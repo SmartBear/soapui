@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jnlp spec="1.0+" codebase="@SOAPUICODEBASE@" href="javamail.jnlp">
+	<information>
+		<title>JavaMail</title>
+		<vendor>Sun Microsystems, Inc.</vendor>
+		<description>JavaMail API.</description>
+		<homepage href="http://java.sun.com/products/javamail/"/>
+	</information>
+	<security>
+		<all-permissions/>
+	</security>
+	<resources>
+		<jar href="javamail-1.4.jar"/>
+	</resources>
+	<component-desc/>
+</jnlp>

@@ -1,0 +1,137 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>Web Service Load Testing assertions</title>
+    </properties>
+    <body>
+		<section name="Web Service LoadTest Assertions">
+		<p>soapUI allows the creation of an arbitrary number of LoadTest Assertions for a LoadTest either from
+		the LoadTest Statistics Popup Menu or from the "LoadTest Assertions" tab at the bottom of the LoadTest
+		editor:</p>
+		<p align="center"><img src="images/loadtest_assertions_tab.gif" alt="Web Service Load Testing Assertions"/></p>
+		<p>The toolbar at the top of the tab contains the following actions (left-to-right):</p>
+		<ul>
+		<li><b>Add Assertion</b> - prompts to add and configure a new LoadTest Assertion</li>
+		<li><b>Remove Assertion</b> - prompts to remove the currently selected assertion</li>
+		<li><b>Assertion Options</b> - shows the options for the currently selected assertion</li>
+		</ul>
+		<p>Below the toolbar a table containing the configuration assertions is shown with the following columns:</p>
+		<ul>
+		<li><b>Name</b> : the configured name of the assertion </li>
+		<li><b>Step</b> : the target step for the assertion</li>
+		<li><b>Details</b> : detailed information on the assertion </li>
+		</ul>
+		<p>A popup menu containing the same actions as in the toolbar is also available.</p>
+		<p>soapUI currently provides the following assertion types:</p>
+		
+		<columns><column>
+		<table><tr><th>Type</th><th>Short Description</th></tr>
+		<tr><td><a href="#Step_Maximum_Assertion">Step Maximum</a></td><td>Asserts a steps max time</td></tr>
+		<tr><td><a href="#Step_Status_Assertion">Step Status</a></td><td>Asserts a steps status</td></tr>
+		<tr><td><a href="#Step_TPS_Assertion">Step TPS</a></td><td>Asserts a steps TPS</td></tr>
+		<tr><td><a href="#Max_Errors_Assertion">Max Errors</a></td><td>Asserts the total number of errors</td></tr>
+		<tr><td><a href="#Step_Average_Assertion">Step Average</a></td><td>Asserts a steps average</td></tr>
+		</table>
+		</column><column align="right">
+		<img src="images/add_assertion_dialog.gif" alt="Add Assertion Popup"/>
+		</column></columns>
+
+		<subsection name="Step Maximum Assertion">
+		<columns><column><div>
+		The Step Maximum assertion checks that a steps max time does not exceed a specified value. It has the following
+		settings:
+		<ul>
+			<li><b>Name</b> - the name of the assertion</li>
+			<li><b>Minimum Requests</b> - the minimum number of runs that must have been executed before applying this
+			assertion. Use this for avoiding assertion errors during startup of a LoadTest</li>
+			<li><b>Max Time</b> - the maximum allowed step time. If this time is exceeded, an assertion error is logged
+			to the LoadTest log</li>
+			<li><b>Max Errors</b> - the maximum number of errors to allow before cancelling the LoadTest</li>
+			<li><b>TestStep</b> - the target step to assert. Selecting "- Any -" will assert all steps, selecting
+			"- Total -" will assert the total time taken for the entire TestCase run </li>
+		</ul></div>
+		</column><column>
+		<img src="images/loadtest_max_assertion.gif" alt="Step Maximum Assertion Configuration"/>
+		</column></columns>
+		
+		</subsection>
+
+		<subsection name="Step Status Assertion">
+		<columns><column><div>
+		The Step Status Assertion checks that a step has not failed with an error, for example a Request steps 
+		or a Groovy script step. It has the following settings:
+		<ul>
+			<li><b>Name</b> - the name of the assertion</li>
+			<li><b>Minimum Requests</b> - the minimum number of runs that must have been executed before applying this
+			assertion. Use this for avoiding assertion errors during start up of a LoadTest</li>
+			<li><b>Max Errors</b> - the maximum number of errors to allow before cancelling the LoadTest</li>
+			<li><b>TestStep</b> - the target step to assert. Selecting "- Any -" will assert all steps</li>
+		</ul></div>
+		</column><column>
+		<img src="images/loadtest_status_assertion.gif" alt="Step Status Assertion Configuration"/>
+		</column></columns>
+		
+		</subsection>
+
+		<subsection name="Step TPS Assertion">
+		<columns><column><div>
+		The Step TPS Assertion checks that a steps TPS does not go below a specified value. It has the following
+		settings:
+		<ul>
+			<li><b>Name</b> - the name of the assertion</li>
+			<li><b>Minimum Requests</b> - the minimum number of runs that must have been executed before applying this
+			assertion. Use this for avoiding assertion errors during start up of a LoadTest</li>
+			<li><b>Minimum TPS</b> - the minimum required TPS. If the actual TPS is lower, an assertion error is logged
+			to the LoadTest log</li>
+			<li><b>Max Errors</b> - the maximum number of errors to allow before cancelling the LoadTest</li>
+			<li><b>TestStep</b> - the target step to assert. Selecting "- Any -" will assert all steps, selecting
+			"- Total -" will assert the total TPS for the entire TestCase run </li>
+		</ul></div>
+		</column><column>
+		<img src="images/loadtest_tps_assertion.gif"  alt="Step TPS Assertion Configuration"/>
+		</column></columns>
+		</subsection>
+
+		<subsection name="Max Errors Assertion">
+		<columns><column><div>
+		The Max Errors Assertion checks that the total number of errors for a specified TestStep does not exceed 
+		a specified value. It has the following	settings:
+		<ul>
+			<li><b>Name</b> - the name of the assertion</li>
+			<li><b>Max Absolute Errors</b> - the absolute maximum allowed number of errors for the specified TestStep</li>
+			<li><b>Max Relative Errors</b> - the relative maximum allowed number of errors for the specified TestStep, for
+			example 0.2 will assert that at most 20% of the runs for the specified TestStep result in an error</li>
+			<li><b>TestStep</b> - the target step to assert. Selecting "- Any -" will assert all steps, selecting
+			"- Total -" will assert the total number of errors for the entire TestCase run </li>
+		</ul></div>
+		</column><column>
+		<img src="images/loadtest_max_errors_assertion.gif" alt="Step Maximum Errors Configuration"/>
+		</column></columns>
+		
+		</subsection>
+
+		<subsection name="Step Average Assertion">
+		<columns><column><div>
+		The Step Average Assertion checks that a steps average does not go over a specified value. It has the following
+		settings:
+		<ul>
+			<li><b>Name</b> - the name of the assertion</li>
+			<li><b>Minmum Requests</b> - the minimum number of runs that must have been executed before applying this
+			assertion. Use this for avoiding assertion errors during start up of a LoadTest</li>
+			<li><b>Max Average</b> - the maximum allowed average. If the actual average is higher, an assertion error 
+			is logged to the LoadTest log</li>
+			<li><b>Max Errors</b> - the maximum number of errors to allow before cancelling the LoadTest</li>
+			<li><b>Sample Interval</b> - the sample interval</li>
+			<li><b>TestStep</b> - the target step to assert. Selecting "- Any -" will assert all steps, selecting
+			"- Total -" will assert the total average for the entire TestCase run </li>
+		</ul></div>
+		</column><column>
+		<img src="images/loadtest_average_assertion.gif" alt="Step Average Assertion Configuration"/>
+		</column></columns>
+		
+		</subsection>		
+
+		<p><hr size="1"/>Next: <a href="diagrams.html">Web Service Load Test Diagrams</a></p>
+		</section>
+    </body>
+</document>

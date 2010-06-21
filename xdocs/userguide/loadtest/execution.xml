@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>Web Service Load Test execution</title>
+    </properties>
+    <body>
+    	<section name="LoadTest Execution">
+    	<p>When running a LoadTest soapUI internally creates a complete copy of the underlying TestCase for 
+    	each thread, allowing each TestCase to maintain its own state and properties. Depending on which limit
+    	and strategy has been selected, load testing will proceed as configured until the LoadTest terminates 
+    	due to one of the following:</p>
+    	<ul>
+    	<li>It has reached its <a href="configuration.html#LoadTest_Limit">configured Load Test limit</a></li>
+    	<li>It has been canceled by the user with the "Cancel" button on the LoadTest toolbar</li>
+    	<li>It has been canceled by a LoadTest Assertion when the maximum number of allowed errors for that
+    	assertion has been passed</li>
+    	</ul>
+    	
+    	<p>During execution, the following statistics are periodically collected and displayed in the Statistics
+    	Table:</p>
+    	<ul>
+    	<li><b>min</b> - the shortest time the step has taken</li>
+    	<li><b>max</b> - the longest time the step has taken</li>
+    	<li><b>avg</b> - the average time for the test step</li>
+    	<li><b>last</b> - the last time for the test step</li>
+    	<li><b>cnt</b> - the number of times the test step has been executed</li>
+    	<li><b>tps</b> - the number of transactions per second for the test step, see 
+    	<a href="#Calculation_of_TPS/BPS">Calculation of TPS/BPS</a> below.</li>
+    	<li><b>bytes</b> - the number of bytes processed by the test step</li>
+    	<li><b>bps</b> - the bytes per second processed by the test step</li>
+    	<li><b>err</b> - the number of assertion errors for the test step</li>
+    	</ul>
+    	
+    	<p>Collection and calculation of this data is performed asynchronously (i.e. independently from the actual TestCase executions)
+  		in soapUI, so it should not affect the actual load testing performance.</p>
+  		
+  		<p>The <b>Total</b> row shows the statistics for the TestCase itself.</p>
+  		
+  		<subsection name="LoadTest Step Time calculation">
+  		<p>soapUI internally uses the <code>System.nanoTime()</code> method for determining the actual time taken 
+  		by a test-step. The following table describes how these times are calculated for the available TestStep types:</p>
+  		<table>
+  		<tr><th>Step Type</th><th>Duration</th></tr>
+  		<tr><td><a href="../functional/testrequests.html">Request Step</a></td><td>The request duration is calculated depending on the settings in 
+  		the <a href="index.html#LoadTest_Options">LoadTest Options</a> dialog (as described there).</td></tr>
+  		<tr><td><a href="../functional/groovystep.html">Groovy Script</a></td><td>The actual script evaluation</td></tr>
+  		<tr><td><a href="../functional/propertiesstep.html">Properties Step</a></td><td>The time to load/save the properties (if configured)</td></tr>
+  		<tr><td><a href="../functional/delaystep.html">Delay Step</a></td><td>The steps delay</td></tr>
+  		<tr><td><a href="../functional/propertytransfers.html">Property Transfer</a></td><td>The time it took to transfer all properties</td></tr>
+  		<tr><td><a href="../functional/gotostep.html">Goto Step</a></td><td>The time it took to evaluate the goto-conditions</td></tr>
+  		</table>
+  		</subsection>
+  		
+  		<subsection name="LoadTest Assertions">
+		<p>When running a LoadTest, the configured assertions are applied and will generate an error in the log if not met:</p>
+		<p align="center"><img src="images/loadtest_4.gif" alt="LoadTest Assertion error log"/></p>
+		<p>Assertion errors can be double clicked and will show a view displaying the underlying TestStep state that  
+		failed the assertion. For example the following will be shown for Request that failed an assertion:</p>
+		<p align="center"><img src="images/teststep_result_1.gif" alt="Request Properties for a failet Load Test Assertion"/></p>
+		</subsection>
+		
+		<subsection name="Calculation of TPS/BPS">
+		<p>Depending on the setting of the "Calculate TPS.." option in
+    	the <a href="index.html#LoadTest_Options">LoadTest Options</a> dialog, TPS and BPS are calculates
+		as follows:</p>
+		<ul>
+		<li>NOT based on actual time passed (default):
+		<ul>
+		<li>TPS : (1000/avg)*threadcount, for example avg = 100 ms with ten threads will give a TPS of 100</li>
+		<li>BPS : (bytes/cnt) * TPS, i.e. the average number of bytes per request * TPS. For example a total number of
+		received bytes of 1000000 for 100 requests with a TPS of 100 would give (100000/100 * 100) = 1000000 BPS</li>
+		</ul>
+		</li>
+		<li>Based on actual time passed:
+		<ul>
+		<li>TPS : Time passed in TestCase / CNT / 1000, i.e. a TestCase that has run for 10 seconds hand handled 100 request
+		will get a TPS of 10</li>
+		<li>BPS : Bytes / Time passed / 1000, i.e. a TestCase that has run for 10 seconds and handled 100000 bytes will get
+		a BPS of 10000.</li>
+		</ul>
+		Please note the time-passed value used is the time for the entire TestCase, not each step for itself. This can bias
+		the TPS/BPS values quite a lot for those TestSteps that take a small amount of the TestCases total time
+		</li>
+		</ul>
+		<p>The option to base on actual time passed can be useful when setting a TestCase delay using the 
+		Simple LoadStrategy, which will generally give a low average, but the actual transactions per second 
+		will not be equivalently high (since there is a delay). Selecting this option will calculate 
+		TPS using (time-passed/cnt) instead.</p>
+		
+		</subsection>
+  		
+		<p><hr size="1"/>Next: <a href="assertions.html">Web Service Test Assertions</a></p>
+		
+		</section>
+    </body>
+</document>
+

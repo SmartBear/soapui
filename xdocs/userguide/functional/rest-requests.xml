@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<!--
+  ~ soapUI, copyright (C) 2004-2008 eviware.com
+  ~
+  ~ soapUI is free software; you can redistribute it and/or modify it under the
+  ~ terms of version 2.1 of the GNU Lesser General Public License as published by
+  ~ the Free Software Foundation.
+  ~
+  ~ soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+  ~ even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+  ~ See the GNU Lesser General Public License for more details at gnu.org.
+  -->
+
+<document>
+    <properties>
+        <title>Web Service Functional Testing - TestRequests</title>
+    </properties>
+    <body>
+		<section name="REST/HTTP Request Steps">
+		 
+            <p>There are two types of HTTP Request steps available:</p>
+            <ol>
+                <li>REST Requests are linked to a REST Resource defined in the project and use that resources service for
+                validations, etc.</li>
+                <li>HTTP Requests are standalone requests not linked to any other item.</li>
+            </ol>
+
+            <subsection name="REST Request Steps">
+
+            <p>REST Request Steps are either created from REST requests using their "Add to Testcase" action or from the
+                TestCase Editors popup menu with the "Insert Step -&gt; REST Request" option which will prompt for which
+                REST Resource in the project that the request should be created for.</p>
+
+                    <p>REST/HTTP TestRequests are submitted either manually through their editors submit actions or when running
+                    the TestCase containing the request. The requests response is validated against a requests assertions and the
+                    requests icon changes to reflect the result of the validations; green means that all validations were ok, red means that some validations
+                    failed. A grey background icon indicates that the request has not yet been submitted for validation, a white
+                    background indicates that the TestRequest lacks assertions</p>
+                     </subsection>
+
+                     <subsection name="REST Test Request Details Tab">
+                      <p>
+                    The "Details" tab shown in the bottom-left shows the same properties when a HTTP TestRequest node is selected in
+                    the navigation tree as for a standard REST Request (see the <a href="../rest/requests.html#Request_Details_Tab">Request Details Tab</a>
+                    for more detailed information) and adds two read-only properties:
+                    <ul>
+                    <li><b>Service</b> : the name of the Service for this TestRequest</li>
+                    <li><b>Resource</b> : the path of the Resource for this TestRequest</li>
+                    </ul>
+
+                    </p>
+                    </subsection>
+
+                             <subsection name="The REST Test Request Editor">
+                     <p>Double-clicking a REST Test Request in either the navigator or the TestCase Editor Pane opens the requests
+                     editor which is more or less a copy of the standard REST Request Editor with the following exceptions:</p>
+                     <ul>
+                         <li>The second toolbar button "Add to Testcase" has been replaced with "Add Assertion" which prompts
+                         to add an assertion to the REST TestRequest</li>
+                         <li>The second toolbar contains a drop-down for selecting which REST Resource this REST Test Request should
+                         be linked to.</li>
+                         </ul>
+
+                                     <p align="center"><img src="images/rest-request-step-toolbar.gif"></img></p>
+
+                                 <ul>
+                         <li>The clone action now clones the TestRequest and appends the cloned request to the containing TestCase</li>
+                         <li>Under the request/response panes there is a now a tabbed pane containing 2 tabs; the "Assertions" tab and
+                         the "Request Log" tab as described in the <a href="testrequests.html">Test Requests Overview</a>.</li>
+                     </ul>
+                    <p>All other editing, submittal, validation functionality is the same as in the REST Request editor</p>
+                    </subsection>
+
+		 <p><hr size="1"/>Next: <a href="http-requests.html">HTTP Requests</a></p>
+		</section>
+    </body>
+</document>

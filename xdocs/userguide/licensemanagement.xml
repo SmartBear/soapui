@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>soapUI Pro License Management</title>
+    </properties>
+    <body>
+		<section name="soapUI Pro License Management">
+		<p>soapUI Pro license management is straightforward; when starting soapUI the first time, or when the 
+		license has expired, the following dialog will prompt for a new License:</p>
+		<p align="center"><img src="images/license_1.gif" alt="soapUI Pro License Dialog"/></p>
+		<p>Selecting either the "Apply for Trial" or "Buy License" buttons will open Web Pages the will let you get the right licenses in an 
+		external browser.</p>
+		<p>Choosing to cancel the dialog without already having a valid license installed will prompt to run soapUI in 
+		"Guest" mode, which has all Pro related features disabled but can still be fully used as a soapUI 
+		standalone installation.</p>
+		<p>After specifying a valid file, you will be prompted to accept the soapUI license agreement and a 
+		confirmation dialog will be shown:</p>
+		<p align="center"><img src="images/license_2.gif" alt="soapUI Pro License info"/></p>
+		
+		<columns><column><div>This dialog can always be opened from the "Help/Show License Details" main menu 
+		option. A license can also be updated manually with the "Help/Update License" option which will restart 
+		the above process. </div> <!-- @TODO@explain Option for bye license? --> 
+		</column>
+		<column><img src="images/help_license_menu.gif" alt="soapUI Pro Help Menu"/></column></columns>
+		<subsection name="Command Line, Plugins and Licenses">
+		<p>None of the command line runners will require a license to run. The associated Tool or IDE plug-ins will 
+		be released in pro enabled versions shortly after the stand alone soapUI Pro release. 
+   </p>
+		</subsection>
+		 <p><hr size="1"/>Next: <a href="preferences.html">soapUI Preferences</a></p>
+		</section>
+    </body>
+</document>

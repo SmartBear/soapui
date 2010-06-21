@@ -1,0 +1,887 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns="http://www.w3.org/2001/XMLSchema"
+	    targetNamespace="http://java.sun.com/xml/ns/j2ee"
+	    xmlns:j2ee="http://java.sun.com/xml/ns/j2ee"
+	    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	    elementFormDefault="qualified"
+	    attributeFormDefault="unqualified"
+	    version="1.1">
+  <xsd:annotation>
+    <xsd:documentation>
+      @(#)j2ee_jaxrpc_mapping_1_1.xsds	1.11 09/03/03
+
+      Based on j2ee_jaxrpc_mapping_1_0.dtd, Last updated: 09/19/2002 10:26
+    </xsd:documentation>
+  </xsd:annotation>
+
+  <xsd:annotation>
+    <xsd:documentation>
+
+      Copyright 2003-2005 Sun Microsystems, Inc.
+      4150 Network Circle
+      Santa Clara, California 95054
+      U.S.A
+      All rights reserved.
+
+      Sun Microsystems, Inc. has intellectual property rights
+      relating to technology described in this document. In
+      particular, and without limitation, these intellectual
+      property rights may include one or more of the U.S. patents
+      listed at http://www.sun.com/patents and one or more
+      additional patents or pending patent applications in the
+      U.S. and other countries.
+
+      This document and the technology which it describes are
+      distributed under licenses restricting their use, copying,
+      distribution, and decompilation. No part of this document
+      may be reproduced in any form by any means without prior
+      written authorization of Sun and its licensors, if any.
+
+      Third-party software, including font technology, is
+      copyrighted and licensed from Sun suppliers.
+
+      Sun, Sun Microsystems, the Sun logo, Solaris, Java, J2EE,
+      JavaServer Pages, Enterprise JavaBeans and the Java Coffee
+      Cup logo are trademarks or registered trademarks of Sun
+      Microsystems, Inc. in the U.S. and other countries.
+
+      Federal Acquisitions: Commercial Software - Government Users
+      Subject to Standard License Terms and Conditions.
+
+    </xsd:documentation>
+  </xsd:annotation>
+
+  <xsd:annotation>
+    <xsd:documentation>
+
+      (C) Copyright International Business Machines Corporation 2002
+
+    </xsd:documentation>
+  </xsd:annotation>
+
+  <xsd:annotation>
+    <xsd:documentation>
+      <![CDATA[
+
+	The element describes the Java mapping to a known WSDL document.
+
+	It contains the mapping between package names and XML namespaces,
+	WSDL root types and Java artifacts, and the set of mappings for
+	services.
+
+	All java-wsdl-mapping deployment descriptors must indicate the
+	schema by using the J2EE namespace:
+
+	http://java.sun.com/xml/ns/j2ee
+
+	and by indicating the version of the schema by using the
+	version element as shown below:
+
+	    <java-wsdl-mapping xmlns="http://java.sun.com/xml/ns/j2ee"
+	      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	      xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
+		http://www.ibm.com/webservices/xsd/j2ee_jaxrpc_mapping_1_1.xsd"
+	      version="1.1">
+	      ...
+	    </java-wsdl-mapping>
+
+	The instance documents may indicate the published version of
+	the schema using the xsi:schemaLocation attribute for J2EE
+	namespace with the following location:
+
+	http://www.ibm.com/webservices/xsd/j2ee_jaxrpc_mapping_1_1.xsd
+
+	]]>
+    </xsd:documentation>
+  </xsd:annotation>
+
+  <xsd:annotation>
+    <xsd:documentation>
+
+      The following conventions apply to all J2EE
+      deployment descriptor elements unless indicated otherwise.
+
+      - In elements that specify a pathname to a file within the
+	same JAR file, relative filenames (i.e., those not
+	starting with "/") are considered relative to the root of
+	the JAR file's namespace.  Absolute filenames (i.e., those
+	starting with "/") also specify names in the root of the
+	JAR file's namespace.  In general, relative names are
+	preferred.  The exception is .war files where absolute
+	names are preferred for consistency with the Servlet API.
+
+    </xsd:documentation>
+  </xsd:annotation>
+
+  <xsd:include schemaLocation="j2ee_1_4.xsd"/>
+
+
+<!-- **************************************************** -->
+
+
+  <xsd:element name="java-wsdl-mapping" type="j2ee:java-wsdl-mappingType">
+    <xsd:annotation>
+      <xsd:documentation>
+
+	This is the root of the java-wsdl-mapping deployment descriptor.
+
+      </xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+
+<!-- **************************************************** -->
+
+  <xsd:complexType name="constructor-parameter-orderType">
+    <xsd:annotation>
+      <xsd:documentation>
+
+	The constructor-parameter-order element defines the order
+	that complexType element values are applied to a Java
+	exception constructor. Element names are specified for each
+	parameter of the constructor, including element names of
+	inherited types if necessary.
+
+	Used in: exception-mapping
+
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="element-name"
+		   type="j2ee:string"
+		   minOccurs="1" maxOccurs="unbounded">
+	<xsd:annotation>
+	  <xsd:documentation>
+
+	    The element-name element defines the name of a complexType
+	    element name attribute value.
+
+	  </xsd:documentation>
+	</xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+  </xsd:complexType>
+
+<!-- **************************************************** -->
+
+  <xsd:complexType name="exception-mappingType">
+    <xsd:annotation>
+      <xsd:documentation>
+
+	The exception-mapping element defines the mapping between the
+	service specific exception types and wsdl faults and
+	SOAP headerfaults.
+
+	This element should be interpreted with respect to the
+	mapping between a method and an operation which provides the
+	mapping context.
+
+	Used in: service-endpoint-method-mapping
+
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="exception-type"
+		   type="j2ee:fully-qualified-classType">
+	<xsd:annotation>
+	  <xsd:documentation>
+
+	    The exception-type element defines Java type of the exception.
+	    It may be a service specific exception.
+
+	    It must be a fully qualified class name.
+
+	  </xsd:documentation>
+	</xsd:annotation>
+      </xsd:element>
+      <xsd:element name="wsdl-message"
+		   type="j2ee:wsdl-messageType"/>
+      <xsd:element name="wsdl-message-part-name"
+		   type="j2ee:wsdl-message-part-nameType"
+		   minOccurs="0" maxOccurs="1">
+	<xsd:annotation>
+	  <xsd:documentation>
+
+            The wsdl-message-part-name element is required only
+            when the message referenced by the wsdl-message element
+            has more than one part.
+
+            This only occurs when multiple headerfaults use the
+            same message.
+
+	  </xsd:documentation>
+	</xsd:annotation>
+      </xsd:element>
+      <xsd:element name="constructor-parameter-order"
+		   type="j2ee:constructor-parameter-orderType"
+		   minOccurs="0" maxOccurs="1"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+  </xsd:complexType>
+
+<!-- **************************************************** -->
+
+  <xsd:complexType name="java-wsdl-mappingType">
+    <xsd:annotation>
+      <xsd:documentation>
+
+	The element describes the Java mapping to a known WSDL document.
+
+	It contains the mapping between package names and XML namespaces,
+	WSDL root types and Java artifacts, and the set of mappings for
+	services.
+
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="package-mapping"
+		   type="j2ee:package-mappingType"
+		   minOccurs="1" maxOccurs="unbounded"/>
+      <xsd:element name="java-xml-type-mapping"
+		   type="j2ee:java-xml-type-mappingType"
+		   minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="exception-mapping"
+		   type="j2ee:exception-mappingType"
+		   minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+        <xsd:element name="service-interface-mapping"
+		     type="j2ee:service-interface-mappingType"
+		     minOccurs="0" maxOccurs="1"/>
+        <xsd:element name="service-endpoint-interface-mapping"
+		     type="j2ee:service-endpoint-interface-mappingType"
+		     minOccurs="1" maxOccurs="unbounded"/>
+      </xsd:sequence>
+    </xsd:sequence>
+
+    <xsd:attribute name="version"
+		   type="j2ee:dewey-versionType"
+		   fixed="1.1"
+		   use="required">
+      <xsd:annotation>
+	<xsd:documentation>
+
+	  The required value for the version is 1.1.
+
+	</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="id" type="xsd:ID"/>
+  </xsd:complexType>
+
+<!-- **************************************************** -->
+
+  <xsd:complexType name="java-xml-type-mappingType">
+    <xsd:annotation>
+      <xsd:documentation>
+
+	The java-xml-type-mapping element contains a java-type that is the
+	fully qualified name of the Java class, primitive type, or array
+	type, QName of the XML root type or anonymous type, the WSDL type
+	scope the QName applies to and the set of variable mappings for
+	each public variable within the Java class.
+
+	Used in: java-wsdl-mapping
+
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="java-type"
+		   type="j2ee:java-typeType">
+	<xsd:annotation>
+	  <xsd:documentation>
+
+	    The java-type element is the fully qualified class name of
+	    a Java class, primitive, or array type.
+
+	  </xsd:documentation>
+	</xsd:annotation>
+      </xsd:element>
+      <choice>
+        <xsd:element name="root-type-qname"
+		   type="j2ee:xsdQNameType">
+	  <xsd:annotation>
+	    <xsd:documentation>
+
+	      The root-type-qname identifies the WSDL QName of an XML type.
+
+	    </xsd:documentation>
+	  </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="anonymous-type-qname"
+		   type="j2ee:string">
+	  <xsd:annotation>
+	    <xsd:documentation>
+
+	      The anonymous-type-qname identifies the WSDL QName of an
+	      anonymous XML type.
+
+	    </xsd:documentation>
+	  </xsd:annotation>
+        </xsd:element>
+      </choice>
+      <xsd:element name="qname-scope"
+		   type="j2ee:qname-scopeType"/>
+      <xsd:element name="variable-mapping"
+		   type="j2ee:variable-mappingType"
+		   minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+  </xsd:complexType>
+
+<!-- **************************************************** -->
+
+  <xsd:complexType name="method-param-parts-mappingType">
+    <xsd:annotation>
+      <xsd:documentation>
+
+	The method-param-parts-mapping element defines the mapping between a
+	Java method parameters and a wsdl-message.
+
+	Used in: service-endpoint-method-mapping
+
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="param-position"
+		   type="j2ee:xsdNonNegativeIntegerType">
+	<xsd:annotation>
+	  <xsd:documentation>
+
+	    The param-position element defines the position of a
+	    parameter within a Java method.  It must be an integer
+	    starting from 0.
+
+	  </xsd:documentation>
+	</xsd:annotation>
+      </xsd:element>
+      <xsd:element name="param-type"
+		   type="j2ee:java-typeType">
+	<xsd:annotation>
+	  <xsd:documentation>
+
+	    The param-type element defines the fully qualified
+	    class name of a Java class, primitive, or array type.
+
+	  </xsd:documentation>
+	</xsd:annotation>
+      </xsd:element>
+      <xsd:element name="wsdl-message-mapping"
+		   type="j2ee:wsdl-message-mappingType"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+  </xsd:complexType>
+
+<!-- **************************************************** -->
+
+  <xsd:complexType name="package-mappingType">
+    <xsd:annotation>
+      <xsd:documentation>
+
+	The package-mapping indicates the mapping between java-package-name
+	and XML namespace in the WSDL document.
+
+	Used in: java-wsdl-mapping
+
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="package-type"
+		   type="j2ee:fully-qualified-classType">
+	<xsd:annotation>
+	  <xsd:documentation>
+
+	    The package-type indicates the Java package name. It must be a fully
+	    qualified package name, even though the XML schema type is
+	    fully-qualified-classType.
+
+	  </xsd:documentation>
+	</xsd:annotation>
+      </xsd:element>
+      <xsd:element name="namespaceURI"
+		   type="j2ee:xsdAnyURIType">
+	<xsd:annotation>
+	  <xsd:documentation>
+
+	    The namespaceURI element indicates a URI.
+
+	  </xsd:documentation>
+	</xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+  </xsd:complexType>
+
+<!-- **************************************************** -->
+
+  <xsd:complexType name="parameter-modeType">
+    <xsd:annotation>
+      <xsd:documentation>
+
+	The parameter-mode element defines the mode of the parameter.
+	It can have only three values, IN, OUT, INOUT.
+
+	Used in: java-xml-type-mapping
+
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:restriction base="j2ee:string">
+	<xsd:enumeration value="IN"/>
+	<xsd:enumeration value="OUT"/>
+	<xsd:enumeration value="INOUT"/>
+      </xsd:restriction>
+    </xsd:simpleContent>
+  </xsd:complexType>
+
+<!-- **************************************************** -->
+
+  <xsd:complexType name="port-mappingType">
+    <xsd:annotation>
+      <xsd:documentation>
+
+	The port-mapping defines the mapping of the WSDL port name attribute
+	to the Java name used to generate the Generated Service Interface
+	method get{java-name}.
+
+	Used in: service-interface-mapping
+
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="port-name"
+		   type="j2ee:string">
+	<xsd:annotation>
+	  <xsd:documentation>
+
+	    The port-mapping defines the mapping of the WSDL port name
+	    attribute to the Java name used to generate the Generated
+	    Service Interface method get{java-name}.
+
+	  </xsd:documentation>
+	</xsd:annotation>
+      </xsd:element>
+      <xsd:element name="java-port-name"
+		   type="j2ee:string">
+	<xsd:annotation>
+	  <xsd:documentation>
+
+	    The java-port-name element is the string to use as the port
+	    name in Java.  It is used in generating the Generated
+	    Service Interface method get{java-port-name}.
+
+	  </xsd:documentation>
+	</xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+  </xsd:complexType>
+
+<!-- **************************************************** -->
+
+  <xsd:complexType name="qname-scopeType">
+    <xsd:annotation>
+      <xsd:documentation>
+
+	The qname-scope elements scopes the reference of a QName to the WSDL
+	element type it applies to. The value of qname-scope may be
+	simpleType, complexType, or element.
+
+	Used in: java-xml-type-mapping
+
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:restriction base="j2ee:string">
+	<xsd:enumeration value="simpleType"/>
+	<xsd:enumeration value="complexType"/>
+	<xsd:enumeration value="element"/>
+      </xsd:restriction>
+    </xsd:simpleContent>
+  </xsd:complexType>
+
+<!-- **************************************************** -->
+
+  <xsd:complexType name="service-endpoint-interface-mappingType">
+    <xsd:annotation>
+      <xsd:documentation>
+
+	The service-endpoint-interface-mapping defines a tuple
+	to specify Service Endpoint Interfaces to
+	WSDL port types and WSDL bindings.
+
+	An interface may be mapped to a port-type and binding multiple
+	times. This happens rarely.
+
+	Used in: java-wsdl-mapping
+
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="service-endpoint-interface"
+		   type="j2ee:fully-qualified-classType">
+	<xsd:annotation>
+	  <xsd:documentation>
+
+	    The service-endpoint-interface element defines the Java
+	    type for the endpoint interface. The name must be a fully
+	    qualified class name.
+
+	  </xsd:documentation>
+	</xsd:annotation>
+      </xsd:element>
+      <xsd:element name="wsdl-port-type"
+		   type="j2ee:xsdQNameType">
+	<xsd:annotation>
+	  <xsd:documentation>
+
+	    The wsdl-port-type element defines the wsdl port type
+	    by a QNAME which uniquely identifies  the port type.
+
+	  </xsd:documentation>
+	</xsd:annotation>
+      </xsd:element>
+      <xsd:element name="wsdl-binding"
+		   type="j2ee:xsdQNameType">
+	<xsd:annotation>
+	  <xsd:documentation>
+
+	    The wsdl-binding element defines the wsdl binding
+	    by a QNAME which uniquely identifies  the binding.
+
+	  </xsd:documentation>
+	</xsd:annotation>
+      </xsd:element>
+      <xsd:element name="service-endpoint-method-mapping"
+		   type="j2ee:service-endpoint-method-mappingType"
+		   minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+  </xsd:complexType>
+
+<!-- **************************************************** -->
+
+  <xsd:complexType name="service-endpoint-method-mappingType">
+    <xsd:annotation>
+      <xsd:documentation>
+
+	The service-endpoint-method-mapping element defines the mapping of
+	Java methods to operations (which are not uniquely qualified by
+	qnames).
+
+	The wsdl-operation should be interpreted with respect to the
+	portType and binding in which this definition is embedded within.
+	See the definitions for service-endpoint-interface-mapping and
+	service-interface-mapping to acquire the proper context.  The
+	wrapped-element indicator should only be specified when a WSDL
+	message wraps an element type.  The wsdl-return-value-mapping is
+	not specified for one-way operations.
+
+	Used in: service-endpoint-interface-mapping
+
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="java-method-name"
+		   type="j2ee:string">
+	<xsd:annotation>
+	  <xsd:documentation>
+
+	    The java-method-name element defines the name of a Java method
+	    within an interface.
+
+	  </xsd:documentation>
+	</xsd:annotation>
+      </xsd:element>
+      <xsd:element name="wsdl-operation"
+		   type="j2ee:string">
+	<xsd:annotation>
+	  <xsd:documentation>
+
+	    The wsdl-operation element defines an operation within a WSDL
+	    document.  It must be interpreted with respect to a port type.
+
+	  </xsd:documentation>
+	</xsd:annotation>
+      </xsd:element>
+      <xsd:element name="wrapped-element"
+		   type="j2ee:emptyType"
+		   minOccurs="0"
+		   maxOccurs="1">
+	<xsd:annotation>
+	  <xsd:documentation>
+
+	    The wrapped-element element is defined when a WSDL message
+	    with a single part is used to wrap an element type and the
+	    element's name matches the operation name.
+
+	  </xsd:documentation>
+	</xsd:annotation>
+      </xsd:element>
+      <xsd:element name="method-param-parts-mapping"
+		   type="j2ee:method-param-parts-mappingType"
+		   minOccurs="0"
+		   maxOccurs="unbounded"/>
+      <xsd:element name="wsdl-return-value-mapping"
+		   type="j2ee:wsdl-return-value-mappingType"
+		   minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+  </xsd:complexType>
+
+<!-- **************************************************** -->
+
+  <xsd:complexType name="service-interface-mappingType">
+    <xsd:annotation>
+      <xsd:documentation>
+
+	The service-interface-mapping element defines how a Java type for
+	the service interface maps to a WSDL service.
+
+	Used in: java-wsdl-mapping
+
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="service-interface"
+		   type="j2ee:fully-qualified-classType">
+	<xsd:annotation>
+	  <xsd:documentation>
+
+	    The service-interface element defines the Java type for the service.
+	    For static services, it is javax.xml.rpc.Service interface. For
+	    generated service, it would be the generated interface name.
+
+	    The name must be a fully qualified class name.
+
+	  </xsd:documentation>
+	</xsd:annotation>
+      </xsd:element>
+      <xsd:element name="wsdl-service-name"
+		   type="j2ee:xsdQNameType">
+	<xsd:annotation>
+	  <xsd:documentation>
+
+	    The wsdl-service-name element defines the wsdl service name
+	    by a QNAME which uniquely identifies  the service.
+
+	  </xsd:documentation>
+	</xsd:annotation>
+      </xsd:element>
+      <xsd:element name="port-mapping"
+		   type="j2ee:port-mappingType"
+		   minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+  </xsd:complexType>
+
+<!-- **************************************************** -->
+
+  <xsd:complexType name="variable-mappingType">
+    <xsd:annotation>
+      <xsd:documentation>
+
+	The variable-mapping element defines the correlation between a
+	Java class data member or JavaBeans property to an XML element
+	or attribute name of an XML root type. If the data-member
+	element is present, the Java variable name is a public data
+	member.  If data-member	is not present, the Java variable name
+	is a JavaBeans property.
+
+	Used in: java-xml-type-mapping
+
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="java-variable-name"
+		   type="j2ee:string">
+	<xsd:annotation>
+	  <xsd:documentation>
+
+	    The java-variable-name defines the name of a public data member or
+	    JavaBeans property within a Java class.
+
+	  </xsd:documentation>
+	</xsd:annotation>
+      </xsd:element>
+      <xsd:element name="data-member"
+		   type="j2ee:emptyType"
+		   minOccurs="0" maxOccurs="1">
+	<xsd:annotation>
+	  <xsd:documentation>
+
+	    The data-member element is a boolean indicator that a Java
+	    variable is a public data member and not a JavaBeans property.
+
+	  </xsd:documentation>
+	</xsd:annotation>
+      </xsd:element>
+      <xsd:choice>
+        <xsd:element name="xml-attribute-name"
+		     type="j2ee:string">
+	  <xsd:annotation>
+	    <xsd:documentation>
+
+	      The xml-attribute-name element defines name attribute value
+	      of a WSDL attribute element within a root type.  The value
+	      of an xml-attribute-name element must match the value of
+	      the ref attribute if mapping an attribute reference.
+
+	    </xsd:documentation>
+	  </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="xml-element-name"
+		     type="j2ee:string">
+	  <xsd:annotation>
+	    <xsd:documentation>
+
+	      The xml-element-name element defines name attribute value of
+	      a WSDL element within a root type.  The value of an
+	      xml-element-name element must match the value of the ref
+	      attribute if mapping an element reference.
+
+	  </xsd:documentation>
+	</xsd:annotation>
+        </xsd:element>
+        <xsd:element name="xml-wildcard"
+		     type="j2ee:emptyType">
+	  <xsd:annotation>
+	    <xsd:documentation>
+
+	      The xml-wildcard element associates the variable-mapping with
+	      an xsd:any element within a root type.
+
+	    </xsd:documentation>
+	  </xsd:annotation>
+        </xsd:element>
+      </xsd:choice>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+  </xsd:complexType>
+
+<!-- **************************************************** -->
+
+  <xsd:complexType name="wsdl-message-mappingType">
+    <xsd:annotation>
+      <xsd:documentation>
+
+	The wsdl-message-mapping element defines the mapping to a
+	specific message and its part. Together they define uniquely
+	the mapping for a specific parameter. Parts within a message
+	context are uniquely identified with their names.
+
+	The parameter-mode is defined by the mapping to indicate
+	whether the mapping will be IN, OUT, or INOUT..  The presence
+	of the soap-header element indicates that the parameter is
+	mapped to a soap header only.  When absent, it means that the
+	wsdl-message is mapped to a Java parameter. The soap headers
+	are interpreted in the order they are provided in the mapping.
+
+	Used in: method-param-parts-mapping
+
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="wsdl-message"
+		   type="j2ee:wsdl-messageType"/>
+      <xsd:element name="wsdl-message-part-name"
+		   type="j2ee:wsdl-message-part-nameType"/>
+      <xsd:element name="parameter-mode"
+		   type="j2ee:parameter-modeType"/>
+      <xsd:element name="soap-header"
+		   type="j2ee:emptyType"
+		   minOccurs="0" maxOccurs="1">
+	<xsd:annotation>
+	  <xsd:documentation>
+
+	    The soap-header element is a boolean element indicating that
+	    a parameter is mapped to a SOAP header.
+
+	  </xsd:documentation>
+	</xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+  </xsd:complexType>
+
+<!-- **************************************************** -->
+
+  <xsd:complexType name="wsdl-message-part-nameType">
+    <xsd:annotation>
+      <xsd:documentation>
+
+	Interpretation of the wsdl-message-part-name element depends on
+	whether or not wrapped-element has been defined in the
+	service-endpoint-method-mapping.  If wrapped-element is not
+	specified, wsdl-message-part-name defines a WSDL message part. It
+	should always be interpreted with respect to a wsdl-message
+	element. If wrapped-element is specified, wsdl-message-part-name
+	refers to an element name of the element type.
+
+	Used in: wsdl-message-mapping, wsdl-return-value-mapping
+
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:restriction base="j2ee:string"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+
+<!-- **************************************************** -->
+
+  <xsd:complexType name="wsdl-messageType">
+    <xsd:annotation>
+      <xsd:documentation>
+
+	The wsdl-message element defines a WSDL message by a QNAME.
+
+	Used in: wsdl-message-mapping, wsdl-return-value-mapping,
+	exception-mapping
+
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:restriction base="j2ee:xsdQNameType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+
+<!-- **************************************************** -->
+
+  <xsd:complexType name="wsdl-return-value-mappingType">
+    <xsd:annotation>
+      <xsd:documentation>
+
+	The wsdl-return-value-mapping  element defines the mapping for the
+	method's return value. It defines the mapping to a specific message
+	and its part.  Together they define uniquely the mapping for a
+	specific parameter. Parts within a message context are uniquely
+	identified with their names. The wsdl-message-part-name is not
+	specified if there is no return value or OUT parameters.
+
+	Used in: service-endpoint-method-mapping
+
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="method-return-value"
+		   type="j2ee:fully-qualified-classType">
+	<xsd:annotation>
+	  <xsd:documentation>
+
+	    The method-return-value  element defines a fully qualified
+	    class name or void type for the method's return value
+	    type.
+
+	  </xsd:documentation>
+	</xsd:annotation>
+      </xsd:element>
+      <xsd:element name="wsdl-message"
+		   type="j2ee:wsdl-messageType"/>
+      <xsd:element name="wsdl-message-part-name"
+		   type="j2ee:wsdl-message-part-nameType"
+		   minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+  </xsd:complexType>
+
+</xsd:schema>
+

@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>Web Service Test Coverage - Mock Coverage</title>
+    </properties>
+    <body>
+		<section name="MockService Coverage">
+
+		<p>When enabling <a href="../coverage.html">Coverage for a MockService</a> , soapUI will 
+		continuously accumulate and analyze mock requests or responses and add their coverage to the Coverage Panel. This
+		collects the following 2 measurements:</p>
+		
+		<ul>
+		<li>Client Coverage : how much of the WSDL contract that your client is actually submitting.</li>
+		<li>Mock Coverage : how much of the contract your Mock is actually mocking</li>
+		</ul>
+		<p>When collecting coverage for a MockService, the Coverage Panel contains the Interface-related part
+		of the Coverage Tree and the containing MockService and its MockOperations; under each MockOperation the 
+		actual exchanged messages are shown.</p>
+ 		<p align="center"><img src="images/coverage_1.gif" alt="Web Service Quality Assurance With Mock Coverage"/></p>
+ 		
+ 		                   <table class="relatedInner">
+                            <tr>
+                                <td>
+                                    <span class="relatedInfoHeader">Did you know?</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div>
+                                        <p>As the only test tool in the world, soapUI Pro shows you how much of your Web Services you have tested</p>
+                                        <p>This will ensure your test quality. Try it out and see how fun it is.</p>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr align="right">
+                                <td>
+                                    <span class="relatedLinks">
+                                        <a href="http://www.eviware.com/component/option,com_wrapper/Itemid,41/"
+                                           title="try soapUI Pro"
+                                           onclick="javascript:urchinTracker:('/downloadPro');">
+                                            <img src="../images/try_pro_100.png" alt="Try soapUI pro to soap test"
+                                                 width="101" height="20" longdesc="http://www.eviware.com"/>
+                                        </a>
+                                    </span>
+                                </td>
+                            </tr>
+                        </table>
+ 		
+		 <p><hr size="1"/>Next: <a href="operations.html">Mock Operations</a></p>
+
+		</section>
+    </body>
+</document>

@@ -1,0 +1,96 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>Data Driven Web Service Test Tutorial</title>
+    </properties>
+    <body>
+		<section name="Data Driven Web Service Testing in soapUI">
+		<p>Data Driven testing is useful if you want to provide input for a test from an external source, 
+		for example from a database or properties file. This document will outline a standard approach with a complete example.</p>
+		<p>A simple approach to Data-Driven Testing in a TestCase is the following:</p>
+		<ul>	
+		<li>Create the Request steps you want to be data driven</li>
+		<li>Create a <a href="../functional/propertiesstep.html">Properties Step</a> and define the properties you 
+		will read from some external source</li>
+		<li>Create a <a href="../functional/propertytransfers.html">Property Transfer Step</a> that transfers these 
+		properties to their destination steps</li>
+		<li>Now you need to specify the actual reading of the external properties, the easiest is to specify 
+		in the "Properties Step" which source properties file to read from. A more flexible approach is to create 
+		a proceeding <a href="../functional/groovystep.html">Groovy Step</a> that reads the properties from some source
+		and assigns them to the Properties Step. Both these approaches will be shown below</li>
+		
+		</ul>
+		<p>Below follows a complete example of the above using the Amazon Search Service and specifying the 
+		author and subscriptionId externally for a book search. You need to create a project and import the Amazon WSDL 
+		(http://webservices.amazon.com/AWSECommerceService/AWSECommerceService.wsdl) before digging in..</p>
+		
+		<subsection name="Create The TestCase and TestRequest">
+		<p>Create a new TestCase and add a new Request Step containing the following request:</p>
+		<source><![CDATA[<soapenv:Envelope xmlns:ns="http://webservices.amazon.com/AWSECommerceService/2006-02-15" 
+		xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+   <soapenv:Body>
+      <ns:ItemSearch>
+         <ns:SubscriptionId>?</ns:SubscriptionId>
+         <ns:Request>
+            <ns:SearchIndex>Books</ns:SearchIndex>
+            <ns:Author>?</ns:Author>
+         </ns:Request>
+      </ns:ItemSearch>
+   </soapenv:Body>
+</soapenv:Envelope>]]></source>
+		<p>Add a "Schema Compliance" Assertion to validate the response and a "SOAP Fault" Assertion to catch unexpected 
+		errors.</p>
+		</subsection>
+		<subsection name="Create Properties and Property Transfer">
+		<p>Insert a "Property Step" and add 2 properties named "SubscriptionID" and "Author" and give them some 
+		default value. After that insert a "Property Transfer" step and define 2 transfers each transferring the 
+		respective property to the target request. You should now have something like the following setup:</p>
+		<p align="center"><img src="images/data-driven-1.gif" alt="Property and Property transfer for data driven Testing"/></p>
+		<p>If you select the "Run" button in the Property Transfer Editor and open the Request editor for the search request 
+		you should see something like the following:</p>
+		<p align="center"><img src="images/data-driven-2.gif" alt="Data driven properties after transfer"/></p>
+		<p>(the default values of the properties have been transferred to the request)</p>
+		</subsection>
+		
+		<subsection name="Reading the properties from an external properties file">
+		<p>If you have a standard properties file containing the input you want to use, specify its name
+		in the Property Step Editors source file field. In this example we will create a file in the current directory 
+		containing the following:</p>
+		<source>SubscriptionID=.. your subscription id ..
+Author=Douglas Coupland</source>		
+		<p>Save this to a "test-input.properties" file and specify that file in the Property Step Editor:</p>
+		<p align="center"><img src="images/data-driven-3.gif" alt="Setting a property file"/></p>
+		<p>You're all set! Open the TestCase editor and run the TestCase and open the Request Editor to see the results:</p>
+		<p align="center"><img src="images/data-driven-4.gif" alt="Complete Data Driven tests made easy"/></p>
+		</subsection>
+		<subsection name="Setting the properties with Groovy">
+		<p>Instead of reading the properties from a properties file we may need to get them "somewhere else", for example
+		from a database. The Groovy Script step will provide any flexibility you may need in this regard.. here we will just
+		create a Groovy Step that "manually" reads the same properties file as created above.</p>
+		<p>Begin by inserting a Groovy Script step in the beginning of the TestCase and opening the Groovy 
+		Script Editor. Enter the following script:</p>
+		<source>// init properties
+def props = new Properties();
+props.load( new FileInputStream( "test-input.properties" ));
+
+// get target step
+def step = testRunner.testCase.getTestStepByName( "Properties" );
+
+// assign all properties
+def names = props.propertyNames();
+while( names.hasMoreElements() )
+{
+   def name = names.nextElement();
+   step.setPropertyValue( name, props.getProperty( name ));
+}</source>
+		<p>The script reads the properties file and assigns all its contained properties to the target "Properties" Step. When 
+		running this you should get the exact same result as above:</p>
+		<p align="center"><img src="images/data-driven-5.gif" alt="Groovy script for data driven web service test"/></p>
+		</subsection>
+
+		<p><hr size="1"/>Next: <a href="templatedriven.html">Template Driven Web Service Testing</a></p>
+		
+		</section>
+    </body>
+</document>
+

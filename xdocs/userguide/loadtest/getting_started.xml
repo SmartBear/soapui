@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>Web Service Load Tests</title>
+    </properties>
+    <body>
+		<section name="Getting Started with Web Service Load Testing">
+		<p>soapUI 1.5 introduces simple and powerful <a href="index.html">SOAP LoadTesting</a> functionality 
+		allowing you to:</p>
+		<ul>
+			<li>Validate a Web Services performance under different Load scenarios</li>
+			<li>Maintain Functional validations to see that they don&apos;t "break" under load</li>
+			<li>Run several load tests simultaneously to see how they affect each other</li>
+		</ul>
+		<p>Here we will continue from the Functional TestCase created in the previous "Getting Started" document. Start by 
+		creating a LoadTest for the created TestCase using its "New LoadTest" popup menu option. The opened LoadTest Editor
+		should be something like the following (depending on which steps you created in your TestCase):</p>
+		<p align="center"><img src="../../gettingstarted/images/getting_started_loadtest_1.gif" alt="Soa Load Test Runner"/></p>
+		<p>The LoadTest is pre configured to run for 60 seconds (top right) with 5 threads using the Simple LoadStrategy. Modify 
+		these values as desired (read more about <a href="configuration.html">soapUI LoadTest Configuration</a>) and run
+		the test. You will see the statistics table in the middle beginning collecting data and after 60 seconds should have a 
+		finished LoadTest as follows (read more about <a href="execution.html">LoadTest Execution</a>):</p>
+		<p align="center"><img src="../../gettingstarted/images/getting_started_loadtest_2.gif" alt="Soa Load Test Runner executing"/></p>
+		
+						
+				<table class="relatedInfo" cellspacing="0" cellpadding="0">
+	<tr class="a">
+    	<td width="75" style="padding-top:5px">
+        	<img src="../../images/where_do_i_start.jpg" alt="Start soapUI Testing" longdesc="http://www.soapui.org"></img>
+        </td>
+        <td>
+            <table class="relatedInner">
+              <tr>
+                <td>
+                	<span class="relatedInfoHeader">Did you know?</span>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                    <div>
+						<p>
+						There is a commercial version of soapUI out called <b><i>soapUI Pro</i></b>.
+						</p>
+						<p>
+						<b><i>soapUI Pro</i></b> contains productivity enhancements as well as offers Professional World Class support. contains productivity enhancements as well as offers Professional World Class support.
+						</p>
+                    </div>
+                </td>
+              </tr>
+              <tr align="right">
+              	<td>
+                	<span class="relatedLinks"><a href="http://www.eviware.com/component/option,com_wrapper/Itemid,41/" title="try soapUI Pro" onclick="javascript:urchinTracker:('/downloadTrial');">
+                                               <img src="../../images/try_pro_100.png" alt="Try soapUI pro to soap test" width="101" height="20" longdesc="http://www.eviware.com"/></a></span>
+                </td>
+              </tr>
+            </table>
+		</td>
+	</tr>
+</table>
+		
+
+		
+		<subsection name="Add Assertions to a Load Test">
+		<p>soapUI allows you to add <a href="assertions.html">LoadTest Assertions</a> to LoadTests just as 
+		to Functional TestSteps. When creating a LoadTest, soapUI will always add a TestStep Status Assertion for us, we will 
+		add a TestStep Max Assertion to validate that our TestCase never exceeds a certain execution time.</p>
+		<p>Select the "LoadTest Assertions" tab at the bottom of the LoadTest Editor and press the displayed "Add Assertion"
+		button. Select the "Step Maximum" assertion and configure it as follows in the displayed dialog:</p>
+	
+	<columns><column><div>
+		The Step Maximum assertion checks that a steps max-time does not exceed a specified value. </div>
+		<ul>
+			<li><b>Name</b> - the name of the assertion, leave it it for now</li>
+			<li><b>Minimum Requests</b> - the minimum number of runs that must have been executed before applying this
+			assertion. We will allow the first 10 TestCase runs to pass.</li>
+			<li><b>Max Time</b> - the maximum allowed step time, we set it to 500 m.</li>
+			<li><b>Max Errors</b> - the maximum number of errors to allow before canceling the LoadTest, we will allow
+			5 "breaches" of the 500ms limit before the LoadTest should fail</li>
+			<li><b>TestStep</b> - the target step to assert. We select the request in our TestCase</li>
+		</ul>
+		</column><column>
+		<img src="../../gettingstarted/images/getting_started_loadtest_4.gif" alt="Load Test, Test Step Max assertion"/>
+		</column></columns>
+		
+		</subsection>
+		
+		<subsection name="Run again!"> 
+		<p>Now running the LoadTest might give you a result like to following where the TestCase 5 times exceeded the 
+		limit of 500ms and failed the LoadTest.</p>
+		<p align="center"><img src="../../gettingstarted/images/getting_started_loadtest_5.gif" alt="Load Test runner step 2"/></p>
+		<p>You can double click an assertion failure in the log and view the actual request that failed, allowing
+		you to debug the request/response message, etc.. Double-clicking one of the errors above shows the following:</p>
+		<p align="center"><img src="../../gettingstarted/images/getting_started_loadtest_6.gif" alt="Load Test error Viewer"/></p>
+		</subsection>
+		
+		<subsection name="Now What?">
+		<p>Try playing around with the different LoadTest Strategies, <a href="diagrams.html">Load Test Diagrams</a>, etc.. </p>
+		</subsection>
+		
+		<p><hr size="1"/>Next: <a href="configuration.html">Configuring Web Service Load Tests</a></p>
+		</section>
+    </body>
+</document>

@@ -1,0 +1,179 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>Web Service Load Tests</title>
+    </properties>
+    <body>
+		<section name="Web Service Load Testing">
+		 <p>soapUI provides extensive load testing functionality allowing you to do the following:</p>
+		 <ul>
+		 <li>Functional LoadTesting : validate functionality under load using standard TestCase methods</li>
+		 <li>Behavioral LoadTesting : analyze performance behaviour under varying load with different 
+		     <a href="configuration.html#LoadTest_Strategies">load strategies</a></li>
+		 <li>Performance LoadTesting : find maximal performance available using thread strategies and 
+		 <a href="../commandline/loadtestrunner.html">Command Line LoadTest execution</a></li>
+		 <li><a href="#Requirements_Driven_Load_Testing">Requirements Driven LoadTesting</a> : define performance 
+		 requirements and continuously validate using <a href="assertions.html">Load Test assertions</a></li>
+		 </ul>
+		 
+		 <p>Any number of LoadTests can be created for a TestCase (using the TestCases "New LoadTest" popup-menu action), 
+		 each with different strategies, assertions, etc. to validate/assess a TestCases and its TestSteps performance 
+		 under different circumstances.</p>
+		 
+		 <p>The documentation for load testing in soapUI has been split into the following documents:</p>
+		 <ul>
+		 <li>This document gives a background on the soapUI approach to load testing and an overview of 
+		 the LoadTest Editor</li>
+		 <li><a href="configuration.html">Load Test Configuration</a> : describes limits and strategies</li>
+		 <li><a href="execution.html">Load Test Execution</a> : describes the execution of LoadTests</li>
+		 <li><a href="assertions.html">Load Test Assertions</a> : specifies the available LoadTest assertions and how they are used</li>
+		 <li><a href="diagrams.html">Load Test Diagrams</a> : describes the available diagrams during LoadTesting</li>
+		 <li><a href="comparison.html">JMeter Comparison</a> : a comparison with the popular JMeter tool</li>
+		 </ul>
+		
+		 <subsection name="Requirements Driven Load Testing">
+		 <p>One of our main objectives with the load testing functionality in soapUI was to implement a 
+		 "requirement-driven" approach to load testing. Far too often, load-testing (in our experience) is performed to 
+		 see "how fast" a certain Web Service or business process is. Although this may be
+		 interesting from a technical (and sometimes business) point of view, more often it is important the 
+		 web service is "fast enough" for the actual business processes being realized, which is usually far below
+		 the actual performance achievable. Although this "fast enough" is usually very hard to define by the business
+		 owner, we believe that this is none-the-less the best approach when assessing the performance of a web service 
+		 and/or its environment.</p>
+		 <p>Based on this approach, soapUI allows you to define a number of <a href="assertions.html">LoadTest Assertions</a> 
+		 that are continuously applied to an ongoing LoadTest to validate that it performs "as required", for example 
+		 the average response time of a request can be asserted to not go under a specified value for a longer period 
+		 of time. Other assertions available include max-response time, TPS, etc...</p>
+		 
+		 <p>This functionality can further be used for surveillance testing, where a number of LoadTests are 
+		 run periodically using some scheduling tool to assess that individual web services (for example in a 
+		 SOA or an integration API) continuously perform as required. A setup for this is described in the
+		 <a href="../scenarios/surveillance.html">Surveillance Scenario</a>.
+		 </p>
+		</subsection>
+		
+		<subsection name="The LoadTest Editor">
+		<p>The LoadTest Editor gives an overview of the current LoadTest configuration, results and events:</p>
+		<p align="center"><img src="images/loadtest_editor.gif" alt="The soapUI Load Test Editor"/></p>
+		
+		<p>The editor contains the following components (top-down)</p>
+		<ul>
+		<li>The LoadTest toolbar containing a number of actions and the Test Limit settings for this LoadTest</li>
+		<li>The Load Strategy toolbar containing settings for the selected Load Strategy</li>
+		<li>The Statistics Table showing up-to-date statistics on the current LoadTest</li>
+		<li>A Tabbed Pane containing two tabs: a "LoadTest Log"-tab showing log-events for the current
+		LoadTest and a "LoadTest Assertions"-assertions where the assertions for this LoadTest can be configured</li>
+		</ul>
+		
+		</subsection>
+		
+		<subsection name="The LoadTest Toolbar">
+		<p>The main toolbar contains the following actions (left to right):</p>
+		<ul>
+		<li><b>Run</b> : Starts the LoadTest as described under <a href="execution.html#LoadTest_Execution">LoadTest Execution</a></li>
+		<li><b>Cancel</b> : Cancels an ongoing LoadTest</li>
+		<li><b>Statistics Graph</b> : Show the <a href="diagrams.html#The_LoadTest_Statistics_Grapgh">Statistics Graph</a> for the LoadTest</li>
+		<li><b>Statistics History Graph</b> : Show the <a href="diagrams.html#The_Statistics_History_Graph">Statistics History Graph</a> for the LoadTest</li>
+		<li><b>Reset Statistics</b> : Resets the statistics for an ongoing LoadTest</li>
+		<li><b>Export Statistics</b> : Prompts to export the current LoadTest Statistics to a comma separated file</li>
+		<li><b>Options</b> : Shows the <a href="#LoadTest_Options">LoadTest Options</a> dialog</li>
+		<li><b>Limit Settings</b> : Sets the limit for the LoadTest as described in the 
+		<a href="execution.html#LoadTest_Limit">Execution</a> document</li>
+		<li>The far right contains a Progress Bar displaying the progress (in percent) of the current LoadTest execution</li>
+		</ul>
+		
+		<p>The LoadStrategy toolbar is described in the 
+		<a href="execution.html#LoadTest_Strategies">Load Test Execution</a> document.</p>
+		
+		</subsection>
+		
+		<subsection name="LoadTest Options">
+		<p>The LoadTest Options dialog contains the following settings:</p>
+		<ul>
+		<li><b>Thread Startup Delay</b> : Sets the startup delay for each thread (in milliseconds), setting to 0 will start all threads
+		simultaneously</li>
+		<li><b>Reset Statistics when thread-count changes</b> : Automatically resets statistics when the number of 
+		threads changes. Since (for example) the average is calculated using the number of threads, this value will 
+		be "influenced" by previous results from a different thread-count, which can be avoided by resetting the 
+		statistics when the number of threads changes</li>
+		<li><b>Calculate TPS/BPS based on actual time passed</b> : By default, TPS (Transactions per second) is calculated
+		with ( (1000/avg)*threadcount ), see <a href="execution.html#Calculation_of_TPS/BPS">Calculation of TPS/BPS</a>. 
+		When setting a TestCase delay using the Simple LoadStrategy, the avg will 
+		generally be very low, but the actual transactions per second will not be equivalently high (since there is a 
+		delay). Selecting this option will calculate TPS using (time-passed/cnt) instead</li>
+		<li><b>Include request write in calculated time</b> : When selected, the time to establish the connection with
+		the target endpoint and write the HTTP request will be included in the calculated time for Request test 
+		steps. Select this option if you want the "actual" request time measured (includes proxy, requests, 
+		authentication challenges, etc) </li>
+		<li><b>Include response read in calculated time</b> : When selected, the time to read the HTTP response will be included
+		in the calculated time for Request test steps. If not selected, only the time for reading the response 
+		HTTP headers will be included (the response content will still be read for assertions and 
+		eventual results viewing)</li>
+		<li><b>Close Connections after each request</b> : Select this if you want to disable Keep-Alives/Connection
+		reuse, which will result in a load testing scenario which resembles an environment with many different 
+		Web Service clients</li>
+		<li><b>Sample Interval</b> : Sets the sample-interval for the LoadTest Statistics table (in milliseconds),
+		default is 250ms.</li>
+		<li><b>Disable History</b> : Discards all historical statistics internal (useful for preserving memory during
+		very-long-running tests)</li>
+		<li><b>Max Assertions in Log</b> : Discards the underlying MessageExchange for assertion errors in the 
+		LoadTest log after the specified amount. Discarded assertions contain the text "[discarded]" in their
+		message column in the LoadTest Log. Use this option to free memory if you are having a lot of assertions.</li>
+		<li><b>Cancel Running</b> : Cancels any running threads when the limit has been reached.</li>
+		</ul>
+		<p>The effect of some of these options on LoadTest results can be rather substantial for response times 
+		(depending on network configuration, etc) and is illustrated and discussed in the 
+		<a href="comparison.html">JMeter Comparison</a> document.</p>
+		<p align="center"><img src="images/loadtest_options.gif" alt="Load Test Options"/></p>
+		<p>The "Statistics Log" tab contains settings for automatically exporting LoadTest statistics continuously
+		during the execution of a LoadTest. The options are:</p>
+		<ul>
+		<li>Log Folder - the folder where to create the log-files. soapUI will create one file for each TestStep and
+		one for the whole TestCase.</li>
+		<li>Log Interval - how often (in milliseconds) the current statistics values should be written</li>
+		<li>Log on ThreadCount change - automatically logs statistics values before changing the number of threads</li>
+		</ul>
+		
+		<p align="center"><img src="images/loadtest_options_2.gif"  alt="Load Test Options for the statistics"/></p>
+		</subsection>
+			
+		<subsection name="The Statistics Table">
+		<p>The statistics table shows real time statistics for each TestStep in the underlying
+		TestCase and for the TestCase total.</p> 
+		<p align="center"><img src="images/loadtest_statistics.gif" alt="Load Test Statistsics"/></p>
+		
+		<p>The Statistics currently collected are described in detail in the 
+		<a href="execution.html">LoadTest Execution</a> document.</p> 
+		
+		<p>Double clicking a TestStep row in the table opens that TestSteps
+		associated editor.</p>
+		
+		<p>Right clicking on a TestStep shows a popup menu show TestStep specific actions
+		and actions to add LoadTest Assertions for the selected TestStep as described under 
+		<a href="assertions.html">LoadTest Assertions</a>.</p>
+		
+		</subsection>
+				 
+		<subsection name="The LoadTest Log">
+		<p>The LoadTest Log displays execution status messages and errors reported by the LoadTest 
+		Assertions. Double-clicking an error will open the errors result viewer (if available), for 
+		example allowing you to see the actual request/response that generated the error.</p>
+				
+		<p align="center"><img src="images/loadtest_log.gif" alt="Load Test Log"/></p>
+		
+		<p>The top toolbar contains the following actions (left-to-right):</p>
+		<ul>
+		<li><b>Remove Errors</b> : removes all errors from the LoadTest Log</li>
+		<li><b>Export</b> : prompts to export the current LoadTest log to a file</li>
+		<li><b>Show Types filter</b> : filters which type of errors/messages that should be shown in the log</li>
+		<li><b>Show Steps filter</b> : filters which steps that should be shown in the log</li>
+		</ul>
+		<p>The table is sortable by clicking the column-header for the column to be sorted on. A label under the
+		table displays the number of rows currently in the table.</p>
+		</subsection>
+		 
+		<p><hr size="1"/>Next: <a href="getting_started.html">Getting Started with Web Service Load Tests</a></p>
+
+		</section>
+    </body>
+</document>

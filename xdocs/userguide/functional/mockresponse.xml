@@ -1,0 +1,107 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>Web Service simulation - Mock Response TestStep</title>
+    </properties>
+    <body>
+		<section name="MockResponse Step">
+		<p>The MockResponse Test step listens for a SOAP Request and returns a
+		pre configured response before moving on. The incoming request can be validated just as the response
+		of a TestRequest Step with the same configurable assertions.</p>
+		<p>Usage scenarios for this TestStep are for example:</p>
+		<ul>
+		<li>Client testing - validating incoming requests and returning dummy or incorrect responses to test
+		a client’s behavior</li>
+		<li>Testing of asynchronous processes - for example starting some kind of job with an initial 
+		RequestStep and then waiting for a notification before moving on</li>		
+		</ul>
+		<subsection name="Creating MockResponse Steps">
+		<p>MockResponse steps can be created either "from scratch" using one of the TestCase or TestStep Insert or Add operations;</p>
+		<p align="center"><img src="images/create_mockresponse_dialog.gif" alt="New Simulated SOAP Response in soapUI Pro"/></p>
+		<p>The dialog contains the following options:</p>
+		<ul>
+		<li>Name - The name of the created step</li>
+		<li>Operation - Specifies which operation to mock</li>
+		<li>Interface - Specifies which interface to mock, changing this will also update the list of available operations</li>
+		<li>Create Response - if a default MockResponse message should be created from the schema</li>
+		<li>Port - the port to listen on</li>
+		<li>Path - the path to listen on</li>
+		</ul>
+		<p>After setting the desired values and selecting OK, the step will be created and its editor opened.</p>
+		<p>Other ways to create a MockResponse Step are:</p>
+		<ul>
+		<li>From an Operation Nodes' right-click menu to create a MockResponse step for that Operation
+		<p align="center"><img src="images/add_operation_as_mockresponse.gif" alt="Add Simulated SOAP Response in soapUI Pro from operations node"/></p></li>
+		
+		<li>From a Request Nodes' right-click menu to create a MockResponse step for that Request, using the last response
+		as the MockResponse content (if available).<p align="center"><img src="images/add_request_as_mockresponse.gif" alt="Add Simulated SOAP Response in soapUI Pro from response"/></p></li>
+		
+		<li>From a MockResponse Nodes' right-click menu to add it to a TestCase, using the existing MockResponse content (if available).
+		<p align="center"><img src="images/add_mockresponse_as_mockresponse.gif" alt="Add Simulated SOAP Response in soapUI Pro from existing MockResponse content"/></p></li>
+		</ul>
+		
+		</subsection>
+
+        <subsection name="MockResponse Step Properties">
+         <p>The bottom-left properties are the same as for a standard MockResponse with the following exceptions:</p>
+            <ul>
+                <li><b>Timeout</b> - Fails the MockResponse Step if no request has been received within the specified number of milliseconds.
+                Specifying 0 will wait indefinitely.</li>
+                <li><b>Handle Fault</b> - tells the MockResponse to accept an incoming SOAP Fault</li>
+                <li><b>Handle Response</b> - tells the MockResponse to accept an incoming Response Message if it matches
+                    the WSDL Operation</li>
+                <li><b>Start Step</b> - Configures at which step in the TestCase this MockResponse should start "listening"
+                for a request. This can be usefull if you first are making a request to a service that calls back to
+                the MockResponse Step within the execution of that request, in which case you would set the Start Step
+                to the request (otherwise the MockResponse would not be listening for requests when the request comes).
+                Leaving this empty will start listening when the step is executed.</li>
+                <li><b>Port</b> - the port to listen on</li>
+                <li><b>Path</b> - the path to listen on</li>
+                <li><b>Host</b> - the hostname to use in the hosted WSDL</li>
+            </ul>
+        </subsection>
+
+		<subsection name="The MockResponse Step Editor">
+		<p>The MockResponse Step is the basically the same as the standard <a href="../mock/responses.html">soapUI Pro MockResponse editor</a>
+		 with the addition of the same assertions/log tabs in the bottom as the TestRequest editor and a number
+		of context-sensitive wizards in the Outline Editor for creating assertions and Property Transfers.</p>
+		
+        <p>At the top there is a toolbar that adds input fields for the path and port to listen on during execution, the 
+		rest is the same as the MockResponse editor. These are grayed out during execution of the MockResponse step.
+		Assertions can be added/managed just as for the 
+		<a href="testrequests.html#The_Assertions_Tab">TestRequest editor</a>, the list of available assertions is the 
+		same except the SOAP-Fault-related assertions, which are not applicable to request messages.</p>
+		<p align="center"><img src="images/mockresponse_step_editor.gif"  alt="Edit Simulated SOAP Response in soapUI Pro with the MockResponse editor"/></p>
+		</subsection>
+
+        <subsection name="Query/Match Configuration">
+            <p>The Query/Match configuration tab allows one to specify a query that will be used to select which incoming
+            request to handle. This is usefull during LoadTests, where requests may come in any order and must be
+            identified using some ID in the request. For example the Query would specify an XPath expression that
+            selects the ID and the Match would contain a property-expansion that would match the ID</p>
+            <p align="center"><img src="images/mockresponse_querymatch_tab.gif" alt="Edit Simulated SOAP Response in soapUI Pro with the MockResponse editor"/></p>
+        </subsection>
+
+		<subsection name="MockResponse Step Execution">
+		<p>When the execution of a TestCase reaches the configured "Start Step", the MockResponse Step will start a local
+            temporary MockService and wait for a request to the configured operation on the configured path and port.
+            Once a request has been received, it will be validated with the configured assertions and processed just like a
+            standard MockResponse. After returning the MockResponse result, the MockService will be closed down. and execution
+            will move to the next step in the TestCase.
+		</p>
+		<p>Property Transfers can be used with MockResponse Steps just as with TestRequests, i.e. properties can be transferred 
+		from incoming requests and to outgoing responses.</p>
+		<p>Although running a LoadTest containing MockResponse steps will work, these steps are not designed for LoadTesting
+		due to the following:</p>
+		
+		</subsection>
+		
+		<subsection name="MockResponse Response Scripts">
+		<p>The context script variable available in the MockResponse Response Script, acts both as a MockRunContext and a
+		TestRunContext, allowing it to access the same context variables as other Groovy scripts in the TestCase</p>
+		</subsection>
+		
+		 <p><hr size="1"/>Next: <a href="datasourcestep.html">soapUI Pro DataSource Step for data driven testing</a></p>
+		</section>
+    </body>
+</document>

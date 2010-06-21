@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2005 rel. 3 U (http://www.altova.com) by jboss (JBoss, Inc.) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://www.jboss.org/jbossws-tools" targetNamespace="http://www.jboss.org/jbossws-tools" elementFormDefault="qualified" attributeFormDefault="unqualified">
+  <xs:element name="configuration" type="ns1:configurationType">
+    <xs:annotation>
+      <xs:documentation>Configuration Element</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <!-- Define the Complex Types Here -->
+  <xs:complexType name="configurationType">
+    <xs:sequence>
+      <xs:element name="global" type="ns1:globalType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Represents global options</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:choice>
+        <xs:element name="java-wsdl" type="ns1:javaToWsdlType">
+          <xs:annotation>
+            <xs:documentation>Generates a WSDL file from a JSR-109 service endpoint interface. Additionally, a webservices.xml and a JSR-109 mapping file can also be generated</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="wsdl-java" type="ns1:wsdlToJavaType">
+          <xs:annotation>
+            <xs:documentation>Generates a JSR-109 service endpoint interface, and optionally a JSR-109 mapping file</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="globalType">
+    <xs:sequence>
+      <xs:element name="package-namespace" type="ns1:pkgNSType" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Allows customization of the java package name to xml namespace mapping. This is specified in package/namespace element pairs.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="pkgNSType">
+    <xs:annotation>
+      <xs:documentation>A package namespace pair.</xs:documentation>
+    </xs:annotation>
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="package">
+          <xs:annotation>
+            <xs:documentation>Package Name</xs:documentation>
+          </xs:annotation>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:whiteSpace value="collapse"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="namespace">
+          <xs:annotation>
+            <xs:documentation>XML Namespace</xs:documentation>
+          </xs:annotation>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:whiteSpace value="collapse"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:attribute>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="serviceType">
+    <xs:sequence>
+      <xs:element name="operation" type="ns1:operationType" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Used to customize a WSDL operation. This chlid elements of this tag are mapped to a Java method on the endpoint interface. The name and parameter types must be specified in order to locate the method.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="name" use="required">
+      <xs:annotation>
+        <xs:documentation>Name of the service. This will appear in the service element of the generated WSDL file.</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:whiteSpace value="collapse"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="endpoint" use="required">
+      <xs:annotation>
+        <xs:documentation>The fully qualified Java interface name of the service endpoint interface.</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:whiteSpace value="collapse"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="style" use="optional" default="rpc">
+      <xs:annotation>
+        <xs:documentation>The style of the web service. The "rpc" style indicates multiple parts where each part is a separate schema document instance. The "document" style indicates that the body of the message is represented by a single part.</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="rpc"/>
+          <xs:enumeration value="document"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="parameter-style" use="optional" default="wrapped">
+      <xs:annotation>
+        <xs:documentation>The parameter style convention to use when using document/literal. The "bare" convention requires that the Java method have a single parameter that represents the full request message body, and a single return value that represents the full response message body. The "wrapped" convention allows any Java method signature because it wraps all parameter in a single schema type.</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="bare"/>
+          <xs:enumeration value="wrapped"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="namespacesType">
+    <xs:attribute name="target-namespace" use="required">
+      <xs:annotation>
+        <xs:documentation>The target namespace of the WSDL. By default, it will be derived from the package name of the java endpoint.</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:anyURI">
+          <xs:whiteSpace value="collapse"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="type-namespace" use="required">
+      <xs:annotation>
+        <xs:documentation>The namespace to be used for the schema types.By default, will be the same as the target namespace of the WSDL file.</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:anyURI">
+          <xs:whiteSpace value="collapse"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="mappingType">
+    <xs:attribute name="file" use="optional" default="jaxrpc-mapping.xml">
+      <xs:annotation>
+        <xs:documentation>The JSR-109 mapping file to generate. This defaults to jaxrpc-mapping.xml</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:whiteSpace value="collapse"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="operationType">
+    <xs:sequence>
+      <xs:element name="parameter" type="ns1:parameterType" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Represents a method parameter. It must be in the exact order of the Java method signature.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="name" use="required">
+      <xs:annotation>
+        <xs:documentation>The Java method name.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="one-way" use="optional">
+      <xs:annotation>
+        <xs:documentation>If true, the generated WSDL operation should have no response message.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="return-xml-name" type="xs:QName" use="optional">
+      <xs:annotation>
+        <xs:documentation>The name of the return value in the response message.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="wsxmlType">
+    <xs:attribute name="servlet-link" use="optional">
+      <xs:annotation>
+        <xs:documentation>Specifies the web.xml servlet-link that is used by Java Service Endpoints (WAR style deployments)</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:whiteSpace value="collapse"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="ejb-link" use="optional">
+      <xs:annotation>
+        <xs:documentation>Specifies the ejb-jar.xml ejb-link for Stateless Session Bean endpoints</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:whiteSpace value="collapse"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="append" type="xs:boolean" use="optional" />
+  </xs:complexType>
+  <xs:complexType name="javaToWsdlType">
+    <xs:sequence>
+      <xs:element name="service" type="ns1:serviceType"/>
+      <xs:element name="namespaces" type="ns1:namespacesType">
+        <xs:annotation>
+          <xs:documentation>Namespaces to use when generating the WSDL file.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="mapping" type="ns1:mappingType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Specifies the JSR-109 mapping file to generate.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="webservices" type="ns1:wsxmlType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Used to generate the JSR-109 webservices.xml file</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="wsdlToJavaType">
+    <xs:sequence>
+      <xs:element name="mapping" type="ns1:mappingType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Specifies the JSR-109 mapping file to generate.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="webservices" type="ns1:wsxmlType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Used to generate the JSR-109 webservices.xml file</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="location" type="xs:anyURI" use="required">
+      <xs:annotation>
+        <xs:documentation>Specifies the location of the WSDL file as a URL. The URL may be either absolute or relative to the current directory. Remote protocols such as http are supported.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="parameter-style" use="optional" default="wrapped">
+      <xs:annotation>
+        <xs:documentation>The parameter style convention to use when using document/literal. The "bare" convention requires that the Java method have a single parameter that represents the full request message body, and a single return value that represents the full response message body. The "wrapped" convention allows any Java method signature because it wraps all parameter in a single schema type.</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="bare"/>
+          <xs:enumeration value="wrapped"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="parameterType">
+    <xs:attribute name="type" use="required">
+      <xs:annotation>
+        <xs:documentation>The fully qualified Java class name of the method parameter type.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="xml-name" type="xs:QName" use="optional">
+      <xs:annotation>
+        <xs:documentation>Used to customize the name of the parameter that is used in the generated WSDL file.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="mode" use="optional" default="IN">
+      <xs:annotation>
+        <xs:documentation>Indicates the in/out mode of the parameter. The "IN" mode is a normal java parameter. The "OUT" mode is a holder parameter that is used to pass multiple return values. The "INOUT" mode is a holder parameter that is used to receive as well as return values. The default is "IN".</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:whiteSpace value="collapse"/>
+          <xs:enumeration value="IN"/>
+          <xs:enumeration value="OUT"/>
+          <xs:enumeration value="INOUT"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="header" type="xs:boolean" use="optional">
+      <xs:annotation>
+        <xs:documentation>Indicates whether this parameter should be mapped to a SOAP header instead of a SOAP body part.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+</xs:schema>

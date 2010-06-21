@@ -1,0 +1,1 @@
+..\jre\bin\javaw -Djava.ext.dirs=.;.\..\lib com.eviware.soapui.SoapUI

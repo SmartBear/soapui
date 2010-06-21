@@ -1,0 +1,194 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>Web Service Testing - Attachments Support</title>
+    </properties>
+    <body>
+		<section name="Working with WS Attachments and Inline Files">
+		<p>soapUI supports the following technologies for working with files and attachments:</p>
+		<ul>
+		<li><a href="http://www.w3.org/TR/2005/REC-soap12-mtom-20050125/" target="_new">MTOM</a> - a technology for 
+		optimized transfer of binary data in SOAP Messages</li>
+		<li><a href="http://www.w3.org/TR/SOAP-attachments#SOAPMultipart" target="_new">SOAP with Attachments</a> in accordance with
+		<a href="http://www.ws-i.org/Profiles/AttachmentsProfile-1.0-2004-08-24.html" target="_new">Attachments Profile</a> - a MIME-based
+		attachment mechanism for the SOAP/HTTP binding</li>
+		<li>Inline files for binary content - soapUI specific functionality for simplifying handling of binary message content</li>
+		</ul>
+		<p>Since the industry, for now, seems to be moving towards MTOM, we currently have no plans for supporting any
+		other attachment technology, for example DIME.</p>
+		<p>Both MTOM and Inlining of files require internal processing and can be disabled for better performance in the
+		<a href="requests.html#Request_Details_Tab">Web Service Request Details Tab</a>. Also, when disabling this feature, soapUI will 
+		no longer be required to load the WSDL Definition (either cached or remote) before sending a request.</p>
+
+		<subsection name="The Attachments Tab">
+		<p>The request and response editors contain tabs for adding or accessing attachments for the current request or response
+		messages. For request messages, this tab contains a table of files that have been attached to the current 
+		request. For the response, the table contains attachments in the response. The tabs are always available since
+		they can always be used for both MTOM attachments and File Inlining as described below</p>
+		<p align="center"><img src="images/attachments_tab.gif" alt="Attachment handling for SOAP Testing"/></p>
+		<p>The attachment-table contains the following columns:</p>
+		<ul>
+		<li><b>Name</b> - The filename of the attachment, support property-expansion and is relative to ResourceRoot</li>
+		<li><b>Content-Type</b> - The MIME content-type of the attachment</li>
+		<li><b>Size</b> (read-only) - The size of the attached file</li>
+		<li><b>Part</b> - The part this attachment should be associated with (see below)</li>
+		<li><b>Type</b> (read-only) - The type of attachment (depends on the attachments Part, see below)</li>
+		<li><b>ContentID</b> - Allows overriding of the content ID taken from the MIME part definition in the 
+		corresponding WSDL</li>
+        <li><b>Cached</b> - Shows if the attachment is cached in the project file</li>
+		</ul>
+		<p>Double-clicking an attachment in either message will attempt to save the attachment to a temporary file 
+		(unless it is relative as described below) and open that file in the systems Web Browser.</p>
+		</subsection>
+		
+		<subsection name="Attaching files to a Web Service Test">
+		<p>A file can be attached to a request message either by dragging it from the file-system into the request
+		attachments table or by selecting the "Add File" button which will open a file-selection dialog. When adding
+		a file, soapUI will prompt if the file should be cached by soapUI or added as a file reference;</p>
+		<ul>
+		<li>Caching the attachment will result in soapUI creating a local copy of the attachment in the attachment 
+		folder configured in the <a href="preferences.html#WSDL_Settings">soapUI Preferences</a> dialog (see more below)</li>
+		<li>Not caching the attachment will result in soapUI storing only the absolute file path to the selected file in 
+		the project</li>
+		</ul>
+		<p>Once attached, a file must be assigned to a corresponding message part in the tables Part column:</p>
+		<ul>
+		<li>If the operation is defined to use MIME attachments in its WSDL, the dropdown displayed in the Part
+		column will contain all defined MIME parts. Just select which part the attachment should be assigned to.</li>
+		<li>If the request message contains SOAP with Attachments swaRef elements containing a "cid:XXX" value, that 
+		XXX value will be available in the part dropdown allowing association of swaRefs with attached files.</li>
+		<li>If the request message contains binary (base64 or hex) elements which contain a "cid:XXX" value, that 
+		XXX value will be available in the part dropdown allowing association of binary elements with attached files.</li>
+		</ul>
+		<p>(all/any of these may be possible depending on message definition and content)</p>
+		<p>Selecting an attachments part will also update the attachments type column, which will display one of 
+		MIME (for a MIME attachment), XOP (for a MTOM attachment), CONTENT (for an inline file attachment), 
+		SWAREF (for a swaRef attachment), UNKNOWN (for unassigned attachments).</p>
+		</subsection>
+		
+		<subsection name="MIME Attachments for Web Servie Testing">
+		<p>MIME attachments have been defined in the operations WSDL-defined as described in the 
+		<a href="http://www.w3.org/TR/SOAP-attachments#SOAPMultipart" target="_new">SOAP with Attachments</a> specification.
+		When adding a file it must be associated with its corresponding MIME Part as described above. For example, 
+		if the request operations' binding defines the following:</p>
+		<source><![CDATA[<wsdl:definitions xmlns:ref="http://ws-i.org/profiles/basic/1.1/xsd"
+...		
+  <wsdl:operation name="SendClaim">
+            <soapbind:operation soapAction="http://example.com/soapaction"/>
+            <wsdl:input>
+                <mime:multipartRelated>
+                    <mime:part>
+                        <soapbind:body use="literal" 
+                                       parts="ClaimDetail" 
+                                       namespace="http://example.com/mimetypes"/>
+                    </mime:part>
+                    <mime:part>
+                        <mime:content part="ClaimPhoto" 
+                                      type="image/jpeg"/>
+                    </mime:part>
+                </mime:multipartRelated>
+            </wsdl:input>
+            <wsdl:output>
+                <soapbind:body use="literal" 
+                               namespace="http://example.com/mimetypes"/>
+            </wsdl:output>
+        </wsdl:operation>]]></source>
+	 	<p>This would result in the following option in the Part combo-box:</p>
+	 	<p align="center"><img src="images/mime_attachment.gif" alt="MIME Attachments in soapUI"/></p>
+		</subsection>
+
+		<subsection name="swaRef Attachments">
+		<p>The WS-I <a href="http://www.ws-i.org/Profiles/AttachmentsProfile-1.0-2004-08-24.html" target="_new">Attachments Profile</a>
+		defines a special <code>swaRef</code> data type which can be used in a schema for designating attached binary
+		content. In soapUI, elements of the swaRef type should contain a value in the form of <code>cid:somename</code>,
+		which will result in "somename" being available in the attachment part dropdown. For example, if the request operations'
+		schema defines the following:</p>
+		<source><![CDATA[<wsdl:definitions xmlns:ref="http://ws-i.org/profiles/basic/1.1/xsd"
+...		
+  <wsdl:types>
+  ...
+	 <xsd:element name="ClaimForm" type="ref:swaRef"/>]]></source>
+	 	<p>and the corresponding message would contain for example:</p>
+	 	<source><![CDATA[<ClaimForm>cid:claimForm</ClaimForm>]]></source>
+	 	<p>this would result in the following option in the Part combo box:</p>
+	 	<p align="center"><img src="images/swaref_attachment.gif" alt="swaRef Attachments in soapUI"/></p>
+		</subsection>
+
+		<subsection name="MTOM Attachments for Web Service Testing">
+		<p>The MTOM specification describes optimized transport of binary data in SOAP-messages. The corresponding
+		data-type used for the binary data message element should be one of the XMIME data types (soapUI 2.5 removes
+		this requirement all together; all element content will checked for and MTOM encoded if MTOM is enabled and there is
+        an attachment reference as described below). For example if the 
+		request operations'	schema defines the following:</p>
+		<source><![CDATA[<wsdl:definitions xmlns:xmime="http://www.w3.org/2005/05/xmlmime
+...		
+  <wsdl:types>
+  ...
+	 <xsd:element name="ClaimImage" type="xmime:base64Binary"/>]]></source>
+	 	<p>and the corresponding message would contain for example:</p>
+	 	<source><![CDATA[<ClaimImage xm:contentType="image/gif">cid:claimImage</ClaimImage>]]></source>
+	 	<p>this would result in the following option in the Part combo-box:</p>
+	 	<p align="center"><img src="images/mtom_attachment.gif" alt="MTOM Attachments in soapUI"/></p>
+	 	
+	 	<p>Since not all servers support MTOM, you can disable this feature in the Request Details Tab which will 
+	 	result in the file-data being inlined in the outgoing message in the same way as described for Inline Files
+	 	below. You can also force the use of MTOM even if there are is no binary content in the request using the
+	 	"Force MTOM" request property.</p>
+		</subsection>
+		
+		<subsection name="Anonymous Attachments">
+		<p>Sometimes you may want/need to attach files although this is not specified in the WSDL, for this soapUI
+		allows "anonymous" attachments by selecting the "&lt;anyonymous&gt;" part from the part dropdown. For these you
+		will also need to set a content id in the ContentID column if required.</p>
+		</subsection>
+	
+		<subsection name="Inline files">
+		<p>soapUI also has the option of "inlining" binary files into request messages when they are sent; if 
+		a message contains base64Binary or hexBinary data elements, these can be "filled" using an attached file
+		in 2 ways:</p>
+		<ol>
+		<li>By specifying a value of <code>cid:somename</code> and associating an attached file with the "somename" 
+		part in the same way as in the swaRef/MTOM examples above</li>
+		<li>By specifying the value <code>file:filepath</code> where file path points to a local file</li>
+		</ol>
+		<p>In both cases, the associated file will be inlined into the message with either base64 or hex encoding. 
+		For example if the 
+		request operations'	schema defines the following:</p>
+		<source><![CDATA[<wsdl:definitions xmlns:xmime="http://www.w3.org/2005/05/xmlmime
+...		
+  <wsdl:types>
+  ...
+	 <xsd:element name="ClaimData" type="xsd:hexBinary"/>]]></source>
+	 	<p>and the corresponding message would contain for example:</p>
+	 	<source><![CDATA[<ClaimData>file:c:\data\mydata.zip</ClaimData>]]></source>
+	 	<p>The c:\data\mydata.zip file would be inlined into the outgoing message using hex encoding.</p>
+		</subsection>
+		
+		<subsection name="Attachment Caching"> 
+		<p>When adding an attachment as described above, soapUI gives an option to cache the attachment locally. 
+		If selected, the file will be saved in the soapUI project file (compressed), otherwise the project file will 
+		keep an	absolute path reference to the selected file.</p>
+		</subsection>
+		
+		<subsection name="Multipart Attachments">
+		<p>For anonymous, MIME, swaRef and MTOM attachments it is possible to associate 
+		multiple files with the same attachment part. This will result in soapUI first building a MIME 
+		Multipart message containing the associated files and then attaching that multipart-message to the 
+		corresponding part definition using the "multipart/mixed" content-type, a feature that can be turned
+		off in the Requests Details tab ("Enable Multiparts"). If you need to set the ContentID for both 
+		the multipart attachment and the contained attachments, set the first attachments ContentID to 
+		"&lt;attachment contentid&gt; &lt;multipart contentid&gt;", i.e. a space-separated string where the first
+		token is the id of the attachment inside the multipart and the second token is the id of the multipart
+		attachment itself.</p>
+		</subsection>
+		
+		<subsection name="Response Attachments">
+		<p>The response attachments table lists all attachment available in the response with their corresponding
+		name, content-type, size, etc. Double-click an attachment to view it with the local web-browser.</p>		
+		</subsection>
+		
+		 <p><hr size="1"/>Next: <a href="rest/index.html">REST Services</a></p>
+		</section>
+    </body>
+</document>
+

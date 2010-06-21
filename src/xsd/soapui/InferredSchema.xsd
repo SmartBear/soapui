@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+ soapUI, copyright (C) 2004-2008 eviware.com
+ 
+ soapUI is free software; you can redistribute it and/or modify it under the
+ terms of version 2.1 of the GNU Lesser General Public License as published by
+ the Free Software Foundation.
+ 
+ soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ See the GNU Lesser General Public License for more details at gnu.org.
+ -->
+<schema targetNamespace="http://www.eviware.com/soapui/InferredSchema" elementFormDefault="qualified" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.eviware.com/soapui/InferredSchema">
+
+    <element name="schemaSystem" type="tns:SchemaSet"></element>
+    
+    <complexType name="SchemaSet">
+    	<sequence>
+    		<element name="schema" type="tns:Schema"
+    			maxOccurs="unbounded" minOccurs="0">
+    		</element>
+    	</sequence>
+    </complexType>
+
+    <complexType name="Schema">
+    	<sequence>
+    		<element name="namespace" type="string"></element>
+    		<element name="particle" type="tns:Particle"
+    			maxOccurs="unbounded" minOccurs="0">
+    		</element>
+    		<element name="prefix" type="tns:MapEntry"
+    			maxOccurs="unbounded" minOccurs="0">
+    		</element>
+    		<element name="complexType" type="tns:ComplexType" maxOccurs="unbounded" minOccurs="0"></element>
+    	</sequence>
+    </complexType>
+
+    <complexType name="Particle">
+    	<sequence>
+    		<element name="name" type="string"></element>
+    		<element name="attribute" type="tns:MapEntry"
+    			maxOccurs="unbounded" minOccurs="0">
+    		</element>
+    	</sequence>
+    </complexType>
+
+
+    <complexType name="AttributeParticle">
+    	<complexContent>
+    		<extension base="tns:Particle">
+    			<sequence>
+    				<element name="type" type="tns:Type"></element>
+    			</sequence>
+    		</extension>
+    	</complexContent>
+    </complexType>
+
+    <complexType name="MapEntry">
+    	<attribute name="key" type="string"></attribute>
+    	<attribute name="value" type="string"></attribute>
+    </complexType>
+
+    <complexType name="ElementParticle">
+    	<complexContent>
+    		<extension base="tns:Particle">
+    			<sequence>
+    				<element name="type" type="tns:Type"></element>
+    			</sequence>
+    		</extension>
+    	</complexContent>
+    </complexType>
+
+    <complexType name="ReferenceParticle">
+    	<complexContent>
+    		<extension base="tns:Particle">
+    			<sequence>
+    				<element name="reference" type="QName"></element>
+    			</sequence>
+    		</extension>
+    	</complexContent>
+    </complexType>
+
+    <complexType name="Type"></complexType>
+
+    <complexType name="EmptyType">
+    	<complexContent>
+    		<extension base="tns:Type">
+    			<sequence>
+    				<element name="completed" type="boolean"></element>
+    			</sequence>
+    		</extension>
+    	</complexContent>
+    </complexType>
+
+    <complexType name="SimpleType">
+    	<complexContent>
+    		<extension base="tns:Type">
+    			<sequence>
+    				<element name="completed" type="boolean"></element>
+    				<element name="typeName" type="string"></element>
+    			</sequence>
+    		</extension>
+    	</complexContent>
+    </complexType>
+
+    <complexType name="CustomType">
+    	<complexContent>
+    		<extension base="tns:Type">
+    			<sequence>
+    				<element name="name" type="string"></element>
+    				<element name="xsd" type="string"></element>
+    			</sequence>
+    		</extension>
+    	</complexContent>
+    </complexType>
+
+    <complexType name="ComplexType">
+    			<sequence>
+    				<element name="completed" type="boolean"></element>
+            <element name="mixed" type="boolean"></element>
+            <element name="name" type="string"></element>
+    				<element name="attribute" type="tns:Particle"
+    					maxOccurs="unbounded" minOccurs="0">
+    				</element>
+    				<element name="content" type="tns:Content"></element>
+    			</sequence>
+    </complexType>
+
+    <complexType name="Content"></complexType>
+
+    <complexType name="EmptyContent">
+    	<complexContent>
+    		<extension base="tns:Content">
+    			<sequence>
+    				<element name="completed" type="boolean"></element>
+    			</sequence>
+    		</extension>
+    	</complexContent>
+    </complexType>
+
+    <complexType name="SimpleContent">
+    	<complexContent>
+    		<extension base="tns:Content">
+    			<sequence>
+    				<element name="typeName" type="string"></element>
+    			</sequence>
+    		</extension>
+    	</complexContent>
+    </complexType>
+
+    <complexType name="SequenceContent">
+    	<complexContent>
+    		<extension base="tns:Content">
+    			<sequence>
+    				<element name="completed" type="boolean"></element>
+    				<element name="particle" type="tns:Particle"
+    					maxOccurs="unbounded" minOccurs="0">
+    				</element>
+    				<element name="comesBefore" maxOccurs="unbounded"
+    					minOccurs="0">
+    					<complexType>
+    						<sequence>
+    							<element name="other" type="QName"
+    								maxOccurs="unbounded" minOccurs="0">
+    							</element>
+    						</sequence>
+    						<attribute name="qname" type="QName">
+    						</attribute>
+    					</complexType>
+    				</element>
+    			</sequence>
+    		</extension>
+    	</complexContent>
+    </complexType>
+
+    <complexType name="TypeReference">
+    	<complexContent>
+    		<extension base="tns:Type">
+    			<sequence>
+    				<element name="reference" type="QName"></element>
+    			</sequence>
+    		</extension>
+    	</complexContent>
+    </complexType>
+</schema>

@@ -1,0 +1,12 @@
+<FindBugsFilter>
+     <Match classregex=".*" >
+       <BugCode name="Se" />
+     </Match>
+
+     <Match class="com.eviware.soapui.SoapUI" >
+       <BugCode name="ST" />
+     </Match>
+     
+     <Match classregex="org\.syntax\.jedit\..*" />
+     
+</FindBugsFilter>

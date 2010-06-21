@@ -1,0 +1,172 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>Web Testing - soapUI feature comparison</title>
+    </properties>
+    <body>
+		<section name="Feature Comparison of soapUI and soapUI Pro ">
+		<p>soapUI Pro offers Commercial support from the 
+		<a target="_new" href="http://www.eviware.com">eviware</a> web site, which includes</p>
+		<ul>
+		<li>Prioritized discussion forum</li>
+		<li>Extended documentation with examples, tips &amp; tricks and more</li>
+		<li>Demonstration movies of common tasks, use-cases, etc...</li>
+		</ul>
+
+		
+		<p>Don't hesitate to <a target="_new" href="http://www.eviware.com/component/option,com_wrapper/Itemid,41/">Download a soapUI Pro Trial version</a> which offers full soapUI Pro functionality 
+		for two weeks.</p>
+		<p>There is also an <a target="_new" href="http://www.eviware.com/content/view/42/36/">soapUI FAQ</a> answering common questions regarding the relationship between 
+		soapUI and soapUI Pro</p>
+		
+		<subsection name="soapUI Pro Features">
+		<p>soapUI Pro also adds a number of "productivity enhancements" to the soapUI core which eases many 
+		recurring tasks when working with soapUI. The following table summarizes these with relevant information and links:</p>
+		<table><tr>
+		<th>What?</th><th>Why?</th><th>How?</th></tr>
+		<tr>
+		<td><b>WSDL Coverage</b></td>
+		<td>Analyze request/response messages to see how well a WSDL contract is being tested/mocked/used</td>
+		<td>[<a href="images/coverage_overview.gif">Screenshot</a>] [<a href="userguide/coverage.html">Read More</a>]</td>
+		</tr>
+		<tr>
+		<td><b>WSDL Refactoring</b></td>
+		<td>Automatically update requests/response/assertions when the underlying WSDL</td>
+		<td>[<a href="images/refactoring_overview.gif">Screenshot</a>] [<a href="userguide/interfaces/refactoring.html">Read More</a>]
+		</td>
+		</tr>
+
+        <tr>
+		<td><b>Composite Projects</b></td>
+		<td>Work together in a team on your Web Service testing projects</td>
+		<td>[<a href="userguide/projects/composite-projects.html">Read More</a>]
+		</td>
+		</tr>
+		<tr>
+		<td><b>Requirements Management</b></td>
+		<td>Manage/Import/Export Project Requirements and link them to TestCases.</td>
+		<td>
+		[<a href="images/requirements_overview.gif">Screenshot</a>] [<a href="userguide/projects/requirements.html">Read More</a>]
+		</td>
+		</tr>
+		<tr>
+		<td><b>Form-based Request Editor</b> <br/>Dynamically creates a user-friendly input form for request messages</td>
+		<td>To greatly ease the editing and understanding of request messages for both technical and non-technical users</td>
+		<td>Open the Request Editor and select the Form tab on its left<br/><br/>
+		[<a href="images/formeditor_overview.gif">Screenshot</a>] [<a href="userguide/formeditor.html">Read More</a>]
+		</td>
+		</tr>
+		<tr>
+		<td><b>Overview Message Viewer</b> <br/>A non-xml message viewer for inspecting messages with direct links to xml/outline 
+		editors.</td><td>To get an overview of the corresponding response/mock-request/monitored message</td>
+		<td>
+		[<a href="images/overview_view.gif">Screenshot</a>] [<a href="userguide/overviewview.html">Read More</a>]
+		</td>
+		</tr>
+		<tr>
+		<td><b>Tree-based Request/Response Editor</b> <br/>Shows a tree-view of the underlying message</td>
+		<td>To ease the navigation and understanding of larger messages.</td>
+		<td>Open any message editor and select the Outline tab on its left<br/><br/>
+		[<a href="images/outlineeditor_overview.gif">Screenshot</a>] [<a href="userguide/outlineeditor.html">Read More</a>]
+		</td>
+		</tr>
+		<tr>
+		<td><b>Table Inspector</b> <br/>Dynamically creates a tabular view of message content</td>
+		<td>To quickly give an overview of tabular message content</td>
+		<td>Open any message editor and select the Table tab on its bottom<br/><br/>
+		[<a href="images/tableinspector_overview.gif">Screenshot</a>] [<a href="userguide/messageinspectors.html#Table_Inspector">Read More</a>]
+		</td>
+		</tr>
+		<tr>
+		<td><b>Schema Inspector</b> <br/>Shows schema definition for selected node</td>
+		<td>To ease inspection and debugging of message content</td>
+		<td>Open any message editor and select the XSD tab on its bottom<br/><br/>
+		[<a href="images/schemainspector_overview.gif">Screenshot</a>] [<a href="userguide/messageinspectors.html#Schema_Inspector">Read More</a>]
+		</td>
+		</tr>
+		<tr>
+		<td><b>XML Inspector</b> <br/>Shows XML fragment selected node</td>
+		<td>To ease inspection and debugging of message content</td>
+		<td>Open any message editor and select the XML tab on its bottom<br/><br/>
+		[<a href="images/xmlinspector_overview.gif">Screenshot</a>] [<a href="userguide/messageinspectors.html#XML_Inspector">Read More</a>]
+		</td>
+		</tr>
+		<tr>
+		<td><b>Doc Inspector</b> <br/>Shows schema documentation for selected nodes' type</td>
+		<td>To ease understanding of message content</td>
+		<td>Open any message editor and select the Doc tab on its bottom (if enabled)<br/><br/>
+		[<a href="images/docinspector_overview.gif">Screenshot</a>] [<a href="userguide/messageinspectors.html#Doc_Inspector">Read More</a>]
+		</td>
+		</tr>
+		<tr>
+		<td><b>DataSource TestStep</b> <br/>Reads and loops data from external data sources</td>
+		<td>To greatly ease the creation of Data-Driven Tests</td>
+		<td>Select Insert TestStep from any of the TestCase pop up menus<br/><br/>
+		[<a href="images/datasourcestep_overview.gif">Screenshot</a>] [<a href="userguide/functional/datasourcestep.html">Read More</a>]
+		</td>
+		</tr>
+		<tr>
+		<td><b>DataSink TestStep</b> <br/>Writes Test Data to external storage (JDBC, Files, Excel, etc..)</td>
+		<td>Eases collection of data to be used in subsequent tests or for external reporting</td>
+		<td>Select Insert TestStep from any of the TestCase pop up menus<br/><br/>
+		[<a href="images/datasinkstep_overview.gif">Screenshot</a>] [<a href="userguide/functional/datasinkstep.html">Read More</a>]
+		</td>
+		</tr>
+		<tr>
+		<td><b>DataGen TestStep</b> <br/>Dynamically Generates Test Data for your Tests</td>
+		<td>To simplify comprehensive testing of complex interfaces</td>
+		<td>Select Insert TestStep from any of the TestCase popup menus<br/><br/>
+		[<a href="images/mockresponsestep_overview.gif">Screenshot</a>] [<a href="userguide/functional/datagenstep.html">Read More</a>]
+		</td>
+		</tr>
+		<tr>
+		<td><b>Property Transfer Wizards</b> <br/>Automatically creates Property Transfers for selected content</td>
+		<td>To greatly ease the creation of complex TestCases / Message Flows</td>
+		<td>Right click on any node in the Outline Editor for a request or response message in a TestRequest Step<br/><br/>
+		[<a href="images/transferwizard_overview.gif">Screenshot</a>] [<a href="userguide/functional/response-wizards.html#Properyt_Transfer_Wizards">Read More</a>]
+		</td>
+		</tr>
+		<tr>
+		<td><b>XPath Assertion Wizards</b> <br/>Automatically creates XPath Assertions for selected content</td>
+		<td>To ease the creation of XPath Assertions for TestRequest and MockResponse Steps</td>
+		<td>Right click on any node in the Outline Editor for a response message in a TestRequest Step<br/><br/>
+		[<a href="images/xpathassertionwizard_overview.gif">Screenshot</a>] [<a href="userguide/functional/response-wizards.html#Add_Assertion_Wizard">Read More</a>]
+		</td>
+		</tr>
+		<tr>
+		<td><b>Integrated Reporting</b><br/>Generate reports for functional test from within the UI</td>
+		<td>To provide summaries of Functional Testing for tracking and governance</td>
+		<td>Available from within TestSuite and TestCase editors<br/><br/>
+		 [<a href="userguide/functional/testsuites.html#Generating_Reports">TestSuites</a>] and
+		 [<a href="userguide/functional/testcases.html#Generating_Reports">TestCases</a>]
+		</td>
+		</tr>
+		<tr>
+		<td><b>Groovy Script Library</b> <br/>Central Repository of Global Scripts that can be accessed from any
+		script in soapUI and used for creating extensions.</td>
+		<td>Greatly eases reuse and scripting of complex scenarios</td>
+		<td>Available from within any Groovy Script<br/><br/>
+		 [<a href="userguide/scripting.html">Read More</a>]
+		</td>
+		</tr>
+		<tr>
+		<td><b>XPath Wizards</b> <br/>Allows creation of XPath expressions by selecting the desired target node</td>
+		<td>Greatly eases creation of XPath expressions in many situations</td>
+		<td>Select "Tabbed" desktop in the Preferences/UI Settings tab<br/><br/>
+		[<a href="images/xpathwizard_overview.gif">Screenshot</a>] [<a href="userguide/xpath_selector.html">Read More</a>]
+		</td>
+		</tr>
+		<tr>
+		<td><b>Tabbed Desktop</b> <br/>Alternative Desktop layout</td>
+		<td>Greatly eases desktop management with multiple editors</td>
+		<td>Select "Tabbed" desktop in the Preferences/UI Settings tab (selected by default since 1.7.6)<br/><br/>
+		[<a href="images/tabbeddesktop_overview.gif">Screenshot</a>] [<a href="userguide/tabbeddesktop.html">Read More</a>]
+		</td>
+		</tr>
+		</table>
+		</subsection>
+		
+		 <p><hr size="1"/>Next: <a href="news-report.html">soapUI News and History</a></p>
+		</section>
+    </body>
+</document>

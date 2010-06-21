@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>JBossWS Plugin - new and noteworthy in 2.0.0 beta2</title>
+    </properties>
+    <body>
+		    	<subsection name="Discontinued">
+		<p><b>2007-14-11 : We have decided to discontinue JBoss WS IDE.</b></p>
+		<p>2007-14-11 : JBoss WS IDE is as of the 14:th of November 2007 discontinued. This does not mean 
+		our support for JBoss WS has ended, we have only chosen to stop producing within JBoss. soapUI will continue its
+		strong support for JBoss, just not <b>as</b> JBoss, rather as a independent Open Source software producer.</p>
+		<p>Look at our <a href="../userguide/tools/index.html">tools Pages</a> for more info. </p>
+		</subsection>
+		
+		<section name="New and Noteworthy in 2.0.0 beta2">
+		<p>The JBossWS Plugin released together with JBossIDE 2.0.0 beta2 is its first "public" release, 
+		including initial site documentation with a number of walk-through-examples for:</p>
+		<ul>
+		<li><a href="bottomup_example.html">Publishing</a> POJO's as Web Services</li>
+		<li><a href="topdown_example.html">Implementing</a> WSDL's as Web Services</li>
+		<li><a href="bottomup_example.html">Annotating</a> EJB's as Web Services</li>
+		</ul>
+		
+		<p>Below is a quick overview of major features:</p>
+		
+		<subsection name="JBossWS Project Nature">
+		<p>JBossWS-related functionality is made available as a "JBossWS Project Nature" as described in
+		<a href="gettingstarted.html">Getting Started</a></p>
+		<p align="center"><img src="images/addjbosswsnature.gif" alt="JBossWS project nature"/></p>
+		<p>A number of global preferences-pages are available:</p>
+		<p align="center"><img src="images/integrated_tools.gif" alt="configure"/></p>
+		</subsection>
+
+		<subsection name="Functionality for Publishing Web Services">
+		<p>Dialog/functionality for <a href="bottomup.html">publishing</a> Web Services with JBossWS:</p>
+		<p align="center"><img src="images/publish_tab1.gif" alt="functionality for publishing webservices  "/></p>
+		<p align="center"><img src="images/publish_tab2.gif" alt="publishing webservices  "/></p>
+		
+		</subsection>
+
+		<subsection name="Functionality for Consuming / Implementing Web Services">
+		<p>Dialog functionality for <a href="consume.html">consuming</a> and 
+		<a href="topdown.html">implementing</a> Web Services with JBossWS:</p>
+		<p align="center"><img src="images/generate_dialog.gif" alt="consuming implementing web services"/></p>
+		</subsection>
+
+		<subsection name="Functionality for Web Service Annotations">
+		<p>Dialog/functionality for adding <a href="annotations.html">Web Service annotations</a> to
+		existing POJO and EJB3 classes:</p>
+		<p align="center"><img src="images/annotate_dialog.gif" alt="adding web service annotations"/></p>
+		</subsection>
+		<p><hr size="1"/>Next: <a href="gettingstarted.html">Getting Started with the JBossWS Plugin</a></p>
+		</section>
+    </body>
+</document>

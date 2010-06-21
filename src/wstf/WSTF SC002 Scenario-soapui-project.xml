@@ -1,0 +1,1055 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:soapui-project name="WSTF SC002 Scenario" resourceRoot="" soapui-version="2.5" xmlns:con="http://eviware.com/soapui/config"><con:settings><con:setting id="ProjectSettings@projectRoot">D:\soapui-workspace\soapui\src\wstf</con:setting></con:settings><con:interface xsi:type="con:WsdlInterface" wsaVersion="NONE" name="sc002SOAP11Binding" type="wsdl" bindingName="{http://www.wstf.org/docs/scenarios/sc002}sc002SOAP11Binding" soapVersion="1_1" anonymous="optional" definition="file:/D:/soapUI-resources/sc002.wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart="file:/D:/soapUI-resources/sc002.wsdl"><con:part><con:url>file:/D:/soapUI-resources/sc002.wsdl</con:url><con:content><![CDATA[<wsdl:definitions targetNamespace="http://www.wstf.org/docs/scenarios/sc002" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://www.wstf.org/docs/scenarios/sc002">
+  <wsdl:types>
+    <xs:schema targetNamespace="http://www.wstf.org/docs/scenarios/sc002">
+      <xs:include schemaLocation="sc002.xsd"/>
+      <xs:element name="Begin" type="tns:BeginType"/>
+      <xs:element name="BeginResponse" type="tns:BeginResponseType"/>
+      <xs:element name="Notify" type="tns:NotifyType"/>
+      <xs:element name="Echo" type="tns:EchoType"/>
+      <xs:element name="EchoResponse" type="tns:EchoResponseType"/>
+      <xs:element name="End" type="tns:EndType"/>
+      <xs:element name="EndResponse" type="tns:EndResponseType"/>
+      <xs:element name="SendMessages" type="tns:SendMessagesType"/>
+      <xs:element name="SendMessagesResponse" type="tns:SendMessagesResponseType"/>
+      <xs:element name="SessionData" type="tns:SessionDataType"/>
+    </xs:schema>
+  </wsdl:types>
+  <wsdl:message name="Begin">
+    <wsdl:part name="Begin" element="tns:Begin"/>
+    <wsdl:part name="SessionData" element="tns:SessionData"/>
+  </wsdl:message>
+  <wsdl:message name="BeginResponse">
+    <wsdl:part name="BeginResponse" element="tns:BeginResponse"/>
+  </wsdl:message>
+  <wsdl:message name="Notify">
+    <wsdl:part name="Notify" element="tns:Notify"/>
+    <wsdl:part name="SessionData" element="tns:SessionData"/>
+  </wsdl:message>
+  <wsdl:message name="Echo">
+    <wsdl:part name="Echo" element="tns:Echo"/>
+    <wsdl:part name="SessionData" element="tns:SessionData"/>
+  </wsdl:message>
+  <wsdl:message name="EchoResponse">
+    <wsdl:part name="EchoResponse" element="tns:EchoResponse"/>
+  </wsdl:message>
+  <wsdl:message name="End">
+    <wsdl:part name="End" element="tns:End"/>
+    <wsdl:part name="SessionData" element="tns:SessionData"/>
+  </wsdl:message>
+  <wsdl:message name="EndResponse">
+    <wsdl:part name="EndResponse" element="tns:EndResponse"/>
+  </wsdl:message>
+  <wsdl:message name="SendMessages">
+    <wsdl:part name="SendMessages" element="tns:SendMessages"/>
+  </wsdl:message>
+  <wsdl:message name="SendMessagesResponse">
+    <wsdl:part name="SendMessagesResponse" element="tns:SendMessagesResponse"/>
+  </wsdl:message>
+  <wsdl:portType name="sc002Port">
+    <wsdl:operation name="Begin">
+      <wsdl:input message="tns:Begin"/>
+      <wsdl:output message="tns:BeginResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="Notify">
+      <wsdl:input message="tns:Notify"/>
+    </wsdl:operation>
+    <wsdl:operation name="Echo">
+      <wsdl:input message="tns:Echo"/>
+      <wsdl:output message="tns:EchoResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="End">
+      <wsdl:input message="tns:End"/>
+      <wsdl:output message="tns:EndResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="SendMessages">
+      <wsdl:input message="tns:SendMessages"/>
+      <wsdl:output message="tns:SendMessagesResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="sc002SOAP11Binding" type="tns:sc002Port">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="Begin">
+      <soap:operation soapAction="http://www.wstf.org/docs/scenarios/sc002/Begin"/>
+      <wsdl:input>
+        <soap:header use="literal" part="SessionData" message="tns:Begin"/>
+        <soap:body use="literal" parts="Begin"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Notify">
+      <soap:operation soapAction="http://www.wstf.org/docs/scenarios/sc002/Notify"/>
+      <wsdl:input>
+        <soap:header use="literal" part="SessionData" message="tns:Notify"/>
+        <soap:body use="literal" parts="Notify"/>
+      </wsdl:input>
+    </wsdl:operation>
+    <wsdl:operation name="Echo">
+      <soap:operation soapAction="http://www.wstf.org/docs/scenarios/sc002/Echo"/>
+      <wsdl:input>
+        <soap:header use="literal" part="SessionData" message="tns:Echo"/>
+        <soap:body use="literal" parts="Echo"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="End">
+      <soap:operation soapAction="http://www.wstf.org/docs/scenarios/sc002/End"/>
+      <wsdl:input>
+        <soap:header use="literal" part="SessionData" message="tns:End"/>
+        <soap:body use="literal" parts="End"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SendMessages">
+      <soap:operation soapAction="http://www.wstf.org/docs/scenarios/sc002/SendMessages"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="sc002SOAP12Binding" type="tns:sc002Port">
+    <soap12:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="Begin">
+      <soap12:operation soapAction="http://www.wstf.org/docs/scenarios/sc002/Begin"/>
+      <wsdl:input>
+        <soap12:header use="literal" part="SessionData" message="tns:Begin"/>
+        <soap12:body use="literal" parts="Begin"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Notify">
+      <soap12:operation soapAction="http://www.wstf.org/docs/scenarios/sc002/Notify"/>
+      <wsdl:input>
+        <soap12:header use="literal" part="SessionData" message="tns:Notify"/>
+        <soap12:body use="literal" parts="Notify"/>
+      </wsdl:input>
+    </wsdl:operation>
+    <wsdl:operation name="Echo">
+      <soap12:operation soapAction="http://www.wstf.org/docs/scenarios/sc002/Echo"/>
+      <wsdl:input>
+        <soap12:header use="literal" part="SessionData" message="tns:Echo"/>
+        <soap12:body use="literal" parts="Echo"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="End">
+      <soap12:operation soapAction="http://www.wstf.org/docs/scenarios/sc002/End"/>
+      <wsdl:input>
+        <soap12:header use="literal" part="SessionData" message="tns:End"/>
+        <soap12:body use="literal" parts="End"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SendMessages">
+      <soap12:operation soapAction="http://www.wstf.org/docs/scenarios/sc002/SendMessages"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="sc002Service">
+    <wsdl:port name="soap11port" binding="tns:sc002SOAP11Binding">
+      <soap:address location="http://www.wstf.org/sc002/sc002SOAP11"/>
+    </wsdl:port>
+    <wsdl:port name="soap12port" binding="tns:sc002SOAP12Binding">
+      <soap12:address location="http://www.wstf.org/sc002/sc002SOAP12"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>]]></con:content><con:type>http://schemas.xmlsoap.org/wsdl/</con:type></con:part><con:part><con:url>http://www.w3.org/2006/03/addressing/ws-addr.xsd</con:url><con:content><![CDATA[<!--W3C XML Schema defined in the Web Services Addressing 1.0 specification
+    http://www.w3.org/TR/ws-addr-core
+
+   Copyright © 2005 World Wide Web Consortium,
+
+   (Massachusetts Institute of Technology, European Research Consortium for
+   Informatics and Mathematics, Keio University). All Rights Reserved. This
+   work is distributed under the W3C® Software License [1] in the hope that
+   it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+   warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+   [1] http://www.w3.org/Consortium/Legal/2002/copyright-software-20021231
+
+   $Id: ws-addr.xsd,v 1.2 2008/07/23 13:38:16 plehegar Exp $-->
+<xs:schema targetNamespace="http://www.w3.org/2005/08/addressing" blockDefault="#all" elementFormDefault="qualified" finalDefault="" attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.w3.org/2005/08/addressing">
+  <!--Constructs from the WS-Addressing Core-->
+  <xs:element name="EndpointReference" type="tns:EndpointReferenceType"/>
+  <xs:complexType name="EndpointReferenceType" mixed="false">
+    <xs:sequence>
+      <xs:element name="Address" type="tns:AttributedURIType"/>
+      <xs:element ref="tns:ReferenceParameters" minOccurs="0"/>
+      <xs:element ref="tns:Metadata" minOccurs="0"/>
+      <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:anyAttribute namespace="##other" processContents="lax"/>
+  </xs:complexType>
+  <xs:element name="ReferenceParameters" type="tns:ReferenceParametersType"/>
+  <xs:complexType name="ReferenceParametersType" mixed="false">
+    <xs:sequence>
+      <xs:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:anyAttribute namespace="##other" processContents="lax"/>
+  </xs:complexType>
+  <xs:element name="Metadata" type="tns:MetadataType"/>
+  <xs:complexType name="MetadataType" mixed="false">
+    <xs:sequence>
+      <xs:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:anyAttribute namespace="##other" processContents="lax"/>
+  </xs:complexType>
+  <xs:element name="MessageID" type="tns:AttributedURIType"/>
+  <xs:element name="RelatesTo" type="tns:RelatesToType"/>
+  <xs:complexType name="RelatesToType" mixed="false">
+    <xs:simpleContent>
+      <xs:extension base="xs:anyURI">
+        <xs:attribute name="RelationshipType" type="tns:RelationshipTypeOpenEnum" use="optional" default="http://www.w3.org/2005/08/addressing/reply"/>
+        <xs:anyAttribute namespace="##other" processContents="lax"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:simpleType name="RelationshipTypeOpenEnum">
+    <xs:union memberTypes="tns:RelationshipType xs:anyURI"/>
+  </xs:simpleType>
+  <xs:simpleType name="RelationshipType">
+    <xs:restriction base="xs:anyURI">
+      <xs:enumeration value="http://www.w3.org/2005/08/addressing/reply"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="ReplyTo" type="tns:EndpointReferenceType"/>
+  <xs:element name="From" type="tns:EndpointReferenceType"/>
+  <xs:element name="FaultTo" type="tns:EndpointReferenceType"/>
+  <xs:element name="To" type="tns:AttributedURIType"/>
+  <xs:element name="Action" type="tns:AttributedURIType"/>
+  <xs:complexType name="AttributedURIType" mixed="false">
+    <xs:simpleContent>
+      <xs:extension base="xs:anyURI">
+        <xs:anyAttribute namespace="##other" processContents="lax"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <!--Constructs from the WS-Addressing SOAP binding-->
+  <xs:attribute name="IsReferenceParameter" type="xs:boolean"/>
+  <xs:simpleType name="FaultCodesOpenEnumType">
+    <xs:union memberTypes="tns:FaultCodesType xs:QName"/>
+  </xs:simpleType>
+  <xs:simpleType name="FaultCodesType">
+    <xs:restriction base="xs:QName">
+      <xs:enumeration value="tns:InvalidAddressingHeader"/>
+      <xs:enumeration value="tns:InvalidAddress"/>
+      <xs:enumeration value="tns:InvalidEPR"/>
+      <xs:enumeration value="tns:InvalidCardinality"/>
+      <xs:enumeration value="tns:MissingAddressInEPR"/>
+      <xs:enumeration value="tns:DuplicateMessageID"/>
+      <xs:enumeration value="tns:ActionMismatch"/>
+      <xs:enumeration value="tns:MessageAddressingHeaderRequired"/>
+      <xs:enumeration value="tns:DestinationUnreachable"/>
+      <xs:enumeration value="tns:ActionNotSupported"/>
+      <xs:enumeration value="tns:EndpointUnavailable"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="RetryAfter" type="tns:AttributedUnsignedLongType"/>
+  <xs:complexType name="AttributedUnsignedLongType" mixed="false">
+    <xs:simpleContent>
+      <xs:extension base="xs:unsignedLong">
+        <xs:anyAttribute namespace="##other" processContents="lax"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:element name="ProblemHeaderQName" type="tns:AttributedQNameType"/>
+  <xs:complexType name="AttributedQNameType" mixed="false">
+    <xs:simpleContent>
+      <xs:extension base="xs:QName">
+        <xs:anyAttribute namespace="##other" processContents="lax"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:element name="ProblemIRI" type="tns:AttributedURIType"/>
+  <xs:element name="ProblemAction" type="tns:ProblemActionType"/>
+  <xs:complexType name="ProblemActionType" mixed="false">
+    <xs:sequence>
+      <xs:element ref="tns:Action" minOccurs="0"/>
+      <xs:element name="SoapAction" minOccurs="0" type="xs:anyURI"/>
+    </xs:sequence>
+    <xs:anyAttribute namespace="##other" processContents="lax"/>
+  </xs:complexType>
+</xs:schema>]]></con:content><con:type>http://www.w3.org/2001/XMLSchema</con:type></con:part><con:part><con:url>file:\D:\soapUI-resources\sc002.xsd</con:url><con:content><![CDATA[<xs:schema targetNamespace="http://www.wstf.org/docs/scenarios/sc002" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.wstf.org/docs/scenarios/sc002" xmlns:wsa="http://www.w3.org/2005/08/addressing">
+  <xs:import namespace="http://www.w3.org/2005/08/addressing" schemaLocation="http://www.w3.org/2006/03/addressing/ws-addr.xsd"/>
+  <xs:complexType name="BeginType">
+    <xs:sequence>
+      <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="BeginResponseType">
+    <xs:sequence>
+      <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="NotifyType">
+    <xs:sequence>
+      <xs:element name="text" type="xs:string"/>
+      <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="EchoType">
+    <xs:sequence>
+      <xs:element name="text" type="xs:string"/>
+      <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="EchoResponseType">
+    <xs:sequence>
+      <xs:element name="text" type="xs:string"/>
+      <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="EndType">
+    <xs:sequence>
+      <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="EndResponseType">
+    <xs:sequence>
+      <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="MessageType">
+    <xs:sequence>
+      <xs:element name="service" type="xs:QName"/>
+      <xs:element name="port" type="xs:NCName"/>
+      <xs:element name="operation" type="xs:string"/>
+      <xs:any namespace="##other" processContents="lax" minOccurs="1" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="SendMessagesType">
+    <xs:sequence>
+      <xs:element name="epr" type="wsa:EndpointReferenceType"/>
+      <xs:element name="messages">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="message" type="tns:MessageType" minOccurs="1" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="SendMessagesResponseType">
+    <xs:sequence>
+      <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="SessionDataType">
+    <xs:sequence>
+      <xs:element name="ID" type="xs:string"/>
+      <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>]]></con:content><con:type>http://www.w3.org/2001/XMLSchema</con:type></con:part></con:definitionCache><con:endpoints><con:endpoint>http://wstf.activevos.com/active-bpel/services/sc002Service</con:endpoint><con:endpoint>http://www.soaphub.org/wstf/services/sc002</con:endpoint></con:endpoints><con:operation isOneWay="false" action="http://www.wstf.org/docs/scenarios/sc002/Begin" name="Begin" bindingOperationName="Begin" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint xsi:nil="true"/><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sc0="http://www.wstf.org/docs/scenarios/sc002">
+   <soapenv:Header>
+      <sc0:SessionData>
+         <sc0:ID>?</sc0:ID>
+         <!--You may enter ANY elements at this point-->
+      </sc0:SessionData>
+   </soapenv:Header>
+   <soapenv:Body>
+      <sc0:Begin>
+         <!--You may enter ANY elements at this point-->
+      </sc0:Begin>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://www.wstf.org/docs/scenarios/sc002/sc002Port/BeginRequest"/></con:call></con:operation><con:operation isOneWay="false" action="http://www.wstf.org/docs/scenarios/sc002/Echo" name="Echo" bindingOperationName="Echo" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint xsi:nil="true"/><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sc0="http://www.wstf.org/docs/scenarios/sc002">
+   <soapenv:Header>
+      <sc0:SessionData>
+         <sc0:ID>?</sc0:ID>
+         <!--You may enter ANY elements at this point-->
+      </sc0:SessionData>
+   </soapenv:Header>
+   <soapenv:Body>
+      <sc0:Echo>
+         <sc0:text>?</sc0:text>
+         <!--You may enter ANY elements at this point-->
+      </sc0:Echo>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://www.wstf.org/docs/scenarios/sc002/sc002Port/EchoRequest"/></con:call></con:operation><con:operation isOneWay="false" action="http://www.wstf.org/docs/scenarios/sc002/End" name="End" bindingOperationName="End" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint xsi:nil="true"/><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sc0="http://www.wstf.org/docs/scenarios/sc002">
+   <soapenv:Header>
+      <sc0:SessionData>
+         <sc0:ID>?</sc0:ID>
+         <!--You may enter ANY elements at this point-->
+      </sc0:SessionData>
+   </soapenv:Header>
+   <soapenv:Body>
+      <sc0:End>
+         <!--You may enter ANY elements at this point-->
+      </sc0:End>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://www.wstf.org/docs/scenarios/sc002/sc002Port/EndRequest"/></con:call></con:operation><con:operation isOneWay="false" action="http://www.wstf.org/docs/scenarios/sc002/Notify" name="Notify" bindingOperationName="Notify" type="One-Way" inputName="" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint xsi:nil="true"/><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sc0="http://www.wstf.org/docs/scenarios/sc002">
+   <soapenv:Header>
+      <sc0:SessionData>
+         <sc0:ID>?</sc0:ID>
+         <!--You may enter ANY elements at this point-->
+      </sc0:SessionData>
+   </soapenv:Header>
+   <soapenv:Body>
+      <sc0:Notify>
+         <sc0:text>?</sc0:text>
+         <!--You may enter ANY elements at this point-->
+      </sc0:Notify>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://www.wstf.org/docs/scenarios/sc002/sc002Port/NotifyRequest"/></con:call></con:operation><con:operation isOneWay="false" action="http://www.wstf.org/docs/scenarios/sc002/SendMessages" name="SendMessages" bindingOperationName="SendMessages" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint xsi:nil="true"/><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sc0="http://www.wstf.org/docs/scenarios/sc002" xmlns:add="http://www.w3.org/2005/08/addressing">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <sc0:SendMessages>
+         <sc0:epr>
+            <add:Address>?</add:Address>
+            <!--Optional:-->
+            <add:ReferenceParameters>
+               <!--You may enter ANY elements at this point-->
+            </add:ReferenceParameters>
+            <!--Optional:-->
+            <add:Metadata>
+               <!--You may enter ANY elements at this point-->
+            </add:Metadata>
+            <!--You may enter ANY elements at this point-->
+         </sc0:epr>
+         <sc0:messages>
+            <!--1 or more repetitions:-->
+            <sc0:message>
+               <sc0:service>?</sc0:service>
+               <sc0:port>?</sc0:port>
+               <sc0:operation>?</sc0:operation>
+               <!--You may enter ANY elements at this point-->
+            </sc0:message>
+         </sc0:messages>
+         <!--You may enter ANY elements at this point-->
+      </sc0:SendMessages>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://www.wstf.org/docs/scenarios/sc002/sc002Port/SendMessagesRequest"/></con:call></con:operation></con:interface><con:interface xsi:type="con:WsdlInterface" wsaVersion="NONE" name="sc002SOAP12Binding" type="wsdl" bindingName="{http://www.wstf.org/docs/scenarios/sc002}sc002SOAP12Binding" soapVersion="1_2" anonymous="optional" definition="file:/D:/soapUI-resources/sc002.wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart="file:/D:/soapUI-resources/sc002.wsdl"><con:part><con:url>file:/D:/soapUI-resources/sc002.wsdl</con:url><con:content><![CDATA[<wsdl:definitions targetNamespace="http://www.wstf.org/docs/scenarios/sc002" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://www.wstf.org/docs/scenarios/sc002">
+  <wsdl:types>
+    <xs:schema targetNamespace="http://www.wstf.org/docs/scenarios/sc002">
+      <xs:include schemaLocation="sc002.xsd"/>
+      <xs:element name="Begin" type="tns:BeginType"/>
+      <xs:element name="BeginResponse" type="tns:BeginResponseType"/>
+      <xs:element name="Notify" type="tns:NotifyType"/>
+      <xs:element name="Echo" type="tns:EchoType"/>
+      <xs:element name="EchoResponse" type="tns:EchoResponseType"/>
+      <xs:element name="End" type="tns:EndType"/>
+      <xs:element name="EndResponse" type="tns:EndResponseType"/>
+      <xs:element name="SendMessages" type="tns:SendMessagesType"/>
+      <xs:element name="SendMessagesResponse" type="tns:SendMessagesResponseType"/>
+      <xs:element name="SessionData" type="tns:SessionDataType"/>
+    </xs:schema>
+  </wsdl:types>
+  <wsdl:message name="Begin">
+    <wsdl:part name="Begin" element="tns:Begin"/>
+    <wsdl:part name="SessionData" element="tns:SessionData"/>
+  </wsdl:message>
+  <wsdl:message name="BeginResponse">
+    <wsdl:part name="BeginResponse" element="tns:BeginResponse"/>
+  </wsdl:message>
+  <wsdl:message name="Notify">
+    <wsdl:part name="Notify" element="tns:Notify"/>
+    <wsdl:part name="SessionData" element="tns:SessionData"/>
+  </wsdl:message>
+  <wsdl:message name="Echo">
+    <wsdl:part name="Echo" element="tns:Echo"/>
+    <wsdl:part name="SessionData" element="tns:SessionData"/>
+  </wsdl:message>
+  <wsdl:message name="EchoResponse">
+    <wsdl:part name="EchoResponse" element="tns:EchoResponse"/>
+  </wsdl:message>
+  <wsdl:message name="End">
+    <wsdl:part name="End" element="tns:End"/>
+    <wsdl:part name="SessionData" element="tns:SessionData"/>
+  </wsdl:message>
+  <wsdl:message name="EndResponse">
+    <wsdl:part name="EndResponse" element="tns:EndResponse"/>
+  </wsdl:message>
+  <wsdl:message name="SendMessages">
+    <wsdl:part name="SendMessages" element="tns:SendMessages"/>
+  </wsdl:message>
+  <wsdl:message name="SendMessagesResponse">
+    <wsdl:part name="SendMessagesResponse" element="tns:SendMessagesResponse"/>
+  </wsdl:message>
+  <wsdl:portType name="sc002Port">
+    <wsdl:operation name="Begin">
+      <wsdl:input message="tns:Begin"/>
+      <wsdl:output message="tns:BeginResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="Notify">
+      <wsdl:input message="tns:Notify"/>
+    </wsdl:operation>
+    <wsdl:operation name="Echo">
+      <wsdl:input message="tns:Echo"/>
+      <wsdl:output message="tns:EchoResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="End">
+      <wsdl:input message="tns:End"/>
+      <wsdl:output message="tns:EndResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="SendMessages">
+      <wsdl:input message="tns:SendMessages"/>
+      <wsdl:output message="tns:SendMessagesResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="sc002SOAP11Binding" type="tns:sc002Port">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="Begin">
+      <soap:operation soapAction="http://www.wstf.org/docs/scenarios/sc002/Begin"/>
+      <wsdl:input>
+        <soap:header use="literal" part="SessionData" message="tns:Begin"/>
+        <soap:body use="literal" parts="Begin"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Notify">
+      <soap:operation soapAction="http://www.wstf.org/docs/scenarios/sc002/Notify"/>
+      <wsdl:input>
+        <soap:header use="literal" part="SessionData" message="tns:Notify"/>
+        <soap:body use="literal" parts="Notify"/>
+      </wsdl:input>
+    </wsdl:operation>
+    <wsdl:operation name="Echo">
+      <soap:operation soapAction="http://www.wstf.org/docs/scenarios/sc002/Echo"/>
+      <wsdl:input>
+        <soap:header use="literal" part="SessionData" message="tns:Echo"/>
+        <soap:body use="literal" parts="Echo"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="End">
+      <soap:operation soapAction="http://www.wstf.org/docs/scenarios/sc002/End"/>
+      <wsdl:input>
+        <soap:header use="literal" part="SessionData" message="tns:End"/>
+        <soap:body use="literal" parts="End"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SendMessages">
+      <soap:operation soapAction="http://www.wstf.org/docs/scenarios/sc002/SendMessages"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="sc002SOAP12Binding" type="tns:sc002Port">
+    <soap12:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="Begin">
+      <soap12:operation soapAction="http://www.wstf.org/docs/scenarios/sc002/Begin"/>
+      <wsdl:input>
+        <soap12:header use="literal" part="SessionData" message="tns:Begin"/>
+        <soap12:body use="literal" parts="Begin"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Notify">
+      <soap12:operation soapAction="http://www.wstf.org/docs/scenarios/sc002/Notify"/>
+      <wsdl:input>
+        <soap12:header use="literal" part="SessionData" message="tns:Notify"/>
+        <soap12:body use="literal" parts="Notify"/>
+      </wsdl:input>
+    </wsdl:operation>
+    <wsdl:operation name="Echo">
+      <soap12:operation soapAction="http://www.wstf.org/docs/scenarios/sc002/Echo"/>
+      <wsdl:input>
+        <soap12:header use="literal" part="SessionData" message="tns:Echo"/>
+        <soap12:body use="literal" parts="Echo"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="End">
+      <soap12:operation soapAction="http://www.wstf.org/docs/scenarios/sc002/End"/>
+      <wsdl:input>
+        <soap12:header use="literal" part="SessionData" message="tns:End"/>
+        <soap12:body use="literal" parts="End"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SendMessages">
+      <soap12:operation soapAction="http://www.wstf.org/docs/scenarios/sc002/SendMessages"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="sc002Service">
+    <wsdl:port name="soap11port" binding="tns:sc002SOAP11Binding">
+      <soap:address location="http://www.wstf.org/sc002/sc002SOAP11"/>
+    </wsdl:port>
+    <wsdl:port name="soap12port" binding="tns:sc002SOAP12Binding">
+      <soap12:address location="http://www.wstf.org/sc002/sc002SOAP12"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>]]></con:content><con:type>http://schemas.xmlsoap.org/wsdl/</con:type></con:part><con:part><con:url>http://www.w3.org/2006/03/addressing/ws-addr.xsd</con:url><con:content><![CDATA[<!--W3C XML Schema defined in the Web Services Addressing 1.0 specification
+    http://www.w3.org/TR/ws-addr-core
+
+   Copyright © 2005 World Wide Web Consortium,
+
+   (Massachusetts Institute of Technology, European Research Consortium for
+   Informatics and Mathematics, Keio University). All Rights Reserved. This
+   work is distributed under the W3C® Software License [1] in the hope that
+   it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+   warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+   [1] http://www.w3.org/Consortium/Legal/2002/copyright-software-20021231
+
+   $Id: ws-addr.xsd,v 1.2 2008/07/23 13:38:16 plehegar Exp $-->
+<xs:schema targetNamespace="http://www.w3.org/2005/08/addressing" blockDefault="#all" elementFormDefault="qualified" finalDefault="" attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.w3.org/2005/08/addressing">
+  <!--Constructs from the WS-Addressing Core-->
+  <xs:element name="EndpointReference" type="tns:EndpointReferenceType"/>
+  <xs:complexType name="EndpointReferenceType" mixed="false">
+    <xs:sequence>
+      <xs:element name="Address" type="tns:AttributedURIType"/>
+      <xs:element ref="tns:ReferenceParameters" minOccurs="0"/>
+      <xs:element ref="tns:Metadata" minOccurs="0"/>
+      <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:anyAttribute namespace="##other" processContents="lax"/>
+  </xs:complexType>
+  <xs:element name="ReferenceParameters" type="tns:ReferenceParametersType"/>
+  <xs:complexType name="ReferenceParametersType" mixed="false">
+    <xs:sequence>
+      <xs:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:anyAttribute namespace="##other" processContents="lax"/>
+  </xs:complexType>
+  <xs:element name="Metadata" type="tns:MetadataType"/>
+  <xs:complexType name="MetadataType" mixed="false">
+    <xs:sequence>
+      <xs:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:anyAttribute namespace="##other" processContents="lax"/>
+  </xs:complexType>
+  <xs:element name="MessageID" type="tns:AttributedURIType"/>
+  <xs:element name="RelatesTo" type="tns:RelatesToType"/>
+  <xs:complexType name="RelatesToType" mixed="false">
+    <xs:simpleContent>
+      <xs:extension base="xs:anyURI">
+        <xs:attribute name="RelationshipType" type="tns:RelationshipTypeOpenEnum" use="optional" default="http://www.w3.org/2005/08/addressing/reply"/>
+        <xs:anyAttribute namespace="##other" processContents="lax"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:simpleType name="RelationshipTypeOpenEnum">
+    <xs:union memberTypes="tns:RelationshipType xs:anyURI"/>
+  </xs:simpleType>
+  <xs:simpleType name="RelationshipType">
+    <xs:restriction base="xs:anyURI">
+      <xs:enumeration value="http://www.w3.org/2005/08/addressing/reply"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="ReplyTo" type="tns:EndpointReferenceType"/>
+  <xs:element name="From" type="tns:EndpointReferenceType"/>
+  <xs:element name="FaultTo" type="tns:EndpointReferenceType"/>
+  <xs:element name="To" type="tns:AttributedURIType"/>
+  <xs:element name="Action" type="tns:AttributedURIType"/>
+  <xs:complexType name="AttributedURIType" mixed="false">
+    <xs:simpleContent>
+      <xs:extension base="xs:anyURI">
+        <xs:anyAttribute namespace="##other" processContents="lax"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <!--Constructs from the WS-Addressing SOAP binding-->
+  <xs:attribute name="IsReferenceParameter" type="xs:boolean"/>
+  <xs:simpleType name="FaultCodesOpenEnumType">
+    <xs:union memberTypes="tns:FaultCodesType xs:QName"/>
+  </xs:simpleType>
+  <xs:simpleType name="FaultCodesType">
+    <xs:restriction base="xs:QName">
+      <xs:enumeration value="tns:InvalidAddressingHeader"/>
+      <xs:enumeration value="tns:InvalidAddress"/>
+      <xs:enumeration value="tns:InvalidEPR"/>
+      <xs:enumeration value="tns:InvalidCardinality"/>
+      <xs:enumeration value="tns:MissingAddressInEPR"/>
+      <xs:enumeration value="tns:DuplicateMessageID"/>
+      <xs:enumeration value="tns:ActionMismatch"/>
+      <xs:enumeration value="tns:MessageAddressingHeaderRequired"/>
+      <xs:enumeration value="tns:DestinationUnreachable"/>
+      <xs:enumeration value="tns:ActionNotSupported"/>
+      <xs:enumeration value="tns:EndpointUnavailable"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="RetryAfter" type="tns:AttributedUnsignedLongType"/>
+  <xs:complexType name="AttributedUnsignedLongType" mixed="false">
+    <xs:simpleContent>
+      <xs:extension base="xs:unsignedLong">
+        <xs:anyAttribute namespace="##other" processContents="lax"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:element name="ProblemHeaderQName" type="tns:AttributedQNameType"/>
+  <xs:complexType name="AttributedQNameType" mixed="false">
+    <xs:simpleContent>
+      <xs:extension base="xs:QName">
+        <xs:anyAttribute namespace="##other" processContents="lax"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:element name="ProblemIRI" type="tns:AttributedURIType"/>
+  <xs:element name="ProblemAction" type="tns:ProblemActionType"/>
+  <xs:complexType name="ProblemActionType" mixed="false">
+    <xs:sequence>
+      <xs:element ref="tns:Action" minOccurs="0"/>
+      <xs:element name="SoapAction" minOccurs="0" type="xs:anyURI"/>
+    </xs:sequence>
+    <xs:anyAttribute namespace="##other" processContents="lax"/>
+  </xs:complexType>
+</xs:schema>]]></con:content><con:type>http://www.w3.org/2001/XMLSchema</con:type></con:part><con:part><con:url>file:\D:\soapUI-resources\sc002.xsd</con:url><con:content><![CDATA[<xs:schema targetNamespace="http://www.wstf.org/docs/scenarios/sc002" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.wstf.org/docs/scenarios/sc002" xmlns:wsa="http://www.w3.org/2005/08/addressing">
+  <xs:import namespace="http://www.w3.org/2005/08/addressing" schemaLocation="http://www.w3.org/2006/03/addressing/ws-addr.xsd"/>
+  <xs:complexType name="BeginType">
+    <xs:sequence>
+      <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="BeginResponseType">
+    <xs:sequence>
+      <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="NotifyType">
+    <xs:sequence>
+      <xs:element name="text" type="xs:string"/>
+      <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="EchoType">
+    <xs:sequence>
+      <xs:element name="text" type="xs:string"/>
+      <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="EchoResponseType">
+    <xs:sequence>
+      <xs:element name="text" type="xs:string"/>
+      <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="EndType">
+    <xs:sequence>
+      <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="EndResponseType">
+    <xs:sequence>
+      <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="MessageType">
+    <xs:sequence>
+      <xs:element name="service" type="xs:QName"/>
+      <xs:element name="port" type="xs:NCName"/>
+      <xs:element name="operation" type="xs:string"/>
+      <xs:any namespace="##other" processContents="lax" minOccurs="1" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="SendMessagesType">
+    <xs:sequence>
+      <xs:element name="epr" type="wsa:EndpointReferenceType"/>
+      <xs:element name="messages">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="message" type="tns:MessageType" minOccurs="1" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="SendMessagesResponseType">
+    <xs:sequence>
+      <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="SessionDataType">
+    <xs:sequence>
+      <xs:element name="ID" type="xs:string"/>
+      <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>]]></con:content><con:type>http://www.w3.org/2001/XMLSchema</con:type></con:part></con:definitionCache><con:endpoints><con:endpoint>http://www.wstf.org/sc002/sc002SOAP12</con:endpoint></con:endpoints><con:operation isOneWay="false" action="http://www.wstf.org/docs/scenarios/sc002/Begin" name="Begin" bindingOperationName="Begin" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://www.wstf.org/sc002/sc002SOAP12</con:endpoint><con:request><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:sc0="http://www.wstf.org/docs/scenarios/sc002">
+   <soap:Header>
+      <sc0:SessionData>
+         <sc0:ID>?</sc0:ID>
+         <!--You may enter ANY elements at this point-->
+      </sc0:SessionData>
+   </soap:Header>
+   <soap:Body>
+      <sc0:Begin>
+         <!--You may enter ANY elements at this point-->
+      </sc0:Begin>
+   </soap:Body>
+</soap:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://www.wstf.org/docs/scenarios/sc002/sc002Port/BeginRequest"/></con:call></con:operation><con:operation isOneWay="false" action="http://www.wstf.org/docs/scenarios/sc002/Echo" name="Echo" bindingOperationName="Echo" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://www.wstf.org/sc002/sc002SOAP12</con:endpoint><con:request><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:sc0="http://www.wstf.org/docs/scenarios/sc002">
+   <soap:Header>
+      <sc0:SessionData>
+         <sc0:ID>?</sc0:ID>
+         <!--You may enter ANY elements at this point-->
+      </sc0:SessionData>
+   </soap:Header>
+   <soap:Body>
+      <sc0:Echo>
+         <sc0:text>?</sc0:text>
+         <!--You may enter ANY elements at this point-->
+      </sc0:Echo>
+   </soap:Body>
+</soap:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://www.wstf.org/docs/scenarios/sc002/sc002Port/EchoRequest"/></con:call></con:operation><con:operation isOneWay="false" action="http://www.wstf.org/docs/scenarios/sc002/End" name="End" bindingOperationName="End" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://www.wstf.org/sc002/sc002SOAP12</con:endpoint><con:request><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:sc0="http://www.wstf.org/docs/scenarios/sc002">
+   <soap:Header>
+      <sc0:SessionData>
+         <sc0:ID>?</sc0:ID>
+         <!--You may enter ANY elements at this point-->
+      </sc0:SessionData>
+   </soap:Header>
+   <soap:Body>
+      <sc0:End>
+         <!--You may enter ANY elements at this point-->
+      </sc0:End>
+   </soap:Body>
+</soap:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://www.wstf.org/docs/scenarios/sc002/sc002Port/EndRequest"/></con:call></con:operation><con:operation isOneWay="false" action="http://www.wstf.org/docs/scenarios/sc002/Notify" name="Notify" bindingOperationName="Notify" type="One-Way" inputName="" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://www.wstf.org/sc002/sc002SOAP12</con:endpoint><con:request><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:sc0="http://www.wstf.org/docs/scenarios/sc002">
+   <soap:Header>
+      <sc0:SessionData>
+         <sc0:ID>?</sc0:ID>
+         <!--You may enter ANY elements at this point-->
+      </sc0:SessionData>
+   </soap:Header>
+   <soap:Body>
+      <sc0:Notify>
+         <sc0:text>?</sc0:text>
+         <!--You may enter ANY elements at this point-->
+      </sc0:Notify>
+   </soap:Body>
+</soap:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://www.wstf.org/docs/scenarios/sc002/sc002Port/NotifyRequest"/></con:call></con:operation><con:operation isOneWay="false" action="http://www.wstf.org/docs/scenarios/sc002/SendMessages" name="SendMessages" bindingOperationName="SendMessages" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://www.wstf.org/sc002/sc002SOAP12</con:endpoint><con:request><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:sc0="http://www.wstf.org/docs/scenarios/sc002" xmlns:add="http://www.w3.org/2005/08/addressing">
+   <soap:Header/>
+   <soap:Body>
+      <sc0:SendMessages>
+         <sc0:epr>
+            <add:Address>?</add:Address>
+            <!--Optional:-->
+            <add:ReferenceParameters>
+               <!--You may enter ANY elements at this point-->
+            </add:ReferenceParameters>
+            <!--Optional:-->
+            <add:Metadata>
+               <!--You may enter ANY elements at this point-->
+            </add:Metadata>
+            <!--You may enter ANY elements at this point-->
+         </sc0:epr>
+         <sc0:messages>
+            <!--1 or more repetitions:-->
+            <sc0:message>
+               <sc0:service>?</sc0:service>
+               <sc0:port>?</sc0:port>
+               <sc0:operation>?</sc0:operation>
+               <!--You may enter ANY elements at this point-->
+            </sc0:message>
+         </sc0:messages>
+         <!--You may enter ANY elements at this point-->
+      </sc0:SendMessages>
+   </soap:Body>
+</soap:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://www.wstf.org/docs/scenarios/sc002/sc002Port/SendMessagesRequest"/></con:call></con:operation></con:interface><con:testSuite name="SOAP11 part one Notify TestSuite"><con:settings/><con:runType>SEQUENTIAL</con:runType><con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="1.1 Notify TestCase" searchProperties="true"><con:description>Notify
+Client sends the Notify message
+Success criteria:
+Service responds with an HTTP 202.
+
+(However:  Due to there being a variety of possible HTTP response codes the exact value may vary. 
+For example, a value of 200 or 202 is a clear indication of success. Whether other values indicate success or not 
+will depend on the client implementation. In many cases a value of 404 (Not Found) would be an error that would be returned back
+ to the application. However, another implementation, that takes a much more strict view on the fire-n-forget aspect of 
+one-way messages, may view a 404 as a success. )</con:description><con:settings/><con:testStep type="request" name="1.1 Notify"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>sc002SOAP11Binding</con:interface><con:operation>Notify</con:operation><con:request name="1.1 Notify"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://wstf.activevos.com/active-bpel/services/sc002Service</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sc0="http://www.wstf.org/docs/scenarios/sc002">
+   <soapenv:Header>
+      <sc0:SessionData>
+         <sc0:ID>?</sc0:ID>
+      </sc0:SessionData>
+   </soapenv:Header>
+   <soapenv:Body>
+      <sc0:Notify>
+         <sc0:text>?</sc0:text>
+      </sc0:Notify>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="GroovyScriptAssertion"><con:configuration><scriptText>boolean success;
+if ( messageExchange.getResponseStatusCode() == 200 ) success = true
+else if ( messageExchange.getResponseStatusCode() == 202 ) success = true
+else success = false;
+if(!success) {
+	throw new java.lang.Exception("Wrong HTTP response code:" + messageExchange.getResponseStatusCode() + ", expected: 200 or 202");
+}</scriptText></con:configuration></con:assertion><con:wsaConfig mustUnderstand="NONE" version="200508"/></con:request></con:config></con:testStep><con:properties/></con:testCase><con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="1.2 Faulting Notify TestCase" searchProperties="true"><con:description>Faulting Notify
+Client sends a faulting Notify message
+Success criteria:
+Service responds with an HTTP 202.
+
+(However:  Due to there being a variety of possible HTTP response codes the exact value may vary. 
+For example, a value of 200 or 202 is a clear indication of success. Whether other values indicate success or not 
+will depend on the client implementation. In many cases a value of 404 (Not Found) would be an error that would be returned back
+ to the application. However, another implementation, that takes a much more strict view on the fire-n-forget aspect of 
+one-way messages, may view a 404 as a success. )</con:description><con:settings/><con:testStep type="request" name="1.2 Faulting Notify"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>sc002SOAP11Binding</con:interface><con:operation>Notify</con:operation><con:request name="1.2 Faulting Notify"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://www.soaphub.org/wstf/services/sc002</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sc0="http://www.wstf.org/docs/scenarios/sc002" xmlns:error="NoneExistingNameSpace">
+   <soapenv:Header>
+     <sc0:SessionData>
+         <sc0:ID>?</sc0:ID>
+      </sc0:SessionData>
+   </soapenv:Header>
+   <soapenv:Body>
+      <sc0:Notify>
+         <sc0:text/>
+      </sc0:Notify>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="GroovyScriptAssertion"><con:configuration><scriptText>boolean success;
+if ( messageExchange.getResponseStatusCode() == 200 ) success = true
+else if ( messageExchange.getResponseStatusCode() == 202 ) success = true
+else success = false;
+if(!success) {
+	throw new java.lang.Exception("Wrong HTTP response code:" + messageExchange.getResponseStatusCode() + ", expected: 200 or 202");
+}</scriptText></con:configuration></con:assertion><con:wsaConfig mustUnderstand="NONE" version="200508"/></con:request></con:config></con:testStep><con:properties/></con:testCase><con:properties/></con:testSuite><con:testSuite name="SOAP11 part one Echo TestSuite"><con:settings/><con:runType>SEQUENTIAL</con:runType><con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="1.3 Echo TestCase" searchProperties="true"><con:description>Echo
+Client sends the Echo message
+Success criteria:
+Service responds with the appropriate EchoResponse on the HTTP back-channel </con:description><con:settings/><con:testStep type="request" name="1.3 Echo"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>sc002SOAP11Binding</con:interface><con:operation>Echo</con:operation><con:request name="1.3 Echo"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://www.soaphub.org/wstf/services/sc002</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sc0="http://www.wstf.org/docs/scenarios/sc002">
+   <soapenv:Header>
+      <sc0:SessionData>
+         <sc0:ID>?</sc0:ID>
+      </sc0:SessionData>
+   </soapenv:Header>
+   <soapenv:Body>
+      <sc0:Echo>
+         <sc0:text>?</sc0:text>
+      </sc0:Echo>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="XPath Match" name="Check for existance of [sc002:EchoResponse]"><con:configuration><path>declare namespace sc002='http://www.wstf.org/docs/scenarios/sc002';
+exists( //sc002:EchoResponse)</path><content>true</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences></con:configuration></con:assertion><con:wsaConfig mustUnderstand="NONE" version="200508"/></con:request></con:config></con:testStep><con:properties/></con:testCase><con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="1.4 Faulting Echo TestCase" searchProperties="true"><con:description>Faulting Echo
+Client sends a faulting Echo message
+Success criteria:
+Service responds with a fault on the HTTP back-channel </con:description><con:settings/><con:testStep type="request" name="1.4 Faulting Echo"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>sc002SOAP11Binding</con:interface><con:operation>Echo</con:operation><con:request name="1.4 Faulting Echo"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://wstf.activevos.com/active-bpel/services/sc002Service</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sc0="http://www.wstf.org/docs/scenarios/sc002" xmlns:error="NoneExistingNameSpace">
+   <soapenv:Header>
+<error:createFault soapenv:mustUnderstand="1">
+	Non existing namespace and tag value!
+</error:createFault>
+      <sc0:SessionData>
+         <sc0:ID>?</sc0:ID>
+      </sc0:SessionData>
+   </soapenv:Header>
+   <soapenv:Body>
+      <sc0:Echo>
+         <sc0:text/>
+      </sc0:Echo>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="XPath Match" name="Check for existance of [soapenv:Fault]"><con:configuration><path>declare namespace soapenv='http://schemas.xmlsoap.org/soap/envelope/';
+exists( //soapenv:Fault)</path><content>true</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences></con:configuration></con:assertion><con:wsaConfig mustUnderstand="NONE" version="200508"/></con:request></con:config></con:testStep><con:properties/></con:testCase><con:properties/></con:testSuite><con:testSuite name="SOAP11 part two Notify TestSuite"><con:settings/><con:runType>SEQUENTIAL</con:runType><con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="2.1 Notify+mU TestCase" searchProperties="true"><con:description>Notify+mU
+Client sends the Notify message with an unknown SOAP Header with the mustUnderstand flag set to 'true'. 
+Success Criteria:
+Service responds with an HTTP 202.
+
+(However:  Due to there being a variety of possible HTTP response codes the exact value may vary. 
+For example, a value of 200 or 202 is a clear indication of success. Whether other values indicate success or not 
+will depend on the client implementation. In many cases a value of 404 (Not Found) would be an error that would be returned back
+ to the application. However, another implementation, that takes a much more strict view on the fire-n-forget aspect of 
+one-way messages, may view a 404 as a success. )</con:description><con:settings/><con:testStep type="request" name="2.1 Notify + mU"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>sc002SOAP11Binding</con:interface><con:operation>Notify</con:operation><con:request name="2.1 Notify + mU"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://wstf.activevos.com/active-bpel/services/sc002Service</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sc0="http://www.wstf.org/docs/scenarios/sc002" xmlns:error="NoneExistingNameSpace">
+   <soapenv:Header>
+<error:createFault soapenv:mustUnderstand="1">
+	Non existing namespace and tag value!
+</error:createFault>
+      <sc0:SessionData>
+         <sc0:ID>?</sc0:ID>
+      </sc0:SessionData>
+   </soapenv:Header>
+   <soapenv:Body>
+      <sc0:Notify>
+         <sc0:text>?</sc0:text>
+      </sc0:Notify>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="GroovyScriptAssertion"><con:configuration><scriptText>boolean success;
+if ( messageExchange.getResponseStatusCode() == 200 ) success = true
+else if ( messageExchange.getResponseStatusCode() == 202 ) success = true
+else success = false;
+if(!success) {
+	throw new java.lang.Exception("Wrong HTTP response code:" + messageExchange.getResponseStatusCode() + ", expected: 200 or 202");
+}</scriptText></con:configuration></con:assertion><con:wsaConfig mustUnderstand="NONE" version="200508"/></con:request></con:config></con:testStep><con:properties/></con:testCase><con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="2.2 Faulting Notify+mU TestCase" searchProperties="true"><con:description>Faulting Notify+mU
+Client sends a faulting Notify message and an unknown SOAP Header with the mustUnderstand flag set to 'true' 
+Success criteria:
+Service responds with an HTTP 202.
+
+(However:  Due to there being a variety of possible HTTP response codes the exact value may vary. 
+For example, a value of 200 or 202 is a clear indication of success. Whether other values indicate success or not 
+will depend on the client implementation. In many cases a value of 404 (Not Found) would be an error that would be returned back
+ to the application. However, another implementation, that takes a much more strict view on the fire-n-forget aspect of 
+one-way messages, may view a 404 as a success. )</con:description><con:settings/><con:testStep type="request" name="2.2 Faulting Notify + mU"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>sc002SOAP11Binding</con:interface><con:operation>Notify</con:operation><con:request name="2.2 Faulting Notify + mU"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://wstf.activevos.com/active-bpel/services/sc002Service</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sc0="http://www.wstf.org/docs/scenarios/sc002" xmlns:error="NoneExistingNameSpace">
+   <soapenv:Header>
+<error:createFault soapenv:mustUnderstand="1">
+	Non existing namespace and tag value!
+</error:createFault>
+      <sc0:Session>
+         <sc0:ID>?</sc0:ID>
+      </sc0:Session>
+   </soapenv:Header>
+   <soapenv:Body>
+      <sc0:Notify>
+         <sc0:text/>
+      </sc0:Notify>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="GroovyScriptAssertion"><con:configuration><scriptText>boolean success;
+if ( messageExchange.getResponseStatusCode() == 200 ) success = true
+else if ( messageExchange.getResponseStatusCode() == 202 ) success = true
+else success = false;
+if(!success) {
+	throw new java.lang.Exception("Wrong HTTP response code:" + messageExchange.getResponseStatusCode() + ", expected: 200 or 202");
+}</scriptText></con:configuration></con:assertion><con:wsaConfig mustUnderstand="NONE" version="200508"/></con:request></con:config></con:testStep><con:properties/></con:testCase><con:properties/></con:testSuite><con:testSuite name="SOAP11 part two Echo TestSuite"><con:settings/><con:runType>SEQUENTIAL</con:runType><con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name=" 2.3 Echo+mU TestCase" searchProperties="true"><con:description>Echo+mU
+Client sends the Echo message with an unknown SOAP Header with the mustUnderstand flag set to 'true' 
+Success Criteria:
+Service responds with a mustUnderstand fault on the HTTP back-channel </con:description><con:settings/><con:testStep type="request" name="2.3 Echo + mU "><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>sc002SOAP11Binding</con:interface><con:operation>Echo</con:operation><con:request name="2.3 Echo + mU "><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://wstf.activevos.com/active-bpel/services/sc002Service</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sc0="http://www.wstf.org/docs/scenarios/sc002" xmlns:error="NoneExistingNameSpace">
+   <soapenv:Header>
+<error:createFault soapenv:mustUnderstand="1">
+	Non existing namespace and tag value!
+</error:createFault>
+      <sc0:SessionData>
+         <sc0:ID>?</sc0:ID>
+      </sc0:SessionData>
+   </soapenv:Header>
+   <soapenv:Body>
+      <sc0:Echo>
+         <sc0:text>?</sc0:text>
+      </sc0:Echo>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="XPath Match" name="Match content of [faultcode]"><con:configuration><path>//faultcode[1]/text()</path><content>soapenv:MustUnderstand</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences></con:configuration></con:assertion><con:wsaConfig mustUnderstand="NONE" version="200508"/></con:request></con:config></con:testStep><con:properties/></con:testCase><con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="2.4 Faulting Echo+mU TestCase " searchProperties="true"><con:description>Faulting Echo+mU
+Client sends a faulting Echo message and an unknown SOAP Header with the mustUnderstand flag set to 'true' 
+Success Criteria:
+Service responds with a mustUnderstand fault on the HTTP back-channel </con:description><con:settings/><con:testStep type="request" name="2.4 Faulting Echo + mU"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>sc002SOAP11Binding</con:interface><con:operation>Echo</con:operation><con:request name="2.4 Faulting Echo + mU"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://wstf.activevos.com/active-bpel/services/sc002Service</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sc0="http://www.wstf.org/docs/scenarios/sc002" xmlns:error="NoneExistingNameSpace">
+   <soapenv:Header>
+      <error:createFault soapenv:mustUnderstand="1">Non existing namespace and tag value!</error:createFault>
+      <sc0:SessionData>
+         <sc0:ID>?</sc0:ID>
+      </sc0:SessionData>
+   </soapenv:Header>
+   <soapenv:Body>
+      <sc0:Echo>
+         <sc0:text/>
+      </sc0:Echo>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="XPath Match" name="Match content of [faultcode]"><con:configuration><path>//faultcode[1]/text()</path><content>soapenv:MustUnderstand</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences></con:configuration></con:assertion><con:wsaConfig mustUnderstand="NONE" version="200508"/></con:request></con:config></con:testStep><con:properties/></con:testCase><con:properties/></con:testSuite><con:requirements/><con:properties/><con:wssContainer/></con:soapui-project>

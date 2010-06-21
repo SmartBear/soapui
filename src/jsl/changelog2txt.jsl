@@ -1,0 +1,29 @@
+<jsl:stylesheet select="$doc" xmlns:jsl="jelly:jsl" xmlns:x="jelly:xml" trim="true"><jsl:template match="//changeset" trim="false">SVN changelog for ${pom.artifactId} from <x:expr select="@start"/> to <x:expr select="@end"/>:
+------------------------------------------------------------------------------------------------------------------------------------------------
+<jsl:applyTemplates select="changelog-entry"/></jsl:template>
+
+<jsl:template match="changelog-entry" trim="false">
+* <x:expr select="date"/> <x:expr select="time"/> <x:expr select="author"/> - <x:expr select="msg" trim="true"/><jsl:applyTemplates select="file" trim="false"/></jsl:template>
+
+<jsl:template match="file" trim="false">- <x:expr select="name"/> : Revision <x:expr select="revision"/>
+</jsl:template>
+
+</jsl:stylesheet>
+        <!--
+  ~ soapUI, copyright (C) 2004-2008 eviware.com
+  ~
+  ~ soapUI is free software; you can redistribute it and/or modify it under the
+  ~ terms of version 2.1 of the GNU Lesser General Public License as published by
+  ~ the Free Software Foundation.
+  ~
+  ~ soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+  ~ even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+  ~ See the GNU Lesser General Public License for more details at gnu.org.
+
+Produce changelog.txt in following format:
+
+Changelog for
+* 2008-10-10 00:02:03 Ole Matzura - Added something very important
+- /soapui/trunk/core/src/java/com/eviware/soapui/tools/AbstractSoapUIRunner.java : Revision 507
+
+-->

@@ -1,0 +1,1187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:soapui-project name="Sample Project" soapui-version="SNAPSHOT" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings>
+    <con:setting id="com.eviware.soapui.impl.wsdl.actions.iface.tools.jbossws.WSToolsJava2WsdlAction@values"><![CDATA[<xml-fragment xmlns:con="http://eviware.com/soapui/config">
+  <con:entry key="Target NS" value=""/>
+  <con:entry key="Output Directory" value=""/>
+  <con:entry key="Style" value="document"/>
+  <con:entry key="servlet-link" value=""/>
+  <con:entry key="Tool Args" value=""/>
+  <con:entry key="Endpoint" value=""/>
+  <con:entry key="Mapping file" value=""/>
+  <con:entry key="Parameter Style" value="bare"/>
+  <con:entry key="Service Name" value=""/>
+  <con:entry key="Classpath" value=""/>
+  <con:entry key="ejb-link" value=""/>
+  <con:entry key="Types NS" value=""/>
+</xml-fragment>]]></con:setting>
+    <con:setting id="ProjectSettings@projectRoot">C:\workspace\core\src\test-resources</con:setting>
+  </con:settings>
+  <con:interface name="CurrencyConvertorSoap" bindingName="{http://www.webserviceX.NET/}CurrencyConvertorSoap" definition="http://www.webservicex.net/CurrencyConvertor.asmx?WSDL" soapVersion="1_1">
+    <con:settings>
+      <con:setting id="com.eviware.soapui.impl.wsdl.actions.iface.tools.jbossws.WSToolsWsdl2JavaAction@values"><![CDATA[<xml-fragment xmlns:con="http://eviware.com/soapui/config">
+  <con:entry key="Output Directory" value="C:\Documents and Settings\ole.matzura\workspace\soapui\tools-test\jbossws"/>
+  <con:entry key="Tool Args" value=""/>
+  <con:entry key="Namespace mapping" value="&lt;entry key=&quot;http://www.webserviceX.NET/&quot; value=&quot;test&quot; xmlns=&quot;http://eviware.com/soapui/config&quot;/>"/>
+  <con:entry key="Mapping file" value=""/>
+  <con:entry key="wsdl" value="http://www.webservicex.net/CurrencyConvertor.asmx?WSDL"/>
+</xml-fragment>]]></con:setting>
+      <con:setting id="com.eviware.soapui.impl.wsdl.actions.iface.tools.wscompile.WSCompileAction@values"><![CDATA[<xml-fragment xmlns:con="http://eviware.com/soapui/config">
+  <con:entry key="directory" value="C:\Documents and Settings\ole.matzura\workspace\soapui\tools-test\wscompile"/>
+  <con:entry key="datahandleronly" value="false"/>
+  <con:entry key="non-class" value="target\classes"/>
+  <con:entry key="resolveidref" value="false"/>
+  <con:entry key="proxy" value=""/>
+  <con:entry key="donotunwrap" value="true"/>
+  <con:entry key="nomultirefs" value="false"/>
+  <con:entry key="unwrap" value="false"/>
+  <con:entry key="norpcstructures" value="false"/>
+  <con:entry key="wsi" value="true"/>
+  <con:entry key="keep" value="true"/>
+  <con:entry key="source version" value="1.1.2"/>
+  <con:entry key="jaxbenumtype" value="false"/>
+  <con:entry key="noencodedtypes" value="false"/>
+  <con:entry key="serializeinterfaces" value="false"/>
+  <con:entry key="explicitcontext" value="false"/>
+  <con:entry key="security" value=""/>
+  <con:entry key="searchschema" value="false"/>
+  <con:entry key="Tool Args" value=""/>
+  <con:entry key="Namespace mapping" value="&lt;xml-fragment/>"/>
+  <con:entry key="debug" value="false"/>
+  <con:entry key="mapping" value="src\conf\test-mapping.xml"/>
+  <con:entry key="model" value="src\conf\model.xml"/>
+  <con:entry key="optimize" value="false"/>
+  <con:entry key="source" value="src\gen"/>
+  <con:entry key="strict" value="true"/>
+  <con:entry key="wsdl" value="http://www.webservicex.net/CurrencyConvertor.asmx?WSDL"/>
+  <con:entry key="nodatabinding" value="false"/>
+  <con:entry key="package" value="test"/>
+  <con:entry key="novalidation" value="true"/>
+</xml-fragment>]]></con:setting>
+      <con:setting id="com.eviware.soapui.impl.wsdl.actions.iface.tools.wsimport.WSImportAction@values"><![CDATA[<xml-fragment xmlns:con="http://eviware.com/soapui/config">
+  <con:entry key="wsdlLocation" value=""/>
+  <con:entry key="Catalog" value=""/>
+  <con:entry key="HTTP Proxy" value=""/>
+  <con:entry key="WSDL" value="http://www.webservicex.net/CurrencyConvertor.asmx?WSDL"/>
+  <con:entry key="Binding files" value=""/>
+  <con:entry key="Tool Args" value=""/>
+  <con:entry key="Source Directory" value="src"/>
+  <con:entry key="Keep" value="true"/>
+  <con:entry key="Package" value="test"/>
+  <con:entry key="Target Directory" value="C:\Documents and Settings\ole.matzura\workspace\soapui\tools-test\wsimport"/>
+</xml-fragment>]]></con:setting>
+      <con:setting id="com.eviware.soapui.impl.wsdl.actions.iface.tools.axis1.Axis1XWSDL2JavaAction@values"><![CDATA[<xml-fragment xmlns:con="http://eviware.com/soapui/config">
+  <con:entry key="password" value=""/>
+  <con:entry key="skeletonDeploy" value="true"/>
+  <con:entry key="noWrapped" value="false"/>
+  <con:entry key="user" value=""/>
+  <con:entry key="wrapArrays" value="false"/>
+  <con:entry key="Tool Args" value=""/>
+  <con:entry key="namespace mapping" value="&lt;xml-fragment/>"/>
+  <con:entry key="typeMappingVersion" value="1.2"/>
+  <con:entry key="factory" value=""/>
+  <con:entry key="server-side" value="true"/>
+  <con:entry key="testCase" value="true"/>
+  <con:entry key="helperGen" value="true"/>
+  <con:entry key="output directory" value="C:\Documents and Settings\ole.matzura\workspace\soapui\tools-test\axis1"/>
+  <con:entry key="deployScope" value="Session"/>
+  <con:entry key="target package" value=""/>
+  <con:entry key="all" value="true"/>
+  <con:entry key="noImports" value="false"/>
+  <con:entry key="implementationClassName" value=""/>
+  <con:entry key="Java Args" value=""/>
+  <con:entry key="wsdl" value="http://www.webservicex.net/CurrencyConvertor.asmx?WSDL"/>
+</xml-fragment>]]></con:setting>
+      <con:setting id="com.eviware.soapui.impl.wsdl.actions.iface.tools.axis2.Axis2WSDL2CodeAction@values"><![CDATA[<xml-fragment xmlns:con="http://eviware.com/soapui/config">
+  <con:entry key="service name" value="CurrencyConvertor"/>
+  <con:entry key="Output Directory" value="C:\Documents and Settings\ole.matzura\workspace\soapui\tools-test\axis2"/>
+  <con:entry key="Tool Args" value=""/>
+  <con:entry key="adb writeClasses" value="false"/>
+  <con:entry key="adb wrapClasses" value="false"/>
+  <con:entry key="namespace mapping" value="&lt;xml-fragment/>"/>
+  <con:entry key="port name" value="CurrencyConvertorSoap"/>
+  <con:entry key="sync" value="false"/>
+  <con:entry key="service descriptor" value="true"/>
+  <con:entry key="JIBX bindingfile" value=""/>
+  <con:entry key="unpack classes" value="true"/>
+  <con:entry key="Package" value=""/>
+  <con:entry key="databinding method" value="xmlbeans"/>
+  <con:entry key="async" value="false"/>
+  <con:entry key="server-side" value="true"/>
+  <con:entry key="generate all" value="true"/>
+  <con:entry key="serverside-interface" value="true"/>
+  <con:entry key="wsdl" value="http://www.webservicex.net/CurrencyConvertor.asmx?WSDL"/>
+  <con:entry key="test-case" value="true"/>
+</xml-fragment>]]></con:setting>
+      <con:setting id="com.eviware.soapui.impl.wsdl.actions.iface.tools.xfire.XFireAction@values"><![CDATA[<xml-fragment xmlns:con="http://eviware.com/soapui/config">
+  <con:entry key="Base URI" value=""/>
+  <con:entry key="Profile" value=""/>
+  <con:entry key="Output Directory" value="C:\Documents and Settings\ole.matzura\workspace\soapui\tools-test\xfire"/>
+  <con:entry key="Binding" value="xmlbeans"/>
+  <con:entry key="Tool Args" value=""/>
+  <con:entry key="External Bindings" value=""/>
+  <con:entry key="Classpath" value=""/>
+  <con:entry key="Package" value="test"/>
+  <con:entry key="Java Args" value=""/>
+  <con:entry key="wsdl" value="http://www.webservicex.net/CurrencyConvertor.asmx?WSDL"/>
+</xml-fragment>]]></con:setting>
+      <con:setting id="com.eviware.soapui.impl.wsdl.actions.iface.tools.xmlbeans.XmlBeansAction@values"><![CDATA[<xml-fragment xmlns:con="http://eviware.com/soapui/config">
+  <con:entry key="catalog file" value=""/>
+  <con:entry key="Tool Args" value=""/>
+  <con:entry key="src target" value="C:\Documents and Settings\ole.matzura\workspace\soapui\tools-test\xmlbeans\src"/>
+  <con:entry key="downloads" value="true"/>
+  <con:entry key="src only" value="false"/>
+  <con:entry key="xsdconfig" value=""/>
+  <con:entry key="nopvr" value="true"/>
+  <con:entry key="debug" value="false"/>
+  <con:entry key="noupa" value="true"/>
+  <con:entry key="noann" value="false"/>
+  <con:entry key="allowmdef" value=""/>
+  <con:entry key="verbose" value="true"/>
+  <con:entry key="novdoc" value="false"/>
+  <con:entry key="out jar" value="C:\Documents and Settings\ole.matzura\workspace\soapui\tools-test\xmlbeans\test.jar"/>
+  <con:entry key="javasource" value="1.5"/>
+  <con:entry key="wsdl" value="http://www.webservicex.net/CurrencyConvertor.asmx?WSDL"/>
+  <con:entry key="class/xsb target" value="C:\Documents and Settings\ole.matzura\workspace\soapui\tools-test\xmlbeans\classes"/>
+</xml-fragment>]]></con:setting>
+      <con:setting id="com.eviware.soapui.impl.wsdl.actions.iface.tools.dotnet.DotNetWsdlAction@values"><![CDATA[<xml-fragment xmlns:con="http://eviware.com/soapui/config">
+  <con:entry key="namespace" value=""/>
+  <con:entry key="password" value=""/>
+  <con:entry key="protocol" value="SOAP"/>
+  <con:entry key="Tool Args" value=""/>
+  <con:entry key="proxy password" value=""/>
+  <con:entry key="url key" value=""/>
+  <con:entry key="proxy domain" value=""/>
+  <con:entry key="proxy" value=""/>
+  <con:entry key="fields" value="false"/>
+  <con:entry key="order" value="false"/>
+  <con:entry key="language" value="CS"/>
+  <con:entry key="serverInterface" value="true"/>
+  <con:entry key="output directory" value="C:\Documents and Settings\ole.matzura\workspace\soapui\tools-test\dotnet2"/>
+  <con:entry key="domain" value=""/>
+  <con:entry key="username" value=""/>
+  <con:entry key="base url" value=""/>
+  <con:entry key="enableDataBinding" value="false"/>
+  <con:entry key="proxy username" value=""/>
+  <con:entry key="wsdl" value="http://www.webservicex.net/CurrencyConvertor.asmx?WSDL"/>
+  <con:entry key="sharetypes" value="false"/>
+</xml-fragment>]]></con:setting>
+      <con:setting id="com.eviware.soapui.impl.wsdl.actions.iface.tools.gsoap.GSoapAction@values"><![CDATA[<xml-fragment xmlns:con="http://eviware.com/soapui/config">
+  <con:entry key="run wsdl2h" value="true"/>
+  <con:entry key="file" value="C:\Documents and Settings\ole.matzura\workspace\soapui\tools-test\gsoap\test.h"/>
+  <con:entry key="wsdl" value="http://www.webservicex.net/CurrencyConvertor.asmx?WSDL"/>
+  <con:entry key="run soapcpp2" value="true"/>
+</xml-fragment>]]></con:setting>
+      <con:setting id="com.eviware.soapui.impl.wsdl.actions.iface.tools.jaxb.JaxbXjcAction@values"><![CDATA[<xml-fragment xmlns:con="http://eviware.com/soapui/config">
+  <con:entry key="classpath" value=""/>
+  <con:entry key="http proxy" value=""/>
+  <con:entry key="output" value="C:\Documents and Settings\ole.matzura\workspace\soapui\tools-test\jaxb"/>
+  <con:entry key="Tool Args" value=""/>
+  <con:entry key="verbose" value="false"/>
+  <con:entry key="catalog" value=""/>
+  <con:entry key="no validation" value="false"/>
+  <con:entry key="read-only" value="false"/>
+  <con:entry key="wsdl" value="http://www.webservicex.net/CurrencyConvertor.asmx?WSDL"/>
+  <con:entry key="binding files" value=""/>
+  <con:entry key="package" value=""/>
+  <con:entry key="npa" value="false"/>
+</xml-fragment>]]></con:setting>
+      <con:setting id="com.eviware.soapui.impl.wsdl.actions.iface.tools.wsi.WSIAnalyzeAction@values">&lt;xml-fragment xmlns:con="http://eviware.com/soapui/config">
+  &lt;con:entry key="Output Directory" value="tools-test/wsi/report.xml"/>
+  &lt;con:entry key="wsdl" value="http://www.webservicex.net/CurrencyConvertor.asmx?WSDL"/>
+&lt;/xml-fragment></con:setting>
+      <con:setting id="com.eviware.soapui.impl.wsdl.actions.iface.tools.jbossws.WSToolsWsdl2JavaAction@values-local"><![CDATA[<xml-fragment xmlns:con="http://eviware.com/soapui/config">
+  <con:entry key="Unwrap" value="false"/>
+  <con:entry key="Use cached WSDL" value="true"/>
+  <con:entry key="Output Directory" value="c:\test"/>
+  <con:entry key="WSDL" value="http://www.webservicex.net/CurrencyConvertor.asmx?WSDL"/>
+  <con:entry key="Tool Args" value=""/>
+  <con:entry key="Namespace mapping" value="&lt;xml-fragment/>"/>
+  <con:entry key="Mapping file" value="test-mapping.xml"/>
+</xml-fragment>]]></con:setting>
+      <con:setting id="com.eviware.soapui.impl.wsdl.actions.iface.tools.axis1.Axis1XWSDL2JavaAction@values-local"><![CDATA[<xml-fragment xmlns:con="http://eviware.com/soapui/config">
+  <con:entry key="password" value=""/>
+  <con:entry key="skeletonDeploy" value="none"/>
+  <con:entry key="user" value=""/>
+  <con:entry key="noWrapped" value="false"/>
+  <con:entry key="Use cached WSDL" value="true"/>
+  <con:entry key="wrapArrays" value="false"/>
+  <con:entry key="WSDL" value="http://www.webservicex.net/CurrencyConvertor.asmx?WSDL"/>
+  <con:entry key="Tool Args" value=""/>
+  <con:entry key="namespace mapping" value="&lt;xml-fragment/>"/>
+  <con:entry key="typeMappingVersion" value="1.2"/>
+  <con:entry key="factory" value=""/>
+  <con:entry key="server-side" value="false"/>
+  <con:entry key="testCase" value="false"/>
+  <con:entry key="helperGen" value="false"/>
+  <con:entry key="output directory" value=""/>
+  <con:entry key="deployScope" value="none"/>
+  <con:entry key="target package" value=""/>
+  <con:entry key="all" value="false"/>
+  <con:entry key="noImports" value="false"/>
+  <con:entry key="implementationClassName" value=""/>
+  <con:entry key="Java Args" value=""/>
+</xml-fragment>]]></con:setting>
+      <con:setting id="com.eviware.soapui.impl.wsdl.actions.iface.tools.axis2.Axis2WSDL2CodeAction@values-local"><![CDATA[<xml-fragment xmlns:con="http://eviware.com/soapui/config">
+  <con:entry key="Use cached WSDL" value="true"/>
+  <con:entry key="service name" value="CurrencyConvertor"/>
+  <con:entry key="WSDL" value="http://www.webservicex.net/CurrencyConvertor.asmx?WSDL"/>
+  <con:entry key="Output Directory" value=""/>
+  <con:entry key="Tool Args" value=""/>
+  <con:entry key="adb writeClasses" value="false"/>
+  <con:entry key="adb wrapClasses" value="false"/>
+  <con:entry key="namespace mapping" value="&lt;xml-fragment/>"/>
+  <con:entry key="port name" value="CurrencyConvertorSoap"/>
+  <con:entry key="sync" value="false"/>
+  <con:entry key="service descriptor" value="false"/>
+  <con:entry key="JIBX bindingfile" value=""/>
+  <con:entry key="unpack classes" value="false"/>
+  <con:entry key="Package" value=""/>
+  <con:entry key="databinding method" value="xmlbeans"/>
+  <con:entry key="async" value="false"/>
+  <con:entry key="server-side" value="false"/>
+  <con:entry key="generate all" value="false"/>
+  <con:entry key="serverside-interface" value="false"/>
+  <con:entry key="test-case" value="false"/>
+</xml-fragment>]]></con:setting>
+    </con:settings>
+    <con:endpoints>
+      <con:endpoint>http://www.webservicex.net/CurrencyConvertor.asmx</con:endpoint>
+    </con:endpoints>
+    <con:operation action="http://www.webserviceX.NET/ConversionRate" name="ConversionRate" bindingOperationName="ConversionRate">
+      <con:settings/>
+      <con:call name="SEK to USD" wssPasswordType="None">
+        <con:settings>
+          <con:setting id="WsdlSettings@enable-mtom">true</con:setting>
+        </con:settings>
+        <con:encoding>UTF-8</con:encoding>
+        <con:endpoint>http://www.webservicex.net/CurrencyConvertor.asmx</con:endpoint>
+        <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:web="http://www.webserviceX.NET/">
+  <soapenv:Body>
+    <web:ConversionRate>
+      <web:FromCurrency>SEK</web:FromCurrency>
+      <web:ToCurrency>USD</web:ToCurrency>
+    </web:ConversionRate>
+  </soapenv:Body>
+</soapenv:Envelope>]]></con:request>
+        <con:credentials>
+          <con:username/>
+          <con:password/>
+        </con:credentials>
+      </con:call>
+      <con:call name="USD to SEK">
+        <con:settings/>
+        <con:encoding>UTF-8</con:encoding>
+        <con:endpoint>http://www.webservicex.net/CurrencyConvertor.asmx</con:endpoint>
+        <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:web="http://www.webserviceX.NET/">
+   <soapenv:Body>
+      <web:ConversionRate>
+         <web:FromCurrency>USD</web:FromCurrency>
+         <web:ToCurrency>SEK</web:ToCurrency>
+      </web:ConversionRate>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request>
+      </con:call>
+    </con:operation>
+    <con:definitionCache rootPart="http://www.webservicex.net/CurrencyConvertor.asmx?WSDL">
+      <con:part>
+        <con:url>http://www.webservicex.net/CurrencyConvertor.asmx?WSDL</con:url>
+        <con:content>
+          <wsdl:definitions targetNamespace="http://www.webserviceX.NET/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns="http://www.webserviceX.NET/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+            <wsdl:types>
+              <s:schema elementFormDefault="qualified" targetNamespace="http://www.webserviceX.NET/">
+                <s:element name="ConversionRate">
+                  <s:complexType>
+                    <s:sequence>
+                      <s:element minOccurs="1" maxOccurs="1" name="FromCurrency" type="tns:Currency"/>
+                      <s:element minOccurs="1" maxOccurs="1" name="ToCurrency" type="tns:Currency"/>
+                    </s:sequence>
+                  </s:complexType>
+                </s:element>
+                <s:simpleType name="Currency">
+                  <s:restriction base="s:string">
+                    <s:enumeration value="AFA"/>
+                    <s:enumeration value="ALL"/>
+                    <s:enumeration value="DZD"/>
+                    <s:enumeration value="ARS"/>
+                    <s:enumeration value="AWG"/>
+                    <s:enumeration value="AUD"/>
+                    <s:enumeration value="BSD"/>
+                    <s:enumeration value="BHD"/>
+                    <s:enumeration value="BDT"/>
+                    <s:enumeration value="BBD"/>
+                    <s:enumeration value="BZD"/>
+                    <s:enumeration value="BMD"/>
+                    <s:enumeration value="BTN"/>
+                    <s:enumeration value="BOB"/>
+                    <s:enumeration value="BWP"/>
+                    <s:enumeration value="BRL"/>
+                    <s:enumeration value="GBP"/>
+                    <s:enumeration value="BND"/>
+                    <s:enumeration value="BIF"/>
+                    <s:enumeration value="XOF"/>
+                    <s:enumeration value="XAF"/>
+                    <s:enumeration value="KHR"/>
+                    <s:enumeration value="CAD"/>
+                    <s:enumeration value="CVE"/>
+                    <s:enumeration value="KYD"/>
+                    <s:enumeration value="CLP"/>
+                    <s:enumeration value="CNY"/>
+                    <s:enumeration value="COP"/>
+                    <s:enumeration value="KMF"/>
+                    <s:enumeration value="CRC"/>
+                    <s:enumeration value="HRK"/>
+                    <s:enumeration value="CUP"/>
+                    <s:enumeration value="CYP"/>
+                    <s:enumeration value="CZK"/>
+                    <s:enumeration value="DKK"/>
+                    <s:enumeration value="DJF"/>
+                    <s:enumeration value="DOP"/>
+                    <s:enumeration value="XCD"/>
+                    <s:enumeration value="EGP"/>
+                    <s:enumeration value="SVC"/>
+                    <s:enumeration value="EEK"/>
+                    <s:enumeration value="ETB"/>
+                    <s:enumeration value="EUR"/>
+                    <s:enumeration value="FKP"/>
+                    <s:enumeration value="GMD"/>
+                    <s:enumeration value="GHC"/>
+                    <s:enumeration value="GIP"/>
+                    <s:enumeration value="XAU"/>
+                    <s:enumeration value="GTQ"/>
+                    <s:enumeration value="GNF"/>
+                    <s:enumeration value="GYD"/>
+                    <s:enumeration value="HTG"/>
+                    <s:enumeration value="HNL"/>
+                    <s:enumeration value="HKD"/>
+                    <s:enumeration value="HUF"/>
+                    <s:enumeration value="ISK"/>
+                    <s:enumeration value="INR"/>
+                    <s:enumeration value="IDR"/>
+                    <s:enumeration value="IQD"/>
+                    <s:enumeration value="ILS"/>
+                    <s:enumeration value="JMD"/>
+                    <s:enumeration value="JPY"/>
+                    <s:enumeration value="JOD"/>
+                    <s:enumeration value="KZT"/>
+                    <s:enumeration value="KES"/>
+                    <s:enumeration value="KRW"/>
+                    <s:enumeration value="KWD"/>
+                    <s:enumeration value="LAK"/>
+                    <s:enumeration value="LVL"/>
+                    <s:enumeration value="LBP"/>
+                    <s:enumeration value="LSL"/>
+                    <s:enumeration value="LRD"/>
+                    <s:enumeration value="LYD"/>
+                    <s:enumeration value="LTL"/>
+                    <s:enumeration value="MOP"/>
+                    <s:enumeration value="MKD"/>
+                    <s:enumeration value="MGF"/>
+                    <s:enumeration value="MWK"/>
+                    <s:enumeration value="MYR"/>
+                    <s:enumeration value="MVR"/>
+                    <s:enumeration value="MTL"/>
+                    <s:enumeration value="MRO"/>
+                    <s:enumeration value="MUR"/>
+                    <s:enumeration value="MXN"/>
+                    <s:enumeration value="MDL"/>
+                    <s:enumeration value="MNT"/>
+                    <s:enumeration value="MAD"/>
+                    <s:enumeration value="MZM"/>
+                    <s:enumeration value="MMK"/>
+                    <s:enumeration value="NAD"/>
+                    <s:enumeration value="NPR"/>
+                    <s:enumeration value="ANG"/>
+                    <s:enumeration value="NZD"/>
+                    <s:enumeration value="NIO"/>
+                    <s:enumeration value="NGN"/>
+                    <s:enumeration value="KPW"/>
+                    <s:enumeration value="NOK"/>
+                    <s:enumeration value="OMR"/>
+                    <s:enumeration value="XPF"/>
+                    <s:enumeration value="PKR"/>
+                    <s:enumeration value="XPD"/>
+                    <s:enumeration value="PAB"/>
+                    <s:enumeration value="PGK"/>
+                    <s:enumeration value="PYG"/>
+                    <s:enumeration value="PEN"/>
+                    <s:enumeration value="PHP"/>
+                    <s:enumeration value="XPT"/>
+                    <s:enumeration value="PLN"/>
+                    <s:enumeration value="QAR"/>
+                    <s:enumeration value="ROL"/>
+                    <s:enumeration value="RUB"/>
+                    <s:enumeration value="WST"/>
+                    <s:enumeration value="STD"/>
+                    <s:enumeration value="SAR"/>
+                    <s:enumeration value="SCR"/>
+                    <s:enumeration value="SLL"/>
+                    <s:enumeration value="XAG"/>
+                    <s:enumeration value="SGD"/>
+                    <s:enumeration value="SKK"/>
+                    <s:enumeration value="SIT"/>
+                    <s:enumeration value="SBD"/>
+                    <s:enumeration value="SOS"/>
+                    <s:enumeration value="ZAR"/>
+                    <s:enumeration value="LKR"/>
+                    <s:enumeration value="SHP"/>
+                    <s:enumeration value="SDD"/>
+                    <s:enumeration value="SRG"/>
+                    <s:enumeration value="SZL"/>
+                    <s:enumeration value="SEK"/>
+                    <s:enumeration value="CHF"/>
+                    <s:enumeration value="SYP"/>
+                    <s:enumeration value="TWD"/>
+                    <s:enumeration value="TZS"/>
+                    <s:enumeration value="THB"/>
+                    <s:enumeration value="TOP"/>
+                    <s:enumeration value="TTD"/>
+                    <s:enumeration value="TND"/>
+                    <s:enumeration value="TRL"/>
+                    <s:enumeration value="USD"/>
+                    <s:enumeration value="AED"/>
+                    <s:enumeration value="UGX"/>
+                    <s:enumeration value="UAH"/>
+                    <s:enumeration value="UYU"/>
+                    <s:enumeration value="VUV"/>
+                    <s:enumeration value="VEB"/>
+                    <s:enumeration value="VND"/>
+                    <s:enumeration value="YER"/>
+                    <s:enumeration value="YUM"/>
+                    <s:enumeration value="ZMK"/>
+                    <s:enumeration value="ZWD"/>
+                    <s:enumeration value="TRY"/>
+                  </s:restriction>
+                </s:simpleType>
+                <s:element name="ConversionRateResponse">
+                  <s:complexType>
+                    <s:sequence>
+                      <s:element minOccurs="1" maxOccurs="1" name="ConversionRateResult" type="s:double"/>
+                    </s:sequence>
+                  </s:complexType>
+                </s:element>
+                <s:element name="double" type="s:double"/>
+              </s:schema>
+            </wsdl:types>
+            <wsdl:message name="ConversionRateSoapIn">
+              <wsdl:part name="parameters" element="tns:ConversionRate"/>
+            </wsdl:message>
+            <wsdl:message name="ConversionRateSoapOut">
+              <wsdl:part name="parameters" element="tns:ConversionRateResponse"/>
+            </wsdl:message>
+            <wsdl:message name="ConversionRateHttpGetIn">
+              <wsdl:part name="FromCurrency" type="s:string"/>
+              <wsdl:part name="ToCurrency" type="s:string"/>
+            </wsdl:message>
+            <wsdl:message name="ConversionRateHttpGetOut">
+              <wsdl:part name="Body" element="tns:double"/>
+            </wsdl:message>
+            <wsdl:message name="ConversionRateHttpPostIn">
+              <wsdl:part name="FromCurrency" type="s:string"/>
+              <wsdl:part name="ToCurrency" type="s:string"/>
+            </wsdl:message>
+            <wsdl:message name="ConversionRateHttpPostOut">
+              <wsdl:part name="Body" element="tns:double"/>
+            </wsdl:message>
+            <wsdl:portType name="CurrencyConvertorSoap">
+              <wsdl:operation name="ConversionRate">
+                <documentation xmlns="http://schemas.xmlsoap.org/wsdl/"><![CDATA[<br><b>Get conversion rate from one currency to another currency <b><br><p><b><font color='#000080' size='1' face='Verdana'><u>Differenct currency Code and Names around the world</u></font></b></p><blockquote><p><font face='Verdana' size='1'>AFA-Afghanistan Afghani<br>ALL-Albanian Lek<br>DZD-Algerian Dinar<br>ARS-Argentine Peso<br>AWG-Aruba Florin<br>AUD-Australian Dollar<br>BSD-Bahamian Dollar<br>BHD-Bahraini Dinar<br>BDT-Bangladesh Taka<br>BBD-Barbados Dollar<br>BZD-Belize Dollar<br>BMD-Bermuda Dollar<br>BTN-Bhutan Ngultrum<br>BOB-Bolivian Boliviano<br>BWP-Botswana Pula<br>BRL-Brazilian Real<br>GBP-British Pound<br>BND-Brunei Dollar<br>BIF-Burundi Franc<br>XOF-CFA Franc (BCEAO)<br>XAF-CFA Franc (BEAC)<br>KHR-Cambodia Riel<br>CAD-Canadian Dollar<br>CVE-Cape Verde Escudo<br>KYD-Cayman Islands Dollar<br>CLP-Chilean Peso<br>CNY-Chinese Yuan<br>COP-Colombian Peso<br>KMF-Comoros Franc<br>CRC-Costa Rica Colon<br>HRK-Croatian Kuna<br>CUP-Cuban Peso<br>CYP-Cyprus Pound<br>CZK-Czech Koruna<br>DKK-Danish Krone<br>DJF-Dijibouti Franc<br>DOP-Dominican Peso<br>XCD-East Caribbean Dollar<br>EGP-Egyptian Pound<br>SVC-El Salvador Colon<br>EEK-Estonian Kroon<br>ETB-Ethiopian Birr<br>EUR-Euro<br>FKP-Falkland Islands Pound<br>GMD-Gambian Dalasi<br>GHC-Ghanian Cedi<br>GIP-Gibraltar Pound<br>XAU-Gold Ounces<br>GTQ-Guatemala Quetzal<br>GNF-Guinea Franc<br>GYD-Guyana Dollar<br>HTG-Haiti Gourde<br>HNL-Honduras Lempira<br>HKD-Hong Kong Dollar<br>HUF-Hungarian Forint<br>ISK-Iceland Krona<br>INR-Indian Rupee<br>IDR-Indonesian Rupiah<br>IQD-Iraqi Dinar<br>ILS-Israeli Shekel<br>JMD-Jamaican Dollar<br>JPY-Japanese Yen<br>JOD-Jordanian Dinar<br>KZT-Kazakhstan Tenge<br>KES-Kenyan Shilling<br>KRW-Korean Won<br>KWD-Kuwaiti Dinar<br>LAK-Lao Kip<br>LVL-Latvian Lat<br>LBP-Lebanese Pound<br>LSL-Lesotho Loti<br>LRD-Liberian Dollar<br>LYD-Libyan Dinar<br>LTL-Lithuanian Lita<br>MOP-Macau Pataca<br>MKD-Macedonian Denar<br>MGF-Malagasy Franc<br>MWK-Malawi Kwacha<br>MYR-Malaysian Ringgit<br>MVR-Maldives Rufiyaa<br>MTL-Maltese Lira<br>MRO-Mauritania Ougulya<br>MUR-Mauritius Rupee<br>MXN-Mexican Peso<br>MDL-Moldovan Leu<br>MNT-Mongolian Tugrik<br>MAD-Moroccan Dirham<br>MZM-Mozambique Metical<br>MMK-Myanmar Kyat<br>NAD-Namibian Dollar<br>NPR-Nepalese Rupee<br>ANG-Neth Antilles Guilder<br>NZD-New Zealand Dollar<br>NIO-Nicaragua Cordoba<br>NGN-Nigerian Naira<br>KPW-North Korean Won<br>NOK-Norwegian Krone<br>OMR-Omani Rial<br>XPF-Pacific Franc<br>PKR-Pakistani Rupee<br>XPD-Palladium Ounces<br>PAB-Panama Balboa<br>PGK-Papua New Guinea Kina<br>PYG-Paraguayan Guarani<br>PEN-Peruvian Nuevo Sol<br>PHP-Philippine Peso<br>XPT-Platinum Ounces<br>PLN-Polish Zloty<br>QAR-Qatar Rial<br>ROL-Romanian Leu<br>RUB-Russian Rouble<br>WST-Samoa Tala<br>STD-Sao Tome Dobra<br>SAR-Saudi Arabian Riyal<br>SCR-Seychelles Rupee<br>SLL-Sierra Leone Leone<br>XAG-Silver Ounces<br>SGD-Singapore Dollar<br>SKK-Slovak Koruna<br>SIT-Slovenian Tolar<br>SBD-Solomon Islands Dollar<br>SOS-Somali Shilling<br>ZAR-South African Rand<br>LKR-Sri Lanka Rupee<br>SHP-St Helena Pound<br>SDD-Sudanese Dinar<br>SRG-Surinam Guilder<br>SZL-Swaziland Lilageni<br>SEK-Swedish Krona<br>TRY-Turkey Lira<br>CHF-Swiss Franc<br>SYP-Syrian Pound<br>TWD-Taiwan Dollar<br>TZS-Tanzanian Shilling<br>THB-Thai Baht<br>TOP-Tonga Pa'anga<br>TTD-Trinidad&amp;amp;Tobago Dollar<br>TND-Tunisian Dinar<br>TRL-Turkish Lira<br>USD-U.S. Dollar<br>AED-UAE Dirham<br>UGX-Ugandan Shilling<br>UAH-Ukraine Hryvnia<br>UYU-Uruguayan New Peso<br>VUV-Vanuatu Vatu<br>VEB-Venezuelan Bolivar<br>VND-Vietnam Dong<br>YER-Yemen Riyal<br>YUM-Yugoslav Dinar<br>ZMK-Zambian Kwacha<br>ZWD-Zimbabwe Dollar</font></p></blockquote>]]></documentation>
+                <wsdl:input message="tns:ConversionRateSoapIn"/>
+                <wsdl:output message="tns:ConversionRateSoapOut"/>
+              </wsdl:operation>
+            </wsdl:portType>
+            <wsdl:portType name="CurrencyConvertorHttpGet">
+              <wsdl:operation name="ConversionRate">
+                <documentation xmlns="http://schemas.xmlsoap.org/wsdl/"><![CDATA[<br><b>Get conversion rate from one currency to another currency <b><br><p><b><font color='#000080' size='1' face='Verdana'><u>Differenct currency Code and Names around the world</u></font></b></p><blockquote><p><font face='Verdana' size='1'>AFA-Afghanistan Afghani<br>ALL-Albanian Lek<br>DZD-Algerian Dinar<br>ARS-Argentine Peso<br>AWG-Aruba Florin<br>AUD-Australian Dollar<br>BSD-Bahamian Dollar<br>BHD-Bahraini Dinar<br>BDT-Bangladesh Taka<br>BBD-Barbados Dollar<br>BZD-Belize Dollar<br>BMD-Bermuda Dollar<br>BTN-Bhutan Ngultrum<br>BOB-Bolivian Boliviano<br>BWP-Botswana Pula<br>BRL-Brazilian Real<br>GBP-British Pound<br>BND-Brunei Dollar<br>BIF-Burundi Franc<br>XOF-CFA Franc (BCEAO)<br>XAF-CFA Franc (BEAC)<br>KHR-Cambodia Riel<br>CAD-Canadian Dollar<br>CVE-Cape Verde Escudo<br>KYD-Cayman Islands Dollar<br>CLP-Chilean Peso<br>CNY-Chinese Yuan<br>COP-Colombian Peso<br>KMF-Comoros Franc<br>CRC-Costa Rica Colon<br>HRK-Croatian Kuna<br>CUP-Cuban Peso<br>CYP-Cyprus Pound<br>CZK-Czech Koruna<br>DKK-Danish Krone<br>DJF-Dijibouti Franc<br>DOP-Dominican Peso<br>XCD-East Caribbean Dollar<br>EGP-Egyptian Pound<br>SVC-El Salvador Colon<br>EEK-Estonian Kroon<br>ETB-Ethiopian Birr<br>EUR-Euro<br>FKP-Falkland Islands Pound<br>GMD-Gambian Dalasi<br>GHC-Ghanian Cedi<br>GIP-Gibraltar Pound<br>XAU-Gold Ounces<br>GTQ-Guatemala Quetzal<br>GNF-Guinea Franc<br>GYD-Guyana Dollar<br>HTG-Haiti Gourde<br>HNL-Honduras Lempira<br>HKD-Hong Kong Dollar<br>HUF-Hungarian Forint<br>ISK-Iceland Krona<br>INR-Indian Rupee<br>IDR-Indonesian Rupiah<br>IQD-Iraqi Dinar<br>ILS-Israeli Shekel<br>JMD-Jamaican Dollar<br>JPY-Japanese Yen<br>JOD-Jordanian Dinar<br>KZT-Kazakhstan Tenge<br>KES-Kenyan Shilling<br>KRW-Korean Won<br>KWD-Kuwaiti Dinar<br>LAK-Lao Kip<br>LVL-Latvian Lat<br>LBP-Lebanese Pound<br>LSL-Lesotho Loti<br>LRD-Liberian Dollar<br>LYD-Libyan Dinar<br>LTL-Lithuanian Lita<br>MOP-Macau Pataca<br>MKD-Macedonian Denar<br>MGF-Malagasy Franc<br>MWK-Malawi Kwacha<br>MYR-Malaysian Ringgit<br>MVR-Maldives Rufiyaa<br>MTL-Maltese Lira<br>MRO-Mauritania Ougulya<br>MUR-Mauritius Rupee<br>MXN-Mexican Peso<br>MDL-Moldovan Leu<br>MNT-Mongolian Tugrik<br>MAD-Moroccan Dirham<br>MZM-Mozambique Metical<br>MMK-Myanmar Kyat<br>NAD-Namibian Dollar<br>NPR-Nepalese Rupee<br>ANG-Neth Antilles Guilder<br>NZD-New Zealand Dollar<br>NIO-Nicaragua Cordoba<br>NGN-Nigerian Naira<br>KPW-North Korean Won<br>NOK-Norwegian Krone<br>OMR-Omani Rial<br>XPF-Pacific Franc<br>PKR-Pakistani Rupee<br>XPD-Palladium Ounces<br>PAB-Panama Balboa<br>PGK-Papua New Guinea Kina<br>PYG-Paraguayan Guarani<br>PEN-Peruvian Nuevo Sol<br>PHP-Philippine Peso<br>XPT-Platinum Ounces<br>PLN-Polish Zloty<br>QAR-Qatar Rial<br>ROL-Romanian Leu<br>RUB-Russian Rouble<br>WST-Samoa Tala<br>STD-Sao Tome Dobra<br>SAR-Saudi Arabian Riyal<br>SCR-Seychelles Rupee<br>SLL-Sierra Leone Leone<br>XAG-Silver Ounces<br>SGD-Singapore Dollar<br>SKK-Slovak Koruna<br>SIT-Slovenian Tolar<br>SBD-Solomon Islands Dollar<br>SOS-Somali Shilling<br>ZAR-South African Rand<br>LKR-Sri Lanka Rupee<br>SHP-St Helena Pound<br>SDD-Sudanese Dinar<br>SRG-Surinam Guilder<br>SZL-Swaziland Lilageni<br>SEK-Swedish Krona<br>TRY-Turkey Lira<br>CHF-Swiss Franc<br>SYP-Syrian Pound<br>TWD-Taiwan Dollar<br>TZS-Tanzanian Shilling<br>THB-Thai Baht<br>TOP-Tonga Pa'anga<br>TTD-Trinidad&amp;amp;Tobago Dollar<br>TND-Tunisian Dinar<br>TRL-Turkish Lira<br>USD-U.S. Dollar<br>AED-UAE Dirham<br>UGX-Ugandan Shilling<br>UAH-Ukraine Hryvnia<br>UYU-Uruguayan New Peso<br>VUV-Vanuatu Vatu<br>VEB-Venezuelan Bolivar<br>VND-Vietnam Dong<br>YER-Yemen Riyal<br>YUM-Yugoslav Dinar<br>ZMK-Zambian Kwacha<br>ZWD-Zimbabwe Dollar</font></p></blockquote>]]></documentation>
+                <wsdl:input message="tns:ConversionRateHttpGetIn"/>
+                <wsdl:output message="tns:ConversionRateHttpGetOut"/>
+              </wsdl:operation>
+            </wsdl:portType>
+            <wsdl:portType name="CurrencyConvertorHttpPost">
+              <wsdl:operation name="ConversionRate">
+                <documentation xmlns="http://schemas.xmlsoap.org/wsdl/"><![CDATA[<br><b>Get conversion rate from one currency to another currency <b><br><p><b><font color='#000080' size='1' face='Verdana'><u>Differenct currency Code and Names around the world</u></font></b></p><blockquote><p><font face='Verdana' size='1'>AFA-Afghanistan Afghani<br>ALL-Albanian Lek<br>DZD-Algerian Dinar<br>ARS-Argentine Peso<br>AWG-Aruba Florin<br>AUD-Australian Dollar<br>BSD-Bahamian Dollar<br>BHD-Bahraini Dinar<br>BDT-Bangladesh Taka<br>BBD-Barbados Dollar<br>BZD-Belize Dollar<br>BMD-Bermuda Dollar<br>BTN-Bhutan Ngultrum<br>BOB-Bolivian Boliviano<br>BWP-Botswana Pula<br>BRL-Brazilian Real<br>GBP-British Pound<br>BND-Brunei Dollar<br>BIF-Burundi Franc<br>XOF-CFA Franc (BCEAO)<br>XAF-CFA Franc (BEAC)<br>KHR-Cambodia Riel<br>CAD-Canadian Dollar<br>CVE-Cape Verde Escudo<br>KYD-Cayman Islands Dollar<br>CLP-Chilean Peso<br>CNY-Chinese Yuan<br>COP-Colombian Peso<br>KMF-Comoros Franc<br>CRC-Costa Rica Colon<br>HRK-Croatian Kuna<br>CUP-Cuban Peso<br>CYP-Cyprus Pound<br>CZK-Czech Koruna<br>DKK-Danish Krone<br>DJF-Dijibouti Franc<br>DOP-Dominican Peso<br>XCD-East Caribbean Dollar<br>EGP-Egyptian Pound<br>SVC-El Salvador Colon<br>EEK-Estonian Kroon<br>ETB-Ethiopian Birr<br>EUR-Euro<br>FKP-Falkland Islands Pound<br>GMD-Gambian Dalasi<br>GHC-Ghanian Cedi<br>GIP-Gibraltar Pound<br>XAU-Gold Ounces<br>GTQ-Guatemala Quetzal<br>GNF-Guinea Franc<br>GYD-Guyana Dollar<br>HTG-Haiti Gourde<br>HNL-Honduras Lempira<br>HKD-Hong Kong Dollar<br>HUF-Hungarian Forint<br>ISK-Iceland Krona<br>INR-Indian Rupee<br>IDR-Indonesian Rupiah<br>IQD-Iraqi Dinar<br>ILS-Israeli Shekel<br>JMD-Jamaican Dollar<br>JPY-Japanese Yen<br>JOD-Jordanian Dinar<br>KZT-Kazakhstan Tenge<br>KES-Kenyan Shilling<br>KRW-Korean Won<br>KWD-Kuwaiti Dinar<br>LAK-Lao Kip<br>LVL-Latvian Lat<br>LBP-Lebanese Pound<br>LSL-Lesotho Loti<br>LRD-Liberian Dollar<br>LYD-Libyan Dinar<br>LTL-Lithuanian Lita<br>MOP-Macau Pataca<br>MKD-Macedonian Denar<br>MGF-Malagasy Franc<br>MWK-Malawi Kwacha<br>MYR-Malaysian Ringgit<br>MVR-Maldives Rufiyaa<br>MTL-Maltese Lira<br>MRO-Mauritania Ougulya<br>MUR-Mauritius Rupee<br>MXN-Mexican Peso<br>MDL-Moldovan Leu<br>MNT-Mongolian Tugrik<br>MAD-Moroccan Dirham<br>MZM-Mozambique Metical<br>MMK-Myanmar Kyat<br>NAD-Namibian Dollar<br>NPR-Nepalese Rupee<br>ANG-Neth Antilles Guilder<br>NZD-New Zealand Dollar<br>NIO-Nicaragua Cordoba<br>NGN-Nigerian Naira<br>KPW-North Korean Won<br>NOK-Norwegian Krone<br>OMR-Omani Rial<br>XPF-Pacific Franc<br>PKR-Pakistani Rupee<br>XPD-Palladium Ounces<br>PAB-Panama Balboa<br>PGK-Papua New Guinea Kina<br>PYG-Paraguayan Guarani<br>PEN-Peruvian Nuevo Sol<br>PHP-Philippine Peso<br>XPT-Platinum Ounces<br>PLN-Polish Zloty<br>QAR-Qatar Rial<br>ROL-Romanian Leu<br>RUB-Russian Rouble<br>WST-Samoa Tala<br>STD-Sao Tome Dobra<br>SAR-Saudi Arabian Riyal<br>SCR-Seychelles Rupee<br>SLL-Sierra Leone Leone<br>XAG-Silver Ounces<br>SGD-Singapore Dollar<br>SKK-Slovak Koruna<br>SIT-Slovenian Tolar<br>SBD-Solomon Islands Dollar<br>SOS-Somali Shilling<br>ZAR-South African Rand<br>LKR-Sri Lanka Rupee<br>SHP-St Helena Pound<br>SDD-Sudanese Dinar<br>SRG-Surinam Guilder<br>SZL-Swaziland Lilageni<br>SEK-Swedish Krona<br>TRY-Turkey Lira<br>CHF-Swiss Franc<br>SYP-Syrian Pound<br>TWD-Taiwan Dollar<br>TZS-Tanzanian Shilling<br>THB-Thai Baht<br>TOP-Tonga Pa'anga<br>TTD-Trinidad&amp;amp;Tobago Dollar<br>TND-Tunisian Dinar<br>TRL-Turkish Lira<br>USD-U.S. Dollar<br>AED-UAE Dirham<br>UGX-Ugandan Shilling<br>UAH-Ukraine Hryvnia<br>UYU-Uruguayan New Peso<br>VUV-Vanuatu Vatu<br>VEB-Venezuelan Bolivar<br>VND-Vietnam Dong<br>YER-Yemen Riyal<br>YUM-Yugoslav Dinar<br>ZMK-Zambian Kwacha<br>ZWD-Zimbabwe Dollar</font></p></blockquote>]]></documentation>
+                <wsdl:input message="tns:ConversionRateHttpPostIn"/>
+                <wsdl:output message="tns:ConversionRateHttpPostOut"/>
+              </wsdl:operation>
+            </wsdl:portType>
+            <wsdl:binding name="CurrencyConvertorSoap" type="tns:CurrencyConvertorSoap">
+              <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+              <wsdl:operation name="ConversionRate">
+                <soap:operation soapAction="http://www.webserviceX.NET/ConversionRate" style="document"/>
+                <wsdl:input>
+                  <soap:body use="literal"/>
+                </wsdl:input>
+                <wsdl:output>
+                  <soap:body use="literal"/>
+                </wsdl:output>
+              </wsdl:operation>
+            </wsdl:binding>
+            <wsdl:binding name="CurrencyConvertorHttpGet" type="tns:CurrencyConvertorHttpGet">
+              <http:binding verb="GET"/>
+              <wsdl:operation name="ConversionRate">
+                <http:operation location="/ConversionRate"/>
+                <wsdl:input>
+                  <http:urlEncoded/>
+                </wsdl:input>
+                <wsdl:output>
+                  <mime:mimeXml part="Body"/>
+                </wsdl:output>
+              </wsdl:operation>
+            </wsdl:binding>
+            <wsdl:binding name="CurrencyConvertorHttpPost" type="tns:CurrencyConvertorHttpPost">
+              <http:binding verb="POST"/>
+              <wsdl:operation name="ConversionRate">
+                <http:operation location="/ConversionRate"/>
+                <wsdl:input>
+                  <mime:content type="application/x-www-form-urlencoded"/>
+                </wsdl:input>
+                <wsdl:output>
+                  <mime:mimeXml part="Body"/>
+                </wsdl:output>
+              </wsdl:operation>
+            </wsdl:binding>
+            <wsdl:service name="CurrencyConvertor">
+              <wsdl:port name="CurrencyConvertorSoap" binding="tns:CurrencyConvertorSoap">
+                <soap:address location="http://www.webservicex.net/CurrencyConvertor.asmx"/>
+              </wsdl:port>
+              <wsdl:port name="CurrencyConvertorHttpGet" binding="tns:CurrencyConvertorHttpGet">
+                <http:address location="http://www.webservicex.net/CurrencyConvertor.asmx"/>
+              </wsdl:port>
+              <wsdl:port name="CurrencyConvertorHttpPost" binding="tns:CurrencyConvertorHttpPost">
+                <http:address location="http://www.webservicex.net/CurrencyConvertor.asmx"/>
+              </wsdl:port>
+            </wsdl:service>
+          </wsdl:definitions>
+        </con:content>
+        <con:type>http://schemas.xmlsoap.org/wsdl/</con:type>
+      </con:part>
+    </con:definitionCache>
+  </con:interface>
+  <con:interface name="XMethodsQuerySoapPortType" bindingName="{http://www.xmethods.net/interfaces/query.wsdl}XMethodsQuerySoap" definition="http://www.xmethods.net/interfaces/query.wsdl">
+    <con:settings>
+      <con:setting id="com.eviware.soapui.impl.wsdl.actions.iface.tools.axis1.Axis1XWSDL2JavaAction@values"><![CDATA[<xml-fragment xmlns:con="http://eviware.com/soapui/config">
+  <con:entry key="password" value=""/>
+  <con:entry key="skeletonDeploy" value="none"/>
+  <con:entry key="noWrapped" value="false"/>
+  <con:entry key="user" value=""/>
+  <con:entry key="wrapArrays" value="false"/>
+  <con:entry key="Tool Args" value=""/>
+  <con:entry key="namespace mapping" value="&lt;xml-fragment/>"/>
+  <con:entry key="typeMappingVersion" value="1.2"/>
+  <con:entry key="factory" value=""/>
+  <con:entry key="server-side" value="true"/>
+  <con:entry key="testCase" value="false"/>
+  <con:entry key="helperGen" value="false"/>
+  <con:entry key="output directory" value="tools-test\axis1"/>
+  <con:entry key="deployScope" value="none"/>
+  <con:entry key="target package" value=""/>
+  <con:entry key="all" value="true"/>
+  <con:entry key="noImports" value="false"/>
+  <con:entry key="implementationClassName" value=""/>
+  <con:entry key="Java Args" value=""/>
+  <con:entry key="wsdl" value="http://www.xmethods.net/interfaces/query.wsdl"/>
+</xml-fragment>]]></con:setting>
+      <con:setting id="com.eviware.soapui.impl.wsdl.actions.iface.tools.jbossws.WSToolsWsdl2JavaAction@values-local"><![CDATA[<xml-fragment xmlns:con="http://eviware.com/soapui/config">
+  <con:entry key="Unwrap" value="false"/>
+  <con:entry key="Use cached WSDL" value="true"/>
+  <con:entry key="Output Directory" value=""/>
+  <con:entry key="WSDL" value="http://www.xmethods.net/interfaces/query.wsdl"/>
+  <con:entry key="Tool Args" value=""/>
+  <con:entry key="Namespace mapping" value="&lt;xml-fragment/>"/>
+  <con:entry key="Mapping file" value=""/>
+</xml-fragment>]]></con:setting>
+    </con:settings>
+    <con:endpoints>
+      <con:endpoint>http://www.xmethods.net/interfaces/query</con:endpoint>
+    </con:endpoints>
+    <con:operation action="" name="getAllServiceNames" bindingOperationName="getAllServiceNames" inputName="getAllServiceNames2SoapIn" outputName="getAllServiceNames2SoapOut">
+      <con:settings/>
+      <con:call name="Request 1">
+        <con:settings/>
+        <con:encoding>UTF-8</con:encoding>
+        <con:endpoint>http://www.xmethods.net/interfaces/query</con:endpoint>
+        <con:request>&lt;soapenv:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:quer="http://www.xmethods.net/interfaces/query">
+   &lt;soapenv:Body>
+      &lt;quer:getAllServiceNames soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+   &lt;/soapenv:Body>
+&lt;/soapenv:Envelope></con:request>
+      </con:call>
+    </con:operation>
+    <con:operation action="" name="getAllServiceSummaries" bindingOperationName="getAllServiceSummaries" inputName="getAllServiceSummaries1SoapIn" outputName="getAllServiceSummaries1SoapOut">
+      <con:settings/>
+      <con:call name="Request 1">
+        <con:settings/>
+        <con:encoding>UTF-8</con:encoding>
+        <con:endpoint>http://www.xmethods.net/interfaces/query</con:endpoint>
+        <con:request>&lt;soapenv:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:quer="http://www.xmethods.net/interfaces/query">
+   &lt;soapenv:Body>
+      &lt;quer:getAllServiceSummaries soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+   &lt;/soapenv:Body>
+&lt;/soapenv:Envelope></con:request>
+      </con:call>
+    </con:operation>
+    <con:operation action="" name="getServiceDetail" bindingOperationName="getServiceDetail" inputName="getServiceDetail4SoapIn" outputName="getServiceDetail4SoapOut">
+      <con:settings/>
+      <con:call name="Request 1">
+        <con:settings/>
+        <con:encoding>UTF-8</con:encoding>
+        <con:endpoint>http://www.xmethods.net/interfaces/query</con:endpoint>
+        <con:request><![CDATA[<soapenv:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:quer="http://www.xmethods.net/interfaces/query">
+   <soapenv:Body>
+      <quer:getServiceDetail soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+         <id xsi:type="xsd:string">uuid:C2014516-5828-A2D1-AB59-4E8DD66BEE4E</id>
+      </quer:getServiceDetail>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request>
+      </con:call>
+    </con:operation>
+    <con:operation action="" name="getServiceNamesByPublisher" bindingOperationName="getServiceNamesByPublisher" inputName="getServiceNamesByPublisher3SoapIn" outputName="getServiceNamesByPublisher3SoapOut">
+      <con:settings/>
+      <con:call name="Request 1">
+        <con:settings/>
+        <con:encoding>UTF-8</con:encoding>
+        <con:endpoint>http://www.xmethods.net/interfaces/query</con:endpoint>
+        <con:request><![CDATA[<soapenv:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:quer="http://www.xmethods.net/interfaces/query">
+   <soapenv:Body>
+      <quer:getServiceNamesByPublisher soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+         <publisherID xsi:type="xsd:string">?</publisherID>
+      </quer:getServiceNamesByPublisher>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request>
+      </con:call>
+    </con:operation>
+    <con:operation action="" name="getServiceSummariesByPublisher" bindingOperationName="getServiceSummariesByPublisher" inputName="getServiceSummariesByPublisher0SoapIn" outputName="getServiceSummariesByPublisher0SoapOut">
+      <con:settings/>
+      <con:call name="Request 1">
+        <con:settings/>
+        <con:encoding>UTF-8</con:encoding>
+        <con:endpoint>http://www.xmethods.net/interfaces/query</con:endpoint>
+        <con:request><![CDATA[<soapenv:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:quer="http://www.xmethods.net/interfaces/query">
+   <soapenv:Body>
+      <quer:getServiceSummariesByPublisher soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+         <publisherID xsi:type="xsd:string">?</publisherID>
+      </quer:getServiceSummariesByPublisher>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request>
+      </con:call>
+    </con:operation>
+    <con:definitionCache rootPart="http://www.xmethods.net/interfaces/query.wsdl">
+      <con:part>
+        <con:url>http://www.xmethods.net/interfaces/query.wsdl</con:url>
+        <con:content>
+          <definitions name="XMethodsQuery" targetNamespace="http://www.xmethods.net/interfaces/query.wsdl" xmlns:tns="http://www.xmethods.net/interfaces/query.wsdl" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns="http://schemas.xmlsoap.org/wsdl/">
+            <types>
+              <schema targetNamespace="http://www.xmethods.net/interfaces/query.xsd" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.xmethods.net/interfaces/query.xsd">
+                <complexType name="ServiceSummary">
+                  <sequence>
+                    <element name="name" nillable="true" type="xsd:string"/>
+                    <element name="id" nillable="true" type="xsd:string"/>
+                    <element name="shortDescription" nillable="true" type="xsd:string"/>
+                    <element name="wsdlURL" nillable="true" type="xsd:string"/>
+                    <element name="publisherID" nillable="true" type="xsd:string"/>
+                  </sequence>
+                </complexType>
+                <complexType name="ArrayOfServiceSummary">
+                  <complexContent>
+                    <restriction base="soapenc:Array">
+                      <attribute ref="soapenc:arrayType" wsdl:arrayType="tns:ServiceSummary[]"/>
+                    </restriction>
+                  </complexContent>
+                </complexType>
+                <complexType name="IDNamePair">
+                  <sequence>
+                    <element name="id" nillable="true" type="xsd:string"/>
+                    <element name="name" nillable="true" type="xsd:string"/>
+                  </sequence>
+                </complexType>
+                <complexType name="ArrayOfIDNamePair">
+                  <complexContent>
+                    <restriction base="soapenc:Array">
+                      <attribute ref="soapenc:arrayType" wsdl:arrayType="tns:IDNamePair[]"/>
+                    </restriction>
+                  </complexContent>
+                </complexType>
+                <complexType name="ServiceDetail">
+                  <sequence>
+                    <element name="name" nillable="true" type="xsd:string"/>
+                    <element name="id" nillable="true" type="xsd:string"/>
+                    <element name="shortDescription" nillable="true" type="xsd:string"/>
+                    <element name="description" nillable="true" type="xsd:string"/>
+                    <element name="implementationID" nillable="true" type="xsd:string"/>
+                    <element name="email" nillable="true" type="xsd:string"/>
+                    <element name="wsdlURL" nillable="true" type="xsd:string"/>
+                    <element name="infoURL" nillable="true" type="xsd:string"/>
+                    <element name="discussionURL" nillable="true" type="xsd:string"/>
+                    <element name="notes" nillable="true" type="xsd:string"/>
+                    <element name="tmodelID" nillable="true" type="xsd:string"/>
+                    <element name="publisherID" nillable="true" type="xsd:string"/>
+                    <element name="uuid" nillable="true" type="xsd:string"/>
+                  </sequence>
+                </complexType>
+              </schema>
+            </types>
+            <message name="getServiceSummariesByPublisher0SoapIn">
+              <part name="publisherID" type="xsd:string"/>
+            </message>
+            <message name="getServiceSummariesByPublisher0SoapOut">
+              <part name="Result" type="ns1:ArrayOfServiceSummary" xmlns:ns1="http://www.xmethods.net/interfaces/query.xsd"/>
+            </message>
+            <message name="getAllServiceSummaries1SoapIn"/>
+            <message name="getAllServiceSummaries1SoapOut">
+              <part name="Result" type="ns1:ArrayOfServiceSummary" xmlns:ns1="http://www.xmethods.net/interfaces/query.xsd"/>
+            </message>
+            <message name="getAllServiceNames2SoapIn"/>
+            <message name="getAllServiceNames2SoapOut">
+              <part name="Result" type="ns1:ArrayOfIDNamePair" xmlns:ns1="http://www.xmethods.net/interfaces/query.xsd"/>
+            </message>
+            <message name="getServiceNamesByPublisher3SoapIn">
+              <part name="publisherID" type="xsd:string"/>
+            </message>
+            <message name="getServiceNamesByPublisher3SoapOut">
+              <part name="Result" type="ns1:ArrayOfIDNamePair" xmlns:ns1="http://www.xmethods.net/interfaces/query.xsd"/>
+            </message>
+            <message name="getServiceDetail4SoapIn">
+              <part name="id" type="xsd:string"/>
+            </message>
+            <message name="getServiceDetail4SoapOut">
+              <part name="Result" type="ns1:ServiceDetail" xmlns:ns1="http://www.xmethods.net/interfaces/query.xsd"/>
+            </message>
+            <portType name="XMethodsQuerySoapPortType">
+              <operation name="getServiceSummariesByPublisher" parameterOrder="publisherID">
+                <input name="getServiceSummariesByPublisher0SoapIn" message="tns:getServiceSummariesByPublisher0SoapIn"/>
+                <output name="getServiceSummariesByPublisher0SoapOut" message="tns:getServiceSummariesByPublisher0SoapOut"/>
+              </operation>
+              <operation name="getAllServiceSummaries" parameterOrder="">
+                <input name="getAllServiceSummaries1SoapIn" message="tns:getAllServiceSummaries1SoapIn"/>
+                <output name="getAllServiceSummaries1SoapOut" message="tns:getAllServiceSummaries1SoapOut"/>
+              </operation>
+              <operation name="getAllServiceNames" parameterOrder="">
+                <input name="getAllServiceNames2SoapIn" message="tns:getAllServiceNames2SoapIn"/>
+                <output name="getAllServiceNames2SoapOut" message="tns:getAllServiceNames2SoapOut"/>
+              </operation>
+              <operation name="getServiceNamesByPublisher" parameterOrder="publisherID">
+                <input name="getServiceNamesByPublisher3SoapIn" message="tns:getServiceNamesByPublisher3SoapIn"/>
+                <output name="getServiceNamesByPublisher3SoapOut" message="tns:getServiceNamesByPublisher3SoapOut"/>
+              </operation>
+              <operation name="getServiceDetail" parameterOrder="id">
+                <input name="getServiceDetail4SoapIn" message="tns:getServiceDetail4SoapIn"/>
+                <output name="getServiceDetail4SoapOut" message="tns:getServiceDetail4SoapOut"/>
+              </operation>
+            </portType>
+            <binding name="XMethodsQuerySoap" type="tns:XMethodsQuerySoapPortType">
+              <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+              <operation name="getServiceSummariesByPublisher">
+                <soap:operation soapAction="" style="rpc"/>
+                <input name="getServiceSummariesByPublisher0SoapIn">
+                  <soap:body use="encoded" namespace="http://www.xmethods.net/interfaces/query" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+                </input>
+                <output name="getServiceSummariesByPublisher0SoapOut">
+                  <soap:body use="encoded" namespace="http://www.xmethods.net/interfaces/query" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+                </output>
+              </operation>
+              <operation name="getAllServiceSummaries">
+                <soap:operation soapAction="" style="rpc"/>
+                <input name="getAllServiceSummaries1SoapIn">
+                  <soap:body use="encoded" namespace="http://www.xmethods.net/interfaces/query" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+                </input>
+                <output name="getAllServiceSummaries1SoapOut">
+                  <soap:body use="encoded" namespace="http://www.xmethods.net/interfaces/query" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+                </output>
+              </operation>
+              <operation name="getAllServiceNames">
+                <soap:operation soapAction="" style="rpc"/>
+                <input name="getAllServiceNames2SoapIn">
+                  <soap:body use="encoded" namespace="http://www.xmethods.net/interfaces/query" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+                </input>
+                <output name="getAllServiceNames2SoapOut">
+                  <soap:body use="encoded" namespace="http://www.xmethods.net/interfaces/query" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+                </output>
+              </operation>
+              <operation name="getServiceNamesByPublisher">
+                <soap:operation soapAction="" style="rpc"/>
+                <input name="getServiceNamesByPublisher3SoapIn">
+                  <soap:body use="encoded" namespace="http://www.xmethods.net/interfaces/query" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+                </input>
+                <output name="getServiceNamesByPublisher3SoapOut">
+                  <soap:body use="encoded" namespace="http://www.xmethods.net/interfaces/query" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+                </output>
+              </operation>
+              <operation name="getServiceDetail">
+                <soap:operation soapAction="" style="rpc"/>
+                <input name="getServiceDetail4SoapIn">
+                  <soap:body use="encoded" namespace="http://www.xmethods.net/interfaces/query" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+                </input>
+                <output name="getServiceDetail4SoapOut">
+                  <soap:body use="encoded" namespace="http://www.xmethods.net/interfaces/query" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+                </output>
+              </operation>
+            </binding>
+            <service name="XMethodsQuery">
+              <documentation>XMethods query service</documentation>
+              <port name="XMethodsQuerySoap" binding="tns:XMethodsQuerySoap">
+                <soap:address location="http://www.xmethods.net/interfaces/query"/>
+              </port>
+            </service>
+          </definitions>
+        </con:content>
+        <con:type>http://schemas.xmlsoap.org/wsdl/</con:type>
+      </con:part>
+    </con:definitionCache>
+  </con:interface>
+  <con:testSuite name="Test Suite">
+    <con:settings/>
+    <con:runType>SEQUENTIAL</con:runType>
+    <con:testCase name="Test Conversions" failOnError="false" keepSession="false" searchProperties="true" failTestCaseOnErrors="true">
+      <con:settings>
+        <con:setting id="HttpSettings@socket_timeout">60000</con:setting>
+        <con:setting id="HttpSettings@include_request_in_time_taken">true</con:setting>
+        <con:setting id="HttpSettings@include_response_in_time_taken">true</con:setting>
+      </con:settings>
+      <con:testStep type="properties" name="Properties">
+        <con:settings/>
+        <con:config xsi:type="con:PropertiesStep" saveFirst="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+          <con:properties>
+            <con:property>
+              <con:name>src_currency</con:name>
+              <con:value>SEK</con:value>
+            </con:property>
+          </con:properties>
+        </con:config>
+      </con:testStep>
+      <con:testStep type="request" name="SEK to USD Test">
+        <con:settings/>
+        <con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+          <con:interface>CurrencyConvertorSoap</con:interface>
+          <con:operation>ConversionRate</con:operation>
+          <con:request name="SEK to USD Test">
+            <con:settings/>
+            <con:encoding>UTF-8</con:encoding>
+            <con:endpoint>http://www.webservicex.net/CurrencyConvertor.asmx</con:endpoint>
+            <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:web="http://www.webserviceX.NET/">
+   <soapenv:Body>
+      <web:ConversionRate>
+         <web:FromCurrency>${src_currency}</web:FromCurrency>
+         <web:ToCurrency>USD</web:ToCurrency>
+      </web:ConversionRate>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request>
+            <con:assertion type="Schema Compliance">
+              <con:configuration>
+                <definition/>
+              </con:configuration>
+            </con:assertion>
+            <con:assertion type="XPath Match" name="XPath Match - check for less than 0.2">
+              <con:configuration>
+                <path>declare namespace ns1='http://www.webserviceX.NET/';
+declare namespace soap='http://schemas.xmlsoap.org/soap/envelope/';
+//ns1:ConversionRateResult > 0.1</path>
+                <content>true</content>
+              </con:configuration>
+            </con:assertion>
+            <con:assertion type="XPath Match" name="XPath Match - check for more than 0.1">
+              <con:configuration>
+                <path>declare namespace ns1='http://www.webserviceX.NET/';
+declare namespace soap='http://schemas.xmlsoap.org/soap/envelope/';
+//ns1:ConversionRateResult > 0.1</path>
+                <content>true</content>
+              </con:configuration>
+            </con:assertion>
+            <con:assertion type="SOAP Fault Assertion"/>
+            <con:assertion type="XPath Match">
+              <con:configuration/>
+            </con:assertion>
+          </con:request>
+        </con:config>
+      </con:testStep>
+      <con:testStep type="request" name="USD to SEK Test">
+        <con:settings/>
+        <con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+          <con:interface>CurrencyConvertorSoap</con:interface>
+          <con:operation>ConversionRate</con:operation>
+          <con:request name="USD to SEK Test">
+            <con:settings/>
+            <con:encoding>UTF-8</con:encoding>
+            <con:endpoint>http://www.webservicex.net/CurrencyConvertor.asmx</con:endpoint>
+            <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:web="http://www.webserviceX.NET/">
+   <soapenv:Body>
+      <web:ConversionRate>
+         <web:FromCurrency>USD</web:FromCurrency>
+         <web:ToCurrency>${Properties#src_currency}</web:ToCurrency>
+      </web:ConversionRate>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request>
+            <con:assertion type="Schema Compliance">
+              <con:configuration>
+                <definition/>
+              </con:configuration>
+            </con:assertion>
+            <con:assertion type="XPath Match" name="XPath Match - check for less than 8">
+              <con:configuration>
+                <path>declare namespace ns1='http://www.webserviceX.NET/';
+declare namespace soap='http://schemas.xmlsoap.org/soap/envelope/';
+//ns1:ConversionRateResult &lt; 9</path>
+                <content>true</content>
+              </con:configuration>
+            </con:assertion>
+            <con:assertion type="XPath Match" name="XPath Match - check for more than 7">
+              <con:configuration>
+                <path>declare namespace ns1='http://www.webserviceX.NET/';
+declare namespace soap='http://schemas.xmlsoap.org/soap/envelope/';
+//ns1:ConversionRateResult > 6</path>
+                <content>true</content>
+              </con:configuration>
+            </con:assertion>
+            <con:assertion type="SOAP Fault Assertion"/>
+          </con:request>
+        </con:config>
+      </con:testStep>
+      <con:loadTest name="LoadTest 1">
+        <con:settings/>
+        <con:threadCount>5</con:threadCount>
+        <con:startDelay>0</con:startDelay>
+        <con:sampleInterval>250</con:sampleInterval>
+        <con:calculateTPSOnTimePassed>false</con:calculateTPSOnTimePassed>
+        <con:resetStatisticsOnThreadCountChange>true</con:resetStatisticsOnThreadCountChange>
+        <con:historyLimit>-1</con:historyLimit>
+        <con:testLimit>60</con:testLimit>
+        <con:limitType>TIME</con:limitType>
+        <con:loadStrategy>
+          <con:type>Simple</con:type>
+        </con:loadStrategy>
+        <con:assertion type="Step Status" name="Step Status"/>
+      </con:loadTest>
+    </con:testCase>
+    <con:testCase name="Test XMethods Query" failOnError="true" keepSession="false" failTestCaseOnErrors="true">
+      <con:settings>
+        <con:setting id="HttpSettings@socket_timeout">60000</con:setting>
+        <con:setting id="HttpSettings@include_request_in_time_taken">true</con:setting>
+        <con:setting id="HttpSettings@include_response_in_time_taken">true</con:setting>
+      </con:settings>
+      <con:testStep type="request" name="Test getAllServiceNames">
+        <con:settings/>
+        <con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+          <con:interface>XMethodsQuerySoapPortType</con:interface>
+          <con:operation>getAllServiceNames</con:operation>
+          <con:request name="Test getAllServiceNames">
+            <con:settings/>
+            <con:encoding>UTF-8</con:encoding>
+            <con:endpoint>http://www.xmethods.net/interfaces/query</con:endpoint>
+            <con:request>&lt;soapenv:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:quer="http://www.xmethods.net/interfaces/query">
+   &lt;soapenv:Body>
+      &lt;quer:getAllServiceNames soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+   &lt;/soapenv:Body>
+&lt;/soapenv:Envelope></con:request>
+            <con:assertion type="XPath Match" name="XPath Match - check for CurrencyExchangeService">
+              <con:configuration>
+                <path>declare namespace soap='http://schemas.xmlsoap.org/soap/envelope/';
+declare namespace soapenc='http://schemas.xmlsoap.org/soap/encoding/';
+declare namespace n='http://www.xmethods.net/interfaces/query';
+declare namespace n4='http://www.xmethods.net/interfaces/query.xsd';
+count(//name[text()='CurrencyExchangeService'])</path>
+                <content>1</content>
+              </con:configuration>
+            </con:assertion>
+          </con:request>
+        </con:config>
+      </con:testStep>
+      <con:testStep type="transfer" name="Transfer values">
+        <con:settings/>
+        <con:config xsi:type="con:TransferValuesStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+          <con:transfers setNullOnMissingSource="true" transferTextContent="true">
+            <con:name>service id</con:name>
+            <con:sourceType>RESPONSE</con:sourceType>
+            <con:sourceStep>Test getAllServiceNames</con:sourceStep>
+            <con:sourcePath>//i[name/text()='CurrencyExchangeService']/id</con:sourcePath>
+            <con:targetType>REQUEST</con:targetType>
+            <con:targetStep>Test getServiceDetail</con:targetStep>
+            <con:targetPath>//id</con:targetPath>
+          </con:transfers>
+        </con:config>
+      </con:testStep>
+      <con:testStep type="request" name="Test getServiceDetail">
+        <con:settings/>
+        <con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+          <con:interface>XMethodsQuerySoapPortType</con:interface>
+          <con:operation>getServiceDetail</con:operation>
+          <con:request name="Test getServiceDetail">
+            <con:settings/>
+            <con:encoding>UTF-8</con:encoding>
+            <con:endpoint>http://www.xmethods.net/interfaces/query</con:endpoint>
+            <con:request><![CDATA[<soapenv:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:quer="http://www.xmethods.net/interfaces/query">
+   <soapenv:Body>
+      <quer:getServiceDetail soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+         <id>uuid:FCCF6690-E981-1C51-09D2-36CA5D4BD7AA</id>
+      </quer:getServiceDetail>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request>
+            <con:assertion type="XPath Match">
+              <con:configuration>
+                <path>//name</path>
+                <content>CurrencyExchangeService</content>
+              </con:configuration>
+            </con:assertion>
+          </con:request>
+        </con:config>
+      </con:testStep>
+      <con:testSchedule name="test">
+        <con:threadCount>1</con:threadCount>
+        <con:startDelay>200</con:startDelay>
+        <con:loadStrategy>
+          <con:type>Simple</con:type>
+          <con:config>
+            <testDelay>5000</testDelay>
+            <stepDelay>0</stepDelay>
+            <randomFactor>0.0</randomFactor>
+          </con:config>
+        </con:loadStrategy>
+      </con:testSchedule>
+      <con:loadTest name="LoadTest 1">
+        <con:settings/>
+        <con:threadCount>5</con:threadCount>
+        <con:startDelay>0</con:startDelay>
+        <con:sampleInterval>250</con:sampleInterval>
+        <con:calculateTPSOnTimePassed>false</con:calculateTPSOnTimePassed>
+        <con:resetStatisticsOnThreadCountChange>true</con:resetStatisticsOnThreadCountChange>
+        <con:historyLimit>-1</con:historyLimit>
+        <con:testLimit>60</con:testLimit>
+        <con:limitType>TIME</con:limitType>
+        <con:loadStrategy>
+          <con:type>Simple</con:type>
+        </con:loadStrategy>
+        <con:assertion type="Step Status" name="Step Status"/>
+      </con:loadTest>
+    </con:testCase>
+  <con:testCase name="Copy of Test Conversions" failOnError="false" keepSession="false" searchProperties="true" failTestCaseOnErrors="true">
+      <con:settings>
+        <con:setting id="HttpSettings@socket_timeout">60000</con:setting>
+        <con:setting id="HttpSettings@include_request_in_time_taken">true</con:setting>
+        <con:setting id="HttpSettings@include_response_in_time_taken">true</con:setting>
+      </con:settings>
+      <con:testStep type="properties" name="Properties">
+        <con:settings/>
+        <con:config xsi:type="con:PropertiesStep" saveFirst="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+          <con:properties>
+            <con:property>
+              <con:name>src_currency</con:name>
+              <con:value>SEK</con:value>
+            </con:property>
+          <con:property><con:name>werwer</con:name></con:property></con:properties>
+        </con:config>
+      </con:testStep>
+      <con:testStep type="request" name="SEK to USD Test">
+        <con:settings/>
+        <con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+          <con:interface>CurrencyConvertorSoap</con:interface>
+          <con:operation>ConversionRate</con:operation>
+          <con:request name="SEK to USD Test">
+            <con:settings/>
+            <con:encoding>UTF-8</con:encoding>
+            <con:endpoint>http://www.webservicex.net/CurrencyConvertor.asmx</con:endpoint>
+            <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:web="http://www.webserviceX.NET/">
+   <soapenv:Body>
+      <web:ConversionRate>
+         <web:FromCurrency>${src_currency}</web:FromCurrency>
+         <web:ToCurrency>USD</web:ToCurrency>
+      </web:ConversionRate>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request>
+            <con:assertion type="Schema Compliance">
+              <con:configuration>
+                <definition/>
+              </con:configuration>
+            </con:assertion>
+            <con:assertion type="XPath Match" name="XPath Match - check for less than 0.2">
+              <con:configuration>
+                <path>declare namespace ns1='http://www.webserviceX.NET/';
+declare namespace soap='http://schemas.xmlsoap.org/soap/envelope/';
+//ns1:ConversionRateResult > 0.1</path>
+                <content>true</content>
+              </con:configuration>
+            </con:assertion>
+            <con:assertion type="XPath Match" name="XPath Match - check for more than 0.1">
+              <con:configuration>
+                <path>declare namespace ns1='http://www.webserviceX.NET/';
+declare namespace soap='http://schemas.xmlsoap.org/soap/envelope/';
+//ns1:ConversionRateResult > 0.1</path>
+                <content>true</content>
+              </con:configuration>
+            </con:assertion>
+            <con:assertion type="SOAP Fault Assertion"/>
+            <con:assertion type="XPath Match">
+              <con:configuration/>
+            </con:assertion>
+          </con:request>
+        </con:config>
+      </con:testStep>
+      <con:testStep type="request" name="USD to SEK Test">
+        <con:settings/>
+        <con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+          <con:interface>CurrencyConvertorSoap</con:interface>
+          <con:operation>ConversionRate</con:operation>
+          <con:request name="USD to SEK Test">
+            <con:settings/>
+            <con:encoding>UTF-8</con:encoding>
+            <con:endpoint>http://www.webservicex.net/CurrencyConvertor.asmx</con:endpoint>
+            <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:web="http://www.webserviceX.NET/">
+   <soapenv:Body>
+      <web:ConversionRate>
+         <web:FromCurrency>USD</web:FromCurrency>
+         <web:ToCurrency>${Properties#src_currency}</web:ToCurrency>
+      </web:ConversionRate>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request>
+            <con:assertion type="Schema Compliance">
+              <con:configuration>
+                <definition/>
+              </con:configuration>
+            </con:assertion>
+            <con:assertion type="XPath Match" name="XPath Match - check for less than 8">
+              <con:configuration>
+                <path>declare namespace ns1='http://www.webserviceX.NET/';
+declare namespace soap='http://schemas.xmlsoap.org/soap/envelope/';
+//ns1:ConversionRateResult &lt; 9</path>
+                <content>true</content>
+              </con:configuration>
+            </con:assertion>
+            <con:assertion type="XPath Match" name="XPath Match - check for more than 7">
+              <con:configuration>
+                <path>declare namespace ns1='http://www.webserviceX.NET/';
+declare namespace soap='http://schemas.xmlsoap.org/soap/envelope/';
+//ns1:ConversionRateResult > 6</path>
+                <content>true</content>
+              </con:configuration>
+            </con:assertion>
+            <con:assertion type="SOAP Fault Assertion"/>
+          </con:request>
+        </con:config>
+      </con:testStep>
+      <con:loadTest name="LoadTest 1">
+        <con:settings/>
+        <con:threadCount>5</con:threadCount>
+        <con:startDelay>0</con:startDelay>
+        <con:sampleInterval>250</con:sampleInterval>
+        <con:calculateTPSOnTimePassed>false</con:calculateTPSOnTimePassed>
+        <con:resetStatisticsOnThreadCountChange>true</con:resetStatisticsOnThreadCountChange>
+        <con:historyLimit>-1</con:historyLimit>
+        <con:testLimit>60</con:testLimit>
+        <con:limitType>TIME</con:limitType>
+        <con:loadStrategy>
+          <con:type>Simple</con:type>
+        </con:loadStrategy>
+        <con:assertion type="Step Status" name="Step Status"/>
+      </con:loadTest>
+    </con:testCase></con:testSuite>
+  <con:testSuite name="TestSuite 2">
+    <con:settings/>
+    <con:runType>SEQUENTIAL</con:runType>
+    <con:testCase failOnError="true" keepSession="false" name="TestCase 1" searchProperties="true" failTestCaseOnErrors="true">
+      <con:settings/>
+      <con:testStep type="groovy" name="Groovy Script">
+        <con:settings/>
+        <con:config>
+          <script>log.info( "Hello" )</script>
+        </con:config>
+      </con:testStep>
+    </con:testCase>
+  </con:testSuite>
+</con:soapui-project>

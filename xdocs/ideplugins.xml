@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>soapUI - IDE and Tool Plugins</title>
+    </properties>
+    <body>
+		<section name="soapUI IDE and Tool Plugins">
+		<p>soapUI comes with plug-ins for the following tools / IDE's</p>
+		<table><tr><th>Tool or IDE</th><th>Functionality</th></tr>
+		<tr><td width="170"><a href="plugin/index.html">Maven 1.X/2.X</a></td><td>Provides goals/properties corresponding to each of the soapUI command-line tools and
+		its arguments</td></tr>
+		<tr><td><a href="netbeans/index.html">NetBeans 5.5/6.0</a></td><td>Provides full soapUI functionality from within the NetBeans IDE</td></tr>
+		<tr><td><a href="intellij/index.html">IntelliJ IDEA 6+</a></td><td>Provides full soapUI functionality from within IntelliJ IDEA</td></tr>
+		<tr><td><a href="eclipse/index.html">Eclipse 3.2+</a></td><td>Provides full soapUI functionality from within Eclipse plus a soapUI Project Nature
+		for integrated browsing/viewing of eclipse/soapUI projects in the Project Explorer.</td></tr>
+		<tr><td><a href="jbossws/index.html">JBossWS/JBossIDE 2.0.0+</a></td><td>Provides the same functionality as the standard Eclipse plug-in plus a number 
+		of JBossWS-related wizards/dialogs/actions.</td></tr>
+		</table>
+		<p>Since the IDE's all have their own window/desktop management, some options in the soapUI Preferences / UI Settings 
+		will not be available.</p>
+		 <p><hr size="1"/></p>
+		</section>
+    </body>
+</document>

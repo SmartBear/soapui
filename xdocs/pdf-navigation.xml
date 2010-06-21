@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="soapUI">
+  <title>soapUI User Guide</title>
+  <body>
+   <menu name="User Guide" collapse="true" href="/userguide/index.html">
+     <item href="/userguide/overview.html" name="Overview">
+        <item href="/userguide/tabbeddesktop.html" name="Tabbed Desktop" pro="true"/>
+        <item href="/userguide/licensemanagement.html" name="License Management" pro="true"/>
+        <item href="/userguide/preferences.html" name="Preferences"/>
+        <item href="/userguide/xpath_selector.html" name="XPath Selection" pro="true"/>
+        <item href="/userguide/coverage.html" name="WSDL Coverage" pro="true"/>
+    </item>
+
+    <item href="/userguide/workspaces.html" name="Workspaces"/>
+    <item href="/userguide/projects/index.html" name="Projects">
+        <item href="/userguide/projects/projectview.html" name="Project View"/>
+        <item href="/userguide/projects/coverage.html" name="Coverage" pro="true"/>
+        <item href="/userguide/projects/requirements.html" name="Requirements" pro="true"/>
+        <item href="/userguide/projects/wss.html" name="WS-Security"/>
+        <item href="/userguide/projects/encryption.html" name="Encryption"/>
+        <item href="/userguide/projects/composite-projects.html" name="Composite Projects" pro="true"/>
+        <item href="/userguide/projects/resolving.html" name="Project Resolving"/>
+    </item>
+
+    <item href="/userguide/interfaces/index.html" name="WSDL Interfaces">
+        <item href="/userguide/interfaces/interfaceview.html" name="Interface View"/>
+        <item href="/userguide/interfaces/wsi.html" name="WS-I Compliance"/>
+        <item href="/userguide/interfaces/refactoring.html" name="WSDL Refactoring" pro="true"/>
+
+        <item href="/userguide/operations.html" name="WSDL Operations"/>
+
+        <item href="/userguide/requests.html" name="Working with SOAP Requests">
+            <item href="/userguide/formeditor.html" name="Form Editor" pro="true"/>
+            <item href="/userguide/overviewview.html" name="Overview View" pro="true"/>
+            <item href="/userguide/outlineeditor.html" name="Outline Editor" pro="true"/>
+            <item href="/userguide/messageinspectors.html" name="Pro Inspectors" pro="true"/>
+            <item href="/userguide/attachments.html" name="Attachments/Inline Files"/>
+        </item>
+    </item>
+
+    <item href="/userguide/rest/index.html" name="REST Services">
+        <item href="/userguide/rest/params.html" name="Parameters/Representations"/>
+        <item href="/userguide/rest/resources.html" name="Resources"/>
+        <item href="/userguide/rest/requests.html" name="Requests"/>
+    </item>
+
+    <item href="/userguide/scripting.html" name="Scripting">
+        <item href="/userguide/scripting.html#Groovy_Script_Library" name="Script Library" pro="true"/>
+       <item href="/userguide/scripting.html#Dynamic_Properties" name="Dynamic Properties"/>
+    </item>
+    <item href="/userguide/properties.html" name="Properties">
+        <item href="/userguide/properties.html#Property_Expansion_in_soapUI" name="Property Expansion"/>
+    </item>
+
+    <item href="/userguide/functional/index.html" name="Functional Testing">
+        <item href="/userguide/functional/getting_started.html" name="Getting Started"/>
+
+        <item href="/userguide/functional/testsuites.html" name="TestSuites"/>
+        <item href="/userguide/functional/testcases.html" name="TestCases"/>
+        <item href="/userguide/functional/teststeps.html" name="TestSteps">
+            <item href="/userguide/functional/testrequests.html" name="Test Requests">
+                <item href="/userguide/functional/soap-requests.html" name="SOAP Requests"/>
+                <item href="/userguide/functional/rest-requests.html" name="REST Requests"/>
+                <item href="/userguide/functional/http-requests.html" name="HTTP Requests"/>
+                <item href="/userguide/functional/response-assertions.html" name="Assertions"/>
+                <item href="/userguide/functional/response-wizards.html" name="Editor Wizards" pro="true"/>
+            </item>
+            <item href="/userguide/functional/propertytransfers.html" name="Property Transfers"/>
+            <item href="/userguide/functional/gotostep.html" name="Conditional Gotos"/>
+            <item href="/userguide/functional/groovystep.html" name="Groovy Scripts">
+                <item href="/userguide/functional/groovystep.html#Groovy_Script_Examples" name="Examples"/>
+                <item href="/userguide/functional/groovystep.html#GroovyUtils" name="GroovyUtils"/>
+            </item>
+            <item href="/userguide/functional/propertiesstep.html" name="Properties Step"/>
+            <item href="/userguide/functional/delaystep.html" name="Delay Step"/>
+            <item href="/userguide/functional/runtestcasestep.html" name="Run TestCase"/>
+            <item href="/userguide/functional/mockresponse.html" name="Mock Response"/>
+            <item href="/userguide/functional/datasourcestep.html" name="DataSource" pro="true"/>
+            <item href="/userguide/functional/datasourceloopstep.html" name="DataSource Loop" pro="true"/>
+            <item href="/userguide/functional/datasinkstep.html" name="DataSink" pro="true"/>
+            <item href="/userguide/functional/datagenstep.html" name="DataGen" pro="true"/>
+        </item>
+    </item>
+
+    <item href="/userguide/loadtest/index.html" name="Load Testing">
+        <item href="/userguide/loadtest/getting_started.html" name="Getting Started"/>
+        <item href="/userguide/loadtest/configuration.html" name="Limit &amp; Strategies"/>
+        <item href="/userguide/loadtest/execution.html" name="Execution"/>
+        <item href="/userguide/loadtest/assertions.html" name="Assertions"/>
+        <item href="/userguide/loadtest/diagrams.html" name="Graphs"/>
+        <item href="/userguide/loadtest/comparison.html" name="JMeter comparison"/>
+    </item>
+
+    <item href="/userguide/mock/index.html" name="Mocking">
+        <item href="/userguide/mock/getting_started.html" name="Getting Started"/>
+        <item href="/userguide/mock/services.html" name="Mock Services">
+            <item href="/userguide/mock/coverage.html" name="Coverage" pro="true"/>
+        </item>
+        <item href="/userguide/mock/operations.html" name="Mock Operations"/>
+        <item href="/userguide/mock/responses.html" name="Mock Responses"/>
+    </item>
+
+    <item href="/userguide/monitor/index.html" name="SOAP Monitoring">
+        <item href="/userguide/monitor/coverage.html" name="Coverage" pro="true"/>
+    </item>
+
+    <item href="/userguide/scenarios/index.html" name="Usage Scenarios">
+        <item href="/userguide/scenarios/datadriven.html" name="Data Driven Testing"/>
+        <item href="/userguide/scenarios/templatedriven.html" name="Template Driven Testing"/>
+        <item href="/userguide/scenarios/interactive.html" name="Interactive Testing"/>
+        <item href="/userguide/scenarios/surveillance.html" name="Surveillance Testing"/>
+    </item>
+
+    <item href="/userguide/tools/index.html" name="Tool Integrations">
+        <item href="/userguide/tools/topdown.html" name="Code Generation"/>
+        <item href="/userguide/tools/tcpmon.html" name="Apache TCPMon"/>
+    </item>
+
+    <item href="/userguide/commandline/index.html" name="CommandLine Tools">
+        <item href="/userguide/commandline/testcaserunner.html" name="TestCase Runner"/>
+        <item href="/userguide/commandline/loadtestrunner.html" name="LoadTest Runner"/>
+        <item href="/userguide/commandline/mockrunner.html" name="MockService Runner"/>
+        <item href="/userguide/commandline/toolrunner.html" name="Tool Runner"/>
+    </item>
+
+   
+         <item name="IDE/Tool Plugins" href="/ideplugins.html">
+			<item name="Maven Plugins" href="/plugin/index.html">
+		      <item href="/plugin/maven1/index.html" name="Maven 1.X Plugin">
+		      	<item href="/plugin/maven1/goals.html" name="Goals"/>
+		      	<item href="/plugin/maven1/properties.html" name="Properties"/>
+		      </item>
+		       <item href="/plugin/maven2/index.html" name="Maven 2.X Plugin">
+		      	<item href="/plugin/maven2/goals.html" name="Goals"/>
+		      	<item href="/plugin/maven2/properties.html" name="Properties"/>
+		      </item>
+		    </item>
+		    
+		     <item name="NetBeans Plugin"  href="/netbeans/index.html">
+		      <item href="/netbeans/installation.html" name="Installation"/>
+		    </item>  
+			 <item name="IntelliJ Plugin" href="/intellij/index.html"/>
+			 
+			 <item name="Eclipse Plugin" href="/eclipse/index.html">
+		        <item href="/eclipse/soapui_nature.html" name="soapUI Nature"/>
+		     </item>  
+	
+		</item>
+         
+         <item href="/userguide/shortcuts.html" name="Keyboard shortcuts"/>
+      
+	</menu>
+	
+  
+
+  </body>
+</project>

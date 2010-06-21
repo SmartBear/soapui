@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>NetBeans soapUI plugin - NetBeans 6.0 Installation</title>
+    </properties>
+    <body>
+		<section name="Installing the NetBeans Plugin in NetBeans 6.0">
+		<p>Here comes a walk-through of how to install the soapUI Plugin in NetBeans 6.0;</p>
+		<ul>
+		<li>Start by downloading the nbm distribution from SourceForge into a temporary folder.</li>
+		<li>Be sure to remove any existing installation of the soapUI plugin and any associated files. Failure to do so 
+		will most likely cause installation / execution problems.</li>
+		<li>Start NetBeans and select the "Tools / Plugins" menu item</li>
+		<li>Switch to the "Downloaded" tab and select the "Add Plugins..." button to browse to the downloaded nbm file
+		<p align="center"><img src="images/install1.gif" alt="Add soapUI Plugin in NetBeans"/></p></li>
+		<li>Once the file has been selected, NetBeans will display module information as follows:
+		<p align="center"><img src="images/install2.gif"  alt="soapUI Module information in NetBeans"/></p></li>
+		<li>Now select the "Install" button at the bottom, NetBeans will install the plugin over a series of
+		steps, including a confirmation to install an unsigned plugin. Just select "Continue" until you get to the 
+		final screen:
+		<p align="center"><img src="images/install3.gif"  alt="soapUI Plugin installed in NetBeans"/></p></li>
+		<li>The plug-in has now been installed and can be seen in the "Installed" tab:
+		<p align="center"><img src="images/install4.gif"  alt="soapUI Plugin installed view in NetBeans"/></p></li>
+		<li>After select OK to close the dialog, the soapUI installation can further be confirmed via the 
+		Tools/soapUI menu; if it shows up, the installation seems to have gone ok:
+		<p align="center"><img src="images/install5.gif"  alt="soapUI Plugin menu choice in NetBeans"/></p></li>
+		</ul>
+		</section>
+    </body>
+</document>

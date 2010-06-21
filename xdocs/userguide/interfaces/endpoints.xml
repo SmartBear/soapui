@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>Managing Web Service Endpoints - soapUI</title>
+    </properties>
+    <body>
+		<section name="Service Endpoints">
+
+		 <p>
+		 Selecting the Service Endpoints action from the interface context menu opens a dialog showing the 
+		 available service endpoints for this interface and each endpoints default authentication settings.
+		 If the interface was imported from a WSDL definition, that services
+		 ports URL will be available in this list, and you are free to add, edit, or remove as many service endpoints as
+		 you want. 
+		 </p>
+		 <p>
+		 If your endpoints are already URL-encoded, you should select the "Preencoded Endpoints" option 
+		 in the <a href="../preferences.html#HTTP_Settings">Http Settings</a> dialog to avoid that they get reencoded 
+		 during requests. When deleting an endpoint, all requests that had that endpoint will have their 
+		 endpoint set to null.
+		 </p>
+		 <p align="center">
+			<img src="images/service_endpoints.gif" border="0" alt="The Service Endpoint editor"/>
+		 </p>
+		 <p>Specified authentication values will be used for all Requests/TestRequest that use the endpoint, unless
+		 any of the values have been overridden at the request level.</p>
+		 <p>The <b>Assign</b> options prompts to assign the selected endpoint to requests, the following options are 
+		 displayed:</p>
+		 <ul>
+			 <li><code>- all requests -</code> : will assign the selected endpoint to all requests for operations in 
+			 the current interface.</li>
+			 <li><code>- all requests with no endpoint -</code> : will assign the selected endpoint to all requests
+			  for operations in the current interface that have no endpoint.</li>
+			 <li><code>&lt;endpoint&gt;</code> : will assign the selected endpoint to all requests
+			  for operations in the current interface that have this endpoint.</li>
+		 </ul>
+		 <p>
+		 Assigning endpoints with this option will <b>not</b> assign to TestRequests, use the "Set TestCase Endpoint"
+		 action in the <a href="../functional/testcases.html#The_TestCase_Editor">TestCase Editor</a> for this instead.
+		 </p>
+		
+		<p align="center"><img src="images/assign_endpoint.gif" border="0" alt="Assigning a Service Endpoint for Web Service Tests"/></p>
+			
+		 <p>
+		 When closing the dialog with the "Ok" button, the available endpoints will be selectable in associated
+		 operations request or test requests editor panes.
+		 </p>
+		  
+		  <p><hr size="1"/>Next: <a href="interfaceeditor.html">WSDL Content Viewer</a></p>
+		</section>
+    </body>
+</document>
+

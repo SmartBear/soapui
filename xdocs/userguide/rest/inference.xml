@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<!--
+  ~ soapUI, copyright (C) 2004-2008 eviware.com
+  ~
+  ~ soapUI is free software; you can redistribute it and/or modify it under the
+  ~ terms of version 2.1 of the GNU Lesser General Public License as published by
+  ~ the Free Software Foundation.
+  ~
+  ~ soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+  ~ even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+  ~ See the GNU Lesser General Public License for more details at gnu.org.
+  -->
+
+<document>
+    <properties>
+        <title>userguide - WADL and XSD Inference</title>
+    </properties>
+    <body>
+		<section name="WADL and XSD Inference">
+		<p>When creating a REST Service without a WADL, it is often useful to be able to generate these documents anyway, 
+		so that validation is made possible, and code/documentation generation tools can be used.
+		For this soapUI automatic inference of WADL from the model you create in soapUI, 
+		and also inference of XSD schemas from any incoming responses that can be converted to XML, 
+		such as XML, JSON and HTML.</p>
+
+		<subsection name="soapUI Schema inspector">
+		<p>To infer an XSD schema, soapUI provides a Schema inspector that can analyze each response. 
+		Doing so, the inspector is able to generate an XML schema for your responses, 
+		but also refine them over time as it gathers more data.</p>
+
+		<p align="center"><img src="images/schema-inspector.gif"></img></p>
+
+		<p>The Schema inspector only gathers data from correct responses, which is either done manually 
+		by clicking on the "Resolve conflicts" button when the inspector has found new content not 
+		previously in the schema, or by having the "Auto-Resolve" checkbox clicked. 
+		Note that having this box checked treats all responses as valid (they can still be Faults, 
+		but they are treated as valid Faults), and an invalid response may cause the inferred schema 
+		to become incorrect.</p>
+
+		<p align="center"><img src="images/schema-manual.gif"></img></p>
+		</subsection>
+
+		<subsection name="Using inferred schemas">
+		<p>Once schemas have been inferred, you may use them as you would any other imported schema. 
+		For example you could use them to assert schema compliance or view them in the 
+		<a href="index.html#REST_Service_Viewer">REST Service Viewer</a> "WADL Content" pane, 
+		where you can export them or use them to generate HTML documentation.</p>
+		
+		<p align="center"><img src="images/schema-wadl-inferred.gif"></img></p>
+
+		<p><hr size="1"/>Next: <a href="tutorial.html">Getting Started with Schema Inference</a></p>
+		</subsection>
+		</section>
+    </body>
+</document>

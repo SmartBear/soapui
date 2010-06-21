@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>functional Web Service testing</title>
+    </properties>
+    <body>
+		<section name="SoapUI Projects for testing WSTF Scenarios">
+		<p>
+		Included with the SoapUI 2.5.1 Release are soapUI Projects containing TestSuites/TestCases for validating 
+		<a href="http://www.wstf.org/" >WSTF scenario</a> implementations. Current TetsRequest are configured for SOAP 1.1 versions of 
+		WSTF scenarios part (see the Interface property of particular TestRequest). This can be reverted to soap1.2 version by changing 
+		the operation of the request to soap12binding which already	is included in Projects as one of the interfaces.</p>
+        <p>Two different projects, for two scenarios are added</p>
+        <ul>
+            <li><a href="#WSTF_SC002_Project">WSTF SC002 Project</a> - for testing if 
+            <a href="http://www.wstf.org/docs/scenarios/sc002/sc002.xml" >sc002 - Notify-Echo</a> is properly implemented</li>
+            
+            <li><a href="#WSTF_SC003_Project">WSTF SC003 Project</a> - for testing if 
+            <a href="http://www.wstf.org/docs/scenarios/sc003/sc003.xml" >sc003 - WS-Addressing</a> is propertly implemented</li>
+        </ul>
+						
+		<subsection name="WSTF SC002 Project">
+		<p>The project is divided into TestSteps and TestCases as specified in <a href="http://www.wstf.org/docs/scenarios/sc002/sc002.xml#sec4">
+		WSTF specification</a> and every TestRequest has assertions in order to validate the given scenario.</p>
+		<p align="center"><img src="images/wstfSc002_project.gif" alt="WSTF sc002 project"/></p>
+		<p>XML project file which can be used for remote or local project import can be found at 
+		<a href="projects/WSTF-SC002-Scenario-soapui-project.xml">http://www.soapui.org/wstf/projects/WSTF-SC002-Scenario-soapui-project.xml</a>.</p>
+		</subsection>
+		
+		<subsection name="WSTF SC003 Project">
+		<p>This project is testing properly implemented WS-Addressing scenarios. It is divided into TestSteps 
+		and TestCases as specified in <a href="http://www.wstf.org/docs/scenarios/sc003/sc003.xml#sec3">
+		WSTF specification.</a> For "Sync" tests, TestCases consist of only one TestRequest which have properly defined assertions in order to validate 
+		given scenario. For "Async" tests, due to the need to test response on a new connection there is a property named publicIp defined 
+		on the Project level that must manually be set to a publicly accessible IP address. Main TestRequest has "wsa:replyTo" (for example for "1.4 Async Echo + Wsa TestCase") 
+		or "wsa:FaultTo" (1.6 Async Faulting Echo + Wsa TestCase) use this "publicIp" property for indicating where to redirect the response.  
+		</p>
+		<p align="center"><img src="images/asyncTestCase_wsaInspector.gif" alt="Async TestCase - WS-A inspector setting"/></p>
+		<p>Also there are more TestSteps defined for this kind of TestCases. Last TestStep in every "Async" test is a MockResponse TestStep which have appropriate 
+		assertions defined. It is important for MockResponse to have properly set "Handle Response", "Handle Fault" and "Start Step" set to 
+		previous TestRequest.</p>
+		<p align="center"><img src="images/asyncTestCase_example.gif" alt="Async WSTF sc003 Project TestCase"/></p>
+		<p>XML project file which can be used for project import can be found at
+		<a href="projects/WSTF-SC003-Scenario-soapui-project.xml">http://www.soapui.org/wstf/projects/WSTF-SC003-Scenario-soapui-project.xml</a>.</p>
+		</subsection>
+		
+		</section>
+    </body>
+</document>
+

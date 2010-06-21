@@ -1,0 +1,410 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>web service testing - soapUI 2.5</title>
+    </properties>
+    <body>
+        <section name="soapUI 2.5 new features">
+            <p>Welcome to soapUI 2.5, the REST release!</p>
+            <p>
+                <i>As always, make backups of your project files before switching and let us know if you have any
+                    issues!
+                </i>
+            </p>
+            <table class="webstartlinkstable">
+                <tr>
+                    <td align="center" bgcolor="white">
+                        <span class="webstartheader">soapUI 2.5.1</span>
+                        <div>
+                            <a href="http://www.soapui.org/jnlp/2.5.1/soapui.jnlp"
+                               urchinTracker="/jnlp/soapui/2_5_1">
+                                <img class="webstart" src="images/webstart_green.png" border="0" alt="soapUI WebStart"/>
+                            </a>
+                        </div>
+                        [<a target="_new"
+                            href="http://sourceforge.net/project/showfiles.php?group_id=136013&amp;package_id=163662&amp;release_id=657327">
+                        Download</a>]
+                    </td>
+                    <td align="center" bgcolor="white">
+                        <span class="webstartheader">soapUI Pro 2.5.1</span>
+                        <div>
+                            <a href="http://www.eviware.com/jnlp/2.5.1/soapui-pro.jnlp"
+                               urchinTracker="/jnlp/soapui/2_5_1-pro">
+                                <img class="webstart" src="images/webstart_orange.png" border="0"
+                                     alt="soapUI Pro WebStart"/>
+                            </a>
+                        </div>
+                        [<a target="_new" href="http://www.eviware.com">Try or buy soapUI Pro</a>]
+                        [<a target="_new" href="http://www.eviware.com/content/view/42/36/">soapUI FAQ</a>]
+                    </td>
+
+                </tr>
+            </table>
+
+            <p>
+            soapUI 2.5, The REST Release, introduces support for testing of RESTful services, including Inspection, Invocation, Functional Tests, 
+            Assertions and LoadTests. soapUI 2.5 allows tests of both WADL supported and WADLess RESTful Services. 
+            The REST testing support makes soapUI the first testing tool to properly support REST Testing.
+            </p>
+            
+            <p>
+            soapUI 2.5 also includes WADL generation and from WADLess services and Documentation generation from both WADLed and WADLess Services.
+            soapUI 2.5 will allow you to test both XML and JSON output from RESTful Web Services.         
+            </p>
+            
+            
+            <p>
+                The most notable improvements to both soapUI and soapUI Pro are described below, on top of these are a
+                large number of bug fixes, minor UI improvements.
+                Also stay tuned to the soapUI blog at
+                <a target="_new" href="http://www.eviware.com/blogs/oleblog/">http://www.eviware.com/blogs/oleblog/</a>
+                for more info, tips and tricks, updates, etc.
+            </p>
+            
+            <subsection name="2.5.1 Release">
+            <p>The 2.5.1 release is plug-in and bug-fix release, most notable issues resolved are:</p>
+            <ul>
+            <li>Updated plugins for NetBeans, IDEA, Eclipse and maven 1/2</li>
+            <li>Updated dependencies for wss4j (WS-Security) and jetty (Mocking)</li>
+            <li>Fixed critical issues with SOAP Monitor and Composite Projects</li>
+            <li>WSTF testing project for the WSTF Scenario nr 3, <a href="wstf/index.html">Read More</a></li> 
+            </ul>
+            
+            <p>Many issues have been resolved thanks to feedback from 
+            our customers and community, we are grateful for your help and patience!</p>
+            
+            </subsection>
+
+             <subsection name="New and Noteworthy in soapUI 2.5 Final">
+
+              <p>The final 2.5 release contains many many bug fixes and small improvements. The most notable addition
+                  is the availability of Groovy Code-Templates for soapUI Pro users
+                  (<a href="userguide/preferences.html#Code_Templates">Read More</a>) and (finally) an updated
+                  user-guide!.
+              </p>
+
+               <p>As always we are in great debt to our customers and community for your awesome feedback, Thanks to all of
+                   you and keep it coming!! - eviware.team</p>  
+
+            </subsection>
+
+
+            <subsection name="New and Noteworthy in soapUI 2.5 beta2">
+
+                <newfeature img="images/2_5/wsa-inspector2.gif" alt="WS-Addressing Support">
+                    <div>
+                        <p>
+                            <b>Much Improved WS-Addressing Support</b>
+                        </p>
+                        <ul>
+                            <li>Better contrrol over generated headers</li>
+                            <li>Configuration for WSA Response assertion</li>
+                            <li>New WSA-Request asssertion for assertion WS-A headers posted to a MockResponseStep</li>
+                            <li>bugfixes..</li>
+                        </ul>
+                    </div>
+                </newfeature>
+
+                <newfeature img="images/2_5/http-tunnel.gif" alt="HTTP-Tunnel Support">
+                    <div>
+                        <p>
+                            <b>SOAP Monitor now with HTTP Tunnel and SSL support</b>
+                        </p>
+                        <ul>
+                            <li>Tunnel HTTP traffic through soapUI (in previous version this was available as TCP
+                                Tunnel)
+                            </li>
+                            <li>Possibility to tunnel SSL requests (if corresponding server and client keystores are
+                                available)
+                            </li>
+                            <li>bugfixes..</li>
+                        </ul>
+                    </div>
+                </newfeature>
+
+                <newfeature img="images/2_5/querymatch-dispatch.gif" alt="Mock Improvements">
+                    <div>
+                        <p>
+                            <b>Web Service Mocking improvements</b>
+                        </p>
+                        <ul>
+                            <li>MockResponse TestStep is now in Open Source version</li>
+                            <li>New XPath-based Dispatch method for MockOperations</li>
+                            <li>MockServices can now receive both Fault and Response messages (in WS-A replyTo/faultTo
+                                scenarios)
+                            </li>
+                            <li>Optional Wire-Log for MockEngine</li>
+                            <li>bugfixes..</li>
+                        </ul>
+                    </div>
+                </newfeature>
+
+                <newfeature img="images/2_5/rest-representations.gif" alt="REST improvements">
+                    <div>
+                        <p>
+                            <b>REST Improvements</b>
+                        </p>
+                        <ul>
+                            <li>Improved handling of REST Representations</li>
+                            <li>Option to not URLEncode parameter values</li>
+                            <li>bugfixes..</li>
+                        </ul>
+                    </div>
+                </newfeature>
+
+                <newfeature img="images/2_5/groovy-editor.gif" alt="Improved Groovy Editor">
+                    <div>
+                        <p>
+                            <b>Groovy Improvements</b>
+                        </p>
+                        <ul>
+                            <li>Much improved Groovy Editor with block-indents, bracket matching, improved undo/redo,
+                                etc
+                            </li>
+                            <li>Updated to groovy 1.5.7</li>
+                            <li>bugfixes..</li>
+                        </ul>
+                    </div>
+                </newfeature>
+
+                <newfeature>
+                    <div>
+                        <p>
+                            <b>And much much more..</b>
+                        </p>
+                        <ul>
+                            <li>New Request options:
+                                <ul>
+                                    <li>Entitize option for Requests</li>
+                                    <li>Option to follow redirects</li>
+                                    <li>MTOM improvements (not require binary datatype)</li>
+                                </ul>
+                            </li>
+                            <li>Property-Transfer Improvements (entitize, transfer child-nodes)</li>
+                            <li>Improved Resolve Dialog / Logic</li>
+                            <li>Command-line improvements
+                                <ul>
+                                    <li>Fixed command-line runners to run from other directories</li>
+                                    <li>Added –G and –P command-line switches to command-line runners</li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <p>And a slew of bug-fixes minor improvements thanks to all our great customers and community!
+                        </p>
+
+                    </div>
+                </newfeature>
+
+
+            </subsection>
+
+
+            <subsection name="New and Noteworthy in soapUI 2.5 beta1">
+
+                <newfeature>
+                    <div>
+                        <p>
+                            <b>REST Service Testing</b>
+                        </p>
+                        <p>
+                            soapUI 2.5 introduce comprehensive support for REST/HTTP services and associated standards:
+
+                            <ul>
+                                <li>Import REST Services from WADL files</li>
+                                <p align="center">
+                                    <img src="images/2_5/import-wadl.gif"></img>
+                                </p>
+
+                                <li>Define/Modify REST Services or Resource from endpoints, parameters, etc</li>
+                                <p align="center">
+                                    <img src="images/2_5/define-resource.gif"></img>
+                                </p>
+                                <li>REST Request TestStep for validating response representations</li>
+                                <p align="center">
+                                    <img src="images/2_5/rest-test-request.gif"></img>
+                                </p>
+                                <li>Support for testing JSON and HTML representations as XML</li>
+                                <p align="center">
+                                    <img src="images/2_5/rest-request.gif"></img>
+                                </p>
+                                <li>Generate WADL files for manually defined REST services</li>
+                                <p align="center">
+                                    <img src="images/2_5/generate-wadl.gif"></img>
+                                </p>
+                                <li>Generate code and documentation from imported or generated WADL</li>
+                                <p align="center">
+                                    <img src="images/2_5/wadl2java.gif"></img>
+                                </p>
+                            </ul>
+                        </p>
+
+                    </div>
+                </newfeature>
+
+                <newfeature img="images/2_5/wsa-inspector.gif" alt="WS-Addressing Support">
+                    <div>
+                        <p>
+                            <b>WS-Addressing Support</b>
+                        </p>
+                        <ul>
+                            <li>Automatically add WS-Addressing headers to both
+                                <a href="userguide/requests.html#WS-A_Inspector">Request</a>
+                                and
+                                <a href="userguide/mock/responses.html#WS-A_Inspector">Read More</a>
+                            </li>
+                            <li>Deduce WS-Addressing requirements from WSDL metadata (including WS-Policy)</li>
+                            <li>
+                                <a href="userguide/functional/response-assertions.html#WS-A_Assertion">WS-A Assertion
+                                </a>
+                                for validation correct WS-Addressing headers in request/response messages
+                            </li>
+                        </ul>
+                    </div>
+                </newfeature>
+
+                <newfeature img="images/2_5/http-test-request.gif" alt="HTTP Request TestStep">
+                    <div>
+                        <p>
+                            <b>HTTP Request TestStep</b>
+                        </p>
+                        <ul>
+                            <li>Send arbitrary HTTP Requests</li>
+                            <li>HTML and JSON responses are converted to XML for assertions, property transfers, etc
+                            </li>
+                        </ul>
+                    </div>
+                </newfeature>
+
+                <newfeature>
+                    <div>
+                        <p>
+                            <b>Improved MockServices</b>
+                        </p>
+                        <ul>
+                            <li>onRequest / afterRequest scripts for custom processing/logging/etc</li>
+                            <li>improved WSDL exposure with "?WSDL" query argument</li>
+                            <li>support for docroot setting for serving static content</li>
+                            <li>HEAD request support</li>
+                            <li>etc..</li>
+                        </ul>
+                    </div>
+                </newfeature>
+
+                <newfeature>
+                    <div>
+                        <p>
+                            <b>And much much more..</b>
+                        </p>
+                        <ul>
+                            <li>Encrypted Project Files and hidden password fields</li>
+                            <li>LoadTest before/afterRun scripts</li>
+                            <li>Import/Export TestCases/TestSuites for sharing</li>
+                            <li>Relative paths to project resources</li>
+                            <li>Improved SOAP Monitor now supports keep-alive and chunked encoding</li>
+                            <li>Dump-File for response message automatically saves responses to a local file</li>
+                            <li>Unique keystores on request-level</li>
+                            <li>Improved XPath Contains Assertion with option to ignore namespace prefixes (Thanks to
+                                the-zerberus)
+                            </li>
+                            <li>Improved compression algorithm support and Extended HTTP-related settings (Thanks to
+                                Mark Moore!)
+                            </li>
+                            <li>WSDL Documentation generation</li>
+                            <li>Improved WS-Security Timestamp generation to allow non-strict conformance</li>
+                            <li>Bug fixes...</li>
+                            <li>and much more..</li>
+                        </ul>
+
+                    </div>
+                </newfeature>
+
+            </subsection>
+            <subsection name="New and Noteworthy in soapUI Pro">
+                <p>On top of all the above, the following improvements/additions have been made to soapUI Pro:</p>
+
+                <newfeature img="images/2_5/project-properties.gif" alt="Composite Projects">
+                    <div>
+                        <p>
+                            <b>Composite Projects</b>
+                        </p>
+                        <p>Finally, for collaborative work on soapUI Pro projects you can split up projects into
+                            multiple files that
+                            can be independantly saved and reloaded,
+                            <a href="userguide/projects/composite-projects.html">Read more</a>
+                        </p>
+                    </div>
+                </newfeature>
+
+                <newfeature img="images/2_5/datagen.gif" alt="DataGen TestStep">
+                    <div>
+                        <p>
+                            <b>DataGen TestStep</b>
+                        </p>
+                        <p>Generate data for property values:</p>
+                        <ul>
+                            <li>Number : generate sequences or random numbers that can be formatted as int, float, etc
+                            </li>
+                            <li>List : sequential or random selection from fixed list of values</li>
+                            <li>Script : dynamically generated property values</li>
+                            <li>Template : content that can be used to create blocks of XML in requests/assertions/etc
+                            </li>
+                        </ul>
+                        <p>Generated property values can be recreated on every usage or only on execution of TestStep,
+                            and can
+                            be shared between threads during LoadTest.
+                        </p>
+
+                    </div>
+                </newfeature>
+
+                <newfeature img="images/2_5/loadtest-strategies.gif" alt="LoadTest Strategies">
+                    <div>
+                        <p>
+                            <b>New LoadTest Strategies</b>
+                        </p>
+                        <ul>
+                            <li>Grid : allows custom variation of number of threads over time</li>
+                            <li>Script : uses groovy script to modify thread count over time</li>
+                        </ul>
+
+                    </div>
+                </newfeature>
+
+                <newfeature img="images/2_5/rest-form-editor.gif" alt="Improved Form Editor">
+                    <div>
+                        <p>
+                            <b>Improved Form Editor</b>
+                        </p>
+                        <ul>
+                            <li>Improved support for abstract and derived types</li>
+                            <li>Support for REST requests and representations</li>
+                        </ul>
+                        <p>The Form editor has been redesigned internally, if you bump into issues or constructs that
+                            worked in
+                            the old version, please let us know so we can fix them for next release!
+                        </p>
+
+                    </div>
+                </newfeature>
+
+                <newfeature>
+                    <div>
+                        <p>
+                            <b>And much more!</b>
+                        </p>
+                        <ul>
+                            <li>Coverage Improvements : Coverage Reports from command-line and Multi-Value Coverage</li>
+                            <li>Requirements import/export improvements</li>
+                            <li>etc..</li>
+                        </ul>
+                    </div>
+                </newfeature>
+            </subsection>
+
+            <p>
+                <hr size="1"/>
+            </p>
+        </section>
+    </body>
+</document>
+

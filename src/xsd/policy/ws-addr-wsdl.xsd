@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+	<!--
+
+		W3C XML Schema defined in the Web Services Addressing 1.0 - WSDL
+		Binding specification http://www.w3.org/TR/ws-addr-core Copyright ©
+		2006 World Wide Web Consortium, (Massachusetts Institute of
+		Technology, European Research Consortium for Informatics and
+		Mathematics, Keio University). All Rights Reserved. This work is
+		distributed under the W3C® Software License [1] in the hope that it
+		will be useful, but WITHOUT ANY WARRANTY; without even the implied
+		warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. [1]
+		http://www.w3.org/Consortium/Legal/2002/copyright-software-20021231
+
+		$Id: ws-addr-wsdl.xsd,v 1.2 2006/05/12 09:46:04 hugo Exp $
+	-->
+
+<xs:schema targetNamespace="http://www.w3.org/2006/05/addressing/wsdl"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.w3.org/2006/05/addressing/wsdl"
+	blockDefault="#all" elementFormDefault="qualified">
+	<xs:import namespace="http://schemas.xmlsoap.org/ws/2004/09/policy" schemaLocation="policy.xsd" /> 
+	<xs:element name="ServiceName" type="tns:ServiceNameType" />
+
+	<xs:complexType name="ServiceNameType">
+
+		<xs:simpleContent>
+
+			<xs:extension base="xs:QName">
+				<xs:attribute name="EndpointName" type="xs:NCName" use="optional" />
+				<xs:anyAttribute namespace="##other"
+					processContents="lax" />
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:element name="InterfaceName" type="tns:AttributedQNameType" />
+
+	<xs:complexType name="AttributedQNameType">
+
+		<xs:simpleContent>
+
+			<xs:extension base="xs:QName">
+				<xs:anyAttribute namespace="##other"
+					processContents="lax" />
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:attribute name="Action" type="xs:anyURI" />
+
+	<xs:element name="UsingAddressing">
+
+		<xs:complexType>
+			<xs:anyAttribute namespace="##other" processContents="lax" />
+		</xs:complexType>
+	</xs:element>
+
+	<xs:simpleType name="AnonymousType">
+
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="optional" />
+			<xs:enumeration value="required" />
+			<xs:enumeration value="prohibited" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:element name="Anonymous">
+
+		<xs:complexType>
+
+			<xs:simpleContent>
+
+				<xs:extension base="tns:AnonymousType">
+					<xs:anyAttribute namespace="##other"
+						processContents="lax" />
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

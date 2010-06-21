@@ -1,0 +1,718 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>Testing Web Services - the soapUI snapshot</title>
+    </properties>
+    <body>
+		<section name="soapUI SNAPSHOT release">
+		<columns><column>
+		<p>The soapUI SNAPSHOT release will be updated frequently to mirror the current code base and fix critical
+		bugs. It will primarily be available through Java WebStart and as a zip binary without the JRE or any documentation.</p>
+		<p>SourceForge release and related plugins will <i>not</i> be made available unless somehow required.</p>
+		<p><b>Please be sure to make backup-copies of your projects before testing a new snapshot!</b></p>
+		</column>
+		<column align="center" width="200">
+			       <div>
+				<a href="http://www.soapui.org/jnlp/SNAPSHOT/soapui.jnlp" urchinTracker="/jnlp/soapui/snapshot"><img src="images/webstart_green.png" alt="" border="0"/></a>
+			 <br/>[<a urchinTracker="/download/soapui/snapshot" href="download/soapui-SNAPSHOT-bin.zip">Download</a>]</div>
+		<p>Updated 2007-11-20</p>
+		</column></columns>
+		
+		<subsection name="SNAPSHOT 2007-11-20">
+		<p>This snapshot fixes some initial bugs in the 2.0 beta1 release and also adds some improvements:</p>
+		<ul>
+		<li>LoadTest Statistics can now be continuously logged to external files during the run of a LoadTest via the 
+		following tab in the LoadTest Options dialog:
+		<p align="center"><img src="images/loadteststatistics.gif" alt="soap test load test statistics"/></p>
+		When specifying a folder, soapUI will there create one file for each TestStep and one for the TestCase total, 
+		and then export	the corresponding statistics as configured and when the LoadTest ends</li>
+		<li>A -b option has been added to the MockServiceRunner command line utility that will cause it not to read from stdin 
+		when starting. This is required if you want to run your MockServices in the background with for example nohup</li>
+		<li>WSDL Caching has been modified to now cache WSDL's as text and not XML, which will improve project load/save 
+		times and stability, especially when working with large/many WSDL's/XSD's</li>
+		<li>The TestRun log visible in the TestCase and TestSuite editors has been "brushed up" visually:
+		<p align="center"><img src="images/testrunlog.gif" alt="test run log and TestSuite editors soap test"/></p></li>
+		<li>a global ${projectDir} property is now available for accessing the projects directory</li>
+		<li>etc..</li>
+		</ul>
+		
+		<p>Bugs fixed:</p>
+		<ul>
+		<li>MockService Start/Stop menu actions now don't confuse the open editor</li>
+		<li>Assign end point in the Service Endpoints dialog now also assigns authorization settings</li>
+		<li>setPropertyValue now works correctly in Groovy scripts</li>
+		<li>Fixed null-pointer in Maven LoadTestRunner when specifying user name, password or domain settings</li>
+		<li>etc...</li>
+		</ul>
+		
+		<p>Together with the SNAPSHOT release, we are also releasing the 2.0 beta1 version of the eclipse, Maven, IDEA and
+		NetBeans plugins;</p>
+		<ul>
+		<li>The NetBeans plugin has been overhauled to now use the standard NetBeans project model instead of a soapUI 
+		Navigator. Create new "soapUI" projects with New Project\SOA\Web Service Testing Project;
+		<p align="center"><img src="images/netbeans_new_project.gif"/></p>
+		Projects can then either be created or imported from an existing soapUI Project and are displayed in the 
+		standard NetBeans project explorer:
+		<p align="center"><img src="images/netbeans_explorer.gif"/></p></li>
+		<li>The eclipse plugin is available from SourceForge and the update site</li>
+		<li>The IDEA plugin is available through the IDEA plugin manager or from SourceForge</li>
+		<li>The Maven plugins are available at SourceForge and our Maven repositories</li>
+		</ul>
+		
+		<p>An associated <a target="_new" href="http://www.eviware.com/content/view/81/58/">soapUI Pro SNAPSHOT</a> is also available 
+		which includes improved WSDL coverage calculations and some more soapUI-Pro specific improvements and bug-fixes.</p>
+		
+		<p>As always a huge thanks to those patiently reporting issues and constantly helping us improve our tools.</p>
+		</subsection>
+		
+		<subsection name="SNAPSHOT 2007-08-29">
+		<p>This snapshot fixes some annoying bugs in the 1.7.5 release and adds a sleuth of UI-improvements:</p>
+		<h4>Bugs (hopefully) fixed:</h4>
+		<ul>
+		<li>The very annoying bug that did not save changes to a TestCase and its contents if any TestCase in the same
+		TestSuite had been moved within that TestSuite.</li>
+		<li>Fixed correct progress display for in the TestSuite runner, see
+		<a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1763706&amp;group_id=136013&amp;atid=737763">Bug Report</a></li>
+		<li>Fixed SOAP 1.2 action header, see
+		<a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1771920&amp;group_id=136013&amp;atid=737763">Bug Report</a></li>
+		<li>Fixed correct HTTP status code for Fault MockResponse, see
+		<a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1773056&amp;group_id=136013&amp;atid=737763">Bug Report</a></li>
+		<li>Fixed Generation of TestSuites to use existing Requests, see
+		<a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1774508&amp;group_id=136013&amp;atid=737763">Bug Report</a></li>
+		<li>Fixed initialization of Horizontal Scroll bars in editors when using tabs, see
+		<a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1775584&amp;group_id=136013&amp;atid=737763">Bug Report</a></li>
+		<li>Fixed Out-Of-Memory errors when creating backup-requests, see
+		<a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1775593&amp;group_id=136013&amp;atid=737763">Bug Report</a></li>
+		<li>Fixed WSDL import problems with circular definition imports, see
+		<a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1776788&amp;group_id=136013&amp;atid=737763">Bug Report</a></li>
+		<li>Fixed progress display for TestCases with disabled TestSteps, see
+		<a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1783837&amp;group_id=136013&amp;atid=737763">Bug Report</a></li>
+		<li>Fixed renaming of Delay Steps, see
+		<a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1783840&amp;group_id=136013&amp;atid=737763">Bug Report</a></li>
+		</ul>
+		<h4>New Features:</h4>
+		<ul>
+		<li>Added option to clear Properties when saving a Project, see 
+		<a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1767300&amp;group_id=136013&amp;atid=737766">Feature Request</a></li>
+		<li>Added line-numbers in all Groovy/XML editors (Alt-L) and also a "Go To Line" action (Ctrl-Alt-L), see 
+		<a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1728250&amp;group_id=136013&amp;atid=737766">Feature Request</a></li>
+		<li>Added Excel-file support to DataSource TestStep (soapUI Pro only)</li>
+		<li>Added range-support to DataSource TestStep (soapUI Pro only)</li>
+		<li>Added XQuery assertion and XQuery support to property-transfers</li>
+		<li>Added "Recent" file menu for fast switching between workspaces, projects and editors</li>
+		<li>Added Log to Property-Transfer editor to show recent transfers</li>
+		<li>Fixed automatic creation of non-existent properties in Properties Steps when "Create on Load" option is selected</li>
+		<li>Added dialogs for launching soapUI command-line TestRunner and LoadTestRunner tools</li>
+		<li>Moved HTTP-Headers/Attachments/SSL-Info tabs in message editors to be inspectors</li>
+		<li>Fixed Response assertions to be inspector instead with automatic show/hide on failed/passed state</li>
+		<li>A large number of UI-Improvements: tool bars, inspectors, etc..</li>
+		<li>And much more... </li>
+		</ul>
+		<p>As always, thanks to all our users for your feedback, reports and patience!</p>
+		</subsection>
+		
+		<subsection name="SNAPSHOT 2007-04-19">
+		<p>This snapshot fixes the following:</p>
+		<ul>
+		<li>Fixed attachment-support in MockRequest dispatching, see
+		<a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1702793&amp;group_id=136013&amp;atid=737763">Bug Report</a></li>
+		<li>Fixed setting of lastSavedDate when WSDL caching is disabled</li>
+		<li>Improved focusing when opening/switching desktop windows</li>
+		<li>Fixed Check-Box label and creation of TestRequests with default Not SOAP Fault assertion, see
+		<a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1702798&amp;group_id=136013&amp;atid=737763">Bug Report</a></li>
+		<li>Fixed correct count and termination of LoadTestRunners, see
+		<a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1702805&amp;group_id=136013&amp;atid=737763">Bug Report</a></li>
+		<li>Fixed TPS/BPS calculation with branched TestCases, see
+		<a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1702802&amp;group_id=136013&amp;atid=737763">Bug Report</a></li>
+		<li>Updated to commons-logging 1.1</li>
+		<li>And more internal fixes.. </li>
+		</ul>
+		<p>Also an update to the <a href="eclipse/index.html">eclipse-plugin</a> with version 1.7.0.02 has been publish 
+		to our update-site with the above fixes and hopefully fixed focusing issues when running eclipse under Java 1.6.</p>
+		
+		<p>As always, thank you for all feedback, keep it coming!</p>
+		</subsection>
+		
+		<subsection name="SNAPSHOT 2007-03-29">
+		<p>This snapshot fixes some more minor issues:</p>
+		<ul>
+		<li>Improved error reporting and dispatching for mock operations</li>
+		<li>Added MockService option to require correct SOAP Version in requests</li>
+		<li>Added XML Schema XSD to default XSD's when importing</li>
+		<li>Added scroll bars to MockOperation dispatch script/XPath editors</li>
+		<li>Fixed unsetting of OutputName when updating to a one-way operation</li>
+		<li>Fixed check of MockService path before starting</li>
+		<li>Fixed LoadTest runner not to start threads if limit has been passed</li>
+		<li>Reverted to commons-ssl-0.3.4, awaiting bug fixes</li>
+		<li>And more internal fixes.. </li>
+		</ul>
+		<p>This is hopefully the final snapshot before the final 1.7 release. Please let us know of any old/new
+		issues as soon as possible. As always, thank you for all feedback, keep it coming!</p>
+		</subsection>
+		
+		<subsection name="SNAPSHOT 2007-03-25">
+		<p>This snapshot fixes a number of minor issues:</p>
+		<ul>
+		<li>Added experimental support for 3rd-party libraries in "ext" folder relative to startup folder, normally soapUI/bin. 
+		Place JDBC drivers and other libs required from Groovy scripts in this folder.</li>
+		<li>Fixed correct validation and failures for one-way operation requests</li>
+		<li>Added new "SOAP Response" assertion which validates that the response is a soap message as mandated by the WSDL. 
+		The assertion is (optionally) added to all new Test Requests.</li>
+		<li>Added internal check that fails empty responses for two-way operations</li>
+		<li>Fixed correct display of message exchanges in load-test log</li>
+		<li>Set character encoding to utf-8 in JUnit reports</li>
+		<li>Fixed NPE's when running tests from command line</li>
+		<li>Fixed closing of MockService-related desktop-panels</li>
+		<li>Added right-click popup to all undoable text-areas with edit-actions</li>
+		<li>Polished up XPath Match assertion dialog</li>
+		<li>Added confirmation to creation of empty requests</li>
+		<li>Fixed property-expansion in end points</li>
+		<li>and some  more internal fixes.. </li>
+		</ul>
+		<p>As always, thank you for all feedback, keep it coming!</p>
+		</subsection>
+		
+		<subsection name="SNAPSHOT 2007-03-21">
+		<p>This snapshot fixes a number of minor issues:</p>
+		<ul>
+		<li>Added support for excluded types in the WSDL Settings page. Types specified here will ignored when 
+		generating requests, which can be handy if "overly complex" types are in the schema. By default the 
+		schema@http://www.w3.org/2001/XMLSchema is added to the list.</li>
+		<li>Fixed error-line-numbers for RPC operations with simple types</li>
+		<li>Fixed step result for test request to be OK if assertions pass</li>
+		<li>Fixed spelling errors in UI Settings page</li>
+		<li>and some  more internal fixes.. </li>
+		</ul>
+		<p>As always, thank you for all feedback, keep it coming!</p>
+		</subsection>
+		
+		<subsection name="SNAPSHOT 2007-03-20">
+		<p>This snapshot fixes a number of minor issues:</p>
+		<ul>
+		<li>Fixed dispatching of mock response with Groovy script</li>
+		<li>Added option to not disable Groovy log during LoadTest</li>
+		<li>Added option to use WSDL Binding name for imported Interfaces (instead of portType)</li>
+		<li>Fixed correct internal WSDL Context initialization when importing WSDL:s with multiple bindings</li>
+		<li>Added output-folder setting to WS-I tools, for running wsi tools from command line runner</li>
+		<li>Fixed failure of test from command line even if no assertions fail</li>
+		<li>Downgrade Xalanan dependency back to 2.6.0 which is required by WSS</li>
+		<li>And more internal stuff of course.. </li>
+		</ul>
+		<p>As always, thank you for all feedback, keep it coming!</p>
+		</subsection>
+		
+		<subsection name="SNAPSHOT 2007-02-25">
+		<p>This snapshot fixes a number of minor issues:</p>
+		<ul>
+		<li>Added update frequency to both LoadTest graphs (for regular intervals..) and LoadTests themselves (in the 
+		Options dialog), see 
+		<a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1667522&amp;group_id=136013&amp;atid=737766">Feature Request</a></li>
+		<li>Fixed threading issues with Groovy scripts</li>
+		<li>Fixed loading of SOAP 1.2 XSD</li>
+		<li>Added option strip whitespaces from outgoing requests, see 
+		<a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1667555&amp;group_id=136013&amp;atid=737766">Feature Request</a></li>
+		<li>Fixed case of wsdl2java axis2 script, see
+		<a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1666462&amp;group_id=136013&amp;atid=737763">Bug Report</a></li>
+		<li>Hopefully fixed calculation of TPS/BPS when using "based on actual time passed" in load tests, see
+		<a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1665700&amp;group_id=136013&amp;atid=737763">Bug Report</a></li>
+		<li>Added possibility to save project before removing, see
+		<a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1664733&amp;group_id=136013&amp;atid=737763">Bug Report</a></li>
+		<li>Improved contentID handling for multi part attachments; the first attachment of a multipart attachment
+		can have 2 space-separated contentIds, where the second will be used for the multipart attachment itself</li>
+		<li>Added system-properties viewer to help menu</li>
+		<li>More minor fixes and refactorings...</li>
+		</ul>
+		
+		<p>Thanks again for all feedback, keep it coming!</p>
+		</subsection>
+		
+		<subsection name="SNAPSHOT 2007-02-19">
+		<p>This snapshot fixes a number of minor issues:</p>
+		<ul>
+		<li>Fixed TestStep focus when moving TestSteps with the keyboard in the testcase editor</li>
+		<li>Fixed check for 0 tabSize in Groovy/XML editors</li>
+		<li>Update JRE requirement to 1.5+ for webstart</li>
+		<li>Improved SOAP Fault error message when dispatch fails in MockService</li>
+		<li>Added saveFirst and createMissing properties to PropertiesStep (default to true/false), see 
+		<a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1661060&amp;group_id=136013&amp;atid=737763">Bug Report</a></li>
+		<li>Added PropertyTransfer setting "Transfer to all", which will transfer a single source property to all target selections 
+		(when using XPath for target). Selecting this option and for example transferring a source property/value to
+		<source>declare namespace ns1='http://www.webserviceX.NET/';
+//ns1:ConversionRate/ns1:*/text()</source>
+		would set the text of all child elements of ns1:ConversionRate</li>
+		<li>Ongoing internal refactorings..</li>
+		</ul>
+		
+		<p>Thanks again for all feedback, keep it coming!</p>
+		</subsection>
+		
+		<subsection name="SNAPSHOT 2007-02-14">
+		<p>This snapshot fixes a number of minor issues:</p>
+		<ul>
+		<li>Added TestCase option to not fail if there were ignored TestStep failures</li>
+		<li>Added display of TestStep status in TestStep log</li>
+		<li>Improved handling of startup delay in LoadTests</li>
+		<li>Removed modification of project file name when creating a new project</li>
+		<li>Fixed all file dialogs to use same chooser and thus reuse last directory</li>
+		<li>Hopefully fixed selection of content nodes when dispatching mock request to RPC operation</li>
+		<li>Updated JBossWS JAX-WS tool to use "wsconsume" instead of "wsimport" (in alignment with their docs..)</li>
+		<li>Let all context objects in Groovy scripts implement Map interface allowing for much simpler syntax when accessing
+		these;
+		<source>context["name"] = ... 
+or
+context.name = .. </source></li>
+		</ul>
+		<p>Thanks for all feedback, keep it coming!</p>
+		</subsection>
+		
+		<subsection name="SNAPSHOT 2006-12-18">
+		<p>This snapshot hopefully fixes a number of bugs:</p>
+		<ul>
+		<li>Added "Export Attachment" button to response attachments panel, see 
+		<a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1613123&amp;group_id=136013&amp;atid=737763">Bug Report</a></li>
+		<li>Fixed start-info value for MTOM attachments with SOAP 1.1 in accordance with spec, see 
+		<a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1613885&amp;group_id=136013&amp;atid=737763">Bug Report</a></li>
+		<li>Fixed/Improved handling of Content-IDs with swaRef attachments, see 
+		<a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1614285&amp;group_id=136013&amp;atid=737763">Bug Report</a></li>
+		<li>Fixed launching of commands under Linux, see 
+		<a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1617319&amp;group_id=136013&amp;atid=737763">Bug Report</a></li>
+		<li>Fixed launching of GSoap tools under Linux, see 
+		<a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1615756&amp;group_id=136013&amp;atid=737763">Bug Report</a></li>
+		<li>Fixed use of correct charset when reading responses, see 
+		<a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1617488&amp;group_id=136013&amp;atid=737766">Bug Report</a></li>
+		<li>and some more internal fixes..</li>
+		</ul>
+		</subsection>
+		
+		<subsection name="SNAPSHOT 2006-12-12">
+		<p>This snapshot fixes a number of bugs:</p>
+		<ul>
+		<li>Added "Export Attachment" button to attachments panel, see 
+		<a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1613123&amp;group_id=136013&amp;atid=737763">Bug Report</a></li>
+		<li>Updated to wsdl4j 1.6.2 for fixes with overloaded operations.. </li>
+		<li>Fixed handling of missing encodingTypes attribute in bindings</li>
+		<li>Fixed export of statistics to export correct data, see 
+		<a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1610645&amp;group_id=136013&amp;atid=737763">Bug Report</a></li>
+		<li>Fixed collapsion of tree on renames and system preference updates, see 
+		<a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1609172&amp;group_id=136013&amp;atid=737763">Bug Report</a></li>
+		<li>Fixed failure of testrequests on connection errors, see 
+		<a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1604544&amp;group_id=136013&amp;atid=737763">Bug Report</a></li>
+		<li>More SSL fixes; removed trustStore settings since soapUI trusts everything anyway.. Huge
+		thanks to Julius Davies for explaining and Thomas Arn for testing!</li>
+		<li>Fixed scrollbar increment in XML/Groovy editors, see
+		<a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1604562&amp;group_id=136013&amp;atid=737766">Feature Request</a></li>
+		<li>More internal improvements and bug fixes...</li>
+		</ul>
+		<p>Since we have updated a core library (wsdl4j) and are aiming for a 1.6.1 release before Christmas we kindly urge 
+		you to report any new/more relevant issues! Thank you!</p>
+		</subsection>
+		
+		<subsection name="SNAPSHOT 2006-11-27">
+		<p>This snapshot fixes a number of bugs:</p>
+		<ul>
+		<li>Copying a Property Transfer now copies source step/property/path correctly</li>
+		<li>Requests are sent using multi part only when necessary</li>
+		<li>Dependency error in command line runners</li>
+		<li>Updated to commons-ssl-0.3.4, please report any SSL-related problems!</li>
+		<li>Fixed file-choosers in dialog to allow selection of files..</li>
+		<li>etc..</li>
+		</ul>
+		
+		</subsection>
+		
+		<subsection name="SNAPSHOT 2006-11-23">
+		<p>This snapshot fixes the following:</p>
+		<ul>
+		<li>Fixed problem when creating new TestCases in empty TestSuite, see 
+		<a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1596907&amp;group_id=136013&amp;atid=737763">Bug Report</a></li>
+		<li>Fixed lockup when loading unavailable WSDL's, see 
+		<a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1599211&amp;group_id=136013&amp;atid=737763">Bug Report</a></li>
+		<li>Fixed NPE when removing an Interface with associated test requests, see 
+		<a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1599193&amp;group_id=136013&amp;atid=737763">Bug Report</a></li>
+		<li>Updated to commons-ssl-0.3.3 which fixes classcastexception and initializing SSL with system properties, see 
+		<a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1597002&amp;group_id=136013&amp;atid=737763">Bug Report</a></li>
+		<li>Added SSL Preferences dialog allowing you to specify keyStore/trustStore from within soapUI without
+		having to modify the bat/sh files. soapUI must be restarted for settings to take effect;
+		<p align="center"><img src="images/ssl_settings_for_snapshot.gif"/></p></li>
+		<li>Added support for "anonymous" attachments; attachments can be added to any request (regardless of 
+		WSDL definition) and assigned the "anonymous" part in the Attachments table. The request will in this case 
+		be sent as a multi part message and the attachment(s) will be added without reference from the root part. (see
+		<a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1599266&amp;group_id=136013&amp;atid=737766">Feature Request</a>)
+		<p align="center"><img src="images/anonymous_attachments_for_snapshot.gif"/></p></li>
+		<li>Added support for specifying request HTTP Headers and viewing response HTTP Headers in the request/response
+		editor:(see
+		<a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1596288&amp;group_id=136013&amp;atid=737766">Feature Request</a>)<p align="center"><img src="images/http_headers_for_snapshot.gif"/></p></li>
+		</ul>
+		<p>As always.. all feedback is greatly appreciated..!</p>
+		</subsection>
+		
+		<subsection name="SNAPSHOT 2006-11-08">
+		<p>This snapshot fixes the following:</p>
+		<ul>
+		<li>Added exclusion list to proxy settings (comma separated)</li>
+		<li>Added support for shift ins/del (copy/cut) to XML editors</li>
+		<li>Added 2 context properties available when load-testing:
+		<ol>
+		<li><b>ThreadIndex</b> - the index of the created thread.. this value will never change for a given TestCase during its run time.. 
+		New threads will simply get an incremented index.. the mod of this value could for example be used as an index into a data-file 
+		(to handle changes in number of threads) </li>
+		<li><b>RunCount</b> - tells how many times the TestCase has been run by its thread (not in total) during the current LoadTest </li>
+		</ol>
+		</li>
+		<li>Fixed correct popup in LoadTest log and similar errors in other tables, see 
+		<a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1592156&amp;group_id=136013&amp;atid=737763">Bug Report</a></li>
+		<li>Improved error handling in LoadTest runner</li>
+		<li>Added initial support for unzipping gzipped response messages, i.e. messages with a Content-Type or Content-Encoding ending with "gzip". 
+		Thanks to Diego Banda.</li>
+		</ul>
+		<p>As always... all feedback is greatly appreciated...!</p>
+		</subsection>
+		
+		<subsection name="SNAPSHOT 2006-10-26">
+		<p>This snapshot fixes the following:</p>
+		<ul>
+		<li>Fixes proxy-support for schema-loading, see 
+		<a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1585239&amp;group_id=136013&amp;atid=737763">Bug Report</a></li>
+		<li>Fixes headless support for command-line runners, see
+		<a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1585241&amp;group_id=136013&amp;atid=737763">Bug Report</a></li>
+		<li>Fixes Unix script arguments, see
+		<a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1585240&amp;group_id=136013&amp;atid=737763">Bug Report</a></li>
+		<li>More internal fixes..</li>
+		</ul>
+		<p>As always.. all feedback is greatly appreciated..!</p>
+		</subsection>
+		
+		<subsection name="SNAPSHOT 2006-10-22">
+		<p>This snapshot fixes the following:</p>
+		<ul>
+		<li>Added request-level property to inline attachment content in response editor (as in soapUI 1.5), see 
+		<a target="_new" href="http://sourceforge.net/forum/forum.php?thread_id=1594751&amp;forum_id=494205">forum discussion</a></li>
+		<li>Improved saving of projects to not corrupt files on out-of-memory (saving now first saves to an in-memory buffer
+		which is written to file if no errors occur..)</li>
+		<li>Fixed export of definitions containing multiple files with same name, see 
+		<a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1579756&amp;group_id=136013&amp;atid=737763">Bug Report</a></li>
+		<li>Fixed validation of derived types in XML editors</li>
+		<li>Fixed load-test statistics to show correct values if a step is executed multiple times within one run</li>
+		<li>Fixed automatic adding of TestStep Status assertion to newly created Load Tests, see
+		<a target="_new" href="http://sourceforge.net/forum/forum.php?thread_id=1595693&amp;forum_id=494205">forum discussion</a></li>
+		<li>More internal fixes..</li>
+		</ul>
+		<p>As always.. all feedback is greatly appreciated..!</p>
+		</subsection>
+		
+		<subsection name="SNAPSHOT 2006-10-14">
+		<p>This snapshot fixes the following:</p>
+		<ul>
+		<li>Added option to ignore case in Contains/NotContains assertions</li>
+		<li>Improved support for automatic validation by adding an option to not send invalid requests (see
+		<a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1570712&amp;group_id=136013&amp;atid=737766">Feature Request</a>)</li>
+		<li>Hopefully fixed the Content-ID related bug when receiving MIME-attachments (see 
+		<a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1575529&amp;group_id=136013&amp;atid=737763">Bug Report</a>)</li>
+		<li>Added a global option to backup project-files before saving to avoid corruption of data when exiting after an 
+		"Out of Memory" error (see <a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1543510&amp;group_id=136013&amp;atid=737763">Bug Report</a>)</li>
+		<li>Hopefully fixed bug of Property-Table values not being saved when moving focus away (see 
+		<a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1563155&amp;group_id=136013&amp;atid=737763">Bug Report</a>)</li> 
+		<li>Fixed a serious memory-leak in request-processor for MTOM/inline attachments and also modified memory-management 
+		under testing to never discard timing results for individual TestSteps.</li>
+		<li>More internal fixes..</li>
+		</ul>
+		<p>As always.. all feedback is greatly appreciated.. hopefully there are only 1-2 more snapshots before the final 1.6 release</p>
+		</subsection>
+		
+		<subsection name="SNAPSHOT 2006-10-09">
+		<p>This snapshot fixes the following:</p>
+		<ul>
+		<li>Added support for automatic validation of request/response messages in editors (see
+		<a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1570712&amp;group_id=136013&amp;atid=737766">Feature Request</a>), 
+		thanks to Michael Vorburger! ("Preferences / UI Settings / Validate Request / Response")</li>
+		<li>Added support for generating RPC-parts for attachments ("Preferences / WSDL Settings / Attachment Parts")</li>
+		<li>Improved Code-generation dialogs:
+		<ul>
+		<li>Added [Tools] button which open "Preferences / Integrated Tools" for setting tool paths</li>
+		<li>All path/file parameters are now relative to soapUI-project directory</li>
+		<li>Improved error messages</li>
+		<li>Fixed bug in additional classes for XFire generation</li>
+		</ul>
+		</li>
+		<li>General dialog improvements; Escape closes and F1 shows online help if available</li>
+		<li>Fixed validation of SOAP mustUnderstand/encodingStyle attributes in entire messages, see 
+		<a target="_new" href="http://sourceforge.net/forum/forum.php?thread_id=1585783&amp;forum_id=494205">forum discussion</a></li>
+		<li>Fixed handling of missing Content-ID header in response attachments, see 
+		<a target="_new" href="http://sourceforge.net/forum/forum.php?thread_id=1582325&amp;forum_id=494205">forum discussion</a></li>
+		<li>Added possibility to edit response message and revalidate with Alt-V (including assertions), see 
+		<a target="_new" href="http://sourceforge.net/forum/forum.php?thread_id=1585341&amp;forum_id=494205">forum discussion</a></li>
+		<li>Added possibility for custom background image in desktop. Just place a soapui-background.gif/jpg/png in the 
+		soapUI bin directory (at last :-), Thanks to Roger Sundberg</li>
+		<li>Added option to open TestCase editor when adding requests to a TestCase</li>
+		<li>Updated to commons-ssl-0.3.0.jar</li>
+		<li>Many more minor fixes..</li>
+		</ul>
+		<p>As always, we are greatly thankful for your help!</p>
+		</subsection>
+		
+		<subsection name="SNAPSHOT 2006-09-22">
+		<p>This snapshot fixes the following:</p>
+		<ul>
+		<li>Fixed caching of attachments to now be saved in the soapUI project file (compressed).. this makes
+		portability of soapUI projects with attachments much simpler.. The attachment-folder setting has been
+		removed.</li>
+		<li>Fixed importing/viewing of schemas starting with a comment</li>
+		<li>Fixed property-expansion when running XPath assertions and property-transfers from within their
+		editors.</li>
+		<li>Fixed .sh script invocation on Unix platforms</li>
+		<li>Fixed loading/caching of WSDL's/schemas on paths with spaces</li>
+		<li>more minor fixes..</li>
+		</ul>
+		<p>As always, we are greatly thankful for your help!</p>
+		</subsection>
+		
+		<subsection name="SNAPSHOT 2006-09-13">
+		<p>This snapshot fixes the following:</p>
+		<ul>
+		<li>Fix for the <a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1557534&amp;group_id=136013&amp;atid=737763">bug</a> 
+		when loading secured WSDL's.</li> 
+		<li>Fix for the <a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1557534&amp;group_id=136013&amp;atid=737763">bug</a> 
+		with XPath assertions containing empty content.</li> 
+		<li>Fixes password-input fields to be masked</li>
+		<li>Added debug-output when launching TcpMon</li>
+		</ul>
+		<p>As always, we are greatly thankful for your help!</p>
+		</subsection>
+
+		<subsection name="SNAPSHOT 2006-09-03">
+		<p>This release adds/fixes the following:</p>
+		<ul>
+		<li>Optimized the Groovy-TestStep for lower memory consumption and faster execution times</li> 
+		<li>Initial fix for the <a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1546292&amp;group_id=136013&amp;atid=737763">bug</a> 
+		when validating doc-literal messages with mime-attachments.</li> 
+		<li>Initial fix for the <a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1546280&amp;group_id=136013&amp;atid=737763">bug</a> 
+		when receiving response attachments.</li> 
+		<li>Initial fix for the <a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1546278&amp;group_id=136013&amp;atid=737763">bug</a> 
+		when viewing response attachments.</li> 
+		<li>Initial fix for the <a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1549544&amp;group_id=136013&amp;atid=737763">bug</a> 
+		when running WS-I analysis reports.</li> 
+		<li>Initial fix for the <a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1546845&amp;group_id=136013&amp;atid=737763">bug</a> 
+		for keyboard accelerators on the mac.</li> 
+		<li>Added a new "Transfer text content" option to Property Transfers for backwards compatibility reasons. When an XPath expression points at an element
+		and this option is checked, the elements text-content will be transferred instead of the entire element. This option will be checked by default.</li>
+		<li>Added a new "Set NULL on missing source" option to Property Transfers that sets the target property to null if the source property is not available (instead of failing) </li>
+		<li>Added a new "Search Properties" option to TestCases that controls if property-references should look for all steps after the requested property or only
+		the TestRunContext. Unchecked by default (for backwards compatibility), see 
+		<a target="_new" href="http://sourceforge.net/forum/forum.php?thread_id=1562227&amp;forum_id=494205">forum discussion</a></li>
+		<li>Added the possibility to specify property expansions as <code>${&lt;TestStep Name&gt;#&lt;Property&gt;}</code> allowing specification 
+		of which TestSteps property to use (instead of searching context and preceding TestSteps..).</li>
+		<li>A large number of minor UI-improvements (icons, shadows, etc..)</li> 
+		<li>Internal refactorings</li>
+		</ul>
+		<p>Thanks again for everyone´s feedback, as always very appreciated!</p>
+		</subsection>
+		
+		<subsection name="SNAPSHOT 2006-08-24">
+		<p>This release adds/fixes the following:</p>
+		<ul>
+		<li>Fixed a number of critical issues in testrunner which resulted in outofmemory errors.. hopefully these are resolved now.</li> 
+		<li>Added step numbers to the testcase log</li> 
+		<li>Minor refactorings..</li>
+		</ul>
+		<p>Thanks again for everyone's feedback, as always very appreciated!</p>
+		</subsection>
+		
+		<subsection name="SNAPSHOT 2006-08-23">
+		<p>This release adds/fixes the following:</p>
+		<ul>
+		<li>Changed support for external log4j.xml to soapui-log4j.xml in line with this <a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1541668&amp;group_id=136013&amp;atid=737766">Feature Request</a></li> 
+		<li>Improved schemaLocation handling for relative paths (see 
+		<a target="_new" href="http://sourceforge.net/forum/forum.php?thread_id=1558763&amp;forum_id=494205">forum discussion</a>)</li>
+		<li>Improved memory conservation during test-cases and load-testing (see 
+		<a target="_new" href="http://sourceforge.net/forum/forum.php?thread_id=1554203&amp;forum_id=494205">forum discussion</a>)</li>
+		<li>Added an option for property-transfers to transfer text content of source/target elements for backwards-compatibility reasons with 1.5, 
+		(see <a target="_new" href="http://sourceforge.net/forum/forum.php?thread_id=1556818&amp;forum_id=494205">forum discussion</a>)</li> 
+		<li>A small number of internal refactorings and improvements..</li> 
+		</ul>
+		<p>Thanks again for everyone's feedback, as always very appreciated!</p>
+		</subsection>
+		
+		
+		<subsection name="SNAPSHOT 2006-08-22">
+		<p>This release adds/fixes the following:</p>
+		<ul>
+		<li>Added support for external log4j.xml in line with this <a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1541668&amp;group_id=136013&amp;atid=737766">Feature Request</a></li> 
+		<li>Added a "description" tab to both TestCase and TestSuite editors for arbitrary TestSuite/TestCase documentation</li> 
+		<li>Fixed teststep-listeners and added an option to transfer null on missing source properties (in line with 
+		<a target="_new" href="http://sourceforge.net/forum/forum.php?thread_id=1556818&amp;forum_id=494205">forum discussion</a>)</li>
+		<li>Added missing library for unverified certificate support</li>
+		<li>Fixed broken Preemptive Authentication support (see 
+		<a target="_new" href="http://sourceforge.net/forum/forum.php?thread_id=1555825&amp;forum_id=494205">forum discussion</a>)</li>
+		<li>Improved schemaLocation handling for relative paths (see 
+		<a target="_new" href="http://sourceforge.net/forum/forum.php?thread_id=1558763&amp;forum_id=494205">forum discussion</a>)</li>
+		<li>Improved memory conservation during load-testing (see 
+		<a target="_new" href="http://sourceforge.net/forum/forum.php?thread_id=1554203&amp;forum_id=494205">forum discussion</a>)</li>
+		
+		<li>A number of internal refactorings and improvements..</li> 
+		</ul>
+		<p>Thanks again for everyone's feedback, as always very appreciated!</p>
+		</subsection>
+		
+		<subsection name="SNAPSHOT 2006-08-09">
+		<p>This release adds/fixes the following:</p>
+		<ul>
+		<li>Improved the Groovy editor in line with the <a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1534414&amp;group_id=136013&amp;atid=737766">Feature Request</a> adding
+		syntax highlighting, undo/redo, line-number information and caret-to-error positioning on parse/execution errors if possible</li> 
+		<li>Improved the undo/redo functionality in line with the <a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1514430 &amp;group_id=136013&amp;atid=737766">feature request</a>
+		and this <a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1529127&amp;group_id=136013&amp;atid=737763">bug report</a></li> 
+		<li>Fixed the <a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1536980&amp;group_id=136013&amp;atid=737763">bug</a> 
+		when importing a WSDL using the swaRef data type.</li> 
+		<li>Hopefully fixed the <a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1529892&amp;group_id=136013&amp;atid=737763">bug</a> 
+		when trying to load an inaccessible WSDL.</li> 
+		<li>Totally refactored the request/response editor internals and added line-number information and a possible tab-based layout (as in the eclipse-plugin) which can be
+		toggled from the request editors toolbar.. Please let us know if you experience any new problems with the request/response editors</li>
+		<li>"Downgraded" to jgoodies looks 2.0 due to user errors under win2000</li>
+		<li>Updated to use commons-ssl for unverified certificate support</li>
+		<li>A large number of internal refactorings and improvements..</li> 
+		</ul>
+		<p>Thanks again for everyone's feedback, as always very appreciated!</p>
+		</subsection>
+		
+		<subsection name="SNAPSHOT 2006-07-24">
+		<p>This release adds/fixes the following:</p>
+		<ul>
+		<li>Added a "tools" log tab showing all tool output</li>
+		<li>Added the <a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1526699&amp;group_id=136013&amp;atid=737766">Exit without Save</a> 
+		feature request, see <a href="userguide/overview.html#Main_Menu">Main Menu</a></li> 
+		<li>Improved the <a href="userguide/shortcuts.html">Keyboard Shortcuts</a> in accordance with established standards
+		(see <a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1476514&amp;group_id=136013&amp;atid=737766">feature request</a>).</li> 
+		<li>Improved the <a href="userguide/tools/topdown.html#XFire_1_X">XFire Code-Generation</a> to include new options for XFire 1.2</li>
+		<li>Improved all integrated Code-Generation tools to optionally use the cached WSDL if available</li>
+		<li>Improved the Dialog UI</li>
+		</ul>
+		<p>Thanks again for everyone's feedback, as always very appreciated!</p>
+		</subsection>
+		
+		<subsection name="SNAPSHOT 2006-07-20">
+		<p>This release adds/fixes the following:</p>
+		<ul>
+		<li>Fixed the <a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1525860&amp;group_id=136013&amp;atid=737763">bug</a> 
+		when updating an interface and also added an option to create default requests for new methods.</li> 
+		<li>Added a binary distribution (see above)</li>
+		</ul>
+		<p>Thanks again for everyone's feedback, as always very appreciated!</p>
+		
+		</subsection>
+	
+		<subsection name="SNAPSHOT 2006-07-19">
+		<p>This release adds/fixes the following in the 1.6 beta1:</p>
+		<ul>
+		<li>An option to turn off automatic resizing of the request/response editors in the 
+		<a href="userguide/preferences.html#UI_Settings">UI Settings</a></li>
+		<li>An option to discard successful test results which will save memory when executing
+		long-running TestCases (see <a target="_new" href="http://sourceforge.net/forum/forum.php?thread_id=1537364&amp;forum_id=494205">forum discussion</a>), 
+		available in the <a href="userguide/functional/testcases.html#TestCase_Options">TestCase Options</a> dialog.</li> 
+		<li>Fixed the <a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1524153&amp;group_id=136013&amp;atid=737763">bug</a> when moving a testrequest step containing attachments</li> 
+		<li>Options for including request/response times in global time-taken calculations in the <a href="userguide/preferences.html#HTTP_Settings">HTTP Settings</a></li>
+		<li>Improved the <a href="userguide/requests.html#Request_Actions">"AddToTestCase" Request Action</a> to provide options to add new TestSuites / TestCases</li>
+		<li>Improved the <a href="userguide/functional/testrequests.html#Request_Result_Viewer">Request Result Viewer</a> to show
+		the actual request content sent, including expanded properties, inline files and MTOM/XOP Includes..</li>
+		</ul>
+		<p>Thanks again for everyone's feedback, as always very appreciated!</p>
+		
+		</subsection>
+	
+		<subsection name="SNAPSHOT 2006-05-11">
+		<p>This release adds/fixes the following:</p>
+		<ul>
+		<li>Adds initial SOAP 1.2 support, selecting the corresponding SOAP Version from an Interfaces Details 
+		panel will affect request generation and HTTP Headers accordingly. SOAP 1.2 documents are currently 
+		validated as if they were SOAP 1.1 (in accordance with Basic Profile).</li>
+		<li>Adds initial WS-Security support for UsernamePassword and Timestamp tokens. Both can be added directly
+		in the request editor from its right-button menu, UsernamePassword tokens can also be added dynamically 
+		at request time by selecting the appropriate WSS-Password Type in a requests Details panel</li>
+		<li>Added a number of WSDL-related settings to the global Preferences dialog</li>
+		<li>Integrated a number of WS-toolkits for direct invocation of "WSDL2Java" and "Java2WSDL" tools from 
+		within soapUI.. <a href="userguide/tools/index.html">[Read More]</a></li>
+		<li>A fair number of bug-fixes related to test-running, logging, etc..</li>
+		</ul>
+		<p>Thanks again for everyone's feedback, as always very appreciated!</p>
+		
+		</subsection>
+	
+		<subsection name="SNAPSHOT 2006-04-11">
+		<p>This release hopefully fixes the following:</p>
+		<ul>
+		<li>Validation of soap encodingStyle and mustUnderstand wildcard attributes should work correctly
+			(bug <a href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1437988&amp;group_id=136013&amp;atid=737763">1437988</a>)</li>
+        <li>Improved pre-selection and feedback for TestCase "Set Endpoint" toolbar button</li>
+        <li>Improved handling of invalid preference-values</li>
+        <li>Fixed correct tree handling for imported projects</li>
+        <li>Added HTTP-Preferences setting to limit maximum number of bytes to read from server, set this value (in bytes) if you want
+        to guard yourself against too long results (which will consume large amounts of memory), leaving it at 0 will result
+        in the entire response being read.</li>
+		</ul>
+		<p>Thanks again for everyone's feedback, as always very appreciated!</p>
+		
+		</subsection>
+	
+		<subsection name="SNAPSHOT 2006-03-14">
+		<p>This release fixes the following:</p>
+		<ul>
+			<li>Cloning of TestSteps failed to update UI correctly for PropertyTransfers and ConditionalGotos 
+			(bug <a href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1448964&amp;group_id=136013&amp;atid=737763">1448964</a>)</li>
+			<li>Removed invalid possibility to rename a TestStep to an existing name
+			(bug <a href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1448967&amp;group_id=136013&amp;atid=737763">1448967</a>)</li>
+			<li>Bug in PropertyTransfer Editor when renaming TestSteps</li>
+			<li>Update 2: Bug when moving and renaming TestSteps</li>
+			<li>Update 2: Fixed display of cancel/fail-reason in TestCase DesktopPanel</li>
+		</ul>
+		<p>Thanks for the reports!</p>
+		</subsection>
+		<subsection name="SNAPSHOT 2006-03-13">
+		<p>This release is the same as 1.5 beta2</p>
+		</subsection>
+		<subsection name="SNAPSHOT 2006-03-08">
+		<p>This release fixes numerous internal issues, including:</p>
+		<ul>
+		<li>Update of Load Test history graph on reset/restart</li>
+		<li>Glitches in TestSuite runner</li>
+		<li>etc...</li>
+		</ul>
+		</subsection>
+		<subsection name="SNAPSHOT 2006-03-06">
+		<p>This release fixes a number of internal issues, including:</p>
+		<ul>
+		<li>Correct rescaling and update of load Test graphs</li>
+		<li>Correct test monitoring in cloned TestCases/TestSuites</li>
+		</ul>
+		</subsection>
+		<subsection name="SNAPSHOT 2006-03-05">
+		<p>This release fixes a number of internal issues, including:</p>
+		<ul>
+		<li>Synchronization of LoadTest Assertions with target TestSteps</li>
+		<li>Correct test monitoring in newly created projects</li>
+		<li>Extensive internal refactorings in accordance with Findbugs report</li>
+		<li>Moved to JGoodies Looks 2.0</li>
+		</ul>
+		</subsection>
+		
+		<subsection name="SNAPSHOT 2006-03-02">
+		<p>This release fixes numerous minor issues with the 1.5 beta1 release, including:</p>
+		<ul>
+		<li>Errors when moving TestSteps</li>
+		<li>Errors in Properties TestStep editor</li>
+		<li>Timings of non-request teststeps</li>
+		</ul>
+		<p>And adds the following functionality:</p>
+		<ul>
+		<li>Possibility to control if request timing should contain send/read times in loadtest options dialog</li>
+		<li>Undo/Redo in all text areas</li>
+		<li>Groovy Scripts expose result property</li>
+		<li>Internal timings are now using <code>System.nanoTime()</code></li>
+		</ul>
+		<p>Huge thanks to Jens Brillinger and Andreas Wickman for their feedback! Keep it coming!</p>
+		</subsection>
+		
+		<subsection name="SNAPSHOT 2006-02-27">
+		<p>This release is the same as 1.5 beta1</p>
+		</subsection>
+		 
+		</section>
+    </body>
+</document>

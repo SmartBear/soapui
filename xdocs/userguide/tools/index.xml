@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>WS Code Generation and other Tools</title>
+    </properties>
+    <body>
+		<section name="Tool Integrations">
+		<p>soapUI provides integrated support for a number of Open Source Web Service 
+		Tool Kits and utilities, including;</p>
+		<ol>
+		<li><b><a href="topdown.html">Code Generation Tools</a></b> allow generation of client or implementation artifacts from an 
+		existing WSDL definition in a soapUI project.</li>
+		<li><b><a href="../interfaces/wsi.html">WS-I Tools</a></b> integrates WS-I Basic Profile validation tools into soapUI</li>
+		<li><b><a href="tcpmon.html">Apache TcpMon</a></b> provides TCP traffic monitoring functionality</li>
+		</ol>
+		
+		<p>If you would like us to integrate any other tools (AJAX, PHP, etc...), don’t hesitate to send us a link to the documentation for
+		the command line utility that should be invoked together with some examples and we will consider integrating the tool for you.</p>
+		<subsection name="Configuration">
+		<p>Before any of the integrations can be used, the respective tools need to be installed separately 
+		(they are not bundled with soapUI) and their location configured on the "Integrated Tools" tab in the soapUI preferences:</p>
+		<p align="center"><img src="images/preferences.gif" alt="Tools Preferences in soapUI"/></p>
+		<p>(the image shows possible configuration values for all integrations)</p>
+		</subsection>
+		 <p><hr size="1"/>Next: <a href="topdown.html">Code Generation Tools for Web Services</a></p>
+		</section>
+    </body>
+</document>
+

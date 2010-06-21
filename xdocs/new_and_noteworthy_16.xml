@@ -1,0 +1,126 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>soapUI 1.6 </title>
+    </properties>
+    <body>
+		<section name="Welcome to soapUI 1.6!">
+		<p>Welcome to soapUI 1.6! We are happy to finally release this version with several key improvements
+		to soapUI functionality.</p>
+		
+		<subsection name="Major Improvements">
+		<ul>
+			<li>Support for <a href="userguide/attachments.html">Attachments</a> (MTOM / SwA / Inlining)</li>
+			<li>12 Tool integrations for;
+			<ul><li> <a href="userguide/tools/topdown.html">Code Generation</a>; JBossWS (wstools), JAX-RPC (wscompile), 
+				JAX-WS (wsimport), XFire 1.2.X (WsGen), Axis 1.X (wsdl2java), Axis 2 (wsdl2code), 
+				JAXB 2.0 (xjc), XmlBeans 2.X (scomp), GSoap 2.7.X and .NET 2.0,  including a 
+				<a href="userguide/commandline/toolrunner.html">ToolRunner</a> for running code-generation tools
+				from the command line</li>
+				<li><a href="userguide/tools/bottomup.html">WSDL-Generation</a>; JBossWS (wstools)</li>
+				<li><a href="userguide/interfaces/wsi.html">WS-I Basic Profile Validations</a></li>
+				<li><a href="userguide/tools/tcpmon.html">Apache TcpMon</a></li>
+			</ul></li>
+			<li><a href="userguide\interfaces\index.html#Caching_Definitions">WSDL Caching</a> and exporting</li>
+			<li><a href="userguide/commandline/functional.html#JUnit_Reports">JUnit Reports</a> for 
+			functional tests from commandline</li>
+		</ul>
+		</subsection>
+		
+		<subsection name="Minor Improvements">
+		<ul>
+			<li>Support for importing secured wsdls</li>
+			<li>Initial support for <a href="userguide/properties.html#Property_Expansion">Property-Expansion</a> in 
+			test requests and xpath expressions</li>
+			<li>Automatic/Manual generation of WS-Security headers for 
+			<a href="userguide/requests.html#Authentication">Authentication</a></li>
+			<li><a href="userguide/interfaces/index.html#Interface_Details">SOAP 1.2 support</a> for request generation / HTTP headers / validation</li>
+			<li>Improved <a href="userguide/preferences.html#WSDL_Settings">request generation</a></li>
+			<li>Options to <a href="userguide/preferences.html#UI_Settings">sort items</a> in navigator</li>
+			<li>Integrated help</li>
+			<li>Default assertions when creating <a href="userguide/functional/testrequests.html">request steps</a></li>
+			<li>Support for unverified SSL certificates</li>
+			<li>Response-size <a href="userguide/preferences.html#HTTP_Settings">threshold</a></li>
+			<li>Support for <a href="userguide/preferences.html#HTTP_Settings">preencoded urls</a> 
+			(see <a href="http://sourceforge.net/forum/forum.php?thread_id=1530358&amp;forum_id=494205" target="_new">Forum discussion</a>)</li>
+			<li>Updated XMLBeans/saxon for <a target="_new" href="http://sourceforge.net/forum/forum.php?thread_id=1531755&amp;forum_id=494205">improved XPath 2.0</a> support</li>
+			<li>More <a href="userguide/shortcuts.html">keyboard shortcuts</a></li>
+		</ul>
+		</subsection>
+		
+		<subsection name="Final release Improvements">
+		<p>soapUI 1.6 final introduces a large number of fixes and many minor improvements which have been
+		accumulated during the snapshot releases during the last months. Some highlights are :</p>
+		<ul>
+		<li>Added exclusion list to proxy settings (comma-separated)</li>
+		<li>Added 2 context properties available when load-testing:
+		<ol>
+		<li><b>ThreadIndex</b> - the index of the created thread... this value will never change for a given TestCase during its run time.. 
+		New threads will simply get an incremented index... the mod of this value could for example be used as an index into a data-file 
+		(to handle changes in number of threads) </li>
+		<li><b>RunCount</b> - tells how many times the TestCase has been run by its thread (not in total) during the current LoadTest </li>
+		</ol>
+		</li>
+		<li>Added initial support for unzipping gzipped response messages, ie messages with a Content-Type or Content-Encoding ending with "gzip". 
+		Thanks to Diego Banda.</li>
+		<li>Added request-level property to inline attachment content in response editor (as in soapUI 1.5), see 
+		<a target="_new" href="http://sourceforge.net/forum/forum.php?thread_id=1594751&amp;forum_id=494205">forum discussion</a></li>
+		<li>Improved saving of projects to not corrupt files on out-of-memory (saving now first saves to an in-memory buffer
+		which is written to file if no errors occur..)</li>
+		<li>Fixed validation of derived types in xml-editors</li>
+		<li>Fixed automatic adding of TestStep Status assertion to newly created Load Tests, see
+		<a target="_new" href="http://sourceforge.net/forum/forum.php?thread_id=1595693&amp;forum_id=494205">forum discussion</a></li>
+		<li>Added option to ignore case in Contains/NotContains assertions</li>
+		<li>Improved support for automatic validation by adding an option to not send invalid requests (see
+		<a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1570712&amp;group_id=136013&amp;atid=737766">Feature Request</a>)</li>
+		<li>Added support for automatic validation of request/response messages in editors (see
+		<a target="_new" href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1570712&amp;group_id=136013&amp;atid=737766">Feature Request</a>), 
+		thanks to Michael Vorburger! ("Preferences / UI Settings / Validate Request / Response")</li>
+		<li>Added support for generating rpc-parts for attachments ("Preferences / WSDL Settings / Attachment Parts")</li>
+		<li>Added [Tools] button which open "Preferences / Integrated Tools" for setting tool paths</li>
+		<li>General dialog improvements; Escape closes and F1 shows online help if available</li>
+		<li>Fixed validation of SOAP mustUnderstand/encodingStyle attributes in entire messages, see 
+		<a target="_new" href="http://sourceforge.net/forum/forum.php?thread_id=1585783&amp;forum_id=494205">forum discussion</a></li>
+		<li>Added possibility to edit response message and revalidate with Alt-V (including assertions), see 
+		<a target="_new" href="http://sourceforge.net/forum/forum.php?thread_id=1585341&amp;forum_id=494205">forum discussion</a></li>
+		<li>Added possibility for custom background image in desktop. Just place a soapui-background.gif/jpg/png in the 
+		soapUI bin directory (at last :-), Thanks to Roger Sundberg</li>
+		<li>Added option to open TestCase editor when adding requests to a TestCase</li>
+		<li>Updated to commons-ssl-0.3.0.jar</li>
+		<li>Fixed caching of attachments to now be saved in the soapui-project file (compressed).. this makes
+		portability of soapui-projects with attachments much simpler... The attachment-folder setting has been
+		removed.</li>
+		<li>Fixed property-expansion when running XPath-assertions and property-transfers from within their
+		editors.</li>
+		<li>Fixes password-input fields to be masked</li>
+		</ul>
+		<p>See the <a href="snapshot.html">snapshot</a> document for all fixes..</p>
+		</subsection>
+		
+		<subsection name="beta2 Improvements">
+		<p>soapUI 1.6 beta2 introduces a large number of fixes and many minor improvements:</p>
+		<ul>
+			<li>Syntax highlighting in groovy editor</li>
+			<li>Improved memory management under long running tests</li>
+			<li>Support for external log4j configuration</li>
+			<li>Greatly improved Groovy script performance and memory usage</li>
+			<li>Undo/Redo in most editors</li>
+			<li>Extended Property-Expansion to allow specification of step and property</li>
+			<li>New tabbed layout mode for request/response editors</li>
+			<li>UI "modernization"</li>
+		</ul>
+		</subsection>
+		
+		<subsection name="More Bugfixes from soapUI 1.5">
+		<ul>
+			<li><a href="http://sourceforge.net/forum/forum.php?thread_id=1528232&amp;forum_id=494205" target="_new">Readonly Project files</a></li>
+			<li>Threads in Load Tests shared underlying data</li>
+			<li><a href="http://sourceforge.net/forum/forum.php?thread_id=1519001&amp;forum_id=494205" target="_new">Circular imports/includes</a></li>
+			<li>Tools run in <a href="http://sourceforge.net/forum/forum.php?thread_id=1525246&amp;forum_id=494205" target="_new">headless environment</a></li>
+		</ul>
+		
+		</subsection>		
+		 <p><hr size="1"/>Next: <a href="new_and_noteworthy_17.html">New and Noteworthy in soapUI 1.7</a></p>
+		</section>
+    </body>
+</document>

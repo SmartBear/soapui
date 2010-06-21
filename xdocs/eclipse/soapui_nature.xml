@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>eclipse SOA testing - the soapUI nature</title>
+    </properties>
+    <body>
+		<section name="soapUI Nature">
+		<p>The soapUI Nature allows integrated access to all soapUI functionality directly from within a Java project.</p>
+		<p>The following example walks through a "top down" scenario:</p>
+		
+		<subsection name="Step 1: Enable soapUI Nature">
+		<p>Start by creating an empty Java project and enabling the soapUI Nature from the 
+		projects popup menu:</p><p align="center"><img src="images/enable_nature.gif"  alt="adding a soapUI nature in eclipse"/></p>
+		<p>If enabling goes will, you will see a "SoapUI Web Services" node in the project:</p>
+		<p align="center"><img src="images/soapui_nature_project.gif" alt="a soapUI project node in eclipse"/></p>
+		<p>When shown in the Eclipse Project Explorer View, this node behaves like a standard soapUI project node. Its 
+		right-click menu includes a "soapUI" menu with available project actions:</p>
+		<p align="center"><img src="images/soapui_menu.gif" alt="a soapUI context senistive menu in eclipse"/></p>
+		</subsection>
+		
+		<subsection name="Step 2: Create or Import a WSDL or WADL">
+		<columns><column><div>You can either manually create a WSDL or WADL in your project (using for example the 
+		formidable Web Tools Project WSDL Editor) or just import one into your project using one of the standard 
+		"Add WSDL" or "Add WADL" actions.</div><p>When creating the WSDL or WADL in your project, right-click on the
+		file and select "soapUI -> Add to soapUI Project"</p>
+		<p align="center"><img src="images/add_wsdl_to_soapui_project.gif" alt="Add to soapUI Project"/></p>
+		<p>Once imported, the WSDL or WADL is shown as a "standard" soapUI Interface node under the 
+		"soapUI Web Services" node:</p></column><column>
+		<img src="images/added_wsdl.gif"  alt="WSDL shown in the soapUI eclipse plug in"/></column></columns> 
+		</subsection>
+		
+		<subsection name="Step 3: Generate Code">
+		<p>Now its time to generate some code... select the "Generate -> Axis 1.X Artifacts" 
+		menu option from the Interface nodes popup menu which will show the below dialog</p>
+		<p align="center"><img src="images/generate_menu.gif"  alt="code generation context sensitive menu in soapUI"/></p> 
+		<p>Select the desired options and set the output folder to a Java source folder in your project..</p>
+		<p align="center"><img src="images/axis_generate.gif"  alt="Setting options for code generation from WSDL"/></p>
+		<p>Select the "Generate" button which will invoke Axis (as configured under 
+		"Preferences -> soapUI -> Integrated Tools") and show the output in the console window:</p>
+		<p align="center"><img src="images/axis_output.gif" alt="Code Generation log in the soapUI eclipse plug in"/></p>
+		<p>The generated classes are now visible under the Java source node (refresh first!)</p>
+		<p align="center"><img src="images/axis_result.gif" alt="Generated classes from WSDL"/></p> 
+		<p>(The classes are marked red above since the axis-libraries are not in the projects classpath. These
+		will be added automatically by soapUI in a future version)</p>
+		</subsection>
+		<subsection name="Step 4: Implement, Deploy and Test your Web Services">
+		<p>After implementing and deploying your Web Service to the desired container, you can now start sending web service requests
+		"as usual"... good luck!</p>
+		</subsection>
+		
+		  <p><hr size="1"/></p>
+		  <p><hr size="1"/>Next: <a href="../jbossws/index.html">Working with JBoss WS Testing</a></p>
+		</section>
+    </body>
+</document>

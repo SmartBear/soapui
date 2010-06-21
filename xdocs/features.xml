@@ -1,0 +1,287 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>feature overview</title>
+    </properties>
+    <body>
+		<section name="Feature Overview">
+		<p>
+		soapUI is a free and open source desktop application for 
+		</p>
+		<ul>
+		<li><a href="features.html#Web_Service_Inspection_and_Invocation">inspecting Web Services</a></li>
+		<li><a href="features.html#Web_Service_Inspection_and_Invocation">invoking Web Services</a> </li>
+		<li><a href="features.html#Web_Service_Development_and_Validation">developing Web Services</a> </li>
+		<li><a href="features.html#Web_Service_Simulation">Web Services Simulation and Mocking</a></li>
+		<li><a href="features.html#Web_Service_Functional_Testing">Functional, Load and Compliance testing of Web Services</a> </li>
+		</ul>
+		<p>
+		It is mainly aimed at developers and testers providing or consuming WSDL or REST based Web Services (Java, .net, etc). 
+		Functional and Load Testing can be done both interactively in soapUI or within an automated build or integration process 
+		using the soapUI <a href="userguide/commandline/index.html">command line tools</a>. 
+		</p>
+		<p>
+		Mock Web Services can easily be created for any WSDL and hosted from within soapUI or using the command-line MockService runner. 
+		IDE-plugins are available for
+		</p>
+		<p>
+		<ul>
+		<li><a href="eclipse/index.html">eclipse plug in</a></li> 
+		<li><a href="intellij/index.html">IntelliJ IDEA plug in</a></li> 
+		<li><a href="netbeans/index.html">NetBeans  plug in</a></li>
+		</ul>
+		</p>
+		<p>
+		soapUI requires Java 1.5 and is licensed under the <a href="license.html">LGPL license</a>.
+		</p>
+		
+		<subsection name="soapUI Pro">
+		
+		<p>soapUI is also available as a commercial version, soapUI Pro, which adds extensive professional support and a
+		number of productivity enhancements to the soapUI interface.</p>
+		<ul>
+		<li>Read a <a href="comparison.html">soapUI Feature Comparison</a> to get an overview of the additional support/functionality
+		available in soapUI Pro</li>
+		<li><a target="_new" href="http://www.eviware.com/component/option,com_wrapper/Itemid,41/">Download a soapUI Pro Trial version</a> which 
+		offers full soapUI Pro functionality for two weeks days.</li>
+		<li>Read more about soapUI Pro, pricing, etc... at the <a target="_new" href="http://www.eviware.com">eviware.com</a> web site</li>
+		</ul>
+		
+		</subsection>
+		
+		<subsection name="WSDL Service Inspection">
+		
+		<columns><column><div>
+		The following features for inspecting WSDL SOAP based Web Services are available:
+		<ul>
+		<li><a href="/userguide/interfaces/index.html">Imported WSDLs</a> are shown as a hierarchy view of interfaces
+		(PortTypes) and their operations</li>
+		<li>Support for both SOAP 1.1 and SOAP 1.2</li>
+		<li><a href="userguide/interfaces/interfaceeditor.html">WSDL Viewer</a> allows easy navigation of WSDL and included/imported
+		WSDL's/XSD's</li>
+		<li>HTTP wire log shows actual requests sent and received</li>
+		<li>View <a href="userguide/requests.html#SSL_Details">SSL Certificate information viewer</a> for secure responses</li>
+		<li><a href="userguide/messageinspectors.html#XSD/XML_Schema_Inspector">XML Schema Inspector</a> (soapUI Pro only)</li>
+		<li><a href="userguide/messageinspectors.html#Table_Layout_Inspector">XML Table Inspector</a> for
+		easily viewing tabular data (soapUI Pro only)</li>
+		<li><a href="userguide/formeditor.html">Web Service Form Editor</a> for easy understanding of message input (soapUI Pro only)</li>
+		<li><a href="userguide/overviewview.html">Web Service Overview View</a> for easy understanding of message output (soapUI Pro only)</li>
+		<li>Integrated <a href="userguide/monitor/index.html">SOAP Monitor</a> with SSL support for capturing and analyzing traffic and converting messages to TestCases and MockServices</li>
+        <li>Generate HTML Documentation for WSDLs</li>
+		</ul>
+		</div>
+		</column><column>
+			<a href="images/screenshot1.gif" target="_new"><img src="images/screenshot1_tn.gif" border="0" alt="Web Service Request and Response view in soapUI"/></a>
+		</column></columns>
+		</subsection>
+		
+            <subsection name="REST Service Inspection">
+
+            <columns><column><div>
+            The following features for inspecting REST based Web Services are available:
+            <ul>
+            <li><a href="/userguide/rest/index.html">REST Services</a> can be defined from a WADL or manually
+                and are shown as a hierarchy view of resources and requests</li>
+            <li><a href="userguide/interfaces/interfaceeditor.html">WADL Viewer</a> allows easy navigation of WADL and included/imported
+            XSD's</li>
+            <li>WADLs are automatically generated for manually defined services</li>
+            <li>HTTP wire log shows actual requests sent and received</li>
+            <li>View <a href="userguide/requests.html#SSL_Details">SSL Certificate information viewer</a> for secure responses</li>
+            <li><a href="userguide/messageinspectors.html#XSD/XML_Schema_Inspector">XML Schema Inspector</a> (soapUI Pro only)</li>
+            <li><a href="userguide/messageinspectors.html#Table_Layout_Inspector">XML Table Inspector</a> for
+            easily viewing tabular data (soapUI Pro only)</li>
+            <li>JSON viewer pretty prints JSON responses</li>
+            <li><a href="userguide/formeditor.html">Web Service Form Editor</a> for easy understanding of message input (soapUI Pro only)</li>
+            <li><a href="userguide/overviewview.html">Web Service Overview View</a> for easy understanding of message output (soapUI Pro only)</li>
+            <li>Generate HTML Documentation for WADLs</li>
+            </ul>
+            </div>
+            </column><column>
+                <a href="images/screenshot7.gif" target="_new"><img src="images/screenshot7_tn.gif" border="0" alt="Web Service Request and Response view in soapUI"/></a>
+            </column></columns>
+            </subsection>
+
+						
+				<table class="relatedInfo" cellspacing="0" cellpadding="0">
+	<tr class="a">
+    	<td width="75" style="padding-top:5px">
+        	<img src="images/where_do_i_start.jpg" alt="Start soapUI Testing" longdesc="http://www.soapui.org"></img>
+        </td>
+        <td>
+            <table class="relatedInner">
+              <tr>
+                <td>
+                	<span class="relatedInfoHeader">Did you know?</span>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                    <div>
+						<p>
+						There is a commercial version of soapUI available; <b><i>soapUI Pro</i></b>.
+						</p>
+						<p>
+						<b><i>soapUI Pro</i></b> contains productivity enhancements as well as offers Professional World Class support.
+						</p>
+                    </div>
+                </td>
+              </tr>
+              <tr align="right">
+              	<td>
+                	<span class="relatedLinks"><a href="http://www.eviware.com/component/option,com_wrapper/Itemid,41/" title="try soapUI Pro" onclick="javascript:urchinTracker:('/downloadTrial');">
+                                               <img src="images/try_pro_100.png" alt="Try soapUI pro to soap test" width="101" height="20" longdesc="http://www.eviware.com"/></a></span>
+                </td>
+              </tr>
+            </table>
+		</td>
+	</tr>
+</table>
+		
+
+		
+		<subsection name="WSDL Service Invocation">
+		
+		<columns><column><div>
+		The following features for invoking WSDL based web services are currently available:
+		<ul>
+		<li>Automatic generation of <a href="userguide/requests.html">Web Service requests</a> from associated schema</li>
+		<li>Manage unlimited number of requests for each operation</li>
+		<li>Manage multiple <a href="userguide/interfaces/index.html#Service_Endpoints">service endpoints</a> for each interface</li>
+		<li>Support for Basic, Digest, WS-Security and NTLM <a href="userguide/requests.html#Authentication">Web Service authentication</a></li>
+        <li>Automatically add WS-Addressing headers to outgoing requests</li>
+		<li>Extensive <a href="userguide/projects/wss.html">WS-Security tool</a> support for encrypting/decrypting and signing/validating messages</li>
+		<li>Support for <a href="userguide/attachments.html">Attachments testing</a>; MTOM, SOAP with Attachments, Inline files</li>
+		<li>Manage custom <a href="userguide/requests.html#HTTP_Headers">HTTP Headers</a> for each request</li>
+		<li>Support for both SOAP 1.1 and SOAP 1.2</li>
+		<li>Raw message viewer for viewing unprocessed message content as it is sent over the wire</li>
+		<li><a href="userguide/formeditor.html">Web Service Form Editor</a> for easy editing of message input (soapUI Pro only)</li>
+		<li><a href="userguide/formeditor.html">Web Service Tree Editor</a> for easy editing of message input (soapUI Pro only)</li>
+		</ul>
+		</div>
+		</column><column>
+			<a href="images/screenshot6.gif" target="_new"><img src="images/screenshot6_tn.gif" border="0" alt="Web Service Form view and SSL info in soapUI"/></a>
+		</column></columns>
+		</subsection>
+
+        <subsection name="REST Service Invocation">
+
+		<columns><column><div>
+		The following features for invoking REST bases web services are currently available:
+		<ul>
+		<li>Automatic generation of <a href="userguide/rest/requests.html">REST Service request</a> representations from associated schema</li>
+		<li>Manage unlimited number of requests for each operation</li>
+        <li>Support all WADL parameter types and representations</li>
+		<li>Manage multiple <a href="userguide/interfaces/index.html#Service_Endpoints">service endpoints</a> for each service</li>
+		<li>Support for Basic, Digest, WS-Security and NTLM <a href="userguide/requests.html#Authentication">Web Service authentication</a></li>
+		<li>Support for simulating HTML Forms and MIME Attachments</li>
+		<li>Manage custom <a href="userguide/requests.html#HTTP_Headers">HTTP Headers</a> for each request</li>
+		<li>Raw message viewer for viewing unprocessed message content as it is sent over the wire</li>
+		<li><a href="userguide/formeditor.html">Web Service Form Editor</a> for easy editing of message input (soapUI Pro only)</li>
+		<li><a href="userguide/formeditor.html">Web Service Tree Editor</a> for easy editing of message input (soapUI Pro only)</li>
+		</ul>
+		</div>
+		</column><column>
+			<a href="images/screenshot8.gif" target="_new"><img src="images/screenshot8_tn.gif" border="0" alt="Web Service Form view and SSL info in soapUI"/></a>
+		</column></columns>
+		</subsection>
+		            
+		<subsection name="Web Service Development and Validation">
+		
+		<columns><column><div>
+		The following features are available for development of Web Services:
+		<ul>
+		<li><a href="userguide/tools/topdown.html">Generate Server and Client code</a> for some of the most popular Web Service
+		toolkits; JBossWS, JWSDP (JAX-WS/JAX-RPC), Axis 1, Axis 2, CXF, XFire, Oracle, .NET and GSoap</li>
+        <li>Generate client code for REST Services based on static or generated WADL</li>
+		<li><a href="userguide/tools/topdown.html">Generate XML-Binding classes</a> for JAXB and XMLBeans</li>
+		<li><a href="userguide/commandline/toolrunner.html">Command line support</a> for all generation tools for easy integration 
+		in continuous integration/build environments</li>
+		<li><a href="userguide/projects/wsi.html">Validate Web Service Definitions</a> and messages against the WS-I Basic Profile</li>
+		<li><a href="userguide/requests.html#Message_Validation">Validate requests and response bodies</a> against their schema definition</li>
+		<li>IDE-plugins are available for <a href="eclipse/index.html">eclipse</a>, <a href="intellij/index.html">IntelliJ IDEA</a>, 
+		and <a href="netbeans/index.html">NetBeans</a>.</li>
+		</ul>
+		</div>
+		</column><column>
+			<a href="images/screenshot4.gif" target="_new"><img src="images/screenshot4_tn.gif" border="0" alt="Automatic generation of JBoss WS code from soapUI"/></a>
+		</column></columns>
+		</subsection>
+		
+		<subsection name="Web Service Functional Testing">
+		
+		<columns><column><div>
+		The following features for functional testing of both WSDL and REST Web Services are currently available:
+		<ul>
+		<li><a href="userguide/functional/index.html">Create or Generate any number of TestSuites and TestCases</a></li>
+		<li>Assert messages for <a href="userguide/functional/response-assertions.html">schema compliance, XPath or XQuery matching</a>, etc...</li>
+		<li><a href="userguide/functional/propertytransfers.html"></a>Easily Transfer content between responses and request</li>
+		<li><a href="userguide/functional/gotostep.html">XPath based conditions</a> to control TestCase execution paths</li>
+		<li><a href="userguide/functional/datasourcestep.html">DataSource</a> support for data driven Web Service testing (soapUI Pro only)</li>
+		<li><a href="userguide/functional/datasinkstep.html">DataSink</a> support for collecting data in a database (soapUI Pro only)</li>
+        <li><a href="userguide/functional/datagenstep.html">DataGen</a> support for dynamically generating data (soapUI Pro only)</li>
+		<li><a href="userguide/functional/datasourcestep.html">MockResponse</a> support for client or asynchronous Web Service testing</li>
+	    <li><a href="userguide/commandline/functional.html">Command Line or Maven support</a> for continuous integration or testing</li> 
+		<li>Extensive scripting and properties support for creating complex or dynamic Test Scenarios</li>
+	    <li>Requirements management (soapUI Pro only)</li>
+	    <li>WSDL Coverage support for analyzing how well your WSDL based Web Services are tested (soapUI Pro only)</li>
+	    <li>Integrated Reporting for TestSuite and TestCase runs (soapUI Pro only)</li>
+		</ul>
+		</div>
+		</column><column>
+		<a href="images/screenshot2.gif" target="_new"><img src="images/screenshot2_tn.gif" border="0"  alt="TestSuite execution is soapUI"/></a> 
+		</column></columns>
+		
+		</subsection>
+		
+		<subsection name="Web Service Load Testing">
+		
+		<columns><column><div>
+		The following features for load testing web services are currently available:
+		<ul>
+		<li>Create any number of <a href="userguide/loadtest/index.html">Web Service LoadTests</a> for a TestCase</li>
+		<li>Choose between configurable <a href="userguide/loadtest/configuration.html">Web Service Load Strategies, Limits and Thread-counts</a> 
+		and analyze how web services perform under a variety of scenarios</li>
+		<li><a href="userguide/loadtest/assertions.html">Assert LoadTest results</a> continuously for performance and functionality surveillance</li>
+		<li><a href="userguide/loadtest/diagrams.html">Web Service usage Behavioral Diagrams</a> allow real time analysis of performance statistics</li>
+		<li>Export results, statistics, logs, diagram data, etc. for external processing</li>
+		<li>Run multiple LoadTests interactively in soapUI, through Maven or <a href="userguide/commandline/loadtest.html">from a soapUI command line</a></li> 
+		</ul>
+		</div>
+		</column><column>
+		<a href="images/screenshot3.gif" target="_new"><img src="images/screenshot3_tn.gif" border="0"  alt="Web Service Load Testing results and graph in soapUI"/></a> 
+		</column></columns>
+		
+		</subsection>
+		
+		<subsection name="Web Service Simulation">
+		
+		<columns><column><div>
+		The following features for simulating/mocking web services are currently available:
+		<ul>
+		<li>Create any number of <a href="userguide/mock/services.html">MockServices from WSDL</a> in a project</li>
+		<li><a href="userguide/mock/services.html">Automatic generation of stub MockServices </a> for a Web Service</li>
+		<li>Add <a href="userguide/mock/operations.html">Web Service MockOperations</a> from any combination of 
+		Interfaces or Operations in a project</li>
+		<li><a href="userguide/mock/responses.html">MockResponse</a> Create Web Service messages with custom content, 
+		HTTP Headers and Attachments</li>
+        <li>Automatically add WS-Addressing headers to outgoing responses</li>
+		<li>Use Groovy Scripts to <a href="userguide/mock/operations.html#Groovy_Script_Dispatching">dispatch Web Service requests</a> 
+		and create <a href="userguide/mock/responses.html#Response_Scripts">dynamic responses</a></li>
+		<li><a href="userguide/scripting.html#Groovy_Script_Library">Groovy Script Library</a> for common or centralized functionality</li>
+		<li>Run MockServices interactively in soapUI or with maven or with the command-line 
+		<a href="userguide/commandline/mockrunner.html">soapUI MockServiceRunner</a></li> 
+	    <li>WSDL Coverage support for MockServices and their clients</li>
+		<li>Extensive <a href="userguide/projects/wss.html">WS-Security support for encrypting or decrypting and 
+		signing or validating messages</a></li>
+		<li>Support for SSL, WSDL publishing and serving of static content for mocking configuration files, etc.</li>
+		</ul>
+		</div>
+		</column><column>
+		<a href="images/screenshot5.gif" target="_new"><img src="images/screenshot5_tn.gif" border="0"  alt="Web Service Simulation in soapUI"/></a> 
+		</column></columns>
+		</subsection>
+	
+		 <p><hr size="1"/>Next: <a href="gettingstarted/index.html">Getting Started</a></p>
+		</section>
+    </body>
+</document>

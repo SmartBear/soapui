@@ -1,0 +1,122 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>soapUI JBossWS plugin - annotate example</title>
+    </properties>
+    <body>
+    	
+    	<subsection name="Discontinued">
+		<p><b>2007-14-11 : We have decided to discontinue JBoss WS IDE.</b></p>
+		<p>2007-14-11 : JBoss WS IDE is as of the 14:th of November 2007 discontinued. This does not mean 
+		our support for JBoss WS has ended, we have only chosen to stop producing within JBoss. soapUI will continue its
+		strong support for JBoss, just not <b>as</b> JBoss, rather as a independent Open Source software producer.</p>
+		<p>Look at our <a href="../userguide/tools/index.html">tools Pages</a> for more info. </p>
+		</subsection>
+		
+		<section name="Publish EJB3 as Web Service with Annotations - Walkthrough Example">
+		<p>The following example gives a complete walkthrough of how to publish a POJO both as an EJB3
+		stateless session bean and Web Service. The development environment is as follows:</p>
+		<ul>
+		<li>The <a href="http://labs.jboss.com/portal/jbosside/download/index.html">JBossIDE-2.0.0-beta2</a> release</li>
+		<li>JBoss 4.0.4-GA with EJB3 profile</li>
+		<li>JBossWS 1.0.3</li>
+		</ul>
+		<p>Start by installing the above and setting the path to the wstools script as described 
+		in the <a href="index.html#Installation">Overview</a>.</p>
+		
+		<subsection name="Create the project">
+		<p>Create a standard empty Java project; </p>
+		<p align="center"><img src="images/implement/create_project.gif" alt="creating the soap test project"/></p>
+		<p>Add a source folder for src/java and create a JBosstest package.</p>
+		</subsection>
+		
+		<subsection name="Create Remote Interface and EJB3">
+		<p>Create a remote interface:</p>
+		<source>package jbosstest;
+
+public interface HelloWorldRemoteInterface {
+
+	public String sayHello(String subject) ;
+}</source>
+		<p>And the EJB:</p>
+		<source>package jbosstest;
+
+import javax.ejb.Remote;
+import javax.ejb.Stateless;
+
+import org.jboss.annotation.ejb.RemoteBinding;
+
+@Stateless
+@Remote(HelloWorldRemoteInterface.class)
+@RemoteBinding(jndiBinding = "/ejb3/EJB3EndpointInterface")
+public class HelloWorld implements HelloWorldRemoteInterface 
+{
+	public String sayHello(String subject) 
+	{
+		return "Hello " + subject + "!";
+	}
+}</source>
+		<p>(You will need to add jboss-ejbx.jar and jboss-ejb3-client.jar to your project classpath)</p>
+		<p>Now enable the JBossWS Nature as described in <a href="gettingstarted.html">Getting Started</a>.
+		Right-click the EJB3-class and select "JBossWS / Add Web Service Annotations", which will show
+		the following dialog:</p>
+		<p align="center"><img src="images/annotate/annotate_dialog.gif"/></p>
+		<p>Change the Binding Style to "rpc" and select Generate. The EJB will be annotated as follows:</p>
+		<source>package jbosstest;
+
+import javax.ejb.Remote;
+import javax.ejb.Stateless;
+
+import org.jboss.annotation.ejb.RemoteBinding;
+
+@javax.jws.soap.SOAPBinding(style = javax.jws.soap.SOAPBinding.Style.RPC)
+@javax.jws.WebService(name = "HelloWorld", targetNamespace = "urn:jbosstest", serviceName = "HelloWorldService")
+@Stateless
+@Remote(HelloWorldRemoteInterface.class)
+@RemoteBinding(jndiBinding = "/ejb3/EJB3EndpointInterface")
+public class HelloWorld implements HelloWorldRemoteInterface {
+	@javax.jws.WebMethod()
+	public String sayHello(String subject) {
+		return "Hello " + subject + "!";
+	}
+}</source>
+		<p>(You can always rerun the dialog for modifying/removing annotations)</p>
+		</subsection>
+		
+		<subsection name="Package and Deploy">
+		<p>Packaging must currently be performed manually: right-click the project and select "Properties". 
+		In the properties dialog select "Packaging Configurations":</p>
+		<p align="center"><img src="images/annotate/packaging.gif" alt=""/></p>
+		<p>Enable packaging and create a new jar package containing the projects output folder 
+		(as shown above).</p>
+		<p>After closing the dialog, right-click the project and select "Run Packaging", this will 
+		create the configured .jar file and log to the console:</p>
+		<p align="center"><img src="images/annotate/run_packaging.gif"/></p>
+		<p>Now right-click the generated jar and select "Run as / Run on Server" and select your
+		configured JBoss 4.0.4 instance. The jar file will be deployed and the following should be
+		logged to the JBoss console:</p>
+		<p align="center"><img src="images/annotate/deploy_output.gif"/></p>
+		</subsection>
+		
+		<subsection name="Test">
+		<p>Since no WSDL was generated in the project, the published Web Service has not yet been imported 
+		into the JBossWS node. Right-click the JBossWS Web Services node (in the Project Explorer View) 
+		and select "JBossWS / Add WSDL from URL".
+		In the prompting dialog, specify "http://localhost:8080/HelloWorld/HelloWorld?wsdl" (taken from 
+		the deployment log with an appended "?WSDL"). The WSDL will be imported into JBossWS node and is now
+		available for invocation;</p>
+		<p align="center"><img src="images/annotate/project_state_1.gif"/></p>
+		
+		<p>Expand the JBossWS nodes children and double-click the "Request 1" node
+		which will open the request editor:</p>
+		<p align="center"><img src="images/annotate/request_editor.gif"/></p>
+		<p>Change the '?' to 'Marc' and submit the request using the green arrow in the toolbar. A response
+		will be shown in a second editor tab:</p>
+		<p align="center"><img src="images/annotate/response_editor.gif"/></p>
+		
+		</subsection>
+		
+		<p><hr size="1"/>Next: <a href="index.html">Back to Overview</a></p>
+		</section>
+    </body>
+</document>

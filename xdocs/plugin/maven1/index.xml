@@ -1,0 +1,162 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>maven 1.X plugin for SOAP Testing</title>
+    </properties>
+    <body>
+		<section name="soapUI maven 1.X plugin">
+
+		 <subsection name="Download soapUI Maven Plugin">
+		 <p>Prior to installing a new version of the plugin, you should delete any old versions from you local 
+		 cache, repository, maven installation.</p>
+		 <p>Download the latest version of the plugin from 
+		 <a target="_new" href="http://sourceforge.net/project/showfiles.php?group_id=136013">sourceforge soapUI Downloads</a> or
+		 install it directly from the command line:</p>
+		 <source>maven plugin:download -DgroupId=eviware -DartifactId=maven-soapui-plugin 
+-Dversion=1.6 -Dmaven.repo.remote=http://www.soapui.org/repository</source>
+		<p>Alternatively you can specify a dependency directly in your project.xml;</p>
+		<source><![CDATA[<dependency>
+    <groupId>eviware</groupId>
+    <artifactId>maven-soapui-plugin</artifactId>
+    <version>1.7.6</version>
+    <type>plugin</type>
+</dependency>]]></source>
+		<p>In this case, don't forget to add the soapUI repository to your repository list in project.properties;</p>
+		<source>maven.repo.remote=http://www.ibiblio.org/maven,http://www.soapui.org/repository</source>
+		
+		</subsection>	
+		
+		<subsection name="soapUI Maven Plugin Usage">
+		<p>Download and install the plugin as described above. By default, it will look for a 
+		<a href="../../userguide/projects/index.html">soapUI project file</a>
+		named <code>${pom.artifactId}-soapui-project.xml</code>, you can override this by setting with the
+		<code>maven.soapui.project</code> property.</p>
+		
+		<p>Run functional tests with</p>
+		<source>maven soapui:test</source>
+		<p>and load tests with</p>
+		<source>maven soapui:loadtest</source>
+		<p>The plugin will load the specified project file and run all TestCases available in all TestSuites. If you
+		want to narrow down which TestSuites/TestCases/LoadTest to run, use the <code>maven.soapui.test.testsuite</code>,  
+		<code>maven.soapui.test.testcase</code> and <code>maven.soapui.test.loadtest</code> <a href="properties.html">properties</a> for that purpose.</p>
+		<p>If you want to change the service endpoint, host, username, password or domain used by the TestRequests in the executed 
+		TestCases, set this	with one of the <code>maven.soapui.test.XX</code> <a href="properties.html">properties</a>, for example</p>
+		<source>maven soapui:test -Dmaven.soapui.test.endpoint=http://somehost.com:8080/services/MyService</source>
+		<p>Be aware that this will set the endpoint for <i>all</i> TestRequests executed, you might need to narrow 
+		down which TestCase to run if you have multiple TestCases testing multiple services.</p>
+		<p>For example if you have 2 TestSuites, each testing its own service in your project, you could run these 
+		as follows;</p>
+		<source>maven soapui:test -Dmaven.soapui.test.testsuite=TestSuite1 
+	-Dmaven.soapui.test.endpoint=http://somehost.com:8080/services/MyService1</source>
+		<p>followed by</p>
+		<source>maven soapui:test -Dmaven.soapui.test.testsuite=TestSuite2 
+	-Dmaven.soapui.test.endpoint=http://someotherhost.com:8080/services/MyService2</source>
+		<p>Turn on creation of simple reports as described for the command line 
+		<a href="../../userguide/commandline/functional.html">SoapUITestCaseRunner</a> and 
+		<a href="../../userguide/commandline/loadtest.html">SoapUITestCaseRunner</a> runners with the 
+		<code>maven.soapui.report.XX</code> properties.
+		</p>
+		</subsection>
+		
+		<subsection name="Sample Outputs from the Maven plugin">
+		<p>Here comes an example output when running soapUI functional tests through maven as described above using the
+		sample project included in the offline distribution:</p>
+		<source><font size="-1">maven soapui:test -Dmaven.soapui.project=sample-soapui-project.xml
+ __  __
+|  \/  |__ _Apache__ ___
+| |\/| / _` \ V / -_) ' \  ~ intelligent projects ~
+|_|  |_\__,_|\_/\___|_||_|  v. 1.0.2
+
+build:start:
+
+soapui:test:
+    [echo] Running soapUI project sample-soapui-project.xml with endpoint []
+    [java] SoapUI 2.5.1 TestRunner
+    [java] 23:57:56,258 INFO  [SoapUITestCaseRunner] setting projectFile to [sample-soapui-project.xml]
+    [java] 23:57:56,838 INFO  [WsdlProject] Loaded project from [sample-soapui-project.xml]
+    [java] 23:57:57,219 INFO  [SoapUITestCaseRunner] Running soapui tests in project [Sample Project]
+    [java] 23:57:57,219 INFO  [SoapUITestCaseRunner] Running soapui suite [Test Suite]
+    [java] 23:57:57,219 INFO  [SoapUITestCaseRunner] Running soapui testcase [Test Conversions]
+    [java] 23:57:57,219 INFO  [SoapUITestCaseRunner] runing step [SEK to USD Test]
+    [java] Retrieving document at 'http://www.webservicex.net/CurrencyConvertor.asmx?WSDL'.
+    [java] 23:57:59,893 INFO  [SchemaUtils] Loading schema types from [http://www.webservicex.net/CurrencyConvertor.asmx?WSDL]
+    [java] 23:57:59,893 INFO  [SchemaUtils] loading schema types from http://www.webservicex.net/CurrencyConvertor.asmx?WSDL
+    [java] Assertion [Schema Compliance] has status VALID
+    [java] Assertion [XPath Match - check for less than 0.2] has status VALID
+    [java] Assertion [XPath Match - check for more than 0.1] has status VALID
+    [java] Assertion [SOAP Fault Assertion] has status VALID
+    [java] 23:58:01,025 INFO  [SoapUITestCaseRunner] runing step [USD to SEK Test]
+    [java] Assertion [Schema Compliance] has status VALID
+    [java] Assertion [XPath Match - check for less than 8] has status VALID
+    [java] Assertion [XPath Match - check for more than 7] has status VALID
+    [java] Assertion [SOAP Fault Assertion] has status VALID
+    [java] 23:58:01,495 INFO  [SoapUITestCaseRunner] Finished running soapui testcase [Test Conversions], time taken = 4276ms
+    [java] 23:58:01,505 INFO  [SoapUITestCaseRunner] Running soapui testcase [Test XMethods Query]
+    [java] 23:58:01,505 INFO  [SoapUITestCaseRunner] runing step [Test getAllServiceNames]
+    [java] Assertion [XPath Match - check for Anagram Service] has status VALID
+    [java] 23:58:03,488 INFO  [SoapUITestCaseRunner] runing step [Transfer values]
+    [java] 23:58:03,688 INFO  [SoapUITestCaseRunner] runing step [Test getServiceDetail]
+    [java] Assertion [XPath Match] has status VALID
+    [java] 23:58:03,949 INFO  [SoapUITestCaseRunner] Finished running soapui testcase [Test XMethods Query], time taken = 2444ms
+    [java] 23:58:03,959 INFO  [SoapUITestCaseRunner] soapui suite [Test Suite] finished in 6740ms
+BUILD SUCCESSFUL
+Total time: 10 seconds
+Finished at: Sun Oct 02 23:58:04 CEST 2005</font></source>
+		<p>Another sample with a failed loadtest:</p>
+		<source><font size="-1">maven soapui:loadtest -Dmaven.soapui.test.loadtest=LoadTest1 -Dmaven.soapui.report.folder=results
+ __  __
+|  \/  |__ _Apache__ ___
+| |\/| / _` \ V / -_) ' \  ~ intelligent projects ~
+|_|  |_\__,_|\_/\___|_||_|  v. 1.0.2
+
+Attempting to download swingx-SNAPSHOT.jar.
+build:start:
+
+soapui:loadtest:
+    [echo] Running soapui project jbossws-soapui-project.xml with endpoint []
+    [java] SoapUI 2.5.1 LoadTestRunner
+    [java] 22:48:13,116 INFO  [SoapUILoadTestRunner] setting projectFile to [jbossws-soapui-project.xml]
+    [java] 22:48:13,116 INFO  [SoapUILoadTestRunner] setting testSuite to [test]
+    [java] 22:48:13,116 INFO  [SoapUILoadTestRunner] setting testCase to [testcase3]
+    [java] 22:48:13,647 INFO  [WsdlProject] Loaded project from [jbossws-soapui-project.xml]
+    [java] 22:48:14,818 INFO  [SoapUILoadTestRunner] Skipping testcase [testing], filter is [testcase3]
+    [java] 22:48:14,818 INFO  [SoapUILoadTestRunner] Skipping testcase [testcase2], filter is [testcase3]
+    [java] 22:48:14,818 INFO  [SoapUILoadTestRunner] Running LoadTest [LoadTest1]
+    [java] 22:48:14,878 INFO  [SoapUILoadTestRunner] LoadTest [LoadTest1] progress: 0.0
+    [java] 22:48:15,870 INFO  [SoapUILoadTestRunner] LoadTest [LoadTest1] progress: 0.038
+    [java] 22:48:16,871 INFO  [SoapUILoadTestRunner] LoadTest [LoadTest1] progress: 0.102
+    [java] 22:48:17,873 INFO  [SoapUILoadTestRunner] LoadTest [LoadTest1] progress: 0.14
+    [java] 22:48:18,884 INFO  [SoapUILoadTestRunner] LoadTest [LoadTest1] progress: 0.204
+    [java] 22:48:19,876 INFO  [SoapUILoadTestRunner] LoadTest [LoadTest1] progress: 0.274
+    [java] 22:48:20,887 INFO  [SoapUILoadTestRunner] LoadTest [LoadTest1] progress: 0.35
+    [java] 22:48:21,889 INFO  [SoapUILoadTestRunner] LoadTest [LoadTest1] progress: 0.424
+    [java] 22:48:22,890 INFO  [SoapUILoadTestRunner] LoadTest [LoadTest1] progress: 0.488
+    [java] 22:48:23,891 INFO  [SoapUILoadTestRunner] LoadTest [LoadTest1] progress: 0.564
+    [java] 22:48:24,893 INFO  [SoapUILoadTestRunner] LoadTest [LoadTest1] progress: 0.642
+    [java] 22:48:25,894 INFO  [SoapUILoadTestRunner] LoadTest [LoadTest1] finished with status FAILED
+    [java] 22:48:25,894 INFO  [SoapUILoadTestRunner] Exporting log and statistics for LoadTest [LoadTest1]
+    [java] 22:48:25,944 INFO  [SoapUILoadTestRunner] Exported 36 log items to [results\LoadTest1-log.txt]
+    [java] 22:48:26,265 INFO  [SoapUILoadTestRunner] Exported 33 error results
+    [java] 22:48:26,265 INFO  [SoapUILoadTestRunner] Exported 3 statistics to [results\LoadTest1-statistics.txt]
+    [java] 22:48:26,265 INFO  [SoapUILoadTestRunner] Skipping testcase [testcase4], filter is [testcase3]
+    [java] 22:48:26,265 INFO  [SoapUILoadTestRunner] soapui suite [test] finished in 11447ms
+    [java] 22:48:26,265 INFO  [SoapUILoadTestRunner] 1 load tests failed:
+    [java] 22:48:26,265 INFO  [SoapUILoadTestRunner] LoadTest1: Maximum number of errors [30] exceeded for step [Groovy Script]
+    [java] 22:48:26,265 ERROR [SoapUILoadTestRunner] com.eviware.soapui.support.SoapUIException: LoadTests failed
+
+BUILD FAILED
+File...... C:\Documents and Settings\ole.matzura\.maven\cache\maven-soapui-plugin-1.5beta1\plugin.jelly
+Element... ant:java
+Line...... 104
+Column.... 105
+Java returned: 1
+Total time: 18 seconds
+Finished at: Sun Mar 12 22:48:26 CET 2006</font></source>
+		
+		</subsection>
+		
+			 
+		<p><hr size="1"/>Next: <a href="goals.html">maven 1.X plugin goals</a></p>
+		</section>
+    </body>
+</document>

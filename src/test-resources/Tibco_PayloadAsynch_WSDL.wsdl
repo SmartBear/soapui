@@ -1,0 +1,45 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+
+<!--Created by TIBCO WSDL-->
+<wsdl:definitions name = "JMS-PayloadAsynchService-SOAP" targetNamespace = "http://www.example.com/PayloadAsynchService/" xmlns:jms = "http://www.tibco.com/namespaces/ws/2004/soap/binding/JMS" xmlns:jndi = "http://www.tibco.com/namespaces/ws/2004/soap/apis/jndi" xmlns:ns0 = "http://hphc.org/payloadmessage" xmlns:soap = "http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns = "http://www.example.com/PayloadAsynchService/" xmlns:wsdl = "http://schemas.xmlsoap.org/wsdl/">    
+	<wsdl:types>        
+		<xs:schema attributeFormDefault = "unqualified" elementFormDefault = "qualified" targetNamespace = "http://hphc.org/payloadmessage" xmlns = "http://hphc.org/payloadmessage" xmlns:xs = "http://www.w3.org/2001/XMLSchema">            
+			<xs:element name = "Message">                
+				<xs:complexType>                    
+					<xs:sequence>                        
+						<xs:element minOccurs = "0" name = "Source" type = "xs:string"/>                        
+						<xs:element minOccurs = "0" name = "Destination" type = "xs:string"/>                        
+						<xs:element minOccurs = "0" name = "Payload" type = "xs:string"/>                    
+					</xs:sequence>                
+				</xs:complexType>            
+			</xs:element>        
+		</xs:schema>    
+	</wsdl:types>    
+	<wsdl:message name = "InMessage">        
+		<wsdl:part element = "ns0:Message" name = "Message"/>    
+	</wsdl:message>    
+	<wsdl:portType name = "PayloadAsynch_Port">        
+		<wsdl:operation name = "ProcessPayloadMessage">            
+			<wsdl:input message = "tns:InMessage"/>        
+		</wsdl:operation>    
+	</wsdl:portType>    
+	<wsdl:binding name = "PayloadAsynch_Port_EP" type = "tns:PayloadAsynch_Port">        
+		<soap:binding style = "document" transport = "http://www.tibco.com/namespaces/ws/2004/soap/binding/JMS"/>        
+		<jms:binding messageFormat = "bytes"/>        
+		<wsdl:operation name = "ProcessPayloadMessage">            
+			<wsdl:documentation/>            
+			<soap:operation soapAction = "ProcessPayloadMessage" style = "document"/>            
+			<wsdl:input>                
+				<soap:body parts = "Message" use = "literal"/>            
+			</wsdl:input>        
+		</wsdl:operation>    
+	</wsdl:binding>    
+	<wsdl:service name = "JMS-PayloadAsynchService-SOAP">        
+		<wsdl:port binding = "tns:PayloadAsynch_Port_EP" name = "PayloadAsynch_Port_EP">            
+			<soap:address location = ""/>            
+			<jndi:context/>            
+			<jms:connectionFactory>com.tibco.tibjms.TibjmsConnectionFactory</jms:connectionFactory>            
+			<jms:targetAddress destination = "queue">HPHC.DEV.OHI.PAYLOAD.MESSAGE</jms:targetAddress>        
+		</wsdl:port>    
+	</wsdl:service>
+</wsdl:definitions>

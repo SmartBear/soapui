@@ -1,0 +1,76 @@
+<!--
+#yschtools {font-family:verdana;}
+#yschinfo h1 {position:static;}
+
+#rel, #full {margin-left:7px;}
+#rel {margin-bottom:5px;}
+/* feedback links */
+#yschfdbk {text-align:right;}
+#yschfdbk a  {font:78% verdana;}
+
+html>body {width:auto;}
+#full dt {display: inline; margin-right: 5px;}
+#full dl {margin: 0;text-indent:-7em;padding-left:7em;}
+#full dd {display: inline; margin: 0 10px 0 0;}
+
+/* results modules */
+#yschres {border-top:1px solid #fff;} /* gecko header alignment */
+#yschpri {margin:18px 230px 0 7px;}
+#photos, #av {margin: 0;padding: 0; list-style-type: none;}
+#photos img {border-width: 1px;margin:0 auto;text-align:center;}
+#yschpri #av img {margin: 0 3px 0}
+#yschpri #av li {text-indent:-25px;}
+#yschpri #av li a {font-size:120%;color:#0000de}
+#yschpri #av li em, #yschweb #photos em {color:#008000}
+
+#yschpri .full .spons li a {font-size: 120%;}	
+#yschpri ol#photos .yschthmb {width:160px;text-align:center;display:inline-block;margin-bottom:10px;}
+#yschpri ol#photos span {width:66%;display:inline-block;vertical-align:top;}
+#yschpri ol#photos {margin:0;}
+#yschweb ol#photos li {border-bottom:1px solid #999;padding-bottom:10px;margin-left:0;}
+html>body ol#photos li {display:table;}
+html>body ol#photos li .yschthmb, html>body ol#photos li span {display:table-cell;}
+
+.pr {color:#666;} /* press release, needs prefix */
+#yschweb .yschhd {display:block;margin:0 0 10px;border-bottom:1px solid #dcdcdc;padding-bottom:2px;color:#909090}
+#yschweb .yschhd div {float:left;}
+#yschweb h2 {display:inline;margin:0 10px 0 0;color:#909090;}
+#yschweb .yschhd #yschsrt {float:none;text-align:right;color:#000;margin:0;} /* TODO: cleanup */
+#yschweb .yschhd #yschsrt a {color:#0000de;}
+#yschweb #photos hr, #yschweb #photos br {display:none;} /* TODO: rip out hrs and brs */
+#yschpri ol#av {margin-left:10px;}
+#yschpri.full li a {font-size: 100%;}
+
+
+#yschsec {width:200px;margin-top:16px;}
+#yschsec .mod li {border:0;background:transparent;}
+.disclaimer, #brws h2 {font:bold 78% verdana;color:#909090} /* TODO: convert to yschhd */
+#yschsec .whatsthis {text-align:center;} /* TODO: convert to li.yschpromo */ 
+#yschsec .mod {margin-bottom: 20px;} /* TODO: deprecate mod */
+#yschsec .mod .hd {text-align:right;white-space: nowrap;border-bottom:1px solid #dcdcdc;margin-bottom:10px;color:#909090}
+#yschsec .mod .hd h2 {float:left;text-align:left;display:block;margin-top:3px;}
+#yschsec .mod .hd small {text-align:right;} /* TODO: convert small to em */
+#yschsec .mod ol {margin: 0; padding: 0; list-style-type: none;clear:both;}
+#yschsec .mod li {margin: 0 0 10px;padding:0;} /* IE, block em adds margin */
+#yschsec #av img {border:0;margin-right:3px;}
+#yschsec #av ol {width:180px;}
+#yschsec #av li {text-indent:-18px;padding-left:18px;}
+#yschsec .mod a em {font:78%/1.1em verdana;text-decoration:none;color:#000;text-indent:0;} /* TODO: reverse nesting */ 
+#yschsec #av li {overflow:visible;}
+#yschsec #alrt .hd {margin-bottom:5px;}
+#yschsec #alrt .hd h2, #yschsec #rssalrt .hd h2 {float:none;}
+#yschsec #alrt div, #yschsec #stories ol {margin: 0 0 0 6px;}
+#yschsec #alrt img {float:left;}
+#yschsec #photos li {text-align: center;}
+#yschsec #stories div {margin-left:10px;}
+
+#brws {min-width: 42em;}
+#brws h2 {margin-bottom:5px;}
+#brws ul,#brws li {margin:0;padding:0;list-style-type:none;}
+#brws li {padding-left:15px;}
+#brws ul span {float:left;border-right:1px solid #CECECE;width:19%;}
+#brws ul span.last {border:0;}
+
+#yschssbx {padding-top:30px;clear:both;}
+#yschft small {font-size:80%;} /* TODO: remove smalls */
+//-->

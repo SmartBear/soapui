@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>Inspecting WSDL - the WSDL Content Viewer in soapUI</title>
+    </properties>
+    <body>
+		<section name="WSDL Content Viewer">
+		<p>The Interface viewer allows relatively easy navigation and inspection of the entire contract for an imported WSDL, 
+		including all imported and included WSDL and XSD files and their contained types, definitions, etc.</p>
+		
+		<p>The navigation tree to the left shows contained elements in the contract, selecting a node will 
+		highlight that element in its containing file to the right, automatically switching tabs if necessary.
+		Elements referring to other elements in the contract are also double clickable and will focus to the
+		referenced element in the tree as follows;</p>
+		<table>
+		<tr><th>Double-click on</th><th>will focus on (if available)</th></tr>
+		<tr><td>Global Element</td><td>its Complex Type</td></tr>
+		<tr><td>Message Part</td><td>its Complex Type or Global Element</td></tr>
+		<tr><td>Operation input/output</td><td>its Message</td></tr>
+		<tr><td>Binding Operation input/output</td><td>its corresponding Operation input/output</td></tr>
+		<tr><td>Port</td><td>its Binding Operation</td></tr>
+		</table>
+		
+		<p>The viewer toolbar has the following actions (left to right)</p>
+		<ul>
+		<li><b>Back</b> - navigates to the previously selected node</li>
+		<li><b>Forward</b> - navigates to the next selected node (after navigating back..)</li>
+		<li><b>Update Definition</b> - updates the WSDL contract as described under 
+		<a href="index.html#Updating_the_Interface_Definition">Updating the Interface Definition</a></li>
+		<li><b>Export WSDL</b> - prompts to export the entire sadly and all imported and included files to a local folder. Import or Includes
+		are replaced with valid relative ones.</li>
+		</ul>
+		
+		<p>The following screenshot shows the viewer for the PayPal API;</p>
+		<p align="center"><img src="images/interface_viewer.gif" alt="the WSDL Content Inspector"/></p>
+	
+		 <p><hr size="1"/>Next: <a href="wsi.html ">WS-I Compliance for Compliance Tests</a></p>
+		</section>
+    </body>
+</document>

@@ -1,0 +1,43 @@
+/*
+ *  soapUI, copyright (C) 2004-2010 eviware.com 
+ *
+ *  soapUI is free software; you can redistribute it and/or modify it under the 
+ *  terms of version 2.1 of the GNU Lesser General Public License as published by 
+ *  the Free Software Foundation.
+ *
+ *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ *  See the GNU Lesser General Public License for more details at gnu.org.
+ */
+
+package com.eviware.soapui.impl.wsdl.teststeps;
+
+import java.lang.reflect.InvocationTargetException;
+
+import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
+
+public class SettingPathPropertySupport extends AbstractPathPropertySupport
+{
+	private final String defaultValue;
+
+	public SettingPathPropertySupport( AbstractWsdlModelItem<?> modelItem, String settingName )
+	{
+		this( modelItem, settingName, null );
+	}
+
+	public SettingPathPropertySupport( AbstractWsdlModelItem<?> modelItem, String settingName, String defaultValue )
+	{
+		super( modelItem, settingName );
+		this.defaultValue = defaultValue;
+	}
+
+	public void setPropertyValue( String value ) throws IllegalAccessException, InvocationTargetException
+	{
+		getModelItem().getSettings().setString( getPropertyName(), value );
+	}
+
+	public String getPropertyValue() throws IllegalAccessException, InvocationTargetException, NoSuchMethodException
+	{
+		return getModelItem().getSettings().getString( getPropertyName(), defaultValue );
+	}
+}

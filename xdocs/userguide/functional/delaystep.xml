@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>Testing Web Services - Delay Step</title>
+    </properties>
+    <body>
+		<section name="SoapUI Delay Steps">
+		 
+		   <columns><column><div>
+		   Delay Test Steps can be inserted at any position in a TestCase to pause the execution of the TestCase for
+		  a specified number of milliseconds.<p>Once inserted using the <b>Insert Step</b> menu option described above, 
+		  right-click the delay step and select the <b>Set Delay Time</b> option to set the number of milliseconds to pause
+		  (default is 1000ms).</p></div></column><column>		
+			<img src="images/set_delay_time.gif" border="0" alt="Set Delay Time"/>
+			</column></columns>
+		 
+		   <p><hr size="1"/>Next: <a href="runtestcasestep.html">Run TestCase Step</a></p>
+		</section>
+    </body>
+</document>

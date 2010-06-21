@@ -1,0 +1,623 @@
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" targetNamespace="http://api.ifyouwannabecool.com/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns0="http://api.ifyouwannabecool.com/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <types>
+    <xs:schema targetNamespace="http://api.ifyouwannabecool.com/" xmlns="http://api.ifyouwannabecool.com/">
+      <xs:include schemaLocation="chameleon.xsd"/>
+      <xs:element name="createLink">
+        <xs:annotation>
+          <xs:documentation>
+            doc/lit request wrapper for operation "createLink". (Creates a link between two personas.)
+          </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="persona1Id" type="xs:string" minOccurs="1" maxOccurs="1">
+              <xs:annotation>
+                <xs:documentation>
+                  The id of the first persona.
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+            <xs:element name="persona2Id" type="xs:string" minOccurs="1" maxOccurs="1">
+              <xs:annotation>
+                <xs:documentation>
+                  The id of the second persona.
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="createLinkResponse">
+        <xs:annotation>
+          <xs:documentation>
+            doc/lit response wrapper for operation "createLink". (Creates a link between two personas.)
+          </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="return" type="link" minOccurs="1" maxOccurs="1">
+              <xs:annotation>
+                <xs:documentation>
+                  The link that was created.
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="PermissionDeniedException">
+        <xs:annotation>
+          <xs:documentation>
+            Thrown when an attempt is made to do something without the correct permissions.
+          </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="message" type="xs:string" minOccurs="0" maxOccurs="1"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="createSocialGroup">
+        <xs:annotation>
+          <xs:documentation>
+            doc/lit request wrapper for operation "createSocialGroup". (Create a social group.)
+          </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="groupLeader" type="xs:string" minOccurs="1" maxOccurs="1">
+              <xs:annotation>
+                <xs:documentation>
+                  The id of the group leader.
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+            <xs:element name="memberIds" type="xs:string" minOccurs="1" maxOccurs="unbounded">
+              <xs:annotation>
+                <xs:documentation>
+                  The ids of the members of the group.
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+            <xs:element name="exclusive" type="xs:boolean" minOccurs="1" maxOccurs="1">
+              <xs:annotation>
+                <xs:documentation>
+                  Whether the group is exclusive.
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="createSocialGroupResponse">
+        <xs:annotation>
+          <xs:documentation>
+            doc/lit response wrapper for operation "createSocialGroup". (Create a social group.)
+          </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="return" type="socialGroup" minOccurs="1" maxOccurs="1">
+              <xs:annotation>
+                <xs:documentation>
+                  The group that was created.
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="addToSocialGroup">
+        <xs:annotation>
+          <xs:documentation>
+            doc/lit request wrapper for operation "addToSocialGroup". (Adds a persona to a social group.)
+          </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="groupId" type="xs:string" minOccurs="1" maxOccurs="1">
+              <xs:annotation>
+                <xs:documentation>
+                  The id of the group to add the persona to.
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+            <xs:element name="personaId" type="xs:string" minOccurs="1" maxOccurs="1">
+              <xs:annotation>
+                <xs:documentation>
+                  The id of the persona to add to the group.
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="addToSocialGroupResponse">
+        <xs:annotation>
+          <xs:documentation>
+            doc/lit response wrapper for operation "addToSocialGroup". (Adds a persona to a social group.)
+          </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="return" type="xs:boolean" minOccurs="1" maxOccurs="1">
+              <xs:annotation>
+                <xs:documentation>
+                  Whether the persona was successfully added.
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="ExclusiveGroupException">
+        <xs:annotation>
+          <xs:documentation>
+            Thrown when trying to add someone to a social group that is exclusive.
+          </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="groupId" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="groupLeader" type="persona" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="message" type="xs:string" minOccurs="0" maxOccurs="1"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="readGroups">
+        <xs:annotation>
+          <xs:documentation>
+            doc/lit request wrapper for operation "readGroups". (Reads the social groups to which a specified persona belongs.)
+          </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="personaId" type="xs:string" minOccurs="1" maxOccurs="1">
+              <xs:annotation>
+                <xs:documentation>
+                  The id of the persona.
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="readGroupsResponse">
+        <xs:annotation>
+          <xs:documentation>
+            doc/lit response wrapper for operation "readGroups". (Reads the social groups to which a specified persona belongs.)
+          </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="return" type="socialGroup" minOccurs="1" maxOccurs="1">
+              <xs:annotation>
+                <xs:documentation>
+                  The social groups that were read.
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="readPersona">
+        <xs:annotation>
+          <xs:documentation>
+            doc/lit request wrapper for operation "readPersona". (Reads a persona.)
+          </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="personaId" type="xs:string" minOccurs="1" maxOccurs="1">
+              <xs:annotation>
+                <xs:documentation>
+                  The id of the persona to read.
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="readPersonaResponse">
+        <xs:annotation>
+          <xs:documentation>
+            doc/lit response wrapper for operation "readPersona". (Reads a persona.)
+          </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="return" type="persona" minOccurs="1" maxOccurs="1">
+              <xs:annotation>
+                <xs:documentation>
+                  The persona.
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="readPersonas">
+        <xs:annotation>
+          <xs:documentation>
+            doc/lit request wrapper for operation "readPersonas". (Reads a set of personas.)
+          </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="personaIds" type="xs:string" minOccurs="1" maxOccurs="unbounded">
+              <xs:annotation>
+                <xs:documentation>
+                  The ids of the personas.
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="readPersonasResponse">
+        <xs:annotation>
+          <xs:documentation>
+            doc/lit response wrapper for operation "readPersonas". (Reads a set of personas.)
+          </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="return" type="persona" minOccurs="1" maxOccurs="1">
+              <xs:annotation>
+                <xs:documentation>
+                  The personas.
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="storePersona">
+        <xs:annotation>
+          <xs:documentation>
+            doc/lit request wrapper for operation "storePersona". (Store a persona.)
+          </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="persona" type="persona" minOccurs="1" maxOccurs="1">
+              <xs:annotation>
+                <xs:documentation>
+                  Th
+e persona to store.
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="storePersonaResponse">
+        <xs:annotation>
+          <xs:documentation>
+            doc/lit response wrapper for operation "storePersona". (Store a persona.)
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="deletePersona">
+        <xs:annotation>
+          <xs:documentation>
+            doc/lit request wrapper for operation "deletePersona". (Delete a persona.)
+          </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="personaId" type="xs:string" minOccurs="1" maxOccurs="1">
+              <xs:annotation>
+                <xs:documentation>
+                  The id of the persona to delete.
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="deletePersonaResponse">
+        <xs:annotation>
+          <xs:documentation>
+            doc/lit response wrapper for operation "deletePersona". (Delete a persona.)
+          </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="return" type="xs:boolean" minOccurs="1" maxOccurs="1">
+              <xs:annotation>
+                <xs:documentation>
+                  Whether the persona was successfully deleted.
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:schema>
+  </types>
+  <message name="LinkageService.createLink">
+    <documentation>
+      request message for operation "createLink". (Creates a link between two personas.)
+    </documentation>
+    <part name="createLink" element="ns0:createLink"/>
+  </message>
+  <message name="LinkageService.createLinkResponse">
+    <documentation>
+      response message for operation "createLink". (Creates a link between two personas.)
+    </documentation>
+    <part name="createLinkResponse" element="ns0:createLinkResponse"/>
+  </message>
+  <message name="PermissionDeniedException">
+    <documentation>
+      Thrown when an attempt is made to do something without the correct permissions.
+    </documentation>
+    <part name="PermissionDeniedException" element="ns0:PermissionDeniedException"/>
+  </message>
+  <message name="LinkageService.createSocialGroup">
+    <documentation>
+      request message for operation "createSocialGroup". (Create a social group.)
+    </documentation>
+    <part name="createSocialGroup" element="ns0:createSocialGroup"/>
+  </message>
+  <message name="LinkageService.createSocialGroupResponse">
+    <documentation>
+      response message for operation "createSocialGroup". (Create a social group.)
+    </documentation>
+    <part name="createSocialGroupResponse" element="ns0:createSocialGroupResponse"/>
+  </message>
+  <message name="LinkageService.addToSocialGroup">
+    <documentation>
+      request message for operation "addToSocialGroup". (Adds a persona to a social group.)
+    </documentation>
+    <part name="addToSocialGroup" element="ns0:addToSocialGroup"/>
+  </message>
+  <message name="LinkageService.addToSocialGroupResponse">
+    <documentation>
+      response message for operation "addToSocialGroup". (Adds a persona to a social group.)
+    </documentation>
+    <part name="addToSocialGroupResponse" element="ns0:addToSocialGroupResponse"/>
+  </message>
+  <message name="ExclusiveGroupException">
+    <documentation>
+      Thrown when trying to add someone to a social group that is exclusive.
+    </documentation>
+    <part name="ExclusiveGroupException" element="ns0:ExclusiveGroupException"/>
+  </message>
+  <message name="LinkageService.readGroups">
+    <documentation>
+      request message for operation "readGroups". (Reads the social groups to which a specified persona belongs.)
+    </documentation>
+    <part name="readGroups" element="ns0:readGroups"/>
+  </message>
+  <message name="LinkageService.readGroupsResponse">
+    <documentation>
+      response message for operation "readGroups". (Reads the social groups to which a specified persona belongs.)
+    </documentation>
+    <part name="readGroupsResponse" element="ns0:readGroupsResponse"/>
+  </message>
+  <message name="PersonaService.readPersona">
+    <documentation>
+      request message for operation "readPersona". (Reads a persona.)
+    </documentation>
+    <part name="readPersona" element="ns0:readPersona"/>
+  </message>
+  <message name="PersonaService.readPersonaResponse">
+    <documentation>
+      response m
+essage for operation "readPersona". (Reads a persona.)
+    </documentation>
+    <part name="readPersonaResponse" element="ns0:readPersonaResponse"/>
+  </message>
+  <message name="PersonaService.readPersonas">
+    <documentation>
+      request message for operation "readPersonas". (Reads a set of personas.)
+    </documentation>
+    <part name="readPersonas" element="ns0:readPersonas"/>
+  </message>
+  <message name="PersonaService.readPersonasResponse">
+    <documentation>
+      response message for operation "readPersonas". (Reads a set of personas.)
+    </documentation>
+    <part name="readPersonasResponse" element="ns0:readPersonasResponse"/>
+  </message>
+  <message name="PersonaService.storePersona">
+    <documentation>
+      request message for operation "storePersona". (Store a persona.)
+    </documentation>
+    <part name="storePersona" element="ns0:storePersona"/>
+  </message>
+  <message name="PersonaService.storePersonaResponse">
+    <documentation>
+      response message for operation "storePersona". (Store a persona.)
+    </documentation>
+    <part name="storePersonaResponse" element="ns0:storePersonaResponse"/>
+  </message>
+  <message name="PersonaService.deletePersona">
+    <documentation>
+      request message for operation "deletePersona". (Delete a persona.)
+    </documentation>
+    <part name="deletePersona" element="ns0:deletePersona"/>
+  </message>
+  <message name="PersonaService.deletePersonaResponse">
+    <documentation>
+      response message for operation "deletePersona". (Delete a persona.)
+    </documentation>
+    <part name="deletePersonaResponse" element="ns0:deletePersonaResponse"/>
+  </message>
+  <portType name="LinkageService">
+    <documentation>
+      The linkage service is used to service the data for creating links between personas. This
+includes links and social groups.
+    </documentation>
+    <operation name="createLink">
+      <documentation>
+        Creates a link between two personas.
+      </documentation>
+      <input message="ns0:LinkageService.createLink"/>
+      <output message="ns0:LinkageService.createLinkResponse"/>
+      <fault name="PermissionDeniedException" message="ns0:PermissionDeniedException"/>
+    </operation>
+    <operation name="createSocialGroup">
+      <documentation>
+        Create a social group.
+      </documentation>
+      <input message="ns0:LinkageService.createSocialGroup"/>
+      <output message="ns0:LinkageService.createSocialGroupResponse"/>
+    </operation>
+    <operation name="addToSocialGroup">
+      <documentation>
+        Adds a persona to a social group.
+      </documentation>
+      <input message="ns0:LinkageService.addToSocialGroup"/>
+      <output message="ns0:LinkageService.addToSocialGroupResponse"/>
+      <fault name="ExclusiveGroupException" message="ns0:ExclusiveGroupException"/>
+    </operation>
+    <operation name="readGroups">
+      <documentation>
+        Reads the social groups to which a specified persona belongs.
+      </documentation>
+      <input message="ns0:LinkageService.readGroups"/>
+      <output message="ns0:LinkageService.readGroupsResponse"/>
+    </operation>
+  </portType>
+  <portType name="PersonaService">
+    <documentation>
+      The persona services is used to perform actions on the data associated with a persona.
+    </documentation>
+    <operation name="readPersona">
+      <documentation>
+        Reads a persona.
+      </documentation>
+      <input message="ns0:PersonaService.readPersona"/>
+      <output message="ns0:PersonaService.readPersonaResponse"/>
+    </operation>
+    <operation name="readPersonas">
+      <documentation>
+        Reads a set of personas.
+      </documentation>
+      <input message="ns0:PersonaService.readPersonas"/>
+      <output message="ns0:PersonaService.readPersonasResponse"/>
+    </operation>
+    <operation name="storePersona">
+      <documentation>
+        Store a persona.
+      </documentation>
+      <input message="ns0:PersonaService.storePersona"/>
+      <output message="ns0:PersonaService.storePersonaResponse"/>
+    </operation>
+    <operation name="deletePersona">
+      <documentation>
+        Delete a persona.
+      </documentation>
+      <input message="ns0:PersonaService.deletePersona"/>
+      <output message="ns0:PersonaService.deletePersonaResponse"/>
+      <fault name="PermissionDeniedException" message="ns0:PermissionDeniedException"/>
+    </operation>
+  </portType>
+  <binding name="LinkageServiceSOAPBinding" type="ns0:LinkageService">
+    <documentation>
+      SOAP Binding for LinkageService
+    </documentation>
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+    <operation name="createLink">
+      <soap:operation soapAction="" style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="PermissionDeniedException">
+        <soap:fault name="PermissionDeniedException" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="createSocialGroup">
+      <soap:operation soapAction="" style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="addToSocialGroup">
+      <soap:operation soapAction="" style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="ExclusiveGroupException">
+        <soap:fault name="ExclusiveGroupException" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="readGroups">
+      <soap:operation soapAction="" style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+  </binding>
+  <binding name="PersonaServiceSOAPBinding" type="ns0:PersonaService">
+    <documentation>
+      SOAP Binding for PersonaService
+    </documentation>
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+    <operation name="readPersona">
+      <soap:operation soapAction="" style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="readPersonas">
+      <soap:operation soapAction="" style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="storePersona">
+      <soap:operation soapAction="" style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="deletePersona">
+      <soap:operation soapAction="" style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="PermissionDeniedException">
+        <soap:fault name="PermissionDeniedException" use="literal"/>
+      </fault>
+    </operation>
+  </binding>
+  <service name="LinkageServiceService">
+    <port name="LinkageServiceSOAPPort" binding="ns0:LinkageServiceSOAPBinding">
+      <soap:address location="http://www.ifyouwannabecool.com/api/LinkageServiceService"/>
+    </port>
+  </service>
+  <service name="PersonaServiceService">
+    <port name="PersonaServiceSOAPPort" binding="ns0:PersonaServiceSOAPBinding">
+      <soap:address location="http://www.ifyouwannabecool.com/api/PersonaServiceService"/>
+    </port>
+  </service>
+</definitions>
+
+ 	  	 

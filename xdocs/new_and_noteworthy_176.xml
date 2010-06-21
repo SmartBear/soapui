@@ -1,0 +1,252 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>soapUI 1.7.6</title>
+    </properties>
+    <body>
+		<section name="Welcome to soapUI 1.7.6!">
+		<p>Welcome to soapUI 1.7.6! We are happy to release this intermediate version which includes a large number of
+        minor features improvements and a general overhaul of the UI itself (which will be continuously improved in coming releases). 
+        Updated plugins for <a href="intellij/index.html">IntelliJ</a> 
+		and <a href="netbeans/index.html">NetBeans 5.5</a>, <a href="plugin/index.html">Maven 1.X/2.X</a> and
+		<a href="eclipse/index.html">eclipse</a> are also available.</p>
+		<p><i>As always, make backups of your project files before switching and let us know if you have any issues!</i></p>
+		<table class="webstartlinkstable">
+		<tr>
+		        <td align="center" bgcolor="white"><span class="webstartheader">soapUI 1.7.6</span><div>
+				<a href="http://www.soapui.org/jnlp/1.7.6/soapui.jnlp" urchinTracker="/jnlp/soapui/1_7_6"><img class="webstart" src="images/webstart_green.png" border="0"/></a></div>
+			 [<a target="_new" href="http://sourceforge.net/project/showfiles.php?group_id=136013&amp;package_id=163662&amp;release_id=542387">Download</a>]</td>
+			 <td align="center" bgcolor="white"><span class="webstartheader">soapUI 1.7.6 Pro</span><div>
+				<a href="http://www.eviware.com/jnlp/1.7.6/soapui-pro.jnlp" urchinTracker="/jnlp/soapui/1_7_6_pro"><img class="webstart" src="images/webstart_orange.png" border="0"/></a></div>
+			 [<a target="_new" href="http://www.eviware.com">Trial/Buy</a>]
+			 [<a target="_new" href="http://www.eviware.com/content/view/42/36/">FAQ</a>]</td>
+	
+			</tr>
+		</table> 
+		
+		<p>The most notable improvements to both soapUI and soapUI Pro are described below.</p>
+
+		<subsection name="New and Noteworthy">
+		
+			<newfeature img="images/176/interfaceendpoints.gif" alt="interface pop up menu default username password for soa test">
+				<div>The "Service Endpoints" dialog shown from the Interface popup menu now allows association 
+				of default username/password/domain/WSS-Type/WSS-TimeToLive for an endpoint, removing the requirement 
+				to enter these at the request/test-request level. [<a href="userguide/interfaces/endpoints.html">Read More</a>]</div>
+			</newfeature>
+			
+			<newfeature img="images/176/testrunnerdialog.gif" alt="launch command line for soa test">
+			<div>Launch dialog for the soapUI command-line TestCaseRunner makes it easy to explore command-line options, 
+			generate launch commands and see the results for command-line execution. soapUI Pro includes an option to 
+			open generated reports directory in a browser. [<a href="userguide/commandline/functional.html#Launch_Dialog">Read More</a>]</div>
+			</newfeature>
+
+			<newfeature img="images/176/loadtestrunnerdialog.gif" alt=" load test runner for soa test">
+			<div>Launch dialog for the soapUI command-line LoadTestRunner makes it easy to explore command-line options, 
+			generate launch commands and see the results for command-line execution. [<a href="userguide/commandline/loadtest.html#Launch_Dialog">Read More</a>]</div>
+			</newfeature>
+			
+			<newfeature img="images/176/apachecxf.gif" alt="Apche CXF stubsfor soap test">
+				<div>Tool integration for CXF wsdl2java utility. [<a href="userguide/tools/topdown.html#Apache_CXF_2_X">Read More</a>]</div>
+			</newfeature>
+			
+			<newfeature img="images/176/xqueryassertion.gif" alt="xquery assertion soa test">
+				<div>XQuery 2.0 assertion and property-transfer support for complex assertions/transfers. 
+				[<a href="userguide/functional/response-assertions.html#XQuery_Match">Read More</a>]</div>
+			</newfeature>
+			
+			<newfeature img="images/176/containsregex.gif" alt="xquery match match confiquration soa test">
+				<div>Support for regular expressions in Simple Contains/NotContains assertions. 
+				[<a href="userguide/functional/response-assertions.html#Simple_Contains">Read More</a>]</div>
+			</newfeature>
+			
+			<newfeature img="images/176/linenumbers.gif" alt="groovy and xml editors with line for soa test">
+				<div>Improved Groovy/xml editors with line-numbers, right-button menus, etc..</div>
+			</newfeature>
+
+			<newfeature>
+				<div>Projects can now be closed / opened in a Workspace from the Projects popup ("Close/Open Project") and 
+				Workspace popup ("Close/Open all... Projects"). Closed projects are displayed with a grey 
+				project-icon and can be opened either via their right-button menu or by simply double-clicking 
+				them. Closed projects will not be loaded from disk and will thus greatly improve startup times 
+				and reduce memory consumption. [<a href="userguide/workspaces.html">Read More</a>]</div>
+			</newfeature>
+
+			<newfeature img="images/176/recentmenu.gif" alt="file and recent menu for soa test">
+			<div>A File/Recent menu for easily switching to/from recent workspaces/projects/editors.</div>
+			</newfeature>
+
+			<newfeature img="images/176/remoteprojects.gif" alt="handle remote project files over http read only mode for you soa test">
+				<div>soapUI can now handle remote project-files over HTTP in read-only mode. When importing, the URL to 
+				project file is saved in the workspace and can be closed/opened/reloaded as usual. 
+				[<a href="userguide/projects/index.html">Read More</a>]</div>
+			</newfeature>
+			
+			<newfeature img="images/176/postprocess.gif" alt="check and post process soa test">
+			<div>A number of actions currently update a number of target items (TestRequests, etc.). It may be required 
+			to manually check/post-process these after such an operation and they have been extended with an option to 
+			open a list of the modified items in a separate window which can be used for post-processing/navigating to 
+			changed items.</div>
+			</newfeature>
+			
+			<newfeature>
+				<div>Improved MTOM functionality;</div>
+				<ul>
+				<li>MTOM will now be used for all binary content when MTOM is enabled, 
+				even if the corresponding XML Schema datatype and/or the content element is missing any of the xmime 
+				related attributes.</li>
+				<li>A new "Force MTOM" request level property which will result in the corresponding message always 
+				being sent with MTOM, even if there is no binary content. This is to mimic the behavior of many web 
+				service toolkits and servers.</li>
+				<li>Improved MTOM support in MockServices</li>
+				</ul>
+				<div>[<a href="userguide/attachments.html#MTOM_Attachments">Read More</a>]</div>
+			</newfeature>
+			
+			<newfeature img="images/176/changemockoperation.gif" alt="actions for mock operations soa test">
+			<div>A "Change Operation" action for MockOperations to change which operation they are mocking. 
+			[<a href="userguide/mock/operations.html#Change_Operation">Read More</a>]</div>
+			</newfeature>
+			
+			<newfeature>
+				<div>Global/System-Property expansion support in property expansions: Specifying a 
+				-Dsoapui.properties=..properties-file.. option at startup will load these properties 
+				and make them globally available in property-expansions using a ${##property.name} syntax. If the property
+				is not found or no properties-file has been specified, the corresponding system property will be 
+				returned instead (if available). [<a href="userguide/properties.html#Property_Expansion">Read More</a>]
+				</div>
+			</newfeature>
+	
+			<newfeature>
+			<div>Added a "Max Assertion Errors" setting to LoadTest options that discards "old" assertion errors to 
+			preserve memory. [<a href="userguide/loadtest/index.html#LoadTest_Options">Read More</a>]</div>
+			</newfeature>
+			
+			<newfeature>
+			    <div>A large number of general UI/Usability improvements;</div>
+			    <ul>
+			    <li>Replaced tabs with "inspectors" in most places for easier/cleaner UI</li>
+			    <li>Streamlined editor windows to always have a toolbar/editor/inspectors top-down layout</li>
+			    <li>Created toolbars/buttons instead of text-buttons in most editors</li>
+			    <li>Fixed tabbing/F1-help in dialogs</li>
+			    <li>Simplified project creation does not require saving of projects on creation</li>
+			    <li>Import of global settings when starting a new installation (see below for extended support in soapUI Pro)</li>
+			    <li>etc..</li>
+			    </ul>
+			</newfeature>
+			
+			<newfeature img="images/176/switchwindow.gif" alt="switch window action between open editors soa test">
+			<div>A global "Switch Window" action (Ctrl W) to switch between open editors</div>
+			</newfeature>
+			
+			<newfeature img="images/176/maximizedesktop.gif" alt="maximize desktop soa test">
+			<div>A global "Maximize Desktop" action (Ctrl M) to show/hide Navigator/Log Inspectors</div>
+			</newfeature>
+			
+			<newfeature>
+			<div>Limit (-m) option for command-line LoadTestRunner for changing the LoadTest limit on the fly. 
+			[<a href="userguide/commandline/loadtest.html">Read More</a>]</div>
+			</newfeature>
+			
+			<newfeature>
+				<div>Initial steps towards a plug-in/extension API, currently allowing easy additions of custom menu-actions
+				and internal listeners. In soapUI Pro these can be created in Groovy in the global script library with run-time
+				recompile support (ie no need to restart soapUI Pro to test changed extensions). This will be much improved to provide
+				a full-fledged extension-API in a future version. Thanks to Philippe Marsteau for contributing/providing feedback! 
+				[<a href="architecture/extensions.html">Read More</a>]
+				</div>
+			</newfeature>
+			
+			<newfeature>
+				<div>Additional methods in the <a href="userguide/functional/groovystep.html#GroovyUtils">GroovyUtils/XmlHolder</a> classes:</div>
+				<ul>
+				<li><code>GroovyUtils.expand( string )</code> - expands the specified Property Expansion string</li>
+				<li><code>XmlHolder.getNamespaces()</code> - returns a Map of prefixes to namespace URI:s that will 
+				be used in XPath expressions</li>
+				<li><code>XmlHolder.removeDomNodes( XPath )</code> - removes all DOM nodes matching the specified
+				XPath expression</li>
+				</ul>
+			</newfeature>
+			
+			<newfeature>
+			<div>As always, a number of SourceForge feature requests and bugs have been fixed:</div>
+			<ul>
+			<li>Option to discard properties</li>
+			<li>Much-improved support for one-way operations</li>
+			<li>Property Expansion is now supported in Conditional Goto Steps XPath</li>
+			<li>Fixed save of empty properties in Properties Step</li>
+			<li>Fixed URL decoding of WSDL port locations</li>
+			<li>Fixed correct setting of SOAPAction / Content-Type headers for SOAP 1.2</li>
+			<li>MockService fault with HTTP response code 500</li>
+			<li>Generate TestSuite does not use existing Requests</li>
+			<li>OutOfMemory error when creating backup requests</li>
+			</ul>
+			</newfeature>
+			
+			<newfeature>
+			<div>And of course a large number of bugs, issues, etc. have been fixed thanks
+			to our users' fantastic support and enthusiasm. Thank you all!!</div>
+			</newfeature>
+			
+		</subsection>
+		
+		<subsection name="New and Noteworthy in soapUI Pro">
+		<p>On top of all the above, the following improvements/additions have been made to soapUI Pro:</p>
+		
+		<newfeature img="images/176/overviewview.gif" alt="overview of response and mock request messages soa test">
+		<div>Overview View for getting an overview of response/mock-request messages with links to corresponding xml/outline
+		positions. [<a href="userguide/overviewview.html">Read More</a>]</div>
+		</newfeature>
+		
+		<newfeature img="images/176/exceldatasource.gif">
+		<div>Excel DataSource support for data-driven testing. [<a href="userguide/functional/datasourcestep.html#Excel_DataSource">Read More</a>]</div>
+		</newfeature>
+		
+		<newfeature img="images/176/griddatasource.gif">
+		<div>Grid DataSource for managing data-driven test-data from within soapUI. [<a href="userguide/functional/datasourcestep.html#Grid_DataSource">Read More</a>]</div>
+		</newfeature>
+
+		<newfeature img="images/176/datasourceoptions.gif">
+		<div>DataSource range support for narrowing down which rows that should be used. 
+		[<a href="userguide/functional/datasourcestep.html#DataSource_Options">Read More</a>]</div>
+		</newfeature>
+
+		<newfeature img="images/176/datainput.gif" alt="data source for data driven testing soa test">
+		<div>Improved Form-Editor with:</div>
+		<ul> 
+		<li>Extensive XML-Schema datatype validation/input</li>
+		<li>Improved SOAP-Header support</li>
+		<li>Right-button menus in text-fields with undo/redo support and wizards for creating property-expansions in form-fields.</li>
+		<li>Initial support for SOAP-Encoding arrays</li>
+		<li>Improved choice-complex-type support</li>
+		<li>Improved attachment support</li>
+		</ul>
+		<div>[<a href="userguide/formeditor.html">Read More</a>]</div>
+		</newfeature>
+		
+		<newfeature img="images/176/copyrequests.gif" alt="grid datasource for managing data driven test data soa test">
+		<div>A new "Copy Requests to TestRequests" action for copying/merging request content into existing TestRequests. 
+		[<a href="userguide/requests.html#Copy_Requests">Read More</a>]</div>
+		</newfeature>
+
+		<newfeature img="images/176/cloneassertions.gif">
+		<div>A new "Clone Assertions" action for cloning TestRequest assertions to other TestRequests. 
+		[<a href="userguide/functional/testrequests.html#Clone_Assertions">Read More</a>]</div>
+		</newfeature>
+		
+		<newfeature img="images/176/importprefs.gif">
+		<div>An extended "Import Preferences" action for importing settings, Groovy scripts, libraries, etc from an
+		existing installation/central repository. This dialog is automatically displayed the first time soapUI Pro is 
+		run. [<a href="userguide/preferences.html#Import_Preferences">Read More</a>]</div>
+		</newfeature>
+		
+		<newfeature>
+		<div>Added global setting for maximum number of columns to display in the
+		<a href="userguide/messageinspectors.html#Table_Layout_Inspector">Table Inspector</a>.</div>
+		</newfeature>
+		
+		</subsection>
+		
+		 <p><hr size="1"/></p>
+		</section>
+    </body>
+</document>

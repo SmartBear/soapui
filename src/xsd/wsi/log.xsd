@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright (c) 2002-2004 by The Web Services-Interoperability Organization (WS-I) and 
+  Certain of its Members. All Rights Reserved.
+	
+  Notice
+  The material contained herein is not a license, either expressly or impliedly, to any 
+  intellectual property owned or controlled by any of the authors or developers of this 
+  material or WS-I. The material contained herein is provided on an "AS IS" basis and to 
+  the maximum extent permitted by applicable law, this material is provided AS IS AND WITH 
+  ALL FAULTS, and the authors and developers of this material and WS-I hereby disclaim all 
+  other warranties and conditions, either express, implied or statutory, including, but not 
+  limited to, any (if any) implied warranties, duties or conditions of  merchantability, 
+  of fitness for a particular purpose, of accuracy or completeness of responses, of results, 
+  of workmanlike effort, of lack of viruses, and of lack of negligence. ALSO, THERE IS NO 
+  WARRANTY OR CONDITION OF TITLE, QUIET ENJOYMENT, QUIET POSSESSION, CORRESPONDENCE TO 
+  DESCRIPTION OR NON-INFRINGEMENT WITH REGARD TO THIS MATERIAL.
+	
+  IN NO EVENT WILL ANY AUTHOR OR DEVELOPER OF THIS MATERIAL OR WS-I BE LIABLE TO ANY OTHER 
+  PARTY FOR THE COST OF PROCURING SUBSTITUTE GOODS OR SERVICES, LOST PROFITS, LOSS OF USE, 
+  LOSS OF DATA, OR ANY INCIDENTAL, CONSEQUENTIAL, DIRECT, INDIRECT, OR SPECIAL DAMAGES 
+  WHETHER UNDER CONTRACT, TORT, WARRANTY, OR OTHERWISE, ARISING IN ANY WAY OUT OF THIS OR 
+  ANY OTHER AGREEMENT RELATING TO THIS MATERIAL, WHETHER OR NOT SUCH PARTY HAD ADVANCE 
+  NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.
+	
+  WS-I License Information
+	Use of this WS-I Material is governed by the WS-I Test License and other licenses.  Information on these 
+	licenses are contained in the README.txt and ReleaseNotes.txt files.  By downloading this file, you agree 
+	to the terms of these licenses.
+	
+  How To Provide Feedback
+  The Web Services-Interoperability Organization (WS-I) would like to receive input, 
+  suggestions and other feedback ("Feedback") on this work from a wide variety of 
+  industry participants to improve its quality over time. 
+	
+  By sending email, or otherwise communicating with WS-I, you (on behalf of yourself if 
+  you are an individual, and your company if you are providing Feedback on behalf of the 
+  company) will be deemed to have granted to WS-I, the members of WS-I, and other parties 
+  that have access to your Feedback, a non-exclusive, non-transferable, worldwide, perpetual, 
+  irrevocable, royalty-free license to use, disclose, copy, license, modify, sublicense or 
+  otherwise distribute and exploit in any manner whatsoever the Feedback you provide regarding 
+  the work. You acknowledge that you have no expectation of confidentiality with respect to 
+  any Feedback you provide. You represent and warrant that you have rights to provide this 
+  Feedback, and if you are providing Feedback on behalf of a company, you represent and warrant 
+  that you have the rights to provide Feedback on behalf of your company. You also acknowledge 
+  that WS-I is not required to review, discuss, use, consider or in any way incorporate your 
+  Feedback into future versions of its work. If WS-I does incorporate some or all of your 
+  Feedback in a future version of the work, it may, but is not obligated to include your name 
+  (or, if you are identified as acting on behalf of your company, the name of your company) on 
+  a list of contributors to the work. If the foregoing is not acceptable to you and any company 
+  on whose behalf you are acting, please do not provide any Feedback.
+	
+  WS-I members should direct feedback on this document to wsi_testing@lists.ws-i.org; 
+  non-members should direct feedback to wsi-tools@ws-i.org.  
+-->
+<xs:schema 
+    xmlns:tns="http://www.ws-i.org/testing/2003/03/log/" 
+    elementFormDefault="qualified" 
+    targetNamespace="http://www.ws-i.org/testing/2003/03/log/" 
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:wsi-monConfig="http://www.ws-i.org/testing/2003/03/monitorConfig/">
+  <xs:import namespace="http://www.ws-i.org/testing/2003/03/monitorConfig/" 
+		schemaLocation=
+		"http://www.ws-i.org/testing/2003/03/monitorConfig/monitorConfig.xsd" />
+  <xs:element name="log" nillable="true" type="tns:log" />
+
+  <xs:complexType name="log">
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" 
+        name="monitor" type="tns:monitor" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" 
+        name="messageEntry" type="tns:messageEntry" >
+        <xs:unique name="ID_PK" >
+           <xs:selector xpath="messageEntry" />
+           <xs:field xpath="@ID" />
+        </xs:unique>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="timestamp" type="xs:dateTime" />
+  </xs:complexType>
+
+  <xs:complexType name="monitor">
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" 
+        name="implementer" type="tns:implementation" />
+      <xs:element minOccurs="1" maxOccurs="1" 
+        name="environment" type="tns:environment" />
+      <xs:element minOccurs="1" maxOccurs="1"
+        ref="wsi-monConfig:configuration" />
+    </xs:sequence>
+    <xs:attribute name="version" type="xs:string" />
+    <xs:attribute name="releaseDate" type="xs:date" />
+  </xs:complexType>
+
+  <xs:complexType name="implementation">
+    <xs:attribute name="name" type="xs:string" />
+    <xs:attribute name="location" type="xs:anyURI" />
+  </xs:complexType>
+
+  <xs:complexType name="environment">
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" 
+        name="runtime" type="tns:nameVersionPair" />
+      <xs:element minOccurs="1" maxOccurs="1" 
+        name="operatingSystem" type="tns:nameVersionPair" />
+      <xs:element minOccurs="1" maxOccurs="1" 
+        name="xmlParser" type="tns:nameVersionPair" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="nameVersionPair">
+    <xs:attribute name="name" type="xs:string" />
+    <xs:attribute name="version" type="xs:string" />
+  </xs:complexType>
+
+  <xs:complexType name="messageEntry" abstract="true">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="messageContent">
+        <xs:complexType>
+          <xs:simpleContent>
+            <xs:extension base="xs:string">
+              <!--Byte Order Mark -->
+              <xs:attribute name="BOM" type="xs:unsignedInt"
+		                    use="optional" />
+            </xs:extension>
+          </xs:simpleContent>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="timestamp" type="xs:dateTime" />
+    <xs:attribute name="conversationID" type="xs:NMTOKEN" />
+    <xs:attribute name="ID" type="xs:string" />
+  </xs:complexType>
+
+  <xs:complexType name="tcpLog" abstract="true">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:messageEntry">
+        <xs:sequence>
+          <xs:element minOccurs="1" maxOccurs="1" 
+            name="senderHostAndPort" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" 
+            name="receiverHostAndPort" type="xs:string" />
+        </xs:sequence>
+        <xs:attribute name="type" type="tns:tcpMessageType" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:simpleType name="tcpMessageType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="request" />
+      <xs:enumeration value="response" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="httpMessageEntry">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:tcpLog">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" 
+            name="httpHeaders" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+</xs:schema>

@@ -1,0 +1,118 @@
+.message {
+	border: dashed 1px;
+	border-color:#999999;
+	margin-left: 7px;
+	padding: 0.5em;
+	line-height: 150%;
+	font-family: monospace;
+	font-size: 12px;
+	color:#000;
+}
+.coverage- {
+	/* pre-wrap is better, but doesn't work in FireFox or IE. */
+	white-space: pre;
+	
+	margin: 0px;
+}
+
+.coverage-true {
+	background-color: #0fdf0f;
+	white-space: pre;
+	margin: 0;
+}
+.coverage-assertion {
+	background-color: #009c00;
+	white-space: pre;
+	margin: 0px;
+}
+.coverage-false {
+background-color:#FF0000;
+	white-space: pre;
+	margin: 0px;
+}
+.tableheader {
+	background-color: #cccccc;
+	font-weight: bold;
+}
+
+body {
+	font:normal 68% verdana,arial,helvetica;
+	color:#000000;
+}
+
+h1 {
+	margin: 0px 5px 5px; 
+	font: verdana,arial,helvetica;
+	 color: #00cc33;
+	 font-weight: normal;
+	 font-size: 18.0pt;
+	 font-weight: bold;
+}
+h1.page {
+	margin-top: 1em; margin-bottom: 0.5em;
+	font: bold 325% verdana,arial,helvetica
+}
+
+h3 {
+	margin: 10px 5px 5px; 
+	border-bottom: 1px solid #00cc33;
+	font-weight: bold;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size:14px;
+	color: #00cc33;
+}
+
+table tr td, table tr th {
+	font-size: 12px;
+}
+
+a:link{
+color: #333333;
+}
+
+a:visited{
+color: #333333;
+}
+
+table.contractCoverage{
+	font-weight: bold;
+	margin: 5px 0px 0px; 
+	text-align:left;
+	background:#ffffff;
+	border-width: 10px;
+	margin-left: 5px;
+	margin-bottom: 5px;
+}
+
+td {
+	font-weight: bold;
+	text-align:left;
+	-moz-border-radius: ;
+	background:#ffffff;
+}
+td.tableheader {
+	padding: 5px;
+}
+td.header {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	text-align:left;
+	padding: 5px;
+	background:#00cc33;
+	-moz-border-radius: ;
+	width=150px;
+}
+
+td.count, td.percent {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: normal;
+	text-align: right;
+	background: #eeeeee;
+	padding: 3px 5px 3px 3px;
+	-moz-border-radius: ;
+}
+td.percent {
+	font-style: italic;
+}

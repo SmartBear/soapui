@@ -1,0 +1,155 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>JBossWS plugin - implement example</title>
+    </properties>
+    <body>
+		<subsection name="Discontinued">
+		<p><b>2007-14-11 : We have decided to discontinue JBoss WS IDE.</b></p>
+		<p>2007-14-11 : JBoss WS IDE is as of the 14:th of November 2007 discontinued. This does not mean 
+		our support for JBoss WS has ended, we have only chosen to stop producing within JBoss. soapUI will continue its
+		strong support for JBoss, just not <b>as</b> JBoss, rather as a independent Open Source software producer.</p>
+		<p>Look at our <a href="../userguide/tools/index.html">tools Pages</a> for more info. </p>
+		</subsection>
+		
+		<section name="Implement WSDL with POJO Web Service - Walkthrough Example">
+		<p>The following example gives a complete walkthrough of how to implement and deploy a Web Service
+		with the JBossWS plugin starting from an existing WSDL. As you will see, this is still a rather 
+		complex procedure, but future versions of the JBossWS Plugin will strive to simplify related tasks
+		even further.</p>
+		<p>The development environment is as follows:</p>
+		<ul>
+		<li>The <a href="http://download.jboss.org/jbosside/builds/nightly/200609232042-nightly/buildResults.html">JBossIDE-200609232042-nightly-ALL.zip</a> 
+		nightly build of JBossIDE on top of the eclipse SDK/WTP/etc.. components listed on the nightly-build page (bottom right)</li>
+		<li>JBoss 4.0.4-GA with EJB3 profile</li>
+		<li>JBossWS 1.0.3</li>
+		</ul>
+		<p>Start by installing the above and setting the path to the WSTools script as described 
+		in the <a href="index.html#Installation">Overview</a>.</p>
+		
+		<subsection name="Create the project and WSDL">
+		<p>Create an empty java-project:</p>
+		<p>Create a standard empty java project; </p>
+		<p align="center"><img src="images/implement/create_project.gif" alt=""/></p>
+		<p>Add 2 folders:</p>
+		<ul>
+		<li>One source folder for src/java</li>
+		<li>One normal folder for src/wsdl</li>
+		</ul>
+		<p>Now manually create a WSDL using the WTP WSDL editor or some other tool, the following
+		is a "simple" RPC-style HelloWorld contract:</p>
+		<source><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="HelloWorld"
+	targetNamespace="http://www.example.org/HelloWorld/"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:tns="http://www.example.org/HelloWorld/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+	<wsdl:types/>
+	<wsdl:message name="sayHelloRequest">
+		<wsdl:part name="sayHelloRequest" type="xsd:string"></wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="sayHelloResponse">
+		<wsdl:part name="sayHelloResponse" type="xsd:string"></wsdl:part>
+	</wsdl:message>
+	<wsdl:portType name="IHelloWorld">
+		<wsdl:operation name="sayHello">
+			<wsdl:input message="tns:sayHelloRequest"></wsdl:input>
+			<wsdl:output message="tns:sayHelloResponse"></wsdl:output>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="HelloWorld" type="tns:IHelloWorld">
+		<soap:binding style="rpc"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="sayHello">
+			<soap:operation
+				soapAction="http://www.example.org/HelloWorld/sayHello" />
+			<wsdl:input>
+				<soap:body use="literal"
+					namespace="http://www.example.org/HelloWorld/" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"
+					namespace="http://www.example.org/HelloWorld/" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="HelloWorldService">
+		<wsdl:port name="HelloWorldPort" binding="tns:HelloWorld">
+			<soap:address location="http://localhost:8080/HelloWorld" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>]]></source>
+		<p>Save the contract to src/wsdl/HelloWorld.wsdl, your project should now be as follows:</p>
+		<p align="center"><img src="images/implement/project_state_1.gif"/></p>		
+		
+		</subsection>
+		
+		<subsection name="Import the WSDL contract">
+		<p>Now we need to enable the JBossWS Nature:</p>
+		<p align="center"><img src="images/implement/add_jbossws_nature.gif" /></p>		
+		<p>After enabling, add the HelloWorld.wsdl to the JBossWS node by right-clicking the WSDL and
+		selecting "JBossWS / Add to JBossWS Project":</p>
+		<p align="center"><img src="images/implement/add_wsdl_to_project.gif"/></p>		
+		<p>After this, your project should look as follows:</p>
+		<p align="center"><img src="images/implement/project_state_2.gif"/></p>		
+		<p>Now right-click the "IHelloWorld" node under the "JBossWS Web Services" node and select
+		"Generate / JBossWS Artifacts", which will open the following dialog:</p>
+		<p align="center"><img src="images/implement/generate_dialog.gif"/></p>	
+		<p>Set the mapping file and namespace as above and select the "Generate" button. After successful
+		generation, your project should now look as follows:</p>
+		<p align="center"><img src="images/implement/project_state_3.gif"/></p>		
+		</subsection>
+		
+		<subsection name="Implement and Publish the Service Interface">
+		<p>The generation in the previous step created an "IHelloWorld" interface which can now implement; in 
+		this example the implementing class will be helloworld.impl.HelloWorld:</p>
+		<source>package helloworld.impl;
+
+import helloworld.IHelloWorld;
+
+public class HelloWorld implements IHelloWorld 
+{
+	public String sayHello(String sayHelloRequest) 
+	{
+		return "Hello " + sayHelloRequest + "!";
+	}
+}</source>		
+		<p>Once implemented, right-click this class and select "JBossWS / Publish as Web Service", which
+		opens the Publish dialog:</p>
+		<p align="center"><img src="images/implement/publish_tab_1.gif"/></p>	
+		<p>Set the style to rpc (as it was in our original WSDL) the rest can be left at default</p>	
+		<p align="center"><img src="images/implement/publish_tab_2.gif"/></p>		
+		<p>Here we need to tell the plugin that we want to reuse our own WSDL and previously generated 
+		mapping file (to ensure a correct contract and mapping..). Also, we don't need to add the WSDL to 
+		our JBossWS project (since it has already been imported there..). Specify these options 
+		and the WSDL port from your WSDL (which goes into webservices.xml) before pressing "Generate".</p>
+		<p>After generating, your project should now look as follows:</p>
+		<p align="center"><img src="images/implement/project_state_4.gif"/></p>		
+		<p>As you can see, the previously generated WSDL and mapping files have been copies to the 
+		WEB-INF and WEB-INF/wsdl folders. Also, the webservices.xml file has been updated accordingly:</p>
+		<p align="center"><img src="images/implement/webservices_xml.gif"/></p>		
+		</subsection>
+		
+		<subsection name="Deploy Locally">
+		<p>Now all that is left is to deploy the generated WAR-file to our local JBoss server; 
+		right-click the generated HelloWorld.jar file and select "Run as / Run on Server" and then 
+		select your locally configured and running JBoss installation. You should get a deployment 
+		log in the servers console:</p>
+		<p align="center"><img src="images/implement/deploy_output.gif"/></p>
+		</subsection>
+		
+		<subsection name="Test">
+		<p>Double-click the previously generated "Request 1" entry under the "sayHello" node in 
+		the Project Explorer, this will open a SOAP request editor:</p>
+		<p align="center"><img src="images/implement/request_editor.gif"/></p>
+		<p>Change the '?' to 'Marc', save the request (CTRL-S) and press the green arrow in the 
+		toolbar for sending the request to the local Web Service. You will get the response in a
+		new editor tab:</p>
+		<p align="center"><img src="images/implement/response_editor.gif"/></p>
+		
+		</subsection>
+		<p><hr size="1"/>Next: <a href="annotations.html">Generating Web Service Annotations</a></p>
+		</section>
+    </body>
+</document>

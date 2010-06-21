@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jnlp spec="1.0+" codebase="@SOAPUICODEBASE@" href="activation.jnlp">
+	<information>
+		<title>JAF</title>
+		<vendor>Sun Microsystems, Inc.</vendor>
+		<description>JavaBeans Activation Framework extension.</description>
+		<homepage href="http://java.sun.com/products/javabeans/glasgow/jaf.html"/>
+	</information>
+	<security>
+		<all-permissions/>
+	</security>
+	<resources>
+		<jar href="activation-1.1.jar"/>
+	</resources>
+	<component-desc/>
+</jnlp>

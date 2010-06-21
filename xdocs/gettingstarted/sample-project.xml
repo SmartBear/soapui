@@ -1,0 +1,423 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>Quick start with soapUI Sample Project file</title>
+    </properties>
+    <body>
+		
+			<section name="soapUI example Movies">
+			<div>
+			<p>
+			As an easy start, before doing the tutorial watch the Sample Project Movie.		
+			</p>
+			<p>
+			<br/>
+				<ul STYLE="list-style-image: url(../images/film.png)">
+					<li><a href="#" onclick="openVideo('../movies/sample_project/sample_project.html');"><b>Sample Project Movie</b> (17:23)</a></li>
+				</ul>
+			<br/>
+			</p>
+			</div>		
+		</section> 
+		
+		
+		
+						
+				<table class="relatedInfo" cellspacing="0" cellpadding="0">
+	<tr class="a">
+    	<td width="75" style="padding-top:5px">
+        	<img src="../images/where_do_i_start.jpg" alt="Start soapUI Testing" longdesc="http://www.soapui.org"></img>
+        </td>
+        <td>
+            <table class="relatedInner">
+              <tr>
+                <td>
+                	<span class="relatedInfoHeader">Did you know?</span>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                    <div>
+						<p>
+						There is a commercial version of soapUI out called <b><i>soapUI Pro</i></b>.
+						</p>
+						<p>
+						<b><i>soapUI Pro</i></b> contains productivity enhancements as well as offers Professional World Class support. contains productivity enhancements as well as offers Professional World Class support.
+						</p>
+                    </div>
+                </td>
+              </tr>
+              <tr align="right">
+              	<td>
+                	<span class="relatedLinks"><a href="http://www.eviware.com/component/option,com_wrapper/Itemid,41/" title="try soapUI Pro" onclick="javascript:urchinTracker:('/downloadTrial');">
+                                               <img src="images/try_pro_100.png" alt="Try soapUI pro to soap test" width="101" height="20" longdesc="http://www.eviware.com"/></a></span>
+                </td>
+              </tr>
+            </table>
+		</td>
+	</tr>
+</table>
+		
+		
+		<section name="soapUI Sample Project">
+			<p>We know that getting started with a new application always is a challenge. 
+			In order to make it easier for you, soapUI comes shipping with a sample soapUI Project file. 
+			This soapUI Projects illustrates some of the basic concepts of soapUI and can be used as a soapUI 
+			starting point; try out the project, run the included MockService and the included tests in 
+			order familiarize yourself with the soapUI interface, and then move on to the Getting 
+			Started tutorial. 
+			</p> 
+			<p>
+			Here are the main concepts that are illustrated in the soapUI Project.
+			</p>
+		</section>
+		<section name="Web Service Mocking">
+			<p>
+			Web Service Mocking is way to fake the functionality of a Web Service in soapUI; to create a Mock Up.
+			But why do you need such functionality?
+			</p> 
+			
+			<p>
+			Web Service Mocking is very useful in projects where implementation of the 
+			Web Service has not started or is not finished for use yet or where you for some 
+			other reasons can't access the Web Services live.
+			</p> 
+			
+			<p>
+			In other words, Web Service Mocking makes it possible for you to start creating test for a 
+			Web Service the same time you start to develop the same Web Service. This means, when the real 
+			Web Service is ready for testing; you can already have the tests done. This can be extremely 
+			powerful and will make it possible to work according to Test Driven or Agile Methodologies.
+			</p> 
+			
+			<p>
+			In soapUI you can create a MockService simply by choosing to add a 
+			Web Service Request to a MockService in order for the MockService to 
+			listen to it. Or you can even right-click the Interface Icon and choose "Generate MockService", which
+			will generate a MockService containing each defined response in the Interface.
+			</p>
+			
+			<p align="center"><img src="images/add_to_mockservice.gif" alt="Add to Web Service Mock"/></p>
+			
+			<p>
+			You can then choose how to Respond to the Request and choose how to 
+			Dispatch (send out) different responses.
+			</p>
+			
+			
+			<p>
+			Now, let's take a look at how the Mock Service works. Open the MockService, called <i>SampleServiceSoapBinding MockService</i>, by 
+			double clicking on it.
+			</p>
+			
+			
+			<p align="center"><img src="images/mockservice_view.gif" alt="Web Service Mock Response View"/></p>
+			
+			<p>
+			Browse through the different Interfaces in the 
+			MockService; login, logout, search, and buy, and see what we do with  
+			different requests. As you see all the requests are dispatched using 
+			scripts. This is by far the most common way of dispatching, but early 
+			on in a project you might just want to create a set of responses and 
+			dispatch them in sequence or at random.
+			</p>
+			
+			<p>
+			You can start the MockService by pressing the MockService Start button.
+			</p>
+			
+			<p align="center"><img src="images/start_mockservice.gif"  alt="Starting a Web Service Simulation"/></p>
+			
+		</section>
+		
+		<section name="Web Service Inspection">
+			<p>
+			Web Service Inspection a fancy way of saying looking at the Web Service. 
+			Good support for Web Service inspection can be very important early in the project when you want to 
+			find out how a Web Service.
+			</p>
+
+			<p>
+			Inspecting the Web Service can be done in two ways; inspecting the Web Service and 
+			making Web Service requests.
+			</p>
+			
+		<subsection name="Inspect a WSDL">
+				<p>
+				You can inspect a WSDL by Double Clicking Interface Icon. 
+				You then get the Interface Viewer, a very useful tool for seeing what the WSDL 
+				contains and how it is structured.
+				</p>
+
+				<p align="center"><img src="images/interface_viewer_small.gif" alt="Inspecting a WSDL"/></p>
+		
+				<p>
+				This is a structured way of looking at your WSDL. Just browsing the XML of the WSDL is very
+				cluttered and a WSDL often is to complicated too look at in its entirety and 
+				therefore it is seldom done, resulting in lower WSDL understanding. In other words, since WSDL's 
+				are so complicated people don't read it, and remember, the WSDL is the specification 
+				(contract actually, bet let's not get into that...) 
+				and how well you use it depends on how well you understand it. This is a serious problem 
+				early on in projects, the people in the project don't understand the Contract. 
+				The soapUI Interface Viewer is a great tool for solving this problem.
+				</p>
+				
+				<p>
+				Now let's Inspect the Web Service. Inspect the Sample Project WSDL by double clicking the 
+				SampleServiceSoapBinding Interface Icon. 
+				Use the Interface Viewer to familiarize yourself with the WSDL, the move on to Web Service Requests.
+				</p>
+		
+				
+			</subsection>
+			<subsection name="Make Service Requests"> 		
+				<p>
+				Expand the login Interface and double click the login request. 
+				Login by using the username Login and the password Login123. 
+				You should now have gotten the response containing a sessionID 
+				<i>9575658833177431</i>
+				</p>
+		
+				<p><b>Go ahead, try it!</b></p>
+		
+				<p align="center"><img src="images/first_request.gif" alt="Web Service Request View"/></p>
+		
+				<p>
+				No response? don't forget to start the MockService. We also need to 
+				copy the sessionID and use it to logout.
+				</p>
+			</subsection>
+		</section>
+		
+		<section name="Functional Tests of Web Services">
+		<subsection name="Test Structure for Web Services"> 	
+			<p>
+				Let's move on and look at how tests work in soapUI. We have created three different 
+				TestSuites all containing different TestCases. A TestCase is made up of several 
+				steps, called TestSteps. The structure of a soapUI project is like this;
+			</p>
+			
+				<ul>
+				<li>Project</li>
+				<li>Interface</li>
+				<li>TestSuites</li>
+				<ul>
+					<li>TestCases</li>
+					<ul>
+						<li>TestSteps</li>
+						<li>LoadTests</li>
+					</ul>
+				</ul>
+				<li>MockServices</li>
+				</ul>
+			
+		
+			<p>
+			As you can see there is also something called LoadTests, we can gather what they 
+			are, but we'll go into detail more what they actually do and how they actually work later.
+			</p>
+			</subsection>
+			
+			<subsection name="SOAP Functional Tests in detail"> 
+			<p>
+			Now let's examine a Functional Test in a TestCase. Expand the TestSuite Sample 
+			Simple TestSuite and then double click the TestCase Simple Login and Logout w. Properties Steps. 
+			As you can see the case consists of 5 TestSteps. 
+			</p>
+			
+			<p align="center"><img src="images/simple_test_view.gif"  alt="Web Service Functional Tests"/></p>
+			
+			<p>
+			You can also click the 
+			Description tab in order to see the in test documentation.
+			</p>
+			
+			<p align="center"><img src="images/description.gif" alt="Web Service Test Case Description"/></p>
+			
+			<p>
+			The step consists of three different types of TestSteps; One PropertyStep, 
+			Two Test Requests and Two PropertyTransfer Steps.
+			This is what they do:
+			</p>
+			
+			<ul>
+				<li><b>PropertySteps: </b> Stores Properties for later use. In our case it's the Username and Password required to login.</li> 
+				<li><b>Test Requests: </b> The actual requests to the server. In this case login and logout. </li> 
+				<li><b>PropertyTransfers: </b> A step used for moving properties between different steps. This might 
+				be from a Property Step to a request like the step Property Transfer: Move 
+				Username and Password does, or to move properties from a Test Request to another, 
+				like the step Property Transfer: Move sessionID does. </li> 
+			</ul>
+			</subsection>
+			
+			<subsection name="Functional Tests continued">
+			<p>
+			Double Click on each step and examine how they work. Double Click the TestSteps and you'll 
+			get the TestStep editor. You can for example see that the step 
+			<i>Property Transfer: Move Username and Password</i> moves does two transfers in two Properties.
+			</p>
+			
+			<p align="center"><img src="images/PropertyTransfer_moveuser.gif" alt="Transfering Test Properties"/></p>
+			
+			<ul>
+				<li>
+					First it takes does the TransferUser Transfer. It takes the Property <i>Username</i> from 
+					the step <i>Properties: Username and Password</i> and moves it to the step 
+					<i>Test Request: login</i>.
+				</li>
+				<li>
+					Then it takes does the TransferPass Transfer. It takes the Property <i>Password</i> from 
+					the said step <i>Properties: Username and Password</i> and also moves it to the step 
+					<i>Test Request: login</i>.
+				</li>
+			</ul>
+			</subsection>
+			<subsection name="SOA Test Assertions">
+			<p>
+				An important feature in Test is the assertions in Test Requests. Open the Test Step 
+				<i>Test Request: logout</i>. 
+			</p>
+			<p align="center"><img src="images/Assertions.gif"  alt="SOA Test Assertions"/></p>					
+			<p>
+				In the TestStep we have four assertions, all asserting different 
+				things; That the response is a SOAP response, that it complies with the schema, that is isn't 
+				a SOAP fault and something called an XPATH match. The XPath Match validates that a certain 
+				element has the value expected.
+			</p>
+			<p align="center"><img src="images/xpath_match.gif" alt="XPATH Matching of SOAP"/></p>		
+			</subsection>
+			
+			<subsection name="The Test Run">
+			<p>
+			Now that we have examined the TestCase, let's run it!
+			Press the Play Button and the Test will run and the Test Case progress bar should be full 
+			and green.
+			</p>
+			
+			<p>  
+			<b><i>Does it turn red after only a step?</i></b>
+			</p>
+			
+			<p> 
+			Don't forget to start the MockService. 
+			</p>
+			
+			<p>
+			<b><i>Or... did you run the TestStep earlier?</i></b> 
+			</p>
+			
+			<p>
+			Look at the response, maybe the response is that you already have a session?
+			</p>
+			
+			<p> 
+			We logged in earlier and aren't allowed to log in again, let's just go to the 
+			MockService, stop it and restart it, clearing any server side sessions. 
+			Now, rerun the test.
+			</p>
+			</subsection>			
+		</section>
+		<section name="SOA Load Tests">
+			<p>
+			Something very useful in soapUI is the ability to quickly create LoadTests. 
+			Why is this useful? The earlier you are able to run load tests, the earlier you 
+			can discover any performance issues. In soapUI you create a LoadTest simply by 
+			choosing a functional test, right-clicking it and saying New LoadTest. Done!
+			</p>
+			
+			<p align="center"><img src="images/new_loadtest.gif "  alt="SOA Load Test"/></p>
+			
+			<p>
+			This makes soapUI LoadTest extra good since the immediately enable you to load test 
+			the functionality not that the Web Service can respond quickly to the same Request 
+			over and over again. LoadTests are byproducts of the Functional Tests.
+			</p>
+			
+			<p>
+			<b>Now, let's examine a Load Test!</b>
+			</p>
+			
+			<p>
+			Go to the TestSuite Sample expanded TestSuite and the TestCase Search and Buy 
+			TestCase. There you will find for LoadTests, one for each LoadTest strategy.
+			Choose the Simple Strategy LoadTest. The simple strategy is a basic strategy with 
+			a random delay.
+			</p>
+			
+			<p align="center"><img src="images/simple_strategy_loadtest.gif" alt="Load Test Pre Configured Strategy"/></p>
+			
+			<p>
+			The first figure to configure is the Test Delay, this sets the 
+			number of milliseconds our base delay will be (1000 is one second). 
+			The second figure is the random variable which sets how the delay should be 
+			changed at random, the value 0.5 means it should be half, that is between 500 
+			and 1000 milliseconds. 
+			</p>
+			
+			<p>
+			What would the value 0 mean? That's right no random delay at all, just 1000 
+			milliseconds all the time.
+			</p>
+			
+			<p>
+			<b>Now, let's run it!</b>
+			</p>
+			
+			<p>
+			As you see the numbers of the test are continuously updated. You can see figures like 
+			the response times throughput per second (tps) assertions errors and more. You can 
+			also press the graph button and see a graph of the test run.
+			</p>
+			
+			<p align="center"><img src="images/LoadTest_Graph.gif"  alt="Web Service Test Graph"/></p>
+			
+			<p>
+			Read more about <a href="../userguide/loadtest/index.html">the Load Test Interface here </a> 
+			and the <a href="../userguide/loadtest/configuration.html">different Load Testing strategies here</a>.
+			</p>
+			
+			<p>
+			You can also do LoadTest Assertions. One of the more important is the Max Errors Step. 
+			This is used for allowing the maximum number of errors allowed in a test run.
+			</p>
+			
+			<p align="center"><img src="images/max_errors_assertions.gif"  alt="Load Test Max Assertion"/></p>
+			
+			<p>
+			This will lead us to the final example, discovering an error in our MockService.
+			</p>
+			
+			<subsection name="An error in our MockService"> 		
+				<p>
+				Go to the TestSuite <i>Sample TestSuite fails if we don't get faults</i> and the TestCase 
+				<i>TestCase: Searching after Logging out LoadTests</i>. There you will find a load test called
+				<i>LoadTest with Multiple Tests (will fail)</i>. Open it and run it. After a time this test will fail
+				</p>
+			
+				<p align="center"><img src="images/failed_loadtest.gif"  alt="A Failed Load Test"/></p>
+			
+				<p>
+				<b>Why?</b>
+				</p>
+			
+				<p>
+				Because multiple users are simultaneously logging in with the same username, which is not allowed by the MockService
+				</p>
+			
+				<p><b>Go ahead, try it!</b></p>
+			
+				<p align="center"><img src="images/first_request.gif"  alt="Web Service Request"/></p>
+			</subsection>
+		</section>
+		<section name="Web Service Tutorial Continuation">
+		<p>
+		Now you can continue running the tests and look at different ways of doing tests.
+		</p>
+		
+		<p>
+		<b>Enjoy!</b>
+		</p>
+		
+		</section>
+    </body>
+</document>

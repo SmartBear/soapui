@@ -1,0 +1,41 @@
+<?xml version="1.0" ?>
+<!-- 
+   W3C XML Schema defined in the Assigning Media Types to Binary Data in XML
+   specification
+     http://www.w3.org/TR/xml-media-types
+
+   Copyright (c) 2004 World Wide Web Consortium,
+  
+   (Massachusetts Institute of Technology, European Research Consortium for
+   Informatics and Mathematics, Keio University). All Rights Reserved. This
+   work is distributed under the W3C(r) Software License [1] in the hope that
+   it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+   warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+  
+   [1] http://www.w3.org/Consortium/Legal/2002/copyright-software-20021231
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:xmime="http://www.w3.org/2004/11/xmlmime"
+           targetNamespace="http://www.w3.org/2004/11/xmlmime" >
+
+<xs:attribute name="contentType" type="xs:string" />
+
+<xs:attribute name="expectedMediaType" type="xs:string" />
+
+<xs:complexType name="base64Binary" >
+    <xs:simpleContent>
+        <xs:extension base="xs:base64Binary" >
+            <xs:attribute ref="xmime:contentType" />
+        </xs:extension>
+    </xs:simpleContent>
+</xs:complexType>
+
+<xs:complexType name="hexBinary" >
+    <xs:simpleContent>
+        <xs:extension base="xs:hexBinary" >
+            <xs:attribute ref="xmime:contentType" />
+        </xs:extension>
+    </xs:simpleContent>
+</xs:complexType>
+
+</xs:schema>

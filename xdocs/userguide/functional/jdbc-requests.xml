@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ soapUI, copyright (C) 2004-2008 eviware.com
+  ~
+  ~ soapUI is free software; you can redistribute it and/or modify it under the
+  ~ terms of version 2.1 of the GNU Lesser General Public License as published by
+  ~ the Free Software Foundation.
+  ~
+  ~ soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+  ~ even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+  ~ See the GNU Lesser General Public License for more details at gnu.org.
+  -->
+
+
+<document>
+    <properties>
+        <title>Web Service Functional Testing - TestRequests</title>
+    </properties>
+    <body>
+		<section name="JDBC Request Steps">
+
+            <p>JDBC Request Steps are standalone JDBC requests that can be used to submit SQL query and get the result in XML format. They are added
+                via the  TestCase Editors popup menu with the "Add Step -&gt; JDBC Request" option.</p>
+
+                     <subsection name="JDBC Test Request Details Tab">
+                      <p>
+                    The "Details" tab shown in the bottom-left shows standard Name and Description of particular TestStep, and introduces two more properties
+                    <li>Max Rows</li>
+                    <li>Query Timeout</li>
+                    </p>
+                    </subsection>
+
+                     <subsection name="The JDBC Test Request Editor">
+                     <p>Double-clicking a JDBC Test Request in either the navigator or the TestCase Editor Pane opens the requests
+                     editor which is split into two parts</p>
+                     <ul>
+                         <li>The first part is standard properties table layout which contains properties to be replaced in SQL query through
+                         PreparedStatement </li>
+                         </ul>
+                                     <p align="center"><img src="images/jdbc_request_step_properties.gif"></img></p>
+
+                      <ul>
+                         <li>The second part contains connection details, SQL query and information if it's a stored procedure or not.</li>
+                         </ul>
+                                     <p align="center"><img src="images/jdbc_request_step_config.gif"></img></p>
+
+                    <p>In SoapUI Pro there is additional option of using Database connection set on project level(see 
+                    <a href="../projects/jdbcConnections.html">Project JDBC Connections</a>) and generating SQL query using a wizard (see 
+                    <a href="../projects/jdbcConnections.html">SQL Query wizards</a>)
+                    </p>
+                    </subsection>
+                    <subsection name="The JDBC Test Request Response View">
+                    <p>
+                    Response view has standard XML and Outline tabs, and it's content can be asserted in a standard way(
+                    see <a href="response-assertions.html">Test Request Assertions</a> for more detailed information about assertions)
+                    </p>
+                    </subsection>
+                    
+                    <p>For more detailed description on how to use this TestStep please have a look at 
+                    <a href="../../tutorials/jdbc/jdbc-tutorial.html"> JDBC Request TestStep tutorial</a> </p>
+
+		 <p><hr size="1"/>Next: <a href="amf-requests.html">AMF Requests</a></p>
+		</section>
+    </body>
+</document>

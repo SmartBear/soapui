@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name='TestImpl' targetNamespace='urn:ole.test' xmlns='http://schemas.xmlsoap.org/wsdl/' xmlns:ns1='urn:ole.test.types' xmlns:soap='http://schemas.xmlsoap.org/wsdl/soap/' xmlns:tns='urn:ole.test' xmlns:xsd='http://www.w3.org/2001/XMLSchema'>
+ <types>
+  <schema targetNamespace='urn:ole.test.types' xmlns='http://www.w3.org/2001/XMLSchema' xmlns:soap11-enc='http://schemas.xmlsoap.org/soap/encoding/' xmlns:tns='urn:ole.test.types' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>
+   <complexType name='toUpperCase'>
+    <sequence>
+     <element name='String_1' nillable='true' type='string'/>
+    </sequence>
+   </complexType>
+   <complexType name='toUpperCaseResponse'>
+    <sequence>
+     <element name='result' nillable='true' type='string'/>
+    </sequence>
+   </complexType>
+   <element name='toUpperCase' type='tns:toUpperCase'/>
+   <element name='toUpperCaseResponse' type='tns:toUpperCaseResponse'/>
+  </schema>
+ </types>
+ <message name='Test_toUpperCase'>
+  <part element='ns1:toUpperCase' name='parameters'/>
+ </message>
+ <message name='Test_toUpperCaseResponse'>
+  <part element='ns1:toUpperCaseResponse' name='result'/>
+ </message>
+ <portType name='Test'>
+  <operation name='toUpperCase'>
+   <input message='tns:Test_toUpperCase'/>
+   <output message='tns:Test_toUpperCaseResponse'/>
+  </operation>
+ </portType>
+ <binding name='TestBinding' type='tns:Test'>
+  <soap:binding style='document' transport='http://schemas.xmlsoap.org/soap/http'/>
+  <operation name='toUpperCase'>
+   <soap:operation soapAction=''/>
+   <input>
+    <soap:body use='literal'/>
+   </input>
+   <output>
+    <soap:body use='literal'/>
+   </output>
+  </operation>
+ </binding>
+ <service name='TestImpl'>
+  <port binding='tns:TestBinding' name='TestPort'>
+   <soap:address location='REPLACE_WITH_ACTUAL_URL'/>
+  </port>
+ </service>
+</definitions>

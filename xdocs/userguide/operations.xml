@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>Web Service operations in soapUI</title>
+    </properties>
+    <body>
+		<section name="WSDL Operations">
+		 <p>When adding an interface as described above, each of that interfaces operations is added as a node in
+		 the navigation tree. We take the name for these from operation in the underlying PortType, that is if they 
+		 are called <i>GetCustomer</i> in the WSDL, that's what we call them.</p>
+		  <columns><column><div>
+		  The following actions are available from the operation nodes' right-button menu:	
+		  <ul>
+		  <li><b>Add to MockService</b> - prompts to create a <a href="mock/operations.html">soapUI MockOperation</a> for 
+		  this operation in an existing or new MockService.</li>
+		  <li><b>Add as MockResponse Step</b> (soapUI Pro only) - prompts to create a <a href="functional/mockresponse.html">MockResponse Step</a>  
+		  this operation in an existing or new TestCase.</li>
+		  <li><b>New Request</b> - creates a new Request for this operation from its wsdl /schema definition. soapUI
+		  will prompt for a name and ask if optional schema elements should be created.</li>
+		  <li><b>Relabel</b> - changes the label of the operation in the navigator, which can be helpful if there are several overloaded
+		  versions of the same operation in the Interface.</li>
+		  <li><b>Online Help</b> - Displays this page in an external browser</li>
+		  </ul>
+		  </div></column></columns>
+		 
+		 <subsection name="Operation Details Tab">
+			 The "Details" tab shown in the bottom-left shows the following values when a Operation node is selected in 
+			 the navigation tree
+			 <ul>
+			 <li><b>Description</b> : an arbitrary description of the operation, displayed as a tooltip over the 
+			   operations node in the Navigator.</li>
+			 <li><b>SOAPAction</b> (read-only): the SOAP Action specified for the operation in its SOAP/HTTP binding</li>
+			 <li><b>Operation</b> (read-only): The name of the operation in the underlying PortType</li>
+			 <li><b>Style</b> (read-only): Shows if this is a Document or RPC operation</li>
+			 <li><b>Type</b> (read-only): Shows WSDL operation type</li>
+			 <li><b>Input</b> (read-only): The explicit name of the operations' input message (may be empty)</li>
+			 <li><b>Output</b> (read-only): The explicit name of the operations' output message (may be empty)</li>
+			 <li><b>Sends Attachments</b> (read-only): Signals that the operation is defined to send Mime Attachments</li>
+			 <li><b>Receives Attachments</b> (read-only): Signals that the operation is defined to receive Mime Attachments</li>
+			 <li><b>WS-A Anonymous </b> : indicates the value of WS Addressing Anonymous element
+			 as specified in <a href="http://www.w3.org/TR/2006/WD-ws-addr-wsdl-20060216/#anonelement">WSDL Binding specification</a> </li>
+			 </ul>
+		</subsection>
+		
+		  <p><hr size="1"/>Next: <a href="requests.html">Working with Requests</a></p>
+		</section>
+    </body>
+</document>

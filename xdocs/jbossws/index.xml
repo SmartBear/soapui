@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>JBossWS Plugin</title>
+    </properties>
+    <body>
+  
+		<section name="JBossWS Plugin">
+		
+    	<subsection name="Discontinued">
+		<p><b>2007-14-11 : We have decided to discontinue JBoss WS IDE.</b></p>
+		<p>2007-14-11 : JBoss WS IDE is as of the 14:th of November 2007 discontinued. This does not mean 
+		our support for JBoss WS has ended, we have only chosen to stop producing within JBoss. soapUI will continue its
+		strong support for JBoss, just not <b>as</b> JBoss, rather as a independent Open Source software producer.</p>
+		<p>Look at our <a href="../userguide/tools/index.html">tools Pages</a> for more info. </p>
+		</subsection>
+		
+		<subsection name="Intro">
+		<p>The JBossWS Plugin is a specialized Eclipse plugin for working with the formidable 
+		<a target="_new" href="http://labs.jboss.org/portal/jbossws">JBossWS Web Service stack</a> together 
+		with <a target="_new" href="http://labs.jboss.org/portal/jbosside">JBossIDE</a> or standalone.
+		Apart from the standard <a href="../eclipse/index.html">soapUI Eclipse Plugin</a> features, 
+		the JBossWS Plugin currently has initial functionality that supports:</p>
+		<ul>
+		<li><a href="bottomup.html">Publishing</a> POJO's/EJB's as JBossWS Web Services</li>
+		<li><a href="consume.html">Consuming</a> an existing Web Service with JBossWS</li>
+		<li><a href="topdown.html">Implementing</a> an existing WSDL contract with JBossWS</li>
+		<li>Adding JSR-181 Web Service <a href="annotations.html">Annotations</a> to an existing Java class</li>
+		</ul>
+		<p>The following improvements are planned to be available for the final JBossIDE 2.0.0 release:</p>
+		<ul>
+		<li>Improved support for implementing Web Services from an existing WSDL contract</li>
+		<li>Improved support for consuming Web Services from an EJB or Servlet</li>
+		<li>Improved support for adding Web Service annotations on a method level</li>
+		<li>Wizards for security configurations</li>
+		<li>Project/File templates for JBossWS projects and related artifacts</li>
+		<li>Tighter integration with the Eclipse Web Tools Projects Web Service support</li>
+		<li>Integrated Help</li>
+		</ul>
+		
+		<p>Please submit questions and discuss issues on the 
+		<a target="_new" href="http://www.jboss.com/index.html?module=bb&amp;op=viewforum&amp;f=201">JBoss Eclipse IDE User Forum</a>, 
+		and report bugs/requests/etc in <a target="_new" href="http://jira.jboss.org/jira/browse/JBIDE">JBossIDE JIRA</a> under
+		the "Web Services Plugin" component!</p>
+		</subsection>
+		
+		<subsection name="Latest News">
+		<p><b>2006-10-12 : JBossIDE 2.0.0 beta2</b><div>- first "public" release of JBossWS plugin for
+		eclipse / JBossIDE [<a href="newandnoteworthy-2.0.0-beta2.html">Read more</a>]</div></p>
+		</subsection>
+				
+		<subsection name="Installation">
+		<p>The plugin is distributed together with <a target="_new" href="http://labs.jboss.org/portal/jbosside">JBossIDE 2.0.0 beta2</a>.</p>
+		<p>Currently, the plugin requires you to install JBossWS separately (download from 
+		<a target="_new" href="http://labs.jboss.com/portal/jbossws/downloads">http://labs.jboss.com/portal/jbossws/downloads</a>), 
+		but it will be bundled in the final jbosside 2.0.0 version</p>
+		<p>Once you have installed the plugin, start by setting the path to the
+		JBossWS WSTools script in the "JBossIDE / JBossWS / Integrated Tools" preferences page:</p>
+		<p align="center"><img src="images/integrated_tools.gif" alt="installation JBossWs"/></p>
+		<p>(The JAXB/XmlBeans tools are not required for JBossWS support)</p>
+		</subsection>
+		
+		<p><hr size="1"/>Next: <a href="gettingstarted.html">Getting Started with JBossWS</a></p>
+		</section>
+    </body>
+</document>
