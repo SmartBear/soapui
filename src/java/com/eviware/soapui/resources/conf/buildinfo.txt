@@ -1,6 +1,0 @@
-#Wed Dec 23 11:06:14 CET 2009
-build.number=[internal]
->>>>>>>=.r41
-build.date=2009/12/23 11\:06
-=\=\=\=\=\=\=
-<<<<<<<=.mine
