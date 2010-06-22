@@ -137,7 +137,7 @@ public class WsdlRunTestCaseStepDesktopPanel extends ModelItemDesktopPanel<WsdlR
 		return testRunLog;
 	}
 
-	protected JComponent createPropertiesTable()
+	protected PropertyHolderTable createPropertiesTable()
 	{
 		propertiesTable = new PropertyHolderTable( getModelItem() );
 
