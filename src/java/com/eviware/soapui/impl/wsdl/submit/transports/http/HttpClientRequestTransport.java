@@ -84,7 +84,6 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 			postMethod.abort();
 	}
 
-	@SuppressWarnings( "deprecation" )
 	public Response sendRequest( SubmitContext submitContext, Request request ) throws Exception
 	{
 		AbstractHttpRequestInterface<?> httpRequest = ( AbstractHttpRequestInterface<?> )request;
@@ -174,7 +173,7 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 				int ix = str.indexOf( '/', str.indexOf( "//" ) + 2 );
 				if( ix != -1 )
 				{
-					uri = new URI( str.substring( ix ) );
+					uri = new URI( str.substring( ix ), true );
 					String qs = httpMethod.getQueryString();
 					httpMethod.setURI( uri );
 					if( StringUtils.hasContent( qs ) )

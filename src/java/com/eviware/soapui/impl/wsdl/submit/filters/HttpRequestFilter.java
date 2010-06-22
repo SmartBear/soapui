@@ -14,7 +14,6 @@ package com.eviware.soapui.impl.wsdl.submit.filters;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -62,6 +61,7 @@ import com.eviware.soapui.support.types.StringToStringMap;
 
 public class HttpRequestFilter extends AbstractRequestFilter
 {
+	@SuppressWarnings( "deprecation" )
 	@Override
 	public void filterHttpRequest( SubmitContext context, HttpRequestInterface<?> request )
 	{
@@ -169,7 +169,7 @@ public class HttpRequestFilter extends AbstractRequestFilter
 			{
 				// URI(String) automatically URLencodes the input, so we need to
 				// decode it first...
-				URI uri = new URI( URLDecoder.decode( path ) );
+				URI uri = new URI( path, false );
 				context.setProperty( BaseHttpRequestTransport.REQUEST_URI, uri );
 				httpMethod.setURI( uri );
 			}
