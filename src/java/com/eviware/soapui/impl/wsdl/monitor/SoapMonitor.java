@@ -434,8 +434,8 @@ public class SoapMonitor extends JPanel
 		toolbar.addFixed( clearButton = UISupport
 				.createToolbarButton( UISupport.createImageIcon( "/clear_loadtest.gif" ) ) );
 
-		startButton.setToolTipText( "Starts the SOAP Monitor as configured" );
-		stopButton.setToolTipText( "Stops the SOAP Monitor" );
+		startButton.setToolTipText( "Starts the HTTP Monitor as configured" );
+		stopButton.setToolTipText( "Stops the HTTP Monitor" );
 		optionsButton.setToolTipText( "Sets Monitor Options" );
 		clearButton.setToolTipText( "Clear all/selected messages from the log" );
 		createRequestButton.setToolTipText( "Creates requests from selected messages" );
@@ -523,7 +523,7 @@ public class SoapMonitor extends JPanel
 					applyProxyButton.setIcon( UISupport.createImageIcon( SoapUI.PROXY_ENABLED_ICON ) );
 			}
 
-			SoapUI.log.info( "Started SOAP Monitor on local port " + localPort );
+			SoapUI.log.info( "Started HTTP Monitor on local port " + localPort );
 		}
 		else
 		{
@@ -533,7 +533,7 @@ public class SoapMonitor extends JPanel
 			infoLabel.setText( "Stoped" );
 			progressBar.setIndeterminate( false );
 
-			SoapUI.log.info( "Could not start SOAP Monitor on local port " + localPort );
+			SoapUI.log.info( "Could not start HTTP Monitor on local port " + localPort );
 		}
 	}
 
@@ -1413,7 +1413,7 @@ public class SoapMonitor extends JPanel
 			}
 		}
 
-		@AForm( name = "SOAP Monitor Options", description = "Set options for SOAP Monitor", helpUrl = HelpUrls.SOAPMONITOR_HELP_URL, icon = UISupport.OPTIONS_ICON_PATH )
+		@AForm( name = "HTTP Monitor Options", description = "Set options for HTTP Monitor", helpUrl = HelpUrls.SOAPMONITOR_HELP_URL, icon = UISupport.OPTIONS_ICON_PATH )
 		private class OptionsForm
 		{
 			@AField( description = "The local port to listen on", name = "Port", type = AFieldType.INT )

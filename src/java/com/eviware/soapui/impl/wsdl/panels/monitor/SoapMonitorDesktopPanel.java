@@ -60,7 +60,7 @@ public class SoapMonitorDesktopPanel extends DefaultDesktopPanel
 	{
 		if( soapMonitor.isRunning() && canCancel )
 		{
-			if( !UISupport.confirm( "Close and stop SOAP Monitor", "Close SOAP Monitor" ) )
+			if( !UISupport.confirm( "Close and stop HTTP Monitor", "Close HTTP Monitor" ) )
 			{
 				return false;
 			}
