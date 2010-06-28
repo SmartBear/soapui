@@ -31,7 +31,6 @@ public class NewRestChildResourceAction extends NewRestResourceActionBase<RestRe
 {
 	public static final String SOAPUI_ACTION_ID = "NewRestChildResourceAction";
 	public static final MessageSupport messages = MessageSupport.getMessages( NewRestChildResourceAction.class );
-	private XFormDialog dialog;
 
 	public NewRestChildResourceAction()
 	{
