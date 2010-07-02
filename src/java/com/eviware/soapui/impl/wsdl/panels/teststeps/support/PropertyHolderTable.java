@@ -469,7 +469,9 @@ public class PropertyHolderTable extends JPanel
 								else if( dialog.getBooleanValue( LoadOptionsForm.CREATEMISSING )
 										&& holder instanceof MutableTestPropertyHolder )
 								{
-									( ( MutableTestPropertyHolder )holder ).addProperty( name ).setValue( value );
+									TestProperty prop = ( ( MutableTestPropertyHolder )holder ).addProperty( name );
+									if ( !prop.isReadOnly() ) 
+										prop.setValue( value );
 									count++ ;
 								}
 
