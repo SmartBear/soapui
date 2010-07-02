@@ -51,7 +51,7 @@ public class SoapUIPreferencesAction extends AbstractAction
 	public static final String SSL_SETTINGS = "SSL Settings";
 	public static final String INTEGRATED_TOOLS = "Tools";
 	public static final String WSA_SETTINGS = "WS-A Settings";
-	public static final String LOADUI_SETTINGS = "LoadUI Settings";
+	public static final String LOADUI_SETTINGS = "loadUI Settings";
 	private SwingConfigurationDialogImpl dialog;
 	private JTabbedPane tabs;
 	private List<Prefs> prefs = new ArrayList<Prefs>();
@@ -67,7 +67,7 @@ public class SoapUIPreferencesAction extends AbstractAction
 
 		// addPrefs( new HttpPrefs( HTTP_SETTINGS));
 		addPrefs( new AnnotatedSettingsPrefs( HttpSettings.class, HTTP_SETTINGS ) );
-		addPrefs( new ProxyPrefs(PROXY_SETTINGS ) );
+		addPrefs( new ProxyPrefs( PROXY_SETTINGS ) );
 		addPrefs( new AnnotatedSettingsPrefs( SSLSettings.class, SSL_SETTINGS ) );
 		addPrefs( new AnnotatedSettingsPrefs( WsdlSettings.class, WSDL_SETTINGS ) );
 		addPrefs( new UIPrefs( UI_SETTINGS ) );
@@ -78,7 +78,7 @@ public class SoapUIPreferencesAction extends AbstractAction
 		addPrefs( new AnnotatedSettingsPrefs( SecuritySettings.class, GLOBAL_SECURITY_SETTINGS ) );
 		addPrefs( new AnnotatedSettingsPrefs( WsaSettings.class, WSA_SETTINGS ) );
 		addPrefs( new LoadUIPrefs( LOADUI_SETTINGS ) );
-		
+
 		instance = this;
 	}
 
