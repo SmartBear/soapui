@@ -319,7 +319,11 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 		}
 		else if( testSuite != null )
 		{
-			runSuite( project.getTestSuiteByName( testSuite ) );
+			WsdlTestSuite ts = project.getTestSuiteByName( testSuite );
+			if( ts == null )
+				throw new Exception( "TestSuite with name [" + testSuite + "] not found in project" );
+			else
+				runSuite( ts );
 		}
 		else
 		{
