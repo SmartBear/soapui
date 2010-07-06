@@ -182,6 +182,7 @@ public class SwingFileDialogs implements XFileDialogs
 		JDirectoryChooser chooser = new JDirectoryChooser( defaultDirectory );
 		chooser.setDialogTitle( title );
 		chooser.setShowingCreateDirectory( true );
+		chooser.setAcceptAllFileFilterUsed( true );
 		if( chooser.showSaveDialog( getParent() ) != JFileChooser.APPROVE_OPTION )
 			return null;
 
