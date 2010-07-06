@@ -14,7 +14,6 @@ package com.eviware.soapui.impl.wsdl.teststeps;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -70,11 +69,10 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 {
 	@SuppressWarnings( "unused" )
 	private final static Logger log = Logger.getLogger( WsdlTestRequestStep.class );
-	protected JdbcRequestTestStepConfig jdbcRequestTestStepConfig;
+
 	public final static String JDBCREQUEST = JdbcRequestTestStep.class.getName() + "@jdbcrequest";
 	public static final String STATUS_PROPERTY = WsdlTestRequest.class.getName() + "@status";
 	public static final String RESPONSE_PROPERTY = "response";
-	private JdbcSubmit submit;
 	protected static final String DRIVER_FIELD = "Driver";
 	protected static final String CONNSTR_FIELD = "Connection String";
 	protected static final String PASS_FIELD = "Password";
@@ -85,11 +83,13 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 
 	protected static final String QUERY_ELEMENT = "query";
 	protected static final String STOREDPROCEDURE_ELEMENT = "stored-procedure";
-	protected Connection connection;
+
 	private AssertionsSupport assertionsSupport;
 	private PropertyChangeNotifier notifier;
 	private XmlBeansPropertiesTestPropertyHolder propertyHolderSupport;
+	private JdbcRequestTestStepConfig jdbcRequestTestStepConfig;
 	private JdbcRequest jdbcRequest;
+	private JdbcSubmit submit;
 
 	public JdbcRequestTestStep( WsdlTestCase testCase, TestStepConfig config, boolean forLoadTest )
 	{
@@ -135,7 +135,7 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 		propertyHolderSupport.addVirtualProperty( WsdlTestStepWithProperties.RESPONSE_AS_XML, responseProperty );
 	}
 
-	public JdbcRequestTestStepConfig getJdbcRequestTestStepConfig()
+	protected JdbcRequestTestStepConfig getJdbcRequestTestStepConfig()
 	{
 		return jdbcRequestTestStepConfig;
 	}

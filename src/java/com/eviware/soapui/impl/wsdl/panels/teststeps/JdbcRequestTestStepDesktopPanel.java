@@ -1,5 +1,13 @@
 /*
- *  soapUI, copyright (C) 2004-2010 eviware.com
+ *  soapUI, copyright (C) 2004-2010 eviware.com 
+ *
+ *  soapUI is free software; you can redistribute it and/or modify it under the 
+ *  terms of version 2.1 of the GNU Lesser General Public License as published by 
+ *  the Free Software Foundation.
+ *
+ *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ *  See the GNU Lesser General Public License for more details at gnu.org.
  */
 
 package com.eviware.soapui.impl.wsdl.panels.teststeps;
@@ -50,7 +58,6 @@ import javax.swing.text.Document;
 import org.apache.log4j.Logger;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.config.JdbcRequestTestStepConfig;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.support.components.ModelItemXmlEditor;
 import com.eviware.soapui.impl.support.components.ResponseMessageXmlEditor;
@@ -109,7 +116,6 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 	private JButton addAssertionButton;
 	protected JInspectorPanel inspectorPanel;
 	protected JdbcRequestTestStep jdbcRequestTestStep;
-	protected JdbcRequestTestStepConfig jdbcRequestTestStepConfig;
 	protected JComponentInspector<?> assertionInspector;
 	protected AssertionsPanel assertionsPanel;
 	private InternalAssertionsListener assertionsListener = new InternalAssertionsListener();
@@ -157,18 +163,12 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 	{
 		super( modelItem );
 		jdbcRequestTestStep = modelItem;
-		initConfig();
 		initContent();
 
 		SoapUI.getTestMonitor().addTestMonitorListener( testMonitorListener );
 		setEnabled( !SoapUI.getTestMonitor().hasRunningTest( jdbcRequestTestStep.getTestCase() ) );
 
 		jdbcRequestTestStep.addAssertionsListener( assertionsListener );
-	}
-
-	protected void initConfig()
-	{
-		jdbcRequestTestStepConfig = jdbcRequestTestStep.getJdbcRequestTestStepConfig();
 	}
 
 	protected JComponent buildContent()
