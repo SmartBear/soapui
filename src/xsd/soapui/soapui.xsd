@@ -82,7 +82,8 @@
     					maxOccurs="1" minOccurs="0">
     				</xsd:element>
     				<xsd:element name="eventHandlers"
-    					type="tns:EventHandlerType" maxOccurs="unbounded" minOccurs="0">
+    					type="tns:EventHandlerType" maxOccurs="unbounded"
+    					minOccurs="0">
     				</xsd:element>
     			</xsd:sequence>
     			<xsd:attribute name="soapui-version"
@@ -94,7 +95,10 @@
     			</xsd:attribute>
     			<xsd:attribute name="abortOnError" type="xsd:boolean"></xsd:attribute>
     			<xsd:attribute name="timeout" type="xsd:long"></xsd:attribute>
-    			<xsd:attribute name="runType" type="tns:TestSuiteRunTypes"></xsd:attribute>
+    			<xsd:attribute name="runType"
+    				type="tns:TestSuiteRunTypes">
+    			</xsd:attribute>
+    			<xsd:attribute name="scriptLibrary" type="xsd:string"></xsd:attribute>
     		</xsd:extension>
     	</xsd:complexContent>
     </xsd:complexType>

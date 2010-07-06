@@ -36,6 +36,7 @@ import com.eviware.soapui.model.mock.MockOperation;
 import com.eviware.soapui.model.mock.MockResponse;
 import com.eviware.soapui.model.mock.MockService;
 import com.eviware.soapui.model.project.Project;
+import com.eviware.soapui.model.support.WorkspaceListenerAdapter;
 import com.eviware.soapui.model.testsuite.LoadTest;
 import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.model.testsuite.TestStep;
@@ -56,7 +57,7 @@ import com.eviware.soapui.ui.desktop.DesktopPanel;
  * @author ole.matzura
  */
 
-public class RecentItemsListener implements WorkspaceListener, DesktopListener
+public class RecentItemsListener extends WorkspaceListenerAdapter implements WorkspaceListener, DesktopListener
 {
 	private static final String RECENT_WORKSPACES_SETTING = "RecentWorkspaces";
 	private static final String RECENT_PROJECTS_SETTING = "RecentProjects";
@@ -119,6 +120,7 @@ public class RecentItemsListener implements WorkspaceListener, DesktopListener
 		updateRecentProjectsMenu();
 	}
 
+	@SuppressWarnings( "unchecked" )
 	private void updateRecentWorkspacesMenu()
 	{
 		String recent = SoapUI.getSettings().getString( RECENT_WORKSPACES_SETTING, null );
@@ -151,6 +153,7 @@ public class RecentItemsListener implements WorkspaceListener, DesktopListener
 		}
 	}
 
+	@SuppressWarnings( "unchecked" )
 	private void updateRecentProjectsMenu()
 	{
 		recentProjectsMenu.removeAll();
@@ -179,6 +182,7 @@ public class RecentItemsListener implements WorkspaceListener, DesktopListener
 		}
 	}
 
+	@SuppressWarnings( "unchecked" )
 	public void projectAdded( Project project )
 	{
 		if( switchingWorkspace )
@@ -218,6 +222,7 @@ public class RecentItemsListener implements WorkspaceListener, DesktopListener
 	{
 	}
 
+	@SuppressWarnings( "unchecked" )
 	public void projectRemoved( Project project )
 	{
 		if( switchingWorkspace )
@@ -324,6 +329,7 @@ public class RecentItemsListener implements WorkspaceListener, DesktopListener
 		return false;
 	}
 
+	@SuppressWarnings( "unchecked" )
 	public void workspaceSwitched( Workspace workspace )
 	{
 		switchingWorkspace = false;
@@ -356,6 +362,7 @@ public class RecentItemsListener implements WorkspaceListener, DesktopListener
 			recentWorkspacesMenu.add( "- empty -" ).setEnabled( false );
 	}
 
+	@SuppressWarnings( "unchecked" )
 	public void workspaceSwitching( Workspace workspace )
 	{
 		switchingWorkspace = true;

@@ -298,7 +298,7 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace
 					else
 					{
 						String path = project.getPath();
-						if( !StringUtils.hasContent( path ))
+						if( !StringUtils.hasContent( path ) )
 						{
 							if( UISupport.confirm( messages.get( "ProjectHasNotBeenSaved.Label", project.getName() ), messages
 									.get( "ProjectHasNotBeenSaved.Title" ) ) )
@@ -455,6 +455,24 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace
 		return project;
 	}
 
+	private void fireProjectOpened( Project project )
+	{
+		for( Iterator<WorkspaceListener> iter = listeners.iterator(); iter.hasNext(); )
+		{
+			WorkspaceListener listener = iter.next();
+			listener.projectOpened( project );
+		}
+	}
+
+	private void fireProjectClosed( Project project )
+	{
+		for( Iterator<WorkspaceListener> iter = listeners.iterator(); iter.hasNext(); )
+		{
+			WorkspaceListener listener = iter.next();
+			listener.projectClosed( project );
+		}
+	}
+
 	private void fireProjectAdded( Project project )
 	{
 		for( Iterator<WorkspaceListener> iter = listeners.iterator(); iter.hasNext(); )
@@ -523,6 +541,7 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace
 		projectList.add( ix, project );
 
 		fireProjectAdded( project );
+		fireProjectOpened( project );
 
 		return project;
 	}
@@ -608,6 +627,7 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace
 
 		projectList.remove( ix );
 		fireProjectRemoved( project );
+		fireProjectClosed( project );
 
 		String name = project.getName();
 		project.release();

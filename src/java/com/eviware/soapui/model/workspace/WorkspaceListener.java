@@ -28,6 +28,10 @@ public interface WorkspaceListener
 
 	public void projectChanged( Project project );
 
+	public void projectOpened( Project project );
+
+	public void projectClosed( Project project );
+
 	public void workspaceSwitching( Workspace workspace );
 
 	public void workspaceSwitched( Workspace workspace );

@@ -43,4 +43,12 @@ public class WorkspaceListenerAdapter implements WorkspaceListener
 	public void workspaceSwitching( Workspace workspace )
 	{
 	}
+
+	public void projectClosed( Project project )
+	{
+	}
+
+	public void projectOpened( Project project )
+	{
+	}
 }
