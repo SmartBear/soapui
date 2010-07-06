@@ -135,7 +135,7 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 		propertyHolderSupport.addVirtualProperty( WsdlTestStepWithProperties.RESPONSE_AS_XML, responseProperty );
 	}
 
-	protected JdbcRequestTestStepConfig getJdbcRequestTestStepConfig()
+	public JdbcRequestTestStepConfig getJdbcRequestTestStepConfig()
 	{
 		return jdbcRequestTestStepConfig;
 	}

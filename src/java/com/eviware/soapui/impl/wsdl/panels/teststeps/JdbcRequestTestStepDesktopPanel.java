@@ -58,6 +58,7 @@ import javax.swing.text.Document;
 import org.apache.log4j.Logger;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.config.JdbcRequestTestStepConfig;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.support.components.ModelItemXmlEditor;
 import com.eviware.soapui.impl.support.components.ResponseMessageXmlEditor;
@@ -158,17 +159,25 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 	private SimpleDateFormat sdf = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
 	protected JButton reconfigureConnPropertiesButton;
 	protected PropertyHolderTable propertyHolderTable;
+	protected JdbcRequestTestStepConfig jdbcRequestTestStepConfig;
 
 	public JdbcRequestTestStepDesktopPanel( JdbcRequestTestStep modelItem )
 	{
 		super( modelItem );
 		jdbcRequestTestStep = modelItem;
+		initConfig();
 		initContent();
 
 		SoapUI.getTestMonitor().addTestMonitorListener( testMonitorListener );
 		setEnabled( !SoapUI.getTestMonitor().hasRunningTest( jdbcRequestTestStep.getTestCase() ) );
 
 		jdbcRequestTestStep.addAssertionsListener( assertionsListener );
+	}
+
+	//added this again cause without it connection is set to none whenever jdbc test step is reopened
+	protected void initConfig()
+	{
+		jdbcRequestTestStepConfig = jdbcRequestTestStep.getJdbcRequestTestStepConfig();
 	}
 
 	protected JComponent buildContent()
