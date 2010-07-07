@@ -171,6 +171,9 @@ public class JdbcSubmit implements Submit, Runnable
 		}
 		finally
 		{
+			if( error != null )
+				status = Status.ERROR;
+
 			if( status != Status.CANCELED )
 			{
 				for( int i = 0; i < listeners.length; i++ )
@@ -190,15 +193,8 @@ public class JdbcSubmit implements Submit, Runnable
 
 	private void runQuery() throws Exception
 	{
-		try
-		{
-			prepare();
-			load();
-		}
-		catch( SQLException e )
-		{
-			SoapUI.logError( e );
-		}
+		prepare();
+		load();
 		createResponse();
 	}
 

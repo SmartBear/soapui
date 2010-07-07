@@ -22,7 +22,6 @@ import javax.swing.ImageIcon;
 import org.apache.log4j.Logger;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.config.JdbcRequestTestStepConfig;
 import com.eviware.soapui.config.ModelItemConfig;
 import com.eviware.soapui.impl.wsdl.support.ModelItemIconAnimator;
 import com.eviware.soapui.impl.wsdl.teststeps.JdbcRequestTestStep;
@@ -100,7 +99,7 @@ public class JdbcRequest extends AbstractAnimatableModelItem<ModelItemConfig> im
 
 	public String getRequestContent()
 	{
-		return ( ( JdbcRequestTestStepConfig )testStep.getConfig() ).getQuery();
+		return ( ( JdbcRequestTestStep )testStep ).getQuery();
 	}
 
 	public MessagePart[] getRequestParts()
