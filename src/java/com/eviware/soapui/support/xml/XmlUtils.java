@@ -1437,21 +1437,24 @@ public final class XmlUtils
 		Element resultsElement = xmlDocumentResult.createElement( "Results" );
 		xmlDocumentResult.appendChild( resultsElement );
 
-		ResultSet resultSet = statement.getResultSet();
-		if( resultSet != null )
+		if( statement != null )
 		{
-			resultSet.setFetchSize( statement.getFetchSize() );
-			xmlDocumentResult = addResultSetXmlPart( resultsElement, resultSet, xmlDocumentResult );
-			while( statement.getMoreResults() )
+			ResultSet resultSet = statement.getResultSet();
+			if( resultSet != null )
 			{
-				xmlDocumentResult = addResultSetXmlPart( resultsElement, statement.getResultSet(), xmlDocumentResult );
+				resultSet.setFetchSize( statement.getFetchSize() );
+				xmlDocumentResult = addResultSetXmlPart( resultsElement, resultSet, xmlDocumentResult );
+				while( statement.getMoreResults() )
+				{
+					xmlDocumentResult = addResultSetXmlPart( resultsElement, statement.getResultSet(), xmlDocumentResult );
+				}
 			}
-		}
-		else
-		{
-			Element errorElement = xmlDocumentResult.createElement( "UpdateCount" );
-			errorElement.appendChild( xmlDocumentResult.createTextNode( String.valueOf( statement.getUpdateCount() ) ) );
-			resultsElement.appendChild( errorElement );
+			else
+			{
+				Element errorElement = xmlDocumentResult.createElement( "UpdateCount" );
+				errorElement.appendChild( xmlDocumentResult.createTextNode( String.valueOf( statement.getUpdateCount() ) ) );
+				resultsElement.appendChild( errorElement );
+			}
 		}
 
 		StringWriter out = new StringWriter();
