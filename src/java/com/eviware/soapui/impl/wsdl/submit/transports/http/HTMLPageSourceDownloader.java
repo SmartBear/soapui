@@ -75,7 +75,7 @@ public class HTMLPageSourceDownloader
 			}
 			catch( Exception e )
 			{
-				SoapUI.logError(  e );
+				SoapUI.log.warn(  e.getMessage() );
 			}
 		}
 		client.removeRequestHeader( "Accept" );
