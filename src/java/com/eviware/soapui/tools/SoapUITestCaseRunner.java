@@ -242,7 +242,12 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 	{
 		this.junitReport = junitReport;
 		if( junitReport )
-			reportCollector = new JUnitReportCollector();
+			reportCollector = createJUnitReportCollector();
+	}
+
+	protected JUnitReportCollector createJUnitReportCollector()
+	{
+		return new JUnitReportCollector();
 	}
 
 	public SoapUITestCaseRunner()
