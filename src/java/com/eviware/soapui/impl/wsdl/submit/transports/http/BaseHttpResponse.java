@@ -55,7 +55,7 @@ public abstract class BaseHttpResponse implements HttpResponse
 	private int requestContentPos = -1;
 	private String xmlContent;
 	private boolean downloadIncludedResources;
-	private Attachment[] attachments =new Attachment[0];
+	private Attachment[] attachments = new Attachment[0];
 
 	public BaseHttpResponse( ExtendedHttpMethod httpMethod, AbstractHttpRequestInterface<?> httpRequest )
 	{
@@ -119,13 +119,16 @@ public abstract class BaseHttpResponse implements HttpResponse
 		}
 
 		initHeaders( httpMethod );
-		downloadIncludedResources = ((HttpRequest)this.httpRequest.get() ).getDownloadIncludedResources();
-		if(downloadIncludedResources )
+		if( this.httpRequest.get() instanceof HttpRequest )
 		{
-			long before = (new Date()).getTime();
-			addIncludedContentsAsAttachments();
-			long after = (new Date()).getTime();
-			timeTaken += (after- before);
+			downloadIncludedResources = ( ( HttpRequest )this.httpRequest.get() ).getDownloadIncludedResources();
+			if( downloadIncludedResources )
+			{
+				long before = ( new Date() ).getTime();
+				addIncludedContentsAsAttachments();
+				long after = ( new Date() ).getTime();
+				timeTaken += ( after - before );
+			}
 		}
 	}
 
@@ -134,14 +137,16 @@ public abstract class BaseHttpResponse implements HttpResponse
 		HTMLPageSourceDownloader downloader = new HTMLPageSourceDownloader();
 		try
 		{
-			List<Attachment> attachmentList = downloader.downloadCssAndImages( url.toString(), ( HttpRequest )httpRequest.get() );
+			List<Attachment> attachmentList = downloader.downloadCssAndImages( url.toString(), ( HttpRequest )httpRequest
+					.get() );
 			attachments = attachmentList.toArray( new Attachment[attachmentList.size()] );
 		}
-		catch(ClassCastException cce){
+		catch( ClassCastException cce )
+		{
 			attachments = new Attachment[1];
 			try
 			{
-				attachments[0] = downloader.createAttachment( rawResponseData,  url, ( HttpRequest )httpRequest.get());
+				attachments[0] = downloader.createAttachment( rawResponseData, url, ( HttpRequest )httpRequest.get() );
 			}
 			catch( IOException e )
 			{
@@ -293,7 +298,7 @@ public abstract class BaseHttpResponse implements HttpResponse
 
 	public Attachment[] getAttachments()
 	{
-		return attachments ;
+		return attachments;
 	}
 
 	public Attachment[] getAttachmentsForPart( String partName )
