@@ -37,6 +37,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 public class HTMLPageSourceDownloader
 {
 	WebClient client = new WebClient();
+	List<String>  notFound404List = new ArrayList<String>();
 	public static final HashMap<String, String> acceptTypes = new HashMap<String, String>()
 	{
 		{
@@ -75,34 +76,54 @@ public class HTMLPageSourceDownloader
 			}
 			catch( Exception e )
 			{
-				SoapUI.log.warn(  e.getMessage() );
+				SoapUI.logError( e );
 			}
 		}
 		client.removeRequestHeader( "Accept" );
 		return attachmentList;
 	}
 
-	public  Attachment createAttachment( byte[] bytes, URL url, Request request ) throws IOException
+	public Attachment createAttachment( byte[] bytes, URL url, Request request ) throws IOException
 	{
 		String fileName = url.getPath()
 				.substring( url.getPath().lastIndexOf( "/" ) + 1, url.getPath().lastIndexOf( "." ) );
 		String extension = url.getPath().substring( url.getPath().lastIndexOf( "." ) );
-		File temp = File.createTempFile( fileName, extension );
-		OutputStream out = new FileOutputStream( temp );
-		out.write( bytes );
-		out.close();
-		return new RequestFileAttachment( temp, false, ( AbstractHttpRequest<?> )request );
+		if( bytes.length > 0 )
+		{
+			File temp = File.createTempFile( fileName, extension );
+			OutputStream out = new FileOutputStream( temp );
+			out.write( bytes );
+			out.close();
+			return new RequestFileAttachment( temp, false, ( AbstractHttpRequest<?> )request );
+		}else{
+			File temp = new File( "404_Not_Found___"+url.toString() );
+			RequestFileAttachment missingFile =  new RequestFileAttachment( temp, false, ( AbstractHttpRequest<?> )request );
+			notFound404List.add( url.toString() );
+			return missingFile;
+		}
 
 	}
 
 	private byte[] downloadResource( HtmlPage page, HtmlElement htmlElement, URL url ) throws IOException
 	{
-		WebRequestSettings wrs = new WebRequestSettings( url );
-		wrs.setAdditionalHeader( "Referer", page.getWebResponse().getRequestSettings().getUrl().toString() );
+		WebRequestSettings wrs = null;
+		try
+		{
+			wrs = new WebRequestSettings( url );
+			wrs.setAdditionalHeader( "Referer", page.getWebResponse().getRequestSettings().getUrl().toString() );
+			client.addRequestHeader( "Accept", acceptTypes.get( htmlElement.getTagName().toLowerCase() ) );
+			return client.getPage( wrs ).getWebResponse().getContentAsBytes();
+		}
+		catch( FailingHttpStatusCodeException fhsce )
+		{
+			SoapUI.log.warn(  fhsce.getMessage() );
+			return new byte[0];
+		}
+	}
 
-		client.addRequestHeader( "Accept", acceptTypes.get( htmlElement.getTagName().toLowerCase() ) );
-		byte[] bytes = client.getPage( wrs ).getWebResponse().getContentAsBytes();
-		return bytes;
+	public List<String> getNotFound404List()
+	{
+		return notFound404List;
 	}
 
 }
