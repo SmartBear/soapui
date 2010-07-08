@@ -183,6 +183,18 @@ public class HttpRequest extends AbstractHttpRequest<HttpRequestConfig> implemen
 		setIcon( UISupport.createImageIcon( "/" + method.toString().toLowerCase() + "_method.gif" ) );
 		notifyPropertyChanged( "method", old, method );
 	}
+	
+	
+	public void setDownloadIncludedResources(boolean downloadIncludedResources){
+		boolean old = getDownloadIncludedResources();
+		getConfig().setDownloadIncludedResources( downloadIncludedResources );
+		notifyPropertyChanged( "downloadIncludedResources", old, downloadIncludedResources );
+	}
+
+	public boolean getDownloadIncludedResources()
+	{
+		return getConfig().getDownloadIncludedResources();
+	}
 
 	public String getPropertiesLabel()
 	{

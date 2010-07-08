@@ -1786,18 +1786,21 @@
     	<xsd:complexContent>
     		<xsd:extension base="tns:AbstractRequest">
     			<xsd:sequence>
-    				<xsd:element name="parameters" type="tns:RestParameters"></xsd:element>
+    				<xsd:element name="parameters"
+    					type="tns:RestParameters">
+    				</xsd:element>
     			</xsd:sequence>
     			<xsd:attribute name="mediaType" type="xsd:string"></xsd:attribute>
     			<xsd:attribute name="method" type="xsd:string"></xsd:attribute>
     			<xsd:attribute name="postQueryString"
     				type="xsd:boolean">
     			</xsd:attribute>
+    			<xsd:attribute name="downloadIncludedResources" type="xsd:boolean"></xsd:attribute>
     		</xsd:extension>
     	</xsd:complexContent>
     </xsd:complexType>
 
-    
+
 
     <xsd:element name="reportTemplate" type="tns:ReportTemplate"></xsd:element>
 

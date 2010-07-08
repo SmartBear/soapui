@@ -16,6 +16,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.net.URL;
+import java.util.Date;
+import java.util.List;
 
 import org.apache.commons.httpclient.Header;
 
@@ -24,6 +26,7 @@ import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.support.MediaTypeHandler;
 import com.eviware.soapui.impl.rest.support.MediaTypeHandlerRegistry;
 import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
+import com.eviware.soapui.impl.support.http.HttpRequest;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.teststeps.TestRequest;
 import com.eviware.soapui.model.iface.Attachment;
@@ -51,6 +54,8 @@ public abstract class BaseHttpResponse implements HttpResponse
 	private byte[] rawResponseData;
 	private int requestContentPos = -1;
 	private String xmlContent;
+	private boolean downloadIncludedResources;
+	private Attachment[] attachments =new Attachment[0];
 
 	public BaseHttpResponse( ExtendedHttpMethod httpMethod, AbstractHttpRequestInterface<?> httpRequest )
 	{
@@ -114,6 +119,39 @@ public abstract class BaseHttpResponse implements HttpResponse
 		}
 
 		initHeaders( httpMethod );
+		downloadIncludedResources = ((HttpRequest)this.httpRequest.get() ).getDownloadIncludedResources();
+		if(downloadIncludedResources )
+		{
+			long before = (new Date()).getTime();
+			addIncludedContentsAsAttachments();
+			long after = (new Date()).getTime();
+			timeTaken += (after- before);
+		}
+	}
+
+	private void addIncludedContentsAsAttachments()
+	{
+		HTMLPageSourceDownloader downloader = new HTMLPageSourceDownloader();
+		try
+		{
+			List<Attachment> attachmentList = downloader.downloadCssAndImages( url.toString(), ( HttpRequest )httpRequest.get() );
+			attachments = attachmentList.toArray( new Attachment[attachmentList.size()] );
+		}
+		catch(ClassCastException cce){
+			attachments = new Attachment[1];
+			try
+			{
+				attachments[0] = downloader.createAttachment( rawResponseData,  url, ( HttpRequest )httpRequest.get());
+			}
+			catch( IOException e )
+			{
+				SoapUI.log.error( e );
+			}
+		}
+		catch( Exception e )
+		{
+			SoapUI.log.error( e );
+		}
 	}
 
 	protected void initHeaders( ExtendedHttpMethod httpMethod )
@@ -255,7 +293,7 @@ public abstract class BaseHttpResponse implements HttpResponse
 
 	public Attachment[] getAttachments()
 	{
-		return new Attachment[0];
+		return attachments ;
 	}
 
 	public Attachment[] getAttachmentsForPart( String partName )

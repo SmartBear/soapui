@@ -46,7 +46,7 @@ public class MimeMessageResponse extends BaseHttpResponse
 	{
 		super( httpMethod, httpRequest );
 
-		if( getRequestContent() == null || !getRequestContent().equals( requestContent ))
+		if( getRequestContent() == null || !getRequestContent().equals( requestContent ) )
 			this.requestContent = requestContent;
 
 		try
@@ -108,7 +108,18 @@ public class MimeMessageResponse extends BaseHttpResponse
 
 	public Attachment[] getAttachments()
 	{
-		return mmSupport.getAttachments();
+		int lengthA = super.getAttachments().length;
+		int lengthB = mmSupport.getAttachments().length;
+		if( lengthA > 0 )
+		{
+			Attachment[] all = new Attachment[lengthA + lengthB];
+			System.arraycopy( super.getAttachments(), 0, all, 0, lengthA );
+			System.arraycopy( mmSupport.getAttachments(), 0, all, lengthA, lengthB );
+			return all;
+		}
+		else
+			return mmSupport.getAttachments();
+
 	}
 
 	public Attachment[] getAttachmentsForPart( String partName )

@@ -14,6 +14,8 @@ package com.eviware.soapui.impl.wsdl.panels.teststeps;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
@@ -23,6 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -33,10 +36,12 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.support.components.ModelItemXmlEditor;
+import com.eviware.soapui.impl.support.http.HttpRequest;
 import com.eviware.soapui.impl.support.panels.AbstractHttpXmlRequestDesktopPanel;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestInterface;
+import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStepInterface;
 import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestInterface;
 import com.eviware.soapui.impl.wsdl.teststeps.actions.AddAssertionAction;
@@ -79,6 +84,7 @@ public class HttpTestRequestDesktopPanel extends
 	private SimpleDateFormat sdf = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
 	private boolean updating;
 	private JUndoableTextField pathTextField;
+	private JCheckBox downloadResources;
 	private JComboBox methodCombo;
 
 	public HttpTestRequestDesktopPanel( HttpTestRequestStepInterface testStep )
@@ -248,9 +254,50 @@ public class HttpTestRequestDesktopPanel extends
 					}
 				}
 			}
-		});
+		} );
 
 		toolbar.addLabeledFixed( "Request URL:", pathTextField );
+
+		toolbar.addSeparator();
+		addCheckBox( toolbar );
+	}
+
+	private void addCheckBox( JXToolBar toolbar )
+	{
+		downloadResources = new JCheckBox();
+		try
+		{
+			downloadResources.setSelected( ( ( HttpRequest )( ( HttpTestRequestStep )getModelItem() ).getHttpRequest() )
+					.getDownloadIncludedResources() );
+		}
+		catch( Exception cce )
+		{
+			SoapUI.logError( cce );
+		}
+		downloadResources.setPreferredSize( new Dimension( 17, 17 ) );
+		downloadResources.setToolTipText( "Download all included resources as attachments!" );
+		downloadResources.addActionListener( new ActionListener()
+		{
+
+			@Override
+			public void actionPerformed( ActionEvent e )
+			{
+				try
+				{
+					if( 1001 == e.getID() && getModelItem() instanceof HttpTestRequestStep )
+					{
+						( ( HttpRequest )( ( HttpTestRequestStep )getModelItem() ).getHttpRequest() )
+								.setDownloadIncludedResources( ( ( JCheckBox )e.getSource() ).isSelected() );
+					}
+				}
+				catch( Exception cce )
+				{
+					SoapUI.logError( cce );
+				}
+
+			}
+		} );
+		toolbar.addLabeledFixed( "Download Resources", downloadResources );
 
 		toolbar.addSeparator();
 	}
@@ -402,13 +449,13 @@ public class HttpTestRequestDesktopPanel extends
 		{
 			getSubmitButton().setEnabled( getSubmit() == null && StringUtils.hasContent( getRequest().getEndpoint() ) );
 		}
-		else if( evt.getPropertyName().equals( AbstractHttpRequest.ENDPOINT_PROPERTY ))
+		else if( evt.getPropertyName().equals( AbstractHttpRequest.ENDPOINT_PROPERTY ) )
 		{
-			if(updating)
+			if( updating )
 				return;
-			
+
 			updating = true;
-			pathTextField.setText( String.valueOf( evt.getNewValue()) );
+			pathTextField.setText( String.valueOf( evt.getNewValue() ) );
 			updating = false;
 		}
 
