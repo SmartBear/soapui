@@ -698,7 +698,9 @@ public class SoapUI
 		BrowserComponent.initialize();
 
 		SoapUIRunner soapuiRunner = new SoapUIRunner();
-		if( !BrowserComponent.isJXBrowserDisabled() && Xpcom.isJVMValid() )
+		//TODO check on Xpcom.isJVMValid
+//		if( !BrowserComponent.isJXBrowserDisabled() && Xpcom.isJVMValid() )
+		if( !BrowserComponent.isJXBrowserDisabled())
 		{
 			SwingUtilities.invokeLater( soapuiRunner );
 		}

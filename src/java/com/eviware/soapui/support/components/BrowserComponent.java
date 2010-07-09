@@ -16,12 +16,9 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
-import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.io.File;
 import java.lang.reflect.InvocationTargetException;
-import java.net.URL;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -35,12 +32,10 @@ import org.mozilla.interfaces.nsIRequest;
 import org.mozilla.interfaces.nsISupports;
 import org.mozilla.interfaces.nsIURI;
 import org.mozilla.interfaces.nsIWeakReference;
-import org.mozilla.interfaces.nsIWebBrowser;
 import org.mozilla.interfaces.nsIWebProgress;
 import org.mozilla.interfaces.nsIWebProgressListener;
 import org.mozilla.xpcom.Mozilla;
 import org.mozilla.xpcom.XPCOMException;
-import org.w3c.dom.Document;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
@@ -51,27 +46,16 @@ import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.xml.XmlUtils;
-import com.teamdev.jxbrowser.BrowserAttributes;
-import com.teamdev.jxbrowser.ClipboardSupport;
-import com.teamdev.jxbrowser.ContentHandler;
-import com.teamdev.jxbrowser.SearchParams;
-import com.teamdev.jxbrowser.WebBrowser;
-import com.teamdev.jxbrowser.WebBrowserFactory;
-import com.teamdev.jxbrowser.WebBrowserHistory;
-import com.teamdev.jxbrowser.WebBrowserWindow;
-import com.teamdev.jxbrowser.WindowCreator;
-import com.teamdev.jxbrowser.event.ContextMenuListener;
-import com.teamdev.jxbrowser.event.HistoryChangeListener;
-import com.teamdev.jxbrowser.event.LocationEvent;
-import com.teamdev.jxbrowser.event.RequestAdapter;
-import com.teamdev.jxbrowser.event.RequestListener;
-import com.teamdev.jxbrowser.event.StatusChangeEvent;
-import com.teamdev.jxbrowser.event.StatusChangeListener;
-import com.teamdev.jxbrowser.event.TitleChangeListener;
-import com.teamdev.jxbrowser.mozilla.MozillaWebBrowser;
-import com.teamdev.jxbrowser.printing.WebBrowserPrinting;
-import com.teamdev.jxbrowser.ssl.BadCertificateHandler;
-import com.teamdev.xpcom.AsyncHandlerFactory;
+import com.jniwrapper.PlatformContext;
+import com.teamdev.jxbrowser.Browser;
+import com.teamdev.jxbrowser.BrowserFactory;
+import com.teamdev.jxbrowser.BrowserType;
+import com.teamdev.jxbrowser1.WebBrowser;
+import com.teamdev.jxbrowser1.WebBrowserWindow;
+import com.teamdev.jxbrowser1.event.LocationEvent;
+import com.teamdev.jxbrowser1.event.RequestAdapter;
+import com.teamdev.jxbrowser1.event.StatusChangeEvent;
+import com.teamdev.jxbrowser1.event.StatusChangeListener;
 import com.teamdev.xpcom.PoxyAuthenticationHandler;
 import com.teamdev.xpcom.ProxyConfiguration;
 import com.teamdev.xpcom.ProxyServerAuthInfo;
@@ -83,302 +67,18 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 {
 	private static String disabledReason;
 
-	public class DummyBrowser implements WebBrowser
-	{
-		public void activate()
-		{
-		}
-
-		public void addContentHandler( ContentHandler arg0 )
-		{
-		}
-
-		public void addContextMenuListener( ContextMenuListener arg0 )
-		{
-		}
-
-		public void addHistoryChangeListener( HistoryChangeListener arg0 )
-		{
-		}
-
-		public void addRequestListener( RequestListener arg0 )
-		{
-		}
-
-		public void addStatusChangeListener( StatusChangeListener arg0 )
-		{
-		}
-
-		public void addTitleChangeListener( TitleChangeListener arg0 )
-		{
-		}
-
-		public void deactivate()
-		{
-		}
-
-		public void displayAsSource( boolean arg0 )
-		{
-		}
-
-		public void dispose()
-		{
-		}
-
-		public String evaluateScript( String arg0 )
-		{
-			return null;
-		}
-
-		public boolean findString( String arg0 )
-		{
-			return false;
-		}
-
-		public AsyncHandlerFactory getAsyncHandler()
-		{
-			return null;
-		}
-
-		public BrowserAttributes getAttributes()
-		{
-			return null;
-		}
-
-		public boolean getCanGoBack()
-		{
-			return false;
-		}
-
-		public boolean getCanGoForward()
-		{
-			return false;
-		}
-
-		public ClipboardSupport getClipboardSupport()
-		{
-			return null;
-		}
-
-		public Component getComponent()
-		{
-			return new JLabel( "Browser Component Disabled: [" + disabledReason + "]" );
-		}
-
-		public Document getDocument()
-		{
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		public String getDocumentContent( String arg0 )
-		{
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		public WebBrowserHistory getHistory()
-		{
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		public String getLocationURL()
-		{
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		public WebBrowserPrinting getPrinting()
-		{
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		public String getTitle()
-		{
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		public void goBack()
-		{
-			// TODO Auto-generated method stub
-
-		}
-
-		public void goForward()
-		{
-			// TODO Auto-generated method stub
-
-		}
-
-		public boolean isDisposed()
-		{
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-		public void navigate( String arg0 )
-		{
-			// TODO Auto-generated method stub
-
-		}
-
-		public void navigate( String arg0, String arg1 )
-		{
-			// TODO Auto-generated method stub
-
-		}
-
-		public void pageDown()
-		{
-			// TODO Auto-generated method stub
-
-		}
-
-		public void pageUp()
-		{
-			// TODO Auto-generated method stub
-
-		}
-
-		public void refresh()
-		{
-			// TODO Auto-generated method stub
-
-		}
-
-		public void removeContextMenuListener( ContextMenuListener arg0 )
-		{
-			// TODO Auto-generated method stub
-
-		}
-
-		public void removeHistoryChangeListener( HistoryChangeListener arg0 )
-		{
-			// TODO Auto-generated method stub
-
-		}
-
-		public void removeRequestListener( RequestListener arg0 )
-		{
-			// TODO Auto-generated method stub
-
-		}
-
-		public void removeStatusChangeListener( StatusChangeListener arg0 )
-		{
-			// TODO Auto-generated method stub
-
-		}
-
-		public void removeTitleChangeListener( TitleChangeListener arg0 )
-		{
-			// TODO Auto-generated method stub
-
-		}
-
-		public void resetBadCertificateHandler( BadCertificateHandler arg0 )
-		{
-			// TODO Auto-generated method stub
-
-		}
-
-		public void saveCurrentDocument( File arg0, RequestListener arg1 )
-		{
-			// TODO Auto-generated method stub
-
-		}
-
-		public void saveURLtoFile( URL arg0, File arg1, RequestListener arg2 )
-		{
-			// TODO Auto-generated method stub
-
-		}
-
-		public void setAsyncHandler( AsyncHandlerFactory arg0 )
-		{
-			// TODO Auto-generated method stub
-
-		}
-
-		public void setAttributes( BrowserAttributes arg0 )
-		{
-			// TODO Auto-generated method stub
-
-		}
-
-		public void setContent( String arg0, String arg1 )
-		{
-			// TODO Auto-generated method stub
-
-		}
-
-		public void setContent( String arg0, String arg1, String arg2 )
-		{
-			// TODO Auto-generated method stub
-
-		}
-
-		public void setContentWithContext( String arg0, String arg1, String arg2 )
-		{
-			// TODO Auto-generated method stub
-
-		}
-
-		public void setFocusAtFirstElement()
-		{
-			// TODO Auto-generated method stub
-
-		}
-
-		public void setWindowCreator( WindowCreator arg0 )
-		{
-			// TODO Auto-generated method stub
-
-		}
-
-		public void showOpenFileDialog()
-		{
-			// TODO Auto-generated method stub
-
-		}
-
-		public void showSaveFileDialog()
-		{
-			// TODO Auto-generated method stub
-
-		}
-
-		public void stop()
-		{
-			// TODO Auto-generated method stub
-
-		}
-
-		public BufferedImage toImage()
-		{
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		public boolean findNext( String arg0, SearchParams arg1 )
-		{
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-		public void setContent( String arg0 )
-		{
-			// TODO Auto-generated method stub
-			
-		}
-
-	}
-
-	private WebBrowser browser;
-	private static WebBrowserFactory webBrowserFactory;
+	// public class DummyBrowser implements Browser
+	// {
+	// public Component getComponent()
+	// {
+	// return new JLabel( "Browser Component Disabled: [" + disabledReason + "]"
+	// );
+	// }
+	//
+	// }
+
+	private Browser browser;
+	// private static BrowserFactory browserFactory;
 	private JPanel panel = new JPanel( new BorderLayout() );
 	private JPanel statusBar;
 	private JLabel statusLabel;
@@ -413,15 +113,16 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 		{
 			if( !isJXBrowserDisabled() )
 			{
-				if( Xpcom.isMacOSX() )
-				{
-					final String currentCP = System.getProperty( "java.class.path" );
-					final String appleJavaExtentions = ":/System/Library/Java";
-					System.setProperty( "java.class.path", currentCP + appleJavaExtentions );
-				}
+				// if( Xpcom.isMacOSX() )
+				// {
+				// final String currentCP = System.getProperty( "java.class.path" );
+				// final String appleJavaExtentions = ":/System/Library/Java";
+				// System.setProperty( "java.class.path", currentCP +
+				// appleJavaExtentions );
+				// }
 
 				Xpcom.initialize();
-				webBrowserFactory = WebBrowserFactory.getInstance();
+				// browserFactory = WebBrowserFactory.getInstance();
 			}
 
 			initialized = true;
@@ -443,7 +144,7 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 			return true;
 
 		if( !disable.equals( "false" )
-				&& ( !Xpcom.isMacOSX() && "64".equals( System.getProperty( "sun.arch.data.model" ) ) ) )
+				&& ( !PlatformContext.isMacOS() && "64".equals( System.getProperty( "sun.arch.data.model" ) ) ) )
 			return true;
 
 		return false;
@@ -502,7 +203,7 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 
 		public void actionPerformed( ActionEvent e )
 		{
-			if( browser.getHistory().getCurrentPosition() == 0 )
+			if( browser.canGoBack() )
 				Toolkit.getDefaultToolkit().beep();
 			else
 				browser.goBack();
@@ -519,7 +220,10 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 
 		public void actionPerformed( ActionEvent e )
 		{
-			browser.goForward();
+			if( browser.canGoForward() )
+				Toolkit.getDefaultToolkit().beep();
+			else
+				browser.goForward();
 		}
 	}
 
@@ -528,40 +232,53 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 		if( browser != null )
 			return false;
 
-		browser = webBrowserFactory == null ? new DummyBrowser() : webBrowserFactory.createBrowser();
+		System.out.println( "default browser:" + BrowserFactory.getDefaultBrowserType() );
+		if( PlatformContext.isWindows() )
+		{
+			browser = BrowserFactory.createBrowser( BrowserType.Mozilla );
+		}
+		else
+		{
+			browser = BrowserFactory.createBrowser();
+		}
 		panel.add( browser.getComponent(), BorderLayout.CENTER );
-		browser.addContentHandler( new ContentHandler()
+		// TODO handle the commented
+		// browser.addContentHandler( new ContentHandler()
+		// {
+		//
+		// public boolean canHandleContent( String arg0 )
+		// {
+		// return true;
+		// }
+		//
+		// public void handleContent( URL arg0 )
+		// {
+		// SoapUI.log.info( "Ignoring content for [" + arg0 + "]" );
+		// }
+		//
+		// public boolean isPreferred( String arg0 )
+		// {
+		// return true;
+		// }
+		// } );
+
+		// if( browserFactory != null )
+		if( PlatformContext.isMacOS() )
 		{
-
-			public boolean canHandleContent( String arg0 )
-			{
-				return true;
-			}
-
-			public void handleContent( URL arg0 )
-			{
-				SoapUI.log.info( "Ignoring content for [" + arg0 + "]" );
-			}
-
-			public boolean isPreferred( String arg0 )
-			{
-				return true;
-			}
-		} );
-
-		if( webBrowserFactory != null )
-		{
-			nsIWebBrowser nsWebBrowser = ( ( MozillaWebBrowser )browser ).getWebBrowser();
-			nsWebBrowser.addWebBrowserListener( this, nsIWebProgressListener.NS_IWEBPROGRESSLISTENER_IID );
-			browser.addStatusChangeListener( this );
-
-			browser.setWindowCreator( new WindowCreator()
-			{
-				public WebBrowserWindow createChildWindow( Component parentComponent, long flags )
-				{
-					return browserWindowAdapter;
-				}
-			} );
+			// nsIWebBrowser nsWebBrowser = ( ( MozillaWebBrowser )browser
+			// ).getWebBrowser();
+			// nsWebBrowser.addWebBrowserListener( this,
+			// nsIWebProgressListener.NS_IWEBPROGRESSLISTENER_IID );
+			// browser.addStatusChangeListener( this );
+			//
+			// browser.setWindowCreator( new WindowCreator()
+			// {
+			// public WebBrowserWindow createChildWindow( Component
+			// parentComponent, long flags )
+			// {
+			// return browserWindowAdapter;
+			// }
+			// } );
 
 			setUpProxy();
 		}
@@ -595,14 +312,15 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 	{
 		browser.stop();
 
-		if( webBrowserFactory != null )
-		{
-			nsIWebBrowser nsWebBrowser = ( ( MozillaWebBrowser )browser ).getWebBrowser();
-			nsWebBrowser.removeWebBrowserListener( BrowserComponent.this,
-					nsIWebProgressListener.NS_IWEBPROGRESSLISTENER_IID );
-			browser.removeStatusChangeListener( BrowserComponent.this );
-			browser.dispose();
-		}
+		// if( browserFactory != null )
+		// {
+		// nsIWebBrowser nsWebBrowser = ( ( MozillaWebBrowser )browser
+		// ).getWebBrowser();
+		// nsWebBrowser.removeWebBrowserListener( BrowserComponent.this,
+		// nsIWebProgressListener.NS_IWEBPROGRESSLISTENER_IID );
+		// browser.removeStatusChangeListener( BrowserComponent.this );
+		// browser.dispose();
+		// }
 		browser = null;
 	}
 
@@ -619,8 +337,11 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 				initBrowser();
 			}
 
-			browser.activate();
-			browser.setContentWithContext( contentAsString, contentType, contextUri );
+			// TODO check commented
+			// browser.activate();
+			// browser.setContentWithContext( contentAsString, contentType,
+			// contextUri );
+			browser.setContent( contentAsString, contentType );
 		}
 	}
 
@@ -637,10 +358,11 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 				initBrowser();
 			}
 
-			browser.activate();
+			// TODO check commented
+			// browser.activate();
 			browser.setContent( content, contentType );
 		}
-		pcs.firePropertyChange( "content" , null,null);
+		pcs.firePropertyChange( "content", null, null );
 	}
 
 	public boolean navigate( String url, String errorPage )
@@ -649,6 +371,7 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 			setErrorPage( errorPage );
 
 		this.url = url;
+
 		Xpcom.invokeLater( new Navigator() );
 		return true;
 	}
@@ -668,8 +391,8 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 				{
 					initBrowser();
 				}
-
-				browser.activate();
+				// TODO check commented
+				// browser.activate();
 				browser.navigate( getUrl() );
 
 				if( showingErrorPage )
@@ -922,14 +645,16 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 
 		public void run()
 		{
-			if( StringUtils.hasContent( contextUri ) )
-			{
-				browser.setContentWithContext( contentAsString, contentType, contextUri );
-			}
-			else
-			{
-				browser.setContent( contentAsString, contentType );
-			}
+			// TODO handle the commented
+			// if( StringUtils.hasContent( contextUri ) )
+			// {
+			// browser.setContentWithContext( contentAsString, contentType,
+			// contextUri );
+			// }
+			// else
+			// {
+			browser.setContent( contentAsString, contentType );
+			// }
 		}
 	}
 
@@ -988,15 +713,17 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 			}
 		}
 	}
-	
-	private PropertyChangeSupport pcs = new PropertyChangeSupport(this); 
-	
-	public void addPropertyChangeListener(PropertyChangeListener pcl){
+
+	private PropertyChangeSupport pcs = new PropertyChangeSupport( this );
+
+	public void addPropertyChangeListener( PropertyChangeListener pcl )
+	{
 		pcs.addPropertyChangeListener( pcl );
 	}
-	
-	public void rempvePropertyChangeListener(PropertyChangeListener pcl){
+
+	public void rempvePropertyChangeListener( PropertyChangeListener pcl )
+	{
 		pcs.removePropertyChangeListener( pcl );
 	}
-	
+
 }

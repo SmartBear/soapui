@@ -25,6 +25,7 @@ import com.eviware.soapui.ui.desktop.DesktopRegistry;
 import com.eviware.soapui.ui.desktop.standalone.StandaloneDesktopFactory;
 import com.jgoodies.looks.plastic.PlasticXPLookAndFeel;
 import com.jgoodies.looks.plastic.theme.SkyBluer;
+import com.jniwrapper.PlatformContext;
 import com.teamdev.xpcom.Xpcom;
 
 public class StandaloneSoapUICore extends SwingSoapUICore
@@ -66,7 +67,9 @@ public class StandaloneSoapUICore extends SwingSoapUICore
 	{
 		try
 		{
-			if( !BrowserComponent.isJXBrowserDisabled() && Xpcom.isLinux() && !Xpcom.isSilentMode() )
+			//TODO check for this silent mode detection?
+//			if( !BrowserComponent.isJXBrowserDisabled() && PlatformContext.isMacOS() && !Xpcom.isSilentMode() )
+			if( !BrowserComponent.isJXBrowserDisabled() && PlatformContext.isMacOS() )
 			{
 				javax.swing.UIManager.setLookAndFeel( UIManager.getCrossPlatformLookAndFeelClassName() );
 			}

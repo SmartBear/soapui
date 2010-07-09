@@ -175,14 +175,14 @@
 			copy licence files for jxbrowser into meta-inf folder of
 			soapui-xx.jar
 		-->
-		<echo>Adding license files for jxbrowser</echo>
+		<!-- echo>Adding license files for jxbrowser</echo>
 		<ant:jar destfile="${maven.build.dir}/jnlp_temp/soapui-${pom.currentVersion}.jar"
 			update="true">
 			<ant:metainf dir="${jxbrowser.dir}/license/runtime">
 				<ant:include name="jxbrowser.lic" />
 				<ant:include name="jniwrap.lic" />
 			</ant:metainf>
-		</ant:jar>
+		</ant:jar-->
 
 		<echo>Signing soapui-${pom.currentVersion}.jar file </echo>
 		<ant:signjar jar="${maven.build.dir}/jnlp_temp/soapui-${pom.currentVersion}.jar"
@@ -194,14 +194,15 @@
 		<ant:copy file="${maven.build.dir}/jnlp_temp/soapui-${pom.currentVersion}.jar"
 			todir="${maven.jnlp.dir}" overwrite="true" />
 
-	   	<echo>Adding dll files to jxbrowser jar</echo>
+	    <!-- in jxbrowser 2.3 these are included in jniwrap-native.jar -->
+	   	<!-- echo>Adding dll files to jxbrowser jar</echo>
       	<ant:jar destfile="${maven.build.dir}/jnlp_temp/${jxbrowser.jar}" update="true">
 			<ant:fileset dir="${jxbrowser.dir}/bin">
 				<ant:include name="jniwrap.dll" />
 				<ant:include name="libjniwrap.jnilib" />
 			    <ant:include name="libjniwrap.so" />
 		</ant:fileset>
-		</ant:jar>
+		</ant:jar-->
 
 		<echo>Signing ${jxbrowser.jar} file </echo>
 		<ant:signjar jar="${maven.build.dir}/jnlp_temp/${jxbrowser.jar}"
@@ -314,7 +315,7 @@
 
         <ant:copy todir="${maven.build.dir}/dist/lib">
             <ant:fileset dir="${maven.build.dir}/docs/jnlp/${pom.currentVersion}" excludes="**/soapui-${pom.currentVersion}.jar">
-            <ant:exclude name="xulrunner*.jar"/>
+            <!-- ant:exclude name="xulrunner*.jar"/-->
             <ant:exclude name="wsi-test-tools*.jar"/>
             <ant:exclude name="*.jnlp"/>
             </ant:fileset>
@@ -335,7 +336,7 @@
         <ant:copy todir="${maven.build.dir}/dist/bin" file="${maven.build.dir}/docs/jnlp/${pom.currentVersion}/soapui-${pom.currentVersion}.jar"/>
 
         <!-- add jxbrowser -->
-        <ant:mkdir dir="${maven.build.dir}\dist\xulrunner-linux"/>
+        <!-- ant:mkdir dir="${maven.build.dir}\dist\xulrunner-linux"/>
         <ant:copy todir="${maven.build.dir}\dist\xulrunner-linux" overwrite="true">
             <ant:fileset dir="${jxbrowser.dir}\xulrunner-linux"/>
         </ant:copy>
@@ -356,7 +357,7 @@
       	<ant:copy file="${jxbrowser.dir}\license\runtime\jniwrap.lic" 
         	todir="${maven.build.dir}/dist/bin" overwrite="true"/>
       	<ant:copy file="${jxbrowser.dir}\license\runtime\jxbrowser.lic" 
-        	todir="${maven.build.dir}/dist/bin" overwrite="true"/>
+        	todir="${maven.build.dir}/dist/bin" overwrite="true"/-->
 
         <!-- create windows binary -->
         <ant:zip destfile="${maven.build.dir}/distributions/soapui-${pom.currentVersion}-windows-bin.zip">
@@ -646,7 +647,7 @@
             <ant:zipfileset dir="${maven.build.dir}/standalone/jre" prefix="soapui-${pom.currentVersion}/jre"/>
             <ant:zipfileset dir="${maven.build.dir}/standalone/lib" prefix="soapui-${pom.currentVersion}/lib"/>
             <ant:zipfileset dir="${maven.build.dir}/standalone/wsi-test-tools" prefix="soapui-${pom.currentVersion}/wsi-test-tools"/>
-            <ant:zipfileset dir="${maven.build.dir}/standalone/xulrunner-windows" prefix="soapui-${pom.currentVersion}/xulrunner-windows"/>
+            <!-- ant:zipfileset dir="${maven.build.dir}/standalone/xulrunner-windows" prefix="soapui-${pom.currentVersion}/xulrunner-windows"/-->
         </ant:zip>
     </goal>
 

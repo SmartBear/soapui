@@ -14,6 +14,8 @@ package com.eviware.soapui.impl.rest.panels.request.views.html;
 
 import com.eviware.soapui.impl.support.http.HttpRequestInterface;
 import com.eviware.soapui.impl.support.panels.AbstractHttpXmlRequestDesktopPanel.HttpResponseMessageEditor;
+import com.eviware.soapui.impl.wsdl.support.MessageExchangeModelItem;
+import com.eviware.soapui.impl.wsdl.support.MessageExchangeResponseMessageEditor;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.support.editor.Editor;
 import com.eviware.soapui.support.editor.EditorView;
@@ -30,11 +32,10 @@ public class HttpHtmlResponseViewFactory implements ResponseEditorViewFactory
 		{
 			return new HttpHtmlResponseView( ( HttpResponseMessageEditor )editor, ( HttpRequestInterface<?> )modelItem );
 		}
-//		this commented out part is for http monitor inspector
-//		if( modelItem instanceof MessageExchangeModelItem )
-//		{
-//			return new HttpHtmlMessageExchangeResponseView( ( MessageExchangeResponseMessageEditor) editor, ( MessageExchangeModelItem )modelItem );
-//		}
+		if( modelItem instanceof MessageExchangeModelItem )
+		{
+			return new HttpHtmlMessageExchangeResponseView( ( MessageExchangeResponseMessageEditor) editor, ( MessageExchangeModelItem )modelItem );
+		}
 		return null;
 	}
 
