@@ -39,7 +39,7 @@ public class SinglePartHttpResponse extends BaseHttpResponse
 	public SinglePartHttpResponse( AbstractHttpRequestInterface<?> httpRequest, ExtendedHttpMethod httpMethod,
 			String requestContent, PropertyExpansionContext context )
 	{
-		super( httpMethod, httpRequest );
+		super( httpMethod, httpRequest, context );
 		
 		if( getRequestContent() == null || !getRequestContent().equals( requestContent ))
 			this.requestContent = requestContent;

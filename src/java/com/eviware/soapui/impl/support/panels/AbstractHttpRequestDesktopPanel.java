@@ -47,6 +47,7 @@ import com.eviware.soapui.impl.support.components.RequestMessageXmlEditor;
 import com.eviware.soapui.impl.support.components.ResponseMessageXmlEditor;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.iface.Submit;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.iface.SubmitListener;
@@ -596,9 +597,17 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 			}
 			else
 			{
-				message = "response time: " + response.getTimeTaken() + "ms (" + response.getContentLength() + " bytes)";
+				long attchmentsSize = 0;
+				if( response.getAttachments().length > 0 )
+				{
+					for( Attachment att : response.getAttachments() )
+					{
+						attchmentsSize += att.getSize();
+					}
+				}
+				message = "response time: " + response.getTimeTaken() + "ms (" + (response.getContentLength()+attchmentsSize )+ " bytes)";
 				infoMessage = "Got response for [" + requestName + "] in " + response.getTimeTaken() + "ms ("
-						+ response.getContentLength() + " bytes)";
+						+ (response.getContentLength()+attchmentsSize ) + " bytes)";
 
 				if (!splitButton.isEnabled())
 					requestTabs.setSelectedIndex(1);

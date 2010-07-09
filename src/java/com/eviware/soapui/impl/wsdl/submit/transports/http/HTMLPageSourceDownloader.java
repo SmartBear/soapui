@@ -37,7 +37,9 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 public class HTMLPageSourceDownloader
 {
 	WebClient client = new WebClient();
-	List<String>  notFound404List = new ArrayList<String>();
+	List<String> missingResourcesList = new ArrayList<String>();
+	public static final String MISSING_RESOURCES_LIST = "MissingResourcesList";
+
 	public static final HashMap<String, String> acceptTypes = new HashMap<String, String>()
 	{
 		{
@@ -51,7 +53,7 @@ public class HTMLPageSourceDownloader
 	List<Attachment> attachmentList = new ArrayList<Attachment>();
 
 	protected List<Attachment> downloadCssAndImages( String endpoint, HttpRequest request )
-			throws FailingHttpStatusCodeException, MalformedURLException, IOException
+			throws  MalformedURLException, IOException
 	{
 		HtmlPage htmlPage = client.getPage( endpoint );
 		String xPathExpression = "//*[name() = 'img' or name() = 'link' and @type = 'text/css']";
@@ -69,8 +71,16 @@ public class HTMLPageSourceDownloader
 				if( path == null || path.equals( "" ) )
 					continue;
 				URL url = htmlPage.getFullyQualifiedUrl( path );
-
-				bytes = downloadResource( htmlPage, htmlElement, url );
+				try
+				{
+					bytes = downloadResource( htmlPage, htmlElement, url );
+				}
+				catch( FailingHttpStatusCodeException fhsce )
+				{
+					SoapUI.log.warn( fhsce.getMessage() );
+					attachmentList.add( createMissingAttachment( request, url, fhsce ) );
+					continue;
+				}
 
 				attachmentList.add( createAttachment( bytes, url, request ) );
 			}
@@ -83,47 +93,48 @@ public class HTMLPageSourceDownloader
 		return attachmentList;
 	}
 
+	private RequestFileAttachment createMissingAttachment( HttpRequest request, URL url,
+			FailingHttpStatusCodeException fhsce ) throws IOException
+	{
+		File temp = new File( fhsce.getStatusCode() + "_" + fhsce.getStatusMessage() + "_" + url.toString() );
+		RequestFileAttachment missingFile = new RequestFileAttachment( temp, false, ( AbstractHttpRequest<?> )request );
+		missingResourcesList.add(  fhsce.getStatusCode() + " " + fhsce.getStatusMessage() + " " + url.toString());
+		return missingFile;
+	}
+
 	public Attachment createAttachment( byte[] bytes, URL url, Request request ) throws IOException
 	{
 		String fileName = url.getPath()
 				.substring( url.getPath().lastIndexOf( "/" ) + 1, url.getPath().lastIndexOf( "." ) );
 		String extension = url.getPath().substring( url.getPath().lastIndexOf( "." ) );
-		if( bytes.length > 0 )
+
+		// handling -> java.lang.IllegalArgumentException: Prefix string too short
+		if( fileName.length() < 3 )
 		{
-			File temp = File.createTempFile( fileName, extension );
-			OutputStream out = new FileOutputStream( temp );
-			out.write( bytes );
-			out.close();
-			return new RequestFileAttachment( temp, false, ( AbstractHttpRequest<?> )request );
-		}else{
-			File temp = new File( "404_Not_Found___"+url.toString() );
-			RequestFileAttachment missingFile =  new RequestFileAttachment( temp, false, ( AbstractHttpRequest<?> )request );
-			notFound404List.add( url.toString() );
-			return missingFile;
+			fileName += "___";
 		}
 
+		File temp = File.createTempFile( fileName, extension );
+		OutputStream out = new FileOutputStream( temp );
+		out.write( bytes );
+		out.close();
+		return new RequestFileAttachment( temp, false, ( AbstractHttpRequest<?> )request );
 	}
 
 	private byte[] downloadResource( HtmlPage page, HtmlElement htmlElement, URL url ) throws IOException
 	{
 		WebRequestSettings wrs = null;
-		try
-		{
-			wrs = new WebRequestSettings( url );
-			wrs.setAdditionalHeader( "Referer", page.getWebResponse().getRequestSettings().getUrl().toString() );
-			client.addRequestHeader( "Accept", acceptTypes.get( htmlElement.getTagName().toLowerCase() ) );
-			return client.getPage( wrs ).getWebResponse().getContentAsBytes();
-		}
-		catch( FailingHttpStatusCodeException fhsce )
-		{
-			SoapUI.log.warn(  fhsce.getMessage() );
-			return new byte[0];
-		}
+
+		wrs = new WebRequestSettings( url );
+		wrs.setAdditionalHeader( "Referer", page.getWebResponse().getRequestSettings().getUrl().toString() );
+		client.addRequestHeader( "Accept", acceptTypes.get( htmlElement.getTagName().toLowerCase() ) );
+		return client.getPage( wrs ).getWebResponse().getContentAsBytes();
+
 	}
 
-	public List<String> getNotFound404List()
+	public List<String> getMissingResourcesList()
 	{
-		return notFound404List;
+		return missingResourcesList;
 	}
 
 }

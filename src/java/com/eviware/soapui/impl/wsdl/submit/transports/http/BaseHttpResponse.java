@@ -30,6 +30,7 @@ import com.eviware.soapui.impl.support.http.HttpRequest;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.teststeps.TestRequest;
 import com.eviware.soapui.model.iface.Attachment;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.settings.HttpSettings;
@@ -37,6 +38,7 @@ import com.eviware.soapui.support.types.StringToStringMap;
 
 public abstract class BaseHttpResponse implements HttpResponse
 {
+	
 	private StringToStringMap requestHeaders;
 	private StringToStringMap responseHeaders;
 
@@ -56,8 +58,9 @@ public abstract class BaseHttpResponse implements HttpResponse
 	private String xmlContent;
 	private boolean downloadIncludedResources;
 	private Attachment[] attachments = new Attachment[0];
+	protected HTMLPageSourceDownloader downloader;
 
-	public BaseHttpResponse( ExtendedHttpMethod httpMethod, AbstractHttpRequestInterface<?> httpRequest )
+	public BaseHttpResponse( ExtendedHttpMethod httpMethod, AbstractHttpRequestInterface<?> httpRequest, PropertyExpansionContext context )
 	{
 		this.httpRequest = new WeakReference<AbstractHttpRequestInterface<?>>( httpRequest );
 		this.timeTaken = httpMethod.getTimeTaken();
@@ -128,13 +131,14 @@ public abstract class BaseHttpResponse implements HttpResponse
 				addIncludedContentsAsAttachments();
 				long after = ( new Date() ).getTime();
 				timeTaken += ( after - before );
+				context.setProperty( HTMLPageSourceDownloader.MISSING_RESOURCES_LIST, downloader.getMissingResourcesList() );
 			}
 		}
 	}
 
 	private void addIncludedContentsAsAttachments()
 	{
-		HTMLPageSourceDownloader downloader = new HTMLPageSourceDownloader();
+		downloader = new HTMLPageSourceDownloader();
 		try
 		{
 			List<Attachment> attachmentList = downloader.downloadCssAndImages( url.toString(), ( HttpRequest )httpRequest
