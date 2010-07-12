@@ -43,19 +43,14 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.settings.ProxySettings;
 import com.eviware.soapui.support.StringUtils;
-import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.xml.XmlUtils;
 import com.jniwrapper.PlatformContext;
 import com.teamdev.jxbrowser.Browser;
 import com.teamdev.jxbrowser.BrowserFactory;
 import com.teamdev.jxbrowser.BrowserType;
-import com.teamdev.jxbrowser1.WebBrowser;
-import com.teamdev.jxbrowser1.WebBrowserWindow;
-import com.teamdev.jxbrowser1.event.LocationEvent;
-import com.teamdev.jxbrowser1.event.RequestAdapter;
-import com.teamdev.jxbrowser1.event.StatusChangeEvent;
-import com.teamdev.jxbrowser1.event.StatusChangeListener;
+import com.teamdev.jxbrowser.events.StatusChangedEvent;
+import com.teamdev.jxbrowser.events.StatusListener;
 import com.teamdev.xpcom.PoxyAuthenticationHandler;
 import com.teamdev.xpcom.ProxyConfiguration;
 import com.teamdev.xpcom.ProxyServerAuthInfo;
@@ -63,7 +58,7 @@ import com.teamdev.xpcom.ProxyServerType;
 import com.teamdev.xpcom.Services;
 import com.teamdev.xpcom.Xpcom;
 
-public class BrowserComponent implements nsIWebProgressListener, nsIWeakReference, StatusChangeListener
+public class BrowserComponent implements nsIWebProgressListener, nsIWeakReference, StatusListener
 {
 	private static String disabledReason;
 
@@ -83,7 +78,8 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 	private JPanel statusBar;
 	private JLabel statusLabel;
 	private String errorPage;
-	private WebBrowserWindow browserWindowAdapter = new BrowserWindowAdapter();
+	// private WebBrowserWindow browserWindowAdapter = new
+	// BrowserWindowAdapter();
 	private final boolean addToolbar;
 	private boolean showingErrorPage;
 	public String url;
@@ -525,51 +521,51 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 		}
 	}
 
-	private class BrowserWindowAdapter implements WebBrowserWindow
-	{
-		private boolean resizable;
+	// private class BrowserWindowAdapter implements WebBrowserWindow
+	// {
+	// private boolean resizable;
+	//
+	// public void close()
+	// {
+	// }
+	//
+	// public boolean isClosed()
+	// {
+	// return true;
+	// }
+	//
+	// public void setModal( boolean arg0 )
+	// {
+	// }
+	//
+	// public void setSize( int arg0, int arg1 )
+	// {
+	// }
+	//
+	// public void setVisible( boolean arg0 )
+	// {
+	// }
+	//
+	// public void setWebBrowser( WebBrowser arg0 )
+	// {
+	// if( arg0 != null )
+	// {
+	// arg0.addRequestListener( new PopupRequestAdapter() );
+	// }
+	// }
 
-		public void close()
-		{
-		}
+	// public boolean isResizable()
+	// {
+	// return resizable;
+	// }
 
-		public boolean isClosed()
-		{
-			return true;
-		}
+	// public void setResizable( boolean resizable )
+	// {
+	// this.resizable = resizable;
+	// }
+	// }
 
-		public void setModal( boolean arg0 )
-		{
-		}
-
-		public void setSize( int arg0, int arg1 )
-		{
-		}
-
-		public void setVisible( boolean arg0 )
-		{
-		}
-
-		public void setWebBrowser( WebBrowser arg0 )
-		{
-			if( arg0 != null )
-			{
-				arg0.addRequestListener( new PopupRequestAdapter() );
-			}
-		}
-
-		public boolean isResizable()
-		{
-			return resizable;
-		}
-
-		public void setResizable( boolean resizable )
-		{
-			this.resizable = resizable;
-		}
-	}
-
-	public void statusChanged( final StatusChangeEvent event )
+	public void statusChanged( final StatusChangedEvent event )
 	{
 		if( statusLabel != null )
 		{
@@ -577,7 +573,7 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 			{
 				public void run()
 				{
-					statusLabel.setText( event.getStatus() );
+					statusLabel.setText( event.getStatusText() );
 				}
 			} );
 		}
@@ -588,47 +584,48 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 		return browser != null;
 	}
 
-	private static class PopupRequestAdapter extends RequestAdapter
-	{
-		private LocationEvent event;
-
-		@Override
-		public void locationChanged( LocationEvent arg0 )
-		{
-			if( !arg0.getLocation().equals( "about:blank" ) )
-			{
-				event = arg0;
-				SwingUtilities.invokeLater( new Runnable()
-				{
-
-					public void run()
-					{
-						boolean opened = false;
-						if( UISupport.confirm( "Open url [" + event.getLocation() + "] in external browser?", "Open URL" ) )
-						{
-							opened = true;
-							SwingUtilities.invokeLater( new Runnable()
-							{
-
-								public void run()
-								{
-									Tools.openURL( event.getLocation() );
-									event = null;
-								}
-							} );
-						}
-
-						event.getWebBrowser().stop();
-						event.getWebBrowser().deactivate();
-						event.getWebBrowser().dispose();
-						event.getWebBrowser().removeRequestListener( PopupRequestAdapter.this );
-						if( !opened )
-							event = null;
-					}
-				} );
-			}
-		}
-	}
+	// private static class PopupRequestAdapter extends RequestAdapter
+	// {
+	// private LocationEvent event;
+	//
+	// @Override
+	// public void locationChanged( LocationEvent arg0 )
+	// {
+	// if( !arg0.getLocation().equals( "about:blank" ) )
+	// {
+	// event = arg0;
+	// SwingUtilities.invokeLater( new Runnable()
+	// {
+	//
+	// public void run()
+	// {
+	// boolean opened = false;
+	// if( UISupport.confirm( "Open url [" + event.getLocation() +
+	// "] in external browser?", "Open URL" ) )
+	// {
+	// opened = true;
+	// SwingUtilities.invokeLater( new Runnable()
+	// {
+	//
+	// public void run()
+	// {
+	// Tools.openURL( event.getLocation() );
+	// event = null;
+	// }
+	// } );
+	// }
+	//
+	// event.getWebBrowser().stop();
+	// event.getWebBrowser().deactivate();
+	// event.getWebBrowser().dispose();
+	// event.getWebBrowser().removeRequestListener( PopupRequestAdapter.this );
+	// if( !opened )
+	// event = null;
+	// }
+	// } );
+	// }
+	// }
+	// }
 
 	public class ContentSetter implements Runnable
 	{
