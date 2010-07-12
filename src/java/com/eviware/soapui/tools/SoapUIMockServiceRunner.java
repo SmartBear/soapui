@@ -21,6 +21,7 @@ import org.apache.commons.cli.CommandLine;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
+import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunner;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockService;
 import com.eviware.soapui.model.mock.MockResult;
 import com.eviware.soapui.model.mock.MockRunner;
@@ -62,7 +63,7 @@ public class SoapUIMockServiceRunner extends AbstractSoapUIRunner
 
 	public static void main( String[] args ) throws Exception
 	{
-		System.exit( new SoapUIMockServiceRunner().runFromCommandLine( args ));
+		System.exit( new SoapUIMockServiceRunner().runFromCommandLine( args ) );
 	}
 
 	public void setMockService( String mockService )
@@ -197,7 +198,9 @@ public class SoapUIMockServiceRunner extends AbstractSoapUIRunner
 				mockService.setPort( Integer.parseInt( port ) );
 
 			mockService.addMockRunListener( new LogListener() );
-			runners.add( mockService.start() );
+			WsdlMockRunner runner = mockService.start();
+			runner.setLogEnabled( false );
+			runners.add( runner );
 		}
 		catch( Exception e )
 		{
@@ -319,9 +322,11 @@ public class SoapUIMockServiceRunner extends AbstractSoapUIRunner
 	{
 		return project;
 	}
-	
-	public void stopAll() {
-		for ( MockRunner runner : runners ) {
+
+	public void stopAll()
+	{
+		for( MockRunner runner : runners )
+		{
 			runner.stop();
 		}
 	}
