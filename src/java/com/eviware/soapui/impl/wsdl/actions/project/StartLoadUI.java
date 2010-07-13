@@ -73,8 +73,8 @@ public class StartLoadUI extends AbstractSoapUIAction<WsdlProject>
 				UISupport.showErrorMessage( "No LoadUI" + extension + " file  on this path!" );
 				return;
 			}
-			String[] commandsWin = new String[] { "cmd.exe", "/c", "loadUItest" + extension };
-			String[] commandsLinux = new String[] { "sh", "loadUItest" + extension };
+			String[] commandsWin = new String[] { "cmd.exe", "/c", "loadUI" + extension };
+			String[] commandsLinux = new String[] { "sh", "loadUI" + extension };
 
 			ProcessBuilder pb = new ProcessBuilder( UISupport.isWindows() ? commandsWin : commandsLinux );
 			pb.directory( new File( SoapUI.getSettings().getString( LoadUISettings.LOADUI_PATH, "" ) ) );
