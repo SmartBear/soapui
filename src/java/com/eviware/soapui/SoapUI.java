@@ -1603,7 +1603,7 @@ public class SoapUI
 	public static void initGCTimer()
 	{
 		Settings settings = SoapUI.getSettings();
-		long interval = settings.getLong( UISettings.GC_INTERVAL, 0 );
+		long interval = settings.getLong( UISettings.GC_INTERVAL, 60 );
 
 		if( gcTimerTask != null )
 		{
