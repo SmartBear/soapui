@@ -19,7 +19,7 @@ import com.eviware.soapui.support.types.StringToStringMap;
 
 public class LoadUIPrefs implements Prefs
 {
-	public static final String LOADUI_PATH = "loadUI.bat folder";
+	public static final String LOADUI_PATH = "loadUI.bat(.sh) folder";
 	// public static final String LOADUI_CAJO_SERVER = "LoadUI Cajo server name";
 	public static final String LOADUI_CAJO_PORT = "loadUI integration port";
 	// public static final String LOADUI_CAJO_ITEM_NAME =
