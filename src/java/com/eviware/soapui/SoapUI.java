@@ -146,7 +146,6 @@ import com.eviware.soapui.ui.support.DesktopListenerAdapter;
 import com.eviware.x.impl.swing.SwingDialogs;
 import com.jgoodies.looks.HeaderStyle;
 import com.jgoodies.looks.Options;
-import com.teamdev.xpcom.Xpcom;
 
 /**
  * Main SoapUI entry point.
@@ -187,6 +186,7 @@ public class SoapUI
 	private static Log4JMonitor logMonitor;
 	private static Logger errorLog = Logger.getLogger( "soapui.errorlog" );
 	private static boolean isStandalone;
+	private static boolean isCommandLine;
 	private static TestMonitor testMonitor;
 
 	private JMenu desktopMenu;
@@ -568,7 +568,9 @@ public class SoapUI
 	{
 		if( logMonitor == null )
 		{
-			logCache.add( msg );
+			if( !isCommandLine && logCache.size() < 100 )
+				logCache.add( msg );
+
 			return;
 		}
 
@@ -698,9 +700,9 @@ public class SoapUI
 		BrowserComponent.initialize();
 
 		SoapUIRunner soapuiRunner = new SoapUIRunner();
-		//TODO check on Xpcom.isJVMValid
-//		if( !BrowserComponent.isJXBrowserDisabled() && Xpcom.isJVMValid() )
-		if( !BrowserComponent.isJXBrowserDisabled())
+		// TODO check on Xpcom.isJVMValid
+		// if( !BrowserComponent.isJXBrowserDisabled() && Xpcom.isJVMValid() )
+		if( !BrowserComponent.isJXBrowserDisabled() )
 		{
 			SwingUtilities.invokeLater( soapuiRunner );
 		}
@@ -858,12 +860,23 @@ public class SoapUI
 
 	public static void setSoapUICore( SoapUICore soapUICore )
 	{
+		setSoapUICore( soapUICore, false );
+	}
+
+	public static void setSoapUICore( SoapUICore soapUICore, boolean isCommandLine )
+	{
 		SoapUI.soapUICore = soapUICore;
+		SoapUI.isCommandLine = isCommandLine;
 	}
 
 	public static boolean isStandalone()
 	{
 		return isStandalone;
+	}
+
+	public static boolean isCommandLine()
+	{
+		return isCommandLine;
 	}
 
 	public static JMenuBar getMenuBar()
@@ -1141,11 +1154,12 @@ public class SoapUI
 			}
 		}
 	}
+
 	private class LaunchLoadUIButtonAction extends AbstractAction
 	{
 		public LaunchLoadUIButtonAction()
 		{
-			putValue(Action.SMALL_ICON, UISupport.createImageIcon("/launchLoadUI.png"));
+			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/launchLoadUI.png" ) );
 			putValue( Action.SHORT_DESCRIPTION, "Launch loadUI" );
 		}
 

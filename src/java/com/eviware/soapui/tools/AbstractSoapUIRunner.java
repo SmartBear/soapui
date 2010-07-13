@@ -132,7 +132,7 @@ public abstract class AbstractSoapUIRunner
 
 	public final boolean run() throws Exception
 	{
-		SoapUI.setSoapUICore( createSoapUICore() );
+		SoapUI.setSoapUICore( createSoapUICore(), true );
 		SoapUI.initGCTimer();
 
 		return runRunner();
