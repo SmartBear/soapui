@@ -14,6 +14,7 @@ package com.eviware.soapui.impl.wsdl.actions.project;
 import java.io.File;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.actions.SoapUIPreferencesAction;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.integration.impl.CajoClient;
 import com.eviware.soapui.settings.LoadUISettings;
@@ -22,6 +23,9 @@ import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 
 public class StartLoadUI extends AbstractSoapUIAction<WsdlProject>
 {
+	private static final String SH = ".sh";
+	private static final String BAT = ".bat";
+	private static final String LOADUI = "loadUI";
 	public static final String SOAPUI_ACTION_ID = "StartLoadUI";
 	public static final String LOADUI_LAUNCH_TITLE = "Launch loadUI";
 	public static final String LOADUI_LAUNCH_QUESTION = "For this action you have to launch loadUI. Launch it now?";
@@ -33,15 +37,15 @@ public class StartLoadUI extends AbstractSoapUIAction<WsdlProject>
 
 	public void perform( WsdlProject project, Object param )
 	{
-		String loadUIBatPath = SoapUI.getSettings().getString( LoadUISettings.LOADUI_PATH, "" ) + File.separator
-				+ "loadUI.bat";
+		String loadUIBatPath = SoapUI.getSettings().getString( LoadUISettings.LOADUI_PATH, "" ) + File.separator + LOADUI
+				+ ( UISupport.isWindows() ? BAT : SH );
 		startLoadUI( loadUIBatPath );
 	}
 
 	public static void launchLoadUI()
 	{
-		String loadUIBatPath = SoapUI.getSettings().getString( LoadUISettings.LOADUI_PATH, "" ) + File.separator
-				+ "loadUI.bat";
+		String loadUIBatPath = SoapUI.getSettings().getString( LoadUISettings.LOADUI_PATH, "" ) + File.separator + LOADUI
+				+ ( UISupport.isWindows() ? BAT : SH );
 		startLoadUI( loadUIBatPath );
 	}
 
@@ -60,25 +64,27 @@ public class StartLoadUI extends AbstractSoapUIAction<WsdlProject>
 			}
 		}
 
-		String extension = UISupport.isWindows() ? ".bat" : ".sh";
-		if( extension.equals( ".sh" ) )
-		{
-			loadUIbatPath = loadUIbatPath.replace( ".bat", ".sh" );
-		}
+		String extension = ( UISupport.isWindows() ? BAT : SH );
 		try
 		{
-			File file = new File( loadUIbatPath );
-			if( !file.exists() )
+			while( !( new File( loadUIbatPath ) ).exists() )
 			{
-				UISupport.showErrorMessage( "No LoadUI" + extension + " file  on this path!" );
-				return;
+				UISupport.showErrorMessage( "No path added to loadUI" + extension );
+				if( UISupport.getMainFrame() != null )
+				{
+					if( SoapUIPreferencesAction.getInstance().show( SoapUIPreferencesAction.LOADUI_SETTINGS ) )
+					{
+						loadUIbatPath = SoapUI.getSettings().getString( LoadUISettings.LOADUI_PATH, "" ) + File.separator
+								+ LOADUI + ( UISupport.isWindows() ? BAT : SH );
+					}
+				}
 			}
-			String[] commandsWin = new String[] { "cmd.exe", "/c", "loadUI" + extension };
-			String[] commandsLinux = new String[] { "sh", "loadUI" + extension };
+			String[] commandsWin = new String[] { "cmd.exe", "/c", LOADUI + extension };
+			String[] commandsLinux = new String[] { "sh", LOADUI + extension };
 
 			ProcessBuilder pb = new ProcessBuilder( UISupport.isWindows() ? commandsWin : commandsLinux );
 			pb.directory( new File( SoapUI.getSettings().getString( LoadUISettings.LOADUI_PATH, "" ) ) );
-			Process p = pb.start();
+			pb.start();
 		}
 		catch( Exception e )
 		{
