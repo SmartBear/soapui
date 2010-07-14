@@ -38,7 +38,8 @@ import com.eviware.soapui.support.editor.views.AbstractXmlEditorView;
 import com.eviware.soapui.support.editor.xml.XmlEditor;
 
 @SuppressWarnings( "unchecked" )
-public class HttpHtmlMessageExchangeResponseView extends AbstractXmlEditorView<HttpResponseDocument> implements PropertyChangeListener
+public class HttpHtmlMessageExchangeResponseView extends AbstractXmlEditorView<HttpResponseDocument> implements
+		PropertyChangeListener
 {
 	private final MessageExchangeModelItem messageExchangeModelItem;
 	private JPanel contentPanel;
@@ -46,8 +47,7 @@ public class HttpHtmlMessageExchangeResponseView extends AbstractXmlEditorView<H
 	private JLabel statusLabel;
 	private BrowserComponent browser;
 
-	
-	public HttpHtmlMessageExchangeResponseView(   XmlEditor editor , MessageExchangeModelItem messageExchangeModelItem )
+	public HttpHtmlMessageExchangeResponseView( XmlEditor editor, MessageExchangeModelItem messageExchangeModelItem )
 	{
 		super( "HTML", editor, HttpHtmlResponseViewFactory.VIEW_ID );
 		this.messageExchangeModelItem = messageExchangeModelItem;
@@ -98,32 +98,30 @@ public class HttpHtmlMessageExchangeResponseView extends AbstractXmlEditorView<H
 		else
 		{
 			browser = new BrowserComponent( false );
-			
+
 			Component component = browser.getComponent();
 			component.setMinimumSize( new Dimension( 100, 100 ) );
-			contentPanel.add( new JScrollPane(component )   );
+			contentPanel.add( new JScrollPane( component ) );
 
-			
-				setEditorContent( messageExchangeModelItem);
+			setEditorContent( messageExchangeModelItem );
 		}
 		return contentPanel;
 	}
-	
-	
+
 	protected void setEditorContent( JProxyServletWsdlMonitorMessageExchange jproxyServletWsdlMonitorMessageExchange )
 	{
-		
-		if( jproxyServletWsdlMonitorMessageExchange != null  )
+
+		if( jproxyServletWsdlMonitorMessageExchange != null )
 		{
-			String contentType =  jproxyServletWsdlMonitorMessageExchange.getResponseContentType();
+			String contentType = jproxyServletWsdlMonitorMessageExchange.getResponseContentType();
 			if( contentType.contains( "html" ) || contentType.contains( "text" ) )
 			{
 				try
 				{
-					
+
 					String content = jproxyServletWsdlMonitorMessageExchange.getResponseContent();
-					content = new String( content.getBytes( "UTF-8"), "iso-8859-1" );
-					browser.setContent( content, contentType,jproxyServletWsdlMonitorMessageExchange.getEndpoint());
+					content = new String( content.getBytes( "UTF-8" ), "iso-8859-1" );
+					browser.setContent( content, contentType, jproxyServletWsdlMonitorMessageExchange.getEndpoint() );
 				}
 				catch( Exception e )
 				{
@@ -153,21 +151,21 @@ public class HttpHtmlMessageExchangeResponseView extends AbstractXmlEditorView<H
 			browser.setContent( "<missing content>", "text/plain" );
 		}
 	}
-	
+
 	protected void setEditorContent( MessageExchangeModelItem messageExchangeModelItem2 )
 	{
-		
-		if( messageExchangeModelItem2 != null && messageExchangeModelItem2.getMessageExchange()!= null )
+
+		if( messageExchangeModelItem2 != null && messageExchangeModelItem2.getMessageExchange() != null )
 		{
-			String contentType =  messageExchangeModelItem2.getMessageExchange().getResponseHeaders().get( "Content-Type");
+			String contentType = messageExchangeModelItem2.getMessageExchange().getResponseHeaders().get( "Content-Type" );
 			if( contentType.contains( "html" ) || contentType.contains( "text" ) )
 			{
 				try
 				{
-					
+
 					String content = messageExchangeModelItem2.getMessageExchange().getResponseContent();
-					content = new String( content.getBytes( "UTF-8"), "iso-8859-1" );
-					browser.setContent( content, contentType);
+					content = new String( content.getBytes( "UTF-8" ), "iso-8859-1" );
+					browser.setContent( content, contentType );
 				}
 				catch( Exception e )
 				{
@@ -230,12 +228,12 @@ public class HttpHtmlMessageExchangeResponseView extends AbstractXmlEditorView<H
 
 	public void propertyChange( PropertyChangeEvent evt )
 	{
-		System.out.println(evt.getPropertyName());
-		System.out.println(evt.getNewValue());
-		System.out.println(evt.getSource());
+		System.out.println( evt.getPropertyName() );
+		System.out.println( evt.getNewValue() );
+		System.out.println( evt.getSource() );
 		if( evt.getPropertyName().equals( "messageExchange" ) )
 		{
-			if( browser != null  && evt.getNewValue() !=null)
+			if( browser != null && evt.getNewValue() != null )
 				setEditorContent( ( ( JProxyServletWsdlMonitorMessageExchange )evt.getNewValue() ) );
 		}
 	}

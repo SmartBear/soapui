@@ -49,6 +49,9 @@ import com.jniwrapper.PlatformContext;
 import com.teamdev.jxbrowser.Browser;
 import com.teamdev.jxbrowser.BrowserFactory;
 import com.teamdev.jxbrowser.BrowserType;
+import com.teamdev.jxbrowser.events.NavigationEvent;
+import com.teamdev.jxbrowser.events.NavigationFinishedEvent;
+import com.teamdev.jxbrowser.events.NavigationListener;
 import com.teamdev.jxbrowser.events.StatusChangedEvent;
 import com.teamdev.jxbrowser.events.StatusListener;
 import com.teamdev.xpcom.PoxyAuthenticationHandler;
@@ -88,8 +91,19 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 	@SuppressWarnings( "unused" )
 	private boolean disposed;
 	private static boolean disabled;
+	private boolean recordTrafic;
 
-	public BrowserComponent( boolean addToolbar )
+	public boolean isRecordTrafic()
+	{
+		return recordTrafic;
+	}
+
+	public void setRecordTrafic( boolean recordTrafic )
+	{
+		this.recordTrafic = recordTrafic;
+	}
+
+	public BrowserComponent( boolean addToolbar)
 	{
 		this.addToolbar = addToolbar;
 		initialize();
@@ -199,7 +213,7 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 
 		public void actionPerformed( ActionEvent e )
 		{
-			if( browser.canGoBack() )
+			if( !browser.canGoBack() )
 				Toolkit.getDefaultToolkit().beep();
 			else
 				browser.goBack();
@@ -216,7 +230,7 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 
 		public void actionPerformed( ActionEvent e )
 		{
-			if( browser.canGoForward() )
+			if( !browser.canGoForward() )
 				Toolkit.getDefaultToolkit().beep();
 			else
 				browser.goForward();
@@ -237,6 +251,28 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 		{
 			browser = BrowserFactory.createBrowser();
 		}
+		browser.addNavigationListener( new NavigationListener()
+		{
+
+			@Override
+			public void navigationStarted( NavigationEvent arg0 )
+			{
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void navigationFinished( NavigationFinishedEvent arg0 )
+			{
+				// TODO Auto-generated method stub
+				System.out.println( "navigationFinished" );
+				if( recordTrafic )
+				{
+					String currLoc = arg0.getUrl();
+					System.out.println( "currLoc " + currLoc );
+				}
+			}
+		} );
+
 		panel.add( browser.getComponent(), BorderLayout.CENTER );
 		// TODO handle the commented
 		// browser.addContentHandler( new ContentHandler()

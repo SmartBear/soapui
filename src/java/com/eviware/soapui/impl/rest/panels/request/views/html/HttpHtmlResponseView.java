@@ -55,11 +55,11 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 
 		httpRequest.addPropertyChangeListener( this );
 	}
-	
-	public HttpHtmlResponseView(   XmlEditor xmlEditor , MessageExchangeModelItem messageExchangeModelItem )
+
+	public HttpHtmlResponseView( XmlEditor xmlEditor, MessageExchangeModelItem messageExchangeModelItem )
 	{
 		super( "HTML", xmlEditor, HttpHtmlResponseViewFactory.VIEW_ID );
-		this.httpRequest = (HttpRequestInterface<?>)messageExchangeModelItem;
+		this.httpRequest = ( HttpRequestInterface<?> )messageExchangeModelItem;
 
 		messageExchangeModelItem.addPropertyChangeListener( this );
 	}
@@ -108,6 +108,7 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 		{
 			browser = new BrowserComponent( false );
 			Component component = browser.getComponent();
+			browser.addPropertyChangeListener( this );
 			component.setMinimumSize( new Dimension( 100, 100 ) );
 			contentPanel.add( component );
 
@@ -127,9 +128,9 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 			{
 				try
 				{
-					
+
 					String content = httpResponse.getContentAsString();
-					content = new String( content.getBytes( "UTF-8"), "iso-8859-1" );
+					content = new String( content.getBytes( "UTF-8" ), "iso-8859-1" );
 					browser.setContent( content, contentType, httpResponse.getURL().toURI().toString() );
 				}
 				catch( Exception e )
