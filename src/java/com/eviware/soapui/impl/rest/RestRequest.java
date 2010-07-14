@@ -658,4 +658,18 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 		}
 		return jmsPropertyConfig;
 	}
+
+	@Override
+	public boolean isRecordHttpTrafic()
+	{
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void setRecordHttpTrafic( boolean recordHttpTrafic )
+	{
+		// TODO Auto-generated method stub
+
+	}
 }

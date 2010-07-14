@@ -131,4 +131,6 @@ public interface AbstractHttpRequestInterface<T extends AbstractRequestConfig> e
 	public abstract boolean hasEndpoint();
 
 	public IAfterRequestInjection getAfterRequestInjection();
+	public abstract boolean isRecordHttpTrafic();
+	public abstract void setRecordHttpTrafic(boolean recordHttpTrafic);
 }

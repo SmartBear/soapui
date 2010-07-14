@@ -698,4 +698,18 @@ public class WsdlRequest extends AbstractHttpRequest<WsdlRequestConfig> implemen
 
 		return getOperation().getAction();
 	}
+
+	@Override
+	public boolean isRecordHttpTrafic()
+	{
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void setRecordHttpTrafic( boolean recordHttpTrafic )
+	{
+		// TODO Auto-generated method stub
+
+	}
 }

@@ -88,8 +88,6 @@ public class HttpTestRequestDesktopPanel extends
 	private JUndoableTextField pathTextField;
 	private JCheckBox downloadResources;
 	private JComboBox methodCombo;
-	private JButton recordButton;
-	private boolean recordHttpTrafic;
 
 	public HttpTestRequestDesktopPanel( HttpTestRequestStepInterface testStep )
 	{
@@ -219,14 +217,6 @@ public class HttpTestRequestDesktopPanel extends
 		toolbar.addSeparator();
 	}
 
-	protected void addToggleButton( JXToolBar toggleToolbar )
-	{
-		recordButton = new JButton( new RecordHttpTraficAction() );
-
-		toggleToolbar.addLabeledFixed( "Record HTTP trafic", recordButton );
-		toggleToolbar.addSeparator();
-	}
-
 	protected void addToolbarComponents( JXToolBar toolbar )
 	{
 		toolbar.addSeparator();
@@ -325,11 +315,7 @@ public class HttpTestRequestDesktopPanel extends
 		JXToolBar toolbar = UISupport.createToolbar();
 		addToolbarComponents( toolbar );
 
-		panel.add( toolbar, BorderLayout.CENTER );
-
-		JXToolBar toggleToolbar = UISupport.createToolbar();
-		addToggleButton( toggleToolbar );
-		panel.add( toggleToolbar, BorderLayout.SOUTH );
+		panel.add( toolbar, BorderLayout.SOUTH );
 		return panel;
 
 	}
@@ -478,41 +464,5 @@ public class HttpTestRequestDesktopPanel extends
 		super.propertyChange( evt );
 	}
 
-	public boolean isRecordHttpTrafic()
-	{
-		return recordHttpTrafic;
-	}
-
-	public void setRecordHttpTrafic( boolean recordHttpTrafic )
-	{
-		this.recordHttpTrafic = recordHttpTrafic;
-	}
-
-	private class RecordHttpTraficAction extends AbstractAction
-	{
-
-		public RecordHttpTraficAction()
-		{
-			putValue( Action.SMALL_ICON, UISupport.createImageIcon("/record_http_false.gif"));
-			putValue( Action.SHORT_DESCRIPTION, "Record HTTP trafic" );
-		}
-
-		@Override
-		public void actionPerformed( ActionEvent arg0 )
-		{
-
-			if( isRecordHttpTrafic() )
-			{
-				setRecordHttpTrafic( false );
-				recordButton.setIcon( UISupport.createImageIcon( "/record_http_false.gif" ) );
-			}
-			else
-			{
-				setRecordHttpTrafic( true );
-				recordButton.setIcon( UISupport.createImageIcon( "/record_http_true.gif" ) );
-			}
-		}
-
-	}
 
 }

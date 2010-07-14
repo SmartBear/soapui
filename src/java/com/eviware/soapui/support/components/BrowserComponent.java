@@ -38,6 +38,13 @@ import org.mozilla.xpcom.Mozilla;
 import org.mozilla.xpcom.XPCOMException;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.support.http.HttpRequestTestStep;
+import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
+import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequest;
+import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.registry.GroovyScriptStepFactory;
+import com.eviware.soapui.impl.wsdl.teststeps.registry.HttpRequestStepFactory;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 import com.eviware.soapui.model.settings.Settings;
@@ -92,10 +99,17 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 	private boolean disposed;
 	private static boolean disabled;
 	private boolean recordTrafic;
+	private HttpRequestTestStep httpRequestTestStep;
 
 	public boolean isRecordTrafic()
 	{
 		return recordTrafic;
+	}
+
+	public void setRecordTrafic( boolean recordTrafic, HttpRequestTestStep httpRequestTestStep )
+	{
+		this.httpRequestTestStep = httpRequestTestStep;
+		this.recordTrafic = recordTrafic;
 	}
 
 	public void setRecordTrafic( boolean recordTrafic )
@@ -103,7 +117,7 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 		this.recordTrafic = recordTrafic;
 	}
 
-	public BrowserComponent( boolean addToolbar)
+	public BrowserComponent( boolean addToolbar )
 	{
 		this.addToolbar = addToolbar;
 		initialize();
@@ -269,6 +283,9 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 				{
 					String currLoc = arg0.getUrl();
 					System.out.println( "currLoc " + currLoc );
+					WsdlTestStep cc = ( ( WsdlTestCase )httpRequestTestStep.getTestCase() ).addTestStep(
+							HttpRequestStepFactory.HTTPREQUEST_TYPE, "new http request" );
+					( ( HttpTestRequestStep )cc ).getRequestStepConfig().setEndpoint( currLoc );
 				}
 			}
 		} );

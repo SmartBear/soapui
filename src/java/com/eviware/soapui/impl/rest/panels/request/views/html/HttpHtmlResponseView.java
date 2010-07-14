@@ -15,13 +15,17 @@ package com.eviware.soapui.impl.rest.panels.request.views.html;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -47,6 +51,7 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 	private JPanel panel;
 	private JLabel statusLabel;
 	private BrowserComponent browser;
+	private JButton recordButton;
 
 	public HttpHtmlResponseView( HttpResponseMessageEditor httpRequestMessageEditor, HttpRequestInterface<?> httpRequest )
 	{
@@ -108,7 +113,6 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 		{
 			browser = new BrowserComponent( false );
 			Component component = browser.getComponent();
-			browser.addPropertyChangeListener( this );
 			component.setMinimumSize( new Dimension( 100, 100 ) );
 			contentPanel.add( component );
 
@@ -185,10 +189,20 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 		out.write( rawResponse );
 	}
 
+	protected void addToggleButton( JXToolBar toggleToolbar )
+	{
+		recordButton = new JButton( new RecordHttpTraficAction() );
+
+		toggleToolbar.addLabeledFixed( "Record HTTP trafic", recordButton );
+		toggleToolbar.addSeparator();
+	}
+
 	private Component buildToolbar()
 	{
 		JXToolBar toolbar = UISupport.createToolbar();
+		recordButton = new JButton( new RecordHttpTraficAction() );
 
+		toolbar.addLabeledFixed( "Record HTTP trafic", recordButton );
 		return toolbar;
 	}
 
@@ -213,6 +227,37 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 
 	public void setEditable( boolean enabled )
 	{
+	}
+
+	private class RecordHttpTraficAction extends AbstractAction
+	{
+
+		public RecordHttpTraficAction()
+		{
+			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/record_http_false.gif" ) );
+			putValue( Action.SHORT_DESCRIPTION, "Record HTTP trafic" );
+		}
+
+		@Override
+		public void actionPerformed( ActionEvent arg0 )
+		{
+
+			if( httpRequest.isRecordHttpTrafic() )
+			{
+				httpRequest.setRecordHttpTrafic( false );
+				recordButton.setIcon( UISupport.createImageIcon( "/record_http_false.gif" ) );
+			}
+			else
+			{
+				httpRequest.setRecordHttpTrafic( true );
+				recordButton.setIcon( UISupport.createImageIcon( "/record_http_true.gif" ) );
+			}
+			if( browser != null )
+			{
+				browser.setRecordTrafic( httpRequest.isRecordHttpTrafic() );
+			}
+		}
+
 	}
 
 }
