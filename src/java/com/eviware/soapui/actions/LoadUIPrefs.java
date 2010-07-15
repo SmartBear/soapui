@@ -11,6 +11,8 @@
  */
 package com.eviware.soapui.actions;
 
+import java.io.File;
+
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.settings.LoadUISettings;
 import com.eviware.soapui.support.components.DirectoryFormComponent;
@@ -20,10 +22,7 @@ import com.eviware.soapui.support.types.StringToStringMap;
 public class LoadUIPrefs implements Prefs
 {
 	public static final String LOADUI_PATH = "loadUI.bat(.sh) folder";
-	// public static final String LOADUI_CAJO_SERVER = "LoadUI Cajo server name";
 	public static final String LOADUI_CAJO_PORT = "loadUI integration port";
-	// public static final String LOADUI_CAJO_ITEM_NAME =
-	// "LoadUI Cajo Item name";
 	public static final String SOAPUI_CAJO_PORT = "soapUI integration port";
 
 	private final String title;
@@ -40,14 +39,12 @@ public class LoadUIPrefs implements Prefs
 		{
 			editorForm = new SimpleForm();
 			editorForm.addSpace( 5 );
-			editorForm.append( LOADUI_PATH, new DirectoryFormComponent( "Folder containing loadUI.bat " ) );
-			// editorForm.appendTextField( LOADUI_CAJO_SERVER,
-			// "Server name of LoadUI machine." );
+			DirectoryFormComponent directoryFormComponent=new DirectoryFormComponent( "Folder containing loadUI.bat(.sh) " );
+			directoryFormComponent.setInitialFolder( System.getProperty( "soapui.home" )+File.separator+".."+File.separator+".." );
+			editorForm.append( LOADUI_PATH,  directoryFormComponent);
 			editorForm.appendTextField( LOADUI_CAJO_PORT, "Client port for loadUI integration" );
 			editorForm.appendTextField( SOAPUI_CAJO_PORT,
 					"Server port of soapUI integration (change requires restart of soapUI)" );
-			// editorForm.appendTextField( LOADUI_CAJO_ITEM_NAME,
-			// "Item name for Cajo server" );
 
 		}
 		return editorForm;
@@ -69,13 +66,8 @@ public class LoadUIPrefs implements Prefs
 	{
 		StringToStringMap values = new StringToStringMap();
 		values.put( LOADUI_PATH, settings.getString( LoadUISettings.LOADUI_PATH, "" ) );
-		// values.put( LOADUI_CAJO_SERVER, settings.getString(
-		// LoadUISettings.LOADUI_CAJO_SERVER, "localhost" ) );
 		values.put( LOADUI_CAJO_PORT, settings.getString( LoadUISettings.LOADUI_CAJO_PORT, "1199" ) );
 		values.put( SOAPUI_CAJO_PORT, settings.getString( LoadUISettings.SOAPUI_CAJO_PORT, "1198" ) );
-		// values.put( LOADUI_CAJO_ITEM_NAME, settings.getString(
-		// LoadUISettings.LOADUI_CAJO_ITEM_NAME, "loaduiIntegration" ) );
-
 		return values;
 	}
 
@@ -87,14 +79,8 @@ public class LoadUIPrefs implements Prefs
 	public void storeValues( StringToStringMap values, Settings settings )
 	{
 		settings.setString( LoadUISettings.LOADUI_PATH, values.get( LOADUI_PATH ) );
-		// settings.setString( LoadUISettings.LOADUI_CAJO_SERVER, values.get(
-		// LOADUI_CAJO_SERVER ) );
 		settings.setString( LoadUISettings.LOADUI_CAJO_PORT, values.get( LOADUI_CAJO_PORT ) );
 		settings.setString( LoadUISettings.SOAPUI_CAJO_PORT, values.get( SOAPUI_CAJO_PORT ) );
-		// settings.setString( LoadUISettings.LOADUI_CAJO_ITEM_NAME, values.get(
-		// LOADUI_CAJO_ITEM_NAME ) );
-
-		// CajoServer.getInstance().restart();
 
 	}
 
