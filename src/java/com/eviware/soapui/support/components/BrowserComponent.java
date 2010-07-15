@@ -14,8 +14,11 @@ package com.eviware.soapui.support.components;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.lang.reflect.InvocationTargetException;
@@ -23,6 +26,7 @@ import java.lang.reflect.InvocationTargetException;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JEditorPane;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -40,10 +44,7 @@ import org.mozilla.xpcom.XPCOMException;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.http.HttpRequestTestStep;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
-import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequest;
-import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
-import com.eviware.soapui.impl.wsdl.teststeps.registry.GroovyScriptStepFactory;
 import com.eviware.soapui.impl.wsdl.teststeps.registry.HttpRequestStepFactory;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
@@ -56,6 +57,11 @@ import com.jniwrapper.PlatformContext;
 import com.teamdev.jxbrowser.Browser;
 import com.teamdev.jxbrowser.BrowserFactory;
 import com.teamdev.jxbrowser.BrowserType;
+import com.teamdev.jxbrowser.NewWindowContainer;
+import com.teamdev.jxbrowser.NewWindowManager;
+import com.teamdev.jxbrowser.NewWindowParams;
+import com.teamdev.jxbrowser.events.DisposeEvent;
+import com.teamdev.jxbrowser.events.DisposeListener;
 import com.teamdev.jxbrowser.events.NavigationEvent;
 import com.teamdev.jxbrowser.events.NavigationFinishedEvent;
 import com.teamdev.jxbrowser.events.NavigationListener;
@@ -100,6 +106,7 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 	private static boolean disabled;
 	private boolean recordTrafic;
 	private HttpRequestTestStep httpRequestTestStep;
+	private NavigationListener internalNavigationListener;
 
 	public boolean isRecordTrafic()
 	{
@@ -145,7 +152,7 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 				// appleJavaExtentions );
 				// }
 
-				Xpcom.initialize();
+//				Xpcom.initialize();
 				// browserFactory = WebBrowserFactory.getInstance();
 			}
 
@@ -217,6 +224,28 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 		return toolbar;
 	}
 
+	private final class InternalBrowserNavigationListener implements NavigationListener
+	{
+		@Override
+		public void navigationStarted( NavigationEvent arg0 )
+		{
+			// TODO Auto-generated method stub
+		}
+
+		@Override
+		public void navigationFinished( NavigationFinishedEvent arg0 )
+		{
+			if( recordTrafic )
+			{
+				String newEndpoint = arg0.getUrl();
+				WsdlTestCase testCase = ( WsdlTestCase )httpRequestTestStep.getTestCase();
+				int count = testCase.getTestStepList().size();
+				WsdlTestStep testStep = testCase.addTestStep( HttpRequestStepFactory.HTTPREQUEST_TYPE, "Http Test Step "
+						+ ++count, newEndpoint );
+			}
+		}
+	}
+
 	private class BackAction extends AbstractAction
 	{
 		public BackAction()
@@ -265,31 +294,59 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 		{
 			browser = BrowserFactory.createBrowser();
 		}
-		browser.addNavigationListener( new NavigationListener()
+		internalNavigationListener = new InternalBrowserNavigationListener();
+		browser.addNavigationListener( internalNavigationListener );
+
+		browser.getServices().setNewWindowManager( new NewWindowManager()
 		{
-
-			@Override
-			public void navigationStarted( NavigationEvent arg0 )
+			public NewWindowContainer evaluateWindow( final NewWindowParams params )
 			{
-				// TODO Auto-generated method stub
-			}
-
-			@Override
-			public void navigationFinished( NavigationFinishedEvent arg0 )
-			{
-				// TODO Auto-generated method stub
-				System.out.println( "navigationFinished" );
-				if( recordTrafic )
+				return new NewWindowContainer()
 				{
-					String currLoc = arg0.getUrl();
-					System.out.println( "currLoc " + currLoc );
-					WsdlTestStep cc = ( ( WsdlTestCase )httpRequestTestStep.getTestCase() ).addTestStep(
-							HttpRequestStepFactory.HTTPREQUEST_TYPE, "new http request" );
-					( ( HttpTestRequestStep )cc ).getRequestStepConfig().setEndpoint( currLoc );
-				}
+					public void insertBrowser( final Browser browser )
+					{
+						// creates JFrame in which browser will be embedded
+						final JFrame popupFrame = new JFrame();
+						Container contentPane = popupFrame.getContentPane();
+						contentPane.add( browser.getComponent(), BorderLayout.CENTER );
+						// sets window bounds using popup window params
+						popupFrame.setBounds( params.getBounds() );
+						popupFrame.setVisible( true );
+
+						// registers window listener to dispose Browser instance on
+						// window close
+						popupFrame.addWindowListener( new WindowAdapter()
+						{
+							@Override
+							public void windowClosing( WindowEvent e )
+							{
+								browser.dispose();
+							}
+						} );
+
+						// registers Browser dispose listener to dispose window when
+						// Browser
+						// is disposed (e.g. using the window.close JavaScript
+						// function)
+						browser.addDisposeListener( new DisposeListener()
+						{
+							public void browserDisposed( DisposeEvent event )
+							{
+								SwingUtilities.invokeLater( new Runnable()
+								{
+									public void run()
+									{
+										popupFrame.dispose();
+									}
+								} );
+							}
+						} );
+						browser.addNavigationListener( internalNavigationListener );
+
+					}
+				};
 			}
 		} );
-
 		panel.add( browser.getComponent(), BorderLayout.CENTER );
 		// TODO handle the commented
 		// browser.addContentHandler( new ContentHandler()
@@ -370,6 +427,8 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 		// browser.removeStatusChangeListener( BrowserComponent.this );
 		// browser.dispose();
 		// }
+		browser.dispose();
+		browser.removeNavigationListener( internalNavigationListener );
 		browser = null;
 	}
 

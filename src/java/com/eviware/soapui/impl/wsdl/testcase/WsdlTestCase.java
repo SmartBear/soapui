@@ -37,6 +37,7 @@ import com.eviware.soapui.impl.wsdl.panels.teststeps.amf.AMFTestRunListener;
 import com.eviware.soapui.impl.wsdl.support.wsrm.WsrmTestRunListener;
 import com.eviware.soapui.impl.wsdl.support.wsrm.WsrmUtils;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.registry.HttpRequestStepFactory;
 import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestStepFactory;
 import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestStepRegistry;
 import com.eviware.soapui.model.ModelItem;
@@ -413,6 +414,18 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 	{
 		TestStepConfig newStepConfig = WsdlTestStepRegistry.getInstance().getFactory( type ).createNewTestStep( this,
 				name );
+		if( newStepConfig != null )
+		{
+			return addTestStep( newStepConfig );
+		}
+		else
+			return null;
+	}
+
+	public WsdlTestStep addTestStep( String type, String name, String endpoint )
+	{
+		TestStepConfig newStepConfig = ((HttpRequestStepFactory)WsdlTestStepRegistry.getInstance().getFactory( type )).createNewTestStep( this,
+				name, endpoint );
 		if( newStepConfig != null )
 		{
 			return addTestStep( newStepConfig );

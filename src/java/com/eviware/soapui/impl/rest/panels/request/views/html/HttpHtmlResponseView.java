@@ -36,6 +36,7 @@ import com.eviware.soapui.impl.support.panels.AbstractHttpXmlRequestDesktopPanel
 import com.eviware.soapui.impl.support.panels.AbstractHttpXmlRequestDesktopPanel.HttpResponseMessageEditor;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.impl.wsdl.support.MessageExchangeModelItem;
+import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequest;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.BrowserComponent;
 import com.eviware.soapui.support.components.JXToolBar;
@@ -52,12 +53,13 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 	private JLabel statusLabel;
 	private BrowserComponent browser;
 	private JButton recordButton;
+	private HttpResponseMessageEditor httpRequestMessageEditor;
 
 	public HttpHtmlResponseView( HttpResponseMessageEditor httpRequestMessageEditor, HttpRequestInterface<?> httpRequest )
 	{
 		super( "HTML", httpRequestMessageEditor, HttpHtmlResponseViewFactory.VIEW_ID );
+		this.httpRequestMessageEditor = httpRequestMessageEditor;
 		this.httpRequest = httpRequest;
-
 		httpRequest.addPropertyChangeListener( this );
 	}
 
@@ -65,7 +67,6 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 	{
 		super( "HTML", xmlEditor, HttpHtmlResponseViewFactory.VIEW_ID );
 		this.httpRequest = ( HttpRequestInterface<?> )messageExchangeModelItem;
-
 		messageExchangeModelItem.addPropertyChangeListener( this );
 	}
 
@@ -254,7 +255,8 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 			}
 			if( browser != null )
 			{
-				browser.setRecordTrafic( httpRequest.isRecordHttpTrafic() );
+				HttpTestRequest httpTestRequest = ( HttpTestRequest )( httpRequestMessageEditor.getModelItem() );
+				browser.setRecordTrafic( httpRequest.isRecordHttpTrafic(), httpTestRequest.getTestStep() );
 			}
 		}
 
