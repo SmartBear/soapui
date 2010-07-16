@@ -36,7 +36,6 @@ import com.eviware.soapui.impl.support.panels.AbstractHttpXmlRequestDesktopPanel
 import com.eviware.soapui.impl.support.panels.AbstractHttpXmlRequestDesktopPanel.HttpResponseMessageEditor;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.impl.wsdl.support.MessageExchangeModelItem;
-import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequest;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.BrowserComponent;
 import com.eviware.soapui.support.components.JXToolBar;
@@ -48,17 +47,32 @@ import com.eviware.soapui.support.editor.xml.XmlEditor;
 public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocument> implements PropertyChangeListener
 {
 	private final HttpRequestInterface<?> httpRequest;
+
+	public HttpRequestInterface<?> getHttpRequest()
+	{
+		return httpRequest;
+	}
+
 	private JPanel contentPanel;
 	private JPanel panel;
 	private JLabel statusLabel;
 	private BrowserComponent browser;
 	private JButton recordButton;
-	private HttpResponseMessageEditor httpRequestMessageEditor;
+	private boolean recordHttpTrafic;
+
+	public boolean isRecordHttpTrafic()
+	{
+		return recordHttpTrafic;
+	}
+
+	public void setRecordHttpTrafic( boolean recordHttpTrafic )
+	{
+		this.recordHttpTrafic = recordHttpTrafic;
+	}
 
 	public HttpHtmlResponseView( HttpResponseMessageEditor httpRequestMessageEditor, HttpRequestInterface<?> httpRequest )
 	{
 		super( "HTML", httpRequestMessageEditor, HttpHtmlResponseViewFactory.VIEW_ID );
-		this.httpRequestMessageEditor = httpRequestMessageEditor;
 		this.httpRequest = httpRequest;
 		httpRequest.addPropertyChangeListener( this );
 	}
@@ -243,20 +257,19 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 		public void actionPerformed( ActionEvent arg0 )
 		{
 
-			if( httpRequest.isRecordHttpTrafic() )
+			if( HttpHtmlResponseView.this.isRecordHttpTrafic() )
 			{
-				httpRequest.setRecordHttpTrafic( false );
+				HttpHtmlResponseView.this.setRecordHttpTrafic( false );
 				recordButton.setIcon( UISupport.createImageIcon( "/record_http_false.gif" ) );
 			}
 			else
 			{
-				httpRequest.setRecordHttpTrafic( true );
+				HttpHtmlResponseView.this.setRecordHttpTrafic( true );
 				recordButton.setIcon( UISupport.createImageIcon( "/record_http_true.gif" ) );
 			}
 			if( browser != null )
 			{
-				HttpTestRequest httpTestRequest = ( HttpTestRequest )( httpRequestMessageEditor.getModelItem() );
-				browser.setRecordTrafic( httpRequest.isRecordHttpTrafic(), httpTestRequest.getTestStep() );
+				browser.setHttpHtmlResponseView( HttpHtmlResponseView.this );
 			}
 		}
 

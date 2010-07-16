@@ -50,17 +50,6 @@ public class HttpTestRequest extends HttpRequest implements HttpTestRequestInter
 	private ImageIcon failedRequestIcon;
 	private ImageIcon disabledRequestIcon;
 	private ImageIcon unknownRequestIcon;
-	private boolean recordHttpTrafic;
-
-	public boolean isRecordHttpTrafic()
-	{
-		return recordHttpTrafic;
-	}
-
-	public void setRecordHttpTrafic( boolean recordHttpTrafic )
-	{
-		this.recordHttpTrafic = recordHttpTrafic;
-	}
 
 	protected HttpTestRequest( HttpRequestConfig config, HttpTestRequestStep testStep, boolean forLoadTest )
 	{

@@ -42,8 +42,9 @@ import org.mozilla.xpcom.Mozilla;
 import org.mozilla.xpcom.XPCOMException;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.support.http.HttpRequestTestStep;
+import com.eviware.soapui.impl.rest.panels.request.views.html.HttpHtmlResponseView;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
+import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequest;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.registry.HttpRequestStepFactory;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
@@ -104,25 +105,8 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 	@SuppressWarnings( "unused" )
 	private boolean disposed;
 	private static boolean disabled;
-	private boolean recordTrafic;
-	private HttpRequestTestStep httpRequestTestStep;
 	private NavigationListener internalNavigationListener;
-
-	public boolean isRecordTrafic()
-	{
-		return recordTrafic;
-	}
-
-	public void setRecordTrafic( boolean recordTrafic, HttpRequestTestStep httpRequestTestStep )
-	{
-		this.httpRequestTestStep = httpRequestTestStep;
-		this.recordTrafic = recordTrafic;
-	}
-
-	public void setRecordTrafic( boolean recordTrafic )
-	{
-		this.recordTrafic = recordTrafic;
-	}
+	private HttpHtmlResponseView httpHtmlResponseView;
 
 	public BrowserComponent( boolean addToolbar )
 	{
@@ -152,7 +136,7 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 				// appleJavaExtentions );
 				// }
 
-//				Xpcom.initialize();
+				// Xpcom.initialize();
 				// browserFactory = WebBrowserFactory.getInstance();
 			}
 
@@ -224,6 +208,11 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 		return toolbar;
 	}
 
+	public void setHttpHtmlResponseView( HttpHtmlResponseView httpHtmlResponseView )
+	{
+		this.httpHtmlResponseView = httpHtmlResponseView;
+	}
+
 	private final class InternalBrowserNavigationListener implements NavigationListener
 	{
 		@Override
@@ -235,13 +224,13 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 		@Override
 		public void navigationFinished( NavigationFinishedEvent arg0 )
 		{
-			if( recordTrafic )
+			if( httpHtmlResponseView.isRecordHttpTrafic() )
 			{
 				String newEndpoint = arg0.getUrl();
-				WsdlTestCase testCase = ( WsdlTestCase )httpRequestTestStep.getTestCase();
+				HttpTestRequest httpTestRequest = ( HttpTestRequest )( httpHtmlResponseView.getHttpRequest().getModelItem() );
+				WsdlTestCase testCase = ( WsdlTestCase )httpTestRequest.getTestStep().getTestCase();
 				int count = testCase.getTestStepList().size();
-				WsdlTestStep testStep = testCase.addTestStep( HttpRequestStepFactory.HTTPREQUEST_TYPE, "Http Test Step "
-						+ ++count, newEndpoint );
+				testCase.addTestStep( HttpRequestStepFactory.HTTPREQUEST_TYPE, "Http Test Step " + ++count, newEndpoint );
 			}
 		}
 	}

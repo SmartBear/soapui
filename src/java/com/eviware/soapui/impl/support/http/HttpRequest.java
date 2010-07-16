@@ -385,17 +385,4 @@ public class HttpRequest extends AbstractHttpRequest<HttpRequestConfig> implemen
 		notifyPropertyChanged( responseContentProperty, ( Object )oldContent, ( Object )responseContent );
 	}
 
-	@Override
-	public boolean isRecordHttpTrafic()
-	{
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public void setRecordHttpTrafic( boolean recordHttpTrafic )
-	{
-		// TODO Auto-generated method stub
-
-	}
 }
