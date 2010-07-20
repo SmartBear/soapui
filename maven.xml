@@ -404,7 +404,7 @@
     </goal>
 
     <postGoal name="jar:install">
-        <ant:mkdir dir="${user.home}/.m2/repository/eviware/soapui/${pom.currentVersion}"/>
+        <ant:mkdir dir="${soapui.maven2.repository}/eviware/soapui/${pom.currentVersion}"/>
         <j:set var="soapuititle" value="${maven.app.branded.title}"/>
         <j:if test="${!empty(soapuititle)}">
 	        <ant:copy todir="src\java\com\eviware\soapui\resources\branded"
@@ -415,10 +415,10 @@
 			<ant:copy todir="src\java\com\eviware\soapui\resources\images"
 	                  file="${maven.app.branded.splash}" overwrite="true"/>   
         </j:if>     
-        <ant:copy todir="${user.home}/.m2/repository/eviware/soapui/${pom.currentVersion}">
+        <ant:copy todir="${soapui.maven2.repository}/eviware/soapui/${pom.currentVersion}">
             <ant:fileset dir="${maven.build.dir}" includes="*.jar"/>
         </ant:copy>
-        <j:file name="${user.home}/.m2/repository/eviware/soapui/${pom.currentVersion}/soapui-${pom.currentVersion}.pom"
+        <j:file name="${soapui.maven2.repository}/eviware/soapui/${pom.currentVersion}/soapui-${pom.currentVersion}.pom"
                 escapeText="false">
             <![CDATA[<project>
   <modelVersion>4.0.0</modelVersion>
@@ -459,11 +459,11 @@
             <fileset dir="src/xsd/soapui" includes="coverage.xsd"/>
         </ant:xmlbean>
 
-        <ant:mkdir dir="${user.home}/.m2/repository/eviware/soapui-xmlbeans/${pom.currentVersion}"/>
-        <ant:copy todir="${user.home}/.m2/repository/eviware/soapui-xmlbeans/${pom.currentVersion}"
+        <ant:mkdir dir="${soapui.maven2.repository}/eviware/soapui-xmlbeans/${pom.currentVersion}"/>
+        <ant:copy todir="${soapui.maven2.repository}/eviware/soapui-xmlbeans/${pom.currentVersion}"
                   file="${maven.repo.local}/eviware/jars/soapui-xmlbeans-${pom.currentVersion}.jar"/>
 
-        <j:file name="${user.home}/.m2/repository/eviware/soapui-xmlbeans/${pom.currentVersion}/soapui-xmlbeans-${pom.currentVersion}.pom"
+        <j:file name="${soapui.maven2.repository}/eviware/soapui-xmlbeans/${pom.currentVersion}/soapui-xmlbeans-${pom.currentVersion}.pom"
                 escapeText="false">
             <![CDATA[<project>
   <modelVersion>4.0.0</modelVersion>
