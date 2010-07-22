@@ -106,6 +106,7 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 	private boolean disposed;
 	private static boolean disabled;
 	private NavigationListener internalNavigationListener;
+	private DisposeListener internalDisposeListener;
 	private HttpHtmlResponseView httpHtmlResponseView;
 
 	public BrowserComponent( boolean addToolbar )
@@ -213,6 +214,27 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 		this.httpHtmlResponseView = httpHtmlResponseView;
 	}
 
+	private final class InternalDisposeListener implements DisposeListener
+	{
+		private final JFrame popupFrame;
+
+		private InternalDisposeListener( JFrame popupFrame )
+		{
+			this.popupFrame = popupFrame;
+		}
+
+		public void browserDisposed( DisposeEvent event )
+		{
+			SwingUtilities.invokeLater( new Runnable()
+			{
+				public void run()
+				{
+					popupFrame.dispose();
+				}
+			} );
+		}
+	}
+
 	private final class InternalBrowserNavigationListener implements NavigationListener
 	{
 		@Override
@@ -317,19 +339,8 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 						// Browser
 						// is disposed (e.g. using the window.close JavaScript
 						// function)
-						browser.addDisposeListener( new DisposeListener()
-						{
-							public void browserDisposed( DisposeEvent event )
-							{
-								SwingUtilities.invokeLater( new Runnable()
-								{
-									public void run()
-									{
-										popupFrame.dispose();
-									}
-								} );
-							}
-						} );
+						internalDisposeListener = new InternalDisposeListener( popupFrame );
+						browser.addDisposeListener( internalDisposeListener );
 						browser.addNavigationListener( internalNavigationListener );
 
 					}
@@ -417,6 +428,7 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 		// browser.dispose();
 		// }
 		browser.dispose();
+		browser.removeDisposeListener( internalDisposeListener );
 		browser.removeNavigationListener( internalNavigationListener );
 		browser = null;
 	}
