@@ -45,7 +45,6 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.panels.request.views.html.HttpHtmlResponseView;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequest;
-import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.registry.HttpRequestStepFactory;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
