@@ -69,13 +69,17 @@ public class StartLoadUI extends AbstractSoapUIAction<WsdlProject>
 		{
 			while( !( new File( loadUIbatPath ) ).exists() )
 			{
-				UISupport.showInfoMessage(  "No path added to loadUI" + extension );
+				UISupport.showInfoMessage( "No path added to loadUI" + extension );
 				if( UISupport.getMainFrame() != null )
 				{
 					if( SoapUIPreferencesAction.getInstance().show( SoapUIPreferencesAction.LOADUI_SETTINGS ) )
 					{
 						loadUIbatPath = SoapUI.getSettings().getString( LoadUISettings.LOADUI_PATH, "" ) + File.separator
 								+ LOADUI + ( UISupport.isWindows() ? BAT : SH );
+					}
+					else
+					{
+						return;
 					}
 				}
 			}
