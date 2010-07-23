@@ -21,6 +21,7 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URL;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -136,24 +137,23 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 		if( httpResponse != null && httpResponse.getContentType() != null )
 		{
 			String contentType = httpResponse.getContentType();
-			// if( contentType.contains( "html" ) || contentType.contains( "text" )
-			// )
-			// {
-			// try
-			// {
-			//
-			// String content = httpResponse.getContentAsString();
-			// content = new String( content.getBytes( "UTF-8" ), "iso-8859-1" );
-			// browser.setContent( content, contentType,
-			// httpResponse.getURL().toURI().toString() );
-			// }
-			// catch( Exception e )
-			// {
-			// e.printStackTrace();
-			// }
-			// }
-			// else if( !contentType.contains( "xml" ) )
-			// {
+			 if( contentType.contains( "html" ) || contentType.contains( "text" )
+			 )
+			 {
+			 try
+			 {
+			
+			 String content = httpResponse.getContentAsString();
+			 content = new String( content.getBytes( "UTF-8" ), "iso-8859-1" );
+			 browser.setContent( content, contentType,new URL( httpResponse.getURL().toURI().toString()).toString() );
+			 }
+			 catch( Exception e )
+			 {
+			 e.printStackTrace();
+			 }
+			 }
+			 else if( !contentType.contains( "xml" ) )
+			 {
 			try
 			{
 				String ext = ContentTypeHandler.getExtensionForContentType( contentType );
@@ -168,7 +168,7 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 			{
 				e.printStackTrace();
 			}
-			// }
+			 }
 		}
 		else
 		{
