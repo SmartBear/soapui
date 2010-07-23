@@ -144,6 +144,10 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 
 					String content = httpResponse.getContentAsString();
 					content = new String( content.getBytes( "UTF-8" ), "iso-8859-1" );
+					//TODO
+					//this particular hardcoded  line solvs the problem of not displaying
+					//html response view - track the diff in vreting contentType
+					contentType = contentType + "; charset=utf-8";
 					browser
 							.setContent( content, contentType, new URL( httpResponse.getURL().toURI().toString() ).toString() );
 				}
