@@ -115,7 +115,6 @@ import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.ActionListBuilder;
 import com.eviware.soapui.support.action.swing.ActionSupport;
 import com.eviware.soapui.support.action.swing.SwingActionDelegate;
-import com.eviware.soapui.support.components.BrowserComponent;
 import com.eviware.soapui.support.components.JComponentInspector;
 import com.eviware.soapui.support.components.JInspectorPanel;
 import com.eviware.soapui.support.components.JInspectorPanelFactory;
@@ -697,19 +696,8 @@ public class SoapUI
 		CajoServer.getInstance().start();
 		mainArgs = args;
 
-		BrowserComponent.initialize();
-
 		SoapUIRunner soapuiRunner = new SoapUIRunner();
-		// TODO check on Xpcom.isJVMValid
-		// if( !BrowserComponent.isJXBrowserDisabled() && Xpcom.isJVMValid() )
-		if( !BrowserComponent.isJXBrowserDisabled() )
-		{
-			SwingUtilities.invokeLater( soapuiRunner );
-		}
-		else
-		{
-			soapuiRunner.run();
-		}
+		soapuiRunner.run();
 	}
 
 	public static String[] getMainArgs()
@@ -782,7 +770,7 @@ public class SoapUI
 		Thread.sleep( 500 );
 		splash.setVisible( false );
 
-		if( getSettings().getBoolean( UISettings.SHOW_STARTUP_PAGE ) && !BrowserComponent.isJXBrowserDisabled() )
+		if( getSettings().getBoolean( UISettings.SHOW_STARTUP_PAGE ) )
 		{
 			SwingUtilities.invokeLater( new Runnable()
 			{

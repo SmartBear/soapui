@@ -25,7 +25,6 @@ import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -72,38 +71,20 @@ import com.teamdev.xpcom.ProxyConfiguration;
 import com.teamdev.xpcom.ProxyServerAuthInfo;
 import com.teamdev.xpcom.ProxyServerType;
 import com.teamdev.xpcom.Services;
-import com.teamdev.xpcom.Xpcom;
 
 public class BrowserComponent implements nsIWebProgressListener, nsIWeakReference, StatusListener
 {
-	private static String disabledReason;
-
-	// public class DummyBrowser implements Browser
-	// {
-	// public Component getComponent()
-	// {
-	// return new JLabel( "Browser Component Disabled: [" + disabledReason + "]"
-	// );
-	// }
-	//
-	// }
-
 	private Browser browser;
-	// private static BrowserFactory browserFactory;
 	private JPanel panel = new JPanel( new BorderLayout() );
 	private JPanel statusBar;
 	private JLabel statusLabel;
 	private String errorPage;
-	// private WebBrowserWindow browserWindowAdapter = new
-	// BrowserWindowAdapter();
 	private final boolean addToolbar;
 	private boolean showingErrorPage;
 	public String url;
-	private static Boolean initialized = false;
 	private Boolean possibleError = false;
 	@SuppressWarnings( "unused" )
 	private boolean disposed;
-	private static boolean disabled;
 	private NavigationListener internalNavigationListener;
 	private DisposeListener internalDisposeListener;
 	private HttpHtmlResponseView httpHtmlResponseView;
@@ -111,86 +92,25 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 	public BrowserComponent( boolean addToolbar )
 	{
 		this.addToolbar = addToolbar;
-		initialize();
-	}
-
-	public static void setDisabled( boolean disabled )
-	{
-		BrowserComponent.disabled = disabled;
-	}
-
-	public synchronized static void initialize()
-	{
-		if( initialized )
-			return;
-
-		try
-		{
-			if( !isJXBrowserDisabled() )
-			{
-				// if( Xpcom.isMacOSX() )
-				// {
-				// final String currentCP = System.getProperty( "java.class.path" );
-				// final String appleJavaExtentions = ":/System/Library/Java";
-				// System.setProperty( "java.class.path", currentCP +
-				// appleJavaExtentions );
-				// }
-
-				// Xpcom.initialize();
-				// browserFactory = WebBrowserFactory.getInstance();
-			}
-
-			initialized = true;
-		}
-		catch( Throwable t )
-		{
-			disabledReason = t.getMessage();
-			t.printStackTrace();
-		}
-	}
-
-	public static boolean isJXBrowserDisabled()
-	{
-		if( disabled )
-			return true;
-
-		String disable = System.getProperty( "soapui.jxbrowser.disable", "nope" );
-		if( disable.equals( "true" ) )
-			return true;
-
-		if( !disable.equals( "false" )
-				&& ( !PlatformContext.isMacOS() && "64".equals( System.getProperty( "sun.arch.data.model" ) ) ) )
-			return true;
-
-		return false;
 	}
 
 	public Component getComponent()
 	{
-		if( isJXBrowserDisabled() )
+		if( browser == null )
 		{
-			JEditorPane jxbrowserDisabledPanel = new JEditorPane();
-			jxbrowserDisabledPanel.setText( "browser component disabled" );
-			panel.add( jxbrowserDisabledPanel );
-		}
-		else
-		{
-			if( browser == null )
-			{
 
-				statusBar = new JPanel();
-				statusLabel = new JLabel();
-				statusBar.add( statusLabel, BorderLayout.CENTER );
+			statusBar = new JPanel();
+			statusLabel = new JLabel();
+			statusBar.add( statusLabel, BorderLayout.CENTER );
 
-				if( addToolbar )
-					panel.add( buildToolbar(), BorderLayout.NORTH );
+			if( addToolbar )
+				panel.add( buildToolbar(), BorderLayout.NORTH );
 
-				panel.add( statusBar, BorderLayout.SOUTH );
+			panel.add( statusBar, BorderLayout.SOUTH );
 
-				initBrowser();
+			initBrowser();
 
-				browser.navigate( "about:blank" );
-			}
+			browser.navigate( "about:blank" );
 		}
 		return panel;
 	}
@@ -347,46 +267,6 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 			}
 		} );
 		panel.add( browser.getComponent(), BorderLayout.CENTER );
-		// TODO handle the commented
-		// browser.addContentHandler( new ContentHandler()
-		// {
-		//
-		// public boolean canHandleContent( String arg0 )
-		// {
-		// return true;
-		// }
-		//
-		// public void handleContent( URL arg0 )
-		// {
-		// SoapUI.log.info( "Ignoring content for [" + arg0 + "]" );
-		// }
-		//
-		// public boolean isPreferred( String arg0 )
-		// {
-		// return true;
-		// }
-		// } );
-
-		// if( browserFactory != null )
-		if( PlatformContext.isMacOS() )
-		{
-			// nsIWebBrowser nsWebBrowser = ( ( MozillaWebBrowser )browser
-			// ).getWebBrowser();
-			// nsWebBrowser.addWebBrowserListener( this,
-			// nsIWebProgressListener.NS_IWEBPROGRESSLISTENER_IID );
-			// browser.addStatusChangeListener( this );
-			//
-			// browser.setWindowCreator( new WindowCreator()
-			// {
-			// public WebBrowserWindow createChildWindow( Component
-			// parentComponent, long flags )
-			// {
-			// return browserWindowAdapter;
-			// }
-			// } );
-
-			setUpProxy();
-		}
 		return true;
 	}
 
@@ -417,15 +297,6 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 	{
 		browser.stop();
 
-		// if( browserFactory != null )
-		// {
-		// nsIWebBrowser nsWebBrowser = ( ( MozillaWebBrowser )browser
-		// ).getWebBrowser();
-		// nsWebBrowser.removeWebBrowserListener( BrowserComponent.this,
-		// nsIWebProgressListener.NS_IWEBPROGRESSLISTENER_IID );
-		// browser.removeStatusChangeListener( BrowserComponent.this );
-		// browser.dispose();
-		// }
 		browser.dispose();
 		browser.removeDisposeListener( internalDisposeListener );
 		browser.removeNavigationListener( internalNavigationListener );
@@ -445,10 +316,6 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 				initBrowser();
 			}
 
-			// TODO check commented
-			// browser.activate();
-			// browser.setContentWithContext( contentAsString, contentType,
-			// contextUri );
 			browser.setContent( contentAsString, contentType );
 		}
 	}
@@ -466,8 +333,6 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 				initBrowser();
 			}
 
-			// TODO check commented
-			// browser.activate();
 			browser.setContent( content, contentType );
 		}
 		pcs.firePropertyChange( "content", null, null );
@@ -480,37 +345,16 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 
 		this.url = url;
 
-		Xpcom.invokeLater( new Navigator() );
+		browser.navigate( getUrl() );
+
+		if( showingErrorPage )
+			showingErrorPage = false;
 		return true;
 	}
 
 	public String getContent()
 	{
 		return browser == null ? null : XmlUtils.serialize( browser.getDocument() );
-	}
-
-	private final class Navigator implements Runnable
-	{
-		public void run()
-		{
-			try
-			{
-				if( browser == null )
-				{
-					initBrowser();
-				}
-				// TODO check commented
-				// browser.activate();
-				browser.navigate( getUrl() );
-
-				if( showingErrorPage )
-					showingErrorPage = false;
-			}
-			catch( Throwable e )
-			{
-				SoapUI.log( e.toString() );
-			}
-		}
 	}
 
 	public String getUrl()
@@ -633,50 +477,6 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 		}
 	}
 
-	// private class BrowserWindowAdapter implements WebBrowserWindow
-	// {
-	// private boolean resizable;
-	//
-	// public void close()
-	// {
-	// }
-	//
-	// public boolean isClosed()
-	// {
-	// return true;
-	// }
-	//
-	// public void setModal( boolean arg0 )
-	// {
-	// }
-	//
-	// public void setSize( int arg0, int arg1 )
-	// {
-	// }
-	//
-	// public void setVisible( boolean arg0 )
-	// {
-	// }
-	//
-	// public void setWebBrowser( WebBrowser arg0 )
-	// {
-	// if( arg0 != null )
-	// {
-	// arg0.addRequestListener( new PopupRequestAdapter() );
-	// }
-	// }
-
-	// public boolean isResizable()
-	// {
-	// return resizable;
-	// }
-
-	// public void setResizable( boolean resizable )
-	// {
-	// this.resizable = resizable;
-	// }
-	// }
-
 	public void statusChanged( final StatusChangedEvent event )
 	{
 		if( statusLabel != null )
@@ -696,49 +496,6 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 		return browser != null;
 	}
 
-	// private static class PopupRequestAdapter extends RequestAdapter
-	// {
-	// private LocationEvent event;
-	//
-	// @Override
-	// public void locationChanged( LocationEvent arg0 )
-	// {
-	// if( !arg0.getLocation().equals( "about:blank" ) )
-	// {
-	// event = arg0;
-	// SwingUtilities.invokeLater( new Runnable()
-	// {
-	//
-	// public void run()
-	// {
-	// boolean opened = false;
-	// if( UISupport.confirm( "Open url [" + event.getLocation() +
-	// "] in external browser?", "Open URL" ) )
-	// {
-	// opened = true;
-	// SwingUtilities.invokeLater( new Runnable()
-	// {
-	//
-	// public void run()
-	// {
-	// Tools.openURL( event.getLocation() );
-	// event = null;
-	// }
-	// } );
-	// }
-	//
-	// event.getWebBrowser().stop();
-	// event.getWebBrowser().deactivate();
-	// event.getWebBrowser().dispose();
-	// event.getWebBrowser().removeRequestListener( PopupRequestAdapter.this );
-	// if( !opened )
-	// event = null;
-	// }
-	// } );
-	// }
-	// }
-	// }
-
 	public class ContentSetter implements Runnable
 	{
 		private final String contentAsString;
@@ -754,16 +511,7 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 
 		public void run()
 		{
-			// TODO handle the commented
-			// if( StringUtils.hasContent( contextUri ) )
-			// {
-			// browser.setContentWithContext( contentAsString, contentType,
-			// contextUri );
-			// }
-			// else
-			// {
 			browser.setContent( contentAsString, contentType );
-			// }
 		}
 	}
 

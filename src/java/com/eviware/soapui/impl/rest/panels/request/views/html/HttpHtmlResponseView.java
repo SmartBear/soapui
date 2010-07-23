@@ -120,21 +120,14 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 	{
 		contentPanel = new JPanel( new BorderLayout() );
 
-		if( BrowserComponent.isJXBrowserDisabled() )
-		{
-			contentPanel.add( new JLabel( "Browser Component is disabled" ) );
-		}
-		else
-		{
-			browser = new BrowserComponent( false );
-			Component component = browser.getComponent();
-			component.setMinimumSize( new Dimension( 100, 100 ) );
-			contentPanel.add( component );
+		browser = new BrowserComponent( false );
+		Component component = browser.getComponent();
+		component.setMinimumSize( new Dimension( 100, 100 ) );
+		contentPanel.add( component );
 
-			HttpResponse response = httpRequest.getResponse();
-			if( response != null )
-				setEditorContent( response );
-		}
+		HttpResponse response = httpRequest.getResponse();
+		if( response != null )
+			setEditorContent( response );
 		return contentPanel;
 	}
 
@@ -143,37 +136,39 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 		if( httpResponse != null && httpResponse.getContentType() != null )
 		{
 			String contentType = httpResponse.getContentType();
-			if( contentType.contains( "html" ) || contentType.contains( "text" ) )
+			// if( contentType.contains( "html" ) || contentType.contains( "text" )
+			// )
+			// {
+			// try
+			// {
+			//
+			// String content = httpResponse.getContentAsString();
+			// content = new String( content.getBytes( "UTF-8" ), "iso-8859-1" );
+			// browser.setContent( content, contentType,
+			// httpResponse.getURL().toURI().toString() );
+			// }
+			// catch( Exception e )
+			// {
+			// e.printStackTrace();
+			// }
+			// }
+			// else if( !contentType.contains( "xml" ) )
+			// {
+			try
 			{
-				try
-				{
-
-					String content = httpResponse.getContentAsString();
-					content = new String( content.getBytes( "UTF-8" ), "iso-8859-1" );
-					browser.setContent( content, contentType, httpResponse.getURL().toURI().toString() );
-				}
-				catch( Exception e )
-				{
-					e.printStackTrace();
-				}
+				String ext = ContentTypeHandler.getExtensionForContentType( contentType );
+				File temp = File.createTempFile( "response", "." + ext );
+				FileOutputStream fileOutputStream = new FileOutputStream( temp );
+				writeHttpBody( httpResponse.getRawResponseData(), fileOutputStream );
+				fileOutputStream.close();
+				browser.navigate( temp.toURI().toURL().toString(), null );
+				temp.deleteOnExit();
 			}
-			else if( !contentType.contains( "xml" ) )
+			catch( Exception e )
 			{
-				try
-				{
-					String ext = ContentTypeHandler.getExtensionForContentType( contentType );
-					File temp = File.createTempFile( "response", "." + ext );
-					FileOutputStream fileOutputStream = new FileOutputStream( temp );
-					writeHttpBody( httpResponse.getRawResponseData(), fileOutputStream );
-					fileOutputStream.close();
-					browser.navigate( temp.toURI().toURL().toString(), null );
-					temp.deleteOnExit();
-				}
-				catch( Exception e )
-				{
-					e.printStackTrace();
-				}
+				e.printStackTrace();
 			}
+			// }
 		}
 		else
 		{
