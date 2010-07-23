@@ -175,6 +175,7 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 		addAssertionButton.setEnabled( true );
 
 		requestTabs = new JTabbedPane();
+		requestTabs.setTabPlacement( JTabbedPane.LEFT );
 		requestTabs.addChangeListener( new ChangeListener()
 		{
 
