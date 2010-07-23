@@ -137,38 +137,38 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 		if( httpResponse != null && httpResponse.getContentType() != null )
 		{
 			String contentType = httpResponse.getContentType();
-			 if( contentType.contains( "html" ) || contentType.contains( "text" )
-			 )
-			 {
-			 try
-			 {
-			
-			 String content = httpResponse.getContentAsString();
-			 content = new String( content.getBytes( "UTF-8" ), "iso-8859-1" );
-			 browser.setContent( content, contentType,new URL( httpResponse.getURL().toURI().toString()).toString() );
-			 }
-			 catch( Exception e )
-			 {
-			 e.printStackTrace();
-			 }
-			 }
-			 else if( !contentType.contains( "xml" ) )
-			 {
-			try
+			if( contentType.contains( "html" ) || contentType.contains( "text" ) )
 			{
-				String ext = ContentTypeHandler.getExtensionForContentType( contentType );
-				File temp = File.createTempFile( "response", "." + ext );
-				FileOutputStream fileOutputStream = new FileOutputStream( temp );
-				writeHttpBody( httpResponse.getRawResponseData(), fileOutputStream );
-				fileOutputStream.close();
-				browser.navigate( temp.toURI().toURL().toString(), null );
-				temp.deleteOnExit();
+				try
+				{
+
+					String content = httpResponse.getContentAsString();
+					content = new String( content.getBytes( "UTF-8" ), "iso-8859-1" );
+					browser
+							.setContent( content, contentType, new URL( httpResponse.getURL().toURI().toString() ).toString() );
+				}
+				catch( Exception e )
+				{
+					e.printStackTrace();
+				}
 			}
-			catch( Exception e )
+			else if( !contentType.contains( "xml" ) )
 			{
-				e.printStackTrace();
+				try
+				{
+					String ext = ContentTypeHandler.getExtensionForContentType( contentType );
+					File temp = File.createTempFile( "response", "." + ext );
+					FileOutputStream fileOutputStream = new FileOutputStream( temp );
+					writeHttpBody( httpResponse.getRawResponseData(), fileOutputStream );
+					fileOutputStream.close();
+					browser.navigate( temp.toURI().toURL().toString(), null );
+					temp.deleteOnExit();
+				}
+				catch( Exception e )
+				{
+					e.printStackTrace();
+				}
 			}
-			 }
 		}
 		else
 		{
