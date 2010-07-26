@@ -40,6 +40,7 @@ import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.types.StringToStringMap;
+import com.eviware.soapui.support.types.StringToStringsMap;
 import com.eviware.soapui.support.xml.XmlUtils;
 
 /**
@@ -50,7 +51,7 @@ import com.eviware.soapui.support.xml.XmlUtils;
 
 public class WsdlMockRequest implements MockRequest
 {
-	private StringToStringMap requestHeaders;
+	private StringToStringsMap requestHeaders;
 	private String requestContent;
 	private MultipartMessageSupport mmSupport;
 	private XmlObject requestXmlObject;
@@ -77,7 +78,7 @@ public class WsdlMockRequest implements MockRequest
 
 		requestContext = new WsdlMockRunContext( context.getMockService(), null );
 
-		requestHeaders = new StringToStringMap();
+		requestHeaders = new StringToStringsMap();
 		for( Enumeration<?> e = request.getHeaderNames(); e.hasMoreElements(); )
 		{
 			String header = ( String )e.nextElement();
@@ -192,7 +193,7 @@ public class WsdlMockRequest implements MockRequest
 		{
 			try
 			{
-			is.reset();
+				is.reset();
 			}
 			catch( IOException e )
 			{
@@ -241,7 +242,7 @@ public class WsdlMockRequest implements MockRequest
 		return mmSupport == null ? requestContent : mmSupport.getContentAsString();
 	}
 
-	public StringToStringMap getRequestHeaders()
+	public StringToStringsMap getRequestHeaders()
 	{
 		return requestHeaders;
 	}

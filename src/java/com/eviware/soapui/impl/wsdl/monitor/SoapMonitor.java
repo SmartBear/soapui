@@ -808,7 +808,7 @@ public class SoapMonitor extends JPanel
 
 						request.setEndpoint( me.getTargetUrl().toString() );
 						// request.setIncomingWss( incomingRequestWss );
-						String existingMediaType = me.getResponseHeaders().get( "Content-Type" );
+						String existingMediaType = me.getResponseHeaders().get( "Content-Type", "" );
 						if( !StringUtils.isNullOrEmpty( existingMediaType ) )
 						{
 							request.setMediaType( existingMediaType );

@@ -150,7 +150,8 @@ public class HttpHtmlMessageExchangeResponseView extends AbstractXmlEditorView<H
 
 		if( messageExchangeModelItem2 != null && messageExchangeModelItem2.getMessageExchange() != null )
 		{
-			String contentType = messageExchangeModelItem2.getMessageExchange().getResponseHeaders().get( "Content-Type" );
+			String contentType = messageExchangeModelItem2.getMessageExchange().getResponseHeaders().get( "Content-Type",
+					"" );
 			if( contentType.contains( "html" ) || contentType.contains( "text" ) )
 			{
 				try

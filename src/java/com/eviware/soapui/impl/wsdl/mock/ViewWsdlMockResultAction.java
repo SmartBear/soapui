@@ -29,7 +29,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.wsdl.panels.request.StringToStringMapTableModel;
+import com.eviware.soapui.impl.wsdl.panels.request.StringToStringsMapTableModel;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.xml.JXEditTextArea;
 import com.eviware.soapui.support.xml.XmlUtils;
@@ -109,7 +109,7 @@ public class ViewWsdlMockResultAction extends AbstractAction
 		responseArea.setToolTipText( "Response Content" );
 		JScrollPane scrollPane = new JScrollPane( responseArea );
 
-		JSplitPane split = UISupport.createVerticalSplit( new JScrollPane( new JTable( new StringToStringMapTableModel(
+		JSplitPane split = UISupport.createVerticalSplit( new JScrollPane( new JTable( new StringToStringsMapTableModel(
 				result.getResponseHeaders(), "Header", "Value", false ) ) ), scrollPane );
 		split.setDividerLocation( 150 );
 		return split;
@@ -123,7 +123,7 @@ public class ViewWsdlMockResultAction extends AbstractAction
 		resultArea.setToolTipText( "Request Content" );
 		JScrollPane scrollPane = new JScrollPane( resultArea );
 
-		JSplitPane split = UISupport.createVerticalSplit( new JScrollPane( new JTable( new StringToStringMapTableModel(
+		JSplitPane split = UISupport.createVerticalSplit( new JScrollPane( new JTable( new StringToStringsMapTableModel(
 				result.getMockRequest().getRequestHeaders(), "Header", "Value", false ) ) ), scrollPane );
 		split.setDividerLocation( 150 );
 		return split;

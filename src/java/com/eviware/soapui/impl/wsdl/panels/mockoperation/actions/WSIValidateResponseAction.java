@@ -50,6 +50,7 @@ import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.settings.WSISettings;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.types.StringToStringMap;
+import com.eviware.soapui.support.types.StringToStringsMap;
 import com.eviware.soapui.ui.support.DefaultDesktopPanel;
 
 /**
@@ -274,19 +275,22 @@ public class WSIValidateResponseAction extends AbstractToolsAction<WsdlMockRespo
 		implConf.setLocation( "here" );
 	}
 
-	private String buildHttpHeadersString( StringToStringMap requestHeaders )
+	private String buildHttpHeadersString( StringToStringsMap headers )
 	{
 		StringBuffer buffer = new StringBuffer();
 
-		if( requestHeaders.containsKey( "#status#" ) )
+		if( headers.containsKey( "#status#" ) )
 		{
-			buffer.append( requestHeaders.get( "#status#" ) ).append( "\r\n" );
+			buffer.append( headers.get( "#status#" ) ).append( "\r\n" );
 		}
 
-		for( String header : requestHeaders.keySet() )
+		for( String header : headers.keySet() )
 		{
 			if( !header.equals( "#status#" ) )
-				buffer.append( header ).append( ": " ).append( requestHeaders.get( header ) ).append( "\r\n" );
+			{
+				for( String value : headers.get( header ) )
+					buffer.append( header ).append( ": " ).append( value ).append( "\r\n" );
+			}
 		}
 
 		return buffer.toString();

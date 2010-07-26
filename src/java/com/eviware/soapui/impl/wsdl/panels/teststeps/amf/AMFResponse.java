@@ -27,6 +27,7 @@ import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.Exten
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.support.AbstractResponse;
 import com.eviware.soapui.support.types.StringToStringMap;
+import com.eviware.soapui.support.types.StringToStringsMap;
 
 import flex.messaging.io.amf.ActionMessage;
 import flex.messaging.io.amf.MessageHeader;
@@ -43,8 +44,8 @@ public class AMFResponse extends AbstractResponse<AMFRequest>
 	private long timeTaken;
 	private long timestamp;
 	private AMFRequest request;
-	private StringToStringMap requestHeaders;
-	private StringToStringMap responseHeaders;
+	private StringToStringsMap requestHeaders;
+	private StringToStringsMap responseHeaders;
 	private StringToStringMap responseAMFHeaders = new StringToStringMap();
 	private byte[] rawRequestData;
 	private byte[] rawResponseData;
@@ -131,25 +132,25 @@ public class AMFResponse extends AbstractResponse<AMFRequest>
 			rawRequest.write( ( postMethod.getMethod() + " " + postMethod.getURI().toString() + " "
 					+ postMethod.getParams().getVersion().toString() + "\r\n" ).getBytes() );
 
-			requestHeaders = new StringToStringMap();
+			requestHeaders = new StringToStringsMap();
 			Header[] headers = postMethod.getRequestHeaders();
 			for( Header header : headers )
 			{
-				requestHeaders.put( header.getName(), header.getValue() );
+				requestHeaders.add( header.getName(), header.getValue() );
 				rawRequest.write( header.toExternalForm().getBytes() );
 			}
 
 			if( !postMethod.isFailed() )
 			{
-				responseHeaders = new StringToStringMap();
+				responseHeaders = new StringToStringsMap();
 				headers = postMethod.getResponseHeaders();
 				for( Header header : headers )
 				{
-					responseHeaders.put( header.getName(), header.getValue() );
+					responseHeaders.add( header.getName(), header.getValue() );
 					rawResponse.write( header.toExternalForm().getBytes() );
 				}
 
-				responseHeaders.put( "#status#", String.valueOf( postMethod.getStatusLine() ) );
+				responseHeaders.add( "#status#", String.valueOf( postMethod.getStatusLine() ) );
 			}
 
 			if( postMethod.getRequestEntity() != null )
@@ -205,12 +206,12 @@ public class AMFResponse extends AbstractResponse<AMFRequest>
 		return rawResponseData;
 	}
 
-	public StringToStringMap getRequestHeaders()
+	public StringToStringsMap getRequestHeaders()
 	{
 		return requestHeaders;
 	}
 
-	public StringToStringMap getResponseHeaders()
+	public StringToStringsMap getResponseHeaders()
 	{
 		return responseHeaders;
 	}

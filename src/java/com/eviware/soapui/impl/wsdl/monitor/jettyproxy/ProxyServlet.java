@@ -44,7 +44,7 @@ import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.Exten
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPostMethod;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 import com.eviware.soapui.model.settings.Settings;
-import com.eviware.soapui.support.types.StringToStringMap;
+import com.eviware.soapui.support.types.StringToStringsMap;
 import com.eviware.soapui.support.xml.XmlUtils;
 
 public class ProxyServlet implements Servlet
@@ -115,7 +115,7 @@ public class ProxyServlet implements Servlet
 		capturedData.setRequestHost( httpRequest.getServerName() );
 		capturedData.setRequestMethod( httpRequest.getMethod() );
 		capturedData.setRequestHeader( httpRequest );
-		capturedData.setHttpRequestParameters(  httpRequest );
+		capturedData.setHttpRequestParameters( httpRequest );
 		capturedData.setTargetURL( httpRequest.getRequestURL().toString() );
 
 		CaptureInputStream capture = new CaptureInputStream( httpRequest.getInputStream() );
@@ -215,15 +215,14 @@ public class ProxyServlet implements Servlet
 
 		if( !response.isCommitted() )
 		{
-			StringToStringMap responseHeaders = capturedData.getResponseHeaders();
+			StringToStringsMap responseHeaders = capturedData.getResponseHeaders();
 			// capturedData = null;
 
 			// copy headers to response
 			HttpServletResponse httpResponse = ( HttpServletResponse )response;
 			for( String name : responseHeaders.keySet() )
 			{
-				String header = responseHeaders.get( name );
-				if( !httpResponse.containsHeader( name ) )
+				for( String header : responseHeaders.get( name ) )
 					httpResponse.addHeader( name, header );
 			}
 

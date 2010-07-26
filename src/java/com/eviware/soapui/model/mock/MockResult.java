@@ -13,7 +13,7 @@
 package com.eviware.soapui.model.mock;
 
 import com.eviware.soapui.support.action.swing.ActionList;
-import com.eviware.soapui.support.types.StringToStringMap;
+import com.eviware.soapui.support.types.StringToStringsMap;
 
 /**
  * Resulting MessageExchange for a request to a MockService
@@ -25,14 +25,14 @@ public interface MockResult
 {
 	public MockRequest getMockRequest();
 
-	public StringToStringMap getResponseHeaders();
+	public StringToStringsMap getResponseHeaders();
 
 	public String getResponseContent();
 
 	public MockResponse getMockResponse();
 
 	public MockOperation getMockOperation();
-	
+
 	public ActionList getActions();
 
 	public long getTimeTaken();

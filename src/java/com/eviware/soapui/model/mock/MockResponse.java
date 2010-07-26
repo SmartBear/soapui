@@ -14,7 +14,7 @@ package com.eviware.soapui.model.mock;
 
 import com.eviware.soapui.model.TestModelItem;
 import com.eviware.soapui.model.iface.Attachment;
-import com.eviware.soapui.support.types.StringToStringMap;
+import com.eviware.soapui.support.types.StringToStringsMap;
 
 /**
  * A MockResponse returned by a MockOperation
@@ -40,7 +40,7 @@ public interface MockResponse extends TestModelItem
 
 	public MockOperation getMockOperation();
 
-	public StringToStringMap getResponseHeaders();
+	public StringToStringsMap getResponseHeaders();
 
 	public MockResult getMockResult();
 }

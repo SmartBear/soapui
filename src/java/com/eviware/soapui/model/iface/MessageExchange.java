@@ -15,6 +15,7 @@ package com.eviware.soapui.model.iface;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.ResultContainer;
 import com.eviware.soapui.support.types.StringToStringMap;
+import com.eviware.soapui.support.types.StringToStringsMap;
 
 /**
  * An exchange of a request and response message
@@ -44,9 +45,9 @@ public interface MessageExchange extends ResultContainer
 
 	public String getResponseContentAsXml();
 
-	public StringToStringMap getRequestHeaders();
+	public StringToStringsMap getRequestHeaders();
 
-	public StringToStringMap getResponseHeaders();
+	public StringToStringsMap getResponseHeaders();
 
 	public Attachment[] getRequestAttachments();
 

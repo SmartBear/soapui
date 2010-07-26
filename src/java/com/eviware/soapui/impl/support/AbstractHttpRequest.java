@@ -54,7 +54,7 @@ import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.resolver.ResolveContext;
-import com.eviware.soapui.support.types.StringToStringMap;
+import com.eviware.soapui.support.types.StringToStringsMap;
 
 public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> extends AbstractWsdlModelItem<T> implements
 		Request, AbstractHttpRequestInterface<T>, JMSHeaderContainer, JMSPropertyContainer
@@ -103,11 +103,11 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 		try
 		{
 			File temp = File.createTempFile( "binaryContent", ".tmp" );
-			
+
 			OutputStream out = new FileOutputStream( temp );
 			out.write( data );
 			out.close();
-			fileAttachment = new RequestFileAttachment( temp,false ,this);
+			fileAttachment = new RequestFileAttachment( temp, false, this );
 			fileAttachment.setContentType( contentType );
 			attachments.add( fileAttachment );
 			notifyPropertyChanged( ATTACHMENTS_PROPERTY, null, fileAttachment );
@@ -403,9 +403,9 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 		notifyPropertyChanged( "timeout", old, timeout );
 	}
 
-	public StringToStringMap getRequestHeaders()
+	public StringToStringsMap getRequestHeaders()
 	{
-		return StringToStringMap.fromXml( getSettings().getString( REQUEST_HEADERS_PROPERTY, null ) );
+		return StringToStringsMap.fromXml( getSettings().getString( REQUEST_HEADERS_PROPERTY, null ) );
 	}
 
 	public RequestIconAnimator<?> getIconAnimator()
@@ -413,9 +413,9 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 		return iconAnimator;
 	}
 
-	public void setRequestHeaders( StringToStringMap map )
+	public void setRequestHeaders( StringToStringsMap map )
 	{
-		StringToStringMap old = getRequestHeaders();
+		StringToStringsMap old = getRequestHeaders();
 		getSettings().setString( REQUEST_HEADERS_PROPERTY, map.toXml() );
 		notifyPropertyChanged( REQUEST_HEADERS_PROPERTY, old, map );
 	}

@@ -102,7 +102,7 @@ public class RestRequestRepresentationsInspector extends AbstractRestRepresentat
 	@SuppressWarnings( "unchecked" )
 	protected void extractRepresentation( HttpResponse response )
 	{
-		String responseContentType = response.getRequestHeaders().get( "Content-Type" );
+		String responseContentType = response.getRequestHeaders().get( "Content-Type", "" );
 		if( StringUtils.isNullOrEmpty( responseContentType ) )
 			return;
 		responseContentType = responseContentType.split( ";" )[0].trim();

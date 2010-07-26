@@ -50,6 +50,7 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.types.StringToObjectMap;
 import com.eviware.soapui.support.types.StringToStringMap;
+import com.eviware.soapui.support.types.StringToStringsMap;
 
 public class AMFRequest extends AbstractAnimatableModelItem<ModelItemConfig> implements Assertable, TestRequest
 {
@@ -71,7 +72,7 @@ public class AMFRequest extends AbstractAnimatableModelItem<ModelItemConfig> imp
 	private HashMap<String, TestProperty> propertyMap;
 	private String[] propertyNames;
 	private List<Object> arguments = new ArrayList<Object>();
-	private StringToStringMap httpHeaders;
+	private StringToStringsMap httpHeaders;
 	private StringToObjectMap amfHeaders;
 	private StringToStringMap amfHeadersString;
 
@@ -597,12 +598,12 @@ public class AMFRequest extends AbstractAnimatableModelItem<ModelItemConfig> imp
 		return sb.toString();
 	}
 
-	public void setHttpHeaders( StringToStringMap httpHeaders )
+	public void setHttpHeaders( StringToStringsMap httpHeaders )
 	{
 		this.httpHeaders = httpHeaders;
 	}
 
-	public StringToStringMap getHttpHeaders()
+	public StringToStringsMap getHttpHeaders()
 	{
 		return httpHeaders;
 	}

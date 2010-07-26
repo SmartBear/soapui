@@ -19,7 +19,7 @@ import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRequest;
 import com.eviware.soapui.impl.wsdl.submit.AbstractWsdlMessageExchange;
 import com.eviware.soapui.model.iface.Attachment;
-import com.eviware.soapui.support.types.StringToStringMap;
+import com.eviware.soapui.support.types.StringToStringsMap;
 
 public class WsdlMockRequestMessageExchange extends AbstractWsdlMessageExchange<WsdlMockOperation>
 {
@@ -62,7 +62,7 @@ public class WsdlMockRequestMessageExchange extends AbstractWsdlMessageExchange<
 		return request.getRequestContent();
 	}
 
-	public StringToStringMap getRequestHeaders()
+	public StringToStringsMap getRequestHeaders()
 	{
 		return request.getRequestHeaders();
 	}
@@ -77,7 +77,7 @@ public class WsdlMockRequestMessageExchange extends AbstractWsdlMessageExchange<
 		return null;
 	}
 
-	public StringToStringMap getResponseHeaders()
+	public StringToStringsMap getResponseHeaders()
 	{
 		return null;
 	}

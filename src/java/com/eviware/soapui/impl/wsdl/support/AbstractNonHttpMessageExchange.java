@@ -4,7 +4,7 @@ import com.eviware.soapui.impl.wsdl.submit.AbstractMessageExchange;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.iface.Operation;
-import com.eviware.soapui.support.types.StringToStringMap;
+import com.eviware.soapui.support.types.StringToStringsMap;
 
 public abstract class AbstractNonHttpMessageExchange<T extends ModelItem> extends AbstractMessageExchange<T>
 {
@@ -39,12 +39,12 @@ public abstract class AbstractNonHttpMessageExchange<T extends ModelItem> extend
 		return null;
 	}
 
-	public StringToStringMap getResponseHeaders()
+	public StringToStringsMap getResponseHeaders()
 	{
 		return null;
 	}
 
-	public StringToStringMap getRequestHeaders()
+	public StringToStringsMap getRequestHeaders()
 	{
 		return null;
 	}

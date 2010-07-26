@@ -20,7 +20,7 @@ import com.eviware.soapui.impl.wsdl.submit.AbstractMessageExchange;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.iface.Operation;
-import com.eviware.soapui.support.types.StringToStringMap;
+import com.eviware.soapui.support.types.StringToStringsMap;
 
 public class HttpResponseMessageExchange extends AbstractMessageExchange<HttpRequestInterface<?>>
 {
@@ -66,7 +66,7 @@ public class HttpResponseMessageExchange extends AbstractMessageExchange<HttpReq
 		return response.getContentAsXml();
 	}
 
-	public StringToStringMap getRequestHeaders()
+	public StringToStringsMap getRequestHeaders()
 	{
 		return response == null ? getModelItem().getRequestHeaders() : response.getRequestHeaders();
 	}
@@ -102,7 +102,7 @@ public class HttpResponseMessageExchange extends AbstractMessageExchange<HttpReq
 		this.response = response;
 	}
 
-	public StringToStringMap getResponseHeaders()
+	public StringToStringsMap getResponseHeaders()
 	{
 		if( response == null )
 			response = getModelItem().getResponse();

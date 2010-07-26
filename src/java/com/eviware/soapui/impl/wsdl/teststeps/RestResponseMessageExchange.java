@@ -18,7 +18,7 @@ import com.eviware.soapui.impl.wsdl.submit.AbstractRestMessageExchange;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.iface.Operation;
-import com.eviware.soapui.support.types.StringToStringMap;
+import com.eviware.soapui.support.types.StringToStringsMap;
 import com.eviware.soapui.support.xml.XmlUtils;
 
 public class RestResponseMessageExchange extends AbstractRestMessageExchange<RestRequestInterface>
@@ -71,7 +71,7 @@ public class RestResponseMessageExchange extends AbstractRestMessageExchange<Res
 		return response == null ? getModelItem().getRequestContent() : response.getRequestContent();
 	}
 
-	public StringToStringMap getRequestHeaders()
+	public StringToStringsMap getRequestHeaders()
 	{
 		return response == null ? getModelItem().getRequestHeaders() : response.getRequestHeaders();
 	}
@@ -121,7 +121,7 @@ public class RestResponseMessageExchange extends AbstractRestMessageExchange<Res
 		return response == null ? null : response.getContentAsXml();
 	}
 
-	public StringToStringMap getResponseHeaders()
+	public StringToStringsMap getResponseHeaders()
 	{
 		if( response == null )
 			response = getModelItem().getResponse();

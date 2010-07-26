@@ -35,12 +35,13 @@ import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.settings.HttpSettings;
 import com.eviware.soapui.support.types.StringToStringMap;
+import com.eviware.soapui.support.types.StringToStringsMap;
 
 public abstract class BaseHttpResponse implements HttpResponse
 {
-	
-	private StringToStringMap requestHeaders;
-	private StringToStringMap responseHeaders;
+
+	private StringToStringsMap requestHeaders;
+	private StringToStringsMap responseHeaders;
 
 	private long timeTaken;
 	private long timestamp;
@@ -60,7 +61,8 @@ public abstract class BaseHttpResponse implements HttpResponse
 	private Attachment[] attachments = new Attachment[0];
 	protected HTMLPageSourceDownloader downloader;
 
-	public BaseHttpResponse( ExtendedHttpMethod httpMethod, AbstractHttpRequestInterface<?> httpRequest, PropertyExpansionContext context )
+	public BaseHttpResponse( ExtendedHttpMethod httpMethod, AbstractHttpRequestInterface<?> httpRequest,
+			PropertyExpansionContext context )
 	{
 		this.httpRequest = new WeakReference<AbstractHttpRequestInterface<?>>( httpRequest );
 		this.timeTaken = httpMethod.getTimeTaken();
@@ -178,7 +180,7 @@ public abstract class BaseHttpResponse implements HttpResponse
 
 			rawRequest.write( ( method + " " + String.valueOf( url ) + " " + version + "\r\n" ).getBytes() );
 
-			requestHeaders = new StringToStringMap();
+			requestHeaders = new StringToStringsMap();
 			Header[] headers = httpMethod.getRequestHeaders();
 			for( Header header : headers )
 			{
@@ -186,9 +188,10 @@ public abstract class BaseHttpResponse implements HttpResponse
 				rawRequest.write( header.toExternalForm().getBytes() );
 			}
 
+			responseHeaders = new StringToStringsMap();
+
 			if( !httpMethod.isFailed() )
 			{
-				responseHeaders = new StringToStringMap();
 				headers = httpMethod.getResponseHeaders();
 				for( Header header : headers )
 				{
@@ -230,7 +233,7 @@ public abstract class BaseHttpResponse implements HttpResponse
 	{
 		try
 		{
-			requestHeaders = new StringToStringMap();
+			requestHeaders = new StringToStringsMap();
 			Header[] headers = httpMethod.getRequestHeaders();
 			for( Header header : headers )
 			{
@@ -239,7 +242,7 @@ public abstract class BaseHttpResponse implements HttpResponse
 
 			if( !httpMethod.isFailed() )
 			{
-				responseHeaders = new StringToStringMap();
+				responseHeaders = new StringToStringsMap();
 				headers = httpMethod.getResponseHeaders();
 				for( Header header : headers )
 				{
@@ -255,12 +258,12 @@ public abstract class BaseHttpResponse implements HttpResponse
 		}
 	}
 
-	public StringToStringMap getRequestHeaders()
+	public StringToStringsMap getRequestHeaders()
 	{
 		return requestHeaders;
 	}
 
-	public StringToStringMap getResponseHeaders()
+	public StringToStringsMap getResponseHeaders()
 	{
 		return responseHeaders;
 	}

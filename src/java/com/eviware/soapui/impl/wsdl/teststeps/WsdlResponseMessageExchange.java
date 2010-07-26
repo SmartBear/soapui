@@ -19,7 +19,7 @@ import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.submit.AbstractWsdlMessageExchange;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.WsdlResponse;
 import com.eviware.soapui.model.iface.Attachment;
-import com.eviware.soapui.support.types.StringToStringMap;
+import com.eviware.soapui.support.types.StringToStringsMap;
 
 /**
  * WsdlMessageExchange for a WsdlRequest and its response
@@ -92,7 +92,7 @@ public class WsdlResponseMessageExchange extends AbstractWsdlMessageExchange<Wsd
 		return response == null ? getModelItem().getRequestContent() : response.getRequestContent();
 	}
 
-	public StringToStringMap getRequestHeaders()
+	public StringToStringsMap getRequestHeaders()
 	{
 		return response == null ? getModelItem().getRequestHeaders() : response.getRequestHeaders();
 	}
@@ -118,7 +118,7 @@ public class WsdlResponseMessageExchange extends AbstractWsdlMessageExchange<Wsd
 		return response == null ? null : response.getContentAsString();
 	}
 
-	public StringToStringMap getResponseHeaders()
+	public StringToStringsMap getResponseHeaders()
 	{
 		if( response == null )
 			response = getModelItem().getResponse();

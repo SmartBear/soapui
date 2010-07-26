@@ -16,7 +16,7 @@ import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 
 import com.eviware.soapui.model.iface.Attachment;
-import com.eviware.soapui.support.types.StringToStringMap;
+import com.eviware.soapui.support.types.StringToStringsMap;
 
 /**
  * A Request to a MockService
@@ -28,7 +28,7 @@ public interface MockRequest
 {
 	public Attachment[] getRequestAttachments();
 
-	public StringToStringMap getRequestHeaders();
+	public StringToStringsMap getRequestHeaders();
 
 	public String getRequestContent();
 

@@ -68,7 +68,7 @@ import com.eviware.soapui.support.resolver.ImportInterfaceResolver;
 import com.eviware.soapui.support.resolver.RemoveTestStepResolver;
 import com.eviware.soapui.support.resolver.ResolveContext;
 import com.eviware.soapui.support.resolver.ResolveContext.PathToResolve;
-import com.eviware.soapui.support.types.StringToStringMap;
+import com.eviware.soapui.support.types.StringToStringsMap;
 
 /**
  * WsdlTestStep that executes a WsdlTestRequest
@@ -588,38 +588,16 @@ public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements O
 		result.extractAndAddAll( "password" );
 		result.extractAndAddAll( "domain" );
 
-		StringToStringMap requestHeaders = testRequest.getRequestHeaders();
+		StringToStringsMap requestHeaders = testRequest.getRequestHeaders();
 		for( String key : requestHeaders.keySet() )
 		{
-			result.extractAndAddAll( new RequestHeaderHolder( requestHeaders, key ), "value" );
+			for( String value : requestHeaders.get( key ) )
+				result.extractAndAddAll( new HttpTestRequestStep.RequestHeaderHolder( key, value, testRequest ), "value" );
 		}
 
 		testRequest.addWsaPropertyExpansions( result, testRequest.getWsaConfig(), this );
 		testRequest.addJMSHeaderExpansions( result, testRequest.getJMSHeaderConfig(), this );
 		return result.toArray( new PropertyExpansion[result.size()] );
-	}
-
-	public class RequestHeaderHolder
-	{
-		private final StringToStringMap valueMap;
-		private final String key;
-
-		public RequestHeaderHolder( StringToStringMap valueMap, String key )
-		{
-			this.valueMap = valueMap;
-			this.key = key;
-		}
-
-		public String getValue()
-		{
-			return valueMap.get( key );
-		}
-
-		public void setValue( String value )
-		{
-			valueMap.put( key, value );
-			testRequest.setRequestHeaders( valueMap );
-		}
 	}
 
 	public TestAssertion addAssertion( String type )

@@ -21,8 +21,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpParser;
 import org.apache.xmlbeans.XmlObject;
@@ -43,15 +41,16 @@ import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.types.StringToStringMap;
+import com.eviware.soapui.support.types.StringToStringsMap;
 import com.eviware.soapui.support.xml.XmlUtils;
 
 public class TcpMonWsdlMonitorMessageExchange extends WsdlMonitorMessageExchange
 {
 	private URL targetUrl;
-	private StringToStringMap responseHeaders;
+	private StringToStringsMap responseHeaders;
 	private long timeTaken;
 	private long timestamp;
-	private StringToStringMap requestHeaders;
+	private StringToStringsMap requestHeaders;
 	private String requestContent;
 	private String responseContent;
 	private int responseContentLength;
@@ -76,8 +75,8 @@ public class TcpMonWsdlMonitorMessageExchange extends WsdlMonitorMessageExchange
 	{
 		super( null );
 		this.project = project;
-		responseHeaders = new StringToStringMap();
-		requestHeaders = new StringToStringMap();
+		responseHeaders = new StringToStringsMap();
+		requestHeaders = new StringToStringsMap();
 		timestamp = System.currentTimeMillis();
 	}
 
@@ -108,7 +107,7 @@ public class TcpMonWsdlMonitorMessageExchange extends WsdlMonitorMessageExchange
 		return requestMmSupport == null ? requestContent : requestMmSupport.getContentAsString();
 	}
 
-	public StringToStringMap getRequestHeaders()
+	public StringToStringsMap getRequestHeaders()
 	{
 		return requestHeaders;
 	}
@@ -123,7 +122,7 @@ public class TcpMonWsdlMonitorMessageExchange extends WsdlMonitorMessageExchange
 		return responseMmSupport == null ? responseContent : responseMmSupport.getContentAsString();
 	}
 
-	public StringToStringMap getResponseHeaders()
+	public StringToStringsMap getResponseHeaders()
 	{
 		return responseHeaders;
 	}
@@ -227,7 +226,7 @@ public class TcpMonWsdlMonitorMessageExchange extends WsdlMonitorMessageExchange
 				}
 			}
 
-			responseContentType = responseHeaders.get( "Content-Type" );
+			responseContentType = responseHeaders.get( "Content-Type", "" );
 			if( responseContentType != null && responseContentType.toUpperCase().startsWith( "MULTIPART" ) )
 			{
 				StringToStringMap values = StringToStringMap.fromHttpHeader( responseContentType );
@@ -308,7 +307,7 @@ public class TcpMonWsdlMonitorMessageExchange extends WsdlMonitorMessageExchange
 				}
 			}
 
-			requestContentType = requestHeaders.get( "Content-Type" );
+			requestContentType = requestHeaders.get( "Content-Type", "" );
 			if( requestContentType != null && requestContentType.toUpperCase().startsWith( "MULTIPART" ) )
 			{
 				StringToStringMap values = StringToStringMap.fromHttpHeader( requestContentType );
@@ -390,7 +389,7 @@ public class TcpMonWsdlMonitorMessageExchange extends WsdlMonitorMessageExchange
 	public SoapVersion getSoapVersion()
 	{
 		if( soapVersion == null )
-			soapVersion = SoapUtils.deduceSoapVersion( requestHeaders.get( "Content-Type" ), getRequestContent() );
+			soapVersion = SoapUtils.deduceSoapVersion( requestHeaders.get( "Content-Type", "" ), getRequestContent() );
 
 		return soapVersion;
 	}
@@ -456,6 +455,5 @@ public class TcpMonWsdlMonitorMessageExchange extends WsdlMonitorMessageExchange
 		// TODO Auto-generated method stub
 		return null;
 	}
-
 
 }

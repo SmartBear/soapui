@@ -28,7 +28,7 @@ import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.iface.SubmitListener;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
 import com.eviware.soapui.support.resolver.ResolveContext;
-import com.eviware.soapui.support.types.StringToStringMap;
+import com.eviware.soapui.support.types.StringToStringsMap;
 
 public interface AbstractHttpRequestInterface<T extends AbstractRequestConfig> extends Request,
 		PropertyExpansionContainer, MutableAttachmentContainer
@@ -70,11 +70,11 @@ public interface AbstractHttpRequestInterface<T extends AbstractRequestConfig> e
 
 	public abstract void setPrettyPrint( boolean prettyPrint );
 
-	public abstract StringToStringMap getRequestHeaders();
+	public abstract StringToStringsMap getRequestHeaders();
 
 	public abstract RequestIconAnimator<?> getIconAnimator();
 
-	public abstract void setRequestHeaders( StringToStringMap map );
+	public abstract void setRequestHeaders( StringToStringsMap map );
 
 	public abstract ImageIcon getIcon();
 

@@ -124,7 +124,7 @@ public class JMSHeaderAndPropertyInspectorFactory implements RequestInspectorFac
 			{
 				Message message = jmsResponse.getMessageReceive();
 				if( message != null )
-					headersAndProperties.putAll( JMSHeader.getMessageHeadersAndProperties( message ) );
+					headersAndProperties.putAll( JMSHeader.getMessageHeadersAndProperties( message ).toStringToStringMap() );
 			}
 			inspector.getHeadersTableModel().setData( headersAndProperties );
 		}
@@ -159,7 +159,7 @@ public class JMSHeaderAndPropertyInspectorFactory implements RequestInspectorFac
 		{
 			MessageExchange messageExchange = getModelItem().getMessageExchange();
 			if( messageExchange != null )
-				return messageExchange.getResponseHeaders();
+				return messageExchange.getResponseHeaders().toStringToStringMap();
 			else
 				return new StringToStringMap();
 		}
@@ -190,7 +190,7 @@ public class JMSHeaderAndPropertyInspectorFactory implements RequestInspectorFac
 		{
 			MessageExchange messageExchange = getModelItem().getMessageExchange();
 			if( messageExchange != null )
-				return messageExchange.getRequestHeaders();
+				return messageExchange.getRequestHeaders().toStringToStringMap();
 			else
 				return new StringToStringMap();
 		}

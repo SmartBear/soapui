@@ -43,6 +43,7 @@ import com.eviware.soapui.monitor.MockEngine;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.editor.inspectors.attachments.ContentTypeHandler;
+import com.eviware.soapui.support.types.StringToStringsMap;
 import com.eviware.soapui.support.xml.XmlUtils;
 
 /**
@@ -183,10 +184,11 @@ public class MockAsWarServlet extends HttpServlet
 
 		out.println( "<hr/><p><b>Request Headers</b>:</p>" );
 		out.print( "<table border=\"1\"><tr><td>Header</td><td>Value</td></tr>" );
-		com.eviware.soapui.support.types.StringToStringMap headers = result.getMockRequest().getRequestHeaders();
+		StringToStringsMap headers = result.getMockRequest().getRequestHeaders();
 		for( String name : headers.getKeys() )
 		{
-			out.println( "<tr><td>" + name + "</td><td>" + headers.get( name ) + "</td></tr>" );
+			for( String value : headers.get( name ) )
+				out.println( "<tr><td>" + name + "</td><td>" + value + "</td></tr>" );
 		}
 		out.println( "</table>" );
 
@@ -198,7 +200,8 @@ public class MockAsWarServlet extends HttpServlet
 		headers = result.getResponseHeaders();
 		for( String name : headers.getKeys() )
 		{
-			out.println( "<tr><td>" + name + "</td><td>" + headers.get( name ) + "</td></tr>" );
+			for( String value : headers.get( name ) )
+				out.println( "<tr><td>" + name + "</td><td>" + value + "</td></tr>" );
 		}
 		out.println( "</table>" );
 

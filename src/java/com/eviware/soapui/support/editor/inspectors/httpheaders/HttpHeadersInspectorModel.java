@@ -20,15 +20,15 @@ import org.apache.commons.lang.NotImplementedException;
 
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.support.editor.inspectors.AbstractXmlInspector;
-import com.eviware.soapui.support.types.StringToStringMap;
+import com.eviware.soapui.support.types.StringToStringsMap;
 
 public interface HttpHeadersInspectorModel
 {
-	public StringToStringMap getHeaders();
+	public StringToStringsMap getHeaders();
 
 	public void addPropertyChangeListener( PropertyChangeListener listener );
 
-	public void setHeaders( StringToStringMap headers );
+	public void setHeaders( StringToStringsMap headers );
 
 	public void removePropertyChangeListener( PropertyChangeListener listener );
 
@@ -85,7 +85,7 @@ public interface HttpHeadersInspectorModel
 			return modelItem;
 		}
 
-		public void setHeaders( StringToStringMap headers )
+		public void setHeaders( StringToStringsMap headers )
 		{
 			if( !readOnly )
 				throw new NotImplementedException();

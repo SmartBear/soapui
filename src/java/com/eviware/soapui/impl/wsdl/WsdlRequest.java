@@ -35,6 +35,7 @@ import com.eviware.soapui.impl.wsdl.support.wsa.WsaConfig;
 import com.eviware.soapui.impl.wsdl.support.wsa.WsaContainer;
 import com.eviware.soapui.impl.wsdl.support.wsrm.WsrmConfig;
 import com.eviware.soapui.impl.wsdl.support.wsrm.WsrmContainer;
+import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.iface.MessagePart;
@@ -49,7 +50,7 @@ import com.eviware.soapui.model.support.InterfaceListenerAdapter;
 import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.types.StringToStringMap;
+import com.eviware.soapui.support.types.StringToStringsMap;
 
 /**
  * Request implementation holding a SOAP request
@@ -515,11 +516,12 @@ public class WsdlRequest extends AbstractHttpRequest<WsdlRequestConfig> implemen
 		PropertyExpansionsResult result = new PropertyExpansionsResult( this, this );
 		result.addAll( super.getPropertyExpansions() );
 
-		StringToStringMap requestHeaders = getRequestHeaders();
+		StringToStringsMap requestHeaders = getRequestHeaders();
 		for( String key : requestHeaders.keySet() )
 		{
-			result.addAll( PropertyExpansionUtils.extractPropertyExpansions( this, new RequestHeaderHolder(
-					requestHeaders, key ), "value" ) );
+			for( String value : requestHeaders.get( key ) )
+				result.addAll( PropertyExpansionUtils.extractPropertyExpansions( this,
+						new HttpTestRequestStep.RequestHeaderHolder( key, value, this ), "value" ) );
 		}
 		addWsaPropertyExpansions( result, getWsaConfig(), this );
 		addJMSHeaderExpansions( result, getJMSHeaderConfig(), this );
@@ -558,29 +560,6 @@ public class WsdlRequest extends AbstractHttpRequest<WsdlRequestConfig> implemen
 				JMSHeader.SEND_AS_BYTESMESSAGE ) );
 		result.addAll( PropertyExpansionUtils.extractPropertyExpansions( modelItem, jmsHeaderConfig,
 				JMSHeader.SOAP_ACTION_ADD ) );
-	}
-
-	public class RequestHeaderHolder
-	{
-		private final StringToStringMap valueMap;
-		private final String key;
-
-		public RequestHeaderHolder( StringToStringMap valueMap, String key )
-		{
-			this.valueMap = valueMap;
-			this.key = key;
-		}
-
-		public String getValue()
-		{
-			return valueMap.get( key );
-		}
-
-		public void setValue( String value )
-		{
-			valueMap.put( key, value );
-			setRequestHeaders( valueMap );
-		}
 	}
 
 	public AttachmentEncoding getAttachmentEncoding( String partName )

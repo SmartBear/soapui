@@ -51,6 +51,7 @@ import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.settings.HttpSettings;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.types.StringToStringMap;
+import com.eviware.soapui.support.types.StringToStringsMap;
 
 /**
  * HTTP transport that uses HttpClient to send/receive SOAP messages
@@ -137,12 +138,14 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 			Settings settings = httpRequest.getSettings();
 
 			// custom http headers last so they can be overridden
-			StringToStringMap headers = httpRequest.getRequestHeaders();
+			StringToStringsMap headers = httpRequest.getRequestHeaders();
 			for( String header : headers.keySet() )
 			{
-				String headerValue = headers.get( header );
-				headerValue = PropertyExpander.expandProperties( submitContext, headerValue );
-				httpMethod.setRequestHeader( header, headerValue );
+				for( String headerValue : headers.get( header ) )
+				{
+					headerValue = PropertyExpander.expandProperties( submitContext, headerValue );
+					httpMethod.addRequestHeader( header, headerValue );
+				}
 			}
 
 			// do request

@@ -46,6 +46,7 @@ import com.eviware.soapui.model.propertyexpansion.DefaultPropertyExpansionContex
 import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.types.StringToStringMap;
+import com.eviware.soapui.support.types.StringToStringsMap;
 import com.eviware.soapui.support.xml.XmlUtils;
 
 public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageExchange
@@ -54,9 +55,9 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
 	private WsdlOperation operation;
 	private WsdlProject project;
 	private String requestContent;
-	private StringToStringMap requestHeaders;
+	private StringToStringsMap requestHeaders;
 	private String responseContent;
-	private StringToStringMap responseHeaders;
+	private StringToStringsMap responseHeaders;
 	private MultipartMessageSupport requestMmSupport;
 	private boolean discarded;
 	private long timestampStart;
@@ -80,8 +81,8 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
 	public JProxyServletWsdlMonitorMessageExchange( WsdlProject project )
 	{
 		super( null );
-		responseHeaders = new StringToStringMap();
-		requestHeaders = new StringToStringMap();
+		responseHeaders = new StringToStringsMap();
+		requestHeaders = new StringToStringsMap();
 		timestampStart = System.currentTimeMillis();
 		this.project = project;
 		capture = true;
@@ -149,7 +150,7 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
 		ByteArrayInputStream in = new ByteArrayInputStream( response == null ? new byte[0] : response );
 		try
 		{
-			responseContentType = responseHeaders.get( "Content-Type" );
+			responseContentType = responseHeaders.get( "Content-Type", "" );
 			if( responseContentType != null && responseContentType.toUpperCase().startsWith( "MULTIPART" ) )
 			{
 				StringToStringMap values = StringToStringMap.fromHttpHeader( responseContentType );
@@ -221,8 +222,7 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
 				request );
 		try
 		{
-
-			requestContentType = requestHeaders.get( "Content-Type" );
+			requestContentType = requestHeaders.get( "Content-Type", "" );
 			if( requestContentType != null && requestContentType.toUpperCase().startsWith( "MULTIPART" ) )
 			{
 				StringToStringMap values = StringToStringMap.fromHttpHeader( requestContentType );
@@ -275,9 +275,9 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
 		return true;
 	}
 
-	private static String getCharset( StringToStringMap headers )
+	private static String getCharset( StringToStringsMap headers )
 	{
-		String requestContentType = headers.get( "Content-Type" );
+		String requestContentType = headers.get( "Content-Type", "" );
 		if( requestContentType != null )
 		{
 			StringToStringMap values = StringToStringMap.fromHttpHeader( requestContentType );
@@ -285,7 +285,7 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
 				return values.get( "charset" );
 		}
 
-		String contentEncodingHeader = headers.get( "Content-Encoding" );
+		String contentEncodingHeader = headers.get( "Content-Encoding", "" );
 		if( contentEncodingHeader != null )
 		{
 			try
@@ -400,7 +400,7 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
 		responseRaw = data;
 	}
 
-	public StringToStringMap getRequestHeaders()
+	public StringToStringsMap getRequestHeaders()
 	{
 		return requestHeaders;
 	}
@@ -415,7 +415,7 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
 		return responseContent;
 	}
 
-	public StringToStringMap getResponseHeaders()
+	public StringToStringsMap getResponseHeaders()
 	{
 		return responseHeaders;
 	}

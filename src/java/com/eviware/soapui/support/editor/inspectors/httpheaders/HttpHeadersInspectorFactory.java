@@ -33,7 +33,7 @@ import com.eviware.soapui.support.editor.inspectors.AbstractXmlInspector;
 import com.eviware.soapui.support.editor.inspectors.httpheaders.HttpHeadersInspectorModel.AbstractHeadersModel;
 import com.eviware.soapui.support.editor.registry.RequestInspectorFactory;
 import com.eviware.soapui.support.editor.registry.ResponseInspectorFactory;
-import com.eviware.soapui.support.types.StringToStringMap;
+import com.eviware.soapui.support.types.StringToStringsMap;
 
 public class HttpHeadersInspectorFactory implements RequestInspectorFactory, ResponseInspectorFactory
 {
@@ -134,10 +134,10 @@ public class HttpHeadersInspectorFactory implements RequestInspectorFactory, Res
 			super( true, request, MessageExchangeModelItem.MESSAGE_EXCHANGE );
 		}
 
-		public StringToStringMap getHeaders()
+		public StringToStringsMap getHeaders()
 		{
 			MessageExchange messageExchange = getModelItem().getMessageExchange();
-			return messageExchange == null ? new StringToStringMap() : messageExchange.getRequestHeaders();
+			return messageExchange == null ? new StringToStringsMap() : messageExchange.getRequestHeaders();
 		}
 	}
 
@@ -148,17 +148,17 @@ public class HttpHeadersInspectorFactory implements RequestInspectorFactory, Res
 			super( true, request, MessageExchangeModelItem.MESSAGE_EXCHANGE );
 		}
 
-		public StringToStringMap getHeaders()
+		public StringToStringsMap getHeaders()
 		{
 			if( getModelItem().getMessageExchange() instanceof AMFTestStepResult )
 			{
 				AMFTestStepResult messageExchange = ( AMFTestStepResult )getModelItem().getMessageExchange();
 				return ( ( AMFRequestTestStep )messageExchange.getTestStep() ).getHttpHeaders();
 			}
-			return new StringToStringMap();
+			return new StringToStringsMap();
 		}
 	}
-	
+
 	private class AMFMessageExchangeResponseHTTPHeadersModel extends AbstractHeadersModel<MessageExchangeModelItem>
 	{
 		public AMFMessageExchangeResponseHTTPHeadersModel( MessageExchangeModelItem modelItem )
@@ -166,14 +166,14 @@ public class HttpHeadersInspectorFactory implements RequestInspectorFactory, Res
 			super( true, modelItem, MessageExchangeModelItem.MESSAGE_EXCHANGE );
 		}
 
-		public StringToStringMap getHeaders()
+		public StringToStringsMap getHeaders()
 		{
 			if( getModelItem().getMessageExchange() instanceof AMFTestStepResult )
 			{
 				AMFTestStepResult messageExchange = ( AMFTestStepResult )getModelItem().getMessageExchange();
 				return ( ( AMFResponse )messageExchange.getResponse() ).getResponseHeaders();
 			}
-			return new StringToStringMap();
+			return new StringToStringsMap();
 		}
 	}
 
@@ -184,10 +184,10 @@ public class HttpHeadersInspectorFactory implements RequestInspectorFactory, Res
 			super( true, response, MessageExchangeModelItem.MESSAGE_EXCHANGE );
 		}
 
-		public StringToStringMap getHeaders()
+		public StringToStringsMap getHeaders()
 		{
 			MessageExchange messageExchange = getModelItem().getMessageExchange();
-			return messageExchange == null ? new StringToStringMap() : messageExchange.getResponseHeaders();
+			return messageExchange == null ? new StringToStringsMap() : messageExchange.getResponseHeaders();
 		}
 
 	}
@@ -204,12 +204,12 @@ public class HttpHeadersInspectorFactory implements RequestInspectorFactory, Res
 			this.request.addPropertyChangeListener( this );
 		}
 
-		public StringToStringMap getHeaders()
+		public StringToStringsMap getHeaders()
 		{
 			return getModelItem().getRequestHeaders();
 		}
 
-		public void setHeaders( StringToStringMap headers )
+		public void setHeaders( StringToStringsMap headers )
 		{
 			getModelItem().setRequestHeaders( headers );
 		}
@@ -240,12 +240,12 @@ public class HttpHeadersInspectorFactory implements RequestInspectorFactory, Res
 			super( false, testStep, AMFRequest.AMF_REQUEST );
 		}
 
-		public StringToStringMap getHeaders()
+		public StringToStringsMap getHeaders()
 		{
 			return getModelItem().getHttpHeaders();
 		}
 
-		public void setHeaders( StringToStringMap headers )
+		public void setHeaders( StringToStringsMap headers )
 		{
 			getModelItem().setHttpHeaders( headers );
 		}
@@ -261,15 +261,15 @@ public class HttpHeadersInspectorFactory implements RequestInspectorFactory, Res
 	private class AMFResponseHeadersModel extends AbstractHeadersModel<AMFRequestTestStep>
 	{
 		AMFRequestTestStep testStep;
-		
+
 		public AMFResponseHeadersModel( AMFRequestTestStep testStep )
 		{
-			super( true, testStep, AMFResponse.AMF_RESPONSE_HEADERS); 
+			super( true, testStep, AMFResponse.AMF_RESPONSE_HEADERS );
 			this.testStep = testStep;
 			this.testStep.getAMFRequest().addPropertyChangeListener( AMFRequest.AMF_RESPONSE_PROPERTY, this );
 		}
 
-		public StringToStringMap getHeaders()
+		public StringToStringsMap getHeaders()
 		{
 			if( testStep.getAMFRequest().getResponse() != null )
 			{
@@ -277,7 +277,7 @@ public class HttpHeadersInspectorFactory implements RequestInspectorFactory, Res
 				return response.getResponseHeaders();
 			}
 			else
-				return new StringToStringMap();
+				return new StringToStringsMap();
 		}
 
 	}
@@ -289,12 +289,12 @@ public class HttpHeadersInspectorFactory implements RequestInspectorFactory, Res
 			super( false, request, WsdlMockResponse.HEADERS_PROPERTY );
 		}
 
-		public StringToStringMap getHeaders()
+		public StringToStringsMap getHeaders()
 		{
 			return getModelItem().getResponseHeaders();
 		}
 
-		public void setHeaders( StringToStringMap headers )
+		public void setHeaders( StringToStringsMap headers )
 		{
 			getModelItem().setResponseHeaders( headers );
 		}
@@ -314,10 +314,10 @@ public class HttpHeadersInspectorFactory implements RequestInspectorFactory, Res
 			this.request.addPropertyChangeListener( this );
 		}
 
-		public StringToStringMap getHeaders()
+		public StringToStringsMap getHeaders()
 		{
 			AbstractHttpRequestInterface<?> request = getModelItem();
-			return request.getResponse() == null ? new StringToStringMap() : request.getResponse().getResponseHeaders();
+			return request.getResponse() == null ? new StringToStringsMap() : request.getResponse().getResponseHeaders();
 		}
 
 		public void setInspector( AbstractXmlInspector inspector )
@@ -327,7 +327,7 @@ public class HttpHeadersInspectorFactory implements RequestInspectorFactory, Res
 
 		public void propertyChange( PropertyChangeEvent evt )
 		{
-			if(  request.getEndpoint() != null && evt.getPropertyName().equals( AbstractHttpRequest.ENDPOINT_PROPERTY ) )
+			if( request.getEndpoint() != null && evt.getPropertyName().equals( AbstractHttpRequest.ENDPOINT_PROPERTY ) )
 			{
 				inspector.setEnabled( !request.getEndpoint().startsWith( JMSEndpoint.JMS_ENDPIONT_PREFIX ) );
 			}
@@ -342,10 +342,10 @@ public class HttpHeadersInspectorFactory implements RequestInspectorFactory, Res
 			super( true, request, WsdlMockResponse.MOCKRESULT_PROPERTY );
 		}
 
-		public StringToStringMap getHeaders()
+		public StringToStringsMap getHeaders()
 		{
 			WsdlMockResponse request = getModelItem();
-			return request.getMockResult() == null ? new StringToStringMap() : request.getMockResult().getMockRequest()
+			return request.getMockResult() == null ? new StringToStringsMap() : request.getMockResult().getMockRequest()
 					.getRequestHeaders();
 		}
 	}

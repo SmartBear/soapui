@@ -61,6 +61,7 @@ import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
 import com.eviware.soapui.support.types.StringToStringMap;
+import com.eviware.soapui.support.types.StringToStringsMap;
 
 /**
  * 
@@ -129,8 +130,8 @@ public class AMFRequestTestStep extends WsdlTestStepWithProperties implements As
 
 	private void addResponseAsXmlVirtualProperty()
 	{
-		TestStepBeanProperty responseProperty = new TestStepBeanProperty( WsdlTestStepWithProperties.RESPONSE_AS_XML, false, amfRequest,
-				"responseContent", this )
+		TestStepBeanProperty responseProperty = new TestStepBeanProperty( WsdlTestStepWithProperties.RESPONSE_AS_XML,
+				false, amfRequest, "responseContent", this )
 		{
 			@Override
 			public String getDefaultValue()
@@ -676,16 +677,16 @@ public class AMFRequestTestStep extends WsdlTestStepWithProperties implements As
 		return amfRequest.executeAmfScript( submitContext );
 	}
 
-	public void setHttpHeaders( StringToStringMap httpHeaders )
+	public void setHttpHeaders( StringToStringsMap httpHeaders )
 	{
-		StringToStringMap old = getHttpHeaders();
+		StringToStringsMap old = getHttpHeaders();
 		getSettings().setString( HTTP_HEADERS_PROPERTY, httpHeaders.toXml() );
 		notifyPropertyChanged( HTTP_HEADERS_PROPERTY, old, httpHeaders );
 	}
 
-	public StringToStringMap getHttpHeaders()
+	public StringToStringsMap getHttpHeaders()
 	{
-		return StringToStringMap.fromXml( getSettings().getString( HTTP_HEADERS_PROPERTY, null ) );
+		return StringToStringsMap.fromXml( getSettings().getString( HTTP_HEADERS_PROPERTY, null ) );
 	}
 
 	public void setAmfHeaders( StringToStringMap amfHeaders )

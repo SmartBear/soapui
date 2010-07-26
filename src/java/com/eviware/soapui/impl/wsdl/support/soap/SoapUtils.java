@@ -33,7 +33,7 @@ import com.eviware.soapui.impl.wsdl.mock.DispatchException;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlUtils;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.support.StringUtils;
-import com.eviware.soapui.support.types.StringToStringMap;
+import com.eviware.soapui.support.types.StringToStringsMap;
 import com.eviware.soapui.support.xml.XmlUtils;
 
 /**
@@ -102,14 +102,14 @@ public class SoapUtils
 		return soapVersion;
 	}
 
-	public static String getSoapAction( SoapVersion soapVersion, StringToStringMap headers )
+	public static String getSoapAction( SoapVersion soapVersion, StringToStringsMap headers )
 	{
 		String soapAction = null;
-		String contentType = headers.get( "Content-Type" );
+		String contentType = headers.get( "Content-Type", "" );
 
 		if( soapVersion == SoapVersion.Soap11 )
 		{
-			soapAction = headers.get( "SOAPAction" );
+			soapAction = headers.get( "SOAPAction", "" );
 		}
 		else if( soapVersion == SoapVersion.Soap12 )
 		{

@@ -35,7 +35,8 @@ import com.eviware.soapui.support.editor.xml.XmlEditor;
 import com.eviware.soapui.support.xml.JXEditTextArea;
 
 @SuppressWarnings( "unchecked" )
-public class JsonResponseMessageExchangeView extends AbstractXmlEditorView<HttpResponseDocument> implements PropertyChangeListener
+public class JsonResponseMessageExchangeView extends AbstractXmlEditorView<HttpResponseDocument> implements
+		PropertyChangeListener
 {
 	private final MessageExchangeModelItem messageExchangeModelItem;
 	private JPanel contentPanel;
@@ -43,7 +44,7 @@ public class JsonResponseMessageExchangeView extends AbstractXmlEditorView<HttpR
 	private boolean updatingRequest;
 	private JPanel panel;
 
-	public JsonResponseMessageExchangeView(  XmlEditor editor , MessageExchangeModelItem messageExchangeModelItem )
+	public JsonResponseMessageExchangeView( XmlEditor editor, MessageExchangeModelItem messageExchangeModelItem )
 	{
 		super( "JSON", editor, JsonResponseViewFactory.VIEW_ID );
 		this.messageExchangeModelItem = messageExchangeModelItem;
@@ -103,7 +104,7 @@ public class JsonResponseMessageExchangeView extends AbstractXmlEditorView<HttpR
 		{
 			String content = "<Not JSON content>";
 
-			if( JsonMediaTypeHandler.couldBeJsonContent( me.getResponseHeaders().get( "Content-Type" )) )
+			if( JsonMediaTypeHandler.couldBeJsonContent( me.getResponseHeaders().get( "Content-Type", "" ) ) )
 			{
 				try
 				{
@@ -136,7 +137,7 @@ public class JsonResponseMessageExchangeView extends AbstractXmlEditorView<HttpR
 
 	public void propertyChange( PropertyChangeEvent evt )
 	{
-		if( evt.getPropertyName().equals("messageExchange") && !updatingRequest )
+		if( evt.getPropertyName().equals( "messageExchange" ) && !updatingRequest )
 		{
 			setEditorContent( ( ( MessageExchange )evt.getNewValue() ) );
 		}

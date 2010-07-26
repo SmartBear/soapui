@@ -4,6 +4,7 @@ import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.model.iface.Response;
 import com.eviware.soapui.support.types.StringToStringMap;
+import com.eviware.soapui.support.types.StringToStringsMap;
 
 public abstract class AbstractResponse<T extends Request> implements Response
 {
@@ -60,12 +61,12 @@ public abstract class AbstractResponse<T extends Request> implements Response
 		return getContentAsString();
 	}
 
-	public StringToStringMap getRequestHeaders()
+	public StringToStringsMap getRequestHeaders()
 	{
 		return null;
 	}
 
-	public StringToStringMap getResponseHeaders()
+	public StringToStringsMap getResponseHeaders()
 	{
 		return null;
 	}

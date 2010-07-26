@@ -40,6 +40,7 @@ import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResult;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunner;
+import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse.ResponseHeaderHolder;
 import com.eviware.soapui.impl.wsdl.mock.dispatch.QueryMatchMockOperationDispatcher;
 import com.eviware.soapui.impl.wsdl.panels.mockoperation.WsdlMockResultMessageExchange;
 import com.eviware.soapui.impl.wsdl.support.ModelItemIconAnimator;
@@ -88,7 +89,7 @@ import com.eviware.soapui.support.resolver.ImportInterfaceResolver;
 import com.eviware.soapui.support.resolver.RemoveTestStepResolver;
 import com.eviware.soapui.support.resolver.ResolveContext;
 import com.eviware.soapui.support.resolver.ResolveContext.PathToResolve;
-import com.eviware.soapui.support.types.StringToStringMap;
+import com.eviware.soapui.support.types.StringToStringsMap;
 
 public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties implements OperationTestStep,
 		PropertyChangeListener, Assertable, PropertyExpansionContainer
@@ -1294,38 +1295,16 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 
 		result.addAll( PropertyExpansionUtils.extractPropertyExpansions( this, mockResponse, "responseContent" ) );
 
-		StringToStringMap responseHeaders = mockResponse.getResponseHeaders();
+		StringToStringsMap responseHeaders = mockResponse.getResponseHeaders();
 		for( String key : responseHeaders.keySet() )
 		{
-			result.addAll( PropertyExpansionUtils.extractPropertyExpansions( this, new ResponseHeaderHolder(
-					responseHeaders, key ), "value" ) );
+			for( String value : responseHeaders.get( key ) )
+				result.addAll( PropertyExpansionUtils.extractPropertyExpansions( this, new ResponseHeaderHolder( key,
+						value, mockResponse ), "value" ) );
 		}
 		mockResponse.addWsaPropertyExpansions( result, mockResponse.getWsaConfig(), this );
 
 		return result.toArray( new PropertyExpansion[result.size()] );
-	}
-
-	public class ResponseHeaderHolder
-	{
-		private final StringToStringMap valueMap;
-		private final String key;
-
-		public ResponseHeaderHolder( StringToStringMap valueMap, String key )
-		{
-			this.valueMap = valueMap;
-			this.key = key;
-		}
-
-		public String getValue()
-		{
-			return valueMap.get( key );
-		}
-
-		public void setValue( String value )
-		{
-			valueMap.put( key, value );
-			mockResponse.setResponseHeaders( valueMap );
-		}
 	}
 
 	public WsdlMessageAssertion getAssertionByName( String name )

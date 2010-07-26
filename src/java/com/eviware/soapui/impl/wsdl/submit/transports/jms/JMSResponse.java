@@ -29,7 +29,7 @@ import com.eviware.soapui.impl.wsdl.submit.transports.http.SSLInfo;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.WsdlResponse;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.iface.Request;
-import com.eviware.soapui.support.types.StringToStringMap;
+import com.eviware.soapui.support.types.StringToStringsMap;
 
 public class JMSResponse implements WsdlResponse
 {
@@ -42,15 +42,15 @@ public class JMSResponse implements WsdlResponse
 	private long requestStartedTime;
 	private String endpoint;
 
-	public JMSResponse(String payload, Message messageSend, Message messageReceive, Request request,
-			long requestStartedTime)
+	public JMSResponse( String payload, Message messageSend, Message messageReceive, Request request,
+			long requestStartedTime )
 	{
 		this.payload = payload;
 		this.messageReceive = messageReceive;
 		this.messageSend = messageSend;
 		this.request = request;
 		this.requestStartedTime = requestStartedTime;
-		this.endpoint=request.getEndpoint();
+		this.endpoint = request.getEndpoint();
 	}
 
 	public Attachment[] getAttachments()
@@ -58,12 +58,12 @@ public class JMSResponse implements WsdlResponse
 		return attachments;
 	}
 
-	public void setAttachments(Attachment[] attachments)
+	public void setAttachments( Attachment[] attachments )
 	{
 		this.attachments = attachments;
 	}
 
-	public Attachment[] getAttachmentsForPart(String partName)
+	public Attachment[] getAttachmentsForPart( String partName )
 	{
 		return attachments;
 	}
@@ -80,28 +80,28 @@ public class JMSResponse implements WsdlResponse
 
 	public String getContentType()
 	{
-		if (messageReceive != null)
+		if( messageReceive != null )
 			try
 			{
 				return messageReceive.getJMSType();
 			}
-			catch (JMSException e)
+			catch( JMSException e )
 			{
-				SoapUI.logError(e);
+				SoapUI.logError( e );
 			}
 		return null;
 	}
 
-	public String getProperty(String name)
+	public String getProperty( String name )
 	{
-		if (messageReceive != null)
+		if( messageReceive != null )
 			try
 			{
-				return messageReceive.getStringProperty(name);
+				return messageReceive.getStringProperty( name );
 			}
-			catch (JMSException e)
+			catch( JMSException e )
 			{
-				SoapUI.logError(e);
+				SoapUI.logError( e );
 			}
 		return null;
 	}
@@ -112,30 +112,30 @@ public class JMSResponse implements WsdlResponse
 		Enumeration<?> temp;
 		try
 		{
-			if (messageReceive != null)
+			if( messageReceive != null )
 			{
 				temp = messageReceive.getPropertyNames();
-				while (temp.hasMoreElements())
+				while( temp.hasMoreElements() )
 				{
-					propertyNames.add((String) temp.nextElement());
+					propertyNames.add( ( String )temp.nextElement() );
 				}
-				return propertyNames.toArray(new String[propertyNames.size()]);
+				return propertyNames.toArray( new String[propertyNames.size()] );
 			}
 			else
 			{
 				return new String[0];
 			}
 		}
-		catch (JMSException e)
+		catch( JMSException e )
 		{
-			SoapUI.logError(e);
+			SoapUI.logError( e );
 		}
 		return null;
 	}
 
 	public byte[] getRawRequestData()
 	{
-		if (messageSend != null)
+		if( messageSend != null )
 			return messageSend.toString().getBytes();
 		else
 			return "".getBytes();
@@ -143,7 +143,7 @@ public class JMSResponse implements WsdlResponse
 
 	public byte[] getRawResponseData()
 	{
-		if (messageReceive != null)
+		if( messageReceive != null )
 			return messageReceive.toString().getBytes();
 		else
 			return "".getBytes();
@@ -151,43 +151,43 @@ public class JMSResponse implements WsdlResponse
 
 	public String getRequestContent()
 	{
-		if (messageSend != null)
+		if( messageSend != null )
 		{
 			try
 			{
-				if (messageSend instanceof TextMessage)
+				if( messageSend instanceof TextMessage )
 				{
-					return ((TextMessage) messageSend).getText();
+					return ( ( TextMessage )messageSend ).getText();
 				}
 			}
-			catch (JMSException e)
+			catch( JMSException e )
 			{
-				SoapUI.logError(e);
+				SoapUI.logError( e );
 			}
 			return messageSend.toString();
 		}
 		return "";
 	}
 
-	public StringToStringMap getRequestHeaders()
+	public StringToStringsMap getRequestHeaders()
 	{
-		if (messageSend != null)
+		if( messageSend != null )
 		{
-			return JMSHeader.getMessageHeadersAndProperties(messageSend);
+			return JMSHeader.getMessageHeadersAndProperties( messageSend );
 		}
 		else
-			return new StringToStringMap();
+			return new StringToStringsMap();
 
 	}
 
-	public StringToStringMap getResponseHeaders()
+	public StringToStringsMap getResponseHeaders()
 	{
-		if (messageReceive != null)
+		if( messageReceive != null )
 		{
-			return JMSHeader.getMessageHeadersAndProperties(messageReceive);
+			return JMSHeader.getMessageHeadersAndProperties( messageReceive );
 		}
 		else
-			return new StringToStringMap();
+			return new StringToStringsMap();
 	}
 
 	public long getTimeTaken()
@@ -199,34 +199,34 @@ public class JMSResponse implements WsdlResponse
 	{
 		try
 		{
-			if (messageReceive != null)
+			if( messageReceive != null )
 				return messageReceive.getJMSTimestamp();
 			else
 				return 0;
 		}
-		catch (JMSException e)
+		catch( JMSException e )
 		{
-			SoapUI.logError(e);
+			SoapUI.logError( e );
 		}
 		return 0;
 	}
 
-	public void setProperty(String name, String value)
+	public void setProperty( String name, String value )
 	{
 		try
 		{
-			messageReceive.setStringProperty(name, value);
+			messageReceive.setStringProperty( name, value );
 		}
-		catch (JMSException e)
+		catch( JMSException e )
 		{
-			SoapUI.logError(e);
+			SoapUI.logError( e );
 		}
 
 	}
 
 	public String getContentAsXml()
 	{
-		if (payload != null && !"".equals(payload))
+		if( payload != null && !"".equals( payload ) )
 			return payload;
 		else
 			return "<xml/>";
@@ -257,7 +257,7 @@ public class JMSResponse implements WsdlResponse
 		return null;
 	}
 
-	public void setResponseContent(String responseContent)
+	public void setResponseContent( String responseContent )
 	{
 		this.payload = responseContent;
 	}
@@ -269,7 +269,7 @@ public class JMSResponse implements WsdlResponse
 
 	public WsdlRequest getRequest()
 	{
-		return (WsdlRequest) request;
+		return ( WsdlRequest )request;
 	}
 
 	public Message getMessageReceive()
@@ -282,8 +282,9 @@ public class JMSResponse implements WsdlResponse
 		return messageSend;
 	}
 
-	public String getEndpoint(){
+	public String getEndpoint()
+	{
 		return endpoint;
 	}
-	
+
 }

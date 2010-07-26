@@ -32,7 +32,7 @@ import com.eviware.soapui.support.editor.registry.RequestEditorViewFactory;
 import com.eviware.soapui.support.editor.registry.ResponseEditorViewFactory;
 import com.eviware.soapui.support.editor.xml.XmlDocument;
 import com.eviware.soapui.support.editor.xml.XmlEditor;
-import com.eviware.soapui.support.types.StringToStringMap;
+import com.eviware.soapui.support.types.StringToStringsMap;
 
 public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEditorViewFactory
 {
@@ -244,7 +244,7 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
 			if( request.getMockResult() == null )
 				return "<missing response>";
 
-			StringToStringMap headers = request.getMockResult().getResponseHeaders();
+			StringToStringsMap headers = request.getMockResult().getResponseHeaders();
 			byte[] data = request.getMockResult().getRawResponseData();
 
 			return buildRawContent( headers, data );
@@ -258,10 +258,10 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
 		}
 	}
 
-	private static String buildRawContent( StringToStringMap headers, byte[] data )
+	private static String buildRawContent( StringToStringsMap headers, byte[] data )
 	{
 		StringBuffer result = new StringBuffer();
-		String status = headers.get( "#status#" );
+		String status = headers.get( "#status#", "" );
 		if( status != null )
 			result.append( status ).append( '\n' );
 
@@ -270,7 +270,8 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
 			if( header.equals( "#status#" ) )
 				continue;
 
-			result.append( header ).append( ": " ).append( headers.get( header ) ).append( '\n' );
+			for( String value : headers.get( header ) )
+				result.append( header ).append( ": " ).append( value ).append( '\n' );
 		}
 		result.append( '\n' );
 
@@ -331,7 +332,7 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
 		@Override
 		public void propertyChange( PropertyChangeEvent evt )
 		{
-				setXml( "" );
+			setXml( "" );
 		}
 
 		@Override
@@ -356,7 +357,7 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
 			super.release();
 		}
 	}
-	
+
 	private static class AmfRequestRawXmlEditor extends RawXmlEditor<XmlDocument>
 	{
 		private final AMFRequest request;
@@ -372,7 +373,7 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
 		@Override
 		public void propertyChange( PropertyChangeEvent evt )
 		{
-				setXml( "" );
+			setXml( "" );
 		}
 
 		@Override
@@ -381,7 +382,7 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
 			if( request.getResponse() == null )
 				return "";
 
-			byte[] rawRequestData = request.getResponse().getRawRequestData(); 
+			byte[] rawRequestData = request.getResponse().getRawRequestData();
 			int maxSize = ( int )SoapUI.getSettings().getLong( UISettings.RAW_RESPONSE_MESSAGE_SIZE, 10000 );
 
 			if( maxSize < rawRequestData.length )

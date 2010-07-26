@@ -41,7 +41,7 @@ import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 import com.eviware.soapui.impl.wsdl.support.http.ProxyUtils;
 import com.eviware.soapui.impl.wsdl.support.http.SoapUIHostConfiguration;
 import com.eviware.soapui.model.propertyexpansion.DefaultPropertyExpansionContext;
-import com.eviware.soapui.support.types.StringToStringMap;
+import com.eviware.soapui.support.types.StringToStringsMap;
 import com.eviware.soapui.support.xml.XmlUtils;
 
 public class TunnelServlet extends ProxyServlet
@@ -179,13 +179,13 @@ public class TunnelServlet extends ProxyServlet
 
 		monitor.fireAfterProxy( request, response, postMethod, capturedData );
 
-		StringToStringMap responseHeaders = capturedData.getResponseHeaders();
+		StringToStringsMap responseHeaders = capturedData.getResponseHeaders();
 		// copy headers to response
 		HttpServletResponse httpResponse = ( HttpServletResponse )response;
 		for( String name : responseHeaders.keySet() )
 		{
-			String header = responseHeaders.get( name );
-			httpResponse.addHeader( name, header );
+			for( String header : responseHeaders.get( name ) )
+				httpResponse.addHeader( name, header );
 
 		}
 

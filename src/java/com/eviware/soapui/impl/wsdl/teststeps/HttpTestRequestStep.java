@@ -57,7 +57,7 @@ import com.eviware.soapui.model.testsuite.TestStepProperty;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
 import com.eviware.soapui.support.resolver.ResolveContext;
-import com.eviware.soapui.support.types.StringToStringMap;
+import com.eviware.soapui.support.types.StringToStringsMap;
 
 public class HttpTestRequestStep extends WsdlTestStepWithProperties implements HttpTestRequestStepInterface
 {
@@ -119,7 +119,8 @@ public class HttpTestRequestStep extends WsdlTestStepWithProperties implements H
 			}
 		} );
 
-		addProperty( new TestStepBeanProperty( WsdlTestStepWithProperties.RESPONSE_AS_XML, true, testRequest, "responseContentAsXml", this )
+		addProperty( new TestStepBeanProperty( WsdlTestStepWithProperties.RESPONSE_AS_XML, true, testRequest,
+				"responseContentAsXml", this )
 		{
 			@Override
 			public String getDefaultValue()
@@ -435,10 +436,11 @@ public class HttpTestRequestStep extends WsdlTestStepWithProperties implements H
 		result.extractAndAddAll( "password" );
 		result.extractAndAddAll( "domain" );
 
-		StringToStringMap requestHeaders = testRequest.getRequestHeaders();
+		StringToStringsMap requestHeaders = testRequest.getRequestHeaders();
 		for( String key : requestHeaders.keySet() )
 		{
-			result.extractAndAddAll( new RequestHeaderHolder( requestHeaders, key ), "value" );
+			for( String value : requestHeaders.get( key ) )
+				result.extractAndAddAll( new RequestHeaderHolder( key, value, testRequest ), "value" );
 		}
 
 		for( String key : testRequest.getParams().getPropertyNames() )
@@ -454,25 +456,28 @@ public class HttpTestRequestStep extends WsdlTestStepWithProperties implements H
 		return testRequest;
 	}
 
-	public class RequestHeaderHolder
+	public static class RequestHeaderHolder
 	{
-		private final StringToStringMap valueMap;
 		private final String key;
+		private final String oldValue;
+		private AbstractHttpRequest<?> testRequest;
 
-		public RequestHeaderHolder( StringToStringMap valueMap, String key )
+		public RequestHeaderHolder( String key, String oldValue, AbstractHttpRequest<?> testRequest )
 		{
-			this.valueMap = valueMap;
 			this.key = key;
+			this.oldValue = oldValue;
+			this.testRequest = testRequest;
 		}
 
 		public String getValue()
 		{
-			return valueMap.get( key );
+			return oldValue;
 		}
 
 		public void setValue( String value )
 		{
-			valueMap.put( key, value );
+			StringToStringsMap valueMap = testRequest.getRequestHeaders();
+			valueMap.replace( key, oldValue, value );
 			testRequest.setRequestHeaders( valueMap );
 		}
 	}

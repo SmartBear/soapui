@@ -12,7 +12,7 @@
 
 package com.eviware.soapui.model.iface;
 
-import com.eviware.soapui.support.types.StringToStringMap;
+import com.eviware.soapui.support.types.StringToStringsMap;
 
 /**
  * Request Response behaviour
@@ -38,9 +38,9 @@ public interface Response
 
 	public Attachment[] getAttachmentsForPart( String partName );
 
-	public StringToStringMap getRequestHeaders();
+	public StringToStringsMap getRequestHeaders();
 
-	public StringToStringMap getResponseHeaders();
+	public StringToStringsMap getResponseHeaders();
 
 	public long getTimestamp();
 

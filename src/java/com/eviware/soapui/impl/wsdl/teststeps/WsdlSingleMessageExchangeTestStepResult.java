@@ -89,18 +89,6 @@ public class WsdlSingleMessageExchangeTestStepResult extends WsdlTestStepResult
 		if( isDiscarded() )
 			return;
 
-		// writer.println( "---------------- Properties ------------------------"
-		// );
-		// if( properties == null )
-		// {
-		// writer.println( "Missing Properties" );
-		// }
-		// else
-		// {
-		// for( String name : properties.keySet() )
-		// writer.println( name + ": " + properties.get( name ) );
-		// }
-
 		writer.println( "---------------- Message Exchange ------------------" );
 		if( messageExchange == null )
 		{
@@ -121,9 +109,4 @@ public class WsdlSingleMessageExchangeTestStepResult extends WsdlTestStepResult
 			writer.println( XmlUtils.prettyPrintXml( messageExchange.getResponseContent() ) );
 		}
 	}
-
-	// public StringToStringMap getProperties()
-	// {
-	// return properties;
-	// }
 }

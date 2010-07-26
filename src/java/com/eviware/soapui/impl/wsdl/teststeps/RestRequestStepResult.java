@@ -29,6 +29,7 @@ import com.eviware.soapui.model.testsuite.ResponseAssertedMessageExchange;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.types.StringToStringMap;
+import com.eviware.soapui.support.types.StringToStringsMap;
 import com.eviware.soapui.support.xml.XmlUtils;
 
 /**
@@ -198,7 +199,7 @@ public class RestRequestStepResult extends WsdlTestStepResult implements Respons
 		writer.println( "\r\n---------------- Request ---------------------------" );
 		if( response != null )
 		{
-			StringToStringMap headers = response.getRequestHeaders();
+			StringToStringsMap headers = response.getRequestHeaders();
 			for( String key : headers.keySet() )
 			{
 				if( headers.get( key ) != null )
@@ -214,12 +215,12 @@ public class RestRequestStepResult extends WsdlTestStepResult implements Respons
 		writer.println( "\r\n---------------- Response --------------------------" );
 		if( response != null )
 		{
-			StringToStringMap headers = response.getResponseHeaders();
+			StringToStringsMap headers = response.getResponseHeaders();
 			for( String key : headers.keySet() )
 			{
 				if( headers.get( key ) != null )
 					writer.println( key + ": " + headers.get( key ) );
-		}
+			}
 
 			String respContent = response.getContentAsString();
 			if( respContent != null )
@@ -247,7 +248,7 @@ public class RestRequestStepResult extends WsdlTestStepResult implements Respons
 		return response.getRequest().getAttachments();
 	}
 
-	public StringToStringMap getRequestHeaders()
+	public StringToStringsMap getRequestHeaders()
 	{
 		if( response == null )
 			return null;
@@ -284,7 +285,7 @@ public class RestRequestStepResult extends WsdlTestStepResult implements Respons
 		return response.getContentAsXml();
 	}
 
-	public StringToStringMap getResponseHeaders()
+	public StringToStringsMap getResponseHeaders()
 	{
 		if( response == null )
 			return null;

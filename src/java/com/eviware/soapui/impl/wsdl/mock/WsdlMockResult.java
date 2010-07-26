@@ -29,7 +29,7 @@ import com.eviware.soapui.model.mock.MockResponse;
 import com.eviware.soapui.model.mock.MockResult;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.DefaultActionList;
-import com.eviware.soapui.support.types.StringToStringMap;
+import com.eviware.soapui.support.types.StringToStringsMap;
 
 /**
  * The result of a handled WsdlMockRequest
@@ -44,7 +44,7 @@ public class WsdlMockResult implements MockResult
 	private long timeTaken;
 	private long timestamp;
 	private DefaultActionList actions;
-	private StringToStringMap responseHeaders = new StringToStringMap();
+	private StringToStringsMap responseHeaders = new StringToStringsMap();
 	private WsdlMockRequest mockRequest;
 	private byte[] rawResponseData;
 	private WsdlMockOperation mockOperation;
@@ -106,7 +106,7 @@ public class WsdlMockResult implements MockResult
 		this.timeTaken = timeTaken;
 	}
 
-	public StringToStringMap getResponseHeaders()
+	public StringToStringsMap getResponseHeaders()
 	{
 		return responseHeaders;
 	}
@@ -142,7 +142,7 @@ public class WsdlMockResult implements MockResult
 			while( e.hasMoreElements() )
 			{
 				String nextElement = e.nextElement();
-				responseHeaders.put( nextElement, httpFields.getStringField( nextElement ) );
+				responseHeaders.add( nextElement, httpFields.getStringField( nextElement ) );
 			}
 		}
 	}
@@ -152,7 +152,7 @@ public class WsdlMockResult implements MockResult
 		if( mockRequest.getHttpResponse() != null )
 			mockRequest.getHttpResponse().addHeader( name, value );
 
-		responseHeaders.put( name, value );
+		responseHeaders.add( name, value );
 	}
 
 	public boolean isCommitted()

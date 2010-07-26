@@ -24,6 +24,7 @@ import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.iface.SubmitListener;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.types.StringToStringsMap;
 
 import flex.messaging.io.amf.client.exceptions.ClientStatusException;
 import flex.messaging.io.amf.client.exceptions.ServerStatusException;
@@ -265,11 +266,13 @@ public class AMFSubmit implements Submit, Runnable
 
 	private void addHttpHeaders( AMFRequest amfRequest, SoapUIAMFConnection amfConnection )
 	{
-		if( amfRequest.getHttpHeaders() != null )
+		StringToStringsMap httpHeaders = amfRequest.getHttpHeaders();
+		if( httpHeaders != null )
 		{
-			for( String key : amfRequest.getHttpHeaders().getKeys() )
+			for( String key : httpHeaders.getKeys() )
 			{
-				amfConnection.addHttpRequestHeader( key, context.expand( amfRequest.getHttpHeaders().get( key ) ) );
+				for( String value : httpHeaders.get( key ) )
+					amfConnection.addHttpRequestHeader( key, context.expand( value ) );
 			}
 		}
 	}

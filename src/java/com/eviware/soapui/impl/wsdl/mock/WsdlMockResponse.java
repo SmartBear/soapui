@@ -93,6 +93,7 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.scripting.ScriptEnginePool;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.types.StringToStringMap;
+import com.eviware.soapui.support.types.StringToStringsMap;
 import com.eviware.soapui.support.xml.XmlUtils;
 
 /**
@@ -272,10 +273,11 @@ public class WsdlMockResponse extends AbstractWsdlModelItem<MockResponseConfig> 
 			context.putAll( request.getContext() );
 			context.putAll( request.getRequestContext() );
 
-			StringToStringMap responseHeaders = getResponseHeaders();
+			StringToStringsMap responseHeaders = getResponseHeaders();
 			for( String name : responseHeaders.keySet() )
 			{
-				result.addHeader( name, PropertyExpander.expandProperties( context, responseHeaders.get( name ) ) );
+				for( String value : responseHeaders.get( name ) )
+					result.addHeader( name, PropertyExpander.expandProperties( context, value ) );
 			}
 
 			responseContent = PropertyExpander.expandProperties( context, responseContent, isEntitizeProperties() );
@@ -382,32 +384,32 @@ public class WsdlMockResponse extends AbstractWsdlModelItem<MockResponseConfig> 
 		}
 	}
 
-	public void setResponseHeaders( StringToStringMap headers )
+	public void setResponseHeaders( StringToStringsMap headers )
 	{
-		StringToStringMap oldHeaders = getResponseHeaders();
+		StringToStringsMap oldHeaders = getResponseHeaders();
 
-		HeaderConfig[] headerConfigs = new HeaderConfig[headers.size()];
-		int ix = 0;
+		getConfig().setHeaderArray( new HeaderConfig[0] );
+
 		for( String header : headers.keySet() )
 		{
-			headerConfigs[ix] = HeaderConfig.Factory.newInstance();
-			headerConfigs[ix].setName( header );
-			headerConfigs[ix].setValue( headers.get( header ) );
-			ix++ ;
+			for( String value : headers.get( header ) )
+			{
+				HeaderConfig headerConfig = getConfig().addNewHeader();
+				headerConfig.setName( header );
+				headerConfig.setValue( value );
+			}
 		}
-
-		getConfig().setHeaderArray( headerConfigs );
 
 		notifyPropertyChanged( HEADERS_PROPERTY, oldHeaders, headers );
 	}
 
-	public StringToStringMap getResponseHeaders()
+	public StringToStringsMap getResponseHeaders()
 	{
-		StringToStringMap result = new StringToStringMap();
+		StringToStringsMap result = new StringToStringsMap();
 		List<HeaderConfig> headerList = getConfig().getHeaderList();
 		for( HeaderConfig header : headerList )
 		{
-			result.put( header.getName(), header.getValue() );
+			result.add( header.getName(), header.getValue() );
 		}
 
 		return result;
@@ -697,7 +699,7 @@ public class WsdlMockResponse extends AbstractWsdlModelItem<MockResponseConfig> 
 			if( !response.getResponseHeaders().containsKeyIgnoreCase( "Content-Type" ) )
 				response.setContentType( soapVersion.getContentTypeHttpHeader( encoding, null ) );
 
-			String acceptEncoding = response.getMockRequest().getRequestHeaders().get( "Accept-Encoding" );
+			String acceptEncoding = response.getMockRequest().getRequestHeaders().get( "Accept-Encoding", "" );
 			if( AUTO_RESPONSE_COMPRESSION.equals( responseCompression ) && acceptEncoding != null
 					&& acceptEncoding.toUpperCase().contains( "GZIP" ) )
 			{
@@ -966,11 +968,12 @@ public class WsdlMockResponse extends AbstractWsdlModelItem<MockResponseConfig> 
 
 		result.addAll( PropertyExpansionUtils.extractPropertyExpansions( this, this, "responseContent" ) );
 
-		StringToStringMap responseHeaders = getResponseHeaders();
+		StringToStringsMap responseHeaders = getResponseHeaders();
 		for( String key : responseHeaders.keySet() )
 		{
-			result.addAll( PropertyExpansionUtils.extractPropertyExpansions( this, new ResponseHeaderHolder(
-					responseHeaders, key ), "value" ) );
+			for( String value : responseHeaders.get( key ) )
+				result.addAll( PropertyExpansionUtils.extractPropertyExpansions( this, new ResponseHeaderHolder( key,
+						value, this ), "value" ) );
 		}
 
 		addWsaPropertyExpansions( result, getWsaConfig(), this );
@@ -991,26 +994,29 @@ public class WsdlMockResponse extends AbstractWsdlModelItem<MockResponseConfig> 
 		result.addAll( PropertyExpansionUtils.extractPropertyExpansions( modelItem, wsaConfig, "messageID" ) );
 	}
 
-	public class ResponseHeaderHolder
+	public static class ResponseHeaderHolder
 	{
-		private final StringToStringMap valueMap;
 		private final String key;
+		private final String oldValue;
+		private WsdlMockResponse mockResponse;
 
-		public ResponseHeaderHolder( StringToStringMap valueMap, String key )
+		public ResponseHeaderHolder( String key, String oldValue, WsdlMockResponse mockResponse )
 		{
-			this.valueMap = valueMap;
 			this.key = key;
+			this.oldValue = oldValue;
+			this.mockResponse = mockResponse;
 		}
 
 		public String getValue()
 		{
-			return valueMap.get( key );
+			return oldValue;
 		}
 
 		public void setValue( String value )
 		{
-			valueMap.put( key, value );
-			setResponseHeaders( valueMap );
+			StringToStringsMap valueMap = mockResponse.getResponseHeaders();
+			valueMap.replace( key, oldValue, value );
+			mockResponse.setResponseHeaders( valueMap );
 		}
 	}
 

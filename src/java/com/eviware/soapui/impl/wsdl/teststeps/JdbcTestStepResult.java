@@ -24,6 +24,7 @@ import com.eviware.soapui.model.iface.Operation;
 import com.eviware.soapui.model.testsuite.AssertedXPath;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.types.StringToStringMap;
+import com.eviware.soapui.support.types.StringToStringsMap;
 
 public class JdbcTestStepResult extends WsdlTestStepResult implements AssertedXPathsContainer, MessageExchange
 {
@@ -53,7 +54,7 @@ public class JdbcTestStepResult extends WsdlTestStepResult implements AssertedXP
 	public void addAssertedXPath( AssertedXPath assertedXPath )
 	{
 	}
-	
+
 	@Override
 	public ActionList getActions()
 	{
@@ -121,9 +122,9 @@ public class JdbcTestStepResult extends WsdlTestStepResult implements AssertedXP
 		return null;
 	}
 
-	public StringToStringMap getRequestHeaders()
+	public StringToStringsMap getRequestHeaders()
 	{
-		return new StringToStringMap();
+		return new StringToStringsMap();
 	}
 
 	public Attachment[] getResponseAttachments()
@@ -146,9 +147,9 @@ public class JdbcTestStepResult extends WsdlTestStepResult implements AssertedXP
 		return getResponseContent();
 	}
 
-	public StringToStringMap getResponseHeaders()
+	public StringToStringsMap getResponseHeaders()
 	{
-		return new StringToStringMap();
+		return new StringToStringsMap();
 	}
 
 	public long getTimestamp()
