@@ -88,7 +88,7 @@ public class StartLoadUI extends AbstractSoapUIAction<WsdlProject>
 
 			ProcessBuilder pb = new ProcessBuilder( UISupport.isWindows() ? commandsWin : commandsLinux );
 			pb.directory( new File( SoapUI.getSettings().getString( LoadUISettings.LOADUI_PATH, "" ) ) );
-			pb.start();
+			Process p = pb.start();
 		}
 		catch( Exception e )
 		{
