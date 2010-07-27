@@ -115,6 +115,7 @@ import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.ActionListBuilder;
 import com.eviware.soapui.support.action.swing.ActionSupport;
 import com.eviware.soapui.support.action.swing.SwingActionDelegate;
+import com.eviware.soapui.support.components.BrowserComponent;
 import com.eviware.soapui.support.components.JComponentInspector;
 import com.eviware.soapui.support.components.JInspectorPanel;
 import com.eviware.soapui.support.components.JInspectorPanelFactory;
@@ -145,6 +146,7 @@ import com.eviware.soapui.ui.support.DesktopListenerAdapter;
 import com.eviware.x.impl.swing.SwingDialogs;
 import com.jgoodies.looks.HeaderStyle;
 import com.jgoodies.looks.Options;
+import com.jniwrapper.PlatformContext;
 
 /**
  * Main SoapUI entry point.
@@ -697,7 +699,14 @@ public class SoapUI
 		mainArgs = args;
 
 		SoapUIRunner soapuiRunner = new SoapUIRunner();
-		soapuiRunner.run();
+		if( !BrowserComponent.isJXBrowserDisabled() && PlatformContext.isMacOS() )
+		{
+			SwingUtilities.invokeLater( soapuiRunner );
+		}
+		else
+		{
+			soapuiRunner.run();
+		}
 	}
 
 	public static String[] getMainArgs()
@@ -770,7 +779,7 @@ public class SoapUI
 		Thread.sleep( 500 );
 		splash.setVisible( false );
 
-		if( getSettings().getBoolean( UISettings.SHOW_STARTUP_PAGE ) )
+		if( getSettings().getBoolean( UISettings.SHOW_STARTUP_PAGE ) && !BrowserComponent.isJXBrowserDisabled() )
 		{
 			SwingUtilities.invokeLater( new Runnable()
 			{

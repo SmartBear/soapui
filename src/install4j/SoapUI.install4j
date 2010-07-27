@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<install4j version="4.2.6" transformSequenceNumber="2">
+<install4j version="4.2.8" transformSequenceNumber="2">
   <directoryPresets config="../../target/standalone" />
   <application name="soapUI ${compiler:VERSION_NUMBER}${compiler:BRANDED_TITLE}" distributionSourceDir="" applicationId="5517-2803-0637-4585" mediaDir="./media" mediaFilePattern="${compiler:sys.shortName}_${compiler:sys.platform}_${compiler:sys.version}" compression="6" lzmaCompression="false" pack200Compression="false" excludeSignedFromPacking="true" keepModificationTimes="false" missingFilesStrategy="warn" shortName="soapUI" publisher="eviware software ab" publisherWeb="http://www.eviware.com" version="${compiler:VERSION_NUMBER}" allPathsRelative="true" backupOnSave="false" autoSave="true" convertDotsToUnderscores="true" macSignature="????" installerName="" javaMinVersion="1.6" javaMaxVersion="" allowBetaVM="true" jdkMode="runtimeJre" jdkName="">
     <languages skipLanguageSelection="false" languageSelectionInPrincipalLanguage="false">
@@ -16,7 +16,6 @@
       <variable name="DIST_ROOT" value="D:\soapUI-workspace\SoapUI 3.5-dev\target\dist" />
       <variable name="RESOURCES_HOME" value="" />
       <variable name="VERSION_NUMBER" value="" />
-      <variable name="XULRUNNER" value="" />
       <variable name="SRC_ROOT" value="" />
       <variable name="SIGNTOOL_PATH" value="" />
       <variable name="CERT_PATH" value="" />
@@ -170,7 +169,7 @@
   </files>
   <launchers>
     <launcher name="soapUI GUI" id="64" external="false" excludeFromMenu="false" menuName="soapUI-${compiler:VERSION_NUMBER}${compiler:BRANDED_TITLE}" icnsFile="${compiler:RESOURCES_HOME}/images/soapui.icns" pngIcon16File="${compiler:RESOURCES_HOME}/images/soapui16.png" pngIcon32File="${compiler:RESOURCES_HOME}/images/soapui32.png" macServiceDependencies="" swtApp="false" fileset="">
-      <executable name="${compiler:EXECUTABLE_NAME}" type="1" iconSet="true" iconFile="${compiler:RESOURCES_HOME}/images/soapui.ico" executableDir="bin" redirectStderr="true" stderrFile="error.log" stderrMode="overwrite" redirectStdout="false" stdoutFile="output.log" stdoutMode="overwrite" failOnStderrOutput="true" executableMode="1" changeWorkingDirectory="true" workingDirectory="." singleInstance="false" serviceStartType="2" serviceDependencies="" serviceDescription="" jreLocation="" executionLevel="asInvoker" checkConsoleParameter="false">
+      <executable name="${compiler:EXECUTABLE_NAME}" type="1" iconSet="true" iconFile="${compiler:RESOURCES_HOME}/images/soapui.ico" executableDir="bin" redirectStderr="true" stderrFile="error.log" stderrMode="overwrite" redirectStdout="false" stdoutFile="output.log" stdoutMode="overwrite" failOnStderrOutput="true" executableMode="1" changeWorkingDirectory="true" workingDirectory="." singleInstance="false" serviceStartType="2" serviceDependencies="" serviceDescription="" jreLocation="" executionLevel="asInvoker" checkConsoleParameter="false" globalSingleInstance="false">
         <versionInfo include="false" fileVersion="" fileDescription="" legalCopyright="" internalName="" productName="" />
       </executable>
       <splashScreen show="false" autoOff="true" alwaysOnTop="true" width="0" height="0" bitmapFile="${compiler:RESOURCES_HOME}/images/soapui-splash.bmp" java6SplashScreen="false">
@@ -411,7 +410,7 @@ return !Util.isMacosInstaller() &amp;&amp; component.isSelected();</condition>
                   </java>
                 </serializedBean>
                 <initScript />
-                <visibiltyScript>if (Util.isMacOS() || Util.isLinux())
+                <visibiltyScript>if (Util.isMacOS())
 return true;
 else return false;
 </visibiltyScript>
@@ -1198,7 +1197,7 @@ return !Util.isMacosInstaller() &amp;&amp; component.isSelected();</condition>
     </applications>
   </installerGui>
   <mediaSets>
-    <win32 name="Windows x32" id="23" mediaFileName="soapUI-x32-${compiler:VERSION_NUMBER}" installDir="eviware/soapUI-${compiler:VERSION_NUMBER}" overridePrincipalLanguage="false" requires64bit="false" jreBitType="32" runPostProcessor="true" postProcessor="${compiler:SIGNTOOL_PATH} sign /v /f ${compiler:CERT_PATH} $EXECUTABLE" failOnPostProcessorError="true" includedJRE="windows-x86-1.6.0_20" manualJREEntry="false" bundleType="1" jreURL="" jreFtpURL="" jreShared="false" directDownload="false" customInstallBaseDir="" createUninstallIcon="true" contentFilesType="1" downloadURL="" runAsAdmin="false">
+    <win32 name="Windows x32" id="23" mediaFileName="soapUI-x32-${compiler:VERSION_NUMBER}" installDir="eviware/soapUI-${compiler:VERSION_NUMBER}" overridePrincipalLanguage="false" requires64bit="false" jreBitType="32" runPostProcessor="true" postProcessor="${compiler:SIGNTOOL_PATH} sign /v /f ${compiler:CERT_PATH} $EXECUTABLE" failOnPostProcessorError="true" includedJRE="windows-x86-1.6.0_21" manualJREEntry="false" bundleType="1" jreURL="" jreFtpURL="" jreShared="false" directDownload="false" customInstallBaseDir="" createUninstallIcon="true" contentFilesType="1" downloadURL="" runAsAdmin="false">
       <excludedLaunchers />
       <excludedComponents />
       <excludedBeans />
@@ -1217,7 +1216,7 @@ return !Util.isMacosInstaller() &amp;&amp; component.isSelected();</condition>
         <variable name="32-BIT-INSTALLER" value="true" />
       </variables>
     </win32>
-    <unixInstaller name="Unix Installer x32" id="196" mediaFileName="soapUI-x32-${compiler:VERSION_NUMBER}" installDir="eviware/soapUI-${compiler:VERSION_NUMBER}" overridePrincipalLanguage="false" requires64bit="false" jreBitType="all" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" includedJRE="linux-x86-1.6.0_20" manualJREEntry="false" bundleType="1" jreURL="" jreFtpURL="" jreShared="false" directDownload="false" customInstallBaseDir="" createUninstallIcon="true" contentFilesType="1" downloadURL="">
+    <unixInstaller name="Unix Installer x32" id="196" mediaFileName="soapUI-x32-${compiler:VERSION_NUMBER}" installDir="eviware/soapUI-${compiler:VERSION_NUMBER}" overridePrincipalLanguage="false" requires64bit="false" jreBitType="all" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" includedJRE="linux-x86-1.6.0_21" manualJREEntry="false" bundleType="1" jreURL="" jreFtpURL="" jreShared="false" directDownload="false" customInstallBaseDir="" createUninstallIcon="true" contentFilesType="1" downloadURL="">
       <excludedLaunchers />
       <excludedComponents />
       <excludedBeans>

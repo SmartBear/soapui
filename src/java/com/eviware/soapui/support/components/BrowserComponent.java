@@ -25,6 +25,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -85,6 +86,7 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 	private Boolean possibleError = false;
 	@SuppressWarnings( "unused" )
 	private boolean disposed;
+	private static boolean disabled;
 	private NavigationListener internalNavigationListener;
 	private DisposeListener internalDisposeListener;
 	private HttpHtmlResponseView httpHtmlResponseView;
@@ -94,23 +96,53 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 		this.addToolbar = addToolbar;
 	}
 
+	public static void setDisabled( boolean disabled )
+	{
+		BrowserComponent.disabled = disabled;
+	}
+
+	public static boolean isJXBrowserDisabled()
+	{
+		if( disabled )
+			return true;
+
+		String disable = System.getProperty( "soapui.jxbrowser.disable", "nope" );
+		if( disable.equals( "true" ) )
+			return true;
+
+		if( !disable.equals( "false" )
+				&& ( !PlatformContext.isMacOS() && "64".equals( System.getProperty( "sun.arch.data.model" ) ) ) )
+			return true;
+
+		return false;
+	}
+
 	public Component getComponent()
 	{
-		if( browser == null )
+		if( isJXBrowserDisabled() )
 		{
+			JEditorPane jxbrowserDisabledPanel = new JEditorPane();
+			jxbrowserDisabledPanel.setText( "browser component disabled" );
+			panel.add( jxbrowserDisabledPanel );
+		}
+		else
+		{
+			if( browser == null )
+			{
 
-			statusBar = new JPanel();
-			statusLabel = new JLabel();
-			statusBar.add( statusLabel, BorderLayout.CENTER );
+				statusBar = new JPanel();
+				statusLabel = new JLabel();
+				statusBar.add( statusLabel, BorderLayout.CENTER );
 
-			if( addToolbar )
-				panel.add( buildToolbar(), BorderLayout.NORTH );
+				if( addToolbar )
+					panel.add( buildToolbar(), BorderLayout.NORTH );
 
-			panel.add( statusBar, BorderLayout.SOUTH );
+				panel.add( statusBar, BorderLayout.SOUTH );
 
-			initBrowser();
+				initBrowser();
 
-			browser.navigate( "about:blank" );
+				browser.navigate( "about:blank" );
+			}
 		}
 		return panel;
 	}
@@ -168,7 +200,7 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 			if( httpHtmlResponseView.isRecordHttpTrafic() )
 			{
 				String newEndpoint = arg0.getUrl();
-				HttpTestRequest httpTestRequest = ( HttpTestRequest )( httpHtmlResponseView.getHttpRequest().getModelItem() );
+				HttpTestRequest httpTestRequest = ( HttpTestRequest )( httpHtmlResponseView.getDocument().getRequest() );
 				WsdlTestCase testCase = ( WsdlTestCase )httpTestRequest.getTestStep().getTestCase();
 				int count = testCase.getTestStepList().size();
 				testCase.addTestStep( HttpRequestStepFactory.HTTPREQUEST_TYPE, "Http Test Step " + ++count, newEndpoint );
@@ -215,7 +247,6 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 		if( browser != null )
 			return false;
 
-		System.out.println( "default browser:" + BrowserFactory.getDefaultBrowserType() );
 		if( PlatformContext.isWindows() )
 		{
 			browser = BrowserFactory.createBrowser( BrowserType.Mozilla );
@@ -345,6 +376,10 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 
 		this.url = url;
 
+		if( browser == null )
+		{
+			initBrowser();
+		}
 		browser.navigate( getUrl() );
 
 		if( showingErrorPage )

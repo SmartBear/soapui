@@ -91,13 +91,19 @@ public class HttpHtmlMessageExchangeResponseView extends AbstractXmlEditorView<H
 	{
 		contentPanel = new JPanel( new BorderLayout() );
 
-		browser = new BrowserComponent( false );
+		if( BrowserComponent.isJXBrowserDisabled() )
+		{
+			contentPanel.add( new JLabel( "Browser Component is disabled" ) );
+		}
+		else
+		{
+			browser = new BrowserComponent( false );
+			Component component = browser.getComponent();
+			component.setMinimumSize( new Dimension( 100, 100 ) );
+			contentPanel.add( new JScrollPane( component ) );
 
-		Component component = browser.getComponent();
-		component.setMinimumSize( new Dimension( 100, 100 ) );
-		contentPanel.add( new JScrollPane( component ) );
-
-		setEditorContent( messageExchangeModelItem );
+			setEditorContent( messageExchangeModelItem );
+		}
 		return contentPanel;
 	}
 

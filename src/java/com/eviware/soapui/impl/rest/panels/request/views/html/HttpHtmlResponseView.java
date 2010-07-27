@@ -21,7 +21,6 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URL;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -54,7 +53,7 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 		return httpRequest;
 	}
 
-	private JPanel contentPanel;
+	// private JPanel contentPanel;
 	private JPanel panel;
 	private JLabel statusLabel;
 	private BrowserComponent browser;
@@ -91,9 +90,23 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 		{
 			panel = new JPanel( new BorderLayout() );
 
-			panel.add( buildToolbar(), BorderLayout.NORTH );
-			panel.add( buildContent(), BorderLayout.CENTER );
-			panel.add( buildStatus(), BorderLayout.SOUTH );
+			if( BrowserComponent.isJXBrowserDisabled() )
+			{
+				panel.add( new JLabel( "Browser Component is disabled" ) );
+			}
+			else
+			{
+				browser = new BrowserComponent( false );
+				Component component = browser.getComponent();
+				component.setMinimumSize( new Dimension( 100, 100 ) );
+				panel.add( buildToolbar(), BorderLayout.NORTH );
+				panel.add( component, BorderLayout.CENTER );
+
+				HttpResponse response = httpRequest.getResponse();
+				if( response != null )
+					setEditorContent( response );
+			}
+			// panel.add( buildStatus(), BorderLayout.SOUTH );
 		}
 
 		return panel;
@@ -117,20 +130,28 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 		return statusLabel;
 	}
 
-	private Component buildContent()
-	{
-		contentPanel = new JPanel( new BorderLayout() );
-
-		browser = new BrowserComponent( false );
-		Component component = browser.getComponent();
-		component.setMinimumSize( new Dimension( 100, 100 ) );
-		contentPanel.add( component );
-
-		HttpResponse response = httpRequest.getResponse();
-		if( response != null )
-			setEditorContent( response );
-		return contentPanel;
-	}
+	// private Component buildContent()
+	// {
+	// contentPanel = new JPanel( new BorderLayout() );
+	//
+	// if( BrowserComponent.isJXBrowserDisabled() )
+	// {
+	// contentPanel.add( new JLabel( "Browser Component is disabled" ) );
+	// }
+	// else
+	// {
+	// browser = new BrowserComponent( false );
+	// Component component = browser.getComponent();
+	// component.setMinimumSize( new Dimension( 100, 100 ) );
+	// contentPanel.add( buildToolbar(), BorderLayout.NORTH );
+	// contentPanel.add( component, BorderLayout.CENTER );
+	//
+	// HttpResponse response = httpRequest.getResponse();
+	// if( response != null )
+	// setEditorContent( response );
+	// }
+	// return contentPanel;
+	// }
 
 	protected void setEditorContent( HttpResponse httpResponse )
 	{
@@ -144,12 +165,12 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 
 					String content = httpResponse.getContentAsString();
 					content = new String( content.getBytes( "UTF-8" ), "iso-8859-1" );
-					//TODO
-					//this particular hardcoded  line solvs the problem of not displaying
-					//html response view - track the diff in vreting contentType
+					// TODO
+					// this particular hardcoded line solvs the problem of not
+					// displaying
+					// html response view - track the diff in vreting contentType
 					contentType = contentType + "; charset=utf-8";
-					browser
-							.setContent( content, contentType, new URL( httpResponse.getURL().toURI().toString() ).toString() );
+					browser.setContent( content, contentType, httpResponse.getURL().toURI().toString() );
 				}
 				catch( Exception e )
 				{
@@ -201,14 +222,6 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 		}
 
 		out.write( rawResponse );
-	}
-
-	protected void addToggleButton( JXToolBar toggleToolbar )
-	{
-		recordButton = new JButton( new RecordHttpTraficAction() );
-
-		toggleToolbar.addLabeledFixed( "Record HTTP trafic", recordButton );
-		toggleToolbar.addSeparator();
 	}
 
 	private Component buildToolbar()
