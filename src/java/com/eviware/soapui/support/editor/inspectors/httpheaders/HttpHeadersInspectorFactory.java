@@ -219,6 +219,13 @@ public class HttpHeadersInspectorFactory implements RequestInspectorFactory, Res
 			this.inspector = inspector;
 		}
 
+		@Override
+		public void release()
+		{
+			super.release();
+			request.removePropertyChangeListener( this );
+		}
+
 		public void propertyChange( PropertyChangeEvent evt )
 		{
 			if( evt.getPropertyName().equals( AbstractHttpRequest.ENDPOINT_PROPERTY ) )
@@ -280,6 +287,12 @@ public class HttpHeadersInspectorFactory implements RequestInspectorFactory, Res
 				return new StringToStringsMap();
 		}
 
+		@Override
+		public void release()
+		{
+			super.release();
+			testStep.getAMFRequest().removePropertyChangeListener( AMFRequest.AMF_RESPONSE_PROPERTY, this );
+		}
 	}
 
 	private class WsdlMockResponseHeadersModel extends AbstractHeadersModel<WsdlMockResponse>
@@ -332,6 +345,14 @@ public class HttpHeadersInspectorFactory implements RequestInspectorFactory, Res
 				inspector.setEnabled( !request.getEndpoint().startsWith( JMSEndpoint.JMS_ENDPIONT_PREFIX ) );
 			}
 			super.propertyChange( evt );
+		}
+
+		@Override
+		public void release()
+		{
+			super.release();
+
+			request.removePropertyChangeListener( this );
 		}
 	}
 

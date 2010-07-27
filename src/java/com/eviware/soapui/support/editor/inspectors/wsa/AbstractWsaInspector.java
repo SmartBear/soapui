@@ -51,6 +51,15 @@ public abstract class AbstractWsaInspector extends AbstractXmlInspector
 		return mainPanel;
 	}
 
+	@Override
+	public void release()
+	{
+		super.release();
+
+		if( form != null )
+			form.getPresentationModel().release();
+	}
+
 	public void buildContent( SimpleBindingForm form )
 	{
 	};

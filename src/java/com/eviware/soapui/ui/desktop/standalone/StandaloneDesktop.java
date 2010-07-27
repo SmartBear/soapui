@@ -272,6 +272,8 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop
 			modelItemToInternalFrameMap.remove( desktopPanel.getModelItem() );
 			internalFrameToDesktopPanelMap.remove( e.getInternalFrame() );
 
+			// replace content frame to make sure it is released
+			e.getInternalFrame().setContentPane( new JPanel() );
 			e.getInternalFrame().dispose();
 
 			if( !transferring )

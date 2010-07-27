@@ -81,4 +81,9 @@ public class SimpleBindingForm extends SimpleForm
 		return comboBox;
 	}
 
+	public PresentationModel<?> getPresentationModel()
+	{
+		return pm;
+	}
+
 }

@@ -12,9 +12,6 @@
 
 package com.eviware.soapui.support.editor.inspectors.wsrm;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-
 import org.apache.log4j.Logger;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
@@ -26,8 +23,7 @@ import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.iface.SubmitListener;
 import com.eviware.soapui.support.editor.xml.XmlInspector;
 
-public class WsdlRequestWsrmPiggybackInspector extends AbstractWsrmInspector implements XmlInspector,
-		PropertyChangeListener, SubmitListener
+public class WsdlRequestWsrmPiggybackInspector extends AbstractWsrmInspector implements XmlInspector, SubmitListener
 {
 
 	private final WsdlRequest request;
@@ -39,10 +35,11 @@ public class WsdlRequestWsrmPiggybackInspector extends AbstractWsrmInspector imp
 		this.request = request;
 	}
 
-	public void propertyChange( PropertyChangeEvent arg0 )
+	@Override
+	public void release()
 	{
-		// TODO Auto-generated method stub
-
+		super.release();
+		request.removeSubmitListener( this );
 	}
 
 	public void afterSubmit( Submit submit, SubmitContext context )

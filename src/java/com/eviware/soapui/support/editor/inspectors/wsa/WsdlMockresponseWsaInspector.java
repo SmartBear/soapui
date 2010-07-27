@@ -14,8 +14,6 @@ package com.eviware.soapui.support.editor.inspectors.wsa;
 
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 import javax.swing.JCheckBox;
 import javax.swing.JTextField;
@@ -26,7 +24,7 @@ import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.support.components.SimpleBindingForm;
 import com.eviware.soapui.support.editor.xml.XmlInspector;
 
-public class WsdlMockresponseWsaInspector extends AbstractWsaInspector implements XmlInspector, PropertyChangeListener
+public class WsdlMockresponseWsaInspector extends AbstractWsaInspector implements XmlInspector
 {
 	private final WsdlMockResponse response;
 	private JCheckBox generateMessageIdCheckBox;
@@ -40,12 +38,6 @@ public class WsdlMockresponseWsaInspector extends AbstractWsaInspector implement
 	{
 		super( response );
 		this.response = response;
-	}
-
-	public void propertyChange( PropertyChangeEvent arg0 )
-	{
-		// TODO Auto-generated method stub
-
 	}
 
 	public void buildContent( SimpleBindingForm form )

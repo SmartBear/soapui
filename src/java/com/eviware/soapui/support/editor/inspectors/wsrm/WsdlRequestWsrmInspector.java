@@ -12,9 +12,6 @@
 
 package com.eviware.soapui.support.editor.inspectors.wsrm;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-
 import org.apache.log4j.Logger;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
@@ -45,8 +42,7 @@ import com.eviware.soapui.support.editor.xml.XmlInspector;
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
 
-public class WsdlRequestWsrmInspector extends AbstractWsrmInspector implements XmlInspector, PropertyChangeListener,
-		SubmitListener
+public class WsdlRequestWsrmInspector extends AbstractWsrmInspector implements XmlInspector, SubmitListener
 {
 	private final WsdlRequest request;
 
@@ -74,10 +70,11 @@ public class WsdlRequestWsrmInspector extends AbstractWsrmInspector implements X
 		form.addSpace( 5 );
 	}
 
-	public void propertyChange( PropertyChangeEvent arg0 )
+	@Override
+	public void release()
 	{
-		// TODO Auto-generated method stub
-
+		super.release();
+		request.removeSubmitListener( this );
 	}
 
 	public void afterSubmit( Submit submit, SubmitContext context )
@@ -123,7 +120,7 @@ public class WsdlRequestWsrmInspector extends AbstractWsrmInspector implements X
 				e.printStackTrace();
 			}
 		}
-		
+
 		if( container.getWsrmConfig().isWsrmEnabled() )
 		{
 			WsdlInterface iface = request.getOperation().getInterface();

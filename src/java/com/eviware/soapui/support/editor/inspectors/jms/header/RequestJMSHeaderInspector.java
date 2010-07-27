@@ -41,7 +41,13 @@ public class RequestJMSHeaderInspector extends AbstractJMSHeaderInspector implem
 		{
 			this.setEnabled( request.getEndpoint().startsWith( JMSEndpoint.JMS_ENDPIONT_PREFIX ) );
 		}
+	}
 
+	@Override
+	public void release()
+	{
+		super.release();
+		request.removePropertyChangeListener( this );
 	}
 
 	public void buildContent( SimpleBindingForm form )

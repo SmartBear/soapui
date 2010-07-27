@@ -107,6 +107,8 @@ public class JMSHeaderAndPropertyInspectorFactory implements RequestInspectorFac
 
 		public void release()
 		{
+			super.release();
+
 			request.removeSubmitListener( this );
 			request.removePropertyChangeListener( this );
 		}

@@ -57,6 +57,15 @@ public abstract class AbstractWsrmInspector extends AbstractXmlInspector
 	};
 
 	@Override
+	public void release()
+	{
+		super.release();
+
+		if( form != null )
+			form.getPresentationModel().release();
+	}
+
+	@Override
 	public boolean isEnabledFor( EditorView<XmlDocument> view )
 	{
 		return !view.getViewId().equals( RawXmlEditorFactory.VIEW_ID );
