@@ -231,12 +231,14 @@ public class CloneTestCaseAction extends AbstractSoapUIAction<WsdlTestCase>
 		@AField( name = "TestCase Name", description = "The name of the cloned TestCase", type = AFieldType.STRING )
 		public final static String NAME = "TestCase Name";
 
-		@AField( name = "Target TestSuite", description = "The target TestSuite for the cloned TestCase", type = AFieldType.ENUMERATION )
-		public final static String TESTSUITE = "Target TestSuite";
 
 		@AField( name = "Target Project", description = "The target Project for the cloned TestCase", type = AFieldType.ENUMERATION )
 		public final static String PROJECT = "Target Project";
 
+
+		@AField( name = "Target TestSuite", description = "The target TestSuite for the cloned TestCase", type = AFieldType.ENUMERATION )
+		public final static String TESTSUITE = "Target TestSuite"; 
+		
 		@AField( name = "Clone LoadTests", description = "Clone contained LoadTests", type = AFieldType.BOOLEAN )
 		public final static String CLONE_LOADTESTS = "Clone LoadTests";
 

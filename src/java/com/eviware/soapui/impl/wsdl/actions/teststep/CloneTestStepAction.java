@@ -250,14 +250,14 @@ public class CloneTestStepAction extends AbstractSoapUIAction<WsdlTestStep>
 		@AField( name = "TestStep Name", description = "The name of the cloned TestStep", type = AFieldType.STRING )
 		public final static String NAME = "TestStep Name";
 
-		@AField( name = "Target TestCase", description = "The target TestCase for the cloned TestStep", type = AFieldType.ENUMERATION )
-		public final static String TESTCASE = "Target TestCase";
-
+		@AField( name = "Target Project", description = "The target Project for the cloned TestStep", type = AFieldType.ENUMERATION )
+		public final static String PROJECT = "Target Project";
+		
 		@AField( name = "Target TestSuite", description = "The target TestSuite for the cloned TestStep", type = AFieldType.ENUMERATION )
 		public final static String TESTSUITE = "Target TestSuite";
 
-		@AField( name = "Target Project", description = "The target Project for the cloned TestStep", type = AFieldType.ENUMERATION )
-		public final static String PROJECT = "Target Project";
+		@AField( name = "Target TestCase", description = "The target TestCase for the cloned TestStep", type = AFieldType.ENUMERATION )
+		public final static String TESTCASE = "Target TestCase";
 
 		@AField( name = "Move Instead", description = "Moves the selected TestStep instead of copying", type = AFieldType.BOOLEAN )
 		public final static String MOVE = "Move Instead";
