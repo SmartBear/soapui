@@ -721,7 +721,7 @@ else return false;
                   </java>
                 </serializedBean>
                 <condition>//for linux and unix encounter check box, but for windows never set jx browser disabled during the installation
-if (Util.isMacOS() || Util.isLinux())
+if (Util.isMacOS())
 return context.getBooleanVariable("disableJxBrowserAction");
 else
 return false;
