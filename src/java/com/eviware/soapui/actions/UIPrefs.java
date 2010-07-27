@@ -41,7 +41,7 @@ public class UIPrefs implements Prefs
 	public static final String CREATE_BACKUP = "Create Backup";
 	public static final String BACKUP_FOLDER = "Backup Folder";
 	public static final String DESKTOP_TYPE = "Desktop Type";
-	public static final String NATIVE_LAF = "Native L&F";
+	public static final String NATIVE_LAF = "Native LF";
 	public static final String ENABLE_GROOVY_LOG_DURING_LOADTEST = "Do not disable Groovy Log";
 	public static final String SHOW_LOGS_AT_STARTUP = "Show Log Tabs";
 	public static final String AUTOSAVE_INTERVAL = "AutoSave Interval";
