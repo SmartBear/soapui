@@ -481,7 +481,7 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
 		JXToolBar toolbar;
 		toolbar = UISupport.createToolbar();
 		toolbar.addSpace( 3 );
-		toolbar.addFixed( new JLabel( "<html><b>Target:</b></html>" ) );
+		toolbar.addFixed( new JLabel( "<html><b>Target: </b></html>" ) );
 		toolbar.addUnrelatedGap();
 
 		targetStepCombo.setSelectedItem( null );
@@ -522,7 +522,7 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
 		toolbar.add( UISupport.setFixedSize( targetStepCombo, 180, 21 ) );
 		toolbar.addUnrelatedGap();
 
-		toolbar.addFixed( new JLabel( "Property:" ) );
+		toolbar.addFixed( new JLabel( " Property: " ) );
 		toolbar.addRelatedGap();
 
 		targetPropertyCombo.setToolTipText( "The property the value will be transferred to" );
@@ -554,7 +554,7 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
 	{
 		JXToolBar toolbar = UISupport.createToolbar();
 		toolbar.addSpace( 3 );
-		toolbar.addFixed( new JLabel( "<html><b>Source:</b></html>" ) );
+		toolbar.addFixed( new JLabel( "<html><b>Source: </b></html>" ) );
 		toolbar.addUnrelatedGap();
 
 		sourcePropertyCombo = UISupport.addTooltipListener( new JComboBox(), "Source Property" );
@@ -634,7 +634,7 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
 		toolbar.add( UISupport.setFixedSize( sourceStepCombo, 180, 21 ) );
 		toolbar.addUnrelatedGap();
 
-		toolbar.addFixed( new JLabel( "Property:" ) );
+		toolbar.addFixed( new JLabel( " Property: " ) );
 		toolbar.addRelatedGap();
 
 		sourcePropertyCombo.setToolTipText( "The property the value will be transferred from" );
