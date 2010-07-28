@@ -231,7 +231,7 @@ public class WsdlMockRunner extends AbstractMockRunner
 		return null;
 	}
 
-	public WsdlMockResult dispatchPostRequest( WsdlMockRequest mockRequest ) throws DispatchException
+	public WsdlMockResult dispatchPostRequest( WsdlMockRequest mockRequest ) throws Exception
 	{
 		WsdlMockResult result = null;
 
@@ -389,7 +389,7 @@ public class WsdlMockRunner extends AbstractMockRunner
 			mockService.runAfterRequestScript( mockContext, this, ( MockResult )result );
 			return ( MockResult )result;
 		}
-		catch( Exception e )
+		catch( Throwable e )
 		{
 			if( e instanceof DispatchException )
 				throw ( DispatchException )e;
