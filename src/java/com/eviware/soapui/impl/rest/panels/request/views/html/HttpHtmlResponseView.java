@@ -46,7 +46,7 @@ import com.eviware.soapui.support.editor.xml.XmlEditor;
 @SuppressWarnings( "unchecked" )
 public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocument> implements PropertyChangeListener
 {
-	private final HttpRequestInterface<?> httpRequest;
+	private HttpRequestInterface<?> httpRequest;
 
 	public HttpRequestInterface<?> getHttpRequest()
 	{
@@ -126,6 +126,9 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 			messageExchangeModelItem.removePropertyChangeListener( this );
 		else
 			httpRequest.removePropertyChangeListener( this );
+
+		httpRequest = null;
+		messageExchangeModelItem = null;
 	}
 
 	private Component buildStatus()

@@ -14,11 +14,8 @@ package com.eviware.soapui.support.components;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.Container;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.lang.reflect.InvocationTargetException;
@@ -51,6 +48,7 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.settings.ProxySettings;
 import com.eviware.soapui.support.StringUtils;
+import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.xml.XmlUtils;
 import com.jniwrapper.PlatformContext;
@@ -90,6 +88,7 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 	private NavigationListener internalNavigationListener;
 	private DisposeListener internalDisposeListener;
 	private HttpHtmlResponseView httpHtmlResponseView;
+	private static SoapUINewWindowManager newWindowManager;
 
 	public BrowserComponent( boolean addToolbar )
 	{
@@ -163,6 +162,54 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 	public void setHttpHtmlResponseView( HttpHtmlResponseView httpHtmlResponseView )
 	{
 		this.httpHtmlResponseView = httpHtmlResponseView;
+	}
+
+	private static final class SoapUINewWindowManager implements NewWindowManager
+	{
+		private String url;
+
+		public NewWindowContainer evaluateWindow( final NewWindowParams params )
+		{
+			this.url = params.getUrl();
+
+			return new NewWindowContainer()
+			{
+				public void insertBrowser( final Browser browser )
+				{
+					Tools.openURL( url );
+
+					// // creates JFrame in which browser will be embedded
+					// final JFrame popupFrame = new JFrame();
+					// Container contentPane = popupFrame.getContentPane();
+					// contentPane.add( browser.getComponent(), BorderLayout.CENTER
+					// );
+					// // sets window bounds using popup window params
+					// popupFrame.setBounds( params.getBounds() );
+					// popupFrame.setVisible( true );
+					//
+					// // registers window listener to dispose Browser instance on
+					// // window close
+					// popupFrame.addWindowListener( new WindowAdapter()
+					// {
+					// @Override
+					// public void windowClosing( WindowEvent e )
+					// {
+					// browser.dispose();
+					// }
+					// } );
+					//
+					// // registers Browser dispose listener to dispose window when
+					// // Browser
+					// // is disposed (e.g. using the window.close JavaScript
+					// // function)
+					// internalDisposeListener = new InternalDisposeListener(
+					// popupFrame );
+					// browser.addDisposeListener( internalDisposeListener );
+					// browser.addNavigationListener( internalNavigationListener );
+
+				}
+			};
+		}
 	}
 
 	private final class InternalDisposeListener implements DisposeListener
@@ -258,45 +305,12 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 		internalNavigationListener = new InternalBrowserNavigationListener();
 		browser.addNavigationListener( internalNavigationListener );
 
-		browser.getServices().setNewWindowManager( new NewWindowManager()
+		if( newWindowManager == null )
 		{
-			public NewWindowContainer evaluateWindow( final NewWindowParams params )
-			{
-				return new NewWindowContainer()
-				{
-					public void insertBrowser( final Browser browser )
-					{
-						// creates JFrame in which browser will be embedded
-						final JFrame popupFrame = new JFrame();
-						Container contentPane = popupFrame.getContentPane();
-						contentPane.add( browser.getComponent(), BorderLayout.CENTER );
-						// sets window bounds using popup window params
-						popupFrame.setBounds( params.getBounds() );
-						popupFrame.setVisible( true );
+			newWindowManager = new SoapUINewWindowManager();
+			browser.getServices().setNewWindowManager( newWindowManager );
+		}
 
-						// registers window listener to dispose Browser instance on
-						// window close
-						popupFrame.addWindowListener( new WindowAdapter()
-						{
-							@Override
-							public void windowClosing( WindowEvent e )
-							{
-								browser.dispose();
-							}
-						} );
-
-						// registers Browser dispose listener to dispose window when
-						// Browser
-						// is disposed (e.g. using the window.close JavaScript
-						// function)
-						internalDisposeListener = new InternalDisposeListener( popupFrame );
-						browser.addDisposeListener( internalDisposeListener );
-						browser.addNavigationListener( internalNavigationListener );
-
-					}
-				};
-			}
-		} );
 		panel.add( browser.getComponent(), BorderLayout.CENTER );
 		return true;
 	}
@@ -306,19 +320,19 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 		if( browser != null )
 		{
 			disposed = true;
-
-			if( !SwingUtilities.isEventDispatchThread() )
-			{
-				SwingUtilities.invokeLater( new Runnable()
-				{
-					public void run()
-					{
-						cleanup();
-					}
-				} );
-			}
-			else
-				cleanup();
+			//
+			// if( !SwingUtilities.isEventDispatchThread() )
+			// {
+			// SwingUtilities.invokeLater( new Runnable()
+			// {
+			// public void run()
+			// {
+			// cleanup();
+			// }
+			// } );
+			// }
+			// else
+			cleanup();
 		}
 
 		possibleError = false;
