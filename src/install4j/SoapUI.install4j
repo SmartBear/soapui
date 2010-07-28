@@ -1240,7 +1240,7 @@ return !Util.isMacosInstaller() &amp;&amp; component.isSelected();</condition>
         <scriptLines />
       </installerScript>
     </unixInstaller>
-    <macos name="Mac OS X Single Bundle" id="198" mediaFileName="soapUI-${compiler:VERSION_NUMBER}" installDir="eviware/soapUI-${compiler:VERSION_NUMBER}" overridePrincipalLanguage="false" requires64bit="false" jreBitType="all" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" customInstallBaseDir="" createUninstallIcon="true" contentFilesType="1" downloadURL="" launcherId="64">
+    <macos name="Mac OS X Single Bundle" id="198" mediaFileName="soapUI-${compiler:VERSION_NUMBER}" installDir="eviware/soapUI-${compiler:VERSION_NUMBER}" overridePrincipalLanguage="false" requires64bit="false" jreBitType="32" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" customInstallBaseDir="" createUninstallIcon="true" contentFilesType="1" downloadURL="" launcherId="64">
       <excludedComponents />
       <excludedBeans>
         <bean refId="493" />
