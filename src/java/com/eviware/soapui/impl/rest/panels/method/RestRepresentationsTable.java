@@ -59,7 +59,6 @@ public class RestRepresentationsTable extends JPanel implements PropertyChangeLi
 		add( new JScrollPane( representationsTable ), BorderLayout.CENTER );
 
 		restMethod.addPropertyChangeListener( "representations", this );
-
 	}
 
 	protected JXToolBar buildToolbar()
@@ -281,6 +280,7 @@ public class RestRepresentationsTable extends JPanel implements PropertyChangeLi
 	public void release()
 	{
 		tableModel.release();
+		restMethod.removePropertyChangeListener( "representations", this );
 	}
 
 	public void refresh()

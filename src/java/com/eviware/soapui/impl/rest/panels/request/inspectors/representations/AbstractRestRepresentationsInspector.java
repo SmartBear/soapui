@@ -107,6 +107,8 @@ public abstract class AbstractRestRepresentationsInspector extends AbstractXmlIn
 	@Override
 	public void release()
 	{
+		super.release();
+
 		representationTable.release();
 		restMethod.removePropertyChangeListener( "representations", this );
 	}

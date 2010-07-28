@@ -59,6 +59,7 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 	private BrowserComponent browser;
 	private JButton recordButton;
 	private boolean recordHttpTrafic;
+	private MessageExchangeModelItem messageExchangeModelItem;
 
 	public boolean isRecordHttpTrafic()
 	{
@@ -80,6 +81,7 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 	public HttpHtmlResponseView( XmlEditor xmlEditor, MessageExchangeModelItem messageExchangeModelItem )
 	{
 		super( "HTML", xmlEditor, HttpHtmlResponseViewFactory.VIEW_ID );
+		this.messageExchangeModelItem = messageExchangeModelItem;
 		this.httpRequest = ( HttpRequestInterface<?> )messageExchangeModelItem;
 		messageExchangeModelItem.addPropertyChangeListener( this );
 	}
@@ -120,7 +122,10 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 		if( browser != null )
 			browser.release();
 
-		httpRequest.removePropertyChangeListener( this );
+		if( messageExchangeModelItem != null )
+			messageExchangeModelItem.removePropertyChangeListener( this );
+		else
+			httpRequest.removePropertyChangeListener( this );
 	}
 
 	private Component buildStatus()

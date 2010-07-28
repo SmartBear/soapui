@@ -197,7 +197,7 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 		@Override
 		public void navigationFinished( NavigationFinishedEvent arg0 )
 		{
-			if( httpHtmlResponseView.isRecordHttpTrafic() )
+			if( httpHtmlResponseView != null && httpHtmlResponseView.isRecordHttpTrafic() )
 			{
 				String newEndpoint = arg0.getUrl();
 				HttpTestRequest httpTestRequest = ( HttpTestRequest )( httpHtmlResponseView.getDocument().getRequest() );
@@ -324,14 +324,19 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 		possibleError = false;
 	}
 
-	private void cleanup()
+	private synchronized void cleanup()
 	{
-		browser.stop();
+		httpHtmlResponseView = null;
 
-		browser.dispose();
-		browser.removeDisposeListener( internalDisposeListener );
-		browser.removeNavigationListener( internalNavigationListener );
-		browser = null;
+		if( browser != null )
+		{
+			browser.stop();
+
+			browser.dispose();
+			browser.removeDisposeListener( internalDisposeListener );
+			browser.removeNavigationListener( internalNavigationListener );
+			browser = null;
+		}
 	}
 
 	public void setContent( String contentAsString, String contentType, String contextUri )

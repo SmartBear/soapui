@@ -39,6 +39,7 @@ public class RestMethodDesktopPanel extends ModelItemDesktopPanel<RestMethod>
 	private RestParamsTable paramsTable;
 	private boolean updatingRequest;
 	private JComboBox methodCombo;
+	private RestRepresentationsTable restRepresentationsTable;
 
 	public RestMethodDesktopPanel( RestMethod modelItem )
 	{
@@ -55,10 +56,10 @@ public class RestMethodDesktopPanel extends ModelItemDesktopPanel<RestMethod>
 		paramsTable = new RestParamsTable( getModelItem().getParams(), true );
 		tabs.addTab( "Method Parameters", paramsTable );
 
-		tabs
-				.addTab( "Representations", new RestRepresentationsTable( getModelItem(), new RestRepresentation.Type[] {
-						RestRepresentation.Type.REQUEST, RestRepresentation.Type.RESPONSE, RestRepresentation.Type.FAULT },
-						false ) );
+		restRepresentationsTable = new RestRepresentationsTable( getModelItem(), new RestRepresentation.Type[] {
+				RestRepresentation.Type.REQUEST, RestRepresentation.Type.RESPONSE, RestRepresentation.Type.FAULT }, false );
+
+		tabs.addTab( "Representations", restRepresentationsTable );
 
 		/*
 		 * tabs.addTab("Response Representations", new RestRepresentationsTable(
@@ -85,6 +86,7 @@ public class RestMethodDesktopPanel extends ModelItemDesktopPanel<RestMethod>
 	protected boolean release()
 	{
 		paramsTable.release();
+		restRepresentationsTable.release();
 		return super.release();
 	}
 
