@@ -331,11 +331,12 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 		if( browser != null )
 		{
 			browser.stop();
-
 			browser.dispose();
 			browser.removeDisposeListener( internalDisposeListener );
 			browser.removeNavigationListener( internalNavigationListener );
 			browser = null;
+
+			panel.removeAll();
 		}
 	}
 
