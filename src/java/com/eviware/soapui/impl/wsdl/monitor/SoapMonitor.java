@@ -91,6 +91,7 @@ import com.eviware.soapui.support.components.JInspectorPanel;
 import com.eviware.soapui.support.components.JInspectorPanelFactory;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.types.StringList;
+import com.eviware.soapui.support.types.StringToStringsMap;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.XFormField;
 import com.eviware.x.form.XFormFieldListener;
@@ -802,7 +803,7 @@ public class SoapMonitor extends JPanel
 						HttpTestRequestStep test = ( HttpTestRequestStep )testCase.insertTestStep( httpRequestStepFactory
 								.createConfig( me, "Monitor Request " + ( row + 1 ) ), -1 );
 
-						test.getTestRequest().setRequestHeaders( me.getRequestHeaders() );
+						test.getTestRequest().setRequestHeaders( excludeProxyHeaders( me.getRequestHeaders() ) );
 
 						HttpTestRequest request = ( HttpTestRequest )test.getHttpRequest();
 
@@ -1216,6 +1217,19 @@ public class SoapMonitor extends JPanel
 	protected String getHttpProxyHost()
 	{
 		return httpProxyHost;
+	}
+
+	public StringToStringsMap excludeProxyHeaders( StringToStringsMap requestHeaders )
+	{
+		StringToStringsMap stsmap = new StringToStringsMap();
+		for( String key : requestHeaders.getKeys() )
+		{
+			if( !( key.contains( "Proxy" ) || key.contains( "Content-Length" ) ) )
+			{
+				stsmap.add( key, requestHeaders.get( key, "" ) );
+			}
+		}
+		return stsmap;
 	}
 
 	protected void setHttpProxyHost( String proxyHost )
