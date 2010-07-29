@@ -1224,7 +1224,7 @@ public class SoapMonitor extends JPanel
 		StringToStringsMap stsmap = new StringToStringsMap();
 		for( String key : requestHeaders.getKeys() )
 		{
-			if( !( key.contains( "Proxy" ) || key.contains( "Content-Length" ) ) )
+			if( !( key.contains( "Proxy" ) || key.contains( "Content" ) ) )
 			{
 				stsmap.add( key, requestHeaders.get( key, "" ) );
 			}
