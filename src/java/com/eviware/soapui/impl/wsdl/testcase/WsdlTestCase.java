@@ -422,10 +422,10 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 			return null;
 	}
 
-	public WsdlTestStep addTestStep( String type, String name, String endpoint )
+	public WsdlTestStep addTestStep( String type, String name, String endpoint, String method )
 	{
 		TestStepConfig newStepConfig = ((HttpRequestStepFactory)WsdlTestStepRegistry.getInstance().getFactory( type )).createNewTestStep( this,
-				name, endpoint );
+				name, endpoint, method );
 		if( newStepConfig != null )
 		{
 			return addTestStep( newStepConfig );

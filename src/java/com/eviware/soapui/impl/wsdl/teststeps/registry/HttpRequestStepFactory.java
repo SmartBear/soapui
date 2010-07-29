@@ -116,7 +116,7 @@ public class HttpRequestStepFactory extends WsdlTestStepFactory
 		}
 	}
 
-	public TestStepConfig createNewTestStep( WsdlTestCase testCase, String name, String endpoint )
+	public TestStepConfig createNewTestStep( WsdlTestCase testCase, String name, String endpoint, String method )
 	{
 //		if( dialog == null )
 //		{
@@ -127,7 +127,8 @@ public class HttpRequestStepFactory extends WsdlTestStepFactory
 //			dialog.setValue( Form.ENDPOINT, "" );
 //		}
 
-//		params = new XmlBeansRestParamsTestPropertyHolder( testCase, RestParametersConfig.Factory.newInstance() );
+		RestParametersConfig ccc =  RestParametersConfig.Factory.newInstance();
+		params = new XmlBeansRestParamsTestPropertyHolder( testCase, ccc );
 
 //		paramsTable = new RestParamsTable( params, false );
 //		dialog.getFormField( Form.PARAMSTABLE ).setProperty( "component", paramsTable );
@@ -136,10 +137,35 @@ public class HttpRequestStepFactory extends WsdlTestStepFactory
 //		try
 //		{
 				HttpRequestConfig httpRequest = HttpRequestConfig.Factory.newInstance();
-				httpRequest.setEndpoint( endpoint );
-				httpRequest.setMethod( "GET" );
-				new XmlBeansRestParamsTestPropertyHolder( testCase, httpRequest.addNewParameters() );
+				httpRequest.setMethod( method );
+				String path = RestUtils.extractParams( endpoint, params, true );
+				endpoint = path;
 
+//				if( StringUtils.isNullOrEmpty( dialog.getValue( Form.STEPNAME ) ) )
+//				{
+//					String[] items = path.split( "/" );
+//
+//					if( items.length > 0 )
+//					{
+//						dialog.setValue( Form.STEPNAME, items[items.length - 1] );
+//					}
+
+//				}
+
+//				new XmlBeansRestParamsTestPropertyHolder( testCase, httpRequest.addNewParameters() );
+
+				httpRequest.setEndpoint( endpoint );
+				
+				RestParametersConfig r;				
+				for(String xx:  params.keySet() )
+				{
+					RestParameterConfig parameterConf = RestParameterConfig.Factory.newInstance();
+					parameterConf.setName( xx );
+					parameterConf.setValue( params.get( xx ).getValue() );
+					ccc.addNewParameter().set( parameterConf );
+				}
+				
+				httpRequest.setParameters( ccc );
 				TestStepConfig testStep = TestStepConfig.Factory.newInstance();
 				testStep.setType( HTTPREQUEST_TYPE );
 				testStep.setConfig( httpRequest );

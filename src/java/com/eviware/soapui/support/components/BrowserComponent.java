@@ -28,11 +28,15 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import org.mozilla.interfaces.nsIDOMDocument;
+import org.mozilla.interfaces.nsIDOMWindow;
 import org.mozilla.interfaces.nsIHttpChannel;
 import org.mozilla.interfaces.nsIRequest;
 import org.mozilla.interfaces.nsISupports;
 import org.mozilla.interfaces.nsIURI;
+import org.mozilla.interfaces.nsIURIContentListener;
 import org.mozilla.interfaces.nsIWeakReference;
+import org.mozilla.interfaces.nsIWebBrowser;
 import org.mozilla.interfaces.nsIWebProgress;
 import org.mozilla.interfaces.nsIWebProgressListener;
 import org.mozilla.xpcom.Mozilla;
@@ -51,6 +55,7 @@ import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.xml.XmlUtils;
+import com.gargoylesoftware.htmlunit.javascript.host.xml.XMLHttpRequest;
 import com.jniwrapper.PlatformContext;
 import com.teamdev.jxbrowser.Browser;
 import com.teamdev.jxbrowser.BrowserFactory;
@@ -65,11 +70,13 @@ import com.teamdev.jxbrowser.events.NavigationFinishedEvent;
 import com.teamdev.jxbrowser.events.NavigationListener;
 import com.teamdev.jxbrowser.events.StatusChangedEvent;
 import com.teamdev.jxbrowser.events.StatusListener;
+import com.teamdev.jxbrowser1.mozilla.MozillaWebBrowser;
 import com.teamdev.xpcom.PoxyAuthenticationHandler;
 import com.teamdev.xpcom.ProxyConfiguration;
 import com.teamdev.xpcom.ProxyServerAuthInfo;
 import com.teamdev.xpcom.ProxyServerType;
 import com.teamdev.xpcom.Services;
+import com.teamdev.xpcom.Xpcom;
 
 public class BrowserComponent implements nsIWebProgressListener, nsIWeakReference, StatusListener
 {
@@ -88,13 +95,44 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 	private NavigationListener internalNavigationListener;
 	private DisposeListener internalDisposeListener;
 	private HttpHtmlResponseView httpHtmlResponseView;
+	private static Boolean initialized = false;
 	private static SoapUINewWindowManager newWindowManager;
 
 	public BrowserComponent( boolean addToolbar )
 	{
 		this.addToolbar = addToolbar;
+		initialize();
 	}
 
+	public synchronized static void initialize()
+	{
+		if( initialized )
+			return;
+
+		try
+		{
+			if( !isJXBrowserDisabled() )
+			{
+				// if( Xpcom.isMacOSX() )
+				// {
+				// final String currentCP = System.getProperty( "java.class.path" );
+				// final String appleJavaExtentions = ":/System/Library/Java";
+				// System.setProperty( "java.class.path", currentCP +
+				// appleJavaExtentions );
+				// }
+
+				Xpcom.initialize();
+				// browserFactory = WebBrowserFactory.getInstance();
+			}
+
+			initialized = true;
+		}
+		catch( Throwable t )
+		{
+//			disabledReason = t.getMessage();
+			t.printStackTrace();
+		}
+	}
 	public static void setDisabled( boolean disabled )
 	{
 		BrowserComponent.disabled = disabled;
@@ -246,11 +284,30 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 		{
 			if( httpHtmlResponseView != null && httpHtmlResponseView.isRecordHttpTrafic() )
 			{
-				String newEndpoint = arg0.getUrl();
+				final String newEndpoint = arg0.getUrl();
+				
 				HttpTestRequest httpTestRequest = ( HttpTestRequest )( httpHtmlResponseView.getDocument().getRequest() );
 				WsdlTestCase testCase = ( WsdlTestCase )httpTestRequest.getTestStep().getTestCase();
 				int count = testCase.getTestStepList().size();
-				testCase.addTestStep( HttpRequestStepFactory.HTTPREQUEST_TYPE, "Http Test Step " + ++count, newEndpoint );
+				//until found the way to detect method hardcode to get
+				testCase.addTestStep( HttpRequestStepFactory.HTTPREQUEST_TYPE, "Http Test Step " + ++count, newEndpoint, "GET" );
+//				Xpcom.invokeLater(new Runnable() {
+//
+//					public void run()
+//					{
+//						nsIWebBrowser mozBrowser = ((MozillaWebBrowser) browser).getWebBrowser(); 
+//
+//						nsISupports subject = mozBrowser.queryInterface( nsIHttpChannel.NS_IHTTPCHANNEL_IID );
+//						nsIHttpChannel httpChannel = (nsIHttpChannel)subject.queryInterface(nsIHttpChannel.NS_IHTTPCHANNEL_IID);
+//						String method =  httpChannel.getRequestMethod();
+//						String url = httpChannel.getURI().toString();
+//						
+//						HttpTestRequest httpTestRequest = ( HttpTestRequest )( httpHtmlResponseView.getDocument().getRequest() );
+//						WsdlTestCase testCase = ( WsdlTestCase )httpTestRequest.getTestStep().getTestCase();
+//						int count = testCase.getTestStepList().size();
+//						testCase.addTestStep( HttpRequestStepFactory.HTTPREQUEST_TYPE, "Http Test Step " + ++count, url, method );
+//					}
+//				  });
 			}
 		}
 	}
