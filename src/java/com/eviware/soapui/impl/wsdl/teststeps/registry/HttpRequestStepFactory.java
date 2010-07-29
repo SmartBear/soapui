@@ -28,7 +28,6 @@ import com.eviware.soapui.impl.rest.panels.resource.RestParamsTable;
 import com.eviware.soapui.impl.rest.support.RestUtils;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
 import com.eviware.soapui.impl.wsdl.monitor.WsdlMonitorMessageExchange;
-import com.eviware.soapui.impl.wsdl.panels.testcase.actions.SetEndpointAction;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
@@ -36,6 +35,7 @@ import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.support.MessageSupport;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.types.StringToStringsMap;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.XFormOptionsField;
 import com.eviware.x.form.support.ADialogBuilder;
@@ -127,8 +127,8 @@ public class HttpRequestStepFactory extends WsdlTestStepFactory
 //			dialog.setValue( Form.ENDPOINT, "" );
 //		}
 
-		RestParametersConfig ccc =  RestParametersConfig.Factory.newInstance();
-		params = new XmlBeansRestParamsTestPropertyHolder( testCase, ccc );
+		RestParametersConfig restParamConf =  RestParametersConfig.Factory.newInstance();
+		params = new XmlBeansRestParamsTestPropertyHolder( testCase, restParamConf );
 
 //		paramsTable = new RestParamsTable( params, false );
 //		dialog.getFormField( Form.PARAMSTABLE ).setProperty( "component", paramsTable );
@@ -141,31 +141,17 @@ public class HttpRequestStepFactory extends WsdlTestStepFactory
 				String path = RestUtils.extractParams( endpoint, params, true );
 				endpoint = path;
 
-//				if( StringUtils.isNullOrEmpty( dialog.getValue( Form.STEPNAME ) ) )
+				new XmlBeansRestParamsTestPropertyHolder( testCase, httpRequest.addNewParameters() ).addParameters( params );				httpRequest.setEndpoint( endpoint );
+				
+//				for(String oneparam:  params.keySet() )
 //				{
-//					String[] items = path.split( "/" );
-//
-//					if( items.length > 0 )
-//					{
-//						dialog.setValue( Form.STEPNAME, items[items.length - 1] );
-//					}
-
+//					RestParameterConfig parameterConf = RestParameterConfig.Factory.newInstance();
+//					parameterConf.setName( oneparam );
+//					parameterConf.setValue( params.get( oneparam ).getValue() );
+//					restParamConf.addNewParameter().set( parameterConf );
 //				}
-
-//				new XmlBeansRestParamsTestPropertyHolder( testCase, httpRequest.addNewParameters() );
-
-				httpRequest.setEndpoint( endpoint );
-				
-				RestParametersConfig r;				
-				for(String xx:  params.keySet() )
-				{
-					RestParameterConfig parameterConf = RestParameterConfig.Factory.newInstance();
-					parameterConf.setName( xx );
-					parameterConf.setValue( params.get( xx ).getValue() );
-					ccc.addNewParameter().set( parameterConf );
-				}
-				
-				httpRequest.setParameters( ccc );
+//				
+//				httpRequest.setParameters( restParamConf );
 				TestStepConfig testStep = TestStepConfig.Factory.newInstance();
 				testStep.setType( HTTPREQUEST_TYPE );
 				testStep.setConfig( httpRequest );
