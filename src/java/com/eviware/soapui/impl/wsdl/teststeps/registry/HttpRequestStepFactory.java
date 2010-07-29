@@ -275,8 +275,8 @@ public class HttpRequestStepFactory extends WsdlTestStepFactory
 		parametersConfig.setParameterArray(parameterConfigList.toArray( new RestParameterConfig[parametersMap.size()] ) );
 		testRequestConfig.setParameters( parametersConfig );
 
-		String requestContent = me.getRequestContent();
-		testRequestConfig.addNewRequest().setStringValue( requestContent );
+//		String requestContent = me.getRequestContent();
+//		testRequestConfig.addNewRequest().setStringValue( requestContent );
 
 		TestStepConfig testStep = TestStepConfig.Factory.newInstance();
 		testStep.setType( HTTPREQUEST );

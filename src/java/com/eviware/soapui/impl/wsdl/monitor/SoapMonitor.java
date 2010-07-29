@@ -816,7 +816,7 @@ public class SoapMonitor extends JPanel
 						if( "application/octet-stream".equals( existingMediaType )
 								|| "application/x-amf".equals( existingMediaType ) )
 						{
-							request.attachBinaryData( me.getRawRequestData(), existingMediaType );
+							request.attachBinaryData( me.getRequestContent().getBytes(), existingMediaType );
 						}
 						else
 						{
