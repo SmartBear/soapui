@@ -19,6 +19,8 @@ import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -28,15 +30,20 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import org.mozilla.interfaces.nsIBinaryInputStream;
+import org.mozilla.interfaces.nsIDOMWindow;
 import org.mozilla.interfaces.nsIHttpChannel;
 import org.mozilla.interfaces.nsIHttpHeaderVisitor;
 import org.mozilla.interfaces.nsIInputStream;
+import org.mozilla.interfaces.nsIInterfaceRequestor;
 import org.mozilla.interfaces.nsIObserver;
 import org.mozilla.interfaces.nsIObserverService;
 import org.mozilla.interfaces.nsIRequest;
+import org.mozilla.interfaces.nsISeekableStream;
 import org.mozilla.interfaces.nsIServiceManager;
 import org.mozilla.interfaces.nsISupports;
 import org.mozilla.interfaces.nsIURI;
+import org.mozilla.interfaces.nsIUploadChannel;
 import org.mozilla.interfaces.nsIWeakReference;
 import org.mozilla.interfaces.nsIWebProgress;
 import org.mozilla.interfaces.nsIWebProgressListener;
@@ -45,7 +52,6 @@ import org.mozilla.xpcom.XPCOMException;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.panels.request.views.html.HttpHtmlResponseView;
-import com.eviware.soapui.impl.support.http.HttpRequestTestStep;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequest;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
@@ -73,16 +79,19 @@ import com.teamdev.jxbrowser.events.NavigationFinishedEvent;
 import com.teamdev.jxbrowser.events.NavigationListener;
 import com.teamdev.jxbrowser.events.StatusChangedEvent;
 import com.teamdev.jxbrowser.events.StatusListener;
+import com.teamdev.jxbrowser.mozilla.MozillaBrowser;
+import com.teamdev.jxbrowser1.mozilla.MozillaWebBrowser;
 import com.teamdev.xpcom.PoxyAuthenticationHandler;
 import com.teamdev.xpcom.ProxyConfiguration;
 import com.teamdev.xpcom.ProxyServerAuthInfo;
 import com.teamdev.xpcom.ProxyServerType;
 import com.teamdev.xpcom.Services;
 import com.teamdev.xpcom.Xpcom;
+import com.teamdev.xpcom.util.XPCOMManager;
 
 public class BrowserComponent implements nsIWebProgressListener, nsIWeakReference, StatusListener
 {
-	private Browser browser;
+	private MozillaBrowser browser;
 	private JPanel panel = new JPanel( new BorderLayout() );
 	private JPanel statusBar;
 	private JLabel statusLabel;
@@ -99,12 +108,12 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 	private HttpHtmlResponseView httpHtmlResponseView;
 	private static Boolean initialized = false;
 	private static SoapUINewWindowManager newWindowManager;
+	private static Map<nsIDOMWindow, BrowserComponent> browserMap = new HashMap<nsIDOMWindow, BrowserComponent>();
 
 	public BrowserComponent( boolean addToolbar )
 	{
 		this.addToolbar = addToolbar;
 		initialize();
-		registerHttpListener();
 	}
 
 	public synchronized static void initialize()
@@ -170,7 +179,6 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 		{
 			if( browser == null )
 			{
-
 				statusBar = new JPanel();
 				statusLabel = new JLabel();
 				statusBar.add( statusLabel, BorderLayout.CENTER );
@@ -204,6 +212,141 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 	public void setHttpHtmlResponseView( HttpHtmlResponseView httpHtmlResponseView )
 	{
 		this.httpHtmlResponseView = httpHtmlResponseView;
+	}
+
+	private static final class RecordingHttpListener implements Runnable
+	{
+		public void run()
+		{
+			final Mozilla mozilla = Mozilla.getInstance();
+			nsIServiceManager serviceManager = mozilla.getServiceManager();
+			nsIObserverService observerService = ( nsIObserverService )serviceManager.getServiceByContractID(
+					"@mozilla.org/observer-service;1", nsIObserverService.NS_IOBSERVERSERVICE_IID );
+
+			final nsIBinaryInputStream in = ( nsIBinaryInputStream )XPCOMManager.getInstance().newComponent(
+					"@mozilla.org/binaryinputstream;1", nsIBinaryInputStream.class );
+
+			nsIObserver httpObserver = new nsIObserver()
+			{
+				protected long _lRequestCounter = 0;
+
+				public void observe( nsISupports subject, String sTopic, String sData )
+				{
+					try
+					{
+						if( EVENT_HTTP_ON_MODIFY_REQUEST.equals( sTopic ) )
+						{
+							_lRequestCounter++ ;
+
+							nsIHttpChannel httpChannel = ( nsIHttpChannel )subject
+									.queryInterface( nsIHttpChannel.NS_IHTTPCHANNEL_IID );
+
+							if( httpChannel.getNotificationCallbacks() == null )
+								return;
+
+							nsIInterfaceRequestor interfaceRequestor = ( nsIInterfaceRequestor )httpChannel
+									.getNotificationCallbacks()
+									.queryInterface( nsIInterfaceRequestor.NS_IINTERFACEREQUESTOR_IID );
+
+							nsIDOMWindow window = ( nsIDOMWindow )interfaceRequestor
+									.getInterface( nsIDOMWindow.NS_IDOMWINDOW_IID );
+
+							if( browserMap.containsKey( window ) && browserMap.get( window ).isRecording() )
+							{
+								nsIURI originalUri = httpChannel.getOriginalURI();
+								nsIUploadChannel upload = ( nsIUploadChannel )httpChannel
+										.queryInterface( nsIUploadChannel.NS_IUPLOADCHANNEL_IID );
+
+								byte[] requestData = null;
+								if( upload != null )
+								{
+									nsIInputStream uploadStream = ( nsIInputStream )upload.getUploadStream();
+
+									if( uploadStream != null && uploadStream.available() > 0 )
+									{
+										nsISeekableStream seekable = ( nsISeekableStream )uploadStream
+												.queryInterface( nsISeekableStream.NS_ISEEKABLESTREAM_IID );
+
+										long pos = seekable.tell();
+										long available = uploadStream.available();
+
+										if( available > 0 )
+										{
+											try
+											{
+												synchronized( mozilla )
+												{
+													in.setInputStream( uploadStream );
+													requestData = in.readByteArray( available );
+												}
+											}
+											catch( Throwable e )
+											{
+												e.printStackTrace();
+											}
+											finally
+											{
+												seekable.seek( nsISeekableStream.NS_SEEK_SET, pos );
+											}
+										}
+									}
+								}
+
+								final StringToStringsMap headersMap = new StringToStringsMap();
+								httpChannel.visitRequestHeaders( new nsIHttpHeaderVisitor()
+								{
+
+									public void visitHeader( String header, String value )
+									{
+										headersMap.put( header, value );
+									}
+
+									public nsISupports queryInterface( String sIID )
+									{
+										return Mozilla.queryInterface( this, sIID );
+									}
+								} );
+
+								HttpHtmlResponseView httpHtmlResponseView = browserMap.get( window ).httpHtmlResponseView;
+								if( httpHtmlResponseView != null && httpHtmlResponseView.isRecordHttpTrafic() )
+								{
+									HttpTestRequest httpTestRequest = ( HttpTestRequest )( httpHtmlResponseView.getDocument()
+											.getRequest() );
+									WsdlTestCase testCase = ( WsdlTestCase )httpTestRequest.getTestStep().getTestCase();
+									int count = testCase.getTestStepList().size();
+									HttpTestRequestStep newHttpStep = ( HttpTestRequestStep )testCase.addTestStep(
+											HttpRequestStepFactory.HTTPREQUEST_TYPE, "Http Test Step " + ++count, originalUri
+													.getSpec(), httpChannel.getRequestMethod() );
+									newHttpStep.getTestRequest().setRequestHeaders( headersMap );
+
+									if( requestData != null )
+									{
+										// process request data here..
+										System.out.println( new String( requestData ) );
+									}
+								}
+							}
+						}
+						else
+						{
+							System.out.println( "HTTPObserver: Unknown event '" + sTopic + "'" );
+						}
+					}
+					catch( Throwable e )
+					{
+						e.printStackTrace();
+					}
+				}
+
+				public nsISupports queryInterface( String sIID )
+				{
+					return Mozilla.queryInterface( this, sIID );
+				}
+			};
+
+			boolean blnObserverIsWeakReference = false;
+			observerService.addObserver( httpObserver, EVENT_HTTP_ON_MODIFY_REQUEST, blnObserverIsWeakReference );
+		}
 	}
 
 	private static final class SoapUINewWindowManager implements NewWindowManager
@@ -363,19 +506,23 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 		if( browser != null )
 			return false;
 
-		if( PlatformContext.isWindows() )
+		// if( PlatformContext.isWindows() )
 		{
-			browser = BrowserFactory.createBrowser( BrowserType.Mozilla );
+			browser = ( MozillaBrowser )BrowserFactory.createBrowser( BrowserType.Mozilla );
+			browserMap.put( ( ( MozillaWebBrowser )browser.getPeer() ).getWebBrowser().getContentDOMWindow(), this );
 		}
-		else
-		{
-			browser = BrowserFactory.createBrowser();
-		}
-		// internalNavigationListener = new InternalBrowserNavigationListener();
+		// else
+		// {
+		// browser = BrowserFactory.createBrowser();
+		// }
+		// // internalNavigationListener = new
+		// InternalBrowserNavigationListener();
 		// browser.addNavigationListener( internalNavigationListener );
 
 		if( newWindowManager == null )
 		{
+			registerHttpListener();
+
 			newWindowManager = new SoapUINewWindowManager();
 			browser.getServices().setNewWindowManager( newWindowManager );
 		}
@@ -384,23 +531,16 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 		return true;
 	}
 
+	protected boolean isRecording()
+	{
+		return httpHtmlResponseView != null && httpHtmlResponseView.isRecordHttpTrafic();
+	}
+
 	public void release()
 	{
 		if( browser != null )
 		{
 			disposed = true;
-			//
-			// if( !SwingUtilities.isEventDispatchThread() )
-			// {
-			// SwingUtilities.invokeLater( new Runnable()
-			// {
-			// public void run()
-			// {
-			// cleanup();
-			// }
-			// } );
-			// }
-			// else
 			cleanup();
 		}
 
@@ -413,13 +553,15 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 
 		if( browser != null )
 		{
+			browserMap.remove( ( ( MozillaWebBrowser )browser.getPeer() ).getWebBrowser().getContentDOMWindow() );
+
 			browser.stop();
 			browser.dispose();
 			browser.removeDisposeListener( internalDisposeListener );
 			// browser.removeNavigationListener( internalNavigationListener );
-			browser = null;
 
 			panel.removeAll();
+			browser = null;
 		}
 	}
 
@@ -716,80 +858,7 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 
 	public void registerHttpListener()
 	{
-		Xpcom.invokeLater( new Runnable()
-		{
-			public void run()
-			{
-				Mozilla mozilla = Mozilla.getInstance();
-				nsIServiceManager serviceManager = mozilla.getServiceManager();
-				nsIObserverService observerService = ( nsIObserverService )serviceManager.getServiceByContractID(
-						"@mozilla.org/observer-service;1", nsIObserverService.NS_IOBSERVERSERVICE_IID );
-
-				nsIObserver httpObserver = new nsIObserver()
-				{
-					protected long _lRequestCounter = 0;
-
-					public void observe( nsISupports subject, String sTopic, String sData )
-					{
-						if( EVENT_HTTP_ON_MODIFY_REQUEST.equals( sTopic ) )
-						{
-							_lRequestCounter++ ;
-
-							nsIHttpChannel httpChannel = ( nsIHttpChannel )subject
-									.queryInterface( nsIHttpChannel.NS_IHTTPCHANNEL_IID );
-
-							nsIURI originalUri = httpChannel.getOriginalURI();
-
-							final StringToStringsMap headersMap = new StringToStringsMap();
-							httpChannel.visitRequestHeaders( new nsIHttpHeaderVisitor()
-							{
-
-								public void visitHeader( String header, String value )
-								{
-									System.out.println( "header:" + header + "," + value );
-									headersMap.put( header, value );
-								}
-
-								public nsISupports queryInterface( String sIID )
-								{
-									return Mozilla.queryInterface( this, sIID );
-								}
-							} );
-
-							if( httpHtmlResponseView != null && httpHtmlResponseView.isRecordHttpTrafic() )
-							{
-
-								HttpTestRequest httpTestRequest = ( HttpTestRequest )( httpHtmlResponseView.getDocument()
-										.getRequest() );
-								WsdlTestCase testCase = ( WsdlTestCase )httpTestRequest.getTestStep().getTestCase();
-								int count = testCase.getTestStepList().size();
-								HttpTestRequestStep newHttpStep = ( HttpTestRequestStep )testCase.addTestStep(
-										HttpRequestStepFactory.HTTPREQUEST_TYPE, "Http Test Step " + ++count, originalUri
-												.getSpec(), httpChannel.getRequestMethod() );
-								newHttpStep.getTestRequest().setRequestHeaders( headersMap );
-								// nsIInputStream inputStream = httpChannel.open();
-								// byte[] cc = new byte[] {};
-								// inputStream.read( cc, inputStream.available() );
-								// System.out.println("**"+cc);
-							}
-
-						}
-						else
-						{
-							System.out.println( "HTTPObserver: Unknown event '" + sTopic + "'" );
-						}
-					}
-
-					public nsISupports queryInterface( String sIID )
-					{
-						return Mozilla.queryInterface( this, sIID );
-					}
-				};
-
-				boolean blnObserverIsWeakReference = false;
-				observerService.addObserver( httpObserver, EVENT_HTTP_ON_MODIFY_REQUEST, blnObserverIsWeakReference );
-			}
-		} );
+		Xpcom.invokeLater( new RecordingHttpListener() );
 	}
 
 	/**
