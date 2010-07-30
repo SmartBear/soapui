@@ -110,6 +110,7 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 	private static Boolean initialized = false;
 	private static SoapUINewWindowManager newWindowManager;
 	private static Map<nsIDOMWindow, BrowserComponent> browserMap = new HashMap<nsIDOMWindow, BrowserComponent>();
+	private static Map<BrowserComponent, Map<String, RecordedRequest>> browserRecordingMap = new HashMap<BrowserComponent, Map<String, RecordedRequest>>();
 
 	public BrowserComponent( boolean addToolbar )
 	{
@@ -126,23 +127,13 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 		{
 			if( !isJXBrowserDisabled() )
 			{
-				// if( Xpcom.isMacOSX() )
-				// {
-				// final String currentCP = System.getProperty( "java.class.path" );
-				// final String appleJavaExtentions = ":/System/Library/Java";
-				// System.setProperty( "java.class.path", currentCP +
-				// appleJavaExtentions );
-				// }
-
 				Xpcom.initialize();
-				// browserFactory = WebBrowserFactory.getInstance();
 			}
 
 			initialized = true;
 		}
 		catch( Throwable t )
 		{
-			// disabledReason = t.getMessage();
 			t.printStackTrace();
 		}
 	}
@@ -252,17 +243,16 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 							nsIDOMWindow window = ( nsIDOMWindow )interfaceRequestor
 									.getInterface( nsIDOMWindow.NS_IDOMWINDOW_IID );
 
-							if( browserMap.containsKey( window ) && browserMap.get( window ).isRecording() )
+							BrowserComponent browserComponent = browserMap.get( window );
+							if( browserComponent != null && browserComponent.isRecording() )
 							{
-								nsIURI originalUri = httpChannel.getOriginalURI();
-								nsIURI referrer = httpChannel.getReferrer();
-								nsIURI uri = httpChannel.getURI();
+								RecordedRequest rr = new RecordedRequest( dumpUri( httpChannel.getURI() ), httpChannel
+										.getRequestMethod() );
 
 								nsIUploadChannel upload = ( nsIUploadChannel )httpChannel
 										.queryInterface( nsIUploadChannel.NS_IUPLOADCHANNEL_IID );
 
 								byte[] requestData = null;
-								String requestSource = "";
 								if( upload != null )
 								{
 									nsIInputStream uploadStream = ( nsIInputStream )upload.getUploadStream();
@@ -283,9 +273,8 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 												{
 													in.setInputStream( uploadStream );
 													requestData = in.readByteArray( available );
-													int contentLength = getContentLength( requestData );
-													requestSource = new String( requestData, requestData.length - contentLength,
-															contentLength );
+													rr.setContent( getRequestBody( requestData ) );
+													rr.setContentType( getContentType( requestData ) );
 												}
 											}
 											catch( Throwable e )
@@ -315,32 +304,14 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 									}
 								} );
 
-								HttpHtmlResponseView httpHtmlResponseView = browserMap.get( window ).httpHtmlResponseView;
-								String requestUrl = originalUri.getSpec();
-								String referrerUrlValue = referrer.getSpec();
-								// if( httpHtmlResponseView != null &&
-								// httpHtmlResponseView.isRecordHttpTrafic()
-								// && requestUrl.equals( referrerUrlValue ) )
-								if( httpHtmlResponseView != null && httpHtmlResponseView.isRecordHttpTrafic() )
-								{
-									HttpTestRequest httpTestRequest = ( HttpTestRequest )( httpHtmlResponseView.getDocument()
-											.getRequest() );
-									WsdlTestCase testCase = ( WsdlTestCase )httpTestRequest.getTestStep().getTestCase();
-									int count = testCase.getTestStepList().size();
-									HttpTestRequestStep newHttpStep = ( HttpTestRequestStep )testCase.addTestStep(
-											HttpRequestStepFactory.HTTPREQUEST_TYPE, "Http Test Step " + ++count, requestUrl,
-											httpChannel.getRequestMethod(), requestSource );
-									newHttpStep.getTestRequest().setRequestHeaders( headersMap );
-									String contentType = getContentType( requestData );
-									newHttpStep.getTestRequest().setMediaType( contentType );
+								rr.setHeaders( headersMap );
 
-									if( requestData != null )
-									{
-										// process request data here..
-										System.out.println( "RequestData\n" + new String( requestData ) );
-										System.out.println( "requestContent\n" + new String( requestSource ) );
-									}
+								if( !browserRecordingMap.containsKey( browserComponent ) )
+								{
+									browserRecordingMap.put( browserComponent, new HashMap<String, RecordedRequest>() );
 								}
+
+								browserRecordingMap.get( browserComponent ).put( rr.getUrl(), rr );
 							}
 						}
 						else
@@ -350,7 +321,8 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 					}
 					catch( Throwable e )
 					{
-						e.printStackTrace();
+						if( e.getMessage().indexOf( "0x80004002" ) == -1 )
+							SoapUI.logError( e );
 					}
 				}
 
@@ -370,15 +342,14 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 		String request = new String( requestData );
 		String contentType = request.substring( request.indexOf( "Content-Type" ) + 14 );
 		contentType = contentType.substring( 0, contentType.indexOf( "\n" ) - 1 );
-		return contentType;
+		return contentType.trim();
 	}
 
-	private static int getContentLength( byte[] requestData )
+	private static String getRequestBody( byte[] requestData )
 	{
 		String request = new String( requestData );
-		String contentLength = request.substring( request.indexOf( "Content-Length" ) + 16 );
-		contentLength = contentLength.substring( 0, contentLength.indexOf( "\n" ) - 1 );
-		return Integer.parseInt( contentLength );
+		int ix = request.indexOf( "\r\n\r\n" );
+		return ix == -1 ? "" : request.substring( ix + 4 );
 	}
 
 	private static final class SoapUINewWindowManager implements NewWindowManager
@@ -455,13 +426,38 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 		@Override
 		public void navigationStarted( NavigationEvent arg0 )
 		{
-			// navigatingUrl = arg0.getUrl();
-			// System.out.println( "navigatingUrl:" + navigatingUrl );
 		}
 
 		@Override
 		public void navigationFinished( NavigationFinishedEvent arg0 )
 		{
+			if( isRecording() && browserRecordingMap.containsKey( BrowserComponent.this ) )
+			{
+				Map<String, RecordedRequest> map = browserRecordingMap.get( BrowserComponent.this );
+				RecordedRequest recordedRequest = map.get( arg0.getUrl() );
+				if( recordedRequest != null )
+				{
+					if( httpHtmlResponseView != null && httpHtmlResponseView.isRecordHttpTrafic() )
+					{
+						HttpTestRequest httpTestRequest = ( HttpTestRequest )( httpHtmlResponseView.getDocument()
+								.getRequest() );
+						WsdlTestCase testCase = ( WsdlTestCase )httpTestRequest.getTestStep().getTestCase();
+						int count = testCase.getTestStepList().size();
+						HttpTestRequestStep newHttpStep = ( HttpTestRequestStep )testCase.addTestStep(
+								HttpRequestStepFactory.HTTPREQUEST_TYPE, "Http Test Step " + ++count, recordedRequest.getUrl(),
+								recordedRequest.getMethod(), null );
+						newHttpStep.getTestRequest().setRequestHeaders( recordedRequest.getHeaders() );
+
+						if( recordedRequest.getContent() != null )
+						{
+							newHttpStep.getTestRequest().setMediaType( recordedRequest.getContentType() );
+							newHttpStep.getTestRequest().setRequestContent( recordedRequest.getContent() );
+						}
+					}
+				}
+			}
+
+			browserRecordingMap.remove( BrowserComponent.this );
 		}
 	}
 
@@ -524,6 +520,9 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 			browser.getServices().setNewWindowManager( newWindowManager );
 		}
 
+		internalNavigationListener = new InternalBrowserNavigationListener();
+		browser.addNavigationListener( internalNavigationListener );
+
 		panel.add( browser.getComponent(), BorderLayout.CENTER );
 		return true;
 	}
@@ -555,7 +554,7 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 			browser.stop();
 			browser.dispose();
 			browser.removeDisposeListener( internalDisposeListener );
-			// browser.removeNavigationListener( internalNavigationListener );
+			browser.removeNavigationListener( internalNavigationListener );
 
 			panel.removeAll();
 			browser = null;
@@ -880,6 +879,61 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 				+ uri.getHost()
 				+ ( ( uri.getPort() == -1 ) ? "" : ":" + uri.getPort() )
 				+ uri.getPath();
+	}
+
+	private static class RecordedRequest
+	{
+		private String url;
+		private String contentType;
+		private StringToStringsMap headers;
+		private String method;
+		private String content;
+
+		public RecordedRequest( String url, String method )
+		{
+			this.url = url;
+			this.method = method;
+		}
+
+		public void setContentType( String contentType )
+		{
+			this.contentType = contentType;
+		}
+
+		public void setHeaders( StringToStringsMap headersMap )
+		{
+			headers = headersMap;
+		}
+
+		public void setContent( String requestBody )
+		{
+			content = requestBody;
+		}
+
+		public String getUrl()
+		{
+			return url;
+		}
+
+		public String getContentType()
+		{
+			return contentType;
+		}
+
+		public StringToStringsMap getHeaders()
+		{
+			return headers;
+		}
+
+		public String getMethod()
+		{
+			return method;
+		}
+
+		public String getContent()
+		{
+			return content;
+		}
 	}
 
 }
