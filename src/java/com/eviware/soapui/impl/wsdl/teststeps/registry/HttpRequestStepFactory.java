@@ -19,6 +19,8 @@ import java.util.Map;
 
 import javax.swing.AbstractAction;
 
+import org.apache.commons.httpclient.HttpMethod;
+
 import com.eviware.soapui.config.HttpRequestConfig;
 import com.eviware.soapui.config.RestParameterConfig;
 import com.eviware.soapui.config.RestParametersConfig;
@@ -42,6 +44,7 @@ import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.validators.RequiredValidator;
+import com.sun.java.xml.ns.j2Ee.HttpMethodType;
 
 /**
  * Factory for WsdlTestRequestSteps
@@ -116,57 +119,67 @@ public class HttpRequestStepFactory extends WsdlTestStepFactory
 		}
 	}
 
-	public TestStepConfig createNewTestStep( WsdlTestCase testCase, String name, String endpoint, String method )
+	public TestStepConfig createNewTestStep( WsdlTestCase testCase, String name, String endpoint, String method,
+			String requestSource )
 	{
-//		if( dialog == null )
-//		{
-//			buildDialog();
-//		}
-//		else
-//		{
-//			dialog.setValue( Form.ENDPOINT, "" );
-//		}
+		// if( dialog == null )
+		// {
+		// buildDialog();
+		// }
+		// else
+		// {
+		// dialog.setValue( Form.ENDPOINT, "" );
+		// }
 
-		RestParametersConfig restParamConf =  RestParametersConfig.Factory.newInstance();
+		RestParametersConfig restParamConf = RestParametersConfig.Factory.newInstance();
 		params = new XmlBeansRestParamsTestPropertyHolder( testCase, restParamConf );
 
-//		paramsTable = new RestParamsTable( params, false );
-//		dialog.getFormField( Form.PARAMSTABLE ).setProperty( "component", paramsTable );
-//		dialog.setValue( Form.STEPNAME, name );
+		// paramsTable = new RestParamsTable( params, false );
+		// dialog.getFormField( Form.PARAMSTABLE ).setProperty( "component",
+		// paramsTable );
+		// dialog.setValue( Form.STEPNAME, name );
 
-//		try
-//		{
-				HttpRequestConfig httpRequest = HttpRequestConfig.Factory.newInstance();
-				httpRequest.setMethod( method );
-				String path = RestUtils.extractParams( endpoint, params, true );
-				endpoint = path;
+		// try
+		// {
+		HttpRequestConfig httpRequest = HttpRequestConfig.Factory.newInstance();
+		httpRequest.setMethod( method );
+		if( HttpMethodType.POST.toString().equals( method ) )
+		{
+			endpoint = endpoint + "?" + requestSource;
+		}
+		String path = RestUtils.extractParams( endpoint, params, true );
+		endpoint = path;
 
-				new XmlBeansRestParamsTestPropertyHolder( testCase, httpRequest.addNewParameters() ).addParameters( params );				httpRequest.setEndpoint( endpoint );
-				
-//				for(String oneparam:  params.keySet() )
-//				{
-//					RestParameterConfig parameterConf = RestParameterConfig.Factory.newInstance();
-//					parameterConf.setName( oneparam );
-//					parameterConf.setValue( params.get( oneparam ).getValue() );
-//					restParamConf.addNewParameter().set( parameterConf );
-//				}
-//				
-//				httpRequest.setParameters( restParamConf );
-				TestStepConfig testStep = TestStepConfig.Factory.newInstance();
-				testStep.setType( HTTPREQUEST_TYPE );
-				testStep.setConfig( httpRequest );
-				testStep.setName( name );
+		new XmlBeansRestParamsTestPropertyHolder( testCase, httpRequest.addNewParameters() ).addParameters( params );
+		httpRequest.setEndpoint( endpoint );
 
-				return testStep;
-//		}
-//		finally
-//		{
-//			paramsTable.release();
-//			paramsTable = null;
-//			params = null;
-//			dialog.getFormField( Form.PARAMSTABLE ).setProperty( "component", paramsTable );
-//		}
+		// for(String oneparam: params.keySet() )
+		// {
+		// RestParameterConfig parameterConf =
+		// RestParameterConfig.Factory.newInstance();
+		// parameterConf.setName( oneparam );
+		// parameterConf.setValue( params.get( oneparam ).getValue() );
+		// restParamConf.addNewParameter().set( parameterConf );
+		// }
+		//				
+		// httpRequest.setParameters( restParamConf );
+		TestStepConfig testStep = TestStepConfig.Factory.newInstance();
+		testStep.setType( HTTPREQUEST_TYPE );
+		testStep.setConfig( httpRequest );
+		testStep.setName( name );
+
+		return testStep;
+		// }
+		// finally
+		// {
+		// paramsTable.release();
+		// paramsTable = null;
+		// params = null;
+		// dialog.getFormField( Form.PARAMSTABLE ).setProperty( "component",
+		// paramsTable );
+		// }
 	}
+
 	public boolean canCreate()
 	{
 		return true;
@@ -247,22 +260,22 @@ public class HttpRequestStepFactory extends WsdlTestStepFactory
 		testRequestConfig.setEndpoint( me.getEndpoint() );
 		testRequestConfig.setMethod( me.getRequestMethod() );
 
-	// set parameters
+		// set parameters
 		RestParametersConfig parametersConfig = testRequestConfig.addNewParameters();
 		Map<String, String> parametersMap = me.getHttpRequestParameters();
 		List<RestParameterConfig> parameterConfigList = new ArrayList<RestParameterConfig>();
-		for(String name:  parametersMap.keySet() )
+		for( String name : parametersMap.keySet() )
 		{
 			RestParameterConfig parameterConf = RestParameterConfig.Factory.newInstance();
 			parameterConf.setName( name );
 			parameterConf.setValue( parametersMap.get( name ) );
 			parameterConfigList.add( parameterConf );
 		}
-		parametersConfig.setParameterArray(parameterConfigList.toArray( new RestParameterConfig[parametersMap.size()] ) );
+		parametersConfig.setParameterArray( parameterConfigList.toArray( new RestParameterConfig[parametersMap.size()] ) );
 		testRequestConfig.setParameters( parametersConfig );
 
-//		String requestContent = me.getRequestContent();
-//		testRequestConfig.addNewRequest().setStringValue( requestContent );
+		// String requestContent = me.getRequestContent();
+		// testRequestConfig.addNewRequest().setStringValue( requestContent );
 
 		TestStepConfig testStep = TestStepConfig.Factory.newInstance();
 		testStep.setType( HTTPREQUEST );

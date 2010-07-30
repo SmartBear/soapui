@@ -91,6 +91,7 @@ import com.teamdev.xpcom.util.XPCOMManager;
 
 public class BrowserComponent implements nsIWebProgressListener, nsIWeakReference, StatusListener
 {
+	private static final String CONTENT_TYPE_FORM_URLENCODED = "application/x-www-form-urlencoded";
 	private MozillaBrowser browser;
 	private JPanel panel = new JPanel( new BorderLayout() );
 	private JPanel statusBar;
@@ -254,10 +255,14 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 							if( browserMap.containsKey( window ) && browserMap.get( window ).isRecording() )
 							{
 								nsIURI originalUri = httpChannel.getOriginalURI();
+								nsIURI referrer = httpChannel.getReferrer();
+								nsIURI uri = httpChannel.getURI();
+
 								nsIUploadChannel upload = ( nsIUploadChannel )httpChannel
 										.queryInterface( nsIUploadChannel.NS_IUPLOADCHANNEL_IID );
 
 								byte[] requestData = null;
+								String requestSource = "";
 								if( upload != null )
 								{
 									nsIInputStream uploadStream = ( nsIInputStream )upload.getUploadStream();
@@ -278,6 +283,9 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 												{
 													in.setInputStream( uploadStream );
 													requestData = in.readByteArray( available );
+													int contentLength = getContentLength( requestData );
+													requestSource = new String( requestData, requestData.length - contentLength,
+															contentLength );
 												}
 											}
 											catch( Throwable e )
@@ -308,6 +316,11 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 								} );
 
 								HttpHtmlResponseView httpHtmlResponseView = browserMap.get( window ).httpHtmlResponseView;
+								String requestUrl = originalUri.getSpec();
+								String referrerUrlValue = referrer.getSpec();
+								// if( httpHtmlResponseView != null &&
+								// httpHtmlResponseView.isRecordHttpTrafic()
+								// && requestUrl.equals( referrerUrlValue ) )
 								if( httpHtmlResponseView != null && httpHtmlResponseView.isRecordHttpTrafic() )
 								{
 									HttpTestRequest httpTestRequest = ( HttpTestRequest )( httpHtmlResponseView.getDocument()
@@ -315,14 +328,17 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 									WsdlTestCase testCase = ( WsdlTestCase )httpTestRequest.getTestStep().getTestCase();
 									int count = testCase.getTestStepList().size();
 									HttpTestRequestStep newHttpStep = ( HttpTestRequestStep )testCase.addTestStep(
-											HttpRequestStepFactory.HTTPREQUEST_TYPE, "Http Test Step " + ++count, originalUri
-													.getSpec(), httpChannel.getRequestMethod() );
+											HttpRequestStepFactory.HTTPREQUEST_TYPE, "Http Test Step " + ++count, requestUrl,
+											httpChannel.getRequestMethod(), requestSource );
 									newHttpStep.getTestRequest().setRequestHeaders( headersMap );
+									String contentType = getContentType( requestData );
+									newHttpStep.getTestRequest().setMediaType( contentType );
 
 									if( requestData != null )
 									{
 										// process request data here..
-										System.out.println( new String( requestData ) );
+										System.out.println( "RequestData\n" + new String( requestData ) );
+										System.out.println( "requestContent\n" + new String( requestSource ) );
 									}
 								}
 							}
@@ -347,6 +363,22 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 			boolean blnObserverIsWeakReference = false;
 			observerService.addObserver( httpObserver, EVENT_HTTP_ON_MODIFY_REQUEST, blnObserverIsWeakReference );
 		}
+	}
+
+	private static String getContentType( byte[] requestData )
+	{
+		String request = new String( requestData );
+		String contentType = request.substring( request.indexOf( "Content-Type" ) + 14 );
+		contentType = contentType.substring( 0, contentType.indexOf( "\n" ) - 1 );
+		return contentType;
+	}
+
+	private static int getContentLength( byte[] requestData )
+	{
+		String request = new String( requestData );
+		String contentLength = request.substring( request.indexOf( "Content-Length" ) + 16 );
+		contentLength = contentLength.substring( 0, contentLength.indexOf( "\n" ) - 1 );
+		return Integer.parseInt( contentLength );
 	}
 
 	private static final class SoapUINewWindowManager implements NewWindowManager
@@ -423,47 +455,13 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 		@Override
 		public void navigationStarted( NavigationEvent arg0 )
 		{
-			// TODO Auto-generated method stub
+			// navigatingUrl = arg0.getUrl();
+			// System.out.println( "navigatingUrl:" + navigatingUrl );
 		}
 
 		@Override
 		public void navigationFinished( NavigationFinishedEvent arg0 )
 		{
-			if( httpHtmlResponseView != null && httpHtmlResponseView.isRecordHttpTrafic() )
-			{
-				String newEndpoint = arg0.getUrl();
-
-				HttpTestRequest httpTestRequest = ( HttpTestRequest )( httpHtmlResponseView.getDocument().getRequest() );
-				WsdlTestCase testCase = ( WsdlTestCase )httpTestRequest.getTestStep().getTestCase();
-				int count = testCase.getTestStepList().size();
-				// until found the way to detect method hardcode to get
-				// testCase.addTestStep( HttpRequestStepFactory.HTTPREQUEST_TYPE,
-				// "Http Test Step " + ++count, newEndpoint,
-				// "GET" );
-				// Xpcom.invokeLater(new Runnable() {
-				//
-				// public void run()
-				// {
-				// nsIWebBrowser mozBrowser = ((MozillaWebBrowser)
-				// browser).getWebBrowser();
-				//
-				// nsISupports subject = mozBrowser.queryInterface(
-				// nsIHttpChannel.NS_IHTTPCHANNEL_IID );
-				// nsIHttpChannel httpChannel =
-				// (nsIHttpChannel)subject.queryInterface(nsIHttpChannel.NS_IHTTPCHANNEL_IID);
-				// String method = httpChannel.getRequestMethod();
-				// String url = httpChannel.getURI().toString();
-				//						
-				// HttpTestRequest httpTestRequest = ( HttpTestRequest )(
-				// httpHtmlResponseView.getDocument().getRequest() );
-				// WsdlTestCase testCase = ( WsdlTestCase
-				// )httpTestRequest.getTestStep().getTestCase();
-				// int count = testCase.getTestStepList().size();
-				// testCase.addTestStep( HttpRequestStepFactory.HTTPREQUEST_TYPE,
-				// "Http Test Step " + ++count, url, method );
-				// }
-				// });
-			}
 		}
 	}
 
@@ -515,8 +513,7 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 		// {
 		// browser = BrowserFactory.createBrowser();
 		// }
-		// // internalNavigationListener = new
-		// InternalBrowserNavigationListener();
+		// internalNavigationListener = new InternalBrowserNavigationListener();
 		// browser.addNavigationListener( internalNavigationListener );
 
 		if( newWindowManager == null )
