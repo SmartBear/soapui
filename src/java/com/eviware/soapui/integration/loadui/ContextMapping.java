@@ -230,7 +230,7 @@ public class ContextMapping
 			triggerProperties.put( "amplitude", createProperyValue( Long.class, Long.toString( ( ( long )( currentStrategy
 					.getVariance() * rate ) ) ) ) );
 			triggerProperties.put( "period",
-					createProperyValue( Long.class, Long.toString( currentStrategy.getInterval() ) ) );
+					createProperyValue( Long.class, Long.toString( currentStrategy.getInterval()/1000 ) ) );
 		}
 		if( loadStrategy instanceof ThreadCountChangeLoadStrategy )
 		{
