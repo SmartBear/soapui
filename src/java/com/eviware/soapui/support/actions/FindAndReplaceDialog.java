@@ -14,7 +14,6 @@ package com.eviware.soapui.support.actions;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
@@ -272,7 +271,9 @@ public class FindAndReplaceDialog extends AbstractAction
 				findCombo.insertItemAt( value, 0 );
 			}
 			else
-				Toolkit.getDefaultToolkit().beep();
+			{
+				UISupport.showErrorMessage( "String [" + value + "] not found" );
+			}
 		}
 	}
 
@@ -362,6 +363,10 @@ public class FindAndReplaceDialog extends AbstractAction
 					ix = findNext( ix - 1, txt, value );
 				}
 			}
+			else
+			{
+				UISupport.showErrorMessage( "String [" + value + "] not found" );
+			}
 		}
 	}
 
@@ -398,45 +403,53 @@ public class FindAndReplaceDialog extends AbstractAction
 				return;
 
 			int ix = findNext( pos, txt, value );
-			int firstIx = ix;
-			int valueInNewValueIx = !caseCheck.isSelected() ? newValue.toLowerCase().indexOf( value ) : newValue
-					.indexOf( value );
-
-			target.setReplaceAll( true );
-			target.setSBTarget();
-			target.setNewValue( newValue );
-			while( ix != -1 )
+			if( ix >= 0 )
 			{
-				target.select( ix, ix + value.length() );
-				target.setSelectedText( newValue );
-				target.select( ix, ix + newValue.length() );
 
-				// adjust firstix
-				if( ix < firstIx )
-					firstIx += newValue.length() - value.length();
+				int firstIx = ix;
+				int valueInNewValueIx = !caseCheck.isSelected() ? newValue.toLowerCase().indexOf( value ) : newValue
+						.indexOf( value );
 
-				txt = target.getText();
-				if( !caseCheck.isSelected() )
+				target.setReplaceAll( true );
+				target.setSBTarget();
+				target.setNewValue( newValue );
+				while( ix != -1 )
 				{
-					txt = txt.toLowerCase();
-				}
+					target.select( ix, ix + value.length() );
+					target.setSelectedText( newValue );
+					target.select( ix, ix + newValue.length() );
 
-				if( forwardButton.isSelected() )
-				{
-					ix = findNext( ix + newValue.length(), txt, value );
+					// adjust firstix
+					if( ix < firstIx )
+						firstIx += newValue.length() - value.length();
+
+					txt = target.getText();
+					if( !caseCheck.isSelected() )
+					{
+						txt = txt.toLowerCase();
+					}
+
+					if( forwardButton.isSelected() )
+					{
+						ix = findNext( ix + newValue.length(), txt, value );
+					}
+					else
+					{
+						ix = findNext( ix - 1, txt, value );
+					}
+					if( wrapCheck.isSelected() && valueInNewValueIx != -1 && ix == firstIx + valueInNewValueIx )
+					{
+						break;
+					}
 				}
-				else
-				{
-					ix = findNext( ix - 1, txt, value );
-				}
-				if( wrapCheck.isSelected() && valueInNewValueIx != -1 && ix == firstIx + valueInNewValueIx )
-				{
-					break;
-				}
+				target.flushSBText();
+				target.setReplaceAll( false );
+				target.setCarretPosition( forwardButton.isSelected() );
 			}
-			target.flushSBText();
-			target.setReplaceAll( false );
-			target.setCarretPosition( forwardButton.isSelected() );
+			else
+			{
+				UISupport.showErrorMessage( "String [" + value + "] not found" );
+			}
 		}
 
 	}
