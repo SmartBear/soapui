@@ -19,8 +19,6 @@ import java.util.Map;
 
 import javax.swing.AbstractAction;
 
-import org.apache.commons.httpclient.HttpMethod;
-
 import com.eviware.soapui.config.HttpRequestConfig;
 import com.eviware.soapui.config.RestParameterConfig;
 import com.eviware.soapui.config.RestParametersConfig;
@@ -37,14 +35,12 @@ import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.support.MessageSupport;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.types.StringToStringsMap;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.XFormOptionsField;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.validators.RequiredValidator;
-import com.sun.java.xml.ns.j2Ee.HttpMethodType;
 
 /**
  * Factory for WsdlTestRequestSteps
@@ -96,7 +92,10 @@ public class HttpRequestStepFactory extends WsdlTestStepFactory
 				HttpRequestConfig httpRequest = HttpRequestConfig.Factory.newInstance();
 				httpRequest.setEndpoint( dialog.getValue( Form.ENDPOINT ) );
 				httpRequest.setMethod( dialog.getValue( Form.HTTPMETHOD ) );
-				new XmlBeansRestParamsTestPropertyHolder( testCase, httpRequest.addNewParameters() ).addParameters( params );
+				XmlBeansRestParamsTestPropertyHolder tempParams = new XmlBeansRestParamsTestPropertyHolder( testCase,
+						httpRequest.addNewParameters() );
+				tempParams.addParameters( params );
+				tempParams.release();
 
 				TestStepConfig testStep = TestStepConfig.Factory.newInstance();
 				testStep.setType( HTTPREQUEST_TYPE );
@@ -119,65 +118,28 @@ public class HttpRequestStepFactory extends WsdlTestStepFactory
 		}
 	}
 
-	public TestStepConfig createNewTestStep( WsdlTestCase testCase, String name, String endpoint, String method,
-			String requestSource )
+	public TestStepConfig createNewTestStep( WsdlTestCase testCase, String name, String endpoint, String method )
 	{
-		// if( dialog == null )
-		// {
-		// buildDialog();
-		// }
-		// else
-		// {
-		// dialog.setValue( Form.ENDPOINT, "" );
-		// }
-
 		RestParametersConfig restParamConf = RestParametersConfig.Factory.newInstance();
 		params = new XmlBeansRestParamsTestPropertyHolder( testCase, restParamConf );
 
-		// paramsTable = new RestParamsTable( params, false );
-		// dialog.getFormField( Form.PARAMSTABLE ).setProperty( "component",
-		// paramsTable );
-		// dialog.setValue( Form.STEPNAME, name );
-
-		// try
-		// {
 		HttpRequestConfig httpRequest = HttpRequestConfig.Factory.newInstance();
 		httpRequest.setMethod( method );
-		if( HttpMethodType.POST.toString().equals( method ) )
-		{
-			endpoint = endpoint + "?" + requestSource;
-		}
+
 		String path = RestUtils.extractParams( endpoint, params, true );
 		endpoint = path;
 
-		new XmlBeansRestParamsTestPropertyHolder( testCase, httpRequest.addNewParameters() ).addParameters( params );
+		XmlBeansRestParamsTestPropertyHolder tempParams = new XmlBeansRestParamsTestPropertyHolder( testCase, httpRequest
+				.addNewParameters() );
+		tempParams.addParameters( params );
 		httpRequest.setEndpoint( endpoint );
 
-		// for(String oneparam: params.keySet() )
-		// {
-		// RestParameterConfig parameterConf =
-		// RestParameterConfig.Factory.newInstance();
-		// parameterConf.setName( oneparam );
-		// parameterConf.setValue( params.get( oneparam ).getValue() );
-		// restParamConf.addNewParameter().set( parameterConf );
-		// }
-		//				
-		// httpRequest.setParameters( restParamConf );
 		TestStepConfig testStep = TestStepConfig.Factory.newInstance();
 		testStep.setType( HTTPREQUEST_TYPE );
 		testStep.setConfig( httpRequest );
 		testStep.setName( name );
 
 		return testStep;
-		// }
-		// finally
-		// {
-		// paramsTable.release();
-		// paramsTable = null;
-		// params = null;
-		// dialog.getFormField( Form.PARAMSTABLE ).setProperty( "component",
-		// paramsTable );
-		// }
 	}
 
 	public boolean canCreate()

@@ -172,13 +172,14 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 				{
 
 					String content = httpResponse.getContentAsString();
-					content = new String( content.getBytes( "UTF-8" ), "iso-8859-1" );
+					// content = new String( content.getBytes( "UTF-8" ),
+					// "iso-8859-1" );
 					// TODO
 					// this particular hardcoded line solvs the problem of not
 					// displaying
 					// html response view - track the diff in vreting contentType
 					contentType = contentType + "; charset=utf-8";
-					browser.setContent( content, contentType, httpResponse.getURL().toURI().toString() );
+					browser.setContent( content, httpResponse.getURL().toURI().toString() );
 				}
 				catch( Exception e )
 				{
@@ -205,7 +206,7 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 		}
 		else
 		{
-			browser.setContent( "<missing content>", "text/plain" );
+			browser.setContent( "<missing content>" );
 		}
 	}
 

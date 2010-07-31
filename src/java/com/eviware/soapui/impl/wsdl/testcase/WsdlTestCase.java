@@ -56,7 +56,6 @@ import com.eviware.soapui.support.resolver.ResolveDialog;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
 import com.eviware.soapui.support.types.StringToObjectMap;
-import com.eviware.soapui.support.types.StringToStringsMap;
 
 /**
  * TestCase implementation for WSDL projects
@@ -423,10 +422,10 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 			return null;
 	}
 
-	public WsdlTestStep addTestStep( String type, String name, String endpoint, String method, String requestSource )
+	public WsdlTestStep addTestStep( String type, String name, String endpoint, String method )
 	{
 		TestStepConfig newStepConfig = ( ( HttpRequestStepFactory )WsdlTestStepRegistry.getInstance().getFactory( type ) )
-				.createNewTestStep( this, name, endpoint, method, requestSource );
+				.createNewTestStep( this, name, endpoint, method );
 		if( newStepConfig != null )
 		{
 			return addTestStep( newStepConfig );

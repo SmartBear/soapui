@@ -119,8 +119,7 @@ public class HttpHtmlMessageExchangeResponseView extends AbstractXmlEditorView<H
 				{
 
 					String content = jproxyServletWsdlMonitorMessageExchange.getResponseContent();
-					content = new String( content.getBytes( "UTF-8" ), "iso-8859-1" );
-					browser.setContent( content, contentType, jproxyServletWsdlMonitorMessageExchange.getEndpoint() );
+					browser.setContent( content, jproxyServletWsdlMonitorMessageExchange.getEndpoint() );
 				}
 				catch( Exception e )
 				{
@@ -147,7 +146,7 @@ public class HttpHtmlMessageExchangeResponseView extends AbstractXmlEditorView<H
 		}
 		else
 		{
-			browser.setContent( "<missing content>", "text/plain" );
+			browser.setContent( "<missing content>" );
 		}
 	}
 
@@ -164,8 +163,7 @@ public class HttpHtmlMessageExchangeResponseView extends AbstractXmlEditorView<H
 				{
 
 					String content = messageExchangeModelItem2.getMessageExchange().getResponseContent();
-					content = new String( content.getBytes( "UTF-8" ), "iso-8859-1" );
-					browser.setContent( content, contentType );
+					browser.setContent( content );
 				}
 				catch( Exception e )
 				{
@@ -192,7 +190,7 @@ public class HttpHtmlMessageExchangeResponseView extends AbstractXmlEditorView<H
 		}
 		else
 		{
-			browser.setContent( "<missing content>", "text/plain" );
+			browser.setContent( "<missing content>" );
 		}
 	}
 

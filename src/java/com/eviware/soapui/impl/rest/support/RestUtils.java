@@ -163,40 +163,7 @@ public class RestUtils
 
 		if( StringUtils.hasContent( queryString ) )
 		{
-			items = queryString.split( "&" );
-			for( String item : items )
-			{
-				try
-				{
-					int ix = item.indexOf( '=' );
-					if( ix == -1 )
-					{
-						String name = URLDecoder.decode( item, "Utf-8" );
-
-						if( !params.hasProperty( name ) )
-						{
-							params.addProperty( name ).setStyle( ParameterStyle.QUERY );
-						}
-					}
-					else
-					{
-						String name = URLDecoder.decode( item.substring( 0, ix ), "Utf-8" );
-						RestParamProperty property = params.getProperty( name );
-						if( property == null )
-						{
-							property = params.addProperty( name );
-						}
-
-						property.setStyle( ParameterStyle.QUERY );
-						property.setValue( URLDecoder.decode( item.substring( ix + 1 ), "Utf-8" ) );
-						property.setDefaultValue( URLDecoder.decode( item.substring( ix + 1 ), "Utf-8" ) );
-					}
-				}
-				catch( UnsupportedEncodingException e )
-				{
-					e.printStackTrace();
-				}
-			}
+			extractParamsFromQueryString( params, queryString );
 		}
 
 		if( path.endsWith( "/" ) )
@@ -210,7 +177,46 @@ public class RestUtils
 		return resultPath.toString();
 	}
 
-	@SuppressWarnings("deprecation")
+	public static void extractParamsFromQueryString( RestParamsPropertyHolder params, String queryString )
+	{
+		String[] items;
+		items = queryString.split( "&" );
+		for( String item : items )
+		{
+			try
+			{
+				int ix = item.indexOf( '=' );
+				if( ix == -1 )
+				{
+					String name = URLDecoder.decode( item, "Utf-8" );
+
+					if( !params.hasProperty( name ) )
+					{
+						params.addProperty( name ).setStyle( ParameterStyle.QUERY );
+					}
+				}
+				else
+				{
+					String name = URLDecoder.decode( item.substring( 0, ix ), "Utf-8" );
+					RestParamProperty property = params.getProperty( name );
+					if( property == null )
+					{
+						property = params.addProperty( name );
+					}
+
+					property.setStyle( ParameterStyle.QUERY );
+					property.setValue( URLDecoder.decode( item.substring( ix + 1 ), "Utf-8" ) );
+					property.setDefaultValue( URLDecoder.decode( item.substring( ix + 1 ), "Utf-8" ) );
+				}
+			}
+			catch( UnsupportedEncodingException e )
+			{
+				e.printStackTrace();
+			}
+		}
+	}
+
+	@SuppressWarnings( "deprecation" )
 	public static String expandPath( String path, RestParamsPropertyHolder params, RestRequestInterface request )
 	{
 		StringBuffer query = request.isPostQueryString() || "multipart/form-data".equals( request.getMediaType() ) ? null
@@ -245,7 +251,7 @@ public class RestUtils
 
 			if( value == null )
 				value = "";
-			
+
 			switch( param.getStyle() )
 			{
 			case QUERY :
