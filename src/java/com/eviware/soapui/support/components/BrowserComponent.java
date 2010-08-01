@@ -52,6 +52,7 @@ import org.mozilla.xpcom.XPCOMException;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.panels.request.views.html.HttpHtmlResponseView;
+import com.eviware.soapui.impl.rest.support.RestUtils;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequest;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
@@ -321,6 +322,8 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 					}
 					catch( Throwable e )
 					{
+						// ignore errors related to the querying of unsupported
+						// interfaces
 						if( e.getMessage().indexOf( "0x80004002" ) == -1 )
 							SoapUI.logError( e );
 					}
@@ -443,15 +446,34 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 								.getRequest() );
 						WsdlTestCase testCase = ( WsdlTestCase )httpTestRequest.getTestStep().getTestCase();
 						int count = testCase.getTestStepList().size();
+
+						String url2 = recordedRequest.getUrl();
+						int ix = url2.lastIndexOf( '/' );
+						if( ix > 0 )
+							url2 = url2.substring( ix );
+						ix = url2.indexOf( '?' );
+						if( ix > 0 )
+							url2 = url2.substring( 0, ix );
+
 						HttpTestRequestStep newHttpStep = ( HttpTestRequestStep )testCase.addTestStep(
-								HttpRequestStepFactory.HTTPREQUEST_TYPE, "Http Test Step " + ++count, recordedRequest.getUrl(),
-								recordedRequest.getMethod(), null );
+								HttpRequestStepFactory.HTTPREQUEST_TYPE, "Http Test Step " + ++count + " [" + url2 + "]",
+								recordedRequest.getUrl(), recordedRequest.getMethod() );
+
 						newHttpStep.getTestRequest().setRequestHeaders( recordedRequest.getHeaders() );
 
 						if( recordedRequest.getContent() != null )
 						{
 							newHttpStep.getTestRequest().setMediaType( recordedRequest.getContentType() );
-							newHttpStep.getTestRequest().setRequestContent( recordedRequest.getContent() );
+							if( newHttpStep.getTestRequest().getMediaType().equals( CONTENT_TYPE_FORM_URLENCODED ) )
+							{
+								newHttpStep.getTestRequest().setPostQueryString( true );
+								RestUtils.extractParamsFromQueryString( newHttpStep.getTestRequest().getParams(),
+										recordedRequest.getContent() );
+							}
+							else
+							{
+								newHttpStep.getTestRequest().setRequestContent( recordedRequest.getContent() );
+							}
 						}
 					}
 				}
@@ -561,38 +583,25 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 		}
 	}
 
-	public void setContent( String contentAsString, String contentType, String contextUri )
+	public void setContent( String contentAsString, String contextUri )
 	{
-		if( !SwingUtilities.isEventDispatchThread() )
+		if( browser == null )
 		{
-			SwingUtilities.invokeLater( new ContentSetter( contentAsString, contentType, contextUri ) );
+			initBrowser();
 		}
-		else
-		{
-			if( browser == null )
-			{
-				initBrowser();
-			}
 
-			browser.setContent( contentAsString, contentType );
-		}
+		browser.setContent( contentAsString, contextUri );
+		pcs.firePropertyChange( "content", null, null );
 	}
 
-	public void setContent( String content, String contentType )
+	public void setContent( String content )
 	{
-		if( !SwingUtilities.isEventDispatchThread() )
+		if( browser == null )
 		{
-			SwingUtilities.invokeLater( new ContentSetter( content, contentType, null ) );
+			initBrowser();
 		}
-		else
-		{
-			if( browser == null )
-			{
-				initBrowser();
-			}
 
-			browser.setContent( content, contentType );
-		}
+		browser.setContent( content );
 		pcs.firePropertyChange( "content", null, null );
 	}
 
