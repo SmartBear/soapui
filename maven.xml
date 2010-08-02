@@ -175,14 +175,13 @@
 			copy licence files for jxbrowser into meta-inf folder of
 			soapui-xx.jar
 		-->
-		<!-- echo>Adding license files for jxbrowser</echo>
+		<echo>Adding license files for jxbrowser</echo>
 		<ant:jar destfile="${maven.build.dir}/jnlp_temp/soapui-${pom.currentVersion}.jar"
 			update="true">
 			<ant:metainf dir="${jxbrowser.dir}/license/runtime">
-				<ant:include name="jxbrowser.lic" />
-				<ant:include name="jniwrap.lic" />
+				<ant:include name="teamdev.licenses" />
 			</ant:metainf>
-		</ant:jar-->
+		</ant:jar>
 
 		<echo>Signing soapui-${pom.currentVersion}.jar file </echo>
 		<ant:signjar jar="${maven.build.dir}/jnlp_temp/soapui-${pom.currentVersion}.jar"
