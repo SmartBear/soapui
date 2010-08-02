@@ -231,7 +231,7 @@ public final class HttpMethodSupport
 			}
 		}
 
-		return null;
+		return responseBody;
 	}
 
 	public SSLInfo getSSLInfo()
