@@ -94,6 +94,7 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 	private boolean ignoreErrors;
 	private boolean junitReport;
 	private int exportCount;
+	private int maxErrors = 5;
 	private JUnitReportCollector reportCollector;
 	// private WsdlProject project;
 	private String projectPassword;
@@ -180,9 +181,23 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 		}
 
 		setJUnitReport( cmd.hasOption( "j" ) );
+
+		if( cmd.hasOption( "m" ) )
+			setMaxErrors( Integer.parseInt( cmd.getOptionValue( "m" ) ) );
+
 		setSaveAfterRun( cmd.hasOption( "S" ) );
 
 		return true;
+	}
+
+	public void setMaxErrors( int maxErrors )
+	{
+		this.maxErrors = maxErrors;
+	}
+
+	protected int getMaxErrors()
+	{
+		return maxErrors;
 	}
 
 	public void setSaveAfterRun( boolean saveAfterRun )
@@ -215,6 +230,7 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 		options.addOption( "r", false, "Prints a small summary report" );
 		options.addOption( "f", true, "Sets the output folder to export results to" );
 		options.addOption( "j", false, "Sets the output to include JUnit XML reports" );
+		options.addOption( "m", false, "Sets the maximum number of TestStep errors to save for each testcase" );
 		options.addOption( "a", false, "Turns on exporting of all results" );
 		options.addOption( "A", false, "Turns on exporting of all results using folders instead of long filenames" );
 		options.addOption( "t", true, "Sets the soapui-settings.xml file to use" );
@@ -247,7 +263,7 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 
 	protected JUnitReportCollector createJUnitReportCollector()
 	{
-		return new JUnitReportCollector();
+		return new JUnitReportCollector( maxErrors );
 	}
 
 	public SoapUITestCaseRunner()

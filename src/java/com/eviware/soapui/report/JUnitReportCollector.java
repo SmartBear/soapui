@@ -50,10 +50,19 @@ public class JUnitReportCollector implements TestRunListener, TestSuiteRunListen
 {
 	HashMap<String, JUnitReport> reports;
 	HashMap<TestCase, String> failures;
+	HashMap<TestCase, Integer> errorCount;
+	private int maxErrors = 0;
 
 	public JUnitReportCollector()
 	{
+		this( 0 );
+	}
+
+	public JUnitReportCollector( int maxErrors )
+	{
+		this.maxErrors = maxErrors;
 		reports = new HashMap<String, JUnitReport>();
+		errorCount = new HashMap<TestCase, Integer>();
 		failures = new HashMap<TestCase, String>();
 	}
 
@@ -135,6 +144,18 @@ public class JUnitReportCollector implements TestRunListener, TestSuiteRunListen
 
 		if( result.getStatus() == TestStepStatus.FAILED )
 		{
+			if( maxErrors > 0 )
+			{
+				Integer errors = errorCount.get( testCase );
+				if( errors == null )
+					errors = 0;
+
+				if( errors >= maxErrors )
+					return;
+
+				errorCount.put( testCase, errors + 1 );
+			}
+
 			StringBuffer buf = new StringBuffer();
 			if( failures.containsKey( testCase ) )
 			{
@@ -144,14 +165,14 @@ public class JUnitReportCollector implements TestRunListener, TestSuiteRunListen
 			buf.append( "<h3><b>" + result.getTestStep().getName() + " Failed</b></h3><pre>" );
 			buf.append( "<pre>" + XmlUtils.entitize( Arrays.toString( result.getMessages() ) ) + "\n" );
 
-			// use string value since constant is defined in pro.. duh.. 
+			// use string value since constant is defined in pro.. duh..
 			if( testRunner.getTestCase().getSettings().getBoolean( "Complete Error Logs" ) )
 			{
-				 StringWriter stringWriter = new StringWriter();
-				 PrintWriter writer = new PrintWriter( stringWriter );
-				 result.writeTo( writer );
-				
-				 buf.append( XmlUtils.entitize( stringWriter.toString() ) );
+				StringWriter stringWriter = new StringWriter();
+				PrintWriter writer = new PrintWriter( stringWriter );
+				result.writeTo( writer );
+
+				buf.append( XmlUtils.entitize( stringWriter.toString() ) );
 			}
 
 			buf.append( "</pre><hr/>" );
