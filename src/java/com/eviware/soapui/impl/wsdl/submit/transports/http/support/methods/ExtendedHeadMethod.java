@@ -144,4 +144,14 @@ public final class ExtendedHeadMethod extends HeadMethod implements ExtendedHttp
 		httpMethodSupport.setFailed( t );
 	}
 
+	public byte[] getDecompressedResponseBody() throws IOException
+	{
+		return httpMethodSupport.getDecompressedResponseBody();
+	}
+
+	public void setDecompress( boolean decompress )
+	{
+		httpMethodSupport.setDecompress( decompress );
+	}
+
 }

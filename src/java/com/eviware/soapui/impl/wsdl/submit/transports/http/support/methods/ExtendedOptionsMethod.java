@@ -136,7 +136,7 @@ public final class ExtendedOptionsMethod extends OptionsMethod implements Extend
 	{
 		return null;
 	}
-	
+
 	public Throwable getFailureCause()
 	{
 		return httpMethodSupport.getFailureCause();
@@ -150,5 +150,15 @@ public final class ExtendedOptionsMethod extends OptionsMethod implements Extend
 	public void setFailed( Throwable t )
 	{
 		httpMethodSupport.setFailed( t );
+	}
+
+	public byte[] getDecompressedResponseBody() throws IOException
+	{
+		return httpMethodSupport.getDecompressedResponseBody();
+	}
+
+	public void setDecompress( boolean decompress )
+	{
+		httpMethodSupport.setDecompress( decompress );
 	}
 }

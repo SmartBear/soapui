@@ -126,7 +126,7 @@ public class HttpHtmlMessageExchangeResponseView extends AbstractXmlEditorView<H
 					e.printStackTrace();
 				}
 			}
-			else if( !contentType.contains( "xml" ) )
+			else if( isSupportedContentType( contentType ) )
 			{
 				try
 				{
@@ -143,11 +143,20 @@ public class HttpHtmlMessageExchangeResponseView extends AbstractXmlEditorView<H
 					e.printStackTrace();
 				}
 			}
+			else
+			{
+				browser.setContent( "unsupported content-type [" + contentType + "]" );
+			}
 		}
 		else
 		{
-			browser.setContent( "<missing content>" );
+			browser.setContent( "-missing content-" );
 		}
+	}
+
+	private boolean isSupportedContentType( String contentType )
+	{
+		return contentType.toLowerCase().contains( "image" );
 	}
 
 	protected void setEditorContent( MessageExchangeModelItem messageExchangeModelItem2 )

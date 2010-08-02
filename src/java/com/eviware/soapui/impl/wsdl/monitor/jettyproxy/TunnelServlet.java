@@ -25,7 +25,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HostConfiguration;
-import org.apache.commons.httpclient.HttpMethodBase;
 import org.apache.commons.httpclient.HttpState;
 import org.apache.commons.httpclient.URI;
 import org.apache.commons.httpclient.methods.InputStreamRequestEntity;
@@ -35,6 +34,7 @@ import com.eviware.soapui.impl.wsdl.actions.monitor.SoapMonitorAction.LaunchForm
 import com.eviware.soapui.impl.wsdl.actions.monitor.SoapMonitorAction.SecurityTabForm;
 import com.eviware.soapui.impl.wsdl.monitor.JProxyServletWsdlMonitorMessageExchange;
 import com.eviware.soapui.impl.wsdl.monitor.SoapMonitor;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedGetMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPostMethod;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
@@ -85,7 +85,7 @@ public class TunnelServlet extends ProxyServlet
 		if( response.isCommitted() )
 			return;
 
-		HttpMethodBase postMethod;
+		ExtendedHttpMethod postMethod;
 
 		// for this create ui server and port, properties.
 		InetSocketAddress inetAddress = new InetSocketAddress( sslEndPoint, sslPort );
@@ -201,7 +201,7 @@ public class TunnelServlet extends ProxyServlet
 		capturedData = null;
 	}
 
-	private byte[] getResponseToBytes( String footer, HttpMethodBase postMethod, byte[] res )
+	private byte[] getResponseToBytes( String footer, ExtendedHttpMethod postMethod, byte[] res )
 	{
 		String response = footer;
 
@@ -216,7 +216,7 @@ public class TunnelServlet extends ProxyServlet
 		return response.getBytes();
 	}
 
-	private byte[] getRequestToBytes( String footer, HttpMethodBase postMethod, CaptureInputStream capture )
+	private byte[] getRequestToBytes( String footer, ExtendedHttpMethod postMethod, CaptureInputStream capture )
 	{
 		String request = footer;
 

@@ -144,4 +144,15 @@ public final class ExtendedDeleteMethod extends DeleteMethod implements Extended
 	{
 		httpMethodSupport.setFailed( t );
 	}
+
+	public byte[] getDecompressedResponseBody() throws IOException
+	{
+		return httpMethodSupport.getDecompressedResponseBody();
+	}
+
+	public void setDecompress( boolean decompress )
+	{
+		httpMethodSupport.setDecompress( decompress );
+	}
+
 }

@@ -143,4 +143,15 @@ public final class ExtendedGetMethod extends GetMethod implements ExtendedHttpMe
 	{
 		httpMethodSupport.setFailed( t );
 	}
+
+	public byte[] getDecompressedResponseBody() throws IOException
+	{
+		return httpMethodSupport.getDecompressedResponseBody();
+	}
+
+	public void setDecompress( boolean decompress )
+	{
+		httpMethodSupport.setDecompress( decompress );
+	}
+
 }

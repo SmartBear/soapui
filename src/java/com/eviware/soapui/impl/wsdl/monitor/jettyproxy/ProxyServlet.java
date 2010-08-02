@@ -12,6 +12,7 @@
 package com.eviware.soapui.impl.wsdl.monitor.jettyproxy;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -29,7 +30,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HostConfiguration;
-import org.apache.commons.httpclient.HttpMethodBase;
 import org.apache.commons.httpclient.HttpState;
 import org.apache.commons.httpclient.URI;
 import org.apache.commons.httpclient.methods.InputStreamRequestEntity;
@@ -40,6 +40,7 @@ import com.eviware.soapui.impl.wsdl.actions.monitor.SoapMonitorAction;
 import com.eviware.soapui.impl.wsdl.actions.monitor.SoapMonitorAction.LaunchForm;
 import com.eviware.soapui.impl.wsdl.monitor.JProxyServletWsdlMonitorMessageExchange;
 import com.eviware.soapui.impl.wsdl.monitor.SoapMonitor;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedGetMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPostMethod;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
@@ -103,12 +104,14 @@ public class ProxyServlet implements Servlet
 		if( response.isCommitted() )
 			return;
 
-		HttpMethodBase method;
+		ExtendedHttpMethod method;
 		HttpServletRequest httpRequest = ( HttpServletRequest )request;
 		if( httpRequest.getMethod().equals( "GET" ) )
 			method = new ExtendedGetMethod();
 		else
 			method = new ExtendedPostMethod();
+
+		method.setDecompress( false );
 
 		// for this create ui server and port, properties.
 		JProxyServletWsdlMonitorMessageExchange capturedData = new JProxyServletWsdlMonitorMessageExchange( project );
@@ -210,6 +213,7 @@ public class ProxyServlet implements Servlet
 		capturedData.setRawRequestData( getRequestToBytes( request.toString(), method, capture ) );
 		capturedData.setRawResponseData( getResponseToBytes( response.toString(), method, capturedData
 				.getRawResponseBody() ) );
+		capturedData.setResponseContent( new String( method.getDecompressedResponseBody() ) );
 
 		monitor.fireAfterProxy( request, response, method, capturedData );
 
@@ -238,7 +242,7 @@ public class ProxyServlet implements Servlet
 		}
 	}
 
-	private boolean checkContentType( HttpMethodBase method )
+	private boolean checkContentType( ExtendedHttpMethod method )
 	{
 		String[] contentTypes = settings
 				.getString( LaunchForm.SET_CONTENT_TYPES, SoapMonitorAction.defaultContentTypes() ).split( "," );
@@ -262,22 +266,31 @@ public class ProxyServlet implements Servlet
 		return false;
 	}
 
-	private byte[] getResponseToBytes( String footer, HttpMethodBase postMethod, byte[] res )
+	private byte[] getResponseToBytes( String status, ExtendedHttpMethod postMethod, byte[] res )
 	{
-		String response = footer;
+		String response = status.trim() + "\r\n";
 
 		Header[] headers = postMethod.getResponseHeaders();
 		for( Header header : headers )
 		{
-			response += header.toString();
+			response += header.toString().trim() + "\r\n";
 		}
-		response += "\n";
-		response += XmlUtils.prettyPrintXml( new String( res ) );
+		response += "\r\n";
 
-		return response.getBytes();
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		try
+		{
+			out.write( response.getBytes() );
+			out.write( res );
+		}
+		catch( IOException e )
+		{
+			e.printStackTrace();
+		}
+		return out.toByteArray();
 	}
 
-	private byte[] getRequestToBytes( String footer, HttpMethodBase postMethod, CaptureInputStream capture )
+	private byte[] getRequestToBytes( String footer, ExtendedHttpMethod postMethod, CaptureInputStream capture )
 	{
 		String request = footer;
 

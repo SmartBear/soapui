@@ -137,7 +137,7 @@ public final class ExtendedTraceMethod extends TraceMethod implements ExtendedHt
 	{
 		return null;
 	}
-	
+
 	public Throwable getFailureCause()
 	{
 		return httpMethodSupport.getFailureCause();
@@ -151,5 +151,15 @@ public final class ExtendedTraceMethod extends TraceMethod implements ExtendedHt
 	public void setFailed( Throwable t )
 	{
 		httpMethodSupport.setFailed( t );
+	}
+
+	public byte[] getDecompressedResponseBody() throws IOException
+	{
+		return httpMethodSupport.getDecompressedResponseBody();
+	}
+
+	public void setDecompress( boolean decompress )
+	{
+		httpMethodSupport.setDecompress( decompress );
 	}
 }

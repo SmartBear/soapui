@@ -67,14 +67,13 @@ public final class ExtendedPutMethod extends PutMethod implements ExtendedHttpMe
 	{
 		return followRedirects;
 	}
-	
+
 	@Override
 	public void setFollowRedirects( boolean followRedirects )
 	{
 		this.followRedirects = followRedirects;
 	}
 
-	
 	@Override
 	public String getResponseCharSet()
 	{
@@ -136,7 +135,7 @@ public final class ExtendedPutMethod extends PutMethod implements ExtendedHttpMe
 	{
 		return RestRequestInterface.RequestMethod.PUT;
 	}
-	
+
 	public Throwable getFailureCause()
 	{
 		return httpMethodSupport.getFailureCause();
@@ -150,5 +149,15 @@ public final class ExtendedPutMethod extends PutMethod implements ExtendedHttpMe
 	public void setFailed( Throwable t )
 	{
 		httpMethodSupport.setFailed( t );
+	}
+
+	public byte[] getDecompressedResponseBody() throws IOException
+	{
+		return httpMethodSupport.getDecompressedResponseBody();
+	}
+
+	public void setDecompress( boolean decompress )
+	{
+		httpMethodSupport.setDecompress( decompress );
 	}
 }

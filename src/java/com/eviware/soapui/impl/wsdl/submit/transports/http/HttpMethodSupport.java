@@ -12,6 +12,23 @@
 
 package com.eviware.soapui.impl.wsdl.submit.transports.http;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.Socket;
+
+import javax.net.ssl.SSLSocket;
+
+import org.apache.commons.httpclient.Header;
+import org.apache.commons.httpclient.HeaderElement;
+import org.apache.commons.httpclient.HttpConnection;
+import org.apache.commons.httpclient.HttpMethodBase;
+import org.apache.commons.httpclient.HttpState;
+import org.apache.commons.httpclient.NameValuePair;
+
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.support.CompressionSupport;
 import com.eviware.soapui.impl.wsdl.support.http.ConnectionWithSocket;
@@ -19,11 +36,6 @@ import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 import com.eviware.soapui.settings.HttpSettings;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
-import org.apache.commons.httpclient.*;
-
-import javax.net.ssl.SSLSocket;
-import java.io.*;
-import java.net.Socket;
 
 /**
  * Extended PostMethod that supports limiting of response size and detailed
@@ -45,10 +57,23 @@ public final class HttpMethodSupport
 	private String dumpFile;
 	private final HttpMethodBase httpMethod;
 	private Throwable failureCause;
+	private boolean decompress;
 
 	public HttpMethodSupport( HttpMethodBase httpMethod )
 	{
 		this.httpMethod = httpMethod;
+
+		decompress = !SoapUI.getSettings().getBoolean( HttpSettings.DISABLE_RESPONSE_DECOMPRESSION );
+	}
+
+	public boolean isDecompress()
+	{
+		return decompress;
+	}
+
+	public void setDecompress( boolean decompress )
+	{
+		this.decompress = decompress;
 	}
 
 	public String getDumpFile()
@@ -138,7 +163,7 @@ public final class HttpMethodSupport
 				e.printStackTrace();
 			}
 
-			if( !SoapUI.getSettings().getBoolean( HttpSettings.DISABLE_RESPONSE_DECOMPRESSION ) )
+			if( decompress )
 			{
 				String compressionAlg = HttpClientSupport.getResponseCompressionType( httpMethod );
 				if( compressionAlg != null )
@@ -187,6 +212,26 @@ public final class HttpMethodSupport
 		responseReadTime /= 1000000;
 
 		return responseBody;
+	}
+
+	public byte[] getDecompressedResponseBody() throws IOException
+	{
+		String compressionAlg = HttpClientSupport.getResponseCompressionType( httpMethod );
+		if( compressionAlg != null )
+		{
+			try
+			{
+				return CompressionSupport.decompress( compressionAlg, responseBody );
+			}
+			catch( Exception e )
+			{
+				IOException ioe = new IOException( "Decompression of response failed" );
+				ioe.initCause( e );
+				throw ioe;
+			}
+		}
+
+		return null;
 	}
 
 	public SSLInfo getSSLInfo()

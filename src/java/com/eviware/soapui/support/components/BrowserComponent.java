@@ -25,7 +25,6 @@ import java.util.Map;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JEditorPane;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -73,7 +72,6 @@ import com.teamdev.jxbrowser.BrowserType;
 import com.teamdev.jxbrowser.NewWindowContainer;
 import com.teamdev.jxbrowser.NewWindowManager;
 import com.teamdev.jxbrowser.NewWindowParams;
-import com.teamdev.jxbrowser.events.DisposeEvent;
 import com.teamdev.jxbrowser.events.DisposeListener;
 import com.teamdev.jxbrowser.events.NavigationEvent;
 import com.teamdev.jxbrowser.events.NavigationFinishedEvent;
@@ -81,6 +79,7 @@ import com.teamdev.jxbrowser.events.NavigationListener;
 import com.teamdev.jxbrowser.events.StatusChangedEvent;
 import com.teamdev.jxbrowser.events.StatusListener;
 import com.teamdev.jxbrowser.mozilla.MozillaBrowser;
+import com.teamdev.jxbrowser.prompt.DefaultPromptService;
 import com.teamdev.jxbrowser1.mozilla.MozillaWebBrowser;
 import com.teamdev.xpcom.PoxyAuthenticationHandler;
 import com.teamdev.xpcom.ProxyConfiguration;
@@ -357,70 +356,28 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 
 	private static final class SoapUINewWindowManager implements NewWindowManager
 	{
-		private String url;
-
-		public NewWindowContainer evaluateWindow( final NewWindowParams params )
+		public NewWindowContainer evaluateWindow( NewWindowParams params )
 		{
-			this.url = params.getUrl();
-
 			return new NewWindowContainer()
 			{
-				public void insertBrowser( final Browser browser )
+				public void insertBrowser( Browser browser )
 				{
-					Tools.openURL( url );
+					browser.addNavigationListener( new NavigationListener()
+					{
+						@Override
+						public void navigationStarted( NavigationEvent arg0 )
+						{
+							Tools.openURL( arg0.getUrl() );
+							arg0.getBrowser().dispose();
+						}
 
-					// // creates JFrame in which browser will be embedded
-					// final JFrame popupFrame = new JFrame();
-					// Container contentPane = popupFrame.getContentPane();
-					// contentPane.add( browser.getComponent(), BorderLayout.CENTER
-					// );
-					// // sets window bounds using popup window params
-					// popupFrame.setBounds( params.getBounds() );
-					// popupFrame.setVisible( true );
-					//
-					// // registers window listener to dispose Browser instance on
-					// // window close
-					// popupFrame.addWindowListener( new WindowAdapter()
-					// {
-					// @Override
-					// public void windowClosing( WindowEvent e )
-					// {
-					// browser.dispose();
-					// }
-					// } );
-					//
-					// // registers Browser dispose listener to dispose window when
-					// // Browser
-					// // is disposed (e.g. using the window.close JavaScript
-					// // function)
-					// internalDisposeListener = new InternalDisposeListener(
-					// popupFrame );
-					// browser.addDisposeListener( internalDisposeListener );
-					// browser.addNavigationListener( internalNavigationListener );
-
+						@Override
+						public void navigationFinished( NavigationFinishedEvent arg0 )
+						{
+						}
+					} );
 				}
 			};
-		}
-	}
-
-	private final class InternalDisposeListener implements DisposeListener
-	{
-		private final JFrame popupFrame;
-
-		private InternalDisposeListener( JFrame popupFrame )
-		{
-			this.popupFrame = popupFrame;
-		}
-
-		public void browserDisposed( DisposeEvent event )
-		{
-			SwingUtilities.invokeLater( new Runnable()
-			{
-				public void run()
-				{
-					popupFrame.dispose();
-				}
-			} );
 		}
 	}
 
@@ -540,6 +497,7 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 
 			newWindowManager = new SoapUINewWindowManager();
 			browser.getServices().setNewWindowManager( newWindowManager );
+			browser.getServices().setPromptService( new DefaultPromptService() );
 		}
 
 		internalNavigationListener = new InternalBrowserNavigationListener();

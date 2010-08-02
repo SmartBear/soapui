@@ -27,7 +27,6 @@ import java.util.Vector;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.httpclient.Header;
-import org.apache.commons.httpclient.HttpMethodBase;
 import org.apache.xmlbeans.XmlObject;
 import org.w3c.dom.Document;
 
@@ -35,6 +34,7 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.MultipartMessageSupport;
 import com.eviware.soapui.impl.wsdl.support.CompressionSupport;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapUtils;
@@ -77,6 +77,7 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
 	private byte[] responseRaw = null;
 	private String requestMethod = null;
 	private Map<String, String> httpRequestParameters;
+	private IncomingWss incomingResponseWss;
 
 	public JProxyServletWsdlMonitorMessageExchange( WsdlProject project )
 	{
@@ -147,6 +148,7 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
 
 	private void parseReponseData( IncomingWss incomingResponseWss )
 	{
+		this.incomingResponseWss = incomingResponseWss;
 		ByteArrayInputStream in = new ByteArrayInputStream( response == null ? new byte[0] : response );
 		try
 		{
@@ -188,6 +190,12 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
 	public Operation getModelItem()
 	{
 		return operation;
+	}
+
+	public void setResponseContent( String content ) throws IOException
+	{
+		this.responseContent = content;
+		processResponseWss( incomingResponseWss );
 	}
 
 	private void processResponseWss( IncomingWss incomingResponseWss ) throws IOException
@@ -516,7 +524,7 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
 		return responseContentType;
 	}
 
-	public void setResponseHeader( HttpMethodBase method )
+	public void setResponseHeader( ExtendedHttpMethod method )
 	{
 		Header[] headers = method.getResponseHeaders();
 		for( Header header : headers )
