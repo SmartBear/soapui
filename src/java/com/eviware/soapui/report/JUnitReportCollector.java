@@ -205,6 +205,7 @@ public class JUnitReportCollector implements TestRunListener, TestSuiteRunListen
 	{
 		reports.clear();
 		failures.clear();
+		errorCount.clear();
 	}
 
 	public void afterRun( TestSuiteRunner testRunner, TestSuiteRunContext runContext )
