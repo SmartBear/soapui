@@ -19,6 +19,8 @@ import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -72,7 +74,6 @@ import com.teamdev.jxbrowser.BrowserType;
 import com.teamdev.jxbrowser.NewWindowContainer;
 import com.teamdev.jxbrowser.NewWindowManager;
 import com.teamdev.jxbrowser.NewWindowParams;
-import com.teamdev.jxbrowser.events.DisposeListener;
 import com.teamdev.jxbrowser.events.NavigationEvent;
 import com.teamdev.jxbrowser.events.NavigationFinishedEvent;
 import com.teamdev.jxbrowser.events.NavigationListener;
@@ -97,7 +98,6 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 	private JPanel statusBar;
 	private JLabel statusLabel;
 	private String errorPage;
-	private final boolean addToolbar;
 	private boolean showingErrorPage;
 	public String url;
 	private Boolean possibleError = false;
@@ -105,16 +105,17 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 	private boolean disposed;
 	private static boolean disabled;
 	private NavigationListener internalNavigationListener;
-	private DisposeListener internalDisposeListener;
-	private HttpHtmlResponseView httpHtmlResponseView;
+	private static BrowserComponent recordingBrowser;
+	private static HttpHtmlResponseView httpHtmlResponseView;
 	private static Boolean initialized = false;
 	private static SoapUINewWindowManager newWindowManager;
 	private static Map<nsIDOMWindow, BrowserComponent> browserMap = new HashMap<nsIDOMWindow, BrowserComponent>();
 	private static Map<BrowserComponent, Map<String, RecordedRequest>> browserRecordingMap = new HashMap<BrowserComponent, Map<String, RecordedRequest>>();
+	private final boolean addStatusBar;
 
-	public BrowserComponent( boolean addToolbar )
+	public BrowserComponent( boolean addToolbar, boolean addStatusBar )
 	{
-		this.addToolbar = addToolbar;
+		this.addStatusBar = addStatusBar;
 		initialize();
 	}
 
@@ -171,14 +172,16 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 		{
 			if( browser == null )
 			{
-				statusBar = new JPanel();
-				statusLabel = new JLabel();
-				statusBar.add( statusLabel, BorderLayout.CENTER );
+				if( addStatusBar )
+				{
+					statusBar = new JPanel( new BorderLayout() );
+					statusLabel = new JLabel();
+					statusBar.add( statusLabel, BorderLayout.WEST );
+					panel.add( statusBar, BorderLayout.SOUTH );
+				}
 
-				if( addToolbar )
-					panel.add( buildToolbar(), BorderLayout.NORTH );
-
-				panel.add( statusBar, BorderLayout.SOUTH );
+				// if( addToolbar )
+				// panel.add( buildToolbar(), BorderLayout.NORTH );
 
 				initBrowser();
 
@@ -201,9 +204,10 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 		return toolbar;
 	}
 
-	public void setHttpHtmlResponseView( HttpHtmlResponseView httpHtmlResponseView )
+	public void setRecordingHttpHtmlResponseView( HttpHtmlResponseView httpHtmlResponseView )
 	{
-		this.httpHtmlResponseView = httpHtmlResponseView;
+		BrowserComponent.httpHtmlResponseView = httpHtmlResponseView;
+		recordingBrowser = httpHtmlResponseView == null ? null : this;
 	}
 
 	private static final class RecordingHttpListener implements Runnable
@@ -244,7 +248,7 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 									.getInterface( nsIDOMWindow.NS_IDOMWINDOW_IID );
 
 							BrowserComponent browserComponent = browserMap.get( window );
-							if( browserComponent != null && browserComponent.isRecording() )
+							if( browserComponent != null && browserComponent == BrowserComponent.recordingBrowser )
 							{
 								RecordedRequest rr = new RecordedRequest( dumpUri( httpChannel.getURI() ), httpChannel
 										.getRequestMethod() );
@@ -365,10 +369,33 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 					browser.addNavigationListener( new NavigationListener()
 					{
 						@Override
-						public void navigationStarted( NavigationEvent arg0 )
+						public void navigationStarted( final NavigationEvent arg0 )
 						{
-							Tools.openURL( arg0.getUrl() );
-							arg0.getBrowser().dispose();
+							// this is the only event we wanted
+							arg0.getBrowser().removeNavigationListener( this );
+
+							// since there is no way to detect the source browser for
+							// the new window we just assume it is the recording one.
+							if( BrowserComponent.recordingBrowser != null )
+							{
+								BrowserComponent.recordingBrowser.replaceBrowser( arg0.getBrowser() );
+							}
+							else
+							{
+								SwingUtilities.invokeLater( new Runnable()
+								{
+
+									@Override
+									public void run()
+									{
+										if( UISupport.confirm( "Open [" + arg0.getUrl() + "] with system Browser?", "Open URL" ) )
+											Tools.openURL( arg0.getUrl() );
+
+									}
+								} );
+
+								arg0.getBrowser().dispose();
+							}
 						}
 
 						@Override
@@ -391,7 +418,8 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 		@Override
 		public void navigationFinished( NavigationFinishedEvent arg0 )
 		{
-			if( isRecording() && browserRecordingMap.containsKey( BrowserComponent.this ) )
+			if( BrowserComponent.recordingBrowser == BrowserComponent.this
+					&& browserRecordingMap.containsKey( BrowserComponent.this ) )
 			{
 				Map<String, RecordedRequest> map = browserRecordingMap.get( BrowserComponent.this );
 				RecordedRequest recordedRequest = map.get( arg0.getUrl() );
@@ -405,12 +433,14 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 						int count = testCase.getTestStepList().size();
 
 						String url2 = recordedRequest.getUrl();
-						int ix = url2.lastIndexOf( '/' );
-						if( ix > 0 )
-							url2 = url2.substring( ix );
-						ix = url2.indexOf( '?' );
-						if( ix > 0 )
-							url2 = url2.substring( 0, ix );
+						try
+						{
+							url2 = new URL( recordedRequest.getUrl() ).getPath();
+						}
+						catch( MalformedURLException e )
+						{
+
+						}
 
 						HttpTestRequestStep newHttpStep = ( HttpTestRequestStep )testCase.addTestStep(
 								HttpRequestStepFactory.HTTPREQUEST_TYPE, "Http Test Step " + ++count + " [" + url2 + "]",
@@ -479,17 +509,8 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 		if( browser != null )
 			return false;
 
-		// if( PlatformContext.isWindows() )
-		{
-			browser = ( MozillaBrowser )BrowserFactory.createBrowser( BrowserType.Mozilla );
-			browserMap.put( ( ( MozillaWebBrowser )browser.getPeer() ).getWebBrowser().getContentDOMWindow(), this );
-		}
-		// else
-		// {
-		// browser = BrowserFactory.createBrowser();
-		// }
-		// internalNavigationListener = new InternalBrowserNavigationListener();
-		// browser.addNavigationListener( internalNavigationListener );
+		browser = ( MozillaBrowser )BrowserFactory.createBrowser( BrowserType.Mozilla );
+		browserMap.put( ( ( MozillaWebBrowser )browser.getPeer() ).getWebBrowser().getContentDOMWindow(), this );
 
 		if( newWindowManager == null )
 		{
@@ -502,12 +523,32 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 
 		internalNavigationListener = new InternalBrowserNavigationListener();
 		browser.addNavigationListener( internalNavigationListener );
+		browser.addStatusListener( this );
 
 		panel.add( browser.getComponent(), BorderLayout.CENTER );
 		return true;
 	}
 
-	protected boolean isRecording()
+	protected void replaceBrowser( Browser browser2 )
+	{
+		// remove old
+		browserMap.remove( ( ( MozillaWebBrowser )browser.getPeer() ).getWebBrowser().getContentDOMWindow() );
+
+		browser.stop();
+		browser.removeNavigationListener( internalNavigationListener );
+		browser.removeStatusListener( this );
+		panel.remove( browser.getComponent() );
+		browser.dispose();
+
+		// replace
+		browser = ( MozillaBrowser )browser2;
+		browserMap.put( ( ( MozillaWebBrowser )browser.getPeer() ).getWebBrowser().getContentDOMWindow(), this );
+		browser.addNavigationListener( internalNavigationListener );
+		browser.addStatusListener( this );
+		panel.add( browser.getComponent(), BorderLayout.CENTER );
+	}
+
+	public static boolean isRecording()
 	{
 		return httpHtmlResponseView != null && httpHtmlResponseView.isRecordHttpTrafic();
 	}
@@ -525,16 +566,21 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 
 	private synchronized void cleanup()
 	{
-		httpHtmlResponseView = null;
+		if( recordingBrowser == this )
+		{
+			httpHtmlResponseView = null;
+			recordingBrowser = null;
+		}
 
 		if( browser != null )
 		{
 			browserMap.remove( ( ( MozillaWebBrowser )browser.getPeer() ).getWebBrowser().getContentDOMWindow() );
+			browserRecordingMap.remove( this );
 
 			browser.stop();
 			browser.dispose();
-			browser.removeDisposeListener( internalDisposeListener );
 			browser.removeNavigationListener( internalNavigationListener );
+			browser.removeStatusListener( this );
 
 			panel.removeAll();
 			browser = null;
@@ -706,42 +752,17 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 		}
 	}
 
-	public void statusChanged( final StatusChangedEvent event )
+	public void statusChanged( StatusChangedEvent event )
 	{
 		if( statusLabel != null )
 		{
-			SwingUtilities.invokeLater( new Runnable()
-			{
-				public void run()
-				{
-					statusLabel.setText( event.getStatusText() );
-				}
-			} );
+			statusLabel.setText( event.getStatusText() );
 		}
 	}
 
 	public boolean isBrowserInitialised()
 	{
 		return browser != null;
-	}
-
-	public class ContentSetter implements Runnable
-	{
-		private final String contentAsString;
-		private final String contentType;
-		private final String contextUri;
-
-		public ContentSetter( String contentAsString, String contentType, String contextUri )
-		{
-			this.contentAsString = contentAsString;
-			this.contentType = contentType;
-			this.contextUri = contextUri;
-		}
-
-		public void run()
-		{
-			browser.setContent( contentAsString, contentType );
-		}
 	}
 
 	/**

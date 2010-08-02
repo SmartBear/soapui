@@ -27,24 +27,25 @@ public class URLDesktopPanel extends DefaultDesktopPanel
 	private BrowserComponent browser;
 	private boolean closed;
 
-	public URLDesktopPanel( String title, String description, String url ) throws InterruptedException, InvocationTargetException
+	public URLDesktopPanel( String title, String description, String url ) throws InterruptedException,
+			InvocationTargetException
 	{
 		super( title, description, new JPanel( new BorderLayout() ) );
 
 		JPanel panel = ( JPanel )getComponent();
 
-		browser = new BrowserComponent( true );
+		browser = new BrowserComponent( true, false );
 		panel.add( browser.getComponent(), BorderLayout.CENTER );
 
 		if( StringUtils.hasContent( url ) )
 			navigate( url, null, true );
 	}
 
-	public void navigate( String url, String errorUrl, boolean async ) 
+	public void navigate( String url, String errorUrl, boolean async )
 	{
-		//if (!browser.isBrowserInitialised()) {
-		//	browser.initBrowser();
-		//}
+		// if (!browser.isBrowserInitialised()) {
+		// browser.initBrowser();
+		// }
 		if( async )
 		{
 			SwingUtilities.invokeLater( new Navigator( url, errorUrl ) );
@@ -80,9 +81,9 @@ public class URLDesktopPanel extends DefaultDesktopPanel
 
 		public void run()
 		{
-			
-				browser.navigate( url, errorUrl );
-			
+
+			browser.navigate( url, errorUrl );
+
 		}
 	}
 }

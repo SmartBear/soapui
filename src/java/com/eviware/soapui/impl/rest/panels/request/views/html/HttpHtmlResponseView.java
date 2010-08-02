@@ -24,7 +24,6 @@ import java.io.IOException;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -55,7 +54,6 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 
 	// private JPanel contentPanel;
 	private JPanel panel;
-	private JLabel statusLabel;
 	private BrowserComponent browser;
 	private JButton recordButton;
 	private boolean recordHttpTrafic;
@@ -68,7 +66,22 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 
 	public void setRecordHttpTrafic( boolean recordHttpTrafic )
 	{
+		// no change?
+		if( recordHttpTrafic == this.recordHttpTrafic )
+			return;
+
 		this.recordHttpTrafic = recordHttpTrafic;
+
+		if( recordHttpTrafic )
+		{
+			recordButton.setIcon( UISupport.createImageIcon( "/record_http_true.gif" ) );
+			browser.setRecordingHttpHtmlResponseView( HttpHtmlResponseView.this );
+		}
+		else
+		{
+			browser.setRecordingHttpHtmlResponseView( null );
+			recordButton.setIcon( UISupport.createImageIcon( "/record_http_false.gif" ) );
+		}
 	}
 
 	public HttpHtmlResponseView( HttpResponseMessageEditor httpRequestMessageEditor, HttpRequestInterface<?> httpRequest )
@@ -98,7 +111,7 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 			}
 			else
 			{
-				browser = new BrowserComponent( false );
+				browser = new BrowserComponent( false, true );
 				Component component = browser.getComponent();
 				component.setMinimumSize( new Dimension( 100, 100 ) );
 				panel.add( buildToolbar(), BorderLayout.NORTH );
@@ -108,7 +121,6 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 				if( response != null )
 					setEditorContent( response );
 			}
-			// panel.add( buildStatus(), BorderLayout.SOUTH );
 		}
 
 		return panel;
@@ -131,36 +143,6 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 		messageExchangeModelItem = null;
 	}
 
-	private Component buildStatus()
-	{
-		statusLabel = new JLabel();
-		statusLabel.setBorder( BorderFactory.createEmptyBorder( 3, 3, 3, 3 ) );
-		return statusLabel;
-	}
-
-	// private Component buildContent()
-	// {
-	// contentPanel = new JPanel( new BorderLayout() );
-	//
-	// if( BrowserComponent.isJXBrowserDisabled() )
-	// {
-	// contentPanel.add( new JLabel( "Browser Component is disabled" ) );
-	// }
-	// else
-	// {
-	// browser = new BrowserComponent( false );
-	// Component component = browser.getComponent();
-	// component.setMinimumSize( new Dimension( 100, 100 ) );
-	// contentPanel.add( buildToolbar(), BorderLayout.NORTH );
-	// contentPanel.add( component, BorderLayout.CENTER );
-	//
-	// HttpResponse response = httpRequest.getResponse();
-	// if( response != null )
-	// setEditorContent( response );
-	// }
-	// return contentPanel;
-	// }
-
 	protected void setEditorContent( HttpResponse httpResponse )
 	{
 		if( httpResponse != null && httpResponse.getContentType() != null )
@@ -172,13 +154,6 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 				{
 
 					String content = httpResponse.getContentAsString();
-					// content = new String( content.getBytes( "UTF-8" ),
-					// "iso-8859-1" );
-					// TODO
-					// this particular hardcoded line solvs the problem of not
-					// displaying
-					// html response view - track the diff in vreting contentType
-					contentType = contentType + "; charset=utf-8";
 					browser.setContent( content, httpResponse.getURL().toURI().toString() );
 				}
 				catch( Exception e )
@@ -277,23 +252,24 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 		@Override
 		public void actionPerformed( ActionEvent arg0 )
 		{
+			if( browser == null )
+				return;
 
-			if( HttpHtmlResponseView.this.isRecordHttpTrafic() )
+			if( isRecordHttpTrafic() )
 			{
-				HttpHtmlResponseView.this.setRecordHttpTrafic( false );
-				recordButton.setIcon( UISupport.createImageIcon( "/record_http_false.gif" ) );
+				setRecordHttpTrafic( false );
 			}
 			else
 			{
-				HttpHtmlResponseView.this.setRecordHttpTrafic( true );
-				recordButton.setIcon( UISupport.createImageIcon( "/record_http_true.gif" ) );
-			}
-			if( browser != null )
-			{
-				browser.setHttpHtmlResponseView( HttpHtmlResponseView.this );
+				if( BrowserComponent.isRecording() )
+				{
+					UISupport.showErrorMessage( "Only one browser can record at a time" );
+				}
+				else
+				{
+					setRecordHttpTrafic( true );
+				}
 			}
 		}
-
 	}
-
 }

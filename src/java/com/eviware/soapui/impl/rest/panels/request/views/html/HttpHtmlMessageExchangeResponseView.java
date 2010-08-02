@@ -97,7 +97,7 @@ public class HttpHtmlMessageExchangeResponseView extends AbstractXmlEditorView<H
 		}
 		else
 		{
-			browser = new BrowserComponent( false );
+			browser = new BrowserComponent( false, false );
 			Component component = browser.getComponent();
 			component.setMinimumSize( new Dimension( 100, 100 ) );
 			contentPanel.add( new JScrollPane( component ) );
