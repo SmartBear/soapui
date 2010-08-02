@@ -28,7 +28,7 @@
      <param name="File" value="${soapui.logroot}soapui.log"/>
      <param name="Threshold" value="INFO"/>
      <param name="Append" value="false"/>
-     <param name="MaxFileSize" value="5000KB"/>
+    <param name="MaxFileSize" value="5000KB"/>
      <param name="MaxBackupIndex" value="50"/>
      <layout class="org.apache.log4j.PatternLayout">
        <param name="ConversionPattern" value="%d %-5p [%c{1}] %m%n"/>
@@ -56,8 +56,8 @@
      <param name="File" value="global-groovy.log"/>
      <param name="Threshold" value="DEBUG"/>
      <param name="Append" value="true"/>
-     <param name="MaxFileSize" value="5000KB"/>
-     <param name="MaxBackupIndex" value="50"/>
+ <!-- <param name="MaxFileSize" value="5000KB"/>
+     <param name="MaxBackupIndex" value="50"/> -->
      <layout class="org.apache.log4j.PatternLayout">
        <param name="ConversionPattern" value="%d %-5p [%c{1}] %m%n"/>
      </layout>      
