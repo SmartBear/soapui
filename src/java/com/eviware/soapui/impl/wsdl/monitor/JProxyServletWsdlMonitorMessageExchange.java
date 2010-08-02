@@ -77,7 +77,6 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
 	private byte[] responseRaw = null;
 	private String requestMethod = null;
 	private Map<String, String> httpRequestParameters;
-	private IncomingWss incomingResponseWss;
 
 	public JProxyServletWsdlMonitorMessageExchange( WsdlProject project )
 	{
@@ -143,28 +142,31 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
 	public void prepare( IncomingWss incomingRequestWss, IncomingWss incomingResponseWss )
 	{
 		parseRequestData( incomingRequestWss );
-		parseReponseData( incomingResponseWss );
+		parseResponseData( incomingResponseWss );
 	}
 
-	private void parseReponseData( IncomingWss incomingResponseWss )
+	private void parseResponseData( IncomingWss incomingResponseWss )
 	{
-		this.incomingResponseWss = incomingResponseWss;
 		ByteArrayInputStream in = new ByteArrayInputStream( response == null ? new byte[0] : response );
 		try
 		{
 			responseContentType = responseHeaders.get( "Content-Type", "" );
-			if( responseContentType != null && responseContentType.toUpperCase().startsWith( "MULTIPART" ) )
+
+			if( responseContent == null )
 			{
-				StringToStringMap values = StringToStringMap.fromHttpHeader( responseContentType );
-				responseMmSupport = new MultipartMessageSupport( new MonitorMessageExchangeDataSource( "monitor response",
-						in, responseContentType ), values.get( "start" ), null, true, false );
-				responseContentType = responseMmSupport.getRootPart().getContentType();
-			}
-			else
-			{
-				String charset = getCharset( responseHeaders );
-				this.responseContent = charset == null ? Tools.readAll( in, 0 ).toString() : Tools.readAll( in, 0 )
-						.toString( charset );
+				if( responseContentType != null && responseContentType.toUpperCase().startsWith( "MULTIPART" ) )
+				{
+					StringToStringMap values = StringToStringMap.fromHttpHeader( responseContentType );
+					responseMmSupport = new MultipartMessageSupport( new MonitorMessageExchangeDataSource(
+							"monitor response", in, responseContentType ), values.get( "start" ), null, true, false );
+					responseContentType = responseMmSupport.getRootPart().getContentType();
+				}
+				else
+				{
+					String charset = getCharset( responseHeaders );
+					this.responseContent = charset == null ? Tools.readAll( in, 0 ).toString() : Tools.readAll( in, 0 )
+							.toString( charset );
+				}
 			}
 
 			processResponseWss( incomingResponseWss );
@@ -195,7 +197,6 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
 	public void setResponseContent( String content ) throws IOException
 	{
 		this.responseContent = content;
-		processResponseWss( incomingResponseWss );
 	}
 
 	private void processResponseWss( IncomingWss incomingResponseWss ) throws IOException

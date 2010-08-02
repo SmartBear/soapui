@@ -235,9 +235,9 @@ public class HttpHtmlMessageExchangeResponseView extends AbstractXmlEditorView<H
 
 	public void propertyChange( PropertyChangeEvent evt )
 	{
-		System.out.println( evt.getPropertyName() );
-		System.out.println( evt.getNewValue() );
-		System.out.println( evt.getSource() );
+		// System.out.println( evt.getPropertyName() );
+		// System.out.println( evt.getNewValue() );
+		// System.out.println( evt.getSource() );
 		if( evt.getPropertyName().equals( "messageExchange" ) )
 		{
 			if( browser != null && evt.getNewValue() != null )

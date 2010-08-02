@@ -118,6 +118,8 @@ public class JsonResponseMessageExchangeView extends AbstractXmlEditorView<HttpR
 				{
 					if( !"Invalid JSON String".equals( e.getMessage() ) )
 						e.printStackTrace();
+					else
+						content = me.getResponseContent();
 				}
 
 				contentEditor.setText( content );
