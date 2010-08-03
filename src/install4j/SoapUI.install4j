@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <install4j version="4.2.8" transformSequenceNumber="2">
-  <directoryPresets config="../../target/standalone" />
+  <directoryPresets config="${compiler:DIST_ROOT}/lib/xulrunner-linux-2.3.jar" />
   <application name="soapUI ${compiler:VERSION_NUMBER}${compiler:BRANDED_TITLE}" distributionSourceDir="" applicationId="5517-2803-0637-4585" mediaDir="./media" mediaFilePattern="${compiler:sys.shortName}_${compiler:sys.platform}_${compiler:sys.version}" compression="6" lzmaCompression="false" pack200Compression="false" excludeSignedFromPacking="true" keepModificationTimes="false" missingFilesStrategy="warn" shortName="soapUI" publisher="eviware software ab" publisherWeb="http://www.eviware.com" version="${compiler:VERSION_NUMBER}" allPathsRelative="true" backupOnSave="false" autoSave="true" convertDotsToUnderscores="true" macSignature="????" installerName="" javaMinVersion="1.6" javaMaxVersion="" allowBetaVM="true" jdkMode="runtimeJre" jdkName="">
     <languages skipLanguageSelection="false" languageSelectionInPrincipalLanguage="false">
       <principalLanguage id="en" customLocalizationFile="" />
@@ -13,7 +13,7 @@
     </searchSequence>
     <variables>
       <variable name="SOAPUI_HOME" value="${installer:sys.installationDir}" />
-      <variable name="DIST_ROOT" value="D:\soapUI-workspace\SoapUI 3.5-dev\target\dist" />
+      <variable name="DIST_ROOT" value="D:\loadui-integration\soapUI 3.6\target\dist" />
       <variable name="RESOURCES_HOME" value="" />
       <variable name="VERSION_NUMBER" value="" />
       <variable name="SRC_ROOT" value="" />
@@ -22,7 +22,7 @@
       <variable name="HERMES_INSTALLER" value="D:\backups\instalacije\hermes-installer-1.13.jar" />
       <variable name="BRANDED_TITLE" value="" />
       <variable name="EXECUTABLE_NAME" value="soapUI-${compiler:VERSION_NUMBER}${compiler:BRANDED_TITLE}" />
-      <variable name="DIST_STANDALONE" value="D:\soapUI-workspace\SoapUI 3.5-dev\target\standalone" />
+      <variable name="DIST_STANDALONE" value="D:\loadui-integration\soapUI 3.6\target\standalone" />
     </variables>
   </application>
   <files>
@@ -35,6 +35,9 @@
       <fileset name="HermesJMS" id="1260" />
       <fileset name="wsi-bundled java" id="1859" />
       <fileset name="wsi-non bundled java" id="1861" />
+      <fileset name="xulrunner-windows" id="2230" />
+      <fileset name="xulrunner-mac" id="2232" />
+      <fileset name="xulrunner-linux" id="2234" />
     </filesets>
     <roots>
       <root id="1842" fileset="1841" location="" />
@@ -45,6 +48,9 @@
       <root id="1261" fileset="1260" location="" />
       <root id="1860" fileset="1859" location="" />
       <root id="1862" fileset="1861" location="" />
+      <root id="2231" fileset="2230" location="" />
+      <root id="2233" fileset="2232" location="" />
+      <root id="2235" fileset="2234" location="" />
     </roots>
     <mountPoints>
       <mountPoint id="321" root="" location="bin" mode="755" />
@@ -59,6 +65,9 @@
       <mountPoint id="1334" root="1261" location="tempHermes" mode="755" />
       <mountPoint id="1955" root="1860" location="wsi-test-tools" mode="755" />
       <mountPoint id="1956" root="1862" location="wsi-test-tools" mode="755" />
+      <mountPoint id="2236" root="2231" location="lib" mode="755" />
+      <mountPoint id="2237" root="2233" location="lib" mode="755" />
+      <mountPoint id="2238" root="2235" location="lib" mode="755" />
     </mountPoints>
     <entries>
       <dirEntry mountPoint="321" file="${compiler:DIST_ROOT}/bin" overwrite="4" shared="false" mode="644" uninstallMode="0" excludeSuffixes="*.bat,*.sh" dirMode="755">
@@ -66,10 +75,9 @@
       </dirEntry>
       <dirEntry mountPoint="318" file="${compiler:DIST_ROOT}/lib" overwrite="4" shared="false" mode="644" uninstallMode="0" excludeSuffixes="" dirMode="755">
         <exclude>
-          <entry location="activation.jnlp" fileType="regular" />
-          <entry location="bouncycastle.jnlp" fileType="regular" />
-          <entry location="javamail.jnlp" fileType="regular" />
-          <entry location="soapui.jnlp" fileType="regular" />
+          <entry location="xulrunner-linux-2.3.jar" fileType="regular" />
+          <entry location="xulrunner-mac-2.3.jar" fileType="regular" />
+          <entry location="xulrunner-windows-2.3.jar" fileType="regular" />
         </exclude>
       </dirEntry>
       <dirEntry mountPoint="399" file="${compiler:DIST_ROOT}/licenses" overwrite="4" shared="false" mode="644" uninstallMode="0" excludeSuffixes="" dirMode="755">
@@ -136,6 +144,9 @@
       <dirEntry mountPoint="1956" file="${compiler:DIST_ROOT}/wsi-test-tools" overwrite="4" shared="false" mode="644" uninstallMode="0" excludeSuffixes="" dirMode="755">
         <exclude />
       </dirEntry>
+      <fileEntry mountPoint="2236" file="${compiler:DIST_ROOT}/lib/xulrunner-windows-2.3.jar" overwrite="4" shared="false" mode="644" uninstallMode="0" />
+      <fileEntry mountPoint="2237" file="${compiler:DIST_ROOT}/lib/xulrunner-mac-2.3.jar" overwrite="4" shared="false" mode="644" uninstallMode="0" />
+      <fileEntry mountPoint="2238" file="${compiler:DIST_ROOT}/lib/xulrunner-linux-2.3.jar" overwrite="4" shared="false" mode="644" uninstallMode="0" />
     </entries>
     <components>
       <component name="SoapUI" id="132" displayDescription="false" selected="true" mandatory="true" downloadable="false">
@@ -148,6 +159,9 @@
           <entry location=".i4j_fileset_1573" fileType="regular" />
           <entry location=".i4j_fileset_1859" fileType="regular" />
           <entry location=".i4j_fileset_1861" fileType="regular" />
+          <entry location=".i4j_fileset_2230" fileType="regular" />
+          <entry location=".i4j_fileset_2232" fileType="regular" />
+          <entry location=".i4j_fileset_2234" fileType="regular" />
         </include>
         <dependencies />
       </component>
@@ -1204,12 +1218,12 @@ return !Util.isMacosInstaller() &amp;&amp; component.isSelected();</condition>
       <overriddenPrincipalLanguage id="en" customLocalizationFile="" />
       <exclude>
         <entry location="bin/soapui32.png" fileType="regular" />
-        <entry location="xulrunner-linux" fileType="regular" />
-        <entry location="xulrunner-mac" fileType="regular" />
         <entry location=".i4j_fileset_1841" fileType="regular" />
         <entry location=".i4j_fileset_1843" fileType="regular" />
         <entry location=".i4j_fileset_1573" fileType="regular" />
         <entry location=".i4j_fileset_1861" fileType="regular" />
+        <entry location=".i4j_fileset_2232" fileType="regular" />
+        <entry location=".i4j_fileset_2234" fileType="regular" />
       </exclude>
       <variables>
         <variable name="XULRUNNER" value="xulrunner-windows" />
@@ -1225,12 +1239,12 @@ return !Util.isMacosInstaller() &amp;&amp; component.isSelected();</condition>
       <overriddenPrincipalLanguage id="en" customLocalizationFile="" />
       <exclude>
         <entry location="bin/soapui32.png" fileType="regular" />
-        <entry location="xulrunner-mac" fileType="regular" />
-        <entry location="xulrunner-windows" fileType="regular" />
         <entry location=".i4j_fileset_1658" fileType="regular" />
         <entry location=".i4j_fileset_1843" fileType="regular" />
         <entry location=".i4j_fileset_1573" fileType="regular" />
         <entry location=".i4j_fileset_1861" fileType="regular" />
+        <entry location=".i4j_fileset_2230" fileType="regular" />
+        <entry location=".i4j_fileset_2232" fileType="regular" />
       </exclude>
       <variables>
         <variable name="XULRUNNER" value="xulrunner-linux" />
@@ -1247,12 +1261,12 @@ return !Util.isMacosInstaller() &amp;&amp; component.isSelected();</condition>
       </excludedBeans>
       <overriddenPrincipalLanguage id="en" customLocalizationFile="" />
       <exclude>
-        <entry location="xulrunner-linux" fileType="regular" />
-        <entry location="xulrunner-windows" fileType="regular" />
         <entry location=".i4j_fileset_1841" fileType="regular" />
         <entry location=".i4j_fileset_1658" fileType="regular" />
         <entry location=".i4j_fileset_1573" fileType="regular" />
         <entry location=".i4j_fileset_1859" fileType="regular" />
+        <entry location=".i4j_fileset_2230" fileType="regular" />
+        <entry location=".i4j_fileset_2234" fileType="regular" />
       </exclude>
       <variables>
         <variable name="XULRUNNER" value="xulrunner-mac" />
@@ -1264,12 +1278,12 @@ return !Util.isMacosInstaller() &amp;&amp; component.isSelected();</condition>
       <excludedBeans />
       <overriddenPrincipalLanguage id="en" customLocalizationFile="" />
       <exclude>
-        <entry location="xulrunner-linux" fileType="regular" />
-        <entry location="xulrunner-mac" fileType="regular" />
         <entry location=".i4j_fileset_1841" fileType="regular" />
         <entry location=".i4j_fileset_1658" fileType="regular" />
         <entry location=".i4j_fileset_1843" fileType="regular" />
         <entry location=".i4j_fileset_1859" fileType="regular" />
+        <entry location=".i4j_fileset_2232" fileType="regular" />
+        <entry location=".i4j_fileset_2234" fileType="regular" />
       </exclude>
       <variables>
         <variable name="XULRUNNER" value="xulrunner-windows" />
