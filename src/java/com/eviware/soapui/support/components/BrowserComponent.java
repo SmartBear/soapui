@@ -153,9 +153,9 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 		if( disable.equals( "true" ) )
 			return true;
 
-//		if( !disable.equals( "false" )
-//				&& ( !PlatformContext.isMacOS() && "64".equals( System.getProperty( "sun.arch.data.model" ) ) ) )
-//			return true;
+		if( !disable.equals( "false" )
+				&& ( !PlatformContext.isMacOS() && "64".equals( System.getProperty( "sun.arch.data.model" ) ) ) )
+			return true;
 
 		return false;
 	}
