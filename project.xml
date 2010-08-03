@@ -852,7 +852,7 @@
 				<jnlp.jar>true</jnlp.jar>
 			</properties>
 		</dependency>
-		<!-- dependency>
+		<dependency>
 			<groupId>teamdev</groupId>
 			<artifactId>engine-ie</artifactId>
 			<version>jxbrowser-2.3</version>
@@ -869,7 +869,7 @@
 			<properties>
 				<jnlp.jar>true</jnlp.jar>
 			</properties>
-		</dependency-->
+		</dependency>
 		<dependency>
 			<groupId>teamdev</groupId>
 			<artifactId>mshtml</artifactId>
