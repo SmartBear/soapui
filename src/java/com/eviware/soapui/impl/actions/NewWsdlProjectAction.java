@@ -25,10 +25,13 @@ import com.eviware.soapui.impl.rest.actions.service.GenerateRestTestSuiteAction;
 import com.eviware.soapui.impl.rest.support.WadlImporter;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
+import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
 import com.eviware.soapui.impl.wsdl.actions.iface.GenerateMockServiceAction;
 import com.eviware.soapui.impl.wsdl.actions.iface.GenerateWsdlTestSuiteAction;
+import com.eviware.soapui.impl.wsdl.actions.project.AddNewWebTestAction;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.support.PathUtils;
+import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.support.MessageSupport;
 import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.support.StringUtils;
@@ -94,7 +97,7 @@ public class NewWsdlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 			dialog.getFormField( Form.GENERATETESTSUITE ).setEnabled( false );
 			dialog.getFormField( Form.ADDRESTSERVICE ).setEnabled( true );
 		}
-		
+
 		if( param instanceof String )
 		{
 			dialog.setValue( Form.INITIALWSDL, param.toString() );
@@ -155,6 +158,10 @@ public class NewWsdlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 							SoapUI.getActionRegistry().getAction( NewRestServiceAction.SOAPUI_ACTION_ID ).perform( project,
 									project );
 						}
+						if( dialog.getBooleanValue( Form.CREATEWEBTEST ) )
+						{
+							createWebTest( project );
+						}
 
 						break;
 					}
@@ -170,11 +177,10 @@ public class NewWsdlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 			}
 		}
 	}
-	
+
 	public void initProjectName( String newValue )
 	{
-		if( StringUtils.isNullOrEmpty( dialog.getValue( Form.PROJECTNAME ) )
-				&& StringUtils.hasContent( newValue ) )
+		if( StringUtils.isNullOrEmpty( dialog.getValue( Form.PROJECTNAME ) ) && StringUtils.hasContent( newValue ) )
 		{
 			int ix = newValue.lastIndexOf( '.' );
 			if( ix > 0 )
@@ -232,6 +238,14 @@ public class NewWsdlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 		}
 	}
 
+	private void createWebTest( WsdlProject project )
+	{
+		WsdlTestSuite targetTestSuite = project.addNewTestSuite( "WebTest TestSuite" );
+		WsdlTestCase targetTestCase = targetTestSuite.addNewTestCase( "WebTest TestCase" );
+		AddNewWebTestAction addNewWebTestAction = new AddNewWebTestAction();
+		addNewWebTestAction.createWebTest( targetTestCase );
+	}
+
 	@AForm( name = "Form.Title", description = "Form.Description", helpUrl = HelpUrls.NEWPROJECT_HELP_URL, icon = UISupport.TOOL_ICON_PATH )
 	public interface Form
 	{
@@ -255,6 +269,9 @@ public class NewWsdlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 
 		@AField( description = "Form.RelativePaths.Description", type = AFieldType.BOOLEAN, enabled = true )
 		public final static String RELATIVEPATHS = messages.get( "Form.RelativePaths.Label" );
+
+		@AField( description = "Form.CreateWebTest.Description", type = AFieldType.BOOLEAN, enabled = true )
+		public final static String CREATEWEBTEST = messages.get( "Form.CreateWebTest.Label" );
 
 		// @AField( description = "Form.CreateProjectFile.Description", type =
 		// AFieldType.BOOLEAN )

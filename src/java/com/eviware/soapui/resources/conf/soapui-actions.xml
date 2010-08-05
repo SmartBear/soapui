@@ -53,6 +53,7 @@
 	<tns:action id="ImportTestSuite" actionClass="com.eviware.soapui.impl.wsdl.actions.project.ImportTestSuiteAction"/>
 	<tns:action id="StarHermesJMS" actionClass="com.eviware.soapui.impl.wsdl.actions.project.StartHermesJMS"/>
 	<tns:action id="StartLoadUI" actionClass="com.eviware.soapui.impl.wsdl.actions.project.StartLoadUI"/>
+	<tns:action id="AddNewWebTestAction" actionClass="com.eviware.soapui.impl.wsdl.actions.project.AddNewWebTestAction"/>
 
 	<!-- WsdlInterface Actions -->
 	<tns:action id="WSToolsRegenerateJava2WsdlAction" actionClass="com.eviware.soapui.impl.wsdl.actions.iface.tools.jbossws.WSToolsRegenerateJava2WsdlAction"/>
@@ -264,6 +265,7 @@
 		<tns:actionMapping actionId="SeperatorAction"/>
 		<tns:actionMapping actionId="AddNewTestSuiteAction" keyStroke="menu T"/>
 		<tns:actionMapping actionId="AddNewMockServiceAction" keyStroke="menu O"/>
+		<tns:actionMapping actionId="AddNewWebTestAction" />
 		<tns:actionMapping actionId="SeperatorAction"/>
 		<tns:actionMapping actionId="RenameProjectAction" keyStroke="F2"/>
 		<tns:actionMapping actionId="RemoveProjectAction" keyStroke="DELETE"/>
