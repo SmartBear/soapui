@@ -768,7 +768,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 		public SubmitAction()
 		{
 			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/submit_request.gif" ) );
-			putValue( Action.SHORT_DESCRIPTION, "Submit request to specified endpoint URL" );
+			putValue( Action.SHORT_DESCRIPTION, "Submit request to specified database" );
 			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "alt ENTER" ) );
 		}
 
