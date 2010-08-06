@@ -21,7 +21,6 @@ import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
-import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.registry.HttpRequestStepFactory;
 import com.eviware.soapui.model.iface.Request.SubmitException;
 import com.eviware.soapui.model.support.ModelSupport;
@@ -58,51 +57,56 @@ public class CreateWebTestAction extends AbstractSoapUIAction<WsdlProject>
 		if( dialog == null )
 		{
 			dialog = ADialogBuilder.buildDialog( Form.class );
-			dialog.getFormField( Form.TESTSUITE ).addFormFieldListener( new XFormFieldListener()
-			{
-
-				@Override
-				public void valueChanged( XFormField sourceField, String newValue, String oldValue )
-				{
-					if( newValue.equals( CREATE_NEW_OPTION ) )
-					{
-						dialog.setOptions( Form.TESTCASE, new String[] { CREATE_NEW_OPTION } );
-					}
-					else
-					{
-						TestSuite testSuite = project.getTestSuiteByName( newValue );
-						dialog.setOptions( Form.TESTCASE, testSuite == null ? new String[] { CREATE_NEW_OPTION }
-								: ModelSupport.getNames( testSuite.getTestCaseList(), new String[] { CREATE_NEW_OPTION } ) );
-					}
-				}
-			} );
+			// dialog.getFormField( Form.TESTSUITE ).addFormFieldListener( new
+			// XFormFieldListener()
+			// {
+			//
+			// @Override
+			// public void valueChanged( XFormField sourceField, String newValue,
+			// String oldValue )
+			// {
+			// if( newValue.equals( CREATE_NEW_OPTION ) )
+			// {
+			// dialog.setOptions( Form.TESTCASE, new String[] { CREATE_NEW_OPTION }
+			// );
+			// }
+			// else
+			// {
+			// TestSuite testSuite = project.getTestSuiteByName( newValue );
+			// dialog.setOptions( Form.TESTCASE, testSuite == null ? new String[] {
+			// CREATE_NEW_OPTION }
+			// : ModelSupport.getNames( testSuite.getTestCaseList(), new String[] {
+			// CREATE_NEW_OPTION } ) );
+			// }
+			// }
+			// } );
 		}
 
 		dialog.setOptions( Form.TESTSUITE, ModelSupport.getNames( new String[] { CREATE_NEW_OPTION }, project
 				.getTestSuiteList() ) );
 		dialog.setValue( Form.TESTSUITE, CREATE_NEW_OPTION );
-		dialog.setOptions( Form.TESTCASE, new String[] { CREATE_NEW_OPTION } );
-		dialog.setValue( Form.TESTCASE, CREATE_NEW_OPTION );
-		dialog.setValue( Form.WEBTESTNAME, "Web Test" );
-		dialog.setValue( Form.ENDPOINT, "" );
+		// dialog.setOptions( Form.TESTCASE, new String[] { CREATE_NEW_OPTION } );
+		// dialog.setValue( Form.TESTCASE, CREATE_NEW_OPTION );
+		dialog.setValue( Form.TESTCASENAME, "Web Test" );
+		dialog.setValue( Form.URL, "" );
 		dialog.setValue( Form.STARTRECORDING, Boolean.toString( true ) );
 		if( dialog.show() )
 		{
 			String targetTestSuiteName = dialog.getValue( Form.TESTSUITE );
-			String targetTestCaseName = dialog.getValue( Form.TESTCASE );
-			String name = dialog.getValue( Form.WEBTESTNAME );
+			String targetTestCaseName = dialog.getValue( Form.TESTCASENAME );
+			String testStepName = dialog.getValue( Form.URL );
 			WsdlTestSuite targetTestSuite = null;
 			WsdlTestCase targetTestCase = null;
 
 			targetTestSuite = project.getTestSuiteByName( targetTestSuiteName );
 			if( targetTestSuite == null )
 			{
-				targetTestSuiteName = "WebTest TestSuite";
+				targetTestSuiteName = "Web Test TestSuite";
 				while( project.getTestSuiteByName( targetTestSuiteName ) != null )
 				{
 					targetTestSuiteName = UISupport.prompt(
-							"TestSuite name must be unique, please specify new name for TestSuite\n" + "["
-									+ targetTestSuiteName + "]", "Change TestSuite name", targetTestSuiteName );
+							"TestSuite name must be unique, please specify new name for TestSuite\n" + "[" + project.getName()
+									+ "->" + targetTestSuiteName + "]", "Change TestSuite name", targetTestSuiteName );
 
 					if( targetTestSuiteName == null )
 						return;
@@ -113,29 +117,29 @@ public class CreateWebTestAction extends AbstractSoapUIAction<WsdlProject>
 			targetTestCase = targetTestSuite.getTestCaseByName( targetTestCaseName );
 			if( targetTestCase == null )
 			{
-				targetTestCaseName = "WebTest TestCase";
+				targetTestCaseName = testStepName;
 				while( targetTestSuite.getTestCaseByName( targetTestCaseName ) != null )
 				{
-					targetTestCaseName = UISupport
-							.prompt( "TestCase name must be unique, please specify new name for TestCase\n" + "["
-									+ targetTestCaseName + "] in TestSuite [" + targetTestSuiteName + "]",
-									"Change TestCase name", targetTestCaseName );
+					targetTestCaseName = UISupport.prompt(
+							"TestCase name must be unique, please specify new name for TestCase\n" + "[" + targetTestCaseName
+									+ "] in TestSuite [" + project.getName() + "->" + targetTestSuiteName + "]",
+							"Change TestCase name", targetTestCaseName );
 					if( targetTestCaseName == null )
 						return;
 				}
 				targetTestCase = targetTestSuite.addNewTestCase( targetTestCaseName );
 
 			}
-			while( name == null || targetTestCase.getTestStepByName( name ) != null )
+			while( testStepName == null || targetTestCase.getTestStepByName( testStepName ) != null )
 			{
-				name = UISupport.prompt( "TestStep name must be unique, please specify new name for step\n" + "[" + name
-						+ "] in TestCase [" + targetTestSuiteName + "->" + targetTestCaseName + "]", "Change TestStep name",
-						name );
+				testStepName = UISupport.prompt( "TestStep name must be unique, please specify new name for step\n" + "["
+						+ testStepName + "] in TestCase [" + project.getName() + "->" + targetTestSuiteName + "->"
+						+ targetTestCaseName + "]", "Change TestStep name", testStepName );
 
-				if( name == null )
+				if( testStepName == null )
 					return;
 			}
-			createWebTest( targetTestCase, dialog.getValue( Form.ENDPOINT ), name, dialog
+			createWebTest( targetTestCase, dialog.getValue( Form.URL ), testStepName, dialog
 					.getBooleanValue( Form.STARTRECORDING ) );
 
 		}
@@ -152,43 +156,41 @@ public class CreateWebTestAction extends AbstractSoapUIAction<WsdlProject>
 		testStepConfig.setType( HttpRequestStepFactory.HTTPREQUEST_TYPE );
 		testStepConfig.setConfig( httpRequest );
 		testStepConfig.setName( name );
-		WsdlTestStep testStep = targetTestCase.addTestStep( testStepConfig );
+		HttpTestRequestStep testStep = ( HttpTestRequestStep )targetTestCase.addTestStep( testStepConfig );
 
 		HttpTestRequestDesktopPanel desktopPanel = ( HttpTestRequestDesktopPanel )UISupport.selectAndShow( testStep );
 		try
 		{
-			( ( HttpTestRequestStep )testStep ).getTestRequest().submit( new WsdlTestRunContext( testStep ), true );
+			testStep.getTestRequest().submit( new WsdlTestRunContext( testStep ), true );
 		}
 		catch( SubmitException e )
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		HttpHtmlResponseView cc = ( HttpHtmlResponseView )desktopPanel.getResponseEditor().getViews().get( 2 );
+		HttpHtmlResponseView htmlResponseView = ( HttpHtmlResponseView )desktopPanel.getResponseEditor().getViews().get(
+				2 );
 		if( startRecording )
 		{
-			cc.setRecordHttpTrafic( true );
+			htmlResponseView.setRecordHttpTrafic( true );
 		}
-		desktopPanel.getResponseEditor().selectView( 2 );
+		desktopPanel.focusResponseInTabbedView( true );
 	}
 
 	@AForm( description = "Specify target TestSuite/TestCase for the WebTest", name = "Add WebTest", helpUrl = HelpUrls.CLONETESTSUITE_HELP_URL, icon = UISupport.TOOL_ICON_PATH )
 	public interface Form
 	{
+		@AField( description = "Url", type = AField.AFieldType.STRING )
+		public final static String URL = "Url";
+
 		@AField( name = "Web Test Name", description = "The WebTestname", type = AFieldType.STRING )
-		public final static String WEBTESTNAME = "Web Test Name";
+		public final static String TESTCASENAME = "Web Test Name";
 
 		@AField( name = "Target TestSuite", description = "The target TestSuite to add WebTest to", type = AFieldType.ENUMERATION )
 		public final static String TESTSUITE = "Target TestSuite";
 
-		@AField( name = "Target TestCase", description = "The target TestCase to add WebTest to", type = AFieldType.ENUMERATION )
-		public final static String TESTCASE = "Target TestCase";
-
-		@AField( description = "Endpoint", type = AField.AFieldType.STRING )
-		public final static String ENDPOINT = messages.get( "Endpoint" );
-
-		@AField( description = "Start Recording immediately", type = AFieldType.BOOLEAN, enabled = true )
-		public final static String STARTRECORDING = messages.get( "Start Recording immediately" );
+		@AField( description = "", type = AFieldType.BOOLEAN, enabled = true )
+		public final static String STARTRECORDING = "Start Recording immediately";
 
 	}
 }
