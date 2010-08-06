@@ -117,7 +117,6 @@ public class CreateWebTestAction extends AbstractSoapUIAction<WsdlProject>
 			targetTestCase = targetTestSuite.getTestCaseByName( targetTestCaseName );
 			if( targetTestCase == null )
 			{
-				targetTestCaseName = testStepName;
 				while( targetTestSuite.getTestCaseByName( targetTestCaseName ) != null )
 				{
 					targetTestCaseName = UISupport.prompt(
