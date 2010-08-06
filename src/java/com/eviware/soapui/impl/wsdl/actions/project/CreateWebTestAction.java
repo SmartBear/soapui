@@ -11,6 +11,8 @@
  */
 package com.eviware.soapui.impl.wsdl.actions.project;
 
+import com.eviware.soapui.config.HttpRequestConfig;
+import com.eviware.soapui.config.TestStepConfig;
 import com.eviware.soapui.impl.rest.panels.request.views.html.HttpHtmlResponseView;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
@@ -34,36 +36,28 @@ import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.AField.AFieldType;
+import com.sun.java.xml.ns.j2Ee.HttpMethodType;
 
-public class AddNewWebTestAction extends AbstractSoapUIAction<WsdlProject>
+public class CreateWebTestAction extends AbstractSoapUIAction<WsdlProject>
 {
 
 	public static final String SOAPUI_ACTION_ID = "AddNewWebTestAction";
 	private WsdlProject project;
-	public static final MessageSupport messages = MessageSupport.getMessages( AddNewWebTestAction.class );
+	public static final MessageSupport messages = MessageSupport.getMessages( CreateWebTestAction.class );
 	private static final String CREATE_NEW_OPTION = "<Create New>";
 	private XFormDialog dialog;
 
-	public AddNewWebTestAction()
+	public CreateWebTestAction()
 	{
-		super( "Add WebTest", "Add new WebTest for recording HTTP trafic" );
+		super( "New Web Test", "New Web Test" );
 	}
 
 	public void perform( WsdlProject target, Object param )
 	{
-		if( !StartLoadUI.testCajoConnection() )
-		{
-			if( UISupport.confirm( StartLoadUI.LOADUI_LAUNCH_QUESTION, StartLoadUI.LOADUI_LAUNCH_TITLE ) )
-			{
-				StartLoadUI.launchLoadUI();
-			}
-			return;
-		}
 		this.project = target;
 		if( dialog == null )
 		{
 			dialog = ADialogBuilder.buildDialog( Form.class );
-
 			dialog.getFormField( Form.TESTSUITE ).addFormFieldListener( new XFormFieldListener()
 			{
 
@@ -87,45 +81,79 @@ public class AddNewWebTestAction extends AbstractSoapUIAction<WsdlProject>
 		dialog.setOptions( Form.TESTSUITE, ModelSupport.getNames( new String[] { CREATE_NEW_OPTION }, project
 				.getTestSuiteList() ) );
 		dialog.setValue( Form.TESTSUITE, CREATE_NEW_OPTION );
-
 		dialog.setOptions( Form.TESTCASE, new String[] { CREATE_NEW_OPTION } );
 		dialog.setValue( Form.TESTCASE, CREATE_NEW_OPTION );
+		dialog.setValue( Form.WEBTESTNAME, "Web Test" );
+		dialog.setValue( Form.ENDPOINT, "" );
+		dialog.setValue( Form.STARTRECORDING, Boolean.toString( true ) );
 		if( dialog.show() )
 		{
 			String targetTestSuiteName = dialog.getValue( Form.TESTSUITE );
 			String targetTestCaseName = dialog.getValue( Form.TESTCASE );
+			String name = dialog.getValue( Form.WEBTESTNAME );
 			WsdlTestSuite targetTestSuite = null;
 			WsdlTestCase targetTestCase = null;
 
 			targetTestSuite = project.getTestSuiteByName( targetTestSuiteName );
 			if( targetTestSuite == null )
 			{
-				targetTestSuiteName = UISupport.prompt( "Specify name for new TestSuite", "Clone TestStep",
-						"WebTest TestSuite" );
-				if( targetTestSuiteName == null )
-					return;
+				targetTestSuiteName = "WebTest TestSuite";
+				while( project.getTestSuiteByName( targetTestSuiteName ) != null )
+				{
+					targetTestSuiteName = UISupport.prompt(
+							"TestSuite name must be unique, please specify new name for TestSuite\n" + "["
+									+ targetTestSuiteName + "]", "Change TestSuite name", targetTestSuiteName );
+
+					if( targetTestSuiteName == null )
+						return;
+				}
 
 				targetTestSuite = project.addNewTestSuite( targetTestSuiteName );
 			}
 			targetTestCase = targetTestSuite.getTestCaseByName( targetTestCaseName );
 			if( targetTestCase == null )
 			{
-				targetTestCaseName = UISupport.prompt( "Specify name for new TestCase", "Clone TestStep",
-						"WebTest TestCase" );
-				if( targetTestCaseName == null )
-					return;
-
+				targetTestCaseName = "WebTest TestCase";
+				while( targetTestSuite.getTestCaseByName( targetTestCaseName ) != null )
+				{
+					targetTestCaseName = UISupport
+							.prompt( "TestCase name must be unique, please specify new name for TestCase\n" + "["
+									+ targetTestCaseName + "] in TestSuite [" + targetTestSuiteName + "]",
+									"Change TestCase name", targetTestCaseName );
+					if( targetTestCaseName == null )
+						return;
+				}
 				targetTestCase = targetTestSuite.addNewTestCase( targetTestCaseName );
 
 			}
-			createWebTest( targetTestCase );
+			while( name == null || targetTestCase.getTestStepByName( name ) != null )
+			{
+				name = UISupport.prompt( "TestStep name must be unique, please specify new name for step\n" + "[" + name
+						+ "] in TestCase [" + targetTestSuiteName + "->" + targetTestCaseName + "]", "Change TestStep name",
+						name );
+
+				if( name == null )
+					return;
+			}
+			createWebTest( targetTestCase, dialog.getValue( Form.ENDPOINT ), name, dialog
+					.getBooleanValue( Form.STARTRECORDING ) );
 
 		}
 	}
 
-	public void createWebTest( WsdlTestCase targetTestCase )
+	public void createWebTest( WsdlTestCase targetTestCase, String endpoint, String name, boolean startRecording )
 	{
-		WsdlTestStep testStep = targetTestCase.addTestStep( HttpRequestStepFactory.HTTPREQUEST_TYPE, "WebTest" );
+		HttpRequestConfig httpRequest = HttpRequestConfig.Factory.newInstance();
+		httpRequest.setMethod( HttpMethodType.GET.toString() );
+
+		httpRequest.setEndpoint( endpoint );
+
+		TestStepConfig testStepConfig = TestStepConfig.Factory.newInstance();
+		testStepConfig.setType( HttpRequestStepFactory.HTTPREQUEST_TYPE );
+		testStepConfig.setConfig( httpRequest );
+		testStepConfig.setName( name );
+		WsdlTestStep testStep = targetTestCase.addTestStep( testStepConfig );
+
 		HttpTestRequestDesktopPanel desktopPanel = ( HttpTestRequestDesktopPanel )UISupport.selectAndShow( testStep );
 		try
 		{
@@ -137,19 +165,30 @@ public class AddNewWebTestAction extends AbstractSoapUIAction<WsdlProject>
 			e.printStackTrace();
 		}
 		HttpHtmlResponseView cc = ( HttpHtmlResponseView )desktopPanel.getResponseEditor().getViews().get( 2 );
-		cc.setRecordHttpTrafic( true );
+		if( startRecording )
+		{
+			cc.setRecordHttpTrafic( true );
+		}
 		desktopPanel.getResponseEditor().selectView( 2 );
 	}
 
 	@AForm( description = "Specify target TestSuite/TestCase for the WebTest", name = "Add WebTest", helpUrl = HelpUrls.CLONETESTSUITE_HELP_URL, icon = UISupport.TOOL_ICON_PATH )
 	public interface Form
 	{
+		@AField( name = "Web Test Name", description = "The WebTestname", type = AFieldType.STRING )
+		public final static String WEBTESTNAME = "Web Test Name";
+
 		@AField( name = "Target TestSuite", description = "The target TestSuite to add WebTest to", type = AFieldType.ENUMERATION )
 		public final static String TESTSUITE = "Target TestSuite";
 
 		@AField( name = "Target TestCase", description = "The target TestCase to add WebTest to", type = AFieldType.ENUMERATION )
 		public final static String TESTCASE = "Target TestCase";
 
-	}
+		@AField( description = "Endpoint", type = AField.AFieldType.STRING )
+		public final static String ENDPOINT = messages.get( "Endpoint" );
 
+		@AField( description = "Start Recording immediately", type = AFieldType.BOOLEAN, enabled = true )
+		public final static String STARTRECORDING = messages.get( "Start Recording immediately" );
+
+	}
 }

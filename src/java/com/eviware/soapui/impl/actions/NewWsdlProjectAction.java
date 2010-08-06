@@ -28,7 +28,7 @@ import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
 import com.eviware.soapui.impl.wsdl.actions.iface.GenerateMockServiceAction;
 import com.eviware.soapui.impl.wsdl.actions.iface.GenerateWsdlTestSuiteAction;
-import com.eviware.soapui.impl.wsdl.actions.project.AddNewWebTestAction;
+import com.eviware.soapui.impl.wsdl.actions.project.CreateWebTestAction;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.support.PathUtils;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
@@ -160,7 +160,7 @@ public class NewWsdlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 						}
 						if( dialog.getBooleanValue( Form.CREATEWEBTEST ) )
 						{
-							createWebTest( project );
+							new CreateWebTestAction().perform( project, param );
 						}
 
 						break;
@@ -238,13 +238,15 @@ public class NewWsdlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 		}
 	}
 
-	private void createWebTest( WsdlProject project )
-	{
-		WsdlTestSuite targetTestSuite = project.addNewTestSuite( "WebTest TestSuite" );
-		WsdlTestCase targetTestCase = targetTestSuite.addNewTestCase( "WebTest TestCase" );
-		AddNewWebTestAction addNewWebTestAction = new AddNewWebTestAction();
-		addNewWebTestAction.createWebTest( targetTestCase );
-	}
+	// private void createWebTest( WsdlProject project )
+	// {
+	// WsdlTestSuite targetTestSuite = project.addNewTestSuite(
+	// "WebTest TestSuite" );
+	// WsdlTestCase targetTestCase = targetTestSuite.addNewTestCase(
+	// "WebTest TestCase" );
+	// CreateWebTestAction addNewWebTestAction = new CreateWebTestAction();
+	// addNewWebTestAction.createWebTest( targetTestCase );
+	// }
 
 	@AForm( name = "Form.Title", description = "Form.Description", helpUrl = HelpUrls.NEWPROJECT_HELP_URL, icon = UISupport.TOOL_ICON_PATH )
 	public interface Form
