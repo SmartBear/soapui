@@ -12,38 +12,30 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps.registry;
 
-import com.eviware.soapui.config.AMFRequestTestStepConfig;
+import com.eviware.soapui.config.ManualTestStepConfig;
 import com.eviware.soapui.config.TestStepConfig;
-import com.eviware.soapui.impl.wsdl.monitor.WsdlMonitorMessageExchange;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
-import com.eviware.soapui.impl.wsdl.teststeps.AMFRequestTestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.ManualTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 
-/**
- * Factory for creation TransferValue steps
- * 
- * @author Ole.Matzura
- */
-
-public class AMFRequestStepFactory extends WsdlTestStepFactory
+public class ManualTestStepFactory extends WsdlTestStepFactory
 {
-	public static final String AMF_REQUEST_TYPE = "amfrequest";
+	public static final String MANUAL_TEST_STEP = "manualTestStep";
 
-	public AMFRequestStepFactory()
+	public ManualTestStepFactory()
 	{
-		super( AMF_REQUEST_TYPE, "AMF Request", "Submits a AMF Request and validates its response",
-				"/amf_request.gif" );
+		super( MANUAL_TEST_STEP, "Manual Test Step", "Submits a Manual Test Step", "/manual_test_step.gif" );
 	}
 
 	public WsdlTestStep buildTestStep( WsdlTestCase testCase, TestStepConfig config, boolean forLoadTest )
 	{
-		return new AMFRequestTestStep( testCase, config, forLoadTest );
+		return new ManualTestStep( testCase, config, forLoadTest );
 	}
 
 	public TestStepConfig createNewTestStep( WsdlTestCase testCase, String name )
 	{
 		TestStepConfig testStepConfig = TestStepConfig.Factory.newInstance();
-		testStepConfig.setType( AMF_REQUEST_TYPE );
+		testStepConfig.setType( MANUAL_TEST_STEP );
 		testStepConfig.setName( name );
 		return testStepConfig;
 	}
@@ -53,14 +45,12 @@ public class AMFRequestStepFactory extends WsdlTestStepFactory
 		return true;
 	}
 
-	public TestStepConfig createConfig( WsdlMonitorMessageExchange me, String stepName )
+	public TestStepConfig createConfig( String stepName )
 	{
-		AMFRequestTestStepConfig testRequestConfig = AMFRequestTestStepConfig.Factory.newInstance();
-
-		testRequestConfig.setEndpoint( me.getEndpoint() );
+		ManualTestStepConfig testRequestConfig = ManualTestStepConfig.Factory.newInstance();
 
 		TestStepConfig testStep = TestStepConfig.Factory.newInstance();
-		testStep.setType( AMF_REQUEST_TYPE );
+		testStep.setType( MANUAL_TEST_STEP );
 		testStep.setConfig( testRequestConfig );
 		testStep.setName( stepName );
 		return testStep;

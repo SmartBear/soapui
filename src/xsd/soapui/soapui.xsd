@@ -1930,4 +1930,13 @@
     		<xsd:element name="amfCall" type="xsd:string"></xsd:element>
     	</xsd:sequence>
     </xsd:complexType>
+
+    <xsd:complexType name="ManualTestStep">
+    	<xsd:sequence>
+    		<xsd:element name="description" type="xsd:string"></xsd:element>
+    		<xsd:element name="name" type="xsd:string"></xsd:element>
+    		<xsd:element name="expectedResult" type="xsd:string"></xsd:element>
+    		<xsd:element name="urlList" type="tns:StringList"></xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
 </xsd:schema>
