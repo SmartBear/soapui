@@ -771,6 +771,11 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 
 	void setUpProxy()
 	{
+		if( isJXBrowserDisabled() )
+			return;
+
+		initialize();
+
 		ProxyConfiguration proxyConf = Services.getProxyConfiguration();
 		if( proxyConf == null )
 			return;
