@@ -50,7 +50,7 @@ public class WsdlSinglePartHttpResponse extends SinglePartHttpResponse implement
 				if( wssResult != null && wssResult.size() > 0 )
 				{
 					StringWriter writer = new StringWriter();
-					XmlUtils.serializePretty( document, writer );
+					XmlUtils.serialize( document, writer );
 					setResponseContent( writer.toString() );
 				}
 			}
