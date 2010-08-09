@@ -219,8 +219,13 @@ public class HttpRequestFilter extends AbstractRequestFilter
 					MimeBodyPart part = new PreencodedMimeBodyPart( "binary" );
 
 					if( attachment instanceof FileAttachment<?> )
-						part.setDisposition( "form-data; name=\"" + attachment.getName() + "\"; filename=\""
-								+ ( ( FileAttachment<?> )attachment ).getName() + "\"" );
+					{
+						String name = attachment.getName();
+						if( StringUtils.hasContent( attachment.getContentID() ) && !name.equals( attachment.getContentID() ) )
+							name = attachment.getContentID();
+
+						part.setDisposition( "form-data; name=\"" + name + "\"; filename=\"" + attachment.getName() + "\"" );
+					}
 					else
 						part.setDisposition( "form-data; name=\"" + attachment.getName() + "\"" );
 
