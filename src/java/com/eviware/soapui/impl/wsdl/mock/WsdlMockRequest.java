@@ -267,7 +267,7 @@ public class WsdlMockRequest implements MockRequest
 
 	public XmlObject getRequestXmlObject() throws XmlException
 	{
-		if( requestXmlObject == null )
+		if( requestXmlObject == null && StringUtils.hasContent( getRequestContent() ) )
 			requestXmlObject = XmlObject.Factory.parse( getRequestContent() );
 
 		return requestXmlObject;
