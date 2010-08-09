@@ -46,7 +46,6 @@ import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.Exten
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.support.types.StringToStringsMap;
-import com.eviware.soapui.support.xml.XmlUtils;
 
 public class ProxyServlet implements Servlet
 {
@@ -292,15 +291,10 @@ public class ProxyServlet implements Servlet
 
 	private byte[] getRequestToBytes( String footer, ExtendedHttpMethod postMethod, CaptureInputStream capture )
 	{
-		String request = footer;
+		String request = footer.trim();
 
-		// Header[] headers = postMethod.getRequestHeaders();
-		// for (Header header : headers)
-		// {
-		// request += header.toString();
-		// }
-		request += "\n";
-		request += XmlUtils.prettyPrintXml( new String( capture.getCapturedData() ) );
+		request += "\r\n\r\n";
+		request += new String( capture.getCapturedData() );
 
 		return request.getBytes();
 	}
