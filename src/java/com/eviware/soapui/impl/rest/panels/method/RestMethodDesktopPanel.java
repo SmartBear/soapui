@@ -135,7 +135,7 @@ public class RestMethodDesktopPanel extends ModelItemDesktopPanel<RestMethod>
 
 	public boolean onClose( boolean canCancel )
 	{
-		return true;
+		return release();
 	}
 
 	@Override

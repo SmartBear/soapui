@@ -110,27 +110,28 @@ public class RestResourceDesktopPanel extends ModelItemDesktopPanel<RestResource
 		{
 			public void focusLost( FocusEvent e )
 			{
-				for( String p : RestUtils.extractTemplateParams( getModelItem().getPath() ))
+				for( String p : RestUtils.extractTemplateParams( getModelItem().getPath() ) )
 				{
-					if( !getModelItem().hasProperty( p ))
+					if( !getModelItem().hasProperty( p ) )
 					{
-						if( UISupport.confirm( "Add template parameter [" + p + "] to resource?", "Add Parameter" ))
+						if( UISupport.confirm( "Add template parameter [" + p + "] to resource?", "Add Parameter" ) )
 						{
 							RestParamProperty property = getModelItem().addProperty( p );
 							property.setStyle( ParameterStyle.TEMPLATE );
-							String value = UISupport.prompt( "Specify default value for parameter [" + p + "]", "Add Parameter", "" );
+							String value = UISupport.prompt( "Specify default value for parameter [" + p + "]",
+									"Add Parameter", "" );
 							if( value != null )
 								property.setDefaultValue( value );
 						}
 					}
 				}
 			}
-			
+
 			public void focusGained( FocusEvent e )
 			{
 			}
-		});
-		
+		} );
+
 		toolbar.addLabeledFixed( "Resource Path", pathTextField );
 
 		toolbar.addGlue();
@@ -147,7 +148,7 @@ public class RestResourceDesktopPanel extends ModelItemDesktopPanel<RestResource
 
 	public boolean onClose( boolean canCancel )
 	{
-		return true;
+		return release();
 	}
 
 	@Override

@@ -556,13 +556,12 @@ public class GotoStepDesktopPanel extends ModelItemDesktopPanel<WsdlGotoTestStep
 
 	public boolean onClose( boolean canCancel )
 	{
-		super.release();
 		componentEnabler.release();
 		gotoStep.getTestCase().removeTestRunListener( testRunListener );
 		testStepsModel.release();
 		inspectorPanel.release();
 
-		return true;
+		return release();
 	}
 
 	public JComponent getComponent()

@@ -1266,7 +1266,6 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
 
 	public boolean onClose( boolean canCancel )
 	{
-		super.release();
 		transferStep.getTestCase().getTestSuite().removeTestSuiteListener( testSuiteListener );
 		transferStep.getTestCase().removeTestRunListener( testRunListener );
 
@@ -1295,7 +1294,7 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
 
 		inspectorPanel.release();
 
-		return true;
+		return release();
 	}
 
 	public JComponent getComponent()

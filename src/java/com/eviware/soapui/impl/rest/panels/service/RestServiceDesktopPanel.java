@@ -445,7 +445,7 @@ public class RestServiceDesktopPanel extends ModelItemDesktopPanel<RestService>
 			targetNamespaces.add( SchemaUtils.getTargetNamespace( xmlObject ) );
 
 			int tabCount = partTabs.getTabCount() - 1;
-			
+
 			String wadlNsDeclaration = "declare namespace wadl='" + Constants.WADL10_NS + "';";
 			mapWadlItems( xmlObject, treeRoot, tabCount, wadlNsDeclaration );
 			wadlNsDeclaration = "declare namespace wadl='" + Constants.WADL11_NS + "';";
@@ -459,7 +459,6 @@ public class RestServiceDesktopPanel extends ModelItemDesktopPanel<RestService>
 				String wadlNsDeclaration )
 		{
 			String xmlNsDeclaration = "declare namespace xs='" + Constants.XSD_NS + "';";
-			
 
 			mapTreeItems( xmlObject, treeRoot, false, tabCount, "Complex Types", xmlNsDeclaration
 					+ "//xs:complexType[@name!='']", "@name", true, null );
@@ -476,17 +475,17 @@ public class RestServiceDesktopPanel extends ModelItemDesktopPanel<RestService>
 			mapTreeItems( xmlObject, treeRoot, false, tabCount, "Schemas", xmlNsDeclaration + "//xs:schema",
 					"@targetNamespace", true, null );
 
-			mapTreeItems( xmlObject, treeRoot, false, tabCount, "Resources",
-					wadlNsDeclaration + "//wadl:resource", "concat( @path, ' [', *:doc[1]/@title, ']' )", true, null );
+			mapTreeItems( xmlObject, treeRoot, false, tabCount, "Resources", wadlNsDeclaration + "//wadl:resource",
+					"concat( @path, ' [', *:doc[1]/@title, ']' )", true, null );
 
-			mapTreeItems( xmlObject, treeRoot, false, tabCount, "Methods",
-					wadlNsDeclaration + "//wadl:method[exists(@name)]", "concat( @name, ' [', parent::node()/*:doc[1]/@title, ']' )", true,
+			mapTreeItems( xmlObject, treeRoot, false, tabCount, "Methods", wadlNsDeclaration
+					+ "//wadl:method[exists(@name)]", "concat( @name, ' [', parent::node()/*:doc[1]/@title, ']' )", true,
 					null );
 
-			mapTreeItems( xmlObject, treeRoot, false, tabCount,
-					"Representations", wadlNsDeclaration + "//wadl:representation[@mediaType!='' or @status!='']",
-					"concat( @mediaType, ' [', @status, '] (', parent::node()/parent::node()/parent::node()/@id, " +
-					"' - ', parent::node()/parent::node()/@id, ' - ', name(parent::node()), ')' )", true, null );
+			mapTreeItems( xmlObject, treeRoot, false, tabCount, "Representations", wadlNsDeclaration
+					+ "//wadl:representation[@mediaType!='' or @status!='']",
+					"concat( @mediaType, ' [', @status, '] (', parent::node()/parent::node()/parent::node()/@id, "
+							+ "' - ', parent::node()/parent::node()/@id, ' - ', name(parent::node()), ')' )", true, null );
 		}
 
 		public void finished()
@@ -681,7 +680,6 @@ public class RestServiceDesktopPanel extends ModelItemDesktopPanel<RestService>
 
 	public boolean onClose( boolean canCancel )
 	{
-
 		return release();
 	}
 

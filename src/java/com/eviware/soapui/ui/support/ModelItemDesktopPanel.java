@@ -25,6 +25,7 @@ import javax.swing.tree.TreePath;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.model.tree.SoapUITreeNode;
 import com.eviware.soapui.model.tree.nodes.support.EmptyModelItem;
 import com.eviware.soapui.support.UISupport;
@@ -68,7 +69,10 @@ public abstract class ModelItemDesktopPanel<T extends ModelItem> extends JPanel 
 		return modelItem.getIcon();
 	}
 
-	abstract public boolean dependsOn( ModelItem modelItem );
+	public boolean dependsOn( ModelItem modelItem )
+	{
+		return ModelSupport.dependsOn( getModelItem(), modelItem );
+	}
 
 	public String getTitle()
 	{
@@ -124,5 +128,11 @@ public abstract class ModelItemDesktopPanel<T extends ModelItem> extends JPanel 
 
 		if( evt.getPropertyName().equals( ModelItem.ICON_PROPERTY ) )
 			notifyPropertyChange( DesktopPanel.ICON_PROPERTY, null, getIcon() );
+	}
+
+	@Override
+	public boolean onClose( boolean canCancel )
+	{
+		return release();
 	}
 }

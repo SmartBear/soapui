@@ -164,8 +164,7 @@ public class PropertiesStepDesktopPanel extends ModelItemDesktopPanel<WsdlProper
 	{
 		componentEnabler.release();
 		propertiesTable.release();
-		super.release();
-		return true;
+		return release();
 	}
 
 	public JComponent getComponent()
@@ -289,7 +288,6 @@ public class PropertiesStepDesktopPanel extends ModelItemDesktopPanel<WsdlProper
 	protected boolean release()
 	{
 		testStep.removePropertyChangeListener( this );
-
 		return super.release();
 	}
 
