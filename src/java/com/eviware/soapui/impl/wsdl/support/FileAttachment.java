@@ -92,6 +92,7 @@ public abstract class FileAttachment<T extends AbstractWsdlModelItem<?>> impleme
 
 		config.setName( file.getName() );
 		config.setContentType( ContentTypeHandler.getContentTypeFromFilename( file.getName() ) );
+		config.setContentId( file.getName() );
 
 		// cache locally if specified
 		if( cache )
@@ -116,6 +117,7 @@ public abstract class FileAttachment<T extends AbstractWsdlModelItem<?>> impleme
 	{
 		config.setName( file.getName() );
 		config.setContentType( ContentTypeHandler.getContentTypeFromFilename( file.getName() ) );
+		config.setContentId( file.getName() );
 
 		// cache locally if specified
 		if( cache )

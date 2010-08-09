@@ -205,68 +205,71 @@ public class AttachmentUtils
 									inlineData( cursor, schemaType, new FileInputStream( filename ) );
 								}
 							}
-							// is content a reference to an attachment?
-							else if( textContent.startsWith( "cid:" ) )
+							else
 							{
-								textContent = textContent.substring( 4 );
+								Attachment[] attachmentsForPart = container.getAttachmentsForPart( textContent );
+								if( textContent.startsWith( "cid:" ) )
+								{
+									textContent = textContent.substring( 4 );
 
-								Attachment[] attachments = container.getAttachmentsForPart( textContent );
-								if( attachments.length == 1 )
-								{
-									attachment = attachments[0];
-								}
-								else if( attachments.length > 1 )
-								{
-									attachment = buildMulitpartAttachment( attachments );
-								}
-
-								isXopAttachment = container.isMtomEnabled();
-								contentIds.put( textContent, textContent );
-							}
-							// content should be binary data; is this an XOP element
-							// which should be serialized with MTOM?
-							else if( container.isMtomEnabled()
-									&& ( SchemaUtils.isBinaryType( schemaType ) || SchemaUtils.isAnyType( schemaType ) ) )
-							{
-								if( "true".equals( System.getProperty( "soapui.mtom.strict" ) ) )
-								{
-									if( SchemaUtils.isAnyType( schemaType ) )
+									Attachment[] attachments = attachmentsForPart;
+									if( attachments.length == 1 )
 									{
-										textContent = null;
+										attachment = attachments[0];
 									}
-									else
+									else if( attachments.length > 1 )
 									{
-										for( int c = 0; c < textContent.length(); c++ )
+										attachment = buildMulitpartAttachment( attachments );
+									}
+
+									isXopAttachment = container.isMtomEnabled();
+									contentIds.put( textContent, textContent );
+								}
+								// content should be binary data; is this an XOP element
+								// which should be serialized with MTOM?
+								else if( container.isMtomEnabled()
+										&& ( SchemaUtils.isBinaryType( schemaType ) || SchemaUtils.isAnyType( schemaType ) ) )
+								{
+									if( "true".equals( System.getProperty( "soapui.mtom.strict" ) ) )
+									{
+										if( SchemaUtils.isAnyType( schemaType ) )
 										{
-											if( Character.isWhitespace( textContent.charAt( c ) ) )
+											textContent = null;
+										}
+										else
+										{
+											for( int c = 0; c < textContent.length(); c++ )
 											{
-												textContent = null;
-												break;
+												if( Character.isWhitespace( textContent.charAt( c ) ) )
+												{
+													textContent = null;
+													break;
+												}
 											}
 										}
 									}
-								}
 
-								if( textContent != null )
+									if( textContent != null )
+									{
+										MimeBodyPart part = new PreencodedMimeBodyPart( "binary" );
+										String xmimeContentType = getXmlMimeContentType( cursor );
+
+										part.setDataHandler( new DataHandler( new XOPPartDataSource( textContent,
+												xmimeContentType, schemaType ) ) );
+
+										textContent = "http://www.soapui.org/" + System.nanoTime();
+
+										part.setContentID( "<" + textContent + ">" );
+										mp.addBodyPart( part );
+
+										isXopAttachment = true;
+									}
+								}
+								else if( container.isInlineFilesEnabled() && attachmentsForPart != null
+										&& attachmentsForPart.length > 0 )
 								{
-									MimeBodyPart part = new PreencodedMimeBodyPart( "binary" );
-									String xmimeContentType = getXmlMimeContentType( cursor );
-
-									part.setDataHandler( new DataHandler( new XOPPartDataSource( textContent, xmimeContentType,
-											schemaType ) ) );
-
-									textContent = "http://www.soapui.org/" + System.nanoTime();
-
-									part.setContentID( "<" + textContent + ">" );
-									mp.addBodyPart( part );
-
-									isXopAttachment = true;
+									attachment = attachmentsForPart[0];
 								}
-							}
-							else if( container.isInlineFilesEnabled()
-									&& container.getAttachmentsForPart( textContent ) != null )
-							{
-								attachment = container.getAttachmentsForPart( textContent )[0];
 							}
 
 							// add XOP include?
