@@ -164,6 +164,9 @@ public class SoapUtils
 
 	public static XmlObject getContentElement( XmlObject messageObject, SoapVersion soapVersion ) throws XmlException
 	{
+		if( messageObject == null )
+			return null;
+
 		XmlObject bodyElement = SoapUtils.getBodyElement( messageObject, soapVersion );
 		if( bodyElement != null )
 		{
@@ -211,6 +214,8 @@ public class SoapUtils
 					return operation;
 				}
 			}
+
+			return null;
 		}
 
 		QName contentQName = XmlUtils.getQName( contentElm.getDomNode() );

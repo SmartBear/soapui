@@ -648,7 +648,7 @@ public class SchemaUtils
 		if( result == null && schemaType != null && schemaType.getAnnotation() != null )
 		{
 			XmlObject[] userInformation = schemaType.getAnnotation().getUserInformation();
-			if( userInformation != null && userInformation.length > 0 )
+			if( userInformation != null && userInformation.length > 0 && userInformation[0] != null )
 			{
 				XmlObject xmlObject = userInformation[0];
 				XmlCursor cursor = xmlObject.newCursor();
