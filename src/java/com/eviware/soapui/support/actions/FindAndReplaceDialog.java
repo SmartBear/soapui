@@ -326,12 +326,10 @@ public class FindAndReplaceDialog extends AbstractAction
 			lastPositionF = ix;
 
 			int firstIx = ix;
-			int valueInNewValueIx = !caseCheck.isSelected() ? newValue.toLowerCase().indexOf( value ) : newValue
-					.indexOf( value );
-
 			if( ix != -1 )
 			{
-				System.out.println( "found match at " + ix + ", " + firstIx + ", " + valueInNewValueIx );
+				// System.out.println( "found match at " + ix + ", " + firstIx +
+				// ", " + valueInNewValueIx );
 				target.select( ix, ix + value.length() );
 
 				target.setSelectedText( newValue );

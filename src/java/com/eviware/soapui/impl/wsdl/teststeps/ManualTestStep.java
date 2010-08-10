@@ -51,7 +51,6 @@ public class ManualTestStep extends WsdlTestStepWithProperties implements Proper
 	@SuppressWarnings( "unused" )
 	private final static Logger log = Logger.getLogger( WsdlTestRequestStep.class );
 	protected ManualTestStepConfig manualTestStepConfig;
-	private XFormDialog dialog;
 	private ManualTestStepResult testStepResult;
 	public final static String MANUAL_STEP = ManualTestStep.class.getName() + "@manualstep";
 	public static final String STATUS_PROPERTY = WsdlTestRequest.class.getName() + "@status";
@@ -132,7 +131,7 @@ public class ManualTestStep extends WsdlTestStepWithProperties implements Proper
 
 		if( !forLoadTest && !UISupport.isHeadless() && !SoapUI.isCommandLine() )
 		{
-			dialog = ADialogBuilder.buildDialog( Form.class );
+			XFormDialog dialog = ADialogBuilder.buildDialog( Form.class );
 			dialog.setSize( 450, 550 );
 
 			dialog.setValue( Form.DESCRIPTION, runContext.expand( getDescription() ) );

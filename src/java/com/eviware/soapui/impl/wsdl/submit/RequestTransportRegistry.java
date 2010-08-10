@@ -101,7 +101,7 @@ public class RequestTransportRegistry
 		transports.put( JMS, jmsTransport );
 	}
 
-	public static RequestTransport getTransport( String endpoint, SubmitContext submitContext )
+	public static synchronized RequestTransport getTransport( String endpoint, SubmitContext submitContext )
 			throws MissingTransportException, CannotResolveJmsTypeException
 	{
 		int ix = endpoint.indexOf( "://" );
