@@ -17,6 +17,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.ManualTestStepConfig;
 import com.eviware.soapui.config.TestStepConfig;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
@@ -129,7 +130,7 @@ public class ManualTestStep extends WsdlTestStepWithProperties implements Proper
 		testStepResult = new ManualTestStepResult( this );
 		testStepResult.startTimer();
 
-		if( !forLoadTest && !UISupport.isHeadless() )
+		if( !forLoadTest && !UISupport.isHeadless() && !SoapUI.isCommandLine() )
 		{
 			dialog = ADialogBuilder.buildDialog( Form.class );
 			dialog.setSize( 450, 550 );
