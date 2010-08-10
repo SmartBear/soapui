@@ -220,4 +220,6 @@ public interface HelpUrls
 
 	public static final String MOCKASWAR_HELP_URL = HELP_URL_ROOT + "mock/mock_as_war.html";
 
+	public static final String MANUALTESTSTEP_HELP_URL = "";
+
 }

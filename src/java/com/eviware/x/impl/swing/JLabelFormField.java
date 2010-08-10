@@ -16,6 +16,11 @@ import javax.swing.JLabel;
 
 public class JLabelFormField extends AbstractSwingXFormField<JLabel>
 {
+	public JLabelFormField()
+	{
+		this( "" );
+	}
+
 	public JLabelFormField( String label )
 	{
 		super( new JLabel() );

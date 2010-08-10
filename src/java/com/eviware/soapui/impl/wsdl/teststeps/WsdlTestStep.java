@@ -104,6 +104,9 @@ abstract public class WsdlTestStep extends AbstractWsdlModelItem<TestStepConfig>
 	@Override
 	public void setName( String name )
 	{
+		if( getName().equals( name ) )
+			return;
+
 		UISupport.setHourglassCursor();
 
 		try
@@ -245,7 +248,7 @@ abstract public class WsdlTestStep extends AbstractWsdlModelItem<TestStepConfig>
 	{
 		return null;
 	}
-	
+
 	public void afterCopy( WsdlTestSuite oldTestSuite, WsdlTestCase oldTestCase )
 	{
 	}

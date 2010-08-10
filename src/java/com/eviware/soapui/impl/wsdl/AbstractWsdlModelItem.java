@@ -33,7 +33,8 @@ import com.eviware.soapui.support.resolver.ResolveContext;
  * @author Ole.Matzura
  */
 
-public abstract class AbstractWsdlModelItem<T extends ModelItemConfig> extends AbstractAnimatableModelItem<ModelItemConfig>
+public abstract class AbstractWsdlModelItem<T extends ModelItemConfig> extends
+		AbstractAnimatableModelItem<ModelItemConfig>
 {
 	private XmlBeansSettingsImpl settings;
 	private T config;
@@ -85,6 +86,9 @@ public abstract class AbstractWsdlModelItem<T extends ModelItemConfig> extends A
 	public void setDescription( String description )
 	{
 		String old = getDescription();
+		if( String.valueOf( old ).equals( description ) )
+			return;
+
 		config.setDescription( description );
 		notifyPropertyChanged( DESCRIPTION_PROPERTY, old, description );
 	}
@@ -115,8 +119,8 @@ public abstract class AbstractWsdlModelItem<T extends ModelItemConfig> extends A
 	public void setConfig( T config )
 	{
 		this.config = config;
-		
-		if( config != null && config.isSetName())
+
+		if( config != null && config.isSetName() )
 		{
 			config.setName( config.getName().trim() );
 		}

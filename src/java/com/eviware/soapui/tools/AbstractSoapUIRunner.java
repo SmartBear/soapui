@@ -358,7 +358,7 @@ public abstract class AbstractSoapUIRunner
 		}
 	}
 
-	protected boolean isEnableUI()
+	public boolean isEnableUI()
 	{
 		return enableUI;
 	}

@@ -24,7 +24,7 @@ public class ManualTestStepFactory extends WsdlTestStepFactory
 
 	public ManualTestStepFactory()
 	{
-		super( MANUAL_TEST_STEP, "Manual Test Step", "Submits a Manual Test Step", "/manual_test_step.gif" );
+		super( MANUAL_TEST_STEP, "Manual TestStep", "Submits a Manual TestStep", "/manualteststep.gif" );
 	}
 
 	public WsdlTestStep buildTestStep( WsdlTestCase testCase, TestStepConfig config, boolean forLoadTest )

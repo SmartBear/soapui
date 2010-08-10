@@ -12,140 +12,38 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps;
 
-import com.eviware.soapui.impl.wsdl.teststeps.actions.ShowMessageExchangeAction;
-import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.iface.Attachment;
-import com.eviware.soapui.model.iface.MessageExchange;
-import com.eviware.soapui.model.iface.Operation;
-import com.eviware.soapui.support.action.swing.ActionList;
-import com.eviware.soapui.support.types.StringToStringMap;
-import com.eviware.soapui.support.types.StringToStringsMap;
+import com.eviware.soapui.support.types.StringList;
 
-public class ManualTestStepResult extends WsdlTestStepResult implements  MessageExchange
+public class ManualTestStepResult extends WsdlTestStepResult
 {
-	private boolean addedAction;
+	private StringList urls = new StringList();
+	private String result;
 
 	public ManualTestStepResult( ManualTestStep testStep )
 	{
 		super( testStep );
 	}
 
-	@Override
-	public ActionList getActions()
+	protected StringList getUrls()
 	{
-		if( !addedAction )
-		{
-			addAction( new ShowMessageExchangeAction( this, "TestStep" ), true );
-			addedAction = true;
-		}
-
-		return super.getActions();
+		return urls;
 	}
 
-	public ModelItem getModelItem()
+	protected void setUrls( Object[] urls )
 	{
-		return getTestStep();
+		this.urls.clear();
+		for( Object o : urls )
+			this.urls.add( String.valueOf( o ) );
 	}
 
-	public Operation getOperation()
+	protected String getResult()
 	{
-		return null;
+		return result;
 	}
 
-	public StringToStringMap getProperties()
+	protected void setResult( String result )
 	{
-		return new StringToStringMap();
+		this.result = result;
+		super.addMessage( result );
 	}
-
-	public String getProperty( String name )
-	{
-		return null;
-	}
-
-	public byte[] getRawRequestData()
-	{
-		return null;
-	}
-
-	public byte[] getRawResponseData()
-	{
-		return null;
-	}
-
-	public Attachment[] getRequestAttachments()
-	{
-		return new Attachment[0];
-	}
-
-	public Attachment[] getRequestAttachmentsForPart( String partName )
-	{
-		return new Attachment[0];
-	}
-
-	public String getRequestContent()
-	{
-		return null;
-	}
-
-	public String getRequestContentAsXml()
-	{
-		return null;
-	}
-
-	public StringToStringsMap getRequestHeaders()
-	{
-		return new StringToStringsMap();
-	}
-
-	public Attachment[] getResponseAttachments()
-	{
-		return new Attachment[0];
-	}
-
-	public Attachment[] getResponseAttachmentsForPart( String partName )
-	{
-		return new Attachment[0];
-	}
-
-	public String getResponseContent()
-	{
-		return  null;
-	}
-
-	public String getResponseContentAsXml()
-	{
-		return  null;
-	}
-
-	public StringToStringsMap getResponseHeaders()
-	{
-		return new StringToStringsMap();
-	}
-
-	public long getTimestamp()
-	{
-		return  -1;
-	}
-
-	public boolean hasRawData()
-	{
-		return true;
-	}
-
-	public boolean hasRequest( boolean ignoreEmpty )
-	{
-		return hasResponse();
-	}
-
-	public boolean hasResponse()
-	{
-		return false;
-	}
-
-	public String getEndpoint()
-	{
-		return this.getEndpoint();
-	}
-
-
 }

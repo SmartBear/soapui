@@ -65,6 +65,7 @@ public class StringListFormComponent extends JPanel implements JFormComponent, A
 		list = new JList( listModel );
 		list.setToolTipText( tooltip );
 		JScrollPane scrollPane = new JScrollPane( list );
+		scrollPane.setVerticalScrollBarPolicy( JScrollPane.VERTICAL_SCROLLBAR_ALWAYS );
 		scrollPane.setPreferredSize( new Dimension( 300, 70 ) );
 		add( scrollPane, BorderLayout.CENTER );
 		buttonBox = new Box( BoxLayout.Y_AXIS );
@@ -240,5 +241,10 @@ public class StringListFormComponent extends JPanel implements JFormComponent, A
 		list.setEnabled( b );
 		if( b )
 			setButtonState();
+	}
+
+	public void addItem( String valueOf )
+	{
+		listModel.addElement( valueOf );
 	}
 }

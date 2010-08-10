@@ -12,12 +12,18 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.swing.SwingUtilities;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.TestStepConfig;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.support.DefaultTestStepProperty;
 import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
@@ -33,7 +39,7 @@ import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
  * @author ole.matzura
  */
 
-public class WsdlDelayTestStep extends WsdlTestStepWithProperties
+public class WsdlDelayTestStep extends WsdlTestStepWithProperties implements PropertyExpansionContainer
 {
 	private static final String DEFAULT_DELAY = "1000";
 	private static final int DELAY_CHUNK = 100;
@@ -107,6 +113,13 @@ public class WsdlDelayTestStep extends WsdlTestStepWithProperties
 	public String getDefaultTargetPropertyName()
 	{
 		return "delay";
+	}
+
+	public PropertyExpansion[] getPropertyExpansions()
+	{
+		List<PropertyExpansion> result = new ArrayList<PropertyExpansion>();
+		result.addAll( PropertyExpansionUtils.extractPropertyExpansions( this, this, "delayString" ) );
+		return result.toArray( new PropertyExpansion[result.size()] );
 	}
 
 	private void saveDelay( TestStepConfig config )

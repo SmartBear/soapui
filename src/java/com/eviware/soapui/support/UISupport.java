@@ -1009,8 +1009,16 @@ public class UISupport
 			}
 		}
 	}
-	
-	public static boolean isIdePlugin(){
+
+	public static boolean isIdePlugin()
+	{
 		return SoapUI.getSoapUICore() instanceof SwingPluginSoapUICore;
+	}
+
+	public static JPanel createEmptyPanel( int top, int left, int bottom, int right )
+	{
+		JPanel panel = new JPanel( new BorderLayout() );
+		panel.setBorder( BorderFactory.createEmptyBorder( top, left, bottom, right ) );
+		return panel;
 	}
 }

@@ -18,7 +18,6 @@ import java.awt.Dimension;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DragSource;
 import java.awt.event.ActionEvent;
-import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -768,7 +767,8 @@ public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase
 			{
 				UISupport.showErrorMessage( "Failed to save project; " + e1 );
 			}
-//			IntegrationUtils.removeLoadUILoadedProject( new File( project.getPath() ) );
+			// IntegrationUtils.removeLoadUILoadedProject( new File(
+			// project.getPath() ) );
 			IntegrationUtils.bringLoadUIToFront();
 		}
 	}

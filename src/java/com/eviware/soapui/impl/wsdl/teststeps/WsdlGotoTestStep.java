@@ -30,6 +30,7 @@ import com.eviware.soapui.impl.support.http.HttpRequestTestStep;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.support.XPathReference;
 import com.eviware.soapui.model.support.XPathReferenceContainer;
@@ -51,7 +52,8 @@ import com.eviware.soapui.support.UISupport;
  * @author ole.matzura
  */
 
-public class WsdlGotoTestStep extends WsdlTestStepWithProperties implements XPathReferenceContainer
+public class WsdlGotoTestStep extends WsdlTestStepWithProperties implements XPathReferenceContainer,
+		PropertyExpansionContainer
 {
 	private GotoStepConfig gotoStepConfig;
 	private List<GotoCondition> conditions = new ArrayList<GotoCondition>();

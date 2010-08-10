@@ -538,6 +538,11 @@
          <tns:actionMapping actionId="ShowOnlineSoapUIHelp" keyStroke="F1" param="functional/rest-requests.html"/>
       </tns:actionGroup>
 
+ 	<tns:actionGroup name="Manual TestStep Actions" id="ManualTestStepActions"
+		class="com.eviware.soapui.impl.wsdl.actions.teststep.WsdlTestStepSoapUIActionGroup">
+		<tns:actionMapping actionId="SeperatorAction"/>
+		<tns:actionMapping actionId="ShowOnlineSoapUIHelp" keyStroke="F1" param="functional/propertytransfers.html"/>
+	</tns:actionGroup>
 
    <tns:actionGroup name="PropertyTransfer Actions" id="PropertyTransfersTestStepActions"
 		class="com.eviware.soapui.impl.wsdl.actions.teststep.WsdlTestStepSoapUIActionGroup">

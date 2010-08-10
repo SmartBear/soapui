@@ -12,45 +12,59 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
-import javax.swing.ImageIcon;
 
 import org.apache.log4j.Logger;
 
 import com.eviware.soapui.config.ManualTestStepConfig;
 import com.eviware.soapui.config.TestStepConfig;
-import com.eviware.soapui.impl.wsdl.panels.teststeps.amf.AMFSubmit;
+import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
-import com.eviware.soapui.model.iface.Interface;
-import com.eviware.soapui.model.iface.SubmitContext;
-import com.eviware.soapui.model.iface.Request.SubmitException;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
+import com.eviware.soapui.model.support.DefaultTestStepProperty;
+import com.eviware.soapui.model.support.TestStepBeanProperty;
 import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
-import com.eviware.soapui.model.testsuite.TestProperty;
-import com.eviware.soapui.model.testsuite.TestPropertyListener;
-import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
+import com.eviware.soapui.support.StringUtils;
+import com.eviware.soapui.support.UISupport;
+import com.eviware.x.form.XFormDialog;
+import com.eviware.x.form.XFormOptionsField;
+import com.eviware.x.form.support.ADialogBuilder;
+import com.eviware.x.form.support.AField;
+import com.eviware.x.form.support.AForm;
+import com.eviware.x.form.support.AField.AFieldType;
 
 /**
  * 
  * @author nebojsa.tasic
  */
 
-public class ManualTestStep extends WsdlTestStep
+public class ManualTestStep extends WsdlTestStepWithProperties implements PropertyExpansionContainer
 
 {
 	@SuppressWarnings( "unused" )
 	private final static Logger log = Logger.getLogger( WsdlTestRequestStep.class );
 	protected ManualTestStepConfig manualTestStepConfig;
+	private XFormDialog dialog;
+	private ManualTestStepResult testStepResult;
 	public final static String MANUAL_STEP = ManualTestStep.class.getName() + "@manualstep";
 	public static final String STATUS_PROPERTY = WsdlTestRequest.class.getName() + "@status";
+	private final boolean forLoadTest;
 
 	public ManualTestStep( WsdlTestCase testCase, TestStepConfig config, boolean forLoadTest )
 	{
 		super( testCase, config, true, forLoadTest );
+		this.forLoadTest = forLoadTest;
+
+		if( !forLoadTest )
+		{
+			setIcon( UISupport.createImageIcon( "/manualteststep.gif" ) );
+		}
 
 		if( getConfig().getConfig() != null )
 		{
@@ -61,6 +75,31 @@ public class ManualTestStep extends WsdlTestStep
 			manualTestStepConfig = ( ManualTestStepConfig )getConfig().addNewConfig().changeType(
 					ManualTestStepConfig.type );
 		}
+
+		addProperty( new DefaultTestStepProperty( "Result", true, new DefaultTestStepProperty.PropertyHandlerAdapter()
+		{
+			@Override
+			public String getValue( DefaultTestStepProperty property )
+			{
+				return getLastResult() == null ? null : getLastResult().getResult();
+			}
+		}, this ) );
+
+		addProperty( new DefaultTestStepProperty( "Result", true, new DefaultTestStepProperty.PropertyHandlerAdapter()
+		{
+			@Override
+			public String getValue( DefaultTestStepProperty property )
+			{
+				return getLastResult() == null ? null : getLastResult().getResult();
+			}
+		}, this ) );
+
+		addProperty( new TestStepBeanProperty( "ExpectedResult", false, this, "endpoint", this ) );
+	}
+
+	protected ManualTestStepResult getLastResult()
+	{
+		return testStepResult;
 	}
 
 	public ManualTestStepConfig getManualTestStepConfig()
@@ -87,44 +126,43 @@ public class ManualTestStep extends WsdlTestStep
 
 	public TestStepResult run( TestCaseRunner runner, TestCaseRunContext runContext )
 	{
-		ManualTestStepResult testStepResult = new ManualTestStepResult( this );
+		testStepResult = new ManualTestStepResult( this );
 		testStepResult.startTimer();
 
-		try
+		if( !forLoadTest && !UISupport.isHeadless() )
 		{
-			if( !initManualStep( runContext ) )
+			dialog = ADialogBuilder.buildDialog( Form.class );
+			dialog.setSize( 450, 550 );
+
+			dialog.setValue( Form.DESCRIPTION, runContext.expand( getDescription() ) );
+			dialog.setValue( Form.EXPECTED_DESULT, runContext.expand( getExpectedResult() ) );
+			dialog.setValue( Form.STATUS, "Unknown" );
+
+			while( !dialog.show() )
 			{
-				throw new SubmitException( "Manual step is not initialised properly !" );
+				if( UISupport.confirm( "Are you sure? This will stop the entire test", "Cancel TestStep" ) )
+				{
+					testStepResult.setStatus( TestStepStatus.CANCELED );
+					runner.cancel( "Canceled by user" );
+					break;
+				}
 			}
 
-			// testStepResult.setTimeTaken( response.getTimeTaken() );
-			// testStepResult.setSize( response.getContentLength() );
-			//
-			// switch( amfRequest.getAssertionStatus() )
-			// {
-			// case FAILED :
-			// testStepResult.setStatus( TestStepStatus.FAILED );
-			// break;
-			// case VALID :
-			// testStepResult.setStatus( TestStepStatus.OK );
-			// break;
-			// case UNKNOWN :
-			// testStepResult.setStatus( TestStepStatus.UNKNOWN );
-			// break;
-			// }
+			if( dialog.getValue( Form.STATUS ).equals( "Pass" ) )
+				testStepResult.setStatus( TestStepStatus.OK );
+			else if( dialog.getValue( Form.STATUS ).equals( "Fail" ) )
+				testStepResult.setStatus( TestStepStatus.FAILED );
 
-			testStepResult.setStatus( TestStepStatus.CANCELED );
-			testStepResult.addMessage( "Request was canceled" );
+			String result = dialog.getValue( Form.RESULT );
+			if( StringUtils.hasContent( result ) )
+				testStepResult.setResult( result );
 
-			testStepResult.stopTimer();
-		}
-		catch( SubmitException e )
-		{
-			testStepResult.setStatus( TestStepStatus.FAILED );
-			testStepResult.addMessage( "SubmitException: " + e );
-			testStepResult.stopTimer();
+			testStepResult.setUrls( ( ( XFormOptionsField )dialog.getFormField( Form.URLS ) ).getOptions() );
+
+			dialog.release();
 		}
 
+		testStepResult.stopTimer();
 		return testStepResult;
 	}
 
@@ -134,31 +172,24 @@ public class ManualTestStep extends WsdlTestStep
 		return true;
 	}
 
+	@Override
 	public String getDefaultSourcePropertyName()
 	{
-		return "Response";
+		return "Result";
 	}
 
-	public ImageIcon getIcon()
+	@Override
+	public String getDefaultTargetPropertyName()
 	{
-		return null;
+		return "ExpectedResult";
 	}
 
-	public Interface getInterface()
+	public PropertyExpansion[] getPropertyExpansions()
 	{
-		return null;
-	}
-
-	public String getDescription()
-	{
-		return manualTestStepConfig.getDescription();
-	}
-
-	public void setDescription( String description )
-	{
-		String old = getDescription();
-		manualTestStepConfig.setDescription( description );
-		notifyPropertyChanged( "description", old, description );
+		List<PropertyExpansion> result = new ArrayList<PropertyExpansion>();
+		result.addAll( PropertyExpansionUtils.extractPropertyExpansions( this, this, "description" ) );
+		result.addAll( PropertyExpansionUtils.extractPropertyExpansions( this, this, "expectedResult" ) );
+		return result.toArray( new PropertyExpansion[result.size()] );
 	}
 
 	public String getExpectedResult()
@@ -169,114 +200,36 @@ public class ManualTestStep extends WsdlTestStep
 	public void setExpectedResult( String expectedResult )
 	{
 		String old = getExpectedResult();
+		if( String.valueOf( old ).equals( expectedResult ) )
+			return;
+
 		manualTestStepConfig.setExpectedResult( expectedResult );
 		notifyPropertyChanged( "expectedResult", old, expectedResult );
-	}
-
-	public String getName()
-	{
-		return manualTestStepConfig.getName();
-	}
-
-	public void setName( String name )
-	{
-		String old = getName();
-		manualTestStepConfig.setName( name );
-		notifyPropertyChanged( "name", old, name );
-	}
-
-	public Boolean initManualStep( SubmitContext submitContext )
-	{
-		return null;
 	}
 
 	public void resetConfigOnMove( TestStepConfig config )
 	{
 		super.resetConfigOnMove( config );
 		manualTestStepConfig = ( ManualTestStepConfig )config.getConfig().changeType( ManualTestStepConfig.type );
-//		propertyHolderSupport.resetPropertiesConfig( manualTestStepConfig.getProperties() );
 	}
 
-	public TestStep getTestStep()
+	@AForm( description = "", name = "Run Manual TestStep", helpUrl = HelpUrls.MANUALTESTSTEP_HELP_URL )
+	protected interface Form
 	{
-		return this;
+		@AField( name = "Description", description = "Describes the actions to perform", type = AFieldType.INFORMATION )
+		public final static String DESCRIPTION = "Description";
+
+		@AField( name = "Expected Result", description = "Describes the actions to perform", type = AFieldType.INFORMATION )
+		public final static String EXPECTED_DESULT = "Expected Result";
+
+		@AField( name = "Result", description = "an optional result description or value", type = AFieldType.STRINGAREA )
+		public final static String RESULT = "Result";
+
+		@AField( name = "URLs", description = "A list of URLs related to the result", type = AFieldType.STRINGLIST )
+		public final static String URLS = "URLs";
+
+		@AField( name = "Result Status", description = "The result status", type = AFieldType.ENUMERATION, values = {
+				"Pass", "Fail", "Unknown" } )
+		public final static String STATUS = "Result Status";
 	}
-
-	@Override
-	public void addTestPropertyListener( TestPropertyListener listener )
-	{
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public Map<String, TestProperty> getProperties()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public TestProperty getProperty( String name )
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public TestProperty getPropertyAt( int index )
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public int getPropertyCount()
-	{
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public List<TestProperty> getPropertyList()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String[] getPropertyNames()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String getPropertyValue( String name )
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public boolean hasProperty( String name )
-	{
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public void removeTestPropertyListener( TestPropertyListener listener )
-	{
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void setPropertyValue( String name, String value )
-	{
-		// TODO Auto-generated method stub
-
-	}
-
 }
