@@ -33,7 +33,10 @@ public class ManualTestStepResult extends WsdlTestStepResult
 	{
 		this.urls.clear();
 		for( Object o : urls )
+		{
 			this.urls.add( String.valueOf( o ) );
+			addMessage( "URL: " + String.valueOf( o ) );
+		}
 	}
 
 	protected String getResult()

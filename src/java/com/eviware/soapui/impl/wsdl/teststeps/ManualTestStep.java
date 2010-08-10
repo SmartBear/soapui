@@ -12,6 +12,7 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps;
 
+import java.awt.Dialog.ModalityType;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +40,7 @@ import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.AField.AFieldType;
+import com.eviware.x.impl.swing.JFormDialog;
 
 /**
  * 
@@ -85,16 +87,7 @@ public class ManualTestStep extends WsdlTestStepWithProperties implements Proper
 			}
 		}, this ) );
 
-		addProperty( new DefaultTestStepProperty( "Result", true, new DefaultTestStepProperty.PropertyHandlerAdapter()
-		{
-			@Override
-			public String getValue( DefaultTestStepProperty property )
-			{
-				return getLastResult() == null ? null : getLastResult().getResult();
-			}
-		}, this ) );
-
-		addProperty( new TestStepBeanProperty( "ExpectedResult", false, this, "endpoint", this ) );
+		addProperty( new TestStepBeanProperty( "ExpectedResult", false, this, "expectedResult", this ) );
 	}
 
 	protected ManualTestStepResult getLastResult()
@@ -133,10 +126,13 @@ public class ManualTestStep extends WsdlTestStepWithProperties implements Proper
 		{
 			XFormDialog dialog = ADialogBuilder.buildDialog( Form.class );
 			dialog.setSize( 450, 550 );
+			( ( JFormDialog )dialog ).getDialog().setModalityType( ModalityType.MODELESS );
 
 			dialog.setValue( Form.DESCRIPTION, runContext.expand( getDescription() ) );
 			dialog.setValue( Form.EXPECTED_DESULT, runContext.expand( getExpectedResult() ) );
 			dialog.setValue( Form.STATUS, "Unknown" );
+
+			UISupport.select( this );
 
 			while( !dialog.show() )
 			{

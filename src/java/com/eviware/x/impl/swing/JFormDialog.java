@@ -15,6 +15,8 @@ package com.eviware.x.impl.swing;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Dialog.ModalityType;
+import java.util.concurrent.CountDownLatch;
 
 import javax.swing.Action;
 import javax.swing.BorderFactory;
@@ -69,6 +71,11 @@ public class JFormDialog extends SwingXFormDialog
 		form.setValues( values );
 	}
 
+	public JDialog getDialog()
+	{
+		return dialog;
+	}
+
 	public void setSize( int i, int j )
 	{
 		dialog.setSize( i, j );
@@ -95,7 +102,7 @@ public class JFormDialog extends SwingXFormDialog
 
 	public void setVisible( boolean visible )
 	{
-		if( !resized )
+		if( !resized && visible )
 		{
 			dialog.pack();
 			if( dialog.getHeight() < 270 )
@@ -108,9 +115,15 @@ public class JFormDialog extends SwingXFormDialog
 				dialog.setSize( new Dimension( 450, dialog.getHeight() ) );
 			}
 		}
-		
-		UISupport.centerDialog( dialog );
+
+		if( visible )
+		{
+			UISupport.centerDialog( dialog );
+		}
 		dialog.setVisible( visible );
+
+		if( startSignal != null )
+			startSignal.countDown();
 	}
 
 	public void addAction( Action action )
@@ -161,10 +174,27 @@ public class JFormDialog extends SwingXFormDialog
 		return StringUtils.toStringList( options ).indexOf( form.getComponentValue( name ) );
 	}
 
+	private CountDownLatch startSignal;
+
 	public boolean show()
 	{
 		setReturnValue( XFormDialog.CANCEL_OPTION );
 		show( new StringToStringMap() );
+		if( dialog.getModalityType() == ModalityType.MODELESS )
+		{
+			startSignal = new CountDownLatch( 1 );
+			try
+			{
+				startSignal.await();
+			}
+			catch( InterruptedException e )
+			{
+				e.printStackTrace();
+			}
+
+			startSignal = null;
+		}
+
 		return getReturnValue() == XFormDialog.OK_OPTION;
 	}
 
