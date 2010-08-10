@@ -96,51 +96,57 @@ public class WsdlMockResponseStepFactory extends WsdlTestStepFactory
 	{
 		WsdlMockResponseStepFactory.project = project;
 
-		List<Interface> interfaces = new ArrayList<Interface>();
-		for( Interface iface : project.getInterfaces( WsdlInterfaceFactory.WSDL_TYPE ) )
+		try
 		{
-			if( iface.getOperationCount() > 0 )
-				interfaces.add( iface );
-		}
+			List<Interface> interfaces = new ArrayList<Interface>();
+			for( Interface iface : project.getInterfaces( WsdlInterfaceFactory.WSDL_TYPE ) )
+			{
+				if( iface.getOperationCount() > 0 )
+					interfaces.add( iface );
+			}
 
-		if( interfaces.isEmpty() )
+			if( interfaces.isEmpty() )
+			{
+				UISupport.showErrorMessage( "Missing Interfaces/Operations to mock" );
+				return null;
+			}
+
+			dialog.setValue( CreateForm.NAME, name );
+			dialog.setOptions( CreateForm.INTERFACE, new ModelItemNames<Interface>( interfaces ).getNames() );
+			dialog.setOptions( CreateForm.OPERATION,
+					new ModelItemNames<Operation>( interfaces.get( 0 ).getOperationList() ).getNames() );
+
+			if( !dialog.show() )
+				return null;
+
+			TestStepConfig testStepConfig = TestStepConfig.Factory.newInstance();
+			testStepConfig.setType( MOCKRESPONSE_TYPE );
+			testStepConfig.setName( dialog.getValue( CreateForm.NAME ) );
+
+			MockResponseStepConfig config = MockResponseStepConfig.Factory.newInstance();
+			config.setInterface( dialog.getValue( CreateForm.INTERFACE ) );
+			config.setOperation( dialog.getValue( CreateForm.OPERATION ) );
+			config.setPort( dialog.getIntValue( CreateForm.PORT, 8080 ) );
+			config.setPath( dialog.getValue( CreateForm.PATH ) );
+			config.addNewResponse();
+			config.getResponse().addNewResponseContent();
+
+			if( dialog.getBooleanValue( CreateForm.CREATE_RESPONSE ) )
+			{
+				WsdlInterface iface = ( WsdlInterface )project.getInterfaceByName( config.getInterface() );
+				String response = iface.getOperationByName( config.getOperation() ).createResponse(
+						project.getSettings().getBoolean( WsdlSettings.XML_GENERATION_ALWAYS_INCLUDE_OPTIONAL_ELEMENTS ) );
+
+				CompressedStringSupport.setString( config.getResponse().getResponseContent(), response );
+			}
+
+			testStepConfig.addNewConfig().set( config );
+			return testStepConfig;
+		}
+		finally
 		{
-			UISupport.showErrorMessage( "Missing Interfaces/Operations to mock" );
-			return null;
+			WsdlMockResponseStepFactory.project = null;
 		}
-
-		dialog.setValue( CreateForm.NAME, name );
-		dialog.setOptions( CreateForm.INTERFACE, new ModelItemNames<Interface>( interfaces ).getNames() );
-		dialog.setOptions( CreateForm.OPERATION, new ModelItemNames<Operation>( interfaces.get( 0 ).getOperationList() )
-				.getNames() );
-
-		if( !dialog.show() )
-			return null;
-
-		TestStepConfig testStepConfig = TestStepConfig.Factory.newInstance();
-		testStepConfig.setType( MOCKRESPONSE_TYPE );
-		testStepConfig.setName( dialog.getValue( CreateForm.NAME ) );
-
-		MockResponseStepConfig config = MockResponseStepConfig.Factory.newInstance();
-		config.setInterface( dialog.getValue( CreateForm.INTERFACE ) );
-		config.setOperation( dialog.getValue( CreateForm.OPERATION ) );
-		config.setPort( dialog.getIntValue( CreateForm.PORT, 8080 ) );
-		config.setPath( dialog.getValue( CreateForm.PATH ) );
-		config.addNewResponse();
-		config.getResponse().addNewResponseContent();
-
-		if( dialog.getBooleanValue( CreateForm.CREATE_RESPONSE ) )
-		{
-			WsdlInterface iface = ( WsdlInterface )project.getInterfaceByName( config.getInterface() );
-			String response = iface.getOperationByName( config.getOperation() ).createResponse(
-					project.getSettings().getBoolean( WsdlSettings.XML_GENERATION_ALWAYS_INCLUDE_OPTIONAL_ELEMENTS ) );
-
-			CompressedStringSupport.setString( config.getResponse().getResponseContent(), response );
-		}
-
-		testStepConfig.addNewConfig().set( config );
-
-		return testStepConfig;
 	}
 
 	@AForm( description = "Secify options for new MockResponse step", name = "New MockResponse Step", helpUrl = HelpUrls.CREATEMOCKRESPONSESTEP_HELP_URL, icon = UISupport.OPTIONS_ICON_PATH )
