@@ -169,5 +169,13 @@ public class AMFHeadersInspectorFactory implements RequestInspectorFactory, Resp
 				return new StringToStringMap();
 			}
 		}
+
+		@Override
+		public void release()
+		{
+			request.removePropertyChangeListener( AMFRequest.AMF_RESPONSE_PROPERTY, this );
+			super.release();
+		}
+
 	}
 }

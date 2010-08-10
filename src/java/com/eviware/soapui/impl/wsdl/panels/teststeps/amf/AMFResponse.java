@@ -118,6 +118,12 @@ public class AMFResponse extends AbstractResponse<AMFRequest>
 
 	protected void initHeaders( ExtendedPostMethod postMethod )
 	{
+		requestHeaders = new StringToStringsMap();
+		responseHeaders = new StringToStringsMap();
+
+		if( postMethod == null )
+			return;
+
 		try
 		{
 			ByteArrayOutputStream rawResponse = new ByteArrayOutputStream();
@@ -132,7 +138,6 @@ public class AMFResponse extends AbstractResponse<AMFRequest>
 			rawRequest.write( ( postMethod.getMethod() + " " + postMethod.getURI().toString() + " "
 					+ postMethod.getParams().getVersion().toString() + "\r\n" ).getBytes() );
 
-			requestHeaders = new StringToStringsMap();
 			Header[] headers = postMethod.getRequestHeaders();
 			for( Header header : headers )
 			{
@@ -142,7 +147,6 @@ public class AMFResponse extends AbstractResponse<AMFRequest>
 
 			if( !postMethod.isFailed() )
 			{
-				responseHeaders = new StringToStringsMap();
 				headers = postMethod.getResponseHeaders();
 				for( Header header : headers )
 				{
