@@ -34,6 +34,7 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.settings.HttpSettings;
+import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.types.StringToStringsMap;
 
@@ -208,7 +209,10 @@ public abstract class BaseHttpResponse implements HttpResponse
 				if( httpMethod.getRequestEntity().isRepeatable() )
 				{
 					requestContentPos = rawRequest.size();
-					httpMethod.getRequestEntity().writeRequest( rawRequest );
+					MaxSizeByteArrayOutputStream tempOut = new MaxSizeByteArrayOutputStream( SoapUI.getSettings().getLong(
+							UISettings.RAW_REQUEST_MESSAGE_SIZE, 0 ) );
+					httpMethod.getRequestEntity().writeRequest( tempOut );
+					tempOut.writeTo( rawRequest );
 				}
 				else
 					rawResponse.write( "<request data not available>".getBytes() );
@@ -227,6 +231,48 @@ public abstract class BaseHttpResponse implements HttpResponse
 		{
 			e.printStackTrace();
 		}
+	}
+
+	public static class MaxSizeByteArrayOutputStream extends ByteArrayOutputStream
+	{
+		private final long maxSize;
+
+		public MaxSizeByteArrayOutputStream( long maxSize )
+		{
+			this.maxSize = maxSize;
+		}
+
+		@Override
+		public synchronized void write( int b )
+		{
+			if( maxSize > 0 && size() < maxSize )
+				super.write( b );
+		}
+
+		@Override
+		public synchronized void write( byte[] b, int off, int len )
+		{
+			if( maxSize > 0 && size() < maxSize )
+			{
+				if( size() + len < maxSize )
+					super.write( b, off, len );
+				else
+					super.write( b, off, ( int )( maxSize - size() ) );
+			}
+		}
+
+		@Override
+		public void write( byte[] b ) throws IOException
+		{
+			if( maxSize > 0 && size() < maxSize )
+			{
+				if( size() + b.length < maxSize )
+					super.write( b );
+				else
+					super.write( b, 0, ( int )( maxSize - size() ) );
+			}
+		}
+
 	}
 
 	protected void initHeadersForLoadTest( ExtendedHttpMethod httpMethod )

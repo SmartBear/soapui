@@ -20,6 +20,13 @@ import java.io.InputStream;
 public class CaptureInputStream extends FilterInputStream
 {
 	private final ByteArrayOutputStream capture = new ByteArrayOutputStream();
+	private long maxData = 0;
+
+	public CaptureInputStream( InputStream in, long maxData )
+	{
+		super( in );
+		this.maxData = maxData;
+	}
 
 	public CaptureInputStream( InputStream in )
 	{
@@ -30,7 +37,9 @@ public class CaptureInputStream extends FilterInputStream
 	public int read() throws IOException
 	{
 		int i = super.read();
-		capture.write( i );
+		if( maxData > 0 && capture.size() < maxData )
+			capture.write( i );
+
 		return i;
 	}
 
@@ -38,7 +47,15 @@ public class CaptureInputStream extends FilterInputStream
 	public int read( byte[] b ) throws IOException
 	{
 		int i = super.read( b );
-		capture.write( b );
+
+		if( i > 0 && maxData > 0 && capture.size() < maxData )
+		{
+			if( i + capture.size() < maxData )
+				capture.write( b, 0, i );
+			else
+				capture.write( b, 0, ( int )( maxData - capture.size() ) );
+		}
+
 		return i;
 	}
 
@@ -46,8 +63,14 @@ public class CaptureInputStream extends FilterInputStream
 	public int read( byte[] b, int off, int len ) throws IOException
 	{
 		int i = super.read( b, off, len );
-		if( i > 0 )
-			capture.write( b, off, i );
+		if( i > 0 && maxData > 0 && capture.size() < maxData )
+		{
+			if( i + capture.size() < maxData )
+				capture.write( b, off, i );
+			else
+				capture.write( b, off, ( int )( maxData - capture.size() ) );
+		}
+
 		return i;
 	}
 

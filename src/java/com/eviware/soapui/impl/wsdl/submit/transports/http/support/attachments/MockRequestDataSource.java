@@ -12,7 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -21,7 +20,8 @@ import javax.activation.DataSource;
 import javax.servlet.http.HttpServletRequest;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.support.Tools;
+import com.eviware.soapui.impl.wsdl.monitor.CaptureInputStream;
+import com.eviware.soapui.settings.UISettings;
 
 /**
  * DataSource for a MockRequest
@@ -31,17 +31,20 @@ import com.eviware.soapui.support.Tools;
 
 public class MockRequestDataSource implements DataSource
 {
-	private byte[] data;
 	private String contentType;
 	private String name;
+	private final HttpServletRequest request;
+	private CaptureInputStream capture = null;
 
 	public MockRequestDataSource( HttpServletRequest request )
 	{
+		this.request = request;
 		try
 		{
-			data = Tools.readAll( request.getInputStream(), 0 ).toByteArray();
 			contentType = request.getContentType();
 			name = "Request for " + request.getPathInfo();
+			capture = new CaptureInputStream( request.getInputStream(), SoapUI.getSettings().getLong(
+					UISettings.RAW_REQUEST_MESSAGE_SIZE, 0 ) );
 		}
 		catch( Exception e )
 		{
@@ -56,7 +59,7 @@ public class MockRequestDataSource implements DataSource
 
 	public InputStream getInputStream() throws IOException
 	{
-		return new ByteArrayInputStream( data );
+		return request.getInputStream();
 	}
 
 	public String getName()
@@ -71,6 +74,6 @@ public class MockRequestDataSource implements DataSource
 
 	public byte[] getData()
 	{
-		return data;
+		return capture.getCapturedData();
 	}
 }

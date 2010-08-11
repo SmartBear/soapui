@@ -35,7 +35,6 @@ import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
 public class WsdlRequestMimeMessageRequestEntity implements RequestEntity
 {
 	private final MimeMessage message;
-	private byte[] buffer;
 	private final boolean isXOP;
 	private final WsdlRequest wsdlRequest;
 
@@ -50,10 +49,9 @@ public class WsdlRequestMimeMessageRequestEntity implements RequestEntity
 	{
 		try
 		{
-			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			DummyOutputStream out = new DummyOutputStream();
 			writeRequest( out );
-			buffer = out.toByteArray();
-			return buffer.length;
+			return out.getSize();
 		}
 		catch( Exception e )
 		{
@@ -100,17 +98,36 @@ public class WsdlRequestMimeMessageRequestEntity implements RequestEntity
 	{
 		try
 		{
-			if( buffer == null )
-			{
-				arg0.write( "\r\n".getBytes() );
-				( ( MimeMultipart )message.getContent() ).writeTo( arg0 );
-			}
-			else
-				arg0.write( buffer );
+			arg0.write( "\r\n".getBytes() );
+			( ( MimeMultipart )message.getContent() ).writeTo( arg0 );
 		}
 		catch( Exception e )
 		{
 			SoapUI.logError( e );
+		}
+	}
+
+	public static class DummyOutputStream extends OutputStream
+	{
+		private int intLength;
+		private long size = 0;
+
+		public DummyOutputStream()
+		{
+			ByteArrayOutputStream tempOut = new ByteArrayOutputStream();
+			tempOut.write( 1 );
+			intLength = tempOut.toByteArray().length;
+		}
+
+		@Override
+		public void write( int b ) throws IOException
+		{
+			size += intLength;
+		}
+
+		public long getSize()
+		{
+			return size;
 		}
 	}
 }

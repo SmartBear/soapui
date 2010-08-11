@@ -40,8 +40,8 @@ public class SinglePartHttpResponse extends BaseHttpResponse
 			String requestContent, PropertyExpansionContext context )
 	{
 		super( httpMethod, httpRequest, context );
-		
-		if( getRequestContent() == null || !getRequestContent().equals( requestContent ))
+
+		if( getRequestContent() == null || !getRequestContent().equals( requestContent ) )
 			this.requestContent = requestContent;
 
 		try
@@ -106,7 +106,7 @@ public class SinglePartHttpResponse extends BaseHttpResponse
 	{
 		return responseContent;
 	}
-	
+
 	public long getContentLength()
 	{
 		return responseSize;

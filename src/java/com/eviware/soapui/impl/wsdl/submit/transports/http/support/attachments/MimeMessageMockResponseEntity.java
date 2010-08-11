@@ -12,7 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -24,6 +23,7 @@ import org.apache.commons.httpclient.methods.RequestEntity;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.WsdlRequestMimeMessageRequestEntity.DummyOutputStream;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
 
 /**
@@ -35,7 +35,6 @@ import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
 public class MimeMessageMockResponseEntity implements RequestEntity
 {
 	private final MimeMessage message;
-	private byte[] buffer;
 	private final boolean isXOP;
 	private final WsdlMockResponse mockResponse;
 
@@ -50,10 +49,9 @@ public class MimeMessageMockResponseEntity implements RequestEntity
 	{
 		try
 		{
-			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			DummyOutputStream out = new DummyOutputStream();
 			writeRequest( out );
-			buffer = out.toByteArray();
-			return buffer.length;
+			return out.getSize();
 		}
 		catch( Exception e )
 		{
@@ -99,13 +97,8 @@ public class MimeMessageMockResponseEntity implements RequestEntity
 	{
 		try
 		{
-			if( buffer == null )
-			{
-				arg0.write( "\r\n".getBytes() );
-				( ( MimeMultipart )message.getContent() ).writeTo( arg0 );
-			}
-			else
-				arg0.write( buffer );
+			arg0.write( "\r\n".getBytes() );
+			( ( MimeMultipart )message.getContent() ).writeTo( arg0 );
 		}
 		catch( Exception e )
 		{

@@ -12,7 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -24,6 +23,7 @@ import org.apache.commons.httpclient.methods.RequestEntity;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.http.HttpRequestInterface;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.WsdlRequestMimeMessageRequestEntity.DummyOutputStream;
 
 /**
  * MimeMessage request class
@@ -34,7 +34,6 @@ import com.eviware.soapui.impl.support.http.HttpRequestInterface;
 public class RestRequestMimeMessageRequestEntity implements RequestEntity
 {
 	private final MimeMessage message;
-	private byte[] buffer;
 	private final HttpRequestInterface<?> restRequest;
 
 	public RestRequestMimeMessageRequestEntity( MimeMessage message, HttpRequestInterface<?> restRequest )
@@ -47,10 +46,9 @@ public class RestRequestMimeMessageRequestEntity implements RequestEntity
 	{
 		try
 		{
-			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			DummyOutputStream out = new DummyOutputStream();
 			writeRequest( out );
-			buffer = out.toByteArray();
-			return buffer.length;
+			return out.getSize();
 		}
 		catch( Exception e )
 		{
@@ -85,13 +83,8 @@ public class RestRequestMimeMessageRequestEntity implements RequestEntity
 	{
 		try
 		{
-			if( buffer == null )
-			{
-				arg0.write( "\r\n".getBytes() );
-				( ( MimeMultipart )message.getContent() ).writeTo( arg0 );
-			}
-			else
-				arg0.write( buffer );
+			arg0.write( "\r\n".getBytes() );
+			( ( MimeMultipart )message.getContent() ).writeTo( arg0 );
 		}
 		catch( Exception e )
 		{
