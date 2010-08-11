@@ -162,7 +162,23 @@ public class JUnitReportCollector implements TestRunListener, TestSuiteRunListen
 				buf.append( failures.get( testCase ) );
 			}
 
-			buf.append( "<h3><b>" + result.getTestStep().getName() + " Failed</b></h3><pre>" );
+			buf.append( "<h3><b>" ).append( XmlUtils.entitize( result.getTestStep().getName() ) ).append(
+					" Failed</b></h3><pre>" );
+			for( String message : result.getMessages() )
+			{
+				if( message.toLowerCase().startsWith( "url:" ) )
+				{
+					buf.append( "<a target=\"new\" href=\"" ).append( XmlUtils.entitize( message.substring( 4 ).trim() ) )
+							.append( "\">" ).append( XmlUtils.entitize( message ) ).append( "</a>" );
+				}
+				else
+				{
+					buf.append( message );
+				}
+
+				buf.append( "\r\n" );
+			}
+
 			buf.append( "<pre>" + XmlUtils.entitize( Arrays.toString( result.getMessages() ) ) + "\n" );
 
 			// use string value since constant is defined in pro.. duh..
