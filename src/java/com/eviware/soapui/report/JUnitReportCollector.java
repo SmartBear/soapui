@@ -167,8 +167,9 @@ public class JUnitReportCollector implements TestRunListener, TestSuiteRunListen
 			{
 				if( message.toLowerCase().startsWith( "url:" ) )
 				{
-					buf.append( "<a target=\"new\" href=\"" ).append( XmlUtils.entitize( message.substring( 4 ).trim() ) )
-							.append( "\">" ).append( XmlUtils.entitize( message ) ).append( "</a>" );
+					String url = XmlUtils.entitize( message.substring( 4 ).trim() );
+					buf.append( "URL: <a target=\"new\" href=\"" ).append( url ).append( "\">" ).append( url ).append(
+							"</a>" );
 				}
 				else
 				{
