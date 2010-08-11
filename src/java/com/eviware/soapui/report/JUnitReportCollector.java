@@ -16,7 +16,6 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -178,8 +177,6 @@ public class JUnitReportCollector implements TestRunListener, TestSuiteRunListen
 
 				buf.append( "\r\n" );
 			}
-
-			buf.append( "<pre>" + XmlUtils.entitize( Arrays.toString( result.getMessages() ) ) + "\n" );
 
 			// use string value since constant is defined in pro.. duh..
 			if( testRunner.getTestCase().getSettings().getBoolean( "Complete Error Logs" ) )
