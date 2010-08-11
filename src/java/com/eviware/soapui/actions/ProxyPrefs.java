@@ -12,9 +12,9 @@
 
 package com.eviware.soapui.actions;
 
-import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JTextField;
+import javax.swing.JToggleButton;
 import javax.swing.text.Document;
 
 import com.eviware.soapui.SoapUI;
@@ -116,7 +116,7 @@ public class ProxyPrefs implements Prefs
 		settings.setString( ProxySettings.PASSWORD, values.get( PASSWORD ) );
 		settings.setString( ProxySettings.EXCLUDES, values.get( EXCLUDES ) );
 		settings.setBoolean( ProxySettings.ENABLE_PROXY, values.getBoolean( ENABLE_PROXY ) );
-		JButton applyProxyButton = ( JButton )SoapUI.getApplyProxyButton();
+		JToggleButton applyProxyButton = ( JToggleButton )SoapUI.getApplyProxyButton();
 		if( values.getBoolean( ENABLE_PROXY ) )
 		{
 			if( applyProxyButton != null )

@@ -48,6 +48,7 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
+import javax.swing.JToggleButton;
 import javax.swing.JTree;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
@@ -163,8 +164,8 @@ public class SoapUI
 	public static final String SOAPUI_TITLE = "/com/eviware/soapui/resources/branded/branded.properties";
 	private static final int DEFAULT_DESKTOP_ACTIONS_COUNT = 3;
 	public static final String BUILDINFO_RESOURCE = "/com/eviware/soapui/resources/conf/buildinfo.txt";
-	public static final String PROXY_ENABLED_ICON = "/proxyEnabled.png";
-	public static final String PROXY_DISABLED_ICON = "/proxyDisabled.png";
+	public static final String PROXY_ENABLED_ICON = "/proxyDisabled.png";
+	public static final String PROXY_DISABLED_ICON = "/proxyEnabled.png";
 
 	@SuppressWarnings( "deprecation" )
 	public static String PUSH_PAGE_URL = "http://www.soapui.org/appindex/soapui_starterpage.php?version="
@@ -216,7 +217,7 @@ public class SoapUI
 
 	private final static ExecutorService threadPool = Executors.newCachedThreadPool();
 	private JTextField searchField;
-	private static JButton applyProxyButton;
+	private static JToggleButton applyProxyButton;
 	private static Logger groovyLogger;
 	private static JButton launchLoadUIButton;
 
@@ -268,7 +269,7 @@ public class SoapUI
 		desktop.init();
 	}
 
-	public static JButton getApplyProxyButton()
+	public static JToggleButton getApplyProxyButton()
 	{
 		return applyProxyButton;
 	}
@@ -291,11 +292,12 @@ public class SoapUI
 				"/favicon.png" ) );
 		mainToolbar.addSeparator();
 		mainToolbar.add( new PreferencesActionDelegate() );
-		applyProxyButton = mainToolbar.add( new ApplyProxyButtonAction() );
+		applyProxyButton = ( JToggleButton )mainToolbar.add( new JToggleButton( new ApplyProxyButtonAction() ) );
 		ProxyUtils.setProxyEnabled( getSettings().getBoolean( ProxySettings.ENABLE_PROXY ) );
 		if( ProxyUtils.isProxyEnabled() )
 		{
 			applyProxyButton.setIcon( UISupport.createImageIcon( PROXY_ENABLED_ICON ) );
+			applyProxyButton.setSelected( true );
 			ProxyUtils.setProxyEnabled( true );
 		}
 		else

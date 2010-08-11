@@ -15,6 +15,7 @@ package com.eviware.soapui.support.components;
 import java.awt.Component;
 import java.awt.Dimension;
 
+import javax.swing.AbstractButton;
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -41,7 +42,7 @@ public class JXToolBar extends JToolBar
 
 	public Component add( Component component )
 	{
-		if( !( component instanceof JButton ) )
+		if( !( component instanceof AbstractButton ) )
 			UISupport.setPreferredHeight( component, 18 );
 
 		return super.add( component );

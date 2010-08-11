@@ -42,6 +42,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
+import javax.swing.JToggleButton;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -519,7 +520,7 @@ public class SoapMonitor extends JPanel
 				SoapUI.getSettings().setString( ProxySettings.PORT, String.valueOf( localPort ) );
 				SoapUI.getSettings().setBoolean( ProxySettings.ENABLE_PROXY, true );
 				ProxyUtils.setProxyEnabled( true );
-				JButton applyProxyButton = ( JButton )SoapUI.getApplyProxyButton();
+				JToggleButton applyProxyButton = ( JToggleButton )SoapUI.getApplyProxyButton();
 				if( applyProxyButton != null )
 					applyProxyButton.setIcon( UISupport.createImageIcon( SoapUI.PROXY_ENABLED_ICON ) );
 			}
@@ -572,7 +573,7 @@ public class SoapMonitor extends JPanel
 			SoapUI.getSettings().setString( ProxySettings.PORT, oldProxyPort );
 			SoapUI.getSettings().setBoolean( ProxySettings.ENABLE_PROXY, oldProxyEnabled );
 			ProxyUtils.setProxyEnabled( oldProxyEnabled );
-			JButton applyProxyButton = ( JButton )SoapUI.getApplyProxyButton();
+			JToggleButton applyProxyButton = ( JToggleButton )SoapUI.getApplyProxyButton();
 			if( applyProxyButton != null )
 			{
 				if( oldProxyEnabled )
