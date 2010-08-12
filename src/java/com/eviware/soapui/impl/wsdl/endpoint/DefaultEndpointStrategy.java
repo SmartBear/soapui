@@ -60,6 +60,7 @@ public class DefaultEndpointStrategy implements EndpointStrategy, PropertyExpans
 	private Map<String, EndpointDefaults> defaults = new HashMap<String, EndpointDefaults>();
 	private PropertyChangeListener propertyChangeListener = new InternalPropertyChangeListener();
 	private ProjectListener projectListener = new InternalProjectListener();
+	private DefaultEndpointStrategyConfigurationPanel configurationPanel;
 
 	public void init( Project project )
 	{
@@ -338,6 +339,9 @@ public class DefaultEndpointStrategy implements EndpointStrategy, PropertyExpans
 		{
 			iface.removePropertyChangeListener( AbstractInterface.ENDPOINT_PROPERTY, propertyChangeListener );
 		}
+
+		if( configurationPanel != null )
+			configurationPanel.release();
 	}
 
 	private class InternalProjectListener extends ProjectListenerAdapter
@@ -579,7 +583,8 @@ public class DefaultEndpointStrategy implements EndpointStrategy, PropertyExpans
 
 	public JComponent getConfigurationPanel( Interface iface )
 	{
-		return new DefaultEndpointStrategyConfigurationPanel( iface, this );
+		configurationPanel = new DefaultEndpointStrategyConfigurationPanel( iface, this );
+		return configurationPanel;
 	}
 
 	public void afterRequest( SubmitContext context, Response response )
