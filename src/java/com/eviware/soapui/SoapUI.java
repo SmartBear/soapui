@@ -340,12 +340,7 @@ public class SoapUI
 
 		if( StringUtils.hasContent( text ) )
 		{
-			// Tools.openURL( "http://www.google.com/search?q=site:eviware.com+" +
-			// URLEncoder.encode( text.trim() )
-			// + "&hl=en&tbs=clue:1&tbo=1" );
-
-			Tools.openURL( "http://www.eviware.com/forums/index.php?action=search2&search="
-					+ URLEncoder.encode( text.trim() ) );
+			Tools.openURL( "http://www.eviware.com/forums/search.php?keywords=" + URLEncoder.encode( text.trim() ) );
 		}
 		else
 		{
