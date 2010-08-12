@@ -562,7 +562,7 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 
 		Status status = submit.getStatus();
 		HttpResponse response = ( HttpResponse )submit.getResponse();
-		if( status == Status.FINISHED )
+		if( status == Status.FINISHED || status == Status.ERROR )
 		{
 			request.setResponse( response, context );
 		}
@@ -744,7 +744,7 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 		}
 	}
 
-	public void focusResponseInTabbedView(boolean respFocus)
+	public void focusResponseInTabbedView( boolean respFocus )
 	{
 		showTabbedView( respFocus );
 		getResponseEditor().selectView( 2 );

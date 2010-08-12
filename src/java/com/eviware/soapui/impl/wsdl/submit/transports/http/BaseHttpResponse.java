@@ -175,8 +175,14 @@ public abstract class BaseHttpResponse implements HttpResponse
 
 			if( !httpMethod.isFailed() )
 			{
-				rawResponse.write( String.valueOf( httpMethod.getStatusLine() ).getBytes() );
-				rawResponse.write( "\r\n".getBytes() );
+				try
+				{
+					rawResponse.write( String.valueOf( httpMethod.getStatusLine() ).getBytes() );
+					rawResponse.write( "\r\n".getBytes() );
+				}
+				catch( Throwable e )
+				{
+				}
 			}
 
 			rawRequest.write( ( method + " " + String.valueOf( url ) + " " + version + "\r\n" ).getBytes() );
@@ -215,7 +221,7 @@ public abstract class BaseHttpResponse implements HttpResponse
 					tempOut.writeTo( rawRequest );
 				}
 				else
-					rawResponse.write( "<request data not available>".getBytes() );
+					rawRequest.write( "<request data not available>".getBytes() );
 			}
 
 			if( !httpMethod.isFailed() )

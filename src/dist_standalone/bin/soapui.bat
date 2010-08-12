@@ -32,7 +32,6 @@ if "%SOAPUI_HOME%" == "" goto START
     set JAVA_OPTS=%JAVA_OPTS% -Dsoapui.ext.actions="%SOAPUI_HOME%actions"
 	set JAVA_OPTS=%JAVA_OPTS% -Djava.library.path="%SOAPUI_HOME%\"
 	set JAVA_OPTS=%JAVA_OPTS% -Dwsi.dir="%SOAPUI_HOME%..\wsi-test-tools"
-    set JAVA_OPTS=%JAVA_OPTS% -DGRE_HOME="%SOAPUI_HOME%..\xulrunner-windows"
 rem uncomment to disable browser component
 rem    set JAVA_OPTS=%JAVA_OPTS% -Dsoapui.jxbrowser.disable="true"
 

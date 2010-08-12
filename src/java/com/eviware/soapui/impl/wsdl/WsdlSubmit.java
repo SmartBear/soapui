@@ -20,6 +20,7 @@ import org.apache.log4j.Logger;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
 import com.eviware.soapui.impl.wsdl.submit.RequestTransport;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransport;
 import com.eviware.soapui.model.iface.Response;
 import com.eviware.soapui.model.iface.Submit;
 import com.eviware.soapui.model.iface.SubmitContext;
@@ -138,6 +139,8 @@ public final class WsdlSubmit<T extends AbstractHttpRequestInterface<?>> impleme
 			status = Status.ERROR;
 			logger.error( "Exception in request: " + e1 );
 			SoapUI.logError( e1 );
+			if( response == null )
+				response = ( Response )submitContext.getProperty( BaseHttpRequestTransport.RESPONSE );
 		}
 		finally
 		{

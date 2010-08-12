@@ -20,7 +20,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,8 +69,7 @@ import com.eviware.soapui.support.xml.actions.SaveXmlTextAreaAction;
  * @author ole.matzura
  */
 
-public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorView<XmlDocument> implements
-		PropertyChangeListener
+public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorView<XmlDocument>
 {
 	private JXEditTextArea editArea;
 	private ValidateMessageXmlAction validateXmlAction;
@@ -89,7 +87,7 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
 	private LineNumbersPanel lineNumbersPanel;
 	private JCheckBoxMenuItem toggleLineNumbersMenuItem;
 	private PreviewCorner previewCorner;
-	private final T modelItem;
+	private T modelItem;
 	private InsertBase64FileTextAreaAction insertBase64FileTextAreaAction;
 
 	public XmlSourceEditorView( XmlEditor<XmlDocument> xmlEditor, T modelItem )
@@ -239,6 +237,7 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
 		super.release();
 		inputPopup.removeAll();
 		previewCorner.release();
+		modelItem = null;
 	}
 
 	private final static class ValidationListMouseAdapter extends MouseAdapter
