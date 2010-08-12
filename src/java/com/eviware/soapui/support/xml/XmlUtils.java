@@ -325,6 +325,9 @@ public final class XmlUtils
 
 	static public String getNodeValue( Node node )
 	{
+		if( node == null )
+			return null;
+
 		if( node.getNodeType() == Node.ELEMENT_NODE )
 			return getElementText( ( Element )node );
 		else if( node.getNodeType() == Node.DOCUMENT_FRAGMENT_NODE )
