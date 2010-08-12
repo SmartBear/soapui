@@ -71,7 +71,6 @@ import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.support.MessageExchangeModelItem;
 import com.eviware.soapui.impl.wsdl.support.MessageExchangeRequestMessageEditor;
 import com.eviware.soapui.impl.wsdl.support.MessageExchangeResponseMessageEditor;
-import com.eviware.soapui.impl.wsdl.support.http.ProxyUtils;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequest;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
@@ -519,7 +518,7 @@ public class SoapMonitor extends JPanel
 				SoapUI.getSettings().setString( ProxySettings.HOST, "127.0.0.1" );
 				SoapUI.getSettings().setString( ProxySettings.PORT, String.valueOf( localPort ) );
 				SoapUI.getSettings().setBoolean( ProxySettings.ENABLE_PROXY, true );
-				ProxyUtils.setProxyEnabled( true );
+				SoapUI.setProxyEnabled( true );
 				JToggleButton applyProxyButton = ( JToggleButton )SoapUI.getApplyProxyButton();
 				if( applyProxyButton != null )
 					applyProxyButton.setIcon( UISupport.createImageIcon( SoapUI.PROXY_ENABLED_ICON ) );
@@ -572,7 +571,7 @@ public class SoapMonitor extends JPanel
 			SoapUI.getSettings().setString( ProxySettings.HOST, oldProxyHost );
 			SoapUI.getSettings().setString( ProxySettings.PORT, oldProxyPort );
 			SoapUI.getSettings().setBoolean( ProxySettings.ENABLE_PROXY, oldProxyEnabled );
-			ProxyUtils.setProxyEnabled( oldProxyEnabled );
+			SoapUI.setProxyEnabled( oldProxyEnabled );
 			JToggleButton applyProxyButton = ( JToggleButton )SoapUI.getApplyProxyButton();
 			if( applyProxyButton != null )
 			{

@@ -21,6 +21,7 @@ public class CaptureInputStream extends FilterInputStream
 {
 	private final ByteArrayOutputStream capture = new ByteArrayOutputStream();
 	private long maxData = 0;
+	private boolean inCapture;
 
 	public CaptureInputStream( InputStream in, long maxData )
 	{
@@ -36,42 +37,80 @@ public class CaptureInputStream extends FilterInputStream
 	@Override
 	public int read() throws IOException
 	{
-		int i = super.read();
-		if( maxData > 0 && capture.size() < maxData )
-			capture.write( i );
-
-		return i;
+		if( inCapture )
+		{
+			return super.read();
+		}
+		else
+		{
+			inCapture = true;
+			int i = super.read();
+			if( i != -1 && ( maxData == 0 || capture.size() < maxData ) )
+				capture.write( i );
+			inCapture = false;
+			return i;
+		}
 	}
 
 	@Override
 	public int read( byte[] b ) throws IOException
 	{
-		int i = super.read( b );
-
-		if( i > 0 && maxData > 0 && capture.size() < maxData )
+		if( inCapture )
 		{
-			if( i + capture.size() < maxData )
-				capture.write( b, 0, i );
-			else
-				capture.write( b, 0, ( int )( maxData - capture.size() ) );
+			return super.read( b );
 		}
-
-		return i;
+		else
+		{
+			inCapture = true;
+			int i = super.read( b );
+			if( i > 0 )
+			{
+				if( maxData == 0 )
+				{
+					capture.write( b, 0, i );
+				}
+				else if( i > 0 && maxData > 0 && capture.size() < maxData )
+				{
+					if( i + capture.size() < maxData )
+						capture.write( b, 0, i );
+					else
+						capture.write( b, 0, ( int )( maxData - capture.size() ) );
+				}
+			}
+			inCapture = false;
+			return i;
+		}
 	}
 
 	@Override
 	public int read( byte[] b, int off, int len ) throws IOException
 	{
-		int i = super.read( b, off, len );
-		if( i > 0 && maxData > 0 && capture.size() < maxData )
+		if( inCapture )
 		{
-			if( i + capture.size() < maxData )
-				capture.write( b, off, i );
-			else
-				capture.write( b, off, ( int )( maxData - capture.size() ) );
+			return super.read( b, off, len );
 		}
+		else
+		{
+			inCapture = true;
+			int i = super.read( b, off, len );
+			if( i > 0 )
+			{
+				if( maxData == 0 )
+				{
+					capture.write( b, off, i );
+				}
+				else if( i > 0 && maxData > 0 && capture.size() < maxData )
+				{
+					if( i + capture.size() < maxData )
+						capture.write( b, off, i );
+					else
+						capture.write( b, off, ( int )( maxData - capture.size() ) );
+				}
+				inCapture = false;
+			}
 
-		return i;
+			return i;
+		}
 	}
 
 	public byte[] getCapturedData()

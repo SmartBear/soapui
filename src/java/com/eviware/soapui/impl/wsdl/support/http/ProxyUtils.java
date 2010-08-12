@@ -46,8 +46,7 @@ public class ProxyUtils
 	public static HostConfiguration initProxySettings( Settings settings, HttpState httpState,
 			HostConfiguration hostConfiguration, String urlString, PropertyExpansionContext context )
 	{
-		boolean enabled = Boolean.getBoolean( PropertyExpander.expandProperties( context,
-				settings.getString( ProxySettings.ENABLE_PROXY, String.valueOf( proxyEnabled ) ) ).toLowerCase() );
+		boolean enabled = proxyEnabled;
 
 		// check system properties first
 		String proxyHost = System.getProperty( "http.proxyHost" );

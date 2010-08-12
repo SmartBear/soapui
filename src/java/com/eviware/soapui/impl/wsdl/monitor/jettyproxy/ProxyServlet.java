@@ -292,12 +292,20 @@ public class ProxyServlet implements Servlet
 
 	private byte[] getRequestToBytes( String footer, ExtendedHttpMethod postMethod, CaptureInputStream capture )
 	{
-		String request = footer.trim();
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
 
-		request += "\r\n\r\n";
-		request += new String( capture.getCapturedData() );
+		try
+		{
+			out.write( footer.trim().getBytes() );
+			out.write( "\r\n\r\n".getBytes() );
+			out.write( capture.getCapturedData() );
+		}
+		catch( IOException e )
+		{
+			e.printStackTrace();
+		}
 
-		return request.getBytes();
+		return out.toByteArray();
 	}
 
 }

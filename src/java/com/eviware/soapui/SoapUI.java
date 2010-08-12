@@ -1659,4 +1659,14 @@ public class SoapUI
 		SoapUI.launchedTestRunner = launchedTestRunner;
 	}
 
+	public static void setProxyEnabled( boolean proxyEnabled )
+	{
+		if( applyProxyButton != null )
+		{
+			applyProxyButton.setSelected( proxyEnabled );
+		}
+
+		ProxyUtils.setProxyEnabled( proxyEnabled );
+	}
+
 }
