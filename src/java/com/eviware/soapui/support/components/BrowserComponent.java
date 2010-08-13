@@ -113,10 +113,14 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 	private static Map<BrowserComponent, Map<String, RecordedRequest>> browserRecordingMap = new HashMap<BrowserComponent, Map<String, RecordedRequest>>();
 	private final boolean addStatusBar;
 
+	static
+	{
+		initialize();
+	}
+
 	public BrowserComponent( boolean addToolbar, boolean addStatusBar )
 	{
 		this.addStatusBar = addStatusBar;
-		initialize();
 	}
 
 	public synchronized static void initialize()
@@ -191,6 +195,7 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 		return panel;
 	}
 
+	@SuppressWarnings( "unused" )
 	private Component buildToolbar()
 	{
 		JXToolBar toolbar = UISupport.createToolbar();
