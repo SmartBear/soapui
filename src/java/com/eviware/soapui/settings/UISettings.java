@@ -30,6 +30,9 @@ public interface UISettings
 	@Setting( name = "Order Projects", description = "(orders projects alphabetically in tree)", type = SettingType.BOOLEAN )
 	public final static String ORDER_PROJECTS = UISettings.class.getSimpleName() + "@order-projects";
 
+	@Setting( name = "Order Services", description = "(orders services alphabetically in tree)", type = SettingType.BOOLEAN )
+	public final static String ORDER_SERVICES = UISettings.class.getSimpleName() + "@order-services";
+
 	@Setting( name = "Order Requests", description = "(orders Requests alphabetically in tree)", type = SettingType.BOOLEAN )
 	public final static String ORDER_REQUESTS = UISettings.class.getSimpleName() + "@order-requests";
 
@@ -62,7 +65,6 @@ public interface UISettings
 	@Setting( name = "Native LF", description = "(use native Look & Feel - requires restart)", type = SettingType.BOOLEAN )
 	public static final String NATIVE_LAF = UISettings.class.getSimpleName() + "@native-laf";
 
-	public final static String ORDER_INTERFACES = UISettings.class.getSimpleName() + "@order-interfaces";
 	public final static String NO_RESIZE_REQUEST_EDITOR = UISettings.class.getSimpleName() + "@no_resize_request_editor";
 	public final static String START_WITH_REQUEST_TABS = UISettings.class.getSimpleName() + "@start_with_request_tabs";
 	public final static String AUTO_VALIDATE_REQUEST = UISettings.class.getSimpleName() + "@auto_validate_request";

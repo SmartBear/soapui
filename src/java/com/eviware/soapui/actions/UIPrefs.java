@@ -36,6 +36,7 @@ public class UIPrefs implements Prefs
 {
 	public static final String CLOSE_PROJECTS = "Close Projects";
 	public static final String ORDER_PROJECTS = "Order Projects";
+	public static final String ORDER_SERVICES = "Order Services";
 	public static final String ORDER_REQUESTS = "Order Requests";
 	public static final String SHOW_DESCRIPTIONS = "Show Descriptions";
 	public static final String CREATE_BACKUP = "Create Backup";
@@ -78,6 +79,7 @@ public class UIPrefs implements Prefs
 			editorForm.appendCheckBox( CLOSE_PROJECTS, "Close all projects on startup", false );
 			editorForm.appendSeparator();
 			editorForm.appendCheckBox( ORDER_PROJECTS, "Order Projects alphabetically in tree", false );
+			editorForm.appendCheckBox( ORDER_SERVICES, "Order Services alphabetically in tree", false );
 			editorForm.appendCheckBox( ORDER_REQUESTS, "Order Requests alphabetically in tree", false );
 			editorForm.appendCheckBox( SHOW_DESCRIPTIONS, "Show description content when available", false );
 			editorForm.appendSeparator();
@@ -141,6 +143,7 @@ public class UIPrefs implements Prefs
 	{
 		settings.setBoolean( UISettings.CLOSE_PROJECTS, values.getBoolean( CLOSE_PROJECTS ) );
 		settings.setBoolean( UISettings.ORDER_PROJECTS, values.getBoolean( ORDER_PROJECTS ) );
+		settings.setBoolean( UISettings.ORDER_SERVICES, values.getBoolean( ORDER_SERVICES ) );
 		settings.setBoolean( UISettings.ORDER_REQUESTS, values.getBoolean( ORDER_REQUESTS ) );
 		settings.setBoolean( UISettings.SHOW_DESCRIPTIONS, values.getBoolean( SHOW_DESCRIPTIONS ) );
 		settings.setBoolean( UISettings.CREATE_BACKUP, values.getBoolean( CREATE_BACKUP ) );
@@ -186,6 +189,7 @@ public class UIPrefs implements Prefs
 		StringToStringMap values = new StringToStringMap();
 		values.put( CLOSE_PROJECTS, settings.getBoolean( UISettings.CLOSE_PROJECTS ) );
 		values.put( ORDER_PROJECTS, settings.getBoolean( UISettings.ORDER_PROJECTS ) );
+		values.put( ORDER_SERVICES, settings.getBoolean( UISettings.ORDER_SERVICES ) );
 		values.put( ORDER_REQUESTS, settings.getBoolean( UISettings.ORDER_REQUESTS ) );
 		values.put( SHOW_DESCRIPTIONS, settings.getBoolean( UISettings.SHOW_DESCRIPTIONS ) );
 		values.put( CREATE_BACKUP, settings.getBoolean( UISettings.CREATE_BACKUP ) );

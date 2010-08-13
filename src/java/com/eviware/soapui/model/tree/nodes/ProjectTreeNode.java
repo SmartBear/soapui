@@ -22,6 +22,7 @@ import com.eviware.soapui.model.support.ProjectListenerAdapter;
 import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.model.tree.AbstractModelItemTreeNode;
 import com.eviware.soapui.model.tree.SoapUITreeNode;
+import com.eviware.soapui.settings.UISettings;
 
 /**
  * SoapUITreeNode for Project implementations
@@ -62,6 +63,8 @@ public class ProjectTreeNode extends AbstractModelItemTreeNode<Project>
 		{
 			mockServiceNodes.add( new MockServiceTreeNode( project.getMockServiceAt( c ), getTreeModel() ) );
 		}
+
+		initOrdering( interfaceNodes, UISettings.ORDER_SERVICES );
 
 		getTreeModel().mapModelItems( interfaceNodes );
 		getTreeModel().mapModelItems( testSuiteNodes );
@@ -153,6 +156,7 @@ public class ProjectTreeNode extends AbstractModelItemTreeNode<Project>
 		{
 			InterfaceTreeNode interfaceTreeNode = new InterfaceTreeNode( iface, getTreeModel() );
 			interfaceNodes.add( interfaceTreeNode );
+			reorder( false );
 			getTreeModel().notifyNodeInserted( interfaceTreeNode );
 		}
 
