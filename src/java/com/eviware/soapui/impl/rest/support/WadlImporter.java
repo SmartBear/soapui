@@ -251,11 +251,26 @@ public class WadlImporter
 
 	private RestMethod initMethod( RestResource newResource, Method method )
 	{
-		String name = method.getName();
+		// build name
+		String name = getFirstTitle( method.getDocList(), method.getName() );
 		if( StringUtils.hasContent( method.getId() ) )
 			name += " - " + method.getId();
 
-		RestMethod restMethod = newResource.addNewMethod( getFirstTitle( method.getDocList(), name ) );
+		// ensure unique name
+		if( newResource.getRestMethodByName( name ) != null )
+		{
+			int cnt = 0;
+			String orgName = name;
+
+			while( newResource.getRestMethodByName( name ) != null )
+			{
+				cnt++ ;
+				name = orgName + "-" + cnt;
+			}
+		}
+
+		// add to resource
+		RestMethod restMethod = newResource.addNewMethod( name );
 		restMethod.setMethod( RestRequestInterface.RequestMethod.valueOf( method.getName() ) );
 
 		if( method.getRequest() != null )

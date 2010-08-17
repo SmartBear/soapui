@@ -138,7 +138,7 @@ public class HttpRequestFilter extends AbstractRequestFilter
 
 				break;
 			case TEMPLATE :
-				path = path.replaceAll( "\\{" + param.getName() + "\\}", value );
+				path = path.replaceAll( "\\{" + param.getName() + "\\}", value == null ? "" : value );
 				break;
 			case MATRIX :
 				if( param.getType().equals( XmlBoolean.type.getName() ) )
