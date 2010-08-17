@@ -69,7 +69,7 @@ public class HttpClientSupport
 			}
 			catch( Throwable e )
 			{
-				SoapUI.logError( e );
+				SoapUI.log( e );
 			}
 
 			Settings settings = SoapUI.getSettings();
