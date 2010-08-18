@@ -38,6 +38,7 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
+import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder.ParameterStyle;
 import com.eviware.soapui.impl.support.http.HttpRequestInterface;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransport;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.AttachmentDataSource;
@@ -85,7 +86,7 @@ public class HttpRequestFilter extends AbstractRequestFilter
 			String value = PropertyExpander.expandProperties( context, param.getValue() );
 			responseProperties.put( param.getName(), value );
 
-			if( value != null /* && formMp == null */&& !param.isDisableUrlEncoding() )
+			if( value != null && param.getStyle() != ParameterStyle.HEADER && !param.isDisableUrlEncoding() )
 			{
 				try
 				{
