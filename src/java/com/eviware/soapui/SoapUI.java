@@ -164,8 +164,8 @@ public class SoapUI
 	public static final String SOAPUI_TITLE = "/com/eviware/soapui/resources/branded/branded.properties";
 	private static final int DEFAULT_DESKTOP_ACTIONS_COUNT = 3;
 	public static final String BUILDINFO_RESOURCE = "/com/eviware/soapui/resources/conf/buildinfo.txt";
-	public static final String PROXY_ENABLED_ICON = "/proxyDisabled.png";
-	public static final String PROXY_DISABLED_ICON = "/proxyEnabled.png";
+	public static final String PROXY_ENABLED_ICON = "/proxyEnabled.png";
+	public static final String PROXY_DISABLED_ICON = "/proxyDisabled.png";
 
 	@SuppressWarnings( "deprecation" )
 	public static String PUSH_PAGE_URL = "http://www.soapui.org/appindex/soapui_starterpage.php?version="
