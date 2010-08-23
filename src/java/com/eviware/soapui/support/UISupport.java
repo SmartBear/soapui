@@ -109,6 +109,7 @@ public class UISupport
 	private static Map<String, ImageIcon> iconCache = new HashMap<String, ImageIcon>();
 	public static Dimension TOOLBAR_BUTTON_DIMENSION;
 	private static Boolean isWindows;
+	private static Boolean isMac;
 
 	private static XDialogs dialogs;
 	private static XFileDialogs fileDialogs;
@@ -648,6 +649,14 @@ public class UISupport
 			isWindows = new Boolean( System.getProperty( "os.name" ).indexOf( "Windows" ) >= 0 );
 
 		return isWindows.booleanValue();
+	}
+
+	public static boolean isMac()
+	{
+		if( isMac == null )
+			isMac = new Boolean( System.getProperty( "os.name" ).indexOf( "Mac" ) >= 0 );
+
+		return isMac.booleanValue();
 	}
 
 	public static void setHourglassCursor()
