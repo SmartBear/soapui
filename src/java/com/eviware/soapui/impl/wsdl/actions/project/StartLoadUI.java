@@ -26,7 +26,11 @@ public class StartLoadUI extends AbstractSoapUIAction<WsdlProject>
 	private static final String SH = ".sh";
 	private static final String BAT = ".bat";
 	private static final String COMMAND = ".command";
+	private static final String LOADUI_LAUNCH_EXTENSION = ( UISupport.isWindows() ? BAT : UISupport.isMac() ? COMMAND
+			: SH );
 	private static final String LOADUI = "loadUI";
+	private static final String LOADUI_LAUNCH_PATH = SoapUI.getSettings().getString( LoadUISettings.LOADUI_PATH, "" )
+			+ File.separator + LOADUI + LOADUI_LAUNCH_EXTENSION;
 	public static final String SOAPUI_ACTION_ID = "StartLoadUI";
 	public static final String LOADUI_LAUNCH_TITLE = "Launch loadUI";
 	public static final String LOADUI_LAUNCH_QUESTION = "For this action you have to launch loadUI. Launch it now?";
@@ -38,15 +42,13 @@ public class StartLoadUI extends AbstractSoapUIAction<WsdlProject>
 
 	public void perform( WsdlProject project, Object param )
 	{
-		String loadUIBatPath = SoapUI.getSettings().getString( LoadUISettings.LOADUI_PATH, "" ) + File.separator + LOADUI
-				+ ( UISupport.isWindows() ? BAT : SH );
+		String loadUIBatPath = LOADUI_LAUNCH_PATH;
 		startLoadUI( loadUIBatPath );
 	}
 
 	public static void launchLoadUI()
 	{
-		String loadUIBatPath = SoapUI.getSettings().getString( LoadUISettings.LOADUI_PATH, "" ) + File.separator + LOADUI
-				+ ( UISupport.isWindows() ? BAT : UISupport.isMac() ? COMMAND : SH );
+		String loadUIBatPath = LOADUI_LAUNCH_PATH;
 		startLoadUI( loadUIBatPath );
 	}
 
@@ -65,18 +67,16 @@ public class StartLoadUI extends AbstractSoapUIAction<WsdlProject>
 			}
 		}
 
-		String extension = ( UISupport.isWindows() ? BAT : SH );
 		try
 		{
 			while( !( new File( loadUIbatPath ) ).exists() )
 			{
-				UISupport.showInfoMessage( "No loadUI" + extension + " in this path!" );
+				UISupport.showInfoMessage( "No loadUI" + LOADUI_LAUNCH_EXTENSION + " in this path!" );
 				if( UISupport.getMainFrame() != null )
 				{
 					if( SoapUIPreferencesAction.getInstance().show( SoapUIPreferencesAction.LOADUI_SETTINGS ) )
 					{
-						loadUIbatPath = SoapUI.getSettings().getString( LoadUISettings.LOADUI_PATH, "" ) + File.separator
-								+ LOADUI + ( UISupport.isWindows() ? BAT : SH );
+						loadUIbatPath = LOADUI_LAUNCH_PATH;
 					}
 					else
 					{
@@ -84,10 +84,12 @@ public class StartLoadUI extends AbstractSoapUIAction<WsdlProject>
 					}
 				}
 			}
-			String[] commandsWin = new String[] { "cmd.exe", "/c", LOADUI + extension };
-			String[] commandsLinux = new String[] { "sh", LOADUI + extension };
+			String[] commandsWin = new String[] { "cmd.exe", "/c", LOADUI + LOADUI_LAUNCH_EXTENSION };
+			String[] commandsLinux = new String[] { "sh", LOADUI + LOADUI_LAUNCH_EXTENSION };
+			String[] commandsMac = new String[] { "sh", LOADUI + LOADUI_LAUNCH_EXTENSION };
 
-			ProcessBuilder pb = new ProcessBuilder( UISupport.isWindows() ? commandsWin : commandsLinux );
+			ProcessBuilder pb = new ProcessBuilder( UISupport.isWindows() ? commandsWin : UISupport.isMac() ? commandsMac
+					: commandsLinux );
 			pb.directory( new File( SoapUI.getSettings().getString( LoadUISettings.LOADUI_PATH, "" ) ) );
 			Process p = pb.start();
 		}
