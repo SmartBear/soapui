@@ -65,7 +65,7 @@ public class RunTestCaseWithLoadUIAction extends AbstractSoapUIAction<WsdlTestCa
 				dialog.setOptions( Form.TESTCASE, IntegrationUtils.getAvailableTestCases( newValue ) );
 				if( dialog.getValue( Form.TESTCASE ).equals( IntegrationUtils.CREATE_ON_PROJECT_LEVEL ) )
 				{
-					dialog.setOptions( Form.SOAPUISAMPLER, IntegrationUtils.getAvailableSamplers( newValue,
+					dialog.setOptions( Form.SOAPUIRUNNER, IntegrationUtils.getAvailableSamplers( newValue,
 							IntegrationUtils.CREATE_ON_PROJECT_LEVEL ) );
 				}
 			}
@@ -77,11 +77,11 @@ public class RunTestCaseWithLoadUIAction extends AbstractSoapUIAction<WsdlTestCa
 			{
 				if( newValue.equals( IntegrationUtils.CREATE_NEW_OPTION ) )
 				{
-					dialog.setOptions( Form.SOAPUISAMPLER, new String[] { IntegrationUtils.CREATE_NEW_OPTION } );
+					dialog.setOptions( Form.SOAPUIRUNNER, new String[] { IntegrationUtils.CREATE_NEW_OPTION } );
 				}
 				else
 				{
-					dialog.setOptions( Form.SOAPUISAMPLER, IntegrationUtils.getAvailableSamplers( dialog
+					dialog.setOptions( Form.SOAPUIRUNNER, IntegrationUtils.getAvailableSamplers( dialog
 							.getValue( Form.PROJECT ), newValue ) );
 				}
 			}
@@ -102,15 +102,15 @@ public class RunTestCaseWithLoadUIAction extends AbstractSoapUIAction<WsdlTestCa
 			dialog.setValue( Form.TESTCASE, IntegrationUtils.CREATE_ON_PROJECT_LEVEL );
 		}
 
-		dialog.setOptions( Form.SOAPUISAMPLER, IntegrationUtils.getAvailableSamplers( dialog.getValue( Form.PROJECT ),
+		dialog.setOptions( Form.SOAPUIRUNNER, IntegrationUtils.getAvailableSamplers( dialog.getValue( Form.PROJECT ),
 				dialog.getValue( Form.TESTCASE ) ) );
-		dialog.setValue( Form.SOAPUISAMPLER, IntegrationUtils.CREATE_NEW_OPTION );
+		dialog.setValue( Form.SOAPUIRUNNER, IntegrationUtils.CREATE_NEW_OPTION );
 		if( dialog.show() )
 		{
 			String targetProjectString = dialog.getValue( Form.PROJECT );
 			String targetTestCaseName = !dialog.getValue( Form.TESTCASE )
 					.equals( IntegrationUtils.CREATE_ON_PROJECT_LEVEL ) ? dialog.getValue( Form.TESTCASE ) : null;
-			String targetSamplerName = dialog.getValue( Form.SOAPUISAMPLER );
+			String targetSamplerName = dialog.getValue( Form.SOAPUIRUNNER );
 			if( dialog.getReturnValue() == XFormDialog.OK_OPTION )
 			{
 				String openedProjectName = IntegrationUtils.getOpenedProjectName();
@@ -138,7 +138,7 @@ public class RunTestCaseWithLoadUIAction extends AbstractSoapUIAction<WsdlTestCa
 				}
 				if( createdSamplerSettings != null )
 				{
-					String creationInfo = "SoapUISampler created under project: '"
+					String creationInfo = "SoapUI Runner created under project: '"
 							+ createdSamplerSettings.get( ContextMapping.LOADUI_PROJECT_NAME ) + "'";
 					if( targetTestCaseName != null && !targetTestCaseName.equals( IntegrationUtils.CREATE_ON_PROJECT_LEVEL ) )
 					{
@@ -161,8 +161,8 @@ public class RunTestCaseWithLoadUIAction extends AbstractSoapUIAction<WsdlTestCa
 		@AField( name = "Target TestCase", description = "The name of the target TestCase in loadUI", type = AFieldType.ENUMERATION )
 		public final static String TESTCASE = "Target TestCase";
 
-		@AField( name = "Target SoapUISampler", description = "The target SoapUISampler in loadUI", type = AFieldType.ENUMERATION )
-		public final static String SOAPUISAMPLER = "Target SoapUISampler";
+		@AField( name = "Target SoapUI Runner", description = "The target SoapUI Runner in loadUI", type = AFieldType.ENUMERATION )
+		public final static String SOAPUIRUNNER = "Target SoapUI Runner";
 
 	}
 
