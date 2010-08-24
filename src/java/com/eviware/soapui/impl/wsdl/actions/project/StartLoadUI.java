@@ -48,11 +48,11 @@ public class StartLoadUI extends AbstractSoapUIAction<WsdlProject>
 
 	public static void launchLoadUI()
 	{
-		String loadUIBatPath = LOADUI_LAUNCH_PATH;
-		startLoadUI( loadUIBatPath );
+		String loadUILaunchPath = LOADUI_LAUNCH_PATH;
+		startLoadUI( loadUILaunchPath );
 	}
 
-	private static void startLoadUI( String loadUIbatPath )
+	private static void startLoadUI( String loadUILaunchPath )
 	{
 		if( CajoClient.getInstance().testConnection() )
 		{
@@ -69,14 +69,14 @@ public class StartLoadUI extends AbstractSoapUIAction<WsdlProject>
 
 		try
 		{
-			while( !( new File( loadUIbatPath ) ).exists() )
+			while( !( new File( loadUILaunchPath ) ).exists() )
 			{
-				UISupport.showInfoMessage( "No loadUI" + LOADUI_LAUNCH_EXTENSION + " in this path!" );
+				UISupport.showInfoMessage( "No loadUI" + LOADUI_LAUNCH_EXTENSION + " in path:\"" + loadUILaunchPath + "\"" );
 				if( UISupport.getMainFrame() != null )
 				{
 					if( SoapUIPreferencesAction.getInstance().show( SoapUIPreferencesAction.LOADUI_SETTINGS ) )
 					{
-						loadUIbatPath = LOADUI_LAUNCH_PATH;
+						loadUILaunchPath = LOADUI_LAUNCH_PATH;
 					}
 					else
 					{
