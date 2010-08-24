@@ -42,7 +42,6 @@ import com.eviware.soapui.config.LoadTestLimitTypesConfig;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.actions.loadtest.ConvertToLoadUIAction;
 import com.eviware.soapui.impl.wsdl.actions.loadtest.LoadTestOptionsAction;
-import com.eviware.soapui.impl.wsdl.actions.testcase.RunWithLoadUIAction;
 import com.eviware.soapui.impl.wsdl.loadtest.WsdlLoadTest;
 import com.eviware.soapui.impl.wsdl.loadtest.WsdlLoadTestRunner;
 import com.eviware.soapui.impl.wsdl.loadtest.data.actions.ExportStatisticsAction;
