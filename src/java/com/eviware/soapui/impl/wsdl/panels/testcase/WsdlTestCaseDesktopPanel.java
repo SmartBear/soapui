@@ -46,7 +46,7 @@ import com.eviware.soapui.config.TestStepConfig;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.actions.testcase.AddNewLoadTestAction;
-import com.eviware.soapui.impl.wsdl.actions.testcase.RunWithLoadUIAction;
+import com.eviware.soapui.impl.wsdl.actions.testcase.RunTestCaseWithLoadUIAction;
 import com.eviware.soapui.impl.wsdl.actions.testcase.TestCaseOptionsAction;
 import com.eviware.soapui.impl.wsdl.panels.support.MockTestRunContext;
 import com.eviware.soapui.impl.wsdl.panels.support.MockTestRunner;
@@ -313,7 +313,7 @@ public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase
 				AddNewLoadTestAction.SOAPUI_ACTION_ID, getModelItem(), null, "/loadTest.gif" ) );
 
 		runWithLoadUIButton = UISupport.createToolbarButton( SwingActionDelegate.createDelegate(
-				RunWithLoadUIAction.SOAPUI_ACTION_ID, getModelItem(), null, "/runTestCaseWithLoadUI.png" ) );
+				RunTestCaseWithLoadUIAction.SOAPUI_ACTION_ID, getModelItem(), null, "/runTestCaseWithLoadUI.png" ) );
 		// convertToLoadUIButton = UISupport.createToolbarButton(
 		// SwingActionDelegate.createDelegate(
 		// ConvertTestCaseLoadTestsToLoadUIAction.SOAPUI_ACTION_ID,

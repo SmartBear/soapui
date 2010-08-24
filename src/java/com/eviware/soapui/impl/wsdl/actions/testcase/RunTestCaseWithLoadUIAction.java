@@ -31,12 +31,12 @@ import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.AField.AFieldType;
 
-public class RunWithLoadUIAction extends AbstractSoapUIAction<WsdlTestCase>
+public class RunTestCaseWithLoadUIAction extends AbstractSoapUIAction<WsdlTestCase>
 {
 	private XFormDialog dialog;
-	public static final String SOAPUI_ACTION_ID = "RunWithLoadUIAction";
+	public static final String SOAPUI_ACTION_ID = "RunTestCaseWithLoadUIAction";
 
-	public RunWithLoadUIAction()
+	public RunTestCaseWithLoadUIAction()
 	{
 		super( "Run with loadUI", "Run this TestCase with loadUI" );
 	}

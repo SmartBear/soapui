@@ -134,7 +134,7 @@
 	<tns:action id="TestCaseTestRunnerAction" actionClass="com.eviware.soapui.impl.wsdl.actions.iface.tools.soapui.TestCaseTestRunnerAction"/>
 	<tns:action id="ToggleDisableTestCaseAction" actionClass="com.eviware.soapui.impl.wsdl.actions.testcase.ToggleDisableTestCaseAction"/>
 	<tns:action id="ExportTestCase" actionClass="com.eviware.soapui.impl.wsdl.actions.testcase.ExportTestCaseAction"/>
-	<tns:action id="RunWithLoadUIAction" actionClass="com.eviware.soapui.impl.wsdl.actions.testcase.RunWithLoadUIAction"/>
+	<tns:action id="RunTestCaseWithLoadUIAction" actionClass="com.eviware.soapui.impl.wsdl.actions.testcase.RunTestCaseWithLoadUIAction"/>
 	<tns:action id="ConvertTestCaseLoadTestsToLoadUIAction" actionClass="com.eviware.soapui.impl.wsdl.actions.testcase.ConvertTestCaseLoadTestsToLoadUIAction"/>
 
 
@@ -472,7 +472,7 @@
 		<tns:actionMapping actionId="SeperatorAction"/>
 		<tns:actionMapping actionId="TestCaseTestRunnerAction"/>
 		<tns:actionMapping actionId="SeperatorAction"/>
-		<tns:actionMapping actionId="RunWithLoadUIAction"/>
+		<tns:actionMapping actionId="RunTestCaseWithLoadUIAction"/>
 		<tns:actionMapping actionId="ConvertTestCaseLoadTestsToLoadUIAction" />
 		<tns:actionMapping actionId="SeperatorAction"/>
 		<tns:actionMapping actionId="SeperatorAction"/>
