@@ -76,4 +76,16 @@ public class StringList extends ArrayList<String>
 		config.setEntryArray( toStringArray() );
 		return config.xmlText();
 	}
+
+	public boolean containsValue( String value )
+	{
+		for( String stringElement : this )
+		{
+			if( stringElement.contains( value ) )
+			{
+				return true;
+			}
+		}
+		return false;
+	}
 }
