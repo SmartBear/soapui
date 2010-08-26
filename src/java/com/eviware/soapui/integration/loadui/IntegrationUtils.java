@@ -70,7 +70,7 @@ public class IntegrationUtils
 		List<String> soapUISamplersNames = new ArrayList<String>();
 		try
 		{
-			soapUISamplersNames = ( List<String> )CajoClient.getInstance().invoke( "getSoapUISamplers",
+			soapUISamplersNames = ( List<String> )CajoClient.getInstance().invoke( "getSoapUIRunners",
 					new String[] { projectName, testCaseName } );
 		}
 		catch( Exception e )
@@ -79,6 +79,22 @@ public class IntegrationUtils
 		}
 
 		return soapUISamplersNames;
+	}
+
+	public static List<String> getMockServiceRunnersNames( String projectName, String testCaseName )
+	{
+		List<String> mockServiceRunnersNames = new ArrayList<String>();
+		try
+		{
+			mockServiceRunnersNames = ( List<String> )CajoClient.getInstance().invoke( "getMockServiceRunners",
+					new String[] { projectName, testCaseName } );
+		}
+		catch( Exception e )
+		{
+			SoapUI.log.error( "Error while invoking cajo server in loadui ", e );
+		}
+
+		return mockServiceRunnersNames;
 	}
 
 	public static boolean isProjectOpened( String projectName )
@@ -134,7 +150,7 @@ public class IntegrationUtils
 		}
 	}
 
-	public static HashMap<String, String> createSoapUISampler( String soapUIProjectPath, String soapUITestSuite,
+	public static HashMap<String, String> createSoapUIRunner( String soapUIProjectPath, String soapUITestSuite,
 			String soapUITestCase, String loadUIProject, String loadUITestCase, String loadUISoapUISampler )
 			throws IOException
 	{
@@ -146,8 +162,8 @@ public class IntegrationUtils
 					+ "\", loadUITestCase=\"" + loadUITestCase + ", \"loadUISoapUISampler=\"" + loadUISoapUISampler + "\"" );
 
 			HashMap<String, Object> context = new ContextMapping( soapUIProjectPath, soapUITestSuite, soapUITestCase,
-					loadUIProject, loadUITestCase, loadUISoapUISampler ).setCreateSoapUISamplerContext();
-			samplerSettings = ( HashMap<String, String> )CajoClient.getInstance().invoke( "createSoapUISampler", context );
+					loadUIProject, loadUITestCase, loadUISoapUISampler ).setCreateSoapUIRunnerContext();
+			samplerSettings = ( HashMap<String, String> )CajoClient.getInstance().invoke( "createSoapUIRunner", context );
 			bringLoadUIToFront();
 		}
 		catch( IOException e )
@@ -159,6 +175,35 @@ public class IntegrationUtils
 			SoapUI.log.error( "Error while invoking cajo server in loadui ", e );
 		}
 		return samplerSettings;
+	}
+
+	public static HashMap<String, String> createMockServiceRunner( String soapUIProjectPath, String soapUIMockService,
+			String path, String port, String loadUIProject, String loadUITestCase, String mockServiceRunner )
+			throws IOException
+	{
+		HashMap<String, String> mockServiceSettings = new HashMap<String, String>();
+		try
+		{
+			SoapUI.log( "createMockRunner for soapUIProjectPath=\"" + soapUIProjectPath + "\", soapUIMockService=\""
+					+ soapUIMockService + "\", path=\"" + path + "\", port=\"" + port + "\", loadUIProject=\""
+					+ loadUIProject + "\", loadUITestCase=\"" + loadUITestCase + ", \"loadUIMockRunner=\""
+					+ mockServiceRunner + "\"" );
+
+			HashMap<String, Object> context = new ContextMapping( soapUIProjectPath, soapUIMockService, "", "",
+					loadUIProject, loadUITestCase, mockServiceRunner ).setCreateMockServiceRunnerContext();
+			mockServiceSettings = ( HashMap<String, String> )CajoClient.getInstance().invoke( "createMockServiceRunner",
+					context );
+			bringLoadUIToFront();
+		}
+		catch( IOException e )
+		{
+			throw e;
+		}
+		catch( Exception e )
+		{
+			SoapUI.log.error( "Error while invoking cajo server in loadui ", e );
+		}
+		return mockServiceSettings;
 	}
 
 	public static HashMap<String, Object> exportLoadTestToLoadUI( WsdlLoadTest loadTest, String loadUIProject,
@@ -295,38 +340,38 @@ public class IntegrationUtils
 		switch( levelToAdd )
 		{
 		case ADD_TO_PROJECT_LEVEL :
-			firstSamplerSettings = createSoapUISampler( soapUIProjectPath, soapUITestSuite, firstTestCase, loadUIProject,
+			firstSamplerSettings = createSoapUIRunner( soapUIProjectPath, soapUITestSuite, firstTestCase, loadUIProject,
 					null, CREATE_NEW_OPTION );
 			loadUIProjectAddedTo = firstSamplerSettings.get( ContextMapping.LOADUI_PROJECT_NAME );
 			for( int i = 1; i < soapUITestCases.length; i++ )
 			{
 				String testCase = soapUITestCases[i];
-				createSoapUISampler( soapUIProjectPath, soapUITestSuite, testCase, loadUIProjectAddedTo, null,
+				createSoapUIRunner( soapUIProjectPath, soapUITestSuite, testCase, loadUIProjectAddedTo, null,
 						CREATE_NEW_OPTION );
 			}
 			break;
 
 		case ADD_TO_SINGLE_TESTCASE :
-			firstSamplerSettings = createSoapUISampler( soapUIProjectPath, soapUITestSuite, firstTestCase, loadUIProject,
+			firstSamplerSettings = createSoapUIRunner( soapUIProjectPath, soapUITestSuite, firstTestCase, loadUIProject,
 					CREATE_NEW_OPTION, CREATE_NEW_OPTION );
 			loadUITestCaseAddedTo = firstSamplerSettings.get( ContextMapping.LOADUI_TEST_CASE_NAME );
 			loadUIProjectAddedTo = firstSamplerSettings.get( ContextMapping.LOADUI_PROJECT_NAME );
 			for( int i = 1; i < soapUITestCases.length; i++ )
 			{
 				String testCase = soapUITestCases[i];
-				createSoapUISampler( soapUIProjectPath, soapUITestSuite, testCase, loadUIProjectAddedTo,
+				createSoapUIRunner( soapUIProjectPath, soapUITestSuite, testCase, loadUIProjectAddedTo,
 						loadUITestCaseAddedTo, CREATE_NEW_OPTION );
 
 			}
 			break;
 		case ADD_TO_SEPARATE_TESTCASES :
-			firstSamplerSettings = createSoapUISampler( soapUIProjectPath, soapUITestSuite, firstTestCase, loadUIProject,
+			firstSamplerSettings = createSoapUIRunner( soapUIProjectPath, soapUITestSuite, firstTestCase, loadUIProject,
 					CREATE_NEW_OPTION, CREATE_NEW_OPTION );
 			loadUIProjectAddedTo = firstSamplerSettings.get( ContextMapping.LOADUI_PROJECT_NAME );
 			for( int i = 1; i < soapUITestCases.length; i++ )
 			{
 				String testCase = soapUITestCases[i];
-				createSoapUISampler( soapUIProjectPath, soapUITestSuite, testCase, loadUIProjectAddedTo, CREATE_NEW_OPTION,
+				createSoapUIRunner( soapUIProjectPath, soapUITestSuite, testCase, loadUIProjectAddedTo, CREATE_NEW_OPTION,
 						CREATE_NEW_OPTION );
 			}
 			break;
@@ -380,7 +425,7 @@ public class IntegrationUtils
 		return names;
 	}
 
-	public static String[] getAvailableSamplers( String projectName, String testCaseName )
+	public static String[] getAvailableRunners( String projectName, String testCaseName )
 	{
 		List<String> availableSamplers = new ArrayList<String>();
 		if( !projectName.equals( CREATE_NEW_OPTION ) && isProjectOpened( projectName ) )
@@ -393,6 +438,24 @@ public class IntegrationUtils
 		for( int c = 0; c < availableSamplers.size(); c++ )
 		{
 			names[c] = availableSamplers.get( c );
+		}
+
+		return names;
+	}
+
+	public static String[] getAvailableMockServiceRunners( String projectName, String testCaseName )
+	{
+		List<String> availableMockServiceRunners = new ArrayList<String>();
+		if( !projectName.equals( CREATE_NEW_OPTION ) && isProjectOpened( projectName ) )
+		{
+			availableMockServiceRunners.addAll( getMockServiceRunnersNames( projectName, testCaseName ) );
+		}
+
+		availableMockServiceRunners.add( CREATE_NEW_OPTION );
+		String[] names = new String[availableMockServiceRunners.size()];
+		for( int c = 0; c < availableMockServiceRunners.size(); c++ )
+		{
+			names[c] = availableMockServiceRunners.get( c );
 		}
 
 		return names;

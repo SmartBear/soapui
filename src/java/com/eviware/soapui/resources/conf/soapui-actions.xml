@@ -179,6 +179,7 @@
 	<tns:action id="ExportMockService" actionClass="com.eviware.soapui.impl.wsdl.actions.mockservice.ExportMockService"/>
 	<tns:action id="ImportMockService" actionClass="com.eviware.soapui.impl.wsdl.actions.mockservice.ImportMockService"/>
 	<tns:action id="MockAsWar" actionClass="com.eviware.soapui.actions.MockAsWarAction"/>
+	<tns:action id="RunMockserviceWithLoadUIAction" actionClass="com.eviware.soapui.impl.wsdl.actions.mockservice.RunMockServiceWithLoadUIAction"/>
 	
 	<!-- MockOperation Actions -->
 	<tns:action id="OpenRequestForMockOperationAction" actionClass="com.eviware.soapui.impl.wsdl.actions.mockoperation.OpenRequestForMockOperationAction"/>
@@ -643,6 +644,8 @@
 		<tns:actionMapping actionId="SeperatorAction"/>
  		<tns:actionMapping actionId="AddNewMockOperationAction" keyStroke="menu N"/>
 		<tns:actionMapping actionId="CloneMockServiceAction" keyStroke="F9"/>
+		<tns:actionMapping actionId="SeperatorAction"/>
+		<tns:actionMapping actionId="RunMockserviceWithLoadUIAction"/>
 		<tns:actionMapping actionId="SeperatorAction"/>
 		<tns:actionMapping actionId="AddEndpointToInterfaceAction"/>
 		<tns:actionMapping actionId="SeperatorAction"/>

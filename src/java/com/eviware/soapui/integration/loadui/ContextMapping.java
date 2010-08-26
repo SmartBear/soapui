@@ -34,11 +34,16 @@ public class ContextMapping
 	private static final String TEST_CASE = "testCase";
 	private static final String TEST_SUITE = "testSuite";
 	private static final String PROJECT_FILE = "projectFile";
+	public static final String MOCK_SERVICE = "mockService";
+	public static final String PATH = "path";
+	public static final String PORT = "port";
 
-	private static final String SOAPUI_SAMPLER_LABEL = "soapuiSamplerLabel";
+	private static final String SOAPUI_RUNNER_LABEL = "soapuiSamplerLabel";
 	public static final String LOADUI_TEST_CASE_NAME = "loaduiTestCaseName";
 	public static final String LOADUI_PROJECT_NAME = "loaduiProjectName";
-	private static final String SOAPUI_SAMPLER_PROPERTIES = "SoapUISamplerComponent_properties";
+	private static final String SOAPUI_RUNNER_PROPERTIES = "SoapUISamplerComponent_properties";
+	private static final String MOCKSERVICE_RUNNER_LABEL = "mockRunnerLabel";
+	private static final String MOCKSERVICE_RUNNER_PROPERTIES = "MockServiceComponent_properties";
 
 	private static final String ASSERTION_LABEL = "assertionLabel";
 	private static final String ASSERTION_TYPE = "assertionType";
@@ -75,6 +80,10 @@ public class ContextMapping
 	private String soapUITestSuite;
 	private String soapUITestCase;
 	protected String loadUITriggerType;
+	private String soapUIMockService;
+	private String mockServicePath;
+	private String mockServicePort;
+	private String loadUIMockServiceRunner;
 
 	HashMap<String, String> triggerProperties;
 	HashMap<String, String> delayProperties;
@@ -101,12 +110,25 @@ public class ContextMapping
 
 	}
 
+	public ContextMapping( String soapUIProjectPath, String soapUIMockService, String path, String port,
+			String loadUIProject, String loadUITestCase, String loadUIMockServiceRunner )
+	{
+		this.loadUIProject = loadUIProject;
+		this.loadUITestCase = loadUITestCase;
+		this.loadUIMockServiceRunner = loadUIMockServiceRunner;
+		this.soapUIProjectPath = soapUIProjectPath;
+		this.soapUIMockService = soapUIMockService;
+		this.mockServicePath = path;
+		this.mockServicePort = port;
+
+	}
+
 	public static String createProperyValue( Class clazz, String value )
 	{
 		return clazz.getName() + "@" + value;
 	}
 
-	public HashMap<String, Object> setCreateSoapUISamplerContext()
+	public HashMap<String, Object> setCreateSoapUIRunnerContext()
 	{
 		HashMap<String, Object> context = new HashMap<String, Object>();
 		HashMap<String, String> properties = new HashMap<String, String>();
@@ -116,8 +138,24 @@ public class ContextMapping
 		properties.put( TEST_CASE, createProperyValue( String.class, soapUITestCase ) );
 		context.put( LOADUI_PROJECT_NAME, loadUIProject );
 		context.put( LOADUI_TEST_CASE_NAME, loadUITestCase );
-		context.put( SOAPUI_SAMPLER_LABEL, loadUISoapUISampler );
-		context.put( SOAPUI_SAMPLER_PROPERTIES, properties );
+		context.put( SOAPUI_RUNNER_LABEL, loadUISoapUISampler );
+		context.put( SOAPUI_RUNNER_PROPERTIES, properties );
+		return context;
+	}
+
+	public HashMap<String, Object> setCreateMockServiceRunnerContext()
+	{
+		HashMap<String, Object> context = new HashMap<String, Object>();
+		HashMap<String, String> properties = new HashMap<String, String>();
+
+		properties.put( PROJECT_FILE, createProperyValue( File.class, soapUIProjectPath ) );
+		properties.put( MOCK_SERVICE, createProperyValue( String.class, soapUIMockService ) );
+		properties.put( PATH, createProperyValue( String.class, mockServicePath ) );
+		properties.put( PORT, createProperyValue( String.class, mockServicePort ) );
+		context.put( LOADUI_PROJECT_NAME, loadUIProject );
+		context.put( LOADUI_TEST_CASE_NAME, loadUITestCase );
+		context.put( MOCKSERVICE_RUNNER_LABEL, loadUIMockServiceRunner );
+		context.put( MOCKSERVICE_RUNNER_PROPERTIES, properties );
 		return context;
 	}
 
@@ -133,9 +171,9 @@ public class ContextMapping
 
 		context.put( LOADUI_PROJECT_NAME, loadUIProject );
 		context.put( LOADUI_TEST_CASE_NAME, loadUITestCase );
-		context.put( SOAPUI_SAMPLER_LABEL, loadUISoapUISampler );
+		context.put( SOAPUI_RUNNER_LABEL, loadUISoapUISampler );
 
-		context.put( SOAPUI_SAMPLER_PROPERTIES, properties );
+		context.put( SOAPUI_RUNNER_PROPERTIES, properties );
 
 		mapInitialTriggerProperties( loadTest );
 		context.put( TRIGGER_PROPERTIES, triggerProperties );
@@ -229,8 +267,8 @@ public class ContextMapping
 			triggerProperties.put( "shape", createProperyValue( String.class, "Sine-wave" ) );
 			triggerProperties.put( "amplitude", createProperyValue( Long.class, Long.toString( ( ( long )( currentStrategy
 					.getVariance() * rate ) ) ) ) );
-			triggerProperties.put( "period",
-					createProperyValue( Long.class, Long.toString( currentStrategy.getInterval()/1000 ) ) );
+			triggerProperties.put( "period", createProperyValue( Long.class, Long
+					.toString( currentStrategy.getInterval() / 1000 ) ) );
 		}
 		if( loadStrategy instanceof ThreadCountChangeLoadStrategy )
 		{

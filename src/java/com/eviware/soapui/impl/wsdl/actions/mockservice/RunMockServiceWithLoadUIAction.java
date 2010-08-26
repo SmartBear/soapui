@@ -10,12 +10,13 @@
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
 
-package com.eviware.soapui.impl.wsdl.actions.testcase;
+package com.eviware.soapui.impl.wsdl.actions.mockservice;
 
 import java.io.IOException;
 import java.util.HashMap;
 
 import com.eviware.soapui.impl.wsdl.actions.project.StartLoadUI;
+import com.eviware.soapui.impl.wsdl.mock.WsdlMockService;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.integration.loadui.ContextMapping;
@@ -31,17 +32,17 @@ import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.AField.AFieldType;
 
-public class RunTestCaseWithLoadUIAction extends AbstractSoapUIAction<WsdlTestCase>
+public class RunMockServiceWithLoadUIAction extends AbstractSoapUIAction<WsdlMockService>
 {
 	private XFormDialog dialog;
-	public static final String SOAPUI_ACTION_ID = "RunTestCaseWithLoadUIAction";
+	public static final String SOAPUI_ACTION_ID = "RunMockServiceWithLoadUIAction";
 
-	public RunTestCaseWithLoadUIAction()
+	public RunMockServiceWithLoadUIAction()
 	{
-		super( "Run with loadUI", "Run this TestCase with loadUI" );
+		super( "Run with loadUI", "Run this MockService with loadUI" );
 	}
 
-	public void perform( WsdlTestCase testCase, Object param )
+	public void perform( WsdlMockService mockService, Object param )
 	{
 		if( !StartLoadUI.testCajoConnection() )
 		{
@@ -51,9 +52,11 @@ public class RunTestCaseWithLoadUIAction extends AbstractSoapUIAction<WsdlTestCa
 			}
 			return;
 		}
-		final String soapUITestCase = testCase.getName();
-		final String soapUITestSuite = testCase.getTestSuite().getName();
-		final String soapUIProjectPath = testCase.getTestSuite().getProject().getPath();
+		final String soapUIMockService = mockService.getName();
+		final String mockServicePath = mockService.getPath();
+		final String mockservicePort = Integer.toString( mockService.getPort() );
+		// final String soapUITestSuite = mockService.getTestSuite().getName();
+		final String soapUIProjectPath = mockService.getProject().getPath();
 		if( dialog == null )
 			dialog = ADialogBuilder.buildDialog( Form.class );
 
@@ -65,7 +68,7 @@ public class RunTestCaseWithLoadUIAction extends AbstractSoapUIAction<WsdlTestCa
 				dialog.setOptions( Form.TESTCASE, IntegrationUtils.getAvailableTestCases( newValue ) );
 				if( dialog.getValue( Form.TESTCASE ).equals( IntegrationUtils.CREATE_ON_PROJECT_LEVEL ) )
 				{
-					dialog.setOptions( Form.SOAPUIRUNNER, IntegrationUtils.getAvailableRunners( newValue,
+					dialog.setOptions( Form.MOCKSERVICERUNNER, IntegrationUtils.getAvailableRunners( newValue,
 							IntegrationUtils.CREATE_ON_PROJECT_LEVEL ) );
 				}
 			}
@@ -77,11 +80,11 @@ public class RunTestCaseWithLoadUIAction extends AbstractSoapUIAction<WsdlTestCa
 			{
 				if( newValue.equals( IntegrationUtils.CREATE_NEW_OPTION ) )
 				{
-					dialog.setOptions( Form.SOAPUIRUNNER, new String[] { IntegrationUtils.CREATE_NEW_OPTION } );
+					dialog.setOptions( Form.MOCKSERVICERUNNER, new String[] { IntegrationUtils.CREATE_NEW_OPTION } );
 				}
 				else
 				{
-					dialog.setOptions( Form.SOAPUIRUNNER, IntegrationUtils.getAvailableRunners( dialog
+					dialog.setOptions( Form.MOCKSERVICERUNNER, IntegrationUtils.getAvailableMockServiceRunners( dialog
 							.getValue( Form.PROJECT ), newValue ) );
 				}
 			}
@@ -102,15 +105,15 @@ public class RunTestCaseWithLoadUIAction extends AbstractSoapUIAction<WsdlTestCa
 			dialog.setValue( Form.TESTCASE, IntegrationUtils.CREATE_ON_PROJECT_LEVEL );
 		}
 
-		dialog.setOptions( Form.SOAPUIRUNNER, IntegrationUtils.getAvailableRunners( dialog.getValue( Form.PROJECT ),
-				dialog.getValue( Form.TESTCASE ) ) );
-		dialog.setValue( Form.SOAPUIRUNNER, IntegrationUtils.CREATE_NEW_OPTION );
+		dialog.setOptions( Form.MOCKSERVICERUNNER, IntegrationUtils.getAvailableMockServiceRunners( dialog
+				.getValue( Form.PROJECT ), dialog.getValue( Form.TESTCASE ) ) );
+		dialog.setValue( Form.MOCKSERVICERUNNER, IntegrationUtils.CREATE_NEW_OPTION );
 		if( dialog.show() )
 		{
 			String targetProjectString = dialog.getValue( Form.PROJECT );
 			String targetTestCaseName = !dialog.getValue( Form.TESTCASE )
 					.equals( IntegrationUtils.CREATE_ON_PROJECT_LEVEL ) ? dialog.getValue( Form.TESTCASE ) : null;
-			String targetSoapUIRunnerName = dialog.getValue( Form.SOAPUIRUNNER );
+			String targetMockRunnerNameName = dialog.getValue( Form.MOCKSERVICERUNNER );
 			if( dialog.getReturnValue() == XFormDialog.OK_OPTION )
 			{
 				String openedProjectName = IntegrationUtils.getOpenedProjectName();
@@ -128,8 +131,9 @@ public class RunTestCaseWithLoadUIAction extends AbstractSoapUIAction<WsdlTestCa
 				HashMap<String, String> createdRunnerSettings = null;
 				try
 				{
-					createdRunnerSettings = IntegrationUtils.createSoapUIRunner( soapUIProjectPath, soapUITestSuite,
-							soapUITestCase, targetProjectString, targetTestCaseName, targetSoapUIRunnerName );
+					createdRunnerSettings = IntegrationUtils.createMockServiceRunner( soapUIProjectPath, soapUIMockService,
+							mockServicePath, mockservicePort, targetProjectString, targetTestCaseName,
+							targetMockRunnerNameName );
 				}
 				catch( IOException e )
 				{
@@ -138,7 +142,7 @@ public class RunTestCaseWithLoadUIAction extends AbstractSoapUIAction<WsdlTestCa
 				}
 				if( createdRunnerSettings != null )
 				{
-					String creationInfo = "SoapUI Runner created/updated under project: '"
+					String creationInfo = "MockService Runner created/updated under project: '"
 							+ createdRunnerSettings.get( ContextMapping.LOADUI_PROJECT_NAME ) + "'";
 					if( targetTestCaseName != null && !targetTestCaseName.equals( IntegrationUtils.CREATE_ON_PROJECT_LEVEL ) )
 					{
@@ -161,8 +165,8 @@ public class RunTestCaseWithLoadUIAction extends AbstractSoapUIAction<WsdlTestCa
 		@AField( name = "Target TestCase", description = "The name of the target TestCase in loadUI", type = AFieldType.ENUMERATION )
 		public final static String TESTCASE = "Target TestCase";
 
-		@AField( name = "Target SoapUI Runner", description = "The target SoapUI Runner in loadUI", type = AFieldType.ENUMERATION )
-		public final static String SOAPUIRUNNER = "Target SoapUI Runner";
+		@AField( name = "Target MockService Runner", description = "The target MockService Runner in loadUI", type = AFieldType.ENUMERATION )
+		public final static String MOCKSERVICERUNNER = "Target MockService Runner";
 
 	}
 

@@ -62,7 +62,7 @@ public class ConvertToLoadUIAction extends AbstractSoapUIAction<WsdlLoadTest>
 				dialog.setOptions( Form.TESTCASE, IntegrationUtils.getAvailableTestCases( newValue ) );
 				if( dialog.getValue( Form.TESTCASE ).equals( IntegrationUtils.CREATE_ON_PROJECT_LEVEL ) )
 				{
-					dialog.setOptions( Form.SOAPUISAMPLER, IntegrationUtils.getAvailableSamplers( newValue,
+					dialog.setOptions( Form.SOAPUIRUNNER, IntegrationUtils.getAvailableRunners( newValue,
 							IntegrationUtils.CREATE_ON_PROJECT_LEVEL ) );
 				}
 			}
@@ -74,11 +74,11 @@ public class ConvertToLoadUIAction extends AbstractSoapUIAction<WsdlLoadTest>
 			{
 				if( newValue.equals( IntegrationUtils.CREATE_NEW_OPTION ) )
 				{
-					dialog.setOptions( Form.SOAPUISAMPLER, new String[] { IntegrationUtils.CREATE_NEW_OPTION } );
+					dialog.setOptions( Form.SOAPUIRUNNER, new String[] { IntegrationUtils.CREATE_NEW_OPTION } );
 				}
 				else
 				{
-					dialog.setOptions( Form.SOAPUISAMPLER, IntegrationUtils.getAvailableSamplers( dialog
+					dialog.setOptions( Form.SOAPUIRUNNER, IntegrationUtils.getAvailableRunners( dialog
 							.getValue( Form.PROJECT ), newValue ) );
 				}
 			}
@@ -99,15 +99,15 @@ public class ConvertToLoadUIAction extends AbstractSoapUIAction<WsdlLoadTest>
 			dialog.setValue( Form.TESTCASE, IntegrationUtils.CREATE_ON_PROJECT_LEVEL );
 		}
 
-		dialog.setOptions( Form.SOAPUISAMPLER, IntegrationUtils.getAvailableSamplers( dialog.getValue( Form.PROJECT ),
+		dialog.setOptions( Form.SOAPUIRUNNER, IntegrationUtils.getAvailableRunners( dialog.getValue( Form.PROJECT ),
 				dialog.getValue( Form.TESTCASE ) ) );
-		dialog.setValue( Form.SOAPUISAMPLER, IntegrationUtils.CREATE_NEW_OPTION );
+		dialog.setValue( Form.SOAPUIRUNNER, IntegrationUtils.CREATE_NEW_OPTION );
 		if( dialog.show() )
 		{
 			String targetProjectString = dialog.getValue( Form.PROJECT );
 			String targetTestCaseName = !dialog.getValue( Form.TESTCASE )
 					.equals( IntegrationUtils.CREATE_ON_PROJECT_LEVEL ) ? dialog.getValue( Form.TESTCASE ) : null;
-			String targetSamplerName = dialog.getValue( Form.SOAPUISAMPLER );
+			String targetRunnerName = dialog.getValue( Form.SOAPUIRUNNER );
 			String openedProjectName = IntegrationUtils.getOpenedProjectName();
 			if( !StringUtils.isNullOrEmpty( openedProjectName ) && !targetProjectString.equals( openedProjectName ) )
 				if( UISupport.confirm( "Close currently open [" + IntegrationUtils.getOpenedProjectName()
@@ -119,32 +119,32 @@ public class ConvertToLoadUIAction extends AbstractSoapUIAction<WsdlLoadTest>
 				{
 					return;
 				}
-			exportToLoadUI( loadTest, targetProjectString, targetTestCaseName, targetSamplerName );
+			exportToLoadUI( loadTest, targetProjectString, targetTestCaseName, targetRunnerName );
 		}
 	}
 
 	protected void exportToLoadUI( WsdlLoadTest loadTest, String targetProjectString, String targetTestCaseName,
-			String targetSamplerName )
+			String targetRunnerName )
 	{
 
-		HashMap<String, Object> createdSamplerSettings = null;
+		HashMap<String, Object> createdRunnerSettings = null;
 		try
 		{
-			createdSamplerSettings = IntegrationUtils.exportLoadTestToLoadUI( loadTest, targetProjectString,
-					targetTestCaseName, targetSamplerName );
+			createdRunnerSettings = IntegrationUtils.exportLoadTestToLoadUI( loadTest, targetProjectString,
+					targetTestCaseName, targetRunnerName );
 		}
 		catch( IOException e )
 		{
 			UISupport.showInfoMessage( "Error while opening selected loadUI project" );
 			return;
 		}
-		if( createdSamplerSettings != null )
+		if( createdRunnerSettings != null )
 		{
-			String creationInfo = "SoapUISampler created under project: '"
-					+ createdSamplerSettings.get( ContextMapping.LOADUI_PROJECT_NAME ) + "'";
+			String creationInfo = "SoapUIRunner created under project: '"
+					+ createdRunnerSettings.get( ContextMapping.LOADUI_PROJECT_NAME ) + "'";
 			if( !targetTestCaseName.equals( IntegrationUtils.CREATE_ON_PROJECT_LEVEL ) )
 			{
-				creationInfo += ", TestCase: '" + createdSamplerSettings.get( ContextMapping.LOADUI_TEST_CASE_NAME ) + "'";
+				creationInfo += ", TestCase: '" + createdRunnerSettings.get( ContextMapping.LOADUI_TEST_CASE_NAME ) + "'";
 			}
 			UISupport.showInfoMessage( creationInfo );
 		}
@@ -159,8 +159,8 @@ public class ConvertToLoadUIAction extends AbstractSoapUIAction<WsdlLoadTest>
 		@AField( name = "Target TestCase", description = "The name of the target TestCase in loadUI", type = AFieldType.ENUMERATION )
 		public final static String TESTCASE = "Target TestCase";
 
-		@AField( name = "Target SoapUISampler", description = "The target SoapUISampler in loadUI", type = AFieldType.ENUMERATION )
-		public final static String SOAPUISAMPLER = "Target SoapUISampler";
+		@AField( name = "Target SoapUIRunner", description = "The target SoapUIRunner in loadUI", type = AFieldType.ENUMERATION )
+		public final static String SOAPUIRUNNER = "Target SoapUIRunner";
 
 	}
 

@@ -33,7 +33,6 @@ import com.eviware.x.form.support.AField.AFieldType;
 
 public class ConvertTestSuiteLoadTestsToLoadUIAction extends AbstractSoapUIAction<WsdlTestSuite>
 {
-	private XFormDialog dialog;
 	public static final String SOAPUI_ACTION_ID = "ConvertTestSuiteLoadTestsToLoadUIAction";
 
 	public ConvertTestSuiteLoadTestsToLoadUIAction()
