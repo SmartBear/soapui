@@ -39,6 +39,10 @@ public class AddNewTestCaseAction extends AbstractSoapUIAction<WsdlTestSuite>
 				+ ( testSuite.getTestCaseCount() + 1 ) );
 		if( name == null )
 			return;
+		while( testSuite.getTestCaseByName( name ) != null )
+		{
+			name = UISupport.prompt( "Specify unique name of TestCase", "Rename TestCase", name );
+		}
 
 		WsdlTestCase testCase = testSuite.addNewTestCase( name );
 		UISupport.showDesktopPanel( testCase );
