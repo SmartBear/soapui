@@ -36,6 +36,12 @@ public class RenameProjectAction extends AbstractSoapUIAction<WsdlProject>
 		String name = UISupport.prompt( "Specify name of project", "Rename Project", project.getName() );
 		if( name == null || name.equals( project.getName() ) )
 			return;
+		while( project.getWorkspace().getProjectByName( name ) != null )
+		{
+			name = UISupport.prompt( "Specify unique name of Project", "Rename Project", project.getName() );
+			if( name == null || name.equals( project.getName() ) )
+				return;
+		}
 
 		project.setName( name );
 	}
