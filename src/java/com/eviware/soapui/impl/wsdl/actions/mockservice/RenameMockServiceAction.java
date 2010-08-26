@@ -34,6 +34,12 @@ public class RenameMockServiceAction extends AbstractSoapUIAction<WsdlMockServic
 		String name = UISupport.prompt( "Specify name of MockService", "Rename MockService", mockService.getName() );
 		if( name == null || name.equals( mockService.getName() ) )
 			return;
+		while( mockService.getProject().getMockServiceByName( name ) != null )
+		{
+			name = UISupport.prompt( "Specify unique name of MockService", "Rename MockService", mockService.getName() );
+			if( name == null || name.equals( mockService.getName() ) )
+				return;
+		}
 
 		mockService.setName( name );
 	}
