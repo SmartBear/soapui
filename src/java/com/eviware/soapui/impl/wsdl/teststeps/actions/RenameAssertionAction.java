@@ -34,6 +34,12 @@ public class RenameAssertionAction extends AbstractSoapUIAction<WsdlMessageAsser
 		String name = UISupport.prompt( "Specify name for this assertion", "Rename Assertion", target.getName() );
 		if( name == null || name.equals( target.getName() ) )
 			return;
+		while( target.getAssertable().getAssertionByName( name ) != null )
+		{
+			name = UISupport.prompt( "Specify unique name of Assertion", "Rename Assertion", target.getName() );
+			if( name == null || name.equals( target.getName() ) )
+				return;
+		}
 
 		target.setName( name );
 	}
