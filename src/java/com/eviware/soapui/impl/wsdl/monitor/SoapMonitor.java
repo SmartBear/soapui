@@ -84,8 +84,10 @@ import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.settings.ProxySettings;
+import com.eviware.soapui.settings.WebRecordingSettings;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.components.BrowserComponent;
 import com.eviware.soapui.support.components.JComponentInspector;
 import com.eviware.soapui.support.components.JInspectorPanel;
 import com.eviware.soapui.support.components.JInspectorPanelFactory;
@@ -803,7 +805,7 @@ public class SoapMonitor extends JPanel
 						HttpTestRequestStep test = ( HttpTestRequestStep )testCase.insertTestStep( httpRequestStepFactory
 								.createConfig( me, "Monitor Request " + ( row + 1 ) ), -1 );
 
-						test.getTestRequest().setRequestHeaders( excludeProxyHeaders( me.getRequestHeaders() ) );
+						test.getTestRequest().setRequestHeaders( excludeHeaders( me.getRequestHeaders() ) );
 
 						HttpTestRequest request = ( HttpTestRequest )test.getHttpRequest();
 
@@ -1219,12 +1221,19 @@ public class SoapMonitor extends JPanel
 		return httpProxyHost;
 	}
 
-	public StringToStringsMap excludeProxyHeaders( StringToStringsMap requestHeaders )
+	/**
+	 * excludes proxy headers as well as headers set for excluding in Global
+	 * Preferences/WebRecordingSettings.EXCLUDED_HEADERS
+	 * 
+	 * @param requestHeaders
+	 * @return
+	 */
+	private StringToStringsMap excludeHeaders( StringToStringsMap requestHeaders )
 	{
 		StringToStringsMap stsmap = new StringToStringsMap();
 		for( String key : requestHeaders.getKeys() )
 		{
-			if( !( key.contains( "Proxy" ) || key.contains( "Content" ) ) )
+			if( !( key.contains( "Proxy" ) || key.contains( "Content" ) ) && !BrowserComponent.isHeaderExcluded( key ) )
 			{
 				stsmap.add( key, requestHeaders.get( key, "" ) );
 			}

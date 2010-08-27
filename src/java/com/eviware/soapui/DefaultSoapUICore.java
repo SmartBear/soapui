@@ -37,6 +37,7 @@ import com.eviware.soapui.settings.HttpSettings;
 import com.eviware.soapui.settings.SecuritySettings;
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.settings.WSISettings;
+import com.eviware.soapui.settings.WebRecordingSettings;
 import com.eviware.soapui.settings.WsaSettings;
 import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.ClasspathHacker;
@@ -252,7 +253,14 @@ public class DefaultSoapUICore implements SoapUICore
 			list.add( "schema@http://www.w3.org/2001/XMLSchema" );
 			settings.setString( WsdlSettings.EXCLUDED_TYPES, list.toXml() );
 		}
-		
+
+		if( !settings.isSet( WebRecordingSettings.EXCLUDED_HEADERS ) )
+		{
+			StringList list = new StringList();
+			list.add( "Host" );
+			settings.setString( WebRecordingSettings.EXCLUDED_HEADERS, list.toXml() );
+		}
+
 		if( settings.getString( HttpSettings.HTTP_VERSION, HttpSettings.HTTP_VERSION_1_1 ).equals(
 				HttpSettings.HTTP_VERSION_0_9 ) )
 		{
@@ -292,19 +300,21 @@ public class DefaultSoapUICore implements SoapUICore
 		if( StringUtils.isNullOrEmpty( wsiLocationString ) )
 		{
 			setWsiDir = true;
-		} else {
-			File wsiFile = new File(wsiLocationString);
-			if (!wsiFile.exists())
+		}
+		else
+		{
+			File wsiFile = new File( wsiLocationString );
+			if( !wsiFile.exists() )
 			{
 				setWsiDir = true;
 			}
 		}
-		if (setWsiDir)
+		if( setWsiDir )
 		{
 			String wsiDir = System.getProperty( "wsi.dir", new File( "." ).getAbsolutePath() );
 			settings.setString( WSISettings.WSI_LOCATION, wsiDir );
 		}
-		
+
 		return settings;
 	}
 

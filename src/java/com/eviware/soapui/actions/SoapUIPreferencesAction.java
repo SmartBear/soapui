@@ -27,6 +27,7 @@ import com.eviware.soapui.settings.HttpSettings;
 import com.eviware.soapui.settings.SSLSettings;
 import com.eviware.soapui.settings.SecuritySettings;
 import com.eviware.soapui.settings.WSISettings;
+import com.eviware.soapui.settings.WebRecordingSettings;
 import com.eviware.soapui.settings.WsaSettings;
 import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.UISupport;
@@ -52,6 +53,7 @@ public class SoapUIPreferencesAction extends AbstractAction
 	public static final String INTEGRATED_TOOLS = "Tools";
 	public static final String WSA_SETTINGS = "WS-A Settings";
 	public static final String LOADUI_SETTINGS = "loadUI Settings";
+	public static final String WEBRECORDING_SETTINGS = "Web Recording Settings";
 	private SwingConfigurationDialogImpl dialog;
 	private JTabbedPane tabs;
 	private List<Prefs> prefs = new ArrayList<Prefs>();
@@ -78,6 +80,7 @@ public class SoapUIPreferencesAction extends AbstractAction
 		addPrefs( new AnnotatedSettingsPrefs( SecuritySettings.class, GLOBAL_SECURITY_SETTINGS ) );
 		addPrefs( new AnnotatedSettingsPrefs( WsaSettings.class, WSA_SETTINGS ) );
 		addPrefs( new LoadUIPrefs( LOADUI_SETTINGS ) );
+		addPrefs( new AnnotatedSettingsPrefs( WebRecordingSettings.class, WEBRECORDING_SETTINGS ) );
 
 		instance = this;
 	}

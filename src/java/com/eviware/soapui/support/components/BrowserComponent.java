@@ -21,7 +21,9 @@ import java.beans.PropertyChangeSupport;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.swing.AbstractAction;
@@ -30,6 +32,7 @@ import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import javax.xml.namespace.QName;
 
 import org.mozilla.interfaces.nsIBinaryInputStream;
 import org.mozilla.interfaces.nsIDOMWindow;
@@ -62,9 +65,12 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.settings.ProxySettings;
+import com.eviware.soapui.settings.WebRecordingSettings;
+import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.types.StringList;
 import com.eviware.soapui.support.types.StringToStringsMap;
 import com.eviware.soapui.support.xml.XmlUtils;
 import com.jniwrapper.PlatformContext;
@@ -304,7 +310,10 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 
 									public void visitHeader( String header, String value )
 									{
-										headersMap.put( header, value );
+										if( !isHeaderExcluded( header ) )
+										{
+											headersMap.put( header, value );
+										}
 									}
 
 									public nsISupports queryInterface( String sIID )
@@ -346,8 +355,30 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 			boolean blnObserverIsWeakReference = false;
 			observerService.addObserver( httpObserver, EVENT_HTTP_ON_MODIFY_REQUEST, blnObserverIsWeakReference );
 		}
+
 	}
 
+	public static boolean isHeaderExcluded( String header )
+	{
+		String excluded = SoapUI.getSettings().getString( WebRecordingSettings.EXCLUDED_HEADERS, null );
+		List<String> result = new ArrayList<String>();
+		if( excluded != null && excluded.trim().length() > 0 )
+		{
+			try
+			{
+				StringList names = StringList.fromXml( excluded );
+				for( String name : names )
+				{
+					result.add( name );
+				}
+			}
+			catch( Exception e )
+			{
+				SoapUI.logError( e );
+			}
+		}
+		return result.contains( header );
+	}
 	private static String getContentType( byte[] requestData )
 	{
 		String request = new String( requestData );
