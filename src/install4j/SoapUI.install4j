@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <install4j version="4.2.8" transformSequenceNumber="2">
-  <directoryPresets config="${compiler:DIST_ROOT}/lib/xulrunner-linux-2.3.jar" />
+  <directoryPresets config="${compiler:DIST_ROOT}/lib/xulrunner-linux-2.4.jar" />
   <application name="soapUI ${compiler:VERSION_NUMBER}${compiler:BRANDED_TITLE}" distributionSourceDir="" applicationId="5517-2803-0637-4585" mediaDir="./media" mediaFilePattern="${compiler:sys.shortName}_${compiler:sys.platform}_${compiler:sys.version}" compression="6" lzmaCompression="false" pack200Compression="false" excludeSignedFromPacking="true" keepModificationTimes="false" missingFilesStrategy="warn" shortName="soapUI" publisher="eviware software ab" publisherWeb="http://www.eviware.com" version="${compiler:VERSION_NUMBER}" allPathsRelative="true" backupOnSave="false" autoSave="true" convertDotsToUnderscores="true" macSignature="????" installerName="" javaMinVersion="1.6" javaMaxVersion="" allowBetaVM="true" jdkMode="runtimeJre" jdkName="">
     <languages skipLanguageSelection="false" languageSelectionInPrincipalLanguage="false">
       <principalLanguage id="en" customLocalizationFile="" />
@@ -75,9 +75,10 @@
       </dirEntry>
       <dirEntry mountPoint="318" file="${compiler:DIST_ROOT}/lib" overwrite="4" shared="false" mode="644" uninstallMode="0" excludeSuffixes="" dirMode="755">
         <exclude>
-          <entry location="xulrunner-linux-2.3.jar" fileType="regular" />
-          <entry location="xulrunner-mac-2.3.jar" fileType="regular" />
-          <entry location="xulrunner-windows-2.3.jar" fileType="regular" />
+          <entry location="xulrunner-linux-2.4.jar" fileType="regular" />
+          <entry location="xulrunner-linux64-2.4.jar" fileType="regular" />
+          <entry location="xulrunner-mac-2.4.jar" fileType="regular" />
+          <entry location="xulrunner-windows-2.4.jar" fileType="regular" />
         </exclude>
       </dirEntry>
       <dirEntry mountPoint="399" file="${compiler:DIST_ROOT}/licenses" overwrite="4" shared="false" mode="644" uninstallMode="0" excludeSuffixes="" dirMode="755">
@@ -144,9 +145,10 @@
       <dirEntry mountPoint="1956" file="${compiler:DIST_ROOT}/wsi-test-tools" overwrite="4" shared="false" mode="644" uninstallMode="0" excludeSuffixes="" dirMode="755">
         <exclude />
       </dirEntry>
-      <fileEntry mountPoint="2236" file="${compiler:DIST_ROOT}/lib/xulrunner-windows-2.3.jar" overwrite="4" shared="false" mode="644" uninstallMode="0" />
-      <fileEntry mountPoint="2237" file="${compiler:DIST_ROOT}/lib/xulrunner-mac-2.3.jar" overwrite="4" shared="false" mode="644" uninstallMode="0" />
-      <fileEntry mountPoint="2238" file="${compiler:DIST_ROOT}/lib/xulrunner-linux-2.3.jar" overwrite="4" shared="false" mode="644" uninstallMode="0" />
+      <fileEntry mountPoint="2236" file="${compiler:DIST_ROOT}/lib/xulrunner-windows-2.4.jar" overwrite="4" shared="false" mode="644" uninstallMode="0" />
+      <fileEntry mountPoint="2237" file="${compiler:DIST_ROOT}/lib/xulrunner-mac-2.4.jar" overwrite="4" shared="false" mode="644" uninstallMode="0" />
+      <fileEntry mountPoint="2238" file="${compiler:DIST_ROOT}/lib/xulrunner-linux-2.4.jar" overwrite="4" shared="false" mode="644" uninstallMode="0" />
+      <fileEntry mountPoint="2238" file="${compiler:DIST_ROOT}/lib/xulrunner-linux64-2.4.jar" overwrite="4" shared="false" mode="644" uninstallMode="0" />
     </entries>
     <components>
       <component name="SoapUI" id="132" displayDescription="false" selected="true" mandatory="true" downloadable="false">
