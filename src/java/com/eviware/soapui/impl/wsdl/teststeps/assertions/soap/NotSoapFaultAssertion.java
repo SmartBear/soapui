@@ -76,5 +76,11 @@ public class NotSoapFaultAssertion extends WsdlMessageAssertion implements Respo
 		{
 			super( NotSoapFaultAssertion.ID, NotSoapFaultAssertion.LABEL, NotSoapFaultAssertion.class, WsdlRequest.class );
 		}
+
+		@Override
+		public Class<? extends WsdlMessageAssertion> getAssertionClassType()
+		{
+			return NotSoapFaultAssertion.class;
+		}
 	}
 }

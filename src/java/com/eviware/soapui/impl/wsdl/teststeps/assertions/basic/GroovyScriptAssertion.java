@@ -59,6 +59,7 @@ import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.model.testsuite.AssertionException;
 import com.eviware.soapui.model.testsuite.RequestAssertion;
 import com.eviware.soapui.model.testsuite.ResponseAssertion;
+import com.eviware.soapui.model.testsuite.TestAssertion;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
@@ -421,5 +422,12 @@ public class GroovyScriptAssertion extends WsdlMessageAssertion implements Reque
 		{
 			super( GroovyScriptAssertion.ID, GroovyScriptAssertion.LABEL, GroovyScriptAssertion.class );
 		}
+
+		@Override
+		public Class<? extends WsdlMessageAssertion> getAssertionClassType()
+		{
+			return GroovyScriptAssertion.class;
+		}
+
 	}
 }

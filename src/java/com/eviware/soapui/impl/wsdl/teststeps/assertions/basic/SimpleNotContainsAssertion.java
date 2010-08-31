@@ -190,5 +190,11 @@ public class SimpleNotContainsAssertion extends WsdlMessageAssertion implements 
 		{
 			super( SimpleNotContainsAssertion.ID, SimpleNotContainsAssertion.LABEL, SimpleNotContainsAssertion.class );
 		}
+
+		@Override
+		public Class<? extends WsdlMessageAssertion> getAssertionClassType()
+		{
+			return SimpleNotContainsAssertion.class;
+		}
 	}
 }

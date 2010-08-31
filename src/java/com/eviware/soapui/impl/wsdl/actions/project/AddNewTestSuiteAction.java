@@ -43,7 +43,7 @@ public class AddNewTestSuiteAction extends AbstractSoapUIAction<WsdlProject>
 				+ ( project.getTestSuiteCount() + 1 ) );
 		if( name == null )
 			return null;
-		while( project.getTestSuiteByName( name ) != null )
+		while( project.getTestSuiteByName( name.trim() ) != null )
 		{
 			name = UISupport.prompt( "Specify unique name of TestSuite", "Rename TestSuite", name );
 		}

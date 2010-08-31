@@ -29,6 +29,7 @@ import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.AssertionsListener;
 import com.eviware.soapui.model.testsuite.TestAssertion;
+import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.resolver.ResolveContext;
 
 /**
@@ -299,11 +300,26 @@ public class AssertionsSupport implements PropertyChangeListener
 			TestAssertionConfig assertionConfig = modelItemConfig.addNewAssertion();
 			assertionConfig.setType( TestAssertionRegistry.getInstance().getAssertionTypeForName( assertionLabel ) );
 
+			String name = assertionLabel;
+			while( getAssertionByName( name ) != null )
+			{
+				name = UISupport.prompt( "Specify unique name of Assertion", "Rename Assertion", assertionLabel + " "
+						+ ( getAssertionsOfType( TestAssertionRegistry.getInstance().getAssertionClassType( assertionConfig ) ).size() ) );
+				if( name == null ) {
+					return null;
+				}
+			}
 			WsdlMessageAssertion assertion = addWsdlAssertion( assertionConfig );
 			if( assertion == null )
 				return null;
 
-			fireAssertionAdded( assertion );
+			assertionConfig.setName( name );
+			assertion.updateConfig( assertionConfig );
+
+			if( assertion != null )
+			{
+				fireAssertionAdded( assertion );
+			}
 
 			return assertion;
 		}

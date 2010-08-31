@@ -74,6 +74,12 @@ public class SoapResponseAssertion extends WsdlMessageAssertion implements Respo
 		{
 			super( SoapResponseAssertion.ID, SoapResponseAssertion.LABEL, SoapResponseAssertion.class, WsdlRequest.class );
 		}
+
+		@Override
+		public Class<? extends WsdlMessageAssertion> getAssertionClassType()
+		{
+			return SoapResponseAssertion.class;
+		}
 	}
 
 	@Override

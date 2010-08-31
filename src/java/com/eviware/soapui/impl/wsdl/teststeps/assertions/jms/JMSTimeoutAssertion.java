@@ -12,8 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps.assertions.jms;
 
-import javax.jms.Message;
-
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.submit.transports.jms.HermesJmsRequestTransport;
@@ -37,41 +35,47 @@ public class JMSTimeoutAssertion extends WsdlMessageAssertion implements Respons
 {
 	public static final String ID = "JMS Timeout";
 	public static final String LABEL = "JMS Timeout";
-	
-	public JMSTimeoutAssertion(TestAssertionConfig assertionConfig, Assertable assertable)
+
+	public JMSTimeoutAssertion( TestAssertionConfig assertionConfig, Assertable assertable )
 	{
-		super(assertionConfig, assertable, false, false, false, true);
+		super( assertionConfig, assertable, false, false, false, true );
 	}
 
 	@Override
-	protected String internalAssertResponse(MessageExchange messageExchange, SubmitContext context)
+	protected String internalAssertResponse( MessageExchange messageExchange, SubmitContext context )
 			throws AssertionException
 	{
-		Boolean   temp = (Boolean)context.getProperty(HermesJmsRequestTransport.IS_JMS_MESSAGE_RECEIVED);
-		Boolean messageReceived = temp != null ?  temp : false;
-		
-		Long timeout =(Long) context.getProperty(HermesJmsRequestTransport.JMS_RECEIVE_TIMEOUT);
-		if(messageReceived!=null && ! messageReceived){
-			throw new AssertionException(new AssertionError("JMS Message timeout error! Message is not received in "+timeout+" ms." ));
+		Boolean temp = ( Boolean )context.getProperty( HermesJmsRequestTransport.IS_JMS_MESSAGE_RECEIVED );
+		Boolean messageReceived = temp != null ? temp : false;
+
+		Long timeout = ( Long )context.getProperty( HermesJmsRequestTransport.JMS_RECEIVE_TIMEOUT );
+		if( messageReceived != null && !messageReceived )
+		{
+			throw new AssertionException( new AssertionError( "JMS Message timeout error! Message is not received in "
+					+ timeout + " ms." ) );
 		}
-			
+
 		return "JMS Timeout OK";
 	}
 
 	@Override
-	protected String internalAssertRequest(MessageExchange messageExchange, SubmitContext context)
+	protected String internalAssertRequest( MessageExchange messageExchange, SubmitContext context )
 			throws AssertionException
 	{
 		return "JMS Timeout OK";
 	}
 
-
-	
 	public static class Factory extends AbstractTestAssertionFactory
 	{
 		public Factory()
 		{
-			super(JMSTimeoutAssertion.ID, JMSTimeoutAssertion.LABEL, JMSTimeoutAssertion.class, WsdlRequest.class);
+			super( JMSTimeoutAssertion.ID, JMSTimeoutAssertion.LABEL, JMSTimeoutAssertion.class, WsdlRequest.class );
+		}
+
+		@Override
+		public Class<? extends WsdlMessageAssertion> getAssertionClassType()
+		{
+			return JMSTimeoutAssertion.class;
 		}
 	}
 }

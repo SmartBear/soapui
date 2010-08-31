@@ -76,5 +76,11 @@ public class SoapFaultAssertion extends WsdlMessageAssertion implements Response
 		{
 			super( SoapFaultAssertion.ID, SoapFaultAssertion.LABEL, SoapFaultAssertion.class, WsdlRequest.class );
 		}
+
+		@Override
+		public Class<? extends WsdlMessageAssertion> getAssertionClassType()
+		{
+			return SoapFaultAssertion.class;
+		}
 	}
 }

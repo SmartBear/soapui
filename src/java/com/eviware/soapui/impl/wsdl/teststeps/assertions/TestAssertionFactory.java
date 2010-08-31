@@ -13,6 +13,7 @@
 package com.eviware.soapui.impl.wsdl.teststeps.assertions;
 
 import com.eviware.soapui.config.TestAssertionConfig;
+import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.TestAssertion;
 
@@ -21,6 +22,8 @@ public interface TestAssertionFactory
 	public boolean canAssert( Assertable assertable );
 
 	public TestAssertion buildAssertion( TestAssertionConfig config, Assertable assertable );
+	
+	public Class<? extends WsdlMessageAssertion> getAssertionClassType();
 
 	public String getAssertionId();
 

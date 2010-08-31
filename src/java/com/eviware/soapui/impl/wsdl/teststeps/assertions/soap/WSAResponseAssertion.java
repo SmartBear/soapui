@@ -95,6 +95,12 @@ public class WSAResponseAssertion extends WsdlMessageAssertion implements Reques
 		{
 			super( WSAResponseAssertion.ID, WSAResponseAssertion.LABEL, WSAResponseAssertion.class, WsdlRequest.class );
 		}
+
+		@Override
+		public Class<? extends WsdlMessageAssertion> getAssertionClassType()
+		{
+			return WSAResponseAssertion.class;
+		}
 	}
 
 	@Override

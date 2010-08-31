@@ -323,5 +323,11 @@ public class SchemaComplianceAssertion extends WsdlMessageAssertion implements R
 			return super.canAssert( assertable ) && assertable.getInterface() instanceof AbstractInterface
 					&& ( ( AbstractInterface<?> )assertable.getInterface() ).getDefinitionContext().hasSchemaTypes();
 		}
+
+		@Override
+		public Class<? extends WsdlMessageAssertion> getAssertionClassType()
+		{
+			return SchemaComplianceAssertion.class;
+		}
 	}
 }

@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.apache.tools.ant.types.selectors.ExtendSelector;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.TestAssertionConfig;
@@ -117,7 +118,28 @@ public class TestAssertionRegistry
 
 		return null;
 	}
+	public Class<? extends WsdlMessageAssertion> getAssertionClassType( TestAssertionConfig config )
+	{
+		try
+		{
+			String type = config.getType();
+			TestAssertionFactory factory = availableAssertions.get( type );
+			if( factory == null )
+			{
+				log.error( "Missing assertion for type [" + type + "]" );
+			}
+			else
+			{
+				return factory.getAssertionClassType();
+			}
+		}
+		catch( Exception e )
+		{
+			SoapUI.logError( e );
+		}
 
+		return null;
+	}
 	public boolean canBuildAssertion( TestAssertionConfig config )
 	{
 		return availableAssertions.containsKey( config.getType() );

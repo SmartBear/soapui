@@ -34,7 +34,7 @@ public class RenameTestCaseAction extends AbstractSoapUIAction<WsdlTestCase>
 		String name = UISupport.prompt( "Specify name of TestCase", "Rename TestCase", testCase.getName() );
 		if( name == null || name.equals( testCase.getName() ) )
 			return;
-		while( testCase.getTestSuite().getTestCaseByName( name ) != null )
+		while( testCase.getTestSuite().getTestCaseByName( name.trim() ) != null )
 		{
 			name = UISupport.prompt( "Specify unique name of TestCase", "Rename TestCase", testCase.getName() );
 			if( name == null || name.equals( testCase.getName() ) )

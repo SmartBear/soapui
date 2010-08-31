@@ -132,5 +132,11 @@ public class ResponseSLAAssertion extends WsdlMessageAssertion implements Respon
 		{
 			super( ResponseSLAAssertion.ID, ResponseSLAAssertion.LABEL, ResponseSLAAssertion.class );
 		}
+
+		@Override
+		public Class<? extends WsdlMessageAssertion> getAssertionClassType()
+		{
+			return ResponseSLAAssertion.class;
+		}
 	}
 }

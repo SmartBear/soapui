@@ -44,7 +44,7 @@ public class AddNewMockServiceAction extends AbstractSoapUIAction<WsdlProject>
 				+ ( project.getMockServiceCount() + 1 ) );
 		if( name == null )
 			return null;
-		while( project.getMockServiceByName( name ) != null )
+		while( project.getMockServiceByName( name.trim() ) != null )
 		{
 			name = UISupport.prompt( "Specify unique name of MockService", "Rename MockService", name );
 		}

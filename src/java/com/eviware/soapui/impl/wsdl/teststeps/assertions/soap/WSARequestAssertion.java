@@ -101,6 +101,12 @@ public class WSARequestAssertion extends WsdlMessageAssertion implements Request
 			super( WSARequestAssertion.ID, WSARequestAssertion.LABEL, WSARequestAssertion.class,
 					WsdlMockResponseTestStep.class );
 		}
+
+		@Override
+		public Class<? extends WsdlMessageAssertion> getAssertionClassType()
+		{
+			return WSARequestAssertion.class;
+		}
 	}
 
 	@Override

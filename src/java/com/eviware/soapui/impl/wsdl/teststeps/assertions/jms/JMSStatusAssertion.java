@@ -35,39 +35,44 @@ public class JMSStatusAssertion extends WsdlMessageAssertion implements Response
 {
 	public static final String ID = "JMS Status";
 	public static final String LABEL = "JMS Status";
-	
-	public JMSStatusAssertion(TestAssertionConfig assertionConfig, Assertable assertable)
+
+	public JMSStatusAssertion( TestAssertionConfig assertionConfig, Assertable assertable )
 	{
-		super(assertionConfig, assertable, false, false, false, true);
+		super( assertionConfig, assertable, false, false, false, true );
 	}
 
 	@Override
-	protected String internalAssertResponse(MessageExchange messageExchange, SubmitContext context)
+	protected String internalAssertResponse( MessageExchange messageExchange, SubmitContext context )
 			throws AssertionException
 	{
-		
-		Exception exception =(Exception) context.getProperty(HermesJmsRequestTransport.JMS_ERROR);
-		if(exception!=null){
-			throw new AssertionException(new AssertionError(exception.getMessage()));
+
+		Exception exception = ( Exception )context.getProperty( HermesJmsRequestTransport.JMS_ERROR );
+		if( exception != null )
+		{
+			throw new AssertionException( new AssertionError( exception.getMessage() ) );
 		}
-			
+
 		return "JMS Status OK";
 	}
 
 	@Override
-	protected String internalAssertRequest(MessageExchange messageExchange, SubmitContext context)
+	protected String internalAssertRequest( MessageExchange messageExchange, SubmitContext context )
 			throws AssertionException
 	{
 		return "JMS Status OK";
 	}
 
-
-	
 	public static class Factory extends AbstractTestAssertionFactory
 	{
 		public Factory()
 		{
-			super(JMSStatusAssertion.ID, JMSStatusAssertion.LABEL, JMSStatusAssertion.class, WsdlRequest.class);
+			super( JMSStatusAssertion.ID, JMSStatusAssertion.LABEL, JMSStatusAssertion.class, WsdlRequest.class );
+		}
+
+		@Override
+		public Class<? extends WsdlMessageAssertion> getAssertionClassType()
+		{
+			return JMSStatusAssertion.class;
 		}
 	}
 }

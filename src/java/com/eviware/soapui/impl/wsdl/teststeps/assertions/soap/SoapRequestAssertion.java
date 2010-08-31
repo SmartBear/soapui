@@ -75,6 +75,12 @@ public class SoapRequestAssertion extends WsdlMessageAssertion implements Reques
 			super( SoapRequestAssertion.ID, SoapRequestAssertion.LABEL, SoapRequestAssertion.class,
 					WsdlMockResponseTestStep.class );
 		}
+
+		@Override
+		public Class<? extends WsdlMessageAssertion> getAssertionClassType()
+		{
+			return SoapRequestAssertion.class;
+		}
 	}
 
 	@Override

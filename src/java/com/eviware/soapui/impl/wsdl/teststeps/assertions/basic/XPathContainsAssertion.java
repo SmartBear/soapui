@@ -759,5 +759,11 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
 		{
 			super( XPathContainsAssertion.ID, XPathContainsAssertion.LABEL, XPathContainsAssertion.class );
 		}
+
+		@Override
+		public Class<? extends WsdlMessageAssertion> getAssertionClassType()
+		{
+			return XPathContainsAssertion.class;
+		}
 	}
 }

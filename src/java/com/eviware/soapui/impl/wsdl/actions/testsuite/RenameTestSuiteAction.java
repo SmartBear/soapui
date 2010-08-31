@@ -35,7 +35,7 @@ public class RenameTestSuiteAction extends AbstractSoapUIAction<WsdlTestSuite>
 		String name = UISupport.prompt( "Specify name of TestSuite", "Rename TestSuite", testSuite.getName() );
 		if( name == null || name.equals( testSuite.getName() ) )
 			return;
-		while( testSuite.getProject().getTestSuiteByName( name ) != null )
+		while( testSuite.getProject().getTestSuiteByName( name.trim() ) != null )
 		{
 			name = UISupport.prompt( "Specify unique name of TestSuite", "Rename TestSuite", testSuite.getName() );
 			if( name == null || name.equals( testSuite.getName() ) )

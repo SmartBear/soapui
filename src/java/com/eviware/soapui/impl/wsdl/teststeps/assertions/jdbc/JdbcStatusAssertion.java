@@ -57,5 +57,11 @@ public class JdbcStatusAssertion extends WsdlMessageAssertion implements Respons
 		{
 			return assertable instanceof JdbcRequestTestStep;
 		}
+
+		@Override
+		public Class<? extends WsdlMessageAssertion> getAssertionClassType()
+		{
+			return JdbcStatusAssertion.class;
+		}
 	}
 }

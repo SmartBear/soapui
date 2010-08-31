@@ -58,5 +58,11 @@ public class JdbcTimeoutAssertion extends WsdlMessageAssertion implements Respon
 		{
 			return assertable instanceof JdbcRequestTestStep;
 		}
+
+		@Override
+		public Class<? extends WsdlMessageAssertion> getAssertionClassType()
+		{
+			return JdbcTimeoutAssertion.class;
+		}
 	}
 }

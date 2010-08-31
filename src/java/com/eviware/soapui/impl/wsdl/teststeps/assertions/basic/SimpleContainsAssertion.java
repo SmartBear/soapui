@@ -201,5 +201,11 @@ public class SimpleContainsAssertion extends WsdlMessageAssertion implements Req
 		{
 			super( SimpleContainsAssertion.ID, SimpleContainsAssertion.LABEL, SimpleContainsAssertion.class );
 		}
+
+		@Override
+		public Class<? extends WsdlMessageAssertion> getAssertionClassType()
+		{
+			return SimpleContainsAssertion.class;
+		}
 	}
 }

@@ -643,5 +643,11 @@ public class XQueryContainsAssertion extends WsdlMessageAssertion implements Req
 		{
 			super( XQueryContainsAssertion.ID, XQueryContainsAssertion.LABEL, XQueryContainsAssertion.class );
 		}
+
+		@Override
+		public Class<? extends WsdlMessageAssertion> getAssertionClassType()
+		{
+			return XQueryContainsAssertion.class;
+		}
 	}
 }
