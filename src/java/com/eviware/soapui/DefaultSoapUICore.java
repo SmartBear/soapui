@@ -257,7 +257,16 @@ public class DefaultSoapUICore implements SoapUICore
 		if( !settings.isSet( WebRecordingSettings.EXCLUDED_HEADERS ) )
 		{
 			StringList list = new StringList();
-			list.add( "Host" );
+			list.add( "Cookie" );
+			list.add( "Set-Cookie" );
+			list.add( "Referer" );
+			list.add( "Keep-Alive" );
+			list.add( "Connection" );
+			list.add( "Proxy-Connection" );
+			list.add( "Pragma" );
+			list.add( "Cache-Control" );
+			list.add( "Transfer-Encoding" );
+			list.add( "Date" );
 			settings.setString( WebRecordingSettings.EXCLUDED_HEADERS, list.toXml() );
 		}
 
