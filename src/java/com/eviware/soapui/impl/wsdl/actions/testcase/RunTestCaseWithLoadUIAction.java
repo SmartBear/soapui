@@ -15,6 +15,8 @@ package com.eviware.soapui.impl.wsdl.actions.testcase;
 import java.io.IOException;
 import java.util.HashMap;
 
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.actions.project.StartLoadUI;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
@@ -51,6 +53,9 @@ public class RunTestCaseWithLoadUIAction extends AbstractSoapUIAction<WsdlTestCa
 			}
 			return;
 		}
+		
+		checkProjectSaved(testCase.getTestSuite().getProject());
+		
 		final String soapUITestCase = testCase.getName();
 		final String soapUITestSuite = testCase.getTestSuite().getName();
 		final String soapUIProjectPath = testCase.getTestSuite().getProject().getPath();
@@ -150,6 +155,23 @@ public class RunTestCaseWithLoadUIAction extends AbstractSoapUIAction<WsdlTestCa
 			}
 
 		}
+	}
+
+	private void checkProjectSaved(WsdlProject project)
+	{
+		String path = project.getPath();
+		if( path == null )
+		{
+			try
+			{
+				project.save();
+			}
+			catch( IOException e )
+			{
+				SoapUI.logError( e );
+			}
+		}
+		
 	}
 
 	@AForm( description = "Specify Items in LoadUI for Running TestCase", name = "Run With LoadUI", helpUrl = HelpUrls.CLONETESTCASE_HELP_URL, icon = UISupport.LOADUI_ICON_PATH )
