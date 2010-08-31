@@ -32,7 +32,6 @@ import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
-import javax.xml.namespace.QName;
 
 import org.mozilla.interfaces.nsIBinaryInputStream;
 import org.mozilla.interfaces.nsIDOMWindow;
@@ -66,7 +65,6 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.settings.ProxySettings;
 import com.eviware.soapui.settings.WebRecordingSettings;
-import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
@@ -111,8 +109,7 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 	private boolean disposed;
 	private static boolean disabled;
 	private NavigationListener internalNavigationListener;
-	private static BrowserComponent recordingBrowser;
-	private static HttpHtmlResponseView httpHtmlResponseView;
+	private HttpHtmlResponseView httpHtmlResponseView;
 	private static Boolean initialized = false;
 	private static SoapUINewWindowManager newWindowManager;
 	private static Map<nsIDOMWindow, BrowserComponent> browserMap = new HashMap<nsIDOMWindow, BrowserComponent>();
@@ -217,8 +214,18 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 
 	public void setRecordingHttpHtmlResponseView( HttpHtmlResponseView httpHtmlResponseView )
 	{
-		BrowserComponent.httpHtmlResponseView = httpHtmlResponseView;
-		recordingBrowser = httpHtmlResponseView == null ? null : this;
+		this.httpHtmlResponseView = httpHtmlResponseView;
+		if( httpHtmlResponseView != null )
+		{
+			if( !browserRecordingMap.containsKey( BrowserComponent.this ) )
+			{
+				browserRecordingMap.put( BrowserComponent.this, new HashMap<String, RecordedRequest>() );
+			}
+		}
+		else
+		{
+			browserRecordingMap.remove( BrowserComponent.this );
+		}
 	}
 
 	private static final class RecordingHttpListener implements Runnable
@@ -259,7 +266,7 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 									.getInterface( nsIDOMWindow.NS_IDOMWINDOW_IID );
 
 							BrowserComponent browserComponent = browserMap.get( window );
-							if( browserComponent != null && browserComponent == BrowserComponent.recordingBrowser )
+							if( browserComponent != null && browserRecordingMap.containsKey( browserComponent ) )
 							{
 								RecordedRequest rr = new RecordedRequest( dumpUri( httpChannel.getURI() ), httpChannel
 										.getRequestMethod() );
@@ -324,10 +331,12 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 
 								rr.setHeaders( headersMap );
 
-								if( !browserRecordingMap.containsKey( browserComponent ) )
-								{
-									browserRecordingMap.put( browserComponent, new HashMap<String, RecordedRequest>() );
-								}
+								// if( !browserRecordingMap.containsKey(
+								// browserComponent ) )
+								// {
+								// browserRecordingMap.put( browserComponent, new
+								// HashMap<String, RecordedRequest>() );
+								// }
 
 								browserRecordingMap.get( browserComponent ).put( rr.getUrl(), rr );
 							}
@@ -379,6 +388,7 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 		}
 		return result.contains( header );
 	}
+
 	private static String getContentType( byte[] requestData )
 	{
 		String request = new String( requestData );
@@ -396,11 +406,11 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 
 	private static final class SoapUINewWindowManager implements NewWindowManager
 	{
-		public NewWindowContainer evaluateWindow( NewWindowParams params )
+		public NewWindowContainer evaluateWindow( final NewWindowParams params )
 		{
 			return new NewWindowContainer()
 			{
-				public void insertBrowser( Browser browser )
+				public void insertBrowser( final Browser browser )
 				{
 					browser.addNavigationListener( new NavigationListener()
 					{
@@ -412,9 +422,13 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 
 							// since there is no way to detect the source browser for
 							// the new window we just assume it is the recording one.
-							if( BrowserComponent.recordingBrowser != null )
+							BrowserComponent browserComponent = browserMap
+									.get( ( ( ( MozillaWebBrowser )( ( MozillaBrowser )params.getParent() ).getPeer() ) )
+											.getWebBrowser().getContentDOMWindow() );
+							if( browserRecordingMap.containsKey( browserComponent ) )
 							{
-								BrowserComponent.recordingBrowser.replaceBrowser( arg0.getBrowser() );
+								browserComponent.replaceBrowser( arg0.getBrowser() );
+
 							}
 							else
 							{
@@ -454,8 +468,7 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 		@Override
 		public void navigationFinished( NavigationFinishedEvent arg0 )
 		{
-			if( BrowserComponent.recordingBrowser == BrowserComponent.this
-					&& browserRecordingMap.containsKey( BrowserComponent.this ) )
+			if( browserRecordingMap.containsKey( BrowserComponent.this ) )
 			{
 				Map<String, RecordedRequest> map = browserRecordingMap.get( BrowserComponent.this );
 				RecordedRequest recordedRequest = map.get( arg0.getUrl() );
@@ -501,8 +514,9 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 					}
 				}
 			}
+			// TODO ask Ole why was this removing necessary
 
-			browserRecordingMap.remove( BrowserComponent.this );
+			// browserRecordingMap.remove( BrowserComponent.this );
 		}
 	}
 
@@ -584,10 +598,11 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 		panel.add( browser.getComponent(), BorderLayout.CENTER );
 	}
 
-	public static boolean isRecording()
-	{
-		return httpHtmlResponseView != null && httpHtmlResponseView.isRecordHttpTrafic();
-	}
+	// public static boolean isRecording()
+	// {
+	// return httpHtmlResponseView != null &&
+	// httpHtmlResponseView.isRecordHttpTrafic();
+	// }
 
 	public void release()
 	{
@@ -602,16 +617,11 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 
 	private synchronized void cleanup()
 	{
-		if( recordingBrowser == this )
-		{
-			httpHtmlResponseView = null;
-			recordingBrowser = null;
-		}
-
 		if( browser != null )
 		{
 			browserMap.remove( ( ( MozillaWebBrowser )browser.getPeer() ).getWebBrowser().getContentDOMWindow() );
 			browserRecordingMap.remove( this );
+			httpHtmlResponseView = null;
 
 			browser.stop();
 			browser.dispose();

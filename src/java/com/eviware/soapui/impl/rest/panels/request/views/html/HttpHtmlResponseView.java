@@ -261,14 +261,7 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 			}
 			else
 			{
-				if( BrowserComponent.isRecording() )
-				{
-					UISupport.showErrorMessage( "Only one browser can record at a time" );
-				}
-				else
-				{
-					setRecordHttpTrafic( true );
-				}
+				setRecordHttpTrafic( true );
 			}
 		}
 	}
