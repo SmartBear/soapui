@@ -271,6 +271,7 @@ public class GotoStepDesktopPanel extends ModelItemDesktopPanel<WsdlGotoTestStep
 		testStepsCombo = new JComboBox( testStepsModel );
 		testStepsCombo.setToolTipText( "The step the test case will go to if the current condition is true" );
 		testStepsCombo.setEnabled( false );
+		UISupport.setFixedSize( testStepsCombo, 280, 20 );
 		builder.addFixed( new JLabel( "<html><b>Target step:</b></html>" ) );
 		builder.addRelatedGap();
 		builder.addFixed( testStepsCombo );
