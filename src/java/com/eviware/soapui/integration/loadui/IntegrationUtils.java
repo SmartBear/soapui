@@ -26,6 +26,7 @@ import com.eviware.soapui.integration.impl.CajoClient;
 public class IntegrationUtils
 {
 
+	private static final String NOT_SELECTED = "-";
 	public static final String CREATE_NEW_OPTION = "<Create New>";
 	public static final String CREATE_ON_PROJECT_LEVEL = "<Project Level>";
 
@@ -151,8 +152,8 @@ public class IntegrationUtils
 	}
 
 	public static HashMap<String, String> createSoapUIRunner( String soapUIProjectPath, String soapUITestSuite,
-			String soapUITestCase, String loadUIProject, String loadUITestCase, String loadUISoapUISampler )
-			throws IOException
+			String soapUITestCase, String loadUIProject, String loadUITestCase, String loadUISoapUISampler,
+			String generatorType, String analisysType ) throws IOException
 	{
 		HashMap<String, String> samplerSettings = new HashMap<String, String>();
 		try
@@ -162,7 +163,8 @@ public class IntegrationUtils
 					+ "\", loadUITestCase=\"" + loadUITestCase + ", \"loadUISoapUISampler=\"" + loadUISoapUISampler + "\"" );
 
 			HashMap<String, Object> context = new ContextMapping( soapUIProjectPath, soapUITestSuite, soapUITestCase,
-					loadUIProject, loadUITestCase, loadUISoapUISampler ).setCreateSoapUIRunnerContext();
+					loadUIProject, loadUITestCase, loadUISoapUISampler ).setCreateSoapUIRunnerContext( generatorType,
+					analisysType );
 			samplerSettings = ( HashMap<String, String> )CajoClient.getInstance().invoke( "createSoapUIRunner", context );
 			bringLoadUIToFront();
 		}
@@ -341,38 +343,38 @@ public class IntegrationUtils
 		{
 		case ADD_TO_PROJECT_LEVEL :
 			firstSamplerSettings = createSoapUIRunner( soapUIProjectPath, soapUITestSuite, firstTestCase, loadUIProject,
-					null, CREATE_NEW_OPTION );
+					null, CREATE_NEW_OPTION, NOT_SELECTED, NOT_SELECTED );
 			loadUIProjectAddedTo = firstSamplerSettings.get( ContextMapping.LOADUI_PROJECT_NAME );
 			for( int i = 1; i < soapUITestCases.length; i++ )
 			{
 				String testCase = soapUITestCases[i];
 				createSoapUIRunner( soapUIProjectPath, soapUITestSuite, testCase, loadUIProjectAddedTo, null,
-						CREATE_NEW_OPTION );
+						CREATE_NEW_OPTION, NOT_SELECTED, NOT_SELECTED );
 			}
 			break;
 
 		case ADD_TO_SINGLE_TESTCASE :
 			firstSamplerSettings = createSoapUIRunner( soapUIProjectPath, soapUITestSuite, firstTestCase, loadUIProject,
-					CREATE_NEW_OPTION, CREATE_NEW_OPTION );
+					CREATE_NEW_OPTION, CREATE_NEW_OPTION, NOT_SELECTED, NOT_SELECTED );
 			loadUITestCaseAddedTo = firstSamplerSettings.get( ContextMapping.LOADUI_TEST_CASE_NAME );
 			loadUIProjectAddedTo = firstSamplerSettings.get( ContextMapping.LOADUI_PROJECT_NAME );
 			for( int i = 1; i < soapUITestCases.length; i++ )
 			{
 				String testCase = soapUITestCases[i];
 				createSoapUIRunner( soapUIProjectPath, soapUITestSuite, testCase, loadUIProjectAddedTo,
-						loadUITestCaseAddedTo, CREATE_NEW_OPTION );
+						loadUITestCaseAddedTo, CREATE_NEW_OPTION, NOT_SELECTED, NOT_SELECTED );
 
 			}
 			break;
 		case ADD_TO_SEPARATE_TESTCASES :
 			firstSamplerSettings = createSoapUIRunner( soapUIProjectPath, soapUITestSuite, firstTestCase, loadUIProject,
-					CREATE_NEW_OPTION, CREATE_NEW_OPTION );
+					CREATE_NEW_OPTION, CREATE_NEW_OPTION, NOT_SELECTED, NOT_SELECTED );
 			loadUIProjectAddedTo = firstSamplerSettings.get( ContextMapping.LOADUI_PROJECT_NAME );
 			for( int i = 1; i < soapUITestCases.length; i++ )
 			{
 				String testCase = soapUITestCases[i];
 				createSoapUIRunner( soapUIProjectPath, soapUITestSuite, testCase, loadUIProjectAddedTo, CREATE_NEW_OPTION,
-						CREATE_NEW_OPTION );
+						CREATE_NEW_OPTION, NOT_SELECTED, NOT_SELECTED );
 			}
 			break;
 		}

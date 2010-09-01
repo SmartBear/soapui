@@ -31,6 +31,7 @@ import com.eviware.soapui.impl.wsdl.loadtest.strategy.VarianceLoadStrategy;
 
 public class ContextMapping
 {
+	private static final String NOT_SELECTED = "-";
 	private static final String TEST_CASE = "testCase";
 	private static final String TEST_SUITE = "testSuite";
 	private static final String PROJECT_FILE = "projectFile";
@@ -128,7 +129,7 @@ public class ContextMapping
 		return clazz.getName() + "@" + value;
 	}
 
-	public HashMap<String, Object> setCreateSoapUIRunnerContext()
+	public HashMap<String, Object> setCreateSoapUIRunnerContext( String generatorType, String analisysType )
 	{
 		HashMap<String, Object> context = new HashMap<String, Object>();
 		HashMap<String, String> properties = new HashMap<String, String>();
@@ -140,6 +141,24 @@ public class ContextMapping
 		context.put( LOADUI_TEST_CASE_NAME, loadUITestCase );
 		context.put( SOAPUI_RUNNER_LABEL, loadUISoapUISampler );
 		context.put( SOAPUI_RUNNER_PROPERTIES, properties );
+
+		if( !NOT_SELECTED.equals( generatorType ) )
+		{
+			mapDefaultTriggerProperties( generatorType );
+			context.put( TRIGGER_PROPERTIES, triggerProperties );
+			context.put( TRIGGER_LABEL, loadUITriggerType );
+			context.put( TRIGGER_TYPE, loadUITriggerType );
+			context.put( TRIGGER_CREATE_NEW, new Boolean( true ) );
+		}
+		
+		if( !NOT_SELECTED.equals( analisysType ) )
+		{
+			mapStatisticsProperties( null );
+			context.put( STATISTICS_PROPERTIES, statisticsProperties );
+			context.put( STATISTICS_LABEL, STATISTICS );
+			context.put( STATISTICS_TYPE, STATISTICS );
+			context.put( STATISTICS_CREATE_NEW, new Boolean( true ) );
+		}
 		return context;
 	}
 
@@ -243,6 +262,12 @@ public class ContextMapping
 			triggerProperties.put( "load", createProperyValue( Long.class, Long.toString( loadTest.getThreadCount() ) ) );
 			return;
 		}
+	}
+
+	protected void mapDefaultTriggerProperties( String generatorType )
+	{
+		triggerProperties = new HashMap<String, String>();
+		loadUITriggerType = generatorType;
 	}
 
 	public HashMap<String, Object> setFinalExportLoadTestToLoadUIContext( HashMap<String, Object> createdItemContext )
