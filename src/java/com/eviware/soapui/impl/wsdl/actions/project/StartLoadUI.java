@@ -29,8 +29,6 @@ public class StartLoadUI extends AbstractSoapUIAction<WsdlProject>
 	private static final String LOADUI_LAUNCH_EXTENSION = ( UISupport.isWindows() ? BAT : UISupport.isMac() ? COMMAND
 			: SH );
 	private static final String LOADUI = "loadUI";
-	private static final String LOADUI_LAUNCH_PATH = SoapUI.getSettings().getString( LoadUISettings.LOADUI_PATH, "" )
-			+ File.separator + LOADUI + LOADUI_LAUNCH_EXTENSION;
 	public static final String SOAPUI_ACTION_ID = "StartLoadUI";
 	public static final String LOADUI_LAUNCH_TITLE = "Launch loadUI";
 	public static final String LOADUI_LAUNCH_QUESTION = "For this action you have to launch loadUI. Launch it now?";
@@ -42,13 +40,13 @@ public class StartLoadUI extends AbstractSoapUIAction<WsdlProject>
 
 	public void perform( WsdlProject project, Object param )
 	{
-		String loadUIBatPath = LOADUI_LAUNCH_PATH;
+		String loadUIBatPath = getLoadUIPath();
 		startLoadUI( loadUIBatPath );
 	}
 
 	public static void launchLoadUI()
 	{
-		String loadUILaunchPath = LOADUI_LAUNCH_PATH;
+		String loadUILaunchPath = getLoadUIPath();
 		startLoadUI( loadUILaunchPath );
 	}
 
@@ -76,7 +74,7 @@ public class StartLoadUI extends AbstractSoapUIAction<WsdlProject>
 				{
 					if( SoapUIPreferencesAction.getInstance().show( SoapUIPreferencesAction.LOADUI_SETTINGS ) )
 					{
-						loadUILaunchPath = LOADUI_LAUNCH_PATH;
+						loadUILaunchPath = getLoadUIPath();
 					}
 					else
 					{
@@ -97,6 +95,12 @@ public class StartLoadUI extends AbstractSoapUIAction<WsdlProject>
 		{
 			SoapUI.logError( e );
 		}
+	}
+
+	private static String getLoadUIPath()
+	{
+		return SoapUI.getSettings().getString( LoadUISettings.LOADUI_PATH, "" )
+		+ File.separator + LOADUI + LOADUI_LAUNCH_EXTENSION;
 	}
 
 	public static boolean testCajoConnection()
