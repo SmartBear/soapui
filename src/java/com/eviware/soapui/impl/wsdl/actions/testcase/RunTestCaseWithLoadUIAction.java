@@ -118,8 +118,8 @@ public class RunTestCaseWithLoadUIAction extends AbstractSoapUIAction<WsdlTestCa
 				"Virtual Users", "Fixed Load" } );
 		dialog.setValue( Form.GENERATOR, EMPTY_OPTION );
 
-		dialog.setOptions( Form.ANALISYS, new String[] { EMPTY_OPTION, "Statistics" } );
-		dialog.setValue( Form.ANALISYS, EMPTY_OPTION );
+		dialog.setOptions( Form.STATISTICS, new String[] { EMPTY_OPTION, "Statistics" } );
+		dialog.setValue( Form.STATISTICS, EMPTY_OPTION );
 
 		if( dialog.show() )
 		{
@@ -128,7 +128,7 @@ public class RunTestCaseWithLoadUIAction extends AbstractSoapUIAction<WsdlTestCa
 					.equals( IntegrationUtils.CREATE_ON_PROJECT_LEVEL ) ? dialog.getValue( Form.TESTCASE ) : null;
 			String targetSoapUIRunnerName = dialog.getValue( Form.SOAPUIRUNNER );
 			generatorType = dialog.getValue( Form.GENERATOR );
-			analisysType = dialog.getValue( Form.ANALISYS );
+			analisysType = dialog.getValue( Form.STATISTICS );
 			if( dialog.getReturnValue() == XFormDialog.OK_OPTION )
 			{
 				String openedProjectName = IntegrationUtils.getOpenedProjectName();
@@ -203,8 +203,8 @@ public class RunTestCaseWithLoadUIAction extends AbstractSoapUIAction<WsdlTestCa
 		@AField( name = "LoadUI Generator Type", description = "Choose generator type in loadUI", type = AFieldType.ENUMERATION )
 		public final static String GENERATOR = "LoadUI Generator Type";
 
-		@AField( name = "LoadUI Analisys Type", description = "Choose analisys type in loadUI", type = AFieldType.ENUMERATION )
-		public final static String ANALISYS = "LoadUI Analisys Type";
+		@AField( name = "LoadUI Statistics", description = "Choose Statistics in loadUI", type = AFieldType.ENUMERATION )
+		public final static String STATISTICS = "LoadUI Statistics";
 
 	}
 
