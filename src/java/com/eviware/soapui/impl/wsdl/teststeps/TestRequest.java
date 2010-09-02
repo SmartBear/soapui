@@ -23,7 +23,8 @@ public interface TestRequest extends Request, Assertable
 
 	public boolean isDiscardResponse();
 
-	public WsdlMessageAssertion importAssertion( WsdlMessageAssertion source, boolean overwrite, boolean createCopy );
+	public WsdlMessageAssertion importAssertion( WsdlMessageAssertion source, boolean overwrite, boolean createCopy,
+			String newName );
 
 	public Response getResponse();
 }

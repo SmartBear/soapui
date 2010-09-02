@@ -398,9 +398,10 @@ public class AMFRequestTestStep extends WsdlTestStepWithProperties implements As
 		return getAMFRequest().getResponse() == null ? null : getAMFRequest().getResponse().getContentAsString();
 	}
 
-	public WsdlMessageAssertion importAssertion( WsdlMessageAssertion source, boolean overwrite, boolean createCopy )
+	public WsdlMessageAssertion importAssertion( WsdlMessageAssertion source, boolean overwrite, boolean createCopy,
+			String newName )
 	{
-		return assertionsSupport.importAssertion( source, overwrite, createCopy );
+		return assertionsSupport.importAssertion( source, overwrite, createCopy, newName );
 	}
 
 	public AssertableType getAssertableType()

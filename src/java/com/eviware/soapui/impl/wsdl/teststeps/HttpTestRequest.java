@@ -357,9 +357,10 @@ public class HttpTestRequest extends HttpRequest implements HttpTestRequestInter
 		return getTestStep();
 	}
 
-	public WsdlMessageAssertion importAssertion( WsdlMessageAssertion source, boolean overwrite, boolean createCopy )
+	public WsdlMessageAssertion importAssertion( WsdlMessageAssertion source, boolean overwrite, boolean createCopy,
+			String newName )
 	{
-		return assertionsSupport.importAssertion( source, overwrite, createCopy );
+		return assertionsSupport.importAssertion( source, overwrite, createCopy, newName );
 	}
 
 	public boolean isDiscardResponse()

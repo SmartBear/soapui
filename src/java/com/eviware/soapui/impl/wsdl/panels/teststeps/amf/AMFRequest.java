@@ -521,9 +521,10 @@ public class AMFRequest extends AbstractAnimatableModelItem<ModelItemConfig> imp
 		return testStep;
 	}
 
-	public WsdlMessageAssertion importAssertion( WsdlMessageAssertion source, boolean overwrite, boolean createCopy )
+	public WsdlMessageAssertion importAssertion( WsdlMessageAssertion source, boolean overwrite, boolean createCopy,
+			String newName )
 	{
-		return testStep.importAssertion( source, overwrite, createCopy );
+		return testStep.importAssertion( source, overwrite, createCopy, newName );
 	}
 
 	public TestAssertion addAssertion( String selection )

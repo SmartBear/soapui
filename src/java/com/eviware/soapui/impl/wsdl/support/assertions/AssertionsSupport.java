@@ -257,10 +257,12 @@ public class AssertionsSupport implements PropertyChangeListener
 		return result;
 	}
 
-	public WsdlMessageAssertion importAssertion( WsdlMessageAssertion source, boolean overwrite, boolean createCopy )
+	public WsdlMessageAssertion importAssertion( WsdlMessageAssertion source, boolean overwrite, boolean createCopy,
+			String newName )
 	{
 		TestAssertionConfig conf = modelItemConfig.addNewAssertion();
 		conf.set( source.getConfig() );
+		conf.setName( newName );
 		if( createCopy && conf.isSetId() )
 			conf.unsetId();
 
@@ -303,9 +305,13 @@ public class AssertionsSupport implements PropertyChangeListener
 			String name = assertionLabel;
 			while( getAssertionByName( name.trim() ) != null )
 			{
-				name = UISupport.prompt( "Specify unique name of Assertion", "Rename Assertion", assertionLabel + " "
-						+ ( getAssertionsOfType( TestAssertionRegistry.getInstance().getAssertionClassType( assertionConfig ) ).size() ) );
-				if( name == null ) {
+				name = UISupport.prompt( "Specify unique name of Assertion", "Rename Assertion",
+						assertionLabel
+								+ " "
+								+ ( getAssertionsOfType( TestAssertionRegistry.getInstance().getAssertionClassType(
+										assertionConfig ) ).size() ) );
+				if( name == null )
+				{
 					return null;
 				}
 			}

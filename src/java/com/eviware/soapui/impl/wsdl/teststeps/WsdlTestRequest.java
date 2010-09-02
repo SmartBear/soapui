@@ -437,9 +437,10 @@ public class WsdlTestRequest extends WsdlRequest implements Assertable, TestRequ
 		return assertionsSupport.cloneAssertion( source, name );
 	}
 
-	public WsdlMessageAssertion importAssertion( WsdlMessageAssertion source, boolean overwrite, boolean createCopy )
+	public WsdlMessageAssertion importAssertion( WsdlMessageAssertion source, boolean overwrite, boolean createCopy,
+			String newName )
 	{
-		return assertionsSupport.importAssertion( source, overwrite, createCopy );
+		return assertionsSupport.importAssertion( source, overwrite, createCopy, newName );
 	}
 
 	public List<TestAssertion> getAssertionList()

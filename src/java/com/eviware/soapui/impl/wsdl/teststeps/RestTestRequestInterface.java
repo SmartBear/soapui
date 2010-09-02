@@ -19,8 +19,8 @@ import com.eviware.soapui.support.resolver.ResolveContext;
 
 public interface RestTestRequestInterface extends HttpTestRequestInterface<RestRequestConfig>, RestRequestInterface
 {
-	public WsdlMessageAssertion importAssertion( WsdlMessageAssertion source, boolean overwrite,
-			boolean createCopy );
+	public WsdlMessageAssertion importAssertion( WsdlMessageAssertion source, boolean overwrite, boolean createCopy,
+			String newName );
 
 	public void setRestMethod( RestMethod restMethod );
 
@@ -29,6 +29,6 @@ public interface RestTestRequestInterface extends HttpTestRequestInterface<RestR
 	public void resolve( ResolveContext<?> context );
 
 	public String getServiceName();
-	
+
 	public RestTestRequestStep getTestStep();
 }

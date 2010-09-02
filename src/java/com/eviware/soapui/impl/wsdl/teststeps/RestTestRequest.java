@@ -390,9 +390,10 @@ public class RestTestRequest extends RestRequest implements RestTestRequestInter
 		return assertionsSupport.cloneAssertion( source, name );
 	}
 
-	public WsdlMessageAssertion importAssertion( WsdlMessageAssertion source, boolean overwrite, boolean createCopy )
+	public WsdlMessageAssertion importAssertion( WsdlMessageAssertion source, boolean overwrite, boolean createCopy,
+			String newName )
 	{
-		return assertionsSupport.importAssertion( source, overwrite, createCopy );
+		return assertionsSupport.importAssertion( source, overwrite, createCopy, newName );
 	}
 
 	public List<TestAssertion> getAssertionList()
@@ -481,4 +482,5 @@ public class RestTestRequest extends RestRequest implements RestTestRequestInter
 	{
 		getSettings().setBoolean( "discardResponse", discardResponse );
 	}
+
 }

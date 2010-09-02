@@ -401,9 +401,10 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 		return getJdbcRequest().getResponse() == null ? "" : getJdbcRequest().getResponse().getContentAsString();
 	}
 
-	public WsdlMessageAssertion importAssertion( WsdlMessageAssertion source, boolean overwrite, boolean createCopy )
+	public WsdlMessageAssertion importAssertion( WsdlMessageAssertion source, boolean overwrite, boolean createCopy,
+			String newName )
 	{
-		return assertionsSupport.importAssertion( source, overwrite, createCopy );
+		return assertionsSupport.importAssertion( source, overwrite, createCopy, newName );
 	}
 
 	public AssertableType getAssertableType()
