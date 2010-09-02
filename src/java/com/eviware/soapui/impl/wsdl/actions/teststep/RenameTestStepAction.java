@@ -35,7 +35,7 @@ public class RenameTestStepAction extends AbstractSoapUIAction<WsdlTestStep>
 		if( name == null || name.equals( testStep.getName() ) )
 			return;
 
-		while( testStep.getTestCase().getTestStepByName( name ) != null )
+		while( testStep.getTestCase().getTestStepByName( name.trim() ) != null )
 		{
 			name = UISupport.prompt( "Specify unique name of TestStep", "Rename TestStep", testStep.getName() );
 			if( name == null || name.equals( testStep.getName() ) )

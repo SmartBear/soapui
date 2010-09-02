@@ -14,6 +14,7 @@ package com.eviware.soapui.impl.wsdl.actions.testsuite;
 
 import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 
@@ -42,6 +43,8 @@ public class AddNewTestCaseAction extends AbstractSoapUIAction<WsdlTestSuite>
 		while( testSuite.getTestCaseByName( name.trim() ) != null )
 		{
 			name = UISupport.prompt( "Specify unique name of TestCase", "Rename TestCase", name );
+			if( StringUtils.isNullOrEmpty( name ) )
+				return;
 		}
 
 		WsdlTestCase testCase = testSuite.addNewTestCase( name );

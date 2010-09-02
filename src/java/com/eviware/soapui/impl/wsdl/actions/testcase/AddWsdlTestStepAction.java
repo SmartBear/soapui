@@ -16,6 +16,7 @@ import com.eviware.soapui.config.TestStepConfig;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestStepFactory;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 
@@ -40,14 +41,20 @@ public class AddWsdlTestStepAction extends AbstractSoapUIAction<WsdlTestCase>
 		WsdlTestStepFactory factory = ( WsdlTestStepFactory )param;
 
 		String name = UISupport.prompt( "Specify name for new step", "Add Step", factory.getTestStepName() );
-		if( name != null )
+
+		if( name == null )
+			return;
+		while( testCase.getTestStepByName( name.trim() ) != null )
 		{
-			TestStepConfig newTestStepConfig = factory.createNewTestStep( testCase, name );
-			if( newTestStepConfig != null )
-			{
-				WsdlTestStep testStep = testCase.addTestStep( newTestStepConfig );
-				UISupport.selectAndShow( testStep );
-			}
+			name = UISupport.prompt( "Specify unique name of TestStep", "Rename TestStep", name );
+			if( StringUtils.isNullOrEmpty( name ) )
+				return;
+		}
+		TestStepConfig newTestStepConfig = factory.createNewTestStep( testCase, name );
+		if( newTestStepConfig != null )
+		{
+			WsdlTestStep testStep = testCase.addTestStep( newTestStepConfig );
+			UISupport.selectAndShow( testStep );
 		}
 	}
 }

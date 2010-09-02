@@ -301,7 +301,7 @@ public class AssertionsSupport implements PropertyChangeListener
 			assertionConfig.setType( TestAssertionRegistry.getInstance().getAssertionTypeForName( assertionLabel ) );
 
 			String name = assertionLabel;
-			while( getAssertionByName( name ) != null )
+			while( getAssertionByName( name.trim() ) != null )
 			{
 				name = UISupport.prompt( "Specify unique name of Assertion", "Rename Assertion", assertionLabel + " "
 						+ ( getAssertionsOfType( TestAssertionRegistry.getInstance().getAssertionClassType( assertionConfig ) ).size() ) );

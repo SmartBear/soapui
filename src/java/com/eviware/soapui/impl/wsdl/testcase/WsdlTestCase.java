@@ -307,7 +307,7 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 	private boolean ensureUniqueName( WsdlTestStep testStep )
 	{
 		String name = testStep.getName();
-		while( name == null || getTestStepByName( name ) != null )
+		while( name == null || getTestStepByName( name.trim() ) != null )
 		{
 			if( name == null )
 				name = testStep.getName();
@@ -315,7 +315,7 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 			{
 				int cnt = 0;
 
-				while( getTestStepByName( name ) != null )
+				while( getTestStepByName( name.trim() ) != null )
 				{
 					cnt++ ;
 					name = testStep.getName() + " " + cnt;
