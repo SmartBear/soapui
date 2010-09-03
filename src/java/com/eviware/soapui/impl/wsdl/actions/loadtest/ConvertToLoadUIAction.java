@@ -150,7 +150,7 @@ public class ConvertToLoadUIAction extends AbstractSoapUIAction<WsdlLoadTest>
 		}
 	}
 
-	@AForm( description = "Specify Items in LoadUI for Converting LoadTest", name = "Convert to LoadUI", helpUrl = HelpUrls.CLONETESTCASE_HELP_URL, icon = UISupport.CONVERT_TO_LOADUI_ICON_PATH )
+	@AForm( description = "Specify Items in loadUI for Converting LoadTest", name = "Convert to loadUI", helpUrl = HelpUrls.CLONETESTCASE_HELP_URL, icon = UISupport.CONVERT_TO_LOADUI_ICON_PATH )
 	protected interface Form
 	{
 		@AField( name = "Target Project", description = "The target Project in loadUI", type = AFieldType.ENUMERATION )

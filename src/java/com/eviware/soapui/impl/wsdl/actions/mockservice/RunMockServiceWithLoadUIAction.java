@@ -18,7 +18,6 @@ import java.util.HashMap;
 import com.eviware.soapui.impl.wsdl.actions.project.StartLoadUI;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockService;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
-import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.integration.loadui.ContextMapping;
 import com.eviware.soapui.integration.loadui.IntegrationUtils;
 import com.eviware.soapui.support.StringUtils;
@@ -156,7 +155,7 @@ public class RunMockServiceWithLoadUIAction extends AbstractSoapUIAction<WsdlMoc
 		}
 	}
 
-	@AForm( description = "Specify Items in LoadUI for Running TestCase", name = "Run With LoadUI", helpUrl = HelpUrls.CLONETESTCASE_HELP_URL, icon = UISupport.LOADUI_ICON_PATH )
+	@AForm( description = "Specify Items in loadUI for Running TestCase", name = "Run With loadUI", helpUrl = HelpUrls.CLONETESTCASE_HELP_URL, icon = UISupport.LOADUI_ICON_PATH )
 	protected interface Form
 	{
 		@AField( name = "Target Project", description = "The target Project in loadUI", type = AFieldType.ENUMERATION )

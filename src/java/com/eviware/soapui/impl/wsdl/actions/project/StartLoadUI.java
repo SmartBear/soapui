@@ -35,7 +35,7 @@ public class StartLoadUI extends AbstractSoapUIAction<WsdlProject>
 
 	public StartLoadUI()
 	{
-		super( "Start LoadUI", "Start LoadUI application" );
+		super( "Start loadUI", "Start loadUI application" );
 	}
 
 	public void perform( WsdlProject project, Object param )

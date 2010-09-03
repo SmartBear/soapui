@@ -188,7 +188,7 @@ public class RunTestCaseWithLoadUIAction extends AbstractSoapUIAction<WsdlTestCa
 
 	}
 
-	@AForm( description = "Specify Items in LoadUI for Running TestCase", name = "Run With LoadUI", helpUrl = HelpUrls.CLONETESTCASE_HELP_URL, icon = UISupport.LOADUI_ICON_PATH )
+	@AForm( description = "Specify Items in loadUI for Running TestCase", name = "Run With loadUI", helpUrl = HelpUrls.CLONETESTCASE_HELP_URL, icon = UISupport.LOADUI_ICON_PATH )
 	protected interface Form
 	{
 		@AField( name = "Target Project", description = "The target Project in loadUI", type = AFieldType.ENUMERATION )
@@ -200,11 +200,11 @@ public class RunTestCaseWithLoadUIAction extends AbstractSoapUIAction<WsdlTestCa
 		@AField( name = "Target SoapUI Runner", description = "The target SoapUI Runner in loadUI", type = AFieldType.ENUMERATION )
 		public final static String SOAPUIRUNNER = "Target SoapUI Runner";
 
-		@AField( name = "LoadUI Generator Type", description = "Choose generator type in loadUI", type = AFieldType.ENUMERATION )
-		public final static String GENERATOR = "LoadUI Generator Type";
+		@AField( name = "loadUI Generator Type", description = "Choose generator type in loadUI", type = AFieldType.ENUMERATION )
+		public final static String GENERATOR = "loadUI Generator Type";
 
-		@AField( name = "LoadUI Statistics", description = "Choose Statistics in loadUI", type = AFieldType.ENUMERATION )
-		public final static String STATISTICS = "LoadUI Statistics";
+		@AField( name = "loadUI Statistics", description = "Choose Statistics in loadUI", type = AFieldType.ENUMERATION )
+		public final static String STATISTICS = "loadUI Statistics";
 
 	}
 
