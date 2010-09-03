@@ -24,13 +24,11 @@ import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.registry.HttpRequestStepFactory;
 import com.eviware.soapui.model.iface.Request.SubmitException;
 import com.eviware.soapui.model.support.ModelSupport;
-import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.support.MessageSupport;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 import com.eviware.x.form.XFormDialog;
-import com.eviware.x.form.XFormField;
-import com.eviware.x.form.XFormFieldListener;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AForm;
@@ -57,36 +55,11 @@ public class CreateWebTestAction extends AbstractSoapUIAction<WsdlProject>
 		if( dialog == null )
 		{
 			dialog = ADialogBuilder.buildDialog( Form.class );
-			// dialog.getFormField( Form.TESTSUITE ).addFormFieldListener( new
-			// XFormFieldListener()
-			// {
-			//
-			// @Override
-			// public void valueChanged( XFormField sourceField, String newValue,
-			// String oldValue )
-			// {
-			// if( newValue.equals( CREATE_NEW_OPTION ) )
-			// {
-			// dialog.setOptions( Form.TESTCASE, new String[] { CREATE_NEW_OPTION }
-			// );
-			// }
-			// else
-			// {
-			// TestSuite testSuite = project.getTestSuiteByName( newValue );
-			// dialog.setOptions( Form.TESTCASE, testSuite == null ? new String[] {
-			// CREATE_NEW_OPTION }
-			// : ModelSupport.getNames( testSuite.getTestCaseList(), new String[] {
-			// CREATE_NEW_OPTION } ) );
-			// }
-			// }
-			// } );
 		}
 
 		dialog.setOptions( Form.TESTSUITE, ModelSupport.getNames( new String[] { CREATE_NEW_OPTION }, project
 				.getTestSuiteList() ) );
 		dialog.setValue( Form.TESTSUITE, CREATE_NEW_OPTION );
-		// dialog.setOptions( Form.TESTCASE, new String[] { CREATE_NEW_OPTION } );
-		// dialog.setValue( Form.TESTCASE, CREATE_NEW_OPTION );
 		dialog.setValue( Form.TESTCASENAME, "Web Test" );
 		dialog.setValue( Form.URL, "" );
 		dialog.setValue( Form.STARTRECORDING, Boolean.toString( true ) );
@@ -94,6 +67,11 @@ public class CreateWebTestAction extends AbstractSoapUIAction<WsdlProject>
 		{
 			String targetTestSuiteName = dialog.getValue( Form.TESTSUITE );
 			String targetTestCaseName = dialog.getValue( Form.TESTCASENAME );
+			while( StringUtils.isNullOrEmpty( dialog.getValue( Form.URL ) ) )
+			{
+				UISupport.showErrorMessage( "You must specify the web address to start at" );
+				dialog.show();
+			}
 			String testStepName = dialog.getValue( Form.URL );
 			WsdlTestSuite targetTestSuite = null;
 			WsdlTestCase targetTestCase = null;
@@ -179,8 +157,8 @@ public class CreateWebTestAction extends AbstractSoapUIAction<WsdlProject>
 	@AForm( description = "Specify target TestSuite/TestCase for the WebTest", name = "Add WebTest", helpUrl = HelpUrls.CLONETESTSUITE_HELP_URL, icon = UISupport.TOOL_ICON_PATH )
 	public interface Form
 	{
-		@AField( description = "Url", type = AField.AFieldType.STRING )
-		public final static String URL = "Url";
+		@AField( name = "Web Address", description = "The web address to start at", type = AField.AFieldType.STRING )
+		public final static String URL = "Web Address";
 
 		@AField( name = "Web Test Name", description = "The WebTestname", type = AFieldType.STRING )
 		public final static String TESTCASENAME = "Web Test Name";
