@@ -200,11 +200,11 @@ public class RunTestCaseWithLoadUIAction extends AbstractSoapUIAction<WsdlTestCa
 		@AField( name = "Target SoapUI Runner", description = "The target SoapUI Runner in loadUI", type = AFieldType.ENUMERATION )
 		public final static String SOAPUIRUNNER = "Target SoapUI Runner";
 
-		@AField( name = "loadUI Generator Type", description = "Choose generator type in loadUI", type = AFieldType.ENUMERATION )
-		public final static String GENERATOR = "loadUI Generator Type";
+		@AField( name = "Default Generator", description = "Choose generator type in loadUI", type = AFieldType.ENUMERATION )
+		public final static String GENERATOR = "Default Generator";
 
-		@AField( name = "loadUI Statistics", description = "Choose Statistics in loadUI", type = AFieldType.ENUMERATION )
-		public final static String STATISTICS = "loadUI Statistics";
+		@AField( name = "Default Statistics", description = "Choose Statistics in loadUI", type = AFieldType.ENUMERATION )
+		public final static String STATISTICS = "Default Statistics";
 
 	}
 
