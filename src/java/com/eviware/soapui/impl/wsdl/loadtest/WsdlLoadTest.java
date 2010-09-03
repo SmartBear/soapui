@@ -628,6 +628,18 @@ public class WsdlLoadTest extends AbstractWsdlModelItem<LoadTestConfig> implemen
 		return index < 0 || index >= assertions.size() ? null : assertions.get( index );
 	}
 
+	public LoadTestAssertion getAssertionByName( String name )
+	{
+		for( LoadTestAssertion assertion : assertions )
+		{
+			if( assertion.getName().equals( name ) )
+			{
+				return assertion;
+			}
+		}
+		return null;
+	}
+
 	private class ConfigurationChangePropertyListener implements PropertyChangeListener
 	{
 		public void propertyChange( PropertyChangeEvent evt )
