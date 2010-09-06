@@ -111,7 +111,8 @@ public class WsdlMockRequest implements MockRequest
 		if( contentType != null && contentType.toUpperCase().startsWith( "MULTIPART" ) )
 		{
 			readMultipartRequest( request );
-			contentType = mmSupport.getRootPart().getContentType();
+			if( mmSupport != null && mmSupport.getRootPart() != null )
+				contentType = mmSupport.getRootPart().getContentType();
 		}
 		else
 		{
