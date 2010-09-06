@@ -22,7 +22,13 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.DataInputStream;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -219,6 +225,7 @@ public class SoapUI
 	private JTextField searchField;
 	private static JToggleButton applyProxyButton;
 	private static Logger groovyLogger;
+	private static Logger loadUILogger;
 	private static JButton launchLoadUIButton;
 
 	// --------------------------- CONSTRUCTORS ---------------------------
@@ -1151,6 +1158,38 @@ public class SoapUI
 
 	private class LaunchLoadUIButtonAction extends AbstractAction
 	{
+		private final class LoadUIRunner implements Runnable
+		{
+			@Override
+			public void run()
+			{
+				Process p = StartLoadUI.launchLoadUI();
+				if( p != null )
+				{
+					InputStream is = p.getInputStream();
+					loadUILogger = Logger.getLogger( "com.eviware.soapui" );
+					try
+					{
+						BufferedInputStream inputStream = new BufferedInputStream( is );
+						BufferedReader bris = new BufferedReader( new InputStreamReader( inputStream ) );
+						String line = null;
+						while( ( line = bris.readLine() ) != null )
+						{
+							loadUILogger.info( line );
+						}
+						inputStream.close();
+						bris.close();
+						is.close();
+					}
+					catch( IOException e1 )
+					{// Catch exception if any
+						SoapUI.logError( e1 );
+					}
+				}
+
+			}
+		}
+
 		public LaunchLoadUIButtonAction()
 		{
 			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/launchLoadUI.png" ) );
@@ -1159,7 +1198,8 @@ public class SoapUI
 
 		public void actionPerformed( ActionEvent e )
 		{
-			new StartLoadUI().launchLoadUI();
+			Thread launchLoadUI = new Thread( new LoadUIRunner() );
+			launchLoadUI.start();
 		}
 	}
 

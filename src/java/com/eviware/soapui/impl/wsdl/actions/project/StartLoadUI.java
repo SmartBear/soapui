@@ -44,20 +44,20 @@ public class StartLoadUI extends AbstractSoapUIAction<WsdlProject>
 		startLoadUI( loadUIBatPath );
 	}
 
-	public static void launchLoadUI()
+	public static Process launchLoadUI()
 	{
 		String loadUILaunchPath = getLoadUIPath();
-		startLoadUI( loadUILaunchPath );
+		return startLoadUI( loadUILaunchPath );
 	}
 
-	private static void startLoadUI( String loadUILaunchPath )
+	private static Process startLoadUI( String loadUILaunchPath )
 	{
 		if( CajoClient.getInstance().testConnection() )
 		{
 			try
 			{
 				CajoClient.getInstance().invoke( "bringToFront", null );
-				return;
+				return null;
 			}
 			catch( Exception e )
 			{
@@ -78,7 +78,7 @@ public class StartLoadUI extends AbstractSoapUIAction<WsdlProject>
 					}
 					else
 					{
-						return;
+						return null;
 					}
 				}
 			}
@@ -90,17 +90,19 @@ public class StartLoadUI extends AbstractSoapUIAction<WsdlProject>
 					: commandsLinux );
 			pb.directory( new File( SoapUI.getSettings().getString( LoadUISettings.LOADUI_PATH, "" ) ) );
 			Process p = pb.start();
+			return p;
 		}
 		catch( Exception e )
 		{
 			SoapUI.logError( e );
 		}
+		return null;
 	}
 
 	private static String getLoadUIPath()
 	{
-		return SoapUI.getSettings().getString( LoadUISettings.LOADUI_PATH, "" )
-		+ File.separator + LOADUI + LOADUI_LAUNCH_EXTENSION;
+		return SoapUI.getSettings().getString( LoadUISettings.LOADUI_PATH, "" ) + File.separator + LOADUI
+				+ LOADUI_LAUNCH_EXTENSION;
 	}
 
 	public static boolean testCajoConnection()
