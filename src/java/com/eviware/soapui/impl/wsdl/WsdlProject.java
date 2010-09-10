@@ -132,6 +132,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 	protected DefaultWssContainer wssContainer;
 	private String projectPassword = null;
 	private String hermesConfig;
+	private boolean wrongPasswordSupplied;
 
 	/*
 	 * 3 state flag: 1. 0 - project not encrypted 2. 1 - encrypted , good
@@ -385,6 +386,11 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 		return new WsdlTestSuite( this, config );
 	}
 
+	public boolean isWrongPasswordSupplied()
+	{
+		return wrongPasswordSupplied;
+	}
+
 	/**
 	 * Decode encrypted data and restore user/pass
 	 * 
@@ -448,10 +454,12 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 				try
 				{
 					projectDocument.getSoapuiProject().set( XmlObject.Factory.parse( decryptedData ) );
+					wrongPasswordSupplied = false;
 				}
 				catch( XmlException e )
 				{
-					UISupport.showErrorMessage( "Wrong password. Project need to be reloaded." );
+					UISupport.showErrorMessage( "Wrong password. Project needs to be reloaded." );
+					wrongPasswordSupplied = true;
 					getWorkspace().clearProjectPassword( soapuiProject.getName() );
 					return -1;
 				}
@@ -460,6 +468,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 		else
 		{
 			UISupport.showErrorMessage( "Wrong project password" );
+			wrongPasswordSupplied = true;
 			getWorkspace().clearProjectPassword( soapuiProject.getName() );
 			return -1;
 		}
