@@ -207,7 +207,7 @@ public class JettyMockEngine implements MockEngine
 			final Integer port = new Integer( mockService.getPort() );
 			Map<String, List<MockRunner>> map = runners.get( port );
 
-			if( map == null )
+			if( map == null || !map.containsKey( mockService.getPath() ) )
 				return;
 
 			map.get( mockService.getPath() ).remove( runner );
