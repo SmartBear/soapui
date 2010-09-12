@@ -27,6 +27,7 @@ import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.panels.resource.RestParamsTable;
 import com.eviware.soapui.impl.rest.support.RestUtils;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
+import com.eviware.soapui.impl.support.HttpUtils;
 import com.eviware.soapui.impl.wsdl.monitor.WsdlMonitorMessageExchange;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
@@ -90,7 +91,7 @@ public class HttpRequestStepFactory extends WsdlTestStepFactory
 			if( dialog.show() )
 			{
 				HttpRequestConfig httpRequest = HttpRequestConfig.Factory.newInstance();
-				httpRequest.setEndpoint( dialog.getValue( Form.ENDPOINT ) );
+				httpRequest.setEndpoint( HttpUtils.ensureEndpointStartsWithProtocol( dialog.getValue( Form.ENDPOINT ) ) );
 				httpRequest.setMethod( dialog.getValue( Form.HTTPMETHOD ) );
 				XmlBeansRestParamsTestPropertyHolder tempParams = new XmlBeansRestParamsTestPropertyHolder( testCase,
 						httpRequest.addNewParameters() );
@@ -132,7 +133,8 @@ public class HttpRequestStepFactory extends WsdlTestStepFactory
 		XmlBeansRestParamsTestPropertyHolder tempParams = new XmlBeansRestParamsTestPropertyHolder( testCase, httpRequest
 				.addNewParameters() );
 		tempParams.addParameters( params );
-		httpRequest.setEndpoint( endpoint );
+
+		httpRequest.setEndpoint( HttpUtils.ensureEndpointStartsWithProtocol( endpoint ) );
 
 		TestStepConfig testStep = TestStepConfig.Factory.newInstance();
 		testStep.setType( HTTPREQUEST_TYPE );

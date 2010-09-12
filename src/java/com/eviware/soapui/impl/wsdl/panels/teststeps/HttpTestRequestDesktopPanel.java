@@ -24,19 +24,19 @@ import java.beans.PropertyChangeEvent;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import javax.swing.AbstractAction;
-import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.ListModel;
+import javax.swing.SwingUtilities;
 import javax.swing.text.Document;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
+import com.eviware.soapui.impl.support.HttpUtils;
 import com.eviware.soapui.impl.support.components.ModelItemXmlEditor;
 import com.eviware.soapui.impl.support.http.HttpRequest;
 import com.eviware.soapui.impl.support.panels.AbstractHttpXmlRequestDesktopPanel;
@@ -235,7 +235,18 @@ public class HttpTestRequestDesktopPanel extends
 					return;
 
 				updating = true;
-				getRequest().setEndpoint( pathTextField.getText() );
+				String text = pathTextField.getText();
+				getRequest().setEndpoint( HttpUtils.ensureEndpointStartsWithProtocol( text ) );
+				if( !text.equals( getRequest().getEndpoint() ) )
+					SwingUtilities.invokeLater( new Runnable()
+					{
+						@Override
+						public void run()
+						{
+							pathTextField.setText( getRequest().getEndpoint() );
+						}
+					} );
+
 				updating = false;
 			}
 		} );
@@ -246,14 +257,7 @@ public class HttpTestRequestDesktopPanel extends
 			{
 				if( e.getKeyCode() == KeyEvent.VK_ENTER )
 				{
-					try
-					{
-						doSubmit();
-					}
-					catch( SubmitException e1 )
-					{
-						e1.printStackTrace();
-					}
+					onSubmit();
 				}
 			}
 		} );
@@ -463,6 +467,5 @@ public class HttpTestRequestDesktopPanel extends
 
 		super.propertyChange( evt );
 	}
-
 
 }

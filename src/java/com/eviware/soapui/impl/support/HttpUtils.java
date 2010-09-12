@@ -36,4 +36,16 @@ public class HttpUtils
 
 		return null;
 	}
+
+	public static String ensureEndpointStartsWithProtocol( String endpoint )
+	{
+		if( StringUtils.isNullOrEmpty( endpoint ) )
+			return endpoint;
+
+		String ep = endpoint.toLowerCase().trim();
+		if( !ep.startsWith( "http://" ) && !ep.startsWith( "https://" ) && !ep.startsWith( "$" ) )
+			return "http://" + endpoint;
+
+		return endpoint;
+	}
 }
