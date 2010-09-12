@@ -14,6 +14,7 @@ package com.eviware.soapui.support.components;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeListener;
@@ -183,6 +184,7 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 				{
 					statusBar = new JPanel( new BorderLayout() );
 					statusLabel = new JLabel();
+					UISupport.setFixedSize( statusBar, new Dimension( 20, 20 ) );
 					statusBar.add( statusLabel, BorderLayout.WEST );
 					panel.add( statusBar, BorderLayout.SOUTH );
 				}
@@ -666,6 +668,7 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 		{
 			initBrowser();
 		}
+
 		browser.navigate( getUrl() );
 
 		if( showingErrorPage )
