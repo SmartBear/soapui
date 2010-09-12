@@ -24,7 +24,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.DataInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -186,6 +185,7 @@ public class SoapUI
 	private static List<Object> logCache = new ArrayList<Object>();
 
 	private static SoapUICore soapUICore;
+	private static Timer soapUITimer = new Timer();
 	private static JFrame frame;
 
 	private static Navigator navigator;
@@ -212,7 +212,6 @@ public class SoapUI
 	private InternalDesktopListener internalDesktopListener = new InternalDesktopListener();
 	private JInspectorPanel mainInspector;
 
-	private static Timer backgroundTimer;
 	private static AutoSaveTimerTask autoSaveTimerTask;
 	private static String workspaceName;
 	private static StringToStringMap projectOptions = new StringToStringMap();
@@ -614,8 +613,11 @@ public class SoapUI
 				{
 					brandedTitleExt = "";
 				}
+
 				startSoapUI( mainArgs, "soapUI " + SOAPUI_VERSION + " " + brandedTitleExt, SOAPUI_SPLASH,
 						new StandaloneSoapUICore( true ) );
+
+				CajoServer.getInstance().start();
 			}
 			catch( Exception e )
 			{
@@ -699,7 +701,6 @@ public class SoapUI
 	{
 		WebstartUtilCore.init();
 
-		CajoServer.getInstance().start();
 		mainArgs = args;
 
 		SoapUIRunner soapuiRunner = new SoapUIRunner();
@@ -974,7 +975,14 @@ public class SoapUI
 			}
 		}
 
+		shutdown();
+
 		return true;
+	}
+
+	public static void shutdown()
+	{
+		soapUITimer.cancel();
 	}
 
 	public static void logError( Throwable e )
@@ -1616,16 +1624,8 @@ public class SoapUI
 
 			SoapUI.log( "Scheduling autosave every " + interval + " minutes" );
 
-			if( backgroundTimer == null )
-				backgroundTimer = new Timer( "AutoSave Timer" );
-
-			backgroundTimer.schedule( autoSaveTimerTask, interval * 1000 * 60, interval * 1000 * 60 );
+			soapUITimer.schedule( autoSaveTimerTask, interval * 1000 * 60, interval * 1000 * 60 );
 		}
-	}
-
-	public static Timer getBackgroundTimer()
-	{
-		return backgroundTimer;
 	}
 
 	private static class AutoSaveTimerTask extends TimerTask
@@ -1665,13 +1665,8 @@ public class SoapUI
 		if( interval > 0 )
 		{
 			gcTimerTask = new GCTimerTask();
-
 			SoapUI.log( "Scheduling garbage collection every " + interval + " seconds" );
-
-			if( backgroundTimer == null )
-				backgroundTimer = new Timer( "AutoSave Timer" );
-
-			backgroundTimer.schedule( gcTimerTask, interval * 1000, interval * 1000 );
+			soapUITimer.schedule( gcTimerTask, interval * 1000, interval * 1000 );
 		}
 	}
 
@@ -1704,4 +1699,8 @@ public class SoapUI
 		ProxyUtils.setProxyEnabled( proxyEnabled );
 	}
 
+	public static Timer getSoapUITimer()
+	{
+		return soapUITimer;
+	}
 }

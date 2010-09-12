@@ -14,10 +14,12 @@ package com.eviware.soapui;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.security.GeneralSecurityException;
+import java.util.TimerTask;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -34,6 +36,7 @@ import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.monitor.JettyMockEngine;
 import com.eviware.soapui.monitor.MockEngine;
 import com.eviware.soapui.settings.HttpSettings;
+import com.eviware.soapui.settings.ProxySettings;
 import com.eviware.soapui.settings.SecuritySettings;
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.settings.WSISettings;
@@ -63,12 +66,12 @@ public class DefaultSoapUICore implements SoapUICore
 	private XmlBeansSettingsImpl settings;
 	private SoapUIListenerRegistry listenerRegistry;
 	private SoapUIActionRegistry actionRegistry;
+	private long lastSettingsLoad = 0;
 
 	private String settingsFile;
-
 	private String password;
-
 	protected boolean initialImport;
+	private TimerTask settingsWatcher;
 
 	public boolean getInitialImport()
 	{
@@ -171,12 +174,16 @@ public class DefaultSoapUICore implements SoapUICore
 				if( !settingsFile.exists() )
 				{
 					settingsFile = new File( new File( System.getProperty( "user.home", "." ) ), DEFAULT_SETTINGS_FILE );
+					lastSettingsLoad = 0;
 				}
 			}
 			else
 			{
 				settingsFile = new File( fileName );
+				if( !settingsFile.getAbsolutePath().equals( this.settingsFile ) )
+					lastSettingsLoad = 0;
 			}
+
 			if( !settingsFile.exists() )
 			{
 				if( settingsDocument == null )
@@ -185,8 +192,10 @@ public class DefaultSoapUICore implements SoapUICore
 					settingsDocument = SoapuiSettingsDocumentConfig.Factory.newInstance();
 					setInitialImport( true );
 				}
+
+				lastSettingsLoad = System.currentTimeMillis();
 			}
-			else
+			else if( settingsFile.lastModified() > lastSettingsLoad )
 			{
 				settingsDocument = SoapuiSettingsDocumentConfig.Factory.parse( settingsFile );
 
@@ -225,12 +234,20 @@ public class DefaultSoapUICore implements SoapUICore
 				}
 
 				log.info( "initialized soapui-settings from [" + settingsFile.getAbsolutePath() + "]" );
+				lastSettingsLoad = settingsFile.lastModified();
+
+				if( settingsWatcher == null )
+				{
+					settingsWatcher = new SettingsWatcher();
+					SoapUI.getSoapUITimer().scheduleAtFixedRate( settingsWatcher, 10000, 10000 );
+				}
 			}
 		}
 		catch( Exception e )
 		{
 			log.warn( "Failed to load settings from [" + e.getMessage() + "], creating new" );
 			settingsDocument = SoapuiSettingsDocumentConfig.Factory.newInstance();
+			lastSettingsLoad = 0;
 		}
 
 		if( settingsDocument.getSoapuiSettings() == null )
@@ -387,10 +404,10 @@ public class DefaultSoapUICore implements SoapUICore
 	public String saveSettings() throws Exception
 	{
 		if( settingsFile == null )
-			settingsFile = DEFAULT_SETTINGS_FILE;
+			settingsFile = getRoot() + File.separatorChar + DEFAULT_SETTINGS_FILE;
 
 		// Save settings to root or user.home
-		File file = new File( new File( getRoot() ), DEFAULT_SETTINGS_FILE );
+		File file = new File( settingsFile );
 		if( !file.canWrite() )
 		{
 			file = new File( new File( System.getProperty( "user.home", "." ) ), DEFAULT_SETTINGS_FILE );
@@ -422,8 +439,12 @@ public class DefaultSoapUICore implements SoapUICore
 			}
 		}
 
-		settingsDocument.save( file );
+		FileOutputStream out = new FileOutputStream( file );
+		settingsDocument.save( out );
+		out.flush();
+		out.close();
 		log.info( "Settings saved to [" + file.getAbsolutePath() + "]" );
+		lastSettingsLoad = file.lastModified();
 		return file.getAbsolutePath();
 	}
 
@@ -575,6 +596,24 @@ public class DefaultSoapUICore implements SoapUICore
 				catch( Exception e )
 				{
 					SoapUI.logError( e );
+				}
+			}
+		}
+	}
+
+	private class SettingsWatcher extends TimerTask
+	{
+		@Override
+		public void run()
+		{
+			if( settingsFile != null )
+			{
+				File file = new File( settingsFile );
+				if( file.exists() && file.lastModified() > lastSettingsLoad )
+				{
+					log.info( "Reloading updated settings file" );
+					initSettings( settingsFile );
+					SoapUI.setProxyEnabled( getSettings().getBoolean( ProxySettings.ENABLE_PROXY ) );
 				}
 			}
 		}

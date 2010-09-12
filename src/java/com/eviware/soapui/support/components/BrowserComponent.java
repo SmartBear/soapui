@@ -297,8 +297,14 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 												{
 													in.setInputStream( uploadStream );
 													requestData = in.readByteArray( available );
-													rr.setContent( getRequestBody( requestData ) );
-													rr.setContentType( getContentType( requestData ) );
+													String requestBody = getRequestBody( requestData );
+													if( requestBody != null && requestBody.length() > 0 )
+													{
+														rr.setContent( requestBody );
+														String contentType = getContentType( requestData );
+														if( StringUtils.hasContent( contentType ) )
+															rr.setContentType( contentType );
+													}
 												}
 											}
 											catch( Throwable e )
@@ -394,9 +400,15 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 	private static String getContentType( byte[] requestData )
 	{
 		String request = new String( requestData );
-		String contentType = request.substring( request.indexOf( "Content-Type" ) + 14 );
-		contentType = contentType.substring( 0, contentType.indexOf( "\n" ) - 1 );
-		return contentType.trim();
+		int ix = request.indexOf( "Content-Type" );
+		if( ix > 0 && ix < request.length() - 14 )
+		{
+			String contentType = request.substring( ix + 14 );
+			contentType = contentType.substring( 0, contentType.indexOf( "\n" ) - 1 );
+			return contentType.trim();
+		}
+		else
+			return null;
 	}
 
 	private static String getRequestBody( byte[] requestData )
@@ -430,19 +442,16 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 							if( browserRecordingMap.containsKey( browserComponent ) )
 							{
 								browserComponent.replaceBrowser( arg0.getBrowser() );
-
 							}
 							else
 							{
 								SwingUtilities.invokeLater( new Runnable()
 								{
-
 									@Override
 									public void run()
 									{
 										if( UISupport.confirm( "Open [" + arg0.getUrl() + "] with system Browser?", "Open URL" ) )
 											Tools.openURL( arg0.getUrl() );
-
 									}
 								} );
 
@@ -657,23 +666,9 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 		pcs.firePropertyChange( "content", null, null );
 	}
 
-	public boolean navigate( String url, String errorPage )
+	public void navigate( String url, String errorPage )
 	{
-		if( errorPage != null )
-			setErrorPage( errorPage );
-
-		this.url = url;
-
-		if( browser == null )
-		{
-			initBrowser();
-		}
-
-		browser.navigate( getUrl() );
-
-		if( showingErrorPage )
-			showingErrorPage = false;
-		return true;
+		navigate( url, null, errorPage );
 	}
 
 	public String getContent()
@@ -976,6 +971,31 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 		{
 			return content;
 		}
+	}
+
+	public void navigate( String url, String postData, String errorPage )
+	{
+		if( errorPage != null )
+			setErrorPage( errorPage );
+
+		this.url = url;
+
+		if( browser == null )
+		{
+			initBrowser();
+		}
+
+		if( postData != null && postData.length() > 0 )
+		{
+			browser.navigate( url, postData );
+		}
+		else
+		{
+			browser.navigate( url );
+		}
+
+		if( showingErrorPage )
+			showingErrorPage = false;
 	}
 
 }

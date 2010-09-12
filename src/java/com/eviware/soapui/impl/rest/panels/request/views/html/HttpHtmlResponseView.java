@@ -145,14 +145,24 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 
 	protected void setEditorContent( HttpResponse httpResponse )
 	{
-		if( httpResponse != null && httpResponse.getContentType() != null )
+		if( httpResponse != null )
+		{
+			try
+			{
+				browser.navigate( httpResponse.getURL().toURI().toString(), httpResponse.getRequestContent(), null );
+			}
+			catch( Throwable e )
+			{
+				e.printStackTrace();
+			}
+		}
+		else if( httpResponse != null && httpResponse.getContentType() != null )
 		{
 			String contentType = httpResponse.getContentType();
 			if( contentType.contains( "html" ) || contentType.contains( "text" ) )
 			{
 				try
 				{
-
 					String content = httpResponse.getContentAsString();
 					browser.setContent( content, httpResponse.getURL().toURI().toString() );
 				}
