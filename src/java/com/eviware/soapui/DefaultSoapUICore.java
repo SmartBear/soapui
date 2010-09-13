@@ -73,6 +73,8 @@ public class DefaultSoapUICore implements SoapUICore
 	protected boolean initialImport;
 	private TimerTask settingsWatcher;
 
+	public boolean isSavingSettings;
+
 	public boolean getInitialImport()
 	{
 		return initialImport;
@@ -403,49 +405,57 @@ public class DefaultSoapUICore implements SoapUICore
 	 */
 	public String saveSettings() throws Exception
 	{
-		if( settingsFile == null )
-			settingsFile = getRoot() + File.separatorChar + DEFAULT_SETTINGS_FILE;
-
-		// Save settings to root or user.home
-		File file = new File( settingsFile );
-		if( !file.canWrite() )
+		isSavingSettings = true;
+		try
 		{
-			file = new File( new File( System.getProperty( "user.home", "." ) ), DEFAULT_SETTINGS_FILE );
+			if( settingsFile == null )
+				settingsFile = getRoot() + File.separatorChar + DEFAULT_SETTINGS_FILE;
+
+			// Save settings to root or user.home
+			File file = new File( settingsFile );
+			if( !file.canWrite() )
+			{
+				file = new File( new File( System.getProperty( "user.home", "." ) ), DEFAULT_SETTINGS_FILE );
+			}
+
+			SoapuiSettingsDocumentConfig settingsDocument = ( SoapuiSettingsDocumentConfig )this.settingsDocument.copy();
+			String password = settings.getString( SecuritySettings.SHADOW_PASSWORD, null );
+
+			if( password != null && password.length() > 0 )
+			{
+				try
+				{
+					byte[] data = settingsDocument.xmlText().getBytes();
+					byte[] encryptedData = OpenSSL.encrypt( "des3", password.toCharArray(), data );
+					settingsDocument.setSoapuiSettings( null );
+					settingsDocument.getSoapuiSettings().setEncryptedContent( encryptedData );
+				}
+				catch( UnsupportedEncodingException e )
+				{
+					log.error( "Encryption error", e );
+				}
+				catch( IOException e )
+				{
+					log.error( "Encryption error", e );
+				}
+				catch( GeneralSecurityException e )
+				{
+					log.error( "Encryption error", e );
+				}
+			}
+
+			FileOutputStream out = new FileOutputStream( file );
+			settingsDocument.save( out );
+			out.flush();
+			out.close();
+			log.info( "Settings saved to [" + file.getAbsolutePath() + "]" );
+			lastSettingsLoad = file.lastModified();
+			return file.getAbsolutePath();
 		}
-
-		SoapuiSettingsDocumentConfig settingsDocument = ( SoapuiSettingsDocumentConfig )this.settingsDocument.copy();
-		String password = settings.getString( SecuritySettings.SHADOW_PASSWORD, null );
-
-		if( password != null && password.length() > 0 )
+		finally
 		{
-			try
-			{
-				byte[] data = settingsDocument.xmlText().getBytes();
-				byte[] encryptedData = OpenSSL.encrypt( "des3", password.toCharArray(), data );
-				settingsDocument.setSoapuiSettings( null );
-				settingsDocument.getSoapuiSettings().setEncryptedContent( encryptedData );
-			}
-			catch( UnsupportedEncodingException e )
-			{
-				log.error( "Encryption error", e );
-			}
-			catch( IOException e )
-			{
-				log.error( "Encryption error", e );
-			}
-			catch( GeneralSecurityException e )
-			{
-				log.error( "Encryption error", e );
-			}
+			isSavingSettings = false;
 		}
-
-		FileOutputStream out = new FileOutputStream( file );
-		settingsDocument.save( out );
-		out.flush();
-		out.close();
-		log.info( "Settings saved to [" + file.getAbsolutePath() + "]" );
-		lastSettingsLoad = file.lastModified();
-		return file.getAbsolutePath();
 	}
 
 	public String getSettingsFile()
@@ -606,7 +616,7 @@ public class DefaultSoapUICore implements SoapUICore
 		@Override
 		public void run()
 		{
-			if( settingsFile != null )
+			if( settingsFile != null && !isSavingSettings )
 			{
 				File file = new File( settingsFile );
 				if( file.exists() && file.lastModified() > lastSettingsLoad )
