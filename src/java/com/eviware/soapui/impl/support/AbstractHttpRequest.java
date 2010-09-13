@@ -573,7 +573,10 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 
 	public boolean isFollowRedirects()
 	{
-		return getSettings().getBoolean( FOLLOW_REDIRECTS );
+		if( !getSettings().isSet( FOLLOW_REDIRECTS ) )
+			return true;
+		else
+			return getSettings().getBoolean( FOLLOW_REDIRECTS );
 	}
 
 	public void setFollowRedirects( boolean followRedirects )

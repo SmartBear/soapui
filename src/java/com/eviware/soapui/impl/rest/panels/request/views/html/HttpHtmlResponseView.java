@@ -33,8 +33,10 @@ import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
 import com.eviware.soapui.impl.support.http.HttpRequestInterface;
 import com.eviware.soapui.impl.support.panels.AbstractHttpXmlRequestDesktopPanel.HttpResponseDocument;
 import com.eviware.soapui.impl.support.panels.AbstractHttpXmlRequestDesktopPanel.HttpResponseMessageEditor;
+import com.eviware.soapui.impl.wsdl.WsdlSubmitContext;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.impl.wsdl.support.MessageExchangeModelItem;
+import com.eviware.soapui.model.iface.Request.SubmitException;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.BrowserComponent;
 import com.eviware.soapui.support.components.JXToolBar;
@@ -46,18 +48,13 @@ import com.eviware.soapui.support.editor.xml.XmlEditor;
 public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocument> implements PropertyChangeListener
 {
 	private HttpRequestInterface<?> httpRequest;
-
-	public HttpRequestInterface<?> getHttpRequest()
-	{
-		return httpRequest;
-	}
-
-	// private JPanel contentPanel;
 	private JPanel panel;
 	private BrowserComponent browser;
 	private JButton recordButton;
 	private boolean recordHttpTrafic;
 	private MessageExchangeModelItem messageExchangeModelItem;
+	private boolean hasResponseForRecording;
+	private boolean preparingToRecord;
 
 	public boolean isRecordHttpTrafic()
 	{
@@ -145,11 +142,13 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 
 	protected void setEditorContent( HttpResponse httpResponse )
 	{
-		if( httpResponse != null )
+		hasResponseForRecording = false;
+		if( httpResponse != null && ( preparingToRecord || isRecordHttpTrafic() ) )
 		{
 			try
 			{
 				browser.navigate( httpResponse.getURL().toURI().toString(), httpResponse.getRequestContent(), null );
+				hasResponseForRecording = true;
 			}
 			catch( Throwable e )
 			{
@@ -252,7 +251,6 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 
 	private class RecordHttpTraficAction extends AbstractAction
 	{
-
 		public RecordHttpTraficAction()
 		{
 			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/record_http_false.gif" ) );
@@ -271,8 +269,27 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 			}
 			else
 			{
-				setRecordHttpTrafic( true );
+				if( !hasResponseForRecording )
+				{
+					// resubmit so we have "live" content
+					try
+					{
+						preparingToRecord = true;
+						getHttpRequest().submit( new WsdlSubmitContext( getHttpRequest() ), false );
+					}
+					catch( SubmitException e )
+					{
+						e.printStackTrace();
+					}
+					preparingToRecord = false;
+					setRecordHttpTrafic( true );
+				}
 			}
 		}
+	}
+
+	public HttpRequestInterface<?> getHttpRequest()
+	{
+		return httpRequest;
 	}
 }
