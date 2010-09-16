@@ -15,6 +15,7 @@ import java.util.List;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.integration.TestCaseEditIntegration;
+import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.model.testsuite.TestSuite;
@@ -30,7 +31,7 @@ public class TestCaseEditIntegrationImpl implements TestCaseEditIntegration
 	{
 		// TODO Auto-generated method stub
 	}
-	
+
 	public void test()
 	{
 	}
@@ -38,6 +39,29 @@ public class TestCaseEditIntegrationImpl implements TestCaseEditIntegration
 	public void printLog( String log )
 	{
 		SoapUI.log( log );
+	}
+
+	public void openProject( String[] parameters )
+	{
+		if( parameters != null && parameters.length == 1 )
+		{
+			String projectFilePath = parameters[0];
+
+			try
+			{
+				Workspace workspace = SoapUI.getWorkspace();
+				Project project = findProject( projectFilePath, workspace );
+
+				project = openProject( projectFilePath, workspace, project );
+
+				showModelItem( project );
+				bringToFront();
+			}
+			catch( Exception e )
+			{
+				SoapUI.logError( e );
+			}
+		}
 	}
 
 	public void openTestCase( String[] parameters )
@@ -59,7 +83,7 @@ public class TestCaseEditIntegrationImpl implements TestCaseEditIntegration
 			TestSuite testSuite = project.getTestSuiteByName( testSuiteName );
 			TestCase testCase = testSuite.getTestCaseByName( testCaseName );
 
-			showTestCase( projectFilePath, workspace, testCase, testSuite );
+			showModelItem( testCase );
 			bringToFront();
 		}
 		catch( Exception e )
@@ -93,12 +117,11 @@ public class TestCaseEditIntegrationImpl implements TestCaseEditIntegration
 		return project;
 	}
 
-	private void showTestCase( String projectFile, Workspace workspace, TestCase testCase, TestSuite testSuite )
-			throws SoapUIException
+	private void showModelItem( ModelItem modelItem ) throws SoapUIException
 	{
-		if( testCase != null )
+		if( modelItem != null )
 		{
-			UISupport.selectAndShow( testCase );
+			UISupport.selectAndShow( modelItem );
 		}
 	}
 
