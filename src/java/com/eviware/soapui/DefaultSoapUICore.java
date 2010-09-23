@@ -496,7 +496,7 @@ public class DefaultSoapUICore implements SoapUICore
 		}
 	}
 
-	protected void loadExternalLibraries()
+	public void loadExternalLibraries()
 	{
 		try
 		{
