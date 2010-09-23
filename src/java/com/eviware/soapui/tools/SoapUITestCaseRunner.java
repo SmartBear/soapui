@@ -115,15 +115,22 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 
 	protected boolean processCommandLine( CommandLine cmd )
 	{
+		String message = "";
 		if( cmd.hasOption( "e" ) )
 			setEndpoint( cmd.getOptionValue( "e" ) );
 
 		if( cmd.hasOption( "s" ) )
-			setTestSuite( getCommandLineOptionSubstSpace( cmd, "s" ) );
-
+		{
+			String testSuite = getCommandLineOptionSubstSpace( cmd, "s" );
+			setTestSuite( testSuite );
+			message += validateTestSuite();
+		}
 		if( cmd.hasOption( "c" ) )
-			setTestCase( getCommandLineOptionSubstSpace( cmd, "c" ) );
-
+		{
+			String testCase = getCommandLineOptionSubstSpace( cmd, "c" );
+			setTestCase( testCase );
+			message += validateTestCase();
+		}
 		if( cmd.hasOption( "u" ) )
 			setUsername( cmd.getOptionValue( "u" ) );
 
@@ -187,7 +194,40 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 
 		setSaveAfterRun( cmd.hasOption( "S" ) );
 
+		if( message.length() > 0 )
+		{
+			log.error( message );
+			return false;
+		}
+
 		return true;
+	}
+
+	private String validateTestCase()
+	{
+
+		WsdlProject project = ( WsdlProject )ProjectFactoryRegistry.getProjectFactory( "wsdl" ).createNew(
+				getProjectFile(), getProjectPassword() );
+
+		if( project.getTestSuiteByName( testSuite ) == null )
+			return "Test Suite with name:'" + testSuite + "' is missing from project:'" + project.getName() + "' \n";
+
+		if( project.getTestSuiteByName( testSuite ).getTestCaseByName( testCase ) == null )
+			return "Test Case with name:'" + testCase + "' is missing from testSuite:'" + testSuite + "' \n";
+
+		return "";
+	}
+
+	private String validateTestSuite()
+	{
+		WsdlProject project = ( WsdlProject )ProjectFactoryRegistry.getProjectFactory( "wsdl" ).createNew(
+				getProjectFile(), getProjectPassword() );
+
+		if( project.getTestSuiteByName( testSuite ) == null )
+			return "Test Suite with name:'" + testSuite + "' is missing from project:'" + project.getName() + "' \n";
+
+		return "";
+
 	}
 
 	public void setMaxErrors( int maxErrors )
