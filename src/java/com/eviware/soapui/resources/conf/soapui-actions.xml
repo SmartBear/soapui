@@ -120,6 +120,7 @@
 	<tns:action id="MoveTestSuiteUpAction" actionClass="com.eviware.soapui.impl.wsdl.actions.testsuite.MoveTestSuiteUpAction"/>
 	<tns:action id="GenerateLoadUITestsAction" actionClass="com.eviware.soapui.impl.wsdl.actions.testsuite.GenerateLoadUITestsAction"/>
 	<tns:action id="ConvertTestSuiteLoadTestsToLoadUIAction" actionClass="com.eviware.soapui.impl.wsdl.actions.testsuite.ConvertTestSuiteLoadTestsToLoadUIAction"/>
+	<tns:action id="CreateWebTestCaseAction" actionClass="com.eviware.soapui.impl.wsdl.actions.testsuite.CreateWebTestCaseAction"/>
 
 	<!-- TestCase Actions -->
 	<tns:action id="AddNewLoadTestAction" actionClass="com.eviware.soapui.impl.wsdl.actions.testcase.AddNewLoadTestAction"/>
@@ -436,6 +437,7 @@
 		<tns:actionMapping actionId="SeperatorAction"/>
  		<tns:actionMapping actionId="AddNewTestCaseAction" keyStroke="menu N" iconPath="/testCase.gif"/>
 		<tns:actionMapping actionId="CloneTestSuiteAction" keyStroke="F9"/>
+		<tns:actionMapping actionId="CreateWebTestCaseAction" />
 		<tns:actionMapping actionId="SeperatorAction"/>
 		<tns:actionMapping actionId="TestSuiteTestRunnerAction"/>
 		<tns:actionMapping actionId="SeperatorAction"/>

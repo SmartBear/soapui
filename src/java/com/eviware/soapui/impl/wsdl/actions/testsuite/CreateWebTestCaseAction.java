@@ -9,12 +9,11 @@
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
-package com.eviware.soapui.impl.wsdl.actions.project;
+package com.eviware.soapui.impl.wsdl.actions.testsuite;
 
 import com.eviware.soapui.config.HttpRequestConfig;
 import com.eviware.soapui.config.TestStepConfig;
 import com.eviware.soapui.impl.rest.panels.request.views.html.HttpHtmlResponseView;
-import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.HttpTestRequestDesktopPanel;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
@@ -23,7 +22,6 @@ import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.registry.HttpRequestStepFactory;
 import com.eviware.soapui.model.iface.Request.SubmitException;
-import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.support.MessageSupport;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
@@ -35,37 +33,32 @@ import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.AField.AFieldType;
 import com.sun.java.xml.ns.j2Ee.HttpMethodType;
 
-public class CreateWebTestAction extends AbstractSoapUIAction<WsdlProject>
+public class CreateWebTestCaseAction extends AbstractSoapUIAction<WsdlTestSuite>
 {
 
 	public static final String SOAPUI_ACTION_ID = "AddNewWebTestAction";
-	private WsdlProject project;
-	public static final MessageSupport messages = MessageSupport.getMessages( CreateWebTestAction.class );
-	private static final String CREATE_NEW_OPTION = "<Create New>";
+	private WsdlTestSuite testSuite;
+	public static final MessageSupport messages = MessageSupport.getMessages( CreateWebTestCaseAction.class );
 	private XFormDialog dialog;
 
-	public CreateWebTestAction()
+	public CreateWebTestCaseAction()
 	{
 		super( "New Web Test", "New Web Test" );
 	}
 
-	public void perform( WsdlProject target, Object param )
+	public void perform( WsdlTestSuite target, Object param )
 	{
-		this.project = target;
+		this.testSuite = target;
 		if( dialog == null )
 		{
 			dialog = ADialogBuilder.buildDialog( Form.class );
 		}
 
-		dialog.setOptions( Form.TESTSUITE, ModelSupport.getNames( new String[] { CREATE_NEW_OPTION }, project
-				.getTestSuiteList() ) );
-		dialog.setValue( Form.TESTSUITE, CREATE_NEW_OPTION );
 		dialog.setValue( Form.TESTCASENAME, "Web TestCase" );
 		dialog.setValue( Form.URL, "" );
 		dialog.setValue( Form.STARTRECORDING, Boolean.toString( true ) );
 		if( dialog.show() )
 		{
-			String targetTestSuiteName = dialog.getValue( Form.TESTSUITE );
 			String targetTestCaseName = dialog.getValue( Form.TESTCASENAME );
 			while( StringUtils.isNullOrEmpty( dialog.getValue( Form.URL ) ) )
 			{
@@ -73,44 +66,27 @@ public class CreateWebTestAction extends AbstractSoapUIAction<WsdlProject>
 				dialog.show();
 			}
 			String testStepName = dialog.getValue( Form.URL );
-			WsdlTestSuite targetTestSuite = null;
 			WsdlTestCase targetTestCase = null;
 
-			targetTestSuite = project.getTestSuiteByName( targetTestSuiteName );
-			if( targetTestSuite == null )
-			{
-				targetTestSuiteName = "Web TestSuite";
-				while( project.getTestSuiteByName( targetTestSuiteName ) != null )
-				{
-					targetTestSuiteName = UISupport.prompt(
-							"TestSuite name must be unique, please specify new name for TestSuite\n" + "[" + project.getName()
-									+ "->" + targetTestSuiteName + "]", "Change TestSuite name", targetTestSuiteName );
-
-					if( targetTestSuiteName == null )
-						return;
-				}
-
-				targetTestSuite = project.addNewTestSuite( targetTestSuiteName );
-			}
-			targetTestCase = targetTestSuite.getTestCaseByName( targetTestCaseName );
+			targetTestCase = testSuite.getTestCaseByName( targetTestCaseName );
 			if( targetTestCase == null )
 			{
-				while( targetTestSuite.getTestCaseByName( targetTestCaseName ) != null )
+				while( testSuite.getTestCaseByName( targetTestCaseName ) != null )
 				{
 					targetTestCaseName = UISupport.prompt(
 							"TestCase name must be unique, please specify new name for TestCase\n" + "[" + targetTestCaseName
-									+ "] in TestSuite [" + project.getName() + "->" + targetTestSuiteName + "]",
+									+ "] in TestSuite [" + testSuite.getName() + "->" + testSuite.getName() + "]",
 							"Change TestCase name", targetTestCaseName );
 					if( targetTestCaseName == null )
 						return;
 				}
-				targetTestCase = targetTestSuite.addNewTestCase( targetTestCaseName );
+				targetTestCase = testSuite.addNewTestCase( targetTestCaseName );
 
 			}
 			while( testStepName == null || targetTestCase.getTestStepByName( testStepName ) != null )
 			{
 				testStepName = UISupport.prompt( "TestStep name must be unique, please specify new name for step\n" + "["
-						+ testStepName + "] in TestCase [" + project.getName() + "->" + targetTestSuiteName + "->"
+						+ testStepName + "] in TestCase [" + testSuite.getName() + "->" + testSuite.getName() + "->"
 						+ targetTestCaseName + "]", "Change TestStep name", testStepName );
 
 				if( testStepName == null )
@@ -154,17 +130,14 @@ public class CreateWebTestAction extends AbstractSoapUIAction<WsdlProject>
 		desktopPanel.focusResponseInTabbedView( true );
 	}
 
-	@AForm( description = "Specify Web TestSuite Options", name = "Add WebTest", helpUrl = HelpUrls.CLONETESTSUITE_HELP_URL, icon = UISupport.TOOL_ICON_PATH )
+	@AForm( description = "Specify Web TestCase Options", name = "Add WebTest", helpUrl = HelpUrls.CLONETESTSUITE_HELP_URL, icon = UISupport.TOOL_ICON_PATH )
 	public interface Form
 	{
 		@AField( name = "Web Address", description = "The web address to start at", type = AField.AFieldType.STRING )
 		public final static String URL = "Web Address";
 
 		@AField( name = "Web TestCase Name", description = "The Web TestCase name", type = AFieldType.STRING )
-		public final static String TESTCASENAME = "Web Test Name";
-
-		@AField( name = "Target TestSuite", description = "The target TestSuite to add WebTest to", type = AFieldType.ENUMERATION )
-		public final static String TESTSUITE = "Target TestSuite";
+		public final static String TESTCASENAME = "Web TestCase Name";
 
 		@AField( description = "", type = AFieldType.BOOLEAN, enabled = true )
 		public final static String STARTRECORDING = "Start Recording immediately";
