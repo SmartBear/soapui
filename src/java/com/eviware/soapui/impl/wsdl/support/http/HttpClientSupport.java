@@ -81,38 +81,7 @@ public class HttpClientSupport
 					( int )settings.getLong( HttpSettings.MAX_TOTAL_CONNECTIONS, 2000 ) );
 			httpClient = new HttpClient( connectionManager );
 
-			settings.addSettingsListener( new SettingsListener()
-			{
-
-				public void settingChanged( String name, String newValue, String oldValue )
-				{
-					if( newValue == null )
-						return;
-
-					if( name.equals( SSLSettings.KEYSTORE ) || name.equals( SSLSettings.KEYSTORE_PASSWORD ) )
-					{
-						try
-						{
-							log.info( "Updating keyStore.." );
-							initKeyMaterial( easySSL );
-						}
-						catch( Throwable e )
-						{
-							SoapUI.logError( e );
-						}
-					}
-					else if( name.equals( HttpSettings.MAX_CONNECTIONS_PER_HOST ) )
-					{
-						log.info( "Updating max connections per host to " + newValue );
-						connectionManager.getParams().setDefaultMaxConnectionsPerHost( Integer.parseInt( newValue ) );
-					}
-					else if( name.equals( HttpSettings.MAX_TOTAL_CONNECTIONS ) )
-					{
-						log.info( "Updating max total connections host to " + newValue );
-						connectionManager.getParams().setMaxTotalConnections( Integer.parseInt( newValue ) );
-					}
-				}
-			} );
+			settings.addSettingsListener( new SSLSettingsListener() );
 		}
 
 		private void initSSL( EasySSLProtocolSocketFactory easySSL ) throws IOException, GeneralSecurityException
@@ -183,6 +152,53 @@ public class HttpClientSupport
 		{
 			return httpClient;
 		}
+
+		public final class SSLSettingsListener implements SettingsListener
+		{
+			public void settingChanged( String name, String newValue, String oldValue )
+			{
+				if( newValue == null )
+					return;
+
+				if( name.equals( SSLSettings.KEYSTORE ) || name.equals( SSLSettings.KEYSTORE_PASSWORD ) )
+				{
+					try
+					{
+						log.info( "Updating keyStore.." );
+						initKeyMaterial( easySSL );
+					}
+					catch( Throwable e )
+					{
+						SoapUI.logError( e );
+					}
+				}
+				else if( name.equals( HttpSettings.MAX_CONNECTIONS_PER_HOST ) )
+				{
+					log.info( "Updating max connections per host to " + newValue );
+					connectionManager.getParams().setDefaultMaxConnectionsPerHost( Integer.parseInt( newValue ) );
+				}
+				else if( name.equals( HttpSettings.MAX_TOTAL_CONNECTIONS ) )
+				{
+					log.info( "Updating max total connections host to " + newValue );
+					connectionManager.getParams().setMaxTotalConnections( Integer.parseInt( newValue ) );
+				}
+			}
+
+			@Override
+			public void settingsReloaded()
+			{
+				try
+				{
+					log.info( "Updating keyStore.." );
+					initKeyMaterial( easySSL );
+				}
+				catch( Throwable e )
+				{
+					SoapUI.logError( e );
+				}
+			}
+		}
+
 	}
 
 	public static HttpClient getHttpClient()
@@ -216,5 +232,10 @@ public class HttpClientSupport
 			return null;
 		else
 			return CompressionSupport.getAvailableAlgorithm( contentEncoding.getValue() );
+	}
+
+	public static void addSSLListener( Settings settings )
+	{
+		settings.addSettingsListener( helper.new SSLSettingsListener() );
 	}
 }

@@ -189,6 +189,12 @@ public abstract class AbstractModelItemTreeNode<T extends ModelItem> implements 
 				}
 			}
 		}
+
+		@Override
+		public void settingsReloaded()
+		{
+			// TODO Auto-generated method stub
+		}
 	}
 
 	public void reorder( boolean notify )

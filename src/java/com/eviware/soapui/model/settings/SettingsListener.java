@@ -21,4 +21,5 @@ package com.eviware.soapui.model.settings;
 public interface SettingsListener
 {
 	public void settingChanged( String name, String newValue, String oldValue );
+	public void settingsReloaded();
 }

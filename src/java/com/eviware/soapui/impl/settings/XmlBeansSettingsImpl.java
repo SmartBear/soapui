@@ -125,6 +125,22 @@ public class XmlBeansSettingsImpl implements Settings
 		}
 	}
 
+	@Override
+	public void reloadSettings()
+	{
+		notifySettingsReloaded();
+
+	}
+
+	private void notifySettingsReloaded()
+	{
+		SettingsListener[] l = listeners.toArray( new SettingsListener[listeners.size()] );
+		for( SettingsListener listener : l )
+		{
+			listener.settingsReloaded();
+		}
+	}
+
 	public boolean getBoolean( String id )
 	{
 		String value = getString( id, null );
@@ -205,6 +221,12 @@ public class XmlBeansSettingsImpl implements Settings
 				notifySettingChanged( name, newValue, oldValue );
 			}
 		}
+
+		@Override
+		public void settingsReloaded()
+		{
+			notifySettingsReloaded();
+		}
 	}
 
 	public void setLong( String id, long value )
@@ -235,5 +257,7 @@ public class XmlBeansSettingsImpl implements Settings
 		{
 			notifySettingChanged( key, getString( key, null ), changed.get( key ) );
 		}
+		notifySettingsReloaded();
 	}
+
 }

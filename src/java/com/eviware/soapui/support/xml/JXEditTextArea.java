@@ -350,6 +350,13 @@ public class JXEditTextArea extends JEditTextArea implements UndoableEditListene
 			}
 		}
 
+		@Override
+		public void settingsReloaded()
+		{
+			// TODO Auto-generated method stub
+			
+		}
+
 	}
 
 	private class UndoAction extends AbstractAction

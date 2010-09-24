@@ -908,6 +908,13 @@ public class SoapUI
 					changeDesktop( DesktopRegistry.getInstance().createDesktop( newValue, SoapUI.workspace ) );
 				}
 			}
+
+			@Override
+			public void settingsReloaded()
+			{
+				// TODO Auto-generated method stub
+				
+			}
 		} );
 
 		buildUI();

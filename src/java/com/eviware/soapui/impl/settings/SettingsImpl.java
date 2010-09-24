@@ -64,6 +64,14 @@ public class SettingsImpl implements Settings
 		}
 	}
 
+	public void reloadSettings()
+	{
+		for( SettingsListener listener : listeners )
+		{
+			listener.settingsReloaded();
+		}
+	}
+
 	public boolean getBoolean( String id )
 	{
 		if( values.containsKey( id ) )

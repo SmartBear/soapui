@@ -81,6 +81,13 @@ public class SchemaUtils
 					initDefaultSchemas();
 				}
 			}
+
+			@Override
+			public void settingsReloaded()
+			{
+				// TODO Auto-generated method stub
+				
+			}
 		} );
 	}
 

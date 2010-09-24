@@ -251,6 +251,13 @@ public class GroovyEditor extends JPanel implements JEditorStatusBarTarget, Prop
 				invalidate();
 			}
 		}
+
+		@Override
+		public void settingsReloaded()
+		{
+			// TODO Auto-generated method stub
+			
+		}
 	}
 
 	public void setEditorFont( Font newFont )

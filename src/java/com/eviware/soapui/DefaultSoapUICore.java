@@ -31,6 +31,7 @@ import org.apache.log4j.xml.DOMConfigurator;
 
 import com.eviware.soapui.config.SoapuiSettingsDocumentConfig;
 import com.eviware.soapui.impl.settings.XmlBeansSettingsImpl;
+import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.monitor.JettyMockEngine;
@@ -342,6 +343,7 @@ public class DefaultSoapUICore implements SoapUICore
 			String wsiDir = System.getProperty( "wsi.dir", new File( "." ).getAbsolutePath() );
 			settings.setString( WSISettings.WSI_LOCATION, wsiDir );
 		}
+		HttpClientSupport.addSSLListener( settings );
 
 		return settings;
 	}
@@ -369,13 +371,14 @@ public class DefaultSoapUICore implements SoapUICore
 	 * 
 	 * @see com.eviware.soapui.SoapUICore#importSettings(java.io.File)
 	 */
-	public void importSettings( File file ) throws Exception
+	public Settings importSettings( File file ) throws Exception
 	{
 		if( file != null )
 		{
 			log.info( "Importing preferences from [" + file.getAbsolutePath() + "]" );
-			initSettings( file.getAbsolutePath() );
+			return initSettings( file.getAbsolutePath() );
 		}
+		return null;
 	}
 
 	/*

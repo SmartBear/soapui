@@ -33,5 +33,5 @@ public interface SoapUICore
 
 	public String saveSettings() throws Exception;
 
-	public void importSettings( File file ) throws Exception;
+	public Settings importSettings( File file ) throws Exception;
 }
