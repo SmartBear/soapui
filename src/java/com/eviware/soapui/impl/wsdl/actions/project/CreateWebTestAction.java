@@ -60,7 +60,7 @@ public class CreateWebTestAction extends AbstractSoapUIAction<WsdlProject>
 		dialog.setOptions( Form.TESTSUITE, ModelSupport.getNames( new String[] { CREATE_NEW_OPTION }, project
 				.getTestSuiteList() ) );
 		dialog.setValue( Form.TESTSUITE, CREATE_NEW_OPTION );
-		dialog.setValue( Form.TESTCASENAME, "Web Test" );
+		dialog.setValue( Form.TESTCASENAME, "Web TestCase" );
 		dialog.setValue( Form.URL, "" );
 		dialog.setValue( Form.STARTRECORDING, Boolean.toString( true ) );
 		if( dialog.show() )
@@ -79,7 +79,7 @@ public class CreateWebTestAction extends AbstractSoapUIAction<WsdlProject>
 			targetTestSuite = project.getTestSuiteByName( targetTestSuiteName );
 			if( targetTestSuite == null )
 			{
-				targetTestSuiteName = "Web Test TestSuite";
+				targetTestSuiteName = "Web TestSuite";
 				while( project.getTestSuiteByName( targetTestSuiteName ) != null )
 				{
 					targetTestSuiteName = UISupport.prompt(
