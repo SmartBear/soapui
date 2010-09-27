@@ -14,6 +14,7 @@ package com.eviware.soapui.impl.wsdl.actions.project;
 import com.eviware.soapui.config.HttpRequestConfig;
 import com.eviware.soapui.config.TestStepConfig;
 import com.eviware.soapui.impl.rest.panels.request.views.html.HttpHtmlResponseView;
+import com.eviware.soapui.impl.support.HttpUtils;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.HttpTestRequestDesktopPanel;
@@ -72,7 +73,8 @@ public class CreateWebTestAction extends AbstractSoapUIAction<WsdlProject>
 				UISupport.showErrorMessage( "You must specify the web address to start at" );
 				dialog.show();
 			}
-			String testStepName = dialog.getValue( Form.URL );
+			String url = dialog.getValue( Form.URL );
+			String testStepName = HttpUtils.ensureEndpointStartsWithProtocol( url );
 			WsdlTestSuite targetTestSuite = null;
 			WsdlTestCase targetTestCase = null;
 
@@ -116,7 +118,7 @@ public class CreateWebTestAction extends AbstractSoapUIAction<WsdlProject>
 				if( testStepName == null )
 					return;
 			}
-			createWebTest( targetTestCase, dialog.getValue( Form.URL ), testStepName, dialog
+			createWebTest( targetTestCase, HttpUtils.ensureEndpointStartsWithProtocol( url ), testStepName, dialog
 					.getBooleanValue( Form.STARTRECORDING ) );
 
 		}
@@ -161,7 +163,7 @@ public class CreateWebTestAction extends AbstractSoapUIAction<WsdlProject>
 		public final static String URL = "Web Address";
 
 		@AField( name = "Web TestCase Name", description = "The Web TestCase name", type = AFieldType.STRING )
-		public final static String TESTCASENAME = "Web Test Name";
+		public final static String TESTCASENAME = "Web TestCase Name";
 
 		@AField( name = "Target TestSuite", description = "The target TestSuite to add WebTest to", type = AFieldType.ENUMERATION )
 		public final static String TESTSUITE = "Target TestSuite";
