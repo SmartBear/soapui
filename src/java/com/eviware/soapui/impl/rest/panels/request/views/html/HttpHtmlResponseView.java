@@ -67,18 +67,20 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 		if( recordHttpTrafic == this.recordHttpTrafic )
 			return;
 
-		this.recordHttpTrafic = recordHttpTrafic;
-
 		if( recordHttpTrafic )
 		{
 			recordButton.setIcon( UISupport.createImageIcon( "/record_http_true.gif" ) );
+			recordButton.setToolTipText( "Stop recording" );
 			browser.setRecordingHttpHtmlResponseView( HttpHtmlResponseView.this );
 		}
 		else
 		{
 			browser.setRecordingHttpHtmlResponseView( null );
 			recordButton.setIcon( UISupport.createImageIcon( "/record_http_false.gif" ) );
+			recordButton.setToolTipText( "Start recording" );
 		}
+		this.recordHttpTrafic = recordHttpTrafic;
+
 	}
 
 	public HttpHtmlResponseView( HttpResponseMessageEditor httpRequestMessageEditor, HttpRequestInterface<?> httpRequest )
@@ -254,7 +256,7 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 		public RecordHttpTraficAction()
 		{
 			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/record_http_false.gif" ) );
-			putValue( Action.SHORT_DESCRIPTION, "Record HTTP trafic" );
+			putValue( Action.SHORT_DESCRIPTION, "Start recording" );
 		}
 
 		@Override
@@ -283,6 +285,10 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 					}
 					preparingToRecord = false;
 					setRecordHttpTrafic( true );
+				}
+				else
+				{
+					UISupport.showInfoMessage( "To start recording please resubmit the request first" );
 				}
 			}
 		}
