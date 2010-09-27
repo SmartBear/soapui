@@ -30,7 +30,7 @@ public class AddNewTestCaseAction extends AbstractSoapUIAction<WsdlTestSuite>
 
 	public AddNewTestCaseAction()
 	{
-		super( "New TestCase", "Creates a new TestCase in this test suite" );
+		super( "New TestCase", "Creates a new TestCase in this TestSuite" );
 		// putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "menu N" ));
 	}
 

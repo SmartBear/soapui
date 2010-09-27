@@ -36,14 +36,14 @@ import com.sun.java.xml.ns.j2Ee.HttpMethodType;
 public class CreateWebTestCaseAction extends AbstractSoapUIAction<WsdlTestSuite>
 {
 
-	public static final String SOAPUI_ACTION_ID = "AddNewWebTestAction";
+	public static final String SOAPUI_ACTION_ID = "CreateWebTestCaseAction";
 	private WsdlTestSuite testSuite;
 	public static final MessageSupport messages = MessageSupport.getMessages( CreateWebTestCaseAction.class );
 	private XFormDialog dialog;
 
 	public CreateWebTestCaseAction()
 	{
-		super( "New Web Test", "New Web Test" );
+		super( "New Web TestCase", "Creates a new Web TestCase in this TestSuite" );
 	}
 
 	public void perform( WsdlTestSuite target, Object param )
@@ -130,7 +130,7 @@ public class CreateWebTestCaseAction extends AbstractSoapUIAction<WsdlTestSuite>
 		desktopPanel.focusResponseInTabbedView( true );
 	}
 
-	@AForm( description = "Specify Web TestCase Options", name = "Add WebTest", helpUrl = HelpUrls.CLONETESTSUITE_HELP_URL, icon = UISupport.TOOL_ICON_PATH )
+	@AForm( description = "Specify Web TestCase Options", name = "Add Web TestCase", helpUrl = HelpUrls.CLONETESTSUITE_HELP_URL, icon = UISupport.TOOL_ICON_PATH )
 	public interface Form
 	{
 		@AField( name = "Web Address", description = "The web address to start at", type = AField.AFieldType.STRING )

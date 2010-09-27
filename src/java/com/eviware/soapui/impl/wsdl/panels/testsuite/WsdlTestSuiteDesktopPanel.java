@@ -36,6 +36,7 @@ import javax.swing.text.Document;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
 import com.eviware.soapui.impl.wsdl.actions.testsuite.AddNewTestCaseAction;
+import com.eviware.soapui.impl.wsdl.actions.testsuite.CreateWebTestCaseAction;
 import com.eviware.soapui.impl.wsdl.actions.testsuite.GenerateLoadUITestsAction;
 import com.eviware.soapui.impl.wsdl.panels.support.MockTestSuiteRunner;
 import com.eviware.soapui.impl.wsdl.panels.testcase.JTestRunLog;
@@ -300,6 +301,8 @@ public class WsdlTestSuiteDesktopPanel extends ModelItemDesktopPanel<WsdlTestSui
 		JXToolBar toolbar = UISupport.createToolbar();
 		toolbar.add( UISupport.createToolbarButton( SwingActionDelegate.createDelegate(
 				AddNewTestCaseAction.SOAPUI_ACTION_ID, getModelItem(), null, "/testCase.gif" ) ) );
+		toolbar.add( UISupport.createToolbarButton( SwingActionDelegate.createDelegate(
+				CreateWebTestCaseAction.SOAPUI_ACTION_ID, getModelItem(), null, "/webTestCase.gif" ) ) );		
 		toolbar.addGlue();
 		toolbar.add( UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.TESTSUITEEDITOR_HELP_URL ) ) );
 		return toolbar;
