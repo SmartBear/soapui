@@ -61,6 +61,8 @@ public class RecentItemsListener extends WorkspaceListenerAdapter implements Wor
 {
 	private static final String RECENT_WORKSPACES_SETTING = "RecentWorkspaces";
 	private static final String RECENT_PROJECTS_SETTING = "RecentProjects";
+	private static final String EMPTYMARKER = "- empty -";
+	private static final String CLEAR_ITEMS = "Clear Items";
 	private JMenu recentProjectsMenu;
 	private JMenu recentWorkspacesMenu;
 	private JMenu recentEditorsMenu;
@@ -71,7 +73,7 @@ public class RecentItemsListener extends WorkspaceListenerAdapter implements Wor
 		recentWorkspacesMenu = recentWorkspacesMenu2;
 		recentProjectsMenu = recentProjectsMenu2;
 		recentEditorsMenu = recentEditorsMenu2;
-		recentEditorsMenu.add( "- empty -" ).setEnabled( false );
+		recentEditorsMenu.add( EMPTYMARKER ).setEnabled( false );
 		recentEditorsMenu.getPopupMenu().addPopupMenuListener( new PopupMenuListener()
 		{
 
@@ -85,11 +87,14 @@ public class RecentItemsListener extends WorkspaceListenerAdapter implements Wor
 
 			public void popupMenuWillBecomeVisible( PopupMenuEvent e )
 			{
+				int editorCount = 0;
 				for( int c = 0; c < recentEditorsMenu.getItemCount(); c++ )
 				{
-					ShowEditorAction action = ( ShowEditorAction )recentEditorsMenu.getItem( c ).getAction();
+					ShowEditorAction action = getShowEditorAction( recentEditorsMenu, c );
 					if( action == null )
 						continue;
+
+					editorCount++ ;
 
 					if( action.isReleased() )
 					{
@@ -110,8 +115,28 @@ public class RecentItemsListener extends WorkspaceListenerAdapter implements Wor
 					}
 				}
 
-				if( recentEditorsMenu.getItemCount() == 0 )
-					recentEditorsMenu.add( "- empty -" ).setEnabled( false );
+				// Look for a Clear Items JMenuItem, and create it if not existing
+				JMenuItem clearAllItem = null;
+				for( int i = 0; i < recentEditorsMenu.getItemCount(); ++i )
+				{
+					JMenuItem editorItem = recentEditorsMenu.getItem( i );
+					if( editorItem == null )
+						continue;
+
+					if( editorItem.getText().equals( CLEAR_ITEMS ) )
+						clearAllItem = editorItem;
+				}
+				if( clearAllItem == null )
+				{
+					clearAllItem = new JMenuItem( new ClearEditorsAction() );
+					recentEditorsMenu.addSeparator();
+					recentEditorsMenu.add( clearAllItem );
+				}
+				clearAllItem.setEnabled( editorCount > 0 );
+
+				// Create Empty Marker if needed.
+				if( editorCount == 0 && recentEditorsMenu.getItemCount() <= 2 )
+					recentEditorsMenu.add( new JMenuItem( EMPTYMARKER ), 0 ).setEnabled( false );
 
 			}
 		} );
@@ -149,8 +174,11 @@ public class RecentItemsListener extends WorkspaceListenerAdapter implements Wor
 		}
 		else
 		{
-			recentWorkspacesMenu.add( "- empty -" ).setEnabled( false );
+			recentWorkspacesMenu.add( EMPTYMARKER ).setEnabled( false );
 		}
+
+		recentWorkspacesMenu.addSeparator();
+		recentWorkspacesMenu.add( new ClearWorkspacesAction() ).setEnabled( history.size() > 0 );
 	}
 
 	@SuppressWarnings( "unchecked" )
@@ -178,8 +206,11 @@ public class RecentItemsListener extends WorkspaceListenerAdapter implements Wor
 		}
 		else
 		{
-			recentProjectsMenu.add( "- empty -" ).setEnabled( false );
+			recentProjectsMenu.add( EMPTYMARKER ).setEnabled( false );
 		}
+
+		recentProjectsMenu.addSeparator();
+		recentProjectsMenu.add( new ClearProjectsAction() ).setEnabled( history.size() > 0 );
 	}
 
 	@SuppressWarnings( "unchecked" )
@@ -214,8 +245,11 @@ public class RecentItemsListener extends WorkspaceListenerAdapter implements Wor
 			}
 		}
 
-		if( recentProjectsMenu.getItemCount() == 0 )
-			recentProjectsMenu.add( "- empty -" ).setEnabled( false );
+		if( recentProjectsMenu.getItemCount() == 2 )
+		{
+			recentProjectsMenu.add( new JMenuItem( EMPTYMARKER ), 0 ).setEnabled( false );
+			recentProjectsMenu.getItem( recentProjectsMenu.getItemCount() - 1 ).setEnabled( false );
+		}
 	}
 
 	public void projectChanged( Project project )
@@ -241,20 +275,23 @@ public class RecentItemsListener extends WorkspaceListenerAdapter implements Wor
 		mapping.setDescription( "Switches to the [" + project.getName() + "] project" );
 
 		AbstractAction delegate = new SwingActionDelegate( mapping, SoapUI.getWorkspace() );
-		recentProjectsMenu.add( new JMenuItem( delegate ) );
 
-		SwingActionDelegate action = ( SwingActionDelegate )recentProjectsMenu.getItem( 0 ).getAction();
-		if( action == null )
+		recentProjectsMenu.add( new JMenuItem( delegate ), recentProjectsMenu.getItemCount() - 2 );
+
+		recentProjectsMenu.getItem( recentProjectsMenu.getItemCount() - 1 ).setEnabled( true );
+
+		if( isEmptyMarker( recentProjectsMenu.getItem( 0 ) ) )
 			recentProjectsMenu.remove( 0 );
 
 		removeProjectEditors( project );
+
 	}
 
 	private void removeProjectEditors( Project project )
 	{
 		for( int c = 0; c < recentEditorsMenu.getItemCount(); c++ )
 		{
-			ShowEditorAction action = ( ShowEditorAction )recentEditorsMenu.getItem( c ).getAction();
+			ShowEditorAction action = getShowEditorAction( recentEditorsMenu, c );
 			if( action == null )
 				continue;
 
@@ -358,8 +395,8 @@ public class RecentItemsListener extends WorkspaceListenerAdapter implements Wor
 			}
 		}
 
-		if( recentWorkspacesMenu.getItemCount() == 0 )
-			recentWorkspacesMenu.add( "- empty -" ).setEnabled( false );
+		if( recentWorkspacesMenu.getItemCount() == 2 )
+			recentWorkspacesMenu.add( new JMenuItem( EMPTYMARKER ), 0 ).setEnabled( false );
 	}
 
 	@SuppressWarnings( "unchecked" )
@@ -368,7 +405,7 @@ public class RecentItemsListener extends WorkspaceListenerAdapter implements Wor
 		switchingWorkspace = true;
 		recentEditorsMenu.removeAll();
 		if( recentEditorsMenu.getItemCount() == 0 )
-			recentEditorsMenu.add( "- empty -" ).setEnabled( false );
+			recentEditorsMenu.add( EMPTYMARKER ).setEnabled( false );
 
 		String filePath = workspace.getPath();
 		DefaultActionMapping<WorkspaceImpl> mapping = new DefaultActionMapping<WorkspaceImpl>(
@@ -377,15 +414,17 @@ public class RecentItemsListener extends WorkspaceListenerAdapter implements Wor
 		mapping.setDescription( "Switches to the [" + workspace.getName() + "] workspace" );
 
 		AbstractAction delegate = new SwingActionDelegate( mapping, SoapUI.getWorkspace() );
-		recentWorkspacesMenu.add( new JMenuItem( delegate ) );
+		recentWorkspacesMenu.add( new JMenuItem( delegate ), recentWorkspacesMenu.getItemCount() - 2 );
+
+		recentWorkspacesMenu.getItem( recentWorkspacesMenu.getItemCount() - 1 ).setEnabled( true );
+		System.out.println( recentWorkspacesMenu.getItem( recentWorkspacesMenu.getItemCount() - 1 ).getText() );
 
 		String recent = SoapUI.getSettings().getString( RECENT_WORKSPACES_SETTING, null );
 		StringToStringMap history = recent == null ? new StringToStringMap() : StringToStringMap.fromXml( recent );
 		history.put( filePath, workspace.getName() );
 		SoapUI.getSettings().setString( RECENT_WORKSPACES_SETTING, history.toXml() );
 
-		SwingActionDelegate action = ( SwingActionDelegate )recentWorkspacesMenu.getItem( 0 ).getAction();
-		if( action == null )
+		if( isEmptyMarker( recentWorkspacesMenu.getItem( 0 ) ) )
 			recentWorkspacesMenu.remove( 0 );
 
 		recentEditorsMenu.removeAll();
@@ -397,18 +436,17 @@ public class RecentItemsListener extends WorkspaceListenerAdapter implements Wor
 		if( modelItem == null )
 			return;
 
-		recentEditorsMenu.add( new JMenuItem( new ShowEditorAction( modelItem ) ) );
+		if( isEmptyMarker( recentWorkspacesMenu.getItem( 0 ) ) )
+			recentWorkspacesMenu.remove( 0 );
 
-		ShowEditorAction action = ( ShowEditorAction )recentEditorsMenu.getItem( 0 ).getAction();
-		if( action == null )
-			recentEditorsMenu.remove( 0 );
+		recentEditorsMenu.add( new JMenuItem( new ShowEditorAction( modelItem ) ), 0 );
 	}
 
 	public void desktopPanelCreated( DesktopPanel desktopPanel )
 	{
 		for( int c = 0; c < recentEditorsMenu.getItemCount(); c++ )
 		{
-			ShowEditorAction action = ( ShowEditorAction )recentEditorsMenu.getItem( c ).getAction();
+			ShowEditorAction action = getShowEditorAction( recentEditorsMenu, c );
 			if( action == null )
 				continue;
 
@@ -424,8 +462,8 @@ public class RecentItemsListener extends WorkspaceListenerAdapter implements Wor
 			}
 		}
 
-		if( recentEditorsMenu.getItemCount() == 0 )
-			recentEditorsMenu.add( "- empty -" ).setEnabled( false );
+		if( recentEditorsMenu.getItemCount() == 2 )
+			recentEditorsMenu.add( new JMenuItem( EMPTYMARKER ), 0 ).setEnabled( false );
 	}
 
 	public void desktopPanelSelected( DesktopPanel desktopPanel )
@@ -473,4 +511,118 @@ public class RecentItemsListener extends WorkspaceListenerAdapter implements Wor
 				UISupport.showErrorMessage( "Item [" + getValue( Action.NAME ) + "] is no longer available" );
 		}
 	}
+
+	/* Helper methods */
+
+	/**
+	 * Confirms that the item of index i in menu is a ShowEditorAction, and
+	 * extracts the ShowEditorAction.
+	 * 
+	 * @param menu
+	 *           The menu to get the JMenuItem, containing the action from.
+	 * @param i
+	 *           The index where the JMenuItem is located in menu.
+	 * @return The ShowEditorAction if confirmed. Otherwise null.
+	 */
+	private ShowEditorAction getShowEditorAction( JMenu menu, int i )
+	{
+		JMenuItem menuItem = recentEditorsMenu.getItem( i );
+		if( menuItem == null )
+			return null;
+
+		Action unknownAction = menuItem.getAction();
+
+		if( unknownAction == null || !( unknownAction instanceof ShowEditorAction ) )
+			return null;
+
+		return ( ShowEditorAction )unknownAction;
+	}
+
+	/**
+	 * Checks whether a JMenuItem is an Empty marker (marking an empty list).
+	 * 
+	 * @param item
+	 *           The item to check.
+	 * @return True if item is an Empty marker. False otherwise (including if
+	 *         item is null).
+	 */
+	private boolean isEmptyMarker( JMenuItem item )
+	{
+		if( item == null )
+			return false;
+		if( item.getText().equals( EMPTYMARKER ) )
+			return true;
+		return false;
+	}
+
+	/*
+	 * Action classes for clearing all items in the Recent
+	 * Editors/Projects/Workspaces submenu
+	 */
+
+	@SuppressWarnings( "serial" )
+	private class ClearProjectsAction extends AbstractAction
+	{
+		public ClearProjectsAction()
+		{
+			super( CLEAR_ITEMS );
+			putValue( Action.SHORT_DESCRIPTION, "Clear all recent projects" );
+		}
+
+		public void actionPerformed( ActionEvent e )
+		{
+			if( !UISupport.confirm( "Remove all Projects from this menu?", "Question" ) )
+				return;
+
+			StringToStringMap emptyMap = new StringToStringMap();
+
+			SoapUI.getSettings().setString( RECENT_PROJECTS_SETTING, emptyMap.toXml() );
+			updateRecentProjectsMenu();
+
+		}
+	}
+
+	@SuppressWarnings( "serial" )
+	private class ClearWorkspacesAction extends AbstractAction
+	{
+		public ClearWorkspacesAction()
+		{
+			super( CLEAR_ITEMS );
+			putValue( Action.SHORT_DESCRIPTION, "Clear all recent workspaces" );
+		}
+
+		public void actionPerformed( ActionEvent e )
+		{
+			if( !UISupport.confirm( "Remove all Workspaces from this menu?", "Question" ) )
+				return;
+
+			StringToStringMap emptyMap = new StringToStringMap();
+
+			SoapUI.getSettings().setString( RECENT_WORKSPACES_SETTING, emptyMap.toXml() );
+			updateRecentWorkspacesMenu();
+
+		}
+	}
+
+	@SuppressWarnings( "serial" )
+	private class ClearEditorsAction extends AbstractAction
+	{
+		public ClearEditorsAction()
+		{
+			super( CLEAR_ITEMS );
+			putValue( Action.SHORT_DESCRIPTION, "Clear all recent Editors" );
+		}
+
+		public void actionPerformed( ActionEvent e )
+		{
+			if( !UISupport.confirm( "Remove all Editors from this menu?", "Question" ) )
+				return;
+
+			recentEditorsMenu.removeAll();
+			recentEditorsMenu.add( EMPTYMARKER ).setEnabled( false );
+			recentEditorsMenu.addSeparator();
+			recentEditorsMenu.add( new ClearEditorsAction() );
+		}
+	}
+
 }
