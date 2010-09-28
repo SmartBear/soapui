@@ -29,7 +29,9 @@ import org.apache.log4j.PatternLayout;
 import com.eviware.soapui.DefaultSoapUICore;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.SoapUICore;
+import com.eviware.soapui.SoapUIExtensionClassLoader;
 import com.eviware.soapui.StandaloneSoapUICore;
+import com.eviware.soapui.SoapUIExtensionClassLoader.SoapUIClassLoaderState;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.support.PathUtils;
 import com.eviware.soapui.model.ModelItem;
@@ -135,7 +137,16 @@ public abstract class AbstractSoapUIRunner
 		SoapUI.setSoapUICore( createSoapUICore(), true );
 		SoapUI.initGCTimer();
 
-		return runRunner();
+		SoapUIClassLoaderState state = SoapUIExtensionClassLoader.ensure();
+
+		try
+		{
+			return runRunner();
+		}
+		finally
+		{
+			state.restore();
+		}
 	}
 
 	protected SoapUICore createSoapUICore()
