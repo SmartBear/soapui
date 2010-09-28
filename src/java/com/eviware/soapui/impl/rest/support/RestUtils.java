@@ -17,6 +17,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.xmlbeans.XmlBoolean;
 
@@ -31,6 +35,8 @@ import com.eviware.soapui.support.types.StringList;
 
 public class RestUtils
 {
+	private final static Pattern splitPattern = Pattern.compile( "[^|]\\|[^|]" );
+
 	public static String[] extractTemplateParams( String path )
 	{
 		if( StringUtils.isNullOrEmpty( path ) )
@@ -228,6 +234,8 @@ public class RestUtils
 			RestParamProperty param = params.getPropertyAt( c );
 
 			String value = PropertyExpander.expandProperties( context, param.getValue() );
+			List<String> valueParts = splitMultipleParameters( value );
+
 			if( value != null && !param.isDisableUrlEncoding() )
 			{
 				try
@@ -235,14 +243,24 @@ public class RestUtils
 					String encoding = System.getProperty( "soapui.request.encoding", request.getEncoding() );
 
 					if( StringUtils.hasContent( encoding ) )
+					{
 						value = URLEncoder.encode( value, encoding );
+						for( int i = 0; i < valueParts.size(); i++ )
+							valueParts.set( i, URLEncoder.encode( valueParts.get( i ), encoding ) );
+					}
 					else
+					{
 						value = URLEncoder.encode( value );
+						for( int i = 0; i < valueParts.size(); i++ )
+							valueParts.set( i, URLEncoder.encode( valueParts.get( i ) ) );
+					}
 				}
 				catch( UnsupportedEncodingException e1 )
 				{
 					SoapUI.logError( e1 );
 					value = URLEncoder.encode( value );
+					for( int i = 0; i < valueParts.size(); i++ )
+						valueParts.set( i, URLEncoder.encode( valueParts.get( i ) ) );
 				}
 			}
 
@@ -257,14 +275,17 @@ public class RestUtils
 			case QUERY :
 				if( query != null )
 				{
-					if( query.length() > 0 )
-						query.append( '&' );
+					for( String valuePart : valueParts )
+					{
+						if( query.length() > 0 )
+							query.append( '&' );
 
-					query.append( URLEncoder.encode( param.getName() ) );
-					query.append( '=' );
+						query.append( URLEncoder.encode( param.getName() ) );
+						query.append( '=' );
 
-					if( StringUtils.hasContent( value ) )
-						query.append( value );
+						if( StringUtils.hasContent( valuePart ) )
+							query.append( valuePart );
+					}
 				}
 				break;
 			case TEMPLATE :
@@ -295,5 +316,20 @@ public class RestUtils
 			path += "?" + query.toString();
 
 		return path;
+	}
+
+	public static List<String> splitMultipleParameters( String paramStr )
+	{
+		Matcher matcher = splitPattern.matcher( paramStr );
+		List<String> parts = new ArrayList<String>();
+		int i = 0;
+		while( matcher.find() )
+		{
+			parts.add( paramStr.substring( i, matcher.start() + 1 ).replaceAll( "\\|\\|", "|" ) );
+			i = matcher.start() + 2;
+		}
+		parts.add( paramStr.substring( i, paramStr.length() ).replaceAll( "\\|\\|", "|" ) );
+
+		return parts;
 	}
 }

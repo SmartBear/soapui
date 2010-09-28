@@ -122,8 +122,10 @@ public class XmlBeansRestParamsTestPropertyHolder implements RestParamsPropertyH
 		}
 	}
 
-	public XmlBeansRestParamProperty addProperty( String name )
+	public RestParamProperty addProperty( String name )
 	{
+		if( hasProperty( name ) )
+			return getProperty( name );
 		RestParameterConfig propertyConfig = config.addNewParameter();
 		propertyConfig.setName( name );
 		return addProperty( propertyConfig, true );

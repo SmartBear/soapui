@@ -910,7 +910,6 @@ public class SoapUI
 				}
 			}
 
-			@Override
 			public void settingsReloaded()
 			{
 				// TODO Auto-generated method stub
@@ -1176,7 +1175,6 @@ public class SoapUI
 	{
 		private final class LoadUIRunner implements Runnable
 		{
-			@Override
 			public void run()
 			{
 				Process p = StartLoadUI.launchLoadUI();

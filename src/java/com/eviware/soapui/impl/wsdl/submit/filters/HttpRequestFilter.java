@@ -17,6 +17,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
@@ -39,6 +41,7 @@ import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder.ParameterStyle;
+import com.eviware.soapui.impl.rest.support.RestUtils;
 import com.eviware.soapui.impl.support.http.HttpRequestInterface;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransport;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.AttachmentDataSource;
@@ -86,6 +89,8 @@ public class HttpRequestFilter extends AbstractRequestFilter
 			String value = PropertyExpander.expandProperties( context, param.getValue() );
 			responseProperties.put( param.getName(), value );
 
+			List<String> valueParts = RestUtils.splitMultipleParameters( value );
+
 			if( value != null && param.getStyle() != ParameterStyle.HEADER && !param.isDisableUrlEncoding() )
 			{
 				try
@@ -93,17 +98,29 @@ public class HttpRequestFilter extends AbstractRequestFilter
 					String encoding = System.getProperty( "soapui.request.encoding", request.getEncoding() );
 
 					if( StringUtils.hasContent( encoding ) )
+					{
 						value = URLEncoder.encode( value, encoding );
+						for( int i = 0; i < valueParts.size(); i++ )
+							valueParts.set( i, URLEncoder.encode( valueParts.get( i ), encoding ) );
+					}
 					else
+					{
 						value = URLEncoder.encode( value );
+						for( int i = 0; i < valueParts.size(); i++ )
+							valueParts.set( i, URLEncoder.encode( valueParts.get( i ) ) );
+					}
 				}
 				catch( UnsupportedEncodingException e1 )
 				{
 					SoapUI.logError( e1 );
 					value = URLEncoder.encode( value );
+					for( int i = 0; i < valueParts.size(); i++ )
+						valueParts.set( i, URLEncoder.encode( valueParts.get( i ) ) );
 				}
 				// URLEncoder replaces space with "+", but we want "%20".
 				value = value.replaceAll( "\\+", "%20" );
+				for( int i = 0; i < valueParts.size(); i++ )
+					valueParts.set( i, valueParts.get( i ).replaceAll( "\\+", "%20" ) );
 			}
 
 			if( !StringUtils.hasContent( value ) && !param.getRequired() )
@@ -112,18 +129,22 @@ public class HttpRequestFilter extends AbstractRequestFilter
 			switch( param.getStyle() )
 			{
 			case HEADER :
-				httpMethod.setRequestHeader( param.getName(), value );
+				for( String valuePart : valueParts )
+					httpMethod.setRequestHeader( param.getName(), valuePart );
 				break;
 			case QUERY :
 				if( formMp == null || !request.isPostQueryString() )
 				{
-					if( query.length() > 0 )
-						query.append( '&' );
+					for( String valuePart : valueParts )
+					{
+						if( query.length() > 0 )
+							query.append( '&' );
 
-					query.append( URLEncoder.encode( param.getName() ) );
-					query.append( '=' );
-					if( StringUtils.hasContent( value ) )
-						query.append( value );
+						query.append( URLEncoder.encode( param.getName() ) );
+						query.append( '=' );
+						if( StringUtils.hasContent( valuePart ) )
+							query.append( valuePart );
+					}
 				}
 				else
 				{
@@ -207,8 +228,8 @@ public class HttpRequestFilter extends AbstractRequestFilter
 			{
 				if( request.hasRequestBody() && httpMethod instanceof EntityEnclosingMethod )
 				{
-					String requestContent = PropertyExpander.expandProperties( context, request.getRequestContent(), request
-							.isEntitizeProperties() );
+					String requestContent = PropertyExpander.expandProperties( context, request.getRequestContent(),
+							request.isEntitizeProperties() );
 					if( StringUtils.hasContent( requestContent ) )
 					{
 						initRootPart( request, requestContent, formMp );
@@ -259,8 +280,8 @@ public class HttpRequestFilter extends AbstractRequestFilter
 			}
 			else
 			{
-				String requestContent = PropertyExpander.expandProperties( context, request.getRequestContent(), request
-						.isEntitizeProperties() );
+				String requestContent = PropertyExpander.expandProperties( context, request.getRequestContent(),
+						request.isEntitizeProperties() );
 				List<Attachment> attachments = new ArrayList<Attachment>();
 
 				for( Attachment attachment : request.getAttachments() )
@@ -300,8 +321,8 @@ public class HttpRequestFilter extends AbstractRequestFilter
 							( ( EntityEnclosingMethod )httpMethod ).setRequestEntity( new InputStreamRequestEntity(
 									attachments.get( 0 ).getInputStream() ) );
 
-							httpMethod.setRequestHeader( "Content-Type", getContentTypeHeader( request.getMediaType(),
-									encoding ) );
+							httpMethod.setRequestHeader( "Content-Type",
+									getContentTypeHeader( request.getMediaType(), encoding ) );
 						}
 
 						if( ( ( EntityEnclosingMethod )httpMethod ).getRequestEntity() == null )
@@ -319,8 +340,8 @@ public class HttpRequestFilter extends AbstractRequestFilter
 							RestRequestMimeMessageRequestEntity mimeMessageRequestEntity = new RestRequestMimeMessageRequestEntity(
 									message, request );
 							( ( EntityEnclosingMethod )httpMethod ).setRequestEntity( mimeMessageRequestEntity );
-							httpMethod.setRequestHeader( "Content-Type", getContentTypeHeader( mimeMessageRequestEntity
-									.getContentType(), encoding ) );
+							httpMethod.setRequestHeader( "Content-Type",
+									getContentTypeHeader( mimeMessageRequestEntity.getContentType(), encoding ) );
 							httpMethod.setRequestHeader( "MIME-Version", "1.0" );
 						}
 					}
