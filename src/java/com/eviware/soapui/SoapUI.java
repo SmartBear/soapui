@@ -37,8 +37,8 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -220,7 +220,8 @@ public class SoapUI
 	private static String[] mainArgs;
 	private static GCTimerTask gcTimerTask;
 
-	private final static ExecutorService threadPool = Executors.newCachedThreadPool( new SoapUIThreadCreator() );
+	private final static ThreadPoolExecutor threadPool = ( ThreadPoolExecutor )Executors
+			.newCachedThreadPool( new SoapUIThreadCreator() );
 	private JTextField searchField;
 	private static JToggleButton applyProxyButton;
 	private static Logger groovyLogger;
@@ -368,7 +369,7 @@ public class SoapUI
 		return menuBar;
 	}
 
-	public static ExecutorService getThreadPool()
+	public static ThreadPoolExecutor getThreadPool()
 	{
 		return threadPool;
 	}

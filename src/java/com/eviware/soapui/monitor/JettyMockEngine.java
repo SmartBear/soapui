@@ -26,6 +26,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletInputStream;
@@ -48,7 +49,7 @@ import org.mortbay.jetty.handler.AbstractHandler;
 import org.mortbay.jetty.handler.RequestLogHandler;
 import org.mortbay.jetty.nio.SelectChannelConnector;
 import org.mortbay.jetty.security.SslSocketConnector;
-import org.mortbay.thread.QueuedThreadPool;
+import org.mortbay.thread.ThreadPool;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.mock.DispatchException;
@@ -168,9 +169,42 @@ public class JettyMockEngine implements MockEngine
 	private void initServer() throws Exception
 	{
 		server = new Server();
-		QueuedThreadPool threadPool = new QueuedThreadPool();
+		// QueuedThreadPool threadPool = new QueuedThreadPool();
 		// threadPool.setMaxThreads( 100 );
-		server.setThreadPool( threadPool );
+		server.setThreadPool( new ThreadPool()
+		{
+			@Override
+			public boolean dispatch( Runnable arg0 )
+			{
+				SoapUI.getThreadPool().execute( arg0 );
+				return true;
+			}
+
+			@Override
+			public int getIdleThreads()
+			{
+				return 0;
+			}
+
+			@Override
+			public int getThreads()
+			{
+				return SoapUI.getThreadPool().getActiveCount();
+			}
+
+			@Override
+			public boolean isLowOnThreads()
+			{
+				return false;
+			}
+
+			@Override
+			public void join() throws InterruptedException
+			{
+				SoapUI.getThreadPool().awaitTermination( 30, TimeUnit.SECONDS );
+			}
+		} );
+
 		server.setHandler( new ServerHandler() );
 
 		RequestLogHandler logHandler = new RequestLogHandler();
