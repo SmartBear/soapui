@@ -16,13 +16,13 @@ import org.mortbay.jetty.bio.SocketConnector;
 import org.mortbay.jetty.security.SslSocketConnector;
 import org.mortbay.jetty.servlet.Context;
 import org.mortbay.jetty.servlet.ServletHolder;
-import org.mortbay.thread.QueuedThreadPool;
 
 import com.eviware.soapui.impl.wsdl.actions.monitor.SoapMonitorAction;
 import com.eviware.soapui.impl.wsdl.monitor.jettyproxy.ProxyServlet;
 import com.eviware.soapui.impl.wsdl.monitor.jettyproxy.Server;
 import com.eviware.soapui.impl.wsdl.monitor.jettyproxy.TunnelServlet;
 import com.eviware.soapui.model.settings.Settings;
+import com.eviware.soapui.monitor.SoapUIJettyThreadPool;
 import com.eviware.soapui.support.UISupport;
 
 public class SoapMonitorEngineImpl implements SoapMonitorEngine
@@ -44,11 +44,8 @@ public class SoapMonitorEngineImpl implements SoapMonitorEngine
 
 	public void start( SoapMonitor soapMonitor, int localPort )
 	{
-
 		Settings settings = soapMonitor.getProject().getSettings();
-		QueuedThreadPool threadPool = new QueuedThreadPool();
-		threadPool.setMaxThreads( 100 );
-		server.setThreadPool( threadPool );
+		server.setThreadPool( new SoapUIJettyThreadPool() );
 		Context context = new Context( server, ROOT, 0 );
 
 		if( sslEndpoint != null )
@@ -56,10 +53,13 @@ public class SoapMonitorEngineImpl implements SoapMonitorEngine
 			if( sslEndpoint.startsWith( HTTPS ) )
 			{
 				sslConnector = new SslSocketConnector();
-				sslConnector.setKeystore( settings.getString( SoapMonitorAction.SecurityTabForm.SSLTUNNEL_KEYSTORE, "JKS" ) );
+				sslConnector
+						.setKeystore( settings.getString( SoapMonitorAction.SecurityTabForm.SSLTUNNEL_KEYSTORE, "JKS" ) );
 				sslConnector.setPassword( settings.getString( SoapMonitorAction.SecurityTabForm.SSLTUNNEL_PASSWORD, "" ) );
-				sslConnector.setKeyPassword( settings.getString( SoapMonitorAction.SecurityTabForm.SSLTUNNEL_KEYPASSWORD, "" ) );
-				sslConnector.setTruststore( settings.getString( SoapMonitorAction.SecurityTabForm.SSLTUNNEL_TRUSTSTORE, "JKS" ) );
+				sslConnector.setKeyPassword( settings.getString( SoapMonitorAction.SecurityTabForm.SSLTUNNEL_KEYPASSWORD,
+						"" ) );
+				sslConnector.setTruststore( settings.getString( SoapMonitorAction.SecurityTabForm.SSLTUNNEL_TRUSTSTORE,
+						"JKS" ) );
 				sslConnector.setTrustPassword( settings.getString(
 						SoapMonitorAction.SecurityTabForm.SSLTUNNEL_TRUSTSTORE_PASSWORD, "" ) );
 				sslConnector.setNeedClientAuth( false );

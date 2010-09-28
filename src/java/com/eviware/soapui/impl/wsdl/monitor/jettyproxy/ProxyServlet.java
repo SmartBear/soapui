@@ -50,7 +50,6 @@ import com.eviware.soapui.support.types.StringToStringsMap;
 
 public class ProxyServlet implements Servlet
 {
-
 	protected ServletConfig config;
 	protected ServletContext context;
 	protected SoapMonitor monitor;

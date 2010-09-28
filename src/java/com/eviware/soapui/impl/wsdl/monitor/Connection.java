@@ -91,6 +91,8 @@ class Connection extends Thread
 	 */
 	public void run()
 	{
+		setContextClassLoader( SoapUI.getSoapUICore().getExtensionClassLoader() );
+
 		try
 		{
 			active = true;
