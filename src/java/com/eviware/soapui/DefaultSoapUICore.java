@@ -17,6 +17,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.GeneralSecurityException;
 import java.util.TimerTask;
@@ -44,7 +45,6 @@ import com.eviware.soapui.settings.WSISettings;
 import com.eviware.soapui.settings.WebRecordingSettings;
 import com.eviware.soapui.settings.WsaSettings;
 import com.eviware.soapui.settings.WsdlSettings;
-import com.eviware.soapui.support.ClasspathHacker;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.action.SoapUIActionRegistry;
 import com.eviware.soapui.support.listener.SoapUIListenerRegistry;
@@ -73,6 +73,7 @@ public class DefaultSoapUICore implements SoapUICore
 	private String password;
 	protected boolean initialImport;
 	private TimerTask settingsWatcher;
+	private SoapUIExtensionClassLoader extClassLoader;
 
 	public boolean isSavingSettings;
 
@@ -144,11 +145,6 @@ public class DefaultSoapUICore implements SoapUICore
 		String extDir = System.getProperty( "soapui.ext.listeners" );
 		addExternalListeners( extDir != null ? extDir : root == null ? "listeners" : root + File.separatorChar
 				+ "listeners", extensionClassLoader );
-	}
-
-	protected ClassLoader getExtensionClassLoader()
-	{
-		return SoapUI.class.getClassLoader();
 	}
 
 	protected void initCoreComponents()
@@ -499,34 +495,33 @@ public class DefaultSoapUICore implements SoapUICore
 		}
 	}
 
-	public void loadExternalLibraries()
+	public synchronized void loadExternalLibraries()
 	{
-		try
+		if( extClassLoader == null )
 		{
-			String extDir = System.getProperty( "soapui.ext.libraries" );
-
-			File dir = extDir != null ? new File( extDir ) : new File( new File( getRoot() ), "ext" );
-
-			if( dir.exists() && dir.isDirectory() )
+			try
 			{
-				File[] files = dir.listFiles();
-				for( File file : files )
-				{
-					if( file.getName().toLowerCase().endsWith( ".jar" ) )
-					{
-						ClasspathHacker.addFile( file );
-					}
-				}
+				extClassLoader = SoapUIExtensionClassLoader.create( getRoot(), getExtensionClassLoaderParent() );
 			}
-			else
+			catch( MalformedURLException e )
 			{
-				log.warn( "Missing folder [" + dir.getAbsolutePath() + "] for external libraries" );
+				SoapUI.logError( e );
 			}
 		}
-		catch( Exception e )
-		{
-			log.error( e.toString() );
-		}
+	}
+
+	protected ClassLoader getExtensionClassLoaderParent()
+	{
+		return SoapUI.class.getClassLoader();
+	}
+
+	@Override
+	public SoapUIExtensionClassLoader getExtensionClassLoader()
+	{
+		if( extClassLoader == null )
+			loadExternalLibraries();
+
+		return extClassLoader;
 	}
 
 	/*

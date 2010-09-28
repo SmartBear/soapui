@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.SoapUIExtensionClassLoader;
+import com.eviware.soapui.SoapUIExtensionClassLoader.SoapUIClassLoaderState;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.propertyexpansion.resolvers.ContextPropertyResolver;
 import com.eviware.soapui.model.propertyexpansion.resolvers.DynamicPropertyResolver;
@@ -109,85 +111,96 @@ public class PropertyExpander
 
 	public String expand( PropertyExpansionContext context, String content, boolean entitize )
 	{
-		if( StringUtils.isNullOrEmpty( content ) )
-			return content;
+		SoapUIClassLoaderState clState = SoapUIExtensionClassLoader.ensure();
 
-		int ix = content.indexOf( "${" );
-		if( ix == -1 )
-			return content;
-
-		StringBuffer buf = new StringBuffer();
-		int lastIx = 0;
-		while( ix != -1 )
+		try
 		{
-			if( ix > lastIx && content.charAt( ix - 1 ) == '$' )
+
+			if( StringUtils.isNullOrEmpty( content ) )
+				return content;
+
+			int ix = content.indexOf( "${" );
+			if( ix == -1 )
+				return content;
+
+			StringBuffer buf = new StringBuffer();
+			int lastIx = 0;
+			while( ix != -1 )
 			{
-				buf.append( content.substring( lastIx, ix - 1 ) );
-				lastIx = ix;
-				ix = content.indexOf( "${", lastIx + 1 );
-				continue;
-			}
-
-			if( ix > lastIx )
-				buf.append( content.substring( lastIx, ix ) );
-
-			int ix2 = content.indexOf( '}', ix + 2 );
-			if( ix2 == -1 )
-				break;
-
-			// check for nesting
-			int ix3 = content.lastIndexOf( "${", ix2 );
-			if( ix3 != ix )
-			{
-				// buf.append( content.substring( ix, ix3 ));
-				content = content.substring( 0, ix3 ) + expand( context, content.substring( ix3, ix2 + 1 ) )
-						+ content.substring( ix2 + 1 );
-
-				lastIx = ix;
-				continue;
-			}
-
-			String propertyName = content.substring( ix + 2, ix2 );
-			String propertyValue = null;
-
-			if( StringUtils.hasContent( propertyName ) )
-			{
-				boolean globalOverrideEnabled = SoapUI.getSettings().getBoolean( GlobalPropertySettings.ENABLE_OVERRIDE );
-
-				for( int c = 0; c < propertyResolvers.size() && propertyValue == null; c++ )
+				if( ix > lastIx && content.charAt( ix - 1 ) == '$' )
 				{
-					propertyValue = propertyResolvers.get( c )
-							.resolveProperty( context, propertyName, globalOverrideEnabled );
+					buf.append( content.substring( lastIx, ix - 1 ) );
+					lastIx = ix;
+					ix = content.indexOf( "${", lastIx + 1 );
+					continue;
 				}
+
+				if( ix > lastIx )
+					buf.append( content.substring( lastIx, ix ) );
+
+				int ix2 = content.indexOf( '}', ix + 2 );
+				if( ix2 == -1 )
+					break;
+
+				// check for nesting
+				int ix3 = content.lastIndexOf( "${", ix2 );
+				if( ix3 != ix )
+				{
+					// buf.append( content.substring( ix, ix3 ));
+					content = content.substring( 0, ix3 ) + expand( context, content.substring( ix3, ix2 + 1 ) )
+							+ content.substring( ix2 + 1 );
+
+					lastIx = ix;
+					continue;
+				}
+
+				String propertyName = content.substring( ix + 2, ix2 );
+				String propertyValue = null;
+
+				if( StringUtils.hasContent( propertyName ) )
+				{
+					boolean globalOverrideEnabled = SoapUI.getSettings().getBoolean( GlobalPropertySettings.ENABLE_OVERRIDE );
+
+					for( int c = 0; c < propertyResolvers.size() && propertyValue == null; c++ )
+					{
+						propertyValue = propertyResolvers.get( c ).resolveProperty( context, propertyName,
+								globalOverrideEnabled );
+					}
+				}
+
+				// found a value?
+				if( propertyValue != null )
+				{
+					if( !content.equals( propertyValue ) )
+						propertyValue = expand( context, propertyValue );
+
+					if( entitize )
+						propertyValue = XmlUtils.entitize( propertyValue );
+
+					buf.append( propertyValue );
+				}
+				else
+				{
+					// if( log.isEnabledFor( Priority.WARN ))
+					// log.warn( "Missing property value for [" + propertyName + "]"
+					// );
+
+					// buf.append( "${" ).append( propertyName ).append( '}' );
+				}
+
+				lastIx = ix2 + 1;
+				ix = content.indexOf( "${", lastIx );
 			}
 
-			// found a value?
-			if( propertyValue != null )
-			{
-				if( !content.equals( propertyValue ) )
-					propertyValue = expand( context, propertyValue );
+			if( lastIx < content.length() )
+				buf.append( content.substring( lastIx ) );
 
-				if( entitize )
-					propertyValue = XmlUtils.entitize( propertyValue );
-
-				buf.append( propertyValue );
-			}
-			else
-			{
-				// if( log.isEnabledFor( Priority.WARN ))
-				// log.warn( "Missing property value for [" + propertyName + "]" );
-
-				// buf.append( "${" ).append( propertyName ).append( '}' );
-			}
-
-			lastIx = ix2 + 1;
-			ix = content.indexOf( "${", lastIx );
+			return buf.toString();
 		}
-
-		if( lastIx < content.length() )
-			buf.append( content.substring( lastIx ) );
-
-		return buf.toString();
+		finally
+		{
+			clState.restore();
+		}
 	}
 
 	public String expand( ModelItem contextModelItem, String content )

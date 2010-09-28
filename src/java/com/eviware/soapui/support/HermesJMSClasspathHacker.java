@@ -20,21 +20,21 @@ import java.net.URL;
 
 public class HermesJMSClasspathHacker
 {
-	public static void addFile( String s ) throws IOException
+	private static void addFile( String s ) throws IOException
 	{
 		File f = new File( s );
 		addFile( f );
 	}// end method
 
-	public static void addFile( File f ) throws IOException
+	private static void addFile( File f ) throws IOException
 	{
 		addURL( f.toURI().toURL() );
 	}// end method
 
-	public static void addURL( URL u ) throws IOException
+	private static void addURL( URL u ) throws IOException
 	{
 		ClassLoader classLoader = JAXBHermesLoader.class.getClassLoader();
-		ClasspathHacker.addUrlToClassLoader( u, classLoader );
+		// ClasspathHacker.addUrlToClassLoader( u, classLoader );
 	}// end method
 
 }// end class

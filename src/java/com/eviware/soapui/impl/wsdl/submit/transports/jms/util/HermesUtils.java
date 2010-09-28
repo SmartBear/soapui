@@ -31,11 +31,11 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.SoapUIExtensionClassLoader;
 import com.eviware.soapui.actions.SoapUIPreferencesAction;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.settings.ToolsSettings;
-import com.eviware.soapui.support.HermesJMSClasspathHacker;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
 
@@ -125,7 +125,8 @@ public class HermesUtils
 
 			urls.add( file.toURI().toURL() );
 
-			HermesJMSClasspathHacker.addFile( new File( dir, filename ) );
+			SoapUIExtensionClassLoader cl = SoapUI.getSoapUICore().getExtensionClassLoader();
+			cl.addFile( new File( dir, filename ) );
 		}
 
 		// hermesClassLoader = new URLClassLoader( urls.toArray( new

@@ -33,7 +33,7 @@ public class GroovyScriptEngineFactory implements SoapUIScriptEngineFactory, Soa
 
 	public SoapUIScriptEngine createScriptEngine( ModelItem modelItem )
 	{
-		return new SoapUIGroovyScriptEngine( SoapUI.class.getClassLoader() );
+		return new SoapUIGroovyScriptEngine( SoapUI.getSoapUICore().getExtensionClassLoader() );
 	}
 
 	public SoapUIScriptGenerator createCodeGenerator( ModelItem modelItem )

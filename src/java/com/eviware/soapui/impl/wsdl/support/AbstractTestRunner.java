@@ -14,8 +14,6 @@ package com.eviware.soapui.impl.wsdl.support;
 
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import org.apache.log4j.Logger;
@@ -45,8 +43,6 @@ public abstract class AbstractTestRunner<T extends TestRunnable, T2 extends Test
 	private String reason;
 	private volatile Future<?> future;
 	private int id;
-	private final static ExecutorService threadPool = Executors.newCachedThreadPool();
-
 	private final static Logger log = Logger.getLogger( AbstractTestRunner.class );
 
 	private static int idCounter = 0;
@@ -76,7 +72,7 @@ public abstract class AbstractTestRunner<T extends TestRunnable, T2 extends Test
 	{
 		status = Status.RUNNING;
 		if( async )
-			future = threadPool.submit( this );
+			future = SoapUI.getThreadPool().submit( this );
 		else
 			run();
 	}

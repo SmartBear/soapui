@@ -220,11 +220,12 @@ public class SoapUI
 	private static String[] mainArgs;
 	private static GCTimerTask gcTimerTask;
 
-	private final static ExecutorService threadPool = Executors.newCachedThreadPool();
+	private final static ExecutorService threadPool = Executors.newCachedThreadPool( new SoapUIThreadCreator() );
 	private JTextField searchField;
 	private static JToggleButton applyProxyButton;
 	private static Logger groovyLogger;
 	private static Logger loadUILogger;
+	@SuppressWarnings( "unused" )
 	private static JButton launchLoadUIButton;
 
 	// --------------------------- CONSTRUCTORS ---------------------------
@@ -913,7 +914,7 @@ public class SoapUI
 			public void settingsReloaded()
 			{
 				// TODO Auto-generated method stub
-				
+
 			}
 		} );
 
@@ -1332,9 +1333,7 @@ public class SoapUI
 				SoapUI.logError( e1 );
 			}
 
-			UISupport.showExtendedInfo(
-					"About soapUI",
-					null,
+			UISupport.showExtendedInfo( "About soapUI", null,
 					"<html><body><p align=center> <font face=\"Verdana,Arial,Helvetica\"><strong><img src=\"" + splashURI
 							+ "\"><br>soapUI " + SOAPUI_VERSION + ", copyright (C) 2004-2010 eviware software ab<br>"
 							+ "<a href=\"http://www.soapui.org\">http://www.soapui.org</a> | "
