@@ -231,7 +231,7 @@ public class RecentItemsListener extends WorkspaceListenerAdapter implements Wor
 			SoapUI.getSettings().setString( RECENT_PROJECTS_SETTING, history.toXml() );
 		}
 
-		for( int c = 0; c < recentProjectsMenu.getItemCount(); c++ )
+		for( int c = 0; c < recentProjectsMenu.getItemCount() - 2; c++ )
 		{
 			SwingActionDelegate action = ( SwingActionDelegate )recentProjectsMenu.getItem( c ).getAction();
 			if( action == null )
