@@ -79,9 +79,11 @@ import com.teamdev.jxbrowser.BrowserType;
 import com.teamdev.jxbrowser.NewWindowContainer;
 import com.teamdev.jxbrowser.NewWindowManager;
 import com.teamdev.jxbrowser.NewWindowParams;
+import com.teamdev.jxbrowser.events.NavigationAdapter;
 import com.teamdev.jxbrowser.events.NavigationEvent;
 import com.teamdev.jxbrowser.events.NavigationFinishedEvent;
 import com.teamdev.jxbrowser.events.NavigationListener;
+import com.teamdev.jxbrowser.events.NavigationStatusCode;
 import com.teamdev.jxbrowser.events.StatusChangedEvent;
 import com.teamdev.jxbrowser.events.StatusListener;
 import com.teamdev.jxbrowser.mozilla.MozillaBrowser;
@@ -585,6 +587,14 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 		internalNavigationListener = new InternalBrowserNavigationListener();
 		browser.addNavigationListener( internalNavigationListener );
 		browser.addStatusListener( this );
+		
+		browser.addNavigationListener(new NavigationAdapter() {
+			@Override
+			public void navigationFinished(NavigationFinishedEvent evt) {
+				if ( evt.getUrl().equals(SoapUI.PUSH_PAGE_URL) && !(NavigationStatusCode.OK == evt.getStatusCode() ))
+					browser.navigate(SoapUI.PUSH_PAGE_ERROR_URL);
+			}
+		});
 
 		panel.add( browser.getComponent(), BorderLayout.CENTER );
 		return true;
