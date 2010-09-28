@@ -533,7 +533,7 @@ public class SoapMonitor extends JPanel
 			stopButton.setEnabled( false );
 			startButton.setEnabled( true );
 			optionsButton.setEnabled( true );
-			infoLabel.setText( "Stoped" );
+			infoLabel.setText( "Stopped" );
 			progressBar.setIndeterminate( false );
 
 			SoapUI.log.info( "Could not start HTTP Monitor on local port " + localPort );
