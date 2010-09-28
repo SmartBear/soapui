@@ -241,8 +241,8 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 			nsIObserverService observerService = ( nsIObserverService )serviceManager.getServiceByContractID(
 					"@mozilla.org/observer-service;1", nsIObserverService.NS_IOBSERVERSERVICE_IID );
 
-			final nsIBinaryInputStream in = ( nsIBinaryInputStream )XPCOMManager.getInstance().newComponent(
-					"@mozilla.org/binaryinputstream;1", nsIBinaryInputStream.class );
+			final nsIBinaryInputStream in = XPCOMManager.getInstance().newComponent( "@mozilla.org/binaryinputstream;1",
+					nsIBinaryInputStream.class );
 
 			nsIObserver httpObserver = new nsIObserver()
 			{
@@ -272,8 +272,8 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 							BrowserComponent browserComponent = browserMap.get( window );
 							if( browserComponent != null && browserRecordingMap.containsKey( browserComponent ) )
 							{
-								RecordedRequest rr = new RecordedRequest( dumpUri( httpChannel.getURI() ), httpChannel
-										.getRequestMethod() );
+								RecordedRequest rr = new RecordedRequest( dumpUri( httpChannel.getURI() ),
+										httpChannel.getRequestMethod() );
 
 								nsIUploadChannel upload = ( nsIUploadChannel )httpChannel
 										.queryInterface( nsIUploadChannel.NS_IUPLOADCHANNEL_IID );
@@ -281,7 +281,7 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 								byte[] requestData = null;
 								if( upload != null )
 								{
-									nsIInputStream uploadStream = ( nsIInputStream )upload.getUploadStream();
+									nsIInputStream uploadStream = upload.getUploadStream();
 
 									if( uploadStream != null && uploadStream.available() > 0 )
 									{
@@ -430,7 +430,6 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 				{
 					browser.addNavigationListener( new NavigationListener()
 					{
-						@Override
 						public void navigationStarted( final NavigationEvent arg0 )
 						{
 							// this is the only event we wanted
@@ -449,7 +448,6 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 							{
 								SwingUtilities.invokeLater( new Runnable()
 								{
-									@Override
 									public void run()
 									{
 										if( UISupport.confirm( "Open [" + arg0.getUrl() + "] with system Browser?", "Open URL" ) )
@@ -461,7 +459,6 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 							}
 						}
 
-						@Override
 						public void navigationFinished( NavigationFinishedEvent arg0 )
 						{
 						}
@@ -473,12 +470,10 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 
 	private final class InternalBrowserNavigationListener implements NavigationListener
 	{
-		@Override
 		public void navigationStarted( NavigationEvent arg0 )
 		{
 		}
 
-		@Override
 		public void navigationFinished( NavigationFinishedEvent arg0 )
 		{
 			if( browserRecordingMap.containsKey( BrowserComponent.this ) )
@@ -491,7 +486,7 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 					{
 						HttpTestRequest httpTestRequest = ( HttpTestRequest )( httpHtmlResponseView.getDocument()
 								.getRequest() );
-						WsdlTestCase testCase = ( WsdlTestCase )httpTestRequest.getTestStep().getTestCase();
+						WsdlTestCase testCase = httpTestRequest.getTestStep().getTestCase();
 						int count = testCase.getTestStepList().size();
 
 						String url2 = recordedRequest.getUrl();
@@ -587,14 +582,16 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 		internalNavigationListener = new InternalBrowserNavigationListener();
 		browser.addNavigationListener( internalNavigationListener );
 		browser.addStatusListener( this );
-		
-		browser.addNavigationListener(new NavigationAdapter() {
+
+		browser.addNavigationListener( new NavigationAdapter()
+		{
 			@Override
-			public void navigationFinished(NavigationFinishedEvent evt) {
-				if ( evt.getUrl().equals(SoapUI.PUSH_PAGE_URL) && !(NavigationStatusCode.OK == evt.getStatusCode() ))
-					browser.navigate(SoapUI.PUSH_PAGE_ERROR_URL);
+			public void navigationFinished( NavigationFinishedEvent evt )
+			{
+				if( evt.getUrl().equals( SoapUI.PUSH_PAGE_URL ) && !( NavigationStatusCode.OK == evt.getStatusCode() ) )
+					browser.navigate( SoapUI.PUSH_PAGE_ERROR_URL );
 			}
-		});
+		} );
 
 		panel.add( browser.getComponent(), BorderLayout.CENTER );
 		return true;
@@ -859,10 +856,10 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 				proxyConf.setSkipProxyFor( url );
 			}
 
-			final String proxyUsername = PropertyExpander.expandProperties( context, settings.getString(
-					ProxySettings.USERNAME, null ) );
-			final String proxyPassword = PropertyExpander.expandProperties( context, settings.getString(
-					ProxySettings.PASSWORD, null ) );
+			final String proxyUsername = PropertyExpander.expandProperties( context,
+					settings.getString( ProxySettings.USERNAME, null ) );
+			final String proxyPassword = PropertyExpander.expandProperties( context,
+					settings.getString( ProxySettings.PASSWORD, null ) );
 
 			if( proxyUsername != null )
 			{

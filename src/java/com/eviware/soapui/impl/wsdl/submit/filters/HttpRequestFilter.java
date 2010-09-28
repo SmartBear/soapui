@@ -130,7 +130,7 @@ public class HttpRequestFilter extends AbstractRequestFilter
 			{
 			case HEADER :
 				for( String valuePart : valueParts )
-					httpMethod.setRequestHeader( param.getName(), valuePart );
+					httpMethod.addRequestHeader( param.getName(), valuePart );
 				break;
 			case QUERY :
 				if( formMp == null || !request.isPostQueryString() )

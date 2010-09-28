@@ -515,7 +515,6 @@ public class DefaultSoapUICore implements SoapUICore
 		return SoapUI.class.getClassLoader();
 	}
 
-	@Override
 	public SoapUIExtensionClassLoader getExtensionClassLoader()
 	{
 		if( extClassLoader == null )
@@ -575,8 +574,8 @@ public class DefaultSoapUICore implements SoapUICore
 
 	protected SoapUIActionRegistry initActionRegistry()
 	{
-		return new SoapUIActionRegistry( DefaultSoapUICore.class
-				.getResourceAsStream( "/com/eviware/soapui/resources/conf/soapui-actions.xml" ) );
+		return new SoapUIActionRegistry(
+				DefaultSoapUICore.class.getResourceAsStream( "/com/eviware/soapui/resources/conf/soapui-actions.xml" ) );
 	}
 
 	protected void addExternalListeners( String folder, ClassLoader classLoader )

@@ -23,7 +23,6 @@ import java.util.concurrent.ThreadFactory;
 
 public class SoapUIThreadCreator implements ThreadFactory
 {
-	@Override
 	public Thread newThread( Runnable r )
 	{
 		Thread thread = new Thread( r );

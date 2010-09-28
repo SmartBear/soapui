@@ -107,6 +107,7 @@ public class HttpTestRequestDesktopPanel extends
 
 		logArea.getLogList().getModel().addListDataListener( new ListDataChangeListener()
 		{
+			@Override
 			public void dataChanged( ListModel model )
 			{
 				logInspector.setTitle( "Request Log (" + model.getSize() + ")" );
@@ -120,29 +121,34 @@ public class HttpTestRequestDesktopPanel extends
 	{
 		return new AssertionsPanel( getRequest() )
 		{
+			@Override
 			protected void selectError( AssertionError error )
 			{
-				ModelItemXmlEditor<?, ?> editor = ( ModelItemXmlEditor<?, ?> )getResponseEditor();
+				ModelItemXmlEditor<?, ?> editor = getResponseEditor();
 				editor.requestFocus();
 			}
 		};
 	}
 
+	@Override
 	public void setContent( JComponent content )
 	{
 		inspectorPanel.setContentComponent( content );
 	}
 
+	@Override
 	public void removeContent( JComponent content )
 	{
 		inspectorPanel.setContentComponent( null );
 	}
 
+	@Override
 	protected String getHelpUrl()
 	{
 		return HelpUrls.TESTREQUESTEDITOR_HELP_URL;
 	}
 
+	@Override
 	protected JComponent buildContent()
 	{
 		JComponent component = super.buildContent();
@@ -167,6 +173,7 @@ public class HttpTestRequestDesktopPanel extends
 		return inspectorPanel.getComponent();
 	}
 
+	@Override
 	protected JComponent buildEndpointComponent()
 	{
 		return null;
@@ -240,7 +247,6 @@ public class HttpTestRequestDesktopPanel extends
 				if( !text.equals( getRequest().getEndpoint() ) )
 					SwingUtilities.invokeLater( new Runnable()
 					{
-						@Override
 						public void run()
 						{
 							pathTextField.setText( getRequest().getEndpoint() );
@@ -253,6 +259,7 @@ public class HttpTestRequestDesktopPanel extends
 
 		pathTextField.addKeyListener( new KeyAdapter()
 		{
+			@Override
 			public void keyPressed( KeyEvent e )
 			{
 				if( e.getKeyCode() == KeyEvent.VK_ENTER )
@@ -284,8 +291,6 @@ public class HttpTestRequestDesktopPanel extends
 		downloadResources.setToolTipText( "Download all included resources as attachments!" );
 		downloadResources.addActionListener( new ActionListener()
 		{
-
-			@Override
 			public void actionPerformed( ActionEvent e )
 			{
 				try
@@ -324,11 +329,13 @@ public class HttpTestRequestDesktopPanel extends
 
 	}
 
+	@Override
 	protected void insertButtons( JXToolBar toolbar )
 	{
 		toolbar.add( addAssertionButton );
 	}
 
+	@Override
 	public void setEnabled( boolean enabled )
 	{
 		if( enabled == true )
@@ -348,6 +355,7 @@ public class HttpTestRequestDesktopPanel extends
 		}
 	}
 
+	@Override
 	protected Submit doSubmit() throws SubmitException
 	{
 		return getRequest().submit( new WsdlTestRunContext( getModelItem() ), true );
@@ -371,6 +379,7 @@ public class HttpTestRequestDesktopPanel extends
 		}
 	}
 
+	@Override
 	public boolean beforeSubmit( Submit submit, SubmitContext context )
 	{
 		boolean result = super.beforeSubmit( submit, context );
@@ -378,6 +387,7 @@ public class HttpTestRequestDesktopPanel extends
 		return result;
 	}
 
+	@Override
 	protected void logMessages( String message, String infoMessage )
 	{
 		super.logMessages( message, infoMessage );
@@ -392,6 +402,7 @@ public class HttpTestRequestDesktopPanel extends
 			updateStatusIcon();
 	}
 
+	@Override
 	public boolean onClose( boolean canCancel )
 	{
 		if( super.onClose( canCancel ) )
@@ -407,6 +418,7 @@ public class HttpTestRequestDesktopPanel extends
 		return false;
 	}
 
+	@Override
 	public boolean dependsOn( ModelItem modelItem )
 	{
 		if( getRequest().getOperation() == null )
@@ -422,22 +434,26 @@ public class HttpTestRequestDesktopPanel extends
 
 	private class InternalTestMonitorListener extends TestMonitorListenerAdapter
 	{
+		@Override
 		public void loadTestFinished( LoadTestRunner runner )
 		{
 			setEnabled( !SoapUI.getTestMonitor().hasRunningTest( getModelItem().getTestCase() ) );
 		}
 
+		@Override
 		public void loadTestStarted( LoadTestRunner runner )
 		{
 			if( runner.getLoadTest().getTestCase() == getModelItem().getTestCase() )
 				setEnabled( false );
 		}
 
+		@Override
 		public void testCaseFinished( TestCaseRunner runner )
 		{
 			setEnabled( !SoapUI.getTestMonitor().hasRunningTest( getModelItem().getTestCase() ) );
 		}
 
+		@Override
 		public void testCaseStarted( TestCaseRunner runner )
 		{
 			if( runner.getTestCase() == getModelItem().getTestCase() )
@@ -445,6 +461,7 @@ public class HttpTestRequestDesktopPanel extends
 		}
 	}
 
+	@Override
 	public void propertyChange( PropertyChangeEvent evt )
 	{
 		if( evt.getPropertyName().equals( RestTestRequestInterface.STATUS_PROPERTY ) )
