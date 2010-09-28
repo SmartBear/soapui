@@ -79,7 +79,7 @@ public class SoapUIExtensionClassLoader extends URLClassLoader
 
 		private SoapUIClassLoaderState activate()
 		{
-			if( cl != null )
+			if( cl != null && SoapUI.getSoapUICore() != null )
 				Thread.currentThread().setContextClassLoader( SoapUI.getSoapUICore().getExtensionClassLoader() );
 
 			return this;
