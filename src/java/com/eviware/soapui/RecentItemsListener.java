@@ -132,6 +132,7 @@ public class RecentItemsListener extends WorkspaceListenerAdapter implements Wor
 					recentEditorsMenu.addSeparator();
 					recentEditorsMenu.add( clearAllItem );
 				}
+				
 				clearAllItem.setEnabled( editorCount > 0 );
 
 				// Create Empty Marker if needed.
@@ -231,13 +232,21 @@ public class RecentItemsListener extends WorkspaceListenerAdapter implements Wor
 			SoapUI.getSettings().setString( RECENT_PROJECTS_SETTING, history.toXml() );
 		}
 
-		for( int c = 0; c < recentProjectsMenu.getItemCount() - 2; c++ )
+		for( int c = 0; c < recentProjectsMenu.getItemCount(); c++ )
 		{
-			SwingActionDelegate action = ( SwingActionDelegate )recentProjectsMenu.getItem( c ).getAction();
-			if( action == null )
+		    	JMenuItem item = recentWorkspacesMenu.getItem( c );
+		    	if( item == null )
+		    	    	continue;
+		    	
+		    	Action action = item.getAction();
+		    	if( !(action instanceof SwingActionDelegate) )
+		    	    	continue;
+		    	
+			SwingActionDelegate actionDelegate = ( SwingActionDelegate ) action;
+			if( actionDelegate == null )
 				continue;
-
-			SoapUIActionMapping mapping = action.getMapping();
+			
+			SoapUIActionMapping mapping = actionDelegate.getMapping();
 			if( filePath.equals( mapping.getParam() ) )
 			{
 				recentProjectsMenu.remove( c );
@@ -383,11 +392,19 @@ public class RecentItemsListener extends WorkspaceListenerAdapter implements Wor
 
 		for( int c = 0; c < recentWorkspacesMenu.getItemCount(); c++ )
 		{
-			SwingActionDelegate action = ( SwingActionDelegate )recentWorkspacesMenu.getItem( c ).getAction();
-			if( action == null )
+		    	JMenuItem item = recentWorkspacesMenu.getItem( c );
+		    	if( item == null )
+		    	    	continue;
+		    	
+		    	Action action = item.getAction();
+		    	if( !(action instanceof SwingActionDelegate) )
+		    	    	continue;
+		    	
+			SwingActionDelegate actionDelegate = ( SwingActionDelegate ) action;
+			if( actionDelegate == null )
 				continue;
 
-			SoapUIActionMapping mapping = action.getMapping();
+			SoapUIActionMapping mapping = actionDelegate.getMapping();
 			if( filePath.equals( mapping.getParam() ) )
 			{
 				recentWorkspacesMenu.remove( c );
@@ -436,8 +453,8 @@ public class RecentItemsListener extends WorkspaceListenerAdapter implements Wor
 		if( modelItem == null )
 			return;
 
-		if( isEmptyMarker( recentWorkspacesMenu.getItem( 0 ) ) )
-			recentWorkspacesMenu.remove( 0 );
+		if( isEmptyMarker( recentEditorsMenu.getItem( 0 ) ) )
+		    	recentEditorsMenu.remove( 0 );
 
 		recentEditorsMenu.add( new JMenuItem( new ShowEditorAction( modelItem ) ), 0 );
 	}
@@ -537,7 +554,7 @@ public class RecentItemsListener extends WorkspaceListenerAdapter implements Wor
 
 		return ( ShowEditorAction )unknownAction;
 	}
-
+	
 	/**
 	 * Checks whether a JMenuItem is an Empty marker (marking an empty list).
 	 * 

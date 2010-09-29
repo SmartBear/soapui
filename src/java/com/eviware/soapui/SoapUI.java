@@ -138,6 +138,7 @@ import com.eviware.soapui.support.log.Log4JMonitor;
 import com.eviware.soapui.support.log.LogDisablingTestMonitorListener;
 import com.eviware.soapui.support.monitor.MonitorPanel;
 import com.eviware.soapui.support.monitor.RuntimeMemoryMonitorSource;
+import com.eviware.soapui.support.swing.MenuScroller;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.ui.JDesktopPanelsList;
 import com.eviware.soapui.ui.Navigator;
@@ -483,6 +484,10 @@ public class SoapUI
 		recentMenu.add( recentEditorsMenu );
 		recentMenu.add( recentProjectsMenu );
 		recentMenu.add( recentWorkspacesMenu );
+
+		MenuScroller.setScrollerFor( recentEditorsMenu, 24, 125, 0, 1 );
+		MenuScroller.setScrollerFor( recentProjectsMenu, 24, 125, 0, 1 );
+		MenuScroller.setScrollerFor( recentWorkspacesMenu, 24, 125, 0, 1 );
 
 		RecentItemsListener recentItemsListener = new RecentItemsListener( recentWorkspacesMenu, recentProjectsMenu,
 				recentEditorsMenu );
