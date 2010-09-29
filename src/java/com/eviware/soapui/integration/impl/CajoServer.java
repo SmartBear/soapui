@@ -41,8 +41,8 @@ public class CajoServer
 
 	public void start()
 	{
-		Remote.config( server, Integer
-				.valueOf( SoapUI.getSettings().getString( LoadUISettings.SOAPUI_CAJO_PORT, "1198" ) ), null, 0 );
+		Remote.config( server,
+				Integer.valueOf( SoapUI.getSettings().getString( LoadUISettings.SOAPUI_CAJO_PORT, "1198" ) ), null, 0 );
 		try
 		{
 			ItemServer.bind( new TestCaseEditIntegrationImpl(), itemName );
@@ -54,13 +54,14 @@ public class CajoServer
 			SoapUI.log( e.getMessage() );
 		}
 
+		CajoClient.getInstance().testConnection();
 	}
 
 	public void restart()
 	{
 		Remote.shutdown();
-		Remote.config( server, Integer
-				.valueOf( SoapUI.getSettings().getString( LoadUISettings.SOAPUI_CAJO_PORT, "1198" ) ), null, 0 );
+		Remote.config( server,
+				Integer.valueOf( SoapUI.getSettings().getString( LoadUISettings.SOAPUI_CAJO_PORT, "1198" ) ), null, 0 );
 		try
 		{
 			ItemServer.bind( new TestCaseEditIntegrationImpl(), itemName );
@@ -71,7 +72,6 @@ public class CajoServer
 		{
 			SoapUI.log( e.getMessage() );
 		}
-
 	}
 
 	public String getServer()
