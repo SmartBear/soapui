@@ -234,7 +234,7 @@ public class RecentItemsListener extends WorkspaceListenerAdapter implements Wor
 
 		for( int c = 0; c < recentProjectsMenu.getItemCount() - 2; c++ )
 		{
-			JMenuItem item = recentWorkspacesMenu.getItem( c );
+			JMenuItem item = recentProjectsMenu.getItem( c );
 			if( item == null )
 				continue;
 
