@@ -16,6 +16,7 @@ import java.rmi.ConnectException;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.actions.LoadUIPrefs;
+import com.eviware.soapui.settings.LoadUISettings;
 
 public class CajoClient
 {
@@ -75,6 +76,7 @@ public class CajoClient
 		try
 		{
 			gnu.cajo.invoke.Remote.invoke( getItem(), "test", null );
+			setLoadUIPath();
 			return true;
 		}
 		catch( Exception e )
@@ -83,6 +85,30 @@ public class CajoClient
 		}
 	}
 
+	/**
+	 * If loadUI bat folder is not specified in soapUI and there is an running
+	 * instance of loadUI, takes the path of that instance and sets it to soapUI.
+	 */
+	private void setLoadUIPath()
+	{
+		String loadUIPath = SoapUI.getSettings().getString( LoadUISettings.LOADUI_PATH, "" );
+		if( loadUIPath == null || loadUIPath.trim().length() == 0 )
+		{
+			try
+			{
+				loadUIPath = ( String )invoke( "getLoadUIPath", null );
+				if( loadUIPath != null )
+				{
+					SoapUI.getSettings().setString( LoadUISettings.LOADUI_PATH, loadUIPath );
+				}
+			}
+			catch( Exception e )
+			{
+				// do nothing
+			}
+		}
+	}
+	
 	public String getConnectionString()
 	{
 		return "//" + server + ":" + port + "/" + itemName;

@@ -11,6 +11,8 @@
  */
 package com.eviware.soapui.integration.impl;
 
+import java.awt.Frame;
+import java.io.File;
 import java.util.List;
 
 import com.eviware.soapui.SoapUI;
@@ -34,6 +36,42 @@ public class TestCaseEditIntegrationImpl implements TestCaseEditIntegration
 
 	public void test()
 	{
+	}
+
+	public String getSoapUIPath()
+	{
+		String os = System.getProperty( "os.name" );
+		if( os == null )
+			return null;
+
+		String ext;
+		if( os.indexOf( "Windows" ) >= 0 )
+			ext = "bat";
+		else if( os.indexOf( "Mac OS X" ) >= 0 )
+			ext = "command";
+		else
+			ext = "sh";
+
+		String pro = "";
+		Frame mainFrame = UISupport.getMainFrame();
+		if( mainFrame != null && mainFrame.getTitle().toLowerCase().indexOf( "pro" ) > -1 )
+		{
+			pro = "-pro";
+		}
+
+		String path = System.getProperty( "soapui.home" );
+		if( path == null )
+			return null;
+		
+		File pathFile = new File( path );
+		path = pathFile.getAbsolutePath();
+		path += File.separator + "bin" + File.separator + "soapui" + pro + "." + ext;
+
+		File f = new File( path );
+		if( f.exists() )
+			return f.getAbsolutePath();
+		else
+			return null;
 	}
 
 	public void printLog( String log )
