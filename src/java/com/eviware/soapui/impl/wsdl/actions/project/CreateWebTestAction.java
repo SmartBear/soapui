@@ -47,7 +47,7 @@ public class CreateWebTestAction extends AbstractSoapUIAction<WsdlProject>
 
 	public CreateWebTestAction()
 	{
-		super( "New Web Test", "New Web Test" );
+		super( "New Web TestCase", "New Web TestCase" );
 	}
 
 	public void perform( WsdlProject target, Object param )
@@ -156,7 +156,7 @@ public class CreateWebTestAction extends AbstractSoapUIAction<WsdlProject>
 		desktopPanel.focusResponseInTabbedView( true );
 	}
 
-	@AForm( description = "Specify Web TestSuite Options", name = "Add Web TestCase", helpUrl = HelpUrls.CLONETESTSUITE_HELP_URL, icon = UISupport.TOOL_ICON_PATH )
+	@AForm( description = "Specify Web TestCase Options", name = "Add Web TestCase", helpUrl = HelpUrls.CLONETESTSUITE_HELP_URL, icon = UISupport.TOOL_ICON_PATH )
 	public interface Form
 	{
 		@AField( name = "Web Address", description = "The web address to start at", type = AField.AFieldType.STRING )
