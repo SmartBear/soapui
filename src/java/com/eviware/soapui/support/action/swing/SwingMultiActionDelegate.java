@@ -20,6 +20,8 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.SoapUIExtensionClassLoader;
+import com.eviware.soapui.SoapUIExtensionClassLoader.SoapUIClassLoaderState;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.SoapUIAction;
@@ -76,8 +78,7 @@ public class SwingMultiActionDelegate extends AbstractAction implements Property
 		// required by IDE plugins
 		if( SwingActionDelegate.switchClassloader )
 		{
-			ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
-			Thread.currentThread().setContextClassLoader( SoapUI.class.getClassLoader() );
+			SoapUIClassLoaderState state = SoapUIExtensionClassLoader.ensure();
 
 			try
 			{
@@ -89,7 +90,7 @@ public class SwingMultiActionDelegate extends AbstractAction implements Property
 			}
 			finally
 			{
-				Thread.currentThread().setContextClassLoader( contextClassLoader );
+				state.restore();
 			}
 		}
 		else

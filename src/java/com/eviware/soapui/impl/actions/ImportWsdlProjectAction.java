@@ -14,7 +14,8 @@ package com.eviware.soapui.impl.actions;
 
 import java.io.File;
 
-import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.SoapUIExtensionClassLoader;
+import com.eviware.soapui.SoapUIExtensionClassLoader.SoapUIClassLoaderState;
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.support.MessageSupport;
@@ -58,9 +59,7 @@ public class ImportWsdlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 		if( fileName == null )
 			return;
 
-		ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
-		Thread.currentThread().setContextClassLoader( SoapUI.class.getClassLoader() );
-
+		SoapUIClassLoaderState state = SoapUIExtensionClassLoader.ensure();
 		try
 		{
 			WsdlProject project = ( WsdlProject )workspace.importProject( fileName );
@@ -73,7 +72,7 @@ public class ImportWsdlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 		}
 		finally
 		{
-			Thread.currentThread().setContextClassLoader( contextClassLoader );
+			state.restore();
 		}
 	}
 }

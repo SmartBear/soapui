@@ -25,6 +25,8 @@ import org.apache.xmlbeans.XmlOptions;
 import org.xmlsoap.schemas.soap.envelope.EnvelopeDocument;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.SoapUIExtensionClassLoader;
+import com.eviware.soapui.SoapUIExtensionClassLoader.SoapUIClassLoaderState;
 import com.eviware.soapui.impl.wsdl.support.Constants;
 
 /**
@@ -50,8 +52,7 @@ public class SoapVersion11 extends AbstractSoapVersion
 
 	private SoapVersion11()
 	{
-		ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
-		Thread.currentThread().setContextClassLoader( SoapUI.class.getClassLoader() );
+		SoapUIClassLoaderState state = SoapUIExtensionClassLoader.ensure();
 
 		try
 		{
@@ -78,7 +79,7 @@ public class SoapVersion11 extends AbstractSoapVersion
 		}
 		finally
 		{
-			Thread.currentThread().setContextClassLoader( contextClassLoader );
+			state.restore();
 		}
 	}
 

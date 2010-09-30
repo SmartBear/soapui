@@ -49,6 +49,8 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.SoapUIExtensionClassLoader;
+import com.eviware.soapui.SoapUIExtensionClassLoader.SoapUIClassLoaderState;
 import com.eviware.soapui.impl.wsdl.support.Constants;
 import com.eviware.soapui.model.settings.SettingsListener;
 import com.eviware.soapui.settings.WsdlSettings;
@@ -86,15 +88,14 @@ public class SchemaUtils
 			public void settingsReloaded()
 			{
 				// TODO Auto-generated method stub
-				
+
 			}
 		} );
 	}
 
 	public static void initDefaultSchemas()
 	{
-		ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
-		Thread.currentThread().setContextClassLoader( SoapUI.class.getClassLoader() );
+		SoapUIClassLoaderState state = SoapUIExtensionClassLoader.ensure();
 
 		try
 		{
@@ -123,7 +124,7 @@ public class SchemaUtils
 		}
 		finally
 		{
-			Thread.currentThread().setContextClassLoader( contextClassLoader );
+			state.restore();
 		}
 	}
 
@@ -181,8 +182,7 @@ public class SchemaUtils
 
 	public static SchemaTypeSystem loadSchemaTypes( String wsdlUrl, SchemaLoader loader ) throws SchemaException
 	{
-		ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
-		Thread.currentThread().setContextClassLoader( SoapUI.class.getClassLoader() );
+		SoapUIClassLoaderState state = SoapUIExtensionClassLoader.ensure();
 
 		try
 		{
@@ -198,7 +198,7 @@ public class SchemaUtils
 		}
 		finally
 		{
-			Thread.currentThread().setContextClassLoader( contextClassLoader );
+			state.restore();
 		}
 	}
 
