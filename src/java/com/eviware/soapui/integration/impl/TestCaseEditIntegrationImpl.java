@@ -36,6 +36,7 @@ public class TestCaseEditIntegrationImpl implements TestCaseEditIntegration
 
 	public void test()
 	{
+		CajoClient.getInstance().setLoadUIPath();
 	}
 
 	public String getSoapUIPath()

@@ -89,7 +89,7 @@ public class CajoClient
 	 * If loadUI bat folder is not specified in soapUI and there is an running
 	 * instance of loadUI, takes the path of that instance and sets it to soapUI.
 	 */
-	private void setLoadUIPath()
+	public void setLoadUIPath()
 	{
 		String loadUIPath = SoapUI.getSettings().getString( LoadUISettings.LOADUI_PATH, "" );
 		if( loadUIPath == null || loadUIPath.trim().length() == 0 )
