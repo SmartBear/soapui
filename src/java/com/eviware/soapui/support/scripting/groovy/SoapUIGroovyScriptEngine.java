@@ -19,6 +19,8 @@ import groovy.lang.Script;
 
 import org.codehaus.groovy.control.CompilerConfiguration;
 
+import com.eviware.soapui.SoapUIExtensionClassLoader;
+import com.eviware.soapui.SoapUIExtensionClassLoader.SoapUIClassLoaderState;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 
@@ -79,6 +81,7 @@ public class SoapUIGroovyScriptEngine implements SoapUIScriptEngine
 	public synchronized Object run() throws Exception
 	{
 		saver.lockSave();
+		SoapUIClassLoaderState state = SoapUIExtensionClassLoader.ensure();
 		try
 		{
 
@@ -96,6 +99,7 @@ public class SoapUIGroovyScriptEngine implements SoapUIScriptEngine
 		}
 		finally
 		{
+			state.restore();
 			saver.unlockSave();
 		}
 	}
@@ -138,8 +142,16 @@ public class SoapUIGroovyScriptEngine implements SoapUIScriptEngine
 	{
 		if( script == null )
 		{
-			script = shell.parse( scriptText );
-			script.setBinding( binding );
+			SoapUIClassLoaderState state = SoapUIExtensionClassLoader.ensure();
+			try
+			{
+				script = shell.parse( scriptText );
+				script.setBinding( binding );
+			}
+			finally
+			{
+				state.restore();
+			}
 		}
 	}
 
