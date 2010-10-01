@@ -19,6 +19,7 @@ import java.sql.SQLException;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
+import com.eviware.soapui.support.GroovyUtils;
 import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.support.StringUtils;
 
@@ -45,6 +46,7 @@ public class JdbcUtils
 		}
 		try
 		{
+			GroovyUtils.registerJdbcDriver( drvr );
 			DriverManager.getDriver( connStr );
 		}
 		catch( SQLException e )
