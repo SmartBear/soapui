@@ -75,9 +75,26 @@ public class SoapUIEasySSLProtocolSocketFactory extends EasySSLProtocolSocketFac
 
 	private Socket enableSocket( SSLSocket socket )
 	{
-		socket.setEnabledProtocols( socket.getSupportedProtocols() );
-		socket.setEnabledCipherSuites( socket.getSupportedCipherSuites() );
+		String protocols = System.getProperty( "soapui.https.protocols" );
+		String ciphers = System.getProperty( "soapui.https.ciphers" );
 
+		if( StringUtils.hasContent( protocols ) )
+		{
+			socket.setEnabledProtocols( protocols.split( "," ) );
+		}
+		else
+		{
+			socket.setEnabledProtocols( socket.getSupportedProtocols() );
+		}
+
+		if( StringUtils.hasContent( ciphers ) )
+		{
+			socket.setEnabledCipherSuites( ciphers.split( "," ) );
+		}
+		else
+		{
+			socket.setEnabledCipherSuites( socket.getSupportedCipherSuites() );
+		}
 		return socket;
 	}
 }
