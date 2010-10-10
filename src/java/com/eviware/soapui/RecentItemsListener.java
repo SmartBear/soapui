@@ -450,7 +450,7 @@ public class RecentItemsListener extends WorkspaceListenerAdapter implements Wor
 	public void desktopPanelClosed( DesktopPanel desktopPanel )
 	{
 		ModelItem modelItem = desktopPanel.getModelItem();
-		if( modelItem == null )
+		if( modelItem == null || recentEditorsMenu.getItemCount() == 0 )
 			return;
 
 		if( isEmptyMarker( recentEditorsMenu.getItem( 0 ) ) )
