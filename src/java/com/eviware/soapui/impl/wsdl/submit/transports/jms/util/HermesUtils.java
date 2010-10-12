@@ -32,6 +32,7 @@ import javax.naming.NamingException;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.SoapUIExtensionClassLoader;
+import com.eviware.soapui.SoapUIExtensionClassLoader.SoapUIClassLoaderState;
 import com.eviware.soapui.actions.SoapUIPreferencesAction;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
@@ -66,6 +67,7 @@ public class HermesUtils
 	private static Context getHermes( String key, String hermesConfigPath ) throws IOException, MalformedURLException,
 			NamingException
 	{
+		SoapUIClassLoaderState state = SoapUIExtensionClassLoader.ensure();
 		if( !hermesJarsLoaded )
 		{
 			addHermesJarsToClasspath();
@@ -81,7 +83,7 @@ public class HermesUtils
 
 		try
 		{
-			// Thread.currentThread().setContextClassLoader( hermesClassLoader );
+//			 Thread.currentThread().setContextClassLoader( JAXBHermesLoader.class.getClassLoader());
 			Properties props = new Properties();
 			props.put( Context.INITIAL_CONTEXT_FACTORY, HermesInitialContextFactory.class.getName() );
 			props.put( Context.PROVIDER_URL, hermesConfigPath + File.separator + HERMES_CONFIG_XML );
@@ -92,7 +94,7 @@ public class HermesUtils
 		}
 		finally
 		{
-			// Thread.currentThread().setContextClassLoader( cl );
+			state.restore();
 		}
 	}
 
@@ -114,7 +116,7 @@ public class HermesUtils
 
 		File[] children = dir.listFiles();
 		List<URL> urls = new ArrayList<URL>();
-
+		SoapUIExtensionClassLoader cl = SoapUI.getSoapUICore().getExtensionClassLoader();
 		for( File file : children )
 		{
 			// fix for users using version of hermesJMS which still has
@@ -124,43 +126,11 @@ public class HermesUtils
 				continue;
 
 			urls.add( file.toURI().toURL() );
-
-			SoapUIExtensionClassLoader cl = SoapUI.getSoapUICore().getExtensionClassLoader();
-			cl.addFile( new File( dir, filename ) );
+		
+//			cl.addFile( new File( dir, filename ) );
+			SoapUIExtensionClassLoader.addUrlToClassLoader(  new File( dir, filename ).toURI().toURL(), cl);
 		}
 
-		// hermesClassLoader = new URLClassLoader( urls.toArray( new
-		// URL[urls.size()] ), SoapUI.class.getClassLoader() )
-		// {
-		// protected synchronized Class<?> loadClass( String name, boolean
-		// resolve ) throws ClassNotFoundException
-		// {
-		// // First, check if the class has already been loaded
-		// Class c = findLoadedClass( name );
-		// if( c == null )
-		// {
-		// // if( name.startsWith( "com.sun." ) || name.startsWith( "javax."
-		// // ) || name.startsWith( "org.apache." )
-		// // || name.startsWith( "org.xml." ) )
-		// // return super.loadClass( name, resolve );
-		//
-		// try
-		// {
-		// c = findClass( name );
-		//
-		// if( resolve )
-		// {
-		// resolveClass( c );
-		// }
-		// }
-		// catch( ClassNotFoundException e )
-		// {
-		// c = super.loadClass( name, resolve );
-		// }
-		// }
-		// return c;
-		// }
-		// };
 	}
 
 	public static void flushHermesCache()
@@ -224,7 +194,7 @@ public class HermesUtils
 	 */
 	public static Hermes getHermes( WsdlProject project, String sessionName ) throws NamingException
 	{
-		ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+		SoapUIClassLoaderState state = SoapUIExtensionClassLoader.ensure();
 		try
 		{
 			Context ctx = hermesContext( project );
@@ -250,7 +220,7 @@ public class HermesUtils
 		}
 		finally
 		{
-			Thread.currentThread().setContextClassLoader( contextClassLoader );
+			state.restore();
 		}
 		return null;
 	}
