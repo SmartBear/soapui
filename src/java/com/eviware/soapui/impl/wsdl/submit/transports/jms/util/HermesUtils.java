@@ -83,7 +83,7 @@ public class HermesUtils
 
 		try
 		{
-//			 Thread.currentThread().setContextClassLoader( JAXBHermesLoader.class.getClassLoader());
+			Thread.currentThread().setContextClassLoader( JAXBHermesLoader.class.getClassLoader());
 			Properties props = new Properties();
 			props.put( Context.INITIAL_CONTEXT_FACTORY, HermesInitialContextFactory.class.getName() );
 			props.put( Context.PROVIDER_URL, hermesConfigPath + File.separator + HERMES_CONFIG_XML );
@@ -116,7 +116,6 @@ public class HermesUtils
 
 		File[] children = dir.listFiles();
 		List<URL> urls = new ArrayList<URL>();
-		SoapUIExtensionClassLoader cl = SoapUI.getSoapUICore().getExtensionClassLoader();
 		for( File file : children )
 		{
 			// fix for users using version of hermesJMS which still has
@@ -127,8 +126,7 @@ public class HermesUtils
 
 			urls.add( file.toURI().toURL() );
 		
-//			cl.addFile( new File( dir, filename ) );
-			SoapUIExtensionClassLoader.addUrlToClassLoader(  new File( dir, filename ).toURI().toURL(), cl);
+			SoapUIExtensionClassLoader.addUrlToClassLoader(  new File( dir, filename ).toURI().toURL(), JAXBHermesLoader.class.getClassLoader());
 		}
 
 	}
