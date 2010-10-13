@@ -35,6 +35,7 @@ import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.settings.SettingsListener;
 import com.eviware.soapui.settings.HttpSettings;
 import com.eviware.soapui.settings.SSLSettings;
+import com.eviware.soapui.support.StringUtils;
 
 /**
  * HttpClient related tools
@@ -157,7 +158,7 @@ public class HttpClientSupport
 		{
 			public void settingChanged( String name, String newValue, String oldValue )
 			{
-				if( newValue == null )
+				if( !StringUtils.hasContent( newValue ) )
 					return;
 
 				if( name.equals( SSLSettings.KEYSTORE ) || name.equals( SSLSettings.KEYSTORE_PASSWORD ) )
