@@ -135,6 +135,9 @@ public class WsdlUtils
 
 	public static Element[] getExentsibilityElements( ElementExtensible item, QName qname )
 	{
+		if( item == null )
+			return new Element[0];
+
 		List<Element> result = new ArrayList<Element>();
 
 		List<?> list = item.getExtensibilityElements();
@@ -152,6 +155,9 @@ public class WsdlUtils
 
 	public static String[] getExentsibilityAttributes( AttributeExtensible item, QName qname )
 	{
+		if( item == null )
+			return new String[0];
+
 		StringList result = new StringList();
 
 		Map map = item.getExtensionAttributes();
@@ -774,7 +780,7 @@ public class WsdlUtils
 				return soapAddress.getLocationURI();
 			}
 		}
-		
+
 		SOAP12Address soap12Address = WsdlUtils.getExtensiblityElement( port.getExtensibilityElements(),
 				SOAP12Address.class );
 		if( soap12Address != null && StringUtils.hasContent( soap12Address.getLocationURI() ) )
@@ -1330,7 +1336,7 @@ public class WsdlUtils
 		}
 		return null;
 	}
-	
+
 	public static String getTargetNamespace( Definition definition )
 	{
 		return definition.getTargetNamespace() == null ? XMLConstants.NULL_NS_URI : definition.getTargetNamespace();
