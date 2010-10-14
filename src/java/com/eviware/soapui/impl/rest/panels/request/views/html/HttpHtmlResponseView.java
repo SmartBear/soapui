@@ -28,6 +28,7 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JToggleButton;
 
 import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
 import com.eviware.soapui.impl.support.http.HttpRequestInterface;
@@ -50,7 +51,7 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 	private HttpRequestInterface<?> httpRequest;
 	private JPanel panel;
 	private BrowserComponent browser;
-	private JButton recordButton;
+	private static JToggleButton recordButton;
 	private boolean recordHttpTrafic;
 	private MessageExchangeModelItem messageExchangeModelItem;
 	private boolean hasResponseForRecording;
@@ -71,6 +72,7 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 		{
 			recordButton.setIcon( UISupport.createImageIcon( "/record_http_true.gif" ) );
 			recordButton.setToolTipText( "Stop recording" );
+			recordButton.setSelected( true );
 			browser.setRecordingHttpHtmlResponseView( HttpHtmlResponseView.this );
 		}
 		else
@@ -78,6 +80,7 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 			browser.setRecordingHttpHtmlResponseView( null );
 			recordButton.setIcon( UISupport.createImageIcon( "/record_http_false.gif" ) );
 			recordButton.setToolTipText( "Start recording" );
+			recordButton.setSelected( false );
 		}
 		this.recordHttpTrafic = recordHttpTrafic;
 
@@ -222,7 +225,7 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 	private Component buildToolbar()
 	{
 		JXToolBar toolbar = UISupport.createToolbar();
-		recordButton = new JButton( new RecordHttpTraficAction() );
+		recordButton = new JToggleButton( new RecordHttpTraficAction() );
 
 		toolbar.addLabeledFixed( "Record HTTP trafic", recordButton );
 		return toolbar;
@@ -289,6 +292,7 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 				else
 				{
 					UISupport.showInfoMessage( "To start recording please resubmit the request first" );
+					recordButton.setSelected( false );
 				}
 			}
 		}
