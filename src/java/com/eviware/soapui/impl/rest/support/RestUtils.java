@@ -320,6 +320,9 @@ public class RestUtils
 
 	public static List<String> splitMultipleParameters( String paramStr )
 	{
+		if( paramStr == null )
+			return null;
+
 		Matcher matcher = splitPattern.matcher( paramStr );
 		List<String> parts = new ArrayList<String>();
 		int i = 0;
