@@ -11,6 +11,8 @@
  */
 package com.eviware.soapui.impl.wsdl.actions.testsuite;
 
+import org.apache.log4j.Logger;
+
 import com.eviware.soapui.config.HttpRequestConfig;
 import com.eviware.soapui.config.TestStepConfig;
 import com.eviware.soapui.impl.rest.panels.request.views.html.HttpHtmlResponseView;
@@ -20,9 +22,14 @@ import com.eviware.soapui.impl.wsdl.panels.teststeps.HttpTestRequestDesktopPanel
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
+import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequest;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.registry.HttpRequestStepFactory;
+import com.eviware.soapui.model.iface.Submit;
+import com.eviware.soapui.model.iface.SubmitContext;
+import com.eviware.soapui.model.iface.SubmitListener;
 import com.eviware.soapui.model.iface.Request.SubmitException;
+import com.eviware.soapui.model.iface.Submit.Status;
 import com.eviware.soapui.support.MessageSupport;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
@@ -41,6 +48,8 @@ public class CreateWebTestCaseAction extends AbstractSoapUIAction<WsdlTestSuite>
 	private WsdlTestSuite testSuite;
 	public static final MessageSupport messages = MessageSupport.getMessages( CreateWebTestCaseAction.class );
 	private XFormDialog dialog;
+	HttpTestRequestDesktopPanel desktopPanel;
+	private final static Logger logger = Logger.getLogger( CreateWebTestCaseAction.class );
 
 	public CreateWebTestCaseAction()
 	{
@@ -100,7 +109,7 @@ public class CreateWebTestCaseAction extends AbstractSoapUIAction<WsdlTestSuite>
 		}
 	}
 
-	public void createWebTest( WsdlTestCase targetTestCase, String endpoint, String name, boolean startRecording )
+	public void createWebTest( WsdlTestCase targetTestCase, String endpoint, String name, final boolean startRecording )
 	{
 		HttpRequestConfig httpRequest = HttpRequestConfig.Factory.newInstance();
 		httpRequest.setMethod( HttpMethodType.GET.toString() );
@@ -113,23 +122,57 @@ public class CreateWebTestCaseAction extends AbstractSoapUIAction<WsdlTestSuite>
 		testStepConfig.setName( name );
 		HttpTestRequestStep testStep = ( HttpTestRequestStep )targetTestCase.addTestStep( testStepConfig );
 
-		HttpTestRequestDesktopPanel desktopPanel = ( HttpTestRequestDesktopPanel )UISupport.selectAndShow( testStep );
+		desktopPanel = ( HttpTestRequestDesktopPanel )UISupport.selectAndShow( testStep );
+		HttpTestRequest testRequest = null;
+		WebTestSubmitListener wtListener = new WebTestSubmitListener( startRecording );
 		try
 		{
-			testStep.getTestRequest().submit( new WsdlTestRunContext( testStep ), true );
+			testRequest = testStep.getTestRequest();
+			testRequest.addSubmitListener( wtListener );
+			testRequest.submit( new WsdlTestRunContext( testStep ), true );
 		}
 		catch( SubmitException e )
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		HttpHtmlResponseView htmlResponseView = ( HttpHtmlResponseView )desktopPanel.getResponseEditor().getViews().get(
-				2 );
-		if( startRecording )
-		{
-			htmlResponseView.setRecordHttpTrafic( true );
-		}
+		// if( testRequest != null )
+		// {
+		// testRequest.removeSubmitListener( wtListener );
+		// }
 		desktopPanel.focusResponseInTabbedView( true );
+	}
+
+	private final class WebTestSubmitListener implements SubmitListener
+	{
+		private final boolean startRecording;
+
+		private WebTestSubmitListener( boolean startRecording )
+		{
+			this.startRecording = startRecording;
+		}
+
+		@Override
+		public boolean beforeSubmit( Submit submit, SubmitContext context )
+		{
+			return true;
+		}
+
+		@Override
+		public void afterSubmit( Submit submit, SubmitContext context )
+		{
+			Status status = submit.getStatus();
+			logger.debug( "submit status: " + status );
+			if( status == Status.FINISHED )
+			{
+				if( startRecording )
+				{
+					HttpHtmlResponseView htmlResponseView = ( HttpHtmlResponseView )desktopPanel.getResponseEditor()
+							.getViews().get( 2 );
+					htmlResponseView.setRecordHttpTrafic( true );
+				}
+			}
+		}
 	}
 
 	@AForm( description = "Specify Web TestCase Options", name = "Add Web TestCase", helpUrl = HelpUrls.CLONETESTSUITE_HELP_URL, icon = UISupport.TOOL_ICON_PATH )
