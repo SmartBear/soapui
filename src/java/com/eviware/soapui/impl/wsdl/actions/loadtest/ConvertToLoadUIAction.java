@@ -138,16 +138,19 @@ public class ConvertToLoadUIAction extends AbstractSoapUIAction<WsdlLoadTest>
 			UISupport.showInfoMessage( "Error while opening selected loadUI project" );
 			return;
 		}
-		if( createdRunnerSettings != null )
-		{
-			String creationInfo = "SoapUIRunner created under project: '"
-					+ createdRunnerSettings.get( ContextMapping.LOADUI_PROJECT_NAME ) + "'";
-			if( !targetTestCaseName.equals( IntegrationUtils.CREATE_ON_PROJECT_LEVEL ) )
-			{
-				creationInfo += ", TestCase: '" + createdRunnerSettings.get( ContextMapping.LOADUI_TEST_CASE_NAME ) + "'";
-			}
-			UISupport.showInfoMessage( creationInfo );
-		}
+		// if( createdRunnerSettings != null )
+		// {
+		// String creationInfo = "SoapUIRunner created under project: '"
+		// + createdRunnerSettings.get( ContextMapping.LOADUI_PROJECT_NAME ) +
+		// "'";
+		// if( !targetTestCaseName.equals(
+		// IntegrationUtils.CREATE_ON_PROJECT_LEVEL ) )
+		// {
+		// creationInfo += ", TestCase: '" + createdRunnerSettings.get(
+		// ContextMapping.LOADUI_TEST_CASE_NAME ) + "'";
+		// }
+		// UISupport.showInfoMessage( creationInfo );
+		// }
 	}
 
 	@AForm( description = "Specify Items in loadUI for Converting LoadTest", name = "Convert to loadUI", helpUrl = HelpUrls.CLONETESTCASE_HELP_URL, icon = UISupport.CONVERT_TO_LOADUI_ICON_PATH )

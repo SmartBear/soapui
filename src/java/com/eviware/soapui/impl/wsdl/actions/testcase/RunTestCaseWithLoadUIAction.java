@@ -155,17 +155,22 @@ public class RunTestCaseWithLoadUIAction extends AbstractSoapUIAction<WsdlTestCa
 					UISupport.showInfoMessage( "Error while opening selected loadUI project" );
 					return;
 				}
-				if( createdRunnerSettings != null )
-				{
-					String creationInfo = "SoapUI Runner created/updated under project: '"
-							+ createdRunnerSettings.get( ContextMapping.LOADUI_PROJECT_NAME ) + "'";
-					if( targetTestCaseName != null && !targetTestCaseName.equals( IntegrationUtils.CREATE_ON_PROJECT_LEVEL ) )
-					{
-						creationInfo += ", TestCase: '" + createdRunnerSettings.get( ContextMapping.LOADUI_TEST_CASE_NAME )
-								+ "'";
-					}
-					UISupport.showInfoMessage( creationInfo, IntegrationUtils.LOADU_INFO_DIALOG_TITLE );
-				}
+				// next code was for getting back info on items created on loadUI side - removed for now
+//				if( createdRunnerSettings != null )
+//				{
+//					String creationInfo = "SoapUI Runner created/updated under project: '"
+//							+ createdRunnerSettings.get( ContextMapping.LOADUI_PROJECT_NAME ) + "'";
+//					if( targetTestCaseName != null && !targetTestCaseName.equals( IntegrationUtils.CREATE_ON_PROJECT_LEVEL ) )
+//					{
+//						creationInfo += ", TestCase: '" + createdRunnerSettings.get( ContextMapping.LOADUI_TEST_CASE_NAME )
+//								+ "'";
+//					}
+//					creationInfo += "Transfer focus to loadUI?";
+//					if( UISupport.confirm( creationInfo, IntegrationUtils.LOADU_INFO_DIALOG_TITLE ) )
+//					{
+//						IntegrationUtils.bringLoadUIToFront();
+//					}
+//				}
 			}
 
 		}

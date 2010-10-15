@@ -139,17 +139,22 @@ public class RunMockServiceWithLoadUIAction extends AbstractSoapUIAction<WsdlMoc
 					UISupport.showInfoMessage( "Error while opening selected loadUI project" );
 					return;
 				}
-				if( createdRunnerSettings != null )
-				{
-					String creationInfo = "MockService Runner created/updated under project: '"
-							+ createdRunnerSettings.get( ContextMapping.LOADUI_PROJECT_NAME ) + "'";
-					if( targetTestCaseName != null && !targetTestCaseName.equals( IntegrationUtils.CREATE_ON_PROJECT_LEVEL ) )
-					{
-						creationInfo += ", TestCase: '" + createdRunnerSettings.get( ContextMapping.LOADUI_TEST_CASE_NAME )
-								+ "'";
-					}
-					UISupport.showInfoMessage( creationInfo, IntegrationUtils.LOADU_INFO_DIALOG_TITLE );
-				}
+				// if( createdRunnerSettings != null )
+				// {
+				// String creationInfo =
+				// "MockService Runner created/updated under project: '"
+				// + createdRunnerSettings.get( ContextMapping.LOADUI_PROJECT_NAME )
+				// + "'";
+				// if( targetTestCaseName != null && !targetTestCaseName.equals(
+				// IntegrationUtils.CREATE_ON_PROJECT_LEVEL ) )
+				// {
+				// creationInfo += ", TestCase: '" + createdRunnerSettings.get(
+				// ContextMapping.LOADUI_TEST_CASE_NAME )
+				// + "'";
+				// }
+				// UISupport.showInfoMessage( creationInfo,
+				// IntegrationUtils.LOADU_INFO_DIALOG_TITLE );
+				// }
 			}
 
 		}
