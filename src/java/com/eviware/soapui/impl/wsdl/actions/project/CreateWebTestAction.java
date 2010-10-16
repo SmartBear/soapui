@@ -13,6 +13,7 @@ package com.eviware.soapui.impl.wsdl.actions.project;
 
 import org.apache.log4j.Logger;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.HttpRequestConfig;
 import com.eviware.soapui.config.TestStepConfig;
 import com.eviware.soapui.impl.rest.panels.request.views.html.HttpHtmlResponseView;
@@ -29,7 +30,6 @@ import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequest;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.registry.HttpRequestStepFactory;
 import com.eviware.soapui.model.iface.Request.SubmitException;
-import com.eviware.soapui.model.iface.Submit.Status;
 import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.support.MessageSupport;
 import com.eviware.soapui.support.StringUtils;
@@ -151,12 +151,9 @@ public class CreateWebTestAction extends AbstractSoapUIAction<WsdlProject>
 		{
 			testRequest = testStep.getTestRequest();
 			WsdlSubmit<HttpRequest> submitRequest = testRequest.submit( new WsdlTestRunContext( testStep ), true );
-			while( submitRequest.getStatus() != Status.FINISHED )
-			{
-				submitRequest.waitUntilFinished();
-			}
 			if( startRecording )
 			{
+				submitRequest.waitUntilFinished();
 				HttpHtmlResponseView htmlResponseView = ( HttpHtmlResponseView )desktopPanel.getResponseEditor().getViews()
 						.get( 2 );
 				htmlResponseView.setRecordHttpTrafic( true );
@@ -164,8 +161,7 @@ public class CreateWebTestAction extends AbstractSoapUIAction<WsdlProject>
 		}
 		catch( SubmitException e )
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			SoapUI.logError( e );
 		}
 		desktopPanel.focusResponseInTabbedView( true );
 	}

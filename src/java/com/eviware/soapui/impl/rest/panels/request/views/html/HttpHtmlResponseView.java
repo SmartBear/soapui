@@ -18,18 +18,17 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
 import com.eviware.soapui.impl.support.http.HttpRequestInterface;
 import com.eviware.soapui.impl.support.panels.AbstractHttpXmlRequestDesktopPanel.HttpResponseDocument;
@@ -41,7 +40,6 @@ import com.eviware.soapui.model.iface.Request.SubmitException;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.BrowserComponent;
 import com.eviware.soapui.support.components.JXToolBar;
-import com.eviware.soapui.support.editor.inspectors.attachments.ContentTypeHandler;
 import com.eviware.soapui.support.editor.views.AbstractXmlEditorView;
 import com.eviware.soapui.support.editor.xml.XmlEditor;
 
@@ -55,7 +53,6 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 	private boolean recordHttpTrafic;
 	private MessageExchangeModelItem messageExchangeModelItem;
 	private boolean hasResponseForRecording;
-	private boolean preparingToRecord;
 
 	public boolean isRecordHttpTrafic()
 	{
@@ -147,8 +144,7 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 
 	protected void setEditorContent( HttpResponse httpResponse )
 	{
-		hasResponseForRecording = false;
-		if( httpResponse != null && ( preparingToRecord || isRecordHttpTrafic() ) )
+		if( httpResponse != null )
 		{
 			try
 			{
@@ -160,39 +156,22 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 				e.printStackTrace();
 			}
 		}
-		else if( httpResponse != null && httpResponse.getContentType() != null )
-		{
-			String contentType = httpResponse.getContentType();
-			if( contentType.contains( "html" ) || contentType.contains( "text" ) )
-			{
-				try
-				{
-					String content = httpResponse.getContentAsString();
-					browser.setContent( content, httpResponse.getURL().toURI().toString() );
-				}
-				catch( Exception e )
-				{
-					e.printStackTrace();
-				}
-			}
-			else if( !contentType.contains( "xml" ) )
-			{
-				try
-				{
-					String ext = ContentTypeHandler.getExtensionForContentType( contentType );
-					File temp = File.createTempFile( "response", "." + ext );
-					FileOutputStream fileOutputStream = new FileOutputStream( temp );
-					writeHttpBody( httpResponse.getRawResponseData(), fileOutputStream );
-					fileOutputStream.close();
-					browser.navigate( temp.toURI().toURL().toString(), null );
-					temp.deleteOnExit();
-				}
-				catch( Exception e )
-				{
-					e.printStackTrace();
-				}
-			}
-		}
+		/*
+		 * else if( httpResponse != null && httpResponse.getContentType() != null
+		 * ) { String contentType = httpResponse.getContentType(); if(
+		 * contentType.contains( "html" ) || contentType.contains( "text" ) ) {
+		 * try { String content = httpResponse.getContentAsString();
+		 * browser.setContent( content, httpResponse.getURL().toURI().toString()
+		 * ); } catch( Exception e ) { e.printStackTrace(); } } else if(
+		 * !contentType.contains( "xml" ) ) { try { String ext =
+		 * ContentTypeHandler.getExtensionForContentType( contentType ); File temp
+		 * = File.createTempFile( "response", "." + ext ); FileOutputStream
+		 * fileOutputStream = new FileOutputStream( temp ); writeHttpBody(
+		 * httpResponse.getRawResponseData(), fileOutputStream );
+		 * fileOutputStream.close(); browser.navigate(
+		 * temp.toURI().toURL().toString(), null ); temp.deleteOnExit(); } catch(
+		 * Exception e ) { e.printStackTrace(); } } }
+		 */
 		else
 		{
 			browser.setContent( "<missing content>" );
@@ -279,14 +258,13 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 					// resubmit so we have "live" content
 					try
 					{
-						preparingToRecord = true;
-						getHttpRequest().submit( new WsdlSubmitContext( getHttpRequest() ), false );
+						getHttpRequest().submit( new WsdlSubmitContext( getHttpRequest() ), false ).waitUntilFinished();
 					}
 					catch( SubmitException e )
 					{
-						e.printStackTrace();
+						SoapUI.logError( e );
 					}
-					preparingToRecord = false;
+
 					setRecordHttpTrafic( true );
 				}
 				else
