@@ -81,8 +81,8 @@ public class CreateWebTestAction extends AbstractSoapUIAction<WsdlProject>
 				UISupport.showErrorMessage( "You must specify the web address to start at" );
 				dialog.show();
 			}
-			String url = dialog.getValue( Form.URL );
-			String testStepName = HttpUtils.ensureEndpointStartsWithProtocol( url );
+			String testStepName = dialog.getValue( Form.URL );
+			String url = HttpUtils.ensureEndpointStartsWithProtocol( testStepName );
 			WsdlTestSuite targetTestSuite = null;
 			WsdlTestCase targetTestCase = null;
 

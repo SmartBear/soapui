@@ -579,7 +579,7 @@ public class SoapUI
 	{
 		if( logMonitor == null )
 		{
-			if( !isCommandLine && logCache.size() < 100 )
+			if( !isCommandLine && logCache.size() < 1000 )
 				logCache.add( msg );
 
 			return;

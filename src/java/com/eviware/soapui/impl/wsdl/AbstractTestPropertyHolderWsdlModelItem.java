@@ -50,9 +50,9 @@ public abstract class AbstractTestPropertyHolderWsdlModelItem<T extends ModelIte
 		{
 			String propFileName = "soapui.properties." + propertyName;
 			String propFile = System.getProperty( propFileName );
-			if( !StringUtils.hasContent( propFile ))
+			if( !StringUtils.hasContent( propFile ) )
 				propFile = SoapUI.getGlobalProperties().getPropertyValue( propFileName );
-			
+
 			if( StringUtils.hasContent( propFile ) )
 			{
 				int result = propertyHolderSupport.addPropertiesFromFile( propFile );
@@ -96,7 +96,7 @@ public abstract class AbstractTestPropertyHolderWsdlModelItem<T extends ModelIte
 
 	public TestProperty getProperty( String name )
 	{
-		return propertyHolderSupport.getProperty( name );
+		return propertyHolderSupport == null ? null : propertyHolderSupport.getProperty( name );
 	}
 
 	public String[] getPropertyNames()
@@ -111,7 +111,7 @@ public abstract class AbstractTestPropertyHolderWsdlModelItem<T extends ModelIte
 
 	public String getPropertyValue( String name )
 	{
-		return propertyHolderSupport.getPropertyValue( name );
+		return propertyHolderSupport == null ? null : propertyHolderSupport.getPropertyValue( name );
 	}
 
 	public TestProperty removeProperty( String propertyName )

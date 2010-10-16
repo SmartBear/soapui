@@ -281,7 +281,8 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 			if( mockRunner.isRunning() )
 				mockRunner.stop();
 
-			mockRunner.release();
+			if( mockRunner != null )
+				mockRunner.release();
 		}
 
 		for( WsdlMockOperation operation : mockOperations )
