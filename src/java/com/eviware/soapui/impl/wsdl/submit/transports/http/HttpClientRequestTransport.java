@@ -139,6 +139,14 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 
 			// custom http headers last so they can be overridden
 			StringToStringsMap headers = httpRequest.getRequestHeaders();
+
+			// first remove so we don't get any unwanted duplicates
+			for( String header : headers.keySet() )
+			{
+				httpMethod.removeRequestHeader( header );
+			}
+
+			// now add
 			for( String header : headers.keySet() )
 			{
 				for( String headerValue : headers.get( header ) )
