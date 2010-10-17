@@ -9,6 +9,18 @@
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
+/*
+ *  soapUI, copyright (C) 2004-2010 eviware.com 
+ *
+ *  soapUI is free software; you can redistribute it and/or modify it under the 
+ *  terms of version 2.1 of the GNU Lesser General Public License as published by 
+ *  the Free Software Foundation.
+ *
+ *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ *  See the GNU Lesser General Public License for more details at gnu.org.
+ */
+
 package com.eviware.soapui.impl.wsdl.actions.project;
 
 import org.apache.log4j.Logger;
@@ -134,6 +146,8 @@ public class CreateWebTestAction extends AbstractSoapUIAction<WsdlProject>
 
 	private void createWebTest( WsdlTestCase targetTestCase, String endpoint, String name, final boolean startRecording )
 	{
+		targetTestCase.setKeepSession( true );
+
 		HttpRequestConfig httpRequest = HttpRequestConfig.Factory.newInstance();
 		httpRequest.setMethod( HttpMethodType.GET.toString() );
 

@@ -9,6 +9,7 @@
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
+
 package com.eviware.soapui.impl.wsdl.actions.testsuite;
 
 import org.apache.log4j.Logger;
@@ -109,6 +110,8 @@ public class CreateWebTestCaseAction extends AbstractSoapUIAction<WsdlTestSuite>
 
 	public void createWebTest( WsdlTestCase targetTestCase, String endpoint, String name, final boolean startRecording )
 	{
+		targetTestCase.setKeepSession( true );
+
 		HttpRequestConfig httpRequest = HttpRequestConfig.Factory.newInstance();
 		httpRequest.setMethod( HttpMethodType.GET.toString() );
 
