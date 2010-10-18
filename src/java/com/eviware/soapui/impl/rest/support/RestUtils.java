@@ -273,7 +273,7 @@ public class RestUtils
 			switch( param.getStyle() )
 			{
 			case QUERY :
-				if( query != null )
+				if( query != null && valueParts != null )
 				{
 					for( String valuePart : valueParts )
 					{
