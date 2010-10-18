@@ -156,25 +156,10 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 				e.printStackTrace();
 			}
 		}
-		/*
-		 * else if( httpResponse != null && httpResponse.getContentType() != null
-		 * ) { String contentType = httpResponse.getContentType(); if(
-		 * contentType.contains( "html" ) || contentType.contains( "text" ) ) {
-		 * try { String content = httpResponse.getContentAsString();
-		 * browser.setContent( content, httpResponse.getURL().toURI().toString()
-		 * ); } catch( Exception e ) { e.printStackTrace(); } } else if(
-		 * !contentType.contains( "xml" ) ) { try { String ext =
-		 * ContentTypeHandler.getExtensionForContentType( contentType ); File temp
-		 * = File.createTempFile( "response", "." + ext ); FileOutputStream
-		 * fileOutputStream = new FileOutputStream( temp ); writeHttpBody(
-		 * httpResponse.getRawResponseData(), fileOutputStream );
-		 * fileOutputStream.close(); browser.navigate(
-		 * temp.toURI().toURL().toString(), null ); temp.deleteOnExit(); } catch(
-		 * Exception e ) { e.printStackTrace(); } } }
-		 */
 		else
 		{
 			browser.setContent( "<missing content>" );
+			hasResponseForRecording = false;
 		}
 	}
 
@@ -266,11 +251,6 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 					}
 
 					setRecordHttpTrafic( true );
-				}
-				else
-				{
-					UISupport.showInfoMessage( "To start recording please resubmit the request first" );
-					recordButton.setSelected( false );
 				}
 			}
 		}
