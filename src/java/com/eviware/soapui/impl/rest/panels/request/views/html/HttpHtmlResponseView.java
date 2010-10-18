@@ -249,9 +249,9 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 					{
 						SoapUI.logError( e );
 					}
-
-					setRecordHttpTrafic( true );
 				}
+
+				setRecordHttpTrafic( true );
 			}
 		}
 	}
