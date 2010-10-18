@@ -1,5 +1,70 @@
 Welcome to soapUI!
 
+2010-10-18 : 3.6.1
+--------------------------------------------------------------------------------
+
+Major New Features: 
+- None!
+
+Minor New Features: 
+- Improved soapUI <-> loadUI integration (loadUI) 
+  - automatic detection of paths 
+  - improved component generation 
+- Multiple Parameter value support for REST requests (REST) 
+
+Bugs Fixed: 
+- Improved Web Recording with Forms (Web) 
+- Fixed HTTP Header overrides (soapUI) 
+- Command-line runners don't execute all tests on misspelling (Automation) 
+- Multiple spelling and usability issues (soapUI) 
+- File DataSink IOException (Functional Testing) 
+- Project Script Library now works on project load (Scripting) 
+
+Updated Libraries: 
+- Groovy 1.7.5
+
+2010-09-14 : 3.6
+--------------------------------------------------------------------------------
+
+Major New Features:
+- loadUI Integration
+- Web Testing and Recording
+- Manual TestStep
+
+Minor New Features:
+- Improved WADL importer 
+- Improved viewing of attachments  
+- Improved support for huge file attachments (>200mb) 
+- Fixed many memory leaks for long-running tests 
+- Added support for project-level script libraries 
+- Added setting to enable wordwrap in Raw message views 
+- Increased default memory setting in .sh files  
+- Added action to clear the current Workspace 
+- Added option to show namespaces in refactoring wizard  
+- Improved web-recording functionality:
+  - wizards for generating web tests when creating new projects
+  - possibility to exclude HTTP Headers
+  - support for multiple recording sessions
+Improved loadUI project generation from functional TestCases 
+
+Major bugs fixed:
+- Fixed adding of HTTP Query Parameters 
+- Fixed JDBC Assertions to handle connection errors 
+- Several fixes to JDBC-connection related functionality 
+- Fixed showing of passwords in UI  
+- Several UI cleanups and minor bug-fixes  
+- Fixed preview of -f argument in runner dialogs 
+- Fixed usage of correct soap version when refactoring  
+- Fixed parameter resolving in script properties 
+- Fixed saving of reordered TestCases 
+- Fixed SSL Support for soapUI TestCases in loadUI 
+- Fixed bundling of external resources in generated War files 
+- Fixed all code-generation to work from command-line tools 
+
+Updated Libraries:
+- Groovy 1.7.4
+- JxBrowser 2.4
+
 2010-04-09 : 3.5.1
 --------------------------------------------------------------------------------
 soapUI 3.5.1 is mainly a bug-fix release with dozens of minor improvements and
