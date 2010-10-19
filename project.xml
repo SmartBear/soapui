@@ -50,7 +50,7 @@
 			<report>jutils-lint4j-plugin</report>
 		-->
 	</reports>
-	<currentVersion>3.6.1</currentVersion>
+	<currentVersion>4.0.0-SNAPSHOT</currentVersion>
 	<package>com.eviware.soapui</package>
 	<url>http://www.soapui.org</url>
 	<versions>
