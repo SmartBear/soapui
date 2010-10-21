@@ -122,7 +122,7 @@ public class StringToStringMapTableModel extends AbstractTableModel implements T
 
 	public StringToStringMap getData()
 	{
-		return new StringToStringMap( data );
+		return new StringToStringMap( this.data == null ? new StringToStringMap() : this.data );
 	}
 
 	public void setData( StringToStringMap data )
