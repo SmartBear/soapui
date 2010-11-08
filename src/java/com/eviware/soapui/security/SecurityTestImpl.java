@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.swing.ImageIcon;
 
+import com.eviware.soapui.config.SecurityTestConfig;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.settings.Settings;
@@ -17,7 +18,7 @@ public class SecurityTestImpl implements SecurityTest, Runnable
 	private HashMap<TestStep,List<SecurityCheck>> securityChecksMap;
 	private String description;
 	private String label;
-//	private SecurityTestConfig securityTestConfig;
+	private SecurityTestConfig securityTestConfig;
 	
 	private SecurityTestLog securityTestLog;
 
