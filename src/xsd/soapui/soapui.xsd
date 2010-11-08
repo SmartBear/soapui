@@ -1936,4 +1936,14 @@
     		<xsd:element name="expectedResult" type="xsd:string"></xsd:element>
     	</xsd:sequence>
     </xsd:complexType>
+
+    <xsd:complexType name="SecurityTest">
+    	<xsd:complexContent>
+    		<xsd:extension base="tns:ModelItem">
+    			<xsd:sequence>
+    				<xsd:element name="test" type="xsd:string"></xsd:element>
+    			</xsd:sequence>
+    		</xsd:extension>
+    	</xsd:complexContent>
+    </xsd:complexType>
 </xsd:schema>
