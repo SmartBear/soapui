@@ -13,18 +13,23 @@ package com.eviware.soapui.security;
 
 import java.util.List;
 
+import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestStep;
 
 public interface SecurityCheck extends ModelItem
 {
-//	private int order; 
+	// private int order;
 	public List<SecurityTestLogEntry> getResults();
-//	public SecurityCheckConfig getConfig();
-	//internaly calles analyze
-	public void execute(TestStep testStep);
-	//used in monitor, 
-	public void analyze(TestStep testStep);
-	//possibly to be done through registry
+
+	public SecurityCheckConfig getConfig();
+
+	// internaly calles analyze
+	public void execute( TestStep testStep );
+
+	// used in monitor,
+	public void analyze( TestStep testStep );
+
+	// possibly to be done through registry
 	public boolean isMonitorApplicable();
 }

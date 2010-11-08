@@ -1,26 +1,54 @@
 package com.eviware.soapui.security;
 
 import java.beans.PropertyChangeListener;
-import java.util.HashMap;
 import java.util.List;
 
 import javax.swing.ImageIcon;
 
-import com.eviware.soapui.config.SecurityTestConfig;
-import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
+import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.testsuite.TestStep;
 
-public class SecurityTestImpl implements SecurityTest, Runnable
+public class GroovySecurityCheck implements SecurityCheck
 {
-	private WsdlTestCase testCase;
-	private HashMap<TestStep,List<SecurityCheck>> securityChecksMap;
-	private String description;
-	private String label;
-	private SecurityTestConfig securityTestConfig;
-	
-	private SecurityTestLog securityTestLog;
+
+	//configuration of specific request modification
+	private SecurityCheckConfig config;
+	@Override
+	public void analyze( TestStep testStep )
+	{
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void execute( TestStep testStep )
+	{
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public SecurityCheckConfig getConfig()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<SecurityTestLogEntry> getResults()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean isMonitorApplicable()
+	{
+		// TODO Auto-generated method stub
+		return false;
+	}
 
 	@Override
 	public List<? extends ModelItem> getChildren()
@@ -75,36 +103,28 @@ public class SecurityTestImpl implements SecurityTest, Runnable
 	public void addPropertyChangeListener( String propertyName, PropertyChangeListener listener )
 	{
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void addPropertyChangeListener( PropertyChangeListener listener )
 	{
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void removePropertyChangeListener( PropertyChangeListener listener )
 	{
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void removePropertyChangeListener( String propertyName, PropertyChangeListener listener )
 	{
 		// TODO Auto-generated method stub
-		
-	}
 
-	@Override
-	public void run()
-	{
-		// TODO Auto-generated method stub
-		
 	}
-
 
 }
