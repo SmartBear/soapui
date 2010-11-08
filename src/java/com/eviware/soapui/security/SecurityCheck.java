@@ -11,25 +11,20 @@
  */
 package com.eviware.soapui.security;
 
-import org.apache.commons.httpclient.HttpMethod;
+import java.util.List;
 
-import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
+import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.testsuite.TestStep;
 
-public class SecurityModel
+public interface SecurityCheck extends ModelItem
 {
-
-	
-//	private WsdlTestCase testCase;
-//	private HashMap<TestStep,List<SecurityAssertion>> hashMap;
-//	private String description;
-//	private String label;
-//	private SecurityModelConfig securityModelConfig;
-//	
-//	private SecurityResult securityResult;
-//	
-//	private SecurityAssertion[] securityAssertions;
-//	
-//	public void onemethod(){
-//		httpMethod.set
-//	}
+//	private int order; 
+	public List<SecurityTestLogEntry> getResults();
+//	public SecurityCheckConfig getConfig();
+	//internaly calles analyze
+	public void execute(TestStep testStep);
+	//used in monitor, 
+	public void analyze(TestStep testStep);
+	//possibly to be done through registry
+	public boolean isMonitorApplicable();
 }
