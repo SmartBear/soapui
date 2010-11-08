@@ -17,6 +17,11 @@ import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestStep;
 
+/**
+ * SecurityCheck
+ * 
+ * @author soapUI team
+ */
 public interface SecurityCheck extends ModelItem
 {
 	// private int order;

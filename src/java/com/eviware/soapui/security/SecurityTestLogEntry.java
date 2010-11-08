@@ -17,9 +17,9 @@ import java.io.IOException;
 import javax.swing.ImageIcon;
 
 /**
- * An entry in the loadtest log
+ * SecurityTestLogEntry
  * 
- * @author Ole.Matzura
+ * @author soapUI team
  */
 
 public interface SecurityTestLogEntry
