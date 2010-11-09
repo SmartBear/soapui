@@ -13,7 +13,6 @@
 package com.eviware.soapui.security.registry;
 
 import com.eviware.soapui.config.SecurityCheckConfig;
-import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.security.SecurityCheck;
 
 /**
@@ -44,7 +43,7 @@ public abstract class SecurityCheckFactory
 		return typeName;
 	}
 
-	public abstract SecurityCheckConfig createNewSecurityCheck( WsdlTestCase testCase, String name );
+	// public abstract SecurityCheckConfig createNewSecurityCheck( WsdlTestCase testCase, String name );
 
 	public abstract boolean canCreate();
 

@@ -10,7 +10,7 @@
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
 
-package com.eviware.soapui.security;
+package com.eviware.soapui.security.log;
 
 import java.io.IOException;
 

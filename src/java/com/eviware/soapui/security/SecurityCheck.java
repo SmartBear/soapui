@@ -16,6 +16,7 @@ import java.util.List;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.model.support.AbstractModelItem;
 import com.eviware.soapui.model.testsuite.TestStep;
+import com.eviware.soapui.security.log.SecurityTestLogEntry;
 
 /**
  * SecurityCheck

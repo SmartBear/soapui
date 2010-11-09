@@ -48,12 +48,14 @@ public class GroovySecurityCheckFactory extends SecurityCheckFactory
 		return new GroovySecurityCheck(  config );
 	}
 
-	@Override
-	public SecurityCheckConfig createNewSecurityCheck( WsdlTestCase testCase, String name )
-	{
-		SecurityCheckConfig securityCheckConfig = SecurityCheckConfig.Factory.newInstance();
-		securityCheckConfig.setType( GROOVY_SECURITY_CHECK_TYPE );
-		securityCheckConfig.setName( name );
-		return securityCheckConfig;
-	}
+	// @Override
+	// public SecurityCheckConfig createNewSecurityCheck( WsdlTestCase testCase,
+	// String name )
+	// {
+	// SecurityCheckConfig securityCheckConfig =
+	// SecurityCheckConfig.Factory.newInstance();
+	// securityCheckConfig.setType( GROOVY_SECURITY_CHECK_TYPE );
+	// securityCheckConfig.setName( name );
+	// return securityCheckConfig;
+	// }
 }

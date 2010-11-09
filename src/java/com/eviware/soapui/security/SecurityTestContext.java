@@ -14,7 +14,6 @@ package com.eviware.soapui.security;
 
 import com.eviware.soapui.model.propertyexpansion.DefaultPropertyExpansionContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
-import com.eviware.soapui.model.testsuite.TestRunContext;
 
 /**
  * SecurityTestContext implementation for SecurityTests
@@ -22,7 +21,7 @@ import com.eviware.soapui.model.testsuite.TestRunContext;
  * @author soapUI team
  */
 
-public class SecurityTestContext extends DefaultPropertyExpansionContext implements TestRunContext
+public class SecurityTestContext extends DefaultPropertyExpansionContext implements SecurityTestRunContext
 {
 	private final SecurityTestRunner runner;
 

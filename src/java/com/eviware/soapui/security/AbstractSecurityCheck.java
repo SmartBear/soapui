@@ -21,29 +21,29 @@ import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.testsuite.TestStep;
+import com.eviware.soapui.security.log.SecurityTestLogEntry;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
 
 public abstract class AbstractSecurityCheck extends SecurityCheck
 {
-	//configuration of specific request modification
+	// configuration of specific request modification
 	protected SecurityCheckConfig config;
 	protected String startupScript;
 	protected String tearDownScript;
 	protected SoapUIScriptEngine scriptEngine;
-	
-	
-//	private 
+
+	// private
 	public AbstractSecurityCheck( SecurityCheckConfig config )
 	{
 		this.config = config;
-		this.startupScript= config.getStartupScript().getStringValue();
-		this.tearDownScript= config.getTearDownScript().getStringValue();
+		this.startupScript = config.getStartupScript().getStringValue();
+		this.tearDownScript = config.getTearDownScript().getStringValue();
 		scriptEngine = SoapUIScriptEngineRegistry.create( this );
 	}
-	
-	abstract protected void execute(TestStep testStep );
-	
+
+	abstract protected void execute( TestStep testStep );
+
 	@Override
 	public void analyze( TestStep testStep )
 	{
@@ -52,17 +52,17 @@ public abstract class AbstractSecurityCheck extends SecurityCheck
 	@Override
 	public void run( TestStep testStep )
 	{
-		runStartupScript(testStep);
+		runStartupScript( testStep );
 		execute( testStep );
-		runTearDownScript(testStep);
+		runTearDownScript( testStep );
 	}
 
-	private void runTearDownScript(TestStep testStep)
+	private void runTearDownScript( TestStep testStep )
 	{
 		scriptEngine.setScript( tearDownScript );
 		scriptEngine.setVariable( "testStep", testStep );
 		scriptEngine.setVariable( "log", SoapUI.ensureGroovyLog() );
-//		scriptEngine.setVariable( "context", context );
+		// scriptEngine.setVariable( "context", context );
 
 		try
 		{
@@ -77,15 +77,15 @@ public abstract class AbstractSecurityCheck extends SecurityCheck
 		{
 			scriptEngine.clearVariables();
 		}
-		
+
 	}
 
-	private void runStartupScript(TestStep testStep)
+	private void runStartupScript( TestStep testStep )
 	{
 		scriptEngine.setScript( startupScript );
 		scriptEngine.setVariable( "testStep", testStep );
 		scriptEngine.setVariable( "log", SoapUI.ensureGroovyLog() );
-//		scriptEngine.setVariable( "context", context );
+		// scriptEngine.setVariable( "context", context );
 
 		try
 		{
