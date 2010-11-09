@@ -39,7 +39,7 @@ public class SecurityTestLogMessageEntry implements SecurityTestLogEntry
 		this.message = message;
 		timestamp = System.currentTimeMillis();
 
-		icon = UISupport.createImageIcon( "/loadtest_log_message.gif" );
+		icon = UISupport.createImageIcon( "/securitytest_log_message.gif" );
 	}
 
 	public String getMessage()
