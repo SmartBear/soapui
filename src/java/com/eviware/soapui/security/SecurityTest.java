@@ -176,7 +176,7 @@ public class SecurityTest implements ModelItem, Runnable
 					checks.remove(check);
 				}
 			}
-			if (checks.size() < 1) {
+			if (checks.isEmpty()) {
 				securityChecksMap.remove(testStepName);
 			} 
 		}
