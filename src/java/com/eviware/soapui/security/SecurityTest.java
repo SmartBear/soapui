@@ -31,7 +31,6 @@ import com.eviware.soapui.model.settings.Settings;
  */
 public class SecurityTest implements ModelItem, Runnable
 {
-	public final static String SECURITY_CHECK_MAP = "securityChecksMap"; 
 	private WsdlTestCase testCase;
 	private HashMap<String, List<SecurityCheck>> securityChecksMap;
 	private String description;
