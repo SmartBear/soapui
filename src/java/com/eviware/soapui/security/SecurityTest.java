@@ -144,7 +144,7 @@ public class SecurityTest implements ModelItem, Runnable
 	 * 
 	 * @return HashMap<TestStep, List<SecurityCheck>> 
 	 */
-	public HashMap<String, List<SecurityCheck>> addSecurityChecks( String testStepName, SecurityCheck securityCheck )
+	public HashMap<String, List<SecurityCheck>> addSecurityCheck( String testStepName, SecurityCheck securityCheck )
 	{
 		List<SecurityCheck> checks = null;
 		if( securityChecksMap.containsKey( testStepName ) )
@@ -157,6 +157,29 @@ public class SecurityTest implements ModelItem, Runnable
 		}
 		checks.add( securityCheck );
 		securityChecksMap.put( testStepName, checks );
+		return securityChecksMap ;
+	}
+	
+	/**
+	 * Remove securityCheck for the specific TestStep
+	 * @param testStepName
+	 * @param securityCheck
+	 * 
+	 * @return HashMap<TestStep, List<SecurityCheck>> 
+	 */
+	public HashMap<String, List<SecurityCheck>> removeSecurityCheck( String testStepName, SecurityCheck securityCheck )
+	{
+		if( securityChecksMap.containsKey( testStepName ) )
+		{
+			List<SecurityCheck> checks = securityChecksMap.get( testStepName );
+			for (SecurityCheck check : checks) {
+				if (check == securityCheck) {
+					checks.remove(check);
+				}
+			}
+			securityChecksMap.put(testStepName, checks);
+		}
+		
 		return securityChecksMap ;
 	}
 
