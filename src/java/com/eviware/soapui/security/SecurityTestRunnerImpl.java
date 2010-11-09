@@ -34,6 +34,7 @@ public class SecurityTestRunnerImpl implements SecurityTestRunner
 	private SecurityTestContext context;
 	private boolean stopped;
 	private boolean hasTornDown;
+	private String reason;
 
 	public SecurityTestRunnerImpl( SecurityTest test )
 	{
@@ -53,11 +54,27 @@ public class SecurityTestRunnerImpl implements SecurityTestRunner
 		return securityTest;
 	}
 
-	@Override
-	public void cancel( String reason )
+	public synchronized void cancel( String reason )
 	{
-		// TODO Auto-generated method stub
+		if( status != Status.RUNNING )
+			return;
 
+		this.reason = reason;
+		status = Status.CANCELED;
+
+		String msg = "SecurityTest [" + securityTest.getName() + "] canceled";
+		if( reason != null )
+			msg += "; " + reason;
+
+		securityTest.getSecurityTestLog().addEntry( new SecurityTestLogMessageEntry( msg ) );
+
+		// for( LoadTestRunListener listener : loadTest.getLoadTestRunListeners()
+		// )
+		// {
+		// listener.loadTestStopped( this, context );
+		// }
+
+		stop();
 	}
 
 	@Override
@@ -70,22 +87,19 @@ public class SecurityTestRunnerImpl implements SecurityTestRunner
 	@Override
 	public String getReason()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return reason;
 	}
 
 	@Override
 	public TestRunContext getRunContext()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return context;
 	}
 
 	@Override
 	public long getStartTime()
 	{
-		// TODO Auto-generated method stub
-		return 0;
+		return startTime;
 	}
 
 	@Override
@@ -97,15 +111,13 @@ public class SecurityTestRunnerImpl implements SecurityTestRunner
 	@Override
 	public TestRunnable getTestRunnable()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return securityTest;
 	}
 
 	@Override
 	public long getTimeTaken()
 	{
-		// TODO Auto-generated method stub
-		return 0;
+		return System.currentTimeMillis() - startTime;
 	}
 
 	@Override
@@ -125,6 +137,7 @@ public class SecurityTestRunnerImpl implements SecurityTestRunner
 	private TestStep cloneForSecurityCheck( TestStep sourceTestStep )
 	{
 		TestStep clonedTestStep = null;
+		// TODO add cloning
 		return clonedTestStep;
 	}
 
@@ -174,20 +187,22 @@ public class SecurityTestRunnerImpl implements SecurityTestRunner
 		// SoapUI.logError( e );
 		// }
 
-		// if( status == Status.RUNNING )
-		// {
-		// for( LoadTestRunListener listener : loadTest.getLoadTestRunListeners()
-		// )
-		// {
-		// listener.loadTestStarted( this, context );
-		// }
-		//
-		// startStrategyThread();
-		// }
-		// else
-		// {
-		// stop();
-		// }
+		if( status == Status.RUNNING )
+		{
+			// for( LoadTestRunListener listener :
+			// loadTest.getLoadTestRunListeners()
+			// )
+			// {
+			// listener.loadTestStarted( this, context );
+			// }
+			//
+			// startStrategyThread();
+			// TODO start actual actions
+		}
+		else
+		{
+			stop();
+		}
 	}
 
 	@Override
