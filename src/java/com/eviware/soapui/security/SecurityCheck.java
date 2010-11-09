@@ -14,7 +14,7 @@ package com.eviware.soapui.security;
 import java.util.List;
 
 import com.eviware.soapui.config.SecurityCheckConfig;
-import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.support.AbstractModelItem;
 import com.eviware.soapui.model.testsuite.TestStep;
 
 /**
@@ -22,19 +22,19 @@ import com.eviware.soapui.model.testsuite.TestStep;
  * 
  * @author soapUI team
  */
-public interface SecurityCheck extends ModelItem
+public abstract class SecurityCheck extends AbstractModelItem
 {
 	// private int order;
-	public List<SecurityTestLogEntry> getResults();
+	public abstract List<SecurityTestLogEntry> getResults();
 
-	public SecurityCheckConfig getConfig();
+	public abstract SecurityCheckConfig getConfig();
 
 	// internaly calles analyze
-	public void execute( TestStep testStep );
+	public abstract void run( TestStep testStep );
 
 	// used in monitor,
-	public void analyze( TestStep testStep );
+	public abstract void analyze( TestStep testStep );
 
 	// possibly to be done through registry
-	public boolean isMonitorApplicable();
+	public abstract boolean isMonitorApplicable();
 }

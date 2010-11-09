@@ -11,142 +11,61 @@
  */
 package com.eviware.soapui.security;
 
-import java.beans.PropertyChangeListener;
-import java.util.List;
-
-import javax.swing.ImageIcon;
-
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.SecurityCheckConfig;
-import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.testsuite.TestStep;
 
 /**
- * GroovySecurityCheck
  * 
  * @author soapui team
  */
 
-public class GroovySecurityCheck implements SecurityCheck
+public class GroovySecurityCheck extends AbstractSecurityCheck
 {
 
-	//configuration of specific request modification
-	private SecurityCheckConfig config;
+	public static final String SCRIPT_PROPERTY = GroovySecurityCheck.class.getName() + "@script";
+	private String script;
+
 	public GroovySecurityCheck( SecurityCheckConfig config )
 	{
-		// TODO Auto-generated constructor stub
+		super( config );
+		this.script = config.getScript().getStringValue();
 	}
 
 	@Override
-	public void analyze( TestStep testStep )
+	protected void execute( TestStep testStep )
 	{
-		// TODO Auto-generated method stub
+		scriptEngine.setScript( script );
+		scriptEngine.setVariable( "testStep", testStep );
+		scriptEngine.setVariable( "log", SoapUI.ensureGroovyLog() );
+		// scriptEngine.setVariable( "context", context );
 
+		try
+		{
+			scriptEngine.run();
+		}
+		catch( Exception e )
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		finally
+		{
+			scriptEngine.clearVariables();
+		}
+	}
+	
+	public void setScript( String script )
+	{
+		String old = getScript();
+		getSettings().setString( SCRIPT_PROPERTY, script );
+		notifyPropertyChanged( SCRIPT_PROPERTY, old, script );
 	}
 
-	@Override
-	public void execute( TestStep testStep )
+	private String getScript()
 	{
-		// TODO Auto-generated method stub
-
+		return getSettings().getString( SCRIPT_PROPERTY, "" );
 	}
-
-	@Override
-	public SecurityCheckConfig getConfig()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<SecurityTestLogEntry> getResults()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public boolean isMonitorApplicable()
-	{
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public List<? extends ModelItem> getChildren()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String getDescription()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public ImageIcon getIcon()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String getId()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String getName()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public ModelItem getParent()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Settings getSettings()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void addPropertyChangeListener( String propertyName, PropertyChangeListener listener )
-	{
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void addPropertyChangeListener( PropertyChangeListener listener )
-	{
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void removePropertyChangeListener( PropertyChangeListener listener )
-	{
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void removePropertyChangeListener( String propertyName, PropertyChangeListener listener )
-	{
-		// TODO Auto-generated method stub
-
-	}
+	
 
 }
