@@ -24,6 +24,7 @@ import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestRunnable;
 import com.eviware.soapui.model.testsuite.TestRunner.Status;
+import com.eviware.soapui.security.check.SecurityCheck;
 import com.eviware.soapui.security.log.SecurityTestLog;
 import com.eviware.soapui.security.registry.SecurityCheckRegistry;
 import com.eviware.soapui.support.StringUtils;

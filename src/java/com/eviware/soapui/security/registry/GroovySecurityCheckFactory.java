@@ -19,8 +19,8 @@ import com.eviware.soapui.config.TestStepConfig;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlGroovyScriptTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
-import com.eviware.soapui.security.GroovySecurityCheck;
-import com.eviware.soapui.security.SecurityCheck;
+import com.eviware.soapui.security.check.GroovySecurityCheck;
+import com.eviware.soapui.security.check.SecurityCheck;
 
 /**
  * Factory for creation GroovyScript steps

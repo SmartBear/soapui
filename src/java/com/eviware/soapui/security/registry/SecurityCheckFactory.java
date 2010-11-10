@@ -13,7 +13,7 @@
 package com.eviware.soapui.security.registry;
 
 import com.eviware.soapui.config.SecurityCheckConfig;
-import com.eviware.soapui.security.SecurityCheck;
+import com.eviware.soapui.security.check.SecurityCheck;
 
 /**
  * Abstract factory behaviour for SecurityCheck factories
