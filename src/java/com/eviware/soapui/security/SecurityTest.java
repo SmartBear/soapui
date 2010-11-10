@@ -18,8 +18,9 @@ import java.util.List;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.config.SecurityTestConfig;
-import com.eviware.soapui.config.SecurityTestStepChecksConfig;
+import com.eviware.soapui.config.TestStepSecurityTestConfig;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
+import com.eviware.soapui.impl.wsdl.loadtest.LoadTestAssertion;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestRunnable;
@@ -43,7 +44,7 @@ public class SecurityTest extends AbstractWsdlModelItem<SecurityTestConfig> impl
 	public final static String TEARDOWN_SCRIPT_PROPERTY = SecurityTest.class.getName() + "@tearDownScript";
 	public final static String SECURITY_CHECK_MAP_PROPERTY = SecurityTest.class.getName() + "@securityCheckMap";
 	private WsdlTestCase testCase;
-	private HashMap<String, List<SecurityCheck>> securityChecksMap;
+	// private HashMap<String, List<SecurityCheck>> securityChecksMap;
 	private SecurityTestLog securityTestLog;
 
 	public SecurityTestLog getSecurityTestLog()
@@ -58,88 +59,98 @@ public class SecurityTest extends AbstractWsdlModelItem<SecurityTestConfig> impl
 	{
 		super( config, testCase, "/loadTest.gif" );
 		this.testCase = testCase;
-		securityChecksMap = createSecurityCheckMap( config );
 		securityTestLog = new SecurityTestLog( this );
-	}
-
-	private HashMap<String, List<SecurityCheck>> createSecurityCheckMap( SecurityTestConfig config )
-	{
-		HashMap<String, List<SecurityCheck>> scm = new HashMap<String, List<SecurityCheck>>();
-		if( config != null )
-		{
-			for( SecurityTestStepChecksConfig testStepChecksConfig : config.getSecurityTestStepChecksList() )
-			{
-				List<SecurityCheck> checkList = new ArrayList<SecurityCheck>();
-				if( testStepChecksConfig != null )
-				{
-					for( SecurityCheckConfig secCheckConfig : testStepChecksConfig.getTestStepChecksList() )
-					{
-						SecurityCheck securityCheck = SecurityCheckRegistry.getInstance().getFactory(
-								secCheckConfig.getType() ).buildSecurityCheck( secCheckConfig );
-						checkList.add( securityCheck );
-					}
-				}
-				scm.put( testStepChecksConfig.getTestStepName(), checkList );
-			}
-		}
-		return scm;
 	}
 
 	/**
 	 * Adds new securityCheck for the specific TestStep
 	 * 
 	 * @param testStepName
-	 * @param securityCheck
+	 * @param securityCheckConfig
 	 * 
 	 * @return HashMap<TestStep, List<SecurityCheck>>
 	 */
-	public HashMap<String, List<SecurityCheck>> addSecurityCheck( String testStepName, SecurityCheck securityCheck )
+	public void addSecurityCheck( String testStepName, SecurityCheckConfig securityCheckConfig )
 	{
-		List<SecurityCheck> checks = null;
-		if( securityChecksMap.containsKey( testStepName ) )
+		boolean hasChecks = false;
+		List<TestStepSecurityTestConfig> testStepSecurityTestList = getConfig().getTestStepSecurityTestList();
+		if( !testStepSecurityTestList.isEmpty() )
 		{
-			checks = securityChecksMap.get( testStepName );
+			for( TestStepSecurityTestConfig testStepSecurityTest : testStepSecurityTestList )
+			{
+				if( testStepSecurityTest.getTestStepName().equals( testStepName ) )
+				{
+					List<SecurityCheckConfig> securityCheckList = testStepSecurityTest.getTestStepSecurityCheckList();
+					securityCheckList.add( securityCheckConfig );
+					hasChecks = true;
+				}
+			}
 		}
-		else
+		if( !hasChecks )
 		{
-			checks = new ArrayList<SecurityCheck>();
+			TestStepSecurityTestConfig testStepSecurityTest = getConfig().addNewTestStepSecurityTest();
+			testStepSecurityTest.setTestStepName( testStepName );
+			SecurityCheckConfig newSecurityCheck = testStepSecurityTest.addNewTestStepSecurityCheck();
+			newSecurityCheck.setConfiguration( securityCheckConfig );
 		}
-		checks.add( securityCheck );
-		securityChecksMap.put( testStepName, checks );
-		return securityChecksMap;
+
 	}
 
 	/**
 	 * Remove securityCheck for the specific TestStep
 	 * 
 	 * @param testStepName
-	 * @param securityCheck
+	 * @param securityCheckConfig
 	 * 
 	 * @return HashMap<TestStep, List<SecurityCheck>>
 	 */
-	public HashMap<String, List<SecurityCheck>> removeSecurityCheck( String testStepName, SecurityCheck securityCheck )
+	public void removeSecurityCheck( String testStepName, SecurityCheckConfig securityCheckConfig )
 	{
-		if( securityChecksMap.containsKey( testStepName ) )
+		List<TestStepSecurityTestConfig> testStepSecurityTestList = getConfig().getTestStepSecurityTestList();
+		if( !testStepSecurityTestList.isEmpty() )
 		{
-			List<SecurityCheck> checks = securityChecksMap.get( testStepName );
-			for( SecurityCheck check : checks )
+			for( TestStepSecurityTestConfig testStepSecurityTest : testStepSecurityTestList )
 			{
-				if( check == securityCheck )
+				if( testStepSecurityTest.getTestStepName().equals( testStepName ) )
 				{
-					checks.remove( check );
+					List<SecurityCheckConfig> securityCheckList = testStepSecurityTest.getTestStepSecurityCheckList();
+					securityCheckList.remove( securityCheckConfig );
+					if( securityCheckList.isEmpty() )
+					{
+						testStepSecurityTestList.remove( testStepSecurityTest );
+					}
 				}
-			}
-			if( checks.isEmpty() )
-			{
-				securityChecksMap.remove( testStepName );
 			}
 		}
 
-		return securityChecksMap;
 	}
 
 	public HashMap<String, List<SecurityCheck>> getSecurityChecksMap()
 	{
+		HashMap<String, List<SecurityCheck>> securityChecksMap = new HashMap<String, List<SecurityCheck>>();
+		if( getConfig() != null )
+		{
+			if( !getConfig().getTestStepSecurityTestList().isEmpty() )
+			{
+				for( TestStepSecurityTestConfig testStepSecurityTestList : getConfig().getTestStepSecurityTestList() )
+				{
+					List<SecurityCheck> checkList = new ArrayList<SecurityCheck>();
+					if( testStepSecurityTestList != null )
+					{
+						if( !testStepSecurityTestList.getTestStepSecurityCheckList().isEmpty() )
+						{
+							for( SecurityCheckConfig secCheckConfig : testStepSecurityTestList.getTestStepSecurityCheckList() )
+							{
+								SecurityCheck securityCheck = SecurityCheckRegistry.getInstance().getFactory(
+										secCheckConfig.getType() ).buildSecurityCheck( secCheckConfig );
+								checkList.add( securityCheck );
+							}
+						}
+					}
+					securityChecksMap.put( testStepSecurityTestList.getTestStepName(), checkList );
+				}
+			}
+		}
 		return securityChecksMap;
 	}
 
