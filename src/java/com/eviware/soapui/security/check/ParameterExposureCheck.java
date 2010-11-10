@@ -13,7 +13,13 @@ package com.eviware.soapui.security.check;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.SecurityCheckConfig;
+import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
+import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCaseRunner;
+import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.testsuite.TestStep;
+import com.eviware.soapui.security.SecurityTest;
+import com.eviware.soapui.support.types.StringToObjectMap;
 
 /**
  * 
@@ -28,12 +34,17 @@ public class ParameterExposureCheck extends AbstractSecurityCheck
 	public ParameterExposureCheck( SecurityCheckConfig config )
 	{
 		super( config );
+		monitorApplicable = true;
 	}
 
 	@Override
 	protected void execute( TestStep testStep )
 	{
-		// TODO Auto-generated method stub
+		if (testStep instanceof HttpTestRequestStep) {
+			WsdlTestCaseRunner testCaseRunner = new WsdlTestCaseRunner( (WsdlTestCase)testStep.getTestCase(), new StringToObjectMap() );
+			testCaseRunner.runTestStepByName( testStep.getName() );
+		}
+		analyze(testStep);		
 	}
 
 	@Override
