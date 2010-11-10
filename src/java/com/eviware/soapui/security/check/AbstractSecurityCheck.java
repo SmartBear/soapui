@@ -104,8 +104,7 @@ public abstract class AbstractSecurityCheck extends SecurityCheck
 	@Override
 	public SecurityCheckConfig getConfig()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return config;
 	}
 
 	@Override

@@ -4,6 +4,9 @@
 package com.eviware.soapui.security;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -11,15 +14,13 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.config.SecurityTestConfig;
-import com.eviware.soapui.impl.wsdl.WsdlInterface;
-import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockService;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.model.testsuite.TestSuite;
+import com.eviware.soapui.security.check.GroovySecurityCheck;
+import com.eviware.soapui.security.check.SecurityCheck;
 
 /**
  * @author dragica.soldo
@@ -29,8 +30,8 @@ public class SecurityTestRunnerTest
 {
 
 	WsdlTestCase testCase;
-	SecurityTestConfig config;
-
+	SecurityTestConfig config = SecurityTestConfig.Factory.newInstance();
+	HashMap<String, List<SecurityCheck>> securityChecksMap = new HashMap<String, List<SecurityCheck>>();
 	/**
 	 * @throws java.lang.Exception
 	 */
@@ -56,6 +57,11 @@ public class SecurityTestRunnerTest
 		WsdlProject project = new WsdlProject( "src" + File.separatorChar + "test-resources" + File.separatorChar
 				+ "sample-soapui-project.xml" );
 		TestSuite testSuite = project.getTestSuiteByName( "Test Suite" );
+		List<SecurityCheck> secCheckList = new ArrayList();
+		GroovySecurityCheck gsc = 	new GroovySecurityCheck(SecurityCheckConfig.Factory.newInstance()) ;
+		gsc.setScript( "log.info testStep" );
+		secCheckList.add( new GroovySecurityCheck(SecurityCheckConfig.Factory.newInstance())  );
+		securityChecksMap.put( "SEK to USD Test", secCheckList);
 		testCase = ( WsdlTestCase )testSuite.getTestCaseByName( "Test Conversions" );
 
 		// WsdlInterface iface = ( WsdlInterface )project.getInterfaceAt( 0 );

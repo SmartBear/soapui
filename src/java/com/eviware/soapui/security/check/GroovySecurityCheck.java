@@ -72,6 +72,4 @@ public class GroovySecurityCheck extends AbstractSecurityCheck
 		// TODO Auto-generated method stub
 		
 	}
-	
-
 }
