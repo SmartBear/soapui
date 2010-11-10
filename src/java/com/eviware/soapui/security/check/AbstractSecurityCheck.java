@@ -45,9 +45,8 @@ public abstract class AbstractSecurityCheck extends SecurityCheck
 	abstract protected void execute( TestStep testStep );
 
 	@Override
-	public void analyze( TestStep testStep )
-	{
-	}
+	abstract public void analyze( TestStep testStep );
+	
 
 	@Override
 	public void run( TestStep testStep )

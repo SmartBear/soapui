@@ -66,6 +66,12 @@ public class GroovySecurityCheck extends AbstractSecurityCheck
 	{
 		return getSettings().getString( SCRIPT_PROPERTY, "" );
 	}
+
+	@Override
+	public void analyze(TestStep testStep) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 
 }
