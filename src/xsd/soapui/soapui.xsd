@@ -1947,7 +1947,7 @@
     				<xsd:element name="tearDownScript" type="tns:Script"
     					maxOccurs="1" minOccurs="0">
     				</xsd:element>
-    				<xsd:element name="securityTestStepChecks" type="tns:SecurityTestStepChecks" maxOccurs="unbounded" minOccurs="1"></xsd:element>
+    				<xsd:element name="testStepSecurityTest" type="tns:TestStepSecurityTest" maxOccurs="unbounded" minOccurs="1"></xsd:element>
     			</xsd:sequence>
     		</xsd:extension>
     	</xsd:complexContent>
@@ -1979,10 +1979,11 @@
 
 
 
-    <xsd:complexType name="SecurityTestStepChecks">
+
+    <xsd:complexType name="TestStepSecurityTest">
     	<xsd:sequence>
     		<xsd:element name="testStepName" type="xsd:string"></xsd:element>
-    		<xsd:element name="testStepChecks" type="tns:SecurityCheck" maxOccurs="unbounded" minOccurs="1"></xsd:element>
+    		<xsd:element name="testStepSecurityCheck" type="tns:SecurityCheck" maxOccurs="unbounded" minOccurs="1"></xsd:element>
     	</xsd:sequence>
     </xsd:complexType>
 </xsd:schema>
