@@ -12,16 +12,13 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.eviware.soapui.config.SecurityTestConfig;
-import com.eviware.soapui.impl.WsdlInterfaceFactory;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
-import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockService;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
-import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestSuite;
 
 /**
@@ -61,25 +58,25 @@ public class SecurityTestRunnerTest
 		TestSuite testSuite = project.getTestSuiteByName( "Test Suite" );
 		testCase = ( WsdlTestCase )testSuite.getTestCaseByName( "Test Conversions" );
 
-		// WsdlInterface iface = (WsdlInterface) project.getInterfaceAt( 0 );
-
-		// WsdlMockService mockService = ( WsdlMockService )
-		// project.addNewMockService( "MockService 1" );
-
+		// WsdlInterface iface = ( WsdlInterface )project.getInterfaceAt( 0 );
+		//
+		// WsdlMockService mockService = ( WsdlMockService
+		// )project.addNewMockService( "MockService 1" );
+		//
 		// mockService.setPort( 9081 );
 		// mockService.setPath( "/testmock" );
-
-		// WsdlOperation operation = ( WsdlOperation ) iface.getOperationAt( 0 );
-		// WsdlMockOperation mockOperation = ( WsdlMockOperation )
-		// mockService.addNewMockOperation( operation );
+		//
+		// WsdlOperation operation = ( WsdlOperation )iface.getOperationAt( 0 );
+		// WsdlMockOperation mockOperation = ( WsdlMockOperation
+		// )mockService.addNewMockOperation( operation );
 		// WsdlMockResponse mockResponse = mockOperation.addNewMockResponse(
 		// "Test Response", true );
 		// mockResponse.setResponseContent( "Tjohoo!" );
-
+		//
 		// mockService.start();
 
 		// iface.addEndpoint( "/testmock" );
-		// WsdlRequest request = ( WsdlRequest ) operation.getRequestAt( 0 );
+		// WsdlRequest request = ( WsdlRequest )operation.getRequestAt( 0 );
 		// TestStepResult result = testStep.run( testRunner, testRunContext );
 
 	}
