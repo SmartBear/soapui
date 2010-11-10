@@ -32,6 +32,7 @@ public abstract class AbstractSecurityCheck extends SecurityCheck
 	protected String startupScript;
 	protected String tearDownScript;
 	protected SoapUIScriptEngine scriptEngine;
+	protected boolean monitorApplicable = false;
 
 	// private
 	public AbstractSecurityCheck( SecurityCheckConfig config )
@@ -117,8 +118,7 @@ public abstract class AbstractSecurityCheck extends SecurityCheck
 	@Override
 	public boolean isMonitorApplicable()
 	{
-		// TODO Auto-generated method stub
-		return false;
+		return monitorApplicable;
 	}
 
 	@Override
