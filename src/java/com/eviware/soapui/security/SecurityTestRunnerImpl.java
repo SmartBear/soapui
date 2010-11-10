@@ -22,12 +22,15 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.config.TestStepConfig;
 import com.eviware.soapui.impl.wsdl.loadtest.WsdlLoadTestRunner;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCaseRunner;
 import com.eviware.soapui.impl.wsdl.teststeps.TestRequest;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestStepFactory;
+import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestStepRegistry;
 import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestRunContext;
 import com.eviware.soapui.model.testsuite.TestRunnable;
@@ -146,12 +149,17 @@ public class SecurityTestRunnerImpl implements SecurityTestRunner
 	 * @param sourceTestStep
 	 * @return TestStep
 	 */
-	private TestStep cloneForSecurityCheck( TestStep sourceTestStep )
+	private TestStep cloneForSecurityCheck( WsdlTestStep sourceTestStep )
 	{
 		TestStep clonedTestStep = null;
-		// TODO add cloning
+		TestStepConfig testStepConfig = ( TestStepConfig )sourceTestStep.getConfig().copy();
+		WsdlTestStepFactory factory = WsdlTestStepRegistry.getInstance().getFactory( testStepConfig.getType() );
+		if( factory != null )
+		{
+			clonedTestStep = factory.buildTestStep( securityTest.getTestCase(), testStepConfig, false );
+		}
 		return clonedTestStep;
-	}
+	}  
 
 	void start()
 	{
