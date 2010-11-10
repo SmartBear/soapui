@@ -11,14 +11,15 @@
  */
 package com.eviware.soapui.security.check;
 
-import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.SecurityCheckConfig;
+import com.eviware.soapui.config.TestAssertionConfig;
+import com.eviware.soapui.impl.wsdl.support.assertions.AssertableConfig;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCaseRunner;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
-import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry;
+import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.SimpleContainsAssertion;
 import com.eviware.soapui.model.testsuite.TestStep;
-import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.support.types.StringToObjectMap;
 
 /**
@@ -49,6 +50,17 @@ public class ParameterExposureCheck extends AbstractSecurityCheck
 
 	@Override
 	public void analyze(TestStep testStep) {
+		if (testStep instanceof HttpTestRequestStep) {
+			//This is just to make things a bit easier to read going forward
+			HttpTestRequestStep httpTestStep = (HttpTestRequestStep)testStep;
+			TestAssertionConfig assertionConfig = TestAssertionConfig.Factory.newInstance();
+			
+			assertionConfig.setType(SimpleContainsAssertion.ID);
+
+			SimpleContainsAssertion containsAssertion = (SimpleContainsAssertion) TestAssertionRegistry.getInstance().buildAssertion(assertionConfig, httpTestStep);
+			
+			
+		}
 		// TODO Auto-generated method stub
 		
 	}
