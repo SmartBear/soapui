@@ -55,7 +55,7 @@ public class SecurityTest extends AbstractWsdlModelItem<SecurityTestConfig> impl
 
 	public SecurityTest( WsdlTestCase testCase, SecurityTestConfig config )
 	{
-		super( config, testCase, "/securityTest.gif" );
+		super( config, testCase, "/loadTest.gif" );
 		this.testCase = testCase;
 		securityChecksMap = createSecurityCheckMap( config );
 		securityTestLog = new SecurityTestLog( this );
@@ -64,16 +64,22 @@ public class SecurityTest extends AbstractWsdlModelItem<SecurityTestConfig> impl
 	private HashMap<String, List<SecurityCheck>> createSecurityCheckMap( SecurityTestConfig config )
 	{
 		HashMap<String, List<SecurityCheck>> scm = new HashMap<String, List<SecurityCheck>>();
-		for( SecurityCheckEntryConfig sceConfig : config.getSecurityCheckMapList() )
+		if( config != null )
 		{
-			List<SecurityCheck> checkList = new ArrayList<SecurityCheck>();
-			for( SecurityCheckConfig secCheckConfig : sceConfig.getSecurityChecksList() )
+			for( SecurityCheckEntryConfig sceConfig : config.getSecurityCheckMapList() )
 			{
-				SecurityCheck securityCheck = SecurityCheckRegistry.getInstance().getFactory( secCheckConfig.getType() )
-						.buildSecurityCheck( secCheckConfig );
-				checkList.add( securityCheck );
+				List<SecurityCheck> checkList = new ArrayList<SecurityCheck>();
+				if( sceConfig != null )
+				{
+					for( SecurityCheckConfig secCheckConfig : sceConfig.getSecurityChecksList() )
+					{
+						SecurityCheck securityCheck = SecurityCheckRegistry.getInstance().getFactory(
+								secCheckConfig.getType() ).buildSecurityCheck( secCheckConfig );
+						checkList.add( securityCheck );
+					}
+				}
+				scm.put( sceConfig.getTestStepName(), checkList );
 			}
-			scm.put( sceConfig.getTestStepName(), checkList );
 		}
 		return scm;
 	}
@@ -170,7 +176,8 @@ public class SecurityTest extends AbstractWsdlModelItem<SecurityTestConfig> impl
 
 	public String getStartupScript()
 	{
-		return getConfig().isSetStartupScript() ? getConfig().getStartupScript().getStringValue() : null;
+		return getConfig() != null ? ( getConfig().isSetStartupScript() ? getConfig().getStartupScript().getStringValue()
+				: "" ) : "";
 	}
 
 	public Object runStartupScript( SecurityTestRunContext runContext, SecurityTestRunner runner ) throws Exception
@@ -207,7 +214,8 @@ public class SecurityTest extends AbstractWsdlModelItem<SecurityTestConfig> impl
 
 	public String getTearDownScript()
 	{
-		return getConfig().isSetTearDownScript() ? getConfig().getTearDownScript().getStringValue() : null;
+		return getConfig() != null ? ( getConfig().isSetTearDownScript() ? getConfig().getTearDownScript()
+				.getStringValue() : "" ) : "";
 	}
 
 	public Object runTearDownScript( SecurityTestRunContext runContext, SecurityTestRunner runner ) throws Exception

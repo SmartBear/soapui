@@ -18,12 +18,24 @@
 package com.eviware.soapui.security;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.wsdl.loadtest.WsdlLoadTestRunner;
+import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
+import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCaseRunner;
+import com.eviware.soapui.impl.wsdl.teststeps.TestRequest;
+import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
+import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestRunContext;
 import com.eviware.soapui.model.testsuite.TestRunnable;
 import com.eviware.soapui.model.testsuite.TestStep;
+import com.eviware.soapui.security.check.SecurityCheck;
 import com.eviware.soapui.security.log.SecurityTestLogMessageEntry;
+import com.eviware.soapui.support.types.StringToObjectMap;
+import com.eviware.soapui.support.types.StringToStringMap;
 
 public class SecurityTestRunnerImpl implements SecurityTestRunner
 {
@@ -198,6 +210,27 @@ public class SecurityTestRunnerImpl implements SecurityTestRunner
 			//
 			// startStrategyThread();
 			// TODO start actual actions
+			WsdlTestCase testCase = securityTest.getTestCase();
+			List<TestStep> testStepsList = testCase.getTestStepList();
+			HashMap<String, List<SecurityCheck>> secCheckMap = securityTest.getSecurityChecksMap();
+			WsdlTestCaseRunner testCaseRunner = new WsdlTestCaseRunner( testCase, new StringToObjectMap() );
+			for( TestStep testStep : testStepsList )
+			{
+				if( secCheckMap.containsKey( testStep.getName() ) )
+				{
+					List<SecurityCheck> testStepChecksList = secCheckMap.get( testStep.getName() );
+					for( SecurityCheck securityCheck : testStepChecksList )
+					{
+						securityCheck.run( testStep );
+					}
+				}
+				else
+				{
+//					System.out.print( "endpoint:" + ((WsdlTestRequestStep)testStep).getTestRequest().getEndpoint() );
+					testCaseRunner.runTestStepByName( testStep.getName() );
+				}
+			}
+			testCase.release();
 		}
 		else
 		{
@@ -279,5 +312,4 @@ public class SecurityTestRunnerImpl implements SecurityTestRunner
 
 		hasTornDown = true;
 	}
-
 }
