@@ -17,8 +17,8 @@ import java.util.List;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.SecurityCheckConfig;
-import com.eviware.soapui.config.SecurityCheckEntryConfig;
 import com.eviware.soapui.config.SecurityTestConfig;
+import com.eviware.soapui.config.SecurityTestStepChecksConfig;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.model.ModelItem;
@@ -41,6 +41,7 @@ public class SecurityTest extends AbstractWsdlModelItem<SecurityTestConfig> impl
 {
 	public final static String STARTUP_SCRIPT_PROPERTY = SecurityTest.class.getName() + "@startupScript";
 	public final static String TEARDOWN_SCRIPT_PROPERTY = SecurityTest.class.getName() + "@tearDownScript";
+	public final static String SECURITY_CHECK_MAP_PROPERTY = SecurityTest.class.getName() + "@securityCheckMap";
 	private WsdlTestCase testCase;
 	private HashMap<String, List<SecurityCheck>> securityChecksMap;
 	private SecurityTestLog securityTestLog;
@@ -66,19 +67,19 @@ public class SecurityTest extends AbstractWsdlModelItem<SecurityTestConfig> impl
 		HashMap<String, List<SecurityCheck>> scm = new HashMap<String, List<SecurityCheck>>();
 		if( config != null )
 		{
-			for( SecurityCheckEntryConfig sceConfig : config.getSecurityCheckMapList() )
+			for( SecurityTestStepChecksConfig testStepChecksConfig : config.getSecurityTestStepChecksList() )
 			{
 				List<SecurityCheck> checkList = new ArrayList<SecurityCheck>();
-				if( sceConfig != null )
+				if( testStepChecksConfig != null )
 				{
-					for( SecurityCheckConfig secCheckConfig : sceConfig.getSecurityChecksList() )
+					for( SecurityCheckConfig secCheckConfig : testStepChecksConfig.getTestStepChecksList() )
 					{
 						SecurityCheck securityCheck = SecurityCheckRegistry.getInstance().getFactory(
 								secCheckConfig.getType() ).buildSecurityCheck( secCheckConfig );
 						checkList.add( securityCheck );
 					}
 				}
-				scm.put( sceConfig.getTestStepName(), checkList );
+				scm.put( testStepChecksConfig.getTestStepName(), checkList );
 			}
 		}
 		return scm;
@@ -235,5 +236,24 @@ public class SecurityTest extends AbstractWsdlModelItem<SecurityTestConfig> impl
 		scriptEngine.setVariable( "log", SoapUI.ensureGroovyLog() );
 		return scriptEngine.run();
 	}
+
+	// public List<SecurityTestStepChecksConfig> getSecurityTestStepChecksList()
+	// {
+	// return getConfig().getSecurityTestStepChecksList();
+	// }
+	//
+	// public void setSecurityTestStepChecksList(
+	// List<SecurityTestStepChecksConfig> securityTestStepChecksList )
+	// {
+	// if( securityTestStepChecksList == null )
+	// return;
+	//
+	// List<SecurityTestStepChecksConfig> oldList =
+	// getSecurityTestStepChecksList();
+	// getConfig().setSecurityTestStepChecksArray( SecurityCheckEntryConfig[]
+	// )secCheckEntryList.toArray() );
+	// notifyPropertyChanged( SECURITY_CHECK_MAP_PROPERTY, oldList,
+	// secCheckEntryList );
+	// }
 
 }
