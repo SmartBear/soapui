@@ -31,7 +31,7 @@ public abstract class SecurityCheck extends AbstractModelItem
 
 	public abstract SecurityCheckConfig getConfig();
 
-	// internaly calles analyze
+	// internaly calls analyze
 	public abstract void run( TestStep testStep, SecurityTestContext context );
 
 	// used in monitor,
@@ -39,4 +39,6 @@ public abstract class SecurityCheck extends AbstractModelItem
 
 	// possibly to be done through registry
 	public abstract boolean isMonitorApplicable();
+	
+	public abstract boolean acceptsTestStep(TestStep testStep);
 }

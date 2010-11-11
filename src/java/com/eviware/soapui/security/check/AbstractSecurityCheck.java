@@ -12,6 +12,7 @@
 package com.eviware.soapui.security.check;
 
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.ImageIcon;
@@ -34,6 +35,7 @@ public abstract class AbstractSecurityCheck extends SecurityCheck
 	protected String tearDownScript;
 	protected SoapUIScriptEngine scriptEngine;
 	protected boolean monitorApplicable = false;
+	protected List<SecurityTestLogEntry> logEntries = new ArrayList<SecurityTestLogEntry>();
 
 	// private
 	public AbstractSecurityCheck( SecurityCheckConfig config )
@@ -112,8 +114,7 @@ public abstract class AbstractSecurityCheck extends SecurityCheck
 	@Override
 	public List<SecurityTestLogEntry> getResults()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return logEntries;
 	}
 
 	@Override

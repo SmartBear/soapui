@@ -29,7 +29,11 @@ import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.SimpleContainsAss
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestStep;
+import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
 import com.eviware.soapui.security.SecurityTestContext;
+import com.eviware.soapui.security.log.SecurityTestLog;
+import com.eviware.soapui.security.log.SecurityTestLogEntry;
+import com.eviware.soapui.security.log.SecurityTestLogMessageEntry;
 import com.eviware.soapui.support.types.StringToObjectMap;
 
 /**
@@ -41,6 +45,7 @@ public class ParameterExposureCheck extends AbstractSecurityCheck
 {
 
 	public static final String MINIMUM_LENGTH_PROPERTY = ParameterExposureCheck.class.getName() + "@minimumLength";
+	List<String> paramsToCheck = null;
 
 	public ParameterExposureCheck( SecurityCheckConfig config )
 	{
@@ -51,7 +56,7 @@ public class ParameterExposureCheck extends AbstractSecurityCheck
 	@Override
 	protected void execute( TestStep testStep, SecurityTestContext context )
 	{
-		if (testStep instanceof HttpTestRequestStep) {
+		if (acceptsTestStep(testStep)) {
 			WsdlTestCaseRunner testCaseRunner = new WsdlTestCaseRunner( (WsdlTestCase)testStep.getTestCase(), new StringToObjectMap() );
 			testCaseRunner.runTestStepByName( testStep.getName() );
 		}
@@ -60,7 +65,7 @@ public class ParameterExposureCheck extends AbstractSecurityCheck
 
 	@Override
 	public void analyze(TestStep testStep, SecurityTestContext context) {
-		if (testStep instanceof HttpTestRequestStep) {
+		if (acceptsTestStep(testStep)) {
 			//This is just to make things a bit easier to read going forward
 			HttpTestRequestStep httpTestStep = (HttpTestRequestStep)testStep;
 			HttpTestRequest request = httpTestStep.getTestRequest();
@@ -68,21 +73,26 @@ public class ParameterExposureCheck extends AbstractSecurityCheck
 			
 			Map<String, TestProperty> params = httpTestStep.getProperties();
 			
-			for (TestProperty param : params.values() ) {
-				if (param.getValue().length() >= getMinimumLength()) {
+			if (paramsToCheck == null) {
+				paramsToCheck = new ArrayList<String>(params.keySet());
+			}
+			for (String paramName : paramsToCheck ) {
+				TestProperty param = params.get(paramName);
+				if (param != null && param.getValue().length() >= getMinimumLength()) {
 					TestAssertionConfig assertionConfig = TestAssertionConfig.Factory.newInstance();
 					assertionConfig.setType(SimpleContainsAssertion.ID);
 		
 					SimpleContainsAssertion containsAssertion = (SimpleContainsAssertion) TestAssertionRegistry.getInstance().buildAssertion(assertionConfig, httpTestStep);
-					containsAssertion.setName(param.getName());
 					containsAssertion.setToken(param.getValue());
 					
 					containsAssertion.assertResponse(messageExchange, context);
+					
+					if ( containsAssertion.getStatus().equals(AssertionStatus.VALID) ) {
+						logEntries.add(new SecurityTestLogMessageEntry("Parameter " + param.getName() + " is exposed in the response"));
+					}
 				}
 			}		
-		}
-		// TODO Auto-generated method stub
-		
+		}	
 	}
 	
 	public void setMinimumLength( long minimumLength )
@@ -97,4 +107,17 @@ public class ParameterExposureCheck extends AbstractSecurityCheck
 		return getSettings().getLong(MINIMUM_LENGTH_PROPERTY, 5);
 	}
 	
+	public List<String> getParamsToCheck()
+	{
+		return paramsToCheck;
+	}
+	
+	public void setParamsToCheck(List<String> params){
+		paramsToCheck = params;
+	}
+
+	@Override
+	public boolean acceptsTestStep(TestStep testStep) {
+		return testStep instanceof HttpTestRequestStep;
+	}	
 }

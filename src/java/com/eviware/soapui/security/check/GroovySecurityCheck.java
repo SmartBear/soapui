@@ -73,4 +73,9 @@ public class GroovySecurityCheck extends AbstractSecurityCheck
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public boolean acceptsTestStep(TestStep testStep) {
+		return true;
+	}
 }
