@@ -20,7 +20,6 @@ import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.config.SecurityTestConfig;
 import com.eviware.soapui.config.TestStepSecurityTestConfig;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
-import com.eviware.soapui.impl.wsdl.loadtest.LoadTestAssertion;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestRunnable;
@@ -247,24 +246,5 @@ public class SecurityTest extends AbstractWsdlModelItem<SecurityTestConfig> impl
 		scriptEngine.setVariable( "log", SoapUI.ensureGroovyLog() );
 		return scriptEngine.run();
 	}
-
-	// public List<SecurityTestStepChecksConfig> getSecurityTestStepChecksList()
-	// {
-	// return getConfig().getSecurityTestStepChecksList();
-	// }
-	//
-	// public void setSecurityTestStepChecksList(
-	// List<SecurityTestStepChecksConfig> securityTestStepChecksList )
-	// {
-	// if( securityTestStepChecksList == null )
-	// return;
-	//
-	// List<SecurityTestStepChecksConfig> oldList =
-	// getSecurityTestStepChecksList();
-	// getConfig().setSecurityTestStepChecksArray( SecurityCheckEntryConfig[]
-	// )secCheckEntryList.toArray() );
-	// notifyPropertyChanged( SECURITY_CHECK_MAP_PROPERTY, oldList,
-	// secCheckEntryList );
-	// }
 
 }
