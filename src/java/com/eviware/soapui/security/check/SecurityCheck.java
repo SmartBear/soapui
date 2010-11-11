@@ -16,6 +16,7 @@ import java.util.List;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.model.support.AbstractModelItem;
 import com.eviware.soapui.model.testsuite.TestStep;
+import com.eviware.soapui.security.SecurityTestContext;
 import com.eviware.soapui.security.log.SecurityTestLogEntry;
 
 /**
@@ -31,10 +32,10 @@ public abstract class SecurityCheck extends AbstractModelItem
 	public abstract SecurityCheckConfig getConfig();
 
 	// internaly calles analyze
-	public abstract void run( TestStep testStep );
+	public abstract void run( TestStep testStep, SecurityTestContext context );
 
 	// used in monitor,
-	public abstract void analyze( TestStep testStep );
+	public abstract void analyze( TestStep testStep, SecurityTestContext context );
 
 	// possibly to be done through registry
 	public abstract boolean isMonitorApplicable();

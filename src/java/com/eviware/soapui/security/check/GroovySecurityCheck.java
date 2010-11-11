@@ -14,6 +14,7 @@ package com.eviware.soapui.security.check;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.model.testsuite.TestStep;
+import com.eviware.soapui.security.SecurityTestContext;
 
 /**
  * 
@@ -33,7 +34,7 @@ public class GroovySecurityCheck extends AbstractSecurityCheck
 	}
 
 	@Override
-	protected void execute( TestStep testStep )
+	protected void execute( TestStep testStep, SecurityTestContext context )
 	{
 		scriptEngine.setScript( script );
 		scriptEngine.setVariable( "testStep", testStep );
@@ -68,7 +69,7 @@ public class GroovySecurityCheck extends AbstractSecurityCheck
 	}
 
 	@Override
-	public void analyze(TestStep testStep) {
+	public void analyze(TestStep testStep, SecurityTestContext context) {
 		// TODO Auto-generated method stub
 		
 	}
