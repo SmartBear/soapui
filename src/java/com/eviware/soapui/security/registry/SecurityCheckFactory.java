@@ -45,8 +45,6 @@ public abstract class SecurityCheckFactory
 		return typeName;
 	}
 
-	// public abstract SecurityCheckConfig createNewSecurityCheck( WsdlTestCase testCase, String name );
-
 	public abstract boolean canCreate();
 
 	public String getSecurityCheckName()

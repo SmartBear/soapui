@@ -34,6 +34,7 @@ import com.eviware.soapui.model.testsuite.TestRunContext;
 import com.eviware.soapui.model.testsuite.TestRunnable;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.check.SecurityCheck;
+import com.eviware.soapui.security.log.SecurityTestLog;
 import com.eviware.soapui.security.log.SecurityTestLogMessageEntry;
 import com.eviware.soapui.support.types.StringToObjectMap;
 
@@ -231,7 +232,7 @@ public class SecurityTestRunnerImpl implements SecurityTestRunner
 					List<SecurityCheck> testStepChecksList = secCheckMap.get( testStep.getName() );
 					for( SecurityCheck securityCheck : testStepChecksList )
 					{
-						securityCheck.run( cloneForSecurityCheck((WsdlTestStep)testStep), context );
+						securityCheck.run( cloneForSecurityCheck((WsdlTestStep)testStep), context, securityTest.getSecurityTestLog() );
 					}
 				}
 				else
