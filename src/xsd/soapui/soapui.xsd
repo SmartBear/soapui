@@ -1986,4 +1986,13 @@
     		<xsd:element name="testStepSecurityCheck" type="tns:SecurityCheck" maxOccurs="unbounded" minOccurs="1"></xsd:element>
     	</xsd:sequence>
     </xsd:complexType>
+
+    <xsd:complexType name="ParameterExposureCheck">
+    	<xsd:sequence>
+    		<xsd:element name="minimumLength" type="xsd:int"
+    			maxOccurs="1" minOccurs="1">
+    		</xsd:element>
+    		<xsd:element name="paramToCheck" type="xsd:string" maxOccurs="unbounded" minOccurs="0"></xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
 </xsd:schema>
