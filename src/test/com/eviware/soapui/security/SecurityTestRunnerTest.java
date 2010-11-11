@@ -32,6 +32,7 @@ public class SecurityTestRunnerTest
 	WsdlTestCase testCase;
 	SecurityTestConfig config = SecurityTestConfig.Factory.newInstance();
 	HashMap<String, List<SecurityCheck>> securityChecksMap = new HashMap<String, List<SecurityCheck>>();
+
 	/**
 	 * @throws java.lang.Exception
 	 */
@@ -54,14 +55,14 @@ public class SecurityTestRunnerTest
 	@Before
 	public void setUp() throws Exception
 	{
-		WsdlProject project = new WsdlProject( "src" + File.separatorChar + "test-resources" + File.separatorChar
-				+ "sample-soapui-project.xml" );
+		WsdlProject project = new WsdlProject( "D:" + File.separatorChar + "temp" + File.separatorChar + "dragica"
+				+ File.separator + "sample-soapui-project.xml" );
 		TestSuite testSuite = project.getTestSuiteByName( "Test Suite" );
 		List<SecurityCheck> secCheckList = new ArrayList();
-		GroovySecurityCheck gsc = 	new GroovySecurityCheck(SecurityCheckConfig.Factory.newInstance()) ;
+		GroovySecurityCheck gsc = new GroovySecurityCheck( SecurityCheckConfig.Factory.newInstance() );
 		gsc.setScript( "log.info testStep" );
-		secCheckList.add( new GroovySecurityCheck(SecurityCheckConfig.Factory.newInstance())  );
-		securityChecksMap.put( "SEK to USD Test", secCheckList);
+		secCheckList.add( gsc );
+		securityChecksMap.put( "SEK to USD Test", secCheckList );
 		testCase = ( WsdlTestCase )testSuite.getTestCaseByName( "Test Conversions" );
 
 		// WsdlInterface iface = ( WsdlInterface )project.getInterfaceAt( 0 );

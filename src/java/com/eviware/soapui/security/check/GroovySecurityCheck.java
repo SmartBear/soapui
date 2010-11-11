@@ -12,6 +12,7 @@
 package com.eviware.soapui.security.check;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.config.GroovySecurityCheckConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTestContext;
@@ -26,11 +27,25 @@ public class GroovySecurityCheck extends AbstractSecurityCheck
 
 	public static final String SCRIPT_PROPERTY = GroovySecurityCheck.class.getName() + "@script";
 	private String script;
+	private GroovySecurityCheckConfig groovySecurityCheckConfig;
 
 	public GroovySecurityCheck( SecurityCheckConfig config )
 	{
 		super( config );
-		this.script = config.getScript().getStringValue();
+		if( config.getConfig() == null )
+		{
+			groovySecurityCheckConfig = ( GroovySecurityCheckConfig )config.addNewConfig().changeType(
+					GroovySecurityCheckConfig.type );
+			groovySecurityCheckConfig.addNewScript();
+		}
+		else
+		{
+			groovySecurityCheckConfig = ( GroovySecurityCheckConfig )config.getConfig().changeType(
+					GroovySecurityCheckConfig.type );
+		
+		}
+	
+		this.script = groovySecurityCheckConfig.getScript().getStringValue();
 	}
 
 	@Override
@@ -55,27 +70,35 @@ public class GroovySecurityCheck extends AbstractSecurityCheck
 			scriptEngine.clearVariables();
 		}
 	}
-	
+
 	public void setScript( String script )
 	{
 		String old = getScript();
-		getSettings().setString( SCRIPT_PROPERTY, script );
+		if( groovySecurityCheckConfig.getScript() == null )
+		{
+			groovySecurityCheckConfig.addNewScript();
+		}
+		
+		groovySecurityCheckConfig.getScript().setStringValue( script );
 		notifyPropertyChanged( SCRIPT_PROPERTY, old, script );
 	}
 
 	private String getScript()
 	{
-		return getSettings().getString( SCRIPT_PROPERTY, "" );
+		return groovySecurityCheckConfig.getScript() != null ? groovySecurityCheckConfig.getScript().getStringValue()
+				: "";
 	}
 
 	@Override
-	public void analyze(TestStep testStep, SecurityTestContext context) {
+	public void analyze( TestStep testStep, SecurityTestContext context )
+	{
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
-	public boolean acceptsTestStep(TestStep testStep) {
+	public boolean acceptsTestStep( TestStep testStep )
+	{
 		return true;
 	}
 }

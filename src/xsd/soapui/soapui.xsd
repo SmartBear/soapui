@@ -1966,9 +1966,6 @@
     				<xsd:element name="tearDownScript" type="tns:Script"
     					maxOccurs="1" minOccurs="0">
     				</xsd:element>
-    				<xsd:element name="script" type="tns:Script"
-    					maxOccurs="1" minOccurs="0">
-    				</xsd:element>
     				<xsd:element name="assertion" type="tns:TestAssertion" maxOccurs="unbounded" minOccurs="0"></xsd:element>
     			</xsd:sequence>
     			<xsd:attribute name="type" type="xsd:string"></xsd:attribute>
@@ -1994,5 +1991,15 @@
     		</xsd:element>
     		<xsd:element name="paramToCheck" type="xsd:string" maxOccurs="unbounded" minOccurs="0"></xsd:element>
     	</xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="GroovySecurityCheck">
+    	<xsd:complexContent>
+    		<xsd:extension base="tns:SecurityCheck">
+    			<xsd:sequence>
+    				<xsd:element name="script" type="tns:Script"></xsd:element>
+    			</xsd:sequence>
+    		</xsd:extension>
+    	</xsd:complexContent>
     </xsd:complexType>
 </xsd:schema>

@@ -12,6 +12,7 @@
 
 package com.eviware.soapui.security.registry;
 
+import com.eviware.soapui.config.GroovySecurityCheckConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.security.check.GroovySecurityCheck;
 import com.eviware.soapui.security.check.SecurityCheck;
@@ -47,7 +48,7 @@ public class GroovySecurityCheckFactory extends SecurityCheckFactory
 		SecurityCheckConfig securityCheckConfig = SecurityCheckConfig.Factory.newInstance();
 		securityCheckConfig.setType(GROOVY_SECURITY_CHECK_TYPE);
 		securityCheckConfig.setName(name);
-		//TODO Add the GroovySecurityCheckConfig
+		securityCheckConfig.setConfig( GroovySecurityCheckConfig.Factory.newInstance() );
 		return securityCheckConfig;
 	}
 

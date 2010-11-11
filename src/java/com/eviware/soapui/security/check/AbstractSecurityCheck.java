@@ -41,8 +41,8 @@ public abstract class AbstractSecurityCheck extends SecurityCheck
 	public AbstractSecurityCheck( SecurityCheckConfig config )
 	{
 		this.config = config;
-		this.startupScript = config.getStartupScript().getStringValue();
-		this.tearDownScript = config.getTearDownScript().getStringValue();
+		this.startupScript = config.getStartupScript()!=null ? config.getStartupScript().getStringValue():"";
+		this.tearDownScript = config.getTearDownScript()!=null ? config.getTearDownScript().getStringValue():"";
 		scriptEngine = SoapUIScriptEngineRegistry.create( this );
 	}
 
