@@ -1957,7 +1957,7 @@
     	<xsd:complexContent>
     		<xsd:extension base="tns:ModelItem">
     			<xsd:sequence>
-    				<xsd:element name="configuration"
+    				<xsd:element name="config"
     					type="xsd:anyType">
     				</xsd:element>
     				<xsd:element name="startupScript" type="tns:Script"
