@@ -47,7 +47,7 @@ public class GroovySecurityCheckFactory extends SecurityCheckFactory
 		SecurityCheckConfig securityCheckConfig = SecurityCheckConfig.Factory.newInstance();
 		securityCheckConfig.setType(GROOVY_SECURITY_CHECK_TYPE);
 		securityCheckConfig.setName(name);
-		
+		//TODO Add the GroovySecurityCheckConfig
 		return securityCheckConfig;
 	}
 
