@@ -37,6 +37,8 @@ public abstract class SecurityCheckFactory
 	}
 
 	public abstract SecurityCheck buildSecurityCheck( SecurityCheckConfig config );
+	
+	public abstract SecurityCheckConfig createNewSecurityCheck(String name);
 
 	public String getType()
 	{

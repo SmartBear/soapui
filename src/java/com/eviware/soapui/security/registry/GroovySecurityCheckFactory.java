@@ -12,13 +12,7 @@
 
 package com.eviware.soapui.security.registry;
 
-import org.codehaus.groovy.runtime.typehandling.GroovyCastException;
-
 import com.eviware.soapui.config.SecurityCheckConfig;
-import com.eviware.soapui.config.TestStepConfig;
-import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
-import com.eviware.soapui.impl.wsdl.teststeps.WsdlGroovyScriptTestStep;
-import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.security.check.GroovySecurityCheck;
 import com.eviware.soapui.security.check.SecurityCheck;
 
@@ -46,6 +40,15 @@ public class GroovySecurityCheckFactory extends SecurityCheckFactory
 	public SecurityCheck buildSecurityCheck(  SecurityCheckConfig config )
 	{
 		return new GroovySecurityCheck(  config );
+	}
+
+	@Override
+	public SecurityCheckConfig createNewSecurityCheck(String name) {
+		SecurityCheckConfig securityCheckConfig = SecurityCheckConfig.Factory.newInstance();
+		securityCheckConfig.setType(GROOVY_SECURITY_CHECK_TYPE);
+		securityCheckConfig.setName(name);
+		
+		return securityCheckConfig;
 	}
 
 	// @Override
