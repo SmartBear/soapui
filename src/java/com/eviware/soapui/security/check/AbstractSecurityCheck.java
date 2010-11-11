@@ -128,8 +128,7 @@ public abstract class AbstractSecurityCheck extends SecurityCheck
 	@Override
 	public String getDescription()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return config.getDescription();
 	}
 
 	@Override
@@ -142,15 +141,13 @@ public abstract class AbstractSecurityCheck extends SecurityCheck
 	@Override
 	public String getId()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return config.getId();
 	}
 
 	@Override
 	public String getName()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return config.getName();
 	}
 
 	@Override
