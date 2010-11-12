@@ -70,7 +70,7 @@ public class SecurityTestRunnerTest extends TestCaseWithJetty
 				+ "sample-soapui-project.xml" );
 		TestSuite testSuite = project.getTestSuiteByName( "Test Suite" );
 		List<SecurityCheck> secCheckList = new ArrayList();
-		GroovySecurityCheck gsc = new GroovySecurityCheck( SecurityCheckConfig.Factory.newInstance() );
+		GroovySecurityCheck gsc = new GroovySecurityCheck( SecurityCheckConfig.Factory.newInstance(), null, null );
 		gsc.setScript( "log.info testStep" );
 		secCheckList.add( gsc );
 		securityChecksMap.put( "SEK to USD Test", secCheckList );
@@ -130,8 +130,7 @@ public class SecurityTestRunnerTest extends TestCaseWithJetty
 		testRunner.start();
 
 		assertEquals( TestStepResult.TestStepStatus.OK, testRunner.getStatus() );
-//		assertEquals( Status.RUNNING, testRunner.getStatus() );
-
+		// assertEquals( Status.RUNNING, testRunner.getStatus() );
 
 	}
 
