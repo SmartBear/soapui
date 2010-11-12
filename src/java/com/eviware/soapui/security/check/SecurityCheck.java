@@ -13,7 +13,11 @@ package com.eviware.soapui.security.check;
 
 import java.util.List;
 
+import javax.swing.JComponent;
+
 import com.eviware.soapui.config.SecurityCheckConfig;
+import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
+import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.support.AbstractModelItem;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTestContext;
@@ -25,8 +29,14 @@ import com.eviware.soapui.security.log.SecurityTestLogEntry;
  * 
  * @author soapUI team
  */
-public abstract class SecurityCheck extends AbstractModelItem
+public abstract class SecurityCheck extends AbstractWsdlModelItem<SecurityCheckConfig>
 {
+	protected SecurityCheck( SecurityCheckConfig config, ModelItem parent, String icon )
+	{
+		super( config, parent, icon );
+		// TODO Auto-generated constructor stub
+	}
+
 	public abstract SecurityCheckConfig getConfig();
 
 	// internaly calls analyze
@@ -37,6 +47,22 @@ public abstract class SecurityCheck extends AbstractModelItem
 
 	// possibly to be done through registry
 	public abstract boolean isMonitorApplicable();
-	
-	public abstract boolean acceptsTestStep(TestStep testStep);
+
+	public abstract boolean acceptsTestStep( TestStep testStep );
+
+	public abstract boolean isDisabled();
+
+	/**
+	 * 
+	 * @param disabled
+	 */
+	public abstract void setDisabled( boolean disabled );
+
+	/**
+	 * Gets desktop configuration for specific SecurityCheck
+	 * 
+	 * @return
+	 */
+	public abstract JComponent getComponent();
+
 }

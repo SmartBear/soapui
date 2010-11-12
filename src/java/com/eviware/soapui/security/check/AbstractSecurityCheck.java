@@ -19,6 +19,7 @@ import javax.swing.ImageIcon;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.SecurityCheckConfig;
+import com.eviware.soapui.impl.settings.XmlBeansSettingsImpl;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.testsuite.TestStep;
@@ -38,11 +39,12 @@ public abstract class AbstractSecurityCheck extends SecurityCheck
 	protected boolean monitorApplicable = false;
 
 	// private
-	public AbstractSecurityCheck( SecurityCheckConfig config )
+	public AbstractSecurityCheck( SecurityCheckConfig config, ModelItem parent, String icon )
 	{
+		super( config, parent, icon );
 		this.config = config;
-		this.startupScript = config.getStartupScript()!=null ? config.getStartupScript().getStringValue():"";
-		this.tearDownScript = config.getTearDownScript()!=null ? config.getTearDownScript().getStringValue():"";
+		this.startupScript = config.getStartupScript() != null ? config.getStartupScript().getStringValue() : "";
+		this.tearDownScript = config.getTearDownScript() != null ? config.getTearDownScript().getStringValue() : "";
 		scriptEngine = SoapUIScriptEngineRegistry.create( this );
 	}
 
@@ -50,7 +52,6 @@ public abstract class AbstractSecurityCheck extends SecurityCheck
 
 	@Override
 	abstract public void analyze( TestStep testStep, SecurityTestContext context, SecurityTestLog securityTestLog );
-	
 
 	@Override
 	public void run( TestStep testStep, SecurityTestContext context, SecurityTestLog securityTestLog )
@@ -150,14 +151,13 @@ public abstract class AbstractSecurityCheck extends SecurityCheck
 	}
 
 	@Override
-	public ModelItem getParent()
+	public void setName( String arg0 )
 	{
-		// TODO Auto-generated method stub
-		return null;
+		config.setName( arg0 );
 	}
 
 	@Override
-	public Settings getSettings()
+	public ModelItem getParent()
 	{
 		// TODO Auto-generated method stub
 		return null;

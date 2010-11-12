@@ -11,9 +11,12 @@
  */
 package com.eviware.soapui.security.check;
 
+import javax.swing.JComponent;
+
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.GroovySecurityCheckConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
+import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTestContext;
 import com.eviware.soapui.security.log.SecurityTestLog;
@@ -30,9 +33,9 @@ public class GroovySecurityCheck extends AbstractSecurityCheck
 	private String script;
 	private GroovySecurityCheckConfig groovySecurityCheckConfig;
 
-	public GroovySecurityCheck( SecurityCheckConfig config )
+	public GroovySecurityCheck( SecurityCheckConfig config, ModelItem parent, String icon )
 	{
-		super( config );
+		super( config, parent, icon );
 		if( config.getConfig() == null )
 		{
 			groovySecurityCheckConfig = ( GroovySecurityCheckConfig )config.addNewConfig().changeType(
@@ -43,9 +46,9 @@ public class GroovySecurityCheck extends AbstractSecurityCheck
 		{
 			groovySecurityCheckConfig = ( GroovySecurityCheckConfig )config.getConfig().changeType(
 					GroovySecurityCheckConfig.type );
-		
+
 		}
-	
+
 		this.script = groovySecurityCheckConfig.getScript().getStringValue();
 	}
 
@@ -79,7 +82,7 @@ public class GroovySecurityCheck extends AbstractSecurityCheck
 		{
 			groovySecurityCheckConfig.addNewScript();
 		}
-		
+
 		groovySecurityCheckConfig.getScript().setStringValue( script );
 		notifyPropertyChanged( SCRIPT_PROPERTY, old, script );
 	}
@@ -101,5 +104,26 @@ public class GroovySecurityCheck extends AbstractSecurityCheck
 	public boolean acceptsTestStep( TestStep testStep )
 	{
 		return true;
+	}
+
+	@Override
+	public JComponent getComponent()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean isDisabled()
+	{
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void setDisabled( boolean disabled )
+	{
+		// TODO Auto-generated method stub
+
 	}
 }

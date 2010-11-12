@@ -30,7 +30,8 @@ public class ParameterExposureCheckFactory extends SecurityCheckFactory
 
 	public ParameterExposureCheckFactory()
 	{
-		super( PARAMETER_EXPOSURE_CHECK_TYPE, "Parameter Exposure Check", "Preforms a check for Parameter Exposure", "/parameter_exposure_check_script.gif" );
+		super( PARAMETER_EXPOSURE_CHECK_TYPE, "Parameter Exposure Check", "Preforms a check for Parameter Exposure",
+				"/parameter_exposure_check_script.gif" );
 	}
 
 	public boolean canCreate()
@@ -39,17 +40,18 @@ public class ParameterExposureCheckFactory extends SecurityCheckFactory
 	}
 
 	@Override
-	public SecurityCheck buildSecurityCheck(  SecurityCheckConfig config )
+	public SecurityCheck buildSecurityCheck( SecurityCheckConfig config )
 	{
-		return new ParameterExposureCheck(  config );
+		return new ParameterExposureCheck( config, null, null );
 	}
 
 	@Override
-	public SecurityCheckConfig createNewSecurityCheck(String name) {
+	public SecurityCheckConfig createNewSecurityCheck( String name )
+	{
 		SecurityCheckConfig securityCheckConfig = SecurityCheckConfig.Factory.newInstance();
-		securityCheckConfig.setType(PARAMETER_EXPOSURE_CHECK_TYPE);
-		securityCheckConfig.setName(name);
-		securityCheckConfig.setConfig(ParameterExposureCheckConfig.Factory.newInstance());
+		securityCheckConfig.setType( PARAMETER_EXPOSURE_CHECK_TYPE );
+		securityCheckConfig.setName( name );
+		securityCheckConfig.setConfig( ParameterExposureCheckConfig.Factory.newInstance() );
 		return securityCheckConfig;
 	}
 

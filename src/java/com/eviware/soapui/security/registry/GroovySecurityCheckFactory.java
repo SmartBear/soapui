@@ -29,7 +29,8 @@ public class GroovySecurityCheckFactory extends SecurityCheckFactory
 
 	public GroovySecurityCheckFactory()
 	{
-		super( GROOVY_SECURITY_CHECK_TYPE, "Groovy Security Check", "Executes the specified groovy script for security check", "/groovy_security_check_script.gif" );
+		super( GROOVY_SECURITY_CHECK_TYPE, "Groovy Security Check",
+				"Executes the specified groovy script for security check", "/groovy_security_check_script.gif" );
 	}
 
 	public boolean canCreate()
@@ -38,16 +39,17 @@ public class GroovySecurityCheckFactory extends SecurityCheckFactory
 	}
 
 	@Override
-	public SecurityCheck buildSecurityCheck(  SecurityCheckConfig config )
+	public SecurityCheck buildSecurityCheck( SecurityCheckConfig config )
 	{
-		return new GroovySecurityCheck(  config );
+		return new GroovySecurityCheck( config, null, null );
 	}
 
 	@Override
-	public SecurityCheckConfig createNewSecurityCheck(String name) {
+	public SecurityCheckConfig createNewSecurityCheck( String name )
+	{
 		SecurityCheckConfig securityCheckConfig = SecurityCheckConfig.Factory.newInstance();
-		securityCheckConfig.setType(GROOVY_SECURITY_CHECK_TYPE);
-		securityCheckConfig.setName(name);
+		securityCheckConfig.setType( GROOVY_SECURITY_CHECK_TYPE );
+		securityCheckConfig.setName( name );
 		securityCheckConfig.setConfig( GroovySecurityCheckConfig.Factory.newInstance() );
 		return securityCheckConfig;
 	}

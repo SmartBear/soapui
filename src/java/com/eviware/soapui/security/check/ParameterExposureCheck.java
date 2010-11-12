@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.JComponent;
+
 import com.eviware.soapui.config.GotoStepConfig;
 import com.eviware.soapui.config.ParameterExposureCheckConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
@@ -30,6 +32,7 @@ import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStepWithProperties;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.SimpleContainsAssertion;
+import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestStep;
@@ -48,75 +51,109 @@ public class ParameterExposureCheck extends AbstractSecurityCheck
 {
 	ParameterExposureCheckConfig parameterExposureCheckConfig;
 
-	public ParameterExposureCheck( SecurityCheckConfig config )
+	public ParameterExposureCheck( SecurityCheckConfig config, ModelItem parent, String icon )
 	{
-		super( config );
+		super( config, parent, icon );
 		monitorApplicable = true;
-		parameterExposureCheckConfig = ( ParameterExposureCheckConfig )config.getConfig().changeType( ParameterExposureCheckConfig.type );
+		parameterExposureCheckConfig = ( ParameterExposureCheckConfig )config.getConfig().changeType(
+				ParameterExposureCheckConfig.type );
 	}
 
 	@Override
 	protected void execute( TestStep testStep, SecurityTestContext context, SecurityTestLog securityTestLog )
 	{
-		if (acceptsTestStep(testStep)) {
-			WsdlTestCaseRunner testCaseRunner = new WsdlTestCaseRunner( (WsdlTestCase)testStep.getTestCase(), new StringToObjectMap() );
+		if( acceptsTestStep( testStep ) )
+		{
+			WsdlTestCaseRunner testCaseRunner = new WsdlTestCaseRunner( ( WsdlTestCase )testStep.getTestCase(),
+					new StringToObjectMap() );
 			testCaseRunner.runTestStepByName( testStep.getName() );
 		}
-		analyze(testStep, context, securityTestLog);		
+		analyze( testStep, context, securityTestLog );
 	}
 
 	@Override
-	public void analyze(TestStep testStep, SecurityTestContext context, SecurityTestLog securityTestLog) {
-		if (acceptsTestStep(testStep)) {
-			HttpTestRequestStepInterface testStepwithProperties = (HttpTestRequestStepInterface)testStep;
+	public void analyze( TestStep testStep, SecurityTestContext context, SecurityTestLog securityTestLog )
+	{
+		if( acceptsTestStep( testStep ) )
+		{
+			HttpTestRequestStepInterface testStepwithProperties = ( HttpTestRequestStepInterface )testStep;
 			HttpTestRequestInterface<?> request = testStepwithProperties.getTestRequest();
 			MessageExchange messageExchange = new HttpResponseMessageExchange( request );
-			
+
 			Map<String, TestProperty> params = testStepwithProperties.getProperties();
-			
-			if (getParamsToCheck().isEmpty()) {
-				setParamsToCheck(new ArrayList<String>(params.keySet()));
+
+			if( getParamsToCheck().isEmpty() )
+			{
+				setParamsToCheck( new ArrayList<String>( params.keySet() ) );
 			}
-			for (String paramName : getParamsToCheck() ) {
-				TestProperty param = params.get(paramName);
-				if (param != null && param.getValue().length() >= getMinimumLength()) {
+			for( String paramName : getParamsToCheck() )
+			{
+				TestProperty param = params.get( paramName );
+				if( param != null && param.getValue().length() >= getMinimumLength() )
+				{
 					TestAssertionConfig assertionConfig = TestAssertionConfig.Factory.newInstance();
-					assertionConfig.setType(SimpleContainsAssertion.ID);
-		
-					SimpleContainsAssertion containsAssertion = (SimpleContainsAssertion) TestAssertionRegistry.getInstance().buildAssertion(assertionConfig, testStepwithProperties);
-					containsAssertion.setToken(param.getValue());
-					
-					containsAssertion.assertResponse(messageExchange, context);
-					
-					if ( containsAssertion.getStatus().equals(AssertionStatus.VALID) ) {
-						securityTestLog.addEntry(new SecurityTestLogMessageEntry("Parameter " + param.getName() + " is exposed in the response"));
+					assertionConfig.setType( SimpleContainsAssertion.ID );
+
+					SimpleContainsAssertion containsAssertion = ( SimpleContainsAssertion )TestAssertionRegistry
+							.getInstance().buildAssertion( assertionConfig, testStepwithProperties );
+					containsAssertion.setToken( param.getValue() );
+
+					containsAssertion.assertResponse( messageExchange, context );
+
+					if( containsAssertion.getStatus().equals( AssertionStatus.VALID ) )
+					{
+						securityTestLog.addEntry( new SecurityTestLogMessageEntry( "Parameter " + param.getName()
+								+ " is exposed in the response" ) );
 					}
 				}
-			}		
-		}	
+			}
+		}
 	}
-	
+
 	public void setMinimumLength( int minimumLength )
 	{
-		parameterExposureCheckConfig.setMinimumLength(minimumLength);
+		parameterExposureCheckConfig.setMinimumLength( minimumLength );
 	}
 
 	private int getMinimumLength()
 	{
 		return parameterExposureCheckConfig.getMinimumLength();
 	}
-	
+
 	public List<String> getParamsToCheck()
 	{
 		return parameterExposureCheckConfig.getParamToCheckList();
 	}
-	
-	public void setParamsToCheck(List<String> params){
-		parameterExposureCheckConfig.setParamToCheckArray(params.toArray(new String[0]));
+
+	public void setParamsToCheck( List<String> params )
+	{
+		parameterExposureCheckConfig.setParamToCheckArray( params.toArray( new String[0] ) );
 	}
 
 	@Override
-	public boolean acceptsTestStep(TestStep testStep) {
+	public boolean acceptsTestStep( TestStep testStep )
+	{
 		return testStep instanceof HttpTestRequestStep || testStep instanceof RestTestRequestStep;
-	}	
+	}
+
+	@Override
+	public JComponent getComponent()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean isDisabled()
+	{
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void setDisabled( boolean disabled )
+	{
+		// TODO Auto-generated method stub
+
+	}
 }
