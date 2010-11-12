@@ -23,7 +23,11 @@ import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCaseRunner;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpResponseMessageExchange;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequest;
+import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestInterface;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStepInterface;
+import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStepWithProperties;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.SimpleContainsAssertion;
 import com.eviware.soapui.model.iface.MessageExchange;
@@ -64,11 +68,11 @@ public class ParameterExposureCheck extends AbstractSecurityCheck
 	@Override
 	public void analyze(TestStep testStep, SecurityTestContext context, SecurityTestLog securityTestLog) {
 		if (acceptsTestStep(testStep)) {
-			HttpTestRequestStep httpTestStep = (HttpTestRequestStep)testStep;
-			HttpTestRequest request = httpTestStep.getTestRequest();
+			HttpTestRequestStepInterface testStepwithProperties = (HttpTestRequestStepInterface)testStep;
+			HttpTestRequestInterface<?> request = testStepwithProperties.getTestRequest();
 			MessageExchange messageExchange = new HttpResponseMessageExchange( request );
 			
-			Map<String, TestProperty> params = httpTestStep.getProperties();
+			Map<String, TestProperty> params = testStepwithProperties.getProperties();
 			
 			if (getParamsToCheck().isEmpty()) {
 				setParamsToCheck(new ArrayList<String>(params.keySet()));
@@ -79,7 +83,7 @@ public class ParameterExposureCheck extends AbstractSecurityCheck
 					TestAssertionConfig assertionConfig = TestAssertionConfig.Factory.newInstance();
 					assertionConfig.setType(SimpleContainsAssertion.ID);
 		
-					SimpleContainsAssertion containsAssertion = (SimpleContainsAssertion) TestAssertionRegistry.getInstance().buildAssertion(assertionConfig, httpTestStep);
+					SimpleContainsAssertion containsAssertion = (SimpleContainsAssertion) TestAssertionRegistry.getInstance().buildAssertion(assertionConfig, testStepwithProperties);
 					containsAssertion.setToken(param.getValue());
 					
 					containsAssertion.assertResponse(messageExchange, context);
@@ -113,6 +117,6 @@ public class ParameterExposureCheck extends AbstractSecurityCheck
 
 	@Override
 	public boolean acceptsTestStep(TestStep testStep) {
-		return testStep instanceof HttpTestRequestStep;
+		return testStep instanceof HttpTestRequestStep || testStep instanceof RestTestRequestStep;
 	}	
 }
