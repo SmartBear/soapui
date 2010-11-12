@@ -32,7 +32,7 @@ public class SecurityCheckRegistry
 	public SecurityCheckRegistry()
 	{
 		addFactory( new GroovySecurityCheckFactory() );
-	
+		addFactory( new ParameterExposureCheckFactory() );
 	}
 
 	public SecurityCheckFactory getFactory( String type )
