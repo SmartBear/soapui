@@ -64,7 +64,6 @@ public class ParameterExposureCheck extends AbstractSecurityCheck
 	@Override
 	public void analyze(TestStep testStep, SecurityTestContext context, SecurityTestLog securityTestLog) {
 		if (acceptsTestStep(testStep)) {
-			//This is just to make things a bit easier to read going forward
 			HttpTestRequestStep httpTestStep = (HttpTestRequestStep)testStep;
 			HttpTestRequest request = httpTestStep.getTestRequest();
 			MessageExchange messageExchange = new HttpResponseMessageExchange( request );
@@ -86,7 +85,7 @@ public class ParameterExposureCheck extends AbstractSecurityCheck
 					containsAssertion.assertResponse(messageExchange, context);
 					
 					if ( containsAssertion.getStatus().equals(AssertionStatus.VALID) ) {
-						logEntries.add(new SecurityTestLogMessageEntry("Parameter " + param.getName() + " is exposed in the response"));
+						securityTestLog.addEntry(new SecurityTestLogMessageEntry("Parameter " + param.getName() + " is exposed in the response"));
 					}
 				}
 			}		

@@ -36,7 +36,6 @@ public abstract class AbstractSecurityCheck extends SecurityCheck
 	protected String tearDownScript;
 	protected SoapUIScriptEngine scriptEngine;
 	protected boolean monitorApplicable = false;
-	protected List<SecurityTestLogEntry> logEntries = new ArrayList<SecurityTestLogEntry>();
 
 	// private
 	public AbstractSecurityCheck( SecurityCheckConfig config )
