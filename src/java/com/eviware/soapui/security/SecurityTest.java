@@ -65,11 +65,11 @@ public class SecurityTest extends AbstractWsdlModelItem<SecurityTestConfig> impl
 	 * Adds new securityCheck for the specific TestStep
 	 * 
 	 * @param testStepName
-	 * @param securityCheckConfig
+	 * @param securityCheck
 	 * 
 	 * @return HashMap<TestStep, List<SecurityCheck>>
 	 */
-	public void addSecurityCheck( String testStepName, SecurityCheckConfig securityCheckConfig )
+	public void addSecurityCheck( String testStepName, SecurityCheck securityCheck )
 	{
 		boolean hasChecks = false;
 		List<TestStepSecurityTestConfig> testStepSecurityTestList = getConfig().getTestStepSecurityTestList();
@@ -80,7 +80,7 @@ public class SecurityTest extends AbstractWsdlModelItem<SecurityTestConfig> impl
 				if( testStepSecurityTest.getTestStepName().equals( testStepName ) )
 				{
 					List<SecurityCheckConfig> securityCheckList = testStepSecurityTest.getTestStepSecurityCheckList();
-					securityCheckList.add( securityCheckConfig );
+					securityCheckList.add( securityCheck.getConfig() );
 					hasChecks = true;
 				}
 			}
@@ -90,7 +90,7 @@ public class SecurityTest extends AbstractWsdlModelItem<SecurityTestConfig> impl
 			TestStepSecurityTestConfig testStepSecurityTest = getConfig().addNewTestStepSecurityTest();
 			testStepSecurityTest.setTestStepName( testStepName );
 			SecurityCheckConfig newSecurityCheck = testStepSecurityTest.addNewTestStepSecurityCheck();
-			newSecurityCheck.setConfig( securityCheckConfig );
+			newSecurityCheck.setConfig( securityCheck.getConfig() );
 		}
 
 	}
@@ -99,11 +99,11 @@ public class SecurityTest extends AbstractWsdlModelItem<SecurityTestConfig> impl
 	 * Remove securityCheck for the specific TestStep
 	 * 
 	 * @param testStepName
-	 * @param securityCheckConfig
+	 * @param securityCheck
 	 * 
 	 * @return HashMap<TestStep, List<SecurityCheck>>
 	 */
-	public void removeSecurityCheck( String testStepName, SecurityCheckConfig securityCheckConfig )
+	public void removeSecurityCheck( String testStepName, SecurityCheck securityCheck )
 	{
 		List<TestStepSecurityTestConfig> testStepSecurityTestList = getConfig().getTestStepSecurityTestList();
 		if( !testStepSecurityTestList.isEmpty() )
@@ -113,7 +113,7 @@ public class SecurityTest extends AbstractWsdlModelItem<SecurityTestConfig> impl
 				if( testStepSecurityTest.getTestStepName().equals( testStepName ) )
 				{
 					List<SecurityCheckConfig> securityCheckList = testStepSecurityTest.getTestStepSecurityCheckList();
-					securityCheckList.remove( securityCheckConfig );
+					securityCheckList.remove( securityCheck.getConfig() );
 					if( securityCheckList.isEmpty() )
 					{
 						testStepSecurityTestList.remove( testStepSecurityTest );
