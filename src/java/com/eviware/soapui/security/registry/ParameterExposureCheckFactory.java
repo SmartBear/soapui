@@ -23,33 +23,31 @@ import com.eviware.soapui.security.check.SecurityCheck;
  * @author soapUI team
  */
 
-public class ParameterExposureCheckFactory extends SecurityCheckFactory
-{
+public class ParameterExposureCheckFactory extends SecurityCheckFactory {
 
-	public ParameterExposureCheckFactory()
-	{
-		super( ParameterExposureCheck.TYPE, "Parameter Exposure Check", "Preforms a check for Parameter Exposure",
-				"/parameter_exposure_check_script.gif" );
+	public ParameterExposureCheckFactory() {
+		super(ParameterExposureCheck.TYPE, "ParameterExposureCheck",
+				"Preforms a check for Parameter Exposure",
+				"/parameter_exposure_check_script.gif");
 	}
 
-	public boolean canCreate()
-	{
+	public boolean canCreate() {
 		return true;
 	}
 
 	@Override
-	public SecurityCheck buildSecurityCheck( SecurityCheckConfig config )
-	{
-		return new ParameterExposureCheck( config, null, null );
+	public SecurityCheck buildSecurityCheck(SecurityCheckConfig config) {
+		return new ParameterExposureCheck(config, null, null);
 	}
 
 	@Override
-	public SecurityCheckConfig createNewSecurityCheck( String name )
-	{
-		SecurityCheckConfig securityCheckConfig = SecurityCheckConfig.Factory.newInstance();
-		securityCheckConfig.setType( ParameterExposureCheck.TYPE );
-		securityCheckConfig.setName( name );
-		securityCheckConfig.setConfig( ParameterExposureCheckConfig.Factory.newInstance() );
+	public SecurityCheckConfig createNewSecurityCheck(String name) {
+		SecurityCheckConfig securityCheckConfig = SecurityCheckConfig.Factory
+				.newInstance();
+		securityCheckConfig.setType(ParameterExposureCheck.TYPE);
+		securityCheckConfig.setName(name);
+		securityCheckConfig.setConfig(ParameterExposureCheckConfig.Factory
+				.newInstance());
 		return securityCheckConfig;
 	}
 

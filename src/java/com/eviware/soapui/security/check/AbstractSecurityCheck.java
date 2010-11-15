@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.ImageIcon;
+import javax.swing.JPanel;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.SecurityCheckConfig;
@@ -26,6 +27,7 @@ import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTestContext;
 import com.eviware.soapui.security.log.SecurityTestLog;
 import com.eviware.soapui.security.log.SecurityTestLogEntry;
+import com.eviware.soapui.support.components.SimpleForm;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
 
@@ -38,6 +40,8 @@ public abstract class AbstractSecurityCheck extends SecurityCheck
 	protected SoapUIScriptEngine scriptEngine;
 	protected boolean monitorApplicable = false;
 	private boolean disabled = false;
+	protected JPanel panel;
+	protected SimpleForm form;
 
 	// private
 	public AbstractSecurityCheck( SecurityCheckConfig config, ModelItem parent, String icon )

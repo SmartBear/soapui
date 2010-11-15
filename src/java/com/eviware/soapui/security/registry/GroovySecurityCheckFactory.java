@@ -23,33 +23,34 @@ import com.eviware.soapui.security.check.SecurityCheck;
  * @author soapUI team
  */
 
-public class GroovySecurityCheckFactory extends SecurityCheckFactory
-{
+public class GroovySecurityCheckFactory extends SecurityCheckFactory {
 
-	public GroovySecurityCheckFactory()
-	{
-		super( GroovySecurityCheck.TYPE, "GroovySecurityCheck",
-				"Executes the specified groovy script for security check", "/groovy_security_check_script.gif" );
+	public GroovySecurityCheckFactory() {
+		super(GroovySecurityCheck.TYPE, "GroovySecurityCheck",
+				"Executes the specified groovy script for security check",
+				"/groovy_security_check_script.gif");
 	}
 
-	public boolean canCreate()
-	{
+	public boolean canCreate() {
 		return true;
 	}
 
 	@Override
-	public SecurityCheck buildSecurityCheck( SecurityCheckConfig config )
-	{
-		return new GroovySecurityCheck( config, null, null );
+	public SecurityCheck buildSecurityCheck(SecurityCheckConfig config) {
+		return new GroovySecurityCheck(config, null, null);
 	}
 
 	@Override
-	public SecurityCheckConfig createNewSecurityCheck( String name )
-	{
-		SecurityCheckConfig securityCheckConfig = SecurityCheckConfig.Factory.newInstance();
-		securityCheckConfig.setType( GroovySecurityCheck.TYPE );
-		securityCheckConfig.setName( name );
-		securityCheckConfig.changeType( GroovySecurityCheckConfig.type );
+	public SecurityCheckConfig createNewSecurityCheck(String name) {
+		SecurityCheckConfig securityCheckConfig = SecurityCheckConfig.Factory
+				.newInstance();
+		securityCheckConfig.setType(GroovySecurityCheck.TYPE);
+		securityCheckConfig.setName(name);
+		GroovySecurityCheckConfig groovyscc = GroovySecurityCheckConfig.Factory
+				.newInstance();
+		groovyscc.addNewScript().setStringValue("log.info(\"***********\")");
+		// securityCheckConfig.changeType( GroovySecurityCheckConfig.type );
+		securityCheckConfig.setConfig(groovyscc);
 		return securityCheckConfig;
 	}
 

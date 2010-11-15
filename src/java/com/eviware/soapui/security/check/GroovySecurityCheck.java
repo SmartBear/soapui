@@ -11,47 +11,49 @@
  */
 package com.eviware.soapui.security.check;
 
+import java.awt.BorderLayout;
+
 import javax.swing.JComponent;
-import javax.swing.JLabel;
+import javax.swing.JEditorPane;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.GroovySecurityCheckConfig;
-import com.eviware.soapui.config.ParameterExposureCheckConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTestContext;
 import com.eviware.soapui.security.log.SecurityTestLog;
-import com.jgoodies.forms.layout.FormLayout;
+import com.eviware.soapui.support.components.SimpleForm;
 
 /**
  * 
  * @author soapui team
  */
 
-public class GroovySecurityCheck extends AbstractSecurityCheck
-{
-	public static final String SCRIPT_PROPERTY = GroovySecurityCheck.class.getName() + "@script";
+public class GroovySecurityCheck extends AbstractSecurityCheck {
+	public static final String SCRIPT_PROPERTY = GroovySecurityCheck.class
+			.getName()
+			+ "@script";
 	public static final String TYPE = "GroovySecurityCheck";
 	// private String script;
 	private GroovySecurityCheckConfig groovySecurityCheckConfig;
+	protected JTextArea scriptTextArea;
 
-	public GroovySecurityCheck( SecurityCheckConfig config, ModelItem parent, String icon )
-	{
-		super( config, parent, icon );
-		if( config == null )
-		{
+	public GroovySecurityCheck(SecurityCheckConfig config, ModelItem parent,
+			String icon) {
+		super(config, parent, icon);
+		if (config == null) {
 			config = SecurityCheckConfig.Factory.newInstance();
-			groovySecurityCheckConfig = ( GroovySecurityCheckConfig )config.changeType( GroovySecurityCheckConfig.type );
-			groovySecurityCheckConfig.addNewScript();
-
-		}
-		else
-		{
-			groovySecurityCheckConfig = ( GroovySecurityCheckConfig )config.changeType( GroovySecurityCheckConfig.type );
-
+			GroovySecurityCheckConfig groovyscc = GroovySecurityCheckConfig.Factory
+					.newInstance();
+			config.setConfig(groovyscc);
+		} else {
+			GroovySecurityCheckConfig groovyscc = GroovySecurityCheckConfig.Factory
+					.newInstance();
+			config.setConfig(groovyscc);
 		}
 
 		// this.script = groovySecurityCheckConfig.getScript() != null ?
@@ -60,71 +62,70 @@ public class GroovySecurityCheck extends AbstractSecurityCheck
 	}
 
 	@Override
-	protected void execute( TestStep testStep, SecurityTestContext context, SecurityTestLog securityTestLog )
-	{
-		scriptEngine.setScript( getScript() );
-		scriptEngine.setVariable( "testStep", testStep );
-		scriptEngine.setVariable( "log", SoapUI.ensureGroovyLog() );
+	protected void execute(TestStep testStep, SecurityTestContext context,
+			SecurityTestLog securityTestLog) {
+		scriptEngine.setScript(getScript());
+		scriptEngine.setVariable("testStep", testStep);
+		scriptEngine.setVariable("log", SoapUI.ensureGroovyLog());
 		// scriptEngine.setVariable( "context", context );
 
-		try
-		{
+		try {
 			scriptEngine.run();
-		}
-		catch( Exception e )
-		{
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		finally
-		{
+		} finally {
 			scriptEngine.clearVariables();
 		}
 	}
 
-	public void setScript( String script )
-	{
+	public void setScript(String script) {
 		String old = getScript();
-		if( groovySecurityCheckConfig.getScript() == null )
-		{
+		if (groovySecurityCheckConfig.getScript() == null) {
 			groovySecurityCheckConfig.addNewScript();
 		}
 
-		groovySecurityCheckConfig.getScript().setStringValue( script );
+		groovySecurityCheckConfig.getScript().setStringValue(script);
 		// this.script=script;
-		notifyPropertyChanged( SCRIPT_PROPERTY, old, script );
+		notifyPropertyChanged(SCRIPT_PROPERTY, old, script);
 	}
 
-	private String getScript()
-	{
-		return groovySecurityCheckConfig.getScript() != null ? groovySecurityCheckConfig.getScript().getStringValue()
+	private String getScript() {
+		return groovySecurityCheckConfig.getScript() != null ? groovySecurityCheckConfig
+				.getScript().getStringValue()
 				: "";
 	}
 
 	@Override
-	public void analyze( TestStep testStep, SecurityTestContext context, SecurityTestLog securityTestLog )
-	{
+	public void analyze(TestStep testStep, SecurityTestContext context,
+			SecurityTestLog securityTestLog) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public boolean acceptsTestStep( TestStep testStep )
-	{
+	public boolean acceptsTestStep(TestStep testStep) {
 		return true;
 	}
 
 	@Override
-	public JComponent getComponent()
-	{
-		JPanel panel = new JPanel( );
-		panel.add( new JLabel( "testing....:" ) );
+	public JComponent getComponent() {
+		if (panel == null) {
+			panel = new JPanel(new BorderLayout());
+
+			form = new SimpleForm();
+			form.addSpace(5);
+
+			form.setDefaultTextFieldColumns(50);
+
+			scriptTextArea = form.appendTextArea("Script", "Script to use");
+			scriptTextArea.setText("");
+		}
 		return panel;
 	}
 
 	@Override
-	public String getType()
-	{
+	public String getType() {
 		return TYPE;
 	}
 }
