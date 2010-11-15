@@ -26,7 +26,7 @@ import com.eviware.soapui.security.check.SecurityCheck;
 
 public class ParameterExposureCheckFactory extends SecurityCheckFactory
 {
-	public static final String PARAMETER_EXPOSURE_CHECK_TYPE = "groovySecurityCheck";
+	public static final String PARAMETER_EXPOSURE_CHECK_TYPE = "parameterExposureCheck";
 
 	public ParameterExposureCheckFactory()
 	{
