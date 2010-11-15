@@ -53,13 +53,23 @@ import com.jgoodies.forms.layout.FormLayout;
 public class ParameterExposureCheck extends AbstractSecurityCheck {
 	ParameterExposureCheckConfig parameterExposureCheckConfig;
 	JTextField minimumCharactersTextField;
-
+	
+	public static final String TYPE = "ParameterExposureCheck";
+	
 	public ParameterExposureCheck(SecurityCheckConfig config, ModelItem parent,
 			String icon) {
 		super(config, parent, icon);
 		monitorApplicable = true;
-		parameterExposureCheckConfig = (ParameterExposureCheckConfig) config
+		if( config.getConfig() == null )
+		{
+			parameterExposureCheckConfig = ( ParameterExposureCheckConfig )config.addNewConfig().changeType(
+					ParameterExposureCheckConfig.type );
+		}
+		else
+		{
+			parameterExposureCheckConfig = (ParameterExposureCheckConfig) config
 				.getConfig().changeType(ParameterExposureCheckConfig.type);
+		}
 		
 		minimumCharactersTextField = new JTextField(((ParameterExposureCheckConfig) config
 				.getConfig()).getMinimumLength());
