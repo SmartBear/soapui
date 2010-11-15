@@ -61,18 +61,19 @@ public class ParameterExposureCheck extends AbstractSecurityCheck
 	{
 		super( config, parent, icon );
 		monitorApplicable = true;
-		if( config.getConfig() == null )
+		if( config == null )
 		{
-			parameterExposureCheckConfig = ( ParameterExposureCheckConfig )config.addNewConfig().changeType(
+			config = SecurityCheckConfig.Factory.newInstance();
+			parameterExposureCheckConfig = ( ParameterExposureCheckConfig )config.changeType(
 					ParameterExposureCheckConfig.type );
 		}
 		else
 		{
-			parameterExposureCheckConfig = ( ParameterExposureCheckConfig )config.getConfig().changeType(
+			parameterExposureCheckConfig = ( ParameterExposureCheckConfig )config.changeType(
 					ParameterExposureCheckConfig.type );
 		}
 
-		minimumCharactersTextField = new JTextField( ( ( ParameterExposureCheckConfig )config.getConfig() )
+		minimumCharactersTextField = new JTextField( ( ( ParameterExposureCheckConfig )config )
 				.getMinimumLength() );
 	}
 
@@ -159,7 +160,7 @@ public class ParameterExposureCheck extends AbstractSecurityCheck
 	{
 		JPanel panel = new JPanel( new FormLayout( "" ) );
 		panel.add( new JLabel( "Minimum Characters:" ) );
-		panel.add( new JTextField( ( ( ParameterExposureCheckConfig )config.getConfig() ).getMinimumLength() ) );
+		panel.add( new JTextField( ( ( ParameterExposureCheckConfig )config ).getMinimumLength() ) );
 		return panel;
 	}
 

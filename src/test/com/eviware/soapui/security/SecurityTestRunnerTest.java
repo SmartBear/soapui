@@ -27,7 +27,6 @@ import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestSuite;
-import com.eviware.soapui.model.testsuite.TestRunner.Status;
 import com.eviware.soapui.security.check.GroovySecurityCheck;
 import com.eviware.soapui.security.check.SecurityCheck;
 import com.eviware.soapui.support.TestCaseWithJetty;
@@ -70,7 +69,9 @@ public class SecurityTestRunnerTest extends TestCaseWithJetty
 				+ "sample-soapui-project.xml" );
 		TestSuite testSuite = project.getTestSuiteByName( "Test Suite" );
 		List<SecurityCheck> secCheckList = new ArrayList();
-		GroovySecurityCheck gsc = new GroovySecurityCheck( SecurityCheckConfig.Factory.newInstance(), null, null );
+		SecurityCheckConfig asdf = SecurityCheckConfig.Factory.newInstance();
+		asdf.setType(  GroovySecurityCheck.TYPE );
+		GroovySecurityCheck gsc = new GroovySecurityCheck(asdf, null, null );
 		gsc.setScript( "log.info testStep" );
 		secCheckList.add( gsc );
 		securityChecksMap.put( "SEK to USD Test", secCheckList );
@@ -123,6 +124,8 @@ public class SecurityTestRunnerTest extends TestCaseWithJetty
 		// testCase.getTestStepByName("SEK to USD Test");
 
 		SecurityTest securityTest = new SecurityTest( testCase, config );
+		addSecurityChecks( securityTest );
+
 		SecurityTestRunnerImpl testRunner = new SecurityTestRunnerImpl( securityTest );
 		// SecurityTestContext testRunContext = new SecurityTestContext(
 		// testRunner );
@@ -134,4 +137,18 @@ public class SecurityTestRunnerTest extends TestCaseWithJetty
 
 	}
 
+	// assertEquals( Status.RUNNING, testRunner.getStatus() );
+
+	private void addSecurityChecks( SecurityTest securityTest )
+	{
+		for( String testSetName : securityChecksMap.keySet() )
+		{
+			List<SecurityCheck> securityCheckList = securityChecksMap.get( testSetName );
+
+			for( SecurityCheck sc : securityCheckList )
+			{
+				securityTest.addSecurityCheck( testSetName, sc );
+			}
+		}
+	}
 }

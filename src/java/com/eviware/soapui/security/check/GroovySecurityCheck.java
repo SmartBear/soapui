@@ -21,7 +21,6 @@ import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTestContext;
 import com.eviware.soapui.security.log.SecurityTestLog;
-import com.eviware.soapui.support.StringUtils;
 
 /**
  * 
@@ -30,36 +29,36 @@ import com.eviware.soapui.support.StringUtils;
 
 public class GroovySecurityCheck extends AbstractSecurityCheck
 {
-
 	public static final String SCRIPT_PROPERTY = GroovySecurityCheck.class.getName() + "@script";
 	public static final String TYPE = "GroovySecurityCheck";
-	private String script;
+	// private String script;
 	private GroovySecurityCheckConfig groovySecurityCheckConfig;
 
 	public GroovySecurityCheck( SecurityCheckConfig config, ModelItem parent, String icon )
 	{
 		super( config, parent, icon );
-		if( config.getConfig() == null )
+		if( config == null )
 		{
-			groovySecurityCheckConfig = ( GroovySecurityCheckConfig )config.addNewConfig().changeType(
-					GroovySecurityCheckConfig.type );
+			config = SecurityCheckConfig.Factory.newInstance();
+			groovySecurityCheckConfig = ( GroovySecurityCheckConfig )config.changeType( GroovySecurityCheckConfig.type );
 			groovySecurityCheckConfig.addNewScript();
+
 		}
 		else
 		{
-			groovySecurityCheckConfig = ( GroovySecurityCheckConfig )config.getConfig().changeType(
-					GroovySecurityCheckConfig.type );
+			groovySecurityCheckConfig = ( GroovySecurityCheckConfig )config.changeType( GroovySecurityCheckConfig.type );
 
 		}
 
-		this.script = groovySecurityCheckConfig.getScript() != null ? groovySecurityCheckConfig.getScript()
-				.getStringValue() : "";
+		// this.script = groovySecurityCheckConfig.getScript() != null ?
+		// groovySecurityCheckConfig.getScript()
+		// .getStringValue() : "";
 	}
 
 	@Override
 	protected void execute( TestStep testStep, SecurityTestContext context, SecurityTestLog securityTestLog )
 	{
-		scriptEngine.setScript( script );
+		scriptEngine.setScript( getScript() );
 		scriptEngine.setVariable( "testStep", testStep );
 		scriptEngine.setVariable( "log", SoapUI.ensureGroovyLog() );
 		// scriptEngine.setVariable( "context", context );
@@ -88,6 +87,7 @@ public class GroovySecurityCheck extends AbstractSecurityCheck
 		}
 
 		groovySecurityCheckConfig.getScript().setStringValue( script );
+		// this.script=script;
 		notifyPropertyChanged( SCRIPT_PROPERTY, old, script );
 	}
 
@@ -116,7 +116,6 @@ public class GroovySecurityCheck extends AbstractSecurityCheck
 		// TODO implement properly
 		return new JPanel();
 	}
-
 
 	@Override
 	public String getType()
