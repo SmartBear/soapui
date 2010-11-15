@@ -143,17 +143,4 @@ public class ParameterExposureCheck extends AbstractSecurityCheck
 		return null;
 	}
 
-	@Override
-	public boolean isDisabled()
-	{
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public void setDisabled( boolean disabled )
-	{
-		// TODO Auto-generated method stub
-
-	}
 }

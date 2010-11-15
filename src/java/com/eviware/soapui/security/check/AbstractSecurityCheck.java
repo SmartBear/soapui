@@ -37,6 +37,7 @@ public abstract class AbstractSecurityCheck extends SecurityCheck
 	protected String tearDownScript;
 	protected SoapUIScriptEngine scriptEngine;
 	protected boolean monitorApplicable = false;
+	private boolean disabled = false;
 
 	// private
 	public AbstractSecurityCheck( SecurityCheckConfig config, ModelItem parent, String icon )
@@ -188,6 +189,19 @@ public abstract class AbstractSecurityCheck extends SecurityCheck
 	public void removePropertyChangeListener( String propertyName, PropertyChangeListener listener )
 	{
 		// TODO Auto-generated method stub
+
+	}
+	
+	@Override
+	public boolean isDisabled()
+	{
+		return disabled ;
+	}
+
+	@Override
+	public void setDisabled( boolean disabled )
+	{
+		this.disabled = disabled;
 
 	}
 }
