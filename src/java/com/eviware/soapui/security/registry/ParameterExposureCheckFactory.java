@@ -14,7 +14,6 @@ package com.eviware.soapui.security.registry;
 
 import com.eviware.soapui.config.ParameterExposureCheckConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
-import com.eviware.soapui.security.check.GroovySecurityCheck;
 import com.eviware.soapui.security.check.ParameterExposureCheck;
 import com.eviware.soapui.security.check.SecurityCheck;
 
@@ -26,11 +25,10 @@ import com.eviware.soapui.security.check.SecurityCheck;
 
 public class ParameterExposureCheckFactory extends SecurityCheckFactory
 {
-	public static final String PARAMETER_EXPOSURE_CHECK_TYPE = "parameterExposureCheck";
 
 	public ParameterExposureCheckFactory()
 	{
-		super( PARAMETER_EXPOSURE_CHECK_TYPE, "Parameter Exposure Check", "Preforms a check for Parameter Exposure",
+		super( ParameterExposureCheck.TYPE, "Parameter Exposure Check", "Preforms a check for Parameter Exposure",
 				"/parameter_exposure_check_script.gif" );
 	}
 
@@ -49,7 +47,7 @@ public class ParameterExposureCheckFactory extends SecurityCheckFactory
 	public SecurityCheckConfig createNewSecurityCheck( String name )
 	{
 		SecurityCheckConfig securityCheckConfig = SecurityCheckConfig.Factory.newInstance();
-		securityCheckConfig.setType( PARAMETER_EXPOSURE_CHECK_TYPE );
+		securityCheckConfig.setType( ParameterExposureCheck.TYPE );
 		securityCheckConfig.setName( name );
 		securityCheckConfig.setConfig( ParameterExposureCheckConfig.Factory.newInstance() );
 		return securityCheckConfig;

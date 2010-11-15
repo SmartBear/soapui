@@ -11,18 +11,14 @@
  */
 package com.eviware.soapui.security.check;
 
-import java.util.List;
-
 import javax.swing.JComponent;
 
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.support.AbstractModelItem;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTestContext;
 import com.eviware.soapui.security.log.SecurityTestLog;
-import com.eviware.soapui.security.log.SecurityTestLogEntry;
 
 /**
  * SecurityCheck
