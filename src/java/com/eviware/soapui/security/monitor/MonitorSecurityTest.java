@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.eviware.soapui.config.SecurityCheckConfig;
+import com.eviware.soapui.impl.wsdl.teststeps.PropertyTransfer;
 import com.eviware.soapui.security.check.SecurityCheck;
 import com.eviware.soapui.security.registry.SecurityCheckFactory;
 import com.eviware.soapui.security.registry.SecurityCheckRegistry;
@@ -17,6 +18,11 @@ public class MonitorSecurityTest
 		monitorSecurityChecksList = new ArrayList<SecurityCheck>();
 	}
 
+	public List<SecurityCheck> getMonitorSecurityChecksList()
+	{
+		return monitorSecurityChecksList;
+	}
+
 	public SecurityCheck addSecurityCheck( String name, String type )
 	{
 		SecurityCheckFactory factory = SecurityCheckRegistry.getInstance().getFactory( type );
@@ -27,14 +33,23 @@ public class MonitorSecurityTest
 
 	public SecurityCheck getSecurityCheckAt( int index )
 	{
-		// TODO implement
-		return null;
+		return monitorSecurityChecksList.get( index );
 	}
 
 	public SecurityCheck removeSecurityCheckAt( int index )
 	{
-		// TODO implement
-		return null;
+		return monitorSecurityChecksList.remove( index );
 	}
 
+	public SecurityCheck getSecurityCheckByName( String name )
+	{
+		for( int c = 0; c < monitorSecurityChecksList.size(); c++ )
+		{
+			SecurityCheck securityCheck = getSecurityCheckAt( c );
+			if( securityCheck.getName().equals( name ) )
+				return securityCheck;
+		}
+
+		return null;
+	}
 }

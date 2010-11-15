@@ -12,15 +12,19 @@
 package com.eviware.soapui.security.check;
 
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.GroovySecurityCheckConfig;
+import com.eviware.soapui.config.ParameterExposureCheckConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTestContext;
 import com.eviware.soapui.security.log.SecurityTestLog;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * 
@@ -113,8 +117,9 @@ public class GroovySecurityCheck extends AbstractSecurityCheck
 	@Override
 	public JComponent getComponent()
 	{
-		// TODO implement properly
-		return new JPanel();
+		JPanel panel = new JPanel( );
+		panel.add( new JLabel( "testing....:" ) );
+		return panel;
 	}
 
 	@Override

@@ -23,13 +23,19 @@ import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
+import javax.swing.JTextArea;
 import javax.swing.JToggleButton;
 import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
+import com.eviware.soapui.impl.wsdl.teststeps.PropertyTransfer;
 import com.eviware.soapui.security.check.GroovySecurityCheck;
 import com.eviware.soapui.security.check.SecurityCheck;
 import com.eviware.soapui.security.monitor.MonitorSecurityTest;
@@ -49,6 +55,7 @@ public class SecurityTestsMonitorDesktopPanel extends JPanel
 {
 	private final MonitorSecurityTest monitorSecurityTest;
 	private DefaultListModel listModel;
+	private JComponent securityTestConfigPanel;
 	private JList securityChecksList;
 	private JButton copyButton;
 	private JButton deleteButton;
@@ -84,8 +91,15 @@ public class SecurityTestsMonitorDesktopPanel extends JPanel
 
 		securityChecksList = new JList( listModel );
 		securityChecksList.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
-		// securityTestsList.addListSelectionListener( new
-		// TransferListSelectionListener() );
+		securityChecksList.addListSelectionListener( new ListSelectionListener()
+		{
+
+			@Override
+			public void valueChanged( ListSelectionEvent arg0 )
+			{
+				securityTestConfigPanel = buildConfigPanel();
+			}
+		} );
 		// componentEnabler.add( securityTestsList );
 
 		JScrollPane listScrollPane = new JScrollPane( securityChecksList );
@@ -97,10 +111,11 @@ public class SecurityTestsMonitorDesktopPanel extends JPanel
 
 		splitPane.setLeftComponent( p );
 
-		JPanel configPanel = new JPanel( new BorderLayout() );
-		UISupport.addTitledBorder( listScrollPane, "Security Check Config" );
 		splitPane.setPreferredSize( new Dimension( 550, 400 ) );
-		splitPane.setRightComponent( configPanel );
+		// configPanel = ( ( SecurityCheck )securityChecksList.getSelectedValue()
+		// ).getComponent();
+		securityTestConfigPanel = buildConfigPanel();
+		splitPane.setRightComponent( securityTestConfigPanel );
 		splitPane.setResizeWeight( 0.1 );
 		splitPane.setDividerLocation( 120 );
 		inspectorPanel = JInspectorPanelFactory.build( splitPane );
@@ -137,6 +152,45 @@ public class SecurityTestsMonitorDesktopPanel extends JPanel
 		return toolbar;
 	}
 
+	private JComponent buildConfigPanel()
+	{
+		securityTestConfigPanel = UISupport.addTitledBorder( new JPanel( new BorderLayout() ), "Configuration" );
+		securityTestConfigPanel.setPreferredSize( new Dimension( 330, 400 ) );
+		securityTestConfigPanel.add( new JTextArea() );
+		if( securityChecksList != null && securityChecksList.getSelectedValue() != null )
+		{
+			SecurityCheck selected = monitorSecurityTest.getSecurityCheckByName( ( String )securityChecksList
+					.getSelectedValue() );
+			securityTestConfigPanel.removeAll();
+			securityTestConfigPanel.add( selected.getComponent() );
+		}
+		securityTestConfigPanel.revalidate();
+		return new JScrollPane( securityTestConfigPanel );
+	}
+
+	/**
+	 * Listen to selection changes in transfer list and update controls
+	 * accordingly
+	 */
+
+	private final class SecurityCheckListSelectionListener implements ListSelectionListener
+	{
+		private SecurityCheck securityCheck;
+
+		public void valueChanged( ListSelectionEvent e )
+		{
+
+			if( securityCheck != null )
+			{
+				// securityCheck.removePropertyChangeListener(
+				// transferPropertyChangeListener );
+			}
+
+			securityCheck = getCurrentSecurityCheck();
+			securityTestConfigPanel = securityCheck.getComponent();
+		}
+	}
+
 	private final class AddAction extends AbstractAction
 	{
 		public AddAction()
@@ -152,7 +206,7 @@ public class SecurityTestsMonitorDesktopPanel extends JPanel
 			if( name == null || name.trim().length() == 0 )
 				return;
 
-			monitorSecurityTest.addSecurityCheck( name, GroovySecurityCheck.TYPE );
+			monitorSecurityTest.addSecurityCheck( name, name );
 
 			listModel.addElement( name );
 			securityChecksList.setSelectedIndex( listModel.getSize() - 1 );

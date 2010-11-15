@@ -28,7 +28,7 @@ public class GroovySecurityCheckFactory extends SecurityCheckFactory
 
 	public GroovySecurityCheckFactory()
 	{
-		super( GroovySecurityCheck.TYPE, "Groovy Security Check",
+		super( GroovySecurityCheck.TYPE, "GroovySecurityCheck",
 				"Executes the specified groovy script for security check", "/groovy_security_check_script.gif" );
 	}
 

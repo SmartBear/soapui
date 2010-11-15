@@ -158,7 +158,7 @@ public class ParameterExposureCheck extends AbstractSecurityCheck
 	@Override
 	public JComponent getComponent()
 	{
-		JPanel panel = new JPanel( new FormLayout( "" ) );
+		JPanel panel = new JPanel();
 		panel.add( new JLabel( "Minimum Characters:" ) );
 		panel.add( new JTextField( ( ( ParameterExposureCheckConfig )config ).getMinimumLength() ) );
 		return panel;
