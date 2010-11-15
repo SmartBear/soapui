@@ -12,6 +12,7 @@
 package com.eviware.soapui.security.check;
 
 import javax.swing.JComponent;
+import javax.swing.JPanel;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.GroovySecurityCheckConfig;
@@ -20,6 +21,7 @@ import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTestContext;
 import com.eviware.soapui.security.log.SecurityTestLog;
+import com.eviware.soapui.support.StringUtils;
 
 /**
  * 
@@ -30,6 +32,7 @@ public class GroovySecurityCheck extends AbstractSecurityCheck
 {
 
 	public static final String SCRIPT_PROPERTY = GroovySecurityCheck.class.getName() + "@script";
+	public static final String TYPE = "GroovySecurityCheck";
 	private String script;
 	private GroovySecurityCheckConfig groovySecurityCheckConfig;
 
@@ -49,7 +52,8 @@ public class GroovySecurityCheck extends AbstractSecurityCheck
 
 		}
 
-		this.script = groovySecurityCheckConfig.getScript().getStringValue();
+		this.script = groovySecurityCheckConfig.getScript() != null ? groovySecurityCheckConfig.getScript()
+				.getStringValue() : "";
 	}
 
 	@Override
@@ -109,8 +113,14 @@ public class GroovySecurityCheck extends AbstractSecurityCheck
 	@Override
 	public JComponent getComponent()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		// TODO implement properly
+		return new JPanel();
 	}
 
+
+	@Override
+	public String getType()
+	{
+		return TYPE;
+	}
 }

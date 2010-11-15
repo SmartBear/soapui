@@ -13,10 +13,13 @@
 package com.eviware.soapui.security.registry;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.eviware.soapui.config.SecurityCheckConfig;
-import com.eviware.soapui.config.TestStepConfig;
+import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionFactory;
+import com.eviware.soapui.model.testsuite.Assertable;
 
 /**
  * Registry of SecurityCheck factories
@@ -27,7 +30,7 @@ import com.eviware.soapui.config.TestStepConfig;
 public class SecurityCheckRegistry
 {
 	private static SecurityCheckRegistry instance;
-	private List<SecurityCheckFactory> factories = new ArrayList<SecurityCheckFactory>();
+	private Map<String, SecurityCheckFactory> availableSecurityChecks = new HashMap<String, SecurityCheckFactory>();
 
 	public SecurityCheckRegistry()
 	{
@@ -37,26 +40,30 @@ public class SecurityCheckRegistry
 
 	public SecurityCheckFactory getFactory( String type )
 	{
-		for( SecurityCheckFactory factory : factories )
-			if( factory.getType().equals( type ) )
-				return factory;
+		for( String cc : availableSecurityChecks.keySet() )
+		{
+			SecurityCheckFactory scf = availableSecurityChecks.get( cc );
+			if( scf.getType().equals( type ) )
+				return scf;
 
+		}
 		return null;
 	}
 
 	public void addFactory( SecurityCheckFactory factory )
 	{
 		removeFactory( factory.getType() );
-		factories.add( factory );
+		availableSecurityChecks.put( factory.getSecurityCheckName(), factory );
 	}
 
 	public void removeFactory( String type )
 	{
-		for( SecurityCheckFactory factory : factories )
+		for( String scfName : availableSecurityChecks.keySet() )
 		{
-			if( factory.getType().equals( type ) )
+			SecurityCheckFactory csf = availableSecurityChecks.get( scfName );
+			if( csf.getType().equals( type ) )
 			{
-				factories.remove( factory );
+				availableSecurityChecks.remove( scfName );
 				break;
 			}
 		}
@@ -70,13 +77,31 @@ public class SecurityCheckRegistry
 		return instance;
 	}
 
-	public SecurityCheckFactory[] getFactories()
-	{
-		return factories.toArray( new SecurityCheckFactory[factories.size()] );
-	}
+	// public SecurityCheckFactory[] getFactories()
+	// {
+	// return availableSecurityChecks.toArray( new
+	// SecurityCheckFactory[availableSecurityChecks.size()] );
+	// }
 
 	public boolean hasFactory( SecurityCheckConfig config )
 	{
 		return getFactory( config.getType() ) != null;
 	}
+
+	// done according to
+	// TestAssertionRegistry.getAvailableAssertionNames...double check to add
+	// argument
+	public String[] getAvailableSecurityChecksNames()
+	{
+		List<String> result = new ArrayList<String>();
+
+		for( SecurityCheckFactory securityCheck : availableSecurityChecks.values() )
+		{
+			// if( securityCheck.canCreate())
+			result.add( securityCheck.getSecurityCheckName() );
+		}
+
+		return result.toArray( new String[result.size()] );
+	}
+
 }

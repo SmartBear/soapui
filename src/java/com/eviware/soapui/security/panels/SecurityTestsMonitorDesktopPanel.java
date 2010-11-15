@@ -30,6 +30,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JToggleButton;
 import javax.swing.ListSelectionModel;
 
+import com.eviware.soapui.security.check.GroovySecurityCheck;
 import com.eviware.soapui.security.check.SecurityCheck;
 import com.eviware.soapui.security.monitor.MonitorSecurityTest;
 import com.eviware.soapui.security.registry.SecurityCheckFactory;
@@ -146,17 +147,12 @@ public class SecurityTestsMonitorDesktopPanel extends JPanel
 
 		public void actionPerformed( ActionEvent e )
 		{
-			SecurityCheckFactory[] scf = SecurityCheckRegistry.getInstance().getFactories();
-			List<String> alist = new ArrayList<String>();
-			for( SecurityCheckFactory c : scf )
-			{
-				alist.add( c.getSecurityCheckName() );
-			}
-			String name = UISupport.prompt( "Specify name for security check", "Add SecurityCheck", alist );
+			String[] availableChecksNames = SecurityCheckRegistry.getInstance().getAvailableSecurityChecksNames();
+			String name = UISupport.prompt( "Specify name for security check", "Add SecurityCheck", availableChecksNames );
 			if( name == null || name.trim().length() == 0 )
 				return;
 
-			monitorSecurityTest.addSecurityTest( name );
+			monitorSecurityTest.addSecurityCheck( name, GroovySecurityCheck.TYPE );
 
 			listModel.addElement( name );
 			securityChecksList.setSelectedIndex( listModel.getSize() - 1 );
@@ -180,7 +176,7 @@ public class SecurityTestsMonitorDesktopPanel extends JPanel
 			if( name == null || name.trim().length() == 0 )
 				return;
 
-			SecurityCheck securityCheck = monitorSecurityTest.addSecurityTest( name );
+			SecurityCheck securityCheck = monitorSecurityTest.addSecurityCheck( name, name );
 			securityCheck.setDisabled( config.isDisabled() );
 
 			listModel.addElement( name );
