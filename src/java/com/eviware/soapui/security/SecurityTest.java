@@ -91,6 +91,7 @@ public class SecurityTest extends AbstractWsdlModelItem<SecurityTestConfig> impl
 			testStepSecurityTest.setTestStepName( testStepName );
 			SecurityCheckConfig newSecurityCheck = testStepSecurityTest.addNewTestStepSecurityCheck();
 			newSecurityCheck.setConfig( securityCheck.getConfig() );
+			newSecurityCheck.setType( securityCheck.getType() );
 		}
 
 	}

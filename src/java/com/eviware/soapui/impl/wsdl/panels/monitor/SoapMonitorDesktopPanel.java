@@ -23,6 +23,8 @@ import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.monitor.SoapMonitor;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.security.monitor.MonitorSecurityTest;
+import com.eviware.soapui.security.panels.SecurityTestsMonitorDesktopPanel;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.ui.support.DefaultDesktopPanel;
@@ -31,6 +33,7 @@ public class SoapMonitorDesktopPanel extends DefaultDesktopPanel
 {
 	private SoapMonitor soapMonitor;
 	private final WsdlProject project;
+	private SecurityTestsMonitorDesktopPanel securityTab;
 
 	public SoapMonitorDesktopPanel( WsdlProject project, int sourcePort, String incomingRequestWss,
 			String incomingResponseWss, boolean setAsProxy, String sslEndpoint )
@@ -46,6 +49,8 @@ public class SoapMonitorDesktopPanel extends DefaultDesktopPanel
 				sslEndpoint );
 
 		tabs.add( soapMonitor, "Traffic Log" );
+		securityTab = new SecurityTestsMonitorDesktopPanel( new MonitorSecurityTest() );
+		tabs.add( securityTab, "Security Tests" );
 
 		toolbar.add( UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.SOAPMONITOR_HELP_URL ) ) );
 
