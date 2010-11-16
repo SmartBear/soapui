@@ -217,14 +217,23 @@ public class SecurityTestsMonitorDesktopPanel extends JPanel
 		public void actionPerformed( ActionEvent e )
 		{
 			int ix = securityChecksList.getSelectedIndex();
-			SecurityCheck config = monitorSecurityTest.getSecurityCheckAt( ix );
+			SecurityCheck sourceCheck = monitorSecurityTest.getSecurityCheckAt( ix );
 
-			String name = UISupport.prompt( "Specify name for SecurityCheck", "Copy SecurityCheck", config.getName() );
+			String name = UISupport.prompt( "Specify name for SecurityCheck", "Copy SecurityCheck", "Copy of " + sourceCheck.getName() );
 			if( name == null || name.trim().length() == 0 )
 				return;
-
-			SecurityCheck securityCheck = monitorSecurityTest.addSecurityCheck( name, name );
-			securityCheck.setDisabled( config.isDisabled() );
+			while( monitorSecurityTest.getSecurityCheckByName( name ) != null
+					|| monitorSecurityTest.getSecurityCheckByName( name + " (disabled)" ) != null )
+			{
+				name = UISupport.prompt( "Specify unique name for check", "Rename SecurityCheck", name + " "
+						+ ( monitorSecurityTest.getMonitorSecurityChecksList().size() ) );
+				if( name == null )
+				{
+					return;
+				}
+			}
+			SecurityCheck securityCheck = monitorSecurityTest.addSecurityCheck( name, sourceCheck );
+			securityCheck.setDisabled( sourceCheck.isDisabled() );
 
 			listModel.addElement( name );
 			securityChecksList.setSelectedIndex( listModel.getSize() - 1 );

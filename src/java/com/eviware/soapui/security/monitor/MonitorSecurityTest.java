@@ -34,8 +34,22 @@ public class MonitorSecurityTest
 
 	public SecurityCheck addSecurityCheck( SecurityCheck sc )
 	{
-		monitorSecurityChecksList.add( sc);
+		monitorSecurityChecksList.add( sc );
 		return sc;
+	}
+
+	public SecurityCheck addSecurityCheck( String name, SecurityCheck sc )
+	{
+		SecurityCheckFactory factory = SecurityCheckRegistry.getInstance().getFactory( sc.getType() );
+		SecurityCheckConfig scc = factory.createNewSecurityCheck( name );
+		SecurityCheck newSc = factory.buildSecurityCheck( scc );
+		newSc.getConfig().setConfig( sc.getConfig().getConfig() );
+		newSc.getConfig().setStartupScript( sc.getConfig().getStartupScript() );
+		newSc.getConfig().setTearDownScript( sc.getConfig().getTearDownScript());
+		//set assertions
+//		newSc.getConfig().setAssertionArray( sc.getConfig().getAssertionList() );
+		monitorSecurityChecksList.add( newSc );
+		return newSc;
 	}
 
 	public SecurityCheck getSecurityCheckAt( int index )
@@ -59,6 +73,7 @@ public class MonitorSecurityTest
 
 		return null;
 	}
+
 	public SecurityCheck renameSecurityCheckAt( int index, String newName )
 	{
 		SecurityCheck sc = removeSecurityCheckAt( index );
@@ -66,7 +81,9 @@ public class MonitorSecurityTest
 		addSecurityCheck( sc );
 		return sc;
 	}
-	public List<String> getExistingChecksNames() {
+
+	public List<String> getExistingChecksNames()
+	{
 		List<String> names = new ArrayList<String>();
 		for( SecurityCheck scc : monitorSecurityChecksList )
 		{

@@ -16,7 +16,8 @@ import java.awt.Dimension;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.text.Document;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.GroovySecurityCheckConfig;
@@ -25,6 +26,8 @@ import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTestContext;
 import com.eviware.soapui.security.log.SecurityTestLog;
+import com.eviware.soapui.support.DocumentListenerAdapter;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.components.SimpleForm;
 
 /**
@@ -36,7 +39,9 @@ public class GroovySecurityCheck extends AbstractSecurityCheck
 {
 	public static final String SCRIPT_PROPERTY = GroovySecurityCheck.class.getName() + "@script";
 	public static final String TYPE = "GroovySecurityCheck";
-	protected JTextArea scriptTextArea;
+	//if this is a text area document listener doesn't work, WHY? !!
+	protected JTextField scriptTextArea;
+	protected static final String SCRIPT_FIELD = "Script";
 
 	public GroovySecurityCheck( SecurityCheckConfig config, ModelItem parent, String icon )
 	{
@@ -75,23 +80,23 @@ public class GroovySecurityCheck extends AbstractSecurityCheck
 	public void setScript( String script )
 	{
 		String old = getScript();
-		if( config.getConfig() == null )
+		if( getConfig().getConfig() == null )
 		{
-			config.addNewConfig();
+			getConfig().addNewConfig();
 		}
 		GroovySecurityCheckConfig groovyscc = GroovySecurityCheckConfig.Factory.newInstance();
 		groovyscc.addNewScript();
 		groovyscc.getScript().setStringValue( script );
-		config.setConfig( groovyscc );
+		getConfig().setConfig( groovyscc );
 		notifyPropertyChanged( SCRIPT_PROPERTY, old, script );
 	}
 
 	private String getScript()
 	{
 		GroovySecurityCheckConfig groovyscc = null;
-		if( config.getConfig() != null )
+		if( getConfig().getConfig() != null )
 		{
-			groovyscc = ( GroovySecurityCheckConfig )config.getConfig().changeType( GroovySecurityCheckConfig.type );
+			groovyscc = ( GroovySecurityCheckConfig )getConfig().getConfig();
 			if( groovyscc.getScript() != null )
 				return groovyscc.getScript().getStringValue();
 		}
@@ -111,7 +116,7 @@ public class GroovySecurityCheck extends AbstractSecurityCheck
 		return true;
 	}
 
-@Override
+	@Override
 	public JComponent getComponent()
 	{
 		// if (panel == null) {
@@ -120,11 +125,24 @@ public class GroovySecurityCheck extends AbstractSecurityCheck
 		form = new SimpleForm();
 		form.addSpace( 5 );
 
-//		form.setDefaultTextFieldColumns( 50 );
+		// form.setDefaultTextFieldColumns( 50 );
 
-		scriptTextArea = form.appendTextArea( "Script", "Script to use" );
+		scriptTextArea = form.appendTextField( SCRIPT_FIELD, "Script to use" );
 		scriptTextArea.setSize( new Dimension( 400, 600 ) );
-		scriptTextArea.setText( "" );
+		scriptTextArea.setText( getScript() );
+		scriptTextArea.getDocument().addDocumentListener( new DocumentListenerAdapter()
+		{
+
+			@Override
+			public void update( Document document )
+			{
+				String scriptStr = form.getComponentValue( SCRIPT_FIELD );
+				if( !StringUtils.isNullOrEmpty( scriptStr ) )
+				{
+					setScript( scriptStr );
+				}
+			}
+		} );
 		panel.add( form.getPanel() );
 		// }
 		return panel;

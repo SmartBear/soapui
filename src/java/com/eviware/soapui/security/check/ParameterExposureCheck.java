@@ -22,6 +22,7 @@ import java.util.Map;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.text.Document;
 
 import com.eviware.soapui.config.ParameterExposureCheckConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
@@ -46,109 +47,114 @@ import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
 import com.eviware.soapui.security.SecurityTestContext;
 import com.eviware.soapui.security.log.SecurityTestLog;
 import com.eviware.soapui.security.log.SecurityTestLogMessageEntry;
+import com.eviware.soapui.support.DocumentListenerAdapter;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.components.SimpleForm;
 import com.eviware.soapui.support.types.StringToObjectMap;
 
 /**
- * This checks whether any parameters sent in the request are included in the response,
- * If they do appear, this is a good parameter to look at as a possible attack vector
- * for XSS
+ * This checks whether any parameters sent in the request are included in the
+ * response, If they do appear, this is a good parameter to look at as a
+ * possible attack vector for XSS
  * 
  * @author soapui team
  */
 
-public class ParameterExposureCheck extends AbstractSecurityCheck {
+public class ParameterExposureCheck extends AbstractSecurityCheck
+{
 
 	// JTextField minimumCharactersTextField;
 	protected JTextField minimumCharactersTextField;
 
 	public static final String TYPE = "ParameterExposureCheck";
 	public static final int DEFAULT_MINIMUM_CHARACTER_LENGTH = 5;
+	protected static final String MINIMUM_CHARACTERS_FIELD = "Minimum Characters";
 
-	public ParameterExposureCheck(SecurityCheckConfig config, ModelItem parent,
-			String icon) {
-		super(config, parent, icon);
+	public ParameterExposureCheck( SecurityCheckConfig config, ModelItem parent, String icon )
+	{
+		super( config, parent, icon );
 		monitorApplicable = true;
-		if (config == null) {
+		if( config == null )
+		{
 			config = SecurityCheckConfig.Factory.newInstance();
-			ParameterExposureCheckConfig pescc = ParameterExposureCheckConfig.Factory
-					.newInstance();
-			pescc.setMinimumLength(DEFAULT_MINIMUM_CHARACTER_LENGTH);
-			config.setConfig(pescc);
-		} 
-		if (config.getConfig() == null) {
-			ParameterExposureCheckConfig pescc = ParameterExposureCheckConfig.Factory
-			.newInstance();
-	pescc.setMinimumLength(DEFAULT_MINIMUM_CHARACTER_LENGTH);
-	config.setConfig(pescc);
+			ParameterExposureCheckConfig pescc = ParameterExposureCheckConfig.Factory.newInstance();
+			pescc.setMinimumLength( DEFAULT_MINIMUM_CHARACTER_LENGTH );
+			config.setConfig( pescc );
 		}
-		
+		if( config.getConfig() == null )
+		{
+			ParameterExposureCheckConfig pescc = ParameterExposureCheckConfig.Factory.newInstance();
+			pescc.setMinimumLength( DEFAULT_MINIMUM_CHARACTER_LENGTH );
+			config.setConfig( pescc );
+		}
 
-		minimumCharactersTextField = new JTextField(
-				((ParameterExposureCheckConfig)config.getConfig()).getMinimumLength());
-		minimumCharactersTextField.addKeyListener(new MinimumListener());
+		// minimumCharactersTextField = new JTextField( ( (
+		// ParameterExposureCheckConfig )config.getConfig() )
+		// .getMinimumLength() );
+		// minimumCharactersTextField.addKeyListener( new MinimumListener() );
 	}
 
 	@Override
-	protected void execute(TestStep testStep, SecurityTestContext context,
-			SecurityTestLog securityTestLog) {
-		if (acceptsTestStep(testStep)) {
-			WsdlTestCaseRunner testCaseRunner = new WsdlTestCaseRunner(
-					(WsdlTestCase) testStep.getTestCase(),
-					new StringToObjectMap());
-			
-			testStep.run(testCaseRunner,testCaseRunner.getRunContext());
-			analyze(testStep, context, securityTestLog);
+	protected void execute( TestStep testStep, SecurityTestContext context, SecurityTestLog securityTestLog )
+	{
+		if( acceptsTestStep( testStep ) )
+		{
+			WsdlTestCaseRunner testCaseRunner = new WsdlTestCaseRunner( ( WsdlTestCase )testStep.getTestCase(),
+					new StringToObjectMap() );
+
+			testStep.run( testCaseRunner, testCaseRunner.getRunContext() );
+			analyze( testStep, context, securityTestLog );
 		}
 	}
 
 	@Override
-	public void analyze(TestStep testStep, SecurityTestContext context,
-			SecurityTestLog securityTestLog) {
-		if (acceptsTestStep(testStep)) {
-			HttpTestRequestStepInterface testStepwithProperties = (HttpTestRequestStepInterface) testStep;
-			HttpTestRequestInterface<?> request = testStepwithProperties
-					.getTestRequest();
-			MessageExchange messageExchange = new HttpResponseMessageExchange(
-					request);
+	public void analyze( TestStep testStep, SecurityTestContext context, SecurityTestLog securityTestLog )
+	{
+		if( acceptsTestStep( testStep ) )
+		{
+			HttpTestRequestStepInterface testStepwithProperties = ( HttpTestRequestStepInterface )testStep;
+			HttpTestRequestInterface<?> request = testStepwithProperties.getTestRequest();
+			MessageExchange messageExchange = new HttpResponseMessageExchange( request );
 
 			Map<String, TestProperty> params;
-			
-			//It might be a good idea to refactor HttpRequest and TestRequest to avoid things like this)
-			
+
+			// It might be a good idea to refactor HttpRequest and TestRequest to
+			// avoid things like this)
+
 			AbstractHttpRequest<?> httpRequest = testStepwithProperties.getHttpRequest();
-			if (httpRequest instanceof HttpRequest ) {
-				params = ((HttpRequest)httpRequest).getParams();
-			} else {
-				params = ((RestRequest)httpRequest).getParams();
+			if( httpRequest instanceof HttpRequest )
+			{
+				params = ( ( HttpRequest )httpRequest ).getParams();
+			}
+			else
+			{
+				params = ( ( RestRequest )httpRequest ).getParams();
 			}
 
-			if (getParamsToCheck().isEmpty()) {
-				setParamsToCheck(new ArrayList<String>(params.keySet()));
+			if( getParamsToCheck().isEmpty() )
+			{
+				setParamsToCheck( new ArrayList<String>( params.keySet() ) );
 			}
-			
-			for (String paramName : getParamsToCheck()) {
-				TestProperty param = params.get(paramName);
 
-				if (param != null && param.getValue() != null
-						&& param.getValue().length() >= getMinimumLength()) {
-					TestAssertionConfig assertionConfig = TestAssertionConfig.Factory
-							.newInstance();
-					assertionConfig.setType(SimpleContainsAssertion.ID);
+			for( String paramName : getParamsToCheck() )
+			{
+				TestProperty param = params.get( paramName );
 
-					SimpleContainsAssertion containsAssertion = (SimpleContainsAssertion) TestAssertionRegistry
-							.getInstance().buildAssertion(assertionConfig,
-									testStepwithProperties);
-					containsAssertion.setToken(param.getValue());
+				if( param != null && param.getValue() != null && param.getValue().length() >= getMinimumLength() )
+				{
+					TestAssertionConfig assertionConfig = TestAssertionConfig.Factory.newInstance();
+					assertionConfig.setType( SimpleContainsAssertion.ID );
 
-					containsAssertion.assertResponse(messageExchange, context);
+					SimpleContainsAssertion containsAssertion = ( SimpleContainsAssertion )TestAssertionRegistry
+							.getInstance().buildAssertion( assertionConfig, testStepwithProperties );
+					containsAssertion.setToken( param.getValue() );
 
-					if (containsAssertion.getStatus().equals(
-							AssertionStatus.VALID)) {
-						securityTestLog
-								.addEntry(new SecurityTestLogMessageEntry(
-										"Parameter " + param.getName()
-												+ " is exposed in the response"));
+					containsAssertion.assertResponse( messageExchange, context );
+
+					if( containsAssertion.getStatus().equals( AssertionStatus.VALID ) )
+					{
+						securityTestLog.addEntry( new SecurityTestLogMessageEntry( "Parameter " + param.getName()
+								+ " is exposed in the response" ) );
 					}
 				}
 			}
@@ -156,13 +162,16 @@ public class ParameterExposureCheck extends AbstractSecurityCheck {
 	}
 
 	/**
-	 * Setting the minimum size that the parameter value will be for it to be checked
+	 * Setting the minimum size that the parameter value will be for it to be
+	 * checked
 	 * 
 	 * @param minimumLength
 	 */
-	public void setMinimumLength(int minimumLength) {
-		((ParameterExposureCheckConfig)config.getConfig()).setMinimumLength(minimumLength);
-		minimumCharactersTextField.setText(Integer.toString(minimumLength));
+	public void setMinimumLength( int minimumLength )
+	{
+		( ( ParameterExposureCheckConfig )config.getConfig() ).setMinimumLength( minimumLength );
+		// minimumCharactersTextField.setText( Integer.toString( minimumLength )
+		// );
 	}
 
 	/**
@@ -170,8 +179,9 @@ public class ParameterExposureCheck extends AbstractSecurityCheck {
 	 * 
 	 * @return
 	 */
-	private int getMinimumLength() {
-		return ((ParameterExposureCheckConfig)config.getConfig()).getMinimumLength();
+	private int getMinimumLength()
+	{
+		return ( ( ParameterExposureCheckConfig )config.getConfig() ).getMinimumLength();
 	}
 
 	/**
@@ -179,8 +189,9 @@ public class ParameterExposureCheck extends AbstractSecurityCheck {
 	 * 
 	 * @return A list of parameter objects
 	 */
-	public List<String> getParamsToCheck() {
-		return ((ParameterExposureCheckConfig)config.getConfig()).getParamToCheckList();
+	public List<String> getParamsToCheck()
+	{
+		return ( ( ParameterExposureCheckConfig )config.getConfig() ).getParamToCheckList();
 	}
 
 	/**
@@ -188,62 +199,85 @@ public class ParameterExposureCheck extends AbstractSecurityCheck {
 	 * 
 	 * @param params
 	 */
-	public void setParamsToCheck(List<String> params) {
-		((ParameterExposureCheckConfig)config.getConfig()).setParamToCheckArray(params
-				.toArray(new String[0]));
+	public void setParamsToCheck( List<String> params )
+	{
+		( ( ParameterExposureCheckConfig )config.getConfig() ).setParamToCheckArray( params.toArray( new String[0] ) );
 	}
 
 	@Override
-	public boolean acceptsTestStep(TestStep testStep) {
-		return testStep instanceof HttpTestRequestStep
-				|| testStep instanceof RestTestRequestStep;
+	public boolean acceptsTestStep( TestStep testStep )
+	{
+		return testStep instanceof HttpTestRequestStep || testStep instanceof RestTestRequestStep;
 	}
 
 	@Override
-	public JComponent getComponent() {
-//		if (panel == null) {
-			panel = new JPanel(new BorderLayout());
+	public JComponent getComponent()
+	{
+		// if (panel == null) {
+		panel = new JPanel( new BorderLayout() );
 
-			form = new SimpleForm();
-			form.addSpace(5);
+		form = new SimpleForm();
+		form.addSpace( 5 );
 
-//			form.setDefaultTextFieldColumns(40);
+		// form.setDefaultTextFieldColumns(40);
 
-			minimumCharactersTextField = form.appendTextField(
-					"Minimum Characters:", "Script to use");
-			minimumCharactersTextField.setMaximumSize( new Dimension( 40, 10 ) );
-			minimumCharactersTextField.setText("" +((ParameterExposureCheckConfig)config.getConfig()).getMinimumLength());
-//		}
-			panel.add( form.getPanel() );
+		minimumCharactersTextField = form.appendTextField( MINIMUM_CHARACTERS_FIELD, "Minimum characters" );
+		minimumCharactersTextField.setMaximumSize( new Dimension( 40, 10 ) );
+		minimumCharactersTextField.setText( String.valueOf( getMinimumLength() ) );
+		minimumCharactersTextField.getDocument().addDocumentListener( new DocumentListenerAdapter()
+		{
+
+			@Override
+			public void update( Document document )
+			{
+				String minCharsStr = form.getComponentValue( MINIMUM_CHARACTERS_FIELD );
+				int minimumLength = StringUtils.isNullOrEmpty( minCharsStr ) ? 0 : Integer.valueOf( minCharsStr );
+				// queryArea.setText( "" );
+				// saveConfig();
+				if( minimumLength > 0 )
+				{
+					setMinimumLength( minimumLength );
+				}
+			}
+		} );
+		minimumCharactersTextField.addKeyListener( new MinimumListener() );
+
+		// }
+		panel.add( form.getPanel() );
 		return panel;
 	}
 
-	private class MinimumListener implements KeyListener {
+	private class MinimumListener implements KeyListener
+	{
 
 		@Override
-		public void keyPressed(KeyEvent arg0) {
+		public void keyPressed( KeyEvent arg0 )
+		{
 			// TODO Auto-generated method stub
 
 		}
 
 		@Override
-		public void keyReleased(KeyEvent arg0) {
+		public void keyReleased( KeyEvent arg0 )
+		{
 			// TODO Auto-generated method stub
 
 		}
 
 		@Override
-		public void keyTyped(KeyEvent ke) {
+		public void keyTyped( KeyEvent ke )
+		{
 			char c = ke.getKeyChar();
-			if (!Character.isDigit(c))
+			if( !Character.isDigit( c ) )
 				ke.consume();
-			setMinimumLength(Integer.parseInt(minimumCharactersTextField
-					.getText()));
+			// setMinimumLength( Integer.parseInt(
+			// minimumCharactersTextField.getText() ) );
 		}
 	}
 
 	@Override
-	public String getType() {
+	public String getType()
+	{
 		return TYPE;
 	}
 
