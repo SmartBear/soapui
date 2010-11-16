@@ -36,8 +36,6 @@ public class GroovySecurityCheck extends AbstractSecurityCheck
 {
 	public static final String SCRIPT_PROPERTY = GroovySecurityCheck.class.getName() + "@script";
 	public static final String TYPE = "GroovySecurityCheck";
-	// private String script;
-//	private GroovySecurityCheckConfig groovySecurityCheckConfig;
 	protected JTextArea scriptTextArea;
 
 	public GroovySecurityCheck( SecurityCheckConfig config, ModelItem parent, String icon )
@@ -86,7 +84,6 @@ public class GroovySecurityCheck extends AbstractSecurityCheck
 		groovyscc.addNewScript();
 		groovyscc.getScript().setStringValue( script );
 		config.setConfig( groovyscc );
-		// this.script=script;
 		notifyPropertyChanged( SCRIPT_PROPERTY, old, script );
 	}
 
