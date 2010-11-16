@@ -19,6 +19,7 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.config.SecurityTestConfig;
 import com.eviware.soapui.config.TestStepSecurityTestConfig;
+import com.eviware.soapui.config.impl.StringToStringMapConfigImpl;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.model.ModelItem;
@@ -90,7 +91,7 @@ public class SecurityTest extends AbstractWsdlModelItem<SecurityTestConfig> impl
 			TestStepSecurityTestConfig testStepSecurityTest = getConfig().addNewTestStepSecurityTest();
 			testStepSecurityTest.setTestStepName( testStepName );
 			SecurityCheckConfig newSecurityCheck = testStepSecurityTest.addNewTestStepSecurityCheck();
-//			newSecurityCheck.setConfig( securityCheck.getConfig() );
+			newSecurityCheck.setConfig( securityCheck.getConfig().getConfig() );
 			newSecurityCheck.setType( securityCheck.getType() );
 		}
 

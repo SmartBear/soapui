@@ -37,7 +37,7 @@ public class GroovySecurityCheck extends AbstractSecurityCheck
 	public static final String SCRIPT_PROPERTY = GroovySecurityCheck.class.getName() + "@script";
 	public static final String TYPE = "GroovySecurityCheck";
 	// private String script;
-	private GroovySecurityCheckConfig groovySecurityCheckConfig;
+//	private GroovySecurityCheckConfig groovySecurityCheckConfig;
 	protected JTextArea scriptTextArea;
 
 	public GroovySecurityCheck( SecurityCheckConfig config, ModelItem parent, String icon )
@@ -49,15 +49,7 @@ public class GroovySecurityCheck extends AbstractSecurityCheck
 			GroovySecurityCheckConfig groovyscc = GroovySecurityCheckConfig.Factory.newInstance();
 			config.setConfig( groovyscc );
 		}
-		else
-		{
-			GroovySecurityCheckConfig groovyscc = GroovySecurityCheckConfig.Factory.newInstance();
-			config.setConfig( groovyscc );
-		}
 
-		// this.script = groovySecurityCheckConfig.getScript() != null ?
-		// groovySecurityCheckConfig.getScript()
-		// .getStringValue() : "";
 	}
 
 	@Override
@@ -86,20 +78,28 @@ public class GroovySecurityCheck extends AbstractSecurityCheck
 	public void setScript( String script )
 	{
 		String old = getScript();
-		if( groovySecurityCheckConfig.getScript() == null )
+		if( config.getConfig() == null )
 		{
-			groovySecurityCheckConfig.addNewScript();
+			config.addNewConfig();
 		}
-
-		groovySecurityCheckConfig.getScript().setStringValue( script );
+		GroovySecurityCheckConfig groovyscc = GroovySecurityCheckConfig.Factory.newInstance();
+		groovyscc.addNewScript();
+		groovyscc.getScript().setStringValue( script );
+		config.setConfig( groovyscc );
 		// this.script=script;
 		notifyPropertyChanged( SCRIPT_PROPERTY, old, script );
 	}
 
 	private String getScript()
 	{
-		return groovySecurityCheckConfig.getScript() != null ? groovySecurityCheckConfig.getScript().getStringValue()
-				: "";
+		GroovySecurityCheckConfig groovyscc = null;
+		if( config.getConfig() != null )
+		{
+			groovyscc = ( GroovySecurityCheckConfig )config.getConfig().changeType( GroovySecurityCheckConfig.type );
+			if( groovyscc.getScript() != null )
+				return groovyscc.getScript().getStringValue();
+		}
+		return "";
 	}
 
 	@Override
@@ -115,7 +115,7 @@ public class GroovySecurityCheck extends AbstractSecurityCheck
 		return true;
 	}
 
-	@Override
+@Override
 	public JComponent getComponent()
 	{
 		// if (panel == null) {
