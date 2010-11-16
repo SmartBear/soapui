@@ -48,7 +48,7 @@ public class GroovySecurityCheckFactory extends SecurityCheckFactory {
 		securityCheckConfig.setName(name);
 		GroovySecurityCheckConfig groovyscc = GroovySecurityCheckConfig.Factory
 				.newInstance();
-		groovyscc.addNewScript().setStringValue("log.info(\"***********\")");
+		groovyscc.addNewScript();
 		// securityCheckConfig.changeType( GroovySecurityCheckConfig.type );
 		securityCheckConfig.setConfig(groovyscc);
 		return securityCheckConfig;
