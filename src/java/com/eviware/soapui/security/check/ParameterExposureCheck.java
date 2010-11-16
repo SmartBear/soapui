@@ -19,12 +19,9 @@ import java.util.List;
 import java.util.Map;
 
 import javax.swing.JComponent;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import com.eviware.soapui.config.GroovySecurityCheckConfig;
 import com.eviware.soapui.config.ParameterExposureCheckConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.config.TestAssertionConfig;
@@ -47,7 +44,6 @@ import com.eviware.soapui.security.log.SecurityTestLog;
 import com.eviware.soapui.security.log.SecurityTestLogMessageEntry;
 import com.eviware.soapui.support.components.SimpleForm;
 import com.eviware.soapui.support.types.StringToObjectMap;
-import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * 
@@ -78,6 +74,7 @@ public class ParameterExposureCheck extends AbstractSecurityCheck {
 
 		minimumCharactersTextField = new JTextField(
 				((ParameterExposureCheckConfig)config.getConfig()).getMinimumLength());
+		minimumCharactersTextField.addKeyListener(new MinimumListener());
 	}
 
 	@Override

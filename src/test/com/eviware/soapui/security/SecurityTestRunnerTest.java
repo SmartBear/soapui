@@ -14,6 +14,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.eviware.soapui.config.GroovySecurityCheckConfig;
+import com.eviware.soapui.config.ParameterExposureCheckConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.config.SecurityTestConfig;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
@@ -28,7 +30,9 @@ import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.security.check.GroovySecurityCheck;
+import com.eviware.soapui.security.check.ParameterExposureCheck;
 import com.eviware.soapui.security.check.SecurityCheck;
+import com.eviware.soapui.security.registry.SecurityCheckRegistry;
 import com.eviware.soapui.support.TestCaseWithJetty;
 
 /**
@@ -73,7 +77,15 @@ public class SecurityTestRunnerTest extends TestCaseWithJetty
 		asdf.setType(  GroovySecurityCheck.TYPE );
 		GroovySecurityCheck gsc = new GroovySecurityCheck(asdf, null, null );
 		gsc.setScript( "log.info testStep" );
+		
+		
+
 		secCheckList.add( gsc );
+		
+	//	ParameterExposureCheckConfig exposureConfig = (ParameterExposureCheckConfig)SecurityCheckRegistry.getInstance().getFactory(ParameterExposureCheck.TYPE).createNewSecurityCheck("Test");
+	//	ParameterExposureCheck exposureCheck = (ParameterExposureCheck)SecurityCheckRegistry.getInstance().getFactory(ParameterExposureCheck.TYPE).buildSecurityCheck(exposureConfig);
+	//	secCheckList.add(exposureCheck);
+		
 		securityChecksMap.put( "SEK to USD Test", secCheckList );
 		testCase = ( WsdlTestCase )testSuite.getTestCaseByName( "Test Conversions" );
 
@@ -151,4 +163,6 @@ public class SecurityTestRunnerTest extends TestCaseWithJetty
 			}
 		}
 	}
+	
+	
 }
