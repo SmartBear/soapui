@@ -24,7 +24,7 @@ import com.eviware.soapui.security.check.SecurityCheck;
  */
 
 public class ParameterExposureCheckFactory extends SecurityCheckFactory {
-
+	
 	public ParameterExposureCheckFactory() {
 		super(ParameterExposureCheck.TYPE, "ParameterExposureCheck",
 				"Preforms a check for Parameter Exposure",
@@ -46,8 +46,9 @@ public class ParameterExposureCheckFactory extends SecurityCheckFactory {
 				.newInstance();
 		securityCheckConfig.setType(ParameterExposureCheck.TYPE);
 		securityCheckConfig.setName(name);
-		securityCheckConfig.setConfig(ParameterExposureCheckConfig.Factory
-				.newInstance());
+		ParameterExposureCheckConfig pecc = ParameterExposureCheckConfig.Factory.newInstance();
+		pecc.setMinimumLength(ParameterExposureCheck.DEFAULT_MINIMUM_CHARACTER_LENGTH);
+		securityCheckConfig.setConfig(pecc);
 		return securityCheckConfig;
 	}
 

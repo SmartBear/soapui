@@ -51,11 +51,12 @@ import com.eviware.soapui.support.types.StringToObjectMap;
  */
 
 public class ParameterExposureCheck extends AbstractSecurityCheck {
-	ParameterExposureCheckConfig parameterExposureCheckConfig;
+
 	// JTextField minimumCharactersTextField;
 	protected JTextField minimumCharactersTextField;
 
 	public static final String TYPE = "ParameterExposureCheck";
+	public static final int DEFAULT_MINIMUM_CHARACTER_LENGTH = 5;
 
 	public ParameterExposureCheck(SecurityCheckConfig config, ModelItem parent,
 			String icon) {
@@ -65,12 +66,16 @@ public class ParameterExposureCheck extends AbstractSecurityCheck {
 			config = SecurityCheckConfig.Factory.newInstance();
 			ParameterExposureCheckConfig pescc = ParameterExposureCheckConfig.Factory
 					.newInstance();
+			pescc.setMinimumLength(DEFAULT_MINIMUM_CHARACTER_LENGTH);
 			config.setConfig(pescc);
-		} else {
+		} 
+		if (config.getConfig() == null) {
 			ParameterExposureCheckConfig pescc = ParameterExposureCheckConfig.Factory
-					.newInstance();
-			config.setConfig(pescc);
+			.newInstance();
+	pescc.setMinimumLength(DEFAULT_MINIMUM_CHARACTER_LENGTH);
+	config.setConfig(pescc);
 		}
+		
 
 		minimumCharactersTextField = new JTextField(
 				((ParameterExposureCheckConfig)config.getConfig()).getMinimumLength());
@@ -84,7 +89,8 @@ public class ParameterExposureCheck extends AbstractSecurityCheck {
 			WsdlTestCaseRunner testCaseRunner = new WsdlTestCaseRunner(
 					(WsdlTestCase) testStep.getTestCase(),
 					new StringToObjectMap());
-			testCaseRunner.runTestStepByName(testStep.getName());
+			
+			testStep.run(testCaseRunner,testCaseRunner.getRunContext());
 			analyze(testStep, context, securityTestLog);
 		}
 	}
@@ -107,7 +113,7 @@ public class ParameterExposureCheck extends AbstractSecurityCheck {
 			}
 			for (String paramName : getParamsToCheck()) {
 				TestProperty param = params.get(paramName);
-				if (param != null
+				if (param != null && param.getValue() != null
 						&& param.getValue().length() >= getMinimumLength()) {
 					TestAssertionConfig assertionConfig = TestAssertionConfig.Factory
 							.newInstance();
@@ -133,20 +139,20 @@ public class ParameterExposureCheck extends AbstractSecurityCheck {
 	}
 
 	public void setMinimumLength(int minimumLength) {
-		parameterExposureCheckConfig.setMinimumLength(minimumLength);
+		((ParameterExposureCheckConfig)config.getConfig()).setMinimumLength(minimumLength);
 		minimumCharactersTextField.setText(Integer.toString(minimumLength));
 	}
 
 	private int getMinimumLength() {
-		return parameterExposureCheckConfig.getMinimumLength();
+		return ((ParameterExposureCheckConfig)config.getConfig()).getMinimumLength();
 	}
 
 	public List<String> getParamsToCheck() {
-		return parameterExposureCheckConfig.getParamToCheckList();
+		return ((ParameterExposureCheckConfig)config.getConfig()).getParamToCheckList();
 	}
 
 	public void setParamsToCheck(List<String> params) {
-		parameterExposureCheckConfig.setParamToCheckArray(params
+		((ParameterExposureCheckConfig)config.getConfig()).setParamToCheckArray(params
 				.toArray(new String[0]));
 	}
 
