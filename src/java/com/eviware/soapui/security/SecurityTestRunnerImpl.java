@@ -80,12 +80,8 @@ public class SecurityTestRunnerImpl implements SecurityTestRunner
 			msg += "; " + reason;
 
 		securityTest.getSecurityTestLog().addEntry( new SecurityTestLogMessageEntry( msg ) );
-
-		// for( LoadTestRunListener listener : loadTest.getLoadTestRunListeners()
-		// )
-		// {
-		// listener.loadTestStopped( this, context );
-		// }
+		
+		status = Status.CANCELED;
 
 		stop();
 	}
@@ -93,7 +89,10 @@ public class SecurityTestRunnerImpl implements SecurityTestRunner
 	@Override
 	public void fail( String reason )
 	{
-		// TODO Auto-generated method stub
+		// TODO Give some thought about how to handle this, it should really never be called, since there is no way for a Security
+		// Test to really fail as such...
+		
+		status = Status.FAILED;
 
 	}
 
@@ -179,48 +178,10 @@ public class SecurityTestRunnerImpl implements SecurityTestRunner
 			SoapUI.logError( e1 );
 		}
 
-		// for( LoadTestRunListener listener : loadTest.getLoadTestRunListeners()
-		// )
-		// {
-		// try
-		// {
-		// listener.beforeLoadTest( this, context );
-		// }
-		// catch( Throwable e )
-		// {
-		// SoapUI.logError( e );
-		// }
-		// }
-
 		status = Status.RUNNING;
-
-		// loadTest.addPropertyChangeListener( WsdlLoadTest.THREADCOUNT_PROPERTY,
-		// internalPropertyChangeListener );
-
-		// XProgressDialog progressDialog =
-		// UISupport.getDialogs().createProgressDialog( "Starting threads",
-		// ( int )loadTest.getThreadCount(), "", true );
-		// try
-		// {
-		// testCaseStarter = new TestCaseStarter();
-		// progressDialog.run( testCaseStarter );
-		// }
-		// catch( Exception e )
-		// {
-		// SoapUI.logError( e );
-		// }
 
 		if( status == Status.RUNNING )
 		{
-			// for( LoadTestRunListener listener :
-			// loadTest.getLoadTestRunListeners()
-			// )
-			// {
-			// listener.loadTestStarted( this, context );
-			// }
-			//
-			// startStrategyThread();
-			// TODO start actual actions
 			WsdlTestCase testCase = securityTest.getTestCase();
 			List<TestStep> testStepsList = testCase.getTestStepList();
 			HashMap<String, List<SecurityCheck>> secCheckMap = securityTest.getSecurityChecksMap();
@@ -237,16 +198,12 @@ public class SecurityTestRunnerImpl implements SecurityTestRunner
 				}
 				else
 				{
-//					System.out.print( "endpoint:" + ((WsdlTestRequestStep)testStep).getTestRequest().getEndpoint() );
 					testCaseRunner.runTestStepByName( testStep.getName() );
 				}
 			}
 			testCase.release();
 		}
-		else
-		{
-			stop();
-		}
+		stop();
 	}
 
 	@Override
@@ -257,8 +214,7 @@ public class SecurityTestRunnerImpl implements SecurityTestRunner
 
 	public void release()
 	{
-		// loadTest.removePropertyChangeListener(
-		// WsdlLoadTest.THREADCOUNT_PROPERTY, internalPropertyChangeListener );
+		
 	}
 
 	private synchronized void stop()
@@ -266,8 +222,6 @@ public class SecurityTestRunnerImpl implements SecurityTestRunner
 		if( stopped )
 			return;
 
-		// securityTest.removePropertyChangeListener(
-		// WsdlLoadTest.THREADCOUNT_PROPERTY, internalPropertyChangeListener );
 
 		if( status == Status.RUNNING )
 			status = Status.FINISHED;
@@ -284,22 +238,8 @@ public class SecurityTestRunnerImpl implements SecurityTestRunner
 			SoapUI.logError( e );
 		}
 
-		// for( LoadTestRunListener listener :
-		// securityTest.getLoadTestRunListeners() )
-		// {
-		// try
-		// {
-		// // listener.afterLoadTest( this, context );
-		// }
-		// catch( Throwable e )
-		// {
-		// SoapUI.logError( e );
-		// }
-		// }
-
 		context.clear();
 		stopped = true;
-		// blueprintConfig = null;
 	}
 
 	public boolean hasStopped()
