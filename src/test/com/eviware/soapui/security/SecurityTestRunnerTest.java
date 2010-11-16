@@ -14,8 +14,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.eviware.soapui.config.GroovySecurityCheckConfig;
-import com.eviware.soapui.config.ParameterExposureCheckConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.config.SecurityTestConfig;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
@@ -27,8 +25,8 @@ import com.eviware.soapui.impl.wsdl.mock.WsdlMockService;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.testsuite.TestStep;
-import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestSuite;
+import com.eviware.soapui.model.testsuite.TestRunner.Status;
 import com.eviware.soapui.security.check.GroovySecurityCheck;
 import com.eviware.soapui.security.check.ParameterExposureCheck;
 import com.eviware.soapui.security.check.SecurityCheck;
@@ -75,18 +73,19 @@ public class SecurityTestRunnerTest extends TestCaseWithJetty
 		List<SecurityCheck> secCheckList = new ArrayList();
 		SecurityCheckConfig asdf = SecurityCheckConfig.Factory.newInstance();
 		asdf.setType(  GroovySecurityCheck.TYPE );
+
 		GroovySecurityCheck gsc = new GroovySecurityCheck(asdf, null, null );
 		gsc.setScript( "println testStep.name" );
 		
 		
 
-		secCheckList.add( gsc );
+		//secCheckList.add( gsc );
 		
-	//	ParameterExposureCheckConfig exposureConfig = (ParameterExposureCheckConfig)SecurityCheckRegistry.getInstance().getFactory(ParameterExposureCheck.TYPE).createNewSecurityCheck("Test");
-	//	ParameterExposureCheck exposureCheck = (ParameterExposureCheck)SecurityCheckRegistry.getInstance().getFactory(ParameterExposureCheck.TYPE).buildSecurityCheck(exposureConfig);
-	//	secCheckList.add(exposureCheck);
+		SecurityCheckConfig exposureConfig = SecurityCheckRegistry.getInstance().getFactory(ParameterExposureCheck.TYPE).createNewSecurityCheck("Test");
+		ParameterExposureCheck exposureCheck = (ParameterExposureCheck)SecurityCheckRegistry.getInstance().getFactory(ParameterExposureCheck.TYPE).buildSecurityCheck(exposureConfig);
+		secCheckList.add(exposureCheck);
 		
-		securityChecksMap.put( "SEK to USD Test", secCheckList );
+		securityChecksMap.put( "HTTP Test Request", secCheckList );
 		testCase = ( WsdlTestCase )testSuite.getTestCaseByName( "Test Conversions" );
 
 		WsdlInterface iface = ( WsdlInterface )project.getInterfaceAt( 0 );
@@ -144,9 +143,9 @@ public class SecurityTestRunnerTest extends TestCaseWithJetty
 
 		testRunner.start();
 
-//		assertEquals( TestStepResult.TestStepStatus.OK, testRunner.getStatus() );
-		assertEquals(true,true );
-		// assertEquals( Status.RUNNING, testRunner.getStatus() );
+		assertEquals( Status.FINISHED, testRunner.getStatus() );
+
+
 
 	}
 

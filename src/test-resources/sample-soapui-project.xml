@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<con:soapui-project name="Sample Project" soapui-version="SNAPSHOT" xmlns:con="http://eviware.com/soapui/config">
+<con:soapui-project name="Sample Project" soapui-version="4.0.0-SNAPSHOT" abortOnError="false" runType="SEQUENTIAL" resourceRoot="" xmlns:con="http://eviware.com/soapui/config">
   <con:settings>
     <con:setting id="com.eviware.soapui.impl.wsdl.actions.iface.tools.jbossws.WSToolsJava2WsdlAction@values"><![CDATA[<xml-fragment xmlns:con="http://eviware.com/soapui/config">
   <con:entry key="Target NS" value=""/>
@@ -15,7 +15,7 @@
   <con:entry key="ejb-link" value=""/>
   <con:entry key="Types NS" value=""/>
 </xml-fragment>]]></con:setting>
-    <con:setting id="ProjectSettings@projectRoot">C:\workspace\core\src\test-resources</con:setting>
+    
     <con:setting id="com.eviware.soapui.impl.wsdl.actions.iface.tools.soapui.TestRunnerAction@values-local"><![CDATA[<xml-fragment xmlns:con="http://eviware.com/soapui/config">
   <con:entry key="TestRunner Path" value="C:\java\soapui-pro-SNAPSHOT\bin"/>
   <con:entry key="Domain" value=""/>
@@ -33,7 +33,7 @@
   <con:entry key="Username" value=""/>
 </xml-fragment>]]></con:setting>
   </con:settings>
-  <con:interface name="CurrencyConvertorSoap" bindingName="{http://www.webserviceX.NET/}CurrencyConvertorSoap" definition="http://www.webservicex.net/CurrencyConvertor.asmx?WSDL" soapVersion="1_1">
+  <con:interface name="CurrencyConvertorSoap" bindingName="{http://www.webserviceX.NET/}CurrencyConvertorSoap" definition="http://www.webservicex.net/CurrencyConvertor.asmx?WSDL" soapVersion="1_1" xsi:type="con:WsdlInterface" wsaVersion="NONE" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <con:settings>
       <con:setting id="com.eviware.soapui.impl.wsdl.actions.iface.tools.jbossws.WSToolsWsdl2JavaAction@values"><![CDATA[<xml-fragment xmlns:con="http://eviware.com/soapui/config">
   <con:entry key="Output Directory" value="C:\Documents and Settings\ole.matzura\workspace\soapui\tools-test\jbossws"/>
@@ -264,7 +264,7 @@
     <con:endpoints>
       <con:endpoint>http://www.webservicex.net/CurrencyConvertor.asmx</con:endpoint>
     </con:endpoints>
-    <con:operation action="http://www.webserviceX.NET/ConversionRate" name="ConversionRate" bindingOperationName="ConversionRate">
+    <con:operation action="http://www.webserviceX.NET/ConversionRate" name="ConversionRate" bindingOperationName="ConversionRate" isOneWay="false">
       <con:settings/>
       <con:call name="SEK to USD" wssPasswordType="None">
         <con:settings>
@@ -573,7 +573,7 @@
       </con:part>
     </con:definitionCache>
   </con:interface>
-  <con:interface name="XMethodsQuerySoapPortType" bindingName="{http://www.xmethods.net/interfaces/query.wsdl}XMethodsQuerySoap" definition="http://www.xmethods.net/interfaces/query.wsdl">
+  <con:interface name="XMethodsQuerySoapPortType" bindingName="{http://www.xmethods.net/interfaces/query.wsdl}XMethodsQuerySoap" definition="http://www.xmethods.net/interfaces/query.wsdl" xsi:type="con:WsdlInterface" wsaVersion="NONE" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <con:settings>
       <con:setting id="com.eviware.soapui.impl.wsdl.actions.iface.tools.axis1.Axis1XWSDL2JavaAction@values"><![CDATA[<xml-fragment xmlns:con="http://eviware.com/soapui/config">
   <con:entry key="password" value=""/>
@@ -610,7 +610,7 @@
     <con:endpoints>
       <con:endpoint>http://www.xmethods.net/interfaces/query</con:endpoint>
     </con:endpoints>
-    <con:operation action="" name="getAllServiceNames" bindingOperationName="getAllServiceNames" inputName="getAllServiceNames2SoapIn" outputName="getAllServiceNames2SoapOut">
+    <con:operation action="" name="getAllServiceNames" bindingOperationName="getAllServiceNames" inputName="getAllServiceNames2SoapIn" outputName="getAllServiceNames2SoapOut" isOneWay="false">
       <con:settings/>
       <con:call name="Request 1">
         <con:settings/>
@@ -623,7 +623,7 @@
 &lt;/soapenv:Envelope></con:request>
       </con:call>
     </con:operation>
-    <con:operation action="" name="getAllServiceSummaries" bindingOperationName="getAllServiceSummaries" inputName="getAllServiceSummaries1SoapIn" outputName="getAllServiceSummaries1SoapOut">
+    <con:operation action="" name="getAllServiceSummaries" bindingOperationName="getAllServiceSummaries" inputName="getAllServiceSummaries1SoapIn" outputName="getAllServiceSummaries1SoapOut" isOneWay="false">
       <con:settings/>
       <con:call name="Request 1">
         <con:settings/>
@@ -636,7 +636,7 @@
 &lt;/soapenv:Envelope></con:request>
       </con:call>
     </con:operation>
-    <con:operation action="" name="getServiceDetail" bindingOperationName="getServiceDetail" inputName="getServiceDetail4SoapIn" outputName="getServiceDetail4SoapOut">
+    <con:operation action="" name="getServiceDetail" bindingOperationName="getServiceDetail" inputName="getServiceDetail4SoapIn" outputName="getServiceDetail4SoapOut" isOneWay="false">
       <con:settings/>
       <con:call name="Request 1">
         <con:settings/>
@@ -651,7 +651,7 @@
 </soapenv:Envelope>]]></con:request>
       </con:call>
     </con:operation>
-    <con:operation action="" name="getServiceNamesByPublisher" bindingOperationName="getServiceNamesByPublisher" inputName="getServiceNamesByPublisher3SoapIn" outputName="getServiceNamesByPublisher3SoapOut">
+    <con:operation action="" name="getServiceNamesByPublisher" bindingOperationName="getServiceNamesByPublisher" inputName="getServiceNamesByPublisher3SoapIn" outputName="getServiceNamesByPublisher3SoapOut" isOneWay="false">
       <con:settings/>
       <con:call name="Request 1">
         <con:settings/>
@@ -666,7 +666,7 @@
 </soapenv:Envelope>]]></con:request>
       </con:call>
     </con:operation>
-    <con:operation action="" name="getServiceSummariesByPublisher" bindingOperationName="getServiceSummariesByPublisher" inputName="getServiceSummariesByPublisher0SoapIn" outputName="getServiceSummariesByPublisher0SoapOut">
+    <con:operation action="" name="getServiceSummariesByPublisher" bindingOperationName="getServiceSummariesByPublisher" inputName="getServiceSummariesByPublisher0SoapIn" outputName="getServiceSummariesByPublisher0SoapOut" isOneWay="false">
       <con:settings/>
       <con:call name="Request 1">
         <con:settings/>
@@ -847,7 +847,7 @@
   <con:testSuite name="Test Suite">
     <con:settings/>
     <con:runType>SEQUENTIAL</con:runType>
-    <con:testCase name="Test Conversions" failOnError="false" keepSession="false" searchProperties="true" failTestCaseOnErrors="true">
+    <con:testCase name="Test Conversions" failOnError="false" keepSession="false" searchProperties="true" failTestCaseOnErrors="true" maxResults="0">
       <con:settings>
         <con:setting id="HttpSettings@socket_timeout">60000</con:setting>
         <con:setting id="HttpSettings@include_request_in_time_taken">true</con:setting>
@@ -870,7 +870,7 @@
           <con:interface>CurrencyConvertorSoap</con:interface>
           <con:operation>ConversionRate</con:operation>
           <con:request name="SEK to USD Test">
-            <con:settings/>
+            <con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings>
             <con:encoding>UTF-8</con:encoding>
             <con:endpoint>http://www.webservicex.net/CurrencyConvertor.asmx</con:endpoint>
             <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:web="http://www.webserviceX.NET/">
@@ -906,7 +906,7 @@ declare namespace soap='http://schemas.xmlsoap.org/soap/envelope/';
             <con:assertion type="XPath Match">
               <con:configuration/>
             </con:assertion>
-          </con:request>
+          <con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request>
         </con:config>
       </con:testStep>
       <con:testStep type="request" name="USD to SEK Test">
@@ -951,8 +951,8 @@ declare namespace soap='http://schemas.xmlsoap.org/soap/envelope/';
           </con:request>
         </con:config>
       </con:testStep>
-      <con:loadTest name="LoadTest 1">
-        <con:settings/>
+      <con:testStep type="httprequest" name="HTTP Test Request"><con:settings/><con:config method="GET" xsi:type="con:HttpRequest" name="HTTP Test Request" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>http://www.google.com/search?q=something</con:endpoint><con:request/><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters><con:parameter><con:name>q</con:name><con:value>something</con:value><con:style>QUERY</con:style><con:default>something</con:default></con:parameter></con:parameters></con:config></con:testStep><con:loadTest name="LoadTest 1">
+        <con:settings><con:setting id="HttpSettings@close-connections">false</con:setting></con:settings>
         <con:threadCount>5</con:threadCount>
         <con:startDelay>0</con:startDelay>
         <con:sampleInterval>250</con:sampleInterval>
@@ -965,9 +965,9 @@ declare namespace soap='http://schemas.xmlsoap.org/soap/envelope/';
           <con:type>Simple</con:type>
         </con:loadStrategy>
         <con:assertion type="Step Status" name="Step Status"/>
-      </con:loadTest>
-    </con:testCase>
-    <con:testCase name="Test XMethods Query" failOnError="true" keepSession="false" failTestCaseOnErrors="true">
+      <con:maxAssertionErrors>100</con:maxAssertionErrors><con:cancelExcessiveThreads>true</con:cancelExcessiveThreads><con:strategyInterval>500</con:strategyInterval></con:loadTest>
+    <con:properties/></con:testCase>
+    <con:testCase name="Test XMethods Query" failOnError="true" keepSession="false" failTestCaseOnErrors="true" maxResults="0">
       <con:settings>
         <con:setting id="HttpSettings@socket_timeout">60000</con:setting>
         <con:setting id="HttpSettings@include_request_in_time_taken">true</con:setting>
@@ -1002,7 +1002,7 @@ count(//name[text()='CurrencyExchangeService'])</path>
       </con:testStep>
       <con:testStep type="transfer" name="Transfer values">
         <con:settings/>
-        <con:config xsi:type="con:TransferValuesStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
           <con:transfers setNullOnMissingSource="true" transferTextContent="true">
             <con:name>service id</con:name>
             <con:sourceType>RESPONSE</con:sourceType>
@@ -1052,7 +1052,7 @@ count(//name[text()='CurrencyExchangeService'])</path>
         </con:loadStrategy>
       </con:testSchedule>
       <con:loadTest name="LoadTest 1">
-        <con:settings/>
+        <con:settings><con:setting id="HttpSettings@close-connections">false</con:setting></con:settings>
         <con:threadCount>5</con:threadCount>
         <con:startDelay>0</con:startDelay>
         <con:sampleInterval>250</con:sampleInterval>
@@ -1065,9 +1065,9 @@ count(//name[text()='CurrencyExchangeService'])</path>
           <con:type>Simple</con:type>
         </con:loadStrategy>
         <con:assertion type="Step Status" name="Step Status"/>
-      </con:loadTest>
-    </con:testCase>
-    <con:testCase name="Copy of Test Conversions" failOnError="false" keepSession="false" searchProperties="true" failTestCaseOnErrors="true">
+      <con:maxAssertionErrors>100</con:maxAssertionErrors><con:cancelExcessiveThreads>true</con:cancelExcessiveThreads><con:strategyInterval>500</con:strategyInterval></con:loadTest>
+    <con:properties/></con:testCase>
+    <con:testCase name="Copy of Test Conversions" failOnError="false" keepSession="false" searchProperties="true" failTestCaseOnErrors="true" maxResults="0">
       <con:settings>
         <con:setting id="HttpSettings@socket_timeout">60000</con:setting>
         <con:setting id="HttpSettings@include_request_in_time_taken">true</con:setting>
@@ -1174,8 +1174,8 @@ declare namespace soap='http://schemas.xmlsoap.org/soap/envelope/';
           </con:request>
         </con:config>
       </con:testStep>
-      <con:loadTest name="LoadTest 1">
-        <con:settings/>
+      <con:testStep type="httprequest" name="HTTP Test Request"><con:settings/><con:config method="GET" xsi:type="con:HttpRequest" name="HTTP Test Request" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:endpoint>http://forum.eviware.com/search.php?sid=680e653df14413462123a3637c13f9e2</con:endpoint><con:request/><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters/></con:config></con:testStep><con:loadTest name="LoadTest 1">
+        <con:settings><con:setting id="HttpSettings@close-connections">false</con:setting></con:settings>
         <con:threadCount>5</con:threadCount>
         <con:startDelay>0</con:startDelay>
         <con:sampleInterval>250</con:sampleInterval>
@@ -1188,9 +1188,9 @@ declare namespace soap='http://schemas.xmlsoap.org/soap/envelope/';
           <con:type>Simple</con:type>
         </con:loadStrategy>
         <con:assertion type="Step Status" name="Step Status"/>
-      </con:loadTest>
-    </con:testCase>
-    <con:testCase name="Copy of Test XMethods Query" failOnError="true" keepSession="false" failTestCaseOnErrors="true">
+      <con:maxAssertionErrors>100</con:maxAssertionErrors><con:cancelExcessiveThreads>true</con:cancelExcessiveThreads><con:strategyInterval>500</con:strategyInterval></con:loadTest>
+    <con:properties/></con:testCase>
+    <con:testCase name="Copy of Test XMethods Query" failOnError="true" keepSession="false" failTestCaseOnErrors="true" maxResults="0">
       <con:settings>
         <con:setting id="HttpSettings@socket_timeout">60000</con:setting>
         <con:setting id="HttpSettings@include_request_in_time_taken">true</con:setting>
@@ -1226,7 +1226,7 @@ count(//name[text()='CurrencyExchangeService'])</path>
       <con:testStep type="transfer" name="Transfer values">
         <con:description>wer</con:description>
         <con:settings/>
-        <con:config xsi:type="con:TransferValuesStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
           <con:transfers setNullOnMissingSource="true" transferTextContent="true">
             <con:name>service id</con:name>
             <con:sourceType>RESPONSE</con:sourceType>
@@ -1276,7 +1276,7 @@ count(//name[text()='CurrencyExchangeService'])</path>
         </con:loadStrategy>
       </con:testSchedule>
       <con:loadTest name="LoadTest 1">
-        <con:settings/>
+        <con:settings><con:setting id="HttpSettings@close-connections">false</con:setting></con:settings>
         <con:threadCount>5</con:threadCount>
         <con:startDelay>0</con:startDelay>
         <con:sampleInterval>250</con:sampleInterval>
@@ -1289,13 +1289,13 @@ count(//name[text()='CurrencyExchangeService'])</path>
           <con:type>Simple</con:type>
         </con:loadStrategy>
         <con:assertion type="Step Status" name="Step Status"/>
-      </con:loadTest>
-    </con:testCase>
-  </con:testSuite>
+      <con:maxAssertionErrors>100</con:maxAssertionErrors><con:cancelExcessiveThreads>true</con:cancelExcessiveThreads><con:strategyInterval>500</con:strategyInterval></con:loadTest>
+    <con:properties/></con:testCase>
+  <con:properties/></con:testSuite>
   <con:testSuite name="TestSuite 2">
     <con:settings/>
     <con:runType>SEQUENTIAL</con:runType>
-    <con:testCase failOnError="true" keepSession="false" name="TestCase 1" searchProperties="true" failTestCaseOnErrors="true">
+    <con:testCase failOnError="true" keepSession="false" name="TestCase 1" searchProperties="true" failTestCaseOnErrors="true" maxResults="0">
       <con:settings/>
       <con:testStep type="groovy" name="Groovy Script">
         <con:settings/>
@@ -1303,6 +1303,6 @@ count(//name[text()='CurrencyExchangeService'])</path>
           <script>log.info( "Hello" )</script>
         </con:config>
       </con:testStep>
-    </con:testCase>
-  </con:testSuite>
-</con:soapui-project>
+    <con:properties/></con:testCase>
+  <con:properties/></con:testSuite>
+<con:properties/><con:wssContainer/></con:soapui-project>
