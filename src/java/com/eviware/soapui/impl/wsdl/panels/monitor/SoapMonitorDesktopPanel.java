@@ -45,8 +45,9 @@ public class SoapMonitorDesktopPanel extends DefaultDesktopPanel
 		JTabbedPane tabs = new JTabbedPane();
 
 		JXToolBar toolbar = UISupport.createToolbar();
+		MonitorSecurityTest securityTest = new MonitorSecurityTest();
 		soapMonitor = new SoapMonitor( project, sourcePort, incomingRequestWss, incomingResponseWss, toolbar, setAsProxy,
-				sslEndpoint );
+				sslEndpoint, securityTest );
 
 		tabs.add( soapMonitor, "Traffic Log" );
 		securityTab = new SecurityTestsMonitorDesktopPanel( new MonitorSecurityTest() );

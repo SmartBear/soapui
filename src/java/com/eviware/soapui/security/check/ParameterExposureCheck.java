@@ -30,6 +30,7 @@ import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.support.http.HttpRequest;
+import com.eviware.soapui.impl.wsdl.monitor.JProxyServletWsdlMonitorMessageExchange;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCaseRunner;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpResponseMessageExchange;
@@ -47,6 +48,8 @@ import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
 import com.eviware.soapui.security.SecurityTestContext;
 import com.eviware.soapui.security.log.SecurityTestLog;
 import com.eviware.soapui.security.log.SecurityTestLogMessageEntry;
+
+import com.eviware.soapui.security.monitor.HttpSecurityAnalyser;
 import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.components.SimpleForm;
@@ -60,8 +63,9 @@ import com.eviware.soapui.support.types.StringToObjectMap;
  * @author soapui team
  */
 
-public class ParameterExposureCheck extends AbstractSecurityCheck
-{
+
+public class ParameterExposureCheck extends AbstractSecurityCheck implements HttpSecurityAnalyser {
+
 
 	// JTextField minimumCharactersTextField;
 	protected JTextField minimumCharactersTextField;
@@ -279,6 +283,33 @@ public class ParameterExposureCheck extends AbstractSecurityCheck
 	public String getType()
 	{
 		return TYPE;
+	}
+
+	@Override
+	public void analyzeHttpConnection(MessageExchange messageExchange,
+			SecurityTestLog securityTestLog) {
+		Map<String, String> parameters = ((JProxyServletWsdlMonitorMessageExchange)messageExchange).getHttpRequestParameters();
+		for (String paramName : parameters.keySet()) {
+			
+			String paramValue = parameters.get(paramName);
+
+			if (paramValue != null
+					&& paramValue.length() >= getMinimumLength()) {
+				if ( messageExchange.getResponseContent().indexOf(paramValue) > -1 && securityTestLog != null )
+				 {
+					securityTestLog
+							.addEntry(new SecurityTestLogMessageEntry(
+									"Parameter " + paramName
+											+ " is exposed in the response"));
+				}
+			}
+		}
+		
+	}
+
+	@Override
+	public boolean canRun() {
+		return true;
 	}
 
 }

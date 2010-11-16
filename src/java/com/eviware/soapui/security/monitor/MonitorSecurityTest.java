@@ -6,12 +6,22 @@ import java.util.List;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.impl.wsdl.teststeps.PropertyTransfer;
 import com.eviware.soapui.security.check.SecurityCheck;
+import com.eviware.soapui.security.log.SecurityTestLog;
 import com.eviware.soapui.security.registry.SecurityCheckFactory;
 import com.eviware.soapui.security.registry.SecurityCheckRegistry;
 
 public class MonitorSecurityTest
 {
-	List<SecurityCheck> monitorSecurityChecksList;
+	private List<SecurityCheck> monitorSecurityChecksList;
+	private SecurityTestLog securityTestLog;
+
+	public SecurityTestLog getSecurityTestLog() {
+		return securityTestLog;
+	}
+
+	public void setSecurityTestLog(SecurityTestLog securityTestLog) {
+		this.securityTestLog = securityTestLog;
+	}
 
 	public MonitorSecurityTest()
 	{

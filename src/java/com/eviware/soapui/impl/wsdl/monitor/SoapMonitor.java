@@ -83,8 +83,10 @@ import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.model.testsuite.TestSuite;
+import com.eviware.soapui.security.check.SecurityCheck;
+import com.eviware.soapui.security.monitor.HttpSecurityAnalyser;
+import com.eviware.soapui.security.monitor.MonitorSecurityTest;
 import com.eviware.soapui.settings.ProxySettings;
-import com.eviware.soapui.settings.WebRecordingSettings;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.BrowserComponent;
@@ -163,9 +165,10 @@ public class SoapMonitor extends JPanel
 	private boolean oldProxyEnabled;
 	private String sslEndpoint;
 	private JInspectorPanel inspectorPanel;
+	private MonitorSecurityTest monitorSecurityTest;
 
 	public SoapMonitor( WsdlProject project, int listenPort, String incomingRequestWss, String incomingResponseWss,
-			JXToolBar mainToolbar, boolean setAsProxy, String sslEndpoint )
+			JXToolBar mainToolbar, boolean setAsProxy, String sslEndpoint, MonitorSecurityTest monitorSecurityTest )
 	{
 		super( new BorderLayout() );
 		this.project = project;
@@ -175,6 +178,7 @@ public class SoapMonitor extends JPanel
 		this.setAsProxy = setAsProxy;
 		this.maxRows = 100;
 		this.sslEndpoint = sslEndpoint;
+		this.monitorSecurityTest = monitorSecurityTest;
 
 		// set the slow link to the passed down link
 
@@ -189,7 +193,7 @@ public class SoapMonitor extends JPanel
 	public SoapMonitor( WsdlProject project, int sourcePort, String incomingRequestWss, String incomingResponseWss,
 			JXToolBar toolbar, boolean setAsProxy )
 	{
-		this( project, sourcePort, incomingRequestWss, incomingResponseWss, toolbar, setAsProxy, null );
+		this( project, sourcePort, incomingRequestWss, incomingResponseWss, toolbar, setAsProxy, null, null );
 	}
 
 	private JComponent buildContent()
@@ -1343,6 +1347,13 @@ public class SoapMonitor extends JPanel
 					.getWssContainer().getIncomingWssByName( incomingResponseWss ) );
 
 			tableModel.addMessageExchange( messageExchange );
+			
+			if (monitorSecurityTest != null) {
+				for (SecurityCheck check : monitorSecurityTest.getMonitorSecurityChecksList()) {
+					if (((HttpSecurityAnalyser)check).canRun())
+						((HttpSecurityAnalyser)check).analyzeHttpConnection(messageExchange, monitorSecurityTest.getSecurityTestLog());
+				}
+			}
 
 			fireOnMessageExchange( messageExchange );
 		}
