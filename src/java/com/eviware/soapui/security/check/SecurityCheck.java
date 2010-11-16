@@ -21,21 +21,33 @@ import com.eviware.soapui.security.SecurityTestContext;
 import com.eviware.soapui.security.log.SecurityTestLog;
 
 /**
- * SecurityCheck
+ * The Abstract Class used as a basis for all Security Checks
  * 
  * @author soapUI team
  */
 public abstract class SecurityCheck extends AbstractWsdlModelItem<SecurityCheckConfig>
 {
+	/**
+	 * The securityCheck constructor
+	 * 
+	 * @param config
+	 * @param parent
+	 * @param icon
+	 */
 	protected SecurityCheck( SecurityCheckConfig config, ModelItem parent, String icon )
 	{
 		super( config, parent, icon );
-		// TODO Auto-generated constructor stub
 	}
 
 	public abstract SecurityCheckConfig getConfig();
 
-	// internaly calls analyze
+	/**
+	 * Runs the test 
+	 * 
+	 * @param testStep The TestStep that the check will be applied to 
+	 * @param context The context to run the test in
+	 * @param securityTestLog The security log to write to
+	 */
 	public abstract void run( TestStep testStep, SecurityTestContext context, SecurityTestLog securityTestLog );
 
 	// used in monitor,
