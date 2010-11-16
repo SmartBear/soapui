@@ -25,6 +25,9 @@ import javax.swing.JTextField;
 import com.eviware.soapui.config.ParameterExposureCheckConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.config.TestAssertionConfig;
+import com.eviware.soapui.impl.rest.RestRequest;
+import com.eviware.soapui.impl.support.AbstractHttpRequest;
+import com.eviware.soapui.impl.support.http.HttpRequest;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCaseRunner;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpResponseMessageExchange;
@@ -105,14 +108,24 @@ public class ParameterExposureCheck extends AbstractSecurityCheck {
 			MessageExchange messageExchange = new HttpResponseMessageExchange(
 					request);
 
-			Map<String, TestProperty> params = testStepwithProperties
-					.getProperties();
+			Map<String, TestProperty> params;
+			
+			//It might be a good idea to refactor HttpRequest and TestRequest to avoid things like this)
+			
+			AbstractHttpRequest<?> httpRequest = testStepwithProperties.getHttpRequest();
+			if (httpRequest instanceof HttpRequest ) {
+				params = ((HttpRequest)httpRequest).getParams();
+			} else {
+				params = ((RestRequest)httpRequest).getParams();
+			}
 
 			if (getParamsToCheck().isEmpty()) {
 				setParamsToCheck(new ArrayList<String>(params.keySet()));
 			}
+			
 			for (String paramName : getParamsToCheck()) {
 				TestProperty param = params.get(paramName);
+
 				if (param != null && param.getValue() != null
 						&& param.getValue().length() >= getMinimumLength()) {
 					TestAssertionConfig assertionConfig = TestAssertionConfig.Factory
