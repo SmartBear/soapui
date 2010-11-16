@@ -12,6 +12,7 @@
 package com.eviware.soapui.security.check;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
@@ -177,18 +178,20 @@ public class ParameterExposureCheck extends AbstractSecurityCheck {
 
 	@Override
 	public JComponent getComponent() {
-		if (panel == null) {
+//		if (panel == null) {
 			panel = new JPanel(new BorderLayout());
 
 			form = new SimpleForm();
 			form.addSpace(5);
 
-			form.setDefaultTextFieldColumns(50);
+//			form.setDefaultTextFieldColumns(40);
 
 			minimumCharactersTextField = form.appendTextField(
 					"Minimum Characters:", "Script to use");
+			minimumCharactersTextField.setMaximumSize( new Dimension( 40, 10 ) );
 			minimumCharactersTextField.setText("" +((ParameterExposureCheckConfig)config.getConfig()).getMinimumLength());
-		}
+//		}
+			panel.add( form.getPanel() );
 		return panel;
 	}
 

@@ -15,36 +15,26 @@ package com.eviware.soapui.security.panels;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
-import javax.swing.JTextArea;
 import javax.swing.JToggleButton;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import com.eviware.soapui.impl.wsdl.teststeps.PropertyTransfer;
-import com.eviware.soapui.security.check.GroovySecurityCheck;
 import com.eviware.soapui.security.check.SecurityCheck;
 import com.eviware.soapui.security.monitor.MonitorSecurityTest;
-import com.eviware.soapui.security.registry.SecurityCheckFactory;
 import com.eviware.soapui.security.registry.SecurityCheckRegistry;
 import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.components.JInspectorPanel;
-import com.eviware.soapui.support.components.JInspectorPanelFactory;
 import com.eviware.soapui.support.components.JXToolBar;
 
 /**
@@ -52,19 +42,20 @@ import com.eviware.soapui.support.components.JXToolBar;
  * @author dragica.soldo
  * 
  */
-public class SecurityTestsMonitorDesktopPanel extends JPanel {
+public class SecurityTestsMonitorDesktopPanel extends JPanel
+{
 	private final MonitorSecurityTest monitorSecurityTest;
 	private DefaultListModel listModel;
-	private JEditorPane securityCheckConfigPanel;
+	private JPanel securityCheckConfigPanel;
 	private JList securityChecksList;
 	private JButton copyButton;
 	private JButton deleteButton;
 	private JButton renameButton;
 	private JToggleButton disableButton;
-	private JInspectorPanel inspectorPanel;
 	JSplitPane splitPane;
 
-	public SecurityTestsMonitorDesktopPanel(MonitorSecurityTest securityTest) {
+	public SecurityTestsMonitorDesktopPanel( MonitorSecurityTest securityTest )
+	{
 		// super( securityTest );
 		this.monitorSecurityTest = securityTest;
 		// componentEnabler = new MonitorSecurityCheckEnabler(
@@ -74,238 +65,252 @@ public class SecurityTestsMonitorDesktopPanel extends JPanel {
 
 	}
 
-	protected void buildUI() {
-		splitPane = UISupport.createHorizontalSplit();
-
+	protected void buildUI()
+	{
 		listModel = new DefaultListModel();
 
-		// for( int c = 0; c < transferStep.getTransferCount(); c++ )
-		// {
-		// String name = transferStep.getTransferAt( c ).getName();
-		// if( transferStep.getTransferAt( c ).isDisabled() )
-		// name += " (disabled)";
-		//
-		// listModel.addElement( name );
-		// }
+		securityChecksList = new JList( listModel );
+		securityChecksList.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
+		securityChecksList.addListSelectionListener( new ListSelectionListener()
+		{
 
-		securityChecksList = new JList(listModel);
-		securityChecksList
-				.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		securityChecksList
-				.addListSelectionListener(new ListSelectionListener() {
+			@Override
+			public void valueChanged( ListSelectionEvent arg0 )
+			{
+				splitPane.remove( splitPane.getRightComponent() );
+				splitPane.setRightComponent( buildConfigPanel() );
+				revalidate();
+				setSelectedCheck( getCurrentSecurityCheck() );
+			}
+		} );
+		JScrollPane listScrollPane = new JScrollPane( securityChecksList );
+		UISupport.addTitledBorder( listScrollPane, "Security Checks" );
 
-					@Override
-					public void valueChanged(ListSelectionEvent arg0) {
-						securityCheckConfigPanel = (JEditorPane) buildConfigPanel();
-				}
-				});
-		// componentEnabler.add( securityTestsList );
+		JPanel p = new JPanel( new BorderLayout() );
+		p.add( listScrollPane, BorderLayout.CENTER );
+		p.add( createPropertiesToolbar(), BorderLayout.NORTH );
 
-		JScrollPane listScrollPane = new JScrollPane(securityChecksList);
-		UISupport.addTitledBorder(listScrollPane, "Security Checks");
+		securityCheckConfigPanel = ( JPanel )buildConfigPanel();
 
-		JPanel p = new JPanel(new BorderLayout());
-		p.add(listScrollPane, BorderLayout.CENTER);
-		p.add(createPropertiesToolbar(), BorderLayout.NORTH);
-
-		splitPane.setLeftComponent(p);
-
-		splitPane.setPreferredSize(new Dimension(550, 400));
-		// configPanel = ( ( SecurityCheck
-		// )securityChecksList.getSelectedValue()
-		// ).getComponent();
-		securityCheckConfigPanel = (JEditorPane) buildConfigPanel();
-		splitPane.setRightComponent(securityCheckConfigPanel);
-		splitPane.setResizeWeight(0.1);
-		splitPane.setDividerLocation(120);
-		inspectorPanel = JInspectorPanelFactory.build(splitPane);
-		add(inspectorPanel.getComponent(), BorderLayout.CENTER);
+		splitPane = UISupport.createHorizontalSplit( p, buildConfigPanel() );
+		splitPane.setPreferredSize( new Dimension( 650, 500 ) );
+		splitPane.setResizeWeight( 0.1 );
+		splitPane.setDividerLocation( 120 );
+		add( splitPane, BorderLayout.CENTER );
 
 	}
 
-	public SecurityCheck getCurrentSecurityCheck() {
+	public SecurityCheck getCurrentSecurityCheck()
+	{
 		int ix = securityChecksList.getSelectedIndex();
-		return ix == -1 ? null : monitorSecurityTest.getSecurityCheckAt(ix);
+		return ix == -1 ? null : monitorSecurityTest.getSecurityCheckAt( ix );
 	}
 
-	protected JXToolBar createPropertiesToolbar() {
-		JXToolBar toolbar = UISupport.createSmallToolbar();
-		toolbar.addFixed(UISupport.createToolbarButton(new AddAction()));
-		deleteButton = UISupport.createToolbarButton(new DeleteAction());
-		deleteButton.setEnabled(false);
-		toolbar.addFixed(deleteButton);
-		copyButton = UISupport.createToolbarButton(new CopyAction());
-		copyButton.setEnabled(false);
-		toolbar.addFixed(copyButton);
-		renameButton = UISupport.createToolbarButton(new RenameAction());
-		renameButton.setEnabled(false);
-		toolbar.addFixed(renameButton);
+	public int getCurrentSecurityCheckIndex()
+	{
+		return securityChecksList.getSelectedIndex();
+	}
 
-		disableButton = new JToggleButton(new DisableAction());
-		disableButton.setPreferredSize(UISupport.TOOLBAR_BUTTON_DIMENSION);
-		disableButton.setSelectedIcon(UISupport
-				.createImageIcon("/bullet_red.png"));
+	protected JXToolBar createPropertiesToolbar()
+	{
+		JXToolBar toolbar = UISupport.createSmallToolbar();
+		toolbar.addFixed( UISupport.createToolbarButton( new AddAction() ) );
+		deleteButton = UISupport.createToolbarButton( new DeleteAction() );
+		deleteButton.setEnabled( false );
+		toolbar.addFixed( deleteButton );
+		copyButton = UISupport.createToolbarButton( new CopyAction() );
+		copyButton.setEnabled( false );
+		toolbar.addFixed( copyButton );
+		renameButton = UISupport.createToolbarButton( new RenameAction() );
+		renameButton.setEnabled( false );
+		toolbar.addFixed( renameButton );
+
+		disableButton = new JToggleButton( new DisableAction() );
+		disableButton.setPreferredSize( UISupport.TOOLBAR_BUTTON_DIMENSION );
+		disableButton.setSelectedIcon( UISupport.createImageIcon( "/bullet_red.png" ) );
 		toolbar.addSeparator();
-		toolbar.addFixed(disableButton);
+		toolbar.addFixed( disableButton );
 
 		return toolbar;
 	}
 
-	private JComponent buildConfigPanel() {
-		// securityCheckConfigPanel = UISupport.addTitledBorder( new JPanel( new
-		// BorderLayout() ), "Configuration" );
-		// securityCheckConfigPanel.setPreferredSize( new Dimension( 330, 400 )
-		// );
-		securityCheckConfigPanel = new JEditorPane();
-		securityCheckConfigPanel.setText("currently no security checks");
+	private void setSelectedCheck( SecurityCheck securityCheck )
+	{
+		if( securityCheck != null )
+		{
+			// securityCheck.addPropertyChangeListener(
+			// transferPropertyChangeListener );
+
+			disableButton.setSelected( securityCheck.isDisabled() );
+		}
+
+		copyButton.setEnabled( securityCheck != null );
+		renameButton.setEnabled( securityCheck != null );
+		deleteButton.setEnabled( securityCheck != null );
+		disableButton.setEnabled( securityCheck != null );
+
+	}
+
+	private JComponent buildConfigPanel()
+	{
+		securityCheckConfigPanel = UISupport.addTitledBorder( new JPanel( new BorderLayout() ), "Configuration" );
+		// securityCheckConfigPanel.setPreferredSize( new Dimension( 330, 400 ) );
+		securityCheckConfigPanel.add( new JLabel( "currently no security checks" ) );
+		// securityCheckConfigPanel = new securityCheckConfigPanel.setText(
+		// "currently no security checks" );
 		// panel.add( securityCheckConfigPanel );
-		if (securityChecksList != null
-				&& securityChecksList.getSelectedValue() != null) {
-			SecurityCheck selected = monitorSecurityTest
-					.getSecurityCheckByName((String) securityChecksList
-							.getSelectedValue());
+		if( securityChecksList != null && securityChecksList.getSelectedValue() != null )
+		{
+			SecurityCheck selected = monitorSecurityTest.getSecurityCheckByName( ( String )securityChecksList
+					.getSelectedValue() );
 			securityCheckConfigPanel.removeAll();
-			securityCheckConfigPanel.add(selected.getComponent());
+			securityCheckConfigPanel.add( selected.getComponent() );
 		}
 		securityCheckConfigPanel.revalidate();
 		return securityCheckConfigPanel;
 	}
 
-	/**
-	 * Listen to selection changes in transfer list and update controls
-	 * accordingly
-	 */
+	private final class AddAction extends AbstractAction
+	{
+		public AddAction()
+		{
+			putValue( Action.SHORT_DESCRIPTION, "Adds a new Property Transfer" );
+			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/add_property.gif" ) );
+		}
 
-	private final class SecurityCheckListSelectionListener implements
-			ListSelectionListener {
-		private SecurityCheck securityCheck;
+		public void actionPerformed( ActionEvent e )
+		{
+			String[] availableChecksNames = SecurityCheckRegistry.getInstance().getAvailableSecurityChecksNames();
+			String type = UISupport.prompt( "Specify type of security check", "Add SecurityCheck", availableChecksNames );
+			if( type == null || type.trim().length() == 0 )
+				return;
 
-		public void valueChanged(ListSelectionEvent e) {
-
-			if (securityCheck != null) {
-				// securityCheck.removePropertyChangeListener(
-				// transferPropertyChangeListener );
+			String name = UISupport.prompt( "Specify name for security check", "Add SecurityCheck", type );
+			if( name == null || name.trim().length() == 0 )
+				return;
+			while( monitorSecurityTest.getSecurityCheckByName( name ) != null
+					|| monitorSecurityTest.getSecurityCheckByName( name + " (disabled)" ) != null )
+			{
+				name = UISupport.prompt( "Specify unique name for check", "Rename SecurityCheck", name + " "
+						+ ( monitorSecurityTest.getMonitorSecurityChecksList().size() ) );
+				if( name == null )
+				{
+					return;
+				}
 			}
 
-			securityCheck = getCurrentSecurityCheck();
-			securityCheckConfigPanel = (JEditorPane) securityCheck
-					.getComponent();
+			monitorSecurityTest.addSecurityCheck( name, type );
+
+			listModel.addElement( name );
+			securityChecksList.setSelectedIndex( listModel.getSize() - 1 );
 		}
 	}
 
-	private final class AddAction extends AbstractAction {
-		public AddAction() {
-			putValue(Action.SHORT_DESCRIPTION, "Adds a new Property Transfer");
-			putValue(Action.SMALL_ICON, UISupport
-					.createImageIcon("/add_property.gif"));
+	private final class CopyAction extends AbstractAction
+	{
+		public CopyAction()
+		{
+			putValue( Action.SHORT_DESCRIPTION, "Copies the selected Property Transfer" );
+			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/clone_request.gif" ) );
 		}
 
-		public void actionPerformed(ActionEvent e) {
-			String[] availableChecksNames = SecurityCheckRegistry.getInstance()
-					.getAvailableSecurityChecksNames();
-			String name = UISupport.prompt("Specify name for security check",
-					"Add SecurityCheck", availableChecksNames);
-			if (name == null || name.trim().length() == 0)
-				return;
-
-			monitorSecurityTest.addSecurityCheck(name, name);
-
-			listModel.addElement(name);
-			securityChecksList.setSelectedIndex(listModel.getSize() - 1);
-		}
-	}
-
-	private final class CopyAction extends AbstractAction {
-		public CopyAction() {
-			putValue(Action.SHORT_DESCRIPTION,
-					"Copies the selected Property Transfer");
-			putValue(Action.SMALL_ICON, UISupport
-					.createImageIcon("/clone_request.gif"));
-		}
-
-		public void actionPerformed(ActionEvent e) {
+		public void actionPerformed( ActionEvent e )
+		{
 			int ix = securityChecksList.getSelectedIndex();
-			SecurityCheck config = monitorSecurityTest.getSecurityCheckAt(ix);
+			SecurityCheck config = monitorSecurityTest.getSecurityCheckAt( ix );
 
-			String name = UISupport.prompt("Specify name for SecurityCheck",
-					"Copy SecurityCheck", config.getName());
-			if (name == null || name.trim().length() == 0)
+			String name = UISupport.prompt( "Specify name for SecurityCheck", "Copy SecurityCheck", config.getName() );
+			if( name == null || name.trim().length() == 0 )
 				return;
 
-			SecurityCheck securityCheck = monitorSecurityTest.addSecurityCheck(
-					name, name);
-			securityCheck.setDisabled(config.isDisabled());
+			SecurityCheck securityCheck = monitorSecurityTest.addSecurityCheck( name, name );
+			securityCheck.setDisabled( config.isDisabled() );
 
-			listModel.addElement(name);
-			securityChecksList.setSelectedIndex(listModel.getSize() - 1);
+			listModel.addElement( name );
+			securityChecksList.setSelectedIndex( listModel.getSize() - 1 );
 		}
 	}
 
-	private final class DeleteAction extends AbstractAction {
-		public DeleteAction() {
-			putValue(Action.SMALL_ICON, UISupport
-					.createImageIcon("/remove_property.gif"));
-			putValue(Action.SHORT_DESCRIPTION,
-					"Deletes the selected Property Transfer");
+	private final class DeleteAction extends AbstractAction
+	{
+		public DeleteAction()
+		{
+			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/remove_property.gif" ) );
+			putValue( Action.SHORT_DESCRIPTION, "Deletes the selected Property Transfer" );
 		}
 
-		public void actionPerformed(ActionEvent e) {
-			if (UISupport
-					.confirm("Delete selected transfer", "Delete Transfer")) {
-				securityChecksList.setSelectedIndex(-1);
+		public void actionPerformed( ActionEvent e )
+		{
+			if( UISupport.confirm( "Delete selected transfer", "Delete Transfer" ) )
+			{
+				securityChecksList.setSelectedIndex( -1 );
 
 				int ix = securityChecksList.getSelectedIndex();
-				monitorSecurityTest.removeSecurityCheckAt(ix);
-				listModel.remove(ix);
+				monitorSecurityTest.removeSecurityCheckAt( ix );
+				listModel.remove( ix );
 
-				if (listModel.getSize() > 0) {
-					securityChecksList.setSelectedIndex(ix > listModel
-							.getSize() - 1 ? listModel.getSize() - 1 : ix);
+				if( listModel.getSize() > 0 )
+				{
+					securityChecksList.setSelectedIndex( ix > listModel.getSize() - 1 ? listModel.getSize() - 1 : ix );
 				}
 			}
 		}
 	}
 
-	private final class RenameAction extends AbstractAction {
-		public RenameAction() {
-			putValue(Action.SMALL_ICON, UISupport
-					.createImageIcon("/rename.gif"));
-			putValue(Action.SHORT_DESCRIPTION,
-					"Renames the selected Property Transfer");
+	private final class RenameAction extends AbstractAction
+	{
+		public RenameAction()
+		{
+			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/rename.gif" ) );
+			putValue( Action.SHORT_DESCRIPTION, "Renames the selected Property Transfer" );
 		}
 
-		public void actionPerformed(ActionEvent e) {
+		public void actionPerformed( ActionEvent e )
+		{
 			SecurityCheck securityCheck = getCurrentSecurityCheck();
 
-			String newName = UISupport.prompt(
-					"Specify new name for security check",
-					"Rename SecurityCheck", securityCheck.getName());
+			String newName = UISupport.prompt( "Specify new name for security check", "Rename SecurityCheck",
+					securityCheck.getName() );
 
-			if (newName != null && !securityCheck.getName().equals(newName)) {
-				listModel.setElementAt(newName, securityChecksList
-						.getSelectedIndex());
-				securityCheck.setName(newName);
+			while( monitorSecurityTest.getSecurityCheckByName( newName ) != null
+					|| monitorSecurityTest.getSecurityCheckByName( newName + " (disabled)" ) != null )
+			{
+				newName = UISupport.prompt( "Specify unique name for check", "Rename SecurityCheck", newName + " "
+						+ ( monitorSecurityTest.getMonitorSecurityChecksList().size() ) );
+				if( newName == null )
+				{
+					return;
+				}
+			}
+			if( newName != null && !securityCheck.getName().equals( newName ) )
+			{
+				listModel.setElementAt( newName, securityChecksList.getSelectedIndex() );
+				securityCheck.setName( newName );
 			}
 		}
 	}
 
-	private final class DisableAction extends AbstractAction {
-		public DisableAction() {
-			putValue(Action.SMALL_ICON, UISupport
-					.createImageIcon("/bullet_green.png"));
-			putValue(Action.SHORT_DESCRIPTION,
-					"Disables the selected Property Transfer");
+	private final class DisableAction extends AbstractAction
+	{
+		public DisableAction()
+		{
+			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/bullet_green.png" ) );
+			putValue( Action.SHORT_DESCRIPTION, "Disables the selected Property Transfer" );
 		}
 
-		public void actionPerformed(ActionEvent e) {
+		public void actionPerformed( ActionEvent e )
+		{
 			SecurityCheck securityCheck = getCurrentSecurityCheck();
-			securityCheck.setDisabled(disableButton.isSelected());
+			securityCheck.setDisabled( disableButton.isSelected() );
 
 			String name = securityCheck.getName();
-			if (securityCheck.isDisabled())
+			if( securityCheck.isDisabled() )
 				name += " (disabled)";
+			securityCheck.setName( name );
+			// monitorSecurityTest.renameSecurityCheckAt(
+			// getCurrentSecurityCheckIndex(), name );
 
-			listModel.setElementAt(name, securityChecksList.getSelectedIndex());
+			listModel.setElementAt( name, securityChecksList.getSelectedIndex() );
 		}
 	}
 
