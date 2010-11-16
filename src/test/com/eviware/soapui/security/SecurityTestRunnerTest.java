@@ -27,7 +27,9 @@ import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.security.check.GroovySecurityCheck;
+import com.eviware.soapui.security.check.ParameterExposureCheck;
 import com.eviware.soapui.security.check.SecurityCheck;
+import com.eviware.soapui.security.registry.SecurityCheckRegistry;
 import com.eviware.soapui.support.TestCaseWithJetty;
 
 /**
@@ -70,6 +72,8 @@ public class SecurityTestRunnerTest extends TestCaseWithJetty
 		
 		groovySecurityCheckSetUp();
 		
+
+		parameterExposureCheckSetup();
 		
 		testCase = ( WsdlTestCase )testSuite.getTestCaseByName( "Test Conversions" );
 
@@ -97,6 +101,15 @@ public class SecurityTestRunnerTest extends TestCaseWithJetty
 				( ( WsdlTestRequestStep )testStep ).getTestRequest().setEndpoint( endpoint );
 			}
 		}
+	}
+
+	private void parameterExposureCheckSetup() {
+		List<SecurityCheck> secCheckList = new ArrayList<SecurityCheck>();
+		SecurityCheckConfig exposureConfig = SecurityCheckRegistry.getInstance().getFactory(ParameterExposureCheck.TYPE).createNewSecurityCheck("Test");
+		ParameterExposureCheck exposureCheck = (ParameterExposureCheck)SecurityCheckRegistry.getInstance().getFactory(ParameterExposureCheck.TYPE).buildSecurityCheck(exposureConfig);
+		secCheckList.add(exposureCheck);
+		
+		securityChecksMap.put( "HTTP Test Request", secCheckList );
 	}
 
 	private void groovySecurityCheckSetUp()
