@@ -11,6 +11,9 @@
  */
 package com.eviware.soapui.security.log;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.swing.AbstractListModel;
 
 import com.eviware.soapui.security.SecurityTest;
@@ -22,9 +25,11 @@ import com.eviware.soapui.security.SecurityTest;
  */
 public class SecurityTestLog extends AbstractListModel implements Runnable
 {
+	private List<SecurityTestLogMessageEntry> logEntries;
+	
 	public SecurityTestLog( SecurityTest securityTest )
 	{
-
+		logEntries = new ArrayList<SecurityTestLogMessageEntry>();
 	}
 
 	@Override
@@ -37,20 +42,18 @@ public class SecurityTestLog extends AbstractListModel implements Runnable
 	@Override
 	public Object getElementAt( int arg0 )
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return logEntries.get(arg0);
 	}
 
 	@Override
 	public int getSize()
 	{
-		// TODO Auto-generated method stub
-		return 0;
+		return logEntries.size();
 	}
 
 	public void addEntry( SecurityTestLogMessageEntry securityTestLogMessageEntry )
 	{
-		// TODO Auto-generated method stub
+		logEntries.add(securityTestLogMessageEntry);
 		
 	}
 

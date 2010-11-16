@@ -166,7 +166,8 @@ public class SecurityTestRunnerImpl implements SecurityTestRunner
 	void start()
 	{
 		securityTest.getTestCase().beforeSave();
-
+		hasTornDown = false;
+		
 		context = new SecurityTestContext( this );
 
 		try
