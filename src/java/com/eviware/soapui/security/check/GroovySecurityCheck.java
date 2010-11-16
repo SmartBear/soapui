@@ -56,7 +56,7 @@ public class GroovySecurityCheck extends AbstractSecurityCheck
 		scriptEngine.setScript( getScript() );
 		scriptEngine.setVariable( "testStep", testStep );
 		scriptEngine.setVariable( "log", SoapUI.ensureGroovyLog() );
-		// scriptEngine.setVariable( "context", context );
+		scriptEngine.setVariable( "context", context );
 
 		try
 		{
@@ -64,8 +64,7 @@ public class GroovySecurityCheck extends AbstractSecurityCheck
 		}
 		catch( Exception e )
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			SoapUI.logError( e );
 		}
 		finally
 		{
