@@ -50,7 +50,7 @@ public class SoapMonitorDesktopPanel extends DefaultDesktopPanel
 				sslEndpoint, securityTest );
 
 		tabs.add( soapMonitor, "Traffic Log" );
-		securityTab = new SecurityTestsMonitorDesktopPanel( new MonitorSecurityTest() );
+		securityTab = new SecurityTestsMonitorDesktopPanel( securityTest );
 		tabs.add( securityTab, "Security Tests" );
 
 		toolbar.add( UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.SOAPMONITOR_HELP_URL ) ) );
