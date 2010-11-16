@@ -50,6 +50,9 @@ import com.eviware.soapui.support.components.SimpleForm;
 import com.eviware.soapui.support.types.StringToObjectMap;
 
 /**
+ * This checks whether any parameters sent in the request are included in the response,
+ * If they do appear, this is a good parameter to look at as a possible attack vector
+ * for XSS
  * 
  * @author soapui team
  */
@@ -152,19 +155,39 @@ public class ParameterExposureCheck extends AbstractSecurityCheck {
 		}
 	}
 
+	/**
+	 * Setting the minimum size that the parameter value will be for it to be checked
+	 * 
+	 * @param minimumLength
+	 */
 	public void setMinimumLength(int minimumLength) {
 		((ParameterExposureCheckConfig)config.getConfig()).setMinimumLength(minimumLength);
 		minimumCharactersTextField.setText(Integer.toString(minimumLength));
 	}
 
+	/**
+	 * Get the minimum length for a parameter to be checked
+	 * 
+	 * @return
+	 */
 	private int getMinimumLength() {
 		return ((ParameterExposureCheckConfig)config.getConfig()).getMinimumLength();
 	}
 
+	/**
+	 * Returns the list of parameters that the response will be checked for
+	 * 
+	 * @return A list of parameter objects
+	 */
 	public List<String> getParamsToCheck() {
 		return ((ParameterExposureCheckConfig)config.getConfig()).getParamToCheckList();
 	}
 
+	/**
+	 * A list of parameters that will be checked in the response
+	 * 
+	 * @param params
+	 */
 	public void setParamsToCheck(List<String> params) {
 		((ParameterExposureCheckConfig)config.getConfig()).setParamToCheckArray(params
 				.toArray(new String[0]));
