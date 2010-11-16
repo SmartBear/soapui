@@ -63,9 +63,8 @@ import com.eviware.soapui.support.types.StringToObjectMap;
  * @author soapui team
  */
 
-
-public class ParameterExposureCheck extends AbstractSecurityCheck implements HttpSecurityAnalyser {
-
+public class ParameterExposureCheck extends AbstractSecurityCheck implements HttpSecurityAnalyser
+{
 
 	// JTextField minimumCharactersTextField;
 	protected JTextField minimumCharactersTextField;
@@ -91,11 +90,6 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements Htt
 			pescc.setMinimumLength( DEFAULT_MINIMUM_CHARACTER_LENGTH );
 			config.setConfig( pescc );
 		}
-
-		// minimumCharactersTextField = new JTextField( ( (
-		// ParameterExposureCheckConfig )config.getConfig() )
-		// .getMinimumLength() );
-		// minimumCharactersTextField.addKeyListener( new MinimumListener() );
 	}
 
 	@Override
@@ -174,8 +168,6 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements Htt
 	public void setMinimumLength( int minimumLength )
 	{
 		( ( ParameterExposureCheckConfig )config.getConfig() ).setMinimumLength( minimumLength );
-		// minimumCharactersTextField.setText( Integer.toString( minimumLength )
-		// );
 	}
 
 	/**
@@ -286,29 +278,30 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements Htt
 	}
 
 	@Override
-	public void analyzeHttpConnection(MessageExchange messageExchange,
-			SecurityTestLog securityTestLog) {
-		Map<String, String> parameters = ((JProxyServletWsdlMonitorMessageExchange)messageExchange).getHttpRequestParameters();
-		for (String paramName : parameters.keySet()) {
-			
-			String paramValue = parameters.get(paramName);
+	public void analyzeHttpConnection( MessageExchange messageExchange, SecurityTestLog securityTestLog )
+	{
+		Map<String, String> parameters = ( ( JProxyServletWsdlMonitorMessageExchange )messageExchange )
+				.getHttpRequestParameters();
+		for( String paramName : parameters.keySet() )
+		{
 
-			if (paramValue != null
-					&& paramValue.length() >= getMinimumLength()) {
-				if ( messageExchange.getResponseContent().indexOf(paramValue) > -1 && securityTestLog != null )
-				 {
-					securityTestLog
-							.addEntry(new SecurityTestLogMessageEntry(
-									"Parameter " + paramName
-											+ " is exposed in the response"));
+			String paramValue = parameters.get( paramName );
+
+			if( paramValue != null && paramValue.length() >= getMinimumLength() )
+			{
+				if( messageExchange.getResponseContent().indexOf( paramValue ) > -1 && securityTestLog != null )
+				{
+					securityTestLog.addEntry( new SecurityTestLogMessageEntry( "Parameter " + paramName
+							+ " is exposed in the response" ) );
 				}
 			}
 		}
-		
+
 	}
 
 	@Override
-	public boolean canRun() {
+	public boolean canRun()
+	{
 		return true;
 	}
 
