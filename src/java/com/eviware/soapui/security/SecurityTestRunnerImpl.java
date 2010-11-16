@@ -194,7 +194,8 @@ public class SecurityTestRunnerImpl implements SecurityTestRunner
 					List<SecurityCheck> testStepChecksList = secCheckMap.get( testStep.getName() );
 					for( SecurityCheck securityCheck : testStepChecksList )
 					{
-						securityCheck.run( cloneForSecurityCheck((WsdlTestStep)testStep), context, securityTest.getSecurityTestLog() );
+						if (securityCheck.acceptsTestStep(testStep))
+							securityCheck.run( cloneForSecurityCheck((WsdlTestStep)testStep), context, securityTest.getSecurityTestLog() );
 					}
 				}
 				else

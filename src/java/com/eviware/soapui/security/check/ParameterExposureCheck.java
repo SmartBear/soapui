@@ -85,8 +85,8 @@ public class ParameterExposureCheck extends AbstractSecurityCheck {
 					(WsdlTestCase) testStep.getTestCase(),
 					new StringToObjectMap());
 			testCaseRunner.runTestStepByName(testStep.getName());
+			analyze(testStep, context, securityTestLog);
 		}
-		analyze(testStep, context, securityTestLog);
 	}
 
 	@Override
