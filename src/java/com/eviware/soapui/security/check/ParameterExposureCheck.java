@@ -219,6 +219,7 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements Htt
 
 		minimumCharactersTextField = form.appendTextField( MINIMUM_CHARACTERS_FIELD, "Minimum characters" );
 		minimumCharactersTextField.setMaximumSize( new Dimension( 40, 10 ) );
+		minimumCharactersTextField.setColumns(4);
 		minimumCharactersTextField.setText( String.valueOf( getMinimumLength() ) );
 		minimumCharactersTextField.getDocument().addDocumentListener( new DocumentListenerAdapter()
 		{
