@@ -186,7 +186,14 @@ public class SecurityTestsMonitorDesktopPanel extends JPanel
 			if( type == null || type.trim().length() == 0 )
 				return;
 
-			String name = UISupport.prompt( "Specify name for security check", "Add SecurityCheck", type );
+			String nameSuggestion = type;
+			if( ( monitorSecurityTest.getSecurityCheckByName( type ) != null
+					|| monitorSecurityTest.getSecurityCheckByName( type + " (disabled)" ) != null ))
+			{
+				nameSuggestion = type + " "
+						+ ( monitorSecurityTest.getMonitorSecurityChecksList().size() );
+			}
+			String name = UISupport.prompt( "Specify name for security check", "Add SecurityCheck", nameSuggestion );
 			if( name == null || name.trim().length() == 0 )
 				return;
 			while( monitorSecurityTest.getSecurityCheckByName( name ) != null
