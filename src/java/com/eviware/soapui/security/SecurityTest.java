@@ -33,7 +33,7 @@ import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
 import com.eviware.soapui.support.types.StringToObjectMap;
 
 /**
- * SecurityTest
+ * This class is used to connect a TestCase with a set of security checks
  * 
  * @author soapUI team
  */
@@ -43,7 +43,6 @@ public class SecurityTest extends AbstractWsdlModelItem<SecurityTestConfig> impl
 	public final static String TEARDOWN_SCRIPT_PROPERTY = SecurityTest.class.getName() + "@tearDownScript";
 	public final static String SECURITY_CHECK_MAP_PROPERTY = SecurityTest.class.getName() + "@securityCheckMap";
 	private WsdlTestCase testCase;
-	// private HashMap<String, List<SecurityCheck>> securityChecksMap;
 	private SecurityTestLog securityTestLog;
 
 	public SecurityTestLog getSecurityTestLog()
@@ -125,6 +124,9 @@ public class SecurityTest extends AbstractWsdlModelItem<SecurityTestConfig> impl
 
 	}
 
+	/**
+	 * @return A map of TestStepNames to their relevant security checks
+	 */
 	public HashMap<String, List<SecurityCheck>> getSecurityChecksMap()
 	{
 		HashMap<String, List<SecurityCheck>> securityChecksMap = new HashMap<String, List<SecurityCheck>>();

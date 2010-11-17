@@ -39,6 +39,10 @@ public class MonitorSecurityTest
 		monitorSecurityChecksList = new ArrayList<SecurityCheck>();
 	}
 
+	/**
+	 * The list of checks attached to the monitor
+	 * @return List of checks
+	 */
 	public List<SecurityCheck> getMonitorSecurityChecksList()
 	{
 		return monitorSecurityChecksList;
