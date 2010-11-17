@@ -1358,13 +1358,11 @@ public class SoapMonitor extends JPanel
 			fireOnMessageExchange( messageExchange );
 		}
 
-		@SuppressWarnings( "unused" )
 		public void cancel()
 		{
 			canceled = true;
 		}
 
-		@SuppressWarnings( "unused" )
 		protected boolean isCanceled()
 		{
 			return canceled;
