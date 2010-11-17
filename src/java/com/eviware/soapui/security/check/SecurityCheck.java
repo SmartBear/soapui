@@ -30,7 +30,6 @@ public abstract class SecurityCheck extends AbstractWsdlModelItem<SecurityCheckC
 	protected SecurityCheck( SecurityCheckConfig config, ModelItem parent, String icon )
 	{
 		super( config, parent, icon );
-		// TODO Auto-generated constructor stub
 	}
 
 	public abstract SecurityCheckConfig getConfig();

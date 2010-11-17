@@ -12,7 +12,6 @@
 package com.eviware.soapui.security.check;
 
 import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.ImageIcon;
@@ -20,13 +19,10 @@ import javax.swing.JPanel;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.SecurityCheckConfig;
-import com.eviware.soapui.impl.settings.XmlBeansSettingsImpl;
 import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTestContext;
 import com.eviware.soapui.security.log.SecurityTestLog;
-import com.eviware.soapui.security.log.SecurityTestLogEntry;
 import com.eviware.soapui.support.components.SimpleForm;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
@@ -71,7 +67,7 @@ public abstract class AbstractSecurityCheck extends SecurityCheck
 		scriptEngine.setScript( tearDownScript );
 		scriptEngine.setVariable( "testStep", testStep );
 		scriptEngine.setVariable( "log", SoapUI.ensureGroovyLog() );
-		// scriptEngine.setVariable( "context", context );
+
 
 		try
 		{
@@ -79,7 +75,6 @@ public abstract class AbstractSecurityCheck extends SecurityCheck
 		}
 		catch( Exception e )
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		finally
@@ -102,7 +97,6 @@ public abstract class AbstractSecurityCheck extends SecurityCheck
 		}
 		catch( Exception e )
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		finally

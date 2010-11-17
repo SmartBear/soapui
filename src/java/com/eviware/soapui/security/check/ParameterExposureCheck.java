@@ -249,14 +249,13 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements Htt
 		@Override
 		public void keyPressed( KeyEvent arg0 )
 		{
-			// TODO Auto-generated method stub
 
 		}
 
 		@Override
 		public void keyReleased( KeyEvent arg0 )
 		{
-			// TODO Auto-generated method stub
+		
 
 		}
 
@@ -266,8 +265,6 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements Htt
 			char c = ke.getKeyChar();
 			if( !Character.isDigit( c ) )
 				ke.consume();
-			// setMinimumLength( Integer.parseInt(
-			// minimumCharactersTextField.getText() ) );
 		}
 	}
 

@@ -25,7 +25,6 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.TestStepConfig;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCaseRunner;
-import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestStepFactory;
 import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestStepRegistry;
@@ -58,7 +57,6 @@ public class SecurityTestRunnerImpl implements SecurityTestRunner
 	@Override
 	public float getProgress()
 	{
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
@@ -89,8 +87,6 @@ public class SecurityTestRunnerImpl implements SecurityTestRunner
 	@Override
 	public void fail( String reason )
 	{
-		// TODO Give some thought about how to handle this, it should really never be called, since there is no way for a Security
-		// Test to really fail as such...
 		
 		status = Status.FAILED;
 
@@ -135,7 +131,6 @@ public class SecurityTestRunnerImpl implements SecurityTestRunner
 	@Override
 	public Status waitUntilFinished()
 	{
-		// TODO Auto-generated method stub
 		return null;
 	}
 

@@ -108,7 +108,7 @@ public class GroovySecurityCheck extends AbstractSecurityCheck implements HttpSe
 	@Override
 	public void analyze( TestStep testStep, SecurityTestContext context, SecurityTestLog securityTestLog )
 	{
-		// TODO Auto-generated method stub
+		
 
 	}
 
