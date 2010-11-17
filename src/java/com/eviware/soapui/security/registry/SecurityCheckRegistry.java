@@ -94,7 +94,7 @@ public class SecurityCheckRegistry
 
 		for( SecurityCheckFactory securityCheck : availableSecurityChecks.values() )
 		{
-			if (monitorOnly && securityCheck instanceof HttpSecurityAnalyser)
+			if (monitorOnly && securityCheck.isHttpMonitor())
 				result.add( securityCheck.getSecurityCheckName() );
 		}
 

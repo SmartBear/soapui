@@ -61,4 +61,9 @@ public abstract class SecurityCheckFactory
 	{
 		return pathToIcon;
 	}
+	
+	public boolean isHttpMonitor()
+	{
+		return false;
+	}
 }
