@@ -277,12 +277,13 @@ public class SecurityTestsMonitorDesktopPanel extends JPanel
 		public void actionPerformed( ActionEvent e )
 		{
 			SecurityCheck securityCheck = getCurrentSecurityCheck();
-
+			
+			String oldName = securityCheck.getName();
 			String newName = UISupport.prompt( "Specify new name for security check", "Rename SecurityCheck",
 					securityCheck.getName() );
 
-			while( monitorSecurityTest.getSecurityCheckByName( newName ) != null
-					|| monitorSecurityTest.getSecurityCheckByName( newName + " (disabled)" ) != null )
+			while( !(newName.equals(oldName)) && ( monitorSecurityTest.getSecurityCheckByName( newName ) != null
+					|| monitorSecurityTest.getSecurityCheckByName( newName + " (disabled)" ) != null ))
 			{
 				newName = UISupport.prompt( "Specify unique name for check", "Rename SecurityCheck", newName + " "
 						+ ( monitorSecurityTest.getMonitorSecurityChecksList().size() ) );
