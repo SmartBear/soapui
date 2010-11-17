@@ -174,7 +174,7 @@ public class SecurityTestsMonitorDesktopPanel extends JPanel
 	{
 		public AddAction()
 		{
-			putValue( Action.SHORT_DESCRIPTION, "Adds a new Property Transfer" );
+			putValue( Action.SHORT_DESCRIPTION, "Adds a new Security Check" );
 			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/add_property.gif" ) );
 		}
 
@@ -210,7 +210,7 @@ public class SecurityTestsMonitorDesktopPanel extends JPanel
 	{
 		public CopyAction()
 		{
-			putValue( Action.SHORT_DESCRIPTION, "Copies the selected Property Transfer" );
+			putValue( Action.SHORT_DESCRIPTION, "Copies the selected Security Check" );
 			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/clone_request.gif" ) );
 		}
 
@@ -245,12 +245,12 @@ public class SecurityTestsMonitorDesktopPanel extends JPanel
 		public DeleteAction()
 		{
 			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/remove_property.gif" ) );
-			putValue( Action.SHORT_DESCRIPTION, "Deletes the selected Property Transfer" );
+			putValue( Action.SHORT_DESCRIPTION, "Deletes the selected Security Check" );
 		}
 
 		public void actionPerformed( ActionEvent e )
 		{
-			if( UISupport.confirm( "Delete selected transfer", "Delete Transfer" ) )
+			if( UISupport.confirm( "Delete selected security check", "Delete Security Check" ) )
 			{
 				securityChecksList.setSelectedIndex( -1 );
 
@@ -271,7 +271,7 @@ public class SecurityTestsMonitorDesktopPanel extends JPanel
 		public RenameAction()
 		{
 			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/rename.gif" ) );
-			putValue( Action.SHORT_DESCRIPTION, "Renames the selected Property Transfer" );
+			putValue( Action.SHORT_DESCRIPTION, "Renames the selected Security Check" );
 		}
 
 		public void actionPerformed( ActionEvent e )
@@ -304,7 +304,7 @@ public class SecurityTestsMonitorDesktopPanel extends JPanel
 		public DisableAction()
 		{
 			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/bullet_green.png" ) );
-			putValue( Action.SHORT_DESCRIPTION, "Disables the selected Property Transfer" );
+			putValue( Action.SHORT_DESCRIPTION, "Disables the selected Security Check" );
 		}
 
 		public void actionPerformed( ActionEvent e )
