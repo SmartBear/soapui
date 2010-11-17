@@ -186,20 +186,13 @@ public class SecurityTestsMonitorDesktopPanel extends JPanel
 			if( type == null || type.trim().length() == 0 )
 				return;
 
-			String nameSuggestion = type;
-			if( ( monitorSecurityTest.getSecurityCheckByName( type ) != null
-					|| monitorSecurityTest.getSecurityCheckByName( type + " (disabled)" ) != null ))
-			{
-				nameSuggestion = type + " "
-						+ ( monitorSecurityTest.getMonitorSecurityChecksList().size() );
-			}
-			String name = UISupport.prompt( "Specify name for security check", "Add SecurityCheck", nameSuggestion );
+			String name = UISupport.prompt( "Specify name for security check", "Add SecurityCheck", findUniqueName(type) );
 			if( name == null || name.trim().length() == 0 )
 				return;
 			while( monitorSecurityTest.getSecurityCheckByName( name ) != null
 					|| monitorSecurityTest.getSecurityCheckByName( name + " (disabled)" ) != null )
 			{
-				name = UISupport.prompt( "Specify unique name for check", "Rename SecurityCheck", name + " "
+				name = UISupport.prompt( "Specify unique name for check", "Add SecurityCheck", name + " "
 						+ ( monitorSecurityTest.getMonitorSecurityChecksList().size() ) );
 				if( name == null )
 				{
@@ -293,8 +286,7 @@ public class SecurityTestsMonitorDesktopPanel extends JPanel
 			while( !(newName.equals(oldName)) && ( monitorSecurityTest.getSecurityCheckByName( newName ) != null
 					|| monitorSecurityTest.getSecurityCheckByName( newName + " (disabled)" ) != null ))
 			{
-				newName = UISupport.prompt( "Specify unique name for check", "Rename SecurityCheck", newName + " "
-						+ ( monitorSecurityTest.getMonitorSecurityChecksList().size() ) );
+				newName = UISupport.prompt( "Specify unique name for check", "Rename SecurityCheck", findUniqueName(securityCheck.getType()) );
 				if( newName == null )
 				{
 					return;
@@ -333,6 +325,19 @@ public class SecurityTestsMonitorDesktopPanel extends JPanel
 
 			listModel.setElementAt( name, securityChecksList.getSelectedIndex() );
 		}
+	}
+	
+	private String findUniqueName(String type) {
+		String name = type;
+		int numNames = 0;
+		for (SecurityCheck existingCheck : monitorSecurityTest.getMonitorSecurityChecksList()) {
+			if (existingCheck.getType().equals(name))
+				numNames++;
+		}
+		if (numNames != 0) {
+			name += " " + numNames;
+		}
+		return name;
 	}
 
 }
