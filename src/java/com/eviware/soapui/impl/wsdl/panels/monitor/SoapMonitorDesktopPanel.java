@@ -64,7 +64,7 @@ public class SoapMonitorDesktopPanel extends DefaultDesktopPanel
 		toolbar.add( UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.SOAPMONITOR_HELP_URL ) ) );
 
 		JPanel innerPanel = new JPanel( new BorderLayout() );
-		innerPanel.add( toolbar, BorderLayout.CENTER );
+		innerPanel.add( toolbar, BorderLayout.NORTH );
 		innerPanel.add( UISupport.createTabPanel( tabs, true ), BorderLayout.CENTER );
 		
 		inspectorPanel = JInspectorPanelFactory.build(innerPanel );
