@@ -20,6 +20,7 @@ import java.util.Map;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionFactory;
 import com.eviware.soapui.model.testsuite.Assertable;
+import com.eviware.soapui.security.monitor.HttpSecurityAnalyser;
 
 /**
  * Registry of SecurityCheck factories
@@ -88,17 +89,22 @@ public class SecurityCheckRegistry
 		return getFactory( config.getType() ) != null;
 	}
 
-	// done according to
-	// TestAssertionRegistry.getAvailableAssertionNames...double check to add
-	// argument
-	public String[] getAvailableSecurityChecksNames()
+	
+	/**
+	 * done according to
+	 * TestAssertionRegistry.getAvailableAssertionNames
+	 * 
+	 * @param monitorOnly Set this to true to get only the list of checks which can be used in the http monitor
+	 * @return A String Array containg the names of all the checks
+	 */
+	public String[] getAvailableSecurityChecksNames(boolean monitorOnly)
 	{
 		List<String> result = new ArrayList<String>();
 
 		for( SecurityCheckFactory securityCheck : availableSecurityChecks.values() )
 		{
-			// if( securityCheck.canCreate())
-			result.add( securityCheck.getSecurityCheckName() );
+			if (monitorOnly && securityCheck instanceof HttpSecurityAnalyser)
+				result.add( securityCheck.getSecurityCheckName() );
 		}
 
 		return result.toArray( new String[result.size()] );

@@ -180,7 +180,7 @@ public class SecurityTestsMonitorDesktopPanel extends JPanel
 
 		public void actionPerformed( ActionEvent e )
 		{
-			String[] availableChecksNames = SecurityCheckRegistry.getInstance().getAvailableSecurityChecksNames();
+			String[] availableChecksNames = SecurityCheckRegistry.getInstance().getAvailableSecurityChecksNames(true);
 			String type = UISupport.prompt( "Specify type of security check", "Add SecurityCheck", availableChecksNames );
 			if( type == null || type.trim().length() == 0 )
 				return;
