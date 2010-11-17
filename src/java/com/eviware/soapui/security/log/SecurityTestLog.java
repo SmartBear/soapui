@@ -12,9 +12,12 @@
 package com.eviware.soapui.security.log;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.swing.AbstractListModel;
+
+import org.apache.commons.collections.list.TreeList;
 
 import com.eviware.soapui.security.SecurityTest;
 
@@ -23,38 +26,58 @@ import com.eviware.soapui.security.SecurityTest;
  * 
  * @author soapUI team
  */
-public class SecurityTestLog extends AbstractListModel implements Runnable
+public class SecurityTestLog extends AbstractListModel
 {
-	private List<SecurityTestLogMessageEntry> logEntries;
-	
-	public SecurityTestLog( SecurityTest securityTest )
-	{
-		logEntries = new ArrayList<SecurityTestLogMessageEntry>();
-	}
+//	private List<SecurityTestLogMessageEntry> logEntries;
+	private List<Object> items = Collections.synchronizedList( new TreeList() );
+	private int maxSize = 0;
 
-	@Override
-	public void run()
+	public SecurityTestLog()
 	{
-		// TODO Auto-generated method stub
-
+//		logEntries = new ArrayList<SecurityTestLogMessageEntry>();
 	}
 
 	@Override
 	public Object getElementAt( int arg0 )
 	{
-		return logEntries.get(arg0);
+		return items.get( arg0 );
 	}
 
 	@Override
 	public int getSize()
 	{
-		return logEntries.size();
+		return items.size();
 	}
 
 	public void addEntry( SecurityTestLogMessageEntry securityTestLogMessageEntry )
 	{
-		logEntries.add(securityTestLogMessageEntry);
-		
+		items.add( securityTestLogMessageEntry.getMessage() );
+		fireIntervalAdded( this, items.size() - 1, items.size() - 1 );
 	}
+	public synchronized void clear()
+	{
+		items.clear();
+	}
+	public int getMaxSize()
+	{
+		return maxSize;
+	}
+
+	public void setMaxSize( int maxSize )
+	{
+		this.maxSize = maxSize;
+		enforceMaxSize();
+	}
+	private synchronized void enforceMaxSize()
+	{
+		while( items.size() > maxSize )
+		{
+			items.remove( 0 );
+//			results.remove( 0 );
+			fireIntervalRemoved( this, 0, 0 );
+		}
+	}
+
+
 
 }

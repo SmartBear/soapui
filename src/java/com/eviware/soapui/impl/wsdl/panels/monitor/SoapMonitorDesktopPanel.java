@@ -15,6 +15,7 @@ package com.eviware.soapui.impl.wsdl.panels.monitor;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 
+import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
@@ -23,9 +24,13 @@ import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.monitor.SoapMonitor;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.security.log.JSecurityTestRunLog;
 import com.eviware.soapui.security.monitor.MonitorSecurityTest;
 import com.eviware.soapui.security.panels.SecurityTestsMonitorDesktopPanel;
 import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.components.JComponentInspector;
+import com.eviware.soapui.support.components.JInspectorPanel;
+import com.eviware.soapui.support.components.JInspectorPanelFactory;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.ui.support.DefaultDesktopPanel;
 
@@ -34,6 +39,8 @@ public class SoapMonitorDesktopPanel extends DefaultDesktopPanel
 	private SoapMonitor soapMonitor;
 	private final WsdlProject project;
 	private SecurityTestsMonitorDesktopPanel securityTab;
+	JSecurityTestRunLog securityTestRunLog;
+	JInspectorPanel inspectorPanel;
 
 	public SoapMonitorDesktopPanel( WsdlProject project, int sourcePort, String incomingRequestWss,
 			String incomingResponseWss, boolean setAsProxy, String sslEndpoint )
@@ -45,7 +52,8 @@ public class SoapMonitorDesktopPanel extends DefaultDesktopPanel
 		JTabbedPane tabs = new JTabbedPane();
 
 		JXToolBar toolbar = UISupport.createToolbar();
-		MonitorSecurityTest securityTest = new MonitorSecurityTest();
+		JComponent securityTestRunLog = buildRunLog();
+		MonitorSecurityTest securityTest = new MonitorSecurityTest(( JSecurityTestRunLog )securityTestRunLog);
 		soapMonitor = new SoapMonitor( project, sourcePort, incomingRequestWss, incomingResponseWss, toolbar, setAsProxy,
 				sslEndpoint, securityTest );
 
@@ -55,10 +63,18 @@ public class SoapMonitorDesktopPanel extends DefaultDesktopPanel
 
 		toolbar.add( UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.SOAPMONITOR_HELP_URL ) ) );
 
-		p.add( toolbar, BorderLayout.NORTH );
-		p.add( UISupport.createTabPanel( tabs, true ), BorderLayout.CENTER );
-
+		JPanel innerPanel = new JPanel( new BorderLayout() );
+		innerPanel.add( toolbar, BorderLayout.CENTER );
+		innerPanel.add( UISupport.createTabPanel( tabs, true ), BorderLayout.CENTER );
+		
+		inspectorPanel = JInspectorPanelFactory.build(innerPanel );
+		JComponentInspector<JComponent> logInspector = new JComponentInspector<JComponent>(securityTestRunLog ,
+				"SecurityChecks Log", "Log of applied SecurityChecks", true );
+		inspectorPanel.addInspector( logInspector );
+		p.add( inspectorPanel.getComponent());
 		p.setPreferredSize( new Dimension( 700, 600 ) );
+		
+
 	}
 
 	@Override
@@ -87,4 +103,14 @@ public class SoapMonitorDesktopPanel extends DefaultDesktopPanel
 	{
 		return project;
 	}
+
+	private JComponent buildRunLog()
+	{
+		// TODO see how to get modelItem and enable options seting
+		// securityTestRunLog = new JSecurityTestRunLog(
+		// getModelItem().getSettings() );
+		securityTestRunLog = new JSecurityTestRunLog();
+		return securityTestRunLog;
+	}
+
 }

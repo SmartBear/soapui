@@ -57,7 +57,7 @@ public class SecurityTest extends AbstractWsdlModelItem<SecurityTestConfig> impl
 	{
 		super( config, testCase, "/loadTest.gif" );
 		this.testCase = testCase;
-		securityTestLog = new SecurityTestLog( this );
+		securityTestLog = new SecurityTestLog();
 	}
 
 	/**

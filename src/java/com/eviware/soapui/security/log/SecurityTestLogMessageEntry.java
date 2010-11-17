@@ -18,7 +18,6 @@ import java.util.Date;
 
 import javax.swing.ImageIcon;
 
-import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.ActionList;
 
 /**
@@ -29,7 +28,7 @@ import com.eviware.soapui.support.action.swing.ActionList;
 
 public class SecurityTestLogMessageEntry implements SecurityTestLogEntry
 {
-	private final String message;
+	private String message;
 	private long timestamp;
 	private ImageIcon icon;
 	private boolean discarded;
@@ -39,7 +38,7 @@ public class SecurityTestLogMessageEntry implements SecurityTestLogEntry
 		this.message = message;
 		timestamp = System.currentTimeMillis();
 
-		icon = UISupport.createImageIcon( "/securitytest_log_message.gif" );
+//		icon = UISupport.createImageIcon( "/securitytest_log_message.gif" );
 	}
 
 	public String getMessage()

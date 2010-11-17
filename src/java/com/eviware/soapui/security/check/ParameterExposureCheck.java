@@ -46,6 +46,7 @@ import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
 import com.eviware.soapui.security.SecurityTestContext;
+import com.eviware.soapui.security.log.JSecurityTestRunLog;
 import com.eviware.soapui.security.log.SecurityTestLog;
 import com.eviware.soapui.security.log.SecurityTestLogMessageEntry;
 
@@ -276,7 +277,7 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements Htt
 	}
 
 	@Override
-	public void analyzeHttpConnection( MessageExchange messageExchange, SecurityTestLog securityTestLog )
+	public void analyzeHttpConnection( MessageExchange messageExchange, JSecurityTestRunLog securityTestLog )
 	{
 		Map<String, String> parameters = ( ( JProxyServletWsdlMonitorMessageExchange )messageExchange )
 				.getHttpRequestParameters();
@@ -287,6 +288,7 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements Htt
 
 			if( paramValue != null && paramValue.length() >= getMinimumLength() )
 			{
+				System.out.println( "Parameter " + paramName + " was found" );
 				if( messageExchange.getResponseContent().indexOf( paramValue ) > -1 && securityTestLog != null )
 				{
 					securityTestLog.addEntry( new SecurityTestLogMessageEntry( "Parameter " + paramName

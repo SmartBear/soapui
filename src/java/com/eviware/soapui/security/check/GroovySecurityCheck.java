@@ -26,6 +26,7 @@ import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTestContext;
+import com.eviware.soapui.security.log.JSecurityTestRunLog;
 import com.eviware.soapui.security.log.SecurityTestLog;
 import com.eviware.soapui.security.monitor.HttpSecurityAnalyser;
 import com.eviware.soapui.support.DocumentListenerAdapter;
@@ -158,7 +159,7 @@ public class GroovySecurityCheck extends AbstractSecurityCheck implements HttpSe
 
 	@Override
 	public void analyzeHttpConnection(MessageExchange messageExchange,
-			SecurityTestLog securityTestLog) {
+			JSecurityTestRunLog securityTestLog) {
 		scriptEngine.setScript( getScript() );
 		scriptEngine.setVariable( "testStep", null );
 		scriptEngine.setVariable( "log", SoapUI.ensureGroovyLog() );

@@ -1,7 +1,7 @@
 package com.eviware.soapui.security.monitor;
 
 import com.eviware.soapui.model.iface.MessageExchange;
-import com.eviware.soapui.security.log.SecurityTestLog;
+import com.eviware.soapui.security.log.JSecurityTestRunLog;
 
 /**
  * An interface that all SecurityChecks that can be used in the security monitor must implement
@@ -16,7 +16,7 @@ public interface HttpSecurityAnalyser {
 	 * @param messageExchange A completed MessageExchange from the HttpMoitor
 	 * @param securityTestLog - The log to record the values to.
 	 */
-	public void analyzeHttpConnection (MessageExchange messageExchange,  SecurityTestLog securityTestLog );
+	public void analyzeHttpConnection (MessageExchange messageExchange,  JSecurityTestRunLog securityTestLog );
 	
 	/**
 	 * Used to confirm if the check an be applied
