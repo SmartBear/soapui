@@ -295,8 +295,11 @@ public class SecurityTestsMonitorDesktopPanel extends JPanel
 			}
 			if( newName != null && !securityCheck.getName().equals( newName ) )
 			{
-				listModel.setElementAt( newName, securityChecksList.getSelectedIndex() );
 				securityCheck.setName( newName );
+				if (securityCheck.isDisabled()) {
+					newName += " (disabled)";
+				}
+				listModel.setElementAt( newName, securityChecksList.getSelectedIndex() );
 			}
 		}
 	}
@@ -317,7 +320,7 @@ public class SecurityTestsMonitorDesktopPanel extends JPanel
 			String name = securityCheck.getName();
 			if( securityCheck.isDisabled() )
 				name += " (disabled)";
-			securityCheck.setName( name );
+			//securityCheck.setName( name );
 			// monitorSecurityTest.renameSecurityCheckAt(
 			// getCurrentSecurityCheckIndex(), name );
 
