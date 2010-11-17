@@ -56,6 +56,7 @@ public class SecurityTestsMonitorDesktopPanel extends JPanel
 
 	public SecurityTestsMonitorDesktopPanel( MonitorSecurityTest securityTest )
 	{
+		super( new BorderLayout() );
 		// super( securityTest );
 		this.monitorSecurityTest = securityTest;
 		// componentEnabler = new MonitorSecurityCheckEnabler(
