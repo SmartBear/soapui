@@ -23,9 +23,11 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.GroovySecurityCheckConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTestContext;
 import com.eviware.soapui.security.log.SecurityTestLog;
+import com.eviware.soapui.security.monitor.HttpSecurityAnalyser;
 import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.components.SimpleForm;
@@ -35,7 +37,7 @@ import com.eviware.soapui.support.components.SimpleForm;
  * @author soapui team
  */
 
-public class GroovySecurityCheck extends AbstractSecurityCheck
+public class GroovySecurityCheck extends AbstractSecurityCheck implements HttpSecurityAnalyser
 {
 	public static final String SCRIPT_PROPERTY = GroovySecurityCheck.class.getName() + "@script";
 	public static final String TYPE = "GroovySecurityCheck";
@@ -152,5 +154,35 @@ public class GroovySecurityCheck extends AbstractSecurityCheck
 	public String getType()
 	{
 		return TYPE;
+	}
+
+	@Override
+	public void analyzeHttpConnection(MessageExchange messageExchange,
+			SecurityTestLog securityTestLog) {
+		scriptEngine.setScript( getScript() );
+		scriptEngine.setVariable( "testStep", null );
+		scriptEngine.setVariable( "log", SoapUI.ensureGroovyLog() );
+		scriptEngine.setVariable( "context", null );
+		scriptEngine.setVariable("messageExchange", messageExchange);
+
+		try
+		{
+			scriptEngine.run();
+		}
+		catch( Exception e )
+		{
+			SoapUI.logError( e );
+		}
+		finally
+		{
+			scriptEngine.clearVariables();
+		}
+		
+	}
+
+	@Override
+	public boolean canRun() {
+
+		return true;
 	}
 }
