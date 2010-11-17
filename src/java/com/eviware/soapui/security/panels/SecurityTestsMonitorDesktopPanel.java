@@ -128,6 +128,7 @@ public class SecurityTestsMonitorDesktopPanel extends JPanel
 		disableButton = new JToggleButton( new DisableAction() );
 		disableButton.setPreferredSize( UISupport.TOOLBAR_BUTTON_DIMENSION );
 		disableButton.setSelectedIcon( UISupport.createImageIcon( "/bullet_red.png" ) );
+		disableButton.setEnabled(false);
 		toolbar.addSeparator();
 		toolbar.addFixed( disableButton );
 
