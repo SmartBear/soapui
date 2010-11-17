@@ -288,7 +288,6 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements Htt
 
 			if( paramValue != null && paramValue.length() >= getMinimumLength() )
 			{
-				System.out.println( "Parameter " + paramName + " was found" );
 				if( messageExchange.getResponseContent().indexOf( paramValue ) > -1 && securityTestLog != null )
 				{
 					securityTestLog.addEntry( new SecurityTestLogMessageEntry( "Parameter " + paramName
