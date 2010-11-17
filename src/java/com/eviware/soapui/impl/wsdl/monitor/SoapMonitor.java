@@ -1350,7 +1350,7 @@ public class SoapMonitor extends JPanel
 			
 			if (monitorSecurityTest != null) {
 				for (SecurityCheck check : monitorSecurityTest.getMonitorSecurityChecksList()) {
-					if (((HttpSecurityAnalyser)check).canRun())
+					if (((HttpSecurityAnalyser)check).canRun() && !check.isDisabled())
 						((HttpSecurityAnalyser)check).analyzeHttpConnection(messageExchange, monitorSecurityTest.getSecurityTestLog());
 				}
 			}
