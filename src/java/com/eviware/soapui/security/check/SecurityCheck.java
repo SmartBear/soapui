@@ -67,6 +67,11 @@ public abstract class SecurityCheck extends AbstractWsdlModelItem<SecurityCheckC
 	 */
 	public abstract JComponent getComponent();
 
+	/**
+	 * The type of this check
+	 * 
+	 * @return
+	 */
 	public abstract String getType();
 
 }
