@@ -37,6 +37,11 @@ public class SecurityCheckRegistry
 		addFactory( new ParameterExposureCheckFactory() );
 	}
 
+	/**
+	 * Gets the right SecurityCheck Factory, depending on the type
+	 * @param type The securityCheck to get the factory for
+	 * @return
+	 */
 	public SecurityCheckFactory getFactory( String type )
 	{
 		for( String cc : availableSecurityChecks.keySet() )
@@ -49,12 +54,20 @@ public class SecurityCheckRegistry
 		return null;
 	}
 
+	/**
+	 * Adding a new factory to the registry
+	 * @param factory
+	 */
 	public void addFactory( SecurityCheckFactory factory )
 	{
 		removeFactory( factory.getType() );
 		availableSecurityChecks.put( factory.getSecurityCheckName(), factory );
 	}
 
+	/**
+	 * Removing a factory from the registry
+	 * @param type
+	 */
 	public void removeFactory( String type )
 	{
 		for( String scfName : availableSecurityChecks.keySet() )
@@ -68,6 +81,10 @@ public class SecurityCheckRegistry
 		}
 	}
 
+	/**
+	 * 
+	 * @return The registry instance
+	 */
 	public static synchronized SecurityCheckRegistry getInstance()
 	{
 		if( instance == null )
@@ -76,6 +93,11 @@ public class SecurityCheckRegistry
 		return instance;
 	}
 
+	/**
+	 * Checking if the registry contains a factory.
+	 * @param config A configuraiton to check the factory for
+	 * @return
+	 */
 	public boolean hasFactory( SecurityCheckConfig config )
 	{
 		return getFactory( config.getType() ) != null;

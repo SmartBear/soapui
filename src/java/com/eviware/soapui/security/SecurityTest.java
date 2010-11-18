@@ -210,6 +210,13 @@ public class SecurityTest extends AbstractWsdlModelItem<SecurityTestConfig> impl
 				: "" ) : "";
 	}
 
+	/**
+	 * Executes the startup Script
+	 * @param runContext
+	 * @param runner
+	 * @return
+	 * @throws Exception
+	 */
 	public Object runStartupScript( SecurityTestRunContext runContext, SecurityTestRunner runner ) throws Exception
 	{
 		String script = getStartupScript();
@@ -255,6 +262,13 @@ public class SecurityTest extends AbstractWsdlModelItem<SecurityTestConfig> impl
 				.getStringValue() : "" ) : "";
 	}
 
+	/**
+	 * Executes the teardown Script
+	 * @param runContext
+	 * @param runner
+	 * @return
+	 * @throws Exception
+	 */
 	public Object runTearDownScript( SecurityTestRunContext runContext, SecurityTestRunner runner ) throws Exception
 	{
 		String script = getTearDownScript();
