@@ -18,6 +18,7 @@ import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 
 import com.eviware.soapui.SoapUI;
@@ -140,7 +141,7 @@ public class SoapUIPreferencesAction extends AbstractAction
 		tabs.setTabPlacement( JTabbedPane.LEFT );
 		for( Prefs pref : prefs )
 		{
-			tabs.addTab( pref.getTitle(), pref.getForm().getPanel() );
+			tabs.addTab( pref.getTitle(), new JScrollPane( pref.getForm().getPanel() ) );
 		}
 
 		dialog.setContent( UISupport.createTabPanel( tabs, false ) );
