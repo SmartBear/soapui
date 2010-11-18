@@ -105,9 +105,7 @@ public class SoapMonitorDesktopPanel extends DefaultDesktopPanel
 
 	private JComponent buildRunLog()
 	{
-		// TODO see how to get modelItem and enable options settings
 		securityTestRunLog = new JSecurityTestRunLog();
-		// securityTestRunLog = new JSecurityTestRunLog();
 		return securityTestRunLog;
 	}
 
