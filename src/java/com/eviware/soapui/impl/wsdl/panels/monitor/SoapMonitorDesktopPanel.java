@@ -53,7 +53,7 @@ public class SoapMonitorDesktopPanel extends DefaultDesktopPanel
 
 		JXToolBar toolbar = UISupport.createToolbar();
 		JComponent securityTestRunLog = buildRunLog();
-		MonitorSecurityTest securityTest = new MonitorSecurityTest(( JSecurityTestRunLog )securityTestRunLog);
+		MonitorSecurityTest securityTest = new MonitorSecurityTest( ( JSecurityTestRunLog )securityTestRunLog );
 		soapMonitor = new SoapMonitor( project, sourcePort, incomingRequestWss, incomingResponseWss, toolbar, setAsProxy,
 				sslEndpoint, securityTest );
 
@@ -66,14 +66,13 @@ public class SoapMonitorDesktopPanel extends DefaultDesktopPanel
 		JPanel innerPanel = new JPanel( new BorderLayout() );
 		innerPanel.add( toolbar, BorderLayout.NORTH );
 		innerPanel.add( UISupport.createTabPanel( tabs, true ), BorderLayout.CENTER );
-		
-		inspectorPanel = JInspectorPanelFactory.build(innerPanel );
-		JComponentInspector<JComponent> logInspector = new JComponentInspector<JComponent>(securityTestRunLog ,
+
+		inspectorPanel = JInspectorPanelFactory.build( innerPanel );
+		JComponentInspector<JComponent> logInspector = new JComponentInspector<JComponent>( securityTestRunLog,
 				"SecurityChecks Log", "Log of applied SecurityChecks", true );
 		inspectorPanel.addInspector( logInspector );
-		p.add( inspectorPanel.getComponent());
+		p.add( inspectorPanel.getComponent() );
 		p.setPreferredSize( new Dimension( 700, 600 ) );
-		
 
 	}
 
@@ -106,10 +105,9 @@ public class SoapMonitorDesktopPanel extends DefaultDesktopPanel
 
 	private JComponent buildRunLog()
 	{
-		// TODO see how to get modelItem and enable options seting
-		// securityTestRunLog = new JSecurityTestRunLog(
-		// getModelItem().getSettings() );
+		// TODO see how to get modelItem and enable options settings
 		securityTestRunLog = new JSecurityTestRunLog();
+		// securityTestRunLog = new JSecurityTestRunLog();
 		return securityTestRunLog;
 	}
 
