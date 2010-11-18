@@ -16,6 +16,8 @@ import java.io.IOException;
 
 import javax.swing.ImageIcon;
 
+import com.eviware.soapui.model.iface.MessageExchange;
+
 /**
  * SecurityTestLogEntry
  * 
@@ -31,6 +33,8 @@ public interface SecurityTestLogEntry
 	public String getType();
 
 	public String getTargetStepName();
+	
+	public MessageExchange getMessageExchange();
 
 //	public ActionList getActions();
 

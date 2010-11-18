@@ -45,6 +45,10 @@ public class SecurityTest extends AbstractWsdlModelItem<SecurityTestConfig> impl
 	private WsdlTestCase testCase;
 	private SecurityTestLogModel securityTestLog;
 
+	/**
+	 * Gets the current security log
+	 * @return
+	 */
 	public SecurityTestLogModel getSecurityTestLog()
 	{
 		return securityTestLog;
@@ -125,6 +129,7 @@ public class SecurityTest extends AbstractWsdlModelItem<SecurityTestConfig> impl
 	}
 
 	/**
+	 * Returns a map of testnames to security checks
 	 * @return A map of TestStepNames to their relevant security checks
 	 */
 	public HashMap<String, List<SecurityCheck>> getSecurityChecksMap()
@@ -156,6 +161,9 @@ public class SecurityTest extends AbstractWsdlModelItem<SecurityTestConfig> impl
 		return securityChecksMap;
 	}
 
+	/**
+	 * @return the current testcase
+	 */
 	public WsdlTestCase getTestCase()
 	{
 		return testCase;
@@ -174,6 +182,10 @@ public class SecurityTest extends AbstractWsdlModelItem<SecurityTestConfig> impl
 		return runner;
 	}
 
+	/**
+	 * Sets the script to be used on startup
+	 * @param script
+	 */
 	public void setStartupScript( String script )
 	{
 		String oldScript = getStartupScript();
@@ -188,6 +200,10 @@ public class SecurityTest extends AbstractWsdlModelItem<SecurityTestConfig> impl
 		notifyPropertyChanged( STARTUP_SCRIPT_PROPERTY, oldScript, script );
 	}
 
+
+	/**
+	 * @return The current startup script
+	 */
 	public String getStartupScript()
 	{
 		return getConfig() != null ? ( getConfig().isSetStartupScript() ? getConfig().getStartupScript().getStringValue()
@@ -212,6 +228,10 @@ public class SecurityTest extends AbstractWsdlModelItem<SecurityTestConfig> impl
 		return scriptEngine.run();
 	}
 
+	/**
+	 * Sets the script to be used on teardown
+	 * @param script
+	 */
 	public void setTearDownScript( String script )
 	{
 		String oldScript = getTearDownScript();
@@ -226,6 +246,9 @@ public class SecurityTest extends AbstractWsdlModelItem<SecurityTestConfig> impl
 		notifyPropertyChanged( TEARDOWN_SCRIPT_PROPERTY, oldScript, script );
 	}
 
+	/**
+	 * @return The current teardown script
+	 */
 	public String getTearDownScript()
 	{
 		return getConfig() != null ? ( getConfig().isSetTearDownScript() ? getConfig().getTearDownScript()

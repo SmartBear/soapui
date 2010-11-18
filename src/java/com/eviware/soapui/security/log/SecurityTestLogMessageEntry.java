@@ -18,6 +18,7 @@ import java.util.Date;
 
 import javax.swing.ImageIcon;
 
+import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.support.action.swing.ActionList;
 
 /**
@@ -32,15 +33,22 @@ public class SecurityTestLogMessageEntry implements SecurityTestLogEntry
 	private long timestamp;
 	private ImageIcon icon;
 	private boolean discarded;
+	private MessageExchange messageExchange;
 
 	public SecurityTestLogMessageEntry( String message )
 	{
 		this.message = message;
 		timestamp = System.currentTimeMillis();
-
-//		icon = UISupport.createImageIcon( "/securitytest_log_message.gif" );
 	}
 
+	public SecurityTestLogMessageEntry( String message, MessageExchange messageExchange )
+	{
+		this.message = message;
+		this.messageExchange = messageExchange;
+		timestamp = System.currentTimeMillis();
+	}
+
+	
 	public String getMessage()
 	{
 		return message;
@@ -93,5 +101,10 @@ public class SecurityTestLogMessageEntry implements SecurityTestLogEntry
 	public boolean isDiscarded()
 	{
 		return discarded;
+	}
+
+	@Override
+	public MessageExchange getMessageExchange() {
+		return messageExchange;
 	}
 }

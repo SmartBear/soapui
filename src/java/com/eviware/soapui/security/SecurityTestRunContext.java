@@ -20,5 +20,8 @@ import com.eviware.soapui.model.testsuite.TestRunContext;
 
 public interface SecurityTestRunContext extends TestRunContext
 {
+	/**
+	 * @return the security test runner
+	 */
 	public SecurityTestRunner getSecurityTestRunner();
 }
