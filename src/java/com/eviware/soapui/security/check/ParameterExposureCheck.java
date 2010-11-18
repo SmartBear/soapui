@@ -67,7 +67,6 @@ import com.eviware.soapui.support.types.StringToObjectMap;
 public class ParameterExposureCheck extends AbstractSecurityCheck implements HttpSecurityAnalyser
 {
 
-	// JTextField minimumCharactersTextField;
 	protected JTextField minimumCharactersTextField;
 
 	public static final String TYPE = "ParameterExposureCheck";
