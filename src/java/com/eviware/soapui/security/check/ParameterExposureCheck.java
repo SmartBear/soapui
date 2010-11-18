@@ -218,7 +218,7 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements Htt
 
 		minimumCharactersTextField = form.appendTextField( MINIMUM_CHARACTERS_FIELD, "Minimum characters" );
 		minimumCharactersTextField.setMaximumSize( new Dimension( 40, 10 ) );
-		minimumCharactersTextField.setColumns(4);
+		minimumCharactersTextField.setColumns( 4 );
 		minimumCharactersTextField.setText( String.valueOf( getMinimumLength() ) );
 		minimumCharactersTextField.getDocument().addDocumentListener( new DocumentListenerAdapter()
 		{
@@ -255,7 +255,6 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements Htt
 		@Override
 		public void keyReleased( KeyEvent arg0 )
 		{
-		
 
 		}
 
@@ -289,7 +288,7 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements Htt
 				if( messageExchange.getResponseContent().indexOf( paramValue ) > -1 && securityTestLog != null )
 				{
 					securityTestLog.addEntry( new SecurityTestLogMessageEntry( "The parameter " + paramName
-							+ " with the value \"" + paramValue + "\" is exposed in the response" ) );
+							+ " with the value \"" + paramValue + "\" is exposed in the response", messageExchange ) );
 				}
 			}
 		}

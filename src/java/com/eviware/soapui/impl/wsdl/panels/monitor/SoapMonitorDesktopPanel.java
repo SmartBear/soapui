@@ -52,10 +52,11 @@ public class SoapMonitorDesktopPanel extends DefaultDesktopPanel
 		JTabbedPane tabs = new JTabbedPane();
 
 		JXToolBar toolbar = UISupport.createToolbar();
-		JComponent securityTestRunLog = buildRunLog();
-		MonitorSecurityTest securityTest = new MonitorSecurityTest( ( JSecurityTestRunLog )securityTestRunLog );
 		soapMonitor = new SoapMonitor( project, sourcePort, incomingRequestWss, incomingResponseWss, toolbar, setAsProxy,
-				sslEndpoint, securityTest );
+				sslEndpoint );
+		JComponent securityTestRunLog = buildRunLog( soapMonitor );
+		MonitorSecurityTest securityTest = new MonitorSecurityTest( ( JSecurityTestRunLog )securityTestRunLog );
+		soapMonitor.setMonitorSecurityTest( securityTest );
 
 		tabs.add( soapMonitor, "Traffic Log" );
 		securityTab = new SecurityTestsMonitorDesktopPanel( securityTest );
@@ -103,9 +104,9 @@ public class SoapMonitorDesktopPanel extends DefaultDesktopPanel
 		return project;
 	}
 
-	private JComponent buildRunLog()
+	private JComponent buildRunLog( SoapMonitor soapMonitor )
 	{
-		securityTestRunLog = new JSecurityTestRunLog();
+		securityTestRunLog = new JSecurityTestRunLog( soapMonitor );
 		return securityTestRunLog;
 	}
 

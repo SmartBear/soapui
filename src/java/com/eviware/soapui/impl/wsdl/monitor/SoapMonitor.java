@@ -117,6 +117,12 @@ public class SoapMonitor extends JPanel
 	private JButton stopButton = null;
 
 	private JXTable logTable = null;
+
+	public JXTable getLogTable()
+	{
+		return logTable;
+	}
+
 	private MonitorLogTableModel tableModel = null;
 
 	private String httpProxyHost = null;
@@ -168,7 +174,7 @@ public class SoapMonitor extends JPanel
 	private MonitorSecurityTest monitorSecurityTest;
 
 	public SoapMonitor( WsdlProject project, int listenPort, String incomingRequestWss, String incomingResponseWss,
-			JXToolBar mainToolbar, boolean setAsProxy, String sslEndpoint, MonitorSecurityTest monitorSecurityTest )
+			JXToolBar mainToolbar, boolean setAsProxy, String sslEndpoint )
 	{
 		super( new BorderLayout() );
 		this.project = project;
@@ -178,7 +184,6 @@ public class SoapMonitor extends JPanel
 		this.setAsProxy = setAsProxy;
 		this.maxRows = 100;
 		this.sslEndpoint = sslEndpoint;
-		this.monitorSecurityTest = monitorSecurityTest;
 
 		// set the slow link to the passed down link
 
@@ -193,7 +198,7 @@ public class SoapMonitor extends JPanel
 	public SoapMonitor( WsdlProject project, int sourcePort, String incomingRequestWss, String incomingResponseWss,
 			JXToolBar toolbar, boolean setAsProxy )
 	{
-		this( project, sourcePort, incomingRequestWss, incomingResponseWss, toolbar, setAsProxy, null, null );
+		this( project, sourcePort, incomingRequestWss, incomingResponseWss, toolbar, setAsProxy, null );
 	}
 
 	private JComponent buildContent()
@@ -1347,11 +1352,14 @@ public class SoapMonitor extends JPanel
 					.getWssContainer().getIncomingWssByName( incomingResponseWss ) );
 
 			tableModel.addMessageExchange( messageExchange );
-			
-			if (monitorSecurityTest != null) {
-				for (SecurityCheck check : monitorSecurityTest.getMonitorSecurityChecksList()) {
-					if (((HttpSecurityAnalyser)check).canRun() && !check.isDisabled())
-						((HttpSecurityAnalyser)check).analyzeHttpConnection(messageExchange, monitorSecurityTest.getSecurityTestLog());
+
+			if( monitorSecurityTest != null )
+			{
+				for( SecurityCheck check : monitorSecurityTest.getMonitorSecurityChecksList() )
+				{
+					if( ( ( HttpSecurityAnalyser )check ).canRun() && !check.isDisabled() )
+						( ( HttpSecurityAnalyser )check ).analyzeHttpConnection( messageExchange, monitorSecurityTest
+								.getSecurityTestLog() );
 				}
 			}
 
@@ -1578,4 +1586,10 @@ public class SoapMonitor extends JPanel
 	{
 		return requestModelItem;
 	}
+
+	public void setMonitorSecurityTest( MonitorSecurityTest monitorSecurityTest )
+	{
+		this.monitorSecurityTest = monitorSecurityTest;
+	}
+
 }

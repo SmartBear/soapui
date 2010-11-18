@@ -15,6 +15,8 @@ package com.eviware.soapui.security.log;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
@@ -25,12 +27,18 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.wsdl.monitor.SoapMonitor;
+import com.eviware.soapui.impl.wsdl.support.MessageExchangeModelItem;
 import com.eviware.soapui.model.settings.Settings;
+import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.action.swing.ActionList;
+import com.eviware.soapui.support.action.swing.ActionSupport;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.support.ADialogBuilder;
@@ -47,6 +55,7 @@ import com.eviware.x.form.support.AField.AFieldType;
 public class JSecurityTestRunLog extends JPanel
 {
 	private SecurityTestLogModel logListModel;
+	private MessageExchangeModelItem requestModelItem;
 	private JList testLogList;
 	private boolean errorsOnly = false;
 	private final Settings settings;
@@ -54,11 +63,13 @@ public class JSecurityTestRunLog extends JPanel
 	private boolean follow = true;
 	protected int selectedIndex;
 	private XFormDialog optionsDialog;
+	private SoapMonitor soapMonitor;
 
-	public JSecurityTestRunLog()
+	public JSecurityTestRunLog( SoapMonitor soapMonitor )
 	{
 		super( new BorderLayout() );
 		this.settings = SoapUI.getSettings();
+		this.soapMonitor = soapMonitor;
 
 		errorsOnly = settings.getBoolean( OptionsForm.class.getName() + "@errors_only" );
 
@@ -74,7 +85,7 @@ public class JSecurityTestRunLog extends JPanel
 		// testLogList.setCellRenderer( new TestLogCellRenderer() );
 		// testLogList.setPrototypeCellValue( "Testing 123" );
 		// testLogList.setFixedCellWidth( -1 );
-		// testLogList.addMouseListener( new LogListMouseListener() );
+		testLogList.addMouseListener( new LogListMouseListener() );
 
 		JScrollPane scrollPane = new JScrollPane( testLogList );
 		add( scrollPane, BorderLayout.CENTER );
@@ -133,8 +144,8 @@ public class JSecurityTestRunLog extends JPanel
 	public synchronized void addEntry( SecurityTestLogMessageEntry securityTestLogMessageEntry )
 	{
 		logListModel.addEntry( securityTestLogMessageEntry );
-		// if( follow )
-		// testLogList.ensureIndexIsVisible( logListModel.getSize() - 1 );
+		if( follow )
+			testLogList.ensureIndexIsVisible( logListModel.getSize() - 1 );
 	}
 
 	// /*
@@ -298,6 +309,71 @@ public class JSecurityTestRunLog extends JPanel
 				if( StringUtils.hasContent( msg ) )
 					out.println( msg );
 			}
+		}
+	}
+
+	/**
+	 * Mouse Listener for triggering default action and showing popup for log
+	 * list items
+	 * 
+	 * @author Ole.Matzura
+	 */
+
+	private final class LogListMouseListener extends MouseAdapter
+	{
+		public void mouseClicked( MouseEvent e )
+		{
+			int index = testLogList.getSelectedIndex();
+			if( index != -1 && ( index == selectedIndex || e.getClickCount() > 1 ) )
+			{
+				SecurityTestLogMessageEntry entry = ( SecurityTestLogMessageEntry )testLogList.getSelectedValue();
+				for( int i = 0; i < soapMonitor.getLogModel().getRowCount(); i++ )
+				{
+					if( soapMonitor.getLogModel().getMessageExchangeAt( i ).equals( entry.getMessageExchange() ) )
+					{
+						soapMonitor.getLogTable().setRowSelectionInterval( i, i );
+						soapMonitor.getLogTable().scrollRowToVisible( i );
+					}
+				}
+			}
+
+			selectedIndex = index;
+		}
+
+		public void mousePressed( MouseEvent e )
+		{
+			if( e.isPopupTrigger() )
+				showPopup( e );
+		}
+
+		public void mouseReleased( MouseEvent e )
+		{
+			if( e.isPopupTrigger() )
+				showPopup( e );
+		}
+
+		public void showPopup( MouseEvent e )
+		{
+			// int row = testLogList.locationToIndex( e.getPoint() );
+			// if( row == -1 )
+			// return;
+			//
+			// if( testLogList.getSelectedIndex() != row )
+			// {
+			// testLogList.setSelectedIndex( row );
+			// }
+			//
+			// TestStepResult result = logListModel.getResultAt( row );
+			// if( result == null )
+			// return;
+			//
+			// ActionList actions = result.getActions();
+			//
+			// if( actions == null || actions.getActionCount() == 0 )
+			// return;
+			//
+			// JPopupMenu popup = ActionSupport.buildPopup( actions );
+			// UISupport.showPopup( popup, testLogList, e.getPoint() );
 		}
 	}
 }

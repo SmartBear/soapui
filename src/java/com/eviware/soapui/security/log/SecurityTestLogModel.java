@@ -25,7 +25,7 @@ import org.apache.commons.collections.list.TreeList;
  */
 public class SecurityTestLogModel extends AbstractListModel
 {
-	private List<Object> items = Collections.synchronizedList( new TreeList() );
+	private List<SecurityTestLogMessageEntry> items = Collections.synchronizedList( new TreeList() );
 	private int maxSize = 0;
 
 	public SecurityTestLogModel()
@@ -33,7 +33,7 @@ public class SecurityTestLogModel extends AbstractListModel
 	}
 
 	@Override
-	public Object getElementAt( int arg0 )
+	public SecurityTestLogMessageEntry getElementAt( int arg0 )
 	{
 		return items.get( arg0 );
 	}
@@ -46,7 +46,7 @@ public class SecurityTestLogModel extends AbstractListModel
 
 	public void addEntry( SecurityTestLogMessageEntry securityTestLogMessageEntry )
 	{
-		items.add( securityTestLogMessageEntry.getMessage() );
+		items.add( securityTestLogMessageEntry );
 		fireIntervalAdded( this, items.size() - 1, items.size() - 1 );
 
 		enforceMaxSize();

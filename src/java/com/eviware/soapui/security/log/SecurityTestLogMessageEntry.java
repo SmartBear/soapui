@@ -48,7 +48,6 @@ public class SecurityTestLogMessageEntry implements SecurityTestLogEntry
 		timestamp = System.currentTimeMillis();
 	}
 
-	
 	public String getMessage()
 	{
 		return message;
@@ -104,7 +103,14 @@ public class SecurityTestLogMessageEntry implements SecurityTestLogEntry
 	}
 
 	@Override
-	public MessageExchange getMessageExchange() {
+	public MessageExchange getMessageExchange()
+	{
 		return messageExchange;
+	}
+
+	//TODO for now just returning message to be able to write it to log, consider changing it properly
+	public String toString()
+	{
+		return getMessage();
 	}
 }
