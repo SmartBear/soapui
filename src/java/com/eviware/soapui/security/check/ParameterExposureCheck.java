@@ -152,8 +152,8 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements Htt
 
 					if( containsAssertion.getStatus().equals( AssertionStatus.VALID ) )
 					{
-						securityTestLog.addEntry( new SecurityTestLogMessageEntry( "Parameter " + param.getName()
-								+ " is exposed in the response" ) );
+						securityTestLog.addEntry( new SecurityTestLogMessageEntry( "The parameter " + param.getName()
+								+ " with the value \"" + param.getValue() + "\" is exposed in the response" ) );
 					}
 				}
 			}
@@ -290,8 +290,8 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements Htt
 			{
 				if( messageExchange.getResponseContent().indexOf( paramValue ) > -1 && securityTestLog != null )
 				{
-					securityTestLog.addEntry( new SecurityTestLogMessageEntry( "Parameter " + paramName
-							+ " is exposed in the response" ) );
+					securityTestLog.addEntry( new SecurityTestLogMessageEntry( "The parameter " + paramName
+							+ " with the value \"" + paramValue + "\" is exposed in the response" ) );
 				}
 			}
 		}
