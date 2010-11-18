@@ -11,7 +11,6 @@
  */
 package com.eviware.soapui.security.log;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -19,22 +18,18 @@ import javax.swing.AbstractListModel;
 
 import org.apache.commons.collections.list.TreeList;
 
-import com.eviware.soapui.security.SecurityTest;
-
 /**
  * SecurityTestLog
  * 
  * @author soapUI team
  */
-public class SecurityTestLog extends AbstractListModel
+public class SecurityTestLogModel extends AbstractListModel
 {
-//	private List<SecurityTestLogMessageEntry> logEntries;
 	private List<Object> items = Collections.synchronizedList( new TreeList() );
 	private int maxSize = 0;
 
-	public SecurityTestLog()
+	public SecurityTestLogModel()
 	{
-//		logEntries = new ArrayList<SecurityTestLogMessageEntry>();
 	}
 
 	@Override
@@ -53,11 +48,19 @@ public class SecurityTestLog extends AbstractListModel
 	{
 		items.add( securityTestLogMessageEntry.getMessage() );
 		fireIntervalAdded( this, items.size() - 1, items.size() - 1 );
+
+		enforceMaxSize();
 	}
+
 	public synchronized void clear()
 	{
+		int sz = items.size();
 		items.clear();
+		// results.clear();
+		// stepCount = 0;
+		fireIntervalRemoved( this, 0, sz );
 	}
+
 	public int getMaxSize()
 	{
 		return maxSize;
@@ -68,16 +71,15 @@ public class SecurityTestLog extends AbstractListModel
 		this.maxSize = maxSize;
 		enforceMaxSize();
 	}
+
 	private synchronized void enforceMaxSize()
 	{
 		while( items.size() > maxSize )
 		{
 			items.remove( 0 );
-//			results.remove( 0 );
+			// results.remove( 0 );
 			fireIntervalRemoved( this, 0, 0 );
 		}
 	}
-
-
 
 }

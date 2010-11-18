@@ -18,7 +18,7 @@ import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTestContext;
-import com.eviware.soapui.security.log.SecurityTestLog;
+import com.eviware.soapui.security.log.SecurityTestLogModel;
 
 /**
  * SecurityCheck
@@ -41,10 +41,10 @@ public abstract class SecurityCheck extends AbstractWsdlModelItem<SecurityCheckC
 	 * @param context The context to run the test in
 	 * @param securityTestLog The security log to write to
 	 */
-	public abstract void run( TestStep testStep, SecurityTestContext context, SecurityTestLog securityTestLog );
+	public abstract void run( TestStep testStep, SecurityTestContext context, SecurityTestLogModel securityTestLog );
 
 	// used in monitor,
-	public abstract void analyze( TestStep testStep, SecurityTestContext context, SecurityTestLog securityTestLog );
+	public abstract void analyze( TestStep testStep, SecurityTestContext context, SecurityTestLogModel securityTestLog );
 
 	// possibly to be done through registry
 	public abstract boolean isMonitorApplicable();

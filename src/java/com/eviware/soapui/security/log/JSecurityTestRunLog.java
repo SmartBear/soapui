@@ -27,10 +27,13 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.x.form.XFormDialog;
+import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.AField.AFieldType;
@@ -43,30 +46,29 @@ import com.eviware.x.form.support.AField.AFieldType;
 
 public class JSecurityTestRunLog extends JPanel
 {
-	private SecurityTestLog logListModel;
+	private SecurityTestLogModel logListModel;
 	private JList testLogList;
 	private boolean errorsOnly = false;
-//	private final Settings settings;
+	private final Settings settings;
 	private Set<String> boldTexts = new HashSet<String>();
 	private boolean follow = true;
 	protected int selectedIndex;
 	private XFormDialog optionsDialog;
 
-	public JSecurityTestRunLog( )
+	public JSecurityTestRunLog()
 	{
 		super( new BorderLayout() );
-//		this.settings = settings;
-//
-//		errorsOnly = settings.getBoolean( OptionsForm.class.getName() + "@errors_only" );
+		this.settings = SoapUI.getSettings();
+
+		errorsOnly = settings.getBoolean( OptionsForm.class.getName() + "@errors_only" );
 
 		buildUI();
 	}
 
 	private void buildUI()
 	{
-		logListModel = new SecurityTestLog();
-		// logListModel.setMaxSize( ( int )settings.getLong(
-		// OptionsForm.class.getName() + "@max_rows", 1000 ) );
+		logListModel = new SecurityTestLogModel();
+		logListModel.setMaxSize( ( int )settings.getLong( OptionsForm.class.getName() + "@max_rows", 1000 ) );
 
 		testLogList = new JList( logListModel );
 		// testLogList.setCellRenderer( new TestLogCellRenderer() );
@@ -106,7 +108,7 @@ public class JSecurityTestRunLog extends JPanel
 	protected void addToolbarButtons( JXToolBar toolbar )
 	{
 		toolbar.addFixed( UISupport.createToolbarButton( new ClearLogAction() ) );
-//		toolbar.addFixed( UISupport.createToolbarButton( new SetLogOptionsAction() ) );
+		toolbar.addFixed( UISupport.createToolbarButton( new SetLogOptionsAction() ) );
 		toolbar.addFixed( UISupport.createToolbarButton( new ExportLogAction() ) );
 	}
 
@@ -131,8 +133,8 @@ public class JSecurityTestRunLog extends JPanel
 	public synchronized void addEntry( SecurityTestLogMessageEntry securityTestLogMessageEntry )
 	{
 		logListModel.addEntry( securityTestLogMessageEntry );
-//		if( follow )
-//			testLogList.ensureIndexIsVisible( logListModel.getSize() - 1 );
+		// if( follow )
+		// testLogList.ensureIndexIsVisible( logListModel.getSize() - 1 );
 	}
 
 	// /*
@@ -162,48 +164,48 @@ public class JSecurityTestRunLog extends JPanel
 	// }
 	// }
 
-	public SecurityTestLog getLogListModel()
+	public SecurityTestLogModel getLogListModel()
 	{
 		return logListModel;
 	}
 
-	public void setLogListModel( SecurityTestLog logListModel )
+	public void setLogListModel( SecurityTestLogModel logListModel )
 	{
 		this.logListModel = logListModel;
 		testLogList.setModel( logListModel );
 	}
 
-//	private class SetLogOptionsAction extends AbstractAction
-//	{
-//		public SetLogOptionsAction()
-//		{
-//			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/options.gif" ) );
-//			putValue( Action.SHORT_DESCRIPTION, "Sets TestCase Log Options" );
-//		}
-//
-//		public void actionPerformed( ActionEvent e )
-//		{
-//			if( optionsDialog == null )
-//				optionsDialog = ADialogBuilder.buildDialog( OptionsForm.class );
-//
-//			optionsDialog.setIntValue( OptionsForm.MAXROWS, ( int )settings.getLong( OptionsForm.class.getName()
-//					+ "@max_rows", 1000 ) );
-//			optionsDialog.setBooleanValue( OptionsForm.ERRORSONLY, settings.getBoolean( OptionsForm.class.getName()
-//					+ "@errors_only" ) );
-//			optionsDialog.setBooleanValue( OptionsForm.FOLLOW, follow );
-//
-//			if( optionsDialog.show() )
-//			{
-//				int maxRows = optionsDialog.getIntValue( OptionsForm.MAXROWS, 1000 );
-//				logListModel.setMaxSize( maxRows );
-//				settings.setLong( OptionsForm.class.getName() + "@max_rows", maxRows );
-//				errorsOnly = optionsDialog.getBooleanValue( OptionsForm.ERRORSONLY );
-//				settings.setBoolean( OptionsForm.class.getName() + "@errors_only", errorsOnly );
-//
-//				follow = optionsDialog.getBooleanValue( OptionsForm.FOLLOW );
-//			}
-//		}
-//	}
+	private class SetLogOptionsAction extends AbstractAction
+	{
+		public SetLogOptionsAction()
+		{
+			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/options.gif" ) );
+			putValue( Action.SHORT_DESCRIPTION, "Sets TestCase Log Options" );
+		}
+
+		public void actionPerformed( ActionEvent e )
+		{
+			if( optionsDialog == null )
+				optionsDialog = ADialogBuilder.buildDialog( OptionsForm.class );
+
+			optionsDialog.setIntValue( OptionsForm.MAXROWS, ( int )settings.getLong( OptionsForm.class.getName()
+					+ "@max_rows", 1000 ) );
+			optionsDialog.setBooleanValue( OptionsForm.ERRORSONLY, settings.getBoolean( OptionsForm.class.getName()
+					+ "@errors_only" ) );
+			optionsDialog.setBooleanValue( OptionsForm.FOLLOW, follow );
+
+			if( optionsDialog.show() )
+			{
+				int maxRows = optionsDialog.getIntValue( OptionsForm.MAXROWS, 1000 );
+				logListModel.setMaxSize( maxRows );
+				settings.setLong( OptionsForm.class.getName() + "@max_rows", maxRows );
+				errorsOnly = optionsDialog.getBooleanValue( OptionsForm.ERRORSONLY );
+				settings.setBoolean( OptionsForm.class.getName() + "@errors_only", errorsOnly );
+
+				follow = optionsDialog.getBooleanValue( OptionsForm.FOLLOW );
+			}
+		}
+	}
 
 	@AForm( name = "Log Options", description = "Set options for the run log below" )
 	private static interface OptionsForm

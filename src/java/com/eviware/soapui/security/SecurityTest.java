@@ -25,7 +25,7 @@ import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestRunnable;
 import com.eviware.soapui.model.testsuite.TestRunner.Status;
 import com.eviware.soapui.security.check.SecurityCheck;
-import com.eviware.soapui.security.log.SecurityTestLog;
+import com.eviware.soapui.security.log.SecurityTestLogModel;
 import com.eviware.soapui.security.registry.SecurityCheckRegistry;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
@@ -43,9 +43,9 @@ public class SecurityTest extends AbstractWsdlModelItem<SecurityTestConfig> impl
 	public final static String TEARDOWN_SCRIPT_PROPERTY = SecurityTest.class.getName() + "@tearDownScript";
 	public final static String SECURITY_CHECK_MAP_PROPERTY = SecurityTest.class.getName() + "@securityCheckMap";
 	private WsdlTestCase testCase;
-	private SecurityTestLog securityTestLog;
+	private SecurityTestLogModel securityTestLog;
 
-	public SecurityTestLog getSecurityTestLog()
+	public SecurityTestLogModel getSecurityTestLog()
 	{
 		return securityTestLog;
 	}
@@ -57,7 +57,7 @@ public class SecurityTest extends AbstractWsdlModelItem<SecurityTestConfig> impl
 	{
 		super( config, testCase, "/loadTest.gif" );
 		this.testCase = testCase;
-		securityTestLog = new SecurityTestLog();
+		securityTestLog = new SecurityTestLogModel();
 	}
 
 	/**

@@ -17,7 +17,6 @@ import java.util.List;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.security.check.SecurityCheck;
 import com.eviware.soapui.security.log.JSecurityTestRunLog;
-import com.eviware.soapui.security.log.SecurityTestLog;
 import com.eviware.soapui.security.registry.SecurityCheckFactory;
 import com.eviware.soapui.security.registry.SecurityCheckRegistry;
 
@@ -35,7 +34,7 @@ public class MonitorSecurityTest
 	private List<SecurityCheck> monitorSecurityChecksList;
 	private JSecurityTestRunLog securityTestLog;
 
-	public MonitorSecurityTest(JSecurityTestRunLog securityTestRunLog)
+	public MonitorSecurityTest( JSecurityTestRunLog securityTestRunLog )
 	{
 		monitorSecurityChecksList = new ArrayList<SecurityCheck>();
 		this.securityTestLog = securityTestRunLog;
@@ -43,6 +42,7 @@ public class MonitorSecurityTest
 
 	/**
 	 * The list of checks attached to the monitor
+	 * 
 	 * @return List of checks
 	 */
 	public List<SecurityCheck> getMonitorSecurityChecksList()
@@ -52,6 +52,7 @@ public class MonitorSecurityTest
 
 	/**
 	 * Adds new SecurityCheck of specified type
+	 * 
 	 * @param name
 	 * @param type
 	 * @return
@@ -66,7 +67,8 @@ public class MonitorSecurityTest
 	}
 
 	/**
-	 * Adds new SecurityCheck with configuration copied from existing one 
+	 * Adds new SecurityCheck with configuration copied from existing one
+	 * 
 	 * @param name
 	 * @param sc
 	 * @return

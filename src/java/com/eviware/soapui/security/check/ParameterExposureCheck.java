@@ -47,7 +47,7 @@ import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
 import com.eviware.soapui.security.SecurityTestContext;
 import com.eviware.soapui.security.log.JSecurityTestRunLog;
-import com.eviware.soapui.security.log.SecurityTestLog;
+import com.eviware.soapui.security.log.SecurityTestLogModel;
 import com.eviware.soapui.security.log.SecurityTestLogMessageEntry;
 
 import com.eviware.soapui.security.monitor.HttpSecurityAnalyser;
@@ -94,7 +94,7 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements Htt
 	}
 
 	@Override
-	protected void execute( TestStep testStep, SecurityTestContext context, SecurityTestLog securityTestLog )
+	protected void execute( TestStep testStep, SecurityTestContext context, SecurityTestLogModel securityTestLog )
 	{
 		if( acceptsTestStep( testStep ) )
 		{
@@ -107,7 +107,7 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements Htt
 	}
 
 	@Override
-	public void analyze( TestStep testStep, SecurityTestContext context, SecurityTestLog securityTestLog )
+	public void analyze( TestStep testStep, SecurityTestContext context, SecurityTestLogModel securityTestLog )
 	{
 		if( acceptsTestStep( testStep ) )
 		{
