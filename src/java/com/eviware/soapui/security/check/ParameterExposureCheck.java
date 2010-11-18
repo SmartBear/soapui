@@ -76,7 +76,6 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements Htt
 	public ParameterExposureCheck( SecurityCheckConfig config, ModelItem parent, String icon )
 	{
 		super( config, parent, icon );
-		monitorApplicable = true;
 		if( config == null )
 		{
 			config = SecurityCheckConfig.Factory.newInstance();

@@ -32,6 +32,7 @@ public abstract class SecurityCheck extends AbstractWsdlModelItem<SecurityCheckC
 		super( config, parent, icon );
 	}
 
+
 	public abstract SecurityCheckConfig getConfig();
 
 	/**
@@ -43,18 +44,32 @@ public abstract class SecurityCheck extends AbstractWsdlModelItem<SecurityCheckC
 	 */
 	public abstract void run( TestStep testStep, SecurityTestContext context, SecurityTestLogModel securityTestLog );
 
-	// used in monitor,
+	
+	/**
+	 * Analyses the specified TestStep
+	 * 
+	 * @param testStep
+	 * @param context
+	 * @param securityTestLog
+	 */
 	public abstract void analyze( TestStep testStep, SecurityTestContext context, SecurityTestLogModel securityTestLog );
 
-	// possibly to be done through registry
-	public abstract boolean isMonitorApplicable();
-
+	/**
+	 * Checks if this securityCheck is applicable to the specified TestStep
+	 * 
+	 * @param testStep
+	 * @return
+	 */
 	public abstract boolean acceptsTestStep( TestStep testStep );
 
+	/**
+	 * Checks if the test is disabled
+	 * @return true if disabled
+	 */
 	public abstract boolean isDisabled();
 
 	/**
-	 * 
+	 * Disables or Enables the check
 	 * @param disabled
 	 */
 	public abstract void setDisabled( boolean disabled );

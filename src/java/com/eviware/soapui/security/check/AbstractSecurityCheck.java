@@ -34,7 +34,6 @@ public abstract class AbstractSecurityCheck extends SecurityCheck
 	protected String startupScript;
 	protected String tearDownScript;
 	protected SoapUIScriptEngine scriptEngine;
-	protected boolean monitorApplicable = false;
 	private boolean disabled = false;
 	protected JPanel panel;
 	protected SimpleForm form;
@@ -109,12 +108,6 @@ public abstract class AbstractSecurityCheck extends SecurityCheck
 	public SecurityCheckConfig getConfig()
 	{
 		return config;
-	}
-
-	@Override
-	public boolean isMonitorApplicable()
-	{
-		return monitorApplicable;
 	}
 
 	@Override
