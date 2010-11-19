@@ -27,18 +27,15 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.monitor.SoapMonitor;
 import com.eviware.soapui.impl.wsdl.support.MessageExchangeModelItem;
 import com.eviware.soapui.model.settings.Settings;
-import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.action.swing.ActionList;
-import com.eviware.soapui.support.action.swing.ActionSupport;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.support.ADialogBuilder;
@@ -64,12 +61,14 @@ public class JSecurityTestRunLog extends JPanel
 	protected int selectedIndex;
 	private XFormDialog optionsDialog;
 	private SoapMonitor soapMonitor;
+	private JTabbedPane tabs;
 
-	public JSecurityTestRunLog( SoapMonitor soapMonitor )
+	public JSecurityTestRunLog( SoapMonitor soapMonitor, JTabbedPane tabs )
 	{
 		super( new BorderLayout() );
 		this.settings = SoapUI.getSettings();
 		this.soapMonitor = soapMonitor;
+		this.tabs = tabs;
 
 		errorsOnly = settings.getBoolean( OptionsForm.class.getName() + "@errors_only" );
 
@@ -333,6 +332,7 @@ public class JSecurityTestRunLog extends JPanel
 					{
 						soapMonitor.getLogTable().setRowSelectionInterval( i, i );
 						soapMonitor.getLogTable().scrollRowToVisible( i );
+						tabs.setSelectedIndex(0);
 					}
 				}
 			}

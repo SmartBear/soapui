@@ -41,6 +41,7 @@ public class SoapMonitorDesktopPanel extends DefaultDesktopPanel
 	private SecurityTestsMonitorDesktopPanel securityTab;
 	JSecurityTestRunLog securityTestRunLog;
 	JInspectorPanel inspectorPanel;
+	JTabbedPane tabs;
 
 	public SoapMonitorDesktopPanel( WsdlProject project, int sourcePort, String incomingRequestWss,
 			String incomingResponseWss, boolean setAsProxy, String sslEndpoint )
@@ -49,7 +50,7 @@ public class SoapMonitorDesktopPanel extends DefaultDesktopPanel
 		this.project = project;
 
 		JPanel p = ( JPanel )getComponent();
-		JTabbedPane tabs = new JTabbedPane();
+		tabs = new JTabbedPane();
 
 		JXToolBar toolbar = UISupport.createToolbar();
 		soapMonitor = new SoapMonitor( project, sourcePort, incomingRequestWss, incomingResponseWss, toolbar, setAsProxy,
@@ -106,7 +107,7 @@ public class SoapMonitorDesktopPanel extends DefaultDesktopPanel
 
 	private JComponent buildRunLog( SoapMonitor soapMonitor )
 	{
-		securityTestRunLog = new JSecurityTestRunLog( soapMonitor );
+		securityTestRunLog = new JSecurityTestRunLog( soapMonitor, tabs );
 		return securityTestRunLog;
 	}
 
