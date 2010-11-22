@@ -23,6 +23,7 @@ import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockService;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
+import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestSuite;
@@ -100,7 +101,10 @@ public class SecurityTestRunnerTest extends TestCaseWithJetty
 			{
 				( ( WsdlTestRequestStep )testStep ).getTestRequest().setEndpoint( endpoint );
 			}
-		}
+			if( testStep instanceof HttpTestRequestStep )
+			{
+				( ( HttpTestRequestStep )testStep ).getTestRequest().setEndpoint( endpoint );
+			}		}
 	}
 
 	private void parameterExposureCheckSetup() {

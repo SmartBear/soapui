@@ -80,6 +80,7 @@ import com.eviware.soapui.impl.wsdl.teststeps.registry.HttpRequestStepFactory;
 import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestRequestStepFactory;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.iface.Interface;
+import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.model.testsuite.TestSuite;
@@ -117,11 +118,6 @@ public class SoapMonitor extends JPanel
 	private JButton stopButton = null;
 
 	private JXTable logTable = null;
-
-	public JXTable getLogTable()
-	{
-		return logTable;
-	}
 
 	private MonitorLogTableModel tableModel = null;
 
@@ -1355,12 +1351,7 @@ public class SoapMonitor extends JPanel
 
 			if( monitorSecurityTest != null )
 			{
-				for( SecurityCheck check : monitorSecurityTest.getMonitorSecurityChecksList() )
-				{
-					if( ( ( HttpSecurityAnalyser )check ).canRun() && !check.isDisabled() )
-						( ( HttpSecurityAnalyser )check ).analyzeHttpConnection( messageExchange, monitorSecurityTest
-								.getSecurityTestLog() );
-				}
+				monitorSecurityTest.logSecurityMessage( messageExchange );
 			}
 
 			fireOnMessageExchange( messageExchange );
@@ -1590,6 +1581,26 @@ public class SoapMonitor extends JPanel
 	public void setMonitorSecurityTest( MonitorSecurityTest monitorSecurityTest )
 	{
 		this.monitorSecurityTest = monitorSecurityTest;
+	}
+
+	public void highlightMessaheExchange( MessageExchange messageExchange )
+	{
+		boolean logEntryFound = false;
+		for( int i = 0; i < getLogModel().getRowCount(); i++ )
+		{
+			if( getLogModel().getMessageExchangeAt( i ).equals( messageExchange ) )
+			{
+				logTable.setRowSelectionInterval( i, i );
+				logTable.scrollRowToVisible( i );
+				logEntryFound = true;
+				break;
+			}
+		}
+		if( !logEntryFound )
+		{
+			UISupport.showErrorMessage( "The Request is no longer stored in the http monitor" );
+		}
+
 	}
 
 }

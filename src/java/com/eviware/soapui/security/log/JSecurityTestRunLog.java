@@ -326,21 +326,8 @@ public class JSecurityTestRunLog extends JPanel
 			if( index != -1 && ( index == selectedIndex || e.getClickCount() > 1 ) )
 			{
 				SecurityTestLogMessageEntry entry = ( SecurityTestLogMessageEntry )testLogList.getSelectedValue();
-				boolean logEntryFound = false;
-				for( int i = 0; i < soapMonitor.getLogModel().getRowCount(); i++ )
-				{
-					if( soapMonitor.getLogModel().getMessageExchangeAt( i ).equals( entry.getMessageExchange() ) )
-					{
-						soapMonitor.getLogTable().setRowSelectionInterval( i, i );
-						soapMonitor.getLogTable().scrollRowToVisible( i );
-						tabs.setSelectedIndex(0);
-						logEntryFound = true;
-						break;
-					}
-				}
-				if (!logEntryFound) {
-					UISupport.showErrorMessage( "The Request is no longer stored in the http monitor" );
-				}
+				soapMonitor.highlightMessaheExchange( entry.getMessageExchange() );
+				tabs.setSelectedIndex( 0 );
 			}
 
 			selectedIndex = index;

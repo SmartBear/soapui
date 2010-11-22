@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.eviware.soapui.config.SecurityCheckConfig;
+import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.security.check.SecurityCheck;
 import com.eviware.soapui.security.log.JSecurityTestRunLog;
 import com.eviware.soapui.security.registry.SecurityCheckFactory;
@@ -131,6 +132,14 @@ public class MonitorSecurityTest
 	public JSecurityTestRunLog getSecurityTestLog()
 	{
 		return securityTestLog;
+	}
+	public void logSecurityMessage(MessageExchange messageExchange) {
+		for( SecurityCheck check : getMonitorSecurityChecksList() )
+		{
+			if( ( ( HttpSecurityAnalyser )check ).canRun() && !check.isDisabled() )
+				( ( HttpSecurityAnalyser )check ).analyzeHttpConnection( messageExchange, getSecurityTestLog() );
+		}
+
 	}
 
 }
