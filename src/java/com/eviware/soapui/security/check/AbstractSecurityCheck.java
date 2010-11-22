@@ -19,9 +19,9 @@ import javax.swing.JPanel;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.SecurityCheckConfig;
+import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestStep;
-import com.eviware.soapui.security.SecurityTestContext;
 import com.eviware.soapui.security.log.SecurityTestLogModel;
 import com.eviware.soapui.support.components.SimpleForm;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
@@ -48,13 +48,13 @@ public abstract class AbstractSecurityCheck extends SecurityCheck
 		scriptEngine = SoapUIScriptEngineRegistry.create( this );
 	}
 
-	abstract protected void execute( TestStep testStep, SecurityTestContext context, SecurityTestLogModel securityTestLog );
+	abstract protected void execute( TestStep testStep, WsdlTestRunContext context, SecurityTestLogModel securityTestLog );
 
 	@Override
-	abstract public void analyze( TestStep testStep, SecurityTestContext context, SecurityTestLogModel securityTestLog );
+	abstract public void analyze( TestStep testStep, WsdlTestRunContext context, SecurityTestLogModel securityTestLog );
 
 	@Override
-	public void run( TestStep testStep, SecurityTestContext context, SecurityTestLogModel securityTestLog )
+	public void run( TestStep testStep, WsdlTestRunContext context, SecurityTestLogModel securityTestLog )
 	{
 		runStartupScript( testStep );
 		execute( testStep, context, securityTestLog );

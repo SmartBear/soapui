@@ -21,6 +21,7 @@ import com.eviware.soapui.config.SecurityTestConfig;
 import com.eviware.soapui.config.TestStepSecurityTestConfig;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
+import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestRunnable;
 import com.eviware.soapui.model.testsuite.TestRunner.Status;
@@ -217,7 +218,7 @@ public class SecurityTest extends AbstractWsdlModelItem<SecurityTestConfig> impl
 	 * @return
 	 * @throws Exception
 	 */
-	public Object runStartupScript( SecurityTestRunContext runContext, SecurityTestRunner runner ) throws Exception
+	public Object runStartupScript( WsdlTestRunContext runContext, SecurityTestRunner runner ) throws Exception
 	{
 		String script = getStartupScript();
 		if( StringUtils.isNullOrEmpty( script ) )
@@ -269,7 +270,7 @@ public class SecurityTest extends AbstractWsdlModelItem<SecurityTestConfig> impl
 	 * @return
 	 * @throws Exception
 	 */
-	public Object runTearDownScript( SecurityTestRunContext runContext, SecurityTestRunner runner ) throws Exception
+	public Object runTearDownScript( WsdlTestRunContext runContext, SecurityTestRunner runner ) throws Exception
 	{
 		String script = getTearDownScript();
 		if( StringUtils.isNullOrEmpty( script ) )

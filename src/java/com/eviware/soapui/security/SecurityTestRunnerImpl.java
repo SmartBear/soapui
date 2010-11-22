@@ -25,31 +25,31 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.TestStepConfig;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCaseRunner;
+import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestStepFactory;
 import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestStepRegistry;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.TestAssertion;
-import com.eviware.soapui.model.testsuite.TestRunContext;
-import com.eviware.soapui.model.testsuite.TestRunnable;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.check.SecurityCheck;
 import com.eviware.soapui.security.log.SecurityTestLogMessageEntry;
 import com.eviware.soapui.support.types.StringToObjectMap;
 
-public class SecurityTestRunnerImpl implements SecurityTestRunner
+public class SecurityTestRunnerImpl extends WsdlTestCaseRunner implements SecurityTestRunner
 {
 
 	private SecurityTest securityTest;
 	private long startTime = 0;
 	private Status status;
-	private SecurityTestContext context;
+	private WsdlTestRunContext context;
 	private boolean stopped;
 	private boolean hasTornDown;
 	private String reason;
 
 	public SecurityTestRunnerImpl( SecurityTest test )
 	{
+		super( test.getTestCase(), new StringToObjectMap() );
 		this.securityTest = test;
 		status = Status.INITIALIZED;
 	}
@@ -78,7 +78,7 @@ public class SecurityTestRunnerImpl implements SecurityTestRunner
 			msg += "; " + reason;
 
 		securityTest.getSecurityTestLog().addEntry( new SecurityTestLogMessageEntry( msg ) );
-		
+
 		status = Status.CANCELED;
 
 		stop();
@@ -87,7 +87,7 @@ public class SecurityTestRunnerImpl implements SecurityTestRunner
 	@Override
 	public void fail( String reason )
 	{
-		
+
 		status = Status.FAILED;
 
 	}
@@ -98,11 +98,11 @@ public class SecurityTestRunnerImpl implements SecurityTestRunner
 		return reason;
 	}
 
-	@Override
-	public TestRunContext getRunContext()
-	{
-		return context;
-	}
+//	@Override
+//	public TestRunContext getRunContext()
+//	{
+//		return context;
+//	}
 
 	@Override
 	public long getStartTime()
@@ -116,11 +116,11 @@ public class SecurityTestRunnerImpl implements SecurityTestRunner
 		return status;
 	}
 
-	@Override
-	public TestRunnable getTestRunnable()
-	{
-		return securityTest;
-	}
+//	@Override
+//	public TestRunnable getTestRunnable()
+//	{
+//		return securityTest;
+//	}
 
 	@Override
 	public long getTimeTaken()
@@ -149,21 +149,23 @@ public class SecurityTestRunnerImpl implements SecurityTestRunner
 		if( factory != null )
 		{
 			clonedTestStep = factory.buildTestStep( securityTest.getTestCase(), testStepConfig, false );
-			if (clonedTestStep instanceof Assertable) {
-				for (TestAssertion assertion : ((Assertable)clonedTestStep).getAssertionList()) {
-					((Assertable)clonedTestStep).removeAssertion(assertion);
+			if( clonedTestStep instanceof Assertable )
+			{
+				for( TestAssertion assertion : ( ( Assertable )clonedTestStep ).getAssertionList() )
+				{
+					( ( Assertable )clonedTestStep ).removeAssertion( assertion );
 				}
 			}
 		}
 		return clonedTestStep;
-	}  
+	}
 
 	void start()
 	{
 		securityTest.getTestCase().beforeSave();
 		hasTornDown = false;
-		
-		context = new SecurityTestContext( this );
+
+		context = new WsdlTestRunContext( this, new StringToObjectMap() );
 
 		try
 		{
@@ -189,8 +191,9 @@ public class SecurityTestRunnerImpl implements SecurityTestRunner
 					List<SecurityCheck> testStepChecksList = secCheckMap.get( testStep.getName() );
 					for( SecurityCheck securityCheck : testStepChecksList )
 					{
-						if (securityCheck.acceptsTestStep(testStep))
-							securityCheck.run( cloneForSecurityCheck((WsdlTestStep)testStep), context, securityTest.getSecurityTestLog() );
+						if( securityCheck.acceptsTestStep( testStep ) )
+							securityCheck.run( cloneForSecurityCheck( ( WsdlTestStep )testStep ), context, securityTest
+									.getSecurityTestLog() );
 					}
 				}
 				else
@@ -211,14 +214,13 @@ public class SecurityTestRunnerImpl implements SecurityTestRunner
 
 	public void release()
 	{
-		
+
 	}
 
 	private synchronized void stop()
 	{
 		if( stopped )
 			return;
-
 
 		if( status == Status.RUNNING )
 			status = Status.FINISHED;

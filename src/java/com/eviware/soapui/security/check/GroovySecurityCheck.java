@@ -22,10 +22,10 @@ import javax.swing.text.Document;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.GroovySecurityCheckConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
+import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.testsuite.TestStep;
-import com.eviware.soapui.security.SecurityTestContext;
 import com.eviware.soapui.security.log.JSecurityTestRunLog;
 import com.eviware.soapui.security.log.SecurityTestLogModel;
 import com.eviware.soapui.security.monitor.HttpSecurityAnalyser;
@@ -59,7 +59,7 @@ public class GroovySecurityCheck extends AbstractSecurityCheck implements HttpSe
 	}
 
 	@Override
-	protected void execute( TestStep testStep, SecurityTestContext context, SecurityTestLogModel securityTestLog )
+	protected void execute( TestStep testStep, WsdlTestRunContext context, SecurityTestLogModel securityTestLog )
 	{
 		scriptEngine.setScript( getScript() );
 		scriptEngine.setVariable( "testStep", testStep );
@@ -107,7 +107,7 @@ public class GroovySecurityCheck extends AbstractSecurityCheck implements HttpSe
 	}
 
 	@Override
-	public void analyze( TestStep testStep, SecurityTestContext context, SecurityTestLogModel securityTestLog )
+	public void analyze( TestStep testStep, WsdlTestRunContext context, SecurityTestLogModel securityTestLog )
 	{
 		
 

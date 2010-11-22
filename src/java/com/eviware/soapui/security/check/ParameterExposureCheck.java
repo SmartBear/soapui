@@ -33,6 +33,7 @@ import com.eviware.soapui.impl.support.http.HttpRequest;
 import com.eviware.soapui.impl.wsdl.monitor.JProxyServletWsdlMonitorMessageExchange;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCaseRunner;
+import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpResponseMessageExchange;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestInterface;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
@@ -45,7 +46,6 @@ import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
-import com.eviware.soapui.security.SecurityTestContext;
 import com.eviware.soapui.security.log.JSecurityTestRunLog;
 import com.eviware.soapui.security.log.SecurityTestLogModel;
 import com.eviware.soapui.security.log.SecurityTestLogMessageEntry;
@@ -92,7 +92,7 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements Htt
 	}
 
 	@Override
-	protected void execute( TestStep testStep, SecurityTestContext context, SecurityTestLogModel securityTestLog )
+	protected void execute( TestStep testStep, WsdlTestRunContext context, SecurityTestLogModel securityTestLog )
 	{
 		if( acceptsTestStep( testStep ) )
 		{
@@ -105,7 +105,7 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements Htt
 	}
 
 	@Override
-	public void analyze( TestStep testStep, SecurityTestContext context, SecurityTestLogModel securityTestLog )
+	public void analyze( TestStep testStep, WsdlTestRunContext context, SecurityTestLogModel securityTestLog )
 	{
 		if( acceptsTestStep( testStep ) )
 		{
