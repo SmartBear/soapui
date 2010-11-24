@@ -23,6 +23,7 @@ import com.eviware.soapui.model.testsuite.TestSuiteListener;
 import com.eviware.soapui.model.tree.AbstractModelItemTreeNode;
 import com.eviware.soapui.model.tree.SoapUITreeModel;
 import com.eviware.soapui.model.tree.SoapUITreeNode;
+import com.eviware.soapui.security.SecurityTest;
 
 /**
  * SoapUITreeNode for TestSuite implementations
@@ -164,6 +165,22 @@ public class TestSuiteTreeNode extends AbstractModelItemTreeNode<TestSuite>
 		{
 			testCaseRemoved( testCase );
 			testCaseAdded( testCase );
+		}
+
+		@Override
+		public void securityTestAdded(SecurityTest securityTest) {
+			TestCaseTreeNode testCaseTreeNode = ( TestCaseTreeNode )getTreeModel().getTreeNode( securityTest.getTestCase() );
+			if( testCaseTreeNode != null )
+				testCaseTreeNode.securityTestInserted( securityTest );
+			
+		}
+
+		@Override
+		public void securityTestRemoved(SecurityTest securityTest) {
+			TestCaseTreeNode testCaseTreeNode = ( TestCaseTreeNode )getTreeModel().getTreeNode( securityTest.getTestCase() );
+			if( testCaseTreeNode != null )
+				testCaseTreeNode.securityTestRemoved( securityTest );
+			
 		}
 	}
 }

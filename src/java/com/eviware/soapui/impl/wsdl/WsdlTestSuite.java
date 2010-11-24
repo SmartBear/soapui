@@ -40,6 +40,7 @@ import com.eviware.soapui.model.testsuite.TestSuiteListener;
 import com.eviware.soapui.model.testsuite.TestSuiteRunContext;
 import com.eviware.soapui.model.testsuite.TestSuiteRunListener;
 import com.eviware.soapui.model.testsuite.TestSuiteRunner;
+import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.resolver.ResolveDialog;
@@ -704,5 +705,25 @@ public class WsdlTestSuite extends AbstractTestPropertyHolderWsdlModelItem<TestS
 		}
 
 		setPropertiesConfig( testSuiteConfig.getProperties() );
+	}
+
+	public void fireSecurityTestAdded(SecurityTest securityTest) {
+		TestSuiteListener[] a = testSuiteListeners.toArray( new TestSuiteListener[testSuiteListeners.size()] );
+
+		for( int c = 0; c < a.length; c++ )
+		{
+			a[c].securityTestAdded( securityTest );
+		}
+		
+	}
+	
+	public void fireSecurityTestRemoved( SecurityTest securityTest )
+	{
+		TestSuiteListener[] a = testSuiteListeners.toArray( new TestSuiteListener[testSuiteListeners.size()] );
+
+		for( int c = 0; c < a.length; c++ )
+		{
+			a[c].securityTestRemoved( securityTest );
+		}
 	}
 }

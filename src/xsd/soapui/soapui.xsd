@@ -426,21 +426,22 @@
 					<xsd:element name="tearDownScript" type="tns:Script"
 						maxOccurs="1" minOccurs="0">
 					</xsd:element>
-					<xsd:element name="properties" type="tns:PropertiesType"
-						maxOccurs="1" minOccurs="0">
+					<xsd:element name="properties"
+						type="tns:PropertiesType" maxOccurs="1" minOccurs="0">
 					</xsd:element>
-					<xsd:element name="requirements" type="tns:RequirementsType"
-						maxOccurs="1" minOccurs="0">
+					<xsd:element name="requirements"
+						type="tns:RequirementsType" maxOccurs="1" minOccurs="0">
 					</xsd:element>
-					<xsd:element name="reportTemplates" type="tns:ReportTemplate"
-						maxOccurs="unbounded" minOccurs="0">
+					<xsd:element name="reportTemplates"
+						type="tns:ReportTemplate" maxOccurs="unbounded" minOccurs="0">
 					</xsd:element>
 					<xsd:element name="reportScript" type="tns:Script"
 						maxOccurs="1" minOccurs="0">
 					</xsd:element>
-					<xsd:element name="reportParameters" type="tns:PropertiesType"
-						minOccurs="0" maxOccurs="1">
+					<xsd:element name="reportParameters"
+						type="tns:PropertiesType" minOccurs="0" maxOccurs="1">
 					</xsd:element>
+					<xsd:element name="securityTest" type="tns:SecurityTest" maxOccurs="unbounded" minOccurs="0"></xsd:element>
 				</xsd:sequence>
 				<xsd:attribute name="keepSession" type="xsd:boolean"
 					use="optional">
@@ -1961,5 +1962,11 @@
     				<xsd:element name="script" type="tns:Script"></xsd:element>
     			</xsd:sequence>
     	
+    </xsd:complexType>
+
+    <xsd:complexType name="ReflectedXSSCheck">
+    	<xsd:sequence>
+    		<xsd:element name="paramToCheck" type="xsd:string" maxOccurs="unbounded" minOccurs="0"></xsd:element>
+    	</xsd:sequence>
     </xsd:complexType>
 </xsd:schema>

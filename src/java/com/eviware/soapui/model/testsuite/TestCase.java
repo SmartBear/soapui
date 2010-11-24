@@ -15,6 +15,7 @@ package com.eviware.soapui.model.testsuite;
 import java.util.List;
 
 import com.eviware.soapui.model.TestModelItem;
+import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.support.types.StringToObjectMap;
 
 /**
@@ -69,4 +70,14 @@ public interface TestCase extends TestModelItem, ResultContainer, TestRunnable
 	public boolean isDisabled();
 
 	public String getLabel();
+	
+	public SecurityTest getSecurityTestAt( int index );
+
+	public SecurityTest getSecurityTestByName( String securityTestName );
+
+	public int getIndexOfSecurityTest( SecurityTest securityTest );
+
+	public int getSecurityTestCount();
+	
+	public List<SecurityTest> getSecurityTestList();
 }

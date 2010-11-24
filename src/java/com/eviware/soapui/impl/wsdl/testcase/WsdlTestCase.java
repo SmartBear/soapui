@@ -25,6 +25,7 @@ import org.apache.log4j.Logger;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.LoadTestConfig;
+import com.eviware.soapui.config.SecurityTestConfig;
 import com.eviware.soapui.config.TestCaseConfig;
 import com.eviware.soapui.config.TestStepConfig;
 import com.eviware.soapui.config.WsrmVersionTypeConfig;
@@ -48,6 +49,7 @@ import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestRunListener;
 import com.eviware.soapui.model.testsuite.TestStep;
+import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.ActionList;
@@ -78,6 +80,7 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 	private final WsdlTestSuite testSuite;
 	private List<WsdlTestStep> testSteps = new ArrayList<WsdlTestStep>();
 	private List<WsdlLoadTest> loadTests = new ArrayList<WsdlLoadTest>();
+	private List<SecurityTest> securityTests = new ArrayList<SecurityTest>();
 	private Set<TestRunListener> testRunListeners = new HashSet<TestRunListener>();
 	private DefaultActionList createActions;
 	private final boolean forLoadTest;
@@ -1064,4 +1067,51 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 			return getConfig().getAmfEndpoint();
 	}
 
+	@Override
+	public int getSecurityTestCount() {
+		return securityTests.size();
+	}
+
+	@Override
+	public int getIndexOfSecurityTest(SecurityTest securityTest) {
+		return securityTests.indexOf( securityTest );
+	}
+
+	@Override
+	public SecurityTest getSecurityTestAt(int index) {
+		return securityTests.get( index );
+	}
+
+	@Override
+	public SecurityTest getSecurityTestByName(String securityTestName) {
+		return ( SecurityTest )getWsdlModelItemByName( securityTests, securityTestName );
+	}
+
+	@Override
+	public List<SecurityTest> getSecurityTestList() {
+		return securityTests;
+	}
+	
+	public Map<String, SecurityTest> getSecurityTests()
+	{
+		Map<String, SecurityTest> result = new HashMap<String, SecurityTest>();
+		for( SecurityTest securityTest : securityTests )
+			result.put( securityTest.getName(), securityTest );
+
+		return result;
+	}
+
+	public SecurityTest addNewSecurityTest(String name) {
+		SecurityTest securityTest = buildSecurityTest( getConfig().addNewSecurityTest() );
+		securityTest.setName( name );
+		securityTests.add( securityTest );
+
+		( getTestSuite() ).fireSecurityTestAdded( securityTest );
+
+		return securityTest;
+	}
+
+	private SecurityTest buildSecurityTest(SecurityTestConfig addNewSecurityTest) {
+		return new SecurityTest(this, addNewSecurityTest);
+	}
 }

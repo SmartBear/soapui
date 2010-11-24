@@ -12,6 +12,8 @@
 
 package com.eviware.soapui.model.testsuite;
 
+import com.eviware.soapui.security.SecurityTest;
+
 /**
  * Listener for TestSuite-related events
  * 
@@ -35,4 +37,8 @@ public interface TestSuiteListener
 	void testStepRemoved( TestStep testStep, int index );
 
 	void testStepMoved( TestStep testStep, int fromIndex, int offset );
+	
+	void securityTestAdded( SecurityTest securityTest );
+	
+	void securityTestRemoved( SecurityTest securityTest );
 }

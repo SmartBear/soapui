@@ -124,6 +124,7 @@
 
 	<!-- TestCase Actions -->
 	<tns:action id="AddNewLoadTestAction" actionClass="com.eviware.soapui.impl.wsdl.actions.testcase.AddNewLoadTestAction"/>
+	<tns:action id="AddNewSecurityTestAction" actionClass="com.eviware.soapui.impl.wsdl.actions.testcase.AddNewSecurityTestAction"/>
 	<tns:action id="CloneTestCaseAction" actionClass="com.eviware.soapui.impl.wsdl.actions.testcase.CloneTestCaseAction"/>
 	<tns:action id="ClearTestCaseAction" actionClass="com.eviware.soapui.impl.wsdl.actions.testcase.ClearTestCaseAction"/>
 	<tns:action id="TestCaseOptionsAction" actionClass="com.eviware.soapui.impl.wsdl.actions.testcase.TestCaseOptionsAction"/>
@@ -470,6 +471,7 @@
 		<tns:actionMapping groupId="WsdlTestCaseAddStepActions" name="Add Step"/>
 		<tns:actionMapping actionId="SeperatorAction"/>
  		<tns:actionMapping actionId="AddNewLoadTestAction" keyStroke="menu N"/>
+ 		<tns:actionMapping actionId="AddNewSecurityTestAction" keyStroke="menu S"/>
  		<tns:actionMapping actionId="CloneTestCaseAction" keyStroke="F9"/>
 		<tns:actionMapping actionId="ClearTestCaseAction"/>
 		<tns:actionMapping actionId="SeperatorAction"/>
@@ -502,6 +504,12 @@
 		<tns:actionMapping actionId="AddNewLoadTestAction" keyStroke="menu N"/>
 		<tns:actionMapping actionId="SeperatorAction"/>
 		<tns:actionMapping actionId="ShowOnlineSoapUIHelp" keyStroke="F1" param="loadtest/index.html"/>
+	</tns:actionGroup>
+	
+	<tns:actionGroup name="SecuritySteps Node Actions" id="SecurityTestsTreeNodeActions">
+		<tns:actionMapping actionId="AddNewSecurityTestAction" keyStroke="menu S"/>
+		<tns:actionMapping actionId="SeperatorAction"/>
+		<tns:actionMapping actionId="ShowOnlineSoapUIHelp" keyStroke="F1" param=""/>
 	</tns:actionGroup>
 
 	<!-- WsdlTestStep ActionGroup -->

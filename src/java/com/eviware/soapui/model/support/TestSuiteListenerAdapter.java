@@ -16,6 +16,7 @@ import com.eviware.soapui.model.testsuite.LoadTest;
 import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestSuiteListener;
+import com.eviware.soapui.security.SecurityTest;
 
 /**
  * Adapter for TestSuiteListener implementations
@@ -48,6 +49,15 @@ public class TestSuiteListenerAdapter implements TestSuiteListener
 	public void loadTestRemoved( LoadTest loadTest )
 	{
 	}
+	
+	public void securityTestAdded( SecurityTest securityTest )
+	{
+	}
+
+	public void securityTestRemoved( SecurityTest securityTest )
+	{
+	}
+
 
 	public void testStepMoved( TestStep testStep, int fromIndex, int offset )
 	{

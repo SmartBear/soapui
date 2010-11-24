@@ -46,6 +46,7 @@ import com.eviware.soapui.config.TestStepConfig;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.actions.testcase.AddNewLoadTestAction;
+import com.eviware.soapui.impl.wsdl.actions.testcase.AddNewSecurityTestAction;
 import com.eviware.soapui.impl.wsdl.actions.testcase.RunTestCaseWithLoadUIAction;
 import com.eviware.soapui.impl.wsdl.actions.testcase.TestCaseOptionsAction;
 import com.eviware.soapui.impl.wsdl.panels.support.MockTestRunContext;
@@ -119,6 +120,7 @@ public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase
 	private GroovyEditorComponent setupGroovyEditor;
 	private JInspectorPanel testStepListInspectorPanel;
 	private JButton createLoadTestButton;
+	private JButton createSecurityTestButton;
 	private JInspectorPanel inspectorPanel;
 	public TestCaseRunner lastRunner;
 	private JButton runWithLoadUIButton;
@@ -311,6 +313,9 @@ public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase
 
 		createLoadTestButton = UISupport.createToolbarButton( SwingActionDelegate.createDelegate(
 				AddNewLoadTestAction.SOAPUI_ACTION_ID, getModelItem(), null, "/loadTest.gif" ) );
+		
+		createSecurityTestButton = UISupport.createToolbarButton( SwingActionDelegate.createDelegate(
+				AddNewSecurityTestAction.SOAPUI_ACTION_ID, getModelItem(), null, "/loadTest.gif" ) );
 
 		runWithLoadUIButton = UISupport.createToolbarButton( SwingActionDelegate.createDelegate(
 				RunTestCaseWithLoadUIAction.SOAPUI_ACTION_ID, getModelItem(), null, "/runTestCaseWithLoadUI.png" ) );
@@ -338,6 +343,8 @@ public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase
 		toolbar.add( setEndpointButton );
 		toolbar.addSeparator();
 		toolbar.add( createLoadTestButton );
+		toolbar.addSeparator();
+		toolbar.add( createSecurityTestButton );
 		toolbar.addSeparator();
 		toolbar.add( optionsButton );
 		toolbar.addSeparator();

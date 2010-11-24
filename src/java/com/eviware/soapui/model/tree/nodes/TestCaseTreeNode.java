@@ -22,8 +22,10 @@ import com.eviware.soapui.model.tree.AbstractModelItemTreeNode;
 import com.eviware.soapui.model.tree.AbstractTreeNode;
 import com.eviware.soapui.model.tree.SoapUITreeModel;
 import com.eviware.soapui.model.tree.SoapUITreeNode;
+import com.eviware.soapui.model.tree.nodes.support.SecurityTestsModelItem;
 import com.eviware.soapui.model.tree.nodes.support.WsdlLoadTestsModelItem;
 import com.eviware.soapui.model.tree.nodes.support.WsdlTestStepsModelItem;
+import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.ActionListBuilder;
 
@@ -37,6 +39,7 @@ public class TestCaseTreeNode extends AbstractModelItemTreeNode<TestCase>
 {
 	private TestStepsTreeNode testStepsNode;
 	private LoadTestsTreeNode loadTestsNode;
+	private SecurityTestsTreeNode securityTestsNode;
 	private PropertiesTreeNode<?> propertiesTreeNode;
 	private List<SoapUITreeNode> childNodes = new ArrayList<SoapUITreeNode>();
 
@@ -46,9 +49,11 @@ public class TestCaseTreeNode extends AbstractModelItemTreeNode<TestCase>
 
 		testStepsNode = new TestStepsTreeNode();
 		loadTestsNode = new LoadTestsTreeNode();
+		securityTestsNode = new SecurityTestsTreeNode();
 
 		getTreeModel().mapModelItem( testStepsNode );
 		getTreeModel().mapModelItem( loadTestsNode );
+		getTreeModel().mapModelItem( securityTestsNode );
 
 		propertiesTreeNode = PropertiesTreeNode.createDefaultPropertiesNode( testCase, getTreeModel() );
 		getTreeModel().mapModelItem( propertiesTreeNode );
@@ -56,6 +61,7 @@ public class TestCaseTreeNode extends AbstractModelItemTreeNode<TestCase>
 		childNodes.add( propertiesTreeNode );
 		childNodes.add( testStepsNode );
 		childNodes.add( loadTestsNode );
+		childNodes.add( securityTestsNode );
 	}
 
 	public void release()
@@ -95,6 +101,11 @@ public class TestCaseTreeNode extends AbstractModelItemTreeNode<TestCase>
 	public LoadTestsTreeNode getLoadTestsNode()
 	{
 		return loadTestsNode;
+	}
+	
+	public SecurityTestsTreeNode getSecurityTestsNode()
+	{
+		return securityTestsNode;
 	}
 
 	public TestStepsTreeNode getTestStepsNode()
@@ -257,6 +268,76 @@ public class TestCaseTreeNode extends AbstractModelItemTreeNode<TestCase>
 			return ActionListBuilder.buildActions( "LoadTestsTreeNodeActions", TestCaseTreeNode.this.getModelItem() );
 		}
 	}
+	
+	public class SecurityTestsTreeNode extends AbstractTreeNode<SecurityTestsModelItem>
+	{
+		private List<SecurityTestTreeNode> securityTestNodes = new ArrayList<SecurityTestTreeNode>();
+
+		protected SecurityTestsTreeNode()
+		{
+			super( new SecurityTestsModelItem( getTestCase() ) );
+
+			for( int c = 0; c < getTestCase().getSecurityTestCount(); c++ )
+			{
+				securityTestNodes
+						.add( new SecurityTestTreeNode( getTestCase().getSecurityTestAt( c ), getModelItem(), getTreeModel() ) );
+			}
+
+			getTreeModel().mapModelItems( securityTestNodes );
+		}
+
+		public int getChildCount()
+		{
+			return securityTestNodes.size();
+		}
+
+		public int getIndexOfChild( Object child )
+		{
+			return securityTestNodes.indexOf( child );
+		}
+
+		public SoapUITreeNode getChildNode( int index )
+		{
+			return securityTestNodes.get( index );
+		}
+
+		public SoapUITreeNode getParentTreeNode()
+		{
+			return TestCaseTreeNode.this;
+		}
+
+		public void securityTestInserted( SecurityTest securityTest )
+		{
+			SecurityTestTreeNode securityTestTreeNode = new SecurityTestTreeNode( securityTest, getModelItem(), getTreeModel() );
+			securityTestNodes.add( securityTestTreeNode );
+			getTreeModel().notifyNodeInserted( securityTestTreeNode );
+			getTreeModel().notifyNodeChanged( this );
+		}
+
+		public void securityTestRemoved( SecurityTest securityTest )
+		{
+			SoapUITreeNode treeNode = getTreeModel().getTreeNode( securityTest );
+			if( securityTestNodes.contains( treeNode ) )
+			{
+				getTreeModel().notifyNodeRemoved( treeNode );
+				securityTestNodes.remove( treeNode );
+			}
+			else
+				throw new RuntimeException( "Removing unkown loadTest" );
+		}
+
+		public void release()
+		{
+			for( SecurityTestTreeNode securityTestNode : securityTestNodes )
+				securityTestNode.release();
+		}
+
+		public ActionList getActions()
+		{
+			return ActionListBuilder.buildActions( "SecurityTestsTreeNodeActions", TestCaseTreeNode.this.getModelItem() );
+		}
+	}
+	
 
 	public void testStepInserted( TestStep testStep, int index )
 	{
@@ -281,5 +362,15 @@ public class TestCaseTreeNode extends AbstractModelItemTreeNode<TestCase>
 	public void testStepMoved( TestStep testStep, int fromIndex, int offset )
 	{
 		testStepsNode.testStepMoved( testStep, fromIndex, offset );
+	}
+
+	public void securityTestInserted(SecurityTest securityTest) {
+		securityTestsNode.securityTestInserted(securityTest);
+		
+	}
+
+	public void securityTestRemoved(SecurityTest securityTest) {
+		securityTestsNode.securityTestRemoved(securityTest);
+		
 	}
 }
