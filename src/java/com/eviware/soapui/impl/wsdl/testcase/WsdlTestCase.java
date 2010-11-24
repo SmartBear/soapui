@@ -1114,4 +1114,35 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 	private SecurityTest buildSecurityTest(SecurityTestConfig addNewSecurityTest) {
 		return new SecurityTest(this, addNewSecurityTest);
 	}
+
+	public SecurityTest cloneSecurityTest(SecurityTest securityTest, String name) {
+		SecurityTestConfig securityTestConfig = getConfig().addNewSecurityTest();
+		securityTestConfig.set( securityTest.getConfig().copy() );
+
+		SecurityTest newSecurityTest = buildSecurityTest( securityTestConfig );
+		newSecurityTest.setName( name );
+		ModelSupport.unsetIds( newSecurityTest );
+		newSecurityTest.afterLoad();
+		securityTests.add( newSecurityTest );
+
+		( getTestSuite() ).fireSecurityTestAdded( newSecurityTest );
+
+		return newSecurityTest;
+	}
+
+	public void removeSecurityTest(SecurityTest securityTest) {
+		int ix = securityTests.indexOf( securityTest );
+
+		securityTests.remove( ix );
+
+		try
+		{
+			( getTestSuite() ).fireSecurityTestRemoved( securityTest );
+		}
+		finally
+		{
+			securityTest.release();
+			getConfig().removeSecurityTest( ix );
+		}
+	}
 }
