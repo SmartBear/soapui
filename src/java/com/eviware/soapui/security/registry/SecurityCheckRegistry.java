@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.eviware.soapui.config.SecurityCheckConfig;
-import com.eviware.soapui.security.monitor.HttpSecurityAnalyser;
 
 /**
  * Registry of SecurityCheck factories
@@ -35,6 +34,7 @@ public class SecurityCheckRegistry
 	{
 		addFactory( new GroovySecurityCheckFactory() );
 		addFactory( new ParameterExposureCheckFactory() );
+		addFactory( new SQLInjectionCheckFactory() );
 	}
 
 	/**
