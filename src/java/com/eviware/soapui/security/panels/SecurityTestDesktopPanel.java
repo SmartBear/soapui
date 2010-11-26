@@ -392,7 +392,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 		// );
 		// getModelItem().removeTestRunListener( testRunListener );
 		// testStepList.release();
-		progressBarAdapter.release();
+//		progressBarAdapter.release();
 		propertiesTable.release();
 		inspectorPanel.release();
 

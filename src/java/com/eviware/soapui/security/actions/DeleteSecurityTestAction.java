@@ -10,7 +10,7 @@
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
 
-package com.eviware.soapui.impl.wsdl.actions.loadtest;
+package com.eviware.soapui.security.actions;
 
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.security.SecurityTest;
@@ -18,7 +18,7 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 
 /**
- * Removes a WsdlLoadTest from its WsdlTestCase
+ * Removes a SecurityTest from its WsdlTestCase
  * 
  * @author Ole.Matzura
  */
@@ -32,9 +32,9 @@ public class DeleteSecurityTestAction extends AbstractSoapUIAction<SecurityTest>
 
 	public void perform( SecurityTest securityTest, Object param )
 	{
-		
 
-		if( UISupport.confirm( "Remove SecurityTest [" + securityTest.getName() + "] from test-case", "Remove SecurityTest" ) )
+		if( UISupport.confirm( "Remove SecurityTest [" + securityTest.getName() + "] from test-case",
+				"Remove SecurityTest" ) )
 		{
 			( ( WsdlTestCase )securityTest.getTestCase() ).removeSecurityTest( securityTest );
 		}

@@ -169,9 +169,9 @@
 	<tns:action id="ConvertToLoadUIAction" actionClass="com.eviware.soapui.impl.wsdl.actions.loadtest.ConvertToLoadUIAction"/>
 	
 	<!-- SecurityTest Actions -->
-	<tns:action id="RenameSecurityTestAction" actionClass="com.eviware.soapui.impl.wsdl.actions.loadtest.RenameSecurityTestAction"/>
-	<tns:action id="DeleteSecurityTestAction" actionClass="com.eviware.soapui.impl.wsdl.actions.loadtest.DeleteSecurityTestAction"/>
-	<tns:action id="CloneSecurityTestAction" actionClass="com.eviware.soapui.impl.wsdl.actions.loadtest.CloneSecurityTestAction"/>
+	<tns:action id="RenameSecurityTestAction" actionClass="com.eviware.soapui.security.actions.RenameSecurityTestAction"/>
+	<tns:action id="DeleteSecurityTestAction" actionClass="com.eviware.soapui.security.actions.DeleteSecurityTestAction"/>
+	<tns:action id="CloneSecurityTestAction" actionClass="com.eviware.soapui.security.actions.CloneSecurityTestAction"/>
 
 	<!-- MockService Actions -->
 	<tns:action id="MockServiceOptionsAction" actionClass="com.eviware.soapui.impl.wsdl.actions.mockservice.MockServiceOptionsAction"/>
@@ -650,6 +650,9 @@
 	
 	<!-- WsdlLoadTest ActionGroup -->
  	<tns:actionGroup name="SecurityTest Actions" id="SecurityTestActions" default="">
+ 	<tns:actionMapping actionId="ShowDesktopPanelAction" name="Show SecurityTest Editor"
+ 			description="Shows the SecurityTest Editor for this SecurityTest" keyStroke="ENTER"/>
+ 		<tns:actionMapping actionId="SeperatorAction"/>
 		<tns:actionMapping actionId="CloneSecurityTestAction" keyStroke="F9"/>
 		<tns:actionMapping actionId="RenameSecurityTestAction" keyStroke="F2"/>
 		<tns:actionMapping actionId="DeleteSecurityTestAction" keyStroke="DELETE"/>

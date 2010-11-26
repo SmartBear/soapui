@@ -10,33 +10,31 @@
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
 
-package com.eviware.soapui.impl.wsdl.actions.loadtest;
+package com.eviware.soapui.security.actions;
 
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 
 /**
- * Clones a WsdlLoadTest
+ * Renames a SecurityTest
  * 
  * @author Ole.Matzura
  */
 
-public class CloneSecurityTestAction extends AbstractSoapUIAction<SecurityTest>
+public class RenameSecurityTestAction extends AbstractSoapUIAction<SecurityTest>
 {
-	public CloneSecurityTestAction()
+	public RenameSecurityTestAction()
 	{
-		super( "Clone SecurityTest", "Clones this SecurityTest" );
+		super( "Rename", "Renames this SecurityTest" );
 	}
 
 	public void perform( SecurityTest securityTest, Object param )
 	{
-		String name = UISupport.prompt( "Specify name of cloned SecurityTest", "Clone SecurityTest", "Copy of "
-				+ securityTest.getName() );
-		if( name == null )
+		String name = UISupport.prompt( "Specify name of SecurityTest", "Rename SecurityTest", securityTest.getName() );
+		if( name == null || name.equals( securityTest.getName() ) )
 			return;
 
-		SecurityTest newSecurityTest = securityTest.getTestCase().cloneSecurityTest( securityTest, name );
-		UISupport.selectAndShow( newSecurityTest );
+		securityTest.setName( name );
 	}
 }
