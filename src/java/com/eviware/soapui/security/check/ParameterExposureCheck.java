@@ -206,7 +206,7 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements Htt
 	}
 
 	@Override
-	public JComponent getComponent()
+	public JComponent getComponent(TestStep testStep)
 	{
 		// if (panel == null) {
 		panel = new JPanel( new BorderLayout() );

@@ -77,9 +77,10 @@ public abstract class SecurityCheck extends AbstractWsdlModelItem<SecurityCheckC
 	/**
 	 * Gets desktop configuration for specific SecurityCheck
 	 * 
+	 * @param TestStep the TestStep to create the config for, could be null for HttpMonitor checks
 	 * @return
 	 */
-	public abstract JComponent getComponent();
+	public abstract JComponent getComponent(TestStep testStep);
 
 	/**
 	 * The type of this check

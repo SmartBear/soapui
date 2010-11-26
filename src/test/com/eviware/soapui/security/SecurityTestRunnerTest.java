@@ -29,6 +29,7 @@ import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.security.check.GroovySecurityCheck;
 import com.eviware.soapui.security.check.ParameterExposureCheck;
+import com.eviware.soapui.security.check.SQLInjectionCheck;
 import com.eviware.soapui.security.check.SecurityCheck;
 import com.eviware.soapui.security.registry.SecurityCheckRegistry;
 import com.eviware.soapui.support.TestCaseWithJetty;
@@ -76,6 +77,8 @@ public class SecurityTestRunnerTest extends TestCaseWithJetty
 
 		parameterExposureCheckSetup();
 		
+		SQLInjectionCheckSetup();
+		
 		testCase = ( WsdlTestCase )testSuite.getTestCaseByName( "Test Conversions" );
 
 		WsdlInterface iface = ( WsdlInterface )project.getInterfaceAt( 0 );
@@ -103,7 +106,7 @@ public class SecurityTestRunnerTest extends TestCaseWithJetty
 			}
 			if( testStep instanceof HttpTestRequestStep )
 			{
-				( ( HttpTestRequestStep )testStep ).getTestRequest().setEndpoint( endpoint );
+			//	( ( HttpTestRequestStep )testStep ).getTestRequest().setEndpoint( endpoint );
 			}		}
 	}
 
@@ -112,6 +115,19 @@ public class SecurityTestRunnerTest extends TestCaseWithJetty
 		SecurityCheckConfig exposureConfig = SecurityCheckRegistry.getInstance().getFactory(ParameterExposureCheck.TYPE).createNewSecurityCheck("Test");
 		ParameterExposureCheck exposureCheck = (ParameterExposureCheck)SecurityCheckRegistry.getInstance().getFactory(ParameterExposureCheck.TYPE).buildSecurityCheck(exposureConfig);
 		secCheckList.add(exposureCheck);
+		
+		//securityChecksMap.put( "HTTP Test Request", secCheckList );
+	}
+	
+	private void SQLInjectionCheckSetup() {
+		List<SecurityCheck> secCheckList = new ArrayList<SecurityCheck>();
+		SecurityCheckConfig injectionConfig = SecurityCheckRegistry.getInstance().getFactory(SQLInjectionCheck.TYPE).createNewSecurityCheck("Test");
+		SQLInjectionCheck sqlCheck = (SQLInjectionCheck)SecurityCheckRegistry.getInstance().getFactory(SQLInjectionCheck.TYPE).buildSecurityCheck(injectionConfig);
+		
+		List<String> params = new ArrayList<String>();
+		params.add("q");
+		sqlCheck.setParamsToUse(params);
+		secCheckList.add(sqlCheck);
 		
 		securityChecksMap.put( "HTTP Test Request", secCheckList );
 	}
@@ -127,7 +143,7 @@ public class SecurityTestRunnerTest extends TestCaseWithJetty
 		secCheckList.add( gsc );
 		
 		
-		securityChecksMap.put( "SEK to USD Test", secCheckList );
+		//securityChecksMap.put( "SEK to USD Test", secCheckList );
 	}
 
 	/**
