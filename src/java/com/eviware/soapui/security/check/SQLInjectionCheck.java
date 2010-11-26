@@ -48,7 +48,6 @@ public class SQLInjectionCheck extends AbstractSecurityCheck {
 
 	public static final String TYPE = "SQLInjectionCheck";
 	private static final int MINIMUM_STRING_DISTANCE = 50;
-	List<String> sqlInjections = new ArrayList<String>();
 
 	public SQLInjectionCheck(SecurityCheckConfig config, ModelItem parent,
 			String icon) {
@@ -64,8 +63,6 @@ public class SQLInjectionCheck extends AbstractSecurityCheck {
 					.newInstance();
 			config.setConfig(pescc);
 		}
-		sqlInjections.add("' or '1'='1");
-		sqlInjections.add("1'");
 	}
 
 	protected void execute(TestStep testStep, WsdlTestRunContext context,
@@ -78,8 +75,7 @@ public class SQLInjectionCheck extends AbstractSecurityCheck {
 
 			HttpTestRequestInterface<?> request = ((HttpTestRequestStepInterface) testStep)
 					.getTestRequest();
-			String originalResponse = request.getResponse()
-					.getContentAsString();
+			String originalResponse = request.getResponse().getContentAsXml();
 
 			for (String param : getParamsToUse()) {
 				Fuzzer sqlFuzzer = Fuzzer.getSQLFuzzer();
