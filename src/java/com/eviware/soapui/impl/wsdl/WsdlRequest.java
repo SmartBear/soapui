@@ -24,6 +24,7 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.CredentialsConfig;
 import com.eviware.soapui.config.WsdlRequestConfig;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
+import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.submit.RequestTransportRegistry;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.WsdlResponse;
@@ -676,6 +677,12 @@ public class WsdlRequest extends AbstractHttpRequest<WsdlRequestConfig> implemen
 		}
 
 		return getOperation().getAction();
+	}
+
+	@Override
+	public RestParamsPropertyHolder getParams() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

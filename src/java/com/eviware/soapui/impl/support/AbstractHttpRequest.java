@@ -29,6 +29,7 @@ import com.eviware.soapui.config.AbstractRequestConfig;
 import com.eviware.soapui.config.AttachmentConfig;
 import com.eviware.soapui.config.CredentialsConfig;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
+import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.HttpAttachmentPart;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
@@ -667,5 +668,7 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 	{
 		return afterRequestInjection;
 	}
+	
+	public abstract RestParamsPropertyHolder getParams();
 
 }

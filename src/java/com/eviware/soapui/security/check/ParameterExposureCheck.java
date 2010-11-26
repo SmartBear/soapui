@@ -115,19 +115,9 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements Htt
 
 			Map<String, TestProperty> params;
 
-			// It might be a good idea to refactor HttpRequest and TestRequest to
-			// avoid things like this)
-
 			AbstractHttpRequest<?> httpRequest = testStepwithProperties.getHttpRequest();
-			if( httpRequest instanceof HttpRequest )
-			{
-				params = ( ( HttpRequest )httpRequest ).getParams();
-			}
-			else
-			{
-				params = ( ( RestRequest )httpRequest ).getParams();
-			}
-
+			params = httpRequest.getParams();
+			
 			if( getParamsToCheck().isEmpty() )
 			{
 				setParamsToCheck( new ArrayList<String>( params.keySet() ) );

@@ -422,6 +422,7 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 		return "Request Params";
 	}
 
+	@Override
 	public RestParamsPropertyHolder getParams()
 	{
 		return params;

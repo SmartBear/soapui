@@ -107,6 +107,7 @@ public class HttpRequest extends AbstractHttpRequest<HttpRequestConfig> implemen
 		return method == RestRequestInterface.RequestMethod.POST || method == RestRequestInterface.RequestMethod.PUT;
 	}
 
+	@Override
 	public RestParamsPropertyHolder getParams()
 	{
 		return params;
