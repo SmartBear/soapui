@@ -73,6 +73,8 @@ import com.eviware.soapui.impl.wsdl.teststeps.WsdlRunTestCaseTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.PanelBuilder;
+import com.eviware.soapui.security.SecurityTest;
+import com.eviware.soapui.security.panels.SecurityTestPanelBuilder;
 
 /**
  * Registry of PanelBuilders
@@ -125,5 +127,6 @@ public class PanelBuilderRegistry
 		register( WsdlMockResponseTestStep.class, new MockResponseStepPanelBuilder() );
 		register( JdbcRequestTestStep.class, new JdbcRequestTestStepPanelBuilder() );
 		register( AMFRequestTestStep.class, new AMFRequestTestStepPanelBuilder() );
+		register( SecurityTest.class, new SecurityTestPanelBuilder<SecurityTest>() );
 	}
 }

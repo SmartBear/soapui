@@ -33,7 +33,9 @@ import javax.swing.JTabbedPane;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.monitor.SoapMonitor;
 import com.eviware.soapui.impl.wsdl.support.MessageExchangeModelItem;
+import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.model.settings.Settings;
+import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
@@ -62,6 +64,7 @@ public class JSecurityTestRunLog extends JPanel
 	private XFormDialog optionsDialog;
 	private SoapMonitor soapMonitor;
 	private JTabbedPane tabs;
+	private SecurityTest securityTest;
 
 	public JSecurityTestRunLog( SoapMonitor soapMonitor, JTabbedPane tabs )
 	{
@@ -73,6 +76,13 @@ public class JSecurityTestRunLog extends JPanel
 		errorsOnly = settings.getBoolean( OptionsForm.class.getName() + "@errors_only" );
 
 		buildUI();
+	}
+
+	public JSecurityTestRunLog( SecurityTest securityTest )
+	{
+//		super( securityTest.getSettings() );
+		this.securityTest = securityTest;
+		this.settings = securityTest.getSettings();
 	}
 
 	private void buildUI()

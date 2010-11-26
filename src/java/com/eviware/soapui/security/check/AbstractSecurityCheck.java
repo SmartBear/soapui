@@ -43,7 +43,7 @@ public abstract class AbstractSecurityCheck extends SecurityCheck
 	{
 		super( config, parent, icon );
 		this.config = config;
-		this.startupScript = config.getStartupScript() != null ? config.getStartupScript().getStringValue() : "";
+		this.startupScript = config.getSetupScript() != null ? config.getSetupScript().getStringValue() : "";
 		this.tearDownScript = config.getTearDownScript() != null ? config.getTearDownScript().getStringValue() : "";
 		scriptEngine = SoapUIScriptEngineRegistry.create( this );
 	}

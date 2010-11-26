@@ -80,7 +80,7 @@ public class MonitorSecurityTest
 		SecurityCheckConfig scc = factory.createNewSecurityCheck( name );
 		SecurityCheck newSc = factory.buildSecurityCheck( scc );
 		newSc.getConfig().setConfig( sc.getConfig().getConfig() );
-		newSc.getConfig().setStartupScript( sc.getConfig().getStartupScript() );
+		newSc.getConfig().setSetupScript( sc.getConfig().getSetupScript() );
 		newSc.getConfig().setTearDownScript( sc.getConfig().getTearDownScript() );
 		// set assertions
 		// newSc.getConfig().setAssertionArray( sc.getConfig().getAssertionList()
@@ -133,7 +133,9 @@ public class MonitorSecurityTest
 	{
 		return securityTestLog;
 	}
-	public void logSecurityMessage(MessageExchange messageExchange) {
+
+	public void logSecurityMessage( MessageExchange messageExchange )
+	{
 		for( SecurityCheck check : getMonitorSecurityChecksList() )
 		{
 			if( ( ( HttpSecurityAnalyser )check ).canRun() && !check.isDisabled() )

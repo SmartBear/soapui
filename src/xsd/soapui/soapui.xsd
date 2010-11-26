@@ -1898,14 +1898,17 @@
 		<xsd:complexContent>
 			<xsd:extension base="tns:ModelItem">
 				<xsd:sequence>
-					<xsd:element name="startupScript" type="tns:Script"
+					<xsd:element name="setupScript" type="tns:Script"
 						maxOccurs="1" minOccurs="0">
 					</xsd:element>
 					<xsd:element name="tearDownScript" type="tns:Script"
 						maxOccurs="1" minOccurs="0">
 					</xsd:element>
-					<xsd:element name="testStepSecurityTest" type="tns:TestStepSecurityTest"
-						maxOccurs="unbounded" minOccurs="1"></xsd:element>
+					<xsd:element name="testStepSecurityTest"
+						type="tns:TestStepSecurityTest" maxOccurs="unbounded"
+						minOccurs="1">
+					</xsd:element>
+					<xsd:element name="properties" type="tns:PropertiesType" maxOccurs="1" minOccurs="0"></xsd:element>
 				</xsd:sequence>
 			</xsd:extension>
 		</xsd:complexContent>
@@ -1916,7 +1919,7 @@
 			<xsd:extension base="tns:ModelItem">
 				<xsd:sequence>
 					<xsd:element name="config" type="xsd:anyType"></xsd:element>
-					<xsd:element name="startupScript" type="tns:Script"
+					<xsd:element name="setupScript" type="tns:Script"
 						maxOccurs="1" minOccurs="0">
 					</xsd:element>
 					<xsd:element name="tearDownScript" type="tns:Script"

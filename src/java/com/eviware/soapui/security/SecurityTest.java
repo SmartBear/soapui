@@ -19,10 +19,10 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.config.SecurityTestConfig;
 import com.eviware.soapui.config.TestStepSecurityTestConfig;
-import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
+import com.eviware.soapui.impl.wsdl.AbstractTestPropertyHolderWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
-import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.TestModelItem;
 import com.eviware.soapui.model.testsuite.TestRunnable;
 import com.eviware.soapui.model.testsuite.TestRunner.Status;
 import com.eviware.soapui.security.check.SecurityCheck;
@@ -38,7 +38,8 @@ import com.eviware.soapui.support.types.StringToObjectMap;
  * 
  * @author soapUI team
  */
-public class SecurityTest extends AbstractWsdlModelItem<SecurityTestConfig> implements ModelItem, TestRunnable
+public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<SecurityTestConfig> implements TestModelItem,
+		TestRunnable
 {
 	public final static String STARTUP_SCRIPT_PROPERTY = SecurityTest.class.getName() + "@startupScript";
 	public final static String TEARDOWN_SCRIPT_PROPERTY = SecurityTest.class.getName() + "@tearDownScript";
@@ -48,6 +49,7 @@ public class SecurityTest extends AbstractWsdlModelItem<SecurityTestConfig> impl
 
 	/**
 	 * Gets the current security log
+	 * 
 	 * @return
 	 */
 	public SecurityTestLogModel getSecurityTestLog()
@@ -62,6 +64,11 @@ public class SecurityTest extends AbstractWsdlModelItem<SecurityTestConfig> impl
 	{
 		super( config, testCase, "/loadTest.gif" );
 		this.testCase = testCase;
+		if( !getConfig().isSetProperties() )
+			getConfig().addNewProperties();
+
+		setPropertiesConfig( getConfig().getProperties() );
+
 		securityTestLog = new SecurityTestLogModel();
 	}
 
@@ -131,6 +138,7 @@ public class SecurityTest extends AbstractWsdlModelItem<SecurityTestConfig> impl
 
 	/**
 	 * Returns a map of testnames to security checks
+	 * 
 	 * @return A map of TestStepNames to their relevant security checks
 	 */
 	public HashMap<String, List<SecurityCheck>> getSecurityChecksMap()
@@ -185,34 +193,35 @@ public class SecurityTest extends AbstractWsdlModelItem<SecurityTestConfig> impl
 
 	/**
 	 * Sets the script to be used on startup
+	 * 
 	 * @param script
 	 */
 	public void setStartupScript( String script )
 	{
 		String oldScript = getStartupScript();
 
-		if( !getConfig().isSetStartupScript() )
-			getConfig().addNewStartupScript();
+		if( !getConfig().isSetSetupScript() )
+			getConfig().addNewSetupScript();
 
-		getConfig().getStartupScript().setStringValue( script );
+		getConfig().getSetupScript().setStringValue( script );
 		if( scriptEngine != null )
 			scriptEngine.setScript( script );
 
 		notifyPropertyChanged( STARTUP_SCRIPT_PROPERTY, oldScript, script );
 	}
 
-
 	/**
 	 * @return The current startup script
 	 */
 	public String getStartupScript()
 	{
-		return getConfig() != null ? ( getConfig().isSetStartupScript() ? getConfig().getStartupScript().getStringValue()
+		return getConfig() != null ? ( getConfig().isSetSetupScript() ? getConfig().getSetupScript().getStringValue()
 				: "" ) : "";
 	}
 
 	/**
 	 * Executes the startup Script
+	 * 
 	 * @param runContext
 	 * @param runner
 	 * @return
@@ -238,6 +247,7 @@ public class SecurityTest extends AbstractWsdlModelItem<SecurityTestConfig> impl
 
 	/**
 	 * Sets the script to be used on teardown
+	 * 
 	 * @param script
 	 */
 	public void setTearDownScript( String script )
@@ -265,6 +275,7 @@ public class SecurityTest extends AbstractWsdlModelItem<SecurityTestConfig> impl
 
 	/**
 	 * Executes the teardown Script
+	 * 
 	 * @param runContext
 	 * @param runner
 	 * @return
