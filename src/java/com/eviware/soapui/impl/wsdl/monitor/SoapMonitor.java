@@ -505,7 +505,7 @@ public class SoapMonitor extends JPanel
 		// monitorEngine = new TcpMonMonitorEngine();
 
 		monitorEngine = new SoapMonitorEngineImpl();
-		( ( SoapMonitorEngineImpl )monitorEngine ).setSslEndpoint( null );
+		( ( SoapMonitorEngineImpl )monitorEngine ).setSslEndpoint( sslEndpoint );
 		monitorEngine.start( this, localPort );
 
 		if( monitorEngine.isRunning() )
