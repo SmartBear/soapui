@@ -733,6 +733,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 			}
 			catch( SQLException e )
 			{
+				SoapUI.logError( e );
 				UISupport.showErrorMessage( "Can't get the Connection for specified properties; " + e.toString() );
 			}
 		}
