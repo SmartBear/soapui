@@ -1,5 +1,7 @@
 package com.eviware.soapui.security.fuzzer;
 
+import java.util.List;
+
 import com.eviware.soapui.config.FuzzerConfig;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestInterface;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStepInterface;
@@ -65,6 +67,15 @@ public class Fuzzer {
 		return currentIndex < config.getValueList().size();
 	}
 	
+	public void addValue(String value) {
+		config.getValueList().add(value);
+	}
 	
+	public List<String> getValues() {
+		return config.getValueList();
+	}
 	
+	public void removeValue(String value) {
+		config.getValueList().remove(value);
+	}
 }
