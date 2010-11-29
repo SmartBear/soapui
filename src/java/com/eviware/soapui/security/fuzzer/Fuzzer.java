@@ -51,7 +51,9 @@ public class Fuzzer {
 				"' o/**/r 1/0 --",
 				";",
 				"'%20and%201=2%20--",
-				"' and 1=2 --"
+				"' and 1=2 --",
+				"test’%20UNION%20select%201,%20@@version,%201,%201;–",
+				"test’ UNION select 1, @@version, 1, 1;–"
 			};
 			sqlFuzzer = new Fuzzer (values);
 		}
