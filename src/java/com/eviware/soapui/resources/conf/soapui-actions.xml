@@ -649,7 +649,7 @@
 	</tns:actionGroup>
 	
 	<!-- WsdlLoadTest ActionGroup -->
- 	<tns:actionGroup name="SecurityTest Actions" id="SecurityTestActions" default="">
+ 	<tns:actionGroup name="SecurityTest Actions" id="SecurityTestActions" default="ShowDesktopPanelAction">
  	<tns:actionMapping actionId="ShowDesktopPanelAction" name="Show SecurityTest Editor"
  			description="Shows the SecurityTest Editor for this SecurityTest" keyStroke="ENTER"/>
  		<tns:actionMapping actionId="SeperatorAction"/>
