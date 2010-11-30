@@ -39,13 +39,13 @@ public class SettingsTestPropertyHolder implements MutableTestPropertyHolder, Ma
 	private final ModelItem modelItem;
 	private String propertiesLabel = "Test Properties";
 
-	public SettingsTestPropertyHolder( Settings settings, ModelItem modelItem )
+	public SettingsTestPropertyHolder( Settings settings, ModelItem modelItem , String settingsName)
 	{
 		this.modelItem = modelItem;
 		config = PropertiesTypeConfig.Factory.newInstance();
 		try
 		{
-			String str = settings.getString( GlobalPropertySettings.PROPERTIES, null );
+			String str = settings.getString( settingsName, null );
 			if( StringUtils.hasContent( str ) )
 				config = PropertiesTypeConfig.Factory.parse( str );
 		}
@@ -56,6 +56,8 @@ public class SettingsTestPropertyHolder implements MutableTestPropertyHolder, Ma
 
 		propertyHolderSupport = new XmlBeansPropertiesTestPropertyHolder( null, config );
 	}
+	
+
 
 	public TestProperty addProperty( String name )
 	{
@@ -110,6 +112,12 @@ public class SettingsTestPropertyHolder implements MutableTestPropertyHolder, Ma
 	public void saveTo( Settings settings )
 	{
 		settings.setString( GlobalPropertySettings.PROPERTIES, config.toString() );
+	}
+
+	
+	public void saveSecurityTo( Settings settings )
+	{
+		settings.setString( GlobalPropertySettings.SECURITY_CHECKS_PROPERTIES, config.toString() );
 	}
 
 	public void setPropertyValue( String name, String value )

@@ -971,6 +971,7 @@ public class SoapUI
 			try
 			{
 				PropertyExpansionUtils.saveGlobalProperties();
+				PropertyExpansionUtils.saveSecurityGlobalProperties();
 				soapUICore.saveSettings();
 				workspace.onClose();
 			}
