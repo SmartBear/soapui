@@ -32,18 +32,24 @@ import javax.swing.JTextArea;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.ListModel;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
+import javax.swing.table.TableColumnModel;
 import javax.swing.text.Document;
+
+import org.jdesktop.swingx.JXTable;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.actions.testcase.AddNewLoadTestAction;
 import com.eviware.soapui.impl.wsdl.actions.testcase.AddNewSecurityTestAction;
+import com.eviware.soapui.impl.wsdl.actions.testcase.AddWsdlTestStepAction;
 import com.eviware.soapui.impl.wsdl.actions.testcase.RunTestCaseWithLoadUIAction;
 import com.eviware.soapui.impl.wsdl.actions.testcase.TestCaseOptionsAction;
 import com.eviware.soapui.impl.wsdl.panels.support.MockTestRunContext;
 import com.eviware.soapui.impl.wsdl.panels.support.MockTestRunner;
 import com.eviware.soapui.impl.wsdl.panels.support.ProgressBarTestCaseAdapter;
+import com.eviware.soapui.impl.wsdl.panels.testcase.JTestStepList;
 import com.eviware.soapui.impl.wsdl.panels.testcase.actions.SetCredentialsAction;
 import com.eviware.soapui.impl.wsdl.panels.testcase.actions.SetEndpointAction;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.AbstractGroovyEditorModel;
@@ -51,6 +57,7 @@ import com.eviware.soapui.impl.wsdl.panels.teststeps.support.PropertyHolderTable
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestStepFactory;
+import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestStepRegistry;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
@@ -69,6 +76,7 @@ import com.eviware.soapui.support.components.JFocusableComponentInspector;
 import com.eviware.soapui.support.components.JInspectorPanel;
 import com.eviware.soapui.support.components.JInspectorPanelFactory;
 import com.eviware.soapui.support.components.JUndoableTextArea;
+import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.dnd.JListDragAndDropable;
 import com.eviware.soapui.support.swing.ComponentBag;
 import com.eviware.soapui.support.types.StringToObjectMap;
@@ -87,6 +95,7 @@ import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
 
 public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest>
 {
+	private JSecurityTestTestStepList testStepList;
 	private JProgressBar progressBar;
 	private JButton runButton;
 	private JButton cancelButton;
@@ -175,22 +184,40 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 	protected JComponent buildTestStepList()
 	{
 		JPanel p = new JPanel( new BorderLayout() );
-		// JXToolBar toolbar = UISupport.createToolbar();
-		//
-		// securitytest[] factories =
+		JXToolBar toolbar = UISupport.createToolbar();
+
+		// TODO add + x for adding/removing securityChecks and then select from
+		// the list, like monitor
+		// WsdlTestStepFactory[] factories =
 		// WsdlTestStepRegistry.getInstance().getFactories();
 		// for( WsdlTestStepFactory factory : factories )
 		// {
 		// toolbar.addFixed( UISupport.createToolbarButton( new
 		// AddWsdlTestStepAction( factory ) ) );
 		// }
-		//
-		// p.add( toolbar, BorderLayout.NORTH );
-		// testStepList = new JTestStepList( getModelItem() );
-		// stateDependantComponents.add( testStepList );
-		//
-		// p.add( new JScrollPane( testStepList ), BorderLayout.CENTER );
 
+		p.add( toolbar, BorderLayout.NORTH );
+		testStepList = new JSecurityTestTestStepList( getModelItem().getTestCase() );
+		stateDependantComponents.add( testStepList );
+
+		p.add( new JScrollPane( testStepList ), BorderLayout.CENTER );
+
+//		JXTable table = new JXTable();
+//		// tree.setRootVisible( true );
+//		// tree.setRowHeightEnabled( false );
+//		// tree.setTreeCellRenderer( treeNodeRenderer );
+//		TableColumnModel columnModel = table.getColumnModel();
+//		// columnModel.getColumn( SecurityTest.SECURITY_CHECK_PROGRESS_COL
+//		// ).setCellRenderer( coverageRenderer );
+//		columnModel.getColumn( SecurityTest.TESTSTEP_NAME_COL ).setPreferredWidth( 200 );
+//		columnModel.getColumn( SecurityTest.SECURITY_CHECK_PROGRESS_COL ).setPreferredWidth( 150 );
+//
+//		table.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
+//		// coverageTreeListener = new CoverageTreeListener();
+//		// tree.addTreeSelectionListener( coverageTreeListener );
+//		// tree.addMouseListener( coverageTreeListener );
+//
+//		return tree;
 		return p;
 	}
 
@@ -392,7 +419,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 		// );
 		// getModelItem().removeTestRunListener( testRunListener );
 		// testStepList.release();
-//		progressBarAdapter.release();
+		// progressBarAdapter.release();
 		propertiesTable.release();
 		inspectorPanel.release();
 

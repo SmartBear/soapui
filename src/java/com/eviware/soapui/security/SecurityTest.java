@@ -46,6 +46,11 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 	public final static String SECURITY_CHECK_MAP_PROPERTY = SecurityTest.class.getName() + "@securityCheckMap";
 	private WsdlTestCase testCase;
 	private SecurityTestLogModel securityTestLog;
+	
+	public static final int TESTSTEP_NAME_COL = 0;
+	public static final int SECURITY_CHECK_PROGRESS_COL = 1;
+	private static final String[] COLUMN_NAMES = { "TestStep", "SecurityChecks Progress" };
+
 
 	/**
 	 * Gets the current security log
