@@ -7,6 +7,13 @@ import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestInterface;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStepInterface;
 import com.eviware.soapui.model.testsuite.TestStep;
 
+/**
+ * A simple Fuzzer implementation. This will also provide different fuzzer instances
+ * IF we find that this class gets to complex, we could refactor it to use  Fuzzer registry
+ * 
+ * @author nenad.ristic
+ *
+ */
 public class Fuzzer {
 	private FuzzerConfig config;
 	private int currentIndex = 0;
@@ -16,6 +23,7 @@ public class Fuzzer {
 		config = FuzzerConfig.Factory.newInstance();
 		config.setValueArray(values);
 	}
+	
 	/**
 	 * Resets the fuzzer so that it starts from the beginning of the list
 	 */
@@ -39,6 +47,13 @@ public class Fuzzer {
 		}
 	}
 	
+	/**
+	 * This creates a  fuzzer designed to test for a SQL injection
+	 * This will be sufficient to test if the vulnerability exists, although
+	 * not its extent, since deep testing that could be dangerous to the database.
+	 * 
+	 * @return
+	 */
 	public static Fuzzer getSQLFuzzer() {
 		if (sqlFuzzer == null) {
 			String[] values = {
@@ -63,18 +78,34 @@ public class Fuzzer {
 		return sqlFuzzer;
 	}
 	
+	/**
+	 * Checks if there are any more values that could be used for fuzzing
+	 * @return
+	 */
 	public boolean hasNext() {
 		return currentIndex < config.getValueList().size();
 	}
 	
+	/**
+	 * Add another fuzzing value
+	 * @param value
+	 */
 	public void addValue(String value) {
 		config.getValueList().add(value);
 	}
 	
+	/**
+	 * Gets the current list of values used in fuzzing
+	 * @return
+	 */
 	public List<String> getValues() {
 		return config.getValueList();
 	}
 	
+	/**
+	 * Removes one of the values
+	 * @param value
+	 */
 	public void removeValue(String value) {
 		config.getValueList().remove(value);
 	}
