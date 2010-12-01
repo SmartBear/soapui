@@ -1940,7 +1940,7 @@
 
     <xsd:complexType name="TestStepSecurityTest">
     	<xsd:sequence>
-    		<xsd:element name="testStepName" type="xsd:string"></xsd:element>
+    		<xsd:element name="testStepId" type="xsd:string"></xsd:element>
     		<xsd:element name="testStepSecurityCheck" type="tns:SecurityCheck" maxOccurs="unbounded" minOccurs="1"></xsd:element>
     	</xsd:sequence>
     </xsd:complexType>

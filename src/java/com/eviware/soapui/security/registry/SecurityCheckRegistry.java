@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.eviware.soapui.config.SecurityCheckConfig;
+import com.eviware.soapui.security.Securable;
 
 /**
  * Registry of SecurityCheck factories
@@ -28,7 +29,7 @@ import com.eviware.soapui.config.SecurityCheckConfig;
 public class SecurityCheckRegistry
 {
 	private static SecurityCheckRegistry instance;
-	private Map<String, SecurityCheckFactory> availableSecurityChecks = new HashMap<String, SecurityCheckFactory>();
+	private Map<String, AbstractSecurityCheckFactory> availableSecurityChecks = new HashMap<String, AbstractSecurityCheckFactory>();
 
 	public SecurityCheckRegistry()
 	{
@@ -39,14 +40,16 @@ public class SecurityCheckRegistry
 
 	/**
 	 * Gets the right SecurityCheck Factory, depending on the type
-	 * @param type The securityCheck to get the factory for
+	 * 
+	 * @param type
+	 *           The securityCheck to get the factory for
 	 * @return
 	 */
-	public SecurityCheckFactory getFactory( String type )
+	public AbstractSecurityCheckFactory getFactory( String type )
 	{
 		for( String cc : availableSecurityChecks.keySet() )
 		{
-			SecurityCheckFactory scf = availableSecurityChecks.get( cc );
+			AbstractSecurityCheckFactory scf = availableSecurityChecks.get( cc );
 			if( scf.getType().equals( type ) )
 				return scf;
 
@@ -56,9 +59,10 @@ public class SecurityCheckRegistry
 
 	/**
 	 * Adding a new factory to the registry
+	 * 
 	 * @param factory
 	 */
-	public void addFactory( SecurityCheckFactory factory )
+	public void addFactory( AbstractSecurityCheckFactory factory )
 	{
 		removeFactory( factory.getType() );
 		availableSecurityChecks.put( factory.getSecurityCheckName(), factory );
@@ -66,13 +70,14 @@ public class SecurityCheckRegistry
 
 	/**
 	 * Removing a factory from the registry
+	 * 
 	 * @param type
 	 */
 	public void removeFactory( String type )
 	{
 		for( String scfName : availableSecurityChecks.keySet() )
 		{
-			SecurityCheckFactory csf = availableSecurityChecks.get( scfName );
+			AbstractSecurityCheckFactory csf = availableSecurityChecks.get( scfName );
 			if( csf.getType().equals( type ) )
 			{
 				availableSecurityChecks.remove( scfName );
@@ -95,7 +100,9 @@ public class SecurityCheckRegistry
 
 	/**
 	 * Checking if the registry contains a factory.
-	 * @param config A configuraiton to check the factory for
+	 * 
+	 * @param config
+	 *           A configuraiton to check the factory for
 	 * @return
 	 */
 	public boolean hasFactory( SecurityCheckConfig config )
@@ -103,20 +110,35 @@ public class SecurityCheckRegistry
 		return getFactory( config.getType() ) != null;
 	}
 
-	
 	/**
 	 * Returns the list of available checks
 	 * 
-	 * @param monitorOnly Set this to true to get only the list of checks which can be used in the http monitor
+	 * @param monitorOnly
+	 *           Set this to true to get only the list of checks which can be
+	 *           used in the http monitor
 	 * @return A String Array containing the names of all the checks
 	 */
-	public String[] getAvailableSecurityChecksNames(boolean monitorOnly)
+	public String[] getAvailableSecurityChecksNames( boolean monitorOnly )
+	{
+		List<String> result = new ArrayList<String>();
+
+		for( AbstractSecurityCheckFactory securityCheck : availableSecurityChecks.values() )
+		{
+			if( monitorOnly && securityCheck.isHttpMonitor() )
+				result.add( securityCheck.getSecurityCheckName() );
+		}
+
+		return result.toArray( new String[result.size()] );
+	}
+
+	//TODO drso: test and implement properly
+	public String[] getAvailableSecurityChecksNames( Securable securable )
 	{
 		List<String> result = new ArrayList<String>();
 
 		for( SecurityCheckFactory securityCheck : availableSecurityChecks.values() )
 		{
-			if (monitorOnly && securityCheck.isHttpMonitor())
+			if( securityCheck.canDoSecurityCheck( securable ) )
 				result.add( securityCheck.getSecurityCheckName() );
 		}
 

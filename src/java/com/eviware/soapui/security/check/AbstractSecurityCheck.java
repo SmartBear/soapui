@@ -22,6 +22,7 @@ import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestStep;
+import com.eviware.soapui.security.Securable;
 import com.eviware.soapui.security.log.SecurityTestLogModel;
 import com.eviware.soapui.support.components.SimpleForm;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
@@ -39,9 +40,19 @@ public abstract class AbstractSecurityCheck extends SecurityCheck
 	protected SimpleForm form;
 
 	// private
+	public AbstractSecurityCheck( SecurityCheckConfig config, ModelItem parent, String icon, Securable securable )
+	{
+		super( config, parent, icon, securable );
+		this.config = config;
+		this.startupScript = config.getSetupScript() != null ? config.getSetupScript().getStringValue() : "";
+		this.tearDownScript = config.getTearDownScript() != null ? config.getTearDownScript().getStringValue() : "";
+		scriptEngine = SoapUIScriptEngineRegistry.create( this );
+	}
+
+	//TODO  check if should exist and what to do with securable
 	public AbstractSecurityCheck( SecurityCheckConfig config, ModelItem parent, String icon )
 	{
-		super( config, parent, icon );
+		super( config, parent, icon, null );
 		this.config = config;
 		this.startupScript = config.getSetupScript() != null ? config.getSetupScript().getStringValue() : "";
 		this.tearDownScript = config.getTearDownScript() != null ? config.getTearDownScript().getStringValue() : "";
@@ -66,7 +77,6 @@ public abstract class AbstractSecurityCheck extends SecurityCheck
 		scriptEngine.setScript( tearDownScript );
 		scriptEngine.setVariable( "testStep", testStep );
 		scriptEngine.setVariable( "log", SoapUI.ensureGroovyLog() );
-
 
 		try
 		{
@@ -182,11 +192,11 @@ public abstract class AbstractSecurityCheck extends SecurityCheck
 		// TODO Auto-generated method stub
 
 	}
-	
+
 	@Override
 	public boolean isDisabled()
 	{
-		return disabled ;
+		return disabled;
 	}
 
 	@Override

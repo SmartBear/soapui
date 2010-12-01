@@ -18,6 +18,7 @@ import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestStep;
+import com.eviware.soapui.security.Securable;
 import com.eviware.soapui.security.log.SecurityTestLogModel;
 
 /**
@@ -27,24 +28,28 @@ import com.eviware.soapui.security.log.SecurityTestLogModel;
  */
 public abstract class SecurityCheck extends AbstractWsdlModelItem<SecurityCheckConfig>
 {
-	protected SecurityCheck( SecurityCheckConfig config, ModelItem parent, String icon )
+	private final Securable securable;
+
+	protected SecurityCheck( SecurityCheckConfig config, ModelItem parent, String icon, Securable requestToCheck )
 	{
 		super( config, parent, icon );
+		securable = requestToCheck;
 	}
-
 
 	public abstract SecurityCheckConfig getConfig();
 
 	/**
-	 * Runs the test (internaly calls analyze) 
+	 * Runs the test (internaly calls analyze)
 	 * 
-	 * @param testStep The TestStep that the check will be applied to 
-	 * @param context The context to run the test in
-	 * @param securityTestLog The security log to write to
+	 * @param testStep
+	 *           The TestStep that the check will be applied to
+	 * @param context
+	 *           The context to run the test in
+	 * @param securityTestLog
+	 *           The security log to write to
 	 */
 	public abstract void run( TestStep testStep, WsdlTestRunContext context, SecurityTestLogModel securityTestLog );
 
-	
 	/**
 	 * Analyses the specified TestStep
 	 * 
@@ -64,12 +69,14 @@ public abstract class SecurityCheck extends AbstractWsdlModelItem<SecurityCheckC
 
 	/**
 	 * Checks if the test is disabled
+	 * 
 	 * @return true if disabled
 	 */
 	public abstract boolean isDisabled();
 
 	/**
 	 * Disables or Enables the check
+	 * 
 	 * @param disabled
 	 */
 	public abstract void setDisabled( boolean disabled );
@@ -77,10 +84,12 @@ public abstract class SecurityCheck extends AbstractWsdlModelItem<SecurityCheckC
 	/**
 	 * Gets desktop configuration for specific SecurityCheck
 	 * 
-	 * @param TestStep the TestStep to create the config for, could be null for HttpMonitor checks
+	 * @param TestStep
+	 *           the TestStep to create the config for, could be null for
+	 *           HttpMonitor checks
 	 * @return
 	 */
-	public abstract JComponent getComponent(TestStep testStep);
+	public abstract JComponent getComponent( TestStep testStep );
 
 	/**
 	 * The type of this check
@@ -88,5 +97,20 @@ public abstract class SecurityCheck extends AbstractWsdlModelItem<SecurityCheckC
 	 * @return
 	 */
 	public abstract String getType();
+
+	public Securable getSecurable()
+	{
+		return securable;
+	}
+	//TODO
+	public boolean configure()
+	{
+		return true;
+	}
+	//TODO
+	public boolean isConfigurable()
+	{
+		return true;
+	}
 
 }

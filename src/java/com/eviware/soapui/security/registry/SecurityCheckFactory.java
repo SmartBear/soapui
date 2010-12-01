@@ -13,57 +13,20 @@
 package com.eviware.soapui.security.registry;
 
 import com.eviware.soapui.config.SecurityCheckConfig;
+import com.eviware.soapui.security.Securable;
 import com.eviware.soapui.security.check.SecurityCheck;
 
-/**
- * Abstract factory behaviour for SecurityCheck factories
- * 
- * @author soapui team
- */
-
-public abstract class SecurityCheckFactory
+public interface SecurityCheckFactory
 {
-	private final String typeName;
-	private final String name;
-	private final String description;
-	private final String pathToIcon;
+	public boolean canDoSecurityCheck( Securable securable );
 
-	public SecurityCheckFactory( String typeName, String name, String description, String pathToIcon )
-	{
-		this.typeName = typeName;
-		this.name = name;
-		this.description = description;
-		this.pathToIcon = pathToIcon;
-	}
+	//TODO check if should be changed to commented
+//	public abstract SecurityCheck buildSecurityCheck( SecurityCheckConfig config, Securable securable );
+	public SecurityCheck buildSecurityCheck( SecurityCheckConfig config);
 
-	public abstract SecurityCheck buildSecurityCheck( SecurityCheckConfig config );
-	
-	public abstract SecurityCheckConfig createNewSecurityCheck(String name);
+	// public Class<? extends WsdlMessageAssertion> getAssertionClassType();
 
-	public String getType()
-	{
-		return typeName;
-	}
+//	public String getAssertionId();
 
-	public abstract boolean canCreate();
-
-	public String getSecurityCheckName()
-	{
-		return name;
-	}
-
-	public String getSecurityCheckDescription()
-	{
-		return description;
-	}
-
-	public String getSecurityCheckIconPath()
-	{
-		return pathToIcon;
-	}
-	
-	public boolean isHttpMonitor()
-	{
-		return false;
-	}
+	public String getSecurityCheckName();
 }

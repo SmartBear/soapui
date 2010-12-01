@@ -14,6 +14,7 @@ package com.eviware.soapui.security;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.SecurityCheckConfig;
@@ -46,11 +47,10 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 	public final static String SECURITY_CHECK_MAP_PROPERTY = SecurityTest.class.getName() + "@securityCheckMap";
 	private WsdlTestCase testCase;
 	private SecurityTestLogModel securityTestLog;
-	
+
 	public static final int TESTSTEP_NAME_COL = 0;
 	public static final int SECURITY_CHECK_PROGRESS_COL = 1;
 	private static final String[] COLUMN_NAMES = { "TestStep", "SecurityChecks Progress" };
-
 
 	/**
 	 * Gets the current security log
@@ -80,12 +80,12 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 	/**
 	 * Adds new securityCheck for the specific TestStep
 	 * 
-	 * @param testStepName
+	 * @param testStepId
 	 * @param securityCheck
 	 * 
 	 * @return HashMap<TestStep, List<SecurityCheck>>
 	 */
-	public void addSecurityCheck( String testStepName, SecurityCheck securityCheck )
+	public void addSecurityCheck( String testStepId, SecurityCheck securityCheck )
 	{
 		boolean hasChecks = false;
 		List<TestStepSecurityTestConfig> testStepSecurityTestList = getConfig().getTestStepSecurityTestList();
@@ -93,7 +93,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 		{
 			for( TestStepSecurityTestConfig testStepSecurityTest : testStepSecurityTestList )
 			{
-				if( testStepSecurityTest.getTestStepName().equals( testStepName ) )
+				if( testStepSecurityTest.getTestStepId().equals( testStepId ) )
 				{
 					List<SecurityCheckConfig> securityCheckList = testStepSecurityTest.getTestStepSecurityCheckList();
 					securityCheckList.add( securityCheck.getConfig() );
@@ -104,7 +104,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 		if( !hasChecks )
 		{
 			TestStepSecurityTestConfig testStepSecurityTest = getConfig().addNewTestStepSecurityTest();
-			testStepSecurityTest.setTestStepName( testStepName );
+			testStepSecurityTest.setTestStepId( testStepId );
 			SecurityCheckConfig newSecurityCheck = testStepSecurityTest.addNewTestStepSecurityCheck();
 			newSecurityCheck.setConfig( securityCheck.getConfig().getConfig() );
 			newSecurityCheck.setType( securityCheck.getType() );
@@ -115,19 +115,19 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 	/**
 	 * Remove securityCheck for the specific TestStep
 	 * 
-	 * @param testStepName
+	 * @param testStepId
 	 * @param securityCheck
 	 * 
 	 * @return HashMap<TestStep, List<SecurityCheck>>
 	 */
-	public void removeSecurityCheck( String testStepName, SecurityCheck securityCheck )
+	public void removeSecurityCheck( String testStepId, SecurityCheck securityCheck )
 	{
 		List<TestStepSecurityTestConfig> testStepSecurityTestList = getConfig().getTestStepSecurityTestList();
 		if( !testStepSecurityTestList.isEmpty() )
 		{
 			for( TestStepSecurityTestConfig testStepSecurityTest : testStepSecurityTestList )
 			{
-				if( testStepSecurityTest.getTestStepName().equals( testStepName ) )
+				if( testStepSecurityTest.getTestStepId().equals( testStepId ) )
 				{
 					List<SecurityCheckConfig> securityCheckList = testStepSecurityTest.getTestStepSecurityCheckList();
 					securityCheckList.remove( securityCheck.getConfig() );
@@ -142,9 +142,9 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 	}
 
 	/**
-	 * Returns a map of testnames to security checks
+	 * Returns a map of testids to security checks
 	 * 
-	 * @return A map of TestStepNames to their relevant security checks
+	 * @return A map of TestStepIds to their relevant security checks
 	 */
 	public HashMap<String, List<SecurityCheck>> getSecurityChecksMap()
 	{
@@ -153,14 +153,15 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 		{
 			if( !getConfig().getTestStepSecurityTestList().isEmpty() )
 			{
-				for( TestStepSecurityTestConfig testStepSecurityTestList : getConfig().getTestStepSecurityTestList() )
+				for( TestStepSecurityTestConfig testStepSecurityTestListConfig : getConfig().getTestStepSecurityTestList() )
 				{
 					List<SecurityCheck> checkList = new ArrayList<SecurityCheck>();
-					if( testStepSecurityTestList != null )
+					if( testStepSecurityTestListConfig != null )
 					{
-						if( !testStepSecurityTestList.getTestStepSecurityCheckList().isEmpty() )
+						if( !testStepSecurityTestListConfig.getTestStepSecurityCheckList().isEmpty() )
 						{
-							for( SecurityCheckConfig secCheckConfig : testStepSecurityTestList.getTestStepSecurityCheckList() )
+							for( SecurityCheckConfig secCheckConfig : testStepSecurityTestListConfig
+									.getTestStepSecurityCheckList() )
 							{
 								SecurityCheck securityCheck = SecurityCheckRegistry.getInstance().getFactory(
 										secCheckConfig.getType() ).buildSecurityCheck( secCheckConfig );
@@ -168,7 +169,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 							}
 						}
 					}
-					securityChecksMap.put( testStepSecurityTestList.getTestStepName(), checkList );
+					securityChecksMap.put( testStepSecurityTestListConfig.getTestStepId(), checkList );
 				}
 			}
 		}
@@ -302,6 +303,30 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 		scriptEngine.setVariable( "securityTestRunner", runner );
 		scriptEngine.setVariable( "log", SoapUI.ensureGroovyLog() );
 		return scriptEngine.run();
+	}
+
+	public List<SecurityCheck> getTestStepSecurityChecks( String testStepId )
+	{
+		return getSecurityChecksMap().get( testStepId );
+	}
+
+	public SecurityCheck getTestStepSecurityCheckByName( String testStepId, String securityCheckName )
+	{
+		List<SecurityCheck> securityChecksList = getTestStepSecurityChecks( testStepId );
+		for( int c = 0; c < securityChecksList.size(); c++ )
+		{
+			SecurityCheck securityCheck = getTestStepSecurityCheckAt( testStepId, c );
+			if( securityCheck.getName().equals( securityCheckName ) )
+				return securityCheck;
+		}
+
+		return null;
+	}
+
+	public SecurityCheck getTestStepSecurityCheckAt( String testStepId, int index )
+	{
+		List<SecurityCheck> securityChecksList = getTestStepSecurityChecks( testStepId );
+		return securityChecksList.get( index );
 	}
 
 }

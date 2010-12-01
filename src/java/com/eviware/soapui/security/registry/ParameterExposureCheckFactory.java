@@ -23,7 +23,7 @@ import com.eviware.soapui.security.check.SecurityCheck;
  * @author soapUI team
  */
 
-public class ParameterExposureCheckFactory extends SecurityCheckFactory {
+public class ParameterExposureCheckFactory extends AbstractSecurityCheckFactory {
 	
 	public ParameterExposureCheckFactory() {
 		super(ParameterExposureCheck.TYPE, "ParameterExposureCheck",

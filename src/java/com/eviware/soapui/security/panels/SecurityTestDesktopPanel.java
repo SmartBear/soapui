@@ -197,27 +197,11 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 		// }
 
 		p.add( toolbar, BorderLayout.NORTH );
-		testStepList = new JSecurityTestTestStepList( getModelItem().getTestCase() );
+		testStepList = new JSecurityTestTestStepList( getModelItem() );
 		stateDependantComponents.add( testStepList );
 
 		p.add( new JScrollPane( testStepList ), BorderLayout.CENTER );
 
-//		JXTable table = new JXTable();
-//		// tree.setRootVisible( true );
-//		// tree.setRowHeightEnabled( false );
-//		// tree.setTreeCellRenderer( treeNodeRenderer );
-//		TableColumnModel columnModel = table.getColumnModel();
-//		// columnModel.getColumn( SecurityTest.SECURITY_CHECK_PROGRESS_COL
-//		// ).setCellRenderer( coverageRenderer );
-//		columnModel.getColumn( SecurityTest.TESTSTEP_NAME_COL ).setPreferredWidth( 200 );
-//		columnModel.getColumn( SecurityTest.SECURITY_CHECK_PROGRESS_COL ).setPreferredWidth( 150 );
-//
-//		table.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
-//		// coverageTreeListener = new CoverageTreeListener();
-//		// tree.addTreeSelectionListener( coverageTreeListener );
-//		// tree.addMouseListener( coverageTreeListener );
-//
-//		return tree;
 		return p;
 	}
 

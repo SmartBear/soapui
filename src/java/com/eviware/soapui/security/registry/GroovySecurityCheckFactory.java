@@ -23,7 +23,7 @@ import com.eviware.soapui.security.check.SecurityCheck;
  * @author soapUI team
  */
 
-public class GroovySecurityCheckFactory extends SecurityCheckFactory {
+public class GroovySecurityCheckFactory extends AbstractSecurityCheckFactory {
 
 	public GroovySecurityCheckFactory() {
 		super(GroovySecurityCheck.TYPE, "GroovySecurityCheck",

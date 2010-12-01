@@ -23,7 +23,7 @@ import com.eviware.soapui.security.check.SecurityCheck;
  * @author soapUI team
  */
 
-public class SQLInjectionCheckFactory extends SecurityCheckFactory {
+public class SQLInjectionCheckFactory extends AbstractSecurityCheckFactory {
 	
 	public SQLInjectionCheckFactory() {
 		super(SQLInjectionCheck.TYPE, "SQLInjectionCheckFactory",

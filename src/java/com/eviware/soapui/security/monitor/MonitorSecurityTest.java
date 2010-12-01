@@ -18,7 +18,7 @@ import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.security.check.SecurityCheck;
 import com.eviware.soapui.security.log.JSecurityTestRunLog;
-import com.eviware.soapui.security.registry.SecurityCheckFactory;
+import com.eviware.soapui.security.registry.AbstractSecurityCheckFactory;
 import com.eviware.soapui.security.registry.SecurityCheckRegistry;
 
 /**
@@ -60,7 +60,7 @@ public class MonitorSecurityTest
 	 */
 	public SecurityCheck addSecurityCheck( String name, String type )
 	{
-		SecurityCheckFactory factory = SecurityCheckRegistry.getInstance().getFactory( type );
+		AbstractSecurityCheckFactory factory = SecurityCheckRegistry.getInstance().getFactory( type );
 		SecurityCheckConfig scc = factory.createNewSecurityCheck( name );
 		SecurityCheck newSc = factory.buildSecurityCheck( scc );
 		monitorSecurityChecksList.add( newSc );
@@ -76,7 +76,7 @@ public class MonitorSecurityTest
 	 */
 	public SecurityCheck addSecurityCheck( String name, SecurityCheck sc )
 	{
-		SecurityCheckFactory factory = SecurityCheckRegistry.getInstance().getFactory( sc.getType() );
+		AbstractSecurityCheckFactory factory = SecurityCheckRegistry.getInstance().getFactory( sc.getType() );
 		SecurityCheckConfig scc = factory.createNewSecurityCheck( name );
 		SecurityCheck newSc = factory.buildSecurityCheck( scc );
 		newSc.getConfig().setConfig( sc.getConfig().getConfig() );

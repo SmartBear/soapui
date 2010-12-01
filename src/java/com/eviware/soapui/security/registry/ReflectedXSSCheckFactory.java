@@ -24,7 +24,7 @@ import com.eviware.soapui.security.check.SecurityCheck;
  * @author soapUI team
  */
 
-public class ReflectedXSSCheckFactory extends SecurityCheckFactory {
+public class ReflectedXSSCheckFactory extends AbstractSecurityCheckFactory {
 	
 	public ReflectedXSSCheckFactory() {
 		super(ReflectedXSSCheck.TYPE, "ReflectedXSSCheck",
