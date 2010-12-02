@@ -98,7 +98,6 @@ public class SQLInjectionCheck extends AbstractSecurityCheck implements Sensitiv
 					
 					// maybe this fuzzer can be implemented to wrap the security check not vice versa
 					
-					checkForSensitiveInformationExposure( testStep, context, securityTestLog );
 				}
 
 			}
