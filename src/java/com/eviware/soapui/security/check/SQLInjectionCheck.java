@@ -43,7 +43,7 @@ import com.eviware.soapui.support.types.StringToObjectMap;
  * @author soapui team
  */
 
-public class SQLInjectionCheck extends AbstractSecurityCheck {
+public class SQLInjectionCheck extends AbstractSecurityCheck implements SensitiveInformationCheckable{
 
 	public static final String TYPE = "SQLInjectionCheck";
 	private static final int MINIMUM_STRING_DISTANCE = 50;
@@ -95,6 +95,10 @@ public class SQLInjectionCheck extends AbstractSecurityCheck {
 												lastRequest)));
 					}
 					analyze(testStep, context, securityTestLog);
+					
+					// maybe this fuzzer can be implemented to wrap the security check not vice versa
+					
+					checkForSensitiveInformationExposure( testStep, context, securityTestLog );
 				}
 
 			}
@@ -153,6 +157,15 @@ public class SQLInjectionCheck extends AbstractSecurityCheck {
 	@Override
 	public String getType() {
 		return TYPE;
+	}
+
+
+	@Override
+	public void checkForSensitiveInformationExposure( TestStep testStep, WsdlTestRunContext context,
+			SecurityTestLogModel securityTestLog )
+	{
+		InformationExposureCheck iec = new InformationExposureCheck( config, null, null);
+		iec.analyze( testStep, context, securityTestLog );
 	}
 
 }

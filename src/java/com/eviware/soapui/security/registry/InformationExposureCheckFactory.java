@@ -19,7 +19,7 @@ import com.eviware.soapui.security.check.SecurityCheck;
 /**
  * Factory for creation InformationExposure checks
  * 
- * @author nebule
+ * @author nebojsa.tasic
  */
 
 public class InformationExposureCheckFactory extends AbstractSecurityCheckFactory {

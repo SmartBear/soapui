@@ -54,7 +54,7 @@ import com.eviware.soapui.support.types.StringToObjectMap;
  * @author soapui team
  */
 
-public class ReflectedXSSCheck extends AbstractSecurityCheck 
+public class ReflectedXSSCheck extends AbstractSecurityCheck  implements SensitiveInformationCheckable
 {
 
 	public static final String TYPE = "ReflectedXSSCheck";
@@ -183,5 +183,13 @@ public class ReflectedXSSCheck extends AbstractSecurityCheck
 			SecurityTestLogModel securityTestLog) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void checkForSensitiveInformationExposure( TestStep testStep, WsdlTestRunContext context,
+			SecurityTestLogModel securityTestLog )
+	{
+		InformationExposureCheck iec = new InformationExposureCheck( config, null, null);
+		iec.analyze( testStep, context, securityTestLog );
 	}
 }

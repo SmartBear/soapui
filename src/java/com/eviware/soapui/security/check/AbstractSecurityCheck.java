@@ -60,7 +60,7 @@ public abstract class AbstractSecurityCheck extends SecurityCheck
 	}
 
 	abstract protected void execute( TestStep testStep, WsdlTestRunContext context, SecurityTestLogModel securityTestLog );
-
+	
 	@Override
 	abstract public void analyze( TestStep testStep, WsdlTestRunContext context, SecurityTestLogModel securityTestLog );
 
@@ -69,7 +69,15 @@ public abstract class AbstractSecurityCheck extends SecurityCheck
 	{
 		runStartupScript( testStep );
 		execute( testStep, context, securityTestLog );
+		sensitiveInfoCheck( testStep, context, securityTestLog );
 		runTearDownScript( testStep );
+	}
+
+	private void sensitiveInfoCheck( TestStep testStep, WsdlTestRunContext context, SecurityTestLogModel securityTestLog )
+	{
+		if (this instanceof SensitiveInformationCheckable ){
+			((SensitiveInformationCheckable)this).checkForSensitiveInformationExposure( testStep, context, securityTestLog );
+		}
 	}
 
 	private void runTearDownScript( TestStep testStep )
