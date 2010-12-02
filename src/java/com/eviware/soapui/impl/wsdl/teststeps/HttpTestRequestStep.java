@@ -13,6 +13,7 @@
 package com.eviware.soapui.impl.wsdl.teststeps;
 
 import java.beans.PropertyChangeEvent;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +26,7 @@ import org.apache.log4j.Logger;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.HttpRequestConfig;
 import com.eviware.soapui.config.RequestStepConfig;
+import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.config.TestStepConfig;
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
 import com.eviware.soapui.impl.rest.support.RestRequestConverter;
@@ -56,21 +58,27 @@ import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepProperty;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
+import com.eviware.soapui.security.Securable;
+import com.eviware.soapui.security.SecurityChecksListener;
+import com.eviware.soapui.security.check.SecurityCheck;
+import com.eviware.soapui.security.registry.AbstractSecurityCheckFactory;
+import com.eviware.soapui.security.registry.SecurityCheckRegistry;
 import com.eviware.soapui.support.resolver.ResolveContext;
 import com.eviware.soapui.support.types.StringToStringsMap;
 
-public class HttpTestRequestStep extends WsdlTestStepWithProperties implements HttpTestRequestStepInterface
+public class HttpTestRequestStep extends WsdlTestStepWithProperties implements HttpTestRequestStepInterface, Securable
 {
 	@SuppressWarnings( "unused" )
 	private final static Logger log = Logger.getLogger( HttpTestRequestStep.class );
 	private HttpRequestConfig httpRequestConfig;
 	private HttpTestRequest testRequest;
 	private WsdlSubmit<HttpRequest> submit;
+	private List<SecurityCheck> securityChecksList;
 
 	public HttpTestRequestStep( WsdlTestCase testCase, TestStepConfig config, boolean forLoadTest )
 	{
 		super( testCase, config, true, forLoadTest );
-
+		securityChecksList = new ArrayList<SecurityCheck>();
 		if( getConfig().getConfig() != null )
 		{
 			// httpRequestConfig = (HttpRequestConfig)
@@ -694,6 +702,91 @@ public class HttpTestRequestStep extends WsdlTestStepWithProperties implements H
 		{
 			return getTestRequest();
 		}
+	}
+
+	@Override
+	public SecurityCheck addSecurityCheck( String checkType, String checkName )
+	{
+		AbstractSecurityCheckFactory factory = SecurityCheckRegistry.getInstance().getFactory( checkType );
+		SecurityCheckConfig scc = factory.createNewSecurityCheck( checkName );
+		SecurityCheck newSc = factory.buildSecurityCheck( scc );
+		securityChecksList.add( newSc );
+		return newSc;
+	}
+
+	@Override
+	public void addSecurityChecksListener( SecurityChecksListener listener )
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public SecurityCheck cloneSecurityCheck( SecurityCheck source, String name )
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public SecurityCheck getSecurityCheckAt( int c )
+	{
+		return securityChecksList.get( c );
+	}
+
+	@Override
+	public SecurityCheck getSecurityCheckByName( String name )
+	{
+		//TODO see to implement unique sc names on a test step
+		for( SecurityCheck sc : securityChecksList )
+		{
+			if( sc.getName().equals( name ) )
+			{
+				return sc;
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public int getSecurityCheckCount()
+	{
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public List<SecurityCheck> getSecurityCheckList()
+	{
+		return securityChecksList;
+	}
+
+	@Override
+	public Map<String, SecurityCheck> getSecurityChecks()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public SecurityCheck moveSecurityCheck( int ix, int offset )
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void removeSecurityCheck( SecurityCheck securityCheck )
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void removeSecurityChecksListener( SecurityChecksListener listener )
+	{
+		// TODO Auto-generated method stub
+		
 	}
 
 }

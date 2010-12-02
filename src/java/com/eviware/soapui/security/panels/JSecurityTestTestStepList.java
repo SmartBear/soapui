@@ -14,14 +14,11 @@ package com.eviware.soapui.security.panels;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.dnd.Autoscroll;
-import java.awt.dnd.DnDConstants;
-import java.awt.dnd.DragSource;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -48,15 +45,12 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import com.eviware.soapui.impl.support.components.ModelItemXmlEditor;
 import com.eviware.soapui.impl.wsdl.actions.testsuite.AddNewTestCaseAction;
 import com.eviware.soapui.impl.wsdl.panels.support.ProgressBarTestCaseAdapter;
-import com.eviware.soapui.impl.wsdl.panels.teststeps.AssertionsPanel;
-import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
+import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.support.TestSuiteListenerAdapter;
-import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTest;
@@ -69,10 +63,6 @@ import com.eviware.soapui.support.action.swing.SwingActionDelegate;
 import com.eviware.soapui.support.components.JComponentInspector;
 import com.eviware.soapui.support.components.JInspectorPanel;
 import com.eviware.soapui.support.components.JInspectorPanelFactory;
-import com.eviware.soapui.support.components.SwingConfigurationDialogImpl;
-import com.eviware.soapui.support.dnd.DropType;
-import com.eviware.soapui.support.dnd.SoapUIDragAndDropHandler;
-import com.eviware.soapui.support.dnd.SoapUIDragAndDropable;
 import com.eviware.soapui.support.swing.AutoscrollSupport;
 
 /**
@@ -92,7 +82,8 @@ public class JSecurityTestTestStepList extends JPanel
 	private JList securityChecksList;
 	JSplitPane splitPane;
 	private JPanel securityCheckConfigPanel;
-
+	JComponentInspector<JComponent> securityChecksInspector;
+	private JComponent secCheckPanel;
 
 	public JSecurityTestTestStepList( SecurityTest securityTest )
 	{
@@ -107,28 +98,42 @@ public class JSecurityTestTestStepList extends JPanel
 			p.add( testCaseListPanel );
 		}
 		p.add( Box.createVerticalGlue() );
-		inspectorPanel = JInspectorPanelFactory.build( p );
-		JComponentInspector<JComponent> securityChecksInspector = new JComponentInspector<JComponent>(
-				buildSecurityChecksList(), "SecurityChecks", "SecurityChecks for selected TestStep", true );
-		inspectorPanel.addInspector( securityChecksInspector );
-		setBackground( Color.WHITE );
-		add( inspectorPanel.getComponent() );
+		// inspectorPanel = JInspectorPanelFactory.build( p );
+		createSecurityCheckInspector();
+		// inspectorPanel.addInspector( securityChecksInspector );
+		// setBackground( Color.WHITE );
+		// add( inspectorPanel.getComponent() );
 
+		secCheckPanel = buildSecurityChecksPanel();
+		secCheckPanel.setPreferredSize( new Dimension( 650, 300 ) );
+		splitPane = UISupport.createVerticalSplit( new JScrollPane( p ), new JScrollPane( secCheckPanel ) );
+		splitPane.setPreferredSize( new Dimension( 650, 500 ) );
+		splitPane.setResizeWeight( 0.1 );
+		splitPane.setDividerLocation( 0.5 );
+		add( splitPane, BorderLayout.CENTER );
 		// testCase.addTestSuiteListener( testSuiteListener );
 
-		ActionList actions = ActionListBuilder.buildActions( securityTest );
-		actions.removeAction( 0 );
-		actions.removeAction( 0 );
-		setComponentPopupMenu( ActionSupport.buildPopup( actions ) );
+		// ActionList actions = ActionListBuilder.buildActions( securityTest );
+		// actions.removeAction( 0 );
+		// actions.removeAction( 0 );
+		// setComponentPopupMenu( ActionSupport.buildPopup( actions ) );
 
-//		DragSource dragSource = DragSource.getDefaultDragSource();
-//
-//		SoapUIDragAndDropHandler dragAndDropHandler = new SoapUIDragAndDropHandler(
-//				new TestStepListDragAndDropable( this ), DropType.AFTER );
-//
-//		dragSource.createDefaultDragGestureRecognizer( this, DnDConstants.ACTION_COPY_OR_MOVE, dragAndDropHandler );
+		// DragSource dragSource = DragSource.getDefaultDragSource();
+		//
+		// SoapUIDragAndDropHandler dragAndDropHandler = new
+		// SoapUIDragAndDropHandler(
+		// new TestStepListDragAndDropable( this ), DropType.AFTER );
+		//
+		// dragSource.createDefaultDragGestureRecognizer( this,
+		// DnDConstants.ACTION_COPY_OR_MOVE, dragAndDropHandler );
 	}
-	
+
+	private void createSecurityCheckInspector()
+	{
+		securityChecksInspector = new JComponentInspector<JComponent>( buildSecurityChecksPanel(), "SecurityChecks",
+				"SecurityChecks for selected TestStep", true );
+	}
+
 	protected JComponent buildSecurityChecksList()
 	{
 		listModel = new DefaultListModel();
@@ -144,7 +149,7 @@ public class JSecurityTestTestStepList extends JPanel
 				splitPane.remove( splitPane.getRightComponent() );
 				splitPane.setRightComponent( buildSecurityCheckConfigPanel() );
 				revalidate();
-//				setSelectedCheck( getCurrentSecurityCheck() );
+				// setSelectedCheck( getCurrentSecurityCheck() );
 			}
 		} );
 		JScrollPane listScrollPane = new JScrollPane( securityChecksList );
@@ -152,7 +157,7 @@ public class JSecurityTestTestStepList extends JPanel
 
 		JPanel p = new JPanel( new BorderLayout() );
 		p.add( listScrollPane, BorderLayout.CENTER );
-//		p.add( createPropertiesToolbar(), BorderLayout.NORTH );
+		// p.add( createPropertiesToolbar(), BorderLayout.NORTH );
 
 		securityCheckConfigPanel = ( JPanel )buildSecurityCheckConfigPanel();
 
@@ -160,10 +165,11 @@ public class JSecurityTestTestStepList extends JPanel
 		splitPane.setPreferredSize( new Dimension( 650, 500 ) );
 		splitPane.setResizeWeight( 0.1 );
 		splitPane.setDividerLocation( 120 );
-//		add( splitPane, BorderLayout.CENTER );
+		// add( splitPane, BorderLayout.CENTER );
 		return splitPane;
 
 	}
+
 	private JComponent buildSecurityCheckConfigPanel()
 	{
 		securityCheckConfigPanel = UISupport.addTitledBorder( new JPanel( new BorderLayout() ), "Configuration" );
@@ -174,36 +180,35 @@ public class JSecurityTestTestStepList extends JPanel
 		// panel.add( securityCheckConfigPanel );
 		if( securityChecksList != null && securityChecksList.getSelectedValue() != null )
 		{
-			SecurityCheck selected = securityTest.getTestStepSecurityCheckByName( selectedTestStep.getTestStep().getId(),  (String )securityChecksList
-					.getSelectedValue() );
+			SecurityCheck selected = securityTest.getTestStepSecurityCheckByName( selectedTestStep.getTestStep().getId(),
+					( String )securityChecksList.getSelectedValue() );
 			securityCheckConfigPanel.removeAll();
-			securityCheckConfigPanel.add( selected.getComponent(null) );
+			securityCheckConfigPanel.add( selected.getComponent( null ) );
 		}
 		securityCheckConfigPanel.revalidate();
 		return securityCheckConfigPanel;
 	}
+
 	public SecurityCheck getCurrentSecurityCheck()
 	{
 		int ix = securityChecksList.getSelectedIndex();
-		return ix == -1 ? null :securityTest.getTestStepSecurityCheckAt( selectedTestStep.getTestStep().getId(), ix );
+		return ix == -1 ? null : securityTest.getTestStepSecurityCheckAt( selectedTestStep.getTestStep().getId(), ix );
 	}
-	//TODO see how to change the model for this to work...which class should implement securable
-//	protected SecurityChecksPanel buildSecurityChecksPanel()
-//	{
-//		return new SecurityChecksPanel( selectedTestStep.getTestStep())
-//		{
-//			protected void selectError( AssertionError error )
-//			{
-//				ModelItemXmlEditor<?, ?> editor = getResponseEditor();
-//				editor.requestFocus();
-//			}
-//		};
-//	}
 
-
-
-
-
+	// TODO see how to change the model for this to work...which class should
+	// implement securable
+	protected JPanel buildSecurityChecksPanel()
+	{
+		if( selectedTestStep != null && selectedTestStep.getTestStep() instanceof HttpTestRequestStep )
+		{
+			return new SecurityChecksPanel( ( HttpTestRequestStep )selectedTestStep.getTestStep(), selectedTestStep
+					.getTestStep(), securityTest );
+		}
+		else
+		{
+			return new JPanel();
+		}
+	}
 
 	protected JComponent buildSecurityChecksInspector()
 	{
@@ -361,7 +366,14 @@ public class JSecurityTestTestStepList extends JPanel
 						return;
 					}
 
-					UISupport.selectAndShow( TestStepListPanel.this.testStep );
+					// UISupport.selectAndShow( TestStepListPanel.this.testStep );
+					// securityChecksInspector.getComponent().removeAll();
+					// securityChecksInspector.getComponent().add(
+					// buildSecurityChecksPanel());
+					// securityChecksInspector.getComponent().revalidate();
+					secCheckPanel.removeAll();
+					secCheckPanel.add( buildSecurityChecksPanel() );
+					secCheckPanel.revalidate();
 				}
 			} );
 
@@ -506,102 +518,107 @@ public class JSecurityTestTestStepList extends JPanel
 	{
 		TestStepListPanel testStepListPanel = new TestStepListPanel( ( WsdlTestStep )testStep );
 
-//		DragSource dragSource = DragSource.getDefaultDragSource();
-//
-//		SoapUIDragAndDropHandler dragAndDropHandler = new SoapUIDragAndDropHandler( new TestCaseListPanelDragAndDropable(
-//				testStepListPanel ), DropType.BEFORE_AND_AFTER );
-//
-//		dragSource.createDefaultDragGestureRecognizer( testStepListPanel, DnDConstants.ACTION_COPY_OR_MOVE,
-//				dragAndDropHandler );
+		// DragSource dragSource = DragSource.getDefaultDragSource();
+		//
+		// SoapUIDragAndDropHandler dragAndDropHandler = new
+		// SoapUIDragAndDropHandler( new TestCaseListPanelDragAndDropable(
+		// testStepListPanel ), DropType.BEFORE_AND_AFTER );
+		//
+		// dragSource.createDefaultDragGestureRecognizer( testStepListPanel,
+		// DnDConstants.ACTION_COPY_OR_MOVE,
+		// dragAndDropHandler );
 
 		return testStepListPanel;
 	}
 
-//	private class TestStepListDragAndDropable implements SoapUIDragAndDropable<ModelItem>
-//	{
-//		private final JSecurityTestTestStepList list;
-//
-//		public TestStepListDragAndDropable( JSecurityTestTestStepList list )
-//		{
-//			this.list = list;
-//		}
-//
-//		public JComponent getComponent()
-//		{
-//			return list;
-//		}
-//
-//		public Rectangle getModelItemBounds( ModelItem modelItem )
-//		{
-//			return list.getBounds();
-//		}
-//
-//		public ModelItem getModelItemForLocation( int x, int y )
-//		{
-//			int testCaseCount = testCase.getTestStepCount();
-//			return testCaseCount == 0 ? testCase : testCase.getTestStepAt( testCaseCount - 1 );
-//		}
-//
-//		public Component getRenderer( ModelItem modelItem )
-//		{
-//			return null;
-//		}
-//
-//		public void selectModelItem( ModelItem modelItem )
-//		{
-//		}
-//
-//		public void setDragInfo( String dropInfo )
-//		{
-//			list.setToolTipText( dropInfo );
-//		}
-//
-//		public void toggleExpansion( ModelItem modelItem )
-//		{
-//		}
-//	}
-//
-//	private static class TestCaseListPanelDragAndDropable implements SoapUIDragAndDropable<ModelItem>
-//	{
-//		private final TestStepListPanel testCasePanel;
-//
-//		public TestCaseListPanelDragAndDropable( TestStepListPanel testCasePanel )
-//		{
-//			this.testCasePanel = testCasePanel;
-//		}
-//
-//		public JComponent getComponent()
-//		{
-//			return testCasePanel;
-//		}
-//
-//		public void setDragInfo( String dropInfo )
-//		{
-//			testCasePanel.setToolTipText( dropInfo.length() == 0 ? null : dropInfo );
-//		}
-//
-//		public Rectangle getModelItemBounds( ModelItem path )
-//		{
-//			return new Rectangle( testCasePanel.getSize() );
-//		}
-//
-//		public ModelItem getModelItemForLocation( int x, int y )
-//		{
-//			return testCasePanel.getModelItem();
-//		}
-//
-//		public Component getRenderer( ModelItem path )
-//		{
-//			return null;
-//		}
-//
-//		public void selectModelItem( ModelItem path )
-//		{
-//			testCasePanel.setSelected( !testCasePanel.isSelected() );
-//		}
-//
-//		public void toggleExpansion( ModelItem last )
-//		{
-//		}
-//	}
+	// private class TestStepListDragAndDropable implements
+	// SoapUIDragAndDropable<ModelItem>
+	// {
+	// private final JSecurityTestTestStepList list;
+	//
+	// public TestStepListDragAndDropable( JSecurityTestTestStepList list )
+	// {
+	// this.list = list;
+	// }
+	//
+	// public JComponent getComponent()
+	// {
+	// return list;
+	// }
+	//
+	// public Rectangle getModelItemBounds( ModelItem modelItem )
+	// {
+	// return list.getBounds();
+	// }
+	//
+	// public ModelItem getModelItemForLocation( int x, int y )
+	// {
+	// int testCaseCount = testCase.getTestStepCount();
+	// return testCaseCount == 0 ? testCase : testCase.getTestStepAt(
+	// testCaseCount - 1 );
+	// }
+	//
+	// public Component getRenderer( ModelItem modelItem )
+	// {
+	// return null;
+	// }
+	//
+	// public void selectModelItem( ModelItem modelItem )
+	// {
+	// }
+	//
+	// public void setDragInfo( String dropInfo )
+	// {
+	// list.setToolTipText( dropInfo );
+	// }
+	//
+	// public void toggleExpansion( ModelItem modelItem )
+	// {
+	// }
+	// }
+	//
+	// private static class TestCaseListPanelDragAndDropable implements
+	// SoapUIDragAndDropable<ModelItem>
+	// {
+	// private final TestStepListPanel testCasePanel;
+	//
+	// public TestCaseListPanelDragAndDropable( TestStepListPanel testCasePanel )
+	// {
+	// this.testCasePanel = testCasePanel;
+	// }
+	//
+	// public JComponent getComponent()
+	// {
+	// return testCasePanel;
+	// }
+	//
+	// public void setDragInfo( String dropInfo )
+	// {
+	// testCasePanel.setToolTipText( dropInfo.length() == 0 ? null : dropInfo );
+	// }
+	//
+	// public Rectangle getModelItemBounds( ModelItem path )
+	// {
+	// return new Rectangle( testCasePanel.getSize() );
+	// }
+	//
+	// public ModelItem getModelItemForLocation( int x, int y )
+	// {
+	// return testCasePanel.getModelItem();
+	// }
+	//
+	// public Component getRenderer( ModelItem path )
+	// {
+	// return null;
+	// }
+	//
+	// public void selectModelItem( ModelItem path )
+	// {
+	// testCasePanel.setSelected( !testCasePanel.isSelected() );
+	// }
+	//
+	// public void toggleExpansion( ModelItem last )
+	// {
+	// }
+	// }
 }

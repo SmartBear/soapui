@@ -46,6 +46,31 @@ public class AddSecurityCheckAction extends AbstractAction
 
 	public void actionPerformed( ActionEvent e )
 	{
+//		String[] availableChecksNames = SecurityCheckRegistry.getInstance().getAvailableSecurityChecksNames(true);
+//		String type = UISupport.prompt( "Specify type of security check", "Add SecurityCheck", availableChecksNames );
+//		if( type == null || type.trim().length() == 0 )
+//			return;
+//
+//		String name = UISupport.prompt( "Specify name for security check", "Add SecurityCheck", findUniqueName(type) );
+//		if( name == null || name.trim().length() == 0 )
+//			return;
+//		while( monitorSecurityTest.getSecurityCheckByName( name ) != null
+//				|| monitorSecurityTest.getSecurityCheckByName( name + " (disabled)" ) != null )
+//		{
+//			name = UISupport.prompt( "Specify unique name for check", "Add SecurityCheck", name + " "
+//					+ ( monitorSecurityTest.getMonitorSecurityChecksList().size() ) );
+//			if( name == null )
+//			{
+//				return;
+//			}
+//		}
+//
+//		monitorSecurityTest.addSecurityCheck( name, type );
+//
+//		listModel.addElement( name );
+//		securityChecksList.setSelectedIndex( listModel.getSize() - 1 );
+
+		
 		String[] assertions = SecurityCheckRegistry.getInstance().getAvailableSecurityChecksNames( securable );
 
 		if( assertions == null || assertions.length == 0 )
@@ -65,7 +90,7 @@ public class AddSecurityCheckAction extends AbstractAction
 		// return;
 		// }
 
-		SecurityCheck securityCheck = securable.addSecurityCheck( selection );
+		SecurityCheck securityCheck = securable.addSecurityCheck( selection, selection );
 		if( securityCheck == null )
 		{
 			UISupport.showErrorMessage( "Failed to add security check" );
@@ -77,4 +102,18 @@ public class AddSecurityCheckAction extends AbstractAction
 			securityCheck.configure();
 		}
 	}
+
+//	private String findUniqueName(String type) {
+//		String name = type;
+//		int numNames = 0;
+//		for (SecurityCheck existingCheck : monitorSecurityTest.getMonitorSecurityChecksList()) {
+//			if (existingCheck.getType().equals(name))
+//				numNames++;
+//		}
+//		if (numNames != 0) {
+//			name += " " + numNames;
+//		}
+//		return name;
+//	}
+
 }

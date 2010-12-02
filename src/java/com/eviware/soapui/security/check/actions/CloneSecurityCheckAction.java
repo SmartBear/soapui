@@ -26,7 +26,7 @@ import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 
 public class CloneSecurityCheckAction extends AbstractSoapUIAction<SecurityCheck>
 {
-//	public static final String SOAPUI_ACTION_ID = "CloneAssertionAction";
+	// public static final String SOAPUI_ACTION_ID = "CloneAssertionAction";
 	public static final String SOAPUI_ACTION_ID = "CloneSecurityCheckAction";
 
 	public CloneSecurityCheckAction()
@@ -40,14 +40,15 @@ public class CloneSecurityCheckAction extends AbstractSoapUIAction<SecurityCheck
 
 		while( target.getName().equals( name ) )
 		{
-			name = UISupport.prompt( "Specify unique name for cloned security check", "Clone SecurityCheck", target.getName() );
+			name = UISupport.prompt( "Specify unique name for cloned security check", "Clone SecurityCheck", target
+					.getName() );
 			if( name == null )
 				return;
 		}
 
-		SecurityCheck securityCheck = target.getSecurable().cloneAssertion( target, name );
+		SecurityCheck securityCheck = target.getSecurable().cloneSecurityCheck( target, name );
 
-//		if( securityCheck.isConfigurable() )
-			securityCheck.configure();
+		// if( securityCheck.isConfigurable() )
+		securityCheck.configure();
 	}
 }

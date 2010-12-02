@@ -27,7 +27,7 @@ import com.eviware.soapui.security.check.SecurityCheck;
 
 public interface Securable
 {
-	public SecurityCheck addSecurityCheck( String selection );
+	public SecurityCheck addSecurityCheck( String checkType, String checkName );
 
 	 public void addSecurityChecksListener( SecurityChecksListener listener );
 
@@ -60,7 +60,7 @@ public interface Securable
 
 	public Interface getInterface();
 
-	public SecurityCheck cloneAssertion( SecurityCheck source, String name );
+	public SecurityCheck cloneSecurityCheck( SecurityCheck source, String name );
 
 	public Map<String, SecurityCheck> getSecurityChecks();
 
