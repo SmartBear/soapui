@@ -36,6 +36,7 @@ public class SecurityCheckRegistry
 		addFactory( new GroovySecurityCheckFactory() );
 		addFactory( new ParameterExposureCheckFactory() );
 		addFactory( new SQLInjectionCheckFactory() );
+		addFactory( new InformationExposureCheckFactory() );
 	}
 
 	/**
