@@ -182,7 +182,7 @@ public class SecurityTestRunnerTest extends TestCaseWithJetty
 
 			for( SecurityCheck sc : securityCheckList )
 			{
-				securityTest.addSecurityCheck( testSetName, sc );
+//				securityTest.addSecurityCheck( testSetName, sc, null );
 			}
 		}
 	}

@@ -201,8 +201,7 @@ public class JSecurityTestTestStepList extends JPanel
 	{
 		if( selectedTestStep != null && selectedTestStep.getTestStep() instanceof HttpTestRequestStep )
 		{
-			return new SecurityChecksPanel( ( HttpTestRequestStep )selectedTestStep.getTestStep(), selectedTestStep
-					.getTestStep(), securityTest );
+			return new SecurityChecksPanel( selectedTestStep.getTestStep(), securityTest );
 		}
 		else
 		{
@@ -371,7 +370,7 @@ public class JSecurityTestTestStepList extends JPanel
 					// securityChecksInspector.getComponent().add(
 					// buildSecurityChecksPanel());
 					// securityChecksInspector.getComponent().revalidate();
-					splitPane.remove(secCheckPanel );
+					splitPane.remove( secCheckPanel );
 					secCheckPanel = buildSecurityChecksPanel();
 					secCheckPanel.revalidate();
 					splitPane.setBottomComponent( secCheckPanel );

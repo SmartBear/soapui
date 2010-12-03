@@ -59,7 +59,7 @@ import com.eviware.soapui.model.testsuite.TestStepProperty;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
 import com.eviware.soapui.security.Securable;
-import com.eviware.soapui.security.SecurityChecksListener;
+import com.eviware.soapui.security.SecurityTestListener;
 import com.eviware.soapui.security.check.SecurityCheck;
 import com.eviware.soapui.security.registry.AbstractSecurityCheckFactory;
 import com.eviware.soapui.security.registry.SecurityCheckRegistry;
@@ -715,7 +715,7 @@ public class HttpTestRequestStep extends WsdlTestStepWithProperties implements H
 	}
 
 	@Override
-	public void addSecurityChecksListener( SecurityChecksListener listener )
+	public void addSecurityChecksListener( SecurityTestListener listener )
 	{
 		// TODO Auto-generated method stub
 		
@@ -783,7 +783,7 @@ public class HttpTestRequestStep extends WsdlTestStepWithProperties implements H
 	}
 
 	@Override
-	public void removeSecurityChecksListener( SecurityChecksListener listener )
+	public void removeSecurityChecksListener( SecurityTestListener listener )
 	{
 		// TODO Auto-generated method stub
 		

@@ -14,6 +14,7 @@ package com.eviware.soapui.security.registry;
 
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.security.Securable;
+import com.eviware.soapui.security.check.SecurityCheck;
 
 /**
  * Abstract factory behaviour for SecurityCheck factories
@@ -21,7 +22,7 @@ import com.eviware.soapui.security.Securable;
  * @author soapui team
  */
 
-public abstract class AbstractSecurityCheckFactory implements SecurityCheckFactory
+public abstract class AbstractSecurityCheckFactory 
 {
 	private final String typeName;
 	private final String name;
@@ -37,7 +38,7 @@ public abstract class AbstractSecurityCheckFactory implements SecurityCheckFacto
 	}
 
 	public abstract SecurityCheckConfig createNewSecurityCheck( String name );
-
+	public abstract SecurityCheck buildSecurityCheck( SecurityCheckConfig config);
 	public String getType()
 	{
 		return typeName;

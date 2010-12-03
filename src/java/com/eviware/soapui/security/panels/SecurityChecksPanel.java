@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.AbstractAction;
-import javax.swing.AbstractListModel;
 import javax.swing.Action;
 import javax.swing.DefaultListModel;
 import javax.swing.JComponent;
@@ -43,9 +42,8 @@ import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.model.testsuite.TestStep;
-import com.eviware.soapui.security.Securable;
-import com.eviware.soapui.security.SecurityChecksListener;
 import com.eviware.soapui.security.SecurityTest;
+import com.eviware.soapui.security.SecurityTestListener;
 import com.eviware.soapui.security.check.SecurityCheck;
 import com.eviware.soapui.security.registry.SecurityCheckRegistry;
 import com.eviware.soapui.support.UISupport;
@@ -62,7 +60,6 @@ public class SecurityChecksPanel extends JPanel
 	private SecurityCheckListModel securityCheckListModel;
 	private JList securityCheckList;
 	private JPopupMenu securityCheckListPopup;
-	private final Securable securable;
 	private final TestStep testStep;
 	private SecurityTest securityTest;
 	private AddSecurityCheckAction addSecurityCheckAction;
@@ -70,22 +67,26 @@ public class SecurityChecksPanel extends JPanel
 	private RemoveSecurityCheckAction removeSecurityCheckAction;
 	private MoveSecurityCheckUpAction moveSecurityCheckUpAction;
 	private MoveSecurityCheckDownAction moveSecurityCheckDownAction;
-	private DefaultListModel listModel;
-	private JList securityChecksList;
+	// private DefaultListModel listModel;
+	// private JList securityChecksList;
 	JSplitPane splitPane;
 	private JPanel securityCheckConfigPanel;
 
-	public SecurityChecksPanel( Securable securable, TestStep testStep, SecurityTest securityTest )
+	public SecurityChecksPanel( TestStep testStep, SecurityTest securityTest )
 	{
 		super( new BorderLayout() );
-		this.securable = securable;
 		this.testStep = testStep;
 		this.securityTest = securityTest;
 
+		// securityTest.addPropertyChangeListener( listener );
+
 		securityCheckListModel = new SecurityCheckListModel();
 		securityCheckList = new JList( securityCheckListModel );
+		securityCheckList.setCellRenderer( new SecurityCheckCellRenderer() );
 		securityCheckList.setToolTipText( "SecurityChecks for this TestStep" );
 		securityCheckList.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
+		// securityTest.addPropertyChangeListener( securityCheckListModel );
+
 		securityCheckList.addListSelectionListener( new ListSelectionListener()
 		{
 
@@ -95,7 +96,15 @@ public class SecurityChecksPanel extends JPanel
 				splitPane.remove( splitPane.getRightComponent() );
 				splitPane.setRightComponent( buildConfigPanel() );
 				revalidate();
-				// setSelectedCheck( getCurrentSecurityCheck() );
+
+				int ix = securityCheckList.getSelectedIndex();
+
+				removeSecurityCheckAction.setEnabled( ix >= 0 );
+				moveSecurityCheckUpAction.setEnabled( ix >= 0 );
+				moveSecurityCheckDownAction.setEnabled( ix >= 0 );
+
+				if( ix == -1 )
+					return;
 			}
 		} );
 
@@ -251,9 +260,10 @@ public class SecurityChecksPanel extends JPanel
 		// securityCheckConfigPanel = new securityCheckConfigPanel.setText(
 		// "currently no security checks" );
 		// panel.add( securityCheckConfigPanel );
-		if( securityChecksList != null && securityChecksList.getSelectedValue() != null )
+		if( securityCheckList != null && securityCheckList.getSelectedValue() != null )
 		{
-			SecurityCheck selected = securable.getSecurityCheckByName( ( String )securityChecksList.getSelectedValue() );
+			SecurityCheck selected = securityTest.getTestStepSecurityCheckByName( testStep.getId(),
+					( ( SecurityCheck )securityCheckList.getSelectedValue() ).getName() );
 			securityCheckConfigPanel.removeAll();
 			securityCheckConfigPanel.add( selected.getComponent( null ) );
 		}
@@ -263,19 +273,39 @@ public class SecurityChecksPanel extends JPanel
 
 	public SecurityCheck getCurrentSecurityCheck()
 	{
-		int ix = securityChecksList.getSelectedIndex();
-		return ix == -1 ? null : securable.getSecurityCheckAt( ix );
+		int ix = securityCheckList.getSelectedIndex();
+		return ix == -1 ? null : securityTest.getTestStepSecurityCheckAt( testStep.getId(), ix );
 	}
 
 	protected JXToolBar createPropertiesToolbar()
 	{
 		JXToolBar checksToolbar = UISupport.createSmallToolbar();
-		addSecurityCheckAction = new AddSecurityCheckAction( securable );
-		configureSecurityCheckAction = new ConfigureSecurityCheckAction();
+		addSecurityCheckAction = new AddSecurityCheckAction();
+		// configureSecurityCheckAction = new ConfigureSecurityCheckAction();
 		removeSecurityCheckAction = new RemoveSecurityCheckAction();
 		moveSecurityCheckUpAction = new MoveSecurityCheckUpAction();
 		moveSecurityCheckDownAction = new MoveSecurityCheckDownAction();
 		addToolbarButtons( checksToolbar );
+		// securityCheckList.addListSelectionListener( new ListSelectionListener()
+		// {
+		//
+		// public void valueChanged( ListSelectionEvent e )
+		// {
+		// int ix = securityCheckList.getSelectedIndex();
+		//
+		// configureSecurityCheckAction.setEnabled( ix >= 0 );
+		// removeSecurityCheckAction.setEnabled( ix >= 0 );
+		// moveSecurityCheckUpAction.setEnabled( ix >= 0 );
+		// moveSecurityCheckDownAction.setEnabled( ix >= 0 );
+		//
+		// if( ix == -1 )
+		// return;
+		// // SecurityCheck securityCheck =
+		// // securityCheckListModel.getSecurityCheckAt( ix );
+		// // configureSecurityCheckAction.setEnabled( securityCheck != null &&
+		// // securityCheck.isConfigurable() );
+		// }
+		// } );
 		return checksToolbar;
 	}
 
@@ -321,7 +351,8 @@ public class SecurityChecksPanel extends JPanel
 	protected void addToolbarButtons( JXToolBar toolbar )
 	{
 		toolbar.addFixed( UISupport.createToolbarButton( addSecurityCheckAction ) );
-//		toolbar.addFixed( UISupport.createToolbarButton( configureSecurityCheckAction ) );
+		// toolbar.addFixed( UISupport.createToolbarButton(
+		// configureSecurityCheckAction ) );
 		toolbar.addFixed( UISupport.createToolbarButton( removeSecurityCheckAction ) );
 		toolbar.addFixed( UISupport.createToolbarButton( moveSecurityCheckUpAction ) );
 		toolbar.addFixed( UISupport.createToolbarButton( moveSecurityCheckDownAction ) );
@@ -380,13 +411,14 @@ public class SecurityChecksPanel extends JPanel
 			return this;
 		}
 	}
+
 	/****
 	 * end of assertion l&f
-	 *
+	 * 
 	 */
 
 	private class SecurityCheckListModel extends DefaultListModel implements PropertyChangeListener,
-			SecurityChecksListener
+			SecurityTestListener
 	{
 		private List<Object> items = new ArrayList<Object>();
 
@@ -428,11 +460,11 @@ public class SecurityChecksPanel extends JPanel
 
 		private void init()
 		{
-			securable.addSecurityChecksListener( this );
+			// securityTest.addSecurityChecksListener( this );
 
-			for( int c = 0; c < securable.getSecurityCheckCount(); c++ )
+			for( int c = 0; c < securityTest.getTestStepSecurityChecksCount( testStep.getId() ); c++ )
 			{
-				SecurityCheck securityCheck = securable.getSecurityCheckAt( c );
+				SecurityCheck securityCheck = securityTest.getTestStepSecurityCheckAt( testStep.getId(), c );
 				addSecurityCheck( securityCheck );
 			}
 		}
@@ -441,13 +473,13 @@ public class SecurityChecksPanel extends JPanel
 		{
 			items.clear();
 
-			for( int c = 0; c < securable.getSecurityCheckCount(); c++ )
+			for( int c = 0; c < securityTest.getTestStepSecurityChecksCount( testStep.getId() ); c++ )
 			{
-				SecurityCheck securityCheck = securable.getSecurityCheckAt( c );
+				SecurityCheck securityCheck = securityTest.getTestStepSecurityCheckAt( testStep.getId(), c );
 				securityCheck.removePropertyChangeListener( this );
 			}
 
-			securable.removeSecurityChecksListener( this );
+			// securityTest.removeSecurityChecksListener( this );
 		}
 
 		public synchronized void propertyChange( PropertyChangeEvent evt )
@@ -465,7 +497,7 @@ public class SecurityChecksPanel extends JPanel
 				} );
 		}
 
-		public void securityCheckAdded( SecurityCheck securityCheck )
+		public void securityCheckAdded( TestStep testStep, SecurityCheck securityCheck )
 		{
 			synchronized( this )
 			{
@@ -489,7 +521,7 @@ public class SecurityChecksPanel extends JPanel
 			// }
 		}
 
-		public void securityCheckRemoved( SecurityCheck securityCheck )
+		public void securityCheckRemoved( TestStep testStep, SecurityCheck securityCheck )
 		{
 			synchronized( this )
 			{
@@ -511,7 +543,7 @@ public class SecurityChecksPanel extends JPanel
 			}
 		}
 
-		public void securityCheckMoved( SecurityCheck newSecurityCheck, int ix, int offset )
+		public void securityCheckMoved( TestStep testStep, SecurityCheck newSecurityCheck, int ix, int offset )
 		{
 			synchronized( this )
 			{
@@ -557,12 +589,9 @@ public class SecurityChecksPanel extends JPanel
 
 	public class AddSecurityCheckAction extends AbstractAction
 	{
-		private final Securable securable;
-
-		public AddSecurityCheckAction( Securable securable )
+		public AddSecurityCheckAction()
 		{
 			super( "Add SecurityCheck" );
-			this.securable = securable;
 
 			putValue( Action.SHORT_DESCRIPTION, "Adds a security check to this item" );
 			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/addSecurityCheck.gif" ) );
@@ -570,35 +599,40 @@ public class SecurityChecksPanel extends JPanel
 
 		public void actionPerformed( ActionEvent e )
 		{
-			String[] securityChecks = SecurityCheckRegistry.getInstance().getAvailableSecurityChecksNames( securable );
 
-			if( securityChecks == null || securityChecks.length == 0 )
+			String[] availableChecksNames = SecurityCheckRegistry.getInstance().getAvailableSecurityChecksNames();
+			String type = UISupport.prompt( "Specify type of security check", "Add SecurityCheck", availableChecksNames );
+			if( type == null || type.trim().length() == 0 )
+				return;
+			String name = UISupport.prompt( "Specify name for security check", "Add SecurityCheck", securityTest
+					.findTestStepCheckUniqueName( testStep.getId(), type ) );
+			if( name == null || name.trim().length() == 0 )
+				return;
+
+			while( securityTest.getTestStepSecurityCheckByName( testStep.getId(), name ) != null )
+			{
+				name = UISupport.prompt( "Specify unique name for check", "Add SecurityCheck", name + " "
+						+ ( securityTest.getTestStepSecurityChecks( testStep.getId() ).size() ) );
+				if( name == null )
+				{
+					return;
+				}
+			}
+
+			if( availableChecksNames == null || availableChecksNames.length == 0 )
 			{
 				UISupport.showErrorMessage( "No security checks available for this message" );
 				return;
 			}
 
-			String selection = ( String )UISupport.prompt( "Select securityCheck to add", "Select SecurityCheck",
-					securityChecks );
-			if( selection == null )
-				return;
-
-			SecurityCheck securityCheck = securable.addSecurityCheck( selection, selection );
-//			securityCheckListModel.addSecurityCheck( securityCheck );
-			securityCheckListModel.addElement( selection );
-			securityCheckList.setSelectedIndex( securityCheckListModel.getSize() - 1 );
-			// add to test case config
-			securityTest.addSecurityCheck( testStep.getId(), securityCheck );
+			SecurityCheck securityCheck = securityTest.addSecurityCheck( testStep.getId(), type, name );
 			if( securityCheck == null )
 			{
 				UISupport.showErrorMessage( "Failed to add security check" );
 				return;
 			}
+			securityCheckList.setSelectedIndex( securityCheckListModel.getSize() - 1 );
 
-			// if( securityCheck.isConfigurable() )
-			// {
-			// securityCheck.configure();
-			// }
 		}
 
 	}
@@ -648,7 +682,7 @@ public class SecurityChecksPanel extends JPanel
 			SecurityCheck securityCheck = securityCheckListModel.getSecurityCheckAt( ix );
 			if( UISupport.confirm( "Remove security check [" + securityCheck.getName() + "]", "Remove SecurityCheck" ) )
 			{
-				securable.removeSecurityCheck( securityCheck );
+				securityTest.removeSecurityCheck( testStep.getId(), securityCheck );
 			}
 		}
 	}
@@ -666,13 +700,14 @@ public class SecurityChecksPanel extends JPanel
 
 		public void actionPerformed( ActionEvent e )
 		{
-			int ix = securityCheckList.getSelectedIndex();
-			SecurityCheck securityCheck = securityCheckListModel.getSecurityCheckAt( ix );
-			if( ix != -1 )
-			{
-				securityCheck = securable.moveSecurityCheck( ix, -1 );
-			}
-			securityCheckList.setSelectedValue( securityCheck, true );
+			// int ix = securityCheckList.getSelectedIndex();
+			// SecurityCheck securityCheck =
+			// securityCheckListModel.getSecurityCheckAt( ix );
+			// if( ix != -1 )
+			// {
+			// securityCheck = securityTest.moveSecurityCheck( ix, -1 );
+			// }
+			// securityCheckList.setSelectedValue( securityCheck, true );
 		}
 	}
 
@@ -689,13 +724,14 @@ public class SecurityChecksPanel extends JPanel
 
 		public void actionPerformed( ActionEvent e )
 		{
-			int ix = securityCheckList.getSelectedIndex();
-			SecurityCheck securityCheck = securityCheckListModel.getSecurityCheckAt( ix );
-			if( ix != -1 )
-			{
-				securityCheck = securable.moveSecurityCheck( ix, 1 );
-			}
-			securityCheckList.setSelectedValue( securityCheck, true );
+			// int ix = securityCheckList.getSelectedIndex();
+			// SecurityCheck securityCheck =
+			// securityCheckListModel.getSecurityCheckAt( ix );
+			// if( ix != -1 )
+			// {
+			// securityCheck = securityTest.moveSecurityCheck( ix, 1 );
+			// }
+			// securityCheckList.setSelectedValue( securityCheck, true );
 		}
 	}
 }

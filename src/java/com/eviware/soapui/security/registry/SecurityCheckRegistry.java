@@ -133,13 +133,13 @@ public class SecurityCheckRegistry
 	}
 
 	//TODO drso: test and implement properly
-	public String[] getAvailableSecurityChecksNames( Securable securable )
+	public String[] getAvailableSecurityChecksNames()
 	{
 		List<String> result = new ArrayList<String>();
 
-		for( SecurityCheckFactory securityCheck : availableSecurityChecks.values() )
+		for( AbstractSecurityCheckFactory securityCheck : availableSecurityChecks.values() )
 		{
-			if( securityCheck.canDoSecurityCheck( securable ) )
+			if( securityCheck.canCreate() )
 				result.add( securityCheck.getSecurityCheckName() );
 		}
 

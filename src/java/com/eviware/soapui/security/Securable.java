@@ -29,13 +29,13 @@ public interface Securable
 {
 	public SecurityCheck addSecurityCheck( String checkType, String checkName );
 
-	 public void addSecurityChecksListener( SecurityChecksListener listener );
+	 public void addSecurityChecksListener( SecurityTestListener listener );
 
 	public int getSecurityCheckCount();
 
 	public SecurityCheck getSecurityCheckAt( int c );
 
-	 public void removeSecurityChecksListener( SecurityChecksListener listener );
+	 public void removeSecurityChecksListener( SecurityTestListener listener );
 
 	public void removeSecurityCheck( SecurityCheck securityCheck );
 
