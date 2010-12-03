@@ -85,7 +85,6 @@ public class SecurityChecksPanel extends JPanel
 		securityCheckListModel = new SecurityCheckListModel();
 		securityCheckList = new JList( securityCheckListModel );
 		securityCheckList.setToolTipText( "SecurityChecks for this TestStep" );
-		securityCheckList.setCellRenderer( new SecurityCheckCellRenderer() );
 		securityCheckList.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
 		securityCheckList.addListSelectionListener( new ListSelectionListener()
 		{
@@ -134,6 +133,10 @@ public class SecurityChecksPanel extends JPanel
 		splitPane.setDividerLocation( 120 );
 		add( splitPane, BorderLayout.CENTER );
 
+		/******************
+		 * ASSERTION APROACH
+		 * 
+		 *****************/
 		// securityCheckListPopup = new JPopupMenu();
 		// addSecurityCheckAction = new AddSecurityCheckAction( securable );
 		// securityCheckListPopup.add( addSecurityCheckAction );
@@ -318,7 +321,7 @@ public class SecurityChecksPanel extends JPanel
 	protected void addToolbarButtons( JXToolBar toolbar )
 	{
 		toolbar.addFixed( UISupport.createToolbarButton( addSecurityCheckAction ) );
-		toolbar.addFixed( UISupport.createToolbarButton( configureSecurityCheckAction ) );
+//		toolbar.addFixed( UISupport.createToolbarButton( configureSecurityCheckAction ) );
 		toolbar.addFixed( UISupport.createToolbarButton( removeSecurityCheckAction ) );
 		toolbar.addFixed( UISupport.createToolbarButton( moveSecurityCheckUpAction ) );
 		toolbar.addFixed( UISupport.createToolbarButton( moveSecurityCheckDownAction ) );
@@ -377,6 +380,10 @@ public class SecurityChecksPanel extends JPanel
 			return this;
 		}
 	}
+	/****
+	 * end of assertion l&f
+	 *
+	 */
 
 	private class SecurityCheckListModel extends DefaultListModel implements PropertyChangeListener,
 			SecurityChecksListener
@@ -563,35 +570,6 @@ public class SecurityChecksPanel extends JPanel
 
 		public void actionPerformed( ActionEvent e )
 		{
-			// String[] availableChecksNames =
-			// SecurityCheckRegistry.getInstance().getAvailableSecurityChecksNames(true);
-			// String type = UISupport.prompt( "Specify type of security check",
-			// "Add SecurityCheck", availableChecksNames );
-			// if( type == null || type.trim().length() == 0 )
-			// return;
-			//
-			// String name = UISupport.prompt( "Specify name for security check",
-			// "Add SecurityCheck", findUniqueName(type) );
-			// if( name == null || name.trim().length() == 0 )
-			// return;
-			// while( monitorSecurityTest.getSecurityCheckByName( name ) != null
-			// || monitorSecurityTest.getSecurityCheckByName( name + " (disabled)"
-			// ) != null )
-			// {
-			// name = UISupport.prompt( "Specify unique name for check",
-			// "Add SecurityCheck", name + " "
-			// + ( monitorSecurityTest.getMonitorSecurityChecksList().size() ) );
-			// if( name == null )
-			// {
-			// return;
-			// }
-			// }
-			//
-			// monitorSecurityTest.addSecurityCheck( name, type );
-			//
-			// listModel.addElement( name );
-			// securityChecksList.setSelectedIndex( listModel.getSize() - 1 );
-
 			String[] securityChecks = SecurityCheckRegistry.getInstance().getAvailableSecurityChecksNames( securable );
 
 			if( securityChecks == null || securityChecks.length == 0 )
@@ -605,16 +583,9 @@ public class SecurityChecksPanel extends JPanel
 			if( selection == null )
 				return;
 
-			// if( !TestAssertionRegistry.getInstance().canAddMultipleAssertions(
-			// selection, securable ) )
-			// {
-			// UISupport.showErrorMessage( "This assertion can only be added once"
-			// );
-			// return;
-			// }
-
 			SecurityCheck securityCheck = securable.addSecurityCheck( selection, selection );
-			securityCheckListModel.addSecurityCheck( securityCheck );
+//			securityCheckListModel.addSecurityCheck( securityCheck );
+			securityCheckListModel.addElement( selection );
 			securityCheckList.setSelectedIndex( securityCheckListModel.getSize() - 1 );
 			// add to test case config
 			securityTest.addSecurityCheck( testStep.getId(), securityCheck );
@@ -629,20 +600,6 @@ public class SecurityChecksPanel extends JPanel
 			// securityCheck.configure();
 			// }
 		}
-
-		// private String findUniqueName(String type) {
-		// String name = type;
-		// int numNames = 0;
-		// for (SecurityCheck existingCheck :
-		// monitorSecurityTest.getMonitorSecurityChecksList()) {
-		// if (existingCheck.getType().equals(name))
-		// numNames++;
-		// }
-		// if (numNames != 0) {
-		// name += " " + numNames;
-		// }
-		// return name;
-		// }
 
 	}
 

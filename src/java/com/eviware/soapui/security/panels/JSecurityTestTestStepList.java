@@ -371,9 +371,11 @@ public class JSecurityTestTestStepList extends JPanel
 					// securityChecksInspector.getComponent().add(
 					// buildSecurityChecksPanel());
 					// securityChecksInspector.getComponent().revalidate();
-					secCheckPanel.removeAll();
-					secCheckPanel.add( buildSecurityChecksPanel() );
+					splitPane.remove(secCheckPanel );
+					secCheckPanel = buildSecurityChecksPanel();
 					secCheckPanel.revalidate();
+					splitPane.setBottomComponent( secCheckPanel );
+					splitPane.revalidate();
 				}
 			} );
 
