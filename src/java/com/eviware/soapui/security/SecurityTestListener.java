@@ -13,7 +13,6 @@
 package com.eviware.soapui.security;
 
 import com.eviware.soapui.model.testsuite.TestStep;
-import com.eviware.soapui.security.check.SecurityCheck;
 
 /**
  * Listener for security check events
@@ -23,9 +22,9 @@ import com.eviware.soapui.security.check.SecurityCheck;
 
 public interface SecurityTestListener
 {
-	public void securityCheckAdded(TestStep testStep,SecurityCheck securityCheck );
+	public void securityCheckAdded( TestStep testStep, SecurityTest securityTest );
 
-	public void securityCheckRemoved( TestStep testStep,SecurityCheck securityCheck );
+	public void securityCheckRemoved( TestStep testStep, SecurityTest securityTest );
 
-	public void securityCheckMoved( TestStep testStep, SecurityCheck securityCheck, int ix, int offset );
+	public void securityCheckMoved( TestStep testStep, SecurityTest securityTest, int ix, int offset );
 }

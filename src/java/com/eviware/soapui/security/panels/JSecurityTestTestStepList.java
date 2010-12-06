@@ -54,6 +54,7 @@ import com.eviware.soapui.model.support.TestSuiteListenerAdapter;
 import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTest;
+import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.security.check.SecurityCheck;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.ActionList;
@@ -183,7 +184,7 @@ public class JSecurityTestTestStepList extends JPanel
 			SecurityCheck selected = securityTest.getTestStepSecurityCheckByName( selectedTestStep.getTestStep().getId(),
 					( String )securityChecksList.getSelectedValue() );
 			securityCheckConfigPanel.removeAll();
-			securityCheckConfigPanel.add( selected.getComponent( null ) );
+			securityCheckConfigPanel.add( selected.getComponent( ) );
 		}
 		securityCheckConfigPanel.revalidate();
 		return securityCheckConfigPanel;
@@ -199,7 +200,7 @@ public class JSecurityTestTestStepList extends JPanel
 	// implement securable
 	protected JPanel buildSecurityChecksPanel()
 	{
-		if( selectedTestStep != null && selectedTestStep.getTestStep() instanceof HttpTestRequestStep )
+		if( selectedTestStep != null && AbstractSecurityCheck.isSecurable( selectedTestStep.getTestStep() )  )
 		{
 			return new SecurityChecksPanel( selectedTestStep.getTestStep(), securityTest );
 		}

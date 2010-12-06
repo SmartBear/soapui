@@ -32,24 +32,18 @@ import javax.swing.JTextArea;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.ListModel;
-import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
-import javax.swing.table.TableColumnModel;
 import javax.swing.text.Document;
-
-import org.jdesktop.swingx.JXTable;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.actions.testcase.AddNewLoadTestAction;
 import com.eviware.soapui.impl.wsdl.actions.testcase.AddNewSecurityTestAction;
-import com.eviware.soapui.impl.wsdl.actions.testcase.AddWsdlTestStepAction;
 import com.eviware.soapui.impl.wsdl.actions.testcase.RunTestCaseWithLoadUIAction;
 import com.eviware.soapui.impl.wsdl.actions.testcase.TestCaseOptionsAction;
 import com.eviware.soapui.impl.wsdl.panels.support.MockTestRunContext;
 import com.eviware.soapui.impl.wsdl.panels.support.MockTestRunner;
 import com.eviware.soapui.impl.wsdl.panels.support.ProgressBarTestCaseAdapter;
-import com.eviware.soapui.impl.wsdl.panels.testcase.JTestStepList;
 import com.eviware.soapui.impl.wsdl.panels.testcase.actions.SetCredentialsAction;
 import com.eviware.soapui.impl.wsdl.panels.testcase.actions.SetEndpointAction;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.AbstractGroovyEditorModel;
@@ -57,7 +51,6 @@ import com.eviware.soapui.impl.wsdl.panels.teststeps.support.PropertyHolderTable
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestStepFactory;
-import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestStepRegistry;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
@@ -144,7 +137,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 		inspectorPanel.addInspector( new JComponentInspector<JComponent>( buildTestLog(), "TestCase Log",
 				"TestCase Execution Log", true ) );
 		inspectorPanel.setDefaultDividerLocation( 0.7F );
-		inspectorPanel.setCurrentInspector( "TestCase Log" );
+		// inspectorPanel.setCurrentInspector( "TestCase Log" );
 
 		if( StringUtils.hasContent( getModelItem().getDescription() )
 				&& getModelItem().getSettings().getBoolean( UISettings.SHOW_DESCRIPTIONS ) )
@@ -185,16 +178,6 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 	{
 		JPanel p = new JPanel( new BorderLayout() );
 		JXToolBar toolbar = UISupport.createToolbar();
-
-		// TODO add + x for adding/removing securityChecks and then select from
-		// the list, like monitor
-		// WsdlTestStepFactory[] factories =
-		// WsdlTestStepRegistry.getInstance().getFactories();
-		// for( WsdlTestStepFactory factory : factories )
-		// {
-		// toolbar.addFixed( UISupport.createToolbarButton( new
-		// AddWsdlTestStepAction( factory ) ) );
-		// }
 
 		p.add( toolbar, BorderLayout.NORTH );
 		testStepList = new JSecurityTestTestStepList( getModelItem() );

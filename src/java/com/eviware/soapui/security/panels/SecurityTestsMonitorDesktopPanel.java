@@ -166,7 +166,7 @@ public class SecurityTestsMonitorDesktopPanel extends JPanel
 			SecurityCheck selected = monitorSecurityTest.getSecurityCheckByName( ( String )securityChecksList
 					.getSelectedValue() );
 			securityCheckConfigPanel.removeAll();
-			securityCheckConfigPanel.add( selected.getComponent(null) );
+			securityCheckConfigPanel.add( selected.getComponent() );
 		}
 		securityCheckConfigPanel.revalidate();
 		return securityCheckConfigPanel;
