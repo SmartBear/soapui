@@ -112,7 +112,7 @@ public class InformationExposureCheck extends AbstractSecurityCheck implements H
 	}
 
 	@Override
-	public JComponent getComponent( TestStep testStep )
+	public JComponent getComponent( )
 	{
 		// if (panel == null) {
 		panel = new JPanel( new BorderLayout() );

@@ -152,7 +152,7 @@ public class ReflectedXSSCheck extends AbstractSecurityCheck  implements Sensiti
 	}
 
 	@Override
-	public JComponent getComponent(TestStep testStep)
+	public JComponent getComponent()
 	{
 		// if (panel == null) {
 		panel = new JPanel( new BorderLayout() );

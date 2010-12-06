@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.swing.JComponent;
+import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.text.Document;
@@ -27,9 +28,7 @@ import javax.swing.text.Document;
 import com.eviware.soapui.config.ParameterExposureCheckConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.config.TestAssertionConfig;
-import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
-import com.eviware.soapui.impl.support.http.HttpRequest;
 import com.eviware.soapui.impl.wsdl.monitor.JProxyServletWsdlMonitorMessageExchange;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCaseRunner;
@@ -47,9 +46,8 @@ import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
 import com.eviware.soapui.security.log.JSecurityTestRunLog;
-import com.eviware.soapui.security.log.SecurityTestLogModel;
 import com.eviware.soapui.security.log.SecurityTestLogMessageEntry;
-
+import com.eviware.soapui.security.log.SecurityTestLogModel;
 import com.eviware.soapui.security.monitor.HttpSecurityAnalyser;
 import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.StringUtils;
@@ -72,6 +70,8 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements Htt
 	public static final String TYPE = "ParameterExposureCheck";
 	public static final int DEFAULT_MINIMUM_CHARACTER_LENGTH = 5;
 	protected static final String MINIMUM_CHARACTERS_FIELD = "Minimum Characters";
+	private static final String checkTitle = "Parameter Exposure";
+	private JDialog dialog;
 
 	public ParameterExposureCheck( SecurityCheckConfig config, ModelItem parent, String icon )
 	{
@@ -117,7 +117,7 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements Htt
 
 			AbstractHttpRequest<?> httpRequest = testStepwithProperties.getHttpRequest();
 			params = httpRequest.getParams();
-			
+
 			if( getParamsToCheck().isEmpty() )
 			{
 				setParamsToCheck( new ArrayList<String>( params.keySet() ) );
@@ -196,7 +196,7 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements Htt
 	}
 
 	@Override
-	public JComponent getComponent(TestStep testStep)
+	public JComponent getComponent()
 	{
 		// if (panel == null) {
 		panel = new JPanel( new BorderLayout() );
@@ -232,6 +232,28 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements Htt
 		panel.add( form.getPanel() );
 		return panel;
 	}
+
+	// @Override
+	// public boolean configure()
+	// {
+	// if( dialog == null )
+	// {
+	// buildDialog();
+	// }
+	//
+	// UISupport.showDialog( dialog );
+	// return true;
+	// }
+	//
+	// protected void buildDialog()
+	// {
+	// dialog = new JDialog( UISupport.getMainFrame(), "Parameter Exposure", true
+	// );
+	// dialog.setContentPane( getComponent( ) );
+	// dialog.setSize( 600, 500 );
+	// dialog.setModal( true );
+	// dialog.pack();
+	// }
 
 	private class MinimumListener implements KeyListener
 	{
@@ -289,6 +311,12 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements Htt
 	public boolean canRun()
 	{
 		return true;
+	}
+
+	@Override
+	public String getTitle()
+	{
+		return checkTitle;
 	}
 
 }

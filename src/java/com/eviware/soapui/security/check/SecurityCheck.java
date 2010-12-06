@@ -87,9 +87,10 @@ public abstract class SecurityCheck extends AbstractWsdlModelItem<SecurityCheckC
 	 * @param TestStep
 	 *           the TestStep to create the config for, could be null for
 	 *           HttpMonitor checks
+	 * 
 	 * @return
 	 */
-	public abstract JComponent getComponent( TestStep testStep );
+	public abstract JComponent getComponent();
 
 	/**
 	 * The type of this check
@@ -98,16 +99,23 @@ public abstract class SecurityCheck extends AbstractWsdlModelItem<SecurityCheckC
 	 */
 	public abstract String getType();
 
+	/**
+	 * The title of this check
+	 * 
+	 * @return
+	 */
+	public abstract String getTitle();
+
 	public Securable getSecurable()
 	{
 		return securable;
 	}
-	//TODO
+
 	public boolean configure()
 	{
 		return true;
 	}
-	//TODO
+
 	public boolean isConfigurable()
 	{
 		return true;
