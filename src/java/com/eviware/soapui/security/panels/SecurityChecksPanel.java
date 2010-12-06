@@ -17,6 +17,8 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -71,7 +73,7 @@ public class SecurityChecksPanel extends JPanel
 	private MoveSecurityCheckDownAction moveSecurityCheckDownAction;
 	// private DefaultListModel listModel;
 	// private JList securityChecksList;
-//	JSplitPane splitPane;
+	// JSplitPane splitPane;
 	private JPanel securityCheckConfigPanel;
 
 	public SecurityChecksPanel( TestStep testStep, SecurityTest securityTest )
@@ -93,9 +95,9 @@ public class SecurityChecksPanel extends JPanel
 			@Override
 			public void valueChanged( ListSelectionEvent arg0 )
 			{
-//				splitPane.remove( splitPane.getRightComponent() );
-//				splitPane.setRightComponent( buildConfigPanel() );
-//				revalidate();
+				// splitPane.remove( splitPane.getRightComponent() );
+				// splitPane.setRightComponent( buildConfigPanel() );
+				// revalidate();
 
 				int ix = securityCheckList.getSelectedIndex();
 
@@ -106,6 +108,29 @@ public class SecurityChecksPanel extends JPanel
 
 				if( ix == -1 )
 					return;
+			}
+		} );
+		securityCheckList.addMouseListener( new MouseAdapter()
+		{
+
+			public void mouseClicked( MouseEvent e )
+			{
+				if( e.getClickCount() < 2 )
+					return;
+
+				int ix = securityCheckList.getSelectedIndex();
+				if( ix == -1 )
+					return;
+
+				Object obj = securityCheckList.getModel().getElementAt( ix );
+				if( obj instanceof SecurityCheck )
+				{
+					SecurityCheck chck = ( SecurityCheck )obj;
+					if( chck.isConfigurable() )
+						chck.configure();
+
+					return;
+				}
 			}
 		} );
 
@@ -137,54 +162,55 @@ public class SecurityChecksPanel extends JPanel
 
 		securityCheckConfigPanel = ( JPanel )buildConfigPanel();
 
-//		splitPane = UISupport.createHorizontalSplit( p, buildConfigPanel() );
-//		splitPane.setPreferredSize( new Dimension( 650, 500 ) );
-//		splitPane.setResizeWeight( 0.1 );
-//		splitPane.setDividerLocation( 120 );
+		// splitPane = UISupport.createHorizontalSplit( p, buildConfigPanel() );
+		// splitPane.setPreferredSize( new Dimension( 650, 500 ) );
+		// splitPane.setResizeWeight( 0.1 );
+		// splitPane.setDividerLocation( 120 );
 		add( p, BorderLayout.CENTER );
 
 		/******************
 		 * ASSERTION APROACH
 		 * 
 		 *****************/
-//		 securityCheckListPopup = new JPopupMenu();
-////		addSecurityCheckAction = new AddSecurityCheckAction( securable );
-//		 securityCheckListPopup.add( addSecurityCheckAction );
-//		
-//		 securityCheckListPopup.addPopupMenuListener( new PopupMenuListener()
-//		{
-//		
-//		 public void popupMenuWillBecomeVisible( PopupMenuEvent e )
-//		 {
-//		 while( securityCheckListPopup.getComponentCount() > 1 )
-//	 securityCheckListPopup.remove( 1 );
-//	
-//		 int ix = securityCheckList.getSelectedIndex();
-//		 if( ix == -1 )
-//		 {
-//		 securityCheckListPopup.addSeparator();
-//		 securityCheckListPopup.add( new ShowOnlineHelpAction(
-//		 HelpUrls.RESPONSE_ASSERTIONS_HELP_URL ) );
-//		 return;
-//		 }
-//		
-//		 SecurityCheck securityCheck =
-//		 securityCheckListModel.getSecurityCheckAt( ix );
-////		 ActionSupport.addActions( ActionListBuilder.buildActions( securityCheck
-////		 ), securityCheckListPopup );
-//		 }
-//		
-//		 public void popupMenuWillBecomeInvisible( PopupMenuEvent e )
-//		 {
-//		 }
-//		
-//		 public void popupMenuCanceled( PopupMenuEvent e )
-//		 {
-//		 }
-//		 } );
-//		 
+		// securityCheckListPopup = new JPopupMenu();
+		// // addSecurityCheckAction = new AddSecurityCheckAction( securable );
+		// securityCheckListPopup.add( addSecurityCheckAction );
+		//		
+		// securityCheckListPopup.addPopupMenuListener( new PopupMenuListener()
+		// {
+		//		
+		// public void popupMenuWillBecomeVisible( PopupMenuEvent e )
+		// {
+		// while( securityCheckListPopup.getComponentCount() > 1 )
+		// securityCheckListPopup.remove( 1 );
+		//	
+		// int ix = securityCheckList.getSelectedIndex();
+		// if( ix == -1 )
+		// {
+		// securityCheckListPopup.addSeparator();
+		// securityCheckListPopup.add( new ShowOnlineHelpAction(
+		// HelpUrls.RESPONSE_ASSERTIONS_HELP_URL ) );
+		// return;
+		// }
+		//		
+		// SecurityCheck securityCheck =
+		// securityCheckListModel.getSecurityCheckAt( ix );
+		// // ActionSupport.addActions( ActionListBuilder.buildActions(
+		// securityCheck
+		// // ), securityCheckListPopup );
+		// }
+		//		
+		// public void popupMenuWillBecomeInvisible( PopupMenuEvent e )
+		// {
+		// }
+		//		
+		// public void popupMenuCanceled( PopupMenuEvent e )
+		// {
+		// }
+		// } );
+		//		 
 
-//		securityCheckList.setComponentPopupMenu( securityCheckListPopup );
+		// securityCheckList.setComponentPopupMenu( securityCheckListPopup );
 
 		// securityCheckList.addMouseListener( new MouseAdapter()
 		// {
@@ -251,7 +277,7 @@ public class SecurityChecksPanel extends JPanel
 
 		// add( new JScrollPane( securityChecksList ), BorderLayout.CENTER );
 		// add( buildToolbar(), BorderLayout.NORTH );
-//		add( new JScrollPane( splitPane ), BorderLayout.CENTER );
+		// add( new JScrollPane( splitPane ), BorderLayout.CENTER );
 	}
 
 	private JComponent buildConfigPanel()
@@ -267,7 +293,7 @@ public class SecurityChecksPanel extends JPanel
 			SecurityCheck selected = securityTest.getTestStepSecurityCheckByName( testStep.getId(),
 					( ( SecurityCheck )securityCheckList.getSelectedValue() ).getName() );
 			securityCheckConfigPanel.removeAll();
-			securityCheckConfigPanel.add( selected.getComponent( ) );
+			securityCheckConfigPanel.add( selected.getComponent() );
 		}
 		securityCheckConfigPanel.revalidate();
 		return securityCheckConfigPanel;
@@ -283,7 +309,7 @@ public class SecurityChecksPanel extends JPanel
 	{
 		JXToolBar checksToolbar = UISupport.createSmallToolbar();
 		addSecurityCheckAction = new AddSecurityCheckAction();
-		 configureSecurityCheckAction = new ConfigureSecurityCheckAction();
+		configureSecurityCheckAction = new ConfigureSecurityCheckAction();
 		removeSecurityCheckAction = new RemoveSecurityCheckAction();
 		moveSecurityCheckUpAction = new MoveSecurityCheckUpAction();
 		moveSecurityCheckDownAction = new MoveSecurityCheckDownAction();
@@ -418,7 +444,7 @@ public class SecurityChecksPanel extends JPanel
 	 * 
 	 */
 
-	public class SecurityCheckListModel extends DefaultListModel 
+	public class SecurityCheckListModel extends DefaultListModel
 	{
 		private List<Object> items = new ArrayList<Object>();
 
