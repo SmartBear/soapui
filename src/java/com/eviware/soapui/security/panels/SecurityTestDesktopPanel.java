@@ -16,6 +16,7 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -50,12 +51,16 @@ import com.eviware.soapui.impl.wsdl.panels.teststeps.support.AbstractGroovyEdito
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.PropertyHolderTable;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
+import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestStepFactory;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
+import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunner;
+import com.eviware.soapui.security.SecurityTestRunnerImpl;
 import com.eviware.soapui.security.log.JSecurityTestRunLog;
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.DocumentListenerAdapter;
@@ -134,10 +139,10 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 		add( panel, BorderLayout.NORTH );
 
 		inspectorPanel = JInspectorPanelFactory.build( buildContent() );
-		inspectorPanel.addInspector( new JComponentInspector<JComponent>( buildTestLog(), "TestCase Log",
-				"TestCase Execution Log", true ) );
+		inspectorPanel.addInspector( new JComponentInspector<JComponent>( buildTestLog(), "Security Log",
+				"Security Execution Log", true ) );
 		inspectorPanel.setDefaultDividerLocation( 0.7F );
-		// inspectorPanel.setCurrentInspector( "TestCase Log" );
+		inspectorPanel.setCurrentInspector( "Security Log" );
 
 		if( StringUtils.hasContent( getModelItem().getDescription() )
 				&& getModelItem().getSettings().getBoolean( UISettings.SHOW_DESCRIPTIONS ) )
@@ -158,6 +163,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 	private JComponent buildTestLog()
 	{
 		securitytestLog = new JSecurityTestRunLog( getModelItem() );
+		stateDependantComponents.add( securitytestLog );
 		return securitytestLog;
 	}
 
@@ -312,6 +318,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 	{
 		if( canceled )
 		{
+			
 			// make sure state is correct
 			runButton.setEnabled( true );
 			cancelButton.setEnabled( false );
@@ -323,6 +330,10 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 		properties.put( "loopButton", loopButton );
 		properties.put( TestCaseRunContext.INTERACTIVE, Boolean.TRUE );
 		lastRunner = null;
+		SecurityTestRunnerImpl testRunner = new SecurityTestRunnerImpl( securityTest );
+
+		testRunner.start();
+		
 		// runner = getModelItem().run( properties, true );
 	}
 
