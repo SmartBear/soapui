@@ -106,9 +106,9 @@ public class JSecurityTestTestStepList extends JPanel
 		// add( inspectorPanel.getComponent() );
 
 		secCheckPanel = buildSecurityChecksPanel();
-		secCheckPanel.setPreferredSize( new Dimension( 650, 300 ) );
+//		secCheckPanel.setPreferredSize( new Dimension( 600, 300 ) );
 		splitPane = UISupport.createVerticalSplit( new JScrollPane( p ), new JScrollPane( secCheckPanel ) );
-		splitPane.setPreferredSize( new Dimension( 650, 500 ) );
+		splitPane.setPreferredSize( new Dimension( 600, 400 ) );
 		splitPane.setResizeWeight( 0.1 );
 		splitPane.setDividerLocation( 0.5 );
 		add( splitPane, BorderLayout.CENTER );
@@ -163,7 +163,7 @@ public class JSecurityTestTestStepList extends JPanel
 		securityCheckConfigPanel = ( JPanel )buildSecurityCheckConfigPanel();
 
 		splitPane = UISupport.createHorizontalSplit( p, buildSecurityCheckConfigPanel() );
-		splitPane.setPreferredSize( new Dimension( 650, 500 ) );
+//		splitPane.setPreferredSize( new Dimension( 650, 500 ) );
 		splitPane.setResizeWeight( 0.1 );
 		splitPane.setDividerLocation( 120 );
 		// add( splitPane, BorderLayout.CENTER );
