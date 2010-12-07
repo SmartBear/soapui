@@ -16,7 +16,6 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
-import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -38,10 +37,6 @@ import javax.swing.text.Document;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
-import com.eviware.soapui.impl.wsdl.actions.testcase.AddNewLoadTestAction;
-import com.eviware.soapui.impl.wsdl.actions.testcase.AddNewSecurityTestAction;
-import com.eviware.soapui.impl.wsdl.actions.testcase.RunTestCaseWithLoadUIAction;
-import com.eviware.soapui.impl.wsdl.actions.testcase.TestCaseOptionsAction;
 import com.eviware.soapui.impl.wsdl.panels.support.MockTestRunContext;
 import com.eviware.soapui.impl.wsdl.panels.support.MockTestRunner;
 import com.eviware.soapui.impl.wsdl.panels.support.ProgressBarTestCaseAdapter;
@@ -51,13 +46,10 @@ import com.eviware.soapui.impl.wsdl.panels.teststeps.support.AbstractGroovyEdito
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.PropertyHolderTable;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
-import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
-import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestStepFactory;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
-import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.security.SecurityTestRunnerImpl;
@@ -100,7 +92,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 	private SecurityTestRunner runner;
 	private JButton setEndpointButton;
 	private JButton setCredentialsButton;
-//	private JButton optionsButton;
+	// private JButton optionsButton;
 	private JSecurityTestRunLog securitytestLog;
 	private JToggleButton loopButton;
 	private ProgressBarTestCaseAdapter progressBarAdapter;
@@ -111,11 +103,11 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 	private GroovyEditorComponent tearDownGroovyEditor;
 	private GroovyEditorComponent setupGroovyEditor;
 	private JInspectorPanel testStepListInspectorPanel;
-//	private JButton createLoadTestButton;
-//	private JButton createSecurityTestButton;
+	// private JButton createLoadTestButton;
+	// private JButton createSecurityTestButton;
 	private JInspectorPanel inspectorPanel;
 	public SecurityTestRunner lastRunner;
-//	private JButton runWithLoadUIButton;
+	// private JButton runWithLoadUIButton;
 	// private JButton synchronizeWithLoadUIButton;
 	private SecurityTest securityTest;
 
@@ -127,6 +119,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 
 		setPreferredSize( new Dimension( 400, 550 ) );
 		this.securityTest = securityTest;
+		progressBarAdapter = new ProgressBarTestCaseAdapter( progressBar, securityTest.getTestCase() );
 	}
 
 	private void buildUI()
@@ -255,9 +248,11 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 		JToolBar toolbar = UISupport.createToolbar();
 
 		runButton = UISupport.createToolbarButton( new RunSecurityTestAction() );
-//		optionsButton = UISupport.createToolbarButton( SwingActionDelegate.createDelegate(
-//				TestCaseOptionsAction.SOAPUI_ACTION_ID, getModelItem(), null, "/options.gif" ) );
-//		optionsButton.setText( null );
+		// optionsButton = UISupport.createToolbarButton(
+		// SwingActionDelegate.createDelegate(
+		// TestCaseOptionsAction.SOAPUI_ACTION_ID, getModelItem(), null,
+		// "/options.gif" ) );
+		// optionsButton.setText( null );
 		cancelButton = UISupport.createToolbarButton( new CancelRunSecuritytestAction(), false );
 
 		loopButton = new JToggleButton( UISupport.createImageIcon( "/loop.gif" ) );
@@ -268,19 +263,25 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 		setEndpointButton = UISupport.createToolbarButton( new SetEndpointAction( getModelItem().getTestCase() ) );
 
 		stateDependantComponents.add( runButton );
-//		stateDependantComponents.add( optionsButton );
+		// stateDependantComponents.add( optionsButton );
 		stateDependantComponents.add( cancelButton );
 		stateDependantComponents.add( setCredentialsButton );
 		stateDependantComponents.add( setEndpointButton );
 
-//		createLoadTestButton = UISupport.createToolbarButton( SwingActionDelegate.createDelegate(
-//				AddNewLoadTestAction.SOAPUI_ACTION_ID, getModelItem(), null, "/loadTest.gif" ) );
-//
-//		createSecurityTestButton = UISupport.createToolbarButton( SwingActionDelegate.createDelegate(
-//				AddNewSecurityTestAction.SOAPUI_ACTION_ID, getModelItem(), null, "/loadTest.gif" ) );
-//
-//		runWithLoadUIButton = UISupport.createToolbarButton( SwingActionDelegate.createDelegate(
-//				RunTestCaseWithLoadUIAction.SOAPUI_ACTION_ID, getModelItem(), null, "/runTestCaseWithLoadUI.png" ) );
+		// createLoadTestButton = UISupport.createToolbarButton(
+		// SwingActionDelegate.createDelegate(
+		// AddNewLoadTestAction.SOAPUI_ACTION_ID, getModelItem(), null,
+		// "/loadTest.gif" ) );
+		//
+		// createSecurityTestButton = UISupport.createToolbarButton(
+		// SwingActionDelegate.createDelegate(
+		// AddNewSecurityTestAction.SOAPUI_ACTION_ID, getModelItem(), null,
+		// "/loadTest.gif" ) );
+		//
+		// runWithLoadUIButton = UISupport.createToolbarButton(
+		// SwingActionDelegate.createDelegate(
+		// RunTestCaseWithLoadUIAction.SOAPUI_ACTION_ID, getModelItem(), null,
+		// "/runTestCaseWithLoadUI.png" ) );
 		// convertToLoadUIButton = UISupport.createToolbarButton(
 		// SwingActionDelegate.createDelegate(
 		// ConvertTestCaseLoadTestsToLoadUIAction.SOAPUI_ACTION_ID,
@@ -303,13 +304,13 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 		toolbar.add( setCredentialsButton );
 		toolbar.add( setEndpointButton );
 		toolbar.addSeparator();
-//		toolbar.add( createLoadTestButton );
+		// toolbar.add( createLoadTestButton );
 		toolbar.addSeparator();
-//		toolbar.add( createSecurityTestButton );
+		// toolbar.add( createSecurityTestButton );
 		toolbar.addSeparator();
-//		toolbar.add( optionsButton );
+		// toolbar.add( optionsButton );
 		toolbar.addSeparator();
-//		toolbar.add( runWithLoadUIButton );
+		// toolbar.add( runWithLoadUIButton );
 		// toolbar.add( convertToLoadUIButton );
 		// toolbar.add( synchronizeWithLoadUIButton );
 	}
@@ -318,7 +319,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 	{
 		if( canceled )
 		{
-			
+
 			// make sure state is correct
 			runButton.setEnabled( true );
 			cancelButton.setEnabled( false );
@@ -333,7 +334,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 		SecurityTestRunnerImpl testRunner = new SecurityTestRunnerImpl( securityTest );
 
 		testRunner.start();
-		
+
 		// runner = getModelItem().run( properties, true );
 	}
 
@@ -397,7 +398,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 		// );
 		// getModelItem().removeTestRunListener( testRunListener );
 		// testStepList.release();
-		// progressBarAdapter.release();
+		progressBarAdapter.release();
 		propertiesTable.release();
 		inspectorPanel.release();
 

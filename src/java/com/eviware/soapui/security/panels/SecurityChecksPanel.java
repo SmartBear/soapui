@@ -716,14 +716,20 @@ public class SecurityChecksPanel extends JPanel
 
 		public void actionPerformed( ActionEvent e )
 		{
-			// int ix = securityCheckList.getSelectedIndex();
-			// SecurityCheck securityCheck =
-			// securityCheckListModel.getSecurityCheckAt( ix );
-			// if( ix != -1 )
-			// {
-			// securityCheck = securityTest.moveSecurityCheck( ix, -1 );
-			// }
-			// securityCheckList.setSelectedValue( securityCheck, true );
+			int ix = securityCheckList.getSelectedIndex();
+			SecurityCheck securityCheck = securityCheckListModel.getSecurityCheckAt( ix );
+			SecurityCheck newSecurityCheck = null;
+			if( ix > 0 )
+			{
+				if( ix != -1 )
+				{
+					newSecurityCheck = securityTest.moveTestStepSecurityCheck( testStep, securityCheck, ix, -1 );
+				}
+				if( newSecurityCheck != null )
+				{
+					securityCheckList.setSelectedValue( newSecurityCheck, true );
+				}
+			}
 		}
 	}
 
@@ -740,14 +746,20 @@ public class SecurityChecksPanel extends JPanel
 
 		public void actionPerformed( ActionEvent e )
 		{
-			// int ix = securityCheckList.getSelectedIndex();
-			// SecurityCheck securityCheck =
-			// securityCheckListModel.getSecurityCheckAt( ix );
-			// if( ix != -1 )
-			// {
-			// securityCheck = securityTest.moveSecurityCheck( ix, 1 );
-			// }
-			// securityCheckList.setSelectedValue( securityCheck, true );
+			int ix = securityCheckList.getSelectedIndex();
+			SecurityCheck securityCheck = securityCheckListModel.getSecurityCheckAt( ix );
+			SecurityCheck newSecurityCheck = null;
+			if( ix < securityCheckListModel.getSize() - 1 )
+			{
+				if( ix != -1 )
+				{
+					newSecurityCheck = securityTest.moveTestStepSecurityCheck( testStep, securityCheck, ix, 1 );
+				}
+				if( newSecurityCheck != null )
+				{
+					securityCheckList.setSelectedValue( newSecurityCheck, true );
+				}
+			}
 		}
 	}
 }

@@ -35,6 +35,7 @@ import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
 import com.eviware.soapui.support.types.StringToObjectMap;
+import com.sun.awt.SecurityWarning;
 
 /**
  * This class is used to connect a TestCase with a set of security checks
@@ -46,7 +47,8 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 {
 	public final static String STARTUP_SCRIPT_PROPERTY = SecurityTest.class.getName() + "@startupScript";
 	public final static String TEARDOWN_SCRIPT_PROPERTY = SecurityTest.class.getName() + "@tearDownScript";
-//	public final static String SECURITY_CHECK_MAP_PROPERTY = SecurityTest.class.getName() + "@securityCheckMap";
+	// public final static String SECURITY_CHECK_MAP_PROPERTY =
+	// SecurityTest.class.getName() + "@securityCheckMap";
 	private WsdlTestCase testCase;
 	private SecurityTestLogModel securityTestLog;
 	private SecurityChecksPanel.SecurityCheckListModel listModel;
@@ -352,6 +354,57 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 		{
 			return getSecurityChecksMap().get( testStepId ).size();
 		}
+	}
+
+	/**
+	 * Moves specified SecurityCheck of a TestStep in a list
+	 * 
+	 * @param testStep
+	 * @param securityCheck
+	 * @param index
+	 * @param offset
+	 *           specifies position to move to , negative value means moving up
+	 *           while positive value means moving down
+	 * @return new SecurityCheck
+	 */
+	public SecurityCheck moveTestStepSecurityCheck( TestStep testStep, SecurityCheck securityCheck, int index, int offset )
+	{
+		List<TestStepSecurityTestConfig> testStepSecurityTestList = getConfig().getTestStepSecurityTestList();
+		if( !testStepSecurityTestList.isEmpty() )
+		{
+			for( TestStepSecurityTestConfig testStepSecurityTest : testStepSecurityTestList )
+			{
+				if( testStepSecurityTest.getTestStepId().equals( testStep.getId() ) )
+				{
+					List<SecurityCheckConfig> securityCheckList = testStepSecurityTest.getTestStepSecurityCheckList();
+					AbstractSecurityCheckFactory factory = SecurityCheckRegistry.getInstance().getFactory(
+							securityCheck.getType() );
+					// SecurityCheckConfig newSecCheckConfig =
+					// factory.createNewSecurityCheck( securityCheck.getName() );
+					SecurityCheckConfig newSecCheckConfig = ( SecurityCheckConfig )securityCheck.getConfig().copy();
+					SecurityCheck newSecCheck = factory.buildSecurityCheck( newSecCheckConfig );
+
+					securityCheckList.remove( securityCheck.getConfig() );
+					securityCheckList.add( index + offset, newSecCheckConfig );
+					SecurityCheckConfig[] cc = new SecurityCheckConfig[securityCheckList.size()];
+					for( int i = 0; i < securityCheckList.size(); i++ )
+					{
+						cc[i] = securityCheckList.get( i );
+					}
+					testStepSecurityTest.setTestStepSecurityCheckArray( cc );
+
+					TestStepSecurityTestConfig[] vv = new TestStepSecurityTestConfig[testStepSecurityTestList.size()];
+					for( int i = 0; i < testStepSecurityTestList.size(); i++ )
+					{
+						vv[i] = testStepSecurityTestList.get( i );
+					}
+					getConfig().setTestStepSecurityTestArray( vv );
+					listModel.securityCheckMoved( testStep, newSecCheck, index, offset );
+					return newSecCheck;
+				}
+			}
+		}
+		return null;
 	}
 
 	public String findTestStepCheckUniqueName( String testStepId, String type )
