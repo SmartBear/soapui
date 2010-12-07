@@ -83,6 +83,8 @@ public class JSecurityTestRunLog extends JPanel
 //		super( securityTest.getSettings() );
 		this.securityTest = securityTest;
 		this.settings = securityTest.getSettings();
+		
+		buildUI();
 	}
 
 	private void buildUI()
