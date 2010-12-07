@@ -12,6 +12,7 @@
 package com.eviware.soapui.security.check;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.util.List;
 
@@ -112,6 +113,7 @@ public abstract class AbstractSecurityCheck extends SecurityCheck
 		dialog = new JDialog( UISupport.getMainFrame(), getTitle(), true );
 
 		JPanel contentPanel = ( JPanel )getComponent();
+		contentPanel.setPreferredSize( new Dimension(300,100) );
 		ButtonBarBuilder builder = new ButtonBarBuilder();
 
 		ShowOnlineHelpAction showOnlineHelpAction = new ShowOnlineHelpAction( HelpUrls.XPATHASSERTIONEDITOR_HELP_URL );
@@ -127,7 +129,6 @@ public abstract class AbstractSecurityCheck extends SecurityCheck
 
 		contentPanel.add( builder.getPanel(), BorderLayout.SOUTH );
 		dialog.setContentPane( contentPanel );
-		dialog.setSize( 600, 500 );
 		dialog.setModal( true );
 		dialog.pack();
 		UISupport.initDialogActions( dialog, showOnlineHelpAction, okButton );
