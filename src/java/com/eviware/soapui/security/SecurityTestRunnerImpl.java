@@ -98,11 +98,11 @@ public class SecurityTestRunnerImpl extends WsdlTestCaseRunner implements Securi
 		return reason;
 	}
 
-//	@Override
-//	public TestRunContext getRunContext()
-//	{
-//		return context;
-//	}
+	// @Override
+	// public TestRunContext getRunContext()
+	// {
+	// return context;
+	// }
 
 	@Override
 	public long getStartTime()
@@ -116,11 +116,11 @@ public class SecurityTestRunnerImpl extends WsdlTestCaseRunner implements Securi
 		return status;
 	}
 
-//	@Override
-//	public TestRunnable getTestRunnable()
-//	{
-//		return securityTest;
-//	}
+	// @Override
+	// public TestRunnable getTestRunnable()
+	// {
+	// return securityTest;
+	// }
 
 	@Override
 	public long getTimeTaken()
@@ -160,7 +160,7 @@ public class SecurityTestRunnerImpl extends WsdlTestCaseRunner implements Securi
 		return clonedTestStep;
 	}
 
-	void start()
+	public void start()
 	{
 		securityTest.getTestCase().beforeSave();
 		hasTornDown = false;
@@ -186,22 +186,25 @@ public class SecurityTestRunnerImpl extends WsdlTestCaseRunner implements Securi
 			WsdlTestCaseRunner testCaseRunner = new WsdlTestCaseRunner( testCase, new StringToObjectMap() );
 			for( TestStep testStep : testStepsList )
 			{
-				if( secCheckMap.containsKey( testStep.getName() ) )
+				if( !testStep.isDisabled() )
 				{
-					List<SecurityCheck> testStepChecksList = secCheckMap.get( testStep.getName() );
-					for( SecurityCheck securityCheck : testStepChecksList )
+					if( secCheckMap.containsKey( testStep.getName() ) )
 					{
-						if( securityCheck.acceptsTestStep( testStep ) )
-							securityCheck.run( cloneForSecurityCheck( ( WsdlTestStep )testStep ), context, securityTest
-									.getSecurityTestLog() );
+						List<SecurityCheck> testStepChecksList = secCheckMap.get( testStep.getName() );
+						for( SecurityCheck securityCheck : testStepChecksList )
+						{
+							if( securityCheck.acceptsTestStep( testStep ) )
+								securityCheck.run( cloneForSecurityCheck( ( WsdlTestStep )testStep ), context, securityTest
+										.getSecurityTestLog() );
+						}
+					}
+					else
+					{
+						testCaseRunner.runTestStepByName( testStep.getName() );
 					}
 				}
-				else
-				{
-					testCaseRunner.runTestStepByName( testStep.getName() );
-				}
 			}
-			testCase.release();
+//			testCase.release();
 		}
 		stop();
 	}
