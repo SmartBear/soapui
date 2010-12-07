@@ -45,7 +45,7 @@ public class GroovySecurityCheck extends AbstractSecurityCheck implements HttpSe
 	//if this is a text area document listener doesn't work, WHY? !!
 	protected JTextField scriptTextArea;
 	protected static final String SCRIPT_FIELD = "Script";
-	private static final String checkTitle = "GroovyScript Check";
+	private static final String checkTitle = "Configure GroovyScript Check";
 
 	public GroovySecurityCheck( SecurityCheckConfig config, ModelItem parent, String icon)
 	{

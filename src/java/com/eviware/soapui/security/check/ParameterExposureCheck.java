@@ -70,7 +70,7 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements Htt
 	public static final String TYPE = "ParameterExposureCheck";
 	public static final int DEFAULT_MINIMUM_CHARACTER_LENGTH = 5;
 	protected static final String MINIMUM_CHARACTERS_FIELD = "Minimum Characters";
-	private static final String checkTitle = "Parameter Exposure";
+	private static final String checkTitle = "Configure Parameter Exposure";
 	private JDialog dialog;
 
 	public ParameterExposureCheck( SecurityCheckConfig config, ModelItem parent, String icon )
