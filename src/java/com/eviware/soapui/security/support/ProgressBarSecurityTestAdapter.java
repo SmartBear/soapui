@@ -88,7 +88,7 @@ public class ProgressBarSecurityTestAdapter
 	// }
 	// }
 
-	public class InternalTestRunListener extends TestRunListenerAdapter
+	public class InternalTestRunListener extends SecurityTestRunListenerAdapter
 	{
 		public void beforeRun( SecurityTestRunner testRunner, TestCaseRunContext runContext )
 		{

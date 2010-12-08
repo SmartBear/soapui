@@ -34,6 +34,7 @@ import com.eviware.soapui.model.testsuite.TestAssertion;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.check.SecurityCheck;
 import com.eviware.soapui.security.log.SecurityTestLogMessageEntry;
+import com.eviware.soapui.security.support.SecurityTestRunListener;
 import com.eviware.soapui.support.types.StringToObjectMap;
 
 public class SecurityTestRunnerImpl extends WsdlTestCaseRunner implements SecurityTestRunner
@@ -46,6 +47,7 @@ public class SecurityTestRunnerImpl extends WsdlTestCaseRunner implements Securi
 	private boolean stopped;
 	private boolean hasTornDown;
 	private String reason;
+	private SecurityTestRunListener[] listeners = new SecurityTestRunListener[0];
 
 	public SecurityTestRunnerImpl( SecurityTest test )
 	{
@@ -163,6 +165,7 @@ public class SecurityTestRunnerImpl extends WsdlTestCaseRunner implements Securi
 	public void start()
 	{
 		securityTest.getTestCase().beforeSave();
+		listeners = securityTest.getTestRunListeners();
 		hasTornDown = false;
 
 		context = new WsdlTestRunContext( this, new StringToObjectMap() );
@@ -183,7 +186,7 @@ public class SecurityTestRunnerImpl extends WsdlTestCaseRunner implements Securi
 			WsdlTestCase testCase = securityTest.getTestCase();
 			List<TestStep> testStepsList = testCase.getTestStepList();
 			HashMap<String, List<SecurityCheck>> secCheckMap = securityTest.getSecurityChecksMap();
-			WsdlTestCaseRunner testCaseRunner = new WsdlTestCaseRunner( testCase, new StringToObjectMap() );
+			SecurityTestRunnerImpl testCaseRunner = new SecurityTestRunnerImpl( securityTest );
 			for( TestStep testStep : testStepsList )
 			{
 				if( !testStep.isDisabled() )
@@ -204,6 +207,9 @@ public class SecurityTestRunnerImpl extends WsdlTestCaseRunner implements Securi
 					}
 				}
 			}
+			status = Status.FINISHED;
+			notifyAfterRun();
+
 //			testCase.release();
 		}
 		stop();
@@ -265,4 +271,22 @@ public class SecurityTestRunnerImpl extends WsdlTestCaseRunner implements Securi
 
 		hasTornDown = true;
 	}
+	private void notifyAfterRun()
+	{
+		if( listeners == null || listeners.length == 0 )
+			return;
+
+		for( int i = 0; i < listeners.length; i++ )
+		{
+			try
+			{
+				listeners[i].afterRun( this, getRunContext() );
+			}
+			catch( Throwable t )
+			{
+				SoapUI.logError( t );
+			}
+		}
+	}
+
 }
