@@ -13,7 +13,9 @@ package com.eviware.soapui.security;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.SecurityCheckConfig;
@@ -23,6 +25,7 @@ import com.eviware.soapui.impl.wsdl.AbstractTestPropertyHolderWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.model.TestModelItem;
+import com.eviware.soapui.model.testsuite.TestRunListener;
 import com.eviware.soapui.model.testsuite.TestRunnable;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestRunner.Status;
@@ -52,6 +55,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 	private WsdlTestCase testCase;
 	private SecurityTestLogModel securityTestLog;
 	private SecurityChecksPanel.SecurityCheckListModel listModel;
+	private Set<TestRunListener> testRunListeners = new HashSet<TestRunListener>();
 
 	public void setListModel( SecurityChecksPanel.SecurityCheckListModel listModel )
 	{
@@ -426,5 +430,23 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 		}
 		return name;
 	}
+	public void addTestRunListener( TestRunListener listener )
+	{
+		if( listener == null )
+			throw new RuntimeException( "listener must not be null" );
+
+		testRunListeners.add( listener );
+	}
+
+	public void removeTestRunListener( TestRunListener listener )
+	{
+		testRunListeners.remove( listener );
+	}
+
+	public TestRunListener[] getTestRunListeners()
+	{
+		return testRunListeners.toArray( new TestRunListener[testRunListeners.size()] );
+	}
+
 
 }

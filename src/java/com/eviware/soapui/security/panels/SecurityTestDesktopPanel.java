@@ -54,6 +54,7 @@ import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.security.SecurityTestRunnerImpl;
 import com.eviware.soapui.security.log.JSecurityTestRunLog;
+import com.eviware.soapui.security.support.ProgressBarSecurityTestAdapter;
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.StringUtils;
@@ -95,7 +96,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 	// private JButton optionsButton;
 	private JSecurityTestRunLog securitytestLog;
 	private JToggleButton loopButton;
-	private ProgressBarTestCaseAdapter progressBarAdapter;
+	private ProgressBarSecurityTestAdapter progressBarAdapter;
 	private ComponentBag stateDependantComponents = new ComponentBag();
 	public boolean canceled;
 	private JTextArea descriptionArea;
@@ -119,7 +120,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 
 		setPreferredSize( new Dimension( 400, 550 ) );
 		this.securityTest = securityTest;
-		progressBarAdapter = new ProgressBarTestCaseAdapter( progressBar, securityTest.getTestCase() );
+		progressBarAdapter = new ProgressBarSecurityTestAdapter( progressBar, securityTest );
 	}
 
 	private void buildUI()
