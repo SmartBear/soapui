@@ -80,16 +80,19 @@ public class JSecurityTestRunLog extends JPanel
 
 	public JSecurityTestRunLog( SecurityTest securityTest )
 	{
-//		super( securityTest.getSettings() );
+		super( new BorderLayout() );
 		this.securityTest = securityTest;
 		this.settings = securityTest.getSettings();
-		
+		logListModel = securityTest.getSecurityTestLog();
 		buildUI();
 	}
 
 	private void buildUI()
 	{
-		logListModel = new SecurityTestLogModel();
+		if( logListModel == null )
+			logListModel = new SecurityTestLogModel();
+		
+		logListModel = securityTest.getSecurityTestLog();
 		logListModel.setMaxSize( ( int )settings.getLong( OptionsForm.class.getName() + "@max_rows", 1000 ) );
 
 		testLogList = new JList( logListModel );
@@ -99,6 +102,8 @@ public class JSecurityTestRunLog extends JPanel
 		testLogList.addMouseListener( new LogListMouseListener() );
 
 		JScrollPane scrollPane = new JScrollPane( testLogList );
+		
+	
 		add( scrollPane, BorderLayout.CENTER );
 		add( buildToolbar(), BorderLayout.NORTH );
 	}

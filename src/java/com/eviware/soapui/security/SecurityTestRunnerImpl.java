@@ -188,9 +188,9 @@ public class SecurityTestRunnerImpl extends WsdlTestCaseRunner implements Securi
 			{
 				if( !testStep.isDisabled() )
 				{
-					if( secCheckMap.containsKey( testStep.getName() ) )
+					if( secCheckMap.containsKey( testStep.getId() ) )
 					{
-						List<SecurityCheck> testStepChecksList = secCheckMap.get( testStep.getName() );
+						List<SecurityCheck> testStepChecksList = secCheckMap.get( testStep.getId() );
 						for( SecurityCheck securityCheck : testStepChecksList )
 						{
 							if( securityCheck.acceptsTestStep( testStep ) )

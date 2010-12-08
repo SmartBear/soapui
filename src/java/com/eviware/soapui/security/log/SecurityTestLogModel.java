@@ -26,7 +26,7 @@ import org.apache.commons.collections.list.TreeList;
 public class SecurityTestLogModel extends AbstractListModel
 {
 	private List<SecurityTestLogMessageEntry> items = Collections.synchronizedList( new TreeList() );
-	private int maxSize = 0;
+	private int maxSize = 100;
 
 	public SecurityTestLogModel()
 	{
