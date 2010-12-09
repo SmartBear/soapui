@@ -21,6 +21,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.commons.httpclient.HttpState;
+
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.TestStepConfig;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
@@ -29,9 +31,14 @@ import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestStepFactory;
 import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestStepRegistry;
+import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.TestAssertion;
+import com.eviware.soapui.model.testsuite.TestCaseRunner;
+import com.eviware.soapui.model.testsuite.TestRunListener;
 import com.eviware.soapui.model.testsuite.TestStep;
+import com.eviware.soapui.model.testsuite.TestStepResult;
+import com.eviware.soapui.model.testsuite.TestRunner.Status;
 import com.eviware.soapui.security.check.SecurityCheck;
 import com.eviware.soapui.security.log.SecurityTestLogMessageEntry;
 import com.eviware.soapui.security.support.SecurityTestRunListener;
@@ -48,6 +55,11 @@ public class SecurityTestRunnerImpl extends WsdlTestCaseRunner implements Securi
 	private boolean hasTornDown;
 	private String reason;
 	private SecurityTestRunListener[] listeners = new SecurityTestRunListener[0];
+	private TestRunListener[] testCaseRunListeners = new TestRunListener[0];
+	private int initCount;
+	private int startStep = 0;
+	private int gotoStepIndex;
+
 
 	public SecurityTestRunnerImpl( SecurityTest test )
 	{
@@ -187,11 +199,72 @@ public class SecurityTestRunnerImpl extends WsdlTestCaseRunner implements Securi
 			List<TestStep> testStepsList = testCase.getTestStepList();
 			HashMap<String, List<SecurityCheck>> secCheckMap = securityTest.getSecurityChecksMap();
 			SecurityTestRunnerImpl testCaseRunner = new SecurityTestRunnerImpl( securityTest );
-			for( TestStep testStep : testStepsList )
+
+			notifyBeforeRun();
+			
+//			//copied from internal run
+//
+//			for( ; initCount < testCase.getTestStepCount() && isRunning(); initCount++ )
+//			{
+//				WsdlTestStep testStep = testCase.getTestStepAt( initCount );
+//				if( testStep.isDisabled() )
+//					continue;
+//
+//				try
+//				{
+//					testStep.prepare( this, context );
+//				}
+//				catch( Exception e )
+//				{
+//					setStatus( Status.FAILED );
+//					SoapUI.logError( e );
+////					throw new Exception( "Failed to prepare testStep [" + testStep.getName() + "]; " + e.toString() );
+//				}
+//			}
+//
+//			int currentStepIndex = startStep;
+//			context.setCurrentStep( currentStepIndex );
+//
+//			for( ; isRunning() && currentStepIndex < testCase.getTestStepCount(); currentStepIndex++ )
+//			{
+//				TestStep currentStep = context.getCurrentStep();
+//				if( !currentStep.isDisabled() )
+//				{
+//					TestStepResult stepResult = runTestStep( currentStep, true, true );
+//					if( stepResult == null )
+//						return;
+//
+//					if( !isRunning() )
+//						return;
+//
+////					if( gotoStepIndex != -1 )
+////					{
+////						currentStepIndex = gotoStepIndex - 1;
+////						gotoStepIndex = -1;
+////					}
+//				}
+//
+//				context.setCurrentStep( currentStepIndex + 1 );
+//			}
+//
+//			
+//			
+//			//end copied from internal run
+//			
+			
+			for( int j = 0; j < testStepsList.size(); j++ )
 			{
+				TestStep testStep = testStepsList.get( j );
+
 				if( !testStep.isDisabled() )
 				{
-					testCaseRunner.runTestStepByName( testStep.getName() );
+					for( int i = 0; i < listeners.length; i++ )
+					{
+						listeners[i].beforeStep( this, getRunContext(), testStep );
+						if( !isRunning() )
+							return;
+					}
+					TestStepResult stepResult = testCaseRunner.runTestStepByName( testStep.getName() );
 
 					if( secCheckMap.containsKey( testStep.getId() ) )
 					{
@@ -206,22 +279,29 @@ public class SecurityTestRunnerImpl extends WsdlTestCaseRunner implements Securi
 							}
 						}
 					}
+					for( int i = 0; i < listeners.length; i++ )
+					{
+						listeners[i].afterStep( this, getRunContext(), stepResult );
+					}
+
 				}
 			}
-			status = Status.FINISHED;
+			if( status == Status.RUNNING )
+			{
+				status = Status.FINISHED;
+			}
 			notifyAfterRun();
 
-//			testCase.release();
+			// testCase.release();
 		}
 		stop();
 	}
 
-
-	@Override
-	public void start( boolean async )
-	{
-		start();
-	}
+//	@Override
+//	public void start( boolean async )
+//	{
+//		start();
+//	}
 
 	public void release()
 	{
@@ -273,7 +353,26 @@ public class SecurityTestRunnerImpl extends WsdlTestCaseRunner implements Securi
 
 		hasTornDown = true;
 	}
-	private void notifyAfterRun()
+
+	protected void notifyBeforeRun()
+	{
+		if( listeners == null || listeners.length == 0 )
+			return;
+
+		for( int i = 0; i < listeners.length; i++ )
+		{
+			try
+			{
+				listeners[i].beforeRun( this, getRunContext() );
+			}
+			catch( Throwable t )
+			{
+				SoapUI.logError( t );
+			}
+		}
+	}
+
+	protected void notifyAfterRun()
 	{
 		if( listeners == null || listeners.length == 0 )
 			return;
@@ -288,6 +387,84 @@ public class SecurityTestRunnerImpl extends WsdlTestCaseRunner implements Securi
 			{
 				SoapUI.logError( t );
 			}
+		}
+	}
+	public void internalRun( WsdlTestRunContext runContext ) throws Exception
+	{
+		WsdlTestCase testCase = getTestRunnable();
+//		gotoStepIndex = -1;
+//		testStepResults.clear();
+
+		// create state for testcase if specified
+		if( testCase.getKeepSession() )
+		{
+			runContext.setProperty( SubmitContext.HTTP_STATE_PROPERTY, new HttpState() );
+		}
+
+		testCaseRunListeners = testCase.getTestRunListeners();
+		testCase.runSetupScript( runContext, this );
+		if( !super.isRunning() )
+			return;
+
+		if( testCase.getTimeout() > 0 )
+		{
+			startTimeoutTimer( testCase.getTimeout() );
+		}
+
+		super.notifyBeforeRun();
+		if( !super.isRunning() )
+			return;
+
+		initCount = 0;
+
+		setStartTime();
+		for( ; initCount < testCase.getTestStepCount() && isRunning(); initCount++ )
+		{
+			WsdlTestStep testStep = testCase.getTestStepAt( initCount );
+			if( testStep.isDisabled() )
+				continue;
+
+			try
+			{
+				testStep.prepare( this, runContext );
+			}
+			catch( Exception e )
+			{
+				setStatus( Status.FAILED );
+				SoapUI.logError( e );
+				throw new Exception( "Failed to prepare testStep [" + testStep.getName() + "]; " + e.toString() );
+			}
+		}
+
+		int currentStepIndex = startStep;
+		runContext.setCurrentStep( currentStepIndex );
+
+		for( ; isRunning() && currentStepIndex < testCase.getTestStepCount(); currentStepIndex++ )
+		{
+			TestStep currentStep = runContext.getCurrentStep();
+			if( !currentStep.isDisabled() )
+			{
+				TestStepResult stepResult = runTestStep( currentStep, true, true );
+				if( stepResult == null )
+					return;
+
+				if( !isRunning() )
+					return;
+
+//				if( gotoStepIndex != -1 )
+//				{
+//					currentStepIndex = gotoStepIndex - 1;
+//					gotoStepIndex = -1;
+//				}
+			}
+
+			runContext.setCurrentStep( currentStepIndex + 1 );
+		}
+
+		if( runContext.getProperty( TestCaseRunner.Status.class.getName() ) == TestCaseRunner.Status.FAILED
+				&& testCase.getFailTestCaseOnErrors() )
+		{
+			fail( "Failing due to failed test step" );
 		}
 	}
 

@@ -237,7 +237,7 @@ public class WsdlTestCaseRunner extends AbstractTestRunner<WsdlTestCase, WsdlTes
 		return stepResult;
 	}
 
-	private void notifyAfterRun()
+	protected void notifyAfterRun()
 	{
 		if( listeners == null || listeners.length == 0 )
 			return;
@@ -255,7 +255,7 @@ public class WsdlTestCaseRunner extends AbstractTestRunner<WsdlTestCase, WsdlTes
 		}
 	}
 
-	private void notifyBeforeRun()
+	protected void notifyBeforeRun()
 	{
 		if( listeners == null || listeners.length == 0 )
 			return;

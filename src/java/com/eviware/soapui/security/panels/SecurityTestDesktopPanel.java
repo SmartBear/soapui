@@ -334,9 +334,9 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 		lastRunner = null;
 		SecurityTestRunnerImpl testRunner = new SecurityTestRunnerImpl( securityTest );
 
-		testRunner.start();
+//		testRunner.run();
 
-		// runner = getModelItem().run( properties, true );
+		 runner = getModelItem().run( properties, true );
 	}
 
 	public class RunSecurityTestAction extends AbstractAction
