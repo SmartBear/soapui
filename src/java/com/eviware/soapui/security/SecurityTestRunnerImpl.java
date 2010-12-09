@@ -191,19 +191,20 @@ public class SecurityTestRunnerImpl extends WsdlTestCaseRunner implements Securi
 			{
 				if( !testStep.isDisabled() )
 				{
+					testCaseRunner.runTestStepByName( testStep.getName() );
+
 					if( secCheckMap.containsKey( testStep.getId() ) )
 					{
 						List<SecurityCheck> testStepChecksList = secCheckMap.get( testStep.getId() );
 						for( SecurityCheck securityCheck : testStepChecksList )
 						{
+
 							if( securityCheck.acceptsTestStep( testStep ) )
+							{
 								securityCheck.run( cloneForSecurityCheck( ( WsdlTestStep )testStep ), context, securityTest
 										.getSecurityTestLog() );
+							}
 						}
-					}
-					else
-					{
-						testCaseRunner.runTestStepByName( testStep.getName() );
 					}
 				}
 			}
@@ -214,6 +215,7 @@ public class SecurityTestRunnerImpl extends WsdlTestCaseRunner implements Securi
 		}
 		stop();
 	}
+
 
 	@Override
 	public void start( boolean async )
