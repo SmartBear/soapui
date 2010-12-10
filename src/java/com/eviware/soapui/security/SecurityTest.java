@@ -45,15 +45,11 @@ import com.eviware.soapui.support.types.StringToObjectMap;
  * 
  * @author soapUI team
  */
-public class SecurityTest extends
-		AbstractTestPropertyHolderWsdlModelItem<SecurityTestConfig> implements
-		TestModelItem, TestRunnable {
-	public final static String STARTUP_SCRIPT_PROPERTY = SecurityTest.class
-			.getName()
-			+ "@startupScript";
-	public final static String TEARDOWN_SCRIPT_PROPERTY = SecurityTest.class
-			.getName()
-			+ "@tearDownScript";
+public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<SecurityTestConfig> implements TestModelItem,
+		TestRunnable
+{
+	public final static String STARTUP_SCRIPT_PROPERTY = SecurityTest.class.getName() + "@startupScript";
+	public final static String TEARDOWN_SCRIPT_PROPERTY = SecurityTest.class.getName() + "@tearDownScript";
 	// public final static String SECURITY_CHECK_MAP_PROPERTY =
 	// SecurityTest.class.getName() + "@securityCheckMap";
 	private WsdlTestCase testCase;
@@ -61,8 +57,8 @@ public class SecurityTest extends
 	private SecurityChecksPanel.SecurityCheckListModel listModel;
 	private Set<SecurityTestRunListener> testRunListeners = new HashSet<SecurityTestRunListener>();
 
-	public void setListModel(
-			SecurityChecksPanel.SecurityCheckListModel listModel) {
+	public void setListModel( SecurityChecksPanel.SecurityCheckListModel listModel )
+	{
 		this.listModel = listModel;
 	}
 
@@ -71,20 +67,22 @@ public class SecurityTest extends
 	 * 
 	 * @return
 	 */
-	public SecurityTestLogModel getSecurityTestLog() {
+	public SecurityTestLogModel getSecurityTestLog()
+	{
 		return securityTestLog;
 	}
 
 	private SecurityTestRunnerImpl runner;
 	private SoapUIScriptEngine scriptEngine;
 
-	public SecurityTest(WsdlTestCase testCase, SecurityTestConfig config) {
-		super(config, testCase, "/securityTest.png");
+	public SecurityTest( WsdlTestCase testCase, SecurityTestConfig config )
+	{
+		super( config, testCase, "/securityTest.png" );
 		this.testCase = testCase;
-		if (!getConfig().isSetProperties())
+		if( !getConfig().isSetProperties() )
 			getConfig().addNewProperties();
 
-		setPropertiesConfig(getConfig().getProperties());
+		setPropertiesConfig( getConfig().getProperties() );
 
 		securityTestLog = new SecurityTestLogModel();
 	}
@@ -97,40 +95,36 @@ public class SecurityTest extends
 	 * @param securityCheckName
 	 * @return SecurityCheck
 	 */
-	public SecurityCheck addSecurityCheck(TestStep testStep,
-			String securityCheckType, String securityCheckName) {
-		AbstractSecurityCheckFactory factory = SecurityCheckRegistry
-				.getInstance().getFactory(securityCheckType);
-		SecurityCheckConfig newSecCheckConfig = factory
-				.createNewSecurityCheck(securityCheckName);
-		SecurityCheck newSecCheck = factory
-				.buildSecurityCheck(newSecCheckConfig);
+	public SecurityCheck addSecurityCheck( TestStep testStep, String securityCheckType, String securityCheckName )
+	{
+		AbstractSecurityCheckFactory factory = SecurityCheckRegistry.getInstance().getFactory( securityCheckType );
+		SecurityCheckConfig newSecCheckConfig = factory.createNewSecurityCheck( securityCheckName );
+		SecurityCheck newSecCheck = factory.buildSecurityCheck( newSecCheckConfig );
 
 		boolean hasChecks = false;
-		List<TestStepSecurityTestConfig> testStepSecurityTestList = getConfig()
-				.getTestStepSecurityTestList();
-		if (!testStepSecurityTestList.isEmpty()) {
-			for (TestStepSecurityTestConfig testStepSecurityTest : testStepSecurityTestList) {
-				if (testStepSecurityTest.getTestStepId().equals(
-						testStep.getId())) {
-					List<SecurityCheckConfig> securityCheckList = testStepSecurityTest
-							.getTestStepSecurityCheckList();
-					securityCheckList.add(newSecCheckConfig);
+		List<TestStepSecurityTestConfig> testStepSecurityTestList = getConfig().getTestStepSecurityTestList();
+		if( !testStepSecurityTestList.isEmpty() )
+		{
+			for( TestStepSecurityTestConfig testStepSecurityTest : testStepSecurityTestList )
+			{
+				if( testStepSecurityTest.getTestStepId().equals( testStep.getId() ) )
+				{
+					List<SecurityCheckConfig> securityCheckList = testStepSecurityTest.getTestStepSecurityCheckList();
+					securityCheckList.add( newSecCheckConfig );
 					hasChecks = true;
 				}
 			}
 		}
-		if (!hasChecks) {
-			TestStepSecurityTestConfig testStepSecurityTest = getConfig()
-					.addNewTestStepSecurityTest();
-			testStepSecurityTest.setTestStepId(testStep.getId());
-			SecurityCheckConfig newSecurityCheck = testStepSecurityTest
-					.addNewTestStepSecurityCheck();
-			newSecurityCheck.setConfig(newSecCheckConfig.getConfig());
-			newSecurityCheck.setType(newSecCheck.getType());
-			newSecurityCheck.setName(newSecCheck.getName());
+		if( !hasChecks )
+		{
+			TestStepSecurityTestConfig testStepSecurityTest = getConfig().addNewTestStepSecurityTest();
+			testStepSecurityTest.setTestStepId( testStep.getId() );
+			SecurityCheckConfig newSecurityCheck = testStepSecurityTest.addNewTestStepSecurityCheck();
+			newSecurityCheck.setConfig( newSecCheckConfig.getConfig() );
+			newSecurityCheck.setType( newSecCheck.getType() );
+			newSecurityCheck.setName( newSecCheck.getName() );
 		}
-		listModel.securityCheckAdded(testStep, newSecCheck);
+		listModel.securityCheckAdded( testStep, newSecCheck );
 		return newSecCheck;
 
 	}
@@ -142,22 +136,23 @@ public class SecurityTest extends
 	 * @param securityCheck
 	 * 
 	 */
-	public void removeSecurityCheck(TestStep testStep,
-			SecurityCheck securityCheck) {
-		List<TestStepSecurityTestConfig> testStepSecurityTestList = getConfig()
-				.getTestStepSecurityTestList();
-		if (!testStepSecurityTestList.isEmpty()) {
-			for (TestStepSecurityTestConfig testStepSecurityTest : testStepSecurityTestList) {
-				if (testStepSecurityTest.getTestStepId().equals(
-						testStep.getId())) {
-					List<SecurityCheckConfig> securityCheckList = testStepSecurityTest
-							.getTestStepSecurityCheckList();
-					securityCheckList.remove(securityCheck.getConfig());
-					if (securityCheckList.isEmpty()) {
-						testStepSecurityTestList.remove(testStepSecurityTest);
+	public void removeSecurityCheck( TestStep testStep, SecurityCheck securityCheck )
+	{
+		List<TestStepSecurityTestConfig> testStepSecurityTestList = getConfig().getTestStepSecurityTestList();
+		if( !testStepSecurityTestList.isEmpty() )
+		{
+			for( TestStepSecurityTestConfig testStepSecurityTest : testStepSecurityTestList )
+			{
+				if( testStepSecurityTest.getTestStepId().equals( testStep.getId() ) )
+				{
+					List<SecurityCheckConfig> securityCheckList = testStepSecurityTest.getTestStepSecurityCheckList();
+					securityCheckList.remove( securityCheck.getConfig() );
+					if( securityCheckList.isEmpty() )
+					{
+						testStepSecurityTestList.remove( testStepSecurityTest );
 						return;
 					}
-					listModel.securityCheckRemoved(testStep, securityCheck);
+					listModel.securityCheckRemoved( testStep, securityCheck );
 				}
 			}
 		}
@@ -169,28 +164,30 @@ public class SecurityTest extends
 	 * 
 	 * @return A map of TestStepIds to their relevant security checks
 	 */
-	public HashMap<String, List<SecurityCheck>> getSecurityChecksMap() {
+	public HashMap<String, List<SecurityCheck>> getSecurityChecksMap()
+	{
 		HashMap<String, List<SecurityCheck>> securityChecksMap = new HashMap<String, List<SecurityCheck>>();
-		if (getConfig() != null) {
-			if (!getConfig().getTestStepSecurityTestList().isEmpty()) {
-				for (TestStepSecurityTestConfig testStepSecurityTestListConfig : getConfig()
-						.getTestStepSecurityTestList()) {
+		if( getConfig() != null )
+		{
+			if( !getConfig().getTestStepSecurityTestList().isEmpty() )
+			{
+				for( TestStepSecurityTestConfig testStepSecurityTestListConfig : getConfig().getTestStepSecurityTestList() )
+				{
 					List<SecurityCheck> checkList = new ArrayList<SecurityCheck>();
-					if (testStepSecurityTestListConfig != null) {
-						if (!testStepSecurityTestListConfig
-								.getTestStepSecurityCheckList().isEmpty()) {
-							for (SecurityCheckConfig secCheckConfig : testStepSecurityTestListConfig
-									.getTestStepSecurityCheckList()) {
-								SecurityCheck securityCheck = SecurityCheckRegistry
-										.getInstance().getFactory(
-												secCheckConfig.getType())
-										.buildSecurityCheck(secCheckConfig);
-								checkList.add(securityCheck);
+					if( testStepSecurityTestListConfig != null )
+					{
+						if( !testStepSecurityTestListConfig.getTestStepSecurityCheckList().isEmpty() )
+						{
+							for( SecurityCheckConfig secCheckConfig : testStepSecurityTestListConfig
+									.getTestStepSecurityCheckList() )
+							{
+								SecurityCheck securityCheck = SecurityCheckRegistry.getInstance().getFactory(
+										secCheckConfig.getType() ).buildSecurityCheck( secCheckConfig );
+								checkList.add( securityCheck );
 							}
 						}
 					}
-					securityChecksMap.put(testStepSecurityTestListConfig
-							.getTestStepId(), checkList);
+					securityChecksMap.put( testStepSecurityTestListConfig.getTestStepId(), checkList );
 				}
 			}
 		}
@@ -200,19 +197,21 @@ public class SecurityTest extends
 	/**
 	 * @return the current testcase
 	 */
-	public WsdlTestCase getTestCase() {
+	public WsdlTestCase getTestCase()
+	{
 		return testCase;
 	}
 
-	public SecurityTestRunner run(StringToObjectMap context, boolean async) {
-		if (runner != null && runner.getStatus() == Status.RUNNING)
+	public SecurityTestRunner run( StringToObjectMap context, boolean async )
+	{
+		if( runner != null && runner.getStatus() == Status.RUNNING )
 			return null;
 
-		if (runner != null)
+		if( runner != null )
 			runner.release();
 
-		runner = new SecurityTestRunnerImpl(this);
-		runner.start(async);
+		runner = new SecurityTestRunnerImpl( this );
+		runner.start( async );
 		return runner;
 	}
 
@@ -221,27 +220,27 @@ public class SecurityTest extends
 	 * 
 	 * @param script
 	 */
-	public void setStartupScript(String script) {
+	public void setStartupScript( String script )
+	{
 		String oldScript = getStartupScript();
 
-		if (!getConfig().isSetSetupScript())
+		if( !getConfig().isSetSetupScript() )
 			getConfig().addNewSetupScript();
 
-		getConfig().getSetupScript().setStringValue(script);
-		if (scriptEngine != null)
-			scriptEngine.setScript(script);
+		getConfig().getSetupScript().setStringValue( script );
+		if( scriptEngine != null )
+			scriptEngine.setScript( script );
 
-		notifyPropertyChanged(STARTUP_SCRIPT_PROPERTY, oldScript, script);
+		notifyPropertyChanged( STARTUP_SCRIPT_PROPERTY, oldScript, script );
 	}
 
 	/**
 	 * @return The current startup script
 	 */
-	public String getStartupScript() {
-		return getConfig() != null ? (getConfig().isSetSetupScript() ? getConfig()
-				.getSetupScript().getStringValue()
-				: "")
-				: "";
+	public String getStartupScript()
+	{
+		return getConfig() != null ? ( getConfig().isSetSetupScript() ? getConfig().getSetupScript().getStringValue()
+				: "" ) : "";
 	}
 
 	/**
@@ -252,20 +251,21 @@ public class SecurityTest extends
 	 * @return
 	 * @throws Exception
 	 */
-	public Object runStartupScript(WsdlTestRunContext runContext,
-			SecurityTestRunner runner) throws Exception {
+	public Object runStartupScript( WsdlTestRunContext runContext, SecurityTestRunner runner ) throws Exception
+	{
 		String script = getStartupScript();
-		if (StringUtils.isNullOrEmpty(script))
+		if( StringUtils.isNullOrEmpty( script ) )
 			return null;
 
-		if (scriptEngine == null) {
-			scriptEngine = SoapUIScriptEngineRegistry.create(this);
-			scriptEngine.setScript(script);
+		if( scriptEngine == null )
+		{
+			scriptEngine = SoapUIScriptEngineRegistry.create( this );
+			scriptEngine.setScript( script );
 		}
 
-		scriptEngine.setVariable("context", runContext);
-		scriptEngine.setVariable("securityTestRunner", runner);
-		scriptEngine.setVariable("log", SoapUI.ensureGroovyLog());
+		scriptEngine.setVariable( "context", runContext );
+		scriptEngine.setVariable( "securityTestRunner", runner );
+		scriptEngine.setVariable( "log", SoapUI.ensureGroovyLog() );
 		return scriptEngine.run();
 	}
 
@@ -274,27 +274,27 @@ public class SecurityTest extends
 	 * 
 	 * @param script
 	 */
-	public void setTearDownScript(String script) {
+	public void setTearDownScript( String script )
+	{
 		String oldScript = getTearDownScript();
 
-		if (!getConfig().isSetTearDownScript())
+		if( !getConfig().isSetTearDownScript() )
 			getConfig().addNewTearDownScript();
 
-		getConfig().getTearDownScript().setStringValue(script);
-		if (scriptEngine != null)
-			scriptEngine.setScript(script);
+		getConfig().getTearDownScript().setStringValue( script );
+		if( scriptEngine != null )
+			scriptEngine.setScript( script );
 
-		notifyPropertyChanged(TEARDOWN_SCRIPT_PROPERTY, oldScript, script);
+		notifyPropertyChanged( TEARDOWN_SCRIPT_PROPERTY, oldScript, script );
 	}
 
 	/**
 	 * @return The current teardown script
 	 */
-	public String getTearDownScript() {
-		return getConfig() != null ? (getConfig().isSetTearDownScript() ? getConfig()
-				.getTearDownScript().getStringValue()
-				: "")
-				: "";
+	public String getTearDownScript()
+	{
+		return getConfig() != null ? ( getConfig().isSetTearDownScript() ? getConfig().getTearDownScript()
+				.getStringValue() : "" ) : "";
 	}
 
 	/**
@@ -305,52 +305,60 @@ public class SecurityTest extends
 	 * @return
 	 * @throws Exception
 	 */
-	public Object runTearDownScript(WsdlTestRunContext runContext,
-			SecurityTestRunner runner) throws Exception {
+	public Object runTearDownScript( WsdlTestRunContext runContext, SecurityTestRunner runner ) throws Exception
+	{
 		String script = getTearDownScript();
-		if (StringUtils.isNullOrEmpty(script))
+		if( StringUtils.isNullOrEmpty( script ) )
 			return null;
 
-		if (scriptEngine == null) {
-			scriptEngine = SoapUIScriptEngineRegistry.create(this);
-			scriptEngine.setScript(script);
+		if( scriptEngine == null )
+		{
+			scriptEngine = SoapUIScriptEngineRegistry.create( this );
+			scriptEngine.setScript( script );
 		}
 
-		scriptEngine.setVariable("context", runContext);
-		scriptEngine.setVariable("securityTestRunner", runner);
-		scriptEngine.setVariable("log", SoapUI.ensureGroovyLog());
+		scriptEngine.setVariable( "context", runContext );
+		scriptEngine.setVariable( "securityTestRunner", runner );
+		scriptEngine.setVariable( "log", SoapUI.ensureGroovyLog() );
 		return scriptEngine.run();
 	}
 
-	public List<SecurityCheck> getTestStepSecurityChecks(String testStepId) {
-		return getSecurityChecksMap().get(testStepId) != null ? getSecurityChecksMap()
-				.get(testStepId)
+	public List<SecurityCheck> getTestStepSecurityChecks( String testStepId )
+	{
+		return getSecurityChecksMap().get( testStepId ) != null ? getSecurityChecksMap().get( testStepId )
 				: new ArrayList<SecurityCheck>();
 	}
 
-	public SecurityCheck getTestStepSecurityCheckByName(String testStepId,
-			String securityCheckName) {
-		List<SecurityCheck> securityChecksList = getTestStepSecurityChecks(testStepId);
-		for (int c = 0; c < securityChecksList.size(); c++) {
-			SecurityCheck securityCheck = getTestStepSecurityCheckAt(
-					testStepId, c);
-			if (securityCheckName.equals(securityCheck.getName()))
+	public SecurityCheck getTestStepSecurityCheckByName( String testStepId, String securityCheckName )
+	{
+		List<SecurityCheck> securityChecksList = getTestStepSecurityChecks( testStepId );
+		for( int c = 0; c < securityChecksList.size(); c++ )
+		{
+			SecurityCheck securityCheck = getTestStepSecurityCheckAt( testStepId, c );
+			if( securityCheckName.equals( securityCheck.getName() ) )
 				return securityCheck;
 		}
 
 		return null;
 	}
 
-	public SecurityCheck getTestStepSecurityCheckAt(String testStepId, int index) {
-		List<SecurityCheck> securityChecksList = getTestStepSecurityChecks(testStepId);
-		return securityChecksList.get(index);
+	public SecurityCheck getTestStepSecurityCheckAt( String testStepId, int index )
+	{
+		List<SecurityCheck> securityChecksList = getTestStepSecurityChecks( testStepId );
+		return securityChecksList.get( index );
 	}
 
-	public int getTestStepSecurityChecksCount(String testStepId) {
-		if (getSecurityChecksMap().isEmpty()) {
+	public int getTestStepSecurityChecksCount( String testStepId )
+	{
+		if( getSecurityChecksMap().isEmpty() )
+		{
 			return 0;
-		} else {
-			return getSecurityChecksMap().get(testStepId).size();
+		}
+		else
+		{
+			if( getSecurityChecksMap().get( testStepId ) != null )
+				return getSecurityChecksMap().get( testStepId ).size();
+			else return 0;
 		}
 	}
 
@@ -361,47 +369,44 @@ public class SecurityTest extends
 	 * @param securityCheck
 	 * @param index
 	 * @param offset
-	 *            specifies position to move to , negative value means moving up
-	 *            while positive value means moving down
+	 *           specifies position to move to , negative value means moving up
+	 *           while positive value means moving down
 	 * @return new SecurityCheck
 	 */
-	public SecurityCheck moveTestStepSecurityCheck(TestStep testStep,
-			SecurityCheck securityCheck, int index, int offset) {
-		List<TestStepSecurityTestConfig> testStepSecurityTestList = getConfig()
-				.getTestStepSecurityTestList();
-		if (!testStepSecurityTestList.isEmpty()) {
-			for (TestStepSecurityTestConfig testStepSecurityTest : testStepSecurityTestList) {
-				if (testStepSecurityTest.getTestStepId().equals(
-						testStep.getId())) {
-					List<SecurityCheckConfig> securityCheckList = testStepSecurityTest
-							.getTestStepSecurityCheckList();
-					AbstractSecurityCheckFactory factory = SecurityCheckRegistry
-							.getInstance().getFactory(securityCheck.getType());
+	public SecurityCheck moveTestStepSecurityCheck( TestStep testStep, SecurityCheck securityCheck, int index, int offset )
+	{
+		List<TestStepSecurityTestConfig> testStepSecurityTestList = getConfig().getTestStepSecurityTestList();
+		if( !testStepSecurityTestList.isEmpty() )
+		{
+			for( TestStepSecurityTestConfig testStepSecurityTest : testStepSecurityTestList )
+			{
+				if( testStepSecurityTest.getTestStepId().equals( testStep.getId() ) )
+				{
+					List<SecurityCheckConfig> securityCheckList = testStepSecurityTest.getTestStepSecurityCheckList();
+					AbstractSecurityCheckFactory factory = SecurityCheckRegistry.getInstance().getFactory(
+							securityCheck.getType() );
 					// SecurityCheckConfig newSecCheckConfig =
 					// factory.createNewSecurityCheck( securityCheck.getName()
 					// );
-					SecurityCheckConfig newSecCheckConfig = (SecurityCheckConfig) securityCheck
-							.getConfig().copy();
-					SecurityCheck newSecCheck = factory
-							.buildSecurityCheck(newSecCheckConfig);
+					SecurityCheckConfig newSecCheckConfig = ( SecurityCheckConfig )securityCheck.getConfig().copy();
+					SecurityCheck newSecCheck = factory.buildSecurityCheck( newSecCheckConfig );
 
-					securityCheckList.remove(securityCheck.getConfig());
-					securityCheckList.add(index + offset, newSecCheckConfig);
-					SecurityCheckConfig[] cc = new SecurityCheckConfig[securityCheckList
-							.size()];
-					for (int i = 0; i < securityCheckList.size(); i++) {
-						cc[i] = securityCheckList.get(i);
+					securityCheckList.remove( securityCheck.getConfig() );
+					securityCheckList.add( index + offset, newSecCheckConfig );
+					SecurityCheckConfig[] cc = new SecurityCheckConfig[securityCheckList.size()];
+					for( int i = 0; i < securityCheckList.size(); i++ )
+					{
+						cc[i] = securityCheckList.get( i );
 					}
-					testStepSecurityTest.setTestStepSecurityCheckArray(cc);
+					testStepSecurityTest.setTestStepSecurityCheckArray( cc );
 
-					TestStepSecurityTestConfig[] vv = new TestStepSecurityTestConfig[testStepSecurityTestList
-							.size()];
-					for (int i = 0; i < testStepSecurityTestList.size(); i++) {
-						vv[i] = testStepSecurityTestList.get(i);
+					TestStepSecurityTestConfig[] vv = new TestStepSecurityTestConfig[testStepSecurityTestList.size()];
+					for( int i = 0; i < testStepSecurityTestList.size(); i++ )
+					{
+						vv[i] = testStepSecurityTestList.get( i );
 					}
-					getConfig().setTestStepSecurityTestArray(vv);
-					listModel.securityCheckMoved(testStep, newSecCheck, index,
-							offset);
+					getConfig().setTestStepSecurityTestArray( vv );
+					listModel.securityCheckMoved( testStep, newSecCheck, index, offset );
 					return newSecCheck;
 				}
 			}
@@ -409,36 +414,42 @@ public class SecurityTest extends
 		return null;
 	}
 
-	public String findTestStepCheckUniqueName(String testStepId, String type) {
+	public String findTestStepCheckUniqueName( String testStepId, String type )
+	{
 		String name = type;
 		int numNames = 0;
-		List<SecurityCheck> securityChecksList = getTestStepSecurityChecks(testStepId);
-		if (securityChecksList != null && !securityChecksList.isEmpty()) {
-			for (SecurityCheck existingCheck : securityChecksList) {
-				if (existingCheck.getType().equals(name))
-					numNames++;
+		List<SecurityCheck> securityChecksList = getTestStepSecurityChecks( testStepId );
+		if( securityChecksList != null && !securityChecksList.isEmpty() )
+		{
+			for( SecurityCheck existingCheck : securityChecksList )
+			{
+				if( existingCheck.getType().equals( name ) )
+					numNames++ ;
 			}
 		}
-		if (numNames != 0) {
+		if( numNames != 0 )
+		{
 			name += " " + numNames;
 		}
 		return name;
 	}
 
-	public void addTestRunListener(SecurityTestRunListener listener) {
-		if (listener == null)
-			throw new RuntimeException("listener must not be null");
+	public void addTestRunListener( SecurityTestRunListener listener )
+	{
+		if( listener == null )
+			throw new RuntimeException( "listener must not be null" );
 
-		testRunListeners.add(listener);
+		testRunListeners.add( listener );
 	}
 
-	public void removeTestRunListener(SecurityTestRunListener listener) {
-		testRunListeners.remove(listener);
+	public void removeTestRunListener( SecurityTestRunListener listener )
+	{
+		testRunListeners.remove( listener );
 	}
 
-	public SecurityTestRunListener[] getTestRunListeners() {
-		return testRunListeners.toArray(new SecurityTestRunListener[testRunListeners
-				.size()]);
+	public SecurityTestRunListener[] getTestRunListeners()
+	{
+		return testRunListeners.toArray( new SecurityTestRunListener[testRunListeners.size()] );
 	}
 
 }
