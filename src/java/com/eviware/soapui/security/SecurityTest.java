@@ -212,7 +212,7 @@ public class SecurityTest extends
 			runner.release();
 
 		runner = new SecurityTestRunnerImpl(this);
-		runner.start();
+		runner.start(async);
 		return runner;
 	}
 

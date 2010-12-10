@@ -12,6 +12,7 @@
 
 package com.eviware.soapui.security;
 
+import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestRunner;
 
 /**
@@ -23,12 +24,13 @@ public interface SecurityTestRunner extends TestRunner
 {
 	public SecurityTest getSecurityTest();
 
+//Removed the rest cause I don't think we need them, since SecurityTestRunnerImpl extends WsdlTestCaseRunner
 	/**
 	 * Returns the progress of the securitytest as a value between 0 and 1.
 	 * Progress is measured depending on the LoadTest limit configuration
 	 */
 
-	public float getProgress();
+//	public float getProgress();
 
 	/**
 	 * Confusing but unfortunately necessary; isStopped will return false until
@@ -38,6 +40,6 @@ public interface SecurityTestRunner extends TestRunner
 	 * @return
 	 */
 
-	public boolean hasStopped();
+//	public boolean hasStopped();
 
 }

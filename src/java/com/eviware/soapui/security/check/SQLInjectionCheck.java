@@ -43,76 +43,75 @@ import com.eviware.soapui.support.types.StringToObjectMap;
  * @author soapui team
  */
 
-public class SQLInjectionCheck extends AbstractSecurityCheck implements SensitiveInformationCheckable{
+public class SQLInjectionCheck extends AbstractSecurityCheck implements SensitiveInformationCheckable
+{
 
 	public static final String TYPE = "SQLInjectionCheck";
 	private static final int MINIMUM_STRING_DISTANCE = 50;
 
-	public SQLInjectionCheck(SecurityCheckConfig config, ModelItem parent,
-			String icon) {
-		super(config, parent, icon);
-		if (config == null) {
+	public SQLInjectionCheck( SecurityCheckConfig config, ModelItem parent, String icon )
+	{
+		super( config, parent, icon );
+		if( config == null )
+		{
 			config = SecurityCheckConfig.Factory.newInstance();
-			SQLInjectionCheckConfig pescc = SQLInjectionCheckConfig.Factory
-					.newInstance();
-			config.setConfig(pescc);
+			SQLInjectionCheckConfig pescc = SQLInjectionCheckConfig.Factory.newInstance();
+			config.setConfig( pescc );
 		}
-		if (config.getConfig() == null) {
-			SQLInjectionCheckConfig pescc = SQLInjectionCheckConfig.Factory
-					.newInstance();
-			config.setConfig(pescc);
+		if( config.getConfig() == null )
+		{
+			SQLInjectionCheckConfig pescc = SQLInjectionCheckConfig.Factory.newInstance();
+			config.setConfig( pescc );
 		}
 	}
 
-	protected void execute(TestStep testStep, WsdlTestRunContext context,
-			SecurityTestLogModel securityTestLog) {
-		if (acceptsTestStep(testStep)) {
-			WsdlTestCaseRunner testCaseRunner = new WsdlTestCaseRunner(
-					(WsdlTestCase) testStep.getTestCase(),
-					new StringToObjectMap());
-			testStep.run(testCaseRunner, testCaseRunner.getRunContext());
+	protected void execute( TestStep testStep, WsdlTestRunContext context, SecurityTestLogModel securityTestLog )
+	{
+		if( acceptsTestStep( testStep ) )
+		{
+			WsdlTestCaseRunner testCaseRunner = new WsdlTestCaseRunner( ( WsdlTestCase )testStep.getTestCase(),
+					new StringToObjectMap() );
+			testStep.run( testCaseRunner, testCaseRunner.getRunContext() );
 
-			HttpTestRequestInterface<?> request = ((HttpTestRequestStepInterface) testStep)
-					.getTestRequest();
+			HttpTestRequestInterface<?> request = ( ( HttpTestRequestStepInterface )testStep ).getTestRequest();
 			String originalResponse = request.getResponse().getContentAsXml();
 
-			for (String param : getParamsToUse()) {
+			for( String param : getParamsToUse() )
+			{
 				Fuzzer sqlFuzzer = Fuzzer.getSQLFuzzer();
 
-				while (sqlFuzzer.hasNext()) {
-					sqlFuzzer.getNextFuzzedTestStep(testStep, param);
-					testStep
-							.run(testCaseRunner, testCaseRunner.getRunContext());
-					HttpTestRequestInterface<?> lastRequest = ((HttpTestRequestStepInterface) testStep)
-							.getTestRequest();
+				while( sqlFuzzer.hasNext() )
+				{
+					sqlFuzzer.getNextFuzzedTestStep( testStep, param );
+					testStep.run( testCaseRunner, testCaseRunner.getRunContext() );
+					HttpTestRequestInterface<?> lastRequest = ( ( HttpTestRequestStepInterface )testStep ).getTestRequest();
 
-					if (StringUtils.getLevenshteinDistance(originalResponse,
-							lastRequest.getResponse().getContentAsString()) > MINIMUM_STRING_DISTANCE) {
+					if( StringUtils
+							.getLevenshteinDistance( originalResponse, lastRequest.getResponse().getContentAsString() ) > MINIMUM_STRING_DISTANCE )
+					{
 						securityTestLog
-								.addEntry(new SecurityTestLogMessageEntry(
-										"Possible SQL Injection Vulnerability Detected",
-										new HttpResponseMessageExchange(
-												lastRequest)));
+								.addEntry( new SecurityTestLogMessageEntry( "Possible SQL Injection Vulnerability Detected",
+										new HttpResponseMessageExchange( lastRequest ) ) );
 					}
-					analyze(testStep, context, securityTestLog);
-					
-					// maybe this fuzzer can be implemented to wrap the security check not vice versa
-					
+					analyze( testStep, context, securityTestLog );
+
+					// maybe this fuzzer can be implemented to wrap the security
+					// check not vice versa
+
 				}
 
 			}
 		}
 	}
 
-	public void analyze(TestStep testStep, WsdlTestRunContext context,
-			SecurityTestLogModel securityTestLog) {
+	public void analyze( TestStep testStep, WsdlTestRunContext context, SecurityTestLogModel securityTestLog )
+	{
 		// TODO: Make this test more extensive
-		HttpTestRequestInterface<?> lastRequest = ((HttpTestRequestStepInterface) testStep)
-				.getTestRequest();
-		if (lastRequest.getResponseContentAsString().indexOf("SQL Error") > -1) {
-			securityTestLog.addEntry(new SecurityTestLogMessageEntry(
-					"SQL Error displayed in response",
-					new HttpResponseMessageExchange(lastRequest)));
+		HttpTestRequestInterface<?> lastRequest = ( ( HttpTestRequestStepInterface )testStep ).getTestRequest();
+		if( lastRequest.getResponseContentAsString().indexOf( "SQL Error" ) > -1 )
+		{
+			securityTestLog.addEntry( new SecurityTestLogMessageEntry( "SQL Error displayed in response",
+					new HttpResponseMessageExchange( lastRequest ) ) );
 		}
 	}
 
@@ -121,9 +120,9 @@ public class SQLInjectionCheck extends AbstractSecurityCheck implements Sensitiv
 	 * 
 	 * @return A list of parameter objects
 	 */
-	public List<String> getParamsToUse() {
-		return ((SQLInjectionCheckConfig) config.getConfig())
-				.getParamsToUseList();
+	public List<String> getParamsToUse()
+	{
+		return ( ( SQLInjectionCheckConfig )config.getConfig() ).getParamsToUseList();
 	}
 
 	/**
@@ -131,40 +130,48 @@ public class SQLInjectionCheck extends AbstractSecurityCheck implements Sensitiv
 	 * 
 	 * @param params
 	 */
-	public void setParamsToUse(List<String> params) {
-		((SQLInjectionCheckConfig) config.getConfig())
-				.setParamsToUseArray(params.toArray(new String[0]));
+	public void setParamsToUse( List<String> params )
+	{
+		( ( SQLInjectionCheckConfig )config.getConfig() ).setParamsToUseArray( params.toArray( new String[0] ) );
 	}
 
 	@Override
-	public boolean acceptsTestStep(TestStep testStep) {
+	public boolean acceptsTestStep( TestStep testStep )
+	{
 		return testStep instanceof SamplerTestStep;
 	}
 
 	@Override
-	public JComponent getComponent() {
+	public JComponent getComponent()
+	{
 		// if (panel == null) {
-		panel = new JPanel(new BorderLayout());
+		panel = new JPanel( new BorderLayout() );
 
 		form = new SimpleForm();
-		form.addSpace(5);
+		form.addSpace( 5 );
 
-		panel.add(form.getPanel());
+		panel.add( form.getPanel() );
 		return panel;
 	}
 
 	@Override
-	public String getType() {
+	public String getType()
+	{
 		return TYPE;
 	}
-
 
 	@Override
 	public void checkForSensitiveInformationExposure( TestStep testStep, WsdlTestRunContext context,
 			SecurityTestLogModel securityTestLog )
 	{
-		InformationExposureCheck iec = new InformationExposureCheck( config, null, null);
+		InformationExposureCheck iec = new InformationExposureCheck( config, null, null );
 		iec.analyze( testStep, context, securityTestLog );
+	}
+
+	@Override
+	public boolean configure()
+	{
+		return false;
 	}
 
 }

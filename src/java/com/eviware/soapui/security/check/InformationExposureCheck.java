@@ -84,15 +84,14 @@ public class InformationExposureCheck extends AbstractSecurityCheck implements H
 				if( assertContains( context, testStepwithProperties, messageExchange, exposureContent ).equals(
 						AssertionStatus.VALID ) )
 				{
-					logSecurityInfo( messageExchange, securityTestLog,  exposureContent );
+					logSecurityInfo( messageExchange, securityTestLog, exposureContent );
 				}
 			}
 		}
 	}
 
-	
-	private AssertionStatus assertContains( WsdlTestRunContext context,
-			HttpTestRequestStepInterface testStep, MessageExchange messageExchange, String exposureContent )
+	private AssertionStatus assertContains( WsdlTestRunContext context, HttpTestRequestStepInterface testStep,
+			MessageExchange messageExchange, String exposureContent )
 	{
 		TestAssertionConfig assertionConfig = TestAssertionConfig.Factory.newInstance();
 		assertionConfig.setType( SimpleContainsAssertion.ID );
@@ -104,7 +103,6 @@ public class InformationExposureCheck extends AbstractSecurityCheck implements H
 		return containsAssertion.getStatus();
 	}
 
-
 	@Override
 	public boolean acceptsTestStep( TestStep testStep )
 	{
@@ -112,7 +110,7 @@ public class InformationExposureCheck extends AbstractSecurityCheck implements H
 	}
 
 	@Override
-	public JComponent getComponent( )
+	public JComponent getComponent()
 	{
 		// if (panel == null) {
 		panel = new JPanel( new BorderLayout() );
@@ -138,7 +136,7 @@ public class InformationExposureCheck extends AbstractSecurityCheck implements H
 		String responseContent = messageExchange.getResponseContent();
 		for( String exposureContent : exposureList )
 		{
-			if( responseContent.contains( exposureContent ))
+			if( responseContent.contains( exposureContent ) )
 			{
 				logSecurityInfo( messageExchange, securityTestLog, exposureContent );
 			}
@@ -149,22 +147,27 @@ public class InformationExposureCheck extends AbstractSecurityCheck implements H
 	private void logSecurityInfo( MessageExchange messageExchange, JSecurityTestRunLog securityTestLog,
 			String exposureContent )
 	{
-		securityTestLog.addEntry( new SecurityTestLogMessageEntry( "The exposed sensitive information '" + exposureContent
-				+ "' is detected in response. ", messageExchange ) );
-	}
-	
-	private void logSecurityInfo(  MessageExchange messageExchange,SecurityTestLogModel securityTestLog,
-			String exposureContent )
-	{
-		securityTestLog.addEntry( new SecurityTestLogMessageEntry( "The exposed sensitive information '" + exposureContent
-				+ "' is detected in response. ", messageExchange ) );
+		securityTestLog.addEntry( new SecurityTestLogMessageEntry( "The exposed sensitive information '"
+				+ exposureContent + "' is detected in response. ", messageExchange ) );
 	}
 
+	private void logSecurityInfo( MessageExchange messageExchange, SecurityTestLogModel securityTestLog,
+			String exposureContent )
+	{
+		securityTestLog.addEntry( new SecurityTestLogMessageEntry( "The exposed sensitive information '"
+				+ exposureContent + "' is detected in response. ", messageExchange ) );
+	}
 
 	@Override
 	public boolean canRun()
 	{
 		return true;
+	}
+
+	@Override
+	public boolean configure()
+	{
+		return false;
 	}
 
 }
