@@ -63,8 +63,8 @@ public class SecurityChecksPanel extends JPanel
 	private AddSecurityCheckAction addSecurityCheckAction;
 	private ConfigureSecurityCheckAction configureSecurityCheckAction;
 	private RemoveSecurityCheckAction removeSecurityCheckAction;
-	private MoveSecurityCheckUpAction moveSecurityCheckUpAction;
-	private MoveSecurityCheckDownAction moveSecurityCheckDownAction;
+//	private MoveSecurityCheckUpAction moveSecurityCheckUpAction;
+//	private MoveSecurityCheckDownAction moveSecurityCheckDownAction;
 	// private DefaultListModel listModel;
 	// private JList securityChecksList;
 	// JSplitPane splitPane;
@@ -97,8 +97,8 @@ public class SecurityChecksPanel extends JPanel
 
 				configureSecurityCheckAction.setEnabled( ix >= 0 );
 				removeSecurityCheckAction.setEnabled( ix >= 0 );
-				moveSecurityCheckUpAction.setEnabled( ix >= 0 );
-				moveSecurityCheckDownAction.setEnabled( ix >= 0 );
+//				moveSecurityCheckUpAction.setEnabled( ix >= 0 );
+//				moveSecurityCheckDownAction.setEnabled( ix >= 0 );
 
 				if( ix == -1 )
 					return;
@@ -305,8 +305,8 @@ public class SecurityChecksPanel extends JPanel
 		addSecurityCheckAction = new AddSecurityCheckAction();
 		configureSecurityCheckAction = new ConfigureSecurityCheckAction();
 		removeSecurityCheckAction = new RemoveSecurityCheckAction();
-		moveSecurityCheckUpAction = new MoveSecurityCheckUpAction();
-		moveSecurityCheckDownAction = new MoveSecurityCheckDownAction();
+//		moveSecurityCheckUpAction = new MoveSecurityCheckUpAction();
+//		moveSecurityCheckDownAction = new MoveSecurityCheckDownAction();
 		addToolbarButtons( checksToolbar );
 		// securityCheckList.addListSelectionListener( new ListSelectionListener()
 		// {
@@ -339,8 +339,8 @@ public class SecurityChecksPanel extends JPanel
 	{
 		configureSecurityCheckAction = new ConfigureSecurityCheckAction();
 		removeSecurityCheckAction = new RemoveSecurityCheckAction();
-		moveSecurityCheckUpAction = new MoveSecurityCheckUpAction();
-		moveSecurityCheckDownAction = new MoveSecurityCheckDownAction();
+//		moveSecurityCheckUpAction = new MoveSecurityCheckUpAction();
+//		moveSecurityCheckDownAction = new MoveSecurityCheckDownAction();
 
 		JXToolBar toolbar = UISupport.createToolbar();
 		addToolbarButtons( toolbar );
@@ -357,8 +357,8 @@ public class SecurityChecksPanel extends JPanel
 
 				configureSecurityCheckAction.setEnabled( ix >= 0 );
 				removeSecurityCheckAction.setEnabled( ix >= 0 );
-				moveSecurityCheckUpAction.setEnabled( ix >= 0 );
-				moveSecurityCheckDownAction.setEnabled( ix >= 0 );
+//				moveSecurityCheckUpAction.setEnabled( ix >= 0 );
+//				moveSecurityCheckDownAction.setEnabled( ix >= 0 );
 
 				if( ix == -1 )
 					return;
@@ -375,8 +375,8 @@ public class SecurityChecksPanel extends JPanel
 		toolbar.addFixed( UISupport.createToolbarButton( addSecurityCheckAction ) );
 		toolbar.addFixed( UISupport.createToolbarButton( configureSecurityCheckAction ) );
 		toolbar.addFixed( UISupport.createToolbarButton( removeSecurityCheckAction ) );
-		toolbar.addFixed( UISupport.createToolbarButton( moveSecurityCheckUpAction ) );
-		toolbar.addFixed( UISupport.createToolbarButton( moveSecurityCheckDownAction ) );
+//		toolbar.addFixed( UISupport.createToolbarButton( moveSecurityCheckUpAction ) );
+//		toolbar.addFixed( UISupport.createToolbarButton( moveSecurityCheckDownAction ) );
 	}
 
 	public void setEnabled( boolean enabled )
