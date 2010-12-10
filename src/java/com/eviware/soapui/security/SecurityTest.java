@@ -79,7 +79,7 @@ public class SecurityTest extends
 	private SoapUIScriptEngine scriptEngine;
 
 	public SecurityTest(WsdlTestCase testCase, SecurityTestConfig config) {
-		super(config, testCase, "/loadTest.gif");
+		super(config, testCase, "/securityTest.png");
 		this.testCase = testCase;
 		if (!getConfig().isSetProperties())
 			getConfig().addNewProperties();

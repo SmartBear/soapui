@@ -301,6 +301,8 @@ public class SecurityTestRunnerImpl extends WsdlTestCaseRunner implements Securi
 		try
 		{
 			securityTest.runTearDownScript( runContext, this );
+			securityTest.getSecurityTestLog().addEntry(
+					new SecurityTestLogMessageEntry( "SecurityTest ended at " + new Date( System.currentTimeMillis() ) ) );
 		}
 		catch( Exception e )
 		{

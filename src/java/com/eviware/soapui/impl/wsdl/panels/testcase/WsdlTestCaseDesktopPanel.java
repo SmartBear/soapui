@@ -315,7 +315,7 @@ public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase
 				AddNewLoadTestAction.SOAPUI_ACTION_ID, getModelItem(), null, "/loadTest.gif" ) );
 		
 		createSecurityTestButton = UISupport.createToolbarButton( SwingActionDelegate.createDelegate(
-				AddNewSecurityTestAction.SOAPUI_ACTION_ID, getModelItem(), null, "/loadTest.gif" ) );
+				AddNewSecurityTestAction.SOAPUI_ACTION_ID, getModelItem(), null, "/securityTest.png" ) );
 
 		runWithLoadUIButton = UISupport.createToolbarButton( SwingActionDelegate.createDelegate(
 				RunTestCaseWithLoadUIAction.SOAPUI_ACTION_ID, getModelItem(), null, "/runTestCaseWithLoadUI.png" ) );
