@@ -58,9 +58,11 @@ public class SecurityChecksPrefs implements Prefs
 
 	public void setFormValues( Settings settings )
 	{
+		PropertyExpansionUtils.saveSecurityGlobalProperties();
 	}
 
 	public void storeValues( StringToStringMap values, Settings settings )
 	{
+		
 	}
 }
