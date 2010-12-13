@@ -191,13 +191,13 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 	protected void addTabs( JTabbedPane tabs, JInspectorPanel inspectorPanel )
 	{
 		inspectorPanel.addInspector( new JFocusableComponentInspector<JPanel>( buildDescriptionPanel(), descriptionArea,
-				"Description", "TestCase Description", true ) );
+				"Description", "SecurityTest Description", true ) );
 		inspectorPanel.addInspector( new JComponentInspector<JComponent>( buildPropertiesPanel(), "Properties",
-				"TestCase level properties", true ) );
+				"SecurityTest level properties", true ) );
 		inspectorPanel.addInspector( new GroovyEditorInspector( buildSetupScriptPanel(), "Setup Script",
-				"Script to run before tunning a TestCase" ) );
+				"Script to run before tunning a SecurityTest" ) );
 		inspectorPanel.addInspector( new GroovyEditorInspector( buildTearDownScriptPanel(), "TearDown Script",
-				"Script to run after a TestCase Run" ) );
+				"Script to run after a SecurityTest Run" ) );
 	}
 
 	protected GroovyEditorComponent buildTearDownScriptPanel()
@@ -239,7 +239,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 
 		panel.setBorder( BorderFactory.createEmptyBorder( 2, 2, 2, 2 ) );
 		panel.add( new JScrollPane( descriptionArea ), BorderLayout.CENTER );
-		UISupport.addTitledBorder( panel, "TestCase Description" );
+		UISupport.addTitledBorder( panel, "SecurityTest Description" );
 
 		return panel;
 	}
