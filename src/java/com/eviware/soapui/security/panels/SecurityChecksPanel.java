@@ -516,7 +516,7 @@ public class SecurityChecksPanel extends JPanel
 				} );
 		}
 
-		public void securityCheckAdded( TestStep testStep, SecurityCheck securityCheck )
+		public void securityCheckAdded( SecurityCheck securityCheck )
 		{
 			synchronized( this )
 			{
@@ -539,7 +539,7 @@ public class SecurityChecksPanel extends JPanel
 			// }
 		}
 
-		public void securityCheckRemoved( TestStep testStep, SecurityCheck securityCheck )
+		public void securityCheckRemoved( SecurityCheck securityCheck )
 		{
 			synchronized( this )
 			{
@@ -560,7 +560,7 @@ public class SecurityChecksPanel extends JPanel
 			}
 		}
 
-		public void securityCheckMoved( TestStep testStep, SecurityCheck newSecurityCheck, int ix, int offset )
+		public void securityCheckMoved( SecurityCheck newSecurityCheck, int ix, int offset )
 		{
 			synchronized( this )
 			{

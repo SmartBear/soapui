@@ -25,12 +25,14 @@ import com.eviware.soapui.impl.wsdl.mock.WsdlMockService;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.security.check.GroovySecurityCheck;
 import com.eviware.soapui.security.check.ParameterExposureCheck;
 import com.eviware.soapui.security.check.SQLInjectionCheck;
 import com.eviware.soapui.security.check.SecurityCheck;
+import com.eviware.soapui.security.panels.SecurityChecksPanel.SecurityCheckListModel;
 import com.eviware.soapui.security.registry.SecurityCheckRegistry;
 import com.eviware.soapui.support.TestCaseWithJetty;
 
@@ -42,8 +44,9 @@ public class SecurityTestRunnerTest extends TestCaseWithJetty
 {
 
 	WsdlTestCase testCase;
+	WsdlTestStep testStep;
 	SecurityTestConfig config = SecurityTestConfig.Factory.newInstance();
-	HashMap<String, List<SecurityCheck>> securityChecksMap = new HashMap<String, List<SecurityCheck>>();
+	HashMap<String , List<SecurityCheck>> securityChecksMap = new HashMap<String, List<SecurityCheck>>();
 	WsdlMockService mockService;
 
 	/**
@@ -71,15 +74,13 @@ public class SecurityTestRunnerTest extends TestCaseWithJetty
 		WsdlProject project = new WsdlProject( "src" + File.separatorChar + "test-resources" + File.separatorChar
 				+ "sample-soapui-project.xml" );
 		TestSuite testSuite = project.getTestSuiteByName( "Test Suite" );
-		
-		groovySecurityCheckSetUp();
-		
-
-		parameterExposureCheckSetup();
-		
-		SQLInjectionCheckSetup();
-		
 		testCase = ( WsdlTestCase )testSuite.getTestCaseByName( "Test Conversions" );
+
+		groovySecurityCheckSetUp();
+
+//		parameterExposureCheckSetup();
+//
+//		SQLInjectionCheckSetup();
 
 		WsdlInterface iface = ( WsdlInterface )project.getInterfaceAt( 0 );
 
@@ -106,44 +107,52 @@ public class SecurityTestRunnerTest extends TestCaseWithJetty
 			}
 			if( testStep instanceof HttpTestRequestStep )
 			{
-			//	( ( HttpTestRequestStep )testStep ).getTestRequest().setEndpoint( endpoint );
-			}		}
+				// ( ( HttpTestRequestStep )testStep ).getTestRequest().setEndpoint(
+				// endpoint );
+			}
+		}
 	}
 
-	private void parameterExposureCheckSetup() {
+	private void parameterExposureCheckSetup()
+	{
 		List<SecurityCheck> secCheckList = new ArrayList<SecurityCheck>();
-		SecurityCheckConfig exposureConfig = SecurityCheckRegistry.getInstance().getFactory(ParameterExposureCheck.TYPE).createNewSecurityCheck("Test");
-		ParameterExposureCheck exposureCheck = (ParameterExposureCheck)SecurityCheckRegistry.getInstance().getFactory(ParameterExposureCheck.TYPE).buildSecurityCheck(exposureConfig);
-		secCheckList.add(exposureCheck);
-		
-		//securityChecksMap.put( "HTTP Test Request", secCheckList );
+		SecurityCheckConfig exposureConfig = SecurityCheckRegistry.getInstance().getFactory( ParameterExposureCheck.TYPE )
+				.createNewSecurityCheck( "Test" );
+		ParameterExposureCheck exposureCheck = ( ParameterExposureCheck )SecurityCheckRegistry.getInstance().getFactory(
+				ParameterExposureCheck.TYPE ).buildSecurityCheck( exposureConfig );
+		secCheckList.add( exposureCheck );
+		TestStep testStep = testCase.getTestStepByName( "HTTP Test Request" );
+		securityChecksMap.put( testStep.getId(), secCheckList );
 	}
-	
-	private void SQLInjectionCheckSetup() {
+
+	private void SQLInjectionCheckSetup()
+	{
 		List<SecurityCheck> secCheckList = new ArrayList<SecurityCheck>();
-		SecurityCheckConfig injectionConfig = SecurityCheckRegistry.getInstance().getFactory(SQLInjectionCheck.TYPE).createNewSecurityCheck("Test");
-		SQLInjectionCheck sqlCheck = (SQLInjectionCheck)SecurityCheckRegistry.getInstance().getFactory(SQLInjectionCheck.TYPE).buildSecurityCheck(injectionConfig);
-		
+		SecurityCheckConfig injectionConfig = SecurityCheckRegistry.getInstance().getFactory( SQLInjectionCheck.TYPE )
+				.createNewSecurityCheck( "Test" );
+		SQLInjectionCheck sqlCheck = ( SQLInjectionCheck )SecurityCheckRegistry.getInstance().getFactory(
+				SQLInjectionCheck.TYPE ).buildSecurityCheck( injectionConfig );
+
 		List<String> params = new ArrayList<String>();
-		params.add("q");
-		sqlCheck.setParamsToUse(params);
-		secCheckList.add(sqlCheck);
-		
-		securityChecksMap.put( "HTTP Test Request", secCheckList );
+		params.add( "q" );
+		sqlCheck.setParamsToUse( params );
+		secCheckList.add( sqlCheck );
+		TestStep testStep = testCase.getTestStepByName( "HTTP Test Request" );
+		securityChecksMap.put( testStep.getId(), secCheckList );
 	}
 
 	private void groovySecurityCheckSetUp()
 	{
 		List<SecurityCheck> secCheckList = new ArrayList<SecurityCheck>();
 		SecurityCheckConfig asdf = SecurityCheckConfig.Factory.newInstance();
-		asdf.setType(  GroovySecurityCheck.TYPE );
-		GroovySecurityCheck gsc = new GroovySecurityCheck(asdf, null, null );
-		gsc.setScript( "println \"this is print from GroovySecurityCheck on test step '${testStep.name}'\"" );
+		asdf.setType( GroovySecurityCheck.TYPE );
+		asdf.setName(  GroovySecurityCheck.TYPE );
+		GroovySecurityCheck gsc = new GroovySecurityCheck( asdf, null, null );
+		gsc.setScript( "println('');println \"this is print from GroovySecurityCheck on test step '${testStep.name}'\";println('')" );
 
 		secCheckList.add( gsc );
-		
-		
-		//securityChecksMap.put( "SEK to USD Test", secCheckList );
+		TestStep testStep = testCase.getTestStepByName( "SEK to USD Test" );
+		securityChecksMap.put( testStep.getId(), secCheckList );
 	}
 
 	/**
@@ -163,29 +172,29 @@ public class SecurityTestRunnerTest extends TestCaseWithJetty
 	{
 		SecurityTest securityTest = new SecurityTest( testCase, config );
 		addSecurityChecks( securityTest );
+//		securityTest.setListModel( new SecurityChecksPanel.SecurityCheckListModel() );
 
 		SecurityTestRunnerImpl testRunner = new SecurityTestRunnerImpl( securityTest );
 
-//		testRunner.start();
+		 testRunner.start( false);
 
-//		assertEquals( TestStepResult.TestStepStatus.OK, testRunner.getStatus() );
-		assertEquals(true,true );
+		// assertEquals( TestStepResult.TestStepStatus.OK, testRunner.getStatus()
+		// );
+		assertEquals( true, true );
 
 	}
-
 
 	private void addSecurityChecks( SecurityTest securityTest )
 	{
-		for( String testSetName : securityChecksMap.keySet() )
+		for( String  testStepId : securityChecksMap.keySet() )
 		{
-			List<SecurityCheck> securityCheckList = securityChecksMap.get( testSetName );
+			List<SecurityCheck> securityCheckList = securityChecksMap.get( testStepId );
 
 			for( SecurityCheck sc : securityCheckList )
 			{
-//				securityTest.addSecurityCheck( testSetName, sc, null );
+				securityTest.addSecurityCheck( testStepId, sc );
 			}
 		}
 	}
-	
-	
+
 }

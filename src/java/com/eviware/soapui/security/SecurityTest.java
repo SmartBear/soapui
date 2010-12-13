@@ -93,6 +93,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 	 * @param testStep
 	 * @param securityCheckType
 	 * @param securityCheckName
+	 * @param securityCheckConfig 
 	 * @return SecurityCheck
 	 */
 	public SecurityCheck addSecurityCheck( TestStep testStep, String securityCheckType, String securityCheckName )
@@ -124,8 +125,43 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 			newSecurityCheck.setType( newSecCheck.getType() );
 			newSecurityCheck.setName( newSecCheck.getName() );
 		}
-		listModel.securityCheckAdded( testStep, newSecCheck );
+		listModel.securityCheckAdded( newSecCheck );
 		return newSecCheck;
+
+	}
+	
+	/**
+	 * Adds new securityCheck for the specific TestStep
+	 * 
+	 * @param testStepId
+	 * @param securityCheck
+	 * 
+	 * @return HashMap<TestStep, List<SecurityCheck>>
+	 */
+	public void addSecurityCheck( String testStepId, SecurityCheck securityCheck )
+	{
+		boolean hasChecks = false;
+		List<TestStepSecurityTestConfig> testStepSecurityTestList = getConfig().getTestStepSecurityTestList();
+		if( !testStepSecurityTestList.isEmpty() )
+		{
+			for( TestStepSecurityTestConfig testStepSecurityTest : testStepSecurityTestList )
+			{
+				if( testStepSecurityTest.getTestStepId().equals( testStepId ) )
+				{
+					List<SecurityCheckConfig> securityCheckList = testStepSecurityTest.getTestStepSecurityCheckList();
+					securityCheckList.add( securityCheck.getConfig() );
+					hasChecks = true;
+				}
+			}
+		}
+		if( !hasChecks )
+		{
+			TestStepSecurityTestConfig testStepSecurityTest = getConfig().addNewTestStepSecurityTest();
+			testStepSecurityTest.setTestStepId(  testStepId );
+			SecurityCheckConfig newSecurityCheck = testStepSecurityTest.addNewTestStepSecurityCheck();
+			newSecurityCheck.setConfig( securityCheck.getConfig().getConfig() );
+			newSecurityCheck.setType( securityCheck.getType() );
+		}
 
 	}
 
@@ -152,7 +188,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 						testStepSecurityTestList.remove( testStepSecurityTest );
 						return;
 					}
-					listModel.securityCheckRemoved( testStep, securityCheck );
+					listModel.securityCheckRemoved( securityCheck );
 				}
 			}
 		}
@@ -358,7 +394,8 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 		{
 			if( getSecurityChecksMap().get( testStepId ) != null )
 				return getSecurityChecksMap().get( testStepId ).size();
-			else return 0;
+			else
+				return 0;
 		}
 	}
 
@@ -406,7 +443,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 						vv[i] = testStepSecurityTestList.get( i );
 					}
 					getConfig().setTestStepSecurityTestArray( vv );
-					listModel.securityCheckMoved( testStep, newSecCheck, index, offset );
+					listModel.securityCheckMoved( newSecCheck, index, offset );
 					return newSecCheck;
 				}
 			}
