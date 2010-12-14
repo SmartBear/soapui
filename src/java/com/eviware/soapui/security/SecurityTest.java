@@ -93,7 +93,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 	 * @param testStep
 	 * @param securityCheckType
 	 * @param securityCheckName
-	 * @param securityCheckConfig 
+	 * @param securityCheckConfig
 	 * @return SecurityCheck
 	 */
 	public SecurityCheck addSecurityCheck( TestStep testStep, String securityCheckType, String securityCheckName )
@@ -125,45 +125,13 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 			newSecurityCheck.setType( newSecCheck.getType() );
 			newSecurityCheck.setName( newSecCheck.getName() );
 		}
-		listModel.securityCheckAdded( newSecCheck );
+		if( listModel != null )
+			listModel.securityCheckAdded( newSecCheck );
 		return newSecCheck;
 
 	}
-	
-	/**
-	 * Adds new securityCheck for the specific TestStep
-	 * 
-	 * @param testStepId
-	 * @param securityCheck
-	 * 
-	 * @return HashMap<TestStep, List<SecurityCheck>>
-	 */
-	public void addSecurityCheck( String testStepId, SecurityCheck securityCheck )
-	{
-		boolean hasChecks = false;
-		List<TestStepSecurityTestConfig> testStepSecurityTestList = getConfig().getTestStepSecurityTestList();
-		if( !testStepSecurityTestList.isEmpty() )
-		{
-			for( TestStepSecurityTestConfig testStepSecurityTest : testStepSecurityTestList )
-			{
-				if( testStepSecurityTest.getTestStepId().equals( testStepId ) )
-				{
-					List<SecurityCheckConfig> securityCheckList = testStepSecurityTest.getTestStepSecurityCheckList();
-					securityCheckList.add( securityCheck.getConfig() );
-					hasChecks = true;
-				}
-			}
-		}
-		if( !hasChecks )
-		{
-			TestStepSecurityTestConfig testStepSecurityTest = getConfig().addNewTestStepSecurityTest();
-			testStepSecurityTest.setTestStepId(  testStepId );
-			SecurityCheckConfig newSecurityCheck = testStepSecurityTest.addNewTestStepSecurityCheck();
-			newSecurityCheck.setConfig( securityCheck.getConfig().getConfig() );
-			newSecurityCheck.setType( securityCheck.getType() );
-		}
 
-	}
+
 
 	/**
 	 * Remove securityCheck for the specific TestStep
