@@ -3,72 +3,52 @@
  */
 package com.eviware.soapui.security;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import org.junit.Before;
 import org.junit.Test;
 
 import com.eviware.soapui.config.SecurityCheckConfig;
-import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.check.ParameterExposureCheck;
-import com.eviware.soapui.security.check.SecurityCheck;
 import com.eviware.soapui.security.registry.SecurityCheckRegistry;
 
 /**
  * @author dragica.soldo
  * 
  */
-public class ParameterExposureTest extends TestCaseWithMockService
+public class ParameterExposureTest extends AbstractSecurityTestCaseWithMockService
 {
 
-	
-
-	private void parameterExposureCheckSetup()
+	/**
+	 * 
+	 * @throws java.lang.Exception
+	 */
+	@Before
+	public void setUp() throws Exception
 	{
-		List<SecurityCheck> secCheckList = new ArrayList<SecurityCheck>();
-		SecurityCheckConfig exposureConfig = SecurityCheckRegistry.getInstance().getFactory( ParameterExposureCheck.TYPE )
-				.createNewSecurityCheck( "Test" );
-		ParameterExposureCheck exposureCheck = ( ParameterExposureCheck )SecurityCheckRegistry.getInstance().getFactory(
-				ParameterExposureCheck.TYPE ).buildSecurityCheck( exposureConfig );
-		secCheckList.add( exposureCheck );
-		TestStep testStep = testCase.getTestStepByName( "HTTP Test Request" );
-		securityChecksMap.put( testStep.getId(), secCheckList );
+		super.setUp();
+		testStepName = "HTTP Test Request";
+		securityCheckType = ParameterExposureCheck.TYPE;
+		securityCheckName = ParameterExposureCheck.TYPE;
 	}
 
+	@Override
+	protected void addSecurityCheckConfig( SecurityCheckConfig securityCheckConfig )
+	{
 
+		SecurityCheckRegistry.getInstance().getFactory(
+				securityCheckType ).buildSecurityCheck( securityCheckConfig );
 
-
+	}
 
 	@Test
 	public void testStart()
 	{
-		
-		parameterExposureCheckSetup();
-		SecurityTest securityTest = new SecurityTest( testCase, config );
-		addSecurityChecks( securityTest );
-//		securityTest.setListModel( new SecurityChecksPanel.SecurityCheckListModel() );
 
-		SecurityTestRunnerImpl testRunner = new SecurityTestRunnerImpl( securityTest );
+		SecurityTestRunnerImpl testRunner = new SecurityTestRunnerImpl( createSecurityTest() );
 
-		 testRunner.start( false);
-
-		// assertEquals( TestStepResult.TestStepStatus.OK, testRunner.getStatus()
-		// );
+		testRunner.start( false );
+		//TODO: finish
 		assertEquals( true, true );
 
-	}
-
-	private void addSecurityChecks( SecurityTest securityTest )
-	{
-		for( String  testStepId : securityChecksMap.keySet() )
-		{
-			List<SecurityCheck> securityCheckList = securityChecksMap.get( testStepId );
-
-			for( SecurityCheck sc : securityCheckList )
-			{
-				securityTest.addSecurityCheck( testStepId, sc );
-			}
-		}
 	}
 
 }

@@ -12,13 +12,16 @@
 package com.eviware.soapui.security;
 
 import java.io.File;
-import java.util.HashMap;
 import java.util.List;
+
+import junit.framework.TestCase;
 
 import org.junit.After;
 import org.junit.Before;
 
+import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.config.SecurityTestConfig;
+import com.eviware.soapui.config.TestStepSecurityTestConfig;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
@@ -31,20 +34,27 @@ import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestSuite;
-import com.eviware.soapui.security.check.SecurityCheck;
 
-import junit.framework.TestCase;
-
-public class TestCaseWithMockService extends TestCase
+public abstract class AbstractSecurityTestCaseWithMockService extends TestCase
 {
 	WsdlTestCase testCase;
 	WsdlTestStep testStep;
 	SecurityTestConfig config = SecurityTestConfig.Factory.newInstance();
-	HashMap<String , List<SecurityCheck>> securityChecksMap = new HashMap<String, List<SecurityCheck>>();
 	WsdlMockService mockService;
-	
-	
+
+	String testStepName;
+	String securityCheckType;
+	String securityCheckName;
+
 	/**
+	 * always override this method to call
+	 * 
+	 * super.setUp();
+	 * 
+	 * and initialise there three variables testStepName = "SEK to USD Test";
+	 * securityCheckType = GroovySecurityCheck.TYPE; securityCheckName =
+	 * GroovySecurityCheck.TYPE;
+	 * 
 	 * @throws java.lang.Exception
 	 */
 	@Before
@@ -54,8 +64,6 @@ public class TestCaseWithMockService extends TestCase
 				+ "sample-soapui-project.xml" );
 		TestSuite testSuite = project.getTestSuiteByName( "Test Suite" );
 		testCase = ( WsdlTestCase )testSuite.getTestCaseByName( "Test Conversions" );
-
-		
 
 		WsdlInterface iface = ( WsdlInterface )project.getInterfaceAt( 0 );
 
@@ -87,8 +95,7 @@ public class TestCaseWithMockService extends TestCase
 			}
 		}
 	}
-	
-	
+
 	/**
 	 * @throws java.lang.Exception
 	 */
@@ -99,5 +106,36 @@ public class TestCaseWithMockService extends TestCase
 		{
 			mockService.getMockRunner().stop();
 		}
+	}
+
+	/*
+	 * creates SecurityTest
+	 */
+	protected SecurityTest createSecurityTest()
+	{
+		SecurityTest securityTest = new SecurityTest( testCase, config );
+		SecurityCheckConfig securityCheckConfig = addCheckToConfig();
+		addSecurityCheckConfig( securityCheckConfig );
+		return securityTest;
+	}
+
+	/*
+	 * adds specific config which is ANY TYPE in soapui.xsd implement it by
+	 * create specific SecurityTest with constructor
+	 */
+	protected abstract void addSecurityCheckConfig( SecurityCheckConfig securityCheckConfig );
+
+	protected SecurityCheckConfig addCheckToConfig()
+	{
+		testStep = testCase.getTestStepByName( testStepName );
+
+		TestStepSecurityTestConfig testStepSecurityTest = config.addNewTestStepSecurityTest();
+		testStepSecurityTest.setTestStepId( testStep.getId() );
+
+		SecurityCheckConfig securityCheckConfig = testStepSecurityTest.addNewTestStepSecurityCheck();
+		securityCheckConfig.setType( securityCheckType );
+		securityCheckConfig.setName( securityCheckName );
+
+		return securityCheckConfig;
 	}
 }
