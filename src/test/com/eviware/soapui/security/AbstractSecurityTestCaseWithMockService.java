@@ -125,6 +125,9 @@ public abstract class AbstractSecurityTestCaseWithMockService extends TestCase
 	 */
 	protected abstract void addSecurityCheckConfig( SecurityCheckConfig securityCheckConfig );
 
+	/*
+	 * creates basic SecurityCheckConfig
+	 */
 	protected SecurityCheckConfig addCheckToConfig()
 	{
 		testStep = testCase.getTestStepByName( testStepName );
