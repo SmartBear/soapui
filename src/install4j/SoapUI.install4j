@@ -1236,7 +1236,7 @@ return !Util.isMacosInstaller() &amp;&amp; component.isSelected();</condition>
     </applications>
   </installerGui>
   <mediaSets>
-    <win32 name="Windows x32" id="23" mediaFileName="soapUI-x32-${compiler:VERSION_NUMBER}" installDir="eviware/soapUI-${compiler:VERSION_NUMBER}" overridePrincipalLanguage="false" requires64bit="false" jreBitType="32" runPostProcessor="true" postProcessor="${compiler:SIGNTOOL_PATH} sign /v /f ${compiler:CERT_PATH} $EXECUTABLE" failOnPostProcessorError="true" includedJRE="windows-x86-1.6.0_21" manualJREEntry="false" bundleType="1" jreURL="" jreFtpURL="" jreShared="false" directDownload="false" customInstallBaseDir="" createUninstallIcon="true" contentFilesType="1" downloadURL="" runAsAdmin="false">
+    <win32 name="Windows x32" id="23" mediaFileName="soapUI-x32-${compiler:VERSION_NUMBER}" installDir="eviware/soapUI-${compiler:VERSION_NUMBER}" overridePrincipalLanguage="false" requires64bit="false" jreBitType="32" runPostProcessor="true" postProcessor="${compiler:SIGNTOOL_PATH} sign /v /f ${compiler:CERT_PATH} $EXECUTABLE" failOnPostProcessorError="true" includedJRE="windows-x86-1.6.0_23" manualJREEntry="false" bundleType="1" jreURL="" jreFtpURL="" jreShared="false" directDownload="false" customInstallBaseDir="" createUninstallIcon="true" contentFilesType="1" downloadURL="" runAsAdmin="false">
       <excludedLaunchers />
       <excludedComponents />
       <excludedBeans />
@@ -1255,7 +1255,7 @@ return !Util.isMacosInstaller() &amp;&amp; component.isSelected();</condition>
         <variable name="32-BIT-INSTALLER" value="true" />
       </variables>
     </win32>
-    <unixInstaller name="Unix Installer x32" id="196" mediaFileName="soapUI-x32-${compiler:VERSION_NUMBER}" installDir="eviware/soapUI-${compiler:VERSION_NUMBER}" overridePrincipalLanguage="false" requires64bit="false" jreBitType="all" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" includedJRE="linux-x86-1.6.0_21" manualJREEntry="false" bundleType="1" jreURL="" jreFtpURL="" jreShared="false" directDownload="false" customInstallBaseDir="" createUninstallIcon="true" contentFilesType="1" downloadURL="">
+    <unixInstaller name="Unix Installer x32" id="196" mediaFileName="soapUI-x32-${compiler:VERSION_NUMBER}" installDir="eviware/soapUI-${compiler:VERSION_NUMBER}" overridePrincipalLanguage="false" requires64bit="false" jreBitType="all" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" includedJRE="linux-x86-1.6.0_23" manualJREEntry="false" bundleType="1" jreURL="" jreFtpURL="" jreShared="false" directDownload="false" customInstallBaseDir="" createUninstallIcon="true" contentFilesType="1" downloadURL="">
       <excludedLaunchers />
       <excludedComponents />
       <excludedBeans>
