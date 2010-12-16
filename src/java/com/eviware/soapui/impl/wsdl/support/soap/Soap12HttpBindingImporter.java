@@ -45,7 +45,8 @@ public class Soap12HttpBindingImporter extends AbstractSoapBindingImporter
 		List<?> list = binding.getExtensibilityElements();
 		SOAP12Binding soapBinding = WsdlUtils.getExtensiblityElement( list, SOAP12Binding.class );
 		return soapBinding == null ? false : soapBinding.getTransportURI().startsWith( Constants.SOAP_HTTP_TRANSPORT )
-				|| soapBinding.getTransportURI().startsWith( Constants.SOAP12_HTTP_BINDING_NS );
+				|| soapBinding.getTransportURI().startsWith( Constants.SOAP12_HTTP_BINDING_NS )
+				|| soapBinding.getTransportURI().startsWith( Constants.SOAP_MICROSOFT_TCP );
 	}
 
 	@SuppressWarnings( "unchecked" )

@@ -32,4 +32,5 @@ public interface Constants
 	public static final String SOAP12_ENVELOPE_NS = "http://www.w3.org/2003/05/soap-envelope";
 	public static final String WADL10_NS = "http://research.sun.com/wadl/2006/10";
 	public static final String WADL11_NS = "http://wadl.dev.java.net/2009/02";
+	public static final String SOAP_MICROSOFT_TCP = "http://schemas.microsoft.com/wse/2003/06/tcp";
 }
