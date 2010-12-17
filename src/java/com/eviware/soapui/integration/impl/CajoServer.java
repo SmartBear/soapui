@@ -17,12 +17,16 @@ import gnu.cajo.utils.ItemServer;
 import java.io.IOException;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.integration.loadui.IntegrationUtils;
 import com.eviware.soapui.settings.LoadUISettings;
 
 public class CajoServer
 {
+
+	public static final String DEFAULT_SOAPUI_CAJO_PORT = "1198";
+	
 	private String server = null;
-	private String port = "1198";
+	private String port = DEFAULT_SOAPUI_CAJO_PORT;
 	private String itemName = "soapuiIntegration";
 	private static CajoServer instance;
 
@@ -41,13 +45,13 @@ public class CajoServer
 
 	public void start()
 	{
-		Remote.config( server,
-				Integer.valueOf( SoapUI.getSettings().getString( LoadUISettings.SOAPUI_CAJO_PORT, "1198" ) ), null, 0 );
+		String cajoPort = IntegrationUtils.getIntegrationPort( "soapUI", LoadUISettings.SOAPUI_CAJO_PORT,
+				DEFAULT_SOAPUI_CAJO_PORT );
+		Remote.config( server, Integer.valueOf( cajoPort ), null, 0 );
 		try
 		{
 			ItemServer.bind( new TestCaseEditIntegrationImpl(), itemName );
-			SoapUI.log( "The cajo server is running on localhost:"
-					+ SoapUI.getSettings().getString( LoadUISettings.SOAPUI_CAJO_PORT, "1198" ) + "/" + itemName );
+			SoapUI.log( "The cajo server is running on localhost:" + cajoPort + "/" + itemName );
 		}
 		catch( IOException e )
 		{
@@ -55,23 +59,6 @@ public class CajoServer
 		}
 
 		CajoClient.getInstance().testConnection();
-	}
-
-	public void restart()
-	{
-		Remote.shutdown();
-		Remote.config( server,
-				Integer.valueOf( SoapUI.getSettings().getString( LoadUISettings.SOAPUI_CAJO_PORT, "1198" ) ), null, 0 );
-		try
-		{
-			ItemServer.bind( new TestCaseEditIntegrationImpl(), itemName );
-			SoapUI.log( "The cajo server is running on localhost:"
-					+ SoapUI.getSettings().getString( LoadUISettings.SOAPUI_CAJO_PORT, "1198" ) + "/" + itemName );
-		}
-		catch( IOException e )
-		{
-			SoapUI.log( e.getMessage() );
-		}
 	}
 
 	public String getServer()

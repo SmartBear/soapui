@@ -15,13 +15,16 @@ import java.io.IOException;
 import java.rmi.ConnectException;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.actions.LoadUIPrefs;
+import com.eviware.soapui.integration.loadui.IntegrationUtils;
 import com.eviware.soapui.settings.LoadUISettings;
 
 public class CajoClient
 {
+
+	public static final String DEFAULT_LOADUI_CAJO_PORT = "1199";
+
 	private String server = "localhost";
-	private String port;
+	private String port = DEFAULT_LOADUI_CAJO_PORT;
 	private String itemName = "loaduiIntegration";
 
 	private static CajoClient instance;
@@ -31,7 +34,7 @@ public class CajoClient
 		if( instance == null )
 		{
 			instance = new CajoClient();
-			instance.port = SoapUI.getSettings().getString( LoadUIPrefs.LOADUI_CAJO_PORT, "1199" );
+			instance.port = IntegrationUtils.getIntegrationPort( "loadUI", LoadUISettings.LOADUI_CAJO_PORT, DEFAULT_LOADUI_CAJO_PORT );
 			return instance;
 		}
 		else
@@ -108,7 +111,7 @@ public class CajoClient
 			}
 		}
 	}
-	
+
 	public String getConnectionString()
 	{
 		return "//" + server + ":" + port + "/" + itemName;
