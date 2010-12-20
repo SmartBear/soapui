@@ -70,7 +70,8 @@ public class NewRestResourceAction extends NewRestResourceActionBase<RestService
 						"New Child Resource" ) )
 		{
 			// adjust path
-			path = path.substring( p.length() - possibleParent.getFullPath().length() - 1 );
+			if (p.length() > 0 && possibleParent.getFullPath().length() > 0)
+				path = path.substring( p.length() - possibleParent.getFullPath().length() - 1 );
 			resource = possibleParent.addNewChildResource( dialog.getValue( Form.RESOURCENAME ), path );
 		}
 		else
