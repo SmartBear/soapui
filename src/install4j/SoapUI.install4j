@@ -451,7 +451,7 @@ return component.isSelected();</string>
                     <boolean>true</boolean>
                   </void>
                   <void property="infoText">
-                    <string>Please select the target directory for unpacking JxBrowser component. 
+                    <string>Please select the target directory for unpacking the Integrated Browser component. 
 Be sure to have write permissions for this directory. </string>
                   </void>
                   <void property="initialDirectory">
@@ -469,7 +469,7 @@ Be sure to have write permissions for this directory. </string>
                   <void property="validationScript">
                     <object class="com.install4j.api.beans.ScriptProperty">
                       <void property="value">
-                        <string>return true;</string>
+                        <string />
                       </void>
                     </object>
                   </void>
@@ -530,7 +530,7 @@ Be sure to have write permissions for this directory. </string>
                 <initScript />
                 <visibiltyScript />
               </formComponent>
-              <formComponent name="DisableJxBrowser" id="1787" beanClass="com.install4j.runtime.beans.formcomponents.CheckboxComponent" enabled="true" commentSet="false" comment="" insetTop="" insetLeft="" insetBottom="" insetRight="" resetInitOnPrevious="false">
+              <formComponent name="DisableJxBrowser" id="1787" beanClass="com.install4j.runtime.beans.formcomponents.CheckboxComponent" enabled="false" commentSet="false" comment="" insetTop="" insetLeft="" insetBottom="" insetRight="" resetInitOnPrevious="false">
                 <serializedBean>
                   <java class="java.beans.XMLDecoder">
                     <object class="com.install4j.runtime.beans.formcomponents.CheckboxComponent">
