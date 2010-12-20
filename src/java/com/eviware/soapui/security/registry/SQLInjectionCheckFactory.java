@@ -26,7 +26,7 @@ import com.eviware.soapui.security.check.SecurityCheck;
 public class SQLInjectionCheckFactory extends AbstractSecurityCheckFactory {
 	
 	public SQLInjectionCheckFactory() {
-		super(SQLInjectionCheck.TYPE, "SQLInjectionCheckFactory",
+		super(SQLInjectionCheck.TYPE, "SQLInjectionCheck",
 				"Preforms a check for SQL Injection Vulerabilities",
 				"/sql_injection_check_script.gif");
 	}
