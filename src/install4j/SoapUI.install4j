@@ -399,7 +399,7 @@ return !Util.isMacosInstaller() &amp;&amp; component.isSelected();</condition>
             <actions />
             <formComponents />
           </screen>
-          <screen name="" id="2395" beanClass="com.install4j.runtime.beans.screens.CustomizableDirectoryScreen" enabled="true" commentSet="false" comment="" rollbackBarrier="false" backButton="2" finishScreen="false">
+          <screen name="Select Tutorials directory" id="2395" beanClass="com.install4j.runtime.beans.screens.CustomizableDirectoryScreen" enabled="true" commentSet="false" comment="" rollbackBarrier="false" backButton="2" finishScreen="false">
             <serializedBean>
               <java class="java.beans.XMLDecoder">
                 <object class="com.install4j.runtime.beans.screens.CustomizableDirectoryScreen">
@@ -437,6 +437,49 @@ return component.isSelected();</string>
               </java>
             </serializedBean>
             <condition>return context.getBooleanVariable("installTutorials");</condition>
+            <validation />
+            <preActivation />
+            <postActivation />
+            <actions />
+            <formComponents />
+          </screen>
+          <screen name="Select JxBrowser directory" id="2544" beanClass="com.install4j.runtime.beans.screens.CustomizableDirectoryScreen" enabled="true" commentSet="false" comment="" rollbackBarrier="false" backButton="2" finishScreen="false">
+            <serializedBean>
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.screens.CustomizableDirectoryScreen">
+                  <void property="allowNewFolderCreation">
+                    <boolean>true</boolean>
+                  </void>
+                  <void property="infoText">
+                    <string>Please select the target directory for unpacking JxBrowser component. 
+Be sure to have write permissions for this directory. </string>
+                  </void>
+                  <void property="initialDirectory">
+                    <string>${compiler:SOAPUI_HOME}</string>
+                  </void>
+                  <void property="onlyWritable">
+                    <boolean>true</boolean>
+                  </void>
+                  <void property="standardDirectoryName">
+                    <string>.JxBrowser</string>
+                  </void>
+                  <void property="title">
+                    <string>JxBrowser directory location</string>
+                  </void>
+                  <void property="validationScript">
+                    <object class="com.install4j.api.beans.ScriptProperty">
+                      <void property="value">
+                        <string>return true;</string>
+                      </void>
+                    </object>
+                  </void>
+                  <void property="variableName">
+                    <string>jxBrowserInstallLocation</string>
+                  </void>
+                </object>
+              </java>
+            </serializedBean>
+            <condition />
             <validation />
             <preActivation />
             <postActivation />
@@ -640,6 +683,29 @@ else return false;
                 </serializedBean>
                 <condition />
               </action>
+              <action name="Set file separator" id="1477" beanClass="com.install4j.runtime.beans.actions.control.SetVariableAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.control.SetVariableAction">
+                      <void property="script">
+                        <object class="com.install4j.api.beans.ScriptProperty">
+                          <void property="value">
+                            <string>import java.io.File;
+
+    return File.separator;
+
+</string>
+                          </void>
+                        </object>
+                      </void>
+                      <void property="variableName">
+                        <string>FILE_SEPARATOR</string>
+                      </void>
+                    </object>
+                  </java>
+                </serializedBean>
+                <condition />
+              </action>
               <action name="Set access mode for wsi-test-tools" id="1037" beanClass="com.install4j.runtime.beans.actions.files.SetModeAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="3" errorMessage="Access mode for wsi-test-tools scripts couldn't be set">
                 <serializedBean>
                   <java class="java.beans.XMLDecoder">
@@ -822,6 +888,25 @@ return false;
 
 </condition>
               </action>
+              <action name="Add jxbrowser install location" id="2545" beanClass="com.install4j.runtime.beans.actions.misc.AddVmOptionsAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="Error setting jxbrowser install dir">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.misc.AddVmOptionsAction">
+                      <void property="launcherId">
+                        <string>64</string>
+                      </void>
+                      <void property="vmOptions">
+                        <array class="java.lang.String" length="1">
+                          <void index="0">
+                            <string>-Djxbrowser.xulrunner.dir=${installer:jxBrowserInstallLocation}</string>
+                          </void>
+                        </array>
+                      </void>
+                    </object>
+                  </java>
+                </serializedBean>
+                <condition />
+              </action>
               <action name="SetMacLookAndFeel" id="2341" beanClass="com.install4j.runtime.beans.actions.misc.AddVmOptionsAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
                 <serializedBean>
                   <java class="java.beans.XMLDecoder">
@@ -844,29 +929,6 @@ if (Util.isMacOS())
 return true;
 else
 return false;</condition>
-              </action>
-              <action name="Set file separator" id="1477" beanClass="com.install4j.runtime.beans.actions.control.SetVariableAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
-                <serializedBean>
-                  <java class="java.beans.XMLDecoder">
-                    <object class="com.install4j.runtime.beans.actions.control.SetVariableAction">
-                      <void property="script">
-                        <object class="com.install4j.api.beans.ScriptProperty">
-                          <void property="value">
-                            <string>import java.io.File;
-
-    return File.separator;
-
-</string>
-                          </void>
-                        </object>
-                      </void>
-                      <void property="variableName">
-                        <string>FILE_SEPARATOR</string>
-                      </void>
-                    </object>
-                  </java>
-                </serializedBean>
-                <condition />
               </action>
               <action name="" id="1436" beanClass="com.install4j.runtime.beans.actions.text.ModifyTextFileAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
                 <serializedBean>
@@ -1229,7 +1291,7 @@ return installTutorials;</condition>
                 </serializedBean>
                 <condition />
               </action>
-              <action name="" id="2201" beanClass="com.install4j.runtime.beans.actions.files.DeleteFileAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+              <action name="Delete .JxBrowser" id="2615" beanClass="com.install4j.runtime.beans.actions.files.DeleteFileAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
                 <serializedBean>
                   <java class="java.beans.XMLDecoder">
                     <object class="com.install4j.runtime.beans.actions.files.DeleteFileAction">
@@ -1238,7 +1300,7 @@ return installTutorials;</condition>
                       </void>
                       <void property="file">
                         <object class="java.io.File">
-                          <string>${installer:sys.installationDir}${installer:FILE_SEPARATOR}bin</string>
+                          <string>${installer:jxBrowserInstallLocation}</string>
                         </object>
                       </void>
                       <void property="recurse">
@@ -1249,7 +1311,7 @@ return installTutorials;</condition>
                 </serializedBean>
                 <condition />
               </action>
-              <action name="" id="2200" beanClass="com.install4j.runtime.beans.actions.files.DeleteFileAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+              <action name="" id="2201" beanClass="com.install4j.runtime.beans.actions.files.DeleteFileAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
                 <serializedBean>
                   <java class="java.beans.XMLDecoder">
                     <object class="com.install4j.runtime.beans.actions.files.DeleteFileAction">
@@ -1258,7 +1320,7 @@ return installTutorials;</condition>
                       </void>
                       <void property="file">
                         <object class="java.io.File">
-                          <string>${installer:sys.installationDir}${installer:FILE_SEPARATOR}xulrunner*</string>
+                          <string>${installer:sys.installationDir}${installer:FILE_SEPARATOR}bin</string>
                         </object>
                       </void>
                       <void property="recurse">
