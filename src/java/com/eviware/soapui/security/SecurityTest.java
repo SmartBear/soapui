@@ -51,6 +51,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 	public final static String TEARDOWN_SCRIPT_PROPERTY = SecurityTest.class.getName() + "@tearDownScript";
 	// public final static String SECURITY_CHECK_MAP_PROPERTY =
 	// SecurityTest.class.getName() + "@securityCheckMap";
+	public final static String FAIL_ON_CHECKS_ERRORS_PROPERTY = WsdlTestCase.class.getName() + "@failOnChecksErrors";
 	private WsdlTestCase testCase;
 	private SecurityTestLogModel securityTestLog;
 	private SecurityChecksPanel.SecurityCheckListModel listModel;
@@ -455,5 +456,20 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 	{
 		return testRunListeners.toArray( new SecurityTestRunListener[testRunListeners.size()] );
 	}
+	public boolean getFailSecurityTestOnCheckErrors()
+	{
+		return getConfig().getFailSecurityTestOnCheckErrors();
+	}
+	public void setFailSecurityTestOnCheckErrors( boolean failSecurityTestOnErrors )
+	{
+		boolean old = getFailSecurityTestOnCheckErrors();
+		if( old != failSecurityTestOnErrors )
+		{
+			getConfig().setFailSecurityTestOnCheckErrors( failSecurityTestOnErrors );
+			notifyPropertyChanged( FAIL_ON_CHECKS_ERRORS_PROPERTY, old, failSecurityTestOnErrors );
+		}
+	}
+
+
 
 }

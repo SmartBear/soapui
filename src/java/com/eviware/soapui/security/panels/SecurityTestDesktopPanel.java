@@ -39,7 +39,6 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.panels.support.MockTestRunContext;
 import com.eviware.soapui.impl.wsdl.panels.support.MockTestRunner;
-import com.eviware.soapui.impl.wsdl.panels.support.ProgressBarTestCaseAdapter;
 import com.eviware.soapui.impl.wsdl.panels.testcase.actions.SetCredentialsAction;
 import com.eviware.soapui.impl.wsdl.panels.testcase.actions.SetEndpointAction;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.AbstractGroovyEditorModel;
@@ -53,6 +52,7 @@ import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.security.SecurityTestRunnerImpl;
+import com.eviware.soapui.security.actions.SecurityTestOptionsAction;
 import com.eviware.soapui.security.log.JSecurityTestRunLog;
 import com.eviware.soapui.security.support.ProgressBarSecurityTestAdapter;
 import com.eviware.soapui.settings.UISettings;
@@ -93,7 +93,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 	private SecurityTestRunner runner;
 	private JButton setEndpointButton;
 	private JButton setCredentialsButton;
-	// private JButton optionsButton;
+	private JButton optionsButton;
 	private JSecurityTestRunLog securitytestLog;
 	private JToggleButton loopButton;
 	private ProgressBarSecurityTestAdapter progressBarAdapter;
@@ -249,11 +249,9 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 		JToolBar toolbar = UISupport.createToolbar();
 
 		runButton = UISupport.createToolbarButton( new RunSecurityTestAction() );
-		// optionsButton = UISupport.createToolbarButton(
-		// SwingActionDelegate.createDelegate(
-		// TestCaseOptionsAction.SOAPUI_ACTION_ID, getModelItem(), null,
-		// "/options.gif" ) );
-		// optionsButton.setText( null );
+		optionsButton = UISupport.createToolbarButton( SwingActionDelegate.createDelegate(
+				SecurityTestOptionsAction.SOAPUI_ACTION_ID, getModelItem(), null, "/options.gif" ) );
+		optionsButton.setText( null );
 		cancelButton = UISupport.createToolbarButton( new CancelRunSecuritytestAction(), false );
 
 		loopButton = new JToggleButton( UISupport.createImageIcon( "/loop.gif" ) );
@@ -264,7 +262,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 		setEndpointButton = UISupport.createToolbarButton( new SetEndpointAction( getModelItem().getTestCase() ) );
 
 		stateDependantComponents.add( runButton );
-		// stateDependantComponents.add( optionsButton );
+		stateDependantComponents.add( optionsButton );
 		stateDependantComponents.add( cancelButton );
 		stateDependantComponents.add( setCredentialsButton );
 		stateDependantComponents.add( setEndpointButton );
@@ -306,10 +304,8 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 		toolbar.add( setEndpointButton );
 		toolbar.addSeparator();
 		// toolbar.add( createLoadTestButton );
-		toolbar.addSeparator();
 		// toolbar.add( createSecurityTestButton );
-		toolbar.addSeparator();
-		// toolbar.add( optionsButton );
+		toolbar.add( optionsButton );
 		toolbar.addSeparator();
 		// toolbar.add( runWithLoadUIButton );
 		// toolbar.add( convertToLoadUIButton );
@@ -334,9 +330,9 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 		lastRunner = null;
 		SecurityTestRunnerImpl testRunner = new SecurityTestRunnerImpl( securityTest );
 
-//		testRunner.run();
+		// testRunner.run();
 
-		 runner = getModelItem().run( properties, true );
+		runner = getModelItem().run( properties, true );
 	}
 
 	public class RunSecurityTestAction extends AbstractAction

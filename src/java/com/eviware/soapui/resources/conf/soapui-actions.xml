@@ -172,6 +172,7 @@
 	<tns:action id="RenameSecurityTestAction" actionClass="com.eviware.soapui.security.actions.RenameSecurityTestAction"/>
 	<tns:action id="DeleteSecurityTestAction" actionClass="com.eviware.soapui.security.actions.DeleteSecurityTestAction"/>
 	<tns:action id="CloneSecurityTestAction" actionClass="com.eviware.soapui.security.actions.CloneSecurityTestAction"/>
+	<tns:action id="SecurityTestOptionsAction" actionClass="com.eviware.soapui.security.actions.SecurityTestOptionsAction"/>
 
 	<!-- MockService Actions -->
 	<tns:action id="MockServiceOptionsAction" actionClass="com.eviware.soapui.impl.wsdl.actions.mockservice.MockServiceOptionsAction"/>
@@ -652,6 +653,7 @@
  	<tns:actionGroup name="SecurityTest Actions" id="SecurityTestActions" default="ShowDesktopPanelAction">
  	<tns:actionMapping actionId="ShowDesktopPanelAction" name="Show SecurityTest Editor"
  			description="Shows the SecurityTest Editor for this SecurityTest" keyStroke="ENTER"/>
+		<tns:actionMapping actionId="SecurityTestOptionsAction" keyStroke="menu shift O" iconPath="/options.gif"/>
  		<tns:actionMapping actionId="SeperatorAction"/>
 		<tns:actionMapping actionId="CloneSecurityTestAction" keyStroke="F9"/>
 		<tns:actionMapping actionId="RenameSecurityTestAction" keyStroke="F2"/>
