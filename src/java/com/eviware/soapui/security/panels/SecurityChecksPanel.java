@@ -166,46 +166,6 @@ public class SecurityChecksPanel extends JPanel
 		// moveSecurityCheckUpAction = new MoveSecurityCheckUpAction();
 		// moveSecurityCheckDownAction = new MoveSecurityCheckDownAction();
 		addToolbarButtons( checksToolbar );
-		// securityCheckList.addListSelectionListener( new ListSelectionListener()
-		// {
-		//
-		// public void valueChanged( ListSelectionEvent e )
-		// {
-		// int ix = securityCheckList.getSelectedIndex();
-		//
-		// configureSecurityCheckAction.setEnabled( ix >= 0 );
-		// removeSecurityCheckAction.setEnabled( ix >= 0 );
-		// moveSecurityCheckUpAction.setEnabled( ix >= 0 );
-		// moveSecurityCheckDownAction.setEnabled( ix >= 0 );
-		//
-		// if( ix == -1 )
-		// return;
-		// // SecurityCheck securityCheck =
-		// // securityCheckListModel.getSecurityCheckAt( ix );
-		// // configureSecurityCheckAction.setEnabled( securityCheck != null &&
-		// // securityCheck.isConfigurable() );
-		// }
-		// } );
-		return checksToolbar;
-	}
-
-	/******************
-	 * ASSERTION APROACH
-	 * 
-	 *****************/
-	private JComponent buildToolbar()
-	{
-		configureSecurityCheckAction = new ConfigureSecurityCheckAction();
-		removeSecurityCheckAction = new RemoveSecurityCheckAction();
-		// moveSecurityCheckUpAction = new MoveSecurityCheckUpAction();
-		// moveSecurityCheckDownAction = new MoveSecurityCheckDownAction();
-
-		JXToolBar toolbar = UISupport.createToolbar();
-		addToolbarButtons( toolbar );
-
-		toolbar.addGlue();
-		toolbar.add( new ShowOnlineHelpAction( HelpUrls.REQUEST_ASSERTIONS_HELP_URL ) );
-
 		securityCheckList.addListSelectionListener( new ListSelectionListener()
 		{
 
@@ -224,8 +184,7 @@ public class SecurityChecksPanel extends JPanel
 				configureSecurityCheckAction.setEnabled( securityCheck != null && securityCheck.isConfigurable() );
 			}
 		} );
-
-		return toolbar;
+		return checksToolbar;
 	}
 
 	protected void addToolbarButtons( JXToolBar toolbar )
@@ -292,11 +251,6 @@ public class SecurityChecksPanel extends JPanel
 			return this;
 		}
 	}
-
-	/****
-	 * end of assertion l&f
-	 * 
-	 */
 
 	public class SecurityCheckListModel extends DefaultListModel
 	{
