@@ -1908,8 +1908,11 @@
 						type="tns:TestStepSecurityTest" maxOccurs="unbounded"
 						minOccurs="1">
 					</xsd:element>
-					<xsd:element name="properties" type="tns:PropertiesType" maxOccurs="1" minOccurs="0"></xsd:element>
+					<xsd:element name="properties"
+						type="tns:PropertiesType" maxOccurs="1" minOccurs="0">
+					</xsd:element>
 				</xsd:sequence>
+				<xsd:attribute name="failSecurityTestOnCheckErrors" type="xsd:boolean"></xsd:attribute>
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
