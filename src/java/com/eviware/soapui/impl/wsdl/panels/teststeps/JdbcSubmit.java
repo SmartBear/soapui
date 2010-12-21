@@ -49,6 +49,7 @@ public class JdbcSubmit implements Submit, Runnable
 	private long timeTaken;
 	private final JdbcRequest request;
 	private JdbcResponse response;
+	private String rawSql;
 
 	public JdbcSubmit( JdbcRequest request, SubmitContext submitContext, boolean async )
 	{
@@ -258,21 +259,20 @@ public class JdbcSubmit implements Submit, Runnable
 	{
 		JdbcRequestTestStep testStep = request.getTestStep();
 		getDatabaseConnection();
-		String sql;
 		List<TestProperty> props = testStep.getPropertyList();
 		if( testStep.isStoredProcedure() )
 		{
-			sql = PropertyExpander.expandProperties( context, testStep.getQuery() );
+			rawSql = PropertyExpander.expandProperties( context, testStep.getQuery() );
 
-			if( !sql.startsWith( "{call " ) && !sql.endsWith( "}" ) )
-				sql = "{call " + sql + "}";
+			if( !rawSql.startsWith( "{call " ) && !rawSql.endsWith( "}" ) )
+				rawSql = "{call " + rawSql + "}";
 
 		}
 		else
 		{
-			sql = PropertyExpander.expandProperties( context, testStep.getQuery() );
+			rawSql = PropertyExpander.expandProperties( context, testStep.getQuery() );
 		}
-		NamedParameterStatement p = new NamedParameterStatement( connection, sql );
+		NamedParameterStatement p = new NamedParameterStatement( connection, rawSql );
 		for( TestProperty testProperty : props )
 		{
 			String value = PropertyExpander.expandProperties( context, testProperty.getValue() );
@@ -326,7 +326,7 @@ public class JdbcSubmit implements Submit, Runnable
 	{
 		try
 		{
-			response = new JdbcResponse( request, statement );
+			response = new JdbcResponse( request, statement, rawSql );
 			response.setTimestamp( timestamp );
 			response.setTimeTaken( timeTaken );
 		}

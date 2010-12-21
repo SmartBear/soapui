@@ -89,7 +89,7 @@ public class JdbcTestStepResult extends WsdlTestStepResult implements AssertedXP
 
 	public byte[] getRawRequestData()
 	{
-		return hasResponse() ? getResponse().getRequestContent().getBytes() : null;
+		return hasResponse() ? getResponse().getRawRequestData() : null;
 	}
 
 	public byte[] getRawResponseData()

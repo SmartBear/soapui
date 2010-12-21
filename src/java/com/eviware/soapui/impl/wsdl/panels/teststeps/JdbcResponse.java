@@ -27,11 +27,13 @@ public class JdbcResponse extends AbstractResponse<JdbcRequest>
 	private String responseContent;
 	private long timeTaken;
 	private long timestamp;
+	private final String rawSql;
 
-	public JdbcResponse( JdbcRequest request, Statement statement ) throws SQLException, ParserConfigurationException,
+	public JdbcResponse( JdbcRequest request, Statement statement, String rawSql ) throws SQLException, ParserConfigurationException,
 			TransformerConfigurationException, TransformerException
 	{
 		super( request );
+		this.rawSql = rawSql;
 
 		responseContent = XmlUtils.createJdbcXmlResult( statement );
 	}
@@ -44,6 +46,12 @@ public class JdbcResponse extends AbstractResponse<JdbcRequest>
 	public String getContentType()
 	{
 		return "text/xml";
+	}
+
+	@Override
+	public byte[] getRawRequestData()
+	{
+		return rawSql.getBytes();
 	}
 
 	public String getRequestContent()
