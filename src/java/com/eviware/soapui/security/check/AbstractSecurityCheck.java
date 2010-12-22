@@ -40,7 +40,10 @@ import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
+import com.eviware.soapui.impl.wsdl.teststeps.AMFRequestTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.Securable;
@@ -172,6 +175,10 @@ public abstract class AbstractSecurityCheck extends SecurityCheck {
 		AbstractHttpRequest<?> request = null;
 		if (getTestStep() instanceof HttpTestRequestStep) {
 			request = ((HttpTestRequestStep) getTestStep()).getHttpRequest();
+		} else if (getTestStep() instanceof RestTestRequestStep) {
+			request = ((RestTestRequestStep) getTestStep()).getHttpRequest();
+		} else if (getTestStep() instanceof WsdlTestRequestStep) {
+			request = ((WsdlTestRequestStep) getTestStep()).getTestRequest();
 		}
 
 		parameterSelector.add(new JLabel("Select the Parameters that this test will apply to"));
