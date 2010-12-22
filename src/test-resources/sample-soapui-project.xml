@@ -32,7 +32,7 @@
   <con:entry key="Print Report" value="true"/>
   <con:entry key="Username" value=""/>
 </xml-fragment>]]></con:setting>
-  </con:settings>
+  <con:setting id="Port">8081</con:setting><con:setting id="Set endpoint for HTTP Tunnel:">http://google.com</con:setting><con:setting id="HTTP tunnel - KeyStore"/><con:setting id="HTTP tunnel - Password"/><con:setting id="HTTP tunnel - KeyPassword"/><con:setting id="HTTP tunnel - TrustStore"/><con:setting id="HTTP tunnel - TrustStore Password"/><con:setting id="Reuse request state">false</con:setting><con:setting id="HTTP tunnel - Set SSL Client Key Store path"/><con:setting id="Content types to monitor">*/html, */xml, */soap+xml, */json, */x-json, */javascript, */x-amf</con:setting><con:setting id="HTTP tunnel - Set SSL Client Key Store Password"/></con:settings>
   <con:interface name="CurrencyConvertorSoap" bindingName="{http://www.webserviceX.NET/}CurrencyConvertorSoap" definition="http://www.webservicex.net/CurrencyConvertor.asmx?WSDL" soapVersion="1_1" xsi:type="con:WsdlInterface" wsaVersion="NONE" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <con:settings>
       <con:setting id="com.eviware.soapui.impl.wsdl.actions.iface.tools.jbossws.WSToolsWsdl2JavaAction@values"><![CDATA[<xml-fragment xmlns:con="http://eviware.com/soapui/config">
@@ -263,7 +263,7 @@
     </con:settings>
     <con:endpoints>
       <con:endpoint>http://www.webservicex.net/CurrencyConvertor.asmx</con:endpoint>
-    <con:endpoint>http://LPT-NERI:8088/mockCurrencyConvertorSoap</con:endpoint></con:endpoints>
+    <con:endpoint>http://LPT-NERI:8088/mockCurrencyConvertorSoap</con:endpoint><con:endpoint>http://localhost:8081</con:endpoint></con:endpoints>
     <con:operation action="http://www.webserviceX.NET/ConversionRate" name="ConversionRate" bindingOperationName="ConversionRate" isOneWay="false" type="Request-Response">
       <con:settings/>
       <con:call name="SEK to USD" wssPasswordType="None">
@@ -847,7 +847,7 @@
   <con:testSuite name="Test Suite">
     <con:settings/>
     <con:runType>SEQUENTIAL</con:runType>
-    <con:testCase name="Test Conversions" failOnError="false" keepSession="false" searchProperties="true" failTestCaseOnErrors="true" maxResults="0">
+    <con:testCase name="Test Conversions" failOnError="false" keepSession="false" searchProperties="true" failTestCaseOnErrors="true" maxResults="0" id="076cde7f-ab41-42c5-93cf-65d3bac44c46">
       <con:settings>
         <con:setting id="HttpSettings@socket_timeout">60000</con:setting>
         <con:setting id="HttpSettings@include_request_in_time_taken">true</con:setting>
@@ -872,7 +872,7 @@
           <con:request name="SEK to USD Test">
             <con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings>
             <con:encoding>UTF-8</con:encoding>
-            <con:endpoint>http://www.webservicex.net/CurrencyConvertor.asmx</con:endpoint>
+            <con:endpoint>http://localhost:8081</con:endpoint>
             <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:web="http://www.webserviceX.NET/">
    <soapenv:Body>
       <web:ConversionRate>
@@ -951,7 +951,7 @@ declare namespace soap='http://schemas.xmlsoap.org/soap/envelope/';
           </con:request>
         </con:config>
       </con:testStep>
-      <con:testStep type="httprequest" name="HTTP Test Request"><con:settings/><con:config method="GET" xsi:type="con:HttpRequest" name="HTTP Test Request" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>http://www.google.com/search?q=something</con:endpoint><con:request/><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters><con:parameter><con:name>q</con:name><con:value>something</con:value><con:style>QUERY</con:style><con:default>something</con:default></con:parameter></con:parameters></con:config></con:testStep><con:loadTest name="LoadTest 1">
+      <con:testStep type="httprequest" name="HTTP Test Request" id="5648b16e-e8a7-4dc2-b9c2-30f2069220ff"><con:settings/><con:config method="GET" xsi:type="con:HttpRequest" name="HTTP Test Request" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>http://localhost:8081</con:endpoint><con:request/><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters><con:parameter><con:name>q</con:name><con:value>something</con:value><con:style>QUERY</con:style><con:default>something</con:default></con:parameter></con:parameters></con:config></con:testStep><con:loadTest name="LoadTest 1">
         <con:settings><con:setting id="HttpSettings@close-connections">false</con:setting></con:settings>
         <con:threadCount>5</con:threadCount>
         <con:startDelay>0</con:startDelay>
@@ -966,13 +966,13 @@ declare namespace soap='http://schemas.xmlsoap.org/soap/envelope/';
         </con:loadStrategy>
         <con:assertion type="Step Status" name="Step Status"/>
       <con:maxAssertionErrors>100</con:maxAssertionErrors><con:cancelExcessiveThreads>true</con:cancelExcessiveThreads><con:strategyInterval>500</con:strategyInterval><con:reportParameters/></con:loadTest>
-    <con:properties/><con:reportParameters/></con:testCase>
+    <con:properties/><con:reportParameters/><con:securityTest name="SecurityTest 1"><con:settings/><con:testStepSecurityTest><con:testStepId>5648b16e-e8a7-4dc2-b9c2-30f2069220ff</con:testStepId><con:testStepSecurityCheck type="GroovySecurityCheck" name="GroovySecurityCheck"><con:settings/><con:config xsi:type="con:GroovySecurityCheck" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:script/></con:config></con:testStepSecurityCheck><con:testStepSecurityCheck type="ParameterExposureCheck" name="ParameterExposureCheck"><con:settings/><con:config xsi:type="con:ParameterExposureCheck" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:minimumLength>18</con:minimumLength></con:config><con:paramsToCheck>fef</con:paramsToCheck><con:paramsToCheck>223</con:paramsToCheck></con:testStepSecurityCheck><con:testStepSecurityCheck type="SQLInjectionCheck" name="SQLInjectionCheck"><con:settings/><con:config xsi:type="con:SQLInjectionCheck" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/></con:testStepSecurityCheck><con:testStepSecurityCheck type="GroovySecurityCheck" name="GroovySecurityCheck 1"><con:settings/><con:config xsi:type="con:GroovySecurityCheck" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:script/></con:config></con:testStepSecurityCheck><con:testStepSecurityCheck type="GroovySecurityCheck" name="GroovySecurityCheck 2"><con:settings/><con:config xsi:type="con:GroovySecurityCheck" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:script/></con:config></con:testStepSecurityCheck></con:testStepSecurityTest><con:properties/></con:securityTest></con:testCase>
     <con:testCase name="Test XMethods Query" failOnError="true" keepSession="false" failTestCaseOnErrors="true" maxResults="0">
       <con:settings>
         <con:setting id="HttpSettings@socket_timeout">60000</con:setting>
         <con:setting id="HttpSettings@include_request_in_time_taken">true</con:setting>
         <con:setting id="HttpSettings@include_response_in_time_taken">true</con:setting>
-      </con:settings>
+      <con:setting id="IncludeOverview">true</con:setting><con:setting id="IncludeResults">true</con:setting><con:setting id="FlowLayout">false</con:setting><con:setting id="ErrorDetails">true</con:setting><con:setting id="IncludeCoverage">true</con:setting></con:settings>
       <con:testStep type="request" name="Test getAllServiceNames">
         <con:settings/>
         <con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -1299,7 +1299,7 @@ count(//name[text()='CurrencyExchangeService'])</path>
          <web:ToCurrency>?</web:ToCurrency>
       </web:ConversionRate>
    </soapenv:Body>
-</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:properties/></con:testCase><con:properties/><con:reportParameters/></con:testSuite>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:properties/><con:reportParameters/></con:testCase><con:properties/><con:reportParameters/></con:testSuite>
   <con:testSuite name="TestSuite 2">
     <con:settings/>
     <con:runType>SEQUENTIAL</con:runType>
@@ -1311,7 +1311,7 @@ count(//name[text()='CurrencyExchangeService'])</path>
           <script>log.info( "Hello" )</script>
         </con:config>
       </con:testStep>
-    <con:loadTest name="LoadTest 1"><con:settings><con:setting id="HttpSettings@close-connections">false</con:setting></con:settings><con:threadCount>5</con:threadCount><con:startDelay>0</con:startDelay><con:sampleInterval>250</con:sampleInterval><con:calculateTPSOnTimePassed>true</con:calculateTPSOnTimePassed><con:resetStatisticsOnThreadCountChange>true</con:resetStatisticsOnThreadCountChange><con:historyLimit>-1</con:historyLimit><con:testLimit>60</con:testLimit><con:limitType>TIME</con:limitType><con:loadStrategy><con:type>Simple</con:type></con:loadStrategy><con:assertion type="Step Status" name="Step Status"/><con:maxAssertionErrors>100</con:maxAssertionErrors><con:cancelExcessiveThreads>true</con:cancelExcessiveThreads><con:strategyInterval>500</con:strategyInterval></con:loadTest><con:properties/><con:reportParameters/><con:securityTest name="SecurityTest 1"><con:settings/></con:securityTest><con:securityTest name="Sec"><con:settings/></con:securityTest><con:securityTest name="SecurityTest 1"><con:settings/></con:securityTest><con:securityTest name="SecurityTest 1"><con:settings/></con:securityTest><con:securityTest name="Copy of SecuritdweryTest 1"><con:settings/></con:securityTest></con:testCase>
+    <con:loadTest name="LoadTest 1"><con:settings><con:setting id="HttpSettings@close-connections">false</con:setting></con:settings><con:threadCount>5</con:threadCount><con:startDelay>0</con:startDelay><con:sampleInterval>250</con:sampleInterval><con:calculateTPSOnTimePassed>true</con:calculateTPSOnTimePassed><con:resetStatisticsOnThreadCountChange>true</con:resetStatisticsOnThreadCountChange><con:historyLimit>-1</con:historyLimit><con:testLimit>60</con:testLimit><con:limitType>TIME</con:limitType><con:loadStrategy><con:type>Simple</con:type></con:loadStrategy><con:assertion type="Step Status" name="Step Status"/><con:maxAssertionErrors>100</con:maxAssertionErrors><con:cancelExcessiveThreads>true</con:cancelExcessiveThreads><con:strategyInterval>500</con:strategyInterval><con:reportParameters/></con:loadTest><con:properties/><con:reportParameters/><con:securityTest name="SecurityTest 1"><con:settings/><con:properties/></con:securityTest><con:securityTest name="Sec"><con:settings/><con:properties/></con:securityTest><con:securityTest name="SecurityTest 1"><con:settings/><con:properties/></con:securityTest><con:securityTest name="SecurityTest 1"><con:settings/><con:properties/></con:securityTest><con:securityTest name="Copy of SecuritdweryTest 1"><con:settings/><con:properties/></con:securityTest><con:securityTest name="SecurityTest 6"><con:settings/><con:properties/></con:securityTest></con:testCase>
   <con:properties/><con:reportParameters/></con:testSuite>
 <con:mockService port="8080" path="/" host="LPT-NERI" name="MockService 1"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.mock.WsdlMockService@require-soap-action">false</con:setting></con:settings><con:properties/></con:mockService><con:mockService port="8088" path="/mockCurrencyConvertorSoap" host="LPT-NERI" name="CurrencyConvertorSoap MockService"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.mock.WsdlMockService@require-soap-action">false</con:setting></con:settings><con:mockOperation name="ConversionRate" interface="CurrencyConvertorSoap" operation="ConversionRate"><con:settings/><con:dispatchStyle>SEQUENCE</con:dispatchStyle><con:defaultResponse>Response 1</con:defaultResponse><con:response name="Response 1" encoding="UTF-8"><con:settings/><con:responseContent><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:web="http://www.webserviceX.NET/">
    <soapenv:Header/>
@@ -1320,4 +1320,32 @@ count(//name[text()='CurrencyExchangeService'])</path>
          <web:ConversionRateResult>?</web:ConversionRateResult>
       </web:ConversionRateResponse>
    </soapenv:Body>
-</soapenv:Envelope>]]></con:responseContent><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://www.webserviceX.NET/ConversionRate"/></con:response><con:dispatchConfig/></con:mockOperation><con:properties/></con:mockService><con:properties/><con:wssContainer/><con:databaseConnectionContainer/><con:reporting><con:xmlTemplates/><con:parameters/></con:reporting></con:soapui-project>
+</soapenv:Envelope>]]></con:responseContent><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://www.webserviceX.NET/ConversionRate"/></con:response><con:dispatchConfig/></con:mockOperation><con:properties/></con:mockService><con:requirements/><con:properties/><con:wssContainer/><con:databaseConnectionContainer/><con:reporting><con:reportTemplates><con:name>hh</con:name><con:reportType>COMMON</con:reportType><con:reportLevel>MAINREPORT</con:reportLevel><con:data><![CDATA[<jasperReport xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ReportTemplate" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="30" bottomMargin="30" xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+   <property name="ireport.encoding" value="UTF-8"/>
+   <template>"../../styles.jrtx"</template>
+   <!--FIELDS & PARAMS-->
+   <title>
+      <band height="70">
+         <textField>
+            <reportElement x="159" y="13" width="229" height="42"/>
+            <textElement>
+               <font size="26"/>
+            </textElement>
+            <textFieldExpression class="java.lang.String">$F{name} + " Report"</textFieldExpression>
+         </textField>
+      </band>
+   </title>
+   <pageHeader>
+      <band/>
+   </pageHeader>
+   <detail>
+      <band height="122">
+         <!--SUBREPORTS UNDER HERE-->
+         <subreport isUsingCache="true">
+            <reportElement positionType="Float" isPrintRepeatedValues="false" x="0" y="0" width="500" height="30"/>
+            <dataSourceExpression>$P{ProjectCoverage}</dataSourceExpression>
+            <subreportExpression>"subreport:ProjectCoverageChart"</subreportExpression>
+         </subreport>
+      </band>
+   </detail>
+</jasperReport>]]></con:data><con:subreports>ProjectCoverageChart</con:subreports><con:scope>PROJECT</con:scope></con:reportTemplates><con:xmlTemplates/><con:parameters/></con:reporting></con:soapui-project>

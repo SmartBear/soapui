@@ -131,10 +131,9 @@ public abstract class AbstractSecurityCheck extends SecurityCheck {
 
 	protected void buildDialog() {
 		dialog = new JDialog(UISupport.getMainFrame(), getTitle(), true);
-		JPanel fullPanel = new JPanel();
-		fullPanel.setPreferredSize(new Dimension(300, 300));
+		JPanel fullPanel = new JPanel(new BorderLayout());
 		JPanel contentPanel = (JPanel) getComponent();
-		contentPanel.setPreferredSize(new Dimension(300, 200));
+		
 		ButtonBarBuilder builder = new ButtonBarBuilder();
 
 		ShowOnlineHelpAction showOnlineHelpAction = new ShowOnlineHelpAction(
@@ -148,18 +147,27 @@ public abstract class AbstractSecurityCheck extends SecurityCheck {
 		builder.addFixed(new JButton(new CancelAction()));
 
 		builder.setBorder(BorderFactory.createEmptyBorder(1, 5, 5, 5));
-
-		contentPanel.add(builder.getPanel(), BorderLayout.SOUTH);
-
+		
 		JInspectorPanel parameter = JInspectorPanelFactory.build(
 				getParameterSelector(), SwingConstants.BOTTOM);
+		
+		if (contentPanel != null) {
+			fullPanel.setPreferredSize(new Dimension(300, 300));
+			contentPanel.setPreferredSize(new Dimension(300, 200));
+			contentPanel.add(builder.getPanel(), BorderLayout.SOUTH);
+			JSplitPane splitPane = UISupport.createVerticalSplit(new JScrollPane(
+					contentPanel), new JScrollPane(parameter.getComponent()));
 
-		JSplitPane splitPane = UISupport.createVerticalSplit(new JScrollPane(
-				contentPanel), new JScrollPane(parameter.getComponent()));
+			dialog.setContentPane(splitPane);
+		} else {
+			fullPanel.setPreferredSize(new Dimension(300, 150));
+			fullPanel.add(builder.getPanel(), BorderLayout.NORTH);
+			fullPanel.add(parameter.getComponent(), BorderLayout.SOUTH);
+			dialog.setContentPane(fullPanel);
+		}
 
-		fullPanel.add(splitPane, BorderLayout.CENTER);
-
-		dialog.setContentPane(splitPane);
+		
+		
 		dialog.setModal(true);
 		dialog.pack();
 		UISupport.initDialogActions(dialog, showOnlineHelpAction, okButton);
@@ -185,6 +193,7 @@ public abstract class AbstractSecurityCheck extends SecurityCheck {
 		if (request != null) {
 			for (String param : request.getParams().keySet()) {
 				ParamPanel paramPanel = new ParamPanel(param, getParamsToCheck().contains(param));
+				paramPanel.setMaximumSize(new Dimension(700, 30));
 				parameterSelector.add(paramPanel, BorderLayout.WEST);
 			}
 		}

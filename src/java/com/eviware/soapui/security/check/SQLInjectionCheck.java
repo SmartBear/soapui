@@ -123,14 +123,7 @@ public class SQLInjectionCheck extends AbstractSecurityCheck implements Sensitiv
 	@Override
 	public JComponent getComponent()
 	{
-		// if (panel == null) {
-		panel = new JPanel( new BorderLayout() );
-
-		form = new SimpleForm();
-		form.addSpace( 5 );
-
-		panel.add( form.getPanel() );
-		return panel;
+		return null;
 	}
 
 	@Override
