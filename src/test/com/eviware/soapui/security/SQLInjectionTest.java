@@ -42,7 +42,6 @@ public class SQLInjectionTest extends AbstractSecurityTestCaseWithMockService
 
 		List<String> params = new ArrayList<String>();
 		params.add( "q" );
-		sqlCheck.setParamsToUse( params );
 	}
 
 	@Test

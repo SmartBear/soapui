@@ -125,26 +125,6 @@ public class ReflectedXSSCheck extends AbstractSecurityCheck  implements Sensiti
 	}
 
 
-	/**
-	 * Returns the list of parameters that the response will be checked for
-	 * 
-	 * @return A list of parameter objects
-	 */
-	public List<String> getParamsToCheck()
-	{
-		return ( ( ParameterExposureCheckConfig )config.getConfig() ).getParamToCheckList();
-	}
-
-	/**
-	 * A list of parameters that will be checked in the response
-	 * 
-	 * @param params
-	 */
-	public void setParamsToCheck( List<String> params )
-	{
-		( ( ParameterExposureCheckConfig )config.getConfig() ).setParamToCheckArray( params.toArray( new String[0] ) );
-	}
-
 	@Override
 	public boolean acceptsTestStep( TestStep testStep )
 	{

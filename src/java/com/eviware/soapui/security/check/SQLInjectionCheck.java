@@ -12,7 +12,6 @@
 package com.eviware.soapui.security.check;
 
 import java.awt.BorderLayout;
-import java.util.List;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -76,7 +75,7 @@ public class SQLInjectionCheck extends AbstractSecurityCheck implements Sensitiv
 			HttpTestRequestInterface<?> request = ( ( HttpTestRequestStepInterface )testStep ).getTestRequest();
 			String originalResponse = request.getResponse().getContentAsXml();
 
-			for( String param : getParamsToUse() )
+			for( String param : getParamsToCheck() )
 			{
 				Fuzzer sqlFuzzer = Fuzzer.getSQLFuzzer();
 
@@ -115,26 +114,6 @@ public class SQLInjectionCheck extends AbstractSecurityCheck implements Sensitiv
 		}
 	}
 
-	/**
-	 * Returns the list of parameters that the response will be checked for
-	 * 
-	 * @return A list of parameter objects
-	 */
-	public List<String> getParamsToUse()
-	{
-		return ( ( SQLInjectionCheckConfig )config.getConfig() ).getParamsToUseList();
-	}
-
-	/**
-	 * A list of parameters that will be checked in the response
-	 * 
-	 * @param params
-	 */
-	public void setParamsToUse( List<String> params )
-	{
-		( ( SQLInjectionCheckConfig )config.getConfig() ).setParamsToUseArray( params.toArray( new String[0] ) );
-	}
-
 	@Override
 	public boolean acceptsTestStep( TestStep testStep )
 	{
@@ -167,11 +146,4 @@ public class SQLInjectionCheck extends AbstractSecurityCheck implements Sensitiv
 		InformationExposureCheck iec = new InformationExposureCheck( config, null, null );
 		iec.analyze( testStep, context, securityTestLog );
 	}
-
-	@Override
-	public boolean configure()
-	{
-		return false;
-	}
-
 }

@@ -16,7 +16,6 @@ import java.awt.Dimension;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import javax.swing.JComponent;
@@ -169,25 +168,6 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements Htt
 		return ( ( ParameterExposureCheckConfig )config.getConfig() ).getMinimumLength();
 	}
 
-	/**
-	 * Returns the list of parameters that the response will be checked for
-	 * 
-	 * @return A list of parameter objects
-	 */
-	public List<String> getParamsToCheck()
-	{
-		return ( ( ParameterExposureCheckConfig )config.getConfig() ).getParamToCheckList();
-	}
-
-	/**
-	 * A list of parameters that will be checked in the response
-	 * 
-	 * @param params
-	 */
-	public void setParamsToCheck( List<String> params )
-	{
-		( ( ParameterExposureCheckConfig )config.getConfig() ).setParamToCheckArray( params.toArray( new String[0] ) );
-	}
 
 	@Override
 	public boolean acceptsTestStep( TestStep testStep )

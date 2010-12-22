@@ -11,6 +11,8 @@
  */
 package com.eviware.soapui.security.check;
 
+import java.util.List;
+
 import javax.swing.JComponent;
 
 import com.eviware.soapui.config.SecurityCheckConfig;
@@ -29,6 +31,7 @@ import com.eviware.soapui.security.log.SecurityTestLogModel;
 public abstract class SecurityCheck extends AbstractWsdlModelItem<SecurityCheckConfig>
 {
 	private final Securable securable;
+	private TestStep testStep;
 
 	protected SecurityCheck( SecurityCheckConfig config, ModelItem parent, String icon, Securable requestToCheck )
 	{
@@ -120,5 +123,17 @@ public abstract class SecurityCheck extends AbstractWsdlModelItem<SecurityCheckC
 	{
 		return true;
 	}
+	
+	public TestStep getTestStep() {
+		return testStep;
+	}
+	
+	public void setTestStep(TestStep step) {
+		testStep = step;
+	}
+	
+	public abstract List<String> getParamsToCheck();
+	
+	public abstract void setParamsToCheck(List<String> params);
 
 }

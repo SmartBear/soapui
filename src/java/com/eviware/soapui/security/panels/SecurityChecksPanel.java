@@ -299,6 +299,7 @@ public class SecurityChecksPanel extends JPanel
 			for( int c = 0; c < securityTest.getTestStepSecurityChecksCount( testStep.getId() ); c++ )
 			{
 				SecurityCheck securityCheck = securityTest.getTestStepSecurityCheckAt( testStep.getId(), c );
+				securityCheck.setTestStep(testStep);
 				addSecurityCheck( securityCheck );
 			}
 		}
