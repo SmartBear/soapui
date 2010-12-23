@@ -853,7 +853,7 @@
         <con:setting id="HttpSettings@include_request_in_time_taken">true</con:setting>
         <con:setting id="HttpSettings@include_response_in_time_taken">true</con:setting>
       </con:settings>
-      <con:testStep type="properties" name="Properties">
+      <con:testStep type="properties" name="Properties" id="e3285a9c-1a5e-458d-81ca-327d05ae41ca">
         <con:settings/>
         <con:config xsi:type="con:PropertiesStep" saveFirst="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
           <con:properties>
@@ -864,7 +864,7 @@
           </con:properties>
         </con:config>
       </con:testStep>
-      <con:testStep type="request" name="SEK to USD Test">
+      <con:testStep type="request" name="SEK to USD Test" id="a34d2b79-0de1-4f8d-8554-84a66aadf54d">
         <con:settings/>
         <con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
           <con:interface>CurrencyConvertorSoap</con:interface>
@@ -966,7 +966,7 @@ declare namespace soap='http://schemas.xmlsoap.org/soap/envelope/';
         </con:loadStrategy>
         <con:assertion type="Step Status" name="Step Status"/>
       <con:maxAssertionErrors>100</con:maxAssertionErrors><con:cancelExcessiveThreads>true</con:cancelExcessiveThreads><con:strategyInterval>500</con:strategyInterval><con:reportParameters/></con:loadTest>
-    <con:properties/><con:reportParameters/><con:securityTest name="SecurityTest 1"><con:settings/><con:testStepSecurityTest><con:testStepId>5648b16e-e8a7-4dc2-b9c2-30f2069220ff</con:testStepId><con:testStepSecurityCheck type="GroovySecurityCheck" name="GroovySecurityCheck"><con:settings/><con:config xsi:type="con:GroovySecurityCheck" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:script/></con:config></con:testStepSecurityCheck><con:testStepSecurityCheck type="ParameterExposureCheck" name="ParameterExposureCheck"><con:settings/><con:config xsi:type="con:ParameterExposureCheck" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:minimumLength>18</con:minimumLength></con:config><con:paramsToCheck>fef</con:paramsToCheck><con:paramsToCheck>223</con:paramsToCheck></con:testStepSecurityCheck><con:testStepSecurityCheck type="SQLInjectionCheck" name="SQLInjectionCheck"><con:settings/><con:config xsi:type="con:SQLInjectionCheck" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/></con:testStepSecurityCheck><con:testStepSecurityCheck type="GroovySecurityCheck" name="GroovySecurityCheck 1"><con:settings/><con:config xsi:type="con:GroovySecurityCheck" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:script/></con:config></con:testStepSecurityCheck><con:testStepSecurityCheck type="GroovySecurityCheck" name="GroovySecurityCheck 2"><con:settings/><con:config xsi:type="con:GroovySecurityCheck" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:script/></con:config></con:testStepSecurityCheck></con:testStepSecurityTest><con:properties/></con:securityTest></con:testCase>
+    <con:properties/><con:reportParameters/><con:securityTest name="SecurityTest 1" failSecurityTestOnCheckErrors="true"><con:settings/><con:testStepSecurityTest><con:testStepId>5648b16e-e8a7-4dc2-b9c2-30f2069220ff</con:testStepId><con:testStepSecurityCheck type="GroovySecurityCheck" name="GroovySecurityCheck"><con:settings/><con:config xsi:type="con:GroovySecurityCheck" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:script/></con:config></con:testStepSecurityCheck><con:testStepSecurityCheck type="ParameterExposureCheck" name="ParameterExposureCheck"><con:settings/><con:config xsi:type="con:ParameterExposureCheck" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:minimumLength>18</con:minimumLength></con:config><con:paramsToCheck>fef</con:paramsToCheck><con:paramsToCheck>223</con:paramsToCheck></con:testStepSecurityCheck><con:testStepSecurityCheck type="SQLInjectionCheck" name="SQLInjectionCheck"><con:settings/><con:config xsi:type="con:SQLInjectionCheck" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/></con:testStepSecurityCheck><con:testStepSecurityCheck type="GroovySecurityCheck" name="GroovySecurityCheck 1"><con:settings/><con:config xsi:type="con:GroovySecurityCheck" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:script/></con:config></con:testStepSecurityCheck><con:testStepSecurityCheck type="GroovySecurityCheck" name="GroovySecurityCheck 2"><con:settings/><con:config xsi:type="con:GroovySecurityCheck" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:script/></con:config></con:testStepSecurityCheck></con:testStepSecurityTest><con:properties/></con:securityTest></con:testCase>
     <con:testCase name="Test XMethods Query" failOnError="true" keepSession="false" failTestCaseOnErrors="true" maxResults="0">
       <con:settings>
         <con:setting id="HttpSettings@socket_timeout">60000</con:setting>

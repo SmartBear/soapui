@@ -44,6 +44,7 @@ import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
+import com.eviware.soapui.model.testsuite.TestRunner.Status;
 import com.eviware.soapui.security.log.JSecurityTestRunLog;
 import com.eviware.soapui.security.log.SecurityTestLogMessageEntry;
 import com.eviware.soapui.security.log.SecurityTestLogModel;
@@ -141,9 +142,12 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements Htt
 					{
 						securityTestLog.addEntry( new SecurityTestLogMessageEntry( "The parameter " + param.getName()
 								+ " with the value \"" + param.getValue() + "\" is exposed in the response", messageExchange ) );
+						setStatus(Status.FAILED);
 					}
 				}
 			}
+			if (getStatus() != Status.FAILED)
+				setStatus(Status.FINISHED);
 		}
 	}
 

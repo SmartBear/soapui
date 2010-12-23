@@ -29,6 +29,7 @@ import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStepInterface;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.SamplerTestStep;
 import com.eviware.soapui.model.testsuite.TestStep;
+import com.eviware.soapui.model.testsuite.TestRunner.Status;
 import com.eviware.soapui.security.fuzzer.Fuzzer;
 import com.eviware.soapui.security.log.SecurityTestLogMessageEntry;
 import com.eviware.soapui.security.log.SecurityTestLogModel;
@@ -91,6 +92,7 @@ public class SQLInjectionCheck extends AbstractSecurityCheck implements Sensitiv
 						securityTestLog
 								.addEntry( new SecurityTestLogMessageEntry( "Possible SQL Injection Vulnerability Detected",
 										new HttpResponseMessageExchange( lastRequest ) ) );
+						setStatus(Status.FAILED);
 					}
 					analyze( testStep, context, securityTestLog );
 
@@ -111,6 +113,9 @@ public class SQLInjectionCheck extends AbstractSecurityCheck implements Sensitiv
 		{
 			securityTestLog.addEntry( new SecurityTestLogMessageEntry( "SQL Error displayed in response",
 					new HttpResponseMessageExchange( lastRequest ) ) );
+			setStatus(Status.FAILED);
+		} else {
+			setStatus(Status.FINISHED);
 		}
 	}
 

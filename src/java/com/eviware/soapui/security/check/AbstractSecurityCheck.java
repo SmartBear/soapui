@@ -40,6 +40,7 @@ import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestStep;
+import com.eviware.soapui.model.testsuite.TestRunner.Status;
 import com.eviware.soapui.security.Securable;
 import com.eviware.soapui.security.log.SecurityTestLogModel;
 import com.eviware.soapui.support.UISupport;
@@ -62,6 +63,7 @@ public abstract class AbstractSecurityCheck extends SecurityCheck {
 	protected JDialog dialog;
 	private boolean configureResult;
 	private JPanel parameterSelector;
+	protected Status status;
 
 	// private
 	public AbstractSecurityCheck(SecurityCheckConfig config, ModelItem parent,
@@ -95,12 +97,18 @@ public abstract class AbstractSecurityCheck extends SecurityCheck {
 			SecurityTestLogModel securityTestLog);
 
 	@Override
-	public void run(TestStep testStep, WsdlTestRunContext context,
+	public Status run(TestStep testStep, WsdlTestRunContext context,
 			SecurityTestLogModel securityTestLog) {
+		setStatus(Status.INITIALIZED);
 		runStartupScript(testStep);
 		execute(testStep, context, securityTestLog);
 		sensitiveInfoCheck(testStep, context, securityTestLog);
 		runTearDownScript(testStep);
+		return getStatus();
+	}
+
+	protected  Status getStatus() {
+		return status;
 	}
 
 	private void sensitiveInfoCheck(TestStep testStep,
@@ -317,5 +325,9 @@ public abstract class AbstractSecurityCheck extends SecurityCheck {
 
 	public void setParamsToCheck(List<String> params) {
 		config.setParamsToCheckArray(params.toArray(new String[1]));
+	}
+	
+	protected void setStatus(Status s) {
+		status = s; 
 	}
 }

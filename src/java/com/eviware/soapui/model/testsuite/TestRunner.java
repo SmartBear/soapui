@@ -23,7 +23,7 @@ public interface TestRunner
 
 	public enum Status
 	{
-		INITIALIZED, RUNNING, CANCELED, FINISHED, FAILED
+		INITIALIZED, RUNNING, CANCELED, FINISHED, FAILED, WARNING
 	};
 
 	/**

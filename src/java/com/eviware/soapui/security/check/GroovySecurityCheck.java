@@ -66,6 +66,7 @@ public class GroovySecurityCheck extends AbstractSecurityCheck implements HttpSe
 		scriptEngine.setVariable( "testStep", testStep );
 		scriptEngine.setVariable( "log", SoapUI.ensureGroovyLog() );
 		scriptEngine.setVariable( "context", context );
+		scriptEngine.setVariable( "status", status );
 
 		try
 		{

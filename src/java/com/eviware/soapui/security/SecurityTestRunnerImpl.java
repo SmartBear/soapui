@@ -232,7 +232,8 @@ public class SecurityTestRunnerImpl extends WsdlTestCaseRunner implements Securi
 
 		int currentStepIndex = startStep;
 		runContext.setCurrentStep( currentStepIndex );
-
+		boolean testFailed = false;
+		
 		for( ; isRunning() && currentStepIndex < testCase.getTestStepCount(); currentStepIndex++ )
 		{
 			TestStep currentStep = runContext.getCurrentStep();
@@ -259,8 +260,11 @@ public class SecurityTestRunnerImpl extends WsdlTestCaseRunner implements Securi
 
 						if( securityCheck.acceptsTestStep( currentStep ) )
 						{
-							securityCheck.run( cloneForSecurityCheck( ( WsdlTestStep )currentStep ), runContext, securityTest
+							Status result = securityCheck.run( cloneForSecurityCheck( ( WsdlTestStep )currentStep ), runContext, securityTest
 									.getSecurityTestLog() );
+							if (securityTest.getFailSecurityTestOnCheckErrors() && result == Status.FAILED) {
+								fail( "Failing due to failed security check" );
+							}
 						}
 					}
 				}
