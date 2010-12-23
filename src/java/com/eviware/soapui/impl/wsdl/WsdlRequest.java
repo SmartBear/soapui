@@ -48,6 +48,7 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionsResult;
 import com.eviware.soapui.model.support.InterfaceListenerAdapter;
+import com.eviware.soapui.model.testsuite.TestPropertyListener;
 import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
@@ -683,6 +684,12 @@ public class WsdlRequest extends AbstractHttpRequest<WsdlRequestConfig> implemen
 	public RestParamsPropertyHolder getParams() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void addTestPropertyListener(TestPropertyListener listener) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

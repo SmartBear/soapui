@@ -50,6 +50,7 @@ import com.eviware.soapui.model.iface.SubmitListener;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionsResult;
+import com.eviware.soapui.model.testsuite.TestPropertyListener;
 import com.eviware.soapui.settings.CommonSettings;
 import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.StringUtils;
@@ -670,5 +671,7 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 	}
 	
 	public abstract RestParamsPropertyHolder getParams();
+	
+	public abstract void addTestPropertyListener( TestPropertyListener listener );
 
 }

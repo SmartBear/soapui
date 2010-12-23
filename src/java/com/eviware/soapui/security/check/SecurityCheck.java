@@ -133,7 +133,5 @@ public abstract class SecurityCheck extends AbstractWsdlModelItem<SecurityCheckC
 	}
 	
 	public abstract List<String> getParamsToCheck();
-	
-	public abstract void setParamsToCheck(List<String> params);
 
 }

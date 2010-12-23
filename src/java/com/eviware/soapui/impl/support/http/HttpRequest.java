@@ -81,6 +81,7 @@ public class HttpRequest extends AbstractHttpRequest<HttpRequestConfig> implemen
 		return params.renameProperty( name, newName );
 	}
 
+	@Override
 	public void addTestPropertyListener( TestPropertyListener listener )
 	{
 		params.addTestPropertyListener( listener );

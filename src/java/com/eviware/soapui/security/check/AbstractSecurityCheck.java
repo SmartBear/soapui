@@ -20,18 +20,13 @@ import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
-import javax.swing.JTabbedPane;
 import javax.swing.SwingConstants;
 
 import com.eviware.soapui.SoapUI;
@@ -40,7 +35,6 @@ import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
-import com.eviware.soapui.impl.wsdl.teststeps.AMFRequestTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
@@ -48,7 +42,6 @@ import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.Securable;
 import com.eviware.soapui.security.log.SecurityTestLogModel;
-import com.eviware.soapui.security.panels.SecurityChecksPanel;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JInspectorPanel;
 import com.eviware.soapui.support.components.JInspectorPanelFactory;
@@ -175,11 +168,6 @@ public abstract class AbstractSecurityCheck extends SecurityCheck {
 	}
 
 	private JComponent getParameterSelector() {
-		parameterSelector = new JPanel(new BorderLayout());
-		parameterSelector.setPreferredSize(new Dimension(300, 100));
-		parameterSelector.setLayout(new BoxLayout(parameterSelector,
-				BoxLayout.Y_AXIS));
-
 		AbstractHttpRequest<?> request = null;
 		if (getTestStep() instanceof HttpTestRequestStep) {
 			request = ((HttpTestRequestStep) getTestStep()).getHttpRequest();
@@ -188,17 +176,9 @@ public abstract class AbstractSecurityCheck extends SecurityCheck {
 		} else if (getTestStep() instanceof WsdlTestRequestStep) {
 			request = ((WsdlTestRequestStep) getTestStep()).getTestRequest();
 		}
-
-		parameterSelector.add(new JLabel("Select the Parameters that this test will apply to"));
-		if (request != null) {
-			for (String param : request.getParams().keySet()) {
-				ParamPanel paramPanel = new ParamPanel(param, getParamsToCheck().contains(param));
-				paramPanel.setMaximumSize(new Dimension(700, 30));
-				parameterSelector.add(paramPanel, BorderLayout.WEST);
-			}
-		}
-
-		parameterSelector.add(Box.createVerticalGlue());
+		
+		parameterSelector = new SecurityCheckParameterSelector(request, getParamsToCheck());
+		
 		return parameterSelector;
 	}
 
