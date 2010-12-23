@@ -594,5 +594,14 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 	{
 		return runner == null ? lastRunner : runner;
 	}
+	public boolean dependsOn( ModelItem modelItem )
+	{
+		SecurityTest securityTest = getModelItem();
+
+		return modelItem == securityTest || modelItem == securityTest.getTestCase()
+				|| modelItem == securityTest.getTestCase().getTestSuite()
+				|| modelItem == securityTest.getTestCase().getTestSuite().getProject();
+	}
+
 
 }

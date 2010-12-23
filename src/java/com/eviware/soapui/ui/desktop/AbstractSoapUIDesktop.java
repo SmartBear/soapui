@@ -33,6 +33,7 @@ import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.model.workspace.Workspace;
+import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.support.action.swing.ActionList;
 
 /**
@@ -224,6 +225,10 @@ public abstract class AbstractSoapUIDesktop implements SoapUIDesktop
 		public void loadTestRemoved( LoadTest loadTest )
 		{
 			closeDependantPanels( loadTest );
+		}
+		public void securityTestRemoved( SecurityTest securityTest)
+		{
+			closeDependantPanels( securityTest );
 		}
 	}
 
