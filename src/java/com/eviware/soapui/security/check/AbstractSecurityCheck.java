@@ -153,7 +153,7 @@ public abstract class AbstractSecurityCheck extends SecurityCheck {
 				getParameterSelector(), SwingConstants.BOTTOM);
 		
 		if (contentPanel != null) {
-			fullPanel.setPreferredSize(new Dimension(300, 300));
+			fullPanel.setPreferredSize(new Dimension(300, 500));
 			contentPanel.setPreferredSize(new Dimension(300, 200));
 			contentPanel.add(builder.getPanel(), BorderLayout.SOUTH);
 			JSplitPane splitPane = UISupport.createVerticalSplit(new JScrollPane(
@@ -320,7 +320,10 @@ public abstract class AbstractSecurityCheck extends SecurityCheck {
 	}
 
 	public List<String> getParamsToCheck() {
-		return config.getParamsToCheckList();
+		if (config.getParamsToCheckList() == null)
+			return new ArrayList<String>();
+		else
+			return config.getParamsToCheckList();
 	}
 
 	public void setParamsToCheck(List<String> params) {

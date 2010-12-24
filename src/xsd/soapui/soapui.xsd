@@ -1931,18 +1931,21 @@
 					<xsd:element name="assertion"
 						type="tns:TestAssertion" maxOccurs="unbounded" minOccurs="0">
 					</xsd:element>
-					<xsd:element name="paramsToCheck" type="xsd:string" maxOccurs="unbounded" minOccurs="0"></xsd:element>
+					<xsd:element name="paramsToCheck" type="xsd:string"
+						maxOccurs="unbounded" minOccurs="0">
+					</xsd:element>
+					<xsd:element name="executionStrategy" type="xsd:string" maxOccurs="1" minOccurs="1"></xsd:element>
 				</xsd:sequence>
 				<xsd:attribute name="type" type="xsd:string"></xsd:attribute>
-    		</xsd:extension>
-    	</xsd:complexContent>
-    </xsd:complexType>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
 
 
 
 
 
-    <xsd:complexType name="TestStepSecurityTest">
+	<xsd:complexType name="TestStepSecurityTest">
     	<xsd:sequence>
     		<xsd:element name="testStepId" type="xsd:string"></xsd:element>
     		<xsd:element name="testStepSecurityCheck" type="tns:SecurityCheck" maxOccurs="unbounded" minOccurs="1"></xsd:element>
