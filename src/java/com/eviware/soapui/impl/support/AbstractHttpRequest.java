@@ -42,6 +42,7 @@ import com.eviware.soapui.impl.wsdl.support.RequestFileAttachment;
 import com.eviware.soapui.impl.wsdl.support.jms.header.JMSHeaderContainer;
 import com.eviware.soapui.impl.wsdl.support.jms.property.JMSPropertyContainer;
 import com.eviware.soapui.impl.wsdl.teststeps.SettingPathPropertySupport;
+import com.eviware.soapui.impl.wsdl.teststeps.TestRequest;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.model.iface.Submit;

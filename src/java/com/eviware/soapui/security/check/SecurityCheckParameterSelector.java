@@ -32,8 +32,6 @@ public class SecurityCheckParameterSelector extends JPanel implements
 		setPreferredSize(new Dimension(300, 300));
 		setLayout(new BoxLayout(this,
 				BoxLayout.Y_AXIS));
-
-		add(new JLabel("Select the Parameters that this test will apply to"));
 		
 		// create execution strategy panel
 		ButtonGroup executionStrategyGroup = new ButtonGroup();
@@ -49,6 +47,7 @@ public class SecurityCheckParameterSelector extends JPanel implements
 		executionPanel.add( singleButton );
 		executionPanel.setBorder( BorderFactory.createTitledBorder( "Execution Strategy" ) );
 		add(executionPanel);
+		add(new JLabel("Select the Parameters that this test will apply to"));
 
 		if (request != null) {
 			for (String param : request.getParams().keySet()) {

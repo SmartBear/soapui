@@ -62,7 +62,7 @@ public abstract class AbstractSecurityCheck extends SecurityCheck {
 	protected SimpleForm form;
 	protected JDialog dialog;
 	private boolean configureResult;
-	private JPanel parameterSelector;
+	private SecurityCheckParameterSelector parameterSelector;
 	protected Status status;
 
 	// private
@@ -163,7 +163,7 @@ public abstract class AbstractSecurityCheck extends SecurityCheck {
 
 			dialog.setContentPane(splitPane);
 		} else {
-			fullPanel.setPreferredSize(new Dimension(300, 150));
+			fullPanel.setPreferredSize(new Dimension(300, 350));
 			fullPanel.add(builder.getPanel(), BorderLayout.NORTH);
 			fullPanel.add(parameter.getComponent(), BorderLayout.SOUTH);
 			dialog.setContentPane(fullPanel);
@@ -209,6 +209,7 @@ public abstract class AbstractSecurityCheck extends SecurityCheck {
 				}
 			}
 			setParamsToCheck(params);
+			setExecutionStrategy(parameterSelector.getExecutionStrategy());
 			dialog.setVisible(false);
 		}
 	}
@@ -334,5 +335,13 @@ public abstract class AbstractSecurityCheck extends SecurityCheck {
 	
 	protected void setStatus(Status s) {
 		status = s; 
+	}
+	
+	public String getExecutionStrategy() {
+		return config.getExecutionStrategy();
+	}
+	
+	public void setExecutionStrategy(String strategy) {
+		config.setExecutionStrategy(strategy);
 	}
 }

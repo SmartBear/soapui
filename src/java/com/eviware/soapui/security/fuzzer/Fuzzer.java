@@ -48,6 +48,23 @@ public class Fuzzer {
 	}
 	
 	/**
+	 * Gets the TestStep with the appropriate parameters fuzzed with the next fuzz value
+	 * Later we can make this more complex to use various encodings
+	 * 
+	 * @param testStep The TestStep to fuzz
+	 * @param params the List of Parameters to fuzz
+	 * 
+	 */
+	public void  getNextFuzzedTestStep(TestStep testStep, List<String> params) {
+		if (currentIndex < config.getValueList().size()) {
+			HttpTestRequestInterface<?> request = (( HttpTestRequestStepInterface )testStep).getTestRequest();
+			for (String param : params)
+				request.setPropertyValue(param, config.getValueArray(currentIndex));
+			currentIndex++;
+		}
+	}
+	
+	/**
 	 * This creates a  fuzzer designed to test for a SQL injection
 	 * This will be sufficient to test if the vulnerability exists, although
 	 * not its extent, since deep testing that could be dangerous to the database.

@@ -40,60 +40,97 @@ import com.eviware.soapui.support.types.StringToObjectMap;
  * @author soapui team
  */
 
-public class SQLInjectionCheck extends AbstractSecurityCheck implements SensitiveInformationCheckable
-{
+public class SQLInjectionCheck extends AbstractSecurityCheck implements
+		SensitiveInformationCheckable {
 
 	public static final String TYPE = "SQLInjectionCheck";
 	private static final int MINIMUM_STRING_DISTANCE = 50;
 
-	public SQLInjectionCheck( SecurityCheckConfig config, ModelItem parent, String icon )
-	{
-		super( config, parent, icon );
-		if( config == null )
-		{
+	public SQLInjectionCheck(SecurityCheckConfig config, ModelItem parent,
+			String icon) {
+		super(config, parent, icon);
+		if (config == null) {
 			config = SecurityCheckConfig.Factory.newInstance();
-			SQLInjectionCheckConfig pescc = SQLInjectionCheckConfig.Factory.newInstance();
-			config.setConfig( pescc );
+			SQLInjectionCheckConfig pescc = SQLInjectionCheckConfig.Factory
+					.newInstance();
+			config.setConfig(pescc);
 		}
-		if( config.getConfig() == null )
-		{
-			SQLInjectionCheckConfig pescc = SQLInjectionCheckConfig.Factory.newInstance();
-			config.setConfig( pescc );
+		if (config.getConfig() == null) {
+			SQLInjectionCheckConfig pescc = SQLInjectionCheckConfig.Factory
+					.newInstance();
+			config.setConfig(pescc);
 		}
 	}
 
-	protected void execute( TestStep testStep, WsdlTestRunContext context, SecurityTestLogModel securityTestLog )
-	{
-		if( acceptsTestStep( testStep ) )
-		{
-			WsdlTestCaseRunner testCaseRunner = new WsdlTestCaseRunner( ( WsdlTestCase )testStep.getTestCase(),
-					new StringToObjectMap() );
-			testStep.run( testCaseRunner, testCaseRunner.getRunContext() );
+	protected void execute(TestStep testStep, WsdlTestRunContext context,
+			SecurityTestLogModel securityTestLog) {
+		if (acceptsTestStep(testStep)) {
+			WsdlTestCaseRunner testCaseRunner = new WsdlTestCaseRunner(
+					(WsdlTestCase) testStep.getTestCase(),
+					new StringToObjectMap());
+			testStep.run(testCaseRunner, testCaseRunner.getRunContext());
 
-			HttpTestRequestInterface<?> request = ( ( HttpTestRequestStepInterface )testStep ).getTestRequest();
-			String originalResponse = ((AbstractHttpRequest<?>)request).getResponse().getContentAsXml();
+			HttpTestRequestInterface<?> request = ((HttpTestRequestStepInterface) testStep)
+					.getTestRequest();
+			String originalResponse = ((AbstractHttpRequest<?>) request)
+					.getResponse().getContentAsXml();
 
-			for( String param : getParamsToCheck() )
-			{
+			if (getExecutionStrategy().equals(
+					SecurityCheckParameterSelector.SEPARATE_REQUEST_STRATEGY)) {
+				for (String param : getParamsToCheck()) {
+					Fuzzer sqlFuzzer = Fuzzer.getSQLFuzzer();
+
+					while (sqlFuzzer.hasNext()) {
+						sqlFuzzer.getNextFuzzedTestStep(testStep, param);
+						testStep.run(testCaseRunner, testCaseRunner
+								.getRunContext());
+						HttpTestRequestInterface<?> lastRequest = ((HttpTestRequestStepInterface) testStep)
+								.getTestRequest();
+
+						if (StringUtils.getLevenshteinDistance(
+								originalResponse,
+								((AbstractHttpRequest<?>) lastRequest)
+										.getResponse().getContentAsString()) > MINIMUM_STRING_DISTANCE) {
+							securityTestLog
+									.addEntry(new SecurityTestLogMessageEntry(
+											"Possible SQL Injection Vulnerability Detected",
+											new HttpResponseMessageExchange(
+													lastRequest)));
+							setStatus(Status.FAILED);
+						}
+						analyze(testStep, context, securityTestLog);
+
+						// maybe this fuzzer can be implemented to wrap the
+						// security
+						// check not vice versa
+
+					}
+
+				}
+			} else {
 				Fuzzer sqlFuzzer = Fuzzer.getSQLFuzzer();
 
-				while( sqlFuzzer.hasNext() )
-				{
-					sqlFuzzer.getNextFuzzedTestStep( testStep, param );
-					testStep.run( testCaseRunner, testCaseRunner.getRunContext() );
-					HttpTestRequestInterface<?> lastRequest = ( ( HttpTestRequestStepInterface )testStep ).getTestRequest();
+				while (sqlFuzzer.hasNext()) {
+					sqlFuzzer.getNextFuzzedTestStep(testStep, getParamsToCheck());
+					testStep
+							.run(testCaseRunner, testCaseRunner.getRunContext());
+					HttpTestRequestInterface<?> lastRequest = ((HttpTestRequestStepInterface) testStep)
+							.getTestRequest();
 
-					if( StringUtils
-							.getLevenshteinDistance( originalResponse, ((AbstractHttpRequest<?>)lastRequest).getResponse().getContentAsString() ) > MINIMUM_STRING_DISTANCE )
-					{
+					if (StringUtils.getLevenshteinDistance(originalResponse,
+							((AbstractHttpRequest<?>) lastRequest)
+									.getResponse().getContentAsString()) > MINIMUM_STRING_DISTANCE) {
 						securityTestLog
-								.addEntry( new SecurityTestLogMessageEntry( "Possible SQL Injection Vulnerability Detected",
-										new HttpResponseMessageExchange( lastRequest ) ) );
+								.addEntry(new SecurityTestLogMessageEntry(
+										"Possible SQL Injection Vulnerability Detected",
+										new HttpResponseMessageExchange(
+												lastRequest)));
 						setStatus(Status.FAILED);
 					}
-					analyze( testStep, context, securityTestLog );
+					analyze(testStep, context, securityTestLog);
 
-					// maybe this fuzzer can be implemented to wrap the security
+					// maybe this fuzzer can be implemented to wrap the
+					// security
 					// check not vice versa
 
 				}
@@ -102,14 +139,15 @@ public class SQLInjectionCheck extends AbstractSecurityCheck implements Sensitiv
 		}
 	}
 
-	public void analyze( TestStep testStep, WsdlTestRunContext context, SecurityTestLogModel securityTestLog )
-	{
+	public void analyze(TestStep testStep, WsdlTestRunContext context,
+			SecurityTestLogModel securityTestLog) {
 		// TODO: Make this test more extensive
-		HttpTestRequestInterface<?> lastRequest = ( ( HttpTestRequestStepInterface )testStep ).getTestRequest();
-		if( lastRequest.getResponseContentAsString().indexOf( "SQL Error" ) > -1 )
-		{
-			securityTestLog.addEntry( new SecurityTestLogMessageEntry( "SQL Error displayed in response",
-					new HttpResponseMessageExchange( lastRequest ) ) );
+		HttpTestRequestInterface<?> lastRequest = ((HttpTestRequestStepInterface) testStep)
+				.getTestRequest();
+		if (lastRequest.getResponseContentAsString().indexOf("SQL Error") > -1) {
+			securityTestLog.addEntry(new SecurityTestLogMessageEntry(
+					"SQL Error displayed in response",
+					new HttpResponseMessageExchange(lastRequest)));
 			setStatus(Status.FAILED);
 		} else {
 			setStatus(Status.FINISHED);
@@ -117,28 +155,25 @@ public class SQLInjectionCheck extends AbstractSecurityCheck implements Sensitiv
 	}
 
 	@Override
-	public boolean acceptsTestStep( TestStep testStep )
-	{
+	public boolean acceptsTestStep(TestStep testStep) {
 		return testStep instanceof SamplerTestStep;
 	}
 
 	@Override
-	public JComponent getComponent()
-	{
+	public JComponent getComponent() {
 		return null;
 	}
 
 	@Override
-	public String getType()
-	{
+	public String getType() {
 		return TYPE;
 	}
 
 	@Override
-	public void checkForSensitiveInformationExposure( TestStep testStep, WsdlTestRunContext context,
-			SecurityTestLogModel securityTestLog )
-	{
-		InformationExposureCheck iec = new InformationExposureCheck( config, null, null );
-		iec.analyze( testStep, context, securityTestLog );
+	public void checkForSensitiveInformationExposure(TestStep testStep,
+			WsdlTestRunContext context, SecurityTestLogModel securityTestLog) {
+		InformationExposureCheck iec = new InformationExposureCheck(config,
+				null, null);
+		iec.analyze(testStep, context, securityTestLog);
 	}
 }
