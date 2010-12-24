@@ -101,7 +101,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 		AbstractSecurityCheckFactory factory = SecurityCheckRegistry.getInstance().getFactory( securityCheckType );
 		SecurityCheckConfig newSecCheckConfig = factory.createNewSecurityCheck( securityCheckName );
 		SecurityCheck newSecCheck = factory.buildSecurityCheck( newSecCheckConfig );
-		newSecCheck.setTestStep(testStep);
+		newSecCheck.setTestStep( testStep );
 
 		boolean hasChecks = false;
 		List<TestStepSecurityTestConfig> testStepSecurityTestList = getConfig().getTestStepSecurityTestList();
@@ -132,8 +132,6 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 
 	}
 
-
-
 	/**
 	 * Remove securityCheck for the specific TestStep
 	 * 
@@ -146,16 +144,17 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 		List<TestStepSecurityTestConfig> testStepSecurityTestList = getConfig().getTestStepSecurityTestList();
 		if( !testStepSecurityTestList.isEmpty() )
 		{
-			for( TestStepSecurityTestConfig testStepSecurityTest : testStepSecurityTestList )
+			for( int i = 0; i < testStepSecurityTestList.size(); i++ )
 			{
+				TestStepSecurityTestConfig testStepSecurityTest = testStepSecurityTestList.get( i );
 				if( testStepSecurityTest.getTestStepId().equals( testStep.getId() ) )
 				{
 					List<SecurityCheckConfig> securityCheckList = testStepSecurityTest.getTestStepSecurityCheckList();
 					securityCheckList.remove( securityCheck.getConfig() );
 					if( securityCheckList.isEmpty() )
 					{
-						testStepSecurityTestList.remove( testStepSecurityTest );
-						return;
+						// testStepSecurityTestList.remove( testStepSecurityTest );
+						getConfig().removeTestStepSecurityTest( i );
 					}
 					listModel.securityCheckRemoved( securityCheck );
 				}
@@ -457,10 +456,12 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 	{
 		return testRunListeners.toArray( new SecurityTestRunListener[testRunListeners.size()] );
 	}
+
 	public boolean getFailSecurityTestOnCheckErrors()
 	{
 		return getConfig().getFailSecurityTestOnCheckErrors();
 	}
+
 	public void setFailSecurityTestOnCheckErrors( boolean failSecurityTestOnErrors )
 	{
 		boolean old = getFailSecurityTestOnCheckErrors();
@@ -470,7 +471,5 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 			notifyPropertyChanged( FAIL_ON_CHECKS_ERRORS_PROPERTY, old, failSecurityTestOnErrors );
 		}
 	}
-
-
 
 }
