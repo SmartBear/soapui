@@ -63,6 +63,7 @@ import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
+import com.eviware.soapui.security.Securable;
 import com.eviware.soapui.support.resolver.ChangeOperationResolver;
 import com.eviware.soapui.support.resolver.ImportInterfaceResolver;
 import com.eviware.soapui.support.resolver.RemoveTestStepResolver;
@@ -77,7 +78,7 @@ import com.eviware.soapui.support.types.StringToStringsMap;
  */
 
 public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements OperationTestStep,
-		PropertyChangeListener, PropertyExpansionContainer, Assertable, HttpRequestTestStep
+		PropertyChangeListener, PropertyExpansionContainer, Assertable, HttpRequestTestStep, Securable
 {
 	private final static Logger log = Logger.getLogger( WsdlTestRequestStep.class );
 	private RequestStepConfig requestStepConfig;

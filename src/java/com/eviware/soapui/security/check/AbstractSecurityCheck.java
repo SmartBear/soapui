@@ -51,7 +51,8 @@ import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
 import com.jgoodies.forms.builder.ButtonBarBuilder;
 
-public abstract class AbstractSecurityCheck extends SecurityCheck {
+public abstract class AbstractSecurityCheck extends SecurityCheck
+{
 	// configuration of specific request modification
 	protected SecurityCheckConfig config;
 	protected String startupScript;
@@ -66,282 +67,326 @@ public abstract class AbstractSecurityCheck extends SecurityCheck {
 	protected Status status;
 
 	// private
-	public AbstractSecurityCheck(SecurityCheckConfig config, ModelItem parent,
-			String icon, Securable securable) {
-		super(config, parent, icon, securable);
+	public AbstractSecurityCheck( SecurityCheckConfig config, ModelItem parent, String icon, Securable securable )
+	{
+		super( config, parent, icon, securable );
 		this.config = config;
-		if (config.getExecutionStrategy() == null)
-			config.setExecutionStrategy(SecurityCheckParameterSelector.SINGLE_REQUEST_STRATEGY);
-		this.startupScript = config.getSetupScript() != null ? config
-				.getSetupScript().getStringValue() : "";
-		this.tearDownScript = config.getTearDownScript() != null ? config
-				.getTearDownScript().getStringValue() : "";
-		scriptEngine = SoapUIScriptEngineRegistry.create(this);
+		if( config.getExecutionStrategy() == null )
+			config.setExecutionStrategy( SecurityCheckParameterSelector.SINGLE_REQUEST_STRATEGY );
+		this.startupScript = config.getSetupScript() != null ? config.getSetupScript().getStringValue() : "";
+		this.tearDownScript = config.getTearDownScript() != null ? config.getTearDownScript().getStringValue() : "";
+		scriptEngine = SoapUIScriptEngineRegistry.create( this );
 	}
 
 	// TODO check if should exist and what to do with securable
-	public AbstractSecurityCheck(SecurityCheckConfig config, ModelItem parent,
-			String icon) {
-		super(config, parent, icon, null);
+	public AbstractSecurityCheck( SecurityCheckConfig config, ModelItem parent, String icon )
+	{
+		super( config, parent, icon, null );
 		this.config = config;
-		this.startupScript = config.getSetupScript() != null ? config
-				.getSetupScript().getStringValue() : "";
-		this.tearDownScript = config.getTearDownScript() != null ? config
-				.getTearDownScript().getStringValue() : "";
-		scriptEngine = SoapUIScriptEngineRegistry.create(this);
+		this.startupScript = config.getSetupScript() != null ? config.getSetupScript().getStringValue() : "";
+		this.tearDownScript = config.getTearDownScript() != null ? config.getTearDownScript().getStringValue() : "";
+		scriptEngine = SoapUIScriptEngineRegistry.create( this );
 	}
 
-	abstract protected void execute(TestStep testStep,
-			WsdlTestRunContext context, SecurityTestLogModel securityTestLog);
+	abstract protected void execute( TestStep testStep, WsdlTestRunContext context, SecurityTestLogModel securityTestLog );
 
 	@Override
-	abstract public void analyze(TestStep testStep, WsdlTestRunContext context,
-			SecurityTestLogModel securityTestLog);
+	abstract public void analyze( TestStep testStep, WsdlTestRunContext context, SecurityTestLogModel securityTestLog );
 
 	@Override
-	public Status run(TestStep testStep, WsdlTestRunContext context,
-			SecurityTestLogModel securityTestLog) {
-		setStatus(Status.INITIALIZED);
-		runStartupScript(testStep);
-		execute(testStep, context, securityTestLog);
-		sensitiveInfoCheck(testStep, context, securityTestLog);
-		runTearDownScript(testStep);
+	public Status run( TestStep testStep, WsdlTestRunContext context, SecurityTestLogModel securityTestLog )
+	{
+		setStatus( Status.INITIALIZED );
+		runStartupScript( testStep );
+		execute( testStep, context, securityTestLog );
+		sensitiveInfoCheck( testStep, context, securityTestLog );
+		runTearDownScript( testStep );
 		return getStatus();
 	}
 
-	protected  Status getStatus() {
+	protected Status getStatus()
+	{
 		return status;
 	}
 
-	private void sensitiveInfoCheck(TestStep testStep,
-			WsdlTestRunContext context, SecurityTestLogModel securityTestLog) {
-		if (this instanceof SensitiveInformationCheckable) {
-			((SensitiveInformationCheckable) this)
-					.checkForSensitiveInformationExposure(testStep, context,
-							securityTestLog);
+	private void sensitiveInfoCheck( TestStep testStep, WsdlTestRunContext context, SecurityTestLogModel securityTestLog )
+	{
+		if( this instanceof SensitiveInformationCheckable )
+		{
+			( ( SensitiveInformationCheckable )this ).checkForSensitiveInformationExposure( testStep, context,
+					securityTestLog );
 		}
 	}
 
 	@Override
-	public boolean configure() {
-		if (dialog == null) {
+	public boolean configure()
+	{
+		if( dialog == null )
+		{
 			buildDialog();
 		}
 
-		UISupport.showDialog(dialog);
+		UISupport.showDialog( dialog );
 		return configureResult;
 	}
 
-	protected void buildDialog() {
-		dialog = new JDialog(UISupport.getMainFrame(), getTitle(), true);
-		JPanel fullPanel = new JPanel(new BorderLayout());
-		JPanel contentPanel = (JPanel) getComponent();
-		
+	protected void buildDialog()
+	{
+		dialog = new JDialog( UISupport.getMainFrame(), getTitle(), true );
+		JPanel fullPanel = new JPanel( new BorderLayout() );
+		JPanel contentPanel = ( JPanel )getComponent();
+
 		ButtonBarBuilder builder = new ButtonBarBuilder();
 
-		ShowOnlineHelpAction showOnlineHelpAction = new ShowOnlineHelpAction(
-				HelpUrls.XPATHASSERTIONEDITOR_HELP_URL);
-		builder.addFixed(UISupport.createToolbarButton(showOnlineHelpAction));
+		ShowOnlineHelpAction showOnlineHelpAction = new ShowOnlineHelpAction( HelpUrls.XPATHASSERTIONEDITOR_HELP_URL );
+		builder.addFixed( UISupport.createToolbarButton( showOnlineHelpAction ) );
 		builder.addGlue();
 
-		JButton okButton = new JButton(new OkAction());
-		builder.addFixed(okButton);
+		JButton okButton = new JButton( new OkAction() );
+		builder.addFixed( okButton );
 		builder.addRelatedGap();
-		builder.addFixed(new JButton(new CancelAction()));
+		builder.addFixed( new JButton( new CancelAction() ) );
 
-		builder.setBorder(BorderFactory.createEmptyBorder(1, 5, 5, 5));
-		
-		JInspectorPanel parameter = JInspectorPanelFactory.build(
-				getParameterSelector(), SwingConstants.BOTTOM);
-		
-		if (contentPanel != null) {
-			fullPanel.setPreferredSize(new Dimension(300, 500));
-			contentPanel.setPreferredSize(new Dimension(300, 200));
-			contentPanel.add(builder.getPanel(), BorderLayout.SOUTH);
-			JSplitPane splitPane = UISupport.createVerticalSplit(new JScrollPane(
-					contentPanel), new JScrollPane(parameter.getComponent()));
+		builder.setBorder( BorderFactory.createEmptyBorder( 1, 5, 5, 5 ) );
 
-			dialog.setContentPane(splitPane);
-		} else {
-			fullPanel.setPreferredSize(new Dimension(300, 350));
-			fullPanel.add(builder.getPanel(), BorderLayout.NORTH);
-			fullPanel.add(parameter.getComponent(), BorderLayout.SOUTH);
-			dialog.setContentPane(fullPanel);
+		JInspectorPanel parameter = JInspectorPanelFactory.build( getParameterSelector(), SwingConstants.BOTTOM );
+
+		if( contentPanel != null )
+		{
+			fullPanel.setPreferredSize( new Dimension( 300, 500 ) );
+			contentPanel.setPreferredSize( new Dimension( 300, 200 ) );
+			contentPanel.add( builder.getPanel(), BorderLayout.SOUTH );
+			JSplitPane splitPane = UISupport.createVerticalSplit( new JScrollPane( contentPanel ), new JScrollPane(
+					parameter.getComponent() ) );
+
+			dialog.setContentPane( splitPane );
+		}
+		else
+		{
+			fullPanel.setPreferredSize( new Dimension( 300, 350 ) );
+			fullPanel.add( builder.getPanel(), BorderLayout.NORTH );
+			fullPanel.add( parameter.getComponent(), BorderLayout.SOUTH );
+			dialog.setContentPane( fullPanel );
 		}
 
-		
-		
-		dialog.setModal(true);
+		dialog.setModal( true );
 		dialog.pack();
-		UISupport.initDialogActions(dialog, showOnlineHelpAction, okButton);
+		UISupport.initDialogActions( dialog, showOnlineHelpAction, okButton );
 
 	}
 
-	private JComponent getParameterSelector() {
+	private JComponent getParameterSelector()
+	{
 		AbstractHttpRequest<?> request = null;
-		if (getTestStep() instanceof HttpTestRequestStep) {
-			request = ((HttpTestRequestStep) getTestStep()).getHttpRequest();
-		} else if (getTestStep() instanceof RestTestRequestStep) {
-			request = ((RestTestRequestStep) getTestStep()).getHttpRequest();
-		} else if (getTestStep() instanceof WsdlTestRequestStep) {
-			request = ((WsdlTestRequestStep) getTestStep()).getTestRequest();
+		if( getTestStep() instanceof HttpTestRequestStep )
+		{
+			request = ( ( HttpTestRequestStep )getTestStep() ).getHttpRequest();
 		}
-		
-		parameterSelector = new SecurityCheckParameterSelector(request, getParamsToCheck());
-		
+		else if( getTestStep() instanceof RestTestRequestStep )
+		{
+			request = ( ( RestTestRequestStep )getTestStep() ).getHttpRequest();
+		}
+		else if( getTestStep() instanceof WsdlTestRequestStep )
+		{
+			request = ( ( WsdlTestRequestStep )getTestStep() ).getTestRequest();
+		}
+
+		parameterSelector = new SecurityCheckParameterSelector( request, getParamsToCheck() );
+
 		return parameterSelector;
 	}
 
-	public class OkAction extends AbstractAction {
-		public OkAction() {
+	public class OkAction extends AbstractAction
+	{
+		public OkAction()
+		{
 			// TODO save the config
-			super("Save");
+			super( "Save" );
 			configureResult = true;
 		}
 
-		public void actionPerformed(ActionEvent arg0) {
+		public void actionPerformed( ActionEvent arg0 )
+		{
 			List<String> params = new ArrayList<String>();
-			for (Component comp : parameterSelector.getComponents()) {
-				if (comp instanceof ParamPanel) {
-					if (((ParamPanel) comp).isSelected()) {
-						params.add(((ParamPanel) comp).getParamName());
+			for( Component comp : parameterSelector.getComponents() )
+			{
+				if( comp instanceof ParamPanel )
+				{
+					if( ( ( ParamPanel )comp ).isSelected() )
+					{
+						params.add( ( ( ParamPanel )comp ).getParamName() );
 					}
 				}
 			}
-			setParamsToCheck(params);
-			setExecutionStrategy(parameterSelector.getExecutionStrategy());
-			dialog.setVisible(false);
+			setParamsToCheck( params );
+			setExecutionStrategy( parameterSelector.getExecutionStrategy() );
+			dialog.setVisible( false );
 		}
 	}
 
-	public class CancelAction extends AbstractAction {
-		public CancelAction() {
-			super("Cancel");
+	public class CancelAction extends AbstractAction
+	{
+		public CancelAction()
+		{
+			super( "Cancel" );
 			configureResult = false;
 		}
 
-		public void actionPerformed(ActionEvent arg0) {
-			dialog.setVisible(false);
+		public void actionPerformed( ActionEvent arg0 )
+		{
+			dialog.setVisible( false );
 		}
 	}
 
-	private void runTearDownScript(TestStep testStep) {
-		scriptEngine.setScript(tearDownScript);
-		scriptEngine.setVariable("testStep", testStep);
-		scriptEngine.setVariable("log", SoapUI.ensureGroovyLog());
+	private void runTearDownScript( TestStep testStep )
+	{
+		scriptEngine.setScript( tearDownScript );
+		scriptEngine.setVariable( "testStep", testStep );
+		scriptEngine.setVariable( "log", SoapUI.ensureGroovyLog() );
 
-		try {
+		try
+		{
 			scriptEngine.run();
-		} catch (Exception e) {
+		}
+		catch( Exception e )
+		{
 			e.printStackTrace();
-		} finally {
+		}
+		finally
+		{
 			scriptEngine.clearVariables();
 		}
 
 	}
 
-	private void runStartupScript(TestStep testStep) {
-		scriptEngine.setScript(startupScript);
-		scriptEngine.setVariable("testStep", testStep);
-		scriptEngine.setVariable("log", SoapUI.ensureGroovyLog());
+	private void runStartupScript( TestStep testStep )
+	{
+		scriptEngine.setScript( startupScript );
+		scriptEngine.setVariable( "testStep", testStep );
+		scriptEngine.setVariable( "log", SoapUI.ensureGroovyLog() );
 		// scriptEngine.setVariable( "context", context );
 
-		try {
+		try
+		{
 			scriptEngine.run();
-		} catch (Exception e) {
+		}
+		catch( Exception e )
+		{
 			e.printStackTrace();
-		} finally {
+		}
+		finally
+		{
 			scriptEngine.clearVariables();
 		}
 	}
 
 	@Override
-	public SecurityCheckConfig getConfig() {
+	public SecurityCheckConfig getConfig()
+	{
 		return config;
 	}
 
 	@Override
-	public List<? extends ModelItem> getChildren() {
+	public List<? extends ModelItem> getChildren()
+	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String getDescription() {
+	public String getDescription()
+	{
 		return config.getDescription();
 	}
 
 	@Override
-	public ImageIcon getIcon() {
+	public ImageIcon getIcon()
+	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String getId() {
+	public String getId()
+	{
 		return config.getId();
 	}
 
 	@Override
-	public String getName() {
+	public String getName()
+	{
 		return config.getName();
 	}
 
 	@Override
-	public void setName(String arg0) {
-		config.setName(arg0);
+	public void setName( String arg0 )
+	{
+		config.setName( arg0 );
 	}
 
 	@Override
-	public ModelItem getParent() {
+	public ModelItem getParent()
+	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public boolean isDisabled() {
+	public boolean isDisabled()
+	{
 		return disabled;
 	}
 
 	@Override
-	public void setDisabled(boolean disabled) {
+	public void setDisabled( boolean disabled )
+	{
 		this.disabled = disabled;
 
 	}
 
 	@Override
-	public String getTitle() {
+	public String getTitle()
+	{
 		return "";
 	}
 
-	public static boolean isSecurable(TestStep testStep) {
-		if (testStep != null && testStep instanceof HttpTestRequestStep) {
+	public static boolean isSecurable( TestStep testStep )
+	{
+		if( testStep != null && testStep instanceof Securable )
+		{
 			return true;
-		} else {
+		}
+		else
+		{
 			return false;
 		}
 	}
 
-	public List<String> getParamsToCheck() {
-		if (config.getParamsToCheckList() == null)
+	public List<String> getParamsToCheck()
+	{
+		if( config.getParamsToCheckList() == null )
 			return new ArrayList<String>();
 		else
 			return config.getParamsToCheckList();
 	}
 
-	public void setParamsToCheck(List<String> params) {
-		config.setParamsToCheckArray(params.toArray(new String[1]));
+	public void setParamsToCheck( List<String> params )
+	{
+		config.setParamsToCheckArray( params.toArray( new String[1] ) );
 	}
-	
-	protected void setStatus(Status s) {
-		status = s; 
+
+	protected void setStatus( Status s )
+	{
+		status = s;
 	}
-	
-	public String getExecutionStrategy() {
+
+	public String getExecutionStrategy()
+	{
 		return config.getExecutionStrategy();
 	}
-	
-	public void setExecutionStrategy(String strategy) {
-		config.setExecutionStrategy(strategy);
+
+	public void setExecutionStrategy( String strategy )
+	{
+		config.setExecutionStrategy( strategy );
 	}
 }

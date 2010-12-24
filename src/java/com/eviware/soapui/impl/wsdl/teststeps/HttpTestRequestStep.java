@@ -56,10 +56,11 @@ import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepProperty;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
+import com.eviware.soapui.security.Securable;
 import com.eviware.soapui.support.resolver.ResolveContext;
 import com.eviware.soapui.support.types.StringToStringsMap;
 
-public class HttpTestRequestStep extends WsdlTestStepWithProperties implements HttpTestRequestStepInterface
+public class HttpTestRequestStep extends WsdlTestStepWithProperties implements HttpTestRequestStepInterface, Securable
 {
 	@SuppressWarnings( "unused" )
 	private final static Logger log = Logger.getLogger( HttpTestRequestStep.class );
