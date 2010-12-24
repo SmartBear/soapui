@@ -16,6 +16,7 @@ import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.security.SecurityTestRunner;
+import com.eviware.soapui.security.check.SecurityCheck;
 
 /**
  * Adapter for TestRunListener implementations
@@ -23,25 +24,37 @@ import com.eviware.soapui.security.SecurityTestRunner;
  * @author Ole.Matzura
  */
 
-public class SecurityTestRunListenerAdapter implements SecurityTestRunListener {
+public class SecurityTestRunListenerAdapter implements SecurityTestRunListener
+{
 
-	public void beforeRun(SecurityTestRunner testRunner,
-			TestCaseRunContext runContext) {
+	public void beforeRun( SecurityTestRunner testRunner, TestCaseRunContext runContext )
+	{
 	}
 
-	public void beforeStep(SecurityTestRunner testRunner,
-			TestCaseRunContext runContext) {
+	public void beforeStep( SecurityTestRunner testRunner, TestCaseRunContext runContext )
+	{
 	}
 
-	public void afterStep(SecurityTestRunner testRunner,
-			TestCaseRunContext runContext, TestStepResult result) {
+	public void afterStep( SecurityTestRunner testRunner, TestCaseRunContext runContext, TestStepResult result )
+	{
 	}
 
-	public void afterRun(SecurityTestRunner testRunner,
-			TestCaseRunContext runContext) {
+	public void afterRun( SecurityTestRunner testRunner, TestCaseRunContext runContext )
+	{
 	}
 
-	public void beforeStep(SecurityTestRunner testRunner,
-			TestCaseRunContext runContext, TestStep testStep) {
+	public void beforeStep( SecurityTestRunner testRunner, TestCaseRunContext runContext, TestStep testStep )
+	{
 	}
+
+	public void beforeSecurityCheck( SecurityTestRunner testRunner, TestCaseRunContext runContext, TestStep testStep,
+			SecurityCheck securityCheck )
+	{
+	}
+
+	public void afterSecurityCheck( SecurityTestRunner testRunner, TestCaseRunContext runContext,
+			SecurityCheck securityCheck )
+	{
+	}
+
 }

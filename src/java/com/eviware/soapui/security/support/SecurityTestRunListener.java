@@ -13,10 +13,10 @@
 package com.eviware.soapui.security.support;
 
 import com.eviware.soapui.model.testsuite.TestCaseRunContext;
-import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.security.SecurityTestRunner;
+import com.eviware.soapui.security.check.SecurityCheck;
 
 /**
  * Listener for TestRun-related events, schedule events will only be triggered
@@ -32,6 +32,12 @@ public interface SecurityTestRunListener
 	public void afterRun( SecurityTestRunner testRunner, TestCaseRunContext runContext );
 
 	public void beforeStep( SecurityTestRunner testRunner, TestCaseRunContext runContext, TestStep testStep );
-	
+
 	public void afterStep( SecurityTestRunner testRunner, TestCaseRunContext runContext, TestStepResult result );
+
+	public void beforeSecurityCheck( SecurityTestRunner testRunner, TestCaseRunContext runContext, TestStep testStep,
+			SecurityCheck securityCheck );
+
+	public void afterSecurityCheck( SecurityTestRunner testRunner, TestCaseRunContext runContext,
+			SecurityCheck securityCheck );
 }

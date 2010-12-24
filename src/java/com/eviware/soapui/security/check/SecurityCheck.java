@@ -22,6 +22,7 @@ import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestRunner.Status;
 import com.eviware.soapui.security.Securable;
+import com.eviware.soapui.security.log.SecurityTestLogMessageEntry;
 import com.eviware.soapui.security.log.SecurityTestLogModel;
 
 /**
@@ -124,16 +125,25 @@ public abstract class SecurityCheck extends AbstractWsdlModelItem<SecurityCheckC
 	{
 		return true;
 	}
-	
-	public TestStep getTestStep() {
+
+	public TestStep getTestStep()
+	{
 		return testStep;
 	}
-	
-	public void setTestStep(TestStep step) {
+
+	public void setTestStep( TestStep step )
+	{
 		testStep = step;
 	}
-	
-	
+
 	public abstract List<String> getParamsToCheck();
+
+	/**
+	 * List of log entries from specific check this should reflect success of the
+	 * check to be used in progress bar of specific test step
+	 * 
+	 * @return
+	 */
+	public abstract List<SecurityTestLogMessageEntry> getSecurityTestLogEntries();
 
 }

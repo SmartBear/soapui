@@ -42,6 +42,7 @@ import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestRunner.Status;
 import com.eviware.soapui.security.Securable;
+import com.eviware.soapui.security.log.SecurityTestLogMessageEntry;
 import com.eviware.soapui.security.log.SecurityTestLogModel;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JInspectorPanel;
@@ -384,4 +385,10 @@ public abstract class AbstractSecurityCheck extends SecurityCheck
 	{
 		config.setExecutionStrategy( strategy );
 	}
+	
+	//TODO implement properly in subclasses
+	public List<SecurityTestLogMessageEntry> getSecurityTestLogEntries() {
+		return new ArrayList<SecurityTestLogMessageEntry>();
+	}
+
 }

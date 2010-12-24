@@ -52,6 +52,7 @@ import com.eviware.soapui.model.testsuite.TestSuiteListener;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.security.check.SecurityCheck;
+import com.eviware.soapui.security.support.ProgressBarSecurityTestAdapter;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.ActionListBuilder;
@@ -211,7 +212,7 @@ public class JSecurityTestTestStepList extends JPanel
 		private final WsdlTestStep testStep;
 		private JProgressBar progressBar;
 		private JLabel label;
-		private ProgressBarTestCaseAdapter progressBarAdapter;
+		private ProgressBarSecurityTestAdapter progressBarAdapter;
 		private TestCasePropertyChangeListener testCasePropertyChangeListener;
 		private AutoscrollSupport autoscrollSupport;
 
@@ -327,8 +328,7 @@ public class JSecurityTestTestStepList extends JPanel
 			super.addNotify();
 			testStep.addPropertyChangeListener( testCasePropertyChangeListener );
 			// TODO check
-			// progressBarAdapter = new ProgressBarTestCaseAdapter( progressBar,
-			// testStep );
+			progressBarAdapter = new ProgressBarSecurityTestAdapter( progressBar, securityTest );
 		}
 
 		public void removeNotify()

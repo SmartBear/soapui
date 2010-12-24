@@ -92,7 +92,7 @@ public class JSecurityTestRunLog extends JPanel
 		if( logListModel == null )
 			logListModel = new SecurityTestLogModel();
 		
-		logListModel = securityTest.getSecurityTestLog();
+//		logListModel = securityTest.getSecurityTestLog();
 		logListModel.setMaxSize( ( int )settings.getLong( OptionsForm.class.getName() + "@max_rows", 1000 ) );
 
 		testLogList = new JList( logListModel );
