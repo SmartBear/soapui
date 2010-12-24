@@ -99,6 +99,8 @@ public class JSecurityTestTestStepList extends JPanel
 				.createVerticalSplit( new JScrollPane( testStepListPanel ), new JScrollPane( secCheckPanel ) );
 		splitPane.setPreferredSize( new Dimension( 600, 400 ) );
 		splitPane.setDividerLocation( 0.5 );
+		splitPane.setResizeWeight( 0.6 );
+
 		add( splitPane, BorderLayout.CENTER );
 		securityTest.getTestCase().getTestSuite().addTestSuiteListener( testSuiteListener );
 
