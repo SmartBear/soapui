@@ -680,16 +680,17 @@ public class WsdlRequest extends AbstractHttpRequest<WsdlRequestConfig> implemen
 		return getOperation().getAction();
 	}
 
-	@Override
-	public RestParamsPropertyHolder getParams() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
 	public void addTestPropertyListener(TestPropertyListener listener) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public RestParamsPropertyHolder getParams() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

@@ -26,7 +26,7 @@ public class SecurityCheckParameterSelector extends JPanel implements
 	private JRadioButton separateButton;
 	private JRadioButton singleButton;
 	
-	public SecurityCheckParameterSelector(AbstractHttpRequest<?> request, List<String> paramsToCheck) {
+	public SecurityCheckParameterSelector(AbstractHttpRequest<?> request, List<String> paramsToCheck, String strategy) {
 		super(new BorderLayout());
 		request.addTestPropertyListener(this);
 		setPreferredSize(new Dimension(300, 300));
@@ -35,9 +35,9 @@ public class SecurityCheckParameterSelector extends JPanel implements
 		
 		// create execution strategy panel
 		ButtonGroup executionStrategyGroup = new ButtonGroup();
-		separateButton = new JRadioButton( SEPARATE_REQUEST_STRATEGY, true );
+		separateButton = new JRadioButton( SEPARATE_REQUEST_STRATEGY, strategy.equals(SEPARATE_REQUEST_STRATEGY) );
 		separateButton.setBorder( BorderFactory.createEmptyBorder( 3, 3, 3, 3 ) );
-		singleButton = new JRadioButton( SINGLE_REQUEST_STRATEGY );
+		singleButton = new JRadioButton( SINGLE_REQUEST_STRATEGY, strategy.equals(SINGLE_REQUEST_STRATEGY) );
 		singleButton.setBorder( BorderFactory.createEmptyBorder( 3, 3, 3, 3 ) );
 		executionStrategyGroup.add( separateButton );
 		executionStrategyGroup.add( singleButton );
@@ -62,9 +62,9 @@ public class SecurityCheckParameterSelector extends JPanel implements
 	
 	public String getExecutionStrategy() {
 		if (singleButton.isSelected()) {
-			return SEPARATE_REQUEST_STRATEGY;
-		} else {
 			return SINGLE_REQUEST_STRATEGY;
+		} else {
+			return SEPARATE_REQUEST_STRATEGY;
 		}
 	}
 

@@ -71,8 +71,8 @@ public abstract class AbstractSecurityCheck extends SecurityCheck
 	{
 		super( config, parent, icon, securable );
 		this.config = config;
-		if( config.getExecutionStrategy() == null )
-			config.setExecutionStrategy( SecurityCheckParameterSelector.SINGLE_REQUEST_STRATEGY );
+	//	if( config.getExecutionStrategy() == null )
+		//	config.setExecutionStrategy( SecurityCheckParameterSelector.SINGLE_REQUEST_STRATEGY );
 		this.startupScript = config.getSetupScript() != null ? config.getSetupScript().getStringValue() : "";
 		this.tearDownScript = config.getTearDownScript() != null ? config.getTearDownScript().getStringValue() : "";
 		scriptEngine = SoapUIScriptEngineRegistry.create( this );
@@ -178,20 +178,15 @@ public abstract class AbstractSecurityCheck extends SecurityCheck
 	private JComponent getParameterSelector()
 	{
 		AbstractHttpRequest<?> request = null;
-		if( getTestStep() instanceof HttpTestRequestStep )
-		{
-			request = ( ( HttpTestRequestStep )getTestStep() ).getHttpRequest();
-		}
-		else if( getTestStep() instanceof RestTestRequestStep )
-		{
-			request = ( ( RestTestRequestStep )getTestStep() ).getHttpRequest();
-		}
-		else if( getTestStep() instanceof WsdlTestRequestStep )
-		{
-			request = ( ( WsdlTestRequestStep )getTestStep() ).getTestRequest();
+		if (getTestStep() instanceof HttpTestRequestStep) {
+			request = ((HttpTestRequestStep) getTestStep()).getHttpRequest();
+		} else if (getTestStep() instanceof RestTestRequestStep) {
+			request = ((RestTestRequestStep) getTestStep()).getHttpRequest();
+		} else if (getTestStep() instanceof WsdlTestRequestStep) {
+			request = ((WsdlTestRequestStep) getTestStep()).getHttpRequest();
 		}
 
-		parameterSelector = new SecurityCheckParameterSelector( request, getParamsToCheck() );
+		parameterSelector = new SecurityCheckParameterSelector( request, getParamsToCheck(), getExecutionStrategy() );
 
 		return parameterSelector;
 	}
