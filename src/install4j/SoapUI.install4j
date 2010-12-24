@@ -443,7 +443,7 @@ return component.isSelected();</string>
             <actions />
             <formComponents />
           </screen>
-          <screen name="Select JxBrowser directory" id="2544" beanClass="com.install4j.runtime.beans.screens.CustomizableDirectoryScreen" enabled="true" commentSet="false" comment="" rollbackBarrier="false" backButton="2" finishScreen="false">
+          <screen name="Select JxBrowser directory" id="2544" beanClass="com.install4j.runtime.beans.screens.CustomizableDirectoryScreen" enabled="false" commentSet="false" comment="" rollbackBarrier="false" backButton="2" finishScreen="false">
             <serializedBean>
               <java class="java.beans.XMLDecoder">
                 <object class="com.install4j.runtime.beans.screens.CustomizableDirectoryScreen">
@@ -863,7 +863,7 @@ else return false;
                 </serializedBean>
                 <condition />
               </action>
-              <action name="Add disable jxbrowser" id="1788" beanClass="com.install4j.runtime.beans.actions.misc.AddVmOptionsAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="Disabling jxbrowser failed, you can disable it manually after the installation">
+              <action name="Add disable jxbrowser" id="1788" beanClass="com.install4j.runtime.beans.actions.misc.AddVmOptionsAction" enabled="false" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="Disabling jxbrowser failed, you can disable it manually after the installation">
                 <serializedBean>
                   <java class="java.beans.XMLDecoder">
                     <object class="com.install4j.runtime.beans.actions.misc.AddVmOptionsAction">
@@ -898,7 +898,7 @@ return false;
                       <void property="vmOptions">
                         <array class="java.lang.String" length="1">
                           <void index="0">
-                            <string>-Djxbrowser.xulrunner.dir=${installer:jxBrowserInstallLocation}</string>
+                            <string>-Djxbrowser.xulrunner.dir=${compiler:SOAPUI_HOME}${installer:FILE_SEPARATOR}.JxBrowser</string>
                           </void>
                         </array>
                       </void>
