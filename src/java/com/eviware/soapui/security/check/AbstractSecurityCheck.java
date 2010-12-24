@@ -70,6 +70,8 @@ public abstract class AbstractSecurityCheck extends SecurityCheck {
 			String icon, Securable securable) {
 		super(config, parent, icon, securable);
 		this.config = config;
+		if (config.getExecutionStrategy() == null)
+			config.setExecutionStrategy(SecurityCheckParameterSelector.SINGLE_REQUEST_STRATEGY);
 		this.startupScript = config.getSetupScript() != null ? config
 				.getSetupScript().getStringValue() : "";
 		this.tearDownScript = config.getTearDownScript() != null ? config

@@ -101,6 +101,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 		AbstractSecurityCheckFactory factory = SecurityCheckRegistry.getInstance().getFactory( securityCheckType );
 		SecurityCheckConfig newSecCheckConfig = factory.createNewSecurityCheck( securityCheckName );
 		SecurityCheck newSecCheck = factory.buildSecurityCheck( newSecCheckConfig );
+		newSecCheck.setTestStep(testStep);
 
 		boolean hasChecks = false;
 		List<TestStepSecurityTestConfig> testStepSecurityTestList = getConfig().getTestStepSecurityTestList();
