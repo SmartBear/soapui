@@ -11,15 +11,13 @@
  */
 package com.eviware.soapui.security.check;
 
-import java.awt.BorderLayout;
-
 import javax.swing.JComponent;
-import javax.swing.JPanel;
 
 import org.apache.commons.lang.StringUtils;
 
 import com.eviware.soapui.config.SQLInjectionCheckConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
+import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCaseRunner;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
@@ -33,7 +31,6 @@ import com.eviware.soapui.model.testsuite.TestRunner.Status;
 import com.eviware.soapui.security.fuzzer.Fuzzer;
 import com.eviware.soapui.security.log.SecurityTestLogMessageEntry;
 import com.eviware.soapui.security.log.SecurityTestLogModel;
-import com.eviware.soapui.support.components.SimpleForm;
 import com.eviware.soapui.support.types.StringToObjectMap;
 
 /**
@@ -74,7 +71,7 @@ public class SQLInjectionCheck extends AbstractSecurityCheck implements Sensitiv
 			testStep.run( testCaseRunner, testCaseRunner.getRunContext() );
 
 			HttpTestRequestInterface<?> request = ( ( HttpTestRequestStepInterface )testStep ).getTestRequest();
-			String originalResponse = request.getResponse().getContentAsXml();
+			String originalResponse = ((AbstractHttpRequest<?>)request).getResponse().getContentAsXml();
 
 			for( String param : getParamsToCheck() )
 			{
@@ -87,7 +84,7 @@ public class SQLInjectionCheck extends AbstractSecurityCheck implements Sensitiv
 					HttpTestRequestInterface<?> lastRequest = ( ( HttpTestRequestStepInterface )testStep ).getTestRequest();
 
 					if( StringUtils
-							.getLevenshteinDistance( originalResponse, lastRequest.getResponse().getContentAsString() ) > MINIMUM_STRING_DISTANCE )
+							.getLevenshteinDistance( originalResponse, ((AbstractHttpRequest<?>)lastRequest).getResponse().getContentAsString() ) > MINIMUM_STRING_DISTANCE )
 					{
 						securityTestLog
 								.addEntry( new SecurityTestLogMessageEntry( "Possible SQL Injection Vulnerability Detected",
