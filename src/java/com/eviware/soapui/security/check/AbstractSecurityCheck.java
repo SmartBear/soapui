@@ -76,6 +76,8 @@ public abstract class AbstractSecurityCheck extends SecurityCheck
 		//	config.setExecutionStrategy( SecurityCheckParameterSelector.SINGLE_REQUEST_STRATEGY );
 		this.startupScript = config.getSetupScript() != null ? config.getSetupScript().getStringValue() : "";
 		this.tearDownScript = config.getTearDownScript() != null ? config.getTearDownScript().getStringValue() : "";
+		if (config.getExecutionStrategy() == null) 
+			config.setExecutionStrategy(SecurityCheckParameterSelector.SEPARATE_REQUEST_STRATEGY);
 		scriptEngine = SoapUIScriptEngineRegistry.create( this );
 	}
 
@@ -87,6 +89,8 @@ public abstract class AbstractSecurityCheck extends SecurityCheck
 		this.startupScript = config.getSetupScript() != null ? config.getSetupScript().getStringValue() : "";
 		this.tearDownScript = config.getTearDownScript() != null ? config.getTearDownScript().getStringValue() : "";
 		scriptEngine = SoapUIScriptEngineRegistry.create( this );
+		if (config.getExecutionStrategy() == null) 
+			config.setExecutionStrategy(SecurityCheckParameterSelector.SEPARATE_REQUEST_STRATEGY);
 	}
 
 	abstract protected void execute( TestStep testStep, WsdlTestRunContext context, SecurityTestLogModel securityTestLog );
@@ -186,7 +190,7 @@ public abstract class AbstractSecurityCheck extends SecurityCheck
 		} else if (getTestStep() instanceof WsdlTestRequestStep) {
 			request = ((WsdlTestRequestStep) getTestStep()).getHttpRequest();
 		}
-
+		
 		parameterSelector = new SecurityCheckParameterSelector( request, getParamsToCheck(), getExecutionStrategy() );
 
 		return parameterSelector;
