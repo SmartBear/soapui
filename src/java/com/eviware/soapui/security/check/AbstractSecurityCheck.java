@@ -183,15 +183,17 @@ public abstract class AbstractSecurityCheck extends SecurityCheck
 	private JComponent getParameterSelector()
 	{
 		AbstractHttpRequest<?> request = null;
+		boolean soapRequest = false;
 		if (getTestStep() instanceof HttpTestRequestStep) {
 			request = ((HttpTestRequestStep) getTestStep()).getHttpRequest();
 		} else if (getTestStep() instanceof RestTestRequestStep) {
 			request = ((RestTestRequestStep) getTestStep()).getHttpRequest();
 		} else if (getTestStep() instanceof WsdlTestRequestStep) {
 			request = ((WsdlTestRequestStep) getTestStep()).getHttpRequest();
+			soapRequest = true;
 		}
 		
-		parameterSelector = new SecurityCheckParameterSelector( request, getParamsToCheck(), getExecutionStrategy() );
+		parameterSelector = new SecurityCheckParameterSelector( request, getParamsToCheck(), getExecutionStrategy(), soapRequest );
 
 		return parameterSelector;
 	}

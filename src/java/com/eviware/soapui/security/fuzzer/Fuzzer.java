@@ -3,9 +3,12 @@ package com.eviware.soapui.security.fuzzer;
 import java.util.List;
 
 import com.eviware.soapui.config.FuzzerConfig;
+import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestInterface;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStepInterface;
+import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.testsuite.TestStep;
+import com.eviware.soapui.support.xml.XmlUtils;
 
 /**
  * A simple Fuzzer implementation. This will also provide different fuzzer instances
@@ -41,8 +44,15 @@ public class Fuzzer {
 	 */
 	public void  getNextFuzzedTestStep(TestStep testStep, String param) {
 		if (currentIndex < config.getValueList().size()) {
-			HttpTestRequestInterface<?> request = (( HttpTestRequestStepInterface )testStep).getTestRequest();
-			request.setPropertyValue(param, config.getValueArray(currentIndex));
+			if ( testStep instanceof WsdlTestRequestStep ) {
+				AbstractHttpRequest<?> request = ((WsdlTestRequestStep) testStep).getHttpRequest();
+				request.getRequestContent();
+				String newContent = XmlUtils.setXPathContent(request.getRequestContent(), param.substring(param.lastIndexOf("\n") + 1), config.getValueArray(currentIndex));
+				request.setRequestContent(newContent);
+			} else {
+				HttpTestRequestInterface<?> request = (( HttpTestRequestStepInterface )testStep).getTestRequest();
+				request.setPropertyValue(param, config.getValueArray(currentIndex));
+			}
 			currentIndex++;
 		}
 	}

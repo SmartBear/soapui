@@ -23,7 +23,10 @@ import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCaseRunner;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpResponseMessageExchange;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestInterface;
+import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStepInterface;
+import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.SamplerTestStep;
 import com.eviware.soapui.model.testsuite.TestStep;
@@ -70,9 +73,16 @@ public class SQLInjectionCheck extends AbstractSecurityCheck implements
 					new StringToObjectMap());
 			testStep.run(testCaseRunner, testCaseRunner.getRunContext());
 
-			HttpTestRequestInterface<?> request = ((HttpTestRequestStepInterface) testStep)
-					.getTestRequest();
-			String originalResponse = ((AbstractHttpRequest<?>) request)
+			AbstractHttpRequest<?> request = null;
+
+			if (testStep instanceof HttpTestRequestStep) {
+				request = ((HttpTestRequestStep) testStep).getHttpRequest();
+			} else if (testStep instanceof RestTestRequestStep) {
+				request = ((RestTestRequestStep) testStep).getHttpRequest();
+			} else if (testStep instanceof WsdlTestRequestStep) {
+				request = ((WsdlTestRequestStep) testStep).getHttpRequest();
+			}
+			String originalResponse = request
 					.getResponse().getContentAsXml();
 
 			if (getExecutionStrategy().equals(
@@ -84,18 +94,25 @@ public class SQLInjectionCheck extends AbstractSecurityCheck implements
 						sqlFuzzer.getNextFuzzedTestStep(testStep, param);
 						testStep.run(testCaseRunner, testCaseRunner
 								.getRunContext());
-						HttpTestRequestInterface<?> lastRequest = ((HttpTestRequestStepInterface) testStep)
-								.getTestRequest();
+						AbstractHttpRequest<?> lastRequest = null;
+
+						if (testStep instanceof HttpTestRequestStep) {
+							lastRequest = ((HttpTestRequestStep) testStep).getHttpRequest();
+						} else if (testStep instanceof RestTestRequestStep) {
+							lastRequest = ((RestTestRequestStep) testStep).getHttpRequest();
+						} else if (testStep instanceof WsdlTestRequestStep) {
+							lastRequest = ((WsdlTestRequestStep) testStep).getHttpRequest();
+						}
 
 						if (StringUtils.getLevenshteinDistance(
 								originalResponse,
-								((AbstractHttpRequest<?>) lastRequest)
+								lastRequest
 										.getResponse().getContentAsString()) > MINIMUM_STRING_DISTANCE) {
 							securityTestLog
 									.addEntry(new SecurityTestLogMessageEntry(
-											"Possible SQL Injection Vulnerability Detected",
-											new HttpResponseMessageExchange(
-													lastRequest)));
+											"Possible SQL Injection Vulnerability Detected", null
+											/*new HttpResponseMessageExchange(
+													lastRequest)*/));
 							setStatus(Status.FAILED);
 						}
 						analyze(testStep, context, securityTestLog);
@@ -142,12 +159,19 @@ public class SQLInjectionCheck extends AbstractSecurityCheck implements
 	public void analyze(TestStep testStep, WsdlTestRunContext context,
 			SecurityTestLogModel securityTestLog) {
 		// TODO: Make this test more extensive
-		HttpTestRequestInterface<?> lastRequest = ((HttpTestRequestStepInterface) testStep)
-				.getTestRequest();
-		if (lastRequest.getResponseContentAsString().indexOf("SQL Error") > -1) {
+		AbstractHttpRequest<?> lastRequest = null;
+
+		if (testStep instanceof HttpTestRequestStep) {
+			lastRequest = ((HttpTestRequestStep) testStep).getHttpRequest();
+		} else if (testStep instanceof RestTestRequestStep) {
+			lastRequest = ((RestTestRequestStep) testStep).getHttpRequest();
+		} else if (testStep instanceof WsdlTestRequestStep) {
+			lastRequest = ((WsdlTestRequestStep) testStep).getHttpRequest();
+		}
+		if (lastRequest.getResponse().getContentAsString().indexOf("SQL Error") > -1) {
 			securityTestLog.addEntry(new SecurityTestLogMessageEntry(
-					"SQL Error displayed in response",
-					new HttpResponseMessageExchange(lastRequest)));
+					"SQL Error displayed in response", null
+					/*new HttpResponseMessageExchange(lastRequest)*/));
 			setStatus(Status.FAILED);
 		} else {
 			setStatus(Status.FINISHED);

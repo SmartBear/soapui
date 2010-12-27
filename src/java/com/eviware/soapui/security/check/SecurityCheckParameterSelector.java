@@ -14,8 +14,16 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
+import org.apache.xmlbeans.XmlException;
+import org.apache.xmlbeans.XmlObject;
+import org.apache.xmlbeans.XmlOptions;
+import org.apache.xmlbeans.impl.xb.xsdschema.Element;
+
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.model.testsuite.TestPropertyListener;
+import com.eviware.soapui.support.xml.XmlUtils;
+import org.w3c.dom.Node;
 
 public class SecurityCheckParameterSelector extends JPanel implements
 		TestPropertyListener {
@@ -26,7 +34,7 @@ public class SecurityCheckParameterSelector extends JPanel implements
 	private JRadioButton separateButton;
 	private JRadioButton singleButton;
 	
-	public SecurityCheckParameterSelector(AbstractHttpRequest<?> request, List<String> paramsToCheck, String strategy) {
+	public SecurityCheckParameterSelector(AbstractHttpRequest<?> request, List<String> paramsToCheck, String strategy, boolean soapRequest) {
 		super(new BorderLayout());
 		request.addTestPropertyListener(this);
 		setPreferredSize(new Dimension(300, 300));
@@ -50,10 +58,27 @@ public class SecurityCheckParameterSelector extends JPanel implements
 		add(new JLabel("Select the Parameters that this test will apply to"));
 
 		if (request != null) {
+			if (!soapRequest) {
 			for (String param : request.getParams().keySet()) {
 				ParamPanel paramPanel = new ParamPanel(param, paramsToCheck.contains(param));
 				paramPanel.setMaximumSize(new Dimension(700, 30));
 				add(paramPanel, BorderLayout.WEST);
+			}
+			} else {
+			try {
+				XmlObject requestXml = XmlObject.Factory.parse(request.getRequestContent(), new XmlOptions().setLoadStripWhitespace()
+						.setLoadStripComments());
+				Node[] nodes = XmlUtils.selectDomNodes(requestXml, "//text()");
+				
+				for (Node node:nodes) {
+					String xpath = XmlUtils.createAbsoluteXPath(node.getParentNode()); 
+					ParamPanel paramPanel = new ParamPanel(node.getParentNode().getNodeName(), paramsToCheck.contains(xpath), xpath);
+					paramPanel.setMaximumSize(new Dimension(700, 30));
+					add(paramPanel, BorderLayout.WEST);
+				}
+			} catch (XmlException e) {
+				SoapUI.logError( e );
+			}
 			}
 		}
 
