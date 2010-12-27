@@ -51,6 +51,8 @@ import com.eviware.soapui.support.types.StringToObjectMap;
  * This will test whether a targeted web page is vulnerable to 
  * reflected XSS attacks
  * 
+ * currently not active check - we may continue with it later in development
+ * 
  * @author soapui team
  */
 
