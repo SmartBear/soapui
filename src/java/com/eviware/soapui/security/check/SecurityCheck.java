@@ -17,11 +17,11 @@ import javax.swing.JComponent;
 
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
-import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestRunner.Status;
 import com.eviware.soapui.security.Securable;
+import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.log.SecurityTestLogMessageEntry;
 import com.eviware.soapui.security.log.SecurityTestLogModel;
 
@@ -53,7 +53,7 @@ public abstract class SecurityCheck extends AbstractWsdlModelItem<SecurityCheckC
 	 * @param securityTestLog
 	 *           The security log to write to
 	 */
-	public abstract Status run( TestStep testStep, WsdlTestRunContext context, SecurityTestLogModel securityTestLog );
+	public abstract Status run( TestStep testStep, SecurityTestRunContext context, SecurityTestLogModel securityTestLog );
 
 	/**
 	 * Analyses the specified TestStep
@@ -62,7 +62,7 @@ public abstract class SecurityCheck extends AbstractWsdlModelItem<SecurityCheckC
 	 * @param context
 	 * @param securityTestLog
 	 */
-	public abstract void analyze( TestStep testStep, WsdlTestRunContext context, SecurityTestLogModel securityTestLog );
+	public abstract void analyze( TestStep testStep, SecurityTestRunContext context, SecurityTestLogModel securityTestLog );
 
 	/**
 	 * Checks if this securityCheck is applicable to the specified TestStep

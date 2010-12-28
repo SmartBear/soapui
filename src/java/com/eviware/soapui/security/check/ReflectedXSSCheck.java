@@ -28,7 +28,6 @@ import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.support.http.HttpRequest;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCaseRunner;
-import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpResponseMessageExchange;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestInterface;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
@@ -42,6 +41,7 @@ import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
 import com.eviware.soapui.security.SecurityTestContext;
+import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.log.SecurityTestLogMessageEntry;
 import com.eviware.soapui.security.log.SecurityTestLogModel;
 import com.eviware.soapui.support.components.SimpleForm;
@@ -154,21 +154,21 @@ public class ReflectedXSSCheck extends AbstractSecurityCheck  implements Sensiti
 	}
 
 	@Override
-	public void analyze(TestStep testStep, WsdlTestRunContext context,
+	public void analyze(TestStep testStep, SecurityTestRunContext context,
 			SecurityTestLogModel securityTestLog) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	protected void execute(TestStep testStep, WsdlTestRunContext context,
+	protected void execute(TestStep testStep, SecurityTestRunContext context,
 			SecurityTestLogModel securityTestLog) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void checkForSensitiveInformationExposure( TestStep testStep, WsdlTestRunContext context,
+	public void checkForSensitiveInformationExposure( TestStep testStep, SecurityTestRunContext context,
 			SecurityTestLogModel securityTestLog )
 	{
 		InformationExposureCheck iec = new InformationExposureCheck( config, null, null);

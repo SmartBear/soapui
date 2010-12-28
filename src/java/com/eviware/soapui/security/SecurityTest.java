@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.eviware.soapui.SoapUI;
@@ -34,6 +35,7 @@ import com.eviware.soapui.security.panels.SecurityChecksPanel;
 import com.eviware.soapui.security.registry.AbstractSecurityCheckFactory;
 import com.eviware.soapui.security.registry.SecurityCheckRegistry;
 import com.eviware.soapui.security.support.SecurityTestRunListener;
+import com.eviware.soapui.security.support.SecurityTestStepRunListener;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
@@ -56,6 +58,10 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 	private SecurityTestLogModel securityTestLog;
 	private SecurityChecksPanel.SecurityCheckListModel listModel;
 	private Set<SecurityTestRunListener> testRunListeners = new HashSet<SecurityTestRunListener>();
+	private Map<TestStep, Set<SecurityTestStepRunListener>> testStepRunListeners = new HashMap<TestStep, Set<SecurityTestStepRunListener>>();
+
+	// private Set<SecurityTestStepRunListener> testStepRunListeners = new
+	// HashSet<SecurityTestStepRunListener>();
 
 	public void setListModel( SecurityChecksPanel.SecurityCheckListModel listModel )
 	{
@@ -206,7 +212,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 		return testCase;
 	}
 
-	public SecurityTestRunner run( StringToObjectMap context, boolean async )
+	public SecurityTestRunnerInterface run( StringToObjectMap context, boolean async )
 	{
 		if( runner != null && runner.getStatus() == Status.RUNNING )
 			return null;
@@ -255,7 +261,8 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 	 * @return
 	 * @throws Exception
 	 */
-	public Object runStartupScript( WsdlTestRunContext runContext, SecurityTestRunner runner ) throws Exception
+	public Object runStartupScript( SecurityTestRunContext runContext, SecurityTestRunnerInterface runner )
+			throws Exception
 	{
 		String script = getStartupScript();
 		if( StringUtils.isNullOrEmpty( script ) )
@@ -309,7 +316,8 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 	 * @return
 	 * @throws Exception
 	 */
-	public Object runTearDownScript( WsdlTestRunContext runContext, SecurityTestRunner runner ) throws Exception
+	public Object runTearDownScript( SecurityTestRunContext runContext, SecurityTestRunnerInterface runner )
+			throws Exception
 	{
 		String script = getTearDownScript();
 		if( StringUtils.isNullOrEmpty( script ) )
@@ -469,6 +477,41 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 		{
 			getConfig().setFailSecurityTestOnCheckErrors( failSecurityTestOnErrors );
 			notifyPropertyChanged( FAIL_ON_CHECKS_ERRORS_PROPERTY, old, failSecurityTestOnErrors );
+		}
+	}
+
+	public void addTestStepRunListener( TestStep testStep, SecurityTestStepRunListener listener )
+	{
+		if( listener == null )
+			throw new RuntimeException( "listener must not be null" );
+
+		if( testStepRunListeners.containsKey( testStep ) )
+		{
+			testStepRunListeners.get( testStep ).add( listener );
+		}
+		else
+		{
+			Set<SecurityTestStepRunListener> listeners = new HashSet<SecurityTestStepRunListener>();
+			listeners.add( listener );
+			testStepRunListeners.put( testStep, listeners );
+		}
+	}
+
+	public void removeTestStepRunListener( TestStep testStep, SecurityTestStepRunListener listener )
+	{
+		testStepRunListeners.remove( testStepRunListeners.get( testStep ) );
+	}
+
+	public SecurityTestStepRunListener[] getTestStepRunListeners( TestStep testStep )
+	{
+		if( testStepRunListeners.containsKey( testStep ) )
+		{
+			Set<SecurityTestStepRunListener> listeners = testStepRunListeners.get( testStep );
+			return listeners.toArray( new SecurityTestStepRunListener[listeners.size()] );
+		}
+		else
+		{
+			return new SecurityTestStepRunListener[0];
 		}
 	}
 

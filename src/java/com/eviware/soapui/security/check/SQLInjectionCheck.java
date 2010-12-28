@@ -20,7 +20,6 @@ import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCaseRunner;
-import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpResponseMessageExchange;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestInterface;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
@@ -31,6 +30,7 @@ import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.SamplerTestStep;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestRunner.Status;
+import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.fuzzer.Fuzzer;
 import com.eviware.soapui.security.log.SecurityTestLogMessageEntry;
 import com.eviware.soapui.security.log.SecurityTestLogModel;
@@ -65,7 +65,7 @@ public class SQLInjectionCheck extends AbstractSecurityCheck implements
 		}
 	}
 
-	protected void execute(TestStep testStep, WsdlTestRunContext context,
+	protected void execute(TestStep testStep, SecurityTestRunContext context,
 			SecurityTestLogModel securityTestLog) {
 		if (acceptsTestStep(testStep)) {
 			WsdlTestCaseRunner testCaseRunner = new WsdlTestCaseRunner(
@@ -156,7 +156,7 @@ public class SQLInjectionCheck extends AbstractSecurityCheck implements
 		}
 	}
 
-	public void analyze(TestStep testStep, WsdlTestRunContext context,
+	public void analyze(TestStep testStep, SecurityTestRunContext context,
 			SecurityTestLogModel securityTestLog) {
 		// TODO: Make this test more extensive
 		AbstractHttpRequest<?> lastRequest = null;
@@ -195,7 +195,7 @@ public class SQLInjectionCheck extends AbstractSecurityCheck implements
 
 	@Override
 	public void checkForSensitiveInformationExposure(TestStep testStep,
-			WsdlTestRunContext context, SecurityTestLogModel securityTestLog) {
+			SecurityTestRunContext context, SecurityTestLogModel securityTestLog) {
 		InformationExposureCheck iec = new InformationExposureCheck(config,
 				null, null);
 		iec.analyze(testStep, context, securityTestLog);

@@ -11,8 +11,8 @@
  */
 package com.eviware.soapui.security.check;
 
-import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.model.testsuite.TestStep;
+import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.log.SecurityTestLogModel;
 
 /**
@@ -24,6 +24,6 @@ import com.eviware.soapui.security.log.SecurityTestLogModel;
 
 public interface SensitiveInformationCheckable
 {
-	public void checkForSensitiveInformationExposure(TestStep testStep, WsdlTestRunContext context,
+	public void checkForSensitiveInformationExposure(TestStep testStep, SecurityTestRunContext context,
 			SecurityTestLogModel securityTestLog);
 }

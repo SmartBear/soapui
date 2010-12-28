@@ -3,9 +3,9 @@ package com.eviware.soapui.security.check;
 import javax.swing.JComponent;
 
 import com.eviware.soapui.config.SecurityCheckConfig;
-import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestStep;
+import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.log.SecurityTestLogModel;
 
 public class XmlBombSecurityCheck extends AbstractSecurityCheck {
@@ -19,14 +19,14 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck {
 	}
 
 	@Override
-	public void analyze(TestStep testStep, WsdlTestRunContext context,
+	public void analyze(TestStep testStep, SecurityTestRunContext context,
 			SecurityTestLogModel securityTestLog) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	protected void execute(TestStep testStep, WsdlTestRunContext context,
+	protected void execute(TestStep testStep, SecurityTestRunContext context,
 			SecurityTestLogModel securityTestLog) {
 		// TODO Auto-generated method stub
 

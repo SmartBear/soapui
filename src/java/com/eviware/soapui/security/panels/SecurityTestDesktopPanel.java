@@ -50,7 +50,7 @@ import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.security.SecurityTest;
-import com.eviware.soapui.security.SecurityTestRunner;
+import com.eviware.soapui.security.SecurityTestRunnerInterface;
 import com.eviware.soapui.security.SecurityTestRunnerImpl;
 import com.eviware.soapui.security.actions.SecurityTestOptionsAction;
 import com.eviware.soapui.security.log.JSecurityTestRunLog;
@@ -90,7 +90,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 	private JProgressBar progressBar;
 	private JButton runButton;
 	private JButton cancelButton;
-	private SecurityTestRunner runner;
+	private SecurityTestRunnerInterface runner;
 	private JButton setEndpointButton;
 	private JButton setCredentialsButton;
 	private JButton optionsButton;
@@ -107,7 +107,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 	// private JButton createLoadTestButton;
 	// private JButton createSecurityTestButton;
 	private JInspectorPanel inspectorPanel;
-	public SecurityTestRunner lastRunner;
+	public SecurityTestRunnerInterface lastRunner;
 	// private JButton runWithLoadUIButton;
 	// private JButton synchronizeWithLoadUIButton;
 	private SecurityTest securityTest;
@@ -590,7 +590,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 		}
 	}
 
-	public SecurityTestRunner getSecurityTestRunner()
+	public SecurityTestRunnerInterface getSecurityTestRunner()
 	{
 		return runner == null ? lastRunner : runner;
 	}

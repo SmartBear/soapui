@@ -34,6 +34,7 @@ import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
 import com.eviware.soapui.model.testsuite.TestRunner.Status;
+import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.log.JSecurityTestRunLog;
 import com.eviware.soapui.security.log.SecurityTestLogMessageEntry;
 import com.eviware.soapui.security.log.SecurityTestLogModel;
@@ -59,7 +60,7 @@ public class InformationExposureCheck extends AbstractSecurityCheck implements H
 	}
 
 	@Override
-	protected void execute( TestStep testStep, WsdlTestRunContext context, SecurityTestLogModel securityTestLog )
+	protected void execute( TestStep testStep, SecurityTestRunContext context, SecurityTestLogModel securityTestLog )
 	{
 		if( acceptsTestStep( testStep ) )
 		{
@@ -72,7 +73,7 @@ public class InformationExposureCheck extends AbstractSecurityCheck implements H
 	}
 
 	@Override
-	public void analyze( TestStep testStep, WsdlTestRunContext context, SecurityTestLogModel securityTestLog )
+	public void analyze( TestStep testStep, SecurityTestRunContext context, SecurityTestLogModel securityTestLog )
 	{
 		if( acceptsTestStep( testStep ) )
 		{
@@ -86,16 +87,17 @@ public class InformationExposureCheck extends AbstractSecurityCheck implements H
 						AssertionStatus.VALID ) )
 				{
 					logSecurityInfo( messageExchange, securityTestLog, exposureContent );
-					setStatus(Status.FAILED);
+					setStatus( Status.FAILED );
 				}
 			}
-			if (getStatus() != Status.FAILED) {
-				setStatus(Status.FINISHED);
+			if( getStatus() != Status.FAILED )
+			{
+				setStatus( Status.FINISHED );
 			}
 		}
 	}
 
-	private AssertionStatus assertContains( WsdlTestRunContext context, HttpTestRequestStepInterface testStep,
+	private AssertionStatus assertContains( SecurityTestRunContext context, HttpTestRequestStepInterface testStep,
 			MessageExchange messageExchange, String exposureContent )
 	{
 		TestAssertionConfig assertionConfig = TestAssertionConfig.Factory.newInstance();

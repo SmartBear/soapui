@@ -16,14 +16,14 @@ import java.awt.Color;
 
 import javax.swing.JProgressBar;
 
-import com.eviware.soapui.model.support.TestRunListenerAdapter;
 import com.eviware.soapui.model.testsuite.TestCaseRunContext;
+import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestRunner.Status;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
 import com.eviware.soapui.security.SecurityTest;
-import com.eviware.soapui.security.SecurityTestRunner;
+import com.eviware.soapui.security.SecurityTestRunnerInterface;
 
 /**
  * Class that keeps a JProgressBars state in sync with a TestCase
@@ -90,7 +90,7 @@ public class ProgressBarSecurityTestAdapter
 
 	public class InternalTestRunListener extends SecurityTestRunListenerAdapter
 	{
-		public void beforeRun( SecurityTestRunner testRunner, TestCaseRunContext runContext )
+		public void beforeRun( SecurityTestRunnerInterface testRunner, TestCaseRunContext runContext )
 		{
 			if( progressBar.isIndeterminate() )
 				return;
@@ -99,7 +99,7 @@ public class ProgressBarSecurityTestAdapter
 			progressBar.setForeground( Color.GREEN.darker() );
 		}
 
-		public void beforeStep( SecurityTestRunner testRunner, TestCaseRunContext runContext, TestStep testStep )
+		public void beforeStep( SecurityTestRunnerInterface testRunner, TestCaseRunContext runContext, TestStep testStep )
 		{
 			if( progressBar.isIndeterminate() )
 				return;
@@ -111,7 +111,8 @@ public class ProgressBarSecurityTestAdapter
 			}
 		}
 
-		public void afterStep( SecurityTestRunner testRunner, TestCaseRunContext runContext, TestStepResult result )
+		public void afterStep( SecurityTestRunnerInterface testRunner, TestCaseRunContext runContext,
+				TestStepResult result )
 		{
 			if( progressBar.isIndeterminate() )
 				return;
@@ -128,7 +129,7 @@ public class ProgressBarSecurityTestAdapter
 			progressBar.setValue( runContext.getCurrentStepIndex() + 1 );
 		}
 
-		public void afterRun(SecurityTestRunner testRunner, TestCaseRunContext runContext )
+		public void afterRun( SecurityTestRunnerInterface testRunner, TestCaseRunContext runContext )
 		{
 			if( testRunner.getStatus() == Status.FAILED )
 			{
@@ -142,7 +143,7 @@ public class ProgressBarSecurityTestAdapter
 			if( progressBar.isIndeterminate() )
 				return;
 
-			if( testRunner.getStatus() == SecurityTestRunner.Status.FINISHED )
+			if( testRunner.getStatus() == TestCaseRunner.Status.FINISHED )
 				progressBar.setValue( testRunner.getSecurityTest().getTestCase().getTestStepCount() );
 
 			progressBar.setString( testRunner.getStatus().toString() );

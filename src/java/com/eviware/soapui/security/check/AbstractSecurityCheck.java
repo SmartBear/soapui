@@ -34,7 +34,6 @@ import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
-import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
@@ -42,6 +41,7 @@ import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestRunner.Status;
 import com.eviware.soapui.security.Securable;
+import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.log.SecurityTestLogMessageEntry;
 import com.eviware.soapui.security.log.SecurityTestLogModel;
 import com.eviware.soapui.support.UISupport;
@@ -93,13 +93,13 @@ public abstract class AbstractSecurityCheck extends SecurityCheck
 			config.setExecutionStrategy(SecurityCheckParameterSelector.SEPARATE_REQUEST_STRATEGY);
 	}
 
-	abstract protected void execute( TestStep testStep, WsdlTestRunContext context, SecurityTestLogModel securityTestLog );
+	abstract protected void execute( TestStep testStep, SecurityTestRunContext context, SecurityTestLogModel securityTestLog );
 
 	@Override
-	abstract public void analyze( TestStep testStep, WsdlTestRunContext context, SecurityTestLogModel securityTestLog );
+	abstract public void analyze( TestStep testStep, SecurityTestRunContext context, SecurityTestLogModel securityTestLog );
 
 	@Override
-	public Status run( TestStep testStep, WsdlTestRunContext context, SecurityTestLogModel securityTestLog )
+	public Status run( TestStep testStep, SecurityTestRunContext context, SecurityTestLogModel securityTestLog )
 	{
 		setStatus( Status.INITIALIZED );
 		runStartupScript( testStep );
@@ -114,7 +114,7 @@ public abstract class AbstractSecurityCheck extends SecurityCheck
 		return status;
 	}
 
-	private void sensitiveInfoCheck( TestStep testStep, WsdlTestRunContext context, SecurityTestLogModel securityTestLog )
+	private void sensitiveInfoCheck( TestStep testStep, SecurityTestRunContext context, SecurityTestLogModel securityTestLog )
 	{
 		if( this instanceof SensitiveInformationCheckable )
 		{
