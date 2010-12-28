@@ -60,40 +60,40 @@ public abstract class AbstractSecurityTestCaseWithMockService extends TestCase
 	@Before
 	public void setUp() throws Exception
 	{
-		WsdlProject project = new WsdlProject( "src" + File.separatorChar + "test-resources" + File.separatorChar
-				+ "sample-soapui-project.xml" );
-		TestSuite testSuite = project.getTestSuiteByName( "Test Suite" );
-		testCase = ( WsdlTestCase )testSuite.getTestCaseByName( "Test Conversions" );
-
-		WsdlInterface iface = ( WsdlInterface )project.getInterfaceAt( 0 );
-
-		mockService = ( WsdlMockService )project.addNewMockService( "MockService 1" );
-
-		mockService.setPort( 9081 );
-		mockService.setPath( "/testmock" );
-
-		WsdlOperation operation = ( WsdlOperation )iface.getOperationAt( 0 );
-		WsdlMockOperation mockOperation = ( WsdlMockOperation )mockService.addNewMockOperation( operation );
-		WsdlMockResponse mockResponse = mockOperation.addNewMockResponse( "Test Response", true );
-		mockResponse.setResponseContent( "Tjohoo!" );
-
-		mockService.start();
-
-		String endpoint = "http://localhost:9081//testmock";
-		iface.addEndpoint( endpoint );
-		List<TestStep> testStepList = testCase.getTestStepList();
-		for( TestStep testStep : testStepList )
-		{
-			if( testStep instanceof WsdlTestRequestStep )
-			{
-				( ( WsdlTestRequestStep )testStep ).getTestRequest().setEndpoint( endpoint );
-			}
-			if( testStep instanceof HttpTestRequestStep )
-			{
-				// ( ( HttpTestRequestStep )testStep ).getTestRequest().setEndpoint(
-				// endpoint );
-			}
-		}
+//		WsdlProject project = new WsdlProject( "src" + File.separatorChar + "test-resources" + File.separatorChar
+//				+ "sample-soapui-project.xml" );
+//		TestSuite testSuite = project.getTestSuiteByName( "Test Suite" );
+//		testCase = ( WsdlTestCase )testSuite.getTestCaseByName( "Test Conversions" );
+//
+//		WsdlInterface iface = ( WsdlInterface )project.getInterfaceAt( 0 );
+//
+//		mockService = ( WsdlMockService )project.addNewMockService( "MockService 1" );
+//
+//		mockService.setPort( 9081 );
+//		mockService.setPath( "/testmock" );
+//
+//		WsdlOperation operation = ( WsdlOperation )iface.getOperationAt( 0 );
+//		WsdlMockOperation mockOperation = ( WsdlMockOperation )mockService.addNewMockOperation( operation );
+//		WsdlMockResponse mockResponse = mockOperation.addNewMockResponse( "Test Response", true );
+//		mockResponse.setResponseContent( "Tjohoo!" );
+//
+//		mockService.start();
+//
+//		String endpoint = "http://localhost:9081//testmock";
+//		iface.addEndpoint( endpoint );
+//		List<TestStep> testStepList = testCase.getTestStepList();
+//		for( TestStep testStep : testStepList )
+//		{
+//			if( testStep instanceof WsdlTestRequestStep )
+//			{
+//				( ( WsdlTestRequestStep )testStep ).getTestRequest().setEndpoint( endpoint );
+//			}
+//			if( testStep instanceof HttpTestRequestStep )
+//			{
+//				// ( ( HttpTestRequestStep )testStep ).getTestRequest().setEndpoint(
+//				// endpoint );
+//			}
+//		}
 	}
 
 	/**
@@ -102,10 +102,10 @@ public abstract class AbstractSecurityTestCaseWithMockService extends TestCase
 	@After
 	public void tearDown() throws Exception
 	{
-		if( mockService.getMockRunner().isRunning() )
-		{
-			mockService.getMockRunner().stop();
-		}
+//		if( mockService.getMockRunner().isRunning() )
+//		{
+//			mockService.getMockRunner().stop();
+//		}
 	}
 
 	/*
