@@ -12,9 +12,8 @@
 
 package com.eviware.soapui.security.registry;
 
-import com.eviware.soapui.config.SQLInjectionCheckConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
-import com.eviware.soapui.security.check.SQLInjectionCheck;
+import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.security.check.SecurityCheck;
 import com.eviware.soapui.security.check.XmlBombSecurityCheck;
 
@@ -37,7 +36,7 @@ public class XmlBombSecurityCheckFactory extends AbstractSecurityCheckFactory {
 	}
 
 	@Override
-	public SecurityCheck buildSecurityCheck(SecurityCheckConfig config) {
+	public SecurityCheck buildSecurityCheck(SecurityCheckConfig config, ModelItem parent) {
 		return new XmlBombSecurityCheck(config, null, null);
 	}
 

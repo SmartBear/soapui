@@ -13,6 +13,7 @@
 package com.eviware.soapui.security.registry;
 
 import com.eviware.soapui.config.SecurityCheckConfig;
+import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.security.Securable;
 import com.eviware.soapui.security.check.SecurityCheck;
 
@@ -38,7 +39,7 @@ public abstract class AbstractSecurityCheckFactory
 	}
 
 	public abstract SecurityCheckConfig createNewSecurityCheck( String name );
-	public abstract SecurityCheck buildSecurityCheck( SecurityCheckConfig config);
+	public abstract SecurityCheck buildSecurityCheck( SecurityCheckConfig config, ModelItem parent);
 	public String getType()
 	{
 		return typeName;

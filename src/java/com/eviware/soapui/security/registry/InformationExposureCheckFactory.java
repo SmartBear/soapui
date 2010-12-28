@@ -13,6 +13,7 @@
 package com.eviware.soapui.security.registry;
 
 import com.eviware.soapui.config.SecurityCheckConfig;
+import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.security.check.InformationExposureCheck;
 import com.eviware.soapui.security.check.SecurityCheck;
 
@@ -22,34 +23,38 @@ import com.eviware.soapui.security.check.SecurityCheck;
  * @author nebojsa.tasic
  */
 
-public class InformationExposureCheckFactory extends AbstractSecurityCheckFactory {
+public class InformationExposureCheckFactory extends AbstractSecurityCheckFactory
+{
 
-	public InformationExposureCheckFactory() {
-		super(InformationExposureCheck.TYPE, "InformationExposureCheck",
-				"Executes the specified information exposure for security check",
-				"/information_exposure_check.gif");
+	public InformationExposureCheckFactory()
+	{
+		super( InformationExposureCheck.TYPE, "InformationExposureCheck",
+				"Executes the specified information exposure for security check", "/information_exposure_check.gif" );
 	}
 
-	public boolean canCreate() {
+	public boolean canCreate()
+	{
 		return true;
 	}
 
 	@Override
-	public SecurityCheck buildSecurityCheck(SecurityCheckConfig config) {
-		return new InformationExposureCheck(config, null, null);
+	public SecurityCheck buildSecurityCheck( SecurityCheckConfig config, ModelItem parent )
+	{
+		return new InformationExposureCheck( config, parent, null );
 	}
 
 	@Override
-	public SecurityCheckConfig createNewSecurityCheck(String name) {
-		SecurityCheckConfig securityCheckConfig = SecurityCheckConfig.Factory
-				.newInstance();
-		securityCheckConfig.setType(InformationExposureCheck.TYPE);
-		securityCheckConfig.setName(name);
+	public SecurityCheckConfig createNewSecurityCheck( String name )
+	{
+		SecurityCheckConfig securityCheckConfig = SecurityCheckConfig.Factory.newInstance();
+		securityCheckConfig.setType( InformationExposureCheck.TYPE );
+		securityCheckConfig.setName( name );
 		return securityCheckConfig;
 	}
 
 	@Override
-	public boolean isHttpMonitor() {
+	public boolean isHttpMonitor()
+	{
 		return true;
 	}
 }

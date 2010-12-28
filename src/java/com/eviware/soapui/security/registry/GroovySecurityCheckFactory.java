@@ -14,6 +14,7 @@ package com.eviware.soapui.security.registry;
 
 import com.eviware.soapui.config.GroovySecurityCheckConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
+import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.security.check.GroovySecurityCheck;
 import com.eviware.soapui.security.check.SecurityCheck;
 
@@ -23,39 +24,42 @@ import com.eviware.soapui.security.check.SecurityCheck;
  * @author soapUI team
  */
 
-public class GroovySecurityCheckFactory extends AbstractSecurityCheckFactory {
+public class GroovySecurityCheckFactory extends AbstractSecurityCheckFactory
+{
 
-	public GroovySecurityCheckFactory() {
-		super(GroovySecurityCheck.TYPE, "GroovySecurityCheck",
-				"Executes the specified groovy script for security check",
-				"/groovy_security_check_script.gif");
+	public GroovySecurityCheckFactory()
+	{
+		super( GroovySecurityCheck.TYPE, "GroovySecurityCheck",
+				"Executes the specified groovy script for security check", "/groovy_security_check_script.gif" );
 	}
 
-	public boolean canCreate() {
+	public boolean canCreate()
+	{
 		return true;
 	}
 
 	@Override
-	public SecurityCheck buildSecurityCheck(SecurityCheckConfig config) {
-		return new GroovySecurityCheck(config, null, null);
+	public SecurityCheck buildSecurityCheck( SecurityCheckConfig config, ModelItem parent )
+	{
+		return new GroovySecurityCheck( config, parent, null );
 	}
 
 	@Override
-	public SecurityCheckConfig createNewSecurityCheck(String name) {
-		SecurityCheckConfig securityCheckConfig = SecurityCheckConfig.Factory
-				.newInstance();
-		securityCheckConfig.setType(GroovySecurityCheck.TYPE);
-		securityCheckConfig.setName(name);
-		GroovySecurityCheckConfig groovyscc = GroovySecurityCheckConfig.Factory
-				.newInstance();
+	public SecurityCheckConfig createNewSecurityCheck( String name )
+	{
+		SecurityCheckConfig securityCheckConfig = SecurityCheckConfig.Factory.newInstance();
+		securityCheckConfig.setType( GroovySecurityCheck.TYPE );
+		securityCheckConfig.setName( name );
+		GroovySecurityCheckConfig groovyscc = GroovySecurityCheckConfig.Factory.newInstance();
 		groovyscc.addNewScript();
 		// securityCheckConfig.changeType( GroovySecurityCheckConfig.type );
-		securityCheckConfig.setConfig(groovyscc);
+		securityCheckConfig.setConfig( groovyscc );
 		return securityCheckConfig;
 	}
 
 	@Override
-	public boolean isHttpMonitor() {
+	public boolean isHttpMonitor()
+	{
 		return true;
 	}
 }

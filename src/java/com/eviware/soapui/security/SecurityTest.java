@@ -106,7 +106,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 	{
 		AbstractSecurityCheckFactory factory = SecurityCheckRegistry.getInstance().getFactory( securityCheckType );
 		SecurityCheckConfig newSecCheckConfig = factory.createNewSecurityCheck( securityCheckName );
-		SecurityCheck newSecCheck = factory.buildSecurityCheck( newSecCheckConfig );
+		SecurityCheck newSecCheck = factory.buildSecurityCheck( newSecCheckConfig, this );
 		newSecCheck.setTestStep( testStep );
 
 		boolean hasChecks = false;
@@ -192,7 +192,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 									.getTestStepSecurityCheckList() )
 							{
 								SecurityCheck securityCheck = SecurityCheckRegistry.getInstance().getFactory(
-										secCheckConfig.getType() ).buildSecurityCheck( secCheckConfig );
+										secCheckConfig.getType() ).buildSecurityCheck( secCheckConfig, this );
 								checkList.add( securityCheck );
 							}
 						}
@@ -402,7 +402,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 					// factory.createNewSecurityCheck( securityCheck.getName()
 					// );
 					SecurityCheckConfig newSecCheckConfig = ( SecurityCheckConfig )securityCheck.getConfig().copy();
-					SecurityCheck newSecCheck = factory.buildSecurityCheck( newSecCheckConfig );
+					SecurityCheck newSecCheck = factory.buildSecurityCheck( newSecCheckConfig, this );
 
 					securityCheckList.remove( securityCheck.getConfig() );
 					securityCheckList.add( index + offset, newSecCheckConfig );

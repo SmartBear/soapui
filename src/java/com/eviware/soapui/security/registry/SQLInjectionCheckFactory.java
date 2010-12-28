@@ -14,6 +14,7 @@ package com.eviware.soapui.security.registry;
 
 import com.eviware.soapui.config.SQLInjectionCheckConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
+import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.security.check.SQLInjectionCheck;
 import com.eviware.soapui.security.check.SecurityCheck;
 
@@ -36,7 +37,7 @@ public class SQLInjectionCheckFactory extends AbstractSecurityCheckFactory {
 	}
 
 	@Override
-	public SecurityCheck buildSecurityCheck(SecurityCheckConfig config) {
+	public SecurityCheck buildSecurityCheck(SecurityCheckConfig config, ModelItem parent) {
 		return new SQLInjectionCheck(config, null, null);
 	}
 

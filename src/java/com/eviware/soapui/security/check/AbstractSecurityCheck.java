@@ -72,12 +72,13 @@ public abstract class AbstractSecurityCheck extends SecurityCheck
 	{
 		super( config, parent, icon, securable );
 		this.config = config;
-	//	if( config.getExecutionStrategy() == null )
-		//	config.setExecutionStrategy( SecurityCheckParameterSelector.SINGLE_REQUEST_STRATEGY );
+		// if( config.getExecutionStrategy() == null )
+		// config.setExecutionStrategy(
+		// SecurityCheckParameterSelector.SINGLE_REQUEST_STRATEGY );
 		this.startupScript = config.getSetupScript() != null ? config.getSetupScript().getStringValue() : "";
 		this.tearDownScript = config.getTearDownScript() != null ? config.getTearDownScript().getStringValue() : "";
-		if (config.getExecutionStrategy() == null) 
-			config.setExecutionStrategy(SecurityCheckParameterSelector.SEPARATE_REQUEST_STRATEGY);
+		if( config.getExecutionStrategy() == null )
+			config.setExecutionStrategy( SecurityCheckParameterSelector.SEPARATE_REQUEST_STRATEGY );
 		scriptEngine = SoapUIScriptEngineRegistry.create( this );
 	}
 
@@ -89,11 +90,12 @@ public abstract class AbstractSecurityCheck extends SecurityCheck
 		this.startupScript = config.getSetupScript() != null ? config.getSetupScript().getStringValue() : "";
 		this.tearDownScript = config.getTearDownScript() != null ? config.getTearDownScript().getStringValue() : "";
 		scriptEngine = SoapUIScriptEngineRegistry.create( this );
-		if (config.getExecutionStrategy() == null) 
-			config.setExecutionStrategy(SecurityCheckParameterSelector.SEPARATE_REQUEST_STRATEGY);
+		if( config.getExecutionStrategy() == null )
+			config.setExecutionStrategy( SecurityCheckParameterSelector.SEPARATE_REQUEST_STRATEGY );
 	}
 
-	abstract protected void execute( TestStep testStep, SecurityTestRunContext context, SecurityTestLogModel securityTestLog );
+	abstract protected void execute( TestStep testStep, SecurityTestRunContext context,
+			SecurityTestLogModel securityTestLog );
 
 	@Override
 	abstract public void analyze( TestStep testStep, SecurityTestRunContext context, SecurityTestLogModel securityTestLog );
@@ -114,7 +116,8 @@ public abstract class AbstractSecurityCheck extends SecurityCheck
 		return status;
 	}
 
-	private void sensitiveInfoCheck( TestStep testStep, SecurityTestRunContext context, SecurityTestLogModel securityTestLog )
+	private void sensitiveInfoCheck( TestStep testStep, SecurityTestRunContext context,
+			SecurityTestLogModel securityTestLog )
 	{
 		if( this instanceof SensitiveInformationCheckable )
 		{
@@ -184,16 +187,22 @@ public abstract class AbstractSecurityCheck extends SecurityCheck
 	{
 		AbstractHttpRequest<?> request = null;
 		boolean soapRequest = false;
-		if (getTestStep() instanceof HttpTestRequestStep) {
-			request = ((HttpTestRequestStep) getTestStep()).getHttpRequest();
-		} else if (getTestStep() instanceof RestTestRequestStep) {
-			request = ((RestTestRequestStep) getTestStep()).getHttpRequest();
-		} else if (getTestStep() instanceof WsdlTestRequestStep) {
-			request = ((WsdlTestRequestStep) getTestStep()).getHttpRequest();
+		if( getTestStep() instanceof HttpTestRequestStep )
+		{
+			request = ( ( HttpTestRequestStep )getTestStep() ).getHttpRequest();
+		}
+		else if( getTestStep() instanceof RestTestRequestStep )
+		{
+			request = ( ( RestTestRequestStep )getTestStep() ).getHttpRequest();
+		}
+		else if( getTestStep() instanceof WsdlTestRequestStep )
+		{
+			request = ( ( WsdlTestRequestStep )getTestStep() ).getHttpRequest();
 			soapRequest = true;
 		}
-		
-		parameterSelector = new SecurityCheckParameterSelector( request, getParamsToCheck(), getExecutionStrategy(), soapRequest );
+
+		parameterSelector = new SecurityCheckParameterSelector( request, getParamsToCheck(), getExecutionStrategy(),
+				soapRequest );
 
 		return parameterSelector;
 	}
@@ -327,13 +336,6 @@ public abstract class AbstractSecurityCheck extends SecurityCheck
 	}
 
 	@Override
-	public ModelItem getParent()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public boolean isDisabled()
 	{
 		return disabled;
@@ -391,9 +393,10 @@ public abstract class AbstractSecurityCheck extends SecurityCheck
 	{
 		config.setExecutionStrategy( strategy );
 	}
-	
-	//TODO implement properly in subclasses
-	public List<SecurityTestLogMessageEntry> getSecurityTestLogEntries() {
+
+	// TODO implement properly in subclasses
+	public List<SecurityTestLogMessageEntry> getSecurityTestLogEntries()
+	{
 		return new ArrayList<SecurityTestLogMessageEntry>();
 	}
 

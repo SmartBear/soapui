@@ -32,13 +32,13 @@ public class SQLInjectionTest extends AbstractSecurityTestCaseWithMockService
 		securityCheckType = SQLInjectionCheck.TYPE;
 		securityCheckName = SQLInjectionCheck.TYPE;
 	}
-	
+
 	@Override
 	protected void addSecurityCheckConfig( SecurityCheckConfig securityCheckConfig )
 	{
 
 		SQLInjectionCheck sqlCheck = ( SQLInjectionCheck )SecurityCheckRegistry.getInstance().getFactory(
-				securityCheckType ).buildSecurityCheck( securityCheckConfig );
+				securityCheckType ).buildSecurityCheck( securityCheckConfig, null );
 
 		List<String> params = new ArrayList<String>();
 		params.add( "q" );
@@ -48,18 +48,18 @@ public class SQLInjectionTest extends AbstractSecurityTestCaseWithMockService
 	public void testStart()
 	{
 
-//		SecurityTestRunnerImpl testRunner = new SecurityTestRunnerImpl( createSecurityTest() );
-//
-//		testRunner.start( false );
-//
-//		// assertEquals( TestStepResult.TestStepStatus.OK, testRunner.getStatus()
-//		// );
-//		
-//		//TODO: finish
-//		assertEquals( true, true );
+		// SecurityTestRunnerImpl testRunner = new SecurityTestRunnerImpl(
+		// createSecurityTest() );
+		//
+		// testRunner.start( false );
+		//
+		// // assertEquals( TestStepResult.TestStepStatus.OK,
+		// testRunner.getStatus()
+		// // );
+		//		
+		// //TODO: finish
+		// assertEquals( true, true );
 
 	}
-
-
 
 }
