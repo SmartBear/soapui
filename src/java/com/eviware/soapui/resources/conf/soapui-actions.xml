@@ -47,6 +47,7 @@
 	<tns:action id="SaveProjectAction" actionClass="com.eviware.soapui.impl.wsdl.actions.project.SaveProjectAction"/>
 	<tns:action id="SaveProjectAsAction" actionClass="com.eviware.soapui.impl.wsdl.actions.project.SaveProjectAsAction"/>
 	<tns:action id="TestRunnerAction" actionClass="com.eviware.soapui.impl.wsdl.actions.iface.tools.soapui.TestRunnerAction"/>
+	<tns:action id="SecurityTestRunnerAction" actionClass="com.eviware.soapui.impl.wsdl.actions.iface.tools.soapui.SecurityTestRunnerAction"/>
 	<tns:action id="LoadTestRunnerAction" actionClass="com.eviware.soapui.impl.wsdl.actions.iface.tools.soapui.LoadTestRunnerAction"/>
 	<tns:action id="SoapMonitorAction" actionClass="com.eviware.soapui.impl.wsdl.actions.monitor.SoapMonitorAction"/>
 	<tns:action id="ResolveProjectAction" actionClass="com.eviware.soapui.impl.wsdl.actions.project.ResolveProjectAction"/>
@@ -269,6 +270,7 @@
 		<tns:actionMapping actionId="TestRunnerAction"/>
 		<tns:actionMapping actionId="LoadTestRunnerAction"/>
 		<tns:actionMapping actionId="SoapMonitorAction"/>
+		<tns:actionMapping actionId="SecurityTestRunnerAction"/>
 	<!-- 	<tns:actionMapping actionId="SeperatorAction"/>
 		<tns:actionMapping actionId="WSToolsJava2WsdlAction"/>-->
 		<tns:actionMapping actionId="SeperatorAction"/>
