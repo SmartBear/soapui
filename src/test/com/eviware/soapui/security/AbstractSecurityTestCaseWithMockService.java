@@ -113,10 +113,11 @@ public abstract class AbstractSecurityTestCaseWithMockService extends TestCase
 	 */
 	protected SecurityTest createSecurityTest()
 	{
-		SecurityTest securityTest = new SecurityTest( testCase, config );
-		SecurityCheckConfig securityCheckConfig = addCheckToConfig();
-		addSecurityCheckConfig( securityCheckConfig );
-		return securityTest;
+//		SecurityTest securityTest = new SecurityTest( testCase, config );
+//		SecurityCheckConfig securityCheckConfig = addCheckToConfig();
+//		addSecurityCheckConfig( securityCheckConfig );
+//		return securityTest;
+		return null;
 	}
 
 	/*
@@ -130,15 +131,16 @@ public abstract class AbstractSecurityTestCaseWithMockService extends TestCase
 	 */
 	protected SecurityCheckConfig addCheckToConfig()
 	{
-		testStep = testCase.getTestStepByName( testStepName );
-
-		TestStepSecurityTestConfig testStepSecurityTest = config.addNewTestStepSecurityTest();
-		testStepSecurityTest.setTestStepId( testStep.getId() );
-
-		SecurityCheckConfig securityCheckConfig = testStepSecurityTest.addNewTestStepSecurityCheck();
-		securityCheckConfig.setType( securityCheckType );
-		securityCheckConfig.setName( securityCheckName );
-
-		return securityCheckConfig;
+//		testStep = testCase.getTestStepByName( testStepName );
+//
+//		TestStepSecurityTestConfig testStepSecurityTest = config.addNewTestStepSecurityTest();
+//		testStepSecurityTest.setTestStepId( testStep.getId() );
+//
+//		SecurityCheckConfig securityCheckConfig = testStepSecurityTest.addNewTestStepSecurityCheck();
+//		securityCheckConfig.setType( securityCheckType );
+//		securityCheckConfig.setName( securityCheckName );
+//
+//		return securityCheckConfig;
+		return null;
 	}
 }
