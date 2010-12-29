@@ -41,7 +41,7 @@ import com.eviware.soapui.support.StringUtils;
 
 public class ProxyUtils
 {
-	private static boolean proxyEnabled = true;
+	private static boolean proxyEnabled = false;
 
 	public static HostConfiguration initProxySettings( Settings settings, HttpState httpState,
 			HostConfiguration hostConfiguration, String urlString, PropertyExpansionContext context )
