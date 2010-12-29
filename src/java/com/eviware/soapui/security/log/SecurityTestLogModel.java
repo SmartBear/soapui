@@ -82,4 +82,15 @@ public class SecurityTestLogModel extends AbstractListModel
 		}
 	}
 
+	public String getMessages()
+	{
+		StringBuffer sb = new StringBuffer();
+		for(SecurityTestLogMessageEntry messageEntry: items)
+		{
+			sb.append( messageEntry.getMessage());
+			sb.append( "\n" );
+		}
+		return sb.toString();
+	}
+
 }

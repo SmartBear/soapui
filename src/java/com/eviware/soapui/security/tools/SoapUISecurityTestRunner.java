@@ -55,6 +55,8 @@ import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
 import com.eviware.soapui.model.testsuite.TestRunner.Status;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
 import com.eviware.soapui.report.JUnitReportCollector;
+import com.eviware.soapui.security.SecurityTest;
+import com.eviware.soapui.security.SecurityTestRunnerImpl;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.types.StringToObjectMap;
@@ -204,42 +206,9 @@ public class SoapUISecurityTestRunner extends AbstractSoapUITestRunner
 	protected SoapUIOptions initCommandLineOptions()
 	{
 		SoapUIOptions options = new SoapUIOptions( "testrunner" );
-		// options.addOption( "e", true, "Sets the endpoint" );
 		options.addOption( "s", true, "Sets the testsuite" );
 		options.addOption( "c", true, "Sets the testcase" );
 		options.addOption( "n", true, "Sets the security test name" );
-		// options.addOption( "p", true, "Sets the password" );
-		// options.addOption( "w", true,
-		// "Sets the WSS password type, either 'Text' or 'Digest'" );
-		// options.addOption( "i", false, "Enables Swing UI for scripts" );
-		// options.addOption( "d", true, "Sets the domain" );
-		// options.addOption( "h", true, "Sets the host" );
-		// options.addOption( "r", false, "Prints a small summary report" );
-		// options.addOption( "f", true,
-		// "Sets the output folder to export results to" );
-		// options.addOption( "j", false,
-		// "Sets the output to include JUnit XML reports" );
-		// options.addOption( "m", false,
-		// "Sets the maximum number of TestStep errors to save for each testcase"
-		// );
-		// options.addOption( "a", false, "Turns on exporting of all results" );
-		// options.addOption( "A", false,
-		// "Turns on exporting of all results using folders instead of long filenames"
-		// );
-		// options.addOption( "t", true,
-		// "Sets the soapui-settings.xml file to use" );
-		// options.addOption( "x", true,
-		// "Sets project password for decryption if project is encrypted" );
-		// options.addOption( "v", true,
-		// "Sets password for soapui-settings.xml file" );
-		// options.addOption( "D", true, "Sets system property with name=value" );
-		// options.addOption( "G", true, "Sets global property with name=value" );
-		// options.addOption( "P", true,
-		// "Sets or overrides project property with name=value" );
-		// options.addOption( "I", false,
-		// "Do not stop if error occurs, ignore them" );
-		// options.addOption( "S", false,
-		// "Saves the project after running the tests" );
 
 		return options;
 	}
@@ -388,9 +357,9 @@ public class SoapUISecurityTestRunner extends AbstractSoapUITestRunner
 		try
 		{
 			log.info( ( "Running Project [" + project.getName() + "], runType = " + project.getRunType() ) );
-			WsdlProjectRunner runner = project.run( new StringToObjectMap(), false );
-			log.info( "Project [" + project.getName() + "] finished with status [" + runner.getStatus() + "] in "
-					+ runner.getTimeTaken() + "ms" );
+			for(TestSuite testSuite: project.getTestSuiteList()){
+				runSuite( ( WsdlTestSuite )testSuite );
+			}
 		}
 		catch( Exception e )
 		{
@@ -483,9 +452,10 @@ public class SoapUISecurityTestRunner extends AbstractSoapUITestRunner
 		try
 		{
 			log.info( ( "Running TestSuite [" + suite.getName() + "], runType = " + suite.getRunType() ) );
-			WsdlTestSuiteRunner runner = suite.run( new StringToObjectMap(), false );
-			log.info( "TestSuite [" + suite.getName() + "] finished with status [" + runner.getStatus() + "] in "
-					+ ( runner.getTimeTaken() ) + "ms" );
+			for( TestCase testCase : suite.getTestCaseList() )
+			{
+				runTestCase( ( WsdlTestCase )testCase );
+			}
 		}
 		catch( Exception e )
 		{
@@ -495,6 +465,8 @@ public class SoapUISecurityTestRunner extends AbstractSoapUITestRunner
 		{
 			testSuiteCount++ ;
 		}
+
+		
 	}
 
 	/**
@@ -510,9 +482,15 @@ public class SoapUISecurityTestRunner extends AbstractSoapUITestRunner
 		try
 		{
 			log.info( "Running TestCase [" + testCase.getName() + "]" );
-			WsdlTestCaseRunner runner = testCase.run( new StringToObjectMap(), false );
-			log.info( "TestCase [" + testCase.getName() + "] finished with status [" + runner.getStatus() + "] in "
-					+ ( runner.getTimeTaken() ) + "ms" );
+			for( SecurityTest securityTest : testCase.getSecurityTestList() )
+			{
+				SecurityTestRunnerImpl testRunner = new SecurityTestRunnerImpl( securityTest );
+				testRunner.start( false );
+				log.info( "\n" + securityTest.getSecurityTestLog().getMessages() );
+				log.info( "SecurityTest [" + securityTest.getName() + "] finished  in " + ( testRunner.getTimeTaken() )
+						+ "ms" );
+			}
+
 		}
 		catch( Exception e )
 		{

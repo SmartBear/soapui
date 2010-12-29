@@ -271,7 +271,7 @@ public class SecurityTestRunnerImpl extends AbstractTestRunner<SecurityTest, Sec
 		securityTest.getTestCase().beforeSave();
 		listeners = securityTest.getTestRunListeners();
 		hasTornDown = false;
-
+		startTime = System.currentTimeMillis();
 		try
 		{
 			securityTest.runStartupScript( runContext, this );
