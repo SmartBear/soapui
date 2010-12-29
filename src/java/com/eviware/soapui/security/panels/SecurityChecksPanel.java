@@ -116,12 +116,16 @@ public class SecurityChecksPanel extends JPanel
 				if( obj instanceof SecurityCheck )
 				{
 					SecurityCheck chck = ( SecurityCheck )obj;
+					chck.setTestStep(getTestStep());
 					if( chck.isConfigurable() )
 						chck.configure();
 
 					return;
 				}
 			}
+
+
+		
 		} );
 
 		JScrollPane listScrollPane = new JScrollPane( securityCheckList );
@@ -134,6 +138,10 @@ public class SecurityChecksPanel extends JPanel
 		securityCheckConfigPanel = ( JPanel )buildConfigPanel();
 		add( p, BorderLayout.CENTER );
 
+	}
+
+	protected TestStep getTestStep() {
+		return testStep;
 	}
 
 	private JComponent buildConfigPanel()
@@ -456,13 +464,16 @@ public class SecurityChecksPanel extends JPanel
 			}
 
 			SecurityCheck securityCheck = securityTest.addSecurityCheck( testStep, type, name );
+
 			if( securityCheck == null )
 			{
 				UISupport.showErrorMessage( "Failed to add security check" );
 				return;
 			}
 			securityCheckList.setSelectedIndex( securityCheckListModel.getSize() - 1 );
-			securityCheck.configure();
+			SecurityCheck secCheck = getCurrentSecurityCheck();
+			secCheck.setTestStep(testStep);
+			secCheck.configure();
 
 		}
 
