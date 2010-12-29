@@ -55,6 +55,7 @@ import org.w3c.dom.CDATASection;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentFragment;
 import org.w3c.dom.Element;
+import org.w3c.dom.EntityReference;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -170,6 +171,7 @@ public final class XmlUtils
 		try
 		{
 			XmlObject xmlObject = XmlObject.Factory.parse( dom.getDocumentElement() );
+			
 			serializePretty( xmlObject, writer );
 		}
 		catch( Exception e )
@@ -874,7 +876,7 @@ public final class XmlUtils
 	{
 		try
 		{
-			XmlObject xmlObject = XmlObject.Factory.parse( xmlText );
+			XmlObject xmlObject = XmlObject.Factory.parse( xmlText, new XmlOptions() );
 
 			String namespaces = declareXPathNamespaces( xmlObject );
 			if( namespaces != null && namespaces.trim().length() > 0 )

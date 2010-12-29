@@ -34,6 +34,7 @@ import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
+import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCaseRunner;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
@@ -399,5 +400,23 @@ public abstract class AbstractSecurityCheck extends SecurityCheck
 	{
 		return new ArrayList<SecurityTestLogMessageEntry>();
 	}
+	
+	protected AbstractHttpRequest<?> getOriginalResult(WsdlTestCaseRunner testCaseRunner, TestStep testStep) {
+		testStep.run(testCaseRunner, testCaseRunner.getRunContext());
+		
+		return getRequest(testStep);
+	}
+	
+	protected AbstractHttpRequest<?> getRequest(TestStep testStep) {
+		if (testStep instanceof HttpTestRequestStep) {
+			return ((HttpTestRequestStep) testStep).getHttpRequest();
+		} else if (testStep instanceof RestTestRequestStep) {
+			return ((RestTestRequestStep) testStep).getHttpRequest();
+		} else if (testStep instanceof WsdlTestRequestStep) {
+			return ((WsdlTestRequestStep) testStep).getHttpRequest();
+		}
+		return null;
+	}
+	
 
 }

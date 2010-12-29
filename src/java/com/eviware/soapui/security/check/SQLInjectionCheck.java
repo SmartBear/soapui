@@ -22,10 +22,7 @@ import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCaseRunner;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpResponseMessageExchange;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestInterface;
-import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStepInterface;
-import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
-import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.SamplerTestStep;
 import com.eviware.soapui.model.testsuite.TestStep;
@@ -71,19 +68,8 @@ public class SQLInjectionCheck extends AbstractSecurityCheck implements
 			WsdlTestCaseRunner testCaseRunner = new WsdlTestCaseRunner(
 					(WsdlTestCase) testStep.getTestCase(),
 					new StringToObjectMap());
-			testStep.run(testCaseRunner, testCaseRunner.getRunContext());
-
-			AbstractHttpRequest<?> request = null;
-
-			if (testStep instanceof HttpTestRequestStep) {
-				request = ((HttpTestRequestStep) testStep).getHttpRequest();
-			} else if (testStep instanceof RestTestRequestStep) {
-				request = ((RestTestRequestStep) testStep).getHttpRequest();
-			} else if (testStep instanceof WsdlTestRequestStep) {
-				request = ((WsdlTestRequestStep) testStep).getHttpRequest();
-			}
-			String originalResponse = request
-					.getResponse().getContentAsXml();
+			
+			String originalResponse = getOriginalResult(testCaseRunner, testStep).getResponse().getContentAsXml();
 
 			if (getExecutionStrategy().equals(
 					SecurityCheckParameterSelector.SEPARATE_REQUEST_STRATEGY)) {
@@ -94,15 +80,7 @@ public class SQLInjectionCheck extends AbstractSecurityCheck implements
 						sqlFuzzer.getNextFuzzedTestStep(testStep, param);
 						testStep.run(testCaseRunner, testCaseRunner
 								.getRunContext());
-						AbstractHttpRequest<?> lastRequest = null;
-
-						if (testStep instanceof HttpTestRequestStep) {
-							lastRequest = ((HttpTestRequestStep) testStep).getHttpRequest();
-						} else if (testStep instanceof RestTestRequestStep) {
-							lastRequest = ((RestTestRequestStep) testStep).getHttpRequest();
-						} else if (testStep instanceof WsdlTestRequestStep) {
-							lastRequest = ((WsdlTestRequestStep) testStep).getHttpRequest();
-						}
+						AbstractHttpRequest<?> lastRequest = getRequest(testStep);
 
 						if (StringUtils.getLevenshteinDistance(
 								originalResponse,
@@ -159,15 +137,8 @@ public class SQLInjectionCheck extends AbstractSecurityCheck implements
 	public void analyze(TestStep testStep, SecurityTestRunContext context,
 			SecurityTestLogModel securityTestLog) {
 		// TODO: Make this test more extensive
-		AbstractHttpRequest<?> lastRequest = null;
-
-		if (testStep instanceof HttpTestRequestStep) {
-			lastRequest = ((HttpTestRequestStep) testStep).getHttpRequest();
-		} else if (testStep instanceof RestTestRequestStep) {
-			lastRequest = ((RestTestRequestStep) testStep).getHttpRequest();
-		} else if (testStep instanceof WsdlTestRequestStep) {
-			lastRequest = ((WsdlTestRequestStep) testStep).getHttpRequest();
-		}
+		AbstractHttpRequest<?> lastRequest = getRequest(testStep);
+		
 		if (lastRequest.getResponse().getContentAsString().indexOf("SQL Error") > -1) {
 			securityTestLog.addEntry(new SecurityTestLogMessageEntry(
 					"SQL Error displayed in response", null

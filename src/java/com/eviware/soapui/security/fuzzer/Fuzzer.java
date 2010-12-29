@@ -46,7 +46,6 @@ public class Fuzzer {
 		if (currentIndex < config.getValueList().size()) {
 			if ( testStep instanceof WsdlTestRequestStep ) {
 				AbstractHttpRequest<?> request = ((WsdlTestRequestStep) testStep).getHttpRequest();
-				request.getRequestContent();
 				String newContent = XmlUtils.setXPathContent(request.getRequestContent(), param.substring(param.lastIndexOf("\n") + 1), config.getValueArray(currentIndex));
 				request.setRequestContent(newContent);
 			} else {

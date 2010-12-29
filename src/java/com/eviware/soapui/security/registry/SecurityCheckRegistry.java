@@ -37,6 +37,7 @@ public class SecurityCheckRegistry
 		addFactory( new ParameterExposureCheckFactory() );
 		addFactory( new SQLInjectionCheckFactory() );
 		addFactory( new InformationExposureCheckFactory() );
+		addFactory( new XmlBombSecurityCheckFactory() );
 	}
 
 	/**

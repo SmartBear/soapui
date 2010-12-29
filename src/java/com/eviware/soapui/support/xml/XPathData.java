@@ -202,7 +202,7 @@ public class XPathData
 		for( Iterator<String> i = nsMap.keySet().iterator(); i.hasNext(); )
 		{
 			String ns = i.next();
-			xpath.append( "declare namespace " + nsMap.get( ns ) + "='" + ns + "';\n" );
+			xpath.append( "declare namespace " + nsMap.get( ns ) + "='" + ns + "'; \n" );
 		}
 
 		if( function != null )

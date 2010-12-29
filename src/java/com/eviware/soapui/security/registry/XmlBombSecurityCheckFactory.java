@@ -13,6 +13,7 @@
 package com.eviware.soapui.security.registry;
 
 import com.eviware.soapui.config.SecurityCheckConfig;
+import com.eviware.soapui.config.XmlBombSecurityCheckConfig;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.security.check.SecurityCheck;
 import com.eviware.soapui.security.check.XmlBombSecurityCheck;
@@ -28,7 +29,7 @@ public class XmlBombSecurityCheckFactory extends AbstractSecurityCheckFactory {
 	public XmlBombSecurityCheckFactory() {
 		super(XmlBombSecurityCheck.TYPE, "XmlBombSecurityCheck",
 				"Preforms a check for XML Bomb Vulerabilities",
-				"/sql_injection_check_script.gif");
+				"/xml_bomb_security_check_script.gif");
 	}
 
 	public boolean canCreate() {
@@ -46,8 +47,8 @@ public class XmlBombSecurityCheckFactory extends AbstractSecurityCheckFactory {
 				.newInstance();
 		securityCheckConfig.setType(XmlBombSecurityCheck.TYPE);
 		securityCheckConfig.setName(name);
-	//	XmlBombSecurityCheckConfig sic = XmlBombSecurityCheckConfig.Factory.newInstance();
-	//	securityCheckConfig.setConfig(sic);
+		XmlBombSecurityCheckConfig xbsc = XmlBombSecurityCheckConfig.Factory.newInstance();
+		securityCheckConfig.setConfig(xbsc);
 		return securityCheckConfig;
 	}
 
