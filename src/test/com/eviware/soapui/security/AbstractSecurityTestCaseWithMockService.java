@@ -18,6 +18,7 @@ import junit.framework.TestCase;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Test;
 
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.config.SecurityTestConfig;
@@ -35,7 +36,7 @@ import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestSuite;
 
-public abstract class AbstractSecurityTestCaseWithMockService extends TestCase
+public class AbstractSecurityTestCaseWithMockService extends TestCase
 {
 	WsdlTestCase testCase;
 	WsdlTestStep testStep;
@@ -122,7 +123,10 @@ public abstract class AbstractSecurityTestCaseWithMockService extends TestCase
 	 * adds specific config which is ANY TYPE in soapui.xsd implement it by
 	 * create specific SecurityTest with constructor
 	 */
-	protected abstract void addSecurityCheckConfig( SecurityCheckConfig securityCheckConfig );
+	protected void addSecurityCheckConfig( SecurityCheckConfig securityCheckConfig )
+	{
+
+	}
 
 	/*
 	 * creates basic SecurityCheckConfig
@@ -139,5 +143,12 @@ public abstract class AbstractSecurityTestCaseWithMockService extends TestCase
 		securityCheckConfig.setName( securityCheckName );
 
 		return securityCheckConfig;
+	}
+
+	@Test
+	public void testDummy()
+	{
+
+		assertTrue( "Dummy SecurityTest", true );
 	}
 }
