@@ -35,7 +35,7 @@ import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestSuite;
 
-public abstract class AbstractSecurityTestCaseWithMockService //extends TestCase
+public abstract class AbstractSecurityTestCaseWithMockService extends TestCase
 {
 	WsdlTestCase testCase;
 	WsdlTestStep testStep;
