@@ -98,28 +98,86 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck implements
 
 		String originalResponse = getOriginalResult(testCaseRunner, testStep)
 				.getResponse().getContentAsXml();
-
-		for (String param : getParamsToCheck()) {
-			
+		if (isAttachXmlBomb()) {
 			while (currentIndex < getBombList().size()) {
-				generateNextRequest(testStep, param);
-				testStep.run(testCaseRunner, testCaseRunner.getRunContext());
-				AbstractHttpRequest<?> lastRequest = getRequest(testStep);
+				attachXmlBomb(testStep);
+				runCheck(testStep, context, securityTestLog,
+						testCaseRunner, originalResponse);
+			}
+			
+			currentIndex = 0;
+		}
 
-				if (StringUtils.getLevenshteinDistance(originalResponse,
-						lastRequest.getResponse().getContentAsString()) > MINIMUM_STRING_DISTANCE) {
-					securityTestLog.addEntry(new SecurityTestLogMessageEntry(
-							"Possible XML Bomb Vulnerability Detected", null
+		if (getExecutionStrategy().equals(
+				SecurityCheckParameterSelector.SEPARATE_REQUEST_STRATEGY)) {
+			for (String param : getParamsToCheck()) {
+
+				while (currentIndex < getBombList().size()) {
+					generateNextRequest(testStep, param);
+					runCheck(testStep, context, securityTestLog,
+							testCaseRunner, originalResponse);
+				}
+
+			}
+		} else {
+			while (currentIndex < getBombList().size()) {
+				generateNextRequest(testStep, getParamsToCheck());
+				runCheck(testStep, context, securityTestLog,
+						testCaseRunner, originalResponse);
+			}
+		}
+
+	}
+
+	private void runCheck(TestStep testStep, SecurityTestRunContext context,
+			SecurityTestLogModel securityTestLog,
+			WsdlTestCaseRunner testCaseRunner, String originalResponse) {
+		testStep
+				.run(testCaseRunner, testCaseRunner.getRunContext());
+		AbstractHttpRequest<?> lastRequest = getRequest(testStep);
+
+		if (StringUtils.getLevenshteinDistance(originalResponse,
+				lastRequest.getResponse().getContentAsString()) > MINIMUM_STRING_DISTANCE) {
+			securityTestLog
+					.addEntry(new SecurityTestLogMessageEntry(
+							"Possible XML Bomb Vulnerability Detected",
+							null
 					/*
 					 * new HttpResponseMessageExchange( lastRequest)
 					 */));
-					setStatus(Status.FAILED);
+			setStatus(Status.FAILED);
+		}
+
+		analyze(testStep, context, securityTestLog);
+	}
+
+	private TestStep generateNextRequest(TestStep testStep,
+			List<String> paramsToCheck) {
+		AbstractHttpRequest<?> request = getRequest(testStep);
+		if (currentIndex < getBombList().size()) {
+			String bomb = getBombList().get(currentIndex);
+
+			String requestContent = request.getRequestContent();
+			String newRequestContent = requestContent;
+			if (testStep instanceof WsdlTestRequestStep) {
+				for (String param: paramsToCheck) {
+				newRequestContent = XmlUtils.setXPathContent(newRequestContent, param.substring(param
+						.lastIndexOf("\n") + 1), "&&payload&&");
 				}
-				
-				analyze(testStep, context, securityTestLog);
+				newRequestContent = newRequestContent.replaceAll(
+						"&amp;&amp;payload&amp;&amp;", "&payload");
 			}
 
+			newRequestContent = bomb + newRequestContent;
+			
+			request.setRequestContent(newRequestContent);
+
+			currentIndex++;
+		} else {
+			return null;
 		}
+
+		return testStep;
 
 	}
 
@@ -148,7 +206,7 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck implements
 					public void update(Document document) {
 						String prefix = form
 								.getComponentValue(ATTACHMENT_PREFIX_FIELD);
-						
+
 						setAttachmentPrefix(prefix);
 					}
 				});
@@ -198,7 +256,40 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck implements
 		if (currentIndex < getBombList().size()) {
 			String bomb = getBombList().get(currentIndex);
 
-			if (isAttachXmlBomb()) {
+			String requestContent = request.getRequestContent();
+			String newRequestContent = requestContent;
+			if (testStep instanceof WsdlTestRequestStep) {
+				newRequestContent = XmlUtils.setXPathContent(request
+						.getRequestContent(), param.substring(param
+						.lastIndexOf("\n") + 1), "&&payload&&");
+				// We need to do this, since the parser we are using does not
+				// provide support for
+				// entity references (it throws a "Not Implemented" runtime
+				// exception when trying to create one
+				newRequestContent = newRequestContent.replaceAll(
+						"&amp;&amp;payload&amp;&amp;", "&payload");
+			}
+
+			newRequestContent = bomb + newRequestContent;
+			// This is a bit of a hack, since the xpath functionality above
+			// strips the DTD if it is run
+			// after the DTD is added.
+			request.setRequestContent(newRequestContent);
+
+			currentIndex++;
+		} else {
+			return null;
+		}
+
+		return testStep;
+	}
+
+	private TestStep attachXmlBomb(TestStep testStep) {
+		if (isAttachXmlBomb()) {
+			AbstractHttpRequest<?> request = getRequest(testStep);
+
+			if (currentIndex < getBombList().size()) {
+				String bomb = getBombList().get(currentIndex);
 				try {
 					File bombFile = File.createTempFile(getAttachmentPrefix(),
 							".xml");
@@ -209,31 +300,12 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck implements
 					writer.flush();
 					request.attachFile(bombFile, false);
 					bombFile.delete();
+					currentIndex++;
 				} catch (IOException e) {
 					SoapUI.logError(e);
 				}
-			} else {
-				String requestContent = request.getRequestContent();
-				String newRequestContent = requestContent;
-				if (testStep instanceof WsdlTestRequestStep) {
-					 newRequestContent = XmlUtils.setXPathContent(request
-							.getRequestContent(), param.substring(param
-							.lastIndexOf("\n") + 1), "&&payload&&");
-					 //We need to do this, since the parser we are using does not provide support for 
-					 //entity references (it throws a "Not Implemented" runtime exception when trying to create one
-					 newRequestContent = newRequestContent.replaceAll("&amp;&amp;payload&amp;&amp;", "&payload");
-				}
-				
-				newRequestContent = bomb + newRequestContent;
-				//This is a bit of a hack, since the xpath functionality above strips the DTD if it is run
-				//after the DTD is added.
-				request.setRequestContent(newRequestContent);
 			}
-			currentIndex++;
-		} else {
-			return null;
 		}
-
 		return testStep;
 	}
 
