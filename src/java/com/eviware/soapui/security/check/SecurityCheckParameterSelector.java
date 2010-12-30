@@ -55,7 +55,7 @@ public class SecurityCheckParameterSelector extends JPanel implements
 		executionPanel.add( singleButton );
 		executionPanel.setBorder( BorderFactory.createTitledBorder( "Execution Strategy" ) );
 		add(executionPanel);
-		add(new JLabel("Select the Parameters that this test will apply to"));
+		add(new JLabel("Select Parameters"));
 
 		if (request != null) {
 			if (!soapRequest) {

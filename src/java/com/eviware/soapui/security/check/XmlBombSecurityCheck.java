@@ -8,6 +8,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JCheckBox;
@@ -98,32 +99,37 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck implements
 
 		String originalResponse = getOriginalResult(testCaseRunner, testStep)
 				.getResponse().getContentAsXml();
+		String originalRequest = getRequest(testStep).getRequestContent();
 		if (isAttachXmlBomb()) {
-			while (currentIndex < getBombList().size()) {
+			while (currentIndex < getBombList().size() + 1) {
 				attachXmlBomb(testStep);
-				runCheck(testStep, context, securityTestLog,
-						testCaseRunner, originalResponse);
+				runCheck(testStep, context, securityTestLog, testCaseRunner,
+						originalResponse);
+				getRequest(testStep).setRequestContent(originalRequest);
 			}
-			
+
 			currentIndex = 0;
 		}
 
 		if (getExecutionStrategy().equals(
-				SecurityCheckParameterSelector.SEPARATE_REQUEST_STRATEGY)) {
+				SecurityCheckParameterSelector.SEPARATE_REQUEST_STRATEGY)
+				&& getParamsToCheck().size() > 0) {
 			for (String param : getParamsToCheck()) {
-
-				while (currentIndex < getBombList().size()) {
-					generateNextRequest(testStep, param);
-					runCheck(testStep, context, securityTestLog,
-							testCaseRunner, originalResponse);
+				if (param != null) {
+					while (currentIndex < getBombList().size() + 1) {
+						generateNextRequest(testStep, param);
+						runCheck(testStep, context, securityTestLog,
+								testCaseRunner, originalResponse);
+						getRequest(testStep).setRequestContent(originalRequest);
+					}
 				}
-
 			}
-		} else {
-			while (currentIndex < getBombList().size()) {
+		} else if (getParamsToCheck().size() > 0) {
+			while (currentIndex < getBombList().size() + 1) {
 				generateNextRequest(testStep, getParamsToCheck());
-				runCheck(testStep, context, securityTestLog,
-						testCaseRunner, originalResponse);
+				runCheck(testStep, context, securityTestLog, testCaseRunner,
+						originalResponse);
+				getRequest(testStep).setRequestContent(originalRequest);
 			}
 		}
 
@@ -132,19 +138,16 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck implements
 	private void runCheck(TestStep testStep, SecurityTestRunContext context,
 			SecurityTestLogModel securityTestLog,
 			WsdlTestCaseRunner testCaseRunner, String originalResponse) {
-		testStep
-				.run(testCaseRunner, testCaseRunner.getRunContext());
+		testStep.run(testCaseRunner, testCaseRunner.getRunContext());
 		AbstractHttpRequest<?> lastRequest = getRequest(testStep);
 
-		if (StringUtils.getLevenshteinDistance(originalResponse,
-				lastRequest.getResponse().getContentAsString()) > MINIMUM_STRING_DISTANCE) {
-			securityTestLog
-					.addEntry(new SecurityTestLogMessageEntry(
-							"Possible XML Bomb Vulnerability Detected",
-							null
-					/*
-					 * new HttpResponseMessageExchange( lastRequest)
-					 */));
+		if (StringUtils.getLevenshteinDistance(originalResponse, lastRequest
+				.getResponse().getContentAsString()) > MINIMUM_STRING_DISTANCE) {
+			securityTestLog.addEntry(new SecurityTestLogMessageEntry(
+					"Possible XML Bomb Vulnerability Detected", null
+			/*
+			 * new HttpResponseMessageExchange( lastRequest)
+			 */));
 			setStatus(Status.FAILED);
 		}
 
@@ -160,21 +163,23 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck implements
 			String requestContent = request.getRequestContent();
 			String newRequestContent = requestContent;
 			if (testStep instanceof WsdlTestRequestStep) {
-				for (String param: paramsToCheck) {
-				newRequestContent = XmlUtils.setXPathContent(newRequestContent, param.substring(param
-						.lastIndexOf("\n") + 1), "&&payload&&");
+				for (String param : paramsToCheck) {
+					newRequestContent = XmlUtils.setXPathContent(
+							newRequestContent, param.substring(param
+									.lastIndexOf("\n") + 1), "&&payload&&");
 				}
 				newRequestContent = newRequestContent.replaceAll(
 						"&amp;&amp;payload&amp;&amp;", "&payload");
 			}
 
 			newRequestContent = bomb + newRequestContent;
-			
+
 			request.setRequestContent(newRequestContent);
 
 			currentIndex++;
-		} else {
-			return null;
+		} else if (currentIndex == getBombList().size()) {
+			request.setRequestContent(createQuadraticExpansionAttack(request
+					.getRequestContent(), paramsToCheck));
 		}
 
 		return testStep;
@@ -276,10 +281,14 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck implements
 			// after the DTD is added.
 			request.setRequestContent(newRequestContent);
 
-			currentIndex++;
-		} else {
-			return null;
+		} else if (currentIndex == getBombList().size()) {
+			List<String> paramList = new ArrayList<String>();
+			paramList.add(param);
+			request.setRequestContent(createQuadraticExpansionAttack(request
+					.getRequestContent(), paramList));
 		}
+
+		currentIndex++;
 
 		return testStep;
 	}
@@ -304,6 +313,34 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck implements
 				} catch (IOException e) {
 					SoapUI.logError(e);
 				}
+			} else if (currentIndex == getBombList().size()) {
+				try {
+					File bombFile = File.createTempFile(getAttachmentPrefix(),
+							".xml");
+					BufferedWriter writer = new BufferedWriter(new FileWriter(
+							bombFile));
+					writer.write(createQuadraticExpansionAttack(null, null));
+					writer.flush();
+					request.attachFile(bombFile, false);
+					bombFile.delete();
+				} catch (IOException e) {
+					SoapUI.logError(e);
+				}
+				currentIndex++;
+			} else if (currentIndex == getBombList().size() + 1) {
+				try {
+					File bombFile = File.createTempFile(getAttachmentPrefix(),
+							".xml");
+					BufferedWriter writer = new BufferedWriter(new FileWriter(
+							bombFile));
+					writer.write(createAttributeBlowupAttack(null, null));
+					writer.flush();
+					request.attachFile(bombFile, false);
+					bombFile.delete();
+				} catch (IOException e) {
+					SoapUI.logError(e);
+				}
+				currentIndex++;
 			}
 		}
 		return testStep;
@@ -338,13 +375,52 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck implements
 		((XmlBombSecurityCheckConfig) config.getConfig())
 				.setXmlAttachmentPrefix(prefix);
 	}
-	
-	private String createQuadraticExpansionAttack(String initialContent, List<String> param) {
+
+	private String createQuadraticExpansionAttack(String initialContent,
+			List<String> params) {
 		String result = "";
-		
-		//String entityContent = 
-		
-		
+
+		StringBuilder entityContent = new StringBuilder("a");
+		StringBuilder entityReferences = new StringBuilder("&a;");
+
+
+		if (initialContent != null) {
+			for (String param : params) {
+				initialContent = XmlUtils.setXPathContent(initialContent, param
+						.substring(param.lastIndexOf("\n") + 1), "&&payload&&");
+			}
+			for (int i = 0; i < 16; i++) {
+				entityContent.append(entityContent.toString());
+				entityReferences.append(entityReferences.toString());
+			}
+			initialContent = initialContent.replaceAll(
+					"&amp;&amp;payload&amp;&amp;", entityReferences.toString());
+		} else {
+			for (int i = 0; i < 16; i++) {
+				entityContent.append(entityContent.toString());
+				entityReferences.append(entityReferences.toString());
+			}
+			initialContent = "<kaboom>" + entityReferences + "</kaboom>";
+		}
+
+		result = "<!DOCTYPE kaboom [\n<!ENTITY a \"" + entityContent.toString()
+				+ "\">\n]>" + initialContent;
+
+		return result;
+	}
+
+	private String createAttributeBlowupAttack(String initialContent,
+			List<String> params) {
+		String result = "";
+
+		result = "<kaboom ";
+
+		for (int i = 0; i < 200000; i++) {
+			result = result + " att" + i + "='test' ";
+		}
+
+		result += "/>";
+
 		return result;
 	}
 
