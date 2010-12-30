@@ -706,6 +706,25 @@ else return false;
                 </serializedBean>
                 <condition />
               </action>
+              <action name="Set JxBrowser location" id="2643" beanClass="com.install4j.runtime.beans.actions.control.SetVariableAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.control.SetVariableAction">
+                      <void property="script">
+                        <object class="com.install4j.api.beans.ScriptProperty">
+                          <void property="value">
+                            <string>return context.getCompilerVariable("SOAPUI_HOME") + context.getVariable("FILE_SEPARATOR") + ".JxBrowser";</string>
+                          </void>
+                        </object>
+                      </void>
+                      <void property="variableName">
+                        <string>jxBrowserInstallLocation</string>
+                      </void>
+                    </object>
+                  </java>
+                </serializedBean>
+                <condition />
+              </action>
               <action name="Set access mode for wsi-test-tools" id="1037" beanClass="com.install4j.runtime.beans.actions.files.SetModeAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="3" errorMessage="Access mode for wsi-test-tools scripts couldn't be set">
                 <serializedBean>
                   <java class="java.beans.XMLDecoder">
@@ -898,7 +917,7 @@ return false;
                       <void property="vmOptions">
                         <array class="java.lang.String" length="1">
                           <void index="0">
-                            <string>-Djxbrowser.xulrunner.dir=${compiler:SOAPUI_HOME}${installer:FILE_SEPARATOR}.JxBrowser</string>
+                            <string>-Djxbrowser.xulrunner.dir=${installer:jxBrowserInstallLocation}</string>
                           </void>
                         </array>
                       </void>
@@ -1291,6 +1310,25 @@ return installTutorials;</condition>
                 </serializedBean>
                 <condition />
               </action>
+              <action name="Set JxBrowser location" id="2645" beanClass="com.install4j.runtime.beans.actions.control.SetVariableAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.control.SetVariableAction">
+                      <void property="script">
+                        <object class="com.install4j.api.beans.ScriptProperty">
+                          <void property="value">
+                            <string>return context.getCompilerVariable("SOAPUI_HOME") + context.getVariable("FILE_SEPARATOR") + ".JxBrowser";</string>
+                          </void>
+                        </object>
+                      </void>
+                      <void property="variableName">
+                        <string>jxBrowserInstallLocation</string>
+                      </void>
+                    </object>
+                  </java>
+                </serializedBean>
+                <condition />
+              </action>
               <action name="Delete .JxBrowser" id="2615" beanClass="com.install4j.runtime.beans.actions.files.DeleteFileAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
                 <serializedBean>
                   <java class="java.beans.XMLDecoder">
@@ -1349,10 +1387,7 @@ return installTutorials;</condition>
                     </object>
                   </java>
                 </serializedBean>
-                <condition>InstallationComponentSetup component =context.getInstallationComponentById("1263");
-
-//for mac hermes installation is trigered and license agreement shouldn't be duplicated
-return !Util.isMacosInstaller() &amp;&amp; component.isSelected();</condition>
+                <condition />
               </action>
               <action name="" id="15" beanClass="com.install4j.runtime.beans.actions.UninstallFilesAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
                 <serializedBean>
