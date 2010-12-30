@@ -267,7 +267,7 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck implements
 				// entity references (it throws a "Not Implemented" runtime
 				// exception when trying to create one
 				newRequestContent = newRequestContent.replaceAll(
-						"&amp;&amp;payload&amp;&amp;", "&payload");
+						"&amp;&amp;payload&amp;&amp;", "&payload;");
 			}
 
 			newRequestContent = bomb + newRequestContent;
@@ -296,7 +296,7 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck implements
 					BufferedWriter writer = new BufferedWriter(new FileWriter(
 							bombFile));
 					writer.write(bomb);
-					writer.write("<payload>&payload</payload>");
+					writer.write("<payload>&payload;</payload>");
 					writer.flush();
 					request.attachFile(bombFile, false);
 					bombFile.delete();
@@ -337,6 +337,15 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck implements
 	protected void setAttachmentPrefix(String prefix) {
 		((XmlBombSecurityCheckConfig) config.getConfig())
 				.setXmlAttachmentPrefix(prefix);
+	}
+	
+	private String createQuadraticExpansionAttack(String initialContent, List<String> param) {
+		String result = "";
+		
+		//String entityContent = 
+		
+		
+		return result;
 	}
 
 }
