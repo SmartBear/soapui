@@ -2003,4 +2003,6 @@
     	<xsd:attribute name="attachXmlBomb" type="xsd:boolean"></xsd:attribute>
     	<xsd:attribute name="xmlAttachmentPrefix" type="xsd:string"></xsd:attribute>
     </xsd:complexType>
+
+    <xsd:complexType name="MaliciousAttachmentSecurityCheck"></xsd:complexType>
 </xsd:schema>

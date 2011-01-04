@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.eviware.soapui.config.SecurityCheckConfig;
-import com.eviware.soapui.security.Securable;
 
 /**
  * Registry of SecurityCheck factories
@@ -38,6 +37,7 @@ public class SecurityCheckRegistry
 		addFactory( new SQLInjectionCheckFactory() );
 		addFactory( new InformationExposureCheckFactory() );
 		addFactory( new XmlBombSecurityCheckFactory() );
+		addFactory( new MaliciousAttachmentSecurityCheckFactory() );
 	}
 
 	/**

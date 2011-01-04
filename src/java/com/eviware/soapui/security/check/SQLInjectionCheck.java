@@ -78,23 +78,7 @@ public class SQLInjectionCheck extends AbstractSecurityCheck implements
 
 					while (sqlFuzzer.hasNext()) {
 						sqlFuzzer.getNextFuzzedTestStep(testStep, param);
-						testStep.run(testCaseRunner, testCaseRunner
-								.getRunContext());
-						AbstractHttpRequest<?> lastRequest = getRequest(testStep);
-
-						if (StringUtils.getLevenshteinDistance(
-								originalResponse,
-								lastRequest
-										.getResponse().getContentAsString()) > MINIMUM_STRING_DISTANCE) {
-							securityTestLog
-									.addEntry(new SecurityTestLogMessageEntry(
-											"Possible SQL Injection Vulnerability Detected", null
-											/*new HttpResponseMessageExchange(
-													lastRequest)*/));
-							setStatus(Status.FAILED);
-						}
-						analyze(testStep, context, securityTestLog);
-
+						runCheck(testStep, context, securityTestLog, testCaseRunner, originalResponse, "Possible SQL injection vulenerability detected");
 						// maybe this fuzzer can be implemented to wrap the
 						// security
 						// check not vice versa
@@ -107,22 +91,7 @@ public class SQLInjectionCheck extends AbstractSecurityCheck implements
 
 				while (sqlFuzzer.hasNext()) {
 					sqlFuzzer.getNextFuzzedTestStep(testStep, getParamsToCheck());
-					testStep
-							.run(testCaseRunner, testCaseRunner.getRunContext());
-					HttpTestRequestInterface<?> lastRequest = ((HttpTestRequestStepInterface) testStep)
-							.getTestRequest();
-
-					if (StringUtils.getLevenshteinDistance(originalResponse,
-							((AbstractHttpRequest<?>) lastRequest)
-									.getResponse().getContentAsString()) > MINIMUM_STRING_DISTANCE) {
-						securityTestLog
-								.addEntry(new SecurityTestLogMessageEntry(
-										"Possible SQL Injection Vulnerability Detected",
-										new HttpResponseMessageExchange(
-												lastRequest)));
-						setStatus(Status.FAILED);
-					}
-					analyze(testStep, context, securityTestLog);
+					runCheck(testStep, context, securityTestLog, testCaseRunner, originalResponse, "Possible SQL injection vulenerability detected");
 
 					// maybe this fuzzer can be implemented to wrap the
 					// security

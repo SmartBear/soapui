@@ -27,6 +27,7 @@ import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCaseRunner;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.testsuite.SamplerTestStep;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestRunner.Status;
@@ -102,9 +103,11 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck implements
 		String originalRequest = getRequest(testStep).getRequestContent();
 		if (isAttachXmlBomb()) {
 			while (currentIndex < getBombList().size() + 1) {
-				attachXmlBomb(testStep);
+				Attachment attach = attachXmlBomb(testStep);
 				runCheck(testStep, context, securityTestLog, testCaseRunner,
-						originalResponse);
+						originalResponse,
+						"Possible XML Bomb Vulnerability Detected");
+				getRequest(testStep).removeAttachment(attach);
 				getRequest(testStep).setRequestContent(originalRequest);
 			}
 
@@ -119,7 +122,8 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck implements
 					while (currentIndex < getBombList().size() + 1) {
 						generateNextRequest(testStep, param);
 						runCheck(testStep, context, securityTestLog,
-								testCaseRunner, originalResponse);
+								testCaseRunner, originalResponse,
+								"Possible XML Bomb Vulnerability Detected");
 						getRequest(testStep).setRequestContent(originalRequest);
 					}
 				}
@@ -128,30 +132,12 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck implements
 			while (currentIndex < getBombList().size() + 1) {
 				generateNextRequest(testStep, getParamsToCheck());
 				runCheck(testStep, context, securityTestLog, testCaseRunner,
-						originalResponse);
+						originalResponse,
+						"Possible XML Bomb Vulnerability Detected");
 				getRequest(testStep).setRequestContent(originalRequest);
 			}
 		}
 
-	}
-
-	private void runCheck(TestStep testStep, SecurityTestRunContext context,
-			SecurityTestLogModel securityTestLog,
-			WsdlTestCaseRunner testCaseRunner, String originalResponse) {
-		testStep.run(testCaseRunner, testCaseRunner.getRunContext());
-		AbstractHttpRequest<?> lastRequest = getRequest(testStep);
-
-		if (StringUtils.getLevenshteinDistance(originalResponse, lastRequest
-				.getResponse().getContentAsString()) > MINIMUM_STRING_DISTANCE) {
-			securityTestLog.addEntry(new SecurityTestLogMessageEntry(
-					"Possible XML Bomb Vulnerability Detected", null
-			/*
-			 * new HttpResponseMessageExchange( lastRequest)
-			 */));
-			setStatus(Status.FAILED);
-		}
-
-		analyze(testStep, context, securityTestLog);
 	}
 
 	private TestStep generateNextRequest(TestStep testStep,
@@ -293,7 +279,8 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck implements
 		return testStep;
 	}
 
-	private TestStep attachXmlBomb(TestStep testStep) {
+	private Attachment attachXmlBomb(TestStep testStep) {
+		Attachment attach = null;
 		if (isAttachXmlBomb()) {
 			AbstractHttpRequest<?> request = getRequest(testStep);
 
@@ -307,7 +294,7 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck implements
 					writer.write(bomb);
 					writer.write("<payload>&payload;</payload>");
 					writer.flush();
-					request.attachFile(bombFile, false);
+					attach = request.attachFile(bombFile, false);
 					bombFile.delete();
 					currentIndex++;
 				} catch (IOException e) {
@@ -321,21 +308,7 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck implements
 							bombFile));
 					writer.write(createQuadraticExpansionAttack(null, null));
 					writer.flush();
-					request.attachFile(bombFile, false);
-					bombFile.delete();
-				} catch (IOException e) {
-					SoapUI.logError(e);
-				}
-				currentIndex++;
-			} else if (currentIndex == getBombList().size() + 1) {
-				try {
-					File bombFile = File.createTempFile(getAttachmentPrefix(),
-							".xml");
-					BufferedWriter writer = new BufferedWriter(new FileWriter(
-							bombFile));
-					writer.write(createAttributeBlowupAttack(null, null));
-					writer.flush();
-					request.attachFile(bombFile, false);
+					attach = request.attachFile(bombFile, false);
 					bombFile.delete();
 				} catch (IOException e) {
 					SoapUI.logError(e);
@@ -343,7 +316,7 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck implements
 				currentIndex++;
 			}
 		}
-		return testStep;
+		return attach;
 	}
 
 	protected List<String> getBombList() {
@@ -382,7 +355,6 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck implements
 
 		StringBuilder entityContent = new StringBuilder("a");
 		StringBuilder entityReferences = new StringBuilder("&a;");
-
 
 		if (initialContent != null) {
 			for (String param : params) {
