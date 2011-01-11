@@ -89,7 +89,7 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 	/**
 	 * runFromHereContext is used only for run from here action
 	 */
-	private StringToObjectMap runFromHereContext;
+	private StringToObjectMap runFromHereContext = new StringToObjectMap();
 
 	public WsdlTestCase( WsdlTestSuite testSuite, TestCaseConfig config, boolean forLoadTest )
 	{
