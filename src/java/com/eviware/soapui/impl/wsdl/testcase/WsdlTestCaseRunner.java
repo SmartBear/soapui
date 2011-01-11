@@ -83,7 +83,8 @@ public class WsdlTestCaseRunner extends AbstractTestRunner<WsdlTestCase, WsdlTes
 	public void internalRun( WsdlTestRunContext runContext ) throws Exception
 	{
 		WsdlTestCase testCase = getTestRunnable();
-		gotoStepIndex = -1;
+	
+		gotoStepIndex = -1; 
 		testStepResults.clear();
 
 		// create state for testcase if specified
@@ -106,7 +107,7 @@ public class WsdlTestCaseRunner extends AbstractTestRunner<WsdlTestCase, WsdlTes
 		if( !isRunning() )
 			return;
 
-		initCount = 0;
+		initCount = getStartStep();
 
 		setStartTime();
 		for( ; initCount < testCase.getTestStepCount() && isRunning(); initCount++ )
@@ -157,6 +158,7 @@ public class WsdlTestCaseRunner extends AbstractTestRunner<WsdlTestCase, WsdlTes
 		{
 			fail( "Failing due to failed test step" );
 		}
+		preserveContext( getRunContext() );
 	}
 
 	protected void internalFinally( WsdlTestRunContext runContext )
@@ -205,6 +207,9 @@ public class WsdlTestCaseRunner extends AbstractTestRunner<WsdlTestCase, WsdlTes
 		}
 
 		TestStepResult stepResult = testStep.run( this, getRunContext() );
+
+		
+
 		testStepResults.add( stepResult );
 		resultCount++ ;
 		enforceMaxResults( getTestRunnable().getMaxResults() );
@@ -233,8 +238,18 @@ public class WsdlTestCaseRunner extends AbstractTestRunner<WsdlTestCase, WsdlTes
 				getRunContext().setProperty( TestCaseRunner.Status.class.getName(), TestCaseRunner.Status.FAILED );
 			}
 		}
-
+		preserveContext( getRunContext() );
 		return stepResult;
+	}
+
+	/**
+	 * create backup of context properties in WsdlTestCase. This is used for RUN FROM HERE action.
+	 *
+	 * @param runContext
+	 */
+	private void preserveContext( WsdlTestRunContext runContext )
+	{
+		getTestCase().setRunFromHereContext( runContext.getProperties() );
 	}
 
 	protected void notifyAfterRun()

@@ -86,6 +86,10 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 	private final boolean forLoadTest;
 	private SoapUIScriptEngine setupScriptEngine;
 	private SoapUIScriptEngine tearDownScriptEngine;
+	/**
+	 * runFromHereContext is used only for run from here action
+	 */
+	private StringToObjectMap runFromHereContext;
 
 	public WsdlTestCase( WsdlTestSuite testSuite, TestCaseConfig config, boolean forLoadTest )
 	{
@@ -124,7 +128,6 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 				loadTests.add( loadTest );
 			}
 		}
-		
 
 		if( !forLoadTest )
 		{
@@ -1079,30 +1082,35 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 	}
 
 	@Override
-	public int getSecurityTestCount() {
+	public int getSecurityTestCount()
+	{
 		return securityTests.size();
 	}
 
 	@Override
-	public int getIndexOfSecurityTest(SecurityTest securityTest) {
+	public int getIndexOfSecurityTest( SecurityTest securityTest )
+	{
 		return securityTests.indexOf( securityTest );
 	}
 
 	@Override
-	public SecurityTest getSecurityTestAt(int index) {
+	public SecurityTest getSecurityTestAt( int index )
+	{
 		return securityTests.get( index );
 	}
 
 	@Override
-	public SecurityTest getSecurityTestByName(String securityTestName) {
+	public SecurityTest getSecurityTestByName( String securityTestName )
+	{
 		return ( SecurityTest )getWsdlModelItemByName( securityTests, securityTestName );
 	}
 
 	@Override
-	public List<SecurityTest> getSecurityTestList() {
+	public List<SecurityTest> getSecurityTestList()
+	{
 		return securityTests;
 	}
-	
+
 	public Map<String, SecurityTest> getSecurityTests()
 	{
 		Map<String, SecurityTest> result = new HashMap<String, SecurityTest>();
@@ -1112,7 +1120,8 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 		return result;
 	}
 
-	public SecurityTest addNewSecurityTest(String name) {
+	public SecurityTest addNewSecurityTest( String name )
+	{
 		SecurityTest securityTest = buildSecurityTest( getConfig().addNewSecurityTest() );
 		securityTest.setName( name );
 		securityTests.add( securityTest );
@@ -1122,11 +1131,13 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 		return securityTest;
 	}
 
-	private SecurityTest buildSecurityTest(SecurityTestConfig addNewSecurityTest) {
-		return new SecurityTest(this, addNewSecurityTest);
+	private SecurityTest buildSecurityTest( SecurityTestConfig addNewSecurityTest )
+	{
+		return new SecurityTest( this, addNewSecurityTest );
 	}
 
-	public SecurityTest cloneSecurityTest(SecurityTest securityTest, String name) {
+	public SecurityTest cloneSecurityTest( SecurityTest securityTest, String name )
+	{
 		SecurityTestConfig securityTestConfig = getConfig().addNewSecurityTest();
 		securityTestConfig.set( securityTest.getConfig().copy() );
 
@@ -1141,7 +1152,8 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 		return newSecurityTest;
 	}
 
-	public void removeSecurityTest(SecurityTest securityTest) {
+	public void removeSecurityTest( SecurityTest securityTest )
+	{
 		int ix = securityTests.indexOf( securityTest );
 
 		securityTests.remove( ix );
@@ -1155,5 +1167,15 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 			securityTest.release();
 			getConfig().removeSecurityTest( ix );
 		}
+	}
+
+	public StringToObjectMap getRunFromHereContext()
+	{
+		return runFromHereContext;
+	}
+
+	public void setRunFromHereContext( StringToObjectMap runFromHereContext )
+	{
+		this.runFromHereContext = new StringToObjectMap(runFromHereContext);
 	}
 }
