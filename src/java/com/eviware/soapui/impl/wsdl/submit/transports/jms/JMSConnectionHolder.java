@@ -165,8 +165,12 @@ public class JMSConnectionHolder
 		{
 			if( session != null )
 				session.close();
+				
 			if( connection != null )
+			{
 				connection.close();
+				connection = null;
+			}
 		}
 		catch( JMSException e )
 		{

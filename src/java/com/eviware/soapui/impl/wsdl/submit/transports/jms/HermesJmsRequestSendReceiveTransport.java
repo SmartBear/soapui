@@ -44,7 +44,8 @@ public class HermesJmsRequestSendReceiveTransport extends HermesJmsRequestTransp
 
 			Message messageSend = messageSend( submitContext, request, queueSession, jmsConnectionHolder.getHermes(),
 					queueSend );
-			MessageConsumer messageConsumer = queueSession.createConsumer( queueReceive, submitContext.expand(messageSelector));
+			MessageConsumer messageConsumer = queueSession.createConsumer( queueReceive, submitContext
+					.expand( messageSelector ) );
 
 			return makeResponse( submitContext, request, timeStarted, messageSend, messageConsumer );
 		}
@@ -58,7 +59,9 @@ public class HermesJmsRequestSendReceiveTransport extends HermesJmsRequestTransp
 		}
 		finally
 		{
-			closeSessionAndConnection( jmsConnectionHolder != null ? jmsConnectionHolder.getConnection() : null,queueSession );
+			jmsConnectionHolder.closeAll();
+			closeSessionAndConnection( jmsConnectionHolder != null ? jmsConnectionHolder.getConnection() : null,
+					queueSession );
 		}
 		return null;
 	}

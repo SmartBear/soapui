@@ -25,14 +25,14 @@ import com.eviware.soapui.model.iface.SubmitContext;
 public class HermesJmsRequestPublishTransport extends HermesJmsRequestTransport
 {
 
-	public Response execute(SubmitContext submitContext, Request request, long timeStarted) throws Exception
+	public Response execute( SubmitContext submitContext, Request request, long timeStarted ) throws Exception
 	{
 		Session topicSession = null;
 		JMSConnectionHolder jmsConnectionHolder = null;
 		try
 		{
 			init( submitContext, request );
-			jmsConnectionHolder = new JMSConnectionHolder( jmsEndpoint, hermes, true, clientID , username, password);
+			jmsConnectionHolder = new JMSConnectionHolder( jmsEndpoint, hermes, true, clientID, username, password );
 
 			// session
 			topicSession = jmsConnectionHolder.getSession();
@@ -40,21 +40,24 @@ public class HermesJmsRequestPublishTransport extends HermesJmsRequestTransport
 			// destination
 			Topic topicPublish = jmsConnectionHolder.getTopic( jmsConnectionHolder.getJmsEndpoint().getSend() );
 
-			Message messagePublish = messagePublish(submitContext, request, topicSession, jmsConnectionHolder.getHermes(), topicPublish);
+			Message messagePublish = messagePublish( submitContext, request, topicSession,
+					jmsConnectionHolder.getHermes(), topicPublish );
 
-			return makeEmptyResponse(submitContext, request, timeStarted, messagePublish);
+			return makeEmptyResponse( submitContext, request, timeStarted, messagePublish );
 		}
-		catch (JMSException jmse)
+		catch( JMSException jmse )
 		{
-			return errorResponse(submitContext, request, timeStarted, jmse);
+			return errorResponse( submitContext, request, timeStarted, jmse );
 		}
-		catch (Throwable t)
+		catch( Throwable t )
 		{
-			SoapUI.logError(t);
+			SoapUI.logError( t );
 		}
 		finally
 		{
-			closeSessionAndConnection( jmsConnectionHolder != null ? jmsConnectionHolder.getConnection() : null, topicSession );
+			jmsConnectionHolder.closeAll();
+			closeSessionAndConnection( jmsConnectionHolder != null ? jmsConnectionHolder.getConnection() : null,
+					topicSession );
 		}
 		return null;
 	}
