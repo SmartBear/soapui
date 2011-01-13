@@ -59,6 +59,7 @@
       <mountPoint id="318" root="" location="lib" mode="755" />
       <mountPoint id="399" root="" location="licences" mode="755" />
       <mountPoint id="63" root="" location="" mode="755" />
+      <mountPoint id="2704" root="" location=".JxBrowser" mode="755" />
       <mountPoint id="1845" root="1842" location="bin" mode="755" />
       <mountPoint id="1660" root="1659" location="bin" mode="755" />
       <mountPoint id="1846" root="1844" location="bin" mode="755" />
@@ -920,6 +921,20 @@ return false;
                             <string>-Djxbrowser.xulrunner.dir=${installer:jxBrowserInstallLocation}</string>
                           </void>
                         </array>
+                      </void>
+                    </object>
+                  </java>
+                </serializedBean>
+                <condition />
+              </action>
+              <action name="" id="2705" beanClass="com.install4j.runtime.beans.actions.files.AddWindowsFileRightsAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="Error in setting write permissions for jxbrowser">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.files.AddWindowsFileRightsAction">
+                      <void property="file">
+                        <object class="java.io.File">
+                          <string>.JxBrowser</string>
+                        </object>
                       </void>
                     </object>
                   </java>
