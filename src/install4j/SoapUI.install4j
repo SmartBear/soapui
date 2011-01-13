@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <install4j version="4.2.8" transformSequenceNumber="2">
-  <directoryPresets config="../../target/dist" />
+  <directoryPresets config="${compiler:DIST_ROOT}/bin/securitytestrunner.bat" />
   <application name="soapUI ${compiler:VERSION_NUMBER}${compiler:BRANDED_TITLE}" distributionSourceDir="" applicationId="5517-2803-0637-4585" mediaDir="./media" mediaFilePattern="${compiler:sys.shortName}_${compiler:sys.platform}_${compiler:sys.version}" compression="6" lzmaCompression="false" pack200Compression="false" excludeSignedFromPacking="true" keepModificationTimes="false" missingFilesStrategy="warn" shortName="soapUI" publisher="eviware software ab" publisherWeb="http://www.eviware.com" version="${compiler:VERSION_NUMBER}" allPathsRelative="true" backupOnSave="false" autoSave="true" convertDotsToUnderscores="true" macSignature="????" installerName="" javaMinVersion="1.6" javaMaxVersion="" allowBetaVM="true" jdkMode="runtimeJre" jdkName="">
     <languages skipLanguageSelection="false" languageSelectionInPrincipalLanguage="false">
       <principalLanguage id="en" customLocalizationFile="" />
@@ -58,8 +58,8 @@
       <mountPoint id="321" root="" location="bin" mode="755" />
       <mountPoint id="318" root="" location="lib" mode="755" />
       <mountPoint id="399" root="" location="licences" mode="755" />
-      <mountPoint id="63" root="" location="" mode="755" />
       <mountPoint id="2704" root="" location=".JxBrowser" mode="755" />
+      <mountPoint id="63" root="" location="" mode="755" />
       <mountPoint id="1845" root="1842" location="bin" mode="755" />
       <mountPoint id="1660" root="1659" location="bin" mode="755" />
       <mountPoint id="1846" root="1844" location="bin" mode="755" />
@@ -105,21 +105,25 @@
       <fileEntry mountPoint="1845" file="${compiler:DIST_STANDALONE}/bin/loadtestrunner.sh" overwrite="4" shared="false" mode="644" uninstallMode="0" />
       <fileEntry mountPoint="1845" file="${compiler:DIST_STANDALONE}/bin/toolrunner.sh" overwrite="4" shared="false" mode="644" uninstallMode="0" />
       <fileEntry mountPoint="1845" file="${compiler:DIST_STANDALONE}/bin/testrunner.sh" overwrite="4" shared="false" mode="644" uninstallMode="0" />
+      <fileEntry mountPoint="1845" file="${compiler:DIST_STANDALONE}/bin/securitytestrunner.sh" overwrite="4" shared="false" mode="644" uninstallMode="0" />
       <fileEntry mountPoint="1660" file="${compiler:DIST_STANDALONE}/bin/soapui.bat" overwrite="4" shared="false" mode="644" uninstallMode="0" />
       <fileEntry mountPoint="1660" file="${compiler:DIST_STANDALONE}/bin/mockservicerunner.bat" overwrite="4" shared="false" mode="644" uninstallMode="0" />
       <fileEntry mountPoint="1660" file="${compiler:DIST_STANDALONE}/bin/loadtestrunner.bat" overwrite="4" shared="false" mode="644" uninstallMode="0" />
       <fileEntry mountPoint="1660" file="${compiler:DIST_STANDALONE}/bin/toolrunner.bat" overwrite="4" shared="false" mode="644" uninstallMode="0" />
       <fileEntry mountPoint="1660" file="${compiler:DIST_STANDALONE}/bin/testrunner.bat" overwrite="4" shared="false" mode="644" uninstallMode="0" />
+      <fileEntry mountPoint="1660" file="${compiler:DIST_STANDALONE}/bin/securitytestrunner.bat" overwrite="4" shared="false" mode="644" uninstallMode="0" />
       <fileEntry mountPoint="1846" file="${compiler:DIST_ROOT}/bin/soapui.sh" overwrite="4" shared="false" mode="644" uninstallMode="0" />
       <fileEntry mountPoint="1846" file="${compiler:DIST_ROOT}/bin/mockservicerunner.sh" overwrite="4" shared="false" mode="644" uninstallMode="0" />
       <fileEntry mountPoint="1846" file="${compiler:DIST_ROOT}/bin/loadtestrunner.sh" overwrite="4" shared="false" mode="644" uninstallMode="0" />
       <fileEntry mountPoint="1846" file="${compiler:DIST_ROOT}/bin/toolrunner.sh" overwrite="4" shared="false" mode="644" uninstallMode="0" />
       <fileEntry mountPoint="1846" file="${compiler:DIST_ROOT}/bin/testrunner.sh" overwrite="4" shared="false" mode="644" uninstallMode="0" />
+      <fileEntry mountPoint="1846" file="${compiler:DIST_ROOT}/bin/securitytestrunner.sh" overwrite="4" shared="false" mode="644" uninstallMode="0" />
       <fileEntry mountPoint="1575" file="${compiler:DIST_ROOT}/bin/soapui.bat" overwrite="4" shared="false" mode="644" uninstallMode="0" />
       <fileEntry mountPoint="1575" file="${compiler:DIST_ROOT}/bin/mockservicerunner.bat" overwrite="4" shared="false" mode="644" uninstallMode="0" />
       <fileEntry mountPoint="1575" file="${compiler:DIST_ROOT}/bin/loadtestrunner.bat" overwrite="4" shared="false" mode="644" uninstallMode="0" />
       <fileEntry mountPoint="1575" file="${compiler:DIST_ROOT}/bin/toolrunner.bat" overwrite="4" shared="false" mode="644" uninstallMode="0" />
       <fileEntry mountPoint="1575" file="${compiler:DIST_ROOT}/bin/testrunner.bat" overwrite="4" shared="false" mode="644" uninstallMode="0" />
+      <fileEntry mountPoint="1575" file="${compiler:DIST_ROOT}/bin/securitytestrunner.bat" overwrite="4" shared="false" mode="644" uninstallMode="0" />
       <dirEntry mountPoint="776" file="${compiler:SRC_ROOT}" overwrite="4" shared="false" mode="644" uninstallMode="0" excludeSuffixes=".svn" dirMode="755">
         <exclude>
           <entry location="conf" fileType="regular" />
