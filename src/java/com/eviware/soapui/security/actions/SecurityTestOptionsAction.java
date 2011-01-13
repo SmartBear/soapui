@@ -85,11 +85,12 @@ public class SecurityTestOptionsAction extends AbstractSoapUIAction<SecurityTest
 				// securityTest.setMaxResults( Integer.parseInt( values.get(
 				// MAXRESULTS ) ) );
 
-				String timeout = values.get( SOCKET_TIMEOUT );
-				if( timeout.trim().length() == 0 )
-					securityTest.getSettings().clearSetting( HttpSettings.SOCKET_TIMEOUT );
-				else
-					securityTest.getSettings().setString( HttpSettings.SOCKET_TIMEOUT, timeout );
+				// String timeout = values.get( SOCKET_TIMEOUT );
+				// if( timeout.trim().length() == 0 )
+				// securityTest.getSettings().clearSetting(
+				// HttpSettings.SOCKET_TIMEOUT );
+				// else
+				// securityTest.getSettings().setString( HttpSettings.SOCKET_TIMEOUT, timeout );
 
 			}
 			catch( Exception e1 )
