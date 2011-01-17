@@ -14,6 +14,7 @@ package com.eviware.soapui.impl.wsdl.actions.testcase;
 
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.security.SecurityTest;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 
@@ -36,8 +37,15 @@ public class AddNewSecurityTestAction extends AbstractSoapUIAction<WsdlTestCase>
 	{
 		String name = UISupport.prompt( "Specify name of SecurityTest", "New SecurityTest", "SecurityTest "
 				+ ( testCase.getSecurityTestCount() + 1 ) );
-		if( name == null )
+		if( StringUtils.isNullOrEmpty( name ) )
 			return;
+
+		while( testCase.getSecurityTestByName( name.trim() ) != null )
+		{
+			name = UISupport.prompt( "Specify unique name of SecurityTest", "Rename SecurityTest", name );
+			if( StringUtils.isNullOrEmpty( name ) )
+				return;
+		}
 
 		SecurityTest securityTest = testCase.addNewSecurityTest( name );
 		UISupport.selectAndShow( securityTest );
