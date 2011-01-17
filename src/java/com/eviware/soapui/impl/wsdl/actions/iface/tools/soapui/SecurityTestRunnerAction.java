@@ -67,7 +67,7 @@ public class SecurityTestRunnerAction extends AbstractToolsAction<WsdlProject>
 
 	private final static Logger log = Logger.getLogger( SecurityTestRunnerAction.class );
 
-	public static final String SOAPUI_ACTION_ID = "SecutiryTestRunnerAction";
+	public static final String SOAPUI_ACTION_ID = "SecurityTestRunnerAction";
 
 	private List<TestSuite> testSuites;
 
