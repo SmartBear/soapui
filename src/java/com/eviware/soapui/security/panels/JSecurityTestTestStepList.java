@@ -263,8 +263,8 @@ public class JSecurityTestTestStepList extends JPanel
 			label.setInheritsPopupMenu( true );
 			label.setEnabled( !testStep.isDisabled() );
 
-			add( progressPanel, BorderLayout.CENTER );
-			add( label, BorderLayout.NORTH );
+			add( progressPanel, BorderLayout.LINE_END );
+			add( label, BorderLayout.LINE_START );
 
 			testCasePropertyChangeListener = new TestCasePropertyChangeListener();
 
