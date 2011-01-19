@@ -47,6 +47,7 @@ import com.eviware.soapui.security.Securable;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.log.SecurityTestLogMessageEntry;
 import com.eviware.soapui.security.log.SecurityTestLogModel;
+import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JInspectorPanel;
 import com.eviware.soapui.support.components.JInspectorPanelFactory;
@@ -64,11 +65,11 @@ public abstract class AbstractSecurityCheck extends SecurityCheck {
 	protected SoapUIScriptEngine scriptEngine;
 	private boolean disabled = false;
 	protected JPanel panel;
-	protected SimpleForm form;
 	protected JDialog dialog;
 	private boolean configureResult;
 	private SecurityCheckParameterSelector parameterSelector;
 	protected Status status;
+	SecurityCheckConfigPanel contentPanel;
 
 	// private
 	public AbstractSecurityCheck(SecurityCheckConfig config, ModelItem parent,
@@ -147,7 +148,7 @@ public abstract class AbstractSecurityCheck extends SecurityCheck {
 	protected void buildDialog() {
 		dialog = new JDialog(UISupport.getMainFrame(), getTitle(), true);
 		JPanel fullPanel = new JPanel(new BorderLayout());
-		JPanel contentPanel = (JPanel) getComponent();
+		contentPanel =  getComponent();
 
 		ButtonBarBuilder builder = new ButtonBarBuilder();
 
@@ -214,6 +215,8 @@ public abstract class AbstractSecurityCheck extends SecurityCheck {
 		}
 
 		public void actionPerformed(ActionEvent arg0) {
+			if (contentPanel != null)
+				contentPanel.save();
 			List<String> params = new ArrayList<String>();
 			for (Component comp : parameterSelector.getComponents()) {
 				if (comp instanceof ParamPanel) {
@@ -383,7 +386,7 @@ public abstract class AbstractSecurityCheck extends SecurityCheck {
 		testStep.run(testCaseRunner, testCaseRunner.getRunContext());
 		AbstractHttpRequest<?> lastRequest = getRequest(testStep);
 		
-		if (lastRequest.getResponse().getStatusCode() != 415) {
+		if (lastRequest.getResponse().getStatusCode() == 200) {
 			if (StringUtils.getLevenshteinDistance(originalResponse,
 					lastRequest.getResponse().getContentAsString()) > MINIMUM_STRING_DISTANCE) {
 				securityTestLog.addEntry(new SecurityTestLogMessageEntry(
@@ -393,6 +396,8 @@ public abstract class AbstractSecurityCheck extends SecurityCheck {
 				 */));
 				setStatus(Status.FAILED);
 			}
+		} else {
+			setStatus(Status.FAILED);
 		}
 		analyze(testStep, context, securityTestLog);
 	}
