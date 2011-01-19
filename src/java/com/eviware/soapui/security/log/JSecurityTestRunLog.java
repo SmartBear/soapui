@@ -27,17 +27,20 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.monitor.SoapMonitor;
 import com.eviware.soapui.impl.wsdl.support.MessageExchangeModelItem;
-import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
+import com.eviware.soapui.impl.wsdl.teststeps.actions.ShowMessageExchangeAction;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.action.swing.ActionList;
+import com.eviware.soapui.support.action.swing.ActionSupport;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.support.ADialogBuilder;
@@ -91,8 +94,8 @@ public class JSecurityTestRunLog extends JPanel
 	{
 		if( logListModel == null )
 			logListModel = new SecurityTestLogModel();
-		
-//		logListModel = securityTest.getSecurityTestLog();
+
+		// logListModel = securityTest.getSecurityTestLog();
 		logListModel.setMaxSize( ( int )settings.getLong( OptionsForm.class.getName() + "@max_rows", 1000 ) );
 
 		testLogList = new JList( logListModel );
@@ -102,8 +105,7 @@ public class JSecurityTestRunLog extends JPanel
 		testLogList.addMouseListener( new LogListMouseListener() );
 
 		JScrollPane scrollPane = new JScrollPane( testLogList );
-		
-	
+
 		add( scrollPane, BorderLayout.CENTER );
 		add( buildToolbar(), BorderLayout.NORTH );
 	}
@@ -343,11 +345,16 @@ public class JSecurityTestRunLog extends JPanel
 			if( index != -1 && ( index == selectedIndex || e.getClickCount() > 1 ) )
 			{
 				SecurityTestLogMessageEntry entry = ( SecurityTestLogMessageEntry )testLogList.getSelectedValue();
-				soapMonitor.highlightMessaheExchange( entry.getMessageExchange() );
-				tabs.setSelectedIndex( 0 );
+				ShowMessageExchangeAction showMessageExchangeAction = new ShowMessageExchangeAction( entry
+						.getMessageExchange(), "SecurityCheck" );
+				showMessageExchangeAction.actionPerformed( new ActionEvent( this, 0, null ) );
 			}
 
 			selectedIndex = index;
+			SecurityTestLogMessageEntry result = logListModel.getElementAt( index );
+			if( result == null )
+				return;
+			ActionList actions = result.getActions();
 		}
 
 		public void mousePressed( MouseEvent e )
@@ -364,26 +371,26 @@ public class JSecurityTestRunLog extends JPanel
 
 		public void showPopup( MouseEvent e )
 		{
-			// int row = testLogList.locationToIndex( e.getPoint() );
-			// if( row == -1 )
-			// return;
-			//
-			// if( testLogList.getSelectedIndex() != row )
-			// {
-			// testLogList.setSelectedIndex( row );
-			// }
-			//
-			// TestStepResult result = logListModel.getResultAt( row );
-			// if( result == null )
-			// return;
-			//
-			// ActionList actions = result.getActions();
-			//
-			// if( actions == null || actions.getActionCount() == 0 )
-			// return;
-			//
-			// JPopupMenu popup = ActionSupport.buildPopup( actions );
-			// UISupport.showPopup( popup, testLogList, e.getPoint() );
+			int row = testLogList.locationToIndex( e.getPoint() );
+			if( row == -1 )
+				return;
+
+			if( testLogList.getSelectedIndex() != row )
+			{
+				testLogList.setSelectedIndex( row );
+			}
+
+			SecurityTestLogMessageEntry result = logListModel.getElementAt( row );
+			if( result == null )
+				return;
+
+			ActionList actions = result.getActions();
+
+			if( actions == null || actions.getActionCount() == 0 )
+				return;
+
+			JPopupMenu popup = ActionSupport.buildPopup( actions );
+			UISupport.showPopup( popup, testLogList, e.getPoint() );
 		}
 	}
 }
