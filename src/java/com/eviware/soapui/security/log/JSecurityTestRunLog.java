@@ -345,16 +345,15 @@ public class JSecurityTestRunLog extends JPanel
 			if( index != -1 && ( index == selectedIndex || e.getClickCount() > 1 ) )
 			{
 				SecurityTestLogMessageEntry entry = ( SecurityTestLogMessageEntry )testLogList.getSelectedValue();
-				ShowMessageExchangeAction showMessageExchangeAction = new ShowMessageExchangeAction( entry
-						.getMessageExchange(), "SecurityCheck" );
-				showMessageExchangeAction.actionPerformed( new ActionEvent( this, 0, null ) );
+				if( entry.getMessageExchange() != null )
+				{
+					ShowMessageExchangeAction showMessageExchangeAction = new ShowMessageExchangeAction( entry
+							.getMessageExchange(), "SecurityCheck" );
+					showMessageExchangeAction.actionPerformed( new ActionEvent( this, 0, null ) );
+				}
 			}
 
 			selectedIndex = index;
-			SecurityTestLogMessageEntry result = logListModel.getElementAt( index );
-			if( result == null )
-				return;
-			ActionList actions = result.getActions();
 		}
 
 		public void mousePressed( MouseEvent e )

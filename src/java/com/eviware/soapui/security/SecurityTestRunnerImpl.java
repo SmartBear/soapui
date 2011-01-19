@@ -436,7 +436,7 @@ public class SecurityTestRunnerImpl extends AbstractTestRunner<SecurityTest, Sec
 		{
 			securityTest.runTearDownScript( runContext, this );
 			securityTest.getSecurityTestLog().addEntry(
-					new SecurityTestLogMessageEntry( "SecurityTest ended at " + new Date( System.currentTimeMillis() ) ) );
+					new SecurityTestLogMessageEntry( " SecurityTest ended at " + new Date( System.currentTimeMillis() ) ) );
 		}
 		catch( Exception e )
 		{

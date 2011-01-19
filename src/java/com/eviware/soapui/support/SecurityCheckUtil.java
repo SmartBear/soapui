@@ -19,7 +19,12 @@ import org.apache.xmlbeans.XmlException;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.PropertiesTypeConfig;
 import com.eviware.soapui.config.PropertyConfig;
+import com.eviware.soapui.model.iface.SubmitContext;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.settings.Settings;
+import com.eviware.soapui.model.testsuite.AssertionError;
+import com.eviware.soapui.model.testsuite.AssertionException;
+import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
 import com.eviware.soapui.settings.GlobalPropertySettings;
 
 public class SecurityCheckUtil
@@ -46,6 +51,34 @@ public class SecurityCheckUtil
 			return null;
 		}
 
+	}
+
+	public static boolean contains( SubmitContext context, String content, String token, boolean useRegEx )
+
+	{
+		if( token == null )
+			token = "";
+		String replToken = PropertyExpander.expandProperties( context, token );
+
+		if( replToken.length() > 0 )
+		{
+			int ix = -1;
+
+			if( useRegEx )
+			{
+				if( content.matches( replToken ) )
+					ix = 0;
+			}
+			else
+			{
+				ix = content.indexOf( replToken );
+			}
+
+			if( ix == -1 )
+				return false;
+		}
+
+		return true;
 	}
 
 }
