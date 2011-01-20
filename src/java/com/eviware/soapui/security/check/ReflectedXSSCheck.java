@@ -44,6 +44,7 @@ import com.eviware.soapui.security.SecurityTestContext;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.log.SecurityTestLogMessageEntry;
 import com.eviware.soapui.security.log.SecurityTestLogModel;
+import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
 import com.eviware.soapui.support.components.SimpleForm;
 import com.eviware.soapui.support.types.StringToObjectMap;
 
@@ -134,16 +135,10 @@ public class ReflectedXSSCheck extends AbstractSecurityCheck  implements Sensiti
 	}
 
 	@Override
-	public JComponent getComponent()
+	public SecurityCheckConfigPanel getComponent()
 	{
-		// if (panel == null) {
-		panel = new JPanel( new BorderLayout() );
-
-		form = new SimpleForm();
-		form.addSpace( 5 );
-
-		panel.add( form.getPanel() );
-		return panel;
+		
+		return null;
 	}
 
 

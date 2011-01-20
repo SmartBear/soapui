@@ -1,23 +1,11 @@
 package com.eviware.soapui.security.check;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.JCheckBox;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.text.Document;
-
-import org.apache.commons.lang.StringUtils;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.SecurityCheckConfig;
@@ -34,8 +22,8 @@ import com.eviware.soapui.model.testsuite.TestRunner.Status;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.log.SecurityTestLogMessageEntry;
 import com.eviware.soapui.security.log.SecurityTestLogModel;
-import com.eviware.soapui.support.DocumentListenerAdapter;
-import com.eviware.soapui.support.components.SimpleForm;
+import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
+import com.eviware.soapui.security.ui.XmlBombSecurityCheckConfigPanel;
 import com.eviware.soapui.support.types.StringToObjectMap;
 import com.eviware.soapui.support.xml.XmlUtils;
 
@@ -43,10 +31,8 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck implements
 		SensitiveInformationCheckable {
 
 	public static final String TYPE = "XmlBombSecurityCheck";
-	private static final int MINIMUM_STRING_DISTANCE = 50;
+
 	private static final String DEFAULT_PREFIX = "xmlbomb";
-	private static final String ATTACHMENT_PREFIX_FIELD = "Attachment Prefix Field";
-	private static final String ENABLE_ATTACHMENT_FIELD = "Send bomb as attachment";
 
 	private int currentIndex = 0;
 
@@ -178,43 +164,8 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck implements
 	}
 
 	@Override
-	public JComponent getComponent() {
-		panel = new JPanel(new BorderLayout());
-
-		form = new SimpleForm();
-		form.addSpace(5);
-
-		JTextField attachmentPrefixField = form.appendTextField(
-				ATTACHMENT_PREFIX_FIELD, "Attachment Prefix Field");
-		attachmentPrefixField.setMaximumSize(new Dimension(80, 10));
-		attachmentPrefixField.setColumns(20);
-		attachmentPrefixField.setText(getAttachmentPrefix());
-		attachmentPrefixField.setEnabled(isAttachXmlBomb());
-		attachmentPrefixField.getDocument().addDocumentListener(
-				new DocumentListenerAdapter() {
-
-					@Override
-					public void update(Document document) {
-						String prefix = form
-								.getComponentValue(ATTACHMENT_PREFIX_FIELD);
-
-						setAttachmentPrefix(prefix);
-					}
-				});
-
-		JCheckBox attachXml = form.appendCheckBox(ENABLE_ATTACHMENT_FIELD,
-				null, isAttachXmlBomb());
-		attachXml.addItemListener(new ItemListener() {
-			public void itemStateChanged(ItemEvent arg0) {
-				setAttachXmlBomb(((JCheckBox) form
-						.getComponent(ENABLE_ATTACHMENT_FIELD)).isSelected());
-				form.getComponent(ATTACHMENT_PREFIX_FIELD).setEnabled(
-						isAttachXmlBomb());
-			}
-		});
-
-		panel.add(form.getPanel());
-		return panel;
+	public SecurityCheckConfigPanel getComponent() {
+		return new XmlBombSecurityCheckConfigPanel(this);
 	}
 
 	@Override
@@ -339,12 +290,12 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck implements
 				.setExternalDTDArray(dtdList.toArray(new String[1]));
 	}
 
-	protected String getAttachmentPrefix() {
+	public String getAttachmentPrefix() {
 		return ((XmlBombSecurityCheckConfig) config.getConfig())
 				.getXmlAttachmentPrefix();
 	}
 
-	protected void setAttachmentPrefix(String prefix) {
+	public void setAttachmentPrefix(String prefix) {
 		((XmlBombSecurityCheckConfig) config.getConfig())
 				.setXmlAttachmentPrefix(prefix);
 	}

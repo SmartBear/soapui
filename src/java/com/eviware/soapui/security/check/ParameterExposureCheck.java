@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import javax.swing.JComponent;
-import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.text.Document;
@@ -49,6 +48,8 @@ import com.eviware.soapui.security.log.JSecurityTestRunLog;
 import com.eviware.soapui.security.log.SecurityTestLogMessageEntry;
 import com.eviware.soapui.security.log.SecurityTestLogModel;
 import com.eviware.soapui.security.monitor.HttpSecurityAnalyser;
+import com.eviware.soapui.security.ui.ParameterExposureCheckPanel;
+import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
 import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.components.SimpleForm;
@@ -69,9 +70,7 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements
 
 	public static final String TYPE = "ParameterExposureCheck";
 	public static final int DEFAULT_MINIMUM_CHARACTER_LENGTH = 5;
-	protected static final String MINIMUM_CHARACTERS_FIELD = "Minimum Characters";
 	private static final String checkTitle = "Configure Parameter Exposure";
-	private JDialog dialog;
 
 	public ParameterExposureCheck(SecurityCheckConfig config, ModelItem parent,
 			String icon) {
@@ -178,7 +177,7 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements
 	 * 
 	 * @return
 	 */
-	private int getMinimumLength() {
+	public int getMinimumLength() {
 		return ((ParameterExposureCheckConfig) config.getConfig())
 				.getMinimumLength();
 	}
@@ -190,42 +189,9 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements
 	}
 
 	@Override
-	public JComponent getComponent() {
-		// if (panel == null) {
-		panel = new JPanel(new BorderLayout());
-
-		form = new SimpleForm();
-		form.addSpace(5);
-
-		// form.setDefaultTextFieldColumns(40);
-
-		minimumCharactersTextField = form.appendTextField(
-				MINIMUM_CHARACTERS_FIELD, "Minimum characters");
-		minimumCharactersTextField.setMaximumSize(new Dimension(40, 10));
-		minimumCharactersTextField.setColumns(4);
-		minimumCharactersTextField.setText(String.valueOf(getMinimumLength()));
-		minimumCharactersTextField.getDocument().addDocumentListener(
-				new DocumentListenerAdapter() {
-
-					@Override
-					public void update(Document document) {
-						String minCharsStr = form
-								.getComponentValue(MINIMUM_CHARACTERS_FIELD);
-						int minimumLength = StringUtils
-								.isNullOrEmpty(minCharsStr) ? 0 : Integer
-								.valueOf(minCharsStr);
-						// queryArea.setText( "" );
-						// saveConfig();
-						if (minimumLength > 0) {
-							setMinimumLength(minimumLength);
-						}
-					}
-				});
-		minimumCharactersTextField.addKeyListener(new MinimumListener());
-
-		// }
-		panel.add(form.getPanel());
-		return panel;
+	public SecurityCheckConfigPanel getComponent() {
+	
+		return new ParameterExposureCheckPanel(this);
 	}
 
 	// @Override
@@ -251,25 +217,7 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements
 	// dialog.pack();
 	// }
 
-	private class MinimumListener implements KeyListener {
 
-		@Override
-		public void keyPressed(KeyEvent arg0) {
-
-		}
-
-		@Override
-		public void keyReleased(KeyEvent arg0) {
-
-		}
-
-		@Override
-		public void keyTyped(KeyEvent ke) {
-			char c = ke.getKeyChar();
-			if (!Character.isDigit(c))
-				ke.consume();
-		}
-	}
 
 	@Override
 	public String getType() {

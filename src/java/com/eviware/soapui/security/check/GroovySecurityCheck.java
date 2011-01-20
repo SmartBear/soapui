@@ -11,13 +11,7 @@
  */
 package com.eviware.soapui.security.check;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-
-import javax.swing.JComponent;
-import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.text.Document;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.GroovySecurityCheckConfig;
@@ -29,159 +23,117 @@ import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.log.JSecurityTestRunLog;
 import com.eviware.soapui.security.log.SecurityTestLogModel;
 import com.eviware.soapui.security.monitor.HttpSecurityAnalyser;
-import com.eviware.soapui.support.DocumentListenerAdapter;
-import com.eviware.soapui.support.StringUtils;
-import com.eviware.soapui.support.components.SimpleForm;
+import com.eviware.soapui.security.ui.GroovySecurityCheckPanel;
+import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
 
 /**
  * 
  * @author soapui team
  */
 
-public class GroovySecurityCheck extends AbstractSecurityCheck implements HttpSecurityAnalyser
-{
-	public static final String SCRIPT_PROPERTY = GroovySecurityCheck.class.getName() + "@script";
+public class GroovySecurityCheck extends AbstractSecurityCheck implements
+		HttpSecurityAnalyser {
+	public static final String SCRIPT_PROPERTY = GroovySecurityCheck.class
+			.getName()
+			+ "@script";
 	public static final String TYPE = "GroovySecurityCheck";
-	//if this is a text area document listener doesn't work, WHY? !!
+	// if this is a text area document listener doesn't work, WHY? !!
 	protected JTextField scriptTextArea;
-	protected static final String SCRIPT_FIELD = "Script";
+
 	private static final String checkTitle = "Configure GroovyScript Check";
 
-	public GroovySecurityCheck( SecurityCheckConfig config, ModelItem parent, String icon)
-	{
-		super( config, parent, icon );
-		if( config == null )
-		{
+	public GroovySecurityCheck(SecurityCheckConfig config, ModelItem parent,
+			String icon) {
+		super(config, parent, icon);
+		if (config == null) {
 			config = SecurityCheckConfig.Factory.newInstance();
-			GroovySecurityCheckConfig groovyscc = GroovySecurityCheckConfig.Factory.newInstance();
-			config.setConfig( groovyscc );
+			GroovySecurityCheckConfig groovyscc = GroovySecurityCheckConfig.Factory
+					.newInstance();
+			config.setConfig(groovyscc);
 		}
 
 	}
 
 	@Override
-	protected void execute( TestStep testStep, SecurityTestRunContext context, SecurityTestLogModel securityTestLog )
-	{
-		scriptEngine.setScript( getScript() );
-		scriptEngine.setVariable( "testStep", testStep );
-		scriptEngine.setVariable( "log", SoapUI.ensureGroovyLog() );
-		scriptEngine.setVariable( "context", context );
-		scriptEngine.setVariable( "status", status );
+	protected void execute(TestStep testStep, SecurityTestRunContext context,
+			SecurityTestLogModel securityTestLog) {
+		scriptEngine.setScript(getScript());
+		scriptEngine.setVariable("testStep", testStep);
+		scriptEngine.setVariable("log", SoapUI.ensureGroovyLog());
+		scriptEngine.setVariable("context", context);
+		scriptEngine.setVariable("status", status);
 		scriptEngine.setVariable("executionStrategy", getExecutionStrategy());
 
-		try
-		{
+		try {
 			scriptEngine.run();
-		}
-		catch( Exception e )
-		{
-			SoapUI.logError( e );
-		}
-		finally
-		{
+		} catch (Exception e) {
+			SoapUI.logError(e);
+		} finally {
 			scriptEngine.clearVariables();
 		}
 	}
 
-	public void setScript( String script )
-	{
+	public void setScript(String script) {
 		String old = getScript();
-		if( getConfig().getConfig() == null )
-		{
+		if (getConfig().getConfig() == null) {
 			getConfig().addNewConfig();
 		}
-		GroovySecurityCheckConfig groovyscc = GroovySecurityCheckConfig.Factory.newInstance();
+		GroovySecurityCheckConfig groovyscc = GroovySecurityCheckConfig.Factory
+				.newInstance();
 		groovyscc.addNewScript();
-		groovyscc.getScript().setStringValue( script );
-		getConfig().setConfig( groovyscc );
-		notifyPropertyChanged( SCRIPT_PROPERTY, old, script );
+		groovyscc.getScript().setStringValue(script);
+		getConfig().setConfig(groovyscc);
+		notifyPropertyChanged(SCRIPT_PROPERTY, old, script);
 	}
 
-	private String getScript()
-	{
+	public String getScript() {
 		GroovySecurityCheckConfig groovyscc = null;
-		if( getConfig().getConfig() != null )
-		{
-			groovyscc = ( GroovySecurityCheckConfig )getConfig().getConfig();
-			if( groovyscc.getScript() != null )
+		if (getConfig().getConfig() != null) {
+			groovyscc = (GroovySecurityCheckConfig) getConfig().getConfig();
+			if (groovyscc.getScript() != null)
 				return groovyscc.getScript().getStringValue();
 		}
 		return "";
 	}
 
 	@Override
-	public void analyze( TestStep testStep, SecurityTestRunContext context, SecurityTestLogModel securityTestLog )
-	{
-		
+	public void analyze(TestStep testStep, SecurityTestRunContext context,
+			SecurityTestLogModel securityTestLog) {
 
 	}
 
 	@Override
-	public boolean acceptsTestStep( TestStep testStep )
-	{
+	public boolean acceptsTestStep(TestStep testStep) {
 		return true;
 	}
 
 	@Override
-	public JComponent getComponent()
-	{
-		// if (panel == null) {
-		panel = new JPanel( new BorderLayout() );
-
-		form = new SimpleForm();
-		form.addSpace( 5 );
-
-		// form.setDefaultTextFieldColumns( 50 );
-
-		scriptTextArea = form.appendTextField( SCRIPT_FIELD, "Script to use" );
-		scriptTextArea.setSize( new Dimension( 400, 600 ) );
-		scriptTextArea.setText( getScript() );
-		scriptTextArea.getDocument().addDocumentListener( new DocumentListenerAdapter()
-		{
-
-			@Override
-			public void update( Document document )
-			{
-				String scriptStr = form.getComponentValue( SCRIPT_FIELD );
-				if( !StringUtils.isNullOrEmpty( scriptStr ) )
-				{
-					setScript( scriptStr );
-				}
-			}
-		} );
-		panel.add( form.getPanel() );
-		// }
-		return panel;
+	public SecurityCheckConfigPanel getComponent() {
+		return new GroovySecurityCheckPanel(this);
 	}
 
 	@Override
-	public String getType()
-	{
+	public String getType() {
 		return TYPE;
 	}
 
 	@Override
 	public void analyzeHttpConnection(MessageExchange messageExchange,
 			JSecurityTestRunLog securityTestLog) {
-		scriptEngine.setScript( getScript() );
-		scriptEngine.setVariable( "testStep", null );
-		scriptEngine.setVariable( "log", SoapUI.ensureGroovyLog() );
-		scriptEngine.setVariable( "context", null );
+		scriptEngine.setScript(getScript());
+		scriptEngine.setVariable("testStep", null);
+		scriptEngine.setVariable("log", SoapUI.ensureGroovyLog());
+		scriptEngine.setVariable("context", null);
 		scriptEngine.setVariable("messageExchange", messageExchange);
 
-		try
-		{
+		try {
 			scriptEngine.run();
-		}
-		catch( Exception e )
-		{
-			SoapUI.logError( e );
-		}
-		finally
-		{
+		} catch (Exception e) {
+			SoapUI.logError(e);
+		} finally {
 			scriptEngine.clearVariables();
 		}
-		
+
 	}
 
 	@Override
@@ -189,10 +141,9 @@ public class GroovySecurityCheck extends AbstractSecurityCheck implements HttpSe
 
 		return true;
 	}
-	
+
 	@Override
-	public String getTitle()
-	{
+	public String getTitle() {
 		return checkTitle;
 	}
 }

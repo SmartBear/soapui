@@ -24,6 +24,7 @@ import com.eviware.soapui.security.Securable;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.log.SecurityTestLogMessageEntry;
 import com.eviware.soapui.security.log.SecurityTestLogModel;
+import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
 
 /**
  * SecurityCheck
@@ -95,7 +96,7 @@ public abstract class SecurityCheck extends AbstractWsdlModelItem<SecurityCheckC
 	 * 
 	 * @return
 	 */
-	public abstract JComponent getComponent();
+	public abstract SecurityCheckConfigPanel getComponent();
 
 	/**
 	 * The type of this check

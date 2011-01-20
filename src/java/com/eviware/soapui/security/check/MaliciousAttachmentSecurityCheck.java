@@ -24,6 +24,7 @@ import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.security.check.SensitiveInformationCheckable;
 import com.eviware.soapui.security.log.SecurityTestLogMessageEntry;
 import com.eviware.soapui.security.log.SecurityTestLogModel;
+import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
 import com.eviware.soapui.support.types.StringToObjectMap;
 
 public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
@@ -122,11 +123,15 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 	}
 
 	@Override
-	public JComponent getComponent() {
+	public SecurityCheckConfigPanel getComponent() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	
+	@Override
+	public boolean configure()
+	{
+		return false;
+	}
 
 }

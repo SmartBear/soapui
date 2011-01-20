@@ -38,6 +38,7 @@ import com.eviware.soapui.security.log.JSecurityTestRunLog;
 import com.eviware.soapui.security.log.SecurityTestLogMessageEntry;
 import com.eviware.soapui.security.log.SecurityTestLogModel;
 import com.eviware.soapui.security.monitor.HttpSecurityAnalyser;
+import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
 import com.eviware.soapui.support.SecurityCheckUtil;
 import com.eviware.soapui.support.components.SimpleForm;
 import com.eviware.soapui.support.types.StringToObjectMap;
@@ -117,18 +118,10 @@ public class InformationExposureCheck extends AbstractSecurityCheck implements H
 	}
 
 	@Override
-	public JComponent getComponent()
+	public SecurityCheckConfigPanel getComponent()
 	{
-		// if (panel == null) {
-		panel = new JPanel( new BorderLayout() );
 
-		form = new SimpleForm();
-		form.addSpace( 5 );
-
-		// form.setDefaultTextFieldColumns(40);
-
-		panel.add( form.getPanel() );
-		return panel;
+		return null;
 	}
 
 	@Override
