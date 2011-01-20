@@ -1131,7 +1131,7 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 		return securityTest;
 	}
 
-	private SecurityTest buildSecurityTest( SecurityTestConfig addNewSecurityTest )
+	protected SecurityTest buildSecurityTest( SecurityTestConfig addNewSecurityTest )
 	{
 		return new SecurityTest( this, addNewSecurityTest );
 	}
