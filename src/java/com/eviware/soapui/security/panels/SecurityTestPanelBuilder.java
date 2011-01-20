@@ -15,7 +15,6 @@ package com.eviware.soapui.security.panels;
 import java.awt.Component;
 
 import com.eviware.soapui.impl.EmptyPanelBuilder;
-import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.support.components.JPropertiesTable;
 import com.eviware.soapui.ui.desktop.DesktopPanel;

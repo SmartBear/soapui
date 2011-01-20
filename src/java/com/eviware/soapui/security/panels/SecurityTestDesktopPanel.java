@@ -111,6 +111,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 	// private JButton runWithLoadUIButton;
 	// private JButton synchronizeWithLoadUIButton;
 	private SecurityTest securityTest;
+	protected JXToolBar toolbar;
 
 	public SecurityTestDesktopPanel( SecurityTest securityTest )
 	{
@@ -246,7 +247,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 
 	private Component buildToolbar()
 	{
-		JToolBar toolbar = UISupport.createToolbar();
+		toolbar = UISupport.createToolbar();
 
 		runButton = UISupport.createToolbarButton( new RunSecurityTestAction() );
 		optionsButton = UISupport.createToolbarButton( SwingActionDelegate.createDelegate(
@@ -267,27 +268,9 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 		stateDependantComponents.add( setCredentialsButton );
 		stateDependantComponents.add( setEndpointButton );
 
-		// createLoadTestButton = UISupport.createToolbarButton(
-		// SwingActionDelegate.createDelegate(
-		// AddNewLoadTestAction.SOAPUI_ACTION_ID, getModelItem(), null,
-		// "/loadTest.gif" ) );
-		//
-		// createSecurityTestButton = UISupport.createToolbarButton(
-		// SwingActionDelegate.createDelegate(
-		// AddNewSecurityTestAction.SOAPUI_ACTION_ID, getModelItem(), null,
-		// "/loadTest.gif" ) );
-		//
-		// runWithLoadUIButton = UISupport.createToolbarButton(
-		// SwingActionDelegate.createDelegate(
-		// RunTestCaseWithLoadUIAction.SOAPUI_ACTION_ID, getModelItem(), null,
-		// "/runTestCaseWithLoadUI.png" ) );
-		// convertToLoadUIButton = UISupport.createToolbarButton(
-		// SwingActionDelegate.createDelegate(
-		// ConvertTestCaseLoadTestsToLoadUIAction.SOAPUI_ACTION_ID,
-		// getModelItem(), null,
-		// "/convertLoadTestToLoadUI.png" ) );
 		addToolbarActions( toolbar );
 
+		toolbar.addSeparator();
 		toolbar.add( Box.createHorizontalGlue() );
 		toolbar.add( UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.TESTCASEEDITOR_HELP_URL ) ) );
 
@@ -306,7 +289,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 		// toolbar.add( createLoadTestButton );
 		// toolbar.add( createSecurityTestButton );
 		toolbar.add( optionsButton );
-		toolbar.addSeparator();
+		
 		// toolbar.add( runWithLoadUIButton );
 		// toolbar.add( convertToLoadUIButton );
 		// toolbar.add( synchronizeWithLoadUIButton );
