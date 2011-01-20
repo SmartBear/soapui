@@ -84,7 +84,7 @@ public class InformationExposureCheck extends AbstractSecurityCheck implements H
 
 			for( String exposureContent : exposureList )
 			{
-				if( SecurityCheckUtil.contains( context, new String( messageExchange.getRawRequestData() ),
+				if( SecurityCheckUtil.contains( context, new String( messageExchange.getRawResponseData() ),
 						exposureContent,  false ) )
 				{
 					logSecurityInfo( messageExchange, securityTestLog, exposureContent );
