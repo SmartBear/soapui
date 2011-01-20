@@ -1700,6 +1700,7 @@
 			<xsd:enumeration value="INTERFACE"></xsd:enumeration>
 			<xsd:enumeration value="CODE"></xsd:enumeration>
 			<xsd:enumeration value="COMMON"></xsd:enumeration>
+			<xsd:enumeration value="SECURITYTESTCASE"></xsd:enumeration>
 		</xsd:restriction>
 	</xsd:simpleType>
 
@@ -1911,6 +1912,10 @@
 					<xsd:element name="properties"
 						type="tns:PropertiesType" maxOccurs="1" minOccurs="0">
 					</xsd:element>
+					<xsd:element name="reportScript"
+						type="tns:Script" minOccurs="0" maxOccurs="1">
+					</xsd:element>
+					<xsd:element name="reportParameters" type="tns:PropertiesType" minOccurs="0" maxOccurs="1"></xsd:element>
 				</xsd:sequence>
 				<xsd:attribute name="failSecurityTestOnCheckErrors" type="xsd:boolean"></xsd:attribute>
 			</xsd:extension>
@@ -2010,4 +2015,5 @@
     	<xsd:attribute name="time" type="xsd:int"></xsd:attribute>
     	<xsd:attribute name="size" type="xsd:float"></xsd:attribute>
     </xsd:complexType>
+
 </xsd:schema>
