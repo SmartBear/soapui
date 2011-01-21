@@ -1,11 +1,13 @@
 /*
- * KeywordMap.java - Fast keyword->id map
- * Copyright (C) 1998, 1999 Slava Pestov
- * Copyright (C) 1999 Mike Dillon
+ *  soapUI, copyright (C) 2004-2011 eviware.com 
  *
- * You may use and modify this package for any purpose. Redistribution is
- * permitted, in both source and binary form, provided that this notice
- * remains intact in all source distributions of this package.
+ *  soapUI is free software; you can redistribute it and/or modify it under the 
+ *  terms of version 2.1 of the GNU Lesser General Public License as published by 
+ *  the Free Software Foundation.
+ *
+ *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ *  See the GNU Lesser General Public License for more details at gnu.org.
  */
 
 package org.syntax.jedit;
