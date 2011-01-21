@@ -41,6 +41,7 @@ import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
+import com.eviware.soapui.security.SecurityCheckResult;
 import com.eviware.soapui.security.SecurityTestContext;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.log.SecurityTestLogMessageEntry;
@@ -150,17 +151,17 @@ public class ReflectedXSSCheck extends AbstractSecurityCheck  implements Sensiti
 	}
 
 	@Override
-	public void analyze(TestStep testStep, SecurityTestRunContext context,
-			SecurityTestLogModel securityTestLog) {
+	public SecurityCheckResult analyze(TestStep testStep, SecurityTestRunContext context,
+			SecurityTestLogModel securityTestLog, SecurityCheckResult securityCheckResult) {
 		// TODO Auto-generated method stub
-		
+		return null;
 	}
 
 	@Override
-	protected void execute(TestStep testStep, SecurityTestRunContext context,
-			SecurityTestLogModel securityTestLog) {
+	protected SecurityCheckResult execute(TestStep testStep, SecurityTestRunContext context,
+			SecurityTestLogModel securityTestLog, SecurityCheckResult securityChekResult) {
 		// TODO Auto-generated method stub
-		
+		return null;
 	}
 
 	@Override
@@ -168,6 +169,6 @@ public class ReflectedXSSCheck extends AbstractSecurityCheck  implements Sensiti
 			SecurityTestLogModel securityTestLog )
 	{
 		InformationExposureCheck iec = new InformationExposureCheck( config, null, null);
-		iec.analyze( testStep, context, securityTestLog );
+		iec.analyze( testStep, context, securityTestLog, null );
 	}
 }

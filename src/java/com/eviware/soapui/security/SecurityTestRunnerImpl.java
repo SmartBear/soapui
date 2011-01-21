@@ -36,6 +36,7 @@ import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
+import com.eviware.soapui.security.SecurityCheckResult.SecurityCheckStatus;
 import com.eviware.soapui.security.check.SecurityCheck;
 import com.eviware.soapui.security.log.SecurityTestLogMessageEntry;
 import com.eviware.soapui.security.support.SecurityTestRunListener;
@@ -403,15 +404,16 @@ public class SecurityTestRunnerImpl extends AbstractTestRunner<SecurityTest, Sec
 			{
 				securityTestStepListeners[j].beforeSecurityCheck( this, runContext, securityCheck );
 			}
-			Status result = securityCheck.run( cloneForSecurityCheck( ( WsdlTestStep )currentStep ), runContext,
+			SecurityCheckResult result = securityCheck.run( cloneForSecurityCheck( ( WsdlTestStep )currentStep ), runContext,
 					securityTest.getSecurityTestLog() );
-			if( securityTest.getFailSecurityTestOnCheckErrors() && result == Status.FAILED )
+			//TODO check
+			if( securityTest.getFailSecurityTestOnCheckErrors() && result.getStatus() == SecurityCheckStatus.FAILED )
 			{
 				fail( "Failing due to failed security check" );
 			}
 			for( int j = 0; j < securityTestStepListeners.length; j++ )
 			{
-				securityTestStepListeners[j].afterSecurityCheck( this, runContext, securityCheck );
+				securityTestStepListeners[j].afterSecurityCheck( this, runContext, result );
 			}
 		}
 	}

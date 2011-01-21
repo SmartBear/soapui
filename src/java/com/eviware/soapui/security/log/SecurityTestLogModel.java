@@ -12,12 +12,16 @@
 
 package com.eviware.soapui.security.log;
 
+import java.lang.ref.SoftReference;
 import java.util.Collections;
 import java.util.List;
 
 import javax.swing.AbstractListModel;
 
 import org.apache.commons.collections.list.TreeList;
+
+import com.eviware.soapui.model.testsuite.TestStepResult;
+import com.eviware.soapui.security.SecurityCheckResult;
 
 /**
  * SecurityTestLog
@@ -26,17 +30,26 @@ import org.apache.commons.collections.list.TreeList;
  */
 public class SecurityTestLogModel extends AbstractListModel
 {
-	private List<SecurityTestLogMessageEntry> items = Collections.synchronizedList( new TreeList() );
+	// private List<SecurityTestLogMessageEntry> items =
+	// Collections.synchronizedList( new TreeList() );
+	private List<Object> items = Collections.synchronizedList( new TreeList() );
 	private int maxSize = 100;
+	private int checkCount;
 
 	public SecurityTestLogModel()
 	{
 	}
 
-	@Override
-	public SecurityTestLogMessageEntry getElementAt( int arg0 )
+	public synchronized Object getElementAt( int arg0 )
 	{
-		return items.get( arg0 );
+		try
+		{
+			return items.get( arg0 );
+		}
+		catch( Throwable e )
+		{
+			return null;
+		}
 	}
 
 	@Override
@@ -53,12 +66,31 @@ public class SecurityTestLogModel extends AbstractListModel
 		enforceMaxSize();
 	}
 
+	public synchronized void addSecurityCheckResult( SecurityCheckResult result )
+	{
+		checkCount++ ;
+
+		int size = items.size();
+		items.add( "Check " + checkCount + " [" + result.getSecurityCheck().getName() + "] " + result.getStatus()
+				+ ": took " + result.getTimeTaken() + " ms" );
+		SoftReference<SecurityCheckResult> ref = new SoftReference<SecurityCheckResult>( result );
+		// results.add( ref );
+		for( String msg : result.getMessages() )
+		{
+			items.add( " -> " + msg );
+			// results.add( ref );
+		}
+
+		fireIntervalAdded( this, size, items.size() - 1 );
+		enforceMaxSize();
+	}
+
 	public synchronized void clear()
 	{
 		int sz = items.size();
 		items.clear();
 		// results.clear();
-		// stepCount = 0;
+		checkCount = 0;
 		fireIntervalRemoved( this, 0, sz );
 	}
 
@@ -86,12 +118,15 @@ public class SecurityTestLogModel extends AbstractListModel
 	public String getMessages()
 	{
 		StringBuffer sb = new StringBuffer();
-		for(SecurityTestLogMessageEntry messageEntry: items)
+		for( Object messageEntry : items )
 		{
-			sb.append( messageEntry.getMessage());
+			sb.append( ( ( SecurityTestLogMessageEntry )messageEntry ).getMessage() );
 			sb.append( "\n" );
 		}
 		return sb.toString();
 	}
-
+	// public void setStepIndex( int i )
+	// {
+	// stepCount = i;
+	// }
 }

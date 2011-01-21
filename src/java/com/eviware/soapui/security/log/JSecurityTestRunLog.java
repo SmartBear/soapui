@@ -36,6 +36,7 @@ import com.eviware.soapui.impl.wsdl.monitor.SoapMonitor;
 import com.eviware.soapui.impl.wsdl.support.MessageExchangeModelItem;
 import com.eviware.soapui.impl.wsdl.teststeps.actions.ShowMessageExchangeAction;
 import com.eviware.soapui.model.settings.Settings;
+import com.eviware.soapui.security.SecurityCheckResult;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
@@ -166,32 +167,26 @@ public class JSecurityTestRunLog extends JPanel
 			testLogList.ensureIndexIsVisible( logListModel.getSize() - 1 );
 	}
 
-	// /*
-	// * (non-Javadoc)
-	// *
-	// * @see
-	// *
-	// com.eviware.soapui.impl.wsdl.panels.testcase.TestRunLog#addTestStepResult
-	// * (com.eviware.soapui.model.testsuite.TestStepResult)
-	// */
-	// public synchronized void addTestStepResult( TestStepResult stepResult )
-	// {
-	// if( errorsOnly && stepResult.getStatus() !=
-	// TestStepResult.TestStepStatus.FAILED )
-	// return;
-	//
-	// logListModel.addTestStepResult( stepResult );
-	// if( follow )
-	// {
-	// try
-	// {
-	// testLogList.ensureIndexIsVisible( logListModel.getSize() - 1 );
-	// }
-	// catch( RuntimeException e )
-	// {
-	// }
-	// }
-	// }
+	/*
+	 * 
+	 */
+	public synchronized void addSecurityCheckResult( SecurityCheckResult checkResult )
+	{
+		if( errorsOnly && checkResult.getStatus() != SecurityCheckResult.SecurityCheckStatus.FAILED )
+			return;
+
+		logListModel.addSecurityCheckResult( checkResult );
+		if( follow )
+		{
+			try
+			{
+				testLogList.ensureIndexIsVisible( logListModel.getSize() - 1 );
+			}
+			catch( RuntimeException e )
+			{
+			}
+		}
+	}
 
 	public SecurityTestLogModel getLogListModel()
 	{
@@ -379,7 +374,7 @@ public class JSecurityTestRunLog extends JPanel
 				testLogList.setSelectedIndex( row );
 			}
 
-			SecurityTestLogMessageEntry result = logListModel.getElementAt( row );
+			SecurityTestLogMessageEntry result = (SecurityTestLogMessageEntry)logListModel.getElementAt( row );
 			if( result == null )
 				return;
 

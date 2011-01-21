@@ -33,8 +33,9 @@ import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
-import com.eviware.soapui.model.testsuite.TestRunner.Status;
+import com.eviware.soapui.security.SecurityCheckResult;
 import com.eviware.soapui.security.SecurityTestRunContext;
+import com.eviware.soapui.security.SecurityCheckResult.SecurityCheckStatus;
 import com.eviware.soapui.security.log.JSecurityTestRunLog;
 import com.eviware.soapui.security.log.SecurityTestLogMessageEntry;
 import com.eviware.soapui.security.log.SecurityTestLogModel;
@@ -62,7 +63,8 @@ public class InformationExposureCheck extends AbstractSecurityCheck implements H
 	}
 
 	@Override
-	protected void execute( TestStep testStep, SecurityTestRunContext context, SecurityTestLogModel securityTestLog )
+	protected SecurityCheckResult execute( TestStep testStep, SecurityTestRunContext context,
+			SecurityTestLogModel securityTestLog, SecurityCheckResult securityCheckResult )
 	{
 		if( acceptsTestStep( testStep ) )
 		{
@@ -70,12 +72,15 @@ public class InformationExposureCheck extends AbstractSecurityCheck implements H
 					new StringToObjectMap() );
 
 			testStep.run( testCaseRunner, testCaseRunner.getRunContext() );
-			analyze( testStep, context, securityTestLog );
+			securityCheckResult = analyze( testStep, context, securityTestLog, securityCheckResult );
 		}
+		// TODO
+		return securityCheckResult;
 	}
 
 	@Override
-	public void analyze( TestStep testStep, SecurityTestRunContext context, SecurityTestLogModel securityTestLog )
+	public SecurityCheckResult analyze( TestStep testStep, SecurityTestRunContext context,
+			SecurityTestLogModel securityTestLog, SecurityCheckResult securityCheckResult )
 	{
 		if( acceptsTestStep( testStep ) )
 		{
@@ -83,34 +88,43 @@ public class InformationExposureCheck extends AbstractSecurityCheck implements H
 			HttpTestRequestInterface<?> request = testStepwithProperties.getTestRequest();
 			MessageExchange messageExchange = new HttpResponseMessageExchange( request );
 
+			securityCheckResult.setMessageExchange( messageExchange );
 			for( String exposureContent : exposureList )
 			{
 				if( SecurityCheckUtil.contains( context, new String( messageExchange.getRawResponseData() ),
-						exposureContent,  false ) )
+						exposureContent, false ) )
 				{
-					logSecurityInfo( messageExchange, securityTestLog, exposureContent );
-					setStatus( Status.FAILED );
+					// logSecurityInfo( messageExchange, securityTestLog,
+					// exposureContent );
+					String message = " sensitive information '" + exposureContent + "' is detected in response.";
+					securityCheckResult.addMessage( message );
+					securityCheckResult.setStatus( SecurityCheckStatus.FAILED );
 				}
 			}
-			if( getStatus() != Status.FAILED )
-			{
-				setStatus( Status.FINISHED );
-			}
+			// if( getStatus() != Status.FAILED )
+			// {
+			// setStatus( Status.FINISHED );
+			// }
 		}
+		// TODO
+		return securityCheckResult;
 	}
 
-//	private AssertionStatus assertContains( SecurityTestRunContext context, HttpTestRequestStepInterface testStep,
-//			MessageExchange messageExchange, String exposureContent )
-//	{
-//		TestAssertionConfig assertionConfig = TestAssertionConfig.Factory.newInstance();
-//		assertionConfig.setType( SimpleContainsAssertion.ID );
-//
-//		SimpleContainsAssertion containsAssertion = ( SimpleContainsAssertion )TestAssertionRegistry.getInstance()
-//				.buildAssertion( assertionConfig, testStep );
-//		containsAssertion.setToken( exposureContent );
-//		containsAssertion.assertResponse( messageExchange, context );
-//		return containsAssertion.getStatus();
-//	}
+	// private AssertionStatus assertContains( SecurityTestRunContext context,
+	// HttpTestRequestStepInterface testStep,
+	// MessageExchange messageExchange, String exposureContent )
+	// {
+	// TestAssertionConfig assertionConfig =
+	// TestAssertionConfig.Factory.newInstance();
+	// assertionConfig.setType( SimpleContainsAssertion.ID );
+	//
+	// SimpleContainsAssertion containsAssertion = ( SimpleContainsAssertion
+	// )TestAssertionRegistry.getInstance()
+	// .buildAssertion( assertionConfig, testStep );
+	// containsAssertion.setToken( exposureContent );
+	// containsAssertion.assertResponse( messageExchange, context );
+	// return containsAssertion.getStatus();
+	// }
 
 	@Override
 	public boolean acceptsTestStep( TestStep testStep )

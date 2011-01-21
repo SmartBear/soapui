@@ -39,6 +39,7 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.panels.support.MockTestRunContext;
 import com.eviware.soapui.impl.wsdl.panels.support.MockTestRunner;
+import com.eviware.soapui.impl.wsdl.panels.testcase.WsdlTestCaseDesktopPanel.InternalTestRunListener;
 import com.eviware.soapui.impl.wsdl.panels.testcase.actions.SetCredentialsAction;
 import com.eviware.soapui.impl.wsdl.panels.testcase.actions.SetEndpointAction;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.AbstractGroovyEditorModel;
@@ -49,12 +50,16 @@ import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestStepFactory;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
+import com.eviware.soapui.security.SecurityCheckResult;
 import com.eviware.soapui.security.SecurityTest;
+import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunnerInterface;
 import com.eviware.soapui.security.SecurityTestRunnerImpl;
 import com.eviware.soapui.security.actions.SecurityTestOptionsAction;
 import com.eviware.soapui.security.log.JSecurityTestRunLog;
 import com.eviware.soapui.security.support.ProgressBarSecurityTestAdapter;
+import com.eviware.soapui.security.support.SecurityTestRunListenerAdapter;
+import com.eviware.soapui.security.support.SecurityTestStepRunListenerAdapter;
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.StringUtils;
@@ -94,7 +99,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 	private JButton setEndpointButton;
 	private JButton setCredentialsButton;
 	private JButton optionsButton;
-	private JSecurityTestRunLog securitytestLog;
+	private JSecurityTestRunLog securityTestLog;
 	private JToggleButton loopButton;
 	private ProgressBarSecurityTestAdapter progressBarAdapter;
 	private ComponentBag stateDependantComponents = new ComponentBag();
@@ -112,6 +117,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 	// private JButton synchronizeWithLoadUIButton;
 	private SecurityTest securityTest;
 	protected JXToolBar toolbar;
+	private InternalSecurityTestRunListener secTestRunListener = new InternalSecurityTestRunListener();
 
 	public SecurityTestDesktopPanel( SecurityTest securityTest )
 	{
@@ -121,6 +127,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 
 		setPreferredSize( new Dimension( 400, 550 ) );
 		this.securityTest = securityTest;
+//		securityTest.addTestRunListener( secTestRunListener );
 		progressBarAdapter = new ProgressBarSecurityTestAdapter( progressBar, securityTest );
 	}
 
@@ -157,9 +164,9 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 
 	private JComponent buildTestLog()
 	{
-		securitytestLog = new JSecurityTestRunLog( getModelItem() );
-		stateDependantComponents.add( securitytestLog );
-		return securitytestLog;
+		securityTestLog = new JSecurityTestRunLog( getModelItem() );
+		stateDependantComponents.add( securityTestLog );
+		return securityTestLog;
 	}
 
 	private JComponent buildContent()
@@ -289,7 +296,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 		// toolbar.add( createLoadTestButton );
 		// toolbar.add( createSecurityTestButton );
 		toolbar.add( optionsButton );
-		
+
 		// toolbar.add( runWithLoadUIButton );
 		// toolbar.add( convertToLoadUIButton );
 		// toolbar.add( synchronizeWithLoadUIButton );
@@ -385,7 +392,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 		setupGroovyEditor.getEditor().release();
 		tearDownGroovyEditor.getEditor().release();
 
-		securitytestLog.release();
+		securityTestLog.release();
 		lastRunner = null;
 
 		return release();
@@ -577,6 +584,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 	{
 		return runner == null ? lastRunner : runner;
 	}
+
 	public boolean dependsOn( ModelItem modelItem )
 	{
 		SecurityTest securityTest = getModelItem();
@@ -586,5 +594,13 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 				|| modelItem == securityTest.getTestCase().getTestSuite().getProject();
 	}
 
-
+	public class InternalSecurityTestRunListener extends SecurityTestStepRunListenerAdapter
+	{
+		@Override
+		public void afterSecurityCheck( SecurityTestRunnerInterface testRunner, SecurityTestRunContext runContext,
+				SecurityCheckResult securityCheckResult )
+		{
+			securityTestLog.addSecurityCheckResult( securityCheckResult );
+		}
+	}
 }

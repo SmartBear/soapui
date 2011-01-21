@@ -31,6 +31,7 @@ import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestRunner.Status;
+import com.eviware.soapui.security.SecurityCheckResult;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.security.check.SensitiveInformationCheckable;
@@ -62,16 +63,17 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 	}
 
 	@Override
-	public void analyze(TestStep testStep, SecurityTestRunContext context,
-			SecurityTestLogModel securityTestLog) {
-		
+	public SecurityCheckResult analyze(TestStep testStep, SecurityTestRunContext context,
+			SecurityTestLogModel securityTestLog, SecurityCheckResult securityCheckResult) {
+		//TODO
+		return null;
 
 	}
 	
 	
 	@Override
-	protected void execute(TestStep testStep, SecurityTestRunContext context,
-			SecurityTestLogModel securityTestLog) {
+	protected SecurityCheckResult execute(TestStep testStep, SecurityTestRunContext context,
+			SecurityTestLogModel securityTestLog, SecurityCheckResult securityChekResult) {
 		WsdlTestCaseRunner testCaseRunner = new WsdlTestCaseRunner(
 				(WsdlTestCase) testStep.getTestCase(), new StringToObjectMap());
 
@@ -97,8 +99,10 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 
 		} catch (IOException e) {
 			SoapUI.logError(e);
-			return;
+			return null;
 		}
+		//TODO 
+		return null;
 
 	}
 
@@ -112,7 +116,7 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 			SecurityTestRunContext context, SecurityTestLogModel securityTestLog) {
 		InformationExposureCheck iec = new InformationExposureCheck(config,
 				null, null);
-		iec.analyze(testStep, context, securityTestLog);
+		iec.analyze(testStep, context, securityTestLog, null);
 
 	}
 

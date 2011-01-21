@@ -18,9 +18,9 @@ import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.security.SecurityTestRunnerInterface;
 
 /**
- * Adapter for TestRunListener implementations
+ * Adapter for SecurityTestRunListener implementations
  * 
- * @author Ole.Matzura
+ * @author dragica.soldo
  */
 
 public class SecurityTestRunListenerAdapter implements SecurityTestRunListener

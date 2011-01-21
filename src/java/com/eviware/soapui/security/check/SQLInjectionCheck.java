@@ -23,7 +23,9 @@ import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.SamplerTestStep;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestRunner.Status;
+import com.eviware.soapui.security.SecurityCheckResult;
 import com.eviware.soapui.security.SecurityTestRunContext;
+import com.eviware.soapui.security.SecurityCheckResult.SecurityCheckStatus;
 import com.eviware.soapui.security.fuzzer.Fuzzer;
 import com.eviware.soapui.security.log.SecurityTestLogMessageEntry;
 import com.eviware.soapui.security.log.SecurityTestLogModel;
@@ -37,44 +39,48 @@ import com.eviware.soapui.support.types.StringToObjectMap;
  * @author soapui team
  */
 
-public class SQLInjectionCheck extends AbstractSecurityCheck implements
-		SensitiveInformationCheckable {
+public class SQLInjectionCheck extends AbstractSecurityCheck implements SensitiveInformationCheckable
+{
 
 	public static final String TYPE = "SQLInjectionCheck";
 
-	public SQLInjectionCheck(SecurityCheckConfig config, ModelItem parent,
-			String icon) {
-		super(config, parent, icon);
-		if (config == null) {
+	public SQLInjectionCheck( SecurityCheckConfig config, ModelItem parent, String icon )
+	{
+		super( config, parent, icon );
+		if( config == null )
+		{
 			config = SecurityCheckConfig.Factory.newInstance();
-			SQLInjectionCheckConfig pescc = SQLInjectionCheckConfig.Factory
-					.newInstance();
-			config.setConfig(pescc);
+			SQLInjectionCheckConfig pescc = SQLInjectionCheckConfig.Factory.newInstance();
+			config.setConfig( pescc );
 		}
-		if (config.getConfig() == null) {
-			SQLInjectionCheckConfig pescc = SQLInjectionCheckConfig.Factory
-					.newInstance();
-			config.setConfig(pescc);
+		if( config.getConfig() == null )
+		{
+			SQLInjectionCheckConfig pescc = SQLInjectionCheckConfig.Factory.newInstance();
+			config.setConfig( pescc );
 		}
 	}
 
-	protected void execute(TestStep testStep, SecurityTestRunContext context,
-			SecurityTestLogModel securityTestLog) {
-		if (acceptsTestStep(testStep)) {
-			WsdlTestCaseRunner testCaseRunner = new WsdlTestCaseRunner(
-					(WsdlTestCase) testStep.getTestCase(),
-					new StringToObjectMap());
-			
-			String originalResponse = getOriginalResult(testCaseRunner, testStep).getResponse().getContentAsXml();
+	protected SecurityCheckResult execute( TestStep testStep, SecurityTestRunContext context, SecurityTestLogModel securityTestLog,
+			SecurityCheckResult securityChekResult )
+	{
+		if( acceptsTestStep( testStep ) )
+		{
+			WsdlTestCaseRunner testCaseRunner = new WsdlTestCaseRunner( ( WsdlTestCase )testStep.getTestCase(),
+					new StringToObjectMap() );
 
-			if (getExecutionStrategy().equals(
-					SecurityCheckParameterSelector.SEPARATE_REQUEST_STRATEGY)) {
-				for (String param : getParamsToCheck()) {
+			String originalResponse = getOriginalResult( testCaseRunner, testStep ).getResponse().getContentAsXml();
+
+			if( getExecutionStrategy().equals( SecurityCheckParameterSelector.SEPARATE_REQUEST_STRATEGY ) )
+			{
+				for( String param : getParamsToCheck() )
+				{
 					Fuzzer sqlFuzzer = Fuzzer.getSQLFuzzer();
 
-					while (sqlFuzzer.hasNext()) {
-						sqlFuzzer.getNextFuzzedTestStep(testStep, param);
-						runCheck(testStep, context, securityTestLog, testCaseRunner, originalResponse, "Possible SQL injection vulenerability detected");
+					while( sqlFuzzer.hasNext() )
+					{
+						sqlFuzzer.getNextFuzzedTestStep( testStep, param );
+						runCheck( testStep, context, securityTestLog, testCaseRunner, originalResponse,
+								"Possible SQL injection vulenerability detected" );
 						// maybe this fuzzer can be implemented to wrap the
 						// security
 						// check not vice versa
@@ -82,12 +88,16 @@ public class SQLInjectionCheck extends AbstractSecurityCheck implements
 					}
 
 				}
-			} else {
+			}
+			else
+			{
 				Fuzzer sqlFuzzer = Fuzzer.getSQLFuzzer();
 
-				while (sqlFuzzer.hasNext()) {
-					sqlFuzzer.getNextFuzzedTestStep(testStep, getParamsToCheck());
-					runCheck(testStep, context, securityTestLog, testCaseRunner, originalResponse, "Possible SQL injection vulenerability detected");
+				while( sqlFuzzer.hasNext() )
+				{
+					sqlFuzzer.getNextFuzzedTestStep( testStep, getParamsToCheck() );
+					runCheck( testStep, context, securityTestLog, testCaseRunner, originalResponse,
+							"Possible SQL injection vulenerability detected" );
 
 					// maybe this fuzzer can be implemented to wrap the
 					// security
@@ -97,43 +107,53 @@ public class SQLInjectionCheck extends AbstractSecurityCheck implements
 
 			}
 		}
+		//TODO
+		return null;
 	}
 
-	public void analyze(TestStep testStep, SecurityTestRunContext context,
-			SecurityTestLogModel securityTestLog) {
+	public SecurityCheckResult analyze( TestStep testStep, SecurityTestRunContext context, SecurityTestLogModel securityTestLog,
+			SecurityCheckResult securityCheckResult )
+	{
 		// TODO: Make this test more extensive
-		AbstractHttpRequest<?> lastRequest = getRequest(testStep);
-		
-		if (lastRequest.getResponse().getContentAsString().indexOf("SQL Error") > -1) {
-			securityTestLog.addEntry(new SecurityTestLogMessageEntry(
-					"SQL Error displayed in response", null
-					/*new HttpResponseMessageExchange(lastRequest)*/));
-			setStatus(Status.FAILED);
-		} else {
-			setStatus(Status.FINISHED);
+		AbstractHttpRequest<?> lastRequest = getRequest( testStep );
+
+		if( lastRequest.getResponse().getContentAsString().indexOf( "SQL Error" ) > -1 )
+		{
+			securityTestLog.addEntry( new SecurityTestLogMessageEntry( "SQL Error displayed in response", null
+			/* new HttpResponseMessageExchange(lastRequest) */) );
+			securityCheckResult.setStatus( SecurityCheckStatus.FAILED );
 		}
-	}
-
-	@Override
-	public boolean acceptsTestStep(TestStep testStep) {
-		return testStep instanceof SamplerTestStep;
-	}
-
-	@Override
-	public SecurityCheckConfigPanel getComponent() {
+		else
+		{
+			securityCheckResult.setStatus( SecurityCheckStatus.OK );
+		}
+		//TODO 
 		return null;
 	}
 
 	@Override
-	public String getType() {
+	public boolean acceptsTestStep( TestStep testStep )
+	{
+		return testStep instanceof SamplerTestStep;
+	}
+
+	@Override
+	public SecurityCheckConfigPanel getComponent()
+	{
+		return null;
+	}
+
+	@Override
+	public String getType()
+	{
 		return TYPE;
 	}
 
 	@Override
-	public void checkForSensitiveInformationExposure(TestStep testStep,
-			SecurityTestRunContext context, SecurityTestLogModel securityTestLog) {
-		InformationExposureCheck iec = new InformationExposureCheck(config,
-				null, null);
-		iec.analyze(testStep, context, securityTestLog);
+	public void checkForSensitiveInformationExposure( TestStep testStep, SecurityTestRunContext context,
+			SecurityTestLogModel securityTestLog )
+	{
+		InformationExposureCheck iec = new InformationExposureCheck( config, null, null );
+		iec.analyze( testStep, context, securityTestLog, null );
 	}
 }

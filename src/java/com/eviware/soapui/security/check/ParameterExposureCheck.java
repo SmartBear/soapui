@@ -43,8 +43,9 @@ import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
-import com.eviware.soapui.model.testsuite.TestRunner.Status;
+import com.eviware.soapui.security.SecurityCheckResult;
 import com.eviware.soapui.security.SecurityTestRunContext;
+import com.eviware.soapui.security.SecurityCheckResult.SecurityCheckStatus;
 import com.eviware.soapui.security.log.JSecurityTestRunLog;
 import com.eviware.soapui.security.log.SecurityTestLogMessageEntry;
 import com.eviware.soapui.security.log.SecurityTestLogModel;
@@ -92,21 +93,23 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements
 	}
 
 	@Override
-	protected void execute(TestStep testStep, SecurityTestRunContext context,
-			SecurityTestLogModel securityTestLog) {
+	protected SecurityCheckResult execute(TestStep testStep, SecurityTestRunContext context,
+			SecurityTestLogModel securityTestLog, SecurityCheckResult securityChekResult) {
 		if (acceptsTestStep(testStep)) {
 			WsdlTestCaseRunner testCaseRunner = new WsdlTestCaseRunner(
 					(WsdlTestCase) testStep.getTestCase(),
 					new StringToObjectMap());
 
 			testStep.run(testCaseRunner, testCaseRunner.getRunContext());
-			analyze(testStep, context, securityTestLog);
+			analyze(testStep, context, securityTestLog, null);
 		}
+		//TODO
+		return null;
 	}
 
 	@Override
-	public void analyze(TestStep testStep, SecurityTestRunContext context,
-			SecurityTestLogModel securityTestLog) {
+	public SecurityCheckResult analyze(TestStep testStep, SecurityTestRunContext context,
+			SecurityTestLogModel securityTestLog, SecurityCheckResult securityCheckResult) {
 		if (acceptsTestStep(testStep)) {
 			HttpTestRequestStepInterface testStepwithProperties = (HttpTestRequestStepInterface) testStep;
 			HttpTestRequestInterface<?> request = testStepwithProperties
@@ -152,14 +155,16 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements
 													+ param.getValue()
 													+ "\" is exposed in the response",
 											messageExchange));
-							setStatus(Status.FAILED);
+							securityCheckResult.setStatus(SecurityCheckStatus.FAILED);
 						}
 					}
 				}
 			}
-			if (getStatus() != Status.FAILED)
-				setStatus(Status.FINISHED);
+//			if (getStatus() != Status.FAILED)
+//				setStatus(Status.FINISHED);
 		}
+		//TODO
+		return null;
 	}
 
 	/**
