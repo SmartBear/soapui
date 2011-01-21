@@ -22,9 +22,6 @@ import com.eviware.soapui.config.PropertyConfig;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.settings.Settings;
-import com.eviware.soapui.model.testsuite.AssertionError;
-import com.eviware.soapui.model.testsuite.AssertionException;
-import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
 import com.eviware.soapui.settings.GlobalPropertySettings;
 
 public class SecurityCheckUtil
@@ -71,7 +68,7 @@ public class SecurityCheckUtil
 			}
 			else
 			{
-				ix = content.indexOf( replToken );
+				ix = content.toUpperCase().indexOf( replToken.toUpperCase() );
 			}
 
 			if( ix == -1 )
