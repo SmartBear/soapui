@@ -1,0 +1,23 @@
+/*
+ *  soapUI, copyright (C) 2004-2009 eviware.com 
+ *
+ *  soapUI is free software; you can redistribute it and/or modify it under the 
+ *  terms of version 2.1 of the GNU Lesser General Public License as published by 
+ *  the Free Software Foundation.
+ *
+ *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ *  See the GNU Lesser General Public License for more details at gnu.org.
+ */
+package com.eviware.soapui.security.boundary;
+
+public interface Boundary
+{
+	public static final int LENGTH = 1;
+	public static final int MIN_LENGTH = 2;
+	public static final int MAX_LENGTH = 3;
+	public static final int TOTAL_DIGITS = 4;
+	public static final int FRACTION_DIGITS = 5;
+
+	String outOfBoundary( int restrictionAttribute );
+}
