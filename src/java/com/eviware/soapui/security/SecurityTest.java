@@ -25,12 +25,11 @@ import com.eviware.soapui.config.SecurityTestConfig;
 import com.eviware.soapui.config.TestStepSecurityTestConfig;
 import com.eviware.soapui.impl.wsdl.AbstractTestPropertyHolderWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
-import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.model.TestModelItem;
 import com.eviware.soapui.model.testsuite.TestRunnable;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestRunner.Status;
-import com.eviware.soapui.security.check.SecurityCheck;
+import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.security.log.SecurityTestLogModel;
 import com.eviware.soapui.security.panels.SecurityChecksPanel;
 import com.eviware.soapui.security.registry.AbstractSecurityCheckFactory;
@@ -107,15 +106,15 @@ public class SecurityTest extends
 	 * @param securityCheckType
 	 * @param securityCheckName
 	 * @param securityCheckConfig
-	 * @return SecurityCheck
+	 * @return AbstractSecurityCheck
 	 */
-	public SecurityCheck addSecurityCheck(TestStep testStep,
+	public AbstractSecurityCheck addSecurityCheck(TestStep testStep,
 			String securityCheckType, String securityCheckName) {
 		AbstractSecurityCheckFactory factory = SecurityCheckRegistry
 				.getInstance().getFactory(securityCheckType);
 		SecurityCheckConfig newSecCheckConfig = factory
 				.createNewSecurityCheck(securityCheckName);
-		SecurityCheck newSecCheck = factory.buildSecurityCheck(
+		AbstractSecurityCheck newSecCheck = factory.buildSecurityCheck(
 				newSecCheckConfig, this);
 		newSecCheck.setTestStep(testStep);
 
@@ -158,7 +157,7 @@ public class SecurityTest extends
 	 * 
 	 */
 	public void removeSecurityCheck(TestStep testStep,
-			SecurityCheck securityCheck) {
+			AbstractSecurityCheck securityCheck) {
 		List<TestStepSecurityTestConfig> testStepSecurityTestList = getConfig()
 				.getTestStepSecurityTestList();
 		if (!testStepSecurityTestList.isEmpty()) {
@@ -187,19 +186,19 @@ public class SecurityTest extends
 	 * 
 	 * @return A map of TestStepIds to their relevant security checks
 	 */
-	public HashMap<String, List<SecurityCheck>> getSecurityChecksMap() {
-		HashMap<String, List<SecurityCheck>> securityChecksMap = new HashMap<String, List<SecurityCheck>>();
+	public HashMap<String, List<AbstractSecurityCheck>> getSecurityChecksMap() {
+		HashMap<String, List<AbstractSecurityCheck>> securityChecksMap = new HashMap<String, List<AbstractSecurityCheck>>();
 		if (getConfig() != null) {
 			if (!getConfig().getTestStepSecurityTestList().isEmpty()) {
 				for (TestStepSecurityTestConfig testStepSecurityTestListConfig : getConfig()
 						.getTestStepSecurityTestList()) {
-					List<SecurityCheck> checkList = new ArrayList<SecurityCheck>();
+					List<AbstractSecurityCheck> checkList = new ArrayList<AbstractSecurityCheck>();
 					if (testStepSecurityTestListConfig != null) {
 						if (!testStepSecurityTestListConfig
 								.getTestStepSecurityCheckList().isEmpty()) {
 							for (SecurityCheckConfig secCheckConfig : testStepSecurityTestListConfig
 									.getTestStepSecurityCheckList()) {
-								SecurityCheck securityCheck = SecurityCheckRegistry
+								AbstractSecurityCheck securityCheck = SecurityCheckRegistry
 										.getInstance().getFactory(
 												secCheckConfig.getType())
 										.buildSecurityCheck(secCheckConfig,
@@ -342,17 +341,17 @@ public class SecurityTest extends
 		return scriptEngine.run();
 	}
 
-	public List<SecurityCheck> getTestStepSecurityChecks(String testStepId) {
+	public List<AbstractSecurityCheck> getTestStepSecurityChecks(String testStepId) {
 		return getSecurityChecksMap().get(testStepId) != null ? getSecurityChecksMap()
 				.get(testStepId)
-				: new ArrayList<SecurityCheck>();
+				: new ArrayList<AbstractSecurityCheck>();
 	}
 
-	public SecurityCheck getTestStepSecurityCheckByName(String testStepId,
+	public AbstractSecurityCheck getTestStepSecurityCheckByName(String testStepId,
 			String securityCheckName) {
-		List<SecurityCheck> securityChecksList = getTestStepSecurityChecks(testStepId);
+		List<AbstractSecurityCheck> securityChecksList = getTestStepSecurityChecks(testStepId);
 		for (int c = 0; c < securityChecksList.size(); c++) {
-			SecurityCheck securityCheck = getTestStepSecurityCheckAt(
+			AbstractSecurityCheck securityCheck = getTestStepSecurityCheckAt(
 					testStepId, c);
 			if (securityCheckName.equals(securityCheck.getName()))
 				return securityCheck;
@@ -361,8 +360,8 @@ public class SecurityTest extends
 		return null;
 	}
 
-	public SecurityCheck getTestStepSecurityCheckAt(String testStepId, int index) {
-		List<SecurityCheck> securityChecksList = getTestStepSecurityChecks(testStepId);
+	public AbstractSecurityCheck getTestStepSecurityCheckAt(String testStepId, int index) {
+		List<AbstractSecurityCheck> securityChecksList = getTestStepSecurityChecks(testStepId);
 		return securityChecksList.get(index);
 	}
 
@@ -386,10 +385,10 @@ public class SecurityTest extends
 	 * @param offset
 	 *            specifies position to move to , negative value means moving up
 	 *            while positive value means moving down
-	 * @return new SecurityCheck
+	 * @return new AbstractSecurityCheck
 	 */
-	public SecurityCheck moveTestStepSecurityCheck(TestStep testStep,
-			SecurityCheck securityCheck, int index, int offset) {
+	public AbstractSecurityCheck moveTestStepSecurityCheck(TestStep testStep,
+			AbstractSecurityCheck securityCheck, int index, int offset) {
 		List<TestStepSecurityTestConfig> testStepSecurityTestList = getConfig()
 				.getTestStepSecurityTestList();
 		if (!testStepSecurityTestList.isEmpty()) {
@@ -405,7 +404,7 @@ public class SecurityTest extends
 					// );
 					SecurityCheckConfig newSecCheckConfig = (SecurityCheckConfig) securityCheck
 							.getConfig().copy();
-					SecurityCheck newSecCheck = factory.buildSecurityCheck(
+					AbstractSecurityCheck newSecCheck = factory.buildSecurityCheck(
 							newSecCheckConfig, this);
 
 					securityCheckList.remove(securityCheck.getConfig());
@@ -434,9 +433,9 @@ public class SecurityTest extends
 	public String findTestStepCheckUniqueName(String testStepId, String type) {
 		String name = type;
 		int numNames = 0;
-		List<SecurityCheck> securityChecksList = getTestStepSecurityChecks(testStepId);
+		List<AbstractSecurityCheck> securityChecksList = getTestStepSecurityChecks(testStepId);
 		if (securityChecksList != null && !securityChecksList.isEmpty()) {
-			for (SecurityCheck existingCheck : securityChecksList) {
+			for (AbstractSecurityCheck existingCheck : securityChecksList) {
 				if (existingCheck.getType().equals(name))
 					numNames++;
 			}

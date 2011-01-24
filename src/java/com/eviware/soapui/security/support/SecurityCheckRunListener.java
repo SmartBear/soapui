@@ -15,20 +15,20 @@ package com.eviware.soapui.security.support;
 import com.eviware.soapui.security.SecurityCheckRequestResult;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunnerInterface;
-import com.eviware.soapui.security.check.SecurityCheck;
+import com.eviware.soapui.security.check.AbstractSecurityCheck;
 
 /**
  * Listener for TestRun-related events, schedule events will only be triggered
  * for LoadTest runs.
  * 
- * @author Dragica
+ * @author dragica.soldo
  */
 
-public interface SecurityCheckRunListener {
-	public void beforeSecurityCheck(SecurityTestRunnerInterface testRunner,
-			SecurityTestRunContext runContext, SecurityCheck securityCheck);
+public interface SecurityCheckRunListener
+{
+	public void beforeSecurityCheck( SecurityTestRunnerInterface testRunner, SecurityTestRunContext runContext,
+			AbstractSecurityCheck securityCheck );
 
-	public void afterSecurityCheck(SecurityTestRunnerInterface testRunner,
-			SecurityTestRunContext runContext,
-			SecurityCheckRequestResult securityCheckResult);
+	public void afterSecurityCheck( SecurityTestRunnerInterface testRunner, SecurityTestRunContext runContext,
+			SecurityCheckRequestResult securityCheckResult );
 }

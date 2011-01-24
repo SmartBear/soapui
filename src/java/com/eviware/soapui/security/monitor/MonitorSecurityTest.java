@@ -17,7 +17,7 @@ import java.util.List;
 
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.model.iface.MessageExchange;
-import com.eviware.soapui.security.check.SecurityCheck;
+import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.security.log.JSecurityTestRunLog;
 import com.eviware.soapui.security.registry.AbstractSecurityCheckFactory;
 import com.eviware.soapui.security.registry.SecurityCheckRegistry;
@@ -33,12 +33,12 @@ import com.eviware.soapui.security.registry.SecurityCheckRegistry;
 public class MonitorSecurityTest
 {
 
-	private List<SecurityCheck> monitorSecurityChecksList;
+	private List<AbstractSecurityCheck> monitorSecurityChecksList;
 	private JSecurityTestRunLog securityTestLog;
 
 	public MonitorSecurityTest( JSecurityTestRunLog securityTestRunLog )
 	{
-		monitorSecurityChecksList = new ArrayList<SecurityCheck>();
+		monitorSecurityChecksList = new ArrayList<AbstractSecurityCheck>();
 		this.securityTestLog = securityTestRunLog;
 	}
 
@@ -47,7 +47,7 @@ public class MonitorSecurityTest
 	 * 
 	 * @return List of checks
 	 */
-	public List<SecurityCheck> getMonitorSecurityChecksList()
+	public List<AbstractSecurityCheck> getMonitorSecurityChecksList()
 	{
 		return monitorSecurityChecksList;
 	}
@@ -59,11 +59,11 @@ public class MonitorSecurityTest
 	 * @param type
 	 * @return
 	 */
-	public SecurityCheck addSecurityCheck( String name, String type )
+	public AbstractSecurityCheck addSecurityCheck( String name, String type )
 	{
 		AbstractSecurityCheckFactory factory = SecurityCheckRegistry.getInstance().getFactory( type );
 		SecurityCheckConfig scc = factory.createNewSecurityCheck( name );
-		SecurityCheck newSc = factory.buildSecurityCheck( scc, null );
+		AbstractSecurityCheck newSc = factory.buildSecurityCheck( scc, null );
 		monitorSecurityChecksList.add( newSc );
 		return newSc;
 	}
@@ -75,11 +75,11 @@ public class MonitorSecurityTest
 	 * @param sc
 	 * @return
 	 */
-	public SecurityCheck addSecurityCheck( String name, SecurityCheck sc )
+	public AbstractSecurityCheck addSecurityCheck( String name, AbstractSecurityCheck sc )
 	{
 		AbstractSecurityCheckFactory factory = SecurityCheckRegistry.getInstance().getFactory( sc.getType() );
 		SecurityCheckConfig scc = factory.createNewSecurityCheck( name );
-		SecurityCheck newSc = factory.buildSecurityCheck( scc, null );
+		AbstractSecurityCheck newSc = factory.buildSecurityCheck( scc, null );
 		newSc.getConfig().setConfig( sc.getConfig().getConfig() );
 		newSc.getConfig().setSetupScript( sc.getConfig().getSetupScript() );
 		newSc.getConfig().setTearDownScript( sc.getConfig().getTearDownScript() );
@@ -90,21 +90,21 @@ public class MonitorSecurityTest
 		return newSc;
 	}
 
-	public SecurityCheck getSecurityCheckAt( int index )
+	public AbstractSecurityCheck getSecurityCheckAt( int index )
 	{
 		return monitorSecurityChecksList.get( index );
 	}
 
-	public SecurityCheck removeSecurityCheckAt( int index )
+	public AbstractSecurityCheck removeSecurityCheckAt( int index )
 	{
 		return monitorSecurityChecksList.remove( index );
 	}
 
-	public SecurityCheck getSecurityCheckByName( String name )
+	public AbstractSecurityCheck getSecurityCheckByName( String name )
 	{
 		for( int c = 0; c < monitorSecurityChecksList.size(); c++ )
 		{
-			SecurityCheck securityCheck = getSecurityCheckAt( c );
+			AbstractSecurityCheck securityCheck = getSecurityCheckAt( c );
 			if( securityCheck.getName().equals( name ) )
 				return securityCheck;
 		}
@@ -112,9 +112,9 @@ public class MonitorSecurityTest
 		return null;
 	}
 
-	public SecurityCheck renameSecurityCheckAt( int index, String newName )
+	public AbstractSecurityCheck renameSecurityCheckAt( int index, String newName )
 	{
-		SecurityCheck sc = removeSecurityCheckAt( index );
+		AbstractSecurityCheck sc = removeSecurityCheckAt( index );
 		sc.setName( newName );
 		monitorSecurityChecksList.add( sc );
 		return sc;
@@ -123,7 +123,7 @@ public class MonitorSecurityTest
 	public List<String> getExistingChecksNames()
 	{
 		List<String> names = new ArrayList<String>();
-		for( SecurityCheck scc : monitorSecurityChecksList )
+		for( AbstractSecurityCheck scc : monitorSecurityChecksList )
 		{
 			names.add( scc.getName() );
 		}
@@ -137,7 +137,7 @@ public class MonitorSecurityTest
 
 	public void logSecurityMessage( MessageExchange messageExchange )
 	{
-		for( SecurityCheck check : getMonitorSecurityChecksList() )
+		for( AbstractSecurityCheck check : getMonitorSecurityChecksList() )
 		{
 			if( ( ( HttpSecurityAnalyser )check ).canRun() && !check.isDisabled() )
 				( ( HttpSecurityAnalyser )check ).analyzeHttpConnection( messageExchange, getSecurityTestLog() );

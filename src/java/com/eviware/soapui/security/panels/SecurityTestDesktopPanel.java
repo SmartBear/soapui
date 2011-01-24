@@ -55,7 +55,7 @@ import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunnerImpl;
 import com.eviware.soapui.security.SecurityTestRunnerInterface;
 import com.eviware.soapui.security.actions.SecurityTestOptionsAction;
-import com.eviware.soapui.security.check.SecurityCheck;
+import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.security.log.JSecurityTestRunLog;
 import com.eviware.soapui.security.support.ProgressBarSecurityTestAdapter;
 import com.eviware.soapui.security.support.SecurityCheckRunListener;
@@ -581,7 +581,7 @@ public class SecurityTestDesktopPanel extends
 	}
 
 	public class InternalSecurityCheckRunListener implements
-			SecurityCheckRunListener {
+ SecurityCheckRunListener {
 		@Override
 		public void afterSecurityCheck(SecurityTestRunnerInterface testRunner,
 				SecurityTestRunContext runContext,
@@ -591,7 +591,7 @@ public class SecurityTestDesktopPanel extends
 
 		@Override
 		public void beforeSecurityCheck(SecurityTestRunnerInterface testRunner,
-				SecurityTestRunContext runContext, SecurityCheck securityCheck) {
+				SecurityTestRunContext runContext, AbstractSecurityCheck securityCheck) {
 			// TODO Auto-generated method stub
 
 		}

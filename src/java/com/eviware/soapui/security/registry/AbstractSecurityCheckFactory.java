@@ -15,7 +15,7 @@ package com.eviware.soapui.security.registry;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.security.Securable;
-import com.eviware.soapui.security.check.SecurityCheck;
+import com.eviware.soapui.security.check.AbstractSecurityCheck;
 
 /**
  * Abstract factory behaviour for SecurityCheck factories
@@ -23,7 +23,7 @@ import com.eviware.soapui.security.check.SecurityCheck;
  * @author soapui team
  */
 
-public abstract class AbstractSecurityCheckFactory 
+public abstract class AbstractSecurityCheckFactory
 {
 	private final String typeName;
 	private final String name;
@@ -39,7 +39,9 @@ public abstract class AbstractSecurityCheckFactory
 	}
 
 	public abstract SecurityCheckConfig createNewSecurityCheck( String name );
-	public abstract SecurityCheck buildSecurityCheck( SecurityCheckConfig config, ModelItem parent);
+
+	public abstract AbstractSecurityCheck buildSecurityCheck( SecurityCheckConfig config, ModelItem parent );
+
 	public String getType()
 	{
 		return typeName;
@@ -66,8 +68,10 @@ public abstract class AbstractSecurityCheckFactory
 	{
 		return false;
 	}
-	public boolean canDoSecurityCheck( Securable securable ) {
-		//TODO implement appropriately for specific checks implementation 
+
+	public boolean canDoSecurityCheck( Securable securable )
+	{
+		// TODO implement appropriately for specific checks implementation
 		return true;
 	}
 }

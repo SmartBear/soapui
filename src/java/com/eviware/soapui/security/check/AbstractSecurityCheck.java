@@ -36,6 +36,7 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
+import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCaseRunner;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
@@ -57,7 +58,7 @@ import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
 import com.jgoodies.forms.builder.ButtonBarBuilder;
 
-public abstract class AbstractSecurityCheck extends SecurityCheck
+public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<SecurityCheckConfig>
 {
 	// configuration of specific request modification
 	private static final int MINIMUM_STRING_DISTANCE = 50;
@@ -73,11 +74,14 @@ public abstract class AbstractSecurityCheck extends SecurityCheck
 	protected Status status;
 	SecurityCheckConfigPanel contentPanel;
 	protected SecurityCheckRequestResult securityCheckResult;
+	private final Securable securable;
+	private TestStep testStep;
 
 	// private
 	public AbstractSecurityCheck( SecurityCheckConfig config, ModelItem parent, String icon, Securable securable )
 	{
-		super( config, parent, icon, securable );
+		super( config, parent, icon );
+		this.securable = securable;
 		this.config = config;
 		// if( config.getExecutionStrategy() == null )
 		// config.setExecutionStrategy(
@@ -92,7 +96,8 @@ public abstract class AbstractSecurityCheck extends SecurityCheck
 	// TODO check if should exist and what to do with securable
 	public AbstractSecurityCheck( SecurityCheckConfig config, ModelItem parent, String icon )
 	{
-		super( config, parent, icon, null );
+		super( config, parent, icon );
+		this.securable = null;
 		this.config = config;
 		this.startupScript = config.getSetupScript() != null ? config.getSetupScript().getStringValue() : "";
 		this.tearDownScript = config.getTearDownScript() != null ? config.getTearDownScript().getStringValue() : "";
@@ -104,15 +109,21 @@ public abstract class AbstractSecurityCheck extends SecurityCheck
 	abstract protected SecurityCheckRequestResult execute( TestStep testStep, SecurityTestRunContext context,
 			SecurityTestLogModel securityTestLog, SecurityCheckRequestResult securityChekResult );
 
-	@Override
-	abstract public SecurityCheckRequestResult analyze( TestStep testStep, SecurityTestRunContext context, SecurityTestLogModel securityTestLog, SecurityCheckRequestResult securityCheckResult );
-
-	@Override
+	/**
+	 * Runs the test (internaly calls analyze)
+	 * 
+	 * @param testStep
+	 *           The TestStep that the check will be applied to
+	 * @param context
+	 *           The context to run the test in
+	 * @param securityTestLog
+	 *           The security log to write to
+	 */
 	public SecurityCheckRequestResult run( TestStep testStep, SecurityTestRunContext context,
 			SecurityTestLogModel securityTestLog )
 	{
 		securityCheckResult = new SecurityCheckRequestResult( this );
-//		setStatus( Status.INITIALIZED );
+		// setStatus( Status.INITIALIZED );
 		runStartupScript( testStep );
 		securityCheckResult = execute( testStep, context, securityTestLog, securityCheckResult );
 		sensitiveInfoCheck( testStep, context, securityTestLog );
@@ -120,10 +131,23 @@ public abstract class AbstractSecurityCheck extends SecurityCheck
 		return securityCheckResult;
 	}
 
-//	protected Status getStatus()
-//	{
-//		return status;
-//	}
+	/**
+	 * Analyses the specified TestStep
+	 * 
+	 * @param testStep
+	 * @param context
+	 * @param securityTestLog
+	 * @param securityCheckResult
+	 *           TODO
+	 * @return TODO
+	 */
+	abstract public SecurityCheckRequestResult analyze( TestStep testStep, SecurityTestRunContext context,
+			SecurityTestLogModel securityTestLog, SecurityCheckRequestResult securityCheckResult );
+
+	// protected Status getStatus()
+	// {
+	// return status;
+	// }
 
 	private void sensitiveInfoCheck( TestStep testStep, SecurityTestRunContext context,
 			SecurityTestLogModel securityTestLog )
@@ -135,7 +159,6 @@ public abstract class AbstractSecurityCheck extends SecurityCheck
 		}
 	}
 
-	@Override
 	public boolean configure()
 	{
 		if( dialog == null )
@@ -147,6 +170,40 @@ public abstract class AbstractSecurityCheck extends SecurityCheck
 		return configureResult;
 	}
 
+	public boolean isConfigurable()
+	{
+		return true;
+	}
+
+	/**
+	 * Gets desktop configuration for specific SecurityCheck
+	 * 
+	 * @param TestStep
+	 *           the TestStep to create the config for, could be null for
+	 *           HttpMonitor checks
+	 * 
+	 * @return
+	 */
+	public abstract SecurityCheckConfigPanel getComponent();
+
+	/**
+	 * The type of this check
+	 * 
+	 * @return
+	 */
+	public abstract String getType();
+
+	/**
+	 * Checks if this securityCheck is applicable to the specified TestStep
+	 * 
+	 * @param testStep
+	 * @return
+	 */
+	public abstract boolean acceptsTestStep( TestStep testStep );
+
+	/**
+	 * Builds the configuration dialog
+	 */
 	protected void buildDialog()
 	{
 		dialog = new JDialog( UISupport.getMainFrame(), getTitle(), true );
@@ -190,6 +247,16 @@ public abstract class AbstractSecurityCheck extends SecurityCheck
 		dialog.pack();
 		UISupport.initDialogActions( dialog, showOnlineHelpAction, okButton );
 
+	}
+
+	public TestStep getTestStep()
+	{
+		return testStep;
+	}
+
+	public void setTestStep( TestStep step )
+	{
+		testStep = step;
 	}
 
 	private JComponent getParameterSelector()
@@ -346,23 +413,40 @@ public abstract class AbstractSecurityCheck extends SecurityCheck
 		config.setName( arg0 );
 	}
 
-	@Override
+	/**
+	 * Checks if the test is disabled
+	 * 
+	 * @return true if disabled
+	 */
 	public boolean isDisabled()
 	{
 		return disabled;
 	}
 
-	@Override
+	/**
+	 * Disables or Enables the check
+	 * 
+	 * @param disabled
+	 */
 	public void setDisabled( boolean disabled )
 	{
 		this.disabled = disabled;
 
 	}
 
-	@Override
+	/**
+	 * The title of this check
+	 * 
+	 * @return
+	 */
 	public String getTitle()
 	{
 		return "";
+	}
+
+	public Securable getSecurable()
+	{
+		return securable;
 	}
 
 	public static boolean isSecurable( TestStep testStep )
@@ -390,10 +474,10 @@ public abstract class AbstractSecurityCheck extends SecurityCheck
 		config.setParamsToCheckArray( params.toArray( new String[1] ) );
 	}
 
-//	protected void setStatus( Status s )
-//	{
-//		status = s;
-//	}
+	// protected void setStatus( Status s )
+	// {
+	// status = s;
+	// }
 
 	public String getExecutionStrategy()
 	{
@@ -405,9 +489,15 @@ public abstract class AbstractSecurityCheck extends SecurityCheck
 		config.setExecutionStrategy( strategy );
 	}
 
-	// TODO implement properly in subclasses
+	/**
+	 * List of log entries from specific check this should reflect success of the
+	 * check to be used in progress bar of specific test step
+	 * 
+	 * @return
+	 */
 	public List<SecurityTestLogMessageEntry> getSecurityTestLogEntries()
 	{
+		// TODO implement properly in subclasses
 		return new ArrayList<SecurityTestLogMessageEntry>();
 	}
 
@@ -438,7 +528,7 @@ public abstract class AbstractSecurityCheck extends SecurityCheck
 	protected void runCheck( TestStep testStep, SecurityTestRunContext context, SecurityTestLogModel securityTestLog,
 			WsdlTestCaseRunner testCaseRunner, String originalResponse, String message )
 	{
-		
+
 		testStep.run( testCaseRunner, testCaseRunner.getRunContext() );
 		AbstractHttpRequest<?> lastRequest = getRequest( testStep );
 
@@ -450,14 +540,14 @@ public abstract class AbstractSecurityCheck extends SecurityCheck
 				/*
 				 * new HttpResponseMessageExchange( lastRequest)
 				 */) );
-				//TODO implement this through SecurityCheckResult
-//				setStatus( Status.FAILED );
+				// TODO implement this through SecurityCheckResult
+				// setStatus( Status.FAILED );
 			}
 		}
 		else
 		{
-			//TODO implement this through SecurityCheckResult
-//			setStatus( Status.FAILED );
+			// TODO implement this through SecurityCheckResult
+			// setStatus( Status.FAILED );
 		}
 		analyze( testStep, context, securityTestLog, null );
 	}

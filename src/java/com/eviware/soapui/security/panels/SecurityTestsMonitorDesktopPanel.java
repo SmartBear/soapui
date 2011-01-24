@@ -31,7 +31,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import com.eviware.soapui.security.check.SecurityCheck;
+import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.security.monitor.MonitorSecurityTest;
 import com.eviware.soapui.security.registry.SecurityCheckRegistry;
 import com.eviware.soapui.support.UISupport;
@@ -101,7 +101,7 @@ public class SecurityTestsMonitorDesktopPanel extends JPanel
 
 	}
 
-	public SecurityCheck getCurrentSecurityCheck()
+	public AbstractSecurityCheck getCurrentSecurityCheck()
 	{
 		int ix = securityChecksList.getSelectedIndex();
 		return ix == -1 ? null : monitorSecurityTest.getSecurityCheckAt( ix );
@@ -129,14 +129,14 @@ public class SecurityTestsMonitorDesktopPanel extends JPanel
 		disableButton = new JToggleButton( new DisableAction() );
 		disableButton.setPreferredSize( UISupport.TOOLBAR_BUTTON_DIMENSION );
 		disableButton.setSelectedIcon( UISupport.createImageIcon( "/bullet_red.png" ) );
-		disableButton.setEnabled(false);
+		disableButton.setEnabled( false );
 		toolbar.addSeparator();
 		toolbar.addFixed( disableButton );
 
 		return toolbar;
 	}
 
-	private void setSelectedCheck( SecurityCheck securityCheck )
+	private void setSelectedCheck( AbstractSecurityCheck securityCheck )
 	{
 		if( securityCheck != null )
 		{
@@ -163,7 +163,7 @@ public class SecurityTestsMonitorDesktopPanel extends JPanel
 		// panel.add( securityCheckConfigPanel );
 		if( securityChecksList != null && securityChecksList.getSelectedValue() != null )
 		{
-			SecurityCheck selected = monitorSecurityTest.getSecurityCheckByName( ( String )securityChecksList
+			AbstractSecurityCheck selected = monitorSecurityTest.getSecurityCheckByName( ( String )securityChecksList
 					.getSelectedValue() );
 			securityCheckConfigPanel.removeAll();
 			securityCheckConfigPanel.add( selected.getComponent() );
@@ -182,12 +182,13 @@ public class SecurityTestsMonitorDesktopPanel extends JPanel
 
 		public void actionPerformed( ActionEvent e )
 		{
-			String[] availableChecksNames = SecurityCheckRegistry.getInstance().getAvailableSecurityChecksNames(true);
+			String[] availableChecksNames = SecurityCheckRegistry.getInstance().getAvailableSecurityChecksNames( true );
 			String type = UISupport.prompt( "Specify type of security check", "Add SecurityCheck", availableChecksNames );
 			if( type == null || type.trim().length() == 0 )
 				return;
 
-			String name = UISupport.prompt( "Specify name for security check", "Add SecurityCheck", findUniqueName(type) );
+			String name = UISupport
+					.prompt( "Specify name for security check", "Add SecurityCheck", findUniqueName( type ) );
 			if( name == null || name.trim().length() == 0 )
 				return;
 			while( monitorSecurityTest.getSecurityCheckByName( name ) != null
@@ -219,9 +220,10 @@ public class SecurityTestsMonitorDesktopPanel extends JPanel
 		public void actionPerformed( ActionEvent e )
 		{
 			int ix = securityChecksList.getSelectedIndex();
-			SecurityCheck sourceCheck = monitorSecurityTest.getSecurityCheckAt( ix );
+			AbstractSecurityCheck sourceCheck = monitorSecurityTest.getSecurityCheckAt( ix );
 
-			String name = UISupport.prompt( "Specify name for SecurityCheck", "Copy SecurityCheck", "Copy of " + sourceCheck.getName() );
+			String name = UISupport.prompt( "Specify name for SecurityCheck", "Copy SecurityCheck", "Copy of "
+					+ sourceCheck.getName() );
 			if( name == null || name.trim().length() == 0 )
 				return;
 			while( monitorSecurityTest.getSecurityCheckByName( name ) != null
@@ -234,7 +236,7 @@ public class SecurityTestsMonitorDesktopPanel extends JPanel
 					return;
 				}
 			}
-			SecurityCheck securityCheck = monitorSecurityTest.addSecurityCheck( name, sourceCheck );
+			AbstractSecurityCheck securityCheck = monitorSecurityTest.addSecurityCheck( name, sourceCheck );
 			securityCheck.setDisabled( sourceCheck.isDisabled() );
 
 			listModel.addElement( name );
@@ -278,16 +280,18 @@ public class SecurityTestsMonitorDesktopPanel extends JPanel
 
 		public void actionPerformed( ActionEvent e )
 		{
-			SecurityCheck securityCheck = getCurrentSecurityCheck();
-			
+			AbstractSecurityCheck securityCheck = getCurrentSecurityCheck();
+
 			String oldName = securityCheck.getName();
 			String newName = UISupport.prompt( "Specify new name for security check", "Rename SecurityCheck",
 					securityCheck.getName() );
 
-			while( !(newName.equals(oldName)) && ( monitorSecurityTest.getSecurityCheckByName( newName ) != null
-					|| monitorSecurityTest.getSecurityCheckByName( newName + " (disabled)" ) != null ))
+			while( !( newName.equals( oldName ) )
+					&& ( monitorSecurityTest.getSecurityCheckByName( newName ) != null || monitorSecurityTest
+							.getSecurityCheckByName( newName + " (disabled)" ) != null ) )
 			{
-				newName = UISupport.prompt( "Specify unique name for check", "Rename SecurityCheck", findUniqueName(securityCheck.getType()) );
+				newName = UISupport.prompt( "Specify unique name for check", "Rename SecurityCheck",
+						findUniqueName( securityCheck.getType() ) );
 				if( newName == null )
 				{
 					return;
@@ -296,7 +300,8 @@ public class SecurityTestsMonitorDesktopPanel extends JPanel
 			if( newName != null && !securityCheck.getName().equals( newName ) )
 			{
 				securityCheck.setName( newName );
-				if (securityCheck.isDisabled()) {
+				if( securityCheck.isDisabled() )
+				{
 					newName += " (disabled)";
 				}
 				listModel.setElementAt( newName, securityChecksList.getSelectedIndex() );
@@ -314,28 +319,31 @@ public class SecurityTestsMonitorDesktopPanel extends JPanel
 
 		public void actionPerformed( ActionEvent e )
 		{
-			SecurityCheck securityCheck = getCurrentSecurityCheck();
+			AbstractSecurityCheck securityCheck = getCurrentSecurityCheck();
 			securityCheck.setDisabled( disableButton.isSelected() );
 
 			String name = securityCheck.getName();
 			if( securityCheck.isDisabled() )
 				name += " (disabled)";
-			//securityCheck.setName( name );
+			// securityCheck.setName( name );
 			// monitorSecurityTest.renameSecurityCheckAt(
 			// getCurrentSecurityCheckIndex(), name );
 
 			listModel.setElementAt( name, securityChecksList.getSelectedIndex() );
 		}
 	}
-	
-	private String findUniqueName(String type) {
+
+	private String findUniqueName( String type )
+	{
 		String name = type;
 		int numNames = 0;
-		for (SecurityCheck existingCheck : monitorSecurityTest.getMonitorSecurityChecksList()) {
-			if (existingCheck.getType().equals(name))
-				numNames++;
+		for( AbstractSecurityCheck existingCheck : monitorSecurityTest.getMonitorSecurityChecksList() )
+		{
+			if( existingCheck.getType().equals( name ) )
+				numNames++ ;
 		}
-		if (numNames != 0) {
+		if( numNames != 0 )
+		{
 			name += " " + numNames;
 		}
 		return name;

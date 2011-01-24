@@ -15,8 +15,8 @@ package com.eviware.soapui.security.registry;
 import com.eviware.soapui.config.MaliciousAttachmentSecurityCheckConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.security.check.MaliciousAttachmentSecurityCheck;
-import com.eviware.soapui.security.check.SecurityCheck;
 
 /**
  * Factory for creation GroovyScript steps
@@ -24,36 +24,40 @@ import com.eviware.soapui.security.check.SecurityCheck;
  * @author soapUI team
  */
 
-public class MaliciousAttachmentSecurityCheckFactory extends AbstractSecurityCheckFactory {
-	
-	public MaliciousAttachmentSecurityCheckFactory() {
-		super(MaliciousAttachmentSecurityCheck.TYPE, "MaliciousAttachmentSecurityCheck",
-				"Preforms a check for Malicious Attachment Vulerabilities",
-				"/malicious_attachement_check_script.gif");
+public class MaliciousAttachmentSecurityCheckFactory extends AbstractSecurityCheckFactory
+{
+
+	public MaliciousAttachmentSecurityCheckFactory()
+	{
+		super( MaliciousAttachmentSecurityCheck.TYPE, "MaliciousAttachmentSecurityCheck",
+				"Preforms a check for Malicious Attachment Vulerabilities", "/malicious_attachement_check_script.gif" );
 	}
 
-	public boolean canCreate() {
+	public boolean canCreate()
+	{
 		return true;
 	}
 
 	@Override
-	public SecurityCheck buildSecurityCheck(SecurityCheckConfig config, ModelItem parent) {
-		return new MaliciousAttachmentSecurityCheck(config, null, null);
+	public AbstractSecurityCheck buildSecurityCheck( SecurityCheckConfig config, ModelItem parent )
+	{
+		return new MaliciousAttachmentSecurityCheck( config, null, null );
 	}
 
 	@Override
-	public SecurityCheckConfig createNewSecurityCheck(String name) {
-		SecurityCheckConfig securityCheckConfig = SecurityCheckConfig.Factory
-				.newInstance();
-		securityCheckConfig.setType(MaliciousAttachmentSecurityCheck.TYPE);
-		securityCheckConfig.setName(name);
+	public SecurityCheckConfig createNewSecurityCheck( String name )
+	{
+		SecurityCheckConfig securityCheckConfig = SecurityCheckConfig.Factory.newInstance();
+		securityCheckConfig.setType( MaliciousAttachmentSecurityCheck.TYPE );
+		securityCheckConfig.setName( name );
 		MaliciousAttachmentSecurityCheckConfig sic = MaliciousAttachmentSecurityCheckConfig.Factory.newInstance();
-		securityCheckConfig.setConfig(sic);
+		securityCheckConfig.setConfig( sic );
 		return securityCheckConfig;
 	}
 
 	@Override
-	public boolean isHttpMonitor() {
+	public boolean isHttpMonitor()
+	{
 		return false;
 	}
 }

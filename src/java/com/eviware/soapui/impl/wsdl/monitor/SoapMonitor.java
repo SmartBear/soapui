@@ -84,8 +84,6 @@ import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.model.testsuite.TestSuite;
-import com.eviware.soapui.security.check.SecurityCheck;
-import com.eviware.soapui.security.monitor.HttpSecurityAnalyser;
 import com.eviware.soapui.security.monitor.MonitorSecurityTest;
 import com.eviware.soapui.settings.ProxySettings;
 import com.eviware.soapui.support.StringUtils;

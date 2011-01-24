@@ -42,7 +42,6 @@ import javax.swing.JSplitPane;
 import javax.swing.SwingConstants;
 
 import com.eviware.soapui.impl.wsdl.actions.testsuite.AddNewTestCaseAction;
-import com.eviware.soapui.impl.wsdl.panels.support.ProgressBarTestCaseAdapter;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.support.TestSuiteListenerAdapter;
@@ -51,8 +50,6 @@ import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestSuiteListener;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.check.AbstractSecurityCheck;
-import com.eviware.soapui.security.check.SecurityCheck;
-import com.eviware.soapui.security.support.ProgressBarSecurityTestAdapter;
 import com.eviware.soapui.security.support.ProgressBarSecurityTestStepAdapter;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.ActionList;
@@ -108,7 +105,7 @@ public class JSecurityTestTestStepList extends JPanel
 
 	}
 
-	public SecurityCheck getCurrentSecurityCheck()
+	public AbstractSecurityCheck getCurrentSecurityCheck()
 	{
 		int ix = securityChecksList.getSelectedIndex();
 		return ix == -1 ? null : securityTest.getTestStepSecurityCheckAt( selectedTestStep.getTestStep().getId(), ix );

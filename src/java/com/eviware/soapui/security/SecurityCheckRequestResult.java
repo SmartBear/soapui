@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.eviware.soapui.model.iface.MessageExchange;
-import com.eviware.soapui.security.check.SecurityCheck;
+import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.support.action.swing.ActionList;
 
 /**
@@ -36,15 +36,16 @@ public class SecurityCheckRequestResult
 
 	private static final String[] EMPTY_MESSAGES = new String[0];
 	public SecurityCheckStatus status;
-	public SecurityCheck securityCheck;
+	public AbstractSecurityCheck securityCheck;
 	private List<String> messages = new ArrayList<String>();
 	private long timeTaken;
+	// starting time
 	private long timeStamp;
 	private long size;
 	private boolean discarded;
 	private MessageExchange messageExchange;
 
-	public SecurityCheckRequestResult( SecurityCheck securityCheck )
+	public SecurityCheckRequestResult( AbstractSecurityCheck securityCheck )
 	{
 		this.securityCheck = securityCheck;
 	}
@@ -59,7 +60,7 @@ public class SecurityCheckRequestResult
 		this.status = status;
 	}
 
-	public SecurityCheck getSecurityCheck()
+	public AbstractSecurityCheck getSecurityCheck()
 	{
 		return securityCheck;
 	}
@@ -136,8 +137,9 @@ public class SecurityCheckRequestResult
 		return messageExchange;
 	}
 
-	//TODO not sure if this should exist, it should be set when result is created
-	//but for now for first step refactoring it's added this way
+	// TODO not sure if this should exist, it should be set when result is
+	// created
+	// but for now for first step refactoring it's added this way
 	public void setMessageExchange( MessageExchange messageExchange )
 	{
 		this.messageExchange = messageExchange;

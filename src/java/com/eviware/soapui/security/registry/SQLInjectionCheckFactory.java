@@ -15,8 +15,8 @@ package com.eviware.soapui.security.registry;
 import com.eviware.soapui.config.SQLInjectionCheckConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.security.check.SQLInjectionCheck;
-import com.eviware.soapui.security.check.SecurityCheck;
 
 /**
  * Factory for creation GroovyScript steps
@@ -24,36 +24,40 @@ import com.eviware.soapui.security.check.SecurityCheck;
  * @author soapUI team
  */
 
-public class SQLInjectionCheckFactory extends AbstractSecurityCheckFactory {
-	
-	public SQLInjectionCheckFactory() {
-		super(SQLInjectionCheck.TYPE, "SQLInjectionCheck",
-				"Preforms a check for SQL Injection Vulerabilities",
-				"/sql_injection_check_script.gif");
+public class SQLInjectionCheckFactory extends AbstractSecurityCheckFactory
+{
+
+	public SQLInjectionCheckFactory()
+	{
+		super( SQLInjectionCheck.TYPE, "SQLInjectionCheck", "Preforms a check for SQL Injection Vulerabilities",
+				"/sql_injection_check_script.gif" );
 	}
 
-	public boolean canCreate() {
+	public boolean canCreate()
+	{
 		return true;
 	}
 
 	@Override
-	public SecurityCheck buildSecurityCheck(SecurityCheckConfig config, ModelItem parent) {
-		return new SQLInjectionCheck(config, null, null);
+	public AbstractSecurityCheck buildSecurityCheck( SecurityCheckConfig config, ModelItem parent )
+	{
+		return new SQLInjectionCheck( config, null, null );
 	}
 
 	@Override
-	public SecurityCheckConfig createNewSecurityCheck(String name) {
-		SecurityCheckConfig securityCheckConfig = SecurityCheckConfig.Factory
-				.newInstance();
-		securityCheckConfig.setType(SQLInjectionCheck.TYPE);
-		securityCheckConfig.setName(name);
+	public SecurityCheckConfig createNewSecurityCheck( String name )
+	{
+		SecurityCheckConfig securityCheckConfig = SecurityCheckConfig.Factory.newInstance();
+		securityCheckConfig.setType( SQLInjectionCheck.TYPE );
+		securityCheckConfig.setName( name );
 		SQLInjectionCheckConfig sic = SQLInjectionCheckConfig.Factory.newInstance();
-		securityCheckConfig.setConfig(sic);
+		securityCheckConfig.setConfig( sic );
 		return securityCheckConfig;
 	}
 
 	@Override
-	public boolean isHttpMonitor() {
+	public boolean isHttpMonitor()
+	{
 		return false;
 	}
 }

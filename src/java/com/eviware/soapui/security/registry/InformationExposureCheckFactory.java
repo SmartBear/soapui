@@ -14,8 +14,8 @@ package com.eviware.soapui.security.registry;
 
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.security.check.InformationExposureCheck;
-import com.eviware.soapui.security.check.SecurityCheck;
 
 /**
  * Factory for creation InformationExposure checks
@@ -38,7 +38,7 @@ public class InformationExposureCheckFactory extends AbstractSecurityCheckFactor
 	}
 
 	@Override
-	public SecurityCheck buildSecurityCheck( SecurityCheckConfig config, ModelItem parent )
+	public AbstractSecurityCheck buildSecurityCheck( SecurityCheckConfig config, ModelItem parent )
 	{
 		return new InformationExposureCheck( config, parent, null );
 	}

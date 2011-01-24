@@ -16,13 +16,13 @@ import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.security.SecurityCheckRequestResult;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunnerInterface;
-import com.eviware.soapui.security.check.SecurityCheck;
+import com.eviware.soapui.security.check.AbstractSecurityCheck;
 
 /**
  * Listener for TestRun-related events, schedule events will only be triggered
  * for LoadTest runs.
  * 
- * @author Dragica
+ * @author dragica.soldo
  */
 
 public interface SecurityTestStepRunListener
@@ -33,7 +33,7 @@ public interface SecurityTestStepRunListener
 			TestStepResult result );
 
 	public void beforeSecurityCheck( SecurityTestRunnerInterface testRunner, SecurityTestRunContext runContext,
-			SecurityCheck securityCheck );
+			AbstractSecurityCheck securityCheck );
 
 	public void afterSecurityCheck( SecurityTestRunnerInterface testRunner, SecurityTestRunContext runContext,
 			SecurityCheckRequestResult securityCheckResult );
