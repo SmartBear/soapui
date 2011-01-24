@@ -36,7 +36,7 @@ import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
-import com.eviware.soapui.security.SecurityCheckResult.SecurityCheckStatus;
+import com.eviware.soapui.security.SecurityCheckRequestResult.SecurityCheckStatus;
 import com.eviware.soapui.security.check.SecurityCheck;
 import com.eviware.soapui.security.log.SecurityTestLogMessageEntry;
 import com.eviware.soapui.security.support.SecurityCheckRunListener;
@@ -369,7 +369,7 @@ public class SecurityTestRunnerImpl extends
 				securityTestStepListeners[j].beforeSecurityCheck(this,
 						runContext, securityCheck);
 			}
-			SecurityCheckResult result = securityCheck.run(
+			SecurityCheckRequestResult result = securityCheck.run(
 					cloneForSecurityCheck((WsdlTestStep) currentStep),
 					runContext, securityTest.getSecurityTestLog());
 			// TODO check

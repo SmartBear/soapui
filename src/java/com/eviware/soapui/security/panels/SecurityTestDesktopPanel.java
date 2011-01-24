@@ -49,7 +49,7 @@ import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestStepFactory;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
-import com.eviware.soapui.security.SecurityCheckResult;
+import com.eviware.soapui.security.SecurityCheckRequestResult;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunnerImpl;
@@ -585,7 +585,7 @@ public class SecurityTestDesktopPanel extends
 		@Override
 		public void afterSecurityCheck(SecurityTestRunnerInterface testRunner,
 				SecurityTestRunContext runContext,
-				SecurityCheckResult securityCheckResult) {
+				SecurityCheckRequestResult securityCheckResult) {
 			securityTestLog.addSecurityCheckResult(securityCheckResult);
 		}
 

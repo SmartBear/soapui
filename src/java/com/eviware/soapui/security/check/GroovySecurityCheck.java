@@ -20,7 +20,7 @@ import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.testsuite.TestStep;
-import com.eviware.soapui.security.SecurityCheckResult;
+import com.eviware.soapui.security.SecurityCheckRequestResult;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.log.JSecurityTestRunLog;
 import com.eviware.soapui.security.log.SecurityTestLogModel;
@@ -57,8 +57,8 @@ public class GroovySecurityCheck extends AbstractSecurityCheck implements
 	}
 
 	@Override
-	protected SecurityCheckResult execute(TestStep testStep, SecurityTestRunContext context,
-			SecurityTestLogModel securityTestLog, SecurityCheckResult securityChekResult) {
+	protected SecurityCheckRequestResult execute(TestStep testStep, SecurityTestRunContext context,
+			SecurityTestLogModel securityTestLog, SecurityCheckRequestResult securityChekResult) {
 		scriptEngine.setScript(getScript());
 		scriptEngine.setVariable("testStep", testStep);
 		scriptEngine.setVariable("log", SoapUI.ensureGroovyLog());
@@ -101,8 +101,8 @@ public class GroovySecurityCheck extends AbstractSecurityCheck implements
 	}
 
 	@Override
-	public SecurityCheckResult analyze(TestStep testStep, SecurityTestRunContext context,
-			SecurityTestLogModel securityTestLog, SecurityCheckResult securityCheckResult) {
+	public SecurityCheckRequestResult analyze(TestStep testStep, SecurityTestRunContext context,
+			SecurityTestLogModel securityTestLog, SecurityCheckRequestResult securityCheckResult) {
 		//TODO
 		return null;
 	}

@@ -21,11 +21,11 @@ import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestRunner.Status;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
-import com.eviware.soapui.security.SecurityCheckResult;
+import com.eviware.soapui.security.SecurityCheckRequestResult;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunnerInterface;
-import com.eviware.soapui.security.SecurityCheckResult.SecurityCheckStatus;
+import com.eviware.soapui.security.SecurityCheckRequestResult.SecurityCheckStatus;
 import com.eviware.soapui.security.check.SecurityCheck;
 
 /**
@@ -120,7 +120,7 @@ public class ProgressBarSecurityTestStepAdapter
 		}
 
 		public void afterSecurityCheck( SecurityTestRunnerInterface testRunner, SecurityTestRunContext runContext,
-				SecurityCheckResult securityCheckResult )
+				SecurityCheckRequestResult securityCheckResult )
 		{
 			if( progressBar.isIndeterminate() )
 				return;

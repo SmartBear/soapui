@@ -41,7 +41,7 @@ import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
-import com.eviware.soapui.security.SecurityCheckResult;
+import com.eviware.soapui.security.SecurityCheckRequestResult;
 import com.eviware.soapui.security.SecurityTestContext;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.log.SecurityTestLogMessageEntry;
@@ -151,15 +151,15 @@ public class ReflectedXSSCheck extends AbstractSecurityCheck  implements Sensiti
 	}
 
 	@Override
-	public SecurityCheckResult analyze(TestStep testStep, SecurityTestRunContext context,
-			SecurityTestLogModel securityTestLog, SecurityCheckResult securityCheckResult) {
+	public SecurityCheckRequestResult analyze(TestStep testStep, SecurityTestRunContext context,
+			SecurityTestLogModel securityTestLog, SecurityCheckRequestResult securityCheckResult) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	protected SecurityCheckResult execute(TestStep testStep, SecurityTestRunContext context,
-			SecurityTestLogModel securityTestLog, SecurityCheckResult securityChekResult) {
+	protected SecurityCheckRequestResult execute(TestStep testStep, SecurityTestRunContext context,
+			SecurityTestLogModel securityTestLog, SecurityCheckRequestResult securityChekResult) {
 		// TODO Auto-generated method stub
 		return null;
 	}

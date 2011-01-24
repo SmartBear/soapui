@@ -45,7 +45,7 @@ import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestRunner.Status;
 import com.eviware.soapui.security.Securable;
-import com.eviware.soapui.security.SecurityCheckResult;
+import com.eviware.soapui.security.SecurityCheckRequestResult;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.log.SecurityTestLogMessageEntry;
 import com.eviware.soapui.security.log.SecurityTestLogModel;
@@ -72,7 +72,7 @@ public abstract class AbstractSecurityCheck extends SecurityCheck
 	private SecurityCheckParameterSelector parameterSelector;
 	protected Status status;
 	SecurityCheckConfigPanel contentPanel;
-	protected SecurityCheckResult securityCheckResult;
+	protected SecurityCheckRequestResult securityCheckResult;
 
 	// private
 	public AbstractSecurityCheck( SecurityCheckConfig config, ModelItem parent, String icon, Securable securable )
@@ -101,17 +101,17 @@ public abstract class AbstractSecurityCheck extends SecurityCheck
 			config.setExecutionStrategy( SecurityCheckParameterSelector.SEPARATE_REQUEST_STRATEGY );
 	}
 
-	abstract protected SecurityCheckResult execute( TestStep testStep, SecurityTestRunContext context,
-			SecurityTestLogModel securityTestLog, SecurityCheckResult securityChekResult );
+	abstract protected SecurityCheckRequestResult execute( TestStep testStep, SecurityTestRunContext context,
+			SecurityTestLogModel securityTestLog, SecurityCheckRequestResult securityChekResult );
 
 	@Override
-	abstract public SecurityCheckResult analyze( TestStep testStep, SecurityTestRunContext context, SecurityTestLogModel securityTestLog, SecurityCheckResult securityCheckResult );
+	abstract public SecurityCheckRequestResult analyze( TestStep testStep, SecurityTestRunContext context, SecurityTestLogModel securityTestLog, SecurityCheckRequestResult securityCheckResult );
 
 	@Override
-	public SecurityCheckResult run( TestStep testStep, SecurityTestRunContext context,
+	public SecurityCheckRequestResult run( TestStep testStep, SecurityTestRunContext context,
 			SecurityTestLogModel securityTestLog )
 	{
-		securityCheckResult = new SecurityCheckResult( this );
+		securityCheckResult = new SecurityCheckRequestResult( this );
 //		setStatus( Status.INITIALIZED );
 		runStartupScript( testStep );
 		securityCheckResult = execute( testStep, context, securityTestLog, securityCheckResult );

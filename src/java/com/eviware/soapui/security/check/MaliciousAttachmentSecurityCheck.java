@@ -31,7 +31,7 @@ import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestRunner.Status;
-import com.eviware.soapui.security.SecurityCheckResult;
+import com.eviware.soapui.security.SecurityCheckRequestResult;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.security.check.SensitiveInformationCheckable;
@@ -63,8 +63,8 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 	}
 
 	@Override
-	public SecurityCheckResult analyze(TestStep testStep, SecurityTestRunContext context,
-			SecurityTestLogModel securityTestLog, SecurityCheckResult securityCheckResult) {
+	public SecurityCheckRequestResult analyze(TestStep testStep, SecurityTestRunContext context,
+			SecurityTestLogModel securityTestLog, SecurityCheckRequestResult securityCheckResult) {
 		//TODO
 		return null;
 
@@ -72,8 +72,8 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 	
 	
 	@Override
-	protected SecurityCheckResult execute(TestStep testStep, SecurityTestRunContext context,
-			SecurityTestLogModel securityTestLog, SecurityCheckResult securityChekResult) {
+	protected SecurityCheckRequestResult execute(TestStep testStep, SecurityTestRunContext context,
+			SecurityTestLogModel securityTestLog, SecurityCheckRequestResult securityChekResult) {
 		WsdlTestCaseRunner testCaseRunner = new WsdlTestCaseRunner(
 				(WsdlTestCase) testStep.getTestCase(), new StringToObjectMap());
 

@@ -33,9 +33,9 @@ import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
-import com.eviware.soapui.security.SecurityCheckResult;
+import com.eviware.soapui.security.SecurityCheckRequestResult;
 import com.eviware.soapui.security.SecurityTestRunContext;
-import com.eviware.soapui.security.SecurityCheckResult.SecurityCheckStatus;
+import com.eviware.soapui.security.SecurityCheckRequestResult.SecurityCheckStatus;
 import com.eviware.soapui.security.log.JSecurityTestRunLog;
 import com.eviware.soapui.security.log.SecurityTestLogMessageEntry;
 import com.eviware.soapui.security.log.SecurityTestLogModel;
@@ -63,8 +63,8 @@ public class InformationExposureCheck extends AbstractSecurityCheck implements H
 	}
 
 	@Override
-	protected SecurityCheckResult execute( TestStep testStep, SecurityTestRunContext context,
-			SecurityTestLogModel securityTestLog, SecurityCheckResult securityCheckResult )
+	protected SecurityCheckRequestResult execute( TestStep testStep, SecurityTestRunContext context,
+			SecurityTestLogModel securityTestLog, SecurityCheckRequestResult securityCheckResult )
 	{
 		if( acceptsTestStep( testStep ) )
 		{
@@ -79,8 +79,8 @@ public class InformationExposureCheck extends AbstractSecurityCheck implements H
 	}
 
 	@Override
-	public SecurityCheckResult analyze( TestStep testStep, SecurityTestRunContext context,
-			SecurityTestLogModel securityTestLog, SecurityCheckResult securityCheckResult )
+	public SecurityCheckRequestResult analyze( TestStep testStep, SecurityTestRunContext context,
+			SecurityTestLogModel securityTestLog, SecurityCheckRequestResult securityCheckResult )
 	{
 		if( acceptsTestStep( testStep ) )
 		{

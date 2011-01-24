@@ -27,7 +27,7 @@ import com.eviware.soapui.support.action.swing.ActionList;
  * @author dragica.soldo
  */
 
-public class SecurityCheckResult
+public class SecurityCheckRequestResult
 {
 	public enum SecurityCheckStatus
 	{
@@ -44,7 +44,7 @@ public class SecurityCheckResult
 	private boolean discarded;
 	private MessageExchange messageExchange;
 
-	public SecurityCheckResult( SecurityCheck securityCheck )
+	public SecurityCheckRequestResult( SecurityCheck securityCheck )
 	{
 		this.securityCheck = securityCheck;
 	}

@@ -31,9 +31,9 @@ import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.testsuite.SamplerTestStep;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestRunner.Status;
-import com.eviware.soapui.security.SecurityCheckResult;
+import com.eviware.soapui.security.SecurityCheckRequestResult;
 import com.eviware.soapui.security.SecurityTestRunContext;
-import com.eviware.soapui.security.SecurityCheckResult.SecurityCheckStatus;
+import com.eviware.soapui.security.SecurityCheckRequestResult.SecurityCheckStatus;
 import com.eviware.soapui.security.log.SecurityTestLogMessageEntry;
 import com.eviware.soapui.security.log.SecurityTestLogModel;
 import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
@@ -76,8 +76,8 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck implements Sensi
 	}
 
 	@Override
-	public SecurityCheckResult analyze( TestStep testStep, SecurityTestRunContext context, SecurityTestLogModel securityTestLog,
-			SecurityCheckResult securityCheckResult )
+	public SecurityCheckRequestResult analyze( TestStep testStep, SecurityTestRunContext context, SecurityTestLogModel securityTestLog,
+			SecurityCheckRequestResult securityCheckResult )
 	{
 		AbstractHttpRequest<?> lastRequest = getRequest( testStep );
 
@@ -96,8 +96,8 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck implements Sensi
 	}
 
 	@Override
-	protected SecurityCheckResult execute( TestStep testStep, SecurityTestRunContext context, SecurityTestLogModel securityTestLog,
-			SecurityCheckResult securityChekResult )
+	protected SecurityCheckRequestResult execute( TestStep testStep, SecurityTestRunContext context, SecurityTestLogModel securityTestLog,
+			SecurityCheckRequestResult securityChekResult )
 	{
 
 		currentIndex = 0;

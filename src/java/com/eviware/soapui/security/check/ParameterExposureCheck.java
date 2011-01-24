@@ -43,9 +43,9 @@ import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
-import com.eviware.soapui.security.SecurityCheckResult;
+import com.eviware.soapui.security.SecurityCheckRequestResult;
 import com.eviware.soapui.security.SecurityTestRunContext;
-import com.eviware.soapui.security.SecurityCheckResult.SecurityCheckStatus;
+import com.eviware.soapui.security.SecurityCheckRequestResult.SecurityCheckStatus;
 import com.eviware.soapui.security.log.JSecurityTestRunLog;
 import com.eviware.soapui.security.log.SecurityTestLogMessageEntry;
 import com.eviware.soapui.security.log.SecurityTestLogModel;
@@ -93,8 +93,8 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements
 	}
 
 	@Override
-	protected SecurityCheckResult execute(TestStep testStep, SecurityTestRunContext context,
-			SecurityTestLogModel securityTestLog, SecurityCheckResult securityChekResult) {
+	protected SecurityCheckRequestResult execute(TestStep testStep, SecurityTestRunContext context,
+			SecurityTestLogModel securityTestLog, SecurityCheckRequestResult securityChekResult) {
 		if (acceptsTestStep(testStep)) {
 			WsdlTestCaseRunner testCaseRunner = new WsdlTestCaseRunner(
 					(WsdlTestCase) testStep.getTestCase(),
@@ -108,8 +108,8 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements
 	}
 
 	@Override
-	public SecurityCheckResult analyze(TestStep testStep, SecurityTestRunContext context,
-			SecurityTestLogModel securityTestLog, SecurityCheckResult securityCheckResult) {
+	public SecurityCheckRequestResult analyze(TestStep testStep, SecurityTestRunContext context,
+			SecurityTestLogModel securityTestLog, SecurityCheckRequestResult securityCheckResult) {
 		if (acceptsTestStep(testStep)) {
 			HttpTestRequestStepInterface testStepwithProperties = (HttpTestRequestStepInterface) testStep;
 			HttpTestRequestInterface<?> request = testStepwithProperties

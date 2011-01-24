@@ -36,7 +36,7 @@ import com.eviware.soapui.impl.wsdl.monitor.SoapMonitor;
 import com.eviware.soapui.impl.wsdl.support.MessageExchangeModelItem;
 import com.eviware.soapui.impl.wsdl.teststeps.actions.ShowMessageExchangeAction;
 import com.eviware.soapui.model.settings.Settings;
-import com.eviware.soapui.security.SecurityCheckResult;
+import com.eviware.soapui.security.SecurityCheckRequestResult;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
@@ -170,9 +170,9 @@ public class JSecurityTestRunLog extends JPanel
 	/*
 	 * 
 	 */
-	public synchronized void addSecurityCheckResult( SecurityCheckResult checkResult )
+	public synchronized void addSecurityCheckResult( SecurityCheckRequestResult checkResult )
 	{
-		if( errorsOnly && checkResult.getStatus() != SecurityCheckResult.SecurityCheckStatus.FAILED )
+		if( errorsOnly && checkResult.getStatus() != SecurityCheckRequestResult.SecurityCheckStatus.FAILED )
 			return;
 
 		logListModel.addSecurityCheckResult( checkResult );
