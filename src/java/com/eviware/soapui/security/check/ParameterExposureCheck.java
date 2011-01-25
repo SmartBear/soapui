@@ -53,6 +53,7 @@ import com.eviware.soapui.security.monitor.HttpSecurityAnalyser;
 import com.eviware.soapui.security.ui.ParameterExposureCheckPanel;
 import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
 import com.eviware.soapui.support.DocumentListenerAdapter;
+import com.eviware.soapui.support.SecurityCheckUtil;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.components.SimpleForm;
 import com.eviware.soapui.support.types.StringToObjectMap;
@@ -137,16 +138,10 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements
 								.newInstance();
 						assertionConfig.setType(SimpleContainsAssertion.ID);
 
-						SimpleContainsAssertion containsAssertion = (SimpleContainsAssertion) TestAssertionRegistry
-								.getInstance().buildAssertion(assertionConfig,
-										testStepwithProperties);
-						containsAssertion.setToken(param.getValue());
+						
 
-						containsAssertion.assertResponse(messageExchange,
-								context);
-
-						if (containsAssertion.getStatus().equals(
-								AssertionStatus.VALID)) {
+						if (SecurityCheckUtil.contains( context, new String( messageExchange.getRawResponseData() ),
+								param.getValue(), false )) {
 							securityTestLog
 									.addEntry(new SecurityTestLogMessageEntry(
 											"The parameter "

@@ -12,14 +12,9 @@
 
 package com.eviware.soapui.security.check;
 
-import java.awt.BorderLayout;
 import java.util.List;
 
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-
 import com.eviware.soapui.config.SecurityCheckConfig;
-import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCaseRunner;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpResponseMessageExchange;
@@ -27,12 +22,9 @@ import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestInterface;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStepInterface;
 import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
-import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry;
-import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.SimpleContainsAssertion;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.testsuite.TestStep;
-import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
 import com.eviware.soapui.security.SecurityCheckRequestResult;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityCheckRequestResult.SecurityCheckStatus;
@@ -42,7 +34,6 @@ import com.eviware.soapui.security.log.SecurityTestLogModel;
 import com.eviware.soapui.security.monitor.HttpSecurityAnalyser;
 import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
 import com.eviware.soapui.support.SecurityCheckUtil;
-import com.eviware.soapui.support.components.SimpleForm;
 import com.eviware.soapui.support.types.StringToObjectMap;
 
 public class InformationExposureCheck extends AbstractSecurityCheck implements HttpSecurityAnalyser
