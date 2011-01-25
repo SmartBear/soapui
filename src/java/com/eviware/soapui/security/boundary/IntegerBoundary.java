@@ -15,7 +15,7 @@ public class IntegerBoundary extends AbstractBoundary
 {
 	private static final String AVAILABLE_VALUES = "1234567890";
 
-	public IntegerBoundary( Integer length, Integer minLength, Integer maxLength, Integer totalDigits )
+	public IntegerBoundary( String length, String minLength, String maxLength, String totalDigits )
 	{
 		super( length, minLength, maxLength, totalDigits, null );
 	}
@@ -26,13 +26,13 @@ public class IntegerBoundary extends AbstractBoundary
 		switch( restrictionAttribute )
 		{
 		case LENGTH :
-			return createCharacterArray( AVAILABLE_VALUES, length );
+			return createCharacterArray( AVAILABLE_VALUES, Integer.valueOf( length ) );
 		case MIN_LENGTH :
-			return createCharacterArray( AVAILABLE_VALUES, minLength - 1 );
+			return createCharacterArray( AVAILABLE_VALUES, Integer.valueOf( minLength ) - 1 );
 		case MAX_LENGTH :
-			return createCharacterArray( AVAILABLE_VALUES, maxLength - 1 );
+			return createCharacterArray( AVAILABLE_VALUES, Integer.valueOf( maxLength ) - 1 );
 		case TOTAL_DIGITS :
-			return createCharacterArray( AVAILABLE_VALUES, totalDigits + 1 );
+			return createCharacterArray( AVAILABLE_VALUES, Integer.valueOf( totalDigits ) + 1 );
 		default :
 			return null;
 		}

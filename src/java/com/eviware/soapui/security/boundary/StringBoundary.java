@@ -15,7 +15,7 @@ public class StringBoundary extends AbstractBoundary
 {
 	private static final String AVAILABLE_VALUES = " abcdefghijklmnopqrstuvwxyz";
 
-	public StringBoundary( Integer length, Integer minLength, Integer maxLength )
+	public StringBoundary( String length, String minLength, String maxLength )
 	{
 		super( length, minLength, maxLength, null, null );
 	}
@@ -26,11 +26,11 @@ public class StringBoundary extends AbstractBoundary
 		switch( restrictionAttribute )
 		{
 		case LENGTH :
-			return createCharacterArray( AVAILABLE_VALUES, length );
+			return createCharacterArray( AVAILABLE_VALUES, Integer.valueOf( length ) );
 		case MIN_LENGTH :
-			return createCharacterArray( AVAILABLE_VALUES, minLength - 1 );
+			return createCharacterArray( AVAILABLE_VALUES, Integer.valueOf( minLength ) - 1 );
 		case MAX_LENGTH :
-			return createCharacterArray( AVAILABLE_VALUES, maxLength - 1 );
+			return createCharacterArray( AVAILABLE_VALUES, Integer.valueOf( maxLength ) - 1 );
 		default :
 			return null;
 		}

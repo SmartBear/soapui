@@ -16,8 +16,8 @@ public class DecimalBoundary extends AbstractBoundary
 	private static final String DECIMAL_POINT = ".";
 	private static final String AVAILABLE_VALUES = "1234567890";
 
-	public DecimalBoundary( Integer length, Integer minLength, Integer maxLength, Integer totalDigits,
-			Integer fractionDigits )
+	public DecimalBoundary( String length, String minLength, String maxLength, String totalDigits,
+			String fractionDigits )
 	{
 		super( length, minLength, maxLength, totalDigits, fractionDigits );
 	}
@@ -28,16 +28,16 @@ public class DecimalBoundary extends AbstractBoundary
 		switch( restrictionAttribute )
 		{
 		case LENGTH :
-			return createCharacterArray( AVAILABLE_VALUES, length );
+			return createCharacterArray( AVAILABLE_VALUES, Integer.valueOf( length ));
 		case MIN_LENGTH :
-			return createCharacterArray( AVAILABLE_VALUES, minLength - 1 );
+			return createCharacterArray( AVAILABLE_VALUES, Integer.valueOf(minLength) - 1 );
 		case MAX_LENGTH :
-			return createCharacterArray( AVAILABLE_VALUES, maxLength - 1 );
+			return createCharacterArray( AVAILABLE_VALUES, Integer.valueOf(maxLength) - 1 );
 		case TOTAL_DIGITS :
-			return createCharacterArray( AVAILABLE_VALUES, totalDigits + 1 );
+			return createCharacterArray( AVAILABLE_VALUES, Integer.valueOf(totalDigits) + 1 );
 		case FRACTION_DIGITS :
 			return createCharacterArray( AVAILABLE_VALUES, 1 ) + DECIMAL_POINT
-					+ createCharacterArray( AVAILABLE_VALUES, fractionDigits + 1 );
+					+ createCharacterArray( AVAILABLE_VALUES, Integer.valueOf(fractionDigits) + 1 );
 		default :
 			return null;
 		}

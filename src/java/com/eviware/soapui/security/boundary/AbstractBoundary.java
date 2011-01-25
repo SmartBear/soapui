@@ -15,14 +15,34 @@ import com.eviware.soapui.SoapUI;
 
 public abstract class AbstractBoundary implements Boundary
 {
-	protected Integer length;
-	protected Integer minLength;
-	protected Integer maxLength;
-	protected Integer totalDigits;
-	protected Integer fractionDigits;
+	protected String length;
+	protected String minLength;
+	protected String maxLength;
+	protected String totalDigits;
+	protected String fractionDigits;
+	protected String maxExclusive;
+	protected String maxInclusive;
+	protected String minExclusive;
+	protected String minInclusive;
+	
 
-	public AbstractBoundary( Integer length, Integer minLength, Integer maxLength, Integer totalDigits,
-			Integer fractionDigits )
+	public AbstractBoundary( String length, String minLength, String maxLength, String totalDigits,
+			String fractionDigits, String maxExclusive, String maxInclusive, String minExclusive, String minInclusive )
+	{
+		this.length = length;
+		this.minLength = minLength;
+		this.maxLength = maxLength;
+		this.totalDigits = totalDigits;
+		this.fractionDigits = fractionDigits;
+		this.maxExclusive = maxExclusive;
+		this.maxInclusive = maxInclusive;
+		this.minExclusive = minExclusive;
+		this.minInclusive = minInclusive;
+	}
+
+
+	public AbstractBoundary( String length, String minLength, String maxLength, String totalDigits,
+			String fractionDigits )
 	{
 		this.length = length;
 		this.minLength = minLength;
