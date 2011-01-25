@@ -1,5 +1,5 @@
 /*
- *  soapUI, copyright (C) 2004-2009 eviware.com 
+ *  soapUI, copyright (C) 2004-2011 eviware.com 
  *
  *  soapUI is free software; you can redistribute it and/or modify it under the 
  *  terms of version 2.1 of the GNU Lesser General Public License as published by 
@@ -11,12 +11,7 @@
  */
 package com.eviware.soapui.security.boundary;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-
-import com.eviware.soapui.SoapUI;
 
 public class DateBoundary extends AbstractBoundary
 {
@@ -36,32 +31,16 @@ public class DateBoundary extends AbstractBoundary
 		switch( restrictionAttribute )
 		{
 		case MAX_EXCLISIVE :
-			return createDate( maxExclusive, ( int )( Math.random() * OFFSET ) );
+			return BoundaryUtils.createDate( maxExclusive, ( int )( Math.random() * OFFSET ) );
 		case MIN_EXCLISIVE :
-			return createDate( minExclusive, -( int )( Math.random() * OFFSET ) );
+			return BoundaryUtils.createDate( minExclusive, -( int )( Math.random() * OFFSET ) );
 		case MAX_INCLISIVE :
-			return createDate( maxInclusive, ( int )( Math.random() * OFFSET + 1 ) );
+			return BoundaryUtils.createDate( maxInclusive, ( int )( Math.random() * OFFSET + 1 ) );
 		case MIN_INCLISIVE :
-			return createDate( minInclusive, -( int )( Math.random() * OFFSET - 1 ) );
+			return BoundaryUtils.createDate( minInclusive, -( int )( Math.random() * OFFSET - 1 ) );
 		default :
 			return null;
 		}
 	}
 
-	private String createDate( String restrictionDate, int days )
-	{
-		try
-		{
-			Date date = simpleDateFormat.parse( restrictionDate );
-			Calendar calendar = Calendar.getInstance();
-			calendar.setTime( date );
-			calendar.add( Calendar.DAY_OF_YEAR, days );
-			return simpleDateFormat.format( calendar.getTime() );
-		}
-		catch( ParseException e )
-		{
-			SoapUI.logError( e, "date : '" + restrictionDate + "' is not in proper format: " + DATE_FORMAT );
-		}
-		return null;
-	}
 }

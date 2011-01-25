@@ -1,5 +1,5 @@
 /*
- *  soapUI, copyright (C) 2004-2009 eviware.com 
+ *  soapUI, copyright (C) 2004-2011 eviware.com 
  *
  *  soapUI is free software; you can redistribute it and/or modify it under the 
  *  terms of version 2.1 of the GNU Lesser General Public License as published by 
@@ -26,13 +26,13 @@ public class IntegerBoundary extends AbstractBoundary
 		switch( restrictionAttribute )
 		{
 		case LENGTH :
-			return createCharacterArray( AVAILABLE_VALUES, Integer.valueOf( length ) );
+			return BoundaryUtils.createCharacterArray( AVAILABLE_VALUES, Integer.valueOf( length ) );
 		case MIN_LENGTH :
-			return createCharacterArray( AVAILABLE_VALUES, Integer.valueOf( minLength ) - 1 );
+			return BoundaryUtils.createCharacterArray( AVAILABLE_VALUES, Integer.valueOf( minLength ) - 1 );
 		case MAX_LENGTH :
-			return createCharacterArray( AVAILABLE_VALUES, Integer.valueOf( maxLength ) - 1 );
+			return BoundaryUtils.createCharacterArray( AVAILABLE_VALUES, Integer.valueOf( maxLength ) - 1 );
 		case TOTAL_DIGITS :
-			return createCharacterArray( AVAILABLE_VALUES, Integer.valueOf( totalDigits ) + 1 );
+			return BoundaryUtils.createCharacterArray( AVAILABLE_VALUES, Integer.valueOf( totalDigits ) + 1 );
 		default :
 			return null;
 		}

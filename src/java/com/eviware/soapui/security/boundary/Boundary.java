@@ -1,5 +1,5 @@
 /*
- *  soapUI, copyright (C) 2004-2009 eviware.com 
+ *  soapUI, copyright (C) 2004-2011 eviware.com 
  *
  *  soapUI is free software; you can redistribute it and/or modify it under the 
  *  terms of version 2.1 of the GNU Lesser General Public License as published by 
@@ -22,7 +22,6 @@ public interface Boundary
 	public static final int MIN_EXCLISIVE = 7;
 	public static final int MAX_INCLISIVE = 8;
 	public static final int MIN_INCLISIVE = 9;
-	
 
 	String outOfBoundary( int restrictionAttribute );
 }
