@@ -16,7 +16,9 @@ import java.util.Calendar;
 import java.util.Date;
 
 import com.eviware.soapui.SoapUI;
-
+/**
+ * @author nebojsa.tasic
+ */
 public class BoundaryUtils
 {
 	

@@ -12,7 +12,9 @@
 package com.eviware.soapui.security.boundary;
 
 import java.text.SimpleDateFormat;
-
+/**
+ * @author nebojsa.tasic
+ */
 public class DateBoundary extends AbstractBoundary
 {
 

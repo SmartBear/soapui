@@ -10,7 +10,9 @@
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
 package com.eviware.soapui.security.boundary;
-
+/**
+ * @author nebojsa.tasic
+ */
 public abstract class AbstractBoundary implements Boundary
 {
 	protected String length;
