@@ -13,6 +13,7 @@ import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCaseRunner;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestStep;
+import com.eviware.soapui.security.SecurityCheckRequestResult;
 import com.eviware.soapui.security.SecurityCheckResult;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.log.SecurityTestLogModel;
@@ -44,16 +45,16 @@ public class LargeAttachmentSecurityCheck extends AbstractSecurityCheck
 	}
 
 	@Override
-	public SecurityCheckResult analyze( TestStep testStep, SecurityTestRunContext context,
-			SecurityTestLogModel securityTestLog, SecurityCheckResult securityCheckResult ) {
+	public SecurityCheckRequestResult analyze( TestStep testStep, SecurityTestRunContext context,
+			SecurityTestLogModel securityTestLog, SecurityCheckRequestResult securityCheckResult ) {
 		
 		return securityCheckResult;
 	}
 	
 	
 	@Override
-	protected SecurityCheckResult execute(TestStep testStep, SecurityTestRunContext context,
-			SecurityTestLogModel securityTestLog, SecurityCheckResult result) {
+	protected SecurityCheckRequestResult execute(TestStep testStep, SecurityTestRunContext context,
+			SecurityTestLogModel securityTestLog, SecurityCheckRequestResult result) {
 		WsdlTestCaseRunner testCaseRunner = new WsdlTestCaseRunner(
 				(WsdlTestCase) testStep.getTestCase(), new StringToObjectMap());
 		

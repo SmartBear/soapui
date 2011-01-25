@@ -15,8 +15,9 @@ package com.eviware.soapui.security.registry;
 import com.eviware.soapui.config.LargeAttachmentSecurityCheckConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.security.check.LargeAttachmentSecurityCheck;
-import com.eviware.soapui.security.check.SecurityCheck;
+
 
 /**
  * Factory for creation GroovyScript steps
@@ -37,7 +38,7 @@ public class LargeAttachmentSecurityCheckFactory extends AbstractSecurityCheckFa
 	}
 
 	@Override
-	public SecurityCheck buildSecurityCheck(SecurityCheckConfig config, ModelItem parent) {
+	public AbstractSecurityCheck buildSecurityCheck(SecurityCheckConfig config, ModelItem parent) {
 		return new LargeAttachmentSecurityCheck(config, null, null);
 	}
 
