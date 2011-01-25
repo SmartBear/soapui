@@ -38,6 +38,7 @@ public class SecurityCheckRegistry
 		addFactory( new InformationExposureCheckFactory() );
 		addFactory( new XmlBombSecurityCheckFactory() );
 		addFactory( new MaliciousAttachmentSecurityCheckFactory() );
+		addFactory( new LargeAttachmentSecurityCheckFactory() );
 	}
 
 	/**
