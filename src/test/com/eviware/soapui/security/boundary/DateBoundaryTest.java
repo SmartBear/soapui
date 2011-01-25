@@ -11,7 +11,7 @@
  */
 package com.eviware.soapui.security.boundary;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import java.text.ParseException;
 import java.util.Calendar;
@@ -26,8 +26,8 @@ public class DateBoundaryTest
 	@Before
 	public void setUp() throws Exception
 	{
-		dateBoundary = new DateBoundary( "2050-12-06T21:30:15-08:00", "2050-12-06T21:30:15-08:00",
-				"2050-12-06T21:30:15-08:00", "2050-12-06T21:30:15-08:00" );
+		String today = DateBoundary.simpleDateFormat.format( Calendar.getInstance().getTime() );
+		dateBoundary = new DateBoundary(today,today,today,today );
 	}
 
 	@Test

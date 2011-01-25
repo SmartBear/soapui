@@ -23,7 +23,7 @@ public class DateBoundary extends AbstractBoundary
 
 	private static final int OFFSET = 10;
 	public static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
-	public SimpleDateFormat simpleDateFormat = new SimpleDateFormat( DATE_FORMAT );
+	public static SimpleDateFormat simpleDateFormat = new SimpleDateFormat( DATE_FORMAT );
 
 	public DateBoundary( String maxExclusive, String maxInclusive, String minExclusive, String minInclusive )
 	{
