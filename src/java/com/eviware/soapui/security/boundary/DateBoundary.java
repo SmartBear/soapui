@@ -12,6 +12,7 @@
 package com.eviware.soapui.security.boundary;
 
 import java.text.SimpleDateFormat;
+
 /**
  * @author nebojsa.tasic
  */
@@ -39,7 +40,7 @@ public class DateBoundary extends AbstractBoundary
 		case MAX_INCLISIVE :
 			return BoundaryUtils.createDate( maxInclusive, ( int )( Math.random() * OFFSET + 1 ) );
 		case MIN_INCLISIVE :
-			return BoundaryUtils.createDate( minInclusive, (-( int )( Math.random() * OFFSET) - 1 ) );
+			return BoundaryUtils.createDate( minInclusive, ( -( int )( Math.random() * OFFSET ) - 1 ) );
 		default :
 			return null;
 		}
