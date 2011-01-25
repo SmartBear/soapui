@@ -16,14 +16,17 @@ import java.util.Calendar;
 import java.util.Date;
 
 import com.eviware.soapui.SoapUI;
+
 /**
  * @author nebojsa.tasic
  */
 public class BoundaryUtils
 {
-	
+
 	/**
-	 * create string of specified size from random characters specified by availableValues 
+	 * create string of specified size from random characters specified by
+	 * availableValues
+	 * 
 	 * @param availableValues
 	 * @param size
 	 * @return
@@ -45,6 +48,7 @@ public class BoundaryUtils
 
 	/**
 	 * returns one random character from specified availableValues string
+	 * 
 	 * @param availableValues
 	 * @return character
 	 */
@@ -53,13 +57,16 @@ public class BoundaryUtils
 		int position = ( int )( Math.random() * availableValues.length() );
 		return availableValues.substring( position, position + 1 );
 	}
-/**
- * 
- * creates date in string representation that is differs from restrictionDate by daysOffset number of days 
- * @param restrictionDate
- * @param daysOffset
- * @return date
- */
+
+	/**
+	 * 
+	 * creates date in string representation that is differs from restrictionDate
+	 * by daysOffset number of days
+	 * 
+	 * @param restrictionDate
+	 * @param daysOffset
+	 * @return date
+	 */
 	public static String createDate( String restrictionDate, int daysOffset )
 	{
 		try
