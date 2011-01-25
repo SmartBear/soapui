@@ -27,7 +27,7 @@ public class DateBoundaryTest
 	public void setUp() throws Exception
 	{
 		String today = DateBoundary.simpleDateFormat.format( Calendar.getInstance().getTime() );
-		dateBoundary = new DateBoundary(today,today,today,today );
+		dateBoundary = new DateBoundary( today, today, today, today );
 	}
 
 	@Test
