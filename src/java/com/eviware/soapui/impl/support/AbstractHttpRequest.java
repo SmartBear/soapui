@@ -168,6 +168,16 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 	{
 		return attachments.get( index );
 	}
+	
+
+	public void setAttachmentAt( int index, Attachment attachment ) {
+		if (attachments.size() > index)
+			attachments.set(index, (FileAttachment)attachment);
+		else
+			attachments.add((FileAttachment)attachment);
+		notifyPropertyChanged( ATTACHMENTS_PROPERTY, null, attachment );
+
+	}
 
 	/*
 	 * (non-Javadoc)
