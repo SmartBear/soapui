@@ -36,6 +36,7 @@ import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestSuite;
+import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.support.scripting.ScriptEnginePool;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
@@ -155,6 +156,9 @@ public class EvalPropertyResolver implements PropertyResolver
 		else if( modelItem instanceof Interface )
 		{
 			objects.put( "interface", modelItem );
+		}
+		else if( modelItem instanceof SecurityTest ) {
+			objects.put( "securityTest", modelItem );
 		}
 
 		if( modelItem != null )
