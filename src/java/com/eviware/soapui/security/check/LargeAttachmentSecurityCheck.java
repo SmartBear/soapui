@@ -5,6 +5,10 @@ import java.awt.BorderLayout;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.AttachmentConfig;
 import com.eviware.soapui.config.LargeAttachmentSecurityCheckConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
@@ -65,8 +69,12 @@ public class LargeAttachmentSecurityCheck extends AbstractSecurityCheck
 		
 		request.setAttachmentAt(0, new InfiniteAttachment(AttachmentConfig.Factory.newInstance(), request, (long)((LargeAttachmentSecurityCheckConfig)config.getConfig()).getSize()));
 		
+		Logger.getLogger( SoapUI.class ).info( "Disabling logs during Large Attachment Check" );
+		Logger.getLogger( "httpclient.wire" ).setLevel( Level.OFF );
 		runCheck(testStep, context, securityTestLog, testCaseRunner, originalResponse, "Large attachment vulnerability detected");
-
+		Logger.getLogger( SoapUI.class ).info( "Re-enabling logs" );
+		Logger.getLogger( "httpclient.wire" ).setLevel( Level.DEBUG );
+		
 		return securityCheckResult;
 		
 	

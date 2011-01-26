@@ -15,7 +15,7 @@ public class InfiniteInputStream extends InputStream {
 
 	@Override
 	public int read() throws IOException {
-		if (byteLimit > 0 && bytesSent > byteLimit) 
+		if (bytesSent >= byteLimit) 
 			return -1;
 		Random rnd = new Random();
 		bytesSent++;
