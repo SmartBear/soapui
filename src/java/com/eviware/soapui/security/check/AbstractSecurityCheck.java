@@ -187,6 +187,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	 * should be implemented in every particular check it executes one request,
 	 * modified by securityCheck if necessary and internally adds messages for
 	 * logging to SecurityCheckRequestResult
+	 * TODO needs to be abstract and implemented in every check
 	 */
 	protected void executeNew( TestStep testStep, SecurityTestRunContext context )
 	{
@@ -196,6 +197,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	 * should be implemented in every particular check it analyzes one executed
 	 * request, modified by securityCheck and internally adds messages for
 	 * logging to SecurityCheckRequestResult
+	 * TODO needs to be abstract and implemented in every check
 	 */
 	protected void analyzeNew( TestStep testStep, SecurityTestRunContext context )
 
