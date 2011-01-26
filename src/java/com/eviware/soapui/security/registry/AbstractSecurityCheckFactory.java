@@ -14,6 +14,7 @@ package com.eviware.soapui.security.registry;
 
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.Securable;
 import com.eviware.soapui.security.check.AbstractSecurityCheck;
 
@@ -40,7 +41,8 @@ public abstract class AbstractSecurityCheckFactory
 
 	public abstract SecurityCheckConfig createNewSecurityCheck( String name );
 
-	public abstract AbstractSecurityCheck buildSecurityCheck( SecurityCheckConfig config, ModelItem parent );
+	public abstract AbstractSecurityCheck buildSecurityCheck( TestStep testStep, SecurityCheckConfig config,
+			ModelItem parent );
 
 	public String getType()
 	{

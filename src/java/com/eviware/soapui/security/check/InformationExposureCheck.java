@@ -44,9 +44,9 @@ public class InformationExposureCheck extends AbstractSecurityCheck implements H
 	public static final String LABEL = "Information Exposure";
 	private boolean next = true;
 
-	public InformationExposureCheck( SecurityCheckConfig config, ModelItem parent, String icon )
+	public InformationExposureCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent, String icon )
 	{
-		super( config, parent, icon );
+		super( testStep, config, parent, icon );
 		if( config == null )
 		{
 			config = SecurityCheckConfig.Factory.newInstance();

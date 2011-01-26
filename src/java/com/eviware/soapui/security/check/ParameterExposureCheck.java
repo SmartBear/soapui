@@ -76,8 +76,8 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements
 	private static final String checkTitle = "Configure Parameter Exposure";
 
 	public ParameterExposureCheck(SecurityCheckConfig config, ModelItem parent,
-			String icon) {
-		super(config, parent, icon);
+			String icon, TestStep testStep) {
+		super(testStep, config, parent, icon);
 		if (config == null) {
 			config = SecurityCheckConfig.Factory.newInstance();
 			ParameterExposureCheckConfig pescc = ParameterExposureCheckConfig.Factory
@@ -183,6 +183,8 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements
 				.getMinimumLength();
 	}
 
+	//QUESTION:
+	// Why not soap too?
 	@Override
 	public boolean acceptsTestStep(TestStep testStep) {
 		return testStep instanceof HttpTestRequestStep

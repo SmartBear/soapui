@@ -43,7 +43,7 @@ public class GroovySecurityCheckTest extends AbstractSecurityTestCaseWithMockSer
 
 	protected void addSecurityCheckConfig( SecurityCheckConfig securityCheckConfig )
 	{
-		GroovySecurityCheck gsc = new GroovySecurityCheck( securityCheckConfig, null, null );
+		GroovySecurityCheck gsc = new GroovySecurityCheck( testStep, securityCheckConfig, null, null );
 		gsc
 				.setScript( "println('');println \"this is print from GroovySecurityCheck on test step '${testStep.name}'\";println('')" );
 	}

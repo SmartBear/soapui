@@ -50,9 +50,9 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck implements Sensi
 
 	private int currentIndex = 0;
 
-	public XmlBombSecurityCheck( SecurityCheckConfig config, ModelItem parent, String icon )
+	public XmlBombSecurityCheck( SecurityCheckConfig config, ModelItem parent, String icon, TestStep testStep )
 	{
-		super( config, parent, icon );
+		super( testStep, config, parent, icon );
 		if( config == null )
 		{
 			config = SecurityCheckConfig.Factory.newInstance();
@@ -75,6 +75,10 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck implements Sensi
 		}
 	}
 
+	//QUESTION: 
+	/*
+	 * How this works??
+	 */
 	@Override
 	public SecurityCheckRequestResult analyze( TestStep testStep, SecurityTestRunContext context, SecurityTestLogModel securityTestLog,
 			SecurityCheckRequestResult securityCheckResult )
@@ -208,7 +212,7 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck implements Sensi
 	public void checkForSensitiveInformationExposure( TestStep testStep, SecurityTestRunContext context,
 			SecurityTestLogModel securityTestLog )
 	{
-		InformationExposureCheck iec = new InformationExposureCheck( config, null, null );
+		InformationExposureCheck iec = new InformationExposureCheck( testStep, config, null, null );
 		iec.analyze( testStep, context, securityTestLog, null );
 
 	}

@@ -64,9 +64,9 @@ public class ReflectedXSSCheck extends AbstractSecurityCheck  implements Sensiti
 
 	public static final String TYPE = "ReflectedXSSCheck";
 
-	public ReflectedXSSCheck( SecurityCheckConfig config, ModelItem parent, String icon )
+	public ReflectedXSSCheck( SecurityCheckConfig config, ModelItem parent, String icon, TestStep testStep )
 	{
-		super( config, parent, icon );
+		super( testStep, config, parent, icon );
 		if( config == null )
 		{
 			config = SecurityCheckConfig.Factory.newInstance();
@@ -168,7 +168,7 @@ public class ReflectedXSSCheck extends AbstractSecurityCheck  implements Sensiti
 	public void checkForSensitiveInformationExposure( TestStep testStep, SecurityTestRunContext context,
 			SecurityTestLogModel securityTestLog )
 	{
-		InformationExposureCheck iec = new InformationExposureCheck( config, null, null);
+		InformationExposureCheck iec = new InformationExposureCheck( testStep, config, null, null);
 		iec.analyze( testStep, context, securityTestLog, null );
 	}
 }

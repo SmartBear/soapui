@@ -46,7 +46,7 @@ public class ParameterExposureTest extends AbstractSecurityTestCaseWithMockServi
 	{
 
 		SecurityCheckRegistry.getInstance().getFactory( securityCheckType )
-				.buildSecurityCheck( securityCheckConfig, null );
+				.buildSecurityCheck( testStep, securityCheckConfig, null );
 
 	}
 

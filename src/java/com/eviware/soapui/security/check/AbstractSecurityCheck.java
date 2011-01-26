@@ -83,12 +83,12 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	protected SecurityCheckRequestResult securityCheckReqResult;
 	private final Securable securable;
 	private TestStep testStep;
-	private int currentIndex;
 
 	// private
-	public AbstractSecurityCheck( SecurityCheckConfig config, ModelItem parent, String icon, Securable securable )
+	public AbstractSecurityCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent, String icon, Securable securable )
 	{
 		super( config, parent, icon );
+		this.testStep = testStep;
 		this.securable = securable;
 		this.config = config;
 		// if( config.getExecutionStrategy() == null )
@@ -102,9 +102,10 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	}
 
 	// TODO check if should exist and what to do with securable
-	public AbstractSecurityCheck( SecurityCheckConfig config, ModelItem parent, String icon )
+	public AbstractSecurityCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent, String icon )
 	{
 		super( config, parent, icon );
+		this.testStep = testStep;
 		this.securable = null;
 		this.config = config;
 		this.startupScript = config.getSetupScript() != null ? config.getSetupScript().getStringValue() : "";
@@ -157,7 +158,6 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	public SecurityCheckResult runNew( TestStep testStep, SecurityTestRunContext context )
 	{
 		securityCheckResult = new SecurityCheckResult( this );
-		currentIndex = 0;
 		WsdlTestCaseRunner testCaseRunner = new WsdlTestCaseRunner( ( WsdlTestCase )testStep.getTestCase(),
 				new StringToObjectMap() );
 		// String originalResponse = getOriginalResult( testCaseRunner, testStep

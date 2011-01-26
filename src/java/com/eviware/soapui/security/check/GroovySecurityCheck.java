@@ -44,9 +44,9 @@ public class GroovySecurityCheck extends AbstractSecurityCheck implements
 
 	private static final String checkTitle = "Configure GroovyScript Check";
 
-	public GroovySecurityCheck(SecurityCheckConfig config, ModelItem parent,
+	public GroovySecurityCheck(TestStep testStep, SecurityCheckConfig config, ModelItem parent,
 			String icon) {
-		super(config, parent, icon);
+		super(testStep, config, parent, icon);
 		if (config == null) {
 			config = SecurityCheckConfig.Factory.newInstance();
 			GroovySecurityCheckConfig groovyscc = GroovySecurityCheckConfig.Factory

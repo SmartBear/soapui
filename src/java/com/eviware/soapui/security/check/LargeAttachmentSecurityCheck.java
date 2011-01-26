@@ -33,8 +33,8 @@ public class LargeAttachmentSecurityCheck extends AbstractSecurityCheck
 	public static final String TYPE = "LargeAttachmentSecurityCheck";
 
 	public LargeAttachmentSecurityCheck(SecurityCheckConfig config,
-			ModelItem parent, String icon) {
-		super(config, parent, icon);
+			ModelItem parent, String icon, TestStep testStep) {
+		super(testStep, config, parent, icon);
 		if (config == null) {
 			config = SecurityCheckConfig.Factory.newInstance();
 			LargeAttachmentSecurityCheckConfig mascc = LargeAttachmentSecurityCheckConfig.Factory
@@ -88,7 +88,7 @@ public class LargeAttachmentSecurityCheck extends AbstractSecurityCheck
 	@Override
 	public void checkForSensitiveInformationExposure(TestStep testStep,
 			SecurityTestRunContext context, SecurityTestLogModel securityTestLog) {
-		InformationExposureCheck iec = new InformationExposureCheck(config,
+		InformationExposureCheck iec = new InformationExposureCheck(testStep, config,
 				null, null);
 		iec.analyze(testStep, context, securityTestLog, securityCheckReqResult);
 

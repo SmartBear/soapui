@@ -47,7 +47,7 @@ public class SQLInjectionTest extends AbstractSecurityTestCaseWithMockService
 	{
 
 		SQLInjectionCheck sqlCheck = ( SQLInjectionCheck )SecurityCheckRegistry.getInstance().getFactory(
-				securityCheckType ).buildSecurityCheck( securityCheckConfig, null );
+				securityCheckType ).buildSecurityCheck( testStep, securityCheckConfig, null );
 
 		List<String> params = new ArrayList<String>();
 		params.add( "q" );

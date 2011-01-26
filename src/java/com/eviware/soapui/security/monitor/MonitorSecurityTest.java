@@ -63,7 +63,7 @@ public class MonitorSecurityTest
 	{
 		AbstractSecurityCheckFactory factory = SecurityCheckRegistry.getInstance().getFactory( type );
 		SecurityCheckConfig scc = factory.createNewSecurityCheck( name );
-		AbstractSecurityCheck newSc = factory.buildSecurityCheck( scc, null );
+		AbstractSecurityCheck newSc = factory.buildSecurityCheck( null, scc, null );
 		monitorSecurityChecksList.add( newSc );
 		return newSc;
 	}
@@ -79,7 +79,7 @@ public class MonitorSecurityTest
 	{
 		AbstractSecurityCheckFactory factory = SecurityCheckRegistry.getInstance().getFactory( sc.getType() );
 		SecurityCheckConfig scc = factory.createNewSecurityCheck( name );
-		AbstractSecurityCheck newSc = factory.buildSecurityCheck( scc, null );
+		AbstractSecurityCheck newSc = factory.buildSecurityCheck( null, scc, null );
 		newSc.getConfig().setConfig( sc.getConfig().getConfig() );
 		newSc.getConfig().setSetupScript( sc.getConfig().getSetupScript() );
 		newSc.getConfig().setTearDownScript( sc.getConfig().getTearDownScript() );

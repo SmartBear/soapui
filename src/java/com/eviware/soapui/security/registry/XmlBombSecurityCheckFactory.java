@@ -15,6 +15,7 @@ package com.eviware.soapui.security.registry;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.config.XmlBombSecurityCheckConfig;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.security.check.XmlBombSecurityCheck;
 
@@ -39,9 +40,9 @@ public class XmlBombSecurityCheckFactory extends AbstractSecurityCheckFactory
 	}
 
 	@Override
-	public AbstractSecurityCheck buildSecurityCheck( SecurityCheckConfig config, ModelItem parent )
+	public AbstractSecurityCheck buildSecurityCheck( TestStep testStep,SecurityCheckConfig config, ModelItem parent )
 	{
-		return new XmlBombSecurityCheck( config, null, null );
+		return new XmlBombSecurityCheck( config, null, null, testStep );
 	}
 
 	@Override

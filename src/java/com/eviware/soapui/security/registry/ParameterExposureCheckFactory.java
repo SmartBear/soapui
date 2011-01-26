@@ -15,6 +15,7 @@ package com.eviware.soapui.security.registry;
 import com.eviware.soapui.config.ParameterExposureCheckConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.security.check.ParameterExposureCheck;
 
@@ -39,9 +40,9 @@ public class ParameterExposureCheckFactory extends AbstractSecurityCheckFactory
 	}
 
 	@Override
-	public AbstractSecurityCheck buildSecurityCheck( SecurityCheckConfig config, ModelItem parent )
+	public AbstractSecurityCheck buildSecurityCheck( TestStep testStep,SecurityCheckConfig config, ModelItem parent )
 	{
-		return new ParameterExposureCheck( config, parent, null );
+		return new ParameterExposureCheck( config, parent, null, testStep );
 	}
 
 	@Override

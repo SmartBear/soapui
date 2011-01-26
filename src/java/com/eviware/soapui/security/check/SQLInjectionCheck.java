@@ -48,9 +48,9 @@ public class SQLInjectionCheck extends AbstractSecurityCheck implements Sensitiv
 
 	public static final String TYPE = "SQLInjectionCheck";
 
-	public SQLInjectionCheck( SecurityCheckConfig config, ModelItem parent, String icon )
+	public SQLInjectionCheck( SecurityCheckConfig config, ModelItem parent, String icon, TestStep testStep )
 	{
-		super( config, parent, icon );
+		super( testStep, config, parent, icon );
 		if( config == null )
 		{
 			config = SecurityCheckConfig.Factory.newInstance();
@@ -115,6 +115,12 @@ public class SQLInjectionCheck extends AbstractSecurityCheck implements Sensitiv
 		return null;
 	}
 
+	//QUESTION:
+	/*
+	 * Is checking for "SQL Error" string enough for this?
+	 * 
+	 * What if this string is part of some tutorial?
+	 */
 	public SecurityCheckRequestResult analyze( TestStep testStep, SecurityTestRunContext context, SecurityTestLogModel securityTestLog,
 			SecurityCheckRequestResult securityCheckResult )
 	{
@@ -162,7 +168,7 @@ public class SQLInjectionCheck extends AbstractSecurityCheck implements Sensitiv
 	public void checkForSensitiveInformationExposure( TestStep testStep, SecurityTestRunContext context,
 			SecurityTestLogModel securityTestLog )
 	{
-		InformationExposureCheck iec = new InformationExposureCheck( config, null, null );
+		InformationExposureCheck iec = new InformationExposureCheck( testStep, config, null, null );
 		iec.analyze( testStep, context, securityTestLog, null );
 	}
 }

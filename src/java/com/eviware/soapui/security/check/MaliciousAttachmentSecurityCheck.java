@@ -47,8 +47,8 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 	private static final int MINIMUM_STRING_DISTANCE = 50;
 
 	public MaliciousAttachmentSecurityCheck(SecurityCheckConfig config,
-			ModelItem parent, String icon) {
-		super(config, parent, icon);
+			ModelItem parent, String icon, TestStep testStep) {
+		super(testStep, config, parent, icon);
 		if (config == null) {
 			config = SecurityCheckConfig.Factory.newInstance();
 			MaliciousAttachmentSecurityCheckConfig mascc = MaliciousAttachmentSecurityCheckConfig.Factory
@@ -114,7 +114,7 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 	@Override
 	public void checkForSensitiveInformationExposure(TestStep testStep,
 			SecurityTestRunContext context, SecurityTestLogModel securityTestLog) {
-		InformationExposureCheck iec = new InformationExposureCheck(config,
+		InformationExposureCheck iec = new InformationExposureCheck(testStep, config,
 				null, null);
 		iec.analyze(testStep, context, securityTestLog, null);
 

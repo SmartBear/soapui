@@ -1939,6 +1939,7 @@
 					<xsd:element name="paramsToCheck" type="xsd:string"
 						maxOccurs="unbounded" minOccurs="0">
 					</xsd:element>
+					<xsd:element name="testStep" type="tns:TestStep"></xsd:element>
 				</xsd:sequence>
 				<xsd:attribute name="type" type="xsd:string"></xsd:attribute>
 				<xsd:attribute name="executionStrategy" type="xsd:string"></xsd:attribute>
