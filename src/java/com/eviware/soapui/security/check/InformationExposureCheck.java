@@ -42,6 +42,7 @@ public class InformationExposureCheck extends AbstractSecurityCheck implements H
 	private List<String> exposureList;
 	public static final String TYPE = "InformationExposureCheck";
 	public static final String LABEL = "Information Exposure";
+	private boolean next = true;
 
 	public InformationExposureCheck( SecurityCheckConfig config, ModelItem parent, String icon )
 	{
@@ -54,8 +55,7 @@ public class InformationExposureCheck extends AbstractSecurityCheck implements H
 	}
 
 	@Override
-	protected SecurityCheckRequestResult execute( TestStep testStep, SecurityTestRunContext context,
-			SecurityTestLogModel securityTestLog, SecurityCheckRequestResult securityCheckResult )
+	protected void executeNew( TestStep testStep, SecurityTestRunContext context )
 	{
 		if( acceptsTestStep( testStep ) )
 		{
@@ -63,15 +63,12 @@ public class InformationExposureCheck extends AbstractSecurityCheck implements H
 					new StringToObjectMap() );
 
 			testStep.run( testCaseRunner, testCaseRunner.getRunContext() );
-			securityCheckResult = analyze( testStep, context, securityTestLog, securityCheckResult );
+			next = false;
 		}
-		// TODO
-		return securityCheckResult;
 	}
 
 	@Override
-	public SecurityCheckRequestResult analyze( TestStep testStep, SecurityTestRunContext context,
-			SecurityTestLogModel securityTestLog, SecurityCheckRequestResult securityCheckResult )
+	protected void analyzeNew( TestStep testStep, SecurityTestRunContext context )
 	{
 		if( acceptsTestStep( testStep ) )
 		{
@@ -79,7 +76,7 @@ public class InformationExposureCheck extends AbstractSecurityCheck implements H
 			HttpTestRequestInterface<?> request = testStepwithProperties.getTestRequest();
 			MessageExchange messageExchange = new HttpResponseMessageExchange( request );
 
-			securityCheckResult.setMessageExchange( messageExchange );
+			securityCheckReqResult.setMessageExchange( messageExchange );
 			for( String exposureContent : exposureList )
 			{
 				if( SecurityCheckUtil.contains( context, new String( messageExchange.getRawResponseData() ),
@@ -88,8 +85,8 @@ public class InformationExposureCheck extends AbstractSecurityCheck implements H
 					// logSecurityInfo( messageExchange, securityTestLog,
 					// exposureContent );
 					String message = " sensitive information '" + exposureContent + "' is detected in response.";
-					securityCheckResult.addMessage( message );
-					securityCheckResult.setStatus( SecurityCheckStatus.FAILED );
+					securityCheckReqResult.addMessage( message );
+					securityCheckReqResult.setStatus( SecurityCheckStatus.FAILED );
 				}
 			}
 			// if( getStatus() != Status.FAILED )
@@ -97,10 +94,12 @@ public class InformationExposureCheck extends AbstractSecurityCheck implements H
 			// setStatus( Status.FINISHED );
 			// }
 		}
-		// TODO
-		return securityCheckResult;
 	}
 
+	protected boolean hasNext()
+	{
+		return next;
+	}
 	// private AssertionStatus assertContains( SecurityTestRunContext context,
 	// HttpTestRequestStepInterface testStep,
 	// MessageExchange messageExchange, String exposureContent )
@@ -176,6 +175,23 @@ public class InformationExposureCheck extends AbstractSecurityCheck implements H
 	public boolean configure()
 	{
 		return false;
+	}
+
+	// TODO next two to be deleted after refactoring is done
+	@Override
+	public SecurityCheckRequestResult analyze( TestStep testStep, SecurityTestRunContext context,
+			SecurityTestLogModel securityTestLog, SecurityCheckRequestResult securityCheckResult )
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected SecurityCheckRequestResult execute( TestStep testStep, SecurityTestRunContext context,
+			SecurityTestLogModel securityTestLog, SecurityCheckRequestResult securityChekResult )
+	{
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

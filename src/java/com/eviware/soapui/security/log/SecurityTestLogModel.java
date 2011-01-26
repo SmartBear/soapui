@@ -20,8 +20,8 @@ import javax.swing.AbstractListModel;
 
 import org.apache.commons.collections.list.TreeList;
 
-import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.security.SecurityCheckRequestResult;
+import com.eviware.soapui.security.SecurityCheckResult;
 
 /**
  * SecurityTestLog
@@ -66,19 +66,22 @@ public class SecurityTestLogModel extends AbstractListModel
 		enforceMaxSize();
 	}
 
-	public synchronized void addSecurityCheckResult( SecurityCheckRequestResult result )
+	public synchronized void addSecurityCheckResult( SecurityCheckResult result )
 	{
 		checkCount++ ;
 
 		int size = items.size();
 		items.add( "Check " + checkCount + " [" + result.getSecurityCheck().getName() + "] " + result.getStatus()
 				+ ": took " + result.getTimeTaken() + " ms" );
-		SoftReference<SecurityCheckRequestResult> ref = new SoftReference<SecurityCheckRequestResult>( result );
+		SoftReference<SecurityCheckResult> ref = new SoftReference<SecurityCheckResult>( result );
 		// results.add( ref );
-		for( String msg : result.getMessages() )
+		for( SecurityCheckRequestResult requestResult : result.getSecurityRequestResultList() )
 		{
-			items.add( " -> " + msg );
-			// results.add( ref );
+			for( String msg : requestResult.getMessages() )
+			{
+				items.add( " -> " + msg );
+				// results.add( ref );
+			}
 		}
 
 		fireIntervalAdded( this, size, items.size() - 1 );

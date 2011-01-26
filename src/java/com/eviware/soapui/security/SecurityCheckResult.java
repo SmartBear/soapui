@@ -16,6 +16,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.eviware.soapui.security.SecurityCheckRequestResult.SecurityCheckStatus;
 import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.support.action.swing.ActionList;
 
@@ -28,22 +29,22 @@ import com.eviware.soapui.support.action.swing.ActionList;
 
 public class SecurityCheckResult
 {
-	public enum SecurityCheckStatus
-	{
-		OK, FAILED
-	}
-
 	private static final String[] EMPTY_MESSAGES = new String[0];
 	public SecurityCheckStatus status;
 	public AbstractSecurityCheck securityCheck;
 	private long size;
 	private boolean discarded;
-	private List<SecurityCheckRequestResult> requestResultList;
+	private List<SecurityCheckRequestResult> securityRequestResultList;
 
 	public SecurityCheckResult( AbstractSecurityCheck securityCheck )
 	{
 		this.securityCheck = securityCheck;
-		requestResultList = new ArrayList<SecurityCheckRequestResult>();
+		securityRequestResultList = new ArrayList<SecurityCheckRequestResult>();
+	}
+
+	public List<SecurityCheckRequestResult> getSecurityRequestResultList()
+	{
+		return securityRequestResultList;
 	}
 
 	public SecurityCheckStatus getStatus()
@@ -72,8 +73,8 @@ public class SecurityCheckResult
 
 	public void addSecurityRequestResult( SecurityCheckRequestResult secReqResult )
 	{
-		if( requestResultList != null )
-			requestResultList.add( secReqResult );
+		if( securityRequestResultList != null )
+			securityRequestResultList.add( secReqResult );
 	}
 
 	// public Throwable getError();
@@ -81,7 +82,7 @@ public class SecurityCheckResult
 	public long getTimeTaken()
 	{
 		long timeTaken = 0;
-		for( SecurityCheckRequestResult requestResult : requestResultList )
+		for( SecurityCheckRequestResult requestResult : securityRequestResultList )
 		{
 			timeTaken += requestResult.getTimeTaken();
 		}

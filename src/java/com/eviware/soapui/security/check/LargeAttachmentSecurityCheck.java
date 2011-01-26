@@ -75,7 +75,7 @@ public class LargeAttachmentSecurityCheck extends AbstractSecurityCheck
 		Logger.getLogger( SoapUI.class ).info( "Re-enabling logs" );
 		Logger.getLogger( "httpclient.wire" ).setLevel( Level.DEBUG );
 		
-		return securityCheckResult;
+		return securityCheckReqResult;
 		
 	
 	}
@@ -90,7 +90,7 @@ public class LargeAttachmentSecurityCheck extends AbstractSecurityCheck
 			SecurityTestRunContext context, SecurityTestLogModel securityTestLog) {
 		InformationExposureCheck iec = new InformationExposureCheck(config,
 				null, null);
-		iec.analyze(testStep, context, securityTestLog, securityCheckResult);
+		iec.analyze(testStep, context, securityTestLog, securityCheckReqResult);
 
 	}
 

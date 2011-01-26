@@ -38,8 +38,11 @@ import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
+import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCaseRunner;
+import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestInterface;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStepInterface;
 import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
@@ -47,6 +50,7 @@ import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestRunner.Status;
 import com.eviware.soapui.security.Securable;
 import com.eviware.soapui.security.SecurityCheckRequestResult;
+import com.eviware.soapui.security.SecurityCheckResult;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.log.SecurityTestLogMessageEntry;
 import com.eviware.soapui.security.log.SecurityTestLogModel;
@@ -56,6 +60,8 @@ import com.eviware.soapui.support.components.JInspectorPanel;
 import com.eviware.soapui.support.components.JInspectorPanelFactory;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
+import com.eviware.soapui.support.types.StringToObjectMap;
+import com.eviware.soapui.support.xml.XmlUtils;
 import com.jgoodies.forms.builder.ButtonBarBuilder;
 
 public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<SecurityCheckConfig>
@@ -73,9 +79,11 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	private SecurityCheckParameterSelector parameterSelector;
 	protected Status status;
 	SecurityCheckConfigPanel contentPanel;
-	protected SecurityCheckRequestResult securityCheckResult;
+	protected SecurityCheckResult securityCheckResult;
+	protected SecurityCheckRequestResult securityCheckReqResult;
 	private final Securable securable;
 	private TestStep testStep;
+	private int currentIndex;
 
 	// private
 	public AbstractSecurityCheck( SecurityCheckConfig config, ModelItem parent, String icon, Securable securable )
@@ -119,17 +127,108 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	 * @param securityTestLog
 	 *           The security log to write to
 	 */
-	public SecurityCheckRequestResult run( TestStep testStep, SecurityTestRunContext context,
-			SecurityTestLogModel securityTestLog )
+	// public SecurityCheckRequestResult run( TestStep testStep,
+	// SecurityTestRunContext context,
+	// SecurityTestLogModel securityTestLog )
+	// {
+	// securityCheckResult = new SecurityCheckRequestResult( this );
+	// // setStatus( Status.INITIALIZED );
+	// runStartupScript( testStep );
+	// securityCheckResult = execute( testStep, context, securityTestLog,
+	// securityCheckResult );
+	// sensitiveInfoCheck( testStep, context, securityTestLog );
+	// runTearDownScript( testStep );
+	// return securityCheckResult;
+	// }
+
+	/*************************************
+	 * START OF NEWLY REFACTORED
+	 **************************************/
+	/**
+	 * Runs the test (internaly calls analyze)
+	 * 
+	 * @param testStep
+	 *           The TestStep that the check will be applied to
+	 * @param context
+	 *           The context to run the test in
+	 * @param securityTestLog
+	 *           The security log to write to
+	 */
+	public SecurityCheckResult runNew( TestStep testStep, SecurityTestRunContext context )
 	{
-		securityCheckResult = new SecurityCheckRequestResult( this );
+		securityCheckResult = new SecurityCheckResult( this );
+		currentIndex = 0;
+		WsdlTestCaseRunner testCaseRunner = new WsdlTestCaseRunner( ( WsdlTestCase )testStep.getTestCase(),
+				new StringToObjectMap() );
+		// String originalResponse = getOriginalResult( testCaseRunner, testStep
+		// ).getResponse().getContentAsXml();
+
 		// setStatus( Status.INITIALIZED );
 		runStartupScript( testStep );
-		securityCheckResult = execute( testStep, context, securityTestLog, securityCheckResult );
-		sensitiveInfoCheck( testStep, context, securityTestLog );
+
+		if( hasNext() )
+		{
+			securityCheckReqResult = new SecurityCheckRequestResult( this );
+			executeNew( testStep, context );
+			analyzeNew( testStep, context );
+			// add to summary result
+			securityCheckResult.addSecurityRequestResult( securityCheckReqResult );
+		}
+		// TODO refactor sensitiveInfoCheck to write to result directly and
+		// uncomment the call
+		// sensitiveInfoCheck( testStep, context, securityTestLog );
+
 		runTearDownScript( testStep );
+
 		return securityCheckResult;
 	}
+
+	/*
+	 * should be implemented in every particular check it executes one request,
+	 * modified by securityCheck if necessary and internally adds messages for
+	 * logging to SecurityCheckRequestResult
+	 */
+	protected void executeNew( TestStep testStep, SecurityTestRunContext context )
+	{
+	}
+
+	/*
+	 * should be implemented in every particular check it analyzes one executed
+	 * request, modified by securityCheck and internally adds messages for
+	 * logging to SecurityCheckRequestResult
+	 */
+	protected void analyzeNew( TestStep testStep, SecurityTestRunContext context )
+
+	{
+
+	}
+
+	/*
+	 * checks if specific SecurityCheck still has modifications left
+	 * TODO needs to be abstract and implemented in every check
+	 */
+	protected boolean hasNext()
+	{
+		return false;
+	}
+
+	//TODO to be extracted to specific securityCheck config for those that need it
+	public void setParamsToCheck( List<String> params )
+	{
+		config.setParamsToCheckArray( params.toArray( new String[1] ) );
+	}
+	public List<String> getParamsToCheck()
+	{
+		if( config.getParamsToCheckList() == null )
+			return new ArrayList<String>();
+		else
+			return config.getParamsToCheckList();
+	}
+
+
+	/*************************************
+	 * END OF NEWLY REFACTORED
+	 **************************************/
 
 	/**
 	 * Analyses the specified TestStep
@@ -459,19 +558,6 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		{
 			return false;
 		}
-	}
-
-	public List<String> getParamsToCheck()
-	{
-		if( config.getParamsToCheckList() == null )
-			return new ArrayList<String>();
-		else
-			return config.getParamsToCheckList();
-	}
-
-	public void setParamsToCheck( List<String> params )
-	{
-		config.setParamsToCheckArray( params.toArray( new String[1] ) );
 	}
 
 	// protected void setStatus( Status s )
