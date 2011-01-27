@@ -27,10 +27,8 @@ import org.apache.commons.cli.CommandLine;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
-import com.eviware.soapui.impl.wsdl.testcase.WsdlProjectRunner;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCaseRunner;
-import com.eviware.soapui.impl.wsdl.testcase.WsdlTestSuiteRunner;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlRunTestCaseTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStepResult;
@@ -59,7 +57,6 @@ import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunnerImpl;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
-import com.eviware.soapui.support.types.StringToObjectMap;
 import com.eviware.soapui.tools.AbstractSoapUITestRunner;
 
 /**
@@ -429,7 +426,7 @@ public class SoapUISecurityTestRunner extends AbstractSoapUITestRunner
 	public void printReport( long timeTaken )
 	{
 		System.out.println();
-		System.out.println( "SoapUI " + SoapUI.SOAPUI_VERSION + " TestCaseRunner Summary" );
+		System.out.println( "SoapUI " + SoapUI.SOAPUI_VERSION + " Security TestCaseRunner Summary" );
 		System.out.println( "-----------------------------" );
 		System.out.println( "Time Taken: " + timeTaken + "ms" );
 		System.out.println( "Total TestSuites: " + testSuiteCount );
