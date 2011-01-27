@@ -145,4 +145,14 @@ public class SecurityCheckRequestResult
 		this.messageExchange = messageExchange;
 	}
 
+	public void setTimeTaken( long timeTaken )
+	{
+		this.timeTaken = timeTaken;
+	}
+
+	public void setStart( long startTime )
+	{
+		this.timeStamp = startTime;
+	}
+
 }
