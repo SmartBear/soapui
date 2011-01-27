@@ -20,6 +20,7 @@ import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
 import com.eviware.soapui.security.SecurityCheckRequestResult;
+import com.eviware.soapui.security.SecurityCheckResult;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunnerInterface;
@@ -118,17 +119,16 @@ public class ProgressBarSecurityTestStepAdapter
 		}
 
 		public void afterSecurityCheck( SecurityTestRunnerInterface testRunner, SecurityTestRunContext runContext,
-				SecurityCheckRequestResult securityCheckResult )
+				SecurityCheckResult securityCheckResult )
 		{
 			if( progressBar.isIndeterminate() )
 				return;
 
-			if( securityCheckResult.getStatus() != SecurityCheckStatus.FAILED )
+			if( securityCheckResult.getStatus() == SecurityCheckStatus.FAILED )
 			{
 				progressBar.setForeground( Color.RED );
 			}
-			else
-			// if( !securityTest.getTestCase().getFailTestCaseOnErrors() )
+			else if( securityCheckResult.getStatus() == SecurityCheckStatus.OK )
 			{
 				progressBar.setForeground( Color.GREEN.darker() );
 			}
