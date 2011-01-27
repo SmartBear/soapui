@@ -42,7 +42,7 @@ public class MaliciousAttachmentSecurityCheckFactory extends AbstractSecurityChe
 	@Override
 	public AbstractSecurityCheck buildSecurityCheck( TestStep testStep,SecurityCheckConfig config, ModelItem parent )
 	{
-		return new MaliciousAttachmentSecurityCheck( config, null, null, testStep );
+		return new MaliciousAttachmentSecurityCheck( config, parent, null, testStep );
 	}
 
 	@Override
