@@ -40,12 +40,14 @@ import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCaseRunner;
-import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestInterface;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
-import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStepInterface;
+import com.eviware.soapui.impl.wsdl.teststeps.PropertyTransfer;
 import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.support.XPathReference;
+import com.eviware.soapui.model.support.XPathReferenceContainer;
+import com.eviware.soapui.model.support.XPathReferenceImpl;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestRunner.Status;
 import com.eviware.soapui.security.Securable;
@@ -61,10 +63,10 @@ import com.eviware.soapui.support.components.JInspectorPanelFactory;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
 import com.eviware.soapui.support.types.StringToObjectMap;
-import com.eviware.soapui.support.xml.XmlUtils;
 import com.jgoodies.forms.builder.ButtonBarBuilder;
 
-public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<SecurityCheckConfig>
+public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<SecurityCheckConfig> implements
+		XPathReferenceContainer
 {
 	// configuration of specific request modification
 	private static final int MINIMUM_STRING_DISTANCE = 50;
@@ -85,7 +87,8 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	private TestStep testStep;
 
 	// private
-	public AbstractSecurityCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent, String icon, Securable securable )
+	public AbstractSecurityCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent, String icon,
+			Securable securable )
 	{
 		super( config, parent, icon );
 		this.testStep = testStep;
@@ -158,15 +161,11 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	public SecurityCheckResult runNew( TestStep testStep, SecurityTestRunContext context )
 	{
 		securityCheckResult = new SecurityCheckResult( this );
-		WsdlTestCaseRunner testCaseRunner = new WsdlTestCaseRunner( ( WsdlTestCase )testStep.getTestCase(),
-				new StringToObjectMap() );
-		// String originalResponse = getOriginalResult( testCaseRunner, testStep
-		// ).getResponse().getContentAsXml();
 
 		// setStatus( Status.INITIALIZED );
 		runStartupScript( testStep );
 
-		if( hasNext() )
+		while( hasNext() )
 		{
 			securityCheckReqResult = new SecurityCheckRequestResult( this );
 			executeNew( testStep, context );
@@ -186,8 +185,8 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	/*
 	 * should be implemented in every particular check it executes one request,
 	 * modified by securityCheck if necessary and internally adds messages for
-	 * logging to SecurityCheckRequestResult
-	 * TODO needs to be abstract and implemented in every check
+	 * logging to SecurityCheckRequestResult TODO needs to be abstract and
+	 * implemented in every check
 	 */
 	protected void executeNew( TestStep testStep, SecurityTestRunContext context )
 	{
@@ -196,8 +195,8 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	/*
 	 * should be implemented in every particular check it analyzes one executed
 	 * request, modified by securityCheck and internally adds messages for
-	 * logging to SecurityCheckRequestResult
-	 * TODO needs to be abstract and implemented in every check
+	 * logging to SecurityCheckRequestResult TODO needs to be abstract and
+	 * implemented in every check
 	 */
 	protected void analyzeNew( TestStep testStep, SecurityTestRunContext context )
 
@@ -206,19 +205,21 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	}
 
 	/*
-	 * checks if specific SecurityCheck still has modifications left
-	 * TODO needs to be abstract and implemented in every check
+	 * checks if specific SecurityCheck still has modifications left TODO needs
+	 * to be abstract and implemented in every check
 	 */
 	protected boolean hasNext()
 	{
 		return false;
 	}
 
-	//TODO to be extracted to specific securityCheck config for those that need it
+	// TODO to be extracted to specific securityCheck config for those that need
+	// it
 	public void setParamsToCheck( List<String> params )
 	{
 		config.setParamsToCheckArray( params.toArray( new String[1] ) );
 	}
+
 	public List<String> getParamsToCheck()
 	{
 		if( config.getParamsToCheckList() == null )
@@ -226,7 +227,6 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		else
 			return config.getParamsToCheckList();
 	}
-
 
 	/*************************************
 	 * END OF NEWLY REFACTORED
@@ -639,4 +639,20 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		}
 		analyze( testStep, context, securityTestLog, null );
 	}
+
+	public XPathReference[] getXPathReferences()
+	{
+		List<XPathReference> result = new ArrayList<XPathReference>();
+
+		for( String param : getParamsToCheck() )
+		{
+//			if( StringUtils.isNotEmpty( param ) )
+//				result.add( new XPathReferenceImpl( "SecurityCheck Parameter " + param, transfer.getSourceProperty(),
+//						this, param ) );
+
+		}
+
+		return result.toArray( new XPathReference[result.size()] );
+	}
+
 }
