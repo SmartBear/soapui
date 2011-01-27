@@ -12,18 +12,30 @@
 
 package com.eviware.soapui.support;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.xmlbeans.XmlException;
+import org.apache.xmlbeans.XmlObject;
+import org.apache.xmlbeans.XmlOptions;
+import org.w3c.dom.Node;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.PropertiesTypeConfig;
 import com.eviware.soapui.config.PropertyConfig;
+import com.eviware.soapui.config.RestParametersConfig;
+import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
+import com.eviware.soapui.impl.rest.support.RestRequestParamsPropertyHolder;
+import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
+import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.settings.Settings;
+import com.eviware.soapui.security.check.ParamPanel;
 import com.eviware.soapui.settings.GlobalPropertySettings;
+import com.eviware.soapui.support.xml.XmlUtils;
 
 public class SecurityCheckUtil
 {
@@ -78,5 +90,23 @@ public class SecurityCheckUtil
 
 		return true;
 	}
+	
+	public static RestParamsPropertyHolder getSoapRequestParams(AbstractHttpRequest<?> request) {
+		XmlBeansRestParamsTestPropertyHolder holder = new XmlBeansRestParamsTestPropertyHolder(request, RestParametersConfig.Factory.newInstance());
+		try {
+			XmlObject requestXml = XmlObject.Factory.parse(request.getRequestContent(), new XmlOptions().setLoadStripWhitespace()
+					.setLoadStripComments());
+			Node[] nodes = XmlUtils.selectDomNodes(requestXml, "//text()");
+			
+			for (Node node:nodes) {
+				String xpath = XmlUtils.createAbsoluteXPath(node.getParentNode()); 
+				holder.addProperty(node.getParentNode().getNodeName());
+			}
+		} catch (XmlException e) {
+			SoapUI.logError( e );
+		}
+		return holder;
+	}
+	
 
 }

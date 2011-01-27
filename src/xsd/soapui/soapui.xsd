@@ -1936,13 +1936,13 @@
 					<xsd:element name="assertion"
 						type="tns:TestAssertion" maxOccurs="unbounded" minOccurs="0">
 					</xsd:element>
-					<xsd:element name="paramsToCheck" type="xsd:string"
-						maxOccurs="unbounded" minOccurs="0">
-					</xsd:element>
+					<xsd:element name="restParameters" type="tns:RestParameters" maxOccurs="1" minOccurs="1"></xsd:element>
 					<xsd:element name="testStep" type="tns:TestStep"></xsd:element>
 				</xsd:sequence>
 				<xsd:attribute name="type" type="xsd:string"></xsd:attribute>
-				<xsd:attribute name="executionStrategy" type="xsd:string"></xsd:attribute>
+				<xsd:attribute name="executionStrategy"
+					type="xsd:string">
+				</xsd:attribute>
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>

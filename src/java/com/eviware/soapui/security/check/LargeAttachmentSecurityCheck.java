@@ -1,10 +1,5 @@
 package com.eviware.soapui.security.check;
 
-import java.awt.BorderLayout;
-
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
@@ -18,13 +13,11 @@ import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCaseRunner;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityCheckRequestResult;
-import com.eviware.soapui.security.SecurityCheckResult;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.log.SecurityTestLogModel;
 import com.eviware.soapui.security.tools.InfiniteAttachment;
 import com.eviware.soapui.security.ui.LargeAttachmentSecurityCheckConfigPanel;
 import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
-import com.eviware.soapui.support.components.SimpleForm;
 import com.eviware.soapui.support.types.StringToObjectMap;
 
 public class LargeAttachmentSecurityCheck extends AbstractSecurityCheck
@@ -44,6 +37,7 @@ public class LargeAttachmentSecurityCheck extends AbstractSecurityCheck
 		if (config.getConfig() == null) {
 			LargeAttachmentSecurityCheckConfig mascc = LargeAttachmentSecurityCheckConfig.Factory
 					.newInstance();
+			mascc.setSize(4 * 1024 * 1024 * 1024);
 			config.setConfig(mascc);
 		}
 	}

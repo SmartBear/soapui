@@ -33,7 +33,11 @@ import javax.swing.SwingConstants;
 import org.apache.commons.lang.StringUtils;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.config.RestParameterConfig;
+import com.eviware.soapui.config.RestParametersConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
+import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
+import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
@@ -57,6 +61,8 @@ import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.log.SecurityTestLogMessageEntry;
 import com.eviware.soapui.security.log.SecurityTestLogModel;
 import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
+import com.eviware.soapui.security.ui.SecurityParamsTable;
+import com.eviware.soapui.support.SecurityCheckUtil;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JInspectorPanel;
 import com.eviware.soapui.support.components.JInspectorPanelFactory;
@@ -85,6 +91,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	protected SecurityCheckRequestResult securityCheckReqResult;
 	private final Securable securable;
 	private TestStep testStep;
+	private SecurityParamsTable paramTable;
 
 	// private
 	public AbstractSecurityCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent, String icon,
@@ -215,17 +222,14 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 
 	// TODO to be extracted to specific securityCheck config for those that need
 	// it
-	public void setParamsToCheck( List<String> params )
+	public void setParameters( RestParametersConfig parameters )
 	{
-		config.setParamsToCheckArray( params.toArray( new String[1] ) );
+		config.setRestParameters(parameters);
 	}
 
-	public List<String> getParamsToCheck()
+	public RestParametersConfig getParameters()
 	{
-		if( config.getParamsToCheckList() == null )
-			return new ArrayList<String>();
-		else
-			return config.getParamsToCheckList();
+		return config.getRestParameters();
 	}
 
 	/*************************************
@@ -310,44 +314,56 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		dialog = new JDialog( UISupport.getMainFrame(), getTitle(), true );
 		JPanel fullPanel = new JPanel( new BorderLayout() );
 		contentPanel = getComponent();
-
+	
 		ButtonBarBuilder builder = new ButtonBarBuilder();
-
+	
 		ShowOnlineHelpAction showOnlineHelpAction = new ShowOnlineHelpAction( HelpUrls.XPATHASSERTIONEDITOR_HELP_URL );
 		builder.addFixed( UISupport.createToolbarButton( showOnlineHelpAction ) );
 		builder.addGlue();
-
+	
 		JButton okButton = new JButton( new OkAction() );
 		builder.addFixed( okButton );
 		builder.addRelatedGap();
 		builder.addFixed( new JButton( new CancelAction() ) );
-
+	
 		builder.setBorder( BorderFactory.createEmptyBorder( 1, 5, 5, 5 ) );
-
-		JInspectorPanel parameter = JInspectorPanelFactory.build( getParameterSelector(), SwingConstants.BOTTOM );
-
+		
+		RestParamsPropertyHolder params = new XmlBeansRestParamsTestPropertyHolder(getRequest(getTestStep()), getParameters() );
+		
+		RestParamsPropertyHolder requestParams;
+		
+		if( getTestStep() instanceof WsdlTestRequestStep ) {
+			requestParams = SecurityCheckUtil.getSoapRequestParams(getRequest(getTestStep()));
+		} else {
+			requestParams = getRequest(getTestStep()).getParams();
+		}
+		
+		paramTable =  new SecurityParamsTable(params, requestParams);
+	
+		JInspectorPanel parameter = JInspectorPanelFactory.build( paramTable, SwingConstants.BOTTOM );
+	
 		if( contentPanel != null )
 		{
 			fullPanel.setPreferredSize( new Dimension( 300, 500 ) );
 			contentPanel.setPreferredSize( new Dimension( 300, 200 ) );
 			contentPanel.add( builder.getPanel(), BorderLayout.SOUTH );
-			JSplitPane splitPane = UISupport.createVerticalSplit( new JScrollPane( contentPanel ), new JScrollPane(
-					parameter.getComponent() ) );
-
+			JSplitPane splitPane = UISupport.createVerticalSplit(  new JScrollPane(
+					parameter.getComponent() ),new JScrollPane( contentPanel ) );
+	
 			dialog.setContentPane( splitPane );
 		}
 		else
 		{
-			fullPanel.setPreferredSize( new Dimension( 300, 350 ) );
+			fullPanel.setPreferredSize( new Dimension( 300, 500 ) );
 			fullPanel.add( builder.getPanel(), BorderLayout.NORTH );
-			fullPanel.add( parameter.getComponent(), BorderLayout.SOUTH );
+			fullPanel.add( paramTable, BorderLayout.SOUTH );
 			dialog.setContentPane( fullPanel );
 		}
-
+	
 		dialog.setModal( true );
 		dialog.pack();
 		UISupport.initDialogActions( dialog, showOnlineHelpAction, okButton );
-
+	
 	}
 
 	public TestStep getTestStep()
@@ -360,30 +376,6 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		testStep = step;
 	}
 
-	private JComponent getParameterSelector()
-	{
-		AbstractHttpRequest<?> request = null;
-		boolean soapRequest = false;
-		if( getTestStep() instanceof HttpTestRequestStep )
-		{
-			request = ( ( HttpTestRequestStep )getTestStep() ).getHttpRequest();
-		}
-		else if( getTestStep() instanceof RestTestRequestStep )
-		{
-			request = ( ( RestTestRequestStep )getTestStep() ).getHttpRequest();
-		}
-		else if( getTestStep() instanceof WsdlTestRequestStep )
-		{
-			request = ( ( WsdlTestRequestStep )getTestStep() ).getHttpRequest();
-			soapRequest = true;
-		}
-
-		parameterSelector = new SecurityCheckParameterSelector( request, getParamsToCheck(), getExecutionStrategy(),
-				soapRequest );
-
-		return parameterSelector;
-	}
-
 	public class OkAction extends AbstractAction
 	{
 		public OkAction()
@@ -392,26 +384,16 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 			super( "Save" );
 			configureResult = true;
 		}
-
+	
 		public void actionPerformed( ActionEvent arg0 )
 		{
 			if( contentPanel != null )
 				contentPanel.save();
-			List<String> params = new ArrayList<String>();
-			for( Component comp : parameterSelector.getComponents() )
-			{
-				if( comp instanceof ParamPanel )
-				{
-					if( ( ( ParamPanel )comp ).isSelected() )
-					{
-						params.add( ( ( ParamPanel )comp ).getParamName() );
-					}
-				}
-			}
-			setParamsToCheck( params );
-			setExecutionStrategy( parameterSelector.getExecutionStrategy() );
+			
 			dialog.setVisible( false );
 		}
+	
+		
 	}
 
 	public class CancelAction extends AbstractAction
@@ -644,7 +626,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	{
 		List<XPathReference> result = new ArrayList<XPathReference>();
 
-		for( String param : getParamsToCheck() )
+		for( RestParameterConfig param : getParameters().getParameterList() )
 		{
 //			if( StringUtils.isNotEmpty( param ) )
 //				result.add( new XPathReferenceImpl( "SecurityCheck Parameter " + param, transfer.getSourceProperty(),

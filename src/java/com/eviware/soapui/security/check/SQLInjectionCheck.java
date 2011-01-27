@@ -12,8 +12,8 @@
 
 package com.eviware.soapui.security.check;
 
-import javax.swing.JComponent;
 
+import com.eviware.soapui.config.RestParameterConfig;
 import com.eviware.soapui.config.SQLInjectionCheckConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
@@ -21,11 +21,11 @@ import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCaseRunner;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpResponseMessageExchange;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestInterface;
+import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStepInterface;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.testsuite.SamplerTestStep;
 import com.eviware.soapui.model.testsuite.TestStep;
-import com.eviware.soapui.model.testsuite.TestRunner.Status;
 import com.eviware.soapui.security.SecurityCheckRequestResult;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityCheckRequestResult.SecurityCheckStatus;
@@ -47,6 +47,8 @@ public class SQLInjectionCheck extends AbstractSecurityCheck implements Sensitiv
 {
 
 	public static final String TYPE = "SQLInjectionCheck";
+	
+	private Fuzzer sqlFuzzer = Fuzzer.getSQLFuzzer();
 
 	public SQLInjectionCheck( SecurityCheckConfig config, ModelItem parent, String icon, TestStep testStep )
 	{
@@ -76,13 +78,13 @@ public class SQLInjectionCheck extends AbstractSecurityCheck implements Sensitiv
 
 			if( getExecutionStrategy().equals( SecurityCheckParameterSelector.SEPARATE_REQUEST_STRATEGY ) )
 			{
-				for( String param : getParamsToCheck() )
+				for( RestParameterConfig param : getParameters().getParameterList() )
 				{
 					Fuzzer sqlFuzzer = Fuzzer.getSQLFuzzer();
 
 					while( sqlFuzzer.hasNext() )
 					{
-						sqlFuzzer.getNextFuzzedTestStep( testStep, param );
+						sqlFuzzer.getNextFuzzedTestStep( testStep, param.getName() );
 						runCheck( testStep, context, securityTestLog, testCaseRunner, originalResponse,
 								"Possible SQL injection vulenerability detected" );
 						// maybe this fuzzer can be implemented to wrap the
@@ -95,11 +97,11 @@ public class SQLInjectionCheck extends AbstractSecurityCheck implements Sensitiv
 			}
 			else
 			{
-				Fuzzer sqlFuzzer = Fuzzer.getSQLFuzzer();
+
 
 				while( sqlFuzzer.hasNext() )
 				{
-					sqlFuzzer.getNextFuzzedTestStep( testStep, getParamsToCheck() );
+					sqlFuzzer.getNextFuzzedTestStep( testStep, getParameters() );
 					runCheck( testStep, context, securityTestLog, testCaseRunner, originalResponse,
 							"Possible SQL injection vulenerability detected" );
 
@@ -171,4 +173,37 @@ public class SQLInjectionCheck extends AbstractSecurityCheck implements Sensitiv
 		InformationExposureCheck iec = new InformationExposureCheck( testStep, config, null, null );
 		iec.analyze( testStep, context, securityTestLog, null );
 	}
+	
+	@Override
+	protected void executeNew( TestStep testStep, SecurityTestRunContext context )
+	{
+		sqlFuzzer.getNextFuzzedTestStep( testStep, getParameters() );
+		
+		WsdlTestCaseRunner testCaseRunner = new WsdlTestCaseRunner( ( WsdlTestCase )testStep.getTestCase(),
+				new StringToObjectMap() );
+		
+		testStep.run( testCaseRunner, context );
+	}
+	
+	@Override
+	protected void analyzeNew( TestStep testStep, SecurityTestRunContext context )
+	{
+		if( acceptsTestStep( testStep ) )
+		{
+			HttpTestRequestStepInterface testStepwithProperties = ( HttpTestRequestStepInterface )testStep;
+			HttpTestRequestInterface<?> request = testStepwithProperties.getTestRequest();
+			MessageExchange messageExchange = new HttpResponseMessageExchange( request );
+
+			securityCheckReqResult.setMessageExchange( messageExchange );
+			securityCheckReqResult.setStatus(SecurityCheckStatus.OK);
+			
+		}
+	}
+	
+	@Override
+	protected boolean hasNext() 
+	{
+		return sqlFuzzer.hasNext();
+	}
+
 }

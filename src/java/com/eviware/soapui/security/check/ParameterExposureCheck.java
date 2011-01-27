@@ -17,6 +17,7 @@ import java.awt.Dimension;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.swing.JComponent;
@@ -25,8 +26,10 @@ import javax.swing.JTextField;
 import javax.swing.text.Document;
 
 import com.eviware.soapui.config.ParameterExposureCheckConfig;
+import com.eviware.soapui.config.RestParameterConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.config.TestAssertionConfig;
+import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.monitor.JProxyServletWsdlMonitorMessageExchange;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
@@ -118,22 +121,27 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements
 			MessageExchange messageExchange = new HttpResponseMessageExchange(
 					request);
 
-			Map<String, TestProperty> params;
+			RestParamsPropertyHolder params;
 
 			AbstractHttpRequest<?> httpRequest = testStepwithProperties
 					.getHttpRequest();
+			
 			params = httpRequest.getParams();
+		
+			List<RestParameterConfig> paramsToCheck;
+			
+		
+				
+			paramsToCheck = getParameters().getParameterList();
+			
 
-			if (getParamsToCheck().isEmpty()) {
-				setParamsToCheck(new ArrayList<String>(params.keySet()));
-			}
 
-			for (String paramName : getParamsToCheck()) {
-				if (paramName != null) {
-					TestProperty param = params.get(paramName);
+			for (RestParameterConfig parameter : paramsToCheck) {
+				if (parameter != null) {
+					TestProperty testParameter = params.get(parameter.getName());
 
-					if (param != null && param.getValue() != null
-							&& param.getValue().length() >= getMinimumLength()) {
+					if (testParameter != null && testParameter.getValue() != null
+							&& testParameter.getValue().length() >= getMinimumLength()) {
 						TestAssertionConfig assertionConfig = TestAssertionConfig.Factory
 								.newInstance();
 						assertionConfig.setType(SimpleContainsAssertion.ID);
@@ -141,13 +149,13 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements
 						
 
 						if (SecurityCheckUtil.contains( context, new String( messageExchange.getRawResponseData() ),
-								param.getValue(), false )) {
+								testParameter.getValue(), false )) {
 							securityTestLog
 									.addEntry(new SecurityTestLogMessageEntry(
 											"The parameter "
-													+ param.getName()
+													+ testParameter.getName()
 													+ " with the value \""
-													+ param.getValue()
+													+ testParameter.getValue()
 													+ "\" is exposed in the response",
 											messageExchange));
 							securityCheckResult.setStatus(SecurityCheckStatus.FAILED);

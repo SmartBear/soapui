@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.config.RestParameterConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.config.XmlBombSecurityCheckConfig;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
@@ -125,15 +126,15 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck implements Sensi
 		}
 
 		if( getExecutionStrategy().equals( SecurityCheckParameterSelector.SEPARATE_REQUEST_STRATEGY )
-				&& getParamsToCheck().size() > 0 )
+				&& getParameters().getParameterList().size() > 0 )
 		{
-			for( String param : getParamsToCheck() )
+			for( RestParameterConfig param : getParameters().getParameterList() )
 			{
 				if( param != null )
 				{
 					while( currentIndex < getBombList().size() + 1 )
 					{
-						generateNextRequest( testStep, param );
+						generateNextRequest( testStep, param.getName() );
 						runCheck( testStep, context, securityTestLog, testCaseRunner, originalResponse,
 								"Possible XML Bomb Vulnerability Detected" );
 						getRequest( testStep ).setRequestContent( originalRequest );
@@ -141,11 +142,11 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck implements Sensi
 				}
 			}
 		}
-		else if( getParamsToCheck().size() > 0 )
+		else if( getParameters().getParameterList().size() > 0 )
 		{
 			while( currentIndex < getBombList().size() + 1 )
 			{
-				generateNextRequest( testStep, getParamsToCheck() );
+				generateNextRequest( testStep, getParameters().getParameterList() );
 				runCheck( testStep, context, securityTestLog, testCaseRunner, originalResponse,
 						"Possible XML Bomb Vulnerability Detected" );
 				getRequest( testStep ).setRequestContent( originalRequest );
@@ -156,7 +157,7 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck implements Sensi
 
 	}
 
-	private TestStep generateNextRequest( TestStep testStep, List<String> paramsToCheck )
+	private TestStep generateNextRequest( TestStep testStep, List<RestParameterConfig> paramsToCheck )
 	{
 		AbstractHttpRequest<?> request = getRequest( testStep );
 		if( currentIndex < getBombList().size() )
@@ -167,9 +168,9 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck implements Sensi
 			String newRequestContent = requestContent;
 			if( testStep instanceof WsdlTestRequestStep )
 			{
-				for( String param : paramsToCheck )
+				for( RestParameterConfig param : paramsToCheck )
 				{
-					newRequestContent = XmlUtils.setXPathContent( newRequestContent, param.substring( param
+					newRequestContent = XmlUtils.setXPathContent( newRequestContent, param.getName().substring( param.getName()
 							.lastIndexOf( "\n" ) + 1 ), "&&payload&&" );
 				}
 				newRequestContent = newRequestContent.replaceAll( "&amp;&amp;payload&amp;&amp;", "&payload" );
@@ -257,8 +258,10 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck implements Sensi
 		}
 		else if( currentIndex == getBombList().size() )
 		{
-			List<String> paramList = new ArrayList<String>();
-			paramList.add( param );
+			List<RestParameterConfig> paramList = new ArrayList<RestParameterConfig>();
+			RestParameterConfig restParam = RestParameterConfig.Factory.newInstance();
+			restParam.setName(param);
+			paramList.add( restParam );
 			request.setRequestContent( createQuadraticExpansionAttack( request.getRequestContent(), paramList ) );
 		}
 
@@ -344,7 +347,7 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck implements Sensi
 		( ( XmlBombSecurityCheckConfig )config.getConfig() ).setXmlAttachmentPrefix( prefix );
 	}
 
-	private String createQuadraticExpansionAttack( String initialContent, List<String> params )
+	private String createQuadraticExpansionAttack( String initialContent, List<RestParameterConfig> params )
 	{
 		String result = "";
 
@@ -353,10 +356,10 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck implements Sensi
 
 		if( initialContent != null )
 		{
-			for( String param : params )
+			for( RestParameterConfig param : params )
 			{
 				initialContent = XmlUtils.setXPathContent( initialContent,
-						param.substring( param.lastIndexOf( "\n" ) + 1 ), "&&payload&&" );
+						param.getName().substring( param.getName().lastIndexOf( "\n" ) + 1 ), "&&payload&&" );
 			}
 			for( int i = 0; i < 16; i++ )
 			{

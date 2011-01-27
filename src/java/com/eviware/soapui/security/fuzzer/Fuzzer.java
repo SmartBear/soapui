@@ -15,6 +15,8 @@ package com.eviware.soapui.security.fuzzer;
 import java.util.List;
 
 import com.eviware.soapui.config.FuzzerConfig;
+import com.eviware.soapui.config.RestParameterConfig;
+import com.eviware.soapui.config.RestParametersConfig;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestInterface;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStepInterface;
@@ -76,11 +78,11 @@ public class Fuzzer {
 	 * @param params the List of Parameters to fuzz
 	 * 
 	 */
-	public void  getNextFuzzedTestStep(TestStep testStep, List<String> params) {
+	public void  getNextFuzzedTestStep(TestStep testStep, RestParametersConfig parameters) {
 		if (currentIndex < config.getValueList().size()) {
 			HttpTestRequestInterface<?> request = (( HttpTestRequestStepInterface )testStep).getTestRequest();
-			for (String param : params)
-				request.setPropertyValue(param, config.getValueArray(currentIndex));
+			for (RestParameterConfig param : parameters.getParameterList())
+				request.setPropertyValue(param.getName(), config.getValueArray(currentIndex));
 			currentIndex++;
 		}
 	}
@@ -147,4 +149,6 @@ public class Fuzzer {
 	public void removeValue(String value) {
 		config.getValueList().remove(value);
 	}
+
+	
 }
