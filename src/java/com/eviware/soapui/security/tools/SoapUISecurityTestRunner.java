@@ -205,7 +205,7 @@ public class SoapUISecurityTestRunner extends AbstractSoapUITestRunner
 
 	protected SoapUIOptions initCommandLineOptions()
 	{
-		SoapUIOptions options = new SoapUIOptions( "testrunner" );
+		SoapUIOptions options = new SoapUIOptions( "security test runner" );
 		options.addOption( "s", true, "Sets the testsuite" );
 		options.addOption( "c", true, "Sets the testcase" );
 		options.addOption( "n", true, "Sets the security test name" );
@@ -484,11 +484,7 @@ public class SoapUISecurityTestRunner extends AbstractSoapUITestRunner
 			log.info( "Running TestCase [" + testCase.getName() + "]" );
 			for( SecurityTest securityTest : testCase.getSecurityTestList() )
 			{
-				SecurityTestRunnerImpl testRunner = new SecurityTestRunnerImpl( securityTest );
-				testRunner.start( false );
-				log.info( "\n" + securityTest.getSecurityTestLog().getMessages() );
-				log.info( "SecurityTest [" + securityTest.getName() + "] finished  in " + ( testRunner.getTimeTaken() )
-						+ "ms" );
+				runSecurityTest( securityTest );
 			}
 
 		}
@@ -496,6 +492,18 @@ public class SoapUISecurityTestRunner extends AbstractSoapUITestRunner
 		{
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * @param securityTest
+	 */
+	protected void runSecurityTest( SecurityTest securityTest )
+	{
+		SecurityTestRunnerImpl testRunner = new SecurityTestRunnerImpl( securityTest );
+		testRunner.start( false );
+		log.info( "\n" + securityTest.getSecurityTestLog().getMessages() );
+		log.info( "SecurityTest [" + securityTest.getName() + "] finished  in " + ( testRunner.getTimeTaken() )
+				+ "ms" );
 	}
 
 	/**
