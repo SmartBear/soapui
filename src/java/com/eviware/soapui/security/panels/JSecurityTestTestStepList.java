@@ -48,6 +48,7 @@ import com.eviware.soapui.model.support.TestSuiteListenerAdapter;
 import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestSuiteListener;
+import com.eviware.soapui.security.Securable;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.security.support.ProgressBarSecurityTestStepAdapter;
@@ -271,16 +272,19 @@ public class JSecurityTestTestStepList extends JPanel
 			{
 
 				@Override
-				public void mousePressed( MouseEvent e )
-				{
-					requestFocus();
-					selectedTestStep = TestStepListEnrtyPanel.this;
-					splitPane.remove( secCheckPanel );
-					secCheckPanel = buildSecurityChecksPanel();
-					secCheckPanel.revalidate();
-					splitPane.setBottomComponent( secCheckPanel );
-					splitPane.revalidate();
-				}
+//				public void mousePressed( MouseEvent e )
+//				{
+//					requestFocus();
+//					selectedTestStep = TestStepListEnrtyPanel.this;
+//					if( getTestStep()instanceof Securable )
+//					{
+//						splitPane.remove( secCheckPanel );
+//						secCheckPanel = buildSecurityChecksPanel();
+//						secCheckPanel.revalidate();
+//						splitPane.setBottomComponent( secCheckPanel );
+//						splitPane.revalidate();
+//					}
+//				}
 
 				public void mouseClicked( MouseEvent e )
 				{
@@ -289,8 +293,17 @@ public class JSecurityTestTestStepList extends JPanel
 						if( selectedTestStep != null )
 							selectedTestStep.setSelected( false );
 
-						setSelected( true );
 						selectedTestStep = TestStepListEnrtyPanel.this;
+						requestFocus();
+						splitPane.remove( secCheckPanel );
+						secCheckPanel = buildSecurityChecksPanel();
+						secCheckPanel.revalidate();
+						splitPane.setBottomComponent( secCheckPanel );
+						splitPane.revalidate();
+						if( getTestStep()instanceof Securable )
+						{
+							setSelected( true );
+						}
 					}
 					else
 					{
