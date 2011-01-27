@@ -271,21 +271,6 @@ public class JSecurityTestTestStepList extends JPanel
 			addMouseListener( new MouseAdapter()
 			{
 
-				@Override
-//				public void mousePressed( MouseEvent e )
-//				{
-//					requestFocus();
-//					selectedTestStep = TestStepListEnrtyPanel.this;
-//					if( getTestStep()instanceof Securable )
-//					{
-//						splitPane.remove( secCheckPanel );
-//						secCheckPanel = buildSecurityChecksPanel();
-//						secCheckPanel.revalidate();
-//						splitPane.setBottomComponent( secCheckPanel );
-//						splitPane.revalidate();
-//					}
-//				}
-
 				public void mouseClicked( MouseEvent e )
 				{
 					if( e.getClickCount() < 2 )
@@ -300,7 +285,7 @@ public class JSecurityTestTestStepList extends JPanel
 						secCheckPanel.revalidate();
 						splitPane.setBottomComponent( secCheckPanel );
 						splitPane.revalidate();
-						if( getTestStep()instanceof Securable )
+						if( AbstractSecurityCheck.isSecurable( selectedTestStep.getTestStep() ) )
 						{
 							setSelected( true );
 						}
