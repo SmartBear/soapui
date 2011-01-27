@@ -90,7 +90,7 @@ public class SecurityCheckResult
 				secReqResult.getStatus().toString() ).append( ": took " ).append( secReqResult.getTimeTaken() ).append(
 				" ms" );
 		for( String s : secReqResult.getMessages() )
-			testLog.append( "\n -> " ).append( secReqResult.getMessages() );
+			testLog.append( "\n -> " ).append( s );
 	}
 
 	public long getTimeTaken()
