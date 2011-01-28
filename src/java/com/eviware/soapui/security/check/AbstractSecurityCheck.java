@@ -13,7 +13,6 @@
 package com.eviware.soapui.security.check;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
@@ -23,7 +22,6 @@ import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -42,16 +40,13 @@ import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
-import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCaseRunner;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
-import com.eviware.soapui.impl.wsdl.teststeps.PropertyTransfer;
 import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.support.XPathReference;
 import com.eviware.soapui.model.support.XPathReferenceContainer;
-import com.eviware.soapui.model.support.XPathReferenceImpl;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestRunner.Status;
 import com.eviware.soapui.security.Securable;
@@ -68,7 +63,6 @@ import com.eviware.soapui.support.components.JInspectorPanel;
 import com.eviware.soapui.support.components.JInspectorPanelFactory;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
-import com.eviware.soapui.support.types.StringToObjectMap;
 import com.jgoodies.forms.builder.ButtonBarBuilder;
 
 public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<SecurityCheckConfig> implements
@@ -89,44 +83,22 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	SecurityCheckConfigPanel contentPanel;
 	protected SecurityCheckResult securityCheckResult;
 	protected SecurityCheckRequestResult securityCheckReqResult;
-	private final Securable securable;
 	private TestStep testStep;
 	private SecurityParamsTable paramTable;
-
-	// private
-	public AbstractSecurityCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent, String icon,
-			Securable securable )
-	{
-		super( config, parent, icon );
-		this.testStep = testStep;
-		this.securable = securable;
-		this.config = config;
-		// if( config.getExecutionStrategy() == null )
-		// config.setExecutionStrategy(
-		// SecurityCheckParameterSelector.SINGLE_REQUEST_STRATEGY );
-		this.startupScript = config.getSetupScript() != null ? config.getSetupScript().getStringValue() : "";
-		this.tearDownScript = config.getTearDownScript() != null ? config.getTearDownScript().getStringValue() : "";
-		if( config.getExecutionStrategy() == null )
-			config.setExecutionStrategy( SecurityCheckParameterSelector.SEPARATE_REQUEST_STRATEGY );
-		if( config.getRestParameters() == null)
-			config.setRestParameters(RestParametersConfig.Factory.newInstance());
-		scriptEngine = SoapUIScriptEngineRegistry.create( this );
-	}
 
 	// TODO check if should exist and what to do with securable
 	public AbstractSecurityCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent, String icon )
 	{
 		super( config, parent, icon );
 		this.testStep = testStep;
-		this.securable = null;
 		this.config = config;
 		this.startupScript = config.getSetupScript() != null ? config.getSetupScript().getStringValue() : "";
 		this.tearDownScript = config.getTearDownScript() != null ? config.getTearDownScript().getStringValue() : "";
 		scriptEngine = SoapUIScriptEngineRegistry.create( this );
 		if( config.getExecutionStrategy() == null )
 			config.setExecutionStrategy( SecurityCheckParameterSelector.SEPARATE_REQUEST_STRATEGY );
-		if( config.getRestParameters() == null)
-			config.setRestParameters(RestParametersConfig.Factory.newInstance());
+		if( config.getRestParameters() == null )
+			config.setRestParameters( RestParametersConfig.Factory.newInstance() );
 	}
 
 	abstract protected SecurityCheckRequestResult execute( TestStep testStep, SecurityTestRunContext context,
@@ -228,7 +200,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	// it
 	public void setParameters( RestParametersConfig parameters )
 	{
-		config.setRestParameters(parameters);
+		config.setRestParameters( parameters );
 	}
 
 	public RestParametersConfig getParameters()
@@ -318,42 +290,46 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		dialog = new JDialog( UISupport.getMainFrame(), getTitle(), true );
 		JPanel fullPanel = new JPanel( new BorderLayout() );
 		contentPanel = getComponent();
-	
+
 		ButtonBarBuilder builder = new ButtonBarBuilder();
-	
+
 		ShowOnlineHelpAction showOnlineHelpAction = new ShowOnlineHelpAction( HelpUrls.XPATHASSERTIONEDITOR_HELP_URL );
 		builder.addFixed( UISupport.createToolbarButton( showOnlineHelpAction ) );
 		builder.addGlue();
-	
+
 		JButton okButton = new JButton( new OkAction() );
 		builder.addFixed( okButton );
 		builder.addRelatedGap();
 		builder.addFixed( new JButton( new CancelAction() ) );
-	
+
 		builder.setBorder( BorderFactory.createEmptyBorder( 1, 5, 5, 5 ) );
-		
-		RestParamsPropertyHolder params = new XmlBeansRestParamsTestPropertyHolder(getRequest(getTestStep()), getParameters() );
-		
+
+		RestParamsPropertyHolder params = new XmlBeansRestParamsTestPropertyHolder( getRequest( getTestStep() ),
+				getParameters() );
+
 		RestParamsPropertyHolder requestParams;
-		
-		if( getTestStep() instanceof WsdlTestRequestStep ) {
-			requestParams = SecurityCheckUtil.getSoapRequestParams(getRequest(getTestStep()));
-		} else {
-			requestParams = getRequest(getTestStep()).getParams();
+
+		if( getTestStep() instanceof WsdlTestRequestStep )
+		{
+			requestParams = SecurityCheckUtil.getSoapRequestParams( getRequest( getTestStep() ) );
 		}
-		
-		paramTable =  new SecurityParamsTable(params, requestParams);
-	
+		else
+		{
+			requestParams = getRequest( getTestStep() ).getParams();
+		}
+
+		paramTable = new SecurityParamsTable( params, requestParams );
+
 		JInspectorPanel parameter = JInspectorPanelFactory.build( paramTable, SwingConstants.BOTTOM );
-	
+
 		if( contentPanel != null )
 		{
 			fullPanel.setPreferredSize( new Dimension( 300, 500 ) );
 			contentPanel.setPreferredSize( new Dimension( 300, 200 ) );
 			contentPanel.add( builder.getPanel(), BorderLayout.SOUTH );
-			JSplitPane splitPane = UISupport.createVerticalSplit(  new JScrollPane(
-					parameter.getComponent() ),new JScrollPane( contentPanel ) );
-	
+			JSplitPane splitPane = UISupport.createVerticalSplit( new JScrollPane( parameter.getComponent() ),
+					new JScrollPane( contentPanel ) );
+
 			dialog.setContentPane( splitPane );
 		}
 		else
@@ -363,11 +339,11 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 			fullPanel.add( paramTable, BorderLayout.SOUTH );
 			dialog.setContentPane( fullPanel );
 		}
-	
+
 		dialog.setModal( true );
 		dialog.pack();
 		UISupport.initDialogActions( dialog, showOnlineHelpAction, okButton );
-	
+
 	}
 
 	public TestStep getTestStep()
@@ -388,16 +364,15 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 			super( "Save" );
 			configureResult = true;
 		}
-	
+
 		public void actionPerformed( ActionEvent arg0 )
 		{
 			if( contentPanel != null )
 				contentPanel.save();
-			
+
 			dialog.setVisible( false );
 		}
-	
-		
+
 	}
 
 	public class CancelAction extends AbstractAction
@@ -531,11 +506,6 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		return "";
 	}
 
-	public Securable getSecurable()
-	{
-		return securable;
-	}
-
 	public static boolean isSecurable( TestStep testStep )
 	{
 		if( testStep != null && testStep instanceof Securable )
@@ -632,9 +602,10 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 
 		for( RestParameterConfig param : getParameters().getParameterList() )
 		{
-//			if( StringUtils.isNotEmpty( param ) )
-//				result.add( new XPathReferenceImpl( "SecurityCheck Parameter " + param, transfer.getSourceProperty(),
-//						this, param ) );
+			// if( StringUtils.isNotEmpty( param ) )
+			// result.add( new XPathReferenceImpl( "SecurityCheck Parameter " +
+			// param, transfer.getSourceProperty(),
+			// this, param ) );
 
 		}
 
