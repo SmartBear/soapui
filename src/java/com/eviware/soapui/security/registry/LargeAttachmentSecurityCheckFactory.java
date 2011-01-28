@@ -34,7 +34,7 @@ public class LargeAttachmentSecurityCheckFactory extends AbstractSecurityCheckFa
 				"/large_attachement_check_script.gif");
 	}
 
-	public boolean canCreate() {
+	public boolean canCreate(TestStep testStep) {
 		return true;
 	}
 

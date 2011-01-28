@@ -33,7 +33,7 @@ public class InformationExposureCheckFactory extends AbstractSecurityCheckFactor
 				"Executes the specified information exposure for security check", "/information_exposure_check.gif" );
 	}
 
-	public boolean canCreate()
+	public boolean canCreate(TestStep testStep)
 	{
 		return true;
 	}
@@ -41,7 +41,7 @@ public class InformationExposureCheckFactory extends AbstractSecurityCheckFactor
 	@Override
 	public AbstractSecurityCheck buildSecurityCheck( TestStep testStep,SecurityCheckConfig config, ModelItem parent )
 	{
-		return new InformationExposureCheck( testStep, config, parent, null );
+		return new InformationExposureCheck( testStep, config, parent, pathToIcon );
 	}
 
 	@Override

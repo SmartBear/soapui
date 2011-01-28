@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.eviware.soapui.config.SecurityCheckConfig;
+import com.eviware.soapui.model.testsuite.TestStep;
 
 /**
  * Registry of SecurityCheck factories
@@ -39,6 +40,7 @@ public class SecurityCheckRegistry
 		addFactory( new XmlBombSecurityCheckFactory() );
 		addFactory( new MaliciousAttachmentSecurityCheckFactory() );
 		addFactory( new LargeAttachmentSecurityCheckFactory() );
+		addFactory( new InvalidTypesSecurityCheckFactory() );
 	}
 
 	/**
@@ -135,13 +137,13 @@ public class SecurityCheckRegistry
 	}
 
 	//TODO drso: test and implement properly
-	public String[] getAvailableSecurityChecksNames()
+	public String[] getAvailableSecurityChecksNames(TestStep testStep)
 	{
 		List<String> result = new ArrayList<String>();
 
 		for( AbstractSecurityCheckFactory securityCheck : availableSecurityChecks.values() )
 		{
-			if( securityCheck.canCreate() )
+			if( securityCheck.canCreate(testStep) )
 				result.add( securityCheck.getSecurityCheckName() );
 		}
 

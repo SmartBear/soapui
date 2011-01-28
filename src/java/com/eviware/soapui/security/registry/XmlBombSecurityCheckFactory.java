@@ -34,7 +34,7 @@ public class XmlBombSecurityCheckFactory extends AbstractSecurityCheckFactory
 				"/xml_bomb_security_check_script.gif" );
 	}
 
-	public boolean canCreate()
+	public boolean canCreate(TestStep testStep)
 	{
 		return true;
 	}

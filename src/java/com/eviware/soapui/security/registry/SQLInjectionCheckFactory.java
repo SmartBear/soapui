@@ -34,7 +34,7 @@ public class SQLInjectionCheckFactory extends AbstractSecurityCheckFactory
 				"/sql_injection_check_script.gif" );
 	}
 
-	public boolean canCreate()
+	public boolean canCreate(TestStep testStep)
 	{
 		return true;
 	}

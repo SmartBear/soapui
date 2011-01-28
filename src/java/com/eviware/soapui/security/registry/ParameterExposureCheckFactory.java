@@ -34,7 +34,7 @@ public class ParameterExposureCheckFactory extends AbstractSecurityCheckFactory
 				"/parameter_exposure_check_script.gif" );
 	}
 
-	public boolean canCreate()
+	public boolean canCreate(TestStep testStep)
 	{
 		return true;
 	}

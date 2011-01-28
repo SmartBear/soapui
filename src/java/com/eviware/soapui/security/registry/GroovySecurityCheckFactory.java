@@ -34,7 +34,7 @@ public class GroovySecurityCheckFactory extends AbstractSecurityCheckFactory
 				"Executes the specified groovy script for security check", "/groovy_security_check_script.gif" );
 	}
 
-	public boolean canCreate()
+	public boolean canCreate(TestStep testStep)
 	{
 		return true;
 	}

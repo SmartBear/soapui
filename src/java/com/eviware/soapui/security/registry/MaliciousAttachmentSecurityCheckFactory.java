@@ -34,7 +34,7 @@ public class MaliciousAttachmentSecurityCheckFactory extends AbstractSecurityChe
 				"Preforms a check for Malicious Attachment Vulerabilities", "/malicious_attachement_check_script.gif" );
 	}
 
-	public boolean canCreate()
+	public boolean canCreate(TestStep testStep)
 	{
 		return true;
 	}

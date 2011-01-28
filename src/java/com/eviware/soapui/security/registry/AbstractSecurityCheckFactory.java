@@ -28,7 +28,7 @@ public abstract class AbstractSecurityCheckFactory
 	private final String typeName;
 	private final String name;
 	private final String description;
-	private final String pathToIcon;
+	protected final String pathToIcon;
 
 	public AbstractSecurityCheckFactory( String typeName, String name, String description, String pathToIcon )
 	{
@@ -48,7 +48,11 @@ public abstract class AbstractSecurityCheckFactory
 		return typeName;
 	}
 
-	public abstract boolean canCreate();
+	/**
+	 * 
+	 * @return
+	 */
+	public abstract boolean canCreate(TestStep testStep);
 
 	public String getSecurityCheckName()
 	{
