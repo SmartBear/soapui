@@ -22,18 +22,28 @@ import org.apache.xmlbeans.XmlObject;
 
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequest;
+import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
+import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel;
 import com.eviware.soapui.support.xml.XmlUtils;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel.XmlTreeNode;
 
 public class SchemeTypeExtractor
 {
+	
 	private WsdlRequest request;
 	private List<NodeInfo> nodeInfoList = new ArrayList<NodeInfo>();
 
 	public SchemeTypeExtractor( WsdlTestRequest request )
 	{
 		this.request = request;
+	}
+
+	public SchemeTypeExtractor( TestStep testStep )
+	{
+		if ( testStep instanceof WsdlTestRequestStep ) {
+			request = ((WsdlTestRequestStep)testStep).getHttpRequest();
+		}
 	}
 
 	public void extract() throws XmlException, Exception
@@ -47,7 +57,7 @@ public class SchemeTypeExtractor
 				.selectTreeNodes( "declare namespace xsd=\'http://www.w3.org/2001/XMLSchema\'; declare namespace wsdl=\'http://schemas.xmlsoap.org/wsdl/\'; //wsdl:definitions[1]/wsdl:types[1]/xsd:schema[1]" );
 	
 
-		getNextChild( nodes[0] );
+		
 		
 		SchemaType schemaType = null;
 	}
