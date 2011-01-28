@@ -68,10 +68,10 @@ import com.eviware.soapui.support.swing.AutoscrollSupport;
 @SuppressWarnings( "serial" )
 public class JSecurityTestTestStepList extends JPanel
 {
-	private Map<TestStep, TestStepListEnrtyPanel> panels = new HashMap<TestStep, TestStepListEnrtyPanel>();
+	private Map<TestStep, TestStepListEntryPanel> panels = new HashMap<TestStep, TestStepListEntryPanel>();
 	private final SecurityTest securityTest;
 	private final TestSuiteListener testSuiteListener = new InternalTestSuiteListener();
-	private TestStepListEnrtyPanel selectedTestStep;
+	private TestStepListEntryPanel selectedTestStep;
 	// private JInspectorPanel inspectorPanel;
 	private JList securityChecksList;
 	JSplitPane splitPane;
@@ -88,7 +88,7 @@ public class JSecurityTestTestStepList extends JPanel
 
 		for( int c = 0; c < securityTest.getTestCase().getTestStepCount(); c++ )
 		{
-			TestStepListEnrtyPanel testStepListEntryPanel = createTestStepListPanel( securityTest.getTestCase()
+			TestStepListEntryPanel testStepListEntryPanel = createTestStepListPanel( securityTest.getTestCase()
 					.getTestStepAt( c ) );
 			panels.put( securityTest.getTestCase().getTestStepAt( c ), testStepListEntryPanel );
 			testStepListPanel.add( testStepListEntryPanel );
@@ -135,7 +135,7 @@ public class JSecurityTestTestStepList extends JPanel
 
 	public void reset()
 	{
-		for( TestStepListEnrtyPanel testCasePanel : panels.values() )
+		for( TestStepListEntryPanel testCasePanel : panels.values() )
 		{
 			testCasePanel.reset();
 		}
@@ -160,7 +160,7 @@ public class JSecurityTestTestStepList extends JPanel
 		@Override
 		public void testStepAdded( TestStep testStep, int index )
 		{
-			TestStepListEnrtyPanel testStepListEntry = createTestStepListPanel( testStep );
+			TestStepListEntryPanel testStepListEntry = createTestStepListPanel( testStep );
 			panels.put( testStep, testStepListEntry );
 			testStepListPanel.add( testStepListEntry, index );
 			splitPane.remove( splitPane.getTopComponent() );
@@ -172,11 +172,11 @@ public class JSecurityTestTestStepList extends JPanel
 		@Override
 		public void testStepRemoved( TestStep testStep, int index )
 		{
-			TestStepListEnrtyPanel testCaseListPanel = panels.get( testStep );
+			TestStepListEntryPanel testCaseListPanel = panels.get( testStep );
 			if( testCaseListPanel != null )
 			{
 				remove( testCaseListPanel );
-				TestStepListEnrtyPanel testStepListEntry = panels.remove( testStep );
+				TestStepListEntryPanel testStepListEntry = panels.remove( testStep );
 				testStepListPanel.remove( testStepListEntry );
 				splitPane.remove( splitPane.getTopComponent() );
 				splitPane.setTopComponent( new JScrollPane( testStepListPanel ) );
@@ -188,7 +188,7 @@ public class JSecurityTestTestStepList extends JPanel
 		@Override
 		public void testStepMoved( TestStep testStep, int index, int offset )
 		{
-			TestStepListEnrtyPanel testStepListEntry = panels.get( testStep );
+			TestStepListEntryPanel testStepListEntry = panels.get( testStep );
 			if( testStepListEntry != null )
 			{
 				boolean hadFocus = testStepListEntry.hasFocus();
@@ -208,7 +208,7 @@ public class JSecurityTestTestStepList extends JPanel
 	}
 
 	@SuppressWarnings( "serial" )
-	public final class TestStepListEnrtyPanel extends JPanel implements Autoscroll
+	public final class TestStepListEntryPanel extends JPanel implements Autoscroll
 	{
 		private final WsdlTestStep testStep;
 		private JProgressBar progressBar;
@@ -217,7 +217,7 @@ public class JSecurityTestTestStepList extends JPanel
 		private TestCasePropertyChangeListener testCasePropertyChangeListener;
 		private AutoscrollSupport autoscrollSupport;
 
-		public TestStepListEnrtyPanel( WsdlTestStep testStep )
+		public TestStepListEntryPanel( WsdlTestStep testStep )
 		{
 			super( new BorderLayout() );
 
@@ -232,13 +232,13 @@ public class JSecurityTestTestStepList extends JPanel
 				{
 					if( e.getID() == MouseEvent.MOUSE_PRESSED || e.getID() == MouseEvent.MOUSE_RELEASED )
 					{
-						TestStepListEnrtyPanel.this.processMouseEvent( translateMouseEvent( e ) );
+						TestStepListEntryPanel.this.processMouseEvent( translateMouseEvent( e ) );
 					}
 				}
 
 				protected void processMouseMotionEvent( MouseEvent e )
 				{
-					TestStepListEnrtyPanel.this.processMouseMotionEvent( translateMouseEvent( e ) );
+					TestStepListEntryPanel.this.processMouseMotionEvent( translateMouseEvent( e ) );
 				}
 
 				/**
@@ -247,14 +247,14 @@ public class JSecurityTestTestStepList extends JPanel
 				 */
 				private MouseEvent translateMouseEvent( MouseEvent e )
 				{
-					return new MouseEvent( TestStepListEnrtyPanel.this, e.getID(), e.getWhen(), e.getModifiers(), e.getX()
+					return new MouseEvent( TestStepListEntryPanel.this, e.getID(), e.getWhen(), e.getModifiers(), e.getX()
 							+ getX(), e.getY() + getY(), e.getClickCount(), e.isPopupTrigger(), e.getButton() );
 				}
 			};
 
 			JPanel progressPanel = UISupport.createProgressBarPanel( progressBar, 5, false );
 
-			progressBar.setMinimumSize( new Dimension( 0, 100 ) );
+			progressBar.setMinimumSize( new Dimension( 0, 200 ) );
 			progressBar.setBackground( Color.WHITE );
 			progressBar.setInheritsPopupMenu( true );
 
@@ -280,7 +280,7 @@ public class JSecurityTestTestStepList extends JPanel
 						if( selectedTestStep != null )
 							selectedTestStep.setSelected( false );
 
-						selectedTestStep = TestStepListEnrtyPanel.this;
+						selectedTestStep = TestStepListEntryPanel.this;
 						requestFocus();
 						splitPane.remove( secCheckPanel );
 						secCheckPanel = buildSecurityChecksPanel();
@@ -294,7 +294,7 @@ public class JSecurityTestTestStepList extends JPanel
 					}
 					else
 					{
-						UISupport.selectAndShow( TestStepListEnrtyPanel.this.testStep );
+						UISupport.selectAndShow( TestStepListEntryPanel.this.testStep );
 					}
 				}
 			} );
@@ -430,14 +430,14 @@ public class JSecurityTestTestStepList extends JPanel
 		}
 	}
 
-	protected int getIndexOf( TestStepListEnrtyPanel panel )
+	protected int getIndexOf( TestStepListEntryPanel panel )
 	{
 		return Arrays.asList( getComponents() ).indexOf( panel );
 	}
 
-	protected TestStepListEnrtyPanel createTestStepListPanel( TestStep testStep )
+	protected TestStepListEntryPanel createTestStepListPanel( TestStep testStep )
 	{
-		TestStepListEnrtyPanel testStepListPanel = new TestStepListEnrtyPanel( ( WsdlTestStep )testStep );
+		TestStepListEntryPanel testStepListPanel = new TestStepListEntryPanel( ( WsdlTestStep )testStep );
 
 		return testStepListPanel;
 	}
