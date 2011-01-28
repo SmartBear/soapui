@@ -26,6 +26,7 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.PropertiesTypeConfig;
 import com.eviware.soapui.config.PropertyConfig;
 import com.eviware.soapui.config.RestParametersConfig;
+import com.eviware.soapui.impl.rest.support.RestParamProperty;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.rest.support.RestRequestParamsPropertyHolder;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
@@ -100,7 +101,9 @@ public class SecurityCheckUtil
 			
 			for (Node node:nodes) {
 				String xpath = XmlUtils.createAbsoluteXPath(node.getParentNode()); 
-				holder.addProperty(node.getParentNode().getNodeName());
+				RestParamProperty property = holder.addProperty(node.getParentNode().getNodeName());
+				property.setValue(node.getNodeValue());
+				property.setDescription(xpath); //this should really be in a spearate parameter, but I am just testing some things out.
 			}
 		} catch (XmlException e) {
 			SoapUI.logError( e );

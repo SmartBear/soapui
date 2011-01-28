@@ -127,11 +127,11 @@ public class SQLInjectionCheck extends AbstractSecurityCheck implements Sensitiv
 	{
 		if( acceptsTestStep( testStep ) )
 		{
-			HttpTestRequestStepInterface testStepwithProperties = ( HttpTestRequestStepInterface )testStep;
-			HttpTestRequestInterface<?> request = testStepwithProperties.getTestRequest();
-			MessageExchange messageExchange = new HttpResponseMessageExchange( request );
+			//HttpTestRequestStepInterface testStepwithProperties = ( HttpTestRequestStepInterface )testStep;
+			//HttpTestRequestInterface<?> request = testStepwithProperties.getTestRequest();
+			//MessageExchange messageExchange = new HttpResponseMessageExchange( request );
 
-			securityCheckReqResult.setMessageExchange( messageExchange );
+			//securityCheckReqResult.setMessageExchange( messageExchange );
 			securityCheckReqResult.setStatus(SecurityCheckStatus.OK);
 			
 		}
