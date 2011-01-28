@@ -108,6 +108,8 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		this.tearDownScript = config.getTearDownScript() != null ? config.getTearDownScript().getStringValue() : "";
 		if( config.getExecutionStrategy() == null )
 			config.setExecutionStrategy( SecurityCheckParameterSelector.SEPARATE_REQUEST_STRATEGY );
+		if( config.getRestParameters() == null)
+			config.setRestParameters(RestParametersConfig.Factory.newInstance());
 		scriptEngine = SoapUIScriptEngineRegistry.create( this );
 	}
 
@@ -123,6 +125,8 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		scriptEngine = SoapUIScriptEngineRegistry.create( this );
 		if( config.getExecutionStrategy() == null )
 			config.setExecutionStrategy( SecurityCheckParameterSelector.SEPARATE_REQUEST_STRATEGY );
+		if( config.getRestParameters() == null)
+			config.setRestParameters(RestParametersConfig.Factory.newInstance());
 	}
 
 	abstract protected SecurityCheckRequestResult execute( TestStep testStep, SecurityTestRunContext context,

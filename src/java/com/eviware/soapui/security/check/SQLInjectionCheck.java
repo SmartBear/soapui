@@ -69,51 +69,7 @@ public class SQLInjectionCheck extends AbstractSecurityCheck implements Sensitiv
 	protected SecurityCheckRequestResult execute( TestStep testStep, SecurityTestRunContext context, SecurityTestLogModel securityTestLog,
 			SecurityCheckRequestResult securityChekResult )
 	{
-		if( acceptsTestStep( testStep ) )
-		{
-			WsdlTestCaseRunner testCaseRunner = new WsdlTestCaseRunner( ( WsdlTestCase )testStep.getTestCase(),
-					new StringToObjectMap() );
-
-			String originalResponse = getOriginalResult( testCaseRunner, testStep ).getResponse().getContentAsXml();
-
-			if( getExecutionStrategy().equals( SecurityCheckParameterSelector.SEPARATE_REQUEST_STRATEGY ) )
-			{
-				for( RestParameterConfig param : getParameters().getParameterList() )
-				{
-					Fuzzer sqlFuzzer = Fuzzer.getSQLFuzzer();
-
-					while( sqlFuzzer.hasNext() )
-					{
-						sqlFuzzer.getNextFuzzedTestStep( testStep, param.getName() );
-						runCheck( testStep, context, securityTestLog, testCaseRunner, originalResponse,
-								"Possible SQL injection vulenerability detected" );
-						// maybe this fuzzer can be implemented to wrap the
-						// security
-						// check not vice versa
-
-					}
-
-				}
-			}
-			else
-			{
-
-
-				while( sqlFuzzer.hasNext() )
-				{
-					sqlFuzzer.getNextFuzzedTestStep( testStep, getParameters() );
-					runCheck( testStep, context, securityTestLog, testCaseRunner, originalResponse,
-							"Possible SQL injection vulenerability detected" );
-
-					// maybe this fuzzer can be implemented to wrap the
-					// security
-					// check not vice versa
-
-				}
-
-			}
-		}
-		//TODO
+		
 		return null;
 	}
 
@@ -126,25 +82,6 @@ public class SQLInjectionCheck extends AbstractSecurityCheck implements Sensitiv
 	public SecurityCheckRequestResult analyze( TestStep testStep, SecurityTestRunContext context, SecurityTestLogModel securityTestLog,
 			SecurityCheckRequestResult securityCheckResult )
 	{
-		// TODO: Make this test more extensive
-		AbstractHttpRequest<?> lastRequest = getRequest( testStep );
-		MessageExchange messageExchange = new HttpResponseMessageExchange((HttpTestRequestInterface<?>) lastRequest );
-
-		securityCheckResult.setMessageExchange( messageExchange );
-		
-
-		if( SecurityCheckUtil.contains( context, new String( messageExchange.getRawResponseData() ),
-				"SQL Error", false ) )
-		{
-			securityTestLog.addEntry( new SecurityTestLogMessageEntry( "SQL Error displayed in response", null
-			/* new HttpResponseMessageExchange(lastRequest) */) );
-			securityCheckResult.setStatus( SecurityCheckStatus.FAILED );
-		}
-		else
-		{
-			securityCheckResult.setStatus( SecurityCheckStatus.OK );
-		}
-		//TODO 
 		return null;
 	}
 
