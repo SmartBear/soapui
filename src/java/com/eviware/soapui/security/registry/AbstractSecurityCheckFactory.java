@@ -49,6 +49,7 @@ public abstract class AbstractSecurityCheckFactory
 	}
 
 	/**
+	 * True for test step on which this check could be aplied.
 	 * 
 	 * @return
 	 */
