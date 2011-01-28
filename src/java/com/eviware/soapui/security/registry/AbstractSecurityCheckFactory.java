@@ -71,9 +71,4 @@ public abstract class AbstractSecurityCheckFactory
 		return false;
 	}
 
-	public boolean canDoSecurityCheck( Securable securable )
-	{
-		// TODO implement appropriately for specific checks implementation
-		return true;
-	}
 }
