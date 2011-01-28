@@ -169,8 +169,6 @@ public class SecurityParamsTable extends JPanel {
 						SwingUtilities.invokeLater(new Runnable() {
 							public void run() {
 								paramsTable.editCellAt(row, 1);
-								paramsTable.getEditorComponent()
-										.requestFocusInWindow();
 							}
 						});
 					}
