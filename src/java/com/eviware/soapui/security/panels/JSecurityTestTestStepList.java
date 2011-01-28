@@ -48,7 +48,6 @@ import com.eviware.soapui.model.support.TestSuiteListenerAdapter;
 import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestSuiteListener;
-import com.eviware.soapui.security.Securable;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.security.support.ProgressBarSecurityTestStepAdapter;
@@ -66,6 +65,7 @@ import com.eviware.soapui.support.swing.AutoscrollSupport;
  * @author dragica.soldo
  */
 
+@SuppressWarnings( "serial" )
 public class JSecurityTestTestStepList extends JPanel
 {
 	private Map<TestStep, TestStepListEnrtyPanel> panels = new HashMap<TestStep, TestStepListEnrtyPanel>();
@@ -81,9 +81,10 @@ public class JSecurityTestTestStepList extends JPanel
 
 	public JSecurityTestTestStepList( SecurityTest securityTest )
 	{
-		testStepListPanel = new JPanel( new BorderLayout() );
-		this.securityTest = securityTest;
+		testStepListPanel = new JPanel();
 		testStepListPanel.setLayout( new BoxLayout( testStepListPanel, BoxLayout.Y_AXIS ) );
+		this.securityTest = securityTest;
+		setLayout( new BoxLayout( this, BoxLayout.Y_AXIS ) );
 
 		for( int c = 0; c < securityTest.getTestCase().getTestStepCount(); c++ )
 		{
@@ -206,6 +207,7 @@ public class JSecurityTestTestStepList extends JPanel
 		}
 	}
 
+	@SuppressWarnings( "serial" )
 	public final class TestStepListEnrtyPanel extends JPanel implements Autoscroll
 	{
 		private final WsdlTestStep testStep;
