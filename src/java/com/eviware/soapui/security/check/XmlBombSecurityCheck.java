@@ -30,6 +30,7 @@ import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.testsuite.SamplerTestStep;
+import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestRunner.Status;
 import com.eviware.soapui.security.SecurityCheckRequestResult;
@@ -126,9 +127,9 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck implements Sensi
 		}
 
 		if( getExecutionStrategy().equals( SecurityCheckParameterSelector.SEPARATE_REQUEST_STRATEGY )
-				&& getParameters().getParameterList().size() > 0 )
+				&& getParameters().getPropertyList().size() > 0 )
 		{
-			for( RestParameterConfig param : getParameters().getParameterList() )
+			for( TestProperty param : getParameters().getPropertyList() )
 			{
 				if( param != null )
 				{
@@ -142,11 +143,11 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck implements Sensi
 				}
 			}
 		}
-		else if( getParameters().getParameterList().size() > 0 )
+		else if( getParameters().getPropertyList().size() > 0 )
 		{
 			while( currentIndex < getBombList().size() + 1 )
 			{
-				generateNextRequest( testStep, getParameters().getParameterList() );
+				generateNextRequest( testStep, getParameters().getPropertyList() );
 				runCheck( testStep, context, securityTestLog, testCaseRunner, originalResponse,
 						"Possible XML Bomb Vulnerability Detected" );
 				getRequest( testStep ).setRequestContent( originalRequest );
@@ -157,7 +158,7 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck implements Sensi
 
 	}
 
-	private TestStep generateNextRequest( TestStep testStep, List<RestParameterConfig> paramsToCheck )
+	private TestStep generateNextRequest( TestStep testStep, List<TestProperty> paramsToCheck )
 	{
 		AbstractHttpRequest<?> request = getRequest( testStep );
 		if( currentIndex < getBombList().size() )
@@ -168,7 +169,7 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck implements Sensi
 			String newRequestContent = requestContent;
 			if( testStep instanceof WsdlTestRequestStep )
 			{
-				for( RestParameterConfig param : paramsToCheck )
+				for( TestProperty param : paramsToCheck )
 				{
 					newRequestContent = XmlUtils.setXPathContent( newRequestContent, param.getName().substring( param.getName()
 							.lastIndexOf( "\n" ) + 1 ), "&&payload&&" );
@@ -262,7 +263,7 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck implements Sensi
 			RestParameterConfig restParam = RestParameterConfig.Factory.newInstance();
 			restParam.setName(param);
 			paramList.add( restParam );
-			request.setRequestContent( createQuadraticExpansionAttack( request.getRequestContent(), paramList ) );
+//			request.setRequestContent( createQuadraticExpansionAttack( request.getRequestContent(), paramList ) );
 		}
 
 		currentIndex++ ;
@@ -347,7 +348,7 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck implements Sensi
 		( ( XmlBombSecurityCheckConfig )config.getConfig() ).setXmlAttachmentPrefix( prefix );
 	}
 
-	private String createQuadraticExpansionAttack( String initialContent, List<RestParameterConfig> params )
+	private String createQuadraticExpansionAttack( String initialContent, List<TestProperty> params )
 	{
 		String result = "";
 
@@ -356,7 +357,7 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck implements Sensi
 
 		if( initialContent != null )
 		{
-			for( RestParameterConfig param : params )
+			for( TestProperty param : params )
 			{
 				initialContent = XmlUtils.setXPathContent( initialContent,
 						param.getName().substring( param.getName().lastIndexOf( "\n" ) + 1 ), "&&payload&&" );

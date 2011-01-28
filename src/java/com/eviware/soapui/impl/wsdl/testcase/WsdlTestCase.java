@@ -904,6 +904,7 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 		List<ModelItem> result = new ArrayList<ModelItem>();
 		result.addAll( getTestStepList() );
 		result.addAll( getLoadTestList() );
+		result.addAll( getSecurityTestList() );
 		return result;
 	}
 

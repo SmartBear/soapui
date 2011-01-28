@@ -25,6 +25,7 @@ import com.eviware.soapui.config.SecurityTestConfig;
 import com.eviware.soapui.config.TestStepSecurityTestConfig;
 import com.eviware.soapui.impl.wsdl.AbstractTestPropertyHolderWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
+import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.TestModelItem;
 import com.eviware.soapui.model.testsuite.TestRunnable;
 import com.eviware.soapui.model.testsuite.TestStep;
@@ -549,6 +550,23 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 	public void removeAllSecurityCheckRunListener()
 	{
 		securityCheckRunListeners.clear();
+	}
+
+	@Override
+	public List<? extends ModelItem> getChildren()
+	{
+		List<ModelItem> result = new ArrayList<ModelItem>();
+		Set<String> testStepIds = getSecurityChecksMap().keySet();
+		for( String testStepId : testStepIds )
+		{
+			List<AbstractSecurityCheck> t = getSecurityChecksMap().get( testStepId );
+			for( int i = 0; i < t.size(); i++ )
+			{
+				AbstractSecurityCheck check = t.get( i );
+				result.add( check );
+			}
+		}
+		return result;
 	}
 
 }

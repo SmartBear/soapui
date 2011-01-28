@@ -31,7 +31,6 @@ import javax.swing.SwingConstants;
 import org.apache.commons.lang.StringUtils;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.config.RestParameterConfig;
 import com.eviware.soapui.config.RestParametersConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
@@ -47,6 +46,8 @@ import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.support.XPathReference;
 import com.eviware.soapui.model.support.XPathReferenceContainer;
+import com.eviware.soapui.model.support.XPathReferenceImpl;
+import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestRunner.Status;
 import com.eviware.soapui.security.Securable;
@@ -85,6 +86,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	protected SecurityCheckRequestResult securityCheckReqResult;
 	private TestStep testStep;
 	private SecurityParamsTable paramTable;
+	RestParamsPropertyHolder parameters;
 
 	// TODO check if should exist and what to do with securable
 	public AbstractSecurityCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent, String icon )
@@ -99,6 +101,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 			config.setExecutionStrategy( SecurityCheckParameterSelector.SEPARATE_REQUEST_STRATEGY );
 		if( config.getRestParameters() == null )
 			config.setRestParameters( RestParametersConfig.Factory.newInstance() );
+
 	}
 
 	abstract protected SecurityCheckRequestResult execute( TestStep testStep, SecurityTestRunContext context,
@@ -198,14 +201,16 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 
 	// TODO to be extracted to specific securityCheck config for those that need
 	// it
-	public void setParameters( RestParametersConfig parameters )
-	{
-		config.setRestParameters( parameters );
-	}
+	// public void setParameters( RestParametersConfig parameters )
+	// {
+	// config.setRestParameters( parameters );
+	// }
 
-	public RestParametersConfig getParameters()
+	public RestParamsPropertyHolder getParameters()
 	{
-		return config.getRestParameters();
+		RestParamsPropertyHolder params = new XmlBeansRestParamsTestPropertyHolder( getRequest( getTestStep() ), config
+				.getRestParameters() );
+		return params;
 	}
 
 	/*************************************
@@ -304,9 +309,6 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 
 		builder.setBorder( BorderFactory.createEmptyBorder( 1, 5, 5, 5 ) );
 
-		RestParamsPropertyHolder params = new XmlBeansRestParamsTestPropertyHolder( getRequest( getTestStep() ),
-				getParameters() );
-
 		RestParamsPropertyHolder requestParams;
 
 		if( getTestStep() instanceof WsdlTestRequestStep )
@@ -318,7 +320,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 			requestParams = getRequest( getTestStep() ).getParams();
 		}
 
-		paramTable = new SecurityParamsTable( params, requestParams );
+		paramTable = new SecurityParamsTable( getParameters(), requestParams );
 
 		JInspectorPanel parameter = JInspectorPanelFactory.build( paramTable, SwingConstants.BOTTOM );
 
@@ -437,12 +439,12 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		return config;
 	}
 
-	@Override
-	public List<? extends ModelItem> getChildren()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
+//	@Override
+//	public List<? extends ModelItem> getChildren()
+//	{
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
 
 	@Override
 	public String getDescription()
@@ -600,12 +602,11 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	{
 		List<XPathReference> result = new ArrayList<XPathReference>();
 
-		for( RestParameterConfig param : getParameters().getParameterList() )
+		for( TestProperty param : getParameters().getPropertyList() )
 		{
-			// if( StringUtils.isNotEmpty( param ) )
-			// result.add( new XPathReferenceImpl( "SecurityCheck Parameter " +
-			// param, transfer.getSourceProperty(),
-			// this, param ) );
+			if( param != null )
+				result.add( new XPathReferenceImpl( "SecurityCheck Parameter " + param.getName(), param, this, param
+						.getName() ) );
 
 		}
 

@@ -17,10 +17,12 @@ import java.util.List;
 import com.eviware.soapui.config.FuzzerConfig;
 import com.eviware.soapui.config.RestParameterConfig;
 import com.eviware.soapui.config.RestParametersConfig;
+import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestInterface;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStepInterface;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
+import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.support.xml.XmlUtils;
 
@@ -90,13 +92,13 @@ public class Fuzzer {
 	 * 
 	 */
 	public void getNextFuzzedTestStep(TestStep testStep,
-			RestParametersConfig parameters) {
+			RestParamsPropertyHolder parameters) {
 		if (currentIndex < config.getValueList().size()) {
 			if (testStep instanceof WsdlTestRequestStep) {
 				AbstractHttpRequest<?> request = ((WsdlTestRequestStep) testStep)
 						.getHttpRequest();
 				String newContent = request.getRequestContent();
-				for (RestParameterConfig param : parameters.getParameterList()) {
+				for (TestProperty param : parameters.getPropertyList()) {
 					newContent = XmlUtils.setXPathContent(newContent,
 							param.getDescription()
 									.substring(
@@ -109,7 +111,7 @@ public class Fuzzer {
 			} else {
 				HttpTestRequestInterface<?> request = ((HttpTestRequestStepInterface) testStep)
 						.getTestRequest();
-				for (RestParameterConfig param : parameters.getParameterList())
+				for (TestProperty param : parameters.getPropertyList())
 					request.setPropertyValue(param.getName(), config
 							.getValueArray(currentIndex));
 			}

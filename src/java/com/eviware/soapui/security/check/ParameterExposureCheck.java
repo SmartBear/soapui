@@ -128,15 +128,15 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements
 			
 			params = httpRequest.getParams();
 		
-			List<RestParameterConfig> paramsToCheck;
+			List<TestProperty> paramsToCheck;
 			
 		
 				
-			paramsToCheck = getParameters().getParameterList();
+			paramsToCheck = getParameters().getPropertyList();
 			
 
 
-			for (RestParameterConfig parameter : paramsToCheck) {
+			for (TestProperty parameter : paramsToCheck) {
 				if (parameter != null) {
 					TestProperty testParameter = params.get(parameter.getName());
 
