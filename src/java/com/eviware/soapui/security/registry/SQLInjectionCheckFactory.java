@@ -34,15 +34,15 @@ public class SQLInjectionCheckFactory extends AbstractSecurityCheckFactory
 				"/sql_injection_check_script.gif" );
 	}
 
-	public boolean canCreate(TestStep testStep)
+	public boolean canCreate( TestStep testStep )
 	{
 		return true;
 	}
 
 	@Override
-	public AbstractSecurityCheck buildSecurityCheck( TestStep testStep,SecurityCheckConfig config, ModelItem parent )
+	public AbstractSecurityCheck buildSecurityCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent )
 	{
-		return new SQLInjectionCheck( config, null, null, testStep );
+		return new SQLInjectionCheck( config, parent, null, testStep );
 	}
 
 	@Override
