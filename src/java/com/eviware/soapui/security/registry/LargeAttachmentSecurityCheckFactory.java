@@ -50,6 +50,7 @@ public class LargeAttachmentSecurityCheckFactory extends AbstractSecurityCheckFa
 		securityCheckConfig.setType(LargeAttachmentSecurityCheck.TYPE);
 		securityCheckConfig.setName(name);
 		LargeAttachmentSecurityCheckConfig sic = LargeAttachmentSecurityCheckConfig.Factory.newInstance();
+		sic.setSize(4 * 1024 * 1024 * 1024);
 		securityCheckConfig.setConfig(sic);
 		return securityCheckConfig;
 	}

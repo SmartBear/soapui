@@ -69,7 +69,7 @@ public class SecurityParamsTable extends JPanel {
 	protected void init(RestParamsPropertyHolder params) {
 		paramsTableModel = createTableModel(params);
 		paramsTable = new JTable(paramsTableModel);
-		paramsTable.setRowHeight(19);
+		paramsTable.setRowHeight(10);
 		paramsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		paramsTable.setDefaultEditor(ParameterStyle.class,
 				new DefaultCellEditor(new JComboBox(new Object[] {

@@ -26,6 +26,7 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
 import javax.swing.SwingConstants;
 
 import org.apache.commons.lang.StringUtils;
@@ -57,6 +58,7 @@ import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.log.SecurityTestLogMessageEntry;
 import com.eviware.soapui.security.log.SecurityTestLogModel;
 import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
+import com.eviware.soapui.security.ui.SecurityCheckExecutionStrategyPanel;
 import com.eviware.soapui.security.ui.SecurityParamsTable;
 import com.eviware.soapui.support.SecurityCheckUtil;
 import com.eviware.soapui.support.UISupport;
@@ -69,6 +71,9 @@ import com.jgoodies.forms.builder.ButtonBarBuilder;
 public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<SecurityCheckConfig> implements
 		XPathReferenceContainer
 {
+	public static final String SINGLE_REQUEST_STRATEGY = "A single request with all the parameters";
+	public static final String SEPARATE_REQUEST_STRATEGY =  "Seperate request for each parameter";
+	
 	// configuration of specific request modification
 	private static final int MINIMUM_STRING_DISTANCE = 50;
 	protected SecurityCheckConfig config;
@@ -79,14 +84,16 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	protected JPanel panel;
 	protected JDialog dialog;
 	private boolean configureResult;
-	private SecurityCheckParameterSelector parameterSelector;
 	protected Status status;
 	SecurityCheckConfigPanel contentPanel;
 	protected SecurityCheckResult securityCheckResult;
 	protected SecurityCheckRequestResult securityCheckReqResult;
 	private TestStep testStep;
 	private SecurityParamsTable paramTable;
+
+	private JTabbedPane tabs;
 	RestParamsPropertyHolder parameters;
+
 
 	// TODO check if should exist and what to do with securable
 	public AbstractSecurityCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent, String icon )
@@ -98,7 +105,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		this.tearDownScript = config.getTearDownScript() != null ? config.getTearDownScript().getStringValue() : "";
 		scriptEngine = SoapUIScriptEngineRegistry.create( this );
 		if( config.getExecutionStrategy() == null )
-			config.setExecutionStrategy( SecurityCheckParameterSelector.SEPARATE_REQUEST_STRATEGY );
+			config.setExecutionStrategy( SEPARATE_REQUEST_STRATEGY );
 		if( config.getRestParameters() == null )
 			config.setRestParameters( RestParametersConfig.Factory.newInstance() );
 
@@ -106,30 +113,6 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 
 	abstract protected SecurityCheckRequestResult execute( TestStep testStep, SecurityTestRunContext context,
 			SecurityTestLogModel securityTestLog, SecurityCheckRequestResult securityChekResult );
-
-	/**
-	 * Runs the test (internaly calls analyze)
-	 * 
-	 * @param testStep
-	 *           The TestStep that the check will be applied to
-	 * @param context
-	 *           The context to run the test in
-	 * @param securityTestLog
-	 *           The security log to write to
-	 */
-	// public SecurityCheckRequestResult run( TestStep testStep,
-	// SecurityTestRunContext context,
-	// SecurityTestLogModel securityTestLog )
-	// {
-	// securityCheckResult = new SecurityCheckRequestResult( this );
-	// // setStatus( Status.INITIALIZED );
-	// runStartupScript( testStep );
-	// securityCheckResult = execute( testStep, context, securityTestLog,
-	// securityCheckResult );
-	// sensitiveInfoCheck( testStep, context, securityTestLog );
-	// runTearDownScript( testStep );
-	// return securityCheckResult;
-	// }
 
 	/*************************************
 	 * START OF NEWLY REFACTORED
@@ -321,25 +304,35 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		}
 
 		paramTable = new SecurityParamsTable( getParameters(), requestParams );
+		paramTable.setPreferredSize( new Dimension( 300, 200 ) );
 
 		JInspectorPanel parameter = JInspectorPanelFactory.build( paramTable, SwingConstants.BOTTOM );
+		
+		tabs = new JTabbedPane();
+		
+		tabs.addTab("Execution Strategy", new SecurityCheckExecutionStrategyPanel(getExecutionStrategy()));
 
 		if( contentPanel != null )
 		{
-			fullPanel.setPreferredSize( new Dimension( 300, 500 ) );
+			fullPanel.setPreferredSize( new Dimension( 300, 400 ) );
 			contentPanel.setPreferredSize( new Dimension( 300, 200 ) );
 			contentPanel.add( builder.getPanel(), BorderLayout.SOUTH );
-			JSplitPane splitPane = UISupport.createVerticalSplit( new JScrollPane( parameter.getComponent() ),
-					new JScrollPane( contentPanel ) );
+			JSplitPane topPane = UISupport.createVerticalSplit( new JScrollPane( parameter.getComponent() ),
+					new JScrollPane( contentPanel ));
+			JSplitPane splitPane = UISupport.createVerticalSplit( topPane,
+					tabs );
 
 			dialog.setContentPane( splitPane );
 		}
 		else
 		{
-			fullPanel.setPreferredSize( new Dimension( 300, 500 ) );
-			fullPanel.add( builder.getPanel(), BorderLayout.NORTH );
-			fullPanel.add( paramTable, BorderLayout.SOUTH );
-			dialog.setContentPane( fullPanel );
+			//fullPanel.setPreferredSize( new Dimension( 300, 400 ) );
+			//fullPanel.add( builder.getPanel(), BorderLayout.SOUTH );
+			paramTable.add( builder.getPanel(), BorderLayout.SOUTH );
+			JSplitPane splitPane = UISupport.createVerticalSplit( paramTable,
+					new JScrollPane( tabs ));
+			//fullPanel.add( paramTable, BorderLayout.NORTH );
+			dialog.setContentPane( splitPane );
 		}
 
 		dialog.setModal( true );

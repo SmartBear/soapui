@@ -39,8 +39,6 @@ import org.w3c.dom.Node;
 
 public class SecurityCheckParameterSelector extends JPanel implements
 		TestPropertyListener {
-	public static final String SINGLE_REQUEST_STRATEGY = "A single request with all the parameters";
-	public static final String SEPARATE_REQUEST_STRATEGY =  "Seperate request for each parameter";
 	
 	private List<String> paramsToCheck;
 	private JRadioButton separateButton;
@@ -55,9 +53,9 @@ public class SecurityCheckParameterSelector extends JPanel implements
 		
 		// create execution strategy panel
 		ButtonGroup executionStrategyGroup = new ButtonGroup();
-		separateButton = new JRadioButton( SEPARATE_REQUEST_STRATEGY, strategy.equals(SEPARATE_REQUEST_STRATEGY) );
+		separateButton = new JRadioButton( AbstractSecurityCheck.SEPARATE_REQUEST_STRATEGY, strategy.equals(AbstractSecurityCheck.SEPARATE_REQUEST_STRATEGY) );
 		separateButton.setBorder( BorderFactory.createEmptyBorder( 3, 3, 3, 3 ) );
-		singleButton = new JRadioButton( SINGLE_REQUEST_STRATEGY, strategy.equals(SINGLE_REQUEST_STRATEGY) );
+		singleButton = new JRadioButton( AbstractSecurityCheck.SINGLE_REQUEST_STRATEGY, strategy.equals(AbstractSecurityCheck.SINGLE_REQUEST_STRATEGY) );
 		singleButton.setBorder( BorderFactory.createEmptyBorder( 3, 3, 3, 3 ) );
 		executionStrategyGroup.add( separateButton );
 		executionStrategyGroup.add( singleButton );
@@ -99,9 +97,9 @@ public class SecurityCheckParameterSelector extends JPanel implements
 	
 	public String getExecutionStrategy() {
 		if (singleButton.isSelected()) {
-			return SINGLE_REQUEST_STRATEGY;
+			return AbstractSecurityCheck.SINGLE_REQUEST_STRATEGY;
 		} else {
-			return SEPARATE_REQUEST_STRATEGY;
+			return AbstractSecurityCheck.SEPARATE_REQUEST_STRATEGY;
 		}
 	}
 

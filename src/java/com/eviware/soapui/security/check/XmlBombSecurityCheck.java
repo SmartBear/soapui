@@ -126,7 +126,7 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck implements Sensi
 			currentIndex = 0;
 		}
 
-		if( getExecutionStrategy().equals( SecurityCheckParameterSelector.SEPARATE_REQUEST_STRATEGY )
+		if( getExecutionStrategy().equals( AbstractSecurityCheck.SEPARATE_REQUEST_STRATEGY )
 				&& getParameters().getPropertyList().size() > 0 )
 		{
 			for( TestProperty param : getParameters().getPropertyList() )

@@ -32,6 +32,7 @@ public class LargeAttachmentSecurityCheck extends AbstractSecurityCheck
 			config = SecurityCheckConfig.Factory.newInstance();
 			LargeAttachmentSecurityCheckConfig mascc = LargeAttachmentSecurityCheckConfig.Factory
 					.newInstance();
+			mascc.setSize(4 * 1024 * 1024 * 1024);
 			config.setConfig(mascc);
 		}
 		if (config.getConfig() == null) {
