@@ -491,6 +491,20 @@ public class XmlBeansRestParamsTestPropertyHolder implements RestParamsPropertyH
 		{
 			setValue( getDefaultValue() );
 		}
+
+		@Override
+		public String getPath() {
+			return propertyConfig.getPath();
+			
+		}
+
+		@Override
+		public void setPath(String path) {
+			String old = getPath();
+			propertyConfig.setPath( path );
+			propertySupport.firePropertyChange( "path", old, path );
+			
+		}
 	}
 
 	/*
@@ -817,6 +831,7 @@ public class XmlBeansRestParamsTestPropertyHolder implements RestParamsPropertyH
 		prop.setDefaultValue( property.getDefaultValue() );
 		prop.setDescription( property.getDescription() );
 		prop.setOptions( property.getOptions() );
+		prop.setPath(property.getPath());
 		prop.setRequired( property.getRequired() );
 	}
 

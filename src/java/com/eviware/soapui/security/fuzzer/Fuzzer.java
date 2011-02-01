@@ -17,6 +17,7 @@ import java.util.List;
 import com.eviware.soapui.config.FuzzerConfig;
 import com.eviware.soapui.config.RestParameterConfig;
 import com.eviware.soapui.config.RestParametersConfig;
+import com.eviware.soapui.impl.rest.support.RestParameter;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestInterface;
@@ -99,10 +100,11 @@ public class Fuzzer {
 						.getHttpRequest();
 				String newContent = request.getRequestContent();
 				for (TestProperty param : parameters.getPropertyList()) {
+					RestParameter restParam = (RestParameter)param;
 					newContent = XmlUtils.setXPathContent(newContent,
-							param.getDescription()
+							restParam.getPath()
 									.substring(
-											param.getDescription().lastIndexOf(
+											restParam.getPath().lastIndexOf(
 													"\n") + 1), config
 									.getValueArray(currentIndex));
 				}

@@ -49,4 +49,8 @@ public interface RestParameter
 	void setType( QName arg0 );
 
 	void setDefaultValue( String default1 );
+	
+	String getPath();
+	
+	void setPath(String path);
 }

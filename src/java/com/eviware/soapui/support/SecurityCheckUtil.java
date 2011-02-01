@@ -103,7 +103,7 @@ public class SecurityCheckUtil
 				String xpath = XmlUtils.createAbsoluteXPath(node.getParentNode()); 
 				RestParamProperty property = holder.addProperty(node.getParentNode().getNodeName());
 				property.setValue(node.getNodeValue());
-				property.setDescription(xpath); //this should really be in a spearate parameter, but I am just testing some things out.
+				property.setPath(xpath); 
 			}
 		} catch (XmlException e) {
 			SoapUI.logError( e );
