@@ -498,9 +498,9 @@ public class SoapUISecurityTestRunner extends AbstractSoapUITestRunner
 	{
 		SecurityTestRunnerImpl testRunner = new SecurityTestRunnerImpl( securityTest );
 		testRunner.start( false );
-		log.info( "\n" + securityTest.getSecurityTestLog().getMessages() );
-		log.info( "SecurityTest [" + securityTest.getName() + "] finished  in " + ( testRunner.getTimeTaken() )
-				+ "ms" );
+//		log.info( "\n" + securityTest.getSecurityTestLog().getMessages() );
+//		log.info( "SecurityTest [" + securityTest.getName() + "] finished  in " + ( testRunner.getTimeTaken() )
+//				+ "ms" );
 	}
 
 	/**

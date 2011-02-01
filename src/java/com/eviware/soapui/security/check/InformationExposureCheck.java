@@ -152,17 +152,19 @@ public class InformationExposureCheck extends AbstractSecurityCheck implements H
 	private void logSecurityInfo( MessageExchange messageExchange, JSecurityTestRunLog securityTestLog,
 			String exposureContent )
 	{
-		securityTestLog.addEntry( new SecurityTestLogMessageEntry( "In Test Step = '"
-				+ messageExchange.getModelItem().getName() + "' sensitive information '" + exposureContent
-				+ "' is detected in response. ", messageExchange ) );
+		// TODO refactor through SecurityCheckResult
+//		securityTestLog.addEntry( new SecurityTestLogMessageEntry( "In Test Step = '"
+//				+ messageExchange.getModelItem().getName() + "' sensitive information '" + exposureContent
+//				+ "' is detected in response. ", messageExchange ) );
 	}
 
 	private void logSecurityInfo( MessageExchange messageExchange, SecurityTestLogModel securityTestLog,
 			String exposureContent )
 	{
-		securityTestLog.addEntry( new SecurityTestLogMessageEntry( "In Test Step = '"
-				+ messageExchange.getModelItem().getName() + "' sensitive information '" + exposureContent
-				+ "' is detected in response. ", messageExchange ) );
+		// TODO refactor through SecurityCheckResult
+//		securityTestLog.addEntry( new SecurityTestLogMessageEntry( "In Test Step = '"
+//				+ messageExchange.getModelItem().getName() + "' sensitive information '" + exposureContent
+//				+ "' is detected in response. ", messageExchange ) );
 	}
 
 	@Override

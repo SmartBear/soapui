@@ -97,8 +97,10 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements
 	}
 
 	@Override
-	protected SecurityCheckRequestResult execute(TestStep testStep, SecurityTestRunContext context,
-			SecurityTestLogModel securityTestLog, SecurityCheckRequestResult securityChekResult) {
+	protected SecurityCheckRequestResult execute(TestStep testStep,
+			SecurityTestRunContext context,
+			SecurityTestLogModel securityTestLog,
+			SecurityCheckRequestResult securityChekResult) {
 		if (acceptsTestStep(testStep)) {
 			WsdlTestCaseRunner testCaseRunner = new WsdlTestCaseRunner(
 					(WsdlTestCase) testStep.getTestCase(),
@@ -107,13 +109,15 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements
 			testStep.run(testCaseRunner, testCaseRunner.getRunContext());
 			analyze(testStep, context, securityTestLog, null);
 		}
-		//TODO
+		// TODO
 		return null;
 	}
 
 	@Override
-	public SecurityCheckRequestResult analyze(TestStep testStep, SecurityTestRunContext context,
-			SecurityTestLogModel securityTestLog, SecurityCheckRequestResult securityCheckResult) {
+	public SecurityCheckRequestResult analyze(TestStep testStep,
+			SecurityTestRunContext context,
+			SecurityTestLogModel securityTestLog,
+			SecurityCheckRequestResult securityCheckResult) {
 		if (acceptsTestStep(testStep)) {
 			HttpTestRequestStepInterface testStepwithProperties = (HttpTestRequestStepInterface) testStep;
 			HttpTestRequestInterface<?> request = testStepwithProperties
@@ -125,48 +129,47 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements
 
 			AbstractHttpRequest<?> httpRequest = testStepwithProperties
 					.getHttpRequest();
-			
-			params = httpRequest.getParams();
-		
-			List<TestProperty> paramsToCheck;
-			
-		
-				
-			paramsToCheck = getParameters().getPropertyList();
-			
 
+			params = httpRequest.getParams();
+
+			List<TestProperty> paramsToCheck;
+
+			paramsToCheck = getParameters().getPropertyList();
 
 			for (TestProperty parameter : paramsToCheck) {
 				if (parameter != null) {
-					TestProperty testParameter = params.get(parameter.getName());
+					TestProperty testParameter = params
+							.get(parameter.getName());
 
-					if (testParameter != null && testParameter.getValue() != null
+					if (testParameter != null
+							&& testParameter.getValue() != null
 							&& testParameter.getValue().length() >= getMinimumLength()) {
 						TestAssertionConfig assertionConfig = TestAssertionConfig.Factory
 								.newInstance();
 						assertionConfig.setType(SimpleContainsAssertion.ID);
 
-						
-
-						if (SecurityCheckUtil.contains( context, new String( messageExchange.getRawResponseData() ),
-								testParameter.getValue(), false )) {
-							securityTestLog
-									.addEntry(new SecurityTestLogMessageEntry(
-											"The parameter "
-													+ testParameter.getName()
-													+ " with the value \""
-													+ testParameter.getValue()
-													+ "\" is exposed in the response",
-											messageExchange));
-							securityCheckResult.setStatus(SecurityCheckStatus.FAILED);
+						if (SecurityCheckUtil.contains(context, new String(
+								messageExchange.getRawResponseData()),
+								testParameter.getValue(), false)) {
+							// TODO refactor through SecurityCheckResult
+							// securityTestLog
+							// .addEntry(new SecurityTestLogMessageEntry(
+							// "The parameter "
+							// + testParameter.getName()
+							// + " with the value \""
+							// + testParameter.getValue()
+							// + "\" is exposed in the response",
+							// messageExchange));
+							securityCheckResult
+									.setStatus(SecurityCheckStatus.FAILED);
 						}
 					}
 				}
 			}
-//			if (getStatus() != Status.FAILED)
-//				setStatus(Status.FINISHED);
+			// if (getStatus() != Status.FAILED)
+			// setStatus(Status.FINISHED);
 		}
-		//TODO
+		// TODO
 		return null;
 	}
 
@@ -191,7 +194,7 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements
 				.getMinimumLength();
 	}
 
-	//QUESTION:
+	// QUESTION:
 	// Why not soap too?
 	@Override
 	public boolean acceptsTestStep(TestStep testStep) {
@@ -201,7 +204,7 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements
 
 	@Override
 	public SecurityCheckConfigPanel getComponent() {
-	
+
 		return new ParameterExposureCheckPanel(this);
 	}
 
@@ -228,8 +231,6 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements
 	// dialog.pack();
 	// }
 
-
-
 	@Override
 	public String getType() {
 		return TYPE;
@@ -247,11 +248,12 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements
 			if (paramValue != null && paramValue.length() >= getMinimumLength()) {
 				if (messageExchange.getResponseContent().indexOf(paramValue) > -1
 						&& securityTestLog != null) {
-					securityTestLog.addEntry(new SecurityTestLogMessageEntry(
-							"The parameter " + paramName + " with the value \""
-									+ paramValue
-									+ "\" is exposed in the response",
-							messageExchange));
+					// TODO refactor through SecurityCheckResult
+					// securityTestLog.addEntry(new SecurityTestLogMessageEntry(
+					// "The parameter " + paramName + " with the value \""
+					// + paramValue
+					// + "\" is exposed in the response",
+					// messageExchange));
 				}
 			}
 		}

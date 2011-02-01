@@ -27,11 +27,9 @@ import com.eviware.soapui.support.action.swing.ActionList;
  * @author dragica.soldo
  */
 
-public class SecurityCheckRequestResult
-{
-	public enum SecurityCheckStatus
-	{
-		OK, FAILED
+public class SecurityCheckRequestResult {
+	public enum SecurityCheckStatus {
+		INITIALIZED, OK, FAILED
 	}
 
 	private static final String[] EMPTY_MESSAGES = new String[0];
@@ -45,23 +43,20 @@ public class SecurityCheckRequestResult
 	private boolean discarded;
 	private MessageExchange messageExchange;
 
-	public SecurityCheckRequestResult( AbstractSecurityCheck securityCheck )
-	{
+	public SecurityCheckRequestResult(AbstractSecurityCheck securityCheck) {
+		status = SecurityCheckStatus.INITIALIZED;
 		this.securityCheck = securityCheck;
 	}
 
-	public SecurityCheckStatus getStatus()
-	{
+	public SecurityCheckStatus getStatus() {
 		return status;
 	}
 
-	public void setStatus( SecurityCheckStatus status )
-	{
+	public void setStatus(SecurityCheckStatus status) {
 		this.status = status;
 	}
 
-	public AbstractSecurityCheck getSecurityCheck()
-	{
+	public AbstractSecurityCheck getSecurityCheck() {
 		return securityCheck;
 	}
 
@@ -69,31 +64,27 @@ public class SecurityCheckRequestResult
 	 * Returns a list of actions that can be applied to this result
 	 */
 
-	public ActionList getActions()
-	{
+	public ActionList getActions() {
 		return null;
 	}
 
-	public String[] getMessages()
-	{
-		return messages == null ? EMPTY_MESSAGES : messages.toArray( new String[messages.size()] );
+	public String[] getMessages() {
+		return messages == null ? EMPTY_MESSAGES : messages
+				.toArray(new String[messages.size()]);
 	}
 
-	public void addMessage( String message )
-	{
-		if( messages != null )
-			messages.add( message );
+	public void addMessage(String message) {
+		if (messages != null)
+			messages.add(message);
 	}
 
 	// public Throwable getError();
 
-	public long getTimeTaken()
-	{
+	public long getTimeTaken() {
 		return timeTaken;
 	}
 
-	public long getTimeStamp()
-	{
+	public long getTimeStamp() {
 		return timeStamp;
 	}
 
@@ -103,8 +94,7 @@ public class SecurityCheckRequestResult
 	 * @return the number of bytes in this result
 	 */
 
-	public long getSize()
-	{
+	public long getSize() {
 		return size;
 	}
 
@@ -112,8 +102,7 @@ public class SecurityCheckRequestResult
 	 * Writes this result to the specified writer, used for logging.
 	 */
 
-	public void writeTo( PrintWriter writer )
-	{
+	public void writeTo(PrintWriter writer) {
 
 	}
 
@@ -122,36 +111,30 @@ public class SecurityCheckRequestResult
 	 * must not be discarded.
 	 */
 
-	public void discard()
-	{
+	public void discard() {
 
 	}
 
-	public boolean isDiscarded()
-	{
+	public boolean isDiscarded() {
 		return discarded;
 	}
 
-	public MessageExchange getMessageExchange()
-	{
+	public MessageExchange getMessageExchange() {
 		return messageExchange;
 	}
 
 	// TODO not sure if this should exist, it should be set when result is
 	// created
 	// but for now for first step refactoring it's added this way
-	public void setMessageExchange( MessageExchange messageExchange )
-	{
+	public void setMessageExchange(MessageExchange messageExchange) {
 		this.messageExchange = messageExchange;
 	}
 
-	public void setTimeTaken( long timeTaken )
-	{
+	public void setTimeTaken(long timeTaken) {
 		this.timeTaken = timeTaken;
 	}
 
-	public void setStart( long startTime )
-	{
+	public void setStart(long startTime) {
 		this.timeStamp = startTime;
 	}
 

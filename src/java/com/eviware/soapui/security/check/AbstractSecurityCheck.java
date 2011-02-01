@@ -528,18 +528,6 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		config.setExecutionStrategy( strategy );
 	}
 
-	/**
-	 * List of log entries from specific check this should reflect success of the
-	 * check to be used in progress bar of specific test step
-	 * 
-	 * @return
-	 */
-	public List<SecurityTestLogMessageEntry> getSecurityTestLogEntries()
-	{
-		// TODO implement properly in subclasses
-		return new ArrayList<SecurityTestLogMessageEntry>();
-	}
-
 	protected AbstractHttpRequest<?> getOriginalResult( WsdlTestCaseRunner testCaseRunner, TestStep testStep )
 	{
 		testStep.run( testCaseRunner, testCaseRunner.getRunContext() );
@@ -575,10 +563,11 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		{
 			if( StringUtils.getLevenshteinDistance( originalResponse, lastRequest.getResponse().getContentAsString() ) > MINIMUM_STRING_DISTANCE )
 			{
-				securityTestLog.addEntry( new SecurityTestLogMessageEntry( message, null
 				/*
+
+				securityTestLog.addEntry( new SecurityTestLogMessageEntry( message, null
 				 * new HttpResponseMessageExchange( lastRequest)
-				 */) );
+				 ) );*/
 				// TODO implement this through SecurityCheckResult
 				// setStatus( Status.FAILED );
 			}

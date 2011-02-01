@@ -36,6 +36,7 @@ import com.eviware.soapui.impl.wsdl.monitor.SoapMonitor;
 import com.eviware.soapui.impl.wsdl.support.MessageExchangeModelItem;
 import com.eviware.soapui.impl.wsdl.teststeps.actions.ShowMessageExchangeAction;
 import com.eviware.soapui.model.settings.Settings;
+import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.security.SecurityCheckRequestResult;
 import com.eviware.soapui.security.SecurityCheckResult;
 import com.eviware.soapui.security.SecurityTest;
@@ -161,12 +162,12 @@ public class JSecurityTestRunLog extends JPanel
 	 * com.eviware.soapui.impl.wsdl.panels.testcase.TestRunLog#addText(java.lang
 	 * .String)
 	 */
-	public synchronized void addEntry( SecurityTestLogMessageEntry securityTestLogMessageEntry )
-	{
-		logListModel.addEntry( securityTestLogMessageEntry );
-		if( follow )
-			testLogList.ensureIndexIsVisible( logListModel.getSize() - 1 );
-	}
+//	public synchronized void addEntry( SecurityTestLogMessageEntry securityTestLogMessageEntry )
+//	{
+//		logListModel.addEntry( securityTestLogMessageEntry );
+//		if( follow )
+//			testLogList.ensureIndexIsVisible( logListModel.getSize() - 1 );
+//	}
 
 	/*
 	 * 
@@ -316,13 +317,13 @@ public class JSecurityTestRunLog extends JPanel
 			{
 				out.println( value.toString() );
 			}
-			else if( value instanceof SecurityTestLogMessageEntry )
-			{
-				SecurityTestLogMessageEntry logItem = ( SecurityTestLogMessageEntry )value;
-				String msg = logItem.getMessage();
-				if( StringUtils.hasContent( msg ) )
-					out.println( msg );
-			}
+//			else if( value instanceof SecurityTestLogMessageEntry )
+//			{
+//				SecurityTestLogMessageEntry logItem = ( SecurityTestLogMessageEntry )value;
+//				String msg = logItem.getMessage();
+//				if( StringUtils.hasContent( msg ) )
+//					out.println( msg );
+//			}
 		}
 	}
 
@@ -340,15 +341,23 @@ public class JSecurityTestRunLog extends JPanel
 			int index = testLogList.getSelectedIndex();
 			if( index != -1 && ( index == selectedIndex || e.getClickCount() > 1 ) )
 			{
-				SecurityTestLogMessageEntry entry = ( SecurityTestLogMessageEntry )testLogList.getSelectedValue();
-				if( entry.getMessageExchange() != null )
+				SecurityCheckResult result = logListModel.getResultAt( index );
+				//TODO see how this default action is implemented, maybe thats's the way to implement opening 
+				//message exchange
+//				if( result != null && result.getActions() != null )
+//					result.getActions().performDefaultAction( new ActionEvent( this, 0, null ) );
+				if( !result.getSecurityRequestResultList().isEmpty())
 				{
-					ShowMessageExchangeAction showMessageExchangeAction = new ShowMessageExchangeAction( entry
-							.getMessageExchange(), "SecurityCheck" );
-					showMessageExchangeAction.actionPerformed( new ActionEvent( this, 0, null ) );
+					
+					for ( SecurityCheckRequestResult reqResult : result.getSecurityRequestResultList() ) 
+					{
+						ShowMessageExchangeAction showMessageExchangeAction = new ShowMessageExchangeAction( reqResult
+								.getMessageExchange(), "SecurityCheck" );
+						showMessageExchangeAction.actionPerformed( new ActionEvent( this, 0, null ) );
+					}
 				}
 			}
-
+			
 			selectedIndex = index;
 		}
 
