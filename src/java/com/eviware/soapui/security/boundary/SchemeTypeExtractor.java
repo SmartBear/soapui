@@ -13,14 +13,22 @@ package com.eviware.soapui.security.boundary;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeMap;
 
 import javax.swing.tree.TreePath;
+import javax.wsdl.Binding;
+import javax.wsdl.Definition;
+import javax.wsdl.Message;
+import javax.wsdl.Operation;
+import javax.wsdl.Part;
+import javax.xml.namespace.QName;
 
-import org.apache.xmlbeans.SchemaType;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
+import org.w3c.dom.Element;
 
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
+import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlContext;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequest;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.testsuite.TestStep;
@@ -30,9 +38,10 @@ import com.eviware.soapui.support.xml.XmlObjectTreeModel.XmlTreeNode;
 
 public class SchemeTypeExtractor
 {
-	
+
 	private WsdlRequest request;
 	private List<NodeInfo> nodeInfoList = new ArrayList<NodeInfo>();
+	private TreeMap<String, Part> variableSet;
 
 	public SchemeTypeExtractor( WsdlTestRequest request )
 	{
@@ -41,25 +50,108 @@ public class SchemeTypeExtractor
 
 	public SchemeTypeExtractor( TestStep testStep )
 	{
-		if ( testStep instanceof WsdlTestRequestStep ) {
-			request = ((WsdlTestRequestStep)testStep).getHttpRequest();
+		if( testStep instanceof WsdlTestRequestStep )
+		{
+			request = ( ( WsdlTestRequestStep )testStep ).getHttpRequest();
 		}
+
 	}
 
-	public void extract() throws XmlException, Exception
+	public String getTypeFor( String name ) throws Exception
+	{
+		Part part = variableSet.get( name );
+		if( part == null )
+			return null;
+		Definition definition = request.getOperation().getInterface().getDefinitionContext().getDefinition();
+		for( Object key : definition.getNamespaces().keySet() )
+		{
+			if( part.getTypeName().getNamespaceURI().equals( definition.getNamespaces().get( key ).toString() ) )
+				return key.toString() + ":" + part.getTypeName().getLocalPart();
+		}
+		return null;
+	}
+
+	public ArrayList<String> getParams()
+	{
+
+		return new ArrayList<String>( variableSet.keySet() );
+	}
+
+
+	public XmlTreeNode[] extract() throws XmlException, Exception
 	{
 		XmlObjectTreeModel model = new XmlObjectTreeModel( request.getOperation().getInterface().getDefinitionContext()
-				.getSchemaTypeSystem(), XmlObject.Factory.parse( request.getOperation().getInterface()
-				.getDefinitionContext().getDefinitionCache().getDefinitionParts().get( 0 ).getContent() ) );
+				.getSchemaTypeSystem(), XmlObject.Factory.parse( request.getRequestContent() ) );
 
+		WsdlContext wsdl = request.getOperation().getInterface().getDefinitionContext();
+
+		String operationName = request.getOperation().getBindingOperation().getName();
+
+		variableSet = new TreeMap<String, Part>();
+		Definition definition = wsdl.getDefinition();
+		for( Object key : definition.getAllBindings().keySet() )
+		{
+			Binding binding = ( Binding )definition.getAllBindings().get( key );
+			for( Object operation : binding.getPortType().getOperations() )
+			{
+				if( ( ( Operation )operation ).getName().equals( operationName ) )
+				{
+					QName messageName = ( ( Operation )operation ).getInput().getMessage().getQName();
+					Message message = definition.getMessage( messageName );
+					for( Object part : message.getParts().values() )
+					{
+						if( !( ( Part )part ).getName().equals( "parameters" ) )
+							variableSet.put( ( ( Part )part ).getName(), ( Part )part );
+
+					}
+
+				}
+			}
+		}
 		// select desired node(s)
-		XmlTreeNode[] nodes = model
-				.selectTreeNodes( "declare namespace xsd=\'http://www.w3.org/2001/XMLSchema\'; declare namespace wsdl=\'http://schemas.xmlsoap.org/wsdl/\'; //wsdl:definitions[1]/wsdl:types[1]/xsd:schema[1]" );
-	
+		// ArrayList<XmlTreeNode> nodes = getElements( model.getRootNode() );
 
-		
-		
-		SchemaType schemaType = null;
+		// for( XmlTreeNode node : nodes ) {
+		//			
+		// node.getNodeName();
+		// getNextChild( node );
+		// }
+
+		return null;
+	}
+
+	public TreeMap<String, Part> getVariableSet()
+	{
+		return variableSet;
+	}
+
+	ArrayList<XmlTreeNode> getElements( XmlTreeNode rootXmlTreeNode )
+	{
+		ArrayList<XmlTreeNode> result = new ArrayList<XmlTreeNode>();
+		for( int cnt = 0; cnt < rootXmlTreeNode.getChildCount(); cnt++ )
+		{
+			if( ( ( XmlTreeNode )rootXmlTreeNode.getChild( cnt ) ).getChildCount() > 0 )
+				result.addAll( getElements( rootXmlTreeNode.getChild( cnt ) ) );
+			else if( rootXmlTreeNode.getChild( cnt ).isLeaf() )
+			{
+
+				result.add( rootXmlTreeNode.getChild( cnt ) );
+
+//				rootXmlTreeNode.getChild( cnt ).get
+			}
+		}
+		return result;
+	}
+
+	private String declareXPathNamespaces( Definition definition )
+	{
+		StringBuilder result = new StringBuilder();
+		for( Object shortName : definition.getNamespaces().keySet() )
+		{
+			result.append( "declare namespace " ).append( shortName.toString() ).append( "=\'" ).append(
+					definition.getNamespaces().get( shortName ).toString() ).append( "\';" );
+		}
+		return result.toString();
 	}
 
 	private void getNextChild( XmlTreeNode node )
@@ -68,6 +160,7 @@ public class SchemeTypeExtractor
 		{
 			XmlTreeNode mynode = node.getChild( i );
 
+			System.out.println( mynode.getNodeName() );
 			if( "@type".equals( mynode.getNodeName() ) )
 			{
 				String xpath = XmlUtils.createXPath( mynode.getDomNode() );
@@ -123,5 +216,10 @@ public class SchemeTypeExtractor
 			this.xpath = xpath;
 
 		}
+	}
+
+	public String[] getParamsAsArray()
+	{
+		return getParams().toArray( new String[0] );
 	}
 }
