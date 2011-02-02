@@ -91,25 +91,30 @@ public class SecurityCheckUtil
 
 		return true;
 	}
-	
-	public static RestParamsPropertyHolder getSoapRequestParams(AbstractHttpRequest<?> request) {
-		XmlBeansRestParamsTestPropertyHolder holder = new XmlBeansRestParamsTestPropertyHolder(request, RestParametersConfig.Factory.newInstance());
-		try {
-			XmlObject requestXml = XmlObject.Factory.parse(request.getRequestContent(), new XmlOptions().setLoadStripWhitespace()
-					.setLoadStripComments());
-			Node[] nodes = XmlUtils.selectDomNodes(requestXml, "//text()");
-			
-			for (Node node:nodes) {
-				String xpath = XmlUtils.createAbsoluteXPath(node.getParentNode()); 
-				RestParamProperty property = holder.addProperty(node.getParentNode().getNodeName());
-				property.setValue(node.getNodeValue());
-				property.setPath(xpath); 
+
+	public static RestParamsPropertyHolder getSoapRequestParams( AbstractHttpRequest<?> request )
+	{
+		XmlBeansRestParamsTestPropertyHolder holder = new XmlBeansRestParamsTestPropertyHolder( request,
+				RestParametersConfig.Factory.newInstance() );
+		try
+		{
+			XmlObject requestXml = XmlObject.Factory.parse( request.getRequestContent(), new XmlOptions()
+					.setLoadStripWhitespace().setLoadStripComments() );
+			Node[] nodes = XmlUtils.selectDomNodes( requestXml, "//text()" );
+
+			for( Node node : nodes )
+			{
+				String xpath = XmlUtils.createXPath( node.getParentNode() );
+				RestParamProperty property = holder.addProperty( node.getParentNode().getNodeName() );
+				property.setValue( node.getNodeValue() );
+				property.setPath( xpath );
 			}
-		} catch (XmlException e) {
+		}
+		catch( XmlException e )
+		{
 			SoapUI.logError( e );
 		}
 		return holder;
 	}
-	
 
 }
