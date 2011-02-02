@@ -34,6 +34,7 @@ import org.apache.commons.lang.StringUtils;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.RestParametersConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
+import com.eviware.soapui.impl.rest.support.RestParamProperty;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
@@ -92,8 +93,6 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	private SecurityParamsTable paramTable;
 
 	private JTabbedPane tabs;
-	RestParamsPropertyHolder parameters;
-
 
 	// TODO check if should exist and what to do with securable
 	public AbstractSecurityCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent, String icon )
@@ -191,7 +190,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 
 	public RestParamsPropertyHolder getParameters()
 	{
-		RestParamsPropertyHolder params = new XmlBeansRestParamsTestPropertyHolder( getRequest( getTestStep() ), config
+		RestParamsPropertyHolder params = new XmlBeansRestParamsTestPropertyHolder( this, config
 				.getRestParameters() );
 		return params;
 	}
@@ -230,11 +229,11 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 
 	public boolean configure()
 	{
-		if( dialog == null )
-		{
+//		if( dialog == null )
+//		{
 			buildDialog();
-		}
-
+//		}
+//
 		UISupport.showDialog( dialog );
 		return configureResult;
 	}
@@ -586,9 +585,9 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 
 		for( TestProperty param : getParameters().getPropertyList() )
 		{
-			if( param != null )
-				result.add( new XPathReferenceImpl( "SecurityCheck Parameter " + param.getName(), param, this, param
-						.getName() ) );
+			RestParamProperty restParam = (RestParamProperty)param;
+			if( restParam != null )
+				result.add( new XPathReferenceImpl( "SecurityCheck Parameter " + restParam.getName(), restParam, restParam, "path" ) );
 
 		}
 
