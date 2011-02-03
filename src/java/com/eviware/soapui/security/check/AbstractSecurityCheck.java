@@ -73,8 +73,8 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		XPathReferenceContainer
 {
 	public static final String SINGLE_REQUEST_STRATEGY = "A single request with all the parameters";
-	public static final String SEPARATE_REQUEST_STRATEGY =  "Seperate request for each parameter";
-	
+	public static final String SEPARATE_REQUEST_STRATEGY = "Seperate request for each parameter";
+
 	// configuration of specific request modification
 	private static final int MINIMUM_STRING_DISTANCE = 50;
 	protected SecurityCheckConfig config;
@@ -93,6 +93,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	private SecurityParamsTable paramTable;
 
 	private JTabbedPane tabs;
+	private RestParamsPropertyHolder params;
 
 	// TODO check if should exist and what to do with securable
 	public AbstractSecurityCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent, String icon )
@@ -190,8 +191,8 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 
 	public RestParamsPropertyHolder getParameters()
 	{
-		RestParamsPropertyHolder params = new XmlBeansRestParamsTestPropertyHolder( this, config
-				.getRestParameters() );
+		if( params == null )
+			params = new XmlBeansRestParamsTestPropertyHolder( this, config.getRestParameters() );
 		return params;
 	}
 
@@ -229,11 +230,11 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 
 	public boolean configure()
 	{
-//		if( dialog == null )
-//		{
-			buildDialog();
-//		}
-//
+		// if( dialog == null )
+		// {
+		buildDialog();
+		// }
+		//
 		UISupport.showDialog( dialog );
 		return configureResult;
 	}
@@ -306,10 +307,10 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		paramTable.setPreferredSize( new Dimension( 300, 200 ) );
 
 		JInspectorPanel parameter = JInspectorPanelFactory.build( paramTable, SwingConstants.BOTTOM );
-		
+
 		tabs = new JTabbedPane();
-		
-		tabs.addTab("Execution Strategy", new SecurityCheckExecutionStrategyPanel(getExecutionStrategy()));
+
+		tabs.addTab( "Execution Strategy", new SecurityCheckExecutionStrategyPanel( getExecutionStrategy() ) );
 
 		if( contentPanel != null )
 		{
@@ -317,20 +318,18 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 			contentPanel.setPreferredSize( new Dimension( 300, 200 ) );
 			contentPanel.add( builder.getPanel(), BorderLayout.SOUTH );
 			JSplitPane topPane = UISupport.createVerticalSplit( new JScrollPane( parameter.getComponent() ),
-					new JScrollPane( contentPanel ));
-			JSplitPane splitPane = UISupport.createVerticalSplit( topPane,
-					tabs );
+					new JScrollPane( contentPanel ) );
+			JSplitPane splitPane = UISupport.createVerticalSplit( topPane, tabs );
 
 			dialog.setContentPane( splitPane );
 		}
 		else
 		{
-			//fullPanel.setPreferredSize( new Dimension( 300, 400 ) );
-			//fullPanel.add( builder.getPanel(), BorderLayout.SOUTH );
+			// fullPanel.setPreferredSize( new Dimension( 300, 400 ) );
+			// fullPanel.add( builder.getPanel(), BorderLayout.SOUTH );
 			paramTable.add( builder.getPanel(), BorderLayout.SOUTH );
-			JSplitPane splitPane = UISupport.createVerticalSplit( paramTable,
-					new JScrollPane( tabs ));
-			//fullPanel.add( paramTable, BorderLayout.NORTH );
+			JSplitPane splitPane = UISupport.createVerticalSplit( paramTable, new JScrollPane( tabs ) );
+			// fullPanel.add( paramTable, BorderLayout.NORTH );
 			dialog.setContentPane( splitPane );
 		}
 
@@ -431,12 +430,12 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		return config;
 	}
 
-//	@Override
-//	public List<? extends ModelItem> getChildren()
-//	{
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
+	// @Override
+	// public List<? extends ModelItem> getChildren()
+	// {
+	// // TODO Auto-generated method stub
+	// return null;
+	// }
 
 	@Override
 	public String getDescription()
@@ -563,10 +562,10 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 			if( StringUtils.getLevenshteinDistance( originalResponse, lastRequest.getResponse().getContentAsString() ) > MINIMUM_STRING_DISTANCE )
 			{
 				/*
-
-				securityTestLog.addEntry( new SecurityTestLogMessageEntry( message, null
-				 * new HttpResponseMessageExchange( lastRequest)
-				 ) );*/
+				 * 
+				 * securityTestLog.addEntry( new SecurityTestLogMessageEntry(
+				 * message, null new HttpResponseMessageExchange( lastRequest) ) );
+				 */
 				// TODO implement this through SecurityCheckResult
 				// setStatus( Status.FAILED );
 			}
@@ -585,10 +584,14 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 
 		for( TestProperty param : getParameters().getPropertyList() )
 		{
-			RestParamProperty restParam = (RestParamProperty)param;
-			if( restParam != null )
-				result.add( new XPathReferenceImpl( "SecurityCheck Parameter " + restParam.getName(), restParam, restParam, "path" ) );
-
+			TestStep t = getTestStep();
+			if( t instanceof WsdlTestRequestStep )
+			{
+				RestParamProperty restParam = ( RestParamProperty )param;
+				if( restParam != null )
+					result.add( new XPathReferenceImpl( "SecurityCheck Parameter " + restParam.getName(),
+							( ( WsdlTestRequestStep )t ).getOperation(), true, restParam, "path" ) );
+			}
 		}
 
 		return result.toArray( new XPathReference[result.size()] );
