@@ -284,7 +284,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		ShowOnlineHelpAction showOnlineHelpAction = new ShowOnlineHelpAction( HelpUrls.XPATHASSERTIONEDITOR_HELP_URL );
 		builder.addFixed( UISupport.createToolbarButton( showOnlineHelpAction ) );
 		builder.addGlue();
-
+ 
 		JButton okButton = new JButton( new OkAction() );
 		builder.addFixed( okButton );
 		builder.addRelatedGap();

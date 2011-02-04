@@ -15,7 +15,7 @@ package com.eviware.soapui.security.boundary;
  */
 public class StringBoundary extends AbstractBoundary
 {
-	private static final String AVAILABLE_VALUES = " abcdefghijklmnopqrstuvwxyz";
+	public static final String AVAILABLE_VALUES = " abcdefghijklmnopqrstuvwxyz";
 
 	public StringBoundary( String length, String minLength, String maxLength )
 	{
@@ -37,5 +37,4 @@ public class StringBoundary extends AbstractBoundary
 			return null;
 		}
 	}
-
 }
