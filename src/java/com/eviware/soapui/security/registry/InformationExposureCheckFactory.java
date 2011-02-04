@@ -41,7 +41,7 @@ public class InformationExposureCheckFactory extends AbstractSecurityCheckFactor
 	@Override
 	public AbstractSecurityCheck buildSecurityCheck( TestStep testStep,SecurityCheckConfig config, ModelItem parent )
 	{
-		return new InformationExposureCheck( testStep, config, parent, pathToIcon );
+		return new InformationExposureCheck( testStep, config, parent, null );
 	}
 
 	@Override

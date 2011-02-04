@@ -270,4 +270,10 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements
 		return checkTitle;
 	}
 
+	@Override
+	protected void buildDialog()
+	{
+		super.buildDialogOld();		
+	}
+
 }

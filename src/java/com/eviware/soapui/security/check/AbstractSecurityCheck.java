@@ -56,7 +56,6 @@ import com.eviware.soapui.security.Securable;
 import com.eviware.soapui.security.SecurityCheckRequestResult;
 import com.eviware.soapui.security.SecurityCheckResult;
 import com.eviware.soapui.security.SecurityTestRunContext;
-import com.eviware.soapui.security.log.SecurityTestLogMessageEntry;
 import com.eviware.soapui.security.log.SecurityTestLogModel;
 import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
 import com.eviware.soapui.security.ui.SecurityCheckExecutionStrategyPanel;
@@ -67,6 +66,7 @@ import com.eviware.soapui.support.components.JInspectorPanel;
 import com.eviware.soapui.support.components.JInspectorPanelFactory;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
+import com.eviware.x.form.XFormDialog;
 import com.jgoodies.forms.builder.ButtonBarBuilder;
 
 public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<SecurityCheckConfig> implements
@@ -82,14 +82,12 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	protected String tearDownScript;
 	protected SoapUIScriptEngine scriptEngine;
 	private boolean disabled = false;
-	protected JPanel panel;
 	protected JDialog dialog;
-	private boolean configureResult;
 	protected Status status;
 	SecurityCheckConfigPanel contentPanel;
 	protected SecurityCheckResult securityCheckResult;
 	protected SecurityCheckRequestResult securityCheckReqResult;
-	private TestStep testStep;
+	TestStep testStep;
 	private SecurityParamsTable paramTable;
 
 	private JTabbedPane tabs;
@@ -99,6 +97,10 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	public AbstractSecurityCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent, String icon )
 	{
 		super( config, parent, icon );
+		if( config == null )
+		{
+			config = SecurityCheckConfig.Factory.newInstance();
+		}
 		this.testStep = testStep;
 		this.config = config;
 		this.startupScript = config.getSetupScript() != null ? config.getSetupScript().getStringValue() : "";
@@ -138,6 +140,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		{
 			securityCheckReqResult = new SecurityCheckRequestResult( this );
 			executeNew( testStep, context );
+			checkResponseValidity();
 			analyzeNew( testStep, context );
 			// add to summary result
 			securityCheckResult.addSecurityRequestResult( securityCheckReqResult );
@@ -149,6 +152,17 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		runTearDownScript( testStep );
 
 		return securityCheckResult;
+	}
+
+	/**
+	 * 
+	 * validate response against HTTP codes.
+	 * 
+	 */
+	private void checkResponseValidity()
+	{
+		// TODO Auto-generated method stub
+
 	}
 
 	/*
@@ -230,13 +244,10 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 
 	public boolean configure()
 	{
-		// if( dialog == null )
-		// {
-		buildDialog();
-		// }
-		//
-		UISupport.showDialog( dialog );
-		return configureResult;
+		if( dialog == null )
+			buildDialog();
+		dialog.setVisible( true );
+		return true;
 	}
 
 	public boolean isConfigurable()
@@ -273,9 +284,12 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	/**
 	 * Builds the configuration dialog
 	 */
-	protected void buildDialog()
+	protected abstract void buildDialog();
+
+	protected void buildDialogOld()
 	{
 		dialog = new JDialog( UISupport.getMainFrame(), getTitle(), true );
+
 		JPanel fullPanel = new JPanel( new BorderLayout() );
 		contentPanel = getComponent();
 
@@ -284,7 +298,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		ShowOnlineHelpAction showOnlineHelpAction = new ShowOnlineHelpAction( HelpUrls.XPATHASSERTIONEDITOR_HELP_URL );
 		builder.addFixed( UISupport.createToolbarButton( showOnlineHelpAction ) );
 		builder.addGlue();
- 
+
 		JButton okButton = new JButton( new OkAction() );
 		builder.addFixed( okButton );
 		builder.addRelatedGap();
@@ -355,7 +369,6 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		{
 			// TODO save the config
 			super( "Save" );
-			configureResult = true;
 		}
 
 		public void actionPerformed( ActionEvent arg0 )
@@ -373,7 +386,6 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		public CancelAction()
 		{
 			super( "Cancel" );
-			configureResult = false;
 		}
 
 		public void actionPerformed( ActionEvent arg0 )

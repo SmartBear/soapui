@@ -23,9 +23,9 @@ import javax.wsdl.Operation;
 import javax.wsdl.Part;
 import javax.xml.namespace.QName;
 
+import org.apache.xmlbeans.SchemaType;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
-import org.w3c.dom.Element;
 
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlContext;
@@ -41,7 +41,7 @@ public class SchemeTypeExtractor
 
 	private WsdlRequest request;
 	private List<NodeInfo> nodeInfoList = new ArrayList<NodeInfo>();
-	private TreeMap<String, Part> variableSet;
+	private TreeMap<String, NodeInfo> variableSet;
 
 	public SchemeTypeExtractor( WsdlTestRequest request )
 	{
@@ -59,35 +59,38 @@ public class SchemeTypeExtractor
 
 	public String getTypeFor( String name ) throws Exception
 	{
-		Part part = variableSet.get( name );
-		if( part == null )
+		NodeInfo node = variableSet.get( name );
+		if( node == null )
 			return null;
 		Definition definition = request.getOperation().getInterface().getDefinitionContext().getDefinition();
 		for( Object key : definition.getNamespaces().keySet() )
 		{
-			if( part.getTypeName().getNamespaceURI().equals( definition.getNamespaces().get( key ).toString() ) )
-				return key.toString() + ":" + part.getTypeName().getLocalPart();
+			node.node.getSchemaType();
+			
+			node.node.getSchemaType().getTypeSystem();
+			
+			return node.node.getSchemaType().getShortJavaName();
 		}
 		return null;
 	}
 
-	public ArrayList<String> getParams()
+	public TreeMap<String, NodeInfo> getParams()
 	{
-
-		return new ArrayList<String>( variableSet.keySet() );
+		return variableSet;
 	}
-
 
 	public XmlTreeNode[] extract() throws XmlException, Exception
 	{
 		XmlObjectTreeModel model = new XmlObjectTreeModel( request.getOperation().getInterface().getDefinitionContext()
 				.getSchemaTypeSystem(), XmlObject.Factory.parse( request.getRequestContent() ) );
 
+		 TreeMap<String, NodeInfo> nodeList = getElements( model.getRootNode() );
+
 		WsdlContext wsdl = request.getOperation().getInterface().getDefinitionContext();
 
 		String operationName = request.getOperation().getBindingOperation().getName();
 
-		variableSet = new TreeMap<String, Part>();
+		variableSet = new TreeMap<String, NodeInfo>();
 		Definition definition = wsdl.getDefinition();
 		for( Object key : definition.getAllBindings().keySet() )
 		{
@@ -101,8 +104,9 @@ public class SchemeTypeExtractor
 					for( Object part : message.getParts().values() )
 					{
 						if( !( ( Part )part ).getName().equals( "parameters" ) )
-							variableSet.put( ( ( Part )part ).getName(), ( Part )part );
-
+						{
+							variableSet.put( ( ( Part )part ).getName(), nodeList.get( ( ( Part )part ).getName() ));
+						}
 					}
 
 				}
@@ -120,25 +124,21 @@ public class SchemeTypeExtractor
 		return null;
 	}
 
-	public TreeMap<String, Part> getVariableSet()
+	public TreeMap<String, NodeInfo> getVariableSet()
 	{
 		return variableSet;
 	}
 
-	ArrayList<XmlTreeNode> getElements( XmlTreeNode rootXmlTreeNode )
+	TreeMap<String, NodeInfo> getElements( XmlTreeNode rootXmlTreeNode )
 	{
-		ArrayList<XmlTreeNode> result = new ArrayList<XmlTreeNode>();
+		TreeMap<String, NodeInfo> result = new TreeMap<String, NodeInfo>();
 		for( int cnt = 0; cnt < rootXmlTreeNode.getChildCount(); cnt++ )
 		{
 			if( ( ( XmlTreeNode )rootXmlTreeNode.getChild( cnt ) ).getChildCount() > 0 )
-				result.addAll( getElements( rootXmlTreeNode.getChild( cnt ) ) );
-			else if( rootXmlTreeNode.getChild( cnt ).isLeaf() )
-			{
-
-				result.add( rootXmlTreeNode.getChild( cnt ) );
-
-//				rootXmlTreeNode.getChild( cnt ).get
-			}
+				result.putAll( getElements( rootXmlTreeNode.getChild( cnt ) ) );
+			else
+				result.put( ( ( XmlTreeNode )rootXmlTreeNode.getChild( cnt ) ).getDomNode().getLocalName(), new NodeInfo(rootXmlTreeNode
+						.getChild( cnt )) );
 		}
 		return result;
 	}
@@ -177,7 +177,7 @@ public class SchemeTypeExtractor
 		}
 	}
 
-	class NodeInfo
+	public class NodeInfo
 	{
 
 		private String name;
@@ -185,6 +185,18 @@ public class SchemeTypeExtractor
 		private TreePath treePath;
 		private XmlTreeNode node;
 		private String xpath;
+		private SchemaType type;
+		private boolean selected = false;
+
+		public boolean isSelected()
+		{
+			return selected;
+		}
+
+		public void setSelected( boolean selected )
+		{
+			this.selected = selected;
+		}
 
 		public String getName()
 		{
@@ -216,10 +228,27 @@ public class SchemeTypeExtractor
 			this.xpath = xpath;
 
 		}
+
+		public NodeInfo( XmlTreeNode child )
+		{
+			this.name = child.getNodeName();
+			this.text = child.getNodeText();
+			this.treePath = child.getTreePath();
+			this.type = child.getSchemaType();
+			this.node = child;
+			this.xpath = XmlUtils.createXPath( child.getDomNode() );
+			this.type = child.getSchemaType();
+		}
+
+		public SchemaType getType()
+		{
+			return type;
+		}
+
+		public String getSimpleName()
+		{
+			return node.getDomNode().getLocalName();
+		}
 	}
 
-	public String[] getParamsAsArray()
-	{
-		return getParams().toArray( new String[0] );
-	}
 }

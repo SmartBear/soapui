@@ -38,7 +38,7 @@ public class GroovySecurityCheckPanel extends SecurityCheckConfigPanel {
 		JTextField scriptTextArea = form.appendTextField(SCRIPT_FIELD,
 				"Script to use");
 		scriptTextArea.setSize(new Dimension(400, 600));
-		scriptTextArea.setText(secCheck.getScript());
+//		scriptTextArea.setText(secCheck.getScript());
 
 		add(form.getPanel());
 	}
@@ -47,7 +47,7 @@ public class GroovySecurityCheckPanel extends SecurityCheckConfigPanel {
 	public void save() {
 		String scriptStr = form.getComponentValue(SCRIPT_FIELD);
 
-		groovyCheck.setScript(scriptStr);
+//		groovyCheck.setScript(scriptStr);
 
 	}
 

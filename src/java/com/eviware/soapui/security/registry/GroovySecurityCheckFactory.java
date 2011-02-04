@@ -13,6 +13,7 @@
 package com.eviware.soapui.security.registry;
 
 import com.eviware.soapui.config.GroovySecurityCheckConfig;
+import com.eviware.soapui.config.ScriptConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestStep;
@@ -52,7 +53,8 @@ public class GroovySecurityCheckFactory extends AbstractSecurityCheckFactory
 		securityCheckConfig.setType( GroovySecurityCheck.TYPE );
 		securityCheckConfig.setName( name );
 		GroovySecurityCheckConfig groovyscc = GroovySecurityCheckConfig.Factory.newInstance();
-		groovyscc.addNewScript();
+		groovyscc.setExecuteScript( ScriptConfig.Factory.newInstance() );
+		groovyscc.setAnalyzeScript( ScriptConfig.Factory.newInstance() );
 		// securityCheckConfig.changeType( GroovySecurityCheckConfig.type );
 		securityCheckConfig.setConfig( groovyscc );
 		return securityCheckConfig;

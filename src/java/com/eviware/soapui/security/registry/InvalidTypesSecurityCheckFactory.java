@@ -1,13 +1,11 @@
 package com.eviware.soapui.security.registry;
 
-import com.eviware.soapui.config.ParameterExposureCheckConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.security.check.InvalidTypesSecurityCheck;
-import com.eviware.soapui.security.check.ParameterExposureCheck;
 
 public class InvalidTypesSecurityCheckFactory extends AbstractSecurityCheckFactory
 {
@@ -21,13 +19,13 @@ public class InvalidTypesSecurityCheckFactory extends AbstractSecurityCheckFacto
 	@Override
 	public AbstractSecurityCheck buildSecurityCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent )
 	{
-		return new InvalidTypesSecurityCheck(testStep, config, parent, null);
+		return new InvalidTypesSecurityCheck( testStep, config, parent, null );
 	}
 
 	@Override
-	public boolean canCreate(TestStep testStep)
+	public boolean canCreate( TestStep testStep )
 	{
-		//XXX: add http and rest
+		// XXX: add http and rest
 		return testStep instanceof WsdlTestRequestStep;
 	}
 
@@ -37,9 +35,6 @@ public class InvalidTypesSecurityCheckFactory extends AbstractSecurityCheckFacto
 		SecurityCheckConfig securityCheckConfig = SecurityCheckConfig.Factory.newInstance();
 		securityCheckConfig.setType( InvalidTypesSecurityCheck.TYPE );
 		securityCheckConfig.setName( name );
-		ParameterExposureCheckConfig pecc = ParameterExposureCheckConfig.Factory.newInstance();
-		pecc.setMinimumLength( ParameterExposureCheck.DEFAULT_MINIMUM_CHARACTER_LENGTH );
-		securityCheckConfig.setConfig( pecc );
 		return securityCheckConfig;
 	}
 

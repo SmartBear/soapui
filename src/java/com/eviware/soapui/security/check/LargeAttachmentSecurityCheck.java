@@ -117,4 +117,10 @@ public class LargeAttachmentSecurityCheck extends AbstractSecurityCheck
 		((LargeAttachmentSecurityCheckConfig)config.getConfig()).setTime(time);
 	}
 
+	@Override
+	protected void buildDialog()
+	{
+		super.buildDialogOld();
+	}
+
 }

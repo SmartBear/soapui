@@ -45,7 +45,7 @@ public class GroovySecurityCheckTest extends AbstractSecurityTestCaseWithMockSer
 	{
 		GroovySecurityCheck gsc = new GroovySecurityCheck( testStep, securityCheckConfig, null, null );
 		gsc
-				.setScript( "println('');println \"this is print from GroovySecurityCheck on test step '${testStep.name}'\";println('')" );
+				.setExecuteScript( "println('');println \"this is print from GroovySecurityCheck on test step '${testStep.name}'\";println('')" );
 	}
 	
 	

@@ -380,4 +380,11 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck implements
 		return result;
 	}
 
+	@Override
+	protected void buildDialog()
+	{
+		super.buildDialogOld();
+		
+	}
+
 }

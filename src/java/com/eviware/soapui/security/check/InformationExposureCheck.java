@@ -196,4 +196,10 @@ public class InformationExposureCheck extends AbstractSecurityCheck implements H
 		return null;
 	}
 
+	@Override
+	protected void buildDialog()
+	{
+		super.buildDialogOld();		
+	}
+
 }

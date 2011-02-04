@@ -12,7 +12,6 @@
 
 package com.eviware.soapui.security.check;
 
-
 import com.eviware.soapui.config.RestParameterConfig;
 import com.eviware.soapui.config.SQLInjectionCheckConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
@@ -47,7 +46,7 @@ public class SQLInjectionCheck extends AbstractSecurityCheck implements Sensitiv
 {
 
 	public static final String TYPE = "SQLInjectionCheck";
-	
+
 	private Fuzzer sqlFuzzer = Fuzzer.getSQLFuzzer();
 
 	public SQLInjectionCheck( SecurityCheckConfig config, ModelItem parent, String icon, TestStep testStep )
@@ -66,21 +65,21 @@ public class SQLInjectionCheck extends AbstractSecurityCheck implements Sensitiv
 		}
 	}
 
-	protected SecurityCheckRequestResult execute( TestStep testStep, SecurityTestRunContext context, SecurityTestLogModel securityTestLog,
-			SecurityCheckRequestResult securityChekResult )
+	protected SecurityCheckRequestResult execute( TestStep testStep, SecurityTestRunContext context,
+			SecurityTestLogModel securityTestLog, SecurityCheckRequestResult securityChekResult )
 	{
-		
+
 		return null;
 	}
 
-	//QUESTION:
+	// QUESTION:
 	/*
 	 * Is checking for "SQL Error" string enough for this?
 	 * 
 	 * What if this string is part of some tutorial?
 	 */
-	public SecurityCheckRequestResult analyze( TestStep testStep, SecurityTestRunContext context, SecurityTestLogModel securityTestLog,
-			SecurityCheckRequestResult securityCheckResult )
+	public SecurityCheckRequestResult analyze( TestStep testStep, SecurityTestRunContext context,
+			SecurityTestLogModel securityTestLog, SecurityCheckRequestResult securityCheckResult )
 	{
 		return null;
 	}
@@ -110,37 +109,46 @@ public class SQLInjectionCheck extends AbstractSecurityCheck implements Sensitiv
 		InformationExposureCheck iec = new InformationExposureCheck( testStep, config, null, null );
 		iec.analyze( testStep, context, securityTestLog, null );
 	}
-	
+
 	@Override
 	protected void executeNew( TestStep testStep, SecurityTestRunContext context )
 	{
 		sqlFuzzer.getNextFuzzedTestStep( testStep, getParameters() );
-		
+
 		WsdlTestCaseRunner testCaseRunner = new WsdlTestCaseRunner( ( WsdlTestCase )testStep.getTestCase(),
 				new StringToObjectMap() );
-		
+
 		testStep.run( testCaseRunner, context );
 	}
-	
+
 	@Override
 	protected void analyzeNew( TestStep testStep, SecurityTestRunContext context )
 	{
 		if( acceptsTestStep( testStep ) )
 		{
-			//HttpTestRequestStepInterface testStepwithProperties = ( HttpTestRequestStepInterface )testStep;
-			//HttpTestRequestInterface<?> request = testStepwithProperties.getTestRequest();
-			//MessageExchange messageExchange = new HttpResponseMessageExchange( request );
+			// HttpTestRequestStepInterface testStepwithProperties = (
+			// HttpTestRequestStepInterface )testStep;
+			// HttpTestRequestInterface<?> request =
+			// testStepwithProperties.getTestRequest();
+			// MessageExchange messageExchange = new HttpResponseMessageExchange(
+			// request );
 
-			//securityCheckReqResult.setMessageExchange( messageExchange );
-			securityCheckReqResult.setStatus(SecurityCheckStatus.OK);
-			
+			// securityCheckReqResult.setMessageExchange( messageExchange );
+			securityCheckReqResult.setStatus( SecurityCheckStatus.OK );
+
 		}
 	}
-	
+
 	@Override
-	protected boolean hasNext() 
+	protected boolean hasNext()
 	{
 		return sqlFuzzer.hasNext();
+	}
+
+	@Override
+	protected void buildDialog()
+	{
+		super.buildDialogOld();
 	}
 
 }

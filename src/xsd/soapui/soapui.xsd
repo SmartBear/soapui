@@ -1974,9 +1974,12 @@
     <xsd:complexType name="GroovySecurityCheck">
     	
     			<xsd:sequence>
-    				<xsd:element name="script" type="tns:Script"></xsd:element>
+    				<xsd:element name="executeScript"
+    					type="tns:Script">
+    				</xsd:element>
+    				<xsd:element name="analyzeScript" type="tns:Script"></xsd:element>
     			</xsd:sequence>
-    	
+
     </xsd:complexType>
 
     <xsd:complexType name="ReflectedXSSCheck">
@@ -2021,6 +2024,8 @@
     <xsd:complexType name="CheckedParameter">
     	<xsd:attribute name="parameterName" type="xsd:string"></xsd:attribute>
     	<xsd:attribute name="checked" type="xsd:boolean"></xsd:attribute>
+    	<xsd:attribute name="xpath" type="xsd:string"></xsd:attribute>
+    	<xsd:attribute name="type" type="xsd:string"></xsd:attribute>
     </xsd:complexType>
 
     <xsd:complexType name="CheckedParametersList">

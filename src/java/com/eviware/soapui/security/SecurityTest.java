@@ -199,10 +199,12 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 								TestStep testStep = null;
 								for( TestStep ts : testCase.getTestSteps().values() )
 									if( testStepSecurityTestListConfig.getTestStepId().equals( ts.getId() ) )
+									{
 										testStep = ts;
-								AbstractSecurityCheck securityCheck = SecurityCheckRegistry.getInstance().getFactory(
-										secCheckConfig.getType() ).buildSecurityCheck( testStep, secCheckConfig, this );
-								checkList.add( securityCheck );
+										AbstractSecurityCheck securityCheck = SecurityCheckRegistry.getInstance().getFactory(
+												secCheckConfig.getType() ).buildSecurityCheck( testStep, secCheckConfig, this );
+										checkList.add( securityCheck );
+									}
 							}
 						}
 					}
