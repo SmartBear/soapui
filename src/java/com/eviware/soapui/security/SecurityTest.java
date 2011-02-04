@@ -160,7 +160,16 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 				if( testStepSecurityTest.getTestStepId().equals( testStep.getId() ) )
 				{
 					List<SecurityCheckConfig> securityCheckList = testStepSecurityTest.getTestStepSecurityCheckList();
-					securityCheckList.remove( securityCheck.getConfig() );
+					for( int j = 0; j < securityCheckList.size(); j++ )
+					{
+						SecurityCheckConfig current = securityCheckList.get( j );
+						if( current.getName().equals( securityCheck.getName() ) )
+						{
+							securityCheckList.remove( j );
+							break;
+						}
+					}
+					// securityCheckList.remove( securityCheck.getConfig() );
 					if( securityCheckList.isEmpty() )
 					{
 						// testStepSecurityTestList.remove( testStepSecurityTest
