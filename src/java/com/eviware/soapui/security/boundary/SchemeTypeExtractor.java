@@ -185,7 +185,7 @@ public class SchemeTypeExtractor
 		private TreePath treePath;
 		private XmlTreeNode node;
 		private String xpath;
-		private SchemaType type;
+		private int type;
 		private boolean selected = false;
 
 		public boolean isSelected()
@@ -234,13 +234,12 @@ public class SchemeTypeExtractor
 			this.name = child.getNodeName();
 			this.text = child.getNodeText();
 			this.treePath = child.getTreePath();
-			this.type = child.getSchemaType();
+			this.type = child.getSchemaType().getBuiltinTypeCode();
 			this.node = child;
 			this.xpath = XmlUtils.createXPath( child.getDomNode() );
-			this.type = child.getSchemaType();
 		}
 
-		public SchemaType getType()
+		public int getType()
 		{
 			return type;
 		}

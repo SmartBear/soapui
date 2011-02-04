@@ -305,7 +305,6 @@ public class GroovySecurityCheck extends AbstractSecurityCheck implements HttpSe
 			buildDialog();
 		if( dialog.show() )
 		{
-
 			groovyscc.getExecuteScript().setStringValue( executeEditor.getEditArea().getText() );
 			groovyscc.getAnalyzeScript().setStringValue( analyzeEditor.getEditArea().getText() );
 		}
