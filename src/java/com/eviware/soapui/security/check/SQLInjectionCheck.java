@@ -148,7 +148,14 @@ public class SQLInjectionCheck extends AbstractSecurityCheck implements Sensitiv
 	@Override
 	protected void buildDialog()
 	{
-		super.buildDialogOld();
+//		super.buildDialogOld();
+	}
+
+	@Override
+	public boolean configure()
+	{
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

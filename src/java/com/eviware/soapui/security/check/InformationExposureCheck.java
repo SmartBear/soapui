@@ -199,7 +199,7 @@ public class InformationExposureCheck extends AbstractSecurityCheck implements H
 	@Override
 	protected void buildDialog()
 	{
-		super.buildDialogOld();		
+//		super.buildDialogOld();		
 	}
 
 }

@@ -82,7 +82,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	protected String tearDownScript;
 	protected SoapUIScriptEngine scriptEngine;
 	private boolean disabled = false;
-	protected JDialog dialog;
+	protected XFormDialog dialog;
 	protected Status status;
 	SecurityCheckConfigPanel contentPanel;
 	protected SecurityCheckResult securityCheckResult;
@@ -242,13 +242,13 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		}
 	}
 
-	public boolean configure()
-	{
-		if( dialog == null )
-			buildDialog();
-		dialog.setVisible( true );
-		return true;
-	}
+	public abstract boolean configure();
+//	{
+//		if( dialog == null )
+//			buildDialog();
+//		dialog.setVisible( true );
+//		return true;
+//	}
 
 	public boolean isConfigurable()
 	{
@@ -286,72 +286,72 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	 */
 	protected abstract void buildDialog();
 
-	protected void buildDialogOld()
-	{
-		dialog = new JDialog( UISupport.getMainFrame(), getTitle(), true );
-
-		JPanel fullPanel = new JPanel( new BorderLayout() );
-		contentPanel = getComponent();
-
-		ButtonBarBuilder builder = new ButtonBarBuilder();
-
-		ShowOnlineHelpAction showOnlineHelpAction = new ShowOnlineHelpAction( HelpUrls.XPATHASSERTIONEDITOR_HELP_URL );
-		builder.addFixed( UISupport.createToolbarButton( showOnlineHelpAction ) );
-		builder.addGlue();
-
-		JButton okButton = new JButton( new OkAction() );
-		builder.addFixed( okButton );
-		builder.addRelatedGap();
-		builder.addFixed( new JButton( new CancelAction() ) );
-
-		builder.setBorder( BorderFactory.createEmptyBorder( 1, 5, 5, 5 ) );
-
-		RestParamsPropertyHolder requestParams;
-
-		if( getTestStep() instanceof WsdlTestRequestStep )
-		{
-			requestParams = SecurityCheckUtil.getSoapRequestParams( getRequest( getTestStep() ) );
-		}
-		else
-		{
-			requestParams = getRequest( getTestStep() ).getParams();
-		}
-
-		paramTable = new SecurityParamsTable( getParameters(), requestParams );
-		paramTable.setPreferredSize( new Dimension( 300, 200 ) );
-
-		JInspectorPanel parameter = JInspectorPanelFactory.build( paramTable, SwingConstants.BOTTOM );
-
-		tabs = new JTabbedPane();
-
-		tabs.addTab( "Execution Strategy", new SecurityCheckExecutionStrategyPanel( getExecutionStrategy() ) );
-
-		if( contentPanel != null )
-		{
-			fullPanel.setPreferredSize( new Dimension( 300, 400 ) );
-			contentPanel.setPreferredSize( new Dimension( 300, 200 ) );
-			contentPanel.add( builder.getPanel(), BorderLayout.SOUTH );
-			JSplitPane topPane = UISupport.createVerticalSplit( new JScrollPane( parameter.getComponent() ),
-					new JScrollPane( contentPanel ) );
-			JSplitPane splitPane = UISupport.createVerticalSplit( topPane, tabs );
-
-			dialog.setContentPane( splitPane );
-		}
-		else
-		{
-			// fullPanel.setPreferredSize( new Dimension( 300, 400 ) );
-			// fullPanel.add( builder.getPanel(), BorderLayout.SOUTH );
-			paramTable.add( builder.getPanel(), BorderLayout.SOUTH );
-			JSplitPane splitPane = UISupport.createVerticalSplit( paramTable, new JScrollPane( tabs ) );
-			// fullPanel.add( paramTable, BorderLayout.NORTH );
-			dialog.setContentPane( splitPane );
-		}
-
-		dialog.setModal( true );
-		dialog.pack();
-		UISupport.initDialogActions( dialog, showOnlineHelpAction, okButton );
-
-	}
+//	protected void buildDialogOld()
+//	{
+//		dialog = new JDialog( UISupport.getMainFrame(), getTitle(), true );
+//
+//		JPanel fullPanel = new JPanel( new BorderLayout() );
+//		contentPanel = getComponent();
+//
+//		ButtonBarBuilder builder = new ButtonBarBuilder();
+//
+//		ShowOnlineHelpAction showOnlineHelpAction = new ShowOnlineHelpAction( HelpUrls.XPATHASSERTIONEDITOR_HELP_URL );
+//		builder.addFixed( UISupport.createToolbarButton( showOnlineHelpAction ) );
+//		builder.addGlue();
+//
+//		JButton okButton = new JButton( new OkAction() );
+//		builder.addFixed( okButton );
+//		builder.addRelatedGap();
+//		builder.addFixed( new JButton( new CancelAction() ) );
+//
+//		builder.setBorder( BorderFactory.createEmptyBorder( 1, 5, 5, 5 ) );
+//
+//		RestParamsPropertyHolder requestParams;
+//
+//		if( getTestStep() instanceof WsdlTestRequestStep )
+//		{
+//			requestParams = SecurityCheckUtil.getSoapRequestParams( getRequest( getTestStep() ) );
+//		}
+//		else
+//		{
+//			requestParams = getRequest( getTestStep() ).getParams();
+//		}
+//
+//		paramTable = new SecurityParamsTable( getParameters(), requestParams );
+//		paramTable.setPreferredSize( new Dimension( 300, 200 ) );
+//
+//		JInspectorPanel parameter = JInspectorPanelFactory.build( paramTable, SwingConstants.BOTTOM );
+//
+//		tabs = new JTabbedPane();
+//
+//		tabs.addTab( "Execution Strategy", new SecurityCheckExecutionStrategyPanel( getExecutionStrategy() ) );
+//
+//		if( contentPanel != null )
+//		{
+//			fullPanel.setPreferredSize( new Dimension( 300, 400 ) );
+//			contentPanel.setPreferredSize( new Dimension( 300, 200 ) );
+//			contentPanel.add( builder.getPanel(), BorderLayout.SOUTH );
+//			JSplitPane topPane = UISupport.createVerticalSplit( new JScrollPane( parameter.getComponent() ),
+//					new JScrollPane( contentPanel ) );
+//			JSplitPane splitPane = UISupport.createVerticalSplit( topPane, tabs );
+//
+//			dialog.setContentPane( splitPane );
+//		}
+//		else
+//		{
+//			// fullPanel.setPreferredSize( new Dimension( 300, 400 ) );
+//			// fullPanel.add( builder.getPanel(), BorderLayout.SOUTH );
+//			paramTable.add( builder.getPanel(), BorderLayout.SOUTH );
+//			JSplitPane splitPane = UISupport.createVerticalSplit( paramTable, new JScrollPane( tabs ) );
+//			// fullPanel.add( paramTable, BorderLayout.NORTH );
+//			dialog.setContentPane( splitPane );
+//		}
+//
+//		dialog.setModal( true );
+//		dialog.pack();
+//		UISupport.initDialogActions( dialog, showOnlineHelpAction, okButton );
+//
+//	}
 
 	public TestStep getTestStep()
 	{

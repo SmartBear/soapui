@@ -120,7 +120,14 @@ public class LargeAttachmentSecurityCheck extends AbstractSecurityCheck
 	@Override
 	protected void buildDialog()
 	{
-		super.buildDialogOld();
+//		super.buildDialogOld();
+	}
+
+	@Override
+	public boolean configure()
+	{
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

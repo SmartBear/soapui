@@ -383,8 +383,15 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck implements
 	@Override
 	protected void buildDialog()
 	{
-		super.buildDialogOld();
+//		super.buildDialogOld();
 		
+	}
+
+	@Override
+	public boolean configure()
+	{
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

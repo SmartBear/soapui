@@ -153,7 +153,7 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 	@Override
 	protected void buildDialog()
 	{
-		super.buildDialogOld();		
+//		super.buildDialogOld();		
 	}
 
 }
