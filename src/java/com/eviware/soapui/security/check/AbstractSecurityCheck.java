@@ -12,11 +12,9 @@
 
 package com.eviware.soapui.security.check;
 
-import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 
 import com.eviware.soapui.SoapUI;
@@ -42,7 +40,7 @@ import com.eviware.soapui.security.Securable;
 import com.eviware.soapui.security.SecurityCheckRequestResult;
 import com.eviware.soapui.security.SecurityCheckResult;
 import com.eviware.soapui.security.SecurityTestRunContext;
-import com.eviware.soapui.security.log.SecurityTestLogModel;
+//import com.eviware.soapui.security.log.SecurityTestLogModel;
 import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
@@ -55,7 +53,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	public static final String SEPARATE_REQUEST_STRATEGY = "Seperate request for each parameter";
 
 	// configuration of specific request modification
-	private static final int MINIMUM_STRING_DISTANCE = 50;
+//	private static final int MINIMUM_STRING_DISTANCE = 50;
 	protected SecurityCheckConfig config;
 	protected String startupScript;
 	protected String tearDownScript;
@@ -179,15 +177,15 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	 * END OF NEWLY REFACTORED
 	 **************************************/
 
-	private void sensitiveInfoCheck( TestStep testStep, SecurityTestRunContext context,
-			SecurityTestLogModel securityTestLog )
-	{
-		if( this instanceof SensitiveInformationCheckable )
-		{
-			( ( SensitiveInformationCheckable )this ).checkForSensitiveInformationExposure( testStep, context,
-					securityTestLog );
-		}
-	}
+//	private void sensitiveInfoCheck( TestStep testStep, SecurityTestRunContext context,
+//			SecurityTestLogModel securityTestLog )
+//	{
+//		if( this instanceof SensitiveInformationCheckable )
+//		{
+//			( ( SensitiveInformationCheckable )this ).checkForSensitiveInformationExposure( testStep, context,
+//					securityTestLog );
+//		}
+//	}
 
 	public abstract boolean configure();
 
@@ -244,36 +242,36 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		testStep = step;
 	}
 
-	public class OkAction extends AbstractAction
-	{
-		public OkAction()
-		{
-			// TODO save the config
-			super( "Save" );
-		}
+//	public class OkAction extends AbstractAction
+//	{
+//		public OkAction()
+//		{
+//			// TODO save the config
+//			super( "Save" );
+//		}
+//
+//		public void actionPerformed( ActionEvent arg0 )
+//		{
+//			if( contentPanel != null )
+//				contentPanel.save();
+//
+//			dialog.setVisible( false );
+//		}
+//
+//	}
 
-		public void actionPerformed( ActionEvent arg0 )
-		{
-			if( contentPanel != null )
-				contentPanel.save();
-
-			dialog.setVisible( false );
-		}
-
-	}
-
-	public class CancelAction extends AbstractAction
-	{
-		public CancelAction()
-		{
-			super( "Cancel" );
-		}
-
-		public void actionPerformed( ActionEvent arg0 )
-		{
-			dialog.setVisible( false );
-		}
-	}
+//	public class CancelAction extends AbstractAction
+//	{
+//		public CancelAction()
+//		{
+//			super( "Cancel" );
+//		}
+//
+//		public void actionPerformed( ActionEvent arg0 )
+//		{
+//			dialog.setVisible( false );
+//		}
+//	}
 
 	private void runTearDownScript( TestStep testStep )
 	{

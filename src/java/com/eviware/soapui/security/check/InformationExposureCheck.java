@@ -28,7 +28,6 @@ import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityCheckRequestResult.SecurityCheckStatus;
 import com.eviware.soapui.security.log.JSecurityTestRunLog;
-import com.eviware.soapui.security.log.SecurityTestLogModel;
 import com.eviware.soapui.security.monitor.HttpSecurityAnalyser;
 import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
 import com.eviware.soapui.support.SecurityCheckUtil;
@@ -159,16 +158,17 @@ public class InformationExposureCheck extends AbstractSecurityCheck implements H
 		// + "' is detected in response. ", messageExchange ) );
 	}
 
-	private void logSecurityInfo( MessageExchange messageExchange, SecurityTestLogModel securityTestLog,
-			String exposureContent )
-	{
-		// TODO refactor through SecurityCheckResult
-		// securityTestLog.addEntry( new SecurityTestLogMessageEntry(
-		// "In Test Step = '"
-		// + messageExchange.getModelItem().getName() +
-		// "' sensitive information '" + exposureContent
-		// + "' is detected in response. ", messageExchange ) );
-	}
+	// private void logSecurityInfo( MessageExchange messageExchange,
+	// SecurityTestLogModel securityTestLog,
+	// String exposureContent )
+	// {
+	// // TODO refactor through SecurityCheckResult
+	// // securityTestLog.addEntry( new SecurityTestLogMessageEntry(
+	// // "In Test Step = '"
+	// // + messageExchange.getModelItem().getName() +
+	// // "' sensitive information '" + exposureContent
+	// // + "' is detected in response. ", messageExchange ) );
+	// }
 
 	@Override
 	public boolean canRun()

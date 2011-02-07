@@ -187,13 +187,14 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheck
 		try
 		{
 			generateRequests();
-			if( result.size() > 0 ) {
+			if( result.size() > 0 )
+			{
 				testStep.getProperty( "Request" ).setValue( result.get( 0 ) );
 				result.remove( 0 );
 			}
 			if( result.size() == 0 )
 				hasNext = false;
-			
+
 		}
 		catch( XmlException e )
 		{
@@ -205,6 +206,7 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheck
 
 	/**
 	 * generate set of requests with all variations
+	 * 
 	 * @throws XmlException
 	 */
 	private void generateRequests() throws XmlException
@@ -233,7 +235,7 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheck
 	@Override
 	protected void analyze( TestStep testStep, SecurityTestRunContext context )
 	{
-		//XXX
+		// XXX
 	}
 
 	@Override

@@ -35,7 +35,7 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck impl
 {
 
 	public static final String TYPE = "MaliciousAttachmentSecurityCheck";
-	private static final int MINIMUM_STRING_DISTANCE = 50;
+//	private static final int MINIMUM_STRING_DISTANCE = 50;
 
 	public MaliciousAttachmentSecurityCheck( SecurityCheckConfig config, ModelItem parent, String icon, TestStep testStep )
 	{

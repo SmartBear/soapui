@@ -12,27 +12,18 @@
 
 package com.eviware.soapui.security.check;
 
-import com.eviware.soapui.config.RestParameterConfig;
 import com.eviware.soapui.config.SQLInjectionCheckConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
-import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCaseRunner;
-import com.eviware.soapui.impl.wsdl.teststeps.HttpResponseMessageExchange;
-import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestInterface;
-import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStepInterface;
 import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.testsuite.SamplerTestStep;
 import com.eviware.soapui.model.testsuite.TestStep;
-import com.eviware.soapui.security.SecurityCheckRequestResult;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityCheckRequestResult.SecurityCheckStatus;
 import com.eviware.soapui.security.fuzzer.Fuzzer;
-import com.eviware.soapui.security.log.SecurityTestLogMessageEntry;
 import com.eviware.soapui.security.log.SecurityTestLogModel;
 import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
-import com.eviware.soapui.support.SecurityCheckUtil;
 import com.eviware.soapui.support.types.StringToObjectMap;
 
 /**
@@ -129,7 +120,7 @@ public class SQLInjectionCheck extends AbstractSecurityCheck implements Sensitiv
 	@Override
 	protected void buildDialog()
 	{
-//		super.buildDialogOld();
+		// super.buildDialogOld();
 	}
 
 	@Override
