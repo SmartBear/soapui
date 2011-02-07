@@ -15,6 +15,7 @@ package com.eviware.soapui.security;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -160,12 +161,12 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 				if( testStepSecurityTest.getTestStepId().equals( testStep.getId() ) )
 				{
 					List<SecurityCheckConfig> securityCheckList = testStepSecurityTest.getTestStepSecurityCheckList();
-					for( int j = 0; j < securityCheckList.size(); j++ )
-					{
-						SecurityCheckConfig current = securityCheckList.get( j );
+					Iterator<SecurityCheckConfig> secListIterator = securityCheckList.iterator();
+					while(secListIterator.hasNext()){
+						SecurityCheckConfig current = secListIterator.next();
 						if( current.getName().equals( securityCheck.getName() ) )
 						{
-							securityCheckList.remove( j );
+							secListIterator.remove();
 							break;
 						}
 					}
@@ -180,6 +181,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 				}
 			}
 		}
+		
 
 	}
 
