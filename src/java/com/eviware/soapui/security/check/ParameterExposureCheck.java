@@ -12,21 +12,12 @@
 
 package com.eviware.soapui.security.check;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.JComponent;
-import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.text.Document;
 
 import com.eviware.soapui.config.ParameterExposureCheckConfig;
-import com.eviware.soapui.config.RestParameterConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
@@ -39,26 +30,18 @@ import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestInterface;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStepInterface;
 import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
-import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.SimpleContainsAssertion;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestStep;
-import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
-import com.eviware.soapui.security.SecurityCheckRequestResult;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityCheckRequestResult.SecurityCheckStatus;
 import com.eviware.soapui.security.log.JSecurityTestRunLog;
-import com.eviware.soapui.security.log.SecurityTestLogMessageEntry;
-import com.eviware.soapui.security.log.SecurityTestLogModel;
 import com.eviware.soapui.security.monitor.HttpSecurityAnalyser;
 import com.eviware.soapui.security.ui.ParameterExposureCheckPanel;
 import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
-import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.SecurityCheckUtil;
-import com.eviware.soapui.support.StringUtils;
-import com.eviware.soapui.support.components.SimpleForm;
 import com.eviware.soapui.support.types.StringToObjectMap;
 
 /**
@@ -69,8 +52,8 @@ import com.eviware.soapui.support.types.StringToObjectMap;
  * @author soapui team
  */
 
-public class ParameterExposureCheck extends AbstractSecurityCheck implements
-		HttpSecurityAnalyser {
+public class ParameterExposureCheck extends AbstractSecurityCheck implements HttpSecurityAnalyser
+{
 
 	protected JTextField minimumCharactersTextField;
 
@@ -78,57 +61,48 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements
 	public static final int DEFAULT_MINIMUM_CHARACTER_LENGTH = 5;
 	private static final String checkTitle = "Configure Parameter Exposure";
 
-	public ParameterExposureCheck(SecurityCheckConfig config, ModelItem parent,
-			String icon, TestStep testStep) {
-		super(testStep, config, parent, icon);
-		if (config == null) {
+	public ParameterExposureCheck( SecurityCheckConfig config, ModelItem parent, String icon, TestStep testStep )
+	{
+		super( testStep, config, parent, icon );
+		if( config == null )
+		{
 			config = SecurityCheckConfig.Factory.newInstance();
-			ParameterExposureCheckConfig pescc = ParameterExposureCheckConfig.Factory
-					.newInstance();
-			pescc.setMinimumLength(DEFAULT_MINIMUM_CHARACTER_LENGTH);
-			config.setConfig(pescc);
+			ParameterExposureCheckConfig pescc = ParameterExposureCheckConfig.Factory.newInstance();
+			pescc.setMinimumLength( DEFAULT_MINIMUM_CHARACTER_LENGTH );
+			config.setConfig( pescc );
 		}
-		if (config.getConfig() == null) {
-			ParameterExposureCheckConfig pescc = ParameterExposureCheckConfig.Factory
-					.newInstance();
-			pescc.setMinimumLength(DEFAULT_MINIMUM_CHARACTER_LENGTH);
-			config.setConfig(pescc);
+		if( config.getConfig() == null )
+		{
+			ParameterExposureCheckConfig pescc = ParameterExposureCheckConfig.Factory.newInstance();
+			pescc.setMinimumLength( DEFAULT_MINIMUM_CHARACTER_LENGTH );
+			config.setConfig( pescc );
 		}
 	}
 
 	@Override
-	protected SecurityCheckRequestResult execute(TestStep testStep,
-			SecurityTestRunContext context,
-			SecurityTestLogModel securityTestLog,
-			SecurityCheckRequestResult securityChekResult) {
-		if (acceptsTestStep(testStep)) {
-			WsdlTestCaseRunner testCaseRunner = new WsdlTestCaseRunner(
-					(WsdlTestCase) testStep.getTestCase(),
-					new StringToObjectMap());
+	protected void execute( TestStep testStep, SecurityTestRunContext context )
+	{
+		if( acceptsTestStep( testStep ) )
+		{
+			WsdlTestCaseRunner testCaseRunner = new WsdlTestCaseRunner( ( WsdlTestCase )testStep.getTestCase(),
+					new StringToObjectMap() );
 
-			testStep.run(testCaseRunner, testCaseRunner.getRunContext());
-			analyze(testStep, context, securityTestLog, null);
+			testStep.run( testCaseRunner, testCaseRunner.getRunContext() );
 		}
-		// TODO
-		return null;
 	}
 
 	@Override
-	public SecurityCheckRequestResult analyze(TestStep testStep,
-			SecurityTestRunContext context,
-			SecurityTestLogModel securityTestLog,
-			SecurityCheckRequestResult securityCheckResult) {
-		if (acceptsTestStep(testStep)) {
-			HttpTestRequestStepInterface testStepwithProperties = (HttpTestRequestStepInterface) testStep;
-			HttpTestRequestInterface<?> request = testStepwithProperties
-					.getTestRequest();
-			MessageExchange messageExchange = new HttpResponseMessageExchange(
-					request);
+	public void analyze( TestStep testStep, SecurityTestRunContext context )
+	{
+		if( acceptsTestStep( testStep ) )
+		{
+			HttpTestRequestStepInterface testStepwithProperties = ( HttpTestRequestStepInterface )testStep;
+			HttpTestRequestInterface<?> request = testStepwithProperties.getTestRequest();
+			MessageExchange messageExchange = new HttpResponseMessageExchange( request );
 
 			RestParamsPropertyHolder params;
 
-			AbstractHttpRequest<?> httpRequest = testStepwithProperties
-					.getHttpRequest();
+			AbstractHttpRequest<?> httpRequest = testStepwithProperties.getHttpRequest();
 
 			params = httpRequest.getParams();
 
@@ -136,21 +110,21 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements
 
 			paramsToCheck = getParameters().getPropertyList();
 
-			for (TestProperty parameter : paramsToCheck) {
-				if (parameter != null) {
-					TestProperty testParameter = params
-							.get(parameter.getName());
+			for( TestProperty parameter : paramsToCheck )
+			{
+				if( parameter != null )
+				{
+					TestProperty testParameter = params.get( parameter.getName() );
 
-					if (testParameter != null
-							&& testParameter.getValue() != null
-							&& testParameter.getValue().length() >= getMinimumLength()) {
-						TestAssertionConfig assertionConfig = TestAssertionConfig.Factory
-								.newInstance();
-						assertionConfig.setType(SimpleContainsAssertion.ID);
+					if( testParameter != null && testParameter.getValue() != null
+							&& testParameter.getValue().length() >= getMinimumLength() )
+					{
+						TestAssertionConfig assertionConfig = TestAssertionConfig.Factory.newInstance();
+						assertionConfig.setType( SimpleContainsAssertion.ID );
 
-						if (SecurityCheckUtil.contains(context, new String(
-								messageExchange.getRawResponseData()),
-								testParameter.getValue(), false)) {
+						if( SecurityCheckUtil.contains( context, new String( messageExchange.getRawResponseData() ),
+								testParameter.getValue(), false ) )
+						{
 							// TODO refactor through SecurityCheckResult
 							// securityTestLog
 							// .addEntry(new SecurityTestLogMessageEntry(
@@ -160,8 +134,7 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements
 							// + testParameter.getValue()
 							// + "\" is exposed in the response",
 							// messageExchange));
-							securityCheckResult
-									.setStatus(SecurityCheckStatus.FAILED);
+							securityCheckRequestResult.setStatus( SecurityCheckStatus.FAILED );
 						}
 					}
 				}
@@ -170,7 +143,6 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements
 			// setStatus(Status.FINISHED);
 		}
 		// TODO
-		return null;
 	}
 
 	/**
@@ -179,9 +151,9 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements
 	 * 
 	 * @param minimumLength
 	 */
-	public void setMinimumLength(int minimumLength) {
-		((ParameterExposureCheckConfig) config.getConfig())
-				.setMinimumLength(minimumLength);
+	public void setMinimumLength( int minimumLength )
+	{
+		( ( ParameterExposureCheckConfig )config.getConfig() ).setMinimumLength( minimumLength );
 	}
 
 	/**
@@ -189,23 +161,24 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements
 	 * 
 	 * @return
 	 */
-	public int getMinimumLength() {
-		return ((ParameterExposureCheckConfig) config.getConfig())
-				.getMinimumLength();
+	public int getMinimumLength()
+	{
+		return ( ( ParameterExposureCheckConfig )config.getConfig() ).getMinimumLength();
 	}
 
 	// QUESTION:
 	// Why not soap too?
 	@Override
-	public boolean acceptsTestStep(TestStep testStep) {
-		return testStep instanceof HttpTestRequestStep
-				|| testStep instanceof RestTestRequestStep;
+	public boolean acceptsTestStep( TestStep testStep )
+	{
+		return testStep instanceof HttpTestRequestStep || testStep instanceof RestTestRequestStep;
 	}
 
 	@Override
-	public SecurityCheckConfigPanel getComponent() {
+	public SecurityCheckConfigPanel getComponent()
+	{
 
-		return new ParameterExposureCheckPanel(this);
+		return new ParameterExposureCheckPanel( this );
 	}
 
 	// @Override
@@ -232,22 +205,25 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements
 	// }
 
 	@Override
-	public String getType() {
+	public String getType()
+	{
 		return TYPE;
 	}
 
 	@Override
-	public void analyzeHttpConnection(MessageExchange messageExchange,
-			JSecurityTestRunLog securityTestLog) {
-		Map<String, String> parameters = ((JProxyServletWsdlMonitorMessageExchange) messageExchange)
+	public void analyzeHttpConnection( MessageExchange messageExchange, JSecurityTestRunLog securityTestLog )
+	{
+		Map<String, String> parameters = ( ( JProxyServletWsdlMonitorMessageExchange )messageExchange )
 				.getHttpRequestParameters();
-		for (String paramName : parameters.keySet()) {
+		for( String paramName : parameters.keySet() )
+		{
 
-			String paramValue = parameters.get(paramName);
+			String paramValue = parameters.get( paramName );
 
-			if (paramValue != null && paramValue.length() >= getMinimumLength()) {
-				if (messageExchange.getResponseContent().indexOf(paramValue) > -1
-						&& securityTestLog != null) {
+			if( paramValue != null && paramValue.length() >= getMinimumLength() )
+			{
+				if( messageExchange.getResponseContent().indexOf( paramValue ) > -1 && securityTestLog != null )
+				{
 					// TODO refactor through SecurityCheckResult
 					// securityTestLog.addEntry(new SecurityTestLogMessageEntry(
 					// "The parameter " + paramName + " with the value \""
@@ -261,23 +237,32 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements
 	}
 
 	@Override
-	public boolean canRun() {
+	public boolean canRun()
+	{
 		return true;
 	}
 
 	@Override
-	public String getTitle() {
+	public String getTitle()
+	{
 		return checkTitle;
 	}
 
 	@Override
 	protected void buildDialog()
 	{
-//		super.buildDialogOld();		
+		// super.buildDialogOld();
 	}
 
 	@Override
 	public boolean configure()
+	{
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected boolean hasNext()
 	{
 		// TODO Auto-generated method stub
 		return false;

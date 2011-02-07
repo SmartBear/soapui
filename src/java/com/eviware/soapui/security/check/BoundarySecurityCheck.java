@@ -103,7 +103,7 @@ public class BoundarySecurityCheck extends AbstractSecurityCheck
 		return TYPE;
 	}
 
-	protected void executeNew( TestStep testStep, SecurityTestRunContext context )
+	protected void execute( TestStep testStep, SecurityTestRunContext context )
 	{
 		if( acceptsTestStep( testStep ) )
 		{
@@ -135,7 +135,7 @@ public class BoundarySecurityCheck extends AbstractSecurityCheck
 		return this.hasNext;
 	}
 
-	protected void analyzeNew( TestStep testStep, SecurityTestRunContext context )
+	protected void analyze( TestStep testStep, SecurityTestRunContext context )
 	{
 		if( testStep instanceof WsdlTestRequestStep )
 		{
@@ -144,10 +144,10 @@ public class BoundarySecurityCheck extends AbstractSecurityCheck
 			{
 				MessageExchange messageExchange = new WsdlResponseMessageExchange( ( ( WsdlTestRequestStep )testStep )
 						.getTestRequest() );
-				securityCheckReqResult.setMessageExchange( messageExchange );
-				securityCheckReqResult
+				securityCheckRequestResult.setMessageExchange( messageExchange );
+				securityCheckRequestResult
 						.addMessage( "Server is accepting invalid enumeration value and returns status code 200 (OK) !" );
-				securityCheckReqResult.setStatus( SecurityCheckStatus.FAILED );
+				securityCheckRequestResult.setStatus( SecurityCheckStatus.FAILED );
 			}
 		}
 		else if( false )
@@ -219,19 +219,4 @@ public class BoundarySecurityCheck extends AbstractSecurityCheck
 
 	}
 
-	@Override
-	public SecurityCheckRequestResult analyze( TestStep testStep, SecurityTestRunContext context,
-			SecurityTestLogModel securityTestLog, SecurityCheckRequestResult securityCheckResult )
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	protected SecurityCheckRequestResult execute( TestStep testStep, SecurityTestRunContext context,
-			SecurityTestLogModel securityTestLog, SecurityCheckRequestResult securityChekResult )
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
 }

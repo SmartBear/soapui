@@ -25,11 +25,9 @@ import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.testsuite.TestStep;
-import com.eviware.soapui.security.SecurityCheckRequestResult;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityCheckRequestResult.SecurityCheckStatus;
 import com.eviware.soapui.security.log.JSecurityTestRunLog;
-import com.eviware.soapui.security.log.SecurityTestLogMessageEntry;
 import com.eviware.soapui.security.log.SecurityTestLogModel;
 import com.eviware.soapui.security.monitor.HttpSecurityAnalyser;
 import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
@@ -55,7 +53,7 @@ public class InformationExposureCheck extends AbstractSecurityCheck implements H
 	}
 
 	@Override
-	protected void executeNew( TestStep testStep, SecurityTestRunContext context )
+	protected void execute( TestStep testStep, SecurityTestRunContext context )
 	{
 		if( acceptsTestStep( testStep ) )
 		{
@@ -68,7 +66,7 @@ public class InformationExposureCheck extends AbstractSecurityCheck implements H
 	}
 
 	@Override
-	protected void analyzeNew( TestStep testStep, SecurityTestRunContext context )
+	protected void analyze( TestStep testStep, SecurityTestRunContext context )
 	{
 		if( acceptsTestStep( testStep ) )
 		{
@@ -76,7 +74,7 @@ public class InformationExposureCheck extends AbstractSecurityCheck implements H
 			HttpTestRequestInterface<?> request = testStepwithProperties.getTestRequest();
 			MessageExchange messageExchange = new HttpResponseMessageExchange( request );
 
-			securityCheckReqResult.setMessageExchange( messageExchange );
+			securityCheckRequestResult.setMessageExchange( messageExchange );
 			for( String exposureContent : exposureList )
 			{
 				if( SecurityCheckUtil.contains( context, new String( messageExchange.getRawResponseData() ),
@@ -85,8 +83,8 @@ public class InformationExposureCheck extends AbstractSecurityCheck implements H
 					// logSecurityInfo( messageExchange, securityTestLog,
 					// exposureContent );
 					String message = " sensitive information '" + exposureContent + "' is detected in response.";
-					securityCheckReqResult.addMessage( message );
-					securityCheckReqResult.setStatus( SecurityCheckStatus.FAILED );
+					securityCheckRequestResult.addMessage( message );
+					securityCheckRequestResult.setStatus( SecurityCheckStatus.FAILED );
 				}
 			}
 			// if( getStatus() != Status.FAILED )
@@ -100,6 +98,7 @@ public class InformationExposureCheck extends AbstractSecurityCheck implements H
 	{
 		return next;
 	}
+
 	// private AssertionStatus assertContains( SecurityTestRunContext context,
 	// HttpTestRequestStepInterface testStep,
 	// MessageExchange messageExchange, String exposureContent )
@@ -153,18 +152,22 @@ public class InformationExposureCheck extends AbstractSecurityCheck implements H
 			String exposureContent )
 	{
 		// TODO refactor through SecurityCheckResult
-//		securityTestLog.addEntry( new SecurityTestLogMessageEntry( "In Test Step = '"
-//				+ messageExchange.getModelItem().getName() + "' sensitive information '" + exposureContent
-//				+ "' is detected in response. ", messageExchange ) );
+		// securityTestLog.addEntry( new SecurityTestLogMessageEntry(
+		// "In Test Step = '"
+		// + messageExchange.getModelItem().getName() +
+		// "' sensitive information '" + exposureContent
+		// + "' is detected in response. ", messageExchange ) );
 	}
 
 	private void logSecurityInfo( MessageExchange messageExchange, SecurityTestLogModel securityTestLog,
 			String exposureContent )
 	{
 		// TODO refactor through SecurityCheckResult
-//		securityTestLog.addEntry( new SecurityTestLogMessageEntry( "In Test Step = '"
-//				+ messageExchange.getModelItem().getName() + "' sensitive information '" + exposureContent
-//				+ "' is detected in response. ", messageExchange ) );
+		// securityTestLog.addEntry( new SecurityTestLogMessageEntry(
+		// "In Test Step = '"
+		// + messageExchange.getModelItem().getName() +
+		// "' sensitive information '" + exposureContent
+		// + "' is detected in response. ", messageExchange ) );
 	}
 
 	@Override
@@ -179,27 +182,10 @@ public class InformationExposureCheck extends AbstractSecurityCheck implements H
 		return false;
 	}
 
-	// TODO next two to be deleted after refactoring is done
-	@Override
-	public SecurityCheckRequestResult analyze( TestStep testStep, SecurityTestRunContext context,
-			SecurityTestLogModel securityTestLog, SecurityCheckRequestResult securityCheckResult )
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	protected SecurityCheckRequestResult execute( TestStep testStep, SecurityTestRunContext context,
-			SecurityTestLogModel securityTestLog, SecurityCheckRequestResult securityChekResult )
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	@Override
 	protected void buildDialog()
 	{
-//		super.buildDialogOld();		
+		// super.buildDialogOld();
 	}
 
 }

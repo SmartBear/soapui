@@ -99,33 +99,6 @@ public class GroovySecurityCheck extends AbstractSecurityCheck implements HttpSe
 	}
 
 	@Override
-	protected SecurityCheckRequestResult execute( TestStep testStep, SecurityTestRunContext context,
-			SecurityTestLogModel securityTestLog, SecurityCheckRequestResult securityChekResult )
-	{
-		scriptEngine.setScript( getExecuteScript() );
-		scriptEngine.setVariable( "testStep", testStep );
-		scriptEngine.setVariable( "log", SoapUI.ensureGroovyLog() );
-		scriptEngine.setVariable( "context", context );
-		scriptEngine.setVariable( "status", status );
-		scriptEngine.setVariable( "executionStrategy", getExecutionStrategy() );
-
-		try
-		{
-			scriptResult = scriptEngine.run();
-		}
-		catch( Exception e )
-		{
-			SoapUI.logError( e );
-		}
-		finally
-		{
-			scriptEngine.clearVariables();
-		}
-		// TODO
-		return null;
-	}
-
-	@Override
 	protected boolean hasNext()
 	{
 		boolean result = next;
@@ -134,7 +107,7 @@ public class GroovySecurityCheck extends AbstractSecurityCheck implements HttpSe
 	}
 
 	@Override
-	protected void executeNew( TestStep testStep, SecurityTestRunContext context )
+	protected void execute( TestStep testStep, SecurityTestRunContext context )
 	{
 		scriptEngine.setScript( groovyscc.getExecuteScript().getStringValue() );
 		scriptEngine.setVariable( "request", this.testStep.getProperty( "Request" ).getValue() );
@@ -162,7 +135,7 @@ public class GroovySecurityCheck extends AbstractSecurityCheck implements HttpSe
 	}
 
 	@Override
-	protected void analyzeNew( TestStep testStep, SecurityTestRunContext context )
+	protected void analyze( TestStep testStep, SecurityTestRunContext context )
 	{
 		scriptEngine.setScript( groovyscc.getAnalyzeScript().getStringValue() );
 		scriptEngine.setVariable( "response", this.testStep.getProperty( "Response" ).getValue() );
@@ -181,15 +154,15 @@ public class GroovySecurityCheck extends AbstractSecurityCheck implements HttpSe
 			{
 				if( this.testStep instanceof WsdlTestRequestStep )
 				{
-					WsdlResponseMessageExchange m = new WsdlResponseMessageExchange(
-							( ( WsdlTestRequestStep )testStep ).getTestRequest() );
-					m.setMessages( new String[]{"CCC"} );
-					securityCheckReqResult.setMessageExchange( m );
+					WsdlResponseMessageExchange m = new WsdlResponseMessageExchange( ( ( WsdlTestRequestStep )testStep )
+							.getTestRequest() );
+					m.setMessages( new String[] { "CCC" } );
+					securityCheckRequestResult.setMessageExchange( m );
 				}
-				if ( Boolean.valueOf( scriptResult.toString() ) ) 
-					securityCheckReqResult.setStatus( SecurityCheckStatus.OK );
-				else 
-					securityCheckReqResult.setStatus( SecurityCheckStatus.FAILED );
+				if( Boolean.valueOf( scriptResult.toString() ) )
+					securityCheckRequestResult.setStatus( SecurityCheckStatus.OK );
+				else
+					securityCheckRequestResult.setStatus( SecurityCheckStatus.FAILED );
 			}
 			scriptEngine.clearVariables();
 		}
@@ -205,14 +178,6 @@ public class GroovySecurityCheck extends AbstractSecurityCheck implements HttpSe
 	public String getExecuteScript()
 	{
 		return groovyscc.getExecuteScript().getStringValue();
-	}
-
-	@Override
-	public SecurityCheckRequestResult analyze( TestStep testStep, SecurityTestRunContext context,
-			SecurityTestLogModel securityTestLog, SecurityCheckRequestResult securityCheckResult )
-	{
-		// TODO
-		return null;
 	}
 
 	@Override
@@ -301,7 +266,7 @@ public class GroovySecurityCheck extends AbstractSecurityCheck implements HttpSe
 	@Override
 	public boolean configure()
 	{
-		if ( dialog == null )
+		if( dialog == null )
 			buildDialog();
 		if( dialog.show() )
 		{

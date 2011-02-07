@@ -16,11 +16,9 @@ import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCaseRunner;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestStep;
-import com.eviware.soapui.security.SecurityCheckRequestResult;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.boundary.SchemeTypeExtractor;
 import com.eviware.soapui.security.boundary.SchemeTypeExtractor.NodeInfo;
-import com.eviware.soapui.security.log.SecurityTestLogModel;
 import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
 import com.eviware.soapui.support.types.StringToObjectMap;
 import com.eviware.soapui.support.xml.XmlUtils;
@@ -93,22 +91,6 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheck
 	public boolean acceptsTestStep( TestStep testStep )
 	{
 		return testStep instanceof WsdlTestRequestStep;
-	}
-
-	@Override
-	public SecurityCheckRequestResult analyze( TestStep testStep, SecurityTestRunContext context,
-			SecurityTestLogModel securityTestLog, SecurityCheckRequestResult securityCheckResult )
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	protected SecurityCheckRequestResult execute( TestStep testStep, SecurityTestRunContext context,
-			SecurityTestLogModel securityTestLog, SecurityCheckRequestResult securityChekResult )
-	{
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
@@ -190,7 +172,7 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheck
 	}
 
 	@Override
-	protected void executeNew( TestStep testStep, SecurityTestRunContext context )
+	protected void execute( TestStep testStep, SecurityTestRunContext context )
 	{
 		updateRequestContent();
 
@@ -249,9 +231,9 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheck
 	}
 
 	@Override
-	protected void analyzeNew( TestStep testStep, SecurityTestRunContext context )
+	protected void analyze( TestStep testStep, SecurityTestRunContext context )
 	{
-		super.analyzeNew( testStep, context );
+		//XXX
 	}
 
 	@Override

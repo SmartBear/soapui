@@ -313,7 +313,9 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 			// testStepList.setEnabled( true );
 			return;
 		}
-
+		
+		runButton.setEnabled( false );
+		cancelButton.setEnabled( true );
 		StringToObjectMap properties = new StringToObjectMap();
 		properties.put( "loopButton", loopButton );
 		properties.put( TestCaseRunContext.INTERACTIVE, Boolean.TRUE );
@@ -412,8 +414,8 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 
 	protected void afterRun()
 	{
-		// runButton.setEnabled( true );
-		// cancelButton.setEnabled( false );
+		 runButton.setEnabled( true );
+		 cancelButton.setEnabled( false );
 		// testStepList.setEnabled( true );
 	}
 

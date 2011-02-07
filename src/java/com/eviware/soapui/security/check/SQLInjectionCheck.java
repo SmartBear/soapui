@@ -65,25 +65,6 @@ public class SQLInjectionCheck extends AbstractSecurityCheck implements Sensitiv
 		}
 	}
 
-	protected SecurityCheckRequestResult execute( TestStep testStep, SecurityTestRunContext context,
-			SecurityTestLogModel securityTestLog, SecurityCheckRequestResult securityChekResult )
-	{
-
-		return null;
-	}
-
-	// QUESTION:
-	/*
-	 * Is checking for "SQL Error" string enough for this?
-	 * 
-	 * What if this string is part of some tutorial?
-	 */
-	public SecurityCheckRequestResult analyze( TestStep testStep, SecurityTestRunContext context,
-			SecurityTestLogModel securityTestLog, SecurityCheckRequestResult securityCheckResult )
-	{
-		return null;
-	}
-
 	@Override
 	public boolean acceptsTestStep( TestStep testStep )
 	{
@@ -107,11 +88,11 @@ public class SQLInjectionCheck extends AbstractSecurityCheck implements Sensitiv
 			SecurityTestLogModel securityTestLog )
 	{
 		InformationExposureCheck iec = new InformationExposureCheck( testStep, config, null, null );
-		iec.analyze( testStep, context, securityTestLog, null );
+		iec.analyze( testStep, context );
 	}
 
 	@Override
-	protected void executeNew( TestStep testStep, SecurityTestRunContext context )
+	protected void execute( TestStep testStep, SecurityTestRunContext context )
 	{
 		sqlFuzzer.getNextFuzzedTestStep( testStep, getParameters() );
 
@@ -122,7 +103,7 @@ public class SQLInjectionCheck extends AbstractSecurityCheck implements Sensitiv
 	}
 
 	@Override
-	protected void analyzeNew( TestStep testStep, SecurityTestRunContext context )
+	protected void analyze( TestStep testStep, SecurityTestRunContext context )
 	{
 		if( acceptsTestStep( testStep ) )
 		{
@@ -134,7 +115,7 @@ public class SQLInjectionCheck extends AbstractSecurityCheck implements Sensitiv
 			// request );
 
 			// securityCheckReqResult.setMessageExchange( messageExchange );
-			securityCheckReqResult.setStatus( SecurityCheckStatus.OK );
+			securityCheckRequestResult.setStatus( SecurityCheckStatus.OK );
 
 		}
 	}
