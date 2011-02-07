@@ -12,8 +12,6 @@
 
 package com.eviware.soapui.support;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,13 +26,11 @@ import com.eviware.soapui.config.PropertyConfig;
 import com.eviware.soapui.config.RestParametersConfig;
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
-import com.eviware.soapui.impl.rest.support.RestRequestParamsPropertyHolder;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.settings.Settings;
-import com.eviware.soapui.security.check.ParamPanel;
 import com.eviware.soapui.settings.GlobalPropertySettings;
 import com.eviware.soapui.support.xml.XmlUtils;
 
