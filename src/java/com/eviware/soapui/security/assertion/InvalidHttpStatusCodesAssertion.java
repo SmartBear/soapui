@@ -160,7 +160,7 @@ public class InvalidHttpStatusCodesAssertion extends WsdlMessageAssertion implem
 		XFormDialogBuilder builder = XFormFactory.createDialogBuilder( "Invalid HTTP status codes Assertion" );
 		XForm mainForm = builder.createForm( "Basic" );
 
-		mainForm.addTextField( CODES, "Coma separated acceptable status codes", XForm.FieldType.TEXTAREA ).setWidth( 40 );
+		mainForm.addTextField( CODES, "Coma separated not acceptable status codes", XForm.FieldType.TEXTAREA ).setWidth( 40 );
 
 		// TODO : update help URL
 		dialog = builder.buildDialog( builder.buildOkCancelHelpActions( HelpUrls.SIMPLE_CONTAINS_HELP_URL ),
