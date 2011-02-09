@@ -37,7 +37,7 @@ public class XPathDataTestCase extends TestCase
    
    public void testCountWithNamespace() throws Exception
    {
-      String namespace = "declare namespace tes='http://www.example.org/TestService/'; \n";
+      String namespace = "declare namespace tes='http://www.example.org/TestService/';\n";
       XPathData data = new XPathData(namespace + "count(//in/name)", false);
       assertEquals(namespace + "count(//in/name)", data.getFullPath());
       assertEquals("count", data.getFunction());
@@ -54,7 +54,7 @@ public class XPathDataTestCase extends TestCase
       checkStripXPath("//abc", "exists(//abc)");
       checkStripXPath("//abc", "exists( //abc)");
 
-      String ns = "declare namespace ns1='http://abc.com'; \n";
+      String ns = "declare namespace ns1='http://abc.com';\n";
       checkStripXPath(ns + "//abc", ns + "//abc[1]");
       checkStripXPath(ns + "//abc", ns + "//abc/text()");
       checkStripXPath(ns + "//abc", ns + "exists(//abc)");
