@@ -89,6 +89,10 @@ public class SchemeTypeExtractor
 		return nodes;
 	}
 
+	/**
+	 * Recursive look for leafs which types are primitive type.
+	 * Those elements actualy carry values.
+	 */
 	TreeMap<String, NodeInfo> getElements( XmlTreeNode rootXmlTreeNode )
 	{
 		TreeMap<String, NodeInfo> result = new TreeMap<String, NodeInfo>();
