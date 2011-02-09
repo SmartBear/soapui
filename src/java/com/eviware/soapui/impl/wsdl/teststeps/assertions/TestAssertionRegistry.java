@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.apache.tools.ant.types.selectors.ExtendSelector;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.TestAssertionConfig;
@@ -44,6 +43,8 @@ import com.eviware.soapui.impl.wsdl.teststeps.assertions.soap.WSAResponseAsserti
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.soap.WSSStatusAssertion;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.TestAssertion;
+import com.eviware.soapui.security.assertion.InvalidHttpStatusCodesAssertion;
+import com.eviware.soapui.security.assertion.ValidHttpStatusCodesAssertion;
 import com.eviware.soapui.support.types.StringToStringMap;
 
 /**
@@ -80,6 +81,12 @@ public class TestAssertionRegistry
 		addAssertion( new JdbcStatusAssertion.Factory() );
 		addAssertion( new JdbcTimeoutAssertion.Factory() );
 		addAssertion( new HttpDownloadAllResourcesAssertion.Factory() );
+		
+		
+		//security
+		addAssertion( new ValidHttpStatusCodesAssertion.Factory() );
+		addAssertion( new InvalidHttpStatusCodesAssertion.Factory() );
+		
 	}
 
 	public void addAssertion( TestAssertionFactory factory )
