@@ -14,6 +14,7 @@ package com.eviware.soapui.security.check;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.ImageIcon;
 
@@ -25,14 +26,21 @@ import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
+import com.eviware.soapui.impl.wsdl.support.assertions.AssertionsSupport;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCaseRunner;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry.AssertableType;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.support.XPathReference;
 import com.eviware.soapui.model.support.XPathReferenceContainer;
 import com.eviware.soapui.model.support.XPathReferenceImpl;
+import com.eviware.soapui.model.testsuite.Assertable;
+import com.eviware.soapui.model.testsuite.AssertionsListener;
+import com.eviware.soapui.model.testsuite.TestAssertion;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestRunner.Status;
@@ -40,20 +48,21 @@ import com.eviware.soapui.security.Securable;
 import com.eviware.soapui.security.SecurityCheckRequestResult;
 import com.eviware.soapui.security.SecurityCheckResult;
 import com.eviware.soapui.security.SecurityTestRunContext;
-//import com.eviware.soapui.security.log.SecurityTestLogModel;
 import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
 import com.eviware.x.form.XFormDialog;
 
 public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<SecurityCheckConfig> implements
-		XPathReferenceContainer
+		XPathReferenceContainer, Assertable
 {
+	public static final String STATUS_PROPERTY = AbstractSecurityCheck.class.getName() + "@status";
+
 	public static final String SINGLE_REQUEST_STRATEGY = "A single request with all the parameters";
 	public static final String SEPARATE_REQUEST_STRATEGY = "Seperate request for each parameter";
 
 	// configuration of specific request modification
-//	private static final int MINIMUM_STRING_DISTANCE = 50;
+	// private static final int MINIMUM_STRING_DISTANCE = 50;
 	protected SecurityCheckConfig config;
 	protected String startupScript;
 	protected String tearDownScript;
@@ -64,9 +73,11 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	SecurityCheckConfigPanel contentPanel;
 	protected SecurityCheckResult securityCheckResult;
 	protected SecurityCheckRequestResult securityCheckRequestResult;
-	TestStep testStep;
-
+	protected TestStep testStep;
+	private AssertionsSupport assertionsSupport;
 	private RestParamsPropertyHolder params;
+
+	private AssertionStatus currentStatus;
 
 	// TODO check if should exist and what to do with securable
 	public AbstractSecurityCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent, String icon )
@@ -177,15 +188,17 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	 * END OF NEWLY REFACTORED
 	 **************************************/
 
-//	private void sensitiveInfoCheck( TestStep testStep, SecurityTestRunContext context,
-//			SecurityTestLogModel securityTestLog )
-//	{
-//		if( this instanceof SensitiveInformationCheckable )
-//		{
-//			( ( SensitiveInformationCheckable )this ).checkForSensitiveInformationExposure( testStep, context,
-//					securityTestLog );
-//		}
-//	}
+	// private void sensitiveInfoCheck( TestStep testStep, SecurityTestRunContext
+	// context,
+	// SecurityTestLogModel securityTestLog )
+	// {
+	// if( this instanceof SensitiveInformationCheckable )
+	// {
+	// ( ( SensitiveInformationCheckable )this
+	// ).checkForSensitiveInformationExposure( testStep, context,
+	// securityTestLog );
+	// }
+	// }
 
 	public abstract boolean configure();
 
@@ -242,36 +255,36 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		testStep = step;
 	}
 
-//	public class OkAction extends AbstractAction
-//	{
-//		public OkAction()
-//		{
-//			// TODO save the config
-//			super( "Save" );
-//		}
-//
-//		public void actionPerformed( ActionEvent arg0 )
-//		{
-//			if( contentPanel != null )
-//				contentPanel.save();
-//
-//			dialog.setVisible( false );
-//		}
-//
-//	}
+	// public class OkAction extends AbstractAction
+	// {
+	// public OkAction()
+	// {
+	// // TODO save the config
+	// super( "Save" );
+	// }
+	//
+	// public void actionPerformed( ActionEvent arg0 )
+	// {
+	// if( contentPanel != null )
+	// contentPanel.save();
+	//
+	// dialog.setVisible( false );
+	// }
+	//
+	// }
 
-//	public class CancelAction extends AbstractAction
-//	{
-//		public CancelAction()
-//		{
-//			super( "Cancel" );
-//		}
-//
-//		public void actionPerformed( ActionEvent arg0 )
-//		{
-//			dialog.setVisible( false );
-//		}
-//	}
+	// public class CancelAction extends AbstractAction
+	// {
+	// public CancelAction()
+	// {
+	// super( "Cancel" );
+	// }
+	//
+	// public void actionPerformed( ActionEvent arg0 )
+	// {
+	// dialog.setVisible( false );
+	// }
+	// }
 
 	private void runTearDownScript( TestStep testStep )
 	{
@@ -441,38 +454,6 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		return null;
 	}
 
-	// protected void runCheck( TestStep testStep, SecurityTestRunContext
-	// context, SecurityTestLogModel securityTestLog,
-	// WsdlTestCaseRunner testCaseRunner, String originalResponse, String message
-	// )
-	// {
-	//
-	// testStep.run( testCaseRunner, testCaseRunner.getRunContext() );
-	// AbstractHttpRequest<?> lastRequest = getRequest( testStep );
-	//
-	// if( lastRequest.getResponse().getStatusCode() == 200 )
-	// {
-	// if( StringUtils.getLevenshteinDistance( originalResponse,
-	// lastRequest.getResponse().getContentAsString() ) > MINIMUM_STRING_DISTANCE
-	// )
-	// {
-	// /*
-	// *
-	// * securityTestLog.addEntry( new SecurityTestLogMessageEntry(
-	// * message, null new HttpResponseMessageExchange( lastRequest) ) );
-	// */
-	// // TODO implement this through SecurityCheckResult
-	// // setStatus( Status.FAILED );
-	// }
-	// }
-	// else
-	// {
-	// // TODO implement this through SecurityCheckResult
-	// // setStatus( Status.FAILED );
-	// }
-	// analyze( testStep, context );
-	// }
-
 	public XPathReference[] getXPathReferences()
 	{
 		List<XPathReference> result = new ArrayList<XPathReference>();
@@ -492,4 +473,198 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		return result.toArray( new XPathReference[result.size()] );
 	}
 
+	private class PropertyChangeNotifier
+	{
+		private AssertionStatus oldStatus;
+
+		public PropertyChangeNotifier()
+		{
+			oldStatus = getAssertionStatus();
+		}
+
+		public void notifyChange()
+		{
+			AssertionStatus newStatus = getAssertionStatus();
+
+			if( oldStatus != newStatus )
+				notifyPropertyChanged( STATUS_PROPERTY, oldStatus, newStatus );
+
+			oldStatus = newStatus;
+		}
+	}
+
+	@Override
+	public TestAssertion addAssertion( String label )
+	{
+
+		try
+		{
+			WsdlMessageAssertion assertion = assertionsSupport.addWsdlAssertion( label );
+			if( assertion == null )
+				return null;
+
+			/*
+			 * What to do if there is at least one response?
+			 * 
+			 * Check have been run, and than I add assertion. Should assertion be
+			 * evaluated?
+			 */
+
+			return assertion;
+		}
+		catch( Exception e )
+		{
+			SoapUI.logError( e );
+			return null;
+		}
+	}
+
+	@Override
+	public void removeAssertion( TestAssertion assertion )
+	{
+		PropertyChangeNotifier notifier = new PropertyChangeNotifier();
+
+		try
+		{
+			assertionsSupport.removeAssertion( ( WsdlMessageAssertion )assertion );
+
+		}
+		finally
+		{
+			( ( WsdlMessageAssertion )assertion ).release();
+			notifier.notifyChange();
+		}
+	}
+
+	@Override
+	public TestAssertion moveAssertion( int ix, int offset )
+	{
+		WsdlMessageAssertion assertion = getAssertionAt( ix );
+		PropertyChangeNotifier notifier = new PropertyChangeNotifier();
+
+		try
+		{
+			return assertionsSupport.moveAssertion( ix, offset );
+		}
+		finally
+		{
+			( ( WsdlMessageAssertion )assertion ).release();
+			notifier.notifyChange();
+		}
+	}
+
+	@Override
+	public WsdlMessageAssertion getAssertionAt( int c )
+	{
+		return assertionsSupport.getAssertionAt( c );
+	}
+
+	@Override
+	public void addAssertionsListener( AssertionsListener listener )
+	{
+		assertionsSupport.addAssertionsListener( listener );
+	}
+
+	@Override
+	public void removeAssertionsListener( AssertionsListener listener )
+	{
+		assertionsSupport.removeAssertionsListener( listener );
+	}
+	
+	@Override
+	public int getAssertionCount()
+	{
+		return assertionsSupport.getAssertionCount();
+	}
+	
+	@Override
+	public AssertionStatus getAssertionStatus()
+	{
+		currentStatus = AssertionStatus.UNKNOWN;
+
+		int cnt = getAssertionCount();
+		if( cnt == 0 )
+			return currentStatus;
+
+		boolean hasEnabled = false;
+
+		for( int c = 0; c < cnt; c++ )
+		{
+			if( !getAssertionAt( c ).isDisabled() )
+				hasEnabled = true;
+
+			if( getAssertionAt( c ).getStatus() == AssertionStatus.FAILED )
+			{
+				currentStatus = AssertionStatus.FAILED;
+				break;
+			}
+		}
+
+		if( currentStatus == AssertionStatus.UNKNOWN && hasEnabled )
+			currentStatus = AssertionStatus.VALID;
+
+		return currentStatus;
+	}
+	
+	@Override
+	public String getAssertableContent()
+	{
+		// TODO Auto-generated method stub
+		// XXX: hm....
+		return null;
+	}
+	
+	@Override
+	public AssertableType getAssertableType()
+	{
+		return AssertableType.BOTH;
+	}
+	
+	@Override
+	public TestAssertion getAssertionByName( String name )
+	{
+		return assertionsSupport.getAssertionByName( name );
+	}
+	
+	@Override
+	public List<TestAssertion> getAssertionList()
+	{
+		return new ArrayList<TestAssertion>( assertionsSupport.getAssertionList() );
+	}
+	
+	@Override
+	public Map<String, TestAssertion> getAssertions()
+	{
+		return assertionsSupport.getAssertions();
+	}
+	
+	public AssertionsSupport getAssertionsSupport()
+	{
+		return assertionsSupport;
+	}
+	
+	@Override
+	public TestAssertion cloneAssertion( TestAssertion source, String name )
+	{
+		return assertionsSupport.cloneAssertion( source, name );
+	}
+
+	@Override
+	public String getDefaultAssertableContent()
+	{
+		// last response???
+		return null;
+	}
+
+	@Override
+	public Interface getInterface()
+	{
+		return null;
+	}
+
+	@Override
+	public ModelItem getModelItem()
+	{
+		return this;
+	}
 }
