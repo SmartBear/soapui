@@ -16,30 +16,37 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.ImageIcon;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.RestParametersConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
+import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
+import com.eviware.soapui.impl.wsdl.support.assertions.AssertableConfig;
 import com.eviware.soapui.impl.wsdl.support.assertions.AssertionsSupport;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCaseRunner;
+import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequest;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequest;
 import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
+import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequest;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry.AssertableType;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Interface;
+import com.eviware.soapui.model.iface.MessageExchange;
+import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.support.XPathReference;
 import com.eviware.soapui.model.support.XPathReferenceContainer;
 import com.eviware.soapui.model.support.XPathReferenceImpl;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.AssertionsListener;
+import com.eviware.soapui.model.testsuite.RequestAssertion;
+import com.eviware.soapui.model.testsuite.ResponseAssertion;
 import com.eviware.soapui.model.testsuite.TestAssertion;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestStep;
@@ -53,8 +60,12 @@ import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
 import com.eviware.x.form.XFormDialog;
 
+/**
+ * @author robert
+ *
+ */
 public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<SecurityCheckConfig> implements
-		XPathReferenceContainer, Assertable
+		XPathReferenceContainer, Assertable, RequestAssertion, ResponseAssertion
 {
 	public static final String STATUS_PROPERTY = AbstractSecurityCheck.class.getName() + "@status";
 
@@ -79,7 +90,6 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 
 	private AssertionStatus currentStatus;
 
-	// TODO check if should exist and what to do with securable
 	public AbstractSecurityCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent, String icon )
 	{
 		super( config, parent, icon );
@@ -96,7 +106,37 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 			config.setExecutionStrategy( SEPARATE_REQUEST_STRATEGY );
 		if( config.getRestParameters() == null )
 			config.setRestParameters( RestParametersConfig.Factory.newInstance() );
+		
+		initAssertions();
 
+	}
+	
+	private void initAssertions()
+	{
+		assertionsSupport = new AssertionsSupport( this , new AssertableConfig()
+		{
+			public TestAssertionConfig addNewAssertion()
+			{
+				return getConfig().addNewAssertion();
+			}
+
+			public List<TestAssertionConfig> getAssertionList()
+			{
+				return getConfig().getAssertionList();
+			}
+
+			public void removeAssertion( int ix )
+			{
+				getConfig().removeAssertion( ix );
+			}
+
+			public TestAssertionConfig insertAssertion( TestAssertionConfig source, int ix )
+			{
+				TestAssertionConfig conf = getConfig().insertNewAssertion( ix );
+				conf.set( source );
+				return conf;
+			}
+		} );
 	}
 
 	/*************************************
@@ -126,35 +166,24 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 			// add to summary result
 			securityCheckResult.addSecurityRequestResult( securityCheckRequestResult );
 		}
-		// TODO refactor sensitiveInfoCheck to write to result directly and
-		// uncomment the call
-		// sensitiveInfoCheck( testStep, context, securityTestLog );
 
 		runTearDownScript( testStep );
 
 		return securityCheckResult;
 	}
 
-	/*
+	/**
 	 * should be implemented in every particular check it executes one request,
 	 * modified by securityCheck if necessary and internally adds messages for
-	 * logging to SecurityCheckRequestResult TODO needs to be abstract and
-	 * implemented in every check
+	 * logging to SecurityCheckRequestResult
 	 */
 	abstract protected void execute( TestStep testStep, SecurityTestRunContext context );
 
-	/*
+	/**
 	 * checks if specific SecurityCheck still has modifications left TODO needs
 	 * to be abstract and implemented in every check
 	 */
 	abstract protected boolean hasNext();
-
-	// TODO to be extracted to specific securityCheck config for those that need
-	// it
-	// public void setParameters( RestParametersConfig parameters )
-	// {
-	// config.setRestParameters( parameters );
-	// }
 
 	public RestParamsPropertyHolder getParameters()
 	{
@@ -270,13 +299,6 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	}
 
 	@Override
-	public ImageIcon getIcon()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public String getId()
 	{
 		return config.getId();
@@ -313,16 +335,6 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	{
 		this.disabled = disabled;
 
-	}
-
-	/**
-	 * The title of this check
-	 * 
-	 * @return
-	 */
-	public String getTitle()
-	{
-		return "";
 	}
 
 	public static boolean isSecurable( TestStep testStep )
@@ -413,7 +425,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	@Override
 	public TestAssertion addAssertion( String label )
 	{
-
+		PropertyChangeNotifier notifier = new PropertyChangeNotifier();
 		try
 		{
 			WsdlMessageAssertion assertion = assertionsSupport.addWsdlAssertion( label );
@@ -421,20 +433,37 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 				return null;
 
 			/*
-			 * What to do if there is at least one response?
+			 * XXX: What to do if there is at least one response?
 			 * 
 			 * Check have been run, and than I add assertion. Should assertion be
 			 * evaluated?
 			 */
+//			if( getAssertableContent() != null )
+//			{
+////				assertRequests( assertion );
+////				assertResponse( assertion );
+////				notifier.notifyChange();
+//			}
 
 			return assertion;
 		}
+
 		catch( Exception e )
 		{
 			SoapUI.logError( e );
 			return null;
 		}
 	}
+
+	
+	/**
+	 * @param assertion
+	 * 			run all responses against this assertion
+	 */
+//	private void assertRequests( WsdlMessageAssertion assertion )
+//	{
+//		securityCheckResult
+//	}
 
 	@Override
 	public void removeAssertion( TestAssertion assertion )
@@ -487,13 +516,13 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	{
 		assertionsSupport.removeAssertionsListener( listener );
 	}
-	
+
 	@Override
 	public int getAssertionCount()
 	{
 		return assertionsSupport.getAssertionCount();
 	}
-	
+
 	@Override
 	public AssertionStatus getAssertionStatus()
 	{
@@ -522,44 +551,57 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 
 		return currentStatus;
 	}
-	
+
 	@Override
 	public String getAssertableContent()
 	{
-		// TODO Auto-generated method stub
-		// XXX: hm....
+		if( testStep instanceof WsdlTestRequest )
+			return ( ( WsdlTestRequest )testStep ).getAssertableContent();
+		if( testStep instanceof HttpTestRequest )
+			return ( ( HttpTestRequest )testStep ).getAssertableContent();
+		if( testStep instanceof RestTestRequest )
+			return ( ( RestTestRequest )testStep ).getAssertableContent();
+
 		return null;
 	}
-	
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.eviware.soapui.model.testsuite.Assertable#getAssertableType()
+	 * 
+	 * Decided to go with assertions on request and response so we can implement
+	 * "men in the middle" attacks using monitor.
+	 */
 	@Override
 	public AssertableType getAssertableType()
 	{
 		return AssertableType.BOTH;
 	}
-	
+
 	@Override
 	public TestAssertion getAssertionByName( String name )
 	{
 		return assertionsSupport.getAssertionByName( name );
 	}
-	
+
 	@Override
 	public List<TestAssertion> getAssertionList()
 	{
 		return new ArrayList<TestAssertion>( assertionsSupport.getAssertionList() );
 	}
-	
+
 	@Override
 	public Map<String, TestAssertion> getAssertions()
 	{
 		return assertionsSupport.getAssertions();
 	}
-	
+
 	public AssertionsSupport getAssertionsSupport()
 	{
 		return assertionsSupport;
 	}
-	
+
 	@Override
 	public TestAssertion cloneAssertion( TestAssertion source, String name )
 	{
@@ -569,13 +611,22 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	@Override
 	public String getDefaultAssertableContent()
 	{
-		// last response???
+		if( testStep instanceof WsdlTestRequest )
+			return ( ( WsdlTestRequest )testStep ).getDefaultAssertableContent();
+		if( testStep instanceof HttpTestRequest )
+			return ( ( HttpTestRequest )testStep ).getDefaultAssertableContent();
+		if( testStep instanceof RestTestRequest )
+			return ( ( RestTestRequest )testStep ).getDefaultAssertableContent();
+
 		return null;
 	}
 
 	@Override
 	public Interface getInterface()
 	{
+		if( testStep instanceof WsdlTestRequest )
+			return ( ( WsdlTestRequest )testStep ).getInterface();
+
 		return null;
 	}
 
@@ -583,5 +634,19 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	public ModelItem getModelItem()
 	{
 		return this;
+	}
+	
+	@Override
+	public AssertionStatus assertRequest( MessageExchange messageExchange, SubmitContext context )
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public AssertionStatus assertResponse( MessageExchange messageExchange, SubmitContext context )
+	{
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
