@@ -64,6 +64,8 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 	private Map<TestStep, Set<SecurityTestStepRunListener>> testStepRunListeners = new HashMap<TestStep, Set<SecurityTestStepRunListener>>();
 	private Set<SecurityCheckRunListener> securityCheckRunListeners = new HashSet<SecurityCheckRunListener>();
 
+	private HashMap<String, List<AbstractSecurityCheck>> securityChecksMapCache;
+
 	// private Set<SecurityTestStepRunListener> testStepRunListeners = new
 	// HashSet<SecurityTestStepRunListener>();
 
@@ -139,8 +141,14 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 		if( listModel != null )
 			listModel.securityCheckAdded( newSecCheck );
 		newSecCheck.setTestStep( testStep );
+		clearSecurityChecksMapCache();
 		return newSecCheck;
 
+	}
+
+	public void clearSecurityChecksMapCache()
+	{
+		securityChecksMapCache = null;
 	}
 
 	/**
@@ -162,7 +170,8 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 				{
 					List<SecurityCheckConfig> securityCheckList = testStepSecurityTest.getTestStepSecurityCheckList();
 					Iterator<SecurityCheckConfig> secListIterator = securityCheckList.iterator();
-					while(secListIterator.hasNext()){
+					while( secListIterator.hasNext() )
+					{
 						SecurityCheckConfig current = secListIterator.next();
 						if( current.getName().equals( securityCheck.getName() ) )
 						{
@@ -181,7 +190,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 				}
 			}
 		}
-		
+		clearSecurityChecksMapCache();
 
 	}
 
@@ -192,6 +201,11 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 	 */
 	public HashMap<String, List<AbstractSecurityCheck>> getSecurityChecksMap()
 	{
+		if( securityChecksMapCache != null )
+		{
+			return securityChecksMapCache;
+		}
+		
 		HashMap<String, List<AbstractSecurityCheck>> securityChecksMap = new HashMap<String, List<AbstractSecurityCheck>>();
 		if( getConfig() != null )
 		{
@@ -223,6 +237,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 				}
 			}
 		}
+		this.securityChecksMapCache = securityChecksMap;
 		return securityChecksMap;
 	}
 
@@ -262,7 +277,8 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 		getConfig().getSetupScript().setStringValue( script );
 		if( scriptEngine != null )
 			scriptEngine.setScript( script );
-
+		
+		clearSecurityChecksMapCache();
 		notifyPropertyChanged( STARTUP_SCRIPT_PROPERTY, oldScript, script );
 	}
 
@@ -318,6 +334,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 		if( scriptEngine != null )
 			scriptEngine.setScript( script );
 
+		clearSecurityChecksMapCache();
 		notifyPropertyChanged( TEARDOWN_SCRIPT_PROPERTY, oldScript, script );
 	}
 
@@ -447,6 +464,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 				}
 			}
 		}
+		clearSecurityChecksMapCache();
 		return null;
 	}
 
@@ -499,6 +517,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 		if( old != failSecurityTestOnErrors )
 		{
 			getConfig().setFailSecurityTestOnCheckErrors( failSecurityTestOnErrors );
+			clearSecurityChecksMapCache();
 			notifyPropertyChanged( FAIL_ON_CHECKS_ERRORS_PROPERTY, old, failSecurityTestOnErrors );
 		}
 	}
