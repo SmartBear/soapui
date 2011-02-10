@@ -406,7 +406,7 @@ public class SecurityTestRunnerImpl extends AbstractTestRunner<SecurityTest, Sec
 			{
 				securityTestStepListeners[j].beforeSecurityCheck( this, runContext, securityCheck );
 			}
-			SecurityCheckResult result = securityCheck.runNew( cloneForSecurityCheck( ( WsdlTestStep )currentStep ),
+			SecurityCheckResult result = securityCheck.run( cloneForSecurityCheck( ( WsdlTestStep )currentStep ),
 					runContext );
 			// TODO check
 			if( securityTest.getFailSecurityTestOnCheckErrors() && result.getStatus() == SecurityCheckStatus.FAILED )

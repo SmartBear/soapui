@@ -112,7 +112,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	 * @param securityTestLog
 	 *           The security log to write to
 	 */
-	public SecurityCheckResult runNew( TestStep testStep, SecurityTestRunContext context )
+	public SecurityCheckResult run( TestStep testStep, SecurityTestRunContext context )
 	{
 		securityCheckResult = new SecurityCheckResult( this );
 
