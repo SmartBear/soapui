@@ -25,6 +25,7 @@ import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
+import com.eviware.soapui.impl.wsdl.WsdlSubmitContext;
 import com.eviware.soapui.impl.wsdl.support.assertions.AssertableConfig;
 import com.eviware.soapui.impl.wsdl.support.assertions.AssertionsSupport;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCaseRunner;
@@ -62,7 +63,7 @@ import com.eviware.x.form.XFormDialog;
 
 /**
  * @author robert
- *
+ * 
  */
 public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<SecurityCheckConfig> implements
 		XPathReferenceContainer, Assertable, RequestAssertion, ResponseAssertion
@@ -106,14 +107,14 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 			config.setExecutionStrategy( SEPARATE_REQUEST_STRATEGY );
 		if( config.getRestParameters() == null )
 			config.setRestParameters( RestParametersConfig.Factory.newInstance() );
-		
+
 		initAssertions();
 
 	}
-	
+
 	private void initAssertions()
 	{
-		assertionsSupport = new AssertionsSupport( this , new AssertableConfig()
+		assertionsSupport = new AssertionsSupport( this, new AssertableConfig()
 		{
 			public TestAssertionConfig addNewAssertion()
 			{
@@ -438,12 +439,12 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 			 * Check have been run, and than I add assertion. Should assertion be
 			 * evaluated?
 			 */
-//			if( getAssertableContent() != null )
-//			{
-////				assertRequests( assertion );
-////				assertResponse( assertion );
-////				notifier.notifyChange();
-//			}
+			if( getAssertableContent() != null )
+			{
+				assertRequests( assertion );
+				assertResponse( assertion );
+				notifier.notifyChange();
+			}
 
 			return assertion;
 		}
@@ -455,15 +456,29 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		}
 	}
 
-	
 	/**
 	 * @param assertion
-	 * 			run all responses against this assertion
+	 *           run all responses against this assertion
 	 */
-//	private void assertRequests( WsdlMessageAssertion assertion )
-//	{
-//		securityCheckResult
-//	}
+	private void assertResponse( WsdlMessageAssertion assertion )
+	{
+		for( SecurityCheckRequestResult result : securityCheckResult.getSecurityRequestResultList() )
+		{
+			assertion.assertResponse( result.getMessageExchange(), new WsdlSubmitContext( testStep ) );
+		}
+	}
+
+	/**
+	 * @param assertion
+	 *           run all request against this assertion
+	 */
+	private void assertRequests( WsdlMessageAssertion assertion )
+	{
+		for( SecurityCheckRequestResult result : securityCheckResult.getSecurityRequestResultList() )
+		{
+			assertion.assertRequest( result.getMessageExchange(), new WsdlSubmitContext( testStep ) );
+		}
+	}
 
 	@Override
 	public void removeAssertion( TestAssertion assertion )
@@ -557,9 +572,9 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	{
 		if( testStep instanceof WsdlTestRequest )
 			return ( ( WsdlTestRequest )testStep ).getAssertableContent();
-		if( testStep instanceof HttpTestRequest )
+		else if( testStep instanceof HttpTestRequest )
 			return ( ( HttpTestRequest )testStep ).getAssertableContent();
-		if( testStep instanceof RestTestRequest )
+		else if( testStep instanceof RestTestRequest )
 			return ( ( RestTestRequest )testStep ).getAssertableContent();
 
 		return null;
@@ -613,9 +628,9 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	{
 		if( testStep instanceof WsdlTestRequest )
 			return ( ( WsdlTestRequest )testStep ).getDefaultAssertableContent();
-		if( testStep instanceof HttpTestRequest )
+		else if( testStep instanceof HttpTestRequest )
 			return ( ( HttpTestRequest )testStep ).getDefaultAssertableContent();
-		if( testStep instanceof RestTestRequest )
+		else if( testStep instanceof RestTestRequest )
 			return ( ( RestTestRequest )testStep ).getDefaultAssertableContent();
 
 		return null;
@@ -635,14 +650,14 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	{
 		return this;
 	}
-	
+
 	@Override
 	public AssertionStatus assertRequest( MessageExchange messageExchange, SubmitContext context )
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	@Override
 	public AssertionStatus assertResponse( MessageExchange messageExchange, SubmitContext context )
 	{
