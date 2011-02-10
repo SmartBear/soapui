@@ -191,7 +191,7 @@ public class JMSHeaderAndPropertyInspectorFactory implements RequestInspectorFac
 		public StringToStringMap getJMSHeadersAndProperties()
 		{
 			MessageExchange messageExchange = getModelItem().getMessageExchange();
-			if( messageExchange != null )
+			if( messageExchange != null && messageExchange.getRequestHeaders() != null )
 				return messageExchange.getRequestHeaders().toStringToStringMap();
 			else
 				return new StringToStringMap();
