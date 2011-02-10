@@ -60,8 +60,8 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 	private WsdlTestCase testCase;
 	private SecurityTestLogModel securityTestLog;
 	private SecurityChecksPanel.SecurityCheckListModel listModel;
-	private Set<SecurityTestRunListener> testRunListeners = new HashSet<SecurityTestRunListener>();
-	private Map<TestStep, Set<SecurityTestStepRunListener>> testStepRunListeners = new HashMap<TestStep, Set<SecurityTestStepRunListener>>();
+	private Set<SecurityTestRunListener> securityTestRunListeners = new HashSet<SecurityTestRunListener>();
+	private Map<TestStep, Set<SecurityTestStepRunListener>> securityTestStepRunListeners = new HashMap<TestStep, Set<SecurityTestStepRunListener>>();
 	private Set<SecurityCheckRunListener> securityCheckRunListeners = new HashSet<SecurityCheckRunListener>();
 
 	private HashMap<String, List<AbstractSecurityCheck>> securityChecksMapCache;
@@ -488,22 +488,22 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 		return name;
 	}
 
-	public void addTestRunListener( SecurityTestRunListener listener )
+	public void addSecurityTestRunListener( SecurityTestRunListener listener )
 	{
 		if( listener == null )
 			throw new RuntimeException( "listener must not be null" );
 
-		testRunListeners.add( listener );
+		securityTestRunListeners.add( listener );
 	}
 
 	public void removeTestRunListener( SecurityTestRunListener listener )
 	{
-		testRunListeners.remove( listener );
+		securityTestRunListeners.remove( listener );
 	}
 
 	public SecurityTestRunListener[] getTestRunListeners()
 	{
-		return testRunListeners.toArray( new SecurityTestRunListener[testRunListeners.size()] );
+		return securityTestRunListeners.toArray( new SecurityTestRunListener[securityTestRunListeners.size()] );
 	}
 
 	public boolean getFailSecurityTestOnCheckErrors()
@@ -527,15 +527,15 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 		if( listener == null )
 			throw new RuntimeException( "listener must not be null" );
 
-		if( testStepRunListeners.containsKey( testStep ) )
+		if( securityTestStepRunListeners.containsKey( testStep ) )
 		{
-			testStepRunListeners.get( testStep ).add( listener );
+			securityTestStepRunListeners.get( testStep ).add( listener );
 		}
 		else
 		{
 			Set<SecurityTestStepRunListener> listeners = new HashSet<SecurityTestStepRunListener>();
 			listeners.add( listener );
-			testStepRunListeners.put( testStep, listeners );
+			securityTestStepRunListeners.put( testStep, listeners );
 		}
 	}
 
@@ -559,14 +559,14 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 
 	public void removeTestStepRunListener( TestStep testStep, SecurityTestStepRunListener listener )
 	{
-		testStepRunListeners.remove( testStepRunListeners.get( testStep ) );
+		securityTestStepRunListeners.remove( securityTestStepRunListeners.get( testStep ) );
 	}
 
 	public SecurityTestStepRunListener[] getTestStepRunListeners( TestStep testStep )
 	{
-		if( testStepRunListeners.containsKey( testStep ) )
+		if( securityTestStepRunListeners.containsKey( testStep ) )
 		{
-			Set<SecurityTestStepRunListener> listeners = testStepRunListeners.get( testStep );
+			Set<SecurityTestStepRunListener> listeners = securityTestStepRunListeners.get( testStep );
 			return listeners.toArray( new SecurityTestStepRunListener[listeners.size()] );
 		}
 		else

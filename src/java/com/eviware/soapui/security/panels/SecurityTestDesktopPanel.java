@@ -16,6 +16,8 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -33,18 +35,22 @@ import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.ListModel;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.text.Document;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.panels.support.MockTestRunContext;
 import com.eviware.soapui.impl.wsdl.panels.support.MockTestRunner;
+import com.eviware.soapui.impl.wsdl.panels.testcase.WsdlTestCaseDesktopPanel;
+import com.eviware.soapui.impl.wsdl.panels.testcase.WsdlTestCaseDesktopPanel.InternalTestRunListener;
 import com.eviware.soapui.impl.wsdl.panels.testcase.actions.SetCredentialsAction;
 import com.eviware.soapui.impl.wsdl.panels.testcase.actions.SetEndpointAction;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.AbstractGroovyEditorModel;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.PropertyHolderTable;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
+import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCaseRunner;
 import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestStepFactory;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestCaseRunContext;
@@ -59,6 +65,7 @@ import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.security.log.JSecurityTestRunLog;
 import com.eviware.soapui.security.support.ProgressBarSecurityTestAdapter;
 import com.eviware.soapui.security.support.SecurityCheckRunListener;
+import com.eviware.soapui.security.support.SecurityTestRunListenerAdapter;
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.StringUtils;
@@ -117,6 +124,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 	private SecurityTest securityTest;
 	protected JXToolBar toolbar;
 	private InternalSecurityCheckRunListener secChkRunListener = new InternalSecurityCheckRunListener();
+	private InternalSecurityTestRunListener securityTestRunListener = new InternalSecurityTestRunListener();
 
 	public SecurityTestDesktopPanel( SecurityTest securityTest )
 	{
@@ -127,6 +135,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 		setPreferredSize( new Dimension( 400, 550 ) );
 		this.securityTest = securityTest;
 		securityTest.addSecurityCheckRunListener( secChkRunListener );
+		securityTest.addSecurityTestRunListener( securityTestRunListener );
 		progressBarAdapter = new ProgressBarSecurityTestAdapter( progressBar, securityTest );
 	}
 
@@ -313,7 +322,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 			// testStepList.setEnabled( true );
 			return;
 		}
-		
+
 		runButton.setEnabled( false );
 		cancelButton.setEnabled( true );
 		StringToObjectMap properties = new StringToObjectMap();
@@ -414,9 +423,9 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 
 	protected void afterRun()
 	{
-		 runButton.setEnabled( true );
-		 cancelButton.setEnabled( false );
-		// testStepList.setEnabled( true );
+		runButton.setEnabled( true );
+		cancelButton.setEnabled( false );
+		testStepList.setEnabled( true );
 	}
 
 	// TODO - check complete logic!
@@ -614,5 +623,82 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 			// TODO Auto-generated method stub
 
 		}
+	}
+
+	public class InternalSecurityTestRunListener extends SecurityTestRunListenerAdapter
+	{
+
+		private SimpleDateFormat dateFormat;
+
+		public InternalSecurityTestRunListener()
+		{
+			dateFormat = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss.SSS" );
+		}
+
+		public void beforeRun( SecurityTestRunnerInterface testRunner, SecurityTestRunContext runContext )
+		{
+			if( SoapUI.getTestMonitor().hasRunningSecurityTests( getModelItem().getTestCase() ) )
+				return;
+
+			runButton.setEnabled( false );
+			cancelButton.setEnabled( true );
+			testStepList.setEnabled( false );
+			// testStepList.setSelectedIndex( -1 );
+			securityTestLog.clear();
+
+			securityTestLog.addText( "SecurityTest started at " + dateFormat.format( new Date() ) );
+
+			SecurityTestDesktopPanel.this.beforeRun();
+
+			if( runner == null )
+				runner = testRunner;
+		}
+		public void afterRun( SecurityTestRunnerInterface testRunner, SecurityTestRunContext runContext )
+		{
+			if( SoapUI.getTestMonitor().hasRunningSecurityTests( getModelItem().getTestCase() ) )
+				return;
+
+			SecurityTestRunnerImpl securityRunner = ( SecurityTestRunnerImpl )testRunner;
+
+			if( testRunner.getStatus() == SecurityTestRunnerInterface.Status.CANCELED )
+				securityTestLog.addText( "SecurityTest canceled [" + testRunner.getReason() + "], time taken = "
+						+ securityRunner.getTimeTaken() );
+			else if( testRunner.getStatus() == SecurityTestRunnerInterface.Status.FAILED )
+			{
+				String msg = securityRunner.getReason();
+				if( securityRunner.getError() != null )
+				{
+					if( msg != null )
+						msg += ":";
+
+					msg += securityRunner.getError();
+				}
+
+				securityTestLog.addText( "SecurityTest failed [" + msg + "], time taken = " + securityRunner.getTimeTaken() );
+			}
+			else
+				securityTestLog.addText( "SecurityTest finished with status [" + testRunner.getStatus() + "], time taken = "
+						+ securityRunner.getTimeTaken() );
+
+			lastRunner = runner;
+			runner = null;
+
+			JToggleButton loopButton = ( JToggleButton )runContext.getProperty( "loopButton" );
+			if( loopButton != null && loopButton.isSelected() && testRunner.getStatus() == SecurityTestRunnerInterface.Status.FINISHED )
+			{
+				SwingUtilities.invokeLater( new Runnable()
+				{
+					public void run()
+					{
+						runSecurityTest();
+					}
+				} );
+			}
+			else
+			{
+				SecurityTestDesktopPanel.this.afterRun();
+			}
+		}
+
 	}
 }

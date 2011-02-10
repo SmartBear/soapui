@@ -62,6 +62,15 @@ public class SecurityTestLogModel extends AbstractListModel
 //		enforceMaxSize();
 //	}
 
+	public synchronized void addText( String msg )
+	{
+		items.add( msg );
+		results.add( null );
+		fireIntervalAdded( this, items.size() - 1, items.size() - 1 );
+
+		enforceMaxSize();
+	}
+
 	public synchronized SecurityCheckResult getResultAt( int index )
 	{
 		if( index >= results.size() )

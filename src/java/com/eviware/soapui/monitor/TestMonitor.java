@@ -476,4 +476,19 @@ public class TestMonitor
 
 		return false;
 	}
+	
+	public boolean hasRunningSecurityTests( TestCase testCase )
+	{
+		//TODO
+//		Iterator<LoadTestRunner> iterator = runningLoadTests.iterator();
+//		while( iterator.hasNext() )
+//		{
+//			if( iterator.next().getLoadTest().getTestCase() == testCase )
+//				return true;
+//		}
+
+		return false;
+	}
+
+
 }

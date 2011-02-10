@@ -397,4 +397,12 @@ public class JSecurityTestRunLog extends JPanel
 			UISupport.showPopup( popup, testLogList, e.getPoint() );
 		}
 	}
+	public synchronized void addText( String string )
+	{
+		logListModel.addText( string );
+		if( follow )
+			testLogList.ensureIndexIsVisible( logListModel.getSize() - 1 );
+	}
+
+
 }
