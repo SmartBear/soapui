@@ -12,36 +12,25 @@
 
 package com.eviware.soapui.security.check;
 
-import java.util.List;
 import java.util.Map;
 
 import javax.swing.JTextField;
 
 import com.eviware.soapui.config.ParameterExposureCheckConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
-import com.eviware.soapui.config.TestAssertionConfig;
-import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
-import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.monitor.JProxyServletWsdlMonitorMessageExchange;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCaseRunner;
-import com.eviware.soapui.impl.wsdl.teststeps.HttpResponseMessageExchange;
-import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestInterface;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
-import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStepInterface;
 import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
-import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.SimpleContainsAssertion;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.MessageExchange;
-import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTestRunContext;
-import com.eviware.soapui.security.SecurityCheckRequestResult.SecurityCheckStatus;
 import com.eviware.soapui.security.log.JSecurityTestRunLog;
 import com.eviware.soapui.security.monitor.HttpSecurityAnalyser;
 import com.eviware.soapui.security.ui.ParameterExposureCheckPanel;
 import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
-import com.eviware.soapui.support.SecurityCheckUtil;
 import com.eviware.soapui.support.types.StringToObjectMap;
 
 /**
@@ -91,59 +80,65 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements Htt
 		}
 	}
 
-//	@Override
-//	public void analyze( TestStep testStep, SecurityTestRunContext context )
-//	{
-//		if( acceptsTestStep( testStep ) )
-//		{
-//			HttpTestRequestStepInterface testStepwithProperties = ( HttpTestRequestStepInterface )testStep;
-//			HttpTestRequestInterface<?> request = testStepwithProperties.getTestRequest();
-//			MessageExchange messageExchange = new HttpResponseMessageExchange( request );
-//
-//			RestParamsPropertyHolder params;
-//
-//			AbstractHttpRequest<?> httpRequest = testStepwithProperties.getHttpRequest();
-//
-//			params = httpRequest.getParams();
-//
-//			List<TestProperty> paramsToCheck;
-//
-//			paramsToCheck = getParameters().getPropertyList();
-//
-//			for( TestProperty parameter : paramsToCheck )
-//			{
-//				if( parameter != null )
-//				{
-//					TestProperty testParameter = params.get( parameter.getName() );
-//
-//					if( testParameter != null && testParameter.getValue() != null
-//							&& testParameter.getValue().length() >= getMinimumLength() )
-//					{
-//						TestAssertionConfig assertionConfig = TestAssertionConfig.Factory.newInstance();
-//						assertionConfig.setType( SimpleContainsAssertion.ID );
-//
-//						if( SecurityCheckUtil.contains( context, new String( messageExchange.getRawResponseData() ),
-//								testParameter.getValue(), false ) )
-//						{
-//							// TODO refactor through SecurityCheckResult
-//							// securityTestLog
-//							// .addEntry(new SecurityTestLogMessageEntry(
-//							// "The parameter "
-//							// + testParameter.getName()
-//							// + " with the value \""
-//							// + testParameter.getValue()
-//							// + "\" is exposed in the response",
-//							// messageExchange));
-//							securityCheckRequestResult.setStatus( SecurityCheckStatus.FAILED );
-//						}
-//					}
-//				}
-//			}
-//			// if (getStatus() != Status.FAILED)
-//			// setStatus(Status.FINISHED);
-//		}
-//		// TODO
-//	}
+	// @Override
+	// public void analyze( TestStep testStep, SecurityTestRunContext context )
+	// {
+	// if( acceptsTestStep( testStep ) )
+	// {
+	// HttpTestRequestStepInterface testStepwithProperties = (
+	// HttpTestRequestStepInterface )testStep;
+	// HttpTestRequestInterface<?> request =
+	// testStepwithProperties.getTestRequest();
+	// MessageExchange messageExchange = new HttpResponseMessageExchange( request
+	// );
+	//
+	// RestParamsPropertyHolder params;
+	//
+	// AbstractHttpRequest<?> httpRequest =
+	// testStepwithProperties.getHttpRequest();
+	//
+	// params = httpRequest.getParams();
+	//
+	// List<TestProperty> paramsToCheck;
+	//
+	// paramsToCheck = getParameters().getPropertyList();
+	//
+	// for( TestProperty parameter : paramsToCheck )
+	// {
+	// if( parameter != null )
+	// {
+	// TestProperty testParameter = params.get( parameter.getName() );
+	//
+	// if( testParameter != null && testParameter.getValue() != null
+	// && testParameter.getValue().length() >= getMinimumLength() )
+	// {
+	// TestAssertionConfig assertionConfig =
+	// TestAssertionConfig.Factory.newInstance();
+	// assertionConfig.setType( SimpleContainsAssertion.ID );
+	//
+	// if( SecurityCheckUtil.contains( context, new String(
+	// messageExchange.getRawResponseData() ),
+	// testParameter.getValue(), false ) )
+	// {
+	// // TODO refactor through SecurityCheckResult
+	// // securityTestLog
+	// // .addEntry(new SecurityTestLogMessageEntry(
+	// // "The parameter "
+	// // + testParameter.getName()
+	// // + " with the value \""
+	// // + testParameter.getValue()
+	// // + "\" is exposed in the response",
+	// // messageExchange));
+	// securityCheckRequestResult.setStatus( SecurityCheckStatus.FAILED );
+	// }
+	// }
+	// }
+	// }
+	// // if (getStatus() != Status.FAILED)
+	// // setStatus(Status.FINISHED);
+	// }
+	// // TODO
+	// }
 
 	/**
 	 * Setting the minimum size that the parameter value will be for it to be
@@ -242,7 +237,6 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements Htt
 		return true;
 	}
 
-	@Override
 	public String getTitle()
 	{
 		return checkTitle;

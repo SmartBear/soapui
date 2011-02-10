@@ -187,7 +187,6 @@ public class GroovySecurityCheck extends AbstractSecurityCheck implements HttpSe
 		return true;
 	}
 
-	@Override
 	public String getTitle()
 	{
 		return checkTitle;
