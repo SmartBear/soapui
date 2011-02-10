@@ -123,8 +123,6 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		{
 			securityCheckRequestResult = new SecurityCheckRequestResult( this );
 			execute( testStep, context );
-			checkResponseValidity();
-			analyze( testStep, context );
 			// add to summary result
 			securityCheckResult.addSecurityRequestResult( securityCheckRequestResult );
 		}
@@ -137,17 +135,6 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		return securityCheckResult;
 	}
 
-	/**
-	 * 
-	 * validate response against HTTP codes.
-	 * 
-	 */
-	private void checkResponseValidity()
-	{
-		// TODO Auto-generated method stub
-
-	}
-
 	/*
 	 * should be implemented in every particular check it executes one request,
 	 * modified by securityCheck if necessary and internally adds messages for
@@ -155,14 +142,6 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	 * implemented in every check
 	 */
 	abstract protected void execute( TestStep testStep, SecurityTestRunContext context );
-
-	/*
-	 * should be implemented in every particular check it analyzes one executed
-	 * request, modified by securityCheck and internally adds messages for
-	 * logging to SecurityCheckRequestResult TODO needs to be abstract and
-	 * implemented in every check
-	 */
-	abstract protected void analyze( TestStep testStep, SecurityTestRunContext context );
 
 	/*
 	 * checks if specific SecurityCheck still has modifications left TODO needs
@@ -188,26 +167,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	 * END OF NEWLY REFACTORED
 	 **************************************/
 
-	// private void sensitiveInfoCheck( TestStep testStep, SecurityTestRunContext
-	// context,
-	// SecurityTestLogModel securityTestLog )
-	// {
-	// if( this instanceof SensitiveInformationCheckable )
-	// {
-	// ( ( SensitiveInformationCheckable )this
-	// ).checkForSensitiveInformationExposure( testStep, context,
-	// securityTestLog );
-	// }
-	// }
-
 	public abstract boolean configure();
-
-	// {
-	// if( dialog == null )
-	// buildDialog();
-	// dialog.setVisible( true );
-	// return true;
-	// }
 
 	public boolean isConfigurable()
 	{
@@ -254,37 +214,6 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	{
 		testStep = step;
 	}
-
-	// public class OkAction extends AbstractAction
-	// {
-	// public OkAction()
-	// {
-	// // TODO save the config
-	// super( "Save" );
-	// }
-	//
-	// public void actionPerformed( ActionEvent arg0 )
-	// {
-	// if( contentPanel != null )
-	// contentPanel.save();
-	//
-	// dialog.setVisible( false );
-	// }
-	//
-	// }
-
-	// public class CancelAction extends AbstractAction
-	// {
-	// public CancelAction()
-	// {
-	// super( "Cancel" );
-	// }
-	//
-	// public void actionPerformed( ActionEvent arg0 )
-	// {
-	// dialog.setVisible( false );
-	// }
-	// }
 
 	private void runTearDownScript( TestStep testStep )
 	{
@@ -333,13 +262,6 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	{
 		return config;
 	}
-
-	// @Override
-	// public List<? extends ModelItem> getChildren()
-	// {
-	// // TODO Auto-generated method stub
-	// return null;
-	// }
 
 	@Override
 	public String getDescription()
@@ -414,11 +336,6 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 			return false;
 		}
 	}
-
-	// protected void setStatus( Status s )
-	// {
-	// status = s;
-	// }
 
 	public String getExecutionStrategy()
 	{

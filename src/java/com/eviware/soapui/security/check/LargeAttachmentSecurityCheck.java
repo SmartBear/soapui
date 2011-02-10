@@ -43,12 +43,6 @@ public class LargeAttachmentSecurityCheck extends AbstractSecurityCheck implemen
 	}
 
 	@Override
-	public void analyze( TestStep testStep, SecurityTestRunContext context )
-	{
-
-	}
-
-	@Override
 	protected void execute( TestStep testStep, SecurityTestRunContext context )
 	{
 		WsdlTestCaseRunner testCaseRunner = new WsdlTestCaseRunner( ( WsdlTestCase )testStep.getTestCase(),
@@ -82,7 +76,6 @@ public class LargeAttachmentSecurityCheck extends AbstractSecurityCheck implemen
 			SecurityTestLogModel securityTestLog )
 	{
 		InformationExposureCheck iec = new InformationExposureCheck( testStep, config, null, null );
-		iec.analyze( testStep, context );
 
 	}
 

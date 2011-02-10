@@ -91,59 +91,59 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements Htt
 		}
 	}
 
-	@Override
-	public void analyze( TestStep testStep, SecurityTestRunContext context )
-	{
-		if( acceptsTestStep( testStep ) )
-		{
-			HttpTestRequestStepInterface testStepwithProperties = ( HttpTestRequestStepInterface )testStep;
-			HttpTestRequestInterface<?> request = testStepwithProperties.getTestRequest();
-			MessageExchange messageExchange = new HttpResponseMessageExchange( request );
-
-			RestParamsPropertyHolder params;
-
-			AbstractHttpRequest<?> httpRequest = testStepwithProperties.getHttpRequest();
-
-			params = httpRequest.getParams();
-
-			List<TestProperty> paramsToCheck;
-
-			paramsToCheck = getParameters().getPropertyList();
-
-			for( TestProperty parameter : paramsToCheck )
-			{
-				if( parameter != null )
-				{
-					TestProperty testParameter = params.get( parameter.getName() );
-
-					if( testParameter != null && testParameter.getValue() != null
-							&& testParameter.getValue().length() >= getMinimumLength() )
-					{
-						TestAssertionConfig assertionConfig = TestAssertionConfig.Factory.newInstance();
-						assertionConfig.setType( SimpleContainsAssertion.ID );
-
-						if( SecurityCheckUtil.contains( context, new String( messageExchange.getRawResponseData() ),
-								testParameter.getValue(), false ) )
-						{
-							// TODO refactor through SecurityCheckResult
-							// securityTestLog
-							// .addEntry(new SecurityTestLogMessageEntry(
-							// "The parameter "
-							// + testParameter.getName()
-							// + " with the value \""
-							// + testParameter.getValue()
-							// + "\" is exposed in the response",
-							// messageExchange));
-							securityCheckRequestResult.setStatus( SecurityCheckStatus.FAILED );
-						}
-					}
-				}
-			}
-			// if (getStatus() != Status.FAILED)
-			// setStatus(Status.FINISHED);
-		}
-		// TODO
-	}
+//	@Override
+//	public void analyze( TestStep testStep, SecurityTestRunContext context )
+//	{
+//		if( acceptsTestStep( testStep ) )
+//		{
+//			HttpTestRequestStepInterface testStepwithProperties = ( HttpTestRequestStepInterface )testStep;
+//			HttpTestRequestInterface<?> request = testStepwithProperties.getTestRequest();
+//			MessageExchange messageExchange = new HttpResponseMessageExchange( request );
+//
+//			RestParamsPropertyHolder params;
+//
+//			AbstractHttpRequest<?> httpRequest = testStepwithProperties.getHttpRequest();
+//
+//			params = httpRequest.getParams();
+//
+//			List<TestProperty> paramsToCheck;
+//
+//			paramsToCheck = getParameters().getPropertyList();
+//
+//			for( TestProperty parameter : paramsToCheck )
+//			{
+//				if( parameter != null )
+//				{
+//					TestProperty testParameter = params.get( parameter.getName() );
+//
+//					if( testParameter != null && testParameter.getValue() != null
+//							&& testParameter.getValue().length() >= getMinimumLength() )
+//					{
+//						TestAssertionConfig assertionConfig = TestAssertionConfig.Factory.newInstance();
+//						assertionConfig.setType( SimpleContainsAssertion.ID );
+//
+//						if( SecurityCheckUtil.contains( context, new String( messageExchange.getRawResponseData() ),
+//								testParameter.getValue(), false ) )
+//						{
+//							// TODO refactor through SecurityCheckResult
+//							// securityTestLog
+//							// .addEntry(new SecurityTestLogMessageEntry(
+//							// "The parameter "
+//							// + testParameter.getName()
+//							// + " with the value \""
+//							// + testParameter.getValue()
+//							// + "\" is exposed in the response",
+//							// messageExchange));
+//							securityCheckRequestResult.setStatus( SecurityCheckStatus.FAILED );
+//						}
+//					}
+//				}
+//			}
+//			// if (getStatus() != Status.FAILED)
+//			// setStatus(Status.FINISHED);
+//		}
+//		// TODO
+//	}
 
 	/**
 	 * Setting the minimum size that the parameter value will be for it to be

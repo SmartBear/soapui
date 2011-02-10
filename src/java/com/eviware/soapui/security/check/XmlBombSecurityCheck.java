@@ -78,24 +78,24 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck implements Sensi
 	/*
 	 * How this works??
 	 */
-	@Override
-	public void analyze( TestStep testStep, SecurityTestRunContext context )
-	{
-		AbstractHttpRequest<?> lastRequest = getRequest( testStep );
-
-		if( lastRequest.getResponse().getContentAsString().indexOf( "SQL Error" ) > -1 )
-		{
-			// securityTestLog.addEntry( new SecurityTestLogMessageEntry(
-			// "SQL Error displayed in response", null
-			// new HttpResponseMessageExchange(lastRequest) ) );
-			securityCheckRequestResult.setStatus( SecurityCheckStatus.FAILED );
-		}
-		else
-		{
-			securityCheckRequestResult.setStatus( SecurityCheckStatus.OK );
-		}
-		// TODO
-	}
+//	@Override
+//	public void analyze( TestStep testStep, SecurityTestRunContext context )
+//	{
+//		AbstractHttpRequest<?> lastRequest = getRequest( testStep );
+//
+//		if( lastRequest.getResponse().getContentAsString().indexOf( "SQL Error" ) > -1 )
+//		{
+//			// securityTestLog.addEntry( new SecurityTestLogMessageEntry(
+//			// "SQL Error displayed in response", null
+//			// new HttpResponseMessageExchange(lastRequest) ) );
+//			securityCheckRequestResult.setStatus( SecurityCheckStatus.FAILED );
+//		}
+//		else
+//		{
+//			securityCheckRequestResult.setStatus( SecurityCheckStatus.OK );
+//		}
+//		// TODO
+//	}
 
 	@Override
 	protected void execute( TestStep testStep, SecurityTestRunContext context )
@@ -211,7 +211,7 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck implements Sensi
 			SecurityTestLogModel securityTestLog )
 	{
 		InformationExposureCheck iec = new InformationExposureCheck( testStep, config, null, null );
-		iec.analyze( testStep, context );
+//		iec.analyze( testStep, context );
 
 	}
 

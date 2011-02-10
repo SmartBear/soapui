@@ -1,3 +1,14 @@
+/*
+ *  soapUI, copyright (C) 2004-2011 eviware.com 
+ *
+ *  soapUI is free software; you can redistribute it and/or modify it under the 
+ *  terms of version 2.1 of the GNU Lesser General Public License as published by 
+ *  the Free Software Foundation.
+ *
+ *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ *  See the GNU Lesser General Public License for more details at gnu.org.
+ */
 package com.eviware.soapui.security.check;
 
 import java.util.ArrayList;
@@ -50,6 +61,7 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheck
 	{
 		super( testStep, config, parent, icon );
 
+		config.setConfig( CheckedParametersListConfig.Factory.newInstance() );
 		if( config.getConfig() == null )
 		{
 			invalidTypesConfig = CheckedParametersListConfig.Factory.newInstance();
@@ -64,14 +76,14 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheck
 				extractor.extract();
 				TreeMap<String, NodeInfo> params = extractor.getParams();
 				// what to do if request is changed????
-				for( String key : params.keySet() )
-				{
-					CheckedParameterConfig param = invalidTypesConfig.addNewParameters();
-					param.setParameterName( params.get( key ).getSimpleName() );
-					param.setXpath( params.get( key ).getXPath() );
-					param.setChecked( false );
-					param.setType( String.valueOf( params.get( key ).getType() ) );
-				}
+//				for( String key : params.keySet() )
+//				{
+//					CheckedParameterConfig param = invalidTypesConfig.addNewParameters();
+////					param.setParameterName( params.get( key ).getSimpleName() );
+//					param.setXpath( params.get( key ).getXPath() );
+//					param.setChecked( false );
+//					param.setType( String.valueOf( params.get( key ).getType() ) );
+//				}
 			}
 			catch( Exception e )
 			{
@@ -230,12 +242,6 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheck
 				}
 			}
 		}
-	}
-
-	@Override
-	protected void analyze( TestStep testStep, SecurityTestRunContext context )
-	{
-		// XXX
 	}
 
 	@Override

@@ -79,7 +79,7 @@ public class SQLInjectionCheck extends AbstractSecurityCheck implements Sensitiv
 			SecurityTestLogModel securityTestLog )
 	{
 		InformationExposureCheck iec = new InformationExposureCheck( testStep, config, null, null );
-		iec.analyze( testStep, context );
+//		iec.analyze( testStep, context );
 	}
 
 	@Override
@@ -93,23 +93,23 @@ public class SQLInjectionCheck extends AbstractSecurityCheck implements Sensitiv
 		testStep.run( testCaseRunner, context );
 	}
 
-	@Override
-	protected void analyze( TestStep testStep, SecurityTestRunContext context )
-	{
-		if( acceptsTestStep( testStep ) )
-		{
-			// HttpTestRequestStepInterface testStepwithProperties = (
-			// HttpTestRequestStepInterface )testStep;
-			// HttpTestRequestInterface<?> request =
-			// testStepwithProperties.getTestRequest();
-			// MessageExchange messageExchange = new HttpResponseMessageExchange(
-			// request );
-
-			// securityCheckReqResult.setMessageExchange( messageExchange );
-			securityCheckRequestResult.setStatus( SecurityCheckStatus.OK );
-
-		}
-	}
+//	@Override
+//	protected void analyze( TestStep testStep, SecurityTestRunContext context )
+//	{
+//		if( acceptsTestStep( testStep ) )
+//		{
+//			// HttpTestRequestStepInterface testStepwithProperties = (
+//			// HttpTestRequestStepInterface )testStep;
+//			// HttpTestRequestInterface<?> request =
+//			// testStepwithProperties.getTestRequest();
+//			// MessageExchange messageExchange = new HttpResponseMessageExchange(
+//			// request );
+//
+//			// securityCheckReqResult.setMessageExchange( messageExchange );
+//			securityCheckRequestResult.setStatus( SecurityCheckStatus.OK );
+//
+//		}
+//	}
 
 	@Override
 	protected boolean hasNext()

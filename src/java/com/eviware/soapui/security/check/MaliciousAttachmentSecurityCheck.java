@@ -101,7 +101,6 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck impl
 			SecurityTestLogModel securityTestLog )
 	{
 		InformationExposureCheck iec = new InformationExposureCheck( testStep, config, null, null );
-		iec.analyze( testStep, context );
 
 	}
 
@@ -138,13 +137,6 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck impl
 	protected void buildDialog()
 	{
 		// super.buildDialogOld();
-	}
-
-	@Override
-	protected void analyze( TestStep testStep, SecurityTestRunContext context )
-	{
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override

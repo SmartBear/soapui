@@ -64,55 +64,10 @@ public class InformationExposureCheck extends AbstractSecurityCheck implements H
 		}
 	}
 
-	@Override
-	protected void analyze( TestStep testStep, SecurityTestRunContext context )
-	{
-		if( acceptsTestStep( testStep ) )
-		{
-			HttpTestRequestStepInterface testStepwithProperties = ( HttpTestRequestStepInterface )testStep;
-			HttpTestRequestInterface<?> request = testStepwithProperties.getTestRequest();
-			MessageExchange messageExchange = new HttpResponseMessageExchange( request );
-
-			securityCheckRequestResult.setMessageExchange( messageExchange );
-			for( String exposureContent : exposureList )
-			{
-				if( SecurityCheckUtil.contains( context, new String( messageExchange.getRawResponseData() ),
-						exposureContent, false ) )
-				{
-					// logSecurityInfo( messageExchange, securityTestLog,
-					// exposureContent );
-					String message = " sensitive information '" + exposureContent + "' is detected in response.";
-					securityCheckRequestResult.addMessage( message );
-					securityCheckRequestResult.setStatus( SecurityCheckStatus.FAILED );
-				}
-			}
-			// if( getStatus() != Status.FAILED )
-			// {
-			// setStatus( Status.FINISHED );
-			// }
-		}
-	}
-
 	protected boolean hasNext()
 	{
 		return next;
 	}
-
-	// private AssertionStatus assertContains( SecurityTestRunContext context,
-	// HttpTestRequestStepInterface testStep,
-	// MessageExchange messageExchange, String exposureContent )
-	// {
-	// TestAssertionConfig assertionConfig =
-	// TestAssertionConfig.Factory.newInstance();
-	// assertionConfig.setType( SimpleContainsAssertion.ID );
-	//
-	// SimpleContainsAssertion containsAssertion = ( SimpleContainsAssertion
-	// )TestAssertionRegistry.getInstance()
-	// .buildAssertion( assertionConfig, testStep );
-	// containsAssertion.setToken( exposureContent );
-	// containsAssertion.assertResponse( messageExchange, context );
-	// return containsAssertion.getStatus();
-	// }
 
 	@Override
 	public boolean acceptsTestStep( TestStep testStep )

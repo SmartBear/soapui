@@ -23,13 +23,10 @@ import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GroovyEditor;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCaseRunner;
-import com.eviware.soapui.impl.wsdl.teststeps.WsdlResponseMessageExchange;
-import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTestRunContext;
-import com.eviware.soapui.security.SecurityCheckRequestResult.SecurityCheckStatus;
 import com.eviware.soapui.security.log.JSecurityTestRunLog;
 import com.eviware.soapui.security.monitor.HttpSecurityAnalyser;
 import com.eviware.soapui.security.ui.GroovySecurityCheckPanel;
@@ -51,7 +48,6 @@ public class GroovySecurityCheck extends AbstractSecurityCheck implements HttpSe
 	public static final String SCRIPT_PROPERTY = GroovySecurityCheck.class.getName() + "@script";
 	public static final String TYPE = "GroovySecurityCheck";
 	private GroovyEditor executeEditor;
-	private GroovyEditor analyzeEditor;
 	private GroovySecurityCheckConfig groovyscc;
 	private boolean next = true;
 	private Object scriptResult;
@@ -128,40 +124,6 @@ public class GroovySecurityCheck extends AbstractSecurityCheck implements HttpSe
 			scriptEngine.clearVariables();
 		}
 
-	}
-
-	@Override
-	protected void analyze( TestStep testStep, SecurityTestRunContext context )
-	{
-		scriptEngine.setScript( groovyscc.getAnalyzeScript().getStringValue() );
-		scriptEngine.setVariable( "response", this.testStep.getProperty( "Response" ).getValue() );
-		scriptEngine.setVariable( "log", SoapUI.ensureGroovyLog() );
-		try
-		{
-			scriptResult = scriptEngine.run();
-		}
-		catch( Exception e )
-		{
-			SoapUI.logError( e );
-		}
-		finally
-		{
-			if( scriptResult != null )
-			{
-				if( this.testStep instanceof WsdlTestRequestStep )
-				{
-					WsdlResponseMessageExchange m = new WsdlResponseMessageExchange( ( ( WsdlTestRequestStep )testStep )
-							.getTestRequest() );
-					m.setMessages( new String[] { "CCC" } );
-					securityCheckRequestResult.setMessageExchange( m );
-				}
-				if( Boolean.valueOf( scriptResult.toString() ) )
-					securityCheckRequestResult.setStatus( SecurityCheckStatus.OK );
-				else
-					securityCheckRequestResult.setStatus( SecurityCheckStatus.FAILED );
-			}
-			scriptEngine.clearVariables();
-		}
 	}
 
 	public void setExecuteScript( String script )
@@ -244,19 +206,8 @@ public class GroovySecurityCheck extends AbstractSecurityCheck implements HttpSe
 			}
 
 		} );
-		analyzeEditor = new GroovyEditor( new GroovySecurityCheckScriptModel()
-		{
-
-			@Override
-			public String getScript()
-			{
-				return groovyscc.getAnalyzeScript().getStringValue();
-			}
-
-		} );
 		dialog = ADialogBuilder.buildDialog( GroovySecurityConfigDialog.class );
 		dialog.getFormField( GroovySecurityConfigDialog.EXECUTE ).setProperty( "component", executeEditor );
-		dialog.getFormField( GroovySecurityConfigDialog.ANALYZE ).setProperty( "component", analyzeEditor );
 	}
 
 	@Override
@@ -267,7 +218,6 @@ public class GroovySecurityCheck extends AbstractSecurityCheck implements HttpSe
 		if( dialog.show() )
 		{
 			groovyscc.getExecuteScript().setStringValue( executeEditor.getEditArea().getText() );
-			groovyscc.getAnalyzeScript().setStringValue( analyzeEditor.getEditArea().getText() );
 		}
 
 		return true;
