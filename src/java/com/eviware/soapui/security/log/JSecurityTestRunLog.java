@@ -13,7 +13,9 @@
 package com.eviware.soapui.security.log;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -25,25 +27,29 @@ import java.util.Set;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.ListCellRenderer;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.monitor.SoapMonitor;
 import com.eviware.soapui.impl.wsdl.support.MessageExchangeModelItem;
+import com.eviware.soapui.impl.wsdl.testcase.TestCaseLogItem;
 import com.eviware.soapui.impl.wsdl.teststeps.actions.ShowMessageExchangeAction;
 import com.eviware.soapui.model.settings.Settings;
-import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.security.SecurityCheckRequestResult;
 import com.eviware.soapui.security.SecurityCheckResult;
 import com.eviware.soapui.security.SecurityTest;
-import com.eviware.soapui.support.StringUtils;
+import com.eviware.soapui.security.SecurityCheckRequestResult.SecurityCheckStatus;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.ActionSupport;
+import com.eviware.soapui.support.components.JHyperlinkLabel;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.support.ADialogBuilder;
@@ -102,7 +108,7 @@ public class JSecurityTestRunLog extends JPanel
 		logListModel.setMaxSize( ( int )settings.getLong( OptionsForm.class.getName() + "@max_rows", 1000 ) );
 
 		testLogList = new JList( logListModel );
-		// testLogList.setCellRenderer( new TestLogCellRenderer() );
+		testLogList.setCellRenderer( new SecurityTestLogCellRenderer() );
 		// testLogList.setPrototypeCellValue( "Testing 123" );
 		// testLogList.setFixedCellWidth( -1 );
 		testLogList.addMouseListener( new LogListMouseListener() );
@@ -162,12 +168,13 @@ public class JSecurityTestRunLog extends JPanel
 	 * com.eviware.soapui.impl.wsdl.panels.testcase.TestRunLog#addText(java.lang
 	 * .String)
 	 */
-//	public synchronized void addEntry( SecurityTestLogMessageEntry securityTestLogMessageEntry )
-//	{
-//		logListModel.addEntry( securityTestLogMessageEntry );
-//		if( follow )
-//			testLogList.ensureIndexIsVisible( logListModel.getSize() - 1 );
-//	}
+	// public synchronized void addEntry( SecurityTestLogMessageEntry
+	// securityTestLogMessageEntry )
+	// {
+	// logListModel.addEntry( securityTestLogMessageEntry );
+	// if( follow )
+	// testLogList.ensureIndexIsVisible( logListModel.getSize() - 1 );
+	// }
 
 	/*
 	 * 
@@ -317,13 +324,14 @@ public class JSecurityTestRunLog extends JPanel
 			{
 				out.println( value.toString() );
 			}
-//			else if( value instanceof SecurityTestLogMessageEntry )
-//			{
-//				SecurityTestLogMessageEntry logItem = ( SecurityTestLogMessageEntry )value;
-//				String msg = logItem.getMessage();
-//				if( StringUtils.hasContent( msg ) )
-//					out.println( msg );
-//			}
+			// else if( value instanceof SecurityTestLogMessageEntry )
+			// {
+			// SecurityTestLogMessageEntry logItem = ( SecurityTestLogMessageEntry
+			// )value;
+			// String msg = logItem.getMessage();
+			// if( StringUtils.hasContent( msg ) )
+			// out.println( msg );
+			// }
 		}
 	}
 
@@ -342,14 +350,16 @@ public class JSecurityTestRunLog extends JPanel
 			if( index != -1 && ( index == selectedIndex || e.getClickCount() > 1 ) )
 			{
 				SecurityCheckResult result = logListModel.getResultAt( index );
-				//TODO see how this default action is implemented, maybe thats's the way to implement opening 
-				//message exchange
-//				if( result != null && result.getActions() != null )
-//					result.getActions().performDefaultAction( new ActionEvent( this, 0, null ) );
-				if( !result.getSecurityRequestResultList().isEmpty())
+				// TODO see how this default action is implemented, maybe thats's
+				// the way to implement opening
+				// message exchange
+				// if( result != null && result.getActions() != null )
+				// result.getActions().performDefaultAction( new ActionEvent( this,
+				// 0, null ) );
+				if( result != null && !result.getSecurityRequestResultList().isEmpty() )
 				{
-					
-					for ( SecurityCheckRequestResult reqResult : result.getSecurityRequestResultList() ) 
+
+					for( SecurityCheckRequestResult reqResult : result.getSecurityRequestResultList() )
 					{
 						ShowMessageExchangeAction showMessageExchangeAction = new ShowMessageExchangeAction( reqResult
 								.getMessageExchange(), "SecurityCheck" );
@@ -357,7 +367,7 @@ public class JSecurityTestRunLog extends JPanel
 					}
 				}
 			}
-			
+
 			selectedIndex = index;
 		}
 
@@ -397,6 +407,7 @@ public class JSecurityTestRunLog extends JPanel
 			UISupport.showPopup( popup, testLogList, e.getPoint() );
 		}
 	}
+
 	public synchronized void addText( String string )
 	{
 		logListModel.addText( string );
@@ -404,5 +415,87 @@ public class JSecurityTestRunLog extends JPanel
 			testLogList.ensureIndexIsVisible( logListModel.getSize() - 1 );
 	}
 
+	private final class SecurityTestLogCellRenderer extends JLabel implements ListCellRenderer
+	{
+		private Font boldFont;
+		private Font normalFont;
+		private JHyperlinkLabel hyperlinkLabel = new JHyperlinkLabel( "" );
+
+		public SecurityTestLogCellRenderer()
+		{
+			setOpaque( true );
+			setBorder( BorderFactory.createEmptyBorder( 3, 3, 3, 3 ) );
+			setIcon( null );
+			boldFont = getFont().deriveFont( Font.BOLD );
+			normalFont = getFont();
+
+			hyperlinkLabel.setOpaque( true );
+			hyperlinkLabel.setForeground( Color.BLUE.darker().darker().darker() );
+			hyperlinkLabel.setUnderlineColor( Color.GRAY );
+			hyperlinkLabel.setBorder( BorderFactory.createEmptyBorder( 0, 4, 3, 3 ) );
+		}
+
+		public Component getListCellRendererComponent( JList list, Object value, int index, boolean isSelected,
+				boolean cellHasFocus )
+		{
+			if( isSelected )
+			{
+				setBackground( list.getSelectionBackground() );
+				setForeground( list.getSelectionForeground() );
+			}
+			else
+			{
+				setBackground( list.getBackground() );
+				setForeground( list.getForeground() );
+			}
+
+			if( value instanceof String )
+			{
+				setText( value.toString() );
+			}
+			else if( value instanceof TestCaseLogItem )
+			{
+				TestCaseLogItem logItem = ( TestCaseLogItem )value;
+				String msg = logItem.getMsg();
+				setText( msg == null ? "" : msg );
+			}
+
+			SecurityCheckResult result = logListModel.getResultAt( index );
+			if( result != null && !getText().startsWith( " ->" ) )
+			{
+				hyperlinkLabel.setText( getText() );
+				hyperlinkLabel.setBackground( getBackground() );
+				hyperlinkLabel.setEnabled( list.isEnabled() );
+
+				if( result.getStatus() == SecurityCheckStatus.OK )
+				{
+					hyperlinkLabel.setIcon( UISupport.createImageIcon( "/valid_assertion.gif" ) );
+				}
+				else if( result.getStatus() == SecurityCheckStatus.FAILED )
+				{
+					hyperlinkLabel.setIcon( UISupport.createImageIcon( "/failed_assertion.gif" ) );
+				}
+				else
+				{
+					hyperlinkLabel.setIcon( UISupport.createImageIcon( "/unknown_assertion.gif" ) );
+				}
+
+				return hyperlinkLabel;
+			}
+
+			setEnabled( list.isEnabled() );
+
+			if( boldTexts.contains( getText() ) )
+			{
+				setFont( boldFont );
+			}
+			else
+			{
+				setFont( normalFont );
+			}
+
+			return this;
+		}
+	}
 
 }

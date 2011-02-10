@@ -49,7 +49,6 @@ public class SecurityTestRunnerImpl extends AbstractTestRunner<SecurityTest, Sec
 
 	private SecurityTest securityTest;
 	private long startTime = 0;
-	// private WsdlTestRunContext context;
 	// private boolean stopped;
 	private boolean hasTornDown;
 	private String reason;
@@ -203,38 +202,6 @@ public class SecurityTestRunnerImpl extends AbstractTestRunner<SecurityTest, Sec
 		TestStep testStep = getTestCase().getTestStepByName( stepName );
 		if( testStep != null )
 			gotoStep( getTestCase().getIndexOfTestStep( testStep ) );
-	}
-
-	@Override
-	public void fail( String reason )
-	{
-
-		setStatus( Status.FAILED );
-
-	}
-
-	@Override
-	public String getReason()
-	{
-		return reason;
-	}
-
-	// @Override
-	// public TestRunContext getRunContext()
-	// {
-	// return context;
-	// }
-
-	@Override
-	public long getStartTime()
-	{
-		return startTime;
-	}
-
-	@Override
-	public Status waitUntilFinished()
-	{
-		return null;
 	}
 
 	/**
