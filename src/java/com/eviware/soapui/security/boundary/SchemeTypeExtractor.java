@@ -67,8 +67,9 @@ public class SchemeTypeExtractor
 
 		nodes = getElements( model.getRootNode() );
 
-//		for( NodeInfo node : nodes.values() )
-//			printNode( node );
+		// these two lines used for testing
+		for( NodeInfo node : nodes.values() )
+			printNode( node );
 		return nodes;
 	}
 
@@ -180,7 +181,7 @@ public class SchemeTypeExtractor
 			this.treePath = child.getTreePath();
 			this.type = child.getSchemaType().toString();
 			this.node = child;
-			this.xpath = XmlUtils.createXPath( child.getDomNode() );
+			this.xpath = XmlUtils.createXPath( child.getDomNode(), true, false, false, null );
 		}
 
 		public String getType()
