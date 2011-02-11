@@ -323,7 +323,9 @@ public class WsdlTestRequest extends WsdlRequest implements Assertable, TestRequ
 			return null;
 
 		TestMonitor testMonitor = SoapUI.getTestMonitor();
-		if( testMonitor != null && testMonitor.hasRunningLoadTest( testStep.getTestCase() ) )
+		if( testMonitor != null
+				&& ( testMonitor.hasRunningLoadTest( testStep.getTestCase() ) || testMonitor
+						.hasRunningSecurityTest( testStep.getTestCase() ) ) )
 			return disabledRequestIcon;
 
 		ImageIcon icon = getIconAnimator().getIcon();
@@ -403,7 +405,9 @@ public class WsdlTestRequest extends WsdlRequest implements Assertable, TestRequ
 		@Override
 		public boolean beforeSubmit( Submit submit, SubmitContext context )
 		{
-			if( SoapUI.getTestMonitor() != null && SoapUI.getTestMonitor().hasRunningLoadTest( getTarget().getTestCase() ) )
+			if( SoapUI.getTestMonitor() != null
+					&& ( SoapUI.getTestMonitor().hasRunningLoadTest( getTarget().getTestCase() ) || SoapUI.getTestMonitor()
+							.hasRunningSecurityTest( getTarget().getTestCase() ) ) )
 				return true;
 
 			return super.beforeSubmit( submit, context );

@@ -496,7 +496,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 		securityTestRunListeners.add( listener );
 	}
 
-	public void removeTestRunListener( SecurityTestRunListener listener )
+	public void removeSecurityTestRunListener( SecurityTestRunListener listener )
 	{
 		securityTestRunListeners.remove( listener );
 	}

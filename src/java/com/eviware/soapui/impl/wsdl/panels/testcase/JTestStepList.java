@@ -165,6 +165,12 @@ public class JTestStepList extends JPanel
 				return;
 			}
 
+			if( SoapUI.getTestMonitor().hasRunningSecurityTest( testCase ) )
+			{
+				testListPopup.add( "<disabled during SecurityTest>" ).setEnabled( false );
+				return;
+			}
+
 			Point location = testStepList.getMousePosition();
 			int ix = -1;
 			if( location != null )

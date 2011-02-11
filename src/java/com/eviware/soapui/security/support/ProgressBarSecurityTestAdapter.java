@@ -55,7 +55,7 @@ public class ProgressBarSecurityTestAdapter
 
 	public void release()
 	{
-		securityTest.removeTestRunListener( internalTestRunListener );
+		securityTest.removeSecurityTestRunListener( internalTestRunListener );
 		// SoapUI.getTestMonitor().removeTestMonitorListener(
 		// internalTestMonitorListener );
 	}

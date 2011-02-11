@@ -281,7 +281,9 @@ public class RestTestRequest extends RestRequest implements RestTestRequestInter
 			return null;
 
 		TestMonitor testMonitor = SoapUI.getTestMonitor();
-		if( testMonitor != null && testMonitor.hasRunningLoadTest( testStep.getTestCase() ) )
+		if( testMonitor != null
+				&& ( testMonitor.hasRunningLoadTest( getTestStep().getTestCase() ) || testMonitor
+						.hasRunningSecurityTest( getTestStep().getTestCase() ) ) )
 			return disabledRequestIcon;
 
 		ImageIcon icon = getIconAnimator().getIcon();
@@ -366,7 +368,9 @@ public class RestTestRequest extends RestRequest implements RestTestRequestInter
 		@Override
 		public boolean beforeSubmit( Submit submit, SubmitContext context )
 		{
-			if( SoapUI.getTestMonitor() != null && SoapUI.getTestMonitor().hasRunningLoadTest( getTarget().getTestCase() ) )
+			if( SoapUI.getTestMonitor() != null
+					&& ( SoapUI.getTestMonitor().hasRunningLoadTest( getTarget().getTestCase() ) || SoapUI.getTestMonitor()
+							.hasRunningSecurityTest( getTarget().getTestCase() ) ) )
 				return true;
 
 			return super.beforeSubmit( submit, context );

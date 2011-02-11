@@ -101,9 +101,11 @@ public abstract class AbstractAddToTestCaseAction<T extends ModelItem> extends A
 				return null;
 
 			testCase = testCases.get( testCaseNames.indexOf( selection ) );
-			while( testCase != null && SoapUI.getTestMonitor().hasRunningLoadTest( testCase ) )
+			while( testCase != null
+					&& ( SoapUI.getTestMonitor().hasRunningLoadTest( testCase ) || SoapUI.getTestMonitor()
+							.hasRunningSecurityTest( testCase ) ) )
 			{
-				UISupport.showErrorMessage( "Can not add to TestCase that is currently LoadTesting" );
+				UISupport.showErrorMessage( "Can not add to TestCase that is currently LoadTesting or SecurityTesting" );
 
 				selection = ( String )UISupport.prompt( "Select TestCase", "Select TestCase", testCaseNames.toArray() );
 				if( selection == null )

@@ -16,6 +16,7 @@ import com.eviware.soapui.model.mock.MockRunner;
 import com.eviware.soapui.model.testsuite.LoadTestRunner;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.monitor.TestMonitorListener;
+import com.eviware.soapui.security.SecurityTestRunner;
 
 /**
  * Adapter for TestMonitorListener implementations
@@ -30,6 +31,14 @@ public class TestMonitorListenerAdapter implements TestMonitorListener
 	}
 
 	public void loadTestFinished( LoadTestRunner runner )
+	{
+	}
+
+	public void securityTestStarted( SecurityTestRunner runner )
+	{
+	}
+
+	public void securityTestFinished( SecurityTestRunner runner )
 	{
 	}
 

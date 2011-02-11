@@ -371,7 +371,9 @@ public class JdbcRequest extends AbstractAnimatableModelItem<ModelItemConfig> im
 			return null;
 
 		TestMonitor testMonitor = SoapUI.getTestMonitor();
-		if( testMonitor != null && testMonitor.hasRunningLoadTest( getTestStep().getTestCase() ) )
+		if( testMonitor != null
+				&& ( testMonitor.hasRunningLoadTest( getTestStep().getTestCase() ) || testMonitor
+						.hasRunningSecurityTest( getTestStep().getTestCase() ) ) )
 			return disabledRequestIcon;
 
 		ImageIcon icon = getIconAnimator().getIcon();

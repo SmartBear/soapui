@@ -82,6 +82,7 @@ import com.eviware.soapui.model.testsuite.TestAssertion;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
 import com.eviware.soapui.monitor.support.TestMonitorListenerAdapter;
+import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.StringUtils;
@@ -767,6 +768,17 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 		public void loadTestStarted( LoadTestRunner runner )
 		{
 			if( runner.getLoadTest().getTestCase() == getModelItem().getTestCase() )
+				setEnabled( false );
+		}
+
+		public void securityTestFinished( SecurityTestRunner runner )
+		{
+			setEnabled( !SoapUI.getTestMonitor().hasRunningTest( getModelItem().getTestCase() ) );
+		}
+
+		public void securityTestStarted( SecurityTestRunner runner )
+		{
+			if( runner.getSecurityTest().getTestCase() == getModelItem().getTestCase() )
 				setEnabled( false );
 		}
 

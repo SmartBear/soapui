@@ -258,7 +258,7 @@ public class JSecurityTestTestStepList extends JPanel
 			progressBar.setBackground( Color.WHITE );
 			progressBar.setInheritsPopupMenu( true );
 
-			label = new JLabel( testStep.getLabel(), SwingConstants.LEFT );
+			label = new JLabel( testStep.getLabel(), testStep.getIcon(), SwingConstants.LEFT );
 			label.setBorder( BorderFactory.createEmptyBorder( 5, 5, 5, 5 ) );
 			label.setInheritsPopupMenu( true );
 			label.setEnabled( !testStep.isDisabled() );

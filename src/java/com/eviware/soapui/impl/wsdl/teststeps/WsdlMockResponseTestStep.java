@@ -207,7 +207,8 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 			return null;
 
 		TestMonitor testMonitor = SoapUI.getTestMonitor();
-		if( testMonitor != null && testMonitor.hasRunningLoadTest( getTestCase() ) )
+		if( testMonitor != null
+				&& ( testMonitor.hasRunningLoadTest( getTestCase() ) || testMonitor.hasRunningSecurityTest( getTestCase() ) ) )
 			return disabledRequestIcon;
 
 		ImageIcon icon = iconAnimator.getIcon();

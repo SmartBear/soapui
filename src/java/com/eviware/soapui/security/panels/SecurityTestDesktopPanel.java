@@ -634,7 +634,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 
 		public void beforeRun( SecurityTestRunner testRunner, SecurityTestRunContext runContext )
 		{
-			if( SoapUI.getTestMonitor().hasRunningSecurityTests( getModelItem().getTestCase() ) )
+			if( SoapUI.getTestMonitor().hasRunningSecurityTest( getModelItem().getTestCase() ) )
 				return;
 
 			runButton.setEnabled( false );
@@ -653,7 +653,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 
 		public void afterRun( SecurityTestRunner testRunner, SecurityTestRunContext runContext )
 		{
-			if( SoapUI.getTestMonitor().hasRunningSecurityTests( getModelItem().getTestCase() ) )
+			if( SoapUI.getTestMonitor().hasRunningSecurityTest( getModelItem().getTestCase() ) )
 				return;
 
 			SecurityTestRunnerImpl securityRunner = ( SecurityTestRunnerImpl )testRunner;

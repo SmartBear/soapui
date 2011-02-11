@@ -339,13 +339,15 @@ public class HttpTestRequestDesktopPanel extends
 	public void setEnabled( boolean enabled )
 	{
 		if( enabled == true )
-			enabled = !SoapUI.getTestMonitor().hasRunningLoadTest( getModelItem().getTestCase() );
+			enabled = !SoapUI.getTestMonitor().hasRunningLoadTest( getModelItem().getTestCase() )
+					&& !SoapUI.getTestMonitor().hasRunningSecurityTest( getModelItem().getTestCase() );
 
 		super.setEnabled( enabled );
 		addAssertionButton.setEnabled( enabled );
 		assertionsPanel.setEnabled( enabled );
 
-		if( SoapUI.getTestMonitor().hasRunningLoadTest( getRequest().getTestCase() ) )
+		if( SoapUI.getTestMonitor().hasRunningLoadTest( getRequest().getTestCase() )
+				|| !SoapUI.getTestMonitor().hasRunningSecurityTest( getModelItem().getTestCase() ) )
 		{
 			getRequest().removeSubmitListener( this );
 		}

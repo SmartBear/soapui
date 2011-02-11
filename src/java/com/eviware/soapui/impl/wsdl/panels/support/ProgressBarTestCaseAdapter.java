@@ -27,6 +27,7 @@ import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestRunner.Status;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
 import com.eviware.soapui.monitor.support.TestMonitorListenerAdapter;
+import com.eviware.soapui.security.SecurityTestRunner;
 
 /**
  * Class that keeps a JProgressBars state in sync with a TestCase
@@ -65,7 +66,21 @@ public class ProgressBarTestCaseAdapter
 		if( SoapUI.getTestMonitor().hasRunningLoadTest( testCase ) )
 		{
 			progressBar.setIndeterminate( true );
-			progressBar.setString( "loadTesting" );
+			progressBar.setString( "load testing" );
+		}
+		else
+		{
+			progressBar.setIndeterminate( false );
+			progressBar.setString( "" );
+		}
+	}
+
+	private void setSecurityTestingState()
+	{
+		if( SoapUI.getTestMonitor().hasRunningSecurityTest( testCase ) )
+		{
+			progressBar.setIndeterminate( true );
+			progressBar.setString( "security testing" );
 		}
 		else
 		{
@@ -84,6 +99,16 @@ public class ProgressBarTestCaseAdapter
 		public void loadTestFinished( LoadTestRunner loadTestRunner )
 		{
 			setLoadTestingState();
+		}
+
+		public void securityTestStarted( SecurityTestRunner securityTestRunner )
+		{
+			setSecurityTestingState();
+		}
+
+		public void securityTestFinished( SecurityTestRunner securityTestRunner )
+		{
+			setSecurityTestingState();
 		}
 	}
 

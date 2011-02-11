@@ -71,6 +71,7 @@ import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.monitor.support.TestMonitorListenerAdapter;
+import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.StringUtils;
@@ -160,7 +161,8 @@ public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase
 
 	private void setRunningState()
 	{
-		stateDependantComponents.setEnabled( !SoapUI.getTestMonitor().hasRunningLoadTest( getModelItem() ) );
+		stateDependantComponents.setEnabled( !SoapUI.getTestMonitor().hasRunningLoadTest( getModelItem() )
+				&& !SoapUI.getTestMonitor().hasRunningSecurityTest( getModelItem() ) );
 	}
 
 	private void buildUI()
@@ -313,7 +315,7 @@ public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase
 
 		createLoadTestButton = UISupport.createToolbarButton( SwingActionDelegate.createDelegate(
 				AddNewLoadTestAction.SOAPUI_ACTION_ID, getModelItem(), null, "/loadTest.gif" ) );
-		
+
 		createSecurityTestButton = UISupport.createToolbarButton( SwingActionDelegate.createDelegate(
 				AddNewSecurityTestAction.SOAPUI_ACTION_ID, getModelItem(), null, "/securityTest.png" ) );
 
@@ -370,6 +372,16 @@ public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase
 		{
 			setRunningState();
 		}
+
+		public void securityTestStarted( SecurityTestRunner runner )
+		{
+			setRunningState();
+		}
+
+		public void securityTestFinished( SecurityTestRunner runner )
+		{
+			setRunningState();
+		}
 	}
 
 	public class InternalTestRunListener extends TestRunListenerAdapter
@@ -383,7 +395,8 @@ public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase
 
 		public void beforeRun( TestCaseRunner testRunner, TestCaseRunContext runContext )
 		{
-			if( SoapUI.getTestMonitor().hasRunningLoadTest( getModelItem() ) )
+			if( SoapUI.getTestMonitor().hasRunningLoadTest( getModelItem() )
+					|| SoapUI.getTestMonitor().hasRunningSecurityTest( getModelItem() ) )
 				return;
 
 			runButton.setEnabled( false );
@@ -403,7 +416,8 @@ public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase
 		public synchronized void beforeStep( TestCaseRunner testRunner, TestCaseRunContext runContext,
 				final TestStep testStep )
 		{
-			if( SoapUI.getTestMonitor().hasRunningLoadTest( getModelItem() ) )
+			if( SoapUI.getTestMonitor().hasRunningLoadTest( getModelItem() )
+					|| SoapUI.getTestMonitor().hasRunningSecurityTest( getModelItem() ) )
 				return;
 
 			if( testStep != null )
@@ -427,7 +441,8 @@ public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase
 
 		public void afterRun( TestCaseRunner testRunner, TestCaseRunContext runContext )
 		{
-			if( SoapUI.getTestMonitor().hasRunningLoadTest( getModelItem() ) )
+			if( SoapUI.getTestMonitor().hasRunningLoadTest( getModelItem() )
+					|| SoapUI.getTestMonitor().hasRunningSecurityTest( getModelItem() ) )
 				return;
 
 			WsdlTestCaseRunner wsdlRunner = ( WsdlTestCaseRunner )testRunner;
@@ -474,7 +489,8 @@ public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase
 
 		public void afterStep( TestCaseRunner testRunner, TestCaseRunContext runContext, TestStepResult stepResult )
 		{
-			if( SoapUI.getTestMonitor().hasRunningLoadTest( getModelItem() ) )
+			if( SoapUI.getTestMonitor().hasRunningLoadTest( getModelItem() )
+					|| SoapUI.getTestMonitor().hasRunningSecurityTest( getModelItem() ) )
 				return;
 
 			testCaseLog.addTestStepResult( stepResult );

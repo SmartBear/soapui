@@ -37,6 +37,10 @@ import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.model.workspace.Workspace;
+import com.eviware.soapui.security.SecurityTest;
+import com.eviware.soapui.security.SecurityTestRunContext;
+import com.eviware.soapui.security.SecurityTestRunner;
+import com.eviware.soapui.security.support.SecurityTestRunListenerAdapter;
 
 /**
  * Global class for monitoring ongoing test runs (both functional and loadtests)
@@ -53,8 +57,10 @@ public class TestMonitor
 	private InternalTestRunListener testRunListener = new InternalTestRunListener();
 	private InternalMockRunListener mockRunListener = new InternalMockRunListener();
 	private InternalLoadTestRunListener loadTestRunListener = new InternalLoadTestRunListener();
+	private InternalSecurityTestRunListener securityTestRunListener = new InternalSecurityTestRunListener();
 	private Set<TestCaseRunner> runningTestCases = new HashSet<TestCaseRunner>();
 	private Set<LoadTestRunner> runningLoadTests = new HashSet<LoadTestRunner>();
+	private Set<SecurityTestRunner> runningSecurityTests = new HashSet<SecurityTestRunner>();
 	private Set<MockRunner> runningMockServices = new HashSet<MockRunner>();
 	private Map<String, TestCaseRunner.Status> runStatusHistory = new HashMap<String, TestCaseRunner.Status>();
 
@@ -78,6 +84,34 @@ public class TestMonitor
 		for( int c = 0; c < l.length; c++ )
 		{
 			l[c].loadTestStarted( runner );
+		}
+	}
+
+	protected void notifySecurityTestStarted( SecurityTestRunner runner )
+	{
+		runningSecurityTests.add( runner );
+
+		if( listeners.isEmpty() )
+			return;
+
+		TestMonitorListener[] l = listeners.toArray( new TestMonitorListener[listeners.size()] );
+		for( int c = 0; c < l.length; c++ )
+		{
+			l[c].securityTestStarted( runner );
+		}
+	}
+
+	protected void notifySecurityTestFinished( SecurityTestRunner runner )
+	{
+		runningSecurityTests.remove( runner.getSecurityTest().getTestCase() );
+
+		if( listeners.isEmpty() )
+			return;
+
+		TestMonitorListener[] l = listeners.toArray( new TestMonitorListener[listeners.size()] );
+		for( int c = 0; c < l.length; c++ )
+		{
+			l[c].securityTestFinished( runner );
 		}
 	}
 
@@ -236,6 +270,16 @@ public class TestMonitor
 		{
 			unmonitorLoadTest( loadTest );
 		}
+
+		public void securityTestAdded( SecurityTest securityTest )
+		{
+			monitorSecurityTest( securityTest );
+		}
+
+		public void securityTestRemoved( SecurityTest securityTest )
+		{
+			unmonitorSecurityTest( securityTest );
+		}
 	}
 
 	private class InternalTestRunListener extends TestRunListenerAdapter
@@ -287,6 +331,21 @@ public class TestMonitor
 		}
 	}
 
+	private class InternalSecurityTestRunListener extends SecurityTestRunListenerAdapter
+	{
+		public void afterRun( SecurityTestRunner testRunner, SecurityTestRunContext context )
+		{
+			runningSecurityTests.remove( testRunner );
+			notifySecurityTestFinished( testRunner );
+		}
+
+		public void beforeRun( SecurityTestRunner testRunner, SecurityTestRunContext context )
+		{
+			runningSecurityTests.add( testRunner );
+			notifySecurityTestStarted( testRunner );
+		}
+	}
+
 	public LoadTestRunner[] getRunningLoadTest()
 	{
 		return runningLoadTests.toArray( new LoadTestRunner[runningLoadTests.size()] );
@@ -294,7 +353,7 @@ public class TestMonitor
 
 	public boolean hasRunningTest( TestCase testCase )
 	{
-		return hasRunningLoadTest( testCase ) || hasRunningTestCase( testCase );
+		return hasRunningLoadTest( testCase ) || hasRunningSecurityTest( testCase ) || hasRunningTestCase( testCase );
 	}
 
 	public void init( Workspace workspace )
@@ -346,11 +405,20 @@ public class TestMonitor
 		{
 			testCase.getLoadTestAt( v ).addLoadTestRunListener( loadTestRunListener );
 		}
+		for( int v = 0; v < testCase.getSecurityTestCount(); v++ )
+		{
+			testCase.getSecurityTestAt( v ).addSecurityTestRunListener( securityTestRunListener );
+		}
 	}
 
 	private void monitorLoadTest( LoadTest loadTest )
 	{
 		loadTest.addLoadTestRunListener( loadTestRunListener );
+	}
+
+	private void monitorSecurityTest( SecurityTest securityTest )
+	{
+		securityTest.addSecurityTestRunListener( securityTestRunListener );
 	}
 
 	public void unmonitorProject( Project project )
@@ -393,11 +461,20 @@ public class TestMonitor
 		{
 			unmonitorLoadTest( testCase.getLoadTestAt( c ) );
 		}
+		for( int c = 0; c < testCase.getSecurityTestCount(); c++ )
+		{
+			unmonitorSecurityTest( testCase.getSecurityTestAt( c ) );
+		}
 	}
 
 	private void unmonitorLoadTest( LoadTest loadTest )
 	{
 		loadTest.removeLoadTestRunListener( loadTestRunListener );
+	}
+
+	private void unmonitorSecurityTest( SecurityTest securityTest )
+	{
+		securityTest.removeSecurityTestRunListener( securityTestRunListener );
 	}
 
 	public boolean hasRunningTests()
@@ -476,19 +553,26 @@ public class TestMonitor
 
 		return false;
 	}
-	
-	public boolean hasRunningSecurityTests( TestCase testCase )
+
+	public boolean hasRunningSecurityTest( TestCase testCase )
 	{
-		//TODO
-//		Iterator<LoadTestRunner> iterator = runningLoadTests.iterator();
-//		while( iterator.hasNext() )
-//		{
-//			if( iterator.next().getLoadTest().getTestCase() == testCase )
-//				return true;
-//		}
+		Iterator<SecurityTestRunner> iterator = runningSecurityTests.iterator();
+		while( iterator.hasNext() )
+		{
+			if( iterator.next().getSecurityTest().getTestCase() == testCase )
+				return true;
+		}
 
 		return false;
 	}
 
+	public boolean hasRunningSecurityTest( TestSuite testSuite )
+	{
+		for( TestCase testCase : testSuite.getTestCaseList() )
+			if( hasRunningSecurityTest( testCase ) )
+				return true;
+
+		return false;
+	}
 
 }

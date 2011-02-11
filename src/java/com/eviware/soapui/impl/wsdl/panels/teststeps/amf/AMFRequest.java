@@ -317,7 +317,9 @@ public class AMFRequest extends AbstractAnimatableModelItem<ModelItemConfig> imp
 			return null;
 
 		TestMonitor testMonitor = SoapUI.getTestMonitor();
-		if( testMonitor != null && testMonitor.hasRunningLoadTest( getTestStep().getTestCase() ) )
+		if( testMonitor != null
+				&& ( testMonitor.hasRunningLoadTest( getTestStep().getTestCase() ) || testMonitor
+						.hasRunningSecurityTest( getTestStep().getTestCase() ) ) )
 			return disabledRequestIcon;
 
 		ImageIcon icon = getIconAnimator().getIcon();

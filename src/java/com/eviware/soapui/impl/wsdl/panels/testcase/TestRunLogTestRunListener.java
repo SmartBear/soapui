@@ -39,7 +39,8 @@ public class TestRunLogTestRunListener extends TestRunListenerAdapter
 
 	public void beforeRun( TestCaseRunner testRunner, TestCaseRunContext runContext )
 	{
-		if( SoapUI.getTestMonitor().hasRunningLoadTest( testRunner.getTestCase() ) )
+		if( SoapUI.getTestMonitor().hasRunningLoadTest( testRunner.getTestCase() )
+				|| SoapUI.getTestMonitor().hasRunningSecurityTest( testRunner.getTestCase() ) )
 			return;
 
 		if( clearOnRun )
@@ -52,7 +53,8 @@ public class TestRunLogTestRunListener extends TestRunListenerAdapter
 
 	public void afterRun( TestCaseRunner testRunner, TestCaseRunContext runContext )
 	{
-		if( SoapUI.getTestMonitor().hasRunningLoadTest( testRunner.getTestCase() ) )
+		if( SoapUI.getTestMonitor().hasRunningLoadTest( testRunner.getTestCase() )
+				|| SoapUI.getTestMonitor().hasRunningSecurityTest( testRunner.getTestCase() ) )
 			return;
 
 		WsdlTestCaseRunner wsdlRunner = ( WsdlTestCaseRunner )testRunner;
@@ -83,7 +85,8 @@ public class TestRunLogTestRunListener extends TestRunListenerAdapter
 	public synchronized void afterStep( TestCaseRunner testRunner, TestCaseRunContext runContext,
 			final TestStepResult stepResult )
 	{
-		if( SoapUI.getTestMonitor().hasRunningLoadTest( testRunner.getTestCase() ) )
+		if( SoapUI.getTestMonitor().hasRunningLoadTest( testRunner.getTestCase() )
+				|| SoapUI.getTestMonitor().hasRunningSecurityTest( testRunner.getTestCase() ) )
 			return;
 
 		SwingUtilities.invokeLater( new Runnable()
@@ -91,8 +94,8 @@ public class TestRunLogTestRunListener extends TestRunListenerAdapter
 
 			public void run()
 			{
-		runLog.addTestStepResult( stepResult );
-	}
+				runLog.addTestStepResult( stepResult );
+			}
 		} );
 	}
 }

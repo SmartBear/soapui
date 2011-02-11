@@ -146,7 +146,9 @@ public class HttpTestRequest extends HttpRequest implements HttpTestRequestInter
 			return null;
 
 		TestMonitor testMonitor = SoapUI.getTestMonitor();
-		if( testMonitor != null && testMonitor.hasRunningLoadTest( testStep.getTestCase() ) )
+		if( testMonitor != null
+				&& ( testMonitor.hasRunningLoadTest( getTestStep().getTestCase() ) || testMonitor
+						.hasRunningSecurityTest( getTestStep().getTestCase() ) ) )
 			return disabledRequestIcon;
 
 		ImageIcon icon = getIconAnimator().getIcon();
