@@ -466,10 +466,11 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	 */
 	private void assertResponse( WsdlMessageAssertion assertion )
 	{
-		for( SecurityCheckRequestResult result : securityCheckResult.getSecurityRequestResultList() )
-		{
-			assertion.assertResponse( result.getMessageExchange(), new WsdlSubmitContext( testStep ) );
-		}
+		if( securityCheckResult != null )
+			for( SecurityCheckRequestResult result : securityCheckResult.getSecurityRequestResultList() )
+			{
+				assertion.assertResponse( result.getMessageExchange(), new WsdlSubmitContext( testStep ) );
+			}
 	}
 
 	/**
