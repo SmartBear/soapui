@@ -29,6 +29,9 @@ import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.model.testsuite.AssertionException;
 import com.eviware.soapui.model.testsuite.ResponseAssertion;
+import com.eviware.soapui.security.SecurityCheckRequestResult;
+import com.eviware.soapui.security.SecurityCheckRequestResult.SecurityCheckStatus;
+import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationBuilder;
@@ -79,13 +82,14 @@ public class InvalidHttpStatusCodesAssertion extends WsdlMessageAssertion implem
 		}
 		
 		
-		if( statusElements.length == 3 )
+		if( statusElements.length >= 2 )
 		{
 			String statusCode = statusElements[1].trim();
 			if( codeList.contains( statusCode ) )
 			{
-				throw new AssertionException( new AssertionError( "Response status code:" + statusCode
-						+ " is in invalid list of status codes" ) );
+				String message = "Response status code:" + statusCode+ " is in invalid list of status codes";
+				updateResult( context, message );
+				throw new AssertionException( new AssertionError( message ) );
 			}
 		}
 		else
@@ -94,6 +98,13 @@ public class InvalidHttpStatusCodesAssertion extends WsdlMessageAssertion implem
 		}
 
 		return "OK";
+	}
+
+	private void updateResult( SubmitContext context, String message )
+	{
+		SecurityCheckRequestResult reqResult  = ( SecurityCheckRequestResult )context.getProperty( AbstractSecurityCheck.SECURITY_CHECK_REQUEST_RESULT );
+		reqResult.addMessage( message );
+		reqResult.setStatus( SecurityCheckStatus.FAILED );
 	}
 
 	private List<String> extractCodes()
@@ -110,8 +121,8 @@ public class InvalidHttpStatusCodesAssertion extends WsdlMessageAssertion implem
 	{
 		public Factory()
 		{
-			super( InvalidHttpStatusCodesAssertion.ID, InvalidHttpStatusCodesAssertion.LABEL, InvalidHttpStatusCodesAssertion.class,
-					WsdlRequest.class );
+			super( InvalidHttpStatusCodesAssertion.ID, InvalidHttpStatusCodesAssertion.LABEL,
+					InvalidHttpStatusCodesAssertion.class, AbstractSecurityCheck.class );
 
 			// TODO: chenge type of target class
 		}
@@ -160,7 +171,8 @@ public class InvalidHttpStatusCodesAssertion extends WsdlMessageAssertion implem
 		XFormDialogBuilder builder = XFormFactory.createDialogBuilder( "Invalid HTTP status codes Assertion" );
 		XForm mainForm = builder.createForm( "Basic" );
 
-		mainForm.addTextField( CODES, "Coma separated not acceptable status codes", XForm.FieldType.TEXTAREA ).setWidth( 40 );
+		mainForm.addTextField( CODES, "Coma separated not acceptable status codes", XForm.FieldType.TEXTAREA ).setWidth(
+				40 );
 
 		// TODO : update help URL
 		dialog = builder.buildDialog( builder.buildOkCancelHelpActions( HelpUrls.SIMPLE_CONTAINS_HELP_URL ),

@@ -25,7 +25,9 @@ import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
+import com.eviware.soapui.impl.wsdl.WsdlRequestTestCase;
 import com.eviware.soapui.impl.wsdl.WsdlSubmitContext;
+import com.eviware.soapui.impl.wsdl.support.AMFMessageExchange;
 import com.eviware.soapui.impl.wsdl.support.assertions.AssertableConfig;
 import com.eviware.soapui.impl.wsdl.support.assertions.AssertionsSupport;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCaseRunner;
@@ -34,8 +36,10 @@ import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequest;
 import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
+import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageExchangeTestStepResult;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequest;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry.AssertableType;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Interface;
@@ -68,6 +72,8 @@ import com.eviware.x.form.XFormDialog;
 public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<SecurityCheckConfig> implements
 		XPathReferenceContainer, Assertable, RequestAssertion, ResponseAssertion
 {
+	public static final String SECURITY_CHECK_REQUEST_RESULT = "SecurityCheckRequestResult";
+
 	public static final String STATUS_PROPERTY = AbstractSecurityCheck.class.getName() + "@status";
 
 	public static final String SINGLE_REQUEST_STRATEGY = "A single request with all the parameters";
@@ -164,8 +170,10 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		{
 			securityCheckRequestResult = new SecurityCheckRequestResult( this );
 			execute( testStep, context );
+			assertResponse( context );
 			// add to summary result
 			securityCheckResult.addSecurityRequestResult( securityCheckRequestResult );
+
 		}
 
 		runTearDownScript( testStep );
@@ -474,10 +482,11 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	 */
 	private void assertRequests( WsdlMessageAssertion assertion )
 	{
-		for( SecurityCheckRequestResult result : securityCheckResult.getSecurityRequestResultList() )
-		{
-			assertion.assertRequest( result.getMessageExchange(), new WsdlSubmitContext( testStep ) );
-		}
+		if( securityCheckResult != null )
+			for( SecurityCheckRequestResult result : securityCheckResult.getSecurityRequestResultList() )
+			{
+				assertion.assertRequest( result.getMessageExchange(), new WsdlSubmitContext( testStep ) );
+			}
 	}
 
 	@Override
@@ -570,8 +579,8 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	@Override
 	public String getAssertableContent()
 	{
-		if( testStep instanceof WsdlTestRequest )
-			return ( ( WsdlTestRequest )testStep ).getAssertableContent();
+		if( testStep instanceof WsdlTestRequestStep )
+			return ( ( WsdlTestRequestStep )testStep ).getAssertableContent();
 		else if( testStep instanceof HttpTestRequest )
 			return ( ( HttpTestRequest )testStep ).getAssertableContent();
 		else if( testStep instanceof RestTestRequest )
@@ -654,14 +663,41 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	@Override
 	public AssertionStatus assertRequest( MessageExchange messageExchange, SubmitContext context )
 	{
-		// TODO Auto-generated method stub
+		System.out.println( "asdasdasd" );
 		return null;
 	}
 
 	@Override
 	public AssertionStatus assertResponse( MessageExchange messageExchange, SubmitContext context )
 	{
-		// TODO Auto-generated method stub
+		System.out.println( "asdasdasd" );
 		return null;
+	}
+
+	public void assertResponse( SubmitContext context )
+	{
+		try
+		{
+			PropertyChangeNotifier notifier = new PropertyChangeNotifier();
+
+			MessageExchange messageExchange = securityCheckRequestResult.getMessageExchange();
+			context.setProperty( SECURITY_CHECK_REQUEST_RESULT, securityCheckRequestResult );
+
+			if( this != null )
+			{
+				// assert!
+				for( WsdlMessageAssertion assertion : assertionsSupport.getAssertionList() )
+				{
+					assertion.assertResponse( messageExchange, context );
+				}
+			}
+
+			context.removeProperty( SECURITY_CHECK_REQUEST_RESULT );
+			notifier.notifyChange();
+		}
+		catch( Exception e )
+		{
+			e.printStackTrace();
+		}
 	}
 }

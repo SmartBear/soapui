@@ -19,7 +19,6 @@ import org.apache.xmlbeans.XmlObject;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.TestAssertionConfig;
-import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.AbstractTestAssertionFactory;
@@ -29,6 +28,9 @@ import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.model.testsuite.AssertionException;
 import com.eviware.soapui.model.testsuite.ResponseAssertion;
+import com.eviware.soapui.security.SecurityCheckRequestResult;
+import com.eviware.soapui.security.SecurityCheckRequestResult.SecurityCheckStatus;
+import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationBuilder;
@@ -77,15 +79,15 @@ public class ValidHttpStatusCodesAssertion extends WsdlMessageAssertion implemen
 		{
 			SoapUI.logError( npe, "Header #status# is missing!" );
 		}
-		
-		
-		if( statusElements.length == 3 )
+
+		if( statusElements.length >= 2 )
 		{
 			String statusCode = statusElements[1].trim();
 			if( !codeList.contains( statusCode ) )
 			{
-				throw new AssertionException( new AssertionError( "Response status code:" + statusCode
-						+ " is not in acceptable list of status codes" ) );
+				String message = "Response status code:" + statusCode + " is not in acceptable list of status codes";
+				updateResult( context, message );
+				throw new AssertionException( new AssertionError( message ) );
 			}
 		}
 		else
@@ -93,7 +95,15 @@ public class ValidHttpStatusCodesAssertion extends WsdlMessageAssertion implemen
 			throw new AssertionException( new AssertionError( "Status code extraction error! " ) );
 		}
 
-		return "JMS Timeout OK";
+		return "OK";
+	}
+
+	private void updateResult( SubmitContext context, String message )
+	{
+		SecurityCheckRequestResult reqResult = ( SecurityCheckRequestResult )context
+				.getProperty( AbstractSecurityCheck.SECURITY_CHECK_REQUEST_RESULT );
+		reqResult.addMessage( message );
+		reqResult.setStatus( SecurityCheckStatus.FAILED );
 	}
 
 	private List<String> extractCodes()
@@ -110,8 +120,8 @@ public class ValidHttpStatusCodesAssertion extends WsdlMessageAssertion implemen
 	{
 		public Factory()
 		{
-			super( ValidHttpStatusCodesAssertion.ID, ValidHttpStatusCodesAssertion.LABEL, ValidHttpStatusCodesAssertion.class,
-					WsdlRequest.class );
+			super( ValidHttpStatusCodesAssertion.ID, ValidHttpStatusCodesAssertion.LABEL,
+					ValidHttpStatusCodesAssertion.class, AbstractSecurityCheck.class );
 
 			// TODO: chenge type of target class
 		}

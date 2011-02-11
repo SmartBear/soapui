@@ -32,11 +32,16 @@ import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityCheckRequestResult.SecurityCheckStatus;
+import com.eviware.soapui.security.assertion.SecurityAssertionPanel;
 import com.eviware.soapui.security.boundary.EnumerationValuesExtractor;
 import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.types.StringToObjectMap;
+import com.eviware.x.form.XForm;
+import com.eviware.x.form.XFormBuilder;
 import com.eviware.x.form.XFormDialog;
+import com.eviware.x.form.XFormFactory;
+import com.eviware.x.form.XFormField;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AForm;
@@ -118,9 +123,17 @@ public class BoundarySecurityCheck extends AbstractSecurityCheck
 					new StringToObjectMap() );
 
 			testStep.run( testCaseRunner, testCaseRunner.getRunContext() );
+			createMessageExchange( testStep );
 			this.hasNext = false;
 
 		}
+	}
+
+	private void createMessageExchange( TestStep testStep )
+	{
+		MessageExchange messageExchange = new WsdlResponseMessageExchange( ( ( WsdlTestRequestStep )testStep )
+				.getTestRequest() );
+		securityCheckRequestResult.setMessageExchange( messageExchange );
 	}
 
 	private void updateRequestContent( TestStep testStep ) throws XmlException, Exception
@@ -133,6 +146,10 @@ public class BoundarySecurityCheck extends AbstractSecurityCheck
 		return this.hasNext;
 	}
 
+	
+	/**
+	 * not used any more
+	 */
 	protected void analyze( TestStep testStep, SecurityTestRunContext context )
 	{
 		if( testStep instanceof WsdlTestRequestStep )
@@ -140,9 +157,7 @@ public class BoundarySecurityCheck extends AbstractSecurityCheck
 			int statusCode = ( ( WsdlTestRequestStep )testStep ).getTestRequest().getResponse().getStatusCode();
 			if( statusCode == HttpStatus.SC_OK )
 			{
-				MessageExchange messageExchange = new WsdlResponseMessageExchange( ( ( WsdlTestRequestStep )testStep )
-						.getTestRequest() );
-				securityCheckRequestResult.setMessageExchange( messageExchange );
+				createMessageExchange( testStep );
 				securityCheckRequestResult
 						.addMessage( "Server is accepting invalid enumeration value and returns status code 200 (OK) !" );
 				securityCheckRequestResult.setStatus( SecurityCheckStatus.FAILED );
@@ -200,6 +215,11 @@ public class BoundarySecurityCheck extends AbstractSecurityCheck
 		field.setOptions( enumerationValuesExtractor.getEnumerationParameters().toArray(
 				new String[enumerationValuesExtractor.getEnumerationParameters().size()] ) );
 		field.setSelectedOptions( selectedOptions.toArray() );
+		
+		XFormField assertionsPanel = dialog.getFormField( BoundaryConfigDialog.ASSERTIONS );
+		SecurityAssertionPanel securityAssertionPanel =  new SecurityAssertionPanel( this ); 
+		assertionsPanel.setProperty( "component", securityAssertionPanel );
+		
 	}
 
 	@Override
@@ -214,6 +234,9 @@ public class BoundarySecurityCheck extends AbstractSecurityCheck
 
 		@AField( description = "Parameters to Check", name = "Select parameters to check", type = AFieldType.MULTILIST )
 		public final static String PARAMETERS = "Select parameters to check";
+		
+		@AField( description = "Assertions", name = "Select assertions to apply", type = AFieldType.COMPONENT )
+		public final static String ASSERTIONS = "Select assertions to apply";
 
 	}
 
