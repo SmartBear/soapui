@@ -42,15 +42,12 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.panels.support.MockTestRunContext;
 import com.eviware.soapui.impl.wsdl.panels.support.MockTestRunner;
-import com.eviware.soapui.impl.wsdl.panels.testcase.WsdlTestCaseDesktopPanel;
-import com.eviware.soapui.impl.wsdl.panels.testcase.WsdlTestCaseDesktopPanel.InternalTestRunListener;
 import com.eviware.soapui.impl.wsdl.panels.testcase.actions.SetCredentialsAction;
 import com.eviware.soapui.impl.wsdl.panels.testcase.actions.SetEndpointAction;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.AbstractGroovyEditorModel;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.PropertyHolderTable;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
-import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCaseRunner;
 import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestStepFactory;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestCaseRunContext;
@@ -58,8 +55,8 @@ import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.security.SecurityCheckResult;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunContext;
+import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.security.SecurityTestRunnerImpl;
-import com.eviware.soapui.security.SecurityTestRunnerInterface;
 import com.eviware.soapui.security.actions.SecurityTestOptionsAction;
 import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.security.log.JSecurityTestRunLog;
@@ -101,7 +98,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 	private JProgressBar progressBar;
 	private JButton runButton;
 	private JButton cancelButton;
-	private SecurityTestRunnerInterface runner;
+	private SecurityTestRunner runner;
 	private JButton setEndpointButton;
 	private JButton setCredentialsButton;
 	private JButton optionsButton;
@@ -118,7 +115,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 	// private JButton createLoadTestButton;
 	// private JButton createSecurityTestButton;
 	private JInspectorPanel inspectorPanel;
-	public SecurityTestRunnerInterface lastRunner;
+	public SecurityTestRunner lastRunner;
 	// private JButton runWithLoadUIButton;
 	// private JButton synchronizeWithLoadUIButton;
 	private SecurityTest securityTest;
@@ -593,7 +590,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 		}
 	}
 
-	public SecurityTestRunnerInterface getSecurityTestRunner()
+	public SecurityTestRunner getSecurityTestRunner()
 	{
 		return runner == null ? lastRunner : runner;
 	}
@@ -610,14 +607,14 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 	public class InternalSecurityCheckRunListener implements SecurityCheckRunListener
 	{
 		@Override
-		public void afterSecurityCheck( SecurityTestRunnerInterface testRunner, SecurityTestRunContext runContext,
+		public void afterSecurityCheck( SecurityTestRunner testRunner, SecurityTestRunContext runContext,
 				SecurityCheckResult securityCheckResult )
 		{
 			securityTestLog.addSecurityCheckResult( securityCheckResult );
 		}
 
 		@Override
-		public void beforeSecurityCheck( SecurityTestRunnerInterface testRunner, SecurityTestRunContext runContext,
+		public void beforeSecurityCheck( SecurityTestRunner testRunner, SecurityTestRunContext runContext,
 				AbstractSecurityCheck securityCheck )
 		{
 			// TODO Auto-generated method stub
@@ -635,7 +632,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 			dateFormat = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss.SSS" );
 		}
 
-		public void beforeRun( SecurityTestRunnerInterface testRunner, SecurityTestRunContext runContext )
+		public void beforeRun( SecurityTestRunner testRunner, SecurityTestRunContext runContext )
 		{
 			if( SoapUI.getTestMonitor().hasRunningSecurityTests( getModelItem().getTestCase() ) )
 				return;
@@ -653,17 +650,18 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 			if( runner == null )
 				runner = testRunner;
 		}
-		public void afterRun( SecurityTestRunnerInterface testRunner, SecurityTestRunContext runContext )
+
+		public void afterRun( SecurityTestRunner testRunner, SecurityTestRunContext runContext )
 		{
 			if( SoapUI.getTestMonitor().hasRunningSecurityTests( getModelItem().getTestCase() ) )
 				return;
 
 			SecurityTestRunnerImpl securityRunner = ( SecurityTestRunnerImpl )testRunner;
 
-			if( testRunner.getStatus() == SecurityTestRunnerInterface.Status.CANCELED )
+			if( testRunner.getStatus() == SecurityTestRunner.Status.CANCELED )
 				securityTestLog.addText( "SecurityTest canceled [" + testRunner.getReason() + "], time taken = "
 						+ securityRunner.getTimeTaken() );
-			else if( testRunner.getStatus() == SecurityTestRunnerInterface.Status.FAILED )
+			else if( testRunner.getStatus() == SecurityTestRunner.Status.FAILED )
 			{
 				String msg = securityRunner.getReason();
 				if( securityRunner.getError() != null )
@@ -674,17 +672,19 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 					msg += securityRunner.getError();
 				}
 
-				securityTestLog.addText( "SecurityTest failed [" + msg + "], time taken = " + securityRunner.getTimeTaken() );
+				securityTestLog
+						.addText( "SecurityTest failed [" + msg + "], time taken = " + securityRunner.getTimeTaken() );
 			}
 			else
-				securityTestLog.addText( "SecurityTest finished with status [" + testRunner.getStatus() + "], time taken = "
-						+ securityRunner.getTimeTaken() );
+				securityTestLog.addText( "SecurityTest finished with status [" + testRunner.getStatus()
+						+ "], time taken = " + securityRunner.getTimeTaken() );
 
 			lastRunner = runner;
 			runner = null;
 
 			JToggleButton loopButton = ( JToggleButton )runContext.getProperty( "loopButton" );
-			if( loopButton != null && loopButton.isSelected() && testRunner.getStatus() == SecurityTestRunnerInterface.Status.FINISHED )
+			if( loopButton != null && loopButton.isSelected()
+					&& testRunner.getStatus() == SecurityTestRunner.Status.FINISHED )
 			{
 				SwingUtilities.invokeLater( new Runnable()
 				{

@@ -21,7 +21,7 @@ import com.eviware.soapui.security.check.AbstractSecurityCheck;
  * 
  * @author soapUI team
  */
-public interface SecurityTestRunnerInterface extends TestRunner
+public interface SecurityTestRunner extends TestRunner
 {
 	public SecurityTest getSecurityTest();
 

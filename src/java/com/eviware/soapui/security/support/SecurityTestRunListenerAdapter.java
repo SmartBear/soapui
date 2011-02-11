@@ -16,7 +16,7 @@ import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.security.SecurityTestRunContext;
-import com.eviware.soapui.security.SecurityTestRunnerInterface;
+import com.eviware.soapui.security.SecurityTestRunner;
 
 /**
  * Adapter for SecurityTestRunListener implementations
@@ -27,23 +27,23 @@ import com.eviware.soapui.security.SecurityTestRunnerInterface;
 public class SecurityTestRunListenerAdapter implements SecurityTestRunListener
 {
 
-	public void beforeRun( SecurityTestRunnerInterface testRunner, SecurityTestRunContext runContext )
+	public void beforeRun( SecurityTestRunner testRunner, SecurityTestRunContext runContext )
 	{
 	}
 
-	public void beforeStep( SecurityTestRunnerInterface testRunner, TestCaseRunContext runContext )
+	public void beforeStep( SecurityTestRunner testRunner, TestCaseRunContext runContext )
 	{
 	}
 
-	public void afterStep( SecurityTestRunnerInterface testRunner, SecurityTestRunContext runContext, TestStepResult result )
+	public void afterStep( SecurityTestRunner testRunner, SecurityTestRunContext runContext, TestStepResult result )
 	{
 	}
 
-	public void afterRun( SecurityTestRunnerInterface testRunner, SecurityTestRunContext runContext )
+	public void afterRun( SecurityTestRunner testRunner, SecurityTestRunContext runContext )
 	{
 	}
 
-	public void beforeStep( SecurityTestRunnerInterface testRunner, SecurityTestRunContext runContext, TestStep testStep )
+	public void beforeStep( SecurityTestRunner testRunner, SecurityTestRunContext runContext, TestStep testStep )
 	{
 	}
 

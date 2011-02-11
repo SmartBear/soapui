@@ -44,7 +44,7 @@ import com.eviware.soapui.security.support.SecurityTestStepRunListener;
 import com.eviware.soapui.support.types.StringToObjectMap;
 
 public class SecurityTestRunnerImpl extends AbstractTestRunner<SecurityTest, SecurityTestRunContext> implements
-		TestCaseRunner, SecurityTestRunnerInterface
+		TestCaseRunner, SecurityTestRunner
 {
 
 	private SecurityTest securityTest;

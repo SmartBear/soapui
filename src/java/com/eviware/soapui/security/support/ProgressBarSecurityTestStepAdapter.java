@@ -23,7 +23,7 @@ import com.eviware.soapui.security.SecurityCheckRequestResult;
 import com.eviware.soapui.security.SecurityCheckResult;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunContext;
-import com.eviware.soapui.security.SecurityTestRunnerInterface;
+import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.security.SecurityCheckRequestResult.SecurityCheckStatus;
 import com.eviware.soapui.security.check.AbstractSecurityCheck;
 
@@ -94,7 +94,7 @@ public class ProgressBarSecurityTestStepAdapter
 
 	public class InternalTestRunListener extends SecurityTestStepRunListenerAdapter
 	{
-		public void beforeStep( SecurityTestRunnerInterface testRunner, SecurityTestRunContext runContext )
+		public void beforeStep( SecurityTestRunner testRunner, SecurityTestRunContext runContext )
 		{
 			if( progressBar.isIndeterminate() )
 				return;
@@ -104,7 +104,7 @@ public class ProgressBarSecurityTestStepAdapter
 			progressBar.setForeground( Color.GREEN.darker() );
 		}
 
-		public void beforeSecurityCheck( SecurityTestRunnerInterface testRunner, SecurityTestRunContext runContext,
+		public void beforeSecurityCheck( SecurityTestRunner testRunner, SecurityTestRunContext runContext,
 				AbstractSecurityCheck securityCheck )
 		{
 			if( progressBar.isIndeterminate() )
@@ -118,7 +118,7 @@ public class ProgressBarSecurityTestStepAdapter
 			}
 		}
 
-		public void afterSecurityCheck( SecurityTestRunnerInterface testRunner, SecurityTestRunContext runContext,
+		public void afterSecurityCheck( SecurityTestRunner testRunner, SecurityTestRunContext runContext,
 				SecurityCheckResult securityCheckResult )
 		{
 			if( progressBar.isIndeterminate() )
@@ -136,7 +136,7 @@ public class ProgressBarSecurityTestStepAdapter
 			progressBar.setValue( runContext.getCurrentCheckIndex() + 1 );
 		}
 
-		public void afterStep( SecurityTestRunnerInterface testRunner, SecurityTestRunContext runContext,
+		public void afterStep( SecurityTestRunner testRunner, SecurityTestRunContext runContext,
 				TestStepResult result )
 		{
 			if( progressBar.isIndeterminate() )

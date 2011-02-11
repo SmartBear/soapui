@@ -249,7 +249,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 		return testCase;
 	}
 
-	public SecurityTestRunnerInterface run( StringToObjectMap context, boolean async )
+	public SecurityTestRunner run( StringToObjectMap context, boolean async )
 	{
 		if( runner != null && runner.getStatus() == Status.RUNNING )
 			return null;
@@ -299,7 +299,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 	 * @return
 	 * @throws Exception
 	 */
-	public Object runStartupScript( SecurityTestRunContext runContext, SecurityTestRunnerInterface runner )
+	public Object runStartupScript( SecurityTestRunContext runContext, SecurityTestRunner runner )
 			throws Exception
 	{
 		String script = getStartupScript();
@@ -355,7 +355,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 	 * @return
 	 * @throws Exception
 	 */
-	public Object runTearDownScript( SecurityTestRunContext runContext, SecurityTestRunnerInterface runner )
+	public Object runTearDownScript( SecurityTestRunContext runContext, SecurityTestRunner runner )
 			throws Exception
 	{
 		String script = getTearDownScript();
