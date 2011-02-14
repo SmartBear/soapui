@@ -546,30 +546,15 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	@Override
 	public AssertionStatus getAssertionStatus()
 	{
-		// XXX: this should return agregate result for all assertions.
-		currentStatus = AssertionStatus.UNKNOWN;
-
 		int cnt = getAssertionCount();
 		if( cnt == 0 )
 			return currentStatus;
-
-		boolean hasEnabled = false;
-
-		for( int c = 0; c < cnt; c++ )
-		{
-			if( !getAssertionAt( c ).isDisabled() )
-				hasEnabled = true;
-
-			if( getAssertionAt( c ).getStatus() == AssertionStatus.FAILED )
-			{
-				currentStatus = AssertionStatus.FAILED;
-				break;
-			}
-		}
-
-		if( currentStatus == AssertionStatus.UNKNOWN && hasEnabled )
+		
+		if ( securityCheckResult.getStatus() == SecurityCheckStatus.OK )
 			currentStatus = AssertionStatus.VALID;
-
+		else
+			currentStatus = AssertionStatus.FAILED;
+		
 		return currentStatus;
 	}
 
