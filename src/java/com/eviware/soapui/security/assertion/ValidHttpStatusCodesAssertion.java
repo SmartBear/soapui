@@ -86,7 +86,6 @@ public class ValidHttpStatusCodesAssertion extends WsdlMessageAssertion implemen
 			if( !codeList.contains( statusCode ) )
 			{
 				String message = "Response status code:" + statusCode + " is not in acceptable list of status codes";
-				updateResult( context, message );
 				throw new AssertionException( new AssertionError( message ) );
 			}
 		}
@@ -96,14 +95,6 @@ public class ValidHttpStatusCodesAssertion extends WsdlMessageAssertion implemen
 		}
 
 		return "OK";
-	}
-
-	private void updateResult( SubmitContext context, String message )
-	{
-		SecurityCheckRequestResult reqResult = ( SecurityCheckRequestResult )context
-				.getProperty( AbstractSecurityCheck.SECURITY_CHECK_REQUEST_RESULT );
-		reqResult.addMessage( message );
-		reqResult.setStatus( SecurityCheckStatus.FAILED );
 	}
 
 	private List<String> extractCodes()

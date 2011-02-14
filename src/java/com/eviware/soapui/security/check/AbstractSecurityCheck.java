@@ -45,6 +45,7 @@ import com.eviware.soapui.model.support.XPathReference;
 import com.eviware.soapui.model.support.XPathReferenceContainer;
 import com.eviware.soapui.model.support.XPathReferenceImpl;
 import com.eviware.soapui.model.testsuite.Assertable;
+import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.model.testsuite.AssertionsListener;
 import com.eviware.soapui.model.testsuite.RequestAssertion;
 import com.eviware.soapui.model.testsuite.ResponseAssertion;
@@ -56,6 +57,7 @@ import com.eviware.soapui.security.Securable;
 import com.eviware.soapui.security.SecurityCheckRequestResult;
 import com.eviware.soapui.security.SecurityCheckResult;
 import com.eviware.soapui.security.SecurityTestRunContext;
+import com.eviware.soapui.security.SecurityCheckRequestResult.SecurityCheckStatus;
 import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
@@ -69,6 +71,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		XPathReferenceContainer, Assertable, RequestAssertion, ResponseAssertion
 {
 	public static final String SECURITY_CHECK_REQUEST_RESULT = "SecurityCheckRequestResult";
+	public static final String SECURITY_CHECK_RESPONSE_RESULT = "SecurityCheckResponseResult";
 
 	public static final String STATUS_PROPERTY = AbstractSecurityCheck.class.getName() + "@status";
 
@@ -166,7 +169,8 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		{
 			securityCheckRequestResult = new SecurityCheckRequestResult( this );
 			execute( testStep, context );
-			assertResponse( context );
+			assertRequest( securityCheckRequestResult.getMessageExchange(), context );
+			assertResponse( securityCheckRequestResult.getMessageExchange(), context );
 			// add to summary result
 			securityCheckResult.addSecurityRequestResult( securityCheckRequestResult );
 
@@ -249,6 +253,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		testStep = step;
 	}
 
+	// XXX: need to be fixed.
 	private void runTearDownScript( TestStep testStep )
 	{
 		scriptEngine.setScript( tearDownScript );
@@ -437,16 +442,10 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 			if( assertion == null )
 				return null;
 
-			/*
-			 * XXX: What to do if there is at least one response?
-			 * 
-			 * Check have been run, and than I add assertion. Should assertion be
-			 * evaluated?
-			 */
 			if( getAssertableContent() != null )
 			{
 				assertRequests( assertion );
-				assertResponse( assertion );
+				assertResponses( assertion );
 				notifier.notifyChange();
 			}
 
@@ -464,7 +463,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	 * @param assertion
 	 *           run all responses against this assertion
 	 */
-	private void assertResponse( WsdlMessageAssertion assertion )
+	private void assertResponses( WsdlMessageAssertion assertion )
 	{
 		if( securityCheckResult != null )
 			for( SecurityCheckRequestResult result : securityCheckResult.getSecurityRequestResultList() )
@@ -547,6 +546,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	@Override
 	public AssertionStatus getAssertionStatus()
 	{
+		// XXX: this should return agregate result for all assertions.
 		currentStatus = AssertionStatus.UNKNOWN;
 
 		int cnt = getAssertionCount();
@@ -660,41 +660,67 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	@Override
 	public AssertionStatus assertRequest( MessageExchange messageExchange, SubmitContext context )
 	{
-		System.out.println( "asdasdasd" );
-		return null;
-	}
+		AssertionStatus result = null;
 
-	@Override
-	public AssertionStatus assertResponse( MessageExchange messageExchange, SubmitContext context )
-	{
-		System.out.println( "asdasdasd" );
-		return null;
-	}
-
-	public void assertResponse( SubmitContext context )
-	{
 		try
 		{
 			PropertyChangeNotifier notifier = new PropertyChangeNotifier();
 
-			MessageExchange messageExchange = securityCheckRequestResult.getMessageExchange();
-			context.setProperty( SECURITY_CHECK_REQUEST_RESULT, securityCheckRequestResult );
-
-			if( this != null )
+			if( messageExchange != null )
 			{
-				// assert!
+				context.setProperty( SECURITY_CHECK_REQUEST_RESULT, securityCheckRequestResult );
+
 				for( WsdlMessageAssertion assertion : assertionsSupport.getAssertionList() )
 				{
-					assertion.assertResponse( messageExchange, context );
+					result = assertion.assertRequest( messageExchange, context );
+					if( result == AssertionStatus.FAILED )
+					{
+						for( AssertionError error : assertion.getErrors() )
+							securityCheckRequestResult.addMessage( error.getMessage() );
+						securityCheckRequestResult.setStatus( SecurityCheckStatus.FAILED );
+					}
 				}
-			}
 
-			context.removeProperty( SECURITY_CHECK_REQUEST_RESULT );
-			notifier.notifyChange();
+				notifier.notifyChange();
+			}
 		}
 		catch( Exception e )
 		{
 			e.printStackTrace();
 		}
+		return result;
+	}
+
+	public AssertionStatus assertResponse( MessageExchange messageExchange, SubmitContext context )
+	{
+		AssertionStatus result = null;
+
+		try
+		{
+			PropertyChangeNotifier notifier = new PropertyChangeNotifier();
+
+			if( messageExchange != null )
+			{
+				context.setProperty( SECURITY_CHECK_REQUEST_RESULT, securityCheckRequestResult );
+
+				for( WsdlMessageAssertion assertion : assertionsSupport.getAssertionList() )
+				{
+					result = assertion.assertResponse( messageExchange, context );
+					if( result == AssertionStatus.FAILED )
+					{
+						for( AssertionError error : assertion.getErrors() )
+							securityCheckRequestResult.addMessage( error.getMessage() );
+						securityCheckRequestResult.setStatus( SecurityCheckStatus.FAILED );
+					}
+				}
+
+				notifier.notifyChange();
+			}
+		}
+		catch( Exception e )
+		{
+			e.printStackTrace();
+		}
+		return result;
 	}
 }
