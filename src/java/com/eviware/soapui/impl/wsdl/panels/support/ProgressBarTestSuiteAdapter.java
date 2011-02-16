@@ -27,6 +27,7 @@ import com.eviware.soapui.model.testsuite.TestSuiteRunListener;
 import com.eviware.soapui.model.testsuite.TestSuiteRunner;
 import com.eviware.soapui.model.testsuite.TestRunner.Status;
 import com.eviware.soapui.monitor.support.TestMonitorListenerAdapter;
+import com.eviware.soapui.security.SecurityTestRunner;
 
 /**
  * Class that keeps a JProgressBars state in sync with a TestCase
@@ -82,6 +83,16 @@ public class ProgressBarTestSuiteAdapter
 		}
 
 		public void loadTestFinished( LoadTestRunner loadTestRunner )
+		{
+			setLoadTestingState();
+		}
+
+		public void securityTestStarted( SecurityTestRunner securityTestRunner )
+		{
+			setLoadTestingState();
+		}
+
+		public void securityTestFinished( SecurityTestRunner securityTestRunner )
 		{
 			setLoadTestingState();
 		}

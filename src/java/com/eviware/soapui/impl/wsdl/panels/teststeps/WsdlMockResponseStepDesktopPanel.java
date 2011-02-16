@@ -49,6 +49,7 @@ import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.monitor.support.TestMonitorListenerAdapter;
+import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.ModelItemPropertyEditorModel;
 import com.eviware.soapui.support.StringUtils;
@@ -85,7 +86,7 @@ public class WsdlMockResponseStepDesktopPanel extends
 
 		SoapUI.getTestMonitor().addTestMonitorListener( testMonitorListener );
 		setEnabled( !SoapUI.getTestMonitor().hasRunningTest( mockResponseStep.getTestCase() ) );
-		
+
 		mockResponseStep.addAssertionsListener( assertionsListener );
 	}
 
@@ -213,7 +214,7 @@ public class WsdlMockResponseStepDesktopPanel extends
 		splitPane.setDividerLocation( 200 );
 		return panel;
 	}
-	
+
 	private Component buildMatchEditor()
 	{
 		JPanel panel = new JPanel( new BorderLayout() );
@@ -244,23 +245,23 @@ public class WsdlMockResponseStepDesktopPanel extends
 		toolBar.addFixed( new JButton( new SelectFromCurrentAction() ) );
 		return toolBar;
 	}
-	
+
 	public class SelectFromCurrentAction extends AbstractAction
 	{
 		public SelectFromCurrentAction()
 		{
 			super( "Select from current" );
-			putValue( Action.SHORT_DESCRIPTION,
-					"Selects the Query XPath expression from the last request Match field" );
+			putValue( Action.SHORT_DESCRIPTION, "Selects the Query XPath expression from the last request Match field" );
 		}
 
 		public void actionPerformed( ActionEvent arg0 )
 		{
-			if( getModelItem().getLastResult() != null && 
-					getModelItem().getLastResult().getMockRequest() != null && StringUtils.hasContent(  getModelItem().getQuery() ) )
+			if( getModelItem().getLastResult() != null && getModelItem().getLastResult().getMockRequest() != null
+					&& StringUtils.hasContent( getModelItem().getQuery() ) )
 			{
-				getModelItem().setMatch( XmlUtils.getXPathValue( getModelItem().getLastResult().getMockRequest().getRequestContent(), 
-						PropertyExpander.expandProperties( getModelItem(), getModelItem().getQuery() )));
+				getModelItem().setMatch(
+						XmlUtils.getXPathValue( getModelItem().getLastResult().getMockRequest().getRequestContent(),
+								PropertyExpander.expandProperties( getModelItem(), getModelItem().getQuery() ) ) );
 			}
 		}
 	}
@@ -361,6 +362,17 @@ public class WsdlMockResponseStepDesktopPanel extends
 				setEnabled( false );
 		}
 
+		public void securityTestFinished( SecurityTestRunner runner )
+		{
+			setEnabled( !SoapUI.getTestMonitor().hasRunningTest( getModelItem().getTestCase() ) );
+		}
+
+		public void securityTestStarted( SecurityTestRunner runner )
+		{
+			if( runner.getSecurityTest().getTestCase() == getModelItem().getTestCase() )
+				setEnabled( false );
+		}
+
 		public void testCaseFinished( TestCaseRunner runner )
 		{
 			setEnabled( !SoapUI.getTestMonitor().hasRunningTest( getModelItem().getTestCase() ) );
@@ -376,12 +388,12 @@ public class WsdlMockResponseStepDesktopPanel extends
 	public void propertyChange( PropertyChangeEvent evt )
 	{
 		super.propertyChange( evt );
-		
+
 		if( evt.getPropertyName().equals( WsdlMockResponseTestStep.STATUS_PROPERTY ) )
 			updateStatusIcon();
 	}
 
-	@SuppressWarnings("unused")
+	@SuppressWarnings( "unused" )
 	private final class DeclareNamespacesAction extends AbstractAction
 	{
 		public DeclareNamespacesAction()

@@ -21,10 +21,11 @@ import org.apache.log4j.Logger;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.model.testsuite.LoadTestRunner;
 import com.eviware.soapui.monitor.support.TestMonitorListenerAdapter;
+import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.settings.UISettings;
 
 /**
- * Disables httpclient and groovy logs during loadtests
+ * Disables httpclient and groovy logs during loadtests and securitytests
  * 
  * @author ole
  */
@@ -32,6 +33,7 @@ import com.eviware.soapui.settings.UISettings;
 public final class LogDisablingTestMonitorListener extends TestMonitorListenerAdapter
 {
 	private Set<LoadTestRunner> loadTestRunners = new HashSet<LoadTestRunner>();
+	private Set<SecurityTestRunner> securityTestRunners = new HashSet<SecurityTestRunner>();
 
 	public void loadTestStarted( LoadTestRunner runner )
 	{
@@ -56,6 +58,32 @@ public final class LogDisablingTestMonitorListener extends TestMonitorListenerAd
 			Logger.getLogger( "httpclient.wire" ).setLevel( Level.DEBUG );
 			Logger.getLogger( "groovy.log" ).setLevel( Level.DEBUG );
 			Logger.getLogger( SoapUI.class ).info( "Enabled logs after loadtests" );
+		}
+	}
+
+	public void securityTestStarted( SecurityTestRunner runner )
+	{
+		if( securityTestRunners.isEmpty() )
+		{
+			Logger.getLogger( SoapUI.class ).info( "Disabling logs during securitytests" );
+			Logger.getLogger( "httpclient.wire" ).setLevel( Level.OFF );
+
+			if( !SoapUI.getSettings().getBoolean( UISettings.DONT_DISABLE_GROOVY_LOG ) )
+				Logger.getLogger( "groovy.log" ).setLevel( Level.OFF );
+		}
+
+		securityTestRunners.add( runner );
+	}
+
+	public void securityTestFinished( SecurityTestRunner runner )
+	{
+		securityTestRunners.remove( runner );
+
+		if( securityTestRunners.isEmpty() )
+		{
+			Logger.getLogger( "httpclient.wire" ).setLevel( Level.DEBUG );
+			Logger.getLogger( "groovy.log" ).setLevel( Level.DEBUG );
+			Logger.getLogger( SoapUI.class ).info( "Enabled logs after securitytests" );
 		}
 	}
 }

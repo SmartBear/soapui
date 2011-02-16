@@ -22,6 +22,7 @@ import com.eviware.soapui.model.testsuite.LoadTestRunner;
 import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.monitor.support.TestMonitorListenerAdapter;
+import com.eviware.soapui.security.SecurityTestRunner;
 
 /**
  * ComponentEnabler for disabling components during TestCase runs
@@ -48,6 +49,11 @@ public class TestRunComponentEnabler extends TestMonitorListenerAdapter
 	}
 
 	public void loadTestStarted( LoadTestRunner runner )
+	{
+		disable();
+	}
+
+	public void securityTestStarted( SecurityTestRunner runner )
 	{
 		disable();
 	}
@@ -79,6 +85,12 @@ public class TestRunComponentEnabler extends TestMonitorListenerAdapter
 	}
 
 	public void loadTestFinished( LoadTestRunner runner )
+	{
+		if( !SoapUI.getTestMonitor().hasRunningTest( testCase ) )
+			enable();
+	}
+
+	public void securityTestFinished( SecurityTestRunner runner )
 	{
 		if( !SoapUI.getTestMonitor().hasRunningTest( testCase ) )
 			enable();

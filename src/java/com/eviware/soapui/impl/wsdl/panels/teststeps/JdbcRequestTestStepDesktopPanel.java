@@ -86,6 +86,7 @@ import com.eviware.soapui.model.testsuite.TestAssertion;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
 import com.eviware.soapui.monitor.support.TestMonitorListenerAdapter;
+import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.ListDataChangeListener;
@@ -174,7 +175,8 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 		jdbcRequestTestStep.addAssertionsListener( assertionsListener );
 	}
 
-	//added this again cause without it connection is set to none whenever jdbc test step is reopened
+	// added this again cause without it connection is set to none whenever jdbc
+	// test step is reopened
 	protected void initConfig()
 	{
 		jdbcRequestTestStepConfig = jdbcRequestTestStep.getJdbcRequestTestStepConfig();
@@ -749,6 +751,17 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 		public void loadTestStarted( LoadTestRunner runner )
 		{
 			if( runner.getLoadTest().getTestCase() == getModelItem().getTestCase() )
+				setEnabled( false );
+		}
+
+		public void securityTestFinished( SecurityTestRunner runner )
+		{
+			setEnabled( !SoapUI.getTestMonitor().hasRunningTest( getModelItem().getTestCase() ) );
+		}
+
+		public void securityTestStarted( SecurityTestRunner runner )
+		{
+			if( runner.getSecurityTest().getTestCase() == getModelItem().getTestCase() )
 				setEnabled( false );
 		}
 
