@@ -78,7 +78,7 @@ public class SQLInjectionCheck extends AbstractSecurityCheck
 	@Override
 	protected void execute( TestStep testStep, SecurityTestRunContext context )
 	{
-		sqlFuzzer.getNextFuzzedTestStep( testStep, getParameters() );
+//		sqlFuzzer.getNextFuzzedTestStep( testStep, getParameters() );
 
 		WsdlTestCaseRunner testCaseRunner = new WsdlTestCaseRunner( ( WsdlTestCase )testStep.getTestCase(),
 				new StringToObjectMap() );

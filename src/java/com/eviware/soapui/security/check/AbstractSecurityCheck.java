@@ -58,6 +58,8 @@ import com.eviware.soapui.security.SecurityCheckRequestResult;
 import com.eviware.soapui.security.SecurityCheckResult;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityCheckRequestResult.SecurityCheckStatus;
+import com.eviware.soapui.security.support.SecurityCheckedParameter;
+import com.eviware.soapui.security.support.SecurityCheckedParameterHolder;
 import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
@@ -92,7 +94,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	protected SecurityCheckRequestResult securityCheckRequestResult;
 	protected TestStep testStep;
 	private AssertionsSupport assertionsSupport;
-	private RestParamsPropertyHolder params;
+	private SecurityCheckedParameterHolder params;
 
 	private AssertionStatus currentStatus;
 
@@ -194,10 +196,10 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	 */
 	abstract protected boolean hasNext();
 
-	public RestParamsPropertyHolder getParameters()
+	public SecurityCheckedParameterHolder getParameters()
 	{
 		if( params == null )
-			params = new XmlBeansRestParamsTestPropertyHolder( this, config.getRestParameters() );
+			params = new SecurityCheckedParameterHolder( this, config.getChekedPameters() );
 		return params;
 	}
 
@@ -397,15 +399,14 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	{
 		List<XPathReference> result = new ArrayList<XPathReference>();
 
-		for( TestProperty param : getParameters().getPropertyList() )
+		for( SecurityCheckedParameter param : getParameters().getPropertyList() )
 		{
 			TestStep t = getTestStep();
 			if( t instanceof WsdlTestRequestStep )
 			{
-				RestParamProperty restParam = ( RestParamProperty )param;
-				if( restParam != null )
-					result.add( new XPathReferenceImpl( "SecurityCheck Parameter " + restParam.getName(),
-							( ( WsdlTestRequestStep )t ).getOperation(), true, restParam, "path" ) );
+				if( param != null )
+					result.add( new XPathReferenceImpl( "SecurityCheck Parameter " + param.getName(),
+							( ( WsdlTestRequestStep )t ).getOperation(), true, param, "path" ) );
 			}
 		}
 
@@ -549,12 +550,12 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		int cnt = getAssertionCount();
 		if( cnt == 0 )
 			return currentStatus;
-		
-		if ( securityCheckResult.getStatus() == SecurityCheckStatus.OK )
+
+		if( securityCheckResult.getStatus() == SecurityCheckStatus.OK )
 			currentStatus = AssertionStatus.VALID;
 		else
 			currentStatus = AssertionStatus.FAILED;
-		
+
 		return currentStatus;
 	}
 

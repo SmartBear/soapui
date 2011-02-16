@@ -187,12 +187,6 @@ public class GroovySecurityCheck extends AbstractSecurityCheck implements HttpSe
 		return true;
 	}
 
-	public String getTitle()
-	{
-		return checkTitle;
-	}
-
-	@Override
 	protected void buildDialog()
 	{
 		executeEditor = new GroovyEditor( new GroovySecurityCheckScriptModel()

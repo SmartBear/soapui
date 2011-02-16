@@ -76,14 +76,14 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheck
 				extractor.extract();
 				TreeMap<String, NodeInfo> params = extractor.getParams();
 				// what to do if request is changed????
-//				for( String key : params.keySet() )
-//				{
-//					CheckedParameterConfig param = invalidTypesConfig.addNewParameters();
-////					param.setParameterName( params.get( key ).getSimpleName() );
-//					param.setXpath( params.get( key ).getXPath() );
-//					param.setChecked( false );
-//					param.setType( String.valueOf( params.get( key ).getType() ) );
-//				}
+				for( String key : params.keySet() )
+				{
+					CheckedParameterConfig param = invalidTypesConfig.addNewParameters();
+					param.setParameterName( params.get( key ).getSimpleName() );
+					param.setXpath( params.get( key ).getXPath() );
+					param.setChecked( false );
+					param.setType( String.valueOf( params.get( key ).getType() ) );
+				}
 			}
 			catch( Exception e )
 			{

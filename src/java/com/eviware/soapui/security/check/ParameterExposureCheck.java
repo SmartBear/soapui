@@ -237,12 +237,6 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements Htt
 		return true;
 	}
 
-	public String getTitle()
-	{
-		return checkTitle;
-	}
-
-	@Override
 	protected void buildDialog()
 	{
 		// super.buildDialogOld();

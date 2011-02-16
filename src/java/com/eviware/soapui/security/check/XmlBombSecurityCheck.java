@@ -35,6 +35,7 @@ import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityCheckRequestResult.SecurityCheckStatus;
 import com.eviware.soapui.security.log.SecurityTestLogModel;
+import com.eviware.soapui.security.support.SecurityCheckedParameter;
 import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
 import com.eviware.soapui.security.ui.XmlBombSecurityCheckConfigPanel;
 import com.eviware.soapui.support.types.StringToObjectMap;
@@ -124,7 +125,7 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck
 		if( getExecutionStrategy().equals( AbstractSecurityCheck.SEPARATE_REQUEST_STRATEGY )
 				&& getParameters().getPropertyList().size() > 0 )
 		{
-			for( TestProperty param : getParameters().getPropertyList() )
+			for( SecurityCheckedParameter param : getParameters().getPropertyList() )
 			{
 				if( param != null )
 				{
@@ -154,7 +155,7 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck
 
 	}
 
-	private TestStep generateNextRequest( TestStep testStep, List<TestProperty> paramsToCheck )
+	private TestStep generateNextRequest( TestStep testStep, List<SecurityCheckedParameter> list )
 	{
 		AbstractHttpRequest<?> request = getRequest( testStep );
 		if( currentIndex < getBombList().size() )
@@ -165,7 +166,7 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck
 			String newRequestContent = requestContent;
 			if( testStep instanceof WsdlTestRequestStep )
 			{
-				for( TestProperty param : paramsToCheck )
+				for( SecurityCheckedParameter param : list )
 				{
 					newRequestContent = XmlUtils.setXPathContent( newRequestContent, param.getName().substring(
 							param.getName().lastIndexOf( "\n" ) + 1 ), "&&payload&&" );
@@ -181,7 +182,7 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck
 		}
 		else if( currentIndex == getBombList().size() )
 		{
-			request.setRequestContent( createQuadraticExpansionAttack( request.getRequestContent(), paramsToCheck ) );
+			request.setRequestContent( createQuadraticExpansionAttack( request.getRequestContent(), list ) );
 		}
 
 		return testStep;
@@ -337,7 +338,7 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck
 		( ( XmlBombSecurityCheckConfig )config.getConfig() ).setXmlAttachmentPrefix( prefix );
 	}
 
-	private String createQuadraticExpansionAttack( String initialContent, List<TestProperty> params )
+	private String createQuadraticExpansionAttack( String initialContent, List<SecurityCheckedParameter> list )
 	{
 		String result = "";
 
@@ -346,7 +347,7 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck
 
 		if( initialContent != null )
 		{
-			for( TestProperty param : params )
+			for( SecurityCheckedParameter param : list )
 			{
 				initialContent = XmlUtils.setXPathContent( initialContent, param.getName().substring(
 						param.getName().lastIndexOf( "\n" ) + 1 ), "&&payload&&" );
