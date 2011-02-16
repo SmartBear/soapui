@@ -48,6 +48,7 @@ public class ProgressBarTestSuiteAdapter
 		this.testSuite = testSuite;
 
 		setLoadTestingState();
+		setSecurityTestingState();
 
 		internalTestRunListener = new InternalTestSuiteRunListener();
 		testSuite.addTestSuiteRunListener( internalTestRunListener );
@@ -66,7 +67,21 @@ public class ProgressBarTestSuiteAdapter
 		if( SoapUI.getTestMonitor().hasRunningLoadTest( testSuite ) )
 		{
 			progressBar.setIndeterminate( true );
-			progressBar.setString( "loadTesting" );
+			progressBar.setString( "load testing" );
+		}
+		else
+		{
+			progressBar.setIndeterminate( false );
+			progressBar.setString( "" );
+		}
+	}
+
+	private void setSecurityTestingState()
+	{
+		if( SoapUI.getTestMonitor().hasRunningSecurityTest( testSuite ) )
+		{
+			progressBar.setIndeterminate( true );
+			progressBar.setString( "security testing" );
 		}
 		else
 		{
@@ -89,12 +104,12 @@ public class ProgressBarTestSuiteAdapter
 
 		public void securityTestStarted( SecurityTestRunner securityTestRunner )
 		{
-			setLoadTestingState();
+			setSecurityTestingState();
 		}
 
 		public void securityTestFinished( SecurityTestRunner securityTestRunner )
 		{
-			setLoadTestingState();
+			setSecurityTestingState();
 		}
 	}
 

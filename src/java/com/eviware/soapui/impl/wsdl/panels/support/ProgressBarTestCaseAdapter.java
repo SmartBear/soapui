@@ -48,6 +48,7 @@ public class ProgressBarTestCaseAdapter
 		this.testCase = testCase;
 
 		setLoadTestingState();
+		setSecurityTestingState();
 
 		internalTestRunListener = new InternalTestRunListener();
 		testCase.addTestRunListener( internalTestRunListener );
