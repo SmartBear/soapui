@@ -19,7 +19,6 @@ import org.apache.xmlbeans.XmlObject;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.TestAssertionConfig;
-import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.AbstractTestAssertionFactory;
@@ -29,8 +28,6 @@ import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.model.testsuite.AssertionException;
 import com.eviware.soapui.model.testsuite.ResponseAssertion;
-import com.eviware.soapui.security.SecurityCheckRequestResult;
-import com.eviware.soapui.security.SecurityCheckRequestResult.SecurityCheckStatus;
 import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.types.StringToStringMap;
@@ -60,6 +57,11 @@ public class InvalidHttpStatusCodesAssertion extends WsdlMessageAssertion implem
 	{
 		super( assertionConfig, assertable, false, true, false, true );
 
+		init();
+	}
+
+	private void init()
+	{
 		XmlObjectConfigurationReader reader = new XmlObjectConfigurationReader( getConfiguration() );
 		codes = reader.readString( CODES, "" );
 	}
@@ -87,8 +89,7 @@ public class InvalidHttpStatusCodesAssertion extends WsdlMessageAssertion implem
 			String statusCode = statusElements[1].trim();
 			if( codeList.contains( statusCode ) )
 			{
-				String message = "Response status code:" + statusCode+ " is in invalid list of status codes";
-				updateResult( context, message );
+				String message = "Response status code: " + statusCode+ " is in invalid list of status codes";
 				throw new AssertionException( new AssertionError( message ) );
 			}
 		}
@@ -98,13 +99,6 @@ public class InvalidHttpStatusCodesAssertion extends WsdlMessageAssertion implem
 		}
 
 		return "OK";
-	}
-
-	private void updateResult( SubmitContext context, String message )
-	{
-		SecurityCheckRequestResult reqResult  = ( SecurityCheckRequestResult )context.getProperty( AbstractSecurityCheck.SECURITY_CHECK_REQUEST_RESULT );
-		reqResult.addMessage( message );
-		reqResult.setStatus( SecurityCheckStatus.FAILED );
 	}
 
 	private List<String> extractCodes()
@@ -175,7 +169,7 @@ public class InvalidHttpStatusCodesAssertion extends WsdlMessageAssertion implem
 				40 );
 
 		// TODO : update help URL
-		dialog = builder.buildDialog( builder.buildOkCancelHelpActions( HelpUrls.SIMPLE_CONTAINS_HELP_URL ),
+		dialog = builder.buildDialog( builder.buildOkCancelHelpActions( HelpUrls.HELP_URL_ROOT ),
 				"Specify codes", UISupport.OPTIONS_ICON );
 	}
 

@@ -33,7 +33,7 @@ import com.eviware.soapui.support.types.StringToObjectMap;
  * @author soapui team
  */
 
-public class SQLInjectionCheck extends AbstractSecurityCheck implements SensitiveInformationCheckable
+public class SQLInjectionCheck extends AbstractSecurityCheck
 {
 
 	public static final String TYPE = "SQLInjectionCheck";
@@ -74,13 +74,6 @@ public class SQLInjectionCheck extends AbstractSecurityCheck implements Sensitiv
 		return TYPE;
 	}
 
-	@Override
-	public void checkForSensitiveInformationExposure( TestStep testStep, SecurityTestRunContext context,
-			SecurityTestLogModel securityTestLog )
-	{
-		InformationExposureCheck iec = new InformationExposureCheck( testStep, config, null, null );
-//		iec.analyze( testStep, context );
-	}
 
 	@Override
 	protected void execute( TestStep testStep, SecurityTestRunContext context )

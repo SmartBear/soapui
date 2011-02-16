@@ -40,7 +40,7 @@ import com.eviware.soapui.security.ui.XmlBombSecurityCheckConfigPanel;
 import com.eviware.soapui.support.types.StringToObjectMap;
 import com.eviware.soapui.support.xml.XmlUtils;
 
-public class XmlBombSecurityCheck extends AbstractSecurityCheck implements SensitiveInformationCheckable
+public class XmlBombSecurityCheck extends AbstractSecurityCheck 
 {
 
 	public static final String TYPE = "XmlBombSecurityCheck";
@@ -206,14 +206,6 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck implements Sensi
 		return TYPE;
 	}
 
-	@Override
-	public void checkForSensitiveInformationExposure( TestStep testStep, SecurityTestRunContext context,
-			SecurityTestLogModel securityTestLog )
-	{
-		InformationExposureCheck iec = new InformationExposureCheck( testStep, config, null, null );
-//		iec.analyze( testStep, context );
-
-	}
 
 	public boolean isAttachXmlBomb()
 	{

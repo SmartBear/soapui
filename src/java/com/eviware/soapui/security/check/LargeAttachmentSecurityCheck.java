@@ -19,7 +19,7 @@ import com.eviware.soapui.security.ui.LargeAttachmentSecurityCheckConfigPanel;
 import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
 import com.eviware.soapui.support.types.StringToObjectMap;
 
-public class LargeAttachmentSecurityCheck extends AbstractSecurityCheck implements SensitiveInformationCheckable
+public class LargeAttachmentSecurityCheck extends AbstractSecurityCheck 
 {
 
 	public static final String TYPE = "LargeAttachmentSecurityCheck";
@@ -71,13 +71,6 @@ public class LargeAttachmentSecurityCheck extends AbstractSecurityCheck implemen
 		return true;
 	}
 
-	@Override
-	public void checkForSensitiveInformationExposure( TestStep testStep, SecurityTestRunContext context,
-			SecurityTestLogModel securityTestLog )
-	{
-		InformationExposureCheck iec = new InformationExposureCheck( testStep, config, null, null );
-
-	}
 
 	@Override
 	public String getType()

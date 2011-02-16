@@ -28,8 +28,6 @@ import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.model.testsuite.AssertionException;
 import com.eviware.soapui.model.testsuite.ResponseAssertion;
-import com.eviware.soapui.security.SecurityCheckRequestResult;
-import com.eviware.soapui.security.SecurityCheckRequestResult.SecurityCheckStatus;
 import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.types.StringToStringMap;
@@ -59,6 +57,11 @@ public class ValidHttpStatusCodesAssertion extends WsdlMessageAssertion implemen
 	{
 		super( assertionConfig, assertable, false, true, false, true );
 
+		init();
+	}
+
+	private void init()
+	{
 		XmlObjectConfigurationReader reader = new XmlObjectConfigurationReader( getConfiguration() );
 		codes = reader.readString( CODES, "" );
 	}
@@ -164,7 +167,7 @@ public class ValidHttpStatusCodesAssertion extends WsdlMessageAssertion implemen
 		mainForm.addTextField( CODES, "Coma separated acceptable status codes", XForm.FieldType.TEXTAREA ).setWidth( 40 );
 
 		// TODO : update help URL
-		dialog = builder.buildDialog( builder.buildOkCancelHelpActions( HelpUrls.SIMPLE_CONTAINS_HELP_URL ),
+		dialog = builder.buildDialog( builder.buildOkCancelHelpActions( HelpUrls.HELP_URL_ROOT ),
 				"Specify codes", UISupport.OPTIONS_ICON );
 	}
 

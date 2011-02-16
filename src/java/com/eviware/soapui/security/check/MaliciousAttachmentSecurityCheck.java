@@ -31,7 +31,7 @@ import com.eviware.soapui.security.log.SecurityTestLogModel;
 import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
 import com.eviware.soapui.support.types.StringToObjectMap;
 
-public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck implements SensitiveInformationCheckable
+public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck 
 {
 
 	public static final String TYPE = "MaliciousAttachmentSecurityCheck";
@@ -96,13 +96,6 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck impl
 		return true;
 	}
 
-	@Override
-	public void checkForSensitiveInformationExposure( TestStep testStep, SecurityTestRunContext context,
-			SecurityTestLogModel securityTestLog )
-	{
-		InformationExposureCheck iec = new InformationExposureCheck( testStep, config, null, null );
-
-	}
 
 	@Override
 	public String getType()
