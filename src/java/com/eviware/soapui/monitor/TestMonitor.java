@@ -103,7 +103,8 @@ public class TestMonitor
 
 	protected void notifySecurityTestFinished( SecurityTestRunner runner )
 	{
-		runningSecurityTests.remove( runner.getSecurityTest().getTestCase() );
+		// this makes no sense but initially added as for loadtests
+		// runningSecurityTests.remove( runner.getSecurityTest().getTestCase() );
 
 		if( listeners.isEmpty() )
 			return;

@@ -633,15 +633,12 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 
 		public void beforeRun( SecurityTestRunner testRunner, SecurityTestRunContext runContext )
 		{
-			if( SoapUI.getTestMonitor().hasRunningSecurityTest( getModelItem().getTestCase() ) )
-				return;
+			securityTestLog.clear();
 
 			runButton.setEnabled( false );
 			cancelButton.setEnabled( true );
 			testStepList.setEnabled( false );
 			// testStepList.setSelectedIndex( -1 );
-			securityTestLog.clear();
-
 			securityTestLog.addText( "SecurityTest started at " + dateFormat.format( new Date() ) );
 
 			SecurityTestDesktopPanel.this.beforeRun();
@@ -652,9 +649,6 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 
 		public void afterRun( SecurityTestRunner testRunner, SecurityTestRunContext runContext )
 		{
-			if( SoapUI.getTestMonitor().hasRunningSecurityTest( getModelItem().getTestCase() ) )
-				return;
-
 			SecurityTestRunnerImpl securityRunner = ( SecurityTestRunnerImpl )testRunner;
 
 			if( testRunner.getStatus() == SecurityTestRunner.Status.CANCELED )
