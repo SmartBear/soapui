@@ -360,7 +360,6 @@ public class SecurityTestRunnerImpl extends AbstractTestRunner<SecurityTest, Sec
 			fail( "Failing due to failed test step" );
 		}
 
-		securityTest.clearSecurityChecksMapCache();
 	}
 
 	public void runTestStepSecurityCheck( SecurityTestRunContext runContext, TestStep currentStep,

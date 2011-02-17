@@ -54,8 +54,6 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 {
 	public final static String STARTUP_SCRIPT_PROPERTY = SecurityTest.class.getName() + "@startupScript";
 	public final static String TEARDOWN_SCRIPT_PROPERTY = SecurityTest.class.getName() + "@tearDownScript";
-	// public final static String SECURITY_CHECK_MAP_PROPERTY =
-	// SecurityTest.class.getName() + "@securityCheckMap";
 	public final static String FAIL_ON_CHECKS_ERRORS_PROPERTY = WsdlTestCase.class.getName() + "@failOnChecksErrors";
 	private WsdlTestCase testCase;
 	private SecurityTestLogModel securityTestLog;
@@ -64,10 +62,8 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 	private Map<TestStep, Set<SecurityTestStepRunListener>> securityTestStepRunListeners = new HashMap<TestStep, Set<SecurityTestStepRunListener>>();
 	private Set<SecurityCheckRunListener> securityCheckRunListeners = new HashSet<SecurityCheckRunListener>();
 
-	private HashMap<String, List<AbstractSecurityCheck>> securityChecksMapCache;
+	private HashMap<String, List<AbstractSecurityCheck>> securityChecksMap = new HashMap<String, List<AbstractSecurityCheck>>();
 
-	// private Set<SecurityTestStepRunListener> testStepRunListeners = new
-	// HashSet<SecurityTestStepRunListener>();
 
 	public void setListModel( SecurityChecksPanel.SecurityCheckListModel listModel )
 	{
@@ -140,16 +136,30 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 		}
 		if( listModel != null )
 			listModel.securityCheckAdded( newSecCheck );
-		newSecCheck.setTestStep( testStep );
-		clearSecurityChecksMapCache();
+		
+		addSecurityCheckByTestStepId( testStep.getId(), newSecCheck );
 		return newSecCheck;
 
 	}
 
-	public void clearSecurityChecksMapCache()
+	private void addSecurityCheckByTestStepId( String testStepId, AbstractSecurityCheck newSecCheck )
 	{
-		securityChecksMapCache = null;
+		if( securityChecksMap.containsKey( testStepId ) )
+		{
+			if( !securityChecksMap.get( testStepId ).contains( newSecCheck ) )
+			{
+				securityChecksMap.get( testStepId ).add( newSecCheck );
+			}
+		}
+		else
+		{
+			List<AbstractSecurityCheck> list = new ArrayList<AbstractSecurityCheck>();
+			list.add( newSecCheck );
+			securityChecksMap.put( testStepId, list );
+		}
 	}
+
+	
 
 	/**
 	 * Remove securityCheck for the specific TestStep
@@ -179,19 +189,25 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 							break;
 						}
 					}
-					// securityCheckList.remove( securityCheck.getConfig() );
 					if( securityCheckList.isEmpty() )
 					{
-						// testStepSecurityTestList.remove( testStepSecurityTest
-						// );
 						getConfig().removeTestStepSecurityTest( i );
 					}
 					listModel.securityCheckRemoved( securityCheck );
 				}
 			}
 		}
-		clearSecurityChecksMapCache();
+		removeSecurityCheckByTestStepId(  testStep.getId(), securityCheck );
+	}
 
+	private void removeSecurityCheckByTestStepId( String testStepId, AbstractSecurityCheck securityCheck )
+	{
+		if(securityChecksMap.containsKey( testStepId )){
+			if( securityChecksMap.get( testStepId ).contains( securityCheck ) )
+			{
+				securityChecksMap.get( testStepId ).remove( securityCheck );
+			}
+		}
 	}
 
 	/**
@@ -201,12 +217,16 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 	 */
 	public HashMap<String, List<AbstractSecurityCheck>> getSecurityChecksMap()
 	{
-		if( securityChecksMapCache != null )
+		if( !securityChecksMap.isEmpty() )
 		{
-			return securityChecksMapCache;
+			return securityChecksMap;
 		}
-		
-		HashMap<String, List<AbstractSecurityCheck>> securityChecksMap = new HashMap<String, List<AbstractSecurityCheck>>();
+
+		return createSecurityChecksMap();
+	}
+
+	private HashMap<String, List<AbstractSecurityCheck>> createSecurityChecksMap()
+	{
 		if( getConfig() != null )
 		{
 			if( !getConfig().getTestStepSecurityTestList().isEmpty() )
@@ -237,7 +257,6 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 				}
 			}
 		}
-		this.securityChecksMapCache = securityChecksMap;
 		return securityChecksMap;
 	}
 
@@ -277,8 +296,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 		getConfig().getSetupScript().setStringValue( script );
 		if( scriptEngine != null )
 			scriptEngine.setScript( script );
-		
-		clearSecurityChecksMapCache();
+
 		notifyPropertyChanged( STARTUP_SCRIPT_PROPERTY, oldScript, script );
 	}
 
@@ -299,8 +317,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 	 * @return
 	 * @throws Exception
 	 */
-	public Object runStartupScript( SecurityTestRunContext runContext, SecurityTestRunner runner )
-			throws Exception
+	public Object runStartupScript( SecurityTestRunContext runContext, SecurityTestRunner runner ) throws Exception
 	{
 		String script = getStartupScript();
 		if( StringUtils.isNullOrEmpty( script ) )
@@ -334,7 +351,6 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 		if( scriptEngine != null )
 			scriptEngine.setScript( script );
 
-		clearSecurityChecksMapCache();
 		notifyPropertyChanged( TEARDOWN_SCRIPT_PROPERTY, oldScript, script );
 	}
 
@@ -355,8 +371,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 	 * @return
 	 * @throws Exception
 	 */
-	public Object runTearDownScript( SecurityTestRunContext runContext, SecurityTestRunner runner )
-			throws Exception
+	public Object runTearDownScript( SecurityTestRunContext runContext, SecurityTestRunner runner ) throws Exception
 	{
 		String script = getTearDownScript();
 		if( StringUtils.isNullOrEmpty( script ) )
@@ -438,9 +453,6 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 					List<SecurityCheckConfig> securityCheckList = testStepSecurityTest.getTestStepSecurityCheckList();
 					AbstractSecurityCheckFactory factory = SecurityCheckRegistry.getInstance().getFactory(
 							securityCheck.getType() );
-					// SecurityCheckConfig newSecCheckConfig =
-					// factory.createNewSecurityCheck( securityCheck.getName()
-					// );
 					SecurityCheckConfig newSecCheckConfig = ( SecurityCheckConfig )securityCheck.getConfig().copy();
 					AbstractSecurityCheck newSecCheck = factory.buildSecurityCheck( testStep, newSecCheckConfig, this );
 
@@ -464,7 +476,6 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 				}
 			}
 		}
-		clearSecurityChecksMapCache();
 		return null;
 	}
 
@@ -517,7 +528,6 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 		if( old != failSecurityTestOnErrors )
 		{
 			getConfig().setFailSecurityTestOnCheckErrors( failSecurityTestOnErrors );
-			clearSecurityChecksMapCache();
 			notifyPropertyChanged( FAIL_ON_CHECKS_ERRORS_PROPERTY, old, failSecurityTestOnErrors );
 		}
 	}

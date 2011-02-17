@@ -310,11 +310,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		return config.getDescription();
 	}
 
-	@Override
-	public String getId()
-	{
-		return config.getId();
-	}
+
 
 	@Override
 	public String getName()
@@ -543,7 +539,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		if( cnt == 0 )
 			return currentStatus;
 
-		if( securityCheckResult.getStatus() == SecurityCheckStatus.OK )
+		if( securityCheckResult != null && securityCheckResult.getStatus() == SecurityCheckStatus.OK )
 			currentStatus = AssertionStatus.VALID;
 		else
 			currentStatus = AssertionStatus.FAILED;
@@ -693,4 +689,5 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		}
 		return result;
 	}
+	
 }
