@@ -120,7 +120,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 	// private JButton synchronizeWithLoadUIButton;
 	private SecurityTest securityTest;
 	protected JXToolBar toolbar;
-	private InternalSecurityCheckRunListener secChkRunListener = new InternalSecurityCheckRunListener();
+	private InternalSecurityCheckRunListener securityCheckkRunListener = new InternalSecurityCheckRunListener();
 	private InternalSecurityTestRunListener securityTestRunListener = new InternalSecurityTestRunListener();
 
 	public SecurityTestDesktopPanel( SecurityTest securityTest )
@@ -131,7 +131,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 
 		setPreferredSize( new Dimension( 400, 550 ) );
 		this.securityTest = securityTest;
-		securityTest.addSecurityCheckRunListener( secChkRunListener );
+		securityTest.addSecurityCheckRunListener( securityCheckkRunListener );
 		securityTest.addSecurityTestRunListener( securityTestRunListener );
 		progressBarAdapter = new ProgressBarSecurityTestAdapter( progressBar, securityTest );
 	}
@@ -389,9 +389,8 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 			}
 		}
 
-		// SoapUI.getTestMonitor().removeTestMonitorListener( testMonitorListener
-		// );
 		getModelItem().removeSecurityTestRunListener( securityTestRunListener );
+		getModelItem().removeSecurityCheckRunListener( securityCheckkRunListener );
 		// testStepList.release();
 		progressBarAdapter.release();
 		propertiesTable.release();
@@ -405,13 +404,6 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 
 		return release();
 	}
-
-	// public boolean dependsOn( ModelItem modelItem )
-	// {
-	// return modelItem == getModelItem() || modelItem ==
-	// getModelItem().getTestSuite()
-	// || modelItem == getModelItem().getTestSuite().getProject();
-	// }
 
 	protected void beforeRun()
 	{
