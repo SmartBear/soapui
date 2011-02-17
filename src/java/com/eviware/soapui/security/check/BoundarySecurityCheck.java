@@ -144,28 +144,6 @@ public class BoundarySecurityCheck extends AbstractSecurityCheck
 	}
 
 	
-	/**
-	 * not used any more
-	 */
-	protected void analyze( TestStep testStep, SecurityTestRunContext context )
-	{
-		if( testStep instanceof WsdlTestRequestStep )
-		{
-			int statusCode = ( ( WsdlTestRequestStep )testStep ).getTestRequest().getResponse().getStatusCode();
-			if( statusCode == HttpStatus.SC_OK )
-			{
-				createMessageExchange( testStep );
-				securityCheckRequestResult
-						.addMessage( "Server is accepting invalid enumeration value and returns status code 200 (OK) !" );
-				securityCheckRequestResult.setStatus( SecurityCheckStatus.FAILED );
-			}
-		}
-		else if( false )
-		{
-			// here we need to add analyze for different types of request
-		}
-	}
-
 	@Override
 	public boolean configure()
 	{
