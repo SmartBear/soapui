@@ -90,4 +90,9 @@ public class SecurityParametersTableModel extends DefaultTableModel
 		return holder == null ? 0 : holder.getParameterList().size();
 	}
 
+	public void removeRows( int[] selectedRows )
+	{
+		holder.removeParameters(selectedRows);
+	}
+
 }

@@ -91,21 +91,23 @@ public class SchemeTypeExtractor
 	}
 
 	/**
-	 * Recursive look for leafs which types are primitive type.
-	 * Those elements actualy carry values.
+	 * Recursive look for leafs which types are primitive type. Those elements
+	 * actualy carry values.
 	 */
 	TreeMap<String, NodeInfo> getElements( XmlTreeNode rootXmlTreeNode )
 	{
 		TreeMap<String, NodeInfo> result = new TreeMap<String, NodeInfo>();
 		for( int cnt = 0; cnt < rootXmlTreeNode.getChildCount(); cnt++ )
 		{
-			if( ( ( XmlTreeNode )rootXmlTreeNode.getChild( cnt ) ).getChildCount() > 0 )
+			XmlTreeNode xmlTreeNodeChild = ( XmlTreeNode )rootXmlTreeNode.getChild( cnt );
+
+			if( xmlTreeNodeChild.getChildCount() > 0 )
 				result.putAll( getElements( rootXmlTreeNode.getChild( cnt ) ) );
 			else
 			{
-				if( ( ( XmlTreeNode )rootXmlTreeNode.getChild( cnt ) ).getSchemaType().isPrimitiveType() )
-					result.put( ( ( XmlTreeNode )rootXmlTreeNode.getChild( cnt ) ).getDomNode().getLocalName(),
-							new NodeInfo( rootXmlTreeNode.getChild( cnt ) ) );
+				if( xmlTreeNodeChild.getSchemaType() != null && xmlTreeNodeChild.getSchemaType().isPrimitiveType() )
+					result
+							.put( xmlTreeNodeChild.getDomNode().getLocalName(), new NodeInfo( rootXmlTreeNode.getChild( cnt ) ) );
 			}
 		}
 		return result;

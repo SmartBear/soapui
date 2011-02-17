@@ -19,6 +19,7 @@ public class SecurityCheckedParametersTable extends JPanel
 
 	private SecurityParametersTableModel model;
 	private JXToolBar toolbar;
+	private JXTable table;
 
 	public SecurityCheckedParametersTable( SecurityParametersTableModel model )
 	{
@@ -37,8 +38,8 @@ public class SecurityCheckedParametersTable extends JPanel
 		toolbar.addGlue();
 
 		add( toolbar, BorderLayout.NORTH );
-
-		add( new JScrollPane( new JXTable( model ) ), BorderLayout.CENTER );
+		table = new JXTable( model );
+		add( new JScrollPane( table ), BorderLayout.CENTER );
 
 	}
 
@@ -72,8 +73,8 @@ public class SecurityCheckedParametersTable extends JPanel
 		@Override
 		public void actionPerformed( ActionEvent e )
 		{
-			// TODO Auto-generated method stub
-
+			model.removeRows(table.getSelectedRows());
+			model.fireTableDataChanged();
 		}
 
 	}
