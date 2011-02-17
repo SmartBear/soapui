@@ -13,51 +13,50 @@
 package com.eviware.soapui.security;
 
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
 
+import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityCheckRequestResult.SecurityStatus;
-import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.support.action.swing.ActionList;
 
 /**
- * A SecurityCheck result represents result of one request (modified by a
- * security check and run)
+ * Security result of a TestStep represents summary result of all TestStep
+ * security checks
  * 
  * @author dragica.soldo
  */
 
-public class SecurityCheckResult
+public class SecurityTestStepResult
 {
 	public SecurityStatus status = SecurityStatus.OK;
-	public AbstractSecurityCheck securityCheck;
+	public TestStep testStep;
 	private long size;
+	// private List<SecurityCheckRequestResult> securityRequestResultList;
 	private boolean discarded;
-	private List<SecurityCheckRequestResult> securityRequestResultList;
 	private long timeTaken = 0;
 	private long timeStamp;
 	private StringBuffer testLog = new StringBuffer();
 
-	public SecurityCheckResult( AbstractSecurityCheck securityCheck )
+	public SecurityTestStepResult( TestStep testStep )
 	{
-		this.securityCheck = securityCheck;
-		securityRequestResultList = new ArrayList<SecurityCheckRequestResult>();
+		this.testStep = testStep;
+		// securityRequestResultList = new
+		// ArrayList<SecurityCheckRequestResult>();
 	}
 
-	public List<SecurityCheckRequestResult> getSecurityRequestResultList()
-	{
-		return securityRequestResultList;
-	}
+	// public List<SecurityCheckRequestResult> getSecurityRequestResultList()
+	// {
+	// return securityRequestResultList;
+	// }
 
 	public SecurityStatus getStatus()
 	{
 		return status;
 	}
 
-	public AbstractSecurityCheck getSecurityCheck()
-	{
-		return securityCheck;
-	}
+	// public AbstractSecurityCheck getSecurityCheck()
+	// {
+	// return securityCheck;
+	// }
 
 	/**
 	 * Returns a list of actions that can be applied to this result
@@ -68,29 +67,31 @@ public class SecurityCheckResult
 		return null;
 	}
 
-	public void addSecurityRequestResult( SecurityCheckRequestResult secReqResult )
+	public void addSecurityRequestResult( SecurityCheckResult securityCheckResult )
 	{
-		if( securityRequestResultList != null )
-			securityRequestResultList.add( secReqResult );
+		// if( securityRequestResultList != null )
+		// securityRequestResultList.add( secReqResult );
 
 		// calulate time taken
-		timeTaken += secReqResult.getTimeTaken();
+		timeTaken += securityCheckResult.getTimeTaken();
 
 		// calculate time stamp (when test is started)
-		if( securityRequestResultList.size() == 1 )
-			timeStamp = securityRequestResultList.get( 0 ).getTimeStamp();
-		else if( timeStamp > secReqResult.getTimeStamp() )
-			timeStamp = secReqResult.getTimeStamp();
+		// if( securityRequestResultList.size() == 1 )
+		// timeStamp = securityRequestResultList.get( 0 ).getTimeStamp();
+		// else if( timeStamp > secReqResult.getTimeStamp() )
+		// timeStamp = securityCheckResult.getTimeStamp();
 
 		// calculate status ( one failed fails whole test )
 		if( status == SecurityStatus.OK )
-			status = secReqResult.getStatus();
+			status = securityCheckResult.getStatus();
 
-		this.testLog.append( "SecurityRequest " ).append( securityRequestResultList.indexOf( secReqResult ) ).append(
-				secReqResult.getStatus().toString() ).append( ": took " ).append( secReqResult.getTimeTaken() ).append(
-				" ms" );
-		for( String s : secReqResult.getMessages() )
-			testLog.append( "\n -> " ).append( s );
+		// this.testLog.append( "SecurityRequest " ).append(
+		// securityRequestResultList.indexOf( secReqResult ) ).append(
+		// secReqResult.getStatus().toString() ).append( ": took " ).append(
+		// secReqResult.getTimeTaken() ).append(
+		// " ms" );
+		// for( String s : secReqResult.getMessages() )
+		// testLog.append( "\n -> " ).append( s );
 	}
 
 	public long getTimeTaken()
@@ -140,18 +141,6 @@ public class SecurityCheckResult
 	public long getTimeStamp()
 	{
 		return timeStamp;
-	}
-
-	/**
-	 * Raturns Security Test Log
-	 */
-	public String getSecurityTestLog()
-	{
-		StringBuffer tl = new StringBuffer().append( "SecurityCheck " ).append( " [" ).append(
-				securityCheck.getTestStep().getName() ).append( "] " ).append( status.toString() ).append( ": took " )
-				.append( timeTaken ).append( " ms" );
-		tl.append( testLog );
-		return tl.toString();
 	}
 
 }

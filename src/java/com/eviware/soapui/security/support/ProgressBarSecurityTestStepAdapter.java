@@ -17,20 +17,19 @@ import java.awt.Color;
 import javax.swing.JProgressBar;
 
 import com.eviware.soapui.model.testsuite.TestStep;
-import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
-import com.eviware.soapui.security.SecurityCheckRequestResult;
 import com.eviware.soapui.security.SecurityCheckResult;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
-import com.eviware.soapui.security.SecurityCheckRequestResult.SecurityCheckStatus;
+import com.eviware.soapui.security.SecurityTestStepResult;
+import com.eviware.soapui.security.SecurityCheckRequestResult.SecurityStatus;
 import com.eviware.soapui.security.check.AbstractSecurityCheck;
 
 /**
- * Class that keeps a JProgressBars state in sync with a TestCase
+ * Class that keeps a JProgressBars state in sync with a SecurityTest
  * 
- * @author Ole.Matzura
+ * @author dragica.soldo
  */
 
 public class ProgressBarSecurityTestStepAdapter
@@ -40,57 +39,20 @@ public class ProgressBarSecurityTestStepAdapter
 	private final SecurityTest securityTest;
 	private InternalTestRunListener internalTestRunListener;
 
-	// private InternalTestMonitorListener internalTestMonitorListener;
-
 	public ProgressBarSecurityTestStepAdapter( JProgressBar progressBar, SecurityTest securityTest, TestStep testStep )
 	{
 		this.progressBar = progressBar;
 		this.testStep = testStep;
 		this.securityTest = securityTest;
 
-		// setLoadTestingState();
-
 		internalTestRunListener = new InternalTestRunListener();
 		securityTest.addTestStepRunListener( testStep, internalTestRunListener );
-		// internalTestMonitorListener = new InternalTestMonitorListener();
-		// SoapUI.getTestMonitor().addTestMonitorListener(
-		// internalTestMonitorListener );
 	}
 
 	public void release()
 	{
 		securityTest.removeTestStepRunListener( testStep, internalTestRunListener );
-		// SoapUI.getTestMonitor().removeTestMonitorListener(
-		// internalTestMonitorListener );
 	}
-
-	// private void setLoadTestingState()
-	// {
-	// if( SoapUI.getTestMonitor().hasRunningLoadTest( securityTest ) )
-	// {
-	// progressBar.setIndeterminate( true );
-	// progressBar.setString( "loadTesting" );
-	// }
-	// else
-	// {
-	// progressBar.setIndeterminate( false );
-	// progressBar.setString( "" );
-	// }
-	// }
-
-	// private class InternalTestMonitorListener extends
-	// TestMonitorListenerAdapter
-	// {
-	// public void loadTestStarted( LoadTestRunner loadTestRunner )
-	// {
-	// setLoadTestingState();
-	// }
-	//
-	// public void loadTestFinished( LoadTestRunner loadTestRunner )
-	// {
-	// setLoadTestingState();
-	// }
-	// }
 
 	public class InternalTestRunListener extends SecurityTestStepRunListenerAdapter
 	{
@@ -124,11 +86,11 @@ public class ProgressBarSecurityTestStepAdapter
 			if( progressBar.isIndeterminate() )
 				return;
 
-			if( securityCheckResult.getStatus() == SecurityCheckStatus.FAILED )
+			if( securityCheckResult.getStatus() == SecurityStatus.FAILED )
 			{
 				progressBar.setForeground( Color.RED );
 			}
-			else if( securityCheckResult.getStatus() == SecurityCheckStatus.OK )
+			else if( securityCheckResult.getStatus() == SecurityStatus.OK )
 			{
 				progressBar.setForeground( Color.GREEN.darker() );
 			}
@@ -136,13 +98,12 @@ public class ProgressBarSecurityTestStepAdapter
 			progressBar.setValue( runContext.getCurrentCheckIndex() + 1 );
 		}
 
-		public void afterStep( SecurityTestRunner testRunner, SecurityTestRunContext runContext,
-				TestStepResult result )
+		public void afterStep( SecurityTestRunner testRunner, SecurityTestRunContext runContext, SecurityTestStepResult result )
 		{
 			if( progressBar.isIndeterminate() )
 				return;
 
-			if( result.getStatus() == TestStepStatus.FAILED )
+			if( result.getStatus() == SecurityStatus.FAILED )
 			{
 				progressBar.setForeground( Color.RED );
 			}

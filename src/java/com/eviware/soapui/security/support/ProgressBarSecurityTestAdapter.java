@@ -18,12 +18,12 @@ import javax.swing.JProgressBar;
 
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
-import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestRunner.Status;
-import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
+import com.eviware.soapui.security.SecurityTestStepResult;
+import com.eviware.soapui.security.SecurityCheckRequestResult.SecurityStatus;
 
 /**
  * Class that keeps a JProgressBars state in sync with a SecurityTest
@@ -58,7 +58,7 @@ public class ProgressBarSecurityTestAdapter
 			if( progressBar.isIndeterminate() )
 				return;
 
-			progressBar.getModel().setMaximum( testRunner.getSecurityTest().getTestCase().getTestStepCount() );
+			progressBar.getModel().setMaximum( testRunner.getSecurityTest().getSecurityCheckCount() );
 			progressBar.setForeground( Color.GREEN.darker() );
 		}
 
@@ -74,12 +74,13 @@ public class ProgressBarSecurityTestAdapter
 			}
 		}
 
-		public void afterStep( SecurityTestRunner testRunner, SecurityTestRunContext runContext, TestStepResult result )
+		public void afterStep( SecurityTestRunner testRunner, SecurityTestRunContext runContext,
+				SecurityTestStepResult result )
 		{
 			if( progressBar.isIndeterminate() )
 				return;
 
-			if( result.getStatus() == TestStepStatus.FAILED )
+			if( result.getStatus() == SecurityStatus.FAILED )
 			{
 				progressBar.setForeground( Color.RED );
 			}
@@ -106,7 +107,7 @@ public class ProgressBarSecurityTestAdapter
 				return;
 
 			if( testRunner.getStatus() == TestCaseRunner.Status.FINISHED )
-				progressBar.setValue( testRunner.getSecurityTest().getTestCase().getTestStepCount() );
+				progressBar.setValue( testRunner.getSecurityTest().getSecurityCheckCount() );
 
 			progressBar.setString( testRunner.getStatus().toString() );
 		}

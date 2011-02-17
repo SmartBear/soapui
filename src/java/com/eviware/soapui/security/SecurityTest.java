@@ -223,6 +223,18 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 		return createSecurityChecksMap();
 	}
 
+	public int getSecurityCheckCount()
+	{
+		Iterator<List<AbstractSecurityCheck>> checkedSteps = getSecurityChecksMap().values().iterator();
+		int count = 0;
+		while( checkedSteps.hasNext() )
+		{
+			List<AbstractSecurityCheck> checkList = checkedSteps.next();
+			count += checkList.size();
+		}
+		return count;
+	}
+
 	private HashMap<String, List<AbstractSecurityCheck>> createSecurityChecksMap()
 	{
 		if( getConfig() != null )

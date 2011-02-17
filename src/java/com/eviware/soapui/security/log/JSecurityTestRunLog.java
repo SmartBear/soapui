@@ -45,7 +45,7 @@ import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.security.SecurityCheckRequestResult;
 import com.eviware.soapui.security.SecurityCheckResult;
 import com.eviware.soapui.security.SecurityTest;
-import com.eviware.soapui.security.SecurityCheckRequestResult.SecurityCheckStatus;
+import com.eviware.soapui.security.SecurityCheckRequestResult.SecurityStatus;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.ActionSupport;
@@ -181,7 +181,7 @@ public class JSecurityTestRunLog extends JPanel
 	 */
 	public synchronized void addSecurityCheckResult( SecurityCheckResult checkResult )
 	{
-		if( errorsOnly && checkResult.getStatus() != SecurityCheckRequestResult.SecurityCheckStatus.FAILED )
+		if( errorsOnly && checkResult.getStatus() != SecurityCheckRequestResult.SecurityStatus.FAILED )
 			return;
 
 		logListModel.addSecurityCheckResult( checkResult );
@@ -467,11 +467,11 @@ public class JSecurityTestRunLog extends JPanel
 				hyperlinkLabel.setBackground( getBackground() );
 				hyperlinkLabel.setEnabled( list.isEnabled() );
 
-				if( result.getStatus() == SecurityCheckStatus.OK )
+				if( result.getStatus() == SecurityStatus.OK )
 				{
 					hyperlinkLabel.setIcon( UISupport.createImageIcon( "/valid_assertion.gif" ) );
 				}
-				else if( result.getStatus() == SecurityCheckStatus.FAILED )
+				else if( result.getStatus() == SecurityStatus.FAILED )
 				{
 					hyperlinkLabel.setIcon( UISupport.createImageIcon( "/failed_assertion.gif" ) );
 				}

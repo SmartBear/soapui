@@ -25,7 +25,7 @@ public interface SecurityTestRunner extends TestRunner
 {
 	public SecurityTest getSecurityTest();
 
-	public void runTestStepSecurityCheck( SecurityTestRunContext runContext, TestStep testStep,
+	public SecurityCheckResult runTestStepSecurityCheck( SecurityTestRunContext runContext, TestStep testStep,
 			AbstractSecurityCheck securityCheck );
 
 	// Removed the rest cause I don't think we need them, since

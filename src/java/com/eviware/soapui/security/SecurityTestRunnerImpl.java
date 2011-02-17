@@ -36,7 +36,7 @@ import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
-import com.eviware.soapui.security.SecurityCheckRequestResult.SecurityCheckStatus;
+import com.eviware.soapui.security.SecurityCheckRequestResult.SecurityStatus;
 import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.security.log.SecurityTestLogMessageEntry;
 import com.eviware.soapui.security.support.SecurityCheckRunListener;
@@ -53,9 +53,9 @@ public class SecurityTestRunnerImpl extends AbstractTestRunner<SecurityTest, Sec
 	// private boolean stopped;
 	private boolean hasTornDown;
 	private String reason;
-	private SecurityTestRunListener[] listeners = new SecurityTestRunListener[0];
+	private SecurityTestRunListener[] securityTestListeners = new SecurityTestRunListener[0];
 	private SecurityTestStepRunListener[] securityTestStepListeners = new SecurityTestStepRunListener[0];
-	private SecurityCheckRunListener[] seccheckListeners = new SecurityCheckRunListener[0];
+	private SecurityCheckRunListener[] securityCheckListeners = new SecurityCheckRunListener[0];
 	// private TestRunListener[] testCaseRunListeners = new TestRunListener[0];
 	private int initCount;
 	private int startStep = 0;
@@ -118,9 +118,9 @@ public class SecurityTestRunnerImpl extends AbstractTestRunner<SecurityTest, Sec
 
 	public TestStepResult runTestStep( TestStep testStep, boolean discard, boolean process )
 	{
-		for( int i = 0; i < listeners.length; i++ )
+		for( int i = 0; i < securityTestListeners.length; i++ )
 		{
-			listeners[i].beforeStep( this, getRunContext(), testStep );
+			securityTestListeners[i].beforeStep( this, getRunContext(), testStep );
 			if( !isRunning() )
 				return null;
 		}
@@ -130,9 +130,12 @@ public class SecurityTestRunnerImpl extends AbstractTestRunner<SecurityTest, Sec
 		resultCount++ ;
 		// enforceMaxResults( getTestRunnable().getMaxResults() );
 
-		for( int i = 0; i < listeners.length; i++ )
+		// this method is effectively used only in internalRun and
+		// listeners.afterStep is done there
+		// that's why securityTestStepResult here dosn't matter
+		for( int i = 0; i < securityTestListeners.length; i++ )
 		{
-			listeners[i].afterStep( this, getRunContext(), stepResult );
+			securityTestListeners[i].afterStep( this, getRunContext(), new SecurityTestStepResult( testStep ) );
 		}
 
 		// discard?
@@ -234,7 +237,7 @@ public class SecurityTestRunnerImpl extends AbstractTestRunner<SecurityTest, Sec
 	public void internalRun( SecurityTestRunContext runContext ) throws Exception
 	{
 		securityTest.getTestCase().beforeSave();
-		listeners = securityTest.getTestRunListeners();
+		securityTestListeners = securityTest.getTestRunListeners();
 		hasTornDown = false;
 		startTime = System.currentTimeMillis();
 		try
@@ -298,7 +301,6 @@ public class SecurityTestRunnerImpl extends AbstractTestRunner<SecurityTest, Sec
 
 		int currentStepIndex = startStep;
 		runContext.setCurrentStep( currentStepIndex );
-		boolean testFailed = false;
 
 		for( ; isRunning() && currentStepIndex < testCase.getTestStepCount(); currentStepIndex++ )
 		{
@@ -306,9 +308,9 @@ public class SecurityTestRunnerImpl extends AbstractTestRunner<SecurityTest, Sec
 			securityTestStepListeners = securityTest.getTestStepRunListeners( currentStep );
 			if( !currentStep.isDisabled() )
 			{
-				for( int i = 0; i < listeners.length; i++ )
+				for( int i = 0; i < securityTestListeners.length; i++ )
 				{
-					listeners[i].beforeStep( this, getRunContext(), currentStep );
+					securityTestListeners[i].beforeStep( this, getRunContext(), currentStep );
 					if( !isRunning() )
 						return;
 				}
@@ -319,6 +321,7 @@ public class SecurityTestRunnerImpl extends AbstractTestRunner<SecurityTest, Sec
 						return;
 				}
 				TestStepResult stepResult = runTestStep( currentStep, true, true );
+				SecurityTestStepResult securityStepResult = new SecurityTestStepResult( currentStep );
 				if( stepResult == null )
 					return;
 
@@ -332,18 +335,20 @@ public class SecurityTestRunnerImpl extends AbstractTestRunner<SecurityTest, Sec
 					{
 						AbstractSecurityCheck securityCheck = testStepChecksList.get( i );
 						runContext.setCurrentCheckIndex( i );
-						runTestStepSecurityCheck( runContext, currentStep, securityCheck );
+						SecurityCheckResult securityCheckResult = runTestStepSecurityCheck( runContext, currentStep,
+								securityCheck );
+						securityStepResult.addSecurityRequestResult( securityCheckResult );
 					}
 				}
 				for( int i = 0; i < securityTestStepListeners.length; i++ )
 				{
-					securityTestStepListeners[i].afterStep( this, getRunContext(), stepResult );
+					securityTestStepListeners[i].afterStep( this, getRunContext(), securityStepResult );
 					if( !isRunning() )
 						return;
 				}
-				for( int i = 0; i < listeners.length; i++ )
+				for( int i = 0; i < securityTestListeners.length; i++ )
 				{
-					listeners[i].afterStep( this, getRunContext(), stepResult );
+					securityTestListeners[i].afterStep( this, getRunContext(), securityStepResult );
 				}
 				if( gotoStepIndex != -1 )
 				{
@@ -354,28 +359,30 @@ public class SecurityTestRunnerImpl extends AbstractTestRunner<SecurityTest, Sec
 
 			runContext.setCurrentStep( currentStepIndex + 1 );
 		}
-		if( runContext.getProperty( TestCaseRunner.Status.class.getName() ) == TestCaseRunner.Status.FAILED
-				&& testCase.getFailTestCaseOnErrors() )
-		{
-			fail( "Failing due to failed test step" );
-		}
+		// if( runContext.getProperty(
+		// SecurityTestRunnerImpl.Status.class.getName() ) ==
+		// TestCaseRunner.Status.FAILED
+		// && testCase.getFailTestCaseOnErrors() )
+		// {
+		// fail( "Failing due to failed test step" );
+		// }
 
 	}
 
-	public void runTestStepSecurityCheck( SecurityTestRunContext runContext, TestStep currentStep,
+	public SecurityCheckResult runTestStepSecurityCheck( SecurityTestRunContext runContext, TestStep currentStep,
 			AbstractSecurityCheck securityCheck )
 	{
+		SecurityCheckResult result = new SecurityCheckResult( securityCheck );
 		if( securityCheck.acceptsTestStep( currentStep ) )
 		{
-			seccheckListeners = securityTest.getSecurityCheckRunListeners();
+			securityCheckListeners = securityTest.getSecurityCheckRunListeners();
 			for( int j = 0; j < securityTestStepListeners.length; j++ )
 			{
 				securityTestStepListeners[j].beforeSecurityCheck( this, runContext, securityCheck );
 			}
-			SecurityCheckResult result = securityCheck.run( cloneForSecurityCheck( ( WsdlTestStep )currentStep ),
-					runContext );
+			result = securityCheck.run( cloneForSecurityCheck( ( WsdlTestStep )currentStep ), runContext );
 			// TODO check
-			if( securityTest.getFailSecurityTestOnCheckErrors() && result.getStatus() == SecurityCheckStatus.FAILED )
+			if( securityTest.getFailSecurityTestOnCheckErrors() && result.getStatus() == SecurityStatus.FAILED )
 			{
 				fail( "Failing due to failed security check" );
 			}
@@ -383,12 +390,12 @@ public class SecurityTestRunnerImpl extends AbstractTestRunner<SecurityTest, Sec
 			{
 				securityTestStepListeners[j].afterSecurityCheck( this, runContext, result );
 			}
-			for( int j = 0; j < seccheckListeners.length; j++ )
+			for( int j = 0; j < securityCheckListeners.length; j++ )
 			{
-				seccheckListeners[j].afterSecurityCheck( this, runContext, result );
+				securityCheckListeners[j].afterSecurityCheck( this, runContext, result );
 			}
-
 		}
+		return result;
 	}
 
 	protected void internalFinally( SecurityTestRunContext runContext )
@@ -417,7 +424,7 @@ public class SecurityTestRunnerImpl extends AbstractTestRunner<SecurityTest, Sec
 		notifyAfterRun();
 
 		runContext.clear();
-		listeners = null;
+		securityTestListeners = null;
 		securityTestStepListeners = null;
 	}
 
@@ -428,14 +435,14 @@ public class SecurityTestRunnerImpl extends AbstractTestRunner<SecurityTest, Sec
 
 	protected void notifyBeforeRun()
 	{
-		if( listeners == null || listeners.length == 0 )
+		if( securityTestListeners == null || securityTestListeners.length == 0 )
 			return;
 
-		for( int i = 0; i < listeners.length; i++ )
+		for( int i = 0; i < securityTestListeners.length; i++ )
 		{
 			try
 			{
-				listeners[i].beforeRun( this, getRunContext() );
+				securityTestListeners[i].beforeRun( this, getRunContext() );
 			}
 			catch( Throwable t )
 			{
@@ -446,14 +453,14 @@ public class SecurityTestRunnerImpl extends AbstractTestRunner<SecurityTest, Sec
 
 	protected void notifyAfterRun()
 	{
-		if( listeners == null || listeners.length == 0 )
+		if( securityTestListeners == null || securityTestListeners.length == 0 )
 			return;
 
-		for( int i = 0; i < listeners.length; i++ )
+		for( int i = 0; i < securityTestListeners.length; i++ )
 		{
 			try
 			{
-				listeners[i].afterRun( this, getRunContext() );
+				securityTestListeners[i].afterRun( this, getRunContext() );
 			}
 			catch( Throwable t )
 			{

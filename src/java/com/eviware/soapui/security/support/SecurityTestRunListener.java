@@ -13,9 +13,9 @@
 package com.eviware.soapui.security.support;
 
 import com.eviware.soapui.model.testsuite.TestStep;
-import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
+import com.eviware.soapui.security.SecurityTestStepResult;
 
 /**
  * Listener for TestRun-related events, schedule events will only be triggered
@@ -32,6 +32,6 @@ public interface SecurityTestRunListener
 
 	public void beforeStep( SecurityTestRunner testRunner, SecurityTestRunContext runContext, TestStep testStep );
 
-	public void afterStep( SecurityTestRunner testRunner, SecurityTestRunContext runContext, TestStepResult result );
+	public void afterStep( SecurityTestRunner testRunner, SecurityTestRunContext runContext, SecurityTestStepResult result );
 
 }

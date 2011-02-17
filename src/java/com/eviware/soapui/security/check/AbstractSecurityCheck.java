@@ -50,7 +50,7 @@ import com.eviware.soapui.security.SecurityCheckRequestResult;
 import com.eviware.soapui.security.SecurityCheckResult;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunnerImpl;
-import com.eviware.soapui.security.SecurityCheckRequestResult.SecurityCheckStatus;
+import com.eviware.soapui.security.SecurityCheckRequestResult.SecurityStatus;
 import com.eviware.soapui.security.support.SecurityCheckedParameterHolder;
 import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
@@ -539,7 +539,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		if( cnt == 0 )
 			return currentStatus;
 
-		if( securityCheckResult != null && securityCheckResult.getStatus() == SecurityCheckStatus.OK )
+		if( securityCheckResult != null && securityCheckResult.getStatus() == SecurityStatus.OK )
 			currentStatus = AssertionStatus.VALID;
 		else
 			currentStatus = AssertionStatus.FAILED;
@@ -643,7 +643,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 					{
 						for( AssertionError error : assertion.getErrors() )
 							securityCheckRequestResult.addMessage( error.getMessage() );
-						securityCheckRequestResult.setStatus( SecurityCheckStatus.FAILED );
+						securityCheckRequestResult.setStatus( SecurityStatus.FAILED );
 					}
 				}
 
@@ -676,7 +676,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 					{
 						for( AssertionError error : assertion.getErrors() )
 							securityCheckRequestResult.addMessage( error.getMessage() );
-						securityCheckRequestResult.setStatus( SecurityCheckStatus.FAILED );
+						securityCheckRequestResult.setStatus( SecurityStatus.FAILED );
 					}
 				}
 

@@ -28,12 +28,12 @@ import com.eviware.soapui.support.action.swing.ActionList;
  */
 
 public class SecurityCheckRequestResult {
-	public enum SecurityCheckStatus {
+	public enum SecurityStatus {
 		INITIALIZED, OK, FAILED
 	}
 
 	private static final String[] EMPTY_MESSAGES = new String[0];
-	public SecurityCheckStatus status;
+	public SecurityStatus status;
 	public AbstractSecurityCheck securityCheck;
 	private List<String> messages = new ArrayList<String>();
 	private long timeTaken;
@@ -44,15 +44,15 @@ public class SecurityCheckRequestResult {
 	private MessageExchange messageExchange;
 
 	public SecurityCheckRequestResult(AbstractSecurityCheck securityCheck) {
-		status = SecurityCheckStatus.INITIALIZED;
+		status = SecurityStatus.INITIALIZED;
 		this.securityCheck = securityCheck;
 	}
 
-	public SecurityCheckStatus getStatus() {
+	public SecurityStatus getStatus() {
 		return status;
 	}
 
-	public void setStatus(SecurityCheckStatus status) {
+	public void setStatus(SecurityStatus status) {
 		this.status = status;
 	}
 

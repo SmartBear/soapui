@@ -12,10 +12,10 @@
 
 package com.eviware.soapui.security.support;
 
-import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.security.SecurityCheckResult;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
+import com.eviware.soapui.security.SecurityTestStepResult;
 import com.eviware.soapui.security.check.AbstractSecurityCheck;
 
 /**
@@ -30,7 +30,7 @@ public interface SecurityTestStepRunListener
 	public void beforeStep( SecurityTestRunner testRunner, SecurityTestRunContext runContext );
 
 	public void afterStep( SecurityTestRunner testRunner, SecurityTestRunContext runContext,
-			TestStepResult result );
+			SecurityTestStepResult result );
 
 	public void beforeSecurityCheck( SecurityTestRunner testRunner, SecurityTestRunContext runContext,
 			AbstractSecurityCheck securityCheck );
