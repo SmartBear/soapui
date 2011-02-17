@@ -9,15 +9,18 @@ import java.util.Set;
 
 import com.eviware.soapui.config.CheckedParameterConfig;
 import com.eviware.soapui.config.CheckedParametersListConfig;
+import com.eviware.soapui.model.security.SecurityCheckParameterHolderListener;
+import com.eviware.soapui.model.security.SecurityCheckedParameter;
 import com.eviware.soapui.security.check.AbstractSecurityCheck;
 
 /**
- * Holder for SecurityCheckPameters, which are request parameters on which security check is 
- * applied. 
+ * Holder for SecurityCheckPameters, which are request parameters on which
+ * security check is applied.
+ * 
  * @author robert
- *
+ * 
  */
-public class SecurityCheckedParameterHolder
+public class SecurityCheckedParameterHolder extends SecurityCheckParameterListenerAdapter
 {
 
 	private AbstractSecurityCheck securityCheck;
@@ -26,7 +29,7 @@ public class SecurityCheckedParameterHolder
 	private List<SecurityCheckedParameter> params = new ArrayList<SecurityCheckedParameter>();
 	private Map<String, SecurityCheckedParameter> paramsMap = new HashMap<String, SecurityCheckedParameter>();
 
-	private Set<SecurityCheckParameterListener> listeners = new HashSet<SecurityCheckParameterListener>();
+	private Set<SecurityCheckParameterHolderListener> listeners = new HashSet<SecurityCheckParameterHolderListener>();
 
 	public SecurityCheckedParameterHolder( AbstractSecurityCheck securityCheck,
 			CheckedParametersListConfig chekedPameters )
@@ -40,15 +43,31 @@ public class SecurityCheckedParameterHolder
 		}
 	}
 
-	public SecurityCheckedParameter addParameter( CheckedParameterConfig param )
+	SecurityCheckedParameter addParameter( CheckedParameterConfig param )
 	{
-		SecurityCheckedParameter result = new SecurityCheckedParameter( param );
+		SecurityCheckedParameter result = new SecurityCheckedParameterImpl( param );
 		params.add( result );
-		paramsMap.put( result.getName().toUpperCase(), result );
-
+		paramsMap.put( result.getLabel().toUpperCase(), result );
+		
 		fireParameterAdded( result );
 
 		return result;
+	}
+
+	public SecurityCheckedParameter addParameter( String label )
+	{
+		if ( paramsMap.get( label ) != null )
+			return paramsMap.get( label );
+		
+		CheckedParameterConfig newParameterConfig = paramsConfig.addNewParameters();
+		SecurityCheckedParameterImpl newParameter = new SecurityCheckedParameterImpl( newParameterConfig );
+		newParameter.setLabel( label );
+		params.add( newParameter );
+		paramsMap.put( newParameter.getLabel().toUpperCase(), newParameter );
+		
+		fireParameterAdded( newParameter );
+
+		return newParameter;
 	}
 
 	public void removeParameter( SecurityCheckedParameter parameter )
@@ -57,28 +76,55 @@ public class SecurityCheckedParameterHolder
 		paramsConfig.removeParameters( params.indexOf( parameter ) );
 
 		params.remove( parameter );
-		paramsMap.remove( parameter.getName().toUpperCase() );
-
+		paramsMap.remove( parameter.getLabel().toUpperCase() );
+		
 		fireParameterRemoved( parameter );
 	}
 
 	public void fireParameterAdded( SecurityCheckedParameter parameter )
 	{
-		for( SecurityCheckParameterListener listener : listeners )
+		for( SecurityCheckParameterHolderListener listener : listeners )
 			listener.parameterAdded( parameter );
 	}
 
 	public void fireParameterRemoved( SecurityCheckedParameter parameter )
 	{
-		for( SecurityCheckParameterListener listener : listeners )
+		for( SecurityCheckParameterHolderListener listener : listeners )
 			listener.parameterRemoved( parameter );
 	}
 
-	public List<SecurityCheckedParameter> getPropertyList()
+	public List<SecurityCheckedParameter> getParameterList()
 	{
 		return params;
 	}
+
+	/*
+	 * Need to keep track on parameter label change.
+	 * 
+	 * (non-Javadoc)
+	 * @see com.eviware.soapui.security.support.SecurityCheckParameterListenerAdapter#parameterLabelChanged(com.eviware.soapui.model.security.SecurityCheckedParameter, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public void parameterLabelChanged( SecurityCheckedParameter parameter, String oldLabel, String newLabel )
+	{
+		SecurityCheckedParameter param = paramsMap.get( oldLabel );
+		paramsMap.remove( oldLabel );
+		paramsMap.put( newLabel, param );
+	}
 	
-	
+	/**
+	 * This method returns parameter based on its name.
+	 * 
+	 * @param paramName
+	 * @return
+	 * 	parameter
+	 */
+	public SecurityCheckedParameter getParametarByName( String paramName )
+	{
+		for( SecurityCheckedParameter param: params )
+			if( param.getName().equals( paramName ))
+				return param;
+		return null;
+	}
 
 }

@@ -29,19 +29,20 @@ import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCaseRunner;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Attachment;
+import com.eviware.soapui.model.security.SecurityCheckedParameter;
 import com.eviware.soapui.model.testsuite.SamplerTestStep;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityCheckRequestResult.SecurityCheckStatus;
 import com.eviware.soapui.security.log.SecurityTestLogModel;
-import com.eviware.soapui.security.support.SecurityCheckedParameter;
+import com.eviware.soapui.security.support.SecurityCheckedParameterImpl;
 import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
 import com.eviware.soapui.security.ui.XmlBombSecurityCheckConfigPanel;
 import com.eviware.soapui.support.types.StringToObjectMap;
 import com.eviware.soapui.support.xml.XmlUtils;
 
-public class XmlBombSecurityCheck extends AbstractSecurityCheck 
+public class XmlBombSecurityCheck extends AbstractSecurityCheck
 {
 
 	public static final String TYPE = "XmlBombSecurityCheck";
@@ -79,24 +80,25 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck
 	/*
 	 * How this works??
 	 */
-//	@Override
-//	public void analyze( TestStep testStep, SecurityTestRunContext context )
-//	{
-//		AbstractHttpRequest<?> lastRequest = getRequest( testStep );
-//
-//		if( lastRequest.getResponse().getContentAsString().indexOf( "SQL Error" ) > -1 )
-//		{
-//			// securityTestLog.addEntry( new SecurityTestLogMessageEntry(
-//			// "SQL Error displayed in response", null
-//			// new HttpResponseMessageExchange(lastRequest) ) );
-//			securityCheckRequestResult.setStatus( SecurityCheckStatus.FAILED );
-//		}
-//		else
-//		{
-//			securityCheckRequestResult.setStatus( SecurityCheckStatus.OK );
-//		}
-//		// TODO
-//	}
+	// @Override
+	// public void analyze( TestStep testStep, SecurityTestRunContext context )
+	// {
+	// AbstractHttpRequest<?> lastRequest = getRequest( testStep );
+	//
+	// if( lastRequest.getResponse().getContentAsString().indexOf( "SQL Error" )
+	// > -1 )
+	// {
+	// // securityTestLog.addEntry( new SecurityTestLogMessageEntry(
+	// // "SQL Error displayed in response", null
+	// // new HttpResponseMessageExchange(lastRequest) ) );
+	// securityCheckRequestResult.setStatus( SecurityCheckStatus.FAILED );
+	// }
+	// else
+	// {
+	// securityCheckRequestResult.setStatus( SecurityCheckStatus.OK );
+	// }
+	// // TODO
+	// }
 
 	@Override
 	protected void execute( TestStep testStep, SecurityTestRunContext context )
@@ -115,17 +117,17 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck
 				// runCheck(testStep, context, securityTestLog, testCaseRunner,
 				// originalResponse,
 				// "Possible XML Bomb Vulnerability Detected");
-				getRequest( testStep ).removeAttachment( attach );
-				getRequest( testStep ).setRequestContent( originalRequest );
+				( ( AbstractHttpRequest<?> )getRequest( testStep ) ).removeAttachment( attach );
+				( ( AbstractHttpRequest<?> )getRequest( testStep ) ).setRequestContent( originalRequest );
 			}
 
 			currentIndex = 0;
 		}
 
 		if( getExecutionStrategy().equals( AbstractSecurityCheck.SEPARATE_REQUEST_STRATEGY )
-				&& getParameters().getPropertyList().size() > 0 )
+				&& getParameters().getParameterList().size() > 0 )
 		{
-			for( SecurityCheckedParameter param : getParameters().getPropertyList() )
+			for( SecurityCheckedParameter param : getParameters().getParameterList() )
 			{
 				if( param != null )
 				{
@@ -135,20 +137,20 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck
 						// runCheck(testStep, context, securityTestLog,
 						// testCaseRunner, originalResponse,
 						// "Possible XML Bomb Vulnerability Detected");
-						getRequest( testStep ).setRequestContent( originalRequest );
+						( ( AbstractHttpRequest<?> )getRequest( testStep ) ).setRequestContent( originalRequest );
 					}
 				}
 			}
 		}
-		else if( getParameters().getPropertyList().size() > 0 )
+		else if( getParameters().getParameterList().size() > 0 )
 		{
 			while( currentIndex < getBombList().size() + 1 )
 			{
-				generateNextRequest( testStep, getParameters().getPropertyList() );
+				generateNextRequest( testStep, getParameters().getParameterList() );
 				// runCheck( testStep, context, securityTestLog, testCaseRunner,
 				// originalResponse,
 				// "Possible XML Bomb Vulnerability Detected" );
-				getRequest( testStep ).setRequestContent( originalRequest );
+				( ( AbstractHttpRequest<?> )getRequest( testStep ) ).setRequestContent( originalRequest );
 			}
 		}
 		// TODO
@@ -157,7 +159,7 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck
 
 	private TestStep generateNextRequest( TestStep testStep, List<SecurityCheckedParameter> list )
 	{
-		AbstractHttpRequest<?> request = getRequest( testStep );
+		AbstractHttpRequest<?> request = ( AbstractHttpRequest<?> )getRequest( testStep );
 		if( currentIndex < getBombList().size() )
 		{
 			String bomb = getBombList().get( currentIndex );
@@ -207,7 +209,6 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck
 		return TYPE;
 	}
 
-
 	public boolean isAttachXmlBomb()
 	{
 		return ( ( XmlBombSecurityCheckConfig )config.getConfig() ).getAttachXmlBomb();
@@ -220,7 +221,7 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck
 
 	private TestStep generateNextRequest( TestStep testStep, String param )
 	{
-		AbstractHttpRequest<?> request = getRequest( testStep );
+		AbstractHttpRequest<?> request = ( AbstractHttpRequest<?> )getRequest( testStep );
 
 		if( currentIndex < getBombList().size() )
 		{
@@ -266,7 +267,7 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck
 		Attachment attach = null;
 		if( isAttachXmlBomb() )
 		{
-			AbstractHttpRequest<?> request = getRequest( testStep );
+			AbstractHttpRequest<?> request = ( AbstractHttpRequest<?> )getRequest( testStep );
 
 			if( currentIndex < getBombList().size() )
 			{

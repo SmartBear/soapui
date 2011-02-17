@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.collections.list.TreeList;
 import org.apache.commons.httpclient.HttpState;
@@ -251,7 +252,7 @@ public class SecurityTestRunnerImpl extends AbstractTestRunner<SecurityTest, Sec
 		// {
 		WsdlTestCase testCase = securityTest.getTestCase();
 		// List<TestStep> testStepsList = testCase.getTestStepList();
-		HashMap<String, List<AbstractSecurityCheck>> secCheckMap = securityTest.getSecurityChecksMap();
+		Map<String, List<AbstractSecurityCheck>> secCheckMap = securityTest.getSecurityChecksMap();
 		// SecurityTestRunnerImpl testCaseRunner = new SecurityTestRunnerImpl(
 		// securityTest );
 

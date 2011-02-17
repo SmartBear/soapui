@@ -17,22 +17,14 @@ import java.util.List;
 import java.util.Map;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.config.RestParametersConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.config.TestAssertionConfig;
-import com.eviware.soapui.impl.rest.support.RestParamProperty;
-import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
-import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
-import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.WsdlSubmitContext;
 import com.eviware.soapui.impl.wsdl.support.assertions.AssertableConfig;
 import com.eviware.soapui.impl.wsdl.support.assertions.AssertionsSupport;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCaseRunner;
-import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequest;
-import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
-import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequest;
-import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.TestRequest;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequest;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
@@ -41,6 +33,7 @@ import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.iface.SubmitContext;
+import com.eviware.soapui.model.security.SecurityCheckedParameter;
 import com.eviware.soapui.model.support.XPathReference;
 import com.eviware.soapui.model.support.XPathReferenceContainer;
 import com.eviware.soapui.model.support.XPathReferenceImpl;
@@ -49,8 +42,8 @@ import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.model.testsuite.AssertionsListener;
 import com.eviware.soapui.model.testsuite.RequestAssertion;
 import com.eviware.soapui.model.testsuite.ResponseAssertion;
+import com.eviware.soapui.model.testsuite.SamplerTestStep;
 import com.eviware.soapui.model.testsuite.TestAssertion;
-import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestRunner.Status;
 import com.eviware.soapui.security.Securable;
@@ -58,7 +51,6 @@ import com.eviware.soapui.security.SecurityCheckRequestResult;
 import com.eviware.soapui.security.SecurityCheckResult;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityCheckRequestResult.SecurityCheckStatus;
-import com.eviware.soapui.security.support.SecurityCheckedParameter;
 import com.eviware.soapui.security.support.SecurityCheckedParameterHolder;
 import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
@@ -97,6 +89,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	private SecurityCheckedParameterHolder params;
 
 	private AssertionStatus currentStatus;
+	protected SecurityCheckedParameterHolder parameterHolder;
 
 	public AbstractSecurityCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent, String icon )
 	{
@@ -112,11 +105,18 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		scriptEngine = SoapUIScriptEngineRegistry.create( this );
 		if( config.getExecutionStrategy() == null )
 			config.setExecutionStrategy( SEPARATE_REQUEST_STRATEGY );
-		if( config.getRestParameters() == null )
-			config.setRestParameters( RestParametersConfig.Factory.newInstance() );
 
+		if( config.getChekedPameters() == null )
+			config.addNewChekedPameters();
+
+		this.parameterHolder = new SecurityCheckedParameterHolder( this, config.getChekedPameters() );
 		initAssertions();
 
+	}
+
+	public SecurityCheckedParameterHolder getParameterHolder()
+	{
+		return this.parameterHolder;
 	}
 
 	private void initAssertions()
@@ -371,26 +371,18 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		config.setExecutionStrategy( strategy );
 	}
 
-	protected AbstractHttpRequest<?> getOriginalResult( WsdlTestCaseRunner testCaseRunner, TestStep testStep )
+	protected TestRequest getOriginalResult( WsdlTestCaseRunner testCaseRunner, TestStep testStep )
 	{
 		testStep.run( testCaseRunner, testCaseRunner.getRunContext() );
 
 		return getRequest( testStep );
 	}
 
-	protected AbstractHttpRequest<?> getRequest( TestStep testStep )
+	protected TestRequest getRequest( TestStep testStep )
 	{
-		if( testStep instanceof HttpTestRequestStep )
+		if( testStep instanceof SamplerTestStep )
 		{
-			return ( ( HttpTestRequestStep )testStep ).getHttpRequest();
-		}
-		else if( testStep instanceof RestTestRequestStep )
-		{
-			return ( ( RestTestRequestStep )testStep ).getHttpRequest();
-		}
-		else if( testStep instanceof WsdlTestRequestStep )
-		{
-			return ( ( WsdlTestRequestStep )testStep ).getHttpRequest();
+			return ( ( SamplerTestStep )testStep ).getTestRequest();
 		}
 		return null;
 	}
@@ -399,14 +391,14 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	{
 		List<XPathReference> result = new ArrayList<XPathReference>();
 
-		for( SecurityCheckedParameter param : getParameters().getPropertyList() )
+		for( SecurityCheckedParameter param : getParameters().getParameterList() )
 		{
 			TestStep t = getTestStep();
 			if( t instanceof WsdlTestRequestStep )
 			{
 				if( param != null )
 					result.add( new XPathReferenceImpl( "SecurityCheck Parameter " + param.getName(),
-							( ( WsdlTestRequestStep )t ).getOperation(), true, param, "path" ) );
+							( ( WsdlTestRequestStep )t ).getOperation(), true, param, "xPath" ) );
 			}
 		}
 
@@ -562,12 +554,8 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	@Override
 	public String getAssertableContent()
 	{
-		if( testStep instanceof WsdlTestRequestStep )
-			return ( ( WsdlTestRequestStep )testStep ).getAssertableContent();
-		else if( testStep instanceof HttpTestRequest )
-			return ( ( HttpTestRequest )testStep ).getAssertableContent();
-		else if( testStep instanceof RestTestRequest )
-			return ( ( RestTestRequest )testStep ).getAssertableContent();
+		if( testStep instanceof Assertable )
+			return ( ( Assertable )testStep ).getAssertableContent();
 
 		return null;
 	}
@@ -618,12 +606,8 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	@Override
 	public String getDefaultAssertableContent()
 	{
-		if( testStep instanceof WsdlTestRequest )
-			return ( ( WsdlTestRequest )testStep ).getDefaultAssertableContent();
-		else if( testStep instanceof HttpTestRequest )
-			return ( ( HttpTestRequest )testStep ).getDefaultAssertableContent();
-		else if( testStep instanceof RestTestRequest )
-			return ( ( RestTestRequest )testStep ).getDefaultAssertableContent();
+		if( testStep instanceof Assertable )
+			return ( ( Assertable )testStep ).getDefaultAssertableContent();
 
 		return null;
 	}

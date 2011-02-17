@@ -31,11 +31,12 @@ import com.eviware.soapui.security.log.SecurityTestLogModel;
 import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
 import com.eviware.soapui.support.types.StringToObjectMap;
 
-public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck 
+public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 {
 
 	public static final String TYPE = "MaliciousAttachmentSecurityCheck";
-//	private static final int MINIMUM_STRING_DISTANCE = 50;
+
+	// private static final int MINIMUM_STRING_DISTANCE = 50;
 
 	public MaliciousAttachmentSecurityCheck( SecurityCheckConfig config, ModelItem parent, String icon, TestStep testStep )
 	{
@@ -73,14 +74,14 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 			// runCheck(testStep, context, securityTestLog, testCaseRunner,
 			// originalResponse,
 			// "Possible Malicious Attachment Vulnerability Detected");
-			getRequest( testStep ).removeAttachment( attach );
+			( ( AbstractHttpRequest<?> )getRequest( testStep ) ).removeAttachment( attach );
 
 			// Try with setting the wrong content type
 			attach = addAttachement( testStep, textFile, "multipart/mixed" );
 			// runCheck(testStep, context, securityTestLog, testCaseRunner,
 			// originalResponse,
 			// "Possible Malicious Attachment Vulnerability Detected");
-			getRequest( testStep ).removeAttachment( attach );
+			( ( AbstractHttpRequest<?> )getRequest( testStep ) ).removeAttachment( attach );
 
 		}
 		catch( IOException e )
@@ -96,7 +97,6 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 		return true;
 	}
 
-
 	@Override
 	public String getType()
 	{
@@ -105,7 +105,7 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 
 	private Attachment addAttachement( TestStep testStep, File file, String contentType ) throws IOException
 	{
-		AbstractHttpRequest<?> request = getRequest( testStep );
+		AbstractHttpRequest<?> request = ( AbstractHttpRequest<?> )getRequest( testStep );
 
 		Attachment attach = request.attachFile( file, false );
 		attach.setContentType( contentType );

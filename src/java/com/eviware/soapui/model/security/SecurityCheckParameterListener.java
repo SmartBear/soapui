@@ -1,11 +1,8 @@
-package com.eviware.soapui.security.support;
+package com.eviware.soapui.model.security;
+
 
 public interface SecurityCheckParameterListener
 {
-
-	void parameterAdded( SecurityCheckedParameter parameter );
-
-	void parameterRemoved( SecurityCheckedParameter parameter );
 
 	void parameterNameChanged( SecurityCheckedParameter parameter, String oldName, String newName );
 
@@ -14,5 +11,7 @@ public interface SecurityCheckParameterListener
 	void parameterXPathChanged( SecurityCheckedParameter parameter, String oldXPath, String newXPath );
 	
 	void parameterCheckedChanged( SecurityCheckedParameter parameter );
+	
+	void parameterTypeChanged( SecurityCheckedParameter paramter, String oldType, String newType);
 
 }

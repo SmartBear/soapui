@@ -21,6 +21,7 @@ import org.apache.xmlbeans.XmlException;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.CheckedParameterConfig;
 import com.eviware.soapui.config.CheckedParametersListConfig;
+import com.eviware.soapui.config.ModelItemConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
@@ -29,11 +30,12 @@ import com.eviware.soapui.impl.wsdl.teststeps.WsdlResponseMessageExchange;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.MessageExchange;
+import com.eviware.soapui.model.security.SecurityCheckedParameter;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTestRunContext;
-import com.eviware.soapui.security.SecurityCheckRequestResult.SecurityCheckStatus;
 import com.eviware.soapui.security.assertion.SecurityAssertionPanel;
 import com.eviware.soapui.security.boundary.EnumerationValuesExtractor;
+import com.eviware.soapui.security.support.SecurityCheckedParameterImpl;
 import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.types.StringToObjectMap;
@@ -58,30 +60,13 @@ public class BoundarySecurityCheck extends AbstractSecurityCheck
 	{
 		super( testStep, config, parent, icon );
 		enumerationValuesExtractor = new EnumerationValuesExtractor( ( ( WsdlTestRequestStep )testStep ).getTestRequest() );
-		if( config == null )
+		List<String> selected = new ArrayList<String>();
+		for( SecurityCheckedParameter cpc : parameterHolder.getParameterList() )
 		{
-			config = SecurityCheckConfig.Factory.newInstance();
-			CheckedParametersListConfig boundary = CheckedParametersListConfig.Factory.newInstance();
-			config.setConfig( boundary );
+			if( cpc.isChecked() )
+				selected.add( cpc.getName() );
 		}
-		else
-		{
-			List<String> selected = new ArrayList<String>();
-			if( config.getConfig() == null )
-			{
-				config.addNewConfig();
-			}
-			else
-			{
-				config.getConfig().changeType( CheckedParametersListConfig.type );
-				for( CheckedParameterConfig cpc : ( ( CheckedParametersListConfig )config.getConfig() ).getParametersList() )
-				{
-					if( cpc.getChecked() )
-						selected.add( cpc.getParameterName() );
-				}
-				enumerationValuesExtractor.setSelectedEnumerationParameters( selected );
-			}
-		}
+		enumerationValuesExtractor.setSelectedEnumerationParameters( selected );
 	}
 
 	@Override
@@ -143,7 +128,6 @@ public class BoundarySecurityCheck extends AbstractSecurityCheck
 		return this.hasNext;
 	}
 
-	
 	@Override
 	public boolean configure()
 	{
@@ -156,19 +140,16 @@ public class BoundarySecurityCheck extends AbstractSecurityCheck
 					.getFormField( BoundaryConfigDialog.PARAMETERS ) ).getSelectedOptions() );
 			enumerationValuesExtractor.setSelectedEnumerationParameters( Arrays.asList( selectedList ) );
 
-			CheckedParametersListConfig boundary = CheckedParametersListConfig.Factory.newInstance();
-			CheckedParameterConfig[] checkedParametersArray = new CheckedParameterConfig[enumerationValuesExtractor
-					.getEnumerationParameters().size()];
-			int i = 0;
-			for( String value : enumerationValuesExtractor.getEnumerationParameters() )
+			for( String paramName : enumerationValuesExtractor.getEnumerationParameters() )
 			{
-				CheckedParameterConfig checkedParameter = CheckedParameterConfig.Factory.newInstance();
-				checkedParameter.setParameterName( value );
-				checkedParameter.setChecked( Arrays.asList( selectedList ).contains( value ) );
-				checkedParametersArray[i++ ] = checkedParameter;
+				SecurityCheckedParameterImpl param = ( SecurityCheckedParameterImpl )parameterHolder.getParametarByName(paramName);
+				if ( param == null ) {
+					param = ( SecurityCheckedParameterImpl )parameterHolder.addParameter( paramName );
+					param.setName( paramName );
+				}
+				( ( SecurityCheckedParameterImpl )param ).setChecked( Arrays.asList( selectedList ).contains( paramName ) );
 			}
-			boundary.setParametersArray( checkedParametersArray );
-			config.setConfig( boundary );
+			
 			return true;
 		}
 		return false;
@@ -178,11 +159,10 @@ public class BoundarySecurityCheck extends AbstractSecurityCheck
 	protected void buildDialog()
 	{
 		List<String> selectedOptions = new ArrayList<String>();
-		config.getConfig().changeType( CheckedParametersListConfig.type );
-		for( CheckedParameterConfig cpc : ( ( CheckedParametersListConfig )config.getConfig() ).getParametersList() )
+		for( SecurityCheckedParameter cpc : parameterHolder.getParameterList() )
 		{
-			if( cpc.getChecked() )
-				selectedOptions.add( cpc.getParameterName() );
+			if( cpc.isChecked() )
+				selectedOptions.add( cpc.getName() );
 		}
 
 		dialog = ADialogBuilder.buildDialog( BoundaryConfigDialog.class );
@@ -190,11 +170,11 @@ public class BoundarySecurityCheck extends AbstractSecurityCheck
 		field.setOptions( enumerationValuesExtractor.getEnumerationParameters().toArray(
 				new String[enumerationValuesExtractor.getEnumerationParameters().size()] ) );
 		field.setSelectedOptions( selectedOptions.toArray() );
-		
+
 		XFormField assertionsPanel = dialog.getFormField( BoundaryConfigDialog.ASSERTIONS );
-		SecurityAssertionPanel securityAssertionPanel =  new SecurityAssertionPanel( this ); 
+		SecurityAssertionPanel securityAssertionPanel = new SecurityAssertionPanel( this );
 		assertionsPanel.setProperty( "component", securityAssertionPanel );
-		
+
 	}
 
 	@Override
@@ -209,7 +189,7 @@ public class BoundarySecurityCheck extends AbstractSecurityCheck
 
 		@AField( description = "Parameters to Check", name = "Select parameters to check", type = AFieldType.MULTILIST )
 		public final static String PARAMETERS = "Select parameters to check";
-		
+
 		@AField( description = "Assertions", name = "Select assertions to apply", type = AFieldType.COMPONENT )
 		public final static String ASSERTIONS = "Select assertions to apply";
 

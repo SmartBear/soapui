@@ -50,7 +50,7 @@ public class LargeAttachmentSecurityCheck extends AbstractSecurityCheck
 
 		String originalResponse = getOriginalResult( testCaseRunner, testStep ).getResponse().getRequestContent();
 
-		AbstractHttpRequest<?> request = getRequest( testStep );
+		AbstractHttpRequest<?> request = ( AbstractHttpRequest<?> )getRequest( testStep );
 
 		request.setAttachmentAt( 0, new InfiniteAttachment( AttachmentConfig.Factory.newInstance(), request,
 				( long )( ( LargeAttachmentSecurityCheckConfig )config.getConfig() ).getSize() ) );
