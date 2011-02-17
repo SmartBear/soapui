@@ -31,7 +31,6 @@ import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunnerImpl;
 import com.eviware.soapui.security.boundary.SchemeTypeExtractor;
 import com.eviware.soapui.security.boundary.SchemeTypeExtractor.NodeInfo;
-import com.eviware.soapui.security.support.SecurityCheckedParameterHolder;
 import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
 import com.eviware.soapui.security.ui.SecurityCheckedParametersTable;
 import com.eviware.soapui.support.types.StringToObjectMap;
@@ -41,10 +40,7 @@ import com.eviware.x.form.XFormField;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AForm;
-import com.eviware.x.form.support.XFormMultiSelectList;
 import com.eviware.x.form.support.AField.AFieldType;
-import com.eviware.x.impl.swing.JTableFormField;
-import com.jniwrapper.win32.ie.fi;
 
 public class InvalidTypesSecurityCheck extends AbstractSecurityCheck
 {
