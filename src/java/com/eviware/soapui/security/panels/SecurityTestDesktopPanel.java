@@ -389,10 +389,9 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 			}
 		}
 
-		// SoapUI.getTestMonitor().removeTestMonitorListener(
-		// testMonitorListener
+		// SoapUI.getTestMonitor().removeTestMonitorListener( testMonitorListener
 		// );
-		// getModelItem().removeTestRunListener( testRunListener );
+		getModelItem().removeSecurityTestRunListener( securityTestRunListener );
 		// testStepList.release();
 		progressBarAdapter.release();
 		propertiesTable.release();
