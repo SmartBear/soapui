@@ -24,21 +24,27 @@ import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.security.SecurityParametersTableModel;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunnerImpl;
 import com.eviware.soapui.security.boundary.SchemeTypeExtractor;
 import com.eviware.soapui.security.boundary.SchemeTypeExtractor.NodeInfo;
+import com.eviware.soapui.security.support.SecurityCheckedParameterHolder;
 import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
+import com.eviware.soapui.security.ui.SecurityCheckedParametersTable;
 import com.eviware.soapui.support.types.StringToObjectMap;
 import com.eviware.soapui.support.xml.XmlUtils;
 import com.eviware.x.form.XFormDialog;
+import com.eviware.x.form.XFormField;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.XFormMultiSelectList;
 import com.eviware.x.form.support.AField.AFieldType;
+import com.eviware.x.impl.swing.JTableFormField;
+import com.jniwrapper.win32.ie.fi;
 
 public class InvalidTypesSecurityCheck extends AbstractSecurityCheck
 {
@@ -91,7 +97,7 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheck
 				e.printStackTrace();
 			}
 		}
-
+		
 	}
 
 	/**
@@ -125,24 +131,24 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheck
 			buildDialog();
 		if( dialog != null )
 		{
-			XFormMultiSelectList field = ( XFormMultiSelectList )dialog.getFormField( InvalidTypesConfigDialog.PARAMETERS );
+//			XFormMultiSelectList field = ( XFormMultiSelectList )dialog.getFormField( InvalidTypesConfigDialog.PARAMETERS );
 			ArrayList<String> selected = new ArrayList<String>();
 			for( CheckedParameterConfig param : invalidTypesConfig.getParametersList() )
 				if( param.isSetChecked() )
 					selected.add( param.getParameterName() );
-			field.setSelectedOptions( selected.toArray( new String[0] ) );
+//			field.setSelectedOptions( selected.toArray( new String[0] ) );
 			if( dialog.show() )
 			{
 				for( CheckedParameterConfig param : invalidTypesConfig.getParametersList() )
 				{
 					{
-						for( Object key : field.getSelectedOptions() )
-							if( param.getParameterName().equals( ( String )key ) )
-							{
-								param.setChecked( true );
-								break;
-							}
-						param.setChecked( false );
+//						for( Object key : field.getSelectedOptions() )
+//							if( param.getParameterName().equals( ( String )key ) )
+//							{
+//								param.setChecked( true );
+//								break;
+//							}
+//						param.setChecked( false );
 					}
 				}
 			}
@@ -154,7 +160,8 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheck
 	protected void buildDialog()
 	{
 		dialog = ADialogBuilder.buildDialog( InvalidTypesConfigDialog.class );
-		XFormMultiSelectList field = ( XFormMultiSelectList )dialog.getFormField( InvalidTypesConfigDialog.PARAMETERS );
+		XFormField field = dialog.getFormField( InvalidTypesConfigDialog.PARAMETERS );
+		field.setProperty( "component", new SecurityCheckedParametersTable(new SecurityParametersTableModel( parameterHolder )) );
 		ArrayList<String> options = new ArrayList<String>();
 		ArrayList<String> selected = new ArrayList<String>();
 		for( CheckedParameterConfig param : invalidTypesConfig.getParametersList() )
@@ -163,9 +170,6 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheck
 			if( param.isSetChecked() )
 				selected.add( param.getParameterName() );
 		}
-		field.setOptions( options.toArray( new String[0] ) );
-		field.setSelectedOptions( selected.toArray( new String[0] ) );
-
 	}
 
 	@Override
@@ -178,8 +182,8 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheck
 	protected interface InvalidTypesConfigDialog
 	{
 
-		@AField( description = "Parameters to Check", name = "Select parameters to check", type = AFieldType.MULTILIST )
-		public final static String PARAMETERS = "Select parameters to check";
+		@AField( description = "Parameters to Check", name = "Parameters", type = AFieldType.COMPONENT )
+		public final static String PARAMETERS = "Parameters";
 
 	}
 

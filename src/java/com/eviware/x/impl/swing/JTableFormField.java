@@ -31,7 +31,7 @@ public class JTableFormField extends AbstractSwingXFormField<JComponent> impleme
 
 	public JTableFormField( String description )
 	{
-		super( new JTable() );
+		super( new JXTable() );
 
 		scrollPane = new JScrollPane( getTable() );
 		scrollPane.setPreferredSize( new Dimension( 350, 200 ) );
