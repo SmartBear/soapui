@@ -26,9 +26,9 @@ import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
 
 /**
- * Class that keeps a JProgressBars state in sync with a TestCase
+ * Class that keeps a JProgressBars state in sync with a SecurityTest
  * 
- * @author Ole.Matzura
+ * @author dragica.soldo
  */
 
 public class ProgressBarSecurityTestAdapter
@@ -37,56 +37,19 @@ public class ProgressBarSecurityTestAdapter
 	private final SecurityTest securityTest;
 	private InternalTestRunListener internalTestRunListener;
 
-	// private InternalTestMonitorListener internalTestMonitorListener;
-
 	public ProgressBarSecurityTestAdapter( JProgressBar progressBar, SecurityTest securityTest )
 	{
 		this.progressBar = progressBar;
 		this.securityTest = securityTest;
 
-		// setLoadTestingState();
-
 		internalTestRunListener = new InternalTestRunListener();
 		securityTest.addSecurityTestRunListener( internalTestRunListener );
-		// internalTestMonitorListener = new InternalTestMonitorListener();
-		// SoapUI.getTestMonitor().addTestMonitorListener(
-		// internalTestMonitorListener );
 	}
 
 	public void release()
 	{
 		securityTest.removeSecurityTestRunListener( internalTestRunListener );
-		// SoapUI.getTestMonitor().removeTestMonitorListener(
-		// internalTestMonitorListener );
 	}
-
-	// private void setLoadTestingState()
-	// {
-	// if( SoapUI.getTestMonitor().hasRunningLoadTest( securityTest ) )
-	// {
-	// progressBar.setIndeterminate( true );
-	// progressBar.setString( "loadTesting" );
-	// }
-	// else
-	// {
-	// progressBar.setIndeterminate( false );
-	// progressBar.setString( "" );
-	// }
-	// }
-
-	// private class InternalTestMonitorListener extends
-	// TestMonitorListenerAdapter
-	// {
-	// public void loadTestStarted( LoadTestRunner loadTestRunner )
-	// {
-	// setLoadTestingState();
-	// }
-	//
-	// public void loadTestFinished( LoadTestRunner loadTestRunner )
-	// {
-	// setLoadTestingState();
-	// }
-	// }
 
 	public class InternalTestRunListener extends SecurityTestRunListenerAdapter
 	{
@@ -111,8 +74,7 @@ public class ProgressBarSecurityTestAdapter
 			}
 		}
 
-		public void afterStep( SecurityTestRunner testRunner, SecurityTestRunContext runContext,
-				TestStepResult result )
+		public void afterStep( SecurityTestRunner testRunner, SecurityTestRunContext runContext, TestStepResult result )
 		{
 			if( progressBar.isIndeterminate() )
 				return;
