@@ -21,13 +21,12 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.MaliciousAttachmentSecurityCheckConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
-import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
-import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCaseRunner;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.testsuite.TestStep;
+import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunContext;
-import com.eviware.soapui.security.log.SecurityTestLogModel;
+import com.eviware.soapui.security.SecurityTestRunnerImpl;
 import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
 import com.eviware.soapui.support.types.StringToObjectMap;
 
@@ -57,10 +56,10 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 	@Override
 	protected void execute( TestStep testStep, SecurityTestRunContext context )
 	{
-		WsdlTestCaseRunner testCaseRunner = new WsdlTestCaseRunner( ( WsdlTestCase )testStep.getTestCase(),
+		SecurityTestRunnerImpl securityTestRunner = new SecurityTestRunnerImpl( ( SecurityTest )getParent(),
 				new StringToObjectMap() );
 
-		String originalResponse = getOriginalResult( testCaseRunner, testStep ).getResponse().getContentAsXml();
+		String originalResponse = getOriginalResult( securityTestRunner, testStep ).getResponse().getContentAsXml();
 
 		// First, lets see what happens when we just attach a plain text file
 		File textFile;

@@ -24,19 +24,15 @@ import com.eviware.soapui.config.RestParameterConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.config.XmlBombSecurityCheckConfig;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
-import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
-import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCaseRunner;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.security.SecurityCheckedParameter;
 import com.eviware.soapui.model.testsuite.SamplerTestStep;
-import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestStep;
+import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunContext;
-import com.eviware.soapui.security.SecurityCheckRequestResult.SecurityCheckStatus;
-import com.eviware.soapui.security.log.SecurityTestLogModel;
-import com.eviware.soapui.security.support.SecurityCheckedParameterImpl;
+import com.eviware.soapui.security.SecurityTestRunnerImpl;
 import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
 import com.eviware.soapui.security.ui.XmlBombSecurityCheckConfigPanel;
 import com.eviware.soapui.support.types.StringToObjectMap;
@@ -104,10 +100,10 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck
 	protected void execute( TestStep testStep, SecurityTestRunContext context )
 	{
 		currentIndex = 0;
-		WsdlTestCaseRunner testCaseRunner = new WsdlTestCaseRunner( ( WsdlTestCase )testStep.getTestCase(),
+		SecurityTestRunnerImpl securityTestRunner = new SecurityTestRunnerImpl( ( SecurityTest )getParent(),
 				new StringToObjectMap() );
 
-		String originalResponse = getOriginalResult( testCaseRunner, testStep ).getResponse().getContentAsXml();
+		String originalResponse = getOriginalResult( securityTestRunner, testStep ).getResponse().getContentAsXml();
 		String originalRequest = getRequest( testStep ).getRequestContent();
 		if( isAttachXmlBomb() )
 		{

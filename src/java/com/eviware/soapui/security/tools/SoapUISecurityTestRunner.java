@@ -57,6 +57,7 @@ import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunnerImpl;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
+import com.eviware.soapui.support.types.StringToObjectMap;
 import com.eviware.soapui.tools.AbstractSoapUITestRunner;
 
 /**
@@ -354,7 +355,8 @@ public class SoapUISecurityTestRunner extends AbstractSoapUITestRunner
 		try
 		{
 			log.info( ( "Running Project [" + project.getName() + "], runType = " + project.getRunType() ) );
-			for(TestSuite testSuite: project.getTestSuiteList()){
+			for( TestSuite testSuite : project.getTestSuiteList() )
+			{
 				runSuite( ( WsdlTestSuite )testSuite );
 			}
 		}
@@ -463,7 +465,6 @@ public class SoapUISecurityTestRunner extends AbstractSoapUITestRunner
 			testSuiteCount++ ;
 		}
 
-		
 	}
 
 	/**
@@ -496,11 +497,12 @@ public class SoapUISecurityTestRunner extends AbstractSoapUITestRunner
 	 */
 	protected void runSecurityTest( SecurityTest securityTest )
 	{
-		SecurityTestRunnerImpl testRunner = new SecurityTestRunnerImpl( securityTest );
+		SecurityTestRunnerImpl testRunner = new SecurityTestRunnerImpl( securityTest, new StringToObjectMap() );
 		testRunner.start( false );
-//		log.info( "\n" + securityTest.getSecurityTestLog().getMessages() );
-//		log.info( "SecurityTest [" + securityTest.getName() + "] finished  in " + ( testRunner.getTimeTaken() )
-//				+ "ms" );
+		// log.info( "\n" + securityTest.getSecurityTestLog().getMessages() );
+		// log.info( "SecurityTest [" + securityTest.getName() + "] finished  in "
+		// + ( testRunner.getTimeTaken() )
+		// + "ms" );
 	}
 
 	/**

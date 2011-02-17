@@ -20,6 +20,7 @@ import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.model.testsuite.TestRunner;
 import com.eviware.soapui.security.check.ParameterExposureCheck;
 import com.eviware.soapui.security.registry.SecurityCheckRegistry;
+import com.eviware.soapui.support.types.StringToObjectMap;
 
 /**
  * @author dragica.soldo
@@ -45,8 +46,8 @@ public class ParameterExposureTest extends AbstractSecurityTestCaseWithMockServi
 	protected void addSecurityCheckConfig( SecurityCheckConfig securityCheckConfig )
 	{
 
-		SecurityCheckRegistry.getInstance().getFactory( securityCheckType )
-				.buildSecurityCheck( testStep, securityCheckConfig, null );
+		SecurityCheckRegistry.getInstance().getFactory( securityCheckType ).buildSecurityCheck( testStep,
+				securityCheckConfig, null );
 
 	}
 
@@ -54,10 +55,12 @@ public class ParameterExposureTest extends AbstractSecurityTestCaseWithMockServi
 	public void testParameterShouldBeExposed()
 	{
 
-		SecurityTestRunnerImpl testRunner = new SecurityTestRunnerImpl( createSecurityTest() );
+		SecurityTestRunnerImpl testRunner = new SecurityTestRunnerImpl( createSecurityTest(), new StringToObjectMap() );
 
 		testRunner.start( false );
-//		String message = testRunner.getSecurityTest().getSecurityTestLog().getElementAt( 0 ).getMessage();
+		// String message =
+		// testRunner.getSecurityTest().getSecurityTestLog().getElementAt( 0
+		// ).getMessage();
 		// assertTrue( message, message.contains( "is exposed in the response" )
 		// );
 		assert true;
@@ -67,14 +70,18 @@ public class ParameterExposureTest extends AbstractSecurityTestCaseWithMockServi
 	@Test
 	public void testLogTestEnded()
 	{
-		SecurityTestRunnerImpl testRunner = new SecurityTestRunnerImpl( createSecurityTest() );
+		SecurityTestRunnerImpl testRunner = new SecurityTestRunnerImpl( createSecurityTest(), new StringToObjectMap() );
 
 		testRunner.start( false );
 		try
 		{
-//			String message = testRunner.getSecurityTest().getSecurityTestLog().getElementAt( 1 ).getMessage();
-//			assertTrue( "Security Check Failed because there is more than one expected warning in the log!", message
-//					.startsWith( "SecurityTest ended" ) );
+			// String message =
+			// testRunner.getSecurityTest().getSecurityTestLog().getElementAt( 1
+			// ).getMessage();
+			// assertTrue(
+			// "Security Check Failed because there is more than one expected warning in the log!",
+			// message
+			// .startsWith( "SecurityTest ended" ) );
 		}
 		catch( IndexOutOfBoundsException ioobe )
 		{
@@ -86,7 +93,7 @@ public class ParameterExposureTest extends AbstractSecurityTestCaseWithMockServi
 	@Test
 	public void testFinished()
 	{
-		SecurityTestRunnerImpl testRunner = new SecurityTestRunnerImpl( createSecurityTest() );
+		SecurityTestRunnerImpl testRunner = new SecurityTestRunnerImpl( createSecurityTest(), new StringToObjectMap() );
 
 		testRunner.start( false );
 

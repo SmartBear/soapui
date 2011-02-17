@@ -326,7 +326,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 		properties.put( "loopButton", loopButton );
 		properties.put( TestCaseRunContext.INTERACTIVE, Boolean.TRUE );
 		lastRunner = null;
-		SecurityTestRunnerImpl testRunner = new SecurityTestRunnerImpl( securityTest );
+		SecurityTestRunnerImpl testRunner = new SecurityTestRunnerImpl( securityTest, properties );
 
 		// testRunner.run();
 

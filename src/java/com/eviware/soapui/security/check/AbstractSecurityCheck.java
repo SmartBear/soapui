@@ -23,7 +23,6 @@ import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.WsdlSubmitContext;
 import com.eviware.soapui.impl.wsdl.support.assertions.AssertableConfig;
 import com.eviware.soapui.impl.wsdl.support.assertions.AssertionsSupport;
-import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCaseRunner;
 import com.eviware.soapui.impl.wsdl.teststeps.TestRequest;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequest;
@@ -50,6 +49,7 @@ import com.eviware.soapui.security.Securable;
 import com.eviware.soapui.security.SecurityCheckRequestResult;
 import com.eviware.soapui.security.SecurityCheckResult;
 import com.eviware.soapui.security.SecurityTestRunContext;
+import com.eviware.soapui.security.SecurityTestRunnerImpl;
 import com.eviware.soapui.security.SecurityCheckRequestResult.SecurityCheckStatus;
 import com.eviware.soapui.security.support.SecurityCheckedParameterHolder;
 import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
@@ -367,9 +367,9 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		config.setExecutionStrategy( strategy );
 	}
 
-	protected TestRequest getOriginalResult( WsdlTestCaseRunner testCaseRunner, TestStep testStep )
+	protected TestRequest getOriginalResult( SecurityTestRunnerImpl securityRunner, TestStep testStep )
 	{
-		testStep.run( testCaseRunner, testCaseRunner.getRunContext() );
+		testStep.run( securityRunner, securityRunner.getRunContext() );
 
 		return getRequest( testStep );
 	}

@@ -64,7 +64,6 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 
 	private HashMap<String, List<AbstractSecurityCheck>> securityChecksMap = new HashMap<String, List<AbstractSecurityCheck>>();
 
-
 	public void setListModel( SecurityChecksPanel.SecurityCheckListModel listModel )
 	{
 		this.listModel = listModel;
@@ -136,7 +135,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 		}
 		if( listModel != null )
 			listModel.securityCheckAdded( newSecCheck );
-		
+
 		addSecurityCheckByTestStepId( testStep.getId(), newSecCheck );
 		return newSecCheck;
 
@@ -158,8 +157,6 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 			securityChecksMap.put( testStepId, list );
 		}
 	}
-
-	
 
 	/**
 	 * Remove securityCheck for the specific TestStep
@@ -197,12 +194,13 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 				}
 			}
 		}
-		removeSecurityCheckByTestStepId(  testStep.getId(), securityCheck );
+		removeSecurityCheckByTestStepId( testStep.getId(), securityCheck );
 	}
 
 	private void removeSecurityCheckByTestStepId( String testStepId, AbstractSecurityCheck securityCheck )
 	{
-		if(securityChecksMap.containsKey( testStepId )){
+		if( securityChecksMap.containsKey( testStepId ) )
+		{
 			if( securityChecksMap.get( testStepId ).contains( securityCheck ) )
 			{
 				securityChecksMap.get( testStepId ).remove( securityCheck );
@@ -276,7 +274,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 		if( runner != null )
 			runner.release();
 
-		runner = new SecurityTestRunnerImpl( this );
+		runner = new SecurityTestRunnerImpl( this, context );
 		runner.start( async );
 		return runner;
 	}

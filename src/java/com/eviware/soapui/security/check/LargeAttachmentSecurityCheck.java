@@ -8,18 +8,17 @@ import com.eviware.soapui.config.AttachmentConfig;
 import com.eviware.soapui.config.LargeAttachmentSecurityCheckConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
-import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
-import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCaseRunner;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestStep;
+import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunContext;
-import com.eviware.soapui.security.log.SecurityTestLogModel;
+import com.eviware.soapui.security.SecurityTestRunnerImpl;
 import com.eviware.soapui.security.tools.InfiniteAttachment;
 import com.eviware.soapui.security.ui.LargeAttachmentSecurityCheckConfigPanel;
 import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
 import com.eviware.soapui.support.types.StringToObjectMap;
 
-public class LargeAttachmentSecurityCheck extends AbstractSecurityCheck 
+public class LargeAttachmentSecurityCheck extends AbstractSecurityCheck
 {
 
 	public static final String TYPE = "LargeAttachmentSecurityCheck";
@@ -45,10 +44,10 @@ public class LargeAttachmentSecurityCheck extends AbstractSecurityCheck
 	@Override
 	protected void execute( TestStep testStep, SecurityTestRunContext context )
 	{
-		WsdlTestCaseRunner testCaseRunner = new WsdlTestCaseRunner( ( WsdlTestCase )testStep.getTestCase(),
+		SecurityTestRunnerImpl securityTestRunner = new SecurityTestRunnerImpl( ( SecurityTest )getParent(),
 				new StringToObjectMap() );
 
-		String originalResponse = getOriginalResult( testCaseRunner, testStep ).getResponse().getRequestContent();
+		String originalResponse = getOriginalResult( securityTestRunner, testStep ).getResponse().getRequestContent();
 
 		AbstractHttpRequest<?> request = ( AbstractHttpRequest<?> )getRequest( testStep );
 
@@ -70,7 +69,6 @@ public class LargeAttachmentSecurityCheck extends AbstractSecurityCheck
 	{
 		return true;
 	}
-
 
 	@Override
 	public String getType()

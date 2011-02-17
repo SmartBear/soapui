@@ -22,12 +22,12 @@ import com.eviware.soapui.config.CheckedParameterConfig;
 import com.eviware.soapui.config.CheckedParametersListConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
-import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
-import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCaseRunner;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestStep;
+import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunContext;
+import com.eviware.soapui.security.SecurityTestRunnerImpl;
 import com.eviware.soapui.security.boundary.SchemeTypeExtractor;
 import com.eviware.soapui.security.boundary.SchemeTypeExtractor.NodeInfo;
 import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
@@ -188,10 +188,10 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheck
 	{
 		updateRequestContent();
 
-		WsdlTestCaseRunner testCaseRunner = new WsdlTestCaseRunner( ( WsdlTestCase )this.testStep.getTestCase(),
+		SecurityTestRunnerImpl securityTestRunner = new SecurityTestRunnerImpl( ( SecurityTest )getParent(),
 				new StringToObjectMap() );
 
-		testStep.run( testCaseRunner, testCaseRunner.getRunContext() );
+		testStep.run( securityTestRunner, securityTestRunner.getRunContext() );
 	}
 
 	private void updateRequestContent()

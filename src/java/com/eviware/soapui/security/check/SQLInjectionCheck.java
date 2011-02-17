@@ -14,15 +14,13 @@ package com.eviware.soapui.security.check;
 
 import com.eviware.soapui.config.SQLInjectionCheckConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
-import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
-import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCaseRunner;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.SamplerTestStep;
 import com.eviware.soapui.model.testsuite.TestStep;
+import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunContext;
-import com.eviware.soapui.security.SecurityCheckRequestResult.SecurityCheckStatus;
+import com.eviware.soapui.security.SecurityTestRunnerImpl;
 import com.eviware.soapui.security.fuzzer.Fuzzer;
-import com.eviware.soapui.security.log.SecurityTestLogModel;
 import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
 import com.eviware.soapui.support.types.StringToObjectMap;
 
@@ -74,35 +72,35 @@ public class SQLInjectionCheck extends AbstractSecurityCheck
 		return TYPE;
 	}
 
-
 	@Override
 	protected void execute( TestStep testStep, SecurityTestRunContext context )
 	{
-//		sqlFuzzer.getNextFuzzedTestStep( testStep, getParameters() );
+		// sqlFuzzer.getNextFuzzedTestStep( testStep, getParameters() );
 
-		WsdlTestCaseRunner testCaseRunner = new WsdlTestCaseRunner( ( WsdlTestCase )testStep.getTestCase(),
+		SecurityTestRunnerImpl securityTestRunner = new SecurityTestRunnerImpl( ( SecurityTest )getParent(),
 				new StringToObjectMap() );
 
-		testStep.run( testCaseRunner, context );
+		testStep.run( securityTestRunner, context );
 	}
 
-//	@Override
-//	protected void analyze( TestStep testStep, SecurityTestRunContext context )
-//	{
-//		if( acceptsTestStep( testStep ) )
-//		{
-//			// HttpTestRequestStepInterface testStepwithProperties = (
-//			// HttpTestRequestStepInterface )testStep;
-//			// HttpTestRequestInterface<?> request =
-//			// testStepwithProperties.getTestRequest();
-//			// MessageExchange messageExchange = new HttpResponseMessageExchange(
-//			// request );
-//
-//			// securityCheckReqResult.setMessageExchange( messageExchange );
-//			securityCheckRequestResult.setStatus( SecurityCheckStatus.OK );
-//
-//		}
-//	}
+	// @Override
+	// protected void analyze( TestStep testStep, SecurityTestRunContext context
+	// )
+	// {
+	// if( acceptsTestStep( testStep ) )
+	// {
+	// // HttpTestRequestStepInterface testStepwithProperties = (
+	// // HttpTestRequestStepInterface )testStep;
+	// // HttpTestRequestInterface<?> request =
+	// // testStepwithProperties.getTestRequest();
+	// // MessageExchange messageExchange = new HttpResponseMessageExchange(
+	// // request );
+	//
+	// // securityCheckReqResult.setMessageExchange( messageExchange );
+	// securityCheckRequestResult.setStatus( SecurityCheckStatus.OK );
+	//
+	// }
+	// }
 
 	@Override
 	protected boolean hasNext()

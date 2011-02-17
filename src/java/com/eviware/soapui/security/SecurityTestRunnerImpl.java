@@ -65,9 +65,9 @@ public class SecurityTestRunnerImpl extends AbstractTestRunner<SecurityTest, Sec
 	private List<TestStepResult> testStepResults = Collections.synchronizedList( new TreeList() );
 	private int resultCount;
 
-	public SecurityTestRunnerImpl( SecurityTest test )
+	public SecurityTestRunnerImpl( SecurityTest test, StringToObjectMap properties )
 	{
-		super( test, new StringToObjectMap() );
+		super( test, properties );
 		this.securityTest = test;
 		setStatus( Status.INITIALIZED );
 	}
@@ -405,8 +405,9 @@ public class SecurityTestRunnerImpl extends AbstractTestRunner<SecurityTest, Sec
 		try
 		{
 			securityTest.runTearDownScript( runContext, this );
-//			securityTest.getSecurityTestLog().addEntry(
-//					new SecurityTestLogMessageEntry( " SecurityTest ended at " + new Date( System.currentTimeMillis() ) ) );
+			// securityTest.getSecurityTestLog().addEntry(
+			// new SecurityTestLogMessageEntry( " SecurityTest ended at " + new
+			// Date( System.currentTimeMillis() ) ) );
 		}
 		catch( Exception e )
 		{

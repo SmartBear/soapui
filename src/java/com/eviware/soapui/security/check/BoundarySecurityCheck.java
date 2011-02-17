@@ -15,24 +15,20 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.commons.httpclient.HttpStatus;
 import org.apache.xmlbeans.XmlException;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.config.CheckedParameterConfig;
-import com.eviware.soapui.config.CheckedParametersListConfig;
-import com.eviware.soapui.config.ModelItemConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
-import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
-import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCaseRunner;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlResponseMessageExchange;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.security.SecurityCheckedParameter;
 import com.eviware.soapui.model.testsuite.TestStep;
+import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunContext;
+import com.eviware.soapui.security.SecurityTestRunnerImpl;
 import com.eviware.soapui.security.assertion.SecurityAssertionPanel;
 import com.eviware.soapui.security.boundary.EnumerationValuesExtractor;
 import com.eviware.soapui.security.support.SecurityCheckedParameterImpl;
@@ -101,10 +97,10 @@ public class BoundarySecurityCheck extends AbstractSecurityCheck
 				SoapUI.log.error( "Error extracting enumeration values from message", e );
 			}
 
-			WsdlTestCaseRunner testCaseRunner = new WsdlTestCaseRunner( ( WsdlTestCase )testStep.getTestCase(),
+			SecurityTestRunnerImpl securityTestRunner = new SecurityTestRunnerImpl( ( SecurityTest )getParent(),
 					new StringToObjectMap() );
 
-			testStep.run( testCaseRunner, testCaseRunner.getRunContext() );
+			testStep.run( securityTestRunner, securityTestRunner.getRunContext() );
 			createMessageExchange( testStep );
 			this.hasNext = false;
 
@@ -142,14 +138,16 @@ public class BoundarySecurityCheck extends AbstractSecurityCheck
 
 			for( String paramName : enumerationValuesExtractor.getEnumerationParameters() )
 			{
-				SecurityCheckedParameterImpl param = ( SecurityCheckedParameterImpl )parameterHolder.getParametarByName(paramName);
-				if ( param == null ) {
+				SecurityCheckedParameterImpl param = ( SecurityCheckedParameterImpl )parameterHolder
+						.getParametarByName( paramName );
+				if( param == null )
+				{
 					param = ( SecurityCheckedParameterImpl )parameterHolder.addParameter( paramName );
 					param.setName( paramName );
 				}
 				( ( SecurityCheckedParameterImpl )param ).setChecked( Arrays.asList( selectedList ).contains( paramName ) );
 			}
-			
+
 			return true;
 		}
 		return false;
