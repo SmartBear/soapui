@@ -949,6 +949,9 @@ return false;
                 <serializedBean>
                   <java class="java.beans.XMLDecoder">
                     <object class="com.install4j.runtime.beans.actions.misc.AddVmOptionsAction">
+                      <void property="launcherId">
+                        <string>64</string>
+                      </void>
                       <void property="vmOptions">
                         <array class="java.lang.String" length="2">
                           <void index="0">
