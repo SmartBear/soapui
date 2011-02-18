@@ -97,7 +97,7 @@ public class ParameterExposureTest extends AbstractSecurityTestCaseWithMockServi
 
 		testRunner.start( false );
 
-		assertTrue( "Test Step failed so as SecurityCheck", !testRunner.getStatus().equals( TestRunner.Status.FINISHED ) );
+		assertTrue( "Test Step failed so as SecurityCheck", testRunner.getStatus().equals( SecurityTestRunner.Status.FINISHED ) );
 
 	}
 
