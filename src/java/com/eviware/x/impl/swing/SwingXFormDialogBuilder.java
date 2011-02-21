@@ -42,7 +42,7 @@ public class SwingXFormDialogBuilder extends XFormDialogBuilder
 	public XForm createForm( String name )
 	{
 		XForm form = new SwingXFormImpl( name );
-		((SwingXFormImpl)form).addSpace( 5 );
+		( ( SwingXFormImpl )form ).addSpace( 5 );
 		addForm( form );
 		return form;
 	}
@@ -87,7 +87,7 @@ public class SwingXFormDialogBuilder extends XFormDialogBuilder
 		actions.setDefaultAction( okAction );
 		return actions;
 	}
-	
+
 	@Override
 	public ActionList buildHelpActions( String url )
 	{
@@ -132,7 +132,7 @@ public class SwingXFormDialogBuilder extends XFormDialogBuilder
 
 	public final class HelpAction extends AbstractAction implements HelpActionMarker
 	{
-		private final String url;
+		private String url;
 
 		public HelpAction( String url )
 		{
@@ -153,6 +153,11 @@ public class SwingXFormDialogBuilder extends XFormDialogBuilder
 				putValue( Action.ACCELERATOR_KEY, accelerator );
 
 			putValue( Action.SMALL_ICON, UISupport.HELP_ICON );
+		}
+
+		public void setUrl( String url )
+		{
+			this.url = url;
 		}
 
 		public void actionPerformed( ActionEvent e )

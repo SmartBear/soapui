@@ -16,14 +16,18 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Dialog.ModalityType;
+import java.awt.event.KeyEvent;
 import java.util.concurrent.CountDownLatch;
 
 import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
+import javax.swing.KeyStroke;
 
+import com.eviware.soapui.support.HelpActionMarker;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.ActionList;
@@ -41,14 +45,15 @@ public class JFormDialog extends SwingXFormDialog
 	private SwingXFormImpl form;
 	private JButtonBar buttons;
 	private boolean resized;
+	private ActionList actions;
 
 	public JFormDialog( String name, SwingXFormImpl form, ActionList actions, String description, ImageIcon icon )
 	{
 		dialog = new JDialog( UISupport.getMainFrame(), name, true );
 
+		this.actions = actions;
 		buttons = UISupport.initDialogActions( actions, dialog );
 		buttons.setBorder( BorderFactory.createEmptyBorder( 5, 0, 0, 0 ) );
-
 		JPanel panel = new JPanel( new BorderLayout() );
 		this.form = ( SwingXFormImpl )form;
 		panel.add( ( this.form.getPanel() ), BorderLayout.CENTER );
@@ -212,4 +217,18 @@ public class JFormDialog extends SwingXFormDialog
 	{
 		dialog.dispose();
 	}
+
+	/*
+	 * Is there any other way to do this?
+	 */
+	public void setHelpUrl( String helpUrl )
+	{
+		for( int cnt = 0; cnt < actions.getActionCount(); cnt++ ) {
+			if ( actions.getActionAt( cnt ) instanceof HelpActionMarker ) {
+				( ( SwingXFormDialogBuilder.HelpAction )actions.getActionAt( cnt ) ).setUrl( helpUrl );
+				break;
+			}
+		}
+	}
+	
 }

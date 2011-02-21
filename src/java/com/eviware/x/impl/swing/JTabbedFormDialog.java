@@ -21,6 +21,7 @@ import java.util.List;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
@@ -73,7 +74,7 @@ public class JTabbedFormDialog extends SwingXFormDialog
 			dialog.setSize( new Dimension( ( int )size.getWidth(), 300 ) );
 		}
 	}
-	
+
 	public void setSize( int i, int j )
 	{
 		dialog.setSize( i, j );
@@ -217,5 +218,10 @@ public class JTabbedFormDialog extends SwingXFormDialog
 	public void release()
 	{
 		dialog.dispose();
+	}
+
+	public JComponent getTabs()
+	{
+		return tabs;
 	}
 }

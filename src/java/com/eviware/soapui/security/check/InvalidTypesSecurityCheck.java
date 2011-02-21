@@ -33,6 +33,7 @@ import com.eviware.soapui.security.boundary.SchemeTypeExtractor;
 import com.eviware.soapui.security.boundary.SchemeTypeExtractor.NodeInfo;
 import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
 import com.eviware.soapui.security.ui.SecurityCheckedParametersTable;
+import com.eviware.soapui.security.ui.SecurityConfigurationDialogBuilder;
 import com.eviware.soapui.support.types.StringToObjectMap;
 import com.eviware.soapui.support.xml.XmlUtils;
 import com.eviware.x.form.XFormDialog;
@@ -93,7 +94,7 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheck
 				e.printStackTrace();
 			}
 		}
-		
+
 	}
 
 	/**
@@ -127,24 +128,25 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheck
 			buildDialog();
 		if( dialog != null )
 		{
-//			XFormMultiSelectList field = ( XFormMultiSelectList )dialog.getFormField( InvalidTypesConfigDialog.PARAMETERS );
+			// XFormMultiSelectList field = ( XFormMultiSelectList
+			// )dialog.getFormField( InvalidTypesConfigDialog.PARAMETERS );
 			ArrayList<String> selected = new ArrayList<String>();
 			for( CheckedParameterConfig param : invalidTypesConfig.getParametersList() )
 				if( param.isSetChecked() )
 					selected.add( param.getParameterName() );
-//			field.setSelectedOptions( selected.toArray( new String[0] ) );
+			// field.setSelectedOptions( selected.toArray( new String[0] ) );
 			if( dialog.show() )
 			{
 				for( CheckedParameterConfig param : invalidTypesConfig.getParametersList() )
 				{
 					{
-//						for( Object key : field.getSelectedOptions() )
-//							if( param.getParameterName().equals( ( String )key ) )
-//							{
-//								param.setChecked( true );
-//								break;
-//							}
-//						param.setChecked( false );
+						// for( Object key : field.getSelectedOptions() )
+						// if( param.getParameterName().equals( ( String )key ) )
+						// {
+						// param.setChecked( true );
+						// break;
+						// }
+						// param.setChecked( false );
 					}
 				}
 			}
@@ -155,32 +157,14 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheck
 	@Override
 	protected void buildDialog()
 	{
-		dialog = ADialogBuilder.buildDialog( InvalidTypesConfigDialog.class );
-		XFormField field = dialog.getFormField( InvalidTypesConfigDialog.PARAMETERS );
-		field.setProperty( "component", new SecurityCheckedParametersTable(new SecurityParametersTableModel( parameterHolder ), testStep.getProperties()) );
-		ArrayList<String> options = new ArrayList<String>();
-		ArrayList<String> selected = new ArrayList<String>();
-		for( CheckedParameterConfig param : invalidTypesConfig.getParametersList() )
-		{
-			options.add( param.getParameterName() );
-			if( param.isSetChecked() )
-				selected.add( param.getParameterName() );
-		}
+		dialog = SecurityConfigurationDialogBuilder.buildSecurityCheckConfigurationDialog( "Ivalid Type Security Check",
+				"Configures invalid type security check", null, "http://www.soapui.org", this );
 	}
 
 	@Override
 	public boolean isConfigurable()
 	{
 		return true;
-	}
-
-	@AForm( description = "Configure Invalid Types Check", name = "Invalid Types Security Check", helpUrl = HelpUrls.MOCKASWAR_HELP_URL )
-	protected interface InvalidTypesConfigDialog
-	{
-
-		@AField( description = "Parameters to Check", name = "Parameters", type = AFieldType.COMPONENT )
-		public final static String PARAMETERS = "Parameters";
-
 	}
 
 	@Override
