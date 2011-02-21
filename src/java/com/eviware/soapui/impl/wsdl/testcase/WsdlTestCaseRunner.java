@@ -38,7 +38,8 @@ import com.eviware.soapui.support.types.StringToObjectMap;
 
 public class WsdlTestCaseRunner extends AbstractTestRunner<WsdlTestCase, WsdlTestRunContext> implements TestCaseRunner
 {
-	private TestRunListener[] listeners = new TestRunListener[0];
+
+	TestRunListener[] testRunListeners = new TestRunListener[0];
 	@SuppressWarnings( "unchecked" )
 	private List<TestStepResult> testStepResults = Collections.synchronizedList( new TreeList() );
 	private int gotoStepIndex;
@@ -83,8 +84,8 @@ public class WsdlTestCaseRunner extends AbstractTestRunner<WsdlTestCase, WsdlTes
 	public void internalRun( WsdlTestRunContext runContext ) throws Exception
 	{
 		WsdlTestCase testCase = getTestRunnable();
-	
-		gotoStepIndex = -1; 
+
+		gotoStepIndex = -1;
 		testStepResults.clear();
 
 		// create state for testcase if specified
@@ -93,7 +94,7 @@ public class WsdlTestCaseRunner extends AbstractTestRunner<WsdlTestCase, WsdlTes
 			runContext.setProperty( SubmitContext.HTTP_STATE_PROPERTY, new HttpState() );
 		}
 
-		listeners = testCase.getTestRunListeners();
+		testRunListeners = testCase.getTestRunListeners();
 		testCase.runSetupScript( runContext, this );
 		if( !isRunning() )
 			return;
@@ -184,7 +185,7 @@ public class WsdlTestCaseRunner extends AbstractTestRunner<WsdlTestCase, WsdlTes
 		notifyAfterRun();
 
 		runContext.clear();
-		listeners = null;
+		testRunListeners = null;
 	}
 
 	public TestStepResult runTestStepByName( String name )
@@ -199,24 +200,22 @@ public class WsdlTestCaseRunner extends AbstractTestRunner<WsdlTestCase, WsdlTes
 
 	public TestStepResult runTestStep( TestStep testStep, boolean discard, boolean process )
 	{
-		for( int i = 0; i < listeners.length; i++ )
+		for( int i = 0; i < testRunListeners.length; i++ )
 		{
-			listeners[i].beforeStep( this, getRunContext(), testStep );
+			testRunListeners[i].beforeStep( this, getRunContext(), testStep );
 			if( !isRunning() )
 				return null;
 		}
 
 		TestStepResult stepResult = testStep.run( this, getRunContext() );
 
-		
-
 		testStepResults.add( stepResult );
 		resultCount++ ;
 		enforceMaxResults( getTestRunnable().getMaxResults() );
 
-		for( int i = 0; i < listeners.length; i++ )
+		for( int i = 0; i < testRunListeners.length; i++ )
 		{
-			listeners[i].afterStep( this, getRunContext(), stepResult );
+			testRunListeners[i].afterStep( this, getRunContext(), stepResult );
 		}
 
 		// discard?
@@ -243,8 +242,9 @@ public class WsdlTestCaseRunner extends AbstractTestRunner<WsdlTestCase, WsdlTes
 	}
 
 	/**
-	 * create backup of context properties in WsdlTestCase. This is used for RUN FROM HERE action.
-	 *
+	 * create backup of context properties in WsdlTestCase. This is used for RUN
+	 * FROM HERE action.
+	 * 
 	 * @param runContext
 	 */
 	private void preserveContext( WsdlTestRunContext runContext )
@@ -254,14 +254,14 @@ public class WsdlTestCaseRunner extends AbstractTestRunner<WsdlTestCase, WsdlTes
 
 	protected void notifyAfterRun()
 	{
-		if( listeners == null || listeners.length == 0 )
+		if( testRunListeners == null || testRunListeners.length == 0 )
 			return;
 
-		for( int i = 0; i < listeners.length; i++ )
+		for( int i = 0; i < testRunListeners.length; i++ )
 		{
 			try
 			{
-				listeners[i].afterRun( this, getRunContext() );
+				testRunListeners[i].afterRun( this, getRunContext() );
 			}
 			catch( Throwable t )
 			{
@@ -272,14 +272,14 @@ public class WsdlTestCaseRunner extends AbstractTestRunner<WsdlTestCase, WsdlTes
 
 	protected void notifyBeforeRun()
 	{
-		if( listeners == null || listeners.length == 0 )
+		if( testRunListeners == null || testRunListeners.length == 0 )
 			return;
 
-		for( int i = 0; i < listeners.length; i++ )
+		for( int i = 0; i < testRunListeners.length; i++ )
 		{
 			try
 			{
-				listeners[i].beforeRun( this, getRunContext() );
+				testRunListeners[i].beforeRun( this, getRunContext() );
 			}
 			catch( Throwable t )
 			{
