@@ -88,6 +88,62 @@ public class ADialogBuilder
 
 		return dialog;
 	}
+	
+	/**
+	 * Allow to use custom  Ok, Cancel buttons...
+	 * 
+	 * This means user have to add control for closing dialog.
+	 *
+	 * @param formClass
+	 * @param actions
+	 * @param okCancel
+	 * @return
+	 */
+	public static XFormDialog buildDialog( Class<? extends Object> formClass, ActionList actions, boolean useDefaultOkCancel )
+	{
+		
+		if ( useDefaultOkCancel )
+			return buildDialog( formClass, actions );
+		AForm formAnnotation = formClass.getAnnotation( AForm.class );
+		if( formAnnotation == null )
+		{
+			throw new RuntimeException( "formClass is not annotated correctly.." );
+		}
+
+		MessageSupport messages = MessageSupport.getMessages( formClass );
+
+		XFormDialogBuilder builder = XFormFactory.createDialogBuilder( messages.get( formAnnotation.name() ) );
+		XForm form = builder.createForm( "Basic" );
+
+		for( Field field : formClass.getFields() )
+		{
+			AField fieldAnnotation = field.getAnnotation( AField.class );
+			if( fieldAnnotation != null )
+			{
+				try
+				{
+					addFormField( form, field, fieldAnnotation, messages );
+				}
+				catch( Exception e )
+				{
+					e.printStackTrace();
+				}
+			}
+		}
+
+		ActionList defaultActions = formAnnotation.helpUrl() == null ? null : builder
+				.buildHelpActions( formAnnotation.helpUrl() );
+
+		if( actions == null )
+			actions = defaultActions;
+		else
+			actions.addActions( defaultActions );
+
+		XFormDialog dialog = builder.buildDialog( actions, messages.get( formAnnotation.description() ), UISupport
+				.createImageIcon( formAnnotation.icon() ) );
+
+		return dialog;
+	}
 
 	public static XFormDialog buildTabbedDialog( Class<? extends Object> tabbedFormClass, ActionList actions )
 	{

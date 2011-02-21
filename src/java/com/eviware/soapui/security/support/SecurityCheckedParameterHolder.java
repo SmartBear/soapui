@@ -69,6 +69,25 @@ public class SecurityCheckedParameterHolder extends SecurityCheckParameterListen
 
 		return newParameter;
 	}
+	
+	public boolean addParameter( String label, String name, String xpath, boolean used )
+	{
+		if( paramsMap.get( label.toUpperCase() ) != null )
+			return false;
+
+		CheckedParameterConfig newParameterConfig = paramsConfig.addNewParameters();
+		SecurityCheckedParameterImpl newParameter = new SecurityCheckedParameterImpl( newParameterConfig );
+		newParameter.setLabel( label );
+		newParameter.setName( name );
+		newParameter.setXPath( xpath );
+		newParameter.setChecked( true );
+		params.add( newParameter );
+		paramsMap.put( newParameter.getLabel().toUpperCase(), newParameter );
+
+		fireParameterAdded( newParameter );
+
+		return true;
+	}
 
 	public void removeParameter( SecurityCheckedParameter parameter )
 	{

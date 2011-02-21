@@ -157,7 +157,7 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheck
 	{
 		dialog = ADialogBuilder.buildDialog( InvalidTypesConfigDialog.class );
 		XFormField field = dialog.getFormField( InvalidTypesConfigDialog.PARAMETERS );
-		field.setProperty( "component", new SecurityCheckedParametersTable(new SecurityParametersTableModel( parameterHolder )) );
+		field.setProperty( "component", new SecurityCheckedParametersTable(new SecurityParametersTableModel( parameterHolder ), testStep.getProperties()) );
 		ArrayList<String> options = new ArrayList<String>();
 		ArrayList<String> selected = new ArrayList<String>();
 		for( CheckedParameterConfig param : invalidTypesConfig.getParametersList() )

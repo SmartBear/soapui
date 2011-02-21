@@ -87,6 +87,14 @@ public class SwingXFormDialogBuilder extends XFormDialogBuilder
 		actions.setDefaultAction( okAction );
 		return actions;
 	}
+	
+	@Override
+	public ActionList buildHelpActions( String url )
+	{
+		DefaultActionList actions = new DefaultActionList( "Actions" );
+		actions.addAction( new HelpAction( url ) );
+		return actions;
+	}
 
 	protected final class OKAction extends AbstractAction
 	{
