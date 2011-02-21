@@ -16,12 +16,13 @@ import java.awt.Color;
 
 import javax.swing.JProgressBar;
 
+import com.eviware.soapui.model.testsuite.TestCaseRunContext;
+import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
-import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
 import com.eviware.soapui.security.SecurityCheckResult;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunContext;
-import com.eviware.soapui.security.SecurityTestRunner;
+import com.eviware.soapui.security.SecurityTestRunnerImpl;
 import com.eviware.soapui.security.SecurityTestStepResult;
 import com.eviware.soapui.security.SecurityCheckRequestResult.SecurityStatus;
 import com.eviware.soapui.security.check.AbstractSecurityCheck;
@@ -56,17 +57,19 @@ public class ProgressBarSecurityTestStepAdapter
 
 	public class InternalTestRunListener extends SecurityTestStepRunListenerAdapter
 	{
-		public void beforeStep( SecurityTestRunner testRunner, SecurityTestRunContext runContext )
+		public void beforeStep( TestCaseRunner testRunner, TestCaseRunContext runContext )
 		{
 			if( progressBar.isIndeterminate() )
 				return;
 
 			progressBar.getModel().setMaximum(
-					testRunner.getSecurityTest().getTestStepSecurityChecksCount( testStep.getId() ) );
-			progressBar.setForeground( Color.GREEN.darker() );
+					( ( SecurityTestRunnerImpl )testRunner ).getSecurityTest().getTestStepSecurityChecksCount(
+							testStep.getId() ) );
+			// progressBar.setForeground( Color.GREEN.darker() );
+			progressBar.setString( "" );
 		}
 
-		public void beforeSecurityCheck( SecurityTestRunner testRunner, SecurityTestRunContext runContext,
+		public void beforeSecurityCheck( TestCaseRunner testRunner, TestCaseRunContext runContext,
 				AbstractSecurityCheck securityCheck )
 		{
 			if( progressBar.isIndeterminate() )
@@ -75,12 +78,11 @@ public class ProgressBarSecurityTestStepAdapter
 			if( securityCheck != null )
 			{
 				progressBar.setString( securityCheck.getName() );
-				// TODO set current securityCheck
-				progressBar.setValue( runContext.getCurrentCheckIndex() );
+				progressBar.setValue( ( ( SecurityTestRunContext )runContext ).getCurrentCheckIndex() );
 			}
 		}
 
-		public void afterSecurityCheck( SecurityTestRunner testRunner, SecurityTestRunContext runContext,
+		public void afterSecurityCheck( TestCaseRunner testRunner, TestCaseRunContext runContext,
 				SecurityCheckResult securityCheckResult )
 		{
 			if( progressBar.isIndeterminate() )
@@ -95,10 +97,10 @@ public class ProgressBarSecurityTestStepAdapter
 				progressBar.setForeground( Color.GREEN.darker() );
 			}
 
-			progressBar.setValue( runContext.getCurrentCheckIndex() + 1 );
+			progressBar.setValue( ( ( SecurityTestRunContext )runContext ).getCurrentCheckIndex() + 1 );
 		}
 
-		public void afterStep( SecurityTestRunner testRunner, SecurityTestRunContext runContext, SecurityTestStepResult result )
+		public void afterStep( TestCaseRunner testRunner, TestCaseRunContext runContext, SecurityTestStepResult result )
 		{
 			if( progressBar.isIndeterminate() )
 				return;

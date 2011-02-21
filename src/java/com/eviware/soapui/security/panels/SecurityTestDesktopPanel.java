@@ -623,7 +623,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 			dateFormat = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss.SSS" );
 		}
 
-		public void beforeRun( SecurityTestRunner testRunner, SecurityTestRunContext runContext )
+		public void beforeRun( TestCaseRunner testRunner, TestCaseRunContext runContext )
 		{
 			securityTestLog.clear();
 
@@ -636,10 +636,10 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 			SecurityTestDesktopPanel.this.beforeRun();
 
 			if( runner == null )
-				runner = testRunner;
+				runner = ( SecurityTestRunnerImpl )testRunner;
 		}
 
-		public void afterRun( SecurityTestRunner testRunner, SecurityTestRunContext runContext )
+		public void afterRun( TestCaseRunner testRunner, TestCaseRunContext runContext )
 		{
 			SecurityTestRunnerImpl securityRunner = ( SecurityTestRunnerImpl )testRunner;
 

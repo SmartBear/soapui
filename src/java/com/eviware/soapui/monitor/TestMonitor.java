@@ -38,8 +38,8 @@ import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.model.workspace.Workspace;
 import com.eviware.soapui.security.SecurityTest;
-import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
+import com.eviware.soapui.security.SecurityTestRunnerImpl;
 import com.eviware.soapui.security.support.SecurityTestRunListenerAdapter;
 
 /**
@@ -118,7 +118,7 @@ public class TestMonitor
 
 	protected void notifyLoadTestFinished( LoadTestRunner runner )
 	{
-		runningLoadTests.remove( runner.getLoadTest().getTestCase() );
+		// runningLoadTests.remove( runner.getLoadTest().getTestCase() );
 
 		if( listeners.isEmpty() )
 			return;
@@ -334,16 +334,16 @@ public class TestMonitor
 
 	private class InternalSecurityTestRunListener extends SecurityTestRunListenerAdapter
 	{
-		public void afterRun( SecurityTestRunner testRunner, SecurityTestRunContext context )
+		public void afterRun( TestCaseRunner testRunner, TestCaseRunContext context )
 		{
-			runningSecurityTests.remove( testRunner );
-			notifySecurityTestFinished( testRunner );
+			runningSecurityTests.remove( ( SecurityTestRunnerImpl )testRunner );
+			notifySecurityTestFinished( ( SecurityTestRunnerImpl )testRunner );
 		}
 
-		public void beforeRun( SecurityTestRunner testRunner, SecurityTestRunContext context )
+		public void beforeRun( TestCaseRunner testRunner, TestCaseRunContext context )
 		{
-			runningSecurityTests.add( testRunner );
-			notifySecurityTestStarted( testRunner );
+			runningSecurityTests.add( ( SecurityTestRunnerImpl )testRunner );
+			notifySecurityTestStarted( ( SecurityTestRunnerImpl )testRunner );
 		}
 	}
 

@@ -119,4 +119,11 @@ public class MockTestRunContext extends AbstractSubmitContext<ModelItem> impleme
 	{
 		return testStep == null ? null : testStep.getSettings();
 	}
+
+	@Override
+	public void setCurrentStep( int index )
+	{
+		// TODO Auto-generated method stub
+		
+	}
 }

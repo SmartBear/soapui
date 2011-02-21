@@ -12,59 +12,40 @@
 
 package com.eviware.soapui.security;
 
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.collections.list.TreeList;
-import org.apache.commons.httpclient.HttpState;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.TestStepConfig;
-import com.eviware.soapui.impl.wsdl.support.AbstractTestRunner;
+import com.eviware.soapui.impl.wsdl.support.AbstractTestCaseRunner;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestStepFactory;
 import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestStepRegistry;
-import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.TestAssertion;
-import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
 import com.eviware.soapui.security.SecurityCheckRequestResult.SecurityStatus;
 import com.eviware.soapui.security.check.AbstractSecurityCheck;
-import com.eviware.soapui.security.log.SecurityTestLogMessageEntry;
 import com.eviware.soapui.security.support.SecurityCheckRunListener;
 import com.eviware.soapui.security.support.SecurityTestRunListener;
 import com.eviware.soapui.security.support.SecurityTestStepRunListener;
 import com.eviware.soapui.support.types.StringToObjectMap;
 
-public class SecurityTestRunnerImpl extends AbstractTestRunner<SecurityTest, SecurityTestRunContext> implements
-		TestCaseRunner, SecurityTestRunner
+public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest, SecurityTestRunContext> implements
+		SecurityTestRunner
 {
 
 	private SecurityTest securityTest;
-	private long startTime = 0;
 	// private boolean stopped;
-	private boolean hasTornDown;
-	private String reason;
 	private SecurityTestRunListener[] securityTestListeners = new SecurityTestRunListener[0];
 	private SecurityTestStepRunListener[] securityTestStepListeners = new SecurityTestStepRunListener[0];
 	private SecurityCheckRunListener[] securityCheckListeners = new SecurityCheckRunListener[0];
-	// private TestRunListener[] testCaseRunListeners = new TestRunListener[0];
-	private int initCount;
-	private int startStep = 0;
-	private int gotoStepIndex;
 
 	@SuppressWarnings( "unchecked" )
-	private List<TestStepResult> testStepResults = Collections.synchronizedList( new TreeList() );
-	private int resultCount;
-
 	public SecurityTestRunnerImpl( SecurityTest test, StringToObjectMap properties )
 	{
 		super( test, properties );
@@ -72,50 +53,17 @@ public class SecurityTestRunnerImpl extends AbstractTestRunner<SecurityTest, Sec
 		setStatus( Status.INITIALIZED );
 	}
 
-	public SecurityTest getSecurityTest()
-	{
-		return securityTest;
-	}
-
 	public SecurityTestRunContext createContext( StringToObjectMap properties )
 	{
 		return new SecurityTestRunContext( this, properties );
 	}
 
-	public int getStartStep()
+	public SecurityTest getSecurityTest()
 	{
-		return startStep;
+		return getTestRunnable();
 	}
 
-	public void setStartStep( int startStep )
-	{
-		this.startStep = startStep;
-	}
-
-	public void onCancel( String reason )
-	{
-		TestStep currentStep = getRunContext().getCurrentStep();
-		if( currentStep != null )
-			currentStep.cancel();
-	}
-
-	public void onFail( String reason )
-	{
-		TestStep currentStep = getRunContext().getCurrentStep();
-		if( currentStep != null )
-			currentStep.cancel();
-	}
-
-	public TestStepResult runTestStepByName( String name )
-	{
-		return runTestStep( getTestCase().getTestStepByName( name ), true, true );
-	}
-
-	public TestStepResult runTestStep( TestStep testStep )
-	{
-		return runTestStep( testStep, true, true );
-	}
-
+	@Override
 	public TestStepResult runTestStep( TestStep testStep, boolean discard, boolean process )
 	{
 		for( int i = 0; i < securityTestListeners.length; i++ )
@@ -162,52 +110,6 @@ public class SecurityTestRunnerImpl extends AbstractTestRunner<SecurityTest, Sec
 		return stepResult;
 	}
 
-	public long getTimeTaken()
-	{
-		long sum = 0;
-		for( int c = 0; c < testStepResults.size(); c++ )
-		{
-			TestStepResult testStepResult = testStepResults.get( c );
-			if( testStepResult != null )
-				sum += testStepResult.getTimeTaken();
-		}
-
-		return sum;
-	}
-
-	public List<TestStepResult> getResults()
-	{
-		return testStepResults;
-	}
-
-	public int getResultCount()
-	{
-		return resultCount;
-	}
-
-	public void gotoStep( int index )
-	{
-		gotoStepIndex = index;
-	}
-
-	public void enforceMaxResults( long maxResults )
-	{
-		if( maxResults < 1 )
-			return;
-
-		while( testStepResults.size() > maxResults )
-		{
-			testStepResults.remove( 0 );
-		}
-	}
-
-	public void gotoStepByName( String stepName )
-	{
-		TestStep testStep = getTestCase().getTestStepByName( stepName );
-		if( testStep != null )
-			gotoStep( getTestCase().getIndexOfTestStep( testStep ) );
-	}
-
 	/**
 	 * Clones original TestStep for security modification this does not alter the
 	 * original test step
@@ -234,138 +136,64 @@ public class SecurityTestRunnerImpl extends AbstractTestRunner<SecurityTest, Sec
 		return clonedTestStep;
 	}
 
-	public void internalRun( SecurityTestRunContext runContext ) throws Exception
+	protected int runCurrentTestStep( SecurityTestRunContext runContext, int currentStepIndex )
 	{
-		securityTest.getTestCase().beforeSave();
-		securityTestListeners = securityTest.getTestRunListeners();
-		hasTornDown = false;
-		startTime = System.currentTimeMillis();
-		try
+		TestStep currentStep = runContext.getCurrentStep();
+		securityTestStepListeners = securityTest.getTestStepRunListeners( currentStep );
+		if( !currentStep.isDisabled() )
 		{
-			securityTest.runStartupScript( runContext, this );
-		}
-		catch( Exception e1 )
-		{
-			SoapUI.logError( e1 );
-		}
-
-		// status = Status.RUNNING;
-		//
-		// if( status == Status.RUNNING )
-		// {
-		WsdlTestCase testCase = securityTest.getTestCase();
-		// List<TestStep> testStepsList = testCase.getTestStepList();
-		Map<String, List<AbstractSecurityCheck>> secCheckMap = securityTest.getSecurityChecksMap();
-		// SecurityTestRunnerImpl testCaseRunner = new SecurityTestRunnerImpl(
-		// securityTest );
-
-		notifyBeforeRun();
-
-		// copied from internal run
-
-		gotoStepIndex = -1;
-		// testStepResults.clear();
-
-		// create state for testcase if specified
-		if( testCase.getKeepSession() )
-		{
-			runContext.setProperty( SubmitContext.HTTP_STATE_PROPERTY, new HttpState() );
-		}
-
-		// testCaseRunListeners = testCase.getTestRunListeners();
-		testCase.runSetupScript( runContext, this );
-		if( !super.isRunning() )
-			return;
-
-		if( testCase.getTimeout() > 0 )
-		{
-			startTimeoutTimer( testCase.getTimeout() );
-		}
-		for( ; initCount < testCase.getTestStepCount() && isRunning(); initCount++ )
-		{
-			WsdlTestStep testStep = testCase.getTestStepAt( initCount );
-			if( testStep.isDisabled() )
-				continue;
-
-			try
+			for( int i = 0; i < securityTestListeners.length; i++ )
 			{
-				testStep.prepare( this, runContext );
-			}
-			catch( Exception e )
-			{
-				setStatus( Status.FAILED );
-				SoapUI.logError( e );
-				throw new Exception( "Failed to prepare testStep [" + testStep.getName() + "]; " + e.toString() );
-			}
-		}
-
-		int currentStepIndex = startStep;
-		runContext.setCurrentStep( currentStepIndex );
-
-		for( ; isRunning() && currentStepIndex < testCase.getTestStepCount(); currentStepIndex++ )
-		{
-			TestStep currentStep = runContext.getCurrentStep();
-			securityTestStepListeners = securityTest.getTestStepRunListeners( currentStep );
-			if( !currentStep.isDisabled() )
-			{
-				for( int i = 0; i < securityTestListeners.length; i++ )
-				{
-					securityTestListeners[i].beforeStep( this, getRunContext(), currentStep );
-					if( !isRunning() )
-						return;
-				}
-				for( int i = 0; i < securityTestStepListeners.length; i++ )
-				{
-					securityTestStepListeners[i].beforeStep( this, getRunContext() );
-					if( !isRunning() )
-						return;
-				}
-				TestStepResult stepResult = runTestStep( currentStep, true, true );
-				SecurityTestStepResult securityStepResult = new SecurityTestStepResult( currentStep );
-				if( stepResult == null )
-					return;
-
+				securityTestListeners[i].beforeStep( this, getRunContext(), currentStep );
 				if( !isRunning() )
-					return;
+					return -1;
+			}
+			for( int i = 0; i < securityTestStepListeners.length; i++ )
+			{
+				securityTestStepListeners[i].beforeStep( this, getRunContext() );
+				if( !isRunning() )
+					return -1;
+			}
+			TestStepResult stepResult = runTestStep( currentStep, true, true );
+			SecurityTestStepResult securityStepResult = new SecurityTestStepResult( currentStep );
+			if( stepResult == null )
+				return -1;
 
-				if( secCheckMap.containsKey( currentStep.getId() ) )
+			if( !isRunning() )
+				return -1;
+
+			Map<String, List<AbstractSecurityCheck>> secCheckMap = securityTest.getSecurityChecksMap();
+			if( secCheckMap.containsKey( currentStep.getId() ) )
+			{
+				List<AbstractSecurityCheck> testStepChecksList = secCheckMap.get( currentStep.getId() );
+				for( int i = 0; i < testStepChecksList.size(); i++ )
 				{
-					List<AbstractSecurityCheck> testStepChecksList = secCheckMap.get( currentStep.getId() );
-					for( int i = 0; i < testStepChecksList.size(); i++ )
-					{
-						AbstractSecurityCheck securityCheck = testStepChecksList.get( i );
-						runContext.setCurrentCheckIndex( i );
-						SecurityCheckResult securityCheckResult = runTestStepSecurityCheck( runContext, currentStep,
-								securityCheck );
-						securityStepResult.addSecurityRequestResult( securityCheckResult );
-					}
-				}
-				for( int i = 0; i < securityTestStepListeners.length; i++ )
-				{
-					securityTestStepListeners[i].afterStep( this, getRunContext(), securityStepResult );
-					if( !isRunning() )
-						return;
-				}
-				for( int i = 0; i < securityTestListeners.length; i++ )
-				{
-					securityTestListeners[i].afterStep( this, getRunContext(), securityStepResult );
-				}
-				if( gotoStepIndex != -1 )
-				{
-					currentStepIndex = gotoStepIndex - 1;
-					gotoStepIndex = -1;
+					AbstractSecurityCheck securityCheck = testStepChecksList.get( i );
+					runContext.setCurrentCheckIndex( i );
+					SecurityCheckResult securityCheckResult = runTestStepSecurityCheck( runContext, currentStep,
+							securityCheck );
+					securityStepResult.addSecurityRequestResult( securityCheckResult );
 				}
 			}
-
-			runContext.setCurrentStep( currentStepIndex + 1 );
+			for( int i = 0; i < securityTestStepListeners.length; i++ )
+			{
+				securityTestStepListeners[i].afterStep( this, getRunContext(), securityStepResult );
+				if( !isRunning() )
+					return -1;
+			}
+			for( int i = 0; i < securityTestListeners.length; i++ )
+			{
+				securityTestListeners[i].afterStep( this, getRunContext(), securityStepResult );
+			}
+			if( gotoStepIndex != -1 )
+			{
+				currentStepIndex = gotoStepIndex - 1;
+				gotoStepIndex = -1;
+			}
 		}
-		// if( runContext.getProperty(
-		// SecurityTestRunnerImpl.Status.class.getName() ) ==
-		// TestCaseRunner.Status.FAILED
-		// && testCase.getFailTestCaseOnErrors() )
-		// {
-		// fail( "Failing due to failed test step" );
-		// }
+
+		runContext.setCurrentStep( currentStepIndex + 1 );
+		return currentStepIndex;
 
 	}
 
@@ -396,41 +224,6 @@ public class SecurityTestRunnerImpl extends AbstractTestRunner<SecurityTest, Sec
 			}
 		}
 		return result;
-	}
-
-	protected void internalFinally( SecurityTestRunContext runContext )
-	{
-		WsdlTestCase testCase = securityTest.getTestCase();
-
-		for( int c = 0; c < initCount && c < testCase.getTestStepCount(); c++ )
-		{
-			WsdlTestStep testStep = testCase.getTestStepAt( c );
-			if( !testStep.isDisabled() )
-				testStep.finish( this, runContext );
-		}
-
-		try
-		{
-			securityTest.runTearDownScript( runContext, this );
-			// securityTest.getSecurityTestLog().addEntry(
-			// new SecurityTestLogMessageEntry( " SecurityTest ended at " + new
-			// Date( System.currentTimeMillis() ) ) );
-		}
-		catch( Exception e )
-		{
-			SoapUI.logError( e );
-		}
-
-		notifyAfterRun();
-
-		runContext.clear();
-		securityTestListeners = null;
-		securityTestStepListeners = null;
-	}
-
-	public void release()
-	{
-
 	}
 
 	protected void notifyBeforeRun()
@@ -470,9 +263,38 @@ public class SecurityTestRunnerImpl extends AbstractTestRunner<SecurityTest, Sec
 	}
 
 	@Override
-	public TestCase getTestCase()
+	public WsdlTestCase getTestCase()
 	{
-		return securityTest.getTestCase();
+		return getTestRunnable().getTestCase();
 	}
 
+	@Override
+	protected void clear( SecurityTestRunContext runContext )
+	{
+		runContext.clear();
+		testRunListeners = null;
+		securityTestListeners = null;
+		securityTestStepListeners = null;
+	}
+
+	@Override
+	protected void runSetupScripts( SecurityTestRunContext runContext ) throws Exception
+	{
+		getTestRunnable().getTestCase().runSetupScript( runContext, this );
+		getTestRunnable().runStartupScript( runContext, this );
+	}
+
+	@Override
+	protected void runTearDownScripts( SecurityTestRunContext runContext ) throws Exception
+	{
+		getTestRunnable().runTearDownScript( runContext, this );
+		getTestRunnable().getTestCase().runTearDownScript( runContext, this );
+	}
+
+	@Override
+	protected void fillInTestRunnableListeners()
+	{
+		testRunListeners = getTestRunnable().getTestCase().getTestRunListeners();
+		securityTestListeners = getTestRunnable().getSecurityTestRunListeners();
+	}
 }

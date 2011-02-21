@@ -283,9 +283,6 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 		if( runner != null && runner.getStatus() == Status.RUNNING )
 			return null;
 
-		if( runner != null )
-			runner.release();
-
 		runner = new SecurityTestRunnerImpl( this, context );
 		runner.start( async );
 		return runner;
@@ -522,7 +519,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 		securityTestRunListeners.remove( listener );
 	}
 
-	public SecurityTestRunListener[] getTestRunListeners()
+	public SecurityTestRunListener[] getSecurityTestRunListeners()
 	{
 		return securityTestRunListeners.toArray( new SecurityTestRunListener[securityTestRunListeners.size()] );
 	}

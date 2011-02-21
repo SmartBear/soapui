@@ -12,21 +12,11 @@
 
 package com.eviware.soapui.impl.wsdl.testcase;
 
-import java.util.Collections;
-import java.util.List;
-
-import org.apache.commons.collections.list.TreeList;
-import org.apache.commons.httpclient.HttpState;
-
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.wsdl.support.AbstractTestRunner;
-import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
-import com.eviware.soapui.model.iface.SubmitContext;
+import com.eviware.soapui.impl.wsdl.support.AbstractTestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
-import com.eviware.soapui.model.testsuite.TestRunListener;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
-import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
 import com.eviware.soapui.support.types.StringToObjectMap;
 
 /**
@@ -36,17 +26,11 @@ import com.eviware.soapui.support.types.StringToObjectMap;
  * @author Ole.Matzura
  */
 
-public class WsdlTestCaseRunner extends AbstractTestRunner<WsdlTestCase, WsdlTestRunContext> implements TestCaseRunner
+public class WsdlTestCaseRunner extends AbstractTestCaseRunner<WsdlTestCase, WsdlTestRunContext> implements
+		TestCaseRunner
 {
 
-	TestRunListener[] testRunListeners = new TestRunListener[0];
 	@SuppressWarnings( "unchecked" )
-	private List<TestStepResult> testStepResults = Collections.synchronizedList( new TreeList() );
-	private int gotoStepIndex;
-	private int resultCount;
-	private int initCount;
-	private int startStep = 0;
-
 	public WsdlTestCaseRunner( WsdlTestCase testCase, StringToObjectMap properties )
 	{
 		super( testCase, properties );
@@ -57,199 +41,28 @@ public class WsdlTestCaseRunner extends AbstractTestRunner<WsdlTestCase, WsdlTes
 		return new WsdlTestRunContext( this, properties );
 	}
 
-	public int getStartStep()
+	@Override
+	protected int runCurrentTestStep( WsdlTestRunContext runContext, int currentStepIndex )
 	{
-		return startStep;
-	}
-
-	public void setStartStep( int startStep )
-	{
-		this.startStep = startStep;
-	}
-
-	public void onCancel( String reason )
-	{
-		TestStep currentStep = getRunContext().getCurrentStep();
-		if( currentStep != null )
-			currentStep.cancel();
-	}
-
-	public void onFail( String reason )
-	{
-		TestStep currentStep = getRunContext().getCurrentStep();
-		if( currentStep != null )
-			currentStep.cancel();
-	}
-
-	public void internalRun( WsdlTestRunContext runContext ) throws Exception
-	{
-		WsdlTestCase testCase = getTestRunnable();
-
-		gotoStepIndex = -1;
-		testStepResults.clear();
-
-		// create state for testcase if specified
-		if( testCase.getKeepSession() )
+		TestStep currentStep = runContext.getCurrentStep();
+		if( !currentStep.isDisabled() )
 		{
-			runContext.setProperty( SubmitContext.HTTP_STATE_PROPERTY, new HttpState() );
-		}
+			TestStepResult stepResult = runTestStep( currentStep, true, true );
+			if( stepResult == null )
+				return -2;
 
-		testRunListeners = testCase.getTestRunListeners();
-		testCase.runSetupScript( runContext, this );
-		if( !isRunning() )
-			return;
-
-		if( testCase.getTimeout() > 0 )
-		{
-			startTimeoutTimer( testCase.getTimeout() );
-		}
-
-		notifyBeforeRun();
-		if( !isRunning() )
-			return;
-
-		initCount = getStartStep();
-
-		setStartTime();
-		for( ; initCount < testCase.getTestStepCount() && isRunning(); initCount++ )
-		{
-			WsdlTestStep testStep = testCase.getTestStepAt( initCount );
-			if( testStep.isDisabled() )
-				continue;
-
-			try
-			{
-				testStep.prepare( this, runContext );
-			}
-			catch( Exception e )
-			{
-				setStatus( Status.FAILED );
-				SoapUI.logError( e );
-				throw new Exception( "Failed to prepare testStep [" + testStep.getName() + "]; " + e.toString() );
-			}
-		}
-
-		int currentStepIndex = startStep;
-		runContext.setCurrentStep( currentStepIndex );
-
-		for( ; isRunning() && currentStepIndex < testCase.getTestStepCount(); currentStepIndex++ )
-		{
-			TestStep currentStep = runContext.getCurrentStep();
-			if( !currentStep.isDisabled() )
-			{
-				TestStepResult stepResult = runTestStep( currentStep, true, true );
-				if( stepResult == null )
-					return;
-
-				if( !isRunning() )
-					return;
-
-				if( gotoStepIndex != -1 )
-				{
-					currentStepIndex = gotoStepIndex - 1;
-					gotoStepIndex = -1;
-				}
-			}
-
-			runContext.setCurrentStep( currentStepIndex + 1 );
-		}
-
-		if( runContext.getProperty( TestCaseRunner.Status.class.getName() ) == TestCaseRunner.Status.FAILED
-				&& testCase.getFailTestCaseOnErrors() )
-		{
-			fail( "Failing due to failed test step" );
-		}
-		preserveContext( getRunContext() );
-	}
-
-	protected void internalFinally( WsdlTestRunContext runContext )
-	{
-		WsdlTestCase testCase = getTestRunnable();
-
-		for( int c = 0; c < initCount && c < testCase.getTestStepCount(); c++ )
-		{
-			WsdlTestStep testStep = testCase.getTestStepAt( c );
-			if( !testStep.isDisabled() )
-				testStep.finish( this, runContext );
-		}
-
-		try
-		{
-			testCase.runTearDownScript( runContext, this );
-		}
-		catch( Exception e )
-		{
-			SoapUI.logError( e );
-		}
-
-		notifyAfterRun();
-
-		runContext.clear();
-		testRunListeners = null;
-	}
-
-	public TestStepResult runTestStepByName( String name )
-	{
-		return runTestStep( getTestCase().getTestStepByName( name ), true, true );
-	}
-
-	public TestStepResult runTestStep( TestStep testStep )
-	{
-		return runTestStep( testStep, true, true );
-	}
-
-	public TestStepResult runTestStep( TestStep testStep, boolean discard, boolean process )
-	{
-		for( int i = 0; i < testRunListeners.length; i++ )
-		{
-			testRunListeners[i].beforeStep( this, getRunContext(), testStep );
 			if( !isRunning() )
-				return null;
-		}
+				return -2;
 
-		TestStepResult stepResult = testStep.run( this, getRunContext() );
-
-		testStepResults.add( stepResult );
-		resultCount++ ;
-		enforceMaxResults( getTestRunnable().getMaxResults() );
-
-		for( int i = 0; i < testRunListeners.length; i++ )
-		{
-			testRunListeners[i].afterStep( this, getRunContext(), stepResult );
-		}
-
-		// discard?
-		if( discard && stepResult.getStatus() == TestStepStatus.OK && getTestRunnable().getDiscardOkResults()
-				&& !stepResult.isDiscarded() )
-		{
-			stepResult.discard();
-		}
-
-		if( process && stepResult.getStatus() == TestStepStatus.FAILED )
-		{
-			if( getTestRunnable().getFailOnError() )
+			if( gotoStepIndex != -1 )
 			{
-				setError( stepResult.getError() );
-				fail( "Cancelling due to failed test step" );
-			}
-			else
-			{
-				getRunContext().setProperty( TestCaseRunner.Status.class.getName(), TestCaseRunner.Status.FAILED );
+				currentStepIndex = gotoStepIndex - 1;
+				gotoStepIndex = -1;
 			}
 		}
-		preserveContext( getRunContext() );
-		return stepResult;
-	}
 
-	/**
-	 * create backup of context properties in WsdlTestCase. This is used for RUN
-	 * FROM HERE action.
-	 * 
-	 * @param runContext
-	 */
-	private void preserveContext( WsdlTestRunContext runContext )
-	{
-		getTestCase().setRunFromHereContext( runContext.getProperties() );
+		runContext.setCurrentStep( currentStepIndex + 1 );
+		return currentStepIndex;
 	}
 
 	protected void notifyAfterRun()
@@ -288,54 +101,35 @@ public class WsdlTestCaseRunner extends AbstractTestRunner<WsdlTestCase, WsdlTes
 		}
 	}
 
+	@Override
 	public WsdlTestCase getTestCase()
 	{
 		return getTestRunnable();
 	}
 
-	public long getTimeTaken()
+	@Override
+	protected void clear( WsdlTestRunContext runContext )
 	{
-		long sum = 0;
-		for( int c = 0; c < testStepResults.size(); c++ )
-		{
-			TestStepResult testStepResult = testStepResults.get( c );
-			if( testStepResult != null )
-				sum += testStepResult.getTimeTaken();
-		}
-
-		return sum;
+		runContext.clear();
+		testRunListeners = null;
 	}
 
-	public List<TestStepResult> getResults()
+	@Override
+	protected void runSetupScripts( WsdlTestRunContext runContext ) throws Exception
 	{
-		return testStepResults;
+		getTestCase().runSetupScript( runContext, this );
 	}
 
-	public int getResultCount()
+	@Override
+	protected void runTearDownScripts( WsdlTestRunContext runContext ) throws Exception
 	{
-		return resultCount;
+		getTestCase().runTearDownScript( runContext, this );
 	}
 
-	public void gotoStep( int index )
+	@Override
+	protected void fillInTestRunnableListeners()
 	{
-		gotoStepIndex = index;
-	}
+		testRunListeners = getTestRunnable().getTestRunListeners();
 
-	public void enforceMaxResults( long maxResults )
-	{
-		if( maxResults < 1 )
-			return;
-
-		while( testStepResults.size() > maxResults )
-		{
-			testStepResults.remove( 0 );
-		}
-	}
-
-	public void gotoStepByName( String stepName )
-	{
-		TestStep testStep = getTestCase().getTestStepByName( stepName );
-		if( testStep != null )
-			gotoStep( getTestCase().getIndexOfTestStep( testStep ) );
 	}
 }

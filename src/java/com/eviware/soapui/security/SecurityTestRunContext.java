@@ -12,45 +12,31 @@
 
 package com.eviware.soapui.security;
 
-import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
-import com.eviware.soapui.model.TestModelItem;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
-import com.eviware.soapui.model.settings.Settings;
-import com.eviware.soapui.model.support.AbstractSubmitContext;
-import com.eviware.soapui.model.testsuite.TestCase;
-import com.eviware.soapui.model.testsuite.TestCaseRunContext;
+import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
-import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.support.types.StringToObjectMap;
 
 /**
  * Context information for a securitytest run session
+ * 
+ * @author dragica.soldo
  */
 
-public class SecurityTestRunContext extends AbstractSubmitContext<TestModelItem> implements TestCaseRunContext
+public class SecurityTestRunContext extends WsdlTestRunContext
 {
 
 	private int currentCheckIndex;
 
-	public SecurityTestRunContext( SecurityTestRunnerImpl testRunner, StringToObjectMap properties )
+	public SecurityTestRunContext( TestCaseRunner testRunner, StringToObjectMap properties )
 	{
-		super( testRunner.getSecurityTest(), properties );
-		this.testRunner = testRunner;
+		super( testRunner, properties );
+		// this.testRunner = testRunner;
 	}
 
-	private final TestCaseRunner testRunner;
-	private int currentStepIndex;
-	private TestCase testCase;
-
-//	public SecurityTestRunContext( TestStep testStep )
-//	{
-//		super( testStep );
-//
-//		testRunner = null;
-//		testCase = testStep.getTestCase();
-//		currentStepIndex = testCase.getIndexOfTestStep( testStep );
-//	}
+	/**
+	 * Holds result of SecurityChecks on a TestStep level
+	 */
+	private SecurityTestStepResult currentSecurityStepResult;
 
 	public int getCurrentCheckIndex()
 	{
@@ -60,46 +46,6 @@ public class SecurityTestRunContext extends AbstractSubmitContext<TestModelItem>
 	public void setCurrentCheckIndex( int currentCheckIndex )
 	{
 		this.currentCheckIndex = currentCheckIndex;
-	}
-
-	public TestStep getCurrentStep()
-	{
-		if( currentStepIndex < 0 || currentStepIndex >= getTestCase().getTestStepCount() )
-			return null;
-
-		return getTestCase().getTestStepAt( currentStepIndex );
-	}
-
-	@Override
-	public void setProperty( String name, Object value )
-	{
-		super.setProperty( name, value, getTestCase() );
-	}
-
-	public int getCurrentStepIndex()
-	{
-		return currentStepIndex;
-	}
-
-	public void setCurrentStep( int index )
-	{
-		currentStepIndex = index;
-	}
-
-	public TestCaseRunner getTestRunner()
-	{
-		return testRunner;
-	}
-
-	public Object getProperty( String testStepName, String propertyName )
-	{
-		TestStep testStep = getTestCase().getTestStepByName( testStepName );
-		return testStep == null ? null : testStep.getPropertyValue( propertyName );
-	}
-
-	public TestCase getTestCase()
-	{
-		return testRunner == null ? testCase : testRunner.getTestCase();
 	}
 
 	@Override
@@ -130,37 +76,14 @@ public class SecurityTestRunContext extends AbstractSubmitContext<TestModelItem>
 		return result;
 	}
 
-	@Override
-	public Object put( String key, Object value )
+	public void setCurrentSecurityStepResult( SecurityTestStepResult result )
 	{
-		Object oldValue = get( key );
-		setProperty( key, value );
-		return oldValue;
+		currentSecurityStepResult = result;
 	}
 
-	public Object getProperty( String name )
+	public SecurityTestStepResult getCurrentSecurityStepResult()
 	{
-		WsdlTestCase testCase = ( WsdlTestCase )getTestCase();
-		TestStep testStep = currentStepIndex >= 0 && currentStepIndex < testCase.getTestStepCount() ? testCase
-				.getTestStepAt( currentStepIndex ) : null;
-
-		return getProperty( name, testStep, testCase );
-	}
-
-	public void reset()
-	{
-		resetProperties();
-		currentStepIndex = 0;
-	}
-
-	public String expand( String content )
-	{
-		return PropertyExpander.expandProperties( this, content );
-	}
-
-	public Settings getSettings()
-	{
-		return testCase == null ? SoapUI.getSettings() : testCase.getSettings();
+		return currentSecurityStepResult;
 	}
 
 }

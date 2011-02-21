@@ -67,17 +67,17 @@ public class WsdlMockRunContext implements MockRunContext, Map<String, Object>, 
 	public synchronized boolean hasProperty( String name )
 	{
 		synchronized( properties )
-	{
-		return properties.containsKey( name );
-	}
+		{
+			return properties.containsKey( name );
+		}
 	}
 
 	public synchronized Object removeProperty( String name )
 	{
 		synchronized( properties )
-	{
-		return properties.remove( name );
-	}
+		{
+			return properties.remove( name );
+		}
 	}
 
 	public synchronized void setProperty( String name, Object value )
@@ -103,73 +103,73 @@ public class WsdlMockRunContext implements MockRunContext, Map<String, Object>, 
 
 		synchronized( properties )
 		{
-		properties.put( name, value );
-	}
+			properties.put( name, value );
+		}
 	}
 
 	public synchronized StringToStringMap toStringToStringMap()
 	{
 		synchronized( properties )
-	{
-		StringToStringMap result = new StringToStringMap();
-
-		for( String key : properties.keySet() )
 		{
-			Object value = properties.get( key );
-			if( value != null )
-				result.put( key, value.toString() );
-		}
+			StringToStringMap result = new StringToStringMap();
 
-		return result;
-	}
+			for( String key : properties.keySet() )
+			{
+				Object value = properties.get( key );
+				if( value != null )
+					result.put( key, value.toString() );
+			}
+
+			return result;
+		}
 	}
 
 	public synchronized void clear()
 	{
 		synchronized( properties )
-	{
-		properties.clear();
-	}
+		{
+			properties.clear();
+		}
 	}
 
 	public synchronized Object clone()
 	{
 		synchronized( properties )
-	{
-		return properties.clone();
-	}
+		{
+			return properties.clone();
+		}
 	}
 
 	public synchronized boolean containsKey( Object arg0 )
 	{
 		synchronized( properties )
-	{
-		return properties.containsKey( arg0 );
-	}
+		{
+			return properties.containsKey( arg0 );
+		}
 	}
 
 	public synchronized boolean containsValue( Object arg0 )
 	{
 		synchronized( properties )
-	{
-		return properties.containsValue( arg0 );
-	}
+		{
+			return properties.containsValue( arg0 );
+		}
 	}
 
 	public synchronized Set<Entry<String, Object>> entrySet()
 	{
 		synchronized( properties )
-	{
-		return properties.entrySet();
-	}
+		{
+			return properties.entrySet();
+		}
 	}
 
 	public synchronized boolean equals( Object arg0 )
 	{
 		synchronized( properties )
-	{
-		return properties.equals( arg0 );
-	}
+		{
+			return properties.equals( arg0 );
+		}
 	}
 
 	public synchronized Object get( Object arg0 )
@@ -200,40 +200,40 @@ public class WsdlMockRunContext implements MockRunContext, Map<String, Object>, 
 
 		synchronized( properties )
 		{
-		return properties.get( arg0 );
-	}
+			return properties.get( arg0 );
+		}
 	}
 
 	public synchronized int hashCode()
 	{
 		synchronized( properties )
-	{
-		return properties.hashCode();
-	}
+		{
+			return properties.hashCode();
+		}
 	}
 
 	public synchronized boolean isEmpty()
 	{
 		synchronized( properties )
-	{
-		return properties.isEmpty();
-	}
+		{
+			return properties.isEmpty();
+		}
 	}
 
 	public synchronized Set<String> keySet()
 	{
 		synchronized( properties )
-	{
-		return properties.keySet();
-	}
+		{
+			return properties.keySet();
+		}
 	}
 
 	public synchronized Object put( String arg0, Object arg1 )
 	{
 		synchronized( properties )
-	{
-		return properties.put( arg0, arg1 );
-	}
+		{
+			return properties.put( arg0, arg1 );
+		}
 	}
 
 	public synchronized void putAll( Map<? extends String, ? extends Object> arg0 )
@@ -241,42 +241,42 @@ public class WsdlMockRunContext implements MockRunContext, Map<String, Object>, 
 		synchronized( arg0 )
 		{
 			synchronized( properties )
-	{
-		properties.putAll( arg0 );
-	}
+			{
+				properties.putAll( arg0 );
+			}
 		}
 	}
 
 	public synchronized Object remove( Object arg0 )
 	{
 		synchronized( properties )
-	{
-		return properties.remove( arg0 );
-	}
+		{
+			return properties.remove( arg0 );
+		}
 	}
 
 	public synchronized int size()
 	{
 		synchronized( properties )
-	{
-		return properties.size();
-	}
+		{
+			return properties.size();
+		}
 	}
 
 	public synchronized String toString()
 	{
 		synchronized( properties )
-	{
-		return properties.toString();
-	}
+		{
+			return properties.toString();
+		}
 	}
 
 	public synchronized Collection<Object> values()
 	{
 		synchronized( properties )
-	{
-		return properties.values();
-	}
+		{
+			return properties.values();
+		}
 	}
 
 	public synchronized TestStep getCurrentStep()
@@ -327,29 +327,36 @@ public class WsdlMockRunContext implements MockRunContext, Map<String, Object>, 
 	public synchronized String expand( String content )
 	{
 		synchronized( properties )
-	{
-		return PropertyExpander.expandProperties( this, content );
-	}
+		{
+			return PropertyExpander.expandProperties( this, content );
+		}
 	}
 
 	public synchronized String[] getPropertyNames()
 	{
 		synchronized( properties )
-	{
-		return properties.keySet().toArray( new String[properties.size()] );
-	}
+		{
+			return properties.keySet().toArray( new String[properties.size()] );
+		}
 	}
 
 	public synchronized StringToObjectMap getProperties()
 	{
 		synchronized( properties )
-	{
-		return properties;
-	}
+		{
+			return properties;
+		}
 	}
 
 	public MockRunner getMockRunner()
 	{
 		return mockService.getMockRunner();
+	}
+
+	@Override
+	public void setCurrentStep( int index )
+	{
+		// TODO Auto-generated method stub
+
 	}
 }
