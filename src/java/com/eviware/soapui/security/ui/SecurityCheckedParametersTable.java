@@ -67,6 +67,29 @@ public class SecurityCheckedParametersTable extends JPanel
 
 	}
 
+	/*
+	 * Creates dialog
+	 */
+	private XFormDialog createDialog()
+	{
+		DefaultActionList actionList = new DefaultActionList();
+		AddAction addAction = new AddAction();
+		actionList.addAction( addAction, true );
+		AddAndCopy addAndCopy = new AddAndCopy();
+		actionList.addAction( addAndCopy );
+		Close closeAction = new Close();
+		actionList.addAction( closeAction );
+		XFormDialog dialog = ADialogBuilder.buildDialog( AddParameterDialog.class, actionList, false );
+		closeAction.setDialog( dialog );
+		addAction.setDialog( dialog );
+		addAndCopy.setDialog( dialog );
+		JComboBoxFormField nameField = ( JComboBoxFormField )dialog.getFormField( AddParameterDialog.NAME );
+		ArrayList<String> options = new ArrayList<String>( properties.keySet() );
+		options.set( 0, "Choose Test Property" );
+		nameField.setOptions( options.toArray( new String[0] ) );
+		return dialog;
+	}
+
 	private class AddNewParameterAction extends AbstractAction
 	{
 
@@ -79,21 +102,7 @@ public class SecurityCheckedParametersTable extends JPanel
 		@Override
 		public void actionPerformed( ActionEvent arg0 )
 		{
-			DefaultActionList actionList = new DefaultActionList();
-			AddAction addAction = new AddAction();
-			actionList.addAction( addAction, true );
-			AddAndCopy addAndCopy = new AddAndCopy();
-			actionList.addAction( addAndCopy );
-			Close closeAction = new Close();
-			actionList.addAction( closeAction );
-			XFormDialog dialog = ADialogBuilder.buildDialog( AddParameterDialog.class, actionList, false );
-			closeAction.setDialog( dialog );
-			addAction.setDialog( dialog );
-			addAndCopy.setDialog( dialog );
-			JComboBoxFormField nameField = ( JComboBoxFormField )dialog.getFormField( AddParameterDialog.NAME );
-			ArrayList<String> options = new ArrayList<String>( properties.keySet() );
-			options.set( 0, "Choose Test Property" );
-			nameField.setOptions( options.toArray( new String[0] ) );
+			XFormDialog dialog = createDialog();
 			dialog.show();
 			model.fireTableDataChanged();
 		}
@@ -185,21 +194,7 @@ public class SecurityCheckedParametersTable extends JPanel
 		{
 			if( table.getSelectedRow() > -1 )
 			{
-				DefaultActionList actionList = new DefaultActionList();
-				AddAction addAction = new AddAction();
-				actionList.addAction( addAction, true );
-				AddAndCopy addAndCopy = new AddAndCopy();
-				actionList.addAction( addAndCopy );
-				Close closeAction = new Close();
-				actionList.addAction( closeAction );
-				XFormDialog dialog = ADialogBuilder.buildDialog( AddParameterDialog.class, actionList, false );
-				closeAction.setDialog( dialog );
-				addAction.setDialog( dialog );
-				addAndCopy.setDialog( dialog );
-				JComboBoxFormField nameField = ( JComboBoxFormField )dialog.getFormField( AddParameterDialog.NAME );
-				ArrayList<String> options = new ArrayList<String>( properties.keySet() );
-				options.set( 0, "Choose Test Property" );
-				nameField.setOptions( options.toArray( new String[0] ) );
+				XFormDialog dialog = createDialog();
 
 				int row = table.getSelectedRow();
 				dialog.setValue( AddParameterDialog.LABEL, ( String )model.getValueAt( row, 0 ) );
