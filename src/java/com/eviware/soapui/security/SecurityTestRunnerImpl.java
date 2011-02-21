@@ -228,6 +228,20 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 
 	protected void notifyBeforeRun()
 	{
+		if( testRunListeners == null || testRunListeners.length == 0 )
+			return;
+
+		for( int i = 0; i < testRunListeners.length; i++ )
+		{
+			try
+			{
+				testRunListeners[i].beforeRun( this, getRunContext() );
+			}
+			catch( Throwable t )
+			{
+				SoapUI.logError( t );
+			}
+		}
 		if( securityTestListeners == null || securityTestListeners.length == 0 )
 			return;
 
@@ -260,6 +274,21 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 				SoapUI.logError( t );
 			}
 		}
+		if( testRunListeners == null || testRunListeners.length == 0 )
+			return;
+
+		for( int i = 0; i < testRunListeners.length; i++ )
+		{
+			try
+			{
+				testRunListeners[i].afterRun( this, getRunContext() );
+			}
+			catch( Throwable t )
+			{
+				SoapUI.logError( t );
+			}
+		}
+
 	}
 
 	@Override
