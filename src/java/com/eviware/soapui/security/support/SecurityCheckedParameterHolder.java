@@ -21,7 +21,8 @@ import com.eviware.soapui.security.check.AbstractSecurityCheck;
  * @author robert
  * 
  */
-public class SecurityCheckedParameterHolder extends SecurityCheckParameterListenerAdapter implements TestPropertyListener
+public class SecurityCheckedParameterHolder extends SecurityCheckParameterListenerAdapter implements
+		TestPropertyListener
 {
 
 	private AbstractSecurityCheck securityCheck;
@@ -42,7 +43,7 @@ public class SecurityCheckedParameterHolder extends SecurityCheckParameterListen
 		{
 			addParameter( param );
 		}
-		
+
 		securityCheck.getTestStep().addTestPropertyListener( this );
 	}
 
@@ -72,7 +73,7 @@ public class SecurityCheckedParameterHolder extends SecurityCheckParameterListen
 
 		return newParameter;
 	}
-	
+
 	public boolean addParameter( String label, String name, String xpath, boolean used )
 	{
 		if( paramsMap.get( label.toUpperCase() ) != null )
@@ -168,38 +169,51 @@ public class SecurityCheckedParameterHolder extends SecurityCheckParameterListen
 	public void propertyAdded( String name )
 	{
 		// TODO Auto-generated method stub
-		
+		// we do not care for this
 	}
 
 	@Override
 	public void propertyMoved( String name, int oldIndex, int newIndex )
 	{
 		// TODO Auto-generated method stub
-		
+		// we do not care about this, we keep order by label
 	}
 
 	@Override
 	public void propertyRemoved( String name )
 	{
-		// TODO Auto-generated method stub
-		
+		ArrayList<SecurityCheckedParameter> parameterToRemove = new ArrayList<SecurityCheckedParameter>();
+		for( SecurityCheckedParameter param : params )
+			if( param.getName().equals( name ) ) {
+				parameterToRemove.add(param);
+			}
+		for( SecurityCheckedParameter param : parameterToRemove)
+			removeParameter( param );
 	}
 
 	@Override
 	public void propertyRenamed( String oldName, String newName )
 	{
-		// TODO Auto-generated method stub
-		
+		ArrayList<SecurityCheckedParameter> parameterToRemove = new ArrayList<SecurityCheckedParameter>();
+		for( SecurityCheckedParameter param : params )
+			if( param.getName().equals( oldName ) ) {
+				parameterToRemove.add(param);
+			}
+		for( SecurityCheckedParameter param : parameterToRemove)
+			( ( SecurityCheckedParameterImpl )param ).setName(newName);
+
 	}
 
 	@Override
 	public void propertyValueChanged( String name, String oldValue, String newValue )
 	{
 		// TODO Auto-generated method stub
-		
+		// we do not cate for this
+
 	}
-	
-	public void release() {
+
+	public void release()
+	{
 		securityCheck.getTestStep().removeTestPropertyListener( this );
 	}
 
