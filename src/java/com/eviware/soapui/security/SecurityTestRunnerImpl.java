@@ -228,20 +228,8 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 
 	protected void notifyBeforeRun()
 	{
-		if( testRunListeners == null || testRunListeners.length == 0 )
-			return;
+		super.notifyBeforeRun();
 
-		for( int i = 0; i < testRunListeners.length; i++ )
-		{
-			try
-			{
-				testRunListeners[i].beforeRun( this, getRunContext() );
-			}
-			catch( Throwable t )
-			{
-				SoapUI.logError( t );
-			}
-		}
 		if( securityTestListeners == null || securityTestListeners.length == 0 )
 			return;
 
@@ -274,21 +262,7 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 				SoapUI.logError( t );
 			}
 		}
-		if( testRunListeners == null || testRunListeners.length == 0 )
-			return;
-
-		for( int i = 0; i < testRunListeners.length; i++ )
-		{
-			try
-			{
-				testRunListeners[i].afterRun( this, getRunContext() );
-			}
-			catch( Throwable t )
-			{
-				SoapUI.logError( t );
-			}
-		}
-
+		super.notifyAfterRun();
 	}
 
 	@Override
@@ -330,7 +304,8 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 	@Override
 	protected void failOnTestStepErrors( SecurityTestRunContext runContext, WsdlTestCase testCase )
 	{
-		//TODO this should be handled properly, maybe add option on securityTest level 
+		// TODO this should be handled properly, maybe add option on securityTest
+		// level
 		if( runContext.getProperty( TestCaseRunner.Status.class.getName() ) == TestCaseRunner.Status.FAILED
 				&& testCase.getFailTestCaseOnErrors() )
 		{

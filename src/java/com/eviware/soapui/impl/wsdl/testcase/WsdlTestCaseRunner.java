@@ -68,38 +68,12 @@ public class WsdlTestCaseRunner extends AbstractTestCaseRunner<WsdlTestCase, Wsd
 
 	protected void notifyAfterRun()
 	{
-		if( testRunListeners == null || testRunListeners.length == 0 )
-			return;
-
-		for( int i = 0; i < testRunListeners.length; i++ )
-		{
-			try
-			{
-				testRunListeners[i].afterRun( this, getRunContext() );
-			}
-			catch( Throwable t )
-			{
-				SoapUI.logError( t );
-			}
-		}
+		super.notifyAfterRun();
 	}
 
 	protected void notifyBeforeRun()
 	{
-		if( testRunListeners == null || testRunListeners.length == 0 )
-			return;
-
-		for( int i = 0; i < testRunListeners.length; i++ )
-		{
-			try
-			{
-				testRunListeners[i].beforeRun( this, getRunContext() );
-			}
-			catch( Throwable t )
-			{
-				SoapUI.logError( t );
-			}
-		}
+		super.notifyBeforeRun();
 	}
 
 	@Override

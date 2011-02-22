@@ -250,9 +250,43 @@ public abstract class AbstractTestCaseRunner<T extends TestRunnable, T2 extends 
 	}
 
 	// Next two will contain both testcase and securitytest listeners
-	protected abstract void notifyAfterRun();
+	protected void notifyAfterRun()
+	{
+		if( testRunListeners == null || testRunListeners.length == 0 )
+			return;
 
-	protected abstract void notifyBeforeRun();
+		for( int i = 0; i < testRunListeners.length; i++ )
+		{
+			try
+			{
+				testRunListeners[i].afterRun( this, getRunContext() );
+			}
+			catch( Throwable t )
+			{
+				SoapUI.logError( t );
+			}
+		}
+
+	}
+
+	protected void notifyBeforeRun()
+	{
+		if( testRunListeners == null || testRunListeners.length == 0 )
+			return;
+
+		for( int i = 0; i < testRunListeners.length; i++ )
+		{
+			try
+			{
+				testRunListeners[i].beforeRun( this, getRunContext() );
+			}
+			catch( Throwable t )
+			{
+				SoapUI.logError( t );
+			}
+		}
+
+	}
 
 	public abstract WsdlTestCase getTestCase();
 
