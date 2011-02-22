@@ -40,48 +40,50 @@
 					<xsd:element name="testSuite" type="tns:TestSuite"
 						maxOccurs="unbounded" minOccurs="0">
 					</xsd:element>
-					<xsd:element name="mockService" type="tns:MockService"
-						maxOccurs="unbounded" minOccurs="0">
+					<xsd:element name="mockService"
+						type="tns:MockService" maxOccurs="unbounded" minOccurs="0">
 					</xsd:element>
-					<xsd:element name="endpointStrategy" type="tns:EndpointStrategy"
-						maxOccurs="1" minOccurs="0">
+					<xsd:element name="endpointStrategy"
+						type="tns:EndpointStrategy" maxOccurs="1" minOccurs="0">
 					</xsd:element>
 					<xsd:element name="requirements" maxOccurs="1"
 						minOccurs="0" type="tns:RequirementsType">
 					</xsd:element>
-					<xsd:element name="properties" type="tns:PropertiesType"
-						maxOccurs="1" minOccurs="0">
+					<xsd:element name="properties"
+						type="tns:PropertiesType" maxOccurs="1" minOccurs="0">
 					</xsd:element>
-					<xsd:element name="afterLoadScript" type="tns:Script"
-						maxOccurs="1" minOccurs="0">
+					<xsd:element name="afterLoadScript"
+						type="tns:Script" maxOccurs="1" minOccurs="0">
 					</xsd:element>
-					<xsd:element name="beforeSaveScript" type="tns:Script"
-						maxOccurs="1" minOccurs="0">
+					<xsd:element name="beforeSaveScript"
+						type="tns:Script" maxOccurs="1" minOccurs="0">
 					</xsd:element>
-					<xsd:element name="encryptedContent" type="xsd:base64Binary"
-						maxOccurs="1" minOccurs="0">
+					<xsd:element name="encryptedContent"
+						type="xsd:base64Binary" maxOccurs="1" minOccurs="0">
 					</xsd:element>
-					<xsd:element name="wssContainer" type="tns:WssContainer"
-						maxOccurs="1" minOccurs="0">
+					<xsd:element name="wssContainer"
+						type="tns:WssContainer" maxOccurs="1" minOccurs="0">
 					</xsd:element>
-					<xsd:element name="databaseConnectionContainer" type="tns:DatabaseConnectionContainer"
-						maxOccurs="1" minOccurs="0">
+					<xsd:element name="databaseConnectionContainer"
+						type="tns:DatabaseConnectionContainer" maxOccurs="1"
+						minOccurs="0">
 					</xsd:element>
-					<xsd:element name="reporting" type="tns:ReportingType"
-						minOccurs="0" maxOccurs="1">
+					<xsd:element name="reporting"
+						type="tns:ReportingType" minOccurs="0" maxOccurs="1">
 					</xsd:element>
 					<xsd:element name="reportScript" type="tns:Script"
 						maxOccurs="1" minOccurs="0">
 					</xsd:element>
-					<xsd:element name="beforeRunScript" type="tns:Script"
-						maxOccurs="1" minOccurs="0">
+					<xsd:element name="beforeRunScript"
+						type="tns:Script" maxOccurs="1" minOccurs="0">
 					</xsd:element>
 					<xsd:element name="afterRunScript" type="tns:Script"
 						maxOccurs="1" minOccurs="0">
 					</xsd:element>
-					<xsd:element name="eventHandlers" type="tns:EventHandlerType"
-						maxOccurs="unbounded" minOccurs="0">
+					<xsd:element name="eventHandlers"
+						type="tns:EventHandlerType" maxOccurs="unbounded" minOccurs="0">
 					</xsd:element>
+					<xsd:element name="sensitiveInformation" type="tns:SensitiveInformation" maxOccurs="1" minOccurs="0"></xsd:element>
 				</xsd:sequence>
 				<xsd:attribute name="soapui-version" type="xsd:string">
 				</xsd:attribute>
@@ -2038,5 +2040,16 @@
     	<xsd:sequence>
     		<xsd:element name="parameters" type="tns:CheckedParameter" maxOccurs="unbounded" minOccurs="0"></xsd:element>
     	</xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="SensitiveInformation">
+    	<xsd:complexContent>
+    		<xsd:extension base="tns:ModelItem">
+    			<xsd:sequence>
+    				<xsd:element name="configuration" type="xsd:anySimpleType"></xsd:element>
+    			</xsd:sequence>
+    			<xsd:attribute name="level" type="xsd:string"></xsd:attribute>
+    		</xsd:extension>
+    	</xsd:complexContent>
     </xsd:complexType>
 </xsd:schema>

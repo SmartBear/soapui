@@ -51,6 +51,7 @@ import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.model.util.ModelItemIconFactory;
+import com.eviware.soapui.security.panels.ProjectSensitiveInformationPanel;
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.StringUtils;
@@ -67,6 +68,7 @@ import com.eviware.soapui.support.components.MetricsPanel;
 import com.eviware.soapui.support.components.MetricsPanel.MetricType;
 import com.eviware.soapui.support.components.MetricsPanel.MetricsSection;
 import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
+import com.eviware.x.impl.swing.JFormDialog;
 
 public class WsdlProjectDesktopPanel extends ModelItemDesktopPanel<WsdlProject>
 {
@@ -88,7 +90,7 @@ public class WsdlProjectDesktopPanel extends ModelItemDesktopPanel<WsdlProject>
 	private GroovyEditorComponent saveScriptGroovyEditor;
 	private JInspectorPanel inspectorPanel;
 	private WsdlProjectTestSuitesTabPanel testSuitesPanel;
-
+	private ProjectSensitiveInformationPanel sensitiveInfoPanel;
 	public WsdlProjectDesktopPanel( WsdlProject modelItem )
 	{
 		super( modelItem );
@@ -110,7 +112,16 @@ public class WsdlProjectDesktopPanel extends ModelItemDesktopPanel<WsdlProject>
 		mainTabs.addTab( "Overview", null, buildOverviewTab(), "Shows General Project information and metrics" );
 		mainTabs.addTab( "TestSuites", null, testSuitesPanel = buildTestSuitesTab(),
 				"Shows and runs all TestSuites in project" );
-		mainTabs.addTab( "Security Configurations", null, buildWSSTab(), "Manages Security-related configurations" );
+		mainTabs.addTab( "WS-Security Configurations", null, buildWSSTab(), "Manages Security-related configurations" );
+		mainTabs
+				.addTab( "Security Checks Defaults", null, buildSecConfigTab(), "Manages Security related configurations" );
+	}
+
+	private Component buildSecConfigTab()
+	{
+		sensitiveInfoPanel = new ProjectSensitiveInformationPanel( getModelItem().getConfig() );
+		sensitiveInfoPanel.build();
+		return (( JFormDialog)sensitiveInfoPanel.getDialog()).getPanel();
 	}
 
 	public WsdlProjectTestSuitesTabPanel getTestSuitesPanel()

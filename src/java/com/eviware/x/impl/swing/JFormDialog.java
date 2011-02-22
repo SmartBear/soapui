@@ -46,6 +46,7 @@ public class JFormDialog extends SwingXFormDialog
 	private JButtonBar buttons;
 	private boolean resized;
 	private ActionList actions;
+	private JPanel panel;
 
 	public JFormDialog( String name, SwingXFormImpl form, ActionList actions, String description, ImageIcon icon )
 	{
@@ -69,6 +70,7 @@ public class JFormDialog extends SwingXFormDialog
 				BorderFactory.createEmptyBorder( 3, 5, 3, 5 ) ) );
 
 		dialog.getContentPane().add( buttons, BorderLayout.SOUTH );
+		this.panel = panel;
 	}
 
 	public void setValues( StringToStringMap values )
@@ -230,5 +232,10 @@ public class JFormDialog extends SwingXFormDialog
 			}
 		}
 	}
-	
+
+	public JPanel getPanel()
+	{
+		return panel;
+	}
+
 }
