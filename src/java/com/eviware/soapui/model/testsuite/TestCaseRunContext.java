@@ -20,8 +20,6 @@ public interface TestCaseRunContext extends TestRunContext
 {
 	public TestStep getCurrentStep();
 
-	public void setCurrentStep( int index );
-
 	public int getCurrentStepIndex();
 
 	public TestCaseRunner getTestRunner();

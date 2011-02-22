@@ -20,9 +20,9 @@ import org.apache.commons.httpclient.HttpState;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
+import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.model.iface.SubmitContext;
-import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestRunListener;
 import com.eviware.soapui.model.testsuite.TestRunnable;
@@ -38,7 +38,7 @@ import com.eviware.soapui.support.types.StringToObjectMap;
  * @author dragica.soldo
  */
 
-public abstract class AbstractTestCaseRunner<T extends TestRunnable, T2 extends TestCaseRunContext> extends
+public abstract class AbstractTestCaseRunner<T extends TestRunnable, T2 extends WsdlTestRunContext> extends
 		AbstractTestRunner<T, T2> implements TestCaseRunner
 {
 	protected TestRunListener[] testRunListeners = new TestRunListener[0];
@@ -138,13 +138,11 @@ public abstract class AbstractTestCaseRunner<T extends TestRunnable, T2 extends 
 			}
 		}
 
-		if( runContext.getProperty( TestCaseRunner.Status.class.getName() ) == TestCaseRunner.Status.FAILED
-				&& testCase.getFailTestCaseOnErrors() )
-		{
-			fail( "Failing due to failed test step" );
-		}
+		failOnTestStepErrors( runContext, testCase );
 		preserveContext( getRunContext() );
 	}
+
+	protected abstract void failOnTestStepErrors( T2 runContext, WsdlTestCase testCase );
 
 	protected abstract int runCurrentTestStep( T2 runContext, int currentStepIndex );
 

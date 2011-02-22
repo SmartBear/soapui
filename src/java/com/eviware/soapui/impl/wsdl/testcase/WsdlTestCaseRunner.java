@@ -17,6 +17,7 @@ import com.eviware.soapui.impl.wsdl.support.AbstractTestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
+import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.support.types.StringToObjectMap;
 
 /**
@@ -131,5 +132,15 @@ public class WsdlTestCaseRunner extends AbstractTestCaseRunner<WsdlTestCase, Wsd
 	{
 		testRunListeners = getTestRunnable().getTestRunListeners();
 
+	}
+
+	@Override
+	protected void failOnTestStepErrors( WsdlTestRunContext runContext, WsdlTestCase testCase )
+	{
+		if( runContext.getProperty( TestCaseRunner.Status.class.getName() ) == TestCaseRunner.Status.FAILED
+				&& testCase.getFailTestCaseOnErrors() )
+		{
+			fail( "Failing due to failed test step" );
+		}
 	}
 }

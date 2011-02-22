@@ -146,21 +146,21 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 			{
 				securityTestListeners[i].beforeStep( this, getRunContext(), currentStep );
 				if( !isRunning() )
-					return -1;
+					return -2;
 			}
 			for( int i = 0; i < securityTestStepListeners.length; i++ )
 			{
 				securityTestStepListeners[i].beforeStep( this, getRunContext() );
 				if( !isRunning() )
-					return -1;
+					return -2;
 			}
 			TestStepResult stepResult = runTestStep( currentStep, true, true );
 			SecurityTestStepResult securityStepResult = new SecurityTestStepResult( currentStep );
 			if( stepResult == null )
-				return -1;
+				return -2;
 
 			if( !isRunning() )
-				return -1;
+				return -2;
 
 			Map<String, List<AbstractSecurityCheck>> secCheckMap = securityTest.getSecurityChecksMap();
 			if( secCheckMap.containsKey( currentStep.getId() ) )
@@ -179,7 +179,7 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 			{
 				securityTestStepListeners[i].afterStep( this, getRunContext(), securityStepResult );
 				if( !isRunning() )
-					return -1;
+					return -2;
 			}
 			for( int i = 0; i < securityTestListeners.length; i++ )
 			{
@@ -326,4 +326,16 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 		testRunListeners = getTestRunnable().getTestCase().getTestRunListeners();
 		securityTestListeners = getTestRunnable().getSecurityTestRunListeners();
 	}
+
+	@Override
+	protected void failOnTestStepErrors( SecurityTestRunContext runContext, WsdlTestCase testCase )
+	{
+		//TODO this should be handled properly, maybe add option on securityTest level 
+		if( runContext.getProperty( TestCaseRunner.Status.class.getName() ) == TestCaseRunner.Status.FAILED
+				&& testCase.getFailTestCaseOnErrors() )
+		{
+			fail( "Failing due to failed test step" );
+		}
+	}
+
 }

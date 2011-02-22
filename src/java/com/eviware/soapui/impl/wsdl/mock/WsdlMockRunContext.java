@@ -353,10 +353,4 @@ public class WsdlMockRunContext implements MockRunContext, Map<String, Object>, 
 		return mockService.getMockRunner();
 	}
 
-	@Override
-	public void setCurrentStep( int index )
-	{
-		// TODO Auto-generated method stub
-
-	}
 }
