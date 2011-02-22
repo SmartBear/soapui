@@ -43,9 +43,9 @@ public abstract class AbstractTestCaseRunner<T extends TestRunnable, T2 extends 
 {
 	protected TestRunListener[] testRunListeners = new TestRunListener[0];
 	@SuppressWarnings( "unchecked" )
-	protected List<TestStepResult> testStepResults = Collections.synchronizedList( new TreeList() );
-	protected int gotoStepIndex;
-	protected int resultCount;
+	private List<TestStepResult> testStepResults = Collections.synchronizedList( new TreeList() );
+	private int gotoStepIndex;
+	private int resultCount;
 	private int initCount;
 	private int startStep = 0;
 
@@ -53,6 +53,11 @@ public abstract class AbstractTestCaseRunner<T extends TestRunnable, T2 extends 
 	{
 		super( modelItem, properties );
 
+	}
+
+	public int getGotoStepIndex()
+	{
+		return gotoStepIndex;
 	}
 
 	public int getStartStep()
@@ -138,15 +143,13 @@ public abstract class AbstractTestCaseRunner<T extends TestRunnable, T2 extends 
 			}
 		}
 
-		failOnTestStepErrors( runContext, testCase );
+		failOnErrors( runContext );
 		preserveContext( getRunContext() );
 	}
 
-	protected abstract void failOnTestStepErrors( T2 runContext, WsdlTestCase testCase );
+	protected abstract void failOnErrors( T2 runContext );
 
 	protected abstract int runCurrentTestStep( T2 runContext, int currentStepIndex );
-
-	protected abstract void runSetupScripts( T2 runContext ) throws Exception;
 
 	protected void internalFinally( T2 runContext )
 	{
@@ -173,11 +176,27 @@ public abstract class AbstractTestCaseRunner<T extends TestRunnable, T2 extends 
 		clear( runContext );
 	}
 
-	protected abstract void runTearDownScripts( T2 runContext ) throws Exception;
+	protected void runSetupScripts( T2 runContext ) throws Exception
+	{
+		getTestCase().runSetupScript( runContext, this );
+	}
 
-	protected abstract void clear( T2 runContext );
+	protected void runTearDownScripts( T2 runContext ) throws Exception
+	{
+		getTestCase().runTearDownScript( runContext, this );
+	}
 
-	protected abstract void fillInTestRunnableListeners();
+	protected void clear( T2 runContext )
+	{
+		runContext.clear();
+		testRunListeners = null;
+	}
+
+	protected void fillInTestRunnableListeners()
+	{
+		testRunListeners = getTestCase().getTestRunListeners();
+
+	}
 
 	public TestStepResult runTestStepByName( String name )
 	{
@@ -306,6 +325,11 @@ public abstract class AbstractTestCaseRunner<T extends TestRunnable, T2 extends 
 	public List<TestStepResult> getResults()
 	{
 		return testStepResults;
+	}
+
+	public void setResultCount( int resultCount )
+	{
+		this.resultCount = resultCount;
 	}
 
 	public int getResultCount()

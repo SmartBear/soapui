@@ -24,10 +24,8 @@ import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestStepFactory;
 import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestStepRegistry;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.TestAssertion;
-import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
-import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
 import com.eviware.soapui.security.SecurityCheckRequestResult.SecurityStatus;
 import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.security.support.SecurityCheckRunListener;
@@ -79,8 +77,8 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 		}
 
 		TestStepResult stepResult = testStep.run( this, getRunContext() );
-		testStepResults.add( stepResult );
-		resultCount++ ;
+		getResults().add( stepResult );
+		setResultCount( getResultCount() + 1 );
 		// enforceMaxResults( getTestRunnable().getMaxResults() );
 
 		// this method is effectively used only in internalRun and
@@ -100,18 +98,19 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 		// }
 
 		// TODO check if step result should be considered?
-		if( process && stepResult.getStatus() == TestStepStatus.FAILED )
-		{
-			if( getTestRunnable().getFailOnError() )
-			{
-				setError( stepResult.getError() );
-				fail( "Cancelling due to failed test step" );
-			}
-			else
-			{
-				getRunContext().setProperty( TestCaseRunner.Status.class.getName(), TestCaseRunner.Status.FAILED );
-			}
-		}
+		// if( process && stepResult.getStatus() == TestStepStatus.FAILED )
+		// {
+		// if( getTestRunnable().getFailOnError() )
+		// {
+		// setError( stepResult.getError() );
+		// fail( "Cancelling due to failed test step" );
+		// }
+		// else
+		// {
+		// getRunContext().setProperty( TestCaseRunner.Status.class.getName(),
+		// TestCaseRunner.Status.FAILED );
+		// }
+		// }
 
 		return stepResult;
 	}
@@ -180,6 +179,19 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 					SecurityCheckResult securityCheckResult = runTestStepSecurityCheck( runContext, currentStep,
 							securityCheck );
 					securityStepResult.addSecurityRequestResult( securityCheckResult );
+					if( securityCheckResult.getStatus() == SecurityStatus.FAILED )
+					{
+						if( getTestRunnable().getFailOnError() )
+						{
+							// setError( stepResult.getError() );
+							fail( "Cancelling due to failed security check" );
+						}
+						else
+						{
+							getRunContext().setProperty( SecurityTestRunner.Status.class.getName(),
+									SecurityTestRunner.Status.FAILED );
+						}
+					}
 				}
 			}
 			for( int i = 0; i < securityTestStepListeners.length; i++ )
@@ -192,10 +204,10 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 			{
 				securityTestListeners[i].afterStep( this, getRunContext(), securityStepResult );
 			}
-			if( gotoStepIndex != -1 )
+			if( getGotoStepIndex() != -1 )
 			{
-				currentStepIndex = gotoStepIndex - 1;
-				gotoStepIndex = -1;
+				currentStepIndex = getGotoStepIndex() - 1;
+				gotoStep( -1 );
 			}
 		}
 
@@ -289,8 +301,7 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 	@Override
 	protected void clear( SecurityTestRunContext runContext )
 	{
-		runContext.clear();
-		testRunListeners = null;
+		super.clear( runContext );
 		securityTestListeners = null;
 		securityTestStepListeners = null;
 	}
@@ -298,7 +309,7 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 	@Override
 	protected void runSetupScripts( SecurityTestRunContext runContext ) throws Exception
 	{
-		getTestRunnable().getTestCase().runSetupScript( runContext, this );
+		super.runSetupScripts( runContext );
 		getTestRunnable().runStartupScript( runContext, this );
 	}
 
@@ -306,25 +317,25 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 	protected void runTearDownScripts( SecurityTestRunContext runContext ) throws Exception
 	{
 		getTestRunnable().runTearDownScript( runContext, this );
-		getTestRunnable().getTestCase().runTearDownScript( runContext, this );
+		super.runTearDownScripts( runContext );
 	}
 
 	@Override
 	protected void fillInTestRunnableListeners()
 	{
-		testRunListeners = getTestRunnable().getTestCase().getTestRunListeners();
+		super.fillInTestRunnableListeners();
 		securityTestListeners = getTestRunnable().getSecurityTestRunListeners();
 	}
 
 	@Override
-	protected void failOnTestStepErrors( SecurityTestRunContext runContext, WsdlTestCase testCase )
+	protected void failOnErrors( SecurityTestRunContext runContext )
 	{
 		// TODO this should be handled properly, maybe add option on securityTest
 		// level
-		if( runContext.getProperty( TestCaseRunner.Status.class.getName() ) == TestCaseRunner.Status.FAILED
-				&& testCase.getFailTestCaseOnErrors() )
+		if( runContext.getProperty( SecurityTestRunner.Status.class.getName() ) == SecurityTestRunner.Status.FAILED
+				&& getTestRunnable().getFailSecurityTestOnCheckErrors() )
 		{
-			fail( "Failing due to failed test step" );
+			fail( "Failing due to failed security check" );
 		}
 	}
 
