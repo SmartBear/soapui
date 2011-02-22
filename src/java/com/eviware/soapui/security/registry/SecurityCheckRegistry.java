@@ -28,7 +28,7 @@ import com.eviware.soapui.model.testsuite.TestStep;
 
 public class SecurityCheckRegistry
 {
-	private static SecurityCheckRegistry instance;
+	protected static SecurityCheckRegistry instance;
 	private Map<String, AbstractSecurityCheckFactory> availableSecurityChecks = new HashMap<String, AbstractSecurityCheckFactory>();
 
 	public SecurityCheckRegistry()

@@ -21,10 +21,8 @@ import org.apache.xmlbeans.XmlException;
 import com.eviware.soapui.config.CheckedParameterConfig;
 import com.eviware.soapui.config.CheckedParametersListConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
-import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.security.SecurityParametersTableModel;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunContext;
@@ -32,16 +30,10 @@ import com.eviware.soapui.security.SecurityTestRunnerImpl;
 import com.eviware.soapui.security.boundary.SchemeTypeExtractor;
 import com.eviware.soapui.security.boundary.SchemeTypeExtractor.NodeInfo;
 import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
-import com.eviware.soapui.security.ui.SecurityCheckedParametersTable;
 import com.eviware.soapui.security.ui.SecurityConfigurationDialogBuilder;
 import com.eviware.soapui.support.types.StringToObjectMap;
 import com.eviware.soapui.support.xml.XmlUtils;
 import com.eviware.x.form.XFormDialog;
-import com.eviware.x.form.XFormField;
-import com.eviware.x.form.support.ADialogBuilder;
-import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AForm;
-import com.eviware.x.form.support.AField.AFieldType;
 
 public class InvalidTypesSecurityCheck extends AbstractSecurityCheck
 {
@@ -157,7 +149,7 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheck
 	@Override
 	protected void buildDialog()
 	{
-		dialog = SecurityConfigurationDialogBuilder.buildSecurityCheckConfigurationDialog( "Ivalid Type Security Check",
+		dialog = new SecurityConfigurationDialogBuilder().buildSecurityCheckConfigurationDialog( "Ivalid Type Security Check",
 				"Configures invalid type security check", null, "http://www.soapui.org", this );
 	}
 

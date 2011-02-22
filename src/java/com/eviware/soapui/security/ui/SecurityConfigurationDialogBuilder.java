@@ -34,13 +34,13 @@ import com.eviware.x.impl.swing.JTabbedFormDialog;
 public class SecurityConfigurationDialogBuilder
 {
 
-	public static XFormDialog buildSecurityCheckConfigurationDialog( AbstractSecurityCheck securityCheck )
+	public XFormDialog buildSecurityCheckConfigurationDialog( AbstractSecurityCheck securityCheck )
 	{
 
 		XFormDialog dialog = ADialogBuilder.buildDialog( DefaultDialog.class );
 		XFormField field = dialog.getFormField( DefaultDialog.PARAMETERS );
-		field.setProperty( "component", new SecurityCheckedParametersTable( new SecurityParametersTableModel(
-				securityCheck.getParameterHolder() ), securityCheck.getTestStep().getProperties() ) );
+		
+		addParameterTable( securityCheck, field );
 
 		return dialog;
 	}
@@ -56,7 +56,7 @@ public class SecurityConfigurationDialogBuilder
 	 * @param securityCheck
 	 * @return
 	 */
-	public static XFormDialog buildSecurityCheckConfigurationDialog( String name, String description, ImageIcon icon,
+	public XFormDialog buildSecurityCheckConfigurationDialog( String name, String description, ImageIcon icon,
 			String helpUrl, AbstractSecurityCheck securityCheck )
 	{
 
@@ -75,12 +75,11 @@ public class SecurityConfigurationDialogBuilder
 	 * @param securityCheck
 	 * @param dialog
 	 */
-	private static void buildBasicDialog( String name, String description, ImageIcon icon, String helpUrl,
+	private void buildBasicDialog( String name, String description, ImageIcon icon, String helpUrl,
 			AbstractSecurityCheck securityCheck, XFormDialog dialog )
 	{
 		XFormField field = dialog.getFormField( DefaultDialog.PARAMETERS );
-		field.setProperty( "component", new SecurityCheckedParametersTable( new SecurityParametersTableModel(
-				securityCheck.getParameterHolder() ), securityCheck.getTestStep().getProperties() ) );
+		addParameterTable( securityCheck, field );
 
 		Container content = ( ( JFormDialog )dialog ).getDialog().getContentPane();
 
@@ -100,7 +99,20 @@ public class SecurityConfigurationDialogBuilder
 				.getTabs() );
 	}
 
-	public static XFormDialog buildSecurityCheckConfigurationDialog( String name, String description, ImageIcon icon,
+	/*
+	 * 
+	 * Adds Parameter table
+	 * 
+	 * @param securityCheck
+	 * @param field
+	 */
+	protected void addParameterTable( AbstractSecurityCheck securityCheck, XFormField field )
+	{
+		field.setProperty( "component", new SecurityCheckedParametersTable( new SecurityParametersTableModel(
+				securityCheck.getParameterHolder() ), securityCheck.getTestStep().getProperties() ) );
+	}
+
+	public XFormDialog buildSecurityCheckConfigurationDialog( String name, String description, ImageIcon icon,
 			String helpUrl, JComponent component, AbstractSecurityCheck securityCheck )
 	{
 

@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.SoapUICore;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.config.SecurityTestConfig;
 import com.eviware.soapui.config.TestStepSecurityTestConfig;
@@ -106,7 +107,8 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 	 */
 	public AbstractSecurityCheck addSecurityCheck( TestStep testStep, String securityCheckType, String securityCheckName )
 	{
-		AbstractSecurityCheckFactory factory = SecurityCheckRegistry.getInstance().getFactory( securityCheckType );
+		AbstractSecurityCheckFactory factory = SoapUI.getSoapUICore().getSecurityCheckRegistry().getFactory(
+				securityCheckType );
 		SecurityCheckConfig newSecCheckConfig = factory.createNewSecurityCheck( securityCheckName );
 		AbstractSecurityCheck newSecCheck = factory.buildSecurityCheck( testStep, newSecCheckConfig, this );
 		newSecCheck.setTestStep( testStep );
@@ -257,8 +259,9 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 									if( testStepSecurityTestListConfig.getTestStepId().equals( ts.getId() ) )
 									{
 										testStep = ts;
-										AbstractSecurityCheck securityCheck = SecurityCheckRegistry.getInstance().getFactory(
-												secCheckConfig.getType() ).buildSecurityCheck( testStep, secCheckConfig, this );
+										AbstractSecurityCheck securityCheck = SoapUI.getSoapUICore().getSecurityCheckRegistry()
+												.getFactory( secCheckConfig.getType() ).buildSecurityCheck( testStep,
+														secCheckConfig, this );
 										checkList.add( securityCheck );
 									}
 							}
@@ -459,7 +462,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 				if( testStepSecurityTest.getTestStepId().equals( testStep.getId() ) )
 				{
 					List<SecurityCheckConfig> securityCheckList = testStepSecurityTest.getTestStepSecurityCheckList();
-					AbstractSecurityCheckFactory factory = SecurityCheckRegistry.getInstance().getFactory(
+					AbstractSecurityCheckFactory factory = SoapUI.getSoapUICore().getSecurityCheckRegistry().getFactory(
 							securityCheck.getType() );
 					SecurityCheckConfig newSecCheckConfig = ( SecurityCheckConfig )securityCheck.getConfig().copy();
 					AbstractSecurityCheck newSecCheck = factory.buildSecurityCheck( testStep, newSecCheckConfig, this );

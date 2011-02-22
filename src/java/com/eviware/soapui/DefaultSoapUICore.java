@@ -37,6 +37,7 @@ import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.monitor.JettyMockEngine;
 import com.eviware.soapui.monitor.MockEngine;
+import com.eviware.soapui.security.registry.SecurityCheckRegistry;
 import com.eviware.soapui.settings.HttpSettings;
 import com.eviware.soapui.settings.ProxySettings;
 import com.eviware.soapui.settings.SecuritySettings;
@@ -76,6 +77,8 @@ public class DefaultSoapUICore implements SoapUICore
 	private SoapUIExtensionClassLoader extClassLoader;
 
 	public boolean isSavingSettings;
+
+	protected SecurityCheckRegistry securityCheckRegistry;
 
 	public boolean getInitialImport()
 	{
@@ -574,8 +577,8 @@ public class DefaultSoapUICore implements SoapUICore
 
 	protected SoapUIActionRegistry initActionRegistry()
 	{
-		return new SoapUIActionRegistry(
-				DefaultSoapUICore.class.getResourceAsStream( "/com/eviware/soapui/resources/conf/soapui-actions.xml" ) );
+		return new SoapUIActionRegistry( DefaultSoapUICore.class
+				.getResourceAsStream( "/com/eviware/soapui/resources/conf/soapui-actions.xml" ) );
 	}
 
 	protected void addExternalListeners( String folder, ClassLoader classLoader )
@@ -624,5 +627,18 @@ public class DefaultSoapUICore implements SoapUICore
 				}
 			}
 		}
+	}
+
+	protected void initSecurityCheckRegistry()
+	{
+		securityCheckRegistry = SecurityCheckRegistry.getInstance();
+	}
+
+	@Override
+	public SecurityCheckRegistry getSecurityCheckRegistry()
+	{
+		if ( securityCheckRegistry == null ) 
+			initSecurityCheckRegistry();
+		return securityCheckRegistry;
 	}
 }
