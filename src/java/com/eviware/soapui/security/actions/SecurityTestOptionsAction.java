@@ -21,6 +21,8 @@ import com.eviware.x.form.XForm;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.XFormDialogBuilder;
 import com.eviware.x.form.XFormFactory;
+import com.eviware.x.form.XFormField;
+import com.eviware.x.form.XFormFieldListener;
 
 /**
  * Options dialog for securitytests
@@ -51,7 +53,14 @@ public class SecurityTestOptionsAction extends AbstractSoapUIAction<SecurityTest
 		{
 			XFormDialogBuilder builder = XFormFactory.createDialogBuilder( "SecurityTest Options" );
 			form = builder.createForm( "Basic" );
-			form.addCheckBox( FAIL_ON_ERROR, "Fail on error" );
+			form.addCheckBox( FAIL_ON_ERROR, "Fail on error" ).addFormFieldListener( new XFormFieldListener()
+			{
+
+				public void valueChanged( XFormField sourceField, String newValue, String oldValue )
+				{
+					form.getFormField( FAIL_SECURITYTEST_ON_ERROR ).setEnabled( !Boolean.parseBoolean( newValue ) );
+				}
+			} );
 			form.addCheckBox( FAIL_SECURITYTEST_ON_ERROR, "Fail SecurityTest if it has failed TestSteps" );
 			// form.addTextField( SOCKET_TIMEOUT, "Socket timeout in milliseconds",
 			// FieldType.TEXT );
