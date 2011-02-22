@@ -64,7 +64,7 @@ import com.eviware.soapui.support.components.JXToolBar;
 public class AssertionsPanel extends JPanel
 {
 	private AssertionListModel assertionListModel;
-	private JList assertionList;
+	protected JList assertionList;
 	private JPopupMenu assertionListPopup;
 	private final Assertable assertable;
 	private AddAssertionAction addAssertionAction;

@@ -73,7 +73,6 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	public static final String SEPARATE_REQUEST_STRATEGY = "Seperate request for each parameter";
 
 	// configuration of specific request modification
-	// private static final int MINIMUM_STRING_DISTANCE = 50;
 	protected SecurityCheckConfig config;
 	protected String startupScript;
 	protected String tearDownScript;
@@ -301,8 +300,6 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	{
 		return config.getDescription();
 	}
-
-
 
 	@Override
 	public String getName()
@@ -681,5 +678,33 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		}
 		return result;
 	}
-	
+
+	public String getSetupScript()
+	{
+		if( config.getSetupScript() == null )
+			config.addNewSetupScript();
+		return config.getSetupScript().getStringValue();
+	}
+
+	public void setSetupScript( String text )
+	{
+		if( config.getSetupScript() == null )
+			config.addNewSetupScript();
+		config.getSetupScript().setStringValue( text );
+	}
+
+	public String getTearDownScript()
+	{
+		if( config.getTearDownScript() == null )
+			config.addNewTearDownScript();
+		return config.getTearDownScript().getStringValue();
+	}
+
+	public void setTearDownScript( String text )
+	{
+		if( config.getTearDownScript() == null )
+			config.addNewTearDownScript();
+		config.getTearDownScript().setStringValue( text );
+	}
+
 }

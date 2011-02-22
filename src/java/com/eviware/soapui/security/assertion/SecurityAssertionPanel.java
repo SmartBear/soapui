@@ -19,6 +19,10 @@ public class SecurityAssertionPanel extends AssertionsPanel
 	public SecurityAssertionPanel( Assertable assertable )
 	{
 		super( assertable );
+		
+		assertionList.setToolTipText( "Assertions for this security check." );
 	}
+
+	
 	
 }
