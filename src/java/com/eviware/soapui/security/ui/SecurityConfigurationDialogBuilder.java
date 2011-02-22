@@ -45,6 +45,17 @@ public class SecurityConfigurationDialogBuilder
 		return dialog;
 	}
 
+	/**
+	 * 
+	 * Creates a dialog for configuring security checks.
+	 * 
+	 * @param name
+	 * @param description
+	 * @param icon
+	 * @param helpUrl
+	 * @param securityCheck
+	 * @return
+	 */
 	public static XFormDialog buildSecurityCheckConfigurationDialog( String name, String description, ImageIcon icon,
 			String helpUrl, AbstractSecurityCheck securityCheck )
 	{
@@ -100,6 +111,7 @@ public class SecurityConfigurationDialogBuilder
 			dialog = ADialogBuilder.buildDialog( GroovyDialog.class );
 
 		buildBasicDialog( name, description, icon, helpUrl, securityCheck, dialog );
+		
 
 		return dialog;
 	}

@@ -136,9 +136,10 @@ public class ADialogBuilder
 
 		if( actions == null )
 			actions = defaultActions;
-		else
-			actions.addActions( defaultActions );
-
+		else {
+			// since there is only one action do it like this
+			actions.insertAction( defaultActions.getActionAt( 0 ), 0 );
+		}
 		XFormDialog dialog = builder.buildDialog( actions, messages.get( formAnnotation.description() ), UISupport
 				.createImageIcon( formAnnotation.icon() ) );
 

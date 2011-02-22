@@ -29,6 +29,8 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.DefaultActionList;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.x.form.XFormDialog;
+import com.eviware.x.form.XFormField;
+import com.eviware.x.form.XFormFieldListener;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AForm;
@@ -39,6 +41,7 @@ import com.eviware.x.impl.swing.SwingXFormDialog;
 public class SecurityCheckedParametersTable extends JPanel
 {
 
+	private static final String CHOOSE_TEST_PROPERTY = "Choose Test Property";
 	private SecurityParametersTableModel model;
 	private JXToolBar toolbar;
 	private JXTable table;
@@ -79,13 +82,39 @@ public class SecurityCheckedParametersTable extends JPanel
 		actionList.addAction( addAndCopy );
 		Close closeAction = new Close();
 		actionList.addAction( closeAction );
+
 		XFormDialog dialog = ADialogBuilder.buildDialog( AddParameterDialog.class, actionList, false );
 		closeAction.setDialog( dialog );
 		addAction.setDialog( dialog );
 		addAndCopy.setDialog( dialog );
+
+		final XFormField labelField = dialog.getFormField( AddParameterDialog.LABEL );
+		labelField.setEnabled( false );
+		final XFormField pathField = dialog.getFormField( AddParameterDialog.PATH );
+		pathField.setEnabled( false );
+
 		JComboBoxFormField nameField = ( JComboBoxFormField )dialog.getFormField( AddParameterDialog.NAME );
+		nameField.addFormFieldListener( new XFormFieldListener()
+		{
+
+			@Override
+			public void valueChanged( XFormField sourceField, String newValue, String oldValue )
+			{
+				if( !newValue.equals( CHOOSE_TEST_PROPERTY ) )
+				{
+					labelField.setEnabled( true );
+					pathField.setEnabled( true );
+				}
+				else
+				{
+					labelField.setEnabled( false );
+					pathField.setEnabled( false );
+				}
+
+			}
+		} );
 		ArrayList<String> options = new ArrayList<String>( properties.keySet() );
-		options.set( 0, "Choose Test Property" );
+		options.set( 0, CHOOSE_TEST_PROPERTY );
 		nameField.setOptions( options.toArray( new String[0] ) );
 		return dialog;
 	}
@@ -243,11 +272,11 @@ public class SecurityCheckedParametersTable extends JPanel
 	@AForm( description = "Add New Security Test Step Parameter", name = "Configure Security Test Step Parameters" )
 	interface AddParameterDialog
 	{
-		@AField( description = "Parameter Label", name = "Parameter Label", type = AFieldType.STRING )
-		static String LABEL = "Parameter Label";
-
 		@AField( description = "Parameter Name", name = "Parameter Name", type = AFieldType.ENUMERATION )
 		static String NAME = "Parameter Name";
+
+		@AField( description = "Parameter Label", name = "Parameter Label", type = AFieldType.STRING )
+		static String LABEL = "Parameter Label";
 
 		@AField( description = "Parameter XPath", name = "XPath", type = AFieldType.STRINGAREA )
 		static String PATH = "XPath";
