@@ -131,7 +131,7 @@ public class SecurityConfigurationDialogBuilder
 
 	}
 
-	@AForm( description = "Set options for this LoadTest", name = "LoadTest Options", helpUrl = HelpUrls.LOADTESTOPTIONS_HELP_URL, icon = UISupport.TOOL_ICON_PATH )
+	@AForm( description = "Security Check Tabs", name = "" )
 	private interface TabsForm
 	{
 		@APage( name = "Assertions" )
@@ -150,7 +150,7 @@ public class SecurityConfigurationDialogBuilder
 		public final static TearDownScript TEARDOWN = null;
 	}
 
-	@AForm( description = "Assertions", name = "Assertions", helpUrl = HelpUrls.MOCKASWAR_HELP_URL )
+	@AForm( description = "Assertions", name = "Assertions")
 	protected interface Assertions
 	{
 
@@ -159,7 +159,7 @@ public class SecurityConfigurationDialogBuilder
 
 	}
 
-	@AForm( description = "Strategy", name = "Strategy", helpUrl = HelpUrls.MOCKASWAR_HELP_URL )
+	@AForm( description = "Strategy", name = "Strategy" )
 	protected interface Strategy
 	{
 
@@ -168,7 +168,7 @@ public class SecurityConfigurationDialogBuilder
 
 	}
 
-	@AForm( description = "Advanced Settings", name = "Advanced Settings", helpUrl = HelpUrls.MOCKASWAR_HELP_URL )
+	@AForm( description = "Advanced Settings", name = "Advanced Settings" )
 	protected interface AdvancedSettings
 	{
 
@@ -177,7 +177,7 @@ public class SecurityConfigurationDialogBuilder
 
 	}
 
-	@AForm( description = "Setup Script", name = "Setup Script", helpUrl = HelpUrls.MOCKASWAR_HELP_URL )
+	@AForm( description = "Setup Script", name = "Setup Script" )
 	protected interface SetupScript
 	{
 
@@ -186,7 +186,7 @@ public class SecurityConfigurationDialogBuilder
 
 	}
 
-	@AForm( description = "TearDown Script", name = "TearDown Script", helpUrl = HelpUrls.MOCKASWAR_HELP_URL )
+	@AForm( description = "TearDown Script", name = "TearDown Script" )
 	protected interface TearDownScript
 	{
 
