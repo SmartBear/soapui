@@ -100,6 +100,11 @@ public class SwingXFormImpl implements XForm
 		return checkBox;
 	}
 
+	/* 
+	 * If label starts with '###' do not show them.
+	 * (non-Javadoc)
+	 * @see com.eviware.x.form.XForm#addComponent(java.lang.String, com.eviware.x.form.XFormField)
+	 */
 	public XFormField addComponent( String label, XFormField formComponent )
 	{
 		if( rowSpacing > 0 && !components.isEmpty() )
@@ -113,7 +118,7 @@ public class SwingXFormImpl implements XForm
 
 		AbstractSwingXFormField<?> swingFormComponent = ( AbstractSwingXFormField<?> )formComponent;
 
-		if( label != null )
+		if( label != null && !label.startsWith( "###" ) )
 		{
 			JLabel jlabel = new JLabel( label.endsWith( ":" ) ? label : label + ":" );
 			jlabel.setBorder( BorderFactory.createEmptyBorder( 2, 0, 0, 0 ) );
@@ -131,7 +136,11 @@ public class SwingXFormImpl implements XForm
 			swingFormComponent.getComponent().getAccessibleContext().setAccessibleDescription( label );
 		}
 
-		panel.add( swingFormComponent.getComponent(), cc.xy( 4, row ) );
+		if( label.startsWith( "###" ) )
+			panel.add( swingFormComponent.getComponent(), cc.xyw( 2, row, 3 ) );
+		else
+			panel.add( swingFormComponent.getComponent(), cc.xy( 4, row ) );
+
 		components.put( label, formComponent );
 
 		return formComponent;
