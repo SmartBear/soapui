@@ -38,6 +38,7 @@ import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.model.workspace.Workspace;
 import com.eviware.soapui.security.SecurityTest;
+import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.security.SecurityTestRunnerImpl;
 import com.eviware.soapui.security.support.SecurityTestRunListenerAdapter;
@@ -334,13 +335,13 @@ public class TestMonitor
 
 	private class InternalSecurityTestRunListener extends SecurityTestRunListenerAdapter
 	{
-		public void afterRun( TestCaseRunner testRunner, TestCaseRunContext context )
+		public void afterRun( TestCaseRunner testRunner, SecurityTestRunContext context )
 		{
 			runningSecurityTests.remove( ( SecurityTestRunnerImpl )testRunner );
 			notifySecurityTestFinished( ( SecurityTestRunnerImpl )testRunner );
 		}
 
-		public void beforeRun( TestCaseRunner testRunner, TestCaseRunContext context )
+		public void beforeRun( TestCaseRunner testRunner, SecurityTestRunContext context )
 		{
 			runningSecurityTests.add( ( SecurityTestRunnerImpl )testRunner );
 			notifySecurityTestStarted( ( SecurityTestRunnerImpl )testRunner );

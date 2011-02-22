@@ -32,7 +32,6 @@ import com.eviware.soapui.security.SecurityCheckRequestResult.SecurityStatus;
 import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.security.support.SecurityCheckRunListener;
 import com.eviware.soapui.security.support.SecurityTestRunListener;
-import com.eviware.soapui.security.support.SecurityTestStepRunListener;
 import com.eviware.soapui.support.types.StringToObjectMap;
 
 public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest, SecurityTestRunContext> implements
@@ -42,14 +41,20 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 	private SecurityTest securityTest;
 	// private boolean stopped;
 	private SecurityTestRunListener[] securityTestListeners = new SecurityTestRunListener[0];
-	private SecurityTestStepRunListener[] securityTestStepListeners = new SecurityTestStepRunListener[0];
+	private SecurityTestRunListener[] securityTestStepListeners = new SecurityTestRunListener[0];
 	private SecurityCheckRunListener[] securityCheckListeners = new SecurityCheckRunListener[0];
+	/**
+	 * holds index of current securityCheck out of summary number of checks on
+	 * SecxurityTest level used in main progress bar on SecurityTest
+	 */
+	private int currentCheckOnSecurityTestIndex;
 
 	@SuppressWarnings( "unchecked" )
 	public SecurityTestRunnerImpl( SecurityTest test, StringToObjectMap properties )
 	{
 		super( test, properties );
 		this.securityTest = test;
+		this.currentCheckOnSecurityTestIndex = 0;
 		setStatus( Status.INITIALIZED );
 	}
 
@@ -151,7 +156,7 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 			}
 			for( int i = 0; i < securityTestStepListeners.length; i++ )
 			{
-				securityTestStepListeners[i].beforeStep( this, getRunContext() );
+				securityTestStepListeners[i].beforeStep( this, getRunContext(), currentStep );
 				if( !isRunning() )
 					return -2;
 			}
@@ -171,6 +176,7 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 				{
 					AbstractSecurityCheck securityCheck = testStepChecksList.get( i );
 					runContext.setCurrentCheckIndex( i );
+					runContext.setCurrentCheckOnSecurityTestIndex( currentCheckOnSecurityTestIndex++ );
 					SecurityCheckResult securityCheckResult = runTestStepSecurityCheck( runContext, currentStep,
 							securityCheck );
 					securityStepResult.addSecurityRequestResult( securityCheckResult );
@@ -209,11 +215,19 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 			{
 				securityTestStepListeners[j].beforeSecurityCheck( this, runContext, securityCheck );
 			}
+			for( int j = 0; j < securityTestListeners.length; j++ )
+			{
+				securityTestListeners[j].beforeSecurityCheck( this, runContext, securityCheck );
+			}
 			result = securityCheck.run( cloneForSecurityCheck( ( WsdlTestStep )currentStep ), runContext );
 			// TODO check
 			if( securityTest.getFailSecurityTestOnCheckErrors() && result.getStatus() == SecurityStatus.FAILED )
 			{
 				fail( "Failing due to failed security check" );
+			}
+			for( int j = 0; j < securityTestListeners.length; j++ )
+			{
+				securityTestListeners[j].afterSecurityCheck( this, runContext, result );
 			}
 			for( int j = 0; j < securityTestStepListeners.length; j++ )
 			{

@@ -226,38 +226,6 @@ public class JSecurityTestTestStepList extends JPanel
 			this.testStep = testStep;
 			autoscrollSupport = new AutoscrollSupport( this );
 
-			progressBar = new JProgressBar()
-			{
-				protected void processMouseEvent( MouseEvent e )
-				{
-					if( e.getID() == MouseEvent.MOUSE_PRESSED || e.getID() == MouseEvent.MOUSE_RELEASED )
-					{
-						TestStepListEntryPanel.this.processMouseEvent( translateMouseEvent( e ) );
-					}
-				}
-
-				protected void processMouseMotionEvent( MouseEvent e )
-				{
-					TestStepListEntryPanel.this.processMouseMotionEvent( translateMouseEvent( e ) );
-				}
-
-				/**
-				 * Translates the given mouse event to the enclosing map panel's
-				 * coordinate space.
-				 */
-				private MouseEvent translateMouseEvent( MouseEvent e )
-				{
-					return new MouseEvent( TestStepListEntryPanel.this, e.getID(), e.getWhen(), e.getModifiers(), e.getX()
-							+ getX(), e.getY() + getY(), e.getClickCount(), e.isPopupTrigger(), e.getButton() );
-				}
-			};
-
-			JPanel progressPanel = UISupport.createProgressBarPanel( progressBar, 5, false );
-
-			progressBar.setMinimumSize( new Dimension( 0, 200 ) );
-			progressBar.setBackground( Color.WHITE );
-			progressBar.setInheritsPopupMenu( true );
-
 			label = new JLabel( testStep.getLabel(), testStep.getIcon(), SwingConstants.LEFT );
 			label.setBorder( BorderFactory.createEmptyBorder( 5, 5, 5, 5 ) );
 			label.setInheritsPopupMenu( true );
@@ -265,6 +233,39 @@ public class JSecurityTestTestStepList extends JPanel
 
 			if( AbstractSecurityCheck.isSecurable( testStep ) )
 			{
+				progressBar = new JProgressBar()
+				{
+					protected void processMouseEvent( MouseEvent e )
+					{
+						if( e.getID() == MouseEvent.MOUSE_PRESSED || e.getID() == MouseEvent.MOUSE_RELEASED )
+						{
+							TestStepListEntryPanel.this.processMouseEvent( translateMouseEvent( e ) );
+						}
+					}
+
+					protected void processMouseMotionEvent( MouseEvent e )
+					{
+						TestStepListEntryPanel.this.processMouseMotionEvent( translateMouseEvent( e ) );
+					}
+
+					/**
+					 * Translates the given mouse event to the enclosing map panel's
+					 * coordinate space.
+					 */
+					private MouseEvent translateMouseEvent( MouseEvent e )
+					{
+						return new MouseEvent( TestStepListEntryPanel.this, e.getID(), e.getWhen(), e.getModifiers(), e
+								.getX()
+								+ getX(), e.getY() + getY(), e.getClickCount(), e.isPopupTrigger(), e.getButton() );
+					}
+				};
+
+				JPanel progressPanel = UISupport.createProgressBarPanel( progressBar, 5, false );
+
+				progressBar.setMinimumSize( new Dimension( 0, 200 ) );
+				progressBar.setBackground( Color.WHITE );
+				progressBar.setInheritsPopupMenu( true );
+
 				add( progressPanel, BorderLayout.LINE_END );
 			}
 			add( label, BorderLayout.LINE_START );
@@ -328,8 +329,11 @@ public class JSecurityTestTestStepList extends JPanel
 		{
 			super.addNotify();
 			testStep.addPropertyChangeListener( testCasePropertyChangeListener );
-			// TODO check
-			progressBarAdapter = new ProgressBarSecurityTestStepAdapter( progressBar, securityTest, testStep );
+			if( progressBar != null )
+			{
+				// TODO check
+				progressBarAdapter = new ProgressBarSecurityTestStepAdapter( progressBar, securityTest, testStep );
+			}
 		}
 
 		public void removeNotify()

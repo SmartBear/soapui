@@ -39,7 +39,6 @@ import com.eviware.soapui.security.registry.AbstractSecurityCheckFactory;
 import com.eviware.soapui.security.registry.SecurityCheckRegistry;
 import com.eviware.soapui.security.support.SecurityCheckRunListener;
 import com.eviware.soapui.security.support.SecurityTestRunListener;
-import com.eviware.soapui.security.support.SecurityTestStepRunListener;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
@@ -61,7 +60,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 	private SecurityTestLogModel securityTestLog;
 	private SecurityChecksPanel.SecurityCheckListModel listModel;
 	private Set<SecurityTestRunListener> securityTestRunListeners = new HashSet<SecurityTestRunListener>();
-	private Map<TestStep, Set<SecurityTestStepRunListener>> securityTestStepRunListeners = new HashMap<TestStep, Set<SecurityTestStepRunListener>>();
+	private Map<TestStep, Set<SecurityTestRunListener>> securityTestStepRunListeners = new HashMap<TestStep, Set<SecurityTestRunListener>>();
 	private Set<SecurityCheckRunListener> securityCheckRunListeners = new HashSet<SecurityCheckRunListener>();
 
 	private HashMap<String, List<AbstractSecurityCheck>> securityChecksMap = new HashMap<String, List<AbstractSecurityCheck>>();
@@ -558,7 +557,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 		}
 	}
 
-	public void addTestStepRunListener( TestStep testStep, SecurityTestStepRunListener listener )
+	public void addTestStepRunListener( TestStep testStep, SecurityTestRunListener listener )
 	{
 		if( listener == null )
 			throw new RuntimeException( "listener must not be null" );
@@ -569,7 +568,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 		}
 		else
 		{
-			Set<SecurityTestStepRunListener> listeners = new HashSet<SecurityTestStepRunListener>();
+			Set<SecurityTestRunListener> listeners = new HashSet<SecurityTestRunListener>();
 			listeners.add( listener );
 			securityTestStepRunListeners.put( testStep, listeners );
 		}
@@ -593,21 +592,21 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 		return securityCheckRunListeners.toArray( new SecurityCheckRunListener[securityCheckRunListeners.size()] );
 	}
 
-	public void removeTestStepRunListener( TestStep testStep, SecurityTestStepRunListener listener )
+	public void removeTestStepRunListener( TestStep testStep, SecurityTestRunListener listener )
 	{
 		securityTestStepRunListeners.remove( securityTestStepRunListeners.get( testStep ) );
 	}
 
-	public SecurityTestStepRunListener[] getTestStepRunListeners( TestStep testStep )
+	public SecurityTestRunListener[] getTestStepRunListeners( TestStep testStep )
 	{
 		if( securityTestStepRunListeners.containsKey( testStep ) )
 		{
-			Set<SecurityTestStepRunListener> listeners = securityTestStepRunListeners.get( testStep );
-			return listeners.toArray( new SecurityTestStepRunListener[listeners.size()] );
+			Set<SecurityTestRunListener> listeners = securityTestStepRunListeners.get( testStep );
+			return listeners.toArray( new SecurityTestRunListener[listeners.size()] );
 		}
 		else
 		{
-			return new SecurityTestStepRunListener[0];
+			return new SecurityTestRunListener[0];
 		}
 	}
 

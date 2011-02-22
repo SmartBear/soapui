@@ -25,7 +25,21 @@ import com.eviware.soapui.support.types.StringToObjectMap;
 public class SecurityTestRunContext extends WsdlTestRunContext
 {
 
+	//holds currentCheck index on TestStep level
 	private int currentCheckIndex;
+	
+	//holds currentCheck index out of summary number of checks on a SecurityTest level
+	private int currentCheckOnSecurityTestIndex;
+
+	public int getCurrentCheckOnSecurityTestIndex()
+	{
+		return currentCheckOnSecurityTestIndex;
+	}
+
+	public void setCurrentCheckOnSecurityTestIndex( int currentCheckOnSecurityTestIndex )
+	{
+		this.currentCheckOnSecurityTestIndex = currentCheckOnSecurityTestIndex;
+	}
 
 	public SecurityTestRunContext( TestCaseRunner testRunner, StringToObjectMap properties )
 	{

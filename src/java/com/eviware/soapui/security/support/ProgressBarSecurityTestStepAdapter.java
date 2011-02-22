@@ -16,7 +16,6 @@ import java.awt.Color;
 
 import javax.swing.JProgressBar;
 
-import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityCheckResult;
@@ -55,9 +54,10 @@ public class ProgressBarSecurityTestStepAdapter
 		securityTest.removeTestStepRunListener( testStep, internalTestRunListener );
 	}
 
-	public class InternalTestRunListener extends SecurityTestStepRunListenerAdapter
+	public class InternalTestRunListener extends SecurityTestRunListenerAdapter
 	{
-		public void beforeStep( TestCaseRunner testRunner, TestCaseRunContext runContext )
+		@Override
+		public void beforeStep( TestCaseRunner testRunner, SecurityTestRunContext runContext, TestStep testStep )
 		{
 			if( progressBar.isIndeterminate() )
 				return;
@@ -69,7 +69,7 @@ public class ProgressBarSecurityTestStepAdapter
 			progressBar.setString( "" );
 		}
 
-		public void beforeSecurityCheck( TestCaseRunner testRunner, TestCaseRunContext runContext,
+		public void beforeSecurityCheck( TestCaseRunner testRunner, SecurityTestRunContext runContext,
 				AbstractSecurityCheck securityCheck )
 		{
 			if( progressBar.isIndeterminate() )
@@ -82,7 +82,7 @@ public class ProgressBarSecurityTestStepAdapter
 			}
 		}
 
-		public void afterSecurityCheck( TestCaseRunner testRunner, TestCaseRunContext runContext,
+		public void afterSecurityCheck( TestCaseRunner testRunner, SecurityTestRunContext runContext,
 				SecurityCheckResult securityCheckResult )
 		{
 			if( progressBar.isIndeterminate() )
@@ -100,7 +100,7 @@ public class ProgressBarSecurityTestStepAdapter
 			progressBar.setValue( ( ( SecurityTestRunContext )runContext ).getCurrentCheckIndex() + 1 );
 		}
 
-		public void afterStep( TestCaseRunner testRunner, TestCaseRunContext runContext, SecurityTestStepResult result )
+		public void afterStep( TestCaseRunner testRunner, SecurityTestRunContext runContext, SecurityTestStepResult result )
 		{
 			if( progressBar.isIndeterminate() )
 				return;

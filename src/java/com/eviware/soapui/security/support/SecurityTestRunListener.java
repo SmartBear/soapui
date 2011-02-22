@@ -12,26 +12,32 @@
 
 package com.eviware.soapui.security.support;
 
-import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
+import com.eviware.soapui.security.SecurityCheckResult;
+import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestStepResult;
+import com.eviware.soapui.security.check.AbstractSecurityCheck;
 
 /**
- * Listener for TestRun-related events, schedule events will only be triggered
- * for LoadTest runs.
+ * Listener for SecurityTestRun-related events
  * 
  * @author Dragica
  */
 
 public interface SecurityTestRunListener
 {
-	public void beforeRun( TestCaseRunner testRunner, TestCaseRunContext runContext );
+	public void beforeRun( TestCaseRunner testRunner, SecurityTestRunContext runContext );
 
-	public void afterRun( TestCaseRunner testRunner, TestCaseRunContext runContext );
+	public void afterRun( TestCaseRunner testRunner, SecurityTestRunContext runContext );
 
-	public void beforeStep( TestCaseRunner testRunner, TestCaseRunContext runContext, TestStep testStep );
+	public void beforeStep( TestCaseRunner testRunner, SecurityTestRunContext runContext, TestStep testStep );
 
-	public void afterStep( TestCaseRunner testRunner, TestCaseRunContext runContext, SecurityTestStepResult result );
+	public void afterStep( TestCaseRunner testRunner, SecurityTestRunContext runContext, SecurityTestStepResult result );
 
+	public void beforeSecurityCheck( TestCaseRunner testRunner, SecurityTestRunContext runContext,
+			AbstractSecurityCheck securityCheck );
+
+	public void afterSecurityCheck( TestCaseRunner testRunner, SecurityTestRunContext runContext,
+			SecurityCheckResult securityCheckResult );
 }

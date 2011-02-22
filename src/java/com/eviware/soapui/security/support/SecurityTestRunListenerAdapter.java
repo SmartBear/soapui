@@ -12,11 +12,12 @@
 
 package com.eviware.soapui.security.support;
 
-import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
-import com.eviware.soapui.security.SecurityTestRunner;
+import com.eviware.soapui.security.SecurityCheckResult;
+import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestStepResult;
+import com.eviware.soapui.security.check.AbstractSecurityCheck;
 
 /**
  * Adapter for SecurityTestRunListener implementations
@@ -27,23 +28,35 @@ import com.eviware.soapui.security.SecurityTestStepResult;
 public class SecurityTestRunListenerAdapter implements SecurityTestRunListener
 {
 
-	public void beforeRun( TestCaseRunner testRunner, TestCaseRunContext runContext )
+	@Override
+	public void beforeRun( TestCaseRunner testRunner, SecurityTestRunContext runContext )
 	{
 	}
 
-	public void beforeStep( SecurityTestRunner testRunner, TestCaseRunContext runContext )
+	@Override
+	public void beforeStep( TestCaseRunner testRunner, SecurityTestRunContext runContext, TestStep testStep )
 	{
 	}
 
-	public void afterStep( TestCaseRunner testRunner, TestCaseRunContext runContext, SecurityTestStepResult result )
+	@Override
+	public void afterStep( TestCaseRunner testRunner, SecurityTestRunContext runContext, SecurityTestStepResult result )
 	{
 	}
 
-	public void afterRun( TestCaseRunner testRunner, TestCaseRunContext runContext )
+	@Override
+	public void afterRun( TestCaseRunner testRunner, SecurityTestRunContext runContext )
 	{
 	}
 
-	public void beforeStep( TestCaseRunner testRunner, TestCaseRunContext runContext, TestStep testStep )
+	@Override
+	public void afterSecurityCheck( TestCaseRunner testRunner, SecurityTestRunContext runContext,
+			SecurityCheckResult securityCheckResult )
+	{
+	}
+
+	@Override
+	public void beforeSecurityCheck( TestCaseRunner testRunner, SecurityTestRunContext runContext,
+			AbstractSecurityCheck securityCheck )
 	{
 	}
 
