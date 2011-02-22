@@ -86,7 +86,6 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	protected SecurityCheckRequestResult securityCheckRequestResult;
 	protected TestStep testStep;
 	private AssertionsSupport assertionsSupport;
-//	private SecurityCheckedParameterHolder params;
 
 	private AssertionStatus currentStatus;
 	protected SecurityCheckedParameterHolder parameterHolder;
@@ -195,13 +194,6 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	 * to be abstract and implemented in every check
 	 */
 	abstract protected boolean hasNext();
-
-//	public SecurityCheckedParameterHolder getParameters()
-//	{
-//		if( params == null )
-//			params = new SecurityCheckedParameterHolder( this, config.getChekedPameters() );
-//		return params;
-//	}
 
 	/*************************************
 	 * END OF NEWLY REFACTORED
