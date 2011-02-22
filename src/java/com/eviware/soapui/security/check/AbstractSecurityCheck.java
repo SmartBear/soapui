@@ -86,7 +86,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	protected SecurityCheckRequestResult securityCheckRequestResult;
 	protected TestStep testStep;
 	private AssertionsSupport assertionsSupport;
-	private SecurityCheckedParameterHolder params;
+//	private SecurityCheckedParameterHolder params;
 
 	private AssertionStatus currentStatus;
 	protected SecurityCheckedParameterHolder parameterHolder;
@@ -196,12 +196,12 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	 */
 	abstract protected boolean hasNext();
 
-	public SecurityCheckedParameterHolder getParameters()
-	{
-		if( params == null )
-			params = new SecurityCheckedParameterHolder( this, config.getChekedPameters() );
-		return params;
-	}
+//	public SecurityCheckedParameterHolder getParameters()
+//	{
+//		if( params == null )
+//			params = new SecurityCheckedParameterHolder( this, config.getChekedPameters() );
+//		return params;
+//	}
 
 	/*************************************
 	 * END OF NEWLY REFACTORED
@@ -387,7 +387,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	{
 		List<XPathReference> result = new ArrayList<XPathReference>();
 
-		for( SecurityCheckedParameter param : getParameters().getParameterList() )
+		for( SecurityCheckedParameter param : getParameterHolder().getParameterList() )
 		{
 			TestStep t = getTestStep();
 			if( t instanceof WsdlTestRequestStep )

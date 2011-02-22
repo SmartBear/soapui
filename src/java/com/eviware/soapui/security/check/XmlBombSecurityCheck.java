@@ -121,9 +121,9 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck
 		}
 
 		if( getExecutionStrategy().equals( AbstractSecurityCheck.SEPARATE_REQUEST_STRATEGY )
-				&& getParameters().getParameterList().size() > 0 )
+				&& getParameterHolder().getParameterList().size() > 0 )
 		{
-			for( SecurityCheckedParameter param : getParameters().getParameterList() )
+			for( SecurityCheckedParameter param : getParameterHolder().getParameterList() )
 			{
 				if( param != null )
 				{
@@ -138,11 +138,11 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck
 				}
 			}
 		}
-		else if( getParameters().getParameterList().size() > 0 )
+		else if( getParameterHolder().getParameterList().size() > 0 )
 		{
 			while( currentIndex < getBombList().size() + 1 )
 			{
-				generateNextRequest( testStep, getParameters().getParameterList() );
+				generateNextRequest( testStep, getParameterHolder().getParameterList() );
 				// runCheck( testStep, context, securityTestLog, testCaseRunner,
 				// originalResponse,
 				// "Possible XML Bomb Vulnerability Detected" );

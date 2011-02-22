@@ -11,6 +11,7 @@ import com.eviware.soapui.config.CheckedParameterConfig;
 import com.eviware.soapui.config.CheckedParametersListConfig;
 import com.eviware.soapui.model.security.SecurityCheckParameterHolderListener;
 import com.eviware.soapui.model.security.SecurityCheckedParameter;
+import com.eviware.soapui.model.testsuite.TestPropertyListener;
 import com.eviware.soapui.security.check.AbstractSecurityCheck;
 
 /**
@@ -20,7 +21,7 @@ import com.eviware.soapui.security.check.AbstractSecurityCheck;
  * @author robert
  * 
  */
-public class SecurityCheckedParameterHolder extends SecurityCheckParameterListenerAdapter
+public class SecurityCheckedParameterHolder extends SecurityCheckParameterListenerAdapter implements TestPropertyListener
 {
 
 	private AbstractSecurityCheck securityCheck;
@@ -41,6 +42,8 @@ public class SecurityCheckedParameterHolder extends SecurityCheckParameterListen
 		{
 			addParameter( param );
 		}
+		
+		securityCheck.getTestStep().addTestPropertyListener( this );
 	}
 
 	SecurityCheckedParameter addParameter( CheckedParameterConfig param )
@@ -159,6 +162,45 @@ public class SecurityCheckedParameterHolder extends SecurityCheckParameterListen
 
 		for( SecurityCheckedParameter param : paramsToRemove )
 			removeParameter( param );
+	}
+
+	@Override
+	public void propertyAdded( String name )
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void propertyMoved( String name, int oldIndex, int newIndex )
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void propertyRemoved( String name )
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void propertyRenamed( String oldName, String newName )
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void propertyValueChanged( String name, String oldValue, String newValue )
+	{
+		// TODO Auto-generated method stub
+		
+	}
+	
+	public void release() {
+		securityCheck.getTestStep().removeTestPropertyListener( this );
 	}
 
 }
