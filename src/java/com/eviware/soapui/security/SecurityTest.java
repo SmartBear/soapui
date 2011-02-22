@@ -54,7 +54,8 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 {
 	public final static String STARTUP_SCRIPT_PROPERTY = SecurityTest.class.getName() + "@startupScript";
 	public final static String TEARDOWN_SCRIPT_PROPERTY = SecurityTest.class.getName() + "@tearDownScript";
-	public final static String FAIL_ON_CHECKS_ERRORS_PROPERTY = WsdlTestCase.class.getName() + "@failOnChecksErrors";
+	public final static String FAIL_ON_CHECKS_ERRORS_PROPERTY = SecurityTest.class.getName() + "@failOnChecksErrors";
+	public final static String FAIL_ON_ERROR_PROPERTY = SecurityTest.class.getName() + "@@failOnError";
 	private WsdlTestCase testCase;
 	private SecurityTestLogModel securityTestLog;
 	private SecurityChecksPanel.SecurityCheckListModel listModel;
@@ -536,6 +537,21 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 		{
 			getConfig().setFailSecurityTestOnCheckErrors( failSecurityTestOnErrors );
 			notifyPropertyChanged( FAIL_ON_CHECKS_ERRORS_PROPERTY, old, failSecurityTestOnErrors );
+		}
+	}
+
+	public boolean getFailOnError()
+	{
+		return getConfig().getFailOnError();
+	}
+
+	public void setFailOnError( boolean failOnError )
+	{
+		boolean old = getFailOnError();
+		if( old != failOnError )
+		{
+			getConfig().setFailOnError( failOnError );
+			notifyPropertyChanged( FAIL_ON_ERROR_PROPERTY, old, failOnError );
 		}
 	}
 

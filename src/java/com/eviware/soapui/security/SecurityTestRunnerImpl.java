@@ -94,9 +94,10 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 		// stepResult.discard();
 		// }
 
+		// TODO check if step result should be considered?
 		if( process && stepResult.getStatus() == TestStepStatus.FAILED )
 		{
-			if( getTestRunnable().getFailSecurityTestOnCheckErrors() )
+			if( getTestRunnable().getFailOnError() )
 			{
 				setError( stepResult.getError() );
 				fail( "Cancelling due to failed test step" );

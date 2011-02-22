@@ -14,7 +14,6 @@ package com.eviware.soapui.security.actions;
 
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.security.SecurityTest;
-import com.eviware.soapui.settings.HttpSettings;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 import com.eviware.soapui.support.types.StringToStringMap;
@@ -22,7 +21,6 @@ import com.eviware.x.form.XForm;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.XFormDialogBuilder;
 import com.eviware.x.form.XFormFactory;
-import com.eviware.x.form.XForm.FieldType;
 
 /**
  * Options dialog for securitytests
@@ -32,6 +30,7 @@ import com.eviware.x.form.XForm.FieldType;
 
 public class SecurityTestOptionsAction extends AbstractSoapUIAction<SecurityTest>
 {
+	private static final String FAIL_ON_ERROR = "Abort on Error";
 	private static final String FAIL_SECURITYTEST_ON_ERROR = "Fail SecurityTest on Error";
 	private static final String SOCKET_TIMEOUT = "Socket timeout";
 	public static final String SOAPUI_ACTION_ID = "SecurityTestOptionsAction";
@@ -52,11 +51,15 @@ public class SecurityTestOptionsAction extends AbstractSoapUIAction<SecurityTest
 		{
 			XFormDialogBuilder builder = XFormFactory.createDialogBuilder( "SecurityTest Options" );
 			form = builder.createForm( "Basic" );
+			form.addCheckBox( FAIL_ON_ERROR, "Fail on error" );
 			form.addCheckBox( FAIL_SECURITYTEST_ON_ERROR, "Fail SecurityTest if it has failed TestSteps" );
-//			form.addTextField( SOCKET_TIMEOUT, "Socket timeout in milliseconds", FieldType.TEXT );
-//			form.addTextField( SECURITYTEST_TIMEOUT, "Timeout in milliseconds for entire SecurityTest", FieldType.TEXT );
-//			form.addTextField( MAXRESULTS, "Maximum number of TestStep results to keep in memory during a run",
-//					FieldType.TEXT );
+			// form.addTextField( SOCKET_TIMEOUT, "Socket timeout in milliseconds",
+			// FieldType.TEXT );
+			// form.addTextField( SECURITYTEST_TIMEOUT,
+			// "Timeout in milliseconds for entire SecurityTest", FieldType.TEXT );
+			// form.addTextField( MAXRESULTS,
+			// "Maximum number of TestStep results to keep in memory during a run",
+			// FieldType.TEXT );
 
 			dialog = builder.buildDialog( builder.buildOkCancelHelpActions( HelpUrls.TESTCASEOPTIONS_HELP_URL ),
 					"Specify general options for this SecurityTest", UISupport.OPTIONS_ICON );
@@ -64,9 +67,10 @@ public class SecurityTestOptionsAction extends AbstractSoapUIAction<SecurityTest
 
 		StringToStringMap values = new StringToStringMap();
 
+		values.put( FAIL_ON_ERROR, String.valueOf( securityTest.getFailOnError() ) );
 		values.put( FAIL_SECURITYTEST_ON_ERROR, String.valueOf( securityTest.getFailSecurityTestOnCheckErrors() ) );
-//		values.put( SOCKET_TIMEOUT, String.valueOf( securityTest.getSettings()
-//				.getString( HttpSettings.SOCKET_TIMEOUT, "" ) ) );
+		// values.put( SOCKET_TIMEOUT, String.valueOf( securityTest.getSettings()
+		// .getString( HttpSettings.SOCKET_TIMEOUT, "" ) ) );
 		// values.put( TESTCASE_TIMEOUT, String.valueOf( securityTest.getTimeout()
 		// ) );
 		// values.put( MAXRESULTS, String.valueOf( securityTest.getMaxResults() )
@@ -78,6 +82,7 @@ public class SecurityTestOptionsAction extends AbstractSoapUIAction<SecurityTest
 		{
 			try
 			{
+				securityTest.setFailOnError( Boolean.parseBoolean( values.get( FAIL_ON_ERROR ) ) );
 				securityTest.setFailSecurityTestOnCheckErrors( Boolean.parseBoolean( values
 						.get( FAIL_SECURITYTEST_ON_ERROR ) ) );
 				// securityTest.setTimeout( Long.parseLong( values.get(
@@ -90,7 +95,8 @@ public class SecurityTestOptionsAction extends AbstractSoapUIAction<SecurityTest
 				// securityTest.getSettings().clearSetting(
 				// HttpSettings.SOCKET_TIMEOUT );
 				// else
-				// securityTest.getSettings().setString( HttpSettings.SOCKET_TIMEOUT, timeout );
+				// securityTest.getSettings().setString(
+				// HttpSettings.SOCKET_TIMEOUT, timeout );
 
 			}
 			catch( Exception e1 )
