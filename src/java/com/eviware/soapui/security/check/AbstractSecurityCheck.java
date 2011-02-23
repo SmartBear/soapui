@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.JComponent;
+
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.config.TestAssertionConfig;
@@ -55,7 +57,6 @@ import com.eviware.soapui.security.support.SecurityCheckedParameterHolder;
 import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
-import com.eviware.x.form.XFormDialog;
 
 /**
  * @author robert
@@ -78,7 +79,6 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	protected String tearDownScript;
 	protected SoapUIScriptEngine scriptEngine;
 	private boolean disabled = false;
-	protected XFormDialog dialog;
 	protected Status status;
 	SecurityCheckConfigPanel contentPanel;
 	protected SecurityCheckResult securityCheckResult;
@@ -198,8 +198,6 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	 * END OF NEWLY REFACTORED
 	 **************************************/
 
-	public abstract boolean configure();
-
 	public boolean isConfigurable()
 	{
 		return true;
@@ -214,7 +212,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	 * 
 	 * @return
 	 */
-	public abstract SecurityCheckConfigPanel getComponent();
+	public abstract JComponent getComponent();
 
 	/**
 	 * The type of this check
@@ -230,11 +228,6 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	 * @return
 	 */
 	public abstract boolean acceptsTestStep( TestStep testStep );
-
-	/**
-	 * Builds the configuration dialog
-	 */
-	protected abstract void buildDialog();
 
 	public TestStep getTestStep()
 	{
@@ -706,5 +699,12 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 			config.addNewTearDownScript();
 		config.getTearDownScript().setStringValue( text );
 	}
-
+	
+	// name used in configuration panel
+	public abstract String getConfigName();
+	// description usd in configuration panel
+	public abstract String getConfigDescription();
+	// help url used for configuration panel ( help for this check )
+	public abstract String getHelpURL();
+	
 }

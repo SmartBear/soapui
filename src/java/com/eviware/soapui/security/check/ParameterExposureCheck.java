@@ -237,18 +237,6 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements Htt
 		return true;
 	}
 
-	protected void buildDialog()
-	{
-		// super.buildDialogOld();
-	}
-
-	@Override
-	public boolean configure()
-	{
-		// TODO Auto-generated method stub
-		return false;
-	}
-
 	@Override
 	protected boolean hasNext()
 	{
@@ -256,4 +244,21 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements Htt
 		return false;
 	}
 
+	@Override
+	public String getConfigDescription()
+	{
+		return "Configures invalid type security check";
+	}
+
+	@Override
+	public String getConfigName()
+	{
+		return "Invalid Types Security Check";
+	}
+
+	@Override
+	public String getHelpURL()
+	{
+		return "http://www.soapui.org";
+	}
 }

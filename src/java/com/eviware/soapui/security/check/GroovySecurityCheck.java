@@ -54,7 +54,6 @@ public class GroovySecurityCheck extends AbstractSecurityCheck implements HttpSe
 	private Object scriptResult;
 	// private TestProperty response;
 
-	XFormDialog dialog;
 	private static final String checkTitle = "Configure GroovyScript Check";
 
 	public GroovySecurityCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent, String icon )
@@ -189,22 +188,6 @@ public class GroovySecurityCheck extends AbstractSecurityCheck implements HttpSe
 		return true;
 	}
 
-	protected void buildDialog()
-	{
-		dialog = new SecurityConfigurationDialogBuilder().buildSecurityCheckConfigurationDialog( "Groovy Script Security Check",
-				"Configures Groovy Script security check", null, "http://www.soapui.org", this );
-	}
-
-	@Override
-	public boolean configure()
-	{
-		if( dialog == null )
-			buildDialog();
-		dialog.show();
-
-		return true;
-	}
-
 	@AForm( description = "Configure Groovy Types Check", name = "Invalid Groovy Security Check", helpUrl = HelpUrls.MOCKASWAR_HELP_URL )
 	protected interface GroovySecurityConfigDialog
 	{
@@ -233,6 +216,24 @@ public class GroovySecurityCheck extends AbstractSecurityCheck implements HttpSe
 		{
 
 		}
+	}
+	
+	@Override
+	public String getConfigDescription()
+	{
+		return "Configuration for Groovy Security Check";
+	}
+
+	@Override
+	public String getConfigName()
+	{
+		return "Configuration for Groovy Security Check";
+	}
+
+	@Override
+	public String getHelpURL()
+	{
+		return "http://www.soapui.org";
 	}
 
 }

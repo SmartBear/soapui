@@ -37,13 +37,16 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.security.registry.SecurityCheckRegistry;
+import com.eviware.soapui.security.ui.SecurityConfigurationDialogBuilder;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
+import com.eviware.x.form.XFormDialog;
 
 /**
  * Seperate panel for holding/managing securityChecks
@@ -116,7 +119,12 @@ public class SecurityChecksPanel extends JPanel
 					AbstractSecurityCheck chck = ( AbstractSecurityCheck )obj;
 					chck.setTestStep( getTestStep() );
 					if( chck.isConfigurable() )
-						chck.configure();
+					{
+						XFormDialog dialog = SoapUI.getSoapUICore().getSecurityCheckRegistry().getUIBuilder()
+								.buildSecurityCheckConfigurationDialog( chck );
+
+						dialog.show();
+					}
 
 					return;
 				}
@@ -435,7 +443,7 @@ public class SecurityChecksPanel extends JPanel
 		public void actionPerformed( ActionEvent e )
 		{
 
-			String[] availableChecksNames = SecurityCheckRegistry.getInstance().getAvailableSecurityChecksNames(testStep);
+			String[] availableChecksNames = SecurityCheckRegistry.getInstance().getAvailableSecurityChecksNames( testStep );
 			String type = UISupport.prompt( "Specify type of security check", "Add SecurityCheck", availableChecksNames );
 			if( type == null || type.trim().length() == 0 )
 				return;
@@ -470,7 +478,11 @@ public class SecurityChecksPanel extends JPanel
 			securityCheckList.setSelectedIndex( securityCheckListModel.getSize() - 1 );
 			AbstractSecurityCheck secCheck = getCurrentSecurityCheck();
 			secCheck.setTestStep( testStep );
-			secCheck.configure();
+
+			XFormDialog dialog = SoapUI.getSoapUICore().getSecurityCheckRegistry().getUIBuilder()
+					.buildSecurityCheckConfigurationDialog( secCheck );
+
+			dialog.show();
 
 		}
 
@@ -495,7 +507,10 @@ public class SecurityChecksPanel extends JPanel
 			AbstractSecurityCheck securityCheck = securityCheckListModel.getSecurityCheckAt( ix );
 			if( securityCheck.isConfigurable() )
 			{
-				securityCheck.configure();
+				XFormDialog dialog = SoapUI.getSoapUICore().getSecurityCheckRegistry().getUIBuilder()
+						.buildSecurityCheckConfigurationDialog( securityCheck );
+
+				dialog.show();
 			}
 			else
 				Toolkit.getDefaultToolkit().beep();

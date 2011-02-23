@@ -48,12 +48,8 @@ public class SecurityConfigurationDialogBuilder
 	public XFormDialog buildSecurityCheckConfigurationDialog( AbstractSecurityCheck securityCheck )
 	{
 
-		XFormDialog dialog = ADialogBuilder.buildDialog( DefaultDialog.class );
-		XFormField field = dialog.getFormField( DefaultDialog.PARAMETERS );
-
-		addParameterTable( securityCheck, field );
-
-		return dialog;
+		return buildSecurityCheckConfigurationDialog( securityCheck.getConfigName(), securityCheck.getConfigDescription(),
+				securityCheck.getIcon(), securityCheck.getHelpURL(), securityCheck.getComponent(), securityCheck );
 	}
 
 	/**
@@ -156,11 +152,13 @@ public class SecurityConfigurationDialogBuilder
 	{
 
 		XFormDialog dialog = null;
-		if( component != null )
+		if( component == null )
 			dialog = ADialogBuilder.buildDialog( DefaultDialog.class );
 		else
-			dialog = ADialogBuilder.buildDialog( GroovyDialog.class );
+			dialog = ADialogBuilder.buildDialog( OptionalDialog.class );
 
+		if( component != null )
+			dialog.getFormField( OptionalDialog.OPTIONAL ).setProperty( "component", component );
 		buildBasicDialog( name, description, icon, helpUrl, securityCheck, dialog );
 
 		return dialog;
@@ -179,17 +177,17 @@ public class SecurityConfigurationDialogBuilder
 	}
 
 	@AForm( description = "Configure Security Check", name = "Configure Security Check", helpUrl = HelpUrls.MOCKASWAR_HELP_URL )
-	protected interface GroovyDialog
+	protected interface OptionalDialog
 	{
 
 		@AField( description = "Parameters to Check", name = "Parameters", type = AFieldType.COMPONENT )
 		public final static String PARAMETERS = "Parameters";
 
-		@AField( description = "Optinal", name = "Optional", type = AFieldType.COMPONENT )
-		public final static String OPTIONAL = "Optional";
+		@AField( description = "Optinal", name = "###Optional", type = AFieldType.COMPONENT )
+		public final static String OPTIONAL = "###Optional";
 
-		@AField( description = "Tabs", name = "Tabs", type = AFieldType.COMPONENT )
-		public final static String TABS = "Tabs";
+		@AField( description = "Tabs", name = "###Tabs", type = AFieldType.COMPONENT )
+		public final static String TABS = "###Tabs";
 
 	}
 

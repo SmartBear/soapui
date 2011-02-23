@@ -80,22 +80,6 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheck
 	}
 
 	@Override
-	public boolean configure()
-	{
-		if( dialog == null )
-			buildDialog();
-		dialog.show();
-		return true;
-	}
-
-	@Override
-	protected void buildDialog()
-	{
-		dialog = new SecurityConfigurationDialogBuilder().buildSecurityCheckConfigurationDialog( "Ivalid Type Security Check",
-				"Configures invalid type security check", null, "http://www.soapui.org", this );
-	}
-
-	@Override
 	public boolean isConfigurable()
 	{
 		return true;
@@ -218,6 +202,24 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheck
 
 		}
 
+	}
+	
+	@Override
+	public String getConfigDescription()
+	{
+		return "Configures invalid type security check";
+	}
+
+	@Override
+	public String getConfigName()
+	{
+		return "Invalid Types Security Check";
+	}
+
+	@Override
+	public String getHelpURL()
+	{
+		return "http://www.soapui.org";
 	}
 
 }

@@ -12,7 +12,6 @@
 package com.eviware.soapui.security.check;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.apache.xmlbeans.XmlException;
@@ -29,26 +28,17 @@ import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunnerImpl;
-import com.eviware.soapui.security.assertion.SecurityAssertionPanel;
 import com.eviware.soapui.security.boundary.EnumerationValuesExtractor;
-import com.eviware.soapui.security.support.SecurityCheckedParameterImpl;
 import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
-import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.types.StringToObjectMap;
-import com.eviware.x.form.XFormDialog;
-import com.eviware.x.form.XFormField;
-import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AForm;
-import com.eviware.x.form.support.XFormMultiSelectList;
 import com.eviware.x.form.support.AField.AFieldType;
 
 public class BoundarySecurityCheck extends AbstractSecurityCheck
 {
 
-	private boolean hasNext = true;
 	private int propertiesCounter = 0;
-	private XFormDialog dialog;
 	public static final String TYPE = "BoundaryCheck";
 	public static final String LABEL = "Boundary";
 	private EnumerationValuesExtractor enumerationValuesExtractor;
@@ -137,52 +127,57 @@ public class BoundarySecurityCheck extends AbstractSecurityCheck
 		return true;
 	}
 
-	@Override
-	public boolean configure()
-	{
-		if( dialog == null )
-			buildDialog();
-		if( dialog.show() )
-		{
+//	@Override
+//	public boolean configure()
+//	{
+//		if( dialog == null )
+//			buildDialog();
+//		if( dialog.show() )
+//		{
+//
+//			String[] selectedList = StringUtils.toStringArray( ( ( XFormMultiSelectList )dialog
+//					.getFormField( BoundaryConfigDialog.PARAMETERS ) ).getSelectedOptions() );
+//			enumerationValuesExtractor.setSelectedEnumerationParameters( Arrays.asList( selectedList ) );
+//
+//			for( String paramName : enumerationValuesExtractor.getEnumerationParameters() )
+//			{
+//				SecurityCheckedParameterImpl param = ( SecurityCheckedParameterImpl )parameterHolder
+//						.getParametarByName( paramName );
+//				if( param == null )
+//				{
+//					param = ( SecurityCheckedParameterImpl )parameterHolder.addParameter( paramName );
+//					param.setName( paramName );
+//				}
+//				( ( SecurityCheckedParameterImpl )param ).setChecked( Arrays.asList( selectedList ).contains( paramName ) );
+//			}
+//
+//			return true;
+//		}
+//		return false;
+//	}
 
-			String[] selectedList = StringUtils.toStringArray( ( ( XFormMultiSelectList )dialog
-					.getFormField( BoundaryConfigDialog.PARAMETERS ) ).getSelectedOptions() );
-			enumerationValuesExtractor.setSelectedEnumerationParameters( Arrays.asList( selectedList ) );
 
-			for( String paramName : enumerationValuesExtractor.getEnumerationParameters() )
-			{
-				SecurityCheckedParameterImpl param = ( SecurityCheckedParameterImpl )parameterHolder
-						.getParametarByName( paramName );
-				if( param == null )
-				{
-					param = ( SecurityCheckedParameterImpl )parameterHolder.addParameter( paramName );
-					param.setName( paramName );
-				}
-				( ( SecurityCheckedParameterImpl )param ).setChecked( Arrays.asList( selectedList ).contains( paramName ) );
-			}
-			propertiesCounter = selectedList.length;
-
-			return true;
-		}
-		return false;
-	}
-
-	@Override
-	protected void buildDialog()
-	{
-		List<String> selectedOptions = getSelectedList();
-
-		dialog = ADialogBuilder.buildDialog( BoundaryConfigDialog.class );
-		XFormMultiSelectList field = ( XFormMultiSelectList )dialog.getFormField( BoundaryConfigDialog.PARAMETERS );
-		field.setOptions( enumerationValuesExtractor.getEnumerationParameters().toArray(
-				new String[enumerationValuesExtractor.getEnumerationParameters().size()] ) );
-		field.setSelectedOptions( selectedOptions.toArray() );
-
-		XFormField assertionsPanel = dialog.getFormField( BoundaryConfigDialog.ASSERTIONS );
-		SecurityAssertionPanel securityAssertionPanel = new SecurityAssertionPanel( this );
-		assertionsPanel.setProperty( "component", securityAssertionPanel );
-
-	}
+//	@Override
+//	protected void buildDialog()
+//	{
+//		List<String> selectedOptions = new ArrayList<String>();
+//		for( SecurityCheckedParameter cpc : parameterHolder.getParameterList() )
+//		{
+//			if( cpc.isChecked() )
+//				selectedOptions.add( cpc.getName() );
+//		}
+//
+//		dialog = ADialogBuilder.buildDialog( BoundaryConfigDialog.class );
+//		XFormMultiSelectList field = ( XFormMultiSelectList )dialog.getFormField( BoundaryConfigDialog.PARAMETERS );
+//		field.setOptions( enumerationValuesExtractor.getEnumerationParameters().toArray(
+//				new String[enumerationValuesExtractor.getEnumerationParameters().size()] ) );
+//		field.setSelectedOptions( selectedOptions.toArray() );
+//
+//		XFormField assertionsPanel = dialog.getFormField( BoundaryConfigDialog.ASSERTIONS );
+//		SecurityAssertionPanel securityAssertionPanel = new SecurityAssertionPanel( this );
+//		assertionsPanel.setProperty( "component", securityAssertionPanel );
+//
+//	}
 
 	@Override
 	public boolean isConfigurable()
@@ -200,6 +195,24 @@ public class BoundarySecurityCheck extends AbstractSecurityCheck
 		@AField( description = "Assertions", name = "Select assertions to apply", type = AFieldType.COMPONENT )
 		public final static String ASSERTIONS = "Select assertions to apply";
 
+	}
+
+	@Override
+	public String getConfigDescription()
+	{
+		return "Configuration for Boundary Security Check";
+	}
+
+	@Override
+	public String getConfigName()
+	{
+		return "Configuration for Boundary Security Check";
+	}
+
+	@Override
+	public String getHelpURL()
+	{
+		return "http://www.soapui.org";
 	}
 
 }

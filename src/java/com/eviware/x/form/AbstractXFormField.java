@@ -31,6 +31,12 @@ public abstract class AbstractXFormField<T> implements XFormField
 	{
 	}
 
+	@Override
+	public boolean isVisible()
+	{
+		return true;
+	}
+
 	public abstract T getComponent();
 
 	public void addFormFieldListener( XFormFieldListener listener )

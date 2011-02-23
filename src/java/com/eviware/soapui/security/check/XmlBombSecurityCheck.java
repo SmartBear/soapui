@@ -388,24 +388,27 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck
 	}
 
 	@Override
-	protected void buildDialog()
-	{
-		// super.buildDialogOld();
-
-	}
-
-	@Override
-	public boolean configure()
-	{
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
 	protected boolean hasNext()
 	{
 		// TODO Auto-generated method stub
 		return false;
 	}
 
+	@Override
+	public String getConfigDescription()
+	{
+		return "Configures invalid type security check";
+	}
+
+	@Override
+	public String getConfigName()
+	{
+		return "Invalid Types Security Check";
+	}
+
+	@Override
+	public String getHelpURL()
+	{
+		return "http://www.soapui.org";
+	}
 }

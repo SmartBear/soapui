@@ -109,16 +109,20 @@ public class SQLInjectionCheck extends AbstractSecurityCheck
 	}
 
 	@Override
-	protected void buildDialog()
+	public String getConfigDescription()
 	{
-		// super.buildDialogOld();
+		return "Configures invalid type security check";
 	}
 
 	@Override
-	public boolean configure()
+	public String getConfigName()
 	{
-		// TODO Auto-generated method stub
-		return false;
+		return "Invalid Types Security Check";
 	}
 
+	@Override
+	public String getHelpURL()
+	{
+		return "http://www.soapui.org";
+	}
 }

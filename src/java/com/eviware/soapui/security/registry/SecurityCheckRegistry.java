@@ -19,6 +19,7 @@ import java.util.Map;
 
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.model.testsuite.TestStep;
+import com.eviware.soapui.security.ui.SecurityConfigurationDialogBuilder;
 
 /**
  * Registry of SecurityCheck factories
@@ -150,4 +151,7 @@ public class SecurityCheckRegistry
 		return result.toArray( new String[result.size()] );
 	}
 
+	public SecurityConfigurationDialogBuilder getUIBuilder() {
+		return new SecurityConfigurationDialogBuilder();
+	}
 }
