@@ -137,7 +137,7 @@ public class SwingXFormImpl implements XForm
 		}
 
 		if( label.startsWith( "###" ) )
-			panel.add( swingFormComponent.getComponent(), cc.xyw( 2, row, 3 ) );
+			panel.add( swingFormComponent.getComponent(), cc.xyw( 2, row, 4 ) );
 		else
 			panel.add( swingFormComponent.getComponent(), cc.xy( 4, row ) );
 

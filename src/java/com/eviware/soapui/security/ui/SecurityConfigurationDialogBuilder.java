@@ -13,6 +13,7 @@ package com.eviware.soapui.security.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
@@ -110,11 +111,14 @@ public class SecurityConfigurationDialogBuilder
 
 		tabDialog.getFormField( Assertions.ASSERTIONS ).setProperty( "component",
 				new SecurityAssertionPanel( securityCheck ) );
+		tabDialog.getFormField( Assertions.ASSERTIONS ).setProperty( "dimension", new Dimension( 345, 165 ) );
 
 		tabDialog.getFormField( SetupScript.SCRIPT ).setProperty( "component", buildSetupScriptPanel( securityCheck ) );
+		tabDialog.getFormField( SetupScript.SCRIPT ).setProperty( "dimension", new Dimension( 385, 165 ) );
 
 		tabDialog.getFormField( TearDownScript.SCRIPT ).setProperty( "component",
 				buildTearDownScriptPanel( securityCheck ) );
+		tabDialog.getFormField( TearDownScript.SCRIPT ).setProperty( "dimension", new Dimension( 360, 165 ) );
 		tabs.setProperty( "component", tabDialog.getTabs() );
 
 	}
@@ -239,8 +243,8 @@ public class SecurityConfigurationDialogBuilder
 	protected interface SetupScript
 	{
 
-		@AField( description = "Script", name = "Setup script", type = AFieldType.COMPONENT )
-		public final static String SCRIPT = "Setup script";
+		@AField( description = "Script", name = "###Setup script", type = AFieldType.COMPONENT )
+		public final static String SCRIPT = "###Setup script";
 
 	}
 
@@ -248,8 +252,8 @@ public class SecurityConfigurationDialogBuilder
 	protected interface TearDownScript
 	{
 
-		@AField( description = "TearDown Script", name = "TearDown Script", type = AFieldType.COMPONENT )
-		public final static String SCRIPT = "TearDown Script";
+		@AField( description = "TearDown Script", name = "###TearDown Script", type = AFieldType.COMPONENT )
+		public final static String SCRIPT = "###TearDown Script";
 
 	}
 
