@@ -1,6 +1,6 @@
-#Wed Feb 23 17:17:05 CET 2011
+#Wed Jul 28 22:55:05 CEST 2010
 build.number=[internal]
 >>>>>>>=.r41
-build.date=2011/02/23 17\:17
-<<<<<<<=.mine
+build.date=2010/07/28 22\:55
 =\=\=\=\=\=\=
+<<<<<<<=.mine
