@@ -24,13 +24,10 @@ import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationBuilder;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
 import com.eviware.x.form.XFormDialog;
-import com.eviware.x.form.XFormField;
-import com.eviware.x.form.XFormFieldListener;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.AField.AFieldType;
-import com.eviware.x.impl.swing.JCheckBoxFormField;
 import com.eviware.x.impl.swing.JStringListFormField;
 
 public class ProjectSensitiveInformationPanel
@@ -39,9 +36,7 @@ public class ProjectSensitiveInformationPanel
 	private XFormDialog dialog;
 	private SensitiveInformationConfig config;
 	private List<String> projectSpecificExposureList;
-	private static final String PROJECT_SPECIFIC_EXPOSURE_LIST = "ProjectSpecificExposureList";
-	private static final String USE_REGEXP = "UseRegexp";
-	private boolean useRegexp;
+	public static final String PROJECT_SPECIFIC_EXPOSURE_LIST = "ProjectSpecificExposureList";
 
 	public ProjectSensitiveInformationPanel( ProjectConfig projectConfig )
 	{
@@ -58,7 +53,6 @@ public class ProjectSensitiveInformationPanel
 	private void init()
 	{
 		XmlObjectConfigurationReader reader = new XmlObjectConfigurationReader( config );
-		useRegexp = reader.readBoolean( USE_REGEXP, false );
 		projectSpecificExposureList = StringUtils.toStringList( reader.readStrings( PROJECT_SPECIFIC_EXPOSURE_LIST ) );
 	}
 
@@ -77,7 +71,6 @@ public class ProjectSensitiveInformationPanel
 
 		String[] stringList = jsringListFormField.getOptions();
 		projectSpecificExposureList = StringUtils.toStringList( stringList );
-		useRegexp = Boolean.valueOf( dialog.getFormField( SensitiveInformationConfigDialog.USE_REGEXP ).getValue() );
 		setConfiguration( createConfiguration() );
 	}
 
@@ -86,7 +79,6 @@ public class ProjectSensitiveInformationPanel
 		XmlObjectConfigurationBuilder builder = new XmlObjectConfigurationBuilder();
 		builder.add( PROJECT_SPECIFIC_EXPOSURE_LIST, projectSpecificExposureList
 				.toArray( new String[projectSpecificExposureList.size()] ) );
-		builder.add( USE_REGEXP, useRegexp );
 		return builder.finish();
 	}
 
@@ -94,34 +86,19 @@ public class ProjectSensitiveInformationPanel
 	{
 		dialog = ADialogBuilder.buildDialog( SensitiveInformationConfigDialog.class );
 		dialog.setOptions( SensitiveInformationConfigDialog.INFOLIST, projectSpecificExposureList.toArray() );
-		dialog.setBooleanValue( SensitiveInformationConfigDialog.USE_REGEXP, useRegexp );
 
 		addListeners();
 	}
 
 	private void addListeners()
 	{
-		
-		dialog.getFormField(  SensitiveInformationConfigDialog.USE_REGEXP ).addFormFieldListener( new XFormFieldListener()
-		{
-			@Override
-			public void valueChanged( XFormField sourceField, String newValue, String oldValue )
-			{
-				if(sourceField instanceof JCheckBoxFormField  )
-				save();
-				
-			}
-		});
-		
 		((JStringListFormField)dialog.getFormField(  SensitiveInformationConfigDialog.INFOLIST )).getComponent().addPropertyChangeListener( new PropertyChangeListener()
 		{
-			
 			@Override
 			public void propertyChange( PropertyChangeEvent evt )
 			{
 				save();
 			}
-
 		});
 	}
 
@@ -130,11 +107,8 @@ public class ProjectSensitiveInformationPanel
 	protected interface SensitiveInformationConfigDialog
 	{
 
-		@AField( description = "Sensitive Info to Check", name = "Sensitive Info to Check", type = AFieldType.STRINGLIST )
-		public final static String INFOLIST = "Sensitive Info to Check";
-
-		@AField( description = "check to use regular expressions", name = "Use regular expressions", type = AFieldType.BOOLEAN )
-		public final static String USE_REGEXP = "Use regular expressions";
+		@AField( description = "Sensitive informations to check. Use ~ as prefix for values that are regular expressions.", name = "Project specific sensitive information", type = AFieldType.STRINGLIST )
+		public final static String INFOLIST = "Project specific sensitive information";
 
 	}
 

@@ -40,18 +40,18 @@ import com.eviware.x.impl.swing.JStringListFormField;
 
 public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion implements ResponseAssertion
 {
+	private static final String PREFIX = "~";
 	public static final String ID = "Sensitive Information Exposure";
 	public static final String LABEL = "Sensitive Information Exposure";
 
-	private List<String> specificExposureList;
-	private List<String> gloablExposureList;
-	private List<String> checkList;
+	private List<String> assertionSpecificExposureList;
+
 	private XFormDialog dialog;
-	private static final String SPECIFIC_EXPOSURE_LIST = "SpecificExposureList";
-	private static final String USE_REGEXP = "UseRegexp";
+	private static final String ASSERTION_SPECIFIC_EXPOSURE_LIST = "AssertionSpecificExposureList";
 	private static final String INCLUDE_GLOBAL = "IncludeGlobal";
-	private boolean useRegexp;
+	private static final String INCLUDE_PROJECT_SPECIFIC = "IncludeProjectSpecific";
 	private boolean includeGlolbal;
+	private boolean includeProjectSpecific;
 
 	public SensitiveInfoExposureAssertion( TestAssertionConfig assertionConfig, Assertable assertable )
 	{
@@ -63,26 +63,39 @@ public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion impleme
 	private void init()
 	{
 		XmlObjectConfigurationReader reader = new XmlObjectConfigurationReader( getConfiguration() );
-		useRegexp = reader.readBoolean( USE_REGEXP, false );
 		includeGlolbal = reader.readBoolean( INCLUDE_GLOBAL, true );
-		specificExposureList = StringUtils.toStringList( reader.readStrings( SPECIFIC_EXPOSURE_LIST ) );
-		gloablExposureList = SecurityCheckUtil.entriesList();
-		checkList = createCheckList();
+		includeProjectSpecific = reader.readBoolean( INCLUDE_PROJECT_SPECIFIC, true );
+		assertionSpecificExposureList = StringUtils.toStringList( reader.readStrings( ASSERTION_SPECIFIC_EXPOSURE_LIST ) );
 	}
 
 	@Override
 	protected String internalAssertResponse( MessageExchange messageExchange, SubmitContext context )
 			throws AssertionException
 	{
+		List<String> checkList = createCheckList();
+		boolean throwException = false;
+		List<AssertionError> assertionErrorList = new ArrayList<AssertionError>();
 		for( String exposureContent : checkList )
 		{
+			boolean useRegexp = exposureContent.trim().startsWith( PREFIX );
+			if( useRegexp )
+			{
+				exposureContent = exposureContent.substring( exposureContent.indexOf( PREFIX ) + 1 );
+			}
+
 			if( SecurityCheckUtil.contains( context, new String( messageExchange.getRawResponseData() ), exposureContent,
 					useRegexp ) )
 			{
 				String message = "Sensitive information '" + exposureContent + "' is exposed in : "
 						+ messageExchange.getModelItem().getName();
-				throw new AssertionException( new AssertionError( message ) );
+				assertionErrorList.add( new AssertionError( message ) );
+				throwException = true;
 			}
+		}
+	
+		if( throwException )
+		{
+			throw new AssertionException(assertionErrorList.toArray( new AssertionError[assertionErrorList.size()]  ));
 		}
 
 		return "OK";
@@ -90,10 +103,15 @@ public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion impleme
 
 	private List<String> createCheckList()
 	{
-		List<String> checkList = new ArrayList<String>( specificExposureList );
+		List<String> checkList = new ArrayList<String>( assertionSpecificExposureList );
+		if( includeProjectSpecific )
+		{
+			checkList.addAll(SecurityCheckUtil.projectEntriesList( this ) );
+		}
+
 		if( includeGlolbal )
 		{
-			checkList.addAll( gloablExposureList );
+			checkList.addAll( SecurityCheckUtil.globalEntriesList() );
 		}
 		return checkList;
 	}
@@ -124,8 +142,9 @@ public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion impleme
 	protected XmlObject createConfiguration()
 	{
 		XmlObjectConfigurationBuilder builder = new XmlObjectConfigurationBuilder();
-		builder.add( SPECIFIC_EXPOSURE_LIST, specificExposureList.toArray( new String[specificExposureList.size()] ) );
-		builder.add( USE_REGEXP, useRegexp );
+		builder.add( ASSERTION_SPECIFIC_EXPOSURE_LIST, assertionSpecificExposureList
+				.toArray( new String[assertionSpecificExposureList.size()] ) );
+		builder.add( INCLUDE_PROJECT_SPECIFIC, includeProjectSpecific );
 		builder.add( INCLUDE_GLOBAL, includeGlolbal );
 		return builder.finish();
 	}
@@ -141,12 +160,12 @@ public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion impleme
 			JStringListFormField jsringListFormField = ( JStringListFormField )dialog
 					.getFormField( SensitiveInformationConfigDialog.INFOLIST );
 
-			String[] stringList = jsringListFormField.getOptions();
-			specificExposureList = StringUtils.toStringList( stringList );
+			String[] stringList = jsringListFormField != null ? jsringListFormField.getOptions() : new String[0];
+			assertionSpecificExposureList = StringUtils.toStringList( stringList );
+			includeProjectSpecific = Boolean.valueOf( dialog.getFormField(
+					SensitiveInformationConfigDialog.INCLUDE_PROJECT_SPECIFIC ).getValue() );
 			includeGlolbal = Boolean.valueOf( dialog.getFormField( SensitiveInformationConfigDialog.INCLUDE_GLOBAL )
 					.getValue() );
-			useRegexp = Boolean.valueOf( dialog.getFormField( SensitiveInformationConfigDialog.USE_REGEXP ).getValue() );
-			checkList = createCheckList();
 			setConfiguration( createConfiguration() );
 
 			return true;
@@ -158,8 +177,8 @@ public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion impleme
 	{
 		dialog = ADialogBuilder.buildDialog( SensitiveInformationConfigDialog.class );
 		dialog.setBooleanValue( SensitiveInformationConfigDialog.INCLUDE_GLOBAL, includeGlolbal );
-		dialog.setOptions( SensitiveInformationConfigDialog.INFOLIST, specificExposureList.toArray() );
-		dialog.setBooleanValue( SensitiveInformationConfigDialog.USE_REGEXP, useRegexp );
+		dialog.setBooleanValue( SensitiveInformationConfigDialog.INCLUDE_PROJECT_SPECIFIC, includeProjectSpecific );
+		dialog.setOptions( SensitiveInformationConfigDialog.INFOLIST, assertionSpecificExposureList.toArray() );
 	}
 
 	// TODO : update help URL
@@ -167,14 +186,14 @@ public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion impleme
 	protected interface SensitiveInformationConfigDialog
 	{
 
-		@AField( description = "Sensitive Info to Check", name = "Sensitive Info to Check", type = AFieldType.STRINGLIST )
-		public final static String INFOLIST = "Sensitive Info to Check";
+		@AField( description = "Sensitive informations to check. Use ~ as prefix for values that are regular expressions.", name = "Assertion specific sensitive information", type = AFieldType.STRINGLIST )
+		public final static String INFOLIST = "Assertion specific sensitive information";
 
-		@AField( description = "Include Global Sensitive Information Configuration", name = "Include Global Configuration", type = AFieldType.BOOLEAN )
+		@AField( description = "Include project specific sensitive information configuration", name = "Include Project Specific Configuration", type = AFieldType.BOOLEAN )
+		public final static String INCLUDE_PROJECT_SPECIFIC = "Include Project Specific Configuration";
+
+		@AField( description = "Include global sensitive information configuration", name = "Include Global Configuration", type = AFieldType.BOOLEAN )
 		public final static String INCLUDE_GLOBAL = "Include Global Configuration";
-
-		@AField( description = "check to use regular expressions", name = "Use regular expressions", type = AFieldType.BOOLEAN )
-		public final static String USE_REGEXP = "Use regular expressions";
 
 	}
 

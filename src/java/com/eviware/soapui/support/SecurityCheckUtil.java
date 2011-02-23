@@ -21,6 +21,8 @@ import org.apache.xmlbeans.XmlOptions;
 import org.w3c.dom.Node;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.config.ModelItemConfig;
+import com.eviware.soapui.config.ProjectConfig;
 import com.eviware.soapui.config.PropertiesTypeConfig;
 import com.eviware.soapui.config.PropertyConfig;
 import com.eviware.soapui.config.RestParametersConfig;
@@ -28,16 +30,22 @@ import com.eviware.soapui.impl.rest.support.RestParamProperty;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
+import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.model.iface.SubmitContext;
+import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.settings.Settings;
+import com.eviware.soapui.model.support.ModelSupport;
+import com.eviware.soapui.security.assertion.SensitiveInfoExposureAssertion;
+import com.eviware.soapui.security.panels.ProjectSensitiveInformationPanel;
 import com.eviware.soapui.settings.GlobalPropertySettings;
+import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
 import com.eviware.soapui.support.xml.XmlUtils;
 
 public class SecurityCheckUtil
 {
 
-	public static List<String> entriesList()
+	public static List<String> globalEntriesList()
 	{
 		Settings settings = SoapUI.getSettings();
 		String temp = settings.getString( GlobalPropertySettings.SECURITY_CHECKS_PROPERTIES, null );
@@ -111,6 +119,15 @@ public class SecurityCheckUtil
 			SoapUI.logError( e );
 		}
 		return holder;
+	}
+
+	public static List<String> projectEntriesList( SensitiveInfoExposureAssertion sensitiveInfoExposureAssertion )
+	{
+		Project project = ModelSupport.getModelItemProject( sensitiveInfoExposureAssertion );
+		AbstractWsdlModelItem<ModelItemConfig> modelItem =( AbstractWsdlModelItem<ModelItemConfig>) project.getModelItem() ;
+//		ProjectConfig config =  
+		XmlObjectConfigurationReader reader = new XmlObjectConfigurationReader( ((ProjectConfig)modelItem.getConfig()).getSensitiveInformation() );
+		return  StringUtils.toStringList( reader.readStrings( ProjectSensitiveInformationPanel.PROJECT_SPECIFIC_EXPOSURE_LIST ) );
 	}
 
 }
