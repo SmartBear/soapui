@@ -47,6 +47,7 @@ public class BoundarySecurityCheck extends AbstractSecurityCheck
 {
 
 	private boolean hasNext = true;
+	private int propertiesCounter = 0;
 	private XFormDialog dialog;
 	public static final String TYPE = "BoundaryCheck";
 	public static final String LABEL = "Boundary";
@@ -56,13 +57,20 @@ public class BoundarySecurityCheck extends AbstractSecurityCheck
 	{
 		super( testStep, config, parent, icon );
 		enumerationValuesExtractor = new EnumerationValuesExtractor( ( ( WsdlTestRequestStep )testStep ).getTestRequest() );
+		List<String> selected = getSelectedList();
+		enumerationValuesExtractor.setSelectedEnumerationParameters( selected );
+		propertiesCounter = selected.size();
+	}
+
+	private List<String> getSelectedList()
+	{
 		List<String> selected = new ArrayList<String>();
 		for( SecurityCheckedParameter cpc : parameterHolder.getParameterList() )
 		{
 			if( cpc.isChecked() )
 				selected.add( cpc.getName() );
 		}
-		enumerationValuesExtractor.setSelectedEnumerationParameters( selected );
+		return selected;
 	}
 
 	@Override
@@ -102,7 +110,7 @@ public class BoundarySecurityCheck extends AbstractSecurityCheck
 
 			testStep.run( securityTestRunner, securityTestRunner.getRunContext() );
 			createMessageExchange( testStep );
-			this.hasNext = false;
+			propertiesCounter-- ;
 
 		}
 	}
@@ -121,7 +129,12 @@ public class BoundarySecurityCheck extends AbstractSecurityCheck
 
 	protected boolean hasNext()
 	{
-		return this.hasNext;
+		if( propertiesCounter == 0 )
+		{
+			propertiesCounter = getSelectedList().size();
+			return false;
+		}
+		return true;
 	}
 
 	@Override
@@ -147,6 +160,7 @@ public class BoundarySecurityCheck extends AbstractSecurityCheck
 				}
 				( ( SecurityCheckedParameterImpl )param ).setChecked( Arrays.asList( selectedList ).contains( paramName ) );
 			}
+			propertiesCounter = selectedList.length;
 
 			return true;
 		}
@@ -156,12 +170,7 @@ public class BoundarySecurityCheck extends AbstractSecurityCheck
 	@Override
 	protected void buildDialog()
 	{
-		List<String> selectedOptions = new ArrayList<String>();
-		for( SecurityCheckedParameter cpc : parameterHolder.getParameterList() )
-		{
-			if( cpc.isChecked() )
-				selectedOptions.add( cpc.getName() );
-		}
+		List<String> selectedOptions = getSelectedList();
 
 		dialog = ADialogBuilder.buildDialog( BoundaryConfigDialog.class );
 		XFormMultiSelectList field = ( XFormMultiSelectList )dialog.getFormField( BoundaryConfigDialog.PARAMETERS );
