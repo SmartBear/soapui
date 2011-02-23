@@ -52,7 +52,7 @@ public class LargeAttachmentSecurityCheck extends AbstractSecurityCheck
 		AbstractHttpRequest<?> request = ( AbstractHttpRequest<?> )getRequest( testStep );
 
 		request.setAttachmentAt( 0, new InfiniteAttachment( AttachmentConfig.Factory.newInstance(), request,
-				( long )( ( LargeAttachmentSecurityCheckConfig )config.getConfig() ).getSize() ) );
+				( long )( ( LargeAttachmentSecurityCheckConfig )getConfig().getConfig() ).getSize() ) );
 
 		Logger.getLogger( SoapUI.class ).info( "Disabling logs during Large Attachment Check" );
 		Logger.getLogger( "httpclient.wire" ).setLevel( Level.OFF );
@@ -84,22 +84,22 @@ public class LargeAttachmentSecurityCheck extends AbstractSecurityCheck
 
 	public long getMaxSize()
 	{
-		return ( long )( ( LargeAttachmentSecurityCheckConfig )config.getConfig() ).getSize();
+		return ( long )( ( LargeAttachmentSecurityCheckConfig )getConfig().getConfig() ).getSize();
 	}
 
 	public void setMaxSize( long size )
 	{
-		( ( LargeAttachmentSecurityCheckConfig )config.getConfig() ).setSize( size );
+		( ( LargeAttachmentSecurityCheckConfig )getConfig().getConfig() ).setSize( size );
 	}
 
 	public int getMaxTime()
 	{
-		return ( ( LargeAttachmentSecurityCheckConfig )config.getConfig() ).getTime();
+		return ( ( LargeAttachmentSecurityCheckConfig )getConfig().getConfig() ).getTime();
 	}
 
 	public void setMaxTime( int time )
 	{
-		( ( LargeAttachmentSecurityCheckConfig )config.getConfig() ).setTime( time );
+		( ( LargeAttachmentSecurityCheckConfig )getConfig().getConfig() ).setTime( time );
 	}
 
 

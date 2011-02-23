@@ -27,7 +27,6 @@ import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunnerImpl;
 import com.eviware.soapui.security.boundary.SchemeTypeExtractor;
 import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
-import com.eviware.soapui.security.ui.SecurityConfigurationDialogBuilder;
 import com.eviware.soapui.support.types.StringToObjectMap;
 import com.eviware.x.form.XFormDialog;
 
@@ -103,7 +102,7 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheck
 			generateRequests();
 			if( result.size() > 0 )
 			{
-				testStep.getProperty( "Request" ).setValue( result.get( 0 ) );
+				getTestStep().getProperty( "Request" ).setValue( result.get( 0 ) );
 				result.remove( 0 );
 			}
 			if( result.size() == 0 )
@@ -129,7 +128,7 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheck
 		if( result.size() == 0 )
 		{
 			hasNext = true;
-			String templateRequest = testStep.getProperty( "Request" ).getValue();
+			String templateRequest = getTestStep().getProperty( "Request" ).getValue();
 		}
 	}
 

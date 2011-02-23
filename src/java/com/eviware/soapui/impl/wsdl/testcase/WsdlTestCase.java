@@ -848,6 +848,12 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 		{
 			loadTests.get( c ).resetConfigOnMove( loadTestConfigs.get( c ) );
 		}
+		
+		List<SecurityTestConfig> securityTestConfigs = getConfig().getSecurityTestList();
+		for( int c = 0; c < securityTestConfigs.size(); c++ )
+		{
+			securityTests.get( c ).resetConfigOnMove( securityTestConfigs.get( c ) );
+		}
 
 		setPropertiesConfig( testCaseConfig.getProperties() );
 	}

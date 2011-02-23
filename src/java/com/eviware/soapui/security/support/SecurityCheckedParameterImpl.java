@@ -22,7 +22,9 @@ public class SecurityCheckedParameterImpl implements SecurityCheckedParameter
 		this.config = param;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.eviware.soapui.security.support.SecurityChekedParameter#getName()
 	 */
 	public String getName()
@@ -39,8 +41,11 @@ public class SecurityCheckedParameterImpl implements SecurityCheckedParameter
 		config.setParameterName( name );
 	}
 
-	/* (non-Javadoc)
-	 * @see com.eviware.soapui.security.support.SecurityChekedParameter#getXPath()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.eviware.soapui.security.support.SecurityChekedParameter#getXPath()
 	 */
 	public String getXPath()
 	{
@@ -56,7 +61,9 @@ public class SecurityCheckedParameterImpl implements SecurityCheckedParameter
 		config.setXpath( xpath );
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.eviware.soapui.security.support.SecurityChekedParameter#getType()
 	 */
 	public String getType()
@@ -73,8 +80,11 @@ public class SecurityCheckedParameterImpl implements SecurityCheckedParameter
 		config.setType( schemaType.toString() );
 	}
 
-	/* (non-Javadoc)
-	 * @see com.eviware.soapui.security.support.SecurityChekedParameter#isChecked()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.eviware.soapui.security.support.SecurityChekedParameter#isChecked()
 	 */
 	public boolean isChecked()
 	{
@@ -92,8 +102,11 @@ public class SecurityCheckedParameterImpl implements SecurityCheckedParameter
 		config.setChecked( checked );
 	}
 
-	/* (non-Javadoc)
-	 * @see com.eviware.soapui.security.support.SecurityChekedParameter#getLabel()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.eviware.soapui.security.support.SecurityChekedParameter#getLabel()
 	 */
 	public String getLabel()
 	{
@@ -107,5 +120,14 @@ public class SecurityCheckedParameterImpl implements SecurityCheckedParameter
 	public void setLabel( String label )
 	{
 		config.setLabel( label );
+	}
+
+	/**
+	 * @param config
+	 *           parameter config
+	 */
+	public void setConfig( CheckedParameterConfig config )
+	{
+		this.config = config;
 	}
 }

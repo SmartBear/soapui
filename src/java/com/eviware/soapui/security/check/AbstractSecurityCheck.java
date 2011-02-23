@@ -45,14 +45,14 @@ import com.eviware.soapui.model.testsuite.RequestAssertion;
 import com.eviware.soapui.model.testsuite.ResponseAssertion;
 import com.eviware.soapui.model.testsuite.SamplerTestStep;
 import com.eviware.soapui.model.testsuite.TestAssertion;
-import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestRunner.Status;
+import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.Securable;
 import com.eviware.soapui.security.SecurityCheckRequestResult;
+import com.eviware.soapui.security.SecurityCheckRequestResult.SecurityStatus;
 import com.eviware.soapui.security.SecurityCheckResult;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunnerImpl;
-import com.eviware.soapui.security.SecurityCheckRequestResult.SecurityStatus;
 import com.eviware.soapui.security.support.SecurityCheckedParameterHolder;
 import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
@@ -74,20 +74,20 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	public static final String SEPARATE_REQUEST_STRATEGY = "Seperate request for each parameter";
 
 	// configuration of specific request modification
-	protected SecurityCheckConfig config;
-	protected String startupScript;
-	protected String tearDownScript;
-	protected SoapUIScriptEngine scriptEngine;
+	private SecurityCheckConfig config;
+	private String startupScript;
+	private String tearDownScript;
+	private SoapUIScriptEngine scriptEngine;
 	private boolean disabled = false;
-	protected Status status;
-	SecurityCheckConfigPanel contentPanel;
-	protected SecurityCheckResult securityCheckResult;
-	protected SecurityCheckRequestResult securityCheckRequestResult;
-	protected TestStep testStep;
+	private Status status;
+	private SecurityCheckConfigPanel contentPanel;
+	private SecurityCheckResult securityCheckResult;
+	private SecurityCheckRequestResult securityCheckRequestResult;
+	private TestStep testStep;
 	private AssertionsSupport assertionsSupport;
 
 	private AssertionStatus currentStatus;
-	protected SecurityCheckedParameterHolder parameterHolder;
+	private SecurityCheckedParameterHolder parameterHolder;
 
 	public AbstractSecurityCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent, String icon )
 	{
@@ -100,16 +100,32 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		this.config = config;
 		this.startupScript = config.getSetupScript() != null ? config.getSetupScript().getStringValue() : "";
 		this.tearDownScript = config.getTearDownScript() != null ? config.getTearDownScript().getStringValue() : "";
-		scriptEngine = SoapUIScriptEngineRegistry.create( this );
+		setScriptEngine( SoapUIScriptEngineRegistry.create( this ) );
 		if( config.getExecutionStrategy() == null )
 			config.setExecutionStrategy( SEPARATE_REQUEST_STRATEGY );
 
 		if( config.getChekedPameters() == null )
 			config.addNewChekedPameters();
 
-		this.parameterHolder = new SecurityCheckedParameterHolder( this, config.getChekedPameters() );
+		setParameterHolder( new SecurityCheckedParameterHolder( this, config.getChekedPameters() ) );
 		initAssertions();
 
+	}
+
+	public void updateSecurityConfig( SecurityCheckConfig config )
+	{
+		this.config = config;
+
+		List<TestAssertionConfig> assertionList = config.getAssertionList();
+		for( int c = 0; c < assertionList.size(); c++ )
+		{
+			assertionsSupport.getAssertionAt( c ).updateConfig( assertionList.get( c ) );
+		}
+
+		if( getParameterHolder() != null )
+		{
+			getParameterHolder().updateConfig( config.getChekedPameters() );
+		}
 	}
 
 	public SecurityCheckedParameterHolder getParameterHolder()
@@ -167,12 +183,12 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 
 		while( hasNext() )
 		{
-			securityCheckRequestResult = new SecurityCheckRequestResult( this );
+			setSecurityCheckRequestResult( new SecurityCheckRequestResult( this ) );
 			execute( testStep, context );
-			assertRequest( securityCheckRequestResult.getMessageExchange(), context );
-			assertResponse( securityCheckRequestResult.getMessageExchange(), context );
+			assertRequest( getSecurityCheckRequestResult().getMessageExchange(), context );
+			assertResponse( getSecurityCheckRequestResult().getMessageExchange(), context );
 			// add to summary result
-			securityCheckResult.addSecurityRequestResult( securityCheckRequestResult );
+			securityCheckResult.addSecurityRequestResult( getSecurityCheckRequestResult() );
 
 		}
 
@@ -242,13 +258,13 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	// XXX: need to be fixed.
 	public void runTearDownScript( TestStep testStep )
 	{
-		scriptEngine.setScript( tearDownScript );
-		scriptEngine.setVariable( "testStep", testStep );
-		scriptEngine.setVariable( "log", SoapUI.ensureGroovyLog() );
+		getScriptEngine().setScript( tearDownScript );
+		getScriptEngine().setVariable( "testStep", testStep );
+		getScriptEngine().setVariable( "log", SoapUI.ensureGroovyLog() );
 
 		try
 		{
-			scriptEngine.run();
+			getScriptEngine().run();
 		}
 		catch( Exception e )
 		{
@@ -256,21 +272,21 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		}
 		finally
 		{
-			scriptEngine.clearVariables();
+			getScriptEngine().clearVariables();
 		}
 
 	}
 
 	public void runStartupScript( TestStep testStep )
 	{
-		scriptEngine.setScript( startupScript );
-		scriptEngine.setVariable( "testStep", testStep );
-		scriptEngine.setVariable( "log", SoapUI.ensureGroovyLog() );
+		getScriptEngine().setScript( startupScript );
+		getScriptEngine().setVariable( "testStep", testStep );
+		getScriptEngine().setVariable( "log", SoapUI.ensureGroovyLog() );
 		// scriptEngine.setVariable( "context", context );
 
 		try
 		{
-			scriptEngine.run();
+			getScriptEngine().run();
 		}
 		catch( Exception e )
 		{
@@ -278,7 +294,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		}
 		finally
 		{
-			scriptEngine.clearVariables();
+			getScriptEngine().clearVariables();
 		}
 	}
 
@@ -616,7 +632,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 
 			if( messageExchange != null )
 			{
-				context.setProperty( SECURITY_CHECK_REQUEST_RESULT, securityCheckRequestResult );
+				context.setProperty( SECURITY_CHECK_REQUEST_RESULT, getSecurityCheckRequestResult() );
 
 				for( WsdlMessageAssertion assertion : assertionsSupport.getAssertionList() )
 				{
@@ -624,8 +640,8 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 					if( result == AssertionStatus.FAILED )
 					{
 						for( AssertionError error : assertion.getErrors() )
-							securityCheckRequestResult.addMessage( error.getMessage() );
-						securityCheckRequestResult.setStatus( SecurityStatus.FAILED );
+							getSecurityCheckRequestResult().addMessage( error.getMessage() );
+						getSecurityCheckRequestResult().setStatus( SecurityStatus.FAILED );
 					}
 				}
 
@@ -649,7 +665,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 
 			if( messageExchange != null )
 			{
-				context.setProperty( SECURITY_CHECK_REQUEST_RESULT, securityCheckRequestResult );
+				context.setProperty( SECURITY_CHECK_REQUEST_RESULT, getSecurityCheckRequestResult() );
 
 				for( WsdlMessageAssertion assertion : assertionsSupport.getAssertionList() )
 				{
@@ -657,8 +673,8 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 					if( result == AssertionStatus.FAILED )
 					{
 						for( AssertionError error : assertion.getErrors() )
-							securityCheckRequestResult.addMessage( error.getMessage() );
-						securityCheckRequestResult.setStatus( SecurityStatus.FAILED );
+							getSecurityCheckRequestResult().addMessage( error.getMessage() );
+						getSecurityCheckRequestResult().setStatus( SecurityStatus.FAILED );
 					}
 				}
 
@@ -699,12 +715,39 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 			config.addNewTearDownScript();
 		config.getTearDownScript().setStringValue( text );
 	}
-	
+
 	// name used in configuration panel
 	public abstract String getConfigName();
+
 	// description usd in configuration panel
 	public abstract String getConfigDescription();
+
 	// help url used for configuration panel ( help for this check )
 	public abstract String getHelpURL();
-	
+
+	protected void setSecurityCheckRequestResult( SecurityCheckRequestResult securityCheckRequestResult )
+	{
+		this.securityCheckRequestResult = securityCheckRequestResult;
+	}
+
+	protected SecurityCheckRequestResult getSecurityCheckRequestResult()
+	{
+		return securityCheckRequestResult;
+	}
+
+	protected void setParameterHolder( SecurityCheckedParameterHolder parameterHolder )
+	{
+		this.parameterHolder = parameterHolder;
+	}
+
+	protected void setScriptEngine( SoapUIScriptEngine scriptEngine )
+	{
+		this.scriptEngine = scriptEngine;
+	}
+
+	protected SoapUIScriptEngine getScriptEngine()
+	{
+		return scriptEngine;
+	}
+
 }

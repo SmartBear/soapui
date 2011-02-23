@@ -148,7 +148,7 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements Htt
 	 */
 	public void setMinimumLength( int minimumLength )
 	{
-		( ( ParameterExposureCheckConfig )config.getConfig() ).setMinimumLength( minimumLength );
+		( ( ParameterExposureCheckConfig )getConfig().getConfig() ).setMinimumLength( minimumLength );
 	}
 
 	/**
@@ -158,7 +158,7 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements Htt
 	 */
 	public int getMinimumLength()
 	{
-		return ( ( ParameterExposureCheckConfig )config.getConfig() ).getMinimumLength();
+		return ( ( ParameterExposureCheckConfig )getConfig().getConfig() ).getMinimumLength();
 	}
 
 	// QUESTION:

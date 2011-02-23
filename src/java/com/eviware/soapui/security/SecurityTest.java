@@ -21,7 +21,6 @@ import java.util.Map;
 import java.util.Set;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.SoapUICore;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.config.SecurityTestConfig;
 import com.eviware.soapui.config.TestStepSecurityTestConfig;
@@ -30,13 +29,12 @@ import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.TestModelItem;
 import com.eviware.soapui.model.testsuite.TestRunnable;
-import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestRunner.Status;
+import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.security.log.SecurityTestLogModel;
 import com.eviware.soapui.security.panels.SecurityChecksPanel;
 import com.eviware.soapui.security.registry.AbstractSecurityCheckFactory;
-import com.eviware.soapui.security.registry.SecurityCheckRegistry;
 import com.eviware.soapui.security.support.SecurityCheckRunListener;
 import com.eviware.soapui.security.support.SecurityTestRunListener;
 import com.eviware.soapui.support.StringUtils;
@@ -106,8 +104,8 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 	 */
 	public AbstractSecurityCheck addSecurityCheck( TestStep testStep, String securityCheckType, String securityCheckName )
 	{
-		AbstractSecurityCheckFactory factory = SoapUI.getSoapUICore().getSecurityCheckRegistry().getFactory(
-				securityCheckType );
+		AbstractSecurityCheckFactory factory = SoapUI.getSoapUICore().getSecurityCheckRegistry()
+				.getFactory( securityCheckType );
 		SecurityCheckConfig newSecCheckConfig = factory.createNewSecurityCheck( securityCheckName );
 		AbstractSecurityCheck newSecCheck = factory.buildSecurityCheck( testStep, newSecCheckConfig, this );
 		newSecCheck.setTestStep( testStep );
@@ -259,8 +257,8 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 									{
 										testStep = ts;
 										AbstractSecurityCheck securityCheck = SoapUI.getSoapUICore().getSecurityCheckRegistry()
-												.getFactory( secCheckConfig.getType() ).buildSecurityCheck( testStep,
-														secCheckConfig, this );
+												.getFactory( secCheckConfig.getType() )
+												.buildSecurityCheck( testStep, secCheckConfig, this );
 										checkList.add( securityCheck );
 									}
 							}
@@ -461,8 +459,8 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 				if( testStepSecurityTest.getTestStepId().equals( testStep.getId() ) )
 				{
 					List<SecurityCheckConfig> securityCheckList = testStepSecurityTest.getTestStepSecurityCheckList();
-					AbstractSecurityCheckFactory factory = SoapUI.getSoapUICore().getSecurityCheckRegistry().getFactory(
-							securityCheck.getType() );
+					AbstractSecurityCheckFactory factory = SoapUI.getSoapUICore().getSecurityCheckRegistry()
+							.getFactory( securityCheck.getType() );
 					SecurityCheckConfig newSecCheckConfig = ( SecurityCheckConfig )securityCheck.getConfig().copy();
 					AbstractSecurityCheck newSecCheck = factory.buildSecurityCheck( testStep, newSecCheckConfig, this );
 
@@ -634,6 +632,30 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 			}
 		}
 		return result;
+	}
+
+	public void resetConfigOnMove( SecurityTestConfig securityTestConfig )
+	{
+		setConfig( securityTestConfig );
+
+		if( securityTestConfig != null )
+		{
+			if( !securityTestConfig.getTestStepSecurityTestList().isEmpty() )
+			{
+				for( TestStepSecurityTestConfig testStepSecurityTestListConfig : securityTestConfig
+						.getTestStepSecurityTestList() )
+				{
+					List<AbstractSecurityCheck> checkList = getSecurityChecksMap().get(
+							testStepSecurityTestListConfig.getTestStepId() );
+
+					for( int i = 0; i < checkList.size(); i++ )
+					{
+						checkList.get( i ).updateSecurityConfig(
+								testStepSecurityTestListConfig.getTestStepSecurityCheckList().get( i ) );
+					}
+				}
+			}
+		}
 	}
 
 }

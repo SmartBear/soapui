@@ -47,6 +47,20 @@ public class SecurityCheckedParameterHolder extends SecurityCheckParameterListen
 		securityCheck.getTestStep().addTestPropertyListener( this );
 	}
 
+	public void updateConfig( CheckedParametersListConfig config )
+	{
+		paramsConfig = config;
+
+		List<CheckedParameterConfig> paramsList = config.getParametersList();
+		for( int c = 0; c < paramsList.size(); c++ )
+		{
+			if( params.get( c ) instanceof SecurityCheckedParameterImpl )
+			{
+				( ( SecurityCheckedParameterImpl )params.get( c ) ).setConfig( paramsList.get( c ) );
+			}
+		}
+	}
+
 	SecurityCheckedParameter addParameter( CheckedParameterConfig param )
 	{
 		SecurityCheckedParameter result = new SecurityCheckedParameterImpl( param );
@@ -56,22 +70,6 @@ public class SecurityCheckedParameterHolder extends SecurityCheckParameterListen
 		fireParameterAdded( result );
 
 		return result;
-	}
-
-	public SecurityCheckedParameter addParameter( String label )
-	{
-		if( paramsMap.get( label ) != null )
-			return paramsMap.get( label );
-
-		CheckedParameterConfig newParameterConfig = paramsConfig.addNewParameters();
-		SecurityCheckedParameterImpl newParameter = new SecurityCheckedParameterImpl( newParameterConfig );
-		newParameter.setLabel( label );
-		params.add( newParameter );
-		paramsMap.put( newParameter.getLabel().toUpperCase(), newParameter );
-
-		fireParameterAdded( newParameter );
-
-		return newParameter;
 	}
 
 	public boolean addParameter( String label, String name, String xpath, boolean used )
@@ -184,10 +182,11 @@ public class SecurityCheckedParameterHolder extends SecurityCheckParameterListen
 	{
 		ArrayList<SecurityCheckedParameter> parameterToRemove = new ArrayList<SecurityCheckedParameter>();
 		for( SecurityCheckedParameter param : params )
-			if( param.getName().equals( name ) ) {
-				parameterToRemove.add(param);
+			if( param.getName().equals( name ) )
+			{
+				parameterToRemove.add( param );
 			}
-		for( SecurityCheckedParameter param : parameterToRemove)
+		for( SecurityCheckedParameter param : parameterToRemove )
 			removeParameter( param );
 	}
 
@@ -196,11 +195,12 @@ public class SecurityCheckedParameterHolder extends SecurityCheckParameterListen
 	{
 		ArrayList<SecurityCheckedParameter> parameterToRemove = new ArrayList<SecurityCheckedParameter>();
 		for( SecurityCheckedParameter param : params )
-			if( param.getName().equals( oldName ) ) {
-				parameterToRemove.add(param);
+			if( param.getName().equals( oldName ) )
+			{
+				parameterToRemove.add( param );
 			}
-		for( SecurityCheckedParameter param : parameterToRemove)
-			( ( SecurityCheckedParameterImpl )param ).setName(newName);
+		for( SecurityCheckedParameter param : parameterToRemove )
+			( ( SecurityCheckedParameterImpl )param ).setName( newName );
 
 	}
 

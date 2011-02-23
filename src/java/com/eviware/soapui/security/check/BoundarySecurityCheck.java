@@ -32,8 +32,8 @@ import com.eviware.soapui.security.boundary.EnumerationValuesExtractor;
 import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
 import com.eviware.soapui.support.types.StringToObjectMap;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.AField.AFieldType;
+import com.eviware.x.form.support.AForm;
 
 public class BoundarySecurityCheck extends AbstractSecurityCheck
 {
@@ -55,7 +55,7 @@ public class BoundarySecurityCheck extends AbstractSecurityCheck
 	private List<String> getSelectedList()
 	{
 		List<String> selected = new ArrayList<String>();
-		for( SecurityCheckedParameter cpc : parameterHolder.getParameterList() )
+		for( SecurityCheckedParameter cpc : getParameterHolder().getParameterList() )
 		{
 			if( cpc.isChecked() )
 				selected.add( cpc.getName() );
@@ -109,7 +109,7 @@ public class BoundarySecurityCheck extends AbstractSecurityCheck
 	{
 		MessageExchange messageExchange = new WsdlResponseMessageExchange( ( ( WsdlTestRequestStep )testStep )
 				.getTestRequest() );
-		securityCheckRequestResult.setMessageExchange( messageExchange );
+		getSecurityCheckRequestResult().setMessageExchange( messageExchange );
 	}
 
 	private void updateRequestContent( TestStep testStep ) throws XmlException, Exception

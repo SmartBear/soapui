@@ -207,12 +207,12 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck
 
 	public boolean isAttachXmlBomb()
 	{
-		return ( ( XmlBombSecurityCheckConfig )config.getConfig() ).getAttachXmlBomb();
+		return ( ( XmlBombSecurityCheckConfig )getConfig().getConfig() ).getAttachXmlBomb();
 	}
 
 	public void setAttachXmlBomb( boolean attach )
 	{
-		( ( XmlBombSecurityCheckConfig )config.getConfig() ).setAttachXmlBomb( attach );
+		( ( XmlBombSecurityCheckConfig )getConfig().getConfig() ).setAttachXmlBomb( attach );
 	}
 
 	private TestStep generateNextRequest( TestStep testStep, String param )
@@ -307,32 +307,32 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck
 
 	protected List<String> getBombList()
 	{
-		return ( ( XmlBombSecurityCheckConfig )config.getConfig() ).getXmlBombsList();
+		return ( ( XmlBombSecurityCheckConfig )getConfig().getConfig() ).getXmlBombsList();
 	}
 
 	protected void setBombList( List<String> bombList )
 	{
-		( ( XmlBombSecurityCheckConfig )config.getConfig() ).setXmlBombsArray( bombList.toArray( new String[1] ) );
+		( ( XmlBombSecurityCheckConfig )getConfig().getConfig() ).setXmlBombsArray( bombList.toArray( new String[1] ) );
 	}
 
 	protected List<String> getExternalDTDList()
 	{
-		return ( ( XmlBombSecurityCheckConfig )config.getConfig() ).getExternalDTDList();
+		return ( ( XmlBombSecurityCheckConfig )getConfig().getConfig() ).getExternalDTDList();
 	}
 
 	protected void setExternalDTDList( List<String> dtdList )
 	{
-		( ( XmlBombSecurityCheckConfig )config.getConfig() ).setExternalDTDArray( dtdList.toArray( new String[1] ) );
+		( ( XmlBombSecurityCheckConfig )getConfig().getConfig() ).setExternalDTDArray( dtdList.toArray( new String[1] ) );
 	}
 
 	public String getAttachmentPrefix()
 	{
-		return ( ( XmlBombSecurityCheckConfig )config.getConfig() ).getXmlAttachmentPrefix();
+		return ( ( XmlBombSecurityCheckConfig )getConfig().getConfig() ).getXmlAttachmentPrefix();
 	}
 
 	public void setAttachmentPrefix( String prefix )
 	{
-		( ( XmlBombSecurityCheckConfig )config.getConfig() ).setXmlAttachmentPrefix( prefix );
+		( ( XmlBombSecurityCheckConfig )getConfig().getConfig() ).setXmlAttachmentPrefix( prefix );
 	}
 
 	private String createQuadraticExpansionAttack( String initialContent, List<SecurityCheckedParameter> list )
