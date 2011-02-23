@@ -84,13 +84,7 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheck
 	{
 		if( dialog == null )
 			buildDialog();
-		if( dialog != null )
-		{
-			ArrayList<String> selected = new ArrayList<String>();
-			if( dialog.show() )
-			{
-			}
-		}
+		dialog.show();
 		return true;
 	}
 

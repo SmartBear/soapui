@@ -31,6 +31,7 @@ import com.eviware.soapui.security.log.JSecurityTestRunLog;
 import com.eviware.soapui.security.monitor.HttpSecurityAnalyser;
 import com.eviware.soapui.security.ui.GroovySecurityCheckPanel;
 import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
+import com.eviware.soapui.security.ui.SecurityConfigurationDialogBuilder;
 import com.eviware.soapui.support.types.StringToObjectMap;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.support.ADialogBuilder;
@@ -190,18 +191,8 @@ public class GroovySecurityCheck extends AbstractSecurityCheck implements HttpSe
 
 	protected void buildDialog()
 	{
-		executeEditor = new GroovyEditor( new GroovySecurityCheckScriptModel()
-		{
-
-			@Override
-			public String getScript()
-			{
-				return groovyscc.getExecuteScript().getStringValue();
-			}
-
-		} );
-		dialog = ADialogBuilder.buildDialog( GroovySecurityConfigDialog.class );
-		dialog.getFormField( GroovySecurityConfigDialog.EXECUTE ).setProperty( "component", executeEditor );
+		dialog = new SecurityConfigurationDialogBuilder().buildSecurityCheckConfigurationDialog( "Groovy Script Security Check",
+				"Configures Groovy Script security check", null, "http://www.soapui.org", this );
 	}
 
 	@Override
@@ -209,10 +200,7 @@ public class GroovySecurityCheck extends AbstractSecurityCheck implements HttpSe
 	{
 		if( dialog == null )
 			buildDialog();
-		if( dialog.show() )
-		{
-			groovyscc.getExecuteScript().setStringValue( executeEditor.getEditArea().getText() );
-		}
+		dialog.show();
 
 		return true;
 	}
