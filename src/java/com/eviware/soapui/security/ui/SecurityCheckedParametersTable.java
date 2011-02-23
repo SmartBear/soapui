@@ -84,7 +84,7 @@ public class SecurityCheckedParametersTable extends JPanel
 		Close closeAction = new Close();
 		actionList.addAction( closeAction );
 
-		XFormDialog dialog = buildDialog();
+		XFormDialog dialog = buildAddParameterDialog();
 
 		closeAction.setDialog( dialog );
 		addAction.setDialog( dialog );
@@ -127,7 +127,7 @@ public class SecurityCheckedParametersTable extends JPanel
 	 * 
 	 * @return
 	 */
-	protected XFormDialog buildDialog()
+	protected XFormDialog buildAddParameterDialog()
 	{
 		return ADialogBuilder.buildDialog( AddParameterDialog.class, actionList, false );
 	}
@@ -153,6 +153,17 @@ public class SecurityCheckedParametersTable extends JPanel
 	protected void enablePathField( final XFormField pathField, boolean enable )
 	{
 		pathField.setEnabled( enable );
+	}
+
+	/**
+	 * 
+	 * 
+	 * @return
+	 */
+	protected boolean addParameter( XFormDialog dialog )
+	{
+		return model.addParameter( dialog.getValue( AddParameterDialog.LABEL ),
+				dialog.getValue( AddParameterDialog.NAME ), dialog.getValue( AddParameterDialog.PATH ) );
 	}
 
 	private class AddNewParameterAction extends AbstractAction
@@ -210,8 +221,7 @@ public class SecurityCheckedParametersTable extends JPanel
 		@Override
 		public void actionPerformed( ActionEvent e )
 		{
-			if( !model.addParameter( dialog.getValue( AddParameterDialog.LABEL ), dialog
-					.getValue( AddParameterDialog.NAME ), dialog.getValue( AddParameterDialog.PATH ) ) )
+			if( !addParameter( dialog ) )
 				UISupport.showErrorMessage( "Label have to be unique!" );
 		}
 
@@ -262,15 +272,24 @@ public class SecurityCheckedParametersTable extends JPanel
 				XFormDialog dialog = createAddParameterDialog();
 
 				int row = table.getSelectedRow();
-				dialog.setValue( AddParameterDialog.LABEL, ( String )model.getValueAt( row, 0 ) );
-				dialog.setValue( AddParameterDialog.NAME, ( String )model.getValueAt( row, 1 ) );
-				dialog.setValue( AddParameterDialog.PATH, ( String )model.getValueAt( row, 2 ) );
+				initDialogForCopy( dialog, row );
 
 				dialog.show();
 				model.fireTableDataChanged();
 			}
 		}
 
+	}
+
+	/**
+	 * @param dialog
+	 * @param row
+	 */
+	protected void initDialogForCopy( XFormDialog dialog, int row )
+	{
+		dialog.setValue( AddParameterDialog.LABEL, ( String )model.getValueAt( row, 0 ) );
+		dialog.setValue( AddParameterDialog.NAME, ( String )model.getValueAt( row, 1 ) );
+		dialog.setValue( AddParameterDialog.PATH, ( String )model.getValueAt( row, 2 ) );
 	}
 
 	private class AddAction extends AbstractAction
@@ -291,18 +310,38 @@ public class SecurityCheckedParametersTable extends JPanel
 		@Override
 		public void actionPerformed( ActionEvent arg0 )
 		{
-			if( model.addParameter( dialog.getValue( AddParameterDialog.LABEL ),
-					dialog.getValue( AddParameterDialog.NAME ), dialog.getValue( AddParameterDialog.PATH ) ) )
+			if( dialog.getValue( AddParameterDialog.LABEL ) == null
+					|| dialog.getValue( AddParameterDialog.LABEL ).trim().length() == 0 )
 			{
-				JComboBoxFormField nameField = ( JComboBoxFormField )dialog.getFormField( AddParameterDialog.NAME );
-				nameField.setSelectedOptions( new Object[] { nameField.getOptions()[0] } );
-				dialog.setValue( AddParameterDialog.LABEL, "" );
-				dialog.setValue( AddParameterDialog.PATH, "" );
+				UISupport.showErrorMessage( "Label is required!" );
 			}
 			else
-				UISupport.showErrorMessage( "Label have to be unique!" );
+			{
+				if( addParameter( dialog ) )
+				{
+					JComboBoxFormField nameField = ( JComboBoxFormField )dialog.getFormField( AddParameterDialog.NAME );
+					nameField.setSelectedOptions( new Object[] { nameField.getOptions()[0] } );
+					dialog.setValue( AddParameterDialog.LABEL, "" );
+					resetPathField(dialog);
+				}
+				else
+					UISupport.showErrorMessage( "Label have to be unique!" );
+			}
 		}
 
+	}
+
+	public SecurityParametersTableModel getModel()
+	{
+		return model;
+	}
+
+	/**
+	 * 
+	 */
+	protected void resetPathField(XFormDialog dialog)
+	{
+		dialog.setValue( AddParameterDialog.PATH, "" );
 	}
 
 	@AForm( description = "Add New Security Test Step Parameter", name = "Configure Security Test Step Parameters" )

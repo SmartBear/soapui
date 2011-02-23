@@ -240,7 +240,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	}
 
 	// XXX: need to be fixed.
-	private void runTearDownScript( TestStep testStep )
+	public void runTearDownScript( TestStep testStep )
 	{
 		scriptEngine.setScript( tearDownScript );
 		scriptEngine.setVariable( "testStep", testStep );
@@ -261,7 +261,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 
 	}
 
-	private void runStartupScript( TestStep testStep )
+	public void runStartupScript( TestStep testStep )
 	{
 		scriptEngine.setScript( startupScript );
 		scriptEngine.setVariable( "testStep", testStep );

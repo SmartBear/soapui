@@ -21,10 +21,12 @@ import javax.swing.Action;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 
+import com.eviware.soapui.impl.wsdl.panels.support.MockSecurityTestRunner;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.AbstractGroovyEditorModel;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.security.SecurityParametersTableModel;
+import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.assertion.SecurityAssertionPanel;
 import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.support.UISupport;
@@ -48,8 +50,9 @@ public class SecurityConfigurationDialogBuilder
 	public XFormDialog buildSecurityCheckConfigurationDialog( AbstractSecurityCheck securityCheck )
 	{
 
-		return buildSecurityCheckConfigurationDialog( securityCheck.getConfigName(), securityCheck.getConfigDescription(),
-				securityCheck.getIcon(), securityCheck.getHelpURL(), securityCheck.getComponent(), securityCheck );
+		return buildSecurityCheckConfigurationDialog( securityCheck.getConfigName(),
+				securityCheck.getConfigDescription(), securityCheck.getIcon(), securityCheck.getHelpURL(), securityCheck
+						.getComponent(), securityCheck );
 	}
 
 	/**
@@ -266,6 +269,12 @@ public class SecurityConfigurationDialogBuilder
 				public void actionPerformed( ActionEvent e )
 				{
 
+					MockSecurityTestRunner securityTestRunner = new MockSecurityTestRunner(
+							( SecurityTest )( ( AbstractSecurityCheck )SetupScriptGroovyEditorModel.this.getModelItem() )
+									.getParent() );
+					( ( AbstractSecurityCheck )SetupScriptGroovyEditorModel.this.getModelItem() )
+							.runTearDownScript( ( ( AbstractSecurityCheck )SetupScriptGroovyEditorModel.this
+									.getModelItem() ).getTestStep() );
 				}
 			};
 		}
@@ -297,6 +306,20 @@ public class SecurityConfigurationDialogBuilder
 				public void actionPerformed( ActionEvent e )
 				{
 
+					try
+					{
+						MockSecurityTestRunner securityTestRunner = new MockSecurityTestRunner(
+								( SecurityTest )( ( AbstractSecurityCheck )TearDownScriptGroovyEditorModel.this.getModelItem() )
+										.getParent() );
+						( ( AbstractSecurityCheck )TearDownScriptGroovyEditorModel.this.getModelItem() )
+								.runTearDownScript( ( ( AbstractSecurityCheck )TearDownScriptGroovyEditorModel.this
+										.getModelItem() ).getTestStep() );
+					}
+					catch( Exception e1 )
+					{
+						UISupport.showErrorMessage( e1 );
+					}
+
 				}
 			};
 		}
@@ -315,6 +338,7 @@ public class SecurityConfigurationDialogBuilder
 		{
 			( ( AbstractSecurityCheck )getModelItem() ).setTearDownScript( text );
 		}
+
 	}
 
 }
