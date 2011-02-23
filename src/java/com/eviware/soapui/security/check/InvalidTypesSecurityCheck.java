@@ -12,13 +12,11 @@
 package com.eviware.soapui.security.check;
 
 import java.util.ArrayList;
-import java.util.TreeMap;
 
 import org.apache.commons.collections.ArrayStack;
 import org.apache.xmlbeans.SchemaType;
 import org.apache.xmlbeans.XmlException;
 
-import com.eviware.soapui.config.CheckedParameterConfig;
 import com.eviware.soapui.config.CheckedParametersListConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
@@ -28,11 +26,9 @@ import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunnerImpl;
 import com.eviware.soapui.security.boundary.SchemeTypeExtractor;
-import com.eviware.soapui.security.boundary.SchemeTypeExtractor.NodeInfo;
 import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
 import com.eviware.soapui.security.ui.SecurityConfigurationDialogBuilder;
 import com.eviware.soapui.support.types.StringToObjectMap;
-import com.eviware.soapui.support.xml.XmlUtils;
 import com.eviware.x.form.XFormDialog;
 
 public class InvalidTypesSecurityCheck extends AbstractSecurityCheck
@@ -43,8 +39,6 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheck
 	private SchemeTypeExtractor extractor;
 
 	XFormDialog dialog;
-
-	private CheckedParametersListConfig invalidTypesConfig;
 
 	private boolean hasNext;
 
@@ -57,35 +51,7 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheck
 		super( testStep, config, parent, icon );
 
 		config.setConfig( CheckedParametersListConfig.Factory.newInstance() );
-		if( config.getConfig() == null )
-		{
-			invalidTypesConfig = CheckedParametersListConfig.Factory.newInstance();
-			config.setConfig( invalidTypesConfig );
-		}
-		invalidTypesConfig = ( CheckedParametersListConfig )config.getConfig();
 		extractor = new SchemeTypeExtractor( testStep );
-		if( invalidTypesConfig.getParametersList() == null || invalidTypesConfig.getParametersList().size() == 0 )
-		{
-			try
-			{
-				extractor.extract();
-				TreeMap<String, NodeInfo> params = extractor.getParams();
-				// what to do if request is changed????
-				for( String key : params.keySet() )
-				{
-					CheckedParameterConfig param = invalidTypesConfig.addNewParameters();
-					param.setParameterName( params.get( key ).getSimpleName() );
-					param.setXpath( params.get( key ).getXPath() );
-					param.setChecked( false );
-					param.setType( String.valueOf( params.get( key ).getType() ) );
-				}
-			}
-			catch( Exception e )
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
 
 	}
 
@@ -120,27 +86,9 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheck
 			buildDialog();
 		if( dialog != null )
 		{
-			// XFormMultiSelectList field = ( XFormMultiSelectList
-			// )dialog.getFormField( InvalidTypesConfigDialog.PARAMETERS );
 			ArrayList<String> selected = new ArrayList<String>();
-			for( CheckedParameterConfig param : invalidTypesConfig.getParametersList() )
-				if( param.isSetChecked() )
-					selected.add( param.getParameterName() );
-			// field.setSelectedOptions( selected.toArray( new String[0] ) );
 			if( dialog.show() )
 			{
-				for( CheckedParameterConfig param : invalidTypesConfig.getParametersList() )
-				{
-					{
-						// for( Object key : field.getSelectedOptions() )
-						// if( param.getParameterName().equals( ( String )key ) )
-						// {
-						// param.setChecked( true );
-						// break;
-						// }
-						// param.setChecked( false );
-					}
-				}
 			}
 		}
 		return true;
@@ -204,19 +152,6 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheck
 		{
 			hasNext = true;
 			String templateRequest = testStep.getProperty( "Request" ).getValue();
-			for( CheckedParameterConfig param : invalidTypesConfig.getParametersList() )
-			{
-				if( param.isSetChecked() )
-				{
-					InvalidTypes invalidGenerator = new InvalidTypes( Integer.valueOf( param.getType() ) );
-					while( invalidGenerator.hasNext() )
-					{
-						invalidGenerator.getNext();
-						result.add( XmlUtils.setXPathContent( templateRequest, param.getXpath(), invalidGenerator.getNext()
-								.toString() ) );
-					}
-				}
-			}
 		}
 	}
 
