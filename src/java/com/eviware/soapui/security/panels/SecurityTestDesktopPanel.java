@@ -197,7 +197,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 		testStepList = new JSecurityTestTestStepList( getModelItem() );
 		stateDependantComponents.add( testStepList );
 
-		p.add( new JScrollPane( testStepList ), BorderLayout.CENTER );
+		p.add( testStepList, BorderLayout.CENTER );
 
 		return p;
 	}
