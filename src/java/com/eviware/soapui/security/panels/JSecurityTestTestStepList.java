@@ -208,7 +208,7 @@ public class JSecurityTestTestStepList extends JPanel
 	}
 
 	@SuppressWarnings( "serial" )
-	public final class TestStepListEntryPanel extends JPanel implements Autoscroll
+	public final class TestStepListEntryPanel extends JPanel implements Autoscroll, PropertyChangeListener
 	{
 		private final WsdlTestStep testStep;
 		private JProgressBar progressBar;
@@ -225,11 +225,14 @@ public class JSecurityTestTestStepList extends JPanel
 
 			this.testStep = testStep;
 			autoscrollSupport = new AutoscrollSupport( this );
-
-			label = new JLabel( testStep.getLabel(), testStep.getIcon(), SwingConstants.LEFT );
+			label = new JLabel( testStep.getLabel(), SwingConstants.LEFT );
+			label.setIcon( testStep.getIcon() );
 			label.setBorder( BorderFactory.createEmptyBorder( 5, 5, 5, 5 ) );
 			label.setInheritsPopupMenu( true );
 			label.setEnabled( !testStep.isDisabled() );
+			testStep.addPropertyChangeListener( TestStep.ICON_PROPERTY, this );
+
+			add( label, BorderLayout.LINE_START );
 
 			if( AbstractSecurityCheck.isSecurable( testStep ) )
 			{
@@ -268,7 +271,6 @@ public class JSecurityTestTestStepList extends JPanel
 
 				add( progressPanel, BorderLayout.LINE_END );
 			}
-			add( label, BorderLayout.LINE_START );
 
 			testCasePropertyChangeListener = new TestCasePropertyChangeListener();
 
@@ -434,6 +436,12 @@ public class JSecurityTestTestStepList extends JPanel
 						actions.dispatchKeyEvent( e );
 				}
 			}
+		}
+
+		@Override
+		public void propertyChange( PropertyChangeEvent evt )
+		{
+			label.setIcon( testStep.getIcon() );
 		}
 	}
 
