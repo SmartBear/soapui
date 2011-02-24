@@ -14,29 +14,31 @@ package com.eviware.soapui.security.check;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.xmlbeans.XmlAnySimpleType;
 import org.apache.xmlbeans.XmlException;
+import org.apache.xmlbeans.XmlObject;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.SecurityCheckConfig;
+import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlResponseMessageExchange;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.security.SecurityCheckedParameter;
-import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
-import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
-import com.eviware.soapui.security.SecurityTestRunnerImpl;
 import com.eviware.soapui.security.boundary.EnumerationValuesExtractor;
+import com.eviware.soapui.security.boundary.enumeration.EnumerationValues;
 import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
-import com.eviware.soapui.support.types.StringToObjectMap;
+import com.eviware.soapui.support.xml.XmlObjectTreeModel;
+import com.eviware.soapui.support.xml.XmlObjectTreeModel.XmlTreeNode;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.support.AForm;
+import com.eviware.x.form.support.AField.AFieldType;
 
 public class BoundarySecurityCheck extends AbstractSecurityCheck
 {
@@ -44,14 +46,11 @@ public class BoundarySecurityCheck extends AbstractSecurityCheck
 	private int propertiesCounter = 0;
 	public static final String TYPE = "BoundaryCheck";
 	public static final String LABEL = "Boundary";
-	private EnumerationValuesExtractor enumerationValuesExtractor;
 
 	public BoundarySecurityCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent, String icon )
 	{
 		super( testStep, config, parent, icon );
-		enumerationValuesExtractor = new EnumerationValuesExtractor( ( ( WsdlTestRequestStep )testStep ).getTestRequest() );
 		List<String> selected = getSelectedList();
-		enumerationValuesExtractor.setSelectedEnumerationParameters( selected );
 		propertiesCounter = selected.size();
 	}
 
@@ -85,7 +84,8 @@ public class BoundarySecurityCheck extends AbstractSecurityCheck
 		return TYPE;
 	}
 
-	protected void execute( SecurityTestRunner  securityTestRunner, TestStep testStep, SecurityTestRunContext context )
+	@Override
+	protected void execute( SecurityTestRunner securityTestRunner, TestStep testStep, SecurityTestRunContext context )
 	{
 		if( acceptsTestStep( testStep ) )
 		{
@@ -98,7 +98,7 @@ public class BoundarySecurityCheck extends AbstractSecurityCheck
 				SoapUI.log.error( "Error extracting enumeration values from message", e );
 			}
 
-			testStep.run( (TestCaseRunner)securityTestRunner, context );
+			testStep.run( ( TestCaseRunner )securityTestRunner, context );
 			createMessageExchange( testStep );
 			propertiesCounter-- ;
 
@@ -114,7 +114,50 @@ public class BoundarySecurityCheck extends AbstractSecurityCheck
 
 	private void updateRequestContent( TestStep testStep ) throws XmlException, Exception
 	{
-		( ( WsdlTestRequestStep )testStep ).getTestRequest().setRequestContent( enumerationValuesExtractor.extract() );
+		XmlObjectTreeModel model = null;
+		WsdlRequest request = ( ( WsdlTestRequestStep )testStep ).getTestRequest();
+		try
+		{
+			model = new XmlObjectTreeModel( request.getOperation().getInterface().getDefinitionContext()
+					.getSchemaTypeSystem(), XmlObject.Factory.parse( request.getRequestContent() ) );
+		}
+		catch( Exception e )
+		{
+			SoapUI.logError( e );
+		}
+		List<SecurityCheckedParameter> scpList = getParameterHolder().getParameterList();
+		for( SecurityCheckedParameter scp : scpList )
+		{
+			if( scp.isChecked() )
+			{
+				XmlTreeNode[] treeNodes = model.selectTreeNodes( scp.getXPath() );
+				if( treeNodes.length > 0 )
+				{
+					XmlTreeNode mynode = treeNodes[0];
+
+					if( mynode.getSchemaType() != null && mynode.getSchemaType().getEnumerationValues() != null
+							&& mynode.getSchemaType().getEnumerationValues().length > 0 )
+					{
+						EnumerationValues nodeInfo = new EnumerationValues( mynode.getSchemaType().getBaseType()
+								.getShortJavaName() );
+						for( XmlAnySimpleType s : mynode.getSchemaType().getEnumerationValues() )
+						{
+							nodeInfo.addValue( s.getStringValue() );
+						}
+						updateNodeValue( mynode, nodeInfo );
+					}
+				}
+			}
+		}
+		( ( WsdlTestRequestStep )testStep ).getTestRequest().setRequestContent( model.getXmlObject().toString() );
+	}
+
+	public  void updateNodeValue( XmlTreeNode mynode, EnumerationValues enumerationValues )
+	{
+		int size = EnumerationValues.maxLengthStringSize( enumerationValues.getValuesList() );
+		String value = EnumerationValues.createOutOfBoundaryValue( enumerationValues, size );
+		if( value != null )
+			mynode.setValue( 1, value );
 	}
 
 	protected boolean hasNext()
@@ -126,6 +169,7 @@ public class BoundarySecurityCheck extends AbstractSecurityCheck
 		}
 		return true;
 	}
+
 
 	@Override
 	public boolean isConfigurable()
@@ -162,5 +206,7 @@ public class BoundarySecurityCheck extends AbstractSecurityCheck
 	{
 		return "http://www.soapui.org";
 	}
+
+	
 
 }
