@@ -18,6 +18,7 @@ import java.util.Map;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
@@ -27,6 +28,7 @@ import com.eviware.soapui.model.security.SecurityParametersTableModel;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.DefaultActionList;
+import com.eviware.soapui.support.components.JUndoableTextArea;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.XFormField;
@@ -47,6 +49,8 @@ public class SecurityCheckedParametersTable extends JPanel
 	private JXTable table;
 	protected Map<String, TestProperty> properties;
 	protected DefaultActionList actionList;
+	private JUndoableTextArea pathPane;
+	private XFormDialog dialog;
 
 	public SecurityCheckedParametersTable( SecurityParametersTableModel model, Map<String, TestProperty> properties )
 	{
@@ -69,6 +73,13 @@ public class SecurityCheckedParametersTable extends JPanel
 		table = new JXTable( model );
 		add( new JScrollPane( table ), BorderLayout.CENTER );
 
+		pathPane = new JUndoableTextArea();
+
+	}
+
+	public XFormDialog getDialog()
+	{
+		return dialog;
 	}
 
 	/*
@@ -84,7 +95,9 @@ public class SecurityCheckedParametersTable extends JPanel
 		Close closeAction = new Close();
 		actionList.addAction( closeAction );
 
-		XFormDialog dialog = buildAddParameterDialog();
+		dialog = ADialogBuilder.buildDialog( AddParameterDialog.class, actionList, false );
+
+		dialog.getFormField( AddParameterDialog.PATH ).setProperty( "component", buildPathSelector() );
 
 		closeAction.setDialog( dialog );
 		addAction.setDialog( dialog );
@@ -92,9 +105,8 @@ public class SecurityCheckedParametersTable extends JPanel
 
 		final XFormField labelField = dialog.getFormField( AddParameterDialog.LABEL );
 		labelField.setEnabled( false );
-		final XFormField pathField = disablePath( dialog );
-		enablePathField( pathField, false );
 		JComboBoxFormField nameField = ( JComboBoxFormField )dialog.getFormField( AddParameterDialog.NAME );
+		enablePathField( false );
 		nameField.addFormFieldListener( new XFormFieldListener()
 		{
 
@@ -104,12 +116,12 @@ public class SecurityCheckedParametersTable extends JPanel
 				if( !newValue.equals( CHOOSE_TEST_PROPERTY ) )
 				{
 					labelField.setEnabled( true );
-					enablePathField( pathField, true );
+					enablePathField( true );
 				}
 				else
 				{
 					labelField.setEnabled( false );
-					enablePathField( pathField, false );
+					enablePathField( false );
 				}
 
 			}
@@ -120,50 +132,20 @@ public class SecurityCheckedParametersTable extends JPanel
 		return dialog;
 	}
 
-	/*
-	 * Override this if you want to use different dialog layout
-	 * 
-	 * @param actionList
-	 * 
-	 * @return
-	 */
-	protected XFormDialog buildAddParameterDialog()
+	protected JPanel buildPathSelector()
 	{
-		return ADialogBuilder.buildDialog( AddParameterDialog.class, actionList, false );
-	}
-
-	/*
-	 * 
-	 * Overide this is path element is not same as in AddParameterDialog
-	 * 
-	 * @param dialog
-	 * 
-	 * @return
-	 */
-	protected XFormField disablePath( XFormDialog dialog )
-	{
-		final XFormField pathField = dialog.getFormField( AddParameterDialog.PATH );
-		pathField.setEnabled( false );
-		return pathField;
+		JPanel sourcePanel = new JPanel( new BorderLayout() );
+		sourcePanel.add( new JScrollPane( pathPane ), BorderLayout.CENTER );
+		sourcePanel.setBorder( BorderFactory.createEmptyBorder( 0, 3, 3, 3 ) );
+		return sourcePanel;
 	}
 
 	/**
 	 * @param pathField
 	 */
-	protected void enablePathField( final XFormField pathField, boolean enable )
+	protected void enablePathField( boolean enable )
 	{
-		pathField.setEnabled( enable );
-	}
-
-	/**
-	 * 
-	 * 
-	 * @return
-	 */
-	protected boolean addParameter( XFormDialog dialog )
-	{
-		return model.addParameter( dialog.getValue( AddParameterDialog.LABEL ),
-				dialog.getValue( AddParameterDialog.NAME ), dialog.getValue( AddParameterDialog.PATH ) );
+		pathPane.setEnabled( enable );
 	}
 
 	private class AddNewParameterAction extends AbstractAction
@@ -221,7 +203,8 @@ public class SecurityCheckedParametersTable extends JPanel
 		@Override
 		public void actionPerformed( ActionEvent e )
 		{
-			if( !addParameter( dialog ) )
+			if( !model.addParameter( dialog.getValue( AddParameterDialog.LABEL ), dialog
+					.getValue( AddParameterDialog.NAME ), pathPane.getText() ) )
 				UISupport.showErrorMessage( "Label have to be unique!" );
 		}
 
@@ -281,15 +264,16 @@ public class SecurityCheckedParametersTable extends JPanel
 
 	}
 
-	/**
-	 * @param dialog
-	 * @param row
-	 */
-	protected void initDialogForCopy( XFormDialog dialog, int row )
+	private void initDialogForCopy( XFormDialog dialog, int row )
 	{
 		dialog.setValue( AddParameterDialog.LABEL, ( String )model.getValueAt( row, 0 ) );
 		dialog.setValue( AddParameterDialog.NAME, ( String )model.getValueAt( row, 1 ) );
-		dialog.setValue( AddParameterDialog.PATH, ( String )model.getValueAt( row, 2 ) );
+		pathPane.setText( ( String )model.getValueAt( row, 2 ) );
+	}
+
+	public JUndoableTextArea getPathPane()
+	{
+		return pathPane;
 	}
 
 	private class AddAction extends AbstractAction
@@ -317,31 +301,19 @@ public class SecurityCheckedParametersTable extends JPanel
 			}
 			else
 			{
-				if( addParameter( dialog ) )
+				if( model.addParameter( dialog.getValue( AddParameterDialog.LABEL ), dialog
+						.getValue( AddParameterDialog.NAME ), pathPane.getText() ) )
 				{
 					JComboBoxFormField nameField = ( JComboBoxFormField )dialog.getFormField( AddParameterDialog.NAME );
 					nameField.setSelectedOptions( new Object[] { nameField.getOptions()[0] } );
 					dialog.setValue( AddParameterDialog.LABEL, "" );
-					resetPathField(dialog);
+					pathPane.setText( "" );
 				}
 				else
 					UISupport.showErrorMessage( "Label have to be unique!" );
 			}
 		}
 
-	}
-
-	public SecurityParametersTableModel getModel()
-	{
-		return model;
-	}
-
-	/**
-	 * 
-	 */
-	protected void resetPathField(XFormDialog dialog)
-	{
-		dialog.setValue( AddParameterDialog.PATH, "" );
 	}
 
 	@AForm( description = "Add New Security Test Step Parameter", name = "Configure Security Test Step Parameters" )
@@ -353,7 +325,7 @@ public class SecurityCheckedParametersTable extends JPanel
 		@AField( description = "Parameter Label", name = "Parameter Label", type = AFieldType.STRING )
 		static String LABEL = "Parameter Label";
 
-		@AField( description = "Parameter XPath", name = "XPath", type = AFieldType.STRINGAREA )
+		@AField( description = "Parameter XPath", name = "XPath", type = AFieldType.COMPONENT )
 		static String PATH = "XPath";
 
 	}
