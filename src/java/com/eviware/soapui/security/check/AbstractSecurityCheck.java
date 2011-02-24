@@ -116,13 +116,9 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	{
 		this.config = config;
 
-		List<TestAssertionConfig> assertionList = config.getAssertionList();
-		for( int c = 0; c < assertionList.size(); c++ )
-		{
-			assertionsSupport.getAssertionAt( c ).updateConfig( assertionList.get( c ) );
-		}
+		assertionsSupport.refresh();
 
-		if( getParameterHolder() != null )
+		if( getParameterHolder() != null && getConfig().getChekedPameters() != null)
 		{
 			getParameterHolder().updateConfig( config.getChekedPameters() );
 		}
