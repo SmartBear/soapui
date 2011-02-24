@@ -477,7 +477,7 @@ public class SecurityChecksPanel extends JPanel
 			}
 			securityCheckList.setSelectedIndex( securityCheckListModel.getSize() - 1 );
 			AbstractSecurityCheck secCheck = getCurrentSecurityCheck();
-			secCheck.setTestStep( testStep );
+//			secCheck.setTestStep( testStep );
 
 			XFormDialog dialog = SoapUI.getSoapUICore().getSecurityCheckRegistry().getUIBuilder()
 					.buildSecurityCheckConfigurationDialog( secCheck );

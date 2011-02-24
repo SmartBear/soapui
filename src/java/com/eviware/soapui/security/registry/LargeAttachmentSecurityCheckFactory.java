@@ -19,44 +19,48 @@ import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.security.check.LargeAttachmentSecurityCheck;
 
-
 /**
  * Factory for creation GroovyScript steps
  * 
  * @author soapUI team
  */
 
-public class LargeAttachmentSecurityCheckFactory extends AbstractSecurityCheckFactory {
-	
-	public LargeAttachmentSecurityCheckFactory() {
-		super(LargeAttachmentSecurityCheck.TYPE, "LargeAttachmentSecurityCheck",
+public class LargeAttachmentSecurityCheckFactory extends AbstractSecurityCheckFactory
+{
+
+	public LargeAttachmentSecurityCheckFactory()
+	{
+		super( LargeAttachmentSecurityCheck.TYPE, "LargeAttachmentSecurityCheck",
 				"Preforms a check to see if the target can deal with extremely large attachments",
-				"/large_attachement_check_script.gif");
+				"/large_attachement_check_script.gif" );
 	}
 
-	public boolean canCreate(TestStep testStep) {
+	public boolean canCreate( TestStep testStep )
+	{
 		return true;
 	}
 
 	@Override
-	public AbstractSecurityCheck buildSecurityCheck(TestStep testStep,SecurityCheckConfig config, ModelItem parent) {
-		return new LargeAttachmentSecurityCheck(config, null, null, testStep);
+	public AbstractSecurityCheck buildSecurityCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent )
+	{
+		return new LargeAttachmentSecurityCheck( config, parent, null, testStep );
 	}
 
 	@Override
-	public SecurityCheckConfig createNewSecurityCheck(String name) {
-		SecurityCheckConfig securityCheckConfig = SecurityCheckConfig.Factory
-				.newInstance();
-		securityCheckConfig.setType(LargeAttachmentSecurityCheck.TYPE);
-		securityCheckConfig.setName(name);
+	public SecurityCheckConfig createNewSecurityCheck( String name )
+	{
+		SecurityCheckConfig securityCheckConfig = SecurityCheckConfig.Factory.newInstance();
+		securityCheckConfig.setType( LargeAttachmentSecurityCheck.TYPE );
+		securityCheckConfig.setName( name );
 		LargeAttachmentSecurityCheckConfig sic = LargeAttachmentSecurityCheckConfig.Factory.newInstance();
-		sic.setSize(4 * 1024 * 1024 * 1024);
-		securityCheckConfig.setConfig(sic);
+		sic.setSize( 4 * 1024 * 1024 * 1024 );
+		securityCheckConfig.setConfig( sic );
 		return securityCheckConfig;
 	}
 
 	@Override
-	public boolean isHttpMonitor() {
+	public boolean isHttpMonitor()
+	{
 		return false;
 	}
 }

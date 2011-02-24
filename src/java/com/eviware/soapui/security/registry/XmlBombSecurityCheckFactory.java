@@ -34,15 +34,15 @@ public class XmlBombSecurityCheckFactory extends AbstractSecurityCheckFactory
 				"/xml_bomb_security_check_script.gif" );
 	}
 
-	public boolean canCreate(TestStep testStep)
+	public boolean canCreate( TestStep testStep )
 	{
 		return true;
 	}
 
 	@Override
-	public AbstractSecurityCheck buildSecurityCheck( TestStep testStep,SecurityCheckConfig config, ModelItem parent )
+	public AbstractSecurityCheck buildSecurityCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent )
 	{
-		return new XmlBombSecurityCheck( config, null, null, testStep );
+		return new XmlBombSecurityCheck( config, parent, null, testStep );
 	}
 
 	@Override

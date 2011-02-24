@@ -50,12 +50,6 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck
 	public XmlBombSecurityCheck( SecurityCheckConfig config, ModelItem parent, String icon, TestStep testStep )
 	{
 		super( testStep, config, parent, icon );
-		if( config == null )
-		{
-			config = SecurityCheckConfig.Factory.newInstance();
-			XmlBombSecurityCheckConfig xmlbsc = XmlBombSecurityCheckConfig.Factory.newInstance();
-			config.setConfig( xmlbsc );
-		}
 		if( config.getConfig() == null )
 		{
 			XmlBombSecurityCheckConfig xmlbsc = XmlBombSecurityCheckConfig.Factory.newInstance();
