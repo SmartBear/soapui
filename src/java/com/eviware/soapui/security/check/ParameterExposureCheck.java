@@ -23,9 +23,12 @@ import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.MessageExchange;
+import com.eviware.soapui.model.testsuite.TestCaseRunContext;
+import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunContext;
+import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.security.SecurityTestRunnerImpl;
 import com.eviware.soapui.security.log.JSecurityTestRunLog;
 import com.eviware.soapui.security.monitor.HttpSecurityAnalyser;
@@ -69,14 +72,11 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements Htt
 	}
 
 	@Override
-	protected void execute( TestStep testStep, SecurityTestRunContext context )
+	protected void execute( SecurityTestRunner securityTestRunner, TestStep testStep, SecurityTestRunContext context )
 	{
 		if( acceptsTestStep( testStep ) )
 		{
-			SecurityTestRunnerImpl securityTestRunner = new SecurityTestRunnerImpl( ( SecurityTest )getParent(),
-					new StringToObjectMap() );
-
-			testStep.run( securityTestRunner, securityTestRunner.getRunContext() );
+			testStep.run( (TestCaseRunner)securityTestRunner, ( TestCaseRunContext )securityTestRunner.getRunContext() );
 		}
 	}
 

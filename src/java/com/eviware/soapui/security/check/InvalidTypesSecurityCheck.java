@@ -21,9 +21,12 @@ import com.eviware.soapui.config.CheckedParametersListConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.testsuite.TestCaseRunContext;
+import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunContext;
+import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.security.SecurityTestRunnerImpl;
 import com.eviware.soapui.security.boundary.SchemeTypeExtractor;
 import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
@@ -85,14 +88,12 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheck
 	}
 
 	@Override
-	protected void execute( TestStep testStep, SecurityTestRunContext context )
+	protected void execute(  SecurityTestRunner  securityTestRunner,TestStep testStep, SecurityTestRunContext context )
 	{
 		updateRequestContent();
 
-		SecurityTestRunnerImpl securityTestRunner = new SecurityTestRunnerImpl( ( SecurityTest )getParent(),
-				new StringToObjectMap() );
 
-		testStep.run( securityTestRunner, securityTestRunner.getRunContext() );
+		testStep.run( (TestCaseRunner)securityTestRunner, ( TestCaseRunContext )securityTestRunner.getRunContext() );
 	}
 
 	private void updateRequestContent()

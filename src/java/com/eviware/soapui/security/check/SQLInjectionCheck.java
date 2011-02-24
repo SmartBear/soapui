@@ -16,9 +16,11 @@ import com.eviware.soapui.config.SQLInjectionCheckConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.SamplerTestStep;
+import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunContext;
+import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.security.SecurityTestRunnerImpl;
 import com.eviware.soapui.security.fuzzer.Fuzzer;
 import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
@@ -73,14 +75,11 @@ public class SQLInjectionCheck extends AbstractSecurityCheck
 	}
 
 	@Override
-	protected void execute( TestStep testStep, SecurityTestRunContext context )
+	protected void execute( SecurityTestRunner securityTestRunner, TestStep testStep, SecurityTestRunContext context )
 	{
 		// sqlFuzzer.getNextFuzzedTestStep( testStep, getParameters() );
 
-		SecurityTestRunnerImpl securityTestRunner = new SecurityTestRunnerImpl( ( SecurityTest )getParent(),
-				new StringToObjectMap() );
-
-		testStep.run( securityTestRunner, context );
+		testStep.run( (TestCaseRunner)securityTestRunner, context );
 	}
 
 	// @Override

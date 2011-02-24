@@ -23,9 +23,12 @@ import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GroovyEditor;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.MessageExchange;
+import com.eviware.soapui.model.testsuite.TestCaseRunContext;
+import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunContext;
+import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.security.SecurityTestRunnerImpl;
 import com.eviware.soapui.security.log.JSecurityTestRunLog;
 import com.eviware.soapui.security.monitor.HttpSecurityAnalyser;
@@ -96,31 +99,29 @@ public class GroovySecurityCheck extends AbstractSecurityCheck implements HttpSe
 	}
 
 	@Override
-	protected void execute( TestStep testStep, SecurityTestRunContext context )
+	protected void execute(  SecurityTestRunner  securityTestRunner,TestStep testStep, SecurityTestRunContext context )
 	{
-		getScriptEngine().setScript( groovyscc.getExecuteScript().getStringValue() );
-		getScriptEngine().setVariable( "request", getTestStep().getProperty( "Request" ).getValue() );
-		getScriptEngine().setVariable( "log", SoapUI.ensureGroovyLog() );
-		try
-		{
-			scriptResult = getScriptEngine().run();
-		}
-		catch( Exception e )
-		{
-			SoapUI.logError( e );
-		}
-		finally
-		{
-			if( scriptResult != null )
-			{
-				getTestStep().getProperty( "Request" ).setValue( ( String )scriptResult );
-				SecurityTestRunnerImpl securityTestRunner = new SecurityTestRunnerImpl( ( SecurityTest )getParent(),
-						new StringToObjectMap() );
-
-				getTestStep().run( securityTestRunner, securityTestRunner.getRunContext() );
-			}
-			getScriptEngine().clearVariables();
-		}
+////		getScriptEngine().setScript( groovyscc.getExecuteScript().getStringValue() );
+////		getScriptEngine().setVariable( "request", getTestStep().getProperty( "Request" ).getValue() );
+////		getScriptEngine().setVariable( "log", SoapUI.ensureGroovyLog() );
+//		try
+//		{
+//			scriptResult = getScriptEngine().run();
+//		}
+//		catch( Exception e )
+//		{
+//			SoapUI.logError( e );
+//		}
+//		finally
+//		{
+//			if( scriptResult != null )
+//			{
+//				getTestStep().getProperty( "Request" ).setValue( ( String )scriptResult );
+//
+//				getTestStep().run( (TestCaseRunner)securityTestRunner, ( TestCaseRunContext )securityTestRunner.getRunContext() );
+//			}
+////			getScriptEngine().clearVariables();
+//		}
 
 	}
 
@@ -157,24 +158,24 @@ public class GroovySecurityCheck extends AbstractSecurityCheck implements HttpSe
 	@Override
 	public void analyzeHttpConnection( MessageExchange messageExchange, JSecurityTestRunLog securityTestLog )
 	{
-		getScriptEngine().setScript( getExecuteScript() );
-		getScriptEngine().setVariable( "testStep", null );
-		getScriptEngine().setVariable( "log", SoapUI.ensureGroovyLog() );
-		getScriptEngine().setVariable( "context", null );
-		getScriptEngine().setVariable( "messageExchange", messageExchange );
-
-		try
-		{
-			getScriptEngine().run();
-		}
-		catch( Exception e )
-		{
-			SoapUI.logError( e );
-		}
-		finally
-		{
-			getScriptEngine().clearVariables();
-		}
+//		getScriptEngine().setScript( getExecuteScript() );
+//		getScriptEngine().setVariable( "testStep", null );
+//		getScriptEngine().setVariable( "log", SoapUI.ensureGroovyLog() );
+//		getScriptEngine().setVariable( "context", null );
+//		getScriptEngine().setVariable( "messageExchange", messageExchange );
+//
+//		try
+//		{
+//			getScriptEngine().run();
+//		}
+//		catch( Exception e )
+//		{
+//			SoapUI.logError( e );
+//		}
+//		finally
+//		{
+//			getScriptEngine().clearVariables();
+//		}
 
 	}
 

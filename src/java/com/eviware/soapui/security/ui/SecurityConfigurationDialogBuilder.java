@@ -15,6 +15,8 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -27,6 +29,7 @@ import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.security.SecurityParametersTableModel;
 import com.eviware.soapui.security.SecurityTest;
+import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.assertion.SecurityAssertionPanel;
 import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.support.UISupport;
@@ -133,6 +136,7 @@ public class SecurityConfigurationDialogBuilder
 	{
 		setupGroovyEditor = new GroovyEditorComponent( new SetupScriptGroovyEditorModel( securityCheck.getModelItem() ),
 				null );
+		
 		return setupGroovyEditor;
 	}
 
@@ -217,8 +221,8 @@ public class SecurityConfigurationDialogBuilder
 	protected interface Assertions
 	{
 
-		@AField( description = "Assertions", name = "Security assertions", type = AFieldType.COMPONENT )
-		public final static String ASSERTIONS = "Security assertions";
+		@AField( description = "Assertions", name = "###Security assertions", type = AFieldType.COMPONENT )
+		public final static String ASSERTIONS = "###Security assertions";
 
 	}
 
@@ -272,9 +276,16 @@ public class SecurityConfigurationDialogBuilder
 					MockSecurityTestRunner securityTestRunner = new MockSecurityTestRunner(
 							( SecurityTest )( ( AbstractSecurityCheck )SetupScriptGroovyEditorModel.this.getModelItem() )
 									.getParent() );
-					( ( AbstractSecurityCheck )SetupScriptGroovyEditorModel.this.getModelItem() )
-							.runTearDownScript( ( ( AbstractSecurityCheck )SetupScriptGroovyEditorModel.this
-									.getModelItem() ).getTestStep() );
+					try
+					{
+						( ( AbstractSecurityCheck )SetupScriptGroovyEditorModel.this.getModelItem() ).runSetupScript(
+								securityTestRunner, ( SecurityTestRunContext )securityTestRunner.getRunContext() );
+					}
+					catch( Exception e1 )
+					{
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				}
 			};
 		}
@@ -311,9 +322,8 @@ public class SecurityConfigurationDialogBuilder
 						MockSecurityTestRunner securityTestRunner = new MockSecurityTestRunner(
 								( SecurityTest )( ( AbstractSecurityCheck )TearDownScriptGroovyEditorModel.this.getModelItem() )
 										.getParent() );
-						( ( AbstractSecurityCheck )TearDownScriptGroovyEditorModel.this.getModelItem() )
-								.runTearDownScript( ( ( AbstractSecurityCheck )TearDownScriptGroovyEditorModel.this
-										.getModelItem() ).getTestStep() );
+						( ( AbstractSecurityCheck )TearDownScriptGroovyEditorModel.this.getModelItem() ).runTearDownScript(
+								securityTestRunner, ( SecurityTestRunContext )securityTestRunner.getRunContext() );
 					}
 					catch( Exception e1 )
 					{

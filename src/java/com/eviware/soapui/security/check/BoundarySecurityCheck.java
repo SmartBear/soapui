@@ -24,9 +24,12 @@ import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.security.SecurityCheckedParameter;
+import com.eviware.soapui.model.testsuite.TestCaseRunContext;
+import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunContext;
+import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.security.SecurityTestRunnerImpl;
 import com.eviware.soapui.security.boundary.EnumerationValuesExtractor;
 import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
@@ -82,7 +85,7 @@ public class BoundarySecurityCheck extends AbstractSecurityCheck
 		return TYPE;
 	}
 
-	protected void execute( TestStep testStep, SecurityTestRunContext context )
+	protected void execute( SecurityTestRunner  securityTestRunner, TestStep testStep, SecurityTestRunContext context )
 	{
 		if( acceptsTestStep( testStep ) )
 		{
@@ -95,10 +98,7 @@ public class BoundarySecurityCheck extends AbstractSecurityCheck
 				SoapUI.log.error( "Error extracting enumeration values from message", e );
 			}
 
-			SecurityTestRunnerImpl securityTestRunner = new SecurityTestRunnerImpl( ( SecurityTest )getParent(),
-					new StringToObjectMap() );
-
-			testStep.run( securityTestRunner, securityTestRunner.getRunContext() );
+			testStep.run( (TestCaseRunner)securityTestRunner, context );
 			createMessageExchange( testStep );
 			propertiesCounter-- ;
 
@@ -126,58 +126,6 @@ public class BoundarySecurityCheck extends AbstractSecurityCheck
 		}
 		return true;
 	}
-
-//	@Override
-//	public boolean configure()
-//	{
-//		if( dialog == null )
-//			buildDialog();
-//		if( dialog.show() )
-//		{
-//
-//			String[] selectedList = StringUtils.toStringArray( ( ( XFormMultiSelectList )dialog
-//					.getFormField( BoundaryConfigDialog.PARAMETERS ) ).getSelectedOptions() );
-//			enumerationValuesExtractor.setSelectedEnumerationParameters( Arrays.asList( selectedList ) );
-//
-//			for( String paramName : enumerationValuesExtractor.getEnumerationParameters() )
-//			{
-//				SecurityCheckedParameterImpl param = ( SecurityCheckedParameterImpl )parameterHolder
-//						.getParametarByName( paramName );
-//				if( param == null )
-//				{
-//					param = ( SecurityCheckedParameterImpl )parameterHolder.addParameter( paramName );
-//					param.setName( paramName );
-//				}
-//				( ( SecurityCheckedParameterImpl )param ).setChecked( Arrays.asList( selectedList ).contains( paramName ) );
-//			}
-//
-//			return true;
-//		}
-//		return false;
-//	}
-
-
-//	@Override
-//	protected void buildDialog()
-//	{
-//		List<String> selectedOptions = new ArrayList<String>();
-//		for( SecurityCheckedParameter cpc : parameterHolder.getParameterList() )
-//		{
-//			if( cpc.isChecked() )
-//				selectedOptions.add( cpc.getName() );
-//		}
-//
-//		dialog = ADialogBuilder.buildDialog( BoundaryConfigDialog.class );
-//		XFormMultiSelectList field = ( XFormMultiSelectList )dialog.getFormField( BoundaryConfigDialog.PARAMETERS );
-//		field.setOptions( enumerationValuesExtractor.getEnumerationParameters().toArray(
-//				new String[enumerationValuesExtractor.getEnumerationParameters().size()] ) );
-//		field.setSelectedOptions( selectedOptions.toArray() );
-//
-//		XFormField assertionsPanel = dialog.getFormField( BoundaryConfigDialog.ASSERTIONS );
-//		SecurityAssertionPanel securityAssertionPanel = new SecurityAssertionPanel( this );
-//		assertionsPanel.setProperty( "component", securityAssertionPanel );
-//
-//	}
 
 	@Override
 	public boolean isConfigurable()

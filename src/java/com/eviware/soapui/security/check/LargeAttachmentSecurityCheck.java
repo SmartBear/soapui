@@ -12,6 +12,7 @@ import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunContext;
+import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.security.SecurityTestRunnerImpl;
 import com.eviware.soapui.security.tools.InfiniteAttachment;
 import com.eviware.soapui.security.ui.LargeAttachmentSecurityCheckConfigPanel;
@@ -42,12 +43,10 @@ public class LargeAttachmentSecurityCheck extends AbstractSecurityCheck
 	}
 
 	@Override
-	protected void execute( TestStep testStep, SecurityTestRunContext context )
+	protected void execute( SecurityTestRunner securityTestRunner, TestStep testStep, SecurityTestRunContext context )
 	{
-		SecurityTestRunnerImpl securityTestRunner = new SecurityTestRunnerImpl( ( SecurityTest )getParent(),
-				new StringToObjectMap() );
 
-		String originalResponse = getOriginalResult( securityTestRunner, testStep ).getResponse().getRequestContent();
+		String originalResponse = getOriginalResult( ( SecurityTestRunnerImpl )securityTestRunner, testStep ).getResponse().getRequestContent();
 
 		AbstractHttpRequest<?> request = ( AbstractHttpRequest<?> )getRequest( testStep );
 
@@ -102,14 +101,13 @@ public class LargeAttachmentSecurityCheck extends AbstractSecurityCheck
 		( ( LargeAttachmentSecurityCheckConfig )getConfig().getConfig() ).setTime( time );
 	}
 
-
 	@Override
 	protected boolean hasNext()
 	{
 		// TODO Auto-generated method stub
 		return false;
 	}
-	
+
 	@Override
 	public String getConfigDescription()
 	{

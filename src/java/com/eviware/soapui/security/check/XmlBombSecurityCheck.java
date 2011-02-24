@@ -32,6 +32,7 @@ import com.eviware.soapui.model.testsuite.SamplerTestStep;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunContext;
+import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.security.SecurityTestRunnerImpl;
 import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
 import com.eviware.soapui.security.ui.XmlBombSecurityCheckConfigPanel;
@@ -91,13 +92,11 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck
 	// }
 
 	@Override
-	protected void execute( TestStep testStep, SecurityTestRunContext context )
+	protected void execute( SecurityTestRunner securityTestRunner, TestStep testStep, SecurityTestRunContext context )
 	{
 		currentIndex = 0;
-		SecurityTestRunnerImpl securityTestRunner = new SecurityTestRunnerImpl( ( SecurityTest )getParent(),
-				new StringToObjectMap() );
 
-		String originalResponse = getOriginalResult( securityTestRunner, testStep ).getResponse().getContentAsXml();
+		String originalResponse = getOriginalResult( ( SecurityTestRunnerImpl )securityTestRunner, testStep ).getResponse().getContentAsXml();
 		String originalRequest = getRequest( testStep ).getRequestContent();
 		if( isAttachXmlBomb() )
 		{

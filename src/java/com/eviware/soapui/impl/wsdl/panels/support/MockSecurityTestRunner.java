@@ -41,7 +41,7 @@ public class MockSecurityTestRunner extends AbstractMockTestRunner<SecurityTest>
 	public SecurityCheckResult runTestStepSecurityCheck( SecurityTestRunContext runContext, TestStep testStep,
 			AbstractSecurityCheck securityCheck )
 	{
-		return securityCheck.run( cloneForSecurityCheck( ( WsdlTestStep )testStep ), runContext );
+		return securityCheck.run( cloneForSecurityCheck( ( WsdlTestStep )testStep ), runContext, null );
 	}
 	
 	private TestStep cloneForSecurityCheck( WsdlTestStep sourceTestStep )
