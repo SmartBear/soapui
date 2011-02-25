@@ -24,13 +24,10 @@ import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
-import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
-import com.eviware.soapui.security.SecurityTestRunnerImpl;
 import com.eviware.soapui.security.boundary.SchemeTypeExtractor;
 import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
-import com.eviware.soapui.support.types.StringToObjectMap;
 import com.eviware.x.form.XFormDialog;
 
 public class InvalidTypesSecurityCheck extends AbstractSecurityCheck

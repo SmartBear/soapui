@@ -12,6 +12,7 @@
 package com.eviware.soapui.security.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Map;
@@ -38,9 +39,10 @@ import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.impl.swing.JComboBoxFormField;
+import com.eviware.x.impl.swing.JFormDialog;
 import com.eviware.x.impl.swing.SwingXFormDialog;
 
-public class SecurityCheckedParametersTable extends JPanel
+public class SecurityCheckedParametersTablePanel extends JPanel
 {
 
 	static final String CHOOSE_TEST_PROPERTY = "Choose Test Property";
@@ -52,7 +54,7 @@ public class SecurityCheckedParametersTable extends JPanel
 	private JUndoableTextArea pathPane;
 	private XFormDialog dialog;
 
-	public SecurityCheckedParametersTable( SecurityParametersTableModel model, Map<String, TestProperty> properties )
+	public SecurityCheckedParametersTablePanel( SecurityParametersTableModel model, Map<String, TestProperty> properties )
 	{
 		this.model = model;
 		this.properties = properties;
@@ -129,6 +131,10 @@ public class SecurityCheckedParametersTable extends JPanel
 		ArrayList<String> options = new ArrayList<String>( properties.keySet() );
 		options.set( 0, CHOOSE_TEST_PROPERTY );
 		nameField.setOptions( options.toArray( new String[0] ) );
+		
+		dialog.setWidth( 450 );
+		((JFormDialog)dialog).getDialog().setResizable(false );
+		
 		return dialog;
 	}
 

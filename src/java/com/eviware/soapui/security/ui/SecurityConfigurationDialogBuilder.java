@@ -15,14 +15,13 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 
+import com.eviware.soapui.config.StrategyTypeConfig;
 import com.eviware.soapui.impl.wsdl.panels.support.MockSecurityTestRunner;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.AbstractGroovyEditorModel;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
@@ -34,12 +33,16 @@ import com.eviware.soapui.security.assertion.SecurityAssertionPanel;
 import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.GroovyEditorComponent;
+import com.eviware.x.form.ValidationMessage;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.XFormField;
+import com.eviware.x.form.XFormFieldListener;
+import com.eviware.x.form.XFormFieldValidator;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.APage;
+import com.eviware.x.form.support.XFormRadioGroup;
 import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.impl.swing.JFormDialog;
 import com.eviware.x.impl.swing.JTabbedFormDialog;
@@ -121,8 +124,55 @@ public class SecurityConfigurationDialogBuilder
 		tabDialog.getFormField( TearDownScript.SCRIPT ).setProperty( "component",
 				buildTearDownScriptPanel( securityCheck ) );
 		tabDialog.getFormField( TearDownScript.SCRIPT ).setProperty( "dimension", new Dimension( 360, 165 ) );
-		tabs.setProperty( "component", tabDialog.getTabs() );
 
+		addStrategyPanel( tabDialog, securityCheck );
+		tabs.setProperty( "component", tabDialog.getTabs() );
+		
+	}
+
+	private void addStrategyPanel( XFormDialog dialog, final AbstractSecurityCheck securityCheck )
+	{
+		XFormRadioGroup strategy = ( XFormRadioGroup )dialog.getFormField( Strategy.STRATEGY );
+		final String[] strategyOptions = new String[] { "One by One", "All At Once" };
+		strategy.setOptions( strategyOptions );
+		if( securityCheck.getExecutionStrategy().getStrategy() == StrategyTypeConfig.ONE_BY_ONE )
+			strategy.setValue( strategyOptions[0] );
+		else
+			strategy.setValue( strategyOptions[1] );
+
+		strategy.addFormFieldListener( new XFormFieldListener()
+		{
+
+			@Override
+			public void valueChanged( XFormField sourceField, String newValue, String oldValue )
+			{
+
+				if( newValue.equals( strategyOptions ) )
+					securityCheck.getExecutionStrategy().setStrategy( StrategyTypeConfig.ONE_BY_ONE );
+				else
+					securityCheck.getExecutionStrategy().setStrategy( StrategyTypeConfig.ALL_AT_ONCE );
+
+			}
+		} );
+
+		XFormField delay = dialog.getFormField( Strategy.DELAY );
+		delay.setValue( String.valueOf( securityCheck.getExecutionStrategy().getDelay() ) );
+
+		delay.addFormFieldListener( new XFormFieldListener()
+		{
+
+			@Override
+			public void valueChanged( XFormField sourceField, String newValue, String oldValue )
+			{
+				try {
+					Integer.valueOf( newValue );
+					securityCheck.getExecutionStrategy().setDelay( Integer.valueOf( newValue ) );
+				} catch (Exception e) {
+					UISupport.showErrorMessage( "Delay value must be integer number" );
+				}
+			}
+		} );
+		
 	}
 
 	private GroovyEditorComponent buildTearDownScriptPanel( AbstractSecurityCheck securityCheck )
@@ -136,7 +186,7 @@ public class SecurityConfigurationDialogBuilder
 	{
 		setupGroovyEditor = new GroovyEditorComponent( new SetupScriptGroovyEditorModel( securityCheck.getModelItem() ),
 				null );
-		
+
 		return setupGroovyEditor;
 	}
 
@@ -150,7 +200,7 @@ public class SecurityConfigurationDialogBuilder
 	 */
 	protected void addParameterTable( AbstractSecurityCheck securityCheck, XFormField field )
 	{
-		field.setProperty( "component", new SecurityCheckedParametersTable( new SecurityParametersTableModel(
+		field.setProperty( "component", new SecurityCheckedParametersTablePanel( new SecurityParametersTableModel(
 				securityCheck.getParameterHolder() ), securityCheck.getTestStep().getProperties() ) );
 	}
 
@@ -166,8 +216,11 @@ public class SecurityConfigurationDialogBuilder
 
 		if( component != null )
 			dialog.getFormField( OptionalDialog.OPTIONAL ).setProperty( "component", component );
+
 		buildBasicDialog( name, description, icon, helpUrl, securityCheck, dialog );
 
+		((JFormDialog)dialog).getDialog().setResizable( false );
+		
 		return dialog;
 	}
 
@@ -230,8 +283,11 @@ public class SecurityConfigurationDialogBuilder
 	protected interface Strategy
 	{
 
-		@AField( description = "Strategy", name = "Select strategy", type = AFieldType.COMPONENT )
+		@AField( description = "Strategy", name = "Select strategy", type = AFieldType.RADIOGROUP )
 		public final static String STRATEGY = "Select strategy";
+
+		@AField( description = "Request Delay", name = "Request Delay", type = AFieldType.INT )
+		public final static String DELAY = "Request Delay";
 
 	}
 

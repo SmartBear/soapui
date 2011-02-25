@@ -20,10 +20,10 @@ import javax.swing.JComponent;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.SecurityCheckConfig;
+import com.eviware.soapui.config.StrategyTypeConfig;
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.WsdlSubmitContext;
-import com.eviware.soapui.impl.wsdl.panels.support.MockSecurityTestRunner;
 import com.eviware.soapui.impl.wsdl.support.assertions.AssertableConfig;
 import com.eviware.soapui.impl.wsdl.support.assertions.AssertionsSupport;
 import com.eviware.soapui.impl.wsdl.teststeps.TestRequest;
@@ -46,25 +46,19 @@ import com.eviware.soapui.model.testsuite.RequestAssertion;
 import com.eviware.soapui.model.testsuite.ResponseAssertion;
 import com.eviware.soapui.model.testsuite.SamplerTestStep;
 import com.eviware.soapui.model.testsuite.TestAssertion;
-import com.eviware.soapui.model.testsuite.TestCaseRunContext;
-import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
-import com.eviware.soapui.model.testsuite.TestRunner.Status;
+import com.eviware.soapui.security.ExecutionStrategyHolder;
 import com.eviware.soapui.security.Securable;
 import com.eviware.soapui.security.SecurityCheckRequestResult;
 import com.eviware.soapui.security.SecurityCheckResult;
-import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.security.SecurityTestRunnerImpl;
 import com.eviware.soapui.security.SecurityCheckRequestResult.SecurityStatus;
 import com.eviware.soapui.security.support.SecurityCheckedParameterHolder;
-import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
 import com.eviware.soapui.support.StringUtils;
-import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
-import com.eviware.soapui.support.types.StringToObjectMap;
 
 /**
  * @author robert
@@ -78,9 +72,6 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 
 	public static final String STATUS_PROPERTY = AbstractSecurityCheck.class.getName() + "@status";
 
-	public static final String SINGLE_REQUEST_STRATEGY = "A single request with all the parameters";
-	public static final String SEPARATE_REQUEST_STRATEGY = "Seperate request for each parameter";
-
 	// configuration of specific request modification
 	private SecurityCheckConfig config;
 	private boolean disabled = false;
@@ -93,6 +84,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	private SecurityCheckedParameterHolder parameterHolder;
 	private SoapUIScriptEngine setupScriptEngine;
 	private SoapUIScriptEngine tearDownScriptEngine;
+	private ExecutionStrategyHolder executionStrategy;
 
 	public AbstractSecurityCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent, String icon )
 	{
@@ -103,15 +95,20 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		}
 		this.testStep = testStep;
 		this.config = config;
-		if( config.getExecutionStrategy() == null )
-			config.setExecutionStrategy( SEPARATE_REQUEST_STRATEGY );
+		if( config.getExecutionStrategy() == null ) {
+			config.addNewExecutionStrategy();
+			config.getExecutionStrategy().setStrategy( StrategyTypeConfig.ONE_BY_ONE );
+			config.getExecutionStrategy().setDelay( 10 );
+		}
 
+		setExecutionStrategy( new ExecutionStrategyHolder(config.getExecutionStrategy()) );
+		
 		if( config.getChekedPameters() == null )
 			config.addNewChekedPameters();
 
 		setParameterHolder( new SecurityCheckedParameterHolder( this, config.getChekedPameters() ) );
 		initAssertions();
-
+		
 	}
 
 	public void updateSecurityConfig( SecurityCheckConfig config )
@@ -123,6 +120,10 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		if( getParameterHolder() != null && getConfig().getChekedPameters() != null)
 		{
 			getParameterHolder().updateConfig( config.getChekedPameters() );
+		}
+		
+		if ( executionStrategy != null && config.getExecutionStrategy() != null ) {
+			executionStrategy.updateConfig(config.getExecutionStrategy());
 		}
 	}
 
@@ -373,14 +374,14 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		}
 	}
 
-	public String getExecutionStrategy()
+	public ExecutionStrategyHolder getExecutionStrategy()
 	{
-		return config.getExecutionStrategy();
+		return this.executionStrategy;
 	}
 
-	public void setExecutionStrategy( String strategy )
+	public void setExecutionStrategy( ExecutionStrategyHolder executionStrategyHolder )
 	{
-		config.setExecutionStrategy( strategy );
+		this.executionStrategy = executionStrategyHolder;
 	}
 
 	protected TestRequest getOriginalResult( SecurityTestRunnerImpl securityRunner, TestStep testStep )
@@ -718,6 +719,9 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		if( config.getSetupScript() == null )
 			config.addNewSetupScript();
 		config.getSetupScript().setStringValue( text );
+		
+		if( setupScriptEngine != null )
+			setupScriptEngine.setScript( text );
 	}
 
 	public String getTearDownScript()
@@ -732,6 +736,9 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		if( config.getTearDownScript() == null )
 			config.addNewTearDownScript();
 		config.getTearDownScript().setStringValue( text );
+		
+		if( tearDownScriptEngine != null )
+			tearDownScriptEngine.setScript( text );
 	}
 
 	// name used in configuration panel

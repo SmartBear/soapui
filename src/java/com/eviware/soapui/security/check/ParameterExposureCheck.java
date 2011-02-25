@@ -26,15 +26,12 @@ import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
-import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
-import com.eviware.soapui.security.SecurityTestRunnerImpl;
 import com.eviware.soapui.security.log.JSecurityTestRunLog;
 import com.eviware.soapui.security.monitor.HttpSecurityAnalyser;
 import com.eviware.soapui.security.ui.ParameterExposureCheckPanel;
 import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
-import com.eviware.soapui.support.types.StringToObjectMap;
 
 /**
  * This checks whether any parameters sent in the request are included in the
@@ -247,13 +244,13 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements Htt
 	@Override
 	public String getConfigDescription()
 	{
-		return "Configures invalid type security check";
+		return "Configures parameter exposure security check";
 	}
 
 	@Override
 	public String getConfigName()
 	{
-		return "Invalid Types Security Check";
+		return "Parameter Exposure Security Check";
 	}
 
 	@Override

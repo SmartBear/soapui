@@ -18,13 +18,10 @@ import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.SamplerTestStep;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
-import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
-import com.eviware.soapui.security.SecurityTestRunnerImpl;
 import com.eviware.soapui.security.fuzzer.Fuzzer;
 import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
-import com.eviware.soapui.support.types.StringToObjectMap;
 
 /**
  * This will test whether a targeted web page is vulnerable to reflected XSS
@@ -82,25 +79,6 @@ public class SQLInjectionCheck extends AbstractSecurityCheck
 		testStep.run( (TestCaseRunner)securityTestRunner, context );
 	}
 
-	// @Override
-	// protected void analyze( TestStep testStep, SecurityTestRunContext context
-	// )
-	// {
-	// if( acceptsTestStep( testStep ) )
-	// {
-	// // HttpTestRequestStepInterface testStepwithProperties = (
-	// // HttpTestRequestStepInterface )testStep;
-	// // HttpTestRequestInterface<?> request =
-	// // testStepwithProperties.getTestRequest();
-	// // MessageExchange messageExchange = new HttpResponseMessageExchange(
-	// // request );
-	//
-	// // securityCheckReqResult.setMessageExchange( messageExchange );
-	// securityCheckRequestResult.setStatus( SecurityCheckStatus.OK );
-	//
-	// }
-	// }
-
 	@Override
 	protected boolean hasNext()
 	{
@@ -110,13 +88,13 @@ public class SQLInjectionCheck extends AbstractSecurityCheck
 	@Override
 	public String getConfigDescription()
 	{
-		return "Configures invalid type security check";
+		return "Configures SQL injection security check";
 	}
 
 	@Override
 	public String getConfigName()
 	{
-		return "Invalid Types Security Check";
+		return "SQL Injection Security Check";
 	}
 
 	@Override

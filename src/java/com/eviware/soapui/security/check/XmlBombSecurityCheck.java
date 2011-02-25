@@ -22,6 +22,7 @@ import java.util.List;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.RestParameterConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
+import com.eviware.soapui.config.StrategyTypeConfig;
 import com.eviware.soapui.config.XmlBombSecurityCheckConfig;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
@@ -30,13 +31,11 @@ import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.security.SecurityCheckedParameter;
 import com.eviware.soapui.model.testsuite.SamplerTestStep;
 import com.eviware.soapui.model.testsuite.TestStep;
-import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.security.SecurityTestRunnerImpl;
 import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
 import com.eviware.soapui.security.ui.XmlBombSecurityCheckConfigPanel;
-import com.eviware.soapui.support.types.StringToObjectMap;
 import com.eviware.soapui.support.xml.XmlUtils;
 
 public class XmlBombSecurityCheck extends AbstractSecurityCheck
@@ -113,7 +112,7 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck
 			currentIndex = 0;
 		}
 
-		if( getExecutionStrategy().equals( AbstractSecurityCheck.SEPARATE_REQUEST_STRATEGY )
+		if( getExecutionStrategy().getStrategy() == StrategyTypeConfig.ONE_BY_ONE 
 				&& getParameterHolder().getParameterList().size() > 0 )
 		{
 			for( SecurityCheckedParameter param : getParameterHolder().getParameterList() )
@@ -390,13 +389,13 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck
 	@Override
 	public String getConfigDescription()
 	{
-		return "Configures invalid type security check";
+		return "Configures Xml bomb security check";
 	}
 
 	@Override
 	public String getConfigName()
 	{
-		return "Invalid Types Security Check";
+		return "XML Bomb Security Check";
 	}
 
 	@Override

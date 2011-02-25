@@ -24,12 +24,10 @@ import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.testsuite.TestStep;
-import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.security.SecurityTestRunnerImpl;
 import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
-import com.eviware.soapui.support.types.StringToObjectMap;
 
 public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 {
@@ -128,13 +126,13 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 	@Override
 	public String getConfigDescription()
 	{
-		return "Configures invalid type security check";
+		return "Configures malicious attachment security check";
 	}
 
 	@Override
 	public String getConfigName()
 	{
-		return "Invalid Types Security Check";
+		return "Malicious Attachmnet Security Check";
 	}
 
 	@Override
