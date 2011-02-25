@@ -19,7 +19,7 @@ import com.eviware.soapui.security.support.SecurityCheckedParameterImpl;
 public class SecurityParametersTableModel extends DefaultTableModel
 {
 
-	private String[] columnNames = new String[] { "Label", "Name", "XPath", "Used" };
+	private String[] columnNames = new String[] { "Label", "Name", "XPath", "Enabled" };
 	private SecurityCheckedParameterHolder holder;
 
 	public SecurityParametersTableModel( SecurityCheckedParameterHolder holder )
