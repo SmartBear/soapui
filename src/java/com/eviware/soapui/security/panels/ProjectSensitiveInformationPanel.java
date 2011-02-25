@@ -92,14 +92,16 @@ public class ProjectSensitiveInformationPanel
 
 	private void addListeners()
 	{
-		((JStringListFormField)dialog.getFormField(  SensitiveInformationConfigDialog.INFOLIST )).getComponent().addPropertyChangeListener( new PropertyChangeListener()
-		{
-			@Override
-			public void propertyChange( PropertyChangeEvent evt )
-			{
-				save();
-			}
-		});
+		( ( JStringListFormField )dialog.getFormField( SensitiveInformationConfigDialog.INFOLIST ) ).getComponent()
+				.addPropertyChangeListener( new PropertyChangeListener()
+				{
+					@Override
+					public void propertyChange( PropertyChangeEvent evt )
+					{
+						if("options".equals( evt.getPropertyName() ) )
+							save();
+					}
+				} );
 	}
 
 	// TODO : update help URL
