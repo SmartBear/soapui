@@ -143,11 +143,11 @@ public abstract class AbstractTestCaseRunner<T extends TestRunnable, T2 extends 
 			}
 		}
 
-		failOnErrors( runContext );
+		failTestRunnableOnErrors( runContext );
 		preserveContext( getRunContext() );
 	}
 
-	protected abstract void failOnErrors( T2 runContext );
+	protected abstract void failTestRunnableOnErrors( T2 runContext );
 
 	protected abstract int runCurrentTestStep( T2 runContext, int currentStepIndex );
 

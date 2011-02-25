@@ -113,8 +113,6 @@ public class JSecurityTestTestStepList extends JPanel
 		return ix == -1 ? null : securityTest.getTestStepSecurityCheckAt( selectedTestStep.getTestStep().getId(), ix );
 	}
 
-	// TODO see how to change the model for this to work...which class should
-	// implement securable
 	protected JPanel buildSecurityChecksPanel()
 	{
 		if( selectedTestStep != null && AbstractSecurityCheck.isSecurable( selectedTestStep.getTestStep() ) )
@@ -135,9 +133,12 @@ public class JSecurityTestTestStepList extends JPanel
 
 	public void reset()
 	{
-		for( TestStepListEntryPanel testCasePanel : panels.values() )
+		for( TestStepListEntryPanel testStepPanel : panels.values() )
 		{
-			testCasePanel.reset();
+			if( AbstractSecurityCheck.isSecurable( testStepPanel.getTestStep() ) )
+			{
+				testStepPanel.reset();
+			}
 		}
 	}
 
@@ -178,6 +179,7 @@ public class JSecurityTestTestStepList extends JPanel
 				remove( testCaseListPanel );
 				TestStepListEntryPanel testStepListEntry = panels.remove( testStep );
 				testStepListPanel.remove( testStepListEntry );
+				testStepListEntry.release();
 				splitPane.remove( splitPane.getTopComponent() );
 				splitPane.setTopComponent( new JScrollPane( testStepListPanel ) );
 				revalidate();
@@ -333,7 +335,6 @@ public class JSecurityTestTestStepList extends JPanel
 			testStep.addPropertyChangeListener( testCasePropertyChangeListener );
 			if( progressBar != null )
 			{
-				// TODO check
 				progressBarAdapter = new ProgressBarSecurityTestStepAdapter( progressBar, securityTest, testStep );
 			}
 		}
@@ -443,6 +444,11 @@ public class JSecurityTestTestStepList extends JPanel
 		{
 			label.setIcon( testStep.getIcon() );
 		}
+
+		public void release()
+		{
+			testStep.removePropertyChangeListener( this );
+		}
 	}
 
 	protected int getIndexOf( TestStepListEntryPanel panel )
@@ -455,6 +461,14 @@ public class JSecurityTestTestStepList extends JPanel
 		TestStepListEntryPanel testStepListPanel = new TestStepListEntryPanel( ( WsdlTestStep )testStep );
 
 		return testStepListPanel;
+	}
+
+	public void release()
+	{
+		for( TestStepListEntryPanel testStepPanel : panels.values() )
+		{
+			testStepPanel.release();
+		}
 	}
 
 }

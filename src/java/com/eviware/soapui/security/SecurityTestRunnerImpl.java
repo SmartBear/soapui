@@ -97,21 +97,6 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 		// stepResult.discard();
 		// }
 
-		// TODO check if step result should be considered?
-		// if( process && stepResult.getStatus() == TestStepStatus.FAILED )
-		// {
-		// if( getTestRunnable().getFailOnError() )
-		// {
-		// setError( stepResult.getError() );
-		// fail( "Cancelling due to failed test step" );
-		// }
-		// else
-		// {
-		// getRunContext().setProperty( TestCaseRunner.Status.class.getName(),
-		// TestCaseRunner.Status.FAILED );
-		// }
-		// }
-
 		return stepResult;
 	}
 
@@ -150,22 +135,18 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 			for( int i = 0; i < securityTestListeners.length; i++ )
 			{
 				securityTestListeners[i].beforeStep( this, getRunContext(), currentStep );
-				if( !isRunning() )
-					return -2;
 			}
 			for( int i = 0; i < securityTestStepListeners.length; i++ )
 			{
 				securityTestStepListeners[i].beforeStep( this, getRunContext(), currentStep );
-				if( !isRunning() )
-					return -2;
 			}
 			TestStepResult stepResult = runTestStep( currentStep, true, true );
 			SecurityTestStepResult securityStepResult = new SecurityTestStepResult( currentStep );
 			if( stepResult == null )
 				return -2;
 
-			if( !isRunning() )
-				return -2;
+			// if( !isRunning() )
+			// return -2;
 
 			Map<String, List<AbstractSecurityCheck>> secCheckMap = securityTest.getSecurityChecksMap();
 			if( secCheckMap.containsKey( currentStep.getId() ) )
@@ -197,8 +178,6 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 			for( int i = 0; i < securityTestStepListeners.length; i++ )
 			{
 				securityTestStepListeners[i].afterStep( this, getRunContext(), securityStepResult );
-				if( !isRunning() )
-					return -2;
 			}
 			for( int i = 0; i < securityTestListeners.length; i++ )
 			{
@@ -232,22 +211,21 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 				securityTestListeners[j].beforeSecurityCheck( this, runContext, securityCheck );
 			}
 			result = securityCheck.run( cloneForSecurityCheck( ( WsdlTestStep )currentStep ), runContext, null );
-			// TODO check
-			if( securityTest.getFailSecurityTestOnCheckErrors() && result.getStatus() == SecurityStatus.FAILED )
+			if( securityTest.getFailOnError() && result.getStatus() == SecurityStatus.FAILED )
 			{
-				fail( "Failing due to failed security check" );
+				fail( "Cancelling due to failed security check" );
 			}
-			for( int j = 0; j < securityTestListeners.length; j++ )
+			for( int j = 0; j < securityCheckListeners.length; j++ )
 			{
-				securityTestListeners[j].afterSecurityCheck( this, runContext, result );
+				securityCheckListeners[j].afterSecurityCheck( this, runContext, result );
 			}
 			for( int j = 0; j < securityTestStepListeners.length; j++ )
 			{
 				securityTestStepListeners[j].afterSecurityCheck( this, runContext, result );
 			}
-			for( int j = 0; j < securityCheckListeners.length; j++ )
+			for( int j = 0; j < securityTestListeners.length; j++ )
 			{
-				securityCheckListeners[j].afterSecurityCheck( this, runContext, result );
+				securityTestListeners[j].afterSecurityCheck( this, runContext, result );
 			}
 		}
 		return result;
@@ -328,7 +306,7 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 	}
 
 	@Override
-	protected void failOnErrors( SecurityTestRunContext runContext )
+	protected void failTestRunnableOnErrors( SecurityTestRunContext runContext )
 	{
 		// TODO this should be handled properly, maybe add option on securityTest
 		// level

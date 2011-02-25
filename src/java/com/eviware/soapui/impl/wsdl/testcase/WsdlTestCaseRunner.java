@@ -73,7 +73,7 @@ public class WsdlTestCaseRunner extends AbstractTestCaseRunner<WsdlTestCase, Wsd
 	}
 
 	@Override
-	protected void failOnErrors( WsdlTestRunContext runContext )
+	protected void failTestRunnableOnErrors( WsdlTestRunContext runContext )
 	{
 		if( runContext.getProperty( TestCaseRunner.Status.class.getName() ) == TestCaseRunner.Status.FAILED
 				&& getTestCase().getFailTestCaseOnErrors() )

@@ -365,6 +365,13 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 		}
 	}
 
+	@Override
+	protected boolean release()
+	{
+		testStepList.release();
+		return super.release();
+	}
+
 	public boolean onClose( boolean canCancel )
 	{
 		if( canCancel )
@@ -634,6 +641,10 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 			securityTestLog.addText( "SecurityTest started at " + dateFormat.format( new Date() ) );
 
 			SecurityTestDesktopPanel.this.beforeRun();
+
+			testStepList.reset();
+			progressBar.setValue( 0 );
+			progressBar.setString( "" );
 
 			if( runner == null )
 				runner = ( SecurityTestRunnerImpl )testRunner;

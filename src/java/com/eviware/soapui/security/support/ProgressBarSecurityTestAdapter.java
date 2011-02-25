@@ -65,36 +65,6 @@ public class ProgressBarSecurityTestAdapter
 			progressBar.setForeground( Color.GREEN.darker() );
 		}
 
-		// TODO - not sure if we should have next 2 methods here, separate checks
-		// are better to monitor progress
-		public void beforeStep( TestCaseRunner testRunner, SecurityTestRunContext runContext, TestStep testStep )
-		{
-			// if( progressBar.isIndeterminate() )
-			// return;
-			//
-			// if( testStep != null )
-			// {
-			// progressBar.setString( testStep.getName() );
-			// progressBar.setValue( runContext.getCurrentStepIndex() );
-			// }
-		}
-
-		public void afterStep( TestCaseRunner testRunner, SecurityTestRunContext runContext, SecurityTestStepResult result )
-		{
-			// if( progressBar.isIndeterminate() )
-			// return;
-			//
-			// if( result.getStatus() == SecurityStatus.FAILED )
-			// {
-			// progressBar.setForeground( Color.RED );
-			// }
-			// else if( !securityTest.getTestCase().getFailTestCaseOnErrors() )
-			// {
-			// progressBar.setForeground( Color.GREEN.darker() );
-			// }
-
-		}
-
 		@Override
 		public void beforeSecurityCheck( TestCaseRunner testRunner, SecurityTestRunContext runContext,
 				AbstractSecurityCheck securityCheck )
