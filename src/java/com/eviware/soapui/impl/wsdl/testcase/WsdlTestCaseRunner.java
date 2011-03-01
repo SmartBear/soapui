@@ -27,8 +27,7 @@ import com.eviware.soapui.support.types.StringToObjectMap;
  * @author Ole.Matzura
  */
 
-public class WsdlTestCaseRunner extends AbstractTestCaseRunner<WsdlTestCase, WsdlTestRunContext> implements
-		TestCaseRunner
+public class WsdlTestCaseRunner extends AbstractTestCaseRunner<WsdlTestCase, WsdlTestRunContext>
 {
 
 	@SuppressWarnings( "unchecked" )
