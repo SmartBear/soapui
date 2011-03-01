@@ -394,7 +394,7 @@ public class JSecurityTestRunLog extends JPanel
 				testLogList.setSelectedIndex( row );
 			}
 
-			SecurityTestLogMessageEntry result = ( SecurityTestLogMessageEntry )logListModel.getElementAt( row );
+			SecurityCheckResult result = ( SecurityCheckResult )logListModel.getResultAt( row );
 			if( result == null )
 				return;
 
