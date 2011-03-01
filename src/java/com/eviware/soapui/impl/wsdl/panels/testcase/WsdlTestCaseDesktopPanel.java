@@ -56,9 +56,10 @@ import com.eviware.soapui.impl.wsdl.panels.testcase.actions.SetCredentialsAction
 import com.eviware.soapui.impl.wsdl.panels.testcase.actions.SetEndpointAction;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.AbstractGroovyEditorModel;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.PropertyHolderTable;
+import com.eviware.soapui.impl.wsdl.support.AbstractTestCaseRunner;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
-import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCaseRunner;
+import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestStepFactory;
 import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestStepRegistry;
@@ -68,6 +69,7 @@ import com.eviware.soapui.model.support.TestRunListenerAdapter;
 import com.eviware.soapui.model.testsuite.LoadTestRunner;
 import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
+import com.eviware.soapui.model.testsuite.TestRunnable;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.monitor.support.TestMonitorListenerAdapter;
@@ -445,7 +447,7 @@ public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase
 					|| SoapUI.getTestMonitor().hasRunningSecurityTest( getModelItem() ) )
 				return;
 
-			WsdlTestCaseRunner wsdlRunner = ( WsdlTestCaseRunner )testRunner;
+			AbstractTestCaseRunner<TestRunnable, WsdlTestRunContext> wsdlRunner = ( AbstractTestCaseRunner<TestRunnable, WsdlTestRunContext> )testRunner;
 
 			if( testRunner.getStatus() == TestCaseRunner.Status.CANCELED )
 				testCaseLog.addText( "TestCase canceled [" + testRunner.getReason() + "], time taken = "
