@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.eviware.soapui.model.iface.MessageExchange;
-import com.eviware.soapui.security.check.AbstractSecurityCheck;
+import com.eviware.soapui.model.security.SecurityCheck;
 import com.eviware.soapui.support.action.swing.ActionList;
 
 /**
@@ -34,7 +34,7 @@ public class SecurityCheckRequestResult {
 
 	private static final String[] EMPTY_MESSAGES = new String[0];
 	public SecurityStatus status;
-	public AbstractSecurityCheck securityCheck;
+	public SecurityCheck securityCheck;
 	private List<String> messages = new ArrayList<String>();
 	private long timeTaken;
 	// starting time
@@ -43,7 +43,7 @@ public class SecurityCheckRequestResult {
 	private boolean discarded;
 	private MessageExchange messageExchange;
 
-	public SecurityCheckRequestResult(AbstractSecurityCheck securityCheck) {
+	public SecurityCheckRequestResult(SecurityCheck securityCheck) {
 		status = SecurityStatus.INITIALIZED;
 		this.securityCheck = securityCheck;
 	}
@@ -56,7 +56,7 @@ public class SecurityCheckRequestResult {
 		this.status = status;
 	}
 
-	public AbstractSecurityCheck getSecurityCheck() {
+	public SecurityCheck getSecurityCheck() {
 		return securityCheck;
 	}
 

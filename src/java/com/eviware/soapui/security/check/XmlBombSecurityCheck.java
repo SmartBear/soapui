@@ -38,7 +38,7 @@ import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
 import com.eviware.soapui.security.ui.XmlBombSecurityCheckConfigPanel;
 import com.eviware.soapui.support.xml.XmlUtils;
 
-public class XmlBombSecurityCheck extends AbstractSecurityCheck
+public class XmlBombSecurityCheck extends AbstractSecurityCheckWithProperties
 {
 
 	public static final String TYPE = "XmlBombSecurityCheck";
@@ -95,7 +95,8 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck
 	{
 		currentIndex = 0;
 
-		String originalResponse = getOriginalResult( ( SecurityTestRunnerImpl )securityTestRunner, testStep ).getResponse().getContentAsXml();
+		String originalResponse = getOriginalResult( ( SecurityTestRunnerImpl )securityTestRunner, testStep )
+				.getResponse().getContentAsXml();
 		String originalRequest = getRequest( testStep ).getRequestContent();
 		if( isAttachXmlBomb() )
 		{
@@ -112,7 +113,7 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheck
 			currentIndex = 0;
 		}
 
-		if( getExecutionStrategy().getStrategy() == StrategyTypeConfig.ONE_BY_ONE 
+		if( getExecutionStrategy().getStrategy() == StrategyTypeConfig.ONE_BY_ONE
 				&& getParameterHolder().getParameterList().size() > 0 )
 		{
 			for( SecurityCheckedParameter param : getParameterHolder().getParameterList() )

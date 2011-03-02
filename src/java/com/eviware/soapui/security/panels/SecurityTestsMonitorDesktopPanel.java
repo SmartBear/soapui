@@ -31,6 +31,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import com.eviware.soapui.model.security.SecurityCheck;
 import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.security.monitor.MonitorSecurityTest;
 import com.eviware.soapui.security.registry.SecurityCheckRegistry;
@@ -136,7 +137,7 @@ public class SecurityTestsMonitorDesktopPanel extends JPanel
 		return toolbar;
 	}
 
-	private void setSelectedCheck( AbstractSecurityCheck securityCheck )
+	private void setSelectedCheck( SecurityCheck securityCheck )
 	{
 		if( securityCheck != null )
 		{
@@ -163,7 +164,7 @@ public class SecurityTestsMonitorDesktopPanel extends JPanel
 		// panel.add( securityCheckConfigPanel );
 		if( securityChecksList != null && securityChecksList.getSelectedValue() != null )
 		{
-			AbstractSecurityCheck selected = monitorSecurityTest.getSecurityCheckByName( ( String )securityChecksList
+			SecurityCheck selected = monitorSecurityTest.getSecurityCheckByName( ( String )securityChecksList
 					.getSelectedValue() );
 			securityCheckConfigPanel.removeAll();
 			securityCheckConfigPanel.add( selected.getComponent() );
@@ -236,7 +237,7 @@ public class SecurityTestsMonitorDesktopPanel extends JPanel
 					return;
 				}
 			}
-			AbstractSecurityCheck securityCheck = monitorSecurityTest.addSecurityCheck( name, sourceCheck );
+			SecurityCheck securityCheck = monitorSecurityTest.addSecurityCheck( name, sourceCheck );
 			securityCheck.setDisabled( sourceCheck.isDisabled() );
 
 			listModel.addElement( name );
@@ -337,7 +338,7 @@ public class SecurityTestsMonitorDesktopPanel extends JPanel
 	{
 		String name = type;
 		int numNames = 0;
-		for( AbstractSecurityCheck existingCheck : monitorSecurityTest.getMonitorSecurityChecksList() )
+		for( SecurityCheck existingCheck : monitorSecurityTest.getMonitorSecurityChecksList() )
 		{
 			if( existingCheck.getType().equals( name ) )
 				numNames++ ;

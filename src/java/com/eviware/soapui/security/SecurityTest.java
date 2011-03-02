@@ -28,6 +28,7 @@ import com.eviware.soapui.impl.wsdl.AbstractTestPropertyHolderWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.TestModelItem;
+import com.eviware.soapui.model.security.SecurityCheck;
 import com.eviware.soapui.model.testsuite.TestRunnable;
 import com.eviware.soapui.model.testsuite.TestRunner.Status;
 import com.eviware.soapui.model.testsuite.TestStep;
@@ -102,7 +103,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 	 * @param securityCheckConfig
 	 * @return AbstractSecurityCheck
 	 */
-	public AbstractSecurityCheck addSecurityCheck( TestStep testStep, String securityCheckType, String securityCheckName )
+	public SecurityCheck addSecurityCheck( TestStep testStep, String securityCheckType, String securityCheckName )
 	{
 		AbstractSecurityCheckFactory factory = SoapUI.getSoapUICore().getSecurityCheckRegistry()
 				.getFactory( securityCheckType );
@@ -403,7 +404,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 				: new ArrayList<AbstractSecurityCheck>();
 	}
 
-	public AbstractSecurityCheck getTestStepSecurityCheckByName( String testStepId, String securityCheckName )
+	public SecurityCheck getTestStepSecurityCheckByName( String testStepId, String securityCheckName )
 	{
 		List<AbstractSecurityCheck> securityChecksList = getTestStepSecurityChecks( testStepId );
 		for( int c = 0; c < securityChecksList.size(); c++ )
@@ -494,7 +495,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 		List<AbstractSecurityCheck> securityChecksList = getTestStepSecurityChecks( testStepId );
 		if( securityChecksList != null && !securityChecksList.isEmpty() )
 		{
-			for( AbstractSecurityCheck existingCheck : securityChecksList )
+			for( SecurityCheck existingCheck : securityChecksList )
 			{
 				if( existingCheck.getType().equals( name ) )
 					numNames++ ;

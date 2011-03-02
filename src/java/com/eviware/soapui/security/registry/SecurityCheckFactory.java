@@ -13,8 +13,8 @@
 package com.eviware.soapui.security.registry;
 
 import com.eviware.soapui.config.SecurityCheckConfig;
+import com.eviware.soapui.model.security.SecurityCheck;
 import com.eviware.soapui.security.Securable;
-import com.eviware.soapui.security.check.AbstractSecurityCheck;
 
 public interface SecurityCheckFactory
 {
@@ -23,7 +23,7 @@ public interface SecurityCheckFactory
 	// TODO check if should be changed to commented
 	// public abstract SecurityCheck buildSecurityCheck( SecurityCheckConfig
 	// config, Securable securable );
-	public AbstractSecurityCheck buildSecurityCheck( SecurityCheckConfig config );
+	public SecurityCheck buildSecurityCheck( SecurityCheckConfig config );
 
 	// public Class<? extends WsdlMessageAssertion> getAssertionClassType();
 

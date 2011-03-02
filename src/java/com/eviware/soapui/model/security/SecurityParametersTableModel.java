@@ -16,6 +16,7 @@ import javax.swing.table.DefaultTableModel;
 import com.eviware.soapui.security.support.SecurityCheckedParameterHolder;
 import com.eviware.soapui.security.support.SecurityCheckedParameterImpl;
 
+@SuppressWarnings( "serial" )
 public class SecurityParametersTableModel extends DefaultTableModel
 {
 

@@ -44,6 +44,7 @@ import javax.swing.SwingConstants;
 import com.eviware.soapui.impl.wsdl.actions.testsuite.AddNewTestCaseAction;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.security.SecurityCheck;
 import com.eviware.soapui.model.support.TestSuiteListenerAdapter;
 import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.model.testsuite.TestStep;
@@ -107,7 +108,7 @@ public class JSecurityTestTestStepList extends JPanel
 
 	}
 
-	public AbstractSecurityCheck getCurrentSecurityCheck()
+	public SecurityCheck getCurrentSecurityCheck()
 	{
 		int ix = securityChecksList.getSelectedIndex();
 		return ix == -1 ? null : securityTest.getTestStepSecurityCheckAt( selectedTestStep.getTestStep().getId(), ix );

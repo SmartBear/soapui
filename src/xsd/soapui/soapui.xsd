@@ -2066,6 +2066,7 @@
     	<xsd:restriction base="xsd:string">
     		<xsd:enumeration value="ONE_BY_ONE"></xsd:enumeration>
     		<xsd:enumeration value="ALL_AT_ONCE"></xsd:enumeration>
+    		<xsd:enumeration value="NO_STRATEGY"></xsd:enumeration>
     	</xsd:restriction>
     </xsd:simpleType>
 </xsd:schema>

@@ -26,18 +26,19 @@ import com.eviware.soapui.impl.wsdl.panels.support.MockSecurityTestRunner;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.AbstractGroovyEditorModel;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.security.SecurityCheck;
 import com.eviware.soapui.model.security.SecurityParametersTableModel;
+import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.assertion.SecurityAssertionPanel;
 import com.eviware.soapui.security.check.AbstractSecurityCheck;
+import com.eviware.soapui.security.check.AbstractSecurityCheckWithProperties;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.GroovyEditorComponent;
-import com.eviware.x.form.ValidationMessage;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.XFormField;
 import com.eviware.x.form.XFormFieldListener;
-import com.eviware.x.form.XFormFieldValidator;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AForm;
@@ -49,6 +50,10 @@ import com.eviware.x.impl.swing.JTabbedFormDialog;
 
 public class SecurityConfigurationDialogBuilder
 {
+
+	public static final String TABS_NAME = "###Tabs";
+	public static final String PARAMETERS_NAME = "Parameters";
+	public static final String OPTIONAL_NAME = "###Optional";
 
 	private GroovyEditorComponent setupGroovyEditor;
 	private GroovyEditorComponent tearDownGroovyEditor;
@@ -62,28 +67,6 @@ public class SecurityConfigurationDialogBuilder
 	}
 
 	/**
-	 * 
-	 * Creates a dialog for configuring security checks.
-	 * 
-	 * @param name
-	 * @param description
-	 * @param icon
-	 * @param helpUrl
-	 * @param securityCheck
-	 * @return
-	 */
-	public XFormDialog buildSecurityCheckConfigurationDialog( String name, String description, ImageIcon icon,
-			String helpUrl, AbstractSecurityCheck securityCheck )
-	{
-
-		XFormDialog dialog = ADialogBuilder.buildDialog( DefaultDialog.class );
-
-		buildBasicDialog( name, description, icon, helpUrl, securityCheck, dialog );
-
-		return dialog;
-	}
-
-	/**
 	 * @param name
 	 * @param description
 	 * @param icon
@@ -92,10 +75,11 @@ public class SecurityConfigurationDialogBuilder
 	 * @param dialog
 	 */
 	private void buildBasicDialog( String name, String description, ImageIcon icon, String helpUrl,
-			AbstractSecurityCheck securityCheck, XFormDialog dialog )
+			SecurityCheck securityCheck, XFormDialog dialog )
 	{
-		XFormField field = dialog.getFormField( DefaultDialog.PARAMETERS );
-		addParameterTable( securityCheck, field );
+		XFormField field = dialog.getFormField( PARAMETERS_NAME );
+		if( field != null )
+			addParameterTable( securityCheck, field );
 
 		Container content = ( ( JFormDialog )dialog ).getDialog().getContentPane();
 
@@ -115,7 +99,7 @@ public class SecurityConfigurationDialogBuilder
 		JTabbedFormDialog tabDialog = ( ( JTabbedFormDialog )ADialogBuilder.buildTabbedDialog( TabsForm.class, null ) );
 
 		tabDialog.getFormField( Assertions.ASSERTIONS ).setProperty( "component",
-				new SecurityAssertionPanel( securityCheck ) );
+				new SecurityAssertionPanel( ( Assertable )securityCheck ) );
 		tabDialog.getFormField( Assertions.ASSERTIONS ).setProperty( "dimension", new Dimension( 345, 165 ) );
 
 		tabDialog.getFormField( SetupScript.SCRIPT ).setProperty( "component", buildSetupScriptPanel( securityCheck ) );
@@ -123,23 +107,31 @@ public class SecurityConfigurationDialogBuilder
 
 		tabDialog.getFormField( TearDownScript.SCRIPT ).setProperty( "component",
 				buildTearDownScriptPanel( securityCheck ) );
+
+		tabDialog.getFormField( AdvancedSettings.SETTINGS ).setProperty( "component",
+				securityCheck.getAdvancedSettingsPanel() );
 		tabDialog.getFormField( TearDownScript.SCRIPT ).setProperty( "dimension", new Dimension( 360, 165 ) );
 
 		addStrategyPanel( tabDialog, securityCheck );
 		tabs.setProperty( "component", tabDialog.getTabs() );
-		
+
 	}
 
-	private void addStrategyPanel( XFormDialog dialog, final AbstractSecurityCheck securityCheck )
+	private void addStrategyPanel( XFormDialog dialog, final SecurityCheck securityCheck )
 	{
 		XFormRadioGroup strategy = ( XFormRadioGroup )dialog.getFormField( Strategy.STRATEGY );
 		final String[] strategyOptions = new String[] { "One by One", "All At Once" };
 		strategy.setOptions( strategyOptions );
-		if( securityCheck.getExecutionStrategy().getStrategy() == StrategyTypeConfig.ONE_BY_ONE )
-			strategy.setValue( strategyOptions[0] );
-		else
-			strategy.setValue( strategyOptions[1] );
 
+		if( securityCheck.getExecutionStrategy().getStrategy() == StrategyTypeConfig.NO_STRATEGY )
+			strategy.setEnabled( false );
+		else
+		{
+			if( securityCheck.getExecutionStrategy().getStrategy() == StrategyTypeConfig.ONE_BY_ONE )
+				strategy.setValue( strategyOptions[0] );
+			else
+				strategy.setValue( strategyOptions[1] );
+		}
 		strategy.addFormFieldListener( new XFormFieldListener()
 		{
 
@@ -164,28 +156,31 @@ public class SecurityConfigurationDialogBuilder
 			@Override
 			public void valueChanged( XFormField sourceField, String newValue, String oldValue )
 			{
-				try {
+				try
+				{
 					Integer.valueOf( newValue );
 					securityCheck.getExecutionStrategy().setDelay( Integer.valueOf( newValue ) );
-				} catch (Exception e) {
+				}
+				catch( Exception e )
+				{
 					UISupport.showErrorMessage( "Delay value must be integer number" );
 				}
 			}
 		} );
-		
+
 	}
 
-	private GroovyEditorComponent buildTearDownScriptPanel( AbstractSecurityCheck securityCheck )
+	private GroovyEditorComponent buildTearDownScriptPanel( SecurityCheck securityCheck )
 	{
-		tearDownGroovyEditor = new GroovyEditorComponent( new TearDownScriptGroovyEditorModel( securityCheck
-				.getModelItem() ), null );
+		tearDownGroovyEditor = new GroovyEditorComponent( new TearDownScriptGroovyEditorModel(
+				( ( Assertable )securityCheck ).getModelItem() ), null );
 		return tearDownGroovyEditor;
 	}
 
-	protected GroovyEditorComponent buildSetupScriptPanel( AbstractSecurityCheck securityCheck )
+	protected GroovyEditorComponent buildSetupScriptPanel( SecurityCheck securityCheck )
 	{
-		setupGroovyEditor = new GroovyEditorComponent( new SetupScriptGroovyEditorModel( securityCheck.getModelItem() ),
-				null );
+		setupGroovyEditor = new GroovyEditorComponent( new SetupScriptGroovyEditorModel( ( ( Assertable )securityCheck )
+				.getModelItem() ), null );
 
 		return setupGroovyEditor;
 	}
@@ -198,10 +193,11 @@ public class SecurityConfigurationDialogBuilder
 	 * 
 	 * @param field
 	 */
-	protected void addParameterTable( AbstractSecurityCheck securityCheck, XFormField field )
+	protected void addParameterTable( SecurityCheck securityCheck, XFormField field )
 	{
 		field.setProperty( "component", new SecurityCheckedParametersTablePanel( new SecurityParametersTableModel(
-				securityCheck.getParameterHolder() ), securityCheck.getTestStep().getProperties() ) );
+				( ( AbstractSecurityCheckWithProperties )securityCheck ).getParameterHolder() ), securityCheck
+				.getTestStep().getProperties() ) );
 	}
 
 	public XFormDialog buildSecurityCheckConfigurationDialog( String name, String description, ImageIcon icon,
@@ -210,29 +206,52 @@ public class SecurityConfigurationDialogBuilder
 
 		XFormDialog dialog = null;
 		if( component == null )
-			dialog = ADialogBuilder.buildDialog( DefaultDialog.class );
+		{
+			if( securityCheck instanceof AbstractSecurityCheckWithProperties )
+				dialog = ADialogBuilder.buildDialog( DialogWithParameters.class );
+			else
+				dialog = ADialogBuilder.buildDialog( DefaultDialog.class );
+		}
 		else
-			dialog = ADialogBuilder.buildDialog( OptionalDialog.class );
-
-		if( component != null )
+		{
+			if( securityCheck instanceof AbstractSecurityCheckWithProperties )
+				dialog = ADialogBuilder.buildDialog( OptionalDialogWithParameters.class );
+			else
+				dialog = ADialogBuilder.buildDialog( OptionalDialog.class );
 			dialog.getFormField( OptionalDialog.OPTIONAL ).setProperty( "component", component );
+		}
 
 		buildBasicDialog( name, description, icon, helpUrl, securityCheck, dialog );
 
-		((JFormDialog)dialog).getDialog().setResizable( false );
-		
+		( ( JFormDialog )dialog ).getDialog().setResizable( false );
+
 		return dialog;
 	}
 
+	/**
+	 * General forms
+	 * 
+	 * @author robert
+	 * 
+	 */
 	@AForm( description = "Configure Security Check", name = "Configure Security Check", helpUrl = HelpUrls.MOCKASWAR_HELP_URL )
 	protected interface DefaultDialog
 	{
 
-		@AField( description = "Parameters to Check", name = "Parameters", type = AFieldType.COMPONENT )
-		public final static String PARAMETERS = "Parameters";
+		@AField( description = "Tabs", name = TABS_NAME, type = AFieldType.COMPONENT )
+		public final static String TABS = TABS_NAME;
 
-		@AField( description = "Tabs", name = "###Tabs", type = AFieldType.COMPONENT )
-		public final static String TABS = "###Tabs";
+	}
+
+	@AForm( description = "Configure Security Check", name = "Configure Security Check", helpUrl = HelpUrls.MOCKASWAR_HELP_URL )
+	protected interface DialogWithParameters
+	{
+
+		@AField( description = "Parameters to Check", name = PARAMETERS_NAME, type = AFieldType.COMPONENT )
+		public final static String PARAMETERS = PARAMETERS_NAME;
+
+		@AField( description = "Tabs", name = TABS_NAME, type = AFieldType.COMPONENT )
+		public final static String TABS = TABS_NAME;
 
 	}
 
@@ -240,17 +259,32 @@ public class SecurityConfigurationDialogBuilder
 	protected interface OptionalDialog
 	{
 
-		@AField( description = "Parameters to Check", name = "Parameters", type = AFieldType.COMPONENT )
-		public final static String PARAMETERS = "Parameters";
+		@AField( description = "Optinal", name = OPTIONAL_NAME, type = AFieldType.COMPONENT )
+		public final static String OPTIONAL = OPTIONAL_NAME;
 
-		@AField( description = "Optinal", name = "###Optional", type = AFieldType.COMPONENT )
-		public final static String OPTIONAL = "###Optional";
-
-		@AField( description = "Tabs", name = "###Tabs", type = AFieldType.COMPONENT )
-		public final static String TABS = "###Tabs";
+		@AField( description = "Tabs", name = TABS_NAME, type = AFieldType.COMPONENT )
+		public final static String TABS = TABS_NAME;
 
 	}
 
+	@AForm( description = "Configure Security Check", name = "Configure Security Check", helpUrl = HelpUrls.MOCKASWAR_HELP_URL )
+	protected interface OptionalDialogWithParameters
+	{
+
+		@AField( description = "Parameters to Check", name = PARAMETERS_NAME, type = AFieldType.COMPONENT )
+		public final static String PARAMETERS = PARAMETERS_NAME;
+
+		@AField( description = "Optinal", name = OPTIONAL_NAME, type = AFieldType.COMPONENT )
+		public final static String OPTIONAL = OPTIONAL_NAME;
+
+		@AField( description = "Tabs", name = TABS_NAME, type = AFieldType.COMPONENT )
+		public final static String TABS = TABS_NAME;
+
+	}
+
+	/*
+	 * Other parts of configuration panel
+	 */
 	@AForm( description = "Security Check Tabs", name = "" )
 	private interface TabsForm
 	{
@@ -334,7 +368,7 @@ public class SecurityConfigurationDialogBuilder
 									.getParent() );
 					try
 					{
-						( ( AbstractSecurityCheck )SetupScriptGroovyEditorModel.this.getModelItem() ).runSetupScript(
+						( ( SecurityCheck )SetupScriptGroovyEditorModel.this.getModelItem() ).runSetupScript(
 								securityTestRunner, ( SecurityTestRunContext )securityTestRunner.getRunContext() );
 					}
 					catch( Exception e1 )
@@ -353,12 +387,12 @@ public class SecurityConfigurationDialogBuilder
 
 		public String getScript()
 		{
-			return ( ( AbstractSecurityCheck )getModelItem() ).getSetupScript();
+			return ( ( SecurityCheck )getModelItem() ).getSetupScript();
 		}
 
 		public void setScript( String text )
 		{
-			( ( AbstractSecurityCheck )getModelItem() ).setSetupScript( text );
+			( ( SecurityCheck )getModelItem() ).setSetupScript( text );
 		}
 	}
 
@@ -378,7 +412,7 @@ public class SecurityConfigurationDialogBuilder
 						MockSecurityTestRunner securityTestRunner = new MockSecurityTestRunner(
 								( SecurityTest )( ( AbstractSecurityCheck )TearDownScriptGroovyEditorModel.this.getModelItem() )
 										.getParent() );
-						( ( AbstractSecurityCheck )TearDownScriptGroovyEditorModel.this.getModelItem() ).runTearDownScript(
+						( ( SecurityCheck )TearDownScriptGroovyEditorModel.this.getModelItem() ).runTearDownScript(
 								securityTestRunner, ( SecurityTestRunContext )securityTestRunner.getRunContext() );
 					}
 					catch( Exception e1 )
@@ -397,12 +431,12 @@ public class SecurityConfigurationDialogBuilder
 
 		public String getScript()
 		{
-			return ( ( AbstractSecurityCheck )getModelItem() ).getTearDownScript();
+			return ( ( SecurityCheck )getModelItem() ).getTearDownScript();
 		}
 
 		public void setScript( String text )
 		{
-			( ( AbstractSecurityCheck )getModelItem() ).setTearDownScript( text );
+			( ( SecurityCheck )getModelItem() ).setTearDownScript( text );
 		}
 
 	}

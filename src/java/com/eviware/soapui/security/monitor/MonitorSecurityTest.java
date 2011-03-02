@@ -17,6 +17,7 @@ import java.util.List;
 
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.model.iface.MessageExchange;
+import com.eviware.soapui.model.security.SecurityCheck;
 import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.security.log.JSecurityTestRunLog;
 import com.eviware.soapui.security.registry.AbstractSecurityCheckFactory;
@@ -59,7 +60,7 @@ public class MonitorSecurityTest
 	 * @param type
 	 * @return
 	 */
-	public AbstractSecurityCheck addSecurityCheck( String name, String type )
+	public SecurityCheck addSecurityCheck( String name, String type )
 	{
 		AbstractSecurityCheckFactory factory = SecurityCheckRegistry.getInstance().getFactory( type );
 		SecurityCheckConfig scc = factory.createNewSecurityCheck( name );
@@ -75,7 +76,7 @@ public class MonitorSecurityTest
 	 * @param sc
 	 * @return
 	 */
-	public AbstractSecurityCheck addSecurityCheck( String name, AbstractSecurityCheck sc )
+	public SecurityCheck addSecurityCheck( String name, AbstractSecurityCheck sc )
 	{
 		AbstractSecurityCheckFactory factory = SecurityCheckRegistry.getInstance().getFactory( sc.getType() );
 		SecurityCheckConfig scc = factory.createNewSecurityCheck( name );
@@ -100,7 +101,7 @@ public class MonitorSecurityTest
 		return monitorSecurityChecksList.remove( index );
 	}
 
-	public AbstractSecurityCheck getSecurityCheckByName( String name )
+	public SecurityCheck getSecurityCheckByName( String name )
 	{
 		for( int c = 0; c < monitorSecurityChecksList.size(); c++ )
 		{
@@ -112,7 +113,7 @@ public class MonitorSecurityTest
 		return null;
 	}
 
-	public AbstractSecurityCheck renameSecurityCheckAt( int index, String newName )
+	public SecurityCheck renameSecurityCheckAt( int index, String newName )
 	{
 		AbstractSecurityCheck sc = removeSecurityCheckAt( index );
 		sc.setName( newName );
@@ -137,7 +138,7 @@ public class MonitorSecurityTest
 
 	public void logSecurityMessage( MessageExchange messageExchange )
 	{
-		for( AbstractSecurityCheck check : getMonitorSecurityChecksList() )
+		for( SecurityCheck check : getMonitorSecurityChecksList() )
 		{
 			if( ( ( HttpSecurityAnalyser )check ).canRun() && !check.isDisabled() )
 				( ( HttpSecurityAnalyser )check ).analyzeHttpConnection( messageExchange, getSecurityTestLog() );

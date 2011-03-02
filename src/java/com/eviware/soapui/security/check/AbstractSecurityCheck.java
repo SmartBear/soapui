@@ -29,16 +29,12 @@ import com.eviware.soapui.impl.wsdl.support.assertions.AssertionsSupport;
 import com.eviware.soapui.impl.wsdl.teststeps.TestRequest;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequest;
-import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry.AssertableType;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.iface.SubmitContext;
-import com.eviware.soapui.model.security.SecurityCheckedParameter;
-import com.eviware.soapui.model.support.XPathReference;
-import com.eviware.soapui.model.support.XPathReferenceContainer;
-import com.eviware.soapui.model.support.XPathReferenceImpl;
+import com.eviware.soapui.model.security.SecurityCheck;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.model.testsuite.AssertionsListener;
@@ -55,7 +51,6 @@ import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.security.SecurityTestRunnerImpl;
 import com.eviware.soapui.security.SecurityCheckRequestResult.SecurityStatus;
-import com.eviware.soapui.security.support.SecurityCheckedParameterHolder;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
@@ -65,13 +60,8 @@ import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
  * 
  */
 public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<SecurityCheckConfig> implements
-		XPathReferenceContainer, Assertable, RequestAssertion, ResponseAssertion
+		 Assertable, RequestAssertion, ResponseAssertion, SecurityCheck
 {
-	public static final String SECURITY_CHECK_REQUEST_RESULT = "SecurityCheckRequestResult";
-	public static final String SECURITY_CHECK_RESPONSE_RESULT = "SecurityCheckResponseResult";
-
-	public static final String STATUS_PROPERTY = AbstractSecurityCheck.class.getName() + "@status";
-
 	// configuration of specific request modification
 	private SecurityCheckConfig config;
 	private boolean disabled = false;
@@ -81,7 +71,6 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	private AssertionsSupport assertionsSupport;
 
 	private AssertionStatus currentStatus;
-	private SecurityCheckedParameterHolder parameterHolder;
 	private SoapUIScriptEngine setupScriptEngine;
 	private SoapUIScriptEngine tearDownScriptEngine;
 	private ExecutionStrategyHolder executionStrategy;
@@ -101,35 +90,31 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 			config.getExecutionStrategy().setDelay( 10 );
 		}
 
+		/*
+		 * if security check have no strategy ( like large attahments, set its value to 
+		 * StrategyTypeConfig.NO_STRATEGY.
+		 */
 		setExecutionStrategy( new ExecutionStrategyHolder(config.getExecutionStrategy()) );
 		
 		if( config.getChekedPameters() == null )
 			config.addNewChekedPameters();
 
-		setParameterHolder( new SecurityCheckedParameterHolder( this, config.getChekedPameters() ) );
 		initAssertions();
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see com.eviware.soapui.security.check.SecurityCheck#updateSecurityConfig(com.eviware.soapui.config.SecurityCheckConfig)
+	 */
 	public void updateSecurityConfig( SecurityCheckConfig config )
 	{
 		this.config = config;
 
 		assertionsSupport.refresh();
 
-		if( getParameterHolder() != null && getConfig().getChekedPameters() != null)
-		{
-			getParameterHolder().updateConfig( config.getChekedPameters() );
-		}
-		
 		if ( executionStrategy != null && config.getExecutionStrategy() != null ) {
 			executionStrategy.updateConfig(config.getExecutionStrategy());
 		}
-	}
-
-	public SecurityCheckedParameterHolder getParameterHolder()
-	{
-		return this.parameterHolder;
 	}
 
 	private void initAssertions()
@@ -163,19 +148,9 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	/*************************************
 	 * START OF NEWLY REFACTORED
 	 **************************************/
-	/**
-	 * Runs the test (internaly calls analyze)
-	 * 
-	 * @param testStep
-	 *           The TestStep that the check will be applied to
-	 * @param context
-	 *           The context to run the test in
-	 * @param runner
-	 *           TODO
-	 * @param securityTestLog
-	 *           The security log to write to
+	/* (non-Javadoc)
+	 * @see com.eviware.soapui.security.check.SecurityCheck#run(com.eviware.soapui.model.testsuite.TestStep, com.eviware.soapui.security.SecurityTestRunContext, com.eviware.soapui.security.SecurityTestRunner)
 	 */
-	@SuppressWarnings( "finally" )
 	public SecurityCheckResult run( TestStep testStep, SecurityTestRunContext context,
 			SecurityTestRunner securityTestRunner )
 	{
@@ -234,9 +209,9 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	 */
 	abstract protected boolean hasNext();
 
-	/*************************************
-	 * END OF NEWLY REFACTORED
-	 **************************************/
+	/* (non-Javadoc)
+	 * @see com.eviware.soapui.security.check.SecurityCheck#isConfigurable()
+	 */
 
 	public boolean isConfigurable()
 	{
@@ -244,41 +219,42 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	}
 
 	/**
-	 * Gets desktop configuration for specific SecurityCheck
-	 * 
-	 * @param TestStep
-	 *           the TestStep to create the config for, could be null for
-	 *           HttpMonitor checks
-	 * 
-	 * @return
+	 * Overide if Security Check have Optional component
 	 */
-	public abstract JComponent getComponent();
+	@Override
+	public JComponent getComponent() {
+		return null;
+	}
 
-	/**
-	 * The type of this check
-	 * 
-	 * @return
+	/* (non-Javadoc)
+	 * @see com.eviware.soapui.security.check.SecurityCheck#getType()
 	 */
 	public abstract String getType();
 
-	/**
-	 * Checks if this securityCheck is applicable to the specified TestStep
-	 * 
-	 * @param testStep
-	 * @return
+	/* (non-Javadoc)
+	 * @see com.eviware.soapui.security.check.SecurityCheck#acceptsTestStep(com.eviware.soapui.model.testsuite.TestStep)
 	 */
 	public abstract boolean acceptsTestStep( TestStep testStep );
 
+	/* (non-Javadoc)
+	 * @see com.eviware.soapui.security.check.SecurityCheck#getTestStep()
+	 */
 	public TestStep getTestStep()
 	{
 		return testStep;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.eviware.soapui.security.check.SecurityCheck#setTestStep(com.eviware.soapui.model.testsuite.TestStep)
+	 */
 	public void setTestStep( TestStep step )
 	{
 		testStep = step;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.eviware.soapui.security.check.SecurityCheck#runTearDownScript(com.eviware.soapui.security.SecurityTestRunner, com.eviware.soapui.security.SecurityTestRunContext)
+	 */
 	public Object runTearDownScript( SecurityTestRunner runner, SecurityTestRunContext context ) throws Exception
 	{
 		String script = getTearDownScript();
@@ -298,6 +274,9 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		return tearDownScriptEngine.run();
 	}
 
+	/* (non-Javadoc)
+	 * @see com.eviware.soapui.security.check.SecurityCheck#runSetupScript(com.eviware.soapui.security.SecurityTestRunner, com.eviware.soapui.security.SecurityTestRunContext)
+	 */
 	public Object runSetupScript( SecurityTestRunner runner, SecurityTestRunContext context ) throws Exception
 	{
 		String script = getSetupScript();
@@ -341,20 +320,16 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		config.setName( arg0 );
 	}
 
-	/**
-	 * Checks if the test is disabled
-	 * 
-	 * @return true if disabled
+	/* (non-Javadoc)
+	 * @see com.eviware.soapui.security.check.SecurityCheck#isDisabled()
 	 */
 	public boolean isDisabled()
 	{
 		return disabled;
 	}
 
-	/**
-	 * Disables or Enables the check
-	 * 
-	 * @param disabled
+	/* (non-Javadoc)
+	 * @see com.eviware.soapui.security.check.SecurityCheck#setDisabled(boolean)
 	 */
 	public void setDisabled( boolean disabled )
 	{
@@ -374,11 +349,17 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see com.eviware.soapui.security.check.SecurityCheck#getExecutionStrategy()
+	 */
 	public ExecutionStrategyHolder getExecutionStrategy()
 	{
 		return this.executionStrategy;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.eviware.soapui.security.check.SecurityCheck#setExecutionStrategy(com.eviware.soapui.security.ExecutionStrategyHolder)
+	 */
 	public void setExecutionStrategy( ExecutionStrategyHolder executionStrategyHolder )
 	{
 		this.executionStrategy = executionStrategyHolder;
@@ -398,24 +379,6 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 			return ( ( SamplerTestStep )testStep ).getTestRequest();
 		}
 		return null;
-	}
-
-	public XPathReference[] getXPathReferences()
-	{
-		List<XPathReference> result = new ArrayList<XPathReference>();
-
-		for( SecurityCheckedParameter param : getParameterHolder().getParameterList() )
-		{
-			TestStep t = getTestStep();
-			if( t instanceof WsdlTestRequestStep )
-			{
-				if( param != null )
-					result.add( new XPathReferenceImpl( "SecurityCheck Parameter " + param.getName(),
-							( ( WsdlTestRequestStep )t ).getOperation(), true, param, "xPath" ) );
-			}
-		}
-
-		return result.toArray( new XPathReference[result.size()] );
 	}
 
 	private class PropertyChangeNotifier
@@ -605,6 +568,9 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		return assertionsSupport.getAssertions();
 	}
 
+	/* (non-Javadoc)
+	 * @see com.eviware.soapui.security.check.SecurityCheck#getAssertionsSupport()
+	 */
 	public AssertionsSupport getAssertionsSupport()
 	{
 		return assertionsSupport;
@@ -707,6 +673,9 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		return result;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.eviware.soapui.security.check.SecurityCheck#getSetupScript()
+	 */
 	public String getSetupScript()
 	{
 		if( config.getSetupScript() == null )
@@ -714,6 +683,9 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		return config.getSetupScript().getStringValue();
 	}
 
+	/* (non-Javadoc)
+	 * @see com.eviware.soapui.security.check.SecurityCheck#setSetupScript(java.lang.String)
+	 */
 	public void setSetupScript( String text )
 	{
 		if( config.getSetupScript() == null )
@@ -724,6 +696,9 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 			setupScriptEngine.setScript( text );
 	}
 
+	/* (non-Javadoc)
+	 * @see com.eviware.soapui.security.check.SecurityCheck#getTearDownScript()
+	 */
 	public String getTearDownScript()
 	{
 		if( config.getTearDownScript() == null )
@@ -731,6 +706,9 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		return config.getTearDownScript().getStringValue();
 	}
 
+	/* (non-Javadoc)
+	 * @see com.eviware.soapui.security.check.SecurityCheck#setTearDownScript(java.lang.String)
+	 */
 	public void setTearDownScript( String text )
 	{
 		if( config.getTearDownScript() == null )
@@ -742,12 +720,21 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	}
 
 	// name used in configuration panel
+	/* (non-Javadoc)
+	 * @see com.eviware.soapui.security.check.SecurityCheck#getConfigName()
+	 */
 	public abstract String getConfigName();
 
 	// description usd in configuration panel
+	/* (non-Javadoc)
+	 * @see com.eviware.soapui.security.check.SecurityCheck#getConfigDescription()
+	 */
 	public abstract String getConfigDescription();
 
 	// help url used for configuration panel ( help for this check )
+	/* (non-Javadoc)
+	 * @see com.eviware.soapui.security.check.SecurityCheck#getHelpURL()
+	 */
 	public abstract String getHelpURL();
 
 	protected void setSecurityCheckRequestResult( SecurityCheckRequestResult securityCheckRequestResult )
@@ -760,9 +747,12 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		return securityCheckRequestResult;
 	}
 
-	protected void setParameterHolder( SecurityCheckedParameterHolder parameterHolder )
+	/**
+	 * Overide if Security Check needs advanced settings
+	 */
+	@Override
+	public JComponent getAdvancedSettingsPanel()
 	{
-		this.parameterHolder = parameterHolder;
+		return null;
 	}
-
 }

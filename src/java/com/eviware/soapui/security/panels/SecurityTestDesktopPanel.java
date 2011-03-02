@@ -50,6 +50,7 @@ import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestStepFactory;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.security.SecurityCheck;
 import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.security.SecurityCheckResult;
@@ -58,7 +59,6 @@ import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.security.SecurityTestRunnerImpl;
 import com.eviware.soapui.security.actions.SecurityTestOptionsAction;
-import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.security.log.JSecurityTestRunLog;
 import com.eviware.soapui.security.support.ProgressBarSecurityTestAdapter;
 import com.eviware.soapui.security.support.SecurityCheckRunListener;
@@ -613,7 +613,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 
 		@Override
 		public void beforeSecurityCheck( SecurityTestRunner testRunner, SecurityTestRunContext runContext,
-				AbstractSecurityCheck securityCheck )
+				SecurityCheck securityCheck )
 		{
 			// TODO Auto-generated method stub
 

@@ -31,7 +31,6 @@ import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
-import com.eviware.soapui.security.boundary.EnumerationValuesExtractor;
 import com.eviware.soapui.security.boundary.enumeration.EnumerationValues;
 import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel;
@@ -40,7 +39,7 @@ import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.AField.AFieldType;
 
-public class BoundarySecurityCheck extends AbstractSecurityCheck
+public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 {
 
 	private int propertiesCounter = 0;
@@ -152,7 +151,7 @@ public class BoundarySecurityCheck extends AbstractSecurityCheck
 		( ( WsdlTestRequestStep )testStep ).getTestRequest().setRequestContent( model.getXmlObject().toString() );
 	}
 
-	public  void updateNodeValue( XmlTreeNode mynode, EnumerationValues enumerationValues )
+	public void updateNodeValue( XmlTreeNode mynode, EnumerationValues enumerationValues )
 	{
 		int size = EnumerationValues.maxLengthStringSize( enumerationValues.getValuesList() );
 		String value = EnumerationValues.createOutOfBoundaryValue( enumerationValues, size );
@@ -169,7 +168,6 @@ public class BoundarySecurityCheck extends AbstractSecurityCheck
 		}
 		return true;
 	}
-
 
 	@Override
 	public boolean isConfigurable()
@@ -206,7 +204,5 @@ public class BoundarySecurityCheck extends AbstractSecurityCheck
 	{
 		return "http://www.soapui.org";
 	}
-
-	
 
 }

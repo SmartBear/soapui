@@ -38,6 +38,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.model.security.SecurityCheck;
 import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTest;
@@ -114,7 +115,7 @@ public class SecurityChecksPanel extends JPanel
 					return;
 
 				Object obj = securityCheckList.getModel().getElementAt( ix );
-				if( obj instanceof AbstractSecurityCheck )
+				if( obj instanceof SecurityCheck )
 				{
 					AbstractSecurityCheck chck = ( AbstractSecurityCheck )obj;
 					chck.setTestStep( getTestStep() );
@@ -155,7 +156,7 @@ public class SecurityChecksPanel extends JPanel
 		securityCheckConfigPanel.add( new JLabel( "currently no security checks" ) );
 		if( securityCheckList != null && securityCheckList.getSelectedValue() != null )
 		{
-			AbstractSecurityCheck selected = securityTest.getTestStepSecurityCheckByName( testStep.getId(),
+			SecurityCheck selected = securityTest.getTestStepSecurityCheckByName( testStep.getId(),
 					( ( AbstractSecurityCheck )securityCheckList.getSelectedValue() ).getName() );
 			securityCheckConfigPanel.removeAll();
 			securityCheckConfigPanel.add( selected.getComponent() );
@@ -193,7 +194,7 @@ public class SecurityChecksPanel extends JPanel
 
 				if( ix == -1 )
 					return;
-				AbstractSecurityCheck securityCheck = securityCheckListModel.getSecurityCheckAt( ix );
+				SecurityCheck securityCheck = securityCheckListModel.getSecurityCheckAt( ix );
 				configureSecurityCheckAction.setEnabled( securityCheck != null && securityCheck.isConfigurable() );
 			}
 		} );
@@ -227,7 +228,7 @@ public class SecurityChecksPanel extends JPanel
 		{
 			setEnabled( list.isEnabled() );
 
-			if( value instanceof AbstractSecurityCheck )
+			if( value instanceof SecurityCheck )
 			{
 				AbstractSecurityCheck securityCheck = ( AbstractSecurityCheck )value;
 				setText( securityCheck.getName() );
@@ -287,12 +288,12 @@ public class SecurityChecksPanel extends JPanel
 		public AbstractSecurityCheck getSecurityCheckAt( int index )
 		{
 			Object object = items.get( index );
-			while( !( object instanceof AbstractSecurityCheck ) && index > 0 )
+			while( !( object instanceof SecurityCheck ) && index > 0 )
 			{
 				object = items.get( --index );
 			}
 
-			return ( AbstractSecurityCheck )( ( object instanceof AbstractSecurityCheck ) ? object : null );
+			return ( AbstractSecurityCheck )( ( object instanceof SecurityCheck ) ? object : null );
 		}
 
 		public void refresh()
@@ -323,7 +324,7 @@ public class SecurityChecksPanel extends JPanel
 
 			for( int c = 0; c < securityTest.getTestStepSecurityChecksCount( testStep.getId() ); c++ )
 			{
-				AbstractSecurityCheck securityCheck = securityTest.getTestStepSecurityCheckAt( testStep.getId(), c );
+				SecurityCheck securityCheck = securityTest.getTestStepSecurityCheckAt( testStep.getId(), c );
 			}
 
 			// securityTest.removeSecurityChecksListener( this );
@@ -393,7 +394,7 @@ public class SecurityChecksPanel extends JPanel
 			synchronized( this )
 			{
 				// int ix = items.indexOf( assertion );
-				AbstractSecurityCheck securityCheck = ( AbstractSecurityCheck )items.get( ix );
+				SecurityCheck securityCheck = ( SecurityCheck )items.get( ix );
 				// if first selected can't move up and if last selected can't move
 				// down
 				if( ( ix == 0 && offset == -1 ) || ( ix == items.size() - 1 && offset == 1 ) )
@@ -468,7 +469,7 @@ public class SecurityChecksPanel extends JPanel
 				return;
 			}
 
-			AbstractSecurityCheck securityCheck = securityTest.addSecurityCheck( testStep, type, name );
+			SecurityCheck securityCheck = securityTest.addSecurityCheck( testStep, type, name );
 
 			if( securityCheck == null )
 			{

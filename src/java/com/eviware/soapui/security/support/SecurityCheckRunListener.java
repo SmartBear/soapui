@@ -12,10 +12,10 @@
 
 package com.eviware.soapui.security.support;
 
+import com.eviware.soapui.model.security.SecurityCheck;
 import com.eviware.soapui.security.SecurityCheckResult;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
-import com.eviware.soapui.security.check.AbstractSecurityCheck;
 
 /**
  * Listener for TestRun-related events, schedule events will only be triggered
@@ -27,7 +27,7 @@ import com.eviware.soapui.security.check.AbstractSecurityCheck;
 public interface SecurityCheckRunListener
 {
 	public void beforeSecurityCheck( SecurityTestRunner testRunner, SecurityTestRunContext runContext,
-			AbstractSecurityCheck securityCheck );
+			SecurityCheck securityCheck );
 
 	public void afterSecurityCheck( SecurityTestRunner testRunner, SecurityTestRunContext runContext,
 			SecurityCheckResult securityCheckResult );

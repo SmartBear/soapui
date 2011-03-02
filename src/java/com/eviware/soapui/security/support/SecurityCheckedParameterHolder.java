@@ -9,10 +9,10 @@ import java.util.Set;
 
 import com.eviware.soapui.config.CheckedParameterConfig;
 import com.eviware.soapui.config.CheckedParametersListConfig;
+import com.eviware.soapui.model.security.SecurityCheck;
 import com.eviware.soapui.model.security.SecurityCheckParameterHolderListener;
 import com.eviware.soapui.model.security.SecurityCheckedParameter;
 import com.eviware.soapui.model.testsuite.TestPropertyListener;
-import com.eviware.soapui.security.check.AbstractSecurityCheck;
 
 /**
  * Holder for SecurityCheckPameters, which are request parameters on which
@@ -25,7 +25,7 @@ public class SecurityCheckedParameterHolder extends SecurityCheckParameterListen
 		TestPropertyListener
 {
 
-	private AbstractSecurityCheck securityCheck;
+	private SecurityCheck securityCheck;
 	private CheckedParametersListConfig paramsConfig;
 
 	private List<SecurityCheckedParameter> params = new ArrayList<SecurityCheckedParameter>();
@@ -33,7 +33,7 @@ public class SecurityCheckedParameterHolder extends SecurityCheckParameterListen
 
 	private Set<SecurityCheckParameterHolderListener> listeners = new HashSet<SecurityCheckParameterHolderListener>();
 
-	public SecurityCheckedParameterHolder( AbstractSecurityCheck securityCheck,
+	public SecurityCheckedParameterHolder( SecurityCheck securityCheck,
 			CheckedParametersListConfig chekedPameters )
 	{
 		this.securityCheck = securityCheck;

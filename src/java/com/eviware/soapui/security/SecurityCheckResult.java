@@ -16,8 +16,8 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.eviware.soapui.model.security.SecurityCheck;
 import com.eviware.soapui.security.SecurityCheckRequestResult.SecurityStatus;
-import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.support.action.swing.ActionList;
 
 /**
@@ -30,7 +30,7 @@ import com.eviware.soapui.support.action.swing.ActionList;
 public class SecurityCheckResult
 {
 	public SecurityStatus status = SecurityStatus.OK;
-	public AbstractSecurityCheck securityCheck;
+	public SecurityCheck securityCheck;
 	private long size;
 	private boolean discarded;
 	private List<SecurityCheckRequestResult> securityRequestResultList;
@@ -38,7 +38,7 @@ public class SecurityCheckResult
 	private long timeStamp;
 	private StringBuffer testLog = new StringBuffer();
 
-	public SecurityCheckResult( AbstractSecurityCheck securityCheck )
+	public SecurityCheckResult( SecurityCheck securityCheck )
 	{
 		this.securityCheck = securityCheck;
 		securityRequestResultList = new ArrayList<SecurityCheckRequestResult>();
@@ -54,7 +54,7 @@ public class SecurityCheckResult
 		return status;
 	}
 
-	public AbstractSecurityCheck getSecurityCheck()
+	public SecurityCheck getSecurityCheck()
 	{
 		return securityCheck;
 	}
