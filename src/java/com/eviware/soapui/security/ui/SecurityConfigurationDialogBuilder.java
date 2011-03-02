@@ -320,8 +320,8 @@ public class SecurityConfigurationDialogBuilder
 		@AField( description = "Strategy", name = "Select strategy", type = AFieldType.RADIOGROUP )
 		public final static String STRATEGY = "Select strategy";
 
-		@AField( description = "Request Delay", name = "Request Delay", type = AFieldType.INT )
-		public final static String DELAY = "Request Delay";
+		@AField( description = "Request Delay", name = "Request Delay(ms)", type = AFieldType.INT )
+		public final static String DELAY = "Request Delay(ms)";
 
 	}
 

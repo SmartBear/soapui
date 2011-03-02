@@ -87,7 +87,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		if( config.getExecutionStrategy() == null ) {
 			config.addNewExecutionStrategy();
 			config.getExecutionStrategy().setStrategy( StrategyTypeConfig.ONE_BY_ONE );
-			config.getExecutionStrategy().setDelay( 10 );
+			config.getExecutionStrategy().setDelay( 100 );
 		}
 
 		/*
@@ -145,9 +145,6 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		} );
 	}
 
-	/*************************************
-	 * START OF NEWLY REFACTORED
-	 **************************************/
 	/* (non-Javadoc)
 	 * @see com.eviware.soapui.security.check.SecurityCheck#run(com.eviware.soapui.model.testsuite.TestStep, com.eviware.soapui.security.SecurityTestRunContext, com.eviware.soapui.security.SecurityTestRunner)
 	 */
@@ -172,13 +169,22 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 
 		while( hasNext() )
 		{
+			
 			setSecurityCheckRequestResult( new SecurityCheckRequestResult( this ) );
 			execute( securityTestRunner, testStep, context );
 			assertRequest( getSecurityCheckRequestResult().getMessageExchange(), context );
 			assertResponse( getSecurityCheckRequestResult().getMessageExchange(), context );
 			// add to summary result
 			securityCheckResult.addSecurityRequestResult( getSecurityCheckRequestResult() );
-
+			
+			try
+			{
+				Thread.sleep( getExecutionStrategy().getDelay() );
+			}
+			catch( InterruptedException e )
+			{
+				SoapUI.logError( e, "Security Check Request Delay Interrupted!" );
+			}
 		}
 		
 		try
