@@ -216,10 +216,20 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 		return result;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.eviware.soapui.impl.wsdl.support.AbstractTestCaseRunner#notifyBeforeRun
+	 * ()
+	 * 
+	 * The order of listeners notifications here is important, security listeners
+	 * first, so while monitoring execution TestCase log is disabled before
+	 * WsdlTestCaseDesktopPanel.InternalTestRunListener.beforeRun is executed
+	 * otherwise SecurityTest execution will temper with functional log.
+	 */
 	protected void notifyBeforeRun()
 	{
-		super.notifyBeforeRun();
-
 		if( securityTestListeners == null || securityTestListeners.length == 0 )
 			return;
 
@@ -234,10 +244,22 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 				SoapUI.logError( t );
 			}
 		}
+		super.notifyBeforeRun();
+
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.eviware.soapui.impl.wsdl.support.AbstractTestCaseRunner#notifyAfterRun
+	 * ()
+	 * 
+	 * The same as for notifyBeforeRun, security listeners come last
+	 */
 	protected void notifyAfterRun()
 	{
+		super.notifyAfterRun();
 		if( securityTestListeners == null || securityTestListeners.length == 0 )
 			return;
 
@@ -252,7 +274,6 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 				SoapUI.logError( t );
 			}
 		}
-		super.notifyAfterRun();
 	}
 
 	@Override
