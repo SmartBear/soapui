@@ -13,8 +13,11 @@
 package com.eviware.soapui.security;
 
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.eviware.soapui.model.testsuite.TestStep;
+import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.security.SecurityCheckRequestResult.SecurityStatus;
 import com.eviware.soapui.support.action.swing.ActionList;
 
@@ -30,33 +33,31 @@ public class SecurityTestStepResult
 	public SecurityStatus status = SecurityStatus.OK;
 	public TestStep testStep;
 	private long size;
-	// private List<SecurityCheckRequestResult> securityRequestResultList;
+	private List<SecurityCheckResult> securityCheckResultList;
 	private boolean discarded;
 	private long timeTaken = 0;
 	private long timeStamp;
 	private StringBuffer testLog = new StringBuffer();
+	private TestStepResult originalTestStepResult;
 
-	public SecurityTestStepResult( TestStep testStep )
+	public SecurityTestStepResult( TestStep testStep, TestStepResult originalResult )
 	{
 		this.testStep = testStep;
-		// securityRequestResultList = new
-		// ArrayList<SecurityCheckRequestResult>();
+		securityCheckResultList = new ArrayList<SecurityCheckResult>();
+		timeStamp = System.currentTimeMillis();
+		this.testLog.append( "" );
+		this.originalTestStepResult = originalResult;
 	}
 
-	// public List<SecurityCheckRequestResult> getSecurityRequestResultList()
-	// {
-	// return securityRequestResultList;
-	// }
+	public List<SecurityCheckResult> getSecurityCheckResultList()
+	{
+		return securityCheckResultList;
+	}
 
 	public SecurityStatus getStatus()
 	{
 		return status;
 	}
-
-	// public AbstractSecurityCheck getSecurityCheck()
-	// {
-	// return securityCheck;
-	// }
 
 	/**
 	 * Returns a list of actions that can be applied to this result
@@ -67,31 +68,24 @@ public class SecurityTestStepResult
 		return null;
 	}
 
-	public void addSecurityRequestResult( SecurityCheckResult securityCheckResult )
+	// TODO
+	public void addSecurityCheckResult( SecurityCheckResult securityCheckResult )
 	{
-		// if( securityRequestResultList != null )
-		// securityRequestResultList.add( secReqResult );
+		if( securityCheckResultList != null )
+			securityCheckResultList.add( securityCheckResult );
 
-		// calulate time taken
+		// calculate time taken
 		timeTaken += securityCheckResult.getTimeTaken();
-
-		// calculate time stamp (when test is started)
-		// if( securityRequestResultList.size() == 1 )
-		// timeStamp = securityRequestResultList.get( 0 ).getTimeStamp();
-		// else if( timeStamp > secReqResult.getTimeStamp() )
-		// timeStamp = securityCheckResult.getTimeStamp();
 
 		// calculate status ( one failed fails whole test )
 		if( status == SecurityStatus.OK )
 			status = securityCheckResult.getStatus();
 
-		// this.testLog.append( "SecurityRequest " ).append(
-		// securityRequestResultList.indexOf( secReqResult ) ).append(
-		// secReqResult.getStatus().toString() ).append( ": took " ).append(
-		// secReqResult.getTimeTaken() ).append(
-		// " ms" );
-		// for( String s : secReqResult.getMessages() )
-		// testLog.append( "\n -> " ).append( s );
+		// TODO check and finish this - seems it's used for reports
+		this.testLog.append( "SecurityCheck " ).append( securityCheckResultList.indexOf( securityCheckResult ) ).append(
+				securityCheckResult.getStatus().toString() ).append( ": took " )
+				.append( securityCheckResult.getTimeTaken() ).append( " ms" );
+		this.testLog.append( securityCheckResult.getSecurityTestLog() );
 	}
 
 	public long getTimeTaken()
@@ -141,6 +135,16 @@ public class SecurityTestStepResult
 	public long getTimeStamp()
 	{
 		return timeStamp;
+	}
+
+	public TestStepResult getOriginalTestStepResult()
+	{
+		return originalTestStepResult;
+	}
+
+	public void setOriginalTestStepResult( TestStepResult originalTestStepResult )
+	{
+		this.originalTestStepResult = originalTestStepResult;
 	}
 
 }

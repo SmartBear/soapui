@@ -59,8 +59,8 @@ import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
  * @author robert
  * 
  */
-public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<SecurityCheckConfig> implements
-		 Assertable, RequestAssertion, ResponseAssertion, SecurityCheck
+public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<SecurityCheckConfig> implements Assertable,
+		RequestAssertion, ResponseAssertion, SecurityCheck
 {
 	// configuration of specific request modification
 	private SecurityCheckConfig config;
@@ -84,27 +84,32 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		}
 		this.testStep = testStep;
 		this.config = config;
-		if( config.getExecutionStrategy() == null ) {
+		if( config.getExecutionStrategy() == null )
+		{
 			config.addNewExecutionStrategy();
 			config.getExecutionStrategy().setStrategy( StrategyTypeConfig.ONE_BY_ONE );
 			config.getExecutionStrategy().setDelay( 100 );
 		}
 
 		/*
-		 * if security check have no strategy ( like large attahments, set its value to 
-		 * StrategyTypeConfig.NO_STRATEGY.
+		 * if security check have no strategy ( like large attahments, set its
+		 * value to StrategyTypeConfig.NO_STRATEGY.
 		 */
-		setExecutionStrategy( new ExecutionStrategyHolder(config.getExecutionStrategy()) );
-		
+		setExecutionStrategy( new ExecutionStrategyHolder( config.getExecutionStrategy() ) );
+
 		if( config.getChekedPameters() == null )
 			config.addNewChekedPameters();
 
 		initAssertions();
-		
+
 	}
 
-	/* (non-Javadoc)
-	 * @see com.eviware.soapui.security.check.SecurityCheck#updateSecurityConfig(com.eviware.soapui.config.SecurityCheckConfig)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.eviware.soapui.security.check.SecurityCheck#updateSecurityConfig(com
+	 * .eviware.soapui.config.SecurityCheckConfig)
 	 */
 	public void updateSecurityConfig( SecurityCheckConfig config )
 	{
@@ -112,8 +117,9 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 
 		assertionsSupport.refresh();
 
-		if ( executionStrategy != null && config.getExecutionStrategy() != null ) {
-			executionStrategy.updateConfig(config.getExecutionStrategy());
+		if( executionStrategy != null && config.getExecutionStrategy() != null )
+		{
+			executionStrategy.updateConfig( config.getExecutionStrategy() );
 		}
 	}
 
@@ -145,8 +151,14 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		} );
 	}
 
-	/* (non-Javadoc)
-	 * @see com.eviware.soapui.security.check.SecurityCheck#run(com.eviware.soapui.model.testsuite.TestStep, com.eviware.soapui.security.SecurityTestRunContext, com.eviware.soapui.security.SecurityTestRunner)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.eviware.soapui.security.check.SecurityCheck#run(com.eviware.soapui
+	 * .model.testsuite.TestStep,
+	 * com.eviware.soapui.security.SecurityTestRunContext,
+	 * com.eviware.soapui.security.SecurityTestRunner)
 	 */
 	public SecurityCheckResult run( TestStep testStep, SecurityTestRunContext context,
 			SecurityTestRunner securityTestRunner )
@@ -163,20 +175,20 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 			SoapUI.log.error( "Exception during Test Execution", e );
 
 			// need fix
-			securityCheckResult.status = SecurityStatus.FAILED;
+			securityCheckResult.setStatus( SecurityStatus.FAILED );
 
 		}
 
 		while( hasNext() )
 		{
-			
+
 			setSecurityCheckRequestResult( new SecurityCheckRequestResult( this ) );
 			execute( securityTestRunner, testStep, context );
 			assertRequest( getSecurityCheckRequestResult().getMessageExchange(), context );
 			assertResponse( getSecurityCheckRequestResult().getMessageExchange(), context );
 			// add to summary result
 			securityCheckResult.addSecurityRequestResult( getSecurityCheckRequestResult() );
-			
+
 			try
 			{
 				Thread.sleep( getExecutionStrategy().getDelay() );
@@ -186,7 +198,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 				SoapUI.logError( e, "Security Check Request Delay Interrupted!" );
 			}
 		}
-		
+
 		try
 		{
 			runTearDownScript( securityTestRunner, context );
@@ -196,7 +208,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 			SoapUI.log.error( "Exception during Test Execution", e );
 
 			// need fix
-			securityCheckResult.status = SecurityStatus.FAILED;
+			securityCheckResult.setStatus( SecurityStatus.FAILED );
 
 		}
 		return securityCheckResult;
@@ -215,7 +227,9 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	 */
 	abstract protected boolean hasNext();
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.eviware.soapui.security.check.SecurityCheck#isConfigurable()
 	 */
 
@@ -228,21 +242,30 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	 * Overide if Security Check have Optional component
 	 */
 	@Override
-	public JComponent getComponent() {
+	public JComponent getComponent()
+	{
 		return null;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.eviware.soapui.security.check.SecurityCheck#getType()
 	 */
 	public abstract String getType();
 
-	/* (non-Javadoc)
-	 * @see com.eviware.soapui.security.check.SecurityCheck#acceptsTestStep(com.eviware.soapui.model.testsuite.TestStep)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.eviware.soapui.security.check.SecurityCheck#acceptsTestStep(com.eviware
+	 * .soapui.model.testsuite.TestStep)
 	 */
 	public abstract boolean acceptsTestStep( TestStep testStep );
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.eviware.soapui.security.check.SecurityCheck#getTestStep()
 	 */
 	public TestStep getTestStep()
@@ -250,16 +273,25 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		return testStep;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.eviware.soapui.security.check.SecurityCheck#setTestStep(com.eviware.soapui.model.testsuite.TestStep)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.eviware.soapui.security.check.SecurityCheck#setTestStep(com.eviware
+	 * .soapui.model.testsuite.TestStep)
 	 */
 	public void setTestStep( TestStep step )
 	{
 		testStep = step;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.eviware.soapui.security.check.SecurityCheck#runTearDownScript(com.eviware.soapui.security.SecurityTestRunner, com.eviware.soapui.security.SecurityTestRunContext)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.eviware.soapui.security.check.SecurityCheck#runTearDownScript(com.
+	 * eviware.soapui.security.SecurityTestRunner,
+	 * com.eviware.soapui.security.SecurityTestRunContext)
 	 */
 	public Object runTearDownScript( SecurityTestRunner runner, SecurityTestRunContext context ) throws Exception
 	{
@@ -280,8 +312,13 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		return tearDownScriptEngine.run();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.eviware.soapui.security.check.SecurityCheck#runSetupScript(com.eviware.soapui.security.SecurityTestRunner, com.eviware.soapui.security.SecurityTestRunContext)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.eviware.soapui.security.check.SecurityCheck#runSetupScript(com.eviware
+	 * .soapui.security.SecurityTestRunner,
+	 * com.eviware.soapui.security.SecurityTestRunContext)
 	 */
 	public Object runSetupScript( SecurityTestRunner runner, SecurityTestRunContext context ) throws Exception
 	{
@@ -326,7 +363,9 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		config.setName( arg0 );
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.eviware.soapui.security.check.SecurityCheck#isDisabled()
 	 */
 	public boolean isDisabled()
@@ -334,7 +373,9 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		return disabled;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.eviware.soapui.security.check.SecurityCheck#setDisabled(boolean)
 	 */
 	public void setDisabled( boolean disabled )
@@ -355,16 +396,23 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see com.eviware.soapui.security.check.SecurityCheck#getExecutionStrategy()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.eviware.soapui.security.check.SecurityCheck#getExecutionStrategy()
 	 */
 	public ExecutionStrategyHolder getExecutionStrategy()
 	{
 		return this.executionStrategy;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.eviware.soapui.security.check.SecurityCheck#setExecutionStrategy(com.eviware.soapui.security.ExecutionStrategyHolder)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.eviware.soapui.security.check.SecurityCheck#setExecutionStrategy(com
+	 * .eviware.soapui.security.ExecutionStrategyHolder)
 	 */
 	public void setExecutionStrategy( ExecutionStrategyHolder executionStrategyHolder )
 	{
@@ -574,8 +622,11 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		return assertionsSupport.getAssertions();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.eviware.soapui.security.check.SecurityCheck#getAssertionsSupport()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.eviware.soapui.security.check.SecurityCheck#getAssertionsSupport()
 	 */
 	public AssertionsSupport getAssertionsSupport()
 	{
@@ -679,7 +730,9 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.eviware.soapui.security.check.SecurityCheck#getSetupScript()
 	 */
 	public String getSetupScript()
@@ -689,20 +742,26 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		return config.getSetupScript().getStringValue();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.eviware.soapui.security.check.SecurityCheck#setSetupScript(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.eviware.soapui.security.check.SecurityCheck#setSetupScript(java.lang
+	 * .String)
 	 */
 	public void setSetupScript( String text )
 	{
 		if( config.getSetupScript() == null )
 			config.addNewSetupScript();
 		config.getSetupScript().setStringValue( text );
-		
+
 		if( setupScriptEngine != null )
 			setupScriptEngine.setScript( text );
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.eviware.soapui.security.check.SecurityCheck#getTearDownScript()
 	 */
 	public String getTearDownScript()
@@ -712,33 +771,44 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		return config.getTearDownScript().getStringValue();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.eviware.soapui.security.check.SecurityCheck#setTearDownScript(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.eviware.soapui.security.check.SecurityCheck#setTearDownScript(java
+	 * .lang.String)
 	 */
 	public void setTearDownScript( String text )
 	{
 		if( config.getTearDownScript() == null )
 			config.addNewTearDownScript();
 		config.getTearDownScript().setStringValue( text );
-		
+
 		if( tearDownScriptEngine != null )
 			tearDownScriptEngine.setScript( text );
 	}
 
 	// name used in configuration panel
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.eviware.soapui.security.check.SecurityCheck#getConfigName()
 	 */
 	public abstract String getConfigName();
 
 	// description usd in configuration panel
-	/* (non-Javadoc)
-	 * @see com.eviware.soapui.security.check.SecurityCheck#getConfigDescription()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.eviware.soapui.security.check.SecurityCheck#getConfigDescription()
 	 */
 	public abstract String getConfigDescription();
 
 	// help url used for configuration panel ( help for this check )
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.eviware.soapui.security.check.SecurityCheck#getHelpURL()
 	 */
 	public abstract String getHelpURL();

@@ -47,7 +47,6 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 	 */
 	private int currentCheckOnSecurityTestIndex;
 
-	@SuppressWarnings( "unchecked" )
 	public SecurityTestRunnerImpl( SecurityTest test, StringToObjectMap properties )
 	{
 		super( test, properties );
@@ -69,25 +68,10 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 	@Override
 	public TestStepResult runTestStep( TestStep testStep, boolean discard, boolean process )
 	{
-		for( int i = 0; i < securityTestListeners.length; i++ )
-		{
-			securityTestListeners[i].beforeStep( this, getRunContext(), testStep );
-			if( !isRunning() )
-				return null;
-		}
-
 		TestStepResult stepResult = testStep.run( this, getRunContext() );
 		getResults().add( stepResult );
 		setResultCount( getResultCount() + 1 );
 		// enforceMaxResults( getTestRunnable().getMaxResults() );
-
-		// this method is effectively used only in internalRun and
-		// listeners.afterStep is done there
-		// that's why securityTestStepResult here dosn't matter
-		for( int i = 0; i < securityTestListeners.length; i++ )
-		{
-			securityTestListeners[i].afterStep( this, getRunContext(), new SecurityTestStepResult( testStep ) );
-		}
 
 		// discard?
 		// if( discard && stepResult.getStatus() == TestStepStatus.OK &&
@@ -141,12 +125,12 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 				securityTestStepListeners[i].beforeStep( this, getRunContext(), currentStep );
 			}
 			TestStepResult stepResult = runTestStep( currentStep, true, true );
-			SecurityTestStepResult securityStepResult = new SecurityTestStepResult( currentStep );
 			if( stepResult == null )
 				return -2;
-
 			// if( !isRunning() )
 			// return -2;
+
+			SecurityTestStepResult securityStepResult = new SecurityTestStepResult( currentStep, stepResult );
 
 			Map<String, List<AbstractSecurityCheck>> secCheckMap = securityTest.getSecurityChecksMap();
 			if( secCheckMap.containsKey( currentStep.getId() ) )
@@ -159,7 +143,7 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 					runContext.setCurrentCheckOnSecurityTestIndex( currentCheckOnSecurityTestIndex++ );
 					SecurityCheckResult securityCheckResult = runTestStepSecurityCheck( runContext, currentStep,
 							securityCheck );
-					securityStepResult.addSecurityRequestResult( securityCheckResult );
+					securityStepResult.addSecurityCheckResult( securityCheckResult );
 					if( securityCheckResult.getStatus() == SecurityStatus.FAILED )
 					{
 						if( getTestRunnable().getFailOnError() )
@@ -174,6 +158,7 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 						}
 					}
 				}
+				securityTest.putSecurityTestStepResult( currentStep, securityStepResult );
 			}
 			for( int i = 0; i < securityTestStepListeners.length; i++ )
 			{
@@ -210,7 +195,7 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 			{
 				securityTestListeners[j].beforeSecurityCheck( this, runContext, securityCheck );
 			}
-			result = securityCheck.run( cloneForSecurityCheck( ( WsdlTestStep )currentStep ), runContext, null );
+			result = securityCheck.run( cloneForSecurityCheck( ( WsdlTestStep )currentStep ), runContext, this );
 			if( securityTest.getFailOnError() && result.getStatus() == SecurityStatus.FAILED )
 			{
 				fail( "Cancelling due to failed security check" );

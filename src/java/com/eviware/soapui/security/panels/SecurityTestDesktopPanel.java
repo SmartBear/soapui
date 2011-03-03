@@ -50,18 +50,16 @@ import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestStepFactory;
 import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.security.SecurityCheck;
 import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
-import com.eviware.soapui.security.SecurityCheckResult;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.security.SecurityTestRunnerImpl;
+import com.eviware.soapui.security.SecurityTestStepResult;
 import com.eviware.soapui.security.actions.SecurityTestOptionsAction;
 import com.eviware.soapui.security.log.JSecurityTestRunLog;
 import com.eviware.soapui.security.support.ProgressBarSecurityTestAdapter;
-import com.eviware.soapui.security.support.SecurityCheckRunListener;
 import com.eviware.soapui.security.support.SecurityTestRunListenerAdapter;
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.DocumentListenerAdapter;
@@ -120,7 +118,8 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 	// private JButton synchronizeWithLoadUIButton;
 	private SecurityTest securityTest;
 	protected JXToolBar toolbar;
-	private InternalSecurityCheckRunListener securityCheckkRunListener = new InternalSecurityCheckRunListener();
+	// private InternalSecurityCheckRunListener securityCheckkRunListener = new
+	// InternalSecurityCheckRunListener();
 	private InternalSecurityTestRunListener securityTestRunListener = new InternalSecurityTestRunListener();
 
 	public SecurityTestDesktopPanel( SecurityTest securityTest )
@@ -131,7 +130,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 
 		setPreferredSize( new Dimension( 400, 550 ) );
 		this.securityTest = securityTest;
-		securityTest.addSecurityCheckRunListener( securityCheckkRunListener );
+		// securityTest.addSecurityCheckRunListener( securityCheckkRunListener );
 		securityTest.addSecurityTestRunListener( securityTestRunListener );
 		progressBarAdapter = new ProgressBarSecurityTestAdapter( progressBar, securityTest );
 	}
@@ -397,7 +396,8 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 		}
 
 		getModelItem().removeSecurityTestRunListener( securityTestRunListener );
-		getModelItem().removeSecurityCheckRunListener( securityCheckkRunListener );
+		// getModelItem().removeSecurityCheckRunListener(
+		// securityCheckkRunListener );
 		// testStepList.release();
 		progressBarAdapter.release();
 		propertiesTable.release();
@@ -602,24 +602,26 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 				|| modelItem == securityTest.getTestCase().getTestSuite().getProject();
 	}
 
-	public class InternalSecurityCheckRunListener implements SecurityCheckRunListener
-	{
-		@Override
-		public void afterSecurityCheck( SecurityTestRunner testRunner, SecurityTestRunContext runContext,
-				SecurityCheckResult securityCheckResult )
-		{
-			securityTestLog.addSecurityCheckResult( securityCheckResult );
-		}
-
-		@Override
-		public void beforeSecurityCheck( SecurityTestRunner testRunner, SecurityTestRunContext runContext,
-				SecurityCheck securityCheck )
-		{
-			// TODO Auto-generated method stub
-
-		}
-	}
-
+	// public class InternalSecurityCheckRunListener implements
+	// SecurityCheckRunListener
+	// {
+	// @Override
+	// public void afterSecurityCheck( SecurityTestRunner testRunner,
+	// SecurityTestRunContext runContext,
+	// SecurityCheckResult securityCheckResult )
+	// {
+	// securityTestLog.addSecurityCheckResult( securityCheckResult );
+	// }
+	//
+	// @Override
+	// public void beforeSecurityCheck( SecurityTestRunner testRunner,
+	// SecurityTestRunContext runContext,
+	// AbstractSecurityCheck securityCheck )
+	// {
+	// // TODO Auto-generated method stub
+	//
+	// }
+	// }
 	public class InternalSecurityTestRunListener extends SecurityTestRunListenerAdapter
 	{
 
@@ -696,5 +698,10 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 			}
 		}
 
+		@Override
+		public void afterStep( TestCaseRunner testRunner, SecurityTestRunContext runContext, SecurityTestStepResult result )
+		{
+			securityTestLog.addSecurityTestStepResult( result );
+		}
 	}
 }

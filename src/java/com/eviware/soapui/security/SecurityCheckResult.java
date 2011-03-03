@@ -29,19 +29,20 @@ import com.eviware.soapui.support.action.swing.ActionList;
 
 public class SecurityCheckResult
 {
-	public SecurityStatus status = SecurityStatus.OK;
+	private SecurityStatus status = SecurityStatus.OK;
 	public SecurityCheck securityCheck;
 	private long size;
 	private boolean discarded;
 	private List<SecurityCheckRequestResult> securityRequestResultList;
 	private long timeTaken = 0;
 	private long timeStamp;
-	private StringBuffer testLog = new StringBuffer();
+	public StringBuffer testLog = new StringBuffer();
 
 	public SecurityCheckResult( SecurityCheck securityCheck )
 	{
 		this.securityCheck = securityCheck;
 		securityRequestResultList = new ArrayList<SecurityCheckRequestResult>();
+		timeStamp = System.currentTimeMillis();
 	}
 
 	public List<SecurityCheckRequestResult> getSecurityRequestResultList()
@@ -52,6 +53,11 @@ public class SecurityCheckResult
 	public SecurityStatus getStatus()
 	{
 		return status;
+	}
+
+	public void setStatus( SecurityStatus status )
+	{
+		this.status = status;
 	}
 
 	public SecurityCheck getSecurityCheck()
@@ -75,12 +81,6 @@ public class SecurityCheckResult
 
 		// calulate time taken
 		timeTaken += secReqResult.getTimeTaken();
-
-		// calculate time stamp (when test is started)
-		if( securityRequestResultList.size() == 1 )
-			timeStamp = securityRequestResultList.get( 0 ).getTimeStamp();
-		else if( timeStamp > secReqResult.getTimeStamp() )
-			timeStamp = secReqResult.getTimeStamp();
 
 		// calculate status ( one failed fails whole test )
 		if( status == SecurityStatus.OK )

@@ -149,7 +149,7 @@ public abstract class AbstractTestCaseRunner<T extends TestRunnable, T2 extends 
 
 	protected abstract void failTestRunnableOnErrors( T2 runContext );
 
-	protected abstract int runCurrentTestStep( T2 runContext, int currentStepIndex );
+	protected abstract int runCurrentTestStep( T2 runContext, int currentStepIndex ) throws Exception;
 
 	protected void internalFinally( T2 runContext )
 	{
@@ -268,7 +268,6 @@ public abstract class AbstractTestCaseRunner<T extends TestRunnable, T2 extends 
 		getTestCase().setRunFromHereContext( runContext.getProperties() );
 	}
 
-	// Next two will contain both testcase and securitytest listeners
 	protected void notifyAfterRun()
 	{
 		if( testRunListeners == null || testRunListeners.length == 0 )

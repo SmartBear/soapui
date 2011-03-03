@@ -61,8 +61,25 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 	private Set<SecurityTestRunListener> securityTestRunListeners = new HashSet<SecurityTestRunListener>();
 	private Map<TestStep, Set<SecurityTestRunListener>> securityTestStepRunListeners = new HashMap<TestStep, Set<SecurityTestRunListener>>();
 	private Set<SecurityCheckRunListener> securityCheckRunListeners = new HashSet<SecurityCheckRunListener>();
+	private Map<TestStep, SecurityTestStepResult> securityTestStepResultMap;
 
 	private HashMap<String, List<AbstractSecurityCheck>> securityChecksMap = new HashMap<String, List<AbstractSecurityCheck>>();
+
+	private SecurityTestRunnerImpl runner;
+	private SoapUIScriptEngine scriptEngine;
+
+	public SecurityTest( WsdlTestCase testCase, SecurityTestConfig config )
+	{
+		super( config, testCase, "/securityTest.png" );
+		this.testCase = testCase;
+		if( !getConfig().isSetProperties() )
+			getConfig().addNewProperties();
+
+		setPropertiesConfig( getConfig().getProperties() );
+
+		securityTestLog = new SecurityTestLogModel();
+		securityTestStepResultMap = new HashMap<TestStep, SecurityTestStepResult>();
+	}
 
 	public void setListModel( SecurityChecksPanel.SecurityCheckListModel listModel )
 	{
@@ -79,21 +96,6 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 		return securityTestLog;
 	}
 
-	private SecurityTestRunnerImpl runner;
-	private SoapUIScriptEngine scriptEngine;
-
-	public SecurityTest( WsdlTestCase testCase, SecurityTestConfig config )
-	{
-		super( config, testCase, "/securityTest.png" );
-		this.testCase = testCase;
-		if( !getConfig().isSetProperties() )
-			getConfig().addNewProperties();
-
-		setPropertiesConfig( getConfig().getProperties() );
-
-		securityTestLog = new SecurityTestLogModel();
-	}
-
 	/**
 	 * Adds new securityCheck for the specific TestStep
 	 * 
@@ -105,8 +107,8 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 	 */
 	public SecurityCheck addSecurityCheck( TestStep testStep, String securityCheckType, String securityCheckName )
 	{
-		AbstractSecurityCheckFactory factory = SoapUI.getSoapUICore().getSecurityCheckRegistry()
-				.getFactory( securityCheckType );
+		AbstractSecurityCheckFactory factory = SoapUI.getSoapUICore().getSecurityCheckRegistry().getFactory(
+				securityCheckType );
 		SecurityCheckConfig newSecCheckConfig = factory.createNewSecurityCheck( securityCheckName );
 		AbstractSecurityCheck newSecCheck = factory.buildSecurityCheck( testStep, newSecCheckConfig, this );
 		newSecCheck.setTestStep( testStep );
@@ -258,8 +260,8 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 									{
 										testStep = ts;
 										AbstractSecurityCheck securityCheck = SoapUI.getSoapUICore().getSecurityCheckRegistry()
-												.getFactory( secCheckConfig.getType() )
-												.buildSecurityCheck( testStep, secCheckConfig, this );
+												.getFactory( secCheckConfig.getType() ).buildSecurityCheck( testStep,
+														secCheckConfig, this );
 										checkList.add( securityCheck );
 									}
 							}
@@ -270,6 +272,24 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 			}
 		}
 		return securityChecksMap;
+	}
+
+	public Map<TestStep, SecurityTestStepResult> getSecurityTestStepResultMap()
+	{
+		return securityTestStepResultMap;
+	}
+
+	/**
+	 * Puts result of a SecurityTest on a TestStep level to a map, if map
+	 * previously contained value for specified TestStep it is beeing replaced
+	 * with the new result value
+	 * 
+	 * @param testStep
+	 * @param securityTestStepResult
+	 */
+	public void putSecurityTestStepResult( TestStep testStep, SecurityTestStepResult securityTestStepResult )
+	{
+		securityTestStepResultMap.put( testStep, securityTestStepResult );
 	}
 
 	/**
@@ -460,8 +480,8 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 				if( testStepSecurityTest.getTestStepId().equals( testStep.getId() ) )
 				{
 					List<SecurityCheckConfig> securityCheckList = testStepSecurityTest.getTestStepSecurityCheckList();
-					AbstractSecurityCheckFactory factory = SoapUI.getSoapUICore().getSecurityCheckRegistry()
-							.getFactory( securityCheck.getType() );
+					AbstractSecurityCheckFactory factory = SoapUI.getSoapUICore().getSecurityCheckRegistry().getFactory(
+							securityCheck.getType() );
 					SecurityCheckConfig newSecCheckConfig = ( SecurityCheckConfig )securityCheck.getConfig().copy();
 					AbstractSecurityCheck newSecCheck = factory.buildSecurityCheck( testStep, newSecCheckConfig, this );
 

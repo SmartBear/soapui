@@ -72,8 +72,9 @@ public class ProgressBarSecurityTestStepAdapter
 		public void beforeSecurityCheck( TestCaseRunner testRunner, SecurityTestRunContext runContext,
 				AbstractSecurityCheck securityCheck )
 		{
-			if( progressBar.isIndeterminate() )
-				return;
+			progressBar.setIndeterminate( true );
+			// if( progressBar.isIndeterminate() )
+			// return;
 
 			if( securityCheck != null )
 			{
@@ -85,8 +86,7 @@ public class ProgressBarSecurityTestStepAdapter
 		public void afterSecurityCheck( TestCaseRunner testRunner, SecurityTestRunContext runContext,
 				SecurityCheckResult securityCheckResult )
 		{
-			if( progressBar.isIndeterminate() )
-				return;
+			progressBar.setIndeterminate( false );
 
 			if( securityCheckResult.getStatus() == SecurityStatus.FAILED )
 			{
