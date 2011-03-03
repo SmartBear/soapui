@@ -10,42 +10,43 @@
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
 package com.eviware.soapui.security.boundary;
+
 /**
  * @author nebojsa.tasic
  */
 public abstract class AbstractBoundary implements Boundary
 {
-	protected String length;
-	protected String minLength;
-	protected String maxLength;
-	protected String totalDigits;
-	protected String fractionDigits;
-	protected String maxExclusive;
-	protected String maxInclusive;
-	protected String minExclusive;
-	protected String minInclusive;
-
-	public AbstractBoundary( String length, String minLength, String maxLength, String totalDigits,
-			String fractionDigits, String maxExclusive, String maxInclusive, String minExclusive, String minInclusive )
+	
+	public static final String XSD_LENGTH = "xsd:length";
+	public static final String XSD_MAX_LENGTH = "xsd:maxLength";
+	public static final String XSD_MIN_LENGTH = "xsd:minLength";
+	
+	public static Boundary factory( String type )
 	{
-		this.length = length;
-		this.minLength = minLength;
-		this.maxLength = maxLength;
-		this.totalDigits = totalDigits;
-		this.fractionDigits = fractionDigits;
-		this.maxExclusive = maxExclusive;
-		this.maxInclusive = maxInclusive;
-		this.minExclusive = minExclusive;
-		this.minInclusive = minInclusive;
+		if( "xsd:string".equals( type ) )
+		{
+			return new StringBoundary();
+		}
+		return null;
 	}
-
-	public AbstractBoundary( String length, String minLength, String maxLength, String totalDigits, String fractionDigits )
+	
+	
+	public static String outOfBoundaryValue( String baseType,  String nodeName, String nodeValue )
 	{
-		this.length = length;
-		this.minLength = minLength;
-		this.maxLength = maxLength;
-		this.totalDigits = totalDigits;
-		this.fractionDigits = fractionDigits;
+		Boundary boundary = AbstractBoundary.factory( baseType );
+		
+		if( AbstractBoundary.XSD_MIN_LENGTH.equals( nodeName ) )
+		{
+			return  boundary.outOfBoundary( Boundary.MIN_LENGTH, nodeValue );
+		}
+		else if( AbstractBoundary.XSD_MAX_LENGTH.equals( nodeName ) )
+		{
+			return  boundary.outOfBoundary( Boundary.MAX_LENGTH, nodeValue);
+		}
+		else if( AbstractBoundary.XSD_LENGTH.equals( nodeName ) )
+		{
+			return  boundary.outOfBoundary( Boundary.LENGTH, nodeValue );
+		}
+		return null;
 	}
-
 }

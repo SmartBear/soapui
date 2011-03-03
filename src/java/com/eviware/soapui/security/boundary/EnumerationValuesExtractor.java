@@ -25,6 +25,11 @@ import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequest;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel.XmlTreeNode;
 
+
+/**
+ * 
+ * NOT USED ANY MORE
+ */
 public class EnumerationValuesExtractor
 {
 	private WsdlRequest request;

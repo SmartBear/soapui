@@ -381,7 +381,7 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheckWithProperties
 	}
 
 	@Override
-	protected boolean hasNext()
+	protected boolean hasNext(TestStep testStep,SecurityTestRunContext context)
 	{
 		// TODO Auto-generated method stub
 		return false;

@@ -100,7 +100,7 @@ public class LargeAttachmentSecurityCheck extends AbstractSecurityCheck
 	}
 
 	@Override
-	protected boolean hasNext()
+	protected boolean hasNext(TestStep testStep,SecurityTestRunContext context)
 	{
 		// TODO Auto-generated method stub
 		return false;

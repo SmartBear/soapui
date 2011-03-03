@@ -80,7 +80,7 @@ public class SQLInjectionCheck extends AbstractSecurityCheck
 	}
 
 	@Override
-	protected boolean hasNext()
+	protected boolean hasNext(TestStep testStep,SecurityTestRunContext context)
 	{
 		return sqlFuzzer.hasNext();
 	}

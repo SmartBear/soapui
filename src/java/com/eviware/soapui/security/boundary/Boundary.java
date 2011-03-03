@@ -25,5 +25,5 @@ public interface Boundary
 	public static final int MAX_INCLISIVE = 8;
 	public static final int MIN_INCLISIVE = 9;
 
-	String outOfBoundary( int restrictionAttribute );
+	String outOfBoundary( int restrictionAttribute , String value);
 }

@@ -85,7 +85,7 @@ public class GroovySecurityCheck extends AbstractSecurityCheck implements HttpSe
 	}
 
 	@Override
-	protected boolean hasNext()
+	protected boolean hasNext(TestStep testStep,SecurityTestRunContext context)
 	{
 		boolean result = next;
 		next = !next;

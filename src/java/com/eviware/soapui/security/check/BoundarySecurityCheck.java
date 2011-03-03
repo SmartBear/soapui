@@ -11,12 +11,13 @@
  */
 package com.eviware.soapui.security.check;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 import org.apache.xmlbeans.XmlAnySimpleType;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
+import org.apache.xmlbeans.impl.schema.SchemaTypeImpl;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.SecurityCheckConfig;
@@ -31,6 +32,8 @@ import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
+import com.eviware.soapui.security.boundary.AbstractBoundary;
+import com.eviware.soapui.security.boundary.Boundary;
 import com.eviware.soapui.security.boundary.enumeration.EnumerationValues;
 import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel;
@@ -42,27 +45,26 @@ import com.eviware.x.form.support.AField.AFieldType;
 public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 {
 
-	private int propertiesCounter = 0;
 	public static final String TYPE = "BoundaryCheck";
 	public static final String LABEL = "Boundary";
+	private static final String REQUEST_MUTATIONS_STACK = "RequestMutationsStack";
 
 	public BoundarySecurityCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent, String icon )
 	{
 		super( testStep, config, parent, icon );
-		List<String> selected = getSelectedList();
-		propertiesCounter = selected.size();
 	}
 
-	private List<String> getSelectedList()
-	{
-		List<String> selected = new ArrayList<String>();
-		for( SecurityCheckedParameter cpc : getParameterHolder().getParameterList() )
-		{
-			if( cpc.isChecked() )
-				selected.add( cpc.getName() );
-		}
-		return selected;
-	}
+	// private List<String> getSelectedList()
+	// {
+	// List<String> selected = new ArrayList<String>();
+	// for( SecurityCheckedParameter cpc :
+	// getParameterHolder().getParameterList() )
+	// {
+	// if( cpc.isChecked() )
+	// selected.add( cpc.getName() );
+	// }
+	// return selected;
+	// }
 
 	@Override
 	public boolean acceptsTestStep( TestStep testStep )
@@ -88,20 +90,17 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 	{
 		if( acceptsTestStep( testStep ) )
 		{
-			try
-			{
-				updateRequestContent( testStep );
-			}
-			catch( Exception e )
-			{
-				SoapUI.log.error( "Error extracting enumeration values from message", e );
-			}
-
+			String mutatedRequest = popMutation( context );
+			updateTestStepRequest( testStep, mutatedRequest );
 			testStep.run( ( TestCaseRunner )securityTestRunner, context );
 			createMessageExchange( testStep );
-			propertiesCounter-- ;
-
 		}
+	}
+
+	private String popMutation( SecurityTestRunContext context )
+	{
+		Stack<String> requestMutationsStack = ( Stack<String> )context.get( REQUEST_MUTATIONS_STACK );
+		return requestMutationsStack.pop();
 	}
 
 	private void createMessageExchange( TestStep testStep )
@@ -111,7 +110,7 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 		getSecurityCheckRequestResult().setMessageExchange( messageExchange );
 	}
 
-	private void updateRequestContent( TestStep testStep ) throws XmlException, Exception
+	private void extractMutations( TestStep testStep, SecurityTestRunContext context ) throws XmlException, Exception
 	{
 		XmlObjectTreeModel model = null;
 		WsdlRequest request = ( ( WsdlTestRequestStep )testStep ).getTestRequest();
@@ -134,24 +133,91 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 				{
 					XmlTreeNode mynode = treeNodes[0];
 
-					if( mynode.getSchemaType() != null && mynode.getSchemaType().getEnumerationValues() != null
-							&& mynode.getSchemaType().getEnumerationValues().length > 0 )
+					// !!!!!!!!!!!!!!work only for simple types
+					if( mynode.getSchemaType().isSimpleType() )
 					{
-						EnumerationValues nodeInfo = new EnumerationValues( mynode.getSchemaType().getBaseType()
-								.getShortJavaName() );
-						for( XmlAnySimpleType s : mynode.getSchemaType().getEnumerationValues() )
+						if( mynode.getSchemaType() != null && mynode.getSchemaType().getEnumerationValues() != null
+								&& mynode.getSchemaType().getEnumerationValues().length > 0 )
 						{
-							nodeInfo.addValue( s.getStringValue() );
+							EnumerationValues nodeInfo = new EnumerationValues( mynode.getSchemaType().getBaseType()
+									.getShortJavaName() );
+							for( XmlAnySimpleType s : mynode.getSchemaType().getEnumerationValues() )
+							{
+								nodeInfo.addValue( s.getStringValue() );
+							}
+							updateEnumNodeValue( mynode, nodeInfo );
+							addMutation( context, model.getXmlObject().toString() );
 						}
-						updateNodeValue( mynode, nodeInfo );
+						else
+						{
+							SchemaTypeImpl simpleType = ( SchemaTypeImpl )mynode.getSchemaType();
+							XmlObjectTreeModel model2 = new XmlObjectTreeModel( simpleType.getTypeSystem(), simpleType
+									.getParseObject() );
+							extractRestrictions( model2, context, mynode, model );
+						}
 					}
 				}
 			}
 		}
-		( ( WsdlTestRequestStep )testStep ).getTestRequest().setRequestContent( model.getXmlObject().toString() );
 	}
 
-	public void updateNodeValue( XmlTreeNode mynode, EnumerationValues enumerationValues )
+	private void addMutation( SecurityTestRunContext context, String request )
+	{
+		Stack<String> stack = ( Stack<String> )context.get( REQUEST_MUTATIONS_STACK );
+		stack.push( request );
+	}
+
+	private void updateTestStepRequest( TestStep testStep, String updatedRequest )
+	{
+		( ( WsdlTestRequestStep )testStep ).getTestRequest().setRequestContent( updatedRequest );
+		System.out.println( updatedRequest );
+	}
+
+	public String extractRestrictions( XmlObjectTreeModel model2, SecurityTestRunContext context,
+			XmlTreeNode nodeToUpdate, XmlObjectTreeModel model ) throws XmlException, Exception
+	{
+		getNextChild( model2.getRootNode(), context, nodeToUpdate, model );
+
+		return nodeToUpdate.getXmlObject().toString();
+	}
+
+	private void getNextChild( XmlTreeNode node, SecurityTestRunContext context, XmlTreeNode nodeToUpdate,
+			XmlObjectTreeModel model )
+	{
+		String baseType = null;
+		for( int i = 0; i < node.getChildCount(); i++ )
+		{
+			XmlTreeNode mynode = node.getChild( i );
+
+			if( "xsd:restriction".equals( mynode.getParent().getNodeName() ) )
+			{
+				if( mynode.getNodeName().equals( "@base" ) )
+				{
+					baseType = mynode.getNodeText();
+					System.out.println( mynode.getNodeName() + "=" + mynode.getNodeText() );
+				}
+				else
+				{
+					createMutation( baseType, mynode, context, nodeToUpdate, model );
+				}
+			}
+			getNextChild( mynode, context, nodeToUpdate, model );
+		}
+	}
+
+	private void createMutation( String baseType, XmlTreeNode mynode, SecurityTestRunContext context,
+			XmlTreeNode nodeToUpdate, XmlObjectTreeModel model )
+	{
+		String value = null;
+		String nodeName = mynode.getNodeName();
+		String nodeValue = mynode.getChild( 0 ).getNodeText();
+		value = AbstractBoundary.outOfBoundaryValue( baseType, nodeName, nodeValue );
+
+		nodeToUpdate.setValue( 1, value );
+		addMutation( context, model.getXmlObject().toString() );
+	}
+
+	public void updateEnumNodeValue( XmlTreeNode mynode, EnumerationValues enumerationValues )
 	{
 		int size = EnumerationValues.maxLengthStringSize( enumerationValues.getValuesList() );
 		String value = EnumerationValues.createOutOfBoundaryValue( enumerationValues, size );
@@ -159,14 +225,37 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 			mynode.setValue( 1, value );
 	}
 
-	protected boolean hasNext()
+	/**
+	 * this method uses context to handle list of mutated request
+	 * 
+	 */
+	protected boolean hasNext( TestStep testStep, SecurityTestRunContext context )
 	{
-		if( propertiesCounter == 0 )
+		if( !context.hasProperty( REQUEST_MUTATIONS_STACK ) )
 		{
-			propertiesCounter = getSelectedList().size();
+			Stack<String> requestMutationsList = new Stack<String>();
+			context.put( REQUEST_MUTATIONS_STACK, requestMutationsList );
+			try
+			{
+				extractMutations( testStep, context );
+			}
+			catch( Exception e )
+			{
+				SoapUI.logError( e );
+			}
+			return true;
+		}
+
+		Stack<String> stack = ( Stack<String> )context.get( REQUEST_MUTATIONS_STACK );
+		if( stack.empty() )
+		{
+			context.remove( REQUEST_MUTATIONS_STACK );
 			return false;
 		}
-		return true;
+		else
+		{
+			return true;
+		}
 	}
 
 	@Override

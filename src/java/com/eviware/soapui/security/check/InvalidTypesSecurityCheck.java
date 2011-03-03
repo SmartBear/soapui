@@ -200,7 +200,7 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 	}
 
 	@Override
-	protected boolean hasNext()
+	protected boolean hasNext(TestStep testStep,SecurityTestRunContext context)
 	{
 		return hasNext;
 	}

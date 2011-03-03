@@ -17,22 +17,18 @@ public class StringBoundary extends AbstractBoundary
 {
 	public static final String AVAILABLE_VALUES = " abcdefghijklmnopqrstuvwxyz";
 
-	public StringBoundary( String length, String minLength, String maxLength )
-	{
-		super( length, minLength, maxLength, null, null );
-	}
 
 	@Override
-	public String outOfBoundary( int restrictionAttribute )
+	public String outOfBoundary( int restrictionAttribute, String value )
 	{
 		switch( restrictionAttribute )
 		{
 		case LENGTH :
-			return BoundaryUtils.createCharacterArray( AVAILABLE_VALUES, Integer.valueOf( length ) );
+			return BoundaryUtils.createCharacterArray( AVAILABLE_VALUES, Integer.valueOf( value ) );
 		case MIN_LENGTH :
-			return BoundaryUtils.createCharacterArray( AVAILABLE_VALUES, Integer.valueOf( minLength ) - 1 );
+			return BoundaryUtils.createCharacterArray( AVAILABLE_VALUES, Integer.valueOf( value ) - 1 );
 		case MAX_LENGTH :
-			return BoundaryUtils.createCharacterArray( AVAILABLE_VALUES, Integer.valueOf( maxLength ) - 1 );
+			return BoundaryUtils.createCharacterArray( AVAILABLE_VALUES, Integer.valueOf( value ) + 1 );
 		default :
 			return null;
 		}

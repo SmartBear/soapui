@@ -179,7 +179,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 
 		}
 
-		while( hasNext() )
+		while( hasNext(testStep,context) )
 		{
 
 			setSecurityCheckRequestResult( new SecurityCheckRequestResult( this ) );
@@ -224,8 +224,10 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	/**
 	 * checks if specific SecurityCheck still has modifications left TODO needs
 	 * to be abstract and implemented in every check
+	 * @param testStep2 
+	 * @param context 
 	 */
-	abstract protected boolean hasNext();
+	abstract protected boolean hasNext(TestStep testStep2, SecurityTestRunContext context);
 
 	/*
 	 * (non-Javadoc)
