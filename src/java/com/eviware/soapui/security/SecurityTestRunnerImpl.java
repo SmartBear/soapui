@@ -293,8 +293,6 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 	@Override
 	protected void failTestRunnableOnErrors( SecurityTestRunContext runContext )
 	{
-		// TODO this should be handled properly, maybe add option on securityTest
-		// level
 		if( runContext.getProperty( SecurityTestRunner.Status.class.getName() ) == SecurityTestRunner.Status.FAILED
 				&& getTestRunnable().getFailSecurityTestOnCheckErrors() )
 		{
