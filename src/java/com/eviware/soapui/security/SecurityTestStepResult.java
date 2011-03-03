@@ -20,6 +20,7 @@ import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.security.SecurityCheckRequestResult.SecurityStatus;
 import com.eviware.soapui.support.action.swing.ActionList;
+import com.eviware.soapui.support.action.swing.DefaultActionList;
 
 /**
  * Security result of a TestStep represents summary result of all TestStep
@@ -39,7 +40,7 @@ public class SecurityTestStepResult
 	private long timeStamp;
 	private StringBuffer testLog = new StringBuffer();
 	private TestStepResult originalTestStepResult;
-	private boolean addedAction;
+	private DefaultActionList actionList;
 
 	public SecurityTestStepResult( TestStep testStep, TestStepResult originalResult )
 	{
@@ -66,7 +67,20 @@ public class SecurityTestStepResult
 
 	public ActionList getActions()
 	{
-		return null;
+		if( actionList == null )
+		{
+			actionList = new DefaultActionList( getOriginalTestStepResult().getTestStep().getName() );
+		}
+		actionList.addActions( getOriginalTestStepResult().getActions() );
+		actionList.setDefaultAction( getOriginalTestStepResult().getActions().getDefaultAction() );
+		if( !getSecurityCheckResultList().isEmpty() )
+		{
+			for( SecurityCheckResult checkResult : getSecurityCheckResultList() )
+			{
+				actionList.addActions( checkResult.getActions() );
+			}
+		}
+		return actionList;
 	}
 
 	// TODO

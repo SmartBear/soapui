@@ -310,34 +310,11 @@ public class JSecurityTestRunLog extends JPanel
 			if( index != -1 && ( index == selectedIndex || e.getClickCount() > 1 ) )
 			{
 				SecurityTestStepResult result = logListModel.getTestStepResultAt( index );
-				// TODO see how this default action is implemented, maybe thats's
-				// the way to implement opening
-				// message exchange
 				if( result != null && result.getActions() != null )
 					result.getActions().performDefaultAction( new ActionEvent( this, 0, null ) );
-				if( result != null && !result.getSecurityCheckResultList().isEmpty() )
-				{
-					for( SecurityCheckResult securityCheckResult : result.getSecurityCheckResultList() )
-					{
-						if( result != null && !securityCheckResult.getSecurityRequestResultList().isEmpty() )
-						{
-							for( SecurityCheckRequestResult reqResult : securityCheckResult.getSecurityRequestResultList() )
-							{
-								showSecurityCheckRequestMessageExchangeAction( reqResult );
-							}
-						}
-					}
-				}
 			}
 
 			selectedIndex = index;
-		}
-
-		public void showSecurityCheckRequestMessageExchangeAction( SecurityCheckRequestResult reqResult )
-		{
-			ShowMessageExchangeAction showMessageExchangeAction = new ShowMessageExchangeAction( reqResult
-					.getMessageExchange(), "SecurityCheck" );
-			showMessageExchangeAction.actionPerformed( new ActionEvent( this, 0, null ) );
 		}
 
 		public void mousePressed( MouseEvent e )

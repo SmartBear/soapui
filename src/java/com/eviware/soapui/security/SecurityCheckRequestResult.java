@@ -12,13 +12,16 @@
 
 package com.eviware.soapui.security;
 
+import java.awt.event.ActionEvent;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.eviware.soapui.impl.wsdl.teststeps.actions.ShowMessageExchangeAction;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.security.SecurityCheck;
 import com.eviware.soapui.support.action.swing.ActionList;
+import com.eviware.soapui.support.action.swing.DefaultActionList;
 
 /**
  * A SecurityCheck result represents result of one request (modified by a
@@ -45,6 +48,7 @@ public class SecurityCheckRequestResult
 	private boolean discarded;
 	private MessageExchange messageExchange;
 	public StringBuffer testLog = new StringBuffer();
+	private DefaultActionList actionList;
 
 	public SecurityCheckRequestResult( SecurityCheck securityCheck )
 	{
@@ -74,7 +78,12 @@ public class SecurityCheckRequestResult
 
 	public ActionList getActions()
 	{
-		return null;
+		if( actionList == null )
+		{
+			actionList = new DefaultActionList( getSecurityCheck().getName() );
+		}
+		actionList.addAction( new ShowMessageExchangeAction( this.getMessageExchange(), "SecurityCheckRequest" ), true );
+		return actionList;
 	}
 
 	public String[] getMessages()

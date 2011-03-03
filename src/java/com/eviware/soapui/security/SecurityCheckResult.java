@@ -16,9 +16,11 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.eviware.soapui.impl.wsdl.teststeps.actions.ShowMessageExchangeAction;
 import com.eviware.soapui.model.security.SecurityCheck;
 import com.eviware.soapui.security.SecurityCheckRequestResult.SecurityStatus;
 import com.eviware.soapui.support.action.swing.ActionList;
+import com.eviware.soapui.support.action.swing.DefaultActionList;
 
 /**
  * A SecurityCheck result represents result of one request (modified by a
@@ -37,6 +39,7 @@ public class SecurityCheckResult
 	private long timeTaken = 0;
 	private long timeStamp;
 	public StringBuffer testLog = new StringBuffer();
+	private DefaultActionList actionList;
 
 	public SecurityCheckResult( SecurityCheck securityCheck )
 	{
@@ -71,7 +74,19 @@ public class SecurityCheckResult
 
 	public ActionList getActions()
 	{
-		return null;
+		if( actionList == null )
+		{
+			actionList = new DefaultActionList( getSecurityCheck().getName() );
+		}
+		if( !getSecurityRequestResultList().isEmpty() )
+		{
+			for( SecurityCheckRequestResult reqResult : getSecurityRequestResultList() )
+			{
+				actionList.addActions( reqResult.getActions() );
+			}
+		}
+		return actionList;
+
 	}
 
 	public void addSecurityRequestResult( SecurityCheckRequestResult secReqResult )
