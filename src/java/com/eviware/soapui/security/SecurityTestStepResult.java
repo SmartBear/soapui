@@ -39,6 +39,7 @@ public class SecurityTestStepResult
 	private long timeStamp;
 	private StringBuffer testLog = new StringBuffer();
 	private TestStepResult originalTestStepResult;
+	private boolean addedAction;
 
 	public SecurityTestStepResult( TestStep testStep, TestStepResult originalResult )
 	{

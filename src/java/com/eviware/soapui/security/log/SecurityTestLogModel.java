@@ -33,11 +33,8 @@ import com.eviware.soapui.security.check.AbstractSecurityCheck;
 public class SecurityTestLogModel extends AbstractListModel
 {
 	private List<Object> items = Collections.synchronizedList( new TreeList() );
-	// private List<SoftReference<SecurityCheckResult>> results =
-	// Collections.synchronizedList( new TreeList() );
 	private List<SoftReference<SecurityTestStepResult>> testStepResults = Collections.synchronizedList( new TreeList() );
 	private int maxSize = 100;
-	// private int checkCount;
 	private int stepCount;
 
 	public synchronized Object getElementAt( int arg0 )
@@ -58,15 +55,6 @@ public class SecurityTestLogModel extends AbstractListModel
 		return items.size();
 	}
 
-	// public void addEntry( SecurityTestLogMessageEntry
-	// securityTestLogMessageEntry )
-	// {
-	// items.add( securityTestLogMessageEntry );
-	// fireIntervalAdded( this, items.size() - 1, items.size() - 1 );
-	//
-	// enforceMaxSize();
-	// }
-
 	public synchronized void addText( String msg )
 	{
 		items.add( msg );
@@ -76,15 +64,6 @@ public class SecurityTestLogModel extends AbstractListModel
 		enforceMaxSize();
 	}
 
-	// public synchronized SecurityCheckResult getResultAt( int index )
-	// {
-	// if( index >= results.size() )
-	// return null;
-	//
-	// SoftReference<SecurityCheckResult> result = results.get( index );
-	// return result == null ? null : result.get();
-	// }
-
 	public synchronized SecurityTestStepResult getTestStepResultAt( int index )
 	{
 		if( index >= testStepResults.size() )
@@ -93,32 +72,6 @@ public class SecurityTestLogModel extends AbstractListModel
 		SoftReference<SecurityTestStepResult> result = testStepResults.get( index );
 		return result == null ? null : result.get();
 	}
-
-	// public synchronized void addSecurityCheckResult( SecurityCheckResult
-	// result )
-	// {
-	// checkCount++ ;
-	//
-	// int size = items.size();
-	// items.add( "Check " + checkCount + " [" +
-	// result.getSecurityCheck().getName() + "] " + result.getStatus()
-	// + ": took " + result.getTimeTaken() + " ms" );
-	// SoftReference<SecurityCheckResult> ref = new
-	// SoftReference<SecurityCheckResult>( result );
-	// results.add( ref );
-	// for( SecurityCheckRequestResult requestResult :
-	// result.getSecurityRequestResultList() )
-	// {
-	// for( String msg : requestResult.getMessages() )
-	// {
-	// items.add( " -> " + msg );
-	// results.add( ref );
-	// }
-	// }
-	//
-	// fireIntervalAdded( this, size, items.size() - 1 );
-	// enforceMaxSize();
-	// }
 
 	public synchronized void addSecurityTestStepResult( SecurityTestStepResult result )
 	{
@@ -143,7 +96,7 @@ public class SecurityTestLogModel extends AbstractListModel
 			for( int i = 0; i < result.getSecurityCheckResultList().size(); i++ )
 			{
 				SecurityCheckResult securityCheckResult = result.getSecurityCheckResultList().get( i );
-				items.add( "Check " + i + " [" + securityCheckResult.getSecurityCheck().getName() + "] "
+				items.add( "Check " + ( i + 1 ) + " [" + securityCheckResult.getSecurityCheck().getName() + "] "
 						+ securityCheckResult.getStatus() + ": took " + result.getTimeTaken() + " ms" );
 				testStepResults.add( stepResultRef );
 				for( SecurityCheckRequestResult requestResult : securityCheckResult.getSecurityRequestResultList() )
@@ -166,7 +119,6 @@ public class SecurityTestLogModel extends AbstractListModel
 		int sz = items.size();
 		items.clear();
 		testStepResults.clear();
-		// checkCount = 0;
 		stepCount = 0;
 		fireIntervalRemoved( this, 0, sz );
 	}
@@ -192,18 +144,4 @@ public class SecurityTestLogModel extends AbstractListModel
 		}
 	}
 
-	// public String getMessages()
-	// {
-	// StringBuffer sb = new StringBuffer();
-	// for( Object messageEntry : items )
-	// {
-	// sb.append( ( ( SecurityTestLogMessageEntry )messageEntry ).getMessage() );
-	// sb.append( "\n" );
-	// }
-	// return sb.toString();
-	// }
-	// public void setStepIndex( int i )
-	// {
-	// stepCount = i;
-	// }
 }

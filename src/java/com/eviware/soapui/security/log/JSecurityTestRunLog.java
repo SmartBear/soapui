@@ -103,16 +103,11 @@ public class JSecurityTestRunLog extends JPanel
 
 	private void buildUI()
 	{
-		// if( logListModel == null )
 		logListModel = new SecurityTestLogModel();
-
-		// logListModel = securityTest.getSecurityTestLog();
 		logListModel.setMaxSize( ( int )settings.getLong( OptionsForm.class.getName() + "@max_rows", 1000 ) );
 
 		testLogList = new JList( logListModel );
 		testLogList.setCellRenderer( new SecurityTestLogCellRenderer() );
-		// testLogList.setPrototypeCellValue( "Testing 123" );
-		// testLogList.setFixedCellWidth( -1 );
 		testLogList.addMouseListener( new LogListMouseListener() );
 
 		JScrollPane scrollPane = new JScrollPane( testLogList );
@@ -162,44 +157,6 @@ public class JSecurityTestRunLog extends JPanel
 		logListModel.clear();
 		boldTexts.clear();
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.eviware.soapui.impl.wsdl.panels.testcase.TestRunLog#addText(java.lang
-	 * .String)
-	 */
-	// public synchronized void addEntry( SecurityTestLogMessageEntry
-	// securityTestLogMessageEntry )
-	// {
-	// logListModel.addEntry( securityTestLogMessageEntry );
-	// if( follow )
-	// testLogList.ensureIndexIsVisible( logListModel.getSize() - 1 );
-	// }
-
-	/*
-	 * 
-	 */
-	// public synchronized void addSecurityCheckResult( SecurityCheckResult
-	// checkResult )
-	// {
-	// if( errorsOnly && checkResult.getStatus() !=
-	// SecurityCheckRequestResult.SecurityStatus.FAILED )
-	// return;
-	//
-	// logListModel.addSecurityCheckResult( checkResult );
-	// if( follow )
-	// {
-	// try
-	// {
-	// testLogList.ensureIndexIsVisible( logListModel.getSize() - 1 );
-	// }
-	// catch( RuntimeException e )
-	// {
-	// }
-	// }
-	// }
 
 	public synchronized void addSecurityTestStepResult( SecurityTestStepResult testStepResult )
 	{
@@ -317,17 +274,6 @@ public class JSecurityTestRunLog extends JPanel
 		}
 	}
 
-	// public void setStepIndex( int i )
-	// {
-	// logListModel.setStepIndex( i );
-	// }
-	//
-	// public synchronized void addBoldText( String string )
-	// {
-	// boldTexts.add( string );
-	// addText( string );
-	// }
-
 	public void release()
 	{
 		if( optionsDialog != null )
@@ -346,14 +292,6 @@ public class JSecurityTestRunLog extends JPanel
 			{
 				out.println( value.toString() );
 			}
-			// else if( value instanceof SecurityTestLogMessageEntry )
-			// {
-			// SecurityTestLogMessageEntry logItem = ( SecurityTestLogMessageEntry
-			// )value;
-			// String msg = logItem.getMessage();
-			// if( StringUtils.hasContent( msg ) )
-			// out.println( msg );
-			// }
 		}
 	}
 
@@ -375,9 +313,8 @@ public class JSecurityTestRunLog extends JPanel
 				// TODO see how this default action is implemented, maybe thats's
 				// the way to implement opening
 				// message exchange
-				// if( result != null && result.getActions() != null )
-				// result.getActions().performDefaultAction( new ActionEvent( this,
-				// 0, null ) );
+				if( result != null && result.getActions() != null )
+					result.getActions().performDefaultAction( new ActionEvent( this, 0, null ) );
 				if( result != null && !result.getSecurityCheckResultList().isEmpty() )
 				{
 					for( SecurityCheckResult securityCheckResult : result.getSecurityCheckResultList() )
@@ -386,9 +323,7 @@ public class JSecurityTestRunLog extends JPanel
 						{
 							for( SecurityCheckRequestResult reqResult : securityCheckResult.getSecurityRequestResultList() )
 							{
-								ShowMessageExchangeAction showMessageExchangeAction = new ShowMessageExchangeAction( reqResult
-										.getMessageExchange(), "SecurityCheck" );
-								showMessageExchangeAction.actionPerformed( new ActionEvent( this, 0, null ) );
+								showSecurityCheckRequestMessageExchangeAction( reqResult );
 							}
 						}
 					}
@@ -396,6 +331,13 @@ public class JSecurityTestRunLog extends JPanel
 			}
 
 			selectedIndex = index;
+		}
+
+		public void showSecurityCheckRequestMessageExchangeAction( SecurityCheckRequestResult reqResult )
+		{
+			ShowMessageExchangeAction showMessageExchangeAction = new ShowMessageExchangeAction( reqResult
+					.getMessageExchange(), "SecurityCheck" );
+			showMessageExchangeAction.actionPerformed( new ActionEvent( this, 0, null ) );
 		}
 
 		public void mousePressed( MouseEvent e )
