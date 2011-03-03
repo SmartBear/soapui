@@ -47,7 +47,6 @@ public class SecurityTestStepResult
 		this.testStep = testStep;
 		securityCheckResultList = new ArrayList<SecurityCheckResult>();
 		timeStamp = System.currentTimeMillis();
-		this.testLog.append( "" );
 		this.originalTestStepResult = originalResult;
 	}
 
@@ -97,9 +96,10 @@ public class SecurityTestStepResult
 			status = securityCheckResult.getStatus();
 
 		// TODO check and finish this - seems it's used for reports
-		this.testLog.append( "SecurityCheck " ).append( securityCheckResultList.indexOf( securityCheckResult ) ).append(
-				securityCheckResult.getStatus().toString() ).append( ": took " )
-				.append( securityCheckResult.getTimeTaken() ).append( " ms" );
+		// this.testLog.append( "SecurityCheck " ).append(
+		// securityCheckResultList.indexOf( securityCheckResult ) ).append(
+		// securityCheckResult.getStatus().toString() ).append( ": took " )
+		// .append( securityCheckResult.getTimeTaken() ).append( " ms" );
 		this.testLog.append( securityCheckResult.getSecurityTestLog() );
 	}
 
@@ -162,4 +162,20 @@ public class SecurityTestStepResult
 		this.originalTestStepResult = originalTestStepResult;
 	}
 
+	public TestStep getTestStep()
+	{
+		return testStep;
+	}
+
+	/**
+	 * Raturns Security Test Log
+	 */
+	public String getSecurityTestLog()
+	{
+		StringBuffer tl = new StringBuffer().append( "TestStep " ).append( " [" ).append( testStep.getName() ).append(
+				"] " ).append( getOriginalTestStepResult().getStatus().toString() ).append( ": took " ).append(
+				getOriginalTestStepResult().getTimeTaken() ).append( " ms" );
+		tl.append( testLog );
+		return tl.toString();
+	}
 }

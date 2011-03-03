@@ -101,7 +101,7 @@ public class SecurityCheckResult
 		if( status == SecurityStatus.OK )
 			status = secReqResult.getStatus();
 
-		this.testLog.append( "SecurityRequest " ).append( securityRequestResultList.indexOf( secReqResult ) ).append(
+		this.testLog.append( "\nSecurityRequest " ).append( securityRequestResultList.indexOf( secReqResult ) ).append(
 				secReqResult.getStatus().toString() ).append( ": took " ).append( secReqResult.getTimeTaken() ).append(
 				" ms" );
 		for( String s : secReqResult.getMessages() )
@@ -162,7 +162,7 @@ public class SecurityCheckResult
 	 */
 	public String getSecurityTestLog()
 	{
-		StringBuffer tl = new StringBuffer().append( "SecurityCheck " ).append( " [" ).append(
+		StringBuffer tl = new StringBuffer().append( "\nSecurityCheck " ).append( " [" ).append(
 				securityCheck.getTestStep().getName() ).append( "] " ).append( status.toString() ).append( ": took " )
 				.append( timeTaken ).append( " ms" );
 		tl.append( testLog );
