@@ -39,6 +39,7 @@ import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.security.assertion.SensitiveInfoExposureAssertion;
 import com.eviware.soapui.security.panels.ProjectSensitiveInformationPanel;
 import com.eviware.soapui.settings.GlobalPropertySettings;
+import com.eviware.soapui.support.types.StringList;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
 import com.eviware.soapui.support.xml.XmlUtils;
 
@@ -124,10 +125,21 @@ public class SecurityCheckUtil
 	public static List<String> projectEntriesList( SensitiveInfoExposureAssertion sensitiveInfoExposureAssertion )
 	{
 		Project project = ModelSupport.getModelItemProject( sensitiveInfoExposureAssertion );
-		AbstractWsdlModelItem<ModelItemConfig> modelItem =( AbstractWsdlModelItem<ModelItemConfig>) project.getModelItem() ;
-//		ProjectConfig config =  
-		XmlObjectConfigurationReader reader = new XmlObjectConfigurationReader( ((ProjectConfig)modelItem.getConfig()).getSensitiveInformation() );
-		return  StringUtils.toStringList( reader.readStrings( ProjectSensitiveInformationPanel.PROJECT_SPECIFIC_EXPOSURE_LIST ) );
+		AbstractWsdlModelItem<ModelItemConfig> modelItem = ( AbstractWsdlModelItem<ModelItemConfig> )project
+				.getModelItem();
+		// ProjectConfig config =
+		XmlObjectConfigurationReader reader = new XmlObjectConfigurationReader( ( ( ProjectConfig )modelItem.getConfig() )
+				.getSensitiveInformation() );
+		String[] strngArray = reader.readStrings( ProjectSensitiveInformationPanel.PROJECT_SPECIFIC_EXPOSURE_LIST );
+		if( strngArray != null )
+		{
+			return StringUtils.toStringList( strngArray );
+		}
+		else
+		{
+			return new StringList();
+		}
+
 	}
 
 }
