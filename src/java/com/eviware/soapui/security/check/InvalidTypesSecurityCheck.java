@@ -16,23 +16,28 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.JComponent;
+
 import org.apache.commons.collections.ArrayStack;
 import org.apache.xmlbeans.SchemaType;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 
-import com.eviware.soapui.config.CheckedParametersListConfig;
+import com.eviware.soapui.config.InvalidSecurityCheckConfig;
+import com.eviware.soapui.config.SchemaTypeForSecurityCheckConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
+import com.eviware.soapui.config.StrategyTypeConfig;
+import com.eviware.soapui.impl.wsdl.teststeps.WsdlResponseMessageExchange;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.security.SecurityCheckedParameter;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
-import com.eviware.soapui.security.boundary.SchemeTypeExtractor;
-import com.eviware.soapui.security.support.SecurityCheckedParameterImpl;
+import com.eviware.soapui.security.ui.InvalidTypesTable;
 import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel;
@@ -43,23 +48,56 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 
 	public final static String TYPE = "InvalidTypesSecurityCheck";
 
-	private SchemeTypeExtractor extractor;
-
-	private boolean hasNext = true;
+	private boolean hasNext = false;
 
 	private InvalidTypesForSOAP invalidTypes;
 
 	private List<String> result = new ArrayList<String>();
 
-	private Map<String, ArrayList<SecurityCheckedParameter>> typeBuckets = new HashMap<String, ArrayList<SecurityCheckedParameter>>();
+	private InvalidSecurityCheckConfig invalidTypeConfig;
+
+	private Map<SecurityCheckedParameter, ArrayList<String>> parameterMutations = new HashMap<SecurityCheckedParameter, ArrayList<String>>();
+
+	private boolean generated;
 
 	public InvalidTypesSecurityCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent, String icon )
 	{
 		super( testStep, config, parent, icon );
 
-		config.setConfig( CheckedParametersListConfig.Factory.newInstance() );
-		extractor = new SchemeTypeExtractor( testStep );
+		if( config.getConfig() == null || !( config.getConfig() instanceof InvalidSecurityCheckConfig ) )
+			initInvalidTypesConfig();
+		else
+			invalidTypeConfig = ( InvalidSecurityCheckConfig )config.getConfig();
 
+	}
+
+	public InvalidSecurityCheckConfig getInvalidTypeConfig()
+	{
+		if( invalidTypeConfig == null || getConfig().getConfig() == null
+				|| !( getConfig().getConfig() instanceof InvalidSecurityCheckConfig ) )
+			initInvalidTypesConfig();
+		return invalidTypeConfig;
+	}
+
+	private void initInvalidTypesConfig()
+	{
+		getConfig().setConfig( InvalidSecurityCheckConfig.Factory.newInstance() );
+		invalidTypeConfig = ( InvalidSecurityCheckConfig )getConfig().getConfig();
+		invalidTypes = new InvalidTypesForSOAP();
+
+		// add all types..
+		for( int key : invalidTypes.getDefaultTypeMap().keySet() )
+		{
+			SchemaTypeForSecurityCheckConfig newType = invalidTypeConfig.addNewTypesList();
+			newType.setValue( invalidTypes.getDefaultTypeMap().get( key ) );
+			newType.setType( key );
+		}
+	}
+
+	@Override
+	public JComponent getAdvancedSettingsPanel()
+	{
+		return new InvalidTypesTable( getInvalidTypeConfig() );
 	}
 
 	@Override
@@ -96,34 +134,115 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 	@Override
 	protected void execute( SecurityTestRunner securityTestRunner, TestStep testStep, SecurityTestRunContext context )
 	{
-		updateRequestContent();
+		updateRequestContent( testStep );
 
 		testStep.run( ( TestCaseRunner )securityTestRunner, context );
+
+		createMessageExchange( testStep );
+	}
+
+	private void createMessageExchange( TestStep testStep )
+	{
+		MessageExchange messageExchange = new WsdlResponseMessageExchange( ( ( WsdlTestRequestStep )testStep )
+				.getTestRequest() );
+		getSecurityCheckRequestResult().setMessageExchange( messageExchange );
 	}
 
 	/*
 	 * Set new value for request
 	 */
-	private void updateRequestContent()
+	private void updateRequestContent( TestStep testStep )
 	{
 
-		try
-		{
-			generateRequests();
-			if( result.size() > 0 )
+			if( !generated )
+				try
+				{
+					mutateParameters();
+				}
+				catch( XmlException e1 )
+				{
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			if( getExecutionStrategy().getStrategy() == StrategyTypeConfig.ONE_BY_ONE )
 			{
-				getTestStep().getProperty( "Request" ).setValue( result.get( 0 ) );
-				result.remove( 0 );
-			}
-			if( result.size() == 0 )
-				hasNext = false;
+				/*
+				 * Idea is to drain for each parameter mutations.
+				 */
+				for( SecurityCheckedParameter param : getParameterHolder().getParameterList() )
+				{
+					if( parameterMutations.containsKey( param ) )
+						if( parameterMutations.get( param ).size() > 0 )
+						{
+							try
+							{
+								TestProperty property = getTestStep().getProperties().get( param.getName() );
+								String value = property.getValue();
+								XmlObjectTreeModel model = new XmlObjectTreeModel( ( ( WsdlTestRequestStep )getTestStep() )
+										.getOperation().getInterface().getDefinitionContext().getSchemaTypeSystem(),
+										XmlObject.Factory.parse( value ) );
+								XmlTreeNode[] nodes = model.selectTreeNodes( param.getXPath() );
+								for( XmlTreeNode node : nodes )
+									node.setValue( 1, parameterMutations.get( param ).get( 0 ) );
+								parameterMutations.get( param ).remove( 0 );
 
-		}
-		catch( XmlException e )
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+								testStep.getProperties().get( param.getName() ).setValue( model.getXmlObject().toString() );
+
+							}
+							catch( Exception e )
+							{
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							break;
+						}
+				}
+			}
+			else
+			{
+				for( TestProperty property : testStep.getPropertyList() )
+				{
+
+					String value = property.getValue();
+					XmlObjectTreeModel model;
+					if ( value == null )
+						continue;
+					try
+					{
+						model = new XmlObjectTreeModel( ( ( WsdlTestRequestStep )getTestStep() )
+								.getOperation().getInterface().getDefinitionContext().getSchemaTypeSystem(), XmlObject.Factory
+								.parse( value ) );
+						for( SecurityCheckedParameter param : getParameterHolder().getParameterList() )
+						{
+							if( param.getName().equals( property.getName() ) )
+							{
+								XmlTreeNode[] nodes = model.selectTreeNodes( param.getXPath() );
+								if( parameterMutations.containsKey( param ) )
+									if( parameterMutations.get( param ).size() > 0 )
+									{
+										for( XmlTreeNode node : nodes )
+											node.setValue( 1, parameterMutations.get( param ).get( 0 ) );
+										parameterMutations.get( param ).remove( 0 );
+									}
+							}
+						}
+						property.setValue( model.getXmlObject().toString() );
+					}
+					catch( XmlException e )
+					{
+						// TODO Auto-generated catch block
+//						e.printStackTrace();
+						continue;
+					}
+					catch( Exception e )
+					{
+						// TODO Auto-generated catch block
+//						e.printStackTrace();
+						continue;
+					}
+
+				}
+			}
 
 	}
 
@@ -132,91 +251,111 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 	 * 
 	 * @throws XmlException
 	 */
-	private void generateRequests() throws XmlException
+	private void mutateParameters() throws XmlException
 	{
 
-		createBuckets();
-
-		if( result.size() == 0 )
+		if( !generated )
 		{
+			generated = true;
 			hasNext = true;
 
-			String templateRequest = getTestStep().getProperty( "Request" ).getValue();
-
-			// XmlObjectTreeModel model = new XmlObjectTreeModel(
-			// request.getOperation().getInterface().getDefinitionContext()
-			// .getSchemaTypeSystem(), templateRequest );
-
-			for( String shemaType : typeBuckets.keySet() )
+			// for each parameter
+			for( SecurityCheckedParameter parameter : getParameterHolder().getParameterList() )
 			{
-				for( SecurityCheckedParameter parameter : typeBuckets.get( shemaType ) )
+
+				TestProperty property = getTestStep().getProperties().get( parameter.getName() );
+				// ignore if there is no value.
+				if( property.getValue() == null && property.getDefaultValue() == null )
+					continue;
+				// get value of that property
+				String value = property.getValue() == null ? property.getDefaultValue() : property.getValue();
+
+				try
 				{
 
+					XmlObjectTreeModel model = new XmlObjectTreeModel( ( ( WsdlTestRequestStep )getTestStep() )
+							.getOperation().getInterface().getDefinitionContext().getSchemaTypeSystem(), XmlObject.Factory
+							.parse( value ) );
+
+					XmlTreeNode[] nodes = model.selectTreeNodes( parameter.getXPath() );
+
+					// for each invalid type set all nodes
+					List<SchemaTypeForSecurityCheckConfig> invalidTypes = invalidTypeConfig.getTypesListList();
+
+					for( SchemaTypeForSecurityCheckConfig type : invalidTypes )
+					{
+
+						if( nodes.length > 0 )
+						{
+							if( nodes[0].getSchemaType().getBuiltinTypeCode() != type.getType() )
+							{
+								if( !parameterMutations.containsKey( parameter ) )
+									parameterMutations.put( parameter, new ArrayList<String>() );
+								parameterMutations.get( parameter ).add( type.getValue() );
+							}
+						}
+
+					}
 				}
+				catch( Exception e1 )
+				{
+					UISupport.showErrorMessage( "Failed to select XPath for source property value [" + value + "]" );
+				}
+
 			}
 
 		}
-	}
 
-	/*
-	 * Here create buckets. Each bucket will hold parameters with same type.
-	 */
-	private void createBuckets()
-	{
-		// clear buckets
-		typeBuckets.clear();
-
-		for( SecurityCheckedParameter param : getParameterHolder().getParameterList() )
-		{
-			TestProperty property = getTestStep().getProperties().get( param.getName() );
-			// ignore if there is no value.
-			if( property.getValue() == null && property.getDefaultValue() == null )
-				continue;
-
-			String value = property.getValue() == null ? property.getDefaultValue() : property.getValue();
-
-			try
-			{
-				XmlObjectTreeModel model = new XmlObjectTreeModel( ( ( WsdlTestRequestStep )getTestStep() ).getOperation()
-						.getInterface().getDefinitionContext().getSchemaTypeSystem(), XmlObject.Factory.parse( value ) );
-
-				XmlTreeNode[] nodes = model.selectTreeNodes( param.getXPath() );
-				if( nodes != null && nodes.length > 0 )
-				{
-					( ( SecurityCheckedParameterImpl )param ).setType( nodes[0].getSchemaType() );
-					// if bucket do not exists add one.
-					if( !typeBuckets.containsKey( param.getType() ) )
-						typeBuckets.put( param.getType(), new ArrayList<SecurityCheckedParameter>() );
-					// add parameter to bucket
-					typeBuckets.get( param.getType() ).add( param );
-				}
-			}
-			catch( Exception e1 )
-			{
-				UISupport.showErrorMessage( "Failed to select XPath for source property value [" + value + "]" );
-			}
-
-		}
 	}
 
 	@Override
-	protected boolean hasNext(TestStep testStep,SecurityTestRunContext context)
+	protected boolean hasNext( TestStep testStep, SecurityTestRunContext context )
 	{
+		boolean oldHasNext = hasNext;
+		if( parameterMutations == null )
+			hasNext = true;
+		else
+		{
+			boolean haveMore = false;
+			for( SecurityCheckedParameter param : parameterMutations.keySet() )
+			{
+				if( parameterMutations.get( param ).size() > 0 )
+				{
+					haveMore = true;
+					break;
+				}
+			}
+			hasNext = hasNext ? haveMore : true;
+		}
+		if( oldHasNext && !hasNext )
+			generated = false;
 		return hasNext;
 	}
 
+	/**
+	 * 
+	 * This is support class that should keep track of all simple types. Also it
+	 * should provide values for creating invalid requests.
+	 * 
+	 * @author robert
+	 * 
+	 */
 	private class InvalidTypesForSOAP
 	{
 
 		private int type;
 		private ArrayStack stack;
-		private ArrayList<InvalidType> invalidTypesList;
 
-		public InvalidTypesForSOAP( int type )
+		private HashMap<Integer, String> typeMap = new HashMap<Integer, String>();
+
+		public InvalidTypesForSOAP()
+		{
+			generateInvalidTypes();
+		}
+
+		public void setType( int type )
 		{
 			this.type = type;
-			generateInvalidTypes();
-
 		}
 
 		/*
@@ -226,71 +365,61 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 		{
 
 			stack = new ArrayStack();
-			this.invalidTypesList = new ArrayList<InvalidType>();
 
 			// strings
-			invalidTypesList.add( new InvalidType<String>( SchemaType.BTC_STRING, "SoapUI is\t the\r best\n" ) );
+			typeMap.put( SchemaType.BTC_STRING, "SoapUI is\t the\r best\n" );
 			// no cr/lf/tab
-			invalidTypesList.add( new InvalidType<String>( SchemaType.BTC_NORMALIZED_STRING, "SoapUI is the best" ) );
+			typeMap.put( SchemaType.BTC_NORMALIZED_STRING, "SoapUI is the best" );
 			// no cr/lf/tab
-			invalidTypesList.add( new InvalidType<String>( SchemaType.BTC_TOKEN, "SoapUI is the best" ) );
+			typeMap.put( SchemaType.BTC_TOKEN, "SoapUI is the best" );
 			// base64Binary
-			invalidTypesList.add( new InvalidType<String>( SchemaType.BTC_BASE_64_BINARY, "GpM7" ) );
+			typeMap.put( SchemaType.BTC_BASE_64_BINARY, "GpM7" );
 			// hexBinary
-			invalidTypesList.add( new InvalidType<String>( SchemaType.BTC_HEX_BINARY, "0FB7" ) );
+			typeMap.put( SchemaType.BTC_HEX_BINARY, "0FB7" );
 			// integer - no min or max
-			invalidTypesList.add( new InvalidType<Integer>( SchemaType.BTC_INTEGER, -1267896799 ) );
+			typeMap.put( SchemaType.BTC_INTEGER, "-1267896799" );
 			// positive integer
-			invalidTypesList.add( new InvalidType<Integer>( SchemaType.BTC_POSITIVE_INTEGER, 1267896799 ) );
+			typeMap.put( SchemaType.BTC_POSITIVE_INTEGER, "1267896799" );
 			// negative integer
-			invalidTypesList.add( new InvalidType<Integer>( SchemaType.BTC_NEGATIVE_INTEGER, -1 ) );
+			typeMap.put( SchemaType.BTC_NEGATIVE_INTEGER, "-1" );
 			// non negative integer
-			invalidTypesList.add( new InvalidType<Integer>( SchemaType.BTC_NON_NEGATIVE_INTEGER, 1 ) );
+			typeMap.put( SchemaType.BTC_NON_NEGATIVE_INTEGER, "1" );
 			// non positive integer
-			invalidTypesList.add( new InvalidType<Integer>( SchemaType.BTC_NON_POSITIVE_INTEGER, 0 ) );
+			typeMap.put( SchemaType.BTC_NON_POSITIVE_INTEGER, "0" );
 			// long
-			invalidTypesList.add( new InvalidType<Long>( SchemaType.BTC_LONG, -882223334991111111L ) );
+			typeMap.put( SchemaType.BTC_LONG, "-882223334991111111" );
 			// unsigned long
-			invalidTypesList.add( new InvalidType<Long>( SchemaType.BTC_UNSIGNED_LONG, 882223334991111111L ) );
+			typeMap.put( SchemaType.BTC_UNSIGNED_LONG, "882223334991111111" );
 			// int
-			invalidTypesList.add( new InvalidType<Integer>( SchemaType.BTC_INT, -2147483647 ) );
+			typeMap.put( SchemaType.BTC_INT, "-2147483647" );
 			// unsigned int
-			invalidTypesList.add( new InvalidType<Integer>( SchemaType.BTC_UNSIGNED_INT, 294967295 ) );
+			typeMap.put( SchemaType.BTC_UNSIGNED_INT, "294967295" );
 			// short
-			invalidTypesList.add( new InvalidType<Short>( SchemaType.BTC_SHORT, ( short )-32768 ) );
+			typeMap.put( SchemaType.BTC_SHORT, "-32768" );
 			// unsigned short
-			invalidTypesList.add( new InvalidType<Short>( SchemaType.BTC_UNSIGNED_SHORT, ( short )65535 ) );
+			typeMap.put( SchemaType.BTC_UNSIGNED_SHORT, "65535" );
 			// byte
-			invalidTypesList.add( new InvalidType<Byte>( SchemaType.BTC_BYTE, ( byte )127 ) );
+			typeMap.put( SchemaType.BTC_BYTE, "127" );
 			// unsigned byte
-			invalidTypesList.add( new InvalidType<Byte>( SchemaType.BTC_UNSIGNED_BYTE, ( byte )255 ) );
+			typeMap.put( SchemaType.BTC_UNSIGNED_BYTE, "255" );
 			// decimal
-			invalidTypesList.add( new InvalidType<Float>( SchemaType.BTC_DECIMAL, -1.23f ) );
+			typeMap.put( SchemaType.BTC_DECIMAL, "-1.23" );
 			// float
-			invalidTypesList.add( new InvalidType<Float>( SchemaType.BTC_FLOAT, -1E4f ) );
+			typeMap.put( SchemaType.BTC_FLOAT, "-1E4f" );
 			// double
-			invalidTypesList.add( new InvalidType<Double>( SchemaType.BTC_DOUBLE, 12.45E+12 ) );
+			typeMap.put( SchemaType.BTC_DOUBLE, "12.45E+12" );
 			// boolean
-			invalidTypesList.add( new InvalidType<Boolean>( SchemaType.BTC_BOOLEAN, new Boolean( true ) ) );
+			typeMap.put( SchemaType.BTC_BOOLEAN, "true" );
 			// duration
-			invalidTypesList.add( new InvalidType<String>( SchemaType.BTC_DURATION, "P1Y2M3DT10H30M12.3S" ) );
+			typeMap.put( SchemaType.BTC_DURATION, "P1Y2M3DT10H30M12.3S" );
 			// date time
-			invalidTypesList.add( new InvalidType<String>( SchemaType.BTC_DATE_TIME, "1999-05-31T13:20:00.000-05:00" ) );
+			typeMap.put( SchemaType.BTC_DATE_TIME, "1999-05-31T13:20:00.000-05:00" );
 			// date
-			invalidTypesList.add( new InvalidType<String>( SchemaType.BTC_DATE, "1999-05-31" ) );
+			typeMap.put( SchemaType.BTC_DATE, "1999-05-31" );
 
 			// need to add more...
 
-			stack.addAll( invalidTypesList );
-		}
-
-		public Object getNext()
-		{
-			InvalidType result = ( InvalidType )stack.pop();
-			if( result.getType() == type )
-				return ( ( InvalidType )stack.pop() ).getValue();
-			else
-				return result.getValue();
+			stack.addAll( typeMap.values() );
 		}
 
 		public boolean hasNext()
@@ -298,28 +427,9 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 			return !stack.isEmpty();
 		}
 
-		class InvalidType<T>
+		public HashMap<Integer, String> getDefaultTypeMap()
 		{
-
-			public int type;
-			public T value;
-
-			public InvalidType( int type, T value )
-			{
-				this.type = type;
-				this.value = value;
-			}
-
-			public int getType()
-			{
-				return type;
-			}
-
-			public T getValue()
-			{
-				return value;
-			}
-
+			return typeMap;
 		}
 
 	}
