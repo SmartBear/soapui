@@ -46,11 +46,11 @@ import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.ExecutionStrategyHolder;
 import com.eviware.soapui.security.Securable;
 import com.eviware.soapui.security.SecurityCheckRequestResult;
+import com.eviware.soapui.security.SecurityCheckRequestResult.SecurityStatus;
 import com.eviware.soapui.security.SecurityCheckResult;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.security.SecurityTestRunnerImpl;
-import com.eviware.soapui.security.SecurityCheckRequestResult.SecurityStatus;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
@@ -63,7 +63,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		RequestAssertion, ResponseAssertion, SecurityCheck
 {
 	// configuration of specific request modification
-	private SecurityCheckConfig config;
+	// private SecurityCheckConfig config;
 	private boolean disabled = false;
 	private SecurityCheckResult securityCheckResult;
 	private SecurityCheckRequestResult securityCheckRequestResult;
@@ -82,8 +82,9 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		{
 			config = SecurityCheckConfig.Factory.newInstance();
 		}
+
 		this.testStep = testStep;
-		this.config = config;
+
 		if( config.getExecutionStrategy() == null )
 		{
 			config.addNewExecutionStrategy();
@@ -113,7 +114,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	 */
 	public void updateSecurityConfig( SecurityCheckConfig config )
 	{
-		this.config = config;
+		setConfig( config );
 
 		assertionsSupport.refresh();
 
@@ -179,7 +180,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 
 		}
 
-		while( hasNext(testStep,context) )
+		while( hasNext( testStep, context ) )
 		{
 
 			setSecurityCheckRequestResult( new SecurityCheckRequestResult( this ) );
@@ -224,10 +225,11 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	/**
 	 * checks if specific SecurityCheck still has modifications left TODO needs
 	 * to be abstract and implemented in every check
-	 * @param testStep2 
-	 * @param context 
+	 * 
+	 * @param testStep2
+	 * @param context
 	 */
-	abstract protected boolean hasNext(TestStep testStep2, SecurityTestRunContext context);
+	abstract protected boolean hasNext( TestStep testStep2, SecurityTestRunContext context );
 
 	/*
 	 * (non-Javadoc)
@@ -339,30 +341,6 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		setupScriptEngine.setVariable( "securityRunner", runner );
 		setupScriptEngine.setVariable( "log", SoapUI.ensureGroovyLog() );
 		return setupScriptEngine.run();
-	}
-
-	@Override
-	public SecurityCheckConfig getConfig()
-	{
-		return config;
-	}
-
-	@Override
-	public String getDescription()
-	{
-		return config.getDescription();
-	}
-
-	@Override
-	public String getName()
-	{
-		return config.getName();
-	}
-
-	@Override
-	public void setName( String arg0 )
-	{
-		config.setName( arg0 );
 	}
 
 	/*
@@ -739,9 +717,9 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	 */
 	public String getSetupScript()
 	{
-		if( config.getSetupScript() == null )
-			config.addNewSetupScript();
-		return config.getSetupScript().getStringValue();
+		if( getConfig().getSetupScript() == null )
+			getConfig().addNewSetupScript();
+		return getConfig().getSetupScript().getStringValue();
 	}
 
 	/*
@@ -753,9 +731,9 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	 */
 	public void setSetupScript( String text )
 	{
-		if( config.getSetupScript() == null )
-			config.addNewSetupScript();
-		config.getSetupScript().setStringValue( text );
+		if( getConfig().getSetupScript() == null )
+			getConfig().addNewSetupScript();
+		getConfig().getSetupScript().setStringValue( text );
 
 		if( setupScriptEngine != null )
 			setupScriptEngine.setScript( text );
@@ -768,9 +746,9 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	 */
 	public String getTearDownScript()
 	{
-		if( config.getTearDownScript() == null )
-			config.addNewTearDownScript();
-		return config.getTearDownScript().getStringValue();
+		if( getConfig().getTearDownScript() == null )
+			getConfig().addNewTearDownScript();
+		return getConfig().getTearDownScript().getStringValue();
 	}
 
 	/*
@@ -782,9 +760,9 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	 */
 	public void setTearDownScript( String text )
 	{
-		if( config.getTearDownScript() == null )
-			config.addNewTearDownScript();
-		config.getTearDownScript().setStringValue( text );
+		if( getConfig().getTearDownScript() == null )
+			getConfig().addNewTearDownScript();
+		getConfig().getTearDownScript().setStringValue( text );
 
 		if( tearDownScriptEngine != null )
 			tearDownScriptEngine.setScript( text );
