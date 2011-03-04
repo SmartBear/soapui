@@ -111,7 +111,6 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 				.getFactory( securityCheckType );
 		SecurityCheckConfig newSecCheckConfig = factory.createNewSecurityCheck( securityCheckName );
 		AbstractSecurityCheck newSecCheck = null;
-		TestStepSecurityTestConfig testStepSecurityTest = null;
 		// newSecCheck.setTestStep( testStep );
 
 		boolean hasChecks = false;
@@ -120,16 +119,10 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 		{
 			for( int i = 0; i < testStepSecurityTestList.size(); i++ )
 			{
-				TestStepSecurityTestConfig testStepSecurityTestConfig = testStepSecurityTestList.get( i );
-				if( testStepSecurityTestConfig.getTestStepId().equals( testStep.getId() ) )
+				TestStepSecurityTestConfig testStepSecurityTest = testStepSecurityTestList.get( i );
+				if( testStepSecurityTest.getTestStepId().equals( testStep.getId() ) )
 				{
-					SecurityCheckConfig newSecurityCheck = testStepSecurityTestConfig.addNewTestStepSecurityCheck();
-					newSecurityCheck.setConfig( newSecCheckConfig.getConfig() );
-					newSecurityCheck.setType( newSecCheckConfig.getType() );
-					newSecurityCheck.setName( newSecCheckConfig.getName() );
-
-					newSecCheck = factory.buildSecurityCheck( testStep, newSecurityCheck, this );
-					
+					newSecCheck = addSecurityCheck( factory, newSecCheckConfig, testStepSecurityTest, testStep );
 					hasChecks = true;
 					break;
 				}
@@ -137,26 +130,29 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 		}
 		if( !hasChecks )
 		{
-			testStepSecurityTest = getConfig().addNewTestStepSecurityTest();
+			TestStepSecurityTestConfig testStepSecurityTest = getConfig().addNewTestStepSecurityTest();
 			testStepSecurityTest.setTestStepId( testStep.getId() );
 
-			SecurityCheckConfig newSecurityCheck = testStepSecurityTest.addNewTestStepSecurityCheck();
-			newSecurityCheck.setConfig( newSecCheckConfig.getConfig() );
-			newSecurityCheck.setType( newSecCheckConfig.getType() );
-			newSecurityCheck.setName( newSecCheckConfig.getName() );
-
-			newSecCheck = factory.buildSecurityCheck( testStep, newSecurityCheck, this );
+			newSecCheck = addSecurityCheck( factory, newSecCheckConfig, testStepSecurityTest, testStep );
 		}
-		else
-		{
 
-		}
 		if( listModel != null )
 			listModel.securityCheckAdded( newSecCheck );
 
 		addSecurityCheckByTestStepId( testStep.getId(), newSecCheck );
 		return newSecCheck;
 
+	}
+
+	private AbstractSecurityCheck addSecurityCheck( AbstractSecurityCheckFactory factory,
+			SecurityCheckConfig newSecCheckConfig, TestStepSecurityTestConfig testStepSecurityTestConfig, TestStep testStep )
+	{
+		SecurityCheckConfig newSecurityCheck = testStepSecurityTestConfig.addNewTestStepSecurityCheck();
+		newSecurityCheck.setConfig( newSecCheckConfig.getConfig() );
+		newSecurityCheck.setType( newSecCheckConfig.getType() );
+		newSecurityCheck.setName( newSecCheckConfig.getName() );
+
+		return factory.buildSecurityCheck( testStep, newSecurityCheck, this );
 	}
 
 	private void addSecurityCheckByTestStepId( String testStepId, AbstractSecurityCheck newSecCheck )
