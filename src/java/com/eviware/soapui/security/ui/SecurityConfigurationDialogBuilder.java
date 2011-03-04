@@ -139,7 +139,7 @@ public class SecurityConfigurationDialogBuilder
 			public void valueChanged( XFormField sourceField, String newValue, String oldValue )
 			{
 
-				if( newValue.equals( strategyOptions ) )
+				if( newValue.equals( strategyOptions[0] ) )
 					securityCheck.getExecutionStrategy().setStrategy( StrategyTypeConfig.ONE_BY_ONE );
 				else
 					securityCheck.getExecutionStrategy().setStrategy( StrategyTypeConfig.ALL_AT_ONCE );
