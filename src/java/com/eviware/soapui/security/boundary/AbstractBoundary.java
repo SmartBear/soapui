@@ -16,36 +16,78 @@ package com.eviware.soapui.security.boundary;
  */
 public abstract class AbstractBoundary implements Boundary
 {
-	
+
 	public static final String XSD_LENGTH = "xsd:length";
 	public static final String XSD_MAX_LENGTH = "xsd:maxLength";
 	public static final String XSD_MIN_LENGTH = "xsd:minLength";
-	
+	public static final String XSD_MIN_INCLUSIVE = "xsd:minInclusive";
+	public static final String XSD_MAX_INCLUSIVE = "xsd:maxInclusive";
+	public static final String XSD_MIN_EXCLUSIVE = "xsd:minExclusive";
+	public static final String XSD_MAX_EXCLUSIVE = "xsd:maxExclusive";
+	public static final String XSD_TOTAL_DIGITS = "xsd:totalDigits";
+	public static final String XSD_FRACTION_DIGITS = "xsd:fractionDigits";
+
+	// TODO: cover more simple types
 	public static Boundary factory( String type )
 	{
 		if( "xsd:string".equals( type ) )
 		{
 			return new StringBoundary();
 		}
+		if( "xsd:integer".equals( type ) )
+		{
+			return new IntegerBoundary();
+		}
+		if( "xsd:decimal".equals( type ) )
+		{
+			return new DecimalBoundary();
+		}
+		if( "xsd:dateTime".equals( type ) )
+		{
+			return new DateBoundary();
+		}
 		return null;
 	}
-	
-	
-	public static String outOfBoundaryValue( String baseType,  String nodeName, String nodeValue )
+
+	public static String outOfBoundaryValue( String baseType, String nodeName, String nodeValue )
 	{
 		Boundary boundary = AbstractBoundary.factory( baseType );
-		
-		if( AbstractBoundary.XSD_MIN_LENGTH.equals( nodeName ) )
+
+		if( XSD_MIN_LENGTH.equals( nodeName ) )
 		{
-			return  boundary.outOfBoundary( Boundary.MIN_LENGTH, nodeValue );
+			return boundary.outOfBoundary( Boundary.MIN_LENGTH, nodeValue );
 		}
-		else if( AbstractBoundary.XSD_MAX_LENGTH.equals( nodeName ) )
+		else if( XSD_MAX_LENGTH.equals( nodeName ) )
 		{
-			return  boundary.outOfBoundary( Boundary.MAX_LENGTH, nodeValue);
+			return boundary.outOfBoundary( Boundary.MAX_LENGTH, nodeValue );
 		}
-		else if( AbstractBoundary.XSD_LENGTH.equals( nodeName ) )
+		else if( XSD_LENGTH.equals( nodeName ) )
 		{
-			return  boundary.outOfBoundary( Boundary.LENGTH, nodeValue );
+			return boundary.outOfBoundary( Boundary.LENGTH, nodeValue );
+		}
+		else if( XSD_MAX_EXCLUSIVE.equals( nodeName ) )
+		{
+			return boundary.outOfBoundary( Boundary.MAX_EXCLISIVE, nodeValue );
+		}
+		else if( XSD_MAX_INCLUSIVE.equals( nodeName ) )
+		{
+			return boundary.outOfBoundary( Boundary.MAX_INCLISIVE, nodeValue );
+		}
+		else if( XSD_MIN_EXCLUSIVE.equals( nodeName ) )
+		{
+			return boundary.outOfBoundary( Boundary.MIN_EXCLISIVE, nodeValue );
+		}
+		else if( XSD_MIN_INCLUSIVE.equals( nodeName ) )
+		{
+			return boundary.outOfBoundary( Boundary.MIN_INCLISIVE, nodeValue );
+		}
+		else if( XSD_TOTAL_DIGITS.equals( nodeName ) )
+		{
+			return boundary.outOfBoundary( Boundary.TOTAL_DIGITS, nodeValue );
+		}
+		else if( XSD_FRACTION_DIGITS.equals( nodeName ) )
+		{
+			return boundary.outOfBoundary( Boundary.FRACTION_DIGITS, nodeValue );
 		}
 		return null;
 	}

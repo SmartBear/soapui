@@ -21,6 +21,7 @@ import org.apache.xmlbeans.impl.schema.SchemaTypeImpl;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.SecurityCheckConfig;
+import com.eviware.soapui.config.StrategyTypeConfig;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlResponseMessageExchange;
@@ -33,7 +34,6 @@ import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.security.boundary.AbstractBoundary;
-import com.eviware.soapui.security.boundary.Boundary;
 import com.eviware.soapui.security.boundary.enumeration.EnumerationValues;
 import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel;
@@ -48,6 +48,8 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 	public static final String TYPE = "BoundaryCheck";
 	public static final String LABEL = "Boundary";
 	private static final String REQUEST_MUTATIONS_STACK = "RequestMutationsStack";
+
+	StrategyTypeConfig.Enum strategy;
 
 	public BoundarySecurityCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent, String icon )
 	{
@@ -97,6 +99,7 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 		}
 	}
 
+	@SuppressWarnings( "unchecked" )
 	private String popMutation( SecurityTestRunContext context )
 	{
 		Stack<String> requestMutationsStack = ( Stack<String> )context.get( REQUEST_MUTATIONS_STACK );
@@ -112,23 +115,24 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 
 	private void extractMutations( TestStep testStep, SecurityTestRunContext context ) throws XmlException, Exception
 	{
-		XmlObjectTreeModel model = null;
-		WsdlRequest request = ( ( WsdlTestRequestStep )testStep ).getTestRequest();
-		try
-		{
-			model = new XmlObjectTreeModel( request.getOperation().getInterface().getDefinitionContext()
-					.getSchemaTypeSystem(), XmlObject.Factory.parse( request.getRequestContent() ) );
-		}
-		catch( Exception e )
-		{
-			SoapUI.logError( e );
-		}
+		strategy = getExecutionStrategy().getStrategy();
+		XmlObjectTreeModel model = getXmlObjectTreeModel( testStep );
 		List<SecurityCheckedParameter> scpList = getParameterHolder().getParameterList();
 		for( SecurityCheckedParameter scp : scpList )
 		{
 			if( scp.isChecked() )
 			{
-				XmlTreeNode[] treeNodes = model.selectTreeNodes( scp.getXPath() );
+				XmlTreeNode[] treeNodes = null;
+				if( strategy.equals( StrategyTypeConfig.ONE_BY_ONE ) )
+				{
+					model = getXmlObjectTreeModel( testStep );
+					treeNodes = model.selectTreeNodes( scp.getXPath() );
+				}
+				else
+				{
+					treeNodes = model.selectTreeNodes( scp.getXPath() );
+				}
+
 				if( treeNodes.length > 0 )
 				{
 					XmlTreeNode mynode = treeNodes[0];
@@ -146,7 +150,8 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 								nodeInfo.addValue( s.getStringValue() );
 							}
 							updateEnumNodeValue( mynode, nodeInfo );
-							addMutation( context, model.getXmlObject().toString() );
+							if( strategy.equals( StrategyTypeConfig.ONE_BY_ONE ) )
+								addMutation( context, model.getXmlObject().toString() );
 						}
 						else
 						{
@@ -159,18 +164,40 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 				}
 			}
 		}
+		if( strategy.equals( StrategyTypeConfig.ALL_AT_ONCE ) )
+			addMutation( context, model.getXmlObject().toString() );
 	}
 
+	private XmlObjectTreeModel getXmlObjectTreeModel( TestStep testStep )
+	{
+		XmlObjectTreeModel model = null;
+		WsdlRequest request = ( ( WsdlTestRequestStep )testStep ).getTestRequest();
+		try
+		{
+			model = new XmlObjectTreeModel( request.getOperation().getInterface().getDefinitionContext()
+					.getSchemaTypeSystem(), XmlObject.Factory.parse( request.getRequestContent() ) );
+		}
+		catch( Exception e )
+		{
+			SoapUI.logError( e );
+		}
+		return model;
+	}
+
+	@SuppressWarnings( "unchecked" )
 	private void addMutation( SecurityTestRunContext context, String request )
 	{
 		Stack<String> stack = ( Stack<String> )context.get( REQUEST_MUTATIONS_STACK );
 		stack.push( request );
+		System.out.println( request );
 	}
 
 	private void updateTestStepRequest( TestStep testStep, String updatedRequest )
 	{
 		( ( WsdlTestRequestStep )testStep ).getTestRequest().setRequestContent( updatedRequest );
-		System.out.println( updatedRequest );
+
+		// TODO: delete System.out
+		// System.out.println( updatedRequest );
 	}
 
 	public String extractRestrictions( XmlObjectTreeModel model2, SecurityTestRunContext context,
@@ -194,7 +221,6 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 				if( mynode.getNodeName().equals( "@base" ) )
 				{
 					baseType = mynode.getNodeText();
-					System.out.println( mynode.getNodeName() + "=" + mynode.getNodeText() );
 				}
 				else
 				{
@@ -213,8 +239,16 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 		String nodeValue = mynode.getChild( 0 ).getNodeText();
 		value = AbstractBoundary.outOfBoundaryValue( baseType, nodeName, nodeValue );
 
-		nodeToUpdate.setValue( 1, value );
-		addMutation( context, model.getXmlObject().toString() );
+		if( value != null )
+		{
+			nodeToUpdate.setValue( 1, value );
+			if( strategy.equals( StrategyTypeConfig.ONE_BY_ONE ) )
+				addMutation( context, model.getXmlObject().toString() );
+		}
+		else
+		{
+			SoapUI.log.warn( "Restriction:" + nodeName + " is not supported for baseType:" + baseType );
+		}
 	}
 
 	public void updateEnumNodeValue( XmlTreeNode mynode, EnumerationValues enumerationValues )
@@ -229,6 +263,7 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 	 * this method uses context to handle list of mutated request
 	 * 
 	 */
+	@SuppressWarnings( "unchecked" )
 	protected boolean hasNext( TestStep testStep, SecurityTestRunContext context )
 	{
 		if( !context.hasProperty( REQUEST_MUTATIONS_STACK ) )
