@@ -264,7 +264,7 @@ public class InvalidTypesTable extends JPanel
 				return "UNSIGNED_LONG";
 				// int
 			case SchemaType.BTC_INT :
-				return "-2147483647";
+				return "INT";
 				// unsigned int
 			case SchemaType.BTC_UNSIGNED_INT :
 				return "UNSIGNED_INT";
@@ -288,7 +288,7 @@ public class InvalidTypesTable extends JPanel
 				return "FLOAT";
 				// double
 			case SchemaType.BTC_DOUBLE :
-				return "12.45E+12";
+				return "DOUBLE";
 				// boolean
 			case SchemaType.BTC_BOOLEAN :
 				return "BOOLEAN";

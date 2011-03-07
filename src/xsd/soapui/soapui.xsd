@@ -1997,6 +1997,7 @@
 
     <xsd:complexType name="SQLInjectionCheck">
     	<xsd:sequence>
+    		<xsd:element name="sqlInjectionStrings" type="xsd:string" minOccurs="0" maxOccurs="unbounded"></xsd:element>
     	</xsd:sequence>
     </xsd:complexType>
 

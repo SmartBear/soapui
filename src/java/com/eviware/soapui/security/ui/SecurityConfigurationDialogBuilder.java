@@ -219,11 +219,12 @@ public class SecurityConfigurationDialogBuilder
 			else
 				dialog = ADialogBuilder.buildDialog( OptionalDialog.class );
 			dialog.getFormField( OptionalDialog.OPTIONAL ).setProperty( "component", component );
+			dialog.getFormField( OptionalDialog.OPTIONAL ).setProperty( "dimension", component.getPreferredSize() );
 		}
 
 		buildBasicDialog( name, description, icon, helpUrl, securityCheck, dialog );
 
-		( ( JFormDialog )dialog ).getDialog().setResizable( false );
+//		( ( JFormDialog )dialog ).getDialog().setResizable( false );
 
 		return dialog;
 	}

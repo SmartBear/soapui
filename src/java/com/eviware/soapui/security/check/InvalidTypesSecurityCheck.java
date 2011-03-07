@@ -22,6 +22,7 @@ import org.apache.xmlbeans.SchemaType;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.InvalidSecurityCheckConfig;
 import com.eviware.soapui.config.SchemaTypeForSecurityCheckConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
@@ -38,7 +39,6 @@ import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.security.ui.InvalidTypesTable;
 import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
-import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel.XmlTreeNode;
 
@@ -151,95 +151,94 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 	private void updateRequestContent( TestStep testStep )
 	{
 
-			if( !generated )
+		if( !generated )
+			try
+			{
+				mutateParameters();
+			}
+			catch( XmlException e1 )
+			{
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		if( getExecutionStrategy().getStrategy() == StrategyTypeConfig.ONE_BY_ONE )
+		{
+			/*
+			 * Idea is to drain for each parameter mutations.
+			 */
+			for( SecurityCheckedParameter param : getParameterHolder().getParameterList() )
+			{
+				if( parameterMutations.containsKey( param ) )
+					if( parameterMutations.get( param ).size() > 0 )
+					{
+						try
+						{
+							TestProperty property = getTestStep().getProperties().get( param.getName() );
+							String value = property.getValue();
+							XmlObjectTreeModel model = new XmlObjectTreeModel( ( ( WsdlTestRequestStep )getTestStep() )
+									.getOperation().getInterface().getDefinitionContext().getSchemaTypeSystem(),
+									XmlObject.Factory.parse( value ) );
+							XmlTreeNode[] nodes = model.selectTreeNodes( param.getXPath() );
+							for( XmlTreeNode node : nodes )
+								node.setValue( 1, parameterMutations.get( param ).get( 0 ) );
+							parameterMutations.get( param ).remove( 0 );
+
+							testStep.getProperties().get( param.getName() ).setValue( model.getXmlObject().toString() );
+
+						}
+						catch( Exception e )
+						{
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						break;
+					}
+			}
+		}
+		else
+		{
+			for( TestProperty property : testStep.getPropertyList() )
+			{
+
+				String value = property.getValue();
+				XmlObjectTreeModel model;
+				if( value == null )
+					continue;
 				try
 				{
-					mutateParameters();
+					model = new XmlObjectTreeModel( ( ( WsdlTestRequestStep )getTestStep() ).getOperation().getInterface()
+							.getDefinitionContext().getSchemaTypeSystem(), XmlObject.Factory.parse( value ) );
+					for( SecurityCheckedParameter param : getParameterHolder().getParameterList() )
+					{
+						if( param.getName().equals( property.getName() ) )
+						{
+							XmlTreeNode[] nodes = model.selectTreeNodes( param.getXPath() );
+							if( parameterMutations.containsKey( param ) )
+								if( parameterMutations.get( param ).size() > 0 )
+								{
+									for( XmlTreeNode node : nodes )
+										node.setValue( 1, parameterMutations.get( param ).get( 0 ) );
+									parameterMutations.get( param ).remove( 0 );
+								}
+						}
+					}
+					property.setValue( model.getXmlObject().toString() );
 				}
-				catch( XmlException e1 )
+				catch( XmlException e )
 				{
 					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					// e.printStackTrace();
+					continue;
 				}
-			if( getExecutionStrategy().getStrategy() == StrategyTypeConfig.ONE_BY_ONE )
-			{
-				/*
-				 * Idea is to drain for each parameter mutations.
-				 */
-				for( SecurityCheckedParameter param : getParameterHolder().getParameterList() )
+				catch( Exception e )
 				{
-					if( parameterMutations.containsKey( param ) )
-						if( parameterMutations.get( param ).size() > 0 )
-						{
-							try
-							{
-								TestProperty property = getTestStep().getProperties().get( param.getName() );
-								String value = property.getValue();
-								XmlObjectTreeModel model = new XmlObjectTreeModel( ( ( WsdlTestRequestStep )getTestStep() )
-										.getOperation().getInterface().getDefinitionContext().getSchemaTypeSystem(),
-										XmlObject.Factory.parse( value ) );
-								XmlTreeNode[] nodes = model.selectTreeNodes( param.getXPath() );
-								for( XmlTreeNode node : nodes )
-									node.setValue( 1, parameterMutations.get( param ).get( 0 ) );
-								parameterMutations.get( param ).remove( 0 );
-
-								testStep.getProperties().get( param.getName() ).setValue( model.getXmlObject().toString() );
-
-							}
-							catch( Exception e )
-							{
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-							break;
-						}
+					// TODO Auto-generated catch block
+					// e.printStackTrace();
+					continue;
 				}
-			}
-			else
-			{
-				for( TestProperty property : testStep.getPropertyList() )
-				{
 
-					String value = property.getValue();
-					XmlObjectTreeModel model;
-					if ( value == null )
-						continue;
-					try
-					{
-						model = new XmlObjectTreeModel( ( ( WsdlTestRequestStep )getTestStep() )
-								.getOperation().getInterface().getDefinitionContext().getSchemaTypeSystem(), XmlObject.Factory
-								.parse( value ) );
-						for( SecurityCheckedParameter param : getParameterHolder().getParameterList() )
-						{
-							if( param.getName().equals( property.getName() ) )
-							{
-								XmlTreeNode[] nodes = model.selectTreeNodes( param.getXPath() );
-								if( parameterMutations.containsKey( param ) )
-									if( parameterMutations.get( param ).size() > 0 )
-									{
-										for( XmlTreeNode node : nodes )
-											node.setValue( 1, parameterMutations.get( param ).get( 0 ) );
-										parameterMutations.get( param ).remove( 0 );
-									}
-							}
-						}
-						property.setValue( model.getXmlObject().toString() );
-					}
-					catch( XmlException e )
-					{
-						// TODO Auto-generated catch block
-//						e.printStackTrace();
-						continue;
-					}
-					catch( Exception e )
-					{
-						// TODO Auto-generated catch block
-//						e.printStackTrace();
-						continue;
-					}
-
-				}
 			}
+		}
 
 	}
 
@@ -265,7 +264,21 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 				if( property.getValue() == null && property.getDefaultValue() == null )
 					continue;
 				// get value of that property
-				String value = property.getValue() == null ? property.getDefaultValue() : property.getValue();
+				String value = property.getValue();
+				// no xpath, just put values in property than.
+				if( value == null )
+				{
+					List<SchemaTypeForSecurityCheckConfig> invalidTypes = invalidTypeConfig.getTypesListList();
+
+					for( SchemaTypeForSecurityCheckConfig type : invalidTypes )
+					{
+
+						if( !parameterMutations.containsKey( parameter ) )
+							parameterMutations.put( parameter, new ArrayList<String>() );
+						parameterMutations.get( parameter ).add( type.getValue() );
+
+					}
+				}
 
 				try
 				{
@@ -296,7 +309,7 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 				}
 				catch( Exception e1 )
 				{
-					UISupport.showErrorMessage( "Failed to select XPath for source property value [" + value + "]" );
+					SoapUI.logError( e1, "[InvalidtypeSecurotyCheck]Failed to select XPath for source property value [" + value + "]" );
 				}
 
 			}
@@ -407,7 +420,6 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 			// need to add more...
 
 		}
-
 
 		public HashMap<Integer, String> getDefaultTypeMap()
 		{

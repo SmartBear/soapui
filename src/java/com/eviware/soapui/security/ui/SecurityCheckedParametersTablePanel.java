@@ -12,6 +12,7 @@
 package com.eviware.soapui.security.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Map;
@@ -21,6 +22,7 @@ import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
 
 import org.jdesktop.swingx.JXTable;
 
@@ -62,6 +64,7 @@ public class SecurityCheckedParametersTablePanel extends JPanel
 
 	private void init()
 	{
+		
 		setLayout( new BorderLayout() );
 		toolbar = UISupport.createToolbar();
 
