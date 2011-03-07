@@ -18,7 +18,6 @@ import java.util.Map;
 
 import javax.swing.JComponent;
 
-import org.apache.commons.collections.ArrayStack;
 import org.apache.xmlbeans.SchemaType;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
