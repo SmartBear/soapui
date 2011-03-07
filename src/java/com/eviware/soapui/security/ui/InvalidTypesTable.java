@@ -14,7 +14,9 @@ package com.eviware.soapui.security.ui;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -22,12 +24,19 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.table.AbstractTableModel;
 
+import org.apache.xmlbeans.SchemaType;
 import org.jdesktop.swingx.JXTable;
 
 import com.eviware.soapui.config.InvalidSecurityCheckConfig;
 import com.eviware.soapui.config.SchemaTypeForSecurityCheckConfig;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
+import com.eviware.x.form.XFormDialog;
+import com.eviware.x.form.support.ADialogBuilder;
+import com.eviware.x.form.support.AField;
+import com.eviware.x.form.support.AForm;
+import com.eviware.x.form.support.AField.AFieldType;
+import com.eviware.x.impl.swing.JComboBoxFormField;
 
 /**
  * Table for handling schema types for InvalidTypes Security Check
@@ -41,6 +50,39 @@ public class InvalidTypesTable extends JPanel
 	private InvalidTypeTableModel model;
 	private JXTable table;
 	private JXToolBar toolbar;
+
+	private Map<String, Integer> typeMap = new HashMap<String, Integer>()
+	{
+		{
+			put( "STRING", SchemaType.BTC_STRING );
+			put( "NORMALIZED_STRING", SchemaType.BTC_NORMALIZED_STRING );
+			put( "TOKEN", SchemaType.BTC_TOKEN );
+			put( "BASE_64_BINARY", SchemaType.BTC_BASE_64_BINARY );
+			put( "HEX_BINARY", SchemaType.BTC_HEX_BINARY );
+			put( "INTEGER", SchemaType.BTC_INTEGER );
+			put( "POSITIVE_INTEGER", SchemaType.BTC_POSITIVE_INTEGER );
+			put( "NEGATIVE_INTEGER", SchemaType.BTC_NEGATIVE_INTEGER );
+			put( "NON_NEGATIVE_INTEGER", SchemaType.BTC_NON_NEGATIVE_INTEGER );
+			put( "NON_POSITIVE_INTEGER", SchemaType.BTC_POSITIVE_INTEGER );
+			put( "LONG", SchemaType.BTC_LONG );
+			put( "UNSIGNED_LONG", SchemaType.BTC_UNSIGNED_LONG );
+			put( "UNSIGNED_INT", SchemaType.BTC_UNSIGNED_INT );
+			put( "SHORT", SchemaType.BTC_SHORT );
+			put( "UNSIGNED_SHORT", SchemaType.BTC_UNSIGNED_SHORT );
+			put( "BYTE", SchemaType.BTC_BYTE );
+			put( "UNSIGNED_BYTE", SchemaType.BTC_UNSIGNED_BYTE );
+			put( "DECIMAL", SchemaType.BTC_DECIMAL );
+			put( "FLOAT", SchemaType.BTC_FLOAT );
+			put( "BOOLEAN", SchemaType.BTC_BOOLEAN );
+			put( "DURATION", SchemaType.BTC_DURATION );
+			put( "DATE_TIME", SchemaType.BTC_DATE_TIME );
+			put( "DATE", SchemaType.BTC_DATE );
+			put( "TIME", SchemaType.BTC_TIME );
+			put( "G_YEAR", SchemaType.BTC_G_YEAR );
+			put( "G_YEAR_MONTH", SchemaType.BTC_G_YEAR_MONTH );
+
+		}
+	};
 
 	public InvalidTypesTable( InvalidSecurityCheckConfig invalidTypeConfig )
 	{
@@ -59,6 +101,7 @@ public class InvalidTypesTable extends JPanel
 
 		add( toolbar, BorderLayout.NORTH );
 		table = new JXTable( model );
+
 		add( new JScrollPane( table ), BorderLayout.CENTER );
 
 	}
@@ -92,7 +135,13 @@ public class InvalidTypesTable extends JPanel
 		@Override
 		public void actionPerformed( ActionEvent arg0 )
 		{
-			model.addNewType();
+			XFormDialog dialog = ADialogBuilder.buildDialog( AddParameterActionDialog.class );
+			JComboBoxFormField chooser = ( JComboBoxFormField )dialog.getFormField( AddParameterActionDialog.TYPE );
+			chooser.setOptions( typeMap.keySet().toArray( new String[0] ) );
+			if( dialog.show() )
+			{
+				model.addNewType(typeMap.get( chooser.getValue()), dialog.getValue( AddParameterActionDialog.VALUE ));
+			}
 		}
 
 	}
@@ -117,11 +166,11 @@ public class InvalidTypesTable extends JPanel
 			fireTableDataChanged();
 		}
 
-		public void addNewType()
+		public void addNewType( int type, String value )
 		{
 			SchemaTypeForSecurityCheckConfig newtype = data.addNewTypesList();
-			newtype.setType( -1 );
-			newtype.setValue( "fill with new value" );
+			newtype.setType( type );
+			newtype.setValue( value );
 
 			fireTableDataChanged();
 		}
@@ -129,7 +178,7 @@ public class InvalidTypesTable extends JPanel
 		@Override
 		public boolean isCellEditable( int rowIndex, int columnIndex )
 		{
-			return true;
+			return columnIndex == 1;
 		}
 
 		@Override
@@ -137,14 +186,7 @@ public class InvalidTypesTable extends JPanel
 		{
 			SchemaTypeForSecurityCheckConfig paramType = data.getTypesListList().get( rowIndex );
 
-			if( columnIndex == 0 )
-				try {
-					paramType.setType( Integer.parseInt( ( String )aValue ) );
-				} catch(NumberFormatException e) {
-					UISupport.showErrorMessage( "Type have be integer!" );
-				}
-				else
-					paramType.setValue( ( String )aValue );
+			paramType.setValue( ( String )aValue );
 
 			fireTableDataChanged();
 		}
@@ -174,15 +216,113 @@ public class InvalidTypesTable extends JPanel
 		{
 			if( columnIndex == 0 )
 			{
-				// XmlOptions options = new XmlOptions();
-				// options.setDocumentType( data.getTypesListList().get( rowIndex
-				// ).getType() );
-				// XmlObject.Factory.newDomImplementation(XmlOptions)
-				return data.getTypesListList().get( rowIndex ).getType();
+				return getTypeName( data.getTypesListList().get( rowIndex ).getType() );
 			}
 			else
 				return data.getTypesListList().get( rowIndex ).getValue();
 		}
 
+		private String getTypeName( int type )
+		{
+			String result = "UNKNOWN";
+
+			switch( type )
+			{
+			case SchemaType.BTC_STRING :
+				return "STRING";
+			case SchemaType.BTC_NORMALIZED_STRING :
+				return "NORMALIZED_STRING";
+				// no cr/lf/tab
+			case SchemaType.BTC_TOKEN :
+				return "TOKEN";
+				// base64Binary
+			case SchemaType.BTC_BASE_64_BINARY :
+				return "BASE_64_BINARY";
+				// hexBinary
+			case SchemaType.BTC_HEX_BINARY :
+				return "HEX_BINARY";
+				// integer - no min or max
+			case SchemaType.BTC_INTEGER :
+				return "INTEGER";
+				// positive integer
+			case SchemaType.BTC_POSITIVE_INTEGER :
+				return "POSITIVE_INTEGER";
+				// negative integer
+			case SchemaType.BTC_NEGATIVE_INTEGER :
+				return "NEGATIVE_INTEGER";
+				// non negative integer
+			case SchemaType.BTC_NON_NEGATIVE_INTEGER :
+				return "NON_NEGATIVE_INTEGER";
+				// non positive integer
+			case SchemaType.BTC_NON_POSITIVE_INTEGER :
+				return "NON_POSITIVE_INTEGER";
+				// long
+			case SchemaType.BTC_LONG :
+				return "LONG";
+				// unsigned long
+			case SchemaType.BTC_UNSIGNED_LONG :
+				return "UNSIGNED_LONG";
+				// int
+			case SchemaType.BTC_INT :
+				return "-2147483647";
+				// unsigned int
+			case SchemaType.BTC_UNSIGNED_INT :
+				return "UNSIGNED_INT";
+				// short
+			case SchemaType.BTC_SHORT :
+				return "SHORT";
+				// unsigned short
+			case SchemaType.BTC_UNSIGNED_SHORT :
+				return "UNSIGNED_SHORT";
+				// byte
+			case SchemaType.BTC_BYTE :
+				return "BYTE";
+				// unsigned byte
+			case SchemaType.BTC_UNSIGNED_BYTE :
+				return "UNSIGNED_BYTE";
+				// decimal
+			case SchemaType.BTC_DECIMAL :
+				return "DECIMAL";
+				// float
+			case SchemaType.BTC_FLOAT :
+				return "FLOAT";
+				// double
+			case SchemaType.BTC_DOUBLE :
+				return "12.45E+12";
+				// boolean
+			case SchemaType.BTC_BOOLEAN :
+				return "BOOLEAN";
+				// duration
+			case SchemaType.BTC_DURATION :
+				return "DURATION";
+				// date time
+			case SchemaType.BTC_DATE_TIME :
+				return "DATE_TIME";
+				// date
+			case SchemaType.BTC_DATE :
+				return "DATE";
+			case SchemaType.BTC_TIME :
+				return "TIME";
+			case SchemaType.BTC_G_YEAR :
+				return "G_YEAR";
+			case SchemaType.BTC_G_YEAR_MONTH :
+				return "G_YEAR_MONTH";
+				// ..needs more
+			default :
+				break;
+			}
+			return result;
+		}
+	}
+
+	@AForm( description = "Add new type", name = "Add new type" )
+	protected interface AddParameterActionDialog
+	{
+
+		@AField( description = "Choose Type", name = "Choose type", type = AFieldType.ENUMERATION )
+		public final static String TYPE = "Choose type";
+
+		@AField( description = "Set a value", name = "Value", type = AFieldType.STRING )
+		public final static String VALUE = "Value";
 	}
 }

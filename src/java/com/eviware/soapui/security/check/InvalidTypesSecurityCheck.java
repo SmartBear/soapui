@@ -52,8 +52,6 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 
 	private InvalidTypesForSOAP invalidTypes;
 
-	private List<String> result = new ArrayList<String>();
-
 	private InvalidSecurityCheckConfig invalidTypeConfig;
 
 	private Map<SecurityCheckedParameter, ArrayList<String>> parameterMutations = new HashMap<SecurityCheckedParameter, ArrayList<String>>();
@@ -343,9 +341,6 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 	private class InvalidTypesForSOAP
 	{
 
-		private int type;
-		private ArrayStack stack;
-
 		private HashMap<Integer, String> typeMap = new HashMap<Integer, String>();
 
 		public InvalidTypesForSOAP()
@@ -353,18 +348,11 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 			generateInvalidTypes();
 		}
 
-		public void setType( int type )
-		{
-			this.type = type;
-		}
-
 		/*
 		 * see http://www.w3.org/TR/xmlschema-0/#CreatDt
 		 */
 		private void generateInvalidTypes()
 		{
-
-			stack = new ArrayStack();
 
 			// strings
 			typeMap.put( SchemaType.BTC_STRING, "SoapUI is\t the\r best\n" );
@@ -419,13 +407,8 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 
 			// need to add more...
 
-			stack.addAll( typeMap.values() );
 		}
 
-		public boolean hasNext()
-		{
-			return !stack.isEmpty();
-		}
 
 		public HashMap<Integer, String> getDefaultTypeMap()
 		{
