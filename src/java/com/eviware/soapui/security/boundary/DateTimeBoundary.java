@@ -16,11 +16,11 @@ import java.text.SimpleDateFormat;
 /**
  * @author nebojsa.tasic
  */
-public class DateBoundary extends AbstractBoundary
+public class DateTimeBoundary extends AbstractBoundary
 {
 
 	private static final int OFFSET = 10;
-	public static final String DATE_FORMAT = "yyyy-MM-dd'T00:00:00'";
+	public static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
 	public static SimpleDateFormat simpleDateFormat = new SimpleDateFormat( DATE_FORMAT );
 
 

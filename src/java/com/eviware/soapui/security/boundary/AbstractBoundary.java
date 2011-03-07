@@ -30,22 +30,39 @@ public abstract class AbstractBoundary implements Boundary
 	// TODO: cover more simple types
 	public static Boundary factory( String type )
 	{
-		if( "xsd:string".equals( type ) )
+		if( type == null )
+			return null;
+		
+		
+		if(type.endsWith( ":string" ))
 		{
 			return new StringBoundary();
 		}
-		if( "xsd:integer".equals( type ) )
+		if(type.endsWith( ":normalizedString" ))
+		{
+			return new NormalisedStringBoundary();
+		}
+		if(type.endsWith( ":integer" ))
 		{
 			return new IntegerBoundary();
 		}
-		if( "xsd:decimal".equals( type ) )
+		if(type.endsWith( ":decimal" ))
 		{
 			return new DecimalBoundary();
 		}
-		if( "xsd:dateTime".equals( type ) )
+		if(type.endsWith( ":dateTime" )) 
+		{
+			return new DateTimeBoundary();
+		}
+		if(type.endsWith( ":date" )) 
 		{
 			return new DateBoundary();
 		}
+		if(type.endsWith( ":time" )) 
+		{
+			return new DateBoundary();
+		}
+		
 		return null;
 	}
 

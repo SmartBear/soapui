@@ -93,9 +93,12 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 		if( acceptsTestStep( testStep ) )
 		{
 			String mutatedRequest = popMutation( context );
-			updateTestStepRequest( testStep, mutatedRequest );
-			testStep.run( ( TestCaseRunner )securityTestRunner, context );
-			createMessageExchange( testStep );
+			if( mutatedRequest != null )
+			{
+				updateTestStepRequest( testStep, mutatedRequest );
+				testStep.run( ( TestCaseRunner )securityTestRunner, context );
+				createMessageExchange( testStep );
+			}
 		}
 	}
 
@@ -103,7 +106,7 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 	private String popMutation( SecurityTestRunContext context )
 	{
 		Stack<String> requestMutationsStack = ( Stack<String> )context.get( REQUEST_MUTATIONS_STACK );
-		return requestMutationsStack.pop();
+		return requestMutationsStack.empty() ? null : requestMutationsStack.pop();
 	}
 
 	private void createMessageExchange( TestStep testStep )
@@ -247,7 +250,7 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 		}
 		else
 		{
-			SoapUI.log.warn( "Restriction:" + nodeName + " is not supported for baseType:" + baseType );
+			SoapUI.log.warn( "No out of boundary value is created for restriction " + nodeName + " of baseType:" + baseType );
 		}
 	}
 

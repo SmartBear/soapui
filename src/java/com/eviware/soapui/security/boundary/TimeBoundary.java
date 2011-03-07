@@ -16,12 +16,12 @@ import java.text.SimpleDateFormat;
 /**
  * @author nebojsa.tasic
  */
-public class DateBoundary extends AbstractBoundary
+public class TimeBoundary extends AbstractBoundary
 {
 
 	private static final int OFFSET = 10;
-	public static final String DATE_FORMAT = "yyyy-MM-dd'T00:00:00'";
-	public static SimpleDateFormat simpleDateFormat = new SimpleDateFormat( DATE_FORMAT );
+	public static final String TIME_FORMAT = "HH:mm:ssZ";
+	public static SimpleDateFormat simpleDateFormat = new SimpleDateFormat( TIME_FORMAT );
 
 
 	@Override
@@ -30,13 +30,13 @@ public class DateBoundary extends AbstractBoundary
 		switch( restrictionAttribute )
 		{
 		case MAX_EXCLISIVE :
-			return BoundaryUtils.createDate( value, ( int )( Math.random() * OFFSET ) ,simpleDateFormat);
+			return BoundaryUtils.createTime( value, ( int )( Math.random() * OFFSET ) ,simpleDateFormat);
 		case MIN_EXCLISIVE :
-			return BoundaryUtils.createDate( value, -( int )( Math.random() * OFFSET ),simpleDateFormat );
+			return BoundaryUtils.createTime( value, -( int )( Math.random() * OFFSET ),simpleDateFormat );
 		case MAX_INCLISIVE :
-			return BoundaryUtils.createDate( value, ( int )( Math.random() * OFFSET + 1 ),simpleDateFormat );
+			return BoundaryUtils.createTime( value, ( int )( Math.random() * OFFSET + 1 ),simpleDateFormat );
 		case MIN_INCLISIVE :
-			return BoundaryUtils.createDate( value, ( -( int )( Math.random() * OFFSET ) - 1 ) ,simpleDateFormat);
+			return BoundaryUtils.createTime( value, ( -( int )( Math.random() * OFFSET ) - 1 ) ,simpleDateFormat);
 		default :
 			return null;
 		}

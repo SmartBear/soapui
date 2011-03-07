@@ -13,9 +13,9 @@ package com.eviware.soapui.security.boundary;
 /**
  * @author nebojsa.tasic
  */
-public class StringBoundary extends AbstractBoundary
+public class NormalisedStringBoundary extends AbstractBoundary
 {
-	public static final String AVAILABLE_VALUES = " abcdefghijklmnopqrstuvwxyz\n\t\r";
+	public static final String AVAILABLE_VALUES = " abcdefghijklmnopqrstuvwxyz";
 
 
 	@Override

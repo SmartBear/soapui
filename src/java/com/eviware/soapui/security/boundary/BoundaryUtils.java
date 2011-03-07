@@ -12,6 +12,7 @@
 package com.eviware.soapui.security.boundary;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -67,19 +68,45 @@ public class BoundaryUtils
 	 * @param daysOffset
 	 * @return date
 	 */
-	public static String createDate( String restrictionDate, int daysOffset )
+	public static String createDate( String restrictionDate, int daysOffset ,SimpleDateFormat format)
 	{
 		try
 		{
-			Date date = DateBoundary.simpleDateFormat.parse( restrictionDate );
+			Date date = format.parse( restrictionDate );
 			Calendar calendar = Calendar.getInstance();
 			calendar.setTime( date );
 			calendar.add( Calendar.DAY_OF_YEAR, daysOffset );
-			return DateBoundary.simpleDateFormat.format( calendar.getTime() );
+			return format.format( calendar.getTime() );
 		}
 		catch( ParseException e )
 		{
-			SoapUI.logError( e, "date : '" + restrictionDate + "' is not in proper format: " + DateBoundary.DATE_FORMAT );
+			SoapUI.logError( e, "date : '" + restrictionDate + "' is not in proper format: " + format.toPattern() );
+		}
+		return null;
+	}
+	
+	/**
+	 * 
+	 * creates time in string representation that is differs from minutesOffset
+	 * by minutesOffset number of minutes
+	 * 
+	 * @param restrictionTime
+	 * @param minutesOffset
+	 * @return date
+	 */
+	public static String createTime( String restrictionTime, int minutesOffset ,SimpleDateFormat format)
+	{
+		try
+		{
+			Date date = format.parse( restrictionTime );
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime( date );
+			calendar.add( Calendar.MINUTE, minutesOffset );
+			return format.format( calendar.getTime() );
+		}
+		catch( ParseException e )
+		{
+			SoapUI.logError( e, "time : '" + restrictionTime + "' is not in proper format: " + format.toPattern() );
 		}
 		return null;
 	}
