@@ -183,6 +183,18 @@ public class JSecurityTestTestStepList extends JPanel
 				testStepListEntry.release();
 				splitPane.remove( splitPane.getTopComponent() );
 				splitPane.setTopComponent( new JScrollPane( testStepListPanel ) );
+
+				if( secCheckPanel instanceof SecurityChecksPanel )
+				{
+					( ( SecurityChecksPanel )secCheckPanel ).release();
+					splitPane.remove( secCheckPanel );
+					selectedTestStep = null;
+					secCheckPanel = buildSecurityChecksPanel();
+					secCheckPanel.revalidate();
+					splitPane.setBottomComponent( secCheckPanel );
+					splitPane.revalidate();
+				}
+
 				revalidate();
 				repaint();
 			}
@@ -210,7 +222,6 @@ public class JSecurityTestTestStepList extends JPanel
 		}
 	}
 
-	@SuppressWarnings( "serial" )
 	public final class TestStepListEntryPanel extends JPanel implements Autoscroll, PropertyChangeListener
 	{
 		private final WsdlTestStep testStep;
@@ -260,9 +271,8 @@ public class JSecurityTestTestStepList extends JPanel
 					 */
 					private MouseEvent translateMouseEvent( MouseEvent e )
 					{
-						return new MouseEvent( TestStepListEntryPanel.this, e.getID(), e.getWhen(), e.getModifiers(), e
-								.getX()
-								+ getX(), e.getY() + getY(), e.getClickCount(), e.isPopupTrigger(), e.getButton() );
+						return new MouseEvent( TestStepListEntryPanel.this, e.getID(), e.getWhen(), e.getModifiers(),
+								e.getX() + getX(), e.getY() + getY(), e.getClickCount(), e.isPopupTrigger(), e.getButton() );
 					}
 				};
 
@@ -323,8 +333,9 @@ public class JSecurityTestTestStepList extends JPanel
 		private void initPopup( WsdlTestStep testStep )
 		{
 			ActionList actions = ActionListBuilder.buildActions( testStep );
-			actions.insertAction( SwingActionDelegate.createDelegate( AddNewTestCaseAction.SOAPUI_ACTION_ID, securityTest,
-					null, null ), 0 );
+			actions
+					.insertAction( SwingActionDelegate.createDelegate( AddNewTestCaseAction.SOAPUI_ACTION_ID, securityTest,
+							null, null ), 0 );
 			actions.insertAction( ActionSupport.SEPARATOR_ACTION, 1 );
 
 			setComponentPopupMenu( ActionSupport.buildPopup( actions ) );

@@ -44,7 +44,6 @@ import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.security.registry.SecurityCheckRegistry;
-import com.eviware.soapui.security.ui.SecurityConfigurationDialogBuilder;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.x.form.XFormDialog;
@@ -448,15 +447,15 @@ public class SecurityChecksPanel extends JPanel
 			String type = UISupport.prompt( "Specify type of security check", "Add SecurityCheck", availableChecksNames );
 			if( type == null || type.trim().length() == 0 )
 				return;
-			String name = UISupport.prompt( "Specify name for security check", "Add SecurityCheck", securityTest
-					.findTestStepCheckUniqueName( testStep.getId(), type ) );
+			String name = UISupport.prompt( "Specify name for security check", "Add SecurityCheck",
+					securityTest.findTestStepCheckUniqueName( testStep.getId(), type ) );
 			if( name == null || name.trim().length() == 0 )
 				return;
 
 			while( securityTest.getTestStepSecurityCheckByName( testStep.getId(), name ) != null )
 			{
-				name = UISupport.prompt( "Specify unique name for check", "Add SecurityCheck", name + " "
-						+ ( securityTest.getTestStepSecurityChecks( testStep.getId() ).size() ) );
+				name = UISupport.prompt( "Specify unique name for check", "Add SecurityCheck",
+						name + " " + ( securityTest.getTestStepSecurityChecks( testStep.getId() ).size() ) );
 				if( name == null )
 				{
 					return;
@@ -478,7 +477,7 @@ public class SecurityChecksPanel extends JPanel
 			}
 			securityCheckList.setSelectedIndex( securityCheckListModel.getSize() - 1 );
 			AbstractSecurityCheck secCheck = getCurrentSecurityCheck();
-//			secCheck.setTestStep( testStep );
+			// secCheck.setTestStep( testStep );
 
 			XFormDialog dialog = SoapUI.getSoapUICore().getSecurityCheckRegistry().getUIBuilder()
 					.buildSecurityCheckConfigurationDialog( secCheck );
