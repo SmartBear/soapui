@@ -25,7 +25,6 @@ public class InvalidTypesSecurityCheckFactory extends AbstractSecurityCheckFacto
 	@Override
 	public boolean canCreate( TestStep testStep )
 	{
-		// XXX: add http and rest
 		return testStep instanceof WsdlTestRequestStep;
 	}
 

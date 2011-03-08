@@ -36,12 +36,14 @@ public class SecurityCheckRegistry
 	{
 		addFactory( new GroovySecurityCheckFactory() );
 		addFactory( new ParameterExposureCheckFactory() );
-		addFactory( new SQLInjectionCheckFactory() );
 		addFactory( new XmlBombSecurityCheckFactory() );
 		addFactory( new MaliciousAttachmentSecurityCheckFactory() );
 		addFactory( new LargeAttachmentSecurityCheckFactory() );
+// this is actually working
+		addFactory( new XPathInjectionSecurityCheckFactory() );
 		addFactory( new InvalidTypesSecurityCheckFactory() );
 		addFactory( new BoundarySecurityCheckFactory() );
+		addFactory( new SQLInjectionCheckFactory() );
 	}
 
 	/**

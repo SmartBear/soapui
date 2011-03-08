@@ -29,8 +29,10 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.SQLInjectionCheckConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.config.StrategyTypeConfig;
+import com.eviware.soapui.impl.wsdl.teststeps.WsdlResponseMessageExchange;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.security.SecurityCheckedParameter;
 import com.eviware.soapui.model.testsuite.SamplerTestStep;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
@@ -109,6 +111,14 @@ public class SQLInjectionCheck extends AbstractSecurityCheckWithProperties
 	{
 		update( testStep );
 		testStep.run( ( TestCaseRunner )securityTestRunner, context );
+		createMessageExchange( testStep );
+	}
+	
+	private void createMessageExchange( TestStep testStep )
+	{
+		MessageExchange messageExchange = new WsdlResponseMessageExchange( ( ( WsdlTestRequestStep )testStep )
+				.getTestRequest() );
+		getSecurityCheckRequestResult().setMessageExchange( messageExchange );
 	}
 
 	private void update( TestStep testStep )

@@ -2083,4 +2083,10 @@
     		<xsd:element name="value" type="xsd:string"></xsd:element>
     	</xsd:sequence>
     </xsd:complexType>
+
+    <xsd:complexType name="XPathInjection">
+    	<xsd:sequence>
+    		<xsd:element name="xpathList" type="xsd:string" minOccurs="1" maxOccurs="unbounded"></xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
 </xsd:schema>
