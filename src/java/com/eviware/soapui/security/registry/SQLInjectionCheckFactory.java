@@ -51,8 +51,6 @@ public class SQLInjectionCheckFactory extends AbstractSecurityCheckFactory
 		SecurityCheckConfig securityCheckConfig = SecurityCheckConfig.Factory.newInstance();
 		securityCheckConfig.setType( SQLInjectionCheck.TYPE );
 		securityCheckConfig.setName( name );
-		SQLInjectionCheckConfig sic = SQLInjectionCheckConfig.Factory.newInstance();
-		securityCheckConfig.setConfig( sic );
 		return securityCheckConfig;
 	}
 

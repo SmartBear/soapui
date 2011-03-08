@@ -47,15 +47,11 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 
 	public final static String TYPE = "InvalidTypesSecurityCheck";
 
-	private boolean hasNext = false;
-
 	private InvalidTypesForSOAP invalidTypes;
 
 	private InvalidSecurityCheckConfig invalidTypeConfig;
 
 	private Map<SecurityCheckedParameter, ArrayList<String>> parameterMutations = new HashMap<SecurityCheckedParameter, ArrayList<String>>();
-
-	private boolean generated;
 
 	public InvalidTypesSecurityCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent, String icon )
 	{
@@ -151,7 +147,7 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 	private void updateRequestContent( TestStep testStep )
 	{
 
-		if( !generated )
+		if( parameterMutations.size() == 0 )
 			try
 			{
 				mutateParameters();
@@ -175,15 +171,27 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 						{
 							TestProperty property = getTestStep().getProperties().get( param.getName() );
 							String value = property.getValue();
-							XmlObjectTreeModel model = new XmlObjectTreeModel( ( ( WsdlTestRequestStep )getTestStep() )
-									.getOperation().getInterface().getDefinitionContext().getSchemaTypeSystem(),
-									XmlObject.Factory.parse( value ) );
-							XmlTreeNode[] nodes = model.selectTreeNodes( param.getXPath() );
-							for( XmlTreeNode node : nodes )
-								node.setValue( 1, parameterMutations.get( param ).get( 0 ) );
-							parameterMutations.get( param ).remove( 0 );
+							if( param.getXPath() == null || param.getXPath().trim().length() == 0 )
+							{
+								testStep.getProperties().get( param.getName() ).setValue(
+										parameterMutations.get( param ).get( 0 ) );
+								parameterMutations.get( param ).remove( 0 );
+							}
+							else
+							{
+								// no value, do nothing.
+								if( value == null || value.trim().equals( "" ) )
+									continue;
+								XmlObjectTreeModel model = new XmlObjectTreeModel( ( ( WsdlTestRequestStep )getTestStep() )
+										.getOperation().getInterface().getDefinitionContext().getSchemaTypeSystem(),
+										XmlObject.Factory.parse( value ) );
+								XmlTreeNode[] nodes = model.selectTreeNodes( param.getXPath() );
+								for( XmlTreeNode node : nodes )
+									node.setValue( 1, parameterMutations.get( param ).get( 0 ) );
+								parameterMutations.get( param ).remove( 0 );
 
-							testStep.getProperties().get( param.getName() ).setValue( model.getXmlObject().toString() );
+								testStep.getProperties().get( param.getName() ).setValue( model.getXmlObject().toString() );
+							}
 
 						}
 						catch( Exception e )
@@ -201,28 +209,39 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 			{
 
 				String value = property.getValue();
-				XmlObjectTreeModel model;
-				if( value == null )
-					continue;
+				XmlObjectTreeModel model = null;
 				try
 				{
 					model = new XmlObjectTreeModel( ( ( WsdlTestRequestStep )getTestStep() ).getOperation().getInterface()
 							.getDefinitionContext().getSchemaTypeSystem(), XmlObject.Factory.parse( value ) );
 					for( SecurityCheckedParameter param : getParameterHolder().getParameterList() )
 					{
-						if( param.getName().equals( property.getName() ) )
+						if( param.getXPath() == null || param.getXPath().trim().length() == 0 )
 						{
-							XmlTreeNode[] nodes = model.selectTreeNodes( param.getXPath() );
-							if( parameterMutations.containsKey( param ) )
-								if( parameterMutations.get( param ).size() > 0 )
-								{
-									for( XmlTreeNode node : nodes )
-										node.setValue( 1, parameterMutations.get( param ).get( 0 ) );
-									parameterMutations.get( param ).remove( 0 );
-								}
+							testStep.getProperties().get( param.getName() )
+									.setValue( parameterMutations.get( param ).get( 0 ) );
+							parameterMutations.get( param ).remove( 0 );
+						}
+						else
+						{
+							// no value, do nothing.
+							if( value == null || value.trim().equals( "" ) )
+								continue;
+							if( param.getName().equals( property.getName() ) )
+							{
+								XmlTreeNode[] nodes = model.selectTreeNodes( param.getXPath() );
+								if( parameterMutations.containsKey( param ) )
+									if( parameterMutations.get( param ).size() > 0 )
+									{
+										for( XmlTreeNode node : nodes )
+											node.setValue( 1, parameterMutations.get( param ).get( 0 ) );
+										parameterMutations.get( param ).remove( 0 );
+									}
+							}
 						}
 					}
-					property.setValue( model.getXmlObject().toString() );
+					if( model != null )
+						property.setValue( model.getXmlObject().toString() );
 				}
 				catch( XmlException e )
 				{
@@ -250,68 +269,61 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 	private void mutateParameters() throws XmlException
 	{
 
-		if( !generated )
+		// for each parameter
+		for( SecurityCheckedParameter parameter : getParameterHolder().getParameterList() )
 		{
-			generated = true;
-			hasNext = true;
 
-			// for each parameter
-			for( SecurityCheckedParameter parameter : getParameterHolder().getParameterList() )
+			TestProperty property = getTestStep().getProperties().get( parameter.getName() );
+			// ignore if there is no value.
+			if( property.getValue() == null && property.getDefaultValue() == null )
+				continue;
+			// get value of that property
+			String value = property.getValue();
+			// no xpath, just put values in property than.
+			if( value == null )
+			{
+				List<SchemaTypeForSecurityCheckConfig> invalidTypes = invalidTypeConfig.getTypesListList();
+
+				for( SchemaTypeForSecurityCheckConfig type : invalidTypes )
+				{
+
+					if( !parameterMutations.containsKey( parameter ) )
+						parameterMutations.put( parameter, new ArrayList<String>() );
+					parameterMutations.get( parameter ).add( type.getValue() );
+
+				}
+			}
+
+			try
 			{
 
-				TestProperty property = getTestStep().getProperties().get( parameter.getName() );
-				// ignore if there is no value.
-				if( property.getValue() == null && property.getDefaultValue() == null )
-					continue;
-				// get value of that property
-				String value = property.getValue();
-				// no xpath, just put values in property than.
-				if( value == null )
-				{
-					List<SchemaTypeForSecurityCheckConfig> invalidTypes = invalidTypeConfig.getTypesListList();
+				XmlObjectTreeModel model = new XmlObjectTreeModel( ( ( WsdlTestRequestStep )getTestStep() ).getOperation()
+						.getInterface().getDefinitionContext().getSchemaTypeSystem(), XmlObject.Factory.parse( value ) );
 
-					for( SchemaTypeForSecurityCheckConfig type : invalidTypes )
-					{
+				XmlTreeNode[] nodes = model.selectTreeNodes( parameter.getXPath() );
 
-						if( !parameterMutations.containsKey( parameter ) )
-							parameterMutations.put( parameter, new ArrayList<String>() );
-						parameterMutations.get( parameter ).add( type.getValue() );
+				// for each invalid type set all nodes
+				List<SchemaTypeForSecurityCheckConfig> invalidTypes = invalidTypeConfig.getTypesListList();
 
-					}
-				}
-
-				try
+				for( SchemaTypeForSecurityCheckConfig type : invalidTypes )
 				{
 
-					XmlObjectTreeModel model = new XmlObjectTreeModel( ( ( WsdlTestRequestStep )getTestStep() )
-							.getOperation().getInterface().getDefinitionContext().getSchemaTypeSystem(), XmlObject.Factory
-							.parse( value ) );
-
-					XmlTreeNode[] nodes = model.selectTreeNodes( parameter.getXPath() );
-
-					// for each invalid type set all nodes
-					List<SchemaTypeForSecurityCheckConfig> invalidTypes = invalidTypeConfig.getTypesListList();
-
-					for( SchemaTypeForSecurityCheckConfig type : invalidTypes )
+					if( nodes.length > 0 )
 					{
-
-						if( nodes.length > 0 )
+						if( nodes[0].getSchemaType().getBuiltinTypeCode() != type.getType() )
 						{
-							if( nodes[0].getSchemaType().getBuiltinTypeCode() != type.getType() )
-							{
-								if( !parameterMutations.containsKey( parameter ) )
-									parameterMutations.put( parameter, new ArrayList<String>() );
-								parameterMutations.get( parameter ).add( type.getValue() );
-							}
+							if( !parameterMutations.containsKey( parameter ) )
+								parameterMutations.put( parameter, new ArrayList<String>() );
+							parameterMutations.get( parameter ).add( type.getValue() );
 						}
-
 					}
-				}
-				catch( Exception e1 )
-				{
-					SoapUI.logError( e1, "[InvalidtypeSecurotyCheck]Failed to select XPath for source property value [" + value + "]" );
-				}
 
+				}
+			}
+			catch( Exception e1 )
+			{
+				SoapUI.logError( e1, "[InvalidtypeSecurotyCheck]Failed to select XPath for source property value [" + value
+						+ "]" );
 			}
 
 		}
@@ -321,24 +333,24 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 	@Override
 	protected boolean hasNext( TestStep testStep, SecurityTestRunContext context )
 	{
-		boolean oldHasNext = hasNext;
-		if( parameterMutations == null )
+		boolean hasNext = false;
+		if( parameterMutations == null || parameterMutations.size() == 0 )
 			hasNext = true;
 		else
 		{
-			boolean haveMore = false;
 			for( SecurityCheckedParameter param : parameterMutations.keySet() )
 			{
 				if( parameterMutations.get( param ).size() > 0 )
 				{
-					haveMore = true;
+					hasNext = true;
 					break;
 				}
 			}
-			hasNext = hasNext ? haveMore : true;
 		}
-		if( oldHasNext && !hasNext )
-			generated = false;
+		if( !hasNext )
+		{
+			parameterMutations.clear();
+		}
 		return hasNext;
 	}
 

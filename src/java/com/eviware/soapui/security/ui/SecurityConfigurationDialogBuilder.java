@@ -224,7 +224,7 @@ public class SecurityConfigurationDialogBuilder
 
 		buildBasicDialog( name, description, icon, helpUrl, securityCheck, dialog );
 
-//		( ( JFormDialog )dialog ).getDialog().setResizable( false );
+		( ( JFormDialog )dialog ).getDialog().setResizable( false );
 
 		return dialog;
 	}
