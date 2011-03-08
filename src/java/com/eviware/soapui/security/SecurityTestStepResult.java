@@ -72,13 +72,14 @@ public class SecurityTestStepResult
 		}
 		actionList.addActions( getOriginalTestStepResult().getActions() );
 		actionList.setDefaultAction( getOriginalTestStepResult().getActions().getDefaultAction() );
-		if( !getSecurityCheckResultList().isEmpty() )
-		{
-			for( SecurityCheckResult checkResult : getSecurityCheckResultList() )
-			{
-				actionList.addActions( checkResult.getActions() );
-			}
-		}
+//		if( !getSecurityCheckResultList().isEmpty() )
+//		{
+//			for( SecurityCheckResult checkResult : getSecurityCheckResultList() )
+//			{
+//				actionList.addActions( checkResult.getActions() );
+//				actionList.setDefaultAction( checkResult.getActions().getDefaultAction() );
+//			}
+//		}
 		return actionList;
 	}
 

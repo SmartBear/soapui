@@ -83,6 +83,7 @@ public class SecurityCheckResult
 			for( SecurityCheckRequestResult reqResult : getSecurityRequestResultList() )
 			{
 				actionList.addActions( reqResult.getActions() );
+				actionList.setDefaultAction( reqResult.getActions().getDefaultAction() );
 			}
 		}
 		return actionList;

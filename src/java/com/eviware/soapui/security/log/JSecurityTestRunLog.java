@@ -176,6 +176,24 @@ public class JSecurityTestRunLog extends JPanel
 		}
 	}
 
+	public synchronized void addSecurityCheckResult( SecurityCheckResult checkResult )
+	{
+		if( errorsOnly && checkResult.getStatus() != SecurityCheckRequestResult.SecurityStatus.FAILED )
+			return;
+
+		logListModel.addSecurityCheckResult( checkResult );
+		if( follow )
+		{
+			try
+			{
+				testLogList.ensureIndexIsVisible( logListModel.getSize() - 1 );
+			}
+			catch( RuntimeException e )
+			{
+			}
+		}
+	}
+
 	public SecurityTestLogModel getLogListModel()
 	{
 		return logListModel;
@@ -309,11 +327,20 @@ public class JSecurityTestRunLog extends JPanel
 			int index = testLogList.getSelectedIndex();
 			if( index != -1 && ( index == selectedIndex || e.getClickCount() > 1 ) )
 			{
-				SecurityTestStepResult result = logListModel.getTestStepResultAt( index );
-				if( result != null && result.getActions() != null )
-					result.getActions().performDefaultAction( new ActionEvent( this, 0, null ) );
-			}
+				SecurityCheckResult checkResult = logListModel.getCheckResultAt( index );
+				if( checkResult != null )
+				{
+					if( checkResult != null && checkResult.getActions() != null )
+						checkResult.getActions().performDefaultAction( new ActionEvent( this, 0, null ) );
+				}
 
+				else
+				{
+					SecurityTestStepResult result = logListModel.getTestStepResultAt( index );
+					if( result != null && result.getActions() != null )
+						result.getActions().performDefaultAction( new ActionEvent( this, 0, null ) );
+				}
+			}
 			selectedIndex = index;
 		}
 
@@ -406,37 +433,22 @@ public class JSecurityTestRunLog extends JPanel
 				setText( msg == null ? "" : msg );
 			}
 
-			SecurityTestStepResult result = logListModel.getTestStepResultAt( index );
-			if( result != null && !getText().startsWith( " ->" ) )
+			SecurityCheckResult checkResult = logListModel.getCheckResultAt( index );
+			if( checkResult != null && !getText().startsWith( " ->" ) )
 			{
+
 				hyperlinkLabel.setText( getText() );
 				hyperlinkLabel.setBackground( getBackground() );
 				hyperlinkLabel.setEnabled( list.isEnabled() );
 
-				if( getText().startsWith( "Step" ) )
-				{
-					hyperlinkLabel.setBorder( BorderFactory.createEmptyBorder( 0, 4, 3, 3 ) );
-					if( result.getOriginalTestStepResult().getStatus() == TestStepStatus.OK )
-					{
-						hyperlinkLabel.setIcon( UISupport.createImageIcon( "/valid_assertion.gif" ) );
-					}
-					else if( result.getOriginalTestStepResult().getStatus() == TestStepStatus.FAILED )
-					{
-						hyperlinkLabel.setIcon( UISupport.createImageIcon( "/failed_assertion.gif" ) );
-					}
-					else
-					{
-						hyperlinkLabel.setIcon( UISupport.createImageIcon( "/unknown_assertion.gif" ) );
-					}
-				}
-				else if( getText().startsWith( "Check" ) )
+				if( getText().startsWith( "Check" ) )
 				{
 					hyperlinkLabel.setBorder( BorderFactory.createEmptyBorder( 0, 16, 3, 3 ) );
-					if( result.getStatus() == SecurityStatus.OK )
+					if( checkResult.getStatus() == SecurityStatus.OK )
 					{
 						hyperlinkLabel.setIcon( UISupport.createImageIcon( "/valid_assertion.gif" ) );
 					}
-					else if( result.getStatus() == SecurityStatus.FAILED )
+					else if( checkResult.getStatus() == SecurityStatus.FAILED )
 					{
 						hyperlinkLabel.setIcon( UISupport.createImageIcon( "/failed_assertion.gif" ) );
 					}
@@ -444,12 +456,43 @@ public class JSecurityTestRunLog extends JPanel
 					{
 						hyperlinkLabel.setIcon( UISupport.createImageIcon( "/unknown_assertion.gif" ) );
 					}
-				}
-				else
-				{
-					hyperlinkLabel.setBorder( BorderFactory.createEmptyBorder( 0, 4, 3, 3 ) );
+
 				}
 				return hyperlinkLabel;
+			}
+
+			else
+			{
+				SecurityTestStepResult result = logListModel.getTestStepResultAt( index );
+				if( result != null && !getText().startsWith( " ->" ) )
+				{
+					hyperlinkLabel.setText( getText() );
+					hyperlinkLabel.setBackground( getBackground() );
+					hyperlinkLabel.setEnabled( list.isEnabled() );
+
+					if( getText().startsWith( "Step" ) )
+					{
+						hyperlinkLabel.setBorder( BorderFactory.createEmptyBorder( 0, 4, 3, 3 ) );
+						if( result.getOriginalTestStepResult().getStatus() == TestStepStatus.OK )
+						{
+							hyperlinkLabel.setIcon( UISupport.createImageIcon( "/valid_assertion.gif" ) );
+						}
+						else if( result.getOriginalTestStepResult().getStatus() == TestStepStatus.FAILED )
+						{
+							hyperlinkLabel.setIcon( UISupport.createImageIcon( "/failed_assertion.gif" ) );
+						}
+						else
+						{
+							hyperlinkLabel.setIcon( UISupport.createImageIcon( "/unknown_assertion.gif" ) );
+						}
+					}
+
+					else
+					{
+						hyperlinkLabel.setBorder( BorderFactory.createEmptyBorder( 0, 4, 3, 3 ) );
+					}
+					return hyperlinkLabel;
+				}
 			}
 
 			setEnabled( list.isEnabled() );

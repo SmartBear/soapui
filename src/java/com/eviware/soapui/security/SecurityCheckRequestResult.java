@@ -17,6 +17,8 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.Action;
+
 import com.eviware.soapui.impl.wsdl.teststeps.actions.ShowMessageExchangeAction;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.security.SecurityCheck;
@@ -49,6 +51,7 @@ public class SecurityCheckRequestResult
 	private MessageExchange messageExchange;
 	public StringBuffer testLog = new StringBuffer();
 	private DefaultActionList actionList;
+	private Action action;
 
 	public SecurityCheckRequestResult( SecurityCheck securityCheck )
 	{
@@ -84,6 +87,15 @@ public class SecurityCheckRequestResult
 		}
 		actionList.addAction( new ShowMessageExchangeAction( this.getMessageExchange(), "SecurityCheckRequest" ), true );
 		return actionList;
+	}
+
+	public Action getAction()
+	{
+		if( action == null )
+		{
+			action = new ShowMessageExchangeAction( this.getMessageExchange(), "SecurityCheckRequest" );
+		}
+		return action;
 	}
 
 	public String[] getMessages()
