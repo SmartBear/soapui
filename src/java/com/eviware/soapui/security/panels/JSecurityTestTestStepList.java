@@ -184,15 +184,18 @@ public class JSecurityTestTestStepList extends JPanel
 				splitPane.remove( splitPane.getTopComponent() );
 				splitPane.setTopComponent( new JScrollPane( testStepListPanel ) );
 
-				if( secCheckPanel instanceof SecurityChecksPanel )
+				if( secCheckPanel != null )
 				{
-					( ( SecurityChecksPanel )secCheckPanel ).release();
-					splitPane.remove( secCheckPanel );
-					selectedTestStep = null;
-					secCheckPanel = buildSecurityChecksPanel();
-					secCheckPanel.revalidate();
-					splitPane.setBottomComponent( secCheckPanel );
-					splitPane.revalidate();
+					if( secCheckPanel instanceof SecurityChecksPanel )
+					{
+						( ( SecurityChecksPanel )secCheckPanel ).release();
+						splitPane.remove( secCheckPanel );
+						selectedTestStep = null;
+						secCheckPanel = buildSecurityChecksPanel();
+						secCheckPanel.revalidate();
+						splitPane.setBottomComponent( secCheckPanel );
+						splitPane.revalidate();
+					}
 				}
 
 				revalidate();
