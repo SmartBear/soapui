@@ -37,7 +37,6 @@ import com.eviware.soapui.security.log.SecurityTestLogModel;
 import com.eviware.soapui.security.panels.SecurityChecksPanel;
 import com.eviware.soapui.security.registry.AbstractSecurityCheckFactory;
 import com.eviware.soapui.security.result.SecurityTestStepResult;
-import com.eviware.soapui.security.support.SecurityCheckRunListener;
 import com.eviware.soapui.security.support.SecurityTestRunListener;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
@@ -61,7 +60,6 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 	private SecurityChecksPanel.SecurityCheckListModel listModel;
 	private Set<SecurityTestRunListener> securityTestRunListeners = new HashSet<SecurityTestRunListener>();
 	private Map<TestStep, Set<SecurityTestRunListener>> securityTestStepRunListeners = new HashMap<TestStep, Set<SecurityTestRunListener>>();
-	private Set<SecurityCheckRunListener> securityCheckRunListeners = new HashSet<SecurityCheckRunListener>();
 	private Map<TestStep, SecurityTestStepResult> securityTestStepResultMap;
 
 	private HashMap<String, List<AbstractSecurityCheck>> securityChecksMap = new HashMap<String, List<AbstractSecurityCheck>>();
@@ -605,24 +603,6 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 		}
 	}
 
-	public void addSecurityCheckRunListener( SecurityCheckRunListener listener )
-	{
-		if( listener == null )
-			throw new RuntimeException( "listener must not be null" );
-
-		securityCheckRunListeners.add( listener );
-	}
-
-	public void removeSecurityCheckRunListener( SecurityCheckRunListener listener )
-	{
-		securityCheckRunListeners.remove( listener );
-	}
-
-	public SecurityCheckRunListener[] getSecurityCheckRunListeners()
-	{
-		return securityCheckRunListeners.toArray( new SecurityCheckRunListener[securityCheckRunListeners.size()] );
-	}
-
 	public void removeTestStepRunListener( TestStep testStep, SecurityTestRunListener listener )
 	{
 		securityTestStepRunListeners.remove( securityTestStepRunListeners.get( testStep ) );
@@ -639,15 +619,6 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 		{
 			return new SecurityTestRunListener[0];
 		}
-	}
-
-	/**
-	 * Removes all security check run listeners.
-	 * 
-	 **/
-	public void removeAllSecurityCheckRunListener()
-	{
-		securityCheckRunListeners.clear();
 	}
 
 	@Override
