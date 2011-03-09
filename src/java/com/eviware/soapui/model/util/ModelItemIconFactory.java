@@ -30,6 +30,7 @@ import com.eviware.soapui.model.testsuite.TestAssertion;
 import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestSuite;
+import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.support.UISupport;
 
 public class ModelItemIconFactory
@@ -50,7 +51,8 @@ public class ModelItemIconFactory
 		modelItemIcons.put( Request.class, "/request.gif" );
 		modelItemIcons.put( Operation.class, "/operation.gif" );
 		modelItemIcons.put( Interface.class, "/interface.gif" );
-		
+		modelItemIcons.put( SecurityTest.class, "/securityTest.png" );
+
 	}
 
 	public static ImageIcon getIcon( Class<? extends ModelItem> clazz )
