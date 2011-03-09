@@ -18,7 +18,6 @@ import java.util.List;
 
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
-import com.eviware.soapui.security.result.SecurityCheckRequestResult.SecurityStatus;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.DefaultActionList;
 
@@ -29,9 +28,10 @@ import com.eviware.soapui.support.action.swing.DefaultActionList;
  * @author dragica.soldo
  */
 
-public class SecurityTestStepResult
+public class SecurityTestStepResult implements SecurityResult
 {
 	public SecurityStatus status = SecurityStatus.OK;
+	public static final String TYPE = "SecurityTestStepResult";
 	public TestStep testStep;
 	private long size;
 	private List<SecurityCheckResult> securityCheckResultList;
@@ -179,5 +179,11 @@ public class SecurityTestStepResult
 				getOriginalTestStepResult().getTimeTaken() ).append( " ms" );
 		tl.append( testLog );
 		return tl.toString();
+	}
+
+	@Override
+	public String getResultType()
+	{
+		return TYPE;
 	}
 }

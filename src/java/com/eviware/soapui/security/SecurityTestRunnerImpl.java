@@ -29,7 +29,7 @@ import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.security.result.SecurityCheckResult;
 import com.eviware.soapui.security.result.SecurityTestStepResult;
-import com.eviware.soapui.security.result.SecurityCheckRequestResult.SecurityStatus;
+import com.eviware.soapui.security.result.SecurityResult.SecurityStatus;
 import com.eviware.soapui.security.support.SecurityTestRunListener;
 import com.eviware.soapui.support.types.StringToObjectMap;
 

@@ -12,7 +12,6 @@
 
 package com.eviware.soapui.security.result;
 
-import java.awt.event.ActionEvent;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,14 +31,10 @@ import com.eviware.soapui.support.action.swing.DefaultActionList;
  * @author dragica.soldo
  */
 
-public class SecurityCheckRequestResult
+public class SecurityCheckRequestResult implements SecurityResult
 {
-	public enum SecurityStatus
-	{
-		INITIALIZED, OK, FAILED
-	}
-
 	private static final String[] EMPTY_MESSAGES = new String[0];
+	public final static String TYPE = "SecurityCheckRequestResult";
 	public SecurityStatus status;
 	public SecurityCheck securityCheck;
 	private List<String> messages = new ArrayList<String>();
@@ -172,6 +167,12 @@ public class SecurityCheckRequestResult
 	public void setTimeTaken( long timeTaken )
 	{
 		this.timeTaken = timeTaken;
+	}
+
+	@Override
+	public String getResultType()
+	{
+		return TYPE;
 	}
 
 }

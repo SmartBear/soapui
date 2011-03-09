@@ -40,14 +40,14 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.monitor.SoapMonitor;
 import com.eviware.soapui.impl.wsdl.support.MessageExchangeModelItem;
 import com.eviware.soapui.impl.wsdl.testcase.TestCaseLogItem;
-import com.eviware.soapui.impl.wsdl.teststeps.actions.ShowMessageExchangeAction;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.result.SecurityCheckRequestResult;
 import com.eviware.soapui.security.result.SecurityCheckResult;
+import com.eviware.soapui.security.result.SecurityResult;
 import com.eviware.soapui.security.result.SecurityTestStepResult;
-import com.eviware.soapui.security.result.SecurityCheckRequestResult.SecurityStatus;
+import com.eviware.soapui.security.result.SecurityResult.SecurityStatus;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.ActionSupport;
@@ -327,30 +327,9 @@ public class JSecurityTestRunLog extends JPanel
 			int index = testLogList.getSelectedIndex();
 			if( index != -1 && ( index == selectedIndex || e.getClickCount() > 1 ) )
 			{
-				SecurityCheckResult checkResult = logListModel.getCheckResultAt( index );
-				if( checkResult != null )
-				{
-					// if( checkResult != null && checkResult.getActions() != null )
-					// checkResult.getActions().performDefaultAction( new
-					// ActionEvent( this, 0, null ) );
-					if( checkResult != null && !checkResult.getSecurityRequestResultList().isEmpty() )
-					{
-
-						for( SecurityCheckRequestResult reqResult : checkResult.getSecurityRequestResultList() )
-						{
-							ShowMessageExchangeAction showMessageExchangeAction = new ShowMessageExchangeAction( reqResult
-									.getMessageExchange(), "SecurityCheck" );
-							showMessageExchangeAction.actionPerformed( new ActionEvent( this, 0, null ) );
-						}
-					}
-				}
-
-				else
-				{
-					SecurityTestStepResult result = logListModel.getTestStepResultAt( index );
-					if( result != null && result.getActions() != null )
-						result.getActions().performDefaultAction( new ActionEvent( this, 0, null ) );
-				}
+				SecurityResult result = logListModel.getTestStepResultAt( index );
+				if( result != null && result.getActions() != null )
+					result.getActions().performDefaultAction( new ActionEvent( this, 0, null ) );
 			}
 			selectedIndex = index;
 		}
@@ -444,39 +423,36 @@ public class JSecurityTestRunLog extends JPanel
 				setText( msg == null ? "" : msg );
 			}
 
-			SecurityCheckResult checkResult = logListModel.getCheckResultAt( index );
-			if( checkResult != null && !getText().startsWith( " ->" ) )
+			SecurityResult result = logListModel.getTestStepResultAt( index );
+			if( result != null && !getText().startsWith( " ->" ) )
 			{
-
-				hyperlinkLabel.setText( getText() );
-				hyperlinkLabel.setBackground( getBackground() );
-				hyperlinkLabel.setEnabled( list.isEnabled() );
-
-				if( getText().startsWith( "Check" ) )
+				if( result.getResultType().equals( SecurityCheckResult.TYPE ) )
 				{
-					hyperlinkLabel.setBorder( BorderFactory.createEmptyBorder( 0, 16, 3, 3 ) );
-					if( checkResult.getStatus() == SecurityStatus.OK )
-					{
-						hyperlinkLabel.setIcon( UISupport.createImageIcon( "/valid_assertion.gif" ) );
-					}
-					else if( checkResult.getStatus() == SecurityStatus.FAILED )
-					{
-						hyperlinkLabel.setIcon( UISupport.createImageIcon( "/failed_assertion.gif" ) );
-					}
-					else
-					{
-						hyperlinkLabel.setIcon( UISupport.createImageIcon( "/unknown_assertion.gif" ) );
-					}
+					hyperlinkLabel.setText( getText() );
+					hyperlinkLabel.setBackground( getBackground() );
+					hyperlinkLabel.setEnabled( list.isEnabled() );
 
+					if( getText().startsWith( "Check" ) )
+					{
+						hyperlinkLabel.setBorder( BorderFactory.createEmptyBorder( 0, 16, 3, 3 ) );
+						if( result.getStatus() == SecurityStatus.OK )
+						{
+							hyperlinkLabel.setIcon( UISupport.createImageIcon( "/valid_assertion.gif" ) );
+						}
+						else if( result.getStatus() == SecurityStatus.FAILED )
+						{
+							hyperlinkLabel.setIcon( UISupport.createImageIcon( "/failed_assertion.gif" ) );
+						}
+						else
+						{
+							hyperlinkLabel.setIcon( UISupport.createImageIcon( "/unknown_assertion.gif" ) );
+						}
+
+					}
 				}
-				return hyperlinkLabel;
-			}
-
-			else
-			{
-				SecurityTestStepResult result = logListModel.getTestStepResultAt( index );
-				if( result != null && !getText().startsWith( " ->" ) )
+				else if( result.getResultType().equals( SecurityTestStepResult.TYPE ) )
 				{
+					SecurityTestStepResult securitytestStepresult = ( SecurityTestStepResult )result;
 					hyperlinkLabel.setText( getText() );
 					hyperlinkLabel.setBackground( getBackground() );
 					hyperlinkLabel.setEnabled( list.isEnabled() );
@@ -484,11 +460,11 @@ public class JSecurityTestRunLog extends JPanel
 					if( getText().startsWith( "Step" ) )
 					{
 						hyperlinkLabel.setBorder( BorderFactory.createEmptyBorder( 0, 4, 3, 3 ) );
-						if( result.getOriginalTestStepResult().getStatus() == TestStepStatus.OK )
+						if( securitytestStepresult.getOriginalTestStepResult().getStatus() == TestStepStatus.OK )
 						{
 							hyperlinkLabel.setIcon( UISupport.createImageIcon( "/valid_assertion.gif" ) );
 						}
-						else if( result.getOriginalTestStepResult().getStatus() == TestStepStatus.FAILED )
+						else if( securitytestStepresult.getOriginalTestStepResult().getStatus() == TestStepStatus.FAILED )
 						{
 							hyperlinkLabel.setIcon( UISupport.createImageIcon( "/failed_assertion.gif" ) );
 						}
@@ -502,10 +478,9 @@ public class JSecurityTestRunLog extends JPanel
 					{
 						hyperlinkLabel.setBorder( BorderFactory.createEmptyBorder( 0, 4, 3, 3 ) );
 					}
-					return hyperlinkLabel;
 				}
+				return hyperlinkLabel;
 			}
-
 			setEnabled( list.isEnabled() );
 
 			if( boldTexts.contains( getText() ) )

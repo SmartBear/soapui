@@ -12,12 +12,15 @@
 
 package com.eviware.soapui.security.result;
 
+import java.awt.event.ActionEvent;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.AbstractAction;
+
 import com.eviware.soapui.model.security.SecurityCheck;
-import com.eviware.soapui.security.result.SecurityCheckRequestResult.SecurityStatus;
+import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.DefaultActionList;
 
@@ -28,8 +31,9 @@ import com.eviware.soapui.support.action.swing.DefaultActionList;
  * @author dragica.soldo
  */
 
-public class SecurityCheckResult
+public class SecurityCheckResult implements SecurityResult
 {
+	public final static String TYPE = "SecurityCheckResult";
 	private SecurityStatus status = SecurityStatus.OK;
 	public SecurityCheck securityCheck;
 	private long size;
@@ -73,22 +77,43 @@ public class SecurityCheckResult
 
 	public ActionList getActions()
 	{
-		if( actionList == null )
-		{
-			actionList = new DefaultActionList( getSecurityCheck().getName() );
-		}
-		if( !getSecurityRequestResultList().isEmpty() )
-		{
-			for( SecurityCheckRequestResult reqResult : getSecurityRequestResultList() )
+			if( actionList == null )
 			{
-				actionList.addActions( reqResult.getActions() );
-				actionList.setDefaultAction( reqResult.getActions().getDefaultAction() );
+				actionList = new DefaultActionList( getSecurityCheck().getName() );
+				actionList.setDefaultAction( new AbstractAction()
+				{
+
+					public void actionPerformed( ActionEvent e )
+					{
+//						if( getMessages().length > 0 )
+//						{
+//							StringBuffer buf = new StringBuffer( "<html><body>");
+//							if( getError() != null )
+//								buf.append( getError().toString() ).append( "<br/>" );
+//
+//							for( String s : getMessages() )
+//								buf.append( s ).append( "<br/>" );
+//
+//							UISupport.showExtendedInfo( "TestStep Result", "Step [" + testStepName + "] ran with status ["
+//									+ getStatus() + "]", buf.toString(), null );
+//						}
+//						else if( getError() != null )
+//						{
+//							UISupport.showExtendedInfo( "TestStep Result", "Step [" + testStepName + "] ran with status ["
+//									+ getStatus() + "]", getError().toString(), null );
+//						}
+//						else
+//						{
+							UISupport.showInfoMessage( "Check [" + getSecurityCheck().getName() + "] ran with status [" + getStatus() + "]",
+									"SecurityCheck Result" );
+//						}
+					}
+				} );
 			}
+
+			return actionList;
 		}
-		return actionList;
-
-	}
-
+		
 	public void addSecurityRequestResult( SecurityCheckRequestResult secReqResult )
 	{
 		if( securityRequestResultList != null )
@@ -167,6 +192,12 @@ public class SecurityCheckResult
 				.append( timeTaken ).append( " ms" );
 		tl.append( testLog );
 		return tl.toString();
+	}
+
+	@Override
+	public String getResultType()
+	{
+		return TYPE;
 	}
 
 }

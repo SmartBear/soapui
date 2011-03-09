@@ -23,7 +23,7 @@ import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunnerImpl;
 import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.security.result.SecurityCheckResult;
-import com.eviware.soapui.security.result.SecurityCheckRequestResult.SecurityStatus;
+import com.eviware.soapui.security.result.SecurityResult.SecurityStatus;
 
 /**
  * Class that keeps a JProgressBars state in sync with a SecurityTest
