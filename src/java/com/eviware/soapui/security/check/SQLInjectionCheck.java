@@ -29,6 +29,8 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.SQLInjectionCheckConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.config.StrategyTypeConfig;
+import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlResponseMessageExchange;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
@@ -124,7 +126,7 @@ public class SQLInjectionCheck extends AbstractSecurityCheckWithProperties
 	private void update( TestStep testStep )
 	{
 		if( parameterMutations.size() == 0 )
-			mutateParameters();
+			mutateParameters(testStep);
 
 		if( getExecutionStrategy().getStrategy() == StrategyTypeConfig.ONE_BY_ONE )
 		{
@@ -229,20 +231,16 @@ public class SQLInjectionCheck extends AbstractSecurityCheckWithProperties
 		}
 	}
 
-	private void mutateParameters()
+	private void mutateParameters(TestStep testStep)
 	{
-		// for each parameter
+	// for each parameter
 		for( SecurityCheckedParameter parameter : getParameterHolder().getParameterList() )
 		{
 
-			TestProperty property = getTestStep().getProperties().get( parameter.getName() );
-			// ignore if there is no value.
-			if( property.getValue() == null && property.getDefaultValue() == null )
-				continue;
-			// get value of that property
-			String value = property.getValue();
-			// no xpath, just put values in property than.
-			if( value == null )
+			TestProperty property = testStep.getProperties().get( parameter.getName() );
+			// check parameter does not have any xpath
+			// than mutate whole parameter
+			if( parameter.getXPath() == null || parameter.getXPath().trim().length() == 0 )
 			{
 				for( String sqlInjectionString : sqlInjectionConfig.getSqlInjectionStringsList() )
 				{
@@ -253,35 +251,49 @@ public class SQLInjectionCheck extends AbstractSecurityCheckWithProperties
 
 				}
 			}
-
-			// we have something that looks like xpath
-			try
+			else
 			{
+				// we have xpath but do we have xml which need to mutate
+				// ignore if there is no value, since than we'll get exception
+				if( property.getValue() == null && property.getDefaultValue() == null )
+					continue;
+				// get value of that property
+				String value = property.getValue();
 
-				XmlObjectTreeModel model = new XmlObjectTreeModel( ( ( WsdlTestRequestStep )getTestStep() ).getOperation()
-						.getInterface().getDefinitionContext().getSchemaTypeSystem(), XmlObject.Factory.parse( value ) );
-
-				XmlTreeNode[] nodes = model.selectTreeNodes( parameter.getXPath() );
-
-				// for each invalid type set all nodes
-
-				for( String sqlInjectionString : sqlInjectionConfig.getSqlInjectionStringsList() )
+				// we have something that looks like xpath, or hope so.
+				try
 				{
 
-					if( nodes.length > 0 )
+					XmlObjectTreeModel model = null;
+
+					if( testStep instanceof WsdlTestRequestStep )
+						model = new XmlObjectTreeModel( ( ( WsdlTestRequestStep )testStep ).getOperation().getInterface()
+								.getDefinitionContext().getSchemaTypeSystem(), XmlObject.Factory.parse( value ) );
+					if( testStep instanceof RestTestRequestStep || testStep instanceof HttpTestRequestStep )
+						model = new XmlObjectTreeModel( XmlObject.Factory.parse( value ) );
+
+					XmlTreeNode[] nodes = model.selectTreeNodes( parameter.getXPath() );
+
+					// for each invalid type set all nodes
+
+					for( String sqlInjectionString : sqlInjectionConfig.getSqlInjectionStringsList() )
 					{
-						if( !parameterMutations.containsKey( parameter ) )
-							parameterMutations.put( parameter, new ArrayList<String>() );
-						parameterMutations.get( parameter ).add( sqlInjectionString );
+
+						if( nodes.length > 0 )
+						{
+							if( !parameterMutations.containsKey( parameter ) )
+								parameterMutations.put( parameter, new ArrayList<String>() );
+							parameterMutations.get( parameter ).add( sqlInjectionString );
+						}
+
 					}
-
 				}
-			}
-			catch( Exception e1 )
-			{
-				SoapUI.logError( e1, "[SqlInjection]Failed to select XPath for source property value [" + value + "]" );
-			}
+				catch( Exception e1 )
+				{
+					SoapUI.logError( e1, "[SQLInjectionSecurityCheck]Failed to select XPath for source property value [" + value + "]" );
+				}
 
+			}
 		}
 
 	}

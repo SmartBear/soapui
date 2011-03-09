@@ -150,7 +150,7 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 		if( parameterMutations.size() == 0 )
 			try
 			{
-				mutateParameters();
+				mutateParameters( testStep );
 			}
 			catch( XmlException e1 )
 			{
@@ -264,9 +264,11 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 	/**
 	 * generate set of requests with all variations
 	 * 
+	 * @param testStep
+	 * 
 	 * @throws XmlException
 	 */
-	private void mutateParameters() throws XmlException
+	private void mutateParameters( TestStep testStep ) throws XmlException
 	{
 
 		// for each parameter
@@ -274,58 +276,61 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 		{
 
 			TestProperty property = getTestStep().getProperties().get( parameter.getName() );
-			// ignore if there is no value.
-			if( property.getValue() == null && property.getDefaultValue() == null )
-				continue;
-			// get value of that property
-			String value = property.getValue();
-			// no xpath, just put values in property than.
-			if( value == null )
+			// no xpath, just put invalid type value in parameter value
+			if( parameter.getXPath() == null || parameter.getXPath().trim().length() == 0 )
 			{
-				List<SchemaTypeForSecurityCheckConfig> invalidTypes = invalidTypeConfig.getTypesListList();
-
-				for( SchemaTypeForSecurityCheckConfig type : invalidTypes )
+				for( SchemaTypeForSecurityCheckConfig invalidType : invalidTypeConfig.getTypesListList() )
 				{
 
 					if( !parameterMutations.containsKey( parameter ) )
 						parameterMutations.put( parameter, new ArrayList<String>() );
-					parameterMutations.get( parameter ).add( type.getValue() );
+					parameterMutations.get( parameter ).add( invalidType.getValue() );
 
 				}
 			}
-
-			try
+			else
 			{
+			// we have xpath but do we have xml which need to mutate
+				// ignore if there is no value, since than we'll get exception
+				if( property.getValue() == null && property.getDefaultValue() == null )
+					continue;
+				// get value of that property
+				String value = property.getValue();
 
-				XmlObjectTreeModel model = new XmlObjectTreeModel( ( ( WsdlTestRequestStep )getTestStep() ).getOperation()
-						.getInterface().getDefinitionContext().getSchemaTypeSystem(), XmlObject.Factory.parse( value ) );
-
-				XmlTreeNode[] nodes = model.selectTreeNodes( parameter.getXPath() );
-
-				// for each invalid type set all nodes
-				List<SchemaTypeForSecurityCheckConfig> invalidTypes = invalidTypeConfig.getTypesListList();
-
-				for( SchemaTypeForSecurityCheckConfig type : invalidTypes )
+				try
 				{
 
-					if( nodes.length > 0 )
+					XmlObjectTreeModel model = new XmlObjectTreeModel( ( ( WsdlTestRequestStep )getTestStep() )
+							.getOperation().getInterface().getDefinitionContext().getSchemaTypeSystem(), XmlObject.Factory
+							.parse( value ) );
+
+					XmlTreeNode[] nodes = model.selectTreeNodes( parameter.getXPath() );
+
+					// for each invalid type set all nodes
+					List<SchemaTypeForSecurityCheckConfig> invalidTypes = invalidTypeConfig.getTypesListList();
+
+					for( SchemaTypeForSecurityCheckConfig type : invalidTypes )
 					{
-						if( nodes[0].getSchemaType().getBuiltinTypeCode() != type.getType() )
+
+						if( nodes.length > 0 )
 						{
-							if( !parameterMutations.containsKey( parameter ) )
-								parameterMutations.put( parameter, new ArrayList<String>() );
-							parameterMutations.get( parameter ).add( type.getValue() );
+							if( nodes[0].getSchemaType().getBuiltinTypeCode() != type.getType() )
+							{
+								if( !parameterMutations.containsKey( parameter ) )
+									parameterMutations.put( parameter, new ArrayList<String>() );
+								parameterMutations.get( parameter ).add( type.getValue() );
+							}
 						}
+
 					}
-
 				}
-			}
-			catch( Exception e1 )
-			{
-				SoapUI.logError( e1, "[InvalidtypeSecurotyCheck]Failed to select XPath for source property value [" + value
-						+ "]" );
-			}
+				catch( Exception e1 )
+				{
+					SoapUI.logError( e1, "[InvalidtypeSecurityCheck]Failed to select XPath for source property value ["
+							+ value + "]" );
+				}
 
+			}
 		}
 
 	}

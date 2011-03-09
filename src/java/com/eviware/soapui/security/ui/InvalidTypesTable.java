@@ -80,6 +80,9 @@ public class InvalidTypesTable extends JPanel
 			put( "TIME", SchemaType.BTC_TIME );
 			put( "G_YEAR", SchemaType.BTC_G_YEAR );
 			put( "G_YEAR_MONTH", SchemaType.BTC_G_YEAR_MONTH );
+			put( "G_MONTH", SchemaType.BTC_G_MONTH );
+			put( "G_MONTH_DAY", SchemaType.BTC_G_MONTH_DAY );
+			put( "G_DAY", SchemaType.BTC_G_DAY );
 
 		}
 	};
@@ -140,7 +143,7 @@ public class InvalidTypesTable extends JPanel
 			chooser.setOptions( typeMap.keySet().toArray( new String[0] ) );
 			if( dialog.show() )
 			{
-				model.addNewType(typeMap.get( chooser.getValue()), dialog.getValue( AddParameterActionDialog.VALUE ));
+				model.addNewType( typeMap.get( chooser.getValue() ), dialog.getValue( AddParameterActionDialog.VALUE ) );
 			}
 		}
 

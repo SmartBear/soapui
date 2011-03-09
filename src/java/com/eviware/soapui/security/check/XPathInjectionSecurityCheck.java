@@ -18,6 +18,9 @@ import com.eviware.soapui.config.SQLInjectionCheckConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.config.StrategyTypeConfig;
 import com.eviware.soapui.config.XPathInjectionConfig;
+import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.RestResponseMessageExchange;
+import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlResponseMessageExchange;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
@@ -46,11 +49,10 @@ public class XPathInjectionSecurityCheck extends AbstractSecurityCheckWithProper
 	private XPathInjectionConfig xpathList;
 
 	private Map<SecurityCheckedParameter, ArrayList<String>> parameterMutations = new HashMap<SecurityCheckedParameter, ArrayList<String>>();
-	
-	String[] defaultXPathInjectionStrings = { "' or '1'='1", "'--", "1'", "admin'--", "/*!10000%201/0%20*/",
-			"/*!10000 1/0 */", "1/0", "'%20o/**/r%201/0%20--", "' o/**/r 1/0 --", ";", "'%20and%201=2%20--",
-			"' and 1=2 --", "test�%20UNION%20select%201,%20@@version,%201,%201;�",
-			"test� UNION select 1, @@version, 1, 1;�" };
+
+	String[] defaultXPathInjectionStrings = { " or name(//users/LoginID[1]) = 'LoginID' or 'a'='b", "' or '1'='1",
+			"1/0", "'%20o/**/r%201/0%20--", "' o/**/r 1/0 --", ";", "'%20and%201=2%20--", "' and 1=2 --",
+			"test�%20UNION%20select%201,%20@@version,%201,%201;�", "test� UNION select 1, @@version, 1, 1;�" };
 
 	public XPathInjectionSecurityCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent, String icon )
 	{
@@ -90,18 +92,21 @@ public class XPathInjectionSecurityCheck extends AbstractSecurityCheckWithProper
 		testStep.run( ( TestCaseRunner )runner, context );
 		createMessageExchange( testStep );
 	}
-	
+
 	private void createMessageExchange( TestStep testStep )
 	{
-		MessageExchange messageExchange = new WsdlResponseMessageExchange( ( ( WsdlTestRequestStep )testStep )
-				.getTestRequest() );
+		MessageExchange messageExchange = null;
+		if( messageExchange instanceof WsdlTestRequestStep )
+			messageExchange = new WsdlResponseMessageExchange( ( ( WsdlTestRequestStep )testStep ).getTestRequest() );
+		else
+			messageExchange = new RestResponseMessageExchange( ( ( RestTestRequestStep )testStep ).getTestRequest() );
 		getSecurityCheckRequestResult().setMessageExchange( messageExchange );
 	}
-	
+
 	private void update( TestStep testStep )
 	{
 		if( parameterMutations.size() == 0 )
-			mutateParameters();
+			mutateParameters( testStep );
 
 		if( getExecutionStrategy().getStrategy() == StrategyTypeConfig.ONE_BY_ONE )
 		{
@@ -206,20 +211,16 @@ public class XPathInjectionSecurityCheck extends AbstractSecurityCheckWithProper
 		}
 	}
 
-	private void mutateParameters()
+	private void mutateParameters( TestStep testStep )
 	{
 		// for each parameter
 		for( SecurityCheckedParameter parameter : getParameterHolder().getParameterList() )
 		{
 
-			TestProperty property = getTestStep().getProperties().get( parameter.getName() );
-			// ignore if there is no value.
-			if( property.getValue() == null && property.getDefaultValue() == null )
-				continue;
-			// get value of that property
-			String value = property.getValue();
-			// no xpath, just put values in property than.
-			if( value == null )
+			TestProperty property = testStep.getProperties().get( parameter.getName() );
+			// check parameter does not have any xpath
+			// than mutate whole parameter
+			if( parameter.getXPath() == null || parameter.getXPath().trim().length() == 0 )
 			{
 				for( String xpathInjectionString : xpathList.getXpathListList() )
 				{
@@ -230,39 +231,53 @@ public class XPathInjectionSecurityCheck extends AbstractSecurityCheckWithProper
 
 				}
 			}
-
-			// we have something that looks like xpath
-			try
+			else
 			{
+				// we have xpath but do we have xml which need to mutate
+				// ignore if there is no value, since than we'll get exception
+				if( property.getValue() == null && property.getDefaultValue() == null )
+					continue;
+				// get value of that property
+				String value = property.getValue();
 
-				XmlObjectTreeModel model = new XmlObjectTreeModel( ( ( WsdlTestRequestStep )getTestStep() ).getOperation()
-						.getInterface().getDefinitionContext().getSchemaTypeSystem(), XmlObject.Factory.parse( value ) );
-
-				XmlTreeNode[] nodes = model.selectTreeNodes( parameter.getXPath() );
-
-				// for each invalid type set all nodes
-
-				for( String xpathInjectionString : xpathList.getXpathListList() )
+				// we have something that looks like xpath, or hope so.
+				try
 				{
 
-					if( nodes.length > 0 )
+					XmlObjectTreeModel model = null;
+
+					if( testStep instanceof WsdlTestRequestStep )
+						model = new XmlObjectTreeModel( ( ( WsdlTestRequestStep )testStep ).getOperation().getInterface()
+								.getDefinitionContext().getSchemaTypeSystem(), XmlObject.Factory.parse( value ) );
+					if( testStep instanceof RestTestRequestStep || testStep instanceof HttpTestRequestStep )
+						model = new XmlObjectTreeModel( XmlObject.Factory.parse( value ) );
+
+					XmlTreeNode[] nodes = model.selectTreeNodes( parameter.getXPath() );
+
+					// for each invalid type set all nodes
+
+					for( String xpathInjectionString : xpathList.getXpathListList() )
 					{
-						if( !parameterMutations.containsKey( parameter ) )
-							parameterMutations.put( parameter, new ArrayList<String>() );
-						parameterMutations.get( parameter ).add( xpathInjectionString );
+
+						if( nodes.length > 0 )
+						{
+							if( !parameterMutations.containsKey( parameter ) )
+								parameterMutations.put( parameter, new ArrayList<String>() );
+							parameterMutations.get( parameter ).add( xpathInjectionString );
+						}
+
 					}
-
 				}
-			}
-			catch( Exception e1 )
-			{
-				SoapUI.logError( e1, "[XPathInjection]Failed to select XPath for source property value [" + value + "]" );
-			}
+				catch( Exception e1 )
+				{
+					SoapUI.logError( e1, "[XPathInjection]Failed to select XPath for source property value [" + value + "]" );
+				}
 
+			}
 		}
 
 	}
-	
+
 	@Override
 	public String getConfigDescription()
 	{
@@ -355,7 +370,7 @@ public class XPathInjectionSecurityCheck extends AbstractSecurityCheckWithProper
 						else
 						{
 							// this is border case, last lement in array is removed.
-							xpathList.removeXpathList( oldOptions.length -1 );
+							xpathList.removeXpathList( oldOptions.length - 1 );
 						}
 					}
 				}
