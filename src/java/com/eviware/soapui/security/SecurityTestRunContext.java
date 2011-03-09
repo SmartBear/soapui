@@ -14,6 +14,7 @@ package com.eviware.soapui.security;
 
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
+import com.eviware.soapui.security.result.SecurityTestStepResult;
 import com.eviware.soapui.support.types.StringToObjectMap;
 
 /**
@@ -25,10 +26,11 @@ import com.eviware.soapui.support.types.StringToObjectMap;
 public class SecurityTestRunContext extends WsdlTestRunContext
 {
 
-	//holds currentCheck index on TestStep level
+	// holds currentCheck index on TestStep level
 	private int currentCheckIndex;
-	
-	//holds currentCheck index out of summary number of checks on a SecurityTest level
+
+	// holds currentCheck index out of summary number of checks on a SecurityTest
+	// level
 	private int currentCheckOnSecurityTestIndex;
 
 	public int getCurrentCheckOnSecurityTestIndex()

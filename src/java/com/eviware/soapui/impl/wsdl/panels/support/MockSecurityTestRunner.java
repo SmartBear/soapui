@@ -9,11 +9,11 @@ import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestStepRegistry;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.TestAssertion;
 import com.eviware.soapui.model.testsuite.TestStep;
-import com.eviware.soapui.security.SecurityCheckResult;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.security.check.AbstractSecurityCheck;
+import com.eviware.soapui.security.result.SecurityCheckResult;
 
 public class MockSecurityTestRunner extends AbstractMockTestRunner<SecurityTest> implements SecurityTestRunner
 {
@@ -43,7 +43,7 @@ public class MockSecurityTestRunner extends AbstractMockTestRunner<SecurityTest>
 	{
 		return securityCheck.run( cloneForSecurityCheck( ( WsdlTestStep )testStep ), runContext, null );
 	}
-	
+
 	private TestStep cloneForSecurityCheck( WsdlTestStep sourceTestStep )
 	{
 		WsdlTestStep clonedTestStep = null;

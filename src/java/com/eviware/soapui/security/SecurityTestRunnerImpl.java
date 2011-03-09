@@ -26,9 +26,10 @@ import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.TestAssertion;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
-import com.eviware.soapui.security.SecurityCheckRequestResult.SecurityStatus;
 import com.eviware.soapui.security.check.AbstractSecurityCheck;
-import com.eviware.soapui.security.support.SecurityCheckRunListener;
+import com.eviware.soapui.security.result.SecurityCheckResult;
+import com.eviware.soapui.security.result.SecurityTestStepResult;
+import com.eviware.soapui.security.result.SecurityCheckRequestResult.SecurityStatus;
 import com.eviware.soapui.security.support.SecurityTestRunListener;
 import com.eviware.soapui.support.types.StringToObjectMap;
 
@@ -40,7 +41,6 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 	// private boolean stopped;
 	private SecurityTestRunListener[] securityTestListeners = new SecurityTestRunListener[0];
 	private SecurityTestRunListener[] securityTestStepListeners = new SecurityTestRunListener[0];
-	private SecurityCheckRunListener[] securityCheckListeners = new SecurityCheckRunListener[0];
 	/**
 	 * holds index of current securityCheck out of summary number of checks on
 	 * SecxurityTest level used in main progress bar on SecurityTest
@@ -91,7 +91,7 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 	 * @param sourceTestStep
 	 * @return TestStep
 	 */
-	private TestStep cloneForSecurityCheck( WsdlTestStep sourceTestStep )
+	public TestStep cloneForSecurityCheck( WsdlTestStep sourceTestStep )
 	{
 		WsdlTestStep clonedTestStep = null;
 		TestStepConfig testStepConfig = ( TestStepConfig )sourceTestStep.getConfig().copy();
@@ -186,7 +186,6 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 		SecurityCheckResult result = new SecurityCheckResult( securityCheck );
 		if( securityCheck.acceptsTestStep( currentStep ) )
 		{
-			securityCheckListeners = securityTest.getSecurityCheckRunListeners();
 			for( int j = 0; j < securityTestStepListeners.length; j++ )
 			{
 				securityTestStepListeners[j].beforeSecurityCheck( this, runContext, securityCheck );
@@ -199,10 +198,6 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 			if( securityTest.getFailOnError() && result.getStatus() == SecurityStatus.FAILED )
 			{
 				fail( "Cancelling due to failed security check" );
-			}
-			for( int j = 0; j < securityCheckListeners.length; j++ )
-			{
-				securityCheckListeners[j].afterSecurityCheck( this, runContext, result );
 			}
 			for( int j = 0; j < securityTestStepListeners.length; j++ )
 			{

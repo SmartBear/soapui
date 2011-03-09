@@ -43,11 +43,11 @@ import com.eviware.soapui.impl.wsdl.testcase.TestCaseLogItem;
 import com.eviware.soapui.impl.wsdl.teststeps.actions.ShowMessageExchangeAction;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
-import com.eviware.soapui.security.SecurityCheckRequestResult;
-import com.eviware.soapui.security.SecurityCheckResult;
 import com.eviware.soapui.security.SecurityTest;
-import com.eviware.soapui.security.SecurityTestStepResult;
-import com.eviware.soapui.security.SecurityCheckRequestResult.SecurityStatus;
+import com.eviware.soapui.security.result.SecurityCheckRequestResult;
+import com.eviware.soapui.security.result.SecurityCheckResult;
+import com.eviware.soapui.security.result.SecurityTestStepResult;
+import com.eviware.soapui.security.result.SecurityCheckRequestResult.SecurityStatus;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.ActionSupport;
@@ -330,8 +330,19 @@ public class JSecurityTestRunLog extends JPanel
 				SecurityCheckResult checkResult = logListModel.getCheckResultAt( index );
 				if( checkResult != null )
 				{
-					if( checkResult != null && checkResult.getActions() != null )
-						checkResult.getActions().performDefaultAction( new ActionEvent( this, 0, null ) );
+					// if( checkResult != null && checkResult.getActions() != null )
+					// checkResult.getActions().performDefaultAction( new
+					// ActionEvent( this, 0, null ) );
+					if( checkResult != null && !checkResult.getSecurityRequestResultList().isEmpty() )
+					{
+
+						for( SecurityCheckRequestResult reqResult : checkResult.getSecurityRequestResultList() )
+						{
+							ShowMessageExchangeAction showMessageExchangeAction = new ShowMessageExchangeAction( reqResult
+									.getMessageExchange(), "SecurityCheck" );
+							showMessageExchangeAction.actionPerformed( new ActionEvent( this, 0, null ) );
+						}
+					}
 				}
 
 				else

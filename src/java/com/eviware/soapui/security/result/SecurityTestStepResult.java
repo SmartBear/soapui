@@ -10,7 +10,7 @@
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
 
-package com.eviware.soapui.security;
+package com.eviware.soapui.security.result;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ import java.util.List;
 
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
-import com.eviware.soapui.security.SecurityCheckRequestResult.SecurityStatus;
+import com.eviware.soapui.security.result.SecurityCheckRequestResult.SecurityStatus;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.DefaultActionList;
 
@@ -72,14 +72,15 @@ public class SecurityTestStepResult
 		}
 		actionList.addActions( getOriginalTestStepResult().getActions() );
 		actionList.setDefaultAction( getOriginalTestStepResult().getActions().getDefaultAction() );
-//		if( !getSecurityCheckResultList().isEmpty() )
-//		{
-//			for( SecurityCheckResult checkResult : getSecurityCheckResultList() )
-//			{
-//				actionList.addActions( checkResult.getActions() );
-//				actionList.setDefaultAction( checkResult.getActions().getDefaultAction() );
-//			}
-//		}
+		// if( !getSecurityCheckResultList().isEmpty() )
+		// {
+		// for( SecurityCheckResult checkResult : getSecurityCheckResultList() )
+		// {
+		// actionList.addActions( checkResult.getActions() );
+		// actionList.setDefaultAction(
+		// checkResult.getActions().getDefaultAction() );
+		// }
+		// }
 		return actionList;
 	}
 

@@ -15,6 +15,7 @@ package com.eviware.soapui.security;
 import com.eviware.soapui.model.testsuite.TestRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.check.AbstractSecurityCheck;
+import com.eviware.soapui.security.result.SecurityCheckResult;
 
 /**
  * SecurityTestRunner

@@ -29,6 +29,7 @@ import com.eviware.soapui.impl.wsdl.support.assertions.AssertionsSupport;
 import com.eviware.soapui.impl.wsdl.teststeps.TestRequest;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequest;
+import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry.AssertableType;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Interface;
@@ -45,12 +46,12 @@ import com.eviware.soapui.model.testsuite.TestAssertion;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.ExecutionStrategyHolder;
 import com.eviware.soapui.security.Securable;
-import com.eviware.soapui.security.SecurityCheckRequestResult;
-import com.eviware.soapui.security.SecurityCheckRequestResult.SecurityStatus;
-import com.eviware.soapui.security.SecurityCheckResult;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.security.SecurityTestRunnerImpl;
+import com.eviware.soapui.security.result.SecurityCheckRequestResult;
+import com.eviware.soapui.security.result.SecurityCheckResult;
+import com.eviware.soapui.security.result.SecurityCheckRequestResult.SecurityStatus;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
@@ -184,7 +185,8 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		{
 
 			setSecurityCheckRequestResult( new SecurityCheckRequestResult( this ) );
-			execute( securityTestRunner, testStep, context );
+			execute( securityTestRunner, ( ( SecurityTestRunnerImpl )securityTestRunner )
+					.cloneForSecurityCheck( ( WsdlTestStep )this.testStep ), context );
 			assertRequest( getSecurityCheckRequestResult().getMessageExchange(), context );
 			assertResponse( getSecurityCheckRequestResult().getMessageExchange(), context );
 			// add to summary result
@@ -793,7 +795,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	 */
 	public abstract String getHelpURL();
 
-	protected void setSecurityCheckRequestResult( SecurityCheckRequestResult securityCheckRequestResult )
+	private void setSecurityCheckRequestResult( SecurityCheckRequestResult securityCheckRequestResult )
 	{
 		this.securityCheckRequestResult = securityCheckRequestResult;
 	}

@@ -10,15 +10,18 @@
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
 
-package com.eviware.soapui.security;
+package com.eviware.soapui.security.result;
 
+import java.awt.event.ActionEvent;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.Action;
+
 import com.eviware.soapui.impl.wsdl.teststeps.actions.ShowMessageExchangeAction;
+import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.security.SecurityCheck;
-import com.eviware.soapui.security.SecurityCheckRequestResult.SecurityStatus;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.DefaultActionList;
 
@@ -29,28 +32,32 @@ import com.eviware.soapui.support.action.swing.DefaultActionList;
  * @author dragica.soldo
  */
 
-public class SecurityCheckResult
+public class SecurityCheckRequestResult
 {
-	private SecurityStatus status = SecurityStatus.OK;
-	public SecurityCheck securityCheck;
-	private long size;
-	private boolean discarded;
-	private List<SecurityCheckRequestResult> securityRequestResultList;
-	private long timeTaken = 0;
-	private long timeStamp;
-	public StringBuffer testLog = new StringBuffer();
-	private DefaultActionList actionList;
-
-	public SecurityCheckResult( SecurityCheck securityCheck )
+	public enum SecurityStatus
 	{
-		this.securityCheck = securityCheck;
-		securityRequestResultList = new ArrayList<SecurityCheckRequestResult>();
-		timeStamp = System.currentTimeMillis();
+		INITIALIZED, OK, FAILED
 	}
 
-	public List<SecurityCheckRequestResult> getSecurityRequestResultList()
+	private static final String[] EMPTY_MESSAGES = new String[0];
+	public SecurityStatus status;
+	public SecurityCheck securityCheck;
+	private List<String> messages = new ArrayList<String>();
+	private long timeTaken;
+	// starting time
+	private long timeStamp;
+	private long size;
+	private boolean discarded;
+	private MessageExchange messageExchange;
+	public StringBuffer testLog = new StringBuffer();
+	private DefaultActionList actionList;
+	private Action action;
+
+	public SecurityCheckRequestResult( SecurityCheck securityCheck )
 	{
-		return securityRequestResultList;
+		status = SecurityStatus.INITIALIZED;
+		this.securityCheck = securityCheck;
+		timeStamp = System.currentTimeMillis();
 	}
 
 	public SecurityStatus getStatus()
@@ -78,40 +85,40 @@ public class SecurityCheckResult
 		{
 			actionList = new DefaultActionList( getSecurityCheck().getName() );
 		}
-		if( !getSecurityRequestResultList().isEmpty() )
-		{
-			for( SecurityCheckRequestResult reqResult : getSecurityRequestResultList() )
-			{
-				actionList.addActions( reqResult.getActions() );
-				actionList.setDefaultAction( reqResult.getActions().getDefaultAction() );
-			}
-		}
+		actionList.addAction( new ShowMessageExchangeAction( this.getMessageExchange(), "SecurityCheckRequest" ), true );
 		return actionList;
-
 	}
 
-	public void addSecurityRequestResult( SecurityCheckRequestResult secReqResult )
+	public Action getAction()
 	{
-		if( securityRequestResultList != null )
-			securityRequestResultList.add( secReqResult );
-
-		// calulate time taken
-		timeTaken += secReqResult.getTimeTaken();
-
-		// calculate status ( one failed fails whole test )
-		if( status == SecurityStatus.OK )
-			status = secReqResult.getStatus();
-
-		this.testLog.append( "\nSecurityRequest " ).append( securityRequestResultList.indexOf( secReqResult ) ).append(
-				secReqResult.getStatus().toString() ).append( ": took " ).append( secReqResult.getTimeTaken() ).append(
-				" ms" );
-		for( String s : secReqResult.getMessages() )
-			testLog.append( "\n -> " ).append( s );
+		if( action == null )
+		{
+			action = new ShowMessageExchangeAction( this.getMessageExchange(), "SecurityCheckRequest" );
+		}
+		return action;
 	}
+
+	public String[] getMessages()
+	{
+		return messages == null ? EMPTY_MESSAGES : messages.toArray( new String[messages.size()] );
+	}
+
+	public void addMessage( String message )
+	{
+		if( messages != null )
+			messages.add( message );
+	}
+
+	// public Throwable getError();
 
 	public long getTimeTaken()
 	{
 		return timeTaken;
+	}
+
+	public long getTimeStamp()
+	{
+		return timeStamp;
 	}
 
 	/**
@@ -141,6 +148,7 @@ public class SecurityCheckResult
 
 	public void discard()
 	{
+
 	}
 
 	public boolean isDiscarded()
@@ -148,26 +156,22 @@ public class SecurityCheckResult
 		return discarded;
 	}
 
-	/**
-	 * Returns time stamp when test is started.
-	 * 
-	 * @return
-	 */
-	public long getTimeStamp()
+	public MessageExchange getMessageExchange()
 	{
-		return timeStamp;
+		return messageExchange;
 	}
 
-	/**
-	 * Raturns Security Test Log
-	 */
-	public String getSecurityTestLog()
+	// TODO not sure if this should exist, it should be set when result is
+	// created
+	// but for now for first step refactoring it's added this way
+	public void setMessageExchange( MessageExchange messageExchange )
 	{
-		StringBuffer tl = new StringBuffer().append( "\nSecurityCheck " ).append( " [" ).append(
-				securityCheck.getTestStep().getName() ).append( "] " ).append( status.toString() ).append( ": took " )
-				.append( timeTaken ).append( " ms" );
-		tl.append( testLog );
-		return tl.toString();
+		this.messageExchange = messageExchange;
+	}
+
+	public void setTimeTaken( long timeTaken )
+	{
+		this.timeTaken = timeTaken;
 	}
 
 }
