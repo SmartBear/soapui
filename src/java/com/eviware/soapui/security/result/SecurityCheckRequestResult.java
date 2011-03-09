@@ -46,7 +46,7 @@ public class SecurityCheckRequestResult implements SecurityResult
 	private MessageExchange messageExchange;
 	public StringBuffer testLog = new StringBuffer();
 	private DefaultActionList actionList;
-	private Action action;
+	private boolean addedAction;
 
 	public SecurityCheckRequestResult( SecurityCheck securityCheck )
 	{
@@ -80,17 +80,13 @@ public class SecurityCheckRequestResult implements SecurityResult
 		{
 			actionList = new DefaultActionList( getSecurityCheck().getName() );
 		}
-		actionList.addAction( new ShowMessageExchangeAction( this.getMessageExchange(), "SecurityCheckRequest" ), true );
-		return actionList;
-	}
-
-	public Action getAction()
-	{
-		if( action == null )
+		if( !addedAction )
 		{
-			action = new ShowMessageExchangeAction( this.getMessageExchange(), "SecurityCheckRequest" );
+			actionList
+					.addAction( new ShowMessageExchangeAction( this.getMessageExchange(), "SecurityCheckRequest" ), true );
+			addedAction = true;
 		}
-		return action;
+		return actionList;
 	}
 
 	public String[] getMessages()
