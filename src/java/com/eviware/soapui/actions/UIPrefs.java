@@ -43,7 +43,7 @@ public class UIPrefs implements Prefs
 	public static final String BACKUP_FOLDER = "Backup Folder";
 	public static final String DESKTOP_TYPE = "Desktop Type";
 	public static final String NATIVE_LAF = "Native LF";
-	public static final String ENABLE_GROOVY_LOG_DURING_LOADTEST = "Do not disable Groovy Log";
+	public static final String ENABLE_GROOVY_LOG = "Do not disable Groovy Log";
 	public static final String SHOW_LOGS_AT_STARTUP = "Show Log Tabs";
 	public static final String AUTOSAVE_INTERVAL = "AutoSave Interval";
 	public static final String AUTOSAVE_ONEXIT = "Save projects on exit";
@@ -108,8 +108,8 @@ public class UIPrefs implements Prefs
 			}
 
 			editorForm.appendSeparator();
-			editorForm.appendCheckBox( ENABLE_GROOVY_LOG_DURING_LOADTEST,
-					"Do not disable the groovy log when running LoadTests", true );
+			editorForm.appendCheckBox( ENABLE_GROOVY_LOG,
+					"Do not disable the groovy log when running load and security tests", true );
 
 			if( SoapUI.isStandalone() )
 			{
@@ -158,7 +158,7 @@ public class UIPrefs implements Prefs
 			settings.setBoolean( UISettings.NATIVE_LAF, values.getBoolean( NATIVE_LAF ) );
 		}
 
-		settings.setBoolean( UISettings.DONT_DISABLE_GROOVY_LOG, values.getBoolean( ENABLE_GROOVY_LOG_DURING_LOADTEST ) );
+		settings.setBoolean( UISettings.DONT_DISABLE_GROOVY_LOG, values.getBoolean( ENABLE_GROOVY_LOG ) );
 		if( SoapUI.isStandalone() )
 		{
 			settings.setBoolean( UISettings.SHOW_LOGS_AT_STARTUP, values.getBoolean( SHOW_LOGS_AT_STARTUP ) );
@@ -204,7 +204,7 @@ public class UIPrefs implements Prefs
 			values.put( NATIVE_LAF, settings.getBoolean( UISettings.NATIVE_LAF ) );
 		}
 
-		values.put( ENABLE_GROOVY_LOG_DURING_LOADTEST, settings.getBoolean( UISettings.DONT_DISABLE_GROOVY_LOG ) );
+		values.put( ENABLE_GROOVY_LOG, settings.getBoolean( UISettings.DONT_DISABLE_GROOVY_LOG ) );
 		if( SoapUI.isStandalone() )
 		{
 			values.put( SHOW_LOGS_AT_STARTUP, settings.getBoolean( UISettings.SHOW_LOGS_AT_STARTUP ) );

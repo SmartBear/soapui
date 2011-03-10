@@ -812,6 +812,9 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 
 		for( WsdlLoadTest loadTest : loadTests )
 			loadTest.release();
+		
+		for( SecurityTest securityTest : securityTests )
+			securityTest.release();
 
 		testRunListeners.clear();
 
