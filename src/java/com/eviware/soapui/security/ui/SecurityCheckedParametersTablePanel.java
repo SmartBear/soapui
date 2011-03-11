@@ -134,7 +134,6 @@ public class SecurityCheckedParametersTablePanel extends JPanel
 		options.set( 0, CHOOSE_TEST_PROPERTY );
 		nameField.setOptions( options.toArray( new String[0] ) );
 		
-//		dialog.setWidth( 450 );
 		((JFormDialog)dialog).getDialog().setResizable(false );
 		
 		return dialog;
