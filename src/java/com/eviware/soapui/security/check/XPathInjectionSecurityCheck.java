@@ -216,63 +216,66 @@ public class XPathInjectionSecurityCheck extends AbstractSecurityCheckWithProper
 		// for each parameter
 		for( SecurityCheckedParameter parameter : getParameterHolder().getParameterList() )
 		{
-
-			TestProperty property = testStep.getProperties().get( parameter.getName() );
-			// check parameter does not have any xpath
-			// than mutate whole parameter
-			if( parameter.getXPath() == null || parameter.getXPath().trim().length() == 0 )
+			if( parameter.isChecked() )
 			{
-				for( String xpathInjectionString : xpathList.getXpathListList() )
+				TestProperty property = testStep.getProperties().get( parameter.getName() );
+				// check parameter does not have any xpath
+				// than mutate whole parameter
+				if( parameter.getXPath() == null || parameter.getXPath().trim().length() == 0 )
 				{
-
-					if( !parameterMutations.containsKey( parameter ) )
-						parameterMutations.put( parameter, new ArrayList<String>() );
-					parameterMutations.get( parameter ).add( xpathInjectionString );
-
-				}
-			}
-			else
-			{
-				// we have xpath but do we have xml which need to mutate
-				// ignore if there is no value, since than we'll get exception
-				if( property.getValue() == null && property.getDefaultValue() == null )
-					continue;
-				// get value of that property
-				String value = property.getValue();
-
-				// we have something that looks like xpath, or hope so.
-				try
-				{
-
-					XmlObjectTreeModel model = null;
-
-					if( testStep instanceof WsdlTestRequestStep )
-						model = new XmlObjectTreeModel( ( ( WsdlTestRequestStep )testStep ).getOperation().getInterface()
-								.getDefinitionContext().getSchemaTypeSystem(), XmlObject.Factory.parse( value ) );
-					if( testStep instanceof RestTestRequestStep || testStep instanceof HttpTestRequestStep )
-						model = new XmlObjectTreeModel( XmlObject.Factory.parse( value ) );
-
-					XmlTreeNode[] nodes = model.selectTreeNodes( parameter.getXPath() );
-
-					// for each invalid type set all nodes
-
 					for( String xpathInjectionString : xpathList.getXpathListList() )
 					{
 
-						if( nodes.length > 0 )
-						{
-							if( !parameterMutations.containsKey( parameter ) )
-								parameterMutations.put( parameter, new ArrayList<String>() );
-							parameterMutations.get( parameter ).add( xpathInjectionString );
-						}
+						if( !parameterMutations.containsKey( parameter ) )
+							parameterMutations.put( parameter, new ArrayList<String>() );
+						parameterMutations.get( parameter ).add( xpathInjectionString );
 
 					}
 				}
-				catch( Exception e1 )
+				else
 				{
-					SoapUI.logError( e1, "[XPathInjection]Failed to select XPath for source property value [" + value + "]" );
-				}
+					// we have xpath but do we have xml which need to mutate
+					// ignore if there is no value, since than we'll get exception
+					if( property.getValue() == null && property.getDefaultValue() == null )
+						continue;
+					// get value of that property
+					String value = property.getValue();
 
+					// we have something that looks like xpath, or hope so.
+					try
+					{
+
+						XmlObjectTreeModel model = null;
+
+						if( testStep instanceof WsdlTestRequestStep )
+							model = new XmlObjectTreeModel( ( ( WsdlTestRequestStep )testStep ).getOperation().getInterface()
+									.getDefinitionContext().getSchemaTypeSystem(), XmlObject.Factory.parse( value ) );
+						if( testStep instanceof RestTestRequestStep || testStep instanceof HttpTestRequestStep )
+							model = new XmlObjectTreeModel( XmlObject.Factory.parse( value ) );
+
+						XmlTreeNode[] nodes = model.selectTreeNodes( parameter.getXPath() );
+
+						// for each invalid type set all nodes
+
+						for( String xpathInjectionString : xpathList.getXpathListList() )
+						{
+
+							if( nodes.length > 0 )
+							{
+								if( !parameterMutations.containsKey( parameter ) )
+									parameterMutations.put( parameter, new ArrayList<String>() );
+								parameterMutations.get( parameter ).add( xpathInjectionString );
+							}
+
+						}
+					}
+					catch( Exception e1 )
+					{
+						SoapUI.logError( e1, "[XPathInjection]Failed to select XPath for source property value [" + value
+								+ "]" );
+					}
+
+				}
 			}
 		}
 

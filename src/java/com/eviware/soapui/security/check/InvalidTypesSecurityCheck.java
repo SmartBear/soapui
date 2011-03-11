@@ -275,64 +275,66 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 		for( SecurityCheckedParameter parameter : getParameterHolder().getParameterList() )
 		{
 
-			TestProperty property = getTestStep().getProperties().get( parameter.getName() );
-			// no xpath, just put invalid type value in parameter value
-			if( parameter.getXPath() == null || parameter.getXPath().trim().length() == 0 )
+			if( parameter.isChecked() )
 			{
-				for( SchemaTypeForSecurityCheckConfig invalidType : invalidTypeConfig.getTypesListList() )
+				TestProperty property = getTestStep().getProperties().get( parameter.getName() );
+				// no xpath, just put invalid type value in parameter value
+				if( parameter.getXPath() == null || parameter.getXPath().trim().length() == 0 )
 				{
-
-					if( !parameterMutations.containsKey( parameter ) )
-						parameterMutations.put( parameter, new ArrayList<String>() );
-					parameterMutations.get( parameter ).add( invalidType.getValue() );
-
-				}
-			}
-			else
-			{
-			// we have xpath but do we have xml which need to mutate
-				// ignore if there is no value, since than we'll get exception
-				if( property.getValue() == null && property.getDefaultValue() == null )
-					continue;
-				// get value of that property
-				String value = property.getValue();
-
-				try
-				{
-
-					XmlObjectTreeModel model = new XmlObjectTreeModel( ( ( WsdlTestRequestStep )getTestStep() )
-							.getOperation().getInterface().getDefinitionContext().getSchemaTypeSystem(), XmlObject.Factory
-							.parse( value ) );
-
-					XmlTreeNode[] nodes = model.selectTreeNodes( parameter.getXPath() );
-
-					// for each invalid type set all nodes
-					List<SchemaTypeForSecurityCheckConfig> invalidTypes = invalidTypeConfig.getTypesListList();
-
-					for( SchemaTypeForSecurityCheckConfig type : invalidTypes )
+					for( SchemaTypeForSecurityCheckConfig invalidType : invalidTypeConfig.getTypesListList() )
 					{
 
-						if( nodes.length > 0 )
-						{
-							if( nodes[0].getSchemaType().getBuiltinTypeCode() != type.getType() )
-							{
-								if( !parameterMutations.containsKey( parameter ) )
-									parameterMutations.put( parameter, new ArrayList<String>() );
-								parameterMutations.get( parameter ).add( type.getValue() );
-							}
-						}
+						if( !parameterMutations.containsKey( parameter ) )
+							parameterMutations.put( parameter, new ArrayList<String>() );
+						parameterMutations.get( parameter ).add( invalidType.getValue() );
 
 					}
 				}
-				catch( Exception e1 )
+				else
 				{
-					SoapUI.logError( e1, "[InvalidtypeSecurityCheck]Failed to select XPath for source property value ["
-							+ value + "]" );
-				}
+					// we have xpath but do we have xml which need to mutate
+					// ignore if there is no value, since than we'll get exception
+					if( property.getValue() == null && property.getDefaultValue() == null )
+						continue;
+					// get value of that property
+					String value = property.getValue();
 
+					try
+					{
+
+						XmlObjectTreeModel model = new XmlObjectTreeModel( ( ( WsdlTestRequestStep )getTestStep() )
+								.getOperation().getInterface().getDefinitionContext().getSchemaTypeSystem(), XmlObject.Factory
+								.parse( value ) );
+
+						XmlTreeNode[] nodes = model.selectTreeNodes( parameter.getXPath() );
+
+						// for each invalid type set all nodes
+						List<SchemaTypeForSecurityCheckConfig> invalidTypes = invalidTypeConfig.getTypesListList();
+
+						for( SchemaTypeForSecurityCheckConfig type : invalidTypes )
+						{
+
+							if( nodes.length > 0 )
+							{
+								if( nodes[0].getSchemaType().getBuiltinTypeCode() != type.getType() )
+								{
+									if( !parameterMutations.containsKey( parameter ) )
+										parameterMutations.put( parameter, new ArrayList<String>() );
+									parameterMutations.get( parameter ).add( type.getValue() );
+								}
+							}
+
+						}
+					}
+					catch( Exception e1 )
+					{
+						SoapUI.logError( e1, "[InvalidtypeSecurityCheck]Failed to select XPath for source property value ["
+								+ value + "]" );
+					}
+
+				}
 			}
 		}
-
 	}
 
 	@Override
