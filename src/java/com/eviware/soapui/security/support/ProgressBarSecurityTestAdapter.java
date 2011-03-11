@@ -111,8 +111,8 @@ public class ProgressBarSecurityTestAdapter
 			if( progressBar.isIndeterminate() )
 				return;
 
-			if( testRunner.getStatus() == TestCaseRunner.Status.FINISHED )
-				progressBar.setValue( ( ( SecurityTestRunnerImpl )testRunner ).getSecurityTest().getSecurityCheckCount() );
+			// if( testRunner.getStatus() == TestCaseRunner.Status.FINISHED )
+			// progressBar.setValue( ( ( SecurityTestRunnerImpl )testRunner ).getSecurityTest().getSecurityCheckCount() );
 
 			progressBar.setString( testRunner.getStatus().toString() );
 		}

@@ -163,7 +163,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 	{
 		// progressBar = new JProgressBar( 0, getModelItem().getTestStepCount()
 		// );
-		progressBar = new JProgressBar( 0, getModelItem().getTestCase().getTestStepCount() );
+		progressBar = new JProgressBar( 0, getModelItem().getSecurityCheckCount() );
 		return UISupport.createProgressBarPanel( progressBar, 10, false );
 	}
 

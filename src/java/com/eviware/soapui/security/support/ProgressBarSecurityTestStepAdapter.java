@@ -18,6 +18,7 @@ import javax.swing.JProgressBar;
 
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
+import com.eviware.soapui.model.testsuite.TestRunner.Status;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunnerImpl;
@@ -109,7 +110,7 @@ public class ProgressBarSecurityTestStepAdapter
 			{
 				progressBar.setForeground( Color.RED );
 			}
-			else if( !securityTest.getTestCase().getFailTestCaseOnErrors() )
+			else if( testRunner.getStatus() == Status.FINISHED )
 			{
 				progressBar.setForeground( Color.GREEN.darker() );
 			}

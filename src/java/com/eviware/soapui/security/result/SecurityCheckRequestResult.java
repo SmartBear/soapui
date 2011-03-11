@@ -16,8 +16,6 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.Action;
-
 import com.eviware.soapui.impl.wsdl.teststeps.actions.ShowMessageExchangeAction;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.security.SecurityCheck;
@@ -35,7 +33,7 @@ public class SecurityCheckRequestResult implements SecurityResult
 {
 	private static final String[] EMPTY_MESSAGES = new String[0];
 	public final static String TYPE = "SecurityCheckRequestResult";
-	public SecurityStatus status;
+	public SecurityStatus status = SecurityStatus.UNKNOWN;
 	public SecurityCheck securityCheck;
 	private List<String> messages = new ArrayList<String>();
 	private long timeTaken;
@@ -50,7 +48,6 @@ public class SecurityCheckRequestResult implements SecurityResult
 
 	public SecurityCheckRequestResult( SecurityCheck securityCheck )
 	{
-		status = SecurityStatus.INITIALIZED;
 		this.securityCheck = securityCheck;
 		timeStamp = System.currentTimeMillis();
 	}

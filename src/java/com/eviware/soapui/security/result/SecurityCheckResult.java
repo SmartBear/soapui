@@ -34,7 +34,7 @@ import com.eviware.soapui.support.action.swing.DefaultActionList;
 public class SecurityCheckResult implements SecurityResult
 {
 	public final static String TYPE = "SecurityCheckResult";
-	private SecurityStatus status = SecurityStatus.OK;
+	private SecurityStatus status = SecurityStatus.UNKNOWN;
 	public SecurityCheck securityCheck;
 	private long size;
 	private boolean discarded;
@@ -43,6 +43,7 @@ public class SecurityCheckResult implements SecurityResult
 	private long timeStamp;
 	public StringBuffer testLog = new StringBuffer();
 	private DefaultActionList actionList;
+	private boolean hasAddedRequests;
 
 	public SecurityCheckResult( SecurityCheck securityCheck )
 	{
@@ -77,60 +78,68 @@ public class SecurityCheckResult implements SecurityResult
 
 	public ActionList getActions()
 	{
-			if( actionList == null )
+		if( actionList == null )
+		{
+			actionList = new DefaultActionList( getSecurityCheck().getName() );
+			actionList.setDefaultAction( new AbstractAction()
 			{
-				actionList = new DefaultActionList( getSecurityCheck().getName() );
-				actionList.setDefaultAction( new AbstractAction()
+
+				public void actionPerformed( ActionEvent e )
 				{
-
-					public void actionPerformed( ActionEvent e )
-					{
-//						if( getMessages().length > 0 )
-//						{
-//							StringBuffer buf = new StringBuffer( "<html><body>");
-//							if( getError() != null )
-//								buf.append( getError().toString() ).append( "<br/>" );
-//
-//							for( String s : getMessages() )
-//								buf.append( s ).append( "<br/>" );
-//
-//							UISupport.showExtendedInfo( "TestStep Result", "Step [" + testStepName + "] ran with status ["
-//									+ getStatus() + "]", buf.toString(), null );
-//						}
-//						else if( getError() != null )
-//						{
-//							UISupport.showExtendedInfo( "TestStep Result", "Step [" + testStepName + "] ran with status ["
-//									+ getStatus() + "]", getError().toString(), null );
-//						}
-//						else
-//						{
-							UISupport.showInfoMessage( "Check [" + getSecurityCheck().getName() + "] ran with status [" + getStatus() + "]",
-									"SecurityCheck Result" );
-//						}
-					}
-				} );
-			}
-
-			return actionList;
+					// if( getMessages().length > 0 )
+					// {
+					// StringBuffer buf = new StringBuffer( "<html><body>");
+					// if( getError() != null )
+					// buf.append( getError().toString() ).append( "<br/>" );
+					//
+					// for( String s : getMessages() )
+					// buf.append( s ).append( "<br/>" );
+					//
+					// UISupport.showExtendedInfo( "TestStep Result", "Step [" +
+					// testStepName + "] ran with status ["
+					// + getStatus() + "]", buf.toString(), null );
+					// }
+					// else if( getError() != null )
+					// {
+					// UISupport.showExtendedInfo( "TestStep Result", "Step [" +
+					// testStepName + "] ran with status ["
+					// + getStatus() + "]", getError().toString(), null );
+					// }
+					// else
+					// {
+					UISupport.showInfoMessage( "Check [" + getSecurityCheck().getName() + "] ran with status ["
+							+ getStatus() + "]", "SecurityCheck Result" );
+					// }
+				}
+			} );
 		}
-		
+
+		return actionList;
+	}
+
 	public void addSecurityRequestResult( SecurityCheckRequestResult secReqResult )
 	{
 		if( securityRequestResultList != null )
 			securityRequestResultList.add( secReqResult );
 
-		// calulate time taken
 		timeTaken += secReqResult.getTimeTaken();
 
-		// calculate status ( one failed fails whole test )
-		if( status == SecurityStatus.OK )
-			status = secReqResult.getStatus();
+		if( !hasAddedRequests && secReqResult.getStatus() == SecurityStatus.OK )
+		{
+			status = SecurityStatus.OK;
+		}
+		else if( secReqResult.getStatus() == SecurityStatus.FAILED )
+		{
+			status = SecurityStatus.FAILED;
+		}
 
 		this.testLog.append( "\nSecurityRequest " ).append( securityRequestResultList.indexOf( secReqResult ) ).append(
 				secReqResult.getStatus().toString() ).append( ": took " ).append( secReqResult.getTimeTaken() ).append(
 				" ms" );
 		for( String s : secReqResult.getMessages() )
 			testLog.append( "\n -> " ).append( s );
+
+		hasAddedRequests = true;
 	}
 
 	public long getTimeTaken()

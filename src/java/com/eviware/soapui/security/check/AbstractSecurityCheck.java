@@ -225,8 +225,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	abstract protected void execute( SecurityTestRunner runner, TestStep testStep, SecurityTestRunContext context );
 
 	/**
-	 * checks if specific SecurityCheck still has modifications left TODO needs
-	 * to be abstract and implemented in every check
+	 * checks if specific SecurityCheck still has modifications left
 	 * 
 	 * @param testStep2
 	 * @param context
@@ -661,12 +660,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 				for( WsdlMessageAssertion assertion : assertionsSupport.getAssertionList() )
 				{
 					result = assertion.assertRequest( messageExchange, context );
-					if( result == AssertionStatus.FAILED )
-					{
-						for( AssertionError error : assertion.getErrors() )
-							getSecurityCheckRequestResult().addMessage( error.getMessage() );
-						getSecurityCheckRequestResult().setStatus( SecurityStatus.FAILED );
-					}
+					setStatus( result, assertion );
 				}
 
 				notifier.notifyChange();
@@ -694,12 +688,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 				for( WsdlMessageAssertion assertion : assertionsSupport.getAssertionList() )
 				{
 					result = assertion.assertResponse( messageExchange, context );
-					if( result == AssertionStatus.FAILED )
-					{
-						for( AssertionError error : assertion.getErrors() )
-							getSecurityCheckRequestResult().addMessage( error.getMessage() );
-						getSecurityCheckRequestResult().setStatus( SecurityStatus.FAILED );
-					}
+					setStatus( result, assertion );
 				}
 
 				notifier.notifyChange();
@@ -710,6 +699,30 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 			e.printStackTrace();
 		}
 		return result;
+	}
+
+	/**
+	 * Sets SecurityCheckStatus based on the status of all assertions added
+	 * 
+	 * @param result
+	 * @param assertion
+	 */
+	private void setStatus( AssertionStatus result, WsdlMessageAssertion assertion )
+	{
+		if( result == AssertionStatus.FAILED )
+		{
+			for( AssertionError error : assertion.getErrors() )
+				getSecurityCheckRequestResult().addMessage( error.getMessage() );
+			getSecurityCheckRequestResult().setStatus( SecurityStatus.FAILED );
+		}
+		else if( result == AssertionStatus.VALID )
+		{
+			getSecurityCheckRequestResult().setStatus( SecurityStatus.OK );
+		}
+		else if( result == AssertionStatus.UNKNOWN )
+		{
+			getSecurityCheckRequestResult().setStatus( SecurityStatus.UNKNOWN );
+		}
 	}
 
 	/*

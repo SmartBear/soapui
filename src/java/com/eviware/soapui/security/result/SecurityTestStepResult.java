@@ -18,6 +18,7 @@ import java.util.List;
 
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
+import com.eviware.soapui.security.result.SecurityResult.SecurityStatus;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.DefaultActionList;
 
@@ -30,9 +31,9 @@ import com.eviware.soapui.support.action.swing.DefaultActionList;
 
 public class SecurityTestStepResult implements SecurityResult
 {
-	public SecurityStatus status = SecurityStatus.OK;
+	private SecurityStatus status = SecurityStatus.UNKNOWN;
 	public static final String TYPE = "SecurityTestStepResult";
-	public TestStep testStep;
+	private TestStep testStep;
 	private long size;
 	private List<SecurityCheckResult> securityCheckResultList;
 	private boolean discarded;
@@ -41,6 +42,7 @@ public class SecurityTestStepResult implements SecurityResult
 	private StringBuffer testLog = new StringBuffer();
 	private TestStepResult originalTestStepResult;
 	private DefaultActionList actionList;
+	private boolean hasAddedRequests;
 
 	public SecurityTestStepResult( TestStep testStep, TestStepResult originalResult )
 	{
@@ -84,18 +86,21 @@ public class SecurityTestStepResult implements SecurityResult
 		return actionList;
 	}
 
-	// TODO
 	public void addSecurityCheckResult( SecurityCheckResult securityCheckResult )
 	{
 		if( securityCheckResultList != null )
 			securityCheckResultList.add( securityCheckResult );
 
-		// calculate time taken
 		timeTaken += securityCheckResult.getTimeTaken();
 
-		// calculate status ( one failed fails whole test )
-		if( status == SecurityStatus.OK )
-			status = securityCheckResult.getStatus();
+		if( !hasAddedRequests && securityCheckResult.getStatus() == SecurityStatus.OK )
+		{
+			status = SecurityStatus.OK;
+		}
+		else if( securityCheckResult.getStatus() == SecurityStatus.FAILED )
+		{
+			status = SecurityStatus.FAILED;
+		}
 
 		// TODO check and finish this - seems it's used for reports
 		// this.testLog.append( "SecurityCheck " ).append(
@@ -103,6 +108,8 @@ public class SecurityTestStepResult implements SecurityResult
 		// securityCheckResult.getStatus().toString() ).append( ": took " )
 		// .append( securityCheckResult.getTimeTaken() ).append( " ms" );
 		this.testLog.append( securityCheckResult.getSecurityTestLog() );
+
+		hasAddedRequests = true;
 	}
 
 	public long getTimeTaken()

@@ -24,7 +24,7 @@ public interface SecurityResult
 {
 	public enum SecurityStatus
 	{
-		INITIALIZED, OK, FAILED
+		UNKNOWN, OK, FAILED, CANCELED
 	}
 
 	/**

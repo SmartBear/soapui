@@ -52,7 +52,6 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 		super( test, properties );
 		this.securityTest = test;
 		this.currentCheckOnSecurityTestIndex = 0;
-		setStatus( Status.INITIALIZED );
 	}
 
 	public SecurityTestRunContext createContext( StringToObjectMap properties )
