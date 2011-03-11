@@ -21,7 +21,6 @@ import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
 
 import org.jdesktop.swingx.JXTable;
 
@@ -40,6 +39,7 @@ import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.impl.swing.JComboBoxFormField;
 import com.eviware.x.impl.swing.JFormDialog;
+import com.eviware.x.impl.swing.JTextFieldFormField;
 import com.eviware.x.impl.swing.SwingXFormDialog;
 
 public class SecurityCheckedParametersTablePanel extends JPanel
@@ -106,7 +106,8 @@ public class SecurityCheckedParametersTablePanel extends JPanel
 		addAction.setDialog( dialog );
 		addAndCopy.setDialog( dialog );
 
-		final XFormField labelField = dialog.getFormField( AddParameterDialog.LABEL );
+		final JTextFieldFormField labelField = ( JTextFieldFormField )dialog.getFormField( AddParameterDialog.LABEL );
+		labelField.getComponent().setColumns( 30 );
 		labelField.setEnabled( false );
 		JComboBoxFormField nameField = ( JComboBoxFormField )dialog.getFormField( AddParameterDialog.NAME );
 		enablePathField( false );
@@ -133,7 +134,7 @@ public class SecurityCheckedParametersTablePanel extends JPanel
 		options.set( 0, CHOOSE_TEST_PROPERTY );
 		nameField.setOptions( options.toArray( new String[0] ) );
 		
-		dialog.setWidth( 450 );
+//		dialog.setWidth( 450 );
 		((JFormDialog)dialog).getDialog().setResizable(false );
 		
 		return dialog;
