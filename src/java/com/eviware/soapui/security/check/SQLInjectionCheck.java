@@ -72,6 +72,8 @@ public class SQLInjectionCheck extends AbstractSecurityCheckWithProperties
 			"' and 1=2 --", "test�%20UNION%20select%201,%20@@version,%201,%201;�",
 			"test� UNION select 1, @@version, 1, 1;�" };
 
+	private boolean mutation;
+
 	public SQLInjectionCheck( SecurityCheckConfig config, ModelItem parent, String icon, TestStep testStep )
 	{
 		super( testStep, config, parent, icon );
@@ -233,6 +235,7 @@ public class SQLInjectionCheck extends AbstractSecurityCheckWithProperties
 
 	private void mutateParameters( TestStep testStep )
 	{
+		mutation = true;
 		// for each parameter
 		for( SecurityCheckedParameter parameter : getParameterHolder().getParameterList() )
 		{
@@ -306,7 +309,7 @@ public class SQLInjectionCheck extends AbstractSecurityCheckWithProperties
 	protected boolean hasNext( TestStep testStep, SecurityTestRunContext context )
 	{
 		boolean hasNext = false;
-		if( parameterMutations == null || parameterMutations.size() == 0 )
+		if( ( parameterMutations == null || parameterMutations.size() == 0 ) && !mutation )
 		{
 			if( getParameterHolder().getParameterList().size() > 0 )
 				hasNext = true;
@@ -327,6 +330,7 @@ public class SQLInjectionCheck extends AbstractSecurityCheckWithProperties
 		if( !hasNext )
 		{
 			parameterMutations.clear();
+			mutation = false;
 		}
 		return hasNext;
 	}

@@ -1,3 +1,14 @@
+/*
+ *  soapUI, copyright (C) 2004-2011 eviware.com 
+ *
+ *  soapUI is free software; you can redistribute it and/or modify it under the 
+ *  terms of version 2.1 of the GNU Lesser General Public License as published by 
+ *  the Free Software Foundation.
+ *
+ *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ *  See the GNU Lesser General Public License for more details at gnu.org.
+ */
 package com.eviware.soapui.security.check;
 
 import java.awt.Dimension;
@@ -53,6 +64,8 @@ public class XPathInjectionSecurityCheck extends AbstractSecurityCheckWithProper
 	String[] defaultXPathInjectionStrings = { " or name(//users/LoginID[1]) = 'LoginID' or 'a'='b", "' or '1'='1",
 			"1/0", "'%20o/**/r%201/0%20--", "' o/**/r 1/0 --", ";", "'%20and%201=2%20--", "' and 1=2 --",
 			"test�%20UNION%20select%201,%20@@version,%201,%201;�", "test� UNION select 1, @@version, 1, 1;�" };
+
+	private boolean mutation;
 
 	public XPathInjectionSecurityCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent, String icon )
 	{
@@ -213,6 +226,7 @@ public class XPathInjectionSecurityCheck extends AbstractSecurityCheckWithProper
 
 	private void mutateParameters( TestStep testStep )
 	{
+		mutation = true;
 		// for each parameter
 		for( SecurityCheckedParameter parameter : getParameterHolder().getParameterList() )
 		{
@@ -309,7 +323,7 @@ public class XPathInjectionSecurityCheck extends AbstractSecurityCheckWithProper
 	protected boolean hasNext( TestStep testStep, SecurityTestRunContext context )
 	{
 		boolean hasNext = false;
-		if( parameterMutations == null || parameterMutations.size() == 0 )
+		if( ( parameterMutations == null || parameterMutations.size() == 0 ) && !mutation )
 		{
 			if( getParameterHolder().getParameterList().size() > 0 )
 				hasNext = true;
@@ -330,6 +344,7 @@ public class XPathInjectionSecurityCheck extends AbstractSecurityCheckWithProper
 		if( !hasNext )
 		{
 			parameterMutations.clear();
+			mutation = false;
 		}
 		return hasNext;
 	}
