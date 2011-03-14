@@ -307,7 +307,12 @@ public class SQLInjectionCheck extends AbstractSecurityCheckWithProperties
 	{
 		boolean hasNext = false;
 		if( parameterMutations == null || parameterMutations.size() == 0 )
-			hasNext = true;
+		{
+			if( getParameterHolder().getParameterList().size() > 0 )
+				hasNext = true;
+			else
+				hasNext = false;
+		}
 		else
 		{
 			for( SecurityCheckedParameter param : parameterMutations.keySet() )

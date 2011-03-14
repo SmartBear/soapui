@@ -341,8 +341,12 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 	protected boolean hasNext( TestStep testStep, SecurityTestRunContext context )
 	{
 		boolean hasNext = false;
-		if( parameterMutations == null || parameterMutations.size() == 0 )
-			hasNext = true;
+		if( parameterMutations == null || parameterMutations.size() == 0 ) {
+			if( getParameterHolder().getParameterList().size() > 0  )
+				hasNext = true;
+			else
+				hasNext = false;
+		}
 		else
 		{
 			for( SecurityCheckedParameter param : parameterMutations.keySet() )
