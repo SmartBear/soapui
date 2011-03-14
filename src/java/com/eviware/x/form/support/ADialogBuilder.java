@@ -193,6 +193,56 @@ public class ADialogBuilder
 
 		return dialog;
 	}
+	
+	public static XFormDialog buildTabbedDialogWithCustomActions( Class<? extends Object> tabbedFormClass, ActionList actions )
+	{
+		AForm formAnnotation = tabbedFormClass.getAnnotation( AForm.class );
+		if( formAnnotation == null )
+		{
+			throw new RuntimeException( "formClass is not annotated correctly.." );
+		}
+
+		MessageSupport messages = MessageSupport.getMessages( tabbedFormClass );
+		XFormDialogBuilder builder = XFormFactory.createDialogBuilder( formAnnotation.name() );
+
+		for( Field field : tabbedFormClass.getFields() )
+		{
+			APage pageAnnotation = field.getAnnotation( APage.class );
+			if( pageAnnotation != null )
+			{
+				buildForm( builder, pageAnnotation.name(), field.getType(), messages );
+			}
+
+			AField fieldAnnotation = field.getAnnotation( AField.class );
+			if( fieldAnnotation != null )
+			{
+				try
+				{
+					Class<?> formClass = Class.forName( fieldAnnotation.description() );
+					buildForm( builder, fieldAnnotation.name(), formClass, messages );
+				}
+				catch( Exception e )
+				{
+					SoapUI.logError( e );
+				}
+			}
+		}
+
+		ActionList defaultActions = formAnnotation.helpUrl().length() == 0 ? null : builder
+				.buildHelpActions( formAnnotation.helpUrl() );
+
+		if( actions == null )
+			actions = defaultActions;
+		else {
+			defaultActions.addActions( actions );
+			actions = defaultActions;
+		}
+
+		XFormDialog dialog = builder.buildDialog( actions, formAnnotation.description(), UISupport
+				.createImageIcon( formAnnotation.icon() ) );
+
+		return dialog;
+	}
 
 	public static XFormDialog buildWizard( Class<? extends Object> tabbedFormClass )
 	{
