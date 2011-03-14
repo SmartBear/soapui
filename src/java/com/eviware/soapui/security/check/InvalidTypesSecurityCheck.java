@@ -53,6 +53,8 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 
 	private Map<SecurityCheckedParameter, ArrayList<String>> parameterMutations = new HashMap<SecurityCheckedParameter, ArrayList<String>>();
 
+	private boolean mutation;
+
 	public InvalidTypesSecurityCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent, String icon )
 	{
 		super( testStep, config, parent, icon );
@@ -271,6 +273,7 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 	private void mutateParameters( TestStep testStep ) throws XmlException
 	{
 
+		mutation = true;
 		// for each parameter
 		for( SecurityCheckedParameter parameter : getParameterHolder().getParameterList() )
 		{
@@ -341,7 +344,7 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 	protected boolean hasNext( TestStep testStep, SecurityTestRunContext context )
 	{
 		boolean hasNext = false;
-		if( parameterMutations == null || parameterMutations.size() == 0 ) {
+		if( (parameterMutations == null || parameterMutations.size() == 0) && !mutation) {
 			if( getParameterHolder().getParameterList().size() > 0  )
 				hasNext = true;
 			else
@@ -361,6 +364,7 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 		if( !hasNext )
 		{
 			parameterMutations.clear();
+			mutation = false;
 		}
 		return hasNext;
 	}
