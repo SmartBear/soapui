@@ -66,7 +66,7 @@ public class ProgressBarSecurityTestStepAdapter
 			progressBar.getModel().setMaximum(
 					( ( SecurityTestRunnerImpl )testRunner ).getSecurityTest().getTestStepSecurityChecksCount(
 							testStep.getId() ) );
-			// progressBar.setForeground( Color.GREEN.darker() );
+			// progressBar.setForeground( Color.WHITE );
 			progressBar.setString( "" );
 		}
 
@@ -80,6 +80,7 @@ public class ProgressBarSecurityTestStepAdapter
 			if( securityCheck != null )
 			{
 				progressBar.setString( securityCheck.getName() );
+				progressBar.setForeground( Color.GRAY );
 				progressBar.setValue( ( ( SecurityTestRunContext )runContext ).getCurrentCheckIndex() );
 			}
 		}
@@ -97,6 +98,10 @@ public class ProgressBarSecurityTestStepAdapter
 			{
 				progressBar.setForeground( Color.GREEN.darker() );
 			}
+			else if( securityCheckResult.getStatus() == SecurityStatus.UNKNOWN )
+			{
+				progressBar.setForeground( Color.WHITE );
+			}
 
 			progressBar.setValue( ( ( SecurityTestRunContext )runContext ).getCurrentCheckIndex() + 1 );
 		}
@@ -113,6 +118,10 @@ public class ProgressBarSecurityTestStepAdapter
 			else if( testRunner.getStatus() == Status.FINISHED )
 			{
 				progressBar.setForeground( Color.GREEN.darker() );
+			}
+			else if( testRunner.getStatus() != Status.RUNNING )
+			{
+				progressBar.setForeground( Color.WHITE );
 			}
 
 			progressBar.setString( result.getStatus().toString() );
