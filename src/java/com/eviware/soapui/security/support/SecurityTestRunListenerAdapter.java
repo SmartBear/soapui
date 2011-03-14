@@ -16,6 +16,7 @@ import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.check.AbstractSecurityCheck;
+import com.eviware.soapui.security.result.SecurityCheckRequestResult;
 import com.eviware.soapui.security.result.SecurityCheckResult;
 import com.eviware.soapui.security.result.SecurityTestStepResult;
 
@@ -58,6 +59,22 @@ public class SecurityTestRunListenerAdapter implements SecurityTestRunListener
 	public void beforeSecurityCheck( TestCaseRunner testRunner, SecurityTestRunContext runContext,
 			AbstractSecurityCheck securityCheck )
 	{
+	}
+
+	@Override
+	public void afterSecurityCheckRequest( TestCaseRunner testRunner, SecurityTestRunContext runContext,
+			SecurityCheckRequestResult securityCheckReqResult )
+	{
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void afterOriginalStep( TestCaseRunner testRunner, SecurityTestRunContext runContext,
+			SecurityTestStepResult result )
+	{
+		// TODO Auto-generated method stub
+		
 	}
 
 }

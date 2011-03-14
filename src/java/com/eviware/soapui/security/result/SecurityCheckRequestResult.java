@@ -37,7 +37,7 @@ public class SecurityCheckRequestResult implements SecurityResult
 	public SecurityCheck securityCheck;
 	private List<String> messages = new ArrayList<String>();
 	private long timeTaken;
-	// starting time
+	private long startTime;
 	private long timeStamp;
 	private long size;
 	private boolean discarded;
@@ -161,6 +161,16 @@ public class SecurityCheckRequestResult implements SecurityResult
 	{
 		this.timeTaken = timeTaken;
 	}
+	public void startTimer()
+	{
+		startTime = System.nanoTime();
+	}
+
+	public void stopTimer()
+	{
+		timeTaken = ( ( System.nanoTime() - startTime ) / 1000000 );
+	}
+
 
 	@Override
 	public String getResultType()

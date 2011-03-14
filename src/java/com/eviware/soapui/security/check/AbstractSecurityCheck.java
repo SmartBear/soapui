@@ -46,12 +46,14 @@ import com.eviware.soapui.model.testsuite.TestAssertion;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.ExecutionStrategyHolder;
 import com.eviware.soapui.security.Securable;
+import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.security.SecurityTestRunnerImpl;
 import com.eviware.soapui.security.result.SecurityCheckRequestResult;
 import com.eviware.soapui.security.result.SecurityCheckResult;
 import com.eviware.soapui.security.result.SecurityResult.SecurityStatus;
+import com.eviware.soapui.security.support.SecurityTestRunListener;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
@@ -75,6 +77,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	private SoapUIScriptEngine setupScriptEngine;
 	private SoapUIScriptEngine tearDownScriptEngine;
 	private ExecutionStrategyHolder executionStrategy;
+	private SecurityTestRunListener[] securityTestListeners = new SecurityTestRunListener[0];
 
 	public AbstractSecurityCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent, String icon )
 	{
@@ -103,7 +106,6 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 			config.addNewChekedPameters();
 
 		initAssertions();
-
 	}
 
 	/*
@@ -166,6 +168,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 			SecurityTestRunner securityTestRunner )
 	{
 		securityCheckResult = new SecurityCheckResult( this );
+		securityTestListeners = ( ( SecurityTest )getParent() ).getSecurityTestRunListeners();
 
 		// setStatus( Status.INITIALIZED );
 		try
@@ -184,13 +187,20 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		while( hasNext( testStep, context ) )
 		{
 
-			setSecurityCheckRequestResult( new SecurityCheckRequestResult( this ) );
+			securityCheckRequestResult = new SecurityCheckRequestResult( this );
+			securityCheckRequestResult.startTimer();
 			execute( securityTestRunner, ( ( SecurityTestRunnerImpl )securityTestRunner )
 					.cloneForSecurityCheck( ( WsdlTestStep )this.testStep ), context );
+			securityCheckRequestResult.stopTimer();
 			assertRequest( getSecurityCheckRequestResult().getMessageExchange(), context );
 			assertResponse( getSecurityCheckRequestResult().getMessageExchange(), context );
 			// add to summary result
 			securityCheckResult.addSecurityRequestResult( getSecurityCheckRequestResult() );
+			for( int i = 0; i < securityTestListeners.length; i++ )
+			{
+				securityTestListeners[i].afterSecurityCheckRequest( ( SecurityTestRunnerImpl )securityTestRunner, context,
+						securityCheckRequestResult );
+			}
 
 			try
 			{

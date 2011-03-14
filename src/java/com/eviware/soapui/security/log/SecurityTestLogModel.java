@@ -20,7 +20,7 @@ import javax.swing.AbstractListModel;
 
 import org.apache.commons.collections.list.TreeList;
 
-import com.eviware.soapui.security.check.AbstractSecurityCheck;
+import com.eviware.soapui.model.security.SecurityCheck;
 import com.eviware.soapui.security.result.SecurityCheckRequestResult;
 import com.eviware.soapui.security.result.SecurityCheckResult;
 import com.eviware.soapui.security.result.SecurityResult;
@@ -95,15 +95,17 @@ public class SecurityTestLogModel extends AbstractListModel
 			results.add( stepResultRef );
 			// checkResults.add( null );
 		}
-		if( AbstractSecurityCheck.isSecurable( result.getOriginalTestStepResult().getTestStep() )
-				&& !result.getSecurityCheckResultList().isEmpty() )
-		{
-			for( int i = 0; i < result.getSecurityCheckResultList().size(); i++ )
-			{
-				SecurityCheckResult securityCheckResult = result.getSecurityCheckResultList().get( i );
-				addSecurityCheckResult( securityCheckResult );
-			}
-		}
+		// if( AbstractSecurityCheck.isSecurable(
+		// result.getOriginalTestStepResult().getTestStep() )
+		// && !result.getSecurityCheckResultList().isEmpty() )
+		// {
+		// for( int i = 0; i < result.getSecurityCheckResultList().size(); i++ )
+		// {
+		// SecurityCheckResult securityCheckResult =
+		// result.getSecurityCheckResultList().get( i );
+		// addSecurityCheckResult( securityCheckResult );
+		// }
+		// }
 
 		fireIntervalAdded( this, size, items.size() - 1 );
 		enforceMaxSize();
@@ -122,12 +124,52 @@ public class SecurityTestLogModel extends AbstractListModel
 		results.add( checkResultRef );
 		for( SecurityCheckRequestResult requestResult : securityCheckResult.getSecurityRequestResultList() )
 		{
-			for( String msg : requestResult.getMessages() )
-			{
-				SoftReference<SecurityResult> checkReqResultRef = new SoftReference<SecurityResult>( requestResult );
-				items.add( " -> " + msg );
-				results.add( checkReqResultRef );
-			}
+			addSecurityCheckRequestResult( requestResult );
+		}
+
+		fireIntervalAdded( this, size, items.size() - 1 );
+		enforceMaxSize();
+	}
+
+	public synchronized void addSecurityCheckStarted( SecurityCheck securityCheck)
+	{
+		int size = items.size();
+
+		SecurityCheckResult securityCheckResult = new SecurityCheckResult( securityCheck );
+		SoftReference<SecurityResult> checkResultRef = new SoftReference<SecurityResult>( securityCheckResult );
+
+		items.add( "SecurityCheck [" + securityCheck.getName() + "] started at "
+				+ securityCheckResult.getTimeStamp() );
+		results.add( checkResultRef );
+
+		fireIntervalAdded( this, size, items.size() - 1 );
+		enforceMaxSize();
+	}
+
+	public synchronized void addSecurityCheckEnded( SecurityCheckResult securityCheckResult )
+	{
+		int size = items.size();
+
+		SoftReference<SecurityResult> checkResultRef = new SoftReference<SecurityResult>( securityCheckResult );
+
+		items.add( "SecurityCheck [" + securityCheckResult.getSecurityCheck().getName() + "] finished with status [ "
+				+ securityCheckResult.getStatus() + "], time taken = " + securityCheckResult.getTimeTaken() );
+		results.add( checkResultRef );
+
+		fireIntervalAdded( this, size, items.size() - 1 );
+		enforceMaxSize();
+	}
+
+	public synchronized void addSecurityCheckRequestResult( SecurityCheckRequestResult securityCheckRequestResult )
+	{
+		int size = items.size();
+
+		for( String msg : securityCheckRequestResult.getMessages() )
+		{
+			SoftReference<SecurityResult> checkReqResultRef = new SoftReference<SecurityResult>(
+					securityCheckRequestResult );
+			items.add( " -> " + msg );
+			results.add( checkReqResultRef );
 		}
 
 		fireIntervalAdded( this, size, items.size() - 1 );

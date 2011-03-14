@@ -57,7 +57,10 @@ import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.security.SecurityTestRunnerImpl;
 import com.eviware.soapui.security.actions.SecurityTestOptionsAction;
+import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.security.log.JSecurityTestRunLog;
+import com.eviware.soapui.security.result.SecurityCheckRequestResult;
+import com.eviware.soapui.security.result.SecurityCheckResult;
 import com.eviware.soapui.security.result.SecurityTestStepResult;
 import com.eviware.soapui.security.support.ProgressBarSecurityTestAdapter;
 import com.eviware.soapui.security.support.SecurityTestRunListenerAdapter;
@@ -699,9 +702,31 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 		}
 
 		@Override
-		public void afterStep( TestCaseRunner testRunner, SecurityTestRunContext runContext, SecurityTestStepResult result )
+		public void beforeSecurityCheck( TestCaseRunner testRunner, SecurityTestRunContext runContext,
+				AbstractSecurityCheck securityCheck )
+		{
+			securityTestLog.addSecurityCheckStarted( securityCheck );
+		}
+
+		@Override
+		public void afterSecurityCheck( TestCaseRunner testRunner, SecurityTestRunContext runContext,
+				SecurityCheckResult securityCheckResult )
+		{
+			securityTestLog.addSecurityCheckEnded( securityCheckResult );
+		}
+
+		@Override
+		public void afterOriginalStep( TestCaseRunner testRunner, SecurityTestRunContext runContext,
+				SecurityTestStepResult result )
 		{
 			securityTestLog.addSecurityTestStepResult( result );
+		}
+
+		@Override
+		public void afterSecurityCheckRequest( TestCaseRunner testRunner, SecurityTestRunContext runContext,
+				SecurityCheckRequestResult securityCheckReqResult )
+		{
+			securityTestLog.addSecurityCheckRequestResult( securityCheckReqResult );
 		}
 	}
 }

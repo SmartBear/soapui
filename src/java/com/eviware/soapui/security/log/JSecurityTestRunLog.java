@@ -40,6 +40,7 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.monitor.SoapMonitor;
 import com.eviware.soapui.impl.wsdl.support.MessageExchangeModelItem;
 import com.eviware.soapui.impl.wsdl.testcase.TestCaseLogItem;
+import com.eviware.soapui.model.security.SecurityCheck;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
 import com.eviware.soapui.security.SecurityTest;
@@ -176,12 +177,65 @@ public class JSecurityTestRunLog extends JPanel
 		}
 	}
 
-	public synchronized void addSecurityCheckResult( SecurityCheckResult checkResult )
+	// public synchronized void addSecurityCheckResult( SecurityCheckResult
+	// checkResult )
+	// {
+	// if( errorsOnly && checkResult.getStatus() !=
+	// SecurityCheckRequestResult.SecurityStatus.FAILED )
+	// return;
+	//
+	// logListModel.addSecurityCheckResult( checkResult );
+	// if( follow )
+	// {
+	// try
+	// {
+	// testLogList.ensureIndexIsVisible( logListModel.getSize() - 1 );
+	// }
+	// catch( RuntimeException e )
+	// {
+	// }
+	// }
+	// }
+
+	public synchronized void addSecurityCheckStarted( SecurityCheck securityCheck )
+	{
+		logListModel.addSecurityCheckStarted( securityCheck );
+		if( follow )
+		{
+			try
+			{
+				testLogList.ensureIndexIsVisible( logListModel.getSize() - 1 );
+			}
+			catch( RuntimeException e )
+			{
+			}
+		}
+	}
+
+	public synchronized void addSecurityCheckEnded( SecurityCheckResult checkResult )
 	{
 		if( errorsOnly && checkResult.getStatus() != SecurityCheckRequestResult.SecurityStatus.FAILED )
 			return;
 
-		logListModel.addSecurityCheckResult( checkResult );
+		logListModel.addSecurityCheckEnded( checkResult );
+		if( follow )
+		{
+			try
+			{
+				testLogList.ensureIndexIsVisible( logListModel.getSize() - 1 );
+			}
+			catch( RuntimeException e )
+			{
+			}
+		}
+	}
+
+	public synchronized void addSecurityCheckRequestResult( SecurityCheckRequestResult checkRequestResult )
+	{
+		if( errorsOnly && checkRequestResult.getStatus() != SecurityCheckRequestResult.SecurityStatus.FAILED )
+			return;
+
+		logListModel.addSecurityCheckRequestResult( checkRequestResult );
 		if( follow )
 		{
 			try
@@ -424,17 +478,30 @@ public class JSecurityTestRunLog extends JPanel
 			}
 
 			SecurityResult result = logListModel.getTestStepResultAt( index );
-			if( result != null && !getText().startsWith( " ->" ) )
+			if( result != null )
 			{
-				if( result.getResultType().equals( SecurityCheckResult.TYPE ) )
+				if( result != null && result.getResultType().equals( SecurityCheckRequestResult.TYPE ) )
+				{
+					hyperlinkLabel.setText( getText() );
+					hyperlinkLabel.setBackground( getBackground() );
+					hyperlinkLabel.setEnabled( list.isEnabled() );
+					hyperlinkLabel.setUnderlineColor( Color.WHITE );
+					hyperlinkLabel.setIcon( null );
+
+					hyperlinkLabel.setBorder( BorderFactory.createEmptyBorder( 0, 16, 3, 3 ) );
+				}
+				else if( result.getResultType().equals( SecurityCheckResult.TYPE ) )
 				{
 					hyperlinkLabel.setText( getText() );
 					hyperlinkLabel.setBackground( getBackground() );
 					hyperlinkLabel.setEnabled( list.isEnabled() );
 
-					if( getText().startsWith( "Check" ) )
+					hyperlinkLabel.setBorder( BorderFactory.createEmptyBorder( 0, 16, 3, 3 ) );
+					hyperlinkLabel.setUnderlineColor( Color.WHITE );
+					hyperlinkLabel.setIcon( null );
+					if( getText().startsWith( "SecurityCheck" ) && !getText().startsWith( " ->" ) )
 					{
-						hyperlinkLabel.setBorder( BorderFactory.createEmptyBorder( 0, 16, 3, 3 ) );
+						hyperlinkLabel.setUnderlineColor( Color.GRAY );
 						if( result.getStatus() == SecurityStatus.OK )
 						{
 							hyperlinkLabel.setIcon( UISupport.createImageIcon( "/valid_assertion.gif" ) );
@@ -456,10 +523,13 @@ public class JSecurityTestRunLog extends JPanel
 					hyperlinkLabel.setText( getText() );
 					hyperlinkLabel.setBackground( getBackground() );
 					hyperlinkLabel.setEnabled( list.isEnabled() );
+					hyperlinkLabel.setUnderlineColor( Color.WHITE );
+					hyperlinkLabel.setIcon( null );
 
-					if( getText().startsWith( "Step" ) )
+					if( getText().startsWith( "Step" ) && !getText().startsWith( " ->" ) )
 					{
 						hyperlinkLabel.setBorder( BorderFactory.createEmptyBorder( 0, 4, 3, 3 ) );
+						hyperlinkLabel.setUnderlineColor( Color.GRAY );
 						if( securitytestStepresult.getOriginalTestStepResult().getStatus() == TestStepStatus.OK )
 						{
 							hyperlinkLabel.setIcon( UISupport.createImageIcon( "/valid_assertion.gif" ) );

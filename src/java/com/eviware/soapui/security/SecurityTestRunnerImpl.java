@@ -130,6 +130,10 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 			// return -2;
 
 			SecurityTestStepResult securityStepResult = new SecurityTestStepResult( currentStep, stepResult );
+			for( int i = 0; i < securityTestListeners.length; i++ )
+			{
+				securityTestListeners[i].afterOriginalStep( this, getRunContext(), securityStepResult );
+			}
 
 			Map<String, List<AbstractSecurityCheck>> secCheckMap = securityTest.getSecurityChecksMap();
 			if( secCheckMap.containsKey( currentStep.getId() ) )
