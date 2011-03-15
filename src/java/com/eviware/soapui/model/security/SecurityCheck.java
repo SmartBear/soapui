@@ -41,14 +41,6 @@ public interface SecurityCheck
 	 */
 	String getType();
 
-	/**
-	 * Checks if this securityCheck is applicable to the specified TestStep
-	 * 
-	 * @param testStep
-	 * @return
-	 */
-	boolean acceptsTestStep( TestStep testStep );
-
 	TestStep getTestStep();
 
 	void setTestStep( TestStep step );

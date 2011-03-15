@@ -272,15 +272,6 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.eviware.soapui.security.check.SecurityCheck#acceptsTestStep(com.eviware
-	 * .soapui.model.testsuite.TestStep)
-	 */
-	public abstract boolean acceptsTestStep( TestStep testStep );
-
-	/*
-	 * (non-Javadoc)
-	 * 
 	 * @see com.eviware.soapui.security.check.SecurityCheck#getTestStep()
 	 */
 	public TestStep getTestStep()

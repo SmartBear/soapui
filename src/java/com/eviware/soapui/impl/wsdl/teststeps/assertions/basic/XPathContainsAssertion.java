@@ -77,6 +77,7 @@ import com.eviware.soapui.model.testsuite.RequestAssertion;
 import com.eviware.soapui.model.testsuite.ResponseAssertion;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestStep;
+import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JUndoableTextArea;
@@ -513,7 +514,11 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
 			if( txt == null )
 				txt = pathArea == null ? "" : pathArea.getText();
 
-			WsdlTestRunContext context = new WsdlTestRunContext( ( TestStep )getAssertable().getModelItem() );
+			WsdlTestRunContext context = null;
+			if( getAssertable().getModelItem() instanceof TestStep )
+				context = new WsdlTestRunContext( ( TestStep )getAssertable().getModelItem() );
+			else if( getAssertable().getModelItem() instanceof AbstractSecurityCheck )
+				context = new WsdlTestRunContext( (( AbstractSecurityCheck )getAssertable().getModelItem()).getTestStep() );
 
 			String expandedPath = PropertyExpander.expandProperties( context, txt.trim() );
 

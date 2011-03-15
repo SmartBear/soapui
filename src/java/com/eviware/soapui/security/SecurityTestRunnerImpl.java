@@ -187,29 +187,26 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 			AbstractSecurityCheck securityCheck )
 	{
 		SecurityCheckResult result = new SecurityCheckResult( securityCheck );
-		if( securityCheck.acceptsTestStep( currentStep ) )
+		for( int j = 0; j < securityTestStepListeners.length; j++ )
 		{
-			for( int j = 0; j < securityTestStepListeners.length; j++ )
-			{
-				securityTestStepListeners[j].beforeSecurityCheck( this, runContext, securityCheck );
-			}
-			for( int j = 0; j < securityTestListeners.length; j++ )
-			{
-				securityTestListeners[j].beforeSecurityCheck( this, runContext, securityCheck );
-			}
-			result = securityCheck.run( cloneForSecurityCheck( ( WsdlTestStep )currentStep ), runContext, this );
-			if( securityTest.getFailOnError() && result.getStatus() == SecurityStatus.FAILED )
-			{
-				fail( "Cancelling due to failed security check" );
-			}
-			for( int j = 0; j < securityTestStepListeners.length; j++ )
-			{
-				securityTestStepListeners[j].afterSecurityCheck( this, runContext, result );
-			}
-			for( int j = 0; j < securityTestListeners.length; j++ )
-			{
-				securityTestListeners[j].afterSecurityCheck( this, runContext, result );
-			}
+			securityTestStepListeners[j].beforeSecurityCheck( this, runContext, securityCheck );
+		}
+		for( int j = 0; j < securityTestListeners.length; j++ )
+		{
+			securityTestListeners[j].beforeSecurityCheck( this, runContext, securityCheck );
+		}
+		result = securityCheck.run( cloneForSecurityCheck( ( WsdlTestStep )currentStep ), runContext, this );
+		if( securityTest.getFailOnError() && result.getStatus() == SecurityStatus.FAILED )
+		{
+			fail( "Cancelling due to failed security check" );
+		}
+		for( int j = 0; j < securityTestStepListeners.length; j++ )
+		{
+			securityTestStepListeners[j].afterSecurityCheck( this, runContext, result );
+		}
+		for( int j = 0; j < securityTestListeners.length; j++ )
+		{
+			securityTestListeners[j].afterSecurityCheck( this, runContext, result );
 		}
 		return result;
 	}

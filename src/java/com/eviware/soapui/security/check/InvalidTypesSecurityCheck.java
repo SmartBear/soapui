@@ -95,11 +95,6 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 		return new InvalidTypesTable( getInvalidTypeConfig() );
 	}
 
-	@Override
-	public boolean acceptsTestStep( TestStep testStep )
-	{
-		return testStep instanceof WsdlTestRequestStep;
-	}
 
 	/*
 	 * There is no advanced settings/special for this security check

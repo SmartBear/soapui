@@ -69,12 +69,6 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 	// }
 
 	@Override
-	public boolean acceptsTestStep( TestStep testStep )
-	{
-		return testStep instanceof WsdlTestRequestStep;
-	}
-
-	@Override
 	public SecurityCheckConfigPanel getComponent()
 	{
 
@@ -90,15 +84,12 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 	@Override
 	protected void execute( SecurityTestRunner securityTestRunner, TestStep testStep, SecurityTestRunContext context )
 	{
-		if( acceptsTestStep( testStep ) )
+		String mutatedRequest = popMutation( context );
+		if( mutatedRequest != null )
 		{
-			String mutatedRequest = popMutation( context );
-			if( mutatedRequest != null )
-			{
-				updateTestStepRequest( testStep, mutatedRequest );
-				testStep.run( ( TestCaseRunner )securityTestRunner, context );
-				createMessageExchange( testStep );
-			}
+			updateTestStepRequest( testStep, mutatedRequest );
+			testStep.run( ( TestCaseRunner )securityTestRunner, context );
+			createMessageExchange( testStep );
 		}
 	}
 
@@ -111,6 +102,10 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 
 	private void createMessageExchange( TestStep testStep )
 	{
+		String originalRequestContent = ( ( WsdlTestRequestStep )testStep ).getTestRequest().getRequestContent();
+		// String propertyType =
+		// / SecurityMutation secMut = new SecurityMutation( propertyType,
+		// original, mutated, xPath )
 		MessageExchange messageExchange = new WsdlResponseMessageExchange( ( ( WsdlTestRequestStep )testStep )
 				.getTestRequest() );
 		getSecurityCheckRequestResult().setMessageExchange( messageExchange );
@@ -119,6 +114,7 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 	private void extractMutations( TestStep testStep, SecurityTestRunContext context ) throws XmlException, Exception
 	{
 		strategy = getExecutionStrategy().getStrategy();
+
 		XmlObjectTreeModel model = getXmlObjectTreeModel( testStep );
 		List<SecurityCheckedParameter> scpList = getParameterHolder().getParameterList();
 		for( SecurityCheckedParameter scp : scpList )
@@ -250,7 +246,8 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 		}
 		else
 		{
-			SoapUI.log.warn( "No out of boundary value is created for restriction " + nodeName + " of baseType:" + baseType );
+			SoapUI.log.warn( "No out of boundary value is created for restriction " + nodeName + " of baseType:"
+					+ baseType );
 		}
 	}
 

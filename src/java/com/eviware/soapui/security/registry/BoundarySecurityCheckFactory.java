@@ -34,12 +34,7 @@ public class BoundarySecurityCheckFactory extends AbstractSecurityCheckFactory
 				"Executes the specified baoundary security check", "/boundary_security_check.gif" );
 	}
 
-	public boolean canCreate()
-	{
-		return true;
-	}
-
-
+	
 	@Override
 	public SecurityCheckConfig createNewSecurityCheck( String name )
 	{

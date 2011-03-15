@@ -37,7 +37,6 @@ import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.security.SecurityCheckedParameter;
-import com.eviware.soapui.model.testsuite.SamplerTestStep;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestStep;
@@ -85,11 +84,6 @@ public class XPathInjectionSecurityCheck extends AbstractSecurityCheckWithProper
 		xpathList.setXpathListArray( defaultXPathInjectionStrings );
 	}
 
-	@Override
-	public boolean acceptsTestStep( TestStep testStep )
-	{
-		return testStep instanceof SamplerTestStep;
-	}
 
 	@Override
 	public JComponent getComponent()

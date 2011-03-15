@@ -87,11 +87,6 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 
 	}
 
-	@Override
-	public boolean acceptsTestStep( TestStep testStep )
-	{
-		return true;
-	}
 
 	@Override
 	public String getType()

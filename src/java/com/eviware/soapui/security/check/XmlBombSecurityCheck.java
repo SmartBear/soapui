@@ -29,7 +29,6 @@ import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.security.SecurityCheckedParameter;
-import com.eviware.soapui.model.testsuite.SamplerTestStep;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
@@ -180,11 +179,6 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheckWithProperties
 
 	}
 
-	@Override
-	public boolean acceptsTestStep( TestStep testStep )
-	{
-		return testStep instanceof SamplerTestStep;
-	}
 
 	@Override
 	public SecurityCheckConfigPanel getComponent()

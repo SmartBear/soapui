@@ -19,8 +19,6 @@ import javax.swing.JTextField;
 import com.eviware.soapui.config.ParameterExposureCheckConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.impl.wsdl.monitor.JProxyServletWsdlMonitorMessageExchange;
-import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
-import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.testsuite.TestCaseRunContext;
@@ -48,7 +46,6 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements Htt
 
 	public static final String TYPE = "ParameterExposureCheck";
 	public static final int DEFAULT_MINIMUM_CHARACTER_LENGTH = 5;
-	private static final String checkTitle = "Configure Parameter Exposure";
 
 	public ParameterExposureCheck( SecurityCheckConfig config, ModelItem parent, String icon, TestStep testStep )
 	{
@@ -71,10 +68,7 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements Htt
 	@Override
 	protected void execute( SecurityTestRunner securityTestRunner, TestStep testStep, SecurityTestRunContext context )
 	{
-		if( acceptsTestStep( testStep ) )
-		{
-			testStep.run( (TestCaseRunner)securityTestRunner, ( TestCaseRunContext )securityTestRunner.getRunContext() );
-		}
+		testStep.run( ( TestCaseRunner )securityTestRunner, ( TestCaseRunContext )securityTestRunner.getRunContext() );
 	}
 
 	// @Override
@@ -158,14 +152,6 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements Htt
 		return ( ( ParameterExposureCheckConfig )getConfig().getConfig() ).getMinimumLength();
 	}
 
-	// QUESTION:
-	// Why not soap too?
-	@Override
-	public boolean acceptsTestStep( TestStep testStep )
-	{
-		return testStep instanceof HttpTestRequestStep || testStep instanceof RestTestRequestStep;
-	}
-
 	@Override
 	public SecurityCheckConfigPanel getComponent()
 	{
@@ -235,7 +221,7 @@ public class ParameterExposureCheck extends AbstractSecurityCheck implements Htt
 	}
 
 	@Override
-	protected boolean hasNext(TestStep testStep,SecurityTestRunContext context)
+	protected boolean hasNext( TestStep testStep, SecurityTestRunContext context )
 	{
 		// TODO Auto-generated method stub
 		return false;

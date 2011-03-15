@@ -14,6 +14,7 @@ package com.eviware.soapui.security.registry;
 
 import com.eviware.soapui.config.LargeAttachmentSecurityCheckConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
+import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.check.AbstractSecurityCheck;
@@ -37,7 +38,7 @@ public class LargeAttachmentSecurityCheckFactory extends AbstractSecurityCheckFa
 
 	public boolean canCreate( TestStep testStep )
 	{
-		return true;
+		return testStep instanceof WsdlTestRequestStep;
 	}
 
 	@Override

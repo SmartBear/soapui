@@ -131,11 +131,6 @@ public class GroovySecurityCheck extends AbstractSecurityCheck implements HttpSe
 		return groovyscc.getExecuteScript().getStringValue();
 	}
 
-	@Override
-	public boolean acceptsTestStep( TestStep testStep )
-	{
-		return true;
-	}
 
 	@Override
 	public SecurityCheckConfigPanel getComponent()
