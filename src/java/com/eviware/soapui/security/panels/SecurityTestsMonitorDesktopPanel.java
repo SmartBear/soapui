@@ -31,10 +31,10 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.model.security.SecurityCheck;
 import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.security.monitor.MonitorSecurityTest;
-import com.eviware.soapui.security.registry.SecurityCheckRegistry;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
 
@@ -183,7 +183,7 @@ public class SecurityTestsMonitorDesktopPanel extends JPanel
 
 		public void actionPerformed( ActionEvent e )
 		{
-			String[] availableChecksNames = SecurityCheckRegistry.getInstance().getAvailableSecurityChecksNames( true );
+			String[] availableChecksNames = SoapUI.getSoapUICore().getSecurityCheckRegistry().getAvailableSecurityChecksNames( true );
 			String type = UISupport.prompt( "Specify type of security check", "Add SecurityCheck", availableChecksNames );
 			if( type == null || type.trim().length() == 0 )
 				return;

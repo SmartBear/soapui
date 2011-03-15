@@ -15,6 +15,7 @@ package com.eviware.soapui.security.monitor;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.security.SecurityCheck;
@@ -62,7 +63,7 @@ public class MonitorSecurityTest
 	 */
 	public SecurityCheck addSecurityCheck( String name, String type )
 	{
-		AbstractSecurityCheckFactory factory = SecurityCheckRegistry.getInstance().getFactory( type );
+		AbstractSecurityCheckFactory factory = SoapUI.getSoapUICore().getSecurityCheckRegistry().getFactory( type );
 		SecurityCheckConfig scc = factory.createNewSecurityCheck( name );
 		AbstractSecurityCheck newSc = factory.buildSecurityCheck( null, scc, null );
 		monitorSecurityChecksList.add( newSc );
@@ -78,7 +79,7 @@ public class MonitorSecurityTest
 	 */
 	public SecurityCheck addSecurityCheck( String name, AbstractSecurityCheck sc )
 	{
-		AbstractSecurityCheckFactory factory = SecurityCheckRegistry.getInstance().getFactory( sc.getType() );
+		AbstractSecurityCheckFactory factory = SoapUI.getSoapUICore().getSecurityCheckRegistry().getFactory( sc.getType() );
 		SecurityCheckConfig scc = factory.createNewSecurityCheck( name );
 		AbstractSecurityCheck newSc = factory.buildSecurityCheck( null, scc, null );
 		newSc.getConfig().setConfig( sc.getConfig().getConfig() );

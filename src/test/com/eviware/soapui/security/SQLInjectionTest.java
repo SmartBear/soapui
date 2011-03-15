@@ -18,9 +18,9 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.security.check.SQLInjectionCheck;
-import com.eviware.soapui.security.registry.SecurityCheckRegistry;
 
 /**
  * @author dragica.soldo
@@ -46,7 +46,7 @@ public class SQLInjectionTest extends AbstractSecurityTestCaseWithMockService
 	protected void addSecurityCheckConfig( SecurityCheckConfig securityCheckConfig )
 	{
 
-		SQLInjectionCheck sqlCheck = ( SQLInjectionCheck )SecurityCheckRegistry.getInstance().getFactory(
+		SQLInjectionCheck sqlCheck = ( SQLInjectionCheck )SoapUI.getSoapUICore().getSecurityCheckRegistry().getFactory(
 				securityCheckType ).buildSecurityCheck( testStep, securityCheckConfig, null );
 
 		List<String> params = new ArrayList<String>();
