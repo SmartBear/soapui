@@ -43,7 +43,6 @@ import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.check.AbstractSecurityCheck;
-import com.eviware.soapui.security.registry.SecurityCheckRegistry;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.x.form.XFormDialog;
@@ -442,8 +441,8 @@ public class SecurityChecksPanel extends JPanel
 
 		public void actionPerformed( ActionEvent e )
 		{
-
-			String[] availableChecksNames = SecurityCheckRegistry.getInstance().getAvailableSecurityChecksNames( testStep );
+			String[] availableChecksNames = SoapUI.getSoapUICore().getSecurityCheckRegistry()
+					.getAvailableSecurityChecksNames( testStep );
 			String type = UISupport.prompt( "Specify type of security check", "Add SecurityCheck", availableChecksNames );
 			if( type == null || type.trim().length() == 0 )
 				return;
