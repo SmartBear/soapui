@@ -209,13 +209,13 @@ public class CloneSecurityCheckParameterAction extends AbstractSoapUIAction<Test
 
 		@AField( name = "Target TestCase", description = "The target TestCase for the cloned Parameter(s)", type = AFieldType.ENUMERATION )
 		public final static String TESTCASE = "Target TestCase";
-
-		@AField( name = "Target TestStep", description = "The target TestStep for the cloned Parameter(s)", type = AFieldType.ENUMERATION )
-		public final static String TESTSTEP = "Target TestStep";
-
+		
 		@AField( name = "Target SecurityTest", description = "The target SecurityTest for the cloned Parameter(s)", type = AFieldType.ENUMERATION )
 		public final static String SECURITYTESTS = "Target SecurityTest";
 
+		@AField( name = "Target TestStep", description = "The target TestStep for the cloned Parameter(s)", type = AFieldType.ENUMERATION )
+		public final static String TESTSTEP = "Target TestStep";
+		
 		@AField( name = "Overwrite", description = "Overwrite existing parameters", type = AFieldType.BOOLEAN )
 		public final static String OVERWRITE = "Overwrite";
 	}
