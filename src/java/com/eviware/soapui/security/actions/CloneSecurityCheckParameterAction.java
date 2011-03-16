@@ -53,138 +53,138 @@ public class CloneSecurityCheckParameterAction extends AbstractSoapUIAction<Abst
 		if( dialog == null )
 		{
 			dialog = ADialogBuilder.buildDialog( CloneParameterDialog.class );
-			dialog.getFormField( CloneParameterDialog.TESTSUITE ).addFormFieldListener( new XFormFieldListener()
+			dialog.getFormField( CloneParameterDialog.TARGET_TESTSUITE ).addFormFieldListener( new XFormFieldListener()
 			{
 				public void valueChanged( XFormField sourceField, String newValue, String oldValue )
 				{
 					TestSuite testSuite = project.getTestSuiteByName( newValue );
 					String[] testCaseNames = ModelSupport.getNames( testSuite.getTestCaseList() );
-					dialog.setOptions( CloneParameterDialog.TESTCASE, testCaseNames );
+					dialog.setOptions( CloneParameterDialog.TARGET_TESTCASE, testCaseNames );
 
 					if( testCaseNames.length > 0 )
 					{
-						dialog.setValue( CloneParameterDialog.TESTCASE, testCaseNames[0] );
+						dialog.setValue( CloneParameterDialog.TARGET_TESTCASE, testCaseNames[0] );
 						TestCase testCase = testSuite.getTestCaseByName( testCaseNames[0] );
 
 						String[] testStepNames = ModelSupport.getNames( testCase.getTestStepList() );
-						dialog.setOptions( CloneParameterDialog.TESTSTEP, testStepNames );
+						dialog.setOptions( CloneParameterDialog.TARGET_TESTSTEP, testStepNames );
 
 						String[] securityTestNames = ModelSupport.getNames( testCase.getSecurityTestList() );
-						dialog.setOptions( CloneParameterDialog.SECURITYTESTS, securityTestNames );
+						dialog.setOptions( CloneParameterDialog.TARGET_SECURITYTEST, securityTestNames );
 
 						if( testStepNames.length > 0 )
 						{
-							dialog.setValue( CloneParameterDialog.TESTSTEP, testStepNames[0] );
+							dialog.setValue( CloneParameterDialog.TARGET_TESTSTEP, testStepNames[0] );
 						}
 						else
 						{
-							dialog.setOptions( CloneParameterDialog.TESTSTEP, new String[0] );
+							dialog.setOptions( CloneParameterDialog.TARGET_TESTSTEP, new String[0] );
 						}
 
 						if( securityTestNames.length > 0 )
 						{
-							dialog.setValue( CloneParameterDialog.SECURITYTESTS, securityTestNames[0] );
+							dialog.setValue( CloneParameterDialog.TARGET_SECURITYTEST, securityTestNames[0] );
 						}
 						else
 						{
-							dialog.setOptions( CloneParameterDialog.SECURITYTESTS, new String[0] );
+							dialog.setOptions( CloneParameterDialog.TARGET_SECURITYTEST, new String[0] );
 						}
 					}
 					else
 					{
-						dialog.setOptions( CloneParameterDialog.SECURITYTESTS, new String[0] );
-						dialog.setOptions( CloneParameterDialog.TESTSTEP, new String[0] );
+						dialog.setOptions( CloneParameterDialog.TARGET_SECURITYTEST, new String[0] );
+						dialog.setOptions( CloneParameterDialog.TARGET_TESTSTEP, new String[0] );
 					}
 				}
 			} );
-			dialog.getFormField( CloneParameterDialog.TESTCASE ).addFormFieldListener( new XFormFieldListener()
+			dialog.getFormField( CloneParameterDialog.TARGET_TESTCASE ).addFormFieldListener( new XFormFieldListener()
 			{
 				public void valueChanged( XFormField sourceField, String newValue, String oldValue )
 				{
-					String testSuiteName = dialog.getValue( CloneParameterDialog.TESTSUITE );
+					String testSuiteName = dialog.getValue( CloneParameterDialog.TARGET_TESTSUITE );
 					TestSuite testSuite = project.getTestSuiteByName( testSuiteName );
 					TestCase testCase = testSuite.getTestCaseByName( newValue );
 					String[] testStepNames = ModelSupport.getNames( testCase.getTestStepList() );
-					dialog.setOptions( CloneParameterDialog.TESTSTEP, testStepNames );
+					dialog.setOptions( CloneParameterDialog.TARGET_TESTSTEP, testStepNames );
 
 					String[] securityTestNames = ModelSupport.getNames( testCase.getSecurityTestList() );
-					dialog.setOptions( CloneParameterDialog.SECURITYTESTS, securityTestNames );
+					dialog.setOptions( CloneParameterDialog.TARGET_SECURITYTEST, securityTestNames );
 
 					if( testStepNames.length > 0 )
 					{
-						dialog.setValue( CloneParameterDialog.TESTSTEP, testStepNames[0] );
+						dialog.setValue( CloneParameterDialog.TARGET_TESTSTEP, testStepNames[0] );
 					}
 					else
 					{
-						dialog.setOptions( CloneParameterDialog.TESTSTEP, new String[0] );
+						dialog.setOptions( CloneParameterDialog.TARGET_TESTSTEP, new String[0] );
 					}
 
 					if( securityTestNames.length > 0 )
 					{
-						dialog.setValue( CloneParameterDialog.SECURITYTESTS, securityTestNames[0] );
+						dialog.setValue( CloneParameterDialog.TARGET_SECURITYTEST, securityTestNames[0] );
 					}
 					else
 					{
-						dialog.setOptions( CloneParameterDialog.SECURITYTESTS, new String[0] );
+						dialog.setOptions( CloneParameterDialog.TARGET_SECURITYTEST, new String[0] );
 					}
 				}
 			} );
-			dialog.getFormField( CloneParameterDialog.TESTSTEP ).addFormFieldListener( new XFormFieldListener()
+			dialog.getFormField( CloneParameterDialog.TARGET_TESTSTEP ).addFormFieldListener( new XFormFieldListener()
 			{
 				public void valueChanged( XFormField sourceField, String newValue, String oldValue )
 				{
-					String testSuiteName = dialog.getValue( CloneParameterDialog.TESTSUITE );
+					String testSuiteName = dialog.getValue( CloneParameterDialog.TARGET_TESTSUITE );
 					TestSuite testSuite = project.getTestSuiteByName( testSuiteName );
-					String testCaseName = dialog.getValue( CloneParameterDialog.TESTCASE );
+					String testCaseName = dialog.getValue( CloneParameterDialog.TARGET_TESTCASE );
 					TestCase testCase = testSuite.getTestCaseByName( testCaseName );
-					String securityTestName = dialog.getValue( CloneParameterDialog.SECURITYTESTS );
+					String securityTestName = dialog.getValue( CloneParameterDialog.TARGET_SECURITYTEST );
 					SecurityTest securityTest = testCase.getSecurityTestByName( securityTestName );
 					TestStep testStep = testCase.getTestStepByName( newValue );
 
 					String[] securityCheckNames = ModelSupport.getNames( securityTest.getTestStepSecurityChecks( testStep
 							.getId() ) );
-					dialog.setOptions( CloneParameterDialog.TARGET_SECURITYCHECKS, securityCheckNames );
+					dialog.setOptions( CloneParameterDialog.TARGET_SECURITYCHECK, securityCheckNames );
 				}
 			} );
-			dialog.getFormField( CloneParameterDialog.SECURITYTESTS ).addFormFieldListener( new XFormFieldListener()
+			dialog.getFormField( CloneParameterDialog.TARGET_SECURITYTEST ).addFormFieldListener( new XFormFieldListener()
 			{
 				public void valueChanged( XFormField sourceField, String newValue, String oldValue )
 				{
-					String testSuiteName = dialog.getValue( CloneParameterDialog.TESTSUITE );
+					String testSuiteName = dialog.getValue( CloneParameterDialog.TARGET_TESTSUITE );
 					TestSuite testSuite = project.getTestSuiteByName( testSuiteName );
-					String testCaseName = dialog.getValue( CloneParameterDialog.TESTCASE );
+					String testCaseName = dialog.getValue( CloneParameterDialog.TARGET_TESTCASE );
 					TestCase testCase = testSuite.getTestCaseByName( testCaseName );
 					SecurityTest securityTest = testCase.getSecurityTestByName( newValue );
-					String testStepName = dialog.getValue( CloneParameterDialog.TESTSTEP );
+					String testStepName = dialog.getValue( CloneParameterDialog.TARGET_TESTSTEP );
 					TestStep testStep = testCase.getTestStepByName( testStepName );
 
 					String[] securityCheckNames = ModelSupport.getNames( securityTest.getTestStepSecurityChecks( testStep
 							.getId() ) );
-					dialog.setOptions( CloneParameterDialog.TARGET_SECURITYCHECKS, securityCheckNames );
+					dialog.setOptions( CloneParameterDialog.TARGET_SECURITYCHECK, securityCheckNames );
 				}
 			} );
 			dialog.addAction( new ApplyAction() );
 		}
 		WsdlTestCase testCase = ( WsdlTestCase )securityCheck.getTestStep().getTestCase();
 
-		dialog.setOptions( CloneParameterDialog.TESTSUITE, ModelSupport.getNames( testCase.getTestSuite().getProject()
+		dialog.setOptions( CloneParameterDialog.TARGET_TESTSUITE, ModelSupport.getNames( testCase.getTestSuite().getProject()
 				.getTestSuiteList() ) );
-		dialog.setValue( CloneParameterDialog.TESTSUITE, testCase.getTestSuite().getName() );
+		dialog.setValue( CloneParameterDialog.TARGET_TESTSUITE, testCase.getTestSuite().getName() );
 
 		List<TestCase> testCaseList = testCase.getTestSuite().getTestCaseList();
-		dialog.setOptions( CloneParameterDialog.TESTCASE, ModelSupport.getNames( testCaseList ) );
-		dialog.setValue( CloneParameterDialog.TESTCASE, testCase.getName() );
+		dialog.setOptions( CloneParameterDialog.TARGET_TESTCASE, ModelSupport.getNames( testCaseList ) );
+		dialog.setValue( CloneParameterDialog.TARGET_TESTCASE, testCase.getName() );
 
-		dialog.setOptions( CloneParameterDialog.TESTSTEP, ModelSupport.getNames( testCase.getTestStepList() ) );
-		dialog.setOptions( CloneParameterDialog.SECURITYTESTS, ModelSupport.getNames( testCase.getSecurityTestList() ) );
+		dialog.setOptions( CloneParameterDialog.TARGET_TESTSTEP, ModelSupport.getNames( testCase.getTestStepList() ) );
+		dialog.setOptions( CloneParameterDialog.TARGET_SECURITYTEST, ModelSupport.getNames( testCase.getSecurityTestList() ) );
 
-		String securityTestName = dialog.getValue( CloneParameterDialog.SECURITYTESTS );
+		String securityTestName = dialog.getValue( CloneParameterDialog.TARGET_SECURITYTEST );
 		SecurityTest securityTest = testCase.getSecurityTestByName( securityTestName );
-		String testStepName = dialog.getValue( CloneParameterDialog.TESTSTEP );
+		String testStepName = dialog.getValue( CloneParameterDialog.TARGET_TESTSTEP );
 		TestStep testStep = testCase.getTestStepByName( testStepName );
 
 		String[] securityCheckNames = ModelSupport.getNames( securityTest.getTestStepSecurityChecks( testStep.getId() ) );
-		dialog.setOptions( CloneParameterDialog.TARGET_SECURITYCHECKS, securityCheckNames );
+		dialog.setOptions( CloneParameterDialog.TARGET_SECURITYCHECK, securityCheckNames );
 
 		dialog.setOptions( CloneParameterDialog.PARAMETERS, ModelSupport.getNames( securityCheck.getParameterHolder()
 				.getParameterList() ) );
@@ -209,12 +209,12 @@ public class CloneSecurityCheckParameterAction extends AbstractSoapUIAction<Abst
 	public List<ModelItem> performClone()
 	{
 		List<ModelItem> items = new ArrayList<ModelItem>();
-		String targetTestSuiteName = dialog.getValue( CloneParameterDialog.TESTSUITE );
-		String targetTestCaseName = dialog.getValue( CloneParameterDialog.TESTCASE );
-		String targetSecurityTestName = dialog.getValue( CloneParameterDialog.SECURITYTESTS );
-		String targetSecurityTestStepName = dialog.getValue( CloneParameterDialog.TESTSTEP );
+		String targetTestSuiteName = dialog.getValue( CloneParameterDialog.TARGET_TESTSUITE );
+		String targetTestCaseName = dialog.getValue( CloneParameterDialog.TARGET_TESTCASE );
+		String targetSecurityTestName = dialog.getValue( CloneParameterDialog.TARGET_SECURITYTEST );
+		String targetSecurityTestStepName = dialog.getValue( CloneParameterDialog.TARGET_TESTSTEP );
 		String[] securityChecks = StringUtils.toStringArray( ( ( XFormMultiSelectList )dialog
-				.getFormField( CloneParameterDialog.TARGET_SECURITYCHECKS ) ).getSelectedOptions() );
+				.getFormField( CloneParameterDialog.TARGET_SECURITYCHECK ) ).getSelectedOptions() );
 
 		if( securityChecks.length == 0 )
 		{
@@ -282,19 +282,19 @@ public class CloneSecurityCheckParameterAction extends AbstractSoapUIAction<Abst
 		public final static String PARAMETERS = "Parameters";
 
 		@AField( name = "SecurityChecks", description = "The SecurityChecks to clone to", type = AFieldType.MULTILIST )
-		public final static String TARGET_SECURITYCHECKS = "SecurityChecks";
+		public final static String TARGET_SECURITYCHECK = "SecurityChecks";
 
 		@AField( name = "Target TestStep", description = "The target TestStep for the cloned Parameter(s)", type = AFieldType.ENUMERATION )
-		public final static String TESTSTEP = "Target TestStep";
+		public final static String TARGET_TESTSTEP = "Target TestStep";
 
 		@AField( name = "Target SecurityTest", description = "The target SecurityTest for the cloned Parameter(s)", type = AFieldType.ENUMERATION )
-		public final static String SECURITYTESTS = "Target SecurityTest";
+		public final static String TARGET_SECURITYTEST = "Target SecurityTest";
 
 		@AField( name = "Target TestCase", description = "The target TestCase for the cloned Parameter(s)", type = AFieldType.ENUMERATION )
-		public final static String TESTCASE = "Target TestCase";
+		public final static String TARGET_TESTCASE = "Target TestCase";
 
 		@AField( name = "Target TestSuite", description = "The target TestSuite for the cloned Parameter(s)", type = AFieldType.ENUMERATION )
-		public final static String TESTSUITE = "Target TestSuite";
+		public final static String TARGET_TESTSUITE = "Target TestSuite";
 
 		@AField( name = "Overwrite", description = "Overwrite existing parameters", type = AFieldType.BOOLEAN )
 		public final static String OVERWRITE = "Overwrite";
