@@ -1,9 +1,16 @@
 package com.eviware.soapui.security.support;
 
+import java.beans.PropertyChangeListener;
+import java.util.List;
+
+import javax.swing.ImageIcon;
+
 import org.apache.xmlbeans.SchemaType;
 
 import com.eviware.soapui.config.CheckedParameterConfig;
+import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.security.SecurityCheckedParameter;
+import com.eviware.soapui.model.settings.Settings;
 
 /**
  * ... holds information on parameter which is excluded from request and
@@ -129,5 +136,61 @@ public class SecurityCheckedParameterImpl implements SecurityCheckedParameter
 	public void setConfig( CheckedParameterConfig config )
 	{
 		this.config = config;
+	}
+
+	@Override
+	public String getId()
+	{
+		return null;
+	}
+
+	@Override
+	public ImageIcon getIcon()
+	{
+		return null;
+	}
+
+	@Override
+	public String getDescription()
+	{
+		return null;
+	}
+
+	@Override
+	public Settings getSettings()
+	{
+		return null;
+	}
+
+	@Override
+	public List<? extends ModelItem> getChildren()
+	{
+		return null;
+	}
+
+	@Override
+	public ModelItem getParent()
+	{
+		return null;
+	}
+
+	@Override
+	public void addPropertyChangeListener( String propertyName, PropertyChangeListener listener )
+	{
+	}
+
+	@Override
+	public void addPropertyChangeListener( PropertyChangeListener listener )
+	{
+	}
+
+	@Override
+	public void removePropertyChangeListener( PropertyChangeListener listener )
+	{
+	}
+
+	@Override
+	public void removePropertyChangeListener( String propertyName, PropertyChangeListener listener )
+	{
 	}
 }

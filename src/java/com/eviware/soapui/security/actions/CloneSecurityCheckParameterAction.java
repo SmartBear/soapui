@@ -29,6 +29,7 @@ import com.eviware.x.form.support.AForm;
 public class CloneSecurityCheckParameterAction extends AbstractSoapUIAction<AbstractSecurityCheckWithProperties>
 {
 	public static final String SOAPUI_ACTION_ID = "CloneSecurityCheckParameterAction";
+
 	private TestCase testCase;
 	private Project project;
 
@@ -170,6 +171,20 @@ public class CloneSecurityCheckParameterAction extends AbstractSoapUIAction<Abst
 		dialog.setOptions( CloneParameterDialog.TESTCASE, ModelSupport.getNames( testCaseList ) );
 		dialog.setValue( CloneParameterDialog.TESTCASE, testCase.getName() );
 
+		dialog.setOptions( CloneParameterDialog.TESTSTEP, ModelSupport.getNames( testCase.getTestStepList() ) );
+		dialog.setOptions( CloneParameterDialog.SECURITYTESTS, ModelSupport.getNames( testCase.getSecurityTestList() ) );
+
+		String securityTestName = dialog.getValue( CloneParameterDialog.SECURITYTESTS );
+		SecurityTest securityTest = testCase.getSecurityTestByName( securityTestName );
+		String testStepName = dialog.getValue( CloneParameterDialog.TESTSTEP );
+		TestStep testStep = testCase.getTestStepByName( testStepName );
+
+		String[] securityCheckNames = ModelSupport.getNames( securityTest.getTestStepSecurityChecks( testStep.getId() ) );
+		dialog.setOptions( CloneParameterDialog.SECURITYCHECKS, securityCheckNames );
+
+		dialog.setOptions( CloneParameterDialog.PARAMETERS,
+				ModelSupport.getNames( securityCheck.getParameterHolder().getParameterList() ) );
+
 		if( dialog.show() )
 		{
 			List<ModelItem> items = performClone();
@@ -177,7 +192,7 @@ public class CloneSecurityCheckParameterAction extends AbstractSoapUIAction<Abst
 			if( items.size() > 0 )
 			{
 				UISupport.showDesktopPanel( new ModelItemListDesktopPanel( "Updated TestRequests",
-						"The following TestRequests where updated with new assertions", items.toArray( new ModelItem[items
+						"The following TestRequests where updated with new parameters", items.toArray( new ModelItem[items
 								.size()] ) ) );
 			}
 			else
@@ -200,7 +215,7 @@ public class CloneSecurityCheckParameterAction extends AbstractSoapUIAction<Abst
 		public final static String PARAMETERS = "Parameters";
 
 		@AField( name = "SecurityChecks", description = "The SecurityChecks to clone to", type = AFieldType.MULTILIST )
-		public final static String SECURITYCHECKS = "Parameters";
+		public final static String SECURITYCHECKS = "SecurityChecks";
 
 		@AField( name = "Target TestStep", description = "The target TestStep for the cloned Parameter(s)", type = AFieldType.ENUMERATION )
 		public final static String TESTSTEP = "Target TestStep";
