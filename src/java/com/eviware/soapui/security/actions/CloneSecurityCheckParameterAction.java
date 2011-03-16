@@ -282,7 +282,7 @@ public class CloneSecurityCheckParameterAction extends AbstractSoapUIAction<Abst
 		public final static String PARAMETERS = "Parameters";
 
 		@AField( name = "SecurityChecks", description = "The SecurityChecks to clone to", type = AFieldType.MULTILIST )
-		public final static String TARGET_SECURITYCHECKS = "Parameters";
+		public final static String TARGET_SECURITYCHECKS = "SecurityChecks";
 
 		@AField( name = "Target TestStep", description = "The target TestStep for the cloned Parameter(s)", type = AFieldType.ENUMERATION )
 		public final static String TESTSTEP = "Target TestStep";
