@@ -197,7 +197,7 @@ public class SecurityConfigurationDialogBuilder
 	{
 		field.setProperty( "component", new SecurityCheckedParametersTablePanel( new SecurityParametersTableModel(
 				( ( AbstractSecurityCheckWithProperties )securityCheck ).getParameterHolder() ), securityCheck
-				.getTestStep().getProperties() ) );
+				.getTestStep().getProperties(), securityCheck.getTestStep() ) );
 	}
 
 	public XFormDialog buildSecurityCheckConfigurationDialog( String name, String description, ImageIcon icon,

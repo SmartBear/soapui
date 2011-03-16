@@ -492,7 +492,7 @@ public class SecurityChecksPanel extends JPanel
 		ConfigureSecurityCheckAction()
 		{
 			super( "Configure" );
-			putValue( Action.SHORT_DESCRIPTION, "Configures the selection assertion" );
+			putValue( Action.SHORT_DESCRIPTION, "Configures selected security check" );
 			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/options.gif" ) );
 			setEnabled( false );
 		}

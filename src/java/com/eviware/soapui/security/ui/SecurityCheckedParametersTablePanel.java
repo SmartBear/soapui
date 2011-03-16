@@ -26,23 +26,27 @@ import org.jdesktop.swingx.JXTable;
 
 import com.eviware.soapui.model.security.SecurityParametersTableModel;
 import com.eviware.soapui.model.testsuite.TestProperty;
+import com.eviware.soapui.model.testsuite.TestStep;
+import com.eviware.soapui.security.actions.CloneSecurityCheckParameterAction;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.DefaultActionList;
+import com.eviware.soapui.support.action.swing.SwingActionDelegate;
 import com.eviware.soapui.support.components.JUndoableTextArea;
 import com.eviware.soapui.support.components.JXToolBar;
+import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.XFormField;
 import com.eviware.x.form.XFormFieldListener;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.AField.AFieldType;
+import com.eviware.x.form.support.AForm;
 import com.eviware.x.impl.swing.JComboBoxFormField;
 import com.eviware.x.impl.swing.JFormDialog;
 import com.eviware.x.impl.swing.JTextFieldFormField;
 import com.eviware.x.impl.swing.SwingXFormDialog;
 
-public class SecurityCheckedParametersTablePanel extends JPanel
+public class SecurityCheckedParametersTablePanel extends ModelItemDesktopPanel<TestStep>
 {
 
 	static final String CHOOSE_TEST_PROPERTY = "Choose Test Property";
@@ -54,8 +58,10 @@ public class SecurityCheckedParametersTablePanel extends JPanel
 	private JUndoableTextArea pathPane;
 	private XFormDialog dialog;
 
-	public SecurityCheckedParametersTablePanel( SecurityParametersTableModel model, Map<String, TestProperty> properties )
+	public SecurityCheckedParametersTablePanel( SecurityParametersTableModel model,
+			Map<String, TestProperty> properties, TestStep testStep )
 	{
+		super( testStep );
 		this.model = model;
 		this.properties = properties;
 		init();
@@ -63,13 +69,15 @@ public class SecurityCheckedParametersTablePanel extends JPanel
 
 	private void init()
 	{
-		
+
 		setLayout( new BorderLayout() );
 		toolbar = UISupport.createToolbar();
 
 		toolbar.add( UISupport.createToolbarButton( new AddNewParameterAction() ) );
 		toolbar.add( UISupport.createToolbarButton( new RemoveParameterAction() ) );
 		toolbar.add( UISupport.createToolbarButton( new CopyParameterAction() ) );
+		toolbar.addFixed( UISupport.createToolbarButton( SwingActionDelegate.createDelegate(
+				CloneSecurityCheckParameterAction.SOAPUI_ACTION_ID, getModelItem(), null, "/clone_request.gif" ) ) );
 		toolbar.addGlue();
 
 		add( toolbar, BorderLayout.NORTH );
@@ -133,9 +141,9 @@ public class SecurityCheckedParametersTablePanel extends JPanel
 		ArrayList<String> options = new ArrayList<String>( properties.keySet() );
 		options.set( 0, CHOOSE_TEST_PROPERTY );
 		nameField.setOptions( options.toArray( new String[0] ) );
-		
-		((JFormDialog)dialog).getDialog().setResizable(false );
-		
+
+		( ( JFormDialog )dialog ).getDialog().setResizable( false );
+
 		return dialog;
 	}
 
@@ -210,8 +218,8 @@ public class SecurityCheckedParametersTablePanel extends JPanel
 		@Override
 		public void actionPerformed( ActionEvent e )
 		{
-			if( !model.addParameter( dialog.getValue( AddParameterDialog.LABEL ), dialog
-					.getValue( AddParameterDialog.NAME ), pathPane.getText() ) )
+			if( !model.addParameter( dialog.getValue( AddParameterDialog.LABEL ),
+					dialog.getValue( AddParameterDialog.NAME ), pathPane.getText() ) )
 				UISupport.showErrorMessage( "Label have to be unique!" );
 		}
 
@@ -308,8 +316,8 @@ public class SecurityCheckedParametersTablePanel extends JPanel
 			}
 			else
 			{
-				if( model.addParameter( dialog.getValue( AddParameterDialog.LABEL ), dialog
-						.getValue( AddParameterDialog.NAME ), pathPane.getText() ) )
+				if( model.addParameter( dialog.getValue( AddParameterDialog.LABEL ),
+						dialog.getValue( AddParameterDialog.NAME ), pathPane.getText() ) )
 				{
 					JComboBoxFormField nameField = ( JComboBoxFormField )dialog.getFormField( AddParameterDialog.NAME );
 					nameField.setSelectedOptions( new Object[] { nameField.getOptions()[0] } );

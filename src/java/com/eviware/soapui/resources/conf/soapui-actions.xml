@@ -153,6 +153,7 @@
 	<tns:action id="SelectOperationAction" actionClass="com.eviware.soapui.impl.wsdl.teststeps.actions.SelectOperationAction"/>
 	<tns:action id="ChangeOperationAction" actionClass="com.eviware.soapui.impl.wsdl.teststeps.actions.ChangeOperationAction"/>
 	<tns:action id="SetWaitTimeAction" actionClass="com.eviware.soapui.impl.wsdl.teststeps.SetWaitTimeAction"/>
+	<tns:action id="CloneSecurityCheckParameterAction" actionClass="com.eviware.soapui.security.actions.CloneSecurityCheckParameterAction"/>
 
 	<!-- WsdlMessageAssertion Actions -->
 	<tns:action id="RenameAssertionAction" actionClass="com.eviware.soapui.impl.wsdl.teststeps.actions.RenameAssertionAction"/>
@@ -535,6 +536,8 @@
 		<tns:actionMapping actionId="SeperatorAction"/>
 		<tns:actionMapping actionId="MoveTestStepUpAction" keyStroke="menu UP"/>
 		<tns:actionMapping actionId="MoveTestStepDownAction" keyStroke="menu DOWN"/>
+		<tns:actionMapping actionId="SeperatorAction"/>
+		<tns:actionMapping actionId="CloneSecurityCheckParameterAction"/>
 	</tns:actionGroup>
 
 	<tns:actionGroup name="WSDL RequestStep Actions" id="WsdlTestRequestStepActions"
