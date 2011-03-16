@@ -26,8 +26,8 @@ import org.jdesktop.swingx.JXTable;
 
 import com.eviware.soapui.model.security.SecurityParametersTableModel;
 import com.eviware.soapui.model.testsuite.TestProperty;
-import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.actions.CloneSecurityCheckParameterAction;
+import com.eviware.soapui.security.check.AbstractSecurityCheckWithProperties;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.DefaultActionList;
 import com.eviware.soapui.support.action.swing.SwingActionDelegate;
@@ -46,7 +46,7 @@ import com.eviware.x.impl.swing.JFormDialog;
 import com.eviware.x.impl.swing.JTextFieldFormField;
 import com.eviware.x.impl.swing.SwingXFormDialog;
 
-public class SecurityCheckedParametersTablePanel extends ModelItemDesktopPanel<TestStep>
+public class SecurityCheckedParametersTablePanel extends ModelItemDesktopPanel<AbstractSecurityCheckWithProperties>
 {
 
 	static final String CHOOSE_TEST_PROPERTY = "Choose Test Property";
@@ -59,9 +59,9 @@ public class SecurityCheckedParametersTablePanel extends ModelItemDesktopPanel<T
 	private XFormDialog dialog;
 
 	public SecurityCheckedParametersTablePanel( SecurityParametersTableModel model,
-			Map<String, TestProperty> properties, TestStep testStep )
+			Map<String, TestProperty> properties, AbstractSecurityCheckWithProperties securityCheck )
 	{
-		super( testStep );
+		super( securityCheck );
 		this.model = model;
 		this.properties = properties;
 		init();

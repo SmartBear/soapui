@@ -6,7 +6,6 @@ import java.util.List;
 
 import javax.swing.AbstractAction;
 
-import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.project.Project;
@@ -15,6 +14,7 @@ import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.security.SecurityTest;
+import com.eviware.soapui.security.check.AbstractSecurityCheckWithProperties;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 import com.eviware.soapui.support.components.ModelItemListDesktopPanel;
@@ -26,10 +26,9 @@ import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.support.AForm;
 
-public class CloneSecurityCheckParameterAction extends AbstractSoapUIAction<TestStep>
+public class CloneSecurityCheckParameterAction extends AbstractSoapUIAction<AbstractSecurityCheckWithProperties>
 {
 	public static final String SOAPUI_ACTION_ID = "CloneSecurityCheckParameterAction";
-	private XFormDialog dialog;
 	private TestCase testCase;
 	private Project project;
 
@@ -38,9 +37,9 @@ public class CloneSecurityCheckParameterAction extends AbstractSoapUIAction<Test
 		super( "Clone SecurityCheck Parameters", "Clones an arbitrary number of security check paramaters" );
 	}
 
-	public void perform( final TestStep testStep, Object param )
+	public void perform( final AbstractSecurityCheckWithProperties securityCheck, Object param )
 	{
-		testCase = testStep.getTestCase();
+		testCase = securityCheck.getTestStep().getTestCase();
 		project = testCase.getTestSuite().getProject();
 
 		final XFormDialog dialog = ADialogBuilder.buildDialog( CloneParameterDialog.class );
@@ -161,8 +160,7 @@ public class CloneSecurityCheckParameterAction extends AbstractSoapUIAction<Test
 
 		dialog.addAction( new ApplyAction() );
 
-		WsdlTestCase testCase = ( WsdlTestCase )testStep.getTestCase();
-		WorkspaceImpl workspace = testCase.getTestSuite().getProject().getWorkspace();
+		WsdlTestCase testCase = ( WsdlTestCase )securityCheck.getTestStep().getTestCase();
 
 		dialog.setOptions( CloneParameterDialog.TESTSUITE,
 				ModelSupport.getNames( testCase.getTestSuite().getProject().getTestSuiteList() ) );
@@ -204,18 +202,18 @@ public class CloneSecurityCheckParameterAction extends AbstractSoapUIAction<Test
 		@AField( name = "SecurityChecks", description = "The SecurityChecks to clone to", type = AFieldType.MULTILIST )
 		public final static String SECURITYCHECKS = "Parameters";
 
-		@AField( name = "Target TestSuite", description = "The target TestSuite for the cloned Parameter(s)", type = AFieldType.ENUMERATION )
-		public final static String TESTSUITE = "Target TestSuite";
+		@AField( name = "Target TestStep", description = "The target TestStep for the cloned Parameter(s)", type = AFieldType.ENUMERATION )
+		public final static String TESTSTEP = "Target TestStep";
 
-		@AField( name = "Target TestCase", description = "The target TestCase for the cloned Parameter(s)", type = AFieldType.ENUMERATION )
-		public final static String TESTCASE = "Target TestCase";
-		
 		@AField( name = "Target SecurityTest", description = "The target SecurityTest for the cloned Parameter(s)", type = AFieldType.ENUMERATION )
 		public final static String SECURITYTESTS = "Target SecurityTest";
 
-		@AField( name = "Target TestStep", description = "The target TestStep for the cloned Parameter(s)", type = AFieldType.ENUMERATION )
-		public final static String TESTSTEP = "Target TestStep";
-		
+		@AField( name = "Target TestCase", description = "The target TestCase for the cloned Parameter(s)", type = AFieldType.ENUMERATION )
+		public final static String TESTCASE = "Target TestCase";
+
+		@AField( name = "Target TestSuite", description = "The target TestSuite for the cloned Parameter(s)", type = AFieldType.ENUMERATION )
+		public final static String TESTSUITE = "Target TestSuite";
+
 		@AField( name = "Overwrite", description = "Overwrite existing parameters", type = AFieldType.BOOLEAN )
 		public final static String OVERWRITE = "Overwrite";
 	}

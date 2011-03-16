@@ -153,8 +153,7 @@
 	<tns:action id="SelectOperationAction" actionClass="com.eviware.soapui.impl.wsdl.teststeps.actions.SelectOperationAction"/>
 	<tns:action id="ChangeOperationAction" actionClass="com.eviware.soapui.impl.wsdl.teststeps.actions.ChangeOperationAction"/>
 	<tns:action id="SetWaitTimeAction" actionClass="com.eviware.soapui.impl.wsdl.teststeps.SetWaitTimeAction"/>
-	<tns:action id="CloneSecurityCheckParameterAction" actionClass="com.eviware.soapui.security.actions.CloneSecurityCheckParameterAction"/>
-
+	
 	<!-- WsdlMessageAssertion Actions -->
 	<tns:action id="RenameAssertionAction" actionClass="com.eviware.soapui.impl.wsdl.teststeps.actions.RenameAssertionAction"/>
 	<tns:action id="DeleteAssertionAction" actionClass="com.eviware.soapui.impl.wsdl.teststeps.actions.DeleteAssertionAction"/>
@@ -176,6 +175,7 @@
 	<tns:action id="CloneSecurityTestAction" actionClass="com.eviware.soapui.security.actions.CloneSecurityTestAction"/>
 	<tns:action id="SecurityTestOptionsAction" actionClass="com.eviware.soapui.security.actions.SecurityTestOptionsAction"/>
 	<tns:action id="SecurityTestSecurityTestRunnerAction" actionClass="com.eviware.soapui.impl.wsdl.actions.iface.tools.soapui.SecurityTestSecurityTestRunnerAction"/>
+	<tns:action id="CloneSecurityCheckParameterAction" actionClass="com.eviware.soapui.security.actions.CloneSecurityCheckParameterAction"/>
 
 	<!-- MockService Actions -->
 	<tns:action id="MockServiceOptionsAction" actionClass="com.eviware.soapui.impl.wsdl.actions.mockservice.MockServiceOptionsAction"/>
@@ -544,15 +544,11 @@
 		<tns:actionMapping actionId="ChangeOperationAction"/>
 		<tns:actionMapping actionId="SelectOperationAction"/>
 		<tns:actionMapping actionId="SeperatorAction"/>
-		<tns:actionMapping actionId="CloneSecurityCheckParameterAction"/>
-		<tns:actionMapping actionId="SeperatorAction"/>
 		<tns:actionMapping actionId="ShowOnlineSoapUIHelp" keyStroke="F1" param="functional/testrequests.html"/>
 	</tns:actionGroup>
 
 	<tns:actionGroup name="HTTP RequestStep Actions" id="HttpTestRequestStepActions"
 		class="com.eviware.soapui.impl.wsdl.actions.teststep.WsdlTestStepSoapUIActionGroup">
-		<tns:actionMapping actionId="SeperatorAction"/>
-		<tns:actionMapping actionId="CloneSecurityCheckParameterAction"/>
 		<tns:actionMapping actionId="SeperatorAction"/>
 		<tns:actionMapping actionId="ShowOnlineSoapUIHelp" keyStroke="F1" param="functional/http-requests.html"/>
 	</tns:actionGroup>
@@ -560,8 +556,6 @@
    <tns:actionGroup name="REST RequestStep Actions" id="RestTestRequestStepActions"
          class="com.eviware.soapui.impl.wsdl.actions.teststep.WsdlTestStepSoapUIActionGroup">
          <tns:actionMapping actionId="SeperatorAction"/>
-         <tns:actionMapping actionId="CloneSecurityCheckParameterAction"/>
-		<tns:actionMapping actionId="SeperatorAction"/>
          <tns:actionMapping actionId="ShowOnlineSoapUIHelp" keyStroke="F1" param="functional/rest-requests.html"/>
       </tns:actionGroup>
 
