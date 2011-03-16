@@ -195,13 +195,13 @@ public class CloneSecurityCheckParameterAction extends AbstractSoapUIAction<Abst
 
 			if( items.size() > 0 )
 			{
-				UISupport.showDesktopPanel( new ModelItemListDesktopPanel( "Updated TestRequests",
-						"The following TestRequests where updated with new parameters", items.toArray( new ModelItem[items
+				UISupport.showDesktopPanel( new ModelItemListDesktopPanel( "Updated SecurityChecks",
+						"The following SecurityChecks where updated with new parameters", items.toArray( new ModelItem[items
 								.size()] ) ) );
 			}
 			else
 			{
-				UISupport.showInfoMessage( "Updated " + items.size() + " steps" );
+				UISupport.showInfoMessage( "Updated " + items.size() + " checks" );
 			}
 		}
 	}
