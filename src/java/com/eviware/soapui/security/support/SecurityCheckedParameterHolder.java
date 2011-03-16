@@ -82,7 +82,7 @@ public class SecurityCheckedParameterHolder extends SecurityCheckParameterListen
 		newParameter.setLabel( label );
 		newParameter.setName( name );
 		newParameter.setXPath( xpath );
-		newParameter.setChecked( true );
+		newParameter.setChecked( used );
 		params.add( newParameter );
 		paramsMap.put( newParameter.getLabel().toUpperCase(), newParameter );
 

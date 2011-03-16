@@ -155,6 +155,15 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 
 	}
 
+	/**
+	 * Adds new security check to TestStep SceurutyTest config
+	 * 
+	 * @param factory
+	 * @param newSecCheckConfig
+	 * @param testStepSecurityTestConfig
+	 * @param testStep
+	 * @return
+	 */
 	private AbstractSecurityCheck addSecurityCheck( AbstractSecurityCheckFactory factory,
 			SecurityCheckConfig newSecCheckConfig, TestStepSecurityTestConfig testStepSecurityTestConfig, TestStep testStep )
 	{
