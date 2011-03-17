@@ -13,11 +13,14 @@
 package com.eviware.x.form.support;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -50,17 +53,21 @@ public class XFormMultiSelectList extends AbstractSwingXFormField<JPanel> implem
 	private DefaultListModel listModel;
 	private List<Boolean> selected = new ArrayList<Boolean>();
 
+	PropertyChangeSupport pcs = new PropertyChangeSupport( this );
+	private int[] defaultIndex;
+	private Color defaultColor;
+
 	public XFormMultiSelectList( String[] values )
 	{
 		super( new JPanel( new BorderLayout() ) );
 
 		listModel = new DefaultListModel();
-		if (values != null)
+		if( values != null )
 		{
-			for (String value : values)
+			for( String value : values )
 			{
-				selected.add(false);
-				listModel.addElement(value);
+				selected.add( false );
+				listModel.addElement( value );
 			}
 		}
 		list = new JList( listModel );
@@ -74,7 +81,9 @@ public class XFormMultiSelectList extends AbstractSwingXFormField<JPanel> implem
 
 				if( index != -1 )
 				{
+					int[] oldValue = getSelectedIndexes();
 					selected.set( index, !selected.get( index ) );
+					pcs.firePropertyChange( "select", oldValue, getSelectedIndexes() );
 					list.repaint();
 				}
 			}
@@ -101,7 +110,7 @@ public class XFormMultiSelectList extends AbstractSwingXFormField<JPanel> implem
 
 	public String getValue()
 	{
-		return String.valueOf( list.getSelectedValue());
+		return String.valueOf( list.getSelectedValue() );
 	}
 
 	public void setValue( String value )
@@ -169,7 +178,10 @@ public class XFormMultiSelectList extends AbstractSwingXFormField<JPanel> implem
 			}
 			else
 			{
-				setBackground( list.getBackground() );
+				if( isDefault( index ) )
+					setBackground( defaultColor );
+				else
+					setBackground( list.getBackground() );
 				setForeground( list.getForeground() );
 			}
 
@@ -238,4 +250,32 @@ public class XFormMultiSelectList extends AbstractSwingXFormField<JPanel> implem
 
 		return result;
 	}
+
+	public void setDefault( Color color, int... defIndex )
+	{
+		this.defaultIndex = defIndex;
+		this.defaultColor = color;
+	}
+
+	private boolean isDefault( int index )
+	{
+		if( defaultIndex == null )
+			return false;
+
+		for( int i : defaultIndex )
+			if( index == i )
+				return true;
+		return false;
+	}
+
+	public void addPropertyChangeListener( PropertyChangeListener listener )
+	{
+		pcs.addPropertyChangeListener( listener );
+	}
+
+	public void removePropertyChangeListener( PropertyChangeListener listener )
+	{
+		pcs.removePropertyChangeListener( listener );
+	}
+
 }
