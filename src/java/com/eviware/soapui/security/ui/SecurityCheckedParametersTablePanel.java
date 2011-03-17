@@ -218,9 +218,17 @@ public class SecurityCheckedParametersTablePanel extends ModelItemDesktopPanel<A
 		@Override
 		public void actionPerformed( ActionEvent e )
 		{
-			if( !model.addParameter( dialog.getValue( AddParameterDialog.LABEL ),
-					dialog.getValue( AddParameterDialog.NAME ), pathPane.getText() ) )
-				UISupport.showErrorMessage( "Label have to be unique!" );
+			if( dialog.getValue( AddParameterDialog.LABEL ) == null
+					|| dialog.getValue( AddParameterDialog.LABEL ).trim().length() == 0 )
+			{
+				UISupport.showErrorMessage( "Label is required!" );
+			}
+			else
+			{
+				if( !model.addParameter( dialog.getValue( AddParameterDialog.LABEL ), dialog
+						.getValue( AddParameterDialog.NAME ), pathPane.getText() ) )
+					UISupport.showErrorMessage( "Label have to be unique!" );
+			}
 		}
 
 	}
@@ -246,6 +254,12 @@ public class SecurityCheckedParametersTablePanel extends ModelItemDesktopPanel<A
 			if( dialog != null )
 			{
 				( ( SwingXFormDialog )dialog ).setReturnValue( XFormDialog.CANCEL_OPTION );
+				
+				JComboBoxFormField nameField = ( JComboBoxFormField )dialog.getFormField( AddParameterDialog.NAME );
+				nameField.setSelectedOptions( new Object[] { nameField.getOptions()[0] } );
+				dialog.setValue( AddParameterDialog.LABEL, "" );
+				pathPane.setText( "" );
+				
 				dialog.setVisible( false );
 			}
 
@@ -316,8 +330,8 @@ public class SecurityCheckedParametersTablePanel extends ModelItemDesktopPanel<A
 			}
 			else
 			{
-				if( model.addParameter( dialog.getValue( AddParameterDialog.LABEL ),
-						dialog.getValue( AddParameterDialog.NAME ), pathPane.getText() ) )
+				if( model.addParameter( dialog.getValue( AddParameterDialog.LABEL ), dialog
+						.getValue( AddParameterDialog.NAME ), pathPane.getText() ) )
 				{
 					JComboBoxFormField nameField = ( JComboBoxFormField )dialog.getFormField( AddParameterDialog.NAME );
 					nameField.setSelectedOptions( new Object[] { nameField.getOptions()[0] } );
