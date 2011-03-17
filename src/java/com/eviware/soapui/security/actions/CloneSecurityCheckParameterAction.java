@@ -274,10 +274,10 @@ public class CloneSecurityCheckParameterAction extends AbstractSoapUIAction<Abst
 					{
 						newParameterLabel = "Copy of " + checkParameter.getLabel();
 					}
-					else
-					{
-						newParameterLabel = newParameterLabel + "1";
-					}
+//					else
+//					{
+//						newParameterLabel = newParameterLabel + "1";
+//					}
 				}
 				if( targetSecurityCheck.importParameter( checkParameter, overwrite, newParameterLabel )
 						&& !items.contains( targetSecurityCheck ) )

@@ -15,6 +15,7 @@ import com.eviware.soapui.model.support.XPathReferenceContainer;
 import com.eviware.soapui.model.support.XPathReferenceImpl;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.support.SecurityCheckedParameterHolder;
+import com.eviware.soapui.security.support.SecurityCheckedParameterImpl;
 
 /**
  * 
@@ -86,12 +87,31 @@ public abstract class AbstractSecurityCheckWithProperties extends AbstractSecuri
 		return parameterHolder.getParametarByLabel( label );
 	}
 
-	public boolean importParameter( SecurityCheckedParameter source, boolean overwrite, String newName )
+	public boolean importParameter( SecurityCheckedParameter source, boolean overwrite, String newLabel )
 	{
-		//TODO double check if this needs to return newly added parameter
-		//also maybe add label checking to holder.addParam...
-		//and use overwrite also
-		return getParameterHolder().addParameter( newName, source.getName(), source.getXPath(), source.isChecked() );
+		// TODO double check if this needs to return newly added parameter
+		// also maybe add label checking to holder.addParam...
+		// and use overwrite also
+		SecurityCheckedParameterImpl param = ( SecurityCheckedParameterImpl )getParameterHolder().getParametarByLabel(
+				newLabel );
+		if( param != null )
+		{
+			if( overwrite )
+			{
+				param.setName( source.getName() );
+				param.setXPath( source.getXPath() );
+				param.setChecked( source.isChecked() );
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		else
+		{
+			return getParameterHolder().addParameter( newLabel, source.getName(), source.getXPath(), source.isChecked() );
+		}
 	}
 
 }
