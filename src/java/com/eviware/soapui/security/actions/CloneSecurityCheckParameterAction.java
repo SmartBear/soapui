@@ -7,6 +7,7 @@ import java.util.List;
 import javax.swing.AbstractAction;
 
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
+import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.model.security.SecurityCheckedParameter;
@@ -15,6 +16,7 @@ import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.security.SecurityTest;
+import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.security.check.AbstractSecurityCheckWithProperties;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
@@ -66,7 +68,7 @@ public class CloneSecurityCheckParameterAction extends AbstractSoapUIAction<Abst
 						dialog.setValue( CloneParameterDialog.TARGET_TESTCASE, testCaseNames[0] );
 						TestCase testCase = testSuite.getTestCaseByName( testCaseNames[0] );
 
-						String[] testStepNames = ModelSupport.getNames( testCase.getTestStepList() );
+						String[] testStepNames = getSecurableTestStepsNames( testCase );
 						dialog.setOptions( CloneParameterDialog.TARGET_TESTSTEP, testStepNames );
 
 						String[] securityTestNames = ModelSupport.getNames( testCase.getSecurityTestList() );
@@ -105,7 +107,7 @@ public class CloneSecurityCheckParameterAction extends AbstractSoapUIAction<Abst
 					TestSuite testSuite = project.getTestSuiteByName( testSuiteName );
 					TestCase testCase = testSuite.getTestCaseByName( newValue );
 
-					String[] testStepNames = ModelSupport.getNames( testCase.getTestStepList() );
+					String[] testStepNames = getSecurableTestStepsNames( testCase );
 					dialog.setOptions( CloneParameterDialog.TARGET_TESTSTEP, testStepNames );
 					String[] securityTestNames = ModelSupport.getNames( testCase.getSecurityTestList() );
 					dialog.setOptions( CloneParameterDialog.TARGET_SECURITYTEST, securityTestNames );
@@ -167,17 +169,17 @@ public class CloneSecurityCheckParameterAction extends AbstractSoapUIAction<Abst
 		}
 		WsdlTestCase testCase = ( WsdlTestCase )securityCheck.getTestStep().getTestCase();
 
-		dialog.setOptions( CloneParameterDialog.TARGET_TESTSUITE,
-				ModelSupport.getNames( testCase.getTestSuite().getProject().getTestSuiteList() ) );
+		dialog.setOptions( CloneParameterDialog.TARGET_TESTSUITE, ModelSupport.getNames( testCase.getTestSuite()
+				.getProject().getTestSuiteList() ) );
 		dialog.setValue( CloneParameterDialog.TARGET_TESTSUITE, testCase.getTestSuite().getName() );
 
 		List<TestCase> testCaseList = testCase.getTestSuite().getTestCaseList();
 		dialog.setOptions( CloneParameterDialog.TARGET_TESTCASE, ModelSupport.getNames( testCaseList ) );
 		dialog.setValue( CloneParameterDialog.TARGET_TESTCASE, testCase.getName() );
 
-		dialog.setOptions( CloneParameterDialog.TARGET_TESTSTEP, ModelSupport.getNames( testCase.getTestStepList() ) );
-		dialog.setOptions( CloneParameterDialog.TARGET_SECURITYTEST,
-				ModelSupport.getNames( testCase.getSecurityTestList() ) );
+		dialog.setOptions( CloneParameterDialog.TARGET_TESTSTEP, getSecurableTestStepsNames( testCase ) );
+		dialog.setOptions( CloneParameterDialog.TARGET_SECURITYTEST, ModelSupport.getNames( testCase
+				.getSecurityTestList() ) );
 
 		String securityTestName = dialog.getValue( CloneParameterDialog.TARGET_SECURITYTEST );
 		SecurityTest securityTest = testCase.getSecurityTestByName( securityTestName );
@@ -204,6 +206,25 @@ public class CloneSecurityCheckParameterAction extends AbstractSoapUIAction<Abst
 				UISupport.showInfoMessage( "Updated " + items.size() + " checks" );
 			}
 		}
+	}
+
+	private String[] getSecurableTestStepsNames( TestCase testCase )
+	{
+		List<TestStep> testStepList = testCase.getTestStepList();
+		List<String> namesList = new ArrayList<String>();
+		for( TestStep testStep : testStepList )
+		{
+			if( AbstractSecurityCheck.isSecurable( testStep ) )
+			{
+				namesList.add( testStep.getName() );
+			}
+		}
+		String[] names = new String[namesList.size()];
+		for( int c = 0; c < namesList.size(); c++ )
+		{
+			names[c] = namesList.get( c );
+		}
+		return names;
 	}
 
 	public List<ModelItem> performClone()
