@@ -20,7 +20,6 @@ import com.eviware.soapui.security.check.AbstractSecurityCheckWithProperties;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
-import com.eviware.soapui.support.components.ModelItemListDesktopPanel;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.XFormField;
 import com.eviware.x.form.XFormFieldListener;
@@ -194,17 +193,7 @@ public class CloneSecurityCheckParameterAction extends AbstractSoapUIAction<Abst
 		if( dialog.show() )
 		{
 			List<ModelItem> items = performClone();
-
-			if( dialog.getBooleanValue( CloneParameterDialog.OPENLIST ) && items.size() > 0 )
-			{
-				UISupport.showDesktopPanel( new ModelItemListDesktopPanel( "Updated SecurityChecks",
-						"The following SecurityChecks where updated with new parameters", items.toArray( new ModelItem[items
-								.size()] ) ) );
-			}
-			else
-			{
-				UISupport.showInfoMessage( "Updated " + items.size() + " checks" );
-			}
+			UISupport.showInfoMessage( "Updated " + items.size() + " checks" );
 		}
 	}
 
@@ -274,10 +263,10 @@ public class CloneSecurityCheckParameterAction extends AbstractSoapUIAction<Abst
 					{
 						newParameterLabel = "Copy of " + checkParameter.getLabel();
 					}
-//					else
-//					{
-//						newParameterLabel = newParameterLabel + "1";
-//					}
+					// else
+					// {
+					// newParameterLabel = newParameterLabel + "1";
+					// }
 				}
 				if( targetSecurityCheck.importParameter( checkParameter, overwrite, newParameterLabel )
 						&& !items.contains( targetSecurityCheck ) )
@@ -312,9 +301,6 @@ public class CloneSecurityCheckParameterAction extends AbstractSoapUIAction<Abst
 
 		@AField( name = "Overwrite", description = "Overwrite existing parameters", type = AFieldType.BOOLEAN )
 		public final static String OVERWRITE = "Overwrite";
-
-		@AField( name = "Open List", description = "Open List of updated SecurityChecks", type = AFieldType.BOOLEAN )
-		public final static String OPENLIST = "Open List";
 	}
 
 	private class ApplyAction extends AbstractAction
