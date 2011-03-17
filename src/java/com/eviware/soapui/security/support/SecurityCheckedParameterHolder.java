@@ -150,17 +150,32 @@ public class SecurityCheckedParameterHolder extends SecurityCheckParameterListen
 	}
 
 	/**
+	 * This method returns parameter based on its label.
+	 * 
+	 * @param paramLabel
+	 * @return parameter
+	 */
+	public SecurityCheckedParameter getParametarByLabel( String paramLabel )
+	{
+		for( SecurityCheckedParameter param : params )
+			if( param.getLabel().equals( paramLabel ) )
+				return param;
+		return null;
+	}
+
+	/**
 	 * This method returns parameter based on its name.
 	 * 
 	 * @param paramName
 	 * @return parameter
 	 */
-	public SecurityCheckedParameter getParametarByName( String paramName )
+	public List<SecurityCheckedParameter> getParametarsByName( String paramName )
 	{
+		List<SecurityCheckedParameter> paramsList = new ArrayList<SecurityCheckedParameter>();
 		for( SecurityCheckedParameter param : params )
 			if( param.getName().equals( paramName ) )
-				return param;
-		return null;
+				paramsList.add( param );
+		return paramsList;
 	}
 
 	public void removeParameters( int[] selected )

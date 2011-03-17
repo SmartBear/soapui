@@ -38,7 +38,7 @@ public class CloneSecurityCheckParameterAction extends AbstractSoapUIAction<Abst
 	private TestCase testCase;
 	private Project project;
 	private XFormDialog dialog;
-	private AbstractSecurityCheckWithProperties securityCheck;
+	private AbstractSecurityCheckWithProperties curentSecurityCheck;
 
 	public CloneSecurityCheckParameterAction()
 	{
@@ -47,7 +47,7 @@ public class CloneSecurityCheckParameterAction extends AbstractSoapUIAction<Abst
 
 	public void perform( final AbstractSecurityCheckWithProperties securityCheck, Object param )
 	{
-		this.securityCheck = securityCheck;
+		curentSecurityCheck = securityCheck;
 		testCase = securityCheck.getTestStep().getTestCase();
 		project = testCase.getTestSuite().getProject();
 
@@ -234,10 +234,10 @@ public class CloneSecurityCheckParameterAction extends AbstractSoapUIAction<Abst
 		String targetTestCaseName = dialog.getValue( CloneParameterDialog.TARGET_TESTCASE );
 		String targetSecurityTestName = dialog.getValue( CloneParameterDialog.TARGET_SECURITYTEST );
 		String targetSecurityTestStepName = dialog.getValue( CloneParameterDialog.TARGET_TESTSTEP );
-		String[] securityChecks = StringUtils.toStringArray( ( ( XFormMultiSelectList )dialog
+		String[] targetSecurityChecks = StringUtils.toStringArray( ( ( XFormMultiSelectList )dialog
 				.getFormField( CloneParameterDialog.TARGET_SECURITYCHECK ) ).getSelectedOptions() );
 
-		if( securityChecks.length == 0 )
+		if( targetSecurityChecks.length == 0 )
 		{
 			UISupport.showErrorMessage( "No SecurityChecks selected.." );
 			return items;
@@ -259,27 +259,27 @@ public class CloneSecurityCheckParameterAction extends AbstractSoapUIAction<Abst
 
 		boolean overwrite = dialog.getBooleanValue( CloneParameterDialog.OVERWRITE );
 
-		for( String checkName : securityChecks )
+		for( String checkName : targetSecurityChecks )
 		{
 			AbstractSecurityCheckWithProperties targetSecurityCheck = ( AbstractSecurityCheckWithProperties )targetSecurityTest
 					.getTestStepSecurityCheckByName( targetTestStep.getId(), checkName );
 
 			for( int i : indexes )
 			{
-				SecurityCheckedParameter checkParameter = securityCheck.getParameterAt( i );
-				String newParameterName = checkParameter.getName();
-				if( securityCheck.getParameterByName( checkParameter.getName() ) != null )
+				SecurityCheckedParameter checkParameter = curentSecurityCheck.getParameterAt( i );
+				String newParameterLabel = checkParameter.getLabel();
+				if( curentSecurityCheck.getParameterByLabel( checkParameter.getLabel() ) != null )
 				{
-					if( securityCheck.equals( targetSecurityCheck ) )
+					if( curentSecurityCheck.equals( targetSecurityCheck ) )
 					{
-						newParameterName = "Copy of " + checkParameter.getName();
+						newParameterLabel = "Copy of " + checkParameter.getLabel();
 					}
 					else
 					{
-						newParameterName = newParameterName + "1";
+						newParameterLabel = newParameterLabel + "1";
 					}
 				}
-				if( targetSecurityCheck.importParameter( checkParameter, overwrite, newParameterName )
+				if( targetSecurityCheck.importParameter( checkParameter, overwrite, newParameterLabel )
 						&& !items.contains( targetSecurityCheck ) )
 				{
 					items.add( targetSecurityCheck );

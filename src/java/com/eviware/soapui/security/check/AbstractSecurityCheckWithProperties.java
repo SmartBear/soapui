@@ -81,9 +81,9 @@ public abstract class AbstractSecurityCheckWithProperties extends AbstractSecuri
 		return getParameterHolder().getParameterList().get( i );
 	}
 
-	public SecurityCheckedParameter getParameterByName( String name )
+	public SecurityCheckedParameter getParameterByLabel( String label )
 	{
-		return parameterHolder.getParametarByName( name );
+		return parameterHolder.getParametarByLabel( label );
 	}
 
 	public boolean importParameter( SecurityCheckedParameter source, boolean overwrite, String newName )
