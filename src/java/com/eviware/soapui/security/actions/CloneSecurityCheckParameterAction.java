@@ -7,7 +7,6 @@ import java.util.List;
 import javax.swing.AbstractAction;
 
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
-import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.model.security.SecurityCheckedParameter;
@@ -28,9 +27,9 @@ import com.eviware.x.form.XFormFieldListener;
 import com.eviware.x.form.XFormOptionsField;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
+import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.XFormMultiSelectList;
-import com.eviware.x.form.support.AField.AFieldType;
 
 public class CloneSecurityCheckParameterAction extends AbstractSoapUIAction<AbstractSecurityCheckWithProperties>
 {
@@ -143,8 +142,8 @@ public class CloneSecurityCheckParameterAction extends AbstractSoapUIAction<Abst
 					SecurityTest securityTest = testCase.getSecurityTestByName( securityTestName );
 					TestStep testStep = testCase.getTestStepByName( newValue );
 
-					String[] securityCheckNames = ModelSupport.getNames( securityTest.getTestStepSecurityChecks( testStep
-							.getId() ) );
+					String[] securityCheckNames = ModelSupport.getNames( securityTest.getTestStepSecurityCheckByType(
+							testStep.getId(), AbstractSecurityCheckWithProperties.class ) );
 					dialog.setOptions( CloneParameterDialog.TARGET_SECURITYCHECK, securityCheckNames );
 				}
 			} );
@@ -160,8 +159,8 @@ public class CloneSecurityCheckParameterAction extends AbstractSoapUIAction<Abst
 					String testStepName = dialog.getValue( CloneParameterDialog.TARGET_TESTSTEP );
 					TestStep testStep = testCase.getTestStepByName( testStepName );
 
-					String[] securityCheckNames = ModelSupport.getNames( securityTest.getTestStepSecurityChecks( testStep
-							.getId() ) );
+					String[] securityCheckNames = ModelSupport.getNames( securityTest.getTestStepSecurityCheckByType(
+							testStep.getId(), AbstractSecurityCheckWithProperties.class ) );
 					dialog.setOptions( CloneParameterDialog.TARGET_SECURITYCHECK, securityCheckNames );
 				}
 			} );
@@ -169,8 +168,8 @@ public class CloneSecurityCheckParameterAction extends AbstractSoapUIAction<Abst
 		}
 		WsdlTestCase testCase = ( WsdlTestCase )securityCheck.getTestStep().getTestCase();
 
-		dialog.setOptions( CloneParameterDialog.TARGET_TESTSUITE, ModelSupport.getNames( testCase.getTestSuite()
-				.getProject().getTestSuiteList() ) );
+		dialog.setOptions( CloneParameterDialog.TARGET_TESTSUITE,
+				ModelSupport.getNames( testCase.getTestSuite().getProject().getTestSuiteList() ) );
 		dialog.setValue( CloneParameterDialog.TARGET_TESTSUITE, testCase.getTestSuite().getName() );
 
 		List<TestCase> testCaseList = testCase.getTestSuite().getTestCaseList();
@@ -178,15 +177,16 @@ public class CloneSecurityCheckParameterAction extends AbstractSoapUIAction<Abst
 		dialog.setValue( CloneParameterDialog.TARGET_TESTCASE, testCase.getName() );
 
 		dialog.setOptions( CloneParameterDialog.TARGET_TESTSTEP, getSecurableTestStepsNames( testCase ) );
-		dialog.setOptions( CloneParameterDialog.TARGET_SECURITYTEST, ModelSupport.getNames( testCase
-				.getSecurityTestList() ) );
+		dialog.setOptions( CloneParameterDialog.TARGET_SECURITYTEST,
+				ModelSupport.getNames( testCase.getSecurityTestList() ) );
 
 		String securityTestName = dialog.getValue( CloneParameterDialog.TARGET_SECURITYTEST );
 		SecurityTest securityTest = testCase.getSecurityTestByName( securityTestName );
 		String testStepName = dialog.getValue( CloneParameterDialog.TARGET_TESTSTEP );
 		TestStep testStep = testCase.getTestStepByName( testStepName );
 
-		String[] securityCheckNames = ModelSupport.getNames( securityTest.getTestStepSecurityChecks( testStep.getId() ) );
+		String[] securityCheckNames = ModelSupport.getNames( securityTest.getTestStepSecurityCheckByType(
+				testStep.getId(), AbstractSecurityCheckWithProperties.class ) );
 		dialog.setOptions( CloneParameterDialog.TARGET_SECURITYCHECK, securityCheckNames );
 
 		dialog.setOptions( CloneParameterDialog.PARAMETERS, securityCheck.getParameterHolder().getParameterLabels() );
@@ -195,7 +195,7 @@ public class CloneSecurityCheckParameterAction extends AbstractSoapUIAction<Abst
 		{
 			List<ModelItem> items = performClone();
 
-			if( items.size() > 0 )
+			if( dialog.getBooleanValue( CloneParameterDialog.OPENLIST ) && items.size() > 0 )
 			{
 				UISupport.showDesktopPanel( new ModelItemListDesktopPanel( "Updated SecurityChecks",
 						"The following SecurityChecks where updated with new parameters", items.toArray( new ModelItem[items
@@ -263,13 +263,6 @@ public class CloneSecurityCheckParameterAction extends AbstractSoapUIAction<Abst
 		{
 			AbstractSecurityCheckWithProperties targetSecurityCheck = ( AbstractSecurityCheckWithProperties )targetSecurityTest
 					.getTestStepSecurityCheckByName( targetTestStep.getId(), checkName );
-			// if( dialog.getBooleanValue( Form.CLEAR_EXISTING ) )
-			// {
-			// while( testRequest.getAssertionCount() > 0 )
-			// {
-			// testRequest.removeAssertion( testRequest.getAssertionAt( 0 ) );
-			// }
-			// }
 
 			for( int i : indexes )
 			{
@@ -319,6 +312,9 @@ public class CloneSecurityCheckParameterAction extends AbstractSoapUIAction<Abst
 
 		@AField( name = "Overwrite", description = "Overwrite existing parameters", type = AFieldType.BOOLEAN )
 		public final static String OVERWRITE = "Overwrite";
+
+		@AField( name = "Open List", description = "Open List of updated SecurityChecks", type = AFieldType.BOOLEAN )
+		public final static String OPENLIST = "Open List";
 	}
 
 	private class ApplyAction extends AbstractAction

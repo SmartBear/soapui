@@ -468,6 +468,18 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 		return null;
 	}
 
+	@SuppressWarnings( "unchecked" )
+	public <T extends SecurityCheck> List<T> getTestStepSecurityCheckByType( String testStepId,
+			Class<T> securityCheckType )
+	{
+		List<T> result = new ArrayList<T>();
+		for( SecurityCheck check : getTestStepSecurityChecks( testStepId ) )
+			if( securityCheckType.isAssignableFrom( check.getClass() ) )
+				result.add( ( T )check );
+
+		return result;
+	}
+
 	public AbstractSecurityCheck getTestStepSecurityCheckAt( String testStepId, int index )
 	{
 		List<AbstractSecurityCheck> securityChecksList = getTestStepSecurityChecks( testStepId );
