@@ -33,8 +33,7 @@ public class SecurityCheckedParameterHolder extends SecurityCheckParameterListen
 
 	private Set<SecurityCheckParameterHolderListener> listeners = new HashSet<SecurityCheckParameterHolderListener>();
 
-	public SecurityCheckedParameterHolder( SecurityCheck securityCheck,
-			CheckedParametersListConfig chekedPameters )
+	public SecurityCheckedParameterHolder( SecurityCheck securityCheck, CheckedParametersListConfig chekedPameters )
 	{
 		this.securityCheck = securityCheck;
 		this.paramsConfig = chekedPameters;
@@ -118,6 +117,17 @@ public class SecurityCheckedParameterHolder extends SecurityCheckParameterListen
 	public List<SecurityCheckedParameter> getParameterList()
 	{
 		return params;
+	}
+
+	public String[] getParameterLabels()
+	{
+		String[] labels = new String[params.size()];
+		for( int c = 0; c < labels.length; c++ )
+		{
+			labels[c] = params.get( c ).getLabel();
+		}
+
+		return labels;
 	}
 
 	/*

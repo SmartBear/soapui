@@ -104,9 +104,9 @@ public class CloneSecurityCheckParameterAction extends AbstractSoapUIAction<Abst
 					String testSuiteName = dialog.getValue( CloneParameterDialog.TARGET_TESTSUITE );
 					TestSuite testSuite = project.getTestSuiteByName( testSuiteName );
 					TestCase testCase = testSuite.getTestCaseByName( newValue );
+
 					String[] testStepNames = ModelSupport.getNames( testCase.getTestStepList() );
 					dialog.setOptions( CloneParameterDialog.TARGET_TESTSTEP, testStepNames );
-
 					String[] securityTestNames = ModelSupport.getNames( testCase.getSecurityTestList() );
 					dialog.setOptions( CloneParameterDialog.TARGET_SECURITYTEST, securityTestNames );
 
@@ -167,8 +167,8 @@ public class CloneSecurityCheckParameterAction extends AbstractSoapUIAction<Abst
 		}
 		WsdlTestCase testCase = ( WsdlTestCase )securityCheck.getTestStep().getTestCase();
 
-		dialog.setOptions( CloneParameterDialog.TARGET_TESTSUITE, ModelSupport.getNames( testCase.getTestSuite().getProject()
-				.getTestSuiteList() ) );
+		dialog.setOptions( CloneParameterDialog.TARGET_TESTSUITE,
+				ModelSupport.getNames( testCase.getTestSuite().getProject().getTestSuiteList() ) );
 		dialog.setValue( CloneParameterDialog.TARGET_TESTSUITE, testCase.getTestSuite().getName() );
 
 		List<TestCase> testCaseList = testCase.getTestSuite().getTestCaseList();
@@ -176,7 +176,8 @@ public class CloneSecurityCheckParameterAction extends AbstractSoapUIAction<Abst
 		dialog.setValue( CloneParameterDialog.TARGET_TESTCASE, testCase.getName() );
 
 		dialog.setOptions( CloneParameterDialog.TARGET_TESTSTEP, ModelSupport.getNames( testCase.getTestStepList() ) );
-		dialog.setOptions( CloneParameterDialog.TARGET_SECURITYTEST, ModelSupport.getNames( testCase.getSecurityTestList() ) );
+		dialog.setOptions( CloneParameterDialog.TARGET_SECURITYTEST,
+				ModelSupport.getNames( testCase.getSecurityTestList() ) );
 
 		String securityTestName = dialog.getValue( CloneParameterDialog.TARGET_SECURITYTEST );
 		SecurityTest securityTest = testCase.getSecurityTestByName( securityTestName );
@@ -186,8 +187,7 @@ public class CloneSecurityCheckParameterAction extends AbstractSoapUIAction<Abst
 		String[] securityCheckNames = ModelSupport.getNames( securityTest.getTestStepSecurityChecks( testStep.getId() ) );
 		dialog.setOptions( CloneParameterDialog.TARGET_SECURITYCHECK, securityCheckNames );
 
-		dialog.setOptions( CloneParameterDialog.PARAMETERS, ModelSupport.getNames( securityCheck.getParameterHolder()
-				.getParameterList() ) );
+		dialog.setOptions( CloneParameterDialog.PARAMETERS, securityCheck.getParameterHolder().getParameterLabels() );
 
 		if( dialog.show() )
 		{

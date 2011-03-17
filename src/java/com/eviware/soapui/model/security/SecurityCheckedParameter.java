@@ -1,8 +1,7 @@
 package com.eviware.soapui.model.security;
 
-import com.eviware.soapui.model.ModelItem;
 
-public interface SecurityCheckedParameter extends ModelItem
+public interface SecurityCheckedParameter
 {
 
 	/**
