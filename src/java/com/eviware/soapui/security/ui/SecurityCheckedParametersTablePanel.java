@@ -538,34 +538,42 @@ public class SecurityCheckedParametersTablePanel extends JPanel
 					dialog.setValue( CloneParameterDialog.TARGET_TESTCASE, testCaseNames[0] );
 					TestCase testCase = testSuite.getTestCaseByName( testCaseNames[0] );
 
-					String[] testStepNames = getSecurableTestStepsNames( testCase );
-					dialog.setOptions( CloneParameterDialog.TARGET_TESTSTEP, testStepNames );
-
+					String[] testStepNames = new String[0];
 					String[] securityTestNames = ModelSupport.getNames( testCase.getSecurityTestList() );
 					dialog.setOptions( CloneParameterDialog.TARGET_SECURITYTEST, securityTestNames );
-
-					if( testStepNames.length > 0 )
+					if( securityTestNames.length > 0 )
 					{
-						dialog.setValue( CloneParameterDialog.TARGET_TESTSTEP, testStepNames[0] );
+						testStepNames = getSecurableTestStepsNames( testCase );
 					}
-					else
-					{
-						dialog.setOptions( CloneParameterDialog.TARGET_TESTSTEP, new String[0] );
-					}
+					dialog.setOptions( CloneParameterDialog.TARGET_TESTSTEP, testStepNames );
 
 					if( securityTestNames.length > 0 )
 					{
 						dialog.setValue( CloneParameterDialog.TARGET_SECURITYTEST, securityTestNames[0] );
-					}
-					else
-					{
-						dialog.setOptions( CloneParameterDialog.TARGET_SECURITYTEST, new String[0] );
+
+						if( testStepNames.length > 0 )
+						{
+							dialog.setValue( CloneParameterDialog.TARGET_TESTSTEP, testStepNames[0] );
+						}
+						else
+						{
+							dialog.setOptions( CloneParameterDialog.TARGET_TESTSTEP, new String[0] );
+						}
+
+						String securityTestName = dialog.getValue( CloneParameterDialog.TARGET_SECURITYTEST );
+						SecurityTest securityTest = testCase.getSecurityTestByName( securityTestName );
+						String testStepName = dialog.getValue( CloneParameterDialog.TARGET_TESTSTEP );
+						TestStep testStep = testCase.getTestStepByName( testStepName );
+						String[] securityCheckNames = ModelSupport.getNames( securityTest.getTestStepSecurityCheckByType(
+								testStep.getId(), AbstractSecurityCheckWithProperties.class ) );
+						dialog.setOptions( CloneParameterDialog.TARGET_SECURITYCHECK, securityCheckNames );
 					}
 				}
 				else
 				{
 					dialog.setOptions( CloneParameterDialog.TARGET_SECURITYTEST, new String[0] );
 					dialog.setOptions( CloneParameterDialog.TARGET_TESTSTEP, new String[0] );
+					dialog.setOptions( CloneParameterDialog.TARGET_SECURITYCHECK, new String[0] );
 				}
 			}
 		} );
