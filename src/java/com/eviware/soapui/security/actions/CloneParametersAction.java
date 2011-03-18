@@ -228,10 +228,14 @@ public class CloneParametersAction extends AbstractAction
 			{
 				List<ModelItem> items = performClone( true );
 				UISupport.showInfoMessage( "Updated " + items.size() + " checks" );
-				( ( XFormMultiSelectList )dialog.getFormField( CloneParameterDialog.TARGET_SECURITYCHECK ) )
-						.setSelectedOptions( new String[0] );
-				( ( XFormMultiSelectList )dialog.getFormField( CloneParameterDialog.PARAMETERS ) )
-						.setSelectedOptions( new String[0] );
+
+				if( items.size() > 0 )
+				{
+					( ( XFormMultiSelectList )dialog.getFormField( CloneParameterDialog.TARGET_SECURITYCHECK ) )
+							.setSelectedOptions( new String[0] );
+					( ( XFormMultiSelectList )dialog.getFormField( CloneParameterDialog.PARAMETERS ) )
+							.setSelectedOptions( new String[0] );
+				}
 			}
 		}
 	}
