@@ -103,10 +103,10 @@ public class XPathInjectionSecurityCheck extends AbstractSecurityCheckWithProper
 	private void createMessageExchange( TestStep testStep )
 	{
 		MessageExchange messageExchange = null;
-		if( messageExchange instanceof WsdlTestRequestStep )
+//		if( messageExchange instanceof WsdlTestRequestStep )
 			messageExchange = new WsdlResponseMessageExchange( ( ( WsdlTestRequestStep )testStep ).getTestRequest() );
-		else
-			messageExchange = new RestResponseMessageExchange( ( ( RestTestRequestStep )testStep ).getTestRequest() );
+//		else
+//			messageExchange = new RestResponseMessageExchange( ( ( RestTestRequestStep )testStep ).getTestRequest() );
 		getSecurityCheckRequestResult().setMessageExchange( messageExchange );
 	}
 
