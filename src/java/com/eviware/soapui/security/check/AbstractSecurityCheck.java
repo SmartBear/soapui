@@ -39,7 +39,6 @@ import com.eviware.soapui.model.security.SecurityCheck;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.model.testsuite.AssertionsListener;
-import com.eviware.soapui.model.testsuite.RequestAssertion;
 import com.eviware.soapui.model.testsuite.ResponseAssertion;
 import com.eviware.soapui.model.testsuite.SamplerTestStep;
 import com.eviware.soapui.model.testsuite.TestAssertion;
@@ -63,7 +62,7 @@ import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
  * 
  */
 public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<SecurityCheckConfig> implements Assertable,
-		RequestAssertion, ResponseAssertion, SecurityCheck
+		 ResponseAssertion, SecurityCheck//, RequestAssertion 
 {
 	// configuration of specific request modification
 	// private SecurityCheckConfig config;
@@ -192,7 +191,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 			execute( securityTestRunner, ( ( SecurityTestRunnerImpl )securityTestRunner )
 					.cloneForSecurityCheck( ( WsdlTestStep )this.testStep ), context );
 			securityCheckRequestResult.stopTimer();
-			assertRequest( getSecurityCheckRequestResult().getMessageExchange(), context );
+//			assertRequest( getSecurityCheckRequestResult().getMessageExchange(), context );
 			assertResponse( getSecurityCheckRequestResult().getMessageExchange(), context );
 			// add to summary result
 			securityCheckResult.addSecurityRequestResult( getSecurityCheckRequestResult() );
@@ -645,34 +644,34 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		return this;
 	}
 
-	@Override
-	public AssertionStatus assertRequest( MessageExchange messageExchange, SubmitContext context )
-	{
-		AssertionStatus result = null;
-
-		try
-		{
-			PropertyChangeNotifier notifier = new PropertyChangeNotifier();
-
-			if( messageExchange != null )
-			{
-				context.setProperty( SECURITY_CHECK_REQUEST_RESULT, getSecurityCheckRequestResult() );
-
-				for( WsdlMessageAssertion assertion : assertionsSupport.getAssertionList() )
-				{
-					result = assertion.assertRequest( messageExchange, context );
-					setStatus( result, assertion );
-				}
-
-				notifier.notifyChange();
-			}
-		}
-		catch( Exception e )
-		{
-			e.printStackTrace();
-		}
-		return result;
-	}
+//	@Override
+//	public AssertionStatus assertRequest( MessageExchange messageExchange, SubmitContext context )
+//	{
+//		AssertionStatus result = null;
+//
+//		try
+//		{
+//			PropertyChangeNotifier notifier = new PropertyChangeNotifier();
+//
+//			if( messageExchange != null )
+//			{
+//				context.setProperty( SECURITY_CHECK_REQUEST_RESULT, getSecurityCheckRequestResult() );
+//
+//				for( WsdlMessageAssertion assertion : assertionsSupport.getAssertionList() )
+//				{
+//					result = assertion.assertRequest( messageExchange, context );
+//					setStatus( result, assertion );
+//				}
+//
+//				notifier.notifyChange();
+//			}
+//		}
+//		catch( Exception e )
+//		{
+//			e.printStackTrace();
+//		}
+//		return result;
+//	}
 
 	public AssertionStatus assertResponse( MessageExchange messageExchange, SubmitContext context )
 	{
