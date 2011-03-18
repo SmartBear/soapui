@@ -36,6 +36,7 @@ import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.security.SecurityTest;
+import com.eviware.soapui.security.actions.CloneParametersAction;
 import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.security.check.AbstractSecurityCheckWithProperties;
 import com.eviware.soapui.support.StringUtils;
@@ -49,9 +50,9 @@ import com.eviware.x.form.XFormFieldListener;
 import com.eviware.x.form.XFormOptionsField;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.XFormMultiSelectList;
+import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.impl.swing.JComboBoxFormField;
 import com.eviware.x.impl.swing.JFormDialog;
 import com.eviware.x.impl.swing.JTextFieldFormField;
@@ -88,7 +89,7 @@ public class SecurityCheckedParametersTablePanel extends JPanel
 		toolbar.add( UISupport.createToolbarButton( new AddNewParameterAction() ) );
 		toolbar.add( UISupport.createToolbarButton( new RemoveParameterAction() ) );
 		toolbar.add( UISupport.createToolbarButton( new CopyParameterAction() ) );
-		toolbar.add( UISupport.createToolbarButton( new CloneParameterAction() ) );
+		toolbar.add( UISupport.createToolbarButton( new CloneParametersAction( securityCheck ) ) );
 		toolbar.addGlue();
 
 		add( toolbar, BorderLayout.NORTH );
@@ -236,8 +237,8 @@ public class SecurityCheckedParametersTablePanel extends JPanel
 			}
 			else
 			{
-				if( !model.addParameter( dialog.getValue( AddParameterDialog.LABEL ),
-						dialog.getValue( AddParameterDialog.NAME ), pathPane.getText() ) )
+				if( !model.addParameter( dialog.getValue( AddParameterDialog.LABEL ), dialog
+						.getValue( AddParameterDialog.NAME ), pathPane.getText() ) )
 					UISupport.showErrorMessage( "Label have to be unique!" );
 			}
 		}
@@ -311,7 +312,7 @@ public class SecurityCheckedParametersTablePanel extends JPanel
 		pathPane.setText( ( String )model.getValueAt( row, 2 ) );
 	}
 
-	private class CloneParameterAction extends AbstractAction
+	public class CloneParameterAction extends AbstractAction
 	{
 
 		public CloneParameterAction()
@@ -634,8 +635,8 @@ public class SecurityCheckedParametersTablePanel extends JPanel
 				SecurityTest securityTest = testCase.getSecurityTestByName( securityTestName );
 				TestStep testStep = testCase.getTestStepByName( newValue );
 
-				String[] securityCheckNames = ModelSupport.getNames( securityTest.getTestStepSecurityCheckByType(
-						testStep.getId(), AbstractSecurityCheckWithProperties.class ) );
+				String[] securityCheckNames = ModelSupport.getNames( securityTest.getTestStepSecurityCheckByType( testStep
+						.getId(), AbstractSecurityCheckWithProperties.class ) );
 				dialog.setOptions( CloneParameterDialog.TARGET_SECURITYCHECK, securityCheckNames );
 			}
 		} );
@@ -651,16 +652,16 @@ public class SecurityCheckedParametersTablePanel extends JPanel
 				String testStepName = dialog.getValue( CloneParameterDialog.TARGET_TESTSTEP );
 				TestStep testStep = testCase.getTestStepByName( testStepName );
 
-				String[] securityCheckNames = ModelSupport.getNames( securityTest.getTestStepSecurityCheckByType(
-						testStep.getId(), AbstractSecurityCheckWithProperties.class ) );
+				String[] securityCheckNames = ModelSupport.getNames( securityTest.getTestStepSecurityCheckByType( testStep
+						.getId(), AbstractSecurityCheckWithProperties.class ) );
 				dialog.setOptions( CloneParameterDialog.TARGET_SECURITYCHECK, securityCheckNames );
 			}
 		} );
 
 		WsdlTestCase wsdlTestCase = ( WsdlTestCase )securityCheck.getTestStep().getTestCase();
 
-		dialog.setOptions( CloneParameterDialog.TARGET_TESTSUITE,
-				ModelSupport.getNames( wsdlTestCase.getTestSuite().getProject().getTestSuiteList() ) );
+		dialog.setOptions( CloneParameterDialog.TARGET_TESTSUITE, ModelSupport.getNames( wsdlTestCase.getTestSuite()
+				.getProject().getTestSuiteList() ) );
 		dialog.setValue( CloneParameterDialog.TARGET_TESTSUITE, wsdlTestCase.getTestSuite().getName() );
 
 		List<TestCase> wsdlTestCaseList = wsdlTestCase.getTestSuite().getTestCaseList();
@@ -668,16 +669,16 @@ public class SecurityCheckedParametersTablePanel extends JPanel
 		dialog.setValue( CloneParameterDialog.TARGET_TESTCASE, wsdlTestCase.getName() );
 
 		dialog.setOptions( CloneParameterDialog.TARGET_TESTSTEP, getSecurableTestStepsNames( wsdlTestCase ) );
-		dialog.setOptions( CloneParameterDialog.TARGET_SECURITYTEST,
-				ModelSupport.getNames( wsdlTestCase.getSecurityTestList() ) );
+		dialog.setOptions( CloneParameterDialog.TARGET_SECURITYTEST, ModelSupport.getNames( wsdlTestCase
+				.getSecurityTestList() ) );
 
 		String securityTestName = dialog.getValue( CloneParameterDialog.TARGET_SECURITYTEST );
 		SecurityTest securityTest = wsdlTestCase.getSecurityTestByName( securityTestName );
 		String testStepName = dialog.getValue( CloneParameterDialog.TARGET_TESTSTEP );
 		TestStep testStep = wsdlTestCase.getTestStepByName( testStepName );
 
-		String[] securityCheckNames = ModelSupport.getNames( securityTest.getTestStepSecurityCheckByType(
-				testStep.getId(), AbstractSecurityCheckWithProperties.class ) );
+		String[] securityCheckNames = ModelSupport.getNames( securityTest.getTestStepSecurityCheckByType( testStep
+				.getId(), AbstractSecurityCheckWithProperties.class ) );
 		dialog.setOptions( CloneParameterDialog.TARGET_SECURITYCHECK, securityCheckNames );
 
 		dialog.setOptions( CloneParameterDialog.PARAMETERS, securityCheck.getParameterHolder().getParameterLabels() );
@@ -717,8 +718,8 @@ public class SecurityCheckedParametersTablePanel extends JPanel
 			}
 			else
 			{
-				if( model.addParameter( dialog.getValue( AddParameterDialog.LABEL ),
-						dialog.getValue( AddParameterDialog.NAME ), pathPane.getText() ) )
+				if( model.addParameter( dialog.getValue( AddParameterDialog.LABEL ), dialog
+						.getValue( AddParameterDialog.NAME ), pathPane.getText() ) )
 				{
 					JComboBoxFormField nameField = ( JComboBoxFormField )dialog.getFormField( AddParameterDialog.NAME );
 					nameField.setSelectedOptions( new Object[] { nameField.getOptions()[0] } );

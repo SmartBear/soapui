@@ -36,14 +36,24 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
+import com.eviware.soapui.impl.wsdl.support.HelpUrls;
+import com.eviware.soapui.impl.wsdl.teststeps.actions.AddAssertionAction;
 import com.eviware.soapui.model.security.SecurityCheck;
 import com.eviware.soapui.model.testsuite.AssertionError;
+import com.eviware.soapui.model.testsuite.TestAssertion;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTest;
+import com.eviware.soapui.security.actions.CloneParametersAction;
 import com.eviware.soapui.security.check.AbstractSecurityCheck;
+import com.eviware.soapui.security.check.AbstractSecurityCheckWithProperties;
 import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.action.swing.ActionListBuilder;
+import com.eviware.soapui.support.action.swing.ActionSupport;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.x.form.XFormDialog;
 
@@ -63,6 +73,7 @@ public class SecurityChecksPanel extends JPanel
 	private AddSecurityCheckAction addSecurityCheckAction;
 	private ConfigureSecurityCheckAction configureSecurityCheckAction;
 	private RemoveSecurityCheckAction removeSecurityCheckAction;
+	private CloneParametersAction cloneParametersAction;
 	// private MoveSecurityCheckUpAction moveSecurityCheckUpAction;
 	// private MoveSecurityCheckDownAction moveSecurityCheckDownAction;
 	// private DefaultListModel listModel;
@@ -83,6 +94,53 @@ public class SecurityChecksPanel extends JPanel
 		securityCheckList.setToolTipText( "SecurityChecks for this TestStep" );
 		securityCheckList.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
 
+		securityCheckListPopup = new JPopupMenu();
+		addSecurityCheckAction = new AddSecurityCheckAction();
+		securityCheckListPopup.add( addSecurityCheckAction );
+
+		securityCheckListPopup.addPopupMenuListener( new PopupMenuListener()
+		{
+
+			public void popupMenuWillBecomeVisible( PopupMenuEvent e )
+			{
+				while( securityCheckListPopup.getComponentCount() > 1 )
+					securityCheckListPopup.remove( 1 );
+
+				int ix = securityCheckList.getSelectedIndex();
+				if( ix >= 0 )
+				{
+
+					securityCheckListPopup.add( configureSecurityCheckAction );
+					SecurityCheck check = securityCheckListModel.getSecurityCheckAt( ix );
+					if( check instanceof AbstractSecurityCheckWithProperties )
+					{
+						// cloneParametersAction = new CloneParametersAction();
+						cloneParametersAction.setSecurityCheck( ( AbstractSecurityCheckWithProperties )check );
+						securityCheckListPopup.add( cloneParametersAction );
+					}
+					securityCheckListPopup.addSeparator();
+					securityCheckListPopup.add( removeSecurityCheckAction );
+					securityCheckListPopup.add( new ShowOnlineHelpAction( HelpUrls.RESPONSE_ASSERTIONS_HELP_URL ) );
+
+				}
+				else
+				{
+					securityCheckListPopup.addSeparator();
+					securityCheckListPopup.add( new ShowOnlineHelpAction( HelpUrls.RESPONSE_ASSERTIONS_HELP_URL ) );
+				}
+			}
+
+			public void popupMenuWillBecomeInvisible( PopupMenuEvent e )
+			{
+			}
+
+			public void popupMenuCanceled( PopupMenuEvent e )
+			{
+			}
+		} );
+
+		securityCheckList.setComponentPopupMenu( securityCheckListPopup );
+
 		securityCheckList.addListSelectionListener( new ListSelectionListener()
 		{
 
@@ -91,8 +149,19 @@ public class SecurityChecksPanel extends JPanel
 			{
 				int ix = securityCheckList.getSelectedIndex();
 
-				configureSecurityCheckAction.setEnabled( ix >= 0 );
+				// configureSecurityCheckAction.setEnabled( ix >= 0 );
 				removeSecurityCheckAction.setEnabled( ix >= 0 );
+				SecurityCheck securityCheck = securityCheckListModel.getSecurityCheckAt( ix );
+				configureSecurityCheckAction.setEnabled( securityCheck != null && securityCheck.isConfigurable() );
+				if( securityCheck instanceof AbstractSecurityCheckWithProperties )
+				{
+					cloneParametersAction.setSecurityCheck( ( AbstractSecurityCheckWithProperties )securityCheck );
+					cloneParametersAction.setEnabled( true );
+				}
+				else
+				{
+					cloneParametersAction.setEnabled( false );
+				}
 				// moveSecurityCheckUpAction.setEnabled( ix >= 0 );
 				// moveSecurityCheckDownAction.setEnabled( ix >= 0 );
 
@@ -175,6 +244,7 @@ public class SecurityChecksPanel extends JPanel
 		addSecurityCheckAction = new AddSecurityCheckAction();
 		configureSecurityCheckAction = new ConfigureSecurityCheckAction();
 		removeSecurityCheckAction = new RemoveSecurityCheckAction();
+		cloneParametersAction = new CloneParametersAction();
 		// moveSecurityCheckUpAction = new MoveSecurityCheckUpAction();
 		// moveSecurityCheckDownAction = new MoveSecurityCheckDownAction();
 		addToolbarButtons( checksToolbar );
@@ -194,6 +264,15 @@ public class SecurityChecksPanel extends JPanel
 					return;
 				SecurityCheck securityCheck = securityCheckListModel.getSecurityCheckAt( ix );
 				configureSecurityCheckAction.setEnabled( securityCheck != null && securityCheck.isConfigurable() );
+				if( securityCheck instanceof AbstractSecurityCheckWithProperties )
+				{
+					cloneParametersAction.setSecurityCheck( ( AbstractSecurityCheckWithProperties )securityCheck );
+					cloneParametersAction.setEnabled( true );
+				}
+				else
+				{
+					cloneParametersAction.setEnabled( false );
+				}
 			}
 		} );
 		return checksToolbar;
@@ -204,6 +283,7 @@ public class SecurityChecksPanel extends JPanel
 		toolbar.addFixed( UISupport.createToolbarButton( addSecurityCheckAction ) );
 		toolbar.addFixed( UISupport.createToolbarButton( configureSecurityCheckAction ) );
 		toolbar.addFixed( UISupport.createToolbarButton( removeSecurityCheckAction ) );
+		toolbar.addFixed( UISupport.createToolbarButton( cloneParametersAction ) );
 		// toolbar.addFixed( UISupport.createToolbarButton(
 		// moveSecurityCheckUpAction ) );
 		// toolbar.addFixed( UISupport.createToolbarButton(
@@ -446,15 +526,15 @@ public class SecurityChecksPanel extends JPanel
 			String type = UISupport.prompt( "Specify type of security check", "Add SecurityCheck", availableChecksNames );
 			if( type == null || type.trim().length() == 0 )
 				return;
-			String name = UISupport.prompt( "Specify name for security check", "Add SecurityCheck",
-					securityTest.findTestStepCheckUniqueName( testStep.getId(), type ) );
+			String name = UISupport.prompt( "Specify name for security check", "Add SecurityCheck", securityTest
+					.findTestStepCheckUniqueName( testStep.getId(), type ) );
 			if( name == null || name.trim().length() == 0 )
 				return;
 
 			while( securityTest.getTestStepSecurityCheckByName( testStep.getId(), name ) != null )
 			{
-				name = UISupport.prompt( "Specify unique name for check", "Add SecurityCheck",
-						name + " " + ( securityTest.getTestStepSecurityChecks( testStep.getId() ).size() ) );
+				name = UISupport.prompt( "Specify unique name for check", "Add SecurityCheck", name + " "
+						+ ( securityTest.getTestStepSecurityChecks( testStep.getId() ).size() ) );
 				if( name == null )
 				{
 					return;
