@@ -175,7 +175,6 @@
 	<tns:action id="CloneSecurityTestAction" actionClass="com.eviware.soapui.security.actions.CloneSecurityTestAction"/>
 	<tns:action id="SecurityTestOptionsAction" actionClass="com.eviware.soapui.security.actions.SecurityTestOptionsAction"/>
 	<tns:action id="SecurityTestSecurityTestRunnerAction" actionClass="com.eviware.soapui.impl.wsdl.actions.iface.tools.soapui.SecurityTestSecurityTestRunnerAction"/>
-	<tns:action id="CloneSecurityCheckParameterAction" actionClass="com.eviware.soapui.security.actions.CloneSecurityCheckParameterAction"/>
 
 	<!-- MockService Actions -->
 	<tns:action id="MockServiceOptionsAction" actionClass="com.eviware.soapui.impl.wsdl.actions.mockservice.MockServiceOptionsAction"/>
