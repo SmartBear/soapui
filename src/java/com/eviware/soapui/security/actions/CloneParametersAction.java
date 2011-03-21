@@ -425,6 +425,7 @@ public class CloneParametersAction extends AbstractAction
 		return dialog;
 	}
 
+	//TODO: link with security checks documentation url
 	@AForm( description = "Specify target TestSuite/TestCase/Security Test(s)/Security Check(s) and select Parameters to clone", name = "Clone Parameters", icon = UISupport.TOOL_ICON_PATH )
 	private interface CloneParameterDialog
 	{
