@@ -42,18 +42,14 @@ import javax.swing.event.PopupMenuListener;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
-import com.eviware.soapui.impl.wsdl.teststeps.actions.AddAssertionAction;
 import com.eviware.soapui.model.security.SecurityCheck;
 import com.eviware.soapui.model.testsuite.AssertionError;
-import com.eviware.soapui.model.testsuite.TestAssertion;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.actions.CloneParametersAction;
 import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.security.check.AbstractSecurityCheckWithProperties;
 import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.action.swing.ActionListBuilder;
-import com.eviware.soapui.support.action.swing.ActionSupport;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.x.form.XFormDialog;
 
@@ -149,8 +145,13 @@ public class SecurityChecksPanel extends JPanel
 			{
 				int ix = securityCheckList.getSelectedIndex();
 
-				// configureSecurityCheckAction.setEnabled( ix >= 0 );
 				removeSecurityCheckAction.setEnabled( ix >= 0 );
+				configureSecurityCheckAction.setEnabled( ix >= 0 );
+				cloneParametersAction.setEnabled( ix >= 0 );
+
+				if( ix == -1 )
+					return;
+
 				SecurityCheck securityCheck = securityCheckListModel.getSecurityCheckAt( ix );
 				configureSecurityCheckAction.setEnabled( securityCheck != null && securityCheck.isConfigurable() );
 				if( securityCheck instanceof AbstractSecurityCheckWithProperties )
@@ -158,15 +159,8 @@ public class SecurityChecksPanel extends JPanel
 					cloneParametersAction.setSecurityCheck( ( AbstractSecurityCheckWithProperties )securityCheck );
 					cloneParametersAction.setEnabled( true );
 				}
-				else
-				{
-					cloneParametersAction.setEnabled( false );
-				}
 				// moveSecurityCheckUpAction.setEnabled( ix >= 0 );
 				// moveSecurityCheckDownAction.setEnabled( ix >= 0 );
-
-				if( ix == -1 )
-					return;
 			}
 		} );
 		securityCheckList.addMouseListener( new MouseAdapter()
@@ -526,15 +520,15 @@ public class SecurityChecksPanel extends JPanel
 			String type = UISupport.prompt( "Specify type of security check", "Add SecurityCheck", availableChecksNames );
 			if( type == null || type.trim().length() == 0 )
 				return;
-			String name = UISupport.prompt( "Specify name for security check", "Add SecurityCheck", securityTest
-					.findTestStepCheckUniqueName( testStep.getId(), type ) );
+			String name = UISupport.prompt( "Specify name for security check", "Add SecurityCheck",
+					securityTest.findTestStepCheckUniqueName( testStep.getId(), type ) );
 			if( name == null || name.trim().length() == 0 )
 				return;
 
 			while( securityTest.getTestStepSecurityCheckByName( testStep.getId(), name ) != null )
 			{
-				name = UISupport.prompt( "Specify unique name for check", "Add SecurityCheck", name + " "
-						+ ( securityTest.getTestStepSecurityChecks( testStep.getId() ).size() ) );
+				name = UISupport.prompt( "Specify unique name for check", "Add SecurityCheck",
+						name + " " + ( securityTest.getTestStepSecurityChecks( testStep.getId() ).size() ) );
 				if( name == null )
 				{
 					return;
