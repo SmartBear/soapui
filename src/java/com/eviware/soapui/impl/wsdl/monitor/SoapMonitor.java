@@ -80,11 +80,9 @@ import com.eviware.soapui.impl.wsdl.teststeps.registry.HttpRequestStepFactory;
 import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestRequestStepFactory;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.iface.Interface;
-import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.model.testsuite.TestSuite;
-import com.eviware.soapui.security.monitor.MonitorSecurityTest;
 import com.eviware.soapui.settings.ProxySettings;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
@@ -165,7 +163,6 @@ public class SoapMonitor extends JPanel
 	private boolean oldProxyEnabled;
 	private String sslEndpoint;
 	private JInspectorPanel inspectorPanel;
-	private MonitorSecurityTest monitorSecurityTest;
 
 	public SoapMonitor( WsdlProject project, int listenPort, String incomingRequestWss, String incomingResponseWss,
 			JXToolBar mainToolbar, boolean setAsProxy, String sslEndpoint )
@@ -1347,11 +1344,6 @@ public class SoapMonitor extends JPanel
 
 			tableModel.addMessageExchange( messageExchange );
 
-			if( monitorSecurityTest != null )
-			{
-				monitorSecurityTest.logSecurityMessage( messageExchange );
-			}
-
 			fireOnMessageExchange( messageExchange );
 		}
 
@@ -1574,31 +1566,6 @@ public class SoapMonitor extends JPanel
 	public MessageExchangeModelItem getRequestModelItem()
 	{
 		return requestModelItem;
-	}
-
-	public void setMonitorSecurityTest( MonitorSecurityTest monitorSecurityTest )
-	{
-		this.monitorSecurityTest = monitorSecurityTest;
-	}
-
-	public void highlightMessaheExchange( MessageExchange messageExchange )
-	{
-		boolean logEntryFound = false;
-		for( int i = 0; i < getLogModel().getRowCount(); i++ )
-		{
-			if( getLogModel().getMessageExchangeAt( i ).equals( messageExchange ) )
-			{
-				logTable.setRowSelectionInterval( i, i );
-				logTable.scrollRowToVisible( i );
-				logEntryFound = true;
-				break;
-			}
-		}
-		if( !logEntryFound )
-		{
-			UISupport.showErrorMessage( "The Request is no longer stored in the http monitor" );
-		}
-
 	}
 
 }

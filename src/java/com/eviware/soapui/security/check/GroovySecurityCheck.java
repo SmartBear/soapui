@@ -26,7 +26,6 @@ import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.security.log.JSecurityTestRunLog;
-import com.eviware.soapui.security.monitor.HttpSecurityAnalyser;
 import com.eviware.soapui.security.ui.GroovySecurityCheckPanel;
 import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
 import com.eviware.x.form.support.AField;
@@ -38,7 +37,7 @@ import com.eviware.x.form.support.AField.AFieldType;
  * @author soapui team
  */
 
-public class GroovySecurityCheck extends AbstractSecurityCheck implements HttpSecurityAnalyser
+public class GroovySecurityCheck extends AbstractSecurityCheck
 {
 	public static final String SCRIPT_PROPERTY = GroovySecurityCheck.class.getName() + "@script";
 	public static final String TYPE = "GroovySecurityCheck";
@@ -85,7 +84,7 @@ public class GroovySecurityCheck extends AbstractSecurityCheck implements HttpSe
 	}
 
 	@Override
-	protected boolean hasNext(TestStep testStep,SecurityTestRunContext context)
+	protected boolean hasNext( TestStep testStep, SecurityTestRunContext context )
 	{
 		boolean result = next;
 		next = !next;
@@ -93,29 +92,33 @@ public class GroovySecurityCheck extends AbstractSecurityCheck implements HttpSe
 	}
 
 	@Override
-	protected void execute(  SecurityTestRunner  securityTestRunner,TestStep testStep, SecurityTestRunContext context )
+	protected void execute( SecurityTestRunner securityTestRunner, TestStep testStep, SecurityTestRunContext context )
 	{
-////		getScriptEngine().setScript( groovyscc.getExecuteScript().getStringValue() );
-////		getScriptEngine().setVariable( "request", getTestStep().getProperty( "Request" ).getValue() );
-////		getScriptEngine().setVariable( "log", SoapUI.ensureGroovyLog() );
-//		try
-//		{
-//			scriptResult = getScriptEngine().run();
-//		}
-//		catch( Exception e )
-//		{
-//			SoapUI.logError( e );
-//		}
-//		finally
-//		{
-//			if( scriptResult != null )
-//			{
-//				getTestStep().getProperty( "Request" ).setValue( ( String )scriptResult );
-//
-//				getTestStep().run( (TestCaseRunner)securityTestRunner, ( TestCaseRunContext )securityTestRunner.getRunContext() );
-//			}
-////			getScriptEngine().clearVariables();
-//		}
+		// // getScriptEngine().setScript(
+		// groovyscc.getExecuteScript().getStringValue() );
+		// // getScriptEngine().setVariable( "request", getTestStep().getProperty(
+		// "Request" ).getValue() );
+		// // getScriptEngine().setVariable( "log", SoapUI.ensureGroovyLog() );
+		// try
+		// {
+		// scriptResult = getScriptEngine().run();
+		// }
+		// catch( Exception e )
+		// {
+		// SoapUI.logError( e );
+		// }
+		// finally
+		// {
+		// if( scriptResult != null )
+		// {
+		// getTestStep().getProperty( "Request" ).setValue( ( String )scriptResult
+		// );
+		//
+		// getTestStep().run( (TestCaseRunner)securityTestRunner, (
+		// TestCaseRunContext )securityTestRunner.getRunContext() );
+		// }
+		// // getScriptEngine().clearVariables();
+		// }
 
 	}
 
@@ -131,7 +134,6 @@ public class GroovySecurityCheck extends AbstractSecurityCheck implements HttpSe
 		return groovyscc.getExecuteScript().getStringValue();
 	}
 
-
 	@Override
 	public SecurityCheckConfigPanel getComponent()
 	{
@@ -142,37 +144,6 @@ public class GroovySecurityCheck extends AbstractSecurityCheck implements HttpSe
 	public String getType()
 	{
 		return TYPE;
-	}
-
-	@Override
-	public void analyzeHttpConnection( MessageExchange messageExchange, JSecurityTestRunLog securityTestLog )
-	{
-//		getScriptEngine().setScript( getExecuteScript() );
-//		getScriptEngine().setVariable( "testStep", null );
-//		getScriptEngine().setVariable( "log", SoapUI.ensureGroovyLog() );
-//		getScriptEngine().setVariable( "context", null );
-//		getScriptEngine().setVariable( "messageExchange", messageExchange );
-//
-//		try
-//		{
-//			getScriptEngine().run();
-//		}
-//		catch( Exception e )
-//		{
-//			SoapUI.logError( e );
-//		}
-//		finally
-//		{
-//			getScriptEngine().clearVariables();
-//		}
-
-	}
-
-	@Override
-	public boolean canRun()
-	{
-
-		return true;
 	}
 
 	@AForm( description = "Configure Groovy Types Check", name = "Invalid Groovy Security Check", helpUrl = HelpUrls.MOCKASWAR_HELP_URL )
@@ -204,7 +175,7 @@ public class GroovySecurityCheck extends AbstractSecurityCheck implements HttpSe
 
 		}
 	}
-	
+
 	@Override
 	public String getConfigDescription()
 	{

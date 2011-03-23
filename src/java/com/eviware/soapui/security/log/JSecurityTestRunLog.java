@@ -33,12 +33,8 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
 import javax.swing.ListCellRenderer;
 
-import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.wsdl.monitor.SoapMonitor;
-import com.eviware.soapui.impl.wsdl.support.MessageExchangeModelItem;
 import com.eviware.soapui.impl.wsdl.testcase.TestCaseLogItem;
 import com.eviware.soapui.model.security.SecurityCheck;
 import com.eviware.soapui.model.settings.Settings;
@@ -69,7 +65,6 @@ import com.eviware.x.form.support.AField.AFieldType;
 public class JSecurityTestRunLog extends JPanel
 {
 	private SecurityTestLogModel logListModel;
-	private MessageExchangeModelItem requestModelItem;
 	private JList testLogList;
 	private boolean errorsOnly = false;
 	private final Settings settings;
@@ -77,26 +72,10 @@ public class JSecurityTestRunLog extends JPanel
 	private boolean follow = true;
 	protected int selectedIndex;
 	private XFormDialog optionsDialog;
-	private SoapMonitor soapMonitor;
-	private JTabbedPane tabs;
-	private SecurityTest securityTest;
-
-	public JSecurityTestRunLog( SoapMonitor soapMonitor, JTabbedPane tabs )
-	{
-		super( new BorderLayout() );
-		this.settings = SoapUI.getSettings();
-		this.soapMonitor = soapMonitor;
-		this.tabs = tabs;
-
-		errorsOnly = settings.getBoolean( OptionsForm.class.getName() + "@errors_only" );
-
-		buildUI();
-	}
 
 	public JSecurityTestRunLog( SecurityTest securityTest )
 	{
 		super( new BorderLayout() );
-		this.securityTest = securityTest;
 		this.settings = securityTest.getSettings();
 		logListModel = securityTest.getSecurityTestLog();
 		buildUI();
