@@ -33,6 +33,7 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 {
 
 	public static final String TYPE = "MaliciousAttachmentSecurityCheck";
+	public static final String NAME = "Malicious Attachment";
 
 	// private static final int MINIMUM_STRING_DISTANCE = 50;
 

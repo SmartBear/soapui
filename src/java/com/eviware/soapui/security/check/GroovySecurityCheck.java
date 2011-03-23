@@ -41,6 +41,7 @@ public class GroovySecurityCheck extends AbstractSecurityCheck
 {
 	public static final String SCRIPT_PROPERTY = GroovySecurityCheck.class.getName() + "@script";
 	public static final String TYPE = "GroovySecurityCheck";
+	public static final String NAME = "Groovy Script";
 	private GroovyEditor executeEditor;
 	private GroovySecurityCheckConfig groovyscc;
 	private boolean next = true;

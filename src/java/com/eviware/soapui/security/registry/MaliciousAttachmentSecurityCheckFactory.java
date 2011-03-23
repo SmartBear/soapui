@@ -31,7 +31,7 @@ public class MaliciousAttachmentSecurityCheckFactory extends AbstractSecurityChe
 
 	public MaliciousAttachmentSecurityCheckFactory()
 	{
-		super( MaliciousAttachmentSecurityCheck.TYPE, "MaliciousAttachmentSecurityCheck",
+		super( MaliciousAttachmentSecurityCheck.TYPE, MaliciousAttachmentSecurityCheck.NAME,
 				"Preforms a check for Malicious Attachment Vulerabilities", "/malicious_attachement_check_script.gif" );
 	}
 

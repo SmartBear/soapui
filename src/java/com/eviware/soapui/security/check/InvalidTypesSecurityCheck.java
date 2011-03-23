@@ -46,6 +46,7 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 {
 
 	public final static String TYPE = "InvalidTypesSecurityCheck";
+	public final static String NAME = "Invalid Types";
 
 	private InvalidTypesForSOAP invalidTypes;
 
@@ -64,6 +65,17 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 		else
 			invalidTypeConfig = ( InvalidSecurityCheckConfig )config.getConfig();
 
+	}
+	
+	@Override
+	public void updateSecurityConfig( SecurityCheckConfig config )
+	{
+		super.updateSecurityConfig( config );
+
+		if( invalidTypeConfig != null)
+		{
+			invalidTypeConfig = ( InvalidSecurityCheckConfig )getConfig().getConfig();
+		}
 	}
 
 	public InvalidSecurityCheckConfig getInvalidTypeConfig()

@@ -44,6 +44,7 @@ public class ParameterExposureCheck extends AbstractSecurityCheck
 	protected JTextField minimumCharactersTextField;
 
 	public static final String TYPE = "ParameterExposureCheck";
+	public static final String NAME = "Parameter Exposure";
 	public static final int DEFAULT_MINIMUM_CHARACTER_LENGTH = 5;
 
 	public ParameterExposureCheck( SecurityCheckConfig config, ModelItem parent, String icon, TestStep testStep )

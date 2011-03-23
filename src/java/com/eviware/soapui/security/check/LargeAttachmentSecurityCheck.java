@@ -21,7 +21,8 @@ public class LargeAttachmentSecurityCheck extends AbstractSecurityCheck
 {
 
 	public static final String TYPE = "LargeAttachmentSecurityCheck";
-
+	public static final String NAME = "Large Attachment";
+	
 	public LargeAttachmentSecurityCheck( SecurityCheckConfig config, ModelItem parent, String icon, TestStep testStep )
 	{
 		super( testStep, config, parent, icon );

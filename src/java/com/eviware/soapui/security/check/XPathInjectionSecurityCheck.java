@@ -30,7 +30,6 @@ import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.config.StrategyTypeConfig;
 import com.eviware.soapui.config.XPathInjectionConfig;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
-import com.eviware.soapui.impl.wsdl.teststeps.RestResponseMessageExchange;
 import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlResponseMessageExchange;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
@@ -46,8 +45,8 @@ import com.eviware.soapui.support.xml.XmlObjectTreeModel;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel.XmlTreeNode;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.AField.AFieldType;
+import com.eviware.x.form.support.AForm;
 import com.eviware.x.impl.swing.JFormDialog;
 import com.eviware.x.impl.swing.JStringListFormField;
 
@@ -55,6 +54,7 @@ public class XPathInjectionSecurityCheck extends AbstractSecurityCheckWithProper
 {
 
 	public static final String TYPE = "XPathInjectionSecurityCheck";
+	public static final String NAME = "XPath Injection";
 
 	private XPathInjectionConfig xpathList;
 
@@ -76,6 +76,17 @@ public class XPathInjectionSecurityCheck extends AbstractSecurityCheckWithProper
 			xpathList = ( XPathInjectionConfig )getConfig().getConfig();
 	}
 
+	@Override
+	public void updateSecurityConfig( SecurityCheckConfig config )
+	{
+		super.updateSecurityConfig( config );
+
+		if( xpathList != null )
+		{
+			xpathList = ( XPathInjectionConfig )getConfig().getConfig();
+		}
+	}
+
 	private void initXPathInjectionConfig()
 	{
 		getConfig().setConfig( XPathInjectionConfig.Factory.newInstance() );
@@ -83,7 +94,6 @@ public class XPathInjectionSecurityCheck extends AbstractSecurityCheckWithProper
 
 		xpathList.setXpathListArray( defaultXPathInjectionStrings );
 	}
-
 
 	@Override
 	public JComponent getComponent()
@@ -103,10 +113,11 @@ public class XPathInjectionSecurityCheck extends AbstractSecurityCheckWithProper
 	private void createMessageExchange( TestStep testStep )
 	{
 		MessageExchange messageExchange = null;
-//		if( messageExchange instanceof WsdlTestRequestStep )
-			messageExchange = new WsdlResponseMessageExchange( ( ( WsdlTestRequestStep )testStep ).getTestRequest() );
-//		else
-//			messageExchange = new RestResponseMessageExchange( ( ( RestTestRequestStep )testStep ).getTestRequest() );
+		// if( messageExchange instanceof WsdlTestRequestStep )
+		messageExchange = new WsdlResponseMessageExchange( ( ( WsdlTestRequestStep )testStep ).getTestRequest() );
+		// else
+		// messageExchange = new RestResponseMessageExchange( ( (
+		// RestTestRequestStep )testStep ).getTestRequest() );
 		getSecurityCheckRequestResult().setMessageExchange( messageExchange );
 	}
 
@@ -131,8 +142,8 @@ public class XPathInjectionSecurityCheck extends AbstractSecurityCheckWithProper
 							String value = property.getValue();
 							if( param.getXPath() == null || param.getXPath().trim().length() == 0 )
 							{
-								testStep.getProperties().get( param.getName() ).setValue(
-										parameterMutations.get( param ).get( 0 ) );
+								testStep.getProperties().get( param.getName() )
+										.setValue( parameterMutations.get( param ).get( 0 ) );
 								parameterMutations.get( param ).remove( 0 );
 							}
 							else

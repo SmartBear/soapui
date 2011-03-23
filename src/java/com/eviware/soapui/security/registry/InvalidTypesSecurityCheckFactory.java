@@ -12,7 +12,7 @@ public class InvalidTypesSecurityCheckFactory extends AbstractSecurityCheckFacto
 
 	public InvalidTypesSecurityCheckFactory()
 	{
-		super( InvalidTypesSecurityCheck.TYPE, "InvalidTypesSecurityCheck",
+		super( InvalidTypesSecurityCheck.TYPE, InvalidTypesSecurityCheck.NAME,
 				"Tries to break application and get information on system", "/information_exposure_check.gif" );
 	}
 

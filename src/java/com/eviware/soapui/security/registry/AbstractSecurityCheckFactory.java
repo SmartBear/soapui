@@ -25,14 +25,14 @@ import com.eviware.soapui.security.check.AbstractSecurityCheck;
 
 public abstract class AbstractSecurityCheckFactory
 {
-	private final String typeName;
+	private final String type;
 	private final String name;
 	private final String description;
 	protected final String pathToIcon;
 
 	public AbstractSecurityCheckFactory( String typeName, String name, String description, String pathToIcon )
 	{
-		this.typeName = typeName;
+		this.type = typeName;
 		this.name = name;
 		this.description = description;
 		this.pathToIcon = pathToIcon;
@@ -43,9 +43,9 @@ public abstract class AbstractSecurityCheckFactory
 	public abstract AbstractSecurityCheck buildSecurityCheck( TestStep testStep, SecurityCheckConfig config,
 			ModelItem parent );
 
-	public String getType()
+	public String getSecurityCheckType()
 	{
-		return typeName;
+		return type;
 	}
 
 	/**

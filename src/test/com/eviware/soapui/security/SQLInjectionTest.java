@@ -39,7 +39,7 @@ public class SQLInjectionTest extends AbstractSecurityTestCaseWithMockService
 		super.setUp();
 		testStepName = "HTTP Test Request";
 		securityCheckType = SQLInjectionCheck.TYPE;
-		securityCheckName = SQLInjectionCheck.TYPE;
+		securityCheckName = SQLInjectionCheck.NAME;
 	}
 
 	@Override

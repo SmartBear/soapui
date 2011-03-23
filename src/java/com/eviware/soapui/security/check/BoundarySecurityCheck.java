@@ -46,7 +46,7 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 {
 
 	public static final String TYPE = "BoundaryCheck";
-	public static final String LABEL = "Boundary";
+	public static final String NAME = "Boundary Check";
 	private static final String REQUEST_MUTATIONS_STACK = "RequestMutationsStack";
 
 	StrategyTypeConfig.Enum strategy;

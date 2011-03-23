@@ -45,8 +45,8 @@ import com.eviware.soapui.support.xml.XmlObjectTreeModel;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel.XmlTreeNode;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.AField.AFieldType;
+import com.eviware.x.form.support.AForm;
 import com.eviware.x.impl.swing.JFormDialog;
 import com.eviware.x.impl.swing.JStringListFormField;
 
@@ -61,6 +61,7 @@ public class SQLInjectionCheck extends AbstractSecurityCheckWithProperties
 {
 
 	public static final String TYPE = "SQLInjectionCheck";
+	public static final String NAME = "SQL Injection";
 
 	private SQLInjectionCheckConfig sqlInjectionConfig;
 
@@ -90,6 +91,16 @@ public class SQLInjectionCheck extends AbstractSecurityCheckWithProperties
 		sqlInjectionConfig.setSqlInjectionStringsArray( defaultSqlInjectionStrings );
 	}
 
+	@Override
+	public void updateSecurityConfig( SecurityCheckConfig config )
+	{
+		super.updateSecurityConfig( config );
+
+		if( sqlInjectionConfig != null )
+		{
+			sqlInjectionConfig = ( SQLInjectionCheckConfig )getConfig().getConfig();
+		}
+	}
 
 	@Override
 	public JComponent getComponent()
@@ -114,8 +125,8 @@ public class SQLInjectionCheck extends AbstractSecurityCheckWithProperties
 
 	private void createMessageExchange( TestStep testStep )
 	{
-		MessageExchange messageExchange = new WsdlResponseMessageExchange( ( ( WsdlTestRequestStep )testStep )
-				.getTestRequest() );
+		MessageExchange messageExchange = new WsdlResponseMessageExchange(
+				( ( WsdlTestRequestStep )testStep ).getTestRequest() );
 		getSecurityCheckRequestResult().setMessageExchange( messageExchange );
 	}
 
@@ -140,8 +151,8 @@ public class SQLInjectionCheck extends AbstractSecurityCheckWithProperties
 							String value = property.getValue();
 							if( param.getXPath() == null || param.getXPath().trim().length() == 0 )
 							{
-								testStep.getProperties().get( param.getName() ).setValue(
-										parameterMutations.get( param ).get( 0 ) );
+								testStep.getProperties().get( param.getName() )
+										.setValue( parameterMutations.get( param ).get( 0 ) );
 								parameterMutations.get( param ).remove( 0 );
 							}
 							else

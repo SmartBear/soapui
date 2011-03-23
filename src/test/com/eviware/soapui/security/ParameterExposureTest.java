@@ -39,7 +39,7 @@ public class ParameterExposureTest extends AbstractSecurityTestCaseWithMockServi
 		super.setUp();
 		testStepName = "HTTP Test Request";
 		securityCheckType = ParameterExposureCheck.TYPE;
-		securityCheckName = ParameterExposureCheck.TYPE;
+		securityCheckName = ParameterExposureCheck.NAME;
 	}
 
 	@Override

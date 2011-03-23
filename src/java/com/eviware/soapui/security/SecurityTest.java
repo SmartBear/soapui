@@ -120,7 +120,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 	public SecurityCheck addSecurityCheck( TestStep testStep, String securityCheckType, String securityCheckName )
 	{
 		AbstractSecurityCheckFactory factory = SoapUI.getSoapUICore().getSecurityCheckRegistry()
-				.getFactory( securityCheckType );
+				.getFactoryByName( securityCheckType );
 		SecurityCheckConfig newSecCheckConfig = factory.createNewSecurityCheck( securityCheckName );
 		AbstractSecurityCheck newSecCheck = null;
 		// newSecCheck.setTestStep( testStep );
@@ -157,7 +157,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 	}
 
 	/**
-	 * Adds new security check to TestStep SceurutyTest config
+	 * Adds new security check to TestStep SecurityTest config
 	 * 
 	 * @param factory
 	 * @param newSecCheckConfig

@@ -4,11 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.eviware.soapui.config.SecurityCheckConfig;
-import com.eviware.soapui.config.TestAssertionConfig;
-import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.security.SecurityCheck;
 import com.eviware.soapui.model.security.SecurityCheckedParameter;
 import com.eviware.soapui.model.support.XPathReference;
 import com.eviware.soapui.model.support.XPathReferenceContainer;

@@ -13,6 +13,7 @@
 package com.eviware.soapui.security.registry;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,7 @@ import java.util.Map;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.ui.SecurityConfigurationDialogBuilder;
+import com.eviware.soapui.support.types.StringToStringMap;
 
 /**
  * Registry of SecurityCheck factories
@@ -31,6 +33,7 @@ public class SecurityCheckRegistry
 {
 	protected static SecurityCheckRegistry instance;
 	private Map<String, AbstractSecurityCheckFactory> availableSecurityChecks = new HashMap<String, AbstractSecurityCheckFactory>();
+	private StringToStringMap securityCheckNames = new StringToStringMap();
 
 	public SecurityCheckRegistry()
 	{
@@ -39,7 +42,7 @@ public class SecurityCheckRegistry
 		addFactory( new XmlBombSecurityCheckFactory() );
 		addFactory( new MaliciousAttachmentSecurityCheckFactory() );
 		addFactory( new LargeAttachmentSecurityCheckFactory() );
-// this is actually working
+		// this is actually working
 		addFactory( new XPathInjectionSecurityCheckFactory() );
 		addFactory( new InvalidTypesSecurityCheckFactory() );
 		addFactory( new BoundarySecurityCheckFactory() );
@@ -58,10 +61,29 @@ public class SecurityCheckRegistry
 		for( String cc : availableSecurityChecks.keySet() )
 		{
 			AbstractSecurityCheckFactory scf = availableSecurityChecks.get( cc );
-			if( scf.getType().equals( type ) )
+			if( scf.getSecurityCheckType().equals( type ) )
 				return scf;
 
 		}
+		return null;
+	}
+
+	/**
+	 * Gets the right SecurityCheck Factory using name
+	 * 
+	 * @param name
+	 *           The securityCheck name to get the factory for
+	 * @return
+	 */
+	public AbstractSecurityCheckFactory getFactoryByName( String name )
+	{
+		String type = getSecurityCheckTypeForName( name );
+
+		if( type != null )
+		{
+			return getFactory( type );
+		}
+
 		return null;
 	}
 
@@ -72,8 +94,9 @@ public class SecurityCheckRegistry
 	 */
 	public void addFactory( AbstractSecurityCheckFactory factory )
 	{
-		removeFactory( factory.getType() );
+		removeFactory( factory.getSecurityCheckType() );
 		availableSecurityChecks.put( factory.getSecurityCheckName(), factory );
+		securityCheckNames.put( factory.getSecurityCheckName(), factory.getSecurityCheckType() );
 	}
 
 	/**
@@ -86,9 +109,10 @@ public class SecurityCheckRegistry
 		for( String scfName : availableSecurityChecks.keySet() )
 		{
 			AbstractSecurityCheckFactory csf = availableSecurityChecks.get( scfName );
-			if( csf.getType().equals( type ) )
+			if( csf.getSecurityCheckType().equals( type ) )
 			{
 				availableSecurityChecks.remove( scfName );
+				securityCheckNames.remove( scfName );
 				break;
 			}
 		}
@@ -110,7 +134,7 @@ public class SecurityCheckRegistry
 	 * Checking if the registry contains a factory.
 	 * 
 	 * @param config
-	 *           A configuraiton to check the factory for
+	 *           A configuration to check the factory for
 	 * @return
 	 */
 	public boolean hasFactory( SecurityCheckConfig config )
@@ -136,24 +160,37 @@ public class SecurityCheckRegistry
 				result.add( securityCheck.getSecurityCheckName() );
 		}
 
-		return result.toArray( new String[result.size()] );
+		String[] sortedResult = result.toArray( new String[result.size()] );
+		Arrays.sort( sortedResult );
+
+		return sortedResult;
 	}
 
-	//TODO drso: test and implement properly
-	public String[] getAvailableSecurityChecksNames(TestStep testStep)
+	// TODO drso: test and implement properly
+	public String[] getAvailableSecurityChecksNames( TestStep testStep )
 	{
 		List<String> result = new ArrayList<String>();
 
 		for( AbstractSecurityCheckFactory securityCheck : availableSecurityChecks.values() )
 		{
-			if( securityCheck.canCreate(testStep) )
+			if( securityCheck.canCreate( testStep ) )
 				result.add( securityCheck.getSecurityCheckName() );
 		}
 
-		return result.toArray( new String[result.size()] );
+		String[] sortedResult = result.toArray( new String[result.size()] );
+		Arrays.sort( sortedResult );
+
+		return sortedResult;
 	}
 
-	public SecurityConfigurationDialogBuilder getUIBuilder() {
+	public SecurityConfigurationDialogBuilder getUIBuilder()
+	{
 		return new SecurityConfigurationDialogBuilder();
 	}
+
+	public String getSecurityCheckTypeForName( String name )
+	{
+		return securityCheckNames.get( name );
+	}
+
 }

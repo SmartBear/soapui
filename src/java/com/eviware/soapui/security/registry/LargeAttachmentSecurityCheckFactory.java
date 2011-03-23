@@ -31,7 +31,7 @@ public class LargeAttachmentSecurityCheckFactory extends AbstractSecurityCheckFa
 
 	public LargeAttachmentSecurityCheckFactory()
 	{
-		super( LargeAttachmentSecurityCheck.TYPE, "LargeAttachmentSecurityCheck",
+		super( LargeAttachmentSecurityCheck.TYPE, LargeAttachmentSecurityCheck.NAME,
 				"Preforms a check to see if the target can deal with extremely large attachments",
 				"/large_attachement_check_script.gif" );
 	}
