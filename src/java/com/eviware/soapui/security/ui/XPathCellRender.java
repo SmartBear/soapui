@@ -32,8 +32,8 @@ import javax.swing.table.TableCellEditor;
 public class XPathCellRender extends AbstractCellEditor implements TableCellEditor, MouseListener
 {
 
-	private JDialog dialog;
-	private JTextArea textArea;
+	protected JDialog dialog;
+	JTextArea textArea;
 
 	protected static final String EDIT = "edit";
 
