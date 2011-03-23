@@ -109,7 +109,7 @@ public class UIPrefs implements Prefs
 
 			editorForm.appendSeparator();
 			editorForm.appendCheckBox( ENABLE_GROOVY_LOG,
-					"Do not disable the groovy log when running load and security tests", true );
+					"Do not disable the groovy log when running load tests", true );
 
 			if( SoapUI.isStandalone() )
 			{
