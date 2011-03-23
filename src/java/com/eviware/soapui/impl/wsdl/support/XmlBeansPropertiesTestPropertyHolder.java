@@ -362,6 +362,12 @@ public class XmlBeansPropertiesTestPropertyHolder implements MutableTestProperty
 		{
 			return null;
 		}
+
+		@Override
+		public boolean isRequestPart()
+		{
+			return false;
+		}
 	}
 
 	public int saveTo( String fileName ) throws IOException

@@ -121,6 +121,13 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 		{
 			if( scp.isChecked() )
 			{
+				
+				// a more generic solution for getting schematype, schematypesystem and value is probably needed for supporting
+				// REST also, something in the line of:
+				//typeSystem = scp.getTestProperty().getSchemaType().getTypeSystem()
+				//model = new XmlObjectTreeModel( typeSystem, XmlObject.Factory.parse( scp.getTestProperty().getValue() ) );
+				
+				
 				XmlTreeNode[] treeNodes = null;
 				if( strategy.equals( StrategyTypeConfig.ONE_BY_ONE ) )
 				{

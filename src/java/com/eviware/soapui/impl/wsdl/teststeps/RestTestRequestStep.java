@@ -120,13 +120,13 @@ public class RestTestRequestStep extends WsdlTestStepWithProperties implements R
 		refreshRequestProperties();
 
 		// init default properties
-		addProperty( new TestStepBeanProperty( "Endpoint", false, testRequest, "endpoint", this ) );
-		addProperty( new TestStepBeanProperty( "Username", false, testRequest, "username", this ) );
-		addProperty( new TestStepBeanProperty( "Password", false, testRequest, "password", this ) );
-		addProperty( new TestStepBeanProperty( "Domain", false, testRequest, "domain", this ) );
+		addProperty( new TestStepBeanProperty( "Endpoint", false, testRequest, "endpoint", this,true ) );
+		addProperty( new TestStepBeanProperty( "Username", false, testRequest, "username", this,true ) );
+		addProperty( new TestStepBeanProperty( "Password", false, testRequest, "password", this ,true) );
+		addProperty( new TestStepBeanProperty( "Domain", false, testRequest, "domain", this,true ) );
 
 		// init properties
-		addProperty( new TestStepBeanProperty( "Request", false, testRequest, "requestContent", this )
+		addProperty( new TestStepBeanProperty( "Request", false, testRequest, "requestContent", this,true )
 		{
 			@Override
 			public String getDefaultValue()
@@ -960,6 +960,12 @@ public class RestTestRequestStep extends WsdlTestStepWithProperties implements R
 		public ModelItem getModelItem()
 		{
 			return getTestRequest();
+		}
+
+		@Override
+		public boolean isRequestPart()
+		{
+			return false;
 		}
 	}
 }

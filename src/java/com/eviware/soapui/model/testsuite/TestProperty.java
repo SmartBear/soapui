@@ -41,4 +41,9 @@ public interface TestProperty
 	 */
 
 	public ModelItem getModelItem();
+	
+	/**
+	 * defines if specific property belongs to request part
+	 */
+	public boolean isRequestPart();
 }

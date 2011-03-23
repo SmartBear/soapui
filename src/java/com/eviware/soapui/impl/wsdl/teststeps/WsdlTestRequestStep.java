@@ -124,11 +124,11 @@ public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements O
 
 	private void initRequestProperties()
 	{
-		addProperty( new TestStepBeanProperty( "Endpoint", false, testRequest, "endpoint", this ) );
-		addProperty( new TestStepBeanProperty( "Username", false, testRequest, "username", this ) );
-		addProperty( new TestStepBeanProperty( "Password", false, testRequest, "password", this ) );
-		addProperty( new TestStepBeanProperty( "Domain", false, testRequest, "domain", this ) );
-		addProperty( new TestStepBeanProperty( "Request", false, testRequest, "requestContent", this )
+		addProperty( new TestStepBeanProperty( "Endpoint", false, testRequest, "endpoint", this , true) );
+		addProperty( new TestStepBeanProperty( "Username", false, testRequest, "username", this , true) );
+		addProperty( new TestStepBeanProperty( "Password", false, testRequest, "password", this , true) );
+		addProperty( new TestStepBeanProperty( "Domain", false, testRequest, "domain", this , true) );
+		addProperty( new TestStepBeanProperty( "Request", false, testRequest, "requestContent", this , true)
 		{
 			@Override
 			public String getDefaultValue()

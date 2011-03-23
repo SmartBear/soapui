@@ -35,6 +35,7 @@ public class DefaultTestStepProperty implements TestStepProperty, RenameableTest
 	private String description;
 	private PropertyHandler handler;
 	private final WsdlTestStep testStep;
+	private boolean requestPart;
 
 	public DefaultTestStepProperty( String name, boolean isReadOnly, PropertyHandler handler, WsdlTestStep testStep )
 	{
@@ -42,6 +43,15 @@ public class DefaultTestStepProperty implements TestStepProperty, RenameableTest
 		this.isReadOnly = isReadOnly;
 		this.handler = handler;
 		this.testStep = testStep;
+	}
+	
+	public DefaultTestStepProperty( String name, boolean isReadOnly, PropertyHandler handler, WsdlTestStep testStep , boolean requestPart )
+	{
+		this.name = name;
+		this.isReadOnly = isReadOnly;
+		this.handler = handler;
+		this.testStep = testStep;
+		this.requestPart = requestPart;
 	}
 
 	public DefaultTestStepProperty( String name, WsdlTestStep testStep )
@@ -176,5 +186,13 @@ public class DefaultTestStepProperty implements TestStepProperty, RenameableTest
 	{
 		return null;
 	}
+
+
+	public boolean isRequestPart()
+	{
+		return requestPart;
+	}
+
+
 
 }

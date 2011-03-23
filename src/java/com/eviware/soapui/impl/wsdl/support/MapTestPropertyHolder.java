@@ -243,6 +243,12 @@ public class MapTestPropertyHolder implements MutableTestPropertyHolder
 			// TODO Auto-generated method stub
 			return null;
 		}
+
+		@Override
+		public boolean isRequestPart()
+		{
+			return false;
+		}
 	}
 
 	public void saveTo( Properties props )

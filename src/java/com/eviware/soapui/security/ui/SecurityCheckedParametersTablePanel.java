@@ -14,6 +14,7 @@ package com.eviware.soapui.security.ui;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.AbstractAction;
@@ -64,8 +65,17 @@ public class SecurityCheckedParametersTablePanel extends JPanel
 	{
 		this.securityCheck = securityCheck;
 		this.model = model;
-		this.properties = properties;
+		initRequestPartProperties( properties );
 		init();
+	}
+
+	private void initRequestPartProperties( Map<String, TestProperty> properties )
+	{
+		this.properties = new HashMap<String, TestProperty>();
+		for(String key : properties.keySet()){
+			if(properties.get( key ).isRequestPart())
+				this.properties.put( key, properties.get( key ));
+		}
 	}
 
 	private void init()
@@ -150,8 +160,9 @@ public class SecurityCheckedParametersTablePanel extends JPanel
 
 			}
 		} );
-		ArrayList<String> options = new ArrayList<String>( properties.keySet() );
-		options.set( 0, CHOOSE_TEST_PROPERTY );
+		ArrayList<String> options = new ArrayList<String>(  );
+		options.add( CHOOSE_TEST_PROPERTY );
+		options.addAll( properties.keySet() );
 		nameField.setOptions( options.toArray( new String[0] ) );
 
 		( ( JFormDialog )dialog ).getDialog().setResizable( false );

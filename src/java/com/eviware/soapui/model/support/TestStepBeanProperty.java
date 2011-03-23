@@ -32,6 +32,12 @@ public class TestStepBeanProperty extends DefaultTestStepProperty
 		super( name, isReadOnly, new BeanPropertyHandler( targetObject, targetName ), testStep );
 	}
 
+	public TestStepBeanProperty( String name, boolean isReadOnly, Object targetObject, String targetName,
+			WsdlTestStep testStep, boolean requestPart )
+	{
+		super( name, isReadOnly, new BeanPropertyHandler( targetObject, targetName ), testStep, requestPart );
+	}
+
 	/**
 	 * PropertyHandler for setting/getting bean properties
 	 * 

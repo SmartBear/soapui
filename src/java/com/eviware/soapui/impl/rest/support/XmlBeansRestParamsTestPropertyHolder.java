@@ -505,6 +505,12 @@ public class XmlBeansRestParamsTestPropertyHolder implements RestParamsPropertyH
 			propertySupport.firePropertyChange( "path", old, path );
 			
 		}
+
+		@Override
+		public boolean isRequestPart()
+		{
+			return false;
+		}
 	}
 
 	/*

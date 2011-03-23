@@ -164,6 +164,12 @@ public class GlobalPropertyResolver implements PropertyResolver
 			public void setValue( String value )
 			{
 			}
+
+			@Override
+			public boolean isRequestPart()
+			{
+				return false;
+			}
 		}
 	}
 
@@ -298,6 +304,12 @@ public class GlobalPropertyResolver implements PropertyResolver
 			public void setValue( String value )
 			{
 				System.setProperty( key.toString(), value );
+			}
+
+			@Override
+			public boolean isRequestPart()
+			{
+				return false;
 			}
 		}
 	}
