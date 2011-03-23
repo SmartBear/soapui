@@ -107,10 +107,11 @@ public class SecurityConfigurationDialogBuilder
 
 		tabDialog.getFormField( TearDownScript.SCRIPT ).setProperty( "component",
 				buildTearDownScriptPanel( securityCheck ) );
-
+		tabDialog.getFormField( TearDownScript.SCRIPT ).setProperty( "dimension", new Dimension( 360, 165 ) );
+		
 		tabDialog.getFormField( AdvancedSettings.SETTINGS ).setProperty( "component",
 				securityCheck.getAdvancedSettingsPanel() );
-		tabDialog.getFormField( TearDownScript.SCRIPT ).setProperty( "dimension", new Dimension( 360, 165 ) );
+		tabDialog.getFormField( AdvancedSettings.SETTINGS ).setProperty( "dimension", new Dimension( 410, 165 ) );
 
 		addStrategyPanel( tabDialog, securityCheck );
 		tabs.setProperty( "component", tabDialog.getTabs() );
