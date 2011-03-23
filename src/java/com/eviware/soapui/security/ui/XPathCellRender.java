@@ -14,6 +14,7 @@ package com.eviware.soapui.security.ui;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.Point;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -41,11 +42,11 @@ public class XPathCellRender extends AbstractCellEditor implements TableCellEdit
 
 	private JTextField textField;
 
-	public XPathCellRender()
+	public XPathCellRender(Frame frame)
 	{
 
-		dialog = new JDialog();
-		dialog.setModal( true );
+		dialog = new JDialog(frame, true);
+//		dialog.setModal( true );
 		dialog.setLayout( new BorderLayout() );
 		dialog.setUndecorated( true );
 		textArea = new JTextArea( 4, 5 );
@@ -71,27 +72,27 @@ public class XPathCellRender extends AbstractCellEditor implements TableCellEdit
 		dialog.add( new JScrollPane( textArea ), BorderLayout.CENTER );
 		dialog.setPreferredSize( new Dimension( 200, 100 ) );
 		dialog.setMinimumSize( new Dimension( 200, 100 ) );
-		
+
 		dialog.addWindowFocusListener( new WindowFocusListener()
 		{
-			
+
 			@Override
 			public void windowLostFocus( WindowEvent arg0 )
 			{
 				dialog.setVisible( false );
 			}
-			
+
 			@Override
 			public void windowGainedFocus( WindowEvent arg0 )
 			{
 				// TODO Auto-generated method stub
-				
+
 			}
-		});
+		} );
 
 		textField = new JTextField();
 		textField.addMouseListener( this );
-		
+
 	}
 
 	@Override

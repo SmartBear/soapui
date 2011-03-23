@@ -107,7 +107,7 @@ public class SecurityCheckedParametersTablePanel extends JPanel
 	 */
 	protected TableCellEditor getDefaultCellEditor()
 	{
-		return new XPathCellRender( );
+		return new XPathCellRender( UISupport.getParentFrame( this ) );
 	}
 
 	public XFormDialog getDialog()
