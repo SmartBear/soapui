@@ -94,4 +94,6 @@ public interface SecurityCheck
 	 */
 	JComponent getAdvancedSettingsPanel();
 
+	public boolean cancel();
+
 }

@@ -62,7 +62,7 @@ import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
  * 
  */
 public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<SecurityCheckConfig> implements Assertable,
-		 ResponseAssertion, SecurityCheck//, RequestAssertion 
+		ResponseAssertion, SecurityCheck// , RequestAssertion
 {
 	// configuration of specific request modification
 	// private SecurityCheckConfig config;
@@ -76,6 +76,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	private SoapUIScriptEngine setupScriptEngine;
 	private SoapUIScriptEngine tearDownScriptEngine;
 	private ExecutionStrategyHolder executionStrategy;
+	private TestStep originalTestStepClone;
 	private SecurityTestRunListener[] securityTestListeners = new SecurityTestRunListener[0];
 
 	public AbstractSecurityCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent, String icon )
@@ -185,13 +186,18 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 
 		while( hasNext( testStep, context ) )
 		{
-
+			if( ( ( SecurityTestRunnerImpl )securityTestRunner ).isCanceled() )
+			{
+				break;
+			}
 			securityCheckRequestResult = new SecurityCheckRequestResult( this );
 			securityCheckRequestResult.startTimer();
-			execute( securityTestRunner, ( ( SecurityTestRunnerImpl )securityTestRunner )
-					.cloneForSecurityCheck( ( WsdlTestStep )this.testStep ), context );
+			originalTestStepClone = ( ( SecurityTestRunnerImpl )securityTestRunner )
+					.cloneForSecurityCheck( ( WsdlTestStep )this.testStep );
+			execute( securityTestRunner, originalTestStepClone, context );
 			securityCheckRequestResult.stopTimer();
-//			assertRequest( getSecurityCheckRequestResult().getMessageExchange(), context );
+			// assertRequest( getSecurityCheckRequestResult().getMessageExchange(),
+			// context );
 			assertResponse( getSecurityCheckRequestResult().getMessageExchange(), context );
 			// add to summary result
 			securityCheckResult.addSecurityRequestResult( getSecurityCheckRequestResult() );
@@ -644,34 +650,37 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		return this;
 	}
 
-//	@Override
-//	public AssertionStatus assertRequest( MessageExchange messageExchange, SubmitContext context )
-//	{
-//		AssertionStatus result = null;
-//
-//		try
-//		{
-//			PropertyChangeNotifier notifier = new PropertyChangeNotifier();
-//
-//			if( messageExchange != null )
-//			{
-//				context.setProperty( SECURITY_CHECK_REQUEST_RESULT, getSecurityCheckRequestResult() );
-//
-//				for( WsdlMessageAssertion assertion : assertionsSupport.getAssertionList() )
-//				{
-//					result = assertion.assertRequest( messageExchange, context );
-//					setStatus( result, assertion );
-//				}
-//
-//				notifier.notifyChange();
-//			}
-//		}
-//		catch( Exception e )
-//		{
-//			e.printStackTrace();
-//		}
-//		return result;
-//	}
+	// @Override
+	// public AssertionStatus assertRequest( MessageExchange messageExchange,
+	// SubmitContext context )
+	// {
+	// AssertionStatus result = null;
+	//
+	// try
+	// {
+	// PropertyChangeNotifier notifier = new PropertyChangeNotifier();
+	//
+	// if( messageExchange != null )
+	// {
+	// context.setProperty( SECURITY_CHECK_REQUEST_RESULT,
+	// getSecurityCheckRequestResult() );
+	//
+	// for( WsdlMessageAssertion assertion : assertionsSupport.getAssertionList()
+	// )
+	// {
+	// result = assertion.assertRequest( messageExchange, context );
+	// setStatus( result, assertion );
+	// }
+	//
+	// notifier.notifyChange();
+	// }
+	// }
+	// catch( Exception e )
+	// {
+	// e.printStackTrace();
+	// }
+	// return result;
+	// }
 
 	public AssertionStatus assertResponse( MessageExchange messageExchange, SubmitContext context )
 	{
@@ -825,5 +834,15 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	public JComponent getAdvancedSettingsPanel()
 	{
 		return null;
+	}
+
+	@Override
+	public boolean cancel()
+	{
+		if( originalTestStepClone != null )
+		{
+			return originalTestStepClone.cancel();
+		}
+		return false;
 	}
 }

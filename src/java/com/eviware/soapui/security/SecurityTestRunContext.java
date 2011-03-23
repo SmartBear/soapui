@@ -13,6 +13,7 @@
 package com.eviware.soapui.security;
 
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
+import com.eviware.soapui.model.security.SecurityCheck;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.security.result.SecurityTestStepResult;
 import com.eviware.soapui.support.types.StringToObjectMap;
@@ -32,6 +33,17 @@ public class SecurityTestRunContext extends WsdlTestRunContext
 	// holds currentCheck index out of summary number of checks on a SecurityTest
 	// level
 	private int currentCheckOnSecurityTestIndex;
+	private SecurityTest securityTest;
+
+	public SecurityTestRunContext( TestCaseRunner testRunner, StringToObjectMap properties )
+	{
+		super( testRunner, properties );
+		if( testRunner instanceof SecurityTestRunnerImpl )
+		{
+			securityTest = ( ( SecurityTestRunnerImpl )testRunner ).getSecurityTest();
+		}
+		// this.testRunner = testRunner;
+	}
 
 	public int getCurrentCheckOnSecurityTestIndex()
 	{
@@ -41,12 +53,6 @@ public class SecurityTestRunContext extends WsdlTestRunContext
 	public void setCurrentCheckOnSecurityTestIndex( int currentCheckOnSecurityTestIndex )
 	{
 		this.currentCheckOnSecurityTestIndex = currentCheckOnSecurityTestIndex;
-	}
-
-	public SecurityTestRunContext( TestCaseRunner testRunner, StringToObjectMap properties )
-	{
-		super( testRunner, properties );
-		// this.testRunner = testRunner;
 	}
 
 	/**
@@ -100,6 +106,23 @@ public class SecurityTestRunContext extends WsdlTestRunContext
 	public SecurityTestStepResult getCurrentSecurityStepResult()
 	{
 		return currentSecurityStepResult;
+	}
+
+	public SecurityCheck getCurrentCheck()
+	{
+		int testStepCheckCount = 0;
+		if( securityTest != null )
+		{
+			testStepCheckCount = securityTest.getSecurityCheckCount();
+		}
+		if( currentCheckIndex < 0 || currentCheckIndex >= testStepCheckCount )
+			return null;
+
+		if( securityTest != null )
+		{
+			return securityTest.getTestStepSecurityCheckAt( getCurrentStep().getId(), getCurrentCheckIndex() );
+		}
+		return null;
 	}
 
 }
