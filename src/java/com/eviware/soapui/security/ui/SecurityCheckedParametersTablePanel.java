@@ -21,6 +21,7 @@ import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.table.TableCellEditor;
 
 import org.jdesktop.swingx.JXTable;
 
@@ -37,13 +38,14 @@ import com.eviware.x.form.XFormField;
 import com.eviware.x.form.XFormFieldListener;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.support.AForm;
+import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.impl.swing.JComboBoxFormField;
 import com.eviware.x.impl.swing.JFormDialog;
 import com.eviware.x.impl.swing.JTextFieldFormField;
 import com.eviware.x.impl.swing.SwingXFormDialog;
 
+@SuppressWarnings( "serial" )
 public class SecurityCheckedParametersTablePanel extends JPanel
 {
 
@@ -80,10 +82,22 @@ public class SecurityCheckedParametersTablePanel extends JPanel
 
 		add( toolbar, BorderLayout.NORTH );
 		table = new JXTable( model );
+		
+		table.setDefaultEditor( String.class, getDefaultCellEditor() );
 		add( new JScrollPane( table ), BorderLayout.CENTER );
 
 		pathPane = new JUndoableTextArea();
 
+	}
+
+	/**
+	 * this will return cell editor when editing xpath
+	 * 
+	 * @return
+	 */
+	protected TableCellEditor getDefaultCellEditor()
+	{
+		return new XPathCellRender( );
 	}
 
 	public XFormDialog getDialog()
