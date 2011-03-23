@@ -19,6 +19,8 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowFocusListener;
 
 import javax.swing.AbstractCellEditor;
 import javax.swing.JDialog;
@@ -69,6 +71,23 @@ public class XPathCellRender extends AbstractCellEditor implements TableCellEdit
 		dialog.add( new JScrollPane( textArea ), BorderLayout.CENTER );
 		dialog.setPreferredSize( new Dimension( 200, 100 ) );
 		dialog.setMinimumSize( new Dimension( 200, 100 ) );
+		
+		dialog.addWindowFocusListener( new WindowFocusListener()
+		{
+			
+			@Override
+			public void windowLostFocus( WindowEvent arg0 )
+			{
+				dialog.setVisible( false );
+			}
+			
+			@Override
+			public void windowGainedFocus( WindowEvent arg0 )
+			{
+				// TODO Auto-generated method stub
+				
+			}
+		});
 
 		textField = new JTextField();
 		textField.addMouseListener( this );
