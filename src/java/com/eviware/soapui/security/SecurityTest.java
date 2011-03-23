@@ -65,7 +65,8 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 	private HashMap<String, List<AbstractSecurityCheck>> securityChecksMap = new HashMap<String, List<AbstractSecurityCheck>>();
 
 	private SecurityTestRunnerImpl runner;
-	private SoapUIScriptEngine scriptEngine;
+	private SoapUIScriptEngine startupScriptEngine;
+	private SoapUIScriptEngine tearDownScriptEngine;
 
 	public SecurityTest( WsdlTestCase testCase, SecurityTestConfig config )
 	{
@@ -354,8 +355,8 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 			getConfig().addNewSetupScript();
 
 		getConfig().getSetupScript().setStringValue( script );
-		if( scriptEngine != null )
-			scriptEngine.setScript( script );
+		if( startupScriptEngine != null )
+			startupScriptEngine.setScript( script );
 
 		notifyPropertyChanged( STARTUP_SCRIPT_PROPERTY, oldScript, script );
 	}
@@ -383,16 +384,16 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 		if( StringUtils.isNullOrEmpty( script ) )
 			return null;
 
-		if( scriptEngine == null )
+		if( startupScriptEngine == null )
 		{
-			scriptEngine = SoapUIScriptEngineRegistry.create( this );
-			scriptEngine.setScript( script );
+			startupScriptEngine = SoapUIScriptEngineRegistry.create( this );
+			startupScriptEngine.setScript( script );
 		}
 
-		scriptEngine.setVariable( "context", runContext );
-		scriptEngine.setVariable( "securityTestRunner", runner );
-		scriptEngine.setVariable( "log", SoapUI.ensureGroovyLog() );
-		return scriptEngine.run();
+		startupScriptEngine.setVariable( "context", runContext );
+		startupScriptEngine.setVariable( "securityTestRunner", runner );
+		startupScriptEngine.setVariable( "log", SoapUI.ensureGroovyLog() );
+		return startupScriptEngine.run();
 	}
 
 	/**
@@ -408,8 +409,8 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 			getConfig().addNewTearDownScript();
 
 		getConfig().getTearDownScript().setStringValue( script );
-		if( scriptEngine != null )
-			scriptEngine.setScript( script );
+		if( tearDownScriptEngine != null )
+			tearDownScriptEngine.setScript( script );
 
 		notifyPropertyChanged( TEARDOWN_SCRIPT_PROPERTY, oldScript, script );
 	}
@@ -437,16 +438,16 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 		if( StringUtils.isNullOrEmpty( script ) )
 			return null;
 
-		if( scriptEngine == null )
+		if( tearDownScriptEngine == null )
 		{
-			scriptEngine = SoapUIScriptEngineRegistry.create( this );
-			scriptEngine.setScript( script );
+			tearDownScriptEngine = SoapUIScriptEngineRegistry.create( this );
+			tearDownScriptEngine.setScript( script );
 		}
 
-		scriptEngine.setVariable( "context", runContext );
-		scriptEngine.setVariable( "securityTestRunner", runner );
-		scriptEngine.setVariable( "log", SoapUI.ensureGroovyLog() );
-		return scriptEngine.run();
+		tearDownScriptEngine.setVariable( "context", runContext );
+		tearDownScriptEngine.setVariable( "securityTestRunner", runner );
+		tearDownScriptEngine.setVariable( "log", SoapUI.ensureGroovyLog() );
+		return tearDownScriptEngine.run();
 	}
 
 	public List<AbstractSecurityCheck> getTestStepSecurityChecks( String testStepId )
