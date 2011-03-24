@@ -481,6 +481,7 @@
 		<tns:actionMapping actionId="SeperatorAction"/>
  		<tns:actionMapping actionId="AddNewLoadTestAction" keyStroke="menu N"/>
  		<tns:actionMapping actionId="AddNewSecurityTestAction" keyStroke="menu S"/>
+ 		<tns:actionMapping actionId="SeperatorAction"/>
  		<tns:actionMapping actionId="CloneTestCaseAction" keyStroke="F9"/>
 		<tns:actionMapping actionId="ClearTestCaseAction"/>
 		<tns:actionMapping actionId="SeperatorAction"/>

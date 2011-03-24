@@ -347,7 +347,6 @@ public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase
 		toolbar.add( setEndpointButton );
 		toolbar.addSeparator();
 		toolbar.add( createLoadTestButton );
-		toolbar.addSeparator();
 		toolbar.add( createSecurityTestButton );
 		toolbar.addSeparator();
 		toolbar.add( optionsButton );
