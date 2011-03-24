@@ -195,15 +195,12 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 	{
 		Stack<String> stack = ( Stack<String> )context.get( REQUEST_MUTATIONS_STACK );
 		stack.push( request );
-		System.out.println( request );
 	}
 
 	private void updateTestStepRequest( TestStep testStep, String updatedRequest )
 	{
 		( ( WsdlTestRequestStep )testStep ).getTestRequest().setRequestContent( updatedRequest );
 
-		// TODO: delete System.out
-		// System.out.println( updatedRequest );
 	}
 
 	public String extractRestrictions( XmlObjectTreeModel model2, SecurityTestRunContext context,

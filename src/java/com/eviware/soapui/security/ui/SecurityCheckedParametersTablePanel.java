@@ -52,14 +52,14 @@ public class SecurityCheckedParametersTablePanel extends JPanel
 {
 
 	static final String CHOOSE_TEST_PROPERTY = "Choose Test Property";
-	private SecurityParametersTableModel model;
-	private JXToolBar toolbar;
-	private JXTable table;
+	protected SecurityParametersTableModel model;
+	protected JXToolBar toolbar;
+	protected JXTable table;
 	protected Map<String, TestProperty> properties;
 	protected DefaultActionList actionList;
-	private JUndoableTextArea pathPane;
-	private XFormDialog dialog;
-	private AbstractSecurityCheckWithProperties securityCheck;
+	protected JUndoableTextArea pathPane;
+	protected XFormDialog dialog;
+	protected AbstractSecurityCheckWithProperties securityCheck;
 
 	public SecurityCheckedParametersTablePanel( SecurityParametersTableModel model,
 			Map<String, TestProperty> properties, AbstractSecurityCheckWithProperties securityCheck )
@@ -80,7 +80,7 @@ public class SecurityCheckedParametersTablePanel extends JPanel
 		}
 	}
 
-	private void init()
+	protected void init()
 	{
 
 		setLayout( new BorderLayout() );
@@ -188,7 +188,7 @@ public class SecurityCheckedParametersTablePanel extends JPanel
 		pathPane.setEnabled( enable );
 	}
 
-	private class AddNewParameterAction extends AbstractAction
+	 class AddNewParameterAction extends AbstractAction
 	{
 
 		public AddNewParameterAction()
@@ -207,7 +207,7 @@ public class SecurityCheckedParametersTablePanel extends JPanel
 
 	}
 
-	private class RemoveParameterAction extends AbstractAction
+	 class RemoveParameterAction extends AbstractAction
 	{
 
 		public RemoveParameterAction()
@@ -292,7 +292,7 @@ public class SecurityCheckedParametersTablePanel extends JPanel
 
 	}
 
-	private class CopyParameterAction extends AbstractAction
+	 class CopyParameterAction extends AbstractAction
 	{
 
 		public CopyParameterAction()
