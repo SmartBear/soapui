@@ -541,6 +541,12 @@ public class SecurityChecksPanel extends JPanel
 				return;
 			}
 
+			if( !securityTest.canAddSecurityCheck( testStep, type) )
+			{
+				UISupport.showErrorMessage( "Security check type already exists" );
+				return;
+			}
+
 			SecurityCheck securityCheck = securityTest.addSecurityCheck( testStep, type, name );
 
 			if( securityCheck == null )

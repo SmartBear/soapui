@@ -696,4 +696,29 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 		}
 	}
 
+	/**
+	 * Checks if we can add new SecurityCheck for the specific TestStep (only one
+	 * type of SecurityCheck for TestStep is allowed)
+	 * 
+	 * @param testStep
+	 * @param securityCheckType
+	 * @return boolean
+	 */
+	public boolean canAddSecurityCheck( TestStep testStep, String securityCheckName )
+	{
+		boolean hasChecksOfType = false;
+		String securityCheckType = SoapUI.getSoapUICore().getSecurityCheckRegistry()
+				.getSecurityCheckTypeForName( securityCheckName );
+
+		for( SecurityCheck check : getTestStepSecurityChecks( testStep.getId() ) )
+		{
+			if( securityCheckType.equals( check.getType() ) )
+			{
+				hasChecksOfType = true;
+				break;
+			}
+		}
+
+		return !hasChecksOfType;
+	}
 }
