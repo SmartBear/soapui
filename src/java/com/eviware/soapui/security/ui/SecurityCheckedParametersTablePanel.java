@@ -33,6 +33,7 @@ import com.eviware.soapui.security.check.AbstractSecurityCheckWithProperties;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.DefaultActionList;
 import com.eviware.soapui.support.components.JUndoableTextArea;
+import com.eviware.soapui.support.components.JUndoableTextField;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.XFormField;
@@ -367,6 +368,10 @@ public class SecurityCheckedParametersTablePanel extends JPanel
 			}
 		}
 
+	}
+	
+	public JUndoableTextField getLabel() {
+		return ((JTextFieldFormField)dialog.getFormField( AddParameterDialog.LABEL )).getComponent();
 	}
 
 	@AForm( description = "Add New Security Test Step Parameter", name = "Configure Security Test Step Parameters" )
