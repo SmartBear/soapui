@@ -136,6 +136,7 @@ public class XPathCellRender extends AbstractCellEditor implements TableCellEdit
 		} );
 		toolbar.addGlue();
 		toolbar.add( resizeBtn );
+		toolbar.setFloatable( false );
 		return toolbar;
 	}
 
