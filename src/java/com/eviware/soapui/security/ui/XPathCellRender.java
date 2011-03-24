@@ -13,39 +13,52 @@ package com.eviware.soapui.security.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.Frame;
 import java.awt.Point;
+import java.awt.Dialog.ModalExclusionType;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowFocusListener;
 
 import javax.swing.AbstractCellEditor;
-import javax.swing.JDialog;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.table.TableCellEditor;
 
+import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.components.JXToolBar;
+
 @SuppressWarnings( "serial" )
-public class XPathCellRender extends AbstractCellEditor implements TableCellEditor, MouseListener
+public class XPathCellRender extends AbstractCellEditor implements TableCellEditor, MouseListener, WindowFocusListener
 {
 
-	protected JDialog dialog;
+	protected JPanel panel;
 	JTextArea textArea;
 
 	protected static final String EDIT = "edit";
 
 	private JTextField textField;
+	protected JFrame frame;
+	private JButton resizeBtn;
+	protected int mouseX;
+	protected int mouseY;
 
-	public XPathCellRender(Frame frame)
+	public XPathCellRender()
 	{
 
-		dialog = new JDialog(frame, true);
-		dialog.setLayout( new BorderLayout() );
-		dialog.setUndecorated( true );
+		panel = new JPanel();
+		panel.setLayout( new BorderLayout() );
 		textArea = new JTextArea( 4, 5 );
 		textArea.setWrapStyleWord( true );
 
@@ -57,22 +70,73 @@ public class XPathCellRender extends AbstractCellEditor implements TableCellEdit
 				{
 				case KeyEvent.VK_ENTER :
 					textField.setText( textArea.getText() );
-					dialog.setVisible( false );
+					frame.setVisible( false );
 					break;
 				case KeyEvent.VK_ESCAPE :
-					dialog.setVisible( false );
+					frame.setVisible( false );
 					break;
 				}
 			}
 		} );
 
-		dialog.add( new JScrollPane( textArea ), BorderLayout.CENTER );
-		dialog.setPreferredSize( new Dimension( 200, 100 ) );
-		dialog.setMinimumSize( new Dimension( 200, 100 ) );
+		panel.add( new JScrollPane( textArea ), BorderLayout.CENTER );
+		panel.setPreferredSize( new Dimension( 200, 100 ) );
+		panel.setMinimumSize( new Dimension( 200, 100 ) );
+		JXToolBar toolbar = initToolbar(UISupport.createToolbar());
+		panel.add( toolbar, BorderLayout.SOUTH );
 
+		this.frame = new JFrame();
+		this.frame.addWindowFocusListener( this );
+		this.frame.setContentPane( panel );
+		this.frame.setAlwaysOnTop( true );
+		this.frame.setModalExclusionType( ModalExclusionType.APPLICATION_EXCLUDE );
+		this.frame.setDefaultCloseOperation( JFrame.HIDE_ON_CLOSE );
+		this.frame.setUndecorated( true );
 		textField = new JTextField();
 		textField.addMouseListener( this );
 
+	}
+
+	/**
+	 * @param jxToolBar 
+	 * @return
+	 */
+	protected JXToolBar initToolbar(JXToolBar toolbar)
+	{
+
+		resizeBtn = UISupport.createToolbarButton( UISupport.createImageIcon( "/icon_resize.gif" ) );
+		resizeBtn.setCursor( new Cursor(Cursor.SE_RESIZE_CURSOR) );
+		resizeBtn.setContentAreaFilled( false );
+		resizeBtn.setBorder( null );
+		resizeBtn.addMouseMotionListener( new MouseMotionListener()
+		{
+			
+			@Override
+			public void mouseMoved( MouseEvent e )
+			{
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseDragged( MouseEvent e )
+			{
+				frame.setSize(frame.getWidth() - mouseX + e.getX(), frame.getHeight() - mouseY + e.getY());
+			}
+		});
+		
+		resizeBtn.addMouseListener( new MouseAdapter()
+		{
+			
+			public void mousePressed(MouseEvent e) {
+				mouseX = e.getX();
+				mouseY = e.getY();
+			};
+			
+		} );
+		toolbar.addGlue();
+		toolbar.add( resizeBtn );
+		return toolbar;
 	}
 
 	@Override
@@ -92,10 +156,14 @@ public class XPathCellRender extends AbstractCellEditor implements TableCellEdit
 	@Override
 	public void mouseClicked( MouseEvent e )
 	{
-		textArea.setText( textField.getText() );
-		Point position = textField.getLocationOnScreen();
-		dialog.setBounds( position.x, position.y, 0, 0 );
-		dialog.setVisible( true );
+		if( !frame.isVisible() )
+		{
+			textArea.setText( textField.getText() );
+			Point position = textField.getLocationOnScreen();
+			frame.setBounds( position.x, position.y, frame.getWidth(), frame.getHeight() );
+			frame.pack();
+			frame.setVisible( true );
+		}
 	}
 
 	@Override
@@ -124,6 +192,19 @@ public class XPathCellRender extends AbstractCellEditor implements TableCellEdit
 	{
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void windowGainedFocus( WindowEvent e )
+	{
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void windowLostFocus( WindowEvent e )
+	{
+		frame.setVisible( false );
 	}
 
 }

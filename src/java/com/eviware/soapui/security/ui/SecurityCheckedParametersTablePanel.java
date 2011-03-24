@@ -72,9 +72,10 @@ public class SecurityCheckedParametersTablePanel extends JPanel
 	private void initRequestPartProperties( Map<String, TestProperty> properties )
 	{
 		this.properties = new HashMap<String, TestProperty>();
-		for(String key : properties.keySet()){
-			if(properties.get( key ).isRequestPart())
-				this.properties.put( key, properties.get( key ));
+		for( String key : properties.keySet() )
+		{
+			if( properties.get( key ).isRequestPart() )
+				this.properties.put( key, properties.get( key ) );
 		}
 	}
 
@@ -92,7 +93,7 @@ public class SecurityCheckedParametersTablePanel extends JPanel
 
 		add( toolbar, BorderLayout.NORTH );
 		table = new JXTable( model );
-		
+
 		table.setDefaultEditor( String.class, getDefaultCellEditor() );
 		add( new JScrollPane( table ), BorderLayout.CENTER );
 
@@ -107,7 +108,7 @@ public class SecurityCheckedParametersTablePanel extends JPanel
 	 */
 	protected TableCellEditor getDefaultCellEditor()
 	{
-		return new XPathCellRender( UISupport.getParentFrame( this ) );
+		return new XPathCellRender();
 	}
 
 	public XFormDialog getDialog()
@@ -160,7 +161,7 @@ public class SecurityCheckedParametersTablePanel extends JPanel
 
 			}
 		} );
-		ArrayList<String> options = new ArrayList<String>(  );
+		ArrayList<String> options = new ArrayList<String>();
 		options.add( CHOOSE_TEST_PROPERTY );
 		options.addAll( properties.keySet() );
 		nameField.setOptions( options.toArray( new String[0] ) );
@@ -248,8 +249,8 @@ public class SecurityCheckedParametersTablePanel extends JPanel
 			}
 			else
 			{
-				if( !model.addParameter( dialog.getValue( AddParameterDialog.LABEL ),
-						dialog.getValue( AddParameterDialog.NAME ), pathPane.getText() ) )
+				if( !model.addParameter( dialog.getValue( AddParameterDialog.LABEL ), dialog
+						.getValue( AddParameterDialog.NAME ), pathPane.getText() ) )
 					UISupport.showErrorMessage( "Label have to be unique!" );
 			}
 		}
@@ -353,8 +354,8 @@ public class SecurityCheckedParametersTablePanel extends JPanel
 			}
 			else
 			{
-				if( model.addParameter( dialog.getValue( AddParameterDialog.LABEL ),
-						dialog.getValue( AddParameterDialog.NAME ), pathPane.getText() ) )
+				if( model.addParameter( dialog.getValue( AddParameterDialog.LABEL ), dialog
+						.getValue( AddParameterDialog.NAME ), pathPane.getText() ) )
 				{
 					JComboBoxFormField nameField = ( JComboBoxFormField )dialog.getFormField( AddParameterDialog.NAME );
 					nameField.setSelectedOptions( new Object[] { nameField.getOptions()[0] } );
