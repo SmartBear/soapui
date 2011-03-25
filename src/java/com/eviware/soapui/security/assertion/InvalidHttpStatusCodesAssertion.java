@@ -71,7 +71,7 @@ public class InvalidHttpStatusCodesAssertion extends WsdlMessageAssertion implem
 			throws AssertionException
 	{
 
-		List<String> codeList = extractCodes();
+		List<String> codeList = extractCodes(context);
 		String[] statusElements = null;
 		try
 		{
@@ -101,10 +101,11 @@ public class InvalidHttpStatusCodesAssertion extends WsdlMessageAssertion implem
 		return "OK";
 	}
 
-	private List<String> extractCodes()
+	private List<String> extractCodes(SubmitContext context)
 	{
+		String expandedCodes = context.expand( codes );
 		List<String> codeList = new ArrayList<String>();
-		for( String str : codes.split( "," ) )
+		for( String str : expandedCodes.split( "," ) )
 		{
 			codeList.add( str.trim() );
 		}

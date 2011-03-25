@@ -73,6 +73,8 @@ public class SecurityParametersTableModel extends DefaultTableModel
 	@Override
 	public void setValueAt( Object aValue, int row, int column )
 	{
+		if( holder.getParameterList().isEmpty() )
+			return;
 		SecurityCheckedParameterImpl param = ( SecurityCheckedParameterImpl )holder.getParameterList().get( row );
 		switch( column )
 		{
@@ -90,12 +92,14 @@ public class SecurityParametersTableModel extends DefaultTableModel
 		}
 	}
 
-	public boolean addParameter(String label, String name, String xpath)
+	public boolean addParameter( String label, String name, String xpath )
 	{
-		if ( holder.addParameter(  label, name, xpath, true ) ) {
+		if( holder.addParameter( label, name, xpath, true ) )
+		{
 			fireTableDataChanged();
 			return true;
-		} else 
+		}
+		else
 			return false;
 	}
 
@@ -107,7 +111,7 @@ public class SecurityParametersTableModel extends DefaultTableModel
 
 	public void removeRows( int[] selectedRows )
 	{
-		holder.removeParameters(selectedRows);
+		holder.removeParameters( selectedRows );
 	}
 
 }

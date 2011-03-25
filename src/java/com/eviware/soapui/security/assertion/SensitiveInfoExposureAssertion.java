@@ -72,7 +72,7 @@ public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion impleme
 	protected String internalAssertResponse( MessageExchange messageExchange, SubmitContext context )
 			throws AssertionException
 	{
-		List<String> checkList = createCheckList();
+		List<String> checkList = createCheckList( context );
 		boolean throwException = false;
 		List<AssertionError> assertionErrorList = new ArrayList<AssertionError>();
 		for( String exposureContent : checkList )
@@ -92,28 +92,39 @@ public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion impleme
 				throwException = true;
 			}
 		}
-	
+
 		if( throwException )
 		{
-			throw new AssertionException(assertionErrorList.toArray( new AssertionError[assertionErrorList.size()]  ));
+			throw new AssertionException( assertionErrorList.toArray( new AssertionError[assertionErrorList.size()] ) );
 		}
 
 		return "OK";
 	}
 
-	private List<String> createCheckList()
+	private List<String> createCheckList( SubmitContext context )
 	{
 		List<String> checkList = new ArrayList<String>( assertionSpecificExposureList );
 		if( includeProjectSpecific )
 		{
-			checkList.addAll(SecurityCheckUtil.projectEntriesList( this ) );
+			checkList.addAll( SecurityCheckUtil.projectEntriesList( this ) );
 		}
 
 		if( includeGlolbal )
 		{
 			checkList.addAll( SecurityCheckUtil.globalEntriesList() );
 		}
-		return checkList;
+		List<String> expandedList = propertyExpansionSupport( checkList, context );
+		return expandedList;
+	}
+
+	private List<String> propertyExpansionSupport( List<String> checkList, SubmitContext context )
+	{
+		List<String> expanded = new ArrayList<String>();
+		for( String content : checkList )
+		{
+			expanded.add( context.expand( content ) );
+		}
+		return expanded;
 	}
 
 	public static class Factory extends AbstractTestAssertionFactory

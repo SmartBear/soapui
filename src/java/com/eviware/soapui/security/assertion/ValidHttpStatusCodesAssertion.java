@@ -71,7 +71,7 @@ public class ValidHttpStatusCodesAssertion extends WsdlMessageAssertion implemen
 			throws AssertionException
 	{
 
-		List<String> codeList = extractCodes();
+		List<String> codeList = extractCodes( context );
 		String[] statusElements = null;
 		try
 		{
@@ -100,10 +100,11 @@ public class ValidHttpStatusCodesAssertion extends WsdlMessageAssertion implemen
 		return "OK";
 	}
 
-	private List<String> extractCodes()
+	private List<String> extractCodes( SubmitContext context )
 	{
+		String expandedCodes = context.expand( codes );
 		List<String> codeList = new ArrayList<String>();
-		for( String str : codes.split( "," ) )
+		for( String str : expandedCodes.split( "," ) )
 		{
 			codeList.add( str.trim() );
 		}
@@ -167,8 +168,8 @@ public class ValidHttpStatusCodesAssertion extends WsdlMessageAssertion implemen
 		mainForm.addTextField( CODES, "Coma separated acceptable status codes", XForm.FieldType.TEXTAREA ).setWidth( 40 );
 
 		// TODO : update help URL
-		dialog = builder.buildDialog( builder.buildOkCancelHelpActions( HelpUrls.HELP_URL_ROOT ),
-				"Specify codes", UISupport.OPTIONS_ICON );
+		dialog = builder.buildDialog( builder.buildOkCancelHelpActions( HelpUrls.HELP_URL_ROOT ), "Specify codes",
+				UISupport.OPTIONS_ICON );
 	}
 
 }
