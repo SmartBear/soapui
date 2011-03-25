@@ -34,7 +34,15 @@ import com.eviware.soapui.support.action.swing.DefaultActionList;
 public class SecurityCheckResult implements SecurityResult
 {
 	public final static String TYPE = "SecurityCheckResult";
-	private SecurityStatus status = SecurityStatus.UNKNOWN;
+	/**
+	 * status is set to SecurityStatus.INITIALIZED but goes to
+	 * SecurityStatus.UNKNOWN first time any checkRequestResult is added.
+	 * INITIALIZED status is necessary to be able to detect when logging if
+	 * SecurityCheck is just started and no status icon should be added, or it
+	 * went through execution and gone into any other status, including UNKNOWN
+	 * if no assertion is added, when status icon should be added to log
+	 */
+	private SecurityStatus status = SecurityStatus.INITIALIZED;
 	public SecurityCheck securityCheck;
 	private long size;
 	private boolean discarded;
@@ -44,6 +52,8 @@ public class SecurityCheckResult implements SecurityResult
 	public StringBuffer testLog = new StringBuffer();
 	private DefaultActionList actionList;
 	private boolean hasAddedRequests;
+	//along with the status determines if canceled with or without warnings
+	private boolean hasRequestsWithWarnings;
 
 	public SecurityCheckResult( SecurityCheck securityCheck )
 	{
@@ -124,12 +134,17 @@ public class SecurityCheckResult implements SecurityResult
 
 		timeTaken += secReqResult.getTimeTaken();
 
-		if( !hasAddedRequests && secReqResult.getStatus() == SecurityStatus.OK )
+		if( !hasAddedRequests )
 		{
-			status = SecurityStatus.OK;
+			status = SecurityStatus.UNKNOWN;
+			if( secReqResult.getStatus() == SecurityStatus.OK )
+			{
+				status = SecurityStatus.OK;
+			}
 		}
 		else if( secReqResult.getStatus() == SecurityStatus.FAILED )
 		{
+			hasRequestsWithWarnings = true;
 			status = SecurityStatus.FAILED;
 		}
 
@@ -207,6 +222,16 @@ public class SecurityCheckResult implements SecurityResult
 	public String getResultType()
 	{
 		return TYPE;
+	}
+
+	public boolean isCanceled()
+	{
+		return status == SecurityStatus.CANCELED;
+	}
+
+	public boolean isHasRequestsWithWarnings()
+	{
+		return hasRequestsWithWarnings;
 	}
 
 }

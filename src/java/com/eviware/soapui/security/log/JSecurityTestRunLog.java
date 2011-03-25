@@ -467,7 +467,7 @@ public class JSecurityTestRunLog extends JPanel
 					hyperlinkLabel.setUnderlineColor( Color.WHITE );
 					hyperlinkLabel.setIcon( null );
 
-					hyperlinkLabel.setBorder( BorderFactory.createEmptyBorder( 0, 16, 3, 3 ) );
+					hyperlinkLabel.setBorder( BorderFactory.createEmptyBorder( 0, 24, 3, 3 ) );
 				}
 				else if( result.getResultType().equals( SecurityCheckResult.TYPE ) )
 				{
@@ -478,7 +478,9 @@ public class JSecurityTestRunLog extends JPanel
 					hyperlinkLabel.setBorder( BorderFactory.createEmptyBorder( 0, 16, 3, 3 ) );
 					hyperlinkLabel.setUnderlineColor( Color.WHITE );
 					hyperlinkLabel.setIcon( null );
-					if( getText().startsWith( "SecurityCheck" ) && !getText().startsWith( " ->" ) )
+					// if( getText().startsWith( "SecurityCheck" ) &&
+					// !getText().startsWith( " ->" ) )
+					if( result.getStatus() != SecurityStatus.INITIALIZED )
 					{
 						hyperlinkLabel.setUnderlineColor( Color.GRAY );
 						if( result.getStatus() == SecurityStatus.OK )

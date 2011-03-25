@@ -22,7 +22,6 @@ import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestStepFactory;
 import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestStepRegistry;
-import com.eviware.soapui.model.security.SecurityCheck;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.TestAssertion;
 import com.eviware.soapui.model.testsuite.TestStep;
@@ -148,6 +147,11 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 					SecurityCheckResult securityCheckResult = runTestStepSecurityCheck( runContext, currentStep,
 							securityCheck );
 					securityStepResult.addSecurityCheckResult( securityCheckResult );
+					if( securityCheckResult.isCanceled() )
+					{
+						return -2;
+					}
+
 					if( securityCheckResult.getStatus() == SecurityStatus.FAILED )
 					{
 						if( getTestRunnable().getFailOnError() )
@@ -316,20 +320,4 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 			fail( "Failing due to failed security check" );
 		}
 	}
-
-	public void onCancel( String reason )
-	{
-		// super.onCancel( reason );
-
-		TestStep currentStep = getRunContext().getCurrentStep();
-		if( currentStep != null )
-			currentStep.cancel();
-
-//		SecurityCheck currentCheck = getRunContext().getCurrentCheck();
-//		if( currentCheck != null )
-//		{
-//			currentCheck.cancel();
-//		}
-	}
-
 }

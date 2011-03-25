@@ -149,6 +149,15 @@ public abstract class AbstractTestCaseRunner<T extends TestRunnable, T2 extends 
 
 	protected abstract void failTestRunnableOnErrors( T2 runContext );
 
+	/**
+	 * Runs current testStep , returns index of the next step to be run and -2 in
+	 * case execution should break if canceled
+	 * 
+	 * @param runContext
+	 * @param currentStepIndex
+	 * @return
+	 * @throws Exception
+	 */
 	protected abstract int runCurrentTestStep( T2 runContext, int currentStepIndex ) throws Exception;
 
 	protected void internalFinally( T2 runContext )

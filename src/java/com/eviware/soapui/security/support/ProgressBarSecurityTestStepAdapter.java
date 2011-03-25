@@ -90,7 +90,18 @@ public class ProgressBarSecurityTestStepAdapter
 		{
 			progressBar.setIndeterminate( false );
 
-			if( securityCheckResult.getStatus() == SecurityStatus.FAILED )
+			if( securityCheckResult.getStatus() == SecurityStatus.CANCELED )
+			{
+				if( securityCheckResult.isHasRequestsWithWarnings() )
+				{
+					progressBar.setForeground( Color.RED );
+				}
+				else
+				{
+					progressBar.setForeground( Color.GREEN.darker() );
+				}
+			}
+			else if( securityCheckResult.getStatus() == SecurityStatus.FAILED )
 			{
 				progressBar.setForeground( Color.RED );
 			}

@@ -13,6 +13,7 @@
 package com.eviware.soapui.security.log;
 
 import java.lang.ref.SoftReference;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.List;
 
@@ -38,6 +39,7 @@ public class SecurityTestLogModel extends AbstractListModel
 	private int maxSize = 100;
 	private int stepCount;
 	private int checkCount;
+	private SimpleDateFormat dateFormat = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss.SSS" );
 
 	public synchronized Object getElementAt( int arg0 )
 	{
@@ -131,7 +133,7 @@ public class SecurityTestLogModel extends AbstractListModel
 		enforceMaxSize();
 	}
 
-	public synchronized void addSecurityCheckStarted( SecurityCheck securityCheck)
+	public synchronized void addSecurityCheckStarted( SecurityCheck securityCheck )
 	{
 		int size = items.size();
 
@@ -139,7 +141,7 @@ public class SecurityTestLogModel extends AbstractListModel
 		SoftReference<SecurityResult> checkResultRef = new SoftReference<SecurityResult>( securityCheckResult );
 
 		items.add( "SecurityCheck [" + securityCheck.getName() + "] started at "
-				+ securityCheckResult.getTimeStamp() );
+				+ dateFormat.format( securityCheckResult.getTimeStamp() ) );
 		results.add( checkResultRef );
 
 		fireIntervalAdded( this, size, items.size() - 1 );

@@ -90,10 +90,9 @@ public interface SecurityCheck
 
 	/**
 	 * Advanced setting panel for configuration
+	 * 
 	 * @return
 	 */
 	JComponent getAdvancedSettingsPanel();
-
-	public boolean cancel();
 
 }

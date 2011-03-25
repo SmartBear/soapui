@@ -188,7 +188,8 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		{
 			if( ( ( SecurityTestRunnerImpl )securityTestRunner ).isCanceled() )
 			{
-				break;
+				securityCheckResult.setStatus( SecurityStatus.CANCELED );
+				return securityCheckResult;
 			}
 			securityCheckRequestResult = new SecurityCheckRequestResult( this );
 			securityCheckRequestResult.startTimer();
@@ -836,13 +837,4 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		return null;
 	}
 
-	@Override
-	public boolean cancel()
-	{
-		if( originalTestStepClone != null )
-		{
-			return originalTestStepClone.cancel();
-		}
-		return false;
-	}
 }

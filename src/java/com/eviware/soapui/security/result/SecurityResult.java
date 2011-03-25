@@ -22,9 +22,17 @@ import com.eviware.soapui.support.action.swing.ActionList;
  */
 public interface SecurityResult
 {
+	/**
+	 * 
+	 * INITIALIZED - just started, for distinguishing if icon should be added in the security log
+	 * UNKNOWN - when no assertions are added
+	 * OK - finished with no errors/warnings
+	 * FAILED 
+	 * CANCELED
+	 */
 	public enum SecurityStatus
 	{
-		UNKNOWN, OK, FAILED, CANCELED
+		INITIALIZED, UNKNOWN, OK, FAILED, CANCELED
 	}
 
 	/**
