@@ -224,4 +224,10 @@ public class JTabbedFormDialog extends SwingXFormDialog
 	{
 		return tabs;
 	}
+
+	public void setResizable( boolean b )
+	{
+		dialog.setResizable( b );
+	}
+	
 }
