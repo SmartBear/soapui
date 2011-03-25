@@ -56,17 +56,6 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 		super( testStep, config, parent, icon );
 	}
 
-	// private List<String> getSelectedList()
-	// {
-	// List<String> selected = new ArrayList<String>();
-	// for( SecurityCheckedParameter cpc :
-	// getParameterHolder().getParameterList() )
-	// {
-	// if( cpc.isChecked() )
-	// selected.add( cpc.getName() );
-	// }
-	// return selected;
-	// }
 
 	@Override
 	public SecurityCheckConfigPanel getComponent()
@@ -102,10 +91,6 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 
 	private void createMessageExchange( TestStep testStep )
 	{
-		String originalRequestContent = ( ( WsdlTestRequestStep )testStep ).getTestRequest().getRequestContent();
-		// String propertyType =
-		// / SecurityMutation secMut = new SecurityMutation( propertyType,
-		// original, mutated, xPath )
 		MessageExchange messageExchange = new WsdlResponseMessageExchange( ( ( WsdlTestRequestStep )testStep )
 				.getTestRequest() );
 		getSecurityCheckRequestResult().setMessageExchange( messageExchange );
@@ -132,11 +117,11 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 				if( strategy.equals( StrategyTypeConfig.ONE_BY_ONE ) )
 				{
 					model = getXmlObjectTreeModel( testStep );
-					treeNodes = model.selectTreeNodes( scp.getXPath() );
+					treeNodes = model.selectTreeNodes( context.expand( scp.getXPath() ));
 				}
 				else
 				{
-					treeNodes = model.selectTreeNodes( scp.getXPath() );
+					treeNodes = model.selectTreeNodes( context.expand(scp.getXPath()) );
 				}
 
 				if( treeNodes.length > 0 )

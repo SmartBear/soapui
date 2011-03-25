@@ -118,7 +118,7 @@ public class SQLInjectionCheck extends AbstractSecurityCheckWithProperties
 	@Override
 	protected void execute( SecurityTestRunner securityTestRunner, TestStep testStep, SecurityTestRunContext context )
 	{
-		update( testStep );
+		update( testStep , context);
 		testStep.run( ( TestCaseRunner )securityTestRunner, context );
 		createMessageExchange( testStep );
 	}
@@ -130,10 +130,10 @@ public class SQLInjectionCheck extends AbstractSecurityCheckWithProperties
 		getSecurityCheckRequestResult().setMessageExchange( messageExchange );
 	}
 
-	private void update( TestStep testStep )
+	private void update( TestStep testStep, SecurityTestRunContext context )
 	{
 		if( parameterMutations.size() == 0 )
-			mutateParameters( testStep );
+			mutateParameters( testStep , context);
 
 		if( getExecutionStrategy().getStrategy() == StrategyTypeConfig.ONE_BY_ONE )
 		{
@@ -163,7 +163,7 @@ public class SQLInjectionCheck extends AbstractSecurityCheckWithProperties
 								XmlObjectTreeModel model = new XmlObjectTreeModel( ( ( WsdlTestRequestStep )getTestStep() )
 										.getOperation().getInterface().getDefinitionContext().getSchemaTypeSystem(),
 										XmlObject.Factory.parse( value ) );
-								XmlTreeNode[] nodes = model.selectTreeNodes( param.getXPath() );
+								XmlTreeNode[] nodes = model.selectTreeNodes( context.expand(param.getXPath()) );
 								for( XmlTreeNode node : nodes )
 									node.setValue( 1, parameterMutations.get( param ).get( 0 ) );
 								parameterMutations.get( param ).remove( 0 );
@@ -207,7 +207,7 @@ public class SQLInjectionCheck extends AbstractSecurityCheckWithProperties
 								continue;
 							if( param.getName().equals( property.getName() ) )
 							{
-								XmlTreeNode[] nodes = model.selectTreeNodes( param.getXPath() );
+								XmlTreeNode[] nodes = model.selectTreeNodes( context.expand(param.getXPath()) );
 								if( parameterMutations.containsKey( param ) )
 									if( parameterMutations.get( param ).size() > 0 )
 									{
@@ -238,7 +238,7 @@ public class SQLInjectionCheck extends AbstractSecurityCheckWithProperties
 		}
 	}
 
-	private void mutateParameters( TestStep testStep )
+	private void mutateParameters( TestStep testStep, SecurityTestRunContext context )
 	{
 		mutation = true;
 		// for each parameter
@@ -282,7 +282,7 @@ public class SQLInjectionCheck extends AbstractSecurityCheckWithProperties
 						if( testStep instanceof RestTestRequestStep || testStep instanceof HttpTestRequestStep )
 							model = new XmlObjectTreeModel( XmlObject.Factory.parse( value ) );
 
-						XmlTreeNode[] nodes = model.selectTreeNodes( parameter.getXPath() );
+						XmlTreeNode[] nodes = model.selectTreeNodes(context.expand( parameter.getXPath()) );
 
 						// for each invalid type set all nodes
 

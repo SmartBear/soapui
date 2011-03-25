@@ -136,7 +136,7 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 	@Override
 	protected void execute( SecurityTestRunner securityTestRunner, TestStep testStep, SecurityTestRunContext context )
 	{
-		updateRequestContent( testStep );
+		updateRequestContent( testStep,context );
 
 		testStep.run( ( TestCaseRunner )securityTestRunner, context );
 
@@ -153,13 +153,13 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 	/*
 	 * Set new value for request
 	 */
-	private void updateRequestContent( TestStep testStep )
+	private void updateRequestContent( TestStep testStep, SecurityTestRunContext context )
 	{
 
 		if( parameterMutations.size() == 0 )
 			try
 			{
-				mutateParameters( testStep );
+				mutateParameters( testStep, context );
 			}
 			catch( XmlException e1 )
 			{
@@ -194,7 +194,7 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 								XmlObjectTreeModel model = new XmlObjectTreeModel( ( ( WsdlTestRequestStep )getTestStep() )
 										.getOperation().getInterface().getDefinitionContext().getSchemaTypeSystem(),
 										XmlObject.Factory.parse( value ) );
-								XmlTreeNode[] nodes = model.selectTreeNodes( param.getXPath() );
+								XmlTreeNode[] nodes = model.selectTreeNodes(context.expand( param.getXPath()) );
 								for( XmlTreeNode node : nodes )
 									node.setValue( 1, parameterMutations.get( param ).get( 0 ) );
 								parameterMutations.get( param ).remove( 0 );
@@ -238,7 +238,7 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 								continue;
 							if( param.getName().equals( property.getName() ) )
 							{
-								XmlTreeNode[] nodes = model.selectTreeNodes( param.getXPath() );
+								XmlTreeNode[] nodes = model.selectTreeNodes(context.expand( param.getXPath()) );
 								if( parameterMutations.containsKey( param ) )
 									if( parameterMutations.get( param ).size() > 0 )
 									{
@@ -274,10 +274,11 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 	 * generate set of requests with all variations
 	 * 
 	 * @param testStep
+	 * @param context 
 	 * 
 	 * @throws XmlException
 	 */
-	private void mutateParameters( TestStep testStep ) throws XmlException
+	private void mutateParameters( TestStep testStep, SecurityTestRunContext context ) throws XmlException
 	{
 
 		mutation = true;
@@ -316,7 +317,7 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 								.getOperation().getInterface().getDefinitionContext().getSchemaTypeSystem(), XmlObject.Factory
 								.parse( value ) );
 
-						XmlTreeNode[] nodes = model.selectTreeNodes( parameter.getXPath() );
+						XmlTreeNode[] nodes = model.selectTreeNodes(context.expand( parameter.getXPath() ));
 
 						// for each invalid type set all nodes
 						List<SchemaTypeForSecurityCheckConfig> invalidTypes = invalidTypeConfig.getTypesListList();

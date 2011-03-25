@@ -105,7 +105,7 @@ public class XPathInjectionSecurityCheck extends AbstractSecurityCheckWithProper
 	@Override
 	protected void execute( SecurityTestRunner runner, TestStep testStep, SecurityTestRunContext context )
 	{
-		update( testStep );
+		update( testStep, context );
 		testStep.run( ( TestCaseRunner )runner, context );
 		createMessageExchange( testStep );
 	}
@@ -121,10 +121,10 @@ public class XPathInjectionSecurityCheck extends AbstractSecurityCheckWithProper
 		getSecurityCheckRequestResult().setMessageExchange( messageExchange );
 	}
 
-	private void update( TestStep testStep )
+	private void update( TestStep testStep, SecurityTestRunContext context )
 	{
 		if( parameterMutations.size() == 0 )
-			mutateParameters( testStep );
+			mutateParameters( testStep, context );
 
 		if( getExecutionStrategy().getStrategy() == StrategyTypeConfig.ONE_BY_ONE )
 		{
@@ -154,7 +154,7 @@ public class XPathInjectionSecurityCheck extends AbstractSecurityCheckWithProper
 								XmlObjectTreeModel model = new XmlObjectTreeModel( ( ( WsdlTestRequestStep )getTestStep() )
 										.getOperation().getInterface().getDefinitionContext().getSchemaTypeSystem(),
 										XmlObject.Factory.parse( value ) );
-								XmlTreeNode[] nodes = model.selectTreeNodes( param.getXPath() );
+								XmlTreeNode[] nodes = model.selectTreeNodes( context.expand(param.getXPath() ));
 								for( XmlTreeNode node : nodes )
 									node.setValue( 1, parameterMutations.get( param ).get( 0 ) );
 								parameterMutations.get( param ).remove( 0 );
@@ -198,7 +198,7 @@ public class XPathInjectionSecurityCheck extends AbstractSecurityCheckWithProper
 								continue;
 							if( param.getName().equals( property.getName() ) )
 							{
-								XmlTreeNode[] nodes = model.selectTreeNodes( param.getXPath() );
+								XmlTreeNode[] nodes = model.selectTreeNodes( context.expand(param.getXPath()) );
 								if( parameterMutations.containsKey( param ) )
 									if( parameterMutations.get( param ).size() > 0 )
 									{
@@ -229,7 +229,7 @@ public class XPathInjectionSecurityCheck extends AbstractSecurityCheckWithProper
 		}
 	}
 
-	private void mutateParameters( TestStep testStep )
+	private void mutateParameters( TestStep testStep, SecurityTestRunContext context )
 	{
 		mutation = true;
 		// for each parameter
@@ -272,7 +272,7 @@ public class XPathInjectionSecurityCheck extends AbstractSecurityCheckWithProper
 						if( testStep instanceof RestTestRequestStep || testStep instanceof HttpTestRequestStep )
 							model = new XmlObjectTreeModel( XmlObject.Factory.parse( value ) );
 
-						XmlTreeNode[] nodes = model.selectTreeNodes( parameter.getXPath() );
+						XmlTreeNode[] nodes = model.selectTreeNodes( context.expand(parameter.getXPath() ));
 
 						// for each invalid type set all nodes
 
