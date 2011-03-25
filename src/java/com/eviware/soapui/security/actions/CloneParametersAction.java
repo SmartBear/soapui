@@ -1,3 +1,14 @@
+/*
+ *  soapUI, copyright (C) 2004-2011 eviware.com 
+ *
+ *  soapUI is free software; you can redistribute it and/or modify it under the 
+ *  terms of version 2.1 of the GNU Lesser General Public License as published by 
+ *  the Free Software Foundation.
+ *
+ *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ *  See the GNU Lesser General Public License for more details at gnu.org.
+ */
 package com.eviware.soapui.security.actions;
 
 import java.awt.event.ActionEvent;
@@ -372,8 +383,8 @@ public class CloneParametersAction extends AbstractAction
 				SecurityTest securityTest = testCase.getSecurityTestByName( securityTestName );
 				TestStep testStep = testCase.getTestStepByName( newValue );
 
-				String[] securityCheckNames = ModelSupport.getNames( securityTest.getTestStepSecurityCheckByType(
-						testStep.getId(), AbstractSecurityCheckWithProperties.class ) );
+				String[] securityCheckNames = ModelSupport.getNames( securityTest.getTestStepSecurityCheckByType( testStep
+						.getId(), AbstractSecurityCheckWithProperties.class ) );
 				dialog.setOptions( CloneParameterDialog.TARGET_SECURITYCHECK, securityCheckNames );
 			}
 		} );
@@ -389,16 +400,16 @@ public class CloneParametersAction extends AbstractAction
 				String testStepName = dialog.getValue( CloneParameterDialog.TARGET_TESTSTEP );
 				TestStep testStep = testCase.getTestStepByName( testStepName );
 
-				String[] securityCheckNames = ModelSupport.getNames( securityTest.getTestStepSecurityCheckByType(
-						testStep.getId(), AbstractSecurityCheckWithProperties.class ) );
+				String[] securityCheckNames = ModelSupport.getNames( securityTest.getTestStepSecurityCheckByType( testStep
+						.getId(), AbstractSecurityCheckWithProperties.class ) );
 				dialog.setOptions( CloneParameterDialog.TARGET_SECURITYCHECK, securityCheckNames );
 			}
 		} );
 
 		WsdlTestCase wsdlTestCase = ( WsdlTestCase )securityCheck.getTestStep().getTestCase();
 
-		dialog.setOptions( CloneParameterDialog.TARGET_TESTSUITE,
-				ModelSupport.getNames( wsdlTestCase.getTestSuite().getProject().getTestSuiteList() ) );
+		dialog.setOptions( CloneParameterDialog.TARGET_TESTSUITE, ModelSupport.getNames( wsdlTestCase.getTestSuite()
+				.getProject().getTestSuiteList() ) );
 		dialog.setValue( CloneParameterDialog.TARGET_TESTSUITE, wsdlTestCase.getTestSuite().getName() );
 
 		List<TestCase> wsdlTestCaseList = wsdlTestCase.getTestSuite().getTestCaseList();
@@ -406,16 +417,16 @@ public class CloneParametersAction extends AbstractAction
 		dialog.setValue( CloneParameterDialog.TARGET_TESTCASE, wsdlTestCase.getName() );
 
 		dialog.setOptions( CloneParameterDialog.TARGET_TESTSTEP, getSecurableTestStepsNames( wsdlTestCase ) );
-		dialog.setOptions( CloneParameterDialog.TARGET_SECURITYTEST,
-				ModelSupport.getNames( wsdlTestCase.getSecurityTestList() ) );
+		dialog.setOptions( CloneParameterDialog.TARGET_SECURITYTEST, ModelSupport.getNames( wsdlTestCase
+				.getSecurityTestList() ) );
 
 		String securityTestName = dialog.getValue( CloneParameterDialog.TARGET_SECURITYTEST );
 		SecurityTest securityTest = wsdlTestCase.getSecurityTestByName( securityTestName );
 		String testStepName = dialog.getValue( CloneParameterDialog.TARGET_TESTSTEP );
 		TestStep testStep = wsdlTestCase.getTestStepByName( testStepName );
 
-		String[] securityCheckNames = ModelSupport.getNames( securityTest.getTestStepSecurityCheckByType(
-				testStep.getId(), AbstractSecurityCheckWithProperties.class ) );
+		String[] securityCheckNames = ModelSupport.getNames( securityTest.getTestStepSecurityCheckByType( testStep
+				.getId(), AbstractSecurityCheckWithProperties.class ) );
 		dialog.setOptions( CloneParameterDialog.TARGET_SECURITYCHECK, securityCheckNames );
 
 		dialog.setOptions( CloneParameterDialog.PARAMETERS, securityCheck.getParameterHolder().getParameterLabels() );
@@ -425,7 +436,7 @@ public class CloneParametersAction extends AbstractAction
 		return dialog;
 	}
 
-	//TODO: link with security checks documentation url
+	// TODO: link with security checks documentation url
 	@AForm( description = "Specify target TestSuite/TestCase/Security Test(s)/Security Check(s) and select Parameters to clone", name = "Clone Parameters", icon = UISupport.TOOL_ICON_PATH )
 	private interface CloneParameterDialog
 	{
