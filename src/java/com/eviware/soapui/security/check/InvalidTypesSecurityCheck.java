@@ -146,16 +146,13 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 		catch( XmlException e )
 		{
 			SoapUI.logError( e, "[InvalidtypeSecurityCheck]XPath seems to be invalid!" );
+			reportSecurityCheckException("Propety value is not XML or XPath is wrong!");
 		}
 		catch( Exception e )
 		{
 			SoapUI.logError( e, "[InvalidtypeSecurityCheck]Property value is not valid xml!" );
-		}
-		finally
-		{
 			reportSecurityCheckException("Propety value is not XML or XPath is wrong!");
 		}
-
 	}
 
 	/*

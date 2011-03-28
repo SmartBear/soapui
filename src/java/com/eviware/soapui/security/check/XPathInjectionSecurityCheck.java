@@ -114,14 +114,12 @@ public class XPathInjectionSecurityCheck extends AbstractSecurityCheckWithProper
 		catch( XmlException e )
 		{
 			SoapUI.logError( e, "[XPathInjectionSecurityCheck]XPath seems to be invalid!" );
+			reportSecurityCheckException("Propety value is not XML or XPath is wrong!");
 		}
 		catch( Exception e )
 		{
 			SoapUI.logError( e, "[XPathInjectionSecurityCheck]Property value is not valid xml!" );
-		}
-		finally
-		{
-			reportSecurityCheckException( "Propety value is not XML or XPath is wrong!" );
+			reportSecurityCheckException("Propety value is not XML or XPath is wrong!");
 		}
 	}
 
