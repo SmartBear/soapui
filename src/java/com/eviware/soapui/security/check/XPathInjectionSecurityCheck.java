@@ -29,32 +29,24 @@ import com.eviware.soapui.config.SQLInjectionCheckConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.config.StrategyTypeConfig;
 import com.eviware.soapui.config.XPathInjectionConfig;
-import com.eviware.soapui.impl.rest.RestRequestInterface;
-import com.eviware.soapui.impl.support.http.HttpRequestInterface;
-import com.eviware.soapui.impl.wsdl.WsdlRequest;
-import com.eviware.soapui.impl.wsdl.teststeps.HttpResponseMessageExchange;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
-import com.eviware.soapui.impl.wsdl.teststeps.RestResponseMessageExchange;
 import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
-import com.eviware.soapui.impl.wsdl.teststeps.WsdlResponseMessageExchange;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.security.SecurityCheckedParameter;
-import com.eviware.soapui.model.testsuite.SamplerTestStep;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
-import com.eviware.soapui.security.result.SecurityResult.SecurityStatus;
-import com.eviware.soapui.security.support.PlainEmptyResponse;
+import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel.XmlTreeNode;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.support.AForm;
+import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.impl.swing.JFormDialog;
 import com.eviware.x.impl.swing.JStringListFormField;
 
@@ -115,9 +107,9 @@ public class XPathInjectionSecurityCheck extends AbstractSecurityCheckWithProper
 	{
 		try
 		{
-			update( testStep, context );
-			testStep.run( ( TestCaseRunner )runner, context );
-			createMessageExchange( testStep );
+			StringToStringMap paramsUpdated = update( testStep, context );
+			MessageExchange message = ( MessageExchange )testStep.run( ( TestCaseRunner )runner, context );
+			createMessageExchange( paramsUpdated, message );
 		}
 		catch( XmlException e )
 		{
@@ -129,62 +121,14 @@ public class XPathInjectionSecurityCheck extends AbstractSecurityCheckWithProper
 		}
 		finally
 		{
-			reportBadXPath( testStep );
+			reportSecurityCheckException( "Propety value is not XML or XPath is wrong!" );
 		}
 	}
 
-	private void reportBadXPath( TestStep testStep )
+	private StringToStringMap update( TestStep testStep, SecurityTestRunContext context ) throws XmlException, Exception
 	{
-		MessageExchange messageExchange = null;
-		if( testStep instanceof WsdlTestRequestStep )
-		{
-			( ( WsdlTestRequestStep )testStep ).getTestRequest().setResponse(
-					new PlainEmptyResponse( ( ( WsdlTestRequestStep )testStep ).getTestRequest(),
-							"Propety value is not XML or XPath is wrong!" ), null );
-			messageExchange = new WsdlResponseMessageExchange( ( ( WsdlTestRequestStep )testStep ).getTestRequest() );
-		}
-		else if( testStep instanceof RestTestRequestStep )
-		{
-			( ( RestTestRequestStep )testStep ).getTestRequest().setResponse(
-					new PlainEmptyResponse( ( ( RestTestRequestStep )testStep ).getTestRequest(),
-							"Propety value is not XML or XPath is wrong!" ), null );
-			messageExchange = new RestResponseMessageExchange( ( ( RestTestRequestStep )testStep ).getTestRequest() );
-		}
-		else if( testStep instanceof HttpTestRequestStep )
-		{
-			( ( HttpTestRequestStep )testStep ).getTestRequest().setResponse(
-					new PlainEmptyResponse( ( ( HttpTestRequestStep )testStep ).getTestRequest(),
-							"Propety value is not XML or XPath is wrong!" ), null );
-			messageExchange = new HttpResponseMessageExchange( ( ( HttpTestRequestStep )testStep ).getTestRequest() );
-		}
-		getSecurityCheckRequestResult().setMessageExchange( messageExchange );
-		getSecurityCheckRequestResult().setStatus( SecurityStatus.FAILED );
-		getSecurityCheckRequestResult().addMessage( "Propety value is not XML or XPath is wrong!" );
-	}
+		StringToStringMap params = new StringToStringMap();
 
-	private void createMessageExchange( TestStep testStep )
-	{
-		MessageExchange messageExchange = null;
-		if( testStep instanceof WsdlTestRequestStep )
-		{
-			messageExchange = new WsdlResponseMessageExchange( ( WsdlRequest )( ( SamplerTestStep )testStep )
-					.getTestRequest() );
-		}
-		else if( testStep instanceof RestTestRequestStep )
-		{
-			messageExchange = new RestResponseMessageExchange( ( RestRequestInterface )( ( SamplerTestStep )testStep )
-					.getTestRequest() );
-		}
-		else if( testStep instanceof HttpTestRequestStep )
-		{
-			messageExchange = new HttpResponseMessageExchange( ( HttpRequestInterface<?> )( ( SamplerTestStep )testStep )
-					.getTestRequest() );
-		}
-		getSecurityCheckRequestResult().setMessageExchange( messageExchange );
-	}
-
-	private void update( TestStep testStep, SecurityTestRunContext context ) throws XmlException, Exception
-	{
 		if( parameterMutations.size() == 0 )
 			mutateParameters( testStep, context );
 
@@ -204,6 +148,7 @@ public class XPathInjectionSecurityCheck extends AbstractSecurityCheckWithProper
 						{
 							testStep.getProperties().get( param.getName() )
 									.setValue( parameterMutations.get( param ).get( 0 ) );
+							params.put( param.getLabel(), parameterMutations.get( param ).get( 0 ) );
 							parameterMutations.get( param ).remove( 0 );
 						}
 						else
@@ -217,6 +162,7 @@ public class XPathInjectionSecurityCheck extends AbstractSecurityCheckWithProper
 							XmlTreeNode[] nodes = model.selectTreeNodes( context.expand( param.getXPath() ) );
 							for( XmlTreeNode node : nodes )
 								node.setValue( 1, parameterMutations.get( param ).get( 0 ) );
+							params.put( param.getLabel(), parameterMutations.get( param ).get( 0 ) );
 							parameterMutations.get( param ).remove( 0 );
 
 							testStep.getProperties().get( param.getName() ).setValue( model.getXmlObject().toString() );
@@ -240,6 +186,7 @@ public class XPathInjectionSecurityCheck extends AbstractSecurityCheckWithProper
 					if( param.getXPath() == null || param.getXPath().trim().length() == 0 )
 					{
 						testStep.getProperties().get( param.getName() ).setValue( parameterMutations.get( param ).get( 0 ) );
+						params.put( param.getLabel(), parameterMutations.get( param ).get( 0 ) );
 						parameterMutations.get( param ).remove( 0 );
 					}
 					else
@@ -255,6 +202,7 @@ public class XPathInjectionSecurityCheck extends AbstractSecurityCheckWithProper
 								{
 									for( XmlTreeNode node : nodes )
 										node.setValue( 1, parameterMutations.get( param ).get( 0 ) );
+									params.put( param.getLabel(), parameterMutations.get( param ).get( 0 ) );
 									parameterMutations.get( param ).remove( 0 );
 								}
 						}
@@ -265,6 +213,7 @@ public class XPathInjectionSecurityCheck extends AbstractSecurityCheckWithProper
 
 			}
 		}
+		return params;
 	}
 
 	private void mutateParameters( TestStep testStep, SecurityTestRunContext context ) throws XmlException, Exception

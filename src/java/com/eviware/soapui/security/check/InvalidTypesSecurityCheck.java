@@ -27,28 +27,18 @@ import com.eviware.soapui.config.InvalidSecurityCheckConfig;
 import com.eviware.soapui.config.SchemaTypeForSecurityCheckConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.config.StrategyTypeConfig;
-import com.eviware.soapui.impl.rest.RestRequestInterface;
-import com.eviware.soapui.impl.support.http.HttpRequestInterface;
-import com.eviware.soapui.impl.wsdl.WsdlRequest;
-import com.eviware.soapui.impl.wsdl.teststeps.HttpResponseMessageExchange;
-import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
-import com.eviware.soapui.impl.wsdl.teststeps.RestResponseMessageExchange;
-import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
-import com.eviware.soapui.impl.wsdl.teststeps.WsdlResponseMessageExchange;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.security.SecurityCheckedParameter;
-import com.eviware.soapui.model.testsuite.SamplerTestStep;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
-import com.eviware.soapui.security.result.SecurityResult.SecurityStatus;
-import com.eviware.soapui.security.support.PlainEmptyResponse;
 import com.eviware.soapui.security.ui.InvalidTypesTable;
 import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
+import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel;
 import com.eviware.soapui.support.xml.XmlUtils;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel.XmlTreeNode;
@@ -148,10 +138,10 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 	{
 		try
 		{
-			updateRequestContent( testStep, context );
-			testStep.run( ( TestCaseRunner )securityTestRunner, context );
+			StringToStringMap updatedParams = updateRequestContent( testStep, context );
+			MessageExchange message = ( MessageExchange )testStep.run( ( TestCaseRunner )securityTestRunner, context );
 
-			createMessageExchange( testStep );
+			createMessageExchange( updatedParams, message );
 		}
 		catch( XmlException e )
 		{
@@ -163,70 +153,19 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 		}
 		finally
 		{
-			reportBadXPath( testStep );
+			reportSecurityCheckException("Propety value is not XML or XPath is wrong!");
 		}
 
-	}
-
-	/**
-	 * @param testStep
-	 */
-	private void reportBadXPath( TestStep testStep )
-	{
-		MessageExchange messageExchange = null;
-		if( testStep instanceof WsdlTestRequestStep )
-		{
-			( ( WsdlTestRequestStep )testStep ).getTestRequest().setResponse(
-					new PlainEmptyResponse( ( ( WsdlTestRequestStep )testStep ).getTestRequest(),
-							"Propety value is not XML or XPath is wrong!" ), null );
-			messageExchange = new WsdlResponseMessageExchange( ( ( WsdlTestRequestStep )testStep ).getTestRequest() );
-		}
-		else if( testStep instanceof RestTestRequestStep )
-		{
-			( ( RestTestRequestStep )testStep ).getTestRequest().setResponse(
-					new PlainEmptyResponse( ( ( RestTestRequestStep )testStep ).getTestRequest(),
-							"Propety value is not XML or XPath is wrong!" ), null );
-			messageExchange = new RestResponseMessageExchange( ( ( RestTestRequestStep )testStep ).getTestRequest() );
-		}
-		else if( testStep instanceof HttpTestRequestStep )
-		{
-			( ( HttpTestRequestStep )testStep ).getTestRequest().setResponse(
-					new PlainEmptyResponse( ( ( HttpTestRequestStep )testStep ).getTestRequest(),
-							"Propety value is not XML or XPath is wrong!" ), null );
-			messageExchange = new HttpResponseMessageExchange( ( ( HttpTestRequestStep )testStep ).getTestRequest() );
-		}
-		getSecurityCheckRequestResult().setMessageExchange( messageExchange );
-		getSecurityCheckRequestResult().setStatus( SecurityStatus.FAILED );
-		getSecurityCheckRequestResult().addMessage( "Propety value is not XML or XPath is wrong!" );
-	}
-
-	private void createMessageExchange( TestStep testStep )
-	{
-		MessageExchange messageExchange = null;
-		if( testStep instanceof WsdlTestRequestStep )
-		{
-			messageExchange = new WsdlResponseMessageExchange( ( WsdlRequest )( ( SamplerTestStep )testStep )
-					.getTestRequest() );
-		}
-		else if( testStep instanceof RestTestRequestStep )
-		{
-			messageExchange = new RestResponseMessageExchange( ( RestRequestInterface )( ( SamplerTestStep )testStep )
-					.getTestRequest() );
-		}
-		else if( testStep instanceof HttpTestRequestStep )
-		{
-			messageExchange = new HttpResponseMessageExchange( ( HttpRequestInterface<?> )( ( SamplerTestStep )testStep )
-					.getTestRequest() );
-		}
-		getSecurityCheckRequestResult().setMessageExchange( messageExchange );
 	}
 
 	/*
 	 * Set new value for request
 	 */
-	private void updateRequestContent( TestStep testStep, SecurityTestRunContext context ) throws XmlException,
-			Exception
+	private StringToStringMap updateRequestContent( TestStep testStep, SecurityTestRunContext context )
+			throws XmlException, Exception
 	{
+
+		StringToStringMap params = new StringToStringMap();
 
 		if( parameterMutations.size() == 0 )
 			mutateParameters( testStep, context );
@@ -247,6 +186,7 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 						{
 							testStep.getProperties().get( param.getName() )
 									.setValue( parameterMutations.get( param ).get( 0 ) );
+							params.put( param.getLabel(), parameterMutations.get( param ).get( 0 ) );
 							parameterMutations.get( param ).remove( 0 );
 						}
 						else
@@ -263,6 +203,7 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 								XmlTreeNode[] nodes = model.selectTreeNodes( context.expand( param.getXPath() ) );
 								for( XmlTreeNode node : nodes )
 									node.setValue( 1, parameterMutations.get( param ).get( 0 ) );
+								params.put( param.getLabel(), parameterMutations.get( param ).get( 0 ) );
 								parameterMutations.get( param ).remove( 0 );
 
 								testStep.getProperties().get( param.getName() ).setValue( model.getXmlObject().toString() );
@@ -290,6 +231,7 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 						{
 							testStep.getProperties().get( param.getName() )
 									.setValue( parameterMutations.get( param ).get( 0 ) );
+							params.put( param.getLabel(), parameterMutations.get( param ).get( 0 ) );
 							parameterMutations.get( param ).remove( 0 );
 						}
 						else
@@ -305,6 +247,7 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 									{
 										for( XmlTreeNode node : nodes )
 											node.setValue( 1, parameterMutations.get( param ).get( 0 ) );
+										params.put( param.getLabel(), parameterMutations.get( param ).get( 0 ) );
 										parameterMutations.get( param ).remove( 0 );
 									}
 							}
@@ -317,6 +260,7 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 			}
 		}
 
+		return params;
 	}
 
 	/**

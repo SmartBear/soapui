@@ -52,10 +52,12 @@ import com.eviware.soapui.security.SecurityTestRunnerImpl;
 import com.eviware.soapui.security.result.SecurityCheckRequestResult;
 import com.eviware.soapui.security.result.SecurityCheckResult;
 import com.eviware.soapui.security.result.SecurityResult.SecurityStatus;
+import com.eviware.soapui.security.support.FailedSecurityMessageExchange;
 import com.eviware.soapui.security.support.SecurityTestRunListener;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
+import com.eviware.soapui.support.types.StringToStringMap;
 
 /**
  * @author robert
@@ -64,6 +66,7 @@ import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
 public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<SecurityCheckConfig> implements Assertable,
 		ResponseAssertion, SecurityCheck// , RequestAssertion
 {
+	public static final String SECURITY_CHANGED_PARAMETERS = "SecurityChangedParameters";
 	// configuration of specific request modification
 	// private SecurityCheckConfig config;
 	private boolean disabled = false;
@@ -837,4 +840,21 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		return null;
 	}
 
+	/**
+	 * @param message 
+	 * @param testStep
+	 */
+	protected void reportSecurityCheckException(String message)
+	{
+		getSecurityCheckRequestResult().setMessageExchange( new FailedSecurityMessageExchange() );
+		getSecurityCheckRequestResult().setStatus( SecurityStatus.FAILED );
+		getSecurityCheckRequestResult().addMessage( message );
+	}
+	
+	protected void createMessageExchange( StringToStringMap updatedParams, MessageExchange message )
+	{
+		message.getProperties().put( SECURITY_CHANGED_PARAMETERS, updatedParams.toXml() );
+		getSecurityCheckRequestResult().setMessageExchange( message );
+	}
 }
+

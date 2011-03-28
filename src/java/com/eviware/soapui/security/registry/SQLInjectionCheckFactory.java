@@ -57,9 +57,4 @@ public class SQLInjectionCheckFactory extends AbstractSecurityCheckFactory
 		return securityCheckConfig;
 	}
 
-	@Override
-	public boolean isHttpMonitor()
-	{
-		return false;
-	}
 }
