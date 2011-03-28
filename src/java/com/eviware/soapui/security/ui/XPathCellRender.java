@@ -17,6 +17,7 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Dialog.ModalExclusionType;
+import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -26,7 +27,9 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
 
+import javax.swing.AbstractAction;
 import javax.swing.AbstractCellEditor;
+import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -45,8 +48,6 @@ public class XPathCellRender extends AbstractCellEditor implements TableCellEdit
 
 	protected JPanel panel;
 	JTextArea textArea;
-
-	protected static final String EDIT = "edit";
 
 	private JTextField textField;
 	protected JFrame frame;
@@ -68,10 +69,10 @@ public class XPathCellRender extends AbstractCellEditor implements TableCellEdit
 			{
 				switch( evt.getKeyCode() )
 				{
-				case KeyEvent.VK_ENTER :
-					textField.setText( textArea.getText() );
-					frame.setVisible( false );
-					break;
+				// case KeyEvent.VK_ENTER :
+				// textField.setText( textArea.getText() );
+				// frame.setVisible( false );
+				// break;
 				case KeyEvent.VK_ESCAPE :
 					frame.setVisible( false );
 					break;
@@ -82,7 +83,7 @@ public class XPathCellRender extends AbstractCellEditor implements TableCellEdit
 		panel.add( new JScrollPane( textArea ), BorderLayout.CENTER );
 		panel.setPreferredSize( new Dimension( 200, 100 ) );
 		panel.setMinimumSize( new Dimension( 200, 100 ) );
-		JXToolBar toolbar = initToolbar(UISupport.createToolbar());
+		JXToolBar toolbar = initToolbar( UISupport.createToolbar() );
 		panel.add( toolbar, BorderLayout.SOUTH );
 
 		this.frame = new JFrame();
@@ -98,46 +99,88 @@ public class XPathCellRender extends AbstractCellEditor implements TableCellEdit
 	}
 
 	/**
-	 * @param jxToolBar 
+	 * @param jxToolBar
 	 * @return
 	 */
-	protected JXToolBar initToolbar(JXToolBar toolbar)
+	protected JXToolBar initToolbar( JXToolBar toolbar )
 	{
 
 		resizeBtn = UISupport.createToolbarButton( UISupport.createImageIcon( "/icon_resize.gif" ) );
-		resizeBtn.setCursor( new Cursor(Cursor.SE_RESIZE_CURSOR) );
+		resizeBtn.setCursor( new Cursor( Cursor.SE_RESIZE_CURSOR ) );
 		resizeBtn.setContentAreaFilled( false );
 		resizeBtn.setBorder( null );
+		resizeBtn.setToolTipText( "Drag to resize..." );
 		resizeBtn.addMouseMotionListener( new MouseMotionListener()
 		{
-			
+
 			@Override
 			public void mouseMoved( MouseEvent e )
 			{
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public void mouseDragged( MouseEvent e )
 			{
-				frame.setSize(frame.getWidth() - mouseX + e.getX(), frame.getHeight() - mouseY + e.getY());
+				frame.setSize( frame.getWidth() - mouseX + e.getX(), frame.getHeight() - mouseY + e.getY() );
 			}
-		});
-		
+		} );
+
 		resizeBtn.addMouseListener( new MouseAdapter()
 		{
-			
-			public void mousePressed(MouseEvent e) {
+
+			public void mousePressed( MouseEvent e )
+			{
 				mouseX = e.getX();
 				mouseY = e.getY();
 			};
-			
+
 		} );
+
+		toolbar.add( UISupport.createToolbarButton( new SaveXPathAction() ), true );
+		toolbar.add( UISupport.createToolbarButton( new CancelXPathAction() ), true );
 		toolbar.addGlue();
 		toolbar.add( resizeBtn );
 		toolbar.setFloatable( false );
 		return toolbar;
+	}
+
+	private class SaveXPathAction extends AbstractAction
+	{
+
+		public SaveXPathAction()
+		{
+			super( "Save" );
+			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/disk_multiple.png" ) );
+			putValue( Action.SHORT_DESCRIPTION, "Save XPath" );
+		}
+
+		@Override
+		public void actionPerformed( ActionEvent arg0 )
+		{
+			textField.setText( textArea.getText() );
+			frame.setVisible( false );
+		}
+
+	}
+
+	private class CancelXPathAction extends AbstractAction
+	{
+
+		public CancelXPathAction()
+		{
+			super( "Cancel" );
+			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/rest_method.gif" ) );
+			putValue( Action.SHORT_DESCRIPTION, "Cancel Changes");
+		}
+
+		@Override
+		public void actionPerformed( ActionEvent e )
+		{
+			frame.setVisible( false );
+		}
+
 	}
 
 	@Override
@@ -159,7 +202,7 @@ public class XPathCellRender extends AbstractCellEditor implements TableCellEdit
 	{
 		if( !frame.isVisible() )
 		{
-			textArea.setText( textField.getText() );
+			textArea.setText( textField.getText().replaceAll( ";", ";\n" ) );
 			Point position = textField.getLocationOnScreen();
 			frame.setBounds( position.x, position.y, frame.getWidth(), frame.getHeight() );
 			frame.pack();

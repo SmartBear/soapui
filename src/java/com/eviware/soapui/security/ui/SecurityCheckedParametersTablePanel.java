@@ -188,7 +188,7 @@ public class SecurityCheckedParametersTablePanel extends JPanel
 		pathPane.setEnabled( enable );
 	}
 
-	 class AddNewParameterAction extends AbstractAction
+	class AddNewParameterAction extends AbstractAction
 	{
 
 		public AddNewParameterAction()
@@ -207,7 +207,7 @@ public class SecurityCheckedParametersTablePanel extends JPanel
 
 	}
 
-	 class RemoveParameterAction extends AbstractAction
+	class RemoveParameterAction extends AbstractAction
 	{
 
 		public RemoveParameterAction()
@@ -292,7 +292,7 @@ public class SecurityCheckedParametersTablePanel extends JPanel
 
 	}
 
-	 class CopyParameterAction extends AbstractAction
+	class CopyParameterAction extends AbstractAction
 	{
 
 		public CopyParameterAction()
@@ -369,9 +369,10 @@ public class SecurityCheckedParametersTablePanel extends JPanel
 		}
 
 	}
-	
-	public JUndoableTextField getLabel() {
-		return ((JTextFieldFormField)dialog.getFormField( AddParameterDialog.LABEL )).getComponent();
+
+	public JUndoableTextField getLabel()
+	{
+		return ( ( JTextFieldFormField )dialog.getFormField( AddParameterDialog.LABEL ) ).getComponent();
 	}
 
 	@AForm( description = "Add New Security Test Step Parameter", name = "Configure Security Test Step Parameters" )

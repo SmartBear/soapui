@@ -67,7 +67,7 @@ public class SecurityParametersTableModel extends DefaultTableModel
 	@Override
 	public Class<?> getColumnClass( int columnIndex )
 	{
-		return columnIndex == 3 ? Boolean.class : String.class;
+		return columnIndex == 3 ? Boolean.class : columnIndex == 2 ? String.class : Object.class;
 	}
 
 	@Override
