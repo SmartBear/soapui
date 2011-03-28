@@ -26,6 +26,7 @@ import com.eviware.soapui.security.result.SecurityCheckRequestResult;
 import com.eviware.soapui.security.result.SecurityCheckResult;
 import com.eviware.soapui.security.result.SecurityResult;
 import com.eviware.soapui.security.result.SecurityTestStepResult;
+import com.eviware.soapui.security.result.SecurityResult.SecurityStatus;
 
 /**
  * SecurityTestLog
@@ -40,6 +41,8 @@ public class SecurityTestLogModel extends AbstractListModel
 	private int stepCount;
 	private int checkCount;
 	private SimpleDateFormat dateFormat = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss.SSS" );
+	private int startCheckIndex;
+	private int startStepIndex;
 
 	public synchronized Object getElementAt( int arg0 )
 	{
@@ -83,6 +86,7 @@ public class SecurityTestLogModel extends AbstractListModel
 		checkCount = 0;
 
 		int size = items.size();
+		startStepIndex = size;
 
 		SoftReference<SecurityResult> stepResultRef = new SoftReference<SecurityResult>( result );
 
@@ -113,6 +117,21 @@ public class SecurityTestLogModel extends AbstractListModel
 		enforceMaxSize();
 	}
 
+	// called after whole security teststep finished to delete start line in case
+	// only errors are beeing displayed
+	public synchronized void updateSecurityTestStepResult( SecurityTestStepResult result, boolean errorsOnly )
+	{
+		if( errorsOnly && result.getStatus() != SecurityStatus.FAILED )
+		{
+			for( int i = startStepIndex; i < items.size() - 1; i++ )
+			{
+				items.remove( i );
+				fireIntervalRemoved( this, startStepIndex, items.size() - 1 );
+			}
+
+		}
+	}
+
 	public synchronized void addSecurityCheckResult( SecurityCheckResult securityCheckResult )
 	{
 		checkCount++ ;
@@ -136,16 +155,40 @@ public class SecurityTestLogModel extends AbstractListModel
 	public synchronized void addSecurityCheckStarted( SecurityCheck securityCheck )
 	{
 		int size = items.size();
+		startCheckIndex = size;
 
-		SecurityCheckResult securityCheckResult = new SecurityCheckResult( securityCheck );
+		SecurityCheckResult securityCheckResult = securityCheck.getSecurityCheckResult();
 		SoftReference<SecurityResult> checkResultRef = new SoftReference<SecurityResult>( securityCheckResult );
 
-		items.add( "SecurityCheck [" + securityCheck.getName() + "] started at "
-				+ dateFormat.format( securityCheckResult.getTimeStamp() ) );
+		items.add( "SecurityCheck [" + securityCheck.getName() + "]" );
 		results.add( checkResultRef );
 
 		fireIntervalAdded( this, size, items.size() - 1 );
 		enforceMaxSize();
+	}
+
+	// updates log entry for security check with the status, time taken, and
+	// similar info known only after finished
+	public synchronized void updateSecurityCheckStarted( SecurityCheckResult securityCheckResult, boolean errorsOnly )
+	{
+		if( errorsOnly && securityCheckResult.getStatus() != SecurityStatus.FAILED )
+		{
+			for( int i = startCheckIndex - 1; i < items.size() - 1; i++ )
+			{
+				items.remove( i );
+				fireIntervalRemoved( this, startCheckIndex, items.size() - 1 );
+			}
+
+		}
+		else
+		{
+			items.set( startCheckIndex, "SecurityCheck [" + securityCheckResult.getSecurityCheck().getName()
+					+ "] finished with status [ " + securityCheckResult.getStatus() + "], time taken = "
+					+ securityCheckResult.getTimeTaken() );
+
+			fireContentsChanged( this, startCheckIndex, startCheckIndex );
+
+		}
 	}
 
 	public synchronized void addSecurityCheckEnded( SecurityCheckResult securityCheckResult )

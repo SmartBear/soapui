@@ -712,7 +712,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 		public void afterSecurityCheck( TestCaseRunner testRunner, SecurityTestRunContext runContext,
 				SecurityCheckResult securityCheckResult )
 		{
-			securityTestLog.addSecurityCheckEnded( securityCheckResult );
+			securityTestLog.updateSecurityCheckStarted( securityCheckResult );
 		}
 
 		@Override
@@ -727,6 +727,12 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 				SecurityCheckRequestResult securityCheckReqResult )
 		{
 			securityTestLog.addSecurityCheckRequestResult( securityCheckReqResult );
+		}
+
+		@Override
+		public void afterStep( TestCaseRunner testRunner, SecurityTestRunContext runContext, SecurityTestStepResult result )
+		{
+			securityTestLog.updateSecurityTestStepResult( result );
 		}
 	}
 }

@@ -140,10 +140,26 @@ public class JSecurityTestRunLog extends JPanel
 
 	public synchronized void addSecurityTestStepResult( SecurityTestStepResult testStepResult )
 	{
-		if( errorsOnly && testStepResult.getStatus() != SecurityCheckRequestResult.SecurityStatus.FAILED )
-			return;
+		// if( errorsOnly && testStepResult.getStatus() !=
+		// SecurityCheckRequestResult.SecurityStatus.FAILED )
+		// return;
 
 		logListModel.addSecurityTestStepResult( testStepResult );
+		if( follow )
+		{
+			try
+			{
+				testLogList.ensureIndexIsVisible( logListModel.getSize() - 1 );
+			}
+			catch( RuntimeException e )
+			{
+			}
+		}
+	}
+
+	public synchronized void updateSecurityTestStepResult( SecurityTestStepResult testStepResult )
+	{
+		logListModel.updateSecurityTestStepResult( testStepResult, errorsOnly );
 		if( follow )
 		{
 			try
@@ -197,6 +213,21 @@ public class JSecurityTestRunLog extends JPanel
 			return;
 
 		logListModel.addSecurityCheckEnded( checkResult );
+		if( follow )
+		{
+			try
+			{
+				testLogList.ensureIndexIsVisible( logListModel.getSize() - 1 );
+			}
+			catch( RuntimeException e )
+			{
+			}
+		}
+	}
+
+	public synchronized void updateSecurityCheckStarted( SecurityCheckResult checkResult )
+	{
+		logListModel.updateSecurityCheckStarted( checkResult, errorsOnly );
 		if( follow )
 		{
 			try
@@ -480,23 +511,23 @@ public class JSecurityTestRunLog extends JPanel
 					hyperlinkLabel.setIcon( null );
 					// if( getText().startsWith( "SecurityCheck" ) &&
 					// !getText().startsWith( " ->" ) )
-					if( result.getStatus() != SecurityStatus.INITIALIZED )
+					// if( result.getStatus() != SecurityStatus.INITIALIZED )
+					// {
+					hyperlinkLabel.setUnderlineColor( Color.GRAY );
+					if( result.getStatus() == SecurityStatus.OK )
 					{
-						hyperlinkLabel.setUnderlineColor( Color.GRAY );
-						if( result.getStatus() == SecurityStatus.OK )
-						{
-							hyperlinkLabel.setIcon( UISupport.createImageIcon( "/valid_assertion.gif" ) );
-						}
-						else if( result.getStatus() == SecurityStatus.FAILED )
-						{
-							hyperlinkLabel.setIcon( UISupport.createImageIcon( "/failed_assertion.gif" ) );
-						}
-						else
-						{
-							hyperlinkLabel.setIcon( UISupport.createImageIcon( "/unknown_assertion.gif" ) );
-						}
-
+						hyperlinkLabel.setIcon( UISupport.createImageIcon( "/valid_assertion.gif" ) );
 					}
+					else if( result.getStatus() == SecurityStatus.FAILED )
+					{
+						hyperlinkLabel.setIcon( UISupport.createImageIcon( "/failed_assertion.gif" ) );
+					}
+					else
+					{
+						hyperlinkLabel.setIcon( UISupport.createImageIcon( "/unknown_assertion.gif" ) );
+					}
+
+					// }
 				}
 				else if( result.getResultType().equals( SecurityTestStepResult.TYPE ) )
 				{

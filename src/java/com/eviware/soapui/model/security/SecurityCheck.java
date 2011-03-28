@@ -95,4 +95,6 @@ public interface SecurityCheck
 	 */
 	JComponent getAdvancedSettingsPanel();
 
+	public SecurityCheckResult getSecurityCheckResult();
+
 }

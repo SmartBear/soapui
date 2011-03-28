@@ -81,6 +81,8 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	private ExecutionStrategyHolder executionStrategy;
 	private TestStep originalTestStepClone;
 	private SecurityTestRunListener[] securityTestListeners = new SecurityTestRunListener[0];
+	private static String SECURITY_CHECK_REQUEST_OK = "SecurityCheckRequest OK";
+	private static String SECURITY_CHECK_REQUEST_UNKNOWN = "SecurityCheckRequest has no assertions added";
 
 	public AbstractSecurityCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent, String icon )
 	{
@@ -186,6 +188,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 			securityCheckResult.setStatus( SecurityStatus.FAILED );
 
 		}
+		PropertyChangeNotifier notifier = new PropertyChangeNotifier();
 
 		while( hasNext( testStep, context ) )
 		{
@@ -199,6 +202,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 			originalTestStepClone = ( ( SecurityTestRunnerImpl )securityTestRunner )
 					.cloneForSecurityCheck( ( WsdlTestStep )this.testStep );
 			execute( securityTestRunner, originalTestStepClone, context );
+			notifier.notifyChange();
 			securityCheckRequestResult.stopTimer();
 			// assertRequest( getSecurityCheckRequestResult().getMessageExchange(),
 			// context );
@@ -426,18 +430,37 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		return null;
 	}
 
+	// private class PropertyChangeNotifier
+	// {
+	// private AssertionStatus oldStatus;
+	//
+	// public PropertyChangeNotifier()
+	// {
+	// oldStatus = getAssertionStatus();
+	// }
+	//
+	// public void notifyChange()
+	// {
+	// AssertionStatus newStatus = getAssertionStatus();
+	//
+	// if( oldStatus != newStatus )
+	// notifyPropertyChanged( STATUS_PROPERTY, oldStatus, newStatus );
+	//
+	// oldStatus = newStatus;
+	// }
+	// }
 	private class PropertyChangeNotifier
 	{
-		private AssertionStatus oldStatus;
+		private SecurityStatus oldStatus;
 
 		public PropertyChangeNotifier()
 		{
-			oldStatus = getAssertionStatus();
+			oldStatus = getSecurityStatus();
 		}
 
 		public void notifyChange()
 		{
-			AssertionStatus newStatus = getAssertionStatus();
+			SecurityStatus newStatus = getSecurityStatus();
 
 			if( oldStatus != newStatus )
 				notifyPropertyChanged( STATUS_PROPERTY, oldStatus, newStatus );
@@ -570,6 +593,11 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 			currentStatus = AssertionStatus.FAILED;
 
 		return currentStatus;
+	}
+
+	public SecurityStatus getSecurityStatus()
+	{
+		return securityCheckResult != null ? securityCheckResult.getStatus() : SecurityStatus.UNKNOWN;
 	}
 
 	@Override
@@ -722,19 +750,24 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	 */
 	private void setStatus( AssertionStatus result, WsdlMessageAssertion assertion )
 	{
-		if( result == AssertionStatus.FAILED )
+		if( getSecurityCheckRequestResult().getStatus() != SecurityStatus.FAILED )
 		{
-			for( AssertionError error : assertion.getErrors() )
-				getSecurityCheckRequestResult().addMessage( error.getMessage() );
-			getSecurityCheckRequestResult().setStatus( SecurityStatus.FAILED );
-		}
-		else if( result == AssertionStatus.VALID )
-		{
-			getSecurityCheckRequestResult().setStatus( SecurityStatus.OK );
-		}
-		else if( result == AssertionStatus.UNKNOWN )
-		{
-			getSecurityCheckRequestResult().setStatus( SecurityStatus.UNKNOWN );
+			if( result == AssertionStatus.FAILED )
+			{
+				for( AssertionError error : assertion.getErrors() )
+					getSecurityCheckRequestResult().addMessage( error.getMessage() );
+				getSecurityCheckRequestResult().setStatus( SecurityStatus.FAILED );
+			}
+			else if( result == AssertionStatus.VALID )
+			{
+				getSecurityCheckRequestResult().setStatus( SecurityStatus.OK );
+				getSecurityCheckRequestResult().addMessage( SECURITY_CHECK_REQUEST_OK );
+			}
+			else if( result == AssertionStatus.UNKNOWN )
+			{
+				getSecurityCheckRequestResult().setStatus( SecurityStatus.UNKNOWN );
+				getSecurityCheckRequestResult().addMessage( SECURITY_CHECK_REQUEST_UNKNOWN );
+			}
 		}
 	}
 
@@ -841,20 +874,26 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	}
 
 	/**
-	 * @param message 
+	 * @param message
 	 * @param testStep
 	 */
-	protected void reportSecurityCheckException(String message)
+	protected void reportSecurityCheckException( String message )
 	{
 		getSecurityCheckRequestResult().setMessageExchange( new FailedSecurityMessageExchange() );
 		getSecurityCheckRequestResult().setStatus( SecurityStatus.FAILED );
 		getSecurityCheckRequestResult().addMessage( message );
 	}
-	
+
 	protected void createMessageExchange( StringToStringMap updatedParams, MessageExchange message )
 	{
 		message.getProperties().put( SECURITY_CHANGED_PARAMETERS, updatedParams.toXml() );
 		getSecurityCheckRequestResult().setMessageExchange( message );
 	}
-}
 
+	@Override
+	public SecurityCheckResult getSecurityCheckResult()
+	{
+		return securityCheckResult;
+	}
+
+}

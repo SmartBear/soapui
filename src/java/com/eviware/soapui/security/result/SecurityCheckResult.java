@@ -42,7 +42,7 @@ public class SecurityCheckResult implements SecurityResult
 	 * went through execution and gone into any other status, including UNKNOWN
 	 * if no assertion is added, when status icon should be added to log
 	 */
-	private SecurityStatus status = SecurityStatus.INITIALIZED;
+	private SecurityStatus status;
 	public SecurityCheck securityCheck;
 	private long size;
 	private boolean discarded;
@@ -52,12 +52,13 @@ public class SecurityCheckResult implements SecurityResult
 	public StringBuffer testLog = new StringBuffer();
 	private DefaultActionList actionList;
 	private boolean hasAddedRequests;
-	//along with the status determines if canceled with or without warnings
+	// along with the status determines if canceled with or without warnings
 	private boolean hasRequestsWithWarnings;
 
 	public SecurityCheckResult( SecurityCheck securityCheck )
 	{
 		this.securityCheck = securityCheck;
+		status = SecurityStatus.INITIALIZED;
 		securityRequestResultList = new ArrayList<SecurityCheckRequestResult>();
 		timeStamp = System.currentTimeMillis();
 	}
@@ -69,7 +70,7 @@ public class SecurityCheckResult implements SecurityResult
 
 	public SecurityStatus getStatus()
 	{
-		return status;
+		return this.status;
 	}
 
 	public void setStatus( SecurityStatus status )

@@ -191,7 +191,7 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 	public SecurityCheckResult runTestStepSecurityCheck( SecurityTestRunContext runContext, TestStep currentStep,
 			AbstractSecurityCheck securityCheck )
 	{
-		SecurityCheckResult result = new SecurityCheckResult( securityCheck );
+		SecurityCheckResult result = null;
 		for( int j = 0; j < securityTestStepListeners.length; j++ )
 		{
 			securityTestStepListeners[j].beforeSecurityCheck( this, runContext, securityCheck );
