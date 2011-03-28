@@ -13,6 +13,8 @@
 package com.eviware.soapui.security.registry;
 
 import com.eviware.soapui.config.SecurityCheckConfig;
+import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestStep;
@@ -36,7 +38,8 @@ public class SQLInjectionCheckFactory extends AbstractSecurityCheckFactory
 
 	public boolean canCreate( TestStep testStep )
 	{
-		return testStep instanceof WsdlTestRequestStep;
+		return testStep instanceof WsdlTestRequestStep || testStep instanceof RestTestRequestStep
+				|| testStep instanceof HttpTestRequestStep;
 	}
 
 	@Override

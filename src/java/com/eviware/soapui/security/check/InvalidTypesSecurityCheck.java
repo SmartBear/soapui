@@ -27,19 +27,30 @@ import com.eviware.soapui.config.InvalidSecurityCheckConfig;
 import com.eviware.soapui.config.SchemaTypeForSecurityCheckConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.config.StrategyTypeConfig;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
+import com.eviware.soapui.impl.support.http.HttpRequestInterface;
+import com.eviware.soapui.impl.wsdl.WsdlRequest;
+import com.eviware.soapui.impl.wsdl.teststeps.HttpResponseMessageExchange;
+import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.RestResponseMessageExchange;
+import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlResponseMessageExchange;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.security.SecurityCheckedParameter;
+import com.eviware.soapui.model.testsuite.SamplerTestStep;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
+import com.eviware.soapui.security.result.SecurityResult.SecurityStatus;
+import com.eviware.soapui.security.support.PlainEmptyResponse;
 import com.eviware.soapui.security.ui.InvalidTypesTable;
 import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel;
+import com.eviware.soapui.support.xml.XmlUtils;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel.XmlTreeNode;
 
 public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperties
@@ -66,13 +77,13 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 			invalidTypeConfig = ( InvalidSecurityCheckConfig )config.getConfig();
 
 	}
-	
+
 	@Override
 	public void updateSecurityConfig( SecurityCheckConfig config )
 	{
 		super.updateSecurityConfig( config );
 
-		if( invalidTypeConfig != null)
+		if( invalidTypeConfig != null )
 		{
 			invalidTypeConfig = ( InvalidSecurityCheckConfig )getConfig().getConfig();
 		}
@@ -107,7 +118,6 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 		return new InvalidTypesTable( getInvalidTypeConfig() );
 	}
 
-
 	/*
 	 * There is no advanced settings/special for this security check
 	 * (non-Javadoc)
@@ -136,36 +146,90 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 	@Override
 	protected void execute( SecurityTestRunner securityTestRunner, TestStep testStep, SecurityTestRunContext context )
 	{
-		updateRequestContent( testStep,context );
+		try
+		{
+			updateRequestContent( testStep, context );
+			testStep.run( ( TestCaseRunner )securityTestRunner, context );
 
-		testStep.run( ( TestCaseRunner )securityTestRunner, context );
+			createMessageExchange( testStep );
+		}
+		catch( XmlException e )
+		{
+			SoapUI.logError( e, "[InvalidtypeSecurityCheck]XPath seems to be invalid!" );
+		}
+		catch( Exception e )
+		{
+			SoapUI.logError( e, "[InvalidtypeSecurityCheck]Property value is not valid xml!" );
+		}
+		finally
+		{
+			reportBadXPath( testStep );
+		}
 
-		createMessageExchange( testStep );
+	}
+
+	/**
+	 * @param testStep
+	 */
+	private void reportBadXPath( TestStep testStep )
+	{
+		MessageExchange messageExchange = null;
+		if( testStep instanceof WsdlTestRequestStep )
+		{
+			( ( WsdlTestRequestStep )testStep ).getTestRequest().setResponse(
+					new PlainEmptyResponse( ( ( WsdlTestRequestStep )testStep ).getTestRequest(),
+							"Propety value is not XML or XPath is wrong!" ), null );
+			messageExchange = new WsdlResponseMessageExchange( ( ( WsdlTestRequestStep )testStep ).getTestRequest() );
+		}
+		else if( testStep instanceof RestTestRequestStep )
+		{
+			( ( RestTestRequestStep )testStep ).getTestRequest().setResponse(
+					new PlainEmptyResponse( ( ( RestTestRequestStep )testStep ).getTestRequest(),
+							"Propety value is not XML or XPath is wrong!" ), null );
+			messageExchange = new RestResponseMessageExchange( ( ( RestTestRequestStep )testStep ).getTestRequest() );
+		}
+		else if( testStep instanceof HttpTestRequestStep )
+		{
+			( ( HttpTestRequestStep )testStep ).getTestRequest().setResponse(
+					new PlainEmptyResponse( ( ( HttpTestRequestStep )testStep ).getTestRequest(),
+							"Propety value is not XML or XPath is wrong!" ), null );
+			messageExchange = new HttpResponseMessageExchange( ( ( HttpTestRequestStep )testStep ).getTestRequest() );
+		}
+		getSecurityCheckRequestResult().setMessageExchange( messageExchange );
+		getSecurityCheckRequestResult().setStatus( SecurityStatus.FAILED );
+		getSecurityCheckRequestResult().addMessage( "Propety value is not XML or XPath is wrong!" );
 	}
 
 	private void createMessageExchange( TestStep testStep )
 	{
-		MessageExchange messageExchange = new WsdlResponseMessageExchange( ( ( WsdlTestRequestStep )testStep )
-				.getTestRequest() );
+		MessageExchange messageExchange = null;
+		if( testStep instanceof WsdlTestRequestStep )
+		{
+			messageExchange = new WsdlResponseMessageExchange( ( WsdlRequest )( ( SamplerTestStep )testStep )
+					.getTestRequest() );
+		}
+		else if( testStep instanceof RestTestRequestStep )
+		{
+			messageExchange = new RestResponseMessageExchange( ( RestRequestInterface )( ( SamplerTestStep )testStep )
+					.getTestRequest() );
+		}
+		else if( testStep instanceof HttpTestRequestStep )
+		{
+			messageExchange = new HttpResponseMessageExchange( ( HttpRequestInterface<?> )( ( SamplerTestStep )testStep )
+					.getTestRequest() );
+		}
 		getSecurityCheckRequestResult().setMessageExchange( messageExchange );
 	}
 
 	/*
 	 * Set new value for request
 	 */
-	private void updateRequestContent( TestStep testStep, SecurityTestRunContext context )
+	private void updateRequestContent( TestStep testStep, SecurityTestRunContext context ) throws XmlException,
+			Exception
 	{
 
 		if( parameterMutations.size() == 0 )
-			try
-			{
-				mutateParameters( testStep, context );
-			}
-			catch( XmlException e1 )
-			{
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+			mutateParameters( testStep, context );
 		if( getExecutionStrategy().getStrategy() == StrategyTypeConfig.ONE_BY_ONE )
 		{
 			/*
@@ -176,37 +240,34 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 				if( parameterMutations.containsKey( param ) )
 					if( parameterMutations.get( param ).size() > 0 )
 					{
-						try
+
+						TestProperty property = getTestStep().getProperties().get( param.getName() );
+						String value = property.getValue();
+						if( param.getXPath() == null || param.getXPath().trim().length() == 0 )
 						{
-							TestProperty property = getTestStep().getProperties().get( param.getName() );
-							String value = property.getValue();
-							if( param.getXPath() == null || param.getXPath().trim().length() == 0 )
+							testStep.getProperties().get( param.getName() )
+									.setValue( parameterMutations.get( param ).get( 0 ) );
+							parameterMutations.get( param ).remove( 0 );
+						}
+						else
+						{
+							// no value, do nothing.
+							if( value == null || value.trim().equals( "" ) )
+								continue;
+							if( XmlUtils.seemsToBeXml( value ) )
+							// try
 							{
-								testStep.getProperties().get( param.getName() ).setValue(
-										parameterMutations.get( param ).get( 0 ) );
-								parameterMutations.get( param ).remove( 0 );
-							}
-							else
-							{
-								// no value, do nothing.
-								if( value == null || value.trim().equals( "" ) )
-									continue;
 								XmlObjectTreeModel model = new XmlObjectTreeModel( ( ( WsdlTestRequestStep )getTestStep() )
 										.getOperation().getInterface().getDefinitionContext().getSchemaTypeSystem(),
 										XmlObject.Factory.parse( value ) );
-								XmlTreeNode[] nodes = model.selectTreeNodes(context.expand( param.getXPath()) );
+								XmlTreeNode[] nodes = model.selectTreeNodes( context.expand( param.getXPath() ) );
 								for( XmlTreeNode node : nodes )
 									node.setValue( 1, parameterMutations.get( param ).get( 0 ) );
 								parameterMutations.get( param ).remove( 0 );
 
 								testStep.getProperties().get( param.getName() ).setValue( model.getXmlObject().toString() );
-							}
 
-						}
-						catch( Exception e )
-						{
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+							}
 						}
 						break;
 					}
@@ -218,9 +279,9 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 			{
 
 				String value = property.getValue();
-				XmlObjectTreeModel model = null;
-				try
+				if( XmlUtils.seemsToBeXml( value ) )
 				{
+					XmlObjectTreeModel model = null;
 					model = new XmlObjectTreeModel( ( ( WsdlTestRequestStep )getTestStep() ).getOperation().getInterface()
 							.getDefinitionContext().getSchemaTypeSystem(), XmlObject.Factory.parse( value ) );
 					for( SecurityCheckedParameter param : getParameterHolder().getParameterList() )
@@ -238,7 +299,7 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 								continue;
 							if( param.getName().equals( property.getName() ) )
 							{
-								XmlTreeNode[] nodes = model.selectTreeNodes(context.expand( param.getXPath()) );
+								XmlTreeNode[] nodes = model.selectTreeNodes( context.expand( param.getXPath() ) );
 								if( parameterMutations.containsKey( param ) )
 									if( parameterMutations.get( param ).size() > 0 )
 									{
@@ -251,20 +312,8 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 					}
 					if( model != null )
 						property.setValue( model.getXmlObject().toString() );
-				}
-				catch( XmlException e )
-				{
-					// TODO Auto-generated catch block
-					// e.printStackTrace();
-					continue;
-				}
-				catch( Exception e )
-				{
-					// TODO Auto-generated catch block
-					// e.printStackTrace();
-					continue;
-				}
 
+				}
 			}
 		}
 
@@ -274,11 +323,13 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 	 * generate set of requests with all variations
 	 * 
 	 * @param testStep
-	 * @param context 
+	 * @param context
+	 * @throws Exception
+	 * @throws XmlException
 	 * 
 	 * @throws XmlException
 	 */
-	private void mutateParameters( TestStep testStep, SecurityTestRunContext context ) throws XmlException
+	private void mutateParameters( TestStep testStep, SecurityTestRunContext context ) throws XmlException, Exception
 	{
 
 		mutation = true;
@@ -310,14 +361,14 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 					// get value of that property
 					String value = property.getValue();
 
-					try
+					if( XmlUtils.seemsToBeXml( value ) )
 					{
 
 						XmlObjectTreeModel model = new XmlObjectTreeModel( ( ( WsdlTestRequestStep )getTestStep() )
 								.getOperation().getInterface().getDefinitionContext().getSchemaTypeSystem(), XmlObject.Factory
 								.parse( value ) );
 
-						XmlTreeNode[] nodes = model.selectTreeNodes(context.expand( parameter.getXPath() ));
+						XmlTreeNode[] nodes = model.selectTreeNodes( context.expand( parameter.getXPath() ) );
 
 						// for each invalid type set all nodes
 						List<SchemaTypeForSecurityCheckConfig> invalidTypes = invalidTypeConfig.getTypesListList();
@@ -337,12 +388,6 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 
 						}
 					}
-					catch( Exception e1 )
-					{
-						SoapUI.logError( e1, "[InvalidtypeSecurityCheck]Failed to select XPath for source property value ["
-								+ value + "]" );
-					}
-
 				}
 			}
 		}
@@ -352,8 +397,9 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 	protected boolean hasNext( TestStep testStep, SecurityTestRunContext context )
 	{
 		boolean hasNext = false;
-		if( (parameterMutations == null || parameterMutations.size() == 0) && !mutation) {
-			if( getParameterHolder().getParameterList().size() > 0  )
+		if( ( parameterMutations == null || parameterMutations.size() == 0 ) && !mutation )
+		{
+			if( getParameterHolder().getParameterList().size() > 0 )
 				hasNext = true;
 			else
 				hasNext = false;

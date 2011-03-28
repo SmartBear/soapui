@@ -29,18 +29,26 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.SQLInjectionCheckConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.config.StrategyTypeConfig;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
+import com.eviware.soapui.impl.support.http.HttpRequestInterface;
+import com.eviware.soapui.impl.wsdl.WsdlRequest;
+import com.eviware.soapui.impl.wsdl.teststeps.HttpResponseMessageExchange;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.RestResponseMessageExchange;
 import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlResponseMessageExchange;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.security.SecurityCheckedParameter;
+import com.eviware.soapui.model.testsuite.SamplerTestStep;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
+import com.eviware.soapui.security.result.SecurityResult.SecurityStatus;
+import com.eviware.soapui.security.support.PlainEmptyResponse;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel.XmlTreeNode;
 import com.eviware.x.form.support.ADialogBuilder;
@@ -118,22 +126,80 @@ public class SQLInjectionCheck extends AbstractSecurityCheckWithProperties
 	@Override
 	protected void execute( SecurityTestRunner securityTestRunner, TestStep testStep, SecurityTestRunContext context )
 	{
-		update( testStep , context);
-		testStep.run( ( TestCaseRunner )securityTestRunner, context );
-		createMessageExchange( testStep );
+		try
+		{
+			update( testStep, context );
+			testStep.run( ( TestCaseRunner )securityTestRunner, context );
+			createMessageExchange( testStep );
+		}
+		catch( XmlException e )
+		{
+			SoapUI.logError( e, "[SqlInjectionSecurityCheck]XPath seems to be invalid!" );
+		}
+		catch( Exception e )
+		{
+			SoapUI.logError( e, "[SqlInjectionSecurityCheck]Property value is not valid xml!" );
+		}
+		finally
+		{
+			reportBadXPath( testStep );
+		}
+	}
+
+	private void reportBadXPath( TestStep testStep )
+	{
+		MessageExchange messageExchange = null;
+		if( testStep instanceof WsdlTestRequestStep )
+		{
+			( ( WsdlTestRequestStep )testStep ).getTestRequest().setResponse(
+					new PlainEmptyResponse( ( ( WsdlTestRequestStep )testStep ).getTestRequest(),
+							"Propety value is not XML or XPath is wrong!" ), null );
+			messageExchange = new WsdlResponseMessageExchange( ( ( WsdlTestRequestStep )testStep ).getTestRequest() );
+		}
+		else if( testStep instanceof RestTestRequestStep )
+		{
+			( ( RestTestRequestStep )testStep ).getTestRequest().setResponse(
+					new PlainEmptyResponse( ( ( RestTestRequestStep )testStep ).getTestRequest(),
+							"Propety value is not XML or XPath is wrong!" ), null );
+			messageExchange = new RestResponseMessageExchange( ( ( RestTestRequestStep )testStep ).getTestRequest() );
+		}
+		else if( testStep instanceof HttpTestRequestStep )
+		{
+			( ( HttpTestRequestStep )testStep ).getTestRequest().setResponse(
+					new PlainEmptyResponse( ( ( HttpTestRequestStep )testStep ).getTestRequest(),
+							"Propety value is not XML or XPath is wrong!" ), null );
+			messageExchange = new HttpResponseMessageExchange( ( ( HttpTestRequestStep )testStep ).getTestRequest() );
+		}
+		getSecurityCheckRequestResult().setMessageExchange( messageExchange );
+		getSecurityCheckRequestResult().setStatus( SecurityStatus.FAILED );
+		getSecurityCheckRequestResult().addMessage( "Propety value is not XML or XPath is wrong!" );
 	}
 
 	private void createMessageExchange( TestStep testStep )
 	{
-		MessageExchange messageExchange = new WsdlResponseMessageExchange(
-				( ( WsdlTestRequestStep )testStep ).getTestRequest() );
+		MessageExchange messageExchange = null;
+		if( testStep instanceof WsdlTestRequestStep )
+		{
+			messageExchange = new WsdlResponseMessageExchange( ( WsdlRequest )( ( SamplerTestStep )testStep )
+					.getTestRequest() );
+		}
+		else if( testStep instanceof RestTestRequestStep )
+		{
+			messageExchange = new RestResponseMessageExchange( ( RestRequestInterface )( ( SamplerTestStep )testStep )
+					.getTestRequest() );
+		}
+		else if( testStep instanceof HttpTestRequestStep )
+		{
+			messageExchange = new HttpResponseMessageExchange( ( HttpRequestInterface<?> )( ( SamplerTestStep )testStep )
+					.getTestRequest() );
+		}
 		getSecurityCheckRequestResult().setMessageExchange( messageExchange );
 	}
 
-	private void update( TestStep testStep, SecurityTestRunContext context )
+	private void update( TestStep testStep, SecurityTestRunContext context ) throws XmlException, Exception
 	{
 		if( parameterMutations.size() == 0 )
-			mutateParameters( testStep , context);
+			mutateParameters( testStep, context );
 
 		if( getExecutionStrategy().getStrategy() == StrategyTypeConfig.ONE_BY_ONE )
 		{
@@ -145,37 +211,28 @@ public class SQLInjectionCheck extends AbstractSecurityCheckWithProperties
 				if( parameterMutations.containsKey( param ) )
 					if( parameterMutations.get( param ).size() > 0 )
 					{
-						try
+						TestProperty property = getTestStep().getProperties().get( param.getName() );
+						String value = property.getValue();
+						if( param.getXPath() == null || param.getXPath().trim().length() == 0 )
 						{
-							TestProperty property = getTestStep().getProperties().get( param.getName() );
-							String value = property.getValue();
-							if( param.getXPath() == null || param.getXPath().trim().length() == 0 )
-							{
-								testStep.getProperties().get( param.getName() )
-										.setValue( parameterMutations.get( param ).get( 0 ) );
-								parameterMutations.get( param ).remove( 0 );
-							}
-							else
-							{
-								// no value, do nothing.
-								if( value == null || value.trim().equals( "" ) )
-									continue;
-								XmlObjectTreeModel model = new XmlObjectTreeModel( ( ( WsdlTestRequestStep )getTestStep() )
-										.getOperation().getInterface().getDefinitionContext().getSchemaTypeSystem(),
-										XmlObject.Factory.parse( value ) );
-								XmlTreeNode[] nodes = model.selectTreeNodes( context.expand(param.getXPath()) );
-								for( XmlTreeNode node : nodes )
-									node.setValue( 1, parameterMutations.get( param ).get( 0 ) );
-								parameterMutations.get( param ).remove( 0 );
-
-								testStep.getProperties().get( param.getName() ).setValue( model.getXmlObject().toString() );
-							}
-
+							testStep.getProperties().get( param.getName() )
+									.setValue( parameterMutations.get( param ).get( 0 ) );
+							parameterMutations.get( param ).remove( 0 );
 						}
-						catch( Exception e )
+						else
 						{
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+							// no value, do nothing.
+							if( value == null || value.trim().equals( "" ) )
+								continue;
+							XmlObjectTreeModel model = new XmlObjectTreeModel( ( ( WsdlTestRequestStep )getTestStep() )
+									.getOperation().getInterface().getDefinitionContext().getSchemaTypeSystem(),
+									XmlObject.Factory.parse( value ) );
+							XmlTreeNode[] nodes = model.selectTreeNodes( context.expand( param.getXPath() ) );
+							for( XmlTreeNode node : nodes )
+								node.setValue( 1, parameterMutations.get( param ).get( 0 ) );
+							parameterMutations.get( param ).remove( 0 );
+
+							testStep.getProperties().get( param.getName() ).setValue( model.getXmlObject().toString() );
 						}
 						break;
 					}
@@ -188,57 +245,40 @@ public class SQLInjectionCheck extends AbstractSecurityCheckWithProperties
 
 				String value = property.getValue();
 				XmlObjectTreeModel model = null;
-				try
+				model = new XmlObjectTreeModel( ( ( WsdlTestRequestStep )getTestStep() ).getOperation().getInterface()
+						.getDefinitionContext().getSchemaTypeSystem(), XmlObject.Factory.parse( value ) );
+				for( SecurityCheckedParameter param : getParameterHolder().getParameterList() )
 				{
-					model = new XmlObjectTreeModel( ( ( WsdlTestRequestStep )getTestStep() ).getOperation().getInterface()
-							.getDefinitionContext().getSchemaTypeSystem(), XmlObject.Factory.parse( value ) );
-					for( SecurityCheckedParameter param : getParameterHolder().getParameterList() )
+					if( param.getXPath() == null || param.getXPath().trim().length() == 0 )
 					{
-						if( param.getXPath() == null || param.getXPath().trim().length() == 0 )
+						testStep.getProperties().get( param.getName() ).setValue( parameterMutations.get( param ).get( 0 ) );
+						parameterMutations.get( param ).remove( 0 );
+					}
+					else
+					{
+						// no value, do nothing.
+						if( value == null || value.trim().equals( "" ) )
+							continue;
+						if( param.getName().equals( property.getName() ) )
 						{
-							testStep.getProperties().get( param.getName() )
-									.setValue( parameterMutations.get( param ).get( 0 ) );
-							parameterMutations.get( param ).remove( 0 );
-						}
-						else
-						{
-							// no value, do nothing.
-							if( value == null || value.trim().equals( "" ) )
-								continue;
-							if( param.getName().equals( property.getName() ) )
-							{
-								XmlTreeNode[] nodes = model.selectTreeNodes( context.expand(param.getXPath()) );
-								if( parameterMutations.containsKey( param ) )
-									if( parameterMutations.get( param ).size() > 0 )
-									{
-										for( XmlTreeNode node : nodes )
-											node.setValue( 1, parameterMutations.get( param ).get( 0 ) );
-										parameterMutations.get( param ).remove( 0 );
-									}
-							}
+							XmlTreeNode[] nodes = model.selectTreeNodes( context.expand( param.getXPath() ) );
+							if( parameterMutations.containsKey( param ) )
+								if( parameterMutations.get( param ).size() > 0 )
+								{
+									for( XmlTreeNode node : nodes )
+										node.setValue( 1, parameterMutations.get( param ).get( 0 ) );
+									parameterMutations.get( param ).remove( 0 );
+								}
 						}
 					}
-					if( model != null )
-						property.setValue( model.getXmlObject().toString() );
 				}
-				catch( XmlException e )
-				{
-					// TODO Auto-generated catch block
-					// e.printStackTrace();
-					continue;
-				}
-				catch( Exception e )
-				{
-					// TODO Auto-generated catch block
-					// e.printStackTrace();
-					continue;
-				}
-
+				if( model != null )
+					property.setValue( model.getXmlObject().toString() );
 			}
 		}
 	}
 
-	private void mutateParameters( TestStep testStep, SecurityTestRunContext context )
+	private void mutateParameters( TestStep testStep, SecurityTestRunContext context ) throws XmlException, Exception
 	{
 		mutation = true;
 		// for each parameter
@@ -271,37 +311,29 @@ public class SQLInjectionCheck extends AbstractSecurityCheckWithProperties
 					String value = property.getValue();
 
 					// we have something that looks like xpath, or hope so.
-					try
+
+					XmlObjectTreeModel model = null;
+
+					if( testStep instanceof WsdlTestRequestStep )
+						model = new XmlObjectTreeModel( ( ( WsdlTestRequestStep )testStep ).getOperation().getInterface()
+								.getDefinitionContext().getSchemaTypeSystem(), XmlObject.Factory.parse( value ) );
+					if( testStep instanceof RestTestRequestStep || testStep instanceof HttpTestRequestStep )
+						model = new XmlObjectTreeModel( XmlObject.Factory.parse( value ) );
+
+					XmlTreeNode[] nodes = model.selectTreeNodes( context.expand( parameter.getXPath() ) );
+
+					// for each invalid type set all nodes
+
+					for( String sqlInjectionString : sqlInjectionConfig.getSqlInjectionStringsList() )
 					{
 
-						XmlObjectTreeModel model = null;
-
-						if( testStep instanceof WsdlTestRequestStep )
-							model = new XmlObjectTreeModel( ( ( WsdlTestRequestStep )testStep ).getOperation().getInterface()
-									.getDefinitionContext().getSchemaTypeSystem(), XmlObject.Factory.parse( value ) );
-						if( testStep instanceof RestTestRequestStep || testStep instanceof HttpTestRequestStep )
-							model = new XmlObjectTreeModel( XmlObject.Factory.parse( value ) );
-
-						XmlTreeNode[] nodes = model.selectTreeNodes(context.expand( parameter.getXPath()) );
-
-						// for each invalid type set all nodes
-
-						for( String sqlInjectionString : sqlInjectionConfig.getSqlInjectionStringsList() )
+						if( nodes.length > 0 )
 						{
-
-							if( nodes.length > 0 )
-							{
-								if( !parameterMutations.containsKey( parameter ) )
-									parameterMutations.put( parameter, new ArrayList<String>() );
-								parameterMutations.get( parameter ).add( sqlInjectionString );
-							}
-
+							if( !parameterMutations.containsKey( parameter ) )
+								parameterMutations.put( parameter, new ArrayList<String>() );
+							parameterMutations.get( parameter ).add( sqlInjectionString );
 						}
-					}
-					catch( Exception e1 )
-					{
-						SoapUI.logError( e1, "[SQLInjectionSecurityCheck]Failed to select XPath for source property value ["
-								+ value + "]" );
+
 					}
 
 				}
