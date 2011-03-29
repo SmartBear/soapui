@@ -208,11 +208,15 @@ public class SecurityTestLogModel extends AbstractListModel
 
 		SoftReference<SecurityResult> checkReqResultRef = new SoftReference<SecurityResult>( securityCheckRequestResult );
 
-		items.add( "[" + securityCheckRequestResult.getSecurityCheck().getName() + "] Request " + requestCount + " - "
-				+ securityCheckRequestResult.getStatus() + " - " + changedParamsInfo.toString() );
+		StringBuilder checkRequestResultStr = new StringBuilder( "["
+				+ securityCheckRequestResult.getSecurityCheck().getName() + "] Request " + requestCount + " - "
+				+ securityCheckRequestResult.getStatus() );
+		if( changedParamsInfo.length() > 1 )
+		{
+			checkRequestResultStr.append( " - " + changedParamsInfo.toString() );
+		}
+		items.add( checkRequestResultStr.toString() );
 		results.add( checkReqResultRef );
-
-		changedParamsInfo.toString();
 
 		for( String msg : securityCheckRequestResult.getMessages() )
 		{
