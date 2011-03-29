@@ -24,6 +24,7 @@ import org.apache.commons.collections.list.TreeList;
 
 import com.eviware.soapui.model.security.SecurityCheck;
 import com.eviware.soapui.security.check.AbstractSecurityCheck;
+import com.eviware.soapui.security.check.AbstractSecurityCheckWithProperties;
 import com.eviware.soapui.security.result.SecurityCheckRequestResult;
 import com.eviware.soapui.security.result.SecurityCheckResult;
 import com.eviware.soapui.security.result.SecurityResult;
@@ -193,7 +194,7 @@ public class SecurityTestLogModel extends AbstractListModel
 		requestCount++ ;
 
 		StringToStringMap changedParams = StringToStringMap.fromXml( securityCheckRequestResult.getMessageExchange()
-				.getProperties().get( AbstractSecurityCheck.SECURITY_CHANGED_PARAMETERS ) );
+				.getProperties().get( AbstractSecurityCheckWithProperties.SECURITY_CHANGED_PARAMETERS ) );
 		StringBuilder changedParamsInfo = new StringBuilder();
 		changedParamsInfo.append( "[" );
 		Iterator<String> keys = changedParams.keySet().iterator();

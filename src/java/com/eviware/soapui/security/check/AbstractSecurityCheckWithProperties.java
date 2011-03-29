@@ -6,13 +6,17 @@ import java.util.List;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.security.SecurityCheckedParameter;
 import com.eviware.soapui.model.support.XPathReference;
 import com.eviware.soapui.model.support.XPathReferenceContainer;
 import com.eviware.soapui.model.support.XPathReferenceImpl;
 import com.eviware.soapui.model.testsuite.TestStep;
+import com.eviware.soapui.security.result.SecurityResult.SecurityStatus;
+import com.eviware.soapui.security.support.FailedSecurityMessageExchange;
 import com.eviware.soapui.security.support.SecurityCheckedParameterHolder;
 import com.eviware.soapui.security.support.SecurityCheckedParameterImpl;
+import com.eviware.soapui.support.types.StringToStringMap;
 
 /**
  * 
@@ -25,6 +29,7 @@ public abstract class AbstractSecurityCheckWithProperties extends AbstractSecuri
 		XPathReferenceContainer
 {
 
+	public static final String SECURITY_CHANGED_PARAMETERS = "SecurityChangedParameters";
 	private SecurityCheckedParameterHolder parameterHolder;
 
 	public AbstractSecurityCheckWithProperties( TestStep testStep, SecurityCheckConfig config, ModelItem parent,
@@ -109,6 +114,23 @@ public abstract class AbstractSecurityCheckWithProperties extends AbstractSecuri
 		{
 			return getParameterHolder().addParameter( newLabel, source.getName(), source.getXPath(), source.isChecked() );
 		}
+	}
+
+	/**
+	 * @param message
+	 * @param testStep
+	 */
+	protected void reportSecurityCheckException( String message )
+	{
+		getSecurityCheckRequestResult().setMessageExchange( new FailedSecurityMessageExchange() );
+		getSecurityCheckRequestResult().setStatus( SecurityStatus.FAILED );
+		getSecurityCheckRequestResult().addMessage( message );
+	}
+
+	protected void createMessageExchange( StringToStringMap updatedParams, MessageExchange message )
+	{
+		message.getProperties().put( SECURITY_CHANGED_PARAMETERS, updatedParams.toXml() );
+		getSecurityCheckRequestResult().setMessageExchange( message );
 	}
 
 }

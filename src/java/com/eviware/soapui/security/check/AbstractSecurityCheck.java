@@ -67,7 +67,6 @@ import com.eviware.soapui.support.types.StringToStringMap;
 public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<SecurityCheckConfig> implements Assertable,
 		ResponseAssertion, SecurityCheck// , RequestAssertion
 {
-	public static final String SECURITY_CHANGED_PARAMETERS = "SecurityChangedParameters";
 	// configuration of specific request modification
 	// private SecurityCheckConfig config;
 	private boolean disabled = false;
@@ -869,23 +868,6 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	public JComponent getAdvancedSettingsPanel()
 	{
 		return null;
-	}
-
-	/**
-	 * @param message
-	 * @param testStep
-	 */
-	protected void reportSecurityCheckException( String message )
-	{
-		getSecurityCheckRequestResult().setMessageExchange( new FailedSecurityMessageExchange() );
-		getSecurityCheckRequestResult().setStatus( SecurityStatus.FAILED );
-		getSecurityCheckRequestResult().addMessage( message );
-	}
-
-	protected void createMessageExchange( StringToStringMap updatedParams, MessageExchange message )
-	{
-		message.getProperties().put( SECURITY_CHANGED_PARAMETERS, updatedParams.toXml() );
-		getSecurityCheckRequestResult().setMessageExchange( message );
 	}
 
 	@Override
