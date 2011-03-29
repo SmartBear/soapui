@@ -51,6 +51,7 @@ import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestSuiteListener;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.check.AbstractSecurityCheck;
+import com.eviware.soapui.security.log.JSecurityTestRunLog;
 import com.eviware.soapui.security.support.ProgressBarSecurityTestStepAdapter;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.ActionList;
@@ -79,8 +80,9 @@ public class JSecurityTestTestStepList extends JPanel
 	JComponentInspector<JComponent> securityChecksInspector;
 	private JComponent secCheckPanel;
 	JPanel testStepListPanel;
-
-	public JSecurityTestTestStepList( SecurityTest securityTest )
+	JSecurityTestRunLog securityTestLog;
+	
+	public JSecurityTestTestStepList( SecurityTest securityTest, JSecurityTestRunLog securityTestLog )
 	{
 		testStepListPanel = new JPanel();
 		testStepListPanel.setLayout( new BoxLayout( testStepListPanel, BoxLayout.Y_AXIS ) );
@@ -105,7 +107,8 @@ public class JSecurityTestTestStepList extends JPanel
 
 		add( splitPane, BorderLayout.CENTER );
 		securityTest.getTestCase().getTestSuite().addTestSuiteListener( testSuiteListener );
-
+		
+		this.securityTestLog = securityTestLog;
 	}
 
 	public SecurityCheck getCurrentSecurityCheck()
@@ -118,7 +121,7 @@ public class JSecurityTestTestStepList extends JPanel
 	{
 		if( selectedTestStep != null && AbstractSecurityCheck.isSecurable( selectedTestStep.getTestStep() ) )
 		{
-			return new SecurityChecksPanel( selectedTestStep.getTestStep(), securityTest );
+			return new SecurityChecksPanel( selectedTestStep.getTestStep(), securityTest, securityTestLog );
 		}
 		else
 		{

@@ -147,8 +147,9 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 
 		add( panel, BorderLayout.NORTH );
 
+		JComponent testLog = buildTestLog();
 		inspectorPanel = JInspectorPanelFactory.build( buildContent() );
-		inspectorPanel.addInspector( new JComponentInspector<JComponent>( buildTestLog(), "Security Log",
+		inspectorPanel.addInspector( new JComponentInspector<JComponent>( testLog, "Security Log",
 				"Security Execution Log", true ) );
 		inspectorPanel.setDefaultDividerLocation( 0.7F );
 		inspectorPanel.setCurrentInspector( "Security Log" );
@@ -196,7 +197,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 		JXToolBar toolbar = UISupport.createToolbar();
 
 		p.add( toolbar, BorderLayout.NORTH );
-		testStepList = new JSecurityTestTestStepList( getModelItem() );
+		testStepList = new JSecurityTestTestStepList( getModelItem(), securityTestLog );
 		stateDependantComponents.add( testStepList );
 
 		p.add( testStepList, BorderLayout.CENTER );
@@ -441,8 +442,8 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 					{
 						MockTestRunner mockTestRunner = new MockTestRunner( SecurityTestDesktopPanel.this.getModelItem()
 								.getTestCase(), SoapUI.ensureGroovyLog() );
-						SecurityTestDesktopPanel.this.getModelItem().getTestCase().runSetupScript(
-								new MockTestRunContext( mockTestRunner, null ), mockTestRunner );
+						SecurityTestDesktopPanel.this.getModelItem().getTestCase()
+								.runSetupScript( new MockTestRunContext( mockTestRunner, null ), mockTestRunner );
 					}
 					catch( Exception e1 )
 					{
@@ -484,8 +485,8 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 					{
 						MockTestRunner mockTestRunner = new MockTestRunner( SecurityTestDesktopPanel.this.getModelItem()
 								.getTestCase(), SoapUI.ensureGroovyLog() );
-						SecurityTestDesktopPanel.this.getModelItem().getTestCase().runTearDownScript(
-								new MockTestRunContext( mockTestRunner, null ), mockTestRunner );
+						SecurityTestDesktopPanel.this.getModelItem().getTestCase()
+								.runTearDownScript( new MockTestRunContext( mockTestRunner, null ), mockTestRunner );
 					}
 					catch( Exception e1 )
 					{

@@ -43,8 +43,8 @@ import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.result.SecurityCheckRequestResult;
 import com.eviware.soapui.security.result.SecurityCheckResult;
 import com.eviware.soapui.security.result.SecurityResult;
-import com.eviware.soapui.security.result.SecurityTestStepResult;
 import com.eviware.soapui.security.result.SecurityResult.SecurityStatus;
+import com.eviware.soapui.security.result.SecurityTestStepResult;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.ActionSupport;
@@ -53,8 +53,8 @@ import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.AField.AFieldType;
+import com.eviware.x.form.support.AForm;
 
 /**
  * Panel for displaying SecurityChecks Results
@@ -136,6 +136,21 @@ public class JSecurityTestRunLog extends JPanel
 	{
 		logListModel.clear();
 		boldTexts.clear();
+	}
+
+	public synchronized void locateSecurityCheck( SecurityCheck check )
+	{
+		try
+		{
+			int idx = logListModel.getIndexOfSecurityCheck( check );
+			if( idx != -1 )
+			{
+				testLogList.ensureIndexIsVisible( idx );
+			}
+		}
+		catch( RuntimeException e )
+		{
+		}
 	}
 
 	public synchronized void addSecurityTestStepResult( SecurityTestStepResult testStepResult )
@@ -282,10 +297,10 @@ public class JSecurityTestRunLog extends JPanel
 			if( optionsDialog == null )
 				optionsDialog = ADialogBuilder.buildDialog( OptionsForm.class );
 
-			optionsDialog.setIntValue( OptionsForm.MAXROWS, ( int )settings.getLong( OptionsForm.class.getName()
-					+ "@max_rows", 1000 ) );
-			optionsDialog.setBooleanValue( OptionsForm.ERRORSONLY, settings.getBoolean( OptionsForm.class.getName()
-					+ "@errors_only" ) );
+			optionsDialog.setIntValue( OptionsForm.MAXROWS,
+					( int )settings.getLong( OptionsForm.class.getName() + "@max_rows", 1000 ) );
+			optionsDialog.setBooleanValue( OptionsForm.ERRORSONLY,
+					settings.getBoolean( OptionsForm.class.getName() + "@errors_only" ) );
 			optionsDialog.setBooleanValue( OptionsForm.FOLLOW, follow );
 
 			if( optionsDialog.show() )
@@ -421,7 +436,7 @@ public class JSecurityTestRunLog extends JPanel
 				testLogList.setSelectedIndex( row );
 			}
 
-			SecurityTestStepResult result = ( SecurityTestStepResult )logListModel.getTestStepResultAt( row );
+			SecurityResult result = logListModel.getTestStepResultAt( row );
 			if( result == null )
 				return;
 

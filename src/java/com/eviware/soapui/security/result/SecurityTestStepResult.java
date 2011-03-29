@@ -18,7 +18,6 @@ import java.util.List;
 
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
-import com.eviware.soapui.security.result.SecurityResult.SecurityStatus;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.DefaultActionList;
 
@@ -43,6 +42,7 @@ public class SecurityTestStepResult implements SecurityResult
 	private TestStepResult originalTestStepResult;
 	private DefaultActionList actionList;
 	private boolean hasAddedRequests;
+	private boolean addedAction;
 
 	public SecurityTestStepResult( TestStep testStep, TestStepResult originalResult )
 	{
@@ -72,8 +72,13 @@ public class SecurityTestStepResult implements SecurityResult
 		{
 			actionList = new DefaultActionList( getOriginalTestStepResult().getTestStep().getName() );
 		}
-		actionList.addActions( getOriginalTestStepResult().getActions() );
-		actionList.setDefaultAction( getOriginalTestStepResult().getActions().getDefaultAction() );
+		// if( !addedAction )
+		// {
+		// actionList.addActions( getOriginalTestStepResult().getActions() );
+		// addedAction = true;
+		// }
+		 actionList.setDefaultAction(
+		 getOriginalTestStepResult().getActions().getDefaultAction() );
 		// if( !getSecurityCheckResultList().isEmpty() )
 		// {
 		// for( SecurityCheckResult checkResult : getSecurityCheckResultList() )
@@ -181,9 +186,9 @@ public class SecurityTestStepResult implements SecurityResult
 	 */
 	public String getSecurityTestLog()
 	{
-		StringBuffer tl = new StringBuffer().append( "TestStep " ).append( " [" ).append( testStep.getName() ).append(
-				"] " ).append( getOriginalTestStepResult().getStatus().toString() ).append( ": took " ).append(
-				getOriginalTestStepResult().getTimeTaken() ).append( " ms" );
+		StringBuffer tl = new StringBuffer().append( "TestStep " ).append( " [" ).append( testStep.getName() )
+				.append( "] " ).append( getOriginalTestStepResult().getStatus().toString() ).append( ": took " )
+				.append( getOriginalTestStepResult().getTimeTaken() ).append( " ms" );
 		tl.append( testLog );
 		return tl.toString();
 	}

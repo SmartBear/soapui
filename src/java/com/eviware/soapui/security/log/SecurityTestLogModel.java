@@ -255,4 +255,23 @@ public class SecurityTestLogModel extends AbstractListModel
 		}
 	}
 
+	public synchronized int getIndexOfSecurityCheck( SecurityCheck check )
+	{
+		for( int i = 0; i < results.size(); i++ )
+		{
+			SoftReference<SecurityResult> result = results.get( i );
+			if( result != null )
+			{
+				SecurityResult referent = result.get();
+				if( referent instanceof SecurityCheckResult )
+				{
+					if( ( ( SecurityCheckResult )referent ).getSecurityCheck() == check )
+					{
+						return i;
+					}
+				}
+			}
+		}
+		return -1;
+	}
 }
