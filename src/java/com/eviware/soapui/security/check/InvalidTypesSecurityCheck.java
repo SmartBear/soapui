@@ -146,12 +146,12 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 		catch( XmlException e )
 		{
 			SoapUI.logError( e, "[InvalidtypeSecurityCheck]XPath seems to be invalid!" );
-			reportSecurityCheckException("Propety value is not XML or XPath is wrong!");
+			reportSecurityCheckException( "Propety value is not XML or XPath is wrong!" );
 		}
 		catch( Exception e )
 		{
 			SoapUI.logError( e, "[InvalidtypeSecurityCheck]Property value is not valid xml!" );
-			reportSecurityCheckException("Propety value is not XML or XPath is wrong!");
+			reportSecurityCheckException( "Propety value is not XML or XPath is wrong!" );
 		}
 	}
 
@@ -178,7 +178,7 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 					{
 
 						TestProperty property = getTestStep().getProperties().get( param.getName() );
-						String value = property.getValue();
+						String value = context.expand( property.getValue() );
 						if( param.getXPath() == null || param.getXPath().trim().length() == 0 )
 						{
 							testStep.getProperties().get( param.getName() )
@@ -216,7 +216,7 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 			for( TestProperty property : testStep.getPropertyList() )
 			{
 
-				String value = property.getValue();
+				String value = context.expand( property.getValue() );
 				if( XmlUtils.seemsToBeXml( value ) )
 				{
 					XmlObjectTreeModel model = null;
@@ -300,7 +300,7 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 					if( property.getValue() == null && property.getDefaultValue() == null )
 						continue;
 					// get value of that property
-					String value = property.getValue();
+					String value = context.expand(  property.getValue());
 
 					if( XmlUtils.seemsToBeXml( value ) )
 					{

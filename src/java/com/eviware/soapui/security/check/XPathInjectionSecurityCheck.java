@@ -114,12 +114,12 @@ public class XPathInjectionSecurityCheck extends AbstractSecurityCheckWithProper
 		catch( XmlException e )
 		{
 			SoapUI.logError( e, "[XPathInjectionSecurityCheck]XPath seems to be invalid!" );
-			reportSecurityCheckException("Propety value is not XML or XPath is wrong!");
+			reportSecurityCheckException( "Propety value is not XML or XPath is wrong!" );
 		}
 		catch( Exception e )
 		{
 			SoapUI.logError( e, "[XPathInjectionSecurityCheck]Property value is not valid xml!" );
-			reportSecurityCheckException("Propety value is not XML or XPath is wrong!");
+			reportSecurityCheckException( "Propety value is not XML or XPath is wrong!" );
 		}
 	}
 
@@ -141,7 +141,7 @@ public class XPathInjectionSecurityCheck extends AbstractSecurityCheckWithProper
 					if( parameterMutations.get( param ).size() > 0 )
 					{
 						TestProperty property = getTestStep().getProperties().get( param.getName() );
-						String value = property.getValue();
+						String value = context.expand( property.getValue() );
 						if( param.getXPath() == null || param.getXPath().trim().length() == 0 )
 						{
 							testStep.getProperties().get( param.getName() )
@@ -175,7 +175,7 @@ public class XPathInjectionSecurityCheck extends AbstractSecurityCheckWithProper
 			for( TestProperty property : testStep.getPropertyList() )
 			{
 
-				String value = property.getValue();
+				String value = context.expand( property.getValue() );
 				XmlObjectTreeModel model = null;
 				model = new XmlObjectTreeModel( ( ( WsdlTestRequestStep )getTestStep() ).getOperation().getInterface()
 						.getDefinitionContext().getSchemaTypeSystem(), XmlObject.Factory.parse( value ) );
@@ -243,7 +243,7 @@ public class XPathInjectionSecurityCheck extends AbstractSecurityCheckWithProper
 					if( property.getValue() == null && property.getDefaultValue() == null )
 						continue;
 					// get value of that property
-					String value = property.getValue();
+					String value = context.expand( property.getValue());
 
 					// we have something that looks like xpath, or hope so.
 
