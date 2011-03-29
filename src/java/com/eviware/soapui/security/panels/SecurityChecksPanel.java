@@ -16,7 +16,6 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
@@ -35,7 +34,6 @@ import javax.swing.JScrollPane;
 import javax.swing.ListCellRenderer;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
-import javax.swing.Timer;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.PopupMenuEvent;
@@ -166,82 +164,38 @@ public class SecurityChecksPanel extends JPanel
 				}
 				// moveSecurityCheckUpAction.setEnabled( ix >= 0 );
 				// moveSecurityCheckDownAction.setEnabled( ix >= 0 );
+
+				if( securityCheck != null )
+				{
+					locateSecurityCheckInLog( securityCheck );
+				}
 			}
 		} );
 		securityCheckList.addMouseListener( new MouseAdapter()
 		{
-			boolean isDoubleClick;
-			final Integer timerinterval = ( Integer )Toolkit.getDefaultToolkit().getDesktopProperty(
-					"awt.multiClickInterval" );
-			Timer timer;
-
 			public void mouseClicked( MouseEvent e )
 			{
-				if( e.getClickCount() == 2 )
-				{
-					doubleClick();System.out.println("double");
-					isDoubleClick = true;
-				}
-				else
-				{
-					timer = new Timer( timerinterval.intValue(), new ActionListener()
-					{
-						public void actionPerformed( ActionEvent evt )
-						{
-							if( isDoubleClick )
-							{
-								isDoubleClick = false;
-							}
-							else
-							{
-								singleClick();System.out.println("single");
-							}
-						}
-					} );
-					timer.setRepeats( false );
-					timer.start();
-				}
-			}
+				if( e.getClickCount() < 2 )
+					return;
 
-			private AbstractSecurityCheck getSecurityCheckFromList()
-			{
 				int ix = securityCheckList.getSelectedIndex();
-				if( ix != -1 )
+				if( ix == -1 )
+					return;
+
+				Object obj = securityCheckList.getModel().getElementAt( ix );
+				if( obj instanceof SecurityCheck )
 				{
-					Object obj = securityCheckList.getModel().getElementAt( ix );
-					if( obj instanceof SecurityCheck )
-					{
-						AbstractSecurityCheck check = ( AbstractSecurityCheck )obj;
-						return check;
-					}
-				}
-				return null;
-			}
-
-			private void singleClick()
-			{
-				AbstractSecurityCheck check = getSecurityCheckFromList();
-
-				if( check != null )
-				{
-					locateSecurityCheckInLog( check );
-				}
-			}
-
-			private void doubleClick()
-			{
-				AbstractSecurityCheck check = getSecurityCheckFromList();
-
-				if( check != null )
-				{
-					check.setTestStep( getTestStep() );
-					if( check.isConfigurable() )
+					AbstractSecurityCheck chck = ( AbstractSecurityCheck )obj;
+					chck.setTestStep( getTestStep() );
+					if( chck.isConfigurable() )
 					{
 						XFormDialog dialog = SoapUI.getSoapUICore().getSecurityCheckRegistry().getUIBuilder()
-								.buildSecurityCheckConfigurationDialog( check );
+								.buildSecurityCheckConfigurationDialog( chck );
 
 						dialog.show();
 					}
+
+					return;
 				}
 			}
 		} );
@@ -256,17 +210,6 @@ public class SecurityChecksPanel extends JPanel
 		securityCheckConfigPanel = ( JPanel )buildConfigPanel();
 		add( p, BorderLayout.CENTER );
 
-	}
-
-	private void showSecurityCheckConfigurationDialog( AbstractSecurityCheck chck )
-	{
-		if( chck.isConfigurable() )
-		{
-			XFormDialog dialog = SoapUI.getSoapUICore().getSecurityCheckRegistry().getUIBuilder()
-					.buildSecurityCheckConfigurationDialog( chck );
-
-			dialog.show();
-		}
 	}
 
 	protected TestStep getTestStep()
