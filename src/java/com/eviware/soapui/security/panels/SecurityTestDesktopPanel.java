@@ -706,14 +706,14 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 		public void beforeSecurityCheck( TestCaseRunner testRunner, SecurityTestRunContext runContext,
 				AbstractSecurityCheck securityCheck )
 		{
-			securityTestLog.addSecurityCheckStarted( securityCheck );
+			securityTestLog.addSecurityCheckResult( securityCheck );
 		}
 
 		@Override
 		public void afterSecurityCheck( TestCaseRunner testRunner, SecurityTestRunContext runContext,
 				SecurityCheckResult securityCheckResult )
 		{
-			securityTestLog.updateSecurityCheckStarted( securityCheckResult );
+			securityTestLog.updateSecurityCheckResult( securityCheckResult );
 		}
 
 		@Override

@@ -35,6 +35,8 @@ import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.ListCellRenderer;
 
+import org.apache.log4j.Logger;
+
 import com.eviware.soapui.impl.wsdl.testcase.TestCaseLogItem;
 import com.eviware.soapui.model.security.SecurityCheck;
 import com.eviware.soapui.model.settings.Settings;
@@ -72,12 +74,14 @@ public class JSecurityTestRunLog extends JPanel
 	private boolean follow = true;
 	protected int selectedIndex;
 	private XFormDialog optionsDialog;
+	private Logger log = Logger.getLogger( JSecurityTestRunLog.class );
 
 	public JSecurityTestRunLog( SecurityTest securityTest )
 	{
 		super( new BorderLayout() );
 		this.settings = securityTest.getSettings();
 		logListModel = securityTest.getSecurityTestLog();
+		errorsOnly = settings.getBoolean( OptionsForm.class.getName() + "@errors_only" );
 		buildUI();
 	}
 
@@ -155,10 +159,6 @@ public class JSecurityTestRunLog extends JPanel
 
 	public synchronized void addSecurityTestStepResult( SecurityTestStepResult testStepResult )
 	{
-		// if( errorsOnly && testStepResult.getStatus() !=
-		// SecurityCheckRequestResult.SecurityStatus.FAILED )
-		// return;
-
 		logListModel.addSecurityTestStepResult( testStepResult );
 		if( follow )
 		{
@@ -168,6 +168,7 @@ public class JSecurityTestRunLog extends JPanel
 			}
 			catch( RuntimeException e )
 			{
+				log.error( e.getMessage() );
 			}
 		}
 	}
@@ -183,33 +184,14 @@ public class JSecurityTestRunLog extends JPanel
 			}
 			catch( RuntimeException e )
 			{
+				log.error( e.getMessage() );
 			}
 		}
 	}
 
-	// public synchronized void addSecurityCheckResult( SecurityCheckResult
-	// checkResult )
-	// {
-	// if( errorsOnly && checkResult.getStatus() !=
-	// SecurityCheckRequestResult.SecurityStatus.FAILED )
-	// return;
-	//
-	// logListModel.addSecurityCheckResult( checkResult );
-	// if( follow )
-	// {
-	// try
-	// {
-	// testLogList.ensureIndexIsVisible( logListModel.getSize() - 1 );
-	// }
-	// catch( RuntimeException e )
-	// {
-	// }
-	// }
-	// }
-
-	public synchronized void addSecurityCheckStarted( SecurityCheck securityCheck )
+	public synchronized void addSecurityCheckResult( SecurityCheck securityCheck )
 	{
-		logListModel.addSecurityCheckStarted( securityCheck );
+		logListModel.addSecurityCheckResult( securityCheck );
 		if( follow )
 		{
 			try
@@ -218,16 +200,14 @@ public class JSecurityTestRunLog extends JPanel
 			}
 			catch( RuntimeException e )
 			{
+				log.error( e.getMessage() );
 			}
 		}
 	}
 
-	public synchronized void addSecurityCheckEnded( SecurityCheckResult checkResult )
+	public synchronized void updateSecurityCheckResult( SecurityCheckResult checkResult )
 	{
-		if( errorsOnly && checkResult.getStatus() != SecurityCheckRequestResult.SecurityStatus.FAILED )
-			return;
-
-		logListModel.addSecurityCheckEnded( checkResult );
+		logListModel.updateSecurityCheckResult( checkResult, errorsOnly );
 		if( follow )
 		{
 			try
@@ -236,21 +216,7 @@ public class JSecurityTestRunLog extends JPanel
 			}
 			catch( RuntimeException e )
 			{
-			}
-		}
-	}
-
-	public synchronized void updateSecurityCheckStarted( SecurityCheckResult checkResult )
-	{
-		logListModel.updateSecurityCheckStarted( checkResult, errorsOnly );
-		if( follow )
-		{
-			try
-			{
-				testLogList.ensureIndexIsVisible( logListModel.getSize() - 1 );
-			}
-			catch( RuntimeException e )
-			{
+				log.error( e.getMessage() );
 			}
 		}
 	}
@@ -269,6 +235,7 @@ public class JSecurityTestRunLog extends JPanel
 			}
 			catch( RuntimeException e )
 			{
+				log.error( e.getMessage() );
 			}
 		}
 	}
@@ -505,7 +472,7 @@ public class JSecurityTestRunLog extends JPanel
 			SecurityResult result = logListModel.getTestStepResultAt( index );
 			if( result != null )
 			{
-				if( result != null && result.getResultType().equals( SecurityCheckRequestResult.TYPE ) )
+				if( result.getResultType().equals( SecurityCheckRequestResult.TYPE ) )
 				{
 					hyperlinkLabel.setText( getText() );
 					hyperlinkLabel.setBackground( getBackground() );

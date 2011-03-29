@@ -13,6 +13,7 @@
 package com.eviware.soapui.security.check;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -81,8 +82,6 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	private ExecutionStrategyHolder executionStrategy;
 	private TestStep originalTestStepClone;
 	private SecurityTestRunListener[] securityTestListeners = new SecurityTestRunListener[0];
-	private static String SECURITY_CHECK_REQUEST_OK = "SecurityCheckRequest OK";
-	private static String SECURITY_CHECK_REQUEST_UNKNOWN = "SecurityCheckRequest has no assertions added";
 
 	public AbstractSecurityCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent, String icon )
 	{
@@ -761,12 +760,11 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 			else if( result == AssertionStatus.VALID )
 			{
 				getSecurityCheckRequestResult().setStatus( SecurityStatus.OK );
-				getSecurityCheckRequestResult().addMessage( SECURITY_CHECK_REQUEST_OK );
+
 			}
 			else if( result == AssertionStatus.UNKNOWN )
 			{
 				getSecurityCheckRequestResult().setStatus( SecurityStatus.UNKNOWN );
-				getSecurityCheckRequestResult().addMessage( SECURITY_CHECK_REQUEST_UNKNOWN );
 			}
 		}
 	}

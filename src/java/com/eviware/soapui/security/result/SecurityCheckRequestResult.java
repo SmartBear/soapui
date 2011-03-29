@@ -33,8 +33,8 @@ public class SecurityCheckRequestResult implements SecurityResult
 {
 	private static final String[] EMPTY_MESSAGES = new String[0];
 	public final static String TYPE = "SecurityCheckRequestResult";
-	public SecurityStatus status = SecurityStatus.UNKNOWN;
-	public SecurityCheck securityCheck;
+	private SecurityStatus status = SecurityStatus.UNKNOWN;
+	private SecurityCheck securityCheck;
 	private List<String> messages = new ArrayList<String>();
 	private long timeTaken;
 	private long startTime;
@@ -161,6 +161,7 @@ public class SecurityCheckRequestResult implements SecurityResult
 	{
 		this.timeTaken = timeTaken;
 	}
+
 	public void startTimer()
 	{
 		startTime = System.nanoTime();
@@ -170,7 +171,6 @@ public class SecurityCheckRequestResult implements SecurityResult
 	{
 		timeTaken = ( ( System.nanoTime() - startTime ) / 1000000 );
 	}
-
 
 	@Override
 	public String getResultType()

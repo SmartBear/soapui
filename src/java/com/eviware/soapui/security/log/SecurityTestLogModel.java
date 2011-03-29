@@ -15,6 +15,7 @@ package com.eviware.soapui.security.log;
 import java.lang.ref.SoftReference;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.AbstractListModel;
@@ -22,11 +23,13 @@ import javax.swing.AbstractListModel;
 import org.apache.commons.collections.list.TreeList;
 
 import com.eviware.soapui.model.security.SecurityCheck;
+import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.security.result.SecurityCheckRequestResult;
 import com.eviware.soapui.security.result.SecurityCheckResult;
 import com.eviware.soapui.security.result.SecurityResult;
 import com.eviware.soapui.security.result.SecurityTestStepResult;
 import com.eviware.soapui.security.result.SecurityResult.SecurityStatus;
+import com.eviware.soapui.support.types.StringToStringMap;
 
 /**
  * SecurityTestLog
@@ -40,6 +43,7 @@ public class SecurityTestLogModel extends AbstractListModel
 	private int maxSize = 100;
 	private int stepCount;
 	private int checkCount;
+	private int requestCount;
 	private SimpleDateFormat dateFormat = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss.SSS" );
 	private int startCheckIndex;
 	private int startStepIndex;
@@ -94,7 +98,7 @@ public class SecurityTestLogModel extends AbstractListModel
 				+ result.getOriginalTestStepResult().getStatus() + ": took "
 				+ result.getOriginalTestStepResult().getTimeTaken() + " ms" );
 		results.add( stepResultRef );
-		// checkResults.add( null );
+
 		for( String msg : result.getOriginalTestStepResult().getMessages() )
 		{
 			items.add( " -> " + msg );
@@ -123,45 +127,29 @@ public class SecurityTestLogModel extends AbstractListModel
 	{
 		if( errorsOnly && result.getStatus() != SecurityStatus.FAILED )
 		{
-			for( int i = startStepIndex; i < items.size() - 1; i++ )
+			stepCount-- ;
+			int size = items.size() - 1;
+			while( size >= startStepIndex )
 			{
-				items.remove( i );
-				results.remove( i );
-				fireIntervalRemoved( this, startStepIndex, items.size() - 1 );
+				items.remove( size );
+				results.remove( size );
+				size-- ;
 			}
-
+			fireIntervalRemoved( this, startStepIndex, size );
 		}
 	}
 
-	public synchronized void addSecurityCheckResult( SecurityCheckResult securityCheckResult )
-	{
-		checkCount++ ;
-
-		int size = items.size();
-
-		SoftReference<SecurityResult> checkResultRef = new SoftReference<SecurityResult>( securityCheckResult );
-
-		items.add( "Check " + checkCount + " [" + securityCheckResult.getSecurityCheck().getName() + "] "
-				+ securityCheckResult.getStatus() + ": took " + securityCheckResult.getTimeTaken() + " ms" );
-		results.add( checkResultRef );
-		for( SecurityCheckRequestResult requestResult : securityCheckResult.getSecurityRequestResultList() )
-		{
-			addSecurityCheckRequestResult( requestResult );
-		}
-
-		fireIntervalAdded( this, size, items.size() - 1 );
-		enforceMaxSize();
-	}
-
-	public synchronized void addSecurityCheckStarted( SecurityCheck securityCheck )
+	public synchronized void addSecurityCheckResult( SecurityCheck securityCheck )
 	{
 		int size = items.size();
 		startCheckIndex = size;
+		checkCount++ ;
+		requestCount = 0;
 
 		SecurityCheckResult securityCheckResult = securityCheck.getSecurityCheckResult();
 		SoftReference<SecurityResult> checkResultRef = new SoftReference<SecurityResult>( securityCheckResult );
 
-		items.add( "SecurityCheck [" + securityCheck.getName() + "]" );
+		items.add( "SecurityCheck " + checkCount + " [" + securityCheck.getName() + "] " );
 		results.add( checkResultRef );
 
 		fireIntervalAdded( this, size, items.size() - 1 );
@@ -170,23 +158,27 @@ public class SecurityTestLogModel extends AbstractListModel
 
 	// updates log entry for security check with the status, time taken, and
 	// similar info known only after finished
-	public synchronized void updateSecurityCheckStarted( SecurityCheckResult securityCheckResult, boolean errorsOnly )
+	public synchronized void updateSecurityCheckResult( SecurityCheckResult securityCheckResult, boolean errorsOnly )
 	{
 		if( errorsOnly && securityCheckResult.getStatus() != SecurityStatus.FAILED )
 		{
-			for( int i = startCheckIndex - 1; i < items.size() - 1; i++ )
+			// remove all entries for the securityCheck that had no warnings
+			checkCount-- ;
+			int size = items.size() - 1;
+			while( size >= startCheckIndex )
 			{
-				items.remove( i );
-				results.remove( i );
-				fireIntervalRemoved( this, startCheckIndex, items.size() - 1 );
+				items.remove( size );
+				results.remove( size );
+				size-- ;
 			}
+			fireIntervalRemoved( this, startCheckIndex, size );
 
 		}
 		else
 		{
-			items.set( startCheckIndex, "SecurityCheck [" + securityCheckResult.getSecurityCheck().getName()
-					+ "] finished with status [ " + securityCheckResult.getStatus() + "], time taken = "
-					+ securityCheckResult.getTimeTaken() );
+			items.set( startCheckIndex, "SecurityCheck " + checkCount + " ["
+					+ securityCheckResult.getSecurityCheck().getName() + "] " + securityCheckResult.getStatus()
+					+ ", time taken = " + securityCheckResult.getTimeTaken() );
 			SoftReference<SecurityResult> checkResultRef = new SoftReference<SecurityResult>( securityCheckResult );
 			results.set( startCheckIndex, checkResultRef );
 
@@ -195,28 +187,34 @@ public class SecurityTestLogModel extends AbstractListModel
 		}
 	}
 
-	public synchronized void addSecurityCheckEnded( SecurityCheckResult securityCheckResult )
-	{
-		int size = items.size();
-
-		SoftReference<SecurityResult> checkResultRef = new SoftReference<SecurityResult>( securityCheckResult );
-
-		items.add( "SecurityCheck [" + securityCheckResult.getSecurityCheck().getName() + "] finished with status [ "
-				+ securityCheckResult.getStatus() + "], time taken = " + securityCheckResult.getTimeTaken() );
-		results.add( checkResultRef );
-
-		fireIntervalAdded( this, size, items.size() - 1 );
-		enforceMaxSize();
-	}
-
 	public synchronized void addSecurityCheckRequestResult( SecurityCheckRequestResult securityCheckRequestResult )
 	{
 		int size = items.size();
+		requestCount++ ;
+
+		StringToStringMap changedParams = StringToStringMap.fromXml( securityCheckRequestResult.getMessageExchange()
+				.getProperties().get( AbstractSecurityCheck.SECURITY_CHANGED_PARAMETERS ) );
+		StringBuilder changedParamsInfo = new StringBuilder();
+		changedParamsInfo.append( "[" );
+		Iterator<String> keys = changedParams.keySet().iterator();
+		while( keys.hasNext() )
+		{
+			String param = ( String )keys.next();
+			String value = changedParams.get( param );
+			changedParamsInfo.append( param + "=" + value + "," );
+		}
+		changedParamsInfo.replace( changedParamsInfo.length() - 1, changedParamsInfo.length(), "]" );
+
+		SoftReference<SecurityResult> checkReqResultRef = new SoftReference<SecurityResult>( securityCheckRequestResult );
+
+		items.add( "[" + securityCheckRequestResult.getSecurityCheck().getName() + "] Request " + requestCount + " - "
+				+ securityCheckRequestResult.getStatus() + " - " + changedParamsInfo.toString() );
+		results.add( checkReqResultRef );
+
+		changedParamsInfo.toString();
 
 		for( String msg : securityCheckRequestResult.getMessages() )
 		{
-			SoftReference<SecurityResult> checkReqResultRef = new SoftReference<SecurityResult>(
-					securityCheckRequestResult );
 			items.add( " -> " + msg );
 			results.add( checkReqResultRef );
 		}
