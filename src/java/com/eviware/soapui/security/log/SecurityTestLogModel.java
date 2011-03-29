@@ -126,6 +126,7 @@ public class SecurityTestLogModel extends AbstractListModel
 			for( int i = startStepIndex; i < items.size() - 1; i++ )
 			{
 				items.remove( i );
+				results.remove( i );
 				fireIntervalRemoved( this, startStepIndex, items.size() - 1 );
 			}
 
@@ -176,6 +177,7 @@ public class SecurityTestLogModel extends AbstractListModel
 			for( int i = startCheckIndex - 1; i < items.size() - 1; i++ )
 			{
 				items.remove( i );
+				results.remove( i );
 				fireIntervalRemoved( this, startCheckIndex, items.size() - 1 );
 			}
 
@@ -185,6 +187,8 @@ public class SecurityTestLogModel extends AbstractListModel
 			items.set( startCheckIndex, "SecurityCheck [" + securityCheckResult.getSecurityCheck().getName()
 					+ "] finished with status [ " + securityCheckResult.getStatus() + "], time taken = "
 					+ securityCheckResult.getTimeTaken() );
+			SoftReference<SecurityResult> checkResultRef = new SoftReference<SecurityResult>( securityCheckResult );
+			results.set( startCheckIndex, checkResultRef );
 
 			fireContentsChanged( this, startCheckIndex, startCheckIndex );
 
