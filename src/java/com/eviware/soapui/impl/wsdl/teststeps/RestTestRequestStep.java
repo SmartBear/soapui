@@ -23,6 +23,7 @@ import javax.swing.ImageIcon;
 import javax.xml.namespace.QName;
 
 import org.apache.log4j.Logger;
+import org.apache.xmlbeans.SchemaType;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.RestRequestStepConfig;
@@ -65,6 +66,7 @@ import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepProperty;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
+import com.eviware.soapui.security.Securable;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.resolver.ChangeRestMethodResolver;
 import com.eviware.soapui.support.resolver.ImportInterfaceResolver;
@@ -73,7 +75,7 @@ import com.eviware.soapui.support.resolver.ResolveContext;
 import com.eviware.soapui.support.resolver.ResolveContext.PathToResolve;
 import com.eviware.soapui.support.types.StringToStringsMap;
 
-public class RestTestRequestStep extends WsdlTestStepWithProperties implements RestTestRequestStepInterface
+public class RestTestRequestStep extends WsdlTestStepWithProperties implements RestTestRequestStepInterface, Securable
 {
 	private final static Logger log = Logger.getLogger( RestTestRequestStep.class );
 	private RestRequestStepConfig restRequestStepConfig;
@@ -120,10 +122,10 @@ public class RestTestRequestStep extends WsdlTestStepWithProperties implements R
 		refreshRequestProperties();
 
 		// init default properties
-		addProperty( new TestStepBeanProperty( "Endpoint", false, testRequest, "endpoint", this,true ) );
+		addProperty( new TestStepBeanProperty( "Endpoint", false, testRequest, "endpoint", this,false ) );
 		addProperty( new TestStepBeanProperty( "Username", false, testRequest, "username", this,true ) );
 		addProperty( new TestStepBeanProperty( "Password", false, testRequest, "password", this ,true) );
-		addProperty( new TestStepBeanProperty( "Domain", false, testRequest, "domain", this,true ) );
+		addProperty( new TestStepBeanProperty( "Domain", false, testRequest, "domain", this,false ) );
 
 		// init properties
 		addProperty( new TestStepBeanProperty( "Request", false, testRequest, "requestContent", this,true )
@@ -967,5 +969,12 @@ public class RestTestRequestStep extends WsdlTestStepWithProperties implements R
 		{
 			return false;
 		}
+
+		@Override
+		public SchemaType getSchemaType()
+		{
+			return getTestRequest().getProperty( propertyName ).getSchemaType();
+		}
+
 	}
 }

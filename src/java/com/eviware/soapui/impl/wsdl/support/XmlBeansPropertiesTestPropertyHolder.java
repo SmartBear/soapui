@@ -28,6 +28,8 @@ import java.util.Set;
 
 import javax.xml.namespace.QName;
 
+import org.apache.xmlbeans.SchemaType;
+import org.apache.xmlbeans.XmlBeans;
 import org.apache.xmlbeans.XmlString;
 
 import com.eviware.soapui.SoapUI;
@@ -368,6 +370,13 @@ public class XmlBeansPropertiesTestPropertyHolder implements MutableTestProperty
 		{
 			return false;
 		}
+
+	@Override
+	public SchemaType getSchemaType()
+	{
+		return XmlBeans.getBuiltinTypeSystem().findType( getType() );
+	}
+
 	}
 
 	public int saveTo( String fileName ) throws IOException

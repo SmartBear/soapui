@@ -21,6 +21,7 @@ import javax.swing.ImageIcon;
 import javax.xml.namespace.QName;
 
 import org.apache.log4j.Logger;
+import org.apache.xmlbeans.SchemaType;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.HttpRequestConfig;
@@ -105,10 +106,10 @@ public class HttpTestRequestStep extends WsdlTestStepWithProperties implements H
 		}
 
 		// init default properties
-		addProperty( new TestStepBeanProperty( "Endpoint", false, testRequest, "endpoint", this , true));
+		addProperty( new TestStepBeanProperty( "Endpoint", false, testRequest, "endpoint", this , false));
 		addProperty( new TestStepBeanProperty( "Username", false, testRequest, "username", this , true));
 		addProperty( new TestStepBeanProperty( "Password", false, testRequest, "password", this, true ));
-		addProperty( new TestStepBeanProperty( "Domain", false, testRequest, "domain", this , true));
+		addProperty( new TestStepBeanProperty( "Domain", false, testRequest, "domain", this , false));
 
 		// init properties
 		addProperty( new TestStepBeanProperty( "Request", false, testRequest, "requestContent", this, true )
@@ -118,7 +119,6 @@ public class HttpTestRequestStep extends WsdlTestStepWithProperties implements H
 			{
 				return createDefaultRequestContent();
 			}
-
 		} );
 
 		addProperty( new TestStepBeanProperty( WsdlTestStepWithProperties.RESPONSE_AS_XML, true, testRequest,
@@ -702,6 +702,11 @@ public class HttpTestRequestStep extends WsdlTestStepWithProperties implements H
 		{
 			return true;
 		}
-	}
 
+		@Override
+		public SchemaType getSchemaType()
+		{
+			return property.getSchemaType();
+		}
+	}
 }

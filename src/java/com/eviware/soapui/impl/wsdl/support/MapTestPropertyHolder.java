@@ -26,6 +26,8 @@ import java.util.Set;
 
 import javax.xml.namespace.QName;
 
+import org.apache.xmlbeans.SchemaType;
+import org.apache.xmlbeans.XmlBeans;
 import org.apache.xmlbeans.XmlString;
 
 import com.eviware.soapui.SoapUI;
@@ -248,6 +250,13 @@ public class MapTestPropertyHolder implements MutableTestPropertyHolder
 		public boolean isRequestPart()
 		{
 			return false;
+		}
+
+		@Override
+		public SchemaType getSchemaType()
+		{
+			return XmlBeans.getBuiltinTypeSystem().findType( getType() );
+
 		}
 	}
 

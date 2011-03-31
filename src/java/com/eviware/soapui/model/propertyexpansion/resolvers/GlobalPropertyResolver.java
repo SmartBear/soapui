@@ -21,6 +21,8 @@ import java.util.Set;
 
 import javax.xml.namespace.QName;
 
+import org.apache.xmlbeans.SchemaType;
+import org.apache.xmlbeans.XmlBeans;
 import org.apache.xmlbeans.XmlString;
 
 import com.eviware.soapui.model.ModelItem;
@@ -170,6 +172,13 @@ public class GlobalPropertyResolver implements PropertyResolver
 			{
 				return false;
 			}
+
+			@Override
+			public SchemaType getSchemaType()
+			{
+				return XmlBeans.getBuiltinTypeSystem().findType( getType() );
+			}
+				
 		}
 	}
 
@@ -311,6 +320,13 @@ public class GlobalPropertyResolver implements PropertyResolver
 			{
 				return false;
 			}
+
+			@Override
+			public SchemaType getSchemaType()
+			{
+				return XmlBeans.getBuiltinTypeSystem().findType( getType() );
+			}
+				
 		}
 	}
 

@@ -14,6 +14,8 @@ package com.eviware.soapui.model.support;
 
 import javax.xml.namespace.QName;
 
+import org.apache.xmlbeans.SchemaType;
+import org.apache.xmlbeans.XmlBeans;
 import org.apache.xmlbeans.XmlString;
 
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
@@ -44,8 +46,9 @@ public class DefaultTestStepProperty implements TestStepProperty, RenameableTest
 		this.handler = handler;
 		this.testStep = testStep;
 	}
-	
-	public DefaultTestStepProperty( String name, boolean isReadOnly, PropertyHandler handler, WsdlTestStep testStep , boolean requestPart )
+
+	public DefaultTestStepProperty( String name, boolean isReadOnly, PropertyHandler handler, WsdlTestStep testStep,
+			boolean requestPart )
 	{
 		this.name = name;
 		this.isReadOnly = isReadOnly;
@@ -187,12 +190,15 @@ public class DefaultTestStepProperty implements TestStepProperty, RenameableTest
 		return null;
 	}
 
-
 	public boolean isRequestPart()
 	{
 		return requestPart;
 	}
 
-
+	@Override
+	public SchemaType getSchemaType()
+	{
+		return XmlBeans.getBuiltinTypeSystem().findType( getType() );
+	}
 
 }

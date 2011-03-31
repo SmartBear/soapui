@@ -26,6 +26,8 @@ import java.util.Set;
 
 import javax.xml.namespace.QName;
 
+import org.apache.xmlbeans.SchemaType;
+
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.testsuite.TestProperty;
@@ -552,6 +554,13 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 		{
 			return false;
 		}
+
+		@Override
+		public SchemaType getSchemaType()
+		{
+			return overriddenProp.getSchemaType();
+		}
+
 	}
 
 	public List<TestProperty> getPropertyList()

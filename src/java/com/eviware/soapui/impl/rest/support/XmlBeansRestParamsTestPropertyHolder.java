@@ -29,6 +29,8 @@ import java.util.Set;
 
 import javax.xml.namespace.QName;
 
+import org.apache.xmlbeans.SchemaType;
+import org.apache.xmlbeans.XmlBeans;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlString;
 
@@ -511,6 +513,13 @@ public class XmlBeansRestParamsTestPropertyHolder implements RestParamsPropertyH
 		{
 			return false;
 		}
+
+		@Override
+		public SchemaType getSchemaType()
+		{
+			return XmlBeans.getBuiltinTypeSystem().findType( getType() );
+		}
+
 	}
 
 	/*

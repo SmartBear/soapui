@@ -14,6 +14,8 @@ package com.eviware.soapui.model.testsuite;
 
 import javax.xml.namespace.QName;
 
+import org.apache.xmlbeans.SchemaType;
+
 import com.eviware.soapui.model.ModelItem;
 
 public interface TestProperty 
@@ -46,4 +48,6 @@ public interface TestProperty
 	 * defines if specific property belongs to request part
 	 */
 	public boolean isRequestPart();
+	
+	public SchemaType getSchemaType();
 }

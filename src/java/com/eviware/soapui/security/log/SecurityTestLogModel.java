@@ -193,8 +193,15 @@ public class SecurityTestLogModel extends AbstractListModel
 		int size = items.size();
 		requestCount++ ;
 
-		StringToStringMap changedParams = StringToStringMap.fromXml( securityCheckRequestResult.getMessageExchange()
-				.getProperties().get( AbstractSecurityCheckWithProperties.SECURITY_CHANGED_PARAMETERS ) );
+		StringToStringMap changedParams = null;
+
+		if( securityCheckRequestResult.getMessageExchange()!=null )
+		{
+			changedParams= 	StringToStringMap.fromXml( securityCheckRequestResult.getMessageExchange().getProperties().get(
+					AbstractSecurityCheckWithProperties.SECURITY_CHANGED_PARAMETERS ) );
+		}else {
+			changedParams = new StringToStringMap();
+		}
 		StringBuilder changedParamsInfo = new StringBuilder();
 		changedParamsInfo.append( "[" );
 		Iterator<String> keys = changedParams.keySet().iterator();

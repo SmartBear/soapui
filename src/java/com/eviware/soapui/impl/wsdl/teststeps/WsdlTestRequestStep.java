@@ -21,8 +21,11 @@ import java.util.List;
 import java.util.Map;
 
 import javax.swing.ImageIcon;
+import javax.xml.namespace.QName;
 
 import org.apache.log4j.Logger;
+import org.apache.xmlbeans.SchemaType;
+import org.apache.xmlbeans.XmlString;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.RequestStepConfig;
@@ -124,17 +127,39 @@ public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements O
 
 	private void initRequestProperties()
 	{
-		addProperty( new TestStepBeanProperty( "Endpoint", false, testRequest, "endpoint", this , true) );
-		addProperty( new TestStepBeanProperty( "Username", false, testRequest, "username", this , true) );
-		addProperty( new TestStepBeanProperty( "Password", false, testRequest, "password", this , true) );
-		addProperty( new TestStepBeanProperty( "Domain", false, testRequest, "domain", this , true) );
-		addProperty( new TestStepBeanProperty( "Request", false, testRequest, "requestContent", this , true)
+		addProperty( new TestStepBeanProperty( "Endpoint", false, testRequest, "endpoint", this, false ) );
+		addProperty( new TestStepBeanProperty( "Username", false, testRequest, "username", this, true ) );
+		addProperty( new TestStepBeanProperty( "Password", false, testRequest, "password", this, true ) );
+		addProperty( new TestStepBeanProperty( "Domain", false, testRequest, "domain", this, false ) );
+		addProperty( new TestStepBeanProperty( "Request", false, testRequest, "requestContent", this, true )
 		{
 			@Override
 			public String getDefaultValue()
 			{
 				return getOperation().createRequest( true );
 			}
+
+			@Override
+			public SchemaType getSchemaType()
+			{
+				try
+				{
+					return getOperation().getInterface().getDefinitionContext().getSchemaTypeSystem().findElement(
+							getOperation().getRequestBodyElementQName() ).getType();
+				}
+				catch( Exception e )
+				{
+					SoapUI.logError( e );
+					return XmlString.type;
+				}
+			}
+
+			@Override
+			public QName getType()
+			{
+				return getSchemaType().getName();
+			}
+
 		} );
 		addProperty( new TestStepBeanProperty( "Response", true, testRequest, "responseContent", this )
 		{
