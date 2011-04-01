@@ -59,11 +59,11 @@ public class TestCaseToTestSuiteDropHandler extends AbstractAfterModelItemDropHa
 
 		if( testCase.getTestSuite() == target )
 		{
-			return target.importTestCase( testCase, name, position, true, true );
+			return target.importTestCase( testCase, name, position, true, true, true );
 		}
 		else if( testCase.getTestSuite().getProject() == target.getProject() )
 		{
-			return target.importTestCase( testCase, name, position, true, true );
+			return target.importTestCase( testCase, name, position, true, true, true );
 		}
 		else
 		{
@@ -78,7 +78,7 @@ public class TestCaseToTestSuiteDropHandler extends AbstractAfterModelItemDropHa
 
 			if( DragAndDropSupport.importRequiredInterfaces( target.getProject(), requiredInterfaces, "Copy TestCase" ) )
 			{
-				return target.importTestCase( testCase, name, position, true, true );
+				return target.importTestCase( testCase, name, position, true, true, true );
 			}
 		}
 
@@ -118,7 +118,7 @@ public class TestCaseToTestSuiteDropHandler extends AbstractAfterModelItemDropHa
 			if( UISupport.confirm( "Move TestCase [" + testCase.getName() + "] to TestSuite [" + target.getName() + "]",
 					"Move TestCase" ) )
 			{
-				WsdlTestCase importedTestCase = target.importTestCase( testCase, testCase.getName(), position, true, false );
+				WsdlTestCase importedTestCase = target.importTestCase( testCase, testCase.getName(), position, true, true, false );
 				if( importedTestCase != null )
 				{
 					testCase.getTestSuite().removeTestCase( testCase );
@@ -140,7 +140,7 @@ public class TestCaseToTestSuiteDropHandler extends AbstractAfterModelItemDropHa
 
 			if( DragAndDropSupport.importRequiredInterfaces( target.getProject(), requiredInterfaces, "Move TestCase" ) )
 			{
-				WsdlTestCase importedTestCase = target.importTestCase( testCase, testCase.getName(), position, true, false );
+				WsdlTestCase importedTestCase = target.importTestCase( testCase, testCase.getName(), position, true, true, false );
 				if( importedTestCase != null )
 				{
 					testCase.getTestSuite().removeTestCase( testCase );

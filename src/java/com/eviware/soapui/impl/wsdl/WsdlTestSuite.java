@@ -23,6 +23,7 @@ import java.util.Set;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.LoadTestConfig;
+import com.eviware.soapui.config.SecurityTestConfig;
 import com.eviware.soapui.config.TestCaseConfig;
 import com.eviware.soapui.config.TestCaseDocumentConfig;
 import com.eviware.soapui.config.TestSuiteConfig;
@@ -176,7 +177,7 @@ public class WsdlTestSuite extends AbstractTestPropertyHolderWsdlModelItem<TestS
 	}
 
 	public WsdlTestCase importTestCase( WsdlTestCase testCase, String name, int index, boolean includeLoadTests,
-			boolean createCopy )
+			boolean includeSecurityTests, boolean createCopy )
 	{
 		testCase.beforeSave();
 
@@ -191,8 +192,11 @@ public class WsdlTestSuite extends AbstractTestPropertyHolderWsdlModelItem<TestS
 		if( !includeLoadTests )
 			testCaseConfig.setLoadTestArray( new LoadTestConfig[0] );
 
+		if( !includeSecurityTests )
+			testCaseConfig.setSecurityTestArray( new SecurityTestConfig[0] );
+
 		WsdlTestCase oldTestCase = testCase;
-		testCase =  buildTestCase( testCaseConfig, false );
+		testCase = buildTestCase( testCaseConfig, false );
 
 		if( createCopy )
 		{
@@ -610,9 +614,9 @@ public class WsdlTestSuite extends AbstractTestPropertyHolderWsdlModelItem<TestS
 			getConfig().removeTestCase( ix );
 		}
 
-		TestCaseConfig newConfig = ( TestCaseConfig )getConfig().insertNewTestCase( ix ).set( newTestCase ).changeType(
-				TestCaseConfig.type );
-		testCase =  buildTestCase( newConfig, false );
+		TestCaseConfig newConfig = ( TestCaseConfig )getConfig().insertNewTestCase( ix ).set( newTestCase )
+				.changeType( TestCaseConfig.type );
+		testCase = buildTestCase( newConfig, false );
 		testCases.add( ix, testCase );
 		testCase.afterLoad();
 		fireTestCaseAdded( testCase );
@@ -641,9 +645,9 @@ public class WsdlTestSuite extends AbstractTestPropertyHolderWsdlModelItem<TestS
 
 		if( testCaseNewConfig != null )
 		{
-			TestCaseConfig newConfig = ( TestCaseConfig )getConfig().addNewTestCase().set( testCaseNewConfig ).changeType(
-					TestCaseConfig.type );
-			WsdlTestCase newTestCase =  buildTestCase( newConfig, false );
+			TestCaseConfig newConfig = ( TestCaseConfig )getConfig().addNewTestCase().set( testCaseNewConfig )
+					.changeType( TestCaseConfig.type );
+			WsdlTestCase newTestCase = buildTestCase( newConfig, false );
 			ModelSupport.unsetIds( newTestCase );
 			newTestCase.afterLoad();
 			testCases.add( newTestCase );
@@ -707,16 +711,17 @@ public class WsdlTestSuite extends AbstractTestPropertyHolderWsdlModelItem<TestS
 		setPropertiesConfig( testSuiteConfig.getProperties() );
 	}
 
-	public void fireSecurityTestAdded(SecurityTest securityTest) {
+	public void fireSecurityTestAdded( SecurityTest securityTest )
+	{
 		TestSuiteListener[] a = testSuiteListeners.toArray( new TestSuiteListener[testSuiteListeners.size()] );
 
 		for( int c = 0; c < a.length; c++ )
 		{
 			a[c].securityTestAdded( securityTest );
 		}
-		
+
 	}
-	
+
 	public void fireSecurityTestRemoved( SecurityTest securityTest )
 	{
 		TestSuiteListener[] a = testSuiteListeners.toArray( new TestSuiteListener[testSuiteListeners.size()] );

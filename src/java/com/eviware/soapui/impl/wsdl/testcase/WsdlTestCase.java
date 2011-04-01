@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import org.apache.log4j.Logger;
 
@@ -134,8 +135,8 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 			List<SecurityTestConfig> securityTestConfigs = config.getSecurityTestList();
 			for( SecurityTestConfig tsc : securityTestConfigs )
 			{
-				SecurityTest loadTest = buildSecurityTest( tsc );
-				securityTests.add( loadTest );
+				SecurityTest securityTest = buildSecurityTest( tsc );
+				securityTests.add( securityTest );
 			}
 		}
 
@@ -342,9 +343,10 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 					break;
 			}
 
-			name = UISupport.prompt( "TestStep name must be unique, please specify new name for step\n" + "["
-					+ testStep.getName() + "] in TestCase [" + getTestSuite().getProject().getName() + "->"
-					+ getTestSuite().getName() + "->" + getName() + "]", "Change TestStep name", name );
+			name = UISupport.prompt(
+					"TestStep name must be unique, please specify new name for step\n" + "[" + testStep.getName()
+							+ "] in TestCase [" + getTestSuite().getProject().getName() + "->" + getTestSuite().getName()
+							+ "->" + getName() + "]", "Change TestStep name", name );
 
 			if( name == null )
 				return false;
@@ -429,8 +431,8 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 
 	public WsdlTestStep addTestStep( String type, String name )
 	{
-		TestStepConfig newStepConfig = WsdlTestStepRegistry.getInstance().getFactory( type ).createNewTestStep( this,
-				name );
+		TestStepConfig newStepConfig = WsdlTestStepRegistry.getInstance().getFactory( type )
+				.createNewTestStep( this, name );
 		if( newStepConfig != null )
 		{
 			return addTestStep( newStepConfig );
@@ -453,8 +455,8 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 
 	public WsdlTestStep insertTestStep( String type, String name, int index )
 	{
-		TestStepConfig newStepConfig = WsdlTestStepRegistry.getInstance().getFactory( type ).createNewTestStep( this,
-				name );
+		TestStepConfig newStepConfig = WsdlTestStepRegistry.getInstance().getFactory( type )
+				.createNewTestStep( this, name );
 		if( newStepConfig != null )
 		{
 			return insertTestStep( newStepConfig, index, false );
@@ -643,6 +645,15 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 
 		return result;
 	}
+	
+	public Map<String, TestStep> getTestStepsOrdered()
+	{
+		Map<String, TestStep> result = new TreeMap<String, TestStep>();
+		for( TestStep testStep : testSteps )
+			result.put( testStep.getName(), testStep );
+
+		return result;
+	}
 
 	public Map<String, LoadTest> getLoadTests()
 	{
@@ -812,7 +823,7 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 
 		for( WsdlLoadTest loadTest : loadTests )
 			loadTest.release();
-		
+
 		for( SecurityTest securityTest : securityTests )
 			securityTest.release();
 
@@ -851,7 +862,7 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 		{
 			loadTests.get( c ).resetConfigOnMove( loadTestConfigs.get( c ) );
 		}
-		
+
 		List<SecurityTestConfig> securityTestConfigs = getConfig().getSecurityTestList();
 		for( int c = 0; c < securityTestConfigs.size(); c++ )
 		{
@@ -993,6 +1004,10 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 	{
 		for( WsdlTestStep testStep : testSteps )
 			testStep.afterCopy( oldTestSuite, oldTestCase );
+		
+		for (SecurityTest securityTest : securityTests) {
+			securityTest.afterCopy();
+		}
 	}
 
 	public void setWsrmEnabled( boolean enabled )
@@ -1186,6 +1201,6 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 
 	public void setRunFromHereContext( StringToObjectMap runFromHereContext )
 	{
-		this.runFromHereContext = new StringToObjectMap(runFromHereContext);
+		this.runFromHereContext = new StringToObjectMap( runFromHereContext );
 	}
 }

@@ -36,8 +36,8 @@ import com.eviware.x.form.XFormField;
 import com.eviware.x.form.XFormFieldListener;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.AField.AFieldType;
+import com.eviware.x.form.support.AForm;
 
 /**
  * Clones a WsdlTestSuite
@@ -76,8 +76,8 @@ public class CloneTestCaseAction extends AbstractSoapUIAction<WsdlTestCase>
 					else
 					{
 						Project project = SoapUI.getWorkspace().getProjectByName( newValue );
-						dialog.setOptions( Form.TESTSUITE, ModelSupport.getNames( project.getTestSuiteList(),
-								new String[] { CREATE_NEW_OPTION } ) );
+						dialog.setOptions( Form.TESTSUITE,
+								ModelSupport.getNames( project.getTestSuiteList(), new String[] { CREATE_NEW_OPTION } ) );
 					}
 				}
 			} );
@@ -105,8 +105,8 @@ public class CloneTestCaseAction extends AbstractSoapUIAction<WsdlTestCase>
 		dialog.setValue( Form.DESCRIPTION, testCase.getDescription() );
 		dialog.setValue( Form.NAME, "Copy of " + testCase.getName() );
 		WorkspaceImpl workspace = testCase.getTestSuite().getProject().getWorkspace();
-		dialog.setOptions( Form.PROJECT, ModelSupport.getNames( workspace.getOpenProjectList(),
-				new String[] { CREATE_NEW_OPTION } ) );
+		dialog.setOptions( Form.PROJECT,
+				ModelSupport.getNames( workspace.getOpenProjectList(), new String[] { CREATE_NEW_OPTION } ) );
 
 		dialog.setValue( Form.PROJECT, testCase.getTestSuite().getProject().getName() );
 
@@ -114,9 +114,14 @@ public class CloneTestCaseAction extends AbstractSoapUIAction<WsdlTestCase>
 				testCase.getTestSuite().getProject().getTestSuiteList(), new String[] { CREATE_NEW_OPTION } ) );
 
 		dialog.setValue( Form.TESTSUITE, testCase.getTestSuite().getName() );
+
 		boolean hasLoadTests = testCase.getLoadTestCount() > 0;
 		dialog.setBooleanValue( Form.CLONE_LOADTESTS, hasLoadTests );
 		dialog.getFormField( Form.CLONE_LOADTESTS ).setEnabled( hasLoadTests );
+
+		boolean hasSecurityTests = testCase.getSecurityTestCount() > 0;
+		dialog.setBooleanValue( Form.CLONE_SECURITYTESTS, hasSecurityTests );
+		dialog.getFormField( Form.CLONE_SECURITYTESTS ).setEnabled( hasSecurityTests );
 
 		if( dialog.show() )
 		{
@@ -209,8 +214,9 @@ public class CloneTestCaseAction extends AbstractSoapUIAction<WsdlTestCase>
 			}
 
 			boolean move = dialog.getBooleanValue( Form.MOVE );
-			WsdlTestCase newTestCase = targetTestSuite.importTestCase( testCase, name, -1, dialog
-					.getBooleanValue( Form.CLONE_LOADTESTS ), !move );
+			WsdlTestCase newTestCase = targetTestSuite.importTestCase( testCase, name, -1,
+					dialog.getBooleanValue( Form.CLONE_LOADTESTS ), dialog.getBooleanValue( Form.CLONE_SECURITYTESTS ),
+					!move );
 			UISupport.select( newTestCase );
 
 			if( move )
@@ -231,16 +237,17 @@ public class CloneTestCaseAction extends AbstractSoapUIAction<WsdlTestCase>
 		@AField( name = "TestCase Name", description = "The name of the cloned TestCase", type = AFieldType.STRING )
 		public final static String NAME = "TestCase Name";
 
-
 		@AField( name = "Target Project", description = "The target Project for the cloned TestCase", type = AFieldType.ENUMERATION )
 		public final static String PROJECT = "Target Project";
 
-
 		@AField( name = "Target TestSuite", description = "The target TestSuite for the cloned TestCase", type = AFieldType.ENUMERATION )
-		public final static String TESTSUITE = "Target TestSuite"; 
-		
+		public final static String TESTSUITE = "Target TestSuite";
+
 		@AField( name = "Clone LoadTests", description = "Clone contained LoadTests", type = AFieldType.BOOLEAN )
 		public final static String CLONE_LOADTESTS = "Clone LoadTests";
+
+		@AField( name = "Clone SecurityTests", description = "Clone contained SecurityTests", type = AFieldType.BOOLEAN )
+		public final static String CLONE_SECURITYTESTS = "Clone SecurityTests";
 
 		@AField( name = "Move instead", description = "Moves the selected TestCase instead of copying", type = AFieldType.BOOLEAN )
 		public final static String MOVE = "Move instead";
