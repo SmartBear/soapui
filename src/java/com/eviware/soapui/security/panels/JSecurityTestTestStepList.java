@@ -156,6 +156,7 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 		securityTestTree.addTreeSelectionListener( this );
 		securityTestTree.addMouseListener( this );
 		securityTestTree.setRowHeight( 30 );
+		securityTestTree.setToggleClickCount( 0 );
 		add( toolbar, BorderLayout.NORTH );
 		add( new JScrollPane( securityTestTree ), BorderLayout.CENTER );
 		securityTest.getTestCase().getTestSuite().addTestSuiteListener( testSuiteListener );
@@ -771,9 +772,22 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 		if( node == null )
 			return;
 
-		/* if nothing is selected */
-		if( e.getClickCount() <= 1 )
+		if( ( e.getModifiers() & InputEvent.BUTTON3_MASK ) == InputEvent.BUTTON3_MASK )
 			return;
+		/* if nothing is selected */
+		if( e.getClickCount() == 1 )
+		{
+			if( securityTestTree.isExpanded( TreePathUtils.getPath( node ) ) )
+			{
+				securityTestTree.collapseRow( securityTestTree.getRowForLocation( e.getX(), e.getY() ) );
+			}
+			else
+			{
+				securityTestTree.expandRow( securityTestTree.getRowForLocation( e.getX(), e.getY() ) );
+			}
+			e.consume();
+			return;
+		}
 
 		if( node instanceof SecurityCheckNode )
 		{
@@ -790,11 +804,10 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 		}
 		else
 		{
-			if( securityTestTree.isExpanded( TreePathUtils.getPath( node ) ) )
+			 if( securityTestTree.isExpanded( TreePathUtils.getPath( node ) ) )
 			{
-				// UISupport.selectAndShow( ( ( TestStepNode )node ).getTestStep()
-				// );
-				// e.consume();
+				UISupport.selectAndShow( ( ( TestStepNode )node ).getTestStep() );
+				e.consume();
 			}
 		}
 
@@ -823,6 +836,9 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 	@Override
 	public void mouseReleased( MouseEvent e )
 	{
+		TreePath path = securityTestTree.getPathForLocation( e.getX(), e.getY() );
+		securityTestTree.setSelectionPath( path );
+
 		Object node = securityTestTree.getLastSelectedPathComponent();
 
 		if( node == null )

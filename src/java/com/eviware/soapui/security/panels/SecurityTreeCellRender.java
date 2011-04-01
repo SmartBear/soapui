@@ -4,6 +4,9 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.HashMap;
@@ -17,6 +20,7 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JTree;
 import javax.swing.SwingConstants;
+import javax.swing.border.Border;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeCellRenderer;
@@ -29,7 +33,6 @@ import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.security.support.ProgressBarSecurityTestStepAdapter;
 import com.eviware.soapui.support.UISupport;
-import com.sun.java.swing.plaf.nimbus.ProgressBarPainter;
 
 @SuppressWarnings( "serial" )
 public class SecurityTreeCellRender implements TreeCellRenderer
@@ -94,8 +97,9 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 		private DefaultMutableTreeNode node;
 		private JPanel innerLeftPanel;
 		private JPanel progressPanel;
+		private JLabel cntLabel;
 
-		public TestStepCellRender( JTree tree, TestStepNode node, boolean sel, boolean exp, boolean leaf, int arg5,
+		public TestStepCellRender( final JTree tree, TestStepNode node, boolean sel, boolean exp, boolean leaf, int arg5,
 				boolean arg6 )
 		{
 			super( new BorderLayout() );
@@ -131,11 +135,8 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 			else
 				expandCollapseBtn = new JButton( collapsed );
 
-			expandCollapseBtn.setEnabled( false );
 			expandCollapseBtn.setBorder( null );
-
 			expandCollapseBtn.setEnabled( false );
-			expandCollapseBtn.setBorder( null );
 
 			innerLeftPanel.add( expandCollapseBtn, BorderLayout.WEST );
 
@@ -143,12 +144,28 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 			{
 				progressBar = new JProgressBar();
 
-				progressPanel = UISupport.createProgressBarPanel( progressBar, 5, false );
+				progressPanel = new JPanel( new FlowLayout( FlowLayout.LEFT, 10, 0 )  );
 
+				progressBar.setValue( 0 );
+				progressBar.setStringPainted( true );
+				progressBar.setString( "" );
+				progressBar.setIndeterminate( false );
+
+				progressBar.setBorder( BorderFactory.createMatteBorder( 0, 0, 1, 1, Color.LIGHT_GRAY ) );
+
+				progressPanel.setBorder( BorderFactory.createEmptyBorder( 5, 5, 5, 0 ) );
+				progressPanel.add( progressBar);
+				
 				progressBar.setMinimumSize( new Dimension( 0, 200 ) );
 				progressBar.setBackground( Color.WHITE );
 				progressBar.setInheritsPopupMenu( true );
-
+				
+				cntLabel = new JLabel(" 0 ");
+				cntLabel.setForeground( Color.white );
+				cntLabel.setBackground( selected );
+				cntLabel.setBorder( BorderFactory.createLineBorder( Color.LIGHT_GRAY ) );
+				
+				progressPanel.add( cntLabel );
 				add( progressPanel, BorderLayout.LINE_END );
 				expandCollapseBtn.setVisible( true );
 
@@ -165,6 +182,8 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 			setSelected( sel );
 			setBorder( BorderFactory.createMatteBorder( 0, 0, 1, 0, Color.black ) );
 		}
+
+		
 
 		public void reset()
 		{
@@ -271,6 +290,7 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 		private JLabel label;
 		private ProgressBarSecurityTestStepAdapter progressBarAdapter;
 		private JPanel progressPanel;
+		private JLabel cntLabel;
 
 		public SecurityCheckCellRender( JTree tree, SecurityCheckNode node, boolean sel, boolean arg3, boolean arg4,
 				int arg5, boolean arg6 )
@@ -286,12 +306,30 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 			add( label, BorderLayout.LINE_START );
 
 			progressBar = new JProgressBar();
-			progressPanel = UISupport.createProgressBarPanel( progressBar, 5, false );
+//			progressPanel = UISupport.createProgressBarPanel( progressBar, 5, false );
 
+			progressPanel = new JPanel( new FlowLayout( FlowLayout.LEFT, 10, 0 )  );
+
+			progressBar.setValue( 0 );
+			progressBar.setStringPainted( true );
+			progressBar.setString( "" );
+			progressBar.setIndeterminate( false );
+
+			progressBar.setBorder( BorderFactory.createMatteBorder( 0, 0, 1, 1, Color.LIGHT_GRAY ) );
+
+			progressPanel.setBorder( BorderFactory.createEmptyBorder( 5, 5, 5, 0 ) );
+			progressPanel.add( progressBar);
+			
 			progressBar.setMinimumSize( new Dimension( 0, 200 ) );
 			progressBar.setBackground( Color.WHITE );
 			progressBar.setInheritsPopupMenu( true );
-
+			
+			cntLabel = new JLabel(" 0 ");
+			cntLabel.setForeground( Color.white );
+			cntLabel.setBackground( selected );
+			cntLabel.setBorder( BorderFactory.createLineBorder( Color.LIGHT_GRAY ) );
+			
+			progressPanel.add( cntLabel );
 			add( progressPanel, BorderLayout.LINE_END );
 
 			setSelected( sel );
