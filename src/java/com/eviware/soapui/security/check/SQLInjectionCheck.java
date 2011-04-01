@@ -155,7 +155,7 @@ public class SQLInjectionCheck extends AbstractSecurityCheckWithProperties
 					{
 						TestProperty property = getTestStep().getProperties().get( param.getName() );
 						String value = context.expand( property.getValue() );
-						if( param.getXPath() == null || param.getXPath().trim().length() == 0 )
+						if( param.getXpath() == null || param.getXpath().trim().length() == 0 )
 						{
 							testStep.getProperties().get( param.getName() )
 									.setValue( parameterMutations.get( param ).get( 0 ) );
@@ -170,7 +170,7 @@ public class SQLInjectionCheck extends AbstractSecurityCheckWithProperties
 							XmlObjectTreeModel model = new XmlObjectTreeModel( ( ( WsdlTestRequestStep )getTestStep() )
 									.getOperation().getInterface().getDefinitionContext().getSchemaTypeSystem(),
 									XmlObject.Factory.parse( value ) );
-							XmlTreeNode[] nodes = model.selectTreeNodes( context.expand( param.getXPath() ) );
+							XmlTreeNode[] nodes = model.selectTreeNodes( context.expand( param.getXpath() ) );
 							for( XmlTreeNode node : nodes )
 								node.setValue( 1, parameterMutations.get( param ).get( 0 ) );
 							params.put( param.getLabel(), parameterMutations.get( param ).get( 0 ) );
@@ -193,7 +193,7 @@ public class SQLInjectionCheck extends AbstractSecurityCheckWithProperties
 						.getDefinitionContext().getSchemaTypeSystem(), XmlObject.Factory.parse( value ) );
 				for( SecurityCheckedParameter param : getParameterHolder().getParameterList() )
 				{
-					if( param.getXPath() == null || param.getXPath().trim().length() == 0 )
+					if( param.getXpath() == null || param.getXpath().trim().length() == 0 )
 					{
 						testStep.getProperties().get( param.getName() ).setValue( parameterMutations.get( param ).get( 0 ) );
 						params.put( param.getLabel(), parameterMutations.get( param ).get( 0 ) );
@@ -206,7 +206,7 @@ public class SQLInjectionCheck extends AbstractSecurityCheckWithProperties
 							continue;
 						if( param.getName().equals( property.getName() ) )
 						{
-							XmlTreeNode[] nodes = model.selectTreeNodes( context.expand( param.getXPath() ) );
+							XmlTreeNode[] nodes = model.selectTreeNodes( context.expand( param.getXpath() ) );
 							if( parameterMutations.containsKey( param ) )
 								if( parameterMutations.get( param ).size() > 0 )
 								{
@@ -237,7 +237,7 @@ public class SQLInjectionCheck extends AbstractSecurityCheckWithProperties
 				TestProperty property = testStep.getProperties().get( parameter.getName() );
 				// check parameter does not have any xpath
 				// than mutate whole parameter
-				if( parameter.getXPath() == null || parameter.getXPath().trim().length() == 0 )
+				if( parameter.getXpath() == null || parameter.getXpath().trim().length() == 0 )
 				{
 					for( String sqlInjectionString : sqlInjectionConfig.getSqlInjectionStringsList() )
 					{
@@ -267,7 +267,7 @@ public class SQLInjectionCheck extends AbstractSecurityCheckWithProperties
 					if( testStep instanceof RestTestRequestStep || testStep instanceof HttpTestRequestStep )
 						model = new XmlObjectTreeModel( XmlObject.Factory.parse( value ) );
 
-					XmlTreeNode[] nodes = model.selectTreeNodes( context.expand( parameter.getXPath() ) );
+					XmlTreeNode[] nodes = model.selectTreeNodes( context.expand( parameter.getXpath() ) );
 
 					// for each invalid type set all nodes
 

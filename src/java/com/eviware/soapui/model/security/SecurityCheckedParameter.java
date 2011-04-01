@@ -1,6 +1,5 @@
 package com.eviware.soapui.model.security;
 
-
 public interface SecurityCheckedParameter
 {
 
@@ -10,9 +9,9 @@ public interface SecurityCheckedParameter
 	String getName();
 
 	/**
-	 * @return parameter XPath
+	 * @return parameter xpath
 	 */
-	String getXPath();
+	String getXpath();
 
 	/**
 	 * @return parameter type

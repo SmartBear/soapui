@@ -57,7 +57,7 @@ public class SecurityParametersTableModel extends DefaultTableModel
 		case 1 :
 			return param.getName();
 		case 2 :
-			return param.getXPath();
+			return param.getXpath();
 		case 3 :
 			return param.isChecked();
 		}
@@ -85,7 +85,7 @@ public class SecurityParametersTableModel extends DefaultTableModel
 			param.setName( ( String )aValue );
 			break;
 		case 2 :
-			param.setXPath( ( String )aValue );
+			param.setXpath( ( String )aValue );
 			break;
 		case 3 :
 			param.setChecked( ( Boolean )aValue );

@@ -47,7 +47,7 @@ public class SecurityCheckedParameterImpl implements SecurityCheckedParameter
 	 * @see
 	 * com.eviware.soapui.security.support.SecurityChekedParameter#getXPath()
 	 */
-	public String getXPath()
+	public String getXpath()
 	{
 		return config.getXpath();
 	}
@@ -56,7 +56,7 @@ public class SecurityCheckedParameterImpl implements SecurityCheckedParameter
 	 * @param xpath
 	 *           parameter XPath
 	 */
-	public void setXPath( String xpath )
+	public void setXpath( String xpath )
 	{
 		config.setXpath( xpath );
 	}

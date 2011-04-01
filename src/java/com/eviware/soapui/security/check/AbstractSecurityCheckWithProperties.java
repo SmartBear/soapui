@@ -61,7 +61,7 @@ public abstract class AbstractSecurityCheckWithProperties extends AbstractSecuri
 			{
 				if( param != null )
 					result.add( new XPathReferenceImpl( "SecurityCheck Parameter " + param.getName(),
-							( ( WsdlTestRequestStep )t ).getOperation(), true, param, "xPath" ) );
+							( ( WsdlTestRequestStep )t ).getOperation(), true, param, "xpath" ) );
 			}
 		}
 
@@ -101,7 +101,7 @@ public abstract class AbstractSecurityCheckWithProperties extends AbstractSecuri
 			if( overwrite )
 			{
 				param.setName( source.getName() );
-				param.setXPath( source.getXPath() );
+				param.setXpath( source.getXpath() );
 				param.setChecked( source.isChecked() );
 				return true;
 			}
@@ -112,7 +112,7 @@ public abstract class AbstractSecurityCheckWithProperties extends AbstractSecuri
 		}
 		else
 		{
-			return getParameterHolder().addParameter( newLabel, source.getName(), source.getXPath(), source.isChecked() );
+			return getParameterHolder().addParameter( newLabel, source.getName(), source.getXpath(), source.isChecked() );
 		}
 	}
 

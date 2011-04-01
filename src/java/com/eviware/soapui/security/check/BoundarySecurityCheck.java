@@ -95,13 +95,13 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 
 		XmlObjectTreeModel model = null;// getXmlObjectTreeModel( testStep );
 		List<SecurityCheckedParameter> scpList = getParameterHolder().getParameterList();
-		StringToStringMap stsmap =  new StringToStringMap();
+		StringToStringMap stsmap = new StringToStringMap();
 		for( SecurityCheckedParameter scp : scpList )
 		{
-			if( scp.isChecked() && scp.getXPath().trim().length() > 0 )
+			if( scp.isChecked() && scp.getXpath().trim().length() > 0 )
 			{
 				XmlTreeNode[] treeNodes = null;
-				
+
 				if( strategy.equals( StrategyTypeConfig.ONE_BY_ONE ) )
 				{
 					stsmap = new StringToStringMap();
@@ -115,7 +115,7 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 					}
 
 				}
-				treeNodes = model.selectTreeNodes( context.expand( scp.getXPath() ) );
+				treeNodes = model.selectTreeNodes( context.expand( scp.getXpath() ) );
 
 				if( treeNodes.length > 0 )
 				{
@@ -169,8 +169,6 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 			addMutation( context, pm );
 		}
 	}
-
-
 
 	private XmlObjectTreeModel getXmlObjectTreeModel( TestStep testStep, SecurityCheckedParameter scp )
 	{
@@ -265,17 +263,17 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 			PropertyMutation pm = new PropertyMutation();
 			pm.setPropertyName( scp.getName() );
 			pm.setPropertyValue( model.getXmlObject().toString() );
-			
+
 			if( strategy.equals( StrategyTypeConfig.ONE_BY_ONE ) )
 			{
 				stsmap = new StringToStringMap();
-				stsmap.put( scp.getLabel() +" ("+nodeName +"='"+ nodeValue+"') ", value );
+				stsmap.put( scp.getLabel() + " (" + nodeName + "='" + nodeValue + "') ", value );
 				pm.setMutatedParameters( stsmap );
 				addMutation( context, pm );
 			}
 			else
 			{
-				stsmap.put( scp.getLabel() +" ("+nodeName +"='"+ nodeValue+"') ", value );
+				stsmap.put( scp.getLabel() + " (" + nodeName + "='" + nodeValue + "') ", value );
 			}
 
 		}
