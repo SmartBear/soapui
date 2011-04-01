@@ -16,6 +16,8 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -193,16 +195,8 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 
 	protected JComponent buildTestStepList()
 	{
-		JPanel p = new JPanel( new BorderLayout() );
-		JXToolBar toolbar = UISupport.createToolbar();
-
-		p.add( toolbar, BorderLayout.NORTH );
 		testStepList = new JSecurityTestTestStepList( getModelItem(), securityTestLog );
-		stateDependantComponents.add( testStepList );
-
-		p.add( testStepList, BorderLayout.CENTER );
-
-		return p;
+		return testStepList;
 	}
 
 	protected void addTabs( JTabbedPane tabs, JInspectorPanel inspectorPanel )

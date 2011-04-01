@@ -59,7 +59,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 	public final static String FAIL_ON_ERROR_PROPERTY = SecurityTest.class.getName() + "@failOnError";
 	private WsdlTestCase testCase;
 	private SecurityTestLogModel securityTestLog;
-	private SecurityChecksPanel.SecurityCheckListModel listModel;
+//	private SecurityChecksPanel.SecurityCheckListModel listModel;
 	private Set<SecurityTestRunListener> securityTestRunListeners = new HashSet<SecurityTestRunListener>();
 	private Map<TestStep, Set<SecurityTestRunListener>> securityTestStepRunListeners = new HashMap<TestStep, Set<SecurityTestRunListener>>();
 	private Map<TestStep, SecurityTestStepResult> securityTestStepResultMap;
@@ -95,10 +95,10 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 		securityTestRunListeners.clear();
 	}
 
-	public void setListModel( SecurityChecksPanel.SecurityCheckListModel listModel )
-	{
-		this.listModel = listModel;
-	}
+//	public void setListModel( SecurityChecksPanel.SecurityCheckListModel listModel )
+//	{
+//		this.listModel = listModel;
+//	}
 
 	/**
 	 * Gets the current security log
@@ -150,8 +150,8 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 			newSecCheck = addSecurityCheck( factory, newSecCheckConfig, testStepSecurityTest, testStep );
 		}
 
-		if( listModel != null )
-			listModel.securityCheckAdded( newSecCheck );
+//		if( listModel != null )
+//			listModel.securityCheckAdded( newSecCheck );
 
 		addSecurityCheckByTestStepId( testStep.getId(), newSecCheck );
 		return newSecCheck;
@@ -227,7 +227,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 					{
 						getConfig().removeTestStepSecurityTest( i );
 					}
-					listModel.securityCheckRemoved( securityCheck );
+//					listModel.securityCheckRemoved( securityCheck );
 				}
 			}
 		}
@@ -546,7 +546,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 						vv[i] = testStepSecurityTestList.get( i );
 					}
 					getConfig().setTestStepSecurityTestArray( vv );
-					listModel.securityCheckMoved( newSecCheck, index, offset );
+//					listModel.securityCheckMoved( newSecCheck, index, offset );
 					return newSecCheck;
 				}
 			}

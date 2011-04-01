@@ -13,9 +13,15 @@
 package com.eviware.soapui.security.support;
 
 import java.awt.Color;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import javax.swing.JProgressBar;
+import javax.swing.JTree;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 
+import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestRunner.Status;
@@ -33,12 +39,14 @@ import com.eviware.soapui.security.result.SecurityResult.SecurityStatus;
  * @author dragica.soldo
  */
 
-public class ProgressBarSecurityTestStepAdapter
+public class ProgressBarSecurityTestStepAdapter implements PropertyChangeListener
 {
 	private final JProgressBar progressBar;
 	private final TestStep testStep;
 	private final SecurityTest securityTest;
 	private InternalTestRunListener internalTestRunListener;
+	private JTree tree;
+	private DefaultMutableTreeNode node;
 
 	public ProgressBarSecurityTestStepAdapter( JProgressBar progressBar, SecurityTest securityTest, TestStep testStep )
 	{
@@ -48,6 +56,20 @@ public class ProgressBarSecurityTestStepAdapter
 
 		internalTestRunListener = new InternalTestRunListener();
 		securityTest.addTestStepRunListener( testStep, internalTestRunListener );
+	}
+
+	public ProgressBarSecurityTestStepAdapter( JTree tree, DefaultMutableTreeNode node, JProgressBar progressBar, SecurityTest securityTest,
+			WsdlTestStep testStep )
+	{
+		this.tree = tree;
+		this.node = node;
+		this.progressBar = progressBar;
+		this.testStep = testStep;
+		this.securityTest = securityTest;
+
+		internalTestRunListener = new InternalTestRunListener();
+		securityTest.addTestStepRunListener( testStep, internalTestRunListener );
+//		progressBar.addPropertyChangeListener( this );
 	}
 
 	public void release()
@@ -68,21 +90,23 @@ public class ProgressBarSecurityTestStepAdapter
 							testStep.getId() ) );
 			// progressBar.setForeground( Color.WHITE );
 			progressBar.setString( "" );
+			((DefaultTreeModel)tree.getModel()).nodeChanged( node );
 		}
 
 		public void beforeSecurityCheck( TestCaseRunner testRunner, SecurityTestRunContext runContext,
 				AbstractSecurityCheck securityCheck )
 		{
-			progressBar.setIndeterminate( true );
+//			progressBar.setIndeterminate( true );
 			// if( progressBar.isIndeterminate() )
 			// return;
 
-			if( securityCheck != null )
-			{
-				progressBar.setString( securityCheck.getName() );
-				progressBar.setForeground( Color.GRAY );
-				progressBar.setValue( ( ( SecurityTestRunContext )runContext ).getCurrentCheckIndex() );
-			}
+//			if( securityCheck != null )
+//			{
+//				progressBar.setString( securityCheck.getName() );
+//				progressBar.setForeground( Color.GRAY );
+//				progressBar.setValue( ( ( SecurityTestRunContext )runContext ).getCurrentCheckIndex() );
+//			}
+//			((DefaultTreeModel)tree.getModel()).nodeChanged( node );
 		}
 
 		public void afterSecurityCheck( TestCaseRunner testRunner, SecurityTestRunContext runContext,
@@ -115,6 +139,7 @@ public class ProgressBarSecurityTestStepAdapter
 			}
 
 			progressBar.setValue( ( ( SecurityTestRunContext )runContext ).getCurrentCheckIndex() + 1 );
+			((DefaultTreeModel)tree.getModel()).nodeChanged( node );
 		}
 
 		public void afterStep( TestCaseRunner testRunner, SecurityTestRunContext runContext, SecurityTestStepResult result )
@@ -137,6 +162,16 @@ public class ProgressBarSecurityTestStepAdapter
 
 			progressBar.setString( result.getStatus().toString() );
 			progressBar.setValue( progressBar.getMaximum() );
+			((DefaultTreeModel)tree.getModel()).nodeChanged( node );
 		}
+	}
+
+	@Override
+	public void propertyChange( PropertyChangeEvent arg0 )
+	{
+		String name = arg0.getPropertyName();
+//		System.out.println(name);
+		if( name.equals("string" ) || name.equals("foreground" ) || name.equals("indeterminate") )
+			((DefaultTreeModel)tree.getModel()).nodeChanged( node );
 	}
 }

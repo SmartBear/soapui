@@ -88,7 +88,7 @@ public class SecurityChecksPanel extends JPanel
 
 		securityCheckListModel = new SecurityCheckListModel();
 		securityCheckList = new JList( securityCheckListModel );
-		securityTest.setListModel( securityCheckListModel );
+//		securityTest.setListModel( securityCheckListModel );
 		securityCheckList.setCellRenderer( new SecurityCheckCellRenderer() );
 		securityCheckList.setToolTipText( "SecurityChecks for this TestStep" );
 		securityCheckList.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
