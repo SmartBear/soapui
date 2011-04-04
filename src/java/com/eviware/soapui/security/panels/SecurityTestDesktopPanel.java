@@ -13,8 +13,10 @@
 package com.eviware.soapui.security.panels;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -25,6 +27,7 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
@@ -124,6 +127,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 	// private InternalSecurityCheckRunListener securityCheckkRunListener = new
 	// InternalSecurityCheckRunListener();
 	private InternalSecurityTestRunListener securityTestRunListener = new InternalSecurityTestRunListener();
+	private JLabel cntLabel;
 
 	public SecurityTestDesktopPanel( SecurityTest securityTest )
 	{
@@ -135,7 +139,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 		this.securityTest = securityTest;
 		// securityTest.addSecurityCheckRunListener( securityCheckkRunListener );
 		securityTest.addSecurityTestRunListener( securityTestRunListener );
-		progressBarAdapter = new ProgressBarSecurityTestAdapter( progressBar, securityTest );
+		progressBarAdapter = new ProgressBarSecurityTestAdapter( progressBar, securityTest, cntLabel );
 	}
 
 	private void buildUI()
@@ -165,10 +169,30 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 
 	private Component buildRunnerBar()
 	{
-		// progressBar = new JProgressBar( 0, getModelItem().getTestStepCount()
-		// );
 		progressBar = new JProgressBar( 0, getModelItem().getSecurityCheckCount() );
-		return UISupport.createProgressBarPanel( progressBar, 10, false );
+
+		JPanel progressPanel = new JPanel( new BorderLayout( 10, 0 ) );
+
+		progressBar.setValue( 0 );
+		progressBar.setStringPainted( true );
+		progressBar.setString( "" );
+		progressBar.setIndeterminate( false );
+
+		progressBar.setBorder( BorderFactory.createMatteBorder( 0, 0, 1, 1, Color.LIGHT_GRAY ) );
+
+		progressPanel.setBorder( BorderFactory.createEmptyBorder( 5, 5, 5, 0 ) );
+		progressPanel.add( progressBar );
+
+		progressBar.setMinimumSize( new Dimension( 0, 200 ) );
+		progressBar.setBackground( Color.WHITE );
+
+		cntLabel = new JLabel( " 0 " );
+		cntLabel.setForeground( Color.white );
+		cntLabel.setBorder( BorderFactory.createLineBorder( Color.LIGHT_GRAY ) );
+
+		progressPanel.add( cntLabel, BorderLayout.EAST );
+		
+		return progressPanel;
 	}
 
 	private JComponent buildTestLog()

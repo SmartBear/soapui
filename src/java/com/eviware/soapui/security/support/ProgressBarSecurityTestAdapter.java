@@ -14,6 +14,7 @@ package com.eviware.soapui.security.support;
 
 import java.awt.Color;
 
+import javax.swing.JLabel;
 import javax.swing.JProgressBar;
 
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
@@ -36,8 +37,11 @@ public class ProgressBarSecurityTestAdapter
 	private final JProgressBar progressBar;
 	private final SecurityTest securityTest;
 	private InternalTestRunListener internalTestRunListener;
+	private static final Color OK_COLOR = new Color( 0, 205, 102 );
+	private static final Color FAILED_COLOR = new Color( 255, 102, 0 );
+	private static final Color UNKNOWN_COLOR = new Color( 255, 255, 204 );
 
-	public ProgressBarSecurityTestAdapter( JProgressBar progressBar, SecurityTest securityTest )
+	public ProgressBarSecurityTestAdapter( JProgressBar progressBar, SecurityTest securityTest, JLabel cntLabel )
 	{
 		this.progressBar = progressBar;
 		this.securityTest = securityTest;
@@ -60,7 +64,7 @@ public class ProgressBarSecurityTestAdapter
 
 			progressBar.getModel().setMaximum(
 					( ( SecurityTestRunnerImpl )testRunner ).getSecurityTest().getSecurityCheckCount() );
-			progressBar.setForeground( Color.GREEN.darker() );
+			progressBar.setForeground( OK_COLOR );
 		}
 
 		@Override
@@ -88,15 +92,15 @@ public class ProgressBarSecurityTestAdapter
 			if( securityCheckResult.getStatus() == SecurityStatus.CANCELED
 					&& securityCheckResult.isHasRequestsWithWarnings() )
 			{
-				progressBar.setForeground( Color.RED );
+				progressBar.setForeground( FAILED_COLOR );
 			}
 			else if( securityCheckResult.getStatus() == SecurityStatus.FAILED )
 			{
-				progressBar.setForeground( Color.RED );
+				progressBar.setForeground( FAILED_COLOR );
 			}
 			else if( securityCheckResult.getStatus() == SecurityStatus.OK )
 			{
-				progressBar.setForeground( Color.GREEN.darker() );
+				progressBar.setForeground( OK_COLOR );
 			}
 
 			progressBar.setValue( runContext.getCurrentCheckOnSecurityTestIndex() + 1 );
@@ -106,11 +110,11 @@ public class ProgressBarSecurityTestAdapter
 		{
 			if( testRunner.getStatus() == Status.FAILED )
 			{
-				progressBar.setForeground( Color.RED );
+				progressBar.setForeground( FAILED_COLOR );
 			}
 			else if( testRunner.getStatus() == Status.FINISHED )
 			{
-				progressBar.setForeground( Color.GREEN.darker() );
+				progressBar.setForeground( OK_COLOR );
 			}
 
 			if( progressBar.isIndeterminate() )

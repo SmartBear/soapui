@@ -13,7 +13,6 @@
 package com.eviware.soapui.security.check;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -53,12 +52,10 @@ import com.eviware.soapui.security.SecurityTestRunnerImpl;
 import com.eviware.soapui.security.result.SecurityCheckRequestResult;
 import com.eviware.soapui.security.result.SecurityCheckResult;
 import com.eviware.soapui.security.result.SecurityResult.SecurityStatus;
-import com.eviware.soapui.security.support.FailedSecurityMessageExchange;
 import com.eviware.soapui.security.support.SecurityTestRunListener;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
-import com.eviware.soapui.support.types.StringToStringMap;
 
 /**
  * @author robert

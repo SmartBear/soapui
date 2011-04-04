@@ -13,9 +13,8 @@
 package com.eviware.soapui.security.support;
 
 import java.awt.Color;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
+import javax.swing.JLabel;
 import javax.swing.JProgressBar;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -28,9 +27,8 @@ import com.eviware.soapui.model.testsuite.TestRunner.Status;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunnerImpl;
-import com.eviware.soapui.security.check.AbstractSecurityCheck;
+import com.eviware.soapui.security.result.SecurityCheckRequestResult;
 import com.eviware.soapui.security.result.SecurityCheckResult;
-import com.eviware.soapui.security.result.SecurityTestStepResult;
 import com.eviware.soapui.security.result.SecurityResult.SecurityStatus;
 
 /**
@@ -39,7 +37,7 @@ import com.eviware.soapui.security.result.SecurityResult.SecurityStatus;
  * @author dragica.soldo
  */
 
-public class ProgressBarSecurityTestStepAdapter implements PropertyChangeListener
+public class ProgressBarSecurityTestStepAdapter
 {
 	private final JProgressBar progressBar;
 	private final TestStep testStep;
@@ -47,19 +45,24 @@ public class ProgressBarSecurityTestStepAdapter implements PropertyChangeListene
 	private InternalTestRunListener internalTestRunListener;
 	private JTree tree;
 	private DefaultMutableTreeNode node;
+	private JLabel counterLabel;
+	private static final Color OK_COLOR = new Color( 0, 205, 102 );
+	private static final Color FAILED_COLOR = new Color( 255, 102, 0 );
+	private static final Color UNKNOWN_COLOR = new Color( 255, 255, 204 );
 
-	public ProgressBarSecurityTestStepAdapter( JProgressBar progressBar, SecurityTest securityTest, TestStep testStep )
-	{
-		this.progressBar = progressBar;
-		this.testStep = testStep;
-		this.securityTest = securityTest;
+	// public ProgressBarSecurityTestStepAdapter( JProgressBar progressBar,
+	// SecurityTest securityTest, TestStep testStep )
+	// {
+	// this.progressBar = progressBar;
+	// this.testStep = testStep;
+	// this.securityTest = securityTest;
+	//
+	// internalTestRunListener = new InternalTestRunListener();
+	// securityTest.addTestStepRunListener( testStep, internalTestRunListener );
+	// }
 
-		internalTestRunListener = new InternalTestRunListener();
-		securityTest.addTestStepRunListener( testStep, internalTestRunListener );
-	}
-
-	public ProgressBarSecurityTestStepAdapter( JTree tree, DefaultMutableTreeNode node, JProgressBar progressBar, SecurityTest securityTest,
-			WsdlTestStep testStep )
+	public ProgressBarSecurityTestStepAdapter( JTree tree, DefaultMutableTreeNode node, JProgressBar progressBar,
+			SecurityTest securityTest, WsdlTestStep testStep, JLabel cntLabel )
 	{
 		this.tree = tree;
 		this.node = node;
@@ -67,9 +70,11 @@ public class ProgressBarSecurityTestStepAdapter implements PropertyChangeListene
 		this.testStep = testStep;
 		this.securityTest = securityTest;
 
+		this.counterLabel = cntLabel;
 		internalTestRunListener = new InternalTestRunListener();
-		securityTest.addTestStepRunListener( testStep, internalTestRunListener );
-//		progressBar.addPropertyChangeListener( this );
+		// securityTest.addTestStepRunListener( testStep, internalTestRunListener
+		// );
+		this.securityTest.addSecurityTestRunListener( internalTestRunListener );
 	}
 
 	public void release()
@@ -79,8 +84,11 @@ public class ProgressBarSecurityTestStepAdapter implements PropertyChangeListene
 
 	public class InternalTestRunListener extends SecurityTestRunListenerAdapter
 	{
+
+		private int totalAlertsCounter;
+
 		@Override
-		public void beforeStep( TestCaseRunner testRunner, SecurityTestRunContext runContext, TestStep testStep )
+		public void beforeRun( TestCaseRunner testRunner, SecurityTestRunContext runContext )
 		{
 			if( progressBar.isIndeterminate() )
 				return;
@@ -88,25 +96,12 @@ public class ProgressBarSecurityTestStepAdapter implements PropertyChangeListene
 			progressBar.getModel().setMaximum(
 					( ( SecurityTestRunnerImpl )testRunner ).getSecurityTest().getTestStepSecurityChecksCount(
 							testStep.getId() ) );
-			// progressBar.setForeground( Color.WHITE );
-			progressBar.setString( "" );
-			((DefaultTreeModel)tree.getModel()).nodeChanged( node );
-		}
-
-		public void beforeSecurityCheck( TestCaseRunner testRunner, SecurityTestRunContext runContext,
-				AbstractSecurityCheck securityCheck )
-		{
-//			progressBar.setIndeterminate( true );
-			// if( progressBar.isIndeterminate() )
-			// return;
-
-//			if( securityCheck != null )
-//			{
-//				progressBar.setString( securityCheck.getName() );
-//				progressBar.setForeground( Color.GRAY );
-//				progressBar.setValue( ( ( SecurityTestRunContext )runContext ).getCurrentCheckIndex() );
-//			}
-//			((DefaultTreeModel)tree.getModel()).nodeChanged( node );
+			progressBar.setForeground( UNKNOWN_COLOR );
+			progressBar.setString( "UNKNOWN" );
+			counterLabel.setText( " 0 " );
+			counterLabel.setBackground( OK_COLOR );
+			totalAlertsCounter = 0;
+			( ( DefaultTreeModel )tree.getModel() ).nodeChanged( node );
 		}
 
 		public void afterSecurityCheck( TestCaseRunner testRunner, SecurityTestRunContext runContext,
@@ -114,64 +109,54 @@ public class ProgressBarSecurityTestStepAdapter implements PropertyChangeListene
 		{
 			progressBar.setIndeterminate( false );
 
-			if( securityCheckResult.getStatus() == SecurityStatus.CANCELED )
-			{
-				if( securityCheckResult.isHasRequestsWithWarnings() )
+			if( !progressBar.getString().equals( "FAILED" ) )
+				if( securityCheckResult.getStatus() == SecurityStatus.CANCELED )
 				{
-					progressBar.setForeground( Color.RED );
+					if( securityCheckResult.isHasRequestsWithWarnings() )
+					{
+						progressBar.setForeground( FAILED_COLOR );
+						progressBar.setString( "FAILED" );
+					}
+					else
+					{
+						progressBar.setForeground( OK_COLOR );
+						progressBar.setString( "OK" );
+					}
 				}
-				else
+				else if( securityCheckResult.getStatus() == SecurityStatus.FAILED )
 				{
-					progressBar.setForeground( Color.GREEN.darker() );
+					progressBar.setForeground( FAILED_COLOR );
+					progressBar.setString( "FAILED" );
 				}
-			}
-			else if( securityCheckResult.getStatus() == SecurityStatus.FAILED )
-			{
-				progressBar.setForeground( Color.RED );
-			}
-			else if( securityCheckResult.getStatus() == SecurityStatus.OK )
-			{
-				progressBar.setForeground( Color.GREEN.darker() );
-			}
-			else if( securityCheckResult.getStatus() == SecurityStatus.UNKNOWN )
-			{
-				progressBar.setForeground( Color.WHITE );
-			}
+				else if( securityCheckResult.getStatus() == SecurityStatus.OK )
+				{
+					progressBar.setForeground( OK_COLOR );
+					progressBar.setString( "OK" );
+				}
+				else if( securityCheckResult.getStatus() == SecurityStatus.UNKNOWN )
+				{
+					progressBar.setForeground( UNKNOWN_COLOR );
+				}
 
 			progressBar.setValue( ( ( SecurityTestRunContext )runContext ).getCurrentCheckIndex() + 1 );
-			((DefaultTreeModel)tree.getModel()).nodeChanged( node );
+			( ( DefaultTreeModel )tree.getModel() ).nodeChanged( node );
 		}
 
-		public void afterStep( TestCaseRunner testRunner, SecurityTestRunContext runContext, SecurityTestStepResult result )
+		@Override
+		public void afterSecurityCheckRequest( TestCaseRunner testRunner, SecurityTestRunContext runContext,
+				SecurityCheckRequestResult securityCheckReqResult )
 		{
-			if( progressBar.isIndeterminate() )
-				return;
 
-			if( result.getStatus() == SecurityStatus.FAILED )
+			if( securityCheckReqResult.getStatus() == SecurityStatus.FAILED )
 			{
-				progressBar.setForeground( Color.RED );
-			}
-			else if( testRunner.getStatus() == Status.FINISHED )
-			{
-				progressBar.setForeground( Color.GREEN.darker() );
-			}
-			else if( testRunner.getStatus() != Status.RUNNING )
-			{
-				progressBar.setForeground( Color.WHITE );
+				counterLabel.setBackground( FAILED_COLOR );
+				totalAlertsCounter++ ;
 			}
 
-			progressBar.setString( result.getStatus().toString() );
-			progressBar.setValue( progressBar.getMaximum() );
-			((DefaultTreeModel)tree.getModel()).nodeChanged( node );
+			counterLabel.setText( " " + totalAlertsCounter + " " );
+			( ( DefaultTreeModel )tree.getModel() ).nodeChanged( node );
 		}
+
 	}
 
-	@Override
-	public void propertyChange( PropertyChangeEvent arg0 )
-	{
-		String name = arg0.getPropertyName();
-//		System.out.println(name);
-		if( name.equals("string" ) || name.equals("foreground" ) || name.equals("indeterminate") )
-			((DefaultTreeModel)tree.getModel()).nodeChanged( node );
-	}
 }

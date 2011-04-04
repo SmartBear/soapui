@@ -402,7 +402,7 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 			testStep.addPropertyChangeListener( testCasePropertyChangeListener );
 			if( progressBar != null )
 			{
-				progressBarAdapter = new ProgressBarSecurityTestStepAdapter( progressBar, securityTest, testStep );
+//				progressBarAdapter = new ProgressBarSecurityTestStepAdapter( progressBar, securityTest, testStep );
 			}
 		}
 
