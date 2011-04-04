@@ -246,66 +246,34 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 		@Override
 		public void testStepAdded( TestStep testStep, int index )
 		{
-			TestStepListEntryPanel testStepListEntry = createTestStepListPanel( testStep );
-			panels.put( testStep, testStepListEntry );
-			testStepListPanel.add( testStepListEntry, index );
-			splitPane.remove( splitPane.getTopComponent() );
-			splitPane.setTopComponent( new JScrollPane( testStepListPanel ) );
-			revalidate();
-			repaint();
+			((SecurityCheckTree)securityTestTree.getModel()).insertNodeInto( testStep );
 		}
 
 		@Override
 		public void testStepRemoved( TestStep testStep, int index )
 		{
-			TestStepListEntryPanel testCaseListPanel = panels.get( testStep );
-			if( testCaseListPanel != null )
-			{
-				remove( testCaseListPanel );
-				TestStepListEntryPanel testStepListEntry = panels.remove( testStep );
-				testStepListPanel.remove( testStepListEntry );
-				testStepListEntry.release();
-				splitPane.remove( splitPane.getTopComponent() );
-				splitPane.setTopComponent( new JScrollPane( testStepListPanel ) );
-
-				if( secCheckPanel != null )
-				{
-					if( secCheckPanel instanceof SecurityChecksPanel )
-					{
-						( ( SecurityChecksPanel )secCheckPanel ).release();
-						splitPane.remove( secCheckPanel );
-						selectedTestStep = null;
-						secCheckPanel = buildSecurityChecksPanel();
-						secCheckPanel.revalidate();
-						splitPane.setBottomComponent( secCheckPanel );
-						splitPane.revalidate();
-					}
-				}
-
-				revalidate();
-				repaint();
-			}
+			((SecurityCheckTree)securityTestTree.getModel()).removeTestStep(testStep);
 		}
 
 		@Override
 		public void testStepMoved( TestStep testStep, int index, int offset )
 		{
-			TestStepListEntryPanel testStepListEntry = panels.get( testStep );
-			if( testStepListEntry != null )
-			{
-				boolean hadFocus = testStepListEntry.hasFocus();
-
-				testStepListPanel.remove( testStepListEntry );
-				testStepListPanel.add( testStepListEntry, index + offset );
-				splitPane.remove( splitPane.getTopComponent() );
-				splitPane.setTopComponent( new JScrollPane( testStepListPanel ) );
-
-				revalidate();
-				repaint();
-
-				if( hadFocus )
-					testStepListEntry.requestFocus();
-			}
+//			TestStepListEntryPanel testStepListEntry = panels.get( testStep );
+//			if( testStepListEntry != null )
+//			{
+//				boolean hadFocus = testStepListEntry.hasFocus();
+//
+//				testStepListPanel.remove( testStepListEntry );
+//				testStepListPanel.add( testStepListEntry, index + offset );
+//				splitPane.remove( splitPane.getTopComponent() );
+//				splitPane.setTopComponent( new JScrollPane( testStepListPanel ) );
+//
+//				revalidate();
+//				repaint();
+//
+//				if( hadFocus )
+//					testStepListEntry.requestFocus();
+//			}
 		}
 	}
 
@@ -804,7 +772,7 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 		}
 		else
 		{
-			 if( securityTestTree.isExpanded( TreePathUtils.getPath( node ) ) )
+			if( securityTestTree.isExpanded( TreePathUtils.getPath( node ) ) )
 			{
 				UISupport.selectAndShow( ( ( TestStepNode )node ).getTestStep() );
 				e.consume();

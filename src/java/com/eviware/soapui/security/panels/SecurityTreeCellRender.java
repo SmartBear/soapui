@@ -1,3 +1,14 @@
+/*
+ *  soapUI, copyright (C) 2004-2011 eviware.com 
+ *
+ *  soapUI is free software; you can redistribute it and/or modify it under the 
+ *  terms of version 2.1 of the GNU Lesser General Public License as published by 
+ *  the Free Software Foundation.
+ *
+ *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ *  See the GNU Lesser General Public License for more details at gnu.org.
+ */
 package com.eviware.soapui.security.panels;
 
 import java.awt.BorderLayout;
@@ -5,8 +16,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.HashMap;
@@ -20,7 +29,6 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JTree;
 import javax.swing.SwingConstants;
-import javax.swing.border.Border;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeCellRenderer;
@@ -144,7 +152,7 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 			{
 				progressBar = new JProgressBar();
 
-				progressPanel = new JPanel( new FlowLayout( FlowLayout.LEFT, 10, 0 )  );
+				progressPanel = new JPanel( new FlowLayout( FlowLayout.LEFT, 10, 0 ) );
 
 				progressBar.setValue( 0 );
 				progressBar.setStringPainted( true );
@@ -154,17 +162,17 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 				progressBar.setBorder( BorderFactory.createMatteBorder( 0, 0, 1, 1, Color.LIGHT_GRAY ) );
 
 				progressPanel.setBorder( BorderFactory.createEmptyBorder( 5, 5, 5, 0 ) );
-				progressPanel.add( progressBar);
-				
+				progressPanel.add( progressBar );
+
 				progressBar.setMinimumSize( new Dimension( 0, 200 ) );
 				progressBar.setBackground( Color.WHITE );
 				progressBar.setInheritsPopupMenu( true );
-				
-				cntLabel = new JLabel(" 0 ");
+
+				cntLabel = new JLabel( " 0 " );
 				cntLabel.setForeground( Color.white );
 				cntLabel.setBackground( selected );
 				cntLabel.setBorder( BorderFactory.createLineBorder( Color.LIGHT_GRAY ) );
-				
+
 				progressPanel.add( cntLabel );
 				add( progressPanel, BorderLayout.LINE_END );
 				expandCollapseBtn.setVisible( true );
@@ -182,8 +190,6 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 			setSelected( sel );
 			setBorder( BorderFactory.createMatteBorder( 0, 0, 1, 0, Color.black ) );
 		}
-
-		
 
 		public void reset()
 		{
@@ -291,6 +297,7 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 		private ProgressBarSecurityTestStepAdapter progressBarAdapter;
 		private JPanel progressPanel;
 		private JLabel cntLabel;
+//		private SecurityTest securityTest;
 
 		public SecurityCheckCellRender( JTree tree, SecurityCheckNode node, boolean sel, boolean arg3, boolean arg4,
 				int arg5, boolean arg6 )
@@ -302,13 +309,11 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 			label.setIcon( UISupport.createImageIcon( "/securityTest.png" ) );
 			label.setBorder( BorderFactory.createEmptyBorder( 5, 45, 5, 5 ) );
 			label.setEnabled( !securityCheck.isDisabled() );
-
+//			securityTest = ( ( SecurityTreeRootNode )node.getParent() ).getSecurityTest();
 			add( label, BorderLayout.LINE_START );
 
 			progressBar = new JProgressBar();
-//			progressPanel = UISupport.createProgressBarPanel( progressBar, 5, false );
-
-			progressPanel = new JPanel( new FlowLayout( FlowLayout.LEFT, 10, 0 )  );
+			progressPanel = new JPanel( new FlowLayout( FlowLayout.LEFT, 10, 0 ) );
 
 			progressBar.setValue( 0 );
 			progressBar.setStringPainted( true );
@@ -318,17 +323,17 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 			progressBar.setBorder( BorderFactory.createMatteBorder( 0, 0, 1, 1, Color.LIGHT_GRAY ) );
 
 			progressPanel.setBorder( BorderFactory.createEmptyBorder( 5, 5, 5, 0 ) );
-			progressPanel.add( progressBar);
-			
+			progressPanel.add( progressBar );
+
 			progressBar.setMinimumSize( new Dimension( 0, 200 ) );
 			progressBar.setBackground( Color.WHITE );
 			progressBar.setInheritsPopupMenu( true );
-			
-			cntLabel = new JLabel(" 0 ");
+
+			cntLabel = new JLabel( " 0 " );
 			cntLabel.setForeground( Color.white );
 			cntLabel.setBackground( selected );
 			cntLabel.setBorder( BorderFactory.createLineBorder( Color.LIGHT_GRAY ) );
-			
+
 			progressPanel.add( cntLabel );
 			add( progressPanel, BorderLayout.LINE_END );
 
@@ -348,8 +353,7 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 			super.addNotify();
 			if( progressBar != null )
 			{
-				// progressBarAdapter = new ProgressBarSecurityTestStepAdapter(
-				// progressBar, securityTest, securityCheck );
+//				progressBarAdapter = new ProgressBarSecurityTestStepAdapter( progressBar, securityTest, securityCheck );
 			}
 		}
 
