@@ -220,7 +220,7 @@ public class WsdlTestSuite extends AbstractTestPropertyHolderWsdlModelItem<TestS
 
 		return testCase;
 	}
-
+	
 	public void removeTestCase( WsdlTestCase testCase )
 	{
 		int ix = testCases.indexOf( testCase );

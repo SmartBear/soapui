@@ -65,6 +65,7 @@ import com.eviware.soapui.impl.wsdl.support.wsdl.UrlWsdlLoader;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlLoader;
 import com.eviware.soapui.impl.wsdl.support.wss.DefaultWssContainer;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlProjectRunner;
+import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.mock.MockService;
@@ -1265,6 +1266,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 
 		testSuiteConfig.setName( name );
 
+		WsdlTestSuite oldTestSuite = testSuite;
 		testSuite = buildTestSuite( testSuiteConfig );
 		if( description != null )
 			testSuite.setDescription( description );
@@ -1278,6 +1280,12 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 			ModelSupport.unsetIds( testSuite );
 
 		testSuite.afterLoad();
+		
+		if( createCopy )
+		{
+			testSuite.afterCopy( oldTestSuite );
+		}
+		
 		fireTestSuiteAdded( testSuite );
 
 		resolveImportedTestSuite( testSuite );
