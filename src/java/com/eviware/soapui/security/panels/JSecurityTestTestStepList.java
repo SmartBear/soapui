@@ -161,6 +161,10 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 		add( new JScrollPane( securityTestTree ), BorderLayout.CENTER );
 		securityTest.getTestCase().getTestSuite().addTestSuiteListener( testSuiteListener );
 
+		for( int row = 0; row < securityTestTree.getRowCount(); row++ )
+		{
+			securityTestTree.expandRow( row );
+		}
 		this.securityTestLog = securityTestLog;
 
 	}

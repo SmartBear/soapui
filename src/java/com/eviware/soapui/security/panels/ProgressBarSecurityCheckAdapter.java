@@ -1,8 +1,6 @@
 package com.eviware.soapui.security.panels;
 
 import java.awt.Color;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 import javax.swing.JLabel;
 import javax.swing.JProgressBar;

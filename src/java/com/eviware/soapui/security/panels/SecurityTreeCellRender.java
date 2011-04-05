@@ -216,9 +216,9 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 			super.removeNotify();
 			if( progressBarAdapter != null )
 			{
-				progressBarAdapter.release();
-
-				progressBarAdapter = null;
+//				progressBarAdapter.release();
+//
+//				progressBarAdapter = null;
 			}
 		}
 

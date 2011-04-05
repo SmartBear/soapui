@@ -38,9 +38,9 @@ import com.eviware.soapui.security.result.SecurityResult.SecurityStatus;
 
 public class ProgressBarSecurityTestStepAdapter
 {
-	private final JProgressBar progressBar;
-	private final TestStep testStep;
-	private final SecurityTest securityTest;
+	private JProgressBar progressBar;
+	private TestStep testStep;
+	private SecurityTest securityTest;
 	private InternalTestRunListener internalTestRunListener;
 	private JTree tree;
 	private DefaultMutableTreeNode node;
@@ -59,7 +59,7 @@ public class ProgressBarSecurityTestStepAdapter
 		this.securityTest = securityTest;
 
 		this.counterLabel = cntLabel;
-		internalTestRunListener = new InternalTestRunListener();
+		internalTestRunListener = new InternalTestRunListener( testStep );
 		if( progressBar != null && cntLabel != null )
 			this.securityTest.addSecurityTestRunListener( internalTestRunListener );
 	}
@@ -73,6 +73,12 @@ public class ProgressBarSecurityTestStepAdapter
 	{
 
 		private int totalAlertsCounter;
+		private TestStep ts;
+
+		public InternalTestRunListener( TestStep testStep )
+		{
+			this.ts = testStep;
+		}
 
 		@Override
 		public void beforeRun( TestCaseRunner testRunner, SecurityTestRunContext runContext )
@@ -94,39 +100,43 @@ public class ProgressBarSecurityTestStepAdapter
 		public void afterSecurityCheck( TestCaseRunner testRunner, SecurityTestRunContext runContext,
 				SecurityCheckResult securityCheckResult )
 		{
-			progressBar.setIndeterminate( false );
 
-			if( !progressBar.getString().equals( "FAILED" ) )
-				if( securityCheckResult.getStatus() == SecurityStatus.CANCELED )
-				{
-					if( securityCheckResult.isHasRequestsWithWarnings() )
+			if( securityCheckResult.getSecurityCheck().getTestStep().getId().equals( testStep.getId() ) )
+			{
+				progressBar.setIndeterminate( false );
+
+				if( !progressBar.getString().equals( "FAILED" ) )
+					if( securityCheckResult.getStatus() == SecurityStatus.CANCELED )
+					{
+						if( securityCheckResult.isHasRequestsWithWarnings() )
+						{
+							progressBar.setForeground( FAILED_COLOR );
+							progressBar.setString( "FAILED" );
+						}
+						else
+						{
+							progressBar.setForeground( OK_COLOR );
+							progressBar.setString( "OK" );
+						}
+					}
+					else if( securityCheckResult.getStatus() == SecurityStatus.FAILED )
 					{
 						progressBar.setForeground( FAILED_COLOR );
 						progressBar.setString( "FAILED" );
 					}
-					else
+					else if( securityCheckResult.getStatus() == SecurityStatus.OK )
 					{
 						progressBar.setForeground( OK_COLOR );
 						progressBar.setString( "OK" );
 					}
-				}
-				else if( securityCheckResult.getStatus() == SecurityStatus.FAILED )
-				{
-					progressBar.setForeground( FAILED_COLOR );
-					progressBar.setString( "FAILED" );
-				}
-				else if( securityCheckResult.getStatus() == SecurityStatus.OK )
-				{
-					progressBar.setForeground( OK_COLOR );
-					progressBar.setString( "OK" );
-				}
-				else if( securityCheckResult.getStatus() == SecurityStatus.UNKNOWN )
-				{
-					progressBar.setForeground( UNKNOWN_COLOR );
-				}
+					else if( securityCheckResult.getStatus() == SecurityStatus.UNKNOWN )
+					{
+						progressBar.setForeground( UNKNOWN_COLOR );
+					}
 
-			progressBar.setValue( ( ( SecurityTestRunContext )runContext ).getCurrentCheckIndex() + 1 );
-			( ( DefaultTreeModel )tree.getModel() ).nodeChanged( node );
+				progressBar.setValue( ( ( SecurityTestRunContext )runContext ).getCurrentCheckIndex() + 1 );
+				( ( DefaultTreeModel )tree.getModel() ).nodeChanged( node );
+			}
 		}
 
 		@Override
@@ -134,14 +144,17 @@ public class ProgressBarSecurityTestStepAdapter
 				SecurityCheckRequestResult securityCheckReqResult )
 		{
 
-			if( securityCheckReqResult.getStatus() == SecurityStatus.FAILED )
+			if( securityCheckReqResult.getSecurityCheck().getTestStep().getId().equals( testStep.getId() ) )
 			{
-				counterLabel.setBackground( FAILED_COLOR );
-				totalAlertsCounter++ ;
-			}
+				if( securityCheckReqResult.getStatus() == SecurityStatus.FAILED )
+				{
+					counterLabel.setBackground( FAILED_COLOR );
+					totalAlertsCounter++ ;
+				}
 
-			counterLabel.setText( " " + totalAlertsCounter + " " );
-			( ( DefaultTreeModel )tree.getModel() ).nodeChanged( node );
+				counterLabel.setText( " " + totalAlertsCounter + " " );
+				( ( DefaultTreeModel )tree.getModel() ).nodeChanged( node );
+			}
 		}
 
 	}
