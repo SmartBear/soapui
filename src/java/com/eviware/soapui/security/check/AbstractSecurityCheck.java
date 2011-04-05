@@ -711,7 +711,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 
 	public AssertionStatus assertResponse( MessageExchange messageExchange, SubmitContext context )
 	{
-		AssertionStatus result = null;
+		AssertionStatus finalResult = null;
 
 		try
 		{
@@ -723,9 +723,16 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 
 				for( WsdlMessageAssertion assertion : assertionsSupport.getAssertionList() )
 				{
-					result = assertion.assertResponse( messageExchange, context );
-					setStatus( result, assertion );
+					AssertionStatus currentResult = assertion.assertResponse( messageExchange, context );
+					updateMessages( currentResult, assertion );
+
+					if( finalResult == null || finalResult != AssertionStatus.FAILED )
+					{
+						finalResult = currentResult;
+					}
 				}
+
+				setStatus( finalResult );
 
 				notifier.notifyChange();
 			}
@@ -734,7 +741,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		{
 			e.printStackTrace();
 		}
-		return result;
+		return finalResult;
 	}
 
 	/**
@@ -743,25 +750,29 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	 * @param result
 	 * @param assertion
 	 */
-	private void setStatus( AssertionStatus result, WsdlMessageAssertion assertion )
+	private void setStatus( AssertionStatus result )
 	{
-		if( getSecurityCheckRequestResult().getStatus() != SecurityStatus.FAILED )
+		if( result == AssertionStatus.FAILED )
 		{
-			if( result == AssertionStatus.FAILED )
-			{
-				for( AssertionError error : assertion.getErrors() )
-					getSecurityCheckRequestResult().addMessage( error.getMessage() );
-				getSecurityCheckRequestResult().setStatus( SecurityStatus.FAILED );
-			}
-			else if( result == AssertionStatus.VALID )
-			{
-				getSecurityCheckRequestResult().setStatus( SecurityStatus.OK );
+			getSecurityCheckRequestResult().setStatus( SecurityStatus.FAILED );
+		}
+		else if( result == AssertionStatus.VALID )
+		{
+			getSecurityCheckRequestResult().setStatus( SecurityStatus.OK );
 
-			}
-			else if( result == AssertionStatus.UNKNOWN )
-			{
-				getSecurityCheckRequestResult().setStatus( SecurityStatus.UNKNOWN );
-			}
+		}
+		else if( result == AssertionStatus.UNKNOWN )
+		{
+			getSecurityCheckRequestResult().setStatus( SecurityStatus.UNKNOWN );
+		}
+	}
+
+	private void updateMessages( AssertionStatus result, WsdlMessageAssertion assertion )
+	{
+		if( result == AssertionStatus.FAILED )
+		{
+			for( AssertionError error : assertion.getErrors() )
+				getSecurityCheckRequestResult().addMessage( error.getMessage() );
 		}
 	}
 
