@@ -22,6 +22,12 @@ import com.eviware.soapui.security.support.SecurityTestRunListenerAdapter;
 public class ProgressBarSecurityCheckAdapter extends SecurityTestRunListenerAdapter implements AssertionsListener
 {
 
+	private static final String OK_MESSAGE = "No Alerts";
+
+	private static final String UNKNOWN_MESSAGE = "No alerts";
+
+	private static final String FAILED_MESSAGE = "Alerts";
+
 	private static final Color UNKNOWN_COLOR = new Color( 255, 255, 204 );
 
 	private static final Color OK_COLOR = new Color( 0, 205, 102 );
@@ -81,19 +87,19 @@ public class ProgressBarSecurityCheckAdapter extends SecurityTestRunListenerAdap
 			if( securityCheckReqResult.getStatus() == SecurityStatus.FAILED )
 			{
 				progressBar.setForeground( FAILED_COLOR );
-				progressBar.setString( "FAILED" );
+				progressBar.setString( FAILED_MESSAGE );
 				cntLabel.setBackground( FAILED_COLOR );
 				alertsCounter++ ;
 			}
 			else if( securityCheckReqResult.getStatus() == SecurityStatus.OK )
 			{
 				progressBar.setForeground( OK_COLOR );
-				progressBar.setString( "OK" );
+				progressBar.setString( OK_MESSAGE );
 			}
 			else if( securityCheckReqResult.getStatus() == SecurityStatus.UNKNOWN )
 			{
 				progressBar.setForeground( UNKNOWN_COLOR );
-				progressBar.setString( "UNKNOWN" );
+				progressBar.setString( UNKNOWN_MESSAGE );
 			}
 
 			cntLabel.setText( " " + alertsCounter + " " );
@@ -147,7 +153,7 @@ public class ProgressBarSecurityCheckAdapter extends SecurityTestRunListenerAdap
 		else
 		{
 			ProgressBarSecurityCheckAdapter.this.progressBar.setForeground( UNKNOWN_COLOR );
-			ProgressBarSecurityCheckAdapter.this.progressBar.setString( "UNKNOWN" );
+			ProgressBarSecurityCheckAdapter.this.progressBar.setString( UNKNOWN_MESSAGE );
 		}
 		( ( DefaultTreeModel )ProgressBarSecurityCheckAdapter.this.tree.getModel() )
 				.nodeChanged( ProgressBarSecurityCheckAdapter.this.node );
