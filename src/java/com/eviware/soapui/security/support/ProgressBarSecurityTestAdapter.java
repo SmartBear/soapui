@@ -23,6 +23,7 @@ import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunnerImpl;
 import com.eviware.soapui.security.check.AbstractSecurityCheck;
+import com.eviware.soapui.security.result.SecurityCheckRequestResult;
 import com.eviware.soapui.security.result.SecurityCheckResult;
 import com.eviware.soapui.security.result.SecurityResult.SecurityStatus;
 
@@ -37,9 +38,10 @@ public class ProgressBarSecurityTestAdapter
 	private final JProgressBar progressBar;
 	private final SecurityTest securityTest;
 	private InternalTestRunListener internalTestRunListener;
+	private JLabel counterLabel;
 	private static final Color OK_COLOR = new Color( 0, 205, 102 );
 	private static final Color FAILED_COLOR = new Color( 255, 102, 0 );
-	private static final Color UNKNOWN_COLOR = new Color( 255, 255, 204 );
+	private int alertsCounter;
 
 	public ProgressBarSecurityTestAdapter( JProgressBar progressBar, SecurityTest securityTest, JLabel cntLabel )
 	{
@@ -48,6 +50,9 @@ public class ProgressBarSecurityTestAdapter
 
 		internalTestRunListener = new InternalTestRunListener();
 		securityTest.addSecurityTestRunListener( internalTestRunListener );
+		cntLabel.setOpaque( true );
+
+		this.counterLabel = cntLabel;
 	}
 
 	public void release()
@@ -57,6 +62,7 @@ public class ProgressBarSecurityTestAdapter
 
 	public class InternalTestRunListener extends SecurityTestRunListenerAdapter
 	{
+
 		public void beforeRun( TestCaseRunner testRunner, SecurityTestRunContext runContext )
 		{
 			if( progressBar.isIndeterminate() )
@@ -65,6 +71,9 @@ public class ProgressBarSecurityTestAdapter
 			progressBar.getModel().setMaximum(
 					( ( SecurityTestRunnerImpl )testRunner ).getSecurityTest().getSecurityCheckCount() );
 			progressBar.setForeground( OK_COLOR );
+			counterLabel.setBackground( OK_COLOR );
+			alertsCounter = 0;
+			counterLabel.setText( " " + alertsCounter + " " );
 		}
 
 		@Override
@@ -121,6 +130,19 @@ public class ProgressBarSecurityTestAdapter
 				return;
 
 			progressBar.setString( testRunner.getStatus().toString() );
+		}
+
+		@Override
+		public void afterSecurityCheckRequest( TestCaseRunner testRunner, SecurityTestRunContext runContext,
+				SecurityCheckRequestResult securityCheckReqResult )
+		{
+			if( securityCheckReqResult.getStatus() == SecurityStatus.FAILED )
+			{
+				counterLabel.setBackground( FAILED_COLOR );
+				alertsCounter++ ;
+			}
+
+			counterLabel.setText( " " + alertsCounter + " " );
 		}
 	}
 }

@@ -180,7 +180,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 
 		progressBar.setBorder( BorderFactory.createMatteBorder( 0, 0, 1, 1, Color.LIGHT_GRAY ) );
 
-		progressPanel.setBorder( BorderFactory.createEmptyBorder( 5, 5, 5, 0 ) );
+		progressPanel.setBorder( BorderFactory.createEmptyBorder( 5, 5, 5, 5 ) );
 		progressPanel.add( progressBar );
 
 		progressBar.setMinimumSize( new Dimension( 0, 200 ) );
