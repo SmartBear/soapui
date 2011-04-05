@@ -23,7 +23,6 @@ import javax.swing.tree.DefaultTreeModel;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
-import com.eviware.soapui.model.testsuite.TestRunner.Status;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunnerImpl;
@@ -50,17 +49,6 @@ public class ProgressBarSecurityTestStepAdapter
 	private static final Color FAILED_COLOR = new Color( 255, 102, 0 );
 	private static final Color UNKNOWN_COLOR = new Color( 255, 255, 204 );
 
-	// public ProgressBarSecurityTestStepAdapter( JProgressBar progressBar,
-	// SecurityTest securityTest, TestStep testStep )
-	// {
-	// this.progressBar = progressBar;
-	// this.testStep = testStep;
-	// this.securityTest = securityTest;
-	//
-	// internalTestRunListener = new InternalTestRunListener();
-	// securityTest.addTestStepRunListener( testStep, internalTestRunListener );
-	// }
-
 	public ProgressBarSecurityTestStepAdapter( JTree tree, DefaultMutableTreeNode node, JProgressBar progressBar,
 			SecurityTest securityTest, WsdlTestStep testStep, JLabel cntLabel )
 	{
@@ -72,14 +60,13 @@ public class ProgressBarSecurityTestStepAdapter
 
 		this.counterLabel = cntLabel;
 		internalTestRunListener = new InternalTestRunListener();
-		// securityTest.addTestStepRunListener( testStep, internalTestRunListener
-		// );
-		this.securityTest.addSecurityTestRunListener( internalTestRunListener );
+		if( progressBar != null && cntLabel != null )
+			this.securityTest.addSecurityTestRunListener( internalTestRunListener );
 	}
 
 	public void release()
 	{
-		securityTest.removeTestStepRunListener( testStep, internalTestRunListener );
+		// securityTest.removeSecurityTestRunListener( internalTestRunListener );
 	}
 
 	public class InternalTestRunListener extends SecurityTestRunListenerAdapter
