@@ -165,6 +165,7 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 		{
 			securityTestTree.expandRow( row );
 		}
+		
 		this.securityTestLog = securityTestLog;
 
 	}
