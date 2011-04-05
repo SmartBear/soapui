@@ -24,7 +24,7 @@ public class ProgressBarSecurityCheckAdapter extends SecurityTestRunListenerAdap
 
 	private static final String OK_MESSAGE = "No Alerts";
 
-	private static final String UNKNOWN_MESSAGE = "No alerts";
+	private static final String UNKNOWN_MESSAGE = "Unknow";
 
 	private static final String FAILED_MESSAGE = "Alerts";
 
