@@ -19,9 +19,8 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 
 /**
- * Adds a new WsdlLoadTest to a WsdlTestCase
+ * Adds a new SecurityTest to a WsdlTestCase
  * 
- * @author Ole.Matzura
  */
 
 public class AddNewSecurityTestAction extends AbstractSoapUIAction<WsdlTestCase>
