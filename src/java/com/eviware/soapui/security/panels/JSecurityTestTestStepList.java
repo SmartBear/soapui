@@ -83,7 +83,6 @@ import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.ActionListBuilder;
 import com.eviware.soapui.support.action.swing.ActionSupport;
 import com.eviware.soapui.support.action.swing.SwingActionDelegate;
-import com.eviware.soapui.support.components.JComponentInspector;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.swing.AutoscrollSupport;
 import com.eviware.soapui.support.swing.TreePathUtils;
@@ -102,19 +101,16 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 	private SecurityTest securityTest;
 	private final TestSuiteListener testSuiteListener = new InternalTestSuiteListener();
 	private TestStepListEntryPanel selectedTestStep;
-	// private JInspectorPanel inspectorPanel;
 	private JList securityChecksList;
-	JSplitPane splitPane;
-	JComponentInspector<JComponent> securityChecksInspector;
+	private JSplitPane splitPane;
 	private JComponent secCheckPanel;
-	JPanel testStepListPanel;
 	private JTree securityTestTree;
 	private AddSecurityCheckAction addSecurityCheckAction;
 	private ConfigureSecurityCheckAction configureSecurityCheckAction;
 	private RemoveSecurityCheckAction removeSecurityCheckAction;
 	private CloneParametersAction cloneParametersAction;
 
-	JSecurityTestRunLog securityTestLog;
+	private JSecurityTestRunLog securityTestLog;
 	private JPopupMenu securityCheckPopUp;
 
 	private JPopupMenu securityCheckWithPropertiesPopUp;

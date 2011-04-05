@@ -297,7 +297,7 @@ public class SecurityCheckedParametersTablePanel extends JPanel
 
 		public CopyParameterAction()
 		{
-			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/clone_request.gif" ) );
+			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/copy_parameters.gif" ) );
 			putValue( Action.SHORT_DESCRIPTION, "Copies parameter" );
 		}
 

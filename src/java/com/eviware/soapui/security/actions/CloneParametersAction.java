@@ -54,7 +54,7 @@ public class CloneParametersAction extends AbstractAction
 	public CloneParametersAction()
 	{
 		super( "Clone SecurityCheck Parameters" );
-		putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/clone_request.gif" ) );
+		putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/clone_parameters.gif" ) );
 		putValue( Action.SHORT_DESCRIPTION, "Clones parameter" );
 		setEnabled( false );
 	}
@@ -62,7 +62,7 @@ public class CloneParametersAction extends AbstractAction
 	public CloneParametersAction( AbstractSecurityCheckWithProperties securityCheck )
 	{
 		super( "Clone SecurityCheck Parameters" );
-		putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/clone_request.gif" ) );
+		putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/clone_parameters.gif" ) );
 		putValue( Action.SHORT_DESCRIPTION, "Clones parameter" );
 		this.securityCheck = securityCheck;
 	}

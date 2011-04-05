@@ -95,9 +95,10 @@ import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
  * @author dragica.soldo
  */
 
+@SuppressWarnings( "serial" )
 public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest>
 {
-	protected JSecurityTestTestStepList testStepList;
+	private JSecurityTestTestStepList testStepList;
 	private JProgressBar progressBar;
 	private JButton runButton;
 	private JButton cancelButton;
@@ -105,26 +106,20 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 	private JButton setEndpointButton;
 	private JButton setCredentialsButton;
 	private JButton optionsButton;
-	protected JSecurityTestRunLog securityTestLog;
+	private JSecurityTestRunLog securityTestLog;
 	private JToggleButton loopButton;
 	private ProgressBarSecurityTestAdapter progressBarAdapter;
 	private ComponentBag stateDependantComponents = new ComponentBag();
-	public boolean canceled;
+	private boolean canceled;
 	private JTextArea descriptionArea;
 	private PropertyHolderTable propertiesTable;
 	private GroovyEditorComponent tearDownGroovyEditor;
 	private GroovyEditorComponent setupGroovyEditor;
 	private JInspectorPanel testStepListInspectorPanel;
-	// private JButton createLoadTestButton;
-	// private JButton createSecurityTestButton;
 	private JInspectorPanel inspectorPanel;
-	public SecurityTestRunner lastRunner;
-	// private JButton runWithLoadUIButton;
-	// private JButton synchronizeWithLoadUIButton;
+	private SecurityTestRunner lastRunner;
 	private SecurityTest securityTest;
-	protected JXToolBar toolbar;
-	// private InternalSecurityCheckRunListener securityCheckkRunListener = new
-	// InternalSecurityCheckRunListener();
+	private JXToolBar toolbar;
 	private InternalSecurityTestRunListener securityTestRunListener = new InternalSecurityTestRunListener();
 	private JLabel cntLabel;
 
@@ -136,9 +131,23 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 
 		setPreferredSize( new Dimension( 400, 550 ) );
 		this.securityTest = securityTest;
-		// securityTest.addSecurityCheckRunListener( securityCheckkRunListener );
 		securityTest.addSecurityTestRunListener( securityTestRunListener );
 		progressBarAdapter = new ProgressBarSecurityTestAdapter( progressBar, securityTest, cntLabel );
+	}
+
+	protected JSecurityTestTestStepList getTestStepList()
+	{
+		return testStepList;
+	}
+
+	protected JSecurityTestRunLog getSecurityTestLog()
+	{
+		return securityTestLog;
+	}
+
+	protected void setTestStepList( JSecurityTestTestStepList testStepList )
+	{
+		this.testStepList = testStepList;
 	}
 
 	private void buildUI()
