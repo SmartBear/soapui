@@ -99,7 +99,7 @@ import com.eviware.x.form.XFormDialog;
 public class JSecurityTestTestStepList extends JPanel implements TreeSelectionListener, MouseListener
 {
 	private Map<TestStep, TestStepListEntryPanel> panels = new HashMap<TestStep, TestStepListEntryPanel>();
-	private final SecurityTest securityTest;
+	private SecurityTest securityTest;
 	private final TestSuiteListener testSuiteListener = new InternalTestSuiteListener();
 	private TestStepListEntryPanel selectedTestStep;
 	// private JInspectorPanel inspectorPanel;
@@ -116,6 +116,7 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 
 	JSecurityTestRunLog securityTestLog;
 	private JPopupMenu securityCheckPopUp;
+
 	private JPopupMenu securityCheckWithPropertiesPopUp;
 	private JPopupMenu testStepPopUp;
 
@@ -142,7 +143,7 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 		securityCheckWithPropertiesPopUp.add( new ShowOnlineHelpAction( HelpUrls.RESPONSE_ASSERTIONS_HELP_URL ) );
 
 		testStepPopUp = new JPopupMenu();
-		testStepPopUp.add( addSecurityCheckAction );
+		initTestStepPopUpActions();
 		testStepPopUp.addSeparator();
 		testStepPopUp.add( new ShowOnlineHelpAction( HelpUrls.RESPONSE_ASSERTIONS_HELP_URL ) );
 
@@ -169,19 +170,36 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 
 	}
 
+	protected SecurityTest getSecurityTest()
+	{
+		return securityTest;
+	}
+
+	protected void setSecurityTest( SecurityTest securityTest )
+	{
+		this.securityTest = securityTest;
+	}
+
+	protected JPopupMenu getTestStepPopUp()
+	{
+		return testStepPopUp;
+	}
+
+	protected void initTestStepPopUpActions()
+	{
+		testStepPopUp.add( addSecurityCheckAction );
+	}
+
+	protected JPopupMenu getSecurityCheckPopUp()
+	{
+		return securityCheckPopUp;
+	}
+
 	private JXToolBar initToolbar()
 	{
 		JXToolBar toolbar = UISupport.createToolbar();
 
-		addSecurityCheckAction = new AddSecurityCheckAction();
-		configureSecurityCheckAction = new ConfigureSecurityCheckAction();
-		removeSecurityCheckAction = new RemoveSecurityCheckAction();
-		cloneParametersAction = new CloneParametersAction();
-
-		toolbar.addFixed( UISupport.createToolbarButton( addSecurityCheckAction ) );
-		toolbar.addFixed( UISupport.createToolbarButton( configureSecurityCheckAction ) );
-		toolbar.addFixed( UISupport.createToolbarButton( removeSecurityCheckAction ) );
-		toolbar.addFixed( UISupport.createToolbarButton( cloneParametersAction ) );
+		initToolbarLeft( toolbar );
 
 		JButton expandActionBtn = UISupport.createToolbarButton( new ExpandTreeAction() );
 		expandActionBtn.setText( "Expanded" );
@@ -194,6 +212,19 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 		toolbar.add( collapsActionBtn );
 
 		return toolbar;
+	}
+
+	protected void initToolbarLeft( JXToolBar toolbar )
+	{
+		addSecurityCheckAction = new AddSecurityCheckAction();
+		configureSecurityCheckAction = new ConfigureSecurityCheckAction();
+		removeSecurityCheckAction = new RemoveSecurityCheckAction();
+		cloneParametersAction = new CloneParametersAction();
+
+		toolbar.addFixed( UISupport.createToolbarButton( addSecurityCheckAction ) );
+		toolbar.addFixed( UISupport.createToolbarButton( configureSecurityCheckAction ) );
+		toolbar.addFixed( UISupport.createToolbarButton( removeSecurityCheckAction ) );
+		toolbar.addFixed( UISupport.createToolbarButton( cloneParametersAction ) );
 	}
 
 	public SecurityCheck getCurrentSecurityCheck()
@@ -250,34 +281,34 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 		@Override
 		public void testStepAdded( TestStep testStep, int index )
 		{
-			((SecurityCheckTree)securityTestTree.getModel()).insertNodeInto( testStep );
+			( ( SecurityCheckTree )securityTestTree.getModel() ).insertNodeInto( testStep );
 		}
 
 		@Override
 		public void testStepRemoved( TestStep testStep, int index )
 		{
-			((SecurityCheckTree)securityTestTree.getModel()).removeTestStep(testStep);
+			( ( SecurityCheckTree )securityTestTree.getModel() ).removeTestStep( testStep );
 		}
 
 		@Override
 		public void testStepMoved( TestStep testStep, int index, int offset )
 		{
-//			TestStepListEntryPanel testStepListEntry = panels.get( testStep );
-//			if( testStepListEntry != null )
-//			{
-//				boolean hadFocus = testStepListEntry.hasFocus();
-//
-//				testStepListPanel.remove( testStepListEntry );
-//				testStepListPanel.add( testStepListEntry, index + offset );
-//				splitPane.remove( splitPane.getTopComponent() );
-//				splitPane.setTopComponent( new JScrollPane( testStepListPanel ) );
-//
-//				revalidate();
-//				repaint();
-//
-//				if( hadFocus )
-//					testStepListEntry.requestFocus();
-//			}
+			// TestStepListEntryPanel testStepListEntry = panels.get( testStep );
+			// if( testStepListEntry != null )
+			// {
+			// boolean hadFocus = testStepListEntry.hasFocus();
+			//
+			// testStepListPanel.remove( testStepListEntry );
+			// testStepListPanel.add( testStepListEntry, index + offset );
+			// splitPane.remove( splitPane.getTopComponent() );
+			// splitPane.setTopComponent( new JScrollPane( testStepListPanel ) );
+			//
+			// revalidate();
+			// repaint();
+			//
+			// if( hadFocus )
+			// testStepListEntry.requestFocus();
+			// }
 		}
 	}
 
@@ -406,7 +437,8 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 			testStep.addPropertyChangeListener( testCasePropertyChangeListener );
 			if( progressBar != null )
 			{
-//				progressBarAdapter = new ProgressBarSecurityTestStepAdapter( progressBar, securityTest, testStep );
+				// progressBarAdapter = new ProgressBarSecurityTestStepAdapter(
+				// progressBar, securityTest, testStep );
 			}
 		}
 
@@ -712,29 +744,39 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 
 		if( node instanceof TestStepNode )
 		{
-			if( !node.getAllowsChildren() )
-				return;
-			addSecurityCheckAction.setEnabled( true );
-			configureSecurityCheckAction.setEnabled( false );
-			removeSecurityCheckAction.setEnabled( false );
-			cloneParametersAction.setEnabled( false );
+			enableTestStepActions( node );
 		}
 		else if( node instanceof SecurityCheckNode )
 		{
-			securityTestLog.locateSecurityCheck( ( ( SecurityCheckNode )securityTestTree.getLastSelectedPathComponent() )
-					.getSecurityCheck() );
-			addSecurityCheckAction.setEnabled( false );
-			configureSecurityCheckAction.setEnabled( true );
-			removeSecurityCheckAction.setEnabled( true );
-			if( ( ( SecurityCheckNode )securityTestTree.getLastSelectedPathComponent() ).getSecurityCheck() instanceof AbstractSecurityCheckWithProperties )
-			{
-				cloneParametersAction.setEnabled( true );
-				cloneParametersAction
-						.setSecurityCheck( ( AbstractSecurityCheckWithProperties )( ( SecurityCheckNode )securityTestTree
-								.getLastSelectedPathComponent() ).getSecurityCheck() );
-			}
+			enableSecurityCheckActions();
 		}
 
+	}
+
+	protected void enableSecurityCheckActions()
+	{
+		securityTestLog.locateSecurityCheck( ( ( SecurityCheckNode )securityTestTree.getLastSelectedPathComponent() )
+				.getSecurityCheck() );
+		addSecurityCheckAction.setEnabled( false );
+		configureSecurityCheckAction.setEnabled( true );
+		removeSecurityCheckAction.setEnabled( true );
+		if( ( ( SecurityCheckNode )securityTestTree.getLastSelectedPathComponent() ).getSecurityCheck() instanceof AbstractSecurityCheckWithProperties )
+		{
+			cloneParametersAction.setEnabled( true );
+			cloneParametersAction
+					.setSecurityCheck( ( AbstractSecurityCheckWithProperties )( ( SecurityCheckNode )securityTestTree
+							.getLastSelectedPathComponent() ).getSecurityCheck() );
+		}
+	}
+
+	protected void enableTestStepActions( DefaultMutableTreeNode node )
+	{
+		if( !node.getAllowsChildren() )
+			return;
+		addSecurityCheckAction.setEnabled( true );
+		configureSecurityCheckAction.setEnabled( false );
+		removeSecurityCheckAction.setEnabled( false );
+		cloneParametersAction.setEnabled( false );
 	}
 
 	@Override
