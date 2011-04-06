@@ -17,44 +17,29 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Insets;
-import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.dnd.Autoscroll;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.InputEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
-import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
 import javax.swing.JTree;
-import javax.swing.SwingConstants;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.plaf.basic.BasicTreeUI;
 import javax.swing.tree.AbstractLayoutCache;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
@@ -62,29 +47,20 @@ import org.jdesktop.swingx.JXTree;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
-import com.eviware.soapui.impl.wsdl.actions.testsuite.AddNewTestCaseAction;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
-import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
-import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.security.SecurityCheck;
 import com.eviware.soapui.model.support.TestSuiteListenerAdapter;
-import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestSuiteListener;
 import com.eviware.soapui.security.Securable;
 import com.eviware.soapui.security.SecurityTest;
+import com.eviware.soapui.security.SecurityTestListener;
 import com.eviware.soapui.security.actions.CloneParametersAction;
 import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.security.check.AbstractSecurityCheckWithProperties;
 import com.eviware.soapui.security.log.JSecurityTestRunLog;
-import com.eviware.soapui.security.support.ProgressBarSecurityTestStepAdapter;
 import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.action.swing.ActionList;
-import com.eviware.soapui.support.action.swing.ActionListBuilder;
-import com.eviware.soapui.support.action.swing.ActionSupport;
-import com.eviware.soapui.support.action.swing.SwingActionDelegate;
 import com.eviware.soapui.support.components.JXToolBar;
-import com.eviware.soapui.support.swing.AutoscrollSupport;
 import com.eviware.soapui.support.swing.TreePathUtils;
 import com.eviware.x.form.XFormDialog;
 
@@ -95,16 +71,11 @@ import com.eviware.x.form.XFormDialog;
  */
 
 @SuppressWarnings( "serial" )
-public class JSecurityTestTestStepList extends JPanel implements TreeSelectionListener, MouseListener
+public class JSecurityTestTestStepList extends JPanel implements TreeSelectionListener, MouseListener, SecurityTestListener
 {
-	private Map<TestStep, TestStepListEntryPanel> panels = new HashMap<TestStep, TestStepListEntryPanel>();
 	private SecurityTest securityTest;
 	private final TestSuiteListener testSuiteListener = new InternalTestSuiteListener();
-	private TestStepListEntryPanel selectedTestStep;
-	private JList securityChecksList;
-	private JSplitPane splitPane;
-	private JComponent secCheckPanel;
-	private JTree securityTestTree;
+	private JXTree securityTestTree;
 	private AddSecurityCheckAction addSecurityCheckAction;
 	private ConfigureSecurityCheckAction configureSecurityCheckAction;
 	private RemoveSecurityCheckAction removeSecurityCheckAction;
@@ -116,6 +87,7 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 	private JPopupMenu securityCheckWithPropertiesPopUp;
 	private JPopupMenu testStepPopUp;
 	private SecurityTreeCellRender cellRender;
+	private SecurityCheckTree treeModel;
 
 	public JSecurityTestTestStepList( SecurityTest securityTest, JSecurityTestRunLog securityTestLog )
 	{
@@ -144,7 +116,8 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 		testStepPopUp.addSeparator();
 		testStepPopUp.add( new ShowOnlineHelpAction( HelpUrls.RESPONSE_ASSERTIONS_HELP_URL ) );
 
-		securityTestTree = new JXTree( new SecurityCheckTree( securityTest ) );
+		treeModel = new SecurityCheckTree( securityTest );
+		securityTestTree = new JXTree( treeModel );
 		securityTestTree.putClientProperty( "JTree.lineStyle", "None" );
 		securityTestTree.setUI( new CustomTreeUI() );
 		securityTestTree.setRootVisible( false );
@@ -161,6 +134,7 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 		JScrollPane scollPane = new JScrollPane( securityTestTree );
 		add( scollPane, BorderLayout.CENTER );
 		securityTest.getTestCase().getTestSuite().addTestSuiteListener( testSuiteListener );
+		securityTest.addSecurityTestListener( this );
 
 		for( int row = 0; row < securityTestTree.getRowCount(); row++ )
 		{
@@ -227,39 +201,10 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 		toolbar.addFixed( UISupport.createToolbarButton( cloneParametersAction ) );
 	}
 
-	public SecurityCheck getCurrentSecurityCheck()
-	{
-		int ix = securityChecksList.getSelectedIndex();
-		return ix == -1 ? null : securityTest.getTestStepSecurityCheckAt( selectedTestStep.getTestStep().getId(), ix );
-	}
-
-	protected JPanel buildSecurityChecksPanel()
-	{
-		if( selectedTestStep != null && AbstractSecurityCheck.isSecurable( selectedTestStep.getTestStep() ) )
-		{
-			return new SecurityChecksPanel( selectedTestStep.getTestStep(), securityTest, securityTestLog );
-		}
-		else
-		{
-			return new JPanel();
-		}
-	}
-
 	protected JComponent buildSecurityChecksInspector()
 	{
 		JPanel p = new JPanel( new BorderLayout() );
 		return p;
-	}
-
-	public void reset()
-	{
-		for( TestStepListEntryPanel testStepPanel : panels.values() )
-		{
-			if( AbstractSecurityCheck.isSecurable( testStepPanel.getTestStep() ) )
-			{
-				testStepPanel.reset();
-			}
-		}
 	}
 
 	@Override
@@ -288,6 +233,12 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 		public void testStepRemoved( TestStep testStep, int index )
 		{
 			TestStepNode node = ( ( SecurityCheckTree )securityTestTree.getModel() ).getTestStepNode( testStep );
+			for( int cnt =0 ; cnt< node.getChildCount(); cnt++)
+			{
+				SecurityCheckNode nodeCld = ( SecurityCheckNode )node.getChildAt( cnt );
+				cellRender.remove( nodeCld );
+				treeModel.removeNodeFromParent( nodeCld );
+			}
 			cellRender.remove( node );
 			( ( SecurityCheckTree )securityTestTree.getModel() ).removeNodeFromParent( node );
 		}
@@ -295,284 +246,7 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 		@Override
 		public void testStepMoved( TestStep testStep, int index, int offset )
 		{
-			// TestStepListEntryPanel testStepListEntry = panels.get( testStep );
-			// if( testStepListEntry != null )
-			// {
-			// boolean hadFocus = testStepListEntry.hasFocus();
-			//
-			// testStepListPanel.remove( testStepListEntry );
-			// testStepListPanel.add( testStepListEntry, index + offset );
-			// splitPane.remove( splitPane.getTopComponent() );
-			// splitPane.setTopComponent( new JScrollPane( testStepListPanel ) );
-			//
-			// revalidate();
-			// repaint();
-			//
-			// if( hadFocus )
-			// testStepListEntry.requestFocus();
-			// }
-		}
-	}
 
-	public final class TestStepListEntryPanel extends JPanel implements Autoscroll, PropertyChangeListener
-	{
-		private final WsdlTestStep testStep;
-		private JProgressBar progressBar;
-		private JLabel label;
-		private ProgressBarSecurityTestStepAdapter progressBarAdapter;
-		private TestCasePropertyChangeListener testCasePropertyChangeListener;
-		private AutoscrollSupport autoscrollSupport;
-
-		public TestStepListEntryPanel( WsdlTestStep testStep )
-		{
-			super( new BorderLayout() );
-
-			setFocusable( true );
-
-			this.testStep = testStep;
-			autoscrollSupport = new AutoscrollSupport( this );
-			label = new JLabel( testStep.getLabel(), SwingConstants.LEFT );
-			label.setIcon( testStep.getIcon() );
-			label.setBorder( BorderFactory.createEmptyBorder( 5, 5, 5, 5 ) );
-			label.setInheritsPopupMenu( true );
-			label.setEnabled( !testStep.isDisabled() );
-			testStep.addPropertyChangeListener( TestStep.ICON_PROPERTY, this );
-
-			add( label, BorderLayout.LINE_START );
-
-			if( AbstractSecurityCheck.isSecurable( testStep ) )
-			{
-				progressBar = new JProgressBar()
-				{
-					protected void processMouseEvent( MouseEvent e )
-					{
-						if( e.getID() == MouseEvent.MOUSE_PRESSED || e.getID() == MouseEvent.MOUSE_RELEASED )
-						{
-							TestStepListEntryPanel.this.processMouseEvent( translateMouseEvent( e ) );
-						}
-					}
-
-					protected void processMouseMotionEvent( MouseEvent e )
-					{
-						TestStepListEntryPanel.this.processMouseMotionEvent( translateMouseEvent( e ) );
-					}
-
-					/**
-					 * Translates the given mouse event to the enclosing map panel's
-					 * coordinate space.
-					 */
-					private MouseEvent translateMouseEvent( MouseEvent e )
-					{
-						return new MouseEvent( TestStepListEntryPanel.this, e.getID(), e.getWhen(), e.getModifiers(),
-								e.getX() + getX(), e.getY() + getY(), e.getClickCount(), e.isPopupTrigger(), e.getButton() );
-					}
-				};
-
-				JPanel progressPanel = UISupport.createProgressBarPanel( progressBar, 5, false );
-
-				progressBar.setMinimumSize( new Dimension( 0, 200 ) );
-				progressBar.setBackground( Color.WHITE );
-				progressBar.setInheritsPopupMenu( true );
-
-				add( progressPanel, BorderLayout.LINE_END );
-			}
-
-			testCasePropertyChangeListener = new TestCasePropertyChangeListener();
-
-			// initPopup( testStep );
-
-			addMouseListener( new MouseAdapter()
-			{
-
-				public void mouseClicked( MouseEvent e )
-				{
-					if( e.getClickCount() < 2 )
-					{
-						if( selectedTestStep != null )
-							selectedTestStep.setSelected( false );
-
-						selectedTestStep = TestStepListEntryPanel.this;
-						requestFocus();
-						splitPane.remove( secCheckPanel );
-						secCheckPanel = buildSecurityChecksPanel();
-						secCheckPanel.revalidate();
-						splitPane.setBottomComponent( secCheckPanel );
-						splitPane.revalidate();
-						if( AbstractSecurityCheck.isSecurable( selectedTestStep.getTestStep() ) )
-						{
-							setSelected( true );
-						}
-					}
-					else
-					{
-						UISupport.selectAndShow( TestStepListEntryPanel.this.testStep );
-					}
-				}
-			} );
-
-			addKeyListener( new TestCaseListPanelKeyHandler() );
-
-			// init border
-			setSelected( false );
-		}
-
-		public void reset()
-		{
-			progressBar.setValue( 0 );
-			progressBar.setString( "" );
-		}
-
-		private void initPopup( WsdlTestStep testStep )
-		{
-			ActionList actions = ActionListBuilder.buildActions( testStep );
-			actions
-					.insertAction( SwingActionDelegate.createDelegate( AddNewTestCaseAction.SOAPUI_ACTION_ID, securityTest,
-							null, null ), 0 );
-			actions.insertAction( ActionSupport.SEPARATOR_ACTION, 1 );
-
-			setComponentPopupMenu( ActionSupport.buildPopup( actions ) );
-		}
-
-		public void addNotify()
-		{
-			super.addNotify();
-			testStep.addPropertyChangeListener( testCasePropertyChangeListener );
-			if( progressBar != null )
-			{
-				// progressBarAdapter = new ProgressBarSecurityTestStepAdapter(
-				// progressBar, securityTest, testStep );
-			}
-		}
-
-		public void removeNotify()
-		{
-			super.removeNotify();
-			if( progressBarAdapter != null )
-			{
-				testStep.removePropertyChangeListener( testCasePropertyChangeListener );
-				progressBarAdapter.release();
-
-				progressBarAdapter = null;
-			}
-		}
-
-		public Dimension getMaximumSize()
-		{
-			Dimension size = super.getMaximumSize();
-			size.height = 50;
-			return size;
-		}
-
-		public void setSelected( boolean selected )
-		{
-			if( selected )
-			{
-				setBorder( BorderFactory.createLineBorder( Color.GRAY ) );
-			}
-			else
-			{
-				setBorder( BorderFactory.createLineBorder( Color.WHITE ) );
-			}
-		}
-
-		public boolean isSelected()
-		{
-			return selectedTestStep != null && selectedTestStep.getTestStep() == testStep;
-		}
-
-		private final class TestCasePropertyChangeListener implements PropertyChangeListener
-		{
-			public void propertyChange( PropertyChangeEvent evt )
-			{
-				if( evt.getPropertyName().equals( TestCase.LABEL_PROPERTY ) )
-				{
-					label.setEnabled( !testStep.isDisabled() );
-					label.setText( testStep.getLabel() );
-				}
-				else if( evt.getPropertyName().equals( TestCase.DISABLED_PROPERTY ) )
-				{
-					initPopup( testStep );
-				}
-			}
-		}
-
-		protected TestStep getTestStep()
-		{
-			return testStep;
-		}
-
-		public ModelItem getModelItem()
-		{
-			return testStep;
-		}
-
-		public void autoscroll( Point pt )
-		{
-			int ix = getIndexOf( this );
-			if( pt.getY() < 12 && ix > 0 )
-			{
-				Rectangle bounds = JSecurityTestTestStepList.this.getComponent( ix - 1 ).getBounds();
-				JSecurityTestTestStepList.this.scrollRectToVisible( bounds );
-			}
-			else if( pt.getY() > getHeight() - 12 && ix < securityTest.getTestCase().getTestStepCount() - 1 )
-			{
-				Rectangle bounds = JSecurityTestTestStepList.this.getComponent( ix + 1 ).getBounds();
-				JSecurityTestTestStepList.this.scrollRectToVisible( bounds );
-			}
-		}
-
-		public Insets getAutoscrollInsets()
-		{
-			return autoscrollSupport.getAutoscrollInsets();
-		}
-
-		private final class TestCaseListPanelKeyHandler extends KeyAdapter
-		{
-			public void keyPressed( KeyEvent e )
-			{
-				if( e.getKeyChar() == KeyEvent.VK_ENTER )
-				{
-					UISupport.selectAndShow( testStep );
-					e.consume();
-				}
-				else
-				{
-					ActionList actions = ActionListBuilder.buildActions( testStep );
-					if( actions != null )
-						actions.dispatchKeyEvent( e );
-				}
-			}
-		}
-
-		@Override
-		public void propertyChange( PropertyChangeEvent evt )
-		{
-			label.setIcon( testStep.getIcon() );
-		}
-
-		public void release()
-		{
-			testStep.removePropertyChangeListener( this );
-		}
-	}
-
-	protected int getIndexOf( TestStepListEntryPanel panel )
-	{
-		return Arrays.asList( getComponents() ).indexOf( panel );
-	}
-
-	protected TestStepListEntryPanel createTestStepListPanel( TestStep testStep )
-	{
-		TestStepListEntryPanel testStepListPanel = new TestStepListEntryPanel( ( WsdlTestStep )testStep );
-
-		return testStepListPanel;
-	}
-
-	public void release()
-	{
-		for( TestStepListEntryPanel testStepPanel : panels.values() )
-		{
-			testStepPanel.release();
 		}
 	}
 
@@ -957,5 +631,23 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 			// TODO Auto-generated method stub
 			// super.paintVerticalPartOfLeg( g, clipBounds, insets, path );
 		}
+	}
+
+	public void release()
+	{
+		cellRender.release();
+	}
+
+	@Override
+	public void securityCheckAdded( SecurityCheck securityCheck )
+	{
+		treeModel.update( securityCheck );
+		
+	}
+
+	@Override
+	public void securityCheckRemoved( SecurityCheck securityCheck )
+	{
+		securityTestTree.invalidate();
 	}
 }
