@@ -115,6 +115,7 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 
 	private JPopupMenu securityCheckWithPropertiesPopUp;
 	private JPopupMenu testStepPopUp;
+	private SecurityTreeCellRender cellRender;
 
 	public JSecurityTestTestStepList( SecurityTest securityTest, JSecurityTestRunLog securityTestLog )
 	{
@@ -148,7 +149,8 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 		securityTestTree.setUI( new CustomTreeUI() );
 		securityTestTree.setRootVisible( false );
 		securityTestTree.setLargeModel( true );
-		securityTestTree.setCellRenderer( new SecurityTreeCellRender() );
+		cellRender = new SecurityTreeCellRender();
+		securityTestTree.setCellRenderer( cellRender );
 		securityTestTree.getSelectionModel().setSelectionMode( TreeSelectionModel.SINGLE_TREE_SELECTION );
 		securityTestTree.addTreeSelectionListener( this );
 		securityTestTree.addMouseListener( this );
@@ -686,7 +688,9 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 			TestStep testStep = ( ( TestStepNode )node.getParent() ).getTestStep();
 			if( UISupport.confirm( "Remove security check [" + securityCheck.getName() + "]", "Remove SecurityCheck" ) )
 			{
+
 				securityTest.removeSecurityCheck( testStep, ( AbstractSecurityCheck )securityCheck );
+				cellRender.remove( node );
 				( ( SecurityCheckTree )securityTestTree.getModel() ).removeNodeFromParent( node );
 			}
 		}

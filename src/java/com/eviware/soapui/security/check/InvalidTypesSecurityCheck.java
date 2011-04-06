@@ -194,8 +194,7 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 							if( XmlUtils.seemsToBeXml( value ) )
 							// try
 							{
-								XmlObjectTreeModel model = new XmlObjectTreeModel( ( ( WsdlTestRequestStep )getTestStep() )
-										.getOperation().getInterface().getDefinitionContext().getSchemaTypeSystem(),
+								XmlObjectTreeModel model = new XmlObjectTreeModel( property.getSchemaType().getTypeSystem(),
 										XmlObject.Factory.parse( value ) );
 								XmlTreeNode[] nodes = model.selectTreeNodes( context.expand( param.getXpath() ) );
 								for( XmlTreeNode node : nodes )
@@ -220,8 +219,8 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 				if( XmlUtils.seemsToBeXml( value ) )
 				{
 					XmlObjectTreeModel model = null;
-					model = new XmlObjectTreeModel( ( ( WsdlTestRequestStep )getTestStep() ).getOperation().getInterface()
-							.getDefinitionContext().getSchemaTypeSystem(), XmlObject.Factory.parse( value ) );
+					model = new XmlObjectTreeModel( property.getSchemaType().getTypeSystem(), XmlObject.Factory
+							.parse( value ) );
 					for( SecurityCheckedParameter param : getParameterHolder().getParameterList() )
 					{
 						if( param.getXpath() == null || param.getXpath().trim().length() == 0 )
@@ -300,14 +299,13 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 					if( property.getValue() == null && property.getDefaultValue() == null )
 						continue;
 					// get value of that property
-					String value = context.expand(  property.getValue());
+					String value = context.expand( property.getValue() );
 
 					if( XmlUtils.seemsToBeXml( value ) )
 					{
 
-						XmlObjectTreeModel model = new XmlObjectTreeModel( ( ( WsdlTestRequestStep )getTestStep() )
-								.getOperation().getInterface().getDefinitionContext().getSchemaTypeSystem(), XmlObject.Factory
-								.parse( value ) );
+						XmlObjectTreeModel model = new XmlObjectTreeModel( property.getSchemaType().getTypeSystem(),
+								XmlObject.Factory.parse( value ) );
 
 						XmlTreeNode[] nodes = model.selectTreeNodes( context.expand( parameter.getXpath() ) );
 

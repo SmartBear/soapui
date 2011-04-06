@@ -46,6 +46,16 @@ public class SecurityCheckedParameterHolder extends SecurityCheckParameterListen
 		securityCheck.getTestStep().addTestPropertyListener( this );
 	}
 
+	public void addParameterListener( SecurityCheckParameterHolderListener listener )
+	{
+		listeners.add( listener );
+	}
+
+	public void removeParameterListener( SecurityCheckParameterHolderListener listener )
+	{
+		listeners.remove( listener );
+	}
+
 	public void updateConfig( CheckedParametersListConfig config )
 	{
 		paramsConfig = config;

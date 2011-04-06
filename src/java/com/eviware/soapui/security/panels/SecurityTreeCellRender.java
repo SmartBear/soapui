@@ -39,6 +39,7 @@ import com.eviware.soapui.model.security.SecurityCheck;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.check.AbstractSecurityCheck;
+import com.eviware.soapui.security.support.ProgressBarSecurityCheckAdapter;
 import com.eviware.soapui.security.support.ProgressBarSecurityTestStepAdapter;
 import com.eviware.soapui.support.UISupport;
 
@@ -138,6 +139,7 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 			testStep.addPropertyChangeListener( TestStep.ICON_PROPERTY, TestStepCellRender.this );
 
 			innerLeftPanel = new JPanel( new BorderLayout() );
+
 			if( exp )
 				expandCollapseBtn = new JButton( expanded );
 			else
@@ -145,6 +147,12 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 
 			expandCollapseBtn.setBorder( null );
 			expandCollapseBtn.setEnabled( false );
+
+			if( securityTest.getSecurityChecksMap().get( testStep.getId() ) == null
+					|| securityTest.getSecurityChecksMap().get( testStep.getId() ).size() == 0 )
+				expandCollapseBtn.setVisible( false );
+			else
+				expandCollapseBtn.setVisible( true );
 
 			innerLeftPanel.add( expandCollapseBtn, BorderLayout.WEST );
 
@@ -190,8 +198,8 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 
 			setSelected( sel );
 			setBorder( BorderFactory.createMatteBorder( 0, 0, 1, 0, Color.black ) );
-			progressBarAdapter = new ProgressBarSecurityTestStepAdapter( tree, node, progressBar, securityTest,
-					testStep, cntLabel );
+			progressBarAdapter = new ProgressBarSecurityTestStepAdapter( tree, node, progressBar, securityTest, testStep,
+					cntLabel );
 		}
 
 		public void reset()
@@ -216,9 +224,9 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 			super.removeNotify();
 			if( progressBarAdapter != null )
 			{
-//				progressBarAdapter.release();
-//
-//				progressBarAdapter = null;
+				// progressBarAdapter.release();
+				//
+				// progressBarAdapter = null;
 			}
 		}
 
@@ -265,6 +273,15 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 		@Override
 		public void setExpandedIcon( boolean exp )
 		{
+			if( securityTest.getSecurityChecksMap().get( testStep.getId() ) == null
+					|| securityTest.getSecurityChecksMap().get( testStep.getId() ).size() == 0 ) {
+				expandCollapseBtn.setVisible( false );
+				innerLeftPanel.setBorder( BorderFactory.createEmptyBorder( 0, 21, 0, 0 ) );
+			}
+			else {
+				expandCollapseBtn.setVisible( true );
+				innerLeftPanel.setBorder( BorderFactory.createEmptyBorder( 0, 5, 0, 0 ) );
+			}
 			if( exp )
 				expandCollapseBtn.setIcon( expanded );
 			else
@@ -350,31 +367,15 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 
 		}
 
+		public void release() {
+			progressBarAdapter.release();
+			securityCheck = null;
+		}
+		
 		public void reset()
 		{
 			progressBar.setValue( 0 );
 			progressBar.setString( "" );
-		}
-
-		public void addNotify()
-		{
-			super.addNotify();
-			if( progressBar != null )
-			{
-				// progressBarAdapter = new ProgressBarSecurityCheckAdapter( tree,
-				// node, progressBar,securityCheck );
-			}
-		}
-
-		public void removeNotify()
-		{
-			super.removeNotify();
-			if( progressBarAdapter != null )
-			{
-//				progressBarAdapter.release();
-//
-//				progressBarAdapter = null;
-			}
 		}
 
 		public void setSelected( boolean sel )
@@ -413,5 +414,14 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 
 		}
 
+	}
+
+	public void remove( SecurityCheckNode node )
+	{
+		Component component = componentTree.get( node );
+		if( component instanceof SecurityCheckCellRender )
+			((SecurityCheckCellRender)component).release();
+		componentTree.remove( node );
+		
 	}
 }

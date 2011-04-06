@@ -154,8 +154,7 @@ public class XPathInjectionSecurityCheck extends AbstractSecurityCheckWithProper
 							// no value, do nothing.
 							if( value == null || value.trim().equals( "" ) )
 								continue;
-							XmlObjectTreeModel model = new XmlObjectTreeModel( ( ( WsdlTestRequestStep )getTestStep() )
-									.getOperation().getInterface().getDefinitionContext().getSchemaTypeSystem(),
+							XmlObjectTreeModel model = new XmlObjectTreeModel( property.getSchemaType().getTypeSystem(),
 									XmlObject.Factory.parse( value ) );
 							XmlTreeNode[] nodes = model.selectTreeNodes( context.expand( param.getXpath() ) );
 							for( XmlTreeNode node : nodes )
@@ -177,8 +176,7 @@ public class XPathInjectionSecurityCheck extends AbstractSecurityCheckWithProper
 
 				String value = context.expand( property.getValue() );
 				XmlObjectTreeModel model = null;
-				model = new XmlObjectTreeModel( ( ( WsdlTestRequestStep )getTestStep() ).getOperation().getInterface()
-						.getDefinitionContext().getSchemaTypeSystem(), XmlObject.Factory.parse( value ) );
+				model = new XmlObjectTreeModel( property.getSchemaType().getTypeSystem(), XmlObject.Factory.parse( value ) );
 				for( SecurityCheckedParameter param : getParameterHolder().getParameterList() )
 				{
 					if( param.getXpath() == null || param.getXpath().trim().length() == 0 )
@@ -243,17 +241,14 @@ public class XPathInjectionSecurityCheck extends AbstractSecurityCheckWithProper
 					if( property.getValue() == null && property.getDefaultValue() == null )
 						continue;
 					// get value of that property
-					String value = context.expand( property.getValue());
+					String value = context.expand( property.getValue() );
 
 					// we have something that looks like xpath, or hope so.
 
 					XmlObjectTreeModel model = null;
 
-					if( testStep instanceof WsdlTestRequestStep )
-						model = new XmlObjectTreeModel( ( ( WsdlTestRequestStep )testStep ).getOperation().getInterface()
-								.getDefinitionContext().getSchemaTypeSystem(), XmlObject.Factory.parse( value ) );
-					if( testStep instanceof RestTestRequestStep || testStep instanceof HttpTestRequestStep )
-						model = new XmlObjectTreeModel( XmlObject.Factory.parse( value ) );
+					model = new XmlObjectTreeModel( property.getSchemaType().getTypeSystem(), XmlObject.Factory
+							.parse( value ) );
 
 					XmlTreeNode[] nodes = model.selectTreeNodes( context.expand( parameter.getXpath() ) );
 

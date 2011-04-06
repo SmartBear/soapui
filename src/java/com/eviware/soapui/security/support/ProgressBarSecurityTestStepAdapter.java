@@ -26,6 +26,7 @@ import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunnerImpl;
+import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.security.result.SecurityCheckRequestResult;
 import com.eviware.soapui.security.result.SecurityCheckResult;
 import com.eviware.soapui.security.result.SecurityResult.SecurityStatus;
@@ -59,7 +60,7 @@ public class ProgressBarSecurityTestStepAdapter
 		this.securityTest = securityTest;
 
 		this.counterLabel = cntLabel;
-		internalTestRunListener = new InternalTestRunListener( testStep );
+		internalTestRunListener = new InternalTestRunListener(  );
 		if( progressBar != null && cntLabel != null )
 			this.securityTest.addSecurityTestRunListener( internalTestRunListener );
 	}
@@ -73,29 +74,39 @@ public class ProgressBarSecurityTestStepAdapter
 	{
 
 		private int totalAlertsCounter;
-		private TestStep ts;
-
-		public InternalTestRunListener( TestStep testStep )
-		{
-			this.ts = testStep;
-		}
 
 		@Override
 		public void beforeRun( TestCaseRunner testRunner, SecurityTestRunContext runContext )
 		{
-			if( progressBar.isIndeterminate() )
-				return;
-
 			progressBar.getModel().setMaximum(
 					( ( SecurityTestRunnerImpl )testRunner ).getSecurityTest().getTestStepSecurityChecksCount(
 							testStep.getId() ) );
-			progressBar.setForeground( UNKNOWN_COLOR );
-			progressBar.setString( "UNKNOWN" );
+			
+			progressBar.setString( "" );
+			progressBar.setForeground( Color.white );
 			counterLabel.setText( " 0 " );
-			counterLabel.setBackground( OK_COLOR );
+			counterLabel.setOpaque( false );
+			
 			totalAlertsCounter = 0;
 			( ( DefaultTreeModel )tree.getModel() ).nodeChanged( node );
 		}
+		
+		@Override
+		public void beforeSecurityCheck( TestCaseRunner testRunner, SecurityTestRunContext runContext,
+				AbstractSecurityCheck securityCheck )
+		{
+			if( securityCheck.getTestStep().getId().equals( testStep.getId() ) )
+			{
+				if ( progressBar.getString().length() == 0 ) {
+					progressBar.setString( "UNKNOWN" );
+					progressBar.setForeground( UNKNOWN_COLOR );
+					counterLabel.setOpaque( true );
+					counterLabel.setBackground( OK_COLOR );
+				}
+			}
+		}
+		
+		
 
 		public void afterSecurityCheck( TestCaseRunner testRunner, SecurityTestRunContext runContext,
 				SecurityCheckResult securityCheckResult )
@@ -148,6 +159,7 @@ public class ProgressBarSecurityTestStepAdapter
 			{
 				if( securityCheckReqResult.getStatus() == SecurityStatus.FAILED )
 				{
+					counterLabel.setOpaque( true );
 					counterLabel.setBackground( FAILED_COLOR );
 					totalAlertsCounter++ ;
 				}
