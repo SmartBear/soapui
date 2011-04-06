@@ -672,7 +672,6 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 
 			SecurityTestDesktopPanel.this.beforeRun();
 
-			testStepList.reset();
 			progressBar.setValue( 0 );
 			progressBar.setString( "" );
 
