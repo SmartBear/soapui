@@ -14,6 +14,7 @@ package com.eviware.soapui.security.support;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.util.List;
 
 import javax.swing.JLabel;
 import javax.swing.JProgressBar;
@@ -63,7 +64,8 @@ public class ProgressBarSecurityTestStepAdapter
 
 		this.counterLabel = cntLabel;
 		internalTestRunListener = new InternalTestRunListener();
-		if( progressBar != null && cntLabel != null ) {
+		if( progressBar != null && cntLabel != null )
+		{
 			this.counterLabel.setPreferredSize( new Dimension( 50, 18 ) );
 			this.counterLabel.setHorizontalTextPosition( SwingConstants.CENTER );
 			this.counterLabel.setHorizontalAlignment( SwingConstants.CENTER );
@@ -73,7 +75,10 @@ public class ProgressBarSecurityTestStepAdapter
 
 	public void release()
 	{
-		// securityTest.removeSecurityTestRunListener( internalTestRunListener );
+		securityTest.removeSecurityTestRunListener( internalTestRunListener );
+		
+		securityTest = null;
+		testStep = null;
 	}
 
 	public class InternalTestRunListener extends SecurityTestRunListenerAdapter

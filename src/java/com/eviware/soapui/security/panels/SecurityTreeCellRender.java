@@ -16,8 +16,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Point;
-import java.awt.Rectangle;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.HashMap;
@@ -95,7 +93,7 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 		return new TestStepCellRender( arg0, node, sel, arg3, arg4, arg5, arg6 );
 	}
 
-	public class TestStepCellRender extends JPanel implements PropertyChangeListener, CustomTreeNode
+	public class TestStepCellRender extends JPanel implements PropertyChangeListener, CustomTreeNode, ReleasableNode
 	{
 		private WsdlTestStep testStep;
 		private JProgressBar progressBar;
@@ -322,13 +320,15 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 
 		public void release()
 		{
-			// TODO Auto-generated method stub
-			
+			progressBarAdapter.release();
+			testStep = null;
+			securityTest = null;
 		}
 
 	}
 
-	public class SecurityCheckCellRender extends JPanel implements PropertyChangeListener, CustomTreeNode
+	public class SecurityCheckCellRender extends JPanel implements PropertyChangeListener, CustomTreeNode,
+			ReleasableNode
 	{
 		private SecurityCheck securityCheck;
 		private JProgressBar progressBar;
@@ -435,11 +435,13 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 
 	}
 
-	public void remove( SecurityCheckNode node )
+	public void remove( DefaultMutableTreeNode node )
 	{
 		Component component = componentTree.get( node );
-		if( component instanceof SecurityCheckCellRender )
-			( ( SecurityCheckCellRender )component ).release();
+		if( component instanceof ReleasableNode )
+		{
+			( ( ReleasableNode )component ).release();
+		}
 		componentTree.remove( node );
 	}
 
@@ -451,11 +453,11 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 
 	public void release()
 	{
-		for( DefaultMutableTreeNode key : componentTree.keySet() ) 
-			if( key instanceof TestStepNode )
-				( ( TestStepCellRender )componentTree.get( key ) ).release();
-			else
-				( ( SecurityCheckCellRender )componentTree.get( key ) ).release();
+		for( DefaultMutableTreeNode key : componentTree.keySet() )
+			if( key instanceof ReleasableNode )
+			{
+				( ( ReleasableNode )componentTree.get( key ) ).release();
+			}
 		componentTree.clear();
 	}
 }
