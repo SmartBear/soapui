@@ -773,9 +773,10 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 
 	protected void enableTestStepActions( DefaultMutableTreeNode node )
 	{
-		if( !node.getAllowsChildren() )
-			return;
-		addSecurityCheckAction.setEnabled( true );
+		if( node.getAllowsChildren() )
+			addSecurityCheckAction.setEnabled( true );
+		else
+			addSecurityCheckAction.setEnabled( false );
 		configureSecurityCheckAction.setEnabled( false );
 		removeSecurityCheckAction.setEnabled( false );
 		cloneParametersAction.setEnabled( false );
