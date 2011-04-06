@@ -13,10 +13,12 @@
 package com.eviware.soapui.security.support;
 
 import java.awt.Color;
+import java.awt.Dimension;
 
 import javax.swing.JLabel;
 import javax.swing.JProgressBar;
 import javax.swing.JTree;
+import javax.swing.SwingConstants;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
@@ -61,8 +63,12 @@ public class ProgressBarSecurityTestStepAdapter
 
 		this.counterLabel = cntLabel;
 		internalTestRunListener = new InternalTestRunListener();
-		if( progressBar != null && cntLabel != null )
+		if( progressBar != null && cntLabel != null ) {
+			this.counterLabel.setPreferredSize( new Dimension( 50, 18 ) );
+			this.counterLabel.setHorizontalTextPosition( SwingConstants.CENTER );
+			this.counterLabel.setHorizontalAlignment( SwingConstants.CENTER );
 			this.securityTest.addSecurityTestRunListener( internalTestRunListener );
+		}
 	}
 
 	public void release()

@@ -1,10 +1,12 @@
 package com.eviware.soapui.security.support;
 
 import java.awt.Color;
+import java.awt.Dimension;
 
 import javax.swing.JLabel;
 import javax.swing.JProgressBar;
 import javax.swing.JTree;
+import javax.swing.SwingConstants;
 import javax.swing.tree.DefaultTreeModel;
 
 import com.eviware.soapui.model.security.SecurityCheck;
@@ -44,6 +46,7 @@ public class ProgressBarSecurityCheckAdapter extends SecurityTestRunListenerAdap
 	private SecurityCheck securityCheck;
 	private SecurityTest securityTest;
 	private int alertsCounter = 0;
+	private String prePostFix = " ";
 
 	private JLabel cntLabel;
 
@@ -81,7 +84,9 @@ public class ProgressBarSecurityCheckAdapter extends SecurityTestRunListenerAdap
 		this.securityTest.addSecurityTestRunListener( this );
 
 		this.cntLabel = cntLabel;
-
+		this.cntLabel.setPreferredSize( new Dimension( 50, 18 ) );
+		this.cntLabel.setHorizontalTextPosition( SwingConstants.CENTER );
+		this.cntLabel.setHorizontalAlignment( SwingConstants.CENTER );
 		( ( AbstractSecurityCheck )securityCheck ).addAssertionsListener( this );
 
 	}
@@ -139,7 +144,7 @@ public class ProgressBarSecurityCheckAdapter extends SecurityTestRunListenerAdap
 				cntLabel.setBackground( FAILED_COLOR );
 			}
 
-			cntLabel.setText( " " + alertsCounter + " " );
+			cntLabel.setText( prePostFix + alertsCounter + prePostFix );
 			progressBar.setValue( progressBar.getValue() + 1 );
 			( ( DefaultTreeModel )tree.getModel() ).nodeChanged( node );
 		}
@@ -149,6 +154,9 @@ public class ProgressBarSecurityCheckAdapter extends SecurityTestRunListenerAdap
 	public void beforeRun( TestCaseRunner testRunner, SecurityTestRunContext runContext )
 	{
 		if( securityCheck.getAssertionsSupport().getAssertionCount() == 0 )
+			return;
+		if( securityCheck instanceof AbstractSecurityCheckWithProperties
+				&& ( ( AbstractSecurityCheckWithProperties )securityCheck ).getParameterHolder().getParameterList().size() == 0 )
 			return;
 		progressBar.setIndeterminate( false );
 
