@@ -156,8 +156,10 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 		securityTestTree.addMouseListener( this );
 		securityTestTree.setRowHeight( 30 );
 		securityTestTree.setToggleClickCount( 0 );
+		securityTestTree.setBackground( new Color(240, 240, 240) );
 		add( toolbar, BorderLayout.NORTH );
-		add( new JScrollPane( securityTestTree ), BorderLayout.CENTER );
+		JScrollPane scollPane = new JScrollPane( securityTestTree );
+		add( scollPane, BorderLayout.CENTER );
 		securityTest.getTestCase().getTestSuite().addTestSuiteListener( testSuiteListener );
 
 		for( int row = 0; row < securityTestTree.getRowCount(); row++ )
@@ -165,7 +167,7 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 			securityTestTree.expandRow( row );
 		}
 		this.securityTestLog = securityTestLog;
-
+		
 	}
 
 	protected SecurityTest getSecurityTest()
