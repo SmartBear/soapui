@@ -240,7 +240,7 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 				treeModel.removeNodeFromParent( nodeCld );
 			}
 			cellRender.remove( node );
-			( ( SecurityCheckTree )securityTestTree.getModel() ).removeNodeFromParent( node );
+			treeModel.removeNodeFromParent( node );
 		}
 
 		@Override
