@@ -149,7 +149,7 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 
 			expandCollapseBtn.setBorder( null );
 			expandCollapseBtn.setEnabled( false );
-			
+
 			if( securityTest.getSecurityChecksMap().get( testStep.getId() ) == null
 					|| securityTest.getSecurityChecksMap().get( testStep.getId() ).size() == 0 )
 				expandCollapseBtn.setVisible( false );
@@ -276,11 +276,13 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 		public void setExpandedIcon( boolean exp )
 		{
 			if( securityTest.getSecurityChecksMap().get( testStep.getId() ) == null
-					|| securityTest.getSecurityChecksMap().get( testStep.getId() ).size() == 0 ) {
+					|| securityTest.getSecurityChecksMap().get( testStep.getId() ).size() == 0 )
+			{
 				expandCollapseBtn.setVisible( false );
 				innerLeftPanel.setBorder( BorderFactory.createEmptyBorder( 0, 21, 0, 0 ) );
 			}
-			else {
+			else
+			{
 				expandCollapseBtn.setVisible( true );
 				innerLeftPanel.setBorder( BorderFactory.createEmptyBorder( 0, 5, 0, 0 ) );
 			}
@@ -309,13 +311,19 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 				}
 			}
 		}
-		
-		public boolean isOnExpandButton(int x, int y ) {
-			y = y - 30 * (tree.getRowForLocation( x, y ));
-			if ( (5 <= x) && ( 20 >= x ) &&
-					(5 <= y ) && ( 20 >= y) )
+
+		public boolean isOnExpandButton( int x, int y )
+		{
+			y = y - 30 * ( tree.getRowForLocation( x, y ) );
+			if( ( 5 <= x ) && ( 20 >= x ) && ( 5 <= y ) && ( 20 >= y ) )
 				return true;
 			return false;
+		}
+
+		public void release()
+		{
+			// TODO Auto-generated method stub
+			
 		}
 
 	}
@@ -377,11 +385,12 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 
 		}
 
-		public void release() {
+		public void release()
+		{
 			progressBarAdapter.release();
 			securityCheck = null;
 		}
-		
+
 		public void reset()
 		{
 			progressBar.setValue( 0 );
@@ -430,13 +439,23 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 	{
 		Component component = componentTree.get( node );
 		if( component instanceof SecurityCheckCellRender )
-			((SecurityCheckCellRender)component).release();
+			( ( SecurityCheckCellRender )component ).release();
 		componentTree.remove( node );
 	}
-	
-	
-	public boolean isOn( TestStepNode node, int x, int y ) {
+
+	public boolean isOn( TestStepNode node, int x, int y )
+	{
 		TestStepCellRender component = ( TestStepCellRender )componentTree.get( node );
 		return component.isOnExpandButton( x, y );
+	}
+
+	public void release()
+	{
+		for( DefaultMutableTreeNode key : componentTree.keySet() ) 
+			if( key instanceof TestStepNode )
+				( ( TestStepCellRender )componentTree.get( key ) ).release();
+			else
+				( ( SecurityCheckCellRender )componentTree.get( key ) ).release();
+		componentTree.clear();
 	}
 }
