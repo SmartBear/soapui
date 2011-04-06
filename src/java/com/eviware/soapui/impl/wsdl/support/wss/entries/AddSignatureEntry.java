@@ -26,6 +26,7 @@ import org.apache.ws.security.WSConstants;
 import org.apache.ws.security.WSEncryptionPart;
 import org.apache.ws.security.message.WSSecHeader;
 import org.apache.ws.security.message.WSSecSignature;
+import org.apache.xml.security.algorithms.MessageDigestAlgorithm;
 import org.apache.xml.security.signature.XMLSignature;
 import org.w3c.dom.Document;
 
@@ -54,6 +55,7 @@ public class AddSignatureEntry extends WssEntryBase
 	private String signatureAlgorithm;
 	private boolean useSingleCert;
 	private String signatureCanonicalization;
+	private String digestAlgorithm; /* ADDED: Combo box for selecting digest algorithm */ 
 	private List<StringToStringMap> parts = new ArrayList<StringToStringMap>();
 	private com.eviware.soapui.impl.wsdl.support.wss.entries.WssEntryBase.KeyAliasComboBoxModel keyAliasComboBoxModel;
 	private com.eviware.soapui.impl.wsdl.support.wss.entries.AddSignatureEntry.InternalWssContainerListener wssContainerListener;
@@ -103,7 +105,17 @@ public class AddSignatureEntry extends WssEntryBase
 		form.appendComboBox( "signatureCanonicalization", "Signature Canonicalization", new String[] { DEFAULT_OPTION,
 				WSConstants.C14N_OMIT_COMMENTS, WSConstants.C14N_WITH_COMMENTS, WSConstants.C14N_EXCL_OMIT_COMMENTS,
 				WSConstants.C14N_EXCL_WITH_COMMENTS }, "Set the canonicalization method to use." );
-
+		
+		/* ADDED: Combo box for selecting digest algorithm */
+		form.appendComboBox( "digestAlgorithm", "Digest Algorithm", new String[] { DEFAULT_OPTION, 
+						MessageDigestAlgorithm.ALGO_ID_DIGEST_NOT_RECOMMENDED_MD5,
+						MessageDigestAlgorithm.ALGO_ID_DIGEST_SHA1,
+						MessageDigestAlgorithm.ALGO_ID_DIGEST_SHA256,
+						MessageDigestAlgorithm.ALGO_ID_DIGEST_SHA384,
+						MessageDigestAlgorithm.ALGO_ID_DIGEST_SHA512,
+						MessageDigestAlgorithm.ALGO_ID_DIGEST_RIPEMD160 },
+						"Set the digest algorithm to use");
+		
 		form.appendCheckBox( "useSingleCert", "Use Single Certificate", "Use single certificate for signing" );
 
 		form.append( "Parts", new WSPartsTable( parts, this ) );
@@ -125,6 +137,10 @@ public class AddSignatureEntry extends WssEntryBase
 		signatureAlgorithm = reader.readString( "signatureAlgorithm", null );
 		signatureCanonicalization = reader.readString( "signatureCanonicalization", null );
 		useSingleCert = reader.readBoolean( "useSingleCert", false );
+
+		/* ADDED: digest algorithm to use */
+		digestAlgorithm = reader.readString( "digestAlgorithm", null);
+
 		parts = readParts( reader, "signaturePart" );
 	}
 
@@ -136,6 +152,10 @@ public class AddSignatureEntry extends WssEntryBase
 		builder.add( "signatureAlgorithm", signatureAlgorithm );
 		builder.add( "signatureCanonicalization", signatureCanonicalization );
 		builder.add( "useSingleCert", useSingleCert );
+
+		/* ADDED: digest algorithm to use */
+		builder.add( "digestAlgorithm", digestAlgorithm );
+		
 		saveParts( builder, parts, "signaturePart" );
 	}
 
@@ -164,6 +184,9 @@ public class AddSignatureEntry extends WssEntryBase
 				wssSign.setSigCanonicalization( signatureCanonicalization );
 
 			wssSign.setUseSingleCertificate( useSingleCert );
+			
+			/* ADDED: Set the digest algorithm to the selected one */
+			wssSign.setDigestAlgo( digestAlgorithm );
 
 			Vector<WSEncryptionPart> wsParts = createWSParts( parts );
 			if( !wsParts.isEmpty() )
@@ -234,6 +257,21 @@ public class AddSignatureEntry extends WssEntryBase
 			signatureAlgorithm = null;
 
 		this.signatureAlgorithm = signatureAlgorithm;
+		saveConfig();
+	}
+	
+	/* ADDED: digest algorithm */
+	public String getDigestAlgorithm()
+	{
+		return StringUtils.isNullOrEmpty( digestAlgorithm ) ? DEFAULT_OPTION : digestAlgorithm;
+	}
+	
+	public void setDigestAlgorithm( String digestAlgorithm )
+	{
+		if ( DEFAULT_OPTION.equals( digestAlgorithm ) )
+			digestAlgorithm = null;
+		
+		this.digestAlgorithm = digestAlgorithm;
 		saveConfig();
 	}
 
