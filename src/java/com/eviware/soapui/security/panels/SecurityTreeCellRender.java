@@ -16,6 +16,8 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.HashMap;
@@ -147,7 +149,7 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 
 			expandCollapseBtn.setBorder( null );
 			expandCollapseBtn.setEnabled( false );
-
+			
 			if( securityTest.getSecurityChecksMap().get( testStep.getId() ) == null
 					|| securityTest.getSecurityChecksMap().get( testStep.getId() ).size() == 0 )
 				expandCollapseBtn.setVisible( false );
@@ -307,6 +309,14 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 				}
 			}
 		}
+		
+		public boolean isOnExpandButton(int x, int y ) {
+			y = y - 30 * (tree.getRowForLocation( x, y ));
+			if ( (5 <= x) && ( 20 >= x ) &&
+					(5 <= y ) && ( 20 >= y) )
+				return true;
+			return false;
+		}
 
 	}
 
@@ -422,6 +432,11 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 		if( component instanceof SecurityCheckCellRender )
 			((SecurityCheckCellRender)component).release();
 		componentTree.remove( node );
-		
+	}
+	
+	
+	public boolean isOn( TestStepNode node, int x, int y ) {
+		TestStepCellRender component = ( TestStepCellRender )componentTree.get( node );
+		return component.isOnExpandButton( x, y );
 	}
 }

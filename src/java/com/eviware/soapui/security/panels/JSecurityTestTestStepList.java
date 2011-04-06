@@ -791,7 +791,8 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 		/* if nothing is selected */
 		if( e.getClickCount() == 1 )
 		{
-			if( securityTestTree.isExpanded( TreePathUtils.getPath( node ) ) )
+			if( securityTestTree.isExpanded( TreePathUtils.getPath( node ) ) && node instanceof TestStepNode
+					&& cellRender.isOn( ( TestStepNode )node, e.getX(), e.getY() ) )
 			{
 				securityTestTree.collapseRow( securityTestTree.getRowForLocation( e.getX(), e.getY() ) );
 			}
