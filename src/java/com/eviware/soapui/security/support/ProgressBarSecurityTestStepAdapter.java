@@ -60,7 +60,7 @@ public class ProgressBarSecurityTestStepAdapter
 		this.securityTest = securityTest;
 
 		this.counterLabel = cntLabel;
-		internalTestRunListener = new InternalTestRunListener(  );
+		internalTestRunListener = new InternalTestRunListener();
 		if( progressBar != null && cntLabel != null )
 			this.securityTest.addSecurityTestRunListener( internalTestRunListener );
 	}
@@ -81,23 +81,24 @@ public class ProgressBarSecurityTestStepAdapter
 			progressBar.getModel().setMaximum(
 					( ( SecurityTestRunnerImpl )testRunner ).getSecurityTest().getTestStepSecurityChecksCount(
 							testStep.getId() ) );
-			
+
 			progressBar.setString( "" );
 			progressBar.setForeground( Color.white );
 			counterLabel.setText( " 0 " );
 			counterLabel.setOpaque( false );
-			
+
 			totalAlertsCounter = 0;
 			( ( DefaultTreeModel )tree.getModel() ).nodeChanged( node );
 		}
-		
+
 		@Override
 		public void beforeSecurityCheck( TestCaseRunner testRunner, SecurityTestRunContext runContext,
 				AbstractSecurityCheck securityCheck )
 		{
 			if( securityCheck.getTestStep().getId().equals( testStep.getId() ) )
 			{
-				if ( progressBar.getString().length() == 0 ) {
+				if( progressBar.getString().length() == 0 )
+				{
 					progressBar.setString( "UNKNOWN" );
 					progressBar.setForeground( UNKNOWN_COLOR );
 					counterLabel.setOpaque( true );
@@ -105,8 +106,6 @@ public class ProgressBarSecurityTestStepAdapter
 				}
 			}
 		}
-		
-		
 
 		public void afterSecurityCheck( TestCaseRunner testRunner, SecurityTestRunContext runContext,
 				SecurityCheckResult securityCheckResult )
@@ -126,8 +125,11 @@ public class ProgressBarSecurityTestStepAdapter
 						}
 						else
 						{
-							progressBar.setForeground( OK_COLOR );
-							progressBar.setString( "OK" );
+							if( !progressBar.getString().equals( "FAILED" ) )
+							{
+								progressBar.setForeground( OK_COLOR );
+								progressBar.setString( "OK" );
+							}
 						}
 					}
 					else if( securityCheckResult.getStatus() == SecurityStatus.FAILED )
@@ -137,12 +139,18 @@ public class ProgressBarSecurityTestStepAdapter
 					}
 					else if( securityCheckResult.getStatus() == SecurityStatus.OK )
 					{
-						progressBar.setForeground( OK_COLOR );
-						progressBar.setString( "OK" );
+						if( !progressBar.getString().equals( "FAILED" ) )
+						{
+							progressBar.setForeground( OK_COLOR );
+							progressBar.setString( "OK" );
+						}
 					}
 					else if( securityCheckResult.getStatus() == SecurityStatus.UNKNOWN )
 					{
-						progressBar.setForeground( UNKNOWN_COLOR );
+						if( progressBar.getString().equals( "" ) )
+						{
+							progressBar.setForeground( UNKNOWN_COLOR );
+						}
 					}
 
 				progressBar.setValue( ( ( SecurityTestRunContext )runContext ).getCurrentCheckIndex() + 1 );

@@ -65,9 +65,9 @@ public class ProgressBarSecurityCheckAdapter extends SecurityTestRunListenerAdap
 
 		if( this.securityCheck instanceof AbstractSecurityCheckWithProperties )
 		{
-			if( ( ( AbstractSecurityCheckWithProperties )this.securityCheck ).getParameterHolder() == null
-					|| ( ( AbstractSecurityCheckWithProperties )this.securityCheck ).getParameterHolder().getParameterList() == null
-					|| ( ( AbstractSecurityCheckWithProperties )this.securityCheck ).getParameterHolder().getParameterList()
+			if( ( ( AbstractSecurityCheckWithProperties )this.securityCheck ).getParameterHolder() != null
+					&& ( ( AbstractSecurityCheckWithProperties )this.securityCheck ).getParameterHolder().getParameterList() != null
+					&& ( ( AbstractSecurityCheckWithProperties )this.securityCheck ).getParameterHolder().getParameterList()
 							.size() == 0 )
 			{
 				progressBar.setForeground( new Color( 204, 153, 255 ) );
