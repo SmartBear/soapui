@@ -11,17 +11,19 @@
  */
 package com.eviware.soapui.model.security;
 
+import java.util.ArrayList;
+
 import javax.swing.table.DefaultTableModel;
 
 import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
 import com.eviware.soapui.model.testsuite.TestProperty;
-import com.eviware.soapui.security.support.SecurityCheckedParameterImpl;
+import com.eviware.soapui.security.SensitiveInformationPropertyHolder.SensitiveTokenProperty;
 
 @SuppressWarnings( "serial" )
 public class SensitiveInformationTableModel extends DefaultTableModel
 {
 
-	private String[] columnNames = new String[] { "Token", "Description" };
+	private String[] columnNames = { "Token", "Description" };
 	private MutableTestPropertyHolder holder;
 
 	public MutableTestPropertyHolder getHolder()
@@ -49,7 +51,7 @@ public class SensitiveInformationTableModel extends DefaultTableModel
 	@Override
 	public boolean isCellEditable( int row, int column )
 	{
-		return column != 1;
+		return true;
 	}
 
 	@Override
@@ -68,26 +70,20 @@ public class SensitiveInformationTableModel extends DefaultTableModel
 	}
 
 	@Override
-	public Class<?> getColumnClass( int columnIndex )
-	{
-		return String.class;
-	}
-
-	@Override
 	public void setValueAt( Object aValue, int row, int column )
 	{
 		if( holder.getPropertyList().isEmpty() )
 			return;
-		SecurityCheckedParameterImpl param = ( SecurityCheckedParameterImpl )holder.getPropertyList().get( row );
+		SensitiveTokenProperty param = ( SensitiveTokenProperty )holder.getPropertyList().get( row );
 		switch( column )
 		{
 		case 0 :
-			param.setLabel( ( String )aValue );
-			break;
-		case 1 :
 			param.setName( ( String )aValue );
 			break;
-		
+		case 1 :
+			param.setValue( ( String )aValue );
+			break;
+
 		}
 	}
 
@@ -100,12 +96,21 @@ public class SensitiveInformationTableModel extends DefaultTableModel
 	@Override
 	public int getRowCount()
 	{
-		return holder == null ? 0 : holder.getPropertyList().size();
+		return holder == null ? 0 : holder.getPropertyList() == null ? 0 : holder.getPropertyList().size();
 	}
 
 	public void removeRows( int[] selectedRows )
 	{
-	//	holder.getPropertyAt( 0).removeParameters( selectedRows );
+		ArrayList<String> toRemove = new ArrayList<String>();
+
+		for( int index : selectedRows )
+		{
+			String name = ( String )getValueAt( index, 0 );
+			toRemove.add( name );
+		}
+		for( String name : toRemove )
+			holder.removeProperty( name );
+		fireTableDataChanged();
 	}
 
 }

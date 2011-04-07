@@ -11,6 +11,7 @@
  */
 package com.eviware.soapui.security;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -79,7 +80,7 @@ public class SensitiveInformationPropertyHolder implements MutableTestPropertyHo
 	@Override
 	public List<TestProperty> getPropertyList()
 	{
-		return ( List<TestProperty> )properties.values();
+		return new ArrayList<TestProperty>( properties.values() );
 	}
 
 	@Override
@@ -150,7 +151,7 @@ public class SensitiveInformationPropertyHolder implements MutableTestPropertyHo
 			return false;
 	}
 
-	class SensitiveTokenProperty implements TestProperty
+	public class SensitiveTokenProperty implements TestProperty
 	{
 
 		private String name;
@@ -225,6 +226,11 @@ public class SensitiveInformationPropertyHolder implements MutableTestPropertyHo
 		public void setValue( String value )
 		{
 			this.value = value;
+		}
+
+		public void setName( String aValue )
+		{
+			this.name = aValue;
 		}
 
 	}
