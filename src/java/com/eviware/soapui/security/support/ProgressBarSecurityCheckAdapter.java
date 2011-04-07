@@ -10,8 +10,6 @@ import javax.swing.SwingConstants;
 import javax.swing.tree.DefaultTreeModel;
 
 import com.eviware.soapui.model.security.SecurityCheck;
-import com.eviware.soapui.model.security.SecurityCheckParameterHolderListener;
-import com.eviware.soapui.model.security.SecurityCheckedParameter;
 import com.eviware.soapui.model.testsuite.AssertionsListener;
 import com.eviware.soapui.model.testsuite.TestAssertion;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
@@ -22,7 +20,6 @@ import com.eviware.soapui.security.check.AbstractSecurityCheckWithProperties;
 import com.eviware.soapui.security.panels.SecurityCheckNode;
 import com.eviware.soapui.security.result.SecurityCheckRequestResult;
 import com.eviware.soapui.security.result.SecurityCheckResult;
-import com.eviware.soapui.security.result.SecurityResult;
 import com.eviware.soapui.security.result.SecurityResult.SecurityStatus;
 
 public class ProgressBarSecurityCheckAdapter extends SecurityTestRunListenerAdapter implements AssertionsListener
@@ -30,7 +27,7 @@ public class ProgressBarSecurityCheckAdapter extends SecurityTestRunListenerAdap
 
 	private static final Color OK_COLOR = new Color( 0, 204, 102 );
 	private static final Color FAILED_COLOR = new Color( 255, 102, 0 );
-	private static final Color UNKNOWN_COLOR = new Color( 240, 240, 240 );
+//	private static final Color UNKNOWN_COLOR = new Color( 240, 240, 240 );
 	private static final Color MISSING_ASSERTION_COLOR = new Color( 204, 153, 255 );
 
 	private static final String STATE_RUN = "No Alerts";
@@ -55,7 +52,6 @@ public class ProgressBarSecurityCheckAdapter extends SecurityTestRunListenerAdap
 		this.tree = tree;
 		this.node = node;
 		this.progressBar = progressBar;
-		this.progressBar.setBackground( UNKNOWN_COLOR );
 		this.progressBar.setMaximum( 100 );
 		this.securityCheck = securityCheck;
 		this.securityTest = securityTest;
@@ -143,6 +139,7 @@ public class ProgressBarSecurityCheckAdapter extends SecurityTestRunListenerAdap
 
 		progressBar.setValue( 0 );
 		progressBar.setString( "" );
+		progressBar.setForeground( OK_COLOR );
 		cntLabel.setOpaque( false );
 		cntLabel.setText( "" );
 		alertsCounter = 0;
@@ -158,6 +155,23 @@ public class ProgressBarSecurityCheckAdapter extends SecurityTestRunListenerAdap
 				&& this.securityCheck.getName().equals( securityCheckResult.getSecurityCheck().getName() ) )
 		{
 			if ( securityCheckResult.getStatus() != SecurityStatus.CANCELED ) {
+				if( securityCheck.getAssertionsSupport().getAssertionCount() == 0 )
+				{
+					progressBar.setForeground( MISSING_ASSERTION_COLOR );
+					progressBar.setString( STATE_MISSING_ASSERTIONS );
+				}
+				else if( this.securityCheck instanceof AbstractSecurityCheckWithProperties )
+				{
+					if( ( ( AbstractSecurityCheckWithProperties )this.securityCheck ).getParameterHolder() != null
+							&& ( ( AbstractSecurityCheckWithProperties )this.securityCheck ).getParameterHolder()
+									.getParameterList() != null
+							&& ( ( AbstractSecurityCheckWithProperties )this.securityCheck ).getParameterHolder()
+									.getParameterList().size() == 0 )
+					{
+						progressBar.setForeground( MISSING_ASSERTION_COLOR );
+						progressBar.setString( STATE_MISSING_PARAMETERS );
+					}
+				}
 				progressBar.setValue( 100 );
 			}else {
 				progressBar.setString( STATE_CANCEL );
@@ -171,18 +185,14 @@ public class ProgressBarSecurityCheckAdapter extends SecurityTestRunListenerAdap
 	 */
 	void updateProgressBar()
 	{
-		if( ProgressBarSecurityCheckAdapter.this.securityCheck.getAssertionsSupport().getAssertionCount() == 0 )
-		{
-			ProgressBarSecurityCheckAdapter.this.progressBar.setForeground( new Color( 204, 153, 255 ) );
-			ProgressBarSecurityCheckAdapter.this.progressBar.setString( "Missing Assertions" );
-			ProgressBarSecurityCheckAdapter.this.progressBar.setValue( 100 );
-		}
-		else
-		{
-			ProgressBarSecurityCheckAdapter.this.progressBar.setForeground( UNKNOWN_COLOR );
-		}
-		( ( DefaultTreeModel )ProgressBarSecurityCheckAdapter.this.tree.getModel() )
-				.nodeChanged( ProgressBarSecurityCheckAdapter.this.node );
+//		if( ProgressBarSecurityCheckAdapter.this.securityCheck.getAssertionsSupport().getAssertionCount() == 0 )
+//		{
+//			ProgressBarSecurityCheckAdapter.this.progressBar.setForeground( MISSING_ASSERTION_COLOR );
+//			ProgressBarSecurityCheckAdapter.this.progressBar.setString( STATE_MISSING_ASSERTIONS );
+//			ProgressBarSecurityCheckAdapter.this.progressBar.setValue( 100 );
+//		}
+//		( ( DefaultTreeModel )ProgressBarSecurityCheckAdapter.this.tree.getModel() )
+//				.nodeChanged( ProgressBarSecurityCheckAdapter.this.node );
 	}
 
 	@Override
