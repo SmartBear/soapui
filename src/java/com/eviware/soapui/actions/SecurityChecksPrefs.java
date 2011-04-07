@@ -13,10 +13,19 @@
 package com.eviware.soapui.actions;
 
 import java.awt.Dimension;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DropTarget;
 
 import javax.swing.JLabel;
+import javax.swing.JTable;
+import javax.swing.TransferHandler;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
+import com.eviware.soapui.impl.wsdl.panels.teststeps.support.DefaultPropertyTableHolderModel;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.PropertyHolderTable;
+import com.eviware.soapui.impl.wsdl.panels.teststeps.support.PropertyHolderTable.PropertiesHolderJTable;
+import com.eviware.soapui.impl.wsdl.panels.teststeps.support.PropertyHolderTable.PropertyHolderTablePropertyExpansionDropTarget;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.support.components.SimpleForm;
@@ -25,6 +34,7 @@ import com.eviware.soapui.support.types.StringToStringMap;
 public class SecurityChecksPrefs implements Prefs
 {
 
+	public static final String GLOBAL_SENSITIVE_INFORMATION_TOKENS = "Global Sensitive Information Tokens";
 	private SimpleForm securityChecksForm;
 	private final String title;
 
@@ -40,7 +50,56 @@ public class SecurityChecksPrefs implements Prefs
 			securityChecksForm = new SimpleForm();
 
 			PropertyHolderTable propertyHolderTable = new PropertyHolderTable( PropertyExpansionUtils
-					.getSecurityGlobalProperties() );
+					.getSecurityGlobalProperties() ){
+				protected JTable buildPropertiesTable()
+				{
+					propertiesModel = new DefaultPropertyTableHolderModel( holder ){
+						public String getColumnName( int columnIndex )
+						{
+							switch( columnIndex )
+							{
+							case 0 :
+								return "Token";
+							case 1 :
+								return "Description";
+							}
+
+							return null;
+						}
+
+					};
+					propertiesTable = new PropertiesHolderJTable();
+					propertiesTable.setSurrendersFocusOnKeystroke( true );
+
+					propertiesTable.putClientProperty( "terminateEditOnFocusLost", Boolean.TRUE );
+					propertiesTable.getSelectionModel().addListSelectionListener( new ListSelectionListener()
+					{
+						public void valueChanged( ListSelectionEvent e )
+						{
+							int selectedRow = propertiesTable.getSelectedRow();
+							if( removePropertyAction != null )
+								removePropertyAction.setEnabled( selectedRow != -1 );
+
+							if( movePropertyUpAction != null )
+								movePropertyUpAction.setEnabled( selectedRow > 0 );
+
+							if( movePropertyDownAction != null )
+								movePropertyDownAction.setEnabled( selectedRow >= 0 && selectedRow < propertiesTable.getRowCount() - 1 );
+						}
+					} );
+
+					propertiesTable.setDragEnabled( true );
+					propertiesTable.setTransferHandler( new TransferHandler( "testProperty" ) );
+
+					if( getHolder().getModelItem() != null )
+					{
+						DropTarget dropTarget = new DropTarget( propertiesTable, new PropertyHolderTablePropertyExpansionDropTarget() );
+						dropTarget.setDefaultActions( DnDConstants.ACTION_COPY_OR_MOVE );
+					}
+
+					return propertiesTable;
+				}
+			};
 			propertyHolderTable.setPreferredSize( new Dimension( 200, 300 ) );
 			securityChecksForm.append( new JLabel( title ) );
 			securityChecksForm.addSpace();
@@ -52,11 +111,12 @@ public class SecurityChecksPrefs implements Prefs
 
 	public void getFormValues( Settings settings )
 	{
+		PropertyExpansionUtils.saveSecurityGlobalProperties();
 	}
 
 	public String getTitle()
 	{
-		return "Security Checks Properties";
+		return GLOBAL_SENSITIVE_INFORMATION_TOKENS;
 	}
 
 	public StringToStringMap getValues( Settings settings )
@@ -66,11 +126,10 @@ public class SecurityChecksPrefs implements Prefs
 
 	public void setFormValues( Settings settings )
 	{
-		PropertyExpansionUtils.saveSecurityGlobalProperties();
+		
 	}
 
 	public void storeValues( StringToStringMap values, Settings settings )
 	{
-		
 	}
 }

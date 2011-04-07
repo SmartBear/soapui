@@ -55,7 +55,7 @@ public class SoapUIPreferencesAction extends AbstractAction
 	public static final String WSA_SETTINGS = "WS-A Settings";
 	public static final String LOADUI_SETTINGS = "loadUI Settings";
 	public static final String WEBRECORDING_SETTINGS = "Web Recording Settings";
-	public static final String SECURITY_CHECKS_SETTINGS = "Security Checks Properties";
+	public static final String GLOBAL_SENSITIVE_INFORMATION_TOKENS = "Global Sensitive Information Tokens";
 	private SwingConfigurationDialogImpl dialog;
 	private JTabbedPane tabs;
 	private List<Prefs> prefs = new ArrayList<Prefs>();
@@ -83,7 +83,7 @@ public class SoapUIPreferencesAction extends AbstractAction
 		addPrefs( new AnnotatedSettingsPrefs( WsaSettings.class, WSA_SETTINGS ) );
 		addPrefs( new LoadUIPrefs( LOADUI_SETTINGS ) );
 		addPrefs( new AnnotatedSettingsPrefs( WebRecordingSettings.class, WEBRECORDING_SETTINGS ) );
-		addPrefs( new SecurityChecksPrefs( SECURITY_CHECKS_SETTINGS ) );
+		addPrefs( new SecurityChecksPrefs( GLOBAL_SENSITIVE_INFORMATION_TOKENS ) );
 
 		instance = this;
 	}
