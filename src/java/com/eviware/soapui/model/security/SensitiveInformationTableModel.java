@@ -13,17 +13,23 @@ package com.eviware.soapui.model.security;
 
 import javax.swing.table.DefaultTableModel;
 
-import com.eviware.soapui.security.support.SecurityCheckedParameterHolder;
+import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
+import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.security.support.SecurityCheckedParameterImpl;
 
 @SuppressWarnings( "serial" )
-public class SecurityParametersTableModel extends DefaultTableModel
+public class SensitiveInformationTableModel extends DefaultTableModel
 {
 
-	private String[] columnNames = new String[] { "Label", "Name", "XPath", "Enabled" };
-	private SecurityCheckedParameterHolder holder;
+	private String[] columnNames = new String[] { "Token", "Description" };
+	private MutableTestPropertyHolder holder;
 
-	public SecurityParametersTableModel( SecurityCheckedParameterHolder holder )
+	public MutableTestPropertyHolder getHolder()
+	{
+		return holder;
+	}
+
+	public SensitiveInformationTableModel( MutableTestPropertyHolder holder )
 	{
 		this.holder = holder;
 	}
@@ -31,7 +37,7 @@ public class SecurityParametersTableModel extends DefaultTableModel
 	@Override
 	public int getColumnCount()
 	{
-		return 4;
+		return 2;
 	}
 
 	@Override
@@ -44,24 +50,19 @@ public class SecurityParametersTableModel extends DefaultTableModel
 	public boolean isCellEditable( int row, int column )
 	{
 		return column != 1;
-		
-		
 	}
 
 	@Override
 	public Object getValueAt( int row, int column )
 	{
-		SecurityCheckedParameter param = holder.getParameterList().get( row );
+		TestProperty param = holder.getPropertyList().get( row );
 		switch( column )
 		{
 		case 0 :
-			return param.getLabel();
-		case 1 :
 			return param.getName();
-		case 2 :
-			return param.getXpath();
-		case 3 :
-			return param.isChecked();
+		case 1 :
+			return param.getValue();
+
 		}
 		return super.getValueAt( row, column );
 	}
@@ -69,15 +70,15 @@ public class SecurityParametersTableModel extends DefaultTableModel
 	@Override
 	public Class<?> getColumnClass( int columnIndex )
 	{
-		return columnIndex == 3 ? Boolean.class : columnIndex == 2 ? String.class : Object.class;
+		return String.class;
 	}
 
 	@Override
 	public void setValueAt( Object aValue, int row, int column )
 	{
-		if( holder.getParameterList().isEmpty() )
+		if( holder.getPropertyList().isEmpty() )
 			return;
-		SecurityCheckedParameterImpl param = ( SecurityCheckedParameterImpl )holder.getParameterList().get( row );
+		SecurityCheckedParameterImpl param = ( SecurityCheckedParameterImpl )holder.getPropertyList().get( row );
 		switch( column )
 		{
 		case 0 :
@@ -86,34 +87,25 @@ public class SecurityParametersTableModel extends DefaultTableModel
 		case 1 :
 			param.setName( ( String )aValue );
 			break;
-		case 2 :
-			param.setXpath( ( String )aValue );
-			break;
-		case 3 :
-			param.setChecked( ( Boolean )aValue );
+		
 		}
 	}
 
-	public boolean addParameter( String label, String name, String xpath )
+	public void addToken( String token, String description )
 	{
-		if( holder.addParameter( label, name, xpath, true ) )
-		{
-			fireTableDataChanged();
-			return true;
-		}
-		else
-			return false;
+		holder.setPropertyValue( token, description );
+		fireTableDataChanged();
 	}
 
 	@Override
 	public int getRowCount()
 	{
-		return holder == null ? 0 : holder.getParameterList().size();
+		return holder == null ? 0 : holder.getPropertyList().size();
 	}
 
 	public void removeRows( int[] selectedRows )
 	{
-		holder.removeParameters( selectedRows );
+	//	holder.getPropertyAt( 0).removeParameters( selectedRows );
 	}
 
 }
