@@ -33,13 +33,11 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
-import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.plaf.basic.BasicTreeUI;
 import javax.swing.tree.AbstractLayoutCache;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
@@ -71,7 +69,8 @@ import com.eviware.x.form.XFormDialog;
  */
 
 @SuppressWarnings( "serial" )
-public class JSecurityTestTestStepList extends JPanel implements TreeSelectionListener, MouseListener, SecurityTestListener
+public class JSecurityTestTestStepList extends JPanel implements TreeSelectionListener, MouseListener,
+		SecurityTestListener
 {
 	private SecurityTest securityTest;
 	private final TestSuiteListener testSuiteListener = new InternalTestSuiteListener();
@@ -233,7 +232,7 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 		public void testStepRemoved( TestStep testStep, int index )
 		{
 			TestStepNode node = ( ( SecurityCheckTree )securityTestTree.getModel() ).getTestStepNode( testStep );
-			for( int cnt =0 ; cnt< node.getChildCount(); cnt++)
+			for( int cnt = 0; cnt < node.getChildCount(); cnt++ )
 			{
 				SecurityCheckNode nodeCld = ( SecurityCheckNode )node.getChildAt( cnt );
 				cellRender.remove( nodeCld );
@@ -313,6 +312,15 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 
 			dialog.show();
 
+			// if cancel is pressed remove security check
+			if( dialog.getReturnValue() == XFormDialog.CANCEL_OPTION )
+			{
+				SecurityCheckNode securityCheckNode = ( SecurityCheckNode )node.getLastChild();
+
+				securityTest.removeSecurityCheck( testStep, ( AbstractSecurityCheck )securityCheck );
+				cellRender.remove( securityCheckNode );
+				( ( SecurityCheckTree )securityTestTree.getModel() ).removeNodeFromParent( securityCheckNode );
+			}
 		}
 
 	}
@@ -636,7 +644,7 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 	public void securityCheckAdded( SecurityCheck securityCheck )
 	{
 		treeModel.addSecurityCheckNode( securityTestTree, securityCheck );
-		
+
 	}
 
 	@Override
