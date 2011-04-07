@@ -190,6 +190,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 			if( ( ( SecurityTestRunnerImpl )securityTestRunner ).isCanceled() )
 			{
 				securityCheckResult.setStatus( SecurityStatus.CANCELED );
+				clear();
 				return securityCheckResult;
 			}
 			securityCheckRequestResult = new SecurityCheckRequestResult( this );
@@ -233,6 +234,11 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 
 		}
 		return securityCheckResult;
+	}
+
+	protected void clear()
+	{
+		
 	}
 
 	/**

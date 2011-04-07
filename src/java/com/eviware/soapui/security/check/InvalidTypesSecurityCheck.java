@@ -27,7 +27,6 @@ import com.eviware.soapui.config.InvalidSecurityCheckConfig;
 import com.eviware.soapui.config.SchemaTypeForSecurityCheckConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.config.StrategyTypeConfig;
-import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.security.SecurityCheckedParameter;
@@ -466,4 +465,10 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 		return "http://www.soapui.org";
 	}
 
+	@Override
+	protected void clear()
+	{
+		parameterMutations.clear();
+		mutation = false;
+	}
 }

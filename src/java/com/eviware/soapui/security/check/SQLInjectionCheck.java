@@ -29,9 +29,6 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.SQLInjectionCheckConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.config.StrategyTypeConfig;
-import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
-import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
-import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.security.SecurityCheckedParameter;
@@ -392,5 +389,12 @@ public class SQLInjectionCheck extends AbstractSecurityCheckWithProperties
 		@AField( description = "SQL Strings", name = "###Injection Strings", type = AFieldType.STRINGLIST )
 		public final static String INJECTION_STRINGS = "###Injection Strings";
 
+	}
+	
+	@Override
+	protected void clear()
+	{
+		parameterMutations.clear();
+		mutation = false;
 	}
 }
