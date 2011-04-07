@@ -308,12 +308,6 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 				return;
 			}
 
-			SecurityCheckNode newnode = new SecurityCheckNode( securityCheck );
-			node.add( newnode );
-			( ( SecurityCheckTree )securityTestTree.getModel() ).nodeStructureChanged( node );
-			securityTestTree.setSelectionInterval( securityTestTree.getModel().getIndexOfChild( node, newnode ) + 1,
-					securityTestTree.getModel().getIndexOfChild( node, newnode ) + 1 );
-
 			XFormDialog dialog = SoapUI.getSoapUICore().getSecurityCheckRegistry().getUIBuilder()
 					.buildSecurityCheckConfigurationDialog( ( AbstractSecurityCheck )securityCheck );
 
@@ -641,7 +635,7 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 	@Override
 	public void securityCheckAdded( SecurityCheck securityCheck )
 	{
-		treeModel.update( securityCheck );
+		treeModel.addSecurityCheckNode( securityTestTree, securityCheck );
 		
 	}
 

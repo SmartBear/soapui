@@ -11,6 +11,7 @@
  */
 package com.eviware.soapui.security.panels;
 
+import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
 
@@ -60,13 +61,16 @@ public class SecurityCheckTree extends DefaultTreeModel
 		return null;
 	}
 
-	public void update( SecurityCheck securityCheck )
+	public void addSecurityCheckNode( JTree tree, SecurityCheck securityCheck )
 	{
 		TestStepNode node = getTestStepNode( securityCheck.getTestStep() );
 		if( node != null )
-			insertNodeInto( new SecurityCheckNode( securityCheck ), node, node.getChildCount() );
-		nodeStructureChanged( node );
-		
+		{
+			SecurityCheckNode newNode = new SecurityCheckNode( securityCheck );
+			insertNodeInto( newNode, node, node.getChildCount() );
+			nodeStructureChanged( node );
+			tree.setSelectionInterval( getIndexOfChild( node, newNode ) + 1, getIndexOfChild( node, newNode ) + 1 );
+		}
 	}
 
 }
