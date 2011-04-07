@@ -60,8 +60,6 @@ public class ProgressBarSecurityTestStepAdapter
 	private static final String STATE_MISSING_ASSERTIONS = "Missing Assertions";
 	private static final String STATE_MISSING_PARAMETERS = "Missing Parameters";
 
-	// private static final String STATE_FAILED = "Alerts";
-
 	public ProgressBarSecurityTestStepAdapter( JTree tree, DefaultMutableTreeNode node, JProgressBar progressBar,
 			SecurityTest securityTest, WsdlTestStep testStep, JLabel cntLabel )
 	{
