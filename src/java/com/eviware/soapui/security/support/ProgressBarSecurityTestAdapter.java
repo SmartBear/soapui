@@ -71,9 +71,9 @@ public class ProgressBarSecurityTestAdapter
 			progressBar.getModel().setMaximum(
 					( ( SecurityTestRunnerImpl )testRunner ).getSecurityTest().getSecurityCheckCount() );
 			progressBar.setForeground( OK_COLOR );
-			counterLabel.setBackground( OK_COLOR );
+			counterLabel.setOpaque( false );
 			alertsCounter = 0;
-			counterLabel.setText( " " + alertsCounter + " " );
+			counterLabel.setText( "" );
 		}
 
 		@Override
@@ -138,11 +138,12 @@ public class ProgressBarSecurityTestAdapter
 		{
 			if( securityCheckReqResult.getStatus() == SecurityStatus.FAILED )
 			{
+				counterLabel.setOpaque( true );
 				counterLabel.setBackground( FAILED_COLOR );
 				alertsCounter++ ;
+				counterLabel.setText( " " + alertsCounter + " " );
 			}
 
-			counterLabel.setText( " " + alertsCounter + " " );
 		}
 	}
 }

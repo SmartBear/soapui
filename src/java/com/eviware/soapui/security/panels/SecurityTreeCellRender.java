@@ -176,9 +176,8 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 				progressBar.setBackground( Color.WHITE );
 				progressBar.setInheritsPopupMenu( true );
 
-				cntLabel = new JLabel( " 0 " );
+				cntLabel = new JLabel( "" );
 				cntLabel.setForeground( Color.white );
-				cntLabel.setOpaque( true );
 				cntLabel.setBackground( selected );
 				cntLabel.setBorder( BorderFactory.createLineBorder( Color.LIGHT_GRAY ) );
 
@@ -368,9 +367,8 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 			progressBar.setBackground( Color.WHITE );
 			progressBar.setInheritsPopupMenu( true );
 
-			cntLabel = new JLabel( " 0 " );
+			cntLabel = new JLabel( "" );
 			cntLabel.setForeground( Color.white );
-			cntLabel.setOpaque( true );
 			cntLabel.setBackground( selected );
 			cntLabel.setBorder( BorderFactory.createLineBorder( Color.LIGHT_GRAY ) );
 

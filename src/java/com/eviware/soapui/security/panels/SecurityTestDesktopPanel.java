@@ -194,8 +194,11 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 		progressBar.setMinimumSize( new Dimension( 0, 200 ) );
 		progressBar.setBackground( Color.WHITE );
 
-		cntLabel = new JLabel( " 0 " );
+		cntLabel = new JLabel( "" );
 		cntLabel.setForeground( Color.white );
+		cntLabel.setPreferredSize( new Dimension( 50, 18 ) );
+		cntLabel.setHorizontalTextPosition( SwingConstants.CENTER );
+		cntLabel.setHorizontalAlignment( SwingConstants.CENTER );
 		cntLabel.setBorder( BorderFactory.createLineBorder( Color.LIGHT_GRAY ) );
 
 		progressPanel.add( cntLabel, BorderLayout.EAST );
