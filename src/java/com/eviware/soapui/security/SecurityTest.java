@@ -25,6 +25,7 @@ import org.apache.xmlbeans.XmlObject;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.config.SecurityTestConfig;
+import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.config.TestStepSecurityTestConfig;
 import com.eviware.soapui.impl.wsdl.AbstractTestPropertyHolderWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
@@ -32,11 +33,10 @@ import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.TestModelItem;
 import com.eviware.soapui.model.security.SecurityCheck;
 import com.eviware.soapui.model.testsuite.TestRunnable;
-import com.eviware.soapui.model.testsuite.TestRunner.Status;
 import com.eviware.soapui.model.testsuite.TestStep;
+import com.eviware.soapui.model.testsuite.TestRunner.Status;
 import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.security.log.SecurityTestLogModel;
-import com.eviware.soapui.security.panels.JSecurityTestTestStepList;
 import com.eviware.soapui.security.registry.AbstractSecurityCheckFactory;
 import com.eviware.soapui.security.result.SecurityTestStepResult;
 import com.eviware.soapui.security.support.SecurityTestRunListener;
@@ -108,7 +108,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 	}
 
 	/**
-	 * Adds new securityCheck for the specific TestStep
+	 * Adds new securityCheck for the specific TestStep by Security Check Type
 	 * 
 	 * @param testStep
 	 * @param securityCheckType
@@ -116,13 +116,26 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 	 * @param securityCheckConfig
 	 * @return AbstractSecurityCheck
 	 */
-	public SecurityCheck addSecurityCheck( TestStep testStep, String securityCheckType, String securityCheckName )
+	public SecurityCheck addNewSecurityCheck( TestStep testStep, String securityCheckType, String securityCheckName )
 	{
 		AbstractSecurityCheckFactory factory = SoapUI.getSoapUICore().getSecurityCheckRegistry().getFactoryByName(
 				securityCheckType );
-		SecurityCheckConfig newSecCheckConfig = factory.createNewSecurityCheck( securityCheckName );
+		SecurityCheckConfig newCheckConfig = factory.createNewSecurityCheck( securityCheckName );
+		return addSecurityCheck( testStep, factory, newCheckConfig );
+	}
+
+	/**
+	 * Adds a securityCheck for the specific TestStep
+	 * 
+	 * @param testStep
+	 * @param factory
+	 * @param newCheckConfig
+	 * @return
+	 */
+	public AbstractSecurityCheck addSecurityCheck( TestStep testStep, AbstractSecurityCheckFactory factory,
+			SecurityCheckConfig newCheckConfig )
+	{
 		AbstractSecurityCheck newSecCheck = null;
-		// newSecCheck.setTestStep( testStep );
 
 		boolean hasChecks = false;
 		List<TestStepSecurityTestConfig> testStepSecurityTestList = getConfig().getTestStepSecurityTestList();
@@ -133,7 +146,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 				TestStepSecurityTestConfig testStepSecurityTest = testStepSecurityTestList.get( i );
 				if( testStepSecurityTest.getTestStepId().equals( testStep.getId() ) )
 				{
-					newSecCheck = addSecurityCheck( factory, newSecCheckConfig, testStepSecurityTest, testStep );
+					newSecCheck = buildSecurityCheck( factory, newCheckConfig, testStepSecurityTest, testStep );
 					hasChecks = true;
 					break;
 				}
@@ -144,13 +157,10 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 			TestStepSecurityTestConfig testStepSecurityTest = getConfig().addNewTestStepSecurityTest();
 			testStepSecurityTest.setTestStepId( testStep.getId() );
 
-			newSecCheck = addSecurityCheck( factory, newSecCheckConfig, testStepSecurityTest, testStep );
+			newSecCheck = buildSecurityCheck( factory, newCheckConfig, testStepSecurityTest, testStep );
 		}
 
-		// if( listModel != null )
-		// listModel.securityCheckAdded( newSecCheck );
-
-		addSecurityCheckByTestStepId( testStep.getId(), newSecCheck );
+		addSecurityCheckToMapByTestStepId( testStep.getId(), newSecCheck );
 		return newSecCheck;
 
 	}
@@ -164,18 +174,24 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 	 * @param testStep
 	 * @return
 	 */
-	private AbstractSecurityCheck addSecurityCheck( AbstractSecurityCheckFactory factory,
+	private AbstractSecurityCheck buildSecurityCheck( AbstractSecurityCheckFactory factory,
 			SecurityCheckConfig newSecCheckConfig, TestStepSecurityTestConfig testStepSecurityTestConfig, TestStep testStep )
 	{
 		SecurityCheckConfig newSecurityCheck = testStepSecurityTestConfig.addNewTestStepSecurityCheck();
-		newSecurityCheck.setConfig( newSecCheckConfig.getConfig() );
 		newSecurityCheck.setType( newSecCheckConfig.getType() );
 		newSecurityCheck.setName( newSecCheckConfig.getName() );
+		newSecurityCheck.setConfig( newSecCheckConfig.getConfig() );
+		newSecurityCheck.setSetupScript( newSecCheckConfig.getSetupScript() );
+		newSecurityCheck.setTearDownScript( newSecCheckConfig.getTearDownScript() );
+		newSecurityCheck.setAssertionArray( newSecCheckConfig.getAssertionList().toArray( new TestAssertionConfig[0] ) );
+		newSecurityCheck.setTestStep( newSecCheckConfig.getTestStep() );
+		newSecurityCheck.setChekedPameters( newSecCheckConfig.getChekedPameters() );
+		newSecurityCheck.setExecutionStrategy( newSecCheckConfig.getExecutionStrategy() );
 
 		return factory.buildSecurityCheck( testStep, newSecurityCheck, this );
 	}
 
-	private void addSecurityCheckByTestStepId( String testStepId, AbstractSecurityCheck newSecCheck )
+	private void addSecurityCheckToMapByTestStepId( String testStepId, AbstractSecurityCheck newSecCheck )
 	{
 		if( securityChecksMap.containsKey( testStepId ) )
 		{
@@ -241,10 +257,10 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 				}
 			}
 		}
-		removeSecurityCheckByTestStepId( testStep.getId(), securityCheck );
+		removeSecurityCheckFromMapByTestStepId( testStep.getId(), securityCheck );
 	}
 
-	private void removeSecurityCheckByTestStepId( String testStepId, AbstractSecurityCheck securityCheck )
+	private void removeSecurityCheckFromMapByTestStepId( String testStepId, AbstractSecurityCheck securityCheck )
 	{
 		if( securityChecksMap.containsKey( testStepId ) )
 		{
@@ -773,55 +789,43 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 		// testCase.beforeSave();
 		XmlObject newConfig = securityCheckToClone.getConfig().copy();
 
-		boolean cloneTried = false;
-		List<TestStepSecurityTestConfig> securityTestStepsList = getConfig().getTestStepSecurityTestList();
-		for( TestStepSecurityTestConfig testStepSecurityTestConfig : securityTestStepsList )
+		SecurityCheckConfig newCheckConfig = SecurityCheckConfig.Factory.newInstance();
+		newCheckConfig.set( newConfig );
+		AbstractSecurityCheckFactory factory = SoapUI.getSoapUICore().getSecurityCheckRegistry().getFactory(
+				newCheckConfig.getType() );
+		boolean targetStepHasChecks = getTestStepSecurityChecksCount( targetTestStep.getId() ) > 0;
+		if( targetStepHasChecks )
 		{
-			if( targetTestStep.getId().equals( testStepSecurityTestConfig.getTestStepId() ) )
+			boolean targetHasCheckOfSameType = false;
+			for( AbstractSecurityCheck oldCheck : getTestStepSecurityChecks( targetTestStep.getId() ) )
 			{
-				List<SecurityCheckConfig> testChecksConfigList = testStepSecurityTestConfig.getTestStepSecurityCheckList();
-				for( SecurityCheckConfig securityCheckConfig : testChecksConfigList )
+				if( oldCheck.getType().equals( securityCheckToClone.getType() ) )
 				{
-					if( securityCheckConfig.getType().equals( securityCheckToClone.getType() ) )
+					// there already is a check of particular type in target
+					// teststep
+					targetHasCheckOfSameType = true;
+					if( overwrite )
 					{
-						// there already is a check of particular type in target
-						// teststep
-						cloneTried = true;
-						if( overwrite )
-						{
-							securityCheckConfig.set( newConfig );
-							// securityCheckConfig.setName( newName );
-							break;
-						}
-						else
-						{
-							return false;
-						}
+						removeSecurityCheck( targetTestStep, oldCheck );
+						addSecurityCheck( targetTestStep, factory, newCheckConfig );
 					}
+					break;
 				}
-				if( !cloneTried )
-				{
-					// teststep doesn't have particular check, but has other checks
-					SecurityCheckConfig newCheckConfig = SecurityCheckConfig.Factory.newInstance();
-					newCheckConfig.set( newConfig );
-					// newCheckConfig.setName( newName );
-					testChecksConfigList.add( newCheckConfig );
-					cloneTried = true;
-				}
-
 			}
+			if( !targetHasCheckOfSameType )
+			{
+				// teststep doesn't have particular check, but has other
+				// checks
+				addSecurityCheck( targetTestStep, factory, newCheckConfig );
+			}
+
 		}
-		if( !cloneTried )
+		else
 		{
-			// teststep doesn't have checks at all
-			TestStepSecurityTestConfig testStepSecurityTestConfig = getConfig().addNewTestStepSecurityTest();
-			testStepSecurityTestConfig.setTestStepId( targetTestStep.getId() );
-			SecurityCheckConfig newCheckConfig = SecurityCheckConfig.Factory.newInstance();
-			newCheckConfig.set( newConfig );
-			// newCheckConfig.setName( newName );
-			testStepSecurityTestConfig.setTestStepSecurityCheckArray( new SecurityCheckConfig[] { newCheckConfig } );
+			// teststep doesn't have particular check, but has other
+			// checks
+			addSecurityCheck( targetTestStep, factory, newCheckConfig );
 		}
-		securityChecksMap.clear();
 
 		return true;
 	}

@@ -272,15 +272,15 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 			String type = UISupport.prompt( "Specify type of security check", "Add SecurityCheck", availableChecksNames );
 			if( type == null || type.trim().length() == 0 )
 				return;
-			String name = UISupport.prompt( "Specify name for security check", "Add SecurityCheck",
-					securityTest.findTestStepCheckUniqueName( testStep.getId(), type ) );
+			String name = UISupport.prompt( "Specify name for security check", "Add SecurityCheck", securityTest
+					.findTestStepCheckUniqueName( testStep.getId(), type ) );
 			if( name == null || name.trim().length() == 0 )
 				return;
 
 			while( securityTest.getTestStepSecurityCheckByName( testStep.getId(), name ) != null )
 			{
-				name = UISupport.prompt( "Specify unique name for check", "Add SecurityCheck",
-						name + " " + ( securityTest.getTestStepSecurityChecks( testStep.getId() ).size() ) );
+				name = UISupport.prompt( "Specify unique name for check", "Add SecurityCheck", name + " "
+						+ ( securityTest.getTestStepSecurityChecks( testStep.getId() ).size() ) );
 				if( name == null )
 				{
 					return;
@@ -299,7 +299,7 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 				return;
 			}
 
-			SecurityCheck securityCheck = securityTest.addSecurityCheck( testStep, type, name );
+			SecurityCheck securityCheck = securityTest.addNewSecurityCheck( testStep, type, name );
 
 			if( securityCheck == null )
 			{
@@ -371,7 +371,7 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 
 				securityTest.removeSecurityCheck( testStep, ( AbstractSecurityCheck )securityCheck );
 				cellRender.remove( node );
-				( ( SecurityCheckTree )securityTestTree.getModel() ).removeNodeFromParent( node );
+//				( ( SecurityCheckTree )securityTestTree.getModel() ).removeNodeFromParent( node );
 			}
 		}
 	}
@@ -650,6 +650,6 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 	@Override
 	public void securityCheckRemoved( SecurityCheck securityCheck )
 	{
-		securityTestTree.invalidate();
+		treeModel.removeSecurityCheckNode( securityCheck );
 	}
 }

@@ -61,6 +61,18 @@ public class SecurityCheckTree extends DefaultTreeModel
 		return null;
 	}
 
+	protected SecurityCheckNode getSecurityCheckNode( SecurityCheck securityCheck )
+	{
+		TestStepNode testStepNode = getTestStepNode( securityCheck.getTestStep() );
+		for( int cnt = 0; cnt < testStepNode.getChildCount(); cnt++ )
+		{
+			SecurityCheckNode node = ( SecurityCheckNode )testStepNode.getChildAt( cnt );
+			if( node.getSecurityCheck().getType().equals( securityCheck.getType() ) )
+				return node;
+		}
+		return null;
+	}
+
 	public void addSecurityCheckNode( JTree tree, SecurityCheck securityCheck )
 	{
 		TestStepNode node = getTestStepNode( securityCheck.getTestStep() );
@@ -71,6 +83,15 @@ public class SecurityCheckTree extends DefaultTreeModel
 			nodeStructureChanged( node );
 			tree.setSelectionInterval( getIndexOfChild( node, newNode ) + 1, getIndexOfChild( node, newNode ) + 1 );
 		}
+	}
+
+	public void removeSecurityCheckNode( SecurityCheck securityCheck )
+	{
+		TestStepNode testStepNode = getTestStepNode( securityCheck.getTestStep() );
+		SecurityCheckNode node = getSecurityCheckNode( securityCheck );
+		removeNodeFromParent( node );
+		nodeStructureChanged( testStepNode );
+		
 	}
 
 }
