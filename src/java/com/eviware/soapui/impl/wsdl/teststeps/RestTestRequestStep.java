@@ -24,11 +24,14 @@ import javax.xml.namespace.QName;
 
 import org.apache.log4j.Logger;
 import org.apache.xmlbeans.SchemaType;
+import org.w3c.dom.Document;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.RestRequestStepConfig;
 import com.eviware.soapui.config.TestStepConfig;
 import com.eviware.soapui.impl.rest.RestMethod;
+import com.eviware.soapui.impl.rest.RestRepresentation;
+import com.eviware.soapui.impl.rest.RestRepresentation.Type;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.RestService;
@@ -46,8 +49,8 @@ import com.eviware.soapui.impl.wsdl.teststeps.registry.RestRequestStepFactory.It
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.iface.Operation;
-import com.eviware.soapui.model.iface.Submit;
 import com.eviware.soapui.model.iface.Request.SubmitException;
+import com.eviware.soapui.model.iface.Submit;
 import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
@@ -74,6 +77,7 @@ import com.eviware.soapui.support.resolver.RemoveTestStepResolver;
 import com.eviware.soapui.support.resolver.ResolveContext;
 import com.eviware.soapui.support.resolver.ResolveContext.PathToResolve;
 import com.eviware.soapui.support.types.StringToStringsMap;
+import com.eviware.soapui.support.xml.XmlUtils;
 
 public class RestTestRequestStep extends WsdlTestStepWithProperties implements RestTestRequestStepInterface, Securable
 {
@@ -122,19 +126,54 @@ public class RestTestRequestStep extends WsdlTestStepWithProperties implements R
 		refreshRequestProperties();
 
 		// init default properties
-		addProperty( new TestStepBeanProperty( "Endpoint", false, testRequest, "endpoint", this,false ) );
-		addProperty( new TestStepBeanProperty( "Username", false, testRequest, "username", this,true ) );
-		addProperty( new TestStepBeanProperty( "Password", false, testRequest, "password", this ,true) );
-		addProperty( new TestStepBeanProperty( "Domain", false, testRequest, "domain", this,false ) );
+		addProperty( new TestStepBeanProperty( "Endpoint", false, testRequest, "endpoint", this, false ) );
+		addProperty( new TestStepBeanProperty( "Username", false, testRequest, "username", this, true ) );
+		addProperty( new TestStepBeanProperty( "Password", false, testRequest, "password", this, true ) );
+		addProperty( new TestStepBeanProperty( "Domain", false, testRequest, "domain", this, false ) );
 
 		// init properties
-		addProperty( new TestStepBeanProperty( "Request", false, testRequest, "requestContent", this,true )
+		addProperty( new TestStepBeanProperty( "Request", false, testRequest, "requestContent", this, true )
 		{
 			@Override
 			public String getDefaultValue()
 			{
 				return createDefaultRequestContent();
 			}
+
+			public SchemaType getSchemaType()
+			{
+				try
+				{
+					// first the DOM of the current request
+					Document dom = XmlUtils.parseXml( getTestRequest().getRequestContent() );
+
+					// get matching representations
+					for( RestRepresentation representation : getTestRequest().getRepresentations( Type.REQUEST,
+							getTestRequest().getMediaType() ) )
+					{
+						// is request element same as that of representation?
+						if( representation.getElement().equals( XmlUtils.getQName( dom.getDocumentElement() ) ) )
+						{
+							// this is it, return its type
+							return representation.getSchemaType();
+						}
+					}
+				}
+				catch( Exception e )
+				{
+					SoapUI.logError( e );
+				}
+
+				// found nothing.. fall back
+				return super.getSchemaType();
+			}
+
+			@Override
+			public QName getType()
+			{
+				return getSchemaType().getName();
+			}
+
 		} );
 
 		addProperty( new TestStepBeanProperty( WsdlTestStepWithProperties.RESPONSE_AS_XML, true, testRequest,
@@ -144,6 +183,40 @@ public class RestTestRequestStep extends WsdlTestStepWithProperties implements R
 			public String getDefaultValue()
 			{
 				return createDefaultResponseXmlContent();
+			}
+
+			public SchemaType getSchemaType()
+			{
+				try
+				{
+					// first the DOM of the current request
+					Document dom = XmlUtils.parseXml( getTestRequest().getResponseContentAsXml() );
+
+					// get matching representations
+					for( RestRepresentation representation : getTestRequest().getRepresentations( Type.RESPONSE,
+							getTestRequest().getResponse().getContentType() ) )
+					{
+						// is request element same as that of representation?
+						if( representation.getElement().equals( XmlUtils.getQName( dom.getDocumentElement() ) ) )
+						{
+							// this is it, return its type
+							return representation.getSchemaType();
+						}
+					}
+				}
+				catch( Exception e )
+				{
+					SoapUI.logError( e );
+				}
+
+				// found nothing.. fall back
+				return super.getSchemaType();
+			}
+
+			@Override
+			public QName getType()
+			{
+				return getSchemaType().getName();
 			}
 		} );
 
@@ -529,7 +602,6 @@ public class RestTestRequestStep extends WsdlTestStepWithProperties implements R
 	}
 
 	@Override
-	@SuppressWarnings( "unchecked" )
 	public void resolve( ResolveContext<?> context )
 	{
 		super.resolve( context );
@@ -585,9 +657,9 @@ public class RestTestRequestStep extends WsdlTestStepWithProperties implements R
 			if( context.hasThisModelItem( this, "Missing REST Method in Project", getRequestStepConfig().getService()
 					+ "/" + getRequestStepConfig().getMethodName() ) )
 			{
+				@SuppressWarnings( "rawtypes" )
 				PathToResolve path = context.getPath( this, "Missing REST Method in Project", getRequestStepConfig()
-						.getService()
-						+ "/" + getRequestStepConfig().getMethodName() );
+						.getService() + "/" + getRequestStepConfig().getMethodName() );
 				path.setSolved( true );
 			}
 		}
