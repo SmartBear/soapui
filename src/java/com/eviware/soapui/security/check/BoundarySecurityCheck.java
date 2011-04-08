@@ -47,7 +47,6 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 	public static final String TYPE = "BoundaryCheck";
 	public static final String NAME = "Boundary Check";
 	private static final String REQUEST_MUTATIONS_STACK = "RequestMutationsStack";
-	private static final String UPDATED_PARAMETERS = "updatedParameters";
 
 	StrategyTypeConfig.Enum strategy = StrategyTypeConfig.ONE_BY_ONE;
 
@@ -172,22 +171,6 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 
 	private XmlObjectTreeModel getXmlObjectTreeModel( TestStep testStep, SecurityCheckedParameter scp )
 	{
-
-		// XmlObjectTreeModel model = null;
-		// WsdlRequest request = ( ( WsdlTestRequestStep )testStep
-		// ).getTestRequest();
-		// try
-		// {
-		// model = new XmlObjectTreeModel(
-		// request.getOperation().getInterface().getDefinitionContext()
-		// .getSchemaTypeSystem(), XmlObject.Factory.parse(
-		// request.getRequestContent() ) );
-		// }
-		// catch( Exception e )
-		// {
-		// SoapUI.logError( e );
-		// }
-		// return model;
 		try
 		{
 			TestProperty tp = testStep.getProperty( scp.getName() );
@@ -305,7 +288,6 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 		{
 			Stack<PropertyMutation> requestMutationsList = new Stack<PropertyMutation>();
 			context.put( REQUEST_MUTATIONS_STACK, requestMutationsList );
-			// context.put( UPDATED_PARAMETERS, new StringToStringMap() );
 			try
 			{
 				extractMutations( testStep, context );
@@ -318,7 +300,6 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 		}
 
 		Stack<PropertyMutation> stack = ( Stack<PropertyMutation> )context.get( REQUEST_MUTATIONS_STACK );
-		// context.put( UPDATED_PARAMETERS, new StringToStringMap() );
 		if( stack.empty() )
 		{
 			context.remove( REQUEST_MUTATIONS_STACK );
