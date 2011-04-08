@@ -94,6 +94,9 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 			config.addNewExecutionStrategy();
 			config.getExecutionStrategy().setStrategy( StrategyTypeConfig.ONE_BY_ONE );
 			config.getExecutionStrategy().setDelay( 100 );
+		}else if ( config.getExecutionStrategy().getStrategy()==null){
+			config.getExecutionStrategy().setStrategy( StrategyTypeConfig.ONE_BY_ONE );
+			config.getExecutionStrategy().setDelay( 100 );
 		}
 
 		/*
