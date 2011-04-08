@@ -39,8 +39,13 @@ public class ProgressBarSecurityTestAdapter
 	private final SecurityTest securityTest;
 	private InternalTestRunListener internalTestRunListener;
 	private JLabel counterLabel;
-	private static final Color OK_COLOR = new Color( 0, 205, 102 );
+	private static final Color OK_COLOR = new Color( 0, 204, 102 );
 	private static final Color FAILED_COLOR = new Color( 255, 102, 0 );
+	private static final Color UNKNOWN_COLOR = new Color( 240, 240, 240 );
+
+	private static final String STATE_RUN = "In progress";
+	private static final String STATE_DONE = "Done";
+	private static final String STATE_CANCEL = "Canceled";
 	private int alertsCounter;
 
 	public ProgressBarSecurityTestAdapter( JProgressBar progressBar, SecurityTest securityTest, JLabel cntLabel )
@@ -48,6 +53,7 @@ public class ProgressBarSecurityTestAdapter
 		this.progressBar = progressBar;
 		this.securityTest = securityTest;
 
+		progressBar.setBackground( UNKNOWN_COLOR );
 		internalTestRunListener = new InternalTestRunListener();
 		securityTest.addSecurityTestRunListener( internalTestRunListener );
 		cntLabel.setOpaque( true );
@@ -65,12 +71,11 @@ public class ProgressBarSecurityTestAdapter
 
 		public void beforeRun( TestCaseRunner testRunner, SecurityTestRunContext runContext )
 		{
-			if( progressBar.isIndeterminate() )
-				return;
 
 			progressBar.getModel().setMaximum(
 					( ( SecurityTestRunnerImpl )testRunner ).getSecurityTest().getSecurityCheckCount() );
 			progressBar.setForeground( OK_COLOR );
+			progressBar.setValue( 0 );
 			counterLabel.setOpaque( false );
 			alertsCounter = 0;
 			counterLabel.setText( "" );
@@ -86,7 +91,7 @@ public class ProgressBarSecurityTestAdapter
 
 			if( securityCheck != null )
 			{
-				progressBar.setString( securityCheck.getTestStep().getName() );
+				progressBar.setString( STATE_RUN + ":" + securityCheck.getTestStep().getName() );
 				progressBar.setValue( runContext.getCurrentCheckOnSecurityTestIndex() );
 			}
 		}
@@ -95,8 +100,10 @@ public class ProgressBarSecurityTestAdapter
 		public void afterSecurityCheck( TestCaseRunner testRunner, SecurityTestRunContext runContext,
 				SecurityCheckResult securityCheckResult )
 		{
-			if( progressBar.isIndeterminate() )
-				return;
+			if( securityCheckResult.getStatus() == SecurityStatus.CANCELED )
+			{
+				progressBar.setString( STATE_CANCEL );
+			}
 
 			if( securityCheckResult.getStatus() == SecurityStatus.CANCELED
 					&& securityCheckResult.isHasRequestsWithWarnings() )
@@ -123,13 +130,15 @@ public class ProgressBarSecurityTestAdapter
 			}
 			else if( testRunner.getStatus() == Status.FINISHED )
 			{
-				progressBar.setForeground( OK_COLOR );
+				if( progressBar.getForeground().equals( FAILED_COLOR ) )
+					progressBar.setForeground( OK_COLOR );
 			}
 
 			if( progressBar.isIndeterminate() )
 				return;
 
-			progressBar.setString( testRunner.getStatus().toString() );
+			if( !progressBar.getString().equals( STATE_CANCEL ) )
+				progressBar.setString( STATE_DONE );
 		}
 
 		@Override
@@ -142,6 +151,10 @@ public class ProgressBarSecurityTestAdapter
 				counterLabel.setBackground( FAILED_COLOR );
 				alertsCounter++ ;
 				counterLabel.setText( " " + alertsCounter + " " );
+			}
+			else if( securityCheckReqResult.getStatus() == SecurityStatus.CANCELED )
+			{
+				progressBar.setString( STATE_CANCEL );
 			}
 
 		}
