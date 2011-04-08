@@ -49,7 +49,7 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 	private static final String REQUEST_MUTATIONS_STACK = "RequestMutationsStack";
 	private static final String UPDATED_PARAMETERS = "updatedParameters";
 
-	StrategyTypeConfig.Enum strategy;
+	StrategyTypeConfig.Enum strategy = StrategyTypeConfig.ONE_BY_ONE;
 
 	public BoundarySecurityCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent, String icon )
 	{
