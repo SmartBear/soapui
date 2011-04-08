@@ -13,7 +13,9 @@
 package com.eviware.soapui.support;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
@@ -34,8 +36,10 @@ import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
+import com.eviware.soapui.model.security.SensitiveInformationTableModel;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.support.ModelSupport;
+import com.eviware.soapui.security.SensitiveInformationPropertyHolder;
 import com.eviware.soapui.security.assertion.SensitiveInfoExposureAssertion;
 import com.eviware.soapui.security.panels.ProjectSensitiveInformationPanel;
 import com.eviware.soapui.settings.GlobalPropertySettings;
@@ -46,7 +50,7 @@ import com.eviware.soapui.support.xml.XmlUtils;
 public class SecurityCheckUtil
 {
 
-	public static List<String> globalEntriesList()
+	public static Map<String,String> globalEntriesList()
 	{
 		Settings settings = SoapUI.getSettings();
 		String temp = settings.getString( GlobalPropertySettings.SECURITY_CHECKS_PROPERTIES, null );
@@ -54,12 +58,12 @@ public class SecurityCheckUtil
 		try
 		{
 			config = PropertiesTypeConfig.Factory.parse( temp );
-			List<String> contentList = new ArrayList<String>();
+			 Map<String,String> map = new HashMap<String,String>();
 			for( PropertyConfig pc : config.getPropertyList() )
 			{
-				contentList.add( pc.getName() );
+				map.put( pc.getName(), pc.getValue() );
 			}
-			return contentList;
+			return map;
 		}
 		catch( XmlException e )
 		{
@@ -123,7 +127,7 @@ public class SecurityCheckUtil
 	}
 
 	@SuppressWarnings( "unchecked" )
-	public static List<String> projectEntriesList( SensitiveInfoExposureAssertion sensitiveInfoExposureAssertion )
+	public static Map<String,String> projectEntriesList( SensitiveInfoExposureAssertion sensitiveInfoExposureAssertion )
 	{
 		Project project = ModelSupport.getModelItemProject( sensitiveInfoExposureAssertion );
 		AbstractWsdlModelItem<ModelItemConfig> modelItem = ( AbstractWsdlModelItem<ModelItemConfig> )project
@@ -133,13 +137,31 @@ public class SecurityCheckUtil
 		String[] strngArray = reader.readStrings( ProjectSensitiveInformationPanel.PROJECT_SPECIFIC_EXPOSURE_LIST );
 		if( strngArray != null )
 		{
-			return StringUtils.toStringList( strngArray );
+			Map<String,String> map = new HashMap<String,String>();
+			
+			for( String str : strngArray)
+			{
+				String[] tokens = str.split( "###" );
+				if( tokens.length == 2 )
+				{
+					map.put( tokens[0], tokens[1] );
+				}
+				else
+				{
+					map.put (tokens[0], "" );
+				}
+			}
+			return map;
 		}
 		else
 		{
-			return new StringList();
+			return new HashMap<String,String>();
 		}
 
+
 	}
+	
+	
+	
 
 }

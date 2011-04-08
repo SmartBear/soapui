@@ -15,7 +15,9 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -100,8 +102,6 @@ public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion impleme
 				siph.setPropertyValue( tokens[0], "" );
 			}
 		}
-		siph.setPropertyValue( "name1", "value1" );
-		siph.setPropertyValue( "name2", "value2" );
 		sensitivInformationTableModel = new SensitiveInformationTableModel( siph );
 	}
 
@@ -109,21 +109,22 @@ public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion impleme
 	protected String internalAssertResponse( MessageExchange messageExchange, SubmitContext context )
 			throws AssertionException
 	{
-		List<String> checkList = createCheckList( context );
+		 Map<String,String> checkList = createCheckMap( context );
 		boolean throwException = false;
 		List<AssertionError> assertionErrorList = new ArrayList<AssertionError>();
-		for( String exposureContent : checkList )
+		for( String token : checkList.keySet() )
 		{
-			boolean useRegexp = exposureContent.trim().startsWith( PREFIX );
+			boolean useRegexp = token.trim().startsWith( PREFIX );
+			String description = !checkList.get( token).equals( "") ? checkList.get( token): token;
 			if( useRegexp )
 			{
-				exposureContent = exposureContent.substring( exposureContent.indexOf( PREFIX ) + 1 );
+				token = token.substring( token.indexOf( PREFIX ) + 1 );
 			}
 
-			if( SecurityCheckUtil.contains( context, new String( messageExchange.getRawResponseData() ), exposureContent,
+			if( SecurityCheckUtil.contains( context, new String( messageExchange.getRawResponseData() ), token,
 					useRegexp ) )
 			{
-				String message = "Sensitive information '" + exposureContent + "' is exposed in : "
+				String message = "Sensitive information '" + description + "' is exposed in : "
 						+ messageExchange.getModelItem().getName();
 				assertionErrorList.add( new AssertionError( message ) );
 				throwException = true;
@@ -138,28 +139,29 @@ public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion impleme
 		return "OK";
 	}
 
-	private List<String> createCheckList( SubmitContext context )
+	private Map<String,String> createCheckMap( SubmitContext context )
 	{
-		List<String> checkList = new ArrayList<String>( assertionSpecificExposureList );
+		Map<String,String> checkMap = new HashMap<String,String>( );
+		checkMap.putAll( createMapFromTable() );
 		if( includeProjectSpecific )
 		{
-			checkList.addAll( SecurityCheckUtil.projectEntriesList( this ) );
+			checkMap.putAll(  SecurityCheckUtil.projectEntriesList( this ) );
 		}
 
 		if( includeGlolbal )
 		{
-			checkList.addAll( SecurityCheckUtil.globalEntriesList() );
+			checkMap.putAll( SecurityCheckUtil.globalEntriesList() );
 		}
-		List<String> expandedList = propertyExpansionSupport( checkList, context );
-		return expandedList;
+		Map<String,String> expandedMap = propertyExpansionSupport( checkMap, context );
+		return expandedMap;
 	}
 
-	private List<String> propertyExpansionSupport( List<String> checkList, SubmitContext context )
+	private  Map<String,String>  propertyExpansionSupport( Map<String,String> checkMap, SubmitContext context )
 	{
-		List<String> expanded = new ArrayList<String>();
-		for( String content : checkList )
+		Map<String,String> expanded = new HashMap<String,String>();
+		for( String key : checkMap.keySet() )
 		{
-			expanded.add( context.expand( content ) );
+			expanded.put( context.expand( key ), context.expand( checkMap.get( key ) ) );
 		}
 		return expanded;
 	}
@@ -222,6 +224,15 @@ public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion impleme
 		for(TestProperty tp:sensitivInformationTableModel.getHolder().getPropertyList()){
 			String tokenPlusDescription = tp.getName()+"###"+tp.getValue();
 			temp.add( tokenPlusDescription );
+		}
+		return temp;
+	}
+	
+	private Map<String,String> createMapFromTable()
+	{
+		Map<String,String> temp = new HashMap<String,String>();
+		for(TestProperty tp:sensitivInformationTableModel.getHolder().getPropertyList()){
+			temp.put( tp.getName(),tp.getValue() );
 		}
 		return temp;
 	}
