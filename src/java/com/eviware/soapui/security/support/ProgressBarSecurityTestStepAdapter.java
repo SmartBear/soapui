@@ -149,14 +149,14 @@ public class ProgressBarSecurityTestStepAdapter
 					progressBar.setString( STATE_RUN );
 				if( securityCheck.getAssertionCount() == 0 )
 				{
-					progressBar.setString( STATE_MISSING_PARAMETERS );
+					progressBar.setString( STATE_MISSING_ASSERTIONS );
 					progressBar.setForeground( MISSING_ASSERTION_COLOR );
 				}
 				if( securityCheck instanceof AbstractSecurityCheckWithProperties
 						&& ( ( AbstractSecurityCheckWithProperties )securityCheck ).getParameterHolder().getParameterList()
 								.size() == 0 )
 				{
-					progressBar.setString( STATE_MISSING_ASSERTIONS );
+					progressBar.setString( STATE_MISSING_PARAMETERS );
 					progressBar.setForeground( MISSING_ASSERTION_COLOR );
 				}
 			}
