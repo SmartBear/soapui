@@ -57,7 +57,7 @@ public class SecurityCheckUtil
 			List<String> contentList = new ArrayList<String>();
 			for( PropertyConfig pc : config.getPropertyList() )
 			{
-				contentList.add( pc.getValue() );
+				contentList.add( pc.getName() );
 			}
 			return contentList;
 		}
@@ -122,12 +122,12 @@ public class SecurityCheckUtil
 		return holder;
 	}
 
+	@SuppressWarnings( "unchecked" )
 	public static List<String> projectEntriesList( SensitiveInfoExposureAssertion sensitiveInfoExposureAssertion )
 	{
 		Project project = ModelSupport.getModelItemProject( sensitiveInfoExposureAssertion );
 		AbstractWsdlModelItem<ModelItemConfig> modelItem = ( AbstractWsdlModelItem<ModelItemConfig> )project
 				.getModelItem();
-		// ProjectConfig config =
 		XmlObjectConfigurationReader reader = new XmlObjectConfigurationReader( ( ( ProjectConfig )modelItem.getConfig() )
 				.getSensitiveInformation() );
 		String[] strngArray = reader.readStrings( ProjectSensitiveInformationPanel.PROJECT_SPECIFIC_EXPOSURE_LIST );

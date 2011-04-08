@@ -36,6 +36,7 @@ import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.model.testsuite.AssertionException;
 import com.eviware.soapui.model.testsuite.ResponseAssertion;
+import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.security.SensitiveInformationPropertyHolder;
 import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.support.SecurityCheckUtil;
@@ -49,7 +50,6 @@ import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.AField.AFieldType;
-import com.eviware.x.impl.swing.JStringListFormField;
 
 public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion implements ResponseAssertion
 {
@@ -204,21 +204,26 @@ public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion impleme
 			buildDialog();
 		if( dialog.show() )
 		{
-
-			JStringListFormField jsringListFormField = ( JStringListFormField )dialog
-					.getFormField( SensitiveInformationConfigDialog.TOKENS );
-
-			String[] stringList = jsringListFormField != null ? jsringListFormField.getOptions() : new String[0];
-			assertionSpecificExposureList = StringUtils.toStringList( stringList );
+			assertionSpecificExposureList = createListFromTable();;
 			includeProjectSpecific = Boolean.valueOf( dialog.getFormField(
 					SensitiveInformationConfigDialog.INCLUDE_PROJECT_SPECIFIC ).getValue() );
 			includeGlolbal = Boolean.valueOf( dialog.getFormField( SensitiveInformationConfigDialog.INCLUDE_GLOBAL )
 					.getValue() );
 			setConfiguration( createConfiguration() );
 
-			return true;
+			return true; 
 		}
 		return false;
+	}
+
+	private List<String> createListFromTable()
+	{
+		List<String> temp = new ArrayList<String>();
+		for(TestProperty tp:sensitivInformationTableModel.getHolder().getPropertyList()){
+			String tokenPlusDescription = tp.getName()+"###"+tp.getValue();
+			temp.add( tokenPlusDescription );
+		}
+		return temp;
 	}
 
 	protected void buildDialog()
@@ -227,8 +232,6 @@ public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion impleme
 		dialog.setBooleanValue( SensitiveInformationConfigDialog.INCLUDE_GLOBAL, includeGlolbal );
 		dialog.setBooleanValue( SensitiveInformationConfigDialog.INCLUDE_PROJECT_SPECIFIC, includeProjectSpecific );
 		dialog.getFormField( SensitiveInformationConfigDialog.TOKENS ).setProperty( "component", getForm() );
-		// dialog.setOptions( SensitiveInformationConfigDialog.TOKENS,
-		// assertionSpecificExposureList.toArray() );
 	}
 
 	// TODO : update help URL
