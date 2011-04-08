@@ -39,6 +39,7 @@ import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel;
+import com.eviware.soapui.support.xml.XmlUtils;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel.XmlTreeNode;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
@@ -172,37 +173,42 @@ public class XPathInjectionSecurityCheck extends AbstractSecurityCheckWithProper
 			{
 
 				String value = context.expand( property.getValue() );
-				XmlObjectTreeModel model = null;
-				model = new XmlObjectTreeModel( property.getSchemaType().getTypeSystem(), XmlObject.Factory.parse( value ) );
-				for( SecurityCheckedParameter param : getParameterHolder().getParameterList() )
+				if( XmlUtils.seemsToBeXml( value ) )
 				{
-					if( param.getXpath() == null || param.getXpath().trim().length() == 0 )
+					XmlObjectTreeModel model = null;
+					model = new XmlObjectTreeModel( property.getSchemaType().getTypeSystem(), XmlObject.Factory
+							.parse( value ) );
+					for( SecurityCheckedParameter param : getParameterHolder().getParameterList() )
 					{
-						testStep.getProperties().get( param.getName() ).setValue( parameterMutations.get( param ).get( 0 ) );
-						params.put( param.getLabel(), parameterMutations.get( param ).get( 0 ) );
-						parameterMutations.get( param ).remove( 0 );
-					}
-					else
-					{
-						// no value, do nothing.
-						if( value == null || value.trim().equals( "" ) )
-							continue;
-						if( param.getName().equals( property.getName() ) )
+						if( param.getXpath() == null || param.getXpath().trim().length() == 0 )
 						{
-							XmlTreeNode[] nodes = model.selectTreeNodes( context.expand( param.getXpath() ) );
-							if( parameterMutations.containsKey( param ) )
-								if( parameterMutations.get( param ).size() > 0 )
-								{
-									for( XmlTreeNode node : nodes )
-										node.setValue( 1, parameterMutations.get( param ).get( 0 ) );
-									params.put( param.getLabel(), parameterMutations.get( param ).get( 0 ) );
-									parameterMutations.get( param ).remove( 0 );
-								}
+							testStep.getProperties().get( param.getName() )
+									.setValue( parameterMutations.get( param ).get( 0 ) );
+							params.put( param.getLabel(), parameterMutations.get( param ).get( 0 ) );
+							parameterMutations.get( param ).remove( 0 );
+						}
+						else
+						{
+							// no value, do nothing.
+							if( value == null || value.trim().equals( "" ) )
+								continue;
+							if( param.getName().equals( property.getName() ) )
+							{
+								XmlTreeNode[] nodes = model.selectTreeNodes( context.expand( param.getXpath() ) );
+								if( parameterMutations.containsKey( param ) )
+									if( parameterMutations.get( param ).size() > 0 )
+									{
+										for( XmlTreeNode node : nodes )
+											node.setValue( 1, parameterMutations.get( param ).get( 0 ) );
+										params.put( param.getLabel(), parameterMutations.get( param ).get( 0 ) );
+										parameterMutations.get( param ).remove( 0 );
+									}
+							}
 						}
 					}
+					if( model != null )
+						property.setValue( model.getXmlObject().toString() );
 				}
-				if( model != null )
-					property.setValue( model.getXmlObject().toString() );
 
 			}
 		}
@@ -244,8 +250,8 @@ public class XPathInjectionSecurityCheck extends AbstractSecurityCheckWithProper
 
 					XmlObjectTreeModel model = null;
 
-					model = new XmlObjectTreeModel( property.getSchemaType().getTypeSystem(), XmlObject.Factory
-							.parse( value ) );
+					model = new XmlObjectTreeModel( property.getSchemaType().getTypeSystem(),
+							XmlObject.Factory.parse( value ) );
 
 					XmlTreeNode[] nodes = model.selectTreeNodes( context.expand( parameter.getXpath() ) );
 
@@ -385,7 +391,7 @@ public class XPathInjectionSecurityCheck extends AbstractSecurityCheckWithProper
 		public final static String INJECTION_STRINGS = "###Injection Strings";
 
 	}
-	
+
 	@Override
 	protected void clear()
 	{
