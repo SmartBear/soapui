@@ -81,6 +81,10 @@ public class SecurityCheckTree extends DefaultTreeModel
 			SecurityCheckNode newNode = new SecurityCheckNode( securityCheck );
 			insertNodeInto( newNode, node, node.getChildCount() );
 			nodeStructureChanged( node );
+			for( int row = 0; row < tree.getRowCount(); row++ )
+			{
+				tree.expandRow( row );
+			}
 			tree.setSelectionInterval( getIndexOfChild( node, newNode ) + 1, getIndexOfChild( node, newNode ) + 1 );
 		}
 	}

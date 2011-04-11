@@ -48,15 +48,18 @@ import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.security.SecurityCheck;
 import com.eviware.soapui.model.support.TestSuiteListenerAdapter;
+import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestSuiteListener;
 import com.eviware.soapui.security.Securable;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestListener;
+import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.actions.CloneParametersAction;
 import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.security.check.AbstractSecurityCheckWithProperties;
 import com.eviware.soapui.security.log.JSecurityTestRunLog;
+import com.eviware.soapui.security.support.SecurityTestRunListenerAdapter;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.swing.TreePathUtils;
@@ -87,6 +90,7 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 	private JPopupMenu testStepPopUp;
 	private SecurityTreeCellRender cellRender;
 	private SecurityCheckTree treeModel;
+	private InternalSecurityTestRunListener testRunListener;
 
 	public JSecurityTestTestStepList( SecurityTest securityTest, JSecurityTestRunLog securityTestLog )
 	{
@@ -134,7 +138,8 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 		add( scollPane, BorderLayout.CENTER );
 		securityTest.getTestCase().getTestSuite().addTestSuiteListener( testSuiteListener );
 		securityTest.addSecurityTestListener( this );
-
+		testRunListener = new InternalSecurityTestRunListener();
+		securityTest.addSecurityTestRunListener( testRunListener );
 		for( int row = 0; row < securityTestTree.getRowCount(); row++ )
 		{
 			securityTestTree.expandRow( row );
@@ -372,7 +377,6 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 
 				securityTest.removeSecurityCheck( testStep, ( AbstractSecurityCheck )securityCheck );
 				cellRender.remove( node );
-//				( ( SecurityCheckTree )securityTestTree.getModel() ).removeNodeFromParent( node );
 			}
 		}
 	}
@@ -410,6 +414,18 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 			{
 				securityTestTree.collapseRow( row );
 			}
+		}
+	}
+
+	public class InternalSecurityTestRunListener extends SecurityTestRunListenerAdapter
+	{
+
+		@Override
+		public void beforeSecurityCheck( TestCaseRunner testRunner, SecurityTestRunContext runContext,
+				AbstractSecurityCheck securityCheck )
+		{
+			securityTestTree.setSelectionRow( securityTestTree.getRowForPath( new TreePath( treeModel
+					.getSecurityCheckNode( securityCheck ).getPath() ) ) );
 		}
 	}
 
@@ -639,6 +655,9 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 	public void release()
 	{
 		cellRender.release();
+		securityTest.getTestCase().getTestSuite().removeTestSuiteListener( testSuiteListener );
+		securityTest.removeSecurityTestRunListener( testRunListener );
+				
 	}
 
 	@Override

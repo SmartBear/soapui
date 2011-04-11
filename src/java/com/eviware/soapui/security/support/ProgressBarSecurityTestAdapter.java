@@ -91,7 +91,7 @@ public class ProgressBarSecurityTestAdapter
 
 			if( securityCheck != null )
 			{
-				progressBar.setString( STATE_RUN + ":" + securityCheck.getTestStep().getName() );
+				progressBar.setString( STATE_RUN + ":" + securityCheck.getTestStep().getName() + " - " + securityCheck.getName());
 				progressBar.setValue( runContext.getCurrentCheckOnSecurityTestIndex() );
 			}
 		}
@@ -116,7 +116,8 @@ public class ProgressBarSecurityTestAdapter
 			}
 			else if( securityCheckResult.getStatus() == SecurityStatus.OK )
 			{
-				progressBar.setForeground( OK_COLOR );
+				if( !progressBar.getForeground().equals( FAILED_COLOR ) )
+					progressBar.setForeground( OK_COLOR );
 			}
 
 			progressBar.setValue( runContext.getCurrentCheckOnSecurityTestIndex() + 1 );
@@ -130,7 +131,7 @@ public class ProgressBarSecurityTestAdapter
 			}
 			else if( testRunner.getStatus() == Status.FINISHED )
 			{
-				if( progressBar.getForeground().equals( FAILED_COLOR ) )
+				if( !progressBar.getForeground().equals( FAILED_COLOR ) )
 					progressBar.setForeground( OK_COLOR );
 			}
 
@@ -139,6 +140,8 @@ public class ProgressBarSecurityTestAdapter
 
 			if( !progressBar.getString().equals( STATE_CANCEL ) )
 				progressBar.setString( STATE_DONE );
+			
+			progressBar.setValue( progressBar.getMaximum() );
 		}
 
 		@Override
@@ -151,6 +154,7 @@ public class ProgressBarSecurityTestAdapter
 				counterLabel.setBackground( FAILED_COLOR );
 				alertsCounter++ ;
 				counterLabel.setText( " " + alertsCounter + " " );
+				progressBar.setForeground( FAILED_COLOR );
 			}
 			else if( securityCheckReqResult.getStatus() == SecurityStatus.CANCELED )
 			{

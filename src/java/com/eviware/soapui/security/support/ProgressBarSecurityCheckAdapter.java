@@ -10,8 +10,6 @@ import javax.swing.SwingConstants;
 import javax.swing.tree.DefaultTreeModel;
 
 import com.eviware.soapui.model.security.SecurityCheck;
-import com.eviware.soapui.model.testsuite.AssertionsListener;
-import com.eviware.soapui.model.testsuite.TestAssertion;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunContext;
@@ -22,12 +20,11 @@ import com.eviware.soapui.security.result.SecurityCheckRequestResult;
 import com.eviware.soapui.security.result.SecurityCheckResult;
 import com.eviware.soapui.security.result.SecurityResult.SecurityStatus;
 
-public class ProgressBarSecurityCheckAdapter extends SecurityTestRunListenerAdapter implements AssertionsListener
+public class ProgressBarSecurityCheckAdapter extends SecurityTestRunListenerAdapter
 {
 
 	private static final Color OK_COLOR = new Color( 0, 204, 102 );
 	private static final Color FAILED_COLOR = new Color( 255, 102, 0 );
-//	private static final Color UNKNOWN_COLOR = new Color( 240, 240, 240 );
 	private static final Color MISSING_ASSERTION_COLOR = new Color( 204, 153, 255 );
 
 	private static final String STATE_RUN = "No Alerts";
@@ -62,14 +59,12 @@ public class ProgressBarSecurityCheckAdapter extends SecurityTestRunListenerAdap
 		this.cntLabel.setPreferredSize( new Dimension( 50, 18 ) );
 		this.cntLabel.setHorizontalTextPosition( SwingConstants.CENTER );
 		this.cntLabel.setHorizontalAlignment( SwingConstants.CENTER );
-		( ( AbstractSecurityCheck )securityCheck ).addAssertionsListener( this );
 
 	}
 
 	public void release()
 	{
 		securityTest.removeSecurityTestRunListener( this );
-		( ( AbstractSecurityCheck )securityCheck ).removeAssertionsListener( this );
 		securityTest = null;
 		securityCheck = null;
 	}
@@ -144,6 +139,8 @@ public class ProgressBarSecurityCheckAdapter extends SecurityTestRunListenerAdap
 		cntLabel.setText( "" );
 		alertsCounter = 0;
 		( ( DefaultTreeModel )tree.getModel() ).nodeChanged( node );
+		
+		
 	}
 
 	@Override
@@ -154,7 +151,8 @@ public class ProgressBarSecurityCheckAdapter extends SecurityTestRunListenerAdap
 				.equals( this.securityCheck.getTestStep().getId() )
 				&& this.securityCheck.getName().equals( securityCheckResult.getSecurityCheck().getName() ) )
 		{
-			if ( securityCheckResult.getStatus() != SecurityStatus.CANCELED ) {
+			if( securityCheckResult.getStatus() != SecurityStatus.CANCELED )
+			{
 				if( securityCheck.getAssertionsSupport().getAssertionCount() == 0 )
 				{
 					progressBar.setForeground( MISSING_ASSERTION_COLOR );
@@ -173,45 +171,24 @@ public class ProgressBarSecurityCheckAdapter extends SecurityTestRunListenerAdap
 					}
 				}
 				progressBar.setValue( 100 );
-			}else {
+			}
+			else
+			{
 				progressBar.setString( STATE_CANCEL );
 			}
 			( ( DefaultTreeModel )tree.getModel() ).nodeChanged( node );
 		}
 	}
 
-	/**
-	 * 
-	 */
-	void updateProgressBar()
-	{
-//		if( ProgressBarSecurityCheckAdapter.this.securityCheck.getAssertionsSupport().getAssertionCount() == 0 )
-//		{
-//			ProgressBarSecurityCheckAdapter.this.progressBar.setForeground( MISSING_ASSERTION_COLOR );
-//			ProgressBarSecurityCheckAdapter.this.progressBar.setString( STATE_MISSING_ASSERTIONS );
-//			ProgressBarSecurityCheckAdapter.this.progressBar.setValue( 100 );
-//		}
-//		( ( DefaultTreeModel )ProgressBarSecurityCheckAdapter.this.tree.getModel() )
-//				.nodeChanged( ProgressBarSecurityCheckAdapter.this.node );
-	}
-
 	@Override
-	public void assertionAdded( TestAssertion assertion )
+	public void beforeSecurityCheck( TestCaseRunner testRunner, SecurityTestRunContext runContext,
+			AbstractSecurityCheck securityCheck )
 	{
-		updateProgressBar();
-	}
-
-	@Override
-	public void assertionMoved( TestAssertion assertion, int ix, int offset )
-	{
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void assertionRemoved( TestAssertion assertion )
-	{
-		updateProgressBar();
+		if( securityCheck.getTestStep().getId().equals( this.securityCheck.getTestStep().getId() )
+				&& this.securityCheck.getName().equals( securityCheck.getName() ) )
+		{
+			progressBar.setString( STATE_RUN );
+		}
 	}
 
 }
