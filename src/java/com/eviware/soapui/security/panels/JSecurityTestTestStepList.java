@@ -319,7 +319,8 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 
 				securityTest.removeSecurityCheck( testStep, ( AbstractSecurityCheck )securityCheck );
 				cellRender.remove( securityCheckNode );
-				( ( SecurityCheckTree )securityTestTree.getModel() ).removeNodeFromParent( securityCheckNode );
+				// ( ( SecurityCheckTree )securityTestTree.getModel()
+				// ).removeNodeFromParent( securityCheckNode );
 			}
 		}
 
