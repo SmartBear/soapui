@@ -62,7 +62,6 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 
 		if( componentTree.containsKey( node ) )
 		{
-			// TODO: update if needed.
 			result = componentTree.get( node );
 
 			( ( CustomTreeNode )result ).setExpandedIcon( exp );
@@ -173,7 +172,6 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 				progressPanel.add( progressBar );
 
 				progressBar.setMinimumSize( new Dimension( 0, 200 ) );
-				progressBar.setBackground( Color.WHITE );
 				progressBar.setInheritsPopupMenu( true );
 
 				cntLabel = new JLabel( "" );
@@ -205,28 +203,6 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 		{
 			progressBar.setValue( 0 );
 			progressBar.setString( "" );
-		}
-
-		public void addNotify()
-		{
-			super.addNotify();
-			if( progressBar != null )
-			{
-				// progressBarAdapter = new ProgressBarSecurityTestStepAdapter(
-				// tree, node, progressBar, securityTest,
-				// testStep, cntLabel );
-			}
-		}
-
-		public void removeNotify()
-		{
-			super.removeNotify();
-			if( progressBarAdapter != null )
-			{
-				// progressBarAdapter.release();
-				//
-				// progressBarAdapter = null;
-			}
 		}
 
 		public void setSelected( boolean sel )
@@ -336,6 +312,7 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 		private JPanel progressPanel;
 		private JLabel cntLabel;
 		private SecurityCheckNode node;
+		private JPanel leftInnerPanel;
 
 		public SecurityCheckCellRender( JTree tree, SecurityCheckNode node, boolean sel, boolean arg3, boolean arg4,
 				int arg5, boolean arg6 )
@@ -348,11 +325,14 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 			label.setIcon( UISupport.createImageIcon( "/securityTest.png" ) );
 			label.setBorder( BorderFactory.createEmptyBorder( 5, 45, 5, 5 ) );
 			label.setEnabled( !securityCheck.isDisabled() );
-			add( label, BorderLayout.LINE_START );
+			leftInnerPanel = new JPanel( new BorderLayout() );
+			leftInnerPanel.add( label, BorderLayout.CENTER );
+			leftInnerPanel.setBackground( getBackground() );
+			
 
 			progressBar = new JProgressBar();
 			progressPanel = new JPanel( new FlowLayout( FlowLayout.LEFT, 10, 0 ) );
-
+//			progressBar.setBackground( UNKNOWN_COLOR );
 			progressBar.setValue( 0 );
 			progressBar.setStringPainted( true );
 			progressBar.setString( "" );
@@ -364,7 +344,6 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 			progressPanel.add( progressBar );
 
 			progressBar.setMinimumSize( new Dimension( 0, 200 ) );
-			progressBar.setBackground( Color.WHITE );
 			progressBar.setInheritsPopupMenu( true );
 
 			cntLabel = new JLabel( "" );
@@ -374,7 +353,7 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 
 			progressPanel.add( cntLabel );
 			add( progressPanel, BorderLayout.LINE_END );
-
+			add( leftInnerPanel, BorderLayout.LINE_START );
 			setSelected( sel );
 			setBorder( BorderFactory.createMatteBorder( 0, 0, 1, 0, Color.black ) );
 
@@ -402,12 +381,14 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 				this.setBackground( selected );
 				this.label.setBackground( selected );
 				progressPanel.setBackground( selected );
+				leftInnerPanel.setBackground( selected );
 			}
 			else
 			{
 				this.setBackground( unselected );
 				this.label.setBackground( unselected );
 				progressPanel.setBackground( unselected );
+				leftInnerPanel.setBackground( unselected );
 			}
 		}
 

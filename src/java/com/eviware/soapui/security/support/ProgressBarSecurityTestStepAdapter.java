@@ -51,7 +51,6 @@ public class ProgressBarSecurityTestStepAdapter
 	private JLabel counterLabel;
 	private static final Color OK_COLOR = new Color( 0, 204, 102 );
 	private static final Color FAILED_COLOR = new Color( 255, 102, 0 );
-	private static final Color UNKNOWN_COLOR = new Color( 240, 240, 240 );
 	private static final Color MISSING_ASSERTION_COLOR = new Color( 204, 153, 255 );
 
 	private static final String STATE_RUN = "In progress";
@@ -73,7 +72,7 @@ public class ProgressBarSecurityTestStepAdapter
 		internalTestRunListener = new InternalTestRunListener();
 		if( progressBar != null && cntLabel != null )
 		{
-			this.progressBar.setBackground( UNKNOWN_COLOR );
+//			this.progressBar.setBackground( UNKNOWN_COLOR );
 			this.counterLabel.setPreferredSize( new Dimension( 50, 18 ) );
 			this.counterLabel.setHorizontalTextPosition( SwingConstants.CENTER );
 			this.counterLabel.setHorizontalAlignment( SwingConstants.CENTER );
@@ -104,6 +103,7 @@ public class ProgressBarSecurityTestStepAdapter
 								testStep.getId() ) );
 
 				progressBar.setString( STATE_RUN );
+				progressBar.setForeground( OK_COLOR );
 				progressBar.setValue( 0 );
 				counterLabel.setText( "" );
 				counterLabel.setOpaque( false );
@@ -119,7 +119,6 @@ public class ProgressBarSecurityTestStepAdapter
 
 			progressBar.setString( "" );
 			progressBar.setValue( 0 );
-			progressBar.setForeground( UNKNOWN_COLOR );
 			counterLabel.setText( "" );
 			counterLabel.setOpaque( false );
 
@@ -145,19 +144,27 @@ public class ProgressBarSecurityTestStepAdapter
 		{
 			if( securityCheck.getTestStep().getId().equals( testStep.getId() ) )
 			{
-				if( progressBar.getString().equals( "" ) )
-					progressBar.setString( STATE_RUN );
-				if( securityCheck.getAssertionCount() == 0 )
+				if( securityCheck.getSecurityCheckResult() != null
+						&& securityCheck.getSecurityCheckResult().getStatus() != SecurityStatus.CANCELED )
 				{
-					progressBar.setString( STATE_MISSING_ASSERTIONS );
-					progressBar.setForeground( MISSING_ASSERTION_COLOR );
-				}
-				if( securityCheck instanceof AbstractSecurityCheckWithProperties
-						&& ( ( AbstractSecurityCheckWithProperties )securityCheck ).getParameterHolder().getParameterList()
-								.size() == 0 )
-				{
-					progressBar.setString( STATE_MISSING_PARAMETERS );
-					progressBar.setForeground( MISSING_ASSERTION_COLOR );
+					if( progressBar.getString().equals( "" ) ) {
+						progressBar.setString( STATE_RUN );
+						progressBar.setForeground( OK_COLOR );
+					}
+					if( securityCheck.getAssertionCount() == 0 )
+					{
+						if( !progressBar.getForeground().equals( FAILED_COLOR ) )
+							progressBar.setForeground( MISSING_ASSERTION_COLOR );
+						progressBar.setString( STATE_MISSING_ASSERTIONS );
+					}
+					if( securityCheck instanceof AbstractSecurityCheckWithProperties
+							&& ( ( AbstractSecurityCheckWithProperties )securityCheck ).getParameterHolder()
+									.getParameterList().size() == 0 )
+					{
+						if( !progressBar.getForeground().equals( FAILED_COLOR ) )
+							progressBar.setForeground( MISSING_ASSERTION_COLOR );
+						progressBar.setString( STATE_MISSING_PARAMETERS );
+					}
 				}
 			}
 		}
@@ -173,22 +180,21 @@ public class ProgressBarSecurityTestStepAdapter
 				{
 					progressBar.setString( STATE_CANCEL );
 				}
-				else if( !progressBar.getForeground().equals( MISSING_ASSERTION_COLOR ) )
+				else
+				// progressbar can change its color only if not missing
+				// assertions or parameters
+				if( securityCheckResult.getStatus() == SecurityStatus.FAILED )
 				{
-					// progressbar can change its color only if not missing
-					// assertions or parameters
-					if( securityCheckResult.getStatus() == SecurityStatus.FAILED )
+					progressBar.setForeground( FAILED_COLOR );
+				}
+				else if( securityCheckResult.getStatus() == SecurityStatus.OK )
+				{
+					// can not change to OK color if any of previous checks
+					// failed or missing assertions/parameters
+					if( !progressBar.getForeground().equals( FAILED_COLOR )
+							|| !progressBar.getForeground().equals( MISSING_ASSERTION_COLOR ) )
 					{
-						progressBar.setForeground( FAILED_COLOR );
-					}
-					else if( securityCheckResult.getStatus() == SecurityStatus.OK )
-					{
-						// can not change to OK color if any of previous checks
-						// failed.
-						if( !progressBar.getForeground().equals( FAILED_COLOR ) )
-						{
-							progressBar.setForeground( OK_COLOR );
-						}
+						progressBar.setForeground( OK_COLOR );
 					}
 				}
 
@@ -211,6 +217,7 @@ public class ProgressBarSecurityTestStepAdapter
 					totalAlertsCounter++ ;
 					counterLabel.setText( " " + totalAlertsCounter + " " );
 					( ( DefaultTreeModel )tree.getModel() ).nodeChanged( node );
+					progressBar.setForeground( FAILED_COLOR );
 				}
 			}
 		}
