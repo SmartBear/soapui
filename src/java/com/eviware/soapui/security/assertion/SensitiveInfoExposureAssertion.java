@@ -206,7 +206,7 @@ public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion impleme
 			buildDialog();
 		if( dialog.show() )
 		{
-			assertionSpecificExposureList = createListFromTable();;
+			assertionSpecificExposureList = createListFromTable();
 			includeProjectSpecific = Boolean.valueOf( dialog.getFormField(
 					SensitiveInformationConfigDialog.INCLUDE_PROJECT_SPECIFIC ).getValue() );
 			includeGlolbal = Boolean.valueOf( dialog.getFormField( SensitiveInformationConfigDialog.INCLUDE_GLOBAL )
@@ -287,16 +287,16 @@ public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion impleme
 		public AddTokenAction()
 		{
 			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/add_property.gif" ) );
-			putValue( Action.SHORT_DESCRIPTION, "Adds a parameter to assertion" );
+			putValue( Action.SHORT_DESCRIPTION, "Adds a token to assertion" );
 		}
 
 		@Override
 		public void actionPerformed( ActionEvent arg0 )
 		{
-			String newToken = "newToken";
-			newToken = UISupport.prompt( "Enter token name", "New Token", newToken );
-			String newValue = "value";
-			newValue = UISupport.prompt( "Enter value", "New Token Value", newValue );
+			String newToken = "";
+			newToken = UISupport.prompt( "Enter token", "New Token", newToken );
+			String newValue = "";
+			newValue = UISupport.prompt( "Enter description", "New Description", newValue );
 			
 			sensitivInformationTableModel.addToken(newToken, newValue);
 		}
