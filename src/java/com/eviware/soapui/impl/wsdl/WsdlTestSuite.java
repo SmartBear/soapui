@@ -192,7 +192,7 @@ public class WsdlTestSuite extends AbstractTestPropertyHolderWsdlModelItem<TestS
 		if( !includeLoadTests )
 			testCaseConfig.setLoadTestArray( new LoadTestConfig[0] );
 
-		if( !includeSecurityTests )
+		if( createCopy )
 			testCaseConfig.setSecurityTestArray( new SecurityTestConfig[0] );
 
 		WsdlTestCase oldTestCase = testCase;
@@ -220,7 +220,7 @@ public class WsdlTestSuite extends AbstractTestPropertyHolderWsdlModelItem<TestS
 
 		return testCase;
 	}
-	
+
 	public void removeTestCase( WsdlTestCase testCase )
 	{
 		int ix = testCases.indexOf( testCase );
@@ -614,8 +614,8 @@ public class WsdlTestSuite extends AbstractTestPropertyHolderWsdlModelItem<TestS
 			getConfig().removeTestCase( ix );
 		}
 
-		TestCaseConfig newConfig = ( TestCaseConfig )getConfig().insertNewTestCase( ix ).set( newTestCase )
-				.changeType( TestCaseConfig.type );
+		TestCaseConfig newConfig = ( TestCaseConfig )getConfig().insertNewTestCase( ix ).set( newTestCase ).changeType(
+				TestCaseConfig.type );
 		testCase = buildTestCase( newConfig, false );
 		testCases.add( ix, testCase );
 		testCase.afterLoad();
@@ -645,8 +645,8 @@ public class WsdlTestSuite extends AbstractTestPropertyHolderWsdlModelItem<TestS
 
 		if( testCaseNewConfig != null )
 		{
-			TestCaseConfig newConfig = ( TestCaseConfig )getConfig().addNewTestCase().set( testCaseNewConfig )
-					.changeType( TestCaseConfig.type );
+			TestCaseConfig newConfig = ( TestCaseConfig )getConfig().addNewTestCase().set( testCaseNewConfig ).changeType(
+					TestCaseConfig.type );
 			WsdlTestCase newTestCase = buildTestCase( newConfig, false );
 			ModelSupport.unsetIds( newTestCase );
 			newTestCase.afterLoad();

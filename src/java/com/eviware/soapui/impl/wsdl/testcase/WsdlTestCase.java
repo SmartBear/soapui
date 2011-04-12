@@ -43,6 +43,7 @@ import com.eviware.soapui.impl.wsdl.teststeps.registry.HttpRequestStepFactory;
 import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestStepFactory;
 import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestStepRegistry;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.security.SecurityCheck;
 import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.model.testsuite.LoadTest;
 import com.eviware.soapui.model.testsuite.TestCase;
@@ -51,6 +52,7 @@ import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestRunListener;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTest;
+import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.ActionList;
@@ -343,10 +345,9 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 					break;
 			}
 
-			name = UISupport.prompt(
-					"TestStep name must be unique, please specify new name for step\n" + "[" + testStep.getName()
-							+ "] in TestCase [" + getTestSuite().getProject().getName() + "->" + getTestSuite().getName()
-							+ "->" + getName() + "]", "Change TestStep name", name );
+			name = UISupport.prompt( "TestStep name must be unique, please specify new name for step\n" + "["
+					+ testStep.getName() + "] in TestCase [" + getTestSuite().getProject().getName() + "->"
+					+ getTestSuite().getName() + "->" + getName() + "]", "Change TestStep name", name );
 
 			if( name == null )
 				return false;
@@ -431,8 +432,8 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 
 	public WsdlTestStep addTestStep( String type, String name )
 	{
-		TestStepConfig newStepConfig = WsdlTestStepRegistry.getInstance().getFactory( type )
-				.createNewTestStep( this, name );
+		TestStepConfig newStepConfig = WsdlTestStepRegistry.getInstance().getFactory( type ).createNewTestStep( this,
+				name );
 		if( newStepConfig != null )
 		{
 			return addTestStep( newStepConfig );
@@ -455,8 +456,8 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 
 	public WsdlTestStep insertTestStep( String type, String name, int index )
 	{
-		TestStepConfig newStepConfig = WsdlTestStepRegistry.getInstance().getFactory( type )
-				.createNewTestStep( this, name );
+		TestStepConfig newStepConfig = WsdlTestStepRegistry.getInstance().getFactory( type ).createNewTestStep( this,
+				name );
 		if( newStepConfig != null )
 		{
 			return insertTestStep( newStepConfig, index, false );
@@ -645,7 +646,7 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 
 		return result;
 	}
-	
+
 	public Map<String, TestStep> getTestStepsOrdered()
 	{
 		Map<String, TestStep> result = new TreeMap<String, TestStep>();
@@ -1004,9 +1005,20 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 	{
 		for( WsdlTestStep testStep : testSteps )
 			testStep.afterCopy( oldTestSuite, oldTestCase );
-		
-		for (SecurityTest securityTest : securityTests) {
-			securityTest.afterCopy();
+
+		for( SecurityTest secTest : oldTestCase.getSecurityTestList() )
+		{
+			SecurityTest newSecurityTest = addNewSecurityTest( secTest.getName() );
+			for( int i = 0; i < oldTestCase.getTestStepList().size(); i++ )
+
+			{
+				TestStep oldStep = oldTestCase.getTestStepAt( i );
+				TestStep newStep = getTestStepAt( i );
+				for( AbstractSecurityCheck secCheck : secTest.getTestStepSecurityChecks( oldStep.getId() ) )
+				{
+					newSecurityTest.importSecurityCheck( newStep, secCheck, true );
+				}
+			}
 		}
 	}
 
