@@ -42,6 +42,7 @@ public class ProgressBarSecurityCheckAdapter extends SecurityTestRunListenerAdap
 	private String prePostFix = " ";
 
 	private JLabel cntLabel;
+	private Color defaultBackground;
 
 	public ProgressBarSecurityCheckAdapter( JTree tree, SecurityCheckNode node, JProgressBar progressBar,
 			SecurityCheck securityCheck, SecurityTest securityTest, JLabel cntLabel )
@@ -49,6 +50,7 @@ public class ProgressBarSecurityCheckAdapter extends SecurityTestRunListenerAdap
 		this.tree = tree;
 		this.node = node;
 		this.progressBar = progressBar;
+		this.defaultBackground = progressBar.getBackground();
 		this.progressBar.setMaximum( 100 );
 		this.securityCheck = securityCheck;
 		this.securityTest = securityTest;
@@ -139,8 +141,7 @@ public class ProgressBarSecurityCheckAdapter extends SecurityTestRunListenerAdap
 		cntLabel.setText( "" );
 		alertsCounter = 0;
 		( ( DefaultTreeModel )tree.getModel() ).nodeChanged( node );
-		
-		
+
 	}
 
 	@Override
@@ -176,6 +177,7 @@ public class ProgressBarSecurityCheckAdapter extends SecurityTestRunListenerAdap
 			{
 				progressBar.setString( STATE_CANCEL );
 			}
+			progressBar.setBackground( defaultBackground );
 			( ( DefaultTreeModel )tree.getModel() ).nodeChanged( node );
 		}
 	}
@@ -188,6 +190,7 @@ public class ProgressBarSecurityCheckAdapter extends SecurityTestRunListenerAdap
 				&& this.securityCheck.getName().equals( securityCheck.getName() ) )
 		{
 			progressBar.setString( STATE_RUN );
+			progressBar.setBackground( Color.white );
 		}
 	}
 

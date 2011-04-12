@@ -75,6 +75,7 @@ public class ProgressBarSecurityTestAdapter
 			progressBar.getModel().setMaximum(
 					( ( SecurityTestRunnerImpl )testRunner ).getSecurityTest().getSecurityCheckCount() );
 			progressBar.setForeground( OK_COLOR );
+			progressBar.setBackground( Color.white );
 			progressBar.setValue( 0 );
 			counterLabel.setOpaque( false );
 			alertsCounter = 0;
@@ -140,7 +141,7 @@ public class ProgressBarSecurityTestAdapter
 
 			if( !progressBar.getString().equals( STATE_CANCEL ) )
 				progressBar.setString( STATE_DONE );
-			
+			progressBar.setBackground( UNKNOWN_COLOR );
 			progressBar.setValue( progressBar.getMaximum() );
 		}
 

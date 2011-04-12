@@ -72,7 +72,7 @@ public class ProgressBarSecurityTestStepAdapter
 		internalTestRunListener = new InternalTestRunListener();
 		if( progressBar != null && cntLabel != null )
 		{
-//			this.progressBar.setBackground( UNKNOWN_COLOR );
+			// this.progressBar.setBackground( UNKNOWN_COLOR );
 			this.counterLabel.setPreferredSize( new Dimension( 50, 18 ) );
 			this.counterLabel.setHorizontalTextPosition( SwingConstants.CENTER );
 			this.counterLabel.setHorizontalAlignment( SwingConstants.CENTER );
@@ -136,6 +136,7 @@ public class ProgressBarSecurityTestStepAdapter
 						STATE_MISSING_PARAMETERS ) ) )
 					progressBar.setString( STATE_DONE );
 			}
+			progressBar.setBackground( new Color( 240, 240, 240 ) );
 		}
 
 		@Override
@@ -144,10 +145,12 @@ public class ProgressBarSecurityTestStepAdapter
 		{
 			if( securityCheck.getTestStep().getId().equals( testStep.getId() ) )
 			{
+				progressBar.setBackground( Color.white );
 				if( securityCheck.getSecurityCheckResult() != null
 						&& securityCheck.getSecurityCheckResult().getStatus() != SecurityStatus.CANCELED )
 				{
-					if( progressBar.getString().equals( "" ) ) {
+					if( progressBar.getString().equals( "" ) )
+					{
 						progressBar.setString( STATE_RUN );
 						progressBar.setForeground( OK_COLOR );
 					}
@@ -179,6 +182,7 @@ public class ProgressBarSecurityTestStepAdapter
 				if( securityCheckResult.getStatus() == SecurityStatus.CANCELED )
 				{
 					progressBar.setString( STATE_CANCEL );
+					progressBar.setBackground( new Color( 240, 240, 240 ) );
 				}
 				else
 				// progressbar can change its color only if not missing
