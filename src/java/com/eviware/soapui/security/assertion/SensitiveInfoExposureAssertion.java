@@ -109,13 +109,13 @@ public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion impleme
 	protected String internalAssertResponse( MessageExchange messageExchange, SubmitContext context )
 			throws AssertionException
 	{
-		 Map<String,String> checkList = createCheckMap( context );
+		 Map<String,String> checkMap = createCheckMap( context );
 		boolean throwException = false;
 		List<AssertionError> assertionErrorList = new ArrayList<AssertionError>();
-		for( String token : checkList.keySet() )
+		for( String token : checkMap.keySet() )
 		{
 			boolean useRegexp = token.trim().startsWith( PREFIX );
-			String description = !checkList.get( token).equals( "") ? checkList.get( token): token;
+			String description = !checkMap.get( token).equals( "") ? checkMap.get( token): token;
 			if( useRegexp )
 			{
 				token = token.substring( token.indexOf( PREFIX ) + 1 );
