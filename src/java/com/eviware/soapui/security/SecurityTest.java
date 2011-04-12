@@ -728,41 +728,6 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 		}
 	}
 
-	public void afterCopy()
-	{
-		if( getConfig() != null )
-		{
-			if( !getConfig().getTestStepSecurityTestList().isEmpty() )
-			{
-				List<TestStepSecurityTestConfig> testStepSecurityTestList = getConfig().getTestStepSecurityTestList();
-
-				for( int i = 0, j = 0; i < testStepSecurityTestList.size(); j++ )
-				{
-					if( j == testCase.getTestStepCount() )
-					{
-						break;
-					}
-
-					TestStep testStep = testCase.getTestStepAt( j );
-
-					if( !AbstractSecurityCheck.isSecurable( testStep ) )
-					{
-						continue;
-					}
-
-					TestStepSecurityTestConfig testStepSecurityTest = testStepSecurityTestList.get( i++ );
-
-					if( testStep != null && testStepSecurityTest != null )
-					{
-						testStepSecurityTest.setTestStepId( testStep.getId() );
-					}
-				}
-
-				createSecurityChecksMap();
-			}
-		}
-	}
-
 	/**
 	 * Checks if we can add new SecurityCheck for the specific TestStep (only one
 	 * type of SecurityCheck for TestStep is allowed)
