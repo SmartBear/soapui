@@ -48,7 +48,9 @@ import com.eviware.soapui.config.InterfaceConfig;
 import com.eviware.soapui.config.MockServiceConfig;
 import com.eviware.soapui.config.MockServiceDocumentConfig;
 import com.eviware.soapui.config.ProjectConfig;
+import com.eviware.soapui.config.SecurityTestConfig;
 import com.eviware.soapui.config.SoapuiProjectDocumentConfig;
+import com.eviware.soapui.config.TestCaseConfig;
 import com.eviware.soapui.config.TestSuiteConfig;
 import com.eviware.soapui.config.TestSuiteDocumentConfig;
 import com.eviware.soapui.config.TestSuiteRunTypesConfig;
@@ -65,7 +67,6 @@ import com.eviware.soapui.impl.wsdl.support.wsdl.UrlWsdlLoader;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlLoader;
 import com.eviware.soapui.impl.wsdl.support.wss.DefaultWssContainer;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlProjectRunner;
-import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.mock.MockService;
@@ -81,6 +82,7 @@ import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.model.testsuite.ProjectRunContext;
 import com.eviware.soapui.model.testsuite.ProjectRunListener;
 import com.eviware.soapui.model.testsuite.ProjectRunner;
+import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.model.testsuite.TestRunnable;
 import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.model.testsuite.TestSuite.TestSuiteRunType;
@@ -1265,9 +1267,16 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 				testSuite.getConfig().copy() );
 
 		testSuiteConfig.setName( name );
+		
+		if( createCopy ) {
+			for (TestCaseConfig testCaseConfig : testSuiteConfig.getTestCaseList()) {
+				testCaseConfig.setSecurityTestArray( new SecurityTestConfig[0] );
+			}
+		}
 
 		WsdlTestSuite oldTestSuite = testSuite;
 		testSuite = buildTestSuite( testSuiteConfig );
+		
 		if( description != null )
 			testSuite.setDescription( description );
 
@@ -1280,12 +1289,12 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 			ModelSupport.unsetIds( testSuite );
 
 		testSuite.afterLoad();
-		
+
 		if( createCopy )
 		{
 			testSuite.afterCopy( oldTestSuite );
 		}
-		
+
 		fireTestSuiteAdded( testSuite );
 
 		resolveImportedTestSuite( testSuite );
@@ -1593,8 +1602,8 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 		}
 		else
 		{
-			TestSuiteConfig config = ( TestSuiteConfig )projectDocument.getSoapuiProject().addNewTestSuite().set(
-					newTestSuiteConfig.getTestSuite() );
+			TestSuiteConfig config = ( TestSuiteConfig )projectDocument.getSoapuiProject().addNewTestSuite()
+					.set( newTestSuiteConfig.getTestSuite() );
 			WsdlTestSuite testSuite = buildTestSuite( config );
 
 			ModelSupport.unsetIds( testSuite );
@@ -1766,7 +1775,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 	// {
 	// return getConfig().getFailOnErrors();
 	// }
-	//	
+	//
 	// public void setFailOnErrors( boolean arg0 )
 	// {
 	// getConfig().setFailOnErrors( arg0 );
@@ -1892,8 +1901,8 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 		}
 		else
 		{
-			MockServiceConfig config = ( MockServiceConfig )projectDocument.getSoapuiProject().addNewMockService().set(
-					newMockServiceConfig.getMockService() );
+			MockServiceConfig config = ( MockServiceConfig )projectDocument.getSoapuiProject().addNewMockService()
+					.set( newMockServiceConfig.getMockService() );
 			WsdlMockService mockService = new WsdlMockService( this, config );
 
 			ModelSupport.unsetIds( mockService );

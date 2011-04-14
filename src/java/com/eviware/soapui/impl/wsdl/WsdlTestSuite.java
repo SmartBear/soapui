@@ -614,8 +614,8 @@ public class WsdlTestSuite extends AbstractTestPropertyHolderWsdlModelItem<TestS
 			getConfig().removeTestCase( ix );
 		}
 
-		TestCaseConfig newConfig = ( TestCaseConfig )getConfig().insertNewTestCase( ix ).set( newTestCase ).changeType(
-				TestCaseConfig.type );
+		TestCaseConfig newConfig = ( TestCaseConfig )getConfig().insertNewTestCase( ix ).set( newTestCase )
+				.changeType( TestCaseConfig.type );
 		testCase = buildTestCase( newConfig, false );
 		testCases.add( ix, testCase );
 		testCase.afterLoad();
@@ -645,8 +645,8 @@ public class WsdlTestSuite extends AbstractTestPropertyHolderWsdlModelItem<TestS
 
 		if( testCaseNewConfig != null )
 		{
-			TestCaseConfig newConfig = ( TestCaseConfig )getConfig().addNewTestCase().set( testCaseNewConfig ).changeType(
-					TestCaseConfig.type );
+			TestCaseConfig newConfig = ( TestCaseConfig )getConfig().addNewTestCase().set( testCaseNewConfig )
+					.changeType( TestCaseConfig.type );
 			WsdlTestCase newTestCase = buildTestCase( newConfig, false );
 			ModelSupport.unsetIds( newTestCase );
 			newTestCase.afterLoad();
@@ -682,8 +682,17 @@ public class WsdlTestSuite extends AbstractTestPropertyHolderWsdlModelItem<TestS
 
 	public void afterCopy( WsdlTestSuite oldTestSuite )
 	{
-		for( WsdlTestCase testCase : testCases )
-			testCase.afterCopy( oldTestSuite, null );
+		
+		for( int i = 0; i < testCases.size(); i++ )
+		{
+			WsdlTestCase testCase = getTestCaseAt( i );
+			WsdlTestCase oldTestCase = oldTestSuite.getTestCaseAt( i );
+
+			testCase.afterCopy( oldTestSuite, oldTestCase );
+		}
+
+		// for( WsdlTestCase testCase : testCases )
+		// testCase.afterCopy( oldTestSuite, null );
 	}
 
 	public WsdlTestSuiteRunner run( StringToObjectMap context, boolean async )
