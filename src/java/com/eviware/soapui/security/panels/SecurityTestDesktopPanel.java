@@ -54,6 +54,8 @@ import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestStepFactory;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
+import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
+import com.eviware.soapui.model.testsuite.TestRunner.Status;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
@@ -64,6 +66,7 @@ import com.eviware.soapui.security.log.JSecurityTestRunLog;
 import com.eviware.soapui.security.result.SecurityCheckRequestResult;
 import com.eviware.soapui.security.result.SecurityCheckResult;
 import com.eviware.soapui.security.result.SecurityTestStepResult;
+import com.eviware.soapui.security.result.SecurityResult.SecurityStatus;
 import com.eviware.soapui.security.support.ProgressBarSecurityTestAdapter;
 import com.eviware.soapui.security.support.SecurityTestRunListenerAdapter;
 import com.eviware.soapui.settings.UISettings;
@@ -122,6 +125,8 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 	private JXToolBar toolbar;
 	private InternalSecurityTestRunListener securityTestRunListener = new InternalSecurityTestRunListener();
 	private JLabel cntLabel;
+	private JComponentInspector<?> securityLogInspector;
+	private JComponentInspector<?> functionalLogInspector;
 
 	public SecurityTestDesktopPanel( SecurityTest securityTest )
 	{
@@ -159,10 +164,14 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 
 		add( panel, BorderLayout.NORTH );
 
-		JComponent testLog = buildTestLog();
+		JComponent securityLog = buildSecurityLog();
 		inspectorPanel = JInspectorPanelFactory.build( buildContent() );
-		inspectorPanel.addInspector( new JComponentInspector<JComponent>( testLog, "Security Log",
-				"Security Execution Log", true ) );
+		securityLogInspector = new JComponentInspector<JComponent>( securityLog, "Security Log",
+				"Security Execution Log", true );
+		inspectorPanel.addInspector( securityLogInspector );
+		JComponent functionalLog = buildFunctionalLog();
+		inspectorPanel.addInspector( new JComponentInspector<JComponent>( functionalLog, "TestCase Log",
+				"Functional Execution Log", true ) );
 		inspectorPanel.setDefaultDividerLocation( 0.7F );
 		inspectorPanel.setCurrentInspector( "Security Log" );
 
@@ -172,7 +181,30 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 			testStepListInspectorPanel.setCurrentInspector( "Description" );
 		}
 
+//		updateSecurityStatusIcon();
 		add( inspectorPanel.getComponent(), BorderLayout.CENTER );
+	}
+
+	// TODO check security result, not runner
+	// this is just to see the icon even wrong one
+	private void updateSecurityStatusIcon()
+	{
+		Status status = runner.getStatus();
+		switch( status )
+		{
+		case FAILED :
+		{
+			securityLogInspector.setIcon( UISupport.createImageIcon( "/failed_assertion.gif" ) );
+			inspectorPanel.activate( securityLogInspector );
+			break;
+		}
+		case INITIALIZED :
+		{
+			securityLogInspector.setIcon( UISupport.createImageIcon( "/valid_assertion.gif" ) );
+			inspectorPanel.deactivate();
+			break;
+		}
+		}
 	}
 
 	private Component buildRunnerBar()
@@ -206,7 +238,14 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 		return progressPanel;
 	}
 
-	private JComponent buildTestLog()
+	private JComponent buildSecurityLog()
+	{
+		securityTestLog = new JSecurityTestRunLog( getModelItem() );
+		stateDependantComponents.add( securityTestLog );
+		return securityTestLog;
+	}
+
+	private JComponent buildFunctionalLog()
 	{
 		securityTestLog = new JSecurityTestRunLog( getModelItem() );
 		stateDependantComponents.add( securityTestLog );
