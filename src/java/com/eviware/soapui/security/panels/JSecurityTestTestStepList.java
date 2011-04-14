@@ -250,7 +250,10 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 		@Override
 		public void testStepMoved( TestStep testStep, int index, int offset )
 		{
-
+			TreePath path = treeModel.moveTestStepNode( testStep, index, offset );
+			
+			securityTestTree.expandPath( path );
+			securityTestTree.setSelectionPath( path );
 		}
 	}
 

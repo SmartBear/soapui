@@ -14,6 +14,7 @@ package com.eviware.soapui.security.panels;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
+import javax.swing.tree.TreePath;
 
 import com.eviware.soapui.model.security.SecurityCheck;
 import com.eviware.soapui.model.testsuite.TestStep;
@@ -96,6 +97,27 @@ public class SecurityCheckTree extends DefaultTreeModel
 		removeNodeFromParent( node );
 		nodeStructureChanged( testStepNode );
 		
+	}
+
+	/**
+	 * 
+	 * moves test step
+	 * 
+	 * returns new index/row where test step is inserted
+	 * 
+	 * @param testStep
+	 * @param index
+	 * @param offset
+	 * @return
+	 */
+	public TreePath moveTestStepNode( TestStep testStep, int index, int offset )
+	{
+		TestStepNode node = getTestStepNode( testStep );
+		int index2 = getIndexOfChild( root, node );
+		removeNodeFromParent( node );
+		insertNodeInto( node, ( MutableTreeNode )root, index2+offset );
+		
+		return new TreePath( node.getPath() );
 	}
 
 }
