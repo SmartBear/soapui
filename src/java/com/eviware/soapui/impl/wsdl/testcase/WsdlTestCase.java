@@ -1005,7 +1005,10 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 	{
 		for( WsdlTestStep testStep : testSteps )
 			testStep.afterCopy( oldTestSuite, oldTestCase );
+	}
 
+	public void importSecurityTests( WsdlTestSuite oldTestSuite, WsdlTestCase oldTestCase )
+	{
 		for( SecurityTest secTest : oldTestCase.getSecurityTestList() )
 		{
 			SecurityTest newSecurityTest = addNewSecurityTest( secTest.getName() );

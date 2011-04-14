@@ -213,6 +213,10 @@ public class WsdlTestSuite extends AbstractTestPropertyHolderWsdlModelItem<TestS
 		if( createCopy )
 		{
 			testCase.afterCopy( null, oldTestCase );
+			
+			if (includeSecurityTests) {
+				testCase.importSecurityTests( null, oldTestCase );
+			}
 		}
 
 		fireTestCaseAdded( testCase );
@@ -688,7 +692,8 @@ public class WsdlTestSuite extends AbstractTestPropertyHolderWsdlModelItem<TestS
 			WsdlTestCase testCase = getTestCaseAt( i );
 			WsdlTestCase oldTestCase = oldTestSuite.getTestCaseAt( i );
 
-			testCase.afterCopy( oldTestSuite, oldTestCase );
+			testCase.afterCopy( oldTestSuite, null );
+			testCase.importSecurityTests( oldTestSuite, oldTestCase );
 		}
 
 		// for( WsdlTestCase testCase : testCases )
