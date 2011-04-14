@@ -104,6 +104,7 @@ public class ProgressBarSecurityTestStepAdapter
 
 				progressBar.setString( STATE_RUN );
 				progressBar.setForeground( OK_COLOR );
+				progressBar.setBackground( Color.white );
 				progressBar.setValue( 0 );
 				counterLabel.setText( "" );
 				counterLabel.setOpaque( false );
@@ -145,7 +146,6 @@ public class ProgressBarSecurityTestStepAdapter
 		{
 			if( securityCheck.getTestStep().getId().equals( testStep.getId() ) )
 			{
-				progressBar.setBackground( Color.white );
 				if( securityCheck.getSecurityCheckResult() != null
 						&& securityCheck.getSecurityCheckResult().getStatus() != SecurityStatus.CANCELED )
 				{
