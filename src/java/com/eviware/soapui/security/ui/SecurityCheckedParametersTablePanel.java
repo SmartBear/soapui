@@ -22,6 +22,8 @@ import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableCellEditor;
 
 import org.jdesktop.swingx.JXTable;
@@ -48,7 +50,7 @@ import com.eviware.x.impl.swing.JTextFieldFormField;
 import com.eviware.x.impl.swing.SwingXFormDialog;
 
 @SuppressWarnings( "serial" )
-public class SecurityCheckedParametersTablePanel extends JPanel
+public class SecurityCheckedParametersTablePanel extends JPanel implements ListSelectionListener
 {
 
 	static final String CHOOSE_TEST_PROPERTY = "Choose Test Property";
@@ -94,6 +96,7 @@ public class SecurityCheckedParametersTablePanel extends JPanel
 
 		add( toolbar, BorderLayout.NORTH );
 		table = new JXTable( model );
+		table.getSelectionModel().addListSelectionListener( this );
 
 		table.setDefaultEditor( String.class, getDefaultCellEditor() );
 		add( new JScrollPane( table ), BorderLayout.CENTER );
@@ -386,6 +389,18 @@ public class SecurityCheckedParametersTablePanel extends JPanel
 
 		@AField( description = "Parameter XPath", name = "XPath", type = AFieldType.COMPONENT )
 		static String PATH = "XPath";
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see javax.swing.event.ListSelectionListener#valueChanged(javax.swing.event.ListSelectionEvent)
+	 */
+	@Override
+	public void valueChanged( ListSelectionEvent arg0 )
+	{
+		// TODO Auto-generated method stub
+	
+		
 	}
 
 }
