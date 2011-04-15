@@ -100,10 +100,11 @@ public class SwingXFormImpl implements XForm
 		return checkBox;
 	}
 
-	/* 
-	 * If label starts with '###' do not show them.
-	 * (non-Javadoc)
-	 * @see com.eviware.x.form.XForm#addComponent(java.lang.String, com.eviware.x.form.XFormField)
+	/*
+	 * If label starts with '###' do not show them. (non-Javadoc)
+	 * if label ends with '___' (3) right border is 30 and no ':' at the end 
+	 * @see com.eviware.x.form.XForm#addComponent(java.lang.String,
+	 * com.eviware.x.form.XFormField)
 	 */
 	public XFormField addComponent( String label, XFormField formComponent )
 	{
@@ -120,8 +121,17 @@ public class SwingXFormImpl implements XForm
 
 		if( label != null && !label.startsWith( "###" ) )
 		{
-			JLabel jlabel = new JLabel( label.endsWith( ":" ) ? label : label + ":" );
-			jlabel.setBorder( BorderFactory.createEmptyBorder( 2, 0, 0, 0 ) );
+			JLabel jlabel = null;
+			if( label.endsWith( "___" ) )
+			{
+				jlabel = new JLabel( label.substring( 0, label.length() - 3 ) );
+				jlabel.setBorder( BorderFactory.createEmptyBorder( 2, 0, 0, 30 ) );
+			}
+			else
+			{
+				jlabel = new JLabel( label.endsWith( ":" ) ? label : label + ":" );
+				jlabel.setBorder( BorderFactory.createEmptyBorder( 2, 0, 0, 0 ) );
+			}
 			panel.add( jlabel, cc.xy( 2, row ) );
 
 			jlabel.setLabelFor( swingFormComponent.getComponent() );
