@@ -44,6 +44,7 @@ import javax.swing.tree.TreeSelectionModel;
 import org.jdesktop.swingx.JXTree;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.security.SecurityCheck;
@@ -251,7 +252,7 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 		public void testStepMoved( TestStep testStep, int index, int offset )
 		{
 			TreePath path = treeModel.moveTestStepNode( testStep, index, offset );
-			
+
 			securityTestTree.expandPath( path );
 			securityTestTree.setSelectionPath( path );
 		}
@@ -280,15 +281,15 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 			String type = UISupport.prompt( "Specify type of security check", "Add SecurityCheck", availableChecksNames );
 			if( type == null || type.trim().length() == 0 )
 				return;
-			String name = UISupport.prompt( "Specify name for security check", "Add SecurityCheck", securityTest
-					.findTestStepCheckUniqueName( testStep.getId(), type ) );
+			String name = UISupport.prompt( "Specify name for security check", "Add SecurityCheck",
+					securityTest.findTestStepCheckUniqueName( testStep.getId(), type ) );
 			if( name == null || name.trim().length() == 0 )
 				return;
 
 			while( securityTest.getTestStepSecurityCheckByName( testStep.getId(), name ) != null )
 			{
-				name = UISupport.prompt( "Specify unique name for check", "Add SecurityCheck", name + " "
-						+ ( securityTest.getTestStepSecurityChecks( testStep.getId() ).size() ) );
+				name = UISupport.prompt( "Specify unique name for check", "Add SecurityCheck",
+						name + " " + ( securityTest.getTestStepSecurityChecks( testStep.getId() ).size() ) );
 				if( name == null )
 				{
 					return;
@@ -320,7 +321,6 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 
 			dialog.show();
 
-			// if cancel is pressed remove security check
 			if( dialog.getReturnValue() == XFormDialog.CANCEL_OPTION )
 			{
 				SecurityCheckNode securityCheckNode = ( SecurityCheckNode )node.getLastChild();
@@ -349,10 +349,17 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 
 			if( securityCheck.isConfigurable() )
 			{
+				SecurityCheckConfig backupCheckConfig = ( SecurityCheckConfig )securityCheck.getConfig().copy();
+
 				XFormDialog dialog = SoapUI.getSoapUICore().getSecurityCheckRegistry().getUIBuilder()
 						.buildSecurityCheckConfigurationDialog( ( AbstractSecurityCheck )securityCheck );
 
 				dialog.show();
+
+				if( dialog.getReturnValue() == XFormDialog.CANCEL_OPTION )
+				{
+					securityCheck.copyConfig( backupCheckConfig );
+				}
 			}
 		}
 	}
@@ -535,10 +542,17 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 
 			if( securityCheck.isConfigurable() )
 			{
+				SecurityCheckConfig backupCheckConfig = ( SecurityCheckConfig )securityCheck.getConfig().copy();
+
 				XFormDialog dialog = SoapUI.getSoapUICore().getSecurityCheckRegistry().getUIBuilder()
 						.buildSecurityCheckConfigurationDialog( ( AbstractSecurityCheck )securityCheck );
 
 				dialog.show();
+
+				if( dialog.getReturnValue() == XFormDialog.CANCEL_OPTION )
+				{
+					securityCheck.copyConfig( backupCheckConfig );
+				}
 			}
 		}
 		else
@@ -711,4 +725,5 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 		removeSecurityCheckAction.setEnabled( false );
 		cloneParametersAction.setEnabled( false );
 	}
+
 }

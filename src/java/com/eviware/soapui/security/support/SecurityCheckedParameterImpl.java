@@ -25,7 +25,7 @@ public class SecurityCheckedParameterImpl implements SecurityCheckedParameter
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.eviware.soapui.security.support.SecurityChekedParameter#getName()
+	 * @see com.eviware.soapui.security.support.SecurityCheckedParameter#getName()
 	 */
 	public String getName()
 	{
@@ -45,7 +45,7 @@ public class SecurityCheckedParameterImpl implements SecurityCheckedParameter
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * com.eviware.soapui.security.support.SecurityChekedParameter#getXPath()
+	 * com.eviware.soapui.security.support.SecurityCheckedParameter#getXPath()
 	 */
 	public String getXpath()
 	{
@@ -64,7 +64,7 @@ public class SecurityCheckedParameterImpl implements SecurityCheckedParameter
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.eviware.soapui.security.support.SecurityChekedParameter#getType()
+	 * @see com.eviware.soapui.security.support.SecurityCheckedParameter#getType()
 	 */
 	public String getType()
 	{
@@ -84,7 +84,7 @@ public class SecurityCheckedParameterImpl implements SecurityCheckedParameter
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * com.eviware.soapui.security.support.SecurityChekedParameter#isChecked()
+	 * com.eviware.soapui.security.support.SecurityCheckedParameter#isChecked()
 	 */
 	public boolean isChecked()
 	{
@@ -106,7 +106,7 @@ public class SecurityCheckedParameterImpl implements SecurityCheckedParameter
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * com.eviware.soapui.security.support.SecurityChekedParameter#getLabel()
+	 * com.eviware.soapui.security.support.SecurityCheckedParameter#getLabel()
 	 */
 	public String getLabel()
 	{

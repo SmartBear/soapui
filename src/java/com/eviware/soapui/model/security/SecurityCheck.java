@@ -2,6 +2,8 @@ package com.eviware.soapui.model.security;
 
 import javax.swing.JComponent;
 
+import org.apache.xmlbeans.XmlObject;
+
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.impl.wsdl.support.assertions.AssertionsSupport;
 import com.eviware.soapui.model.testsuite.TestStep;
@@ -96,5 +98,9 @@ public interface SecurityCheck
 	JComponent getAdvancedSettingsPanel();
 
 	public SecurityCheckResult getSecurityCheckResult();
+
+	XmlObject getConfig();
+
+	void copyConfig( SecurityCheckConfig backupCheckConfig );
 
 }

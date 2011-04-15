@@ -37,7 +37,7 @@ public abstract class AbstractSecurityCheckWithProperties extends AbstractSecuri
 	{
 		super( testStep, config, parent, icon );
 
-		setParameterHolder( new SecurityCheckedParameterHolder( this, config.getChekedPameters() ) );
+		setParameterHolder( new SecurityCheckedParameterHolder( this, config.getCheckedPameters() ) );
 	}
 
 	public SecurityCheckedParameterHolder getParameterHolder()
@@ -48,6 +48,14 @@ public abstract class AbstractSecurityCheckWithProperties extends AbstractSecuri
 	protected void setParameterHolder( SecurityCheckedParameterHolder parameterHolder )
 	{
 		this.parameterHolder = parameterHolder;
+	}
+
+	@Override
+	public void copyConfig( SecurityCheckConfig config )
+	{
+		super.copyConfig( config );
+		getConfig().setCheckedPameters( config.getCheckedPameters() );
+		setParameterHolder( new SecurityCheckedParameterHolder( this, config.getCheckedPameters() ) );
 	}
 
 	public XPathReference[] getXPathReferences()
@@ -74,9 +82,9 @@ public abstract class AbstractSecurityCheckWithProperties extends AbstractSecuri
 	{
 		super.updateSecurityConfig( config );
 
-		if( getParameterHolder() != null && getConfig().getChekedPameters() != null )
+		if( getParameterHolder() != null && getConfig().getCheckedPameters() != null )
 		{
-			getParameterHolder().updateConfig( config.getChekedPameters() );
+			getParameterHolder().updateConfig( config.getCheckedPameters() );
 		}
 	}
 

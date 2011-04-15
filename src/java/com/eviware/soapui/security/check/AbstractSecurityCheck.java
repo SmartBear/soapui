@@ -94,7 +94,9 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 			config.addNewExecutionStrategy();
 			config.getExecutionStrategy().setStrategy( StrategyTypeConfig.ONE_BY_ONE );
 			config.getExecutionStrategy().setDelay( 100 );
-		}else if ( config.getExecutionStrategy().getStrategy()==null){
+		}
+		else if( config.getExecutionStrategy().getStrategy() == null )
+		{
 			config.getExecutionStrategy().setStrategy( StrategyTypeConfig.ONE_BY_ONE );
 			config.getExecutionStrategy().setDelay( 100 );
 		}
@@ -105,10 +107,29 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		 */
 		setExecutionStrategy( new ExecutionStrategyHolder( config.getExecutionStrategy() ) );
 
-		if( config.getChekedPameters() == null )
-			config.addNewChekedPameters();
+		if( config.getCheckedPameters() == null )
+			config.addNewCheckedPameters();
 
 		initAssertions();
+	}
+
+	@Override
+	public void copyConfig( SecurityCheckConfig config )
+	{
+		super.setConfig( config );
+		getConfig().setType( config.getType() );
+		getConfig().setName( config.getName() );
+		getConfig().setConfig( config.getConfig() );
+		getConfig().setSetupScript( config.getSetupScript() );
+		getConfig().setTearDownScript( config.getTearDownScript() );
+		getConfig().setTestStep( config.getTestStep() );
+
+		TestAssertionConfig[] assertions = config.getAssertionList().toArray( new TestAssertionConfig[0] );
+		getConfig().setAssertionArray( assertions );
+		initAssertions();
+
+		getConfig().setExecutionStrategy( config.getExecutionStrategy() );
+		setExecutionStrategy( new ExecutionStrategyHolder( config.getExecutionStrategy() ) );
 	}
 
 	/*
@@ -241,7 +262,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 
 	protected void clear()
 	{
-		
+
 	}
 
 	/**

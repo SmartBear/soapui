@@ -33,10 +33,10 @@ public class SecurityCheckedParameterHolder extends SecurityCheckParameterListen
 
 	private Set<SecurityCheckParameterHolderListener> listeners = new HashSet<SecurityCheckParameterHolderListener>();
 
-	public SecurityCheckedParameterHolder( SecurityCheck securityCheck, CheckedParametersListConfig chekedPameters )
+	public SecurityCheckedParameterHolder( SecurityCheck securityCheck, CheckedParametersListConfig checkedPameters )
 	{
 		this.securityCheck = securityCheck;
-		this.paramsConfig = chekedPameters;
+		this.paramsConfig = checkedPameters;
 
 		for( CheckedParameterConfig param : paramsConfig.getParametersList() )
 		{

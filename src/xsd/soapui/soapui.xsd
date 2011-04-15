@@ -1944,7 +1944,7 @@
 						type="tns:TestAssertion" maxOccurs="unbounded" minOccurs="0">
 					</xsd:element>
 					<xsd:element name="testStep" type="tns:TestStep"></xsd:element>
-					<xsd:element name="chekedPameters"
+					<xsd:element name="checkedPameters"
 						type="tns:CheckedParametersList" minOccurs="1" maxOccurs="1">
 					</xsd:element>
 					<xsd:element name="executionStrategy" type="tns:ExecutionStrategy"></xsd:element>
@@ -1954,10 +1954,6 @@
 		</xsd:complexContent>
 	</xsd:complexType>
 
-
-
-
-
 	<xsd:complexType name="TestStepSecurityTest">
     	<xsd:sequence>
     		<xsd:element name="testStepId" type="xsd:string"></xsd:element>
@@ -1966,27 +1962,20 @@
     </xsd:complexType>
 
     <xsd:complexType name="ParameterExposureCheck">
-    	
-    		
     		<xsd:sequence>
     		<xsd:element name="minimumLength" type="xsd:int"
     			maxOccurs="1" minOccurs="1">
     		</xsd:element>
     	</xsd:sequence>
-    	
-    	
-    	
     </xsd:complexType>
 
     <xsd:complexType name="GroovySecurityCheck">
-    	
     			<xsd:sequence>
     				<xsd:element name="executeScript"
     					type="tns:Script">
     				</xsd:element>
     				<xsd:element name="analyzeScript" type="tns:Script"></xsd:element>
     			</xsd:sequence>
-
     </xsd:complexType>
 
     <xsd:complexType name="ReflectedXSSCheck">
@@ -2006,7 +1995,6 @@
     		<xsd:element name="Value" type="xsd:string" maxOccurs="unbounded" minOccurs="1"></xsd:element>
     	</xsd:sequence>
     </xsd:complexType>
-
 
     <xsd:complexType name="XmlBombSecurityCheck">
     	<xsd:sequence>
