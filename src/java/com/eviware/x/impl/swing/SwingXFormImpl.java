@@ -101,8 +101,9 @@ public class SwingXFormImpl implements XForm
 	}
 
 	/*
-	 * If label starts with '###' do not show them. (non-Javadoc)
-	 * if label ends with '___' (3) right border is 30 and no ':' at the end 
+	 * If label starts with '###' do not show them. (non-Javadoc) if label ends
+	 * with '___' (3) right border is 30 and no ':' at the end
+	 * 
 	 * @see com.eviware.x.form.XForm#addComponent(java.lang.String,
 	 * com.eviware.x.form.XFormField)
 	 */
@@ -146,7 +147,7 @@ public class SwingXFormImpl implements XForm
 			swingFormComponent.getComponent().getAccessibleContext().setAccessibleDescription( label );
 		}
 
-		if( label.startsWith( "###" ) )
+		if( label != null && label.startsWith( "###" ) )
 			panel.add( swingFormComponent.getComponent(), cc.xyw( 2, row, 4 ) );
 		else
 			panel.add( swingFormComponent.getComponent(), cc.xy( 4, row ) );
