@@ -491,7 +491,6 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 		testStepList.setEnabled( true );
 	}
 
-	// TODO - check complete logic!
 	private class SetupScriptGroovyEditorModel extends AbstractGroovyEditorModel
 	{
 		@Override
@@ -537,7 +536,6 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 		}
 	}
 
-	// TODO - check complete logic!
 	private class TearDownScriptGroovyEditorModel extends AbstractGroovyEditorModel
 	{
 		@Override
