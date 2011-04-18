@@ -51,6 +51,7 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionImpl;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.testsuite.TestProperty;
+import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.GroovyEditorComponent;
@@ -92,6 +93,7 @@ public class PropertyExpansionPopupListener implements PopupMenuListener
 		WsdlProject project = null;
 		WsdlMockService mockService = null;
 		WsdlMockResponse mockResponse = null;
+		SecurityTest securityTest = null;
 
 		if( modelItem instanceof WsdlTestStep )
 		{
@@ -133,6 +135,13 @@ public class PropertyExpansionPopupListener implements PopupMenuListener
 		{
 			project = ( WsdlProject )( ( Operation )modelItem ).getInterface().getProject();
 		}
+		else if( modelItem instanceof SecurityTest )
+		{
+			securityTest = ( SecurityTest )modelItem;
+			testCase = securityTest.getTestCase();
+			testSuite = testCase.getTestSuite();
+			project = testSuite.getProject();
+		}
 
 		TestPropertyHolder globalProperties = PropertyExpansionUtils.getGlobalProperties();
 		if( globalProperties.getProperties().size() > 0 )
@@ -165,6 +174,11 @@ public class PropertyExpansionPopupListener implements PopupMenuListener
 
 				targetMenu.add( createPropertyMenu( "Step " + ( c + 1 ) + ": [" + testStep.getName() + "]", testStep ) );
 			}
+		}
+
+		if( securityTest != null )
+		{
+			targetMenu.add( createPropertyMenu( "SecurityTest: [" + securityTest.getName() + "]", securityTest ) );
 		}
 
 	}
