@@ -17,7 +17,6 @@ import java.util.List;
 
 import com.eviware.soapui.security.boundary.BoundaryUtils;
 import com.eviware.soapui.security.boundary.StringBoundary;
-import com.eviware.soapui.support.xml.XmlObjectTreeModel.XmlTreeNode;
 
 public class EnumerationValues
 {

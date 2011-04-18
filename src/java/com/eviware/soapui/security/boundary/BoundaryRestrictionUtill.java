@@ -1,0 +1,69 @@
+/*
+ *  soapUI, copyright (C) 2004-2011 eviware.com 
+ *
+ *  soapUI is free software; you can redistribute it and/or modify it under the 
+ *  terms of version 2.1 of the GNU Lesser General Public License as published by 
+ *  the Free Software Foundation.
+ *
+ *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ *  See the GNU Lesser General Public License for more details at gnu.org.
+ */
+package com.eviware.soapui.security.boundary;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.xmlbeans.XmlAnySimpleType;
+
+import com.eviware.soapui.support.xml.XmlObjectTreeModel.XmlTreeNode;
+
+public class BoundaryRestrictionUtill
+{
+	public static String getRestrictionInfo( String label, String name, String xpath )
+	{
+		return BoundaryUtils.createCharacterArray( "ABCDEFG ", 100 );
+	}
+
+	public static List<String> getNextChild(  XmlTreeNode node,List<String> restrictionsList )
+	{
+		String baseType = null;
+
+		for( int i = 0; i < node.getChildCount(); i++ )
+		{
+			XmlTreeNode mynode = node.getChild( i );
+
+			if( "xsd:restriction".equals( mynode.getParent().getNodeName() ) )
+			{
+				if( mynode.getNodeName().equals( "@base" ) )
+				{
+					baseType = mynode.getNodeText();
+					restrictionsList.add( "type="+ baseType );
+				}
+				else
+				{
+					String nodeName = mynode.getNodeName();
+					String nodeValue = mynode.getChild( 0 ).getNodeText();
+					restrictionsList.add( nodeName + "=" + nodeValue );
+				}
+			}
+			getNextChild( mynode ,restrictionsList);
+		}
+		return restrictionsList;
+	}
+
+	public static List<String> extractEnums( XmlTreeNode node)
+	{
+		List<String> restrictionsList = new ArrayList<String>();
+			for( XmlAnySimpleType s : node.getSchemaType().getEnumerationValues() )
+			{
+				if( restrictionsList.isEmpty() )
+				{
+					restrictionsList.add( "type=enumeration " );
+				}
+				restrictionsList.add( s.getStringValue() );
+			}
+			return restrictionsList;
+	}
+
+}

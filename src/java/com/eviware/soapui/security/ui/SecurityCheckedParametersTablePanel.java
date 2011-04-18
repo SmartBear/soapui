@@ -20,6 +20,7 @@ import java.util.Map;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
+import javax.swing.DefaultListSelectionModel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
@@ -32,6 +33,7 @@ import com.eviware.soapui.model.security.SecurityParametersTableModel;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.security.actions.CloneParametersAction;
 import com.eviware.soapui.security.check.AbstractSecurityCheckWithProperties;
+import com.eviware.soapui.security.check.BoundarySecurityCheck;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.DefaultActionList;
 import com.eviware.soapui.support.components.JUndoableTextArea;
@@ -102,7 +104,9 @@ public class SecurityCheckedParametersTablePanel extends JPanel implements ListS
 		add( new JScrollPane( table ), BorderLayout.CENTER );
 
 		pathPane = new JUndoableTextArea();
-
+		if(securityCheck instanceof BoundarySecurityCheck){
+			((BoundarySecurityCheck	)securityCheck).refreshRestrictionLabel(-1);
+		}
 	}
 
 	/**
@@ -393,14 +397,17 @@ public class SecurityCheckedParametersTablePanel extends JPanel implements ListS
 
 	/*
 	 * (non-Javadoc)
-	 * @see javax.swing.event.ListSelectionListener#valueChanged(javax.swing.event.ListSelectionEvent)
+	 * 
+	 * @see
+	 * javax.swing.event.ListSelectionListener#valueChanged(javax.swing.event
+	 * .ListSelectionEvent)
 	 */
 	@Override
-	public void valueChanged( ListSelectionEvent arg0 )
+	public void valueChanged( ListSelectionEvent lse )
 	{
-		// TODO Auto-generated method stub
-	
-		
+		DefaultListSelectionModel dlsm = ((DefaultListSelectionModel)lse.getSource()	);	
+		if(securityCheck instanceof BoundarySecurityCheck){
+			((BoundarySecurityCheck	)securityCheck).refreshRestrictionLabel(dlsm.getAnchorSelectionIndex());
+		}
 	}
-
 }

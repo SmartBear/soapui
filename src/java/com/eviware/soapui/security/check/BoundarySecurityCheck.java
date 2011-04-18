@@ -11,8 +11,12 @@
  */
 package com.eviware.soapui.security.check;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
+
+import javax.swing.JComponent;
+import javax.swing.JLabel;
 
 import org.apache.xmlbeans.XmlAnySimpleType;
 import org.apache.xmlbeans.XmlException;
@@ -22,7 +26,6 @@ import org.apache.xmlbeans.impl.schema.SchemaTypeImpl;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.config.StrategyTypeConfig;
-import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.security.SecurityCheckedParameter;
@@ -32,14 +35,12 @@ import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.security.boundary.AbstractBoundary;
+import com.eviware.soapui.security.boundary.BoundaryRestrictionUtill;
 import com.eviware.soapui.security.boundary.enumeration.EnumerationValues;
-import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel;
+import com.eviware.soapui.support.xml.XmlUtils;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel.XmlTreeNode;
-import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AForm;
-import com.eviware.x.form.support.AField.AFieldType;
 
 public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 {
@@ -47,6 +48,7 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 	public static final String TYPE = "BoundaryCheck";
 	public static final String NAME = "Boundary Check";
 	private static final String REQUEST_MUTATIONS_STACK = "RequestMutationsStack";
+	private RestrictionLabel restrictionLabel = new RestrictionLabel();
 
 	StrategyTypeConfig.Enum strategy = StrategyTypeConfig.ONE_BY_ONE;
 
@@ -56,10 +58,9 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 	}
 
 	@Override
-	public SecurityCheckConfigPanel getComponent()
+	public JComponent getComponent()
 	{
-
-		return null;
+		return restrictionLabel.getJLabel();
 	}
 
 	@Override
@@ -317,18 +318,6 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 		return true;
 	}
 
-	@AForm( description = "Configure Out of Boundary Check", name = "Configure Out of Boundary Check", helpUrl = HelpUrls.HELP_URL_ROOT )
-	protected interface BoundaryConfigDialog
-	{
-
-		@AField( description = "Parameters to Check", name = "Select parameters to check", type = AFieldType.MULTILIST )
-		public final static String PARAMETERS = "Select parameters to check";
-
-		@AField( description = "Assertions", name = "Select assertions to apply", type = AFieldType.COMPONENT )
-		public final static String ASSERTIONS = "Select assertions to apply";
-
-	}
-
 	@Override
 	public String getConfigDescription()
 	{
@@ -386,4 +375,92 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 
 	}
 
+	public class RestrictionLabel
+	{
+		private String text = "<html><pre>    </pre></html>";
+		private JLabel jlabel = new JLabel();
+		private int limit = 70;
+		{
+			setJlabel( text );
+		}
+
+		public void setJlabel( String text )
+		{
+			text = text.replace( "[", "" );
+			text = text.replace( "]", "" );
+			if( text.length() > limit )
+			{
+				jlabel.setToolTipText( text.length() < 250 ? text : text.substring( 0, 249 ) + " ... " );
+				jlabel.setText( text.substring( 0, limit - 5 ) + " ... " );
+			}
+			else
+			{
+				jlabel.setText( text );
+			}
+		}
+
+		public JLabel getJLabel()
+		{
+			return jlabel;
+		}
+
+	}
+
+	public RestrictionLabel getRestrictionLabel()
+	{
+		return restrictionLabel;
+	}
+
+	public void refreshRestrictionLabel( int row )
+	{
+		if( row == -1 )
+		{
+			restrictionLabel.setJlabel( "<html><pre>    </pre></html>" );
+			return;
+		}
+		SecurityCheckedParameter parameter = getParameterAt( row );
+		String name = parameter.getName();
+		String xpath = parameter.getXpath();
+		TestProperty tp = getTestStep().getProperty( name );
+		XmlObjectTreeModel xmlObjectTreeModel = null;
+		if( tp.getSchemaType() != null && XmlUtils.seemsToBeXml( tp.getValue() ) )
+		{
+			try
+			{
+				xmlObjectTreeModel = new XmlObjectTreeModel( tp.getSchemaType().getTypeSystem(), XmlObject.Factory
+						.parse( tp.getValue() ) );
+			}
+			catch( XmlException e )
+			{
+				SoapUI.logError( e );
+			}
+
+			XmlTreeNode[] treeNodes = xmlObjectTreeModel.selectTreeNodes( xpath );
+
+			if( treeNodes.length == 0 )
+			{
+				restrictionLabel.setJlabel( "<html><pre>    </pre></html>" );
+				return;
+			}
+			List<String> list = null;
+			if( treeNodes[0].getSchemaType() != null && treeNodes[0].getSchemaType().getEnumerationValues() != null )
+			{
+				list = BoundaryRestrictionUtill.extractEnums( treeNodes[0]);
+			}
+			else
+			{
+				SchemaTypeImpl simpleType = ( SchemaTypeImpl )treeNodes[0].getSchemaType();
+				XmlObjectTreeModel model2 = new XmlObjectTreeModel( simpleType.getTypeSystem(), simpleType.getParseObject() );
+				list = BoundaryRestrictionUtill.getNextChild(  model2.getRootNode() , new ArrayList<String>());
+				if(list.isEmpty()){
+					list.add("No restrictions in schema are specified for this parameter!");
+				}
+			}
+			restrictionLabel.setJlabel( list.toString() );
+		}
+		else
+		{
+			restrictionLabel.setJlabel( "<html><pre>    </pre></html>" );
+		}
+	}
 }
