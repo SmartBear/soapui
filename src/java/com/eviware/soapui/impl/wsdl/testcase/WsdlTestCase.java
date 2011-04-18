@@ -885,6 +885,11 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 	public Object runSetupScript( TestCaseRunContext runContext, TestCaseRunner runner ) throws Exception
 	{
 		String script = getSetupScript();
+		return runSetupScript( runContext, runner, script );
+	}
+
+	public Object runSetupScript( TestCaseRunContext runContext, TestCaseRunner runner, String script ) throws Exception
+	{
 		if( StringUtils.isNullOrEmpty( script ) )
 			return null;
 
@@ -904,6 +909,12 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 	public Object runTearDownScript( TestCaseRunContext runContext, TestCaseRunner runner ) throws Exception
 	{
 		String script = getTearDownScript();
+		return runTearDownScript( runContext, runner, script );
+	}
+
+	public Object runTearDownScript( TestCaseRunContext runContext, TestCaseRunner runner, String script )
+			throws Exception
+	{
 		if( StringUtils.isNullOrEmpty( script ) )
 			return null;
 

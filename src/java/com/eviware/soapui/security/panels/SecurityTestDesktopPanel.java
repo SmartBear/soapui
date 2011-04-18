@@ -54,7 +54,6 @@ import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestStepFactory;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
-import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
 import com.eviware.soapui.model.testsuite.TestRunner.Status;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunContext;
@@ -66,7 +65,6 @@ import com.eviware.soapui.security.log.JSecurityTestRunLog;
 import com.eviware.soapui.security.result.SecurityCheckRequestResult;
 import com.eviware.soapui.security.result.SecurityCheckResult;
 import com.eviware.soapui.security.result.SecurityTestStepResult;
-import com.eviware.soapui.security.result.SecurityResult.SecurityStatus;
 import com.eviware.soapui.security.support.ProgressBarSecurityTestAdapter;
 import com.eviware.soapui.security.support.SecurityTestRunListenerAdapter;
 import com.eviware.soapui.settings.UISettings;
@@ -181,7 +179,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 			testStepListInspectorPanel.setCurrentInspector( "Description" );
 		}
 
-//		updateSecurityStatusIcon();
+		// updateSecurityStatusIcon();
 		add( inspectorPanel.getComponent(), BorderLayout.CENTER );
 	}
 
@@ -508,8 +506,11 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 					{
 						MockTestRunner mockTestRunner = new MockTestRunner( SecurityTestDesktopPanel.this.getModelItem()
 								.getTestCase(), SoapUI.ensureGroovyLog() );
-						SecurityTestDesktopPanel.this.getModelItem().getTestCase().runSetupScript(
-								new MockTestRunContext( mockTestRunner, null ), mockTestRunner );
+						SecurityTestDesktopPanel.this
+								.getModelItem()
+								.getTestCase()
+								.runSetupScript( new MockTestRunContext( mockTestRunner, null ), mockTestRunner,
+										securityTest.getStartupScript() );
 					}
 					catch( Exception e1 )
 					{
@@ -551,8 +552,11 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 					{
 						MockTestRunner mockTestRunner = new MockTestRunner( SecurityTestDesktopPanel.this.getModelItem()
 								.getTestCase(), SoapUI.ensureGroovyLog() );
-						SecurityTestDesktopPanel.this.getModelItem().getTestCase().runTearDownScript(
-								new MockTestRunContext( mockTestRunner, null ), mockTestRunner );
+						SecurityTestDesktopPanel.this
+								.getModelItem()
+								.getTestCase()
+								.runTearDownScript( new MockTestRunContext( mockTestRunner, null ), mockTestRunner,
+										securityTest.getTearDownScript() );
 					}
 					catch( Exception e1 )
 					{
