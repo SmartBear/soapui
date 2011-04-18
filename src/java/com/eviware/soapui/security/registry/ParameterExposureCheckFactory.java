@@ -14,6 +14,7 @@ package com.eviware.soapui.security.registry;
 
 import com.eviware.soapui.config.ParameterExposureCheckConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
+import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestStep;
@@ -35,15 +36,15 @@ public class ParameterExposureCheckFactory extends AbstractSecurityCheckFactory
 				"/parameter_exposure_check_script.gif" );
 	}
 
-	public boolean canCreate(TestStep testStep)
+	public boolean canCreate( TestStep testStep )
 	{
-		return testStep instanceof WsdlTestRequestStep;
+		return testStep instanceof WsdlTestRequestStep || testStep instanceof RestTestRequestStep;
 	}
 
 	@Override
-	public AbstractSecurityCheck buildSecurityCheck( TestStep testStep,SecurityCheckConfig config, ModelItem parent )
+	public AbstractSecurityCheck buildSecurityCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent )
 	{
-		return new ParameterExposureCheck( config, parent, null, testStep );
+		return new ParameterExposureCheck( testStep, config, parent, null );
 	}
 
 	@Override
@@ -52,9 +53,6 @@ public class ParameterExposureCheckFactory extends AbstractSecurityCheckFactory
 		SecurityCheckConfig securityCheckConfig = SecurityCheckConfig.Factory.newInstance();
 		securityCheckConfig.setType( ParameterExposureCheck.TYPE );
 		securityCheckConfig.setName( name );
-		ParameterExposureCheckConfig pecc = ParameterExposureCheckConfig.Factory.newInstance();
-		pecc.setMinimumLength( ParameterExposureCheck.DEFAULT_MINIMUM_CHARACTER_LENGTH );
-		securityCheckConfig.setConfig( pecc );
 		return securityCheckConfig;
 	}
 
