@@ -17,10 +17,12 @@ import java.util.List;
 import java.util.Map;
 
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 
 import org.apache.xmlbeans.SchemaType;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
+import org.apache.xmlbeans.impl.schema.SchemaTypeImpl;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.InvalidSecurityCheckConfig;
@@ -35,8 +37,8 @@ import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
+import com.eviware.soapui.security.boundary.BoundaryRestrictionUtill;
 import com.eviware.soapui.security.ui.InvalidTypesTable;
-import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel;
 import com.eviware.soapui.support.xml.XmlUtils;
@@ -49,7 +51,7 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 	public final static String NAME = "Invalid Types";
 
 	private InvalidTypesForSOAP invalidTypes;
-
+	private TypeLabel typeLabel = new TypeLabel();
 	private InvalidSecurityCheckConfig invalidTypeConfig;
 
 	private Map<SecurityCheckedParameter, ArrayList<String>> parameterMutations = new HashMap<SecurityCheckedParameter, ArrayList<String>>();
@@ -115,9 +117,9 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 	 * com.eviware.soapui.security.check.AbstractSecurityCheck#getComponent()
 	 */
 	@Override
-	public SecurityCheckConfigPanel getComponent()
+	public JComponent getComponent()
 	{
-		return null;
+		return typeLabel.getJLabel();
 	}
 
 	@Override
@@ -471,4 +473,76 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 		parameterMutations.clear();
 		mutation = false;
 	}
+
+	public class TypeLabel
+	{
+		private String text = "<html><pre>    </pre></html>";
+		private JLabel jlabel = new JLabel();
+		{
+			setJlabel( text );
+		}
+
+		public void setJlabel( String text )
+		{
+			text = text.replace( "[", "" );
+			text = text.replace( "]", "" );
+			jlabel.setText( text );
+		}
+
+		public JLabel getJLabel()
+		{
+			return jlabel;
+		}
+
+	}
+
+	public TypeLabel getTypeLabel()
+	{
+		return typeLabel;
+	}
+
+	public void refreshRestrictionLabel( int row )
+	{
+		if( row == -1 )
+		{
+			typeLabel.setJlabel( "<html><pre>    </pre></html>" );
+			return;
+		}
+		SecurityCheckedParameter parameter = getParameterAt( row );
+		String name = parameter.getName();
+		String xpath = parameter.getXpath();
+		TestProperty tp = getTestStep().getProperty( name );
+		XmlObjectTreeModel xmlObjectTreeModel = null;
+		if( tp.getSchemaType() != null && XmlUtils.seemsToBeXml( tp.getValue() ) )
+		{
+			try
+			{
+				xmlObjectTreeModel = new XmlObjectTreeModel( tp.getSchemaType().getTypeSystem(), XmlObject.Factory
+						.parse( tp.getValue() ) );
+			}
+			catch( XmlException e )
+			{
+				SoapUI.logError( e );
+			}
+
+			XmlTreeNode[] treeNodes = xmlObjectTreeModel.selectTreeNodes( xpath );
+
+			if( treeNodes.length == 0 )
+			{
+				typeLabel.setJlabel( "<html><pre>    </pre></html>" );
+				return;
+			}
+
+			SchemaTypeImpl simpleType = ( SchemaTypeImpl )treeNodes[0].getSchemaType();
+			XmlObjectTreeModel model2 = new XmlObjectTreeModel( simpleType.getTypeSystem(), simpleType.getParseObject() );
+			List<String> list = BoundaryRestrictionUtill.getType( model2.getRootNode(), new ArrayList<String>() );
+			typeLabel.setJlabel( list.toString() );
+		}
+		else
+		{
+			typeLabel.setJlabel( "<html><pre>    </pre></html>" );
+		}
+
+	}
+
 }

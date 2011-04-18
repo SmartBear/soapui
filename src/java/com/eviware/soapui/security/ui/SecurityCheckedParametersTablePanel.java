@@ -34,6 +34,7 @@ import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.security.actions.CloneParametersAction;
 import com.eviware.soapui.security.check.AbstractSecurityCheckWithProperties;
 import com.eviware.soapui.security.check.BoundarySecurityCheck;
+import com.eviware.soapui.security.check.InvalidTypesSecurityCheck;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.DefaultActionList;
 import com.eviware.soapui.support.components.JUndoableTextArea;
@@ -104,8 +105,13 @@ public class SecurityCheckedParametersTablePanel extends JPanel implements ListS
 		add( new JScrollPane( table ), BorderLayout.CENTER );
 
 		pathPane = new JUndoableTextArea();
-		if(securityCheck instanceof BoundarySecurityCheck){
-			((BoundarySecurityCheck	)securityCheck).refreshRestrictionLabel(-1);
+		if( securityCheck instanceof BoundarySecurityCheck )
+		{
+			( ( BoundarySecurityCheck )securityCheck ).refreshRestrictionLabel( -1 );
+		}
+		if( securityCheck instanceof InvalidTypesSecurityCheck )
+		{
+			( ( InvalidTypesSecurityCheck )securityCheck ).refreshRestrictionLabel( -1 );
 		}
 	}
 
@@ -405,9 +411,14 @@ public class SecurityCheckedParametersTablePanel extends JPanel implements ListS
 	@Override
 	public void valueChanged( ListSelectionEvent lse )
 	{
-		DefaultListSelectionModel dlsm = ((DefaultListSelectionModel)lse.getSource()	);	
-		if(securityCheck instanceof BoundarySecurityCheck){
-			((BoundarySecurityCheck	)securityCheck).refreshRestrictionLabel(dlsm.getAnchorSelectionIndex());
+		DefaultListSelectionModel dlsm = ( ( DefaultListSelectionModel )lse.getSource() );
+		if( securityCheck instanceof BoundarySecurityCheck )
+		{
+			( ( BoundarySecurityCheck )securityCheck ).refreshRestrictionLabel( dlsm.getAnchorSelectionIndex() );
+		}
+		if( securityCheck instanceof InvalidTypesSecurityCheck )
+		{
+			( ( InvalidTypesSecurityCheck )securityCheck ).refreshRestrictionLabel( dlsm.getAnchorSelectionIndex() );
 		}
 	}
 }

@@ -25,7 +25,7 @@ public class BoundaryRestrictionUtill
 		return BoundaryUtils.createCharacterArray( "ABCDEFG ", 100 );
 	}
 
-	public static List<String> getNextChild(  XmlTreeNode node,List<String> restrictionsList )
+	public static List<String> getRestrictions(  XmlTreeNode node,List<String> restrictionsList )
 	{
 		String baseType = null;
 
@@ -38,20 +38,43 @@ public class BoundaryRestrictionUtill
 				if( mynode.getNodeName().equals( "@base" ) )
 				{
 					baseType = mynode.getNodeText();
-					restrictionsList.add( "type="+ baseType );
+					restrictionsList.add( "type = "+ baseType );
 				}
 				else
 				{
 					String nodeName = mynode.getNodeName();
 					String nodeValue = mynode.getChild( 0 ).getNodeText();
-					restrictionsList.add( nodeName + "=" + nodeValue );
+					restrictionsList.add( nodeName + " = " + nodeValue );
 				}
 			}
-			getNextChild( mynode ,restrictionsList);
+			getRestrictions( mynode ,restrictionsList);
 		}
 		return restrictionsList;
 	}
 
+	
+	public static List<String> getType(  XmlTreeNode node,List<String> restrictionsList )
+	{
+		String baseType = null;
+
+		for( int i = 0; i < node.getChildCount(); i++ )
+		{
+			XmlTreeNode mynode = node.getChild( i );
+
+				if( mynode.getNodeName().equals( "@base" ) )
+				{
+					baseType = mynode.getNodeText();
+					if(baseType.contains( ":" )){
+						baseType = baseType.substring( baseType.indexOf( ":" )+1 );
+					}
+					restrictionsList.add( "type = "+ baseType );
+				}
+				getType( mynode ,restrictionsList);
+		}
+		return restrictionsList;
+	}
+	
+	
 	public static List<String> extractEnums( XmlTreeNode node)
 	{
 		List<String> restrictionsList = new ArrayList<String>();
@@ -59,7 +82,7 @@ public class BoundaryRestrictionUtill
 			{
 				if( restrictionsList.isEmpty() )
 				{
-					restrictionsList.add( "type=enumeration " );
+					restrictionsList.add( "For type enumeration values are: " );
 				}
 				restrictionsList.add( s.getStringValue() );
 			}

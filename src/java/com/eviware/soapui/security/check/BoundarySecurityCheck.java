@@ -406,11 +406,6 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 
 	}
 
-	public RestrictionLabel getRestrictionLabel()
-	{
-		return restrictionLabel;
-	}
-
 	public void refreshRestrictionLabel( int row )
 	{
 		if( row == -1 )
@@ -445,22 +440,26 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 			List<String> list = null;
 			if( treeNodes[0].getSchemaType() != null && treeNodes[0].getSchemaType().getEnumerationValues() != null )
 			{
-				list = BoundaryRestrictionUtill.extractEnums( treeNodes[0]);
+				list = BoundaryRestrictionUtill.extractEnums( treeNodes[0] );
+				restrictionLabel.setJlabel( list.toString().replaceFirst( ",", "" ) );
 			}
 			else
 			{
 				SchemaTypeImpl simpleType = ( SchemaTypeImpl )treeNodes[0].getSchemaType();
 				XmlObjectTreeModel model2 = new XmlObjectTreeModel( simpleType.getTypeSystem(), simpleType.getParseObject() );
-				list = BoundaryRestrictionUtill.getNextChild(  model2.getRootNode() , new ArrayList<String>());
-				if(list.isEmpty()){
-					list.add("No restrictions in schema are specified for this parameter!");
+				list = BoundaryRestrictionUtill.getRestrictions( model2.getRootNode(), new ArrayList<String>() );
+				if( list.isEmpty() )
+				{
+					list.add( "No restrictions in schema are specified for this parameter!" );
 				}
+				restrictionLabel.setJlabel( list.toString() );
 			}
-			restrictionLabel.setJlabel( list.toString() );
+
 		}
 		else
 		{
 			restrictionLabel.setJlabel( "<html><pre>    </pre></html>" );
 		}
 	}
+
 }
