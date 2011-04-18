@@ -40,10 +40,8 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.text.Document;
 
-import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
-import com.eviware.soapui.impl.wsdl.panels.support.MockTestRunContext;
-import com.eviware.soapui.impl.wsdl.panels.support.MockTestRunner;
+import com.eviware.soapui.impl.wsdl.panels.support.MockSecurityTestRunner;
 import com.eviware.soapui.impl.wsdl.panels.testcase.actions.SetCredentialsAction;
 import com.eviware.soapui.impl.wsdl.panels.testcase.actions.SetEndpointAction;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.AbstractGroovyEditorModel;
@@ -521,17 +519,19 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 
 				public void actionPerformed( ActionEvent e )
 				{
+
+					MockSecurityTestRunner securityTestRunner = new MockSecurityTestRunner(
+							SecurityTestDesktopPanel.this.getModelItem() );
 					try
 					{
-						MockTestRunner mockTestRunner = new MockTestRunner( SecurityTestDesktopPanel.this.getModelItem()
-								.getTestCase(), SoapUI.ensureGroovyLog() );
-						SecurityTestDesktopPanel.this.getModelItem().getTestCase()
-								.runSetupScript( new MockTestRunContext( mockTestRunner, null ), mockTestRunner );
+						SecurityTestDesktopPanel.this.getModelItem().runStartupScript(
+								( SecurityTestRunContext )securityTestRunner.getRunContext(), securityTestRunner );
 					}
 					catch( Exception e1 )
 					{
 						UISupport.showErrorMessage( e1 );
 					}
+
 				}
 			};
 		}
@@ -565,10 +565,10 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 				{
 					try
 					{
-						MockTestRunner mockTestRunner = new MockTestRunner( SecurityTestDesktopPanel.this.getModelItem()
-								.getTestCase(), SoapUI.ensureGroovyLog() );
-						SecurityTestDesktopPanel.this.getModelItem().getTestCase()
-								.runTearDownScript( new MockTestRunContext( mockTestRunner, null ), mockTestRunner );
+						MockSecurityTestRunner securityTestRunner = new MockSecurityTestRunner(
+								SecurityTestDesktopPanel.this.getModelItem() );
+						SecurityTestDesktopPanel.this.getModelItem().runTearDownScript(
+								( SecurityTestRunContext )securityTestRunner.getRunContext(), securityTestRunner );
 					}
 					catch( Exception e1 )
 					{
