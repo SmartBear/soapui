@@ -66,8 +66,8 @@ import com.eviware.soapui.security.log.JFunctionalTestRunLog;
 import com.eviware.soapui.security.log.JSecurityTestRunLog;
 import com.eviware.soapui.security.result.SecurityCheckRequestResult;
 import com.eviware.soapui.security.result.SecurityCheckResult;
-import com.eviware.soapui.security.result.SecurityTestStepResult;
 import com.eviware.soapui.security.result.SecurityResult.ResultStatus;
+import com.eviware.soapui.security.result.SecurityTestStepResult;
 import com.eviware.soapui.security.support.ProgressBarSecurityTestAdapter;
 import com.eviware.soapui.security.support.SecurityTestRunListenerAdapter;
 import com.eviware.soapui.settings.UISettings;
@@ -526,8 +526,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 						MockTestRunner mockTestRunner = new MockTestRunner( SecurityTestDesktopPanel.this.getModelItem()
 								.getTestCase(), SoapUI.ensureGroovyLog() );
 						SecurityTestDesktopPanel.this.getModelItem().getTestCase()
-								.runSetupScript( new MockTestRunContext( mockTestRunner, null ), mockTestRunner,
-										securityTest.getStartupScript() );
+								.runSetupScript( new MockTestRunContext( mockTestRunner, null ), mockTestRunner );
 					}
 					catch( Exception e1 )
 					{
@@ -568,9 +567,8 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 					{
 						MockTestRunner mockTestRunner = new MockTestRunner( SecurityTestDesktopPanel.this.getModelItem()
 								.getTestCase(), SoapUI.ensureGroovyLog() );
-						SecurityTestDesktopPanel.this.getModelItem().getTestCase().runTearDownScript(
-								new MockTestRunContext( mockTestRunner, null ), mockTestRunner,
-								securityTest.getTearDownScript() );
+						SecurityTestDesktopPanel.this.getModelItem().getTestCase()
+								.runTearDownScript( new MockTestRunContext( mockTestRunner, null ), mockTestRunner );
 					}
 					catch( Exception e1 )
 					{
