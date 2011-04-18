@@ -18,7 +18,7 @@ import com.eviware.soapui.security.check.AbstractSecurityCheckWithProperties;
 import com.eviware.soapui.security.panels.SecurityCheckNode;
 import com.eviware.soapui.security.result.SecurityCheckRequestResult;
 import com.eviware.soapui.security.result.SecurityCheckResult;
-import com.eviware.soapui.security.result.SecurityResult.SecurityStatus;
+import com.eviware.soapui.security.result.SecurityResult.ResultStatus;
 
 public class ProgressBarSecurityCheckAdapter extends SecurityTestRunListenerAdapter
 {
@@ -100,13 +100,13 @@ public class ProgressBarSecurityCheckAdapter extends SecurityTestRunListenerAdap
 				}
 				else
 				{
-					if( securityCheckReqResult.getStatus() == SecurityStatus.FAILED )
+					if( securityCheckReqResult.getStatus() == ResultStatus.FAILED )
 					{
 						progressBar.setForeground( FAILED_COLOR );
 						progressBar.setString( STATE_FAIL );
 						alertsCounter++ ;
 					}
-					else if( securityCheckReqResult.getStatus() == SecurityStatus.OK )
+					else if( securityCheckReqResult.getStatus() == ResultStatus.OK )
 					{
 						if( !progressBar.getForeground().equals( FAILED_COLOR ) )
 						{
@@ -152,7 +152,7 @@ public class ProgressBarSecurityCheckAdapter extends SecurityTestRunListenerAdap
 				.equals( this.securityCheck.getTestStep().getId() )
 				&& this.securityCheck.getName().equals( securityCheckResult.getSecurityCheck().getName() ) )
 		{
-			if( securityCheckResult.getStatus() != SecurityStatus.CANCELED )
+			if( securityCheckResult.getStatus() != ResultStatus.CANCELED )
 			{
 				if( securityCheck.getAssertionsSupport().getAssertionCount() == 0 )
 				{

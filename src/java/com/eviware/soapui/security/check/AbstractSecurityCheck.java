@@ -51,7 +51,7 @@ import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.security.SecurityTestRunnerImpl;
 import com.eviware.soapui.security.result.SecurityCheckRequestResult;
 import com.eviware.soapui.security.result.SecurityCheckResult;
-import com.eviware.soapui.security.result.SecurityResult.SecurityStatus;
+import com.eviware.soapui.security.result.SecurityResult.ResultStatus;
 import com.eviware.soapui.security.support.SecurityTestRunListener;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
@@ -204,7 +204,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 			SoapUI.log.error( "Exception during Test Execution", e );
 
 			// need fix
-			securityCheckResult.setStatus( SecurityStatus.FAILED );
+			securityCheckResult.setStatus( ResultStatus.FAILED );
 
 		}
 		PropertyChangeNotifier notifier = new PropertyChangeNotifier();
@@ -213,7 +213,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		{
 			if( ( ( SecurityTestRunnerImpl )securityTestRunner ).isCanceled() )
 			{
-				securityCheckResult.setStatus( SecurityStatus.CANCELED );
+				securityCheckResult.setStatus( ResultStatus.CANCELED );
 				clear();
 				return securityCheckResult;
 			}
@@ -254,7 +254,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 			SoapUI.log.error( "Exception during Test Execution", e );
 
 			// need fix
-			securityCheckResult.setStatus( SecurityStatus.FAILED );
+			securityCheckResult.setStatus( ResultStatus.FAILED );
 
 		}
 		return securityCheckResult;
@@ -476,7 +476,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	// }
 	private class PropertyChangeNotifier
 	{
-		private SecurityStatus oldStatus;
+		private ResultStatus oldStatus;
 
 		public PropertyChangeNotifier()
 		{
@@ -485,7 +485,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 
 		public void notifyChange()
 		{
-			SecurityStatus newStatus = getSecurityStatus();
+			ResultStatus newStatus = getSecurityStatus();
 
 			if( oldStatus != newStatus )
 				notifyPropertyChanged( STATUS_PROPERTY, oldStatus, newStatus );
@@ -612,7 +612,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		if( cnt == 0 )
 			return currentStatus;
 
-		if( securityCheckResult != null && securityCheckResult.getStatus() == SecurityStatus.OK )
+		if( securityCheckResult != null && securityCheckResult.getStatus() == ResultStatus.OK )
 			currentStatus = AssertionStatus.VALID;
 		else
 			currentStatus = AssertionStatus.FAILED;
@@ -620,9 +620,9 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		return currentStatus;
 	}
 
-	public SecurityStatus getSecurityStatus()
+	public ResultStatus getSecurityStatus()
 	{
-		return securityCheckResult != null ? securityCheckResult.getStatus() : SecurityStatus.UNKNOWN;
+		return securityCheckResult != null ? securityCheckResult.getStatus() : ResultStatus.UNKNOWN;
 	}
 
 	@Override
@@ -784,16 +784,16 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	{
 		if( result == AssertionStatus.FAILED )
 		{
-			getSecurityCheckRequestResult().setStatus( SecurityStatus.FAILED );
+			getSecurityCheckRequestResult().setStatus( ResultStatus.FAILED );
 		}
 		else if( result == AssertionStatus.VALID )
 		{
-			getSecurityCheckRequestResult().setStatus( SecurityStatus.OK );
+			getSecurityCheckRequestResult().setStatus( ResultStatus.OK );
 
 		}
 		else if( result == AssertionStatus.UNKNOWN )
 		{
-			getSecurityCheckRequestResult().setStatus( SecurityStatus.UNKNOWN );
+			getSecurityCheckRequestResult().setStatus( ResultStatus.UNKNOWN );
 		}
 	}
 

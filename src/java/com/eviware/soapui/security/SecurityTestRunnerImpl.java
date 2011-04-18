@@ -29,7 +29,7 @@ import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.security.result.SecurityCheckResult;
 import com.eviware.soapui.security.result.SecurityTestStepResult;
-import com.eviware.soapui.security.result.SecurityResult.SecurityStatus;
+import com.eviware.soapui.security.result.SecurityResult.ResultStatus;
 import com.eviware.soapui.security.support.SecurityTestRunListener;
 import com.eviware.soapui.support.types.StringToObjectMap;
 
@@ -111,6 +111,11 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 
 	protected int runCurrentTestStep( SecurityTestRunContext runContext, int currentStepIndex )
 	{
+		// flag for detecting if running has been interrupted either by canceling
+		// securityCheckRequest
+		// or if request result is null(backward compatibility for running
+		// TestCase )
+		boolean jumpExit = false;
 		TestStep currentStep = runContext.getCurrentStep();
 		securityTestStepListeners = securityTest.getTestStepRunListeners( currentStep );
 		if( !currentStep.isDisabled() )
@@ -125,7 +130,7 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 			}
 			TestStepResult stepResult = runTestStep( currentStep, true, true );
 			if( stepResult == null )
-				return -2;
+				jumpExit = true;
 			// if( !isRunning() )
 			// return -2;
 
@@ -149,10 +154,10 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 					securityStepResult.addSecurityCheckResult( securityCheckResult );
 					if( securityCheckResult.isCanceled() )
 					{
-						return -2;
+						jumpExit = true;
+						break;
 					}
-
-					if( securityCheckResult.getStatus() == SecurityStatus.FAILED )
+					else if( securityCheckResult.getStatus() == ResultStatus.FAILED )
 					{
 						if( getTestRunnable().getFailOnError() )
 						{
@@ -176,7 +181,11 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 			{
 				securityTestListeners[i].afterStep( this, getRunContext(), securityStepResult );
 			}
-			if( getGotoStepIndex() != -1 )
+			if( jumpExit )
+			{
+				return -2;
+			}
+			else if( getGotoStepIndex() != -1 )
 			{
 				currentStepIndex = getGotoStepIndex() - 1;
 				gotoStep( -1 );
@@ -201,7 +210,7 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 			securityTestListeners[j].beforeSecurityCheck( this, runContext, securityCheck );
 		}
 		result = securityCheck.run( cloneForSecurityCheck( ( WsdlTestStep )currentStep ), runContext, this );
-		if( securityTest.getFailOnError() && result.getStatus() == SecurityStatus.FAILED )
+		if( securityTest.getFailOnError() && result.getStatus() == ResultStatus.FAILED )
 		{
 			fail( "Cancelling due to failed security check" );
 		}

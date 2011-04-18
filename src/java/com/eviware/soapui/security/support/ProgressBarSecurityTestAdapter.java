@@ -25,7 +25,7 @@ import com.eviware.soapui.security.SecurityTestRunnerImpl;
 import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.security.result.SecurityCheckRequestResult;
 import com.eviware.soapui.security.result.SecurityCheckResult;
-import com.eviware.soapui.security.result.SecurityResult.SecurityStatus;
+import com.eviware.soapui.security.result.SecurityResult.ResultStatus;
 
 /**
  * Class that keeps a JProgressBars state in sync with a SecurityTest
@@ -101,21 +101,21 @@ public class ProgressBarSecurityTestAdapter
 		public void afterSecurityCheck( TestCaseRunner testRunner, SecurityTestRunContext runContext,
 				SecurityCheckResult securityCheckResult )
 		{
-			if( securityCheckResult.getStatus() == SecurityStatus.CANCELED )
+			if( securityCheckResult.getStatus() == ResultStatus.CANCELED )
 			{
 				progressBar.setString( STATE_CANCEL );
 			}
 
-			if( securityCheckResult.getStatus() == SecurityStatus.CANCELED
+			if( securityCheckResult.getStatus() == ResultStatus.CANCELED
 					&& securityCheckResult.isHasRequestsWithWarnings() )
 			{
 				progressBar.setForeground( FAILED_COLOR );
 			}
-			else if( securityCheckResult.getStatus() == SecurityStatus.FAILED )
+			else if( securityCheckResult.getStatus() == ResultStatus.FAILED )
 			{
 				progressBar.setForeground( FAILED_COLOR );
 			}
-			else if( securityCheckResult.getStatus() == SecurityStatus.OK )
+			else if( securityCheckResult.getStatus() == ResultStatus.OK )
 			{
 				if( !progressBar.getForeground().equals( FAILED_COLOR ) )
 					progressBar.setForeground( OK_COLOR );
@@ -142,14 +142,14 @@ public class ProgressBarSecurityTestAdapter
 			if( !progressBar.getString().equals( STATE_CANCEL ) )
 				progressBar.setString( STATE_DONE );
 			progressBar.setBackground( UNKNOWN_COLOR );
-			progressBar.setValue( progressBar.getMaximum() );
+//			progressBar.setValue( progressBar.getMaximum() );
 		}
 
 		@Override
 		public void afterSecurityCheckRequest( TestCaseRunner testRunner, SecurityTestRunContext runContext,
 				SecurityCheckRequestResult securityCheckReqResult )
 		{
-			if( securityCheckReqResult.getStatus() == SecurityStatus.FAILED )
+			if( securityCheckReqResult.getStatus() == ResultStatus.FAILED )
 			{
 				counterLabel.setOpaque( true );
 				counterLabel.setBackground( FAILED_COLOR );
@@ -157,7 +157,7 @@ public class ProgressBarSecurityTestAdapter
 				counterLabel.setText( " " + alertsCounter + " " );
 				progressBar.setForeground( FAILED_COLOR );
 			}
-			else if( securityCheckReqResult.getStatus() == SecurityStatus.CANCELED )
+			else if( securityCheckReqResult.getStatus() == ResultStatus.CANCELED )
 			{
 				progressBar.setString( STATE_CANCEL );
 			}

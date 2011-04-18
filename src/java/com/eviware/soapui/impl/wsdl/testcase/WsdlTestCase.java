@@ -344,10 +344,9 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 					break;
 			}
 
-			name = UISupport.prompt(
-					"TestStep name must be unique, please specify new name for step\n" + "[" + testStep.getName()
-							+ "] in TestCase [" + getTestSuite().getProject().getName() + "->" + getTestSuite().getName()
-							+ "->" + getName() + "]", "Change TestStep name", name );
+			name = UISupport.prompt( "TestStep name must be unique, please specify new name for step\n" + "["
+					+ testStep.getName() + "] in TestCase [" + getTestSuite().getProject().getName() + "->"
+					+ getTestSuite().getName() + "->" + getName() + "]", "Change TestStep name", name );
 
 			if( name == null )
 				return false;
@@ -432,8 +431,8 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 
 	public WsdlTestStep addTestStep( String type, String name )
 	{
-		TestStepConfig newStepConfig = WsdlTestStepRegistry.getInstance().getFactory( type )
-				.createNewTestStep( this, name );
+		TestStepConfig newStepConfig = WsdlTestStepRegistry.getInstance().getFactory( type ).createNewTestStep( this,
+				name );
 		if( newStepConfig != null )
 		{
 			return addTestStep( newStepConfig );
@@ -456,8 +455,8 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 
 	public WsdlTestStep insertTestStep( String type, String name, int index )
 	{
-		TestStepConfig newStepConfig = WsdlTestStepRegistry.getInstance().getFactory( type )
-				.createNewTestStep( this, name );
+		TestStepConfig newStepConfig = WsdlTestStepRegistry.getInstance().getFactory( type ).createNewTestStep( this,
+				name );
 		if( newStepConfig != null )
 		{
 			return insertTestStep( newStepConfig, index, false );
@@ -591,6 +590,15 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 		}
 
 		testSteps.remove( ix );
+		for( SecurityTest securityTest : getSecurityTestList() )
+		{
+			List<AbstractSecurityCheck> testStepChecks = securityTest.getTestStepSecurityChecks( testStep.getId() );
+			for( AbstractSecurityCheck chk : testStepChecks )
+			{
+				securityTest.removeSecurityCheck( testStep, chk );
+			}
+
+		}
 
 		try
 		{

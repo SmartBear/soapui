@@ -12,7 +12,7 @@ import com.eviware.soapui.model.support.XPathReference;
 import com.eviware.soapui.model.support.XPathReferenceContainer;
 import com.eviware.soapui.model.support.XPathReferenceImpl;
 import com.eviware.soapui.model.testsuite.TestStep;
-import com.eviware.soapui.security.result.SecurityResult.SecurityStatus;
+import com.eviware.soapui.security.result.SecurityResult.ResultStatus;
 import com.eviware.soapui.security.support.FailedSecurityMessageExchange;
 import com.eviware.soapui.security.support.SecurityCheckedParameterHolder;
 import com.eviware.soapui.security.support.SecurityCheckedParameterImpl;
@@ -132,7 +132,7 @@ public abstract class AbstractSecurityCheckWithProperties extends AbstractSecuri
 	protected void reportSecurityCheckException( String message )
 	{
 		getSecurityCheckRequestResult().setMessageExchange( new FailedSecurityMessageExchange() );
-		getSecurityCheckRequestResult().setStatus( SecurityStatus.FAILED );
+		getSecurityCheckRequestResult().setStatus( ResultStatus.FAILED );
 		getSecurityCheckRequestResult().addMessage( message );
 	}
 

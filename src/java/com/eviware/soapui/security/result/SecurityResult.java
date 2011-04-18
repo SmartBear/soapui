@@ -24,13 +24,11 @@ public interface SecurityResult
 {
 	/**
 	 * 
-	 * INITIALIZED - just started, for distinguishing if icon should be added in the security log
-	 * UNKNOWN - when no assertions are added
-	 * OK - finished with no errors/warnings
-	 * FAILED 
-	 * CANCELED
+	 * INITIALIZED - just started, for distinguishing if icon should be added in
+	 * the security log UNKNOWN - when no assertions are added OK - finished with
+	 * no errors/warnings FAILED CANCELED
 	 */
-	public enum SecurityStatus
+	public enum ResultStatus
 	{
 		INITIALIZED, UNKNOWN, OK, FAILED, CANCELED
 	}
@@ -43,7 +41,7 @@ public interface SecurityResult
 	 */
 	public String getResultType();
 
-	public SecurityStatus getStatus();
+	public ResultStatus getStatus();
 
 	/**
 	 * Returns a list of actions that can be applied to this result

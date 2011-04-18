@@ -39,56 +39,52 @@ import org.apache.log4j.Logger;
 
 import com.eviware.soapui.impl.wsdl.testcase.TestCaseLogItem;
 import com.eviware.soapui.model.security.SecurityCheck;
-import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.result.SecurityCheckRequestResult;
 import com.eviware.soapui.security.result.SecurityCheckResult;
 import com.eviware.soapui.security.result.SecurityResult;
-import com.eviware.soapui.security.result.SecurityResult.ResultStatus;
 import com.eviware.soapui.security.result.SecurityTestStepResult;
+import com.eviware.soapui.security.result.SecurityResult.ResultStatus;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.ActionSupport;
 import com.eviware.soapui.support.components.JHyperlinkLabel;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.x.form.XFormDialog;
-import com.eviware.x.form.support.ADialogBuilder;
-import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AField.AFieldType;
-import com.eviware.x.form.support.AForm;
 
 /**
- * Panel for displaying SecurityChecks Results
+ * Panel for displaying Functional Results in a SecurityTest
  * 
  * @author dragica.soldo
  */
 
-public class JSecurityTestRunLog extends JPanel
+public class JFunctionalTestRunLog extends JPanel
 {
-	private SecurityTestLogModel logListModel;
+	private FunctionalTestLogModel logListModel;
 	private JList testLogList;
 	private boolean errorsOnly = false;
-	private final Settings settings;
+	// private final Settings settings;
 	private Set<String> boldTexts = new HashSet<String>();
 	private boolean follow = true;
 	protected int selectedIndex;
-	private XFormDialog optionsDialog;
 	private Logger log = Logger.getLogger( JSecurityTestRunLog.class );
 
-	public JSecurityTestRunLog( SecurityTest securityTest )
+	public JFunctionalTestRunLog( SecurityTest securityTest )
 	{
 		super( new BorderLayout() );
-		this.settings = securityTest.getSettings();
-		logListModel = securityTest.getSecurityTestLog();
-		errorsOnly = settings.getBoolean( OptionsForm.class.getName() + "@errors_only" );
+		// this.settings = securityTest.getSettings();
+		logListModel = securityTest.getFunctionalTestLog();
+		// errorsOnly = settings.getBoolean( OptionsForm.class.getName() +
+		// "@errors_only" );
 		buildUI();
 	}
 
 	private void buildUI()
 	{
-		logListModel = new SecurityTestLogModel();
-		logListModel.setMaxSize( ( int )settings.getLong( OptionsForm.class.getName() + "@max_rows", 1000 ) );
+		// logListModel = new SecurityTestLogModel();
+		// logListModel.setMaxSize( ( int )settings.getLong(
+		// OptionsForm.class.getName() + "@max_rows", 1000 ) );
 
 		testLogList = new JList( logListModel );
 		testLogList.setCellRenderer( new SecurityTestLogCellRenderer() );
@@ -127,7 +123,8 @@ public class JSecurityTestRunLog extends JPanel
 	protected void addToolbarButtons( JXToolBar toolbar )
 	{
 		toolbar.addFixed( UISupport.createToolbarButton( new ClearLogAction() ) );
-		toolbar.addFixed( UISupport.createToolbarButton( new SetLogOptionsAction() ) );
+		// toolbar.addFixed( UISupport.createToolbarButton( new
+		// SetLogOptionsAction() ) );
 		toolbar.addFixed( UISupport.createToolbarButton( new ExportLogAction() ) );
 	}
 
@@ -173,128 +170,142 @@ public class JSecurityTestRunLog extends JPanel
 		}
 	}
 
-	public synchronized void updateSecurityTestStepResult( SecurityTestStepResult testStepResult )
-	{
-		logListModel.updateSecurityTestStepResult( testStepResult, errorsOnly );
-		if( follow )
-		{
-			try
-			{
-				testLogList.ensureIndexIsVisible( logListModel.getSize() - 1 );
-			}
-			catch( RuntimeException e )
-			{
-				log.error( e.getMessage() );
-			}
-		}
-	}
+	// public synchronized void updateSecurityTestStepResult(
+	// SecurityTestStepResult testStepResult )
+	// {
+	// logListModel.updateSecurityTestStepResult( testStepResult, errorsOnly );
+	// if( follow )
+	// {
+	// try
+	// {
+	// testLogList.ensureIndexIsVisible( logListModel.getSize() - 1 );
+	// }
+	// catch( RuntimeException e )
+	// {
+	// log.error( e.getMessage() );
+	// }
+	// }
+	// }
 
-	public synchronized void addSecurityCheckResult( SecurityCheck securityCheck )
-	{
-		logListModel.addSecurityCheckResult( securityCheck );
-		if( follow )
-		{
-			try
-			{
-				testLogList.ensureIndexIsVisible( logListModel.getSize() - 1 );
-			}
-			catch( RuntimeException e )
-			{
-				log.error( e.getMessage() );
-			}
-		}
-	}
+	// public synchronized void addSecurityCheckResult( SecurityCheck
+	// securityCheck )
+	// {
+	// logListModel.addSecurityCheckResult( securityCheck );
+	// if( follow )
+	// {
+	// try
+	// {
+	// testLogList.ensureIndexIsVisible( logListModel.getSize() - 1 );
+	// }
+	// catch( RuntimeException e )
+	// {
+	// log.error( e.getMessage() );
+	// }
+	// }
+	// }
 
-	public synchronized void updateSecurityCheckResult( SecurityCheckResult checkResult )
-	{
-		logListModel.updateSecurityCheckResult( checkResult, errorsOnly );
-		if( follow )
-		{
-			try
-			{
-				testLogList.ensureIndexIsVisible( logListModel.getSize() - 1 );
-			}
-			catch( RuntimeException e )
-			{
-				log.error( e.getMessage() );
-			}
-		}
-	}
+	// public synchronized void updateSecurityCheckResult( SecurityCheckResult
+	// checkResult )
+	// {
+	// logListModel.updateSecurityCheckResult( checkResult, errorsOnly );
+	// if( follow )
+	// {
+	// try
+	// {
+	// testLogList.ensureIndexIsVisible( logListModel.getSize() - 1 );
+	// }
+	// catch( RuntimeException e )
+	// {
+	// log.error( e.getMessage() );
+	// }
+	// }
+	// }
 
-	public synchronized void addSecurityCheckRequestResult( SecurityCheckRequestResult checkRequestResult )
-	{
-		if( errorsOnly && checkRequestResult.getStatus() != SecurityCheckRequestResult.ResultStatus.FAILED )
-			return;
+	// public synchronized void addSecurityCheckRequestResult(
+	// SecurityCheckRequestResult checkRequestResult )
+	// {
+	// if( errorsOnly && checkRequestResult.getStatus() !=
+	// SecurityCheckRequestResult.SecurityStatus.FAILED )
+	// return;
+	//
+	// logListModel.addSecurityCheckRequestResult( checkRequestResult );
+	// if( follow )
+	// {
+	// try
+	// {
+	// testLogList.ensureIndexIsVisible( logListModel.getSize() - 1 );
+	// }
+	// catch( RuntimeException e )
+	// {
+	// log.error( e.getMessage() );
+	// }
+	// }
+	// }
 
-		logListModel.addSecurityCheckRequestResult( checkRequestResult );
-		if( follow )
-		{
-			try
-			{
-				testLogList.ensureIndexIsVisible( logListModel.getSize() - 1 );
-			}
-			catch( RuntimeException e )
-			{
-				log.error( e.getMessage() );
-			}
-		}
-	}
+	// public SecurityTestLogModel getLogListModel()
+	// {
+	// return logListModel;
+	// }
+	//
+	// public void setLogListModel( SecurityTestLogModel logListModel )
+	// {
+	// this.logListModel = logListModel;
+	// testLogList.setModel( logListModel );
+	// }
 
-//	public SecurityTestLogModel getLogListModel()
-//	{
-//		return logListModel;
-//	}
-
-//	public void setLogListModel( SecurityTestLogModel logListModel )
-//	{
-//		this.logListModel = logListModel;
-//		testLogList.setModel( logListModel );
-//	}
-
-	private class SetLogOptionsAction extends AbstractAction
-	{
-		public SetLogOptionsAction()
-		{
-			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/options.gif" ) );
-			putValue( Action.SHORT_DESCRIPTION, "Sets TestCase Log Options" );
-		}
-
-		public void actionPerformed( ActionEvent e )
-		{
-			if( optionsDialog == null )
-				optionsDialog = ADialogBuilder.buildDialog( OptionsForm.class );
-
-			optionsDialog.setIntValue( OptionsForm.MAXROWS,
-					( int )settings.getLong( OptionsForm.class.getName() + "@max_rows", 1000 ) );
-			optionsDialog.setBooleanValue( OptionsForm.ERRORSONLY,
-					settings.getBoolean( OptionsForm.class.getName() + "@errors_only" ) );
-			optionsDialog.setBooleanValue( OptionsForm.FOLLOW, follow );
-
-			if( optionsDialog.show() )
-			{
-				int maxRows = optionsDialog.getIntValue( OptionsForm.MAXROWS, 1000 );
-				logListModel.setMaxSize( maxRows );
-				settings.setLong( OptionsForm.class.getName() + "@max_rows", maxRows );
-				errorsOnly = optionsDialog.getBooleanValue( OptionsForm.ERRORSONLY );
-				settings.setBoolean( OptionsForm.class.getName() + "@errors_only", errorsOnly );
-
-				follow = optionsDialog.getBooleanValue( OptionsForm.FOLLOW );
-			}
-		}
-	}
-
-	@AForm( name = "Log Options", description = "Set options for the run log below" )
-	private static interface OptionsForm
-	{
-		@AField( name = "Max Rows", description = "Sets the maximum number of rows to keep in the log", type = AFieldType.INT )
-		public static final String MAXROWS = "Max Rows";
-
-		@AField( name = "Errors Only", description = "Logs only TestStep errors in the log", type = AFieldType.BOOLEAN )
-		public static final String ERRORSONLY = "Errors Only";
-
-		@AField( name = "Follow", description = "Follow log content", type = AFieldType.BOOLEAN )
-		public static final String FOLLOW = "Follow";
-	}
+	// private class SetLogOptionsAction extends AbstractAction
+	// {
+	// public SetLogOptionsAction()
+	// {
+	// putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/options.gif" )
+	// );
+	// putValue( Action.SHORT_DESCRIPTION, "Sets TestCase Log Options" );
+	// }
+	//
+	// public void actionPerformed( ActionEvent e )
+	// {
+	// if( optionsDialog == null )
+	// optionsDialog = ADialogBuilder.buildDialog( OptionsForm.class );
+	//
+	// optionsDialog.setIntValue( OptionsForm.MAXROWS, ( int )settings.getLong(
+	// OptionsForm.class.getName()
+	// + "@max_rows", 1000 ) );
+	// optionsDialog.setBooleanValue( OptionsForm.ERRORSONLY,
+	// settings.getBoolean( OptionsForm.class.getName()
+	// + "@errors_only" ) );
+	// optionsDialog.setBooleanValue( OptionsForm.FOLLOW, follow );
+	//
+	// if( optionsDialog.show() )
+	// {
+	// int maxRows = optionsDialog.getIntValue( OptionsForm.MAXROWS, 1000 );
+	// logListModel.setMaxSize( maxRows );
+	// settings.setLong( OptionsForm.class.getName() + "@max_rows", maxRows );
+	// errorsOnly = optionsDialog.getBooleanValue( OptionsForm.ERRORSONLY );
+	// settings.setBoolean( OptionsForm.class.getName() + "@errors_only",
+	// errorsOnly );
+	//
+	// follow = optionsDialog.getBooleanValue( OptionsForm.FOLLOW );
+	// }
+	// }
+	// }
+	//
+	// @AForm( name = "Log Options", description =
+	// "Set options for the run log below" )
+	// private static interface OptionsForm
+	// {
+	// @AField( name = "Max Rows", description =
+	// "Sets the maximum number of rows to keep in the log", type =
+	// AFieldType.INT )
+	// public static final String MAXROWS = "Max Rows";
+	//
+	// @AField( name = "Errors Only", description =
+	// "Logs only TestStep errors in the log", type = AFieldType.BOOLEAN )
+	// public static final String ERRORSONLY = "Errors Only";
+	//
+	// @AField( name = "Follow", description = "Follow log content", type =
+	// AFieldType.BOOLEAN )
+	// public static final String FOLLOW = "Follow";
+	// }
 
 	private class ClearLogAction extends AbstractAction
 	{
@@ -338,14 +349,14 @@ public class JSecurityTestRunLog extends JPanel
 		}
 	}
 
-	public void release()
-	{
-		if( optionsDialog != null )
-		{
-			optionsDialog.release();
-			optionsDialog = null;
-		}
-	}
+//	public void release()
+//	{
+//		if( optionsDialog != null )
+//		{
+//			optionsDialog.release();
+//			optionsDialog = null;
+//		}
+//	}
 
 	public void printLog( PrintWriter out )
 	{

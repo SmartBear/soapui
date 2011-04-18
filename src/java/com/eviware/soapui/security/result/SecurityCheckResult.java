@@ -42,7 +42,7 @@ public class SecurityCheckResult implements SecurityResult
 	 * went through execution and gone into any other status, including UNKNOWN
 	 * if no assertion is added, when status icon should be added to log
 	 */
-	private SecurityStatus status;
+	private ResultStatus status;
 	public SecurityCheck securityCheck;
 	private long size;
 	private boolean discarded;
@@ -58,7 +58,7 @@ public class SecurityCheckResult implements SecurityResult
 	public SecurityCheckResult( SecurityCheck securityCheck )
 	{
 		this.securityCheck = securityCheck;
-		status = SecurityStatus.INITIALIZED;
+		status = ResultStatus.INITIALIZED;
 		securityRequestResultList = new ArrayList<SecurityCheckRequestResult>();
 		timeStamp = System.currentTimeMillis();
 	}
@@ -68,12 +68,12 @@ public class SecurityCheckResult implements SecurityResult
 		return securityRequestResultList;
 	}
 
-	public SecurityStatus getStatus()
+	public ResultStatus getStatus()
 	{
 		return this.status;
 	}
 
-	public void setStatus( SecurityStatus status )
+	public void setStatus( ResultStatus status )
 	{
 		this.status = status;
 	}
@@ -137,16 +137,16 @@ public class SecurityCheckResult implements SecurityResult
 
 		if( !hasAddedRequests )
 		{
-			status = SecurityStatus.UNKNOWN;
-			if( secReqResult.getStatus() == SecurityStatus.OK )
+			status = ResultStatus.UNKNOWN;
+			if( secReqResult.getStatus() == ResultStatus.OK )
 			{
-				status = SecurityStatus.OK;
+				status = ResultStatus.OK;
 			}
 		}
-		else if( secReqResult.getStatus() == SecurityStatus.FAILED )
+		else if( secReqResult.getStatus() == ResultStatus.FAILED )
 		{
 			hasRequestsWithWarnings = true;
-			status = SecurityStatus.FAILED;
+			status = ResultStatus.FAILED;
 		}
 
 		this.testLog.append( "\nSecurityRequest " ).append( securityRequestResultList.indexOf( secReqResult ) ).append(
@@ -227,7 +227,7 @@ public class SecurityCheckResult implements SecurityResult
 
 	public boolean isCanceled()
 	{
-		return status == SecurityStatus.CANCELED;
+		return status == ResultStatus.CANCELED;
 	}
 
 	public boolean isHasRequestsWithWarnings()

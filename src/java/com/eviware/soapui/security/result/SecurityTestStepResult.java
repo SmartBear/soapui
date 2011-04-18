@@ -30,7 +30,7 @@ import com.eviware.soapui.support.action.swing.DefaultActionList;
 
 public class SecurityTestStepResult implements SecurityResult
 {
-	private SecurityStatus status = SecurityStatus.UNKNOWN;
+	private ResultStatus status = ResultStatus.UNKNOWN;
 	public static final String TYPE = "SecurityTestStepResult";
 	private TestStep testStep;
 	private long size;
@@ -57,7 +57,7 @@ public class SecurityTestStepResult implements SecurityResult
 		return securityCheckResultList;
 	}
 
-	public SecurityStatus getStatus()
+	public ResultStatus getStatus()
 	{
 		return status;
 	}
@@ -98,13 +98,13 @@ public class SecurityTestStepResult implements SecurityResult
 
 		timeTaken += securityCheckResult.getTimeTaken();
 
-		if( !hasAddedRequests && securityCheckResult.getStatus() == SecurityStatus.OK )
+		if( !hasAddedRequests && securityCheckResult.getStatus() == ResultStatus.OK )
 		{
-			status = SecurityStatus.OK;
+			status = ResultStatus.OK;
 		}
-		else if( securityCheckResult.getStatus() == SecurityStatus.FAILED )
+		else if( securityCheckResult.getStatus() == ResultStatus.FAILED )
 		{
-			status = SecurityStatus.FAILED;
+			status = ResultStatus.FAILED;
 		}
 
 		// TODO check and finish this - seems it's used for reports

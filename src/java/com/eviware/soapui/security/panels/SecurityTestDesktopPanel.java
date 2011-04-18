@@ -55,16 +55,19 @@ import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestRunner.Status;
+import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.security.SecurityTestRunnerImpl;
 import com.eviware.soapui.security.actions.SecurityTestOptionsAction;
 import com.eviware.soapui.security.check.AbstractSecurityCheck;
+import com.eviware.soapui.security.log.JFunctionalTestRunLog;
 import com.eviware.soapui.security.log.JSecurityTestRunLog;
 import com.eviware.soapui.security.result.SecurityCheckRequestResult;
 import com.eviware.soapui.security.result.SecurityCheckResult;
 import com.eviware.soapui.security.result.SecurityTestStepResult;
+import com.eviware.soapui.security.result.SecurityResult.ResultStatus;
 import com.eviware.soapui.security.support.ProgressBarSecurityTestAdapter;
 import com.eviware.soapui.security.support.SecurityTestRunListenerAdapter;
 import com.eviware.soapui.settings.UISettings;
@@ -108,6 +111,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 	private JButton setCredentialsButton;
 	private JButton optionsButton;
 	private JSecurityTestRunLog securityTestLog;
+	private JFunctionalTestRunLog functionalTestLog;
 	private JToggleButton loopButton;
 	private ProgressBarSecurityTestAdapter progressBarAdapter;
 	private ComponentBag stateDependantComponents = new ComponentBag();
@@ -125,6 +129,8 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 	private JLabel cntLabel;
 	private JComponentInspector<?> securityLogInspector;
 	private JComponentInspector<?> functionalLogInspector;
+	private ResultStatus securityStatus;
+	private ResultStatus functionalStatus;
 
 	public SecurityTestDesktopPanel( SecurityTest securityTest )
 	{
@@ -168,8 +174,9 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 				"Security Execution Log", true );
 		inspectorPanel.addInspector( securityLogInspector );
 		JComponent functionalLog = buildFunctionalLog();
-		inspectorPanel.addInspector( new JComponentInspector<JComponent>( functionalLog, "TestCase Log",
-				"Functional Execution Log", true ) );
+		functionalLogInspector = new JComponentInspector<JComponent>( functionalLog, "TestCase Log",
+				"Functional Execution Log", true );
+		inspectorPanel.addInspector( functionalLogInspector );
 		inspectorPanel.setDefaultDividerLocation( 0.7F );
 		inspectorPanel.setCurrentInspector( "Security Log" );
 
@@ -178,27 +185,38 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 		{
 			testStepListInspectorPanel.setCurrentInspector( "Description" );
 		}
+		initializeStatusIcons();
 
-		// updateSecurityStatusIcon();
 		add( inspectorPanel.getComponent(), BorderLayout.CENTER );
 	}
 
-	// TODO check security result, not runner
-	// this is just to see the icon even wrong one
-	private void updateSecurityStatusIcon()
+	private void initializeStatusIcons()
 	{
-		Status status = runner.getStatus();
+		securityStatus = ResultStatus.UNKNOWN;
+		updateStatusIcon( securityStatus, securityLogInspector );
+
+		functionalStatus = ResultStatus.UNKNOWN;
+		updateStatusIcon( functionalStatus, functionalLogInspector );
+	}
+
+	private void updateStatusIcon( ResultStatus status, JComponentInspector<?> logInspector )
+	{
 		switch( status )
 		{
 		case FAILED :
 		{
-			securityLogInspector.setIcon( UISupport.createImageIcon( "/failed_assertion.gif" ) );
-			inspectorPanel.activate( securityLogInspector );
+			logInspector.setIcon( UISupport.createImageIcon( "/failed_securitytest.gif" ) );
+			inspectorPanel.activate( logInspector );
 			break;
 		}
-		case INITIALIZED :
+		case UNKNOWN :
 		{
-			securityLogInspector.setIcon( UISupport.createImageIcon( "/valid_assertion.gif" ) );
+			logInspector.setIcon( UISupport.createImageIcon( "/unknown_securitytest.gif" ) );
+			break;
+		}
+		case OK :
+		{
+			logInspector.setIcon( UISupport.createImageIcon( "/valid_securitytest.gif" ) );
 			inspectorPanel.deactivate();
 			break;
 		}
@@ -245,9 +263,9 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 
 	private JComponent buildFunctionalLog()
 	{
-		securityTestLog = new JSecurityTestRunLog( getModelItem() );
-		stateDependantComponents.add( securityTestLog );
-		return securityTestLog;
+		functionalTestLog = new JFunctionalTestRunLog( getModelItem() );
+		stateDependantComponents.add( functionalTestLog );
+		return functionalTestLog;
 	}
 
 	private JComponent buildContent()
@@ -377,6 +395,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 
 	protected void runSecurityTest()
 	{
+		initializeStatusIcons();
 		if( canceled )
 		{
 
@@ -393,7 +412,8 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 		properties.put( "loopButton", loopButton );
 		properties.put( TestCaseRunContext.INTERACTIVE, Boolean.TRUE );
 		lastRunner = null;
-		SecurityTestRunnerImpl testRunner = new SecurityTestRunnerImpl( securityTest, properties );
+		// SecurityTestRunnerImpl testRunner = new SecurityTestRunnerImpl(
+		// securityTest, properties );
 
 		// testRunner.run();
 
@@ -505,9 +525,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 					{
 						MockTestRunner mockTestRunner = new MockTestRunner( SecurityTestDesktopPanel.this.getModelItem()
 								.getTestCase(), SoapUI.ensureGroovyLog() );
-						SecurityTestDesktopPanel.this
-								.getModelItem()
-								.getTestCase()
+						SecurityTestDesktopPanel.this.getModelItem().getTestCase()
 								.runSetupScript( new MockTestRunContext( mockTestRunner, null ), mockTestRunner,
 										securityTest.getStartupScript() );
 					}
@@ -550,11 +568,9 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 					{
 						MockTestRunner mockTestRunner = new MockTestRunner( SecurityTestDesktopPanel.this.getModelItem()
 								.getTestCase(), SoapUI.ensureGroovyLog() );
-						SecurityTestDesktopPanel.this
-								.getModelItem()
-								.getTestCase()
-								.runTearDownScript( new MockTestRunContext( mockTestRunner, null ), mockTestRunner,
-										securityTest.getTearDownScript() );
+						SecurityTestDesktopPanel.this.getModelItem().getTestCase().runTearDownScript(
+								new MockTestRunContext( mockTestRunner, null ), mockTestRunner,
+								securityTest.getTearDownScript() );
 					}
 					catch( Exception e1 )
 					{
@@ -707,12 +723,15 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 		public void beforeRun( TestCaseRunner testRunner, SecurityTestRunContext runContext )
 		{
 			securityTestLog.clear();
+			functionalTestLog.clear();
 
 			runButton.setEnabled( false );
 			cancelButton.setEnabled( true );
 			testStepList.setEnabled( false );
 			// testStepList.setSelectedIndex( -1 );
-			securityTestLog.addText( "SecurityTest started at " + dateFormat.format( new Date() ) );
+			String start = dateFormat.format( new Date() );
+			securityTestLog.addText( "SecurityTest started at " + start );
+			functionalTestLog.addText( "SecurityTest started at " + start );
 
 			SecurityTestDesktopPanel.this.beforeRun();
 
@@ -721,6 +740,8 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 
 			if( runner == null )
 				runner = ( SecurityTestRunnerImpl )testRunner;
+
+			securityStatus = ResultStatus.UNKNOWN;
 		}
 
 		public void afterRun( TestCaseRunner testRunner, SecurityTestRunContext runContext )
@@ -728,8 +749,12 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 			SecurityTestRunnerImpl securityRunner = ( SecurityTestRunnerImpl )testRunner;
 
 			if( testRunner.getStatus() == SecurityTestRunner.Status.CANCELED )
+			{
 				securityTestLog.addText( "SecurityTest canceled [" + testRunner.getReason() + "], time taken = "
 						+ securityRunner.getTimeTaken() );
+				functionalTestLog.addText( "SecurityTest canceled [" + testRunner.getReason() + "], time taken = "
+						+ securityRunner.getTimeTaken() );
+			}
 			else if( testRunner.getStatus() == SecurityTestRunner.Status.FAILED )
 			{
 				String msg = securityRunner.getReason();
@@ -743,10 +768,16 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 
 				securityTestLog
 						.addText( "SecurityTest failed [" + msg + "], time taken = " + securityRunner.getTimeTaken() );
+				functionalTestLog.addText( "SecurityTest failed [" + msg + "], time taken = "
+						+ securityRunner.getTimeTaken() );
 			}
 			else
+			{
 				securityTestLog.addText( "SecurityTest finished with status [" + testRunner.getStatus()
 						+ "], time taken = " + securityRunner.getTimeTaken() );
+				functionalTestLog.addText( "SecurityTest finished with status [" + testRunner.getStatus()
+						+ "], time taken = " + securityRunner.getTimeTaken() );
+			}
 
 			lastRunner = runner;
 			runner = null;
@@ -767,6 +798,18 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 			{
 				SecurityTestDesktopPanel.this.afterRun();
 			}
+
+			if( testRunner.getStatus() == Status.FAILED )
+			{
+				securityStatus = ResultStatus.FAILED;
+			}
+			else if( testRunner.getStatus() == Status.FINISHED || testRunner.getStatus() == Status.CANCELED )
+			{
+				if( securityStatus != ResultStatus.FAILED )
+					securityStatus = ResultStatus.OK;
+			}
+			updateStatusIcon( securityStatus, securityLogInspector );
+			updateStatusIcon( functionalStatus, functionalLogInspector );
 		}
 
 		@Override
@@ -781,13 +824,38 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 				SecurityCheckResult securityCheckResult )
 		{
 			securityTestLog.updateSecurityCheckResult( securityCheckResult );
+
+			if( securityCheckResult.getStatus() == ResultStatus.CANCELED
+					&& securityCheckResult.isHasRequestsWithWarnings() )
+			{
+				securityStatus = ResultStatus.FAILED;
+			}
+			else if( securityCheckResult.getStatus() == ResultStatus.FAILED )
+			{
+				securityStatus = ResultStatus.FAILED;
+			}
+			else if( securityCheckResult.getStatus() == ResultStatus.OK )
+			{
+				if( securityStatus != ResultStatus.FAILED )
+					securityStatus = ResultStatus.OK;
+			}
+
 		}
 
 		@Override
 		public void afterOriginalStep( TestCaseRunner testRunner, SecurityTestRunContext runContext,
 				SecurityTestStepResult result )
 		{
-			securityTestLog.addSecurityTestStepResult( result );
+			functionalTestLog.addSecurityTestStepResult( result );
+			if( result.getOriginalTestStepResult().getStatus() == TestStepStatus.FAILED )
+			{
+				functionalStatus = ResultStatus.FAILED;
+			}
+			else if( result.getOriginalTestStepResult().getStatus() == TestStepStatus.OK
+					&& functionalStatus != ResultStatus.FAILED )
+			{
+				functionalStatus = ResultStatus.OK;
+			}
 		}
 
 		@Override
@@ -801,6 +869,15 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 		public void afterStep( TestCaseRunner testRunner, SecurityTestRunContext runContext, SecurityTestStepResult result )
 		{
 			securityTestLog.updateSecurityTestStepResult( result );
+			if( result.getStatus() == ResultStatus.FAILED )
+			{
+				securityStatus = ResultStatus.FAILED;
+			}
+			else if( result.getStatus() == ResultStatus.OK )
+			{
+				if( securityStatus != ResultStatus.FAILED )
+					securityStatus = ResultStatus.OK;
+			}
 		}
 	}
 }

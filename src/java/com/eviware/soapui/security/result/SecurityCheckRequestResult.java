@@ -33,7 +33,7 @@ public class SecurityCheckRequestResult implements SecurityResult
 {
 	private static final String[] EMPTY_MESSAGES = new String[0];
 	public final static String TYPE = "SecurityCheckRequestResult";
-	private SecurityStatus status = SecurityStatus.UNKNOWN;
+	private ResultStatus status = ResultStatus.UNKNOWN;
 	private SecurityCheck securityCheck;
 	private List<String> messages = new ArrayList<String>();
 	private long timeTaken;
@@ -52,12 +52,12 @@ public class SecurityCheckRequestResult implements SecurityResult
 		timeStamp = System.currentTimeMillis();
 	}
 
-	public SecurityStatus getStatus()
+	public ResultStatus getStatus()
 	{
 		return status;
 	}
 
-	public void setStatus( SecurityStatus status )
+	public void setStatus( ResultStatus status )
 	{
 		this.status = status;
 	}

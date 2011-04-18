@@ -23,7 +23,6 @@ import javax.swing.AbstractListModel;
 import org.apache.commons.collections.list.TreeList;
 
 import com.eviware.soapui.model.security.SecurityCheck;
-import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.security.check.AbstractSecurityCheckWithProperties;
 import com.eviware.soapui.security.result.SecurityCheckRequestResult;
 import com.eviware.soapui.security.result.SecurityCheckResult;
@@ -33,11 +32,11 @@ import com.eviware.soapui.security.result.SecurityResult.ResultStatus;
 import com.eviware.soapui.support.types.StringToStringMap;
 
 /**
- * SecurityTestLog
+ * SecurityTest - Functional log
  * 
  * @author soapUI team
  */
-public class SecurityTestLogModel extends AbstractListModel
+public class FunctionalTestLogModel extends AbstractListModel
 {
 	private List<Object> items = Collections.synchronizedList( new TreeList() );
 	private List<SoftReference<SecurityResult>> results = Collections.synchronizedList( new TreeList() );
@@ -195,11 +194,13 @@ public class SecurityTestLogModel extends AbstractListModel
 
 		StringToStringMap changedParams = null;
 
-		if( securityCheckRequestResult.getMessageExchange()!=null )
+		if( securityCheckRequestResult.getMessageExchange() != null )
 		{
-			changedParams= 	StringToStringMap.fromXml( securityCheckRequestResult.getMessageExchange().getProperties().get(
-					AbstractSecurityCheckWithProperties.SECURITY_CHANGED_PARAMETERS ) );
-		}else {
+			changedParams = StringToStringMap.fromXml( securityCheckRequestResult.getMessageExchange().getProperties()
+					.get( AbstractSecurityCheckWithProperties.SECURITY_CHANGED_PARAMETERS ) );
+		}
+		else
+		{
 			changedParams = new StringToStringMap();
 		}
 		StringBuilder changedParamsInfo = new StringBuilder();

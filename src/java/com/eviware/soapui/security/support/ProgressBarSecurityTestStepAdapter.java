@@ -33,7 +33,7 @@ import com.eviware.soapui.security.check.AbstractSecurityCheckWithProperties;
 import com.eviware.soapui.security.result.SecurityCheckRequestResult;
 import com.eviware.soapui.security.result.SecurityCheckResult;
 import com.eviware.soapui.security.result.SecurityTestStepResult;
-import com.eviware.soapui.security.result.SecurityResult.SecurityStatus;
+import com.eviware.soapui.security.result.SecurityResult.ResultStatus;
 
 /**
  * Class that keeps a JProgressBars state in sync with a SecurityTest
@@ -147,7 +147,7 @@ public class ProgressBarSecurityTestStepAdapter
 			if( securityCheck.getTestStep().getId().equals( testStep.getId() ) )
 			{
 				if( securityCheck.getSecurityCheckResult() != null
-						&& securityCheck.getSecurityCheckResult().getStatus() != SecurityStatus.CANCELED )
+						&& securityCheck.getSecurityCheckResult().getStatus() != ResultStatus.CANCELED )
 				{
 					if( progressBar.getString().equals( "" ) )
 					{
@@ -179,7 +179,7 @@ public class ProgressBarSecurityTestStepAdapter
 			if( securityCheckResult.getSecurityCheck().getTestStep().getId().equals( testStep.getId() ) )
 			{
 
-				if( securityCheckResult.getStatus() == SecurityStatus.CANCELED )
+				if( securityCheckResult.getStatus() == ResultStatus.CANCELED )
 				{
 					progressBar.setString( STATE_CANCEL );
 					progressBar.setBackground( new Color( 240, 240, 240 ) );
@@ -187,11 +187,11 @@ public class ProgressBarSecurityTestStepAdapter
 				else
 				// progressbar can change its color only if not missing
 				// assertions or parameters
-				if( securityCheckResult.getStatus() == SecurityStatus.FAILED )
+				if( securityCheckResult.getStatus() == ResultStatus.FAILED )
 				{
 					progressBar.setForeground( FAILED_COLOR );
 				}
-				else if( securityCheckResult.getStatus() == SecurityStatus.OK )
+				else if( securityCheckResult.getStatus() == ResultStatus.OK )
 				{
 					// can not change to OK color if any of previous checks
 					// failed or missing assertions/parameters
@@ -214,7 +214,7 @@ public class ProgressBarSecurityTestStepAdapter
 
 			if( securityCheckReqResult.getSecurityCheck().getTestStep().getId().equals( testStep.getId() ) )
 			{
-				if( securityCheckReqResult.getStatus() == SecurityStatus.FAILED )
+				if( securityCheckReqResult.getStatus() == ResultStatus.FAILED )
 				{
 					counterLabel.setOpaque( true );
 					counterLabel.setBackground( FAILED_COLOR );

@@ -36,6 +36,7 @@ import com.eviware.soapui.model.testsuite.TestRunnable;
 import com.eviware.soapui.model.testsuite.TestRunner.Status;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.check.AbstractSecurityCheck;
+import com.eviware.soapui.security.log.FunctionalTestLogModel;
 import com.eviware.soapui.security.log.SecurityTestLogModel;
 import com.eviware.soapui.security.registry.AbstractSecurityCheckFactory;
 import com.eviware.soapui.security.result.SecurityTestStepResult;
@@ -59,7 +60,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 	public final static String FAIL_ON_ERROR_PROPERTY = SecurityTest.class.getName() + "@failOnError";
 	private WsdlTestCase testCase;
 	private SecurityTestLogModel securityTestLog;
-	// private SecurityChecksPanel.SecurityCheckListModel listModel;
+	private FunctionalTestLogModel functionalTestLog;
 	private Set<SecurityTestRunListener> securityTestRunListeners = new HashSet<SecurityTestRunListener>();
 	private Map<TestStep, Set<SecurityTestRunListener>> securityTestStepRunListeners = new HashMap<TestStep, Set<SecurityTestRunListener>>();
 	private Map<TestStep, SecurityTestStepResult> securityTestStepResultMap;
@@ -83,6 +84,8 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 		securityTestLog = new SecurityTestLogModel();
 		securityTestStepResultMap = new HashMap<TestStep, SecurityTestStepResult>();
 
+		functionalTestLog = new FunctionalTestLogModel();
+
 		for( SecurityTestRunListener listener : SoapUI.getListenerRegistry().getListeners( SecurityTestRunListener.class ) )
 		{
 			addSecurityTestRunListener( listener );
@@ -104,6 +107,16 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 	public SecurityTestLogModel getSecurityTestLog()
 	{
 		return securityTestLog;
+	}
+
+	/**
+	 * Gets the current security log - functional part
+	 * 
+	 * @return
+	 */
+	public FunctionalTestLogModel getFunctionalTestLog()
+	{
+		return functionalTestLog;
 	}
 
 	/**
