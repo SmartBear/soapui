@@ -57,7 +57,7 @@ public class SecurityTreeRootNode extends DefaultMutableTreeNode implements Prop
 	@Override
 	public void propertyChange( PropertyChangeEvent evt )
 	{
-		System.out.println(evt.toString());
+		//System.out.println(evt.toString());
 	}
 
 	public SecurityTest getSecurityTest()
