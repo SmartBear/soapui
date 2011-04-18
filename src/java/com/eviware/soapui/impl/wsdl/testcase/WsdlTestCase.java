@@ -344,9 +344,10 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 					break;
 			}
 
-			name = UISupport.prompt( "TestStep name must be unique, please specify new name for step\n" + "["
-					+ testStep.getName() + "] in TestCase [" + getTestSuite().getProject().getName() + "->"
-					+ getTestSuite().getName() + "->" + getName() + "]", "Change TestStep name", name );
+			name = UISupport.prompt(
+					"TestStep name must be unique, please specify new name for step\n" + "[" + testStep.getName()
+							+ "] in TestCase [" + getTestSuite().getProject().getName() + "->" + getTestSuite().getName()
+							+ "->" + getName() + "]", "Change TestStep name", name );
 
 			if( name == null )
 				return false;
@@ -431,8 +432,8 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 
 	public WsdlTestStep addTestStep( String type, String name )
 	{
-		TestStepConfig newStepConfig = WsdlTestStepRegistry.getInstance().getFactory( type ).createNewTestStep( this,
-				name );
+		TestStepConfig newStepConfig = WsdlTestStepRegistry.getInstance().getFactory( type )
+				.createNewTestStep( this, name );
 		if( newStepConfig != null )
 		{
 			return addTestStep( newStepConfig );
@@ -455,8 +456,8 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 
 	public WsdlTestStep insertTestStep( String type, String name, int index )
 	{
-		TestStepConfig newStepConfig = WsdlTestStepRegistry.getInstance().getFactory( type ).createNewTestStep( this,
-				name );
+		TestStepConfig newStepConfig = WsdlTestStepRegistry.getInstance().getFactory( type )
+				.createNewTestStep( this, name );
 		if( newStepConfig != null )
 		{
 			return insertTestStep( newStepConfig, index, false );
@@ -893,11 +894,6 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 	public Object runSetupScript( TestCaseRunContext runContext, TestCaseRunner runner ) throws Exception
 	{
 		String script = getSetupScript();
-		return runSetupScript( runContext, runner, script );
-	}
-
-	public Object runSetupScript( TestCaseRunContext runContext, TestCaseRunner runner, String script ) throws Exception
-	{
 		if( StringUtils.isNullOrEmpty( script ) )
 			return null;
 
@@ -912,17 +908,12 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 		setupScriptEngine.setVariable( "testRunner", runner );
 		setupScriptEngine.setVariable( "log", SoapUI.ensureGroovyLog() );
 		return setupScriptEngine.run();
+
 	}
 
 	public Object runTearDownScript( TestCaseRunContext runContext, TestCaseRunner runner ) throws Exception
 	{
 		String script = getTearDownScript();
-		return runTearDownScript( runContext, runner, script );
-	}
-
-	public Object runTearDownScript( TestCaseRunContext runContext, TestCaseRunner runner, String script )
-			throws Exception
-	{
 		if( StringUtils.isNullOrEmpty( script ) )
 			return null;
 
