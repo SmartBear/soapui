@@ -199,7 +199,7 @@ public class ProgressBarSecurityTestStepAdapter
 					// can not change to OK color if any of previous checks
 					// failed or missing assertions/parameters
 					if( !progressBar.getForeground().equals( FAILED_COLOR )
-							|| !progressBar.getForeground().equals( MISSING_ASSERTION_COLOR ) )
+							&& !progressBar.getForeground().equals( MISSING_ASSERTION_COLOR ) )
 					{
 						progressBar.setForeground( OK_COLOR );
 					}
