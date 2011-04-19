@@ -48,7 +48,6 @@ import com.eviware.soapui.impl.wsdl.panels.teststeps.support.AbstractGroovyEdito
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.PropertyHolderTable;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
-import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestStepFactory;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
@@ -64,8 +63,8 @@ import com.eviware.soapui.security.log.JFunctionalTestRunLog;
 import com.eviware.soapui.security.log.JSecurityTestRunLog;
 import com.eviware.soapui.security.result.SecurityCheckRequestResult;
 import com.eviware.soapui.security.result.SecurityCheckResult;
-import com.eviware.soapui.security.result.SecurityResult.ResultStatus;
 import com.eviware.soapui.security.result.SecurityTestStepResult;
+import com.eviware.soapui.security.result.SecurityResult.ResultStatus;
 import com.eviware.soapui.security.support.ProgressBarSecurityTestAdapter;
 import com.eviware.soapui.security.support.SecurityTestRunListenerAdapter;
 import com.eviware.soapui.settings.UISettings;
@@ -382,13 +381,8 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 		toolbar.add( setCredentialsButton );
 		toolbar.add( setEndpointButton );
 		toolbar.addSeparator();
-		// toolbar.add( createLoadTestButton );
-		// toolbar.add( createSecurityTestButton );
 		toolbar.add( optionsButton );
 
-		// toolbar.add( runWithLoadUIButton );
-		// toolbar.add( convertToLoadUIButton );
-		// toolbar.add( synchronizeWithLoadUIButton );
 	}
 
 	protected void runSecurityTest()
@@ -400,7 +394,6 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 			// make sure state is correct
 			runButton.setEnabled( true );
 			cancelButton.setEnabled( false );
-			// testStepList.setEnabled( true );
 			return;
 		}
 
@@ -410,10 +403,6 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 		properties.put( "loopButton", loopButton );
 		properties.put( TestCaseRunContext.INTERACTIVE, Boolean.TRUE );
 		lastRunner = null;
-		// SecurityTestRunnerImpl testRunner = new SecurityTestRunnerImpl(
-		// securityTest, properties );
-
-		// testRunner.run();
 
 		runner = getModelItem().run( properties, true );
 	}
@@ -482,9 +471,6 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 		}
 
 		getModelItem().removeSecurityTestRunListener( securityTestRunListener );
-		// getModelItem().removeSecurityCheckRunListener(
-		// securityCheckkRunListener );
-		// testStepList.release();
 		progressBarAdapter.release();
 		propertiesTable.release();
 		inspectorPanel.release();
@@ -520,8 +506,8 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 				public void actionPerformed( ActionEvent e )
 				{
 
-					MockSecurityTestRunner securityTestRunner = new MockSecurityTestRunner(
-							SecurityTestDesktopPanel.this.getModelItem() );
+					MockSecurityTestRunner securityTestRunner = new MockSecurityTestRunner( SecurityTestDesktopPanel.this
+							.getModelItem() );
 					try
 					{
 						SecurityTestDesktopPanel.this.getModelItem().runStartupScript(
@@ -565,8 +551,8 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 				{
 					try
 					{
-						MockSecurityTestRunner securityTestRunner = new MockSecurityTestRunner(
-								SecurityTestDesktopPanel.this.getModelItem() );
+						MockSecurityTestRunner securityTestRunner = new MockSecurityTestRunner( SecurityTestDesktopPanel.this
+								.getModelItem() );
 						SecurityTestDesktopPanel.this.getModelItem().runTearDownScript(
 								( SecurityTestRunContext )securityTestRunner.getRunContext(), securityTestRunner );
 					}
@@ -592,45 +578,6 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 		public void setScript( String text )
 		{
 			SecurityTestDesktopPanel.this.getModelItem().setTearDownScript( text );
-		}
-	}
-
-	private class AddSecurityCheckAction extends AbstractAction implements Runnable
-	{
-		private final WsdlTestStepFactory factory;
-
-		public AddSecurityCheckAction( WsdlTestStepFactory factory )
-		{
-			this.factory = factory;
-			putValue( SMALL_ICON, UISupport.createImageIcon( factory.getTestStepIconPath() ) );
-			putValue( SHORT_DESCRIPTION, "Create a new " + factory.getTestStepName() + " TestStep" );
-		}
-
-		public void actionPerformed( ActionEvent e )
-		{
-			SwingActionDelegate.invoke( this );
-		}
-
-		public void run()
-		{
-			// int ix = testStepList.getTestStepList().getSelectedIndex();
-			//
-			// String name = UISupport.prompt( "Specify name for new step", ix
-			// ==
-			// -1 ? "Add Step" : "Insert Step", factory
-			// .getTestStepName() );
-			// if( name != null )
-			// {
-			// TestStepConfig newTestStepConfig = factory.createNewTestStep(
-			// getModelItem(), name );
-			// if( newTestStepConfig != null )
-			// {
-			// WsdlTestStep testStep = getModelItem().insertTestStep(
-			// newTestStepConfig, ix );
-			// if( testStep != null )
-			// UISupport.selectAndShow( testStep );
-			// }
-			// }
 		}
 	}
 
@@ -688,26 +635,6 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 				|| modelItem == securityTest.getTestCase().getTestSuite().getProject();
 	}
 
-	// public class InternalSecurityCheckRunListener implements
-	// SecurityCheckRunListener
-	// {
-	// @Override
-	// public void afterSecurityCheck( SecurityTestRunner testRunner,
-	// SecurityTestRunContext runContext,
-	// SecurityCheckResult securityCheckResult )
-	// {
-	// securityTestLog.addSecurityCheckResult( securityCheckResult );
-	// }
-	//
-	// @Override
-	// public void beforeSecurityCheck( SecurityTestRunner testRunner,
-	// SecurityTestRunContext runContext,
-	// AbstractSecurityCheck securityCheck )
-	// {
-	// // TODO Auto-generated method stub
-	//
-	// }
-	// }
 	public class InternalSecurityTestRunListener extends SecurityTestRunListenerAdapter
 	{
 
@@ -729,7 +656,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 			// testStepList.setSelectedIndex( -1 );
 			String start = dateFormat.format( new Date() );
 			securityTestLog.addText( "SecurityTest started at " + start );
-			functionalTestLog.addText( "SecurityTest started at " + start );
+			functionalTestLog.addText( "Test started at " + start );
 
 			SecurityTestDesktopPanel.this.beforeRun();
 
@@ -750,7 +677,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 			{
 				securityTestLog.addText( "SecurityTest canceled [" + testRunner.getReason() + "], time taken = "
 						+ securityRunner.getTimeTaken() );
-				functionalTestLog.addText( "SecurityTest canceled [" + testRunner.getReason() + "], time taken = "
+				functionalTestLog.addText( "Test canceled [" + testRunner.getReason() + "], time taken = "
 						+ securityRunner.getTimeTaken() );
 			}
 			else if( testRunner.getStatus() == SecurityTestRunner.Status.FAILED )
@@ -766,15 +693,31 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 
 				securityTestLog
 						.addText( "SecurityTest failed [" + msg + "], time taken = " + securityRunner.getTimeTaken() );
-				functionalTestLog.addText( "SecurityTest failed [" + msg + "], time taken = "
-						+ securityRunner.getTimeTaken() );
+				if( functionalStatus == ResultStatus.OK )
+				{
+					functionalTestLog.addText( "FunctionalTest finished with status [" + functionalStatus
+							+ "], time taken = " + securityRunner.getTimeTaken() );
+				}
+				else if( functionalStatus == ResultStatus.FAILED )
+				{
+					functionalTestLog.addText( "FunctionalTest failed [Failing due to failed test step], time taken = "
+							+ securityRunner.getTimeTaken() );
+				}
 			}
 			else
 			{
 				securityTestLog.addText( "SecurityTest finished with status [" + testRunner.getStatus()
 						+ "], time taken = " + securityRunner.getTimeTaken() );
-				functionalTestLog.addText( "SecurityTest finished with status [" + testRunner.getStatus()
-						+ "], time taken = " + securityRunner.getTimeTaken() );
+				if( functionalStatus == ResultStatus.OK )
+				{
+					functionalTestLog.addText( "FunctionalTest finished with status [" + functionalStatus
+							+ "], time taken = " + securityRunner.getTimeTaken() );
+				}
+				else if( functionalStatus == ResultStatus.FAILED )
+				{
+					functionalTestLog.addText( "FunctionalTest failed [Failing due to failed test step], time taken = "
+							+ securityRunner.getTimeTaken() );
+				}
 			}
 
 			lastRunner = runner;

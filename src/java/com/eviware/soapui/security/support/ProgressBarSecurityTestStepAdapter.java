@@ -52,6 +52,7 @@ public class ProgressBarSecurityTestStepAdapter
 	private static final Color OK_COLOR = new Color( 0, 204, 102 );
 	private static final Color FAILED_COLOR = new Color( 255, 102, 0 );
 	private static final Color MISSING_ASSERTION_COLOR = new Color( 204, 153, 255 );
+	private static final Color UNKNOWN_COLOR = new Color( 240, 240, 240 );
 
 	private static final String STATE_RUN = "In progress";
 	private static final String STATE_DONE = "Done";
@@ -137,7 +138,7 @@ public class ProgressBarSecurityTestStepAdapter
 						STATE_MISSING_PARAMETERS ) ) )
 					progressBar.setString( STATE_DONE );
 			}
-			progressBar.setBackground( new Color( 240, 240, 240 ) );
+			progressBar.setBackground( UNKNOWN_COLOR );
 		}
 
 		@Override
@@ -182,7 +183,7 @@ public class ProgressBarSecurityTestStepAdapter
 				if( securityCheckResult.getStatus() == ResultStatus.CANCELED )
 				{
 					progressBar.setString( STATE_CANCEL );
-					progressBar.setBackground( new Color( 240, 240, 240 ) );
+					progressBar.setBackground( UNKNOWN_COLOR );
 				}
 				else
 				// progressbar can change its color only if not missing

@@ -329,4 +329,5 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 			fail( "Failing due to failed security check" );
 		}
 	}
+
 }

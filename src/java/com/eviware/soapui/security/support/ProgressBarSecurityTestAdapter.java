@@ -92,7 +92,8 @@ public class ProgressBarSecurityTestAdapter
 
 			if( securityCheck != null )
 			{
-				progressBar.setString( STATE_RUN + ":" + securityCheck.getTestStep().getName() + " - " + securityCheck.getName());
+				progressBar.setString( STATE_RUN + ":" + securityCheck.getTestStep().getName() + " - "
+						+ securityCheck.getName() );
 				progressBar.setValue( runContext.getCurrentCheckOnSecurityTestIndex() );
 			}
 		}
@@ -142,7 +143,7 @@ public class ProgressBarSecurityTestAdapter
 			if( !progressBar.getString().equals( STATE_CANCEL ) )
 				progressBar.setString( STATE_DONE );
 			progressBar.setBackground( UNKNOWN_COLOR );
-//			progressBar.setValue( progressBar.getMaximum() );
+			// progressBar.setValue( progressBar.getMaximum() );
 		}
 
 		@Override
