@@ -152,7 +152,8 @@ public class ProgressBarSecurityCheckAdapter extends SecurityTestRunListenerAdap
 				.equals( this.securityCheck.getTestStep().getId() )
 				&& this.securityCheck.getName().equals( securityCheckResult.getSecurityCheck().getName() ) )
 		{
-			if( securityCheckResult.getStatus() != ResultStatus.CANCELED )
+			if( securityCheckResult.getStatus() != ResultStatus.CANCELED_OK
+					&& securityCheckResult.getStatus() != ResultStatus.CANCELED_FAILED )
 			{
 				if( securityCheck.getAssertionsSupport().getAssertionCount() == 0 )
 				{

@@ -77,8 +77,7 @@ public class SecurityTestStepResult implements SecurityResult
 		// actionList.addActions( getOriginalTestStepResult().getActions() );
 		// addedAction = true;
 		// }
-		 actionList.setDefaultAction(
-		 getOriginalTestStepResult().getActions().getDefaultAction() );
+		actionList.setDefaultAction( getOriginalTestStepResult().getActions().getDefaultAction() );
 		// if( !getSecurityCheckResultList().isEmpty() )
 		// {
 		// for( SecurityCheckResult checkResult : getSecurityCheckResultList() )
@@ -98,15 +97,38 @@ public class SecurityTestStepResult implements SecurityResult
 
 		timeTaken += securityCheckResult.getTimeTaken();
 
-		if( !hasAddedRequests && securityCheckResult.getStatus() == ResultStatus.OK )
+		if( !hasAddedRequests )
 		{
-			status = ResultStatus.OK;
+			status = securityCheckResult.getStatus();
 		}
-		else if( securityCheckResult.getStatus() == ResultStatus.FAILED )
+		else if( (securityCheckResult.getStatus() == ResultStatus.OK
+				|| securityCheckResult.getStatus() == ResultStatus.CANCELED_OK ) && status != ResultStatus.FAILED )
 		{
-			status = ResultStatus.FAILED;
+			status = securityCheckResult.getStatus();
+		}
+		else {
+			status = securityCheckResult.getStatus();
 		}
 
+		// if( !hasAddedRequests && securityCheckResult.getStatus() ==
+		// ResultStatus.OK )
+		// {
+		// status = ResultStatus.OK;
+		// }
+		// else if( securityCheckResult.getStatus() == ResultStatus.FAILED )
+		// {
+		// status = ResultStatus.FAILED;
+		// }
+		// else if( securityCheckResult.getStatus() ==
+		// ResultStatus.CANCELED_FAILED )
+		// {
+		// status = ResultStatus.CANCELED_FAILED;
+		//
+		// }
+		// else
+		// {
+		// status = ResultStatus.CANCELED_OK;
+		// }
 		// TODO check and finish this - seems it's used for reports
 		// this.testLog.append( "SecurityCheck " ).append(
 		// securityCheckResultList.indexOf( securityCheckResult ) ).append(
@@ -186,9 +208,9 @@ public class SecurityTestStepResult implements SecurityResult
 	 */
 	public String getSecurityTestLog()
 	{
-		StringBuffer tl = new StringBuffer().append( "TestStep " ).append( " [" ).append( testStep.getName() )
-				.append( "] " ).append( getOriginalTestStepResult().getStatus().toString() ).append( ": took " )
-				.append( getOriginalTestStepResult().getTimeTaken() ).append( " ms" );
+		StringBuffer tl = new StringBuffer().append( "TestStep " ).append( " [" ).append( testStep.getName() ).append(
+				"] " ).append( getOriginalTestStepResult().getStatus().toString() ).append( ": took " ).append(
+				getOriginalTestStepResult().getTimeTaken() ).append( " ms" );
 		tl.append( testLog );
 		return tl.toString();
 	}

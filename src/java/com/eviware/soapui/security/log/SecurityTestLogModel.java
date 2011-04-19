@@ -23,6 +23,7 @@ import javax.swing.AbstractListModel;
 import org.apache.commons.collections.list.TreeList;
 
 import com.eviware.soapui.model.security.SecurityCheck;
+import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.security.check.AbstractSecurityCheckWithProperties;
 import com.eviware.soapui.security.result.SecurityCheckRequestResult;
@@ -48,6 +49,7 @@ public class SecurityTestLogModel extends AbstractListModel
 	private SimpleDateFormat dateFormat = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss.SSS" );
 	private int startCheckIndex;
 	private int startStepIndex;
+	private boolean startStepLogEntryAdded;
 
 	public synchronized Object getElementAt( int arg0 )
 	{
@@ -85,48 +87,40 @@ public class SecurityTestLogModel extends AbstractListModel
 		return result == null ? null : result.get();
 	}
 
-	public synchronized void addSecurityTestStepResult( SecurityTestStepResult result )
+	/**
+	 *called before TestStep SecurityChecks just to mark beginning of TestStep
+	 * SecurityLog part to be updated after step checks finish with proper values
+	 * 
+	 * @return true - if added, false - otherwise
+	 */
+	public synchronized boolean addSecurityTestStepResult( TestStep testStep )
 	{
 		stepCount++ ;
 		checkCount = 0;
 
 		int size = items.size();
 		startStepIndex = size;
-
-		SoftReference<SecurityResult> stepResultRef = new SoftReference<SecurityResult>( result );
-
-		items.add( "Step " + stepCount + " [" + result.getOriginalTestStepResult().getTestStep().getName() + "] "
-				+ result.getOriginalTestStepResult().getStatus() + ": took "
-				+ result.getOriginalTestStepResult().getTimeTaken() + " ms" );
-		results.add( stepResultRef );
-
-		for( String msg : result.getOriginalTestStepResult().getMessages() )
+		if( AbstractSecurityCheck.isSecurable( testStep ) )
 		{
-			items.add( " -> " + msg );
+			SecurityTestStepResult result = new SecurityTestStepResult( testStep, null );
+			SoftReference<SecurityResult> stepResultRef = new SoftReference<SecurityResult>( result );
+			items.add( "Step " + stepCount + " [" + result.getTestStep().getName() + "] " );
 			results.add( stepResultRef );
-			// checkResults.add( null );
+			fireIntervalAdded( this, size, items.size() - 1 );
+			enforceMaxSize();
+			return true;
 		}
-		// if( AbstractSecurityCheck.isSecurable(
-		// result.getOriginalTestStepResult().getTestStep() )
-		// && !result.getSecurityCheckResultList().isEmpty() )
-		// {
-		// for( int i = 0; i < result.getSecurityCheckResultList().size(); i++ )
-		// {
-		// SecurityCheckResult securityCheckResult =
-		// result.getSecurityCheckResultList().get( i );
-		// addSecurityCheckResult( securityCheckResult );
-		// }
-		// }
-
-		fireIntervalAdded( this, size, items.size() - 1 );
-		enforceMaxSize();
+		else
+			return false;
 	}
 
 	// called after whole security teststep finished to delete start line in case
 	// only errors are beeing displayed
-	public synchronized void updateSecurityTestStepResult( SecurityTestStepResult result, boolean errorsOnly )
+	public synchronized void updateSecurityTestStepResult( SecurityTestStepResult result, boolean errorsOnly,
+			boolean hasChecksToProcess, boolean startStepLogEntryAdded )
 	{
-		if( errorsOnly && result.getStatus() != ResultStatus.FAILED )
+		if( ( errorsOnly && result.getStatus() != ResultStatus.FAILED )
+				|| ( startStepLogEntryAdded && !hasChecksToProcess ) )
 		{
 			stepCount-- ;
 			int size = items.size() - 1;
@@ -137,6 +131,16 @@ public class SecurityTestLogModel extends AbstractListModel
 				size-- ;
 			}
 			fireIntervalRemoved( this, startStepIndex, size );
+		}
+		else if( startStepLogEntryAdded )
+		{
+			items.set( startStepIndex, "Step " + stepCount + " [" + result.getTestStep().getName() + "] "
+					+ result.getStatus() + ": took " + result.getTimeTaken() + " ms" );
+
+			SoftReference<SecurityResult> stepResultRef = new SoftReference<SecurityResult>( result );
+			results.set( startStepIndex, stepResultRef );
+
+			fireContentsChanged( this, startStepIndex, startStepIndex );
 		}
 	}
 
@@ -195,11 +199,13 @@ public class SecurityTestLogModel extends AbstractListModel
 
 		StringToStringMap changedParams = null;
 
-		if( securityCheckRequestResult.getMessageExchange()!=null )
+		if( securityCheckRequestResult.getMessageExchange() != null )
 		{
-			changedParams= 	StringToStringMap.fromXml( securityCheckRequestResult.getMessageExchange().getProperties().get(
-					AbstractSecurityCheckWithProperties.SECURITY_CHANGED_PARAMETERS ) );
-		}else {
+			changedParams = StringToStringMap.fromXml( securityCheckRequestResult.getMessageExchange().getProperties()
+					.get( AbstractSecurityCheckWithProperties.SECURITY_CHANGED_PARAMETERS ) );
+		}
+		else
+		{
 			changedParams = new StringToStringMap();
 		}
 		StringBuilder changedParamsInfo = new StringBuilder();

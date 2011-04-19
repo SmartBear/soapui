@@ -40,13 +40,13 @@ import org.apache.log4j.Logger;
 import com.eviware.soapui.impl.wsdl.testcase.TestCaseLogItem;
 import com.eviware.soapui.model.security.SecurityCheck;
 import com.eviware.soapui.model.settings.Settings;
-import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
+import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.result.SecurityCheckRequestResult;
 import com.eviware.soapui.security.result.SecurityCheckResult;
 import com.eviware.soapui.security.result.SecurityResult;
-import com.eviware.soapui.security.result.SecurityResult.ResultStatus;
 import com.eviware.soapui.security.result.SecurityTestStepResult;
+import com.eviware.soapui.security.result.SecurityResult.ResultStatus;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.ActionSupport;
@@ -55,8 +55,8 @@ import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.support.AForm;
+import com.eviware.x.form.support.AField.AFieldType;
 
 /**
  * Panel for displaying SecurityChecks Results
@@ -157,9 +157,9 @@ public class JSecurityTestRunLog extends JPanel
 		}
 	}
 
-	public synchronized void addSecurityTestStepResult( SecurityTestStepResult testStepResult )
+	public synchronized boolean addSecurityTestStepResult( TestStep testStep )
 	{
-		logListModel.addSecurityTestStepResult( testStepResult );
+		boolean added = logListModel.addSecurityTestStepResult( testStep );
 		if( follow )
 		{
 			try
@@ -171,11 +171,14 @@ public class JSecurityTestRunLog extends JPanel
 				log.error( e.getMessage() );
 			}
 		}
+		return added;
 	}
 
-	public synchronized void updateSecurityTestStepResult( SecurityTestStepResult testStepResult )
+	public synchronized void updateSecurityTestStepResult( SecurityTestStepResult testStepResult,
+			boolean hasChecksToProcess, boolean startStepLogEntryAdded )
 	{
-		logListModel.updateSecurityTestStepResult( testStepResult, errorsOnly );
+		logListModel
+				.updateSecurityTestStepResult( testStepResult, errorsOnly, hasChecksToProcess, startStepLogEntryAdded );
 		if( follow )
 		{
 			try
@@ -240,17 +243,6 @@ public class JSecurityTestRunLog extends JPanel
 		}
 	}
 
-//	public SecurityTestLogModel getLogListModel()
-//	{
-//		return logListModel;
-//	}
-
-//	public void setLogListModel( SecurityTestLogModel logListModel )
-//	{
-//		this.logListModel = logListModel;
-//		testLogList.setModel( logListModel );
-//	}
-
 	private class SetLogOptionsAction extends AbstractAction
 	{
 		public SetLogOptionsAction()
@@ -264,10 +256,10 @@ public class JSecurityTestRunLog extends JPanel
 			if( optionsDialog == null )
 				optionsDialog = ADialogBuilder.buildDialog( OptionsForm.class );
 
-			optionsDialog.setIntValue( OptionsForm.MAXROWS,
-					( int )settings.getLong( OptionsForm.class.getName() + "@max_rows", 1000 ) );
-			optionsDialog.setBooleanValue( OptionsForm.ERRORSONLY,
-					settings.getBoolean( OptionsForm.class.getName() + "@errors_only" ) );
+			optionsDialog.setIntValue( OptionsForm.MAXROWS, ( int )settings.getLong( OptionsForm.class.getName()
+					+ "@max_rows", 1000 ) );
+			optionsDialog.setBooleanValue( OptionsForm.ERRORSONLY, settings.getBoolean( OptionsForm.class.getName()
+					+ "@errors_only" ) );
 			optionsDialog.setBooleanValue( OptionsForm.FOLLOW, follow );
 
 			if( optionsDialog.show() )
@@ -496,18 +488,7 @@ public class JSecurityTestRunLog extends JPanel
 					// if( result.getStatus() != SecurityStatus.INITIALIZED )
 					// {
 					hyperlinkLabel.setUnderlineColor( Color.GRAY );
-					if( result.getStatus() == ResultStatus.OK )
-					{
-						hyperlinkLabel.setIcon( UISupport.createImageIcon( "/valid_assertion.gif" ) );
-					}
-					else if( result.getStatus() == ResultStatus.FAILED )
-					{
-						hyperlinkLabel.setIcon( UISupport.createImageIcon( "/failed_assertion.gif" ) );
-					}
-					else
-					{
-						hyperlinkLabel.setIcon( UISupport.createImageIcon( "/unknown_assertion.gif" ) );
-					}
+					setStatusIcon( result );
 
 					// }
 				}
@@ -524,18 +505,7 @@ public class JSecurityTestRunLog extends JPanel
 					{
 						hyperlinkLabel.setBorder( BorderFactory.createEmptyBorder( 0, 4, 3, 3 ) );
 						hyperlinkLabel.setUnderlineColor( Color.GRAY );
-						if( securitytestStepresult.getOriginalTestStepResult().getStatus() == TestStepStatus.OK )
-						{
-							hyperlinkLabel.setIcon( UISupport.createImageIcon( "/valid_assertion.gif" ) );
-						}
-						else if( securitytestStepresult.getOriginalTestStepResult().getStatus() == TestStepStatus.FAILED )
-						{
-							hyperlinkLabel.setIcon( UISupport.createImageIcon( "/failed_assertion.gif" ) );
-						}
-						else
-						{
-							hyperlinkLabel.setIcon( UISupport.createImageIcon( "/unknown_assertion.gif" ) );
-						}
+						setStatusIcon( securitytestStepresult );
 					}
 
 					else
@@ -557,6 +527,23 @@ public class JSecurityTestRunLog extends JPanel
 			}
 
 			return this;
+		}
+
+		private void setStatusIcon( SecurityResult securityrresult )
+		{
+			if( securityrresult.getStatus() == ResultStatus.OK || securityrresult.getStatus() == ResultStatus.CANCELED_OK )
+			{
+				hyperlinkLabel.setIcon( UISupport.createImageIcon( "/valid_assertion.gif" ) );
+			}
+			else if( securityrresult.getStatus() == ResultStatus.FAILED
+					|| securityrresult.getStatus() == ResultStatus.CANCELED_FAILED )
+			{
+				hyperlinkLabel.setIcon( UISupport.createImageIcon( "/failed_assertion.gif" ) );
+			}
+			else
+			{
+				hyperlinkLabel.setIcon( UISupport.createImageIcon( "/unknown_assertion.gif" ) );
+			}
 		}
 	}
 

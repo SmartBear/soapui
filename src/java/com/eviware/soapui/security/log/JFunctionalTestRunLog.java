@@ -38,20 +38,15 @@ import javax.swing.ListCellRenderer;
 import org.apache.log4j.Logger;
 
 import com.eviware.soapui.impl.wsdl.testcase.TestCaseLogItem;
-import com.eviware.soapui.model.security.SecurityCheck;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
 import com.eviware.soapui.security.SecurityTest;
-import com.eviware.soapui.security.result.SecurityCheckRequestResult;
-import com.eviware.soapui.security.result.SecurityCheckResult;
 import com.eviware.soapui.security.result.SecurityResult;
 import com.eviware.soapui.security.result.SecurityTestStepResult;
-import com.eviware.soapui.security.result.SecurityResult.ResultStatus;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.ActionSupport;
 import com.eviware.soapui.support.components.JHyperlinkLabel;
 import com.eviware.soapui.support.components.JXToolBar;
-import com.eviware.x.form.XFormDialog;
 
 /**
  * Panel for displaying Functional Results in a SecurityTest
@@ -63,31 +58,23 @@ public class JFunctionalTestRunLog extends JPanel
 {
 	private FunctionalTestLogModel logListModel;
 	private JList testLogList;
-	private boolean errorsOnly = false;
-	// private final Settings settings;
 	private Set<String> boldTexts = new HashSet<String>();
-	private boolean follow = true;
 	protected int selectedIndex;
 	private Logger log = Logger.getLogger( JSecurityTestRunLog.class );
+	// TODO see how to get this from security log options to apply here
+	private boolean follow = true;
 
 	public JFunctionalTestRunLog( SecurityTest securityTest )
 	{
 		super( new BorderLayout() );
-		// this.settings = securityTest.getSettings();
 		logListModel = securityTest.getFunctionalTestLog();
-		// errorsOnly = settings.getBoolean( OptionsForm.class.getName() +
-		// "@errors_only" );
 		buildUI();
 	}
 
 	private void buildUI()
 	{
-		// logListModel = new SecurityTestLogModel();
-		// logListModel.setMaxSize( ( int )settings.getLong(
-		// OptionsForm.class.getName() + "@max_rows", 1000 ) );
-
 		testLogList = new JList( logListModel );
-		testLogList.setCellRenderer( new SecurityTestLogCellRenderer() );
+		testLogList.setCellRenderer( new FunctionalLogCellRenderer() );
 		testLogList.addMouseListener( new LogListMouseListener() );
 
 		JScrollPane scrollPane = new JScrollPane( testLogList );
@@ -110,21 +97,9 @@ public class JFunctionalTestRunLog extends JPanel
 		return testLogList;
 	}
 
-	public boolean isErrorsOnly()
-	{
-		return errorsOnly;
-	}
-
-	public boolean isFollow()
-	{
-		return follow;
-	}
-
 	protected void addToolbarButtons( JXToolBar toolbar )
 	{
 		toolbar.addFixed( UISupport.createToolbarButton( new ClearLogAction() ) );
-		// toolbar.addFixed( UISupport.createToolbarButton( new
-		// SetLogOptionsAction() ) );
 		toolbar.addFixed( UISupport.createToolbarButton( new ExportLogAction() ) );
 	}
 
@@ -139,24 +114,9 @@ public class JFunctionalTestRunLog extends JPanel
 		boldTexts.clear();
 	}
 
-	public synchronized void locateSecurityCheck( SecurityCheck check )
+	public synchronized void addSecurityTestFunctionalStepResult( SecurityTestStepResult testStepResult )
 	{
-		try
-		{
-			int idx = logListModel.getIndexOfSecurityCheck( check );
-			if( idx != -1 )
-			{
-				testLogList.ensureIndexIsVisible( idx );
-			}
-		}
-		catch( RuntimeException e )
-		{
-		}
-	}
-
-	public synchronized void addSecurityTestStepResult( SecurityTestStepResult testStepResult )
-	{
-		logListModel.addSecurityTestStepResult( testStepResult );
+		logListModel.addSecurityTestFunctionalStepResult( testStepResult );
 		if( follow )
 		{
 			try
@@ -169,143 +129,6 @@ public class JFunctionalTestRunLog extends JPanel
 			}
 		}
 	}
-
-	// public synchronized void updateSecurityTestStepResult(
-	// SecurityTestStepResult testStepResult )
-	// {
-	// logListModel.updateSecurityTestStepResult( testStepResult, errorsOnly );
-	// if( follow )
-	// {
-	// try
-	// {
-	// testLogList.ensureIndexIsVisible( logListModel.getSize() - 1 );
-	// }
-	// catch( RuntimeException e )
-	// {
-	// log.error( e.getMessage() );
-	// }
-	// }
-	// }
-
-	// public synchronized void addSecurityCheckResult( SecurityCheck
-	// securityCheck )
-	// {
-	// logListModel.addSecurityCheckResult( securityCheck );
-	// if( follow )
-	// {
-	// try
-	// {
-	// testLogList.ensureIndexIsVisible( logListModel.getSize() - 1 );
-	// }
-	// catch( RuntimeException e )
-	// {
-	// log.error( e.getMessage() );
-	// }
-	// }
-	// }
-
-	// public synchronized void updateSecurityCheckResult( SecurityCheckResult
-	// checkResult )
-	// {
-	// logListModel.updateSecurityCheckResult( checkResult, errorsOnly );
-	// if( follow )
-	// {
-	// try
-	// {
-	// testLogList.ensureIndexIsVisible( logListModel.getSize() - 1 );
-	// }
-	// catch( RuntimeException e )
-	// {
-	// log.error( e.getMessage() );
-	// }
-	// }
-	// }
-
-	// public synchronized void addSecurityCheckRequestResult(
-	// SecurityCheckRequestResult checkRequestResult )
-	// {
-	// if( errorsOnly && checkRequestResult.getStatus() !=
-	// SecurityCheckRequestResult.SecurityStatus.FAILED )
-	// return;
-	//
-	// logListModel.addSecurityCheckRequestResult( checkRequestResult );
-	// if( follow )
-	// {
-	// try
-	// {
-	// testLogList.ensureIndexIsVisible( logListModel.getSize() - 1 );
-	// }
-	// catch( RuntimeException e )
-	// {
-	// log.error( e.getMessage() );
-	// }
-	// }
-	// }
-
-	// public SecurityTestLogModel getLogListModel()
-	// {
-	// return logListModel;
-	// }
-	//
-	// public void setLogListModel( SecurityTestLogModel logListModel )
-	// {
-	// this.logListModel = logListModel;
-	// testLogList.setModel( logListModel );
-	// }
-
-	// private class SetLogOptionsAction extends AbstractAction
-	// {
-	// public SetLogOptionsAction()
-	// {
-	// putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/options.gif" )
-	// );
-	// putValue( Action.SHORT_DESCRIPTION, "Sets TestCase Log Options" );
-	// }
-	//
-	// public void actionPerformed( ActionEvent e )
-	// {
-	// if( optionsDialog == null )
-	// optionsDialog = ADialogBuilder.buildDialog( OptionsForm.class );
-	//
-	// optionsDialog.setIntValue( OptionsForm.MAXROWS, ( int )settings.getLong(
-	// OptionsForm.class.getName()
-	// + "@max_rows", 1000 ) );
-	// optionsDialog.setBooleanValue( OptionsForm.ERRORSONLY,
-	// settings.getBoolean( OptionsForm.class.getName()
-	// + "@errors_only" ) );
-	// optionsDialog.setBooleanValue( OptionsForm.FOLLOW, follow );
-	//
-	// if( optionsDialog.show() )
-	// {
-	// int maxRows = optionsDialog.getIntValue( OptionsForm.MAXROWS, 1000 );
-	// logListModel.setMaxSize( maxRows );
-	// settings.setLong( OptionsForm.class.getName() + "@max_rows", maxRows );
-	// errorsOnly = optionsDialog.getBooleanValue( OptionsForm.ERRORSONLY );
-	// settings.setBoolean( OptionsForm.class.getName() + "@errors_only",
-	// errorsOnly );
-	//
-	// follow = optionsDialog.getBooleanValue( OptionsForm.FOLLOW );
-	// }
-	// }
-	// }
-	//
-	// @AForm( name = "Log Options", description =
-	// "Set options for the run log below" )
-	// private static interface OptionsForm
-	// {
-	// @AField( name = "Max Rows", description =
-	// "Sets the maximum number of rows to keep in the log", type =
-	// AFieldType.INT )
-	// public static final String MAXROWS = "Max Rows";
-	//
-	// @AField( name = "Errors Only", description =
-	// "Logs only TestStep errors in the log", type = AFieldType.BOOLEAN )
-	// public static final String ERRORSONLY = "Errors Only";
-	//
-	// @AField( name = "Follow", description = "Follow log content", type =
-	// AFieldType.BOOLEAN )
-	// public static final String FOLLOW = "Follow";
-	// }
 
 	private class ClearLogAction extends AbstractAction
 	{
@@ -348,15 +171,6 @@ public class JFunctionalTestRunLog extends JPanel
 			}
 		}
 	}
-
-//	public void release()
-//	{
-//		if( optionsDialog != null )
-//		{
-//			optionsDialog.release();
-//			optionsDialog = null;
-//		}
-//	}
 
 	public void printLog( PrintWriter out )
 	{
@@ -435,13 +249,13 @@ public class JFunctionalTestRunLog extends JPanel
 			testLogList.ensureIndexIsVisible( logListModel.getSize() - 1 );
 	}
 
-	private final class SecurityTestLogCellRenderer extends JLabel implements ListCellRenderer
+	private final class FunctionalLogCellRenderer extends JLabel implements ListCellRenderer
 	{
 		private Font boldFont;
 		private Font normalFont;
 		private JHyperlinkLabel hyperlinkLabel = new JHyperlinkLabel( "" );
 
-		public SecurityTestLogCellRenderer()
+		public FunctionalLogCellRenderer()
 		{
 			setOpaque( true );
 			setBorder( BorderFactory.createEmptyBorder( 3, 3, 3, 3 ) );
@@ -483,46 +297,7 @@ public class JFunctionalTestRunLog extends JPanel
 			SecurityResult result = logListModel.getTestStepResultAt( index );
 			if( result != null )
 			{
-				if( result.getResultType().equals( SecurityCheckRequestResult.TYPE ) )
-				{
-					hyperlinkLabel.setText( getText() );
-					hyperlinkLabel.setBackground( getBackground() );
-					hyperlinkLabel.setEnabled( list.isEnabled() );
-					hyperlinkLabel.setUnderlineColor( Color.WHITE );
-					hyperlinkLabel.setIcon( null );
-
-					hyperlinkLabel.setBorder( BorderFactory.createEmptyBorder( 0, 24, 3, 3 ) );
-				}
-				else if( result.getResultType().equals( SecurityCheckResult.TYPE ) )
-				{
-					hyperlinkLabel.setText( getText() );
-					hyperlinkLabel.setBackground( getBackground() );
-					hyperlinkLabel.setEnabled( list.isEnabled() );
-
-					hyperlinkLabel.setBorder( BorderFactory.createEmptyBorder( 0, 16, 3, 3 ) );
-					hyperlinkLabel.setUnderlineColor( Color.WHITE );
-					hyperlinkLabel.setIcon( null );
-					// if( getText().startsWith( "SecurityCheck" ) &&
-					// !getText().startsWith( " ->" ) )
-					// if( result.getStatus() != SecurityStatus.INITIALIZED )
-					// {
-					hyperlinkLabel.setUnderlineColor( Color.GRAY );
-					if( result.getStatus() == ResultStatus.OK )
-					{
-						hyperlinkLabel.setIcon( UISupport.createImageIcon( "/valid_assertion.gif" ) );
-					}
-					else if( result.getStatus() == ResultStatus.FAILED )
-					{
-						hyperlinkLabel.setIcon( UISupport.createImageIcon( "/failed_assertion.gif" ) );
-					}
-					else
-					{
-						hyperlinkLabel.setIcon( UISupport.createImageIcon( "/unknown_assertion.gif" ) );
-					}
-
-					// }
-				}
-				else if( result.getResultType().equals( SecurityTestStepResult.TYPE ) )
+				if( result.getResultType().equals( SecurityTestStepResult.TYPE ) )
 				{
 					SecurityTestStepResult securitytestStepresult = ( SecurityTestStepResult )result;
 					hyperlinkLabel.setText( getText() );

@@ -51,6 +51,7 @@ import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
+import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestRunner.Status;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
 import com.eviware.soapui.security.SecurityTest;
@@ -109,7 +110,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 	private JButton optionsButton;
 	private JSecurityTestRunLog securityTestLog;
 	private JFunctionalTestRunLog functionalTestLog;
-	private JToggleButton loopButton;
+	// private JToggleButton loopButton;
 	private ProgressBarSecurityTestAdapter progressBarAdapter;
 	private ComponentBag stateDependantComponents = new ComponentBag();
 	private boolean canceled;
@@ -128,6 +129,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 	private JComponentInspector<?> functionalLogInspector;
 	private ResultStatus securityStatus;
 	private ResultStatus functionalStatus;
+	private boolean startStepLogEntryAdded;
 
 	public SecurityTestDesktopPanel( SecurityTest securityTest )
 	{
@@ -203,7 +205,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 		case FAILED :
 		{
 			logInspector.setIcon( UISupport.createImageIcon( "/failed_securitytest.gif" ) );
-			inspectorPanel.activate( logInspector );
+			// inspectorPanel.activate( logInspector );
 			break;
 		}
 		case UNKNOWN :
@@ -214,7 +216,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 		case OK :
 		{
 			logInspector.setIcon( UISupport.createImageIcon( "/valid_securitytest.gif" ) );
-			inspectorPanel.deactivate();
+			// inspectorPanel.deactivate();
 			break;
 		}
 		}
@@ -350,9 +352,10 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 		optionsButton.setText( null );
 		cancelButton = UISupport.createToolbarButton( new CancelRunSecuritytestAction(), false );
 
-		loopButton = new JToggleButton( UISupport.createImageIcon( "/loop.gif" ) );
-		loopButton.setPreferredSize( UISupport.getPreferredButtonSize() );
-		loopButton.setToolTipText( "Loop TestCase continuously" );
+		// loopButton = new JToggleButton( UISupport.createImageIcon( "/loop.gif"
+		// ) );
+		// loopButton.setPreferredSize( UISupport.getPreferredButtonSize() );
+		// loopButton.setToolTipText( "Loop TestCase continuously" );
 
 		setCredentialsButton = UISupport.createToolbarButton( new SetCredentialsAction( getModelItem().getTestCase() ) );
 		setEndpointButton = UISupport.createToolbarButton( new SetEndpointAction( getModelItem().getTestCase() ) );
@@ -376,7 +379,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 	{
 		toolbar.add( runButton );
 		toolbar.add( cancelButton );
-		toolbar.add( loopButton );
+		// toolbar.add( loopButton );
 		toolbar.addSeparator();
 		toolbar.add( setCredentialsButton );
 		toolbar.add( setEndpointButton );
@@ -400,7 +403,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 		runButton.setEnabled( false );
 		cancelButton.setEnabled( true );
 		StringToObjectMap properties = new StringToObjectMap();
-		properties.put( "loopButton", loopButton );
+		// properties.put( "loopButton", loopButton );
 		properties.put( TestCaseRunContext.INTERACTIVE, Boolean.TRUE );
 		lastRunner = null;
 
@@ -728,22 +731,23 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 			lastRunner = runner;
 			runner = null;
 
-			JToggleButton loopButton = ( JToggleButton )runContext.getProperty( "loopButton" );
-			if( loopButton != null && loopButton.isSelected()
-					&& testRunner.getStatus() == SecurityTestRunner.Status.FINISHED )
-			{
-				SwingUtilities.invokeLater( new Runnable()
-				{
-					public void run()
-					{
-						runSecurityTest();
-					}
-				} );
-			}
-			else
-			{
-				SecurityTestDesktopPanel.this.afterRun();
-			}
+			// JToggleButton loopButton = ( JToggleButton )runContext.getProperty(
+			// "loopButton" );
+			// if( loopButton != null && loopButton.isSelected()
+			// && testRunner.getStatus() == SecurityTestRunner.Status.FINISHED )
+			// {
+			// SwingUtilities.invokeLater( new Runnable()
+			// {
+			// public void run()
+			// {
+			// runSecurityTest();
+			// }
+			// } );
+			// }
+			// else
+			// {
+			SecurityTestDesktopPanel.this.afterRun();
+			// }
 
 			if( testRunner.getStatus() == Status.FAILED )
 			{
@@ -771,8 +775,8 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 		{
 			securityTestLog.updateSecurityCheckResult( securityCheckResult );
 
-			if( securityCheckResult.getStatus() == ResultStatus.CANCELED
-					&& securityCheckResult.isHasRequestsWithWarnings() )
+			if( securityCheckResult.getStatus() == ResultStatus.CANCELED_FAILED )
+			// && securityCheckResult.isHasRequestsWithWarnings() )
 			{
 				securityStatus = ResultStatus.FAILED;
 			}
@@ -792,7 +796,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 		public void afterOriginalStep( TestCaseRunner testRunner, SecurityTestRunContext runContext,
 				SecurityTestStepResult result )
 		{
-			functionalTestLog.addSecurityTestStepResult( result );
+			functionalTestLog.addSecurityTestFunctionalStepResult( result );
 			if( result.getOriginalTestStepResult().getStatus() == TestStepStatus.FAILED )
 			{
 				functionalStatus = ResultStatus.FAILED;
@@ -812,9 +816,16 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 		}
 
 		@Override
+		public void beforeStep( TestCaseRunner testRunner, SecurityTestRunContext runContext, TestStep testStep )
+		{
+			startStepLogEntryAdded = securityTestLog.addSecurityTestStepResult( testStep );
+		}
+
+		@Override
 		public void afterStep( TestCaseRunner testRunner, SecurityTestRunContext runContext, SecurityTestStepResult result )
 		{
-			securityTestLog.updateSecurityTestStepResult( result );
+			boolean hasChecksToProcess = securityTest.getTestStepSecurityChecksCount( result.getTestStep().getId() ) > 0;
+			securityTestLog.updateSecurityTestStepResult( result, hasChecksToProcess, startStepLogEntryAdded );
 			if( result.getStatus() == ResultStatus.FAILED )
 			{
 				securityStatus = ResultStatus.FAILED;

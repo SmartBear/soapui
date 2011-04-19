@@ -148,7 +148,8 @@ public class ProgressBarSecurityTestStepAdapter
 			if( securityCheck.getTestStep().getId().equals( testStep.getId() ) )
 			{
 				if( securityCheck.getSecurityCheckResult() != null
-						&& securityCheck.getSecurityCheckResult().getStatus() != ResultStatus.CANCELED )
+						&& ( securityCheck.getSecurityCheckResult().getStatus() != ResultStatus.CANCELED_OK || securityCheck
+								.getSecurityCheckResult().getStatus() != ResultStatus.CANCELED_FAILED ) )
 				{
 					if( progressBar.getString().equals( "" ) )
 					{
@@ -180,7 +181,8 @@ public class ProgressBarSecurityTestStepAdapter
 			if( securityCheckResult.getSecurityCheck().getTestStep().getId().equals( testStep.getId() ) )
 			{
 
-				if( securityCheckResult.getStatus() == ResultStatus.CANCELED )
+				if( securityCheckResult.getStatus() == ResultStatus.CANCELED_OK
+						|| securityCheckResult.getStatus() == ResultStatus.CANCELED_FAILED )
 				{
 					progressBar.setString( STATE_CANCEL );
 					progressBar.setBackground( UNKNOWN_COLOR );

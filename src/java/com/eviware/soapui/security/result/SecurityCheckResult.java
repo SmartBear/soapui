@@ -142,11 +142,20 @@ public class SecurityCheckResult implements SecurityResult
 			{
 				status = ResultStatus.OK;
 			}
+			else if( secReqResult.getStatus() == ResultStatus.FAILED )
+			{
+				hasRequestsWithWarnings = true;
+				status = ResultStatus.FAILED;
+			}
 		}
 		else if( secReqResult.getStatus() == ResultStatus.FAILED )
 		{
 			hasRequestsWithWarnings = true;
 			status = ResultStatus.FAILED;
+		}
+		else if( secReqResult.getStatus() == ResultStatus.OK && status != ResultStatus.FAILED )
+		{
+			status = ResultStatus.OK;
 		}
 
 		this.testLog.append( "\nSecurityRequest " ).append( securityRequestResultList.indexOf( secReqResult ) ).append(
@@ -227,7 +236,7 @@ public class SecurityCheckResult implements SecurityResult
 
 	public boolean isCanceled()
 	{
-		return status == ResultStatus.CANCELED;
+		return status == ResultStatus.CANCELED_OK || status == ResultStatus.CANCELED_FAILED;
 	}
 
 	public boolean isHasRequestsWithWarnings()

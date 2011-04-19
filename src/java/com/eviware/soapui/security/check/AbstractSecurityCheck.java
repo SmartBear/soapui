@@ -213,7 +213,15 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		{
 			if( ( ( SecurityTestRunnerImpl )securityTestRunner ).isCanceled() )
 			{
-				securityCheckResult.setStatus( ResultStatus.CANCELED );
+				// securityCheckResult.setStatus( ResultStatus.CANCELED );
+				if( securityCheckResult.isHasRequestsWithWarnings() )
+				{
+					securityCheckResult.setStatus( ResultStatus.CANCELED_FAILED );
+				}
+				else
+				{
+					securityCheckResult.setStatus( ResultStatus.CANCELED_OK );
+				}
 				clear();
 				return securityCheckResult;
 			}

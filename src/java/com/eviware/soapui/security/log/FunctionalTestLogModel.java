@@ -36,6 +36,7 @@ import com.eviware.soapui.support.types.StringToStringMap;
  * 
  * @author soapUI team
  */
+@SuppressWarnings( "serial" )
 public class FunctionalTestLogModel extends AbstractListModel
 {
 	private List<Object> items = Collections.synchronizedList( new TreeList() );
@@ -84,7 +85,7 @@ public class FunctionalTestLogModel extends AbstractListModel
 		return result == null ? null : result.get();
 	}
 
-	public synchronized void addSecurityTestStepResult( SecurityTestStepResult result )
+	public synchronized void addSecurityTestFunctionalStepResult( SecurityTestStepResult result )
 	{
 		stepCount++ ;
 		checkCount = 0;
@@ -103,135 +104,7 @@ public class FunctionalTestLogModel extends AbstractListModel
 		{
 			items.add( " -> " + msg );
 			results.add( stepResultRef );
-			// checkResults.add( null );
 		}
-		// if( AbstractSecurityCheck.isSecurable(
-		// result.getOriginalTestStepResult().getTestStep() )
-		// && !result.getSecurityCheckResultList().isEmpty() )
-		// {
-		// for( int i = 0; i < result.getSecurityCheckResultList().size(); i++ )
-		// {
-		// SecurityCheckResult securityCheckResult =
-		// result.getSecurityCheckResultList().get( i );
-		// addSecurityCheckResult( securityCheckResult );
-		// }
-		// }
-
-		fireIntervalAdded( this, size, items.size() - 1 );
-		enforceMaxSize();
-	}
-
-	// called after whole security teststep finished to delete start line in case
-	// only errors are beeing displayed
-	public synchronized void updateSecurityTestStepResult( SecurityTestStepResult result, boolean errorsOnly )
-	{
-		if( errorsOnly && result.getStatus() != ResultStatus.FAILED )
-		{
-			stepCount-- ;
-			int size = items.size() - 1;
-			while( size >= startStepIndex )
-			{
-				items.remove( size );
-				results.remove( size );
-				size-- ;
-			}
-			fireIntervalRemoved( this, startStepIndex, size );
-		}
-	}
-
-	public synchronized void addSecurityCheckResult( SecurityCheck securityCheck )
-	{
-		int size = items.size();
-		startCheckIndex = size;
-		checkCount++ ;
-		requestCount = 0;
-
-		SecurityCheckResult securityCheckResult = securityCheck.getSecurityCheckResult();
-		SoftReference<SecurityResult> checkResultRef = new SoftReference<SecurityResult>( securityCheckResult );
-
-		items.add( "SecurityCheck " + checkCount + " [" + securityCheck.getName() + "] " );
-		results.add( checkResultRef );
-
-		fireIntervalAdded( this, size, items.size() - 1 );
-		enforceMaxSize();
-	}
-
-	// updates log entry for security check with the status, time taken, and
-	// similar info known only after finished
-	public synchronized void updateSecurityCheckResult( SecurityCheckResult securityCheckResult, boolean errorsOnly )
-	{
-		if( errorsOnly && securityCheckResult.getStatus() != ResultStatus.FAILED )
-		{
-			// remove all entries for the securityCheck that had no warnings
-			checkCount-- ;
-			int size = items.size() - 1;
-			while( size >= startCheckIndex )
-			{
-				items.remove( size );
-				results.remove( size );
-				size-- ;
-			}
-			fireIntervalRemoved( this, startCheckIndex, size );
-
-		}
-		else
-		{
-			items.set( startCheckIndex, "SecurityCheck " + checkCount + " ["
-					+ securityCheckResult.getSecurityCheck().getName() + "] " + securityCheckResult.getStatus()
-					+ ", time taken = " + securityCheckResult.getTimeTaken() );
-			SoftReference<SecurityResult> checkResultRef = new SoftReference<SecurityResult>( securityCheckResult );
-			results.set( startCheckIndex, checkResultRef );
-
-			fireContentsChanged( this, startCheckIndex, startCheckIndex );
-
-		}
-	}
-
-	public synchronized void addSecurityCheckRequestResult( SecurityCheckRequestResult securityCheckRequestResult )
-	{
-		int size = items.size();
-		requestCount++ ;
-
-		StringToStringMap changedParams = null;
-
-		if( securityCheckRequestResult.getMessageExchange() != null )
-		{
-			changedParams = StringToStringMap.fromXml( securityCheckRequestResult.getMessageExchange().getProperties()
-					.get( AbstractSecurityCheckWithProperties.SECURITY_CHANGED_PARAMETERS ) );
-		}
-		else
-		{
-			changedParams = new StringToStringMap();
-		}
-		StringBuilder changedParamsInfo = new StringBuilder();
-		changedParamsInfo.append( "[" );
-		Iterator<String> keys = changedParams.keySet().iterator();
-		while( keys.hasNext() )
-		{
-			String param = ( String )keys.next();
-			String value = changedParams.get( param );
-			changedParamsInfo.append( param + "=" + value + "," );
-		}
-		changedParamsInfo.replace( changedParamsInfo.length() - 1, changedParamsInfo.length(), "]" );
-
-		SoftReference<SecurityResult> checkReqResultRef = new SoftReference<SecurityResult>( securityCheckRequestResult );
-
-		StringBuilder checkRequestResultStr = new StringBuilder( "["
-				+ securityCheckRequestResult.getSecurityCheck().getName() + "] Request " + requestCount + " - "
-				+ securityCheckRequestResult.getStatus() );
-		if( changedParamsInfo.length() > 1 )
-		{
-			checkRequestResultStr.append( " - " + changedParamsInfo.toString() );
-		}
-		items.add( checkRequestResultStr.toString() );
-		results.add( checkReqResultRef );
-
-		for( String msg : securityCheckRequestResult.getMessages() )
-		{
-			items.add( " -> " + msg );
-			results.add( checkReqResultRef );
-		}
-
 		fireIntervalAdded( this, size, items.size() - 1 );
 		enforceMaxSize();
 	}
