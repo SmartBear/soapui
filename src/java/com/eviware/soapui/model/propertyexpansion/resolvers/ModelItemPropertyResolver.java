@@ -34,6 +34,7 @@ import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestSuite;
+import com.eviware.soapui.security.SecurityTest;
 
 public class ModelItemPropertyResolver implements PropertyResolver
 {
@@ -51,6 +52,8 @@ public class ModelItemPropertyResolver implements PropertyResolver
 				&& ( ( WsdlMockResponse )modelItem ).getMockOperation().getMockService() instanceof WsdlTestMockService )
 			modelItem = ( ( WsdlTestMockService )( ( WsdlMockResponse )modelItem ).getMockOperation().getMockService() )
 					.getMockResponseStep();
+		if( modelItem instanceof SecurityTest )
+			modelItem = ( ( SecurityTest )modelItem ).getTestCase();
 
 		if( modelItem instanceof WsdlTestStep || modelItem instanceof WsdlTestCase )
 		{
@@ -91,8 +94,8 @@ public class ModelItemPropertyResolver implements PropertyResolver
 
 				if( property != null && xpath != null )
 				{
-					property = ResolverUtils.extractXPathPropertyValue( property, PropertyExpander.expandProperties(
-							context, xpath ) );
+					property = ResolverUtils.extractXPathPropertyValue( property,
+							PropertyExpander.expandProperties( context, xpath ) );
 				}
 			}
 
@@ -113,6 +116,7 @@ public class ModelItemPropertyResolver implements PropertyResolver
 		Project project = null;
 		WsdlMockService mockService = null;
 		WsdlMockResponse mockResponse = null;
+		SecurityTest securityTest = null;
 
 		if( modelItem instanceof WsdlTestStep )
 		{
@@ -173,6 +177,13 @@ public class ModelItemPropertyResolver implements PropertyResolver
 			mockService = mockResponse.getMockOperation().getMockService();
 			project = mockService.getProject();
 		}
+		else if( modelItem instanceof SecurityTest )
+		{
+			securityTest = ( SecurityTest )modelItem;
+			testCase = ( ( SecurityTest )modelItem ).getTestCase();
+			testSuite = testCase.getTestSuite();
+			project = testSuite.getProject();
+		}
 
 		// no project -> nothing
 		if( project == null )
@@ -200,6 +211,11 @@ public class ModelItemPropertyResolver implements PropertyResolver
 			return result;
 
 		result = ResolverUtils.checkForExplicitReference( pe, PropertyExpansion.MOCKRESPONSE_REFERENCE, mockResponse,
+				context, globalOverride );
+		if( result != null )
+			return result;
+
+		result = ResolverUtils.checkForExplicitReference( pe, PropertyExpansion.SECURITYTEST_REFERENCE, securityTest,
 				context, globalOverride );
 		if( result != null )
 			return result;

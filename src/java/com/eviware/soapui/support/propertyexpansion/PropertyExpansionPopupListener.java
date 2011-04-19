@@ -175,12 +175,9 @@ public class PropertyExpansionPopupListener implements PopupMenuListener
 				targetMenu.add( createPropertyMenu( "Step " + ( c + 1 ) + ": [" + testStep.getName() + "]", testStep ) );
 			}
 		}
-
+		
 		if( securityTest != null )
-		{
 			targetMenu.add( createPropertyMenu( "SecurityTest: [" + securityTest.getName() + "]", securityTest ) );
-		}
-
 	}
 
 	private JMenu createPropertyMenu( String string, TestPropertyHolder holder )

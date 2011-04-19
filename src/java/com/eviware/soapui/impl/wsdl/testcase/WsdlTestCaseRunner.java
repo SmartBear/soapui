@@ -12,12 +12,10 @@
 
 package com.eviware.soapui.impl.wsdl.testcase;
 
-import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.support.AbstractTestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
-import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.support.types.StringToObjectMap;
 
 /**
@@ -38,7 +36,7 @@ public class WsdlTestCaseRunner extends AbstractTestCaseRunner<WsdlTestCase, Wsd
 
 	public WsdlTestRunContext createContext( StringToObjectMap properties )
 	{
-		return new WsdlTestRunContext( this, properties );
+		return new WsdlTestRunContext( this, properties, this.getTestCase() );
 	}
 
 	@Override

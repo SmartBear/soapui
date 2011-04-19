@@ -37,7 +37,7 @@ public class SecurityTestRunContext extends WsdlTestRunContext
 
 	public SecurityTestRunContext( TestCaseRunner testRunner, StringToObjectMap properties )
 	{
-		super( testRunner, properties );
+		super( testRunner, properties, ( ( SecurityTestRunnerImpl )testRunner ).getSecurityTest() );
 		if( testRunner instanceof SecurityTestRunnerImpl )
 		{
 			securityTest = ( ( SecurityTestRunnerImpl )testRunner ).getSecurityTest();

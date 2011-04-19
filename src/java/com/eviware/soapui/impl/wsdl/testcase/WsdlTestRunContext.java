@@ -35,9 +35,9 @@ public class WsdlTestRunContext extends AbstractSubmitContext<TestModelItem> imp
 	private int currentStepIndex;
 	private TestCase testCase;
 
-	public WsdlTestRunContext( TestCaseRunner testRunner, StringToObjectMap properties )
+	public WsdlTestRunContext( TestCaseRunner testRunner, StringToObjectMap properties, TestModelItem testModelItem )
 	{
-		super( testRunner.getTestCase(), properties );
+		super( testModelItem, properties );
 		this.testRunner = testRunner;
 	}
 

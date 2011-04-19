@@ -21,6 +21,7 @@ import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestSuite;
+import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.support.StringUtils;
 
 public class PropertyExpansionImpl implements PropertyExpansion
@@ -57,6 +58,8 @@ public class PropertyExpansionImpl implements PropertyExpansion
 			result.append( PropertyExpansionImpl.TESTSUITE_REFERENCE );
 		else if( modelItem instanceof TestCase )
 			result.append( PropertyExpansionImpl.TESTCASE_REFERENCE );
+		else if( modelItem instanceof SecurityTest )
+			result.append( PropertyExpansionImpl.SECURITYTEST_REFERENCE );
 		else if( modelItem instanceof MockService )
 			result.append( PropertyExpansionImpl.MOCKSERVICE_REFERENCE );
 		else if( modelItem instanceof MockResponse )

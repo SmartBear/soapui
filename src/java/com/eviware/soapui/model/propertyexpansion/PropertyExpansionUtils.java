@@ -47,6 +47,7 @@ import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestSuite;
+import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.settings.GlobalPropertySettings;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
@@ -226,6 +227,17 @@ public class PropertyExpansionUtils
 							.getMockOperation() );
 		}
 
+		if( contextModelItem instanceof SecurityTest )
+		{
+			SecurityTest securityTest = ( ( SecurityTest )contextModelItem );
+
+			return propertyModelItem == contextModelItem
+					|| ( propertyModelItem instanceof TestSuite && securityTest.getTestCase().getTestSuite() == propertyModelItem )
+					|| ( propertyModelItem instanceof TestCase && securityTest.getTestCase() == propertyModelItem )
+					|| ( propertyModelItem instanceof SecurityTest && securityTest.getTestCase() == ( ( SecurityTest )propertyModelItem )
+							.getTestCase() );
+		}
+
 		System.out
 				.println( "property " + property.getName() + " can not be transferred to " + contextModelItem.getName() );
 		return false;
@@ -388,6 +400,7 @@ public class PropertyExpansionUtils
 		WsdlMockService mockService = null;
 		WsdlMockResponse mockResponse = null;
 		TestPropertyHolder holder = null;
+		SecurityTest securityTest = null;
 
 		if( modelItem instanceof WsdlTestStep )
 		{
@@ -435,6 +448,13 @@ public class PropertyExpansionUtils
 			mockService = mockResponse.getMockOperation().getMockService();
 			project = mockService.getProject();
 		}
+		else if( modelItem instanceof SecurityTest )
+		{
+			securityTest = ( SecurityTest )modelItem;
+			testCase = securityTest.getTestCase();
+			testSuite = testCase.getTestSuite();
+			project = testSuite.getProject();
+		}
 
 		// explicit item reference?
 		if( pe.startsWith( PropertyExpansion.PROJECT_REFERENCE ) )
@@ -451,6 +471,11 @@ public class PropertyExpansionUtils
 		{
 			holder = testCase;
 			pe = pe.substring( PropertyExpansion.TESTCASE_REFERENCE.length() );
+		}
+		else if( pe.startsWith( PropertyExpansion.SECURITYTEST_REFERENCE ) )
+		{
+			holder = testCase;
+			pe = pe.substring( PropertyExpansion.SECURITYTEST_REFERENCE.length() );
 		}
 		else if( pe.startsWith( PropertyExpansion.MOCKSERVICE_REFERENCE ) )
 		{
