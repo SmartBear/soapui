@@ -47,6 +47,7 @@ public class SecurityCheckRegistry
 		addFactory( new InvalidTypesSecurityCheckFactory() );
 		addFactory( new BoundarySecurityCheckFactory() );
 		addFactory( new SQLInjectionCheckFactory() );
+		addFactory( new MalformedXmlSecurityCheckFactory() );
 	}
 
 	/**

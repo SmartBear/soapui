@@ -2077,4 +2077,29 @@
     		<xsd:element name="xpathList" type="xsd:string" minOccurs="1" maxOccurs="unbounded"></xsd:element>
     	</xsd:sequence>
     </xsd:complexType>
+
+    <xsd:complexType name="MalformedXml">
+    	<xsd:sequence>
+    		<xsd:element name="insertNewElement" type="xsd:boolean"></xsd:element>
+    		<xsd:element name="newElementValue" type="xsd:string"></xsd:element>
+    		<xsd:element name="leaveTagOpen" type="xsd:boolean"></xsd:element>
+    		<xsd:element name="changeTagName" type="xsd:boolean"></xsd:element>
+    		<xsd:element name="attributeMutation" type="tns:MalformedXmlAttribute"></xsd:element>
+    	</xsd:sequence>
+
+
+    </xsd:complexType>
+
+
+
+    <xsd:complexType name="MalformedXmlAttribute">
+    	<xsd:sequence>
+    		<xsd:element name="leaveAttributeOpen" type="xsd:boolean"></xsd:element>
+    		<xsd:element name="insertInvalidChars" type="xsd:boolean"></xsd:element>
+    		<xsd:element name="mutateAttributes" type="xsd:boolean"></xsd:element>
+    		<xsd:element name="newAttributeName" type="xsd:string"></xsd:element>
+    		<xsd:element name="newAttributeValue" type="xsd:string"></xsd:element>
+    		<xsd:element name="addNewAttribute" type="xsd:boolean"></xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
 </xsd:schema>

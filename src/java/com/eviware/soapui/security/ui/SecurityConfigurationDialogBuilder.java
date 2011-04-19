@@ -97,24 +97,28 @@ public class SecurityConfigurationDialogBuilder
 		XFormField tabs = dialog.getFormField( DefaultDialog.TABS );
 
 		JTabbedFormDialog tabDialog = ( ( JTabbedFormDialog )ADialogBuilder.buildTabbedDialog( TabsForm.class, null ) );
+		
+		tabDialog.setResizable( true );
+//		tabDialog.setSize( 420, 400 );
 
 		tabDialog.getFormField( Assertions.ASSERTIONS ).setProperty( "component",
 				new SecurityAssertionPanel( ( Assertable )securityCheck ) );
-		tabDialog.getFormField( Assertions.ASSERTIONS ).setProperty( "dimension", new Dimension( 345, 165 ) );
+		tabDialog.getFormField( Assertions.ASSERTIONS ).setProperty( "dimension", new Dimension( 345, 260 ) );
 
 		tabDialog.getFormField( SetupScript.SCRIPT ).setProperty( "component", buildSetupScriptPanel( securityCheck ) );
-		tabDialog.getFormField( SetupScript.SCRIPT ).setProperty( "dimension", new Dimension( 385, 165 ) );
+		tabDialog.getFormField( SetupScript.SCRIPT ).setProperty( "dimension", new Dimension( 385, 260 ) );
 
 		tabDialog.getFormField( TearDownScript.SCRIPT ).setProperty( "component",
 				buildTearDownScriptPanel( securityCheck ) );
-		tabDialog.getFormField( TearDownScript.SCRIPT ).setProperty( "dimension", new Dimension( 360, 165 ) );
+		tabDialog.getFormField( TearDownScript.SCRIPT ).setProperty( "dimension", new Dimension( 360, 260 ) );
 		
 		tabDialog.getFormField( AdvancedSettings.SETTINGS ).setProperty( "component",
 				securityCheck.getAdvancedSettingsPanel() );
-		tabDialog.getFormField( AdvancedSettings.SETTINGS ).setProperty( "dimension", new Dimension( 410, 165 ) );
+		tabDialog.getFormField( AdvancedSettings.SETTINGS ).setProperty( "dimension", new Dimension( 410, 260 ) );
 
 		addStrategyPanel( tabDialog, securityCheck );
 		tabs.setProperty( "component", tabDialog.getTabs() );
+		tabs.setProperty( "dimension", new Dimension( 420, 300 ) );
 
 	}
 
@@ -225,7 +229,7 @@ public class SecurityConfigurationDialogBuilder
 
 		buildBasicDialog( name, description, icon, helpUrl, securityCheck, dialog );
 
-		( ( JFormDialog )dialog ).getDialog().setResizable( false );
+//		( ( JFormDialog )dialog ).getDialog().setResizable( false );
 
 		return dialog;
 	}
