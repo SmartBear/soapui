@@ -12,7 +12,6 @@
 
 package com.eviware.soapui.security.registry;
 
-import com.eviware.soapui.config.ParameterExposureCheckConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
@@ -22,7 +21,7 @@ import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.security.check.ParameterExposureCheck;
 
 /**
- * Factory for creation GroovyScript steps
+ * Factory for creation parameter exposure check
  * 
  * @author soapUI team
  */

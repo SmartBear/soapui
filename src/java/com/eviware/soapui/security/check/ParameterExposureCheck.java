@@ -12,20 +12,24 @@
 
 package com.eviware.soapui.security.check;
 
-import javax.swing.JTextField;
+import java.util.List;
+import java.util.Stack;
 
-import com.eviware.soapui.config.ParameterExposureCheckConfig;
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.config.StrategyTypeConfig;
 import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.testsuite.TestCaseRunContext;
+import com.eviware.soapui.model.iface.MessageExchange;
+import com.eviware.soapui.model.security.SecurityCheckedParameter;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
-import com.eviware.soapui.security.check.BoundarySecurityCheck.RestrictionLabel;
-import com.eviware.soapui.security.ui.ParameterExposureCheckPanel;
 import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
+import com.eviware.soapui.support.SecurityCheckUtil;
+import com.eviware.soapui.support.types.StringToStringMap;
+import com.eviware.soapui.support.xml.XmlObjectTreeModel;
+import com.eviware.soapui.support.xml.XmlObjectTreeModel.XmlTreeNode;
 
 /**
  * This checks whether any parameters sent in the request are included in the
@@ -39,7 +43,6 @@ public class ParameterExposureCheck extends AbstractSecurityCheckWithProperties
 {
 	public static final String TYPE = "ParameterExposureCheck";
 	public static final String NAME = "Parameter Exposure";
-	private static final String REQUEST_MUTATIONS_STACK = "RequestMutationsStack";
 
 	StrategyTypeConfig.Enum strategy = StrategyTypeConfig.ONE_BY_ONE;
 
@@ -51,8 +54,33 @@ public class ParameterExposureCheck extends AbstractSecurityCheckWithProperties
 	@Override
 	protected void execute( SecurityTestRunner securityTestRunner, TestStep testStep, SecurityTestRunContext context )
 	{
-		testStep.run( ( TestCaseRunner )securityTestRunner, ( TestCaseRunContext )securityTestRunner.getRunContext() );
+		if( strategy.equals( StrategyTypeConfig.ALL_AT_ONCE ) )
+		{
+			StringToStringMap stsmap = new StringToStringMap();
+			List<PropertyMutation> mutationList =PropertyMutation.popAllMutation( context );
+			if( mutationList != null && !mutationList.isEmpty() )
+			{
+				for( PropertyMutation pm : mutationList )
+				{
+					pm.updateRequestProperty( testStep );
+					stsmap.putAll( pm.getMutatedParameters() );
+				}
+				MessageExchange message = ( MessageExchange )testStep.run( ( TestCaseRunner )securityTestRunner, context );
+				createMessageExchange( stsmap, message );
+			}
+		}
+		else
+		{
+			PropertyMutation mutation = PropertyMutation.popMutation( context );
+			if( mutation != null )
+			{
+				mutation.updateRequestProperty( testStep );
+				MessageExchange message = ( MessageExchange )testStep.run( ( TestCaseRunner )securityTestRunner, context );
+				createMessageExchange( mutation.getMutatedParameters(), message );
+			}
+		}
 	}
+
 
 
 	@Override
@@ -67,10 +95,97 @@ public class ParameterExposureCheck extends AbstractSecurityCheckWithProperties
 		return TYPE;
 	}
 
+	@SuppressWarnings( "unchecked" )
 	@Override
 	protected boolean hasNext( TestStep testStep, SecurityTestRunContext context )
 	{
-		return false;
+		if( !context.hasProperty( PropertyMutation.REQUEST_MUTATIONS_STACK ) )
+		{
+			Stack<PropertyMutation> requestMutationsList = new Stack<PropertyMutation>();
+			context.put( PropertyMutation.REQUEST_MUTATIONS_STACK, requestMutationsList );
+			try
+			{
+				extractMutations( testStep, context );
+			}
+			catch( Exception e )
+			{
+				SoapUI.logError( e );
+			}
+			return true;
+		}
+
+		Stack<PropertyMutation> stack = ( Stack<PropertyMutation> )context.get( PropertyMutation.REQUEST_MUTATIONS_STACK );
+		if( stack.empty() )
+		{
+			context.remove( PropertyMutation.REQUEST_MUTATIONS_STACK );
+			return false;
+		}
+		else
+		{
+			return true;
+		}
+	}
+
+	private void extractMutations( TestStep testStep, SecurityTestRunContext context )
+	{
+		strategy = getExecutionStrategy().getStrategy();
+
+		XmlObjectTreeModel model = null;
+		List<SecurityCheckedParameter> scpList = getParameterHolder().getParameterList();
+		StringToStringMap stsmap = new StringToStringMap();
+		for( SecurityCheckedParameter scp : scpList )
+		{
+
+			if( strategy.equals( StrategyTypeConfig.ONE_BY_ONE ) )
+			{
+				stsmap = new StringToStringMap();
+				model = SecurityCheckUtil.getXmlObjectTreeModel( testStep, scp );
+			}
+			else
+			{
+				if( model == null )
+				{
+					model = SecurityCheckUtil.getXmlObjectTreeModel( testStep, scp );
+				}
+			}
+
+			// if parameter is xml
+			if( scp.isChecked() && scp.getXpath().trim().length() > 0 )
+			{
+				XmlTreeNode[] treeNodes = null;
+
+				treeNodes = model.selectTreeNodes( context.expand( scp.getXpath() ) );
+
+				if( treeNodes.length > 0 )
+				{
+					XmlTreeNode mynode = treeNodes[0];
+
+					// work only for simple types
+					if( mynode.getSchemaType().isSimpleType() )
+					{
+						mynode.setValue( 1, "value!!!!!!!!!!!!!!!!!" );
+
+						PropertyMutation pm = new PropertyMutation();
+						pm.setPropertyName( scp.getName() );
+						pm.setPropertyValue( model.getXmlObject().toString() );
+						stsmap.put( scp.getLabel(), mynode.getNodeText() );
+						pm.setMutatedParameters( stsmap );
+						pm.addMutation( context );
+					}
+				}
+			}
+			// non xml parameter
+			else
+			{
+				PropertyMutation pm = new PropertyMutation();
+				pm.setPropertyName( scp.getName() );
+				pm.setPropertyValue( "non xml value" );
+				stsmap.put( scp.getLabel(), "non xml value" );
+				pm.setMutatedParameters( stsmap );
+				pm.addMutation( context );
+			}
+
+		}
 	}
 
 	@Override

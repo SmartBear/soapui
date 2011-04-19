@@ -12,9 +12,7 @@
 
 package com.eviware.soapui.support;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.xmlbeans.XmlException;
@@ -36,15 +34,16 @@ import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
-import com.eviware.soapui.model.security.SensitiveInformationTableModel;
+import com.eviware.soapui.model.security.SecurityCheckedParameter;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.support.ModelSupport;
-import com.eviware.soapui.security.SensitiveInformationPropertyHolder;
+import com.eviware.soapui.model.testsuite.TestProperty;
+import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.assertion.SensitiveInfoExposureAssertion;
 import com.eviware.soapui.security.panels.ProjectSensitiveInformationPanel;
 import com.eviware.soapui.settings.GlobalPropertySettings;
-import com.eviware.soapui.support.types.StringList;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
+import com.eviware.soapui.support.xml.XmlObjectTreeModel;
 import com.eviware.soapui.support.xml.XmlUtils;
 
 public class SecurityCheckUtil
@@ -157,11 +156,24 @@ public class SecurityCheckUtil
 		{
 			return new HashMap<String,String>();
 		}
-
-
 	}
 	
-	
+	public static XmlObjectTreeModel getXmlObjectTreeModel( TestStep testStep, SecurityCheckedParameter scp )
+	{
+		try
+		{
+			TestProperty tp = testStep.getProperty( scp.getName() );
+			if( tp.getSchemaType() != null && XmlUtils.seemsToBeXml( tp.getValue() ))
+			{
+				return new XmlObjectTreeModel( tp.getSchemaType().getTypeSystem(), XmlObject.Factory.parse( tp.getValue() ) );
+			}
+		}
+		catch( Exception e )
+		{
+			SoapUI.logError( e );
+		}
+		return null;
+	}
 	
 
 }

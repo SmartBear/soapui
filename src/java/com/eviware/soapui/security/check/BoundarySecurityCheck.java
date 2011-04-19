@@ -37,6 +37,7 @@ import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.security.boundary.AbstractBoundary;
 import com.eviware.soapui.security.boundary.BoundaryRestrictionUtill;
 import com.eviware.soapui.security.boundary.enumeration.EnumerationValues;
+import com.eviware.soapui.support.SecurityCheckUtil;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel;
 import com.eviware.soapui.support.xml.XmlUtils;
@@ -105,13 +106,13 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 				if( strategy.equals( StrategyTypeConfig.ONE_BY_ONE ) )
 				{
 					stsmap = new StringToStringMap();
-					model = getXmlObjectTreeModel( testStep, scp );
+					model = SecurityCheckUtil.getXmlObjectTreeModel( testStep, scp );
 				}
 				else
 				{
 					if( model == null )
 					{
-						model = getXmlObjectTreeModel( testStep, scp );
+						model = SecurityCheckUtil.getXmlObjectTreeModel( testStep, scp );
 					}
 
 				}
@@ -170,22 +171,22 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 		}
 	}
 
-	private XmlObjectTreeModel getXmlObjectTreeModel( TestStep testStep, SecurityCheckedParameter scp )
-	{
-		try
-		{
-			TestProperty tp = testStep.getProperty( scp.getName() );
-			if( tp.getSchemaType() != null )
-			{
-				return new XmlObjectTreeModel( tp.getSchemaType().getTypeSystem(), XmlObject.Factory.parse( tp.getValue() ) );
-			}
-		}
-		catch( Exception e )
-		{
-			SoapUI.logError( e );
-		}
-		return null;
-	}
+//	private XmlObjectTreeModel getXmlObjectTreeModel( TestStep testStep, SecurityCheckedParameter scp )
+//	{
+//		try
+//		{
+//			TestProperty tp = testStep.getProperty( scp.getName() );
+//			if( tp.getSchemaType() != null )
+//			{
+//				return new XmlObjectTreeModel( tp.getSchemaType().getTypeSystem(), XmlObject.Factory.parse( tp.getValue() ) );
+//			}
+//		}
+//		catch( Exception e )
+//		{
+//			SoapUI.logError( e );
+//		}
+//		return null;
+//	}
 
 	@SuppressWarnings( "unchecked" )
 	private void addMutation( SecurityTestRunContext context, PropertyMutation mutation )
@@ -336,45 +337,7 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 		return "http://www.soapui.org";
 	}
 
-	private class PropertyMutation
-	{
-
-		private String propertyName;
-		private String propertyValue;
-		private StringToStringMap mutatedParameters;
-
-		public String getPropertyName()
-		{
-			return propertyName;
-		}
-
-		public String getPropertyValue()
-		{
-			return propertyValue;
-		}
-
-		public StringToStringMap getMutatedParameters()
-		{
-			return mutatedParameters;
-		}
-
-		public void setPropertyName( String propertyName )
-		{
-			this.propertyName = propertyName;
-		}
-
-		public void setPropertyValue( String propertyValue )
-		{
-			this.propertyValue = propertyValue;
-		}
-
-		public void setMutatedParameters( StringToStringMap mutatedParameters )
-		{
-			this.mutatedParameters = mutatedParameters;
-		}
-
-	}
-
+	
 	public class RestrictionLabel
 	{
 		private String text = "<html><pre>    </pre></html>";
