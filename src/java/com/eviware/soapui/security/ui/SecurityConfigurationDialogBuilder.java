@@ -375,8 +375,7 @@ public class SecurityConfigurationDialogBuilder
 					}
 					catch( Exception e1 )
 					{
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+						UISupport.showErrorMessage( e1 );
 					}
 				}
 			};
