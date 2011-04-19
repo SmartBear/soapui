@@ -13,6 +13,7 @@
 package com.eviware.soapui.security.support;
 
 import java.awt.Color;
+import java.util.List;
 
 import javax.swing.JLabel;
 import javax.swing.JProgressBar;
@@ -72,8 +73,16 @@ public class ProgressBarSecurityTestAdapter
 		public void beforeRun( TestCaseRunner testRunner, SecurityTestRunContext runContext )
 		{
 
-			progressBar.getModel().setMaximum(
-					( ( SecurityTestRunnerImpl )testRunner ).getSecurityTest().getSecurityCheckCount() );
+			int maximum = ( ( SecurityTestRunnerImpl )testRunner ).getSecurityTest().getSecurityCheckCount();
+
+			for( String key : securityTest.getSecurityChecksMap().keySet() )
+			{
+				List<AbstractSecurityCheck> securityCheckList = securityTest.getSecurityChecksMap().get( key );
+				if( securityCheckList.size() > 0 )
+					if( securityCheckList.get( 0 ).getTestStep().isDisabled() )
+						maximum -= securityCheckList.size();
+			}
+			progressBar.getModel().setMaximum( maximum );
 			progressBar.setForeground( OK_COLOR );
 			progressBar.setBackground( Color.white );
 			progressBar.setValue( 0 );
