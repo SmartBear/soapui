@@ -39,14 +39,15 @@ import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.WsdlSubmit;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.WsdlResponse;
 import com.eviware.soapui.impl.wsdl.support.assertions.AssertedXPathsContainer;
+import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlUtils;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry.AssertableType;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.iface.Operation;
-import com.eviware.soapui.model.iface.Submit;
 import com.eviware.soapui.model.iface.Request.SubmitException;
+import com.eviware.soapui.model.iface.Submit;
 import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
@@ -144,8 +145,12 @@ public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements O
 			{
 				try
 				{
-					return getOperation().getInterface().getDefinitionContext().getSchemaTypeSystem().findElement(
-							getOperation().getRequestBodyElementQName() ).getType();
+					WsdlInterface iface = getOperation().getInterface();
+					if( WsdlUtils.isRpc( iface.getBinding() ) )
+						return WsdlUtils.generateRpcBodyType( getOperation() );
+					else
+						return iface.getDefinitionContext().getSchemaTypeSystem()
+								.findElement( getOperation().getRequestBodyElementQName() ).getType();
 				}
 				catch( Exception e )
 				{
@@ -781,9 +786,8 @@ public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements O
 			if( context.hasThisModelItem( this, "Missing SOAP Operation in Project", requestStepConfig.getInterface()
 					+ "/" + requestStepConfig.getOperation() ) )
 			{
-				PathToResolve path = context.getPath( this, "Missing SOAP Operation in Project", requestStepConfig
-						.getInterface()
-						+ "/" + requestStepConfig.getOperation() );
+				PathToResolve path = context.getPath( this, "Missing SOAP Operation in Project",
+						requestStepConfig.getInterface() + "/" + requestStepConfig.getOperation() );
 				path.setSolved( true );
 			}
 		}

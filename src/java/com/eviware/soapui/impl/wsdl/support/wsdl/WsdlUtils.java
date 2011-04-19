@@ -66,6 +66,7 @@ import org.apache.xmlbeans.SchemaGlobalElement;
 import org.apache.xmlbeans.SchemaType;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
+import org.apache.xmlbeans.XmlString;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentFragment;
 import org.w3c.dom.Element;
@@ -1084,8 +1085,8 @@ public class WsdlUtils
 	public static boolean isHeaderOutputPart( Part part, Message message, BindingOperation bindingOperation )
 	{
 		BindingOutput bindingOutput = bindingOperation.getBindingOutput();
-		List<SOAPHeader> headers = bindingOutput == null ? null : WsdlUtils.getExtensiblityElements( bindingOutput
-				.getExtensibilityElements(), SOAPHeader.class );
+		List<SOAPHeader> headers = bindingOutput == null ? null : WsdlUtils.getExtensiblityElements(
+				bindingOutput.getExtensibilityElements(), SOAPHeader.class );
 
 		if( headers == null || headers.isEmpty() )
 			return false;
@@ -1340,5 +1341,10 @@ public class WsdlUtils
 	public static String getTargetNamespace( Definition definition )
 	{
 		return definition.getTargetNamespace() == null ? XMLConstants.NULL_NS_URI : definition.getTargetNamespace();
+	}
+
+	public static SchemaType generateRpcBodyType( WsdlOperation operation )
+	{
+		return XmlString.type;
 	}
 }
