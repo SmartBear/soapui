@@ -11,6 +11,7 @@
  */
 package com.eviware.soapui.security.check;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -58,7 +59,10 @@ public class MalformedXmlSecurityCheck extends AbstractSecurityCheckWithProperti
 		if( config.getConfig() == null || !( config.getConfig() instanceof MalformedXmlConfig ) )
 			initMalformedXmlConfig();
 		else
+		{
 			malformedXmlConfig = ( ( MalformedXmlConfig )config.getConfig() );
+			malformedAttributeConfig = malformedXmlConfig.getAttributeMutation();
+		}
 	}
 
 	/**
@@ -128,7 +132,7 @@ public class MalformedXmlSecurityCheck extends AbstractSecurityCheckWithProperti
 						String value = context.expand( property.getValue() );
 						if( param.getXpath() == null || param.getXpath().trim().length() == 0 )
 						{
-							//no xpath ignore
+							// no xpath ignore
 						}
 						else
 						{
@@ -138,12 +142,41 @@ public class MalformedXmlSecurityCheck extends AbstractSecurityCheckWithProperti
 							XmlObjectTreeModel model = new XmlObjectTreeModel( property.getSchemaType().getTypeSystem(),
 									XmlObject.Factory.parse( value ) );
 							XmlTreeNode[] nodes = model.selectTreeNodes( context.expand( param.getXpath() ) );
-							for( XmlTreeNode node : nodes )
-								node.setValue( 1, parameterMutations.get( param ).get( 0 ) );
+							StringBuffer buffer = new StringBuffer( value );
+							for( int cnt = 0; cnt < nodes.length; cnt++ )
+							{
+								// find right node
+								int start = value.indexOf( "<" + nodes[cnt].getNodeName() ); // keeps
+								// node
+								// start
+								int cnt2 = 0;
+								while( cnt2 < cnt )
+								{
+									start = value.indexOf( "<" + nodes[cnt].getNodeName(), start );
+									cnt2++ ;
+								}
+								String nodeXml = getXmlForNode( nodes[cnt] );
+								int end = value.indexOf( "<" + nodes[cnt].getNodeName(), start + 1 );
+								if( end <= 0 )
+								{
+									if( nodeXml.endsWith( "</" + nodes[cnt].getDomNode().getNodeName() + ">" ) )
+									{
+										end = value.indexOf( "</" + nodes[cnt].getDomNode().getNodeName() + ">" )
+												+ ( "</" + nodes[cnt].getDomNode().getNodeName() + ">" ).length();
+									}
+									else
+									{
+										end = value.indexOf( ">", value.indexOf( "/", start ) );
+									}
+								}
+								if( end <= 0 || end <= start )
+									break;
+								buffer.replace( start, end + 1, parameterMutations.get( param ).get( 0 ) );
+							}
 							params.put( param.getLabel(), parameterMutations.get( param ).get( 0 ) );
 							parameterMutations.get( param ).remove( 0 );
 
-							testStep.getProperties().get( param.getName() ).setValue( model.getXmlObject().toString() );
+							testStep.getProperties().get( param.getName() ).setValue( buffer.toString() );
 						}
 
 						break;
@@ -158,6 +191,7 @@ public class MalformedXmlSecurityCheck extends AbstractSecurityCheckWithProperti
 				String value = context.expand( property.getValue() );
 				if( XmlUtils.seemsToBeXml( value ) )
 				{
+					StringBuffer buffer = new StringBuffer( value );
 					XmlObjectTreeModel model = null;
 					model = new XmlObjectTreeModel( property.getSchemaType().getTypeSystem(), XmlObject.Factory
 							.parse( value ) );
@@ -181,9 +215,35 @@ public class MalformedXmlSecurityCheck extends AbstractSecurityCheckWithProperti
 								if( parameterMutations.containsKey( param ) )
 									if( parameterMutations.get( param ).size() > 0 )
 									{
-										for( XmlTreeNode node : nodes )
-											node.setValue( 1, parameterMutations.get( param ).get( 0 ) );
-
+										for( int cnt = 0; cnt < nodes.length; cnt++ )
+										{
+											// find right node
+											int start = value.indexOf( "<" + nodes[cnt].getNodeName() ); // keeps
+											// node
+											// start
+											int cnt2 = 0;
+											while( cnt2 < cnt )
+											{
+												start = value.indexOf( "<" + nodes[cnt].getNodeName(), start );
+												cnt2++ ;
+											}
+											String nodeXml = getXmlForNode( nodes[cnt] );
+											int end = value.indexOf( "<" + nodes[cnt].getNodeName(), start + 1 );
+											if( end <= 0 )
+											{
+												if( nodeXml.endsWith( "</" + nodes[cnt].getDomNode().getNodeName() + ">" ) )
+												{
+													end = value.indexOf( "</" + nodes[cnt].getDomNode().getNodeName() + ">" );
+												}
+												else
+												{
+													end = value.indexOf( ">", value.indexOf( "/", start ) );
+												}
+											}
+											if( end <= 0 || end <= start )
+												break;
+											buffer.replace( start, end + 1, parameterMutations.get( param ).get( 0 ) );
+										}
 										params.put( param.getLabel(), parameterMutations.get( param ).get( 0 ) );
 										parameterMutations.get( param ).remove( 0 );
 									}
@@ -191,7 +251,7 @@ public class MalformedXmlSecurityCheck extends AbstractSecurityCheckWithProperti
 						}
 					}
 					if( model != null )
-						property.setValue( model.getXmlObject().toString() );
+						property.setValue( buffer.toString() );
 				}
 
 			}
@@ -199,7 +259,7 @@ public class MalformedXmlSecurityCheck extends AbstractSecurityCheckWithProperti
 		return params;
 	}
 
-	private void mutateParameters( TestStep testStep, SecurityTestRunContext context ) throws XmlException
+	private void mutateParameters( TestStep testStep, SecurityTestRunContext context ) throws XmlException, IOException
 	{
 		mutation = true;
 		// for each parameter
@@ -228,14 +288,13 @@ public class MalformedXmlSecurityCheck extends AbstractSecurityCheckWithProperti
 
 						XmlObjectTreeModel model = new XmlObjectTreeModel( property.getSchemaType().getTypeSystem(),
 								XmlObject.Factory.parse( value ) );
-
 						XmlTreeNode[] nodes = model.selectTreeNodes( context.expand( parameter.getXpath() ) );
 
 						if( nodes.length > 0 )
 						{
 							if( !parameterMutations.containsKey( parameter ) )
 								parameterMutations.put( parameter, new ArrayList<String>() );
-							parameterMutations.get( parameter ).addAll( mutateNode( nodes[0] ) );
+							parameterMutations.get( parameter ).addAll( mutateNode( nodes[0], value ) );
 						}
 					}
 
@@ -244,22 +303,111 @@ public class MalformedXmlSecurityCheck extends AbstractSecurityCheckWithProperti
 		}
 	}
 
-	private Collection<? extends String> mutateNode( XmlTreeNode node )
+	private Collection<? extends String> mutateNode( XmlTreeNode node, String xml ) throws IOException
 	{
 
 		ArrayList<String> result = new ArrayList<String>();
-
+		String nodeXml = getXmlForNode( node );
+		// insert new element
 		if( malformedXmlConfig.getInsertNewElement() )
 		{
-			XmlOptions options = new XmlOptions();
-			options.setSaveOuter();
-			options.setSavePrettyPrint();
-			String xml = node.getXmlObject().xmlText(options);
-			new StringBuffer(xml).insert( malformedXmlConfig.getNewElementValue().length(), malformedXmlConfig.getNewElementValue() );
-			result.add( xml );
+			StringBuffer buffer = new StringBuffer( nodeXml );
+			if( nodeXml.endsWith( "</" + node.getDomNode().getNodeName() + ">" ) )
+			{
+				buffer.insert( nodeXml.indexOf( ">" ) + 1, malformedXmlConfig.getNewElementValue() );
+			}
+			else
+			{
+				buffer.delete( nodeXml.lastIndexOf( "/" ), nodeXml.length() );
+				buffer
+						.append( ">" + malformedXmlConfig.getNewElementValue() + "</" + node.getDomNode().getNodeName() + ">" );
+			}
+			result.add( buffer.toString() );
 		}
+		// change name
+		if( malformedXmlConfig.getChangeTagName() )
+		{
+			String original = node.getNodeName();
 
+			if( original.toUpperCase().equals( original ) )
+			{
+				result.add( nodeXml.replaceAll( original, original.toLowerCase() ) );
+			}
+			else if( original.toLowerCase().equals( original ) )
+			{
+				result.add( nodeXml.replaceAll( original, original.toUpperCase() ) );
+			}
+			else
+			{
+				StringBuffer buffer = new StringBuffer();
+				// kewl
+				for( char ch : original.toCharArray() )
+				{
+					if( Character.isUpperCase( ch ) )
+						buffer.append( Character.toLowerCase( ch ) );
+					else
+						buffer.append( Character.toUpperCase( ch ) );
+				}
+				result.add( nodeXml.replaceAll( original, buffer.toString() ) );
+			}
+
+		}
+		// leave tag open
+		if( malformedXmlConfig.getLeaveTagOpen() )
+		{
+			StringBuffer buffer = new StringBuffer( nodeXml );
+			if( nodeXml.endsWith( "</" + node.getDomNode().getNodeName() + ">" ) )
+			{
+				buffer.delete( buffer.indexOf( "</" + node.getDomNode().getNodeName() + ">" ), buffer.length() );
+			}
+			else
+			{
+				buffer.delete( nodeXml.lastIndexOf( "/" ), nodeXml.length() );
+			}
+			result.add( buffer.toString() );
+		}
+		if( malformedAttributeConfig.getMutateAttributes() )
+		{
+			if( malformedAttributeConfig.getAddNewAttribute() )
+			{
+				// insert new attribute just after node tag
+				StringBuffer buffer = new StringBuffer( nodeXml );
+				buffer.insert( node.getNodeName().length() + 1, " " + malformedAttributeConfig.getNewAttributeName() + "="
+						+ "\"" + malformedAttributeConfig.getNewAttributeValue() + "\" " );
+				result.add( buffer.toString() );
+			}
+			if( malformedAttributeConfig.getInsertInvalidChars() )
+			{
+				if( node.getDomNode().hasAttributes() )
+				{
+					// add it at beggining of attribute value
+					StringBuffer buffer = new StringBuffer( nodeXml );
+					buffer.insert( buffer.indexOf( "=" ) + 3, '"' );
+					result.add( buffer.toString() );
+				}
+			}
+			if( malformedAttributeConfig.getLeaveAttributeOpen() )
+			{
+				if( node.getDomNode().hasAttributes() )
+				{
+					StringBuffer buffer = new StringBuffer( nodeXml );
+					buffer.delete( buffer.indexOf( "=" ) + 1, buffer.indexOf( "=" ) + 2 );
+					result.add( buffer.toString() );
+				}
+			}
+		}
 		return result;
+	}
+
+	private String getXmlForNode( XmlTreeNode nodes )
+	{
+		XmlOptions options = new XmlOptions();
+		options.setSaveOuter();
+		options.setSavePrettyPrint();
+
+		String xml = nodes.getXmlObject().xmlText( options );
+
+		return XmlUtils.removeUnneccessaryNamespaces( xml );
 	}
 
 	@Override
