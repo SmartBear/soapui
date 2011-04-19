@@ -57,7 +57,7 @@ public class ParameterExposureCheck extends AbstractSecurityCheckWithProperties
 		if( strategy.equals( StrategyTypeConfig.ALL_AT_ONCE ) )
 		{
 			StringToStringMap stsmap = new StringToStringMap();
-			List<PropertyMutation> mutationList =PropertyMutation.popAllMutation( context );
+			List<PropertyMutation> mutationList = PropertyMutation.popAllMutation( context );
 			if( mutationList != null && !mutationList.isEmpty() )
 			{
 				for( PropertyMutation pm : mutationList )
@@ -80,8 +80,6 @@ public class ParameterExposureCheck extends AbstractSecurityCheckWithProperties
 			}
 		}
 	}
-
-
 
 	@Override
 	public SecurityCheckConfigPanel getComponent()
