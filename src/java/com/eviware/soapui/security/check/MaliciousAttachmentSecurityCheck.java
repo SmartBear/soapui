@@ -35,11 +35,12 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 	public static final String TYPE = "MaliciousAttachmentSecurityCheck";
 	public static final String NAME = "Malicious Attachment";
 
-	// private static final int MINIMUM_STRING_DISTANCE = 50;
+	private MaliciousAttachmentSecurityCheckConfig config;
 
 	public MaliciousAttachmentSecurityCheck( SecurityCheckConfig config, ModelItem parent, String icon, TestStep testStep )
 	{
 		super( testStep, config, parent, icon );
+
 		if( config == null )
 		{
 			config = SecurityCheckConfig.Factory.newInstance();
@@ -54,10 +55,27 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 	}
 
 	@Override
+	public void updateSecurityConfig( SecurityCheckConfig config )
+	{
+		super.updateSecurityConfig( config );
+
+		if( this.config != null )
+		{
+			this.config = ( MaliciousAttachmentSecurityCheckConfig )getConfig().getConfig();
+		}
+	}
+
+	public MaliciousAttachmentSecurityCheckConfig getMaliciousAttachmentSecurityCheckConfig()
+	{
+		return config;
+	}
+
+	@Override
 	protected void execute( SecurityTestRunner securityTestRunner, TestStep testStep, SecurityTestRunContext context )
 	{
 
-		String originalResponse = getOriginalResult( ( SecurityTestRunnerImpl )securityTestRunner, testStep ).getResponse().getContentAsXml();
+		String originalResponse = getOriginalResult( ( SecurityTestRunnerImpl )securityTestRunner, testStep )
+				.getResponse().getContentAsXml();
 
 		// First, lets see what happens when we just attach a plain text file
 		File textFile;
@@ -67,14 +85,14 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 			BufferedWriter writer = new BufferedWriter( new FileWriter( textFile ) );
 			writer.write( "This is just a text file, nothing to see here, just a harmless text file" );
 			writer.flush();
-			Attachment attach = addAttachement( testStep, textFile, "text/plain" );
+			Attachment attach = addAttachment( testStep, textFile, "text/plain" );
 			// runCheck(testStep, context, securityTestLog, testCaseRunner,
 			// originalResponse,
 			// "Possible Malicious Attachment Vulnerability Detected");
 			( ( AbstractHttpRequest<?> )getRequest( testStep ) ).removeAttachment( attach );
 
 			// Try with setting the wrong content type
-			attach = addAttachement( testStep, textFile, "multipart/mixed" );
+			attach = addAttachment( testStep, textFile, "multipart/mixed" );
 			// runCheck(testStep, context, securityTestLog, testCaseRunner,
 			// originalResponse,
 			// "Possible Malicious Attachment Vulnerability Detected");
@@ -88,14 +106,13 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 
 	}
 
-
 	@Override
 	public String getType()
 	{
 		return TYPE;
 	}
 
-	private Attachment addAttachement( TestStep testStep, File file, String contentType ) throws IOException
+	private Attachment addAttachment( TestStep testStep, File file, String contentType ) throws IOException
 	{
 		AbstractHttpRequest<?> request = ( AbstractHttpRequest<?> )getRequest( testStep );
 
@@ -113,7 +130,7 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 	}
 
 	@Override
-	protected boolean hasNext(TestStep testStep,SecurityTestRunContext context)
+	protected boolean hasNext( TestStep testStep, SecurityTestRunContext context )
 	{
 		// TODO Auto-generated method stub
 		return false;
@@ -128,7 +145,7 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 	@Override
 	public String getConfigName()
 	{
-		return "Malicious Attachmnet Security Check";
+		return "Malicious Attachment Security Check";
 	}
 
 	@Override
