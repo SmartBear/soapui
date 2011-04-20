@@ -41,7 +41,6 @@ public class SecurityCheckRegistry
 		addFactory( new ParameterExposureCheckFactory() );
 		addFactory( new XmlBombSecurityCheckFactory() );
 		addFactory( new MaliciousAttachmentSecurityCheckFactory() );
-		addFactory( new LargeAttachmentSecurityCheckFactory() );
 		// this is actually working
 		addFactory( new XPathInjectionSecurityCheckFactory() );
 		addFactory( new InvalidTypesSecurityCheckFactory() );

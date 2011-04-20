@@ -2005,12 +2005,6 @@
 
 	<xsd:complexType name="MaliciousAttachmentSecurityCheck"></xsd:complexType>
 
-	<xsd:complexType name="LargeAttachmentSecurityCheck">
-		<xsd:attribute name="time" type="xsd:int"></xsd:attribute>
-		<xsd:attribute name="size" type="xsd:float"></xsd:attribute>
-	</xsd:complexType>
-
-
 	<xsd:complexType name="CheckedParameter">
 		<xsd:attribute name="parameterName" type="xsd:string"></xsd:attribute>
 		<xsd:attribute name="checked" type="xsd:boolean"></xsd:attribute>
