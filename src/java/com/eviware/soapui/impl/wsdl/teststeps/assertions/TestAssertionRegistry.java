@@ -83,6 +83,11 @@ public class TestAssertionRegistry
 		addAssertion( new JdbcTimeoutAssertion.Factory() );
 		addAssertion( new HttpDownloadAllResourcesAssertion.Factory() );
 
+		// security
+		addAssertion( new ValidHttpStatusCodesAssertion.Factory() );
+		addAssertion( new InvalidHttpStatusCodesAssertion.Factory() );
+		addAssertion( new SensitiveInfoExposureAssertion.Factory() );
+
 		for( TestAssertionFactory factory : SoapUI.getFactoryRegistry().getFactories( TestAssertionFactory.class ) )
 		{
 			addAssertion( factory );
