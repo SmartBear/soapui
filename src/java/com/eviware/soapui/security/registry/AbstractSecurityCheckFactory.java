@@ -23,7 +23,7 @@ import com.eviware.soapui.security.check.AbstractSecurityCheck;
  * @author soapui team
  */
 
-public abstract class AbstractSecurityCheckFactory
+public abstract class AbstractSecurityCheckFactory implements SecurityCheckFactory
 {
 	private final String type;
 	private final String name;

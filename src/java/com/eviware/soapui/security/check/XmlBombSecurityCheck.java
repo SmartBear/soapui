@@ -41,7 +41,7 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheckWithProperties
 {
 
 	public static final String TYPE = "XmlBombSecurityCheck";
-	public static final String NAME = "Xml Bomb";
+	public static final String NAME = "XML Bomb";
 	private static final String DEFAULT_PREFIX = "xmlbomb";
 
 	private int currentIndex = 0;

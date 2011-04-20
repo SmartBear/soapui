@@ -12,9 +12,9 @@
 
 package com.eviware.soapui.security;
 
+import com.eviware.soapui.model.security.SecurityCheck;
 import com.eviware.soapui.model.testsuite.TestRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
-import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.security.result.SecurityCheckResult;
 
 /**
@@ -27,12 +27,12 @@ public interface SecurityTestRunner extends TestRunner
 	public SecurityTest getSecurityTest();
 
 	public SecurityCheckResult runTestStepSecurityCheck( SecurityTestRunContext runContext, TestStep testStep,
-			AbstractSecurityCheck securityCheck );
+			SecurityCheck securityCheck );
 
 	// Removed the rest cause I don't think we need them, since
 	// SecurityTestRunnerImpl extends WsdlTestCaseRunner
 	/**
-	 * Returns the progress of the securitytest as a value between 0 and 1.
+	 * Returns the progress of the security test as a value between 0 and 1.
 	 * Progress is measured depending on the LoadTest limit configuration
 	 */
 

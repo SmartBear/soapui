@@ -24,11 +24,11 @@ import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.AbstractTestAssertionFactory;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.iface.SubmitContext;
+import com.eviware.soapui.model.security.SecurityCheck;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.model.testsuite.AssertionException;
 import com.eviware.soapui.model.testsuite.ResponseAssertion;
-import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationBuilder;
@@ -116,7 +116,7 @@ public class ValidHttpStatusCodesAssertion extends WsdlMessageAssertion implemen
 		public Factory()
 		{
 			super( ValidHttpStatusCodesAssertion.ID, ValidHttpStatusCodesAssertion.LABEL,
-					ValidHttpStatusCodesAssertion.class, AbstractSecurityCheck.class );
+					ValidHttpStatusCodesAssertion.class, SecurityCheck.class );
 
 			// TODO: chenge type of target class
 		}

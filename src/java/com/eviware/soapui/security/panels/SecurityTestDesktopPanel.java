@@ -47,17 +47,17 @@ import com.eviware.soapui.impl.wsdl.panels.teststeps.support.PropertyHolderTable
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.security.SecurityCheck;
 import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
-import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestRunner.Status;
+import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.security.SecurityTestRunnerImpl;
 import com.eviware.soapui.security.actions.SecurityTestOptionsAction;
-import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.security.log.JFunctionalTestRunLog;
 import com.eviware.soapui.security.log.JSecurityTestRunLog;
 import com.eviware.soapui.security.result.SecurityCheckRequestResult;
@@ -762,7 +762,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 
 		@Override
 		public void beforeSecurityCheck( TestCaseRunner testRunner, SecurityTestRunContext runContext,
-				AbstractSecurityCheck securityCheck )
+				SecurityCheck securityCheck )
 		{
 			securityTestLog.addSecurityCheckResult( securityCheck );
 		}

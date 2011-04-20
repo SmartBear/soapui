@@ -7,14 +7,13 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import com.eviware.soapui.model.security.SecurityCheck;
 import com.eviware.soapui.model.testsuite.SamplerTestStep;
 import com.eviware.soapui.model.testsuite.TestStep;
-import com.eviware.soapui.security.check.AbstractSecurityCheck;
 
 public class TestStepNode extends DefaultMutableTreeNode
 {
 
 	private TestStep testStep;
 
-	public TestStepNode( SecurityTreeRootNode securityTreeRootNode, TestStep step, List<AbstractSecurityCheck> list )
+	public TestStepNode( SecurityTreeRootNode securityTreeRootNode, TestStep step, List<SecurityCheck> list )
 	{
 		this.testStep = step;
 		if( step instanceof SamplerTestStep )

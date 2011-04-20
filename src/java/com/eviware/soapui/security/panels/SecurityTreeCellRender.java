@@ -357,7 +357,7 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 			setBorder( BorderFactory.createMatteBorder( 0, 0, 1, 0, Color.black ) );
 
 			progressBarAdapter = new ProgressBarSecurityCheckAdapter( tree, this.node, progressBar, securityCheck,
-					( SecurityTest )( ( AbstractSecurityCheck )securityCheck ).getParent(), cntLabel );
+					( SecurityTest )( ( SecurityCheck )securityCheck ).getParent(), cntLabel );
 
 		}
 

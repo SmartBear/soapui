@@ -18,12 +18,12 @@ import java.util.List;
 import javax.swing.JLabel;
 import javax.swing.JProgressBar;
 
+import com.eviware.soapui.model.security.SecurityCheck;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestRunner.Status;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunnerImpl;
-import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.security.result.SecurityCheckRequestResult;
 import com.eviware.soapui.security.result.SecurityCheckResult;
 import com.eviware.soapui.security.result.SecurityResult.ResultStatus;
@@ -77,7 +77,7 @@ public class ProgressBarSecurityTestAdapter
 
 			for( String key : securityTest.getSecurityChecksMap().keySet() )
 			{
-				List<AbstractSecurityCheck> securityCheckList = securityTest.getSecurityChecksMap().get( key );
+				List<SecurityCheck> securityCheckList = securityTest.getSecurityChecksMap().get( key );
 				if( securityCheckList.size() > 0 )
 					if( securityCheckList.get( 0 ).getTestStep().isDisabled() )
 						maximum -= securityCheckList.size();
@@ -93,7 +93,7 @@ public class ProgressBarSecurityTestAdapter
 
 		@Override
 		public void beforeSecurityCheck( TestCaseRunner testRunner, SecurityTestRunContext runContext,
-				AbstractSecurityCheck securityCheck )
+				SecurityCheck securityCheck )
 		{
 
 			if( progressBar.isIndeterminate() )

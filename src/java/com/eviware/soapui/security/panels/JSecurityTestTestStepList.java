@@ -57,7 +57,6 @@ import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestListener;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.actions.CloneParametersAction;
-import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.security.check.AbstractSecurityCheckWithProperties;
 import com.eviware.soapui.security.log.JSecurityTestRunLog;
 import com.eviware.soapui.security.support.SecurityTestRunListenerAdapter;
@@ -317,7 +316,7 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 			}
 
 			XFormDialog dialog = SoapUI.getSoapUICore().getSecurityCheckRegistry().getUIBuilder()
-					.buildSecurityCheckConfigurationDialog( ( AbstractSecurityCheck )securityCheck );
+					.buildSecurityCheckConfigurationDialog( ( SecurityCheck )securityCheck );
 
 			dialog.show();
 
@@ -325,7 +324,7 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 			{
 				SecurityCheckNode securityCheckNode = ( SecurityCheckNode )node.getLastChild();
 
-				securityTest.removeSecurityCheck( testStep, ( AbstractSecurityCheck )securityCheck );
+				securityTest.removeSecurityCheck( testStep, ( SecurityCheck )securityCheck );
 				cellRender.remove( securityCheckNode );
 			}
 		}
@@ -352,7 +351,7 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 				SecurityCheckConfig backupCheckConfig = ( SecurityCheckConfig )securityCheck.getConfig().copy();
 
 				XFormDialog dialog = SoapUI.getSoapUICore().getSecurityCheckRegistry().getUIBuilder()
-						.buildSecurityCheckConfigurationDialog( ( AbstractSecurityCheck )securityCheck );
+						.buildSecurityCheckConfigurationDialog( ( SecurityCheck )securityCheck );
 
 				dialog.show();
 
@@ -383,7 +382,7 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 			if( UISupport.confirm( "Remove security check [" + securityCheck.getName() + "]", "Remove SecurityCheck" ) )
 			{
 
-				securityTest.removeSecurityCheck( testStep, ( AbstractSecurityCheck )securityCheck );
+				securityTest.removeSecurityCheck( testStep, ( SecurityCheck )securityCheck );
 				cellRender.remove( node );
 			}
 		}
@@ -430,7 +429,7 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 
 		@Override
 		public void beforeSecurityCheck( TestCaseRunner testRunner, SecurityTestRunContext runContext,
-				AbstractSecurityCheck securityCheck )
+				SecurityCheck securityCheck )
 		{
 			securityTestTree.setSelectionRow( securityTestTree.getRowForPath( new TreePath( treeModel
 					.getSecurityCheckNode( securityCheck ).getPath() ) ) );
@@ -545,7 +544,7 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 				SecurityCheckConfig backupCheckConfig = ( SecurityCheckConfig )securityCheck.getConfig().copy();
 
 				XFormDialog dialog = SoapUI.getSoapUICore().getSecurityCheckRegistry().getUIBuilder()
-						.buildSecurityCheckConfigurationDialog( ( AbstractSecurityCheck )securityCheck );
+						.buildSecurityCheckConfigurationDialog( ( SecurityCheck )securityCheck );
 
 				dialog.show();
 

@@ -31,7 +31,7 @@ public class BoundarySecurityCheckFactory extends AbstractSecurityCheckFactory
 
 	public BoundarySecurityCheckFactory()
 	{
-		super( BoundarySecurityCheck.TYPE, BoundarySecurityCheck.NAME, "Executes the specified baoundary security check",
+		super( BoundarySecurityCheck.TYPE, BoundarySecurityCheck.NAME, "Executes the specified boundary security check",
 				"/boundary_security_check.gif" );
 	}
 

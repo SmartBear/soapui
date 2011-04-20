@@ -13,7 +13,6 @@ import com.eviware.soapui.model.security.SecurityCheck;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunContext;
-import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.security.check.AbstractSecurityCheckWithProperties;
 import com.eviware.soapui.security.panels.SecurityCheckNode;
 import com.eviware.soapui.security.result.SecurityCheckRequestResult;
@@ -184,7 +183,7 @@ public class ProgressBarSecurityCheckAdapter extends SecurityTestRunListenerAdap
 
 	@Override
 	public void beforeSecurityCheck( TestCaseRunner testRunner, SecurityTestRunContext runContext,
-			AbstractSecurityCheck securityCheck )
+			SecurityCheck securityCheck )
 	{
 		if( securityCheck.getTestStep().getId().equals( this.securityCheck.getTestStep().getId() )
 				&& this.securityCheck.getName().equals( securityCheck.getName() ) )

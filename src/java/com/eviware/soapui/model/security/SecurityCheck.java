@@ -6,13 +6,14 @@ import org.apache.xmlbeans.XmlObject;
 
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.impl.wsdl.support.assertions.AssertionsSupport;
+import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.ExecutionStrategyHolder;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.security.result.SecurityCheckResult;
 
-public interface SecurityCheck
+public interface SecurityCheck extends ModelItem
 {
 
 	public static final String SECURITY_CHECK_REQUEST_RESULT = "SecurityCheckRequestResult";
@@ -102,5 +103,7 @@ public interface SecurityCheck
 	XmlObject getConfig();
 
 	void copyConfig( SecurityCheckConfig backupCheckConfig );
+
+	int getAssertionCount();
 
 }

@@ -33,7 +33,6 @@ import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.assertion.SecurityAssertionPanel;
-import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.security.check.AbstractSecurityCheckWithProperties;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.GroovyEditorComponent;
@@ -59,7 +58,7 @@ public class SecurityConfigurationDialogBuilder
 	private GroovyEditorComponent setupGroovyEditor;
 	private GroovyEditorComponent tearDownGroovyEditor;
 
-	public XFormDialog buildSecurityCheckConfigurationDialog( AbstractSecurityCheck securityCheck )
+	public XFormDialog buildSecurityCheckConfigurationDialog( SecurityCheck securityCheck )
 	{
 
 		return buildSecurityCheckConfigurationDialog( securityCheck.getConfigName(),
@@ -207,7 +206,7 @@ public class SecurityConfigurationDialogBuilder
 	}
 
 	public XFormDialog buildSecurityCheckConfigurationDialog( String name, String description, ImageIcon icon,
-			String helpUrl, JComponent component, AbstractSecurityCheck securityCheck )
+			String helpUrl, JComponent component, SecurityCheck securityCheck )
 	{
 
 		XFormDialog dialog = null;
@@ -371,8 +370,7 @@ public class SecurityConfigurationDialogBuilder
 				{
 
 					MockSecurityTestRunner securityTestRunner = new MockSecurityTestRunner(
-							( SecurityTest )( ( AbstractSecurityCheck )SetupScriptGroovyEditorModel.this.getModelItem() )
-									.getParent() );
+							( SecurityTest )( ( SecurityCheck )SetupScriptGroovyEditorModel.this.getModelItem() ).getParent() );
 					try
 					{
 						( ( SecurityCheck )SetupScriptGroovyEditorModel.this.getModelItem() ).runSetupScript(
@@ -416,7 +414,7 @@ public class SecurityConfigurationDialogBuilder
 					try
 					{
 						MockSecurityTestRunner securityTestRunner = new MockSecurityTestRunner(
-								( SecurityTest )( ( AbstractSecurityCheck )TearDownScriptGroovyEditorModel.this.getModelItem() )
+								( SecurityTest )( ( SecurityCheck )TearDownScriptGroovyEditorModel.this.getModelItem() )
 										.getParent() );
 						( ( SecurityCheck )TearDownScriptGroovyEditorModel.this.getModelItem() ).runTearDownScript(
 								securityTestRunner, ( SecurityTestRunContext )securityTestRunner.getRunContext() );

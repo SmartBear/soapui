@@ -33,6 +33,7 @@ import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.AbstractTestAssertionFactory;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.iface.SubmitContext;
+import com.eviware.soapui.model.security.SecurityCheck;
 import com.eviware.soapui.model.security.SensitiveInformationTableModel;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.AssertionError;
@@ -40,7 +41,6 @@ import com.eviware.soapui.model.testsuite.AssertionException;
 import com.eviware.soapui.model.testsuite.ResponseAssertion;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.security.SensitiveInformationPropertyHolder;
-import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.support.SecurityCheckUtil;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
@@ -170,7 +170,7 @@ public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion impleme
 		public Factory()
 		{
 			super( SensitiveInfoExposureAssertion.ID, SensitiveInfoExposureAssertion.LABEL,
-					SensitiveInfoExposureAssertion.class, AbstractSecurityCheck.class );
+					SensitiveInfoExposureAssertion.class, SecurityCheck.class );
 
 		}
 

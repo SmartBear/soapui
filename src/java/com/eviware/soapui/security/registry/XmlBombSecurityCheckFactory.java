@@ -31,7 +31,7 @@ public class XmlBombSecurityCheckFactory extends AbstractSecurityCheckFactory
 
 	public XmlBombSecurityCheckFactory()
 	{
-		super( XmlBombSecurityCheck.TYPE, XmlBombSecurityCheck.NAME, "Preforms a check for XML Bomb Vulerabilities",
+		super( XmlBombSecurityCheck.TYPE, XmlBombSecurityCheck.NAME, "Performs a check for XML Bomb Vulnerabilities",
 				"/xml_bomb_security_check_script.gif" );
 	}
 

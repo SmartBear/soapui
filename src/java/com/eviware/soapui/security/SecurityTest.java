@@ -35,10 +35,9 @@ import com.eviware.soapui.model.security.SecurityCheck;
 import com.eviware.soapui.model.testsuite.TestRunnable;
 import com.eviware.soapui.model.testsuite.TestRunner.Status;
 import com.eviware.soapui.model.testsuite.TestStep;
-import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.security.log.FunctionalTestLogModel;
 import com.eviware.soapui.security.log.SecurityTestLogModel;
-import com.eviware.soapui.security.registry.AbstractSecurityCheckFactory;
+import com.eviware.soapui.security.registry.SecurityCheckFactory;
 import com.eviware.soapui.security.result.SecurityTestStepResult;
 import com.eviware.soapui.security.support.SecurityTestRunListener;
 import com.eviware.soapui.support.StringUtils;
@@ -65,7 +64,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 	private Map<TestStep, Set<SecurityTestRunListener>> securityTestStepRunListeners = new HashMap<TestStep, Set<SecurityTestRunListener>>();
 	private Map<TestStep, SecurityTestStepResult> securityTestStepResultMap;
 
-	private HashMap<String, List<AbstractSecurityCheck>> securityChecksMap = new HashMap<String, List<AbstractSecurityCheck>>();
+	private HashMap<String, List<SecurityCheck>> securityChecksMap = new HashMap<String, List<SecurityCheck>>();
 	private ArrayList<SecurityTestListener> securityTestListeners = new ArrayList<SecurityTestListener>();
 
 	private SecurityTestRunnerImpl runner;
@@ -130,7 +129,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 	 */
 	public SecurityCheck addNewSecurityCheck( TestStep testStep, String securityCheckType, String securityCheckName )
 	{
-		AbstractSecurityCheckFactory factory = SoapUI.getSoapUICore().getSecurityCheckRegistry()
+		SecurityCheckFactory factory = SoapUI.getSoapUICore().getSecurityCheckRegistry()
 				.getFactoryByName( securityCheckType );
 		SecurityCheckConfig newCheckConfig = factory.createNewSecurityCheck( securityCheckName );
 		return addSecurityCheck( testStep, factory, newCheckConfig );
@@ -144,10 +143,10 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 	 * @param newCheckConfig
 	 * @return
 	 */
-	public AbstractSecurityCheck addSecurityCheck( TestStep testStep, AbstractSecurityCheckFactory factory,
+	public SecurityCheck addSecurityCheck( TestStep testStep, SecurityCheckFactory factory,
 			SecurityCheckConfig newCheckConfig )
 	{
-		AbstractSecurityCheck newSecCheck = null;
+		SecurityCheck newSecCheck = null;
 
 		boolean hasChecks = false;
 		List<TestStepSecurityTestConfig> testStepSecurityTestList = getConfig().getTestStepSecurityTestList();
@@ -186,8 +185,8 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 	 * @param testStep
 	 * @return
 	 */
-	private AbstractSecurityCheck buildSecurityCheck( AbstractSecurityCheckFactory factory,
-			SecurityCheckConfig newSecCheckConfig, TestStepSecurityTestConfig testStepSecurityTestConfig, TestStep testStep )
+	private SecurityCheck buildSecurityCheck( SecurityCheckFactory factory, SecurityCheckConfig newSecCheckConfig,
+			TestStepSecurityTestConfig testStepSecurityTestConfig, TestStep testStep )
 	{
 		SecurityCheckConfig newSecurityCheck = testStepSecurityTestConfig.addNewTestStepSecurityCheck();
 		newSecurityCheck.setType( newSecCheckConfig.getType() );
@@ -203,7 +202,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 		return factory.buildSecurityCheck( testStep, newSecurityCheck, this );
 	}
 
-	private void addSecurityCheckToMapByTestStepId( String testStepId, AbstractSecurityCheck newSecCheck )
+	private void addSecurityCheckToMapByTestStepId( String testStepId, SecurityCheck newSecCheck )
 	{
 		if( securityChecksMap.containsKey( testStepId ) )
 		{
@@ -214,20 +213,20 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 		}
 		else
 		{
-			List<AbstractSecurityCheck> list = new ArrayList<AbstractSecurityCheck>();
+			List<SecurityCheck> list = new ArrayList<SecurityCheck>();
 			list.add( newSecCheck );
 			securityChecksMap.put( testStepId, list );
 		}
 		fireSecurityCheckAdded( newSecCheck );
 	}
 
-	private void fireSecurityCheckAdded( AbstractSecurityCheck newSecCheck )
+	private void fireSecurityCheckAdded( SecurityCheck newSecCheck )
 	{
 		for( SecurityTestListener listener : securityTestListeners )
 			listener.securityCheckAdded( newSecCheck );
 	}
 
-	private void fireSecurityCheckRemoved( AbstractSecurityCheck newSecCheck )
+	private void fireSecurityCheckRemoved( SecurityCheck newSecCheck )
 	{
 		for( SecurityTestListener listener : securityTestListeners )
 			listener.securityCheckRemoved( newSecCheck );
@@ -240,7 +239,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 	 * @param securityCheck
 	 * 
 	 */
-	public void removeSecurityCheck( TestStep testStep, AbstractSecurityCheck securityCheck )
+	public void removeSecurityCheck( TestStep testStep, SecurityCheck securityCheck )
 	{
 		List<TestStepSecurityTestConfig> testStepSecurityTestList = getConfig().getTestStepSecurityTestList();
 		if( !testStepSecurityTestList.isEmpty() )
@@ -272,7 +271,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 		removeSecurityCheckFromMapByTestStepId( testStep.getId(), securityCheck );
 	}
 
-	private void removeSecurityCheckFromMapByTestStepId( String testStepId, AbstractSecurityCheck securityCheck )
+	private void removeSecurityCheckFromMapByTestStepId( String testStepId, SecurityCheck securityCheck )
 	{
 		if( securityChecksMap.containsKey( testStepId ) )
 		{
@@ -289,7 +288,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 	 * 
 	 * @return A map of TestStepIds to their relevant security checks
 	 */
-	public HashMap<String, List<AbstractSecurityCheck>> getSecurityChecksMap()
+	public HashMap<String, List<SecurityCheck>> getSecurityChecksMap()
 	{
 
 		if( !securityChecksMap.isEmpty() )
@@ -302,17 +301,17 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 
 	public int getSecurityCheckCount()
 	{
-		Iterator<List<AbstractSecurityCheck>> checkedSteps = getSecurityChecksMap().values().iterator();
+		Iterator<List<SecurityCheck>> checkedSteps = getSecurityChecksMap().values().iterator();
 		int count = 0;
 		while( checkedSteps.hasNext() )
 		{
-			List<AbstractSecurityCheck> checkList = checkedSteps.next();
+			List<SecurityCheck> checkList = checkedSteps.next();
 			count += checkList.size();
 		}
 		return count;
 	}
 
-	private HashMap<String, List<AbstractSecurityCheck>> createSecurityChecksMap()
+	private HashMap<String, List<SecurityCheck>> createSecurityChecksMap()
 	{
 		if( getConfig() != null )
 		{
@@ -320,7 +319,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 			{
 				for( TestStepSecurityTestConfig testStepSecurityTestListConfig : getConfig().getTestStepSecurityTestList() )
 				{
-					List<AbstractSecurityCheck> checkList = new ArrayList<AbstractSecurityCheck>();
+					List<SecurityCheck> checkList = new ArrayList<SecurityCheck>();
 					if( testStepSecurityTestListConfig != null )
 					{
 						if( !testStepSecurityTestListConfig.getTestStepSecurityCheckList().isEmpty() )
@@ -333,7 +332,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 									if( testStepSecurityTestListConfig.getTestStepId().equals( ts.getId() ) )
 									{
 										testStep = ts;
-										AbstractSecurityCheck securityCheck = SoapUI.getSoapUICore().getSecurityCheckRegistry()
+										SecurityCheck securityCheck = SoapUI.getSoapUICore().getSecurityCheckRegistry()
 												.getFactory( secCheckConfig.getType() )
 												.buildSecurityCheck( testStep, secCheckConfig, this );
 										checkList.add( securityCheck );
@@ -495,18 +494,18 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 		return tearDownScriptEngine.run();
 	}
 
-	public List<AbstractSecurityCheck> getTestStepSecurityChecks( String testStepId )
+	public List<SecurityCheck> getTestStepSecurityChecks( String testStepId )
 	{
 		return getSecurityChecksMap().get( testStepId ) != null ? getSecurityChecksMap().get( testStepId )
-				: new ArrayList<AbstractSecurityCheck>();
+				: new ArrayList<SecurityCheck>();
 	}
 
 	public SecurityCheck getTestStepSecurityCheckByName( String testStepId, String securityCheckName )
 	{
-		List<AbstractSecurityCheck> securityChecksList = getTestStepSecurityChecks( testStepId );
+		List<SecurityCheck> securityChecksList = getTestStepSecurityChecks( testStepId );
 		for( int c = 0; c < securityChecksList.size(); c++ )
 		{
-			AbstractSecurityCheck securityCheck = getTestStepSecurityCheckAt( testStepId, c );
+			SecurityCheck securityCheck = getTestStepSecurityCheckAt( testStepId, c );
 			if( securityCheckName.equals( securityCheck.getName() ) )
 				return securityCheck;
 		}
@@ -526,9 +525,9 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 		return result;
 	}
 
-	public AbstractSecurityCheck getTestStepSecurityCheckAt( String testStepId, int index )
+	public SecurityCheck getTestStepSecurityCheckAt( String testStepId, int index )
 	{
-		List<AbstractSecurityCheck> securityChecksList = getTestStepSecurityChecks( testStepId );
+		List<SecurityCheck> securityChecksList = getTestStepSecurityChecks( testStepId );
 		return securityChecksList.get( index );
 	}
 
@@ -558,8 +557,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 	 *           while positive value means moving down
 	 * @return new AbstractSecurityCheck
 	 */
-	public AbstractSecurityCheck moveTestStepSecurityCheck( TestStep testStep, AbstractSecurityCheck securityCheck,
-			int index, int offset )
+	public SecurityCheck moveTestStepSecurityCheck( TestStep testStep, SecurityCheck securityCheck, int index, int offset )
 	{
 		List<TestStepSecurityTestConfig> testStepSecurityTestList = getConfig().getTestStepSecurityTestList();
 		if( !testStepSecurityTestList.isEmpty() )
@@ -569,10 +567,10 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 				if( testStepSecurityTest.getTestStepId().equals( testStep.getId() ) )
 				{
 					List<SecurityCheckConfig> securityCheckList = testStepSecurityTest.getTestStepSecurityCheckList();
-					AbstractSecurityCheckFactory factory = SoapUI.getSoapUICore().getSecurityCheckRegistry()
+					SecurityCheckFactory factory = SoapUI.getSoapUICore().getSecurityCheckRegistry()
 							.getFactory( securityCheck.getType() );
 					SecurityCheckConfig newSecCheckConfig = ( SecurityCheckConfig )securityCheck.getConfig().copy();
-					AbstractSecurityCheck newSecCheck = factory.buildSecurityCheck( testStep, newSecCheckConfig, this );
+					SecurityCheck newSecCheck = factory.buildSecurityCheck( testStep, newSecCheckConfig, this );
 
 					securityCheckList.remove( securityCheck.getConfig() );
 					securityCheckList.add( index + offset, newSecCheckConfig );
@@ -601,7 +599,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 	{
 		String name = type;
 		int numNames = 0;
-		List<AbstractSecurityCheck> securityChecksList = getTestStepSecurityChecks( testStepId );
+		List<SecurityCheck> securityChecksList = getTestStepSecurityChecks( testStepId );
 		if( securityChecksList != null && !securityChecksList.isEmpty() )
 		{
 			for( SecurityCheck existingCheck : securityChecksList )
@@ -707,11 +705,11 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 		Set<String> testStepIds = getSecurityChecksMap().keySet();
 		for( String testStepId : testStepIds )
 		{
-			List<AbstractSecurityCheck> t = getSecurityChecksMap().get( testStepId );
+			List<SecurityCheck> t = getSecurityChecksMap().get( testStepId );
 			for( int i = 0; i < t.size(); i++ )
 			{
-				AbstractSecurityCheck check = t.get( i );
-				result.add( check );
+				SecurityCheck check = t.get( i );
+				result.add( ( ModelItem )check );
 			}
 		}
 		return result;
@@ -728,7 +726,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 				for( TestStepSecurityTestConfig testStepSecurityTestListConfig : securityTestConfig
 						.getTestStepSecurityTestList() )
 				{
-					List<AbstractSecurityCheck> checkList = getSecurityChecksMap().get(
+					List<SecurityCheck> checkList = getSecurityChecksMap().get(
 							testStepSecurityTestListConfig.getTestStepId() );
 
 					for( int i = 0; i < checkList.size(); i++ )
@@ -767,21 +765,20 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 		return !hasChecksOfType;
 	}
 
-	public boolean importSecurityCheck( TestStep targetTestStep, AbstractSecurityCheck securityCheckToClone,
-			boolean overwrite )
+	public boolean importSecurityCheck( TestStep targetTestStep, SecurityCheck securityCheckToClone, boolean overwrite )
 	{
 		// testCase.beforeSave();
 		XmlObject newConfig = securityCheckToClone.getConfig().copy();
 
 		SecurityCheckConfig newCheckConfig = SecurityCheckConfig.Factory.newInstance();
 		newCheckConfig.set( newConfig );
-		AbstractSecurityCheckFactory factory = SoapUI.getSoapUICore().getSecurityCheckRegistry()
+		SecurityCheckFactory factory = SoapUI.getSoapUICore().getSecurityCheckRegistry()
 				.getFactory( newCheckConfig.getType() );
 		boolean targetStepHasChecks = getTestStepSecurityChecksCount( targetTestStep.getId() ) > 0;
 		if( targetStepHasChecks )
 		{
 			boolean targetHasCheckOfSameType = false;
-			for( AbstractSecurityCheck oldCheck : getTestStepSecurityChecks( targetTestStep.getId() ) )
+			for( SecurityCheck oldCheck : getTestStepSecurityChecks( targetTestStep.getId() ) )
 			{
 				if( oldCheck.getType().equals( securityCheckToClone.getType() ) )
 				{

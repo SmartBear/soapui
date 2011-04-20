@@ -22,11 +22,11 @@ import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestStepFactory;
 import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestStepRegistry;
+import com.eviware.soapui.model.security.SecurityCheck;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.TestAssertion;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
-import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.security.result.SecurityCheckResult;
 import com.eviware.soapui.security.result.SecurityTestStepResult;
 import com.eviware.soapui.security.result.SecurityResult.ResultStatus;
@@ -166,13 +166,13 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 				securityTestListeners[i].afterOriginalStep( this, getRunContext(), securityStepResult );
 			}
 
-			Map<String, List<AbstractSecurityCheck>> secCheckMap = securityTest.getSecurityChecksMap();
+			Map<String, List<SecurityCheck>> secCheckMap = securityTest.getSecurityChecksMap();
 			if( secCheckMap.containsKey( currentStep.getId() ) )
 			{
-				List<AbstractSecurityCheck> testStepChecksList = secCheckMap.get( currentStep.getId() );
+				List<SecurityCheck> testStepChecksList = secCheckMap.get( currentStep.getId() );
 				for( int i = 0; i < testStepChecksList.size(); i++ )
 				{
-					AbstractSecurityCheck securityCheck = testStepChecksList.get( i );
+					SecurityCheck securityCheck = testStepChecksList.get( i );
 					runContext.setCurrentCheckIndex( i );
 					runContext.setCurrentCheckOnSecurityTestIndex( currentCheckOnSecurityTestIndex++ );
 					SecurityCheckResult securityCheckResult = runTestStepSecurityCheck( runContext, currentStep,
@@ -224,7 +224,7 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 	}
 
 	public SecurityCheckResult runTestStepSecurityCheck( SecurityTestRunContext runContext, TestStep currentStep,
-			AbstractSecurityCheck securityCheck )
+			SecurityCheck securityCheck )
 	{
 		SecurityCheckResult result = null;
 		for( int j = 0; j < securityTestStepListeners.length; j++ )
