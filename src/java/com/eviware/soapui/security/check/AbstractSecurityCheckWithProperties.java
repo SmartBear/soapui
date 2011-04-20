@@ -90,7 +90,9 @@ public abstract class AbstractSecurityCheckWithProperties extends AbstractSecuri
 
 	public SecurityCheckedParameter getParameterAt( int i )
 	{
-		return getParameterHolder().getParameterList().get( i );
+		if( !getParameterHolder().getParameterList().isEmpty() )
+			return getParameterHolder().getParameterList().get( i );
+		else return null;
 	}
 
 	public SecurityCheckedParameter getParameterByLabel( String label )
