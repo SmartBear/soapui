@@ -80,6 +80,7 @@ public class MalformedXmlSecurityCheck extends AbstractSecurityCheckWithProperti
 		malformedXmlConfig.setNewElementValue( "<xml>xml <joke> </xml> </joke>" );
 		malformedXmlConfig.setChangeTagName( true );
 		malformedXmlConfig.setLeaveTagOpen( true );
+		malformedXmlConfig.setInsertInvalidCharacter( true );
 
 		malformedAttributeConfig = malformedXmlConfig.getAttributeMutation();
 		malformedAttributeConfig.setMutateAttributes( true );
@@ -111,7 +112,8 @@ public class MalformedXmlSecurityCheck extends AbstractSecurityCheckWithProperti
 		}
 	}
 
-	protected StringToStringMap update( TestStep testStep, SecurityTestRunContext context ) throws XmlException, Exception
+	protected StringToStringMap update( TestStep testStep, SecurityTestRunContext context ) throws XmlException,
+			Exception
 	{
 		StringToStringMap params = new StringToStringMap();
 
@@ -218,9 +220,8 @@ public class MalformedXmlSecurityCheck extends AbstractSecurityCheckWithProperti
 										for( int cnt = 0; cnt < nodes.length; cnt++ )
 										{
 											// find right node
-											int start = value.indexOf( "<" + nodes[cnt].getNodeName() ); // keeps
-											// node
-											// start
+											// keeps node start
+											int start = value.indexOf( "<" + nodes[cnt].getNodeName() );
 											int cnt2 = 0;
 											while( cnt2 < cnt )
 											{
@@ -259,7 +260,8 @@ public class MalformedXmlSecurityCheck extends AbstractSecurityCheckWithProperti
 		return params;
 	}
 
-	protected void mutateParameters( TestStep testStep, SecurityTestRunContext context ) throws XmlException, IOException
+	protected void mutateParameters( TestStep testStep, SecurityTestRunContext context ) throws XmlException,
+			IOException
 	{
 		mutation = true;
 		// for each parameter
@@ -366,6 +368,25 @@ public class MalformedXmlSecurityCheck extends AbstractSecurityCheckWithProperti
 			}
 			result.add( buffer.toString() );
 		}
+		if( malformedXmlConfig.getInsertInvalidCharacter() )
+		{
+			for( char ch : new char[] { '<', '>', '&' } )
+			{
+				StringBuffer buffer = new StringBuffer( nodeXml );
+				if( nodeXml.endsWith( "</" + node.getDomNode().getNodeName() + ">" ) )
+				{
+					buffer.insert( buffer.indexOf( "</" + node.getDomNode().getNodeName() + ">" ), ch );
+				}
+				else
+				{
+					buffer.delete( nodeXml.lastIndexOf( "/" ), nodeXml.length() );
+					buffer.append( '>' ).append( ch ).append( "</" ).append( node.getDomNode().getNodeName() ).append( ">" );
+				}
+				result.add( buffer.toString() );
+			}
+		}
+
+		// mutate attributes
 		if( malformedAttributeConfig.getMutateAttributes() )
 		{
 			if( malformedAttributeConfig.getAddNewAttribute() )
@@ -380,10 +401,13 @@ public class MalformedXmlSecurityCheck extends AbstractSecurityCheckWithProperti
 			{
 				if( node.getDomNode().hasAttributes() )
 				{
-					// add it at beggining of attribute value
-					StringBuffer buffer = new StringBuffer( nodeXml );
-					buffer.insert( buffer.indexOf( "=" ) + 3, '"' );
-					result.add( buffer.toString() );
+					for( char ch : new char[] { '"', '\'', '<', '>', '&' } )
+					{
+						// add it at beggining of attribute value
+						StringBuffer buffer = new StringBuffer( nodeXml );
+						buffer.insert( buffer.indexOf( "=" ) + 3, ch );
+						result.add( buffer.toString() );
+					}
 				}
 			}
 			if( malformedAttributeConfig.getLeaveAttributeOpen() )

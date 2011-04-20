@@ -2080,7 +2080,10 @@
 			<xsd:element name="newElementValue" type="xsd:string"></xsd:element>
 			<xsd:element name="leaveTagOpen" type="xsd:boolean"></xsd:element>
 			<xsd:element name="changeTagName" type="xsd:boolean"></xsd:element>
-			<xsd:element name="attributeMutation" type="tns:MalformedXmlAttribute"></xsd:element>
+			<xsd:element name="attributeMutation"
+				type="tns:MalformedXmlAttribute">
+			</xsd:element>
+			<xsd:element name="insertInvalidCharacter" type="xsd:boolean"></xsd:element>
 		</xsd:sequence>
 	</xsd:complexType>
 

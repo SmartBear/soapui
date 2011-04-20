@@ -20,6 +20,7 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
+import javax.swing.JScrollPane;
 
 import com.eviware.soapui.config.StrategyTypeConfig;
 import com.eviware.soapui.impl.wsdl.panels.support.MockSecurityTestRunner;
@@ -113,7 +114,7 @@ public class SecurityConfigurationDialogBuilder
 		tabDialog.getFormField( TearDownScript.SCRIPT ).setProperty( "dimension", new Dimension( 360, 260 ) );
 
 		tabDialog.getFormField( AdvancedSettings.SETTINGS ).setProperty( "component",
-				securityCheck.getAdvancedSettingsPanel() );
+				new JScrollPane( securityCheck.getAdvancedSettingsPanel() ));
 		tabDialog.getFormField( AdvancedSettings.SETTINGS ).setProperty( "dimension", new Dimension( 410, 260 ) );
 
 		addStrategyPanel( tabDialog, securityCheck );
@@ -335,8 +336,8 @@ public class SecurityConfigurationDialogBuilder
 	protected interface AdvancedSettings
 	{
 
-		@AField( description = "Settings", name = "Settings", type = AFieldType.COMPONENT )
-		public final static String SETTINGS = "Settings";
+		@AField( description = "Settings", name = "###Settings", type = AFieldType.COMPONENT )
+		public final static String SETTINGS = "###Settings";
 
 	}
 

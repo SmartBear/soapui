@@ -24,7 +24,7 @@ public class MalformedXmlSecurityCheckFactory extends AbstractSecurityCheckFacto
 	public MalformedXmlSecurityCheckFactory()
 	{
 		super( MalformedXmlSecurityCheck.TYPE, MalformedXmlSecurityCheck.NAME,
-				"Preforms a check for XPath Injection Vulerabilities", null );
+				"Preforms a check for Malformed XML Vulerabilities", null );
 	}
 
 	@Override

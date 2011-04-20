@@ -44,6 +44,7 @@ public class MalformedXmlAdvancedSettingsPanel
 		dialog.setValue( AdvancedSettings.NEW_ELEMENT_VALUE, configuration.getNewElementValue() );
 		dialog.setBooleanValue( AdvancedSettings.CHANGE_TAG_NAME, configuration.getChangeTagName() );
 		dialog.setBooleanValue( AdvancedSettings.LEAVE_TAG_OPEN, configuration.getLeaveTagOpen() );
+		dialog.setBooleanValue( AdvancedSettings.INSERT_INVALID_CHARACTER, configuration.getInsertInvalidCharacter() );
 
 		dialog.setBooleanValue( AdvancedSettings.MUTATE_ATTRIBUTES, attributeConfig.getMutateAttributes() );
 		dialog.setBooleanValue( AdvancedSettings.INSERT_INVALID_CHARS, attributeConfig.getInsertInvalidChars() );
@@ -143,6 +144,15 @@ public class MalformedXmlAdvancedSettingsPanel
 				attributeConfig.setNewAttributeValue( newValue );
 			}
 		} );
+		dialog.getFormField( AdvancedSettings.INSERT_INVALID_CHARACTER ).addFormFieldListener( new XFormFieldListener()
+		{
+
+			@Override
+			public void valueChanged( XFormField sourceField, String newValue, String oldValue )
+			{
+				configuration.setInsertInvalidCharacter( Boolean.parseBoolean( newValue ) );
+			}
+		} );
 
 	}
 
@@ -151,38 +161,41 @@ public class MalformedXmlAdvancedSettingsPanel
 		return dialog.getPanel();
 	}
 
-	@AForm( description = "Malformed Xml Configuration", name = "Malformed Xml Configuration" )
+	@AForm( description = "Malformed XML Configuration", name = "Malformed XML Configuration" )
 	protected interface AdvancedSettings
 	{
 
-		@AField( description = "Insert new element", name = "Insert new element", type = AFieldType.BOOLEAN )
+		@AField( description = "", name = "Insert new element", type = AFieldType.BOOLEAN )
 		public final static String INSERT_NEW_ELEMENT = "Insert new element";
 
-		@AField( description = "New element value", name = "New element value", type = AFieldType.STRING )
+		@AField( description = "", name = "New element value", type = AFieldType.STRING )
 		public final static String NEW_ELEMENT_VALUE = "New element value";
 
-		@AField( description = "Change Tag Name", name = "Change tag name", type = AFieldType.BOOLEAN )
+		@AField( description = "", name = "Change tag name", type = AFieldType.BOOLEAN )
 		public final static String CHANGE_TAG_NAME = "Change tag name";
 
-		@AField( description = "Leave tag open", name = "Leave tag open", type = AFieldType.BOOLEAN )
+		@AField( description = "", name = "Leave tag open", type = AFieldType.BOOLEAN )
 		public final static String LEAVE_TAG_OPEN = "Leave tag open";
 
-		@AField( description = "Mutate attributes", name = "Mutate attributes", type = AFieldType.BOOLEAN )
+		@AField( description = "", name = "Insert invalid char in xml", type = AFieldType.BOOLEAN )
+		public final static String INSERT_INVALID_CHARACTER = "Insert invalid char in xml";
+
+		@AField( description = "", name = "Mutate attributes", type = AFieldType.BOOLEAN )
 		public final static String MUTATE_ATTRIBUTES = "Mutate attributes";
 
-		@AField( description = "Insert invalid chars in xml", name = "Insert invalid chars in xml", type = AFieldType.BOOLEAN )
-		public final static String INSERT_INVALID_CHARS = "Insert invalid chars in xml";
+		@AField( description = "", name = "Insert invalid chars in attribute", type = AFieldType.BOOLEAN )
+		public final static String INSERT_INVALID_CHARS = "Insert invalid chars in attribute";
 
-		@AField( description = "Leave attribute open", name = "Leave attribute open", type = AFieldType.BOOLEAN )
+		@AField( description = "", name = "Leave attribute open", type = AFieldType.BOOLEAN )
 		public final static String LEAVE_ATTRIBUTE_OPEN = "Leave attribute open";
 
-		@AField( description = "Add new attribute", name = "Add new attribute", type = AFieldType.BOOLEAN )
+		@AField( description = "", name = "Add new attribute", type = AFieldType.BOOLEAN )
 		public final static String ADD_NEW_ATTRIBUTE = "Add new attribute";
 
-		@AField( description = "New attribute name", name = "New attribute name", type = AFieldType.STRING )
+		@AField( description = "", name = "New attribute name", type = AFieldType.STRING )
 		public final static String NEW_ATTRIBUTE_NAME = "New attribute name";
 
-		@AField( description = "New attribute value", name = "New attribute value", type = AFieldType.STRING )
+		@AField( description = "", name = "New attribute value", type = AFieldType.STRING )
 		public final static String NEW_ATTIBUTE_VALUE = "New attribute value";
 
 	}

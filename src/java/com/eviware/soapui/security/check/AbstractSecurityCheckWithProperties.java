@@ -37,7 +37,7 @@ public abstract class AbstractSecurityCheckWithProperties extends AbstractSecuri
 	{
 		super( testStep, config, parent, icon );
 
-		setParameterHolder( new SecurityCheckedParameterHolder( this, config.getCheckedPameters() ) );
+		setParameterHolder( new SecurityCheckedParameterHolder( this, getConfig().getCheckedPameters() ) );
 	}
 
 	public SecurityCheckedParameterHolder getParameterHolder()

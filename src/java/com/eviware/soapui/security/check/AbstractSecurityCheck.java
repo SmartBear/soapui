@@ -86,6 +86,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		if( config == null )
 		{
 			config = SecurityCheckConfig.Factory.newInstance();
+			setConfig( config );
 		}
 
 		this.testStep = testStep;
