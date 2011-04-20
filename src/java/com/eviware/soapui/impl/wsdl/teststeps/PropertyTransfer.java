@@ -595,7 +595,7 @@ public class PropertyTransfer implements PropertyChangeNotifier
 				if( !getSetNullOnMissingSource() && !getIgnoreEmpty() )
 					throw new Exception( "Missing match for Source XQuery [" + xquery + "]" );
 			}
-			else
+			else if( sourceCursor != null )
 			{
 				Node sourceNode = sourceCursor.getDomNode();
 				short sourceNodeType = sourceNode.getNodeType();

@@ -310,7 +310,7 @@ public class WsrmUtils
 				.changeType( WsrmConfigConfig.type ) );
 		WsrmConfig wsrmConfig = new WsrmConfig( wsrmConfigConfig, null );
 
-		if( wsrmNamespace != WSRM_NS_1_0 )
+		if( !wsrmNamespace.equals( WSRM_NS_1_0 ) )
 		{
 			WsaRequest closeSequenceRequest = new WsaRequest( httpRequestConfig, wsaConfig, wsrmConfig, false );
 			closeSequenceRequest.setOperation( operation );

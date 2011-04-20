@@ -207,11 +207,11 @@ public class CapturedExchange
 
 		String toString = "Request host: " + this.requestHost + "\n";
 		toString += "Request header : \n" + this.requestHeader + "\n";
-		toString += "Request: " + this.request + "\n";
+		toString += "Request: " + new String( this.request ) + "\n";
 		toString += "Request size: " + this.requestSize + "\n";
 		toString += "Response host:" + this.targetHost + "\n";
 		toString += "Response header: \n" + this.responseHeader + "\n";
-		toString += "Response: " + this.response + "\n";
+		toString += "Response: " + new String( this.response ) + "\n";
 		toString += "Response size:" + this.responseSize + "\n";
 		toString += "Started: " + new Date( this.operationStarted ) + "\n";
 		toString += "Time Taken: " + this.timeTaken + "ms\n";

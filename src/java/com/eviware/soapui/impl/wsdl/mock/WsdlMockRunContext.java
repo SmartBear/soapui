@@ -38,7 +38,7 @@ import com.eviware.soapui.support.types.StringToStringMap;
  * @author ole.matzura
  */
 
-public class WsdlMockRunContext implements MockRunContext, Map<String, Object>, TestCaseRunContext
+public class WsdlMockRunContext implements MockRunContext, Map<String, Object>, TestCaseRunContext, Cloneable
 {
 	private DefaultPropertyExpansionContext properties;
 	private final WsdlMockService mockService;

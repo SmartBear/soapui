@@ -146,7 +146,7 @@ public class WsdlRequestWsrmInspector extends AbstractWsrmInspector implements X
 			request.getWsrmConfig().setSequenceIdentifier( sequence.getIdentifier() );
 			request.getWsrmConfig().setUuid( sequence.getUuid() );
 
-			if( request.getWsrmConfig().getVersion() != WsrmVersionTypeConfig.X_1_0.toString() )
+			if( !request.getWsrmConfig().getVersion().equals( WsrmVersionTypeConfig.X_1_0.toString() ) )
 			{
 				WsmcInjection receiveInjection = new WsmcInjection( request.getEndpoint(), request.getOperation(),
 						iface.getSoapVersion(), request.getWsrmConfig().getUuid() );

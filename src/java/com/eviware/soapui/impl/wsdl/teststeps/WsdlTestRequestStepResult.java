@@ -360,7 +360,8 @@ public class WsdlTestRequestStepResult extends WsdlTestStepResult implements Res
 
 	public int getResponseStatusCode()
 	{
-		return getResponse() == null ? null : getResponse().getStatusCode();
+		WsdlResponse resp = getResponse();
+		return resp == null ? null : resp.getStatusCode();
 	}
 
 	public String getResponseContentType()

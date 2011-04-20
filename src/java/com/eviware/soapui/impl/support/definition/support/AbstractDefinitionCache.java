@@ -47,8 +47,8 @@ public abstract class AbstractDefinitionCache<T extends AbstractInterface<?>> im
 		this.definitionCache = definitionCache;
 		this.container = container;
 
-		if( definitionCache == null )
-			definitionCache = reinit( container );
+		if( this.definitionCache == null )
+			this.definitionCache = reinit( container );
 	}
 
 	protected abstract DefinitionCacheConfig reinit( T owner );

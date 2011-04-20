@@ -97,12 +97,14 @@ public class JEditorStatusBar extends JPanel implements CaretListener
 		{
 			if( target == null )
 				caretLabel.setText( "" );
+			else
+			{
+				int offset = target.getCaretPosition();
+				int line = target.getLineOfOffset( offset );
+				int column = offset - target.getLineStartOffset( line );
 
-			int offset = target.getCaretPosition();
-			int line = target.getLineOfOffset( offset );
-			int column = offset - target.getLineStartOffset( line );
-
-			caretLabel.setText( " " + ( line + 1 ) + " : " + ( column + 1 ) );
+				caretLabel.setText( " " + ( line + 1 ) + " : " + ( column + 1 ) );
+			}
 		}
 		catch( Exception e1 )
 		{

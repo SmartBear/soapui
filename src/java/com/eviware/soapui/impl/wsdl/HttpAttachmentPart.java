@@ -13,6 +13,7 @@
 package com.eviware.soapui.impl.wsdl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.xmlbeans.SchemaType;
@@ -85,7 +86,7 @@ public final class HttpAttachmentPart extends MessagePart.AttachmentPart
 
 	public String getDescription()
 	{
-		return name + " attachment; [" + getContentTypes() + "]";
+		return name + " attachment; [" + Arrays.toString( getContentTypes() ) + "]";
 	}
 
 	public boolean isAnonymous()

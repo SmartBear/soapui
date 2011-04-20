@@ -80,7 +80,7 @@ public class PathUtils
 	{
 		if( path != null )
 		{
-			if( path.startsWith( "\"" ) & path.endsWith( "\"" ) )
+			if( path.startsWith( "\"" ) && path.endsWith( "\"" ) )
 			{
 				path = path.substring( 1, path.length() - 1 );
 			}

@@ -44,7 +44,7 @@ public class JarPackager
 
 	public static void copyAllFromTo( File fromDir, File toDir, FileFilter filter )
 	{
-		if( fromDir.isDirectory() & toDir.isDirectory() )
+		if( fromDir.isDirectory() && toDir.isDirectory() )
 		{
 			log.info( "Coping files from " + fromDir.getAbsolutePath() + " to " + toDir.getAbsolutePath() );
 			File[] fromFiles = filter == null ? fromDir.listFiles() : fromDir.listFiles( filter );

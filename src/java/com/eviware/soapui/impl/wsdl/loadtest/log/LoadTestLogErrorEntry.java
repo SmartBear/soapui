@@ -45,7 +45,7 @@ public class LoadTestLogErrorEntry implements LoadTestLogEntry
 		this.error = error;
 		this.result = result;
 		this.threadIndex = threadIndex;
-		this.targetStepName = result.getTestStep().getName();
+		this.targetStepName = result == null ? null : result.getTestStep().getName();
 
 		timestamp = result == null ? System.currentTimeMillis() : result.getTimeStamp();
 	}

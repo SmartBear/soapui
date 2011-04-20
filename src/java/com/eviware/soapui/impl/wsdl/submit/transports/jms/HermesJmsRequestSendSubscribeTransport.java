@@ -70,8 +70,10 @@ public class HermesJmsRequestSendSubscribeTransport extends HermesJmsRequestTran
 		{
 			if( topicDurableSubsriber != null )
 				topicDurableSubsriber.close();
-			jmsConnectionHolderQueue.closeAll();
-			jmsConnectionHolderTopic.closeAll();
+			if( jmsConnectionHolderQueue != null )
+				jmsConnectionHolderQueue.closeAll();
+			if( jmsConnectionHolderTopic != null )
+				jmsConnectionHolderTopic.closeAll();
 			closeSessionAndConnection( jmsConnectionHolderQueue != null ? jmsConnectionHolderQueue.getConnection() : null,
 					queueSession );
 			closeSessionAndConnection( jmsConnectionHolderTopic != null ? jmsConnectionHolderTopic.getConnection() : null,

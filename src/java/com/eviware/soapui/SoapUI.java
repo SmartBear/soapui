@@ -121,7 +121,6 @@ import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.ActionListBuilder;
 import com.eviware.soapui.support.action.swing.ActionSupport;
 import com.eviware.soapui.support.action.swing.SwingActionDelegate;
-import com.eviware.soapui.support.components.BrowserComponent;
 import com.eviware.soapui.support.components.JComponentInspector;
 import com.eviware.soapui.support.components.JInspectorPanel;
 import com.eviware.soapui.support.components.JInspectorPanelFactory;
@@ -1060,7 +1059,7 @@ public class SoapUI
 
 	public static Logger ensureGroovyLog()
 	{
-		synchronized( checkedGroovyLogMonitor )
+		synchronized( threadPool )
 		{
 			if( !checkedGroovyLogMonitor || launchedTestRunner )
 			{

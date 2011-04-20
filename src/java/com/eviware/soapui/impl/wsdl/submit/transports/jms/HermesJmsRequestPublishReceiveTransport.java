@@ -67,7 +67,8 @@ public class HermesJmsRequestPublishReceiveTransport extends HermesJmsRequestTra
 		}
 		finally
 		{
-			jmsConnectionHolderQueue.closeAll();
+			if( jmsConnectionHolderQueue != null )
+				jmsConnectionHolderQueue.closeAll();
 			jmsConnectionHolderQueue.closeAll();
 			closeSessionAndConnection( jmsConnectionHolderQueue != null ? jmsConnectionHolderQueue.getConnection() : null,
 					queueSession );

@@ -808,8 +808,8 @@ public class XmlObjectTreeModel implements TreeTableModel
 
 		public boolean setValue( int column, Object value )
 		{
-			if( column == 1 )
-				node.setNodeValue( node == null ? null : value.toString() );
+			if( column == 1 && node != null )
+				node.setNodeValue( value.toString() );
 
 			return column == 1;
 		}

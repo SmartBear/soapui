@@ -114,7 +114,7 @@ public class WsrmTestRunListener implements TestRunListener
 			wsdlRequest.getWsrmConfig().setUuid( sequence.getUuid() );
 			wsdlRequest.getWsrmConfig().setWsrmEnabled( true );
 
-			if( testCase.getWsrmVersion() != WsrmVersionTypeConfig.X_1_0.toString() )
+			if( !testCase.getWsrmVersion().equals( WsrmVersionTypeConfig.X_1_0.toString() ) )
 			{
 				WsmcInjection injection = new WsmcInjection( wsdlRequest.getEndpoint(), wsdlRequest.getOperation(),
 						soapVersion, wsdlRequest.getWsrmConfig().getUuid() );

@@ -266,7 +266,8 @@ public abstract class AbstractDefinitionContext<T extends AbstractInterface<?>, 
 		currentLoader = createDefinitionLoader( cache );
 		currentLoader.setProgressInfo( "Loading Definition" );
 		definition = loadDefinition( currentLoader );
-		definition.setDefinitionCache( cache );
+		if( definition != null )
+			definition.setDefinitionCache( cache );
 
 		log.debug( "Loaded Definition: " + ( definition != null ? "ok" : "null" ) );
 

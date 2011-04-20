@@ -17,9 +17,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.xmlbeans.XmlBoolean;
@@ -330,7 +328,7 @@ public class RestUtils
 			if( !StringUtils.hasContent( delimiter ) )
 			{
 				result.add( paramStr );
-		}
+			}
 			else
 			{
 				result.addAll( paramStr.split( delimiter ) );

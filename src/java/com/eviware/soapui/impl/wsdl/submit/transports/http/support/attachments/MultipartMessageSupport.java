@@ -182,7 +182,7 @@ public class MultipartMessageSupport
 
 				if( responseContent == null )
 				{
-					responseContent = data.toString();
+					responseContent = new String( data );
 				}
 
 				return responseContent;

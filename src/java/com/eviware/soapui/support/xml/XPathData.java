@@ -138,7 +138,7 @@ public class XPathData
 	@Override
 	public boolean equals( Object obj )
 	{
-		if( obj.getClass() != XPathData.class )
+		if( obj == null || obj.getClass() != XPathData.class )
 			return false;
 
 		XPathData other = ( XPathData )obj;

@@ -257,16 +257,16 @@ class PreviewPopup extends JPopupMenu implements MouseListener, MouseMotionListe
 		int dx = componentIcon.getIconWidth() + DELTA;
 		int dy = componentIcon.getIconHeight() + DELTA;
 
-		if( corner == JScrollPane.UPPER_LEFT_CORNER )
+		if( corner.equals( JScrollPane.UPPER_LEFT_CORNER ) )
 			;
-		else if( corner == JScrollPane.UPPER_RIGHT_CORNER )
+		else if( corner.equals( JScrollPane.UPPER_RIGHT_CORNER ) )
 			dx = -dx;
-		else if( corner == JScrollPane.LOWER_RIGHT_CORNER )
+		else if( corner.equals( JScrollPane.LOWER_RIGHT_CORNER ) )
 		{
 			dx = -dx;
 			dy = -dy;
 		}
-		else if( corner == JScrollPane.LOWER_LEFT_CORNER )
+		else if( corner.equals( JScrollPane.LOWER_LEFT_CORNER ) )
 			dy = -dy;
 
 		if( dy < 0 && Math.abs( dy ) > _viewPort.getHeight() )
