@@ -29,7 +29,7 @@ import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.security.ui.MaliciousAttachmentAdvancedSettingsPanel;
-import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
+import com.eviware.soapui.security.ui.MaliciousAttachmentMutationsPanel;
 import com.eviware.soapui.support.types.StringToStringMap;
 
 public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
@@ -41,6 +41,7 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 	private MaliciousAttachmentSecurityCheckConfig config;
 
 	private MaliciousAttachmentAdvancedSettingsPanel advancedSettingsPanel;
+	private MaliciousAttachmentMutationsPanel mutationsPanel;
 
 	public MaliciousAttachmentSecurityCheck( SecurityCheckConfig newConfig, ModelItem parent, String icon,
 			TestStep testStep )
@@ -121,10 +122,12 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 	}
 
 	@Override
-	public SecurityCheckConfigPanel getComponent()
+	public JComponent getComponent()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		if( mutationsPanel == null )
+			mutationsPanel = new MaliciousAttachmentMutationsPanel( config );
+
+		return mutationsPanel.getPanel();
 	}
 
 	@Override

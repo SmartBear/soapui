@@ -56,6 +56,6 @@ public class MaliciousAttachmentAdvancedSettingsPanel
 	protected interface AdvancedSettings
 	{
 		@AField( description = "Request timeout", name = "Request timeout (ms)", type = AFieldType.INT )
-		public final static String REQUEST_TIMEOUT = "Request timeout (ms)";
+		final static String REQUEST_TIMEOUT = "Request timeout (ms)";
 	}
 }

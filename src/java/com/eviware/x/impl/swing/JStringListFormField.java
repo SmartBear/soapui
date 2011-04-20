@@ -26,7 +26,7 @@ public class JStringListFormField extends AbstractSwingXFormField<StringListForm
 
 	public JStringListFormField( String tooltip, String defaultValue )
 	{
-		super( new StringListFormComponent( tooltip, false, defaultValue ) );
+		super( new StringListFormComponent( tooltip, false, false, defaultValue ) );
 	}
 
 	public void setValue( String value )
