@@ -39,8 +39,9 @@ import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.security.ui.MalformedXmlAdvancedSettingsPanel;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel;
-import com.eviware.soapui.support.xml.XmlObjectTreeModel.XmlTreeNode;
 import com.eviware.soapui.support.xml.XmlUtils;
+import com.eviware.soapui.support.xml.XmlObjectTreeModel.AttributeXmlTreeNode;
+import com.eviware.soapui.support.xml.XmlObjectTreeModel.XmlTreeNode;
 
 public class MalformedXmlSecurityCheck extends AbstractSecurityCheckWithProperties
 {
@@ -130,7 +131,7 @@ public class MalformedXmlSecurityCheck extends AbstractSecurityCheckWithProperti
 				if( parameterMutations.containsKey( param ) )
 					if( parameterMutations.get( param ).size() > 0 )
 					{
-						TestProperty property = getTestStep().getProperties().get( param.getName() );
+						TestProperty property = testStep.getProperties().get( param.getName() );
 						String value = context.expand( property.getValue() );
 						if( param.getXpath() == null || param.getXpath().trim().length() == 0 )
 						{
@@ -269,7 +270,7 @@ public class MalformedXmlSecurityCheck extends AbstractSecurityCheckWithProperti
 		{
 			if( parameter.isChecked() )
 			{
-				TestProperty property = testStep.getProperties().get( parameter.getName() );
+				TestProperty property = getTestStep().getProperties().get( parameter.getName() );
 				// check parameter does not have any xpath
 				if( parameter.getXpath() == null || parameter.getXpath().trim().length() == 0 )
 				{
@@ -292,7 +293,7 @@ public class MalformedXmlSecurityCheck extends AbstractSecurityCheckWithProperti
 								XmlObject.Factory.parse( value ) );
 						XmlTreeNode[] nodes = model.selectTreeNodes( context.expand( parameter.getXpath() ) );
 
-						if( nodes.length > 0 )
+						if( nodes.length > 0 && !( nodes[0] instanceof AttributeXmlTreeNode ) )
 						{
 							if( !parameterMutations.containsKey( parameter ) )
 								parameterMutations.put( parameter, new ArrayList<String>() );
@@ -351,22 +352,50 @@ public class MalformedXmlSecurityCheck extends AbstractSecurityCheckWithProperti
 						buffer.append( Character.toUpperCase( ch ) );
 				}
 				result.add( nodeXml.replaceAll( original, buffer.toString() ) );
+
+				// add '_' before upper case and make uppercase lowercase
+				// just start tag change
+				buffer = new StringBuffer();
+				for( char ch : original.toCharArray() )
+				{
+					if( Character.isUpperCase( ch ) )
+						buffer.append( "_" ).append( Character.toLowerCase( ch ) );
+					else
+						buffer.append( ch );
+				}
+				result.add( nodeXml.replaceAll( original, buffer.toString() ) );
 			}
 
 		}
 		// leave tag open
 		if( malformedXmlConfig.getLeaveTagOpen() )
 		{
-			StringBuffer buffer = new StringBuffer( nodeXml );
 			if( nodeXml.endsWith( "</" + node.getDomNode().getNodeName() + ">" ) )
 			{
+				// cut end tag
+				StringBuffer buffer = new StringBuffer( nodeXml );
 				buffer.delete( buffer.indexOf( "</" + node.getDomNode().getNodeName() + ">" ), buffer.length() );
+				result.add( buffer.toString() );
+
+				// cut start tag
+				buffer = new StringBuffer( nodeXml );
+				buffer.delete( 0, buffer.indexOf( ">" ) + 1 );
+				result.add( buffer.toString() );
+
+				// cut start tag and remove '/' from end tag
+				buffer = new StringBuffer( nodeXml );
+				buffer.delete( 0, buffer.indexOf( ">" ) + 1 );
+				buffer.delete( buffer.indexOf( "</" + node.getDomNode().getNodeName() + ">" ) + 1, buffer.indexOf( "</"
+						+ node.getDomNode().getNodeName() + ">" ) + 2 );
+				result.add( buffer.toString() );
 			}
 			else
 			{
+				// remove '/>' from end of tag
+				StringBuffer buffer = new StringBuffer( nodeXml );
 				buffer.delete( nodeXml.lastIndexOf( "/" ), nodeXml.length() );
+				result.add( buffer.toString() );
 			}
-			result.add( buffer.toString() );
 		}
 		if( malformedXmlConfig.getInsertInvalidCharacter() )
 		{
@@ -391,11 +420,14 @@ public class MalformedXmlSecurityCheck extends AbstractSecurityCheckWithProperti
 		{
 			if( malformedAttributeConfig.getAddNewAttribute() )
 			{
-				// insert new attribute just after node tag
-				StringBuffer buffer = new StringBuffer( nodeXml );
-				buffer.insert( node.getNodeName().length() + 1, " " + malformedAttributeConfig.getNewAttributeName() + "="
-						+ "\"" + malformedAttributeConfig.getNewAttributeValue() + "\" " );
-				result.add( buffer.toString() );
+				if( malformedAttributeConfig.getNewAttributeName().trim().length() > 0 )
+				{
+					// insert new attribute just after node tag
+					StringBuffer buffer = new StringBuffer( nodeXml );
+					buffer.insert( node.getNodeName().length() + 1, " " + malformedAttributeConfig.getNewAttributeName()
+							+ "=" + "\"" + malformedAttributeConfig.getNewAttributeValue() + "\" " );
+					result.add( buffer.toString() );
+				}
 			}
 			if( malformedAttributeConfig.getInsertInvalidChars() )
 			{
