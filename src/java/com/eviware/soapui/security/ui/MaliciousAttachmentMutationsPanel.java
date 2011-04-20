@@ -36,7 +36,11 @@ public class MaliciousAttachmentMutationsPanel
 	private JComponent buildFilesList()
 	{
 		StringListFormComponent filesList = new StringListFormComponent( null, true, true, "" );
+
 		filesList.setPreferredSize( new Dimension( 50, 400 ) );
+
+		filesList.setData( new String[] { "file1", "file2", "file3" } );
+
 		return filesList;
 	}
 
