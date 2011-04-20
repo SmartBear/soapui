@@ -75,11 +75,11 @@ public class ProgressBarSecurityCheckAdapter extends SecurityTestRunListenerAdap
 			SecurityCheckRequestResult securityCheckReqResult )
 	{
 
-		if( securityCheckReqResult.getSecurityCheck().getTestStep().getId().equals(
-				this.securityCheck.getTestStep().getId() )
+		if( securityCheckReqResult.getSecurityCheck().getTestStep().getId()
+				.equals( this.securityCheck.getTestStep().getId() )
 				&& this.securityCheck.getName().equals( securityCheckReqResult.getSecurityCheck().getName() ) )
 		{
-			if( securityCheck.getAssertionsSupport().getAssertionCount() == 0 )
+			if( securityCheck.getAssertionCount() == 0 )
 			{
 				progressBar.setForeground( MISSING_ASSERTION_COLOR );
 				progressBar.setString( STATE_MISSING_ASSERTIONS );
@@ -153,7 +153,7 @@ public class ProgressBarSecurityCheckAdapter extends SecurityTestRunListenerAdap
 		{
 			if( securityCheckResult.getStatus() != ResultStatus.CANCELED )
 			{
-				if( securityCheck.getAssertionsSupport().getAssertionCount() == 0 )
+				if( securityCheck.getAssertionCount() == 0 )
 				{
 					progressBar.setForeground( MISSING_ASSERTION_COLOR );
 					progressBar.setString( STATE_MISSING_ASSERTIONS );

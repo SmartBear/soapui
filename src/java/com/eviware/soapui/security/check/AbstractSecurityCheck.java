@@ -62,7 +62,7 @@ import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
  * @author robert
  * 
  */
-public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<SecurityCheckConfig> implements Assertable,
+public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<SecurityCheckConfig> implements
 		ResponseAssertion, SecurityCheck// , RequestAssertion
 {
 	// configuration of specific request modification
@@ -915,7 +915,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	{
 		return securityCheckResult;
 	}
-	
+
 	/**
 	 * @param message
 	 * @param testStep
@@ -927,4 +927,9 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		getSecurityCheckRequestResult().addMessage( message );
 	}
 
+	@Override
+	public void addWsdlAssertion( String assertionLabel )
+	{
+		assertionsSupport.addWsdlAssertion( assertionLabel );
+	}
 }

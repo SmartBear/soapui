@@ -12,8 +12,6 @@ import com.eviware.soapui.model.support.XPathReference;
 import com.eviware.soapui.model.support.XPathReferenceContainer;
 import com.eviware.soapui.model.support.XPathReferenceImpl;
 import com.eviware.soapui.model.testsuite.TestStep;
-import com.eviware.soapui.security.result.SecurityResult.ResultStatus;
-import com.eviware.soapui.security.support.FailedSecurityMessageExchange;
 import com.eviware.soapui.security.support.SecurityCheckedParameterHolder;
 import com.eviware.soapui.security.support.SecurityCheckedParameterImpl;
 import com.eviware.soapui.support.types.StringToStringMap;
@@ -92,7 +90,8 @@ public abstract class AbstractSecurityCheckWithProperties extends AbstractSecuri
 	{
 		if( !getParameterHolder().getParameterList().isEmpty() )
 			return getParameterHolder().getParameterList().get( i );
-		else return null;
+		else
+			return null;
 	}
 
 	public SecurityCheckedParameter getParameterByLabel( String label )
@@ -132,5 +131,4 @@ public abstract class AbstractSecurityCheckWithProperties extends AbstractSecuri
 		message.getProperties().put( SECURITY_CHANGED_PARAMETERS, updatedParams.toXml() );
 		getSecurityCheckRequestResult().setMessageExchange( message );
 	}
-
 }

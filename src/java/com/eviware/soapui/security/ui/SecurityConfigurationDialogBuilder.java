@@ -14,24 +14,16 @@ package com.eviware.soapui.security.ui;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
 
-import javax.swing.AbstractAction;
-import javax.swing.Action;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JScrollPane;
 
 import com.eviware.soapui.config.StrategyTypeConfig;
-import com.eviware.soapui.impl.wsdl.panels.support.MockSecurityTestRunner;
-import com.eviware.soapui.impl.wsdl.panels.teststeps.support.AbstractGroovyEditorModel;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
-import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.security.SecurityCheck;
 import com.eviware.soapui.model.security.SecurityParametersTableModel;
 import com.eviware.soapui.model.testsuite.Assertable;
-import com.eviware.soapui.security.SecurityTest;
-import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.assertion.SecurityAssertionPanel;
 import com.eviware.soapui.security.check.AbstractSecurityCheckWithProperties;
 import com.eviware.soapui.support.UISupport;
@@ -105,15 +97,19 @@ public class SecurityConfigurationDialogBuilder
 				new SecurityAssertionPanel( ( Assertable )securityCheck ) );
 		tabDialog.getFormField( Assertions.ASSERTIONS ).setProperty( "dimension", new Dimension( 345, 260 ) );
 
-		tabDialog.getFormField( SetupScript.SCRIPT ).setProperty( "component", buildSetupScriptPanel( securityCheck ) );
-		tabDialog.getFormField( SetupScript.SCRIPT ).setProperty( "dimension", new Dimension( 385, 260 ) );
-
-		tabDialog.getFormField( TearDownScript.SCRIPT ).setProperty( "component",
-				buildTearDownScriptPanel( securityCheck ) );
-		tabDialog.getFormField( TearDownScript.SCRIPT ).setProperty( "dimension", new Dimension( 360, 260 ) );
+		// tabDialog.getFormField( SetupScript.SCRIPT ).setProperty( "component",
+		// buildSetupScriptPanel( securityCheck ) );
+		// tabDialog.getFormField( SetupScript.SCRIPT ).setProperty( "dimension",
+		// new Dimension( 385, 260 ) );
+		//
+		// tabDialog.getFormField( TearDownScript.SCRIPT ).setProperty(
+		// "component",
+		// buildTearDownScriptPanel( securityCheck ) );
+		// tabDialog.getFormField( TearDownScript.SCRIPT ).setProperty(
+		// "dimension", new Dimension( 360, 260 ) );
 
 		tabDialog.getFormField( AdvancedSettings.SETTINGS ).setProperty( "component",
-				new JScrollPane( securityCheck.getAdvancedSettingsPanel() ));
+				new JScrollPane( securityCheck.getAdvancedSettingsPanel() ) );
 		tabDialog.getFormField( AdvancedSettings.SETTINGS ).setProperty( "dimension", new Dimension( 410, 260 ) );
 
 		addStrategyPanel( tabDialog, securityCheck );
@@ -175,20 +171,24 @@ public class SecurityConfigurationDialogBuilder
 
 	}
 
-	private GroovyEditorComponent buildTearDownScriptPanel( SecurityCheck securityCheck )
-	{
-		tearDownGroovyEditor = new GroovyEditorComponent( new TearDownScriptGroovyEditorModel(
-				( ( Assertable )securityCheck ).getModelItem() ), null );
-		return tearDownGroovyEditor;
-	}
-
-	protected GroovyEditorComponent buildSetupScriptPanel( SecurityCheck securityCheck )
-	{
-		setupGroovyEditor = new GroovyEditorComponent( new SetupScriptGroovyEditorModel(
-				( ( Assertable )securityCheck ).getModelItem() ), null );
-
-		return setupGroovyEditor;
-	}
+	// private GroovyEditorComponent buildTearDownScriptPanel( SecurityCheck
+	// securityCheck )
+	// {
+	// tearDownGroovyEditor = new GroovyEditorComponent( new
+	// TearDownScriptGroovyEditorModel(
+	// ( ( Assertable )securityCheck ).getModelItem() ), null );
+	// return tearDownGroovyEditor;
+	// }
+	//
+	// protected GroovyEditorComponent buildSetupScriptPanel( SecurityCheck
+	// securityCheck )
+	// {
+	// setupGroovyEditor = new GroovyEditorComponent( new
+	// SetupScriptGroovyEditorModel(
+	// ( ( Assertable )securityCheck ).getModelItem() ), null );
+	//
+	// return setupGroovyEditor;
+	// }
 
 	/*
 	 * 
@@ -358,91 +358,103 @@ public class SecurityConfigurationDialogBuilder
 
 	}
 
-	private class SetupScriptGroovyEditorModel extends AbstractGroovyEditorModel
-	{
-		@Override
-		public Action createRunAction()
-		{
-			return new AbstractAction()
-			{
-
-				public void actionPerformed( ActionEvent e )
-				{
-
-					MockSecurityTestRunner securityTestRunner = new MockSecurityTestRunner(
-							( SecurityTest )( ( SecurityCheck )SetupScriptGroovyEditorModel.this.getModelItem() ).getParent() );
-					try
-					{
-						( ( SecurityCheck )SetupScriptGroovyEditorModel.this.getModelItem() ).runSetupScript(
-								securityTestRunner, ( SecurityTestRunContext )securityTestRunner.getRunContext() );
-					}
-					catch( Exception e1 )
-					{
-						UISupport.showErrorMessage( e1 );
-					}
-				}
-			};
-		}
-
-		public SetupScriptGroovyEditorModel( ModelItem modelItem )
-		{
-			super( new String[] { "log", "context", "securityCheck" }, modelItem, "Setup" );
-		}
-
-		public String getScript()
-		{
-			return ( ( SecurityCheck )getModelItem() ).getSetupScript();
-		}
-
-		public void setScript( String text )
-		{
-			( ( SecurityCheck )getModelItem() ).setSetupScript( text );
-		}
-	}
-
-	private class TearDownScriptGroovyEditorModel extends AbstractGroovyEditorModel
-	{
-		@Override
-		public Action createRunAction()
-		{
-			return new AbstractAction()
-			{
-
-				public void actionPerformed( ActionEvent e )
-				{
-
-					try
-					{
-						MockSecurityTestRunner securityTestRunner = new MockSecurityTestRunner(
-								( SecurityTest )( ( SecurityCheck )TearDownScriptGroovyEditorModel.this.getModelItem() )
-										.getParent() );
-						( ( SecurityCheck )TearDownScriptGroovyEditorModel.this.getModelItem() ).runTearDownScript(
-								securityTestRunner, ( SecurityTestRunContext )securityTestRunner.getRunContext() );
-					}
-					catch( Exception e1 )
-					{
-						UISupport.showErrorMessage( e1 );
-					}
-
-				}
-			};
-		}
-
-		public TearDownScriptGroovyEditorModel( ModelItem modelItem )
-		{
-			super( new String[] { "log", "context", "securityCheck" }, modelItem, "TearDown" );
-		}
-
-		public String getScript()
-		{
-			return ( ( SecurityCheck )getModelItem() ).getTearDownScript();
-		}
-
-		public void setScript( String text )
-		{
-			( ( SecurityCheck )getModelItem() ).setTearDownScript( text );
-		}
-
-	}
+	// private class SetupScriptGroovyEditorModel extends
+	// AbstractGroovyEditorModel
+	// {
+	// @Override
+	// public Action createRunAction()
+	// {
+	// return new AbstractAction()
+	// {
+	//
+	// public void actionPerformed( ActionEvent e )
+	// {
+	//
+	// // MockSecurityTestRunner securityTestRunner = new
+	// // MockSecurityTestRunner(
+	// // ( SecurityTest )( ( SecurityCheck
+	// // )SetupScriptGroovyEditorModel.this.getModelItem()
+	// // ).getParent() );
+	// // try
+	// // {
+	// // ( ( SecurityCheck
+	// // )SetupScriptGroovyEditorModel.this.getModelItem()
+	// // ).runSetupScript(
+	// // securityTestRunner, ( SecurityTestRunContext
+	// // )securityTestRunner.getRunContext() );
+	// // }
+	// // catch( Exception e1 )
+	// // {
+	// // UISupport.showErrorMessage( e1 );
+	// // }
+	// }
+	// };
+	// }
+	//
+	// public SetupScriptGroovyEditorModel( ModelItem modelItem )
+	// {
+	// super( new String[] { "log", "context", "securityCheck" }, modelItem,
+	// "Setup" );
+	// }
+	//
+	// public String getScript()
+	// {
+	// return ( ( SecurityCheck )getModelItem() ).getSetupScript();
+	// }
+	//
+	// public void setScript( String text )
+	// {
+	// ( ( SecurityCheck )getModelItem() ).setSetupScript( text );
+	// }
+	// }
+	//
+	// private class TearDownScriptGroovyEditorModel extends
+	// AbstractGroovyEditorModel
+	// {
+	// @Override
+	// public Action createRunAction()
+	// {
+	// return new AbstractAction()
+	// {
+	// public void actionPerformed( ActionEvent e )
+	// {
+	// // try
+	// // {
+	// // MockSecurityTestRunner securityTestRunner = new
+	// // MockSecurityTestRunner(
+	// // ( SecurityTest )( ( SecurityCheck
+	// // )TearDownScriptGroovyEditorModel.this.getModelItem() )
+	// // .getParent() );
+	// // ( ( SecurityCheck
+	// // )TearDownScriptGroovyEditorModel.this.getModelItem()
+	// // ).runTearDownScript(
+	// // securityTestRunner, ( SecurityTestRunContext
+	// // )securityTestRunner.getRunContext() );
+	// // }
+	// // catch( Exception e1 )
+	// // {
+	// // UISupport.showErrorMessage( e1 );
+	// // }
+	// }
+	// };
+	// }
+	//
+	// public TearDownScriptGroovyEditorModel( ModelItem modelItem )
+	// {
+	// super( new String[] { "log", "context", "securityCheck" }, modelItem,
+	// "TearDown" );
+	// }
+	//
+	// public String getScript()
+	// {
+	// return ( ( SecurityCheck )getModelItem() ).getTearDownScript();
+	// }
+	//
+	// public void setScript( String text )
+	// {
+	// ( ( SecurityCheck )getModelItem() ).setTearDownScript( text );
+	// }
+	//
+	// }
 
 }

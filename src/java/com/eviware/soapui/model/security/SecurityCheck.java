@@ -5,15 +5,15 @@ import javax.swing.JComponent;
 import org.apache.xmlbeans.XmlObject;
 
 import com.eviware.soapui.config.SecurityCheckConfig;
-import com.eviware.soapui.impl.wsdl.support.assertions.AssertionsSupport;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.ExecutionStrategyHolder;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.security.result.SecurityCheckResult;
 
-public interface SecurityCheck extends ModelItem
+public interface SecurityCheck extends ModelItem, Assertable
 {
 
 	public static final String SECURITY_CHECK_REQUEST_RESULT = "SecurityCheckRequestResult";
@@ -48,9 +48,11 @@ public interface SecurityCheck extends ModelItem
 
 	void setTestStep( TestStep step );
 
-	Object runTearDownScript( SecurityTestRunner runner, SecurityTestRunContext context ) throws Exception;
-
-	Object runSetupScript( SecurityTestRunner runner, SecurityTestRunContext context ) throws Exception;
+	// Object runTearDownScript( SecurityTestRunner runner,
+	// SecurityTestRunContext context ) throws Exception;
+	//
+	// Object runSetupScript( SecurityTestRunner runner, SecurityTestRunContext
+	// context ) throws Exception;
 
 	/**
 	 * Checks if the test is disabled
@@ -70,15 +72,13 @@ public interface SecurityCheck extends ModelItem
 
 	void setExecutionStrategy( ExecutionStrategyHolder executionStrategyHolder );
 
-	AssertionsSupport getAssertionsSupport();
-
-	String getSetupScript();
-
-	void setSetupScript( String text );
-
-	String getTearDownScript();
-
-	void setTearDownScript( String text );
+	// String getSetupScript();
+	//
+	// void setSetupScript( String text );
+	//
+	// String getTearDownScript();
+	//
+	// void setTearDownScript( String text );
 
 	// name used in configuration panel
 	String getConfigName();
@@ -88,8 +88,6 @@ public interface SecurityCheck extends ModelItem
 
 	// help url used for configuration panel ( help for this check )
 	String getHelpURL();
-
-	String getName();
 
 	/**
 	 * Advanced setting panel for configuration
@@ -104,6 +102,5 @@ public interface SecurityCheck extends ModelItem
 
 	void copyConfig( SecurityCheckConfig backupCheckConfig );
 
-	int getAssertionCount();
-
+	void addWsdlAssertion( String assertionLabel );
 }
