@@ -273,8 +273,8 @@ public class Navigator extends JPanel
 
 				if( targets.size() > 0 )
 				{
-					ActionList actions = ActionListBuilder.buildMultiActions( targets
-							.toArray( new ModelItem[targets.size()] ) );
+					ActionList actions = ActionListBuilder
+							.buildMultiActions( targets.toArray( new ModelItem[targets.size()] ) );
 					if( actions.getActionCount() > 0 )
 					{
 						actions.dispatchKeyEvent( e );
@@ -466,8 +466,8 @@ public class Navigator extends JPanel
 
 				if( targets.size() > 0 )
 				{
-					ActionList actions = ActionListBuilder.buildMultiActions( targets
-							.toArray( new ModelItem[targets.size()] ) );
+					ActionList actions = ActionListBuilder
+							.buildMultiActions( targets.toArray( new ModelItem[targets.size()] ) );
 					if( actions.getActionCount() > 0 )
 					{
 						JPopupMenu popup = new JPopupMenu();

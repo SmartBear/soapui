@@ -96,7 +96,7 @@ public class SecurityCheckTree extends DefaultTreeModel
 		SecurityCheckNode node = getSecurityCheckNode( securityCheck );
 		removeNodeFromParent( node );
 		nodeStructureChanged( testStepNode );
-		
+
 	}
 
 	/**
@@ -115,8 +115,8 @@ public class SecurityCheckTree extends DefaultTreeModel
 		TestStepNode node = getTestStepNode( testStep );
 		int index2 = getIndexOfChild( root, node );
 		removeNodeFromParent( node );
-		insertNodeInto( node, ( MutableTreeNode )root, index2+offset );
-		
+		insertNodeInto( node, ( MutableTreeNode )root, index2 + offset );
+
 		return new TreePath( node.getPath() );
 	}
 

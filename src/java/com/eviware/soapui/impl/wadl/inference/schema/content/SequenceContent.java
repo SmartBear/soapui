@@ -34,8 +34,8 @@ import com.eviware.soapui.inferredSchema.SequenceContentConfig;
 import com.eviware.soapui.inferredSchema.SequenceContentConfig.ComesBefore;
 
 /**
- * SequenceContent represents an xs:sequence, xs:choice, or xs:all. It infers ordering and occurrences
- * of its children.
+ * SequenceContent represents an xs:sequence, xs:choice, or xs:all. It infers
+ * ordering and occurrences of its children.
  * 
  * @author Dain Nilsson
  */
@@ -172,13 +172,13 @@ public class SequenceContent implements Content
 			fixedParticles.put( item, particles.get( item ) );
 		particles = fixedParticles;
 	}
-	
+
 	private boolean verifyOrder()
 	{
 		List<QName> order = new ArrayList<QName>();
 		order.addAll( particles.keySet() );
-		for(int i=1; i<particles.size(); i++)
-			if(!canAppend(order.subList(0,i), order.get( i )))
+		for( int i = 1; i < particles.size(); i++ )
+			if( !canAppend( order.subList( 0, i ), order.get( i ) ) )
 				return false;
 		return true;
 	}

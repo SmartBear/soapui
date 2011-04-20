@@ -353,8 +353,8 @@ public class JLogList extends JPanel
 
 		public void actionPerformed( ActionEvent e )
 		{
-			String val = UISupport.prompt( "Set maximum number of log rows to keep", "Set Max Rows", String
-					.valueOf( maxRows ) );
+			String val = UISupport.prompt( "Set maximum number of log rows to keep", "Set Max Rows",
+					String.valueOf( maxRows ) );
 			if( val != null )
 			{
 				try

@@ -488,8 +488,8 @@ public class WsdlInterface extends AbstractInterface<WsdlInterfaceConfig>
 					list.add( newOperations.get( c ).getName() );
 
 				String retval = ( String )UISupport.prompt( "Binding operation [" + name
-						+ "] not found in new interface, select new\nbinding operation to map to", "Map Operation", list
-						.toArray(), "none/cancel - delete operation" );
+						+ "] not found in new interface, select new\nbinding operation to map to", "Map Operation",
+						list.toArray(), "none/cancel - delete operation" );
 
 				int ix = retval == null ? -1 : list.indexOf( retval ) - 1;
 
@@ -645,7 +645,6 @@ public class WsdlInterface extends AbstractInterface<WsdlInterfaceConfig>
 			result.put( operation.getName(), operation );
 
 		return result;
-
 	}
 
 	public boolean isCached()
@@ -923,8 +922,8 @@ public class WsdlInterface extends AbstractInterface<WsdlInterfaceConfig>
 			getConfig().removeOperation( c );
 		}
 
-		OperationConfig newConfig = ( OperationConfig )getConfig().addNewOperation().set( reloadedOperation ).changeType(
-				OperationConfig.type );
+		OperationConfig newConfig = ( OperationConfig )getConfig().addNewOperation().set( reloadedOperation )
+				.changeType( OperationConfig.type );
 		WsdlOperation newOperation = new WsdlOperation( this, newConfig );
 		operations.add( index, newOperation );
 		newOperation.afterLoad();
@@ -1002,8 +1001,8 @@ public class WsdlInterface extends AbstractInterface<WsdlInterfaceConfig>
 			}
 		}
 		setAnonymous( interfaceAnonymous );
-		//set wsaVersion to one from policy only if it was null from wsdl binding
-		if (getConfig().getWsaVersion().equals(WsaVersionTypeConfig.NONE))
+		// set wsaVersion to one from policy only if it was null from wsdl binding
+		if( getConfig().getWsaVersion().equals( WsaVersionTypeConfig.NONE ) )
 		{
 			setWsaVersion( interfaceWsaVersion );
 		}

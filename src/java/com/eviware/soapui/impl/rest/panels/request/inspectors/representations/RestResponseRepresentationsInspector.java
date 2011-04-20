@@ -111,6 +111,7 @@ public class RestResponseRepresentationsInspector extends AbstractRestRepresenta
 			if( representations[c].getMediaType() != null
 					&& representations[c].getMediaType().equals( response.getContentType() ) )
 			{
+				@SuppressWarnings( "rawtypes" )
 				List status = representations[c].getStatus();
 				if( status == null || !status.contains( response.getStatusCode() ) )
 				{

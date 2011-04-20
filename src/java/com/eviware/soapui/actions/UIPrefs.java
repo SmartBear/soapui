@@ -54,6 +54,7 @@ public class UIPrefs implements Prefs
 	public static final String RAW_REQUEST_MESSAGE_SIZE = "Size of Raw Request Message to Show";
 	public static final String WRAP_RAW_MESSAGES = "Wrap content in Raw Message Viewers";
 	public static final String DISABLE_TOOLTIPS = "Disable Tooltips";
+	public static final String DISABLE_BROWSER = "Disable Browser";
 
 	private SimpleForm editorForm;
 	private final String title;
@@ -108,8 +109,7 @@ public class UIPrefs implements Prefs
 			}
 
 			editorForm.appendSeparator();
-			editorForm.appendCheckBox( ENABLE_GROOVY_LOG,
-					"Do not disable the groovy log when running load tests", true );
+			editorForm.appendCheckBox( ENABLE_GROOVY_LOG, "Do not disable the groovy log when running load tests", true );
 
 			if( SoapUI.isStandalone() )
 			{
@@ -127,6 +127,8 @@ public class UIPrefs implements Prefs
 			editorForm.appendTextField( RAW_RESPONSE_MESSAGE_SIZE, "Sets the size of raw response mesage to show." );
 			editorForm.appendTextField( RAW_REQUEST_MESSAGE_SIZE, "Sets the size of raw request mesage to show." );
 			editorForm.appendCheckBox( WRAP_RAW_MESSAGES, "Wraps content in Raw Message Viewers", false );
+			editorForm.appendSeparator();
+			editorForm.appendCheckBox( DISABLE_BROWSER, "Disables integrated Browser component", false );
 		}
 
 		return editorForm;
@@ -173,6 +175,7 @@ public class UIPrefs implements Prefs
 		settings.setString( UISettings.RAW_RESPONSE_MESSAGE_SIZE, values.get( RAW_RESPONSE_MESSAGE_SIZE ) );
 		settings.setString( UISettings.RAW_REQUEST_MESSAGE_SIZE, values.get( RAW_REQUEST_MESSAGE_SIZE ) );
 		settings.setBoolean( UISettings.WRAP_RAW_MESSAGES, values.getBoolean( WRAP_RAW_MESSAGES ) );
+		settings.setBoolean( UISettings.DISABLE_BROWSER, values.getBoolean( DISABLE_BROWSER ) );
 
 		SoapUI.initAutoSaveTimer();
 		SoapUI.initGCTimer();
@@ -216,6 +219,7 @@ public class UIPrefs implements Prefs
 		values.put( RAW_RESPONSE_MESSAGE_SIZE, settings.getString( UISettings.RAW_RESPONSE_MESSAGE_SIZE, "10000" ) );
 		values.put( RAW_REQUEST_MESSAGE_SIZE, settings.getString( UISettings.RAW_REQUEST_MESSAGE_SIZE, "10000" ) );
 		values.put( WRAP_RAW_MESSAGES, settings.getBoolean( UISettings.WRAP_RAW_MESSAGES ) );
+		values.put( DISABLE_BROWSER, settings.getBoolean( UISettings.DISABLE_BROWSER ) );
 
 		return values;
 	}

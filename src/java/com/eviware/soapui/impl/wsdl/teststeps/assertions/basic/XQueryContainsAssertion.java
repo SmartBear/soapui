@@ -212,8 +212,8 @@ public class XQueryContainsAssertion extends WsdlMessageAssertion implements Req
 							Node domNode = items[c].getDomNode();
 							if( domNode.getNodeType() == Node.ELEMENT_NODE )
 							{
-								String expandedValue = PropertyExpander.expandProperties( context, XmlUtils
-										.getElementText( ( Element )domNode ) );
+								String expandedValue = PropertyExpander.expandProperties( context,
+										XmlUtils.getElementText( ( Element )domNode ) );
 								XMLAssert.assertEquals( expandedContent, expandedValue );
 							}
 							else

@@ -178,8 +178,10 @@ public class BodyPartAttachment implements Attachment
 
 			try
 			{
-				tempFile = File.createTempFile( "response-attachment", ( ix == -1 ? ".dat" : "."
-						+ ( iy == -1 ? contentType.substring( ix + 1 ) : contentType.substring( ix + 1, iy ) ) ) );
+				tempFile = File.createTempFile(
+						"response-attachment",
+						( ix == -1 ? ".dat" : "."
+								+ ( iy == -1 ? contentType.substring( ix + 1 ) : contentType.substring( ix + 1, iy ) ) ) );
 
 				OutputStream out = new BufferedOutputStream( new FileOutputStream( tempFile ) );
 				InputStream inputStream = getInputStream();

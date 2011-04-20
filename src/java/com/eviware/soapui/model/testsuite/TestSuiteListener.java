@@ -37,8 +37,8 @@ public interface TestSuiteListener
 	void testStepRemoved( TestStep testStep, int index );
 
 	void testStepMoved( TestStep testStep, int fromIndex, int offset );
-	
+
 	void securityTestAdded( SecurityTest securityTest );
-	
+
 	void securityTestRemoved( SecurityTest securityTest );
 }

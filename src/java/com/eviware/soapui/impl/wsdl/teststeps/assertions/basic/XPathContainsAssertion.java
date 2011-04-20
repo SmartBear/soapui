@@ -107,11 +107,13 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
 	private boolean configureResult;
 	private boolean allowWildcards;
 	private boolean ignoreNamespaceDifferences;
+	private boolean ignoreComments;
 
 	public static final String ID = "XPath Match";
 	public static final String LABEL = "XPath Match";
 	private JCheckBox allowWildcardsCheckBox;
 	private JCheckBox ignoreNamespaceDifferencesCheckBox;
+	private JCheckBox ignoreCommentsCheckBox;
 
 	public XPathContainsAssertion( TestAssertionConfig assertionConfig, Assertable assertable )
 	{
@@ -122,6 +124,7 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
 		expectedContent = reader.readString( "content", null );
 		allowWildcards = reader.readBoolean( "allowWildcards", false );
 		ignoreNamespaceDifferences = reader.readBoolean( "ignoreNamspaceDifferences", false );
+		ignoreComments = reader.readBoolean( "ignoreComments", false );
 	}
 
 	public String getExpectedContent()
@@ -178,6 +181,17 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
 		setConfiguration( createConfiguration() );
 	}
 
+	public boolean isIgnoreComments()
+	{
+		return ignoreComments;
+	}
+
+	public void setIgnoreComments( boolean ignoreComments )
+	{
+		this.ignoreComments = ignoreComments;
+		setConfiguration( createConfiguration() );
+	}
+
 	@Override
 	protected String internalAssertResponse( MessageExchange messageExchange, SubmitContext context )
 			throws AssertionException
@@ -197,7 +211,11 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
 			if( expectedContent == null )
 				return "Missing content for XPath assertion";
 
-			XmlObject xml = XmlObject.Factory.parse( response );
+			XmlOptions options = new XmlOptions();
+			if( ignoreComments )
+				options.setLoadStripComments();
+
+			XmlObject xml = XmlObject.Factory.parse( response, options );
 			String expandedPath = PropertyExpander.expandProperties( context, path );
 			XmlObject[] items = xml.selectPath( expandedPath );
 			AssertedXPathsContainer assertedXPathsContainer = ( AssertedXPathsContainer )context
@@ -213,7 +231,7 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
 			{
 				try
 				{
-					contentObj = XmlObject.Factory.parse( expandedContent );
+					contentObj = XmlObject.Factory.parse( expandedContent, options );
 				}
 				catch( Exception e )
 				{
@@ -227,7 +245,6 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
 			if( items.length == 0 )
 				throw new Exception( "Missing content for xpath [" + path + "] in " + type );
 
-			XmlOptions options = new XmlOptions();
 			options.setSavePrettyPrint();
 			options.setSaveOuter();
 
@@ -263,8 +280,8 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
 							Node domNode = items[c].getDomNode();
 							if( domNode.getNodeType() == Node.ELEMENT_NODE )
 							{
-								String expandedValue = PropertyExpander.expandProperties( context, XmlUtils
-										.getElementText( ( Element )domNode ) );
+								String expandedValue = PropertyExpander.expandProperties( context,
+										XmlUtils.getElementText( ( Element )domNode ) );
 								XMLAssert.assertEquals( expandedContent, expandedValue );
 							}
 							else
@@ -300,7 +317,7 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
 
 				// if( expected.length() > ERROR_LENGTH_LIMIT )
 				// expected = expected.substring(0, ERROR_LENGTH_LIMIT) + "..";
-				//				
+				//
 				// if( actual.length() > ERROR_LENGTH_LIMIT )
 				// actual = actual.substring(0, ERROR_LENGTH_LIMIT) + "..";
 
@@ -383,7 +400,7 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
 	protected void buildConfigurationDialog()
 	{
 		configurationDialog = new JDialog( UISupport.getMainFrame() );
-		configurationDialog.setTitle( "XPath Match configuration" );
+		configurationDialog.setTitle( "XPath Match Configuration" );
 		configurationDialog.addWindowListener( new WindowAdapter()
 		{
 			@Override
@@ -393,7 +410,7 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
 				{
 					public void run()
 					{
-						pathArea.requestFocusInWindow();
+						// pathArea.requestFocusInWindow();
 					}
 				} );
 			}
@@ -450,7 +467,7 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
 		contentPanel.add( builder.getPanel(), BorderLayout.SOUTH );
 
 		configurationDialog.setContentPane( contentPanel );
-		configurationDialog.setSize( 600, 500 );
+		configurationDialog.setSize( 800, 500 );
 		configurationDialog.setModal( true );
 		UISupport.initDialogActions( configurationDialog, showOnlineHelpAction, okButton );
 	}
@@ -467,7 +484,7 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
 		toolbar.addFixed( new JButton( new TestPathAction() ) );
 		allowWildcardsCheckBox = new JCheckBox( "Allow Wildcards" );
 
-		Dimension dim = new Dimension( 100, 20 );
+		Dimension dim = new Dimension( 120, 20 );
 
 		allowWildcardsCheckBox.setSize( dim );
 		allowWildcardsCheckBox.setPreferredSize( dim );
@@ -476,13 +493,20 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
 		toolbar.addRelatedGap();
 		toolbar.addFixed( allowWildcardsCheckBox );
 
-		Dimension largerDim = new Dimension( 200, 20 );
+		Dimension largerDim = new Dimension( 170, 20 );
 		ignoreNamespaceDifferencesCheckBox = new JCheckBox( "Ignore namespace prefixes" );
 		ignoreNamespaceDifferencesCheckBox.setSize( largerDim );
 		ignoreNamespaceDifferencesCheckBox.setPreferredSize( largerDim );
 		ignoreNamespaceDifferencesCheckBox.setOpaque( false );
 		toolbar.addRelatedGap();
 		toolbar.addFixed( ignoreNamespaceDifferencesCheckBox );
+
+		ignoreCommentsCheckBox = new JCheckBox( "Ignore XML Comments" );
+		ignoreCommentsCheckBox.setSize( largerDim );
+		ignoreCommentsCheckBox.setPreferredSize( largerDim );
+		ignoreCommentsCheckBox.setOpaque( false );
+		toolbar.addRelatedGap();
+		toolbar.addFixed( ignoreCommentsCheckBox );
 	}
 
 	public XmlObject createConfiguration()
@@ -492,6 +516,7 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
 		builder.add( "content", expectedContent );
 		builder.add( "allowWildcards", allowWildcards );
 		builder.add( "ignoreNamspaceDifferences", ignoreNamespaceDifferences );
+		builder.add( "ignoreComments", ignoreComments );
 		return builder.finish();
 	}
 
@@ -518,7 +543,7 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
 			if( getAssertable().getModelItem() instanceof TestStep )
 				context = new WsdlTestRunContext( ( TestStep )getAssertable().getModelItem() );
 			else if( getAssertable().getModelItem() instanceof AbstractSecurityCheck )
-				context = new WsdlTestRunContext( (( AbstractSecurityCheck )getAssertable().getModelItem()).getTestStep() );
+				context = new WsdlTestRunContext( ( ( AbstractSecurityCheck )getAssertable().getModelItem() ).getTestStep() );
 
 			String expandedPath = PropertyExpander.expandProperties( context, txt.trim() );
 
@@ -576,6 +601,17 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
 					return Diff.RETURN_IGNORE_DIFFERENCE_NODES_IDENTICAL;
 				}
 			}
+			else if( allowWildcards && diff.getId() == DifferenceEngine.NODE_TYPE.getId() )
+			{
+				if( diff.getControlNodeDetail().getNode().getNodeValue().equals( "*" ) )
+				{
+					Node node = diff.getTestNodeDetail().getNode();
+					String xp = XmlUtils.createAbsoluteXPath( node.getNodeType() == Node.ATTRIBUTE_NODE ? node : node
+							.getParentNode() );
+					nodesToRemove.add( xp );
+					return Diff.RETURN_IGNORE_DIFFERENCE_NODES_IDENTICAL;
+				}
+			}
 			else if( ignoreNamespaceDifferences && diff.getId() == DifferenceEngine.NAMESPACE_PREFIX_ID )
 			{
 				return Diff.RETURN_IGNORE_DIFFERENCE_NODES_IDENTICAL;
@@ -608,6 +644,7 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
 			setExpectedContent( contentArea.getText() );
 			setAllowWildcards( allowWildcardsCheckBox.isSelected() );
 			setIgnoreNamespaceDifferences( ignoreNamespaceDifferencesCheckBox.isSelected() );
+			setIgnoreComments( ignoreCommentsCheckBox.isSelected() );
 			setConfiguration( createConfiguration() );
 			configureResult = true;
 			configurationDialog.setVisible( false );
@@ -677,6 +714,7 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
 			setExpectedContent( contentArea.getText() );
 			setAllowWildcards( allowWildcardsCheckBox.isSelected() );
 			setIgnoreNamespaceDifferences( ignoreNamespaceDifferencesCheckBox.isSelected() );
+			setIgnoreComments( ignoreCommentsCheckBox.isSelected() );
 
 			try
 			{

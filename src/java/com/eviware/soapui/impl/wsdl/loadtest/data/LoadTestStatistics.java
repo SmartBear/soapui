@@ -535,10 +535,13 @@ public final class LoadTestStatistics extends AbstractTableModel implements Runn
 				}
 
 				int index = testCase.getIndexOfTestStep( testStepResult.getTestStep() );
+				if( index >= 0 )
+				{
 				sampleCounts[index]++ ;
 
 				samples[index] += testStepResult.getTimeTaken();
 				sizes[index] += testStepResult.getSize();
+			}
 			}
 
 			pushSamples( samples, sizes, sampleCounts, testRunner.getStartTime(), testRunner.getTimeTaken(), true );

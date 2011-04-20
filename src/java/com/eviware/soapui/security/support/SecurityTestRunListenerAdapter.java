@@ -74,7 +74,7 @@ public class SecurityTestRunListenerAdapter implements SecurityTestRunListener
 			SecurityTestStepResult result )
 	{
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

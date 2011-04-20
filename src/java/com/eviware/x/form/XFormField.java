@@ -45,6 +45,6 @@ public interface XFormField
 	public Object getProperty( String name );
 
 	public ValidationMessage[] validate();
-	
+
 	boolean isVisible();
 }

@@ -65,7 +65,7 @@ public class XFormRadioGroup extends AbstractSwingXFormField<JPanel> implements 
 
 	public void addItem( Object value )
 	{
-		JRadioButton button = new JRadioButton( String.valueOf( value ));
+		JRadioButton button = new JRadioButton( String.valueOf( value ) );
 		button.setActionCommand( String.valueOf( value ) );
 		button.addActionListener( new ActionListener()
 		{

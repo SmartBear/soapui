@@ -20,9 +20,9 @@ import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.support.action.SoapUIAction;
 import com.eviware.soapui.support.action.SoapUIActionGroup;
 import com.eviware.soapui.support.action.SoapUIActionMapping;
-import com.eviware.soapui.support.action.SoapUIMultiAction;
 import com.eviware.soapui.support.action.SoapUIActionRegistry.SeperatorAction;
 import com.eviware.soapui.support.action.SoapUIActionRegistry.SoapUIActionGroupAction;
+import com.eviware.soapui.support.action.SoapUIMultiAction;
 import com.eviware.soapui.support.action.support.SoapUIActionMappingList;
 
 /**
@@ -136,7 +136,7 @@ public class ActionListBuilder
 			}
 		}
 	}
-	
+
 	public static ActionList buildMultiActions( ModelItem[] modelItems )
 	{
 		DefaultActionList actions = new DefaultActionList();
@@ -149,7 +149,7 @@ public class ActionListBuilder
 
 		return actions;
 	}
-	
+
 	/**
 	 * Adds the specified ActionMappings to the specified ActionList for the
 	 * specified modelItem

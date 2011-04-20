@@ -36,11 +36,12 @@ public interface LoadTestRunner extends TestRunner
 	public float getProgress();
 
 	/**
-	 * Confusing but unfortunately necessary; isStopped will return false until the loadtest has
-	 * called all handlers, etc.. the status will be set to FINISHED before that.
+	 * Confusing but unfortunately necessary; isStopped will return false until
+	 * the loadtest has called all handlers, etc.. the status will be set to
+	 * FINISHED before that.
 	 * 
 	 * @return
 	 */
-	
+
 	public boolean hasStopped();
 }

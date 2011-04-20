@@ -18,7 +18,6 @@ import java.util.HashMap;
 import com.eviware.soapui.impl.wsdl.actions.project.StartLoadUI;
 import com.eviware.soapui.impl.wsdl.loadtest.WsdlLoadTest;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
-import com.eviware.soapui.integration.loadui.ContextMapping;
 import com.eviware.soapui.integration.loadui.IntegrationUtils;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
@@ -28,8 +27,8 @@ import com.eviware.x.form.XFormField;
 import com.eviware.x.form.XFormFieldListener;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.AField.AFieldType;
+import com.eviware.x.form.support.AForm;
 
 public class ConvertToLoadUIAction extends AbstractSoapUIAction<WsdlLoadTest>
 {
@@ -63,8 +62,8 @@ public class ConvertToLoadUIAction extends AbstractSoapUIAction<WsdlLoadTest>
 				dialog.setOptions( Form.TESTCASE, IntegrationUtils.getAvailableTestCases( newValue ) );
 				if( dialog.getValue( Form.TESTCASE ).equals( IntegrationUtils.CREATE_ON_PROJECT_LEVEL ) )
 				{
-					dialog.setOptions( Form.SOAPUIRUNNER, IntegrationUtils.getAvailableRunners( newValue,
-							IntegrationUtils.CREATE_ON_PROJECT_LEVEL ) );
+					dialog.setOptions( Form.SOAPUIRUNNER,
+							IntegrationUtils.getAvailableRunners( newValue, IntegrationUtils.CREATE_ON_PROJECT_LEVEL ) );
 				}
 			}
 		} );
@@ -79,8 +78,8 @@ public class ConvertToLoadUIAction extends AbstractSoapUIAction<WsdlLoadTest>
 				}
 				else
 				{
-					dialog.setOptions( Form.SOAPUIRUNNER, IntegrationUtils.getAvailableRunners( dialog
-							.getValue( Form.PROJECT ), newValue ) );
+					dialog.setOptions( Form.SOAPUIRUNNER,
+							IntegrationUtils.getAvailableRunners( dialog.getValue( Form.PROJECT ), newValue ) );
 				}
 			}
 		} );
@@ -100,8 +99,8 @@ public class ConvertToLoadUIAction extends AbstractSoapUIAction<WsdlLoadTest>
 			dialog.setValue( Form.TESTCASE, IntegrationUtils.CREATE_ON_PROJECT_LEVEL );
 		}
 
-		dialog.setOptions( Form.SOAPUIRUNNER, IntegrationUtils.getAvailableRunners( dialog.getValue( Form.PROJECT ),
-				dialog.getValue( Form.TESTCASE ) ) );
+		dialog.setOptions( Form.SOAPUIRUNNER,
+				IntegrationUtils.getAvailableRunners( dialog.getValue( Form.PROJECT ), dialog.getValue( Form.TESTCASE ) ) );
 		dialog.setValue( Form.SOAPUIRUNNER, IntegrationUtils.CREATE_NEW_OPTION );
 		if( dialog.show() )
 		{

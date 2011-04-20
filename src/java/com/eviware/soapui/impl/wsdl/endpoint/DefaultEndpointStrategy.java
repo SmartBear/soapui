@@ -97,6 +97,11 @@ public class DefaultEndpointStrategy implements EndpointStrategy, PropertyExpans
 
 		for( EndpointConfig endpointConfig : config.getEndpointList() )
 		{
+			if( !endpointConfig.isSetMode() )
+			{
+				endpointConfig.setMode( EndpointConfig.Mode.COMPLEMENT );
+			}
+
 			defaults.put( endpointConfig.getStringValue(), new EndpointDefaults( endpointConfig ) );
 		}
 	}
@@ -145,8 +150,8 @@ public class DefaultEndpointStrategy implements EndpointStrategy, PropertyExpans
 			}
 			catch( URIException e )
 			{
-				SoapUI.logError( e, "Error for path: " + httpMethod.getPath() + ", QueryString: "
-						+ httpMethod.getQueryString() );
+				SoapUI.logError( e,
+						"Error for path: " + httpMethod.getPath() + ", QueryString: " + httpMethod.getQueryString() );
 				return;
 			}
 		}

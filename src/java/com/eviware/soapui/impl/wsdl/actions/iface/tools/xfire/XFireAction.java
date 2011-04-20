@@ -168,8 +168,8 @@ public class XFireAction extends AbstractToolsAction<Interface>
 		}
 
 		classpath.append( File.pathSeparatorChar );
-		classpath.append( antDir ).append( File.separatorChar ).append( "lib" ).append( File.separatorChar ).append(
-				"ant.jar" );
+		classpath.append( antDir ).append( File.separatorChar ).append( "lib" ).append( File.separatorChar )
+				.append( "ant.jar" );
 
 		if( additional != null && additional.trim().length() > 0 )
 			classpath.append( File.pathSeparatorChar ).append( additional.trim() );

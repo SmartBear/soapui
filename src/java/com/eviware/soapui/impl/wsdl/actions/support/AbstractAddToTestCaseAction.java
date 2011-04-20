@@ -83,8 +83,8 @@ public abstract class AbstractAddToTestCaseAction<T extends ModelItem> extends A
 
 			WsdlTestSuite testSuite = ( WsdlTestSuite )project.getTestSuiteAt( testSuiteNames.indexOf( selection ) );
 
-			String name = UISupport.prompt( "Enter name for TestCase create", "Create TestCase", "TestCase "
-					+ ( testSuite.getTestCaseCount() + 1 ) );
+			String name = UISupport.prompt( "Enter name for TestCase create", "Create TestCase",
+					"TestCase " + ( testSuite.getTestCaseCount() + 1 ) );
 			if( name == null )
 				return null;
 

@@ -28,8 +28,8 @@ import com.eviware.x.form.XFormField;
 import com.eviware.x.form.XFormFieldListener;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.AField.AFieldType;
+import com.eviware.x.form.support.AForm;
 
 /**
  * Prompts to change the WsdlOperation of a WsdlMockOperation
@@ -60,8 +60,8 @@ public class ChangeMockOperationAction extends AbstractSoapUIAction<WsdlMockOper
 				public void valueChanged( XFormField sourceField, String newValue, String oldValue )
 				{
 					WsdlProject project = testStep.getMockService().getProject();
-					dialog.setOptions( Form.OPERATION, ModelSupport.getNames( project.getInterfaceByName( newValue )
-							.getOperationList() ) );
+					dialog.setOptions( Form.OPERATION,
+							ModelSupport.getNames( project.getInterfaceByName( newValue ).getOperationList() ) );
 					WsdlOperation operation = testStep.getOperation();
 					dialog.setValue( Form.OPERATION, operation == null ? "" : operation.getName() );
 				}
@@ -90,8 +90,8 @@ public class ChangeMockOperationAction extends AbstractSoapUIAction<WsdlMockOper
 		dialog.setOptions( Form.INTERFACE, interfaceNames );
 		dialog.setValue( Form.INTERFACE, operation == null ? interfaceNames[0] : operation.getInterface().getName() );
 
-		dialog.setOptions( Form.OPERATION, ModelSupport.getNames( project.getInterfaceByName(
-				dialog.getValue( Form.INTERFACE ) ).getOperationList() ) );
+		dialog.setOptions( Form.OPERATION,
+				ModelSupport.getNames( project.getInterfaceByName( dialog.getValue( Form.INTERFACE ) ).getOperationList() ) );
 		dialog.setValue( Form.OPERATION, operation == null ? null : operation.getName() );
 		dialog.setValue( Form.NAME, target.getName() );
 

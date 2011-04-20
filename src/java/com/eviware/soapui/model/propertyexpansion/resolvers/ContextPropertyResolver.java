@@ -45,8 +45,8 @@ public class ContextPropertyResolver implements PropertyResolver
 
 		if( property != null && xpath != null )
 		{
-			property = ResolverUtils.extractXPathPropertyValue( property, PropertyExpander.expandProperties( context,
-					xpath ) );
+			property = ResolverUtils.extractXPathPropertyValue( property,
+					PropertyExpander.expandProperties( context, xpath ) );
 		}
 
 		return property == null ? null : property.toString();

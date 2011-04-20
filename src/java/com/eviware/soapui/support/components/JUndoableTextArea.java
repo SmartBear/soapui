@@ -80,7 +80,7 @@ public class JUndoableTextArea extends JTextArea implements Undoable, UndoableEd
 					findAndReplace();
 				else
 					return;
-				
+
 				e.consume();
 			}
 		} );

@@ -12,16 +12,24 @@
 
 package com.eviware.soapui.support.editor;
 
-import com.eviware.soapui.support.components.*;
-
-import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+import javax.swing.SwingUtilities;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
+import com.eviware.soapui.support.components.Inspector;
+import com.eviware.soapui.support.components.JInspectorPanel;
+import com.eviware.soapui.support.components.JInspectorPanelFactory;
+import com.eviware.soapui.support.components.VTextIcon;
+import com.eviware.soapui.support.components.VerticalTabbedPaneUI;
 
 /**
  * Editor-framework for Documents
@@ -61,8 +69,8 @@ public class Editor<T extends EditorDocument> extends JPanel implements Property
 	{
 		views.add( editorView );
 
-		inputTabs.addTab( null, new VTextIcon( inputTabs, editorView.getTitle(), VTextIcon.ROTATE_LEFT ), editorView
-				.getComponent() );
+		inputTabs.addTab( null, new VTextIcon( inputTabs, editorView.getTitle(), VTextIcon.ROTATE_LEFT ),
+				editorView.getComponent() );
 
 		editorView.addPropertyChangeListener( this );
 		editorView.addLocationListener( this );
@@ -234,8 +242,8 @@ public class Editor<T extends EditorDocument> extends JPanel implements Property
 
 			for( Inspector inspector : inspectorPanel.getInspectors() )
 			{
-				inspectorPanel.setInspectorVisible( inspector, ( ( EditorInspector<T> )inspector )
-						.isEnabledFor( currentView ) );
+				inspectorPanel.setInspectorVisible( inspector,
+						( ( EditorInspector<T> )inspector ).isEnabledFor( currentView ) );
 			}
 
 			if( currentInspector != null && ( ( EditorInspector<T> )currentInspector ).isEnabledFor( currentView ) )

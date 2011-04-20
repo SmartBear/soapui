@@ -24,7 +24,7 @@ public class MockProjectRunner extends AbstractMockTestRunner<WsdlProject> imple
 	public MockProjectRunner( WsdlProject project )
 	{
 		super( project, null );
-		setRunContext( new MockProjectRunContext( this ));
+		setRunContext( new MockProjectRunContext( this ) );
 	}
 
 	public WsdlProject getProject()

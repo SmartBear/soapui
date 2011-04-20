@@ -229,5 +229,5 @@ public class JTabbedFormDialog extends SwingXFormDialog
 	{
 		dialog.setResizable( b );
 	}
-	
+
 }

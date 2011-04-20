@@ -45,4 +45,6 @@ public interface HttpRequestInterface<T extends AbstractRequestConfig> extends A
 
 	public String getPath();
 
+	public String getMultiValueDelimiter();
+
 }

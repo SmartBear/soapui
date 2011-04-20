@@ -195,7 +195,7 @@ public class WsdlDelayTestStep extends WsdlTestStepWithProperties implements Pro
 			}
 
 			// sleep in chunks for canceling
-			final long stopTime = System.nanoTime() + ( long )delay * 1000000;
+			final long stopTime = System.currentTimeMillis() + delay;
 			int lastUpdate = 0;
 			while( !canceled && timeWaited < delay )
 			{
@@ -218,7 +218,7 @@ public class WsdlDelayTestStep extends WsdlTestStepWithProperties implements Pro
 				}
 
 				Thread.sleep( Math.min( DELAY_CHUNK, delay - timeWaited ) );
-				timeWaited = delay - ( int )( ( stopTime - System.nanoTime() ) / 1000000 );
+				timeWaited = delay - ( int )( ( stopTime - System.currentTimeMillis() ) );
 			}
 		}
 		catch( InterruptedException e )

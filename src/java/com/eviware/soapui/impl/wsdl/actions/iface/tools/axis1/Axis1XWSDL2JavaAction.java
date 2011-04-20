@@ -88,11 +88,11 @@ public class Axis1XWSDL2JavaAction extends AbstractToolsAction<Interface>
 		mainForm.addCheckBox( SERVER_SIDE, messages.get( "Dialog.Basic.ServerSide" ) );
 		mainForm.addCheckBox( ALL, messages.get( "Dialog.Basic.All" ) );
 
-		mainForm.addComboBox( DEPLOY_SCOPE, new String[] { "none", "Application", "Session", "Request" }, messages
-				.get( "Axis1XWSDL2JavaAction.Dialog.Basic.AddScope" ) );
+		mainForm.addComboBox( DEPLOY_SCOPE, new String[] { "none", "Application", "Session", "Request" },
+				messages.get( "Axis1XWSDL2JavaAction.Dialog.Basic.AddScope" ) );
 
-		mainForm.addComboBox( SKELETON_DEPLOY, new String[] { "none", "true", "false" }, messages
-				.get( "Dialog.Basic.DeploySkeleton" ) );
+		mainForm.addComboBox( SKELETON_DEPLOY, new String[] { "none", "true", "false" },
+				messages.get( "Dialog.Basic.DeploySkeleton" ) );
 
 		mainForm.addCheckBox( NO_IMPORTS, messages.get( "Dialog.Basic.NoImports" ) );
 		mainForm.addCheckBox( NO_WRAPPED, messages.get( "Dialog.Basic.NoWrapped" ) );
@@ -101,8 +101,8 @@ public class Axis1XWSDL2JavaAction extends AbstractToolsAction<Interface>
 		mainForm.addCheckBox( WRAP_ARRAYS, messages.get( "Dialog.Basic.WrapArrays" ) );
 
 		XForm advForm = builder.createForm( messages.get( "Dialog.Advanced.Label" ) );
-		advForm.addComboBox( TYPE_MAPPING_VERSION, new String[] { "1.2", "1.1" }, messages
-				.get( "Dialog.Advanced.TypeMappingVersion" ) );
+		advForm.addComboBox( TYPE_MAPPING_VERSION, new String[] { "1.2", "1.1" },
+				messages.get( "Dialog.Advanced.TypeMappingVersion" ) );
 
 		advForm.addTextField( IMPLCLASS, messages.get( "Dialog.Advanced.ImplClass" ), XForm.FieldType.JAVA_CLASS );
 		advForm.addTextField( FACTORY, messages.get( "Dialog.Advanced.Factory" ), XForm.FieldType.JAVA_CLASS );
@@ -115,8 +115,8 @@ public class Axis1XWSDL2JavaAction extends AbstractToolsAction<Interface>
 
 		buildArgsForm( builder, true, "WSDL2Java" ); //$NON-NLS-1$
 
-		return builder.buildDialog( buildDefaultActions( HelpUrls.AXIS1X_HELP_URL, modelItem ), messages
-				.get( "Dialog.Description" ), UISupport.TOOL_ICON );
+		return builder.buildDialog( buildDefaultActions( HelpUrls.AXIS1X_HELP_URL, modelItem ),
+				messages.get( "Dialog.Description" ), UISupport.TOOL_ICON );
 	}
 
 	protected void generate( StringToStringMap values, ToolHost toolHost, Interface modelItem ) throws Exception

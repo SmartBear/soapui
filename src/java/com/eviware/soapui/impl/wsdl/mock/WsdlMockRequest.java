@@ -31,6 +31,8 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.MockRequestDataSource;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.MultipartMessageSupport;
+import com.eviware.soapui.impl.wsdl.support.CompressionSupport;
+import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapUtils;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
 import com.eviware.soapui.impl.wsdl.support.wss.IncomingWss;
@@ -97,6 +99,8 @@ public class WsdlMockRequest implements MockRequest
 
 		protocol = request.getProtocol();
 		path = request.getPathInfo();
+		if( path == null )
+			path = "";
 
 		if( request.getMethod().equals( "POST" ) )
 		{
@@ -120,8 +124,8 @@ public class WsdlMockRequest implements MockRequest
 
 			if( StringUtils.hasContent( context.getMockService().getIncomingWss() ) )
 			{
-				IncomingWss incoming = context.getMockService().getProject().getWssContainer().getIncomingWssByName(
-						context.getMockService().getIncomingWss() );
+				IncomingWss incoming = context.getMockService().getProject().getWssContainer()
+						.getIncomingWssByName( context.getMockService().getIncomingWss() );
 				if( incoming != null )
 				{
 					Document dom = XmlUtils.parseXml( requestContent );
@@ -146,7 +150,15 @@ public class WsdlMockRequest implements MockRequest
 			}
 		}
 
+		try
+		{
 		soapVersion = SoapUtils.deduceSoapVersion( contentType, getRequestXmlObject() );
+		}
+		catch( Exception e )
+		{
+			// ignore non xml requests
+		}
+
 		if( soapVersion == null )
 			soapVersion = SoapVersion.Soap11;
 
@@ -178,7 +190,7 @@ public class WsdlMockRequest implements MockRequest
 
 	private String readRequestContent( HttpServletRequest request ) throws Exception
 	{
-		String responseContent = null;
+		String messageContent = null;
 		String encoding = request.getCharacterEncoding();
 		if( encoding != null )
 			encoding = StringUtils.unquote( encoding );
@@ -202,6 +214,24 @@ public class WsdlMockRequest implements MockRequest
 			}
 		}
 
+		// decompress
+		String compressionAlg = HttpClientSupport.getCompressionType( request.getContentType(),
+				requestHeaders.get( "Content-Encoding", ( String )null ) );
+
+		if( compressionAlg != null )
+		{
+			try
+			{
+				data = CompressionSupport.decompress( compressionAlg, data );
+			}
+			catch( Exception e )
+			{
+				IOException ioe = new IOException( "Decompression of response failed" );
+				ioe.initCause( e );
+				throw ioe;
+			}
+		}
+
 		int contentOffset = 0;
 
 		String contentType = request.getContentType();
@@ -218,19 +248,19 @@ public class WsdlMockRequest implements MockRequest
 
 			encoding = StringUtils.unquote( encoding );
 
-			responseContent = encoding == null ? new String( data ) : new String( data, contentOffset,
+			messageContent = encoding == null ? new String( data ) : new String( data, contentOffset,
 					( int )( data.length - contentOffset ), encoding );
 		}
 
 		if( encoding == null )
 			encoding = "UTF-8";
 
-		if( responseContent == null )
+		if( messageContent == null )
 		{
-			responseContent = new String( data, encoding );
+			messageContent = new String( data, encoding );
 		}
 
-		return responseContent;
+		return messageContent;
 	}
 
 	public Attachment[] getRequestAttachments()

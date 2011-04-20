@@ -40,19 +40,21 @@ public class HermesJmsRequestSendSubscribeTransport extends HermesJmsRequestTran
 			init( submitContext, request );
 			String clientIDString = StringUtils.hasContent( clientID ) ? clientID : jmsEndpoint.getSessionName() + "-"
 					+ jmsEndpoint.getReceive();
-			jmsConnectionHolderTopic = new JMSConnectionHolder( jmsEndpoint, hermes, true, clientIDString, username, password );
+			jmsConnectionHolderTopic = new JMSConnectionHolder( jmsEndpoint, hermes, true, clientIDString, username,
+					password );
 			jmsConnectionHolderQueue = new JMSConnectionHolder( jmsEndpoint, hermes, false, null, username, password );
 			// session
 			topicSession = jmsConnectionHolderTopic.getSession();
 			queueSession = jmsConnectionHolderQueue.getSession();
 
 			Queue queueSend = jmsConnectionHolderQueue.getQueue( jmsConnectionHolderQueue.getJmsEndpoint().getSend() );
-		
-			
-			topicDurableSubsriber = createDurableSubscription( submitContext, topicSession, jmsConnectionHolderTopic ); 
 
-			Message textMessageSend = messageSend( submitContext, request, queueSession, jmsConnectionHolderQueue.getHermes(),
-					queueSend );
+			Topic topicSubscribe = jmsConnectionHolderTopic.getTopic( jmsConnectionHolderTopic.getJmsEndpoint()
+					.getReceive() );
+			topicDurableSubsriber = createDurableSubscription( submitContext, topicSession, jmsConnectionHolderTopic );
+
+			Message textMessageSend = messageSend( submitContext, request, queueSession,
+					jmsConnectionHolderQueue.getHermes(), queueSend, topicSubscribe );
 
 			return makeResponse( submitContext, request, timeStarted, textMessageSend, topicDurableSubsriber );
 		}
@@ -70,8 +72,10 @@ public class HermesJmsRequestSendSubscribeTransport extends HermesJmsRequestTran
 				topicDurableSubsriber.close();
 			jmsConnectionHolderQueue.closeAll();
 			jmsConnectionHolderTopic.closeAll();
-			closeSessionAndConnection( jmsConnectionHolderQueue != null ? jmsConnectionHolderQueue.getConnection() : null,queueSession );
-			closeSessionAndConnection( jmsConnectionHolderTopic != null ? jmsConnectionHolderTopic.getConnection() : null,topicSession );
+			closeSessionAndConnection( jmsConnectionHolderQueue != null ? jmsConnectionHolderQueue.getConnection() : null,
+					queueSession );
+			closeSessionAndConnection( jmsConnectionHolderTopic != null ? jmsConnectionHolderTopic.getConnection() : null,
+					topicSession );
 		}
 		return null;
 	}

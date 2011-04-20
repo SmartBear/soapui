@@ -55,7 +55,10 @@ public class AddSignatureEntry extends WssEntryBase
 	private String signatureAlgorithm;
 	private boolean useSingleCert;
 	private String signatureCanonicalization;
-	private String digestAlgorithm; /* ADDED: Combo box for selecting digest algorithm */ 
+	private String digestAlgorithm; /*
+												 * ADDED: Combo box for selecting digest
+												 * algorithm
+												 */
 	private List<StringToStringMap> parts = new ArrayList<StringToStringMap>();
 	private com.eviware.soapui.impl.wsdl.support.wss.entries.WssEntryBase.KeyAliasComboBoxModel keyAliasComboBoxModel;
 	private com.eviware.soapui.impl.wsdl.support.wss.entries.AddSignatureEntry.InternalWssContainerListener wssContainerListener;
@@ -92,30 +95,25 @@ public class AddSignatureEntry extends WssEntryBase
 
 		form.appendComboBox( "keyIdentifierType", "Key Identifier Type", new Integer[] { 0, 1, 2, 3, 4 },
 				"Sets which key identifier to use" ).setRenderer( new KeyIdentifierTypeRenderer() );
-		form
-				.appendComboBox( "signatureAlgorithm", "Signature Algorithm", new String[] { DEFAULT_OPTION,
-						WSConstants.RSA, WSConstants.DSA, XMLSignature.ALGO_ID_MAC_HMAC_SHA1,
-						XMLSignature.ALGO_ID_MAC_HMAC_SHA256, XMLSignature.ALGO_ID_MAC_HMAC_SHA384,
-						XMLSignature.ALGO_ID_MAC_HMAC_SHA512, XMLSignature.ALGO_ID_MAC_HMAC_RIPEMD160,
-						XMLSignature.ALGO_ID_MAC_HMAC_NOT_RECOMMENDED_MD5, XMLSignature.ALGO_ID_SIGNATURE_ECDSA_SHA1,
-						XMLSignature.ALGO_ID_SIGNATURE_NOT_RECOMMENDED_RSA_MD5, XMLSignature.ALGO_ID_SIGNATURE_RSA_SHA1,
-						XMLSignature.ALGO_ID_SIGNATURE_RSA_SHA256, XMLSignature.ALGO_ID_SIGNATURE_RSA_SHA384,
-						XMLSignature.ALGO_ID_SIGNATURE_RSA_SHA512, XMLSignature.ALGO_ID_SIGNATURE_RSA_RIPEMD160 },
-						"Set the name of the signature encryption algorithm to use" );
+		form.appendComboBox( "signatureAlgorithm", "Signature Algorithm", new String[] { DEFAULT_OPTION, WSConstants.RSA,
+				WSConstants.DSA, XMLSignature.ALGO_ID_MAC_HMAC_SHA1, XMLSignature.ALGO_ID_MAC_HMAC_SHA256,
+				XMLSignature.ALGO_ID_MAC_HMAC_SHA384, XMLSignature.ALGO_ID_MAC_HMAC_SHA512,
+				XMLSignature.ALGO_ID_MAC_HMAC_RIPEMD160, XMLSignature.ALGO_ID_MAC_HMAC_NOT_RECOMMENDED_MD5,
+				XMLSignature.ALGO_ID_SIGNATURE_ECDSA_SHA1, XMLSignature.ALGO_ID_SIGNATURE_NOT_RECOMMENDED_RSA_MD5,
+				XMLSignature.ALGO_ID_SIGNATURE_RSA_SHA1, XMLSignature.ALGO_ID_SIGNATURE_RSA_SHA256,
+				XMLSignature.ALGO_ID_SIGNATURE_RSA_SHA384, XMLSignature.ALGO_ID_SIGNATURE_RSA_SHA512,
+				XMLSignature.ALGO_ID_SIGNATURE_RSA_RIPEMD160 }, "Set the name of the signature encryption algorithm to use" );
 		form.appendComboBox( "signatureCanonicalization", "Signature Canonicalization", new String[] { DEFAULT_OPTION,
 				WSConstants.C14N_OMIT_COMMENTS, WSConstants.C14N_WITH_COMMENTS, WSConstants.C14N_EXCL_OMIT_COMMENTS,
 				WSConstants.C14N_EXCL_WITH_COMMENTS }, "Set the canonicalization method to use." );
-		
+
 		/* ADDED: Combo box for selecting digest algorithm */
-		form.appendComboBox( "digestAlgorithm", "Digest Algorithm", new String[] { DEFAULT_OPTION, 
-						MessageDigestAlgorithm.ALGO_ID_DIGEST_NOT_RECOMMENDED_MD5,
-						MessageDigestAlgorithm.ALGO_ID_DIGEST_SHA1,
-						MessageDigestAlgorithm.ALGO_ID_DIGEST_SHA256,
-						MessageDigestAlgorithm.ALGO_ID_DIGEST_SHA384,
-						MessageDigestAlgorithm.ALGO_ID_DIGEST_SHA512,
-						MessageDigestAlgorithm.ALGO_ID_DIGEST_RIPEMD160 },
-						"Set the digest algorithm to use");
-		
+		form.appendComboBox( "digestAlgorithm", "Digest Algorithm", new String[] { DEFAULT_OPTION,
+				MessageDigestAlgorithm.ALGO_ID_DIGEST_NOT_RECOMMENDED_MD5, MessageDigestAlgorithm.ALGO_ID_DIGEST_SHA1,
+				MessageDigestAlgorithm.ALGO_ID_DIGEST_SHA256, MessageDigestAlgorithm.ALGO_ID_DIGEST_SHA384,
+				MessageDigestAlgorithm.ALGO_ID_DIGEST_SHA512, MessageDigestAlgorithm.ALGO_ID_DIGEST_RIPEMD160 },
+				"Set the digest algorithm to use" );
+
 		form.appendCheckBox( "useSingleCert", "Use Single Certificate", "Use single certificate for signing" );
 
 		form.append( "Parts", new WSPartsTable( parts, this ) );
@@ -139,7 +137,7 @@ public class AddSignatureEntry extends WssEntryBase
 		useSingleCert = reader.readBoolean( "useSingleCert", false );
 
 		/* ADDED: digest algorithm to use */
-		digestAlgorithm = reader.readString( "digestAlgorithm", null);
+		digestAlgorithm = reader.readString( "digestAlgorithm", null );
 
 		parts = readParts( reader, "signaturePart" );
 	}
@@ -155,7 +153,7 @@ public class AddSignatureEntry extends WssEntryBase
 
 		/* ADDED: digest algorithm to use */
 		builder.add( "digestAlgorithm", digestAlgorithm );
-		
+
 		saveParts( builder, parts, "signaturePart" );
 	}
 
@@ -184,7 +182,7 @@ public class AddSignatureEntry extends WssEntryBase
 				wssSign.setSigCanonicalization( signatureCanonicalization );
 
 			wssSign.setUseSingleCertificate( useSingleCert );
-			
+
 			/* ADDED: Set the digest algorithm to the selected one */
 			wssSign.setDigestAlgo( digestAlgorithm );
 
@@ -259,18 +257,18 @@ public class AddSignatureEntry extends WssEntryBase
 		this.signatureAlgorithm = signatureAlgorithm;
 		saveConfig();
 	}
-	
+
 	/* ADDED: digest algorithm */
 	public String getDigestAlgorithm()
 	{
 		return StringUtils.isNullOrEmpty( digestAlgorithm ) ? DEFAULT_OPTION : digestAlgorithm;
 	}
-	
+
 	public void setDigestAlgorithm( String digestAlgorithm )
 	{
-		if ( DEFAULT_OPTION.equals( digestAlgorithm ) )
+		if( DEFAULT_OPTION.equals( digestAlgorithm ) )
 			digestAlgorithm = null;
-		
+
 		this.digestAlgorithm = digestAlgorithm;
 		saveConfig();
 	}

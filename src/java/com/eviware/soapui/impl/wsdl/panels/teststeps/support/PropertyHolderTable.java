@@ -63,8 +63,8 @@ import com.eviware.soapui.support.xml.XmlUtils;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.AField.AFieldType;
+import com.eviware.x.form.support.AForm;
 
 public class PropertyHolderTable extends JPanel
 {
@@ -470,7 +470,7 @@ public class PropertyHolderTable extends JPanel
 										&& holder instanceof MutableTestPropertyHolder )
 								{
 									TestProperty prop = ( ( MutableTestPropertyHolder )holder ).addProperty( name );
-									if ( !prop.isReadOnly() ) 
+									if( !prop.isReadOnly() )
 										prop.setValue( value );
 									count++ ;
 								}

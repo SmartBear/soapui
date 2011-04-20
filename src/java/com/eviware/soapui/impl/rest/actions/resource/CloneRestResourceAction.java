@@ -33,8 +33,8 @@ public class CloneRestResourceAction extends AbstractSoapUIAction<RestResource>
 
 	public void perform( RestResource resource, Object param )
 	{
-		String name = UISupport.prompt( "Specify name of cloned Resource", "Clone Resource", "Copy of "
-				+ resource.getName() );
+		String name = UISupport.prompt( "Specify name of cloned Resource", "Clone Resource",
+				"Copy of " + resource.getName() );
 		if( name == null )
 			return;
 

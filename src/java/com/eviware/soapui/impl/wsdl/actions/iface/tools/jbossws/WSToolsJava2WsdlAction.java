@@ -21,9 +21,9 @@ import org.jboss.jbosswsTools.JavaToWsdlType;
 import org.jboss.jbosswsTools.MappingType;
 import org.jboss.jbosswsTools.NamespacesType;
 import org.jboss.jbosswsTools.ServiceType;
-import org.jboss.jbosswsTools.WsxmlType;
 import org.jboss.jbosswsTools.ServiceType.ParameterStyle;
 import org.jboss.jbosswsTools.ServiceType.Style;
+import org.jboss.jbosswsTools.WsxmlType;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.WsdlInterfaceFactory;
@@ -84,8 +84,8 @@ public class WSToolsJava2WsdlAction extends AbstractToolsAction<WsdlProject>
 		mainForm.addTextField( SERVICE_NAME, "The name of the generated Service", XForm.FieldType.TEXT );
 		mainForm
 				.addComboBox( STYLE, new String[] { Style.DOCUMENT.toString(), Style.RPC.toString() }, "The style to use" );
-		mainForm.addComboBox( PARAMETER_STYLE, new String[] { ParameterStyle.BARE.toString(),
-				ParameterStyle.WRAPPED.toString() }, "The style to use" );
+		mainForm.addComboBox( PARAMETER_STYLE,
+				new String[] { ParameterStyle.BARE.toString(), ParameterStyle.WRAPPED.toString() }, "The style to use" );
 		mainForm.addTextField( CLASSPATH, "Classpath to use", XForm.FieldType.PROJECT_FOLDER );
 		mainForm.addTextField( OUTPUT, "The root directory for all emitted files.", XForm.FieldType.PROJECT_FOLDER );
 		mainForm.addTextField( MAPPING, "mapping file to generate", XForm.FieldType.PROJECT_FILE );

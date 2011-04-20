@@ -40,9 +40,11 @@ public class LoadUIPrefs implements Prefs
 		{
 			editorForm = new SimpleForm();
 			editorForm.addSpace( 5 );
-			DirectoryFormComponent directoryFormComponent=new DirectoryFormComponent( "Folder containing loadUI.bat(.sh) " );
-			directoryFormComponent.setInitialFolder( System.getProperty( "soapui.home" )+File.separator+".."+File.separator+".." );
-			editorForm.append( LOADUI_PATH,  directoryFormComponent);
+			DirectoryFormComponent directoryFormComponent = new DirectoryFormComponent(
+					"Folder containing loadUI.bat(.sh) " );
+			directoryFormComponent.setInitialFolder( System.getProperty( "soapui.home" ) + File.separator + ".."
+					+ File.separator + ".." );
+			editorForm.append( LOADUI_PATH, directoryFormComponent );
 			editorForm.appendTextField( LOADUI_CAJO_PORT, "Client port for loadUI integration" );
 			editorForm.appendTextField( SOAPUI_CAJO_PORT,
 					"Server port of soapUI integration (change requires restart of soapUI)" );

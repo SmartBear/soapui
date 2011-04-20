@@ -84,7 +84,7 @@ public class RestMethodTreeNode extends AbstractModelItemTreeNode<RestMethod>
 		else
 			throw new RuntimeException( "Removing unknown request" );
 	}
-	
+
 	public void release()
 	{
 		super.release();

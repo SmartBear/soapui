@@ -40,6 +40,7 @@ import com.eviware.soapui.config.RestParametersConfig;
 import com.eviware.soapui.impl.wsdl.support.wsdl.UrlWsdlLoader;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestPropertyListener;
 import com.eviware.soapui.support.StringUtils;
@@ -495,17 +496,19 @@ public class XmlBeansRestParamsTestPropertyHolder implements RestParamsPropertyH
 		}
 
 		@Override
-		public String getPath() {
+		public String getPath()
+		{
 			return propertyConfig.getPath();
-			
+
 		}
 
 		@Override
-		public void setPath(String path) {
+		public void setPath( String path )
+		{
 			String old = getPath();
 			propertyConfig.setPath( path );
 			propertySupport.firePropertyChange( "path", old, path );
-			
+
 		}
 
 		@Override
@@ -648,6 +651,9 @@ public class XmlBeansRestParamsTestPropertyHolder implements RestParamsPropertyH
 	public PropertyExpansion[] getPropertyExpansions()
 	{
 		List<PropertyExpansion> result = new ArrayList<PropertyExpansion>();
+
+		for( RestParamProperty prop : properties )
+			result.addAll( PropertyExpansionUtils.extractPropertyExpansions( getModelItem(), prop, "value" ) );
 
 		return result.toArray( new PropertyExpansion[result.size()] );
 	}
@@ -846,7 +852,7 @@ public class XmlBeansRestParamsTestPropertyHolder implements RestParamsPropertyH
 		prop.setDefaultValue( property.getDefaultValue() );
 		prop.setDescription( property.getDescription() );
 		prop.setOptions( property.getOptions() );
-		prop.setPath(property.getPath());
+		prop.setPath( property.getPath() );
 		prop.setRequired( property.getRequired() );
 	}
 

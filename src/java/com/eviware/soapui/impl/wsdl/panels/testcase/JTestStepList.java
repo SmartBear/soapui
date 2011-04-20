@@ -233,7 +233,7 @@ public class JTestStepList extends JPanel
 	// {
 	// return;
 	// }
-	//			
+	//
 	// ModelItem modelItem = (ModelItem) testStepList.getSelectedValue();
 	// if (modelItem == null)
 	// return;
@@ -402,6 +402,9 @@ public class JTestStepList extends JPanel
 
 		public void actionPerformed( ActionEvent e )
 		{
+			if( !factory.canAddTestStepToTestCase( testCase ) )
+				return;
+
 			String name = UISupport.prompt( "Specify name for new step", "Insert Step", factory.getTestStepName() );
 			if( name != null )
 			{

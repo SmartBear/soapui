@@ -25,5 +25,5 @@ public interface LoadUISettings
 	public final static String LOADUI_CAJO_PORT = LoadUISettings.class.getSimpleName() + "@" + "cajo_port";
 	public final static String LOADUI_CAJO_ITEM_NAME = LoadUISettings.class.getSimpleName() + "@" + "cajo_item_name";
 	public final static String SOAPUI_CAJO_PORT = LoadUISettings.class.getSimpleName() + "@" + "cajo_soapui_port";
-	
+
 }

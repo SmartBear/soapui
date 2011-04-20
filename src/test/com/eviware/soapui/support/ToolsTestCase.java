@@ -19,14 +19,14 @@ public class ToolsTestCase extends TestCase
 	public void testTokenizeArgs() throws Exception
 	{
 		assertNull( Tools.tokenizeArgs( "" ) );
-		
+
 		String[] args = Tools.tokenizeArgs( "test ett" );
 		assertEquals( args.length, 2 );
 
 		args = Tools.tokenizeArgs( "\"test ett\"" );
 		assertEquals( args.length, 1 );
 		assertEquals( args[0], "test ett" );
-		
+
 		args = Tools.tokenizeArgs( "\"test\\\" ett\" " );
 		assertEquals( args.length, 1 );
 		assertEquals( args[0], "test\" ett" );

@@ -60,8 +60,8 @@ public class HttpAuthenticationRequestFilter extends AbstractRequestFilter
 
 		if( wsdlRequest instanceof WsdlRequest )
 		{
-			wssPasswordType = PropertyExpander.expandProperties( context, ( ( WsdlRequest )wsdlRequest )
-					.getWssPasswordType() );
+			wssPasswordType = PropertyExpander.expandProperties( context,
+					( ( WsdlRequest )wsdlRequest ).getWssPasswordType() );
 		}
 
 		if( StringUtils.isNullOrEmpty( wssPasswordType ) )

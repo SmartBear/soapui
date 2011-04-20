@@ -18,6 +18,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.java.dev.wadl.x2009.x02.ApplicationDocument;
+import net.java.dev.wadl.x2009.x02.ApplicationDocument.Application;
+import net.java.dev.wadl.x2009.x02.DocDocument.Doc;
+import net.java.dev.wadl.x2009.x02.GrammarsDocument.Grammars;
+import net.java.dev.wadl.x2009.x02.MethodDocument.Method;
+import net.java.dev.wadl.x2009.x02.ParamDocument.Param;
+import net.java.dev.wadl.x2009.x02.ParamStyle;
+import net.java.dev.wadl.x2009.x02.RepresentationDocument.Representation;
+import net.java.dev.wadl.x2009.x02.RequestDocument.Request;
+import net.java.dev.wadl.x2009.x02.ResourceDocument.Resource;
+import net.java.dev.wadl.x2009.x02.ResourcesDocument.Resources;
+import net.java.dev.wadl.x2009.x02.ResponseDocument.Response;
+
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
@@ -33,23 +46,10 @@ import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.types.StringToStringMap;
 
-import net.java.dev.wadl.x2009.x02.ApplicationDocument;
-import net.java.dev.wadl.x2009.x02.ParamStyle;
-import net.java.dev.wadl.x2009.x02.ApplicationDocument.Application;
-import net.java.dev.wadl.x2009.x02.DocDocument.Doc;
-import net.java.dev.wadl.x2009.x02.GrammarsDocument.Grammars;
-import net.java.dev.wadl.x2009.x02.MethodDocument.Method;
-import net.java.dev.wadl.x2009.x02.ParamDocument.Param;
-import net.java.dev.wadl.x2009.x02.RepresentationDocument.Representation;
-import net.java.dev.wadl.x2009.x02.RequestDocument.Request;
-import net.java.dev.wadl.x2009.x02.ResourceDocument.Resource;
-import net.java.dev.wadl.x2009.x02.ResourcesDocument.Resources;
-import net.java.dev.wadl.x2009.x02.ResponseDocument.Response;
-
 public class WadlGenerator
 {
 	private RestService restService;
-	
+
 	private boolean isWADL11 = true;
 
 	public WadlGenerator( RestService restService )
@@ -88,8 +88,8 @@ public class WadlGenerator
 				grammars.addNewInclude().setHref( InferredSchemaManager.filenameForNamespace( namespace ) );
 			}
 		}
-		
-		if(!isWADL11)
+
+		if( !isWADL11 )
 		{
 			XmlOptions options = new XmlOptions();
 			StringToStringMap subst = new StringToStringMap();
@@ -216,8 +216,8 @@ public class WadlGenerator
 				generateRepresentation( requestConfig.addNewRepresentation(), representation );
 			}
 		}
-		
-		Map<String,Response> responses = new HashMap<String, Response>();
+
+		Map<String, Response> responses = new HashMap<String, Response>();
 		if( !isWADL11 )
 			responses.put( null, methodConfig.addNewResponse() );
 		for( RestRepresentation representation : restMethod.getRepresentations() )
@@ -225,14 +225,14 @@ public class WadlGenerator
 			Response response;
 			if( isWADL11 )
 			{
-				List<Comparable> status = new ArrayList<Comparable>((List<Comparable>)representation.getStatus());
+				List<Comparable> status = new ArrayList<Comparable>( ( List<Comparable> )representation.getStatus() );
 				Collections.sort( status );
 				StringBuilder statusStrBuilder = new StringBuilder();
-				for(Object o : status)
+				for( Object o : status )
 					statusStrBuilder.append( o ).append( " " );
 				String statusStr = statusStrBuilder.toString();
-				
-				if(!responses.containsKey( statusStr ))
+
+				if( !responses.containsKey( statusStr ) )
 				{
 					response = methodConfig.addNewResponse();
 					response.setStatus( status );
@@ -247,27 +247,27 @@ public class WadlGenerator
 			{
 				response = responses.get( null );
 			}
-			
+
 			Representation representationConfig = response.addNewRepresentation();
 			generateRepresentation( representationConfig, representation );
-			
+
 			if( !isWADL11 && representation.getType() == RestRepresentation.Type.FAULT )
 			{
 				Element resp = ( Element )response.getDomNode();
 				Element rep = ( Element )representationConfig.getDomNode();
 				Element fault = resp.getOwnerDocument().createElementNS( Constants.WADL11_NS, "fault" );
-				
+
 				NamedNodeMap attributes = rep.getAttributes();
-				for( int i=0; i<attributes.getLength(); i++)
+				for( int i = 0; i < attributes.getLength(); i++ )
 				{
 					fault.setAttribute( attributes.item( i ).getNodeName(), attributes.item( i ).getNodeValue() );
 				}
 				NodeList children = rep.getChildNodes();
-				for( int i=0; i<children.getLength(); i++ )
+				for( int i = 0; i < children.getLength(); i++ )
 				{
 					fault.appendChild( children.item( i ) );
 				}
-				
+
 				resp.appendChild( fault );
 				rep.getParentNode().removeChild( rep );
 			}
@@ -281,7 +281,7 @@ public class WadlGenerator
 		if( StringUtils.hasContent( representation.getId() ) )
 			representationConfig.setId( representation.getId() );
 
-		if(!isWADL11)
+		if( !isWADL11 )
 		{
 			List<?> status = representation.getStatus();
 			if( status != null && status.size() > 0 )

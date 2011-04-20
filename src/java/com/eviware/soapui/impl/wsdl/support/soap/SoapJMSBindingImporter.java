@@ -75,9 +75,7 @@ public class SoapJMSBindingImporter extends AbstractSoapBindingImporter
 			// sanity check
 			if( operation.getOperation() == null || operation.getOperation().isUndefined() )
 			{
-				log
-						.error( "BindingOperation [" + operation.getName()
-								+ "] is missing or referring to an invalid operation" );
+				log.error( "BindingOperation [" + operation.getName() + "] is missing or referring to an invalid operation" );
 			}
 			else
 			{

@@ -151,7 +151,7 @@ public class ContextMapping
 			context.put( TRIGGER_TYPE, loadUITriggerType );
 			context.put( TRIGGER_CREATE_NEW, new Boolean( true ) );
 		}
-		
+
 		if( !NOT_SELECTED.equals( analisysType ) )
 		{
 			mapStatisticsProperties( null );
@@ -184,8 +184,8 @@ public class ContextMapping
 		HashMap<String, Object> context = new HashMap<String, Object>();
 		HashMap<String, String> properties = new HashMap<String, String>();
 
-		properties.put( PROJECT_FILE, createProperyValue( File.class, loadTest.getTestCase().getTestSuite().getProject()
-				.getPath() ) );
+		properties.put( PROJECT_FILE,
+				createProperyValue( File.class, loadTest.getTestCase().getTestSuite().getProject().getPath() ) );
 		properties.put( TEST_SUITE, createProperyValue( String.class, loadTest.getTestCase().getTestSuite().getName() ) );
 		properties.put( TEST_CASE, createProperyValue( String.class, loadTest.getTestCase().getName() ) );
 
@@ -291,18 +291,22 @@ public class ContextMapping
 			VarianceLoadStrategy currentStrategy = ( VarianceLoadStrategy )loadStrategy;
 			long rate = extractLongProperty( "rate" );
 			triggerProperties.put( "shape", createProperyValue( String.class, "Sine-wave" ) );
-			triggerProperties.put( "amplitude", createProperyValue( Long.class, Long.toString( ( ( long )( currentStrategy
-					.getVariance() * rate ) ) ) ) );
-			triggerProperties.put( "period", createProperyValue( Long.class, Long
-					.toString( currentStrategy.getInterval() / 1000 ) ) );
+			triggerProperties.put( "amplitude",
+					createProperyValue( Long.class, Long.toString( ( ( long )( currentStrategy.getVariance() * rate ) ) ) ) );
+			triggerProperties.put( "period",
+					createProperyValue( Long.class, Long.toString( currentStrategy.getInterval() / 1000 ) ) );
 		}
 		if( loadStrategy instanceof ThreadCountChangeLoadStrategy )
 		{
 			loadUITriggerType = RAMP_TRIGGER;
 			ThreadCountChangeLoadStrategy currentStrategy = ( ThreadCountChangeLoadStrategy )loadStrategy;
 			long end = extractLongProperty( "end" );
-			triggerProperties.put( "end", createProperyValue( Long.class, Long.toString( end
-					* ( currentStrategy.getEndThreadCount() / currentStrategy.getStartThreadCount() ) ) ) );
+			triggerProperties.put(
+					"end",
+					createProperyValue(
+							Long.class,
+							Long.toString( end
+									* ( currentStrategy.getEndThreadCount() / currentStrategy.getStartThreadCount() ) ) ) );
 			if( loadTest.getLimitType().equals( LoadTestLimitTypesConfig.TIME ) )
 			{
 				triggerProperties

@@ -178,7 +178,7 @@ public class GlobalPropertyResolver implements PropertyResolver
 			{
 				return XmlBeans.getBuiltinTypeSystem().findType( getType() );
 			}
-				
+
 		}
 	}
 
@@ -326,7 +326,7 @@ public class GlobalPropertyResolver implements PropertyResolver
 			{
 				return XmlBeans.getBuiltinTypeSystem().findType( getType() );
 			}
-				
+
 		}
 	}
 

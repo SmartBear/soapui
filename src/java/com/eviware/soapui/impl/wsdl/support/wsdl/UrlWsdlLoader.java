@@ -181,7 +181,7 @@ public class UrlWsdlLoader extends WsdlLoader implements DefinitionLoader
 		}
 	}
 
-	protected InputStream handleFile( String url ) throws IOException
+	protected InputStream handleFile( String url ) throws Exception
 	{
 		setNewBaseURI( url );
 		return new URL( url ).openStream();
@@ -254,8 +254,8 @@ public class UrlWsdlLoader extends WsdlLoader implements DefinitionLoader
 	 * @author ole.matzura
 	 */
 
-	private static Map<String,Credentials> cache = new HashMap<String,Credentials>();
-	
+	private static Map<String, Credentials> cache = new HashMap<String, Credentials>();
+
 	public final class WsdlCredentialsProvider implements CredentialsProvider
 	{
 		private XFormDialog basicDialog;
@@ -269,9 +269,9 @@ public class UrlWsdlLoader extends WsdlLoader implements DefinitionLoader
 				throws CredentialsNotAvailableException
 		{
 			String key = String.valueOf( authscheme ) + "-" + host + "-" + port + "-" + proxy;
-			if( cache.containsKey( key ))
+			if( cache.containsKey( key ) )
 				return cache.get( key );
-			
+
 			if( authscheme == null )
 			{
 				return null;
@@ -303,9 +303,9 @@ public class UrlWsdlLoader extends WsdlLoader implements DefinitionLoader
 					if( ntDialog.show() )
 					{
 						values = ntDialog.getValues();
-						NTCredentials credentials = new NTCredentials( values.get( "Username" ), values.get( "Password" ), host, values
-								.get( "Domain" ) );
-						
+						NTCredentials credentials = new NTCredentials( values.get( "Username" ), values.get( "Password" ),
+								host, values.get( "Domain" ) );
+
 						cache.put( key, credentials );
 						return credentials;
 					}
@@ -329,8 +329,8 @@ public class UrlWsdlLoader extends WsdlLoader implements DefinitionLoader
 					UISupport.getUIUtils().runInUIThreadIfSWT( showDialog );
 					if( showDialog.result )
 					{
-						UsernamePasswordCredentials credentials = new UsernamePasswordCredentials( showDialog.values.get( "Username" ), showDialog.values
-								.get( "Password" ) );
+						UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(
+								showDialog.values.get( "Username" ), showDialog.values.get( "Password" ) );
 						cache.put( key, credentials );
 						return credentials;
 					}

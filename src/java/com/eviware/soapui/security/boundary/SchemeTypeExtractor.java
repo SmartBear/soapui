@@ -24,8 +24,8 @@ import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequest;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel;
-import com.eviware.soapui.support.xml.XmlUtils;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel.XmlTreeNode;
+import com.eviware.soapui.support.xml.XmlUtils;
 
 public class SchemeTypeExtractor
 {
@@ -106,8 +106,7 @@ public class SchemeTypeExtractor
 			else
 			{
 				if( xmlTreeNodeChild.getSchemaType() != null && xmlTreeNodeChild.getSchemaType().isPrimitiveType() )
-					result
-							.put( xmlTreeNodeChild.getDomNode().getLocalName(), new NodeInfo( rootXmlTreeNode.getChild( cnt ) ) );
+					result.put( xmlTreeNodeChild.getDomNode().getLocalName(), new NodeInfo( rootXmlTreeNode.getChild( cnt ) ) );
 			}
 		}
 		return result;
@@ -118,8 +117,8 @@ public class SchemeTypeExtractor
 		StringBuilder result = new StringBuilder();
 		for( Object shortName : definition.getNamespaces().keySet() )
 		{
-			result.append( "declare namespace " ).append( shortName.toString() ).append( "=\'" ).append(
-					definition.getNamespaces().get( shortName ).toString() ).append( "\';" );
+			result.append( "declare namespace " ).append( shortName.toString() ).append( "=\'" )
+					.append( definition.getNamespaces().get( shortName ).toString() ).append( "\';" );
 		}
 		return result.toString();
 	}

@@ -540,13 +540,15 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 		}
 
 		@Override
-		public String getPath() {
+		public String getPath()
+		{
 			return overriddenProp.getPath();
 		}
 
 		@Override
-		public void setPath(String path) {
-			overriddenProp.setPath(path);
+		public void setPath( String path )
+		{
+			overriddenProp.setPath( path );
 		}
 
 		@Override

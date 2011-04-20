@@ -20,7 +20,6 @@ import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.actions.project.StartLoadUI;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
-import com.eviware.soapui.integration.loadui.ContextMapping;
 import com.eviware.soapui.integration.loadui.IntegrationUtils;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
@@ -30,8 +29,8 @@ import com.eviware.x.form.XFormField;
 import com.eviware.x.form.XFormFieldListener;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.AField.AFieldType;
+import com.eviware.x.form.support.AForm;
 
 public class RunTestCaseWithLoadUIAction extends AbstractSoapUIAction<WsdlTestCase>
 {
@@ -73,8 +72,8 @@ public class RunTestCaseWithLoadUIAction extends AbstractSoapUIAction<WsdlTestCa
 				dialog.setOptions( Form.TESTCASE, IntegrationUtils.getAvailableTestCases( newValue ) );
 				if( dialog.getValue( Form.TESTCASE ).equals( IntegrationUtils.CREATE_ON_PROJECT_LEVEL ) )
 				{
-					dialog.setOptions( Form.SOAPUIRUNNER, IntegrationUtils.getAvailableRunners( newValue,
-							IntegrationUtils.CREATE_ON_PROJECT_LEVEL ) );
+					dialog.setOptions( Form.SOAPUIRUNNER,
+							IntegrationUtils.getAvailableRunners( newValue, IntegrationUtils.CREATE_ON_PROJECT_LEVEL ) );
 				}
 			}
 		} );
@@ -89,8 +88,8 @@ public class RunTestCaseWithLoadUIAction extends AbstractSoapUIAction<WsdlTestCa
 				}
 				else
 				{
-					dialog.setOptions( Form.SOAPUIRUNNER, IntegrationUtils.getAvailableRunners( dialog
-							.getValue( Form.PROJECT ), newValue ) );
+					dialog.setOptions( Form.SOAPUIRUNNER,
+							IntegrationUtils.getAvailableRunners( dialog.getValue( Form.PROJECT ), newValue ) );
 				}
 			}
 		} );
@@ -110,8 +109,8 @@ public class RunTestCaseWithLoadUIAction extends AbstractSoapUIAction<WsdlTestCa
 			dialog.setValue( Form.TESTCASE, IntegrationUtils.CREATE_ON_PROJECT_LEVEL );
 		}
 
-		dialog.setOptions( Form.SOAPUIRUNNER, IntegrationUtils.getAvailableRunners( dialog.getValue( Form.PROJECT ),
-				dialog.getValue( Form.TESTCASE ) ) );
+		dialog.setOptions( Form.SOAPUIRUNNER,
+				IntegrationUtils.getAvailableRunners( dialog.getValue( Form.PROJECT ), dialog.getValue( Form.TESTCASE ) ) );
 		dialog.setValue( Form.SOAPUIRUNNER, IntegrationUtils.CREATE_NEW_OPTION );
 
 		dialog.setOptions( Form.GENERATOR, new String[] { EMPTY_OPTION, "Fixed Rate", "Variance", "Random", "Ramp",
@@ -155,22 +154,28 @@ public class RunTestCaseWithLoadUIAction extends AbstractSoapUIAction<WsdlTestCa
 					UISupport.showInfoMessage( "Error while opening selected loadUI project" );
 					return;
 				}
-				// next code was for getting back info on items created on loadUI side - removed for now
-//				if( createdRunnerSettings != null )
-//				{
-//					String creationInfo = "SoapUI Runner created/updated under project: '"
-//							+ createdRunnerSettings.get( ContextMapping.LOADUI_PROJECT_NAME ) + "'";
-//					if( targetTestCaseName != null && !targetTestCaseName.equals( IntegrationUtils.CREATE_ON_PROJECT_LEVEL ) )
-//					{
-//						creationInfo += ", TestCase: '" + createdRunnerSettings.get( ContextMapping.LOADUI_TEST_CASE_NAME )
-//								+ "'";
-//					}
-//					creationInfo += "Transfer focus to loadUI?";
-//					if( UISupport.confirm( creationInfo, IntegrationUtils.LOADU_INFO_DIALOG_TITLE ) )
-//					{
-//						IntegrationUtils.bringLoadUIToFront();
-//					}
-//				}
+				// next code was for getting back info on items created on loadUI
+				// side - removed for now
+				// if( createdRunnerSettings != null )
+				// {
+				// String creationInfo =
+				// "SoapUI Runner created/updated under project: '"
+				// + createdRunnerSettings.get( ContextMapping.LOADUI_PROJECT_NAME )
+				// + "'";
+				// if( targetTestCaseName != null && !targetTestCaseName.equals(
+				// IntegrationUtils.CREATE_ON_PROJECT_LEVEL ) )
+				// {
+				// creationInfo += ", TestCase: '" + createdRunnerSettings.get(
+				// ContextMapping.LOADUI_TEST_CASE_NAME )
+				// + "'";
+				// }
+				// creationInfo += "Transfer focus to loadUI?";
+				// if( UISupport.confirm( creationInfo,
+				// IntegrationUtils.LOADU_INFO_DIALOG_TITLE ) )
+				// {
+				// IntegrationUtils.bringLoadUIToFront();
+				// }
+				// }
 			}
 
 		}

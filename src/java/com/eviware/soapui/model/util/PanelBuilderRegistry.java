@@ -15,6 +15,7 @@ package com.eviware.soapui.model.util;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.WorkspaceImplPanelBuilder;
 import com.eviware.soapui.impl.rest.RestMethod;
@@ -128,5 +129,10 @@ public class PanelBuilderRegistry
 		register( JdbcRequestTestStep.class, new JdbcRequestTestStepPanelBuilder() );
 		register( AMFRequestTestStep.class, new AMFRequestTestStepPanelBuilder() );
 		register( SecurityTest.class, new SecurityTestPanelBuilder<SecurityTest>() );
+
+		for( PanelBuilderFactory factory : SoapUI.getFactoryRegistry().getFactories( PanelBuilderFactory.class ) )
+		{
+			register( factory.getTargetModelItem(), factory.createPanelBuilder() );
+		}
 	}
 }

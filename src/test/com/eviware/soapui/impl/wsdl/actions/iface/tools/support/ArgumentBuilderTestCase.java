@@ -20,18 +20,18 @@ public class ArgumentBuilderTestCase extends TestCase
 {
 	public void testUnix() throws Exception
 	{
-		ArgumentBuilder builder = new ArgumentBuilder(  new StringToStringMap() );
+		ArgumentBuilder builder = new ArgumentBuilder( new StringToStringMap() );
 		builder.startScript( "tcpmon", null, ".sh" );
-		
-		assertEquals( "sh", builder.getArgs().get( 0 ));
+
+		assertEquals( "sh", builder.getArgs().get( 0 ) );
 		assertEquals( "-c", builder.getArgs().get( 1 ) );
-		
+
 		assertEquals( "./tcpmon.sh", builder.getArgs().get( 2 ) );
-		
-		builder.addArgs( new String[] {"test"} );
+
+		builder.addArgs( new String[] { "test" } );
 		assertEquals( "./tcpmon.sh test", builder.getArgs().get( 2 ) );
-		
-		builder.addArgs( new String[] {"te st"} );
+
+		builder.addArgs( new String[] { "te st" } );
 		assertEquals( "./tcpmon.sh test te%20st", builder.getArgs().get( 2 ) );
 	}
 }

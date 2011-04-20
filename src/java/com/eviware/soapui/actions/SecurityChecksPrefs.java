@@ -24,8 +24,6 @@ import javax.swing.event.ListSelectionListener;
 
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.DefaultPropertyTableHolderModel;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.PropertyHolderTable;
-import com.eviware.soapui.impl.wsdl.panels.teststeps.support.PropertyHolderTable.PropertiesHolderJTable;
-import com.eviware.soapui.impl.wsdl.panels.teststeps.support.PropertyHolderTable.PropertyHolderTablePropertyExpansionDropTarget;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.support.components.SimpleForm;
@@ -49,11 +47,13 @@ public class SecurityChecksPrefs implements Prefs
 		{
 			securityChecksForm = new SimpleForm();
 
-			PropertyHolderTable propertyHolderTable = new PropertyHolderTable( PropertyExpansionUtils
-					.getSecurityGlobalProperties() ){
+			PropertyHolderTable propertyHolderTable = new PropertyHolderTable(
+					PropertyExpansionUtils.getSecurityGlobalProperties() )
+			{
 				protected JTable buildPropertiesTable()
 				{
-					propertiesModel = new DefaultPropertyTableHolderModel( holder ){
+					propertiesModel = new DefaultPropertyTableHolderModel( holder )
+					{
 						public String getColumnName( int columnIndex )
 						{
 							switch( columnIndex )
@@ -84,7 +84,8 @@ public class SecurityChecksPrefs implements Prefs
 								movePropertyUpAction.setEnabled( selectedRow > 0 );
 
 							if( movePropertyDownAction != null )
-								movePropertyDownAction.setEnabled( selectedRow >= 0 && selectedRow < propertiesTable.getRowCount() - 1 );
+								movePropertyDownAction.setEnabled( selectedRow >= 0
+										&& selectedRow < propertiesTable.getRowCount() - 1 );
 						}
 					} );
 
@@ -93,7 +94,8 @@ public class SecurityChecksPrefs implements Prefs
 
 					if( getHolder().getModelItem() != null )
 					{
-						DropTarget dropTarget = new DropTarget( propertiesTable, new PropertyHolderTablePropertyExpansionDropTarget() );
+						DropTarget dropTarget = new DropTarget( propertiesTable,
+								new PropertyHolderTablePropertyExpansionDropTarget() );
 						dropTarget.setDefaultActions( DnDConstants.ACTION_COPY_OR_MOVE );
 					}
 
@@ -126,7 +128,7 @@ public class SecurityChecksPrefs implements Prefs
 
 	public void setFormValues( Settings settings )
 	{
-		
+
 	}
 
 	public void storeValues( StringToStringMap values, Settings settings )

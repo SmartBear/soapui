@@ -108,8 +108,8 @@ public final class PropertyExpansionDropTarget implements DropTargetListener
 									.getValue() );
 					}
 
-					target.insertPropertyExpansion( new PropertyExpansionImpl( modelItem.getProperty(), xpath ), dtde
-							.getLocation() );
+					target.insertPropertyExpansion( new PropertyExpansionImpl( modelItem.getProperty(), xpath ),
+							dtde.getLocation() );
 
 					dtde.dropComplete( true );
 				}

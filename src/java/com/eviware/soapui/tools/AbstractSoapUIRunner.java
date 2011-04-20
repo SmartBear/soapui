@@ -30,17 +30,18 @@ import com.eviware.soapui.DefaultSoapUICore;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.SoapUICore;
 import com.eviware.soapui.SoapUIExtensionClassLoader;
-import com.eviware.soapui.StandaloneSoapUICore;
 import com.eviware.soapui.SoapUIExtensionClassLoader.SoapUIClassLoaderState;
+import com.eviware.soapui.StandaloneSoapUICore;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.support.PathUtils;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.project.Project;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 
-public abstract class AbstractSoapUIRunner
+public abstract class AbstractSoapUIRunner implements CmdLineRunner
 {
 	private boolean groovyLogInitialized;
 	private String projectFile;
@@ -56,6 +57,8 @@ public abstract class AbstractSoapUIRunner
 	{
 		if( title != null )
 			System.out.println( title );
+
+		SoapUI.setCmdLineRunner( this );
 	}
 
 	protected void initGroovyLog()
@@ -134,8 +137,11 @@ public abstract class AbstractSoapUIRunner
 
 	public final boolean run() throws Exception
 	{
+		if( SoapUI.getSoapUICore() == null )
+		{
 		SoapUI.setSoapUICore( createSoapUICore(), true );
 		SoapUI.initGCTimer();
+		}
 
 		SoapUIClassLoaderState state = SoapUIExtensionClassLoader.ensure();
 
@@ -176,11 +182,23 @@ public abstract class AbstractSoapUIRunner
 		return cmd.getOptionValue( key ).replaceAll( "%20", " " );
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.eviware.soapui.tools.CmdLineRunner#getProjectFile()
+	 */
+	@Override
 	public String getProjectFile()
 	{
 		return projectFile;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.eviware.soapui.tools.CmdLineRunner#getSettingsFile()
+	 */
+	@Override
 	public String getSettingsFile()
 	{
 		return settingsFile;
@@ -191,6 +209,12 @@ public abstract class AbstractSoapUIRunner
 		this.outputFolder = outputFolder;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.eviware.soapui.tools.CmdLineRunner#getOutputFolder()
+	 */
+	@Override
 	public String getOutputFolder()
 	{
 		return this.outputFolder;
@@ -198,7 +222,7 @@ public abstract class AbstractSoapUIRunner
 
 	public String getAbsoluteOutputFolder( ModelItem modelItem )
 	{
-		String folder = outputFolder;
+		String folder = PropertyExpander.expandProperties( modelItem, outputFolder );
 
 		if( StringUtils.isNullOrEmpty( folder ) )
 		{
@@ -341,11 +365,23 @@ public abstract class AbstractSoapUIRunner
 		this.projectProperties = projectProperties;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.eviware.soapui.tools.CmdLineRunner#getLog()
+	 */
+	@Override
 	public Logger getLog()
 	{
 		return log;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.eviware.soapui.tools.CmdLineRunner#getProjectProperties()
+	 */
+	@Override
 	public String[] getProjectProperties()
 	{
 		return projectProperties;

@@ -16,8 +16,9 @@ import junit.framework.TestCase;
 
 public class RecursiveImportTestCase extends TestCase
 {
-   public void testImport() throws Exception
-   { 
-//   		WsdlLoader.cacheWsdl( new UrlWsdlLoader( "https://www.sandbox.paypal.com/wsdl/PayPalSvc.wsdl" ));
-   }
+	public void testImport() throws Exception
+	{
+		// WsdlLoader.cacheWsdl( new UrlWsdlLoader(
+		// "https://www.sandbox.paypal.com/wsdl/PayPalSvc.wsdl" ));
+	}
 }

@@ -25,14 +25,14 @@ import com.eviware.soapui.SoapUI;
 public class TestCaseWithJetty extends TestCase
 {
 	private static Server server;
-	
+
 	protected void setUp() throws Exception
 	{
 		if( server != null )
-		{	
+		{
 			return;
 		}
-		
+
 		server = new Server( 8082 );
 		ResourceHandler resource_handler = new ResourceHandler();
 		resource_handler.setResourceBase( ".\\src\\test-resources" );
@@ -50,7 +50,7 @@ public class TestCaseWithJetty extends TestCase
 			SoapUI.logError( e );
 		}
 	}
-	
+
 	public void testDummy() throws Exception
 	{
 		assertTrue( 1 == 1 );

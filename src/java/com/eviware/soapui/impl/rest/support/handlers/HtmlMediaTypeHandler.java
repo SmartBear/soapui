@@ -50,7 +50,6 @@ public class HtmlMediaTypeHandler implements MediaTypeHandler
 
 		try
 		{
-
 			Tidy tidy = new Tidy();
 			tidy.setXmlOut( true );
 			tidy.setShowWarnings( false );

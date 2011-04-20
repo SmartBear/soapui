@@ -88,8 +88,7 @@ public class WadlDefinitionExporter extends AbstractDefinitionExporter<RestServi
 		for( Representation representation : representationList )
 		{
 			if( !( "text/xml".equals( representation.getMediaType() ) || "application/xml".equals( representation
-					.getMediaType() ) )
-					&& representation.isSetElement() )
+					.getMediaType() ) ) && representation.isSetElement() )
 			{
 				String prefix = representation.xgetElement().getDomNode().getNodeValue().split( ":" )[0];
 				representation.unsetElement();

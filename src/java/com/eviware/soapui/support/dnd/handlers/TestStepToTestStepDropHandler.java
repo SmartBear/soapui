@@ -24,14 +24,14 @@ public class TestStepToTestStepDropHandler extends AbstractBeforeAfterModelItemD
 
 	boolean copyAfter( WsdlTestStep source, WsdlTestStep target )
 	{
-		return DragAndDropSupport.copyTestStep( source, target.getTestCase(), target.getTestCase().getIndexOfTestStep(
-				target ) + 1 );
+		return DragAndDropSupport.copyTestStep( source, target.getTestCase(),
+				target.getTestCase().getIndexOfTestStep( target ) + 1 );
 	}
 
 	boolean moveAfter( WsdlTestStep source, WsdlTestStep target )
 	{
-		return DragAndDropSupport.moveTestStep( source, target.getTestCase(), target.getTestCase().getIndexOfTestStep(
-				target ) + 1 );
+		return DragAndDropSupport.moveTestStep( source, target.getTestCase(),
+				target.getTestCase().getIndexOfTestStep( target ) + 1 );
 	}
 
 	@Override
@@ -77,8 +77,8 @@ public class TestStepToTestStepDropHandler extends AbstractBeforeAfterModelItemD
 	@Override
 	boolean copyBefore( WsdlTestStep source, WsdlTestStep target )
 	{
-		return DragAndDropSupport.copyTestStep( source, target.getTestCase(), target.getTestCase().getIndexOfTestStep(
-				target ) );
+		return DragAndDropSupport.copyTestStep( source, target.getTestCase(),
+				target.getTestCase().getIndexOfTestStep( target ) );
 	}
 
 	@Override
@@ -96,7 +96,7 @@ public class TestStepToTestStepDropHandler extends AbstractBeforeAfterModelItemD
 	@Override
 	boolean moveBefore( WsdlTestStep source, WsdlTestStep target )
 	{
-		return DragAndDropSupport.moveTestStep( source, target.getTestCase(), target.getTestCase().getIndexOfTestStep(
-				target ) );
+		return DragAndDropSupport.moveTestStep( source, target.getTestCase(),
+				target.getTestCase().getIndexOfTestStep( target ) );
 	}
 }

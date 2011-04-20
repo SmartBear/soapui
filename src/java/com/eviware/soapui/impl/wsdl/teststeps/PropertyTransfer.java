@@ -20,10 +20,10 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.apache.xmlbeans.XmlCursor;
+import org.apache.xmlbeans.XmlCursor.TokenType;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
-import org.apache.xmlbeans.XmlCursor.TokenType;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -628,8 +628,8 @@ public class PropertyTransfer implements PropertyChangeNotifier
 				}
 			}
 
-			if( !getIgnoreEmpty() || ( value != null && value.length() > 0 ) || 
-					(getSetNullOnMissingSource() && !StringUtils.hasContent( value )))
+			if( !getIgnoreEmpty() || ( value != null && value.length() > 0 )
+					|| ( getSetNullOnMissingSource() && !StringUtils.hasContent( value ) ) )
 			{
 				if( StringUtils.hasContent( value ) && getEntitize() )
 					value = XmlUtils.entitize( value );

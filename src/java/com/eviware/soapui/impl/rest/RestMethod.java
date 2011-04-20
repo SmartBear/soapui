@@ -79,7 +79,7 @@ public class RestMethod extends AbstractWsdlModelItem<RestMethodConfig> implemen
 			requests.add( request );
 			notifyPropertyChanged( "childRequests", null, request );
 		}
-		
+
 		addTestPropertyListener( testPropertyListener );
 	}
 
@@ -426,7 +426,7 @@ public class RestMethod extends AbstractWsdlModelItem<RestMethodConfig> implemen
 		}
 		getOperation().removePropertyChangeListener( this );
 		params.release();
-		
+
 		removeTestPropertyListener( testPropertyListener );
 	}
 
@@ -434,7 +434,7 @@ public class RestMethod extends AbstractWsdlModelItem<RestMethodConfig> implemen
 	{
 		return params.getPropertyList();
 	}
-	
+
 	private class RepresentationPropertyChangeListener implements PropertyChangeListener
 	{
 		public void propertyChange( PropertyChangeEvent evt )
@@ -446,7 +446,7 @@ public class RestMethod extends AbstractWsdlModelItem<RestMethodConfig> implemen
 			}
 		}
 	}
-	
+
 	private class InternalTestPropertyListener implements TestPropertyListener
 	{
 		public void propertyAdded( String name )
@@ -469,7 +469,7 @@ public class RestMethod extends AbstractWsdlModelItem<RestMethodConfig> implemen
 		{
 			getProperty( name ).setDefaultValue( newValue );
 		}
-		
+
 	}
 
 }

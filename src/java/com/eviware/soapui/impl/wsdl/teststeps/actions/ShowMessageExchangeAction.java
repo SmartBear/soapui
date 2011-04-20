@@ -198,7 +198,7 @@ public class ShowMessageExchangeAction extends AbstractAction
 		requestMessageEditor = new MessageExchangeRequestMessageEditor( messageExchange );
 		return requestMessageEditor;
 	}
-	
+
 	private final class MessageExchangeDesktopPanel extends DefaultDesktopPanel
 	{
 		private MessageExchangeDesktopPanel( String title, String description, JComponent component )
@@ -213,7 +213,7 @@ public class ShowMessageExchangeAction extends AbstractAction
 			responseMessageEditor.release();
 
 			desktopPanel = null;
-			
+
 			return super.onClose( canCancel );
 		}
 

@@ -68,6 +68,7 @@ public class RestRequestPanelBuilder extends EmptyPanelBuilder<RestRequest>
 		table.addProperty( "Strip whitespaces", "stripWhitespaces", JPropertiesTable.BOOLEAN_OPTIONS );
 		table.addProperty( "Remove Empty Content", "removeEmptyContent", JPropertiesTable.BOOLEAN_OPTIONS );
 		table.addProperty( "Entitize Properties", "entitizeProperties", JPropertiesTable.BOOLEAN_OPTIONS );
+		table.addProperty( "Multi-Value Delimiter", "multiValueDelimiter", true );
 
 		// post-processing
 		table.addProperty( "Pretty Print", "prettyPrint", JPropertiesTable.BOOLEAN_OPTIONS );

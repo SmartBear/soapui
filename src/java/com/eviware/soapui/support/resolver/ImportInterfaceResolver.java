@@ -20,6 +20,7 @@ import com.eviware.soapui.impl.WsdlInterfaceFactory;
 import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.rest.RestServiceFactory;
 import com.eviware.soapui.impl.rest.support.WadlImporter;
+import com.eviware.soapui.impl.support.definition.support.InvalidDefinitionException;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStepInterface;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
@@ -161,6 +162,11 @@ public abstract class ImportInterfaceResolver implements Resolver
 			Interface[] ifaces = WsdlInterfaceFactory.importWsdl( project, file, createRequests );
 			if( ifaces.length > 0 )
 				UISupport.select( ifaces[0] );
+		}
+		catch( InvalidDefinitionException ex )
+		{
+			UISupport.showExtendedInfo( "Error loading WSDL",
+					"There was something wrong with the WSDL you are trying to import", ex.getDetailedMessage(), null );
 		}
 		catch( Exception ex )
 		{

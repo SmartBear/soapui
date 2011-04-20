@@ -334,8 +334,8 @@ public class WsaUtils
 
 	public String addWSAddressingRequest( WsaContainer wsaContainer, ExtendedHttpMethod httpMethod )
 	{
-		return createNewWSAddressingRequest( wsaContainer, httpMethod, SoapUI.getSettings().getBoolean(
-				WsaSettings.OVERRIDE_EXISTING_HEADERS ) );
+		return createNewWSAddressingRequest( wsaContainer, httpMethod,
+				SoapUI.getSettings().getBoolean( WsaSettings.OVERRIDE_EXISTING_HEADERS ) );
 	}
 
 	private String createNewWSAddressingRequest( WsaContainer wsaContainer, ExtendedHttpMethod httpMethod,
@@ -476,8 +476,8 @@ public class WsaUtils
 
 	public String addWSAddressingMockResponse( WsaContainer wsaContainer, WsdlMockRequest request )
 	{
-		return createWSAddressingMockResponse( wsaContainer, request, SoapUI.getSettings().getBoolean(
-				WsaSettings.OVERRIDE_EXISTING_HEADERS ) );
+		return createWSAddressingMockResponse( wsaContainer, request,
+				SoapUI.getSettings().getBoolean( WsaSettings.OVERRIDE_EXISTING_HEADERS ) );
 	}
 
 	private String createWSAddressingMockResponse( WsaContainer wsaContainer, WsdlMockRequest request, boolean override )

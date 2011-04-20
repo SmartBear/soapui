@@ -370,8 +370,9 @@ public class WsdlMockServiceDesktopPanel extends ModelItemDesktopPanel<WsdlMockS
 
 		runButton = createActionButton( new RunMockServiceAction(), true );
 		stopButton = createActionButton( new StopMockServiceAction(), false );
-		optionsButton = createActionButton( SwingActionDelegate.createDelegate( new MockServiceOptionsAction(),
-				getModelItem(), null, "/options.gif" ), true );
+		optionsButton = createActionButton(
+				SwingActionDelegate.createDelegate( new MockServiceOptionsAction(), getModelItem(), null, "/options.gif" ),
+				true );
 		showWsdlButton = createActionButton( new ShowWsdlAction(), false );
 
 		toolbar.addFixed( runButton );
@@ -756,8 +757,8 @@ public class WsdlMockServiceDesktopPanel extends ModelItemDesktopPanel<WsdlMockS
 
 		public void actionPerformed( ActionEvent e )
 		{
-			String s = UISupport.prompt( "Enter maximum number of rows for MockService Log", "Log Options", String
-					.valueOf( logListModel.getMaxSize() ) );
+			String s = UISupport.prompt( "Enter maximum number of rows for MockService Log", "Log Options",
+					String.valueOf( logListModel.getMaxSize() ) );
 			if( s != null )
 			{
 				try

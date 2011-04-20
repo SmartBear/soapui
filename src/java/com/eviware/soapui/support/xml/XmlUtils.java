@@ -46,16 +46,15 @@ import org.apache.xml.serialize.XMLSerializer;
 import org.apache.xmlbeans.SchemaType;
 import org.apache.xmlbeans.XmlAnySimpleType;
 import org.apache.xmlbeans.XmlCursor;
+import org.apache.xmlbeans.XmlCursor.TokenType;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
-import org.apache.xmlbeans.XmlCursor.TokenType;
 import org.w3c.dom.Attr;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentFragment;
 import org.w3c.dom.Element;
-import org.w3c.dom.EntityReference;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -111,8 +110,8 @@ public final class XmlUtils
 
 	public static String entitize( String xml )
 	{
-		return xml.replaceAll( "&", "&amp;" ).replaceAll( "<", "&lt;" ).replaceAll( ">", "&gt;" ).replaceAll( "\"",
-				"&quot;" ).replaceAll( "'", "&apos;" );
+		return xml.replaceAll( "&", "&amp;" ).replaceAll( "<", "&lt;" ).replaceAll( ">", "&gt;" )
+				.replaceAll( "\"", "&quot;" ).replaceAll( "'", "&apos;" );
 	}
 
 	public static String entitizeContent( String xml )
@@ -171,7 +170,6 @@ public final class XmlUtils
 		try
 		{
 			XmlObject xmlObject = XmlObject.Factory.parse( dom.getDocumentElement() );
-			
 			serializePretty( xmlObject, writer );
 		}
 		catch( Exception e )
@@ -276,12 +274,28 @@ public final class XmlUtils
 		return null;
 	}
 
+	public static Element getFirstChildElementIgnoreCase( Element elm, String name )
+	{
+		if( elm == null )
+			return null;
+
+		NodeList nl = elm.getChildNodes();
+		for( int c = 0; c < nl.getLength(); c++ )
+		{
+			Node node = nl.item( c );
+			if( node.getNodeType() == Node.ELEMENT_NODE && ( name == null || node.getNodeName().equalsIgnoreCase( name ) ) )
+				return ( Element )node;
+		}
+
+		return null;
+	}
+
 	public static Element getFirstChildElementNS( Element elm, String tns, String localName )
 	{
 		if( tns == null && localName == null )
 			return getFirstChildElement( elm );
 
-		if( tns == null )
+		if( tns == null || tns.length() == 0 )
 			return getFirstChildElement( elm, localName );
 
 		NodeList nl = elm.getChildNodes();
@@ -364,8 +378,8 @@ public final class XmlUtils
 			}
 			else
 			{
-				modelElement = ( Element )modelElement.insertBefore( document.createElement( t ), getFirstChildElement(
-						modelElement, t ) );
+				modelElement = ( Element )modelElement.insertBefore( document.createElement( t ),
+						getFirstChildElement( modelElement, t ) );
 			}
 		}
 
@@ -876,7 +890,7 @@ public final class XmlUtils
 	{
 		try
 		{
-			XmlObject xmlObject = XmlObject.Factory.parse( xmlText, new XmlOptions() );
+			XmlObject xmlObject = XmlObject.Factory.parse( xmlText );
 
 			String namespaces = declareXPathNamespaces( xmlObject );
 			if( namespaces != null && namespaces.trim().length() > 0 )
@@ -1151,7 +1165,7 @@ public final class XmlUtils
 			if( domNode.getNodeType() == Node.ELEMENT_NODE )
 			{
 				Element elm = ( Element )domNode;
-				if( elm.getChildNodes().getLength() == 1 && elm.getAttributes().getLength() == 0 )
+				if( elm.getChildNodes().getLength() == 1 && !hasContentAttributes( elm ) )
 				{
 					stringValue = getElementText( elm );
 				}
@@ -1169,6 +1183,24 @@ public final class XmlUtils
 		return stringValue;
 	}
 
+	public static boolean hasContentAttributes( Element elm )
+	{
+		NamedNodeMap attributes = elm.getAttributes();
+		for( int c = 0; c < attributes.getLength(); c++ )
+		{
+			Node item = attributes.item( c );
+			String ns = item.getNamespaceURI();
+			if( !ns.equals( Constants.XML_NS )
+			// && !ns.equals( Constants.XSI_NS ) && !ns.equals(
+			// Constants.XSI_NS_2000 )
+			// && !ns.equals( Constants.XSD_NS )
+			)
+				return true;
+		}
+
+		return false;
+	}
+
 	public static String getValueForMatch( Node domNode, boolean prettyPrintXml )
 	{
 		String stringValue;
@@ -1182,7 +1214,7 @@ public final class XmlUtils
 			if( domNode.getNodeType() == Node.ELEMENT_NODE )
 			{
 				Element elm = ( Element )domNode;
-				if( elm.getChildNodes().getLength() == 1 && elm.getAttributes().getLength() == 0 )
+				if( elm.getChildNodes().getLength() == 1 && !hasContentAttributes( elm ) )
 				{
 					stringValue = getElementText( elm );
 				}
@@ -1369,8 +1401,8 @@ public final class XmlUtils
 					}
 				}
 
-				xml = xmlObject.xmlText( new XmlOptions().setSaveOuter().setSavePrettyPrint().setSaveImplicitNamespaces(
-						nsMap ) );
+				xml = xmlObject.xmlText( new XmlOptions().setSaveOuter().setSavePrettyPrint()
+						.setSaveImplicitNamespaces( nsMap ) );
 			}
 		}
 		catch( XmlException e )
@@ -1515,7 +1547,7 @@ public final class XmlUtils
 				}
 				columnName += ( rsmd.getColumnName( ii ) ).toUpperCase();
 				String value = rs.getString( ii );
-				Element node = xmlDocumentResult.createElement( columnName );
+				Element node = xmlDocumentResult.createElement( StringUtils.createXmlName( columnName ) );
 				if( !StringUtils.isNullOrEmpty( value ) )
 				{
 					Text textNode = xmlDocumentResult.createTextNode( value.toString() );

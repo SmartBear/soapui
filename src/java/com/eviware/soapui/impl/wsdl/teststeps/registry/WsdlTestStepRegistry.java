@@ -15,6 +15,7 @@ package com.eviware.soapui.impl.wsdl.teststeps.registry;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.TestStepConfig;
 
 /**
@@ -49,6 +50,11 @@ public class WsdlTestStepRegistry
 		addFactory( new ProPlaceholderStepFactory( "datasourceloop", "soapUI Pro DataSourceLoop", "/datasource_loop.gif" ) );
 		addFactory( new ProPlaceholderStepFactory( "datasink", "soapUI Pro DataSink", "/datasink.gif" ) );
 		addFactory( new ProPlaceholderStepFactory( "datagen", "soapUI Pro DataGen", "/datagen.gif" ) );
+
+		for( WsdlTestStepFactory factory : SoapUI.getFactoryRegistry().getFactories( WsdlTestStepFactory.class ) )
+		{
+			addFactory( factory );
+		}
 	}
 
 	public WsdlTestStepFactory getFactory( String type )

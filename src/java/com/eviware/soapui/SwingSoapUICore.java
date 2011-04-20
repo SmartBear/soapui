@@ -34,6 +34,9 @@ import com.eviware.soapui.support.editor.inspectors.ssl.SSLInspectorFactory;
 import com.eviware.soapui.support.editor.inspectors.wsa.WsaInspectorFactory;
 import com.eviware.soapui.support.editor.inspectors.wsrm.WsrmInspectorFactory;
 import com.eviware.soapui.support.editor.inspectors.wss.WssInspectorFactory;
+import com.eviware.soapui.support.editor.registry.EditorViewFactory;
+import com.eviware.soapui.support.editor.registry.EditorViewFactoryRegistry;
+import com.eviware.soapui.support.editor.registry.InspectorFactory;
 import com.eviware.soapui.support.editor.registry.InspectorRegistry;
 import com.eviware.x.form.XFormFactory;
 import com.eviware.x.impl.swing.SwingFormFactory;
@@ -63,6 +66,11 @@ public class SwingSoapUICore extends DefaultSoapUICore
 
 	public void afterStartup( Workspace workspace )
 	{
+		for( EditorViewFactory factory : SoapUI.getFactoryRegistry().getFactories( EditorViewFactory.class ) )
+		{
+			EditorViewFactoryRegistry.getInstance().addFactory( factory );
+		}
+
 		InspectorRegistry inspectorRegistry = InspectorRegistry.getInstance();
 		inspectorRegistry.addFactory( new ScriptInspectorFactory() );
 		inspectorRegistry.addFactory( new AutInspectorFactory() );
@@ -77,8 +85,13 @@ public class SwingSoapUICore extends DefaultSoapUICore
 		inspectorRegistry.addFactory( new InferredSchemaInspectorFactory() );
 		inspectorRegistry.addFactory( new JMSHeaderInspectorFactory() );
 		inspectorRegistry.addFactory( new JMSPropertyInspectorFactory() );
-		inspectorRegistry.addFactory( new JMSHeaderAndPropertyInspectorFactory());
+		inspectorRegistry.addFactory( new JMSHeaderAndPropertyInspectorFactory() );
 		inspectorRegistry.addFactory( new AMFHeadersInspectorFactory() );
+
+		for( InspectorFactory factory : SoapUI.getFactoryRegistry().getFactories( InspectorFactory.class ) )
+		{
+			inspectorRegistry.addFactory( factory );
+		}
 
 		String actionsDir = System.getProperty( "soapui.ext.actions" );
 		addExternalActions( actionsDir == null ? getRoot() == null ? "actions" : getRoot() + File.separatorChar

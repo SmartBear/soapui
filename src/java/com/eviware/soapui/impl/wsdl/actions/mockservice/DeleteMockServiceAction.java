@@ -39,8 +39,7 @@ public class DeleteMockServiceAction extends AbstractSoapUIAction<WsdlMockServic
 			return;
 		}
 
-		if( UISupport.confirm( "Remove MockService [" + mockService.getName() + "] from Project",
-				"Remove MockService" ) )
+		if( UISupport.confirm( "Remove MockService [" + mockService.getName() + "] from Project", "Remove MockService" ) )
 		{
 			( ( WsdlProject )mockService.getProject() ).removeMockService( mockService );
 		}

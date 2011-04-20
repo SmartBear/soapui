@@ -37,13 +37,10 @@ public class RunFromTestStepAction extends AbstractSoapUIAction<WsdlTestStep>
 		StringToObjectMap properties = recoverContextProperties( testStep );
 		properties.put( TestCaseRunContext.INTERACTIVE, Boolean.TRUE );
 
-		
 		WsdlTestCaseRunner testCaseRunner = new WsdlTestCaseRunner( testStep.getTestCase(), properties );
 		testCaseRunner.setStartStep( testStep.getTestCase().getIndexOfTestStep( testStep ) );
 		testCaseRunner.start( true );
 	}
-
-
 
 	private StringToObjectMap recoverContextProperties( WsdlTestStep testStep )
 	{

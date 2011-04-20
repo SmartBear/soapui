@@ -38,9 +38,9 @@ import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.WsdlSubmitContext;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
+import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse.ResponseHeaderHolder;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResult;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunner;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse.ResponseHeaderHolder;
 import com.eviware.soapui.impl.wsdl.mock.dispatch.QueryMatchMockOperationDispatcher;
 import com.eviware.soapui.impl.wsdl.panels.mockoperation.WsdlMockResultMessageExchange;
 import com.eviware.soapui.impl.wsdl.support.ModelItemIconAnimator;
@@ -281,8 +281,8 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 		mockService = new WsdlTestMockService( this, mockServiceConfig );
 		mockService.setName( getName() );
 
-		iface = ( WsdlInterface )testCase.getTestSuite().getProject().getInterfaceByName(
-				mockResponseStepConfig.getInterface() );
+		iface = ( WsdlInterface )testCase.getTestSuite().getProject()
+				.getInterfaceByName( mockResponseStepConfig.getInterface() );
 		if( iface == null )
 		{
 		}
@@ -1407,9 +1407,8 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 			if( context.hasThisModelItem( this, "Missing Operation in Project", mockResponseStepConfig.getInterface()
 					+ "/" + mockResponseStepConfig.getOperation() ) )
 			{
-				PathToResolve path = context.getPath( this, "Missing Operation in Project", mockResponseStepConfig
-						.getInterface()
-						+ "/" + mockResponseStepConfig.getOperation() );
+				PathToResolve path = context.getPath( this, "Missing Operation in Project",
+						mockResponseStepConfig.getInterface() + "/" + mockResponseStepConfig.getOperation() );
 				path.setSolved( true );
 			}
 		}

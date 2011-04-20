@@ -213,8 +213,9 @@ public class WsdlTestSuite extends AbstractTestPropertyHolderWsdlModelItem<TestS
 		if( createCopy )
 		{
 			testCase.afterCopy( null, oldTestCase );
-			
-			if (includeSecurityTests) {
+
+			if( includeSecurityTests )
+			{
 				testCase.importSecurityTests( null, oldTestCase );
 			}
 		}
@@ -686,7 +687,7 @@ public class WsdlTestSuite extends AbstractTestPropertyHolderWsdlModelItem<TestS
 
 	public void afterCopy( WsdlTestSuite oldTestSuite )
 	{
-		
+
 		for( int i = 0; i < testCases.size(); i++ )
 		{
 			WsdlTestCase testCase = getTestCaseAt( i );

@@ -13,6 +13,7 @@
 package com.eviware.soapui.impl.wsdl.actions.project;
 
 import com.eviware.soapui.impl.WsdlInterfaceFactory;
+import com.eviware.soapui.impl.support.definition.support.InvalidDefinitionException;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.support.UISupport;
@@ -49,6 +50,10 @@ public class AddInterfaceActionFromURL extends AbstractSoapUIAction<WsdlProject>
 			Interface[] ifaces = WsdlInterfaceFactory.importWsdl( project, url, createRequests );
 			if( ifaces != null && ifaces.length > 0 )
 				UISupport.select( ifaces[0] );
+		}
+		catch( InvalidDefinitionException ex )
+		{
+			ex.show();
 		}
 		catch( Exception ex )
 		{

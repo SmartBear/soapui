@@ -90,7 +90,7 @@ public class JComboBoxFormField extends AbstractSwingXFormField<JComboBox> imple
 
 	public Object[] getSelectedOptions()
 	{
-		return new Object[] {getComponent().getSelectedItem()};
+		return new Object[] { getComponent().getSelectedItem() };
 	}
 
 	public void setSelectedOptions( Object[] options )

@@ -62,9 +62,9 @@ public class ScriptEnginePool
 			if( scriptEngines.isEmpty() )
 			{
 				if( modelItem != null )
-				scriptEngines.push( SoapUIScriptEngineRegistry.create( modelItem ) );
+					scriptEngines.push( SoapUIScriptEngineRegistry.create( modelItem ) );
 				else
-					scriptEngines.push( SoapUIScriptEngineRegistry.getFactory( id ).createScriptEngine( null ));
+					scriptEngines.push( SoapUIScriptEngineRegistry.getFactory( id ).createScriptEngine( null ) );
 			}
 
 			SoapUIScriptEngine result = scriptEngines.pop();

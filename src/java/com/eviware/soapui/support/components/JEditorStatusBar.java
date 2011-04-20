@@ -55,8 +55,9 @@ public class JEditorStatusBar extends JPanel implements CaretListener
 		infoLabel = new JLabel();
 		infoLabel.setVisible( false );
 
-		caretLabel.setBorder( BorderFactory.createCompoundBorder( BorderFactory.createMatteBorder( 0, 1, 0, 0,
-				Color.LIGHT_GRAY ), BorderFactory.createMatteBorder( 0, 1, 0, 0, Color.WHITE ) ) );
+		caretLabel.setBorder( BorderFactory.createCompoundBorder(
+				BorderFactory.createMatteBorder( 0, 1, 0, 0, Color.LIGHT_GRAY ),
+				BorderFactory.createMatteBorder( 0, 1, 0, 0, Color.WHITE ) ) );
 
 		ButtonBarBuilder builder = new ButtonBarBuilder( this );
 		builder.addGriddedGrowing( infoLabel );
@@ -65,8 +66,9 @@ public class JEditorStatusBar extends JPanel implements CaretListener
 		statusPanel = new JPanel( new BorderLayout() );
 		statusPanel.setPreferredSize( new Dimension( 60, 16 ) );
 
-		statusPanel.setBorder( BorderFactory.createCompoundBorder( BorderFactory.createMatteBorder( 0, 1, 0, 0,
-				Color.LIGHT_GRAY ), BorderFactory.createMatteBorder( 0, 1, 0, 0, Color.WHITE ) ) );
+		statusPanel.setBorder( BorderFactory.createCompoundBorder(
+				BorderFactory.createMatteBorder( 0, 1, 0, 0, Color.LIGHT_GRAY ),
+				BorderFactory.createMatteBorder( 0, 1, 0, 0, Color.WHITE ) ) );
 
 		builder.addFixed( statusPanel );
 		builder.addFixed( caretLabel );

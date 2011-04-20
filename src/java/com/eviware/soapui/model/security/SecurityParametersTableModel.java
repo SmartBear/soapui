@@ -44,8 +44,7 @@ public class SecurityParametersTableModel extends DefaultTableModel
 	public boolean isCellEditable( int row, int column )
 	{
 		return column != 1;
-		
-		
+
 	}
 
 	@Override

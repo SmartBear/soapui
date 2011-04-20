@@ -32,7 +32,7 @@ public class HermesJmsRequestSendTransport extends HermesJmsRequestTransport
 		try
 		{
 			init( submitContext, request );
-			jmsConnectionHolder = new JMSConnectionHolder( jmsEndpoint, hermes,  false, clientID, username, password );
+			jmsConnectionHolder = new JMSConnectionHolder( jmsEndpoint, hermes, false, clientID, username, password );
 
 			// session
 			queueSession = jmsConnectionHolder.getSession();
@@ -41,7 +41,7 @@ public class HermesJmsRequestSendTransport extends HermesJmsRequestTransport
 			Queue queueSend = jmsConnectionHolder.getQueue( jmsConnectionHolder.getJmsEndpoint().getSend() );
 
 			Message messageSend = messageSend( submitContext, request, queueSession, jmsConnectionHolder.getHermes(),
-					queueSend );
+					queueSend, null );
 
 			return makeEmptyResponse( submitContext, request, timeStarted, messageSend );
 		}
@@ -56,7 +56,8 @@ public class HermesJmsRequestSendTransport extends HermesJmsRequestTransport
 		finally
 		{
 			jmsConnectionHolder.closeAll();
-			closeSessionAndConnection( jmsConnectionHolder != null ? jmsConnectionHolder.getConnection() : null,queueSession );
+			closeSessionAndConnection( jmsConnectionHolder != null ? jmsConnectionHolder.getConnection() : null,
+					queueSession );
 		}
 		return null;
 	}

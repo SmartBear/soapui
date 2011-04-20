@@ -58,7 +58,7 @@ public class WsdlSingleMessageExchangeTestStepResult extends WsdlTestStepResult
 	// {
 	// if( isDiscarded() )
 	// return "<discarded>";
-	//		
+	//
 	// return messageExchange == null ? null :
 	// messageExchange.getRequestContent();
 	// }
@@ -67,10 +67,10 @@ public class WsdlSingleMessageExchangeTestStepResult extends WsdlTestStepResult
 	// {
 	// if( isDiscarded() )
 	// return;
-	//		
+	//
 	// if( properties == null )
 	// properties = new StringToStringMap();
-	//		
+	//
 	// properties.put( name, value );
 	// }
 

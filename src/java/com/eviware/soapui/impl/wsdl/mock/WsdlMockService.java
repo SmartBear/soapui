@@ -754,8 +754,8 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 		mockOperation.release();
 		getConfig().removeMockOperation( ix );
 
-		MockOperationConfig newConfig = ( MockOperationConfig )getConfig().insertNewMockOperation( ix ).set(
-				reloadedMockOperation ).changeType( MockOperationConfig.type );
+		MockOperationConfig newConfig = ( MockOperationConfig )getConfig().insertNewMockOperation( ix )
+				.set( reloadedMockOperation ).changeType( MockOperationConfig.type );
 		WsdlMockOperation newOperation = new WsdlMockOperation( this, newConfig );
 		mockOperations.add( ix, newOperation );
 		newOperation.afterLoad();
@@ -795,8 +795,8 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 
 		if( mockOperationNewConfig != null )
 		{
-			MockOperationConfig newConfig = ( MockOperationConfig )getConfig().addNewMockOperation().set(
-					mockOperationNewConfig ).changeType( TestCaseConfig.type );
+			MockOperationConfig newConfig = ( MockOperationConfig )getConfig().addNewMockOperation()
+					.set( mockOperationNewConfig ).changeType( TestCaseConfig.type );
 			WsdlMockOperation newMockOperation = new WsdlMockOperation( this, newConfig );
 			ModelSupport.unsetIds( newMockOperation );
 			newMockOperation.afterLoad();
@@ -844,7 +844,10 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 		if( StringUtils.isNullOrEmpty( host ) )
 			host = "127.0.0.1";
 
-		return getProtocol() + host + ":" + getPort() + getPath();
+		int port = ( int )( getSettings().getBoolean( SSLSettings.ENABLE_MOCK_SSL ) ? getSettings().getLong(
+				SSLSettings.MOCK_PORT, 443 ) : getPort() );
+
+		return getProtocol() + host + ":" + port + getPath();
 	}
 
 }

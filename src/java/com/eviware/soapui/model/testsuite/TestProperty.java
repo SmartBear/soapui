@@ -18,7 +18,7 @@ import org.apache.xmlbeans.SchemaType;
 
 import com.eviware.soapui.model.ModelItem;
 
-public interface TestProperty 
+public interface TestProperty
 {
 	public String getName();
 
@@ -43,11 +43,11 @@ public interface TestProperty
 	 */
 
 	public ModelItem getModelItem();
-	
+
 	/**
 	 * defines if specific property belongs to request part
 	 */
 	public boolean isRequestPart();
-	
+
 	public SchemaType getSchemaType();
 }

@@ -22,8 +22,8 @@ import org.jboss.jbosswsTools.ConfigurationType;
 import org.jboss.jbosswsTools.GlobalType;
 import org.jboss.jbosswsTools.PkgNSType;
 import org.jboss.jbosswsTools.WsdlToJavaType;
-import org.jboss.jbosswsTools.WsxmlType;
 import org.jboss.jbosswsTools.WsdlToJavaType.ParameterStyle;
+import org.jboss.jbosswsTools.WsxmlType;
 import org.w3c.dom.Element;
 
 import com.eviware.soapui.SoapUI;

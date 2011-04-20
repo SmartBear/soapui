@@ -39,8 +39,8 @@ import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.AField.AFieldType;
+import com.eviware.x.form.support.AForm;
 
 public class ProjectSensitiveInformationPanel
 {
@@ -52,7 +52,7 @@ public class ProjectSensitiveInformationPanel
 	private SensitiveInformationTableModel sensitivInformationTableModel;
 	private JXTable tokenTable;
 	private JPanel sensitiveInfoTableForm;
-	
+
 	public ProjectSensitiveInformationPanel( ProjectConfig projectConfig )
 	{
 		config = projectConfig.getSensitiveInformation();
@@ -71,7 +71,7 @@ public class ProjectSensitiveInformationPanel
 		projectSpecificExposureList = StringUtils.toStringList( reader.readStrings( PROJECT_SPECIFIC_EXPOSURE_LIST ) );
 		extractTokenTable();
 	}
-	
+
 	private void extractTokenTable()
 	{
 		SensitiveInformationPropertyHolder siph = new SensitiveInformationPropertyHolder();
@@ -103,23 +103,23 @@ public class ProjectSensitiveInformationPanel
 		projectSpecificExposureList = createListFromTable();
 		setConfiguration( createConfiguration() );
 	}
-	
+
 	private List<String> createListFromTable()
 	{
 		List<String> temp = new ArrayList<String>();
-		for(TestProperty tp:sensitivInformationTableModel.getHolder().getPropertyList()){
-			String tokenPlusDescription = tp.getName()+"###"+tp.getValue();
+		for( TestProperty tp : sensitivInformationTableModel.getHolder().getPropertyList() )
+		{
+			String tokenPlusDescription = tp.getName() + "###" + tp.getValue();
 			temp.add( tokenPlusDescription );
 		}
 		return temp;
 	}
-	
-	
+
 	protected XmlObject createConfiguration()
 	{
 		XmlObjectConfigurationBuilder builder = new XmlObjectConfigurationBuilder();
-		builder.add( PROJECT_SPECIFIC_EXPOSURE_LIST, projectSpecificExposureList
-				.toArray( new String[projectSpecificExposureList.size()] ) );
+		builder.add( PROJECT_SPECIFIC_EXPOSURE_LIST,
+				projectSpecificExposureList.toArray( new String[projectSpecificExposureList.size()] ) );
 		return builder.finish();
 	}
 
@@ -129,8 +129,6 @@ public class ProjectSensitiveInformationPanel
 		dialog.getFormField( SensitiveInformationConfigDialog.TOKENS ).setProperty( "component", getForm() );
 
 	}
-
-
 
 	// TODO : update help URL
 	@AForm( description = "Configure Sensitive Information Exposure Assertion", name = "Sensitive Information Exposure Assertion", helpUrl = HelpUrls.HELP_URL_ROOT )
@@ -150,8 +148,7 @@ public class ProjectSensitiveInformationPanel
 	{
 		return dialog;
 	}
-	
-	
+
 	public JPanel getForm()
 	{
 		if( sensitiveInfoTableForm == null )
@@ -188,8 +185,8 @@ public class ProjectSensitiveInformationPanel
 			newToken = UISupport.prompt( "Enter token", "New Token", newToken );
 			String newValue = "";
 			newValue = UISupport.prompt( "Enter description", "New Description", newValue );
-			
-			sensitivInformationTableModel.addToken(newToken, newValue);
+
+			sensitivInformationTableModel.addToken( newToken, newValue );
 			save();
 		}
 
@@ -207,7 +204,7 @@ public class ProjectSensitiveInformationPanel
 		@Override
 		public void actionPerformed( ActionEvent arg0 )
 		{
-			sensitivInformationTableModel.removeRows(tokenTable.getSelectedRows());
+			sensitivInformationTableModel.removeRows( tokenTable.getSelectedRows() );
 			save();
 		}
 

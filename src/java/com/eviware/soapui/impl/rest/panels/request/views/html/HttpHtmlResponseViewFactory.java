@@ -34,13 +34,12 @@ public class HttpHtmlResponseViewFactory implements ResponseEditorViewFactory
 		}
 		if( modelItem instanceof MessageExchangeModelItem )
 		{
-			return new HttpHtmlMessageExchangeResponseView( ( MessageExchangeResponseMessageEditor) editor, ( MessageExchangeModelItem )modelItem );
+			return new HttpHtmlMessageExchangeResponseView( ( MessageExchangeResponseMessageEditor )editor,
+					( MessageExchangeModelItem )modelItem );
 		}
 		return null;
 	}
 
-	
-	
 	public String getViewId()
 	{
 		return VIEW_ID;

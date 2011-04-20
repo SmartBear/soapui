@@ -49,7 +49,7 @@ public class TestSuiteListenerAdapter implements TestSuiteListener
 	public void loadTestRemoved( LoadTest loadTest )
 	{
 	}
-	
+
 	public void securityTestAdded( SecurityTest securityTest )
 	{
 	}
@@ -57,7 +57,6 @@ public class TestSuiteListenerAdapter implements TestSuiteListener
 	public void securityTestRemoved( SecurityTest securityTest )
 	{
 	}
-
 
 	public void testStepMoved( TestStep testStep, int fromIndex, int offset )
 	{

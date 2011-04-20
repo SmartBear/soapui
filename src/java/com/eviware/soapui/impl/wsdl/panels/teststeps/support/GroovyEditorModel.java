@@ -38,9 +38,9 @@ public interface GroovyEditorModel
 	public Settings getSettings();
 
 	public String getScriptName();
-	
+
 	public void addPropertyChangeListener( PropertyChangeListener listener );
-	
+
 	public void removePropertyChangeListener( PropertyChangeListener listener );
 
 	public ModelItem getModelItem();

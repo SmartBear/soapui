@@ -59,16 +59,17 @@ public abstract class AbstractWssRequestFilter extends AbstractRequestFilter
 		Document doc = ( Document )context.getProperty( WSS_DOC );
 
 		// this should be solved with pooling for performance-reasons..
-		if( doc == null || ((Integer)context.getProperty( REQUEST_CONTENT_HASH_CODE )).intValue() != request.hashCode() )
+		if( doc == null
+				|| ( ( Integer )context.getProperty( REQUEST_CONTENT_HASH_CODE ) ).intValue() != request.hashCode() )
 		{
 			synchronized( db )
 			{
 				doc = db.parse( new InputSource( new StringReader( request ) ) );
-				context.setProperty( REQUEST_CONTENT_HASH_CODE, new Integer( request.hashCode()) );
+				context.setProperty( REQUEST_CONTENT_HASH_CODE, new Integer( request.hashCode() ) );
 				context.setProperty( WSS_DOC, doc );
 			}
 		}
-		
+
 		return doc;
 	}
 
@@ -78,9 +79,9 @@ public abstract class AbstractWssRequestFilter extends AbstractRequestFilter
 		XmlUtils.serialize( dom, writer );
 		String request = writer.toString();
 		context.setProperty( BaseHttpRequestTransport.REQUEST_CONTENT, request );
-		context.setProperty( REQUEST_CONTENT_HASH_CODE, new Integer( request.hashCode()) );
+		context.setProperty( REQUEST_CONTENT_HASH_CODE, new Integer( request.hashCode() ) );
 	}
-	
+
 	public void afterRequest( SubmitContext context, Response response )
 	{
 		context.removeProperty( WSS_DOC );

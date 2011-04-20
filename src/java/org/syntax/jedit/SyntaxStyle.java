@@ -87,8 +87,8 @@ public class SyntaxStyle
 		if( font.equals( lastFont ) )
 			return lastStyledFont;
 		lastFont = font;
-		lastStyledFont = new Font( font.getFamily(), ( bold ? Font.BOLD : 0 ) | ( italic ? Font.ITALIC : 0 ), font
-				.getSize() );
+		lastStyledFont = new Font( font.getFamily(), ( bold ? Font.BOLD : 0 ) | ( italic ? Font.ITALIC : 0 ),
+				font.getSize() );
 		return lastStyledFont;
 	}
 
@@ -102,8 +102,8 @@ public class SyntaxStyle
 		if( font.equals( lastFont ) && fontMetrics != null )
 			return fontMetrics;
 		lastFont = font;
-		lastStyledFont = new Font( font.getFamily(), ( bold ? Font.BOLD : 0 ) | ( italic ? Font.ITALIC : 0 ), font
-				.getSize() );
+		lastStyledFont = new Font( font.getFamily(), ( bold ? Font.BOLD : 0 ) | ( italic ? Font.ITALIC : 0 ),
+				font.getSize() );
 		fontMetrics = Toolkit.getDefaultToolkit().getFontMetrics( lastStyledFont );
 		return fontMetrics;
 	}

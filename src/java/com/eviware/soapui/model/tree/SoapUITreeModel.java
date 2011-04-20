@@ -200,8 +200,8 @@ public class SoapUITreeModel implements TreeModel
 
 		if( !( treeNode instanceof PropertyTreeNode ) || showProperties )
 		{
-			notifyNodesChanged( new TreeModelEvent( this, getPath( parent ), new int[] { ix }, new Object[] { parent
-					.getChildNode( ix ) } ) );
+			notifyNodesChanged( new TreeModelEvent( this, getPath( parent ), new int[] { ix },
+					new Object[] { parent.getChildNode( ix ) } ) );
 		}
 	}
 
@@ -220,8 +220,8 @@ public class SoapUITreeModel implements TreeModel
 
 		if( !( treeNode instanceof PropertyTreeNode ) || showProperties )
 		{
-			notifyNodesInserted( new TreeModelEvent( this, getPath( parent ), new int[] { ix }, new Object[] { parent
-					.getChildNode( ix ) } ) );
+			notifyNodesInserted( new TreeModelEvent( this, getPath( parent ), new int[] { ix },
+					new Object[] { parent.getChildNode( ix ) } ) );
 		}
 	}
 
@@ -243,8 +243,8 @@ public class SoapUITreeModel implements TreeModel
 
 		if( !( treeNode instanceof PropertyTreeNode ) || showProperties )
 		{
-			notifyNodesRemoved( new TreeModelEvent( this, getPath( parent ), new int[] { ix }, new Object[] { parent
-					.getChildNode( ix ) } ) );
+			notifyNodesRemoved( new TreeModelEvent( this, getPath( parent ), new int[] { ix },
+					new Object[] { parent.getChildNode( ix ) } ) );
 		}
 
 		if( release )

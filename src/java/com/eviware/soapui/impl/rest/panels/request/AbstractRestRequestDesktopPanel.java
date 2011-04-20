@@ -40,8 +40,8 @@ import com.eviware.soapui.impl.support.panels.AbstractHttpXmlRequestDesktopPanel
 import com.eviware.soapui.impl.wsdl.WsdlSubmitContext;
 import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestInterface;
 import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.iface.Submit;
 import com.eviware.soapui.model.iface.Request.SubmitException;
+import com.eviware.soapui.model.iface.Submit;
 import com.eviware.soapui.model.support.TestPropertyListenerAdapter;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.support.DocumentListenerAdapter;
@@ -93,7 +93,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 			acceptCombo.setModel( new DefaultComboBoxModel( ( Object[] )evt.getNewValue() ) );
 			acceptCombo.setSelectedItem( item );
 		}
-		else if( (evt.getPropertyName().equals( "path" ) || evt.getPropertyName().equals( "restMethod" ))
+		else if( ( evt.getPropertyName().equals( "path" ) || evt.getPropertyName().equals( "restMethod" ) )
 				&& ( getRequest().getResource() == null || getRequest().getResource() == evt.getSource() ) )
 		{
 			if( pathLabel != null )
@@ -293,34 +293,34 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 	{
 		public int getSize()
 		{
-			int sz = 0; 
-			for( RestResource resource : getRequest().getResource().getService().getAllResources())
+			int sz = 0;
+			for( RestResource resource : getRequest().getResource().getService().getAllResources() )
 			{
 				sz += resource.getRestMethodCount();
 			}
-			
+
 			return sz;
 		}
 
 		public Object getElementAt( int index )
 		{
-			int sz = 0; 
-			for( RestResource resource : getRequest().getResource().getService().getAllResources())
+			int sz = 0;
+			for( RestResource resource : getRequest().getResource().getService().getAllResources() )
 			{
 				if( index < sz + resource.getRestMethodCount() )
 				{
-					return resource.getRestMethodAt( index-sz );
+					return resource.getRestMethodAt( index - sz );
 				}
-				
+
 				sz += resource.getRestMethodCount();
 			}
-			
+
 			return null;
 		}
 
 		public void setSelectedItem( Object anItem )
 		{
-			( ( RestTestRequestInterface )getRequest() ).getTestStep().setRestMethod( (RestMethod)anItem );
+			( ( RestTestRequestInterface )getRequest() ).getTestStep().setRestMethod( ( RestMethod )anItem );
 		}
 
 		public Object getSelectedItem()

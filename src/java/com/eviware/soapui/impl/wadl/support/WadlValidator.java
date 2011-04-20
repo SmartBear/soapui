@@ -63,8 +63,8 @@ public class WadlValidator
 		RestRequestInterface restRequest = messageExchange.getRestRequest();
 		boolean asserted = false;
 
-		for( RestRepresentation representation : restRequest.getRepresentations( type, messageExchange
-				.getResponseContentType() ) )
+		for( RestRepresentation representation : restRequest.getRepresentations( type,
+				messageExchange.getResponseContentType() ) )
 		{
 			if( representation.getStatus().isEmpty()
 					|| representation.getStatus().contains( messageExchange.getResponseStatusCode() ) )

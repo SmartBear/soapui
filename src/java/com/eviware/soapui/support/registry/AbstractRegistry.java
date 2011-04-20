@@ -20,6 +20,7 @@ import java.util.Map;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.RegistryEntryConfig;
+import com.eviware.soapui.support.StringUtils;
 
 public abstract class AbstractRegistry<T1 extends RegistryEntry<T2, T3>, T2 extends RegistryEntryConfig, T3 extends Object>
 {
@@ -68,7 +69,7 @@ public abstract class AbstractRegistry<T1 extends RegistryEntry<T2, T3>, T2 exte
 
 	public String[] getTypes()
 	{
-		return registry.keySet().toArray( new String[registry.size()] );
+		return StringUtils.sortNames( registry.keySet().toArray( new String[registry.size()] ) );
 	}
 
 	public String[] getTypesWithInterface( Class<?> clazz )

@@ -87,7 +87,6 @@ public class RestRequestRepresentationsInspector extends AbstractRestRepresentat
 		}
 	}
 
-	@SuppressWarnings( "unchecked" )
 	protected void extractRepresentation( HttpResponse response )
 	{
 		String responseContentType = response.getRequestHeaders().get( "Content-Type", "" );
@@ -113,7 +112,7 @@ public class RestRequestRepresentationsInspector extends AbstractRestRepresentat
 			RestRepresentation representation = getMethod().addNewRepresentation( RestRepresentation.Type.REQUEST );
 			representation.setMediaType( responseContentType );
 
-			String xmlContent = response.getContentAsXml();
+			String xmlContent = response.getRequestContent();
 
 			if( !xmlContent.equals( "<xml/>" ) )
 			{

@@ -31,7 +31,7 @@ public class HermesJmsRequestPublishReceiveTransport extends HermesJmsRequestTra
 	{
 		Session topicSession = null;
 		Session queueSession = null;
-		
+
 		JMSConnectionHolder jmsConnectionHolderTopic = null;
 		JMSConnectionHolder jmsConnectionHolderQueue = null;
 		try
@@ -46,12 +46,14 @@ public class HermesJmsRequestPublishReceiveTransport extends HermesJmsRequestTra
 
 			// destination
 			Topic topicPublish = jmsConnectionHolderTopic.getTopic( jmsConnectionHolderTopic.getJmsEndpoint().getSend() );
-			Queue queueReceive = jmsConnectionHolderQueue.getQueue( jmsConnectionHolderQueue.getJmsEndpoint().getReceive() );
+			Queue queueReceive = jmsConnectionHolderQueue
+					.getQueue( jmsConnectionHolderQueue.getJmsEndpoint().getReceive() );
 
 			Message messagePublish = messagePublish( submitContext, request, topicSession,
-					jmsConnectionHolderTopic.getHermes(), topicPublish );
+					jmsConnectionHolderTopic.getHermes(), topicPublish, queueReceive );
 
-			MessageConsumer messageConsumer = queueSession.createConsumer( queueReceive, submitContext.expand(messageSelector) );
+			MessageConsumer messageConsumer = queueSession.createConsumer( queueReceive,
+					submitContext.expand( messageSelector ) );
 
 			return makeResponse( submitContext, request, timeStarted, messagePublish, messageConsumer );
 		}
@@ -67,9 +69,11 @@ public class HermesJmsRequestPublishReceiveTransport extends HermesJmsRequestTra
 		{
 			jmsConnectionHolderQueue.closeAll();
 			jmsConnectionHolderQueue.closeAll();
-			closeSessionAndConnection( jmsConnectionHolderQueue != null ? jmsConnectionHolderQueue.getConnection() : null,queueSession );
-			closeSessionAndConnection( jmsConnectionHolderQueue != null ? jmsConnectionHolderTopic.getConnection() : null,topicSession );
-		
+			closeSessionAndConnection( jmsConnectionHolderQueue != null ? jmsConnectionHolderQueue.getConnection() : null,
+					queueSession );
+			closeSessionAndConnection( jmsConnectionHolderTopic != null ? jmsConnectionHolderTopic.getConnection() : null,
+					topicSession );
+
 		}
 		return null;
 

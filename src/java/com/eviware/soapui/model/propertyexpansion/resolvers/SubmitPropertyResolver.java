@@ -25,8 +25,8 @@ public class SubmitPropertyResolver implements PropertyResolver
 				&& context.getModelItem() instanceof AbstractHttpRequestInterface<?> )
 		{
 			return ResolverUtils.checkForExplicitReference( propertyName, PropertyExpansion.PROJECT_REFERENCE,
-					( ( AbstractHttpRequest<?> )context.getModelItem() ).getOperation().getInterface().getProject(), context,
-					globalOverride );
+					( ( AbstractHttpRequest<?> )context.getModelItem() ).getOperation().getInterface().getProject(),
+					context, globalOverride );
 		}
 
 		return null;

@@ -41,7 +41,7 @@ import com.eviware.soapui.support.types.StringToObjectMap;
 public abstract class AbstractTestCaseRunner<T extends TestRunnable, T2 extends WsdlTestRunContext> extends
 		AbstractTestRunner<T, T2> implements TestCaseRunner
 {
-	protected TestRunListener[] testRunListeners = new TestRunListener[0];
+	private TestRunListener[] testRunListeners = new TestRunListener[0];
 	@SuppressWarnings( "unchecked" )
 	private List<TestStepResult> testStepResults = Collections.synchronizedList( new TreeList() );
 	private int gotoStepIndex;

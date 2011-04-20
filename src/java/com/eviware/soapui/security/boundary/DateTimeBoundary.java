@@ -23,20 +23,19 @@ public class DateTimeBoundary extends AbstractBoundary
 	public static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
 	public static SimpleDateFormat simpleDateFormat = new SimpleDateFormat( DATE_FORMAT );
 
-
 	@Override
-	public String outOfBoundary( int restrictionAttribute,String  value )
+	public String outOfBoundary( int restrictionAttribute, String value )
 	{
 		switch( restrictionAttribute )
 		{
 		case MAX_EXCLISIVE :
-			return BoundaryUtils.createDate( value, ( int )( Math.random() * OFFSET ) ,simpleDateFormat);
+			return BoundaryUtils.createDate( value, ( int )( Math.random() * OFFSET ), simpleDateFormat );
 		case MIN_EXCLISIVE :
-			return BoundaryUtils.createDate( value, -( int )( Math.random() * OFFSET ),simpleDateFormat );
+			return BoundaryUtils.createDate( value, -( int )( Math.random() * OFFSET ), simpleDateFormat );
 		case MAX_INCLISIVE :
-			return BoundaryUtils.createDate( value, ( int )( Math.random() * OFFSET + 1 ),simpleDateFormat );
+			return BoundaryUtils.createDate( value, ( int )( Math.random() * OFFSET + 1 ), simpleDateFormat );
 		case MIN_INCLISIVE :
-			return BoundaryUtils.createDate( value, ( -( int )( Math.random() * OFFSET ) - 1 ) ,simpleDateFormat);
+			return BoundaryUtils.createDate( value, ( -( int )( Math.random() * OFFSET ) - 1 ), simpleDateFormat );
 		default :
 			return null;
 		}

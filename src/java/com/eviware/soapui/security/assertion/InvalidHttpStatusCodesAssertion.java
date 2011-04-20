@@ -71,7 +71,7 @@ public class InvalidHttpStatusCodesAssertion extends WsdlMessageAssertion implem
 			throws AssertionException
 	{
 
-		List<String> codeList = extractCodes(context);
+		List<String> codeList = extractCodes( context );
 		String[] statusElements = null;
 		try
 		{
@@ -82,14 +82,13 @@ public class InvalidHttpStatusCodesAssertion extends WsdlMessageAssertion implem
 		{
 			SoapUI.logError( npe, "Header #status# is missing!" );
 		}
-		
-		
+
 		if( statusElements.length >= 2 )
 		{
 			String statusCode = statusElements[1].trim();
 			if( codeList.contains( statusCode ) )
 			{
-				String message = "Response status code: " + statusCode+ " is in invalid list of status codes";
+				String message = "Response status code: " + statusCode + " is in invalid list of status codes";
 				throw new AssertionException( new AssertionError( message ) );
 			}
 		}
@@ -101,7 +100,7 @@ public class InvalidHttpStatusCodesAssertion extends WsdlMessageAssertion implem
 		return "OK";
 	}
 
-	private List<String> extractCodes(SubmitContext context)
+	private List<String> extractCodes( SubmitContext context )
 	{
 		String expandedCodes = context.expand( codes );
 		List<String> codeList = new ArrayList<String>();
@@ -170,8 +169,8 @@ public class InvalidHttpStatusCodesAssertion extends WsdlMessageAssertion implem
 				40 );
 
 		// TODO : update help URL
-		dialog = builder.buildDialog( builder.buildOkCancelHelpActions( HelpUrls.HELP_URL_ROOT ),
-				"Specify codes", UISupport.OPTIONS_ICON );
+		dialog = builder.buildDialog( builder.buildOkCancelHelpActions( HelpUrls.HELP_URL_ROOT ), "Specify codes",
+				UISupport.OPTIONS_ICON );
 	}
 
 }

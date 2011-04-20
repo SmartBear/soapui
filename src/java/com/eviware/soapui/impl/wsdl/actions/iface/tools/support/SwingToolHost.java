@@ -29,8 +29,8 @@ public class SwingToolHost implements ToolHost
 
 		try
 		{
-			processDialog = new ProcessDialog( runner.getName(), runner.getDescription(), runner.showLog(), runner
-					.canCancel() );
+			processDialog = new ProcessDialog( runner.getName(), runner.getDescription(), runner.showLog(),
+					runner.canCancel() );
 			ModelItem modelItem = runner.getModelItem();
 			if( modelItem == null )
 				processDialog.log( "Running " + runner.getName() + "\r\n" );

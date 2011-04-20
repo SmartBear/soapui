@@ -12,12 +12,21 @@
 
 package com.eviware.soapui.support.monitor;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+
+import javax.swing.AbstractAction;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 
 /**
  * @author Angelo De Caro

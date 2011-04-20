@@ -157,7 +157,8 @@ public class EvalPropertyResolver implements PropertyResolver
 		{
 			objects.put( "interface", modelItem );
 		}
-		else if( modelItem instanceof SecurityTest ) {
+		else if( modelItem instanceof SecurityTest )
+		{
 			objects.put( "securityTest", modelItem );
 		}
 

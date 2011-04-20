@@ -51,6 +51,14 @@ public class StringToStringsMap extends HashMap<String, List<String>>
 		super( m );
 	}
 
+	public StringToStringsMap( StringToStringMap map )
+	{
+		super();
+
+		for( String key : map.keySet() )
+			put( key, map.get( key ) );
+	}
+
 	public List<String> get( String key, List<String> defaultValue )
 	{
 		List<String> value = get( key );

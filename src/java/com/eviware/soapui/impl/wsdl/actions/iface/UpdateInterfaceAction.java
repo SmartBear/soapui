@@ -40,8 +40,8 @@ import com.eviware.x.form.XFormField;
 import com.eviware.x.form.XFormFieldListener;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.AField.AFieldType;
+import com.eviware.x.form.support.AForm;
 
 /**
  * Updates the definition of a WsdlInterface.
@@ -131,7 +131,7 @@ public class UpdateInterfaceAction extends AbstractSoapUIAction<WsdlInterface>
 			else
 			{
 				UISupport.showInfoMessage( "Update of interface failed", "Update Definition" );
-		}
+			}
 		}
 		catch( Exception e1 )
 		{
@@ -244,14 +244,15 @@ public class UpdateInterfaceAction extends AbstractSoapUIAction<WsdlInterface>
 					if( testStep instanceof WsdlTestRequestStep )
 					{
 						WsdlTestRequest testRequest = ( ( WsdlTestRequestStep )testStep ).getTestRequest();
-						if( testRequest != null && testRequest.getOperation() != null && testRequest.getOperation().getInterface() == iface )
+						if( testRequest != null && testRequest.getOperation() != null
+								&& testRequest.getOperation().getInterface() == iface )
 						{
 							String newRequest = testRequest.getOperation().createRequest( buildOptional );
 
 							if( keepHeaders )
 							{
-								newRequest = SoapUtils.transferSoapHeaders( testRequest.getRequestContent(), newRequest, iface
-										.getSoapVersion() );
+								newRequest = SoapUtils.transferSoapHeaders( testRequest.getRequestContent(), newRequest,
+										iface.getSoapVersion() );
 							}
 
 							if( keepExisting )

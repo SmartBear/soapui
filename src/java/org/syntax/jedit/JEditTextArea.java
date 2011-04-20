@@ -194,8 +194,8 @@ public class JEditTextArea extends JComponent implements Scrollable
 				else
 				{
 					Rectangle rect = getVisibleRect();
-					rect.setLocation( ( int )rect.getX(), ( int )rect.getY() + painter.getFontMetrics().getHeight() * 3
-							* e.getWheelRotation() );
+					rect.setLocation( ( int )rect.getX(),
+							( int )rect.getY() + painter.getFontMetrics().getHeight() * 3 * e.getWheelRotation() );
 					scrollRectToVisible( rect );
 				}
 			}

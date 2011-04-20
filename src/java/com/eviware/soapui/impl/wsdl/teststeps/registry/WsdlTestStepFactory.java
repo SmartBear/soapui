@@ -62,4 +62,9 @@ public abstract class WsdlTestStepFactory
 	{
 		return pathToIcon;
 	}
+
+	public boolean canAddTestStepToTestCase( WsdlTestCase testCase )
+	{
+		return true;
+	}
 }

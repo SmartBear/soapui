@@ -29,8 +29,8 @@ import com.eviware.x.form.XFormField;
 import com.eviware.x.form.XFormFieldListener;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.AField.AFieldType;
+import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.validators.RequiredValidator;
 
 public class MockAsWarAction extends AbstractSoapUIAction<WsdlProject>
@@ -94,11 +94,12 @@ public class MockAsWarAction extends AbstractSoapUIAction<WsdlProject>
 				project.getSettings().setString( ProjectSettings.SHADOW_PASSWORD, passwordForEncryption );
 			}
 
-			MockAsWar mockAsWar = new MockAsWar( project.getPath(), dialog
-					.getBooleanValue( MockAsWarDialog.GLOBAL_SETTINGS ) ? settingFile.getValue() : "", warDirectory
-					.getValue(), warFile.getValue(), dialog.getBooleanValue( MockAsWarDialog.EXT_LIBS ), dialog
-					.getBooleanValue( MockAsWarDialog.ACTIONS ), dialog.getBooleanValue( MockAsWarDialog.LISTENERS ), dialog
-					.getValue( MockAsWarDialog.MOCKSERVICE_ENDPOINT ), dialog.getBooleanValue( MockAsWarDialog.ENABLE_WEBUI ) );
+			MockAsWar mockAsWar = new MockAsWar( project.getPath(),
+					dialog.getBooleanValue( MockAsWarDialog.GLOBAL_SETTINGS ) ? settingFile.getValue() : "",
+					warDirectory.getValue(), warFile.getValue(), dialog.getBooleanValue( MockAsWarDialog.EXT_LIBS ),
+					dialog.getBooleanValue( MockAsWarDialog.ACTIONS ), dialog.getBooleanValue( MockAsWarDialog.LISTENERS ),
+					dialog.getValue( MockAsWarDialog.MOCKSERVICE_ENDPOINT ),
+					dialog.getBooleanValue( MockAsWarDialog.ENABLE_WEBUI ) );
 			mockAsWar.createMockAsWarArchive();
 		}
 	}
@@ -132,6 +133,5 @@ public class MockAsWarAction extends AbstractSoapUIAction<WsdlProject>
 
 		@AField( description = "Specify a directory where War file structure will be created", name = "War Directory", type = AFieldType.FOLDER )
 		public final static String WAR_DIRECTORY = "War Directory";
-
 	}
 }

@@ -41,10 +41,10 @@ import com.eviware.x.form.XFormField;
 import com.eviware.x.form.XFormFieldListener;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
+import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.APage;
 import com.eviware.x.form.support.XFormRadioGroup;
-import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.impl.swing.JFormDialog;
 import com.eviware.x.impl.swing.JTabbedFormDialog;
 
@@ -62,8 +62,8 @@ public class SecurityConfigurationDialogBuilder
 	{
 
 		return buildSecurityCheckConfigurationDialog( securityCheck.getConfigName(),
-				securityCheck.getConfigDescription(), securityCheck.getIcon(), securityCheck.getHelpURL(), securityCheck
-						.getComponent(), securityCheck );
+				securityCheck.getConfigDescription(), securityCheck.getIcon(), securityCheck.getHelpURL(),
+				securityCheck.getComponent(), securityCheck );
 	}
 
 	/**
@@ -97,9 +97,9 @@ public class SecurityConfigurationDialogBuilder
 		XFormField tabs = dialog.getFormField( DefaultDialog.TABS );
 
 		JTabbedFormDialog tabDialog = ( ( JTabbedFormDialog )ADialogBuilder.buildTabbedDialog( TabsForm.class, null ) );
-		
+
 		tabDialog.setResizable( true );
-//		tabDialog.setSize( 420, 400 );
+		// tabDialog.setSize( 420, 400 );
 
 		tabDialog.getFormField( Assertions.ASSERTIONS ).setProperty( "component",
 				new SecurityAssertionPanel( ( Assertable )securityCheck ) );
@@ -111,7 +111,7 @@ public class SecurityConfigurationDialogBuilder
 		tabDialog.getFormField( TearDownScript.SCRIPT ).setProperty( "component",
 				buildTearDownScriptPanel( securityCheck ) );
 		tabDialog.getFormField( TearDownScript.SCRIPT ).setProperty( "dimension", new Dimension( 360, 260 ) );
-		
+
 		tabDialog.getFormField( AdvancedSettings.SETTINGS ).setProperty( "component",
 				securityCheck.getAdvancedSettingsPanel() );
 		tabDialog.getFormField( AdvancedSettings.SETTINGS ).setProperty( "dimension", new Dimension( 410, 260 ) );
@@ -184,8 +184,8 @@ public class SecurityConfigurationDialogBuilder
 
 	protected GroovyEditorComponent buildSetupScriptPanel( SecurityCheck securityCheck )
 	{
-		setupGroovyEditor = new GroovyEditorComponent( new SetupScriptGroovyEditorModel( ( ( Assertable )securityCheck )
-				.getModelItem() ), null );
+		setupGroovyEditor = new GroovyEditorComponent( new SetupScriptGroovyEditorModel(
+				( ( Assertable )securityCheck ).getModelItem() ), null );
 
 		return setupGroovyEditor;
 	}
@@ -202,7 +202,7 @@ public class SecurityConfigurationDialogBuilder
 	{
 		field.setProperty( "component", new SecurityCheckedParametersTablePanel( new SecurityParametersTableModel(
 				( ( AbstractSecurityCheckWithProperties )securityCheck ).getParameterHolder() ), securityCheck
-				.getTestStep().getProperties(), (AbstractSecurityCheckWithProperties)securityCheck ) );
+				.getTestStep().getProperties(), ( AbstractSecurityCheckWithProperties )securityCheck ) );
 	}
 
 	public XFormDialog buildSecurityCheckConfigurationDialog( String name, String description, ImageIcon icon,
@@ -229,7 +229,7 @@ public class SecurityConfigurationDialogBuilder
 
 		buildBasicDialog( name, description, icon, helpUrl, securityCheck, dialog );
 
-//		( ( JFormDialog )dialog ).getDialog().setResizable( false );
+		// ( ( JFormDialog )dialog ).getDialog().setResizable( false );
 
 		return dialog;
 	}

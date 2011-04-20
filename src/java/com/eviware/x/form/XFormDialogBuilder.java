@@ -45,6 +45,6 @@ public abstract class XFormDialogBuilder
 	public abstract ActionList buildOkCancelActions();
 
 	public abstract ActionList buildOkCancelHelpActions( String url );
-	
-	public abstract ActionList buildHelpActions(String url);
+
+	public abstract ActionList buildHelpActions( String url );
 }

@@ -39,8 +39,8 @@ import com.eviware.x.form.XFormField;
 import com.eviware.x.form.XFormFieldListener;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.AField.AFieldType;
+import com.eviware.x.form.support.AForm;
 
 /**
  * Factory for creation TransferValue steps
@@ -82,8 +82,8 @@ public class WsdlMockResponseStepFactory extends WsdlTestStepFactory
 				public void valueChanged( XFormField sourceField, String newValue, String oldValue )
 				{
 					WsdlInterface iface = ( WsdlInterface )project.getInterfaceByName( newValue );
-					dialog.setOptions( CreateForm.OPERATION, new ModelItemNames<Operation>( iface.getOperationList() )
-							.getNames() );
+					dialog.setOptions( CreateForm.OPERATION,
+							new ModelItemNames<Operation>( iface.getOperationList() ).getNames() );
 				}
 			} );
 
@@ -241,5 +241,19 @@ public class WsdlMockResponseStepFactory extends WsdlTestStepFactory
 	public boolean canCreate()
 	{
 		return true;
+	}
+
+	@Override
+	public boolean canAddTestStepToTestCase( WsdlTestCase testCase )
+	{
+		for( Interface iface : testCase.getTestSuite().getProject().getInterfaceList() )
+		{
+			if( iface instanceof WsdlInterface && iface.getOperationCount() > 0 )
+				return true;
+		}
+
+		UISupport.showErrorMessage( "Missing SOAP Operations to Mock in Project" );
+		return false;
+
 	}
 }

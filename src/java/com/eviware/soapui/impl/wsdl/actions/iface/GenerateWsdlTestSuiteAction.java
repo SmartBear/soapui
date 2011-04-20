@@ -12,7 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.actions.iface;
 
-import java.util.Arrays;
 import java.util.List;
 
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
@@ -30,8 +29,8 @@ import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.XFormOptionsField;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.AField.AFieldType;
+import com.eviware.x.form.support.AForm;
 
 /**
  * Generates a TestSuite for the specified Interface
@@ -77,9 +76,8 @@ public class GenerateWsdlTestSuiteAction extends AbstractSoapUIAction<WsdlInterf
 			String testSuiteName = dialog.getValue( GenerateForm.TESTSUITE );
 
 			if( testSuiteName.equals( "<create>" ) )
-				testSuiteName = UISupport.prompt( "Enter name of TestSuite to create", "Generate TestSuite", iface
-						.getName()
-						+ " TestSuite" );
+				testSuiteName = UISupport.prompt( "Enter name of TestSuite to create", "Generate TestSuite",
+						iface.getName() + " TestSuite" );
 
 			if( testSuiteName != null && testSuiteName.trim().length() > 0 )
 			{
@@ -129,8 +127,8 @@ public class GenerateWsdlTestSuiteAction extends AbstractSoapUIAction<WsdlInterf
 			{
 				for( int x = 0; x < operation.getRequestCount(); x++ )
 				{
-					testCase.addTestStep( WsdlTestRequestStepFactory.createConfig( operation.getRequestAt( x ), operation
-							.getName() ) );
+					testCase.addTestStep( WsdlTestRequestStepFactory.createConfig( operation.getRequestAt( x ),
+							operation.getName() ) );
 				}
 			}
 			else
@@ -160,8 +158,8 @@ public class GenerateWsdlTestSuiteAction extends AbstractSoapUIAction<WsdlInterf
 			{
 				for( int x = 0; x < operation.getRequestCount(); x++ )
 				{
-					testCase.addTestStep( WsdlTestRequestStepFactory.createConfig( operation.getRequestAt( x ), operation
-							.getName() ) );
+					testCase.addTestStep( WsdlTestRequestStepFactory.createConfig( operation.getRequestAt( x ),
+							operation.getName() ) );
 				}
 			}
 			else

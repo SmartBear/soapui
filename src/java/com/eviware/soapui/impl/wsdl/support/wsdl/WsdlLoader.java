@@ -16,12 +16,15 @@ import java.io.InputStream;
 import java.net.URL;
 
 import org.apache.log4j.Logger;
+import org.apache.xmlbeans.XmlError;
+import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
 import org.xml.sax.InputSource;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.definition.support.AbstractDefinitionLoader;
+import com.eviware.soapui.impl.support.definition.support.InvalidDefinitionException;
 import com.eviware.soapui.impl.wsdl.support.PathUtils;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
@@ -104,12 +107,24 @@ public abstract class WsdlLoader extends AbstractDefinitionLoader implements Wsd
 				monitor.setProgress( progressIndex, "Loading [" + url + "]" );
 
 			options.setLoadLineNumbers();
-			return XmlObject.Factory.parse( load( url ), options );
+			String content = Tools.readAll( load( url ), 0 ).toString().trim();
+			return XmlObject.Factory.parse( content, options );
 		}
 		catch( Exception e )
 		{
+			if( e instanceof XmlException )
+			{
+				XmlError error = ( ( XmlException )e ).getError();
+				if( error != null )
+				{
+					InvalidDefinitionException ex = new InvalidDefinitionException( ( XmlException )e );
+					ex.setMessage( "Error loading [" + url + "]" );
+					throw ex;
+				}
+			}
+
 			log.error( "Failed to load url [" + url + "]" );
-			throw e;
+			throw new InvalidDefinitionException( "Error loading [" + url + "]: " + e );
 		}
 	}
 
@@ -167,17 +182,20 @@ public abstract class WsdlLoader extends AbstractDefinitionLoader implements Wsd
 	public boolean hasCredentials()
 	{
 		return !StringUtils.isNullOrEmpty( getUsername() ) && !StringUtils.isNullOrEmpty( getPassword() );
-		//return !StringUtils.isNullOrEmpty( username ) && !StringUtils.isNullOrEmpty( password );
+		// return !StringUtils.isNullOrEmpty( username ) &&
+		// !StringUtils.isNullOrEmpty( password );
 	}
 
 	public String getPassword()
 	{
-		return StringUtils.isNullOrEmpty( password ) ? System.getProperty( "soapui.loader.password", password ) : password ;
+		return StringUtils.isNullOrEmpty( password ) ? System.getProperty( "soapui.loader.password", password )
+				: password;
 	}
 
 	public String getUsername()
 	{
-		return StringUtils.isNullOrEmpty( username ) ? System.getProperty( "soapui.loader.username", username ) : username ;
+		return StringUtils.isNullOrEmpty( username ) ? System.getProperty( "soapui.loader.username", username )
+				: username;
 	}
 
 }

@@ -43,9 +43,6 @@ public class URLDesktopPanel extends DefaultDesktopPanel
 
 	public void navigate( String url, String errorUrl, boolean async )
 	{
-		// if (!browser.isBrowserInitialised()) {
-		// browser.initBrowser();
-		// }
 		if( async )
 		{
 			SwingUtilities.invokeLater( new Navigator( url, errorUrl ) );

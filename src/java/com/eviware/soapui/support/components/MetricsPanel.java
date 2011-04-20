@@ -274,8 +274,8 @@ public class MetricsPanel extends JPanel
 			setFont( boldFont );
 			if( color != null )
 				setBackground( color );
-			setBorder( BorderFactory.createCompoundBorder( BorderFactory.createEtchedBorder(), BorderFactory
-					.createEmptyBorder( 0, 2, 1, 2 ) ) );
+			setBorder( BorderFactory.createCompoundBorder( BorderFactory.createEtchedBorder(),
+					BorderFactory.createEmptyBorder( 0, 2, 1, 2 ) ) );
 			return result;
 		}
 	}

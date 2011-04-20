@@ -22,6 +22,8 @@ import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.config.TestStepConfig;
 import com.eviware.soapui.config.WsaConfigConfig;
 import com.eviware.soapui.config.WsdlRequestConfig;
+import com.eviware.soapui.config.WsrmConfigConfig;
+import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlUtils;
@@ -85,10 +87,17 @@ public class WsdlTestRequestStepFactory extends WsdlTestStepFactory
 		testRequestConfig.addNewRequest().setStringValue( request.getRequestContent() );
 		testRequestConfig.setOutgoingWss( request.getOutgoingWss() );
 		testRequestConfig.setIncomingWss( request.getIncomingWss() );
-		testRequestConfig.setTimeout(request.getTimeout());
-		
+		testRequestConfig.setTimeout( request.getTimeout() );
+		testRequestConfig.setSslKeystore( request.getSslKeystore() );
+
+		testRequestConfig.setUseWsAddressing( request.isWsaEnabled() );
+		testRequestConfig.setUseWsReliableMessaging( request.isWsrmEnabled() );
+
 		if( request.getConfig().isSetWsaConfig() )
 			testRequestConfig.setWsaConfig( ( WsaConfigConfig )request.getConfig().getWsaConfig().copy() );
+
+		if( request.getConfig().isSetWsrmConfig() )
+			testRequestConfig.setWsrmConfig( ( WsrmConfigConfig )request.getConfig().getWsrmConfig().copy() );
 
 		if( ( CredentialsConfig )request.getConfig().getCredentials() != null )
 		{
@@ -244,5 +253,18 @@ public class WsdlTestRequestStepFactory extends WsdlTestStepFactory
 				"Specify options for adding a new request to a TestCase", UISupport.OPTIONS_ICON );
 
 		dialogValues.put( ADD_SOAP_RESPONSE_ASSERTION, Boolean.TRUE.toString() );
+	}
+
+	@Override
+	public boolean canAddTestStepToTestCase( WsdlTestCase testCase )
+	{
+		for( Interface iface : testCase.getTestSuite().getProject().getInterfaceList() )
+		{
+			if( iface instanceof WsdlInterface && iface.getOperationCount() > 0 )
+				return true;
+		}
+
+		UISupport.showErrorMessage( "Missing SOAP Operations in Project" );
+		return false;
 	}
 }

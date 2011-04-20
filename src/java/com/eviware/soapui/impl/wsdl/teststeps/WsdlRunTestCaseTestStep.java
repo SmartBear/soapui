@@ -20,10 +20,10 @@ import java.util.Set;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.LoadTestConfig;
 import com.eviware.soapui.config.RunTestCaseRunModeTypeConfig;
+import com.eviware.soapui.config.RunTestCaseRunModeTypeConfig.Enum;
 import com.eviware.soapui.config.RunTestCaseStepConfig;
 import com.eviware.soapui.config.TestCaseConfig;
 import com.eviware.soapui.config.TestStepConfig;
-import com.eviware.soapui.config.RunTestCaseRunModeTypeConfig.Enum;
 import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
 import com.eviware.soapui.impl.wsdl.support.XmlBeansPropertiesTestPropertyHolder;
 import com.eviware.soapui.impl.wsdl.support.XmlBeansPropertiesTestPropertyHolder.PropertiesStepProperty;
@@ -216,19 +216,19 @@ public class WsdlRunTestCaseTestStep extends WsdlTestStep
 					{
 						properties
 								.put( TestRunContext.THREAD_INDEX, testRunContext.getProperty( TestRunContext.THREAD_INDEX ) );
-						properties.put( TestRunContext.TOTAL_RUN_COUNT, testRunContext
-								.getProperty( TestRunContext.TOTAL_RUN_COUNT ) );
-						properties.put( TestRunContext.LOAD_TEST_CONTEXT, testRunContext
-								.getProperty( TestRunContext.LOAD_TEST_CONTEXT ) );
-						properties.put( TestRunContext.LOAD_TEST_RUNNER, testRunContext
-								.getProperty( TestRunContext.LOAD_TEST_RUNNER ) );
+						properties.put( TestRunContext.TOTAL_RUN_COUNT,
+								testRunContext.getProperty( TestRunContext.TOTAL_RUN_COUNT ) );
+						properties.put( TestRunContext.LOAD_TEST_CONTEXT,
+								testRunContext.getProperty( TestRunContext.LOAD_TEST_CONTEXT ) );
+						properties.put( TestRunContext.LOAD_TEST_RUNNER,
+								testRunContext.getProperty( TestRunContext.LOAD_TEST_RUNNER ) );
 						properties.put( TestRunContext.RUN_COUNT, testRunContext.getProperty( TestRunContext.RUN_COUNT ) );
 					}
 
 					if( isCopyHttpSession() && properties.containsKey( TestRunContext.HTTP_STATE_PROPERTY ) )
 					{
-						properties.put( TestRunContext.HTTP_STATE_PROPERTY, testRunContext
-								.getProperty( TestRunContext.HTTP_STATE_PROPERTY ) );
+						properties.put( TestRunContext.HTTP_STATE_PROPERTY,
+								testRunContext.getProperty( TestRunContext.HTTP_STATE_PROPERTY ) );
 					}
 
 					properties.put( TestRunContext.INTERACTIVE, testRunContext.getProperty( TestRunContext.INTERACTIVE ) );
@@ -615,8 +615,8 @@ public class WsdlRunTestCaseTestStep extends WsdlTestStep
 
 		if( targetTestCase == null )
 		{
-			if( context.hasThisModelItem( this, "Missing Test Case", getTestStepTitle() + "/"
-					+ stepConfig.getTargetTestCase() ) )
+			if( context.hasThisModelItem( this, "Missing Test Case",
+					getTestStepTitle() + "/" + stepConfig.getTargetTestCase() ) )
 				return;
 			context
 					.addPathToResolve( this, "Missing Test Case", getTestStepTitle() + "/" + stepConfig.getTargetTestCase() )
@@ -626,8 +626,8 @@ public class WsdlRunTestCaseTestStep extends WsdlTestStep
 		else
 		{
 			targetTestCase.resolve( context );
-			if( context.hasThisModelItem( this, "Missing Test Case", getTestStepTitle() + "/"
-					+ stepConfig.getTargetTestCase() ) )
+			if( context.hasThisModelItem( this, "Missing Test Case",
+					getTestStepTitle() + "/" + stepConfig.getTargetTestCase() ) )
 			{
 				context.getPath( this, "Missing Test Case", getTestStepTitle() + "/" + stepConfig.getTargetTestCase() )
 						.setSolved( true );

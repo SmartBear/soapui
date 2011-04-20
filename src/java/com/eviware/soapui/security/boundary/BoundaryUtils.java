@@ -68,7 +68,7 @@ public class BoundaryUtils
 	 * @param daysOffset
 	 * @return date
 	 */
-	public static String createDate( String restrictionDate, int daysOffset ,SimpleDateFormat format)
+	public static String createDate( String restrictionDate, int daysOffset, SimpleDateFormat format )
 	{
 		try
 		{
@@ -84,7 +84,7 @@ public class BoundaryUtils
 		}
 		return null;
 	}
-	
+
 	/**
 	 * 
 	 * creates time in string representation that is differs from minutesOffset
@@ -94,7 +94,7 @@ public class BoundaryUtils
 	 * @param minutesOffset
 	 * @return date
 	 */
-	public static String createTime( String restrictionTime, int minutesOffset ,SimpleDateFormat format)
+	public static String createTime( String restrictionTime, int minutesOffset, SimpleDateFormat format )
 	{
 		try
 		{

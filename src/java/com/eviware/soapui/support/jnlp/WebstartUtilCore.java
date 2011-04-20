@@ -31,9 +31,9 @@ public class WebstartUtilCore extends WebstartUtil
 				// }
 
 				// wsi-test-tools
-				System.setProperty( "wsi.dir", createWebStartDirectory( "wsi-test-tools", System
-						.getProperty( "wsitesttools.jar.url" ) )
-						+ File.separator + "wsi-test-tools" );
+				System.setProperty( "wsi.dir",
+						createWebStartDirectory( "wsi-test-tools", System.getProperty( "wsitesttools.jar.url" ) )
+								+ File.separator + "wsi-test-tools" );
 				System.out.println( System.getProperty( "wsi.dir" ) );
 			}
 			catch( Exception e )

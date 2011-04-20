@@ -47,7 +47,6 @@ import com.eviware.soapui.support.actions.FindAndReplaceDialog;
 import com.eviware.soapui.support.actions.FindAndReplaceable;
 import com.eviware.soapui.support.components.JEditorStatusBar.JEditorStatusBarTarget;
 import com.eviware.soapui.support.scripting.groovy.GroovyScriptEngineFactory;
-import com.eviware.soapui.support.scripting.groovy.SoapUIGroovyScriptEngine;
 import com.eviware.soapui.support.scripting.js.JsScriptEngineFactory;
 import com.eviware.soapui.support.swing.RSyntaxAreaPopupMenu;
 
@@ -73,7 +72,7 @@ public class GroovyEditor extends JPanel implements JEditorStatusBarTarget, Prop
 	{
 		super( new BorderLayout() );
 		this.model = model;
-		
+
 		model.addPropertyChangeListener( this );
 
 		Settings settings = model.getSettings();
@@ -82,12 +81,13 @@ public class GroovyEditor extends JPanel implements JEditorStatusBarTarget, Prop
 		editArea = new RSyntaxTextArea();
 		editArea.restoreDefaultSyntaxScheme();
 
-		String defaultScriptLanguage = ((WsdlProject)ModelSupport.getModelItemProject( model.getModelItem() )).getDefaultScriptLanguage();
-		if( defaultScriptLanguage.equals( GroovyScriptEngineFactory.ID ))
+		String defaultScriptLanguage = ( ( WsdlProject )ModelSupport.getModelItemProject( model.getModelItem() ) )
+				.getDefaultScriptLanguage();
+		if( defaultScriptLanguage.equals( GroovyScriptEngineFactory.ID ) )
 			editArea.setSyntaxEditingStyle( SyntaxConstants.SYNTAX_STYLE_GROOVY );
-		else if( defaultScriptLanguage.equals( JsScriptEngineFactory.ID ))
+		else if( defaultScriptLanguage.equals( JsScriptEngineFactory.ID ) )
 			editArea.setSyntaxEditingStyle( SyntaxConstants.SYNTAX_STYLE_JAVASCRIPT );
-		
+
 		editArea.setBorder( BorderFactory.createMatteBorder( 0, 2, 0, 0, Color.WHITE ) );
 
 		editArea.setText( model.getScript() );
@@ -111,9 +111,9 @@ public class GroovyEditor extends JPanel implements JEditorStatusBarTarget, Prop
 		settingsListener = new InternalSettingsListener();
 		settings.addSettingsListener( settingsListener );
 
-		//scrollPane = new RTextScrollPane( 500, 300, editArea, true );
+		// scrollPane = new RTextScrollPane( 500, 300, editArea, true );
 		scrollPane = new RTextScrollPane( editArea, true );
-		scrollPane.setPreferredSize(new Dimension(500, 300));
+		scrollPane.setPreferredSize( new Dimension( 500, 300 ) );
 		add( scrollPane );
 
 		UISupport.addPreviewCorner( scrollPane, true );
@@ -159,7 +159,7 @@ public class GroovyEditor extends JPanel implements JEditorStatusBarTarget, Prop
 	public void setEnabled( boolean enabled )
 	{
 		super.setEnabled( enabled );
-		
+
 		editArea.setEnabled( enabled );
 	}
 
@@ -168,9 +168,11 @@ public class GroovyEditor extends JPanel implements JEditorStatusBarTarget, Prop
 		scrollPane.setLineNumbersEnabled( enable );
 		try
 		{
-			/*if( scrollPane.getLineNumbersEnabled() )
-				( ( LineNumberBorder )scrollPane.getViewportBorder() )
-						.setBackground( StandaloneSoapUICore.SoapUITheme.BACKGROUND_COLOR );*/
+			/*
+			 * if( scrollPane.getLineNumbersEnabled() ) ( ( LineNumberBorder
+			 * )scrollPane.getViewportBorder() ) .setBackground(
+			 * StandaloneSoapUICore.SoapUITheme.BACKGROUND_COLOR );
+			 */
 		}
 		catch( Exception e )
 		{
@@ -256,7 +258,7 @@ public class GroovyEditor extends JPanel implements JEditorStatusBarTarget, Prop
 		public void settingsReloaded()
 		{
 			// TODO Auto-generated method stub
-			
+
 		}
 	}
 
@@ -367,10 +369,10 @@ public class GroovyEditor extends JPanel implements JEditorStatusBarTarget, Prop
 
 	public void propertyChange( PropertyChangeEvent evt )
 	{
-		if( evt.getPropertyName().equals( "script" ))
+		if( evt.getPropertyName().equals( "script" ) )
 		{
 			updating = true;
-			editArea.setText( String.valueOf( evt.getNewValue() ));
+			editArea.setText( String.valueOf( evt.getNewValue() ) );
 			updating = false;
 		}
 	}

@@ -51,7 +51,7 @@ public class AMFHeadersInspector extends AbstractXmlInspector implements Propert
 	protected AMFHeadersInspector( AMFHeadersInspectorModel model )
 	{
 		super( "AMF Headers (" + ( model.getHeaders() == null ? "0" : model.getHeaders().size() ) + ")",
-				"AMF Headers for this amf message", true, AMFHeadersInspectorFactory.INSPECTOR_ID);
+				"AMF Headers for this amf message", true, AMFHeadersInspectorFactory.INSPECTOR_ID );
 		this.model = model;
 
 		model.addPropertyChangeListener( this );
@@ -59,51 +59,52 @@ public class AMFHeadersInspector extends AbstractXmlInspector implements Propert
 
 	public JComponent getComponent()
 	{
-		if (panel != null)
+		if( panel != null )
 			return panel;
 
-		headersTableModel = new StringToStringMapTableModel(model.getHeaders(), "AMFHeader", "Value", !model.isReadOnly());
-		headersTableModel.addTableModelListener(new TableModelListener()
+		headersTableModel = new StringToStringMapTableModel( model.getHeaders(), "AMFHeader", "Value",
+				!model.isReadOnly() );
+		headersTableModel.addTableModelListener( new TableModelListener()
 		{
-			public void tableChanged(TableModelEvent arg0)
+			public void tableChanged( TableModelEvent arg0 )
 			{
-				model.setHeaders(headersTableModel.getData());
-				setTitle("AMF Headers (" + (model.getHeaders() == null ? "0" : model.getHeaders().size()) + ")");
+				model.setHeaders( headersTableModel.getData() );
+				setTitle( "AMF Headers (" + ( model.getHeaders() == null ? "0" : model.getHeaders().size() ) + ")" );
 			}
-		});
+		} );
 
-		headersTable = new JTable(headersTableModel);
+		headersTable = new JTable( headersTableModel );
 
-		panel = new JPanel(new BorderLayout());
-		panel.add(new JScrollPane(headersTable), BorderLayout.CENTER);
+		panel = new JPanel( new BorderLayout() );
+		panel.add( new JScrollPane( headersTable ), BorderLayout.CENTER );
 
-		if (!model.isReadOnly())
+		if( !model.isReadOnly() )
 		{
-			headersTable.setSurrendersFocusOnKeystroke(true);
-			headersTable.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
+			headersTable.setSurrendersFocusOnKeystroke( true );
+			headersTable.putClientProperty( "terminateEditOnFocusLost", Boolean.TRUE );
 
 			JXToolBar builder = UISupport.createSmallToolbar();
-			builder.addFixed(UISupport.createToolbarButton(new AddAction()));
-			removeButton = UISupport.createToolbarButton(new RemoveAction());
-			builder.addFixed(removeButton);
+			builder.addFixed( UISupport.createToolbarButton( new AddAction() ) );
+			removeButton = UISupport.createToolbarButton( new RemoveAction() );
+			builder.addFixed( removeButton );
 			builder.addGlue();
-			builder.addFixed(UISupport.createToolbarButton(new ShowOnlineHelpAction(HelpUrls.HEADERS_HELP_URL)));
+			builder.addFixed( UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.HEADERS_HELP_URL ) ) );
 
-			panel.add(builder, BorderLayout.NORTH);
+			panel.add( builder, BorderLayout.NORTH );
 
-			headersTable.getSelectionModel().addListSelectionListener(new ListSelectionListener()
+			headersTable.getSelectionModel().addListSelectionListener( new ListSelectionListener()
 			{
 
-				public void valueChanged(ListSelectionEvent e)
+				public void valueChanged( ListSelectionEvent e )
 				{
-					removeButton.setEnabled(headersTable.getSelectedRow() != -1);
+					removeButton.setEnabled( headersTable.getSelectedRow() != -1 );
 				}
-			});
+			} );
 
-			if (headersTable.getRowCount() > 0)
-				headersTable.setRowSelectionInterval(0, 0);
+			if( headersTable.getRowCount() > 0 )
+				headersTable.setRowSelectionInterval( 0, 0 );
 			else
-				removeButton.setEnabled(false);
+				removeButton.setEnabled( false );
 		}
 
 		return panel;
@@ -119,13 +120,13 @@ public class AMFHeadersInspector extends AbstractXmlInspector implements Propert
 	{
 		super.release();
 		model.release();
-		model.removePropertyChangeListener(this);
+		model.removePropertyChangeListener( this );
 	}
 
-	public void propertyChange(PropertyChangeEvent evt)
+	public void propertyChange( PropertyChangeEvent evt )
 	{
-		if (!changing)
-			headersTableModel.setData(model.getHeaders());
+		if( !changing )
+			headersTableModel.setData( model.getHeaders() );
 	}
 
 	private final class RemoveAction extends AbstractAction
@@ -133,17 +134,17 @@ public class AMFHeadersInspector extends AbstractXmlInspector implements Propert
 		private RemoveAction()
 		{
 			super();
-			putValue(AbstractAction.SMALL_ICON, UISupport.createImageIcon("/remove_property.gif"));
-			putValue(AbstractAction.SHORT_DESCRIPTION, "Removes the selected custom AMF Header from this message");
+			putValue( AbstractAction.SMALL_ICON, UISupport.createImageIcon( "/remove_property.gif" ) );
+			putValue( AbstractAction.SHORT_DESCRIPTION, "Removes the selected custom AMF Header from this message" );
 		}
 
-		public void actionPerformed(ActionEvent arg0)
+		public void actionPerformed( ActionEvent arg0 )
 		{
 			int row = headersTable.getSelectedRow();
-			if (row != -1 && UISupport.confirm("Delete selected header?", "Remove Header"))
+			if( row != -1 && UISupport.confirm( "Delete selected header?", "Remove Header" ) )
 			{
 				changing = true;
-				headersTableModel.remove(row);
+				headersTableModel.remove( row );
 				changing = false;
 			}
 		}
@@ -154,35 +155,35 @@ public class AMFHeadersInspector extends AbstractXmlInspector implements Propert
 		private AddAction()
 		{
 			super();
-			putValue(AbstractAction.SMALL_ICON, UISupport.createImageIcon("/add_property.gif"));
-			putValue(AbstractAction.SHORT_DESCRIPTION, "Adds a custom AMF Header to this message");
+			putValue( AbstractAction.SMALL_ICON, UISupport.createImageIcon( "/add_property.gif" ) );
+			putValue( AbstractAction.SHORT_DESCRIPTION, "Adds a custom AMF Header to this message" );
 		}
 
-		public void actionPerformed(ActionEvent arg0)
+		public void actionPerformed( ActionEvent arg0 )
 		{
-			Object header = UISupport.prompt("Specify name of header to add", "Add AMF Header", "");
-			if (header != null)
+			Object header = UISupport.prompt( "Specify name of header to add", "Add AMF Header", "" );
+			if( header != null )
 			{
 				changing = true;
-				headersTableModel.add(header.toString(), "");
-				SwingUtilities.invokeLater(new Runnable()
+				headersTableModel.add( header.toString(), "" );
+				SwingUtilities.invokeLater( new Runnable()
 				{
 					public void run()
 					{
 						int row = headersTable.getRowCount() - 1;
-						headersTable.scrollRectToVisible(headersTable.getCellRect(row, 1, true));
-						headersTable.setRowSelectionInterval(row, row);
+						headersTable.scrollRectToVisible( headersTable.getCellRect( row, 1, true ) );
+						headersTable.setRowSelectionInterval( row, row );
 
-						SwingUtilities.invokeLater(new Runnable()
+						SwingUtilities.invokeLater( new Runnable()
 						{
 							public void run()
 							{
-								headersTable.editCellAt(headersTable.getRowCount() - 1, 1);
+								headersTable.editCellAt( headersTable.getRowCount() - 1, 1 );
 								headersTable.getEditorComponent().requestFocusInWindow();
 							}
-						});
+						} );
 					}
-				});
+				} );
 
 				changing = false;
 			}
@@ -190,8 +191,8 @@ public class AMFHeadersInspector extends AbstractXmlInspector implements Propert
 	}
 
 	@Override
-	public boolean isEnabledFor(EditorView<XmlDocument> view)
+	public boolean isEnabledFor( EditorView<XmlDocument> view )
 	{
-		return !view.getViewId().equals(RawXmlEditorFactory.VIEW_ID);
+		return !view.getViewId().equals( RawXmlEditorFactory.VIEW_ID );
 	}
 }

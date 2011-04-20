@@ -70,7 +70,7 @@ public class AMFCredentials
 			connection.close();
 		}
 	}
-	
+
 	public void logout()
 	{
 		SoapUIAMFConnection connection = ( SoapUIAMFConnection )context.getProperty( AMFSubmit.AMF_CONNECTION );

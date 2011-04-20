@@ -36,8 +36,8 @@ public class AddNewTestCaseAction extends AbstractSoapUIAction<WsdlTestSuite>
 
 	public void perform( WsdlTestSuite testSuite, Object param )
 	{
-		String name = UISupport.prompt( "Specify name of TestCase", "New TestCase", "TestCase "
-				+ ( testSuite.getTestCaseCount() + 1 ) );
+		String name = UISupport.prompt( "Specify name of TestCase", "New TestCase",
+				"TestCase " + ( testSuite.getTestCaseCount() + 1 ) );
 		if( name == null )
 			return;
 		while( testSuite.getTestCaseByName( name.trim() ) != null )

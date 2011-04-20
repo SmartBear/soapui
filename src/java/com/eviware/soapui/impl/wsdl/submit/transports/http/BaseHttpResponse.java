@@ -144,8 +144,8 @@ public abstract class BaseHttpResponse implements HttpResponse
 		downloader = new HTMLPageSourceDownloader();
 		try
 		{
-			List<Attachment> attachmentList = downloader.downloadCssAndImages( url.toString(), ( HttpRequest )httpRequest
-					.get() );
+			List<Attachment> attachmentList = downloader.downloadCssAndImages( url.toString(),
+					( HttpRequest )httpRequest.get() );
 			attachments = attachmentList.toArray( new Attachment[attachmentList.size()] );
 		}
 		catch( ClassCastException cce )

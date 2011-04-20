@@ -84,7 +84,7 @@ public class HermesUtils
 
 		try
 		{
-			Thread.currentThread().setContextClassLoader( JAXBHermesLoader.class.getClassLoader());
+			Thread.currentThread().setContextClassLoader( JAXBHermesLoader.class.getClassLoader() );
 			Properties props = new Properties();
 			props.put( Context.INITIAL_CONTEXT_FACTORY, HermesInitialContextFactory.class.getName() );
 			props.put( Context.PROVIDER_URL, hermesConfigPath + File.separator + HERMES_CONFIG_XML );
@@ -126,8 +126,9 @@ public class HermesUtils
 				continue;
 
 			urls.add( file.toURI().toURL() );
-		
-			SoapUIExtensionClassLoader.addUrlToClassLoader(  new File( dir, filename ).toURI().toURL(), JAXBHermesLoader.class.getClassLoader());
+
+			SoapUIExtensionClassLoader.addUrlToClassLoader( new File( dir, filename ).toURI().toURL(),
+					JAXBHermesLoader.class.getClassLoader() );
 		}
 
 	}

@@ -18,7 +18,6 @@ import java.awt.Dimension;
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.table.TableModel;
 
 import org.jdesktop.swingx.JXTable;
@@ -45,12 +44,12 @@ public class JTableFormField extends AbstractSwingXFormField<JComponent> impleme
 
 		if( required )
 			getComponent().setBorder(
-					BorderFactory.createCompoundBorder( BorderFactory.createLineBorder( Color.RED ), BorderFactory
-							.createEmptyBorder( 2, 2, 2, 2 ) ) );
+					BorderFactory.createCompoundBorder( BorderFactory.createLineBorder( Color.RED ),
+							BorderFactory.createEmptyBorder( 2, 2, 2, 2 ) ) );
 		else
 			getComponent().setBorder(
-					BorderFactory.createCompoundBorder( BorderFactory.createLineBorder( Color.GRAY ), BorderFactory
-							.createEmptyBorder( 2, 2, 2, 2 ) ) );
+					BorderFactory.createCompoundBorder( BorderFactory.createLineBorder( Color.GRAY ),
+							BorderFactory.createEmptyBorder( 2, 2, 2, 2 ) ) );
 	}
 
 	public JXTable getTable()

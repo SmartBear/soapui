@@ -10,6 +10,7 @@
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
 package com.eviware.soapui.security.boundary;
+
 /**
  * @author nebojsa.tasic
  */
@@ -25,5 +26,5 @@ public interface Boundary
 	public static final int MAX_INCLISIVE = 8;
 	public static final int MIN_INCLISIVE = 9;
 
-	String outOfBoundary( int restrictionAttribute , String value);
+	String outOfBoundary( int restrictionAttribute, String value );
 }

@@ -28,7 +28,7 @@ public class SecurityTreeRootNode extends DefaultMutableTreeNode implements Prop
 	public SecurityTreeRootNode( SecurityTest securityTest )
 	{
 		this.securityTest = securityTest;
-		
+
 		securityTest.addPropertyChangeListener( this );
 
 		initRoot();
@@ -43,8 +43,9 @@ public class SecurityTreeRootNode extends DefaultMutableTreeNode implements Prop
 
 	private void initChildren()
 	{
-		for( TestStep step : securityTest.getTestCase().getTestStepList() ) {
-			add( new TestStepNode( this, step, securityTest.getSecurityChecksMap().get( step.getId() ) ));
+		for( TestStep step : securityTest.getTestCase().getTestStepList() )
+		{
+			add( new TestStepNode( this, step, securityTest.getSecurityChecksMap().get( step.getId() ) ) );
 		}
 	}
 
@@ -57,7 +58,7 @@ public class SecurityTreeRootNode extends DefaultMutableTreeNode implements Prop
 	@Override
 	public void propertyChange( PropertyChangeEvent evt )
 	{
-		//System.out.println(evt.toString());
+		// System.out.println(evt.toString());
 	}
 
 	public SecurityTest getSecurityTest()

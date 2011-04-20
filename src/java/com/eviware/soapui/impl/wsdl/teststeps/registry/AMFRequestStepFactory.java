@@ -31,8 +31,7 @@ public class AMFRequestStepFactory extends WsdlTestStepFactory
 
 	public AMFRequestStepFactory()
 	{
-		super( AMF_REQUEST_TYPE, "AMF Request", "Submits a AMF Request and validates its response",
-				"/amf_request.gif" );
+		super( AMF_REQUEST_TYPE, "AMF Request", "Submits a AMF Request and validates its response", "/amf_request.gif" );
 	}
 
 	public WsdlTestStep buildTestStep( WsdlTestCase testCase, TestStepConfig config, boolean forLoadTest )

@@ -46,8 +46,8 @@ public class SQLInjectionTest extends AbstractSecurityTestCaseWithMockService
 	protected void addSecurityCheckConfig( SecurityCheckConfig securityCheckConfig )
 	{
 
-		SQLInjectionCheck sqlCheck = ( SQLInjectionCheck )SoapUI.getSoapUICore().getSecurityCheckRegistry().getFactory(
-				securityCheckType ).buildSecurityCheck( testStep, securityCheckConfig, null );
+		SQLInjectionCheck sqlCheck = ( SQLInjectionCheck )SoapUI.getSoapUICore().getSecurityCheckRegistry()
+				.getFactory( securityCheckType ).buildSecurityCheck( testStep, securityCheckConfig, null );
 
 		List<String> params = new ArrayList<String>();
 		params.add( "q" );

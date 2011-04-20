@@ -42,7 +42,7 @@ public class RestRequestContentView extends HttpRequestContentView
 	private JButton recreateButton;
 	private RestParamsTable paramsTable;
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings( "unchecked" )
 	public RestRequestContentView( HttpRequestMessageEditor restRequestMessageEditor, RestRequestInterface restRequest )
 	{
 		super( restRequestMessageEditor, restRequest );
@@ -92,11 +92,11 @@ public class RestRequestContentView extends HttpRequestContentView
 		{
 			recreateButton.setEnabled( canRecreate() );
 		}
-		else if( evt.getPropertyName().equals( "restMethod" ))
+		else if( evt.getPropertyName().equals( "restMethod" ) )
 		{
 			paramsTable.setParams( restRequest.getParams() );
 		}
-		
+
 		super.propertyChange( evt );
 	}
 
@@ -159,7 +159,7 @@ public class RestRequestContentView extends HttpRequestContentView
 			putValue( Action.SHORT_DESCRIPTION, "Recreates a default representation from the schema" );
 		}
 
-		@SuppressWarnings("unchecked")
+		@SuppressWarnings( "unchecked" )
 		public void actionPerformed( ActionEvent e )
 		{
 			TupleList<RestRepresentation, SchemaType> list = new TupleList<RestRepresentation, SchemaType>()

@@ -293,19 +293,19 @@ public class JXEditTextArea extends JEditTextArea implements UndoableEditListene
 					{
 						if( testQueue != null )
 						{
-						Reference<? extends JXEditTextArea> ref = testQueue.remove();
-						// System.out.println( "Got ref to clear" );
-						InternalSettingsListener listener = testMap.remove( ref );
-						if( listener != null )
-						{
-							// System.out.println( "Releasing listener" );
-							listener.release();
+							Reference<? extends JXEditTextArea> ref = testQueue.remove();
+							// System.out.println( "Got ref to clear" );
+							InternalSettingsListener listener = testMap.remove( ref );
+							if( listener != null )
+							{
+								// System.out.println( "Releasing listener" );
+								listener.release();
+							}
+							else
+							{
+								// System.out.println( "Listener not found" );
+							}
 						}
-						else
-						{
-							// System.out.println( "Listener not found" );
-						}
-					}
 					}
 					catch( InterruptedException e )
 					{
@@ -354,7 +354,7 @@ public class JXEditTextArea extends JEditTextArea implements UndoableEditListene
 		public void settingsReloaded()
 		{
 			// TODO Auto-generated method stub
-			
+
 		}
 
 	}
@@ -398,8 +398,8 @@ public class JXEditTextArea extends JEditTextArea implements UndoableEditListene
 
 		public void actionPerformed( ActionEvent e )
 		{
-			String line = UISupport.prompt( "Enter line-number to (1.." + ( getLineCount() ) + ")", "Go To Line", String
-					.valueOf( getCaretLine() + 1 ) );
+			String line = UISupport.prompt( "Enter line-number to (1.." + ( getLineCount() ) + ")", "Go To Line",
+					String.valueOf( getCaretLine() + 1 ) );
 
 			if( line != null )
 			{

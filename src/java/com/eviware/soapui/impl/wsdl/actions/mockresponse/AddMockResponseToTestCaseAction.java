@@ -28,8 +28,8 @@ import com.eviware.soapui.ui.desktop.SoapUIDesktop;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.AField.AFieldType;
+import com.eviware.x.form.support.AForm;
 
 public class AddMockResponseToTestCaseAction extends AbstractAddToTestCaseAction<WsdlMockResponse>
 {

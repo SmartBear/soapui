@@ -19,8 +19,7 @@ import com.eviware.soapui.model.testsuite.ProjectRunner;
 import com.eviware.soapui.model.testsuite.TestRunner;
 import com.eviware.soapui.support.types.StringToObjectMap;
 
-public class WsdlProjectRunContext extends AbstractSubmitContext<WsdlProject> implements
-		ProjectRunContext
+public class WsdlProjectRunContext extends AbstractSubmitContext<WsdlProject> implements ProjectRunContext
 {
 	private final WsdlProjectRunner testScenarioRunner;
 

@@ -146,7 +146,8 @@ public abstract class AbstractDefinitionExporter<T extends Interface> implements
 			fileName += ".wsdl";
 		else if( part.getType().equals( Constants.XSD_NS ) )
 			fileName += ".xsd";
-		else if( part.getType().equals( ((RestService)getDefinition().getInterface()).getWadlVersion() ) )
+		else if( getDefinition().getInterface() instanceof RestService
+				&& part.getType().equals( ( ( RestService )getDefinition().getInterface() ).getWadlVersion() ) )
 			fileName += ".wadl";
 		else
 			fileName += ".xml";

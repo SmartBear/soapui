@@ -17,8 +17,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
@@ -53,6 +51,7 @@ import com.eviware.soapui.impl.wsdl.support.PathUtils;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
+import com.eviware.soapui.settings.HttpSettings;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.editor.inspectors.attachments.ContentTypeHandler;
 import com.eviware.soapui.support.types.StringToStringMap;
@@ -89,9 +88,12 @@ public class HttpRequestFilter extends AbstractRequestFilter
 			String value = PropertyExpander.expandProperties( context, param.getValue() );
 			responseProperties.put( param.getName(), value );
 
-			List<String> valueParts = RestUtils.splitMultipleParameters( value );
+			List<String> valueParts = RestUtils.splitMultipleParameters( value, request.getMultiValueDelimiter() );
 
-			if( value != null && param.getStyle() != ParameterStyle.HEADER && !param.isDisableUrlEncoding() )
+			// skip HEADER and TEMPLATE parameter encoding (TEMPLATE is encoded by
+			// the URI handling further down)
+			if( value != null && param.getStyle() != ParameterStyle.HEADER && param.getStyle() != ParameterStyle.TEMPLATE
+					&& !param.isDisableUrlEncoding() )
 			{
 				try
 				{
@@ -183,6 +185,7 @@ public class HttpRequestFilter extends AbstractRequestFilter
 			}
 		}
 
+		if( request.getSettings().getBoolean( HttpSettings.FORWARD_SLASHES ) )
 		path = PathUtils.fixForwardSlashesInPath( path );
 
 		if( PathUtils.isHttpPath( path ) )

@@ -29,7 +29,8 @@ public class DefaultEditorFactory implements EditorFactory
 	{
 		JUndoableTextArea textArea = new JUndoableTextArea();
 		textArea.setText( editorModel.getEditorText() );
-		textArea.getDocument().addDocumentListener( new JTextComponentEditorModelDocumentListener( editorModel, textArea ) );
+		textArea.getDocument()
+				.addDocumentListener( new JTextComponentEditorModelDocumentListener( editorModel, textArea ) );
 		return new JScrollPane( textArea );
 	}
 
@@ -57,7 +58,7 @@ public class DefaultEditorFactory implements EditorFactory
 		{
 			this.editorModel = editorModel;
 			this.xmlEditor = xmlEditor;
-			
+
 			editorModel.addEditorModelListener( this );
 		}
 
@@ -65,7 +66,7 @@ public class DefaultEditorFactory implements EditorFactory
 		{
 			editorModel.setEditorText( getText( document ) );
 		}
-		
+
 		public void editorTextChanged( String oldText, String newText )
 		{
 			xmlEditor.getDocument().removeDocumentListener( this );
@@ -73,8 +74,9 @@ public class DefaultEditorFactory implements EditorFactory
 			xmlEditor.getDocument().addDocumentListener( this );
 		}
 	}
-	
-	private static class JTextComponentEditorModelDocumentListener extends DocumentListenerAdapter implements EditorModelListener
+
+	private static class JTextComponentEditorModelDocumentListener extends DocumentListenerAdapter implements
+			EditorModelListener
 	{
 		private final JTextComponent textField;
 		private final EditorModel editorModel;

@@ -520,6 +520,7 @@ public class Tools
 		}
 		return content;
 	}
+
 	public static String getTitleProperty( String path )
 	{
 		String content = "";

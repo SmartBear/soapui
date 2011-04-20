@@ -53,6 +53,7 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionsResult;
+import com.eviware.soapui.model.support.DefaultTestStepProperty;
 import com.eviware.soapui.model.support.InterfaceListenerAdapter;
 import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.model.support.ProjectListenerAdapter;
@@ -172,6 +173,16 @@ public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements O
 			public String getDefaultValue()
 			{
 				return getOperation().createResponse( true );
+			}
+		} );
+
+    	        addProperty( new DefaultTestStepProperty( "RawRequest", true, this )
+  		{
+			@Override
+			public String getValue()
+			{
+				WsdlResponse response = testRequest.getResponse();
+				return response == null ? null : response.getRequestContent();
 			}
 		} );
 	}

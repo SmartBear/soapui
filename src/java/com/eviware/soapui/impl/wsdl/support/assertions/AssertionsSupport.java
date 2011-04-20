@@ -43,14 +43,14 @@ public class AssertionsSupport implements PropertyChangeListener
 	private List<AssertionsListener> assertionsListeners = new ArrayList<AssertionsListener>();
 	private List<WsdlMessageAssertion> assertions = new ArrayList<WsdlMessageAssertion>();
 	private final Assertable assertable;
-	private AssertableConfig modelItemConfig;
+	private AssertableConfig assertableConfig;
 
-	public AssertionsSupport( Assertable assertable, AssertableConfig modelItemConfig )
+	public AssertionsSupport( Assertable assertable, AssertableConfig assertableConfig )
 	{
 		this.assertable = assertable;
-		this.modelItemConfig = modelItemConfig;
+		this.assertableConfig = assertableConfig;
 
-		for( TestAssertionConfig rac : modelItemConfig.getAssertionList() )
+		for( TestAssertionConfig rac : assertableConfig.getAssertionList() )
 		{
 			addWsdlAssertion( rac );
 		}
@@ -120,7 +120,7 @@ public class AssertionsSupport implements PropertyChangeListener
 
 		assertion.release();
 
-		modelItemConfig.removeAssertion( ix );
+		assertableConfig.removeAssertion( ix );
 	}
 
 	public WsdlMessageAssertion moveAssertion( int ix, int offset )
@@ -148,12 +148,12 @@ public class AssertionsSupport implements PropertyChangeListener
 
 		assertion.release();
 
-		modelItemConfig.removeAssertion( ix );
+		assertableConfig.removeAssertion( ix );
 
 		newAssertion.addPropertyChangeListener( this );
 		assertions.add( ix + offset, newAssertion );
 
-		modelItemConfig.insertAssertion( newConf, ix + offset );
+		assertableConfig.insertAssertion( newConf, ix + offset );
 		fireAssertionMoved( newAssertion, ix, offset );
 		return newAssertion;
 
@@ -204,7 +204,7 @@ public class AssertionsSupport implements PropertyChangeListener
 	{
 		int mod = 0;
 
-		List<TestAssertionConfig> assertionList = modelItemConfig.getAssertionList();
+		List<TestAssertionConfig> assertionList = assertableConfig.getAssertionList();
 
 		for( int i = 0; i < assertionList.size(); i++ )
 		{
@@ -260,7 +260,7 @@ public class AssertionsSupport implements PropertyChangeListener
 	public WsdlMessageAssertion importAssertion( WsdlMessageAssertion source, boolean overwrite, boolean createCopy,
 			String newName )
 	{
-		TestAssertionConfig conf = modelItemConfig.addNewAssertion();
+		TestAssertionConfig conf = assertableConfig.addNewAssertion();
 		conf.set( source.getConfig() );
 		conf.setName( newName );
 		if( createCopy && conf.isSetId() )
@@ -285,7 +285,7 @@ public class AssertionsSupport implements PropertyChangeListener
 
 	public TestAssertion cloneAssertion( TestAssertion source, String name )
 	{
-		TestAssertionConfig conf = modelItemConfig.addNewAssertion();
+		TestAssertionConfig conf = assertableConfig.addNewAssertion();
 		conf.set( ( ( WsdlMessageAssertion )source ).getConfig() );
 		conf.setName( name );
 
@@ -299,13 +299,15 @@ public class AssertionsSupport implements PropertyChangeListener
 	{
 		try
 		{
-			TestAssertionConfig assertionConfig = modelItemConfig.addNewAssertion();
+			TestAssertionConfig assertionConfig = assertableConfig.addNewAssertion();
 			assertionConfig.setType( TestAssertionRegistry.getInstance().getAssertionTypeForName( assertionLabel ) );
 
 			String name = assertionLabel;
 			while( getAssertionByName( name.trim() ) != null )
 			{
-				name = UISupport.prompt( "Specify unique name of Assertion", "Rename Assertion",
+				name = UISupport.prompt(
+						"Specify unique name of Assertion",
+						"Rename Assertion",
 						assertionLabel
 								+ " "
 								+ ( getAssertionsOfType( TestAssertionRegistry.getInstance().getAssertionClassType(

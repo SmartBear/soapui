@@ -14,49 +14,46 @@ package com.eviware.soapui.impl.wsdl;
 
 import java.io.File;
 
-import com.eviware.soapui.impl.WsdlInterfaceFactory;
-
 import junit.framework.TestCase;
+
+import com.eviware.soapui.impl.WsdlInterfaceFactory;
 
 public class AttachmentTestCase extends TestCase
 {
-   public void test() throws Exception
-   {
-   	String wsdlUrl = new File( "src/test-resources/attachment-test.wsdl" ).toURI().toURL().toString();
-   	WsdlProject project = new WsdlProject();
-   	WsdlInterface iface = WsdlInterfaceFactory.importWsdl( project, wsdlUrl, false )[0];
+	public void test() throws Exception
+	{
+		String wsdlUrl = new File( "src/test-resources/attachment-test.wsdl" ).toURI().toURL().toString();
+		WsdlProject project = new WsdlProject();
+		WsdlInterface iface = WsdlInterfaceFactory.importWsdl( project, wsdlUrl, false )[0];
 
-   	WsdlOperation operation = (WsdlOperation) iface.getOperationByName( "SendClaim" );
-   	WsdlRequest request = operation.addNewRequest( "Test" );
-   	
-   	request.setRequestContent( operation.createRequest( true ));
-   	
-   	System.out.println( request.getRequestContent() );
-   	
-   	HttpAttachmentPart[] definedAttachmentParts = request.getDefinedAttachmentParts();
-   	
-   	assertEquals( definedAttachmentParts.length, 4 );
-   	assertEquals( definedAttachmentParts[0].getName(), "ClaimPhoto" );
-   	
-   	/*
-		XmlCursor cursor = xmlObject.newCursor(); //xmlObject.changeType( docType ).newCursor();
-		while( !cursor.isEnddoc() )
-		{
-			if( cursor.isContainer() )
-			{
-				String attributeText = cursor.getAttributeText( new QName( "http://www.w3.org/2004/11/xmlmime", "contentType"));
-				if( attributeText != null )
-					System.out.println( "contentType: " + attributeText);
-				
-				SchemaType schemaType = cursor.getObject().schemaType();
-				if( schemaType != null && schemaType.getName().equals( new QName("http://ws-i.org/profiles/basic/1.1/xsd","swaRef")) )
-				{
-					System.out.println( cursor.getTextValue() );
-				}
-			}
-			
-			cursor.toNextToken();
-			
-		}*/
-   }
+		WsdlOperation operation = ( WsdlOperation )iface.getOperationByName( "SendClaim" );
+		WsdlRequest request = operation.addNewRequest( "Test" );
+
+		request.setRequestContent( operation.createRequest( true ) );
+
+		System.out.println( request.getRequestContent() );
+
+		HttpAttachmentPart[] definedAttachmentParts = request.getDefinedAttachmentParts();
+
+		assertEquals( definedAttachmentParts.length, 4 );
+		assertEquals( definedAttachmentParts[0].getName(), "ClaimPhoto" );
+
+		/*
+		 * XmlCursor cursor = xmlObject.newCursor(); //xmlObject.changeType(
+		 * docType ).newCursor(); while( !cursor.isEnddoc() ) { if(
+		 * cursor.isContainer() ) { String attributeText =
+		 * cursor.getAttributeText( new QName(
+		 * "http://www.w3.org/2004/11/xmlmime", "contentType")); if( attributeText
+		 * != null ) System.out.println( "contentType: " + attributeText);
+		 * 
+		 * SchemaType schemaType = cursor.getObject().schemaType(); if( schemaType
+		 * != null && schemaType.getName().equals( new
+		 * QName("http://ws-i.org/profiles/basic/1.1/xsd","swaRef")) ) {
+		 * System.out.println( cursor.getTextValue() ); } }
+		 * 
+		 * cursor.toNextToken();
+		 * 
+		 * }
+		 */
+	}
 }

@@ -50,8 +50,8 @@ import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.AField.AFieldType;
+import com.eviware.x.form.support.AForm;
 
 public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion implements ResponseAssertion
 {
@@ -109,20 +109,19 @@ public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion impleme
 	protected String internalAssertResponse( MessageExchange messageExchange, SubmitContext context )
 			throws AssertionException
 	{
-		 Map<String,String> checkMap = createCheckMap( context );
+		Map<String, String> checkMap = createCheckMap( context );
 		boolean throwException = false;
 		List<AssertionError> assertionErrorList = new ArrayList<AssertionError>();
 		for( String token : checkMap.keySet() )
 		{
 			boolean useRegexp = token.trim().startsWith( PREFIX );
-			String description = !checkMap.get( token).equals( "") ? checkMap.get( token): token;
+			String description = !checkMap.get( token ).equals( "" ) ? checkMap.get( token ) : token;
 			if( useRegexp )
 			{
 				token = token.substring( token.indexOf( PREFIX ) + 1 );
 			}
 
-			if( SecurityCheckUtil.contains( context, new String( messageExchange.getRawResponseData() ), token,
-					useRegexp ) )
+			if( SecurityCheckUtil.contains( context, new String( messageExchange.getRawResponseData() ), token, useRegexp ) )
 			{
 				String message = "Sensitive information '" + description + "' is exposed in : "
 						+ messageExchange.getModelItem().getName();
@@ -139,26 +138,26 @@ public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion impleme
 		return "OK";
 	}
 
-	private Map<String,String> createCheckMap( SubmitContext context )
+	private Map<String, String> createCheckMap( SubmitContext context )
 	{
-		Map<String,String> checkMap = new HashMap<String,String>( );
+		Map<String, String> checkMap = new HashMap<String, String>();
 		checkMap.putAll( createMapFromTable() );
 		if( includeProjectSpecific )
 		{
-			checkMap.putAll(  SecurityCheckUtil.projectEntriesList( this ) );
+			checkMap.putAll( SecurityCheckUtil.projectEntriesList( this ) );
 		}
 
 		if( includeGlolbal )
 		{
 			checkMap.putAll( SecurityCheckUtil.globalEntriesList() );
 		}
-		Map<String,String> expandedMap = propertyExpansionSupport( checkMap, context );
+		Map<String, String> expandedMap = propertyExpansionSupport( checkMap, context );
 		return expandedMap;
 	}
 
-	private  Map<String,String>  propertyExpansionSupport( Map<String,String> checkMap, SubmitContext context )
+	private Map<String, String> propertyExpansionSupport( Map<String, String> checkMap, SubmitContext context )
 	{
-		Map<String,String> expanded = new HashMap<String,String>();
+		Map<String, String> expanded = new HashMap<String, String>();
 		for( String key : checkMap.keySet() )
 		{
 			expanded.put( context.expand( key ), context.expand( checkMap.get( key ) ) );
@@ -192,8 +191,8 @@ public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion impleme
 	protected XmlObject createConfiguration()
 	{
 		XmlObjectConfigurationBuilder builder = new XmlObjectConfigurationBuilder();
-		builder.add( ASSERTION_SPECIFIC_EXPOSURE_LIST, assertionSpecificExposureList
-				.toArray( new String[assertionSpecificExposureList.size()] ) );
+		builder.add( ASSERTION_SPECIFIC_EXPOSURE_LIST,
+				assertionSpecificExposureList.toArray( new String[assertionSpecificExposureList.size()] ) );
 		builder.add( INCLUDE_PROJECT_SPECIFIC, includeProjectSpecific );
 		builder.add( INCLUDE_GLOBAL, includeGlolbal );
 		return builder.finish();
@@ -213,7 +212,7 @@ public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion impleme
 					.getValue() );
 			setConfiguration( createConfiguration() );
 
-			return true; 
+			return true;
 		}
 		return false;
 	}
@@ -221,18 +220,20 @@ public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion impleme
 	private List<String> createListFromTable()
 	{
 		List<String> temp = new ArrayList<String>();
-		for(TestProperty tp:sensitivInformationTableModel.getHolder().getPropertyList()){
-			String tokenPlusDescription = tp.getName()+"###"+tp.getValue();
+		for( TestProperty tp : sensitivInformationTableModel.getHolder().getPropertyList() )
+		{
+			String tokenPlusDescription = tp.getName() + "###" + tp.getValue();
 			temp.add( tokenPlusDescription );
 		}
 		return temp;
 	}
-	
-	private Map<String,String> createMapFromTable()
+
+	private Map<String, String> createMapFromTable()
 	{
-		Map<String,String> temp = new HashMap<String,String>();
-		for(TestProperty tp:sensitivInformationTableModel.getHolder().getPropertyList()){
-			temp.put( tp.getName(),tp.getValue() );
+		Map<String, String> temp = new HashMap<String, String>();
+		for( TestProperty tp : sensitivInformationTableModel.getHolder().getPropertyList() )
+		{
+			temp.put( tp.getName(), tp.getValue() );
 		}
 		return temp;
 	}
@@ -297,8 +298,8 @@ public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion impleme
 			newToken = UISupport.prompt( "Enter token", "New Token", newToken );
 			String newValue = "";
 			newValue = UISupport.prompt( "Enter description", "New Description", newValue );
-			
-			sensitivInformationTableModel.addToken(newToken, newValue);
+
+			sensitivInformationTableModel.addToken( newToken, newValue );
 		}
 
 	}
@@ -315,7 +316,7 @@ public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion impleme
 		@Override
 		public void actionPerformed( ActionEvent arg0 )
 		{
-			sensitivInformationTableModel.removeRows(tokenTable.getSelectedRows());
+			sensitivInformationTableModel.removeRows( tokenTable.getSelectedRows() );
 		}
 
 	}

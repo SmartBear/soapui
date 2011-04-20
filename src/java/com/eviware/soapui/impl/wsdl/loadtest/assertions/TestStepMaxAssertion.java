@@ -34,10 +34,10 @@ import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationBuilder;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
 import com.eviware.x.form.XForm;
+import com.eviware.x.form.XForm.FieldType;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.XFormDialogBuilder;
 import com.eviware.x.form.XFormFactory;
-import com.eviware.x.form.XForm.FieldType;
 
 /**
  * LoadTestAssertion for asserting the maximum step time
@@ -210,8 +210,8 @@ public class TestStepMaxAssertion extends AbstractLoadTestAssertion implements C
 				FieldType.TEXT );
 		form.addComboBox( TestStepMaxAssertion.TEST_STEP_FIELD, new String[0], "TestStep to assert" );
 
-		dialog = builder.buildDialog( builder
-				.buildOkCancelHelpActions( HelpUrls.STEP_MAXIMUM_LOAD_TEST_ASSERTION_HELP_URL ),
+		dialog = builder.buildDialog(
+				builder.buildOkCancelHelpActions( HelpUrls.STEP_MAXIMUM_LOAD_TEST_ASSERTION_HELP_URL ),
 				"Specify options for this Step Maximum Assertion", UISupport.OPTIONS_ICON );
 	}
 }

@@ -35,35 +35,34 @@ public class JMSHeaderAndPropertyInspector extends AbstractXmlInspector implemen
 	private StringToStringMapTableModel headersTableModel;
 	private final JMSHeaderAndPropertyInspectorModel model;
 	private JTable headersTable;
-	
 
 	private JPanel panel;
 	public boolean changing;
 
 	protected JMSHeaderAndPropertyInspector( JMSHeaderAndPropertyInspectorModel model )
-	{ 
-		super( "JMS (" + ( model.getJMSHeadersAndProperties() == null ? "0" : model.getJMSHeadersAndProperties().size() ) + ")",
-				"JMS Header and Property for this message", true, JMSHeaderAndPropertyInspectorFactory.INSPECTOR_ID );
-		
+	{
+		super( "JMS (" + ( model.getJMSHeadersAndProperties() == null ? "0" : model.getJMSHeadersAndProperties().size() )
+				+ ")", "JMS Header and Property for this message", true, JMSHeaderAndPropertyInspectorFactory.INSPECTOR_ID );
+
 		this.model = model;
 
 		model.addPropertyChangeListener( this );
-		model.setInspector(this);
+		model.setInspector( this );
 	}
 
-	
 	public JComponent getComponent()
 	{
 		if( panel != null )
 			return panel;
 
-		headersTableModel = new StringToStringMapTableModel( model.getJMSHeadersAndProperties(), "Key", "Value", !model.isReadOnly() );
+		headersTableModel = new StringToStringMapTableModel( model.getJMSHeadersAndProperties(), "Key", "Value",
+				!model.isReadOnly() );
 		headersTableModel.addTableModelListener( new TableModelListener()
 		{
 			public void tableChanged( TableModelEvent arg0 )
 			{
-				StringToStringMap map =  model.getJMSHeadersAndProperties() ;
-				setTitle( "JMS (" + (map == null ? "0" : map.size() ) + ")" );
+				StringToStringMap map = model.getJMSHeadersAndProperties();
+				setTitle( "JMS (" + ( map == null ? "0" : map.size() ) + ")" );
 			}
 		} );
 		headersTable = new JTable( headersTableModel );
@@ -98,13 +97,10 @@ public class JMSHeaderAndPropertyInspector extends AbstractXmlInspector implemen
 		return model;
 	}
 
-
 	public StringToStringMapTableModel getHeadersTableModel()
 	{
 		return headersTableModel;
 	}
-	
-	
 
 	@Override
 	public boolean isEnabledFor( EditorView<XmlDocument> view )

@@ -34,8 +34,8 @@ import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.AField.AFieldType;
+import com.eviware.x.form.support.AForm;
 
 public class CreateWsdlDocumentationAction extends AbstractSoapUIAction<WsdlInterface>
 {

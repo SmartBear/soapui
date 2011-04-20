@@ -57,8 +57,8 @@ import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestRunnable;
 import com.eviware.soapui.model.testsuite.TestRunner;
-import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestRunner.Status;
+import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.settings.HttpSettings;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
@@ -783,8 +783,7 @@ public class WsdlLoadTest extends AbstractWsdlModelItem<LoadTestConfig> implemen
 			{
 				if( !folder.mkdirs() )
 				{
-					SoapUI
-							.logError( new Exception( "Failed to create statistics log folder [" + statisticsLogFolder + "]" ) );
+					SoapUI.logError( new Exception( "Failed to create statistics log folder [" + statisticsLogFolder + "]" ) );
 					return;
 				}
 			}

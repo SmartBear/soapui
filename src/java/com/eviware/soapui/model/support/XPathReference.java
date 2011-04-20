@@ -23,14 +23,14 @@ public interface XPathReference
 	public String getLabel();
 
 	public Operation getOperation();
-	
+
 	public boolean isRequest();
-	
+
 	/**
 	 * Gets the property this xpath selects from
 	 */
 
-	//public TestProperty getTargetProperty();
+	// public TestProperty getTargetProperty();
 
 	/**
 	 * apply updates

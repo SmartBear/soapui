@@ -39,8 +39,8 @@ public class TestSuiteToProjectDropHandler extends AbstractAfterModelItemDropHan
 	@Override
 	boolean copyAfter( WsdlTestSuite source, WsdlProject target )
 	{
-		String name = UISupport.prompt( "Specify name for copied TestSuite", "Copy TestSuite", "Copy of "
-				+ source.getName() );
+		String name = UISupport.prompt( "Specify name for copied TestSuite", "Copy TestSuite",
+				"Copy of " + source.getName() );
 		if( name == null )
 			return false;
 
@@ -50,8 +50,8 @@ public class TestSuiteToProjectDropHandler extends AbstractAfterModelItemDropHan
 		}
 		else
 		{
-			return CloneTestSuiteAction.cloneToAnotherProject( source, target.getName(), name, false, source
-					.getDescription() ) != null;
+			return CloneTestSuiteAction.cloneToAnotherProject( source, target.getName(), name, false,
+					source.getDescription() ) != null;
 		}
 	}
 

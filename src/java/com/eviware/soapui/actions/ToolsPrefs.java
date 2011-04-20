@@ -55,7 +55,7 @@ public class ToolsPrefs implements Prefs
 			{ GSOAP, ToolsSettings.GSOAP_LOCATION }, { ANT, ToolsSettings.ANT_LOCATION },
 			{ XMLBEANS, ToolsSettings.XMLBEANS_LOCATION }, { JAXB, ToolsSettings.JAXB_LOCATION },
 			{ TCPMON, ToolsSettings.TCPMON_LOCATION }, { WSA, ToolsSettings.ORACLE_WSA_LOCATION },
-			{ WADL, ToolsSettings.WADL2JAVA_LOCATION },  { HERMES_JMS, ToolsSettings.HERMES_JMS },};
+			{ WADL, ToolsSettings.WADL2JAVA_LOCATION }, { HERMES_JMS, ToolsSettings.HERMES_JMS }, };
 
 	private SimpleForm toolsForm;
 	private final String title;

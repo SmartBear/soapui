@@ -12,10 +12,9 @@
 
 package com.eviware.soapui.impl.wadl;
 
+import junit.framework.TestCase;
 import net.java.dev.wadl.x2009.x02.ApplicationDocument;
 import net.java.dev.wadl.x2009.x02.ApplicationDocument.Application;
-
-import junit.framework.TestCase;
 
 public class WadlTestCase extends TestCase
 {

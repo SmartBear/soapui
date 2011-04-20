@@ -135,7 +135,7 @@ public abstract class AbstractDefinitionCache<T extends AbstractInterface<?>> im
 		return parts;
 	}
 
-	private void initParts() 
+	private void initParts()
 	{
 		parts = new ArrayList<InterfaceDefinitionPart>();
 
@@ -144,8 +144,9 @@ public abstract class AbstractDefinitionCache<T extends AbstractInterface<?>> im
 		{
 			try
 			{
-				boolean rootElement = URLDecoder.decode( part.getUrl() , "UTF-8").equals( URLDecoder.decode( definitionCache.getRootPart(), "UTF-8") );
-				ConfigInterfaceDefinitionPart configInterfaceDefinitionPart = new ConfigInterfaceDefinitionPart( part, 
+				boolean rootElement = URLDecoder.decode( part.getUrl(), "UTF-8" ).equals(
+						URLDecoder.decode( definitionCache.getRootPart(), "UTF-8" ) );
+				ConfigInterfaceDefinitionPart configInterfaceDefinitionPart = new ConfigInterfaceDefinitionPart( part,
 						rootElement, definitionCache.getType() );
 				parts.add( configInterfaceDefinitionPart );
 
@@ -156,9 +157,11 @@ public abstract class AbstractDefinitionCache<T extends AbstractInterface<?>> im
 			{
 				e.printStackTrace();
 			}
-//			ConfigInterfaceDefinitionPart configInterfaceDefinitionPart = new ConfigInterfaceDefinitionPart( part, part
-//					.getUrl().equals( definitionCache.getRootPart() ), definitionCache.getType() );
-			
+			// ConfigInterfaceDefinitionPart configInterfaceDefinitionPart = new
+			// ConfigInterfaceDefinitionPart( part, part
+			// .getUrl().equals( definitionCache.getRootPart() ),
+			// definitionCache.getType() );
+
 		}
 	}
 

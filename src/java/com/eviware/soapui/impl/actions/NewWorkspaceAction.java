@@ -74,8 +74,8 @@ public class NewWorkspaceAction extends AbstractSoapUIAction<WorkspaceImpl>
 
 			if( workspace.getOpenProjectList().size() > 0 )
 			{
-				val = UISupport.confirmOrCancel( messages.get( "SaveAllProjects.Prompt" ), messages
-						.get( "SaveAllProjects.Title" ) );
+				val = UISupport.confirmOrCancel( messages.get( "SaveAllProjects.Prompt" ),
+						messages.get( "SaveAllProjects.Title" ) );
 				if( val == null )
 					return;
 			}

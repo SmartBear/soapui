@@ -49,8 +49,8 @@ import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.AField.AFieldType;
+import com.eviware.x.form.support.AForm;
 
 /**
  * Panel for displaying TestStepResults
@@ -342,10 +342,10 @@ public class JTestRunLog extends JPanel implements TestRunLog
 			if( optionsDialog == null )
 				optionsDialog = ADialogBuilder.buildDialog( OptionsForm.class );
 
-			optionsDialog.setIntValue( OptionsForm.MAXROWS, ( int )settings.getLong( OptionsForm.class.getName()
-					+ "@max_rows", 1000 ) );
-			optionsDialog.setBooleanValue( OptionsForm.ERRORSONLY, settings.getBoolean( OptionsForm.class.getName()
-					+ "@errors_only" ) );
+			optionsDialog.setIntValue( OptionsForm.MAXROWS,
+					( int )settings.getLong( OptionsForm.class.getName() + "@max_rows", 1000 ) );
+			optionsDialog.setBooleanValue( OptionsForm.ERRORSONLY,
+					settings.getBoolean( OptionsForm.class.getName() + "@errors_only" ) );
 			optionsDialog.setBooleanValue( OptionsForm.FOLLOW, follow );
 
 			if( optionsDialog.show() )

@@ -32,8 +32,8 @@ import com.eviware.x.form.XFormFieldListener;
 import com.eviware.x.form.XFormFieldValidator;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.AField.AFieldType;
+import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.validators.RequiredValidator;
 
 /**

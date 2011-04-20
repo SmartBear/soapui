@@ -40,6 +40,9 @@ public class InsertWsdlTestStepAction extends AbstractSoapUIAction<WsdlTestStep>
 		WsdlTestStepFactory factory = ( WsdlTestStepFactory )param;
 		WsdlTestCase testCase = testStep.getTestCase();
 
+		if( !factory.canAddTestStepToTestCase( testCase ) )
+			return;
+
 		String name = UISupport.prompt( "Specify name for new step", "Insert Step", factory.getTestStepName() );
 		if( name != null )
 		{

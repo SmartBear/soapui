@@ -17,9 +17,10 @@ public class TestStepNode extends DefaultMutableTreeNode
 	public TestStepNode( SecurityTreeRootNode securityTreeRootNode, TestStep step, List<AbstractSecurityCheck> list )
 	{
 		this.testStep = step;
-		if ( step instanceof SamplerTestStep )
+		if( step instanceof SamplerTestStep )
 			setAllowsChildren( true );
-		else {
+		else
+		{
 			setAllowsChildren( false );
 			children = null;
 		}
@@ -38,6 +39,5 @@ public class TestStepNode extends DefaultMutableTreeNode
 	{
 		return testStep;
 	}
-	
-	
+
 }

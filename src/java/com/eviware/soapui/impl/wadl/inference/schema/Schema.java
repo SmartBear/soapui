@@ -205,11 +205,10 @@ public class Schema
 	{
 		StringBuilder s = new StringBuilder( "<?xml version=\"1.0\" encoding=\"utf-8\" ?>" + "<"
 				+ getPrefixForNamespace( Settings.xsdns ) + ":schema " );
-		
-		if( StringUtils.hasContent( namespace ))
+
+		if( StringUtils.hasContent( namespace ) )
 			s.append( "targetNamespace=\"" + namespace + "\" " + "xmlns=\"" + namespace + "\" " );
-		
-		
+
 		for( Map.Entry<String, String> entry : prefixes.entrySet() )
 			s.append( "xmlns:" + entry.getValue() + "=\"" + entry.getKey() + "\" " );
 		s.append( "elementFormDefault=\"qualified\">" );

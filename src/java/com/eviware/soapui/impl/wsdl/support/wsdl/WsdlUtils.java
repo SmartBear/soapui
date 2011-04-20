@@ -1165,6 +1165,9 @@ public class WsdlUtils
 
 		try
 		{
+			if( operation.getBindingOperation() == null || operation.getBindingOperation().getOperation() == null )
+				return null;
+
 			AttributeExtensible attributeExtensible = output ? operation.getBindingOperation().getOperation().getOutput()
 					: operation.getBindingOperation().getOperation().getInput();
 

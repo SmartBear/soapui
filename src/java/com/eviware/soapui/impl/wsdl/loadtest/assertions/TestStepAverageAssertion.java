@@ -31,10 +31,10 @@ import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationBuilder;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
 import com.eviware.x.form.XForm;
+import com.eviware.x.form.XForm.FieldType;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.XFormDialogBuilder;
 import com.eviware.x.form.XFormFactory;
-import com.eviware.x.form.XForm.FieldType;
 
 /**
  * LoadTestAssertion for asserting the average step time
@@ -198,8 +198,8 @@ public class TestStepAverageAssertion extends AbstractLoadTestAssertion implemen
 		form.addTextField( SAMPLE_INTERVAL_FIELD, "Step count interval between sampling", FieldType.TEXT );
 		form.addComboBox( TEST_STEP_FIELD, new String[0], "TestStep to assert" );
 
-		dialog = builder.buildDialog( builder
-				.buildOkCancelHelpActions( HelpUrls.STEP_AVERAGE_LOAD_TEST_ASSERTION_HELP_URL ),
+		dialog = builder.buildDialog(
+				builder.buildOkCancelHelpActions( HelpUrls.STEP_AVERAGE_LOAD_TEST_ASSERTION_HELP_URL ),
 				"Specify options for this Step Average Assertion", UISupport.OPTIONS_ICON );
 	}
 }

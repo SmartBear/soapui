@@ -234,7 +234,7 @@ public class RestUtils
 			RestParamProperty param = params.getPropertyAt( c );
 
 			String value = PropertyExpander.expandProperties( context, param.getValue() );
-			List<String> valueParts = splitMultipleParameters( value );
+			List<String> valueParts = splitMultipleParameters( value, request.getMultiValueDelimiter() );
 
 			if( value != null && !param.isDisableUrlEncoding() )
 			{
@@ -318,21 +318,38 @@ public class RestUtils
 		return path;
 	}
 
-	public static List<String> splitMultipleParameters( String paramStr )
+	// private final static Pattern splitPattern = Pattern.compile( "[^|]\\|[^|]"
+	// );
+
+	public static List<String> splitMultipleParameters( String paramStr, String delimiter )
 	{
-		if( paramStr == null )
-			return null;
+		StringList result = new StringList();
 
-		Matcher matcher = splitPattern.matcher( paramStr );
-		List<String> parts = new ArrayList<String>();
-		int i = 0;
-		while( matcher.find() )
+		if( StringUtils.hasContent( paramStr ) )
 		{
-			parts.add( paramStr.substring( i, matcher.start() + 1 ).replaceAll( "\\|\\|", "|" ) );
-			i = matcher.start() + 2;
+			if( !StringUtils.hasContent( delimiter ) )
+			{
+				result.add( paramStr );
 		}
-		parts.add( paramStr.substring( i, paramStr.length() ).replaceAll( "\\|\\|", "|" ) );
+			else
+			{
+				result.addAll( paramStr.split( delimiter ) );
+			}
+		}
 
-		return parts;
+		return result;
+
+		// Matcher matcher = splitPattern.matcher( paramStr );
+		// List<String> parts = new ArrayList<String>();
+		// int i = 0;
+		// while( matcher.find() )
+		// {
+		// parts.add( paramStr.substring( i, matcher.start() + 1 ).replaceAll(
+		// "\\|\\|", "|" ) );
+		// i = matcher.start() + 2;
+		// }
+		// parts.add( paramStr.substring( i, paramStr.length() ).replaceAll(
+		// "\\|\\|", "|" ) );
+		// return parts;
 	}
 }

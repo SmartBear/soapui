@@ -35,8 +35,8 @@ import org.wsI.testing.x2004.x07.analyzerConfig.AssertionResults;
 import org.wsI.testing.x2004.x07.analyzerConfig.Configuration;
 import org.wsI.testing.x2004.x07.analyzerConfig.ConfigurationDocument;
 import org.wsI.testing.x2004.x07.analyzerConfig.LogFile;
-import org.wsI.testing.x2004.x07.analyzerConfig.ReportFile;
 import org.wsI.testing.x2004.x07.analyzerConfig.LogFile.CorrelationType;
+import org.wsI.testing.x2004.x07.analyzerConfig.ReportFile;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;

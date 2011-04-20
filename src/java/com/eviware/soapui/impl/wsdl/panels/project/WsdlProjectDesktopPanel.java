@@ -91,6 +91,7 @@ public class WsdlProjectDesktopPanel extends ModelItemDesktopPanel<WsdlProject>
 	private JInspectorPanel inspectorPanel;
 	private WsdlProjectTestSuitesTabPanel testSuitesPanel;
 	private ProjectSensitiveInformationPanel sensitiveInfoPanel;
+
 	public WsdlProjectDesktopPanel( WsdlProject modelItem )
 	{
 		super( modelItem );
@@ -121,7 +122,7 @@ public class WsdlProjectDesktopPanel extends ModelItemDesktopPanel<WsdlProject>
 	{
 		sensitiveInfoPanel = new ProjectSensitiveInformationPanel( getModelItem().getConfig() );
 		sensitiveInfoPanel.build();
-		return (( JFormDialog)sensitiveInfoPanel.getDialog()).getPanel();
+		return ( ( JFormDialog )sensitiveInfoPanel.getDialog() ).getPanel();
 	}
 
 	public WsdlProjectTestSuitesTabPanel getTestSuitesPanel()

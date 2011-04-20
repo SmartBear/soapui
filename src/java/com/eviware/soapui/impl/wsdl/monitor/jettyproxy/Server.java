@@ -75,10 +75,13 @@ public class Server extends org.mortbay.jetty.Server
 			IO.copyThread( socket.getInputStream(), out );
 
 			IO.copyThread( in, socket.getOutputStream() );
-		} else {
-			if ( request.getMethod().equals( "POST" ) || request.getMethod().equals( "GET" ))
+		}
+		else
+		{
+			if( request.getMethod().equals( "POST" ) || request.getMethod().equals( "GET" ) )
 				super.handle( connection );
-			else {
+			else
+			{
 				final String uri = request.getUri().toString();
 
 				final int c = uri.indexOf( ':' );

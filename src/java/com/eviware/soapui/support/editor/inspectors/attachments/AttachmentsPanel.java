@@ -264,8 +264,8 @@ public class AttachmentsPanel extends javax.swing.JPanel
 					try
 					{
 						name = StringUtils.createFileName( name, '-' );
-						File tempFile = File.createTempFile( "attachment-" + name, "."
-								+ ContentTypeHandler.getExtensionForContentType( attachment.getContentType() ) );
+						File tempFile = File.createTempFile( "attachment-" + name,
+								"." + ContentTypeHandler.getExtensionForContentType( attachment.getContentType() ) );
 						exportAttachment( tempFile, attachment, false );
 					}
 					catch( Exception e1 )

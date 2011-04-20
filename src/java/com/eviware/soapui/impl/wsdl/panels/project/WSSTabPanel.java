@@ -124,12 +124,12 @@ public class WSSTabPanel extends JPanel
 		} );
 
 		incomingWssDecryptionCryptoComboBox = new JComboBox( new KeystoresComboBoxModel( wssContainer, null ) );
-		incomingWssTable.getColumnModel().getColumn( 1 ).setCellEditor(
-				new DefaultCellEditor( incomingWssDecryptionCryptoComboBox ) );
+		incomingWssTable.getColumnModel().getColumn( 1 )
+				.setCellEditor( new DefaultCellEditor( incomingWssDecryptionCryptoComboBox ) );
 
 		incomingWssSignatureCryptoComboBox = new JComboBox( new KeystoresComboBoxModel( wssContainer, null ) );
-		incomingWssTable.getColumnModel().getColumn( 2 ).setCellEditor(
-				new DefaultCellEditor( incomingWssSignatureCryptoComboBox ) );
+		incomingWssTable.getColumnModel().getColumn( 2 )
+				.setCellEditor( new DefaultCellEditor( incomingWssSignatureCryptoComboBox ) );
 
 		incomingWssTable.getColumnModel().getColumn( 3 ).setCellEditor( new DefaultCellEditor( new JPasswordField() ) );
 		incomingWssTable.getColumnModel().getColumn( 3 ).setCellRenderer( new PasswordTableCellRenderer() );
@@ -222,7 +222,7 @@ public class WSSTabPanel extends JPanel
 		// entriesModel.getElementAt( index ) ) );
 		// }
 		// } );
-		//		
+		//
 		entriesTabs = new JTabbedPane();
 		entriesTabs.addChangeListener( new ChangeListener()
 		{
@@ -303,7 +303,7 @@ public class WSSTabPanel extends JPanel
 		// {
 		// providers.add( provider.getName() );
 		// }
-		//		
+		//
 		// JComboBox comboBox = new JComboBox( providers.toArray() );
 		// cryptosTable.getColumn( 5 ).setCellEditor( new DefaultCellEditor(
 		// comboBox ) );
@@ -649,8 +649,8 @@ public class WSSTabPanel extends JPanel
 			if( StringUtils.hasContent( name ) && wssContainer.getIncomingWssByName( name ) == null )
 			{
 				wssContainer.addIncomingWss( name );
-				incomingWssTable.setRowSelectionInterval( incomingWssTable.getRowCount() - 1, incomingWssTable
-						.getRowCount() - 1 );
+				incomingWssTable.setRowSelectionInterval( incomingWssTable.getRowCount() - 1,
+						incomingWssTable.getRowCount() - 1 );
 			}
 		}
 	}
@@ -808,8 +808,8 @@ public class WSSTabPanel extends JPanel
 			if( StringUtils.hasContent( name ) && wssContainer.getOutgoingWssByName( name ) == null )
 			{
 				wssContainer.addOutgoingWss( name );
-				outgoingWssTable.setRowSelectionInterval( outgoingWssTable.getRowCount() - 1, outgoingWssTable
-						.getRowCount() - 1 );
+				outgoingWssTable.setRowSelectionInterval( outgoingWssTable.getRowCount() - 1,
+						outgoingWssTable.getRowCount() - 1 );
 			}
 		}
 	}
@@ -844,7 +844,7 @@ public class WSSTabPanel extends JPanel
 	// public WssEntriesListModel()
 	// {
 	// }
-	//		
+	//
 	// public void release()
 	// {
 	// entries.clear();
@@ -858,12 +858,12 @@ public class WSSTabPanel extends JPanel
 	// entries.clear();
 	// fireIntervalRemoved( this, 0, sz-1 );
 	// }
-	//			
+	//
 	// if( outgoingWss == null )
 	// return;
-	//			
+	//
 	// entries.addAll( outgoingWss.getEntries() );
-	//			
+	//
 	// if( !entries.isEmpty())
 	// fireIntervalAdded( this, 0, entries.size()-1 );
 	// }

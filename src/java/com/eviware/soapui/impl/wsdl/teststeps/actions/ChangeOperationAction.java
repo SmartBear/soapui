@@ -28,8 +28,8 @@ import com.eviware.x.form.XFormField;
 import com.eviware.x.form.XFormFieldListener;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.AField.AFieldType;
+import com.eviware.x.form.support.AForm;
 
 /**
  * Prompts to change the WsdlOperation of a WsdlTestRequestStep
@@ -60,8 +60,8 @@ public class ChangeOperationAction extends AbstractSoapUIAction<WsdlTestRequestS
 				public void valueChanged( XFormField sourceField, String newValue, String oldValue )
 				{
 					WsdlProject project = testStep.getTestCase().getTestSuite().getProject();
-					dialog.setOptions( Form.OPERATION, ModelSupport.getNames( project.getInterfaceByName( newValue )
-							.getOperationList() ) );
+					dialog.setOptions( Form.OPERATION,
+							ModelSupport.getNames( project.getInterfaceByName( newValue ).getOperationList() ) );
 					dialog.setValue( Form.OPERATION, testStep.getOperationName() );
 				}
 			} );
@@ -87,8 +87,8 @@ public class ChangeOperationAction extends AbstractSoapUIAction<WsdlTestRequestS
 				new ModelSupport.InterfaceTypeFilter( WsdlInterfaceFactory.WSDL_TYPE ) ) );
 		dialog.setValue( Form.INTERFACE, target.getInterfaceName() );
 
-		dialog.setOptions( Form.OPERATION, ModelSupport.getNames( project.getInterfaceByName( target.getInterfaceName() )
-				.getOperationList() ) );
+		dialog.setOptions( Form.OPERATION,
+				ModelSupport.getNames( project.getInterfaceByName( target.getInterfaceName() ).getOperationList() ) );
 		dialog.setValue( Form.OPERATION, target.getOperationName() );
 		dialog.setValue( Form.NAME, target.getName() );
 

@@ -53,7 +53,7 @@ public abstract class AbstractSecurityCheckFactory
 	 * 
 	 * @return
 	 */
-	public abstract boolean canCreate(TestStep testStep);
+	public abstract boolean canCreate( TestStep testStep );
 
 	public String getSecurityCheckName()
 	{

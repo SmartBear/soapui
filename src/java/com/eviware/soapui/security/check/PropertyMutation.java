@@ -22,8 +22,8 @@ import com.eviware.soapui.support.types.StringToStringMap;
 public class PropertyMutation
 {
 
-	public  static final String REQUEST_MUTATIONS_STACK = "RequestMutationsStack";
-	
+	public static final String REQUEST_MUTATIONS_STACK = "RequestMutationsStack";
+
 	private String propertyName;
 	private String propertyValue;
 	private StringToStringMap mutatedParameters;
@@ -58,22 +58,18 @@ public class PropertyMutation
 		this.mutatedParameters = mutatedParameters;
 	}
 
-	
-	
-
-	public  void updateRequestProperty( TestStep testStep)
+	public void updateRequestProperty( TestStep testStep )
 	{
 		testStep.getProperty( this.getPropertyName() ).setValue( this.getPropertyValue() );
 	}
 
 	@SuppressWarnings( "unchecked" )
-	public  void addMutation( SecurityTestRunContext context )
+	public void addMutation( SecurityTestRunContext context )
 	{
 		Stack<PropertyMutation> stack = ( Stack<PropertyMutation> )context.get( REQUEST_MUTATIONS_STACK );
 		stack.push( this );
 	}
 
-	
 	@SuppressWarnings( "unchecked" )
 	public static PropertyMutation popMutation( SecurityTestRunContext context )
 	{
@@ -82,12 +78,12 @@ public class PropertyMutation
 	}
 
 	@SuppressWarnings( "unchecked" )
-	public static  List<PropertyMutation> popAllMutation( SecurityTestRunContext context )
+	public static List<PropertyMutation> popAllMutation( SecurityTestRunContext context )
 	{
 		Stack<PropertyMutation> requestMutationsStack = ( Stack<PropertyMutation> )context.get( REQUEST_MUTATIONS_STACK );
 		PropertyMutation[] array = requestMutationsStack.toArray( new PropertyMutation[requestMutationsStack.size()] );
 		requestMutationsStack.clear();
 		return Arrays.asList( array );
 	}
-	
+
 }

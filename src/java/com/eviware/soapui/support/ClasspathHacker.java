@@ -54,8 +54,8 @@ public class ClasspathHacker
 		{
 			try
 			{
-				Method method = classLoader.getClass().getSuperclass().getDeclaredMethod( "addURL",
-						new Class[] { java.net.URL.class } );
+				Method method = classLoader.getClass().getSuperclass()
+						.getDeclaredMethod( "addURL", new Class[] { java.net.URL.class } );
 				method.setAccessible( true );
 				method.invoke( classLoader, new Object[] { u } );
 
@@ -65,8 +65,8 @@ public class ClasspathHacker
 			{
 				try
 				{
-					Method method = classLoader.getClass().getSuperclass().getSuperclass().getDeclaredMethod( "addURL",
-							new Class[] { java.net.URL.class } );
+					Method method = classLoader.getClass().getSuperclass().getSuperclass()
+							.getDeclaredMethod( "addURL", new Class[] { java.net.URL.class } );
 					method.setAccessible( true );
 					method.invoke( classLoader, new Object[] { u } );
 

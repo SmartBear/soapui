@@ -105,7 +105,7 @@ public class JWizardDialog extends SwingXFormDialog
 			result.add( form );
 		return result.toArray( new XForm[result.size()] );
 	}
-	
+
 	public void dispose()
 	{
 		dialog.dispose();

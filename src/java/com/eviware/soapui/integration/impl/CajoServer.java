@@ -25,7 +25,7 @@ public class CajoServer
 {
 
 	public static final String DEFAULT_SOAPUI_CAJO_PORT = "1198";
-	
+
 	private String server = null;
 	private String port = DEFAULT_SOAPUI_CAJO_PORT;
 	private String itemName = "soapuiIntegration";

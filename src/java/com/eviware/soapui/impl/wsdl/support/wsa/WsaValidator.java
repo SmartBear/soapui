@@ -362,8 +362,8 @@ public class WsaValidator
 		{
 			// check if request ReplyTo ReferenceParameters are included in
 			// response
-			NodeList requestReplyToRefProps = WsdlUtils.getRequestReplyToRefProps( messageExchange, getWsaVersion(
-					requestXmlObject, soapVersion ) );
+			NodeList requestReplyToRefProps = WsdlUtils.getRequestReplyToRefProps( messageExchange,
+					getWsaVersion( requestXmlObject, soapVersion ) );
 			for( int i = 0; i < requestReplyToRefProps.getLength(); i++ )
 			{
 				Node refProp = requestReplyToRefProps.item( i );
@@ -385,8 +385,8 @@ public class WsaValidator
 		{
 			// check if request FaultTo ReferenceParameters are included in
 			// response
-			NodeList requestFaultToRefProps = WsdlUtils.getRequestFaultToRefProps( messageExchange, getWsaVersion(
-					requestXmlObject, soapVersion ) );
+			NodeList requestFaultToRefProps = WsdlUtils.getRequestFaultToRefProps( messageExchange,
+					getWsaVersion( requestXmlObject, soapVersion ) );
 			for( int i = 0; i < requestFaultToRefProps.getLength(); i++ )
 			{
 				Node refProp = requestFaultToRefProps.item( i );
@@ -425,8 +425,8 @@ public class WsaValidator
 			}
 			else
 			{
-				String requestMsgId = WsdlUtils.getRequestWsaMessageId( messageExchange, getWsaVersion( requestXmlObject,
-						soapVersion ) );
+				String requestMsgId = WsdlUtils.getRequestWsaMessageId( messageExchange,
+						getWsaVersion( requestXmlObject, soapVersion ) );
 				if( !relatesToValue.equals( requestMsgId ) )
 				{
 					cumulativeErrorMsg.append( "WS-A RelatesTo property is not equal to request wsa:MessageId. " );

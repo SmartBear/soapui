@@ -42,8 +42,8 @@ public class PropertyExpansionRequestFilter extends AbstractRequestFilter
 		}
 		else
 		{
-			content = PropertyExpander.expandProperties( context, content, request.getSettings().getBoolean(
-					CommonSettings.ENTITIZE_PROPERTIES ) );
+			content = PropertyExpander.expandProperties( context, content,
+					request.getSettings().getBoolean( CommonSettings.ENTITIZE_PROPERTIES ) );
 
 			if( content != null )
 			{

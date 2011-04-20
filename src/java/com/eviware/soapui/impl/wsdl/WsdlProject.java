@@ -82,7 +82,6 @@ import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.model.testsuite.ProjectRunContext;
 import com.eviware.soapui.model.testsuite.ProjectRunListener;
 import com.eviware.soapui.model.testsuite.ProjectRunner;
-import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.model.testsuite.TestRunnable;
 import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.model.testsuite.TestSuite.TestSuiteRunType;
@@ -209,7 +208,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 				{
 					try
 					{
-						loadProject( new URL( "file:" + file.getAbsolutePath() ) );
+						loadProject( file.toURI().toURL() );
 						lastModified = file.lastModified();
 					}
 					catch( MalformedURLException e )
@@ -1267,16 +1266,18 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 				testSuite.getConfig().copy() );
 
 		testSuiteConfig.setName( name );
-		
-		if( createCopy ) {
-			for (TestCaseConfig testCaseConfig : testSuiteConfig.getTestCaseList()) {
+
+		if( createCopy )
+		{
+			for( TestCaseConfig testCaseConfig : testSuiteConfig.getTestCaseList() )
+			{
 				testCaseConfig.setSecurityTestArray( new SecurityTestConfig[0] );
 			}
 		}
 
 		WsdlTestSuite oldTestSuite = testSuite;
 		testSuite = buildTestSuite( testSuiteConfig );
-		
+
 		if( description != null )
 			testSuite.setDescription( description );
 

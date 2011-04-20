@@ -46,8 +46,8 @@ public class SoapUIMockServlet extends HttpServlet
 		try
 		{
 			logger.info( "Initializing soapUI Core" );
-			SoapUI.setSoapUICore( createSoapUICore( getInitParameter( "settingsFile" ),
-					getInitParameter( "settingsPassword" ) ), true );
+			SoapUI.setSoapUICore(
+					createSoapUICore( getInitParameter( "settingsFile" ), getInitParameter( "settingsPassword" ) ), true );
 
 			logger.info( "Loading project" );
 			project = new WsdlProject( getInitParameter( "projectFile" ), getInitParameter( "projectPassword" ) );

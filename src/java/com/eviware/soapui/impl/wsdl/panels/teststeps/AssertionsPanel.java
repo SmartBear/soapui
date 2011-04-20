@@ -64,7 +64,7 @@ import com.eviware.soapui.support.components.JXToolBar;
 public class AssertionsPanel extends JPanel
 {
 	private AssertionListModel assertionListModel;
-	protected JList assertionList;
+	private JList assertionList;
 	private JPopupMenu assertionListPopup;
 	private final Assertable assertable;
 	private AddAssertionAction addAssertionAction;
@@ -543,5 +543,10 @@ public class AssertionsPanel extends JPanel
 			}
 			assertionList.setSelectedValue( assertion, true );
 		}
+	}
+
+	public JList getAssertionsList()
+	{
+		return assertionList;
 	}
 }

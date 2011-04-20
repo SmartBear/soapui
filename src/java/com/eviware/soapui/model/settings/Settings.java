@@ -43,6 +43,6 @@ public interface Settings
 	public boolean isSet( String id );
 
 	public void setLong( String id, long value );
-	
+
 	public void reloadSettings();
 }

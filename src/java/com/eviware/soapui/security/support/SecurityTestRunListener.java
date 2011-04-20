@@ -36,7 +36,8 @@ public interface SecurityTestRunListener
 
 	public void afterStep( TestCaseRunner testRunner, SecurityTestRunContext runContext, SecurityTestStepResult result );
 
-	public void afterOriginalStep( TestCaseRunner testRunner, SecurityTestRunContext runContext, SecurityTestStepResult result );
+	public void afterOriginalStep( TestCaseRunner testRunner, SecurityTestRunContext runContext,
+			SecurityTestStepResult result );
 
 	public void beforeSecurityCheck( TestCaseRunner testRunner, SecurityTestRunContext runContext,
 			AbstractSecurityCheck securityCheck );

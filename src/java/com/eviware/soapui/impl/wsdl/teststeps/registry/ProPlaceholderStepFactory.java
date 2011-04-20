@@ -37,7 +37,8 @@ public class ProPlaceholderStepFactory extends WsdlTestStepFactory
 
 	public WsdlTestStep buildTestStep( WsdlTestCase testCase, TestStepConfig config, boolean forLoadTest )
 	{
-		return new WsdlProPlaceholderTestStep( testCase, config, forLoadTest, getTestStepIconPath(), getTestStepDescription() );
+		return new WsdlProPlaceholderTestStep( testCase, config, forLoadTest, getTestStepIconPath(),
+				getTestStepDescription() );
 	}
 
 	public TestStepConfig createNewTestStep( WsdlTestCase testCase, String name )
@@ -49,16 +50,17 @@ public class ProPlaceholderStepFactory extends WsdlTestStepFactory
 	{
 		return false;
 	}
-	
+
 	public static class WsdlProPlaceholderTestStep extends WsdlTestStepWithProperties
 	{
 		private final String description;
 
-		protected WsdlProPlaceholderTestStep( WsdlTestCase testCase, TestStepConfig config,	boolean forLoadTest, String iconPath, String description )
+		protected WsdlProPlaceholderTestStep( WsdlTestCase testCase, TestStepConfig config, boolean forLoadTest,
+				String iconPath, String description )
 		{
 			super( testCase, config, false, forLoadTest );
 			this.description = description;
-			
+
 			if( !forLoadTest )
 			{
 				setIcon( UISupport.createImageIcon( iconPath ) );

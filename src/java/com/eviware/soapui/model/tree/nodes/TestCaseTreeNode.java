@@ -102,7 +102,7 @@ public class TestCaseTreeNode extends AbstractModelItemTreeNode<TestCase>
 	{
 		return loadTestsNode;
 	}
-	
+
 	public SecurityTestsTreeNode getSecurityTestsNode()
 	{
 		return securityTestsNode;
@@ -268,7 +268,7 @@ public class TestCaseTreeNode extends AbstractModelItemTreeNode<TestCase>
 			return ActionListBuilder.buildActions( "LoadTestsTreeNodeActions", TestCaseTreeNode.this.getModelItem() );
 		}
 	}
-	
+
 	public class SecurityTestsTreeNode extends AbstractTreeNode<SecurityTestsModelItem>
 	{
 		private List<SecurityTestTreeNode> securityTestNodes = new ArrayList<SecurityTestTreeNode>();
@@ -279,8 +279,8 @@ public class TestCaseTreeNode extends AbstractModelItemTreeNode<TestCase>
 
 			for( int c = 0; c < getTestCase().getSecurityTestCount(); c++ )
 			{
-				securityTestNodes
-						.add( new SecurityTestTreeNode( getTestCase().getSecurityTestAt( c ), getModelItem(), getTreeModel() ) );
+				securityTestNodes.add( new SecurityTestTreeNode( getTestCase().getSecurityTestAt( c ), getModelItem(),
+						getTreeModel() ) );
 			}
 
 			getTreeModel().mapModelItems( securityTestNodes );
@@ -308,7 +308,8 @@ public class TestCaseTreeNode extends AbstractModelItemTreeNode<TestCase>
 
 		public void securityTestInserted( SecurityTest securityTest )
 		{
-			SecurityTestTreeNode securityTestTreeNode = new SecurityTestTreeNode( securityTest, getModelItem(), getTreeModel() );
+			SecurityTestTreeNode securityTestTreeNode = new SecurityTestTreeNode( securityTest, getModelItem(),
+					getTreeModel() );
 			securityTestNodes.add( securityTestTreeNode );
 			getTreeModel().notifyNodeInserted( securityTestTreeNode );
 			getTreeModel().notifyNodeChanged( this );
@@ -337,7 +338,6 @@ public class TestCaseTreeNode extends AbstractModelItemTreeNode<TestCase>
 			return ActionListBuilder.buildActions( "SecurityTestsTreeNodeActions", TestCaseTreeNode.this.getModelItem() );
 		}
 	}
-	
 
 	public void testStepInserted( TestStep testStep, int index )
 	{
@@ -364,13 +364,15 @@ public class TestCaseTreeNode extends AbstractModelItemTreeNode<TestCase>
 		testStepsNode.testStepMoved( testStep, fromIndex, offset );
 	}
 
-	public void securityTestInserted(SecurityTest securityTest) {
-		securityTestsNode.securityTestInserted(securityTest);
-		
+	public void securityTestInserted( SecurityTest securityTest )
+	{
+		securityTestsNode.securityTestInserted( securityTest );
+
 	}
 
-	public void securityTestRemoved(SecurityTest securityTest) {
-		securityTestsNode.securityTestRemoved(securityTest);
-		
+	public void securityTestRemoved( SecurityTest securityTest )
+	{
+		securityTestsNode.securityTestRemoved( securityTest );
+
 	}
 }

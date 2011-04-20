@@ -48,8 +48,8 @@ public class WsdlProjectPanelBuilder extends EmptyPanelBuilder<WsdlProject>
 						new String[] { null, "${projectDir}", "${workspaceDir}" } );
 				table.addProperty( "Cache Definitions", "cacheDefinitions", JPropertiesTable.BOOLEAN_OPTIONS );
 				table.addPropertyShadow( "Project Password", "shadowPassword", true );
-				table.addProperty( "Script Language", "defaultScriptLanguage", SoapUIScriptEngineRegistry
-						.getAvailableEngineIds() );
+				table.addProperty( "Script Language", "defaultScriptLanguage",
+						SoapUIScriptEngineRegistry.getAvailableEngineIds() );
 				table.addProperty( "Hermes Config", "hermesConfig", true );
 			}
 		}

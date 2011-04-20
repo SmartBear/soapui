@@ -27,8 +27,7 @@ public class EnumerationValues
 	{
 		this.type = type;
 	}
-	
-	
+
 	public static int maxLengthStringSize( Collection<String> values )
 	{
 		int max = 0;
@@ -39,7 +38,7 @@ public class EnumerationValues
 		}
 		return max;
 	}
-	
+
 	public static String createOutOfBoundaryValue( EnumerationValues enumValues, int size )
 	{
 		if( "XmlString".equals( enumValues.getType() ) )
@@ -55,7 +54,6 @@ public class EnumerationValues
 		return null;
 	}
 
-	
 	public String getType()
 	{
 		return type;

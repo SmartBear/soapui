@@ -211,8 +211,8 @@ public class ProxyServlet implements Servlet
 		capturedData.setRawResponseBody( method.getResponseBody() );
 		capturedData.setResponseHeader( method );
 		capturedData.setRawRequestData( getRequestToBytes( request.toString(), method, capture ) );
-		capturedData.setRawResponseData( getResponseToBytes( response.toString(), method, capturedData
-				.getRawResponseBody() ) );
+		capturedData.setRawResponseData( getResponseToBytes( response.toString(), method,
+				capturedData.getRawResponseBody() ) );
 		capturedData.setResponseContent( new String( method.getDecompressedResponseBody() ) );
 
 		monitor.fireAfterProxy( request, response, method, capturedData );

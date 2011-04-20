@@ -20,23 +20,23 @@ public class RemoveEmptyContentRequestFilterTestCase extends TestCase
 	{
 		doRemoval( "<test><testing/></test>", "<test/>" );
 		doRemoval( "<test><testing test=\"\"/></test>", "<test/>" );
-		
+
 		doRemoval( "<test><testing>   </testing></test>", "<test/>" );
-		doRemoval( "<test><testing>  <testar test=\"\"></testar> </testing></test>", 
-					"<test><testing>   </testing></test>" );
-		
-		doRemoval( "<test><testing>\n   <testar test=\"\"></testar>\n </testing></test>", 
-		"<test><testing>\n   \n </testing></test>" );
-		
+		doRemoval( "<test><testing>  <testar test=\"\"></testar> </testing></test>",
+				"<test><testing>   </testing></test>" );
+
+		doRemoval( "<test><testing>\n   <testar test=\"\"></testar>\n </testing></test>",
+				"<test><testing>\n   \n </testing></test>" );
+
 		doRemoval( "<test></test>", "<test></test>" );
-		
+
 		doRemoval( "<test><testing/><testing/></test>", "<test/>" );
 		doRemoval(
 				"<dat1:documentType xmlns:dat1=\"test\"><dat1:listName test=\"\" xsi:nil=\"true\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"/></dat1:documentType>",
 				"<dat1:documentType xmlns:dat1=\"test\"/>" );
 
 	}
-	
+
 	public void doRemoval( String request, String expected ) throws Exception
 	{
 		assertEquals( expected, RemoveEmptyContentRequestFilter.removeEmptyContent( request, null, true ) );

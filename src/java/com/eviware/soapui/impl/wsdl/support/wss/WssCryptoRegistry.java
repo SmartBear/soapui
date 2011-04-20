@@ -15,7 +15,7 @@ package com.eviware.soapui.impl.wsdl.support.wss;
 import com.eviware.soapui.config.WSSCryptoConfig;
 
 public class WssCryptoRegistry // extends
-											// AbstractRegistry<WssCrypto,WSSCryptoConfig,WssContainer>
+// AbstractRegistry<WssCrypto,WSSCryptoConfig,WssContainer>
 {
 	private static WssCryptoRegistry instance;
 

@@ -143,8 +143,8 @@ public class AMFRequest extends AbstractAnimatableModelItem<ModelItemConfig> imp
 				}
 				else
 				{
-					stringToObjectMap.put( key, PropertyExpander
-							.expandProperties( context, getAmfHeadersString().get( key ) ) );
+					stringToObjectMap.put( key,
+							PropertyExpander.expandProperties( context, getAmfHeadersString().get( key ) ) );
 				}
 			}
 			setAmfHeaders( stringToObjectMap );

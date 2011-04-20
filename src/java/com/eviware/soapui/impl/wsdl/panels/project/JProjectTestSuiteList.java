@@ -266,8 +266,8 @@ public class JProjectTestSuiteList extends JPanel
 		private void initPopup( WsdlTestSuite testSuite )
 		{
 			ActionList actions = ActionListBuilder.buildActions( testSuite );
-			actions.insertAction( SwingActionDelegate.createDelegate( AddNewTestSuiteAction.SOAPUI_ACTION_ID, project,
-					null, null ), 0 );
+			actions.insertAction(
+					SwingActionDelegate.createDelegate( AddNewTestSuiteAction.SOAPUI_ACTION_ID, project, null, null ), 0 );
 			actions.insertAction( ActionSupport.SEPARATOR_ACTION, 1 );
 
 			setComponentPopupMenu( ActionSupport.buildPopup( actions ) );

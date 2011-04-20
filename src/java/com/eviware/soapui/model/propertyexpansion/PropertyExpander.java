@@ -26,6 +26,7 @@ import com.eviware.soapui.model.propertyexpansion.resolvers.GlobalPropertyResolv
 import com.eviware.soapui.model.propertyexpansion.resolvers.MockRunPropertyResolver;
 import com.eviware.soapui.model.propertyexpansion.resolvers.ModelItemPropertyResolver;
 import com.eviware.soapui.model.propertyexpansion.resolvers.PropertyResolver;
+import com.eviware.soapui.model.propertyexpansion.resolvers.PropertyResolverFactory;
 import com.eviware.soapui.model.propertyexpansion.resolvers.SubmitPropertyResolver;
 import com.eviware.soapui.model.propertyexpansion.resolvers.TestRunPropertyResolver;
 import com.eviware.soapui.settings.GlobalPropertySettings;
@@ -56,6 +57,11 @@ public class PropertyExpander
 		defaultResolvers.add( new DynamicPropertyResolver() );
 		defaultResolvers.add( new GlobalPropertyResolver() );
 		defaultResolvers.add( new EvalPropertyResolver() );
+
+		for( PropertyResolverFactory factory : SoapUI.getFactoryRegistry().getFactories( PropertyResolverFactory.class ) )
+		{
+			defaultResolvers.add( factory.createPropertyResolver() );
+		}
 
 		defaultExpander = new PropertyExpander( true );
 	}

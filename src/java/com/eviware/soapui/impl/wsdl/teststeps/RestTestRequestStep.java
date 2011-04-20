@@ -15,6 +15,7 @@ package com.eviware.soapui.impl.wsdl.teststeps;
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,6 +56,7 @@ import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionsResult;
+import com.eviware.soapui.model.support.DefaultTestStepProperty;
 import com.eviware.soapui.model.support.InterfaceListenerAdapter;
 import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.model.support.ProjectListenerAdapter;
@@ -226,6 +228,16 @@ public class RestTestRequestStep extends WsdlTestStepWithProperties implements R
 			public String getDefaultValue()
 			{
 				return createDefaultRawResponseContent();
+			}
+		} );
+
+		addProperty( new DefaultTestStepProperty( "RawRequest", true, this )
+		{
+			@Override
+			public String getValue()
+			{
+				HttpResponse response = testRequest.getResponse();
+				return response == null ? null : response.getRequestContent();
 			}
 		} );
 
@@ -602,6 +614,7 @@ public class RestTestRequestStep extends WsdlTestStepWithProperties implements R
 	}
 
 	@Override
+	@SuppressWarnings( "unchecked" )
 	public void resolve( ResolveContext<?> context )
 	{
 		super.resolve( context );
@@ -676,6 +689,13 @@ public class RestTestRequestStep extends WsdlTestStepWithProperties implements R
 		{
 			assertion.prepare( testRunner, testRunContext );
 		}
+	}
+
+	@SuppressWarnings( "unchecked" )
+	@Override
+	public List<? extends ModelItem> getChildren()
+	{
+		return testRequest == null ? Collections.EMPTY_LIST : testRequest.getAssertionList();
 	}
 
 	/*

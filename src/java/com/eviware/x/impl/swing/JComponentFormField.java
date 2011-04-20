@@ -58,7 +58,7 @@ public class JComponentFormField extends AbstractSwingXFormField<JPanel>
 			getComponent().revalidate();
 			getComponent().getParent().repaint();
 		}
-		else if( name.equals( "preferredSize"))
+		else if( name.equals( "preferredSize" ) )
 		{
 			getComponent().setPreferredSize( ( Dimension )value );
 			getComponent().setMaximumSize( ( Dimension )value );

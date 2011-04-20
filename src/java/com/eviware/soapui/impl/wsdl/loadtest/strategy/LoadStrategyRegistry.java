@@ -15,6 +15,8 @@ package com.eviware.soapui.impl.wsdl.loadtest.strategy;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.eviware.soapui.support.StringUtils;
+
 /**
  * Registry of LoadFactorys
  * 
@@ -39,9 +41,9 @@ public class LoadStrategyRegistry
 		factories.put( factory.getType(), factory );
 	}
 
-	public Object[] getStrategies()
+	public String[] getStrategies()
 	{
-		return factories.keySet().toArray();
+		return StringUtils.sortNames( factories.keySet().toArray( new String[factories.size()] ) );
 	}
 
 	public static LoadStrategyRegistry getInstance()

@@ -33,8 +33,8 @@ import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.Exten
 import com.eviware.soapui.impl.wsdl.support.MessageXmlObject;
 import com.eviware.soapui.impl.wsdl.support.MessageXmlPart;
 import com.eviware.soapui.model.iface.Attachment;
-import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.iface.Attachment.AttachmentType;
+import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.types.StringToStringMap;
 
@@ -92,8 +92,8 @@ public class WsdlPackagingRequestFilter extends AbstractRequestFilter
 		// non-multipart request?
 		if( !isXOP && ( mp == null || mp.getCount() == 0 ) && hasContentAttachmentsOnly( wsdlRequest ) )
 		{
-			String encoding = System.getProperty( "soapui.request.encoding", StringUtils.unquote( wsdlRequest
-					.getEncoding() ) );
+			String encoding = System.getProperty( "soapui.request.encoding",
+					StringUtils.unquote( wsdlRequest.getEncoding() ) );
 			byte[] content = StringUtils.isNullOrEmpty( encoding ) ? requestContent.getBytes() : requestContent
 					.getBytes( encoding );
 			postMethod.setRequestEntity( new ByteArrayRequestEntity( content ) );

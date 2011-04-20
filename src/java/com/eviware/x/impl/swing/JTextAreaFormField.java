@@ -39,12 +39,12 @@ public class JTextAreaFormField extends AbstractSwingXFormField<JComponent> impl
 
 		if( required )
 			getComponent().setBorder(
-					BorderFactory.createCompoundBorder( BorderFactory.createLineBorder( Color.RED ), BorderFactory
-							.createEmptyBorder( 2, 2, 2, 2 ) ) );
+					BorderFactory.createCompoundBorder( BorderFactory.createLineBorder( Color.RED ),
+							BorderFactory.createEmptyBorder( 2, 2, 2, 2 ) ) );
 		else
 			getComponent().setBorder(
-					BorderFactory.createCompoundBorder( BorderFactory.createLineBorder( Color.GRAY ), BorderFactory
-							.createEmptyBorder( 2, 2, 2, 2 ) ) );
+					BorderFactory.createCompoundBorder( BorderFactory.createLineBorder( Color.GRAY ),
+							BorderFactory.createEmptyBorder( 2, 2, 2, 2 ) ) );
 	}
 
 	public JTextArea getTextArea()

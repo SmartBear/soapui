@@ -128,7 +128,14 @@ public class JMSConnectionHolder
 	 */
 	public Topic getTopic( String name ) throws JMSException, NamingException
 	{
+		if( name == null || name.isEmpty() )
+		{
+			return getSession().createTemporaryTopic();
+		}
+		else
+		{
 		return ( Topic )getHermes().getDestination( name, Domain.TOPIC );
+	}
 	}
 
 	/**
@@ -140,7 +147,14 @@ public class JMSConnectionHolder
 	 */
 	public Queue getQueue( String name ) throws JMSException, NamingException
 	{
+		if( name == null || name.isEmpty() )
+		{
+			return getSession().createTemporaryQueue();
+		}
+		else
+		{
 		return ( Queue )getHermes().getDestination( name, Domain.QUEUE );
+	}
 	}
 
 	/**
@@ -166,7 +180,7 @@ public class JMSConnectionHolder
 		{
 			if( session != null )
 				session.close();
-				
+
 			if( connection != null )
 			{
 				connection.close();

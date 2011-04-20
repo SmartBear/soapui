@@ -39,8 +39,8 @@ import org.apache.xmlbeans.XmlBeans;
 
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
-import com.eviware.soapui.impl.rest.support.RestUtils;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder.ParameterStyle;
+import com.eviware.soapui.impl.rest.support.RestUtils;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.testsuite.TestProperty;

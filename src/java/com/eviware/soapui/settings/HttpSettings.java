@@ -50,9 +50,11 @@ public interface HttpSettings
 	@Setting( name = "Close connections after request", description = "Closes the HTTP connection after each SOAP request", type = SettingType.BOOLEAN )
 	public final static String CLOSE_CONNECTIONS = HttpSettings.class.getSimpleName() + "@" + "close-connections";
 
-	//@Setting( name = "Disable Chunking", description = "Disables content-chunking", type = SettingType.BOOLEAN )
-	//public static final String DISABLE_CHUNKING = HttpSettings.class.getSimpleName() + "@" + "disable_chunking";
-	
+	// @Setting( name = "Disable Chunking", description =
+	// "Disables content-chunking", type = SettingType.BOOLEAN )
+	// public static final String DISABLE_CHUNKING =
+	// HttpSettings.class.getSimpleName() + "@" + "disable_chunking";
+
 	@Setting( name = "Chunking Threshold", description = "Uses content-chunking for requests larger than threshold, blank to disable", type = SettingType.INT )
 	public static final String CHUNKING_THRESHOLD = HttpSettings.class.getSimpleName() + "@" + "chunking_threshold";
 
@@ -62,9 +64,12 @@ public interface HttpSettings
 
 	@Setting( name = "Expect-Continue", description = "Adds Expect-Continue header to outgoing request", type = SettingType.BOOLEAN )
 	public final static String EXPECT_CONTINUE = HttpSettings.class.getSimpleName() + "@expect-continue";
-	
+
 	@Setting( name = "Pre-encoded Endpoints", description = "Do not URL-escape service endpoints", type = SettingType.BOOLEAN )
 	public static final String ENCODED_URLS = HttpSettings.class.getSimpleName() + "@" + "encoded_urls";
+
+	@Setting( name = "Normalize Forward Slashes", description = "Replaces duplicate forward slashes in HTTP request endpoints with a single slash", type = SettingType.BOOLEAN )
+	public static final String FORWARD_SLASHES = HttpSettings.class.getSimpleName() + "@" + "forward_slashes";
 
 	@Setting( name = "Bind Address", description = "Default local address to bind to when sending requests" )
 	public static final String BIND_ADDRESS = HttpSettings.class.getSimpleName() + "@" + "bind_address";

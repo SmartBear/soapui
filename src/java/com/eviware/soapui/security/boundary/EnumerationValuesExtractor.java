@@ -25,7 +25,6 @@ import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequest;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel.XmlTreeNode;
 
-
 /**
  * 
  * NOT USED ANY MORE
@@ -33,9 +32,8 @@ import com.eviware.soapui.support.xml.XmlObjectTreeModel.XmlTreeNode;
 public class EnumerationValuesExtractor
 {
 	private WsdlRequest request;
-//	private List<String> enumerationParameters = new ArrayList<String>();
+	// private List<String> enumerationParameters = new ArrayList<String>();
 	private List<String> selectedEnumerationParameters = new ArrayList<String>();
-
 
 	private XmlObjectTreeModel model;
 
@@ -52,7 +50,7 @@ public class EnumerationValuesExtractor
 			SoapUI.logError( e );
 		}
 
-//		extractEnumerationParameters( model.getRootNode() );
+		// extractEnumerationParameters( model.getRootNode() );
 	}
 
 	public String extract() throws XmlException, Exception
@@ -85,26 +83,27 @@ public class EnumerationValuesExtractor
 		}
 	}
 
-//	private void extractEnumerationParameters( XmlTreeNode node )
-//	{
-//		for( int i = 0; i < node.getChildCount(); i++ )
-//		{
-//			XmlTreeNode mynode = node.getChild( i );
-//
-//			if( mynode.getSchemaType() != null && mynode.getSchemaType().getEnumerationValues() != null
-//					&& mynode.getSchemaType().getEnumerationValues().length > 0 )
-//			{
-//				enumerationParameters.add( mynode.getDomNode().getLocalName() );
-//			}
-//			extractEnumerationParameters( mynode );
-//		}
-//	}
+	// private void extractEnumerationParameters( XmlTreeNode node )
+	// {
+	// for( int i = 0; i < node.getChildCount(); i++ )
+	// {
+	// XmlTreeNode mynode = node.getChild( i );
+	//
+	// if( mynode.getSchemaType() != null &&
+	// mynode.getSchemaType().getEnumerationValues() != null
+	// && mynode.getSchemaType().getEnumerationValues().length > 0 )
+	// {
+	// enumerationParameters.add( mynode.getDomNode().getLocalName() );
+	// }
+	// extractEnumerationParameters( mynode );
+	// }
+	// }
 
 	private void updateNodeValue( XmlTreeNode mynode, EnumerationValues enumerationValues )
 	{
 		if( !selectedEnumerationParameters.contains( mynode.getDomNode().getLocalName() ) )
 			return;
-		
+
 		int size = maxLengthStringSize( enumerationValues.getValuesList() );
 		String value = createOutOfBoundaryValue( enumerationValues, size );
 		if( value != null )
@@ -164,15 +163,15 @@ public class EnumerationValuesExtractor
 
 	}
 
-//	public List<String> getEnumerationParameters()
-//	{
-//		return enumerationParameters;
-//	}
-//	
-//	public void setEnumerationParameters( List<String> enumerationParameters )
-//	{
-//		this.enumerationParameters = enumerationParameters;
-//	}
+	// public List<String> getEnumerationParameters()
+	// {
+	// return enumerationParameters;
+	// }
+	//
+	// public void setEnumerationParameters( List<String> enumerationParameters )
+	// {
+	// this.enumerationParameters = enumerationParameters;
+	// }
 
 	public void setSelectedEnumerationParameters( List<String> selectedEnumerationParameters )
 	{

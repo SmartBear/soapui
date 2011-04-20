@@ -8,26 +8,29 @@ import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
 import com.eviware.soapui.impl.wsdl.support.RequestFileAttachment;
 import com.eviware.soapui.model.iface.Attachment;
 
-public class InfiniteAttachment extends RequestFileAttachment{
+public class InfiniteAttachment extends RequestFileAttachment
+{
 	private long maxSize;
-	
+
 	public InfiniteAttachment( AttachmentConfig config, AbstractHttpRequestInterface<?> request, long maxSize )
 	{
-		super( config, request);
+		super( config, request );
 		this.maxSize = maxSize;
 	}
-	
+
 	public InputStream getInputStream() throws IOException
 	{
-		return new InfiniteInputStream(maxSize);
+		return new InfiniteInputStream( maxSize );
 	}
-	
-	public AttachmentType getAttachmentType() {
+
+	public AttachmentType getAttachmentType()
+	{
 		return Attachment.AttachmentType.UNKNOWN;
 	}
-	
+
 	@Override
-	public String getContentType() {
+	public String getContentType()
+	{
 		return "application/octet-stream";
 	}
 }

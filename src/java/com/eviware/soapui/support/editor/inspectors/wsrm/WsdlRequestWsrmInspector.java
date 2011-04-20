@@ -31,7 +31,7 @@ import com.eviware.soapui.support.components.SimpleBindingForm;
 import com.eviware.soapui.support.editor.xml.XmlInspector;
 
 /*
- *  soapUI, copyright (C) 2004-2010 eviware.com 
+ *  soapUI, copyright (C) 2004-2011 eviware.com 
  *
  *  soapUI is free software; you can redistribute it and/or modify it under the 
  *  terms of version 2.1 of the GNU Lesser General Public License as published by 
@@ -148,8 +148,8 @@ public class WsdlRequestWsrmInspector extends AbstractWsrmInspector implements X
 
 			if( request.getWsrmConfig().getVersion() != WsrmVersionTypeConfig.X_1_0.toString() )
 			{
-				WsmcInjection receiveInjection = new WsmcInjection( request.getEndpoint(), request.getOperation(), iface
-						.getSoapVersion(), request.getWsrmConfig().getUuid() );
+				WsmcInjection receiveInjection = new WsmcInjection( request.getEndpoint(), request.getOperation(),
+						iface.getSoapVersion(), request.getWsrmConfig().getUuid() );
 				request.setAfterRequestInjection( receiveInjection );
 			}
 

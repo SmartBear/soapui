@@ -40,5 +40,5 @@ public abstract class WsdlMonitorMessageExchange extends AbstractWsdlMessageExch
 
 	public abstract String getRequestMethod();
 
-	public abstract Map<String,String> getHttpRequestParameters();
+	public abstract Map<String, String> getHttpRequestParameters();
 }

@@ -235,8 +235,8 @@ public class SoapUIActionRegistry
 
 				if( mapping.isSetGroupId() )
 				{
-					SoapUIActionGroupAction actionListAction = new SoapUIActionGroupAction( mapping.getName(), mapping
-							.getDescription(), mapping.getGroupId() );
+					SoapUIActionGroupAction actionListAction = new SoapUIActionGroupAction( mapping.getName(),
+							mapping.getDescription(), mapping.getGroupId() );
 					StandaloneActionMapping actionMapping = new StandaloneActionMapping( actionListAction );
 
 					actionGroup.addMapping( mapping.getGroupId(), insertIndex, actionMapping );
@@ -254,9 +254,9 @@ public class SoapUIActionRegistry
 				}
 				else
 				{
-					DefaultActionMapping actionMapping = new DefaultActionMapping( mapping.getActionId(), mapping
-							.getKeyStroke(), mapping.getIconPath(), mapping.getActionId().equals( groupConfig.getDefault() ),
-							mapping.getParam() );
+					DefaultActionMapping actionMapping = new DefaultActionMapping( mapping.getActionId(),
+							mapping.getKeyStroke(), mapping.getIconPath(), mapping.getActionId().equals(
+									groupConfig.getDefault() ), mapping.getParam() );
 					actionGroup.addMapping( mapping.getActionId(), insertIndex, actionMapping );
 
 					if( mapping.isSetName() )

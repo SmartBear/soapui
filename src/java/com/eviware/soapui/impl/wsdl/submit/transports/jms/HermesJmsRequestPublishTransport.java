@@ -41,7 +41,7 @@ public class HermesJmsRequestPublishTransport extends HermesJmsRequestTransport
 			Topic topicPublish = jmsConnectionHolder.getTopic( jmsConnectionHolder.getJmsEndpoint().getSend() );
 
 			Message messagePublish = messagePublish( submitContext, request, topicSession,
-					jmsConnectionHolder.getHermes(), topicPublish );
+					jmsConnectionHolder.getHermes(), topicPublish, null );
 
 			return makeEmptyResponse( submitContext, request, timeStarted, messagePublish );
 		}

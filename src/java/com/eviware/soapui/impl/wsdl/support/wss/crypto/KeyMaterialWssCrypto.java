@@ -134,7 +134,7 @@ public class KeyMaterialWssCrypto implements WssCrypto
 			}
 			else
 				keyStore = KeyStoreBuilder.build( Util.streamToBytes( new FileInputStream( sourceProperty.expand() ) ),
-						getPassword().toCharArray() );
+						StringUtils.hasContent( getPassword() ) ? getPassword().toCharArray() : null );
 
 			return keyStore;
 		}
@@ -152,7 +152,7 @@ public class KeyMaterialWssCrypto implements WssCrypto
 	{
 		try
 		{
-			if( StringUtils.hasContent( getSource() ) && StringUtils.hasContent( getPassword() ) )
+			if( StringUtils.hasContent( getSource() ) )
 			{
 				load();
 				return "OK";

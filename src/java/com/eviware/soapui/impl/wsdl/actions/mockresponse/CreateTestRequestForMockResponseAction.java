@@ -80,8 +80,8 @@ public class CreateTestRequestForMockResponseAction extends AbstractAddToTestCas
 
 		String name = dialogValues.get( STEP_NAME );
 
-		WsdlTestRequestStep testStep = ( WsdlTestRequestStep )testCase.insertTestStep( WsdlTestRequestStepFactory
-				.createConfig( mockResponse.getMockOperation().getOperation(), name ), position );
+		WsdlTestRequestStep testStep = ( WsdlTestRequestStep )testCase.insertTestStep(
+				WsdlTestRequestStepFactory.createConfig( mockResponse.getMockOperation().getOperation(), name ), position );
 
 		if( testStep == null )
 			return null;

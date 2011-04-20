@@ -45,8 +45,8 @@ public class MockServiceToProjectDropHandler extends AbstractAfterModelItemDropH
 				CloneMockServiceAction.SOAPUI_ACTION_ID );
 		CloneMockServiceAction a = ( CloneMockServiceAction )action;
 
-		String name = UISupport.prompt( "Specify name for copied MockService", "Copy MockService", "Copy of "
-				+ source.getName() );
+		String name = UISupport.prompt( "Specify name for copied MockService", "Copy MockService",
+				"Copy of " + source.getName() );
 		if( name == null )
 			return false;
 

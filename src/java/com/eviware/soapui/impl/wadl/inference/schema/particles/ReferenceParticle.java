@@ -76,8 +76,8 @@ public class ReferenceParticle implements Particle
 	{
 		if( reference == null )
 		{
-			reference = schema.getSystem().getSchemaForNamespace( referenceQName.getNamespaceURI() ).getParticle(
-					referenceQName.getLocalPart() );
+			reference = schema.getSystem().getSchemaForNamespace( referenceQName.getNamespaceURI() )
+					.getParticle( referenceQName.getLocalPart() );
 		}
 		return reference;
 	}

@@ -31,9 +31,9 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
+import com.eviware.x.dialogs.Worker.WorkerAdapter;
 import com.eviware.x.dialogs.XProgressDialog;
 import com.eviware.x.dialogs.XProgressMonitor;
-import com.eviware.x.dialogs.Worker.WorkerAdapter;
 
 public class MockAsWar
 {
@@ -159,13 +159,15 @@ public class MockAsWar
 
 	protected void createContent( StringBuilder content )
 	{
-		content.replace( content.indexOf( PROJECT_FILE_NAME ), content.indexOf( PROJECT_FILE_NAME )
-				+ PROJECT_FILE_NAME.length(), projectFile.getName() );
+		content.replace( content.indexOf( PROJECT_FILE_NAME ),
+				content.indexOf( PROJECT_FILE_NAME ) + PROJECT_FILE_NAME.length(), projectFile.getName() );
 
-		content.replace( content.indexOf( SOAPUI_SETTINGS ), content.indexOf( SOAPUI_SETTINGS )
-				+ SOAPUI_SETTINGS.length(),
+		content.replace(
+				content.indexOf( SOAPUI_SETTINGS ),
+				content.indexOf( SOAPUI_SETTINGS ) + SOAPUI_SETTINGS.length(),
 				settingsFile != null && settingsFile.exists() && settingsFile.isFile() ? "WEB-INF/soapui/"
-						+ settingsFile.getName() : "");//settingsFile.getAbsolutePath() );
+						+ settingsFile.getName() : "" );// settingsFile.getAbsolutePath()
+																	// );
 		content.replace( content.indexOf( MOCKSERVICE_ENDPOINT ), content.indexOf( MOCKSERVICE_ENDPOINT )
 				+ MOCKSERVICE_ENDPOINT.length(), localEndpoint );
 
@@ -176,9 +178,9 @@ public class MockAsWar
 			content.replace( content.indexOf( "WEB-INF/listeners" ), content.indexOf( "WEB-INF/listeners" )
 					+ "WEB-INF/listeners".length(), "" );
 		if( !enableWebUI )
-			content.replace( content.indexOf( "<param-value>true</param-value>" ), content
-					.indexOf( "<param-value>true</param-value>" )
-					+ "<param-value>true</param-value>".length(), "<param-value>false</param-value>" );
+			content.replace( content.indexOf( "<param-value>true</param-value>" ),
+					content.indexOf( "<param-value>true</param-value>" ) + "<param-value>true</param-value>".length(),
+					"<param-value>false</param-value>" );
 	}
 
 	protected boolean prepareWarFile()
@@ -190,10 +192,14 @@ public class MockAsWar
 			File fromDir = new File( System.getProperty( "soapui.home" ), ".." + File.separator + "lib" );
 			JarPackager.copyAllFromTo( fromDir, lib, new FileFilter()
 			{
-
 				public boolean accept( File pathname )
 				{
-					return pathname.getName().indexOf( "servlet" ) == -1;
+					return pathname.getName().indexOf( "servlet" ) == -1 && pathname.getName().indexOf( "xulrunner" ) == -1
+							&& pathname.getName().indexOf( "Mozilla" ) == -1 && pathname.getName().indexOf( "l2fprod" ) == -1
+							&& pathname.getName().indexOf( "tuxpack" ) == -1 && pathname.getName().indexOf( "winpack" ) == -1
+							&& pathname.getName().indexOf( "rsyntax" ) == -1
+							&& pathname.getName().indexOf( "ActiveQueryBuilder" ) == -1
+							&& pathname.getName().indexOf( "jxbrowser" ) == -1;
 				}
 			} );
 
@@ -248,8 +254,8 @@ public class MockAsWar
 	{
 		try
 		{
-			Tools.writeAll( new FileOutputStream( new File( warDir, resource ) ), SoapUI.class
-					.getResourceAsStream( "/com/eviware/soapui/resources/mockaswar/" + resource ) );
+			Tools.writeAll( new FileOutputStream( new File( warDir, resource ) ),
+					SoapUI.class.getResourceAsStream( "/com/eviware/soapui/resources/mockaswar/" + resource ) );
 		}
 		catch( Exception e )
 		{

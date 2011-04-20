@@ -19,12 +19,12 @@ import com.eviware.soapui.support.MessageSupport;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.x.form.XForm;
+import com.eviware.x.form.XForm.FieldType;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.XFormDialogBuilder;
 import com.eviware.x.form.XFormFactory;
 import com.eviware.x.form.XFormField;
 import com.eviware.x.form.XFormTextField;
-import com.eviware.x.form.XForm.FieldType;
 import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.impl.swing.ActionFormFieldComponent;
 import com.eviware.x.impl.swing.JComponentFormField;
@@ -83,26 +83,27 @@ public class ADialogBuilder
 		else
 			actions.addActions( defaultActions );
 
-		XFormDialog dialog = builder.buildDialog( actions, messages.get( formAnnotation.description() ), UISupport
-				.createImageIcon( formAnnotation.icon() ) );
+		XFormDialog dialog = builder.buildDialog( actions, messages.get( formAnnotation.description() ),
+				UISupport.createImageIcon( formAnnotation.icon() ) );
 
 		return dialog;
 	}
-	
+
 	/**
-	 * Allow to use custom  Ok, Cancel buttons...
+	 * Allow to use custom Ok, Cancel buttons...
 	 * 
 	 * This means user have to add control for closing dialog.
-	 *
+	 * 
 	 * @param formClass
 	 * @param actions
 	 * @param okCancel
 	 * @return
 	 */
-	public static XFormDialog buildDialog( Class<? extends Object> formClass, ActionList actions, boolean useDefaultOkCancel )
+	public static XFormDialog buildDialog( Class<? extends Object> formClass, ActionList actions,
+			boolean useDefaultOkCancel )
 	{
-		
-		if ( useDefaultOkCancel )
+
+		if( useDefaultOkCancel )
 			return buildDialog( formClass, actions );
 		AForm formAnnotation = formClass.getAnnotation( AForm.class );
 		if( formAnnotation == null )
@@ -131,17 +132,18 @@ public class ADialogBuilder
 			}
 		}
 
-		ActionList defaultActions = formAnnotation.helpUrl() == null ? null : builder
-				.buildHelpActions( formAnnotation.helpUrl() );
+		ActionList defaultActions = formAnnotation.helpUrl() == null ? null : builder.buildHelpActions( formAnnotation
+				.helpUrl() );
 
 		if( actions == null )
 			actions = defaultActions;
-		else {
+		else
+		{
 			// since there is only one action do it like this
 			actions.insertAction( defaultActions.getActionAt( 0 ), 0 );
 		}
-		XFormDialog dialog = builder.buildDialog( actions, messages.get( formAnnotation.description() ), UISupport
-				.createImageIcon( formAnnotation.icon() ) );
+		XFormDialog dialog = builder.buildDialog( actions, messages.get( formAnnotation.description() ),
+				UISupport.createImageIcon( formAnnotation.icon() ) );
 
 		return dialog;
 	}
@@ -188,13 +190,14 @@ public class ADialogBuilder
 		else
 			actions.addActions( defaultActions );
 
-		XFormDialog dialog = builder.buildDialog( actions, formAnnotation.description(), UISupport
-				.createImageIcon( formAnnotation.icon() ) );
+		XFormDialog dialog = builder.buildDialog( actions, formAnnotation.description(),
+				UISupport.createImageIcon( formAnnotation.icon() ) );
 
 		return dialog;
 	}
-	
-	public static XFormDialog buildTabbedDialogWithCustomActions( Class<? extends Object> tabbedFormClass, ActionList actions )
+
+	public static XFormDialog buildTabbedDialogWithCustomActions( Class<? extends Object> tabbedFormClass,
+			ActionList actions )
 	{
 		AForm formAnnotation = tabbedFormClass.getAnnotation( AForm.class );
 		if( formAnnotation == null )
@@ -233,13 +236,14 @@ public class ADialogBuilder
 
 		if( actions == null )
 			actions = defaultActions;
-		else {
+		else
+		{
 			defaultActions.addActions( actions );
 			actions = defaultActions;
 		}
 
-		XFormDialog dialog = builder.buildDialog( actions, formAnnotation.description(), UISupport
-				.createImageIcon( formAnnotation.icon() ) );
+		XFormDialog dialog = builder.buildDialog( actions, formAnnotation.description(),
+				UISupport.createImageIcon( formAnnotation.icon() ) );
 
 		return dialog;
 	}
@@ -264,8 +268,8 @@ public class ADialogBuilder
 			}
 		}
 
-		XFormDialog dialog = builder.buildWizard( formAnnotation.description(), UISupport.createImageIcon( formAnnotation
-				.icon() ), formAnnotation.helpUrl() );
+		XFormDialog dialog = builder.buildWizard( formAnnotation.description(),
+				UISupport.createImageIcon( formAnnotation.icon() ), formAnnotation.helpUrl() );
 
 		return dialog;
 	}

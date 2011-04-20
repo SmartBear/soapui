@@ -179,7 +179,7 @@ public class PolicyUtils
 	// Node.ELEMENT_NODE )
 	// listElms.add( (Element) item );
 	// }
-	//      
+	//
 	// for (int i = 0; i < listElms.size(); i++)
 	// {
 	// Element elm = listElms.get(i);
@@ -193,7 +193,7 @@ public class PolicyUtils
 	// newElm = normalize(elm);
 	//
 	// } else {
-	//				
+	//
 	// Element allElm =
 	// elm.getOwnerDocument().createElementNS(WS_W3_POLICY_NAMESPACE, "All");
 	// allElm.appendChild(elm);
@@ -202,7 +202,7 @@ public class PolicyUtils
 	// elm.getOwnerDocument().createElementNS(WS_W3_POLICY_NAMESPACE,
 	// "ExactlyOne");
 	// exactlyOneElm.appendChild(allElm);
-	//				
+	//
 	// String optional = elm.getAttributeNS(WS_W3_POLICY_NAMESPACE, "Optional");
 	// if (!StringUtils.isNullOrEmpty(optional) && optional.equals("true"))
 	// {
@@ -210,7 +210,7 @@ public class PolicyUtils
 	// elm.getOwnerDocument().createElementNS(WS_W3_POLICY_NAMESPACE, "All");
 	// exactlyOneElm.appendChild(allElmEmpty);
 	// }
-	//				
+	//
 	// newElm = exactlyOneElm;
 	// }
 	// elm.getParentNode().replaceChild(elm, newElm);

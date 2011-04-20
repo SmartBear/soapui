@@ -39,8 +39,8 @@ import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.AField.AFieldType;
+import com.eviware.x.form.support.AForm;
 
 public class CreateWadlDocumentationAction extends AbstractSoapUIAction<RestService>
 {
@@ -122,10 +122,12 @@ public class CreateWadlDocumentationAction extends AbstractSoapUIAction<RestServ
 		transformers = new HashMap<String, Transformer>();
 		TransformerFactory xformFactory = new org.apache.xalan.processor.TransformerFactoryImpl();
 
-		transformers.put( "WADL", xformFactory.newTemplates(
-				new StreamSource( SoapUI.class
-						.getResourceAsStream( "/com/eviware/soapui/resources/doc/wadl_documentation.xsl" ) ) )
-				.newTransformer() );
+		transformers.put(
+				"WADL",
+				xformFactory.newTemplates(
+						new StreamSource( SoapUI.class
+								.getResourceAsStream( "/com/eviware/soapui/resources/doc/wadl_documentation.xsl" ) ) )
+						.newTransformer() );
 	}
 
 	@AForm( description = "Creates an HTML-Report for the current WADL", name = "Create Report", helpUrl = HelpUrls.CREATEWADLDOC_HELP_URL, icon = UISupport.TOOL_ICON_PATH )

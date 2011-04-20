@@ -15,6 +15,7 @@ package com.eviware.soapui.impl.wsdl.actions.testsuite;
 import java.io.File;
 
 import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 
@@ -29,7 +30,8 @@ public class ExportTestSuiteAction extends AbstractSoapUIAction<WsdlTestSuite>
 	public void perform( WsdlTestSuite tSuite, Object param )
 	{
 		tSuite.beforeSave();
-		String defaultFileName = System.getProperty( "user.home" ) + File.separator + tSuite.getName() + ".xml";
+		String defaultFileName = System.getProperty( "user.home" ) + File.separator
+				+ StringUtils.createFileName( tSuite.getName(), '-' ) + ".xml";
 		File file = UISupport.getFileDialogs().saveAs( this, "Select test case file", "xml", "XML",
 				new File( defaultFileName ) );
 

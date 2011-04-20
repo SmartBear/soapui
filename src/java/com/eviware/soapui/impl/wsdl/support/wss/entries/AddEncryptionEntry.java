@@ -278,17 +278,17 @@ public class AddEncryptionEntry extends WssEntryBase
 				wsEncrypt.setKey( crypto.getPrivateKey( getEmbeddedKeyName(), getEmbeddedKeyPassword() ).getEncoded() );
 			}
 
-			if( !getSymmetricEncAlgorithm().equals(DEFAULT_OPTION) )
+			if( !getSymmetricEncAlgorithm().equals( DEFAULT_OPTION ) )
 			{
 				wsEncrypt.setSymmetricEncAlgorithm( getSymmetricEncAlgorithm() );
 			}
 
-			if( !getEncKeyTransport().equals(DEFAULT_OPTION)  )
+			if( !getEncKeyTransport().equals( DEFAULT_OPTION ) )
 			{
 				wsEncrypt.setKeyEnc( getEncKeyTransport() );
 			}
 
-			if( !getEncryptionCanonicalization().equals(DEFAULT_OPTION)  )
+			if( !getEncryptionCanonicalization().equals( DEFAULT_OPTION ) )
 			{
 				wsEncrypt.setEncCanonicalization( getEncryptionCanonicalization() );
 			}

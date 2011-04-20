@@ -19,6 +19,7 @@ import org.apache.log4j.Logger;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.InterfaceConfig;
 import com.eviware.soapui.config.WsdlInterfaceConfig;
+import com.eviware.soapui.impl.support.definition.support.InvalidDefinitionException;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
@@ -73,6 +74,10 @@ public class WsdlInterfaceFactory implements InterfaceFactory<WsdlInterface>
 		{
 			result = WsdlImporter.importWsdl( project, url, bindingName, wsdlLoader );
 		}
+		catch( InvalidDefinitionException e )
+		{
+			throw e;
+		}
 		catch( Exception e )
 		{
 			log.error( "Error importing wsdl: " + e );
@@ -92,7 +97,8 @@ public class WsdlInterfaceFactory implements InterfaceFactory<WsdlInterface>
 						WsdlRequest request = operation.addNewRequest( "Request 1" );
 						try
 						{
-							String requestContent = operation.createRequest( project.getSettings().getBoolean( WsdlSettings.XML_GENERATION_ALWAYS_INCLUDE_OPTIONAL_ELEMENTS ) );
+							String requestContent = operation.createRequest( project.getSettings().getBoolean(
+									WsdlSettings.XML_GENERATION_ALWAYS_INCLUDE_OPTIONAL_ELEMENTS ) );
 							request.setRequestContent( requestContent );
 						}
 						catch( Exception e )

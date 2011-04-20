@@ -25,14 +25,14 @@ public class ScriptingSupport
 	public static SoapUIGroovyShell createGsroovyShell( Binding binding )
 	{
 		// LoaderConfiguration config = new LoaderConfiguration();
-		//		
+		//
 		// String libraries = SoapUI.getSettings().getString(
 		// ToolsSettings.SCRIPT_LIBRARIES, null );
 		// if( libraries != null )
 		// {
 		// File libs = new File( libraries );
 		// File[] list = libs.listFiles();
-		//			
+		//
 		// for( File lib : list)
 		// {
 		// if( lib.getName().toLowerCase().endsWith( ".jar" ))

@@ -226,7 +226,8 @@ public abstract class AbstractSoapUIDesktop implements SoapUIDesktop
 		{
 			closeDependantPanels( loadTest );
 		}
-		public void securityTestRemoved( SecurityTest securityTest)
+
+		public void securityTestRemoved( SecurityTest securityTest )
 		{
 			closeDependantPanels( securityTest );
 		}

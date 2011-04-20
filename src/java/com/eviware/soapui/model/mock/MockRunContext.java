@@ -12,6 +12,7 @@
 
 package com.eviware.soapui.model.mock;
 
+import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 
 /**
@@ -27,4 +28,6 @@ public interface MockRunContext extends PropertyExpansionContext
 	public MockResponse getMockResponse();
 
 	public MockRunner getMockRunner();
+
+	public void setMockResponse( WsdlMockResponse wsdlMockResponse );
 }

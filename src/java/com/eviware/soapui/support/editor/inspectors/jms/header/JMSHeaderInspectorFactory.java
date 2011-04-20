@@ -29,18 +29,18 @@ public class JMSHeaderInspectorFactory implements RequestInspectorFactory, Respo
 		return INSPECTOR_ID;
 	}
 
-	public EditorInspector<?> createRequestInspector(Editor<?> editor, ModelItem modelItem)
+	public EditorInspector<?> createRequestInspector( Editor<?> editor, ModelItem modelItem )
 	{
-		if (modelItem instanceof AbstractHttpRequest)
+		if( modelItem instanceof AbstractHttpRequest )
 		{
-			RequestJMSHeaderInspector inspector = new RequestJMSHeaderInspector(((AbstractHttpRequest<?>) modelItem));
-			inspector.setEnabled(JMSUtils.checkIfJMS(modelItem));
+			RequestJMSHeaderInspector inspector = new RequestJMSHeaderInspector( ( ( AbstractHttpRequest<?> )modelItem ) );
+			inspector.setEnabled( JMSUtils.checkIfJMS( modelItem ) );
 			return inspector;
 		}
 		return null;
 	}
 
-	public EditorInspector<?> createResponseInspector(Editor<?> editor, ModelItem modelItem)
+	public EditorInspector<?> createResponseInspector( Editor<?> editor, ModelItem modelItem )
 	{
 		return null;
 	}

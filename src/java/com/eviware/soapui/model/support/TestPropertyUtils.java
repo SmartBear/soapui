@@ -55,11 +55,11 @@ public class TestPropertyUtils
 	public synchronized static void sortProperties( MutableTestPropertyHolder holder )
 	{
 		ascending = false;
-		
+
 		String[] names = holder.getPropertyNames();
-		
+
 		quicksort( holder, 0, holder.getPropertyCount() - 1 );
-		if( Arrays.equals( names, holder.getPropertyNames() ))
+		if( Arrays.equals( names, holder.getPropertyNames() ) )
 		{
 			ascending = true;
 			quicksort( holder, 0, holder.getPropertyCount() - 1 );
@@ -119,7 +119,7 @@ public class TestPropertyUtils
 		array.moveProperty( prop1, j );
 		array.moveProperty( prop2, i );
 
-		//      	
+		//
 		// T temp = array[i];
 		// array[i] = array[j];
 		// array[j] = temp;

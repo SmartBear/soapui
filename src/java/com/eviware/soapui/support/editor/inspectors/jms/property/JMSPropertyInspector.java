@@ -62,8 +62,8 @@ public class JMSPropertyInspector extends AbstractXmlInspector implements Proper
 		if( panel != null )
 			return panel;
 
-		headersTableModel = new StringToStringMapTableModel( model.getJMSProperties(), "Key", "Value", !model
-				.isReadOnly() );
+		headersTableModel = new StringToStringMapTableModel( model.getJMSProperties(), "Key", "Value",
+				!model.isReadOnly() );
 		headersTableModel.addTableModelListener( new TableModelListener()
 		{
 			public void tableChanged( TableModelEvent arg0 )

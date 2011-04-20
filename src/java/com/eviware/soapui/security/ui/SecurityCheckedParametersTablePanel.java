@@ -45,8 +45,8 @@ import com.eviware.x.form.XFormField;
 import com.eviware.x.form.XFormFieldListener;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.AField.AFieldType;
+import com.eviware.x.form.support.AForm;
 import com.eviware.x.impl.swing.JComboBoxFormField;
 import com.eviware.x.impl.swing.JFormDialog;
 import com.eviware.x.impl.swing.JTextFieldFormField;
@@ -263,8 +263,8 @@ public class SecurityCheckedParametersTablePanel extends JPanel implements ListS
 			}
 			else
 			{
-				if( !model.addParameter( dialog.getValue( AddParameterDialog.LABEL ), dialog
-						.getValue( AddParameterDialog.NAME ), pathPane.getText() ) )
+				if( !model.addParameter( dialog.getValue( AddParameterDialog.LABEL ),
+						dialog.getValue( AddParameterDialog.NAME ), pathPane.getText() ) )
 					UISupport.showErrorMessage( "Label have to be unique!" );
 			}
 		}
@@ -368,8 +368,8 @@ public class SecurityCheckedParametersTablePanel extends JPanel implements ListS
 			}
 			else
 			{
-				if( model.addParameter( dialog.getValue( AddParameterDialog.LABEL ), dialog
-						.getValue( AddParameterDialog.NAME ), pathPane.getText() ) )
+				if( model.addParameter( dialog.getValue( AddParameterDialog.LABEL ),
+						dialog.getValue( AddParameterDialog.NAME ), pathPane.getText() ) )
 				{
 					JComboBoxFormField nameField = ( JComboBoxFormField )dialog.getFormField( AddParameterDialog.NAME );
 					nameField.setSelectedOptions( new Object[] { nameField.getOptions()[0] } );

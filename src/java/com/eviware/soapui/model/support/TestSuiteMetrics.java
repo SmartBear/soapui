@@ -21,7 +21,7 @@ public class TestSuiteMetrics
 {
 	final private TestSuite testSuite;
 
-	public TestSuiteMetrics(TestSuite testSuite)
+	public TestSuiteMetrics( TestSuite testSuite )
 	{
 		this.testSuite = testSuite;
 	}
@@ -35,7 +35,7 @@ public class TestSuiteMetrics
 	{
 		int result = 0;
 
-		for (TestCase testCase : testSuite.getTestCaseList())
+		for( TestCase testCase : testSuite.getTestCaseList() )
 		{
 			result += testCase.getTestStepCount();
 		}
@@ -47,13 +47,13 @@ public class TestSuiteMetrics
 	{
 		int result = 0;
 
-		for (TestCase testCase : testSuite.getTestCaseList())
+		for( TestCase testCase : testSuite.getTestCaseList() )
 		{
-			for (TestStep testStep : testCase.getTestStepList())
+			for( TestStep testStep : testCase.getTestStepList() )
 			{
-				if (testStep instanceof Assertable)
+				if( testStep instanceof Assertable )
 				{
-					result += ((Assertable) testStep).getAssertionCount();
+					result += ( ( Assertable )testStep ).getAssertionCount();
 				}
 			}
 		}
@@ -64,7 +64,7 @@ public class TestSuiteMetrics
 	public int getLoadTestCount()
 	{
 		int result = 0;
-		for (TestCase testCase : testSuite.getTestCaseList())
+		for( TestCase testCase : testSuite.getTestCaseList() )
 		{
 			result += testCase.getLoadTestCount();
 		}

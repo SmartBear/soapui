@@ -33,8 +33,8 @@ public class NewMockResponseAction extends AbstractSoapUIAction<WsdlMockOperatio
 
 	public void perform( WsdlMockOperation mockOperation, Object param )
 	{
-		String name = UISupport.prompt( "Enter name of new MockResponse", getName(), "MockResponse "
-				+ ( mockOperation.getMockResponseCount() + 1 ) );
+		String name = UISupport.prompt( "Enter name of new MockResponse", getName(),
+				"MockResponse " + ( mockOperation.getMockResponseCount() + 1 ) );
 
 		if( name != null )
 		{

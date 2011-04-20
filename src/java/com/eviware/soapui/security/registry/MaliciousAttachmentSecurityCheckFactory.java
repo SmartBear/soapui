@@ -35,13 +35,13 @@ public class MaliciousAttachmentSecurityCheckFactory extends AbstractSecurityChe
 				"Performs a check for Malicious Attachment Vulnerabilities", null);
 	}
 
-	public boolean canCreate(TestStep testStep)
+	public boolean canCreate( TestStep testStep )
 	{
 		return testStep instanceof WsdlTestRequestStep;
 	}
 
 	@Override
-	public AbstractSecurityCheck buildSecurityCheck( TestStep testStep,SecurityCheckConfig config, ModelItem parent )
+	public AbstractSecurityCheck buildSecurityCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent )
 	{
 		return new MaliciousAttachmentSecurityCheck( config, parent, null, testStep );
 	}

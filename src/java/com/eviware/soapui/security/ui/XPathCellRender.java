@@ -14,9 +14,9 @@ package com.eviware.soapui.security.ui;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Cursor;
+import java.awt.Dialog.ModalExclusionType;
 import java.awt.Dimension;
 import java.awt.Point;
-import java.awt.Dialog.ModalExclusionType;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -172,7 +172,7 @@ public class XPathCellRender extends AbstractCellEditor implements TableCellEdit
 		{
 			super( "Cancel" );
 			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/rest_method.gif" ) );
-			putValue( Action.SHORT_DESCRIPTION, "Cancel Changes");
+			putValue( Action.SHORT_DESCRIPTION, "Cancel Changes" );
 		}
 
 		@Override

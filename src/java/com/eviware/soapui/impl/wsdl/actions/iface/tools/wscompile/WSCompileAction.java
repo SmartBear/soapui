@@ -33,10 +33,10 @@ import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.XFormDialogBuilder;
 import com.eviware.x.form.XFormFactory;
 import com.sun.java.xml.ns.jaxRpc.ri.config.ConfigurationDocument;
+import com.sun.java.xml.ns.jaxRpc.ri.config.ConfigurationDocument.Configuration;
 import com.sun.java.xml.ns.jaxRpc.ri.config.NamespaceMappingRegistryType;
 import com.sun.java.xml.ns.jaxRpc.ri.config.NamespaceMappingType;
 import com.sun.java.xml.ns.jaxRpc.ri.config.WsdlType;
-import com.sun.java.xml.ns.jaxRpc.ri.config.ConfigurationDocument.Configuration;
 
 /**
  * Invokes JWSDP wscompile

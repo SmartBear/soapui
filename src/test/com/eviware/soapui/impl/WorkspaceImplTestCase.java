@@ -23,35 +23,35 @@ public class WorkspaceImplTestCase extends TestCase
 	@Override
 	protected void setUp() throws Exception
 	{
-		File file = new File( "test-workspace.xml");
+		File file = new File( "test-workspace.xml" );
 		if( file.exists() )
 			file.delete();
-		
-		file = new File( "test-project.xml");
+
+		file = new File( "test-project.xml" );
 		if( file.exists() )
 			file.delete();
 	}
 
 	public void testProjectRoot() throws Exception
 	{
-		File wsFile = new File( "test-workspace.xml");
+		File wsFile = new File( "test-workspace.xml" );
 		WorkspaceImpl ws = new WorkspaceImpl( wsFile.getAbsolutePath(), null );
-		
+
 		WsdlProject project = ws.createProject( "Test Project", null );
-		project.saveAs(new File("test-project.xml").getAbsolutePath() );
-		
-		ws.save(false);
-		ws.switchWorkspace(wsFile);
-		assertEquals(1, ws.getProjectCount());
-		assertEquals("Test Project", ws.getProjectAt( 0 ).getName());
-		
-		ws.setProjectRoot("${workspaceDir}");
+		project.saveAs( new File( "test-project.xml" ).getAbsolutePath() );
 
-		ws.save(false);
+		ws.save( false );
+		ws.switchWorkspace( wsFile );
+		assertEquals( 1, ws.getProjectCount() );
+		assertEquals( "Test Project", ws.getProjectAt( 0 ).getName() );
 
-		ws.switchWorkspace(wsFile);
-		assertEquals("${workspaceDir}",ws.getProjectRoot() );
-		assertEquals(1, ws.getProjectCount());
-		assertEquals("Test Project", ws.getProjectAt( 0 ).getName());
+		ws.setProjectRoot( "${workspaceDir}" );
+
+		ws.save( false );
+
+		ws.switchWorkspace( wsFile );
+		assertEquals( "${workspaceDir}", ws.getProjectRoot() );
+		assertEquals( 1, ws.getProjectCount() );
+		assertEquals( "Test Project", ws.getProjectAt( 0 ).getName() );
 	}
 }

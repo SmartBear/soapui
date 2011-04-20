@@ -37,6 +37,6 @@ public interface TestJdbcDriver
 	// *
 	// * @return the modelItem containing this property
 	// */
-	//	
+	//
 	// public ModelItem getModelItem();
 }

@@ -59,8 +59,7 @@ public class ShowSystemPropertiesAction extends AbstractAction
 			buffer.append( key ).append( '=' ).append( properties.get( key ) ).append( "\r\n" );
 		}
 
-		UISupport.showExtendedInfo( "System Properties", "Current system properties",
-				"<html><body><pre><font size=-1>" + buffer.toString() + "</font></pre></body></html>", new Dimension(
-						600, 400 ) );
+		UISupport.showExtendedInfo( "System Properties", "Current system properties", "<html><body><pre><font size=-1>"
+				+ buffer.toString() + "</font></pre></body></html>", new Dimension( 600, 400 ) );
 	}
 }

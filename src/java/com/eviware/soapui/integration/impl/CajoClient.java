@@ -35,7 +35,8 @@ public class CajoClient
 		if( instance == null )
 		{
 			instance = new CajoClient();
-			instance.port = IntegrationUtils.getIntegrationPort( "loadUI", LoadUISettings.LOADUI_CAJO_PORT, DEFAULT_LOADUI_CAJO_PORT );
+			instance.port = IntegrationUtils.getIntegrationPort( "loadUI", LoadUISettings.LOADUI_CAJO_PORT,
+					DEFAULT_LOADUI_CAJO_PORT );
 			return instance;
 		}
 		else

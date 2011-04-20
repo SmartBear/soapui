@@ -49,9 +49,9 @@ import com.eviware.soapui.impl.wadl.inference.ConflictHandler;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.impl.wsdl.submit.transports.jms.JMSResponse;
 import com.eviware.soapui.model.iface.Submit;
+import com.eviware.soapui.model.iface.Submit.Status;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.iface.SubmitListener;
-import com.eviware.soapui.model.iface.Submit.Status;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.editor.EditorView;
@@ -406,8 +406,8 @@ public class InferredSchemaInspector extends AbstractXmlInspector implements Sub
 				s.append( "attribute '" );
 			else if( type == Type.TYPE )
 				s.append( "type '" );
-			s.append( name.getLocalPart() ).append( "' in namespace '" ).append( name.getNamespaceURI() ).append(
-					"' at path " ).append( path ).append( "?" );
+			s.append( name.getLocalPart() ).append( "' in namespace '" ).append( name.getNamespaceURI() )
+					.append( "' at path " ).append( path ).append( "?" );
 			if( !yesToAll )
 			{
 				int choice = UISupport.yesYesToAllOrNo( s.toString(), "Conflict" );

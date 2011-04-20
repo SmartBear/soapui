@@ -119,25 +119,25 @@ public class ScriptMockOperationDispatcher extends AbstractMockOperationDispatch
 		if( groovyEditorPanel == null )
 		{
 			groovyEditorPanel = new JPanel( new BorderLayout() );
-		DispatchScriptGroovyEditorModel editorModel = new DispatchScriptGroovyEditorModel();
-		groovyEditor = ( GroovyEditor )UISupport.getEditorFactory().buildGroovyEditor( editorModel );
-		groovyEditorPanel.add( groovyEditor, BorderLayout.CENTER );
-		groovyEditorPanel.add( buildGroovyEditorToolbar( editorModel ), BorderLayout.PAGE_START );
+			DispatchScriptGroovyEditorModel editorModel = new DispatchScriptGroovyEditorModel();
+			groovyEditor = ( GroovyEditor )UISupport.getEditorFactory().buildGroovyEditor( editorModel );
+			groovyEditorPanel.add( groovyEditor, BorderLayout.CENTER );
+			groovyEditorPanel.add( buildGroovyEditorToolbar( editorModel ), BorderLayout.PAGE_START );
 		}
 
 		return groovyEditorPanel;
 	}
 
 	@Override
-	public void releaseEditorComponent( )
+	public void releaseEditorComponent()
 	{
 		if( groovyEditor != null )
 			groovyEditor.release();
-		
+
 		groovyEditor = null;
 		groovyEditorPanel = null;
-		
-		super.releaseEditorComponent( );
+
+		super.releaseEditorComponent();
 	}
 
 	protected JXToolBar buildGroovyEditorToolbar( DispatchScriptGroovyEditorModel editorModel )

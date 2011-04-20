@@ -25,7 +25,7 @@ public class MockTestSuiteRunner extends AbstractMockTestRunner<WsdlTestSuite> i
 	public MockTestSuiteRunner( WsdlTestSuite testSuite )
 	{
 		super( testSuite, null );
-		setRunContext( new MockTestSuiteRunContext(this) );
+		setRunContext( new MockTestSuiteRunContext( this ) );
 	}
 
 	public List<TestCaseRunner> getResults()

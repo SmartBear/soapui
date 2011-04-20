@@ -27,20 +27,20 @@ public class WsdlRequestStepTestCase extends TestCase
 {
 	public void testAssert() throws Exception
 	{
-		WsdlProject project = new WsdlProject("src" + File.separatorChar + "test-resources" + File.separatorChar + "sample-soapui-project.xml");
-      TestSuite testSuite = project.getTestSuiteByName("Test Suite");
-      com.eviware.soapui.model.testsuite.TestCase testCase = 
-         testSuite.getTestCaseByName("Test Conversions");
-     
-      WsdlTestRequestStep testStep = ( WsdlTestRequestStep ) testCase.getTestStepByName("SEK to USD Test");
-     
-      MockTestRunner testRunner = new MockTestRunner( (WsdlTestCase) testStep.getTestCase() ); 
-      MockTestRunContext testRunContext = new MockTestRunContext( testRunner, (WsdlTestStep) testStep ); 
-     
-      TestStepResult result = testStep.run( testRunner, testRunContext ); 
+		WsdlProject project = new WsdlProject( "src" + File.separatorChar + "test-resources" + File.separatorChar
+				+ "sample-soapui-project.xml" );
+		TestSuite testSuite = project.getTestSuiteByName( "Test Suite" );
+		com.eviware.soapui.model.testsuite.TestCase testCase = testSuite.getTestCaseByName( "Test Conversions" );
 
-      WsdlTestRequestStepResult wsdlResult = (WsdlTestRequestStepResult)result;
-      assertNotNull( wsdlResult );
-     // assertEquals(TestStepResult.TestStepStatus.OK, wsdlResult.getStatus());
+		WsdlTestRequestStep testStep = ( WsdlTestRequestStep )testCase.getTestStepByName( "SEK to USD Test" );
+
+		MockTestRunner testRunner = new MockTestRunner( ( WsdlTestCase )testStep.getTestCase() );
+		MockTestRunContext testRunContext = new MockTestRunContext( testRunner, ( WsdlTestStep )testStep );
+
+		TestStepResult result = testStep.run( testRunner, testRunContext );
+
+		WsdlTestRequestStepResult wsdlResult = ( WsdlTestRequestStepResult )result;
+		assertNotNull( wsdlResult );
+		// assertEquals(TestStepResult.TestStepStatus.OK, wsdlResult.getStatus());
 	}
 }

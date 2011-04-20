@@ -32,37 +32,36 @@ public abstract class AbstractBoundary implements Boundary
 	{
 		if( type == null )
 			return null;
-		
-		
-		if(type.endsWith( ":string" ))
+
+		if( type.endsWith( ":string" ) )
 		{
 			return new StringBoundary();
 		}
-		if(type.endsWith( ":normalizedString" ))
+		if( type.endsWith( ":normalizedString" ) )
 		{
 			return new NormalisedStringBoundary();
 		}
-		if(type.endsWith( ":integer" ))
+		if( type.endsWith( ":integer" ) )
 		{
 			return new IntegerBoundary();
 		}
-		if(type.endsWith( ":decimal" ))
+		if( type.endsWith( ":decimal" ) )
 		{
 			return new DecimalBoundary();
 		}
-		if(type.endsWith( ":dateTime" )) 
+		if( type.endsWith( ":dateTime" ) )
 		{
 			return new DateTimeBoundary();
 		}
-		if(type.endsWith( ":date" )) 
+		if( type.endsWith( ":date" ) )
 		{
 			return new DateBoundary();
 		}
-		if(type.endsWith( ":time" )) 
+		if( type.endsWith( ":time" ) )
 		{
 			return new DateBoundary();
 		}
-		
+
 		return null;
 	}
 

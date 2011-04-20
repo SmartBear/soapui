@@ -48,6 +48,7 @@ public class HttpPrefs implements Prefs
 	public static final String HTTP_VERSION = "HTTP Version";
 	public static final String ENABLE_MOCK_WIRE_LOG = "Enable Mock HTTP Log";
 	public static final String DISABLE_RESPONSE_DECOMPRESSION = "Disable Response Decompression";
+	public static final String FORWARD_SLASHES = "Normalize Forward Slashes";
 
 	private static TreeMap<String, String> compressionAlgs = new TreeMap<String, String>();
 
@@ -91,6 +92,9 @@ public class HttpPrefs implements Prefs
 			httpForm.appendCheckBox( HttpPrefs.EXPECT_CONTINUE,
 					"Activates 'Expect: 100-Continue' handshake for the entity enclosing methods", true );
 			httpForm.appendCheckBox( HttpPrefs.ENCODED_URLS, "Do not URL-escape service endpoints", true );
+			httpForm.appendCheckBox( HttpPrefs.FORWARD_SLASHES,
+					"Replaces duplicate forward slashes in HTTP request endpoints with a single slash", false );
+
 			httpForm.appendTextField( HttpPrefs.BIND_ADDRESS, "Default local address to bind to when sending requests" );
 			httpForm.appendSeparator();
 			httpForm.appendCheckBox( HttpPrefs.INCLUDE_REQUEST_IN_TIME_TAKEN,
@@ -134,6 +138,7 @@ public class HttpPrefs implements Prefs
 		settings.setString( HttpSettings.AUTHENTICATE_PREEMPTIVELY, httpValues.get( AUTHENTICATE_PREEMPTIVELY ) );
 		settings.setString( HttpSettings.SOCKET_TIMEOUT, httpValues.get( SOCKET_TIMEOUT ) );
 		settings.setString( HttpSettings.ENCODED_URLS, httpValues.get( ENCODED_URLS ) );
+		settings.setString( HttpSettings.FORWARD_SLASHES, httpValues.get( FORWARD_SLASHES ) );
 		settings.setString( HttpSettings.MAX_RESPONSE_SIZE, httpValues.get( MAX_RESPONSE_SIZE ) );
 		settings.setString( HttpSettings.INCLUDE_REQUEST_IN_TIME_TAKEN, httpValues.get( INCLUDE_REQUEST_IN_TIME_TAKEN ) );
 		settings
@@ -158,24 +163,25 @@ public class HttpPrefs implements Prefs
 		// HttpSettings.DISABLE_CHUNKING, null ) );
 		httpValues.put( CHUNKING_THRESHOLD, settings.getString( HttpSettings.CHUNKING_THRESHOLD, null ) );
 		httpValues.put( USER_AGENT_HEADER, settings.getString( HttpSettings.USER_AGENT, null ) );
-		httpValues.put( REQUEST_COMPRESSION, compressionAlgs.get( settings.getString( HttpSettings.REQUEST_COMPRESSION,
-				"None" ) ) );
+		httpValues.put( REQUEST_COMPRESSION,
+				compressionAlgs.get( settings.getString( HttpSettings.REQUEST_COMPRESSION, "None" ) ) );
 		httpValues.put( RESPONSE_COMPRESSION, settings.getString( HttpSettings.RESPONSE_COMPRESSION, null ) );
-		httpValues.put( DISABLE_RESPONSE_DECOMPRESSION, settings.getString( HttpSettings.DISABLE_RESPONSE_DECOMPRESSION,
-				null ) );
+		httpValues.put( DISABLE_RESPONSE_DECOMPRESSION,
+				settings.getString( HttpSettings.DISABLE_RESPONSE_DECOMPRESSION, null ) );
 		httpValues.put( EXPECT_CONTINUE, settings.getString( HttpSettings.EXPECT_CONTINUE, null ) );
 		httpValues.put( CLOSE_CONNECTIONS_AFTER_REQUEST, settings.getString( HttpSettings.CLOSE_CONNECTIONS, null ) );
 		httpValues.put( AUTHENTICATE_PREEMPTIVELY, settings.getString( HttpSettings.AUTHENTICATE_PREEMPTIVELY, null ) );
-		httpValues.put( INCLUDE_REQUEST_IN_TIME_TAKEN, settings.getString( HttpSettings.INCLUDE_REQUEST_IN_TIME_TAKEN,
-				null ) );
-		httpValues.put( INCLUDE_RESPONSE_IN_TIME_TAKEN, settings.getString( HttpSettings.INCLUDE_RESPONSE_IN_TIME_TAKEN,
-				null ) );
+		httpValues.put( INCLUDE_REQUEST_IN_TIME_TAKEN,
+				settings.getString( HttpSettings.INCLUDE_REQUEST_IN_TIME_TAKEN, null ) );
+		httpValues.put( INCLUDE_RESPONSE_IN_TIME_TAKEN,
+				settings.getString( HttpSettings.INCLUDE_RESPONSE_IN_TIME_TAKEN, null ) );
 		httpValues.put( SOCKET_TIMEOUT, settings.getString( HttpSettings.SOCKET_TIMEOUT, null ) );
 		httpValues.put( ENCODED_URLS, settings.getString( HttpSettings.ENCODED_URLS, null ) );
 		httpValues.put( MAX_RESPONSE_SIZE, settings.getString( HttpSettings.MAX_RESPONSE_SIZE, "0" ) );
 		httpValues.put( MAX_CONNECTIONS_PER_HOST, settings.getString( HttpSettings.MAX_CONNECTIONS_PER_HOST, "500" ) );
 		httpValues.put( MAX_TOTAL_CONNECTIONS, settings.getString( HttpSettings.MAX_TOTAL_CONNECTIONS, "2000" ) );
 		httpValues.put( BIND_ADDRESS, settings.getString( HttpSettings.BIND_ADDRESS, "" ) );
+		httpValues.put( FORWARD_SLASHES, settings.getString( HttpSettings.FORWARD_SLASHES, "" ) );
 		httpValues.put( LEAVE_MOCKENGINE, settings.getString( HttpSettings.LEAVE_MOCKENGINE, null ) );
 		httpValues.put( ENABLE_MOCK_WIRE_LOG, settings.getString( HttpSettings.ENABLE_MOCK_WIRE_LOG, null ) );
 		return httpValues;

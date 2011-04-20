@@ -20,8 +20,8 @@ import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.AField.AFieldType;
+import com.eviware.x.form.support.AForm;
 
 /**
  * Displays the options for the specified WsdlMockService
@@ -54,8 +54,8 @@ public class MockServiceOptionsAction extends AbstractSoapUIAction<WsdlMockServi
 		dialog.setIntValue( OptionsForm.PORT, mockService.getPort() );
 		dialog.setBooleanValue( OptionsForm.HOSTONLY, mockService.getBindToHostOnly() );
 		dialog.setValue( OptionsForm.DOCROOT, mockService.getDocroot() );
-		dialog.setOptions( OptionsForm.FAULT_OPERATION, ModelSupport.getNames( new String[] { "- none -" }, mockService
-				.getMockOperationList() ) );
+		dialog.setOptions( OptionsForm.FAULT_OPERATION,
+				ModelSupport.getNames( new String[] { "- none -" }, mockService.getMockOperationList() ) );
 		dialog.setValue( OptionsForm.FAULT_OPERATION, String.valueOf( mockService.getFaultMockOperation() ) );
 
 		if( dialog.show() )

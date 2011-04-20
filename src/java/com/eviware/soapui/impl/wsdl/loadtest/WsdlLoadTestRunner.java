@@ -684,12 +684,12 @@ public class WsdlLoadTestRunner implements LoadTestRunner
 		tc.afterLoad();
 		tc.addTestRunListener( testRunListener );
 		Settings settings = tc.getSettings();
-		settings.setBoolean( HttpSettings.INCLUDE_REQUEST_IN_TIME_TAKEN, loadTest.getSettings().getBoolean(
-				HttpSettings.INCLUDE_REQUEST_IN_TIME_TAKEN ) );
-		settings.setBoolean( HttpSettings.INCLUDE_RESPONSE_IN_TIME_TAKEN, loadTest.getSettings().getBoolean(
-				HttpSettings.INCLUDE_RESPONSE_IN_TIME_TAKEN ) );
-		settings.setBoolean( HttpSettings.CLOSE_CONNECTIONS, loadTest.getSettings().getBoolean(
-				HttpSettings.CLOSE_CONNECTIONS ) );
+		settings.setBoolean( HttpSettings.INCLUDE_REQUEST_IN_TIME_TAKEN,
+				loadTest.getSettings().getBoolean( HttpSettings.INCLUDE_REQUEST_IN_TIME_TAKEN ) );
+		settings.setBoolean( HttpSettings.INCLUDE_RESPONSE_IN_TIME_TAKEN,
+				loadTest.getSettings().getBoolean( HttpSettings.INCLUDE_RESPONSE_IN_TIME_TAKEN ) );
+		settings.setBoolean( HttpSettings.CLOSE_CONNECTIONS,
+				loadTest.getSettings().getBoolean( HttpSettings.CLOSE_CONNECTIONS ) );
 
 		// disable default pretty-printing since it takes time
 		settings.setBoolean( WsdlSettings.PRETTY_PRINT_RESPONSE_MESSAGES, false );
@@ -756,6 +756,11 @@ public class WsdlLoadTestRunner implements LoadTestRunner
 				listener.afterTestCase( WsdlLoadTestRunner.this, context, testRunner, runContext );
 			}
 		}
+	}
+
+	public boolean isRunning()
+	{
+		return status == Status.RUNNING;
 	}
 
 	public TestRunContext getRunContext()

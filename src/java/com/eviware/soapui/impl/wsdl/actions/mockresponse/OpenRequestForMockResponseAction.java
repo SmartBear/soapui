@@ -53,8 +53,8 @@ public class OpenRequestForMockResponseAction extends AbstractSoapUIAction<WsdlM
 			WsdlRequest request = operation.getRequestByName( name );
 			if( request == null )
 			{
-				name = UISupport.prompt( "Specify name of new request", "Open Request", "Request "
-						+ ( operation.getRequestCount() + 1 ) );
+				name = UISupport.prompt( "Specify name of new request", "Open Request",
+						"Request " + ( operation.getRequestCount() + 1 ) );
 				if( name == null )
 					return;
 

@@ -23,16 +23,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.namespace.QName;
+
 import net.java.dev.wadl.x2009.x02.ApplicationDocument;
-import net.java.dev.wadl.x2009.x02.ParamStyle;
-import net.java.dev.wadl.x2009.x02.RepresentationDocument;
-import net.java.dev.wadl.x2009.x02.ResourceTypeDocument;
 import net.java.dev.wadl.x2009.x02.ApplicationDocument.Application;
 import net.java.dev.wadl.x2009.x02.DocDocument.Doc;
 import net.java.dev.wadl.x2009.x02.MethodDocument.Method;
 import net.java.dev.wadl.x2009.x02.ParamDocument.Param;
+import net.java.dev.wadl.x2009.x02.ParamStyle;
+import net.java.dev.wadl.x2009.x02.RepresentationDocument;
 import net.java.dev.wadl.x2009.x02.RepresentationDocument.Representation;
 import net.java.dev.wadl.x2009.x02.ResourceDocument.Resource;
+import net.java.dev.wadl.x2009.x02.ResourceTypeDocument;
 import net.java.dev.wadl.x2009.x02.ResourcesDocument.Resources;
 import net.java.dev.wadl.x2009.x02.ResponseDocument.Response;
 
@@ -51,6 +53,7 @@ import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder.ParameterStyle;
+import com.eviware.soapui.impl.support.definition.support.InvalidDefinitionException;
 import com.eviware.soapui.impl.wsdl.support.Constants;
 import com.eviware.soapui.impl.wsdl.support.UrlSchemaLoader;
 import com.eviware.soapui.impl.wsdl.support.xsd.SchemaUtils;
@@ -173,6 +176,10 @@ public class WadlImporter
 				}
 			}
 		}
+		catch( InvalidDefinitionException ex )
+		{
+			ex.show();
+		}
 		catch( Exception e )
 		{
 			UISupport.showErrorMessage( e );
@@ -186,7 +193,20 @@ public class WadlImporter
 			String name = getFirstTitle( res.getDocList(), res.getPath() );
 			String path = res.getPath();
 
-			RestResource newRes = newResource.addNewChildResource( name, path );
+			RestResource newRes = null;
+
+			for( RestResource child : newResource.getChildResourceList() )
+			{
+				if( child.getPath().equals( path ) )
+				{
+					newRes = child;
+					break;
+				}
+			}
+
+			if( newRes == null )
+				newRes = newResource.addNewChildResource( name, path );
+
 			initResourceFromWadlResource( newRes, res );
 
 			addSubResources( newRes, res );
@@ -209,11 +229,15 @@ public class WadlImporter
 	{
 		for( Param param : resource.getParamList() )
 		{
+			param = resolveParameter( param );
+			if( param != null )
+			{
 			String nm = param.getName();
 			RestParamProperty prop = newResource.hasProperty( nm ) ? newResource.getProperty( nm ) : newResource
 					.addProperty( nm );
 
 			initParam( param, prop );
+		}
 		}
 
 		for( Method method : resource.getMethodList() )
@@ -237,9 +261,12 @@ public class WadlImporter
 
 						for( Param param : type.getParamList() )
 						{
+							param = resolveParameter( param );
+							if( param != null )
+							{
 							String nm = param.getName();
-							RestParamProperty prop = restMethod.hasProperty( nm ) ? restMethod.getProperty( nm ) : restMethod
-									.addProperty( nm );
+								RestParamProperty prop = restMethod.hasProperty( nm ) ? restMethod.getProperty( nm )
+										: restMethod.addProperty( nm );
 
 							initParam( param, prop );
 						}
@@ -247,6 +274,7 @@ public class WadlImporter
 				}
 			}
 		}
+	}
 	}
 
 	private RestMethod initMethod( RestResource newResource, Method method )
@@ -277,8 +305,12 @@ public class WadlImporter
 		{
 			for( Param param : method.getRequest().getParamList() )
 			{
+				param = resolveParameter( param );
+				if( param != null )
+				{
 				RestParamProperty p = restMethod.addProperty( param.getName() );
 				initParam( param, p );
+			}
 			}
 
 			for( Representation representation : method.getRequest().getRepresentationList() )
@@ -311,8 +343,8 @@ public class WadlImporter
 							cursor.dispose();
 							XmlOptions options = new XmlOptions();
 							options.setLoadAdditionalNamespaces( map );
-							XmlObject obj = XmlObject.Factory.parse( content.replaceFirst( "<(([a-z]+:)?)fault ",
-									"<$1representation " ), options );
+							XmlObject obj = XmlObject.Factory.parse(
+									content.replaceFirst( "<(([a-z]+:)?)fault ", "<$1representation " ), options );
 							RepresentationDocument representation = ( RepresentationDocument )obj
 									.changeType( RepresentationDocument.type );
 							addRepresentation( response, restMethod, representation.getRepresentation() );
@@ -386,7 +418,8 @@ public class WadlImporter
 
 		prop.setStyle( ParameterStyle.valueOf( paramStyle.toString().toUpperCase() ) );
 		prop.setRequired( param.getRequired() );
-		prop.setType( param.getType() );
+		QName paramType = param.getType();
+		prop.setType( paramType );
 
 		String[] options = new String[param.sizeOfOptionArray()];
 		for( int c = 0; c < options.length; c++ )
@@ -440,11 +473,18 @@ public class WadlImporter
 
 		try
 		{
+			Application app = application;
+
+			if( !href.startsWith( "#" ) )
+			{
 			ApplicationDocument applicationDocument = loadReferencedWadl( href );
-			if( applicationDocument != null )
+				app = applicationDocument.getApplication();
+			}
+
+			if( app != null )
 			{
 				int ix = href.lastIndexOf( '#' );
-				if( ix > 0 )
+				if( ix >= 0 )
 					href = href.substring( ix + 1 );
 
 				for( Representation m : application.getRepresentationList() )
@@ -460,6 +500,43 @@ public class WadlImporter
 		}
 
 		return representation;
+	}
+
+	private Param resolveParameter( Param param )
+	{
+		String href = param.getHref();
+		if( !StringUtils.hasContent( href ) )
+			return param;
+
+		try
+		{
+			Application app = application;
+
+			if( !href.startsWith( "#" ) )
+			{
+				ApplicationDocument applicationDocument = loadReferencedWadl( href );
+				app = applicationDocument.getApplication();
+			}
+
+			if( app != null )
+			{
+				int ix = href.lastIndexOf( '#' );
+				if( ix >= 0 )
+					href = href.substring( ix + 1 );
+
+				for( Param p : application.getParamList() )
+				{
+					if( p.getId().equals( href ) )
+						return p;
+				}
+			}
+		}
+		catch( Exception e )
+		{
+			e.printStackTrace();
+		}
+
+		return null;
 	}
 
 	/*

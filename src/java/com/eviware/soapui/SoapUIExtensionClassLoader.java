@@ -120,9 +120,10 @@ public class SoapUIExtensionClassLoader extends URLClassLoader
 
 		return new SoapUIExtensionClassLoader( urls.toArray( new URL[urls.size()] ), parent );
 	}
-	
+
 	/**
 	 * method used for hermes classloading
+	 * 
 	 * @param u
 	 * @param classLoader
 	 * @throws IOException
@@ -141,8 +142,8 @@ public class SoapUIExtensionClassLoader extends URLClassLoader
 		{
 			try
 			{
-				Method method = classLoader.getClass().getSuperclass().getDeclaredMethod( "addURL",
-						new Class[] { java.net.URL.class } );
+				Method method = classLoader.getClass().getSuperclass()
+						.getDeclaredMethod( "addURL", new Class[] { java.net.URL.class } );
 				method.setAccessible( true );
 				method.invoke( classLoader, new Object[] { u } );
 
@@ -152,8 +153,8 @@ public class SoapUIExtensionClassLoader extends URLClassLoader
 			{
 				try
 				{
-					Method method = classLoader.getClass().getSuperclass().getSuperclass().getDeclaredMethod( "addURL",
-							new Class[] { java.net.URL.class } );
+					Method method = classLoader.getClass().getSuperclass().getSuperclass()
+							.getDeclaredMethod( "addURL", new Class[] { java.net.URL.class } );
 					method.setAccessible( true );
 					method.invoke( classLoader, new Object[] { u } );
 

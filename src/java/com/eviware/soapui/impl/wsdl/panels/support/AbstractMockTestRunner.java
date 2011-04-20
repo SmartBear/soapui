@@ -40,7 +40,12 @@ public abstract class AbstractMockTestRunner<T extends TestRunnable> implements 
 		this.logger = logger == null ? SoapUI.ensureGroovyLog() : logger;
 		startTime = System.currentTimeMillis();
 	}
-	
+
+	public boolean isRunning()
+	{
+		return false;
+	}
+
 	public void setRunContext( TestRunContext context )
 	{
 		this.context = context;
@@ -71,7 +76,7 @@ public abstract class AbstractMockTestRunner<T extends TestRunnable> implements 
 		logger.info( "Started with async [" + async + "]" );
 		startTime = System.currentTimeMillis();
 	}
-	
+
 	public long getTimeTaken()
 	{
 		return System.currentTimeMillis() - startTime;

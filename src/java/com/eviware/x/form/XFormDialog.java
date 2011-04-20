@@ -60,8 +60,8 @@ public interface XFormDialog
 	public void release();
 
 	public void addAction( Action action );
-	
-	public XForm [] getForms();
+
+	public XForm[] getForms();
 
 	public void setSize( int i, int j );
 }

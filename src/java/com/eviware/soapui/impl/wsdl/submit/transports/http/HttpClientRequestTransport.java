@@ -115,7 +115,7 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 			}
 			catch( Exception e )
 			{
-				SoapUI.logError( e );
+				SoapUI.logError( e, "Failed to set localAddress to [" + localAddress + "]" );
 			}
 		}
 

@@ -138,6 +138,9 @@ public abstract class AbstractDefinitionContext<T extends AbstractInterface<?>, 
 		// wait for the other thread to finish.
 		if( loader.hasError() )
 		{
+			if( loader.getError() instanceof InvalidDefinitionException )
+				throw ( InvalidDefinitionException )loader.getError();
+
 			if( loader.getError() instanceof SchemaException )
 			{
 				schemaException = ( SchemaException )loader.getError();
@@ -152,6 +155,8 @@ public abstract class AbstractDefinitionContext<T extends AbstractInterface<?>, 
 						log.error( errorList.get( c ).toString() );
 					}
 				}
+
+				throw new InvalidDefinitionException( schemaException );
 			}
 			else
 				throw new Exception( loader.getError() );
@@ -167,8 +172,8 @@ public abstract class AbstractDefinitionContext<T extends AbstractInterface<?>, 
 	public SchemaTypeLoader getSchemaTypeLoader() throws Exception
 	{
 		loadIfNecessary();
-		return iface != null && definitionCache.containsKey( url ) ? definitionCache.get( url ).getSchemaTypeLoader() : 
-			definition != null ? definition.getSchemaTypeLoader() : null;
+		return iface != null && definitionCache.containsKey( url ) ? definitionCache.get( url ).getSchemaTypeLoader()
+				: definition != null ? definition.getSchemaTypeLoader() : null;
 	}
 
 	public SchemaException getSchemaException()
@@ -232,7 +237,6 @@ public abstract class AbstractDefinitionContext<T extends AbstractInterface<?>, 
 			}
 			catch( Throwable e )
 			{
-				log.error( "Loading of definition failed for [" + url + "]; " + e );
 				SoapUI.logError( e );
 				this.error = e;
 				return e;

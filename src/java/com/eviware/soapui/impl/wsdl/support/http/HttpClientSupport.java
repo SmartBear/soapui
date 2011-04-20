@@ -224,15 +224,20 @@ public class HttpClientSupport
 		Header contentType = method.getResponseHeader( "Content-Type" );
 		Header contentEncoding = method.getResponseHeader( "Content-Encoding" );
 
-		String compressionAlg = contentType == null ? null : CompressionSupport.getAvailableAlgorithm( contentType
-				.getValue() );
+		return getCompressionType( contentType == null ? null : contentType.getValue(), contentEncoding == null ? null
+				: contentEncoding.getValue() );
+	}
+
+	public static String getCompressionType( String contentType, String contentEncoding )
+	{
+		String compressionAlg = contentType == null ? null : CompressionSupport.getAvailableAlgorithm( contentType );
 		if( compressionAlg != null )
 			return compressionAlg;
 
 		if( contentEncoding == null )
 			return null;
 		else
-			return CompressionSupport.getAvailableAlgorithm( contentEncoding.getValue() );
+			return CompressionSupport.getAvailableAlgorithm( contentEncoding );
 	}
 
 	public static void addSSLListener( Settings settings )

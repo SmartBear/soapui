@@ -37,7 +37,7 @@ public class JMSEndpoint
 	{
 		this.request = request;
 		this.submitContext = submitContext;
-		parameters = extractEndpointParameters( request );
+		parameters = extractEndpointParameters( request, submitContext );
 		sessionName = getEndpointParameter( 0 );
 		send = getEndpointParameter( 1 );
 		receive = getEndpointParameter( 2 );
@@ -49,22 +49,21 @@ public class JMSEndpoint
 		this.send = send;
 		this.receive = receive;
 	}
-	
+
 	public JMSEndpoint( String jmsEndpointString )
 	{
-		parameters = jmsEndpointString.replaceFirst( JMS_ENDPIONT_PREFIX, "" )
-		.split( JMS_ENDPOINT_SEPARATOR );
+		parameters = jmsEndpointString.replaceFirst( JMS_ENDPIONT_PREFIX, "" ).split( JMS_ENDPOINT_SEPARATOR );
 		sessionName = getEndpointParameter( 0 );
 		send = getEndpointParameter( 1 );
 		receive = getEndpointParameter( 2 );
 	}
 
-	public static String[] extractEndpointParameters( Request request )
+	public static String[] extractEndpointParameters( Request request, SubmitContext context )
 	{
 		resolveOldEndpointPattern( request );
 
-		String[] parameters = request.getEndpoint().replaceFirst( JMS_ENDPIONT_PREFIX, "" )
-				.split( JMS_ENDPOINT_SEPARATOR );
+		String endpoint = PropertyExpander.expandProperties( context, request.getEndpoint() );
+		String[] parameters = endpoint.replaceFirst( JMS_ENDPIONT_PREFIX, "" ).split( JMS_ENDPOINT_SEPARATOR );
 		return parameters;
 	}
 
@@ -73,10 +72,10 @@ public class JMSEndpoint
 		String oldEndpoint = request.getEndpoint();
 		if( oldEndpoint.contains( "/queue_" ) || oldEndpoint.contains( "/topic_" ) )
 		{
-			String newEndpoint = request.getEndpoint().replaceAll( JMS_OLD_ENDPOINT_SEPARATOR + "queue_",
-					JMS_ENDPOINT_SEPARATOR + "queue_" ).replaceAll( JMS_OLD_ENDPOINT_SEPARATOR + "topic_",
-					JMS_ENDPOINT_SEPARATOR + "topic_" ).replaceAll( JMS_OLD_ENDPOINT_SEPARATOR + "-",
-							JMS_ENDPOINT_SEPARATOR + "-" );
+			String newEndpoint = request.getEndpoint()
+					.replaceAll( JMS_OLD_ENDPOINT_SEPARATOR + "queue_", JMS_ENDPOINT_SEPARATOR + "queue_" )
+					.replaceAll( JMS_OLD_ENDPOINT_SEPARATOR + "topic_", JMS_ENDPOINT_SEPARATOR + "topic_" )
+					.replaceAll( JMS_OLD_ENDPOINT_SEPARATOR + "-", JMS_ENDPOINT_SEPARATOR + "-" );
 
 			request.setEndpoint( newEndpoint );
 
@@ -102,8 +101,8 @@ public class JMSEndpoint
 	{
 		if( i > parameters.length - 1 )
 			return null;
-		String stripParameter = PropertyExpander.expandProperties( submitContext, parameters[i] ).replaceFirst(
-				QUEUE_ENDPOINT_PREFIX, "" ).replaceFirst( TOPIC_ENDPOINT_PREFIX, "" );
+		String stripParameter = PropertyExpander.expandProperties( submitContext, parameters[i] )
+				.replaceFirst( QUEUE_ENDPOINT_PREFIX, "" ).replaceFirst( TOPIC_ENDPOINT_PREFIX, "" );
 		return stripParameter;
 	}
 

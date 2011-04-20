@@ -131,8 +131,8 @@ public class JTableTestPropertyDropTarget implements DropTargetListener
 					Object modelItem = transferable.getTransferData( flavor );
 					if( modelItem instanceof PropertyModelItem )
 					{
-						return PropertyExpansionUtils.canExpandProperty( this.modelItem, ( ( PropertyModelItem )modelItem )
-								.getProperty() );
+						return PropertyExpansionUtils.canExpandProperty( this.modelItem,
+								( ( PropertyModelItem )modelItem ).getProperty() );
 					}
 				}
 				catch( Exception ex )

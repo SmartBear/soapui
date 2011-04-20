@@ -297,7 +297,7 @@ public class DefaultInputHandler extends InputHandler
 					modifiers |= InputEvent.ALT_MASK;
 					break;
 				case 'C' :
-				   modifiers |= getMenuShortcutKeyMask();
+					modifiers |= getMenuShortcutKeyMask();
 					break;
 				case 'M' :
 					modifiers |= InputEvent.META_MASK;

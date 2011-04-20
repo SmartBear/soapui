@@ -75,8 +75,8 @@ import com.eviware.soapui.impl.wsdl.support.wss.OutgoingWss;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.TestPropertyHolder;
 import com.eviware.soapui.model.iface.Attachment;
-import com.eviware.soapui.model.iface.MessagePart;
 import com.eviware.soapui.model.iface.Attachment.AttachmentEncoding;
+import com.eviware.soapui.model.iface.MessagePart;
 import com.eviware.soapui.model.mock.MockResponse;
 import com.eviware.soapui.model.mock.MockRunContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
@@ -338,6 +338,8 @@ public class WsdlMockResponse extends AbstractWsdlModelItem<MockResponseConfig> 
 		WsdlMockRunner mockRunner = mockService.getMockRunner();
 		MockRunContext context = mockRunner == null ? new WsdlMockRunContext( mockService, null ) : mockRunner
 				.getMockContext();
+
+		context.setMockResponse( this );
 
 		SoapUIScriptEngine scriptEngine = scriptEnginePool.getScriptEngine();
 

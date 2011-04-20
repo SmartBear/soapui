@@ -14,15 +14,12 @@ package com.eviware.soapui.impl.wsdl.teststeps.registry;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-import com.eviware.soapui.config.RestParameterConfig;
-import com.eviware.soapui.config.RestParametersConfig;
 import com.eviware.soapui.config.RestRequestConfig;
 import com.eviware.soapui.config.RestRequestStepConfig;
 import com.eviware.soapui.config.StringToStringMapConfig;
-import com.eviware.soapui.config.TestStepConfig;
 import com.eviware.soapui.config.StringToStringMapConfig.Entry;
+import com.eviware.soapui.config.TestStepConfig;
 import com.eviware.soapui.impl.rest.RestMethod;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.RestResource;
@@ -36,7 +33,6 @@ import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.types.TupleList;
 
 /**
@@ -93,7 +89,7 @@ public class RestRequestStepFactory extends WsdlTestStepFactory
 		return testStep;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings( "unchecked" )
 	public TestStepConfig createNewTestStep( WsdlTestCase testCase, String name )
 	{
 		// build list of available interfaces / restResources
@@ -151,8 +147,8 @@ public class RestRequestStepFactory extends WsdlTestStepFactory
 				// if( dialog.getReturnValue() != XFormDialog.OK_OPTION )
 				// return null;
 
-				return tuple.getValue2() == null ? createNewTestStep( tuple.getValue1(), name ) : createConfig( tuple
-						.getValue2(), name );
+				return tuple.getValue2() == null ? createNewTestStep( tuple.getValue1(), name ) : createConfig(
+						tuple.getValue2(), name );
 			}
 		}
 
@@ -211,8 +207,8 @@ public class RestRequestStepFactory extends WsdlTestStepFactory
 		testRequestConfig.setName( stepName );
 		testRequestConfig.setEncoding( "UTF-8" );
 		testRequestConfig.setEndpoint( me.getEndpoint() );
-//		testRequestConfig.setParameters( 
-	// set parameters
+		// testRequestConfig.setParameters(
+		// set parameters
 
 		String requestContent = me.getRequestContent();
 		testRequestConfig.addNewRequest().setStringValue( requestContent );
@@ -237,4 +233,22 @@ public class RestRequestStepFactory extends WsdlTestStepFactory
 	// "Specify options for adding a new REST Request to a TestCase",
 	// UISupport.OPTIONS_ICON );
 	// }
+
+	@Override
+	public boolean canAddTestStepToTestCase( WsdlTestCase testCase )
+	{
+		for( Interface iface : testCase.getTestSuite().getProject().getInterfaceList() )
+		{
+			if( iface instanceof RestService )
+			{
+				for( RestResource resource : ( ( RestService )iface ).getAllResources() )
+					if( resource.getRestMethodCount() > 0 )
+						return true;
+			}
+		}
+
+		UISupport.showErrorMessage( "Missing REST Methods in Project" );
+		return false;
+
+	}
 }

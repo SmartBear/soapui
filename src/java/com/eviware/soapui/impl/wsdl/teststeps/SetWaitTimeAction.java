@@ -30,8 +30,8 @@ public class SetWaitTimeAction extends AbstractSoapUIAction<WsdlDelayTestStep>
 
 	public void perform( WsdlDelayTestStep target, Object param )
 	{
-		String value = UISupport.prompt( "Specify delay in milliseconds", "Set Delay", String.valueOf( target
-				.getDelayString() ) );
+		String value = UISupport.prompt( "Specify delay in milliseconds", "Set Delay",
+				String.valueOf( target.getDelayString() ) );
 		if( value != null )
 		{
 			try

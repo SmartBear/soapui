@@ -117,9 +117,9 @@ public class StringToStringsMapTableModel extends AbstractTableModel implements 
 		return new StringToStringsMap( data );
 	}
 
-	public synchronized void setData( StringToStringsMap data )
+	public synchronized void setData( StringToStringsMap newData )
 	{
-		this.data = data == null ? new StringToStringsMap() : data;
+		data = newData == null ? new StringToStringsMap() : new StringToStringsMap( newData );
 
 		keyList.clear();
 		for( String key : data.keySet() )

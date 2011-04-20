@@ -57,7 +57,7 @@ public class MockTestRunner extends AbstractMockTestRunner<WsdlTestCase> impleme
 	{
 		return mockRunContext;
 	}
-	
+
 	public TestStepResult runTestStep( TestStep testStep )
 	{
 		return testStep.run( this, mockRunContext );

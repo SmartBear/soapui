@@ -27,10 +27,10 @@ import com.eviware.soapui.model.support.TestSuiteRunListenerAdapter;
 import com.eviware.soapui.model.testsuite.ProjectRunListener;
 import com.eviware.soapui.model.testsuite.ProjectRunner;
 import com.eviware.soapui.model.testsuite.TestSuite;
+import com.eviware.soapui.model.testsuite.TestSuite.TestSuiteRunType;
 import com.eviware.soapui.model.testsuite.TestSuiteRunContext;
 import com.eviware.soapui.model.testsuite.TestSuiteRunListener;
 import com.eviware.soapui.model.testsuite.TestSuiteRunner;
-import com.eviware.soapui.model.testsuite.TestSuite.TestSuiteRunType;
 import com.eviware.soapui.support.types.StringToObjectMap;
 
 public class WsdlProjectRunner extends AbstractTestRunner<WsdlProject, WsdlProjectRunContext> implements ProjectRunner
@@ -83,7 +83,7 @@ public class WsdlProjectRunner extends AbstractTestRunner<WsdlProject, WsdlProje
 		{
 			startTimeoutTimer( project.getTimeout() );
 		}
-		
+
 		notifyBeforeRun();
 		if( !isRunning() )
 			return;
@@ -160,6 +160,9 @@ public class WsdlProjectRunner extends AbstractTestRunner<WsdlProject, WsdlProje
 	private WsdlTestSuiteRunner runTestSuite( WsdlTestSuite testSuite, boolean async )
 	{
 		DefaultPropertyExpansionContext properties = ( DefaultPropertyExpansionContext )getRunContext().getProperties();
+		properties.put( "#ProjectRunner#", this );
+
+		// this is here for backwards compatibility, should be removed eventually
 		properties.put( "#TestSuiteRunner#", this );
 
 		WsdlTestSuiteRunner currentRunner = testSuite.run( properties, true );
@@ -182,7 +185,7 @@ public class WsdlProjectRunner extends AbstractTestRunner<WsdlProject, WsdlProje
 		{
 			SoapUI.logError( e );
 		}
-		
+
 		notifyAfterRun();
 
 		runContext.clear();
@@ -250,7 +253,7 @@ public class WsdlProjectRunner extends AbstractTestRunner<WsdlProject, WsdlProje
 		if( activeRunners.isEmpty() )
 		{
 			updateStatus();
-			
+
 			synchronized( activeRunners )
 			{
 				activeRunners.notify();

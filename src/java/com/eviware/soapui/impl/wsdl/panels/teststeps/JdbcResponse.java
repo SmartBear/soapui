@@ -29,8 +29,8 @@ public class JdbcResponse extends AbstractResponse<JdbcRequest>
 	private long timestamp;
 	private final String rawSql;
 
-	public JdbcResponse( JdbcRequest request, Statement statement, String rawSql ) throws SQLException, ParserConfigurationException,
-			TransformerConfigurationException, TransformerException
+	public JdbcResponse( JdbcRequest request, Statement statement, String rawSql ) throws SQLException,
+			ParserConfigurationException, TransformerConfigurationException, TransformerException
 	{
 		super( request );
 		this.rawSql = rawSql;

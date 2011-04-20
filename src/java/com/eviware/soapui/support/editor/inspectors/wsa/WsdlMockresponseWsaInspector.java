@@ -82,11 +82,10 @@ public class WsdlMockresponseWsaInspector extends AbstractWsaInspector implement
 			}
 		} );
 
-		form
-				.appendTextField(
-						"relatesTo",
-						"Relates to",
-						"The endpoint reference Mock Response relates to, will be set to 'unspecified' if left empty and ws-a settings 'use default...' checked  " );
+		form.appendTextField(
+				"relatesTo",
+				"Relates to",
+				"The endpoint reference Mock Response relates to, will be set to 'unspecified' if left empty and ws-a settings 'use default...' checked  " );
 		form.appendTextField( "relationshipType", "Relationship type",
 				"Relationship type, will be set to 'reply' if left empty and ws-a settings 'use default...' checked  " );
 		form.addSpace( 10 );

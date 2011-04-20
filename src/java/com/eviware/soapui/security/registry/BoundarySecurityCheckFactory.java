@@ -31,11 +31,10 @@ public class BoundarySecurityCheckFactory extends AbstractSecurityCheckFactory
 
 	public BoundarySecurityCheckFactory()
 	{
-		super( BoundarySecurityCheck.TYPE, BoundarySecurityCheck.NAME,
-				"Executes the specified baoundary security check", "/boundary_security_check.gif" );
+		super( BoundarySecurityCheck.TYPE, BoundarySecurityCheck.NAME, "Executes the specified baoundary security check",
+				"/boundary_security_check.gif" );
 	}
 
-	
 	@Override
 	public SecurityCheckConfig createNewSecurityCheck( String name )
 	{
@@ -54,7 +53,7 @@ public class BoundarySecurityCheckFactory extends AbstractSecurityCheckFactory
 	@Override
 	public AbstractSecurityCheck buildSecurityCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent )
 	{
-		return new BoundarySecurityCheck(testStep, config, parent, null);
+		return new BoundarySecurityCheck( testStep, config, parent, null );
 	}
 
 	@Override

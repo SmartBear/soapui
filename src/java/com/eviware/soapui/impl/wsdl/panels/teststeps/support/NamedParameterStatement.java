@@ -61,7 +61,7 @@ public class NamedParameterStatement
 	 *           map to hold parameter-index mappings
 	 * @return the parsed query
 	 */
-	 private static final String parse( String query, Map paramMap )
+	private static final String parse( String query, Map paramMap )
 	{
 		// I was originally using regular expressions, but they didn't work well
 		// for ignoring

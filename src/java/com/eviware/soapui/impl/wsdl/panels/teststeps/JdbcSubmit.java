@@ -215,8 +215,8 @@ public class JdbcSubmit implements Submit, Runnable
 	private void getDatabaseConnection() throws SQLException, SoapUIException
 	{
 		JdbcRequestTestStep testStep = request.getTestStep();
-		connection = JdbcUtils.initConnection( context, testStep.getDriver(), testStep.getConnectionString(), testStep
-				.getPassword() );
+		connection = JdbcUtils.initConnection( context, testStep.getDriver(), testStep.getConnectionString(),
+				testStep.getPassword() );
 		// IMPORTANT: setting as readOnly raises an exception in calling stored
 		// procedures!
 		// connection.setReadOnly( true );

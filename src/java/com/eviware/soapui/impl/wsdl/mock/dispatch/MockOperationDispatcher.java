@@ -25,8 +25,8 @@ public interface MockOperationDispatcher
 			throws DispatchException;
 
 	public JComponent getEditorComponent();
-	
-	public void releaseEditorComponent( );
+
+	public void releaseEditorComponent();
 
 	public void release();
 }

@@ -20,8 +20,8 @@ import org.apache.commons.httpclient.HttpMethod;
 
 public interface MonitorListener
 {
-	void onRequest(SoapMonitor soapMonitor, ServletRequest request, ServletResponse response );
-	
+	void onRequest( SoapMonitor soapMonitor, ServletRequest request, ServletResponse response );
+
 	void onMessageExchange( WsdlMonitorMessageExchange messageExchange );
 
 	void beforeProxy( SoapMonitor soapMonitor, ServletRequest request, ServletResponse response, HttpMethod method,

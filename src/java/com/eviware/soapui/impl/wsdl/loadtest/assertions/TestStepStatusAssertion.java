@@ -34,10 +34,10 @@ import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationBuilder;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
 import com.eviware.x.form.XForm;
+import com.eviware.x.form.XForm.FieldType;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.XFormDialogBuilder;
 import com.eviware.x.form.XFormFactory;
-import com.eviware.x.form.XForm.FieldType;
 
 /**
  * LoadTestAssertion for asserting the status of a teststep
@@ -163,8 +163,8 @@ public class TestStepStatusAssertion extends AbstractLoadTestAssertion implement
 		form.addTextField( MAX_ERRORS_FIELD, "Maximum number of errors before failing", FieldType.TEXT );
 		form.addComboBox( TEST_STEP_FIELD, new String[0], "TestStep to assert" );
 
-		dialog = builder.buildDialog( builder
-				.buildOkCancelHelpActions( HelpUrls.STEP_STATUS_LOAD_TEST_ASSERTION_HELP_URL ),
+		dialog = builder.buildDialog(
+				builder.buildOkCancelHelpActions( HelpUrls.STEP_STATUS_LOAD_TEST_ASSERTION_HELP_URL ),
 				"Specify options for this Step Status Assertion", UISupport.OPTIONS_ICON );
 	}
 

@@ -321,7 +321,7 @@ public class WsdlMockRunContext implements MockRunContext, Map<String, Object>, 
 
 	public ModelItem getModelItem()
 	{
-		return mockService;
+		return mockResponse == null ? mockService : mockResponse;
 	}
 
 	public synchronized String expand( String content )
@@ -352,5 +352,4 @@ public class WsdlMockRunContext implements MockRunContext, Map<String, Object>, 
 	{
 		return mockService.getMockRunner();
 	}
-
 }

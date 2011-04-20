@@ -45,6 +45,7 @@ abstract public class WsdlTestStepWithProperties extends WsdlTestStep
 		super( testCase, config, hasEditor, forLoadTest );
 	}
 
+	@Override
 	public String[] getPropertyNames()
 	{
 		if( properties == null )
@@ -58,11 +59,13 @@ abstract public class WsdlTestStepWithProperties extends WsdlTestStep
 		return result;
 	}
 
+	@Override
 	public TestProperty getProperty( String name )
 	{
 		return properties == null || name == null ? null : properties.get( getPropertyKeyName( name ) );
 	}
 
+	@Override
 	public String getPropertyValue( String name )
 	{
 		if( properties == null )
@@ -72,6 +75,7 @@ abstract public class WsdlTestStepWithProperties extends WsdlTestStep
 		return testStepProperty == null ? null : testStepProperty.getValue();
 	}
 
+	@Override
 	public void setPropertyValue( String name, String value )
 	{
 		if( properties == null )
@@ -93,13 +97,13 @@ abstract public class WsdlTestStepWithProperties extends WsdlTestStep
 	{
 		if( properties == null )
 			properties = new HashMap<String, TestProperty>();
-		
+
 		String name = property.getName();
 		String upper = name.toUpperCase();
-		
+
 		if( !normalizedPropertyNames.containsKey( upper ) )
 			normalizedPropertyNames.put( upper, new HashSet<String>() );
-		
+
 		normalizedPropertyNames.get( upper ).add( name );
 
 		properties.put( name, property );
@@ -110,14 +114,14 @@ abstract public class WsdlTestStepWithProperties extends WsdlTestStep
 			firePropertyAdded( name );
 		}
 	}
-	
-	private String getPropertyKeyName(String name)
+
+	private String getPropertyKeyName( String name )
 	{
-		if(properties.containsKey( name ))
+		if( properties.containsKey( name ) )
 			return name;
-		
+
 		Set<String> props = normalizedPropertyNames.get( name.toUpperCase() );
-		if(props != null && !props.isEmpty())
+		if( props != null && !props.isEmpty() )
 		{
 			return props.iterator().next();
 		}
@@ -128,9 +132,9 @@ abstract public class WsdlTestStepWithProperties extends WsdlTestStep
 	{
 		if( properties != null )
 		{
-			name = getPropertyKeyName(name);
+			name = getPropertyKeyName( name );
 			TestProperty result = properties.remove( name );
-			
+
 			if( result != null )
 			{
 				normalizedPropertyNames.get( name.toUpperCase() ).remove( name );
@@ -150,7 +154,7 @@ abstract public class WsdlTestStepWithProperties extends WsdlTestStep
 	{
 		if( properties == null )
 			return;
-		
+
 		oldName = getPropertyKeyName( oldName );
 		String upper = oldName.toUpperCase();
 
@@ -159,11 +163,11 @@ abstract public class WsdlTestStepWithProperties extends WsdlTestStep
 			return;
 
 		Set<String> props = normalizedPropertyNames.get( upper );
-		properties.remove( oldName );		
+		properties.remove( oldName );
 		props.remove( oldName );
 		String newName = testStepProperty.getName();
 		properties.put( newName, testStepProperty );
-		
+
 		upper = newName.toUpperCase();
 		if( !normalizedPropertyNames.containsKey( upper ) )
 			normalizedPropertyNames.put( upper, new HashSet<String>() );
@@ -172,11 +176,13 @@ abstract public class WsdlTestStepWithProperties extends WsdlTestStep
 		firePropertyRenamed( oldName, newName );
 	}
 
+	@Override
 	public void addTestPropertyListener( TestPropertyListener listener )
 	{
 		listeners.add( listener );
 	}
 
+	@Override
 	public void removeTestPropertyListener( TestPropertyListener listener )
 	{
 		listeners.remove( listener );
@@ -227,6 +233,7 @@ abstract public class WsdlTestStepWithProperties extends WsdlTestStep
 		}
 	}
 
+	@Override
 	public Map<String, TestProperty> getProperties()
 	{
 		Map<String, TestProperty> result = new HashMap<String, TestProperty>();
@@ -240,6 +247,7 @@ abstract public class WsdlTestStepWithProperties extends WsdlTestStep
 		return result;
 	}
 
+	@Override
 	public boolean hasProperty( String name )
 	{
 		return properties != null && properties.containsKey( getPropertyKeyName( name ) );
@@ -250,16 +258,19 @@ abstract public class WsdlTestStepWithProperties extends WsdlTestStep
 		return true;
 	}
 
+	@Override
 	public TestProperty getPropertyAt( int index )
 	{
 		return propertyList.get( index );
 	}
 
+	@Override
 	public int getPropertyCount()
 	{
 		return propertyList.size();
 	}
 
+	@Override
 	public List<TestProperty> getPropertyList()
 	{
 		return Collections.unmodifiableList( propertyList );

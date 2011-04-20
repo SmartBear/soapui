@@ -130,8 +130,8 @@ public class WsdlMockRunner extends AbstractMockRunner
 					if( key.toLowerCase().endsWith( ".wsdl" ) )
 					{
 						InputSource inputSource = new InputSource( new StringReader( parts.get( key ) ) );
-						String content = WsdlUtils.replacePortEndpoint( ( WsdlInterface )iface, inputSource, mockService
-								.getLocalMockServiceEndpoint() );
+						String content = WsdlUtils.replacePortEndpoint( ( WsdlInterface )iface, inputSource,
+								mockService.getLocalMockServiceEndpoint() );
 
 						if( content != null )
 							parts.put( key, content );
@@ -258,9 +258,10 @@ public class WsdlMockRunner extends AbstractMockRunner
 			{
 				try
 				{
-					operation = SoapUtils.findOperationForRequest( soapVersion, soapAction, mockRequest
-							.getRequestXmlObject(), mockService.getMockedOperations(), mockService.isRequireSoapVersion(),
-							mockService.isRequireSoapAction(), mockRequest.getRequestAttachments() );
+					operation = SoapUtils.findOperationForRequest( soapVersion, soapAction,
+							mockRequest.getRequestXmlObject(), mockService.getMockedOperations(),
+							mockService.isRequireSoapVersion(), mockService.isRequireSoapAction(),
+							mockRequest.getRequestAttachments() );
 				}
 				catch( Exception e )
 				{
@@ -268,9 +269,9 @@ public class WsdlMockRunner extends AbstractMockRunner
 					{
 						try
 						{
-							operation = SoapUtils.findOperationForResponse( soapVersion, soapAction, mockRequest
-									.getRequestXmlObject(), mockService.getMockedOperations(), mockService
-									.isRequireSoapVersion(), mockService.isRequireSoapAction() );
+							operation = SoapUtils.findOperationForResponse( soapVersion, soapAction,
+									mockRequest.getRequestXmlObject(), mockService.getMockedOperations(),
+									mockService.isRequireSoapVersion(), mockService.isRequireSoapAction() );
 
 							if( operation != null )
 							{
@@ -432,6 +433,9 @@ public class WsdlMockRunner extends AbstractMockRunner
 						try
 						{
 							String pathInfo = request.getPathInfo();
+							if( pathInfo == null )
+								pathInfo = "";
+
 							if( mockService.getPath().length() > 1 && pathInfo.startsWith( mockService.getPath() ) )
 								pathInfo = pathInfo.substring( mockService.getPath().length() );
 
@@ -514,7 +518,7 @@ public class WsdlMockRunner extends AbstractMockRunner
 					}
 
 					stop();
-					//					
+					//
 					// try
 					// {
 					// Thread.sleep( 500 );

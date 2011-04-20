@@ -35,8 +35,7 @@ public class HermesJmsRequestSubscribeTransport extends HermesJmsRequestTranspor
 			init( submitContext, request );
 			String clientIDString = StringUtils.hasContent( clientID ) ? clientID : jmsEndpoint.getSessionName() + "-"
 					+ jmsEndpoint.getReceive();
-			jmsConnectionHolder = new JMSConnectionHolder( jmsEndpoint, hermes,  true, clientIDString, username,
-					password );
+			jmsConnectionHolder = new JMSConnectionHolder( jmsEndpoint, hermes, true, clientIDString, username, password );
 
 			// session
 			topicSession = jmsConnectionHolder.getSession();
@@ -58,7 +57,8 @@ public class HermesJmsRequestSubscribeTransport extends HermesJmsRequestTranspor
 			if( topicDurableSubsriber != null )
 				topicDurableSubsriber.close();
 			jmsConnectionHolder.closeAll();
-			closeSessionAndConnection( jmsConnectionHolder != null ? jmsConnectionHolder.getConnection() : null,topicSession );
+			closeSessionAndConnection( jmsConnectionHolder != null ? jmsConnectionHolder.getConnection() : null,
+					topicSession );
 		}
 		return null;
 	}

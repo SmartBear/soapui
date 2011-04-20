@@ -25,7 +25,7 @@ public class BoundaryRestrictionUtill
 		return BoundaryUtils.createCharacterArray( "ABCDEFG ", 100 );
 	}
 
-	public static List<String> getRestrictions(  XmlTreeNode node,List<String> restrictionsList )
+	public static List<String> getRestrictions( XmlTreeNode node, List<String> restrictionsList )
 	{
 		String baseType = null;
 
@@ -38,7 +38,7 @@ public class BoundaryRestrictionUtill
 				if( mynode.getNodeName().equals( "@base" ) )
 				{
 					baseType = mynode.getNodeText();
-					restrictionsList.add( "type = "+ baseType );
+					restrictionsList.add( "type = " + baseType );
 				}
 				else
 				{
@@ -47,13 +47,12 @@ public class BoundaryRestrictionUtill
 					restrictionsList.add( nodeName + " = " + nodeValue );
 				}
 			}
-			getRestrictions( mynode ,restrictionsList);
+			getRestrictions( mynode, restrictionsList );
 		}
 		return restrictionsList;
 	}
 
-	
-	public static List<String> getType(  XmlTreeNode node,List<String> restrictionsList )
+	public static List<String> getType( XmlTreeNode node, List<String> restrictionsList )
 	{
 		String baseType = null;
 
@@ -61,32 +60,32 @@ public class BoundaryRestrictionUtill
 		{
 			XmlTreeNode mynode = node.getChild( i );
 
-				if( mynode.getNodeName().equals( "@base" ) )
+			if( mynode.getNodeName().equals( "@base" ) )
+			{
+				baseType = mynode.getNodeText();
+				if( baseType.contains( ":" ) )
 				{
-					baseType = mynode.getNodeText();
-					if(baseType.contains( ":" )){
-						baseType = baseType.substring( baseType.indexOf( ":" )+1 );
-					}
-					restrictionsList.add( "type = "+ baseType );
+					baseType = baseType.substring( baseType.indexOf( ":" ) + 1 );
 				}
-				getType( mynode ,restrictionsList);
+				restrictionsList.add( "type = " + baseType );
+			}
+			getType( mynode, restrictionsList );
 		}
 		return restrictionsList;
 	}
-	
-	
-	public static List<String> extractEnums( XmlTreeNode node)
+
+	public static List<String> extractEnums( XmlTreeNode node )
 	{
 		List<String> restrictionsList = new ArrayList<String>();
-			for( XmlAnySimpleType s : node.getSchemaType().getEnumerationValues() )
+		for( XmlAnySimpleType s : node.getSchemaType().getEnumerationValues() )
+		{
+			if( restrictionsList.isEmpty() )
 			{
-				if( restrictionsList.isEmpty() )
-				{
-					restrictionsList.add( "For type enumeration values are: " );
-				}
-				restrictionsList.add( s.getStringValue() );
+				restrictionsList.add( "For type enumeration values are: " );
 			}
-			return restrictionsList;
+			restrictionsList.add( s.getStringValue() );
+		}
+		return restrictionsList;
 	}
 
 }

@@ -10,13 +10,13 @@
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
 package com.eviware.soapui.security.boundary;
+
 /**
  * @author nebojsa.tasic
  */
 public class StringBoundary extends AbstractBoundary
 {
 	public static final String AVAILABLE_VALUES = " abcdefghijklmnopqrstuvwxyz\n\t\r";
-
 
 	@Override
 	public String outOfBoundary( int restrictionAttribute, String value )

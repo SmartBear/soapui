@@ -14,7 +14,6 @@ package com.eviware.soapui.security;
 
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.propertyexpansion.DefaultPropertyExpansionContext;
-import com.eviware.soapui.model.testsuite.TestCaseRunner;
 
 /**
  * SecurityTestContext implementation for SecurityTests not active - just left

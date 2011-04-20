@@ -32,7 +32,7 @@ public class ExecutionStrategyHolder
 	{
 		int oldValue = config.getDelay();
 		config.setDelay( delay );
-		
+
 		pcs.firePropertyChange( "delay", oldValue, delay );
 	}
 
@@ -40,29 +40,33 @@ public class ExecutionStrategyHolder
 	{
 		Enum oldValue = config.getStrategy();
 		config.setStrategy( strategy );
-		
+
 		pcs.firePropertyChange( "strategy", oldValue, strategy );
 	}
-	
-	public void addPropertyChangeListener(PropertyChangeListener listener) {
+
+	public void addPropertyChangeListener( PropertyChangeListener listener )
+	{
 		pcs.addPropertyChangeListener( listener );
 	}
-	
-	public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+
+	public void addPropertyChangeListener( String propertyName, PropertyChangeListener listener )
+	{
 		pcs.addPropertyChangeListener( propertyName, listener );
 	}
-	
-	public void removePropertyChangeListener(PropertyChangeListener listener) {
+
+	public void removePropertyChangeListener( PropertyChangeListener listener )
+	{
 		pcs.removePropertyChangeListener( listener );
 	}
-	
-	public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+
+	public void removePropertyChangeListener( String propertyName, PropertyChangeListener listener )
+	{
 		pcs.removePropertyChangeListener( propertyName, listener );
 	}
 
 	public void updateConfig( ExecutionStrategyConfig config )
 	{
-		this.config = config; 
+		this.config = config;
 	}
-	
+
 }

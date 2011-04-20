@@ -28,8 +28,8 @@ public class RestServiceFactory implements InterfaceFactory<RestService>
 
 	public RestService createNew( WsdlProject project, String name )
 	{
-		RestServiceConfig config = ( RestServiceConfig )project.getConfig().addNewInterface().changeType(
-				RestServiceConfig.type );
+		RestServiceConfig config = ( RestServiceConfig )project.getConfig().addNewInterface()
+				.changeType( RestServiceConfig.type );
 		RestService iface = new RestService( project, config );
 		iface.setName( name );
 

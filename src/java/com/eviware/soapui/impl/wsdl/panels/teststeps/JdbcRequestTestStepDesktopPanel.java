@@ -72,19 +72,19 @@ import com.eviware.soapui.impl.wsdl.teststeps.JdbcRequestTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStepWithProperties;
 import com.eviware.soapui.impl.wsdl.teststeps.actions.AddAssertionAction;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.iface.Request.SubmitException;
 import com.eviware.soapui.model.iface.Submit;
+import com.eviware.soapui.model.iface.Submit.Status;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.iface.SubmitListener;
-import com.eviware.soapui.model.iface.Request.SubmitException;
-import com.eviware.soapui.model.iface.Submit.Status;
 import com.eviware.soapui.model.propertyexpansion.DefaultPropertyExpansionContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 import com.eviware.soapui.model.testsuite.Assertable;
+import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
 import com.eviware.soapui.model.testsuite.AssertionsListener;
 import com.eviware.soapui.model.testsuite.LoadTestRunner;
 import com.eviware.soapui.model.testsuite.TestAssertion;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
-import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
 import com.eviware.soapui.monitor.support.TestMonitorListenerAdapter;
 import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.settings.UISettings;
@@ -724,8 +724,8 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 			{
 
 				PropertyExpansionContext context = new DefaultPropertyExpansionContext( getModelItem() );
-				JdbcUtils.initConnection( context, jdbcRequestTestStep.getDriver(), jdbcRequestTestStep
-						.getConnectionString(), jdbcRequestTestStep.getPassword() );
+				JdbcUtils.initConnection( context, jdbcRequestTestStep.getDriver(),
+						jdbcRequestTestStep.getConnectionString(), jdbcRequestTestStep.getPassword() );
 				UISupport.showInfoMessage( "The Connection Successfully Tested" );
 			}
 			catch( SoapUIException e )

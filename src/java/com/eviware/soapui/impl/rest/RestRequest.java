@@ -44,8 +44,8 @@ import com.eviware.soapui.impl.wsdl.support.jms.header.JMSHeaderConfig;
 import com.eviware.soapui.impl.wsdl.support.jms.property.JMSPropertiesConfig;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.MessagePart;
-import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.iface.MessagePart.ContentPart;
+import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
@@ -219,6 +219,7 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 		PropertyExpansionsResult result = new PropertyExpansionsResult( this, this );
 		result.addAll( super.getPropertyExpansions() );
 		result.addAll( getRestMethod().getPropertyExpansions() );
+		result.addAll( params.getPropertyExpansions() );
 		addJMSHeaderExpansions( result, getJMSHeaderConfig(), this );
 
 		return result.toArray();
@@ -238,8 +239,7 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 				.extractPropertyExpansions( modelItem, jmsHeaderConfig, JMSHeader.TIMETOLIVE ) );
 		result.addAll( PropertyExpansionUtils.extractPropertyExpansions( modelItem, jmsHeaderConfig,
 				JMSHeader.DURABLE_SUBSCRIPTION_NAME ) );
-		result
-				.addAll( PropertyExpansionUtils.extractPropertyExpansions( modelItem, jmsHeaderConfig, JMSHeader.CLIENT_ID ) );
+		result.addAll( PropertyExpansionUtils.extractPropertyExpansions( modelItem, jmsHeaderConfig, JMSHeader.CLIENT_ID ) );
 		result.addAll( PropertyExpansionUtils.extractPropertyExpansions( modelItem, jmsHeaderConfig,
 				JMSHeader.SEND_AS_BYTESMESSAGE ) );
 		result.addAll( PropertyExpansionUtils.extractPropertyExpansions( modelItem, jmsHeaderConfig,
@@ -422,7 +422,6 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 		return "Request Params";
 	}
 
-	@Override
 	public RestParamsPropertyHolder getParams()
 	{
 		return params;
@@ -660,4 +659,17 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 		return jmsPropertyConfig;
 	}
 
+	@Override
+	public String getMultiValueDelimiter()
+	{
+		return getConfig().getMultiValueDelimiter();
+	}
+
+	public void setMultiValueDelimiter( String delimiter )
+	{
+		String old = getMultiValueDelimiter();
+		getConfig().setMultiValueDelimiter( delimiter );
+
+		notifyPropertyChanged( "multiValueDelimiter", old, delimiter );
+	}
 }

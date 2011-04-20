@@ -95,13 +95,13 @@ public class MockAsWarServlet extends HttpServlet
 		if( StringUtils.hasContent( getInitParameter( "listeners" ) ) )
 		{
 			logger.info( "Init listeners" );
-			System
-					.setProperty( "soapui.ext.listeners", getServletContext().getRealPath( getInitParameter( "listeners" ) ) );
+			System.setProperty( "soapui.ext.listeners", getServletContext().getRealPath( getInitParameter( "listeners" ) ) );
 		}
 		else
 		{
 			logger.info( "Listeners not set!" );
 		}
+
 		if( StringUtils.hasContent( getInitParameter( "actions" ) ) )
 		{
 			logger.info( "Init actions" );
@@ -111,6 +111,7 @@ public class MockAsWarServlet extends HttpServlet
 		{
 			logger.info( "Actions not set!" );
 		}
+
 		if( StringUtils.hasContent( getInitParameter( "soapuiSettings" ) ) )
 		{
 			logger.info( "Init settings" );
@@ -223,11 +224,20 @@ public class MockAsWarServlet extends HttpServlet
 		public void dispatchRequest( HttpServletRequest request, HttpServletResponse response ) throws DispatchException,
 				IOException
 		{
+			String pathInfo = request.getPathInfo();
+			if( pathInfo == null )
+				pathInfo = "";
+
 			for( MockRunner mockRunner : getMockRunners() )
 			{
-				if( request.getPathInfo().equals( mockRunner.getMockService().getPath() ) )
+				if( pathInfo.equals( mockRunner.getMockService().getPath() ) )
 				{
 					MockResult result = mockRunner.dispatchRequest( request, response );
+
+					if( maxResults > 0 )
+					{
+						synchronized( results )
+						{
 					while( maxResults > 0 && results.size() > maxResults )
 					{
 						results.remove( 0 );
@@ -236,15 +246,17 @@ public class MockAsWarServlet extends HttpServlet
 					{
 						results.add( result );
 					}
+						}
+					}
 					return;
 				}
 			}
 
 			if( enableWebUI )
 			{
-				String pathInfo = request.getPathInfo();
-				File file = new File( servletContext.getRealPath( pathInfo ) );
-				if( file.exists() && file.isFile() )
+				String realPath = servletContext.getRealPath( pathInfo );
+				File file = realPath == null ? null : new File( realPath );
+				if( file != null && file.exists() && file.isFile() )
 				{
 					FileInputStream in = new FileInputStream( file );
 					response.setStatus( HttpServletResponse.SC_OK );
@@ -258,11 +270,11 @@ public class MockAsWarServlet extends HttpServlet
 				{
 					printMaster( request, response );
 				}
-				else if( request.getPathInfo().equals( "/detail" ) )
+				else if( pathInfo.equals( "/detail" ) )
 				{
 					printDetail( request, response );
 				}
-				else if( request.getPathInfo().equals( "/log" ) )
+				else if( pathInfo.equals( "/log" ) )
 				{
 					printLog( request, response );
 				}
@@ -360,8 +372,7 @@ public class MockAsWarServlet extends HttpServlet
 		}
 
 		out.print( "<table border=\"1\">" );
-		out
-				.print( "<tr><td></td><td>Timestamp</td><td>Time Taken</td><td>MockOperation</td><td>MockResponse</td><td>MockService</td></tr>" );
+		out.print( "<tr><td></td><td>Timestamp</td><td>Time Taken</td><td>MockOperation</td><td>MockResponse</td><td>MockService</td></tr>" );
 
 		int cnt = 1;
 
@@ -387,7 +398,7 @@ public class MockAsWarServlet extends HttpServlet
 	private void startHtmlPage( PrintWriter out, String title, String refresh )
 	{
 		out.print( "<html><head>" );
-		out.print( "<title>" + title + "</head>" );
+		out.print( "<title>" + title + "</title>" );
 		if( refresh != null )
 		{
 			out.print( "<meta http-equiv=\"refresh\" content=\"" + refresh + "\"/>" );
@@ -424,7 +435,7 @@ public class MockAsWarServlet extends HttpServlet
 		out.print( "<frame name=\"detail\" src=\"detail\"/>" );
 		out.print( "<frame src=\"log\"/>" );
 		out.print( "</frameset>" );
-		out.print( "</body></html>" );
+		out.print( "</html>" );
 		out.flush();
 	}
 

@@ -23,7 +23,7 @@ public class ImportMockService extends AbstractSoapUIAction<WsdlProject>
 
 	public ImportMockService()
 	{
-		super("Import Mock Service", "Import Mock Service");
+		super( "Import Mock Service", "Import Mock Service" );
 	}
 
 	public void perform( WsdlProject project, Object param )

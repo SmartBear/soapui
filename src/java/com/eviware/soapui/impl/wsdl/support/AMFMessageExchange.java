@@ -23,7 +23,7 @@ import com.eviware.soapui.impl.wsdl.teststeps.AMFRequestTestStep;
 public class AMFMessageExchange extends AbstractNonHttpMessageExchange<AMFRequestTestStep>
 {
 	private final AMFResponse response;
-	
+
 	public AMFMessageExchange( AMFRequestTestStep modelItem, AMFResponse response )
 	{
 		super( modelItem );
@@ -57,7 +57,7 @@ public class AMFMessageExchange extends AbstractNonHttpMessageExchange<AMFReques
 
 	public boolean hasResponse()
 	{
-		return getResponseContent()!= null ;
+		return getResponseContent() != null;
 	}
 
 	public boolean isDiscarded()

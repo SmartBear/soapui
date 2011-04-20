@@ -32,9 +32,9 @@ import com.eviware.x.form.XFormField;
 import com.eviware.x.form.XFormFieldListener;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
+import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.APage;
-import com.eviware.x.form.support.AField.AFieldType;
 
 public class SoapMonitorAction extends AbstractSoapUIAction<WsdlProject>
 {
@@ -78,31 +78,30 @@ public class SoapMonitorAction extends AbstractSoapUIAction<WsdlProject>
 		generalForm = builder.createForm( "General" );
 
 		dialog.setIntValue( LaunchForm.PORT, ( int )settings.getLong( LaunchForm.PORT, 8081 ) );
-		dialog.setOptions( LaunchForm.REQUEST_WSS, StringUtils.merge( project.getWssContainer().getIncomingWssNames(),
-				"<none>" ) );
-		dialog.setOptions( LaunchForm.RESPONSE_WSS, StringUtils.merge( project.getWssContainer().getIncomingWssNames(),
-				"<none>" ) );
-		dialog.setValue( LaunchForm.SETSSLMON, settings.getString( LaunchForm.SETSSLMON, "" ).length() > 0 ? settings
-				.getString( LaunchForm.SETSSLMON, "" ) : HTTPS_PROTOCOL );
+		dialog.setOptions( LaunchForm.REQUEST_WSS,
+				StringUtils.merge( project.getWssContainer().getIncomingWssNames(), "<none>" ) );
+		dialog.setOptions( LaunchForm.RESPONSE_WSS,
+				StringUtils.merge( project.getWssContainer().getIncomingWssNames(), "<none>" ) );
+		dialog.setValue( LaunchForm.SETSSLMON,
+				settings.getString( LaunchForm.SETSSLMON, "" ).length() > 0 ? settings.getString( LaunchForm.SETSSLMON, "" )
+						: HTTPS_PROTOCOL );
 		dialog.setOptions( LaunchForm.SSLORHTTP, new String[] { HTTP_TUNNEL, HTTP_PROXY } );
 
-		dialog
-				.setValue( SecurityTabForm.SSLTUNNEL_KEYSTORE, settings.getString( SecurityTabForm.SSLTUNNEL_KEYSTORE, "" ) );
-		dialog
-				.setValue( SecurityTabForm.SSLTUNNEL_PASSWORD, settings.getString( SecurityTabForm.SSLTUNNEL_PASSWORD, "" ) );
-		dialog.setValue( SecurityTabForm.SSLTUNNEL_KEYPASSWORD, settings.getString(
-				SecurityTabForm.SSLTUNNEL_KEYPASSWORD, "" ) );
-		dialog.setValue( SecurityTabForm.SSLTUNNEL_TRUSTSTORE, settings.getString( SecurityTabForm.SSLTUNNEL_TRUSTSTORE,
-				"" ) );
-		dialog.setValue( SecurityTabForm.SSLTUNNEL_TRUSTSTORE_PASSWORD, settings.getString(
-				SecurityTabForm.SSLTUNNEL_TRUSTSTORE_PASSWORD, "" ) );
+		dialog.setValue( SecurityTabForm.SSLTUNNEL_KEYSTORE, settings.getString( SecurityTabForm.SSLTUNNEL_KEYSTORE, "" ) );
+		dialog.setValue( SecurityTabForm.SSLTUNNEL_PASSWORD, settings.getString( SecurityTabForm.SSLTUNNEL_PASSWORD, "" ) );
+		dialog.setValue( SecurityTabForm.SSLTUNNEL_KEYPASSWORD,
+				settings.getString( SecurityTabForm.SSLTUNNEL_KEYPASSWORD, "" ) );
+		dialog.setValue( SecurityTabForm.SSLTUNNEL_TRUSTSTORE,
+				settings.getString( SecurityTabForm.SSLTUNNEL_TRUSTSTORE, "" ) );
+		dialog.setValue( SecurityTabForm.SSLTUNNEL_TRUSTSTORE_PASSWORD,
+				settings.getString( SecurityTabForm.SSLTUNNEL_TRUSTSTORE_PASSWORD, "" ) );
 		dialog.setBooleanValue( LaunchForm.SSLTUNNEL_REUSESTATE, settings.getBoolean( LaunchForm.SSLTUNNEL_REUSESTATE ) );
-		dialog.setValue( LaunchForm.SET_CONTENT_TYPES, settings.getString( LaunchForm.SET_CONTENT_TYPES,
-				defaultContentTypes() ) );
-		dialog.setValue( SecurityTabForm.SSLTUNNEL_KEYSTOREPATH, settings.getString(
-				SecurityTabForm.SSLTUNNEL_KEYSTOREPATH, "" ) );
-		dialog.setValue( SecurityTabForm.SSLTUNNEL_KEYSTOREPASSWORD, settings.getString(
-				SecurityTabForm.SSLTUNNEL_KEYSTOREPASSWORD, "" ) );
+		dialog.setValue( LaunchForm.SET_CONTENT_TYPES,
+				settings.getString( LaunchForm.SET_CONTENT_TYPES, defaultContentTypes() ) );
+		dialog.setValue( SecurityTabForm.SSLTUNNEL_KEYSTOREPATH,
+				settings.getString( SecurityTabForm.SSLTUNNEL_KEYSTOREPATH, "" ) );
+		dialog.setValue( SecurityTabForm.SSLTUNNEL_KEYSTOREPASSWORD,
+				settings.getString( SecurityTabForm.SSLTUNNEL_KEYSTOREPASSWORD, "" ) );
 
 		XFormField sslOrHttp = dialog.getFormField( LaunchForm.SSLORHTTP );
 		sslOrHttp.setValue( HTTP_PROXY );
@@ -128,19 +127,19 @@ public class SoapMonitorAction extends AbstractSoapUIAction<WsdlProject>
 
 				settings.setString( LaunchForm.SETSSLMON, dialog.getValue( LaunchForm.SETSSLMON ) );
 
-				settings.setString( SecurityTabForm.SSLTUNNEL_KEYSTORE, dialog
-						.getValue( SecurityTabForm.SSLTUNNEL_KEYSTORE ) );
-				settings.setString( SecurityTabForm.SSLTUNNEL_PASSWORD, dialog
-						.getValue( SecurityTabForm.SSLTUNNEL_PASSWORD ) );
-				settings.setString( SecurityTabForm.SSLTUNNEL_KEYPASSWORD, dialog
-						.getValue( SecurityTabForm.SSLTUNNEL_KEYPASSWORD ) );
-				settings.setString( SecurityTabForm.SSLTUNNEL_TRUSTSTORE, dialog
-						.getValue( SecurityTabForm.SSLTUNNEL_TRUSTSTORE ) );
-				settings.setString( SecurityTabForm.SSLTUNNEL_TRUSTSTORE_PASSWORD, dialog
-						.getValue( SecurityTabForm.SSLTUNNEL_TRUSTSTORE_PASSWORD ) );
+				settings.setString( SecurityTabForm.SSLTUNNEL_KEYSTORE,
+						dialog.getValue( SecurityTabForm.SSLTUNNEL_KEYSTORE ) );
+				settings.setString( SecurityTabForm.SSLTUNNEL_PASSWORD,
+						dialog.getValue( SecurityTabForm.SSLTUNNEL_PASSWORD ) );
+				settings.setString( SecurityTabForm.SSLTUNNEL_KEYPASSWORD,
+						dialog.getValue( SecurityTabForm.SSLTUNNEL_KEYPASSWORD ) );
+				settings.setString( SecurityTabForm.SSLTUNNEL_TRUSTSTORE,
+						dialog.getValue( SecurityTabForm.SSLTUNNEL_TRUSTSTORE ) );
+				settings.setString( SecurityTabForm.SSLTUNNEL_TRUSTSTORE_PASSWORD,
+						dialog.getValue( SecurityTabForm.SSLTUNNEL_TRUSTSTORE_PASSWORD ) );
 				settings.setString( LaunchForm.SSLTUNNEL_REUSESTATE, dialog.getValue( LaunchForm.SSLTUNNEL_REUSESTATE ) );
-				settings.setString( SecurityTabForm.SSLTUNNEL_KEYSTOREPATH, dialog
-						.getValue( SecurityTabForm.SSLTUNNEL_KEYSTOREPATH ) );
+				settings.setString( SecurityTabForm.SSLTUNNEL_KEYSTOREPATH,
+						dialog.getValue( SecurityTabForm.SSLTUNNEL_KEYSTOREPATH ) );
 				if( dialog.getValue( LaunchForm.SET_CONTENT_TYPES ) != null
 						&& dialog.getValue( LaunchForm.SET_CONTENT_TYPES ).trim().equals( "" ) )
 				{
@@ -151,8 +150,8 @@ public class SoapMonitorAction extends AbstractSoapUIAction<WsdlProject>
 					settings.setString( LaunchForm.SET_CONTENT_TYPES, dialog.getValue( LaunchForm.SET_CONTENT_TYPES ) );
 				}
 
-				settings.setString( SecurityTabForm.SSLTUNNEL_KEYSTOREPASSWORD, dialog
-						.getValue( SecurityTabForm.SSLTUNNEL_KEYSTOREPASSWORD ) );
+				settings.setString( SecurityTabForm.SSLTUNNEL_KEYSTOREPASSWORD,
+						dialog.getValue( SecurityTabForm.SSLTUNNEL_KEYSTOREPASSWORD ) );
 
 				// load all interfaces in project
 				for( Interface iface : project.getInterfaceList() )
@@ -162,14 +161,14 @@ public class SoapMonitorAction extends AbstractSoapUIAction<WsdlProject>
 
 				if( HTTP_PROXY.equals( dialog.getValue( LaunchForm.SSLORHTTP ) ) )
 				{
-					openSoapMonitor( project, listenPort, dialog.getValue( LaunchForm.REQUEST_WSS ), dialog
-							.getValue( LaunchForm.RESPONSE_WSS ), dialog.getBooleanValue( LaunchForm.SETASPROXY ), null );
+					openSoapMonitor( project, listenPort, dialog.getValue( LaunchForm.REQUEST_WSS ),
+							dialog.getValue( LaunchForm.RESPONSE_WSS ), dialog.getBooleanValue( LaunchForm.SETASPROXY ), null );
 				}
 				else
 				{
-					openSoapMonitor( project, listenPort, dialog.getValue( LaunchForm.REQUEST_WSS ), dialog
-							.getValue( LaunchForm.RESPONSE_WSS ), dialog.getBooleanValue( LaunchForm.SETASPROXY ), dialog
-							.getValue( LaunchForm.SETSSLMON ) );
+					openSoapMonitor( project, listenPort, dialog.getValue( LaunchForm.REQUEST_WSS ),
+							dialog.getValue( LaunchForm.RESPONSE_WSS ), dialog.getBooleanValue( LaunchForm.SETASPROXY ),
+							dialog.getValue( LaunchForm.SETSSLMON ) );
 				}
 			}
 			catch( Exception e )

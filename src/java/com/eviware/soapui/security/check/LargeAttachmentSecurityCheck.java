@@ -22,7 +22,7 @@ public class LargeAttachmentSecurityCheck extends AbstractSecurityCheck
 
 	public static final String TYPE = "LargeAttachmentSecurityCheck";
 	public static final String NAME = "Large Attachment";
-	
+
 	public LargeAttachmentSecurityCheck( SecurityCheckConfig config, ModelItem parent, String icon, TestStep testStep )
 	{
 		super( testStep, config, parent, icon );
@@ -45,7 +45,8 @@ public class LargeAttachmentSecurityCheck extends AbstractSecurityCheck
 	protected void execute( SecurityTestRunner securityTestRunner, TestStep testStep, SecurityTestRunContext context )
 	{
 
-		String originalResponse = getOriginalResult( ( SecurityTestRunnerImpl )securityTestRunner, testStep ).getResponse().getRequestContent();
+		String originalResponse = getOriginalResult( ( SecurityTestRunnerImpl )securityTestRunner, testStep )
+				.getResponse().getRequestContent();
 
 		AbstractHttpRequest<?> request = ( AbstractHttpRequest<?> )getRequest( testStep );
 
@@ -61,7 +62,6 @@ public class LargeAttachmentSecurityCheck extends AbstractSecurityCheck
 		Logger.getLogger( "httpclient.wire" ).setLevel( Level.DEBUG );
 
 	}
-
 
 	@Override
 	public String getType()
@@ -96,7 +96,7 @@ public class LargeAttachmentSecurityCheck extends AbstractSecurityCheck
 	}
 
 	@Override
-	protected boolean hasNext(TestStep testStep,SecurityTestRunContext context)
+	protected boolean hasNext( TestStep testStep, SecurityTestRunContext context )
 	{
 		// TODO Auto-generated method stub
 		return false;

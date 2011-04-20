@@ -135,8 +135,8 @@ public class AnnotatedSettingsPrefs implements Prefs
 			{
 				try
 				{
-					result.put( annotation.name(), settings.getString( field.get( null ).toString(), annotation
-							.defaultValue() ) );
+					result.put( annotation.name(),
+							settings.getString( field.get( null ).toString(), annotation.defaultValue() ) );
 				}
 				catch( Exception e )
 				{

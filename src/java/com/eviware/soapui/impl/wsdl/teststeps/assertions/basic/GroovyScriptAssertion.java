@@ -59,7 +59,6 @@ import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.model.testsuite.AssertionException;
 import com.eviware.soapui.model.testsuite.RequestAssertion;
 import com.eviware.soapui.model.testsuite.ResponseAssertion;
-import com.eviware.soapui.model.testsuite.TestAssertion;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
@@ -112,6 +111,7 @@ public class GroovyScriptAssertion extends WsdlMessageAssertion implements Reque
 			scriptEngine.setVariable( "context", context );
 			scriptEngine.setVariable( "messageExchange", messageExchange );
 			scriptEngine.setVariable( "log", log );
+			scriptEngine.setVariable( "assertion", this );
 
 			Object result = scriptEngine.run();
 			return result == null ? null : result.toString();
@@ -238,8 +238,8 @@ public class GroovyScriptAssertion extends WsdlMessageAssertion implements Reque
 				}
 			} );
 
-			editor.setBorder( BorderFactory.createCompoundBorder( BorderFactory.createEmptyBorder( 0, 3, 0, 3 ), editor
-					.getBorder() ) );
+			editor.setBorder( BorderFactory.createCompoundBorder( BorderFactory.createEmptyBorder( 0, 3, 0, 3 ),
+					editor.getBorder() ) );
 
 			mainSplit = UISupport.createVerticalSplit( editor, logArea );
 			mainSplit.setDividerLocation( 280 );

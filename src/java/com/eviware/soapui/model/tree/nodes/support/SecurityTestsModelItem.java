@@ -16,8 +16,8 @@ import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.support.TestSuiteListenerAdapter;
 import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.model.testsuite.TestSuiteListener;
-import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.security.SecurityTest;
+import com.eviware.soapui.support.UISupport;
 
 /**
  * ModelItem for LoadTests node

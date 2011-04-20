@@ -27,9 +27,9 @@ import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestRunListener;
 import com.eviware.soapui.model.testsuite.TestSuite;
+import com.eviware.soapui.model.testsuite.TestSuite.TestSuiteRunType;
 import com.eviware.soapui.model.testsuite.TestSuiteRunListener;
 import com.eviware.soapui.model.testsuite.TestSuiteRunner;
-import com.eviware.soapui.model.testsuite.TestSuite.TestSuiteRunType;
 import com.eviware.soapui.support.types.StringToObjectMap;
 
 /**
@@ -187,7 +187,7 @@ public class WsdlTestSuiteRunner extends AbstractTestRunner<WsdlTestSuite, WsdlT
 		{
 			SoapUI.logError( e );
 		}
-		
+
 		notifyAfterRun();
 
 		runContext.clear();

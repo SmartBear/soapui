@@ -39,7 +39,7 @@ public abstract class AbstractMockOperationDispatcher implements PropertyChangeN
 		return new JPanel();
 	}
 
-	public void releaseEditorComponent( )
+	public void releaseEditorComponent()
 	{
 	}
 

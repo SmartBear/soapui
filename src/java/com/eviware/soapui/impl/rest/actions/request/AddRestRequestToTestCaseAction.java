@@ -82,8 +82,8 @@ public class AddRestRequestToTestCaseAction extends AbstractAddToTestCaseAction<
 
 		String name = dialogValues.get( STEP_NAME );
 
-		RestTestRequestStep testStep = ( RestTestRequestStep )testCase.insertTestStep( RestRequestStepFactory
-				.createConfig( request, name ), position );
+		RestTestRequestStep testStep = ( RestTestRequestStep )testCase.insertTestStep(
+				RestRequestStepFactory.createConfig( request, name ), position );
 
 		if( testStep == null )
 			return null;

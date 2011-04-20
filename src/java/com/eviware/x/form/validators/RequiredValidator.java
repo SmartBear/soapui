@@ -39,14 +39,14 @@ public class RequiredValidator implements XFormFieldValidator
 
 		if( formField instanceof XFormOptionsField )
 		{
-			value = ((XFormOptionsField)formField).getSelectedIndexes().length == 0 ? null : "check";
+			value = ( ( XFormOptionsField )formField ).getSelectedIndexes().length == 0 ? null : "check";
 		}
 		else
 		{
 			value = formField.getValue();
 		}
-		
-		if( !StringUtils.hasContent( value ))
+
+		if( !StringUtils.hasContent( value ) )
 		{
 			return new ValidationMessage[] { new ValidationMessage( message, formField ) };
 		}

@@ -26,9 +26,7 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.RestParametersConfig;
 import com.eviware.soapui.impl.rest.RestMethod;
 import com.eviware.soapui.impl.rest.RestRequest;
-import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.RestResource;
-import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.rest.actions.resource.NewRestMethodAction;
 import com.eviware.soapui.impl.rest.panels.resource.RestParamsTable;
 import com.eviware.soapui.impl.rest.panels.resource.RestParamsTableModel;
@@ -45,8 +43,8 @@ import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.AField.AFieldType;
+import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.validators.RequiredValidator;
 
 /**
@@ -302,37 +300,42 @@ public abstract class NewRestResourceActionBase<T extends ModelItem> extends Abs
 		// .get("Form.CreateRequest.Label");
 	}
 
-//	public void performAutomatic( RestService service, URL param )
-//	{
-//
-//		 params = new XmlBeansRestParamsTestPropertyHolder( null,
-//		 RestParametersConfig.Factory.newInstance() );
-//		 String path = null;
-//		 path = RestUtils.extractParams( param.toString(), params, false );
-//		
-//		 try
-//		 {
-//		 URL url = new URL( path );
-//		 path = url.getPath();
-//		 }
-//		 catch( MalformedURLException e )
-//		 {
-//		 }
-//
-//		RestResource resource = ( ( RestService )service ).addNewResource( "Monitor Resource",path );
-//
-//		XmlBeansRestParamsTestPropertyHolder methodParams = new XmlBeansRestParamsTestPropertyHolder( null,
-//				RestParametersConfig.Factory.newInstance() );
-//		createMethodAutomatic( resource, methodParams, resource.getName(), RestRequestInterface.RequestMethod.GET );
-//
-//	}
-//
-//	public RestRequest createMethodAutomatic( RestResource resource, Object param, String resourceName,
-//			RestRequestInterface.RequestMethod methodName )
-//	{
-//		RestMethod method = resource.addNewMethod( resourceName );
-//		method.setMethod( methodName );
-//		RestRequest request = method.addNewRequest( "Request " + ( method.getRequestCount() + 1 ) );
-//		return request;
-//	}
+	// public void performAutomatic( RestService service, URL param )
+	// {
+	//
+	// params = new XmlBeansRestParamsTestPropertyHolder( null,
+	// RestParametersConfig.Factory.newInstance() );
+	// String path = null;
+	// path = RestUtils.extractParams( param.toString(), params, false );
+	//
+	// try
+	// {
+	// URL url = new URL( path );
+	// path = url.getPath();
+	// }
+	// catch( MalformedURLException e )
+	// {
+	// }
+	//
+	// RestResource resource = ( ( RestService )service ).addNewResource(
+	// "Monitor Resource",path );
+	//
+	// XmlBeansRestParamsTestPropertyHolder methodParams = new
+	// XmlBeansRestParamsTestPropertyHolder( null,
+	// RestParametersConfig.Factory.newInstance() );
+	// createMethodAutomatic( resource, methodParams, resource.getName(),
+	// RestRequestInterface.RequestMethod.GET );
+	//
+	// }
+	//
+	// public RestRequest createMethodAutomatic( RestResource resource, Object
+	// param, String resourceName,
+	// RestRequestInterface.RequestMethod methodName )
+	// {
+	// RestMethod method = resource.addNewMethod( resourceName );
+	// method.setMethod( methodName );
+	// RestRequest request = method.addNewRequest( "Request " + (
+	// method.getRequestCount() + 1 ) );
+	// return request;
+	// }
 }

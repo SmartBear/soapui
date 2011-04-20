@@ -18,11 +18,12 @@ import com.eviware.soapui.support.xml.XmlUtils;
 
 public class StripWhitespacesTestCase extends TestCase
 {
-   public void testStripWhitespaces() throws Exception
-   {
-   	StripWhitespacesRequestFilter filter = new StripWhitespacesRequestFilter();
-   	
-   	assertEquals( "<content/>", XmlUtils.stripWhitespaces( "<content>   </content>" ));
-   	assertEquals( "<content><test>bil</test></content>", XmlUtils.stripWhitespaces( "<content>  <test>  bil   </test>   </content>" ));
-   }
+	public void testStripWhitespaces() throws Exception
+	{
+		StripWhitespacesRequestFilter filter = new StripWhitespacesRequestFilter();
+
+		assertEquals( "<content/>", XmlUtils.stripWhitespaces( "<content>   </content>" ) );
+		assertEquals( "<content><test>bil</test></content>",
+				XmlUtils.stripWhitespaces( "<content>  <test>  bil   </test>   </content>" ) );
+	}
 }

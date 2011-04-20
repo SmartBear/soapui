@@ -27,12 +27,12 @@ import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.support.AbstractModelItem;
 import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.model.testsuite.Assertable;
+import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
 import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.model.testsuite.AssertionException;
 import com.eviware.soapui.model.testsuite.TestAssertion;
 import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
-import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.resolver.ResolveContext;
 

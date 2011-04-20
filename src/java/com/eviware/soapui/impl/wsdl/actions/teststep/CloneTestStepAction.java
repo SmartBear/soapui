@@ -37,8 +37,8 @@ import com.eviware.x.form.XFormField;
 import com.eviware.x.form.XFormFieldListener;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.AField.AFieldType;
+import com.eviware.x.form.support.AForm;
 
 /**
  * Clones a WsdlTestStep
@@ -82,8 +82,8 @@ public class CloneTestStepAction extends AbstractSoapUIAction<WsdlTestStep>
 						if( names.length > 1 )
 						{
 							TestSuite testSuite = project.getTestSuiteByName( names[0] );
-							dialog.setOptions( Form.TESTCASE, ModelSupport.getNames( testSuite.getTestCaseList(),
-									new String[] { CREATE_NEW_OPTION } ) );
+							dialog.setOptions( Form.TESTCASE,
+									ModelSupport.getNames( testSuite.getTestCaseList(), new String[] { CREATE_NEW_OPTION } ) );
 						}
 						else
 						{
@@ -118,8 +118,8 @@ public class CloneTestStepAction extends AbstractSoapUIAction<WsdlTestStep>
 		dialog.setBooleanValue( Form.MOVE, false );
 		dialog.setValue( Form.NAME, "Copy of " + testStep.getName() );
 		WorkspaceImpl workspace = testStep.getTestCase().getTestSuite().getProject().getWorkspace();
-		dialog.setOptions( Form.PROJECT, ModelSupport.getNames( workspace.getOpenProjectList(),
-				new String[] { CREATE_NEW_OPTION } ) );
+		dialog.setOptions( Form.PROJECT,
+				ModelSupport.getNames( workspace.getOpenProjectList(), new String[] { CREATE_NEW_OPTION } ) );
 
 		dialog.setValue( Form.PROJECT, testStep.getTestCase().getTestSuite().getProject().getName() );
 
@@ -252,7 +252,7 @@ public class CloneTestStepAction extends AbstractSoapUIAction<WsdlTestStep>
 
 		@AField( name = "Target Project", description = "The target Project for the cloned TestStep", type = AFieldType.ENUMERATION )
 		public final static String PROJECT = "Target Project";
-		
+
 		@AField( name = "Target TestSuite", description = "The target TestSuite for the cloned TestStep", type = AFieldType.ENUMERATION )
 		public final static String TESTSUITE = "Target TestSuite";
 

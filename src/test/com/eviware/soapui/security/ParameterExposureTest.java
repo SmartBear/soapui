@@ -17,9 +17,7 @@ import org.junit.Test;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.SecurityCheckConfig;
-import com.eviware.soapui.model.testsuite.TestRunner;
 import com.eviware.soapui.security.check.ParameterExposureCheck;
-import com.eviware.soapui.security.registry.SecurityCheckRegistry;
 import com.eviware.soapui.support.types.StringToObjectMap;
 
 /**
@@ -46,8 +44,8 @@ public class ParameterExposureTest extends AbstractSecurityTestCaseWithMockServi
 	protected void addSecurityCheckConfig( SecurityCheckConfig securityCheckConfig )
 	{
 
-		SoapUI.getSoapUICore().getSecurityCheckRegistry().getFactory( securityCheckType ).buildSecurityCheck( testStep,
-				securityCheckConfig, null );
+		SoapUI.getSoapUICore().getSecurityCheckRegistry().getFactory( securityCheckType )
+				.buildSecurityCheck( testStep, securityCheckConfig, null );
 
 	}
 

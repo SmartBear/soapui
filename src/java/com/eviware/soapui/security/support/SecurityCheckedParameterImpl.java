@@ -25,7 +25,8 @@ public class SecurityCheckedParameterImpl implements SecurityCheckedParameter
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.eviware.soapui.security.support.SecurityCheckedParameter#getName()
+	 * @see
+	 * com.eviware.soapui.security.support.SecurityCheckedParameter#getName()
 	 */
 	public String getName()
 	{
@@ -64,7 +65,8 @@ public class SecurityCheckedParameterImpl implements SecurityCheckedParameter
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.eviware.soapui.security.support.SecurityCheckedParameter#getType()
+	 * @see
+	 * com.eviware.soapui.security.support.SecurityCheckedParameter#getType()
 	 */
 	public String getType()
 	{

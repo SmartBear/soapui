@@ -14,18 +14,15 @@ package com.eviware.x.impl.swing;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Dialog.ModalityType;
-import java.awt.event.KeyEvent;
+import java.awt.Dimension;
 import java.util.concurrent.CountDownLatch;
 
 import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
-import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
-import javax.swing.KeyStroke;
 
 import com.eviware.soapui.support.HelpActionMarker;
 import com.eviware.soapui.support.StringUtils;
@@ -65,9 +62,11 @@ public class JFormDialog extends SwingXFormDialog
 
 		dialog.getContentPane().add( panel, BorderLayout.CENTER );
 
-		buttons.setBorder( BorderFactory.createCompoundBorder( BorderFactory.createCompoundBorder( BorderFactory
-				.createMatteBorder( 1, 0, 0, 0, Color.GRAY ), BorderFactory.createMatteBorder( 1, 0, 0, 0, Color.WHITE ) ),
-				BorderFactory.createEmptyBorder( 3, 5, 3, 5 ) ) );
+		buttons
+				.setBorder( BorderFactory.createCompoundBorder( BorderFactory.createCompoundBorder(
+						BorderFactory.createMatteBorder( 1, 0, 0, 0, Color.GRAY ),
+						BorderFactory.createMatteBorder( 1, 0, 0, 0, Color.WHITE ) ), BorderFactory.createEmptyBorder( 3, 5,
+						3, 5 ) ) );
 
 		dialog.getContentPane().add( buttons, BorderLayout.SOUTH );
 		this.panel = panel;
@@ -225,8 +224,10 @@ public class JFormDialog extends SwingXFormDialog
 	 */
 	public void setHelpUrl( String helpUrl )
 	{
-		for( int cnt = 0; cnt < actions.getActionCount(); cnt++ ) {
-			if ( actions.getActionAt( cnt ) instanceof HelpActionMarker ) {
+		for( int cnt = 0; cnt < actions.getActionCount(); cnt++ )
+		{
+			if( actions.getActionAt( cnt ) instanceof HelpActionMarker )
+			{
 				( ( SwingXFormDialogBuilder.HelpAction )actions.getActionAt( cnt ) ).setUrl( helpUrl );
 				break;
 			}

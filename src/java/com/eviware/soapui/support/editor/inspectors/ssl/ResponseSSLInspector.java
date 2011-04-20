@@ -73,12 +73,12 @@ public class ResponseSSLInspector extends AbstractXmlInspector implements Proper
 		{
 			StringBuffer buf = new StringBuffer( "<html><body><table cellpadding=1 cellspacing=1 border=0>" );
 
-			buf.append( "<tr><td><b>CipherSuite:</b></td><td align=left valign=top>" ).append(
-					sslInfo.getCipherSuite().toString() ).append( "</td></tr>" );
+			buf.append( "<tr><td><b>CipherSuite:</b></td><td align=left valign=top>" )
+					.append( sslInfo.getCipherSuite().toString() ).append( "</td></tr>" );
 
 			if( sslInfo.getLocalPrincipal() != null )
-				buf.append( "<tr><td><b>LocalPrincipal:</b></td><td align=left valign=top>" ).append(
-						sslInfo.getLocalPrincipal().getName() ).append( "</td></tr>" );
+				buf.append( "<tr><td><b>LocalPrincipal:</b></td><td align=left valign=top>" )
+						.append( sslInfo.getLocalPrincipal().getName() ).append( "</td></tr>" );
 
 			Certificate[] localCertificates = sslInfo.getLocalCertificates();
 
@@ -98,8 +98,8 @@ public class ResponseSSLInspector extends AbstractXmlInspector implements Proper
 			}
 
 			if( sslInfo.getPeerPrincipal() != null )
-				buf.append( "<tr><td><b>PeerPrincipal:</b></td><td align=left valign=top>" ).append(
-						sslInfo.getPeerPrincipal().toString() ).append( "</td></tr>" );
+				buf.append( "<tr><td><b>PeerPrincipal:</b></td><td align=left valign=top>" )
+						.append( sslInfo.getPeerPrincipal().toString() ).append( "</td></tr>" );
 
 			Certificate[] peerCertificates = sslInfo.getPeerCertificates();
 			if( peerCertificates != null )
@@ -109,8 +109,8 @@ public class ResponseSSLInspector extends AbstractXmlInspector implements Proper
 				int cnt = 1;
 				for( Certificate cert : peerCertificates )
 				{
-					buf.append( "<tr><td colspan=2><b>Peer Certificate " ).append( cnt++ ).append(
-							":</b><pre><font size=-1>" ).append( cert.toString() ).append( "</font></pre></td></tr>" );
+					buf.append( "<tr><td colspan=2><b>Peer Certificate " ).append( cnt++ )
+							.append( ":</b><pre><font size=-1>" ).append( cert.toString() ).append( "</font></pre></td></tr>" );
 				}
 
 				buf.append( "</table><table cellpadding=0 cellspacing=0 border=0>" );

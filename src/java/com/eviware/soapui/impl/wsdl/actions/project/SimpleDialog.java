@@ -47,13 +47,15 @@ public abstract class SimpleDialog extends JDialog
 
 		getContentPane().add( buildContent(), BorderLayout.CENTER );
 
-		buttons.setBorder( BorderFactory.createCompoundBorder( BorderFactory.createCompoundBorder( BorderFactory
-				.createMatteBorder( 1, 0, 0, 0, Color.GRAY ), BorderFactory.createMatteBorder( 1, 0, 0, 0, Color.WHITE ) ),
-				BorderFactory.createEmptyBorder( 3, 5, 3, 5 ) ) );
+		buttons
+				.setBorder( BorderFactory.createCompoundBorder( BorderFactory.createCompoundBorder(
+						BorderFactory.createMatteBorder( 1, 0, 0, 0, Color.GRAY ),
+						BorderFactory.createMatteBorder( 1, 0, 0, 0, Color.WHITE ) ), BorderFactory.createEmptyBorder( 3, 5,
+						3, 5 ) ) );
 
 		getContentPane().add( buttons, BorderLayout.SOUTH );
 		modifyButtons();
-		
+
 		pack();
 	}
 

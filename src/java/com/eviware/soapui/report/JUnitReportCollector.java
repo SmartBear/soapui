@@ -28,14 +28,14 @@ import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestRunListener;
+import com.eviware.soapui.model.testsuite.TestRunner.Status;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
+import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
 import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.model.testsuite.TestSuiteRunContext;
 import com.eviware.soapui.model.testsuite.TestSuiteRunListener;
 import com.eviware.soapui.model.testsuite.TestSuiteRunner;
-import com.eviware.soapui.model.testsuite.TestRunner.Status;
-import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.xml.XmlUtils;
 
@@ -92,7 +92,7 @@ public class JUnitReportCollector implements TestRunListener, TestSuiteRunListen
 		return reports;
 	}
 
-	private void saveReport( JUnitReport report, String filename ) throws Exception
+	public void saveReport( JUnitReport report, String filename ) throws Exception
 	{
 		report.save( new File( filename ) );
 	}
@@ -161,15 +161,15 @@ public class JUnitReportCollector implements TestRunListener, TestSuiteRunListen
 				buf.append( failures.get( testCase ) );
 			}
 
-			buf.append( "<h3><b>" ).append( XmlUtils.entitize( result.getTestStep().getName() ) ).append(
-					" Failed</b></h3><pre>" );
+			buf.append( "<h3><b>" ).append( XmlUtils.entitize( result.getTestStep().getName() ) )
+					.append( " Failed</b></h3><pre>" );
 			for( String message : result.getMessages() )
 			{
 				if( message.toLowerCase().startsWith( "url:" ) )
 				{
 					String url = XmlUtils.entitize( message.substring( 4 ).trim() );
-					buf.append( "URL: <a target=\"new\" href=\"" ).append( url ).append( "\">" ).append( url ).append(
-							"</a>" );
+					buf.append( "URL: <a target=\"new\" href=\"" ).append( url ).append( "\">" ).append( url )
+							.append( "</a>" );
 				}
 				else
 				{
@@ -257,5 +257,33 @@ public class JUnitReportCollector implements TestRunListener, TestSuiteRunListen
 	public void beforeTestSuite( ProjectRunner testScenarioRunner, ProjectRunContext runContext, TestSuite testSuite )
 	{
 		testSuite.addTestSuiteRunListener( this );
+	}
+
+	/**
+	 * Use this factory method to allow usage of an external reportCollecto; it
+	 * checks for a soapui.junit.reportCollector system property that should
+	 * specify a class derived from this JUnitReportCollector which will be used
+	 * instead
+	 * 
+	 * @param maxErrors
+	 */
+
+	public static JUnitReportCollector createNew( int maxErrors )
+	{
+		String className = System.getProperty( "soapui.junit.reportCollector", null );
+		if( StringUtils.hasContent( className ) )
+		{
+			try
+			{
+				return ( JUnitReportCollector )Class.forName( className ).getConstructor( Integer.class )
+						.newInstance( maxErrors );
+			}
+			catch( Exception e )
+			{
+				System.err.println( "Failed to create JUnitReportCollector class [" + className + "]; " + e.toString() );
+			}
+		}
+
+		return new JUnitReportCollector( maxErrors );
 	}
 }

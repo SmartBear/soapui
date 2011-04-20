@@ -48,6 +48,7 @@ import com.eviware.soapui.settings.WsaSettings;
 import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.action.SoapUIActionRegistry;
+import com.eviware.soapui.support.factory.SoapUIFactoryRegistry;
 import com.eviware.soapui.support.listener.SoapUIListenerRegistry;
 import com.eviware.soapui.support.types.StringList;
 
@@ -68,6 +69,7 @@ public class DefaultSoapUICore implements SoapUICore
 	private XmlBeansSettingsImpl settings;
 	private SoapUIListenerRegistry listenerRegistry;
 	private SoapUIActionRegistry actionRegistry;
+	private SoapUIFactoryRegistry factoryRegistry;
 	private long lastSettingsLoad = 0;
 
 	private String settingsFile;
@@ -140,7 +142,6 @@ public class DefaultSoapUICore implements SoapUICore
 		initExtensions( getExtensionClassLoader() );
 
 		SoapVersion.Soap11.equals( SoapVersion.Soap12 );
-
 	}
 
 	protected void initExtensions( ClassLoader extensionClassLoader )
@@ -148,6 +149,10 @@ public class DefaultSoapUICore implements SoapUICore
 		String extDir = System.getProperty( "soapui.ext.listeners" );
 		addExternalListeners( extDir != null ? extDir : root == null ? "listeners" : root + File.separatorChar
 				+ "listeners", extensionClassLoader );
+
+		String factoriesDir = System.getProperty( "soapui.ext.factories" );
+		addExternalFactories( factoriesDir != null ? factoriesDir : root == null ? "factories" : root
+				+ File.separatorChar + "factories", extensionClassLoader );
 	}
 
 	protected void initCoreComponents()
@@ -474,8 +479,8 @@ public class DefaultSoapUICore implements SoapUICore
 	{
 		if( !logIsInitialized )
 		{
-			File log4jconfig = root == null ? new File( "soapui-log4j.xml" ) : new File( new File( getRoot() ),
-					"soapui-log4j.xml" );
+			String logFileName = System.getProperty( "soapui.log4j.config", "soapui-log4j.xml" );
+			File log4jconfig = root == null ? new File( logFileName ) : new File( new File( getRoot() ), logFileName );
 			if( log4jconfig.exists() )
 			{
 				System.out.println( "Configuring log4j from [" + log4jconfig.getAbsolutePath() + "]" );
@@ -577,8 +582,8 @@ public class DefaultSoapUICore implements SoapUICore
 
 	protected SoapUIActionRegistry initActionRegistry()
 	{
-		return new SoapUIActionRegistry( DefaultSoapUICore.class
-				.getResourceAsStream( "/com/eviware/soapui/resources/conf/soapui-actions.xml" ) );
+		return new SoapUIActionRegistry(
+				DefaultSoapUICore.class.getResourceAsStream( "/com/eviware/soapui/resources/conf/soapui-actions.xml" ) );
 	}
 
 	protected void addExternalListeners( String folder, ClassLoader classLoader )
@@ -611,6 +616,36 @@ public class DefaultSoapUICore implements SoapUICore
 		}
 	}
 
+	protected void addExternalFactories( String folder, ClassLoader classLoader )
+	{
+		File[] factoryFiles = new File( folder ).listFiles();
+		if( factoryFiles != null )
+		{
+			for( File factoryFile : factoryFiles )
+			{
+				if( factoryFile.isDirectory() )
+				{
+					addExternalListeners( factoryFile.getAbsolutePath(), classLoader );
+					continue;
+				}
+
+				if( !factoryFile.getName().toLowerCase().endsWith( "-factories.xml" ) )
+					continue;
+
+				try
+				{
+					log.info( "Adding factories from [" + factoryFile.getAbsolutePath() + "]" );
+
+					getFactoryRegistry().addConfig( new FileInputStream( factoryFile ), classLoader );
+				}
+				catch( Exception e )
+				{
+					SoapUI.logError( e );
+				}
+			}
+		}
+	}
+
 	private class SettingsWatcher extends TimerTask
 	{
 		@Override
@@ -629,6 +664,20 @@ public class DefaultSoapUICore implements SoapUICore
 		}
 	}
 
+	@Override
+	public SoapUIFactoryRegistry getFactoryRegistry()
+	{
+		if( factoryRegistry == null )
+			initFactoryRegistry();
+
+		return factoryRegistry;
+	}
+
+	protected void initFactoryRegistry()
+	{
+		factoryRegistry = new SoapUIFactoryRegistry( null );
+	}
+
 	protected void initSecurityCheckRegistry()
 	{
 		securityCheckRegistry = SecurityCheckRegistry.getInstance();
@@ -637,7 +686,7 @@ public class DefaultSoapUICore implements SoapUICore
 	@Override
 	public SecurityCheckRegistry getSecurityCheckRegistry()
 	{
-		if ( securityCheckRegistry == null ) 
+		if( securityCheckRegistry == null )
 			initSecurityCheckRegistry();
 		return securityCheckRegistry;
 	}

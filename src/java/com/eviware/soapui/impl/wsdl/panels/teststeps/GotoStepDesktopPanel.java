@@ -329,8 +329,8 @@ public class GotoStepDesktopPanel extends ModelItemDesktopPanel<WsdlGotoTestStep
 
 		public void actionPerformed( ActionEvent e )
 		{
-			String name = UISupport.prompt( "Specify name for condition", "Add Condition", "Condition "
-					+ ( gotoStep.getConditionCount() + 1 ) );
+			String name = UISupport.prompt( "Specify name for condition", "Add Condition",
+					"Condition " + ( gotoStep.getConditionCount() + 1 ) );
 			if( name == null || name.trim().length() == 0 )
 				return;
 

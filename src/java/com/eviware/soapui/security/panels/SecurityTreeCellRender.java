@@ -328,11 +328,10 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 			leftInnerPanel = new JPanel( new BorderLayout() );
 			leftInnerPanel.add( label, BorderLayout.CENTER );
 			leftInnerPanel.setBackground( getBackground() );
-			
 
 			progressBar = new JProgressBar();
 			progressPanel = new JPanel( new FlowLayout( FlowLayout.LEFT, 10, 0 ) );
-//			progressBar.setBackground( UNKNOWN_COLOR );
+			// progressBar.setBackground( UNKNOWN_COLOR );
 			progressBar.setValue( 0 );
 			progressBar.setStringPainted( true );
 			progressBar.setString( "" );

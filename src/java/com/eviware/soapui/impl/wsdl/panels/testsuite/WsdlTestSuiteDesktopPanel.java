@@ -49,10 +49,10 @@ import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.support.TestSuiteListenerAdapter;
 import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
+import com.eviware.soapui.model.testsuite.TestSuite.TestSuiteRunType;
 import com.eviware.soapui.model.testsuite.TestSuiteRunContext;
 import com.eviware.soapui.model.testsuite.TestSuiteRunListener;
 import com.eviware.soapui.model.testsuite.TestSuiteRunner;
-import com.eviware.soapui.model.testsuite.TestSuite.TestSuiteRunType;
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.StringUtils;
@@ -95,7 +95,8 @@ public class WsdlTestSuiteDesktopPanel extends ModelItemDesktopPanel<WsdlTestSui
 	private JInspectorPanel inspectorPanel;
 	private WsdlTestSuiteRunner testSuiteRunner;
 	private JButton generateLoadUITestsButton;
-//	private JButton convertToLoadUIButton;
+
+	// private JButton convertToLoadUIButton;
 
 	public WsdlTestSuiteDesktopPanel( WsdlTestSuite testSuite )
 	{
@@ -207,12 +208,14 @@ public class WsdlTestSuiteDesktopPanel extends ModelItemDesktopPanel<WsdlTestSui
 		toolbar.add( parallellButton );
 		generateLoadUITestsButton = UISupport.createToolbarButton( SwingActionDelegate.createDelegate(
 				GenerateLoadUITestsAction.SOAPUI_ACTION_ID, getModelItem(), null, "/runTestSuiteWithLoadUI.png" ) );
-//		convertToLoadUIButton = UISupport.createToolbarButton( SwingActionDelegate.createDelegate(
-//				ConvertTestSuiteLoadTestsToLoadUIAction.SOAPUI_ACTION_ID, getModelItem(), null,
-//				"/convertLoadTestToLoadUI.png" ) );
+		// convertToLoadUIButton = UISupport.createToolbarButton(
+		// SwingActionDelegate.createDelegate(
+		// ConvertTestSuiteLoadTestsToLoadUIAction.SOAPUI_ACTION_ID,
+		// getModelItem(), null,
+		// "/convertLoadTestToLoadUI.png" ) );
 		toolbar.addUnrelatedGap();
 		toolbar.add( generateLoadUITestsButton );
-//		toolbar.add( convertToLoadUIButton );
+		// toolbar.add( convertToLoadUIButton );
 	}
 
 	private JComponent buildTabs()
@@ -235,9 +238,9 @@ public class WsdlTestSuiteDesktopPanel extends ModelItemDesktopPanel<WsdlTestSui
 		inspectorPanel.addInspector( new JComponentInspector<JComponent>( buildPropertiesPanel(), "Properties",
 				"TestSuite level properties", true ) );
 		inspectorPanel.addInspector( new GroovyEditorInspector( buildSetupScriptPanel(), "Setup Script",
-				"Script to run before running TestSuite" ) );
+				"Script to run before running the TestSuite" ) );
 		inspectorPanel.addInspector( new GroovyEditorInspector( buildTearDownScriptPanel(), "TearDown Script",
-				"Script to run after running TestSuite" ) );
+				"Script to run after running the TestSuite" ) );
 	}
 
 	protected GroovyEditorComponent buildTearDownScriptPanel()
@@ -302,7 +305,7 @@ public class WsdlTestSuiteDesktopPanel extends ModelItemDesktopPanel<WsdlTestSui
 		toolbar.add( UISupport.createToolbarButton( SwingActionDelegate.createDelegate(
 				AddNewTestCaseAction.SOAPUI_ACTION_ID, getModelItem(), null, "/testCase.gif" ) ) );
 		toolbar.add( UISupport.createToolbarButton( SwingActionDelegate.createDelegate(
-				CreateWebTestCaseAction.SOAPUI_ACTION_ID, getModelItem(), null, "/webTestCase.gif" ) ) );		
+				CreateWebTestCaseAction.SOAPUI_ACTION_ID, getModelItem(), null, "/webTestCase.gif" ) ) );
 		toolbar.addGlue();
 		toolbar.add( UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.TESTSUITEEDITOR_HELP_URL ) ) );
 		return toolbar;
@@ -430,8 +433,8 @@ public class WsdlTestSuiteDesktopPanel extends ModelItemDesktopPanel<WsdlTestSui
 				{
 					try
 					{
-						MockTestSuiteRunner mockRunner = new MockTestSuiteRunner( WsdlTestSuiteDesktopPanel.this
-								.getModelItem() );
+						MockTestSuiteRunner mockRunner = new MockTestSuiteRunner(
+								WsdlTestSuiteDesktopPanel.this.getModelItem() );
 						WsdlTestSuiteDesktopPanel.this.getModelItem().runSetupScript(
 								( TestSuiteRunContext )mockRunner.getRunContext(), mockRunner );
 					}
@@ -472,8 +475,8 @@ public class WsdlTestSuiteDesktopPanel extends ModelItemDesktopPanel<WsdlTestSui
 				{
 					try
 					{
-						MockTestSuiteRunner mockRunner = new MockTestSuiteRunner( WsdlTestSuiteDesktopPanel.this
-								.getModelItem() );
+						MockTestSuiteRunner mockRunner = new MockTestSuiteRunner(
+								WsdlTestSuiteDesktopPanel.this.getModelItem() );
 						WsdlTestSuiteDesktopPanel.this.getModelItem().runTearDownScript(
 								( TestSuiteRunContext )mockRunner.getRunContext(), mockRunner );
 					}

@@ -59,9 +59,9 @@ import com.eviware.x.form.XFormField;
 import com.eviware.x.form.XFormFieldListener;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
+import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.XFormMultiSelectList;
-import com.eviware.x.form.support.AField.AFieldType;
 
 public class WsdlRunTestCaseStepDesktopPanel extends ModelItemDesktopPanel<WsdlRunTestCaseTestStep> implements
 		PropertyChangeListener
@@ -308,8 +308,7 @@ public class WsdlRunTestCaseStepDesktopPanel extends ModelItemDesktopPanel<WsdlR
 
 					public void valueChanged( XFormField sourceField, String newValue, String oldValue )
 					{
-						WsdlTestSuite testSuite = project
-								.getTestSuiteByName( optionsDialog.getValue( OptionsForm.TESTSUITE ) );
+						WsdlTestSuite testSuite = project.getTestSuiteByName( optionsDialog.getValue( OptionsForm.TESTSUITE ) );
 						WsdlTestCase testCase = testSuite.getTestCaseByName( newValue );
 						optionsDialog.setOptions( OptionsForm.RETURN_PROPERTIES, testCase.getPropertyNames() );
 						( ( XFormMultiSelectList )optionsDialog.getFormField( OptionsForm.RETURN_PROPERTIES ) )
@@ -377,8 +376,8 @@ public class WsdlRunTestCaseStepDesktopPanel extends ModelItemDesktopPanel<WsdlR
 			{
 				WsdlTestSuite testSuite = project.getTestSuiteByName( optionsDialog.getValue( OptionsForm.TESTSUITE ) );
 				getModelItem().setTargetTestCase(
-						testSuite == null ? null : testSuite
-								.getTestCaseByName( optionsDialog.getValue( OptionsForm.TESTCASE ) ) );
+						testSuite == null ? null
+								: testSuite.getTestCaseByName( optionsDialog.getValue( OptionsForm.TESTCASE ) ) );
 				getModelItem().setReturnProperties(
 						new StringList(
 								( ( XFormMultiSelectList )optionsDialog.getFormField( OptionsForm.RETURN_PROPERTIES ) )

@@ -19,8 +19,8 @@ import com.eviware.x.form.XFormField;
 import com.eviware.x.form.XFormFieldListener;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.AField.AFieldType;
+import com.eviware.x.form.support.AForm;
 import com.eviware.x.impl.swing.JFormDialog;
 
 public class MalformedXmlAdvancedSettingsPanel
@@ -55,95 +55,95 @@ public class MalformedXmlAdvancedSettingsPanel
 		// listeners...
 		dialog.getFormField( AdvancedSettings.INSERT_NEW_ELEMENT ).addFormFieldListener( new XFormFieldListener()
 		{
-			
+
 			@Override
 			public void valueChanged( XFormField sourceField, String newValue, String oldValue )
 			{
 				configuration.setInsertNewElement( Boolean.parseBoolean( newValue ) );
 			}
-		});
+		} );
 		dialog.getFormField( AdvancedSettings.NEW_ELEMENT_VALUE ).addFormFieldListener( new XFormFieldListener()
 		{
-			
+
 			@Override
 			public void valueChanged( XFormField sourceField, String newValue, String oldValue )
 			{
 				configuration.setNewElementValue( newValue );
 			}
-		});
+		} );
 		dialog.getFormField( AdvancedSettings.CHANGE_TAG_NAME ).addFormFieldListener( new XFormFieldListener()
 		{
-			
+
 			@Override
 			public void valueChanged( XFormField sourceField, String newValue, String oldValue )
 			{
 				configuration.setChangeTagName( Boolean.parseBoolean( newValue ) );
 			}
-		});
+		} );
 		dialog.getFormField( AdvancedSettings.LEAVE_TAG_OPEN ).addFormFieldListener( new XFormFieldListener()
 		{
-			
+
 			@Override
 			public void valueChanged( XFormField sourceField, String newValue, String oldValue )
 			{
 				configuration.setLeaveTagOpen( Boolean.parseBoolean( newValue ) );
 			}
-		});
+		} );
 		dialog.getFormField( AdvancedSettings.MUTATE_ATTRIBUTES ).addFormFieldListener( new XFormFieldListener()
 		{
-			
+
 			@Override
 			public void valueChanged( XFormField sourceField, String newValue, String oldValue )
 			{
 				attributeConfig.setMutateAttributes( Boolean.parseBoolean( newValue ) );
 			}
-		});
+		} );
 		dialog.getFormField( AdvancedSettings.INSERT_INVALID_CHARS ).addFormFieldListener( new XFormFieldListener()
 		{
-			
+
 			@Override
 			public void valueChanged( XFormField sourceField, String newValue, String oldValue )
 			{
 				attributeConfig.setInsertInvalidChars( Boolean.parseBoolean( newValue ) );
 			}
-		});
+		} );
 		dialog.getFormField( AdvancedSettings.LEAVE_ATTRIBUTE_OPEN ).addFormFieldListener( new XFormFieldListener()
 		{
-			
+
 			@Override
 			public void valueChanged( XFormField sourceField, String newValue, String oldValue )
 			{
 				attributeConfig.setLeaveAttributeOpen( Boolean.parseBoolean( newValue ) );
 			}
-		});
+		} );
 		dialog.getFormField( AdvancedSettings.ADD_NEW_ATTRIBUTE ).addFormFieldListener( new XFormFieldListener()
 		{
-			
+
 			@Override
 			public void valueChanged( XFormField sourceField, String newValue, String oldValue )
 			{
 				attributeConfig.setAddNewAttribute( Boolean.parseBoolean( newValue ) );
 			}
-		});
+		} );
 		dialog.getFormField( AdvancedSettings.NEW_ATTRIBUTE_NAME ).addFormFieldListener( new XFormFieldListener()
 		{
-			
+
 			@Override
 			public void valueChanged( XFormField sourceField, String newValue, String oldValue )
 			{
 				attributeConfig.setNewAttributeName( newValue );
 			}
-		});
+		} );
 		dialog.getFormField( AdvancedSettings.NEW_ATTIBUTE_VALUE ).addFormFieldListener( new XFormFieldListener()
 		{
-			
+
 			@Override
 			public void valueChanged( XFormField sourceField, String newValue, String oldValue )
 			{
 				attributeConfig.setNewAttributeValue( newValue );
 			}
-		});
-		
+		} );
+
 	}
 
 	public JComponent getPanel()

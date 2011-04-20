@@ -68,8 +68,7 @@ public class LineNumbersPanel extends JPanel
 				int row = lineNumberTable.getSelectedRow();
 				if( row != -1 )
 				{
-					LineNumbersPanel.this.editArea
-							.setCaretPosition( LineNumbersPanel.this.editArea.getLineStartOffset( row ) );
+					LineNumbersPanel.this.editArea.setCaretPosition( LineNumbersPanel.this.editArea.getLineStartOffset( row ) );
 					LineNumbersPanel.this.editArea.requestFocusInWindow();
 				}
 			}

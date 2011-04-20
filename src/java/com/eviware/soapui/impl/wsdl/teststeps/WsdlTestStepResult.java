@@ -85,13 +85,13 @@ public class WsdlTestStepResult implements TestStepResult
 		{
 			if( testStep != null )
 				testStep.getName();
-			
+
 			return testStep;
 		}
 		catch( Throwable t )
 		{
 		}
-		
+
 		return null;
 	}
 
@@ -110,7 +110,7 @@ public class WsdlTestStepResult implements TestStepResult
 				{
 					if( getMessages().length > 0 )
 					{
-						StringBuffer buf = new StringBuffer( "<html><body>");
+						StringBuffer buf = new StringBuffer( "<html><body>" );
 						if( getError() != null )
 							buf.append( getError().toString() ).append( "<br/>" );
 

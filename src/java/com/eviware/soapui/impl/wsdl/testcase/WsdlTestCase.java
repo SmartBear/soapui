@@ -908,7 +908,6 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 		setupScriptEngine.setVariable( "testRunner", runner );
 		setupScriptEngine.setVariable( "log", SoapUI.ensureGroovyLog() );
 		return setupScriptEngine.run();
-
 	}
 
 	public Object runTearDownScript( TestCaseRunContext runContext, TestCaseRunner runner ) throws Exception

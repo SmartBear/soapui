@@ -130,6 +130,7 @@ import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.dnd.DropType;
 import com.eviware.soapui.support.dnd.NavigatorDragAndDropable;
 import com.eviware.soapui.support.dnd.SoapUIDragAndDropHandler;
+import com.eviware.soapui.support.factory.SoapUIFactoryRegistry;
 import com.eviware.soapui.support.jnlp.WebstartUtilCore;
 import com.eviware.soapui.support.listener.SoapUIListenerRegistry;
 import com.eviware.soapui.support.log.InspectorLog4JMonitor;
@@ -140,6 +141,7 @@ import com.eviware.soapui.support.monitor.MonitorPanel;
 import com.eviware.soapui.support.monitor.RuntimeMemoryMonitorSource;
 import com.eviware.soapui.support.swing.MenuScroller;
 import com.eviware.soapui.support.types.StringToStringMap;
+import com.eviware.soapui.tools.CmdLineRunner;
 import com.eviware.soapui.ui.JDesktopPanelsList;
 import com.eviware.soapui.ui.Navigator;
 import com.eviware.soapui.ui.NavigatorListener;
@@ -229,6 +231,7 @@ public class SoapUI
 	private static Logger loadUILogger;
 	@SuppressWarnings( "unused" )
 	private static JButton launchLoadUIButton;
+	private static CmdLineRunner soapUIRunner;
 
 	// --------------------------- CONSTRUCTORS ---------------------------
 
@@ -711,7 +714,7 @@ public class SoapUI
 		mainArgs = args;
 
 		SoapUIRunner soapuiRunner = new SoapUIRunner();
-		if( !BrowserComponent.isJXBrowserDisabled() && PlatformContext.isMacOS() )
+		if( !SoapUI.isJXBrowserDisabled() && PlatformContext.isMacOS() )
 		{
 			SwingUtilities.invokeLater( soapuiRunner );
 		}
@@ -791,7 +794,7 @@ public class SoapUI
 		Thread.sleep( 500 );
 		splash.setVisible( false );
 
-		if( getSettings().getBoolean( UISettings.SHOW_STARTUP_PAGE ) && !BrowserComponent.isJXBrowserDisabled() )
+		if( getSettings().getBoolean( UISettings.SHOW_STARTUP_PAGE ) && !SoapUI.isJXBrowserDisabled() )
 		{
 			SwingUtilities.invokeLater( new Runnable()
 			{
@@ -992,6 +995,28 @@ public class SoapUI
 		shutdown();
 
 		return true;
+	}
+
+	public static boolean isJXBrowserDisabled()
+	{
+		if( UISupport.isHeadless() )
+			return true;
+
+		if( isCommandLine() )
+			return true;
+
+		String disable = System.getProperty( "soapui.jxbrowser.disable", "nope" );
+		if( disable.equals( "true" ) )
+			return true;
+
+		if( getSoapUICore() != null && getSettings().getBoolean( UISettings.DISABLE_BROWSER ) )
+			return true;
+
+		if( !disable.equals( "false" )
+				&& ( !PlatformContext.isMacOS() && "64".equals( System.getProperty( "sun.arch.data.model" ) ) ) )
+			return true;
+
+		return false;
 	}
 
 	public static void shutdown()
@@ -1547,6 +1572,14 @@ public class SoapUI
 		return soapUICore.getListenerRegistry();
 	}
 
+	public static SoapUIFactoryRegistry getFactoryRegistry()
+	{
+		if( soapUICore == null )
+			soapUICore = DefaultSoapUICore.createDefault();
+
+		return soapUICore.getFactoryRegistry();
+	}
+
 	public static Settings getSettings()
 	{
 		if( soapUICore == null )
@@ -1717,5 +1750,15 @@ public class SoapUI
 	public static Timer getSoapUITimer()
 	{
 		return soapUITimer;
+	}
+
+	public static void setCmdLineRunner( CmdLineRunner abstractSoapUIRunner )
+	{
+		SoapUI.soapUIRunner = abstractSoapUIRunner;
+	}
+
+	public static CmdLineRunner getCmdLineRunner()
+	{
+		return soapUIRunner;
 	}
 }

@@ -28,10 +28,10 @@ public class DefaultPropertyTableHolderModel extends AbstractTableModel implemen
 	public DefaultPropertyTableHolderModel( TestPropertyHolder holder )
 	{
 		this.holder = holder;
-		names = new StringList(getPropertyNames());
+		names = new StringList( getPropertyNames() );
 	}
 
-	public String [] getPropertyNames()
+	public String[] getPropertyNames()
 	{
 		return holder.getPropertyNames();
 	}
@@ -49,7 +49,7 @@ public class DefaultPropertyTableHolderModel extends AbstractTableModel implemen
 	@Override
 	public void fireTableDataChanged()
 	{
-		names = new StringList(getPropertyNames());
+		names = new StringList( getPropertyNames() );
 		super.fireTableDataChanged();
 	}
 

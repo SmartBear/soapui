@@ -29,28 +29,27 @@ public class JMSPropertiesConfig implements PropertyChangeNotifier
 
 	private final JMSPropertyContainer container;
 
-	public JMSPropertiesConfig(JMSPropertiesConfConfig jmsPropertiesConfConfig, JMSPropertyContainer container)
+	public JMSPropertiesConfig( JMSPropertiesConfConfig jmsPropertiesConfConfig, JMSPropertyContainer container )
 	{
 		this.jmsPropertiesConfConfig = jmsPropertiesConfConfig;
 		this.container = container;
-//		propertyChangeSupport = new PropertyChangeSupport(this);
-//		if (!jmsPropertyConfConfig.isSetJMSDeliveryMode())
-//		{
-//			jmsPropertyConfConfig.setJMSDeliveryMode(JMSDeliveryModeTypeConfig.PERSISTENT);
-//		}
+		// propertyChangeSupport = new PropertyChangeSupport(this);
+		// if (!jmsPropertyConfConfig.isSetJMSDeliveryMode())
+		// {
+		// jmsPropertyConfConfig.setJMSDeliveryMode(JMSDeliveryModeTypeConfig.PERSISTENT);
+		// }
 	}
 
-	
 	public JMSPropertiesConfConfig getJmsPropertyConfConfig()
 	{
 		return jmsPropertiesConfConfig;
 	}
 
-	public void setJmsPropertyConfConfig(JMSPropertiesConfConfig jmsPropertiesConfConfig)
+	public void setJmsPropertyConfConfig( JMSPropertiesConfConfig jmsPropertiesConfConfig )
 	{
 		this.jmsPropertiesConfConfig = jmsPropertiesConfConfig;
 	}
-	
+
 	public JMSPropertyContainer getContainer()
 	{
 		return container;
@@ -58,38 +57,39 @@ public class JMSPropertiesConfig implements PropertyChangeNotifier
 
 	public List<JMSPropertyConfig> getJMSProperties()
 	{
-		 return jmsPropertiesConfConfig.getJmsPropertiesList();
+		return jmsPropertiesConfConfig.getJmsPropertiesList();
 	}
 
-	public void setJMSProperties(List<JMSPropertyConfig> map)
+	public void setJMSProperties( List<JMSPropertyConfig> map )
 	{
 
-//		List<JMSPropertyConfig> propertyList =  jmsPropertiesConfConfig.getJmsPropertiesList();
-//		StringToStringMap stringToStringMap = new StringToStringMap(propertyList.size());
-//		for (JMSPropertyConfig jmsProperty:propertyList){
-//			stringToStringMap
-//		}
+		// List<JMSPropertyConfig> propertyList =
+		// jmsPropertiesConfConfig.getJmsPropertiesList();
+		// StringToStringMap stringToStringMap = new
+		// StringToStringMap(propertyList.size());
+		// for (JMSPropertyConfig jmsProperty:propertyList){
+		// stringToStringMap
+		// }
 	}
 
-
-	public void addPropertyChangeListener(PropertyChangeListener listener)
+	public void addPropertyChangeListener( PropertyChangeListener listener )
 	{
-		propertyChangeSupport.addPropertyChangeListener(listener);
+		propertyChangeSupport.addPropertyChangeListener( listener );
 	}
 
-	public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener)
+	public void addPropertyChangeListener( String propertyName, PropertyChangeListener listener )
 	{
-		propertyChangeSupport.addPropertyChangeListener(propertyName, listener);
+		propertyChangeSupport.addPropertyChangeListener( propertyName, listener );
 	}
 
-	public void removePropertyChangeListener(PropertyChangeListener listener)
+	public void removePropertyChangeListener( PropertyChangeListener listener )
 	{
-		propertyChangeSupport.removePropertyChangeListener(listener);
+		propertyChangeSupport.removePropertyChangeListener( listener );
 	}
 
-	public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener)
+	public void removePropertyChangeListener( String propertyName, PropertyChangeListener listener )
 	{
-		propertyChangeSupport.removePropertyChangeListener(propertyName, listener);
+		propertyChangeSupport.removePropertyChangeListener( propertyName, listener );
 	}
 
 }

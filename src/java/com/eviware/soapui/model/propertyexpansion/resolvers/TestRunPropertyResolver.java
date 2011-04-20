@@ -20,14 +20,14 @@ public class TestRunPropertyResolver implements PropertyResolver
 	{
 		// if( !(context instanceof TestRunContext ))
 		// return null;
-		//		
+		//
 		// TestRunContext trc = ( TestRunContext ) context;
-		//		
+		//
 		// TestCase testCase = trc.getTestCase();
 		// if( testCase == null )
 		// return null;
 		// TestSuite testSuite = testCase.getTestSuite();
-		//		
+		//
 		// if( propertyName.charAt( 0 ) == PropertyExpansion.SCOPE_PREFIX )
 		// {
 		// // explicit item reference?
@@ -36,19 +36,19 @@ public class TestRunPropertyResolver implements PropertyResolver
 		// globalOverride );
 		// if( value != null )
 		// return value;
-		//			
+		//
 		// value = ResolverUtils.checkForExplicitReference( propertyName,
 		// PropertyExpansion.TESTSUITE_REFERENCE, testSuite, trc, globalOverride
 		// );
 		// if( value != null )
 		// return value;
-		//			
+		//
 		// value = ResolverUtils.checkForExplicitReference( propertyName,
 		// PropertyExpansion.TESTCASE_REFERENCE, testCase, trc, globalOverride );
 		// if( value != null )
 		// return value;
 		// }
-		//		
+		//
 		// int sepIx = propertyName.indexOf( PropertyExpansion.PROPERTY_SEPARATOR
 		// );
 		// Object property = null;
@@ -57,18 +57,18 @@ public class TestRunPropertyResolver implements PropertyResolver
 		// {
 		// String step = propertyName.substring( 0, sepIx );
 		// String name = propertyName.substring( sepIx+1 );
-		//			
+		//
 		// sepIx = name.indexOf( PropertyExpansion.PROPERTY_SEPARATOR );
 		// if( sepIx != -1 )
 		// {
 		// String xpath = name.substring( sepIx+1 );
 		// name = name.substring( 0, sepIx );
-		//				
+		//
 		// if( step.length() == 0 )
 		// property = trc.getProperty( name);
 		// else
 		// property = trc.getProperty( step, name);
-		//				
+		//
 		// if( property != null )
 		// {
 		// property = ResolverUtils.extractXPathPropertyValue( property,
@@ -83,7 +83,7 @@ public class TestRunPropertyResolver implements PropertyResolver
 		// property = trc.getProperty( step, name);
 		// }
 		// }
-		//		
+		//
 		// return property == null ? null : property.toString();
 
 		return null;

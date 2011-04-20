@@ -22,10 +22,10 @@ import com.eviware.soapui.model.testsuite.LoadTestRunner;
 import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestRunner;
+import com.eviware.soapui.model.testsuite.TestRunner.Status;
 import com.eviware.soapui.model.testsuite.TestSuiteRunContext;
 import com.eviware.soapui.model.testsuite.TestSuiteRunListener;
 import com.eviware.soapui.model.testsuite.TestSuiteRunner;
-import com.eviware.soapui.model.testsuite.TestRunner.Status;
 import com.eviware.soapui.monitor.support.TestMonitorListenerAdapter;
 import com.eviware.soapui.security.SecurityTestRunner;
 

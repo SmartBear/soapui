@@ -39,8 +39,8 @@ import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.AField.AFieldType;
+import com.eviware.x.form.support.AForm;
 import com.sun.java.xml.ns.j2Ee.HttpMethodType;
 
 public class CreateWebTestAction extends AbstractSoapUIAction<WsdlProject>
@@ -67,8 +67,8 @@ public class CreateWebTestAction extends AbstractSoapUIAction<WsdlProject>
 			dialog = ADialogBuilder.buildDialog( Form.class );
 		}
 
-		dialog.setOptions( Form.TESTSUITE, ModelSupport.getNames( new String[] { CREATE_NEW_OPTION }, project
-				.getTestSuiteList() ) );
+		dialog.setOptions( Form.TESTSUITE,
+				ModelSupport.getNames( new String[] { CREATE_NEW_OPTION }, project.getTestSuiteList() ) );
 		dialog.setValue( Form.TESTSUITE, CREATE_NEW_OPTION );
 		dialog.setValue( Form.TESTCASENAME, "Web TestCase" );
 		dialog.setValue( Form.URL, "" );
@@ -127,8 +127,8 @@ public class CreateWebTestAction extends AbstractSoapUIAction<WsdlProject>
 				if( testStepName == null )
 					return;
 			}
-			createWebTest( targetTestCase, HttpUtils.ensureEndpointStartsWithProtocol( url ), testStepName, dialog
-					.getBooleanValue( Form.STARTRECORDING ) );
+			createWebTest( targetTestCase, HttpUtils.ensureEndpointStartsWithProtocol( url ), testStepName,
+					dialog.getBooleanValue( Form.STARTRECORDING ) );
 
 		}
 	}

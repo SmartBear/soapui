@@ -519,9 +519,10 @@ public class SoapUtils
 					{
 						Element docElm = ( ( Document )dest.getDomNode() ).getDocumentElement();
 
-						destElm = ( Element )docElm.insertBefore( docElm.getOwnerDocument().createElementNS(
-								soapVersion.getEnvelopeNamespace(), docElm.getPrefix() + ":Header" ), XmlUtils
-								.getFirstChildElementNS( docElm, soapVersion.getBodyQName() ) );
+						destElm = ( Element )docElm.insertBefore(
+								docElm.getOwnerDocument().createElementNS( soapVersion.getEnvelopeNamespace(),
+										docElm.getPrefix() + ":Header" ),
+								XmlUtils.getFirstChildElementNS( docElm, soapVersion.getBodyQName() ) );
 					}
 					else
 					{
@@ -530,7 +531,15 @@ public class SoapUtils
 
 					for( int c = 0; c < childNodes.getLength(); c++ )
 					{
-						destElm.appendChild( destElm.getOwnerDocument().importNode( childNodes.item( c ), true ) );
+						Node childNode = childNodes.item( c );
+						if( childNode.getNodeType() == Node.ELEMENT_NODE )
+						{
+							if( XmlUtils.getFirstChildElementNS( destElm, childNode.getNamespaceURI(),
+									childNode.getLocalName() ) != null )
+								continue;
+
+							destElm.appendChild( destElm.getOwnerDocument().importNode( childNode, true ) );
+						}
 					}
 
 					return dest.xmlText();

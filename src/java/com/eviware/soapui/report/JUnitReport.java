@@ -20,12 +20,12 @@ import java.util.Set;
 
 import org.apache.xmlbeans.XmlOptions;
 
+import com.eviware.soapui.junit.FailureDocument.Failure;
 import com.eviware.soapui.junit.Properties;
 import com.eviware.soapui.junit.Property;
 import com.eviware.soapui.junit.Testcase;
 import com.eviware.soapui.junit.Testsuite;
 import com.eviware.soapui.junit.TestsuiteDocument;
-import com.eviware.soapui.junit.FailureDocument.Failure;
 
 /**
  * Wrapper for a number of Test runs

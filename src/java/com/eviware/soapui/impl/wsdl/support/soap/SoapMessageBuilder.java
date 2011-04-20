@@ -428,7 +428,7 @@ public class SoapMessageBuilder implements MessageBuilder
 
 		if( ns == null )
 		{
-			ns = WsdlUtils.getTargetNamespace( wsdlContext.getDefinition());
+			ns = WsdlUtils.getTargetNamespace( wsdlContext.getDefinition() );
 			log.warn( "missing namespace on soapbind:body for RPC response, using targetNamespace instead (BP violation)" );
 		}
 

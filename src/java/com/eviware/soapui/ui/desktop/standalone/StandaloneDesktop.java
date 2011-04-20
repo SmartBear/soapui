@@ -231,8 +231,8 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop
 		if( !SoapUI.getSettings().getBoolean( UISettings.NATIVE_LAF ) )
 		{
 			// This creates an empty frame on Mac OS X native L&F.
-			frame.setBorder( BorderFactory.createCompoundBorder( BorderFactory.createRaisedBevelBorder(), BorderFactory
-					.createEmptyBorder( 2, 2, 2, 2 ) ) );
+			frame.setBorder( BorderFactory.createCompoundBorder( BorderFactory.createRaisedBevelBorder(),
+					BorderFactory.createEmptyBorder( 2, 2, 2, 2 ) ) );
 		}
 		openFrameCount++ ;
 		return frame;

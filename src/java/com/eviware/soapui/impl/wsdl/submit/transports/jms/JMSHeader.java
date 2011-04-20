@@ -70,22 +70,22 @@ public class JMSHeader
 				// JMSCORRELATIONID
 				if( jmsConfig.getJMSCorrelationID() != null && !jmsConfig.getJMSCorrelationID().equals( "" ) )
 				{
-					message.setJMSCorrelationID( PropertyExpander.expandProperties( submitContext, jmsConfig
-							.getJMSCorrelationID() ) );
+					message.setJMSCorrelationID( PropertyExpander.expandProperties( submitContext,
+							jmsConfig.getJMSCorrelationID() ) );
 				}
 
 				// JMSREPLYTO
 				if( jmsConfig.getJMSReplyTo() != null && !jmsConfig.getJMSReplyTo().equals( "" ) )
 				{
-					message.setJMSReplyTo( hermes.getDestination( PropertyExpander.expandProperties( submitContext,
-							jmsConfig.getJMSReplyTo() ), Domain.QUEUE ) );
+					message.setJMSReplyTo( hermes.getDestination(
+							PropertyExpander.expandProperties( submitContext, jmsConfig.getJMSReplyTo() ), Domain.QUEUE ) );
 				}
 
 				// TIMETOLIVE
 				if( jmsConfig.getTimeToLive() != null && !jmsConfig.getTimeToLive().equals( "" ) )
 				{
-					setTimeTolive( Long.parseLong( PropertyExpander.expandProperties( submitContext, jmsConfig
-							.getTimeToLive() ) ) );
+					setTimeTolive( Long.parseLong( PropertyExpander.expandProperties( submitContext,
+							jmsConfig.getTimeToLive() ) ) );
 				}
 				else
 				{
@@ -101,8 +101,8 @@ public class JMSHeader
 				// JMSPRIORITY
 				if( jmsConfig.getJMSPriority() != null && !jmsConfig.getJMSPriority().equals( "" ) )
 				{
-					message.setJMSPriority( Integer.parseInt( PropertyExpander.expandProperties( submitContext, jmsConfig
-							.getJMSPriority() ) ) );
+					message.setJMSPriority( Integer.parseInt( PropertyExpander.expandProperties( submitContext,
+							jmsConfig.getJMSPriority() ) ) );
 				}
 				else
 				{
@@ -124,9 +124,11 @@ public class JMSHeader
 			}
 			catch( NamingException e )
 			{
-				SoapUI.logError( e, "Message header JMSReplyTo = "
-						+ PropertyExpander.expandProperties( submitContext, jmsConfig.getJMSReplyTo() )
-						+ "destination not exists!" );
+				SoapUI.logError(
+						e,
+						"Message header JMSReplyTo = "
+								+ PropertyExpander.expandProperties( submitContext, jmsConfig.getJMSReplyTo() )
+								+ "destination not exists!" );
 			}
 			catch( Exception e )
 			{
@@ -156,8 +158,8 @@ public class JMSHeader
 					if( !key.equals( JMSCORRELATIONID ) && !key.equals( JMSREPLYTO ) && !key.equals( TIMETOLIVE )
 							&& !key.equals( JMSTYPE ) && !key.equals( JMSPRIORITY ) && !key.equals( JMSDELIVERYMODE ) )
 					{
-						message.setStringProperty( key, PropertyExpander.expandProperties( submitContext, stringToStringMap
-								.get( key ) ) );
+						message.setStringProperty( key,
+								PropertyExpander.expandProperties( submitContext, stringToStringMap.get( key ) ) );
 					}
 				}
 			}

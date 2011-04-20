@@ -99,8 +99,8 @@ public class ResolveDialog
 							int ix = table.getSelectedRow();
 							if( ix != -1 )
 							{
-								ResolveContext.PathToResolve pathToResolve = resolveContextTableModel
-										.getContext().getPathsToResolve().get( ix );
+								ResolveContext.PathToResolve pathToResolve = resolveContextTableModel.getContext()
+										.getPathsToResolve().get( ix );
 
 								if( pathToResolve != null )
 									UISupport.selectAndShow( pathToResolve.getOwner() );

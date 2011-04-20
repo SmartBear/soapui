@@ -27,8 +27,8 @@ import com.eviware.soapui.security.check.AbstractSecurityCheckWithProperties;
 import com.eviware.soapui.security.result.SecurityCheckRequestResult;
 import com.eviware.soapui.security.result.SecurityCheckResult;
 import com.eviware.soapui.security.result.SecurityResult;
-import com.eviware.soapui.security.result.SecurityTestStepResult;
 import com.eviware.soapui.security.result.SecurityResult.ResultStatus;
+import com.eviware.soapui.security.result.SecurityTestStepResult;
 import com.eviware.soapui.support.types.StringToStringMap;
 
 /**

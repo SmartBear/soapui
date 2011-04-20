@@ -64,7 +64,7 @@ public class TestCaseEditIntegrationImpl implements TestCaseEditIntegration
 		String path = System.getProperty( "soapui.home" );
 		if( path == null )
 			return null;
-		
+
 		File pathFile = new File( path );
 		path = pathFile.getAbsolutePath();
 		path += File.separator + "bin" + File.separator + "soapui" + pro + "." + ext;

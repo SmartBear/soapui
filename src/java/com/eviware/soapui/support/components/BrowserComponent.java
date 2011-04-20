@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -72,13 +73,13 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.types.StringList;
 import com.eviware.soapui.support.types.StringToStringsMap;
 import com.eviware.soapui.support.xml.XmlUtils;
-import com.jniwrapper.PlatformContext;
 import com.teamdev.jxbrowser.Browser;
 import com.teamdev.jxbrowser.BrowserFactory;
 import com.teamdev.jxbrowser.BrowserType;
 import com.teamdev.jxbrowser.NewWindowContainer;
 import com.teamdev.jxbrowser.NewWindowManager;
 import com.teamdev.jxbrowser.NewWindowParams;
+import com.teamdev.jxbrowser.cookie.HttpCookieStorage;
 import com.teamdev.jxbrowser.events.NavigationAdapter;
 import com.teamdev.jxbrowser.events.NavigationEvent;
 import com.teamdev.jxbrowser.events.NavigationFinishedEvent;
@@ -87,7 +88,11 @@ import com.teamdev.jxbrowser.events.NavigationStatusCode;
 import com.teamdev.jxbrowser.events.StatusChangedEvent;
 import com.teamdev.jxbrowser.events.StatusListener;
 import com.teamdev.jxbrowser.mozilla.MozillaBrowser;
+import com.teamdev.jxbrowser.mozilla.MozillaCookieStorage;
 import com.teamdev.jxbrowser.prompt.DefaultPromptService;
+import com.teamdev.jxbrowser.security.HttpSecurityAction;
+import com.teamdev.jxbrowser.security.HttpSecurityHandler;
+import com.teamdev.jxbrowser.security.SecurityProblem;
 import com.teamdev.jxbrowser1.mozilla.MozillaWebBrowser;
 import com.teamdev.xpcom.PoxyAuthenticationHandler;
 import com.teamdev.xpcom.ProxyConfiguration;
@@ -110,7 +115,7 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 	private Boolean possibleError = false;
 	@SuppressWarnings( "unused" )
 	private boolean disposed;
-	private static boolean disabled;
+	// private static boolean disabled;
 	private NavigationListener internalNavigationListener;
 	private HttpHtmlResponseView httpHtmlResponseView;
 	private static Boolean initialized = false;
@@ -136,7 +141,7 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 
 		try
 		{
-			if( !isJXBrowserDisabled() )
+			if( !SoapUI.isJXBrowserDisabled() )
 			{
 				Xpcom.initialize();
 			}
@@ -149,30 +154,23 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 		}
 	}
 
-	public static void setDisabled( boolean disabled )
-	{
-		BrowserComponent.disabled = disabled;
-	}
+	// public static void setDisabled( boolean disabled )
+	// {
+	// BrowserComponent.disabled = disabled;
+	// }
+
+	/**
+	 * @deprecated
+	 */
 
 	public static boolean isJXBrowserDisabled()
 	{
-		if( disabled )
-			return true;
-
-		String disable = System.getProperty( "soapui.jxbrowser.disable", "nope" );
-		if( disable.equals( "true" ) )
-			return true;
-
-		if( !disable.equals( "false" )
-				&& ( !PlatformContext.isMacOS() && "64".equals( System.getProperty( "sun.arch.data.model" ) ) ) )
-			return true;
-
-		return false;
+		return SoapUI.isJXBrowserDisabled();
 	}
 
 	public Component getComponent()
 	{
-		if( isJXBrowserDisabled() )
+		if( SoapUI.isJXBrowserDisabled() )
 		{
 			JEditorPane jxbrowserDisabledPanel = new JEditorPane();
 			jxbrowserDisabledPanel.setText( "browser component disabled" );
@@ -225,6 +223,10 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 			{
 				browserRecordingMap.put( BrowserComponent.this, new HashMap<String, RecordedRequest>() );
 			}
+
+			// clear cookies when we start recording
+			HttpCookieStorage cookies = MozillaCookieStorage.getInstance( BrowserType.Mozilla );
+			cookies.deleteCookie( cookies.getCookies() );
 		}
 		else
 		{
@@ -246,16 +248,12 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 
 			nsIObserver httpObserver = new nsIObserver()
 			{
-				protected long _lRequestCounter = 0;
-
 				public void observe( nsISupports subject, String sTopic, String sData )
 				{
 					try
 					{
 						if( EVENT_HTTP_ON_MODIFY_REQUEST.equals( sTopic ) )
 						{
-							_lRequestCounter++ ;
-
 							nsIHttpChannel httpChannel = ( nsIHttpChannel )subject
 									.queryInterface( nsIHttpChannel.NS_IHTTPCHANNEL_IID );
 
@@ -340,13 +338,6 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 								} );
 
 								rr.setHeaders( headersMap );
-
-								// if( !browserRecordingMap.containsKey(
-								// browserComponent ) )
-								// {
-								// browserRecordingMap.put( browserComponent, new
-								// HashMap<String, RecordedRequest>() );
-								// }
 
 								browserRecordingMap.get( browserComponent ).put( rr.getUrl(), rr );
 							}
@@ -511,6 +502,7 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 							if( newHttpStep.getTestRequest().getMediaType().equals( CONTENT_TYPE_FORM_URLENCODED ) )
 							{
 								newHttpStep.getTestRequest().setPostQueryString( true );
+								newHttpStep.getTestRequest().setMediaType( CONTENT_TYPE_FORM_URLENCODED );
 								RestUtils.extractParamsFromQueryString( newHttpStep.getTestRequest().getParams(),
 										recordedRequest.getContent() );
 							}
@@ -564,7 +556,7 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 
 	public synchronized boolean initBrowser()
 	{
-		if( browser != null )
+		if( browser != null || SoapUI.isJXBrowserDisabled() )
 			return false;
 
 		browser = ( MozillaBrowser )BrowserFactory.createBrowser( BrowserType.Mozilla );
@@ -578,6 +570,16 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 			browser.getServices().setNewWindowManager( newWindowManager );
 			browser.getServices().setPromptService( new DefaultPromptService() );
 		}
+
+		// ignore security errors
+		browser.setHttpSecurityHandler( new HttpSecurityHandler()
+		{
+			@Override
+			public HttpSecurityAction onSecurityProblem( Set<SecurityProblem> arg0 )
+			{
+				return HttpSecurityAction.CONTINUE;
+			}
+		} );
 
 		internalNavigationListener = new InternalBrowserNavigationListener();
 		browser.addNavigationListener( internalNavigationListener );
@@ -653,17 +655,31 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 
 	public void setContent( String contentAsString, String contextUri )
 	{
+		if( SoapUI.isJXBrowserDisabled() )
+			return;
+
 		if( browser == null )
 		{
 			initBrowser();
 		}
 
-		browser.setContent( contentAsString, contextUri );
-		pcs.firePropertyChange( "content", null, null );
+		try
+		{
+			browser.setContent( contentAsString, contextUri );
+			pcs.firePropertyChange( "content", null, null );
+		}
+		catch( Throwable e )
+		{
+			e.printStackTrace();
+		}
+
 	}
 
 	public void setContent( String content )
 	{
+		if( SoapUI.isJXBrowserDisabled() )
+			return;
+
 		if( browser == null )
 		{
 			initBrowser();
@@ -820,9 +836,11 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 	 * Setups proxy configuration
 	 */
 
-	void setUpProxy()
+	private static boolean proxyAuthenticationInitialized = false;
+
+	public synchronized static void updateProxy( boolean proxyEnabled )
 	{
-		if( isJXBrowserDisabled() )
+		if( SoapUI.isJXBrowserDisabled() )
 			return;
 
 		initialize();
@@ -831,21 +849,44 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 		if( proxyConf == null )
 			return;
 
-		Settings settings = SoapUI.getSettings();
-		PropertyExpansionContext context = null;
+		proxyConf.setType( ProxyConfiguration.MANUAL );
 
-		// check system properties first
-		String proxyHost = System.getProperty( "http.proxyHost" );
-		String proxyPort = System.getProperty( "http.proxyPort" );
-
-		if( proxyHost == null )
-			proxyHost = PropertyExpander.expandProperties( context, settings.getString( ProxySettings.HOST, "" ) );
-
-		if( proxyPort == null )
-			proxyPort = PropertyExpander.expandProperties( context, settings.getString( ProxySettings.PORT, "" ) );
-
-		if( !StringUtils.isNullOrEmpty( proxyHost ) && !StringUtils.isNullOrEmpty( proxyPort ) )
+		if( !proxyAuthenticationInitialized )
 		{
+			proxyConf.setPoxyAuthenticationHandler( ProxyServerType.HTTP, new PoxyAuthenticationHandler()
+			{
+				public ProxyServerAuthInfo authenticationRequired()
+				{
+					Settings settings = SoapUI.getSettings();
+					PropertyExpansionContext context = null;
+
+					String proxyUsername = PropertyExpander.expandProperties( context,
+							settings.getString( ProxySettings.USERNAME, null ) );
+					String proxyPassword = PropertyExpander.expandProperties( context,
+							settings.getString( ProxySettings.PASSWORD, null ) );
+
+					return new ProxyServerAuthInfo( proxyUsername, proxyPassword );
+				}
+			} );
+
+			proxyAuthenticationInitialized = true;
+		}
+
+		if( proxyEnabled )
+		{
+			Settings settings = SoapUI.getSettings();
+			PropertyExpansionContext context = null;
+
+			// check system properties first
+			String proxyHost = System.getProperty( "http.proxyHost" );
+			String proxyPort = System.getProperty( "http.proxyPort" );
+
+			if( proxyHost == null )
+				proxyHost = PropertyExpander.expandProperties( context, settings.getString( ProxySettings.HOST, "" ) );
+
+			if( proxyPort == null )
+				proxyPort = PropertyExpander.expandProperties( context, settings.getString( ProxySettings.PORT, "" ) );
+
 			proxyConf.setHttpHost( proxyHost );
 			proxyConf.setHttpPort( Integer.parseInt( proxyPort ) );
 			// check excludes
@@ -855,26 +896,12 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 			{
 				proxyConf.setSkipProxyFor( url );
 			}
-
-			final String proxyUsername = PropertyExpander.expandProperties( context,
-					settings.getString( ProxySettings.USERNAME, null ) );
-			final String proxyPassword = PropertyExpander.expandProperties( context,
-					settings.getString( ProxySettings.PASSWORD, null ) );
-
-			if( proxyUsername != null )
-			{
-				proxyConf.setPoxyAuthenticationHandler( ProxyServerType.HTTP, new PoxyAuthenticationHandler()
-				{
-					/**
-					 * manually sets user name and password for proxy server
-					 */
-					public ProxyServerAuthInfo authenticationRequired()
-					{
-						return new ProxyServerAuthInfo( proxyUsername, proxyPassword );
-					}
-				} );
-			}
 		}
+		else
+		{
+			proxyConf.setHttpHost( "" );
+		}
+
 	}
 
 	private PropertyChangeSupport pcs = new PropertyChangeSupport( this );
@@ -982,6 +1009,9 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 
 	public void navigate( String url, String postData, String errorPage )
 	{
+		if( SoapUI.isJXBrowserDisabled() )
+			return;
+
 		if( errorPage != null )
 			setErrorPage( errorPage );
 

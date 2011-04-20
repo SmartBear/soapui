@@ -40,8 +40,8 @@ import com.eviware.soapui.impl.wsdl.support.wsa.WsaConfig;
 import com.eviware.soapui.impl.wsdl.support.wsa.WsaContainer;
 import com.eviware.soapui.impl.wsdl.support.wsa.WsaContainerImpl;
 import com.eviware.soapui.impl.wsdl.support.wsa.WsaUtils;
-import com.eviware.soapui.model.iface.Response;
 import com.eviware.soapui.model.iface.Request.SubmitException;
+import com.eviware.soapui.model.iface.Response;
 import com.eviware.soapui.model.iface.Submit.Status;
 import com.eviware.soapui.model.propertyexpansion.DefaultPropertyExpansionContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
@@ -202,7 +202,7 @@ public class WsrmUtils
 			cursor.beginElement( WSRM_CREATE_SEQUENCE, wsrmNamespace );
 			cursor.beginElement( "Offer", wsrmNamespace );
 			cursor.beginElement( "Identifier", wsrmNamespace );
-			cursor.insertChars( "blah" );
+			cursor.insertChars( "urn:soapui:" + uuid );
 
 			cursor.toParent();
 			cursor.toParent();

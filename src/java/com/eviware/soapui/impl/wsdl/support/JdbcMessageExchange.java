@@ -23,7 +23,7 @@ import com.eviware.soapui.impl.wsdl.teststeps.JdbcRequestTestStep;
 public class JdbcMessageExchange extends AbstractNonHttpMessageExchange<JdbcRequestTestStep>
 {
 	private final JdbcResponse response;
-	
+
 	public JdbcMessageExchange( JdbcRequestTestStep modelItem, JdbcResponse response )
 	{
 		super( modelItem );
@@ -57,7 +57,7 @@ public class JdbcMessageExchange extends AbstractNonHttpMessageExchange<JdbcRequ
 
 	public boolean hasResponse()
 	{
-		return getResponseContent()!= null ;
+		return getResponseContent() != null;
 	}
 
 	public boolean isDiscarded()

@@ -27,6 +27,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.panels.AbstractHttpXmlRequestDesktopPanel.HttpResponseDocument;
 import com.eviware.soapui.impl.wsdl.monitor.JProxyServletWsdlMonitorMessageExchange;
 import com.eviware.soapui.impl.wsdl.support.MessageExchangeModelItem;
@@ -91,7 +92,7 @@ public class HttpHtmlMessageExchangeResponseView extends AbstractXmlEditorView<H
 	{
 		contentPanel = new JPanel( new BorderLayout() );
 
-		if( BrowserComponent.isJXBrowserDisabled() )
+		if( SoapUI.isJXBrowserDisabled() )
 		{
 			contentPanel.add( new JLabel( "Browser Component is disabled" ) );
 		}
@@ -164,8 +165,8 @@ public class HttpHtmlMessageExchangeResponseView extends AbstractXmlEditorView<H
 
 		if( messageExchangeModelItem2 != null && messageExchangeModelItem2.getMessageExchange() != null )
 		{
-			String contentType = messageExchangeModelItem2.getMessageExchange().getResponseHeaders().get( "Content-Type",
-					"" );
+			String contentType = messageExchangeModelItem2.getMessageExchange().getResponseHeaders()
+					.get( "Content-Type", "" );
 			if( contentType.contains( "html" ) || contentType.contains( "text" ) )
 			{
 				try

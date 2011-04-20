@@ -297,8 +297,8 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
 		public String getContent()
 		{
 			MessageExchange me = response.getMessageExchange();
-			return me == null || me.getRawResponseData() == null ? "<missing raw response data>" : new String( me
-					.getRawResponseData() );
+			return me == null || me.getRawResponseData() == null ? "<missing raw response data>" : new String(
+					me.getRawResponseData() );
 		}
 	}
 
@@ -316,8 +316,8 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
 		public String getContent()
 		{
 			MessageExchange me = request.getMessageExchange();
-			return me == null || me.getRawRequestData() == null ? "<missing raw request data>" : new String( me
-					.getRawRequestData() );
+			return me == null || me.getRawRequestData() == null ? "<missing raw request data>" : new String(
+					me.getRawRequestData() );
 		}
 	}
 

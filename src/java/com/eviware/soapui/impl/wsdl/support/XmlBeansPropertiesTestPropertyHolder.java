@@ -371,11 +371,11 @@ public class XmlBeansPropertiesTestPropertyHolder implements MutableTestProperty
 			return false;
 		}
 
-	@Override
-	public SchemaType getSchemaType()
-	{
-		return XmlBeans.getBuiltinTypeSystem().findType( getType() );
-	}
+		@Override
+		public SchemaType getSchemaType()
+		{
+			return XmlBeans.getBuiltinTypeSystem().findType( getType() );
+		}
 
 	}
 

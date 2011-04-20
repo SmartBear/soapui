@@ -19,7 +19,6 @@ import java.util.Collections;
 import java.util.List;
 
 import com.eviware.soapui.config.TestAssertionConfig;
-import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry.AssertableType;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.Assertable;
@@ -40,7 +39,7 @@ public abstract class AbstractTestAssertionFactory implements TestAssertionFacto
 		this.assertionClass = assertionClass;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings( "unchecked" )
 	public AbstractTestAssertionFactory( String id, String label, Class<? extends TestAssertion> assertionClass,
 			Class<? extends ModelItem> targetClass )
 	{

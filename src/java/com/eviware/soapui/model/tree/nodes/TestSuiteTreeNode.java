@@ -168,19 +168,23 @@ public class TestSuiteTreeNode extends AbstractModelItemTreeNode<TestSuite>
 		}
 
 		@Override
-		public void securityTestAdded(SecurityTest securityTest) {
-			TestCaseTreeNode testCaseTreeNode = ( TestCaseTreeNode )getTreeModel().getTreeNode( securityTest.getTestCase() );
+		public void securityTestAdded( SecurityTest securityTest )
+		{
+			TestCaseTreeNode testCaseTreeNode = ( TestCaseTreeNode )getTreeModel()
+					.getTreeNode( securityTest.getTestCase() );
 			if( testCaseTreeNode != null )
 				testCaseTreeNode.securityTestInserted( securityTest );
-			
+
 		}
 
 		@Override
-		public void securityTestRemoved(SecurityTest securityTest) {
-			TestCaseTreeNode testCaseTreeNode = ( TestCaseTreeNode )getTreeModel().getTreeNode( securityTest.getTestCase() );
+		public void securityTestRemoved( SecurityTest securityTest )
+		{
+			TestCaseTreeNode testCaseTreeNode = ( TestCaseTreeNode )getTreeModel()
+					.getTreeNode( securityTest.getTestCase() );
 			if( testCaseTreeNode != null )
 				testCaseTreeNode.securityTestRemoved( securityTest );
-			
+
 		}
 	}
 }

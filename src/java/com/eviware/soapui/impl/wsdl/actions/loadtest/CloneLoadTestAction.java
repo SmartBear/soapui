@@ -31,8 +31,8 @@ public class CloneLoadTestAction extends AbstractSoapUIAction<WsdlLoadTest>
 
 	public void perform( WsdlLoadTest loadTest, Object param )
 	{
-		String name = UISupport.prompt( "Specify name of cloned LoadTest", "Clone LoadTest", "Copy of "
-				+ loadTest.getName() );
+		String name = UISupport.prompt( "Specify name of cloned LoadTest", "Clone LoadTest",
+				"Copy of " + loadTest.getName() );
 		if( name == null )
 			return;
 

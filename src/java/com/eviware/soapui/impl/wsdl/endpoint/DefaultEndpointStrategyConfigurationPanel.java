@@ -93,8 +93,8 @@ public class DefaultEndpointStrategyConfigurationPanel extends JPanel implements
 		} );
 
 		for( int c = 0; c < table.getColumnCount(); c++ )
-			table.getColumnModel().getColumn( c ).setHeaderRenderer(
-					new MetricsPanel.InternalHeaderRenderer( getBackground() ) );
+			table.getColumnModel().getColumn( c )
+					.setHeaderRenderer( new MetricsPanel.InternalHeaderRenderer( getBackground() ) );
 
 		table.getColumnModel().getColumn( 0 ).setPreferredWidth( 250 );
 
@@ -105,13 +105,23 @@ public class DefaultEndpointStrategyConfigurationPanel extends JPanel implements
 			wssTypeCombo.setEditable( true );
 
 			table.getColumnModel().getColumn( 4 ).setCellEditor( new DefaultCellEditor( wssTypeCombo ) );
-			table.getColumnModel().getColumn( 6 ).setCellEditor(
-					new OutgoingWssCellEditor( ( ( WsdlInterface )iface ).getProject().getWssContainer() ) );
-			table.getColumnModel().getColumn( 7 ).setCellEditor(
-					new IncomingWssCellEditor( ( ( WsdlInterface )iface ).getProject().getWssContainer() ) );
-			table.getColumnModel().getColumn( 8 ).setCellEditor(
-					new DefaultCellEditor( new JComboBox( new String[] { EndpointConfig.Mode.OVERRIDE.toString(),
-							EndpointConfig.Mode.COMPLEMENT.toString(), EndpointConfig.Mode.COPY.toString() } ) ) );
+			table.getColumnModel().getColumn( 6 )
+					.setCellEditor( new OutgoingWssCellEditor( ( ( WsdlInterface )iface ).getProject().getWssContainer() ) );
+			table.getColumnModel().getColumn( 7 )
+					.setCellEditor( new IncomingWssCellEditor( ( ( WsdlInterface )iface ).getProject().getWssContainer() ) );
+			table.getColumnModel()
+					.getColumn( 8 )
+					.setCellEditor(
+							new DefaultCellEditor( new JComboBox( new String[] { EndpointConfig.Mode.OVERRIDE.toString(),
+									EndpointConfig.Mode.COMPLEMENT.toString(), EndpointConfig.Mode.COPY.toString() } ) ) );
+		}
+		else
+		{
+			table.getColumnModel()
+					.getColumn( 4 )
+					.setCellEditor(
+							new DefaultCellEditor( new JComboBox( new String[] { EndpointConfig.Mode.OVERRIDE.toString(),
+									EndpointConfig.Mode.COMPLEMENT.toString(), EndpointConfig.Mode.COPY.toString() } ) ) );
 		}
 
 		table.getTableHeader().setReorderingAllowed( false );
@@ -205,8 +215,8 @@ public class DefaultEndpointStrategyConfigurationPanel extends JPanel implements
 			list.add( 2, ALL_REQUESTS_AND_TEST_REQUESTS );
 			list.add( 3, ALL_REQUESTS_WITH_NO_ENDPOINT );
 
-			Object endpoint = UISupport.prompt( "Assign selected endpoint and authorization to..", "Assign Endpoint", list
-					.toArray(), ALL_REQUESTS_WITH_NO_ENDPOINT );
+			Object endpoint = UISupport.prompt( "Assign selected endpoint and authorization to..", "Assign Endpoint",
+					list.toArray(), ALL_REQUESTS_WITH_NO_ENDPOINT );
 
 			if( endpoint == null )
 				return;
@@ -330,7 +340,7 @@ public class DefaultEndpointStrategyConfigurationPanel extends JPanel implements
 			fireTableRowsDeleted( index, index );
 		}
 
-			public int getRowCount()
+		public int getRowCount()
 		{
 			return iface == null ? 0 : iface.getEndpoints().length;
 		}

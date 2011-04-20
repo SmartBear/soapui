@@ -295,10 +295,10 @@ public class WsdlMockOperationDesktopPanel extends ModelItemDesktopPanel<WsdlMoc
 		responseListModel.release();
 
 		inspectorPanel.release();
-		
+
 		if( dispatcher != null )
 			dispatcher.releaseEditorComponent();
-		
+
 		return release();
 	}
 
@@ -312,8 +312,8 @@ public class WsdlMockOperationDesktopPanel extends ModelItemDesktopPanel<WsdlMoc
 	{
 		public void itemStateChanged( ItemEvent e )
 		{
-			WsdlInterface iface = ( WsdlInterface )getModelItem().getMockService().getProject().getInterfaceByName(
-					interfaceCombo.getSelectedItem().toString() );
+			WsdlInterface iface = ( WsdlInterface )getModelItem().getMockService().getProject()
+					.getInterfaceByName( interfaceCombo.getSelectedItem().toString() );
 			WsdlOperation operation = iface.getOperationByName( operationCombo.getSelectedItem().toString() );
 			getModelItem().setOperation( operation );
 		}
@@ -336,8 +336,8 @@ public class WsdlMockOperationDesktopPanel extends ModelItemDesktopPanel<WsdlMoc
 			}
 			else
 			{
-				currentInterface = ( WsdlInterface )getModelItem().getMockService().getProject().getInterfaceByName(
-						selectedItem.toString() );
+				currentInterface = ( WsdlInterface )getModelItem().getMockService().getProject()
+						.getInterfaceByName( selectedItem.toString() );
 				ModelItemNames<Operation> names = new ModelItemNames<Operation>( currentInterface.getOperationList() );
 				operationCombo.setModel( new ExtendedComboBoxModel( names.getNames() ) );
 

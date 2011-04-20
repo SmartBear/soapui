@@ -54,7 +54,7 @@ public class HTMLPageSourceDownloader
 	List<Attachment> attachmentList = new ArrayList<Attachment>();
 
 	protected List<Attachment> downloadCssAndImages( String endpoint, HttpRequest request )
-			throws  MalformedURLException, IOException
+			throws MalformedURLException, IOException
 	{
 		HtmlPage htmlPage = client.getPage( endpoint );
 		String xPathExpression = "//*[name() = 'img' or name() = 'link' and @type = 'text/css']";
@@ -99,7 +99,7 @@ public class HTMLPageSourceDownloader
 	{
 		File temp = new File( fhsce.getStatusCode() + "_" + fhsce.getStatusMessage() + "_" + url.toString() );
 		RequestFileAttachment missingFile = new RequestFileAttachment( temp, false, ( AbstractHttpRequest<?> )request );
-		missingResourcesList.add(  fhsce.getStatusCode() + " " + fhsce.getStatusMessage() + " " + url.toString());
+		missingResourcesList.add( fhsce.getStatusCode() + " " + fhsce.getStatusMessage() + " " + url.toString() );
 		return missingFile;
 	}
 

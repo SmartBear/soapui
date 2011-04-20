@@ -15,6 +15,7 @@ package com.eviware.soapui.impl.wsdl.actions.project;
 import java.io.File;
 
 import com.eviware.soapui.impl.WsdlInterfaceFactory;
+import com.eviware.soapui.impl.support.definition.support.InvalidDefinitionException;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.actions.iface.GenerateMockServiceAction;
@@ -31,8 +32,8 @@ import com.eviware.x.form.XFormField;
 import com.eviware.x.form.XFormFieldListener;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.AField.AFieldType;
+import com.eviware.x.form.support.AForm;
 
 /**
  * Action for creating a new WSDL project
@@ -95,13 +96,17 @@ public class AddWsdlAction extends AbstractSoapUIAction<WsdlProject>
 					if( !url.equals( expUrl ) )
 					{
 						for( WsdlInterface iface : results )
-				{
+						{
 							iface.setDefinition( url, false );
 						}
 					}
 
 					break;
 				}
+			}
+			catch( InvalidDefinitionException ex )
+			{
+				ex.show();
 			}
 			catch( Exception ex )
 			{

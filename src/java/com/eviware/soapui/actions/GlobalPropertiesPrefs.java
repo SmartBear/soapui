@@ -32,8 +32,8 @@ public class GlobalPropertiesPrefs implements Prefs
 		{
 			globalPropertiesForm = new SimpleForm();
 
-			PropertyHolderTable propertyHolderTable = new PropertyHolderTable( PropertyExpansionUtils
-					.getGlobalProperties() );
+			PropertyHolderTable propertyHolderTable = new PropertyHolderTable(
+					PropertyExpansionUtils.getGlobalProperties() );
 			propertyHolderTable.setPreferredSize( new Dimension( 200, 300 ) );
 			globalPropertiesForm.addComponent( propertyHolderTable );
 			globalPropertiesForm.addSpace();

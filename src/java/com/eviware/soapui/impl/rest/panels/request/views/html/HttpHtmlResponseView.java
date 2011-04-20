@@ -62,7 +62,7 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 	public void setRecordHttpTrafic( boolean recordHttpTrafic )
 	{
 		// no change?
-		if( recordHttpTrafic == this.recordHttpTrafic )
+		if( SoapUI.isJXBrowserDisabled() || recordHttpTrafic == this.recordHttpTrafic )
 			return;
 
 		if( recordHttpTrafic )
@@ -104,7 +104,7 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 		{
 			panel = new JPanel( new BorderLayout() );
 
-			if( BrowserComponent.isJXBrowserDisabled() )
+			if( SoapUI.isJXBrowserDisabled() )
 			{
 				panel.add( new JLabel( "Browser Component is disabled" ) );
 			}
@@ -144,11 +144,15 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 
 	protected void setEditorContent( HttpResponse httpResponse )
 	{
-		if( httpResponse != null )
+		if( httpResponse != null && httpResponse.getContentAsString() != null )
 		{
 			try
 			{
-				browser.navigate( httpResponse.getURL().toURI().toString(), httpResponse.getRequestContent(), null );
+				browser.setContent( new String( httpResponse.getContentAsString().getBytes( "utf-8" ) ), httpResponse
+						.getURL().toURI().toString() );
+
+				// browser.navigate( httpResponse.getURL().toURI().toString(),
+				// httpResponse.getRequestContent(), null );
 				hasResponseForRecording = true;
 			}
 			catch( Throwable e )
@@ -161,29 +165,6 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 			browser.setContent( "<missing content>" );
 			hasResponseForRecording = false;
 		}
-	}
-
-	private void writeHttpBody( byte[] rawResponse, FileOutputStream out ) throws IOException
-	{
-		int index = 0;
-		byte[] divider = "\r\n\r\n".getBytes();
-		for( ; index < ( rawResponse.length - divider.length ); index++ )
-		{
-			int i;
-			for( i = 0; i < divider.length; i++ )
-			{
-				if( rawResponse[index + i] != divider[i] )
-					break;
-			}
-
-			if( i == divider.length )
-			{
-				out.write( rawResponse, index + divider.length, rawResponse.length - ( index + divider.length ) );
-				return;
-			}
-		}
-
-		out.write( rawResponse );
 	}
 
 	private Component buildToolbar()

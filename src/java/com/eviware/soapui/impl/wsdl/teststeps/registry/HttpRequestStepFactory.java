@@ -130,8 +130,8 @@ public class HttpRequestStepFactory extends WsdlTestStepFactory
 		String path = RestUtils.extractParams( endpoint, params, true );
 		endpoint = path;
 
-		XmlBeansRestParamsTestPropertyHolder tempParams = new XmlBeansRestParamsTestPropertyHolder( testCase, httpRequest
-				.addNewParameters() );
+		XmlBeansRestParamsTestPropertyHolder tempParams = new XmlBeansRestParamsTestPropertyHolder( testCase,
+				httpRequest.addNewParameters() );
 		tempParams.addParameters( params );
 
 		httpRequest.setEndpoint( HttpUtils.ensureEndpointStartsWithProtocol( endpoint ) );

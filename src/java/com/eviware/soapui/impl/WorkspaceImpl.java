@@ -300,8 +300,8 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace
 						String path = project.getPath();
 						if( !StringUtils.hasContent( path ) )
 						{
-							if( UISupport.confirm( messages.get( "ProjectHasNotBeenSaved.Label", project.getName() ), messages
-									.get( "ProjectHasNotBeenSaved.Title" ) ) )
+							if( UISupport.confirm( messages.get( "ProjectHasNotBeenSaved.Label", project.getName() ),
+									messages.get( "ProjectHasNotBeenSaved.Title" ) ) )
 							{
 								project.save();
 							}
@@ -411,8 +411,8 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace
 			Boolean result = Boolean.FALSE;
 			while( !result.booleanValue() )
 			{
-				result = UISupport.confirmOrCancel( messages.get( "OverwriteProject.Label" ), messages
-						.get( "OverwriteProject.Title" ) );
+				result = UISupport.confirmOrCancel( messages.get( "OverwriteProject.Label" ),
+						messages.get( "OverwriteProject.Title" ) );
 				if( result == null )
 					return null;
 				if( result.booleanValue() )

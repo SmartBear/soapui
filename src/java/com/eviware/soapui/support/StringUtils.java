@@ -19,6 +19,7 @@ import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -248,9 +249,10 @@ public class StringUtils
 
 		return result.toString();
 	}
-	
+
 	/**
 	 * replaces all non letter and non digit characte from file name
+	 * 
 	 * @param str
 	 * @param replace
 	 * @return
@@ -265,27 +267,27 @@ public class StringUtils
 
 			if( Character.isLetterOrDigit( ch ) )
 				result.append( ch );
-			else 
+			else
 				result.append( replace );
 		}
 
 		return result.toString();
 	}
-	
+
 	public static String createXmlName( String str )
 	{
 		StringBuffer result = new StringBuffer();
 		boolean skipped = false;
 		boolean numbersOnly = true;
-		
+
 		for( int c = 0; c < str.length(); c++ )
 		{
 			char ch = str.charAt( c );
 
-			if( Character.isLetter( ch ))
+			if( Character.isLetter( ch ) || ch == '_' || ch == '-' || ch == '.' )
 			{
 				if( skipped )
-					result.append(  Character.toUpperCase( ch ) );
+					result.append( Character.toUpperCase( ch ) );
 				else
 					result.append( ch );
 				numbersOnly = false;
@@ -305,7 +307,7 @@ public class StringUtils
 		str = result.toString();
 		if( numbersOnly && str.length() > 0 )
 			str = "_" + str;
-		
+
 		return str;
 	}
 
@@ -341,17 +343,24 @@ public class StringUtils
 
 	public static String toHtml( String string )
 	{
+		return toHtml( string, 0 );
+	}
+
+	public static String toHtml( String string, int maxSize )
+	{
 		if( StringUtils.isNullOrEmpty( string ) )
 			return "<html><body></body></html>";
 
 		BufferedReader st = new BufferedReader( new StringReader( string ) );
 		StringBuffer buf = new StringBuffer( "<html><body>" );
 
+		String str = null;
+
 		try
 		{
-			String str = st.readLine();
+			str = st.readLine();
 
-			while( str != null )
+			while( str != null && ( maxSize == 0 || ( buf.length() + str.length() ) < maxSize ) )
 			{
 				if( str.equalsIgnoreCase( "<br/>" ) )
 				{
@@ -372,6 +381,9 @@ public class StringUtils
 		{
 			e.printStackTrace();
 		}
+
+		if( str != null )
+			buf.append( "..." );
 
 		buf.append( "</body></html>" );
 		string = buf.toString();
@@ -424,12 +436,18 @@ public class StringUtils
 	public static List<String> toStringList( Object[] selectedOptions )
 	{
 		StringList result = new StringList();
-		
+
 		for( Object o : selectedOptions )
 		{
 			result.add( o.toString() );
 		}
-		
+
 		return result;
+	}
+
+	public static String[] sortNames( String[] names )
+	{
+		Arrays.sort( names );
+		return names;
 	}
 }

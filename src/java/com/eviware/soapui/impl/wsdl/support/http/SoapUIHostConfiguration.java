@@ -42,8 +42,8 @@ public class SoapUIHostConfiguration extends HostConfiguration
 		if( result && o instanceof SoapUIHostConfiguration )
 		{
 			SoapUIHostConfiguration that = ( SoapUIHostConfiguration )o;
-			return LangUtils.equals( getParams().getParameter( SOAPUI_SSL_CONFIG ), that.getParams().getParameter(
-					SOAPUI_SSL_CONFIG ) );
+			return LangUtils.equals( getParams().getParameter( SOAPUI_SSL_CONFIG ),
+					that.getParams().getParameter( SOAPUI_SSL_CONFIG ) );
 		}
 		else
 		{

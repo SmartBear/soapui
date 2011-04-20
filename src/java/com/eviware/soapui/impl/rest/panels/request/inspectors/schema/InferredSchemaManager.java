@@ -84,8 +84,8 @@ public class InferredSchemaManager
 		{
 			try
 			{
-				schemas.put( service, InferredSchema.Factory.parse( new ByteArrayInputStream( service.getInferredSchema()
-						.getBytes() ) ) );
+				schemas.put( service,
+						InferredSchema.Factory.parse( new ByteArrayInputStream( service.getInferredSchema().getBytes() ) ) );
 			}
 			catch( Exception e )
 			{
@@ -114,7 +114,7 @@ public class InferredSchemaManager
 			propertyChangeSupports.get( service ).firePropertyChange( "inferredSchema", old, out.toString() );
 		}
 	}
-	
+
 	public static void release( RestService service )
 	{
 		schemas.remove( service );

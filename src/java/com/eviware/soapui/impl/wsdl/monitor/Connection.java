@@ -215,9 +215,9 @@ class Connection extends Thread
 			}
 			else
 			{
-				// 
+				//
 				// Change Host: header to point to correct host
-				// 
+				//
 				byte[] b1 = new byte[1];
 				buf = new StringBuffer();
 				String s1;

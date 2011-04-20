@@ -49,7 +49,7 @@ import com.eviware.soapui.support.xml.XmlUtils;
 public class SecurityCheckUtil
 {
 
-	public static Map<String,String> globalEntriesList()
+	public static Map<String, String> globalEntriesList()
 	{
 		Settings settings = SoapUI.getSettings();
 		String temp = settings.getString( GlobalPropertySettings.SECURITY_CHECKS_PROPERTIES, null );
@@ -57,7 +57,7 @@ public class SecurityCheckUtil
 		try
 		{
 			config = PropertiesTypeConfig.Factory.parse( temp );
-			 Map<String,String> map = new HashMap<String,String>();
+			Map<String, String> map = new HashMap<String, String>();
 			for( PropertyConfig pc : config.getPropertyList() )
 			{
 				map.put( pc.getName(), pc.getValue() );
@@ -126,19 +126,19 @@ public class SecurityCheckUtil
 	}
 
 	@SuppressWarnings( "unchecked" )
-	public static Map<String,String> projectEntriesList( SensitiveInfoExposureAssertion sensitiveInfoExposureAssertion )
+	public static Map<String, String> projectEntriesList( SensitiveInfoExposureAssertion sensitiveInfoExposureAssertion )
 	{
 		Project project = ModelSupport.getModelItemProject( sensitiveInfoExposureAssertion );
 		AbstractWsdlModelItem<ModelItemConfig> modelItem = ( AbstractWsdlModelItem<ModelItemConfig> )project
 				.getModelItem();
-		XmlObjectConfigurationReader reader = new XmlObjectConfigurationReader( ( ( ProjectConfig )modelItem.getConfig() )
-				.getSensitiveInformation() );
+		XmlObjectConfigurationReader reader = new XmlObjectConfigurationReader(
+				( ( ProjectConfig )modelItem.getConfig() ).getSensitiveInformation() );
 		String[] strngArray = reader.readStrings( ProjectSensitiveInformationPanel.PROJECT_SPECIFIC_EXPOSURE_LIST );
 		if( strngArray != null )
 		{
-			Map<String,String> map = new HashMap<String,String>();
-			
-			for( String str : strngArray)
+			Map<String, String> map = new HashMap<String, String>();
+
+			for( String str : strngArray )
 			{
 				String[] tokens = str.split( "###" );
 				if( tokens.length == 2 )
@@ -147,23 +147,23 @@ public class SecurityCheckUtil
 				}
 				else
 				{
-					map.put (tokens[0], "" );
+					map.put( tokens[0], "" );
 				}
 			}
 			return map;
 		}
 		else
 		{
-			return new HashMap<String,String>();
+			return new HashMap<String, String>();
 		}
 	}
-	
+
 	public static XmlObjectTreeModel getXmlObjectTreeModel( TestStep testStep, SecurityCheckedParameter scp )
 	{
 		try
 		{
 			TestProperty tp = testStep.getProperty( scp.getName() );
-			if( tp.getSchemaType() != null && XmlUtils.seemsToBeXml( tp.getValue() ))
+			if( tp.getSchemaType() != null && XmlUtils.seemsToBeXml( tp.getValue() ) )
 			{
 				return new XmlObjectTreeModel( tp.getSchemaType().getTypeSystem(), XmlObject.Factory.parse( tp.getValue() ) );
 			}
@@ -174,6 +174,5 @@ public class SecurityCheckUtil
 		}
 		return null;
 	}
-	
 
 }

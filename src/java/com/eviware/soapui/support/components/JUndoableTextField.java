@@ -79,7 +79,7 @@ public class JUndoableTextField extends JTextField implements Undoable, Undoable
 					paste();
 				else
 					return;
-				
+
 				e.consume();
 			}
 		} );

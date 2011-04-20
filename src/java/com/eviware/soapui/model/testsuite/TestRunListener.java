@@ -26,12 +26,14 @@ public interface TestRunListener
 	public void afterRun( TestCaseRunner testRunner, TestCaseRunContext runContext );
 
 	/**
-	 * @deprecated use {@link #beforeStep(TestCaseRunner, TestCaseRunContext, TestStep)} instead
+	 * @deprecated use
+	 *             {@link #beforeStep(TestCaseRunner, TestCaseRunContext, TestStep)}
+	 *             instead
 	 */
-	
+
 	public void beforeStep( TestCaseRunner testRunner, TestCaseRunContext runContext );
 
 	public void beforeStep( TestCaseRunner testRunner, TestCaseRunContext runContext, TestStep testStep );
-	
+
 	public void afterStep( TestCaseRunner testRunner, TestCaseRunContext runContext, TestStepResult result );
 }

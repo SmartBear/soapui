@@ -33,8 +33,8 @@ public class CloneMockResponseAction extends AbstractSoapUIAction<WsdlMockRespon
 
 	public void perform( WsdlMockResponse mockResponse, Object param )
 	{
-		String name = UISupport.prompt( "Specify name of cloned MockResponse", getName(), "Copy of "
-				+ mockResponse.getName() );
+		String name = UISupport.prompt( "Specify name of cloned MockResponse", getName(),
+				"Copy of " + mockResponse.getName() );
 		if( name == null )
 			return;
 

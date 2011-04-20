@@ -15,8 +15,6 @@ package com.eviware.soapui.impl.wsdl.support.wsrm;
 import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlObject;
 
-import net.java.dev.wadl.x2009.x02.ApplicationDocument;
-
 public class WsrmBuilder
 {
 	private static final String WSRM_CREATE_SEQUENCE = "CreateSequence";

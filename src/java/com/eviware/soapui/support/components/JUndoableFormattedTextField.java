@@ -72,7 +72,7 @@ public class JUndoableFormattedTextField extends JFormattedTextField implements 
 					paste();
 				else
 					return;
-				
+
 				e.consume();
 			}
 		} );

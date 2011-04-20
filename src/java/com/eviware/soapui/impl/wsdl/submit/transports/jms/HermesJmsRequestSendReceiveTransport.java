@@ -43,9 +43,9 @@ public class HermesJmsRequestSendReceiveTransport extends HermesJmsRequestTransp
 			Queue queueReceive = jmsConnectionHolder.getQueue( jmsConnectionHolder.getJmsEndpoint().getReceive() );
 
 			Message messageSend = messageSend( submitContext, request, queueSession, jmsConnectionHolder.getHermes(),
-					queueSend );
-			MessageConsumer messageConsumer = queueSession.createConsumer( queueReceive, submitContext
-					.expand( messageSelector ) );
+					queueSend, queueReceive );
+			MessageConsumer messageConsumer = queueSession.createConsumer( queueReceive,
+					submitContext.expand( messageSelector ) );
 
 			return makeResponse( submitContext, request, timeStarted, messageSend, messageConsumer );
 		}

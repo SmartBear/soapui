@@ -1257,8 +1257,8 @@ public class SampleXmlUtil
 					SOAPArrayType arrayType = ( ( SchemaWSDLArrayType )stype.getAttributeModel().getAttribute(
 							attr.getName() ) ).getWSDLArrayType();
 					if( arrayType != null )
-						xmlc.insertAttributeWithValue( attr.getName(), formatQName( xmlc, arrayType.getQName() )
-								+ arrayType.soap11DimensionString() );
+						xmlc.insertAttributeWithValue( attr.getName(),
+								formatQName( xmlc, arrayType.getQName() ) + arrayType.soap11DimensionString() );
 					continue;
 				}
 			}

@@ -12,8 +12,8 @@
 
 package com.eviware.soapui.impl.support;
 
-import com.eviware.soapui.model.iface.Operation;
 import com.eviware.soapui.model.iface.Attachment.AttachmentEncoding;
+import com.eviware.soapui.model.iface.Operation;
 
 public interface AbstractHttpOperation extends Operation
 {

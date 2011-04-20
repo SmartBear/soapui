@@ -200,17 +200,16 @@ public class MultipartMessageSupport
 	{
 		if( responseContent == null )
 			getResponseContent();
-		
+
 		if( prettyPrint )
 		{
 			responseContent = XmlUtils.prettyPrintXml( responseContent );
 			prettyPrint = false;
 		}
-		
+
 		return responseContent;
 	}
-	
-	
+
 	public void setResponseContent( String responseContent )
 	{
 		this.responseContent = responseContent;

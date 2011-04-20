@@ -34,8 +34,8 @@ public class AddNewLoadTestAction extends AbstractSoapUIAction<WsdlTestCase>
 
 	public void perform( WsdlTestCase testCase, Object param )
 	{
-		String name = UISupport.prompt( "Specify name of LoadTest", "New LoadTest", "LoadTest "
-				+ ( testCase.getLoadTestCount() + 1 ) );
+		String name = UISupport.prompt( "Specify name of LoadTest", "New LoadTest",
+				"LoadTest " + ( testCase.getLoadTestCount() + 1 ) );
 		if( name == null )
 			return;
 

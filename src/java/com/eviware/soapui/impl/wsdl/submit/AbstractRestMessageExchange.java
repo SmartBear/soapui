@@ -44,11 +44,11 @@ public abstract class AbstractRestMessageExchange<T extends ModelItem> extends A
 
 		if( getResponseAttachments() != null )
 		{
-		for( Attachment attachment : getResponseAttachments() )
-		{
-			if( attachment.getPart().equals( name ) )
-				result.add( attachment );
-		}
+			for( Attachment attachment : getResponseAttachments() )
+			{
+				if( attachment.getPart().equals( name ) )
+					result.add( attachment );
+			}
 		}
 
 		return result.toArray( new Attachment[result.size()] );

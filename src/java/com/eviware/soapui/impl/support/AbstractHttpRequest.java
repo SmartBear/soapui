@@ -29,7 +29,6 @@ import com.eviware.soapui.config.AbstractRequestConfig;
 import com.eviware.soapui.config.AttachmentConfig;
 import com.eviware.soapui.config.CredentialsConfig;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
-import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.HttpAttachmentPart;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
@@ -41,8 +40,8 @@ import com.eviware.soapui.impl.wsdl.support.ModelItemIconAnimator;
 import com.eviware.soapui.impl.wsdl.support.RequestFileAttachment;
 import com.eviware.soapui.impl.wsdl.support.jms.header.JMSHeaderContainer;
 import com.eviware.soapui.impl.wsdl.support.jms.property.JMSPropertyContainer;
+import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep.RequestHeaderHolder;
 import com.eviware.soapui.impl.wsdl.teststeps.SettingPathPropertySupport;
-import com.eviware.soapui.impl.wsdl.teststeps.TestRequest;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.model.iface.Submit;
@@ -51,12 +50,12 @@ import com.eviware.soapui.model.iface.SubmitListener;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionsResult;
-import com.eviware.soapui.model.testsuite.TestPropertyListener;
 import com.eviware.soapui.settings.CommonSettings;
 import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.resolver.ResolveContext;
+import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.types.StringToStringsMap;
 
 public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> extends AbstractWsdlModelItem<T> implements
@@ -168,13 +167,13 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 	{
 		return attachments.get( index );
 	}
-	
 
-	public void setAttachmentAt( int index, Attachment attachment ) {
-		if (attachments.size() > index)
-			attachments.set(index, (FileAttachment)attachment);
+	public void setAttachmentAt( int index, Attachment attachment )
+	{
+		if( attachments.size() > index )
+			attachments.set( index, ( FileAttachment )attachment );
 		else
-			attachments.add((FileAttachment)attachment);
+			attachments.add( ( FileAttachment )attachment );
 		notifyPropertyChanged( ATTACHMENTS_PROPERTY, null, attachment );
 
 	}
@@ -426,6 +425,17 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 		return iconAnimator;
 	}
 
+	/**
+	 * Added for backwards compatibility
+	 * 
+	 * @param map
+	 */
+
+	public void setRequestHeaders( StringToStringMap map )
+	{
+		setRequestHeaders( new StringToStringsMap( map ) );
+	}
+
 	public void setRequestHeaders( StringToStringsMap map )
 	{
 		StringToStringsMap old = getRequestHeaders();
@@ -448,6 +458,13 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 		result.addAll( PropertyExpansionUtils.extractPropertyExpansions( this, this, "username" ) );
 		result.addAll( PropertyExpansionUtils.extractPropertyExpansions( this, this, "password" ) );
 		result.addAll( PropertyExpansionUtils.extractPropertyExpansions( this, this, "domain" ) );
+
+		StringToStringsMap requestHeaders = getRequestHeaders();
+		for( String key : requestHeaders.keySet() )
+		{
+			for( String value : requestHeaders.get( key ) )
+				result.extractAndAddAll( new RequestHeaderHolder( key, value, this ), "value" );
+		}
 
 		return result.toArray();
 	}
@@ -680,9 +697,4 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 	{
 		return afterRequestInjection;
 	}
-	
-	public abstract RestParamsPropertyHolder getParams();
-	
-	public abstract void addTestPropertyListener( TestPropertyListener listener );
-
 }

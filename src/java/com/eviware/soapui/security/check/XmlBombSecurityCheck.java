@@ -60,8 +60,7 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheckWithProperties
 		if( getBombList().size() < 1 )
 		{
 			getBombList()
-					.add(
-							"<!DOCTYPE lolz [\n<!ENTITY lol \"lol\">\n<!ENTITY lol2 \"&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;\">\n<!ENTITY lol3 \"&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;\">\n<!ENTITY lol4 \"&lol3;&lol3;&lol3;&lol3;&lol3;&lol3;&lol3;&lol3;&lol3;&lol3;\">\n<!ENTITY lol5 \"&lol4;&lol4;&lol4;&lol4;&lol4;&lol4;&lol4;&lol4;&lol4;&lol4;\">\n<!ENTITY lol6 \"&lol5;&lol5;&lol5;&lol5;&lol5;&lol5;&lol5;&lol5;&lol5;&lol5;\">\n<!ENTITY lol7 \"&lol6;&lol6;&lol6;&lol6;&lol6;&lol6;&lol6;&lol6;&lol6;&lol6;\">\n<!ENTITY lol8 \"&lol7;&lol7;&lol7;&lol7;&lol7;&lol7;&lol7;&lol7;&lol7;&lol7;\">\n<!ENTITY payload \"&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;\">\n]>" );
+					.add( "<!DOCTYPE lolz [\n<!ENTITY lol \"lol\">\n<!ENTITY lol2 \"&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;\">\n<!ENTITY lol3 \"&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;\">\n<!ENTITY lol4 \"&lol3;&lol3;&lol3;&lol3;&lol3;&lol3;&lol3;&lol3;&lol3;&lol3;\">\n<!ENTITY lol5 \"&lol4;&lol4;&lol4;&lol4;&lol4;&lol4;&lol4;&lol4;&lol4;&lol4;\">\n<!ENTITY lol6 \"&lol5;&lol5;&lol5;&lol5;&lol5;&lol5;&lol5;&lol5;&lol5;&lol5;\">\n<!ENTITY lol7 \"&lol6;&lol6;&lol6;&lol6;&lol6;&lol6;&lol6;&lol6;&lol6;&lol6;\">\n<!ENTITY lol8 \"&lol7;&lol7;&lol7;&lol7;&lol7;&lol7;&lol7;&lol7;&lol7;&lol7;\">\n<!ENTITY payload \"&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;\">\n]>" );
 		}
 	}
 
@@ -158,8 +157,8 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheckWithProperties
 			{
 				for( SecurityCheckedParameter param : list )
 				{
-					newRequestContent = XmlUtils.setXPathContent( newRequestContent, param.getName().substring(
-							param.getName().lastIndexOf( "\n" ) + 1 ), "&&payload&&" );
+					newRequestContent = XmlUtils.setXPathContent( newRequestContent,
+							param.getName().substring( param.getName().lastIndexOf( "\n" ) + 1 ), "&&payload&&" );
 				}
 				newRequestContent = newRequestContent.replaceAll( "&amp;&amp;payload&amp;&amp;", "&payload" );
 			}
@@ -178,7 +177,6 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheckWithProperties
 		return testStep;
 
 	}
-
 
 	@Override
 	public SecurityCheckConfigPanel getComponent()
@@ -214,8 +212,8 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheckWithProperties
 			String newRequestContent = requestContent;
 			if( testStep instanceof WsdlTestRequestStep )
 			{
-				newRequestContent = XmlUtils.setXPathContent( request.getRequestContent(), param.substring( param
-						.lastIndexOf( "\n" ) + 1 ), "&&payload&&" );
+				newRequestContent = XmlUtils.setXPathContent( request.getRequestContent(),
+						param.substring( param.lastIndexOf( "\n" ) + 1 ), "&&payload&&" );
 				// We need to do this, since the parser we are using does not
 				// provide support for
 				// entity references (it throws a "Not Implemented" runtime
@@ -333,8 +331,8 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheckWithProperties
 		{
 			for( SecurityCheckedParameter param : list )
 			{
-				initialContent = XmlUtils.setXPathContent( initialContent, param.getName().substring(
-						param.getName().lastIndexOf( "\n" ) + 1 ), "&&payload&&" );
+				initialContent = XmlUtils.setXPathContent( initialContent,
+						param.getName().substring( param.getName().lastIndexOf( "\n" ) + 1 ), "&&payload&&" );
 			}
 			for( int i = 0; i < 16; i++ )
 			{
@@ -375,7 +373,7 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheckWithProperties
 	}
 
 	@Override
-	protected boolean hasNext(TestStep testStep,SecurityTestRunContext context)
+	protected boolean hasNext( TestStep testStep, SecurityTestRunContext context )
 	{
 		// TODO Auto-generated method stub
 		return false;

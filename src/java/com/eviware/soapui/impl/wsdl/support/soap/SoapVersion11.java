@@ -63,15 +63,15 @@ public class SoapVersion11 extends AbstractSoapVersion
 			options.setCompileNoUpaRule();
 			options.setValidateTreatLaxAsSkip();
 
-			soapSchemaXml = XmlObject.Factory.parse( SoapUI.class
-					.getResource( "/com/eviware/soapui/resources/xsds/soapEnvelope.xsd" ), options );
+			soapSchemaXml = XmlObject.Factory.parse(
+					SoapUI.class.getResource( "/com/eviware/soapui/resources/xsds/soapEnvelope.xsd" ), options );
 			soapSchema = XmlBeans.loadXsd( new XmlObject[] { soapSchemaXml } );
 
 			soapEnvelopeType = soapSchema.findDocumentType( envelopeQName );
 			soapFaultType = soapSchema.findDocumentType( faultQName );
 
-			soapEncodingXml = XmlObject.Factory.parse( SoapUI.class
-					.getResource( "/com/eviware/soapui/resources/xsds/soapEncoding.xsd" ), options );
+			soapEncodingXml = XmlObject.Factory.parse(
+					SoapUI.class.getResource( "/com/eviware/soapui/resources/xsds/soapEncoding.xsd" ), options );
 		}
 		catch( Exception e )
 		{

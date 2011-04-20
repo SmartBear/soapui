@@ -70,7 +70,7 @@ public interface TestCase extends TestModelItem, ResultContainer, TestRunnable
 	public boolean isDisabled();
 
 	public String getLabel();
-	
+
 	public SecurityTest getSecurityTestAt( int index );
 
 	public SecurityTest getSecurityTestByName( String securityTestName );
@@ -78,6 +78,6 @@ public interface TestCase extends TestModelItem, ResultContainer, TestRunnable
 	public int getIndexOfSecurityTest( SecurityTest securityTest );
 
 	public int getSecurityTestCount();
-	
+
 	public List<SecurityTest> getSecurityTestList();
 }

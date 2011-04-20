@@ -33,9 +33,10 @@ public class JsonResponseViewFactory implements ResponseEditorViewFactory
 			return new JsonResponseView( ( HttpResponseMessageEditor )editor, ( HttpRequestInterface<?> )modelItem );
 		}
 		if( modelItem instanceof MessageExchangeModelItem )
-			{
-				return new JsonResponseMessageExchangeView( ( MessageExchangeResponseMessageEditor) editor, ( MessageExchangeModelItem )modelItem );
-			}
+		{
+			return new JsonResponseMessageExchangeView( ( MessageExchangeResponseMessageEditor )editor,
+					( MessageExchangeModelItem )modelItem );
+		}
 		return null;
 	}
 

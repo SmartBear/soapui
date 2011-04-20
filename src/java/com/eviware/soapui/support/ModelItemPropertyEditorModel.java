@@ -69,7 +69,7 @@ public class ModelItemPropertyEditorModel<T extends ModelItem> extends AbstractE
 	public void release()
 	{
 		super.release();
-		
+
 		modelItem.removePropertyChangeListener( propertyName, this );
 	}
 

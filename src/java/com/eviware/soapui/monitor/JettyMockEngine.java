@@ -81,6 +81,8 @@ public class JettyMockEngine implements MockEngine
 
 	private SslSocketConnector sslConnector;
 
+	private boolean addedSslConnector;
+
 	public JettyMockEngine()
 	{
 		System.setProperty( "org.mortbay.log.class", JettyLogger.class.getName() );
@@ -105,6 +107,20 @@ public class JettyMockEngine implements MockEngine
 			WsdlMockService mockService = ( WsdlMockService )runner.getMockService();
 			int port = mockService.getPort();
 
+			if( SoapUI.getSettings().getBoolean( SSLSettings.ENABLE_MOCK_SSL ) && !addedSslConnector )
+			{
+				updateSslConnectorSettings();
+				server.addConnector( sslConnector );
+				addedSslConnector = true;
+			}
+			else
+			{
+				if( addedSslConnector )
+					server.removeConnector( sslConnector );
+
+				addedSslConnector = false;
+			}
+
 			if( !runners.containsKey( port ) )
 			{
 				SoapUIConnector connector = new SoapUIConnector();
@@ -112,7 +128,9 @@ public class JettyMockEngine implements MockEngine
 
 				connector.setPort( port );
 				if( sslConnector != null )
+				{
 					connector.setConfidentialPort( sslConnector.getPort() );
+				}
 
 				if( mockService.getBindToHostOnly() )
 				{
@@ -167,19 +185,19 @@ public class JettyMockEngine implements MockEngine
 	private void initServer() throws Exception
 	{
 		server = new Server();
-		// QueuedThreadPool threadPool = new QueuedThreadPool();
-		// threadPool.setMaxThreads( 100 );
 		server.setThreadPool( new SoapUIJettyThreadPool() );
-
 		server.setHandler( new ServerHandler() );
 
 		RequestLogHandler logHandler = new RequestLogHandler();
 		logHandler.setRequestLog( new MockRequestLog() );
 		server.addHandler( logHandler );
 
-		if( SoapUI.getSettings().getBoolean( SSLSettings.ENABLE_MOCK_SSL ) )
+		sslConnector = new SslSocketConnector();
+		sslConnector.setMaxIdleTime( 30000 );
+	}
+
+	private void updateSslConnectorSettings()
 		{
-			sslConnector = new SslSocketConnector();
 			sslConnector.setKeystore( SoapUI.getSettings().getString( SSLSettings.MOCK_KEYSTORE, null ) );
 			sslConnector.setPassword( SoapUI.getSettings().getString( SSLSettings.MOCK_PASSWORD, null ) );
 			sslConnector.setKeyPassword( SoapUI.getSettings().getString( SSLSettings.MOCK_KEYSTORE_PASSWORD, null ) );
@@ -187,16 +205,11 @@ public class JettyMockEngine implements MockEngine
 			if( StringUtils.hasContent( truststore ) )
 			{
 				sslConnector.setTruststore( truststore );
-				sslConnector
-						.setTrustPassword( SoapUI.getSettings().getString( SSLSettings.MOCK_TRUSTSTORE_PASSWORD, null ) );
+			sslConnector.setTrustPassword( SoapUI.getSettings().getString( SSLSettings.MOCK_TRUSTSTORE_PASSWORD, null ) );
 			}
 
-			sslConnector.setMaxIdleTime( 30000 );
 			sslConnector.setPort( ( int )SoapUI.getSettings().getLong( SSLSettings.MOCK_PORT, 443 ) );
 			sslConnector.setNeedClientAuth( SoapUI.getSettings().getBoolean( SSLSettings.CLIENT_AUTHENTICATION ) );
-
-			server.addConnector( sslConnector );
-		}
 	}
 
 	public void stopMockService( MockRunner runner )
@@ -749,9 +762,7 @@ public class JettyMockEngine implements MockEngine
 
 			MockRunner[] mockRunners = getMockRunners();
 			PrintWriter out = response.getWriter();
-			out
-					.print( "<html><body><p>There are currently " + mockRunners.length
-							+ " running soapUI MockServices</p><ul>" );
+			out.print( "<html><body><p>There are currently " + mockRunners.length + " running soapUI MockServices</p><ul>" );
 
 			for( MockRunner mockRunner : mockRunners )
 			{

@@ -52,8 +52,8 @@ public class TestCaseToTestSuiteDropHandler extends AbstractAfterModelItemDropHa
 
 	public static WsdlTestCase copyTestCase( WsdlTestCase testCase, WsdlTestSuite target, int position )
 	{
-		String name = UISupport.prompt( "Specify name of copied TestCase", "Copy TestCase", "Copy of "
-				+ testCase.getName() );
+		String name = UISupport.prompt( "Specify name of copied TestCase", "Copy TestCase",
+				"Copy of " + testCase.getName() );
 		if( name == null )
 			return null;
 
@@ -118,7 +118,8 @@ public class TestCaseToTestSuiteDropHandler extends AbstractAfterModelItemDropHa
 			if( UISupport.confirm( "Move TestCase [" + testCase.getName() + "] to TestSuite [" + target.getName() + "]",
 					"Move TestCase" ) )
 			{
-				WsdlTestCase importedTestCase = target.importTestCase( testCase, testCase.getName(), position, true, true, false );
+				WsdlTestCase importedTestCase = target.importTestCase( testCase, testCase.getName(), position, true, true,
+						false );
 				if( importedTestCase != null )
 				{
 					testCase.getTestSuite().removeTestCase( testCase );
@@ -140,7 +141,8 @@ public class TestCaseToTestSuiteDropHandler extends AbstractAfterModelItemDropHa
 
 			if( DragAndDropSupport.importRequiredInterfaces( target.getProject(), requiredInterfaces, "Move TestCase" ) )
 			{
-				WsdlTestCase importedTestCase = target.importTestCase( testCase, testCase.getName(), position, true, true, false );
+				WsdlTestCase importedTestCase = target.importTestCase( testCase, testCase.getName(), position, true, true,
+						false );
 				if( importedTestCase != null )
 				{
 					testCase.getTestSuite().removeTestCase( testCase );

@@ -34,8 +34,8 @@ public class AddNewSecurityTestAction extends AbstractSoapUIAction<WsdlTestCase>
 
 	public void perform( WsdlTestCase testCase, Object param )
 	{
-		String name = UISupport.prompt( "Specify name of SecurityTest", "New SecurityTest", "SecurityTest "
-				+ ( testCase.getSecurityTestCount() + 1 ) );
+		String name = UISupport.prompt( "Specify name of SecurityTest", "New SecurityTest",
+				"SecurityTest " + ( testCase.getSecurityTestCount() + 1 ) );
 		if( StringUtils.isNullOrEmpty( name ) )
 			return;
 

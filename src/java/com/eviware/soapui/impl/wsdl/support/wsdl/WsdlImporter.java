@@ -93,8 +93,8 @@ public class WsdlImporter
 		List<WsdlInterface> result = new ArrayList<WsdlInterface>();
 		if( bindingName != null )
 		{
-			WsdlInterface iface = importBinding( project, wsdlContext, ( Binding )definition.getAllBindings().get(
-					bindingName ) );
+			WsdlInterface iface = importBinding( project, wsdlContext,
+					( Binding )definition.getAllBindings().get( bindingName ) );
 			return iface == null ? new WsdlInterface[0] : new WsdlInterface[] { iface };
 		}
 

@@ -48,11 +48,11 @@ public class GroovyEditorComponent extends JPanel implements PropertyChangeListe
 		this.helpUrl = helpUrl;
 
 		editor = new GroovyEditor( editorModel );
-		editor.setBorder( BorderFactory.createCompoundBorder( BorderFactory.createEmptyBorder( 0, 3, 0, 3 ), editor
-				.getBorder() ) );
+		editor.setBorder( BorderFactory.createCompoundBorder( BorderFactory.createEmptyBorder( 0, 3, 0, 3 ),
+				editor.getBorder() ) );
 		add( editor, BorderLayout.CENTER );
 		buildToolbar( editorModel, helpUrl );
-		
+
 		editorModel.addPropertyChangeListener( this );
 	}
 
@@ -65,11 +65,11 @@ public class GroovyEditorComponent extends JPanel implements PropertyChangeListe
 	public void setEnabled( boolean enabled )
 	{
 		super.setEnabled( enabled );
-		
+
 		editor.setEnabled( enabled );
 		if( runAction != null )
 			runAction.setEnabled( enabled );
-		
+
 		insertCodeButton.setEnabled( enabled );
 	}
 
@@ -105,7 +105,7 @@ public class GroovyEditorComponent extends JPanel implements PropertyChangeListe
 			insertCodeButton.setIcon( UISupport.createImageIcon( "/down_arrow.gif" ) );
 			insertCodeButton.setHorizontalTextPosition( SwingConstants.LEFT );
 		}
-		
+
 		toolBar.addFixed( insertCodeButton );
 
 		toolBar.add( Box.createHorizontalGlue() );
@@ -170,7 +170,7 @@ public class GroovyEditorComponent extends JPanel implements PropertyChangeListe
 
 	public void propertyChange( PropertyChangeEvent evt )
 	{
-		if( !evt.getPropertyName().equals( "script" ))
+		if( !evt.getPropertyName().equals( "script" ) )
 		{
 			buildToolbar( editorModel, helpUrl );
 		}

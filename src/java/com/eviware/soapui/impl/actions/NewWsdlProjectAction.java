@@ -13,7 +13,6 @@
 package com.eviware.soapui.impl.actions;
 
 import java.io.File;
-import java.net.URL;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.WorkspaceImpl;
@@ -23,15 +22,14 @@ import com.eviware.soapui.impl.rest.RestServiceFactory;
 import com.eviware.soapui.impl.rest.actions.project.NewRestServiceAction;
 import com.eviware.soapui.impl.rest.actions.service.GenerateRestTestSuiteAction;
 import com.eviware.soapui.impl.rest.support.WadlImporter;
+import com.eviware.soapui.impl.support.definition.support.InvalidDefinitionException;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
-import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
 import com.eviware.soapui.impl.wsdl.actions.iface.GenerateMockServiceAction;
 import com.eviware.soapui.impl.wsdl.actions.iface.GenerateWsdlTestSuiteAction;
 import com.eviware.soapui.impl.wsdl.actions.project.CreateWebTestAction;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.support.PathUtils;
-import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.support.MessageSupport;
 import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.support.StringUtils;
@@ -42,8 +40,8 @@ import com.eviware.x.form.XFormField;
 import com.eviware.x.form.XFormFieldListener;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.AField.AFieldType;
+import com.eviware.x.form.support.AForm;
 
 /**
  * Action for creating a new WSDL project
@@ -155,8 +153,8 @@ public class NewWsdlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 						}
 						else if( dialog.getBooleanValue( Form.ADDRESTSERVICE ) )
 						{
-							SoapUI.getActionRegistry().getAction( NewRestServiceAction.SOAPUI_ACTION_ID ).perform( project,
-									project );
+							SoapUI.getActionRegistry().getAction( NewRestServiceAction.SOAPUI_ACTION_ID )
+									.perform( project, project );
 						}
 						if( dialog.getBooleanValue( Form.CREATEWEBTEST ) )
 						{
@@ -166,6 +164,10 @@ public class NewWsdlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 						break;
 					}
 				}
+			}
+			catch( InvalidDefinitionException ex )
+			{
+				ex.show();
 			}
 			catch( Exception ex )
 			{

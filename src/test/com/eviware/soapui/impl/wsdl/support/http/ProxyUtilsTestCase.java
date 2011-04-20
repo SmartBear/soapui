@@ -18,13 +18,13 @@ public class ProxyUtilsTestCase extends TestCase
 {
 	public void testExcludes()
 	{
-		assertFalse( ProxyUtils.excludes( new String[] { ""} , "www.test.com", 8080 ));
-		assertTrue( ProxyUtils.excludes( new String[] { "test.com"} , "www.test.com", 8080 ));
-		assertFalse( ProxyUtils.excludes( new String[] { "test2.com"} , "www.test.com", 8080));
-		assertTrue( ProxyUtils.excludes( new String[] { "test.com:8080"} , "www.test.com", 8080 ));
-		assertFalse( ProxyUtils.excludes( new String[] { "test2.com:8080"} , "www.test.com", 8080 ));
-		assertFalse( ProxyUtils.excludes( new String[] { "test.com:8081"} , "www.test.com", 8080 ));
-		assertTrue( ProxyUtils.excludes( new String[] { "test.com:8080","test.com:8081"} , "www.test.com", 8080 ));
-		assertTrue( ProxyUtils.excludes( new String[] { "test.com:8080","test.com"} , "www.test.com", 8080 ));
+		assertFalse( ProxyUtils.excludes( new String[] { "" }, "www.test.com", 8080 ) );
+		assertTrue( ProxyUtils.excludes( new String[] { "test.com" }, "www.test.com", 8080 ) );
+		assertFalse( ProxyUtils.excludes( new String[] { "test2.com" }, "www.test.com", 8080 ) );
+		assertTrue( ProxyUtils.excludes( new String[] { "test.com:8080" }, "www.test.com", 8080 ) );
+		assertFalse( ProxyUtils.excludes( new String[] { "test2.com:8080" }, "www.test.com", 8080 ) );
+		assertFalse( ProxyUtils.excludes( new String[] { "test.com:8081" }, "www.test.com", 8080 ) );
+		assertTrue( ProxyUtils.excludes( new String[] { "test.com:8080", "test.com:8081" }, "www.test.com", 8080 ) );
+		assertTrue( ProxyUtils.excludes( new String[] { "test.com:8080", "test.com" }, "www.test.com", 8080 ) );
 	}
 }

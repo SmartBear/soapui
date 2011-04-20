@@ -40,8 +40,8 @@ import com.eviware.soapui.security.boundary.enumeration.EnumerationValues;
 import com.eviware.soapui.support.SecurityCheckUtil;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel;
-import com.eviware.soapui.support.xml.XmlUtils;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel.XmlTreeNode;
+import com.eviware.soapui.support.xml.XmlUtils;
 
 public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 {
@@ -152,8 +152,8 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 						else
 						{
 							SchemaTypeImpl simpleType = ( SchemaTypeImpl )mynode.getSchemaType();
-							XmlObjectTreeModel model2 = new XmlObjectTreeModel( simpleType.getTypeSystem(), simpleType
-									.getParseObject() );
+							XmlObjectTreeModel model2 = new XmlObjectTreeModel( simpleType.getTypeSystem(),
+									simpleType.getParseObject() );
 							extractRestrictions( model2, context, mynode, model, scp, stsmap );
 						}
 					}
@@ -171,22 +171,24 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 		}
 	}
 
-//	private XmlObjectTreeModel getXmlObjectTreeModel( TestStep testStep, SecurityCheckedParameter scp )
-//	{
-//		try
-//		{
-//			TestProperty tp = testStep.getProperty( scp.getName() );
-//			if( tp.getSchemaType() != null )
-//			{
-//				return new XmlObjectTreeModel( tp.getSchemaType().getTypeSystem(), XmlObject.Factory.parse( tp.getValue() ) );
-//			}
-//		}
-//		catch( Exception e )
-//		{
-//			SoapUI.logError( e );
-//		}
-//		return null;
-//	}
+	// private XmlObjectTreeModel getXmlObjectTreeModel( TestStep testStep,
+	// SecurityCheckedParameter scp )
+	// {
+	// try
+	// {
+	// TestProperty tp = testStep.getProperty( scp.getName() );
+	// if( tp.getSchemaType() != null )
+	// {
+	// return new XmlObjectTreeModel( tp.getSchemaType().getTypeSystem(),
+	// XmlObject.Factory.parse( tp.getValue() ) );
+	// }
+	// }
+	// catch( Exception e )
+	// {
+	// SoapUI.logError( e );
+	// }
+	// return null;
+	// }
 
 	@SuppressWarnings( "unchecked" )
 	private void addMutation( SecurityTestRunContext context, PropertyMutation mutation )
@@ -337,7 +339,6 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 		return "http://www.soapui.org";
 	}
 
-	
 	public class RestrictionLabel
 	{
 		private String text = "<html><pre>    </pre></html>";
@@ -385,8 +386,8 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 		{
 			try
 			{
-				xmlObjectTreeModel = new XmlObjectTreeModel( tp.getSchemaType().getTypeSystem(), XmlObject.Factory
-						.parse( tp.getValue() ) );
+				xmlObjectTreeModel = new XmlObjectTreeModel( tp.getSchemaType().getTypeSystem(),
+						XmlObject.Factory.parse( tp.getValue() ) );
 			}
 			catch( XmlException e )
 			{

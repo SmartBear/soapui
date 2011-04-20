@@ -23,10 +23,10 @@ public class ImportMockOperation extends AbstractSoapUIAction<WsdlMockService>
 
 	public ImportMockOperation()
 	{
-		super( "Import Mock Operation", "Import Mock Operation in this Mock Service");
+		super( "Import Mock Operation", "Import Mock Operation in this Mock Service" );
 	}
 
-	public void perform(WsdlMockService target, Object param)
+	public void perform( WsdlMockService target, Object param )
 	{
 		File file = UISupport.getFileDialogs().openXML( this, "Choose test case to import" );
 
@@ -38,7 +38,7 @@ public class ImportMockOperation extends AbstractSoapUIAction<WsdlMockService>
 			return;
 
 		target.importMockOperation( file );
-		
+
 	}
 
 }

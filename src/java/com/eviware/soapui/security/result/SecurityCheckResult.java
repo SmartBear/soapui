@@ -158,9 +158,9 @@ public class SecurityCheckResult implements SecurityResult
 			status = ResultStatus.OK;
 		}
 
-		this.testLog.append( "\nSecurityRequest " ).append( securityRequestResultList.indexOf( secReqResult ) ).append(
-				secReqResult.getStatus().toString() ).append( ": took " ).append( secReqResult.getTimeTaken() ).append(
-				" ms" );
+		this.testLog.append( "\nSecurityRequest " ).append( securityRequestResultList.indexOf( secReqResult ) )
+				.append( secReqResult.getStatus().toString() ).append( ": took " ).append( secReqResult.getTimeTaken() )
+				.append( " ms" );
 		for( String s : secReqResult.getMessages() )
 			testLog.append( "\n -> " ).append( s );
 
@@ -221,9 +221,9 @@ public class SecurityCheckResult implements SecurityResult
 	 */
 	public String getSecurityTestLog()
 	{
-		StringBuffer tl = new StringBuffer().append( "\nSecurityCheck " ).append( " [" ).append(
-				securityCheck.getTestStep().getName() ).append( "] " ).append( status.toString() ).append( ": took " )
-				.append( timeTaken ).append( " ms" );
+		StringBuffer tl = new StringBuffer().append( "\nSecurityCheck " ).append( " [" )
+				.append( securityCheck.getTestStep().getName() ).append( "] " ).append( status.toString() )
+				.append( ": took " ).append( timeTaken ).append( " ms" );
 		tl.append( testLog );
 		return tl.toString();
 	}

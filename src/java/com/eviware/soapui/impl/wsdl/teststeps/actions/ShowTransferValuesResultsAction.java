@@ -28,8 +28,8 @@ import javax.swing.table.AbstractTableModel;
 import org.jdesktop.swingx.JXTable;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStepResult;
 import com.eviware.soapui.impl.wsdl.teststeps.PropertyTransfersTestStep.PropertyTransferResult;
+import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStepResult;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.ui.desktop.DesktopPanel;
 import com.eviware.soapui.ui.support.DefaultDesktopPanel;

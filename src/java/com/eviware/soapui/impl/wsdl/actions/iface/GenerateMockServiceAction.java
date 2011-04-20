@@ -30,8 +30,8 @@ import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.XFormOptionsField;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.AField.AFieldType;
+import com.eviware.x.form.support.AForm;
 
 /**
  * Generates a MockService for a specified Interface
@@ -65,8 +65,8 @@ public class GenerateMockServiceAction extends AbstractSoapUIAction<WsdlInterfac
 		dialog.getFormField( Form.START_MOCKSERVICE ).setEnabled( !atCreation );
 
 		WsdlProject project = ( WsdlProject )iface.getProject();
-		String[] mockServices = ModelSupport.getNames( new String[] { CREATE_MOCKSUITE_OPTION }, project
-				.getMockServiceList() );
+		String[] mockServices = ModelSupport.getNames( new String[] { CREATE_MOCKSUITE_OPTION },
+				project.getMockServiceList() );
 		dialog.setOptions( Form.MOCKSERVICE, mockServices );
 
 		dialog.setValue( Form.PATH, "/mock" + iface.getName() );

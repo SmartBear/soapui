@@ -82,14 +82,11 @@ public class TestAssertionRegistry
 		addAssertion( new JdbcStatusAssertion.Factory() );
 		addAssertion( new JdbcTimeoutAssertion.Factory() );
 		addAssertion( new HttpDownloadAllResourcesAssertion.Factory() );
-		
-		
-		//security
-		addAssertion( new ValidHttpStatusCodesAssertion.Factory() );
-		addAssertion( new InvalidHttpStatusCodesAssertion.Factory() );
-		addAssertion( new SensitiveInfoExposureAssertion.Factory() );
-		
-		
+
+		for( TestAssertionFactory factory : SoapUI.getFactoryRegistry().getFactories( TestAssertionFactory.class ) )
+		{
+			addAssertion( factory );
+		}
 	}
 
 	public void addAssertion( TestAssertionFactory factory )
@@ -128,6 +125,7 @@ public class TestAssertionRegistry
 
 		return null;
 	}
+
 	public Class<? extends WsdlMessageAssertion> getAssertionClassType( TestAssertionConfig config )
 	{
 		try
@@ -150,6 +148,7 @@ public class TestAssertionRegistry
 
 		return null;
 	}
+
 	public boolean canBuildAssertion( TestAssertionConfig config )
 	{
 		return availableAssertions.containsKey( config.getType() );

@@ -20,12 +20,12 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.x.form.XForm;
+import com.eviware.x.form.XForm.FieldType;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.XFormDialogBuilder;
 import com.eviware.x.form.XFormFactory;
 import com.eviware.x.form.XFormField;
 import com.eviware.x.form.XFormFieldListener;
-import com.eviware.x.form.XForm.FieldType;
 
 /**
  * Options dialog for testcases
@@ -113,8 +113,7 @@ public class TestCaseOptionsAction extends AbstractSoapUIAction<WsdlTestCase>
 		values.put( FAIL_ON_ERROR, String.valueOf( testCase.getFailOnError() ) );
 		values.put( FAIL_TESTCASE_ON_ERROR, String.valueOf( testCase.getFailTestCaseOnErrors() ) );
 		values.put( DISCARD_OK_RESULTS, String.valueOf( testCase.getDiscardOkResults() ) );
-		values
-				.put( SOCKET_TIMEOUT, String.valueOf( testCase.getSettings().getString( HttpSettings.SOCKET_TIMEOUT, "" ) ) );
+		values.put( SOCKET_TIMEOUT, String.valueOf( testCase.getSettings().getString( HttpSettings.SOCKET_TIMEOUT, "" ) ) );
 		values.put( TESTCASE_TIMEOUT, String.valueOf( testCase.getTimeout() ) );
 		values.put( MAXRESULTS, String.valueOf( testCase.getMaxResults() ) );
 

@@ -22,7 +22,7 @@ public interface TestAssertionFactory
 	public boolean canAssert( Assertable assertable );
 
 	public TestAssertion buildAssertion( TestAssertionConfig config, Assertable assertable );
-	
+
 	public Class<? extends WsdlMessageAssertion> getAssertionClassType();
 
 	public String getAssertionId();

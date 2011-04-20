@@ -41,6 +41,8 @@ public abstract class AbstractSubmitContext<T extends ModelItem> implements Subm
 	public AbstractSubmitContext( T modelItem )
 	{
 		this.modelItem = modelItem;
+		this.properties = new DefaultPropertyExpansionContext( modelItem );
+
 		setProperty( TestCaseRunContext.RUN_COUNT, 0 );
 		setProperty( TestCaseRunContext.THREAD_INDEX, 0 );
 	}

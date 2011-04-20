@@ -281,7 +281,7 @@ public class CachedWsdlLoader extends WsdlLoader
 			SimpleValue wadlImport = ( ( SimpleValue )wadlImports[i] );
 			replaceLocation( urlToFileMap, baseUrl, wadlImport );
 		}
-		
+
 		wadlImports = xmlObject.selectPath( "declare namespace s='" + Constants.WADL11_NS
 				+ "' .//s:grammars/s:include/@href" );
 

@@ -30,7 +30,7 @@ public class WsdlInterfaceTestCase extends TestCase
 
 		assertEquals( 0, iface.getEndpoints().length );
 	}
-	
+
 	public void testAddEndpoints() throws Exception
 	{
 		iface.addEndpoint( "testEndpoint" );
@@ -40,7 +40,7 @@ public class WsdlInterfaceTestCase extends TestCase
 		iface.addEndpoint( "testEndpoint" );
 		assertEquals( 1, iface.getEndpoints().length );
 		assertEquals( "testEndpoint", iface.getEndpoints()[0] );
-		
+
 		iface.addEndpoint( "testEndpoint2" );
 		assertEquals( 2, iface.getEndpoints().length );
 		assertEquals( "testEndpoint", iface.getEndpoints()[0] );
@@ -51,10 +51,10 @@ public class WsdlInterfaceTestCase extends TestCase
 	{
 		iface.addEndpoint( "testEndpoint" );
 		iface.addEndpoint( "testEndpoint2" );
-		
+
 		iface.removeEndpoint( "testEndpoint" );
 		assertEquals( 1, iface.getEndpoints().length );
-		
+
 		iface.removeEndpoint( "testEndpoint2" );
 		assertEquals( 0, iface.getEndpoints().length );
 	}

@@ -31,8 +31,8 @@ import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.AField.AFieldType;
+import com.eviware.x.form.support.AForm;
 
 public class JTestCaseTestRunLog extends JTestRunLog
 {
@@ -102,8 +102,8 @@ public class JTestCaseTestRunLog extends JTestRunLog
 			{
 				String targetMockServiceName = addDialog.getValue( MOCKSERVICE );
 
-				WsdlMockService mockService = testCase.getTestSuite().getProject().getMockServiceByName(
-						targetMockServiceName );
+				WsdlMockService mockService = testCase.getTestSuite().getProject()
+						.getMockServiceByName( targetMockServiceName );
 				if( mockService == null )
 				{
 					targetMockServiceName = ModelSupport.promptForUniqueName( "MockService", testCase.getTestSuite()

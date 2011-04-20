@@ -645,8 +645,8 @@ public class WsdlLoadTestDesktopPanel extends ModelItemDesktopPanel<WsdlLoadTest
 				{
 					try
 					{
-						MockLoadTestRunner mockTestRunner = new MockLoadTestRunner( WsdlLoadTestDesktopPanel.this
-								.getModelItem(), SoapUI.ensureGroovyLog() );
+						MockLoadTestRunner mockTestRunner = new MockLoadTestRunner(
+								WsdlLoadTestDesktopPanel.this.getModelItem(), SoapUI.ensureGroovyLog() );
 						WsdlLoadTestDesktopPanel.this.getModelItem().runSetupScript(
 								new MockLoadTestRunContext( mockTestRunner ), mockTestRunner );
 					}
@@ -687,8 +687,8 @@ public class WsdlLoadTestDesktopPanel extends ModelItemDesktopPanel<WsdlLoadTest
 				{
 					try
 					{
-						MockLoadTestRunner mockTestRunner = new MockLoadTestRunner( WsdlLoadTestDesktopPanel.this
-								.getModelItem(), SoapUI.ensureGroovyLog() );
+						MockLoadTestRunner mockTestRunner = new MockLoadTestRunner(
+								WsdlLoadTestDesktopPanel.this.getModelItem(), SoapUI.ensureGroovyLog() );
 						WsdlLoadTestDesktopPanel.this.getModelItem().runTearDownScript(
 								new MockLoadTestRunContext( mockTestRunner ), mockTestRunner );
 					}

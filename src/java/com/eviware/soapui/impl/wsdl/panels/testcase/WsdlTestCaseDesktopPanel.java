@@ -243,7 +243,7 @@ public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase
 		inspectorPanel.addInspector( new JComponentInspector<JComponent>( buildPropertiesPanel(), "Properties",
 				"TestCase level properties", true ) );
 		inspectorPanel.addInspector( new GroovyEditorInspector( buildSetupScriptPanel(), "Setup Script",
-				"Script to run before tunning a TestCase" ) );
+				"Script to run before running a TestCase" ) );
 		inspectorPanel.addInspector( new GroovyEditorInspector( buildTearDownScriptPanel(), "TearDown Script",
 				"Script to run after a TestCase Run" ) );
 	}
@@ -707,10 +707,13 @@ public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase
 
 		public void run()
 		{
+			if( !factory.canAddTestStepToTestCase( testCase ) )
+				return;
+
 			int ix = testStepList.getTestStepList().getSelectedIndex();
 
-			String name = UISupport.prompt( "Specify name for new step", ix == -1 ? "Add Step" : "Insert Step", factory
-					.getTestStepName() );
+			String name = UISupport.prompt( "Specify name for new step", ix == -1 ? "Add Step" : "Insert Step",
+					factory.getTestStepName() );
 			if( name != null )
 			{
 				TestStepConfig newTestStepConfig = factory.createNewTestStep( getModelItem(), name );

@@ -63,8 +63,8 @@ import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.editor.inspectors.attachments.ContentTypeHandler;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel;
-import com.eviware.soapui.support.xml.XmlUtils;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel.XmlTreeNode;
+import com.eviware.soapui.support.xml.XmlUtils;
 
 /**
  * Attachment-related utility classes
@@ -202,7 +202,16 @@ public class AttachmentUtils
 								}
 								else
 								{
+									if( new File( filename ).exists() )
+									{
 									inlineData( cursor, schemaType, new FileInputStream( filename ) );
+								}
+									else
+									{
+										Attachment att = getAttachmentForFilename( container, filename );
+										if( att != null )
+											inlineData( cursor, schemaType, att.getInputStream() );
+									}
 								}
 							}
 							else
@@ -211,6 +220,7 @@ public class AttachmentUtils
 								if( textContent.startsWith( "cid:" ) )
 								{
 									textContent = textContent.substring( 4 );
+									attachmentsForPart = container.getAttachmentsForPart( textContent );
 
 									Attachment[] attachments = attachmentsForPart;
 									if( attachments.length == 1 )
@@ -298,6 +308,19 @@ public class AttachmentUtils
 		return isXop;
 	}
 
+	private static Attachment getAttachmentForFilename( WsdlAttachmentContainer container, String filename )
+	{
+		for( Attachment attachment : container.getAttachments() )
+		{
+			if( filename.equals( attachment.getName() ) )
+			{
+				return attachment;
+			}
+		}
+
+		return null;
+	}
+
 	private static void inlineAttachment( XmlCursor cursor, SchemaType schemaType, Attachment attachment )
 			throws Exception
 	{
@@ -316,6 +339,10 @@ public class AttachmentUtils
 		else if( SchemaUtils.isInstanceOf( schemaType, XmlBase64Binary.type ) )
 		{
 			content = new String( Base64.encodeBase64( data ) );
+		}
+		else
+		{
+			content = new String( data );
 		}
 
 		XmlCursor c = cursor.newCursor();

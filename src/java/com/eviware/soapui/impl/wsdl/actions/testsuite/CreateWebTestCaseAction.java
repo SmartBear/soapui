@@ -36,8 +36,8 @@ import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.AField.AFieldType;
+import com.eviware.x.form.support.AForm;
 import com.sun.java.xml.ns.j2Ee.HttpMethodType;
 
 public class CreateWebTestCaseAction extends AbstractSoapUIAction<WsdlTestSuite>
@@ -102,8 +102,8 @@ public class CreateWebTestCaseAction extends AbstractSoapUIAction<WsdlTestSuite>
 				if( testStepName == null )
 					return;
 			}
-			createWebTest( targetTestCase, HttpUtils.ensureEndpointStartsWithProtocol( url ), testStepName, dialog
-					.getBooleanValue( Form.STARTRECORDING ) );
+			createWebTest( targetTestCase, HttpUtils.ensureEndpointStartsWithProtocol( url ), testStepName,
+					dialog.getBooleanValue( Form.STARTRECORDING ) );
 
 		}
 	}

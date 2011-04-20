@@ -66,7 +66,7 @@ public class DefaultXmlDocument extends AbstractXmlDocument
 	{
 		String oldXml = this.xml;
 		this.xml = xml;
-		if(  "<not-xml/>".equals(xml ) )
+		if( "<not-xml/>".equals( xml ) )
 			fireXmlChanged( "", xml );
 
 		fireXmlChanged( oldXml, xml );

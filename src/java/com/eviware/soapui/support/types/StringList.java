@@ -35,13 +35,14 @@ public class StringList extends ArrayList<String>
 
 	public StringList( String[] strings )
 	{
-		super( Arrays.asList( strings ) );
+		super( strings == null ? new StringList() : Arrays.asList( strings ) );
 	}
 
 	public StringList( Object[] objects )
 	{
 		super();
 
+		if( objects != null )
 		for( Object object : objects )
 			add( object == null ? null : object.toString() );
 	}
@@ -50,12 +51,20 @@ public class StringList extends ArrayList<String>
 	{
 		super();
 
+		if( objects != null )
 		for( Object object : objects )
 			add( object == null ? null : object.toString() );
 	}
 
+	public StringList( String paramStr )
+	{
+		this();
+		add( paramStr );
+	}
+
 	public void addAll( String[] strings )
 	{
+		if( strings != null && strings.length > 0 )
 		addAll( Arrays.asList( strings ) );
 	}
 

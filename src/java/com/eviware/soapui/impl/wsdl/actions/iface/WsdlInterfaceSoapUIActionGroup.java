@@ -35,7 +35,8 @@ public class WsdlInterfaceSoapUIActionGroup extends DefaultSoapUIActionGroup<Wsd
 	{
 		SoapUIActionMappingList<WsdlInterface> actionMappings = super.getActionMappings( modelItem );
 
-		actionMappings.getMapping( AddJMSEndpointAction.SOAPUI_ACTION_ID ).setEnabled(HermesUtils.isHermesJMSSupported() );
+		actionMappings.getMapping( AddJMSEndpointAction.SOAPUI_ACTION_ID )
+				.setEnabled( HermesUtils.isHermesJMSSupported() );
 		// SoapUIActionMapping<WsdlInterface> mapping = actionMappings.getMapping(
 		// WSToolsRegenerateJava2WsdlAction.SOAPUI_ACTION_ID );
 		// WSToolsRegenerateJava2WsdlAction action = (

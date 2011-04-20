@@ -92,7 +92,7 @@ public class InterfaceCacheDefinitionLoader extends AbstractWsdlDefinitionLoader
 		}
 
 		log.error( "Failed to find [" + url + "] in InterfaceCache" );
-		
+
 		return null;
 	}
 

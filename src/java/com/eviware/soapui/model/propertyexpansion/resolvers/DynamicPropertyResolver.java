@@ -15,6 +15,7 @@ package com.eviware.soapui.model.propertyexpansion.resolvers;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 import com.eviware.soapui.model.propertyexpansion.resolvers.providers.ProjectDirProvider;
 import com.eviware.soapui.model.propertyexpansion.resolvers.providers.WorkspaceDirProvider;
@@ -27,6 +28,11 @@ public class DynamicPropertyResolver implements PropertyResolver
 	{
 		addProvider( "projectDir", new ProjectDirProvider() );
 		addProvider( "workspaceDir", new WorkspaceDirProvider() );
+
+		for( ValueProviderFactory obj : SoapUI.getFactoryRegistry().getFactories( ValueProviderFactory.class ) )
+		{
+			addProvider( obj.getValueId(), obj.createValueProvider() );
+		}
 	}
 
 	public DynamicPropertyResolver()
@@ -50,5 +56,12 @@ public class DynamicPropertyResolver implements PropertyResolver
 	public interface ValueProvider
 	{
 		String getValue( PropertyExpansionContext context );
+	}
+
+	public interface ValueProviderFactory
+	{
+		public ValueProvider createValueProvider();
+
+		public String getValueId();
 	}
 }

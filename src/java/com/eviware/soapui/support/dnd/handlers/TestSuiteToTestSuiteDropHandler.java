@@ -45,8 +45,8 @@ public class TestSuiteToTestSuiteDropHandler extends
 	@Override
 	boolean copyAfter( WsdlTestSuite source, WsdlTestSuite target )
 	{
-		WsdlTestSuite testCase = copyTestSuite( source, target.getProject(), target
-				.getProject().getIndexOfTestSuite( target ) + 1 );
+		WsdlTestSuite testCase = copyTestSuite( source, target.getProject(),
+				target.getProject().getIndexOfTestSuite( target ) + 1 );
 
 		if( testCase != null )
 			UISupport.select( testCase );
@@ -57,8 +57,8 @@ public class TestSuiteToTestSuiteDropHandler extends
 	@Override
 	boolean moveAfter( WsdlTestSuite source, WsdlTestSuite target )
 	{
-		WsdlTestSuite testCase = moveTestSuite( source, target.getProject(), target
-				.getProject().getIndexOfTestSuite( target ) + 1 );
+		WsdlTestSuite testCase = moveTestSuite( source, target.getProject(),
+				target.getProject().getIndexOfTestSuite( target ) + 1 );
 
 		if( testCase != null )
 			UISupport.select( testCase );
@@ -94,7 +94,8 @@ public class TestSuiteToTestSuiteDropHandler extends
 	@Override
 	boolean copyBefore( WsdlTestSuite source, WsdlTestSuite target )
 	{
-		WsdlTestSuite testCase = copyTestSuite( source, source.getProject(), target.getProject().getIndexOfTestSuite( target ) );
+		WsdlTestSuite testCase = copyTestSuite( source, source.getProject(),
+				target.getProject().getIndexOfTestSuite( target ) );
 
 		if( testCase != null )
 			UISupport.select( testCase );
@@ -117,8 +118,8 @@ public class TestSuiteToTestSuiteDropHandler extends
 	@Override
 	boolean moveBefore( WsdlTestSuite source, WsdlTestSuite target )
 	{
-		WsdlTestSuite testCase = moveTestSuite( source, target.getProject(), target.getProject().getIndexOfTestSuite(
-				target ) );
+		WsdlTestSuite testCase = moveTestSuite( source, target.getProject(),
+				target.getProject().getIndexOfTestSuite( target ) );
 
 		if( testCase != null )
 			UISupport.select( testCase );
@@ -161,7 +162,8 @@ public class TestSuiteToTestSuiteDropHandler extends
 
 			if( DragAndDropSupport.importRequiredInterfaces( target, requiredInterfaces, "Move TestSuite" ) )
 			{
-				WsdlTestSuite importedTestSuite = target.importTestSuite( testSuite, testSuite.getName(), position, true, null );
+				WsdlTestSuite importedTestSuite = target.importTestSuite( testSuite, testSuite.getName(), position, true,
+						null );
 				if( importedTestSuite != null )
 				{
 					testSuite.getProject().removeTestSuite( testSuite );
@@ -172,11 +174,11 @@ public class TestSuiteToTestSuiteDropHandler extends
 
 		return null;
 	}
-	
+
 	public static WsdlTestSuite copyTestSuite( WsdlTestSuite testSuite, WsdlProject target, int position )
 	{
-		String name = UISupport.prompt( "Specify name of copied TestCase", "Copy TestCase", "Copy of "
-				+ testSuite.getName() );
+		String name = UISupport.prompt( "Specify name of copied TestCase", "Copy TestCase",
+				"Copy of " + testSuite.getName() );
 		if( name == null )
 			return null;
 
@@ -197,7 +199,6 @@ public class TestSuiteToTestSuiteDropHandler extends
 					requiredInterfaces.addAll( testStep.getRequiredInterfaces() );
 				}
 			}
-
 
 			if( DragAndDropSupport.importRequiredInterfaces( target, requiredInterfaces, "Move TestSuite" ) )
 			{

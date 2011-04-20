@@ -123,13 +123,13 @@ public class XmlSourceEditorViewFactory implements ResponseEditorViewFactory, Re
 			return new XmlSourceEditorView<MessageExchangeModelItem>( ( XmlEditor )editor,
 					( MessageExchangeModelItem )modelItem );
 		}
-		else if( modelItem instanceof JdbcRequestTestStep)
+		else if( modelItem instanceof JdbcRequestTestStep )
 		{
-			return new XmlSourceEditorView<JdbcRequestTestStep>( (XmlEditor) editor, (JdbcRequestTestStep)modelItem );
+			return new XmlSourceEditorView<JdbcRequestTestStep>( ( XmlEditor )editor, ( JdbcRequestTestStep )modelItem );
 		}
-		else if( modelItem instanceof AMFRequestTestStep)
+		else if( modelItem instanceof AMFRequestTestStep )
 		{
-			return new XmlSourceEditorView<AMFRequestTestStep>( (XmlEditor) editor, (AMFRequestTestStep)modelItem );
+			return new XmlSourceEditorView<AMFRequestTestStep>( ( XmlEditor )editor, ( AMFRequestTestStep )modelItem );
 		}
 
 		return null;

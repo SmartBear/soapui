@@ -38,14 +38,14 @@ import com.eviware.soapui.config.RestRequestStepConfig;
 import com.eviware.soapui.config.RestResourceRepresentationConfig;
 import com.eviware.soapui.config.SettingsConfig;
 import com.eviware.soapui.config.StringToStringMapConfig;
-import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.config.StringToStringMapConfig.Entry;
+import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.rest.RestMethod;
 import com.eviware.soapui.impl.rest.RestRepresentation;
 import com.eviware.soapui.impl.rest.RestRequest;
+import com.eviware.soapui.impl.rest.RestRequestInterface.RequestMethod;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.RestService;
-import com.eviware.soapui.impl.rest.RestRequestInterface.RequestMethod;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
 import com.eviware.soapui.model.iface.Interface;
@@ -77,8 +77,7 @@ public class RestRequestConverter
 		if( !autoConvert.containsKey( project ) )
 		{
 			autoConvert
-					.put(
-							project,
+					.put( project,
 							UISupport
 									.confirm(
 											"The model for REST requests has changed slightly,\r\n"
@@ -184,8 +183,8 @@ public class RestRequestConverter
 
 		RestRequest request = method.addNewRequest( oldConfig.getName() );
 
-		XmlBeansRestParamsTestPropertyHolder params = new XmlBeansRestParamsTestPropertyHolder( null, oldConfig
-				.getParameters() );
+		XmlBeansRestParamsTestPropertyHolder params = new XmlBeansRestParamsTestPropertyHolder( null,
+				oldConfig.getParameters() );
 		RestParamsPropertyHolder parentParams = method.getOverlayParams();
 
 		for( TestProperty prop : params.values() )
@@ -202,8 +201,8 @@ public class RestRequestConverter
 		for( RestResourceRepresentationConfig rep : oldConfig.getRepresentationList() )
 		{
 			exists = false;
-			for( RestRepresentation existing : method.getRepresentations( RestRepresentation.Type.valueOf( rep.getType()
-					.toString() ), rep.getMediaType() ) )
+			for( RestRepresentation existing : method.getRepresentations(
+					RestRepresentation.Type.valueOf( rep.getType().toString() ), rep.getMediaType() ) )
 			{
 				if( existing.getElement() == null && rep.getElement() == null
 						|| existing.getElement().equals( rep.getElement() ) )
@@ -231,7 +230,7 @@ public class RestRequestConverter
 				{
 					File temp = File.createTempFile( "pattern", ".suffix" );
 					temp.deleteOnExit();
-					FileOutputStream out = new FileOutputStream( temp ) ;
+					FileOutputStream out = new FileOutputStream( temp );
 					out.write( ac.getData() );
 					request.attachFile( temp, true );
 				}
@@ -266,7 +265,7 @@ public class RestRequestConverter
 			newConfig.setTimestamp( oldConfig.getTimestamp() );
 		if( oldConfig.isSetWadlId() )
 			newConfig.setWadlId( oldConfig.getWadlId() );
-		
+
 		request.updateConfig( newConfig );
 
 	}
@@ -310,10 +309,10 @@ public class RestRequestConverter
 		try
 		{
 			if( config instanceof RestRequestStepConfig )
-		{
-			return convert( OldRestRequestConfig.Factory.parse( config.selectChildren( "http://eviware.com/soapui/config",
-					"restRequest" )[0].toString() ) );
-		}
+			{
+				return convert( OldRestRequestConfig.Factory.parse( config.selectChildren(
+						"http://eviware.com/soapui/config", "restRequest" )[0].toString() ) );
+			}
 			else
 			{
 				return ( HttpRequestConfig )config.changeType( HttpRequestConfig.type );
@@ -357,8 +356,8 @@ public class RestRequestConverter
 					}
 				}
 
-				restRequestConfig.getParameters().getDomNode().getParentNode().removeChild(
-						restRequestConfig.getParameters().getDomNode() );
+				restRequestConfig.getParameters().getDomNode().getParentNode()
+						.removeChild( restRequestConfig.getParameters().getDomNode() );
 			}
 		}
 		catch( XmlException e )

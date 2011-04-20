@@ -22,9 +22,10 @@ import org.apache.log4j.Logger;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.CredentialsConfig;
+import com.eviware.soapui.config.WsaVersionTypeConfig;
 import com.eviware.soapui.config.WsdlRequestConfig;
+import com.eviware.soapui.config.WsrmVersionTypeConfig;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
-import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.submit.RequestTransportRegistry;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.WsdlResponse;
@@ -38,17 +39,16 @@ import com.eviware.soapui.impl.wsdl.support.wsrm.WsrmConfig;
 import com.eviware.soapui.impl.wsdl.support.wsrm.WsrmContainer;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.iface.Attachment.AttachmentEncoding;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.iface.MessagePart;
 import com.eviware.soapui.model.iface.SubmitContext;
-import com.eviware.soapui.model.iface.Attachment.AttachmentEncoding;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionsResult;
 import com.eviware.soapui.model.support.InterfaceListenerAdapter;
-import com.eviware.soapui.model.testsuite.TestPropertyListener;
 import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
@@ -61,7 +61,7 @@ import com.eviware.soapui.support.types.StringToStringsMap;
  */
 
 public class WsdlRequest extends AbstractHttpRequest<WsdlRequestConfig> implements WsdlAttachmentContainer,
-		PropertyExpansionContainer, WsaContainer, WsrmContainer
+		PropertyExpansionContainer, WsaContainer, WsrmContainer, PropertyChangeListener
 {
 	public final static Logger log = Logger.getLogger( WsdlRequest.class );
 
@@ -218,7 +218,7 @@ public class WsdlRequest extends AbstractHttpRequest<WsdlRequestConfig> implemen
 	// {
 	// WsdlResponse oldResponse = getResponse();
 	// this.response = response;
-	//		
+	//
 	// notifyPropertyChanged( RESPONSE_PROPERTY, oldResponse, response );
 	// }
 
@@ -556,8 +556,7 @@ public class WsdlRequest extends AbstractHttpRequest<WsdlRequestConfig> implemen
 				JMSHeader.JMSPRIORITY ) );
 		result.addAll( PropertyExpansionUtils.extractPropertyExpansions( modelItem, jmsHeaderConfig,
 				JMSHeader.DURABLE_SUBSCRIPTION_NAME ) );
-		result
-				.addAll( PropertyExpansionUtils.extractPropertyExpansions( modelItem, jmsHeaderConfig, JMSHeader.CLIENT_ID ) );
+		result.addAll( PropertyExpansionUtils.extractPropertyExpansions( modelItem, jmsHeaderConfig, JMSHeader.CLIENT_ID ) );
 		result.addAll( PropertyExpansionUtils.extractPropertyExpansions( modelItem, jmsHeaderConfig,
 				JMSHeader.SEND_AS_BYTESMESSAGE ) );
 		result.addAll( PropertyExpansionUtils.extractPropertyExpansions( modelItem, jmsHeaderConfig,
@@ -622,6 +621,7 @@ public class WsdlRequest extends AbstractHttpRequest<WsdlRequestConfig> implemen
 				getConfig().addNewWsrmConfig();
 			}
 			wsrmConfig = new WsrmConfig( getConfig().getWsrmConfig(), this );
+			wsrmConfig.addPropertyChangeListener( "version", this );
 		}
 		return wsrmConfig;
 	}
@@ -680,17 +680,15 @@ public class WsdlRequest extends AbstractHttpRequest<WsdlRequestConfig> implemen
 		return getOperation().getAction();
 	}
 
-
 	@Override
-	public void addTestPropertyListener(TestPropertyListener listener) {
-		// TODO Auto-generated method stub
-		
+	public void propertyChange( PropertyChangeEvent evt )
+	{
+		if( evt.getSource() == wsrmConfig && evt.getPropertyName().equals( "version" ) )
+		{
+			if( evt.getNewValue().equals( WsrmVersionTypeConfig.X_1_0.toString() ) )
+			{
+				getWsaConfig().setVersion( WsaVersionTypeConfig.X_200408.toString() );
+			}
+		}
 	}
-
-	@Override
-	public RestParamsPropertyHolder getParams() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

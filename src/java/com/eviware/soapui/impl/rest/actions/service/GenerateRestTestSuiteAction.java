@@ -32,8 +32,8 @@ import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.XFormOptionsField;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.AField.AFieldType;
+import com.eviware.x.form.support.AForm;
 
 /**
  * Generates a TestSuite for the specified Interface
@@ -82,9 +82,8 @@ public class GenerateRestTestSuiteAction extends AbstractSoapUIAction<RestServic
 			String testSuiteName = dialog.getValue( GenerateForm.TESTSUITE );
 
 			if( testSuiteName.equals( "<create>" ) )
-				testSuiteName = UISupport.prompt( "Enter name of TestSuite to create", "Generate TestSuite", service
-						.getName()
-						+ " TestSuite" );
+				testSuiteName = UISupport.prompt( "Enter name of TestSuite to create", "Generate TestSuite",
+						service.getName() + " TestSuite" );
 
 			if( testSuiteName != null && testSuiteName.trim().length() > 0 )
 			{
@@ -133,8 +132,8 @@ public class GenerateRestTestSuiteAction extends AbstractSoapUIAction<RestServic
 			{
 				for( int x = 0; x < resource.getRequestCount(); x++ )
 				{
-					testCase.addTestStep( RestRequestStepFactory.createConfig( resource.getRequestAt( x ), resource
-							.getName() ) );
+					testCase.addTestStep( RestRequestStepFactory.createConfig( resource.getRequestAt( x ),
+							resource.getName() ) );
 				}
 			}
 		}

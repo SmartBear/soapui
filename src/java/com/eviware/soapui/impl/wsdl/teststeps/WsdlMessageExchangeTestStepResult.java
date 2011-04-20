@@ -35,14 +35,14 @@ public class WsdlMessageExchangeTestStepResult extends WsdlTestStepResult implem
 	public void addMessageExchange( MessageExchange messageExchange )
 	{
 		if( exchanges != null )
-		exchanges.add( messageExchange );
+			exchanges.add( messageExchange );
 	}
 
 	public void addMessages( MessageExchange[] messageExchanges )
 	{
 		if( exchanges != null )
-		for( MessageExchange messageExchange : messageExchanges )
-			exchanges.add( messageExchange );
+			for( MessageExchange messageExchange : messageExchanges )
+				exchanges.add( messageExchange );
 	}
 
 	@Override

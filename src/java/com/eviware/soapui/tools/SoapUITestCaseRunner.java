@@ -40,6 +40,7 @@ import com.eviware.soapui.model.project.ProjectFactoryRegistry;
 import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.model.support.ProjectRunListenerAdapter;
 import com.eviware.soapui.model.testsuite.Assertable;
+import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
 import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.model.testsuite.ProjectRunContext;
 import com.eviware.soapui.model.testsuite.ProjectRunner;
@@ -47,13 +48,12 @@ import com.eviware.soapui.model.testsuite.TestAssertion;
 import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
+import com.eviware.soapui.model.testsuite.TestRunner.Status;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
+import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
 import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.model.testsuite.TestSuiteRunner;
-import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
-import com.eviware.soapui.model.testsuite.TestRunner.Status;
-import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
 import com.eviware.soapui.report.JUnitReportCollector;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
@@ -123,14 +123,14 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 		{
 			String testSuite = getCommandLineOptionSubstSpace( cmd, "s" );
 			setTestSuite( testSuite );
-			message += validateTestSuite();
 		}
+
 		if( cmd.hasOption( "c" ) )
 		{
 			String testCase = getCommandLineOptionSubstSpace( cmd, "c" );
 			setTestCase( testCase );
-			message += validateTestCase();
 		}
+
 		if( cmd.hasOption( "u" ) )
 			setUsername( cmd.getOptionValue( "u" ) );
 
@@ -201,33 +201,6 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 		}
 
 		return true;
-	}
-
-	private String validateTestCase()
-	{
-
-		WsdlProject project = ( WsdlProject )ProjectFactoryRegistry.getProjectFactory( "wsdl" ).createNew(
-				getProjectFile(), getProjectPassword() );
-
-		if( project.getTestSuiteByName( testSuite ) == null )
-			return "Test Suite with name:'" + testSuite + "' is missing from project:'" + project.getName() + "' \n";
-
-		if( project.getTestSuiteByName( testSuite ).getTestCaseByName( testCase ) == null )
-			return "Test Case with name:'" + testCase + "' is missing from testSuite:'" + testSuite + "' \n";
-
-		return "";
-	}
-
-	private String validateTestSuite()
-	{
-		WsdlProject project = ( WsdlProject )ProjectFactoryRegistry.getProjectFactory( "wsdl" ).createNew(
-				getProjectFile(), getProjectPassword() );
-
-		if( project.getTestSuiteByName( testSuite ) == null )
-			return "Test Suite with name:'" + testSuite + "' is missing from project:'" + project.getName() + "' \n";
-
-		return "";
-
 	}
 
 	public void setMaxErrors( int maxErrors )
@@ -303,7 +276,7 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 
 	protected JUnitReportCollector createJUnitReportCollector()
 	{
-		return new JUnitReportCollector( maxErrors );
+		return JUnitReportCollector.createNew( maxErrors );
 	}
 
 	public SoapUITestCaseRunner()
@@ -356,6 +329,11 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 
 		List<TestCase> testCasesToRun = new ArrayList<TestCase>();
 
+		// validate testSuite argument
+		if( testSuite != null && project.getTestSuiteByName( testSuite ) == null )
+			throw new Exception( "TestSuite with name [" + testSuite + "] is missing in Project [" + project.getName()
+					+ "]" );
+
 		// start by listening to all testcases.. (since one testcase can call
 		// another)
 		for( int c = 0; c < project.getTestSuiteCount(); c++ )
@@ -364,13 +342,26 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 			for( int i = 0; i < suite.getTestCaseCount(); i++ )
 			{
 				TestCase tc = suite.getTestCaseAt( i );
-				if( ( testSuite == null || suite.getName().equals( suite.getName() ) ) && testCase != null
+				if( ( testSuite == null || suite.getName().equals( testSuite ) ) && testCase != null
 						&& tc.getName().equals( testCase ) )
 					testCasesToRun.add( tc );
 
 				addListeners( tc );
 			}
 		}
+
+		try
+		{
+			// validate testSuite argument
+			if( testCase != null && testCasesToRun.size() == 0 )
+			{
+				if( testSuite == null )
+					throw new Exception( "TestCase with name [" + testCase + "] is missing in Project [" + project.getName()
+							+ "]" );
+				else
+					throw new Exception( "TestCase with name [" + testCase + "] in TestSuite [" + testSuite
+							+ "] is missing in Project [" + project.getName() + "]" );
+			}
 
 		// decide what to run
 		if( testCasesToRun.size() > 0 )
@@ -418,6 +409,26 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 		}
 
 		return true;
+	}
+		finally
+		{
+			for( int c = 0; c < project.getTestSuiteCount(); c++ )
+			{
+				TestSuite suite = project.getTestSuiteAt( c );
+				for( int i = 0; i < suite.getTestCaseCount(); i++ )
+				{
+					TestCase tc = suite.getTestCaseAt( i );
+					removeListeners( tc );
+				}
+			}
+		}
+	}
+
+	protected void removeListeners( TestCase tc )
+	{
+		tc.removeTestRunListener( this );
+		if( junitReport )
+			tc.removeTestRunListener( reportCollector );
 	}
 
 	protected void runProject( WsdlProject project )

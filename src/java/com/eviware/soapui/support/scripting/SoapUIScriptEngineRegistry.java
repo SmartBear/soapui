@@ -59,8 +59,8 @@ public class SoapUIScriptEngineRegistry
 
 		String scriptEngineId = null;
 		if( project == null )
-			log.warn( "Project is null for modelItem [" + String.valueOf( modelItem ) + "], using default script language [" +
-					DEFAULT_SCRIPT_ENGINE_ID + "]" );
+			log.warn( "Project is null for modelItem [" + String.valueOf( modelItem )
+					+ "], using default script language [" + DEFAULT_SCRIPT_ENGINE_ID + "]" );
 		else
 			scriptEngineId = project.getDefaultScriptLanguage();
 

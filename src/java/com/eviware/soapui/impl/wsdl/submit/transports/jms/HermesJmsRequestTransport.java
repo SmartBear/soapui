@@ -27,6 +27,7 @@ import java.util.List;
 
 import javax.jms.BytesMessage;
 import javax.jms.Connection;
+import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.MapMessage;
 import javax.jms.Message;
@@ -86,8 +87,6 @@ public class HermesJmsRequestTransport implements RequestTransport
 	protected Hermes hermes;
 	protected static List<RequestFilter> filters = new ArrayList<RequestFilter>();
 
-
-
 	public Response sendRequest( SubmitContext submitContext, Request request ) throws Exception
 	{
 		long timeStarted = Calendar.getInstance().getTimeInMillis();
@@ -120,11 +119,12 @@ public class HermesJmsRequestTransport implements RequestTransport
 	private HermesJmsRequestTransport resolveType( SubmitContext submitContext, Request request )
 			throws CannotResolveJmsTypeException, MissingTransportException
 	{
-		int ix = request.getEndpoint().indexOf( "://" );
+		String endpoint = PropertyExpander.expandProperties( submitContext, request.getEndpoint() );
+		int ix = endpoint.indexOf( "://" );
 		if( ix == -1 )
-			throw new MissingTransportException( "Missing protocol in endpoint [" + request.getEndpoint() + "]" );
+			throw new MissingTransportException( "Missing protocol in endpoint [" + endpoint + "]" );
 
-		String[] params = JMSEndpoint.extractEndpointParameters( request );
+		String[] params = JMSEndpoint.extractEndpointParameters( request, submitContext );
 
 		// resolve sending class
 		if( params.length == 2 )
@@ -225,13 +225,19 @@ public class HermesJmsRequestTransport implements RequestTransport
 		return to;
 	}
 
-	protected JMSHeader createJMSHeader( SubmitContext submitContext, Request request, Hermes hermes, Message message )
+	protected JMSHeader createJMSHeader( SubmitContext submitContext, Request request, Hermes hermes, Message message,
+			Destination replyToDestination )
 	{
 		JMSHeader jmsHeader = new JMSHeader();
 		jmsHeader.setMessageHeaders( message, request, hermes, submitContext );
 		JMSHeader.setMessageProperties( message, request, hermes, submitContext );
 		try
 		{
+			if( message.getJMSReplyTo() == null )
+			{
+				message.setJMSReplyTo( replyToDestination );
+			}
+
 			if( addSoapAction )
 			{
 				message.setStringProperty( JMSHeader.SOAPJMS_SOAP_ACTION, request.getOperation().getName() );
@@ -264,25 +270,25 @@ public class HermesJmsRequestTransport implements RequestTransport
 	}
 
 	protected Message messageSend( SubmitContext submitContext, Request request, Session session, Hermes hermes,
-			Queue queueSend ) throws JMSException
+			Queue queueSend, Destination replyToDestination ) throws JMSException
 	{
 		MessageProducer messageProducer = session.createProducer( queueSend );
 		Message messageSend = createMessage( submitContext, request, session );
-		return send( submitContext, request, hermes, messageProducer, messageSend );
+		return send( submitContext, request, hermes, messageProducer, messageSend, replyToDestination );
 	}
 
 	protected Message messagePublish( SubmitContext submitContext, Request request, Session topicSession, Hermes hermes,
-			Topic topicPublish ) throws JMSException
+			Topic topicPublish, Destination replyToDestination ) throws JMSException
 	{
 		MessageProducer topicPublisher = topicSession.createProducer( topicPublish );
 		Message messagePublish = createMessage( submitContext, request, topicSession );
-		return send( submitContext, request, hermes, topicPublisher, messagePublish );
+		return send( submitContext, request, hermes, topicPublisher, messagePublish, replyToDestination );
 	}
 
 	private Message send( SubmitContext submitContext, Request request, Hermes hermes, MessageProducer messageProducer,
-			Message message ) throws JMSException
+			Message message, Destination replyToDestination ) throws JMSException
 	{
-		JMSHeader jmsHeader = createJMSHeader( submitContext, request, hermes, message );
+		JMSHeader jmsHeader = createJMSHeader( submitContext, request, hermes, message, replyToDestination );
 		messageProducer.send( message, message.getJMSDeliveryMode(), message.getJMSPriority(), jmsHeader.getTimeTolive() );
 		submitContext.setProperty( JMS_MESSAGE_SEND, message );
 		return message;
@@ -531,9 +537,9 @@ public class HermesJmsRequestTransport implements RequestTransport
 		Topic topicSubscribe = jmsConnectionHolder.getTopic( jmsConnectionHolder.getJmsEndpoint().getReceive() );
 
 		// create durable subscriber
-		TopicSubscriber topicDurableSubsriber = topicSession.createDurableSubscriber( topicSubscribe, StringUtils
-				.hasContent( durableSubscriptionName ) ? durableSubscriptionName : "durableSubscription"
-				+ jmsConnectionHolder.getJmsEndpoint().getReceive(), submitContext.expand( messageSelector ), false );
+		TopicSubscriber topicDurableSubsriber = topicSession.createDurableSubscriber( topicSubscribe,
+				StringUtils.hasContent( durableSubscriptionName ) ? durableSubscriptionName : "durableSubscription"
+						+ jmsConnectionHolder.getJmsEndpoint().getReceive(), submitContext.expand( messageSelector ), false );
 		return topicDurableSubsriber;
 	}
 

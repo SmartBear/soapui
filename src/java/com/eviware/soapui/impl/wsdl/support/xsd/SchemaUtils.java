@@ -194,6 +194,9 @@ public class SchemaUtils
 		catch( Exception e )
 		{
 			SoapUI.logError( e );
+			if( e instanceof SchemaException )
+				throw ( SchemaException )e;
+			else
 			throw new SchemaException( "Error loading schema types", e );
 		}
 		finally
@@ -215,8 +218,8 @@ public class SchemaUtils
 		{
 			XmlObject xmlObject = schemas.get( c );
 			if( xmlObject == null
-					|| !( ( Document )xmlObject.getDomNode() ).getDocumentElement().getNamespaceURI().equals(
-							Constants.XSD_NS ) )
+					|| !( ( Document )xmlObject.getDomNode() ).getDocumentElement().getNamespaceURI()
+							.equals( Constants.XSD_NS ) )
 			{
 				schemas.remove( c );
 				c-- ;
@@ -279,8 +282,8 @@ public class SchemaUtils
 			// schemas.add( soapVersion.getSoapEnvelopeSchema());
 			schemas.addAll( defaultSchemas.values() );
 
-			SchemaTypeSystem sts = XmlBeans.compileXsd( schemas.toArray( new XmlObject[schemas.size()] ), XmlBeans
-					.getBuiltinTypeSystem(), options );
+			SchemaTypeSystem sts = XmlBeans.compileXsd( schemas.toArray( new XmlObject[schemas.size()] ),
+					XmlBeans.getBuiltinTypeSystem(), options );
 
 			return sts;
 			// return XmlBeans.typeLoaderUnion(new SchemaTypeLoader[] { sts,
@@ -740,7 +743,8 @@ public class SchemaUtils
 
 	public static boolean isAnyType( SchemaType schemaType )
 	{
-		return schemaType.getBuiltinTypeCode() == SchemaType.BTC_ANY_TYPE
-				|| ( schemaType.getBaseType() != null && schemaType.getBaseType().getBuiltinTypeCode() == SchemaType.BTC_ANY_TYPE );
+		return schemaType != null
+				&& ( schemaType.getBuiltinTypeCode() == SchemaType.BTC_ANY_TYPE || ( schemaType.getBaseType() != null && schemaType
+						.getBaseType().getBuiltinTypeCode() == SchemaType.BTC_ANY_TYPE ) );
 	}
 }

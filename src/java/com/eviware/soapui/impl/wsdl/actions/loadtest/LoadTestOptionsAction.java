@@ -23,9 +23,9 @@ import com.eviware.x.form.XFormField;
 import com.eviware.x.form.XFormFieldListener;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
+import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.APage;
-import com.eviware.x.form.support.AField.AFieldType;
 
 /**
  * Displays the LoadTest Options dialog
@@ -61,10 +61,10 @@ public class LoadTestOptionsAction extends AbstractSoapUIAction<WsdlLoadTest>
 
 		Settings settings = loadTest.getSettings();
 
-		dialog.setBooleanValue( SettingsForm.INCLUDE_REQUEST, settings
-				.getBoolean( HttpSettings.INCLUDE_REQUEST_IN_TIME_TAKEN ) );
-		dialog.setBooleanValue( SettingsForm.INCLUDE_RESPONSE, settings
-				.getBoolean( HttpSettings.INCLUDE_RESPONSE_IN_TIME_TAKEN ) );
+		dialog.setBooleanValue( SettingsForm.INCLUDE_REQUEST,
+				settings.getBoolean( HttpSettings.INCLUDE_REQUEST_IN_TIME_TAKEN ) );
+		dialog.setBooleanValue( SettingsForm.INCLUDE_RESPONSE,
+				settings.getBoolean( HttpSettings.INCLUDE_RESPONSE_IN_TIME_TAKEN ) );
 		dialog.setBooleanValue( SettingsForm.CLOSE_CONNECTIONS, settings.getBoolean( HttpSettings.CLOSE_CONNECTIONS ) );
 
 		dialog.setValue( LogForm.LOG_FOLDER, loadTest.getStatisticsLogFolder() );
@@ -78,8 +78,8 @@ public class LoadTestOptionsAction extends AbstractSoapUIAction<WsdlLoadTest>
 				loadTest.setStartDelay( dialog.getIntValue( SettingsForm.THREAD_STARTUP_DELAY, loadTest.getStartDelay() ) );
 				loadTest.setResetStatisticsOnThreadCountChange( dialog.getBooleanValue( SettingsForm.RESET_STATISTICS ) );
 				loadTest.setCalculateTPSOnTimePassed( dialog.getBooleanValue( SettingsForm.CALC_TPS ) );
-				loadTest.setSampleInterval( dialog.getIntValue( SettingsForm.SAMPLE_INTERVAL, ( int )loadTest
-						.getSampleInterval() ) );
+				loadTest.setSampleInterval( dialog.getIntValue( SettingsForm.SAMPLE_INTERVAL,
+						( int )loadTest.getSampleInterval() ) );
 				loadTest.setHistoryLimit( dialog.getBooleanValue( SettingsForm.DISABLE_HISTORY ) ? 0 : -1 );
 				loadTest.setMaxAssertionErrors( dialog.getIntValue( SettingsForm.MAX_ASSERTIONS, 1000 ) );
 				loadTest.setCancelOnReachedLimit( dialog.getBooleanValue( SettingsForm.CANCEL_RUNNING ) );
@@ -88,17 +88,17 @@ public class LoadTestOptionsAction extends AbstractSoapUIAction<WsdlLoadTest>
 				loadTest.setCancelExcessiveThreads( dialog.getBooleanValue( SettingsForm.CANCEL_EXCESSIVE ) );
 				loadTest.setUpdateStatisticsPerTestStep( dialog.getBooleanValue( SettingsForm.TESTSTEP_STATISTICS ) );
 
-				settings.setBoolean( HttpSettings.INCLUDE_REQUEST_IN_TIME_TAKEN, dialog
-						.getBooleanValue( SettingsForm.INCLUDE_REQUEST ) );
-				settings.setBoolean( HttpSettings.INCLUDE_RESPONSE_IN_TIME_TAKEN, dialog
-						.getBooleanValue( SettingsForm.INCLUDE_RESPONSE ) );
-				settings.setBoolean( HttpSettings.CLOSE_CONNECTIONS, dialog
-						.getBooleanValue( SettingsForm.CLOSE_CONNECTIONS ) );
+				settings.setBoolean( HttpSettings.INCLUDE_REQUEST_IN_TIME_TAKEN,
+						dialog.getBooleanValue( SettingsForm.INCLUDE_REQUEST ) );
+				settings.setBoolean( HttpSettings.INCLUDE_RESPONSE_IN_TIME_TAKEN,
+						dialog.getBooleanValue( SettingsForm.INCLUDE_RESPONSE ) );
+				settings.setBoolean( HttpSettings.CLOSE_CONNECTIONS,
+						dialog.getBooleanValue( SettingsForm.CLOSE_CONNECTIONS ) );
 
 				loadTest.setLogStatisticsOnThreadChange( dialog.getBooleanValue( LogForm.LOG_ON_THREADCOUNT_CHANGE ) );
 				loadTest.setStatisticsLogFolder( dialog.getValue( LogForm.LOG_FOLDER ) );
-				loadTest.setStatisticsLogInterval( dialog.getIntValue( LogForm.LOG_INTERVAL, ( int )loadTest
-						.getStatisticsLogInterval() ) );
+				loadTest.setStatisticsLogInterval( dialog.getIntValue( LogForm.LOG_INTERVAL,
+						( int )loadTest.getStatisticsLogInterval() ) );
 			}
 			catch( NumberFormatException ex )
 			{

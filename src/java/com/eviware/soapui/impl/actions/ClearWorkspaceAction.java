@@ -42,8 +42,8 @@ public class ClearWorkspaceAction extends AbstractSoapUIAction<WorkspaceImpl>
 			return;
 		}
 
-		if( !UISupport.confirm( messages.get( "ClearWorkspaceAction.ConfirmQuestion" ), messages
-				.get( "ClearWorkspaceAction.Title" ) ) )
+		if( !UISupport.confirm( messages.get( "ClearWorkspaceAction.ConfirmQuestion" ),
+				messages.get( "ClearWorkspaceAction.Title" ) ) )
 		{
 			return;
 		}

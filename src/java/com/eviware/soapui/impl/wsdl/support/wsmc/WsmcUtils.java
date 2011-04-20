@@ -32,8 +32,8 @@ import com.eviware.soapui.impl.wsdl.support.wsa.WsaContainer;
 import com.eviware.soapui.impl.wsdl.support.wsa.WsaContainerImpl;
 import com.eviware.soapui.impl.wsdl.support.wsa.WsaUtils;
 import com.eviware.soapui.impl.wsdl.support.wsrm.WsrmConfig;
-import com.eviware.soapui.model.iface.Response;
 import com.eviware.soapui.model.iface.Request.SubmitException;
+import com.eviware.soapui.model.iface.Response;
 import com.eviware.soapui.model.iface.Submit.Status;
 import com.eviware.soapui.model.propertyexpansion.DefaultPropertyExpansionContext;
 

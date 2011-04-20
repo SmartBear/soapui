@@ -25,7 +25,7 @@ public abstract class AbstractGroovyEditorModel implements GroovyEditorModel
 	private final String[] keywords;
 	private Action runAction;
 	private final String name;
-	
+
 	private PropertyChangeSupport propertyChangeSupport;
 	private final ModelItem modelItem;
 
@@ -36,7 +36,7 @@ public abstract class AbstractGroovyEditorModel implements GroovyEditorModel
 		this.name = name;
 
 		runAction = createRunAction();
-		
+
 		propertyChangeSupport = new PropertyChangeSupport( this );
 	}
 
@@ -83,7 +83,7 @@ public abstract class AbstractGroovyEditorModel implements GroovyEditorModel
 	{
 		propertyChangeSupport.removePropertyChangeListener( listener );
 	}
-	
+
 	public void notifyPropertyChanged( String name, Object oldValue, Object newValue )
 	{
 		propertyChangeSupport.firePropertyChange( name, oldValue, newValue );

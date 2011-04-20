@@ -37,9 +37,7 @@ public class IntegrationUtils
 
 	public static final String LOADU_INFO_DIALOG_TITLE = "Target loadUI items info";
 
-	
-	
-	public static String getIntegrationPort(String appName, String whichAppPort, String defaultPort )
+	public static String getIntegrationPort( String appName, String whichAppPort, String defaultPort )
 	{
 		String cajoPort = SoapUI.getSettings().getString( whichAppPort, defaultPort );
 		try
@@ -50,12 +48,12 @@ public class IntegrationUtils
 		{
 			cajoPort = defaultPort;
 			SoapUI.getSettings().setString( whichAppPort, cajoPort );
-			SoapUI.log( appName+" integration port was reset to default value "+defaultPort+", because its value was not correct!" );
+			SoapUI.log( appName + " integration port was reset to default value " + defaultPort
+					+ ", because its value was not correct!" );
 		}
 		return cajoPort;
 	}
-	
-	
+
 	public static List<String> getProjectsNames()
 	{
 		List<String> testCaseNames = new ArrayList<String>();

@@ -115,8 +115,9 @@ public class RemoveEmptyContentRequestFilter extends AbstractRequestFilter
 						}
 					}
 
-					if( attributes.getLength() == 0 && cursor.getTextValue() == null
-							|| cursor.getTextValue().trim().length() == 0 && XmlUtils.getFirstChildElement( elm ) == null )
+					if( attributes.getLength() == 0
+							&& ( cursor.getTextValue() == null || cursor.getTextValue().trim().length() == 0 )
+							&& XmlUtils.getFirstChildElement( elm ) == null )
 					{
 						if( cursor.removeXml() )
 						{

@@ -40,11 +40,12 @@ import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry.AssertableType;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Interface;
-import com.eviware.soapui.model.iface.Submit;
 import com.eviware.soapui.model.iface.Request.SubmitException;
+import com.eviware.soapui.model.iface.Submit;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionsResult;
+import com.eviware.soapui.model.support.DefaultTestStepProperty;
 import com.eviware.soapui.model.support.TestPropertyListenerAdapter;
 import com.eviware.soapui.model.support.TestStepBeanProperty;
 import com.eviware.soapui.model.testsuite.AssertionError;
@@ -106,10 +107,10 @@ public class HttpTestRequestStep extends WsdlTestStepWithProperties implements H
 		}
 
 		// init default properties
-		addProperty( new TestStepBeanProperty( "Endpoint", false, testRequest, "endpoint", this , false));
-		addProperty( new TestStepBeanProperty( "Username", false, testRequest, "username", this , true));
-		addProperty( new TestStepBeanProperty( "Password", false, testRequest, "password", this, true ));
-		addProperty( new TestStepBeanProperty( "Domain", false, testRequest, "domain", this , false));
+		addProperty( new TestStepBeanProperty( "Endpoint", false, testRequest, "endpoint", this, false ) );
+		addProperty( new TestStepBeanProperty( "Username", false, testRequest, "username", this, true ) );
+		addProperty( new TestStepBeanProperty( "Password", false, testRequest, "password", this, true ) );
+		addProperty( new TestStepBeanProperty( "Domain", false, testRequest, "domain", this, false ) );
 
 		// init properties
 		addProperty( new TestStepBeanProperty( "Request", false, testRequest, "requestContent", this, true )
@@ -137,6 +138,16 @@ public class HttpTestRequestStep extends WsdlTestStepWithProperties implements H
 			public String getDefaultValue()
 			{
 				return createDefaultRawResponseContent();
+			}
+		} );
+
+		addProperty( new DefaultTestStepProperty( "RawRequest", true, this )
+		{
+			@Override
+			public String getValue()
+			{
+				HttpResponse response = testRequest.getResponse();
+				return response == null ? null : response.getRequestContent();
 			}
 		} );
 	}

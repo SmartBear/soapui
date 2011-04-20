@@ -13,6 +13,7 @@
 package com.eviware.soapui.impl.wsdl.submit;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.eviware.soapui.SoapUI;
@@ -58,6 +59,9 @@ public class RequestTransportRegistry
 		HttpClientRequestTransport httpTransport = new HttpClientRequestTransport();
 		HermesJmsRequestTransport jmsTransport = new HermesJmsRequestTransport();
 
+		List<RequestFilterFactory> filterFactories = SoapUI.getFactoryRegistry()
+				.getFactories( RequestFilterFactory.class );
+
 		httpTransport.addRequestFilter( new EndpointRequestFilter() );
 		httpTransport.addRequestFilter( new HttpSettingsRequestFilter() );
 		httpTransport.addRequestFilter( new RestRequestFilter() );
@@ -76,6 +80,12 @@ public class RequestTransportRegistry
 		for( RequestFilter filter : SoapUI.getListenerRegistry().getListeners( RequestFilter.class ) )
 		{
 			httpTransport.addRequestFilter( filter );
+		}
+
+		for( RequestFilterFactory factory : filterFactories )
+		{
+			if( factory.getProtocol().equals( HTTP ) || factory.getProtocol().equals( HTTPS ) )
+				httpTransport.addRequestFilter( factory.createRequestFilter() );
 		}
 
 		httpTransport.addRequestFilter( new WsdlPackagingRequestFilter() );
@@ -98,7 +108,27 @@ public class RequestTransportRegistry
 			jmsTransport.addRequestFilter( filter );
 		}
 
+		for( RequestFilterFactory factory : filterFactories )
+		{
+			if( factory.getProtocol().equals( JMS ) )
+				jmsTransport.addRequestFilter( factory.createRequestFilter() );
+		}
+
 		transports.put( JMS, jmsTransport );
+
+		for( RequestTransportFactory factory : SoapUI.getFactoryRegistry().getFactories( RequestTransportFactory.class ) )
+		{
+			RequestTransport transport = factory.newRequestTransport();
+			String protocol = factory.getProtocol();
+
+			for( RequestFilterFactory filterFactory : filterFactories )
+			{
+				if( filterFactory.getProtocol().equals( protocol ) )
+					transport.addRequestFilter( filterFactory.createRequestFilter() );
+			}
+
+			transports.put( protocol, transport );
+		}
 	}
 
 	public static synchronized RequestTransport getTransport( String endpoint, SubmitContext submitContext )

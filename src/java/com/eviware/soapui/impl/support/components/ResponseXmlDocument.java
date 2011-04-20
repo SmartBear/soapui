@@ -57,7 +57,9 @@ public class ResponseXmlDocument extends AbstractXmlDocument implements Property
 			try
 			{
 				settingResponse = true;
+				String oldXml = response.getContentAsString();
 				response.setResponseContent( xml );
+				fireXmlChanged( oldXml, xml );
 			}
 			finally
 			{

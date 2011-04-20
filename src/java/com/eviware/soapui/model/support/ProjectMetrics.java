@@ -81,7 +81,7 @@ public class ProjectMetrics
 
 		for( TestSuite testSuite : project.getTestSuiteList() )
 		{
-			for (TestCase testCase : testSuite.getTestCaseList())
+			for( TestCase testCase : testSuite.getTestCaseList() )
 			{
 				result += testCase.getLoadTestCount();
 			}

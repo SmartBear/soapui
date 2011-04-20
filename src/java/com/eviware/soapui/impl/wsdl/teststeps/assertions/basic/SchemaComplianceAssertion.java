@@ -86,8 +86,7 @@ public class SchemaComplianceAssertion extends WsdlMessageAssertion implements R
 
 		// get correct context for checking if cache has been cleared for this run
 		PropertyExpansionContext context = testRunContext.hasProperty( TestCaseRunContext.LOAD_TEST_CONTEXT ) ? ( PropertyExpansionContext )testRunContext
-				.getProperty( TestCaseRunContext.LOAD_TEST_CONTEXT )
-				: testRunContext;
+				.getProperty( TestCaseRunContext.LOAD_TEST_CONTEXT ) : testRunContext;
 
 		synchronized( context )
 		{

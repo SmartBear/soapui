@@ -37,12 +37,12 @@ public class RestartMockServiceAction extends AbstractSoapUIAction<WsdlMockServi
 		try
 		{
 			UISupport.setHourglassCursor();
-			if( !SoapUI.getDesktop().hasDesktopPanel( mockService ))
+			if( !SoapUI.getDesktop().hasDesktopPanel( mockService ) )
 				UISupport.showDesktopPanel( mockService );
-			
+
 			if( mockService.getMockRunner() != null )
 				mockService.getMockRunner().stop();
-			
+
 			mockService.start();
 		}
 		catch( Exception e )

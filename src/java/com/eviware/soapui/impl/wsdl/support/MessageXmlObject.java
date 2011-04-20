@@ -103,13 +103,13 @@ public class MessageXmlObject
 			// get root element
 			XmlObject[] paths = msgXml.selectPath( "declare namespace env='"
 					+ wsdlContext.getSoapVersion().getEnvelopeNamespace() + "';" + "declare namespace ns='"
-					+ WsdlUtils.getTargetNamespace( wsdlContext.getDefinition()) + "';" + "$this/env:Envelope/env:Body/ns:"
+					+ WsdlUtils.getTargetNamespace( wsdlContext.getDefinition() ) + "';" + "$this/env:Envelope/env:Body/ns:"
 					+ bindingOperation.getName() );
 
 			if( paths.length != 1 )
 			{
-				throw new Exception( "Missing message wrapper element [" + WsdlUtils.getTargetNamespace( wsdlContext.getDefinition())
-						+ "@" + bindingOperation.getName() );
+				throw new Exception( "Missing message wrapper element ["
+						+ WsdlUtils.getTargetNamespace( wsdlContext.getDefinition() ) + "@" + bindingOperation.getName() );
 			}
 			else
 			{

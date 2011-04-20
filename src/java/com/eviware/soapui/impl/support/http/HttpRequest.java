@@ -23,8 +23,8 @@ import org.apache.xmlbeans.SchemaType;
 
 import com.eviware.soapui.config.AttachmentConfig;
 import com.eviware.soapui.config.HttpRequestConfig;
-import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.RestRequest.ParameterMessagePart;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.RestRequestInterface.RequestMethod;
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
@@ -39,9 +39,11 @@ import com.eviware.soapui.impl.wsdl.support.jms.header.JMSHeaderConfig;
 import com.eviware.soapui.impl.wsdl.support.jms.property.JMSPropertiesConfig;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.MessagePart;
-import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.iface.MessagePart.ContentPart;
+import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpansionsResult;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestPropertyListener;
 import com.eviware.soapui.support.StringUtils;
@@ -388,4 +390,26 @@ public class HttpRequest extends AbstractHttpRequest<HttpRequestConfig> implemen
 		notifyPropertyChanged( responseContentProperty, ( Object )oldContent, ( Object )responseContent );
 	}
 
+	@Override
+	public String getMultiValueDelimiter()
+	{
+		return getConfig().getMultiValueDelimiter();
+	}
+
+	public void setMultiValueDelimiter( String delimiter )
+	{
+		String old = getMultiValueDelimiter();
+		getConfig().setMultiValueDelimiter( delimiter );
+
+		notifyPropertyChanged( "multiValueDelimiter", old, delimiter );
+	}
+
+	public PropertyExpansion[] getPropertyExpansions()
+	{
+		PropertyExpansionsResult result = new PropertyExpansionsResult( this, this );
+		result.addAll( super.getPropertyExpansions() );
+		result.addAll( params.getPropertyExpansions() );
+
+		return result.toArray();
+	}
 }

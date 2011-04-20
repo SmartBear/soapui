@@ -33,10 +33,10 @@ import com.eviware.soapui.model.testsuite.LoadTestRunner;
 import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
+import com.eviware.soapui.model.testsuite.TestRunner.Status;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestSuite;
-import com.eviware.soapui.model.testsuite.TestRunner.Status;
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.support.StringUtils;
@@ -91,13 +91,12 @@ public class SoapUILoadTestRunner extends AbstractSoapUITestRunner implements Lo
 		{
 			String testSuite = getCommandLineOptionSubstSpace( cmd, "s" );
 			setTestSuite( testSuite );
-			message += validateTestSuite();
 		}
+
 		if( cmd.hasOption( "c" ) )
 		{
 			String testCase = cmd.getOptionValue( "c" );
 			setTestCase( testCase );
-			message += validateTestCase();
 		}
 
 		if( cmd.hasOption( "l" ) )
@@ -165,32 +164,6 @@ public class SoapUILoadTestRunner extends AbstractSoapUITestRunner implements Lo
 		}
 
 		return true;
-	}
-
-	private String validateTestCase()
-	{
-		WsdlProject project = ( WsdlProject )ProjectFactoryRegistry.getProjectFactory( "wsdl" ).createNew(
-				getProjectFile(), getProjectPassword() );
-
-		if( project.getTestSuiteByName( testSuite ) == null )
-			return "Test Suite with name:'" + testSuite + "' is missing from project:'" + project.getName() + "' \n";
-
-		if( project.getTestSuiteByName( testSuite ).getTestCaseByName( testCase ) == null )
-			return "Test Case with name:'" + testCase + "' is missing from testSuite:'" + testSuite + "' \n";
-
-		return "";
-	}
-
-	private String validateTestSuite()
-	{
-		WsdlProject project = ( WsdlProject )ProjectFactoryRegistry.getProjectFactory( "wsdl" ).createNew(
-				getProjectFile(), getProjectPassword() );
-
-		if( project.getTestSuiteByName( testSuite ) == null )
-			return "Test Suite with name:'" + testSuite + "' is missing from project:'" + project.getName() + "' \n";
-
-		return "";
-
 	}
 
 	public void setLimit( int limit )
@@ -283,6 +256,9 @@ public class SoapUILoadTestRunner extends AbstractSoapUITestRunner implements Lo
 
 		int suiteCount = 0;
 
+		if( testSuite != null && project.getTestSuiteByName( testSuite ) == null )
+			throw new Exception( "Missing TestSuite named [" + testSuite + "]" );
+
 		for( int c = 0; c < project.getTestSuiteCount(); c++ )
 		{
 			if( testSuite == null || project.getTestSuiteAt( c ).getName().equalsIgnoreCase( testSuite ) )
@@ -342,6 +318,11 @@ public class SoapUILoadTestRunner extends AbstractSoapUITestRunner implements Lo
 
 	public void runSuite( TestSuite suite )
 	{
+		if( testCase != null && suite.getTestCaseByName( testCase ) == null )
+		{
+			return;
+		}
+
 		long start = System.currentTimeMillis();
 		for( int c = 0; c < suite.getTestCaseCount(); c++ )
 		{
@@ -366,6 +347,11 @@ public class SoapUILoadTestRunner extends AbstractSoapUITestRunner implements Lo
 
 	private void runTestCase( TestCase testCase )
 	{
+		if( loadTest != null && testCase.getLoadTestByName( loadTest ) == null )
+		{
+			return;
+		}
+
 		for( int c = 0; c < testCase.getLoadTestCount(); c++ )
 		{
 			String name = testCase.getLoadTestAt( c ).getName();
@@ -397,9 +383,7 @@ public class SoapUILoadTestRunner extends AbstractSoapUITestRunner implements Lo
 
 			if( threadCount >= 0 )
 			{
-				log
-						.info( "Overriding threadCount [" + loadTest.getThreadCount() + "] with specified [" + threadCount
-								+ "]" );
+				log.info( "Overriding threadCount [" + loadTest.getThreadCount() + "] with specified [" + threadCount + "]" );
 				loadTest.setThreadCount( threadCount );
 			}
 

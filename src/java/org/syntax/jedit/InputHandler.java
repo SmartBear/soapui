@@ -47,21 +47,21 @@ import com.eviware.soapui.support.UISupport;
  */
 public abstract class InputHandler extends KeyAdapter
 {
-   private static boolean useCtrlKeyInsteadOfMenuKey = false;
-   
-   public static void useCtrlKeyInsteadOfMenuKey(boolean b)
-   {
-      useCtrlKeyInsteadOfMenuKey = b;
-   }
-   
-   public static int getMenuShortcutKeyMask()
-   {
-      if(useCtrlKeyInsteadOfMenuKey)
-         return InputEvent.CTRL_MASK;
-      else
-         return Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
-   }
-   
+	private static boolean useCtrlKeyInsteadOfMenuKey = false;
+
+	public static void useCtrlKeyInsteadOfMenuKey( boolean b )
+	{
+		useCtrlKeyInsteadOfMenuKey = b;
+	}
+
+	public static int getMenuShortcutKeyMask()
+	{
+		if( useCtrlKeyInsteadOfMenuKey )
+			return InputEvent.CTRL_MASK;
+		else
+			return Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+	}
+
 	/**
 	 * If this client property is set to Boolean.TRUE on the text area, the
 	 * home/end keys will support 'smart' BRIEF-like behaviour (one press =

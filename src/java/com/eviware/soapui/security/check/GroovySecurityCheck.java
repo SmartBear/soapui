@@ -21,16 +21,14 @@ import com.eviware.soapui.impl.wsdl.panels.teststeps.support.AbstractGroovyEdito
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GroovyEditor;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
-import com.eviware.soapui.security.log.JSecurityTestRunLog;
 import com.eviware.soapui.security.ui.GroovySecurityCheckPanel;
 import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.AField.AFieldType;
+import com.eviware.x.form.support.AForm;
 
 /**
  * 

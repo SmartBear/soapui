@@ -60,8 +60,8 @@ public class WSPartsTable extends JPanel
 			}
 		} );
 
-		partsTable.getColumnModel().getColumn( 3 ).setCellEditor(
-				new DefaultCellEditor( new JComboBox( new String[] { "Content", "Element" } ) ) );
+		partsTable.getColumnModel().getColumn( 3 )
+				.setCellEditor( new DefaultCellEditor( new JComboBox( new String[] { "Content", "Element" } ) ) );
 
 		JScrollPane scrollPane = new JScrollPane( partsTable );
 		scrollPane.setBackground( Color.WHITE );

@@ -109,7 +109,7 @@ public class RestResourceTreeNode extends AbstractModelItemTreeNode<RestResource
 			treeNode.getModelItem().removePropertyChangeListener( Request.NAME_PROPERTY, propertyChangeListener );
 			treeNode.release();
 		}
-		
+
 		for( RestResourceTreeNode resource : resourceNodes )
 		{
 			resource.release();

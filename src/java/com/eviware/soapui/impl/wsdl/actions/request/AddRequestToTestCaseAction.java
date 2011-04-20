@@ -96,8 +96,8 @@ public class AddRequestToTestCaseAction extends AbstractAddToTestCaseAction<Wsdl
 
 		String name = dialogValues.get( STEP_NAME );
 
-		WsdlTestRequestStep testStep = ( WsdlTestRequestStep )testCase.insertTestStep( WsdlTestRequestStepFactory
-				.createConfig( request, name ), position );
+		WsdlTestRequestStep testStep = ( WsdlTestRequestStep )testCase.insertTestStep(
+				WsdlTestRequestStepFactory.createConfig( request, name ), position );
 
 		if( testStep == null )
 			return null;

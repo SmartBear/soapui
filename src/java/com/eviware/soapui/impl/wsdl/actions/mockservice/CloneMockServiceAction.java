@@ -33,8 +33,8 @@ import com.eviware.x.form.XFormField;
 import com.eviware.x.form.XFormFieldListener;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.AField.AFieldType;
+import com.eviware.x.form.support.AForm;
 
 /**
  * Clones a WsdlMockService
@@ -78,8 +78,8 @@ public class CloneMockServiceAction extends AbstractSoapUIAction<WsdlMockService
 		dialog.getFormField( Form.DESCRIPTION ).setEnabled( false );
 		dialog.setValue( Form.DESCRIPTION, mockService.getDescription() );
 		WorkspaceImpl workspace = mockService.getProject().getWorkspace();
-		dialog.setOptions( Form.PROJECT, ModelSupport.getNames( workspace.getOpenProjectList(),
-				new String[] { "<Create New>" } ) );
+		dialog.setOptions( Form.PROJECT,
+				ModelSupport.getNames( workspace.getOpenProjectList(), new String[] { "<Create New>" } ) );
 
 		dialog.setValue( Form.PROJECT, mockService.getProject().getName() );
 

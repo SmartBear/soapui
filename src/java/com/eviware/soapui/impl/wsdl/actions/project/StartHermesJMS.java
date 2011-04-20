@@ -47,18 +47,21 @@ public class StartHermesJMS extends AbstractSoapUIAction<WsdlProject>
 		project.setHermesConfig( hermesConfigPath );
 
 		String hermesHome = SoapUI.getSettings().getString( ToolsSettings.HERMES_JMS, HermesUtils.defaultHermesJMSPath() );
-		if(!isHermesHomeValid( hermesHome )){
-			UISupport.showErrorMessage("Please set Hermes JMS path in Preferences->Tools ! ");
+		if( !isHermesHomeValid( hermesHome ) )
+		{
+			UISupport.showErrorMessage( "Please set Hermes JMS path in Preferences->Tools ! " );
 			if( UISupport.getMainFrame() != null )
 			{
 				if( SoapUIPreferencesAction.getInstance().show( SoapUIPreferencesAction.INTEGRATED_TOOLS ) )
 				{
-					hermesHome = SoapUI.getSettings().getString( ToolsSettings.HERMES_JMS,HermesUtils.defaultHermesJMSPath() );
+					hermesHome = SoapUI.getSettings().getString( ToolsSettings.HERMES_JMS,
+							HermesUtils.defaultHermesJMSPath() );
 				}
 			}
-			
+
 		}
-		if( !isHermesHomeValid( hermesHome )){
+		if( !isHermesHomeValid( hermesHome ) )
+		{
 			return;
 		}
 		startHermesJMS( hermesConfigPath, hermesHome );
@@ -66,7 +69,7 @@ public class StartHermesJMS extends AbstractSoapUIAction<WsdlProject>
 
 	private boolean isHermesHomeValid( String hermesHome )
 	{
-		File file = new File( hermesHome + File.separator + "bin"+ File.separator + "hermes.bat" );
+		File file = new File( hermesHome + File.separator + "bin" + File.separator + "hermes.bat" );
 		if( file.exists() )
 		{
 			return true;

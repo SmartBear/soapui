@@ -13,11 +13,13 @@
 package com.eviware.soapui.impl.wsdl.support.wsdl;
 
 import javax.wsdl.Definition;
+import javax.wsdl.WSDLException;
 import javax.wsdl.factory.WSDLFactory;
 import javax.wsdl.xml.WSDLReader;
 
 import org.apache.log4j.Logger;
 
+import com.eviware.soapui.impl.support.definition.support.InvalidDefinitionException;
 import com.eviware.soapui.impl.support.definition.support.XmlSchemaBasedInterfaceDefinition;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 
@@ -44,8 +46,15 @@ public class WsdlInterfaceDefinition extends XmlSchemaBasedInterfaceDefinition<W
 			wsdlReader.setFeature( "javax.wsdl.importDocuments", true );
 		}
 
-		log.debug( "Loading WSDL: " + loader.getBaseURI());
+		log.debug( "Loading WSDL: " + loader.getBaseURI() );
+		try
+		{
 		definition = wsdlReader.readWSDL( loader );
+		}
+		catch( WSDLException e )
+		{
+			throw new InvalidDefinitionException( e );
+		}
 
 		if( !loader.isAborted() )
 		{
