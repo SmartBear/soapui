@@ -109,7 +109,8 @@ public class SecurityTestStepResult implements SecurityResult
 		{
 			executionProgressStatus = ResultStatus.MISSING_ASSERTIONS;
 		}
-		else
+		else if( status != ResultStatus.UNKNOWN || executionProgressStatus != ResultStatus.MISSING_ASSERTIONS
+				|| executionProgressStatus != ResultStatus.MISSING_PARAMETERS )
 		{
 			executionProgressStatus = status;
 		}
