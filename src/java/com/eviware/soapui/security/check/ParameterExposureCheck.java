@@ -25,6 +25,9 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.ParameterExposureCheckConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.config.StrategyTypeConfig;
+import com.eviware.soapui.config.TestAssertionConfig;
+import com.eviware.soapui.impl.wsdl.support.assertions.AssertableConfig;
+import com.eviware.soapui.impl.wsdl.support.assertions.AssertionsSupport;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.MessageExchange;
@@ -34,6 +37,7 @@ import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.security.SecurityTestRunnerImpl;
+import com.eviware.soapui.security.assertion.ParameterExposureAssertion;
 import com.eviware.soapui.support.SecurityCheckUtil;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel;
@@ -57,6 +61,7 @@ public class ParameterExposureCheck extends AbstractSecurityCheckWithProperties
 {
 	public static final String TYPE = "ParameterExposureCheck";
 	public static final String NAME = "Parameter Exposure";
+	public static final String PARAMETER_EXPOSURE_CHECK_CONFIG = "ParameterExposureCheckConfig";
 	private ParameterExposureCheckConfig parameterExposureCheckConfig;
 	StrategyTypeConfig.Enum strategy = StrategyTypeConfig.ONE_BY_ONE;
 
@@ -69,6 +74,13 @@ public class ParameterExposureCheck extends AbstractSecurityCheckWithProperties
 			initConfig();
 		else
 			parameterExposureCheckConfig = ( ParameterExposureCheckConfig )getConfig().getConfig();
+	}
+
+	@Override
+	protected void initAssertions()
+	{
+		super.initAssertions();
+		assertionsSupport.addWsdlAssertion( ParameterExposureAssertion.LABEL );
 	}
 
 	private void initConfig()
@@ -123,6 +135,7 @@ public class ParameterExposureCheck extends AbstractSecurityCheckWithProperties
 		{
 			Stack<PropertyMutation> requestMutationsList = new Stack<PropertyMutation>();
 			context.put( PropertyMutation.REQUEST_MUTATIONS_STACK, requestMutationsList );
+			context.put( PARAMETER_EXPOSURE_CHECK_CONFIG, parameterExposureCheckConfig );
 			try
 			{
 				extractMutations( testStep, context );
@@ -138,6 +151,7 @@ public class ParameterExposureCheck extends AbstractSecurityCheckWithProperties
 		if( stack.empty() )
 		{
 			context.remove( PropertyMutation.REQUEST_MUTATIONS_STACK );
+			context.remove( PARAMETER_EXPOSURE_CHECK_CONFIG );
 			return false;
 		}
 		else
@@ -153,7 +167,7 @@ public class ParameterExposureCheck extends AbstractSecurityCheckWithProperties
 		{
 			// property expansion support
 			value = context.expand( value );
-			
+
 			PropertyMutation allAtOncePropertyMutation = new PropertyMutation();
 			TestStep testStepCopy = null;
 			XmlObjectTreeModel model = null;

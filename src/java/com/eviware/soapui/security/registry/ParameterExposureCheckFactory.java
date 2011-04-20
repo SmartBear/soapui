@@ -13,6 +13,7 @@
 package com.eviware.soapui.security.registry;
 
 import com.eviware.soapui.config.SecurityCheckConfig;
+import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
@@ -37,7 +38,7 @@ public class ParameterExposureCheckFactory extends AbstractSecurityCheckFactory
 
 	public boolean canCreate( TestStep testStep )
 	{
-		return testStep instanceof WsdlTestRequestStep || testStep instanceof RestTestRequestStep;
+		return testStep instanceof WsdlTestRequestStep || testStep instanceof RestTestRequestStep || testStep instanceof HttpTestRequestStep;
 	}
 
 	@Override

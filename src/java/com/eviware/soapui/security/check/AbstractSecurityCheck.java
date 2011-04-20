@@ -71,7 +71,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	private SecurityCheckResult securityCheckResult;
 	private SecurityCheckRequestResult securityCheckRequestResult;
 	private TestStep testStep;
-	private AssertionsSupport assertionsSupport;
+	protected AssertionsSupport assertionsSupport;
 
 	private AssertionStatus currentStatus;
 	private SoapUIScriptEngine setupScriptEngine;
@@ -153,7 +153,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		}
 	}
 
-	private void initAssertions()
+	protected void initAssertions()
 	{
 		assertionsSupport = new AssertionsSupport( this, new AssertableConfig()
 		{
