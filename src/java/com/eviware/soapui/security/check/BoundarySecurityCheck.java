@@ -123,7 +123,7 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 					XmlTreeNode mynode = treeNodes[0];
 
 					// !!!!!!!!!!!!!!work only for simple types
-					if( mynode.getSchemaType().isSimpleType() )
+					if( mynode.isLeaf() )
 					{
 						if( mynode.getSchemaType() != null && mynode.getSchemaType().getEnumerationValues() != null
 								&& mynode.getSchemaType().getEnumerationValues().length > 0 )
@@ -377,7 +377,11 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 			restrictionLabel.setJlabel( "<html><pre>    </pre></html>" );
 			return;
 		}
+		
 		SecurityCheckedParameter parameter = getParameterAt( row );
+		if( parameter == null )
+			return;
+		
 		String name = parameter.getName();
 		String xpath = parameter.getXpath();
 		TestProperty tp = getTestStep().getProperty( name );
