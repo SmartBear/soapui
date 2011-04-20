@@ -12,10 +12,10 @@
 
 package com.eviware.soapui.security.check;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
+
+import javax.swing.JComponent;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.MaliciousAttachmentSecurityCheckConfig;
@@ -23,11 +23,14 @@ import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Attachment;
+import com.eviware.soapui.model.iface.MessageExchange;
+import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
-import com.eviware.soapui.security.SecurityTestRunnerImpl;
+import com.eviware.soapui.security.ui.MaliciousAttachmentAdvancedSettingsPanel;
 import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
+import com.eviware.soapui.support.types.StringToStringMap;
 
 public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 {
@@ -37,21 +40,30 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 
 	private MaliciousAttachmentSecurityCheckConfig config;
 
-	public MaliciousAttachmentSecurityCheck( SecurityCheckConfig config, ModelItem parent, String icon, TestStep testStep )
-	{
-		super( testStep, config, parent, icon );
+	private MaliciousAttachmentAdvancedSettingsPanel advancedSettingsPanel;
 
-		if( config == null )
+	public MaliciousAttachmentSecurityCheck( SecurityCheckConfig newConfig, ModelItem parent, String icon,
+			TestStep testStep )
+	{
+		super( testStep, newConfig, parent, icon );
+
+		if( newConfig.getConfig() == null || !( newConfig.getConfig() instanceof MaliciousAttachmentSecurityCheckConfig ) )
 		{
-			config = SecurityCheckConfig.Factory.newInstance();
-			MaliciousAttachmentSecurityCheckConfig mascc = MaliciousAttachmentSecurityCheckConfig.Factory.newInstance();
-			config.setConfig( mascc );
+			initConfig();
 		}
-		if( config.getConfig() == null )
+		else
 		{
-			MaliciousAttachmentSecurityCheckConfig mascc = MaliciousAttachmentSecurityCheckConfig.Factory.newInstance();
-			config.setConfig( mascc );
+			config = ( ( MaliciousAttachmentSecurityCheckConfig )newConfig.getConfig() );
 		}
+	}
+
+	/**
+	 * Default malicious attachment configuration
+	 */
+	protected void initConfig()
+	{
+		getConfig().setConfig( MaliciousAttachmentSecurityCheckConfig.Factory.newInstance() );
+		config = ( MaliciousAttachmentSecurityCheckConfig )getConfig().getConfig();
 	}
 
 	@Override
@@ -70,40 +82,26 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 		return config;
 	}
 
-	@Override
-	protected void execute( SecurityTestRunner securityTestRunner, TestStep testStep, SecurityTestRunContext context )
+	protected StringToStringMap update( TestStep testStep, SecurityTestRunContext context ) throws Exception
 	{
+		return null;
 
-		String originalResponse = getOriginalResult( ( SecurityTestRunnerImpl )securityTestRunner, testStep )
-				.getResponse().getContentAsXml();
+	}
 
-		// First, lets see what happens when we just attach a plain text file
-		File textFile;
+	@Override
+	protected void execute( SecurityTestRunner runner, TestStep testStep, SecurityTestRunContext context )
+	{
 		try
 		{
-			textFile = File.createTempFile( "test", ".txt" );
-			BufferedWriter writer = new BufferedWriter( new FileWriter( textFile ) );
-			writer.write( "This is just a text file, nothing to see here, just a harmless text file" );
-			writer.flush();
-			Attachment attach = addAttachment( testStep, textFile, "text/plain" );
-			// runCheck(testStep, context, securityTestLog, testCaseRunner,
-			// originalResponse,
-			// "Possible Malicious Attachment Vulnerability Detected");
-			( ( AbstractHttpRequest<?> )getRequest( testStep ) ).removeAttachment( attach );
-
-			// Try with setting the wrong content type
-			attach = addAttachment( testStep, textFile, "multipart/mixed" );
-			// runCheck(testStep, context, securityTestLog, testCaseRunner,
-			// originalResponse,
-			// "Possible Malicious Attachment Vulnerability Detected");
-			( ( AbstractHttpRequest<?> )getRequest( testStep ) ).removeAttachment( attach );
-
+			StringToStringMap paramsUpdated = update( testStep, context );
+			MessageExchange message = ( MessageExchange )testStep.run( ( TestCaseRunner )runner, context );
+			// createMessageExchange( paramsUpdated, message );
 		}
-		catch( IOException e )
+		catch( Exception e )
 		{
-			SoapUI.logError( e );
+			SoapUI.logError( e, "[MaliciousAttachmentSecurityCheck]Property value is not valid xml!" );
+			reportSecurityCheckException( "Propety value is not XML or XPath is wrong!" );
 		}
-
 	}
 
 	@Override
@@ -153,4 +151,14 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 	{
 		return "http://www.soapui.org";
 	}
+
+	@Override
+	public JComponent getAdvancedSettingsPanel()
+	{
+		if( advancedSettingsPanel == null )
+			advancedSettingsPanel = new MaliciousAttachmentAdvancedSettingsPanel( config );
+
+		return advancedSettingsPanel.getPanel();
+	}
+
 }

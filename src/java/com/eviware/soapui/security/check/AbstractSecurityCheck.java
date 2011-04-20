@@ -52,6 +52,7 @@ import com.eviware.soapui.security.SecurityTestRunnerImpl;
 import com.eviware.soapui.security.result.SecurityCheckRequestResult;
 import com.eviware.soapui.security.result.SecurityCheckResult;
 import com.eviware.soapui.security.result.SecurityResult.ResultStatus;
+import com.eviware.soapui.security.support.FailedSecurityMessageExchange;
 import com.eviware.soapui.security.support.SecurityTestRunListener;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
@@ -920,6 +921,17 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	public SecurityCheckResult getSecurityCheckResult()
 	{
 		return securityCheckResult;
+	}
+	
+	/**
+	 * @param message
+	 * @param testStep
+	 */
+	protected void reportSecurityCheckException( String message )
+	{
+		getSecurityCheckRequestResult().setMessageExchange( new FailedSecurityMessageExchange() );
+		getSecurityCheckRequestResult().setStatus( ResultStatus.FAILED );
+		getSecurityCheckRequestResult().addMessage( message );
 	}
 
 }

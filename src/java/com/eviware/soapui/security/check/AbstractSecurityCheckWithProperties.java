@@ -127,17 +127,6 @@ public abstract class AbstractSecurityCheckWithProperties extends AbstractSecuri
 		}
 	}
 
-	/**
-	 * @param message
-	 * @param testStep
-	 */
-	protected void reportSecurityCheckException( String message )
-	{
-		getSecurityCheckRequestResult().setMessageExchange( new FailedSecurityMessageExchange() );
-		getSecurityCheckRequestResult().setStatus( ResultStatus.FAILED );
-		getSecurityCheckRequestResult().addMessage( message );
-	}
-
 	protected void createMessageExchange( StringToStringMap updatedParams, MessageExchange message )
 	{
 		message.getProperties().put( SECURITY_CHANGED_PARAMETERS, updatedParams.toXml() );
