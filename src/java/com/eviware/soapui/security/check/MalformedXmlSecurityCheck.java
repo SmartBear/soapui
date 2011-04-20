@@ -46,7 +46,7 @@ public class MalformedXmlSecurityCheck extends AbstractSecurityCheckWithProperti
 {
 
 	public static final String TYPE = "MalformedXmlSecurityCheck";
-	public static final String NAME = "Malformed Xml";
+	public static final String NAME = "Malformed XML";
 	private Map<SecurityCheckedParameter, ArrayList<String>> parameterMutations = new HashMap<SecurityCheckedParameter, ArrayList<String>>();
 	private boolean mutation;
 	private MalformedXmlConfig malformedXmlConfig;
@@ -68,7 +68,7 @@ public class MalformedXmlSecurityCheck extends AbstractSecurityCheckWithProperti
 	/**
 	 * Default malformed xml configuration
 	 */
-	private void initMalformedXmlConfig()
+	protected void initMalformedXmlConfig()
 	{
 		getConfig().setConfig( MalformedXmlConfig.Factory.newInstance() );
 		malformedXmlConfig = ( MalformedXmlConfig )getConfig().getConfig();
@@ -111,7 +111,7 @@ public class MalformedXmlSecurityCheck extends AbstractSecurityCheckWithProperti
 		}
 	}
 
-	private StringToStringMap update( TestStep testStep, SecurityTestRunContext context ) throws XmlException, Exception
+	protected StringToStringMap update( TestStep testStep, SecurityTestRunContext context ) throws XmlException, Exception
 	{
 		StringToStringMap params = new StringToStringMap();
 
@@ -259,7 +259,7 @@ public class MalformedXmlSecurityCheck extends AbstractSecurityCheckWithProperti
 		return params;
 	}
 
-	private void mutateParameters( TestStep testStep, SecurityTestRunContext context ) throws XmlException, IOException
+	protected void mutateParameters( TestStep testStep, SecurityTestRunContext context ) throws XmlException, IOException
 	{
 		mutation = true;
 		// for each parameter
@@ -303,7 +303,7 @@ public class MalformedXmlSecurityCheck extends AbstractSecurityCheckWithProperti
 		}
 	}
 
-	private Collection<? extends String> mutateNode( XmlTreeNode node, String xml ) throws IOException
+	protected Collection<? extends String> mutateNode( XmlTreeNode node, String xml ) throws IOException
 	{
 
 		ArrayList<String> result = new ArrayList<String>();
@@ -413,13 +413,13 @@ public class MalformedXmlSecurityCheck extends AbstractSecurityCheckWithProperti
 	@Override
 	public String getConfigDescription()
 	{
-		return "Configures Malformed Xml Security Check";
+		return "Configures Malformed XML Security Check";
 	}
 
 	@Override
 	public String getConfigName()
 	{
-		return "Malformed Xml Security Check";
+		return "Malformed XML Security Check";
 	}
 
 	@Override
