@@ -108,6 +108,33 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 		}
 		return clonedTestStep;
 	}
+	
+	
+	/**
+	 * Clones original TestStep for security modification this does not alter the
+	 * original test step
+	 * 
+	 * @param sourceTestStep
+	 * @return TestStep
+	 */
+	public static TestStep cloneTestStepForSecurityCheck( WsdlTestStep sourceTestStep )
+	{
+		WsdlTestStep clonedTestStep = null;
+		TestStepConfig testStepConfig = ( TestStepConfig )sourceTestStep.getConfig().copy();
+		WsdlTestStepFactory factory = WsdlTestStepRegistry.getInstance().getFactory( testStepConfig.getType() );
+		if( factory != null )
+		{
+			clonedTestStep = factory.buildTestStep( sourceTestStep.getTestCase(), testStepConfig, false );
+			if( clonedTestStep instanceof Assertable )
+			{
+				for( TestAssertion assertion : ( ( Assertable )clonedTestStep ).getAssertionList() )
+				{
+					( ( Assertable )clonedTestStep ).removeAssertion( assertion );
+				}
+			}
+		}
+		return clonedTestStep;
+	}
 
 	protected int runCurrentTestStep( SecurityTestRunContext runContext, int currentStepIndex )
 	{
