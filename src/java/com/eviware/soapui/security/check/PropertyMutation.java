@@ -27,6 +27,17 @@ public class PropertyMutation
 	private String propertyName;
 	private String propertyValue;
 	private StringToStringMap mutatedParameters;
+	private TestStep testStep;
+
+	public TestStep getTestStep()
+	{
+		return testStep;
+	}
+
+	public void setTestStep( TestStep testStep )
+	{
+		this.testStep = testStep;
+	}
 
 	public String getPropertyName()
 	{
@@ -55,7 +66,11 @@ public class PropertyMutation
 
 	public void setMutatedParameters( StringToStringMap mutatedParameters )
 	{
-		this.mutatedParameters = mutatedParameters;
+		if( this.mutatedParameters == null )
+		{
+			this.mutatedParameters = new StringToStringMap();
+		}
+		this.mutatedParameters.putAll( mutatedParameters );
 	}
 
 	public void updateRequestProperty( TestStep testStep )
