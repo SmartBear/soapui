@@ -529,15 +529,20 @@ public class JSecurityTestRunLog extends JPanel
 			return this;
 		}
 
-		private void setStatusIcon( SecurityResult securityrresult )
+		private void setStatusIcon( SecurityResult securityResult )
 		{
-			if( securityrresult.getStatus() == ResultStatus.OK )
+			if( securityResult.getExecutionProgressStatus() == ResultStatus.OK )
 			{
 				hyperlinkLabel.setIcon( UISupport.createImageIcon( "/valid_assertion.gif" ) );
 			}
-			else if( securityrresult.getStatus() == ResultStatus.FAILED )
+			else if( securityResult.getExecutionProgressStatus() == ResultStatus.FAILED )
 			{
 				hyperlinkLabel.setIcon( UISupport.createImageIcon( "/failed_assertion.gif" ) );
+			}
+			else if( securityResult.getExecutionProgressStatus() == ResultStatus.MISSING_ASSERTIONS
+					|| securityResult.getExecutionProgressStatus() == ResultStatus.MISSING_PARAMETERS )
+			{
+				hyperlinkLabel.setIcon( UISupport.createImageIcon( "/missing_assertion.gif" ) );
 			}
 			else
 			{

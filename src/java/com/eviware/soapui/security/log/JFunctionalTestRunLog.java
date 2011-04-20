@@ -38,10 +38,9 @@ import javax.swing.ListCellRenderer;
 import org.apache.log4j.Logger;
 
 import com.eviware.soapui.impl.wsdl.testcase.TestCaseLogItem;
+import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
 import com.eviware.soapui.security.SecurityTest;
-import com.eviware.soapui.security.result.SecurityResult;
-import com.eviware.soapui.security.result.SecurityTestStepResult;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.ActionSupport;
@@ -114,7 +113,7 @@ public class JFunctionalTestRunLog extends JPanel
 		boldTexts.clear();
 	}
 
-	public synchronized void addSecurityTestFunctionalStepResult( SecurityTestStepResult testStepResult )
+	public synchronized void addSecurityTestFunctionalStepResult( TestStepResult testStepResult )
 	{
 		logListModel.addSecurityTestFunctionalStepResult( testStepResult );
 		if( follow )
@@ -198,7 +197,7 @@ public class JFunctionalTestRunLog extends JPanel
 			int index = testLogList.getSelectedIndex();
 			if( index != -1 && ( index == selectedIndex || e.getClickCount() > 1 ) )
 			{
-				SecurityResult result = logListModel.getTestStepResultAt( index );
+				TestStepResult result = logListModel.getTestStepResultAt( index );
 				if( result != null && result.getActions() != null )
 					result.getActions().performDefaultAction( new ActionEvent( this, 0, null ) );
 			}
@@ -228,7 +227,7 @@ public class JFunctionalTestRunLog extends JPanel
 				testLogList.setSelectedIndex( row );
 			}
 
-			SecurityResult result = logListModel.getTestStepResultAt( row );
+			TestStepResult result = logListModel.getTestStepResultAt( row );
 			if( result == null )
 				return;
 
@@ -294,41 +293,26 @@ public class JFunctionalTestRunLog extends JPanel
 				setText( msg == null ? "" : msg );
 			}
 
-			SecurityResult result = logListModel.getTestStepResultAt( index );
-			if( result != null )
+			TestStepResult result = logListModel.getTestStepResultAt( index );
+			if( result != null && !getText().startsWith( " ->" ) )
 			{
-				if( result.getResultType().equals( SecurityTestStepResult.TYPE ) )
+				hyperlinkLabel.setText( getText() );
+				hyperlinkLabel.setBackground( getBackground() );
+				hyperlinkLabel.setEnabled( list.isEnabled() );
+
+				if( result.getStatus() == TestStepStatus.OK )
 				{
-					SecurityTestStepResult securitytestStepresult = ( SecurityTestStepResult )result;
-					hyperlinkLabel.setText( getText() );
-					hyperlinkLabel.setBackground( getBackground() );
-					hyperlinkLabel.setEnabled( list.isEnabled() );
-					hyperlinkLabel.setUnderlineColor( Color.WHITE );
-					hyperlinkLabel.setIcon( null );
-
-					if( getText().startsWith( "Step" ) && !getText().startsWith( " ->" ) )
-					{
-						hyperlinkLabel.setBorder( BorderFactory.createEmptyBorder( 0, 4, 3, 3 ) );
-						hyperlinkLabel.setUnderlineColor( Color.GRAY );
-						if( securitytestStepresult.getOriginalTestStepResult().getStatus() == TestStepStatus.OK )
-						{
-							hyperlinkLabel.setIcon( UISupport.createImageIcon( "/valid_assertion.gif" ) );
-						}
-						else if( securitytestStepresult.getOriginalTestStepResult().getStatus() == TestStepStatus.FAILED )
-						{
-							hyperlinkLabel.setIcon( UISupport.createImageIcon( "/failed_assertion.gif" ) );
-						}
-						else
-						{
-							hyperlinkLabel.setIcon( UISupport.createImageIcon( "/unknown_assertion.gif" ) );
-						}
-					}
-
-					else
-					{
-						hyperlinkLabel.setBorder( BorderFactory.createEmptyBorder( 0, 4, 3, 3 ) );
-					}
+					hyperlinkLabel.setIcon( UISupport.createImageIcon( "/valid_assertion.gif" ) );
 				}
+				else if( result.getStatus() == TestStepStatus.FAILED )
+				{
+					hyperlinkLabel.setIcon( UISupport.createImageIcon( "/failed_assertion.gif" ) );
+				}
+				else
+				{
+					hyperlinkLabel.setIcon( UISupport.createImageIcon( "/unknown_assertion.gif" ) );
+				}
+
 				return hyperlinkLabel;
 			}
 			setEnabled( list.isEnabled() );

@@ -794,7 +794,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 		public void afterOriginalStep( TestCaseRunner testRunner, SecurityTestRunContext runContext,
 				SecurityTestStepResult result )
 		{
-			functionalTestLog.addSecurityTestFunctionalStepResult( result );
+			functionalTestLog.addSecurityTestFunctionalStepResult( result.getOriginalTestStepResult() );
 			if( result.getOriginalTestStepResult().getStatus() == TestStepStatus.FAILED )
 			{
 				functionalStatus = ResultStatus.FAILED;

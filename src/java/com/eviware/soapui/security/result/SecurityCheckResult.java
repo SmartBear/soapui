@@ -20,6 +20,8 @@ import java.util.List;
 import javax.swing.AbstractAction;
 
 import com.eviware.soapui.model.security.SecurityCheck;
+import com.eviware.soapui.security.check.AbstractSecurityCheckWithProperties;
+import com.eviware.soapui.security.result.SecurityResult.ResultStatus;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.DefaultActionList;
@@ -54,11 +56,13 @@ public class SecurityCheckResult implements SecurityResult
 	private boolean hasAddedRequests;
 	// along with the status determines if canceled with or without warnings
 	private boolean hasRequestsWithWarnings;
+	private ResultStatus executionProgressStatus;
 
 	public SecurityCheckResult( SecurityCheck securityCheck )
 	{
 		this.securityCheck = securityCheck;
 		status = ResultStatus.INITIALIZED;
+		executionProgressStatus = ResultStatus.INITIALIZED;
 		securityRequestResultList = new ArrayList<SecurityCheckRequestResult>();
 		timeStamp = System.currentTimeMillis();
 	}
@@ -97,30 +101,8 @@ public class SecurityCheckResult implements SecurityResult
 
 				public void actionPerformed( ActionEvent e )
 				{
-					// if( getMessages().length > 0 )
-					// {
-					// StringBuffer buf = new StringBuffer( "<html><body>");
-					// if( getError() != null )
-					// buf.append( getError().toString() ).append( "<br/>" );
-					//
-					// for( String s : getMessages() )
-					// buf.append( s ).append( "<br/>" );
-					//
-					// UISupport.showExtendedInfo( "TestStep Result", "Step [" +
-					// testStepName + "] ran with status ["
-					// + getStatus() + "]", buf.toString(), null );
-					// }
-					// else if( getError() != null )
-					// {
-					// UISupport.showExtendedInfo( "TestStep Result", "Step [" +
-					// testStepName + "] ran with status ["
-					// + getStatus() + "]", getError().toString(), null );
-					// }
-					// else
-					// {
 					UISupport.showInfoMessage( "Check [" + getSecurityCheck().getName() + "] ran with status ["
 							+ getStatus() + "]", "SecurityCheck Result" );
-					// }
 				}
 			} );
 		}
@@ -157,6 +139,7 @@ public class SecurityCheckResult implements SecurityResult
 		{
 			status = ResultStatus.OK;
 		}
+		executionProgressStatus = status;
 
 		this.testLog.append( "\nSecurityRequest " ).append( securityRequestResultList.indexOf( secReqResult ) ).append(
 				secReqResult.getStatus().toString() ).append( ": took " ).append( secReqResult.getTimeTaken() ).append(
@@ -242,6 +225,39 @@ public class SecurityCheckResult implements SecurityResult
 	public boolean isHasRequestsWithWarnings()
 	{
 		return hasRequestsWithWarnings;
+	}
+
+	@Override
+	public ResultStatus getExecutionProgressStatus()
+	{
+		return executionProgressStatus;
+	}
+
+	public void setExecutionProgressStatus( ResultStatus status )
+	{
+		executionProgressStatus = status;
+	}
+
+	public String getStatusToDisplayInLog()
+	{
+		String itemStatus = getStatus().toString();
+		SecurityCheck securityCheck = getSecurityCheck();
+		if( securityCheck instanceof AbstractSecurityCheckWithProperties
+				&& ( ( AbstractSecurityCheckWithProperties )securityCheck ).getParameterHolder().getParameterList().size() == 0 )
+		{
+			itemStatus = ResultStatus.MISSING_PARAMETERS.toString();
+			executionProgressStatus = ResultStatus.MISSING_PARAMETERS;
+		}
+		if( securityCheck.getAssertionCount() == 0 )
+		{
+			itemStatus = ResultStatus.MISSING_ASSERTIONS.toString();
+			executionProgressStatus = ResultStatus.MISSING_ASSERTIONS;
+		}
+		if( getStatus().equals( ResultStatus.CANCELED ) )
+		{
+			itemStatus = ResultStatus.CANCELED.toString();
+		}
+		return itemStatus;
 	}
 
 }

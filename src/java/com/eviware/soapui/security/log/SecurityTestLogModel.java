@@ -13,7 +13,6 @@
 package com.eviware.soapui.security.log;
 
 import java.lang.ref.SoftReference;
-import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -46,10 +45,8 @@ public class SecurityTestLogModel extends AbstractListModel
 	private int stepCount;
 	private int checkCount;
 	private int requestCount;
-	private SimpleDateFormat dateFormat = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss.SSS" );
 	private int startCheckIndex;
 	private int startStepIndex;
-	private boolean startStepLogEntryAdded;
 
 	public synchronized Object getElementAt( int arg0 )
 	{
@@ -134,6 +131,16 @@ public class SecurityTestLogModel extends AbstractListModel
 		}
 		else if( startStepLogEntryAdded )
 		{
+
+			// String itemStatus = result.getStatus().toString();
+			// if( result.getStatus().equals( ResultStatus.UNKNOWN ) )
+			// {
+			// itemStatus = ResultStatus.MISSING_ASSERTIONS.toString();
+			// }
+			// else if( result.getStatus().equals( ResultStatus.INITIALIZED ) )
+			// {
+			// itemStatus = ResultStatus.MISSING_PARAMETERS.toString();
+			// }
 			items.set( startStepIndex, "Step " + stepCount + " [" + result.getTestStep().getName() + "] "
 					+ result.getStatus() + ": took " + result.getTimeTaken() + " ms" );
 
@@ -181,8 +188,9 @@ public class SecurityTestLogModel extends AbstractListModel
 		}
 		else
 		{
-			items.set( startCheckIndex, "SecurityCheck " + checkCount + " ["
-					+ securityCheckResult.getSecurityCheck().getName() + "] " + securityCheckResult.getStatus()
+			SecurityCheck securityCheck = securityCheckResult.getSecurityCheck();
+			String itemStatus = securityCheckResult.getStatusToDisplayInLog();
+			items.set( startCheckIndex, "SecurityCheck " + checkCount + " [" + securityCheck.getName() + "] " + itemStatus
 					+ ", time taken = " + securityCheckResult.getTimeTaken() );
 			SoftReference<SecurityResult> checkResultRef = new SoftReference<SecurityResult>( securityCheckResult );
 			results.set( startCheckIndex, checkResultRef );

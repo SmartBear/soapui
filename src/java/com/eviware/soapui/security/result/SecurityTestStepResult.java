@@ -12,12 +12,19 @@
 
 package com.eviware.soapui.security.result;
 
+import java.awt.event.ActionEvent;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.AbstractAction;
+
+import com.eviware.soapui.model.security.SecurityCheck;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
+import com.eviware.soapui.security.check.AbstractSecurityCheckWithProperties;
+import com.eviware.soapui.security.result.SecurityResult.ResultStatus;
+import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.DefaultActionList;
 
@@ -42,11 +49,12 @@ public class SecurityTestStepResult implements SecurityResult
 	private TestStepResult originalTestStepResult;
 	private DefaultActionList actionList;
 	private boolean hasAddedRequests;
-	private boolean addedAction;
+	private ResultStatus executionProgressStatus;
 
 	public SecurityTestStepResult( TestStep testStep, TestStepResult originalResult )
 	{
 		this.testStep = testStep;
+		executionProgressStatus = ResultStatus.INITIALIZED;
 		securityCheckResultList = new ArrayList<SecurityCheckResult>();
 		timeStamp = System.currentTimeMillis();
 		this.originalTestStepResult = originalResult;
@@ -70,23 +78,18 @@ public class SecurityTestStepResult implements SecurityResult
 	{
 		if( actionList == null )
 		{
-			actionList = new DefaultActionList( getOriginalTestStepResult().getTestStep().getName() );
+			actionList = new DefaultActionList( getTestStep().getName() );
+			actionList.setDefaultAction( new AbstractAction()
+			{
+
+				public void actionPerformed( ActionEvent e )
+				{
+					UISupport.showInfoMessage( "Step [" + getTestStep().getName() + "] ran with security status ["
+							+ getStatus() + "]", "TestStep Result" );
+				}
+			} );
 		}
-		// if( !addedAction )
-		// {
-		// actionList.addActions( getOriginalTestStepResult().getActions() );
-		// addedAction = true;
-		// }
-		actionList.setDefaultAction( getOriginalTestStepResult().getActions().getDefaultAction() );
-		// if( !getSecurityCheckResultList().isEmpty() )
-		// {
-		// for( SecurityCheckResult checkResult : getSecurityCheckResultList() )
-		// {
-		// actionList.addActions( checkResult.getActions() );
-		// actionList.setDefaultAction(
-		// checkResult.getActions().getDefaultAction() );
-		// }
-		// }
+
 		return actionList;
 	}
 
@@ -97,38 +100,32 @@ public class SecurityTestStepResult implements SecurityResult
 
 		timeTaken += securityCheckResult.getTimeTaken();
 
+		securityCheckResult.getStatusToDisplayInLog();
+		if( securityCheckResult.getExecutionProgressStatus().equals( ResultStatus.MISSING_PARAMETERS ) )
+		{
+			executionProgressStatus = ResultStatus.MISSING_PARAMETERS;
+		}
+		else if( securityCheckResult.getExecutionProgressStatus().equals( ResultStatus.MISSING_ASSERTIONS ) )
+		{
+			executionProgressStatus = ResultStatus.MISSING_ASSERTIONS;
+		}
+		else
+		{
+			executionProgressStatus = status;
+		}
 		if( !hasAddedRequests )
 		{
 			status = securityCheckResult.getStatus();
 		}
-		else if( (securityCheckResult.getStatus() == ResultStatus.OK
-				|| securityCheckResult.getStatus() == ResultStatus.CANCELED ) && status != ResultStatus.FAILED )
+		else if( status != ResultStatus.FAILED )
 		{
 			status = securityCheckResult.getStatus();
 		}
-		else {
-			status = securityCheckResult.getStatus();
+		if( securityCheckResult.getStatus() != ResultStatus.CANCELED )
+		{
+			executionProgressStatus = status;
 		}
 
-		// if( !hasAddedRequests && securityCheckResult.getStatus() ==
-		// ResultStatus.OK )
-		// {
-		// status = ResultStatus.OK;
-		// }
-		// else if( securityCheckResult.getStatus() == ResultStatus.FAILED )
-		// {
-		// status = ResultStatus.FAILED;
-		// }
-		// else if( securityCheckResult.getStatus() ==
-		// ResultStatus.CANCELED_FAILED )
-		// {
-		// status = ResultStatus.CANCELED_FAILED;
-		//
-		// }
-		// else
-		// {
-		// status = ResultStatus.CANCELED_OK;
-		// }
 		// TODO check and finish this - seems it's used for reports
 		// this.testLog.append( "SecurityCheck " ).append(
 		// securityCheckResultList.indexOf( securityCheckResult ) ).append(
@@ -219,5 +216,16 @@ public class SecurityTestStepResult implements SecurityResult
 	public String getResultType()
 	{
 		return TYPE;
+	}
+
+	@Override
+	public ResultStatus getExecutionProgressStatus()
+	{
+		return executionProgressStatus;
+	}
+
+	public void setExecutionProgressStatus( ResultStatus status )
+	{
+		executionProgressStatus = status;
 	}
 }

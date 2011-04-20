@@ -26,11 +26,13 @@ public interface SecurityResult
 	 * 
 	 * INITIALIZED - just started, for distinguishing if icon should be added in
 	 * the security log UNKNOWN - when no assertions are added OK - finished with
-	 * no errors/warnings FAILED CANCELED
+	 * no errors/warnings FAILED CANCELED note:
+	 * MISSING_ASSERTIONS,MISSING_PARAMETERS - are used only for indicating
+	 * progress execution for security log entry icons
 	 */
 	public enum ResultStatus
 	{
-		INITIALIZED, UNKNOWN, OK, FAILED, CANCELED
+		INITIALIZED, UNKNOWN, OK, FAILED, CANCELED, MISSING_ASSERTIONS, MISSING_PARAMETERS
 	}
 
 	/**
@@ -40,6 +42,16 @@ public interface SecurityResult
 	 * @return
 	 */
 	public String getResultType();
+
+	/**
+	 * Gets execution progress status used for indicating icon color in the
+	 * SecurityLog introduced in general in case of missing assertions and
+	 * missing parameters to match status in progress bars and yet not to need
+	 * resultStatus changed
+	 * 
+	 * @return
+	 */
+	public ResultStatus getExecutionProgressStatus();
 
 	public ResultStatus getStatus();
 
