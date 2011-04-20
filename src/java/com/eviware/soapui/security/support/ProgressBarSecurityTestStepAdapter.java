@@ -32,8 +32,8 @@ import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.security.check.AbstractSecurityCheckWithProperties;
 import com.eviware.soapui.security.result.SecurityCheckRequestResult;
 import com.eviware.soapui.security.result.SecurityCheckResult;
-import com.eviware.soapui.security.result.SecurityResult.ResultStatus;
 import com.eviware.soapui.security.result.SecurityTestStepResult;
+import com.eviware.soapui.security.result.SecurityResult.ResultStatus;
 
 /**
  * Class that keeps a JProgressBars state in sync with a SecurityTest
@@ -148,8 +148,7 @@ public class ProgressBarSecurityTestStepAdapter
 			if( securityCheck.getTestStep().getId().equals( testStep.getId() ) )
 			{
 				if( securityCheck.getSecurityCheckResult() != null
-						&& ( securityCheck.getSecurityCheckResult().getStatus() != ResultStatus.CANCELED_OK || securityCheck
-								.getSecurityCheckResult().getStatus() != ResultStatus.CANCELED_FAILED ) )
+						&& securityCheck.getSecurityCheckResult().getStatus() != ResultStatus.CANCELED )
 				{
 					if( progressBar.getString().equals( "" ) )
 					{
@@ -181,8 +180,7 @@ public class ProgressBarSecurityTestStepAdapter
 			if( securityCheckResult.getSecurityCheck().getTestStep().getId().equals( testStep.getId() ) )
 			{
 
-				if( securityCheckResult.getStatus() == ResultStatus.CANCELED_OK
-						|| securityCheckResult.getStatus() == ResultStatus.CANCELED_FAILED )
+				if( securityCheckResult.getStatus() == ResultStatus.CANCELED )
 				{
 					progressBar.setString( STATE_CANCEL );
 					progressBar.setBackground( UNKNOWN_COLOR );

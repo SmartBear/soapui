@@ -102,7 +102,7 @@ public class SecurityTestStepResult implements SecurityResult
 			status = securityCheckResult.getStatus();
 		}
 		else if( (securityCheckResult.getStatus() == ResultStatus.OK
-				|| securityCheckResult.getStatus() == ResultStatus.CANCELED_OK ) && status != ResultStatus.FAILED )
+				|| securityCheckResult.getStatus() == ResultStatus.CANCELED ) && status != ResultStatus.FAILED )
 		{
 			status = securityCheckResult.getStatus();
 		}

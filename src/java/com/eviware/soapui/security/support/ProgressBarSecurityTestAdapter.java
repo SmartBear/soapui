@@ -111,15 +111,14 @@ public class ProgressBarSecurityTestAdapter
 		public void afterSecurityCheck( TestCaseRunner testRunner, SecurityTestRunContext runContext,
 				SecurityCheckResult securityCheckResult )
 		{
-			if( securityCheckResult.getStatus() == ResultStatus.CANCELED_OK )
+			if( securityCheckResult.getStatus() == ResultStatus.CANCELED )
 			{
 				progressBar.setString( STATE_CANCEL );
 			}
 
-			if( securityCheckResult.getStatus() == ResultStatus.CANCELED_FAILED )
-			// && securityCheckResult.isHasRequestsWithWarnings() )
+			if( securityCheckResult.getStatus() == ResultStatus.CANCELED
+					&& securityCheckResult.isHasRequestsWithWarnings() )
 			{
-				progressBar.setString( STATE_CANCEL );
 				progressBar.setForeground( FAILED_COLOR );
 			}
 			else if( securityCheckResult.getStatus() == ResultStatus.FAILED )
@@ -168,8 +167,7 @@ public class ProgressBarSecurityTestAdapter
 				counterLabel.setText( " " + alertsCounter + " " );
 				progressBar.setForeground( FAILED_COLOR );
 			}
-			else if( securityCheckReqResult.getStatus() == ResultStatus.CANCELED_OK
-					|| securityCheckReqResult.getStatus() == ResultStatus.CANCELED_FAILED )
+			else if( securityCheckReqResult.getStatus() == ResultStatus.CANCELED )
 			{
 				progressBar.setString( STATE_CANCEL );
 			}

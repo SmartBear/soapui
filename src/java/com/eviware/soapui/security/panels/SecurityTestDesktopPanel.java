@@ -33,11 +33,9 @@ import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
-import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.ListModel;
 import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
 import javax.swing.text.Document;
 
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
@@ -64,8 +62,8 @@ import com.eviware.soapui.security.log.JFunctionalTestRunLog;
 import com.eviware.soapui.security.log.JSecurityTestRunLog;
 import com.eviware.soapui.security.result.SecurityCheckRequestResult;
 import com.eviware.soapui.security.result.SecurityCheckResult;
-import com.eviware.soapui.security.result.SecurityResult.ResultStatus;
 import com.eviware.soapui.security.result.SecurityTestStepResult;
+import com.eviware.soapui.security.result.SecurityResult.ResultStatus;
 import com.eviware.soapui.security.support.ProgressBarSecurityTestAdapter;
 import com.eviware.soapui.security.support.SecurityTestRunListenerAdapter;
 import com.eviware.soapui.settings.UISettings;
@@ -509,8 +507,8 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 				public void actionPerformed( ActionEvent e )
 				{
 
-					MockSecurityTestRunner securityTestRunner = new MockSecurityTestRunner(
-							SecurityTestDesktopPanel.this.getModelItem() );
+					MockSecurityTestRunner securityTestRunner = new MockSecurityTestRunner( SecurityTestDesktopPanel.this
+							.getModelItem() );
 					try
 					{
 						SecurityTestDesktopPanel.this.getModelItem().runStartupScript(
@@ -554,8 +552,8 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 				{
 					try
 					{
-						MockSecurityTestRunner securityTestRunner = new MockSecurityTestRunner(
-								SecurityTestDesktopPanel.this.getModelItem() );
+						MockSecurityTestRunner securityTestRunner = new MockSecurityTestRunner( SecurityTestDesktopPanel.this
+								.getModelItem() );
 						SecurityTestDesktopPanel.this.getModelItem().runTearDownScript(
 								( SecurityTestRunContext )securityTestRunner.getRunContext(), securityTestRunner );
 					}
@@ -775,8 +773,8 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 		{
 			securityTestLog.updateSecurityCheckResult( securityCheckResult );
 
-			if( securityCheckResult.getStatus() == ResultStatus.CANCELED_FAILED )
-			// && securityCheckResult.isHasRequestsWithWarnings() )
+			if( securityCheckResult.getStatus() == ResultStatus.CANCELED
+					&& securityCheckResult.isHasRequestsWithWarnings() )
 			{
 				securityStatus = ResultStatus.FAILED;
 			}

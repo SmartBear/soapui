@@ -30,7 +30,7 @@ public interface SecurityResult
 	 */
 	public enum ResultStatus
 	{
-		INITIALIZED, UNKNOWN, OK, FAILED, CANCELED_OK, CANCELED_FAILED
+		INITIALIZED, UNKNOWN, OK, FAILED, CANCELED
 	}
 
 	/**

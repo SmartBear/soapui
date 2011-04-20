@@ -531,12 +531,11 @@ public class JSecurityTestRunLog extends JPanel
 
 		private void setStatusIcon( SecurityResult securityrresult )
 		{
-			if( securityrresult.getStatus() == ResultStatus.OK || securityrresult.getStatus() == ResultStatus.CANCELED_OK )
+			if( securityrresult.getStatus() == ResultStatus.OK )
 			{
 				hyperlinkLabel.setIcon( UISupport.createImageIcon( "/valid_assertion.gif" ) );
 			}
-			else if( securityrresult.getStatus() == ResultStatus.FAILED
-					|| securityrresult.getStatus() == ResultStatus.CANCELED_FAILED )
+			else if( securityrresult.getStatus() == ResultStatus.FAILED )
 			{
 				hyperlinkLabel.setIcon( UISupport.createImageIcon( "/failed_assertion.gif" ) );
 			}
