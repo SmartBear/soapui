@@ -97,7 +97,7 @@ public class MaliciousAttachmentMutationsPanel
 		panel.add( gP, BorderLayout.NORTH );
 		panel.add( rP, BorderLayout.SOUTH );
 
-		panel.setBorder( BorderFactory.createEmptyBorder() );
+		panel.setBorder( BorderFactory.createEmptyBorder( 0, 1, 0, 0 ) );
 
 		return panel;
 	}
@@ -115,10 +115,9 @@ public class MaliciousAttachmentMutationsPanel
 
 		panel.add( toolbar, BorderLayout.PAGE_START );
 		panel.add( tableScrollPane, BorderLayout.CENTER );
-		panel.setBorder( BorderFactory.createEmptyBorder() );
 
 		JScrollPane scrollPane = new JScrollPane( panel );
-		scrollPane.setBorder( BorderFactory.createEmptyBorder() );
+		scrollPane.setBorder( BorderFactory.createEmptyBorder( 0, 1, 0, 0 ) );
 
 		return scrollPane;
 	}
