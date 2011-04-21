@@ -141,7 +141,8 @@ public class ParameterExposureCheck extends AbstractSecurityCheckWithProperties
 			{
 				SoapUI.logError( e );
 			}
-			return true;
+			
+			return checkIfEmptyStack( context );
 		}
 
 		Stack<PropertyMutation> stack = ( Stack<PropertyMutation> )context.get( PropertyMutation.REQUEST_MUTATIONS_STACK );
@@ -155,6 +156,16 @@ public class ParameterExposureCheck extends AbstractSecurityCheckWithProperties
 		{
 			return true;
 		}
+	}
+	
+	@SuppressWarnings( "unchecked" )
+	private boolean checkIfEmptyStack( SecurityTestRunContext context )
+	{
+		Stack<PropertyMutation> stack = ( Stack<PropertyMutation> )context.get(PropertyMutation.REQUEST_MUTATIONS_STACK );
+		if( stack.empty() )
+			return false;
+		else
+			return true;
 	}
 
 	private void extractMutations( TestStep testStep, SecurityTestRunContext context )
