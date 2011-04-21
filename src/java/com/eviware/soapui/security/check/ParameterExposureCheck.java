@@ -15,6 +15,12 @@ package com.eviware.soapui.security.check;
 import java.awt.Dimension;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
@@ -62,7 +68,7 @@ public class ParameterExposureCheck extends AbstractSecurityCheckWithProperties
 	private ParameterExposureCheckConfig parameterExposureCheckConfig;
 	StrategyTypeConfig.Enum strategy = StrategyTypeConfig.ONE_BY_ONE;
 
-	String[] defaultParameterExposureStrings = { "<script></script>" };
+	List<String> defaultParameterExposureStrings = new ArrayList<String>();
 
 	public ParameterExposureCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent, String icon )
 	{
@@ -71,6 +77,29 @@ public class ParameterExposureCheck extends AbstractSecurityCheckWithProperties
 			initConfig();
 		else
 			parameterExposureCheckConfig = ( ParameterExposureCheckConfig )getConfig().getConfig();
+
+	}
+
+	private void initDefaultVectors()
+	{
+		try
+		{
+			FileInputStream fstream = new FileInputStream( new File( SoapUI.class
+					.getResource( "/com/eviware/soapui/resources/security/XSS-vectors.txt" ).toURI() ) );
+			DataInputStream in = new DataInputStream( fstream );
+			BufferedReader br = new BufferedReader( new InputStreamReader( in ) );
+			String strLine;
+			while( ( strLine = br.readLine() ) != null )
+			{
+				defaultParameterExposureStrings.add( strLine );
+			}
+			in.close();
+		}
+		catch( Exception e )
+		{
+			SoapUI.logError( e );
+		}
+
 	}
 
 	@Override
@@ -82,10 +111,12 @@ public class ParameterExposureCheck extends AbstractSecurityCheckWithProperties
 
 	private void initConfig()
 	{
+		initDefaultVectors();
 		getConfig().setConfig( ParameterExposureCheckConfig.Factory.newInstance() );
 		parameterExposureCheckConfig = ( ParameterExposureCheckConfig )getConfig().getConfig();
 
-		parameterExposureCheckConfig.setParameterExposureStringsArray( defaultParameterExposureStrings );
+		parameterExposureCheckConfig.setParameterExposureStringsArray( defaultParameterExposureStrings
+				.toArray( new String[defaultParameterExposureStrings.size()] ) );
 	}
 
 	@Override
@@ -141,7 +172,7 @@ public class ParameterExposureCheck extends AbstractSecurityCheckWithProperties
 			{
 				SoapUI.logError( e );
 			}
-			
+
 			return checkIfEmptyStack( context );
 		}
 
@@ -157,11 +188,11 @@ public class ParameterExposureCheck extends AbstractSecurityCheckWithProperties
 			return true;
 		}
 	}
-	
+
 	@SuppressWarnings( "unchecked" )
 	private boolean checkIfEmptyStack( SecurityTestRunContext context )
 	{
-		Stack<PropertyMutation> stack = ( Stack<PropertyMutation> )context.get(PropertyMutation.REQUEST_MUTATIONS_STACK );
+		Stack<PropertyMutation> stack = ( Stack<PropertyMutation> )context.get( PropertyMutation.REQUEST_MUTATIONS_STACK );
 		if( stack.empty() )
 			return false;
 		else
