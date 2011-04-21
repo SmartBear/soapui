@@ -4,22 +4,27 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import javax.swing.Action;
+import javax.activation.MimetypesFileTypeMap;
 import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
-import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
 import javax.swing.JSplitPane;
+import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.AbstractTableModel;
+
+import org.jdesktop.swingx.JXTable;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.MaliciousAttachmentSecurityCheckConfig;
@@ -40,48 +45,61 @@ public class MaliciousAttachmentMutationsPanel
 	private MaliciousAttachmentSecurityCheckConfig config;
 	private MaliciousAttachmentsTableModel tableModel;
 
+	private Map<String, Object> tableMap = new HashMap<String, Object>();
+
 	public MaliciousAttachmentMutationsPanel( MaliciousAttachmentSecurityCheckConfig config )
 	{
 		this.config = config;
 		dialog = ( JFormDialog )ADialogBuilder.buildDialog( MutationSettings.class );
 		dialog.getFormField( MutationSettings.MUTATIONS_PANEL ).setProperty( "component", createMutationsPanel() );
+		dialog.getFormField( MutationSettings.MUTATIONS_PANEL ).setProperty( "dimension", new Dimension( 620, 300 ) );
 		initDialog();
 	}
 
 	private JComponent buildFilesList()
 	{
-		StringListFormComponent filesList = new StringListFormComponent( null, true, true, "" );
+		FileListFormComponent filesList = new FileListFormComponent();
 
-		filesList.setPreferredSize( new Dimension( 50, 400 ) );
-
-		filesList.setData( new String[] { "file1", "file2", "file3" } );
+		filesList.setData( new String[] { "workspace/soapUI-core-DEV/copyrightInXsd.groovy", "file2", "file3" } );
 
 		return filesList;
 	}
 
-	protected void updatePanel()
+	protected void update( String key )
 	{
 
 	}
 
 	private JComponent buildTables()
 	{
-		// JPanel panel = new JPanel( new BorderLayout() );
-		// JXTable table = new JXTable( new TransfersTableModel() );
-		//
-		// //table.setColumnControlVisible( true );
-		// table.setHorizontalScrollEnabled( true );
-		// table.packAll();
-		return new JPanel( new BorderLayout() );
+		JPanel panel = new JPanel( new BorderLayout() );
+
+		JXTable generateTable = new JXTable( new GenerateMutationTableModel() );
+		JScrollPane generateTableScrollpane = new JScrollPane( generateTable );
+		generateTable.setPreferredScrollableViewportSize( new Dimension( 50, 50 ) );
+		generateTable.setFillsViewportHeight( true );
+
+		JXTable replaceTable = new JXTable( new ReplaceMutationTableModel() );
+		JScrollPane replaceTableScrollPane = new JScrollPane( replaceTable );
+		replaceTable.setPreferredScrollableViewportSize( new Dimension( 50, 50 ) );
+		replaceTable.setFillsViewportHeight( true );
+
+		panel.add( generateTableScrollpane, BorderLayout.NORTH );
+		panel.add( new JSeparator( SwingConstants.HORIZONTAL ) );
+		panel.add( replaceTableScrollPane, BorderLayout.SOUTH );
+		panel.add( new JSeparator( SwingConstants.HORIZONTAL ) );
+
+		panel.setBorder( BorderFactory.createEmptyBorder( 3, 3, 3, 3 ) );
+
+		return panel;
 	}
 
 	private Object createMutationsPanel()
 	{
 		JPanel panel = new JPanel( new BorderLayout() );
 
-		JComponent filesList = buildFilesList();
-		JSplitPane mainSplit = UISupport.createHorizontalSplit( filesList, buildTables() );
-		mainSplit.setResizeWeight( 0.4 );
+		JSplitPane mainSplit = UISupport.createHorizontalSplit( buildFilesList(), buildTables() );
+		mainSplit.setResizeWeight( 0.20 );
 		panel.add( mainSplit, BorderLayout.CENTER );
 
 		panel.setBorder( BorderFactory.createEmptyBorder( 3, 3, 3, 3 ) );
@@ -105,98 +123,32 @@ public class MaliciousAttachmentMutationsPanel
 		@AField( description = "###Mutations panel", name = "###Mutations panel", type = AFieldType.COMPONENT )
 		final static String MUTATIONS_PANEL = "###Mutations panel";
 	}
-	
- class StringListFormComponent extends JPanel implements JFormComponent, ActionListener
+
+	class FileListFormComponent extends JPanel implements JFormComponent, ActionListener
 	{
 		private DefaultListModel listModel;
-		private String defaultValue = null;
-		private JButton addButton;
-		private JButton removeButton;
 		private JList list;
-		private JButton editButton;
-		private Box buttonBox;
-		private List<JButton> buttons = new ArrayList<JButton>();
 
-		public StringListFormComponent( String tooltip )
-		{
-			this( tooltip, false, false, null );
-		}
-
-		public StringListFormComponent( String tooltip, boolean editOnly )
-		{
-			this( tooltip, editOnly, false, null );
-		}
-
-		public StringListFormComponent( String tooltip, boolean editOnly, boolean readOnly )
-		{
-			this( tooltip, editOnly, readOnly, null );
-		}
-
-		public StringListFormComponent( String tooltip, boolean editOnly, boolean readOnly, String defaultValue )
+		public FileListFormComponent()
 		{
 			super( new BorderLayout() );
 
-			this.defaultValue = defaultValue;
 			listModel = new DefaultListModel();
 			list = new JList( listModel );
-			list.setToolTipText( tooltip );
+			list.setToolTipText( "Choose file" );
 			JScrollPane scrollPane = new JScrollPane( list );
-			scrollPane.setVerticalScrollBarPolicy( JScrollPane.VERTICAL_SCROLLBAR_ALWAYS );
-			scrollPane.setPreferredSize( new Dimension( 300, 70 ) );
+			scrollPane.setPreferredSize( new Dimension( 30, 50 ) );
 			add( scrollPane, BorderLayout.CENTER );
-			buttonBox = new Box( BoxLayout.Y_AXIS );
-			buttonBox.setBorder( BorderFactory.createEmptyBorder( 0, 5, 0, 0 ) );
-
-			if( !editOnly || !readOnly )
-			{
-				addButton = new JButton( "Add.." );
-				addButton.addActionListener( this );
-				buttonBox.add( addButton );
-				buttonBox.add( Box.createVerticalStrut( 5 ) );
-			}
-
-			if( !readOnly )
-			{
-				editButton = new JButton( "Edit.." );
-				editButton.addActionListener( this );
-				buttons.add( editButton );
-				buttonBox.add( editButton );
-			}
-
-			if( !editOnly || !readOnly )
-			{
-				buttonBox.add( Box.createVerticalStrut( 5 ) );
-				removeButton = new JButton( "Remove.." );
-				removeButton.addActionListener( this );
-				buttonBox.add( removeButton );
-				buttons.add( removeButton );
-			}
-
-			add( buttonBox, BorderLayout.EAST );
 
 			list.addListSelectionListener( new ListSelectionListener()
 			{
 
 				public void valueChanged( ListSelectionEvent e )
 				{
-					setButtonState();
+					String key = null;
+					MaliciousAttachmentMutationsPanel.this.update( key );
 				}
 			} );
-
-			setButtonState();
-		}
-
-		public void addButton( Action action, boolean requireSelection )
-		{
-			buttonBox.add( Box.createVerticalStrut( 5 ) );
-			JButton button = new JButton( action );
-			buttonBox.add( button );
-
-			if( requireSelection )
-			{
-				buttons.add( button );
-				setButtonState();
-			}
 		}
 
 		public void setValue( String value )
@@ -236,47 +188,16 @@ public class MaliciousAttachmentMutationsPanel
 		{
 			String[] oldData = getData();
 
-			if( e.getSource() == addButton )
+			int selectedIndex = list.getSelectedIndex();
+
+			String elm = ( String )listModel.getElementAt( selectedIndex );
+			String value = UISupport.prompt( "Specify value", "Edit..", elm );
+
+			if( value != null )
 			{
-				String value = UISupport.prompt( "Specify value to add", "Add..", defaultValue );
-				if( value != null )
-				{
-					listModel.addElement( value );
-					firePropertyChange( "options", oldData, getData() );
-				}
+				listModel.setElementAt( value, selectedIndex );
+				firePropertyChange( "options", oldData, getData() );
 			}
-			else
-			{
-				int selectedIndex = list.getSelectedIndex();
-
-				if( e.getSource() == removeButton && selectedIndex != -1 )
-				{
-					Object elm = listModel.getElementAt( selectedIndex );
-					if( UISupport.confirm( "Remove [" + elm.toString() + "] from list", "Remove" ) )
-					{
-						listModel.remove( selectedIndex );
-						firePropertyChange( "options", oldData, getData() );
-					}
-				}
-				else if( e.getSource() == editButton && selectedIndex != -1 )
-				{
-					String elm = ( String )listModel.getElementAt( selectedIndex );
-					String value = UISupport.prompt( "Specify value", "Edit..", elm );
-
-					if( value != null )
-					{
-						listModel.setElementAt( value, selectedIndex );
-						firePropertyChange( "options", oldData, getData() );
-					}
-				}
-			}
-		}
-
-		public void setButtonState()
-		{
-			boolean b = list.getSelectedIndex() != -1;
-			for( JButton button : buttons )
-				button.setEnabled( b );
 		}
 
 		public String[] getData()
@@ -314,17 +235,150 @@ public class MaliciousAttachmentMutationsPanel
 			setData( options );
 		}
 
-		public void setEnabled( boolean b )
-		{
-			addButton.setEnabled( b );
-			list.setEnabled( b );
-			if( b )
-				setButtonState();
-		}
-
 		public void addItem( String valueOf )
 		{
 			listModel.addElement( valueOf );
-		}}
+		}
+	}
+
+	private abstract class MutationTableModel extends AbstractTableModel
+	{
+		protected List<File> files = new ArrayList<File>();
+
+		public synchronized int getRowCount()
+		{
+			return files.size();
+		}
+
+		public synchronized void clear()
+		{
+			files.clear();
+			fireTableDataChanged();
+		}
+
+		public boolean isCellEditable( int row, int col )
+		{
+			if( col < 2 )
+			{
+				return false;
+			}
+			else
+			{
+				return true;
+			}
+		}
+
+		public void addResult( File file )
+		{
+			int rowCount;
+			synchronized( this )
+			{
+				rowCount = getRowCount();
+				files.add( file );
+			}
+
+			fireTableRowsInserted( rowCount, rowCount++ );
+		}
+
+		public abstract int getColumnCount();
+
+		public abstract String getColumnName( int column );
+
+		public abstract Object getValueAt( int rowIndex, int columnIndex );
+	}
+
+	private class GenerateMutationTableModel extends MutationTableModel
+	{
+		public int getColumnCount()
+		{
+			return 3;
+		}
+
+		public String getColumnName( int column )
+		{
+			switch( column )
+			{
+			case 0 :
+				return "Size";
+			case 1 :
+				return "Content type";
+			case 2 :
+				return "Enable";
+			}
+
+			return null;
+		}
+
+		public synchronized Object getValueAt( int rowIndex, int columnIndex )
+		{
+			File file = null;
+
+			file = files.get( rowIndex );
+
+			if( file != null )
+			{
+				switch( columnIndex )
+				{
+				case 0 :
+					return file.length();
+				case 1 :
+					return new MimetypesFileTypeMap().getContentType( file );
+				case 2 :
+					return false;
+				}
+			}
+
+			return null;
+		}
+	}
+
+	private class ReplaceMutationTableModel extends MutationTableModel
+	{
+		public int getColumnCount()
+		{
+			return 4;
+		}
+
+		public String getColumnName( int column )
+		{
+			switch( column )
+			{
+			case 0 :
+				return "With";
+			case 1 :
+				return "Size";
+			case 2 :
+				return "Content type";
+			case 3 :
+				return "Enable";
+			}
+
+			return null;
+		}
+
+		public synchronized Object getValueAt( int rowIndex, int columnIndex )
+		{
+			File file = null;
+
+			file = files.get( rowIndex );
+
+			if( file != null )
+			{
+				switch( columnIndex )
+				{
+				case 0 :
+					return "file";
+				case 1 :
+					return file.length();
+				case 2 :
+					return new MimetypesFileTypeMap().getContentType( file );
+				case 3 :
+					return false;
+				}
+			}
+
+			return null;
+		}
+	}
 
 }
