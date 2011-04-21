@@ -48,20 +48,15 @@ public class StringListFormComponent extends JPanel implements JFormComponent, A
 
 	public StringListFormComponent( String tooltip )
 	{
-		this( tooltip, false, false, null );
+		this( tooltip, false, null );
 	}
 
 	public StringListFormComponent( String tooltip, boolean editOnly )
 	{
-		this( tooltip, editOnly, false, null );
+		this( tooltip, editOnly, null );
 	}
 
-	public StringListFormComponent( String tooltip, boolean editOnly, boolean readOnly )
-	{
-		this( tooltip, editOnly, readOnly, null );
-	}
-
-	public StringListFormComponent( String tooltip, boolean editOnly, boolean readOnly, String defaultValue )
+	public StringListFormComponent( String tooltip, boolean editOnly, String defaultValue )
 	{
 		super( new BorderLayout() );
 
@@ -76,7 +71,7 @@ public class StringListFormComponent extends JPanel implements JFormComponent, A
 		buttonBox = new Box( BoxLayout.Y_AXIS );
 		buttonBox.setBorder( BorderFactory.createEmptyBorder( 0, 5, 0, 0 ) );
 
-		if( !editOnly || !readOnly )
+		if( !editOnly )
 		{
 			addButton = new JButton( "Add.." );
 			addButton.addActionListener( this );
@@ -84,15 +79,12 @@ public class StringListFormComponent extends JPanel implements JFormComponent, A
 			buttonBox.add( Box.createVerticalStrut( 5 ) );
 		}
 
-		if( !readOnly )
-		{
-			editButton = new JButton( "Edit.." );
-			editButton.addActionListener( this );
-			buttons.add( editButton );
-			buttonBox.add( editButton );
-		}
+		editButton = new JButton( "Edit.." );
+		editButton.addActionListener( this );
+		buttons.add( editButton );
+		buttonBox.add( editButton );
 
-		if( !editOnly || !readOnly )
+		if( !editOnly )
 		{
 			buttonBox.add( Box.createVerticalStrut( 5 ) );
 			removeButton = new JButton( "Remove.." );
