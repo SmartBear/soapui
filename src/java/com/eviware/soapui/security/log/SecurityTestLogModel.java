@@ -132,17 +132,8 @@ public class SecurityTestLogModel extends AbstractListModel
 		else if( startStepLogEntryAdded )
 		{
 
-			// String itemStatus = result.getStatus().toString();
-			// if( result.getStatus().equals( ResultStatus.UNKNOWN ) )
-			// {
-			// itemStatus = ResultStatus.MISSING_ASSERTIONS.toString();
-			// }
-			// else if( result.getStatus().equals( ResultStatus.INITIALIZED ) )
-			// {
-			// itemStatus = ResultStatus.MISSING_PARAMETERS.toString();
-			// }
 			items.set( startStepIndex, "Step " + stepCount + " [" + result.getTestStep().getName() + "] "
-					+ result.getStatus() + ": took " + result.getTimeTaken() + " ms" );
+					+ result.getExecutionProgressStatus() + ": took " + result.getTimeTaken() + " ms" );
 
 			SoftReference<SecurityResult> stepResultRef = new SoftReference<SecurityResult>( result );
 			results.set( startStepIndex, stepResultRef );
@@ -189,9 +180,10 @@ public class SecurityTestLogModel extends AbstractListModel
 		else
 		{
 			SecurityCheck securityCheck = securityCheckResult.getSecurityCheck();
-			String itemStatus = securityCheckResult.getStatusToDisplayInLog();
-			items.set( startCheckIndex, "SecurityCheck " + checkCount + " [" + securityCheck.getName() + "] " + itemStatus
-					+ ", time taken = " + securityCheckResult.getTimeTaken() );
+			securityCheckResult.detectMissingItems();
+			items.set( startCheckIndex, "SecurityCheck " + checkCount + " [" + securityCheck.getName() + "] "
+					+ securityCheckResult.getExecutionProgressStatus() + ", time taken = "
+					+ securityCheckResult.getTimeTaken() );
 			SoftReference<SecurityResult> checkResultRef = new SoftReference<SecurityResult>( securityCheckResult );
 			results.set( startCheckIndex, checkResultRef );
 

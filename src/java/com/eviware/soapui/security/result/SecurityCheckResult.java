@@ -21,7 +21,6 @@ import javax.swing.AbstractAction;
 
 import com.eviware.soapui.model.security.SecurityCheck;
 import com.eviware.soapui.security.check.AbstractSecurityCheckWithProperties;
-import com.eviware.soapui.security.result.SecurityResult.ResultStatus;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.DefaultActionList;
@@ -57,12 +56,14 @@ public class SecurityCheckResult implements SecurityResult
 	// along with the status determines if canceled with or without warnings
 	private boolean hasRequestsWithWarnings;
 	private ResultStatus executionProgressStatus;
+	private ResultStatus logIconStatus;
 
 	public SecurityCheckResult( SecurityCheck securityCheck )
 	{
 		this.securityCheck = securityCheck;
 		status = ResultStatus.INITIALIZED;
 		executionProgressStatus = ResultStatus.INITIALIZED;
+		logIconStatus = ResultStatus.INITIALIZED;
 		securityRequestResultList = new ArrayList<SecurityCheckRequestResult>();
 		timeStamp = System.currentTimeMillis();
 	}
@@ -139,6 +140,7 @@ public class SecurityCheckResult implements SecurityResult
 		{
 			status = ResultStatus.OK;
 		}
+		logIconStatus = status;
 		executionProgressStatus = status;
 
 		this.testLog.append( "\nSecurityRequest " ).append( securityRequestResultList.indexOf( secReqResult ) ).append(
@@ -238,26 +240,29 @@ public class SecurityCheckResult implements SecurityResult
 		executionProgressStatus = status;
 	}
 
-	public String getStatusToDisplayInLog()
+	public void detectMissingItems()
 	{
-		String itemStatus = getStatus().toString();
 		SecurityCheck securityCheck = getSecurityCheck();
 		if( securityCheck instanceof AbstractSecurityCheckWithProperties
 				&& ( ( AbstractSecurityCheckWithProperties )securityCheck ).getParameterHolder().getParameterList().size() == 0 )
 		{
-			itemStatus = ResultStatus.MISSING_PARAMETERS.toString();
+			logIconStatus = ResultStatus.MISSING_PARAMETERS;
 			executionProgressStatus = ResultStatus.MISSING_PARAMETERS;
 		}
 		if( securityCheck.getAssertionCount() == 0 )
 		{
-			itemStatus = ResultStatus.MISSING_ASSERTIONS.toString();
+			logIconStatus = ResultStatus.MISSING_ASSERTIONS;
 			executionProgressStatus = ResultStatus.MISSING_ASSERTIONS;
 		}
 		if( getStatus().equals( ResultStatus.CANCELED ) )
 		{
-			itemStatus = ResultStatus.CANCELED.toString();
+			executionProgressStatus = ResultStatus.CANCELED;
 		}
-		return itemStatus;
 	}
 
+	@Override
+	public ResultStatus getLogIconStatus()
+	{
+		return logIconStatus;
+	}
 }

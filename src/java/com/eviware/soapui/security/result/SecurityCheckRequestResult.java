@@ -45,12 +45,10 @@ public class SecurityCheckRequestResult implements SecurityResult
 	public StringBuffer testLog = new StringBuffer();
 	private DefaultActionList actionList;
 	private boolean addedAction;
-	private ResultStatus executionProgressStatus;
 
 	public SecurityCheckRequestResult( SecurityCheck securityCheck )
 	{
 		this.securityCheck = securityCheck;
-		executionProgressStatus = ResultStatus.INITIALIZED;
 		timeStamp = System.currentTimeMillis();
 	}
 
@@ -183,7 +181,15 @@ public class SecurityCheckRequestResult implements SecurityResult
 	@Override
 	public ResultStatus getExecutionProgressStatus()
 	{
-		return executionProgressStatus;
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ResultStatus getLogIconStatus()
+	{
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

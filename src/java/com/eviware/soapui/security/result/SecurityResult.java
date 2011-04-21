@@ -53,6 +53,8 @@ public interface SecurityResult
 	 */
 	public ResultStatus getExecutionProgressStatus();
 
+	public ResultStatus getLogIconStatus();
+
 	public ResultStatus getStatus();
 
 	/**

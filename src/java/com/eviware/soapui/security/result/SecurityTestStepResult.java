@@ -19,11 +19,8 @@ import java.util.List;
 
 import javax.swing.AbstractAction;
 
-import com.eviware.soapui.model.security.SecurityCheck;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
-import com.eviware.soapui.security.check.AbstractSecurityCheckWithProperties;
-import com.eviware.soapui.security.result.SecurityResult.ResultStatus;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.DefaultActionList;
@@ -50,6 +47,7 @@ public class SecurityTestStepResult implements SecurityResult
 	private DefaultActionList actionList;
 	private boolean hasAddedRequests;
 	private ResultStatus executionProgressStatus;
+	private ResultStatus logIconStatus;
 
 	public SecurityTestStepResult( TestStep testStep, TestStepResult originalResult )
 	{
@@ -100,20 +98,6 @@ public class SecurityTestStepResult implements SecurityResult
 
 		timeTaken += securityCheckResult.getTimeTaken();
 
-		securityCheckResult.getStatusToDisplayInLog();
-		if( securityCheckResult.getExecutionProgressStatus().equals( ResultStatus.MISSING_PARAMETERS ) )
-		{
-			executionProgressStatus = ResultStatus.MISSING_PARAMETERS;
-		}
-		else if( securityCheckResult.getExecutionProgressStatus().equals( ResultStatus.MISSING_ASSERTIONS ) )
-		{
-			executionProgressStatus = ResultStatus.MISSING_ASSERTIONS;
-		}
-		else if( status != ResultStatus.UNKNOWN || executionProgressStatus != ResultStatus.MISSING_ASSERTIONS
-				|| executionProgressStatus != ResultStatus.MISSING_PARAMETERS )
-		{
-			executionProgressStatus = status;
-		}
 		if( !hasAddedRequests )
 		{
 			status = securityCheckResult.getStatus();
@@ -122,9 +106,53 @@ public class SecurityTestStepResult implements SecurityResult
 		{
 			status = securityCheckResult.getStatus();
 		}
-		if( securityCheckResult.getStatus() != ResultStatus.CANCELED )
+
+		securityCheckResult.detectMissingItems();
+		if( securityCheckResult.getExecutionProgressStatus().equals( ResultStatus.CANCELED ) )
 		{
-			executionProgressStatus = status;
+			executionProgressStatus = securityCheckResult.getExecutionProgressStatus();
+		}
+		else if( securityCheckResult.getExecutionProgressStatus().equals( ResultStatus.MISSING_PARAMETERS )
+				&& executionProgressStatus != ResultStatus.CANCELED )
+		{
+			executionProgressStatus = ResultStatus.MISSING_PARAMETERS;
+		}
+		else if( securityCheckResult.getExecutionProgressStatus().equals( ResultStatus.MISSING_ASSERTIONS )
+				&& executionProgressStatus != ResultStatus.CANCELED
+				&& executionProgressStatus != ResultStatus.MISSING_PARAMETERS )
+		{
+			executionProgressStatus = ResultStatus.MISSING_ASSERTIONS;
+		}
+		else if( securityCheckResult.getExecutionProgressStatus().equals( ResultStatus.FAILED )
+				&& executionProgressStatus != ResultStatus.CANCELED
+				&& executionProgressStatus != ResultStatus.MISSING_PARAMETERS
+				&& executionProgressStatus != ResultStatus.MISSING_ASSERTIONS )
+		{
+			executionProgressStatus = ResultStatus.FAILED;
+		}
+		else if( securityCheckResult.getExecutionProgressStatus().equals( ResultStatus.OK )
+				&& executionProgressStatus != ResultStatus.CANCELED
+				&& executionProgressStatus != ResultStatus.MISSING_PARAMETERS
+				&& executionProgressStatus != ResultStatus.MISSING_ASSERTIONS
+				&& executionProgressStatus != ResultStatus.FAILED )
+		{
+			executionProgressStatus = ResultStatus.OK;
+		}
+
+		if( securityCheckResult.getLogIconStatus().equals( ResultStatus.FAILED ) )
+		{
+			logIconStatus = securityCheckResult.getLogIconStatus();
+		}
+		else if( ( securityCheckResult.getLogIconStatus().equals( ResultStatus.MISSING_ASSERTIONS ) || securityCheckResult
+				.getLogIconStatus().equals( ResultStatus.MISSING_PARAMETERS ) )
+				&& logIconStatus != ResultStatus.FAILED )
+		{
+			logIconStatus = securityCheckResult.getLogIconStatus();
+		}
+		else if( securityCheckResult.getLogIconStatus().equals( ResultStatus.OK ) && logIconStatus != ResultStatus.FAILED
+				&& logIconStatus != ResultStatus.MISSING_ASSERTIONS && logIconStatus != ResultStatus.MISSING_PARAMETERS )
+		{
+			logIconStatus = ResultStatus.OK;
 		}
 
 		// TODO check and finish this - seems it's used for reports
@@ -228,5 +256,11 @@ public class SecurityTestStepResult implements SecurityResult
 	public void setExecutionProgressStatus( ResultStatus status )
 	{
 		executionProgressStatus = status;
+	}
+
+	@Override
+	public ResultStatus getLogIconStatus()
+	{
+		return logIconStatus;
 	}
 }
