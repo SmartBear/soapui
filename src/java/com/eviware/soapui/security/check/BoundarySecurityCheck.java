@@ -152,8 +152,8 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 						else
 						{
 							SchemaTypeImpl simpleType = ( SchemaTypeImpl )mynode.getSchemaType();
-							XmlObjectTreeModel model2 = new XmlObjectTreeModel( simpleType.getTypeSystem(),
-									simpleType.getParseObject() );
+							XmlObjectTreeModel model2 = new XmlObjectTreeModel( simpleType.getTypeSystem(), simpleType
+									.getParseObject() );
 							extractRestrictions( model2, context, mynode, model, scp, stsmap );
 						}
 					}
@@ -300,7 +300,11 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 			{
 				SoapUI.logError( e );
 			}
-			return true;
+			Stack<PropertyMutation> stack = ( Stack<PropertyMutation> )context.get( REQUEST_MUTATIONS_STACK );
+			if( stack.empty() )
+				return false;
+			else
+				return true;
 		}
 
 		Stack<PropertyMutation> stack = ( Stack<PropertyMutation> )context.get( REQUEST_MUTATIONS_STACK );
@@ -377,11 +381,11 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 			restrictionLabel.setJlabel( "<html><pre>    </pre></html>" );
 			return;
 		}
-		
+
 		SecurityCheckedParameter parameter = getParameterAt( row );
 		if( parameter == null )
 			return;
-		
+
 		String name = parameter.getName();
 		String xpath = parameter.getXpath();
 		TestProperty tp = getTestStep().getProperty( name );
@@ -390,8 +394,8 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 		{
 			try
 			{
-				xmlObjectTreeModel = new XmlObjectTreeModel( tp.getSchemaType().getTypeSystem(),
-						XmlObject.Factory.parse( tp.getValue() ) );
+				xmlObjectTreeModel = new XmlObjectTreeModel( tp.getSchemaType().getTypeSystem(), XmlObject.Factory
+						.parse( tp.getValue() ) );
 			}
 			catch( XmlException e )
 			{
