@@ -1,0 +1,105 @@
+/*** Sensitive information regexps ***/
+
+
+/*
+	JVM STACKTRACE MATCHERS
+
+	Matches strings like:
+	
+	at org.apache.xmlbeans.impl.schema.SchemaTypeLoaderBase.parse(SchemaTypeLoaderBase.java:345)
+	at com.eviware.soapui.config.SoapuiProjectDocumentConfig$Factory.parse(Unknown Source)
+	at clojure.main$repl__7403$read_eval_print__7415.invoke(main.clj:183)
+	
+*/
+	
+	.*at [a-zA-Z][\w\$]*(\.[a-zA-Z][\w\$]*)+\((Unknown Source|Native Method|[a-zA-Z][\w\$]*\.([a-zA-Z]{3,5}):[0-9]+)\).*
+	
+	
+	
+/*
+	PYTHON STACKTRACE MATCHERS
+
+	Matches strings like:
+	
+	Traceback (most recent call last)
+	File "/usr/lib/python2.5/site-packages/django/template/debug.py", line 71, in render_node
+	
+*/
+
+	.*Traceback \(most recent call last\):.*
+	.*File ".+", line [0-9]{1,6}, in .*
+	
+	
+/*
+	.NET STACKTRACE MATCHERS
+
+	Matches strings like:
+	
+    at System.IO.StreamReader..ctor(String str)
+	
+	at System.Web.Mvc.ControllerActionInvoker.<>c__DisplayClassa.<InvokeActionMethodWithFilters>b__7()
+	
+	at Microsoft.Scripting.Actions.MatchCaller.Call1[T0,TRet](Func`3 target, CallSite site, Object[] args)
+	
+	from IronRuby.Libraries.Yaml:0:in `FetchMoreTokens'
+*/
+
+	.*at [\w\$]+(\.[\w\$<>\[\],]+|\.\.ctor)+(\((([\w\$<>\`\[\]]+ [\w\$<>]+, )*(([\w\$<>\`\[\]]+ [\w\$<>]+)))\)|\(\)).*
+	.*from [\w\$]+(\.[\w\$<>]+)+:\d+:in \`.*
+	
+
+/*
+	ERLANG ERROR MATCHERS
+
+	Matches strings like:
+	
+	Error in process <0.37.0> with exit value: {undef,[{file,some_function,[]}]}
+	
+*/
+	
+	.*Error in process <\d+\.\d+\.\d+> with exit value: .*
+	
+	
+/*
+	PHP STACKTRACE MATCHERS
+
+	Matches strings like:
+	
+	Warning: mysql_query(): supplied argument is not a valid MySQL-Link resource in /home/rymate/public_html/canary/groups.p... on line 16
+	Warning: ereg() [function.ereg]: REG_BADBR in C:\Program Files\EasyPHP 2.0b1\www\polydotnet\controler\verif_formulaire.php on line 35 emaill- Email incorrecte
+	Warning: mysql_num_rows() expects parameter 1 to be resource, boolean given in /home/patrickm129/patthepcwizard.com/login02.php on line 25
+	
+*/
+	
+	.*Warning: [\w]+\(\) .+ in .+ on line \d{1,6}.*
+	
+
+/*
+	GENERAL STACKTRACE MATCHERS
+*/
+
+	.*(s|S)tack(t|T| (t|T))race.*
+	.*STACK\s?TRACE.*
+	.*(s|S)tack:.*
+	.*(s|S)yntax (e|E)rror\s.*
+	.*((I|i)ncorrect|(I|i)nvalid) (s|S)yntax.*
+	.*Runtime (E|e)rror.*
+	
+	
+/*
+	DATABASE MISC MATCHERS
+*/
+
+	.*SQLSTATE: [A-Z0-9] .*
+	.*Invalid column name\s.*
+	.*(e|E)rror was:\s.*
+	(ORA|EXP|IMP|KUP|UDE|UDI|DBV|LCD|QSM|OCI|RMAN|LFI|PLS|PLQ|AMD|CLSR|PROC|PROT|TNS|NNC|NLP|NNF|NMP|NCR|NZE|O2F|O2I|O2U|PCB|PCC|SQL|AUD|IMG|VID|DRG|LPX|LSX)-\d{5}\s
+
+
+
+/*
+	VERSION MATCHERS
+*/
+	
+	.*(vBulletin|MySQL|PostgreSQL|phpBB) \d\.\d{1,2}\.{1,3}-?.*
+	.*Powered by [a-zA-Z]+.*
