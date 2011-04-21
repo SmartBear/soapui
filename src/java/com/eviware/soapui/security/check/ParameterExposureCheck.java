@@ -37,6 +37,7 @@ import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.security.SecurityCheckedParameter;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
+import com.eviware.soapui.security.ExecutionStrategyHolder;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.security.SecurityTestRunnerImpl;
@@ -47,8 +48,8 @@ import com.eviware.soapui.support.xml.XmlObjectTreeModel;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel.XmlTreeNode;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.AField.AFieldType;
+import com.eviware.x.form.support.AForm;
 import com.eviware.x.impl.swing.JFormDialog;
 import com.eviware.x.impl.swing.JStringListFormField;
 
@@ -84,8 +85,8 @@ public class ParameterExposureCheck extends AbstractSecurityCheckWithProperties
 	{
 		try
 		{
-			FileInputStream fstream = new FileInputStream( new File( SoapUI.class
-					.getResource( "/com/eviware/soapui/resources/security/XSS-vectors.txt" ).toURI() ) );
+			FileInputStream fstream = new FileInputStream( new File( SoapUI.class.getResource(
+					"/com/eviware/soapui/resources/security/XSS-vectors.txt" ).toURI() ) );
 			DataInputStream in = new DataInputStream( fstream );
 			BufferedReader br = new BufferedReader( new InputStreamReader( in ) );
 			String strLine;
@@ -106,7 +107,11 @@ public class ParameterExposureCheck extends AbstractSecurityCheckWithProperties
 	protected void initAssertions()
 	{
 		super.initAssertions();
-		assertionsSupport.addWsdlAssertion( ParameterExposureAssertion.LABEL );
+
+		if( assertionsSupport.getAssertionByName( ParameterExposureAssertion.LABEL ) == null )
+		{
+			assertionsSupport.addWsdlAssertion( ParameterExposureAssertion.LABEL );
+		}
 	}
 
 	private void initConfig()
