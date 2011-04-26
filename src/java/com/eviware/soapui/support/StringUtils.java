@@ -28,6 +28,7 @@ import com.eviware.soapui.support.types.StringList;
 public class StringUtils
 {
 	public static final String NEWLINE = System.getProperty( "line.separator" );
+	public static final char DEFAULT_FILENAME_WHITESPACE_CHAR = '-';
 
 	public static String unquote( String str )
 	{
@@ -248,6 +249,16 @@ public class StringUtils
 		}
 
 		return result.toString();
+	}
+
+	/**
+	 * replaces only white spaces from file name, uses the
+	 * DEFAULT_FILENAME_WHITESPACE_CHAR
+	 */
+
+	public static String createFileName( String str )
+	{
+		return createFileName( str, DEFAULT_FILENAME_WHITESPACE_CHAR );
 	}
 
 	/**
