@@ -137,7 +137,7 @@ public abstract class AbstractTestCaseRunner<T extends TestRunnable, T2 extends 
 
 		for( ; isRunning() && currentStepIndex < testCase.getTestStepCount(); currentStepIndex++ )
 		{
-			if( runCurrentTestStep( runContext, currentStepIndex ) == -2 )
+			if( ( currentStepIndex = runCurrentTestStep( runContext, currentStepIndex ) ) == -2 )
 			{
 				return;
 			}
@@ -262,7 +262,7 @@ public abstract class AbstractTestCaseRunner<T extends TestRunnable, T2 extends 
 				getRunContext().setProperty( TestCaseRunner.Status.class.getName(), TestCaseRunner.Status.FAILED );
 			}
 		}
-		preserveContext( getRunContext() );
+		// preserveContext( getRunContext() );
 		return stepResult;
 	}
 
