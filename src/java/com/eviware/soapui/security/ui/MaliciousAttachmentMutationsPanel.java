@@ -1,6 +1,7 @@
 package com.eviware.soapui.security.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -23,6 +24,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
@@ -36,15 +38,17 @@ import org.jdesktop.swingx.JXTable;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.MaliciousAttachmentSecurityCheckConfig;
-import com.eviware.soapui.model.security.MaliciousAttachmentsTableModel;
 import com.eviware.soapui.settings.ProjectSettings;
 import com.eviware.soapui.support.DocumentListenerAdapter;
+import com.eviware.soapui.support.HelpActionMarker;
+import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JFormComponent;
 import com.eviware.soapui.support.components.JUndoableTextField;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.types.StringList;
 import com.eviware.x.form.XForm.FieldType;
+import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.XFormTextField;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
@@ -60,7 +64,8 @@ public class MaliciousAttachmentMutationsPanel
 
 	private JFormDialog dialog;
 	private MaliciousAttachmentSecurityCheckConfig config;
-	private MaliciousAttachmentsTableModel tableModel;
+	private MutationTableModel generateTableModel;
+	private MutationTableModel replaceTableModel;
 
 	private Map<String, Object> tableMap = new HashMap<String, Object>();
 
@@ -69,17 +74,16 @@ public class MaliciousAttachmentMutationsPanel
 		this.config = config;
 		dialog = ( JFormDialog )ADialogBuilder.buildDialog( MutationSettings.class );
 		dialog.getFormField( MutationSettings.MUTATIONS_PANEL ).setProperty( "component", createMutationsPanel() );
-		dialog.getFormField( MutationSettings.MUTATIONS_PANEL ).setProperty( "dimension", new Dimension( 620, 320 ) );
+		dialog.getFormField( MutationSettings.MUTATIONS_PANEL ).setProperty( "dimension", new Dimension( 720, 320 ) );
 		initDialog();
 	}
 
 	private JComponent buildFilesList()
 	{
 		FileListFormComponent filesList = new FileListFormComponent();
-
 		filesList.setData( new String[] { "workspace/soapUI-core-DEV/copyrightInXsd.groovy", "file2", "file3" } );
-
-		return filesList;
+		JScrollPane scrollPane = new JScrollPane( filesList );
+		return scrollPane;
 	}
 
 	protected void update( String key )
@@ -89,37 +93,50 @@ public class MaliciousAttachmentMutationsPanel
 
 	private JComponent buildTables()
 	{
-		JPanel panel = new JPanel( new BorderLayout() );
+		JFormDialog dialog = ( JFormDialog )ADialogBuilder.buildDialog( MutationTables.class );
 
-		JScrollPane gP = buildTable( new GenerateMutationTableModel() );
-		JScrollPane rP = buildTable( new ReplaceMutationTableModel() );
+		generateTableModel = new GenerateMutationTableModel();
+		dialog.getFormField( MutationTables.GENERATE_FILE ).setProperty( "dimension", new Dimension( 410, 120 ) );
+		dialog.getFormField( MutationTables.GENERATE_FILE ).setProperty( "component",
+				buildTable( generateTableModel, false ) );
 
-		panel.add( gP, BorderLayout.NORTH );
-		panel.add( rP, BorderLayout.SOUTH );
+		replaceTableModel = new ReplaceMutationTableModel();
+		dialog.getFormField( MutationTables.REPLACE_FILE ).setProperty( "dimension", new Dimension( 410, 120 ) );
+		dialog.getFormField( MutationTables.REPLACE_FILE )
+				.setProperty( "component", buildTable( replaceTableModel, true ) );
 
-		panel.setBorder( BorderFactory.createEmptyBorder( 0, 1, 0, 0 ) );
-
-		return panel;
+		return dialog.getPanel();
 	}
 
-	protected JScrollPane buildTable( MutationTableModel tableModel )
+	protected JPanel buildTable( MutationTableModel tableModel, boolean add )
 	{
 		JPanel panel = new JPanel( new BorderLayout() );
 		JXTable table = new JXTable( tableModel );
 		setupTable( table );
 		JScrollPane tableScrollPane = new JScrollPane( table );
+		tableScrollPane.setBorder( BorderFactory.createEmptyBorder() );
 
 		JXToolBar toolbar = UISupport.createToolbar();
-		toolbar.add( UISupport.createToolbarButton( new AddFileAction() ) );
+
+		if( add )
+		{
+			toolbar.add( UISupport.createToolbarButton( new AddFileAction() ) );
+		}
+		else
+		{
+			// generate
+			toolbar.add( UISupport.createToolbarButton( new GenerateFileAction() ) );
+		}
+
 		toolbar.add( UISupport.createToolbarButton( new RemoveFileAction() ) );
+		toolbar.add( UISupport.createToolbarButton( new HelpAction( "www.soapui.org" ) ) );
 
 		panel.add( toolbar, BorderLayout.PAGE_START );
 		panel.add( tableScrollPane, BorderLayout.CENTER );
 
-		JScrollPane scrollPane = new JScrollPane( panel );
-		scrollPane.setBorder( BorderFactory.createEmptyBorder( 0, 1, 0, 0 ) );
+		panel.setBorder( BorderFactory.createLineBorder( new Color( 0 ), 1 ) );
 
-		return scrollPane;
+		return panel;
 	}
 
 	protected void setupTable( JXTable table )
@@ -143,12 +160,46 @@ public class MaliciousAttachmentMutationsPanel
 		}
 	}
 
+	// private void initColumnSizes(JXTable table, Malic) {
+	// TableColumn column = null;
+	// Component comp = null;
+	// int headerWidth = 0;
+	// int cellWidth = 0;
+	// Object[] longValues = model.longValues;
+	// TableCellRenderer headerRenderer =
+	// table.getTableHeader().getDefaultRenderer();
+	//
+	// for (int i = 0; i < 5; i++) {
+	// column = table.getColumnModel().getColumn(i);
+	//
+	// comp = headerRenderer.getTableCellRendererComponent(
+	// null, column.getHeaderValue(),
+	// false, false, 0, 0);
+	// headerWidth = comp.getPreferredSize().width;
+	//
+	// comp = table.getDefaultRenderer(model.getColumnClass(i)).
+	// getTableCellRendererComponent(
+	// table, longValues[i],
+	// false, false, 0, i);
+	// cellWidth = comp.getPreferredSize().width;
+	//
+	// if (DEBUG) {
+	// System.out.println("Initializing width of column "
+	// + i + ". "
+	// + "headerWidth = " + headerWidth
+	// + "; cellWidth = " + cellWidth);
+	// }
+	//
+	// column.setPreferredWidth(Math.max(headerWidth, cellWidth));
+	// }
+	// }
+
 	private Object createMutationsPanel()
 	{
 		JPanel panel = new JPanel( new BorderLayout() );
 
 		JSplitPane mainSplit = UISupport.createHorizontalSplit( buildFilesList(), buildTables() );
-		mainSplit.setResizeWeight( 0.2 );
+		mainSplit.setResizeWeight( 1 );
 		panel.add( mainSplit, BorderLayout.CENTER );
 
 		return panel;
@@ -169,6 +220,28 @@ public class MaliciousAttachmentMutationsPanel
 	{
 		@AField( description = "###Mutations panel", name = "###Mutations panel", type = AFieldType.COMPONENT )
 		final static String MUTATIONS_PANEL = "###Mutations panel";
+	}
+
+	@AForm( description = "Malicious Attachment Mutation Tables", name = "Malicious Attachment Mutation Tables" )
+	protected interface MutationTables
+	{
+		@AField( description = "Selected", name = "Selected", type = AFieldType.LABEL )
+		final static String SELECTED_FILE = "Selected";
+		@AField( description = "Generate file", name = "Generate file", type = AFieldType.COMPONENT )
+		final static String GENERATE_FILE = "Generate file";
+		@AField( description = "Replace file", name = "Replace file", type = AFieldType.COMPONENT )
+		final static String REPLACE_FILE = "Replace file";
+		@AField( description = "Remove file", name = "Do not send attachment", type = AFieldType.BOOLEAN )
+		final static String REMOVE_FILE = "Do not send attachment";
+	}
+
+	@AForm( description = "Generate File Mutation", name = "Generate File Mutation" )
+	protected interface GenerateFile
+	{
+		@AField( description = "Size", name = "Size", type = AFieldType.INT )
+		final static String SIZE = "Size";
+		@AField( description = "Content type", name = "Content type", type = AFieldType.STRING )
+		final static String CONTENT_TYPE = "Content type";
 	}
 
 	class FileListFormComponent extends JPanel implements JFormComponent, ActionListener
@@ -288,43 +361,49 @@ public class MaliciousAttachmentMutationsPanel
 		}
 	}
 
+	class FileElement
+	{
+		File file;
+		Boolean enabled;
+
+		FileElement( File file, Boolean enabled )
+		{
+			this.file = file;
+			this.enabled = enabled;
+		}
+	}
+
 	private abstract class MutationTableModel extends AbstractTableModel
 	{
-		protected List<File> files = new ArrayList<File>();
+		protected List<FileElement> files = new ArrayList<FileElement>();
 
 		public synchronized int getRowCount()
 		{
 			return files.size();
 		}
 
-		public synchronized void clear()
-		{
-			files.clear();
-			fireTableDataChanged();
-		}
-
-		public boolean isCellEditable( int row, int col )
-		{
-			if( col < 2 )
-			{
-				return false;
-			}
-			else
-			{
-				return true;
-			}
-		}
-
-		public void addResult( File file )
+		public void addResult( FileElement element )
 		{
 			int rowCount;
 			synchronized( this )
 			{
 				rowCount = getRowCount();
-				files.add( file );
+				files.add( element );
 			}
 
 			fireTableRowsInserted( rowCount, rowCount++ );
+		}
+
+		public void removeResult( FileElement element )
+		{
+			int rowCount;
+			synchronized( this )
+			{
+				rowCount = getRowCount();
+				files.remove( element );
+			}
+
+			fireTableRowsDeleted( rowCount, rowCount-- );
 		}
 
 		public abstract int getColumnCount();
@@ -332,10 +411,27 @@ public class MaliciousAttachmentMutationsPanel
 		public abstract String getColumnName( int column );
 
 		public abstract Object getValueAt( int rowIndex, int columnIndex );
+
+		public Class getColumnClass( int c )
+		{
+			return getValueAt( 0, c ).getClass();
+		}
 	}
 
 	private class GenerateMutationTableModel extends MutationTableModel
 	{
+		public boolean isCellEditable( int row, int col )
+		{
+			if( col > 0 )
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
 		public int getColumnCount()
 		{
 			return 3;
@@ -358,20 +454,18 @@ public class MaliciousAttachmentMutationsPanel
 
 		public synchronized Object getValueAt( int rowIndex, int columnIndex )
 		{
-			File file = null;
+			FileElement element = files.get( rowIndex );
 
-			file = files.get( rowIndex );
-
-			if( file != null )
+			if( element != null )
 			{
 				switch( columnIndex )
 				{
 				case 0 :
-					return file.length();
+					return element.file.length();
 				case 1 :
-					return new MimetypesFileTypeMap().getContentType( file );
+					return new MimetypesFileTypeMap().getContentType( element.file );
 				case 2 :
-					return false;
+					return element.enabled;
 				}
 			}
 
@@ -381,6 +475,19 @@ public class MaliciousAttachmentMutationsPanel
 
 	private class ReplaceMutationTableModel extends MutationTableModel
 	{
+
+		public boolean isCellEditable( int row, int col )
+		{
+			if( col == 2 || col == 3 )
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
 		public int getColumnCount()
 		{
 			return 4;
@@ -405,22 +512,20 @@ public class MaliciousAttachmentMutationsPanel
 
 		public synchronized Object getValueAt( int rowIndex, int columnIndex )
 		{
-			File file = null;
+			FileElement element = files.get( rowIndex );
 
-			file = files.get( rowIndex );
-
-			if( file != null )
+			if( element != null )
 			{
 				switch( columnIndex )
 				{
 				case 0 :
 					return "file";
 				case 1 :
-					return file.length();
+					return element.file.length();
 				case 2 :
-					return new MimetypesFileTypeMap().getContentType( file );
+					return new MimetypesFileTypeMap().getContentType( element.file );
 				case 3 :
-					return false;
+					return element.enabled;
 				}
 			}
 
@@ -428,8 +533,25 @@ public class MaliciousAttachmentMutationsPanel
 		}
 	}
 
+	// private void updateValue( String value )
+	// {
+	// if( value != null && projectRoot != null && value.startsWith( projectRoot
+	// ) )
+	// {
+	// if( value.equals( projectRoot ) )
+	// value = "";
+	// else if( value.length() > projectRoot.length() + 1 )
+	// value = value.substring( projectRoot.length() + 1 );
+	// }
+	//
+	// textField.setText( value );
+	// }
+
 	public class AddFileAction extends AbstractAction
 	{
+		private JFileChooser fileChooser;
+		private String projectRoot = ProjectSettings.PROJECT_ROOT;
+
 		public AddFileAction()
 		{
 			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/add_property.gif" ) );
@@ -438,14 +560,48 @@ public class MaliciousAttachmentMutationsPanel
 
 		public void actionPerformed( ActionEvent e )
 		{
-			// String newToken = "";
-			// newToken = UISupport.prompt( "Enter token", "New Token", newToken );
-			// String newValue = "";
-			// newValue = UISupport.prompt( "Enter description", "New Description",
-			// newValue );
-			//
-			// sensitivInformationTableModel.addToken( newToken, newValue );
+			if( fileChooser == null )
+			{
+				fileChooser = new JFileChooser();
 
+			}
+
+			fileChooser.setCurrentDirectory( new File( projectRoot ) );
+
+			int returnVal = fileChooser.showOpenDialog( UISupport.getMainFrame() );
+			if( returnVal == JFileChooser.APPROVE_OPTION )
+			{
+				// updateValue( fileChooser.getSelectedFile().getAbsolutePath() );
+			}
+		}
+	}
+
+	public class GenerateFileAction extends AbstractAction
+	{
+		private XFormDialog dialog;
+
+		public GenerateFileAction()
+		{
+			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/add_property.gif" ) );
+			putValue( Action.SHORT_DESCRIPTION, "Generate file" );
+		}
+
+		public void actionPerformed( ActionEvent e )
+		{
+			if( dialog == null )
+			{
+				dialog = ADialogBuilder.buildDialog( GenerateFile.class );
+			}
+
+			dialog.show();
+
+			if( dialog.getReturnValue() == XFormDialog.OK_OPTION )
+			{
+				Integer size = dialog.getIntValue( GenerateFile.SIZE, 0 );
+				String contentType = dialog.getFormField( GenerateFile.CONTENT_TYPE ).getValue();
+
+				generateTableModel.addResult( new FileElement( new File( "fake_file" ), true ) );
+			}
 		}
 	}
 
@@ -463,6 +619,37 @@ public class MaliciousAttachmentMutationsPanel
 			// sensitivInformationTableModel.removeRows(
 			// tokenTable.getSelectedRows() );
 
+		}
+	}
+
+	public class HelpAction extends AbstractAction implements HelpActionMarker
+	{
+		private final String url;
+
+		public HelpAction( String url )
+		{
+			this( "Online Help", url, UISupport.getKeyStroke( "F1" ) );
+		}
+
+		public HelpAction( String title, String url )
+		{
+			this( title, url, null );
+		}
+
+		public HelpAction( String title, String url, KeyStroke accelerator )
+		{
+			super( title );
+			this.url = url;
+			putValue( Action.SHORT_DESCRIPTION, "Show online help" );
+			if( accelerator != null )
+				putValue( Action.ACCELERATOR_KEY, accelerator );
+
+			putValue( Action.SMALL_ICON, UISupport.HELP_ICON );
+		}
+
+		public void actionPerformed( ActionEvent e )
+		{
+			Tools.openURL( url );
 		}
 	}
 

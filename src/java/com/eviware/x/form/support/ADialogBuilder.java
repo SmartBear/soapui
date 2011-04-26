@@ -28,6 +28,7 @@ import com.eviware.x.form.XFormTextField;
 import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.impl.swing.ActionFormFieldComponent;
 import com.eviware.x.impl.swing.JComponentFormField;
+import com.eviware.x.impl.swing.JLabelFormField;
 import com.eviware.x.impl.swing.JMultilineLabelTextField;
 import com.eviware.x.impl.swing.JPasswordFieldFormField;
 import com.eviware.x.impl.swing.JStringListFormField;
@@ -356,6 +357,9 @@ public class ADialogBuilder
 			break;
 		case INFORMATION :
 			field = form.addComponent( name, new JMultilineLabelTextField() );
+			break;
+		case LABEL :
+			field = form.addComponent( name, new JLabelFormField() );
 			break;
 		case SEPARATOR :
 			form.addSeparator( description );
