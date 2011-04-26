@@ -273,41 +273,36 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 		{
 			TestStepNode node = ( TestStepNode )securityTestTree.getLastSelectedPathComponent();
 			if( !node.getAllowsChildren() )
+			{
 				return;
+			}
+
 			TestStep testStep = node.getTestStep();
+
 			String[] availableChecksNames = SoapUI.getSoapUICore().getSecurityCheckRegistry()
 					.getAvailableSecurityChecksNames( testStep );
-			String type = UISupport.prompt( "Specify type of security check", "Add SecurityCheck", availableChecksNames );
-			if( type == null || type.trim().length() == 0 )
-				return;
-			String name = UISupport.prompt( "Specify name for security check", "Add SecurityCheck",
-					securityTest.findTestStepCheckUniqueName( testStep.getId(), type ) );
-			if( name == null || name.trim().length() == 0 )
-				return;
-
-			while( securityTest.getTestStepSecurityCheckByName( testStep.getId(), name ) != null )
-			{
-				name = UISupport.prompt( "Specify unique name for check", "Add SecurityCheck",
-						name + " " + ( securityTest.getTestStepSecurityChecks( testStep.getId() ).size() ) );
-				if( name == null )
-				{
-					return;
-				}
-			}
 
 			if( availableChecksNames == null || availableChecksNames.length == 0 )
 			{
-				UISupport.showErrorMessage( "No security checks available for this message" );
+				UISupport.showErrorMessage( "No security checks available for this test step" );
 				return;
 			}
 
-			if( !securityTest.canAddSecurityCheck( testStep, type ) )
+			String name = UISupport.prompt( "Specify type of security check", "Add SecurityCheck", availableChecksNames );
+			if( name == null || name.trim().length() == 0 )
+				return;
+
+			String type = SoapUI.getSoapUICore().getSecurityCheckRegistry().getSecurityCheckTypeForName( name );
+			if( type == null || type.trim().length() == 0 )
+				return;
+
+			if( !securityTest.canAddSecurityCheck( testStep, name ) )
 			{
-				UISupport.showErrorMessage( "Security check type already exists" );
+				UISupport.showErrorMessage( "Security check already exists" );
 				return;
 			}
 
-			SecurityCheck securityCheck = securityTest.addNewSecurityCheck( testStep, type, name );
+			SecurityCheck securityCheck = securityTest.addNewSecurityCheck( testStep, name );
 
 			if( securityCheck == null )
 			{
