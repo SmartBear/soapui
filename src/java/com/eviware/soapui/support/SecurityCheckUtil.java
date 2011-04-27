@@ -12,6 +12,9 @@
 
 package com.eviware.soapui.support;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,7 +28,9 @@ import com.eviware.soapui.config.ModelItemConfig;
 import com.eviware.soapui.config.ProjectConfig;
 import com.eviware.soapui.config.PropertiesTypeConfig;
 import com.eviware.soapui.config.PropertyConfig;
+import com.eviware.soapui.config.RegexConfig;
 import com.eviware.soapui.config.RestParametersConfig;
+import com.eviware.soapui.config.SearchPatternsDocumentConfig;
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
@@ -54,22 +59,52 @@ public class SecurityCheckUtil
 		Settings settings = SoapUI.getSettings();
 		String temp = settings.getString( GlobalPropertySettings.SECURITY_CHECKS_PROPERTIES, null );
 		PropertiesTypeConfig config;
+		Map<String, String> map = new HashMap<String, String>();
+
 		try
 		{
-			config = PropertiesTypeConfig.Factory.parse( temp );
-			Map<String, String> map = new HashMap<String, String>();
-			for( PropertyConfig pc : config.getPropertyList() )
+			SearchPatternsDocumentConfig doc = SearchPatternsDocumentConfig.Factory.parse( new File( SoapUI.class
+					.getResource( "/com/eviware/soapui/resources/security/SensitiveInfo.xml" ).toURI() ) );
+			for( RegexConfig regex : doc.getSearchPatterns().getRegexList() )
 			{
-				map.put( pc.getName(), pc.getValue() );
+				String name = regex.getName();
+				String message = regex.getMessage();
+				String description = regex.getDescription();
+				int i = 0;
+				for( String pattern : regex.getPatternList() )
+				{
+					map.put( "~(?s).*" + pattern + ".*", name );
+				}
 			}
-			return map;
 		}
 		catch( XmlException e )
 		{
 			SoapUI.logError( e );
-			return null;
+		}
+		catch( URISyntaxException e )
+		{
+			SoapUI.logError( e );
+		}
+		catch( IOException e )
+		{
+			SoapUI.logError( e );
 		}
 
+		try
+		{
+			config = PropertiesTypeConfig.Factory.parse( temp );
+
+			for( PropertyConfig pc : config.getPropertyList() )
+			{
+				map.put( pc.getName(), pc.getValue() );
+			}
+		}
+		catch( XmlException e )
+		{
+			SoapUI.logError( e );
+		}
+
+		return map;
 	}
 
 	public static boolean contains( SubmitContext context, String content, String token, boolean useRegEx )

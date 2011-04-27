@@ -65,7 +65,7 @@ public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion impleme
 	private static final String ASSERTION_SPECIFIC_EXPOSURE_LIST = "AssertionSpecificExposureList";
 	private static final String INCLUDE_GLOBAL = "IncludeGlobal";
 	private static final String INCLUDE_PROJECT_SPECIFIC = "IncludeProjectSpecific";
-	private boolean includeGlolbal;
+	private boolean includeGlobal;
 	private boolean includeProjectSpecific;
 	private JPanel sensitiveInfoTableForm;
 	private SensitiveInformationTableModel sensitivInformationTableModel;
@@ -81,7 +81,7 @@ public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion impleme
 	private void init()
 	{
 		XmlObjectConfigurationReader reader = new XmlObjectConfigurationReader( getConfiguration() );
-		includeGlolbal = reader.readBoolean( INCLUDE_GLOBAL, true );
+		includeGlobal = reader.readBoolean( INCLUDE_GLOBAL, true );
 		includeProjectSpecific = reader.readBoolean( INCLUDE_PROJECT_SPECIFIC, true );
 		assertionSpecificExposureList = StringUtils.toStringList( reader.readStrings( ASSERTION_SPECIFIC_EXPOSURE_LIST ) );
 		extractTokenTable();
@@ -147,7 +147,7 @@ public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion impleme
 			checkMap.putAll( SecurityCheckUtil.projectEntriesList( this ) );
 		}
 
-		if( includeGlolbal )
+		if( includeGlobal )
 		{
 			checkMap.putAll( SecurityCheckUtil.globalEntriesList() );
 		}
@@ -194,7 +194,7 @@ public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion impleme
 		builder.add( ASSERTION_SPECIFIC_EXPOSURE_LIST,
 				assertionSpecificExposureList.toArray( new String[assertionSpecificExposureList.size()] ) );
 		builder.add( INCLUDE_PROJECT_SPECIFIC, includeProjectSpecific );
-		builder.add( INCLUDE_GLOBAL, includeGlolbal );
+		builder.add( INCLUDE_GLOBAL, includeGlobal );
 		return builder.finish();
 	}
 
@@ -208,7 +208,7 @@ public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion impleme
 			assertionSpecificExposureList = createListFromTable();
 			includeProjectSpecific = Boolean.valueOf( dialog.getFormField(
 					SensitiveInformationConfigDialog.INCLUDE_PROJECT_SPECIFIC ).getValue() );
-			includeGlolbal = Boolean.valueOf( dialog.getFormField( SensitiveInformationConfigDialog.INCLUDE_GLOBAL )
+			includeGlobal = Boolean.valueOf( dialog.getFormField( SensitiveInformationConfigDialog.INCLUDE_GLOBAL )
 					.getValue() );
 			setConfiguration( createConfiguration() );
 
@@ -241,7 +241,7 @@ public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion impleme
 	protected void buildDialog()
 	{
 		dialog = ADialogBuilder.buildDialog( SensitiveInformationConfigDialog.class );
-		dialog.setBooleanValue( SensitiveInformationConfigDialog.INCLUDE_GLOBAL, includeGlolbal );
+		dialog.setBooleanValue( SensitiveInformationConfigDialog.INCLUDE_GLOBAL, includeGlobal );
 		dialog.setBooleanValue( SensitiveInformationConfigDialog.INCLUDE_PROJECT_SPECIFIC, includeProjectSpecific );
 		dialog.getFormField( SensitiveInformationConfigDialog.TOKENS ).setProperty( "component", getForm() );
 	}
