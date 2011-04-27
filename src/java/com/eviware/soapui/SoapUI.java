@@ -111,6 +111,7 @@ import com.eviware.soapui.monitor.MockEngine;
 import com.eviware.soapui.monitor.TestMonitor;
 import com.eviware.soapui.settings.ProxySettings;
 import com.eviware.soapui.settings.UISettings;
+import com.eviware.soapui.support.SecurityCheckUtil;
 import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
@@ -973,7 +974,7 @@ public class SoapUI
 			try
 			{
 				PropertyExpansionUtils.saveGlobalProperties();
-				PropertyExpansionUtils.saveSecurityGlobalProperties();
+				SecurityCheckUtil.saveGlobalSecuritySettings();
 				soapUICore.saveSettings();
 				workspace.onClose();
 			}

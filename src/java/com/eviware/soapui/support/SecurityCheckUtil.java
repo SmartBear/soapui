@@ -13,8 +13,6 @@
 package com.eviware.soapui.support;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,8 +24,6 @@ import org.w3c.dom.Node;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.ModelItemConfig;
 import com.eviware.soapui.config.ProjectConfig;
-import com.eviware.soapui.config.PropertiesTypeConfig;
-import com.eviware.soapui.config.PropertyConfig;
 import com.eviware.soapui.config.RegexConfig;
 import com.eviware.soapui.config.RestParametersConfig;
 import com.eviware.soapui.config.SearchPatternsDocumentConfig;
@@ -36,75 +32,37 @@ import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
+import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.security.SecurityCheckedParameter;
-import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.support.ModelSupport;
+import com.eviware.soapui.model.support.SettingsTestPropertyHolder;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.assertion.SensitiveInfoExposureAssertion;
 import com.eviware.soapui.security.panels.ProjectSensitiveInformationPanel;
 import com.eviware.soapui.settings.GlobalPropertySettings;
+import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel;
 import com.eviware.soapui.support.xml.XmlUtils;
 
 public class SecurityCheckUtil
 {
+	private static SettingsTestPropertyHolder globalSensitiveInformationExposureTokens;
 
 	public static Map<String, String> globalEntriesList()
 	{
-		Settings settings = SoapUI.getSettings();
-		String temp = settings.getString( GlobalPropertySettings.SECURITY_CHECKS_PROPERTIES, null );
-		PropertiesTypeConfig config;
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, TestProperty> map = globalSensitiveInformationExposureTokens.getProperties();
 
-		try
-		{
-			SearchPatternsDocumentConfig doc = SearchPatternsDocumentConfig.Factory.parse( new File( SoapUI.class
-					.getResource( "/com/eviware/soapui/resources/security/SensitiveInfo.xml" ).toURI() ) );
-			for( RegexConfig regex : doc.getSearchPatterns().getRegexList() )
-			{
-				String name = regex.getName();
-				String message = regex.getMessage();
-				String description = regex.getDescription();
-				int i = 0;
-				for( String pattern : regex.getPatternList() )
-				{
-					map.put( "~(?s).*" + pattern + ".*", description );
-				}
-			}
-		}
-		catch( XmlException e )
-		{
-			SoapUI.logError( e );
-		}
-		catch( URISyntaxException e )
-		{
-			SoapUI.logError( e );
-		}
-		catch( IOException e )
-		{
-			SoapUI.logError( e );
-		}
+		StringToStringMap result = new StringToStringMap();
 
-		try
-		{
-			config = PropertiesTypeConfig.Factory.parse( temp );
+		for( String key : map.keySet() )
+			result.put( key, map.get( key ).getValue() );
 
-			for( PropertyConfig pc : config.getPropertyList() )
-			{
-				map.put( pc.getName(), pc.getValue() );
-			}
-		}
-		catch( XmlException e )
-		{
-			SoapUI.logError( e );
-		}
-
-		return map;
+		return result;
 	}
 
 	public static boolean contains( SubmitContext context, String content, String token, boolean useRegEx )
@@ -208,6 +166,52 @@ public class SecurityCheckUtil
 			SoapUI.logError( e );
 		}
 		return null;
+	}
+
+	private synchronized static void initGloblaSecuritySettings()
+	{
+		globalSensitiveInformationExposureTokens = new SettingsTestPropertyHolder( SoapUI.getSettings(), null,
+				GlobalPropertySettings.SECURITY_CHECKS_PROPERTIES );
+
+		String propFile = System.getProperty( "soapuisecurity.properties" );
+		if( StringUtils.hasContent( propFile ) )
+			globalSensitiveInformationExposureTokens.addPropertiesFromFile( propFile );
+
+		try
+		{
+			SearchPatternsDocumentConfig doc = SearchPatternsDocumentConfig.Factory.parse( new File( SoapUI.class
+					.getResource( "/com/eviware/soapui/resources/security/SensitiveInfo.xml" ).toURI() ) );
+			for( RegexConfig regex : doc.getSearchPatterns().getRegexList() )
+			{
+				String description = regex.getDescription();
+				for( String pattern : regex.getPatternList() )
+				{
+					globalSensitiveInformationExposureTokens.setPropertyValue( "~(?s).*" + pattern + ".*", description );
+				}
+			}
+		}
+		catch( Exception e )
+		{
+			SoapUI.logError( e );
+		}
+	}
+
+	public static void saveGlobalSecuritySettings()
+	{
+		if( globalSensitiveInformationExposureTokens != null )
+		{
+			globalSensitiveInformationExposureTokens.saveSecurityTo( SoapUI.getSettings() );
+		}
+	}
+
+	public static MutableTestPropertyHolder getGlobalSensitiveInformationExposureTokens()
+	{
+		if( globalSensitiveInformationExposureTokens == null )
+		{
+			initGloblaSecuritySettings();
+		}
+
+		return globalSensitiveInformationExposureTokens;
 	}
 
 }

@@ -58,7 +58,6 @@ public class PropertyExpansionUtils
 	public final static Logger log = Logger.getLogger( PropertyExpansionUtils.class );
 
 	private static SettingsTestPropertyHolder globalTestPropertyHolder;
-	private static SettingsTestPropertyHolder globalSecurityPropertyHolder;
 
 	public static String getGlobalProperty( String propertyName )
 	{
@@ -80,29 +79,11 @@ public class PropertyExpansionUtils
 			globalTestPropertyHolder.addPropertiesFromFile( propFile );
 	}
 
-	private synchronized static void initSecurityChecksProperties()
-	{
-		globalSecurityPropertyHolder = new SettingsTestPropertyHolder( SoapUI.getSettings(), null,
-				GlobalPropertySettings.SECURITY_CHECKS_PROPERTIES );
-
-		String propFile = System.getProperty( "soapuisecurity.properties" );
-		if( StringUtils.hasContent( propFile ) )
-			globalSecurityPropertyHolder.addPropertiesFromFile( propFile );
-	}
-
 	public static void saveGlobalProperties()
 	{
 		if( globalTestPropertyHolder != null )
 		{
 			globalTestPropertyHolder.saveTo( SoapUI.getSettings() );
-		}
-	}
-
-	public static void saveSecurityGlobalProperties()
-	{
-		if( globalSecurityPropertyHolder != null )
-		{
-			globalSecurityPropertyHolder.saveSecurityTo( SoapUI.getSettings() );
 		}
 	}
 
@@ -251,16 +232,6 @@ public class PropertyExpansionUtils
 		}
 
 		return globalTestPropertyHolder;
-	}
-
-	public static MutableTestPropertyHolder getSecurityGlobalProperties()
-	{
-		if( globalSecurityPropertyHolder == null )
-		{
-			initSecurityChecksProperties();
-		}
-
-		return globalSecurityPropertyHolder;
 	}
 
 	public static MutablePropertyExpansion[] renameProperty( RenameableTestProperty property, String newName,
