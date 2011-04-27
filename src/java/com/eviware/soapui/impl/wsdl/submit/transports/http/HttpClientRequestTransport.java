@@ -201,6 +201,14 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 			// submit!
 			httpClient.executeMethod( hostConfiguration, httpMethod, httpState );
 			httpMethod.getTimeTaken();
+
+			if( isRedirectResponse( httpMethod ) && httpRequest.isFollowRedirects() )
+			{
+				ExtendedGetMethod returnMethod = followRedirects( httpClient, 0, httpMethod, httpState );
+				httpMethod.releaseConnection();
+				httpMethod = returnMethod;
+				submitContext.setProperty( HTTP_METHOD, httpMethod );
+			}
 		}
 		catch( Throwable t )
 		{
@@ -216,7 +224,8 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 		{
 			for( int c = filters.size() - 1; c >= 0; c-- )
 			{
-				filters.get( c ).afterRequest( submitContext, httpRequest );
+				RequestFilter filter = filters.get( c );
+				filter.afterRequest( submitContext, httpRequest );
 			}
 
 			if( !submitContext.hasProperty( RESPONSE ) )
@@ -247,6 +256,48 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 		}
 
 		return ( Response )submitContext.getProperty( BaseHttpRequestTransport.RESPONSE );
+	}
+
+	private boolean isRedirectResponse( ExtendedHttpMethod httpMethod )
+	{
+		switch( httpMethod.getStatusCode() )
+		{
+		case 301 :
+		case 302 :
+		case 303 :
+		case 307 :
+			return true;
+		}
+
+		return false;
+	}
+
+	private ExtendedGetMethod followRedirects( HttpClient httpClient, int redirectCount, ExtendedHttpMethod httpMethod,
+			HttpState httpState ) throws Exception
+	{
+		ExtendedGetMethod getMethod = new ExtendedGetMethod();
+		URI uri = new URI( httpMethod.getResponseHeader( "Location" ).getValue(), true );
+		getMethod.setURI( uri );
+		HostConfiguration host = new HostConfiguration();
+		host.setHost( uri );
+		httpClient.executeMethod( host, getMethod, httpState );
+		if( isRedirectResponse( getMethod ) )
+		{
+			if( redirectCount == 10 )
+				throw new Exception( "Maximum number of Redirects reached [10]" );
+
+			try
+			{
+				return followRedirects( httpClient, redirectCount + 1, getMethod, httpState );
+			}
+			finally
+			{
+				getMethod.releaseConnection();
+			}
+		}
+		else
+			return getMethod;
+
 	}
 
 	private void createDefaultResponse( SubmitContext submitContext, AbstractHttpRequestInterface<?> httpRequest,

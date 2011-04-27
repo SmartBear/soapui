@@ -86,8 +86,8 @@ public class HttpSettingsRequestFilter extends AbstractRequestFilter
 		if( maxSize > 0 )
 			httpMethod.setMaxSize( maxSize );
 
-		// follow redirects
-		httpMethod.setFollowRedirects( httpRequest.isFollowRedirects() );
+		// follow redirects is false; handled in transport
+		httpMethod.setFollowRedirects( false );
 
 		// apply global settings
 		HttpClientSupport.applyHttpSettings( httpMethod, settings );
