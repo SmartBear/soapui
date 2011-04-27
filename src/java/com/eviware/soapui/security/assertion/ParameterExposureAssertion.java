@@ -29,14 +29,12 @@ import com.eviware.soapui.support.SecurityCheckUtil;
 
 public class ParameterExposureAssertion extends WsdlMessageAssertion implements ResponseAssertion
 {
-
 	public static final String ID = "Parameter Exposure";
-	public static final String LABEL = "Parameter Exposure";
+	public static final String LABEL = "Cross Site Scripting Detection";
 
 	public ParameterExposureAssertion( TestAssertionConfig assertionConfig, Assertable assertable )
 	{
 		super( assertionConfig, assertable, false, true, false, true );
-
 	}
 
 	@Override
@@ -49,10 +47,11 @@ public class ParameterExposureAssertion extends WsdlMessageAssertion implements 
 		List<AssertionError> assertionErrorList = new ArrayList<AssertionError>();
 		for( String value : parameterExposureCheckConfig.getParameterExposureStringsList() )
 		{
-			value = context.expand( value );// property expansion support 
-			if( SecurityCheckUtil.contains( context, new String( messageExchange.getRawResponseData() ), value ,false ) )
+			value = context.expand( value );// property expansion support
+			if( SecurityCheckUtil.contains( context, new String( messageExchange.getRawResponseData() ), value, false ) )
 			{
-				String message = "Content that is sent in request '" + value + "' is exposed in response. Possibility for XSS script attack in: "
+				String message = "Content that is sent in request '" + value
+						+ "' is exposed in response. Possibility for XSS script attack in: "
 						+ messageExchange.getModelItem().getName();
 				assertionErrorList.add( new AssertionError( message ) );
 				throwException = true;

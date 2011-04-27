@@ -16,9 +16,7 @@ import java.awt.Dimension;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -84,9 +82,7 @@ public class ParameterExposureCheck extends AbstractSecurityCheckWithProperties
 	{
 		try
 		{
-			FileInputStream fstream = new FileInputStream( new File( SoapUI.class.getResource(
-					"/com/eviware/soapui/resources/security/XSS-vectors.txt" ).toURI() ) );
-			DataInputStream in = new DataInputStream( fstream );
+			InputStream in = SoapUI.class.getResourceAsStream( "/com/eviware/soapui/resources/security/XSS-vectors.txt" );
 			BufferedReader br = new BufferedReader( new InputStreamReader( in ) );
 			String strLine;
 			while( ( strLine = br.readLine() ) != null )
