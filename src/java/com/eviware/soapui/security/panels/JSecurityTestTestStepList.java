@@ -281,6 +281,7 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 
 			String[] availableChecksNames = SoapUI.getSoapUICore().getSecurityCheckRegistry()
 					.getAvailableSecurityChecksNames( testStep );
+			availableChecksNames = securityTest.getAvailableSecurityCheckNames( testStep, availableChecksNames );
 
 			if( availableChecksNames == null || availableChecksNames.length == 0 )
 			{
@@ -295,12 +296,6 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 			String type = SoapUI.getSoapUICore().getSecurityCheckRegistry().getSecurityCheckTypeForName( name );
 			if( type == null || type.trim().length() == 0 )
 				return;
-
-			if( !securityTest.canAddSecurityCheck( testStep, name ) )
-			{
-				UISupport.showErrorMessage( "Security check already exists" );
-				return;
-			}
 
 			SecurityCheck securityCheck = securityTest.addNewSecurityCheck( testStep, name );
 

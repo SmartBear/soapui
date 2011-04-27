@@ -765,6 +765,30 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 		return !hasChecksOfType;
 	}
 
+	/**
+	 * Creates array of all available security check names (those that have not
+	 * been added to test step).
+	 * 
+	 * @param testStep
+	 * @param securityCheckType
+	 * @return boolean
+	 */
+	public String[] getAvailableSecurityCheckNames( TestStep testStep, String[] securityCheckNames )
+	{
+		List<String> availableNames = new ArrayList<String>();
+
+		for( int i = 0; i < securityCheckNames.length; i++ )
+		{
+			String name = securityCheckNames[i];
+			if( canAddSecurityCheck( testStep, name ) )
+			{
+				availableNames.add( name );
+			}
+		}
+
+		return availableNames.toArray( new String[availableNames.size()] );
+	}
+
 	public boolean importSecurityCheck( TestStep targetTestStep, SecurityCheck securityCheckToClone, boolean overwrite )
 	{
 		// testCase.beforeSave();
