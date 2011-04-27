@@ -346,7 +346,13 @@ public class RestTestRequestStep extends WsdlTestStepWithProperties implements R
 		RestService restService = ( RestService )project.getInterfaceByName( getRequestStepConfig().getService() );
 		if( restService != null )
 		{
-			return restService.getResourceByFullPath( getRequestStepConfig().getResourcePath() );
+			// get all resources with the configured path
+			for( RestResource resource : restService.getResourcesByFullPath( getRequestStepConfig().getResourcePath() ) )
+			{
+				// try to find matching method
+				if( getWsdlModelItemByName( resource.getRestMethodList(), getRequestStepConfig().getMethodName() ) != null )
+					return resource;
+			}
 		}
 		return null;
 	}

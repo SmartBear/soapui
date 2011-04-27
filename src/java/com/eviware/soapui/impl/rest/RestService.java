@@ -218,6 +218,21 @@ public class RestService extends AbstractInterface<RestServiceConfig> implements
 		return null;
 	}
 
+	public RestResource[] getResourcesByFullPath( String resourcePath )
+	{
+		List<RestResource> result = new ArrayList<RestResource>();
+
+		for( RestResource resource : getAllResources() )
+		{
+			if( resource.getFullPath().equals( resourcePath ) )
+			{
+				result.add( resource );
+			}
+		}
+
+		return result.toArray( new RestResource[result.size()] );
+	}
+
 	@Override
 	public WadlDefinitionContext getDefinitionContext()
 	{
