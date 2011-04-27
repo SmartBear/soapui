@@ -183,7 +183,6 @@ public class SQLInjectionCheck extends AbstractSecurityCheckWithProperties
 		{
 			for( TestProperty property : testStep.getPropertyList() )
 			{
-
 				String value = context.expand( property.getValue() );
 				if( XmlUtils.seemsToBeXml( value ) )
 				{
@@ -192,12 +191,18 @@ public class SQLInjectionCheck extends AbstractSecurityCheckWithProperties
 							XmlObject.Factory.parse( value ) );
 					for( SecurityCheckedParameter param : getParameterHolder().getParameterList() )
 					{
+						if( !param.isChecked() )
+							continue;
+
 						if( param.getXpath() == null || param.getXpath().trim().length() == 0 )
 						{
-							testStep.getProperties().get( param.getName() )
-									.setValue( parameterMutations.get( param ).get( 0 ) );
-							params.put( param.getLabel(), parameterMutations.get( param ).get( 0 ) );
-							parameterMutations.get( param ).remove( 0 );
+							if( parameterMutations.containsKey( param ) )
+							{
+								testStep.getProperties().get( param.getName() )
+										.setValue( parameterMutations.get( param ).get( 0 ) );
+								params.put( param.getLabel(), parameterMutations.get( param ).get( 0 ) );
+								parameterMutations.get( param ).remove( 0 );
+							}
 						}
 						else
 						{
