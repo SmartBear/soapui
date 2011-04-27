@@ -22,6 +22,7 @@ import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.support.AForm;
 import com.eviware.x.impl.swing.JFormDialog;
+import com.eviware.x.impl.swing.JTextFieldFormField;
 
 public class MalformedXmlAdvancedSettingsPanel
 {
@@ -34,7 +35,13 @@ public class MalformedXmlAdvancedSettingsPanel
 	{
 		this.configuration = malformedXmlConfig;
 		this.attributeConfig = malformedXmlConfig.getAttributeMutation();
+
 		dialog = ( JFormDialog )ADialogBuilder.buildDialog( AdvancedSettings.class );
+
+		( ( JTextFieldFormField )dialog.getFormField( AdvancedSettings.NEW_ELEMENT_VALUE ) ).setWidth( 30 );
+		( ( JTextFieldFormField )dialog.getFormField( AdvancedSettings.NEW_ATTRIBUTE_NAME ) ).setWidth( 30 );
+		( ( JTextFieldFormField )dialog.getFormField( AdvancedSettings.NEW_ATTRIBUTE_VALUE ) ).setWidth( 30 );
+
 		initDialog();
 	}
 
@@ -51,7 +58,7 @@ public class MalformedXmlAdvancedSettingsPanel
 		dialog.setBooleanValue( AdvancedSettings.LEAVE_ATTRIBUTE_OPEN, attributeConfig.getLeaveAttributeOpen() );
 		dialog.setBooleanValue( AdvancedSettings.ADD_NEW_ATTRIBUTE, attributeConfig.getAddNewAttribute() );
 		dialog.setValue( AdvancedSettings.NEW_ATTRIBUTE_NAME, attributeConfig.getNewAttributeName() );
-		dialog.setValue( AdvancedSettings.NEW_ATTIBUTE_VALUE, attributeConfig.getNewAttributeValue() );
+		dialog.setValue( AdvancedSettings.NEW_ATTRIBUTE_VALUE, attributeConfig.getNewAttributeValue() );
 
 		// listeners...
 		dialog.getFormField( AdvancedSettings.INSERT_NEW_ELEMENT ).addFormFieldListener( new XFormFieldListener()
@@ -135,7 +142,7 @@ public class MalformedXmlAdvancedSettingsPanel
 				attributeConfig.setNewAttributeName( newValue );
 			}
 		} );
-		dialog.getFormField( AdvancedSettings.NEW_ATTIBUTE_VALUE ).addFormFieldListener( new XFormFieldListener()
+		dialog.getFormField( AdvancedSettings.NEW_ATTRIBUTE_VALUE ).addFormFieldListener( new XFormFieldListener()
 		{
 
 			@Override
@@ -196,7 +203,7 @@ public class MalformedXmlAdvancedSettingsPanel
 		public final static String NEW_ATTRIBUTE_NAME = "New attribute name";
 
 		@AField( description = "", name = "New attribute value", type = AFieldType.STRING )
-		public final static String NEW_ATTIBUTE_VALUE = "New attribute value";
+		public final static String NEW_ATTRIBUTE_VALUE = "New attribute value";
 
 	}
 
