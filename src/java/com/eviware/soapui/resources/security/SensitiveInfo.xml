@@ -11,11 +11,11 @@
 <searchPatterns xmlns="http://eviware.com/soapui/config">
 	<Regex>
 		<name>Stacktrace</name>
-		<description>Found text that looks like a stacktrace.</description>
-		<explanation>A stacktrace can give hackers information about method
-			signatures, which software you use, which version, class hierarchies,
-			etc. Exposing the internals of an obviously faulty method/function
-			might be very dangerous.</explanation>
+		<description>A stacktrace can give hackers information about method 
+			signatures, which software you use, which version, class hierarchies, 
+			etc. Exposing the internals of an obviously faulty method/function 
+			might be very dangerous.</description>
+		<message>Found text that looks like a stacktrace.</message>
 
 		<!-- General -->
 		<pattern>(s|S)tack ?(t|T)race</pattern>
@@ -72,12 +72,11 @@
 
 	<Regex>
 		<name>Version x.y.z</name>
-		<description>Found text that looks like a software version number.
-		</description>
-		<explanation>Critical security related bugs are often tied to certain
-			versions of the affected software. Exposing version numbers gives
-			unnecessary hints on which vurnabilities your system might suffer to
-			hackers.</explanation>
+		<description>Critical security related bugs are often tied to certain 
+			versions of the affected software. Exposing version numbers gives 
+			unnecessary hints on which vurnabilities your system might suffer to 
+			hackers.</description>
+		<message>Found text that looks like a software version number.</message>
 
 		<pattern>(v|V)ersion:? \d\.\d{1,2}\.{1,3}-?</pattern>
 		<!-- example match: version 4.7.11 -->
@@ -94,11 +93,10 @@
 
 	<Regex>
 		<name>Database error messages</name>
-		<description>Found text that looks like an error message from a
-			database.</description>
-		<explanation>Database internals should not be revealed to third
-			parties. Such information can be used by hackers, for example via SQL
-			injection attacks.</explanation>
+		<description>Database internals should not be revealed to third 
+			parties. Such information can be used by hackers, for example via SQL 
+			injection attacks.</description>
+		<message>Found text that looks like an error message from a database.</message>
 
 		<pattern>SQLSTATE: [A-Z0-9] </pattern>
 		<pattern>Invalid column name\s</pattern>

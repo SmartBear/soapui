@@ -73,7 +73,7 @@ public class SecurityCheckUtil
 				int i = 0;
 				for( String pattern : regex.getPatternList() )
 				{
-					map.put( "~(?s).*" + pattern + ".*", name );
+					map.put( "~(?s).*" + pattern + ".*", description );
 				}
 			}
 		}
