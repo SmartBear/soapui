@@ -74,7 +74,7 @@
 		<name>Version x.y.z</name>
 		<description>Critical security related bugs are often tied to certain 
 			versions of the affected software. Exposing version numbers gives 
-			unnecessary hints on which vurnabilities your system might suffer to 
+			unnecessary hints on which vulnerabilities your system might suffer to 
 			hackers.</description>
 		<message>Found text that looks like a software version number.</message>
 
