@@ -12,7 +12,6 @@
 
 package com.eviware.soapui.support;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -179,8 +178,9 @@ public class SecurityCheckUtil
 
 		try
 		{
-			SearchPatternsDocumentConfig doc = SearchPatternsDocumentConfig.Factory.parse( new File( SoapUI.class
-					.getResource( "/com/eviware/soapui/resources/security/SensitiveInfo.xml" ).toURI() ) );
+			SearchPatternsDocumentConfig doc = SearchPatternsDocumentConfig.Factory.parse( SoapUI.class
+					.getResourceAsStream( "/com/eviware/soapui/resources/security/SensitiveInfo.xml" ) );
+
 			for( RegexConfig regex : doc.getSearchPatterns().getRegexList() )
 			{
 				String description = regex.getDescription();
