@@ -54,7 +54,7 @@ public class SecurityCheckUtil
 
 	public static Map<String, String> globalEntriesList()
 	{
-		Map<String, TestProperty> map = globalSensitiveInformationExposureTokens.getProperties();
+		Map<String, TestProperty> map = getGlobalSensitiveInformationExposureTokens().getProperties();
 
 		StringToStringMap result = new StringToStringMap();
 
@@ -65,7 +65,6 @@ public class SecurityCheckUtil
 	}
 
 	public static boolean contains( SubmitContext context, String content, String token, boolean useRegEx )
-
 	{
 		if( token == null )
 			token = "";
@@ -167,7 +166,7 @@ public class SecurityCheckUtil
 		return null;
 	}
 
-	private synchronized static void initGloblaSecuritySettings()
+	private synchronized static void initGlobalSecuritySettings()
 	{
 		globalSensitiveInformationExposureTokens = new SettingsTestPropertyHolder( SoapUI.getSettings(), null,
 				GlobalPropertySettings.SECURITY_CHECKS_PROPERTIES );
@@ -186,7 +185,8 @@ public class SecurityCheckUtil
 				String description = regex.getDescription();
 				for( String pattern : regex.getPatternList() )
 				{
-					globalSensitiveInformationExposureTokens.setPropertyValue( "~(?s).*" + pattern + ".*", description );
+					globalSensitiveInformationExposureTokens.setPropertyValue( "~(?s).*" + pattern + ".*",
+							"[" + regex.getName() + "] " + description );
 				}
 			}
 		}
@@ -208,7 +208,7 @@ public class SecurityCheckUtil
 	{
 		if( globalSensitiveInformationExposureTokens == null )
 		{
-			initGloblaSecuritySettings();
+			initGlobalSecuritySettings();
 		}
 
 		return globalSensitiveInformationExposureTokens;

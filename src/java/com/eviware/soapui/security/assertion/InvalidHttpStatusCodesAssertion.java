@@ -19,6 +19,7 @@ import org.apache.xmlbeans.XmlObject;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.TestAssertionConfig;
+import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.AbstractTestAssertionFactory;
@@ -113,12 +114,11 @@ public class InvalidHttpStatusCodesAssertion extends WsdlMessageAssertion implem
 
 	public static class Factory extends AbstractTestAssertionFactory
 	{
+		@SuppressWarnings( "unchecked" )
 		public Factory()
 		{
 			super( InvalidHttpStatusCodesAssertion.ID, InvalidHttpStatusCodesAssertion.LABEL,
-					InvalidHttpStatusCodesAssertion.class, SecurityCheck.class );
-
-			// TODO: chenge type of target class
+					InvalidHttpStatusCodesAssertion.class, new Class[] { SecurityCheck.class, AbstractHttpRequest.class } );
 		}
 
 		@Override

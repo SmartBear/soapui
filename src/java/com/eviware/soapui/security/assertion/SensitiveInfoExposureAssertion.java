@@ -16,8 +16,10 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -28,6 +30,7 @@ import org.apache.xmlbeans.XmlObject;
 import org.jdesktop.swingx.JXTable;
 
 import com.eviware.soapui.config.TestAssertionConfig;
+import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.AbstractTestAssertionFactory;
@@ -110,8 +113,10 @@ public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion impleme
 			throws AssertionException
 	{
 		Map<String, String> checkMap = createCheckMap( context );
-		boolean throwException = false;
 		List<AssertionError> assertionErrorList = new ArrayList<AssertionError>();
+		String response = messageExchange.getResponseContent();
+		Set<String> messages = new HashSet<String>();
+
 		for( String token : checkMap.keySet() )
 		{
 			boolean useRegexp = token.trim().startsWith( PREFIX );
@@ -121,16 +126,18 @@ public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion impleme
 				token = token.substring( token.indexOf( PREFIX ) + 1 );
 			}
 
-			if( SecurityCheckUtil.contains( context, new String( messageExchange.getRawResponseData() ), token, useRegexp ) )
+			if( SecurityCheckUtil.contains( context, response, token, useRegexp ) )
 			{
-				String message = "Sensitive information '" + description + "' is exposed in : "
-						+ messageExchange.getModelItem().getName();
-				assertionErrorList.add( new AssertionError( message ) );
-				throwException = true;
+				String message = description;
+				if( !messages.contains( message ) )
+				{
+					assertionErrorList.add( new AssertionError( message ) );
+					messages.add( message );
+				}
 			}
 		}
 
-		if( throwException )
+		if( !messages.isEmpty() )
 		{
 			throw new AssertionException( assertionErrorList.toArray( new AssertionError[assertionErrorList.size()] ) );
 		}
@@ -167,11 +174,11 @@ public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion impleme
 
 	public static class Factory extends AbstractTestAssertionFactory
 	{
+		@SuppressWarnings( "unchecked" )
 		public Factory()
 		{
 			super( SensitiveInfoExposureAssertion.ID, SensitiveInfoExposureAssertion.LABEL,
-					SensitiveInfoExposureAssertion.class, SecurityCheck.class );
-
+					SensitiveInfoExposureAssertion.class, new Class[] { SecurityCheck.class, AbstractHttpRequest.class } );
 		}
 
 		@Override
