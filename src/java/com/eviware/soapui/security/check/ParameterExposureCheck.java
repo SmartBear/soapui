@@ -37,7 +37,6 @@ import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.security.SecurityCheckedParameter;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
-import com.eviware.soapui.security.ExecutionStrategyHolder;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.security.SecurityTestRunnerImpl;
@@ -63,9 +62,9 @@ import com.eviware.x.impl.swing.JStringListFormField;
 
 public class ParameterExposureCheck extends AbstractSecurityCheckWithProperties
 {
-	public static final String TYPE = "ParameterExposureCheck";
-	public static final String NAME = "Parameter Exposure";
-	public static final String PARAMETER_EXPOSURE_CHECK_CONFIG = "ParameterExposureCheckConfig";
+	public static final String TYPE = "CrossSiteScriptingScan";
+	public static final String NAME = "Cross Site Scripting";
+	public static final String PARAMETER_EXPOSURE_CHECK_CONFIG = "CrossSiteScriptingScanConfig";
 	private ParameterExposureCheckConfig parameterExposureCheckConfig;
 	StrategyTypeConfig.Enum strategy = StrategyTypeConfig.ONE_BY_ONE;
 
@@ -383,12 +382,12 @@ public class ParameterExposureCheck extends AbstractSecurityCheckWithProperties
 		return dialog.getPanel();
 	}
 
-	@AForm( description = "Parameter Exposure", name = "Parameter Exposure" )
+	@AForm( description = "Cross Site Scripting", name = "Cross Site Scripting" )
 	protected interface AdvancedSettings
 	{
 
-		@AField( description = "Parameter Exposure Values", name = "###Parameter Exposure", type = AFieldType.STRINGLIST )
-		public final static String PARAMETER_EXPOSURE_STRINGS = "###Parameter Exposure";
+		@AField( description = "Cross Site Scripting Vectors", name = "###Cross Site Scripting", type = AFieldType.STRINGLIST )
+		public final static String PARAMETER_EXPOSURE_STRINGS = "###Cross Site Scripting";
 
 	}
 }
