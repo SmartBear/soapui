@@ -47,7 +47,7 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 {
 
 	public static final String TYPE = "BoundaryCheck";
-	public static final String NAME = "Boundary Check";
+	public static final String NAME = "Boundary Scan";
 	private static final String REQUEST_MUTATIONS_STACK = "RequestMutationsStack";
 	private RestrictionLabel restrictionLabel = new RestrictionLabel();
 
@@ -335,13 +335,13 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 	@Override
 	public String getConfigDescription()
 	{
-		return "Configuration for Boundary Security Check";
+		return "Configuration for Boundary Security Scan";
 	}
 
 	@Override
 	public String getConfigName()
 	{
-		return "Configuration for Boundary Security Check";
+		return "Configuration for Boundary Security Scan";
 	}
 
 	@Override

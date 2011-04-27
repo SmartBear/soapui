@@ -110,13 +110,13 @@ public class XPathInjectionSecurityCheck extends AbstractSecurityCheckWithProper
 		}
 		catch( XmlException e )
 		{
-			SoapUI.logError( e, "[XPathInjectionSecurityCheck]XPath seems to be invalid!" );
-			reportSecurityCheckException( "Propety value is not XML or XPath is wrong!" );
+			SoapUI.logError( e, "[XPathInjectionSecurityScan]XPath seems to be invalid!" );
+			reportSecurityCheckException( "Property value is not XML or XPath is wrong!" );
 		}
 		catch( Exception e )
 		{
-			SoapUI.logError( e, "[XPathInjectionSecurityCheck]Property value is not valid xml!" );
-			reportSecurityCheckException( "Propety value is not XML or XPath is wrong!" );
+			SoapUI.logError( e, "[XPathInjectionSecurityScan]Property value is not valid xml!" );
+			reportSecurityCheckException( "Property value is not XML or XPath is wrong!" );
 		}
 	}
 
@@ -277,13 +277,13 @@ public class XPathInjectionSecurityCheck extends AbstractSecurityCheckWithProper
 	@Override
 	public String getConfigDescription()
 	{
-		return "Configures XPath Injection Security Check";
+		return "Configures XPath Injection Security Scan";
 	}
 
 	@Override
 	public String getConfigName()
 	{
-		return "XPath Injection Security Check";
+		return "XPath Injection Security Scan";
 	}
 
 	@Override

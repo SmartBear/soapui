@@ -32,7 +32,7 @@ public class ParameterExposureCheckFactory extends AbstractSecurityCheckFactory
 
 	public ParameterExposureCheckFactory()
 	{
-		super( ParameterExposureCheck.TYPE, ParameterExposureCheck.NAME, "Preforms a check for Parameter Exposure",
+		super( ParameterExposureCheck.TYPE, ParameterExposureCheck.NAME, "Preforms a scan for Parameter Exposure",
 				"/parameter_exposure_check_script.gif" );
 	}
 

@@ -16,8 +16,8 @@ import com.eviware.soapui.security.result.SecurityCheckResult;
 public interface SecurityCheck extends ModelItem, Assertable
 {
 
-	public static final String SECURITY_CHECK_REQUEST_RESULT = "SecurityCheckRequestResult";
-	public static final String SECURITY_CHECK_RESPONSE_RESULT = "SecurityCheckResponseResult";
+	public static final String SECURITY_CHECK_REQUEST_RESULT = "SecurityScanRequestResult";
+	public static final String SECURITY_CHECK_RESPONSE_RESULT = "SecurityScanResponseResult";
 	public static final String STATUS_PROPERTY = SecurityCheck.class.getName() + "@status";
 
 	void updateSecurityConfig( SecurityCheckConfig config );

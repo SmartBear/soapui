@@ -32,7 +32,7 @@ public class MaliciousAttachmentSecurityCheckFactory extends AbstractSecurityChe
 	public MaliciousAttachmentSecurityCheckFactory()
 	{
 		super( MaliciousAttachmentSecurityCheck.TYPE, MaliciousAttachmentSecurityCheck.NAME,
-				"Performs a check for Malicious Attachment Vulnerabilities", null);
+				"Performs a scan for Malicious Attachment Vulnerabilities", null);
 	}
 
 	public boolean canCreate( TestStep testStep )

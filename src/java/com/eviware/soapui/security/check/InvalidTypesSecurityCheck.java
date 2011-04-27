@@ -146,13 +146,13 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 		}
 		catch( XmlException e )
 		{
-			SoapUI.logError( e, "[InvalidtypeSecurityCheck]XPath seems to be invalid!" );
-			reportSecurityCheckException( "Propety value is not XML or XPath is wrong!" );
+			SoapUI.logError( e, "[InvalidtypeSecurityScan]XPath seems to be invalid!" );
+			reportSecurityCheckException( "Property value is not XML or XPath is wrong!" );
 		}
 		catch( Exception e )
 		{
-			SoapUI.logError( e, "[InvalidtypeSecurityCheck]Property value is not valid xml!" );
-			reportSecurityCheckException( "Propety value is not XML or XPath is wrong!" );
+			SoapUI.logError( e, "[InvalidtypeSecurityScan]Property value is not valid xml!" );
+			reportSecurityCheckException( "Property value is not XML or XPath is wrong!" );
 		}
 	}
 
@@ -452,13 +452,13 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 	@Override
 	public String getConfigDescription()
 	{
-		return "Configures invalid type security check";
+		return "Configures invalid type security scan";
 	}
 
 	@Override
 	public String getConfigName()
 	{
-		return "Invalid Types Security Check";
+		return "Invalid Types Security Scan";
 	}
 
 	@Override

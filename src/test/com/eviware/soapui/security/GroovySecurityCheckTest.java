@@ -41,7 +41,7 @@ public class GroovySecurityCheckTest extends AbstractSecurityTestCaseWithMockSer
 	protected void addSecurityCheckConfig( SecurityCheckConfig securityCheckConfig )
 	{
 		GroovySecurityCheck gsc = new GroovySecurityCheck( testStep, securityCheckConfig, null, null );
-		gsc.setExecuteScript( "println('');println \"this is print from GroovySecurityCheck on test step '${testStep.name}'\";println('')" );
+		gsc.setExecuteScript( "println('');println \"this is print from GroovySecurityScan on test step '${testStep.name}'\";println('')" );
 	}
 
 	@Test
@@ -52,7 +52,7 @@ public class GroovySecurityCheckTest extends AbstractSecurityTestCaseWithMockSer
 		//
 		// testRunner.start( false );
 		//
-		// assertTrue( "Groovy Security Check Failed due to wrong Log message",
+		// assertTrue( "Groovy Security Scan Failed due to wrong Log message",
 		// testRunner.getSecurityTest()
 		// .getSecurityTestLog().getElementAt( 0 ).getMessage().startsWith(
 		// "SecurityTest ended" ) );
@@ -67,7 +67,7 @@ public class GroovySecurityCheckTest extends AbstractSecurityTestCaseWithMockSer
 		//
 		// testRunner.start( false );
 		//
-		// assertTrue( "Test Step failed so as GroovySecurityCheck",
+		// assertTrue( "Test Step failed so as GroovySecurityScan",
 		// !testRunner.getStatus().equals(
 		// TestRunner.Status.FINISHED ) );
 

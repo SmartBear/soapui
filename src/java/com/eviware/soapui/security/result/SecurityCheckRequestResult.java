@@ -32,7 +32,7 @@ import com.eviware.soapui.support.action.swing.DefaultActionList;
 public class SecurityCheckRequestResult implements SecurityResult
 {
 	private static final String[] EMPTY_MESSAGES = new String[0];
-	public final static String TYPE = "SecurityCheckRequestResult";
+	public final static String TYPE = "SecurityScanRequestResult";
 	private ResultStatus status = ResultStatus.UNKNOWN;
 	private SecurityCheck securityCheck;
 	private List<String> messages = new ArrayList<String>();
@@ -80,7 +80,7 @@ public class SecurityCheckRequestResult implements SecurityResult
 		if( !addedAction )
 		{
 			actionList
-					.addAction( new ShowMessageExchangeAction( this.getMessageExchange(), "SecurityCheckRequest" ), true );
+					.addAction( new ShowMessageExchangeAction( this.getMessageExchange(), "SecurityScanRequest" ), true );
 			addedAction = true;
 		}
 		return actionList;

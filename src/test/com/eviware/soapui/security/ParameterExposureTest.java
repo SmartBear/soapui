@@ -77,7 +77,7 @@ public class ParameterExposureTest extends AbstractSecurityTestCaseWithMockServi
 			// testRunner.getSecurityTest().getSecurityTestLog().getElementAt( 1
 			// ).getMessage();
 			// assertTrue(
-			// "Security Check Failed because there is more than one expected warning in the log!",
+			// "Security Scan Failed because there is more than one expected warning in the log!",
 			// message
 			// .startsWith( "SecurityTest ended" ) );
 		}
@@ -95,7 +95,7 @@ public class ParameterExposureTest extends AbstractSecurityTestCaseWithMockServi
 
 		testRunner.start( false );
 
-		// assertTrue( "Test Step failed so as SecurityCheck",
+		// assertTrue( "Test Step failed so as SecurityScan",
 		// !testRunner.getStatus().equals( SecurityTestRunner.Status.FINISHED ) );
 		assertTrue( true );
 	}

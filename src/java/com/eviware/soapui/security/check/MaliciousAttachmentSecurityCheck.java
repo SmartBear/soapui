@@ -100,8 +100,8 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 		}
 		catch( Exception e )
 		{
-			SoapUI.logError( e, "[MaliciousAttachmentSecurityCheck]Property value is not valid xml!" );
-			reportSecurityCheckException( "Propety value is not XML or XPath is wrong!" );
+			SoapUI.logError( e, "[MaliciousAttachmentSecurityScan]Property value is not valid xml!" );
+			reportSecurityCheckException( "Property value is not XML or XPath is wrong!" );
 		}
 	}
 
@@ -140,13 +140,13 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 	@Override
 	public String getConfigDescription()
 	{
-		return "Configures malicious attachment security check";
+		return "Configures malicious attachment security scan";
 	}
 
 	@Override
 	public String getConfigName()
 	{
-		return "Malicious Attachment Security Check";
+		return "Malicious Attachment Security Scan";
 	}
 
 	@Override

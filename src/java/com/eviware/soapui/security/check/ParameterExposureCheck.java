@@ -62,7 +62,7 @@ import com.eviware.x.impl.swing.JStringListFormField;
 
 public class ParameterExposureCheck extends AbstractSecurityCheckWithProperties
 {
-	public static final String TYPE = "CrossSiteScriptingScan";
+	public static final String TYPE = "ParameterExposureCheck";
 	public static final String NAME = "Cross Site Scripting";
 	public static final String PARAMETER_EXPOSURE_CHECK_CONFIG = "CrossSiteScriptingScanConfig";
 	private ParameterExposureCheckConfig parameterExposureCheckConfig;
@@ -313,13 +313,13 @@ public class ParameterExposureCheck extends AbstractSecurityCheckWithProperties
 	@Override
 	public String getConfigDescription()
 	{
-		return "Configures parameter exposure security check";
+		return "Configures parameter exposure security scan";
 	}
 
 	@Override
 	public String getConfigName()
 	{
-		return "Parameter Exposure Security Check";
+		return "Cross Site Scripting Scan";
 	}
 
 	@Override

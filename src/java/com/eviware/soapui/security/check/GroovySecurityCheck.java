@@ -46,7 +46,7 @@ public class GroovySecurityCheck extends AbstractSecurityCheck
 	private Object scriptResult;
 	// private TestProperty response;
 
-	private static final String checkTitle = "Configure GroovyScript Check";
+	private static final String checkTitle = "Configure GroovyScript Scan";
 
 	public GroovySecurityCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent, String icon )
 	{
@@ -145,7 +145,7 @@ public class GroovySecurityCheck extends AbstractSecurityCheck
 		return TYPE;
 	}
 
-	@AForm( description = "Configure Groovy Types Check", name = "Invalid Groovy Security Check", helpUrl = HelpUrls.MOCKASWAR_HELP_URL )
+	@AForm( description = "Configure Groovy Types Scan", name = "Invalid Groovy Security Scan", helpUrl = HelpUrls.MOCKASWAR_HELP_URL )
 	protected interface GroovySecurityConfigDialog
 	{
 
@@ -178,13 +178,13 @@ public class GroovySecurityCheck extends AbstractSecurityCheck
 	@Override
 	public String getConfigDescription()
 	{
-		return "Configuration for Groovy Security Check";
+		return "Configuration for Groovy Security Scan";
 	}
 
 	@Override
 	public String getConfigName()
 	{
-		return "Configuration for Groovy Security Check";
+		return "Configuration for Groovy Security Scan";
 	}
 
 	@Override

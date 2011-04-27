@@ -27,7 +27,7 @@ public class XPathInjectionSecurityCheckFactory extends AbstractSecurityCheckFac
 	public XPathInjectionSecurityCheckFactory()
 	{
 		super( XPathInjectionSecurityCheck.TYPE, XPathInjectionSecurityCheck.NAME,
-				"Preforms a check for XPath Injection Vulerabilities", null );
+				"Preforms a scan for XPath Injection Vulerabilities", null );
 	}
 
 	@Override

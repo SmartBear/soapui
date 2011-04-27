@@ -483,7 +483,7 @@ public class JSecurityTestRunLog extends JPanel
 					hyperlinkLabel.setBorder( BorderFactory.createEmptyBorder( 0, 16, 3, 3 ) );
 					hyperlinkLabel.setUnderlineColor( Color.WHITE );
 					hyperlinkLabel.setIcon( null );
-					// if( getText().startsWith( "SecurityCheck" ) &&
+					// if( getText().startsWith( "SecurityScan" ) &&
 					// !getText().startsWith( " ->" ) )
 					// if( result.getStatus() != SecurityStatus.INITIALIZED )
 					// {

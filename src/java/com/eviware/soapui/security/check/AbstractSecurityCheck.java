@@ -250,7 +250,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 			}
 			catch( InterruptedException e )
 			{
-				SoapUI.logError( e, "Security Check Request Delay Interrupted!" );
+				SoapUI.logError( e, "Security Scan Request Delay Interrupted!" );
 			}
 		}
 
@@ -385,7 +385,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 			setupScriptEngine.setScript( script );
 		}
 
-		setupScriptEngine.setVariable( "securityCheck", this );
+		setupScriptEngine.setVariable( "securityScan", this );
 		setupScriptEngine.setVariable( "context", context );
 		setupScriptEngine.setVariable( "securityRunner", runner );
 		setupScriptEngine.setVariable( "log", SoapUI.ensureGroovyLog() );

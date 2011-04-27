@@ -124,13 +124,13 @@ public class SQLInjectionCheck extends AbstractSecurityCheckWithProperties
 		}
 		catch( XmlException e )
 		{
-			SoapUI.logError( e, "[SqlInjectionSecurityCheck]XPath seems to be invalid!" );
-			reportSecurityCheckException( "Propety value is not XML or XPath is wrong!" );
+			SoapUI.logError( e, "[SqlInjectionSecurityScan]XPath seems to be invalid!" );
+			reportSecurityCheckException( "Property value is not XML or XPath is wrong!" );
 		}
 		catch( Exception e )
 		{
-			SoapUI.logError( e, "[SqlInjectionSecurityCheck]Property value is not valid xml!" );
-			reportSecurityCheckException( "Propety value is not XML or XPath is wrong!" );
+			SoapUI.logError( e, "[SqlInjectionSecurityScan]Property value is not valid xml!" );
+			reportSecurityCheckException( "Property value is not XML or XPath is wrong!" );
 		}
 	}
 
@@ -320,13 +320,13 @@ public class SQLInjectionCheck extends AbstractSecurityCheckWithProperties
 	@Override
 	public String getConfigDescription()
 	{
-		return "Configures SQL injection security check";
+		return "Configures SQL injection security scan";
 	}
 
 	@Override
 	public String getConfigName()
 	{
-		return "SQL Injection Security Check";
+		return "SQL Injection Security Scan";
 	}
 
 	@Override

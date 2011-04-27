@@ -32,7 +32,7 @@ public class SQLInjectionCheckFactory extends AbstractSecurityCheckFactory
 
 	public SQLInjectionCheckFactory()
 	{
-		super( SQLInjectionCheck.TYPE, SQLInjectionCheck.NAME, "Preforms a check for SQL Injection Vulerabilities",
+		super( SQLInjectionCheck.TYPE, SQLInjectionCheck.NAME, "Preforms a scan for SQL Injection Vulnerabilities",
 				"/sql_injection_check_script.gif" );
 	}
 

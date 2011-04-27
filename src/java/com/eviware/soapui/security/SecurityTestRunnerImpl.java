@@ -188,7 +188,7 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 						if( getTestRunnable().getFailOnError() )
 						{
 							// setError( stepResult.getError() );
-							fail( "Cancelling due to failed security check" );
+							fail( "Cancelling due to failed security scan" );
 						}
 						else
 						{
@@ -238,7 +238,7 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 		result = securityCheck.run( cloneForSecurityCheck( ( WsdlTestStep )currentStep ), runContext, this );
 		if( securityTest.getFailOnError() && result.getStatus() == ResultStatus.FAILED )
 		{
-			fail( "Cancelling due to failed security check" );
+			fail( "Cancelling due to failed security scan" );
 		}
 		for( int j = 0; j < securityTestStepListeners.length; j++ )
 		{
@@ -352,7 +352,7 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 		if( runContext.getProperty( SecurityTestRunner.Status.class.getName() ) == SecurityTestRunner.Status.FAILED
 				&& getTestRunnable().getFailSecurityTestOnCheckErrors() )
 		{
-			fail( "Failing due to failed security check" );
+			fail( "Failing due to failed security scan" );
 		}
 	}
 

@@ -53,7 +53,7 @@ public class CloneParametersAction extends AbstractAction
 
 	public CloneParametersAction()
 	{
-		super( "Clone SecurityCheck Parameters" );
+		super( "Clone SecurityScan Parameters" );
 		putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/clone_parameters.gif" ) );
 		putValue( Action.SHORT_DESCRIPTION, "Clones parameter" );
 		setEnabled( false );
@@ -61,7 +61,7 @@ public class CloneParametersAction extends AbstractAction
 
 	public CloneParametersAction( AbstractSecurityCheckWithProperties securityCheck )
 	{
-		super( "Clone SecurityCheck Parameters" );
+		super( "Clone SecurityScan Parameters" );
 		putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/clone_parameters.gif" ) );
 		putValue( Action.SHORT_DESCRIPTION, "Clones parameter" );
 		this.securityCheck = securityCheck;
@@ -102,7 +102,7 @@ public class CloneParametersAction extends AbstractAction
 			{
 				( ( SwingXFormDialog )dialog ).setReturnValue( XFormDialog.OK_OPTION );
 				List<ModelItem> items = performClone( true );
-				UISupport.showInfoMessage( "Updated " + items.size() + " checks" );
+				UISupport.showInfoMessage( "Updated " + items.size() + " scans" );
 				dialog.setVisible( false );
 			}
 		}
@@ -141,7 +141,7 @@ public class CloneParametersAction extends AbstractAction
 		{
 			if( showErrorMessage )
 			{
-				UISupport.showErrorMessage( "No SecurityChecks selected.." );
+				UISupport.showErrorMessage( "No SecurityScans selected.." );
 			}
 			return items;
 		}
@@ -238,7 +238,7 @@ public class CloneParametersAction extends AbstractAction
 			if( dialog != null )
 			{
 				List<ModelItem> items = performClone( true );
-				UISupport.showInfoMessage( "Updated " + items.size() + " checks" );
+				UISupport.showInfoMessage( "Updated " + items.size() + " scans" );
 
 				if( items.size() > 0 )
 				{
@@ -437,14 +437,14 @@ public class CloneParametersAction extends AbstractAction
 	}
 
 	// TODO: link with security checks documentation url
-	@AForm( description = "Specify target TestSuite/TestCase/Security Test(s)/Security Check(s) and select Parameters to clone", name = "Clone Parameters", icon = UISupport.TOOL_ICON_PATH )
+	@AForm( description = "Specify target TestSuite/TestCase/Security Test(s)/Security Scan(s) and select Parameters to clone", name = "Clone Parameters", icon = UISupport.TOOL_ICON_PATH )
 	private interface CloneParameterDialog
 	{
 		@AField( name = "Parameters", description = "The Parameters to clone", type = AFieldType.MULTILIST )
 		public final static String PARAMETERS = "Parameters";
 
-		@AField( name = "SecurityChecks", description = "The SecurityChecks to clone to", type = AFieldType.MULTILIST )
-		public final static String TARGET_SECURITYCHECK = "SecurityChecks";
+		@AField( name = "SecurityScans", description = "The SecurityScans to clone to", type = AFieldType.MULTILIST )
+		public final static String TARGET_SECURITYCHECK = "SecurityScans";
 
 		@AField( name = "Target TestStep", description = "The target TestStep for the cloned Parameter(s)", type = AFieldType.ENUMERATION )
 		public final static String TARGET_TESTSTEP = "Target TestStep";

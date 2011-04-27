@@ -34,7 +34,7 @@ import com.eviware.soapui.support.action.swing.DefaultActionList;
 
 public class SecurityCheckResult implements SecurityResult
 {
-	public final static String TYPE = "SecurityCheckResult";
+	public final static String TYPE = "SecurityScanResult";
 	/**
 	 * status is set to SecurityStatus.INITIALIZED but goes to
 	 * SecurityStatus.UNKNOWN first time any checkRequestResult is added.
@@ -102,8 +102,8 @@ public class SecurityCheckResult implements SecurityResult
 
 				public void actionPerformed( ActionEvent e )
 				{
-					UISupport.showInfoMessage( "Check [" + getSecurityCheck().getName() + "] ran with status ["
-							+ getStatus() + "]", "SecurityCheck Result" );
+					UISupport.showInfoMessage( "Scan [" + getSecurityCheck().getName() + "] ran with status ["
+							+ getStatus() + "]", "SecurityScan Result" );
 				}
 			} );
 		}
@@ -206,7 +206,7 @@ public class SecurityCheckResult implements SecurityResult
 	 */
 	public String getSecurityTestLog()
 	{
-		StringBuffer tl = new StringBuffer().append( "\nSecurityCheck " ).append( " [" ).append(
+		StringBuffer tl = new StringBuffer().append( "\nSecurityScan " ).append( " [" ).append(
 				securityCheck.getTestStep().getName() ).append( "] " ).append( status.toString() ).append( ": took " )
 				.append( timeTaken ).append( " ms" );
 		tl.append( testLog );

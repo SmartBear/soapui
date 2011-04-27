@@ -382,13 +382,13 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheckWithProperties
 	@Override
 	public String getConfigDescription()
 	{
-		return "Configures Xml bomb security check";
+		return "Configures Xml bomb security scan";
 	}
 
 	@Override
 	public String getConfigName()
 	{
-		return "XML Bomb Security Check";
+		return "XML Bomb Security Scan";
 	}
 
 	@Override

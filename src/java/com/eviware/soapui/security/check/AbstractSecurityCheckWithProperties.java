@@ -66,7 +66,7 @@ public abstract class AbstractSecurityCheckWithProperties extends AbstractSecuri
 			if( t instanceof WsdlTestRequestStep )
 			{
 				if( param != null )
-					result.add( new XPathReferenceImpl( "SecurityCheck Parameter " + param.getLabel() + " in \""
+					result.add( new XPathReferenceImpl( "SecurityScan Parameter " + param.getLabel() + " in \""
 							+ getTestStep().getName() + "\"", ( ( WsdlTestRequestStep )t ).getOperation(), true, param,
 							"xpath" ) );
 			}

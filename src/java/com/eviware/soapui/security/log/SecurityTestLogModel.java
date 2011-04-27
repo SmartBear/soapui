@@ -152,7 +152,7 @@ public class SecurityTestLogModel extends AbstractListModel
 		SecurityCheckResult securityCheckResult = securityCheck.getSecurityCheckResult();
 		SoftReference<SecurityResult> checkResultRef = new SoftReference<SecurityResult>( securityCheckResult );
 
-		items.add( "SecurityCheck " + checkCount + " [" + securityCheck.getName() + "] " );
+		items.add( "SecurityScan " + checkCount + " [" + securityCheck.getName() + "] " );
 		results.add( checkResultRef );
 
 		fireIntervalAdded( this, size, items.size() - 1 );
@@ -181,7 +181,7 @@ public class SecurityTestLogModel extends AbstractListModel
 		{
 			SecurityCheck securityCheck = securityCheckResult.getSecurityCheck();
 			securityCheckResult.detectMissingItems();
-			items.set( startCheckIndex, "SecurityCheck " + checkCount + " [" + securityCheck.getName() + "] "
+			items.set( startCheckIndex, "SecurityScan " + checkCount + " [" + securityCheck.getName() + "] "
 					+ securityCheckResult.getExecutionProgressStatus() + ", time taken = "
 					+ securityCheckResult.getTimeTaken() );
 			SoftReference<SecurityResult> checkResultRef = new SoftReference<SecurityResult>( securityCheckResult );

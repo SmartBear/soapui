@@ -121,8 +121,8 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 				{
 					String labelText = securityTest.getSecurityChecksMap().get( testStep.getId() ).size() == 1 ? securityTest
 							.getSecurityChecksMap().get( testStep.getId() ).size()
-							+ " check)"
-							: securityTest.getSecurityChecksMap().get( testStep.getId() ).size() + " checks)";
+							+ " scan)"
+							: securityTest.getSecurityChecksMap().get( testStep.getId() ).size() + " scans)";
 					label = new JLabel( testStep.getLabel() + " (" + labelText, SwingConstants.LEFT );
 				}
 				else
@@ -274,13 +274,13 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 				{
 					String labelText = securityTest.getSecurityChecksMap().get( testStep.getId() ).size() == 1 ? securityTest
 							.getSecurityChecksMap().get( testStep.getId() ).size()
-							+ " check)"
-							: securityTest.getSecurityChecksMap().get( testStep.getId() ).size() + " checks)";
+							+ " scan)"
+							: securityTest.getSecurityChecksMap().get( testStep.getId() ).size() + " scans)";
 					label.setText( testStep.getLabel() + " (" + labelText );
 				}
 				else
 				{
-					label.setText( testStep.getLabel() + " (0 checks)" );
+					label.setText( testStep.getLabel() + " (0 scans)" );
 				}
 			}
 		}

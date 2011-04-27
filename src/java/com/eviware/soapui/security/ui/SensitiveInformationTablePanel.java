@@ -191,7 +191,7 @@ public class SensitiveInformationTablePanel extends JPanel
 	// {
 	// putValue( Action.SMALL_ICON, UISupport.createImageIcon(
 	// "/add_property.gif" ) );
-	// putValue( Action.SHORT_DESCRIPTION, "Adds a parameter to security check"
+	// putValue( Action.SHORT_DESCRIPTION, "Adds a parameter to security scan"
 	// );
 	// }
 	//
@@ -213,7 +213,7 @@ public class SensitiveInformationTablePanel extends JPanel
 	// putValue( Action.SMALL_ICON, UISupport.createImageIcon(
 	// "/remove_property.gif" ) );
 	// putValue( Action.SHORT_DESCRIPTION,
-	// "Removes parameter from security check" );
+	// "Removes parameter from security scan" );
 	// }
 	//
 	// @Override

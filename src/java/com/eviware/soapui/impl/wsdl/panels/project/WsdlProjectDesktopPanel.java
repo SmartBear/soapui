@@ -115,7 +115,7 @@ public class WsdlProjectDesktopPanel extends ModelItemDesktopPanel<WsdlProject>
 				"Shows and runs all TestSuites in project" );
 		mainTabs.addTab( "WS-Security Configurations", null, buildWSSTab(), "Manages Security-related configurations" );
 		mainTabs
-				.addTab( "Security Checks Defaults", null, buildSecConfigTab(), "Manages Security related configurations" );
+				.addTab( "Security Scan Defaults", null, buildSecConfigTab(), "Manages Security related configurations" );
 	}
 
 	private Component buildSecConfigTab()

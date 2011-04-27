@@ -103,13 +103,13 @@ public class MalformedXmlSecurityCheck extends AbstractSecurityCheckWithProperti
 		}
 		catch( XmlException e )
 		{
-			SoapUI.logError( e, "[MalformedXmlSecurityCheck]XPath seems to be invalid!" );
-			reportSecurityCheckException( "Propety value is not XML or XPath is wrong!" );
+			SoapUI.logError( e, "[MalformedXmlSecurityScan]XPath seems to be invalid!" );
+			reportSecurityCheckException( "Property value is not XML or XPath is wrong!" );
 		}
 		catch( Exception e )
 		{
-			SoapUI.logError( e, "[MalformedXmlSecurityCheck]Property value is not valid xml!" );
-			reportSecurityCheckException( "Propety value is not XML or XPath is wrong!" );
+			SoapUI.logError( e, "[MalformedXmlSecurityScan]Property value is not valid xml!" );
+			reportSecurityCheckException( "Property value is not XML or XPath is wrong!" );
 		}
 	}
 
@@ -469,13 +469,13 @@ public class MalformedXmlSecurityCheck extends AbstractSecurityCheckWithProperti
 	@Override
 	public String getConfigDescription()
 	{
-		return "Configures Malformed XML Security Check";
+		return "Configures Malformed XML Security Scan";
 	}
 
 	@Override
 	public String getConfigName()
 	{
-		return "Malformed XML Security Check";
+		return "Malformed XML Security Scan";
 	}
 
 	@Override

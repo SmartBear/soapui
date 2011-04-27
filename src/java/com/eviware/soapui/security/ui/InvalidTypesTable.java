@@ -39,7 +39,7 @@ import com.eviware.x.form.support.AForm;
 import com.eviware.x.impl.swing.JComboBoxFormField;
 
 /**
- * Table for handling schema types for InvalidTypes Security Check
+ * Table for handling schema types for InvalidTypes Security Scan
  * 
  * @author robert
  * 
@@ -115,7 +115,7 @@ public class InvalidTypesTable extends JPanel
 		public RemoveTypeAction()
 		{
 			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/remove_property.gif" ) );
-			putValue( Action.SHORT_DESCRIPTION, "Removes type from security check" );
+			putValue( Action.SHORT_DESCRIPTION, "Removes type from security scan" );
 		}
 
 		@Override
@@ -132,7 +132,7 @@ public class InvalidTypesTable extends JPanel
 		public AddNewTypeAction()
 		{
 			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/add_property.gif" ) );
-			putValue( Action.SHORT_DESCRIPTION, "Adds new type to use in security check" );
+			putValue( Action.SHORT_DESCRIPTION, "Adds new type to use in security scan" );
 		}
 
 		@Override

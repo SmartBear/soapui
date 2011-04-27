@@ -240,7 +240,7 @@ public class SecurityConfigurationDialogBuilder
 	 * @author robert
 	 * 
 	 */
-	@AForm( description = "Configure Security Check", name = "Configure Security Check", helpUrl = HelpUrls.MOCKASWAR_HELP_URL )
+	@AForm( description = "Configure Security Scan", name = "Configure Security Scan", helpUrl = HelpUrls.MOCKASWAR_HELP_URL )
 	protected interface DefaultDialog
 	{
 
@@ -249,11 +249,11 @@ public class SecurityConfigurationDialogBuilder
 
 	}
 
-	@AForm( description = "Configure Security Check", name = "Configure Security Check", helpUrl = HelpUrls.MOCKASWAR_HELP_URL )
+	@AForm( description = "Configure Security Scan", name = "Configure Security Scan", helpUrl = HelpUrls.MOCKASWAR_HELP_URL )
 	protected interface DialogWithParameters
 	{
 
-		@AField( description = "Parameters to Check", name = PARAMETERS_NAME, type = AFieldType.COMPONENT )
+		@AField( description = "Parameters to Scan", name = PARAMETERS_NAME, type = AFieldType.COMPONENT )
 		public final static String PARAMETERS = PARAMETERS_NAME;
 
 		@AField( description = "Tabs", name = TABS_NAME, type = AFieldType.COMPONENT )
@@ -261,7 +261,7 @@ public class SecurityConfigurationDialogBuilder
 
 	}
 
-	@AForm( description = "Configure Security Check", name = "Configure Security Check", helpUrl = HelpUrls.MOCKASWAR_HELP_URL )
+	@AForm( description = "Configure Security Scan", name = "Configure Security Scan", helpUrl = HelpUrls.MOCKASWAR_HELP_URL )
 	protected interface OptionalDialog
 	{
 
@@ -273,11 +273,11 @@ public class SecurityConfigurationDialogBuilder
 
 	}
 
-	@AForm( description = "Configure Security Check", name = "Configure Security Check", helpUrl = HelpUrls.MOCKASWAR_HELP_URL )
+	@AForm( description = "Configure Security Scan", name = "Configure Security Scan", helpUrl = HelpUrls.MOCKASWAR_HELP_URL )
 	protected interface OptionalDialogWithParameters
 	{
 
-		@AField( description = "Parameters to Check", name = PARAMETERS_NAME, type = AFieldType.COMPONENT )
+		@AField( description = "Parameters to Scan", name = PARAMETERS_NAME, type = AFieldType.COMPONENT )
 		public final static String PARAMETERS = PARAMETERS_NAME;
 
 		@AField( description = "Optinal", name = OPTIONAL_NAME, type = AFieldType.COMPONENT )
@@ -291,7 +291,7 @@ public class SecurityConfigurationDialogBuilder
 	/*
 	 * Other parts of configuration panel
 	 */
-	@AForm( description = "Security Check Tabs", name = "" )
+	@AForm( description = "Security Scan Tabs", name = "" )
 	private interface TabsForm
 	{
 		@APage( name = "Assertions" )
@@ -393,18 +393,18 @@ public class SecurityConfigurationDialogBuilder
 	//
 	// public SetupScriptGroovyEditorModel( ModelItem modelItem )
 	// {
-	// super( new String[] { "log", "context", "securityCheck" }, modelItem,
+	// super( new String[] { "log", "context", "securityScan" }, modelItem,
 	// "Setup" );
 	// }
 	//
 	// public String getScript()
 	// {
-	// return ( ( SecurityCheck )getModelItem() ).getSetupScript();
+	// return ( ( SecurityScan )getModelItem() ).getSetupScript();
 	// }
 	//
 	// public void setScript( String text )
 	// {
-	// ( ( SecurityCheck )getModelItem() ).setSetupScript( text );
+	// ( ( SecurityScan )getModelItem() ).setSetupScript( text );
 	// }
 	// }
 	//
@@ -441,7 +441,7 @@ public class SecurityConfigurationDialogBuilder
 	//
 	// public TearDownScriptGroovyEditorModel( ModelItem modelItem )
 	// {
-	// super( new String[] { "log", "context", "securityCheck" }, modelItem,
+	// super( new String[] { "log", "context", "securityScan" }, modelItem,
 	// "TearDown" );
 	// }
 	//

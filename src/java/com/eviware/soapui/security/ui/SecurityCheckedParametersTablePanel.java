@@ -207,7 +207,7 @@ public class SecurityCheckedParametersTablePanel extends JPanel implements ListS
 		public AddNewParameterAction()
 		{
 			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/add_property.gif" ) );
-			putValue( Action.SHORT_DESCRIPTION, "Adds a parameter to security check" );
+			putValue( Action.SHORT_DESCRIPTION, "Adds a parameter to security scan" );
 		}
 
 		@Override
@@ -226,7 +226,7 @@ public class SecurityCheckedParametersTablePanel extends JPanel implements ListS
 		public RemoveParameterAction()
 		{
 			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/remove_property.gif" ) );
-			putValue( Action.SHORT_DESCRIPTION, "Removes parameter from security check" );
+			putValue( Action.SHORT_DESCRIPTION, "Removes parameter from security scan" );
 		}
 
 		@Override

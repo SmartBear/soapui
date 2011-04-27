@@ -156,7 +156,7 @@ public class SecurityTestStepResult implements SecurityResult
 		}
 
 		// TODO check and finish this - seems it's used for reports
-		// this.testLog.append( "SecurityCheck " ).append(
+		// this.testLog.append( "SecurityScan " ).append(
 		// securityCheckResultList.indexOf( securityCheckResult ) ).append(
 		// securityCheckResult.getStatus().toString() ).append( ": took " )
 		// .append( securityCheckResult.getTimeTaken() ).append( " ms" );

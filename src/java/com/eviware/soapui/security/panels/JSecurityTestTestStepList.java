@@ -262,9 +262,9 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 	{
 		public AddSecurityCheckAction()
 		{
-			super( "Add SecurityCheck" );
+			super( "Add SecurityScan" );
 
-			putValue( Action.SHORT_DESCRIPTION, "Adds a security check to this item" );
+			putValue( Action.SHORT_DESCRIPTION, "Adds a security scan to this item" );
 			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/addSecurityCheck.gif" ) );
 			setEnabled( false );
 		}
@@ -285,11 +285,11 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 
 			if( availableChecksNames == null || availableChecksNames.length == 0 )
 			{
-				UISupport.showErrorMessage( "No security checks available for this test step" );
+				UISupport.showErrorMessage( "No security scans available for this test step" );
 				return;
 			}
 
-			String name = UISupport.prompt( "Specify type of security check", "Add SecurityCheck", availableChecksNames );
+			String name = UISupport.prompt( "Specify type of security scan", "Add SecurityScan", availableChecksNames );
 			if( name == null || name.trim().length() == 0 )
 				return;
 
@@ -301,7 +301,7 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 
 			if( securityCheck == null )
 			{
-				UISupport.showErrorMessage( "Failed to add security check" );
+				UISupport.showErrorMessage( "Failed to add security scan" );
 				return;
 			}
 
@@ -326,7 +326,7 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 		ConfigureSecurityCheckAction()
 		{
 			super( "Configure" );
-			putValue( Action.SHORT_DESCRIPTION, "Configures selected security check" );
+			putValue( Action.SHORT_DESCRIPTION, "Configures selected security scan" );
 			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/options.gif" ) );
 			setEnabled( false );
 		}
@@ -357,8 +357,8 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 	{
 		public RemoveSecurityCheckAction()
 		{
-			super( "Remove SecurityCheck" );
-			putValue( Action.SHORT_DESCRIPTION, "Removes the selected security check" );
+			super( "Remove SecurityScan" );
+			putValue( Action.SHORT_DESCRIPTION, "Removes the selected security scan" );
 			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/remove_securityCheck.gif" ) );
 			setEnabled( false );
 		}
@@ -369,7 +369,7 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 			SecurityCheck securityCheck = node.getSecurityCheck();
 
 			TestStep testStep = ( ( TestStepNode )node.getParent() ).getTestStep();
-			if( UISupport.confirm( "Remove security check [" + securityCheck.getName() + "]", "Remove SecurityCheck" ) )
+			if( UISupport.confirm( "Remove security scan [" + securityCheck.getName() + "]", "Remove SecurityScan" ) )
 			{
 
 				securityTest.removeSecurityCheck( testStep, ( SecurityCheck )securityCheck );
