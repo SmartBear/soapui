@@ -26,11 +26,9 @@ import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
-import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellEditor;
 import javax.swing.text.Document;
 
@@ -56,6 +54,7 @@ import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.support.AForm;
 import com.eviware.x.impl.swing.AbstractSwingXFormField;
 import com.eviware.x.impl.swing.JFormDialog;
+import com.eviware.x.impl.swing.JTextFieldFormField;
 import com.jgoodies.forms.builder.ButtonBarBuilder;
 import com.l2fprod.common.swing.JDirectoryChooser;
 
@@ -124,11 +123,10 @@ public class MaliciousAttachmentMutationsPanel
 		}
 		else
 		{
-			// generate
 			toolbar.add( UISupport.createToolbarButton( new GenerateFileAction() ) );
 		}
 
-		toolbar.add( UISupport.createToolbarButton( new RemoveFileAction() ) );
+		toolbar.add( UISupport.createToolbarButton( new RemoveFileAction( tableModel, table ) ) );
 		toolbar.add( UISupport.createToolbarButton( new HelpAction( "www.soapui.org" ) ) );
 
 		panel.add( toolbar, BorderLayout.PAGE_START );
@@ -146,53 +144,7 @@ public class MaliciousAttachmentMutationsPanel
 		table.getTableHeader().setReorderingAllowed( false );
 		table.setDefaultEditor( String.class, getDefaultCellEditor() );
 		table.setSortable( false );
-
-		InternalCellRenderer internalCellRenderer = new InternalCellRenderer();
-
-		for( int c = 0; c < table.getColumnCount(); c++ )
-		{
-			table.getColumn( c ).setCellRenderer( internalCellRenderer );
-
-			if( c == table.getColumnCount() - 1 )
-			{
-				table.getColumn( c ).setPreferredWidth( 30 );
-			}
-		}
 	}
-
-	// private void initColumnSizes(JXTable table, Malic) {
-	// TableColumn column = null;
-	// Component comp = null;
-	// int headerWidth = 0;
-	// int cellWidth = 0;
-	// Object[] longValues = model.longValues;
-	// TableCellRenderer headerRenderer =
-	// table.getTableHeader().getDefaultRenderer();
-	//
-	// for (int i = 0; i < 5; i++) {
-	// column = table.getColumnModel().getColumn(i);
-	//
-	// comp = headerRenderer.getTableCellRendererComponent(
-	// null, column.getHeaderValue(),
-	// false, false, 0, 0);
-	// headerWidth = comp.getPreferredSize().width;
-	//
-	// comp = table.getDefaultRenderer(model.getColumnClass(i)).
-	// getTableCellRendererComponent(
-	// table, longValues[i],
-	// false, false, 0, i);
-	// cellWidth = comp.getPreferredSize().width;
-	//
-	// if (DEBUG) {
-	// System.out.println("Initializing width of column "
-	// + i + ". "
-	// + "headerWidth = " + headerWidth
-	// + "; cellWidth = " + cellWidth);
-	// }
-	//
-	// column.setPreferredWidth(Math.max(headerWidth, cellWidth));
-	// }
-	// }
 
 	private Object createMutationsPanel()
 	{
@@ -361,49 +313,115 @@ public class MaliciousAttachmentMutationsPanel
 		}
 	}
 
+	class FileElementHolder
+	{
+		List<FileElement> list;
+
+		protected void addElement( File file, String contentType, Boolean enabled )
+		{
+			if( list == null )
+			{
+				list = new ArrayList<FileElement>();
+			}
+
+			list.add( new FileElement( file, contentType, enabled ) );
+		}
+
+		protected void removeElement( int i )
+		{
+			if( list != null )
+			{
+				list.remove( i );
+			}
+		}
+
+		protected int size()
+		{
+			if( list != null )
+			{
+				return list.size();
+			}
+			else
+			{
+				return 0;
+			}
+		}
+
+		protected List<FileElement> getList()
+		{
+			return list;
+		}
+	}
+
 	class FileElement
 	{
 		File file;
+		String contentType;
 		Boolean enabled;
 
-		FileElement( File file, Boolean enabled )
+		FileElement( File file, String contentType, Boolean enabled )
 		{
 			this.file = file;
+			this.contentType = contentType;
 			this.enabled = enabled;
+		}
+
+		public void setFile( File file )
+		{
+			this.file = file;
+			this.contentType = new MimetypesFileTypeMap().getContentType( file );
+		}
+
+		public void setContentType( String contentType )
+		{
+			this.contentType = contentType;
+		}
+
+		public void setEnabled( Boolean enabled )
+		{
+			this.enabled = enabled;
+		}
+
+		public String getName()
+		{
+			return file.getAbsolutePath();
+		}
+
+		public long getLength()
+		{
+			return file.length();
+		}
+
+		public String getContentType()
+		{
+			return this.contentType;
+		}
+
+		public Boolean isEnabled()
+		{
+			return enabled;
 		}
 	}
 
 	private abstract class MutationTableModel extends AbstractTableModel
 	{
-		protected List<FileElement> files = new ArrayList<FileElement>();
+		protected FileElementHolder holder = new FileElementHolder();
 
-		public synchronized int getRowCount()
+		public int getRowCount()
 		{
-			return files.size();
+			return holder.size();
 		}
 
-		public void addResult( FileElement element )
+		public void addResult( File file, String contentType, Boolean enabled )
 		{
-			int rowCount;
-			synchronized( this )
-			{
-				rowCount = getRowCount();
-				files.add( element );
-			}
-
-			fireTableRowsInserted( rowCount, rowCount++ );
+			holder.addElement( file, contentType, enabled );
+			fireTableDataChanged();
 		}
 
-		public void removeResult( FileElement element )
+		public void removeResult( int i )
 		{
-			int rowCount;
-			synchronized( this )
-			{
-				rowCount = getRowCount();
-				files.remove( element );
-			}
-
-			fireTableRowsDeleted( rowCount, rowCount-- );
+			holder.removeElement( i );
+			fireTableDataChanged();
 		}
 
 		public abstract int getColumnCount();
@@ -411,15 +429,16 @@ public class MaliciousAttachmentMutationsPanel
 		public abstract String getColumnName( int column );
 
 		public abstract Object getValueAt( int rowIndex, int columnIndex );
-
-		public Class getColumnClass( int c )
-		{
-			return getValueAt( 0, c ).getClass();
-		}
 	}
 
 	private class GenerateMutationTableModel extends MutationTableModel
 	{
+
+		public Class<?> getColumnClass( int columnIndex )
+		{
+			return columnIndex == 2 ? Boolean.class : columnIndex == 1 ? String.class : String.class;
+		}
+
 		public boolean isCellEditable( int row, int col )
 		{
 			if( col > 0 )
@@ -452,33 +471,59 @@ public class MaliciousAttachmentMutationsPanel
 			return null;
 		}
 
-		public synchronized Object getValueAt( int rowIndex, int columnIndex )
+		public Object getValueAt( int rowIndex, int columnIndex )
 		{
-			FileElement element = files.get( rowIndex );
+			FileElement element = holder.getList().get( rowIndex );
 
 			if( element != null )
 			{
 				switch( columnIndex )
 				{
 				case 0 :
-					return element.file.length();
+					return element.getLength();
 				case 1 :
-					return new MimetypesFileTypeMap().getContentType( element.file );
+					return element.getContentType();
 				case 2 :
-					return element.enabled;
+					return element.isEnabled();
 				}
 			}
 
 			return null;
 		}
+
+		public void setValueAt( Object aValue, int row, int column )
+		{
+			if( holder.getList().isEmpty() )
+			{
+				return;
+			}
+			FileElement element = holder.getList().get( row );
+
+			switch( column )
+			{
+			case 0 :
+				element.setFile( ( File )aValue );
+				break;
+			case 1 :
+				element.setContentType( ( String )aValue );
+				break;
+			case 2 :
+				element.setEnabled( ( Boolean )aValue );
+				break;
+			}
+		}
 	}
 
 	private class ReplaceMutationTableModel extends MutationTableModel
 	{
+		public Class<?> getColumnClass( int columnIndex )
+		{
+			return columnIndex == 3 ? Boolean.class : columnIndex == 2 ? String.class : String.class;
+		}
 
 		public boolean isCellEditable( int row, int col )
 		{
-			if( col == 2 || col == 3 )
+			if( col > 1 )
 			{
 				return true;
 			}
@@ -510,42 +555,47 @@ public class MaliciousAttachmentMutationsPanel
 			return null;
 		}
 
-		public synchronized Object getValueAt( int rowIndex, int columnIndex )
+		public Object getValueAt( int rowIndex, int columnIndex )
 		{
-			FileElement element = files.get( rowIndex );
+			FileElement element = holder.getList().get( rowIndex );
 
 			if( element != null )
 			{
 				switch( columnIndex )
 				{
 				case 0 :
-					return "file";
+					return element.getName();
 				case 1 :
-					return element.file.length();
+					return element.getLength();
 				case 2 :
-					return new MimetypesFileTypeMap().getContentType( element.file );
+					return element.getContentType();
 				case 3 :
-					return element.enabled;
+					return element.isEnabled();
 				}
 			}
 
 			return null;
 		}
-	}
 
-	// private void updateValue( String value )
-	// {
-	// if( value != null && projectRoot != null && value.startsWith( projectRoot
-	// ) )
-	// {
-	// if( value.equals( projectRoot ) )
-	// value = "";
-	// else if( value.length() > projectRoot.length() + 1 )
-	// value = value.substring( projectRoot.length() + 1 );
-	// }
-	//
-	// textField.setText( value );
-	// }
+		public void setValueAt( Object aValue, int row, int column )
+		{
+			if( holder.getList().isEmpty() )
+			{
+				return;
+			}
+			FileElement element = holder.getList().get( row );
+
+			switch( column )
+			{
+			case 2 :
+				element.setContentType( ( String )aValue );
+				break;
+			case 3 :
+				element.setEnabled( ( Boolean )aValue );
+				break;
+			}
+		}
+	}
 
 	public class AddFileAction extends AbstractAction
 	{
@@ -571,7 +621,10 @@ public class MaliciousAttachmentMutationsPanel
 			int returnVal = fileChooser.showOpenDialog( UISupport.getMainFrame() );
 			if( returnVal == JFileChooser.APPROVE_OPTION )
 			{
-				// updateValue( fileChooser.getSelectedFile().getAbsolutePath() );
+				// TODO: actually replace file
+				replaceTableModel.addResult( fileChooser.getSelectedFile(),
+						new MimetypesFileTypeMap().getContentType( fileChooser.getSelectedFile() ), true );
+
 			}
 		}
 	}
@@ -591,33 +644,54 @@ public class MaliciousAttachmentMutationsPanel
 			if( dialog == null )
 			{
 				dialog = ADialogBuilder.buildDialog( GenerateFile.class );
+				( ( JTextFieldFormField )dialog.getFormField( GenerateFile.CONTENT_TYPE ) ).setWidth( 30 );
 			}
 
 			dialog.show();
 
 			if( dialog.getReturnValue() == XFormDialog.OK_OPTION )
 			{
-				Integer size = dialog.getIntValue( GenerateFile.SIZE, 0 );
+				int newSizeInt = 0;
+				String newSizeString = dialog.getValue( GenerateFile.SIZE );
 				String contentType = dialog.getFormField( GenerateFile.CONTENT_TYPE ).getValue();
 
-				generateTableModel.addResult( new FileElement( new File( "fake_file" ), true ) );
+				try
+				{
+					newSizeInt = Integer.parseInt( newSizeString );
+				}
+				catch( NumberFormatException nfe )
+				{
+					UISupport.showErrorMessage( "Size must be integer number" );
+					return;
+				}
+
+				// TODO: actually generate file
+				generateTableModel.addResult( new File( "file" ), contentType, true );
 			}
 		}
 	}
 
 	public class RemoveFileAction extends AbstractAction
 	{
-		public RemoveFileAction()
+		private MutationTableModel tableModel;
+		private JXTable table;
+
+		public RemoveFileAction( MutationTableModel tableModel, JXTable table )
 		{
 			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/remove_property.gif" ) );
 			putValue( Action.SHORT_DESCRIPTION, "Remove file" );
+
+			this.tableModel = tableModel;
+			this.table = table;
 		}
 
 		public void actionPerformed( ActionEvent e )
 		{
-
-			// sensitivInformationTableModel.removeRows(
-			// tokenTable.getSelectedRows() );
+			int row = table.getSelectedRow();
+			if( row >= 0 )
+			{
+				tableModel.removeResult( row );
+			}
 
 		}
 	}
@@ -822,16 +896,6 @@ public class MaliciousAttachmentMutationsPanel
 	protected TableCellEditor getDefaultCellEditor()
 	{
 		return new XPathCellRender();
-	}
-
-	private class InternalCellRenderer extends DefaultTableCellRenderer
-	{
-		public InternalCellRenderer()
-		{
-			super();
-
-			setHorizontalAlignment( SwingConstants.CENTER );
-		}
 	}
 
 }
