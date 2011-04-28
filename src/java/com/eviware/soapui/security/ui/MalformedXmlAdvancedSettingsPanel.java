@@ -11,10 +11,13 @@
  */
 package com.eviware.soapui.security.ui;
 
+import java.awt.Dimension;
+
 import javax.swing.JComponent;
 
 import com.eviware.soapui.config.MalformedXmlAttributeConfig;
 import com.eviware.soapui.config.MalformedXmlConfig;
+import com.eviware.soapui.security.ui.MaliciousAttachmentMutationsPanel.MutationSettings;
 import com.eviware.x.form.XFormField;
 import com.eviware.x.form.XFormFieldListener;
 import com.eviware.x.form.support.ADialogBuilder;
@@ -39,10 +42,10 @@ public class MalformedXmlAdvancedSettingsPanel
 		dialog = ( JFormDialog )ADialogBuilder.buildDialog( AdvancedSettings.class );
 
 		initDialog();
-		
-		( ( JTextFieldFormField )dialog.getFormField( AdvancedSettings.NEW_ELEMENT_VALUE ) ).setWidth( 21 );
-		( ( JTextFieldFormField )dialog.getFormField( AdvancedSettings.NEW_ATTRIBUTE_NAME ) ).setWidth( 21 );
-		( ( JTextFieldFormField )dialog.getFormField( AdvancedSettings.NEW_ATTRIBUTE_VALUE ) ).setWidth( 21 );
+
+		( ( JTextFieldFormField )dialog.getFormField( AdvancedSettings.NEW_ELEMENT_VALUE ) ).setWidth( 20 );
+		( ( JTextFieldFormField )dialog.getFormField( AdvancedSettings.NEW_ATTRIBUTE_NAME ) ).setWidth( 20 );
+		( ( JTextFieldFormField )dialog.getFormField( AdvancedSettings.NEW_ATTRIBUTE_VALUE ) ).setWidth( 20 );
 	}
 
 	private void initDialog()
