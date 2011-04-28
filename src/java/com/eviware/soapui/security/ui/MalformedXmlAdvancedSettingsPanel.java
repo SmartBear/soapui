@@ -38,9 +38,9 @@ public class MalformedXmlAdvancedSettingsPanel
 
 		dialog = ( JFormDialog )ADialogBuilder.buildDialog( AdvancedSettings.class );
 
-		( ( JTextFieldFormField )dialog.getFormField( AdvancedSettings.NEW_ELEMENT_VALUE ) ).setWidth( 30 );
-		( ( JTextFieldFormField )dialog.getFormField( AdvancedSettings.NEW_ATTRIBUTE_NAME ) ).setWidth( 30 );
-		( ( JTextFieldFormField )dialog.getFormField( AdvancedSettings.NEW_ATTRIBUTE_VALUE ) ).setWidth( 30 );
+		( ( JTextFieldFormField )dialog.getFormField( AdvancedSettings.NEW_ELEMENT_VALUE ) ).setWidth( 23 );
+		( ( JTextFieldFormField )dialog.getFormField( AdvancedSettings.NEW_ATTRIBUTE_NAME ) ).setWidth( 23 );
+		( ( JTextFieldFormField )dialog.getFormField( AdvancedSettings.NEW_ATTRIBUTE_VALUE ) ).setWidth( 23 );
 
 		initDialog();
 	}
