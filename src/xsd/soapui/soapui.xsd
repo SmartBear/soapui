@@ -2003,10 +2003,28 @@
 		<xsd:attribute name="xmlAttachmentPrefix" type="xsd:string"></xsd:attribute>
 	</xsd:complexType>
 
+	<xsd:complexType name="GenerateFileMaliciousAttachment">
+		<xsd:attribute name="size" type="xsd:string"></xsd:attribute>
+		<xsd:attribute name="contentType" type="xsd:int"></xsd:attribute>
+		<xsd:attribute name="enable" type="xsd:boolean"></xsd:attribute>
+	</xsd:complexType>
+
+	<xsd:complexType name="ReplaceFileMaliciousAttachment">
+		<xsd:attribute name="filename" type="xsd:string"></xsd:attribute>
+		<xsd:attribute name="size" type="xsd:string"></xsd:attribute>
+		<xsd:attribute name="contentType" type="xsd:int"></xsd:attribute>
+		<xsd:attribute name="enable" type="xsd:boolean"></xsd:attribute>
+	</xsd:complexType>
+
 	<xsd:complexType name="MaliciousAttachmentSecurityCheck">
 		<xsd:sequence>
-			<xsd:element name="requestTimeout" type="xsd:int"></xsd:element>
+			<xsd:element name="generateFileList" type="tns:GenerateFileMaliciousAttachment"
+				minOccurs="0" maxOccurs="unbounded"></xsd:element>
+			<xsd:element name="replaceFileList" type="tns:ReplaceFileMaliciousAttachment"
+				minOccurs="0" maxOccurs="unbounded"></xsd:element>
+			<xsd:element name="remove" type="xsd:boolean"></xsd:element>
 		</xsd:sequence>
+		<xsd:attribute name="requestTimeout" type="xsd:int"></xsd:attribute>
 	</xsd:complexType>
 
 	<xsd:complexType name="CheckedParameter">
@@ -2080,8 +2098,7 @@
 			<xsd:element name="newElementValue" type="xsd:string"></xsd:element>
 			<xsd:element name="leaveTagOpen" type="xsd:boolean"></xsd:element>
 			<xsd:element name="changeTagName" type="xsd:boolean"></xsd:element>
-			<xsd:element name="attributeMutation"
-				type="tns:MalformedXmlAttribute">
+			<xsd:element name="attributeMutation" type="tns:MalformedXmlAttribute">
 			</xsd:element>
 			<xsd:element name="insertInvalidCharacter" type="xsd:boolean"></xsd:element>
 		</xsd:sequence>
@@ -2117,7 +2134,8 @@
 
 	<xsd:complexType name="SearchPatterns">
 		<xsd:sequence>
-			<xsd:element name="Regex" type="tns:Regex" maxOccurs="unbounded" minOccurs="0"></xsd:element>
+			<xsd:element name="Regex" type="tns:Regex" maxOccurs="unbounded"
+				minOccurs="0"></xsd:element>
 		</xsd:sequence>
 	</xsd:complexType>
 
@@ -2126,7 +2144,8 @@
 			<xsd:element name="name" type="xsd:string"></xsd:element>
 			<xsd:element name="description" type="xsd:string"></xsd:element>
 			<xsd:element name="message" type="xsd:string"></xsd:element>
-			<xsd:element name="pattern" type="xsd:string" maxOccurs="unbounded" minOccurs="1"></xsd:element>
+			<xsd:element name="pattern" type="xsd:string" maxOccurs="unbounded"
+				minOccurs="1"></xsd:element>
 		</xsd:sequence>
 	</xsd:complexType>
 </xsd:schema>

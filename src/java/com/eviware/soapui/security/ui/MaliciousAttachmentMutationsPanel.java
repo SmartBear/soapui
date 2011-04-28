@@ -52,8 +52,6 @@ public class MaliciousAttachmentMutationsPanel
 {
 
 	private JFormDialog dialog;
-	private JFormDialog tablesDialog;
-	private FileListFormComponent filesList;
 	private MaliciousAttachmentSecurityCheckConfig config;
 	private MutationTableModel generateTableModel;
 	private MutationTableModel replaceTableModel;
@@ -66,31 +64,20 @@ public class MaliciousAttachmentMutationsPanel
 		dialog = ( JFormDialog )ADialogBuilder.buildDialog( MutationSettings.class );
 		dialog.getFormField( MutationSettings.MUTATIONS_PANEL ).setProperty( "component", createMutationsPanel() );
 		dialog.getFormField( MutationSettings.MUTATIONS_PANEL ).setProperty( "dimension", new Dimension( 720, 320 ) );
-		initDialog();
+		refresh( tableMap );
 	}
 
 	private JComponent buildFilesList()
 	{
-		if( filesList == null )
-		{
-			filesList = new FileListFormComponent();
-		}
+		FileListFormComponent filesList = new FileListFormComponent();
 		filesList.setData( new String[] { "workspace/soapUI-core-DEV/copyrightInXsd.groovy", "file2", "file3" } );
 		JScrollPane scrollPane = new JScrollPane( filesList );
 		return scrollPane;
 	}
 
-	protected void update( String key )
-	{
-		tablesDialog.getFormField( MutationTables.SELECTED_FILE ).setValue( key );
-	}
-
 	private JComponent buildTables()
 	{
-		if( tablesDialog == null )
-		{
-			tablesDialog = ( JFormDialog )ADialogBuilder.buildDialog( MutationTables.class );
-		}
+		JFormDialog tablesDialog = ( JFormDialog )ADialogBuilder.buildDialog( MutationTables.class );
 
 		generateTableModel = new GenerateMutationTableModel();
 		tablesDialog.getFormField( MutationTables.GENERATE_FILE ).setProperty( "dimension", new Dimension( 410, 120 ) );
@@ -147,21 +134,21 @@ public class MaliciousAttachmentMutationsPanel
 	private Object createMutationsPanel()
 	{
 		JPanel panel = new JPanel( new BorderLayout() );
-
 		JSplitPane mainSplit = UISupport.createHorizontalSplit( buildFilesList(), buildTables() );
 		mainSplit.setResizeWeight( 1 );
-		if( filesList != null )
-		{
-			filesList.initialize();
-		}
 		panel.add( mainSplit, BorderLayout.CENTER );
-
 		return panel;
 	}
 
-	private void initDialog()
+	private void refresh( Map<String, Object> map )
 	{
-
+		// if( filesList != null )
+		// {
+		// filesList.initialize();
+		// }
+		//
+		// tablesDialog.getFormField( MutationTables.SELECTED_FILE ).setValue( key
+		// );
 	}
 
 	public JComponent getPanel()
@@ -220,7 +207,8 @@ public class MaliciousAttachmentMutationsPanel
 				public void valueChanged( ListSelectionEvent e )
 				{
 					String selectedFile = ( String )listModel.get( list.getSelectedIndex() );
-					MaliciousAttachmentMutationsPanel.this.update( selectedFile );
+					// MaliciousAttachmentMutationsPanel.this.refresh( tableMap,
+					// selectedFile );
 				}
 			} );
 		}
