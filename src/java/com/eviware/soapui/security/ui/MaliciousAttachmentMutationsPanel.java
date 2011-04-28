@@ -16,52 +16,44 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
-import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
-import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
-import javax.swing.text.Document;
 
 import org.jdesktop.swingx.JXTable;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.MaliciousAttachmentSecurityCheckConfig;
 import com.eviware.soapui.settings.ProjectSettings;
-import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.HelpActionMarker;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JFormComponent;
-import com.eviware.soapui.support.components.JUndoableTextField;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.types.StringList;
-import com.eviware.x.form.XForm.FieldType;
 import com.eviware.x.form.XFormDialog;
-import com.eviware.x.form.XFormTextField;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.support.AForm;
-import com.eviware.x.impl.swing.AbstractSwingXFormField;
 import com.eviware.x.impl.swing.JFormDialog;
 import com.eviware.x.impl.swing.JTextFieldFormField;
-import com.jgoodies.forms.builder.ButtonBarBuilder;
-import com.l2fprod.common.swing.JDirectoryChooser;
 
 public class MaliciousAttachmentMutationsPanel
 {
 
 	private JFormDialog dialog;
+	private JFormDialog tablesDialog;
+	private FileListFormComponent filesList;
 	private MaliciousAttachmentSecurityCheckConfig config;
 	private MutationTableModel generateTableModel;
 	private MutationTableModel replaceTableModel;
@@ -79,7 +71,10 @@ public class MaliciousAttachmentMutationsPanel
 
 	private JComponent buildFilesList()
 	{
-		FileListFormComponent filesList = new FileListFormComponent();
+		if( filesList == null )
+		{
+			filesList = new FileListFormComponent();
+		}
 		filesList.setData( new String[] { "workspace/soapUI-core-DEV/copyrightInXsd.groovy", "file2", "file3" } );
 		JScrollPane scrollPane = new JScrollPane( filesList );
 		return scrollPane;
@@ -87,24 +82,27 @@ public class MaliciousAttachmentMutationsPanel
 
 	protected void update( String key )
 	{
-
+		tablesDialog.getFormField( MutationTables.SELECTED_FILE ).setValue( key );
 	}
 
 	private JComponent buildTables()
 	{
-		JFormDialog dialog = ( JFormDialog )ADialogBuilder.buildDialog( MutationTables.class );
+		if( tablesDialog == null )
+		{
+			tablesDialog = ( JFormDialog )ADialogBuilder.buildDialog( MutationTables.class );
+		}
 
 		generateTableModel = new GenerateMutationTableModel();
-		dialog.getFormField( MutationTables.GENERATE_FILE ).setProperty( "dimension", new Dimension( 410, 120 ) );
-		dialog.getFormField( MutationTables.GENERATE_FILE ).setProperty( "component",
+		tablesDialog.getFormField( MutationTables.GENERATE_FILE ).setProperty( "dimension", new Dimension( 410, 120 ) );
+		tablesDialog.getFormField( MutationTables.GENERATE_FILE ).setProperty( "component",
 				buildTable( generateTableModel, false ) );
 
 		replaceTableModel = new ReplaceMutationTableModel();
-		dialog.getFormField( MutationTables.REPLACE_FILE ).setProperty( "dimension", new Dimension( 410, 120 ) );
-		dialog.getFormField( MutationTables.REPLACE_FILE )
-				.setProperty( "component", buildTable( replaceTableModel, true ) );
+		tablesDialog.getFormField( MutationTables.REPLACE_FILE ).setProperty( "dimension", new Dimension( 410, 120 ) );
+		tablesDialog.getFormField( MutationTables.REPLACE_FILE ).setProperty( "component",
+				buildTable( replaceTableModel, true ) );
 
-		return dialog.getPanel();
+		return tablesDialog.getPanel();
 	}
 
 	protected JPanel buildTable( MutationTableModel tableModel, boolean add )
@@ -152,6 +150,10 @@ public class MaliciousAttachmentMutationsPanel
 
 		JSplitPane mainSplit = UISupport.createHorizontalSplit( buildFilesList(), buildTables() );
 		mainSplit.setResizeWeight( 1 );
+		if( filesList != null )
+		{
+			filesList.initialize();
+		}
 		panel.add( mainSplit, BorderLayout.CENTER );
 
 		return panel;
@@ -217,10 +219,18 @@ public class MaliciousAttachmentMutationsPanel
 
 				public void valueChanged( ListSelectionEvent e )
 				{
-					String key = null;
-					MaliciousAttachmentMutationsPanel.this.update( key );
+					String selectedFile = ( String )listModel.get( list.getSelectedIndex() );
+					MaliciousAttachmentMutationsPanel.this.update( selectedFile );
 				}
 			} );
+		}
+
+		public void initialize()
+		{
+			if( list.getModel().getSize() != 0 )
+			{
+				list.setSelectedIndex( 0 );
+			}
 		}
 
 		public void setValue( String value )
@@ -724,172 +734,6 @@ public class MaliciousAttachmentMutationsPanel
 		public void actionPerformed( ActionEvent e )
 		{
 			Tools.openURL( url );
-		}
-	}
-
-	class FileFormField extends AbstractSwingXFormField<JPanel> implements XFormTextField
-	{
-		private JTextField textField;
-		private final FieldType type;
-		private JButton selectDirectoryButton;
-		private String projectRoot;
-
-		private boolean updating;
-		private String oldValue;
-		private String currentDirectory;
-
-		public FileFormField( String tooltip, FieldType type )
-		{
-			super( new JPanel() );
-			this.type = type;
-
-			ButtonBarBuilder builder = new ButtonBarBuilder( getComponent() );
-			textField = new JUndoableTextField( 30 );
-			textField.setToolTipText( tooltip );
-			builder.addGriddedGrowing( textField );
-			builder.addRelatedGap();
-			selectDirectoryButton = new JButton( new SelectDirectoryAction() );
-			builder.addFixed( selectDirectoryButton );
-
-			textField.getDocument().addDocumentListener( new DocumentListenerAdapter()
-			{
-
-				@Override
-				public void update( Document document )
-				{
-					String text = textField.getText();
-
-					if( !updating )
-						fireValueChanged( text, oldValue );
-
-					oldValue = text;
-				}
-			} );
-		}
-
-		public void setValue( String value )
-		{
-			updating = true;
-			oldValue = null;
-			updateValue( value );
-			updating = false;
-		}
-
-		private void updateValue( String value )
-		{
-			if( value != null && projectRoot != null && value.startsWith( projectRoot ) )
-			{
-				if( value.equals( projectRoot ) )
-					value = "";
-				else if( value.length() > projectRoot.length() + 1 )
-					value = value.substring( projectRoot.length() + 1 );
-			}
-
-			textField.setText( value );
-		}
-
-		public String getValue()
-		{
-			String text = textField.getText().trim();
-
-			if( projectRoot != null && text.length() > 0 )
-			{
-				String tempName = projectRoot + File.separatorChar + text;
-				if( new File( tempName ).exists() )
-				{
-					text = tempName;
-				}
-			}
-
-			return text;
-		}
-
-		public void setEnabled( boolean enabled )
-		{
-			textField.setEnabled( enabled );
-			selectDirectoryButton.setEnabled( enabled );
-		}
-
-		@Override
-		public boolean isEnabled()
-		{
-			return textField.isEnabled();
-		}
-
-		public void setCurrentDirectory( String currentDirectory )
-		{
-			this.currentDirectory = currentDirectory;
-		}
-
-		public class SelectDirectoryAction extends AbstractAction
-		{
-			private JFileChooser fileChooser;
-
-			public SelectDirectoryAction()
-			{
-				super( "Browse..." );
-			}
-
-			public void actionPerformed( ActionEvent e )
-			{
-				if( fileChooser == null )
-				{
-					if( type == FieldType.FILE_OR_FOLDER )
-					{
-						fileChooser = new JFileChooser();
-						fileChooser.setFileSelectionMode( JFileChooser.FILES_AND_DIRECTORIES );
-					}
-					else if( type == FieldType.FOLDER || type == FieldType.PROJECT_FOLDER )
-						fileChooser = new JDirectoryChooser();
-					else
-						fileChooser = new JFileChooser();
-
-				}
-
-				String value = FileFormField.this.getValue();
-				if( value.length() > 0 )
-				{
-					fileChooser.setSelectedFile( new File( value ) );
-				}
-				else if( currentDirectory != null )
-				{
-					fileChooser.setCurrentDirectory( new File( currentDirectory ) );
-				}
-				else if( projectRoot != null )
-				{
-					fileChooser.setCurrentDirectory( new File( projectRoot ) );
-				}
-
-				int returnVal = fileChooser.showOpenDialog( UISupport.getMainFrame() );
-				if( returnVal == JFileChooser.APPROVE_OPTION )
-				{
-					updateValue( fileChooser.getSelectedFile().getAbsolutePath() );
-				}
-			}
-		}
-
-		public void setProperty( String name, Object value )
-		{
-			super.setProperty( name, value );
-
-			if( name.equals( ProjectSettings.PROJECT_ROOT ) && type == FieldType.PROJECT_FOLDER )
-			{
-				projectRoot = ( String )value;
-			}
-			else if( name.equals( CURRENT_DIRECTORY ) )
-			{
-				currentDirectory = ( String )value;
-			}
-		}
-
-		public void setWidth( int columns )
-		{
-			textField.setColumns( columns );
-		}
-
-		public String getCurrentDirectory()
-		{
-			return currentDirectory;
 		}
 	}
 
