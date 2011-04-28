@@ -157,14 +157,13 @@ public class SecurityCheckRegistry
 	 *           used in the http monitor
 	 * @return A String Array containing the names of all the checks
 	 */
-	public String[] getAvailableSecurityChecksNames( boolean monitorOnly )
+	public String[] getAvailableSecurityChecksNames()
 	{
 		List<String> result = new ArrayList<String>();
 
 		for( SecurityCheckFactory securityCheck : availableSecurityChecks.values() )
 		{
-			if( monitorOnly && securityCheck.isHttpMonitor() )
-				result.add( securityCheck.getSecurityCheckName() );
+			result.add( securityCheck.getSecurityCheckName() );
 		}
 
 		String[] sortedResult = result.toArray( new String[result.size()] );

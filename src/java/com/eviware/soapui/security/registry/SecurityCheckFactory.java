@@ -19,7 +19,6 @@ import com.eviware.soapui.model.testsuite.TestStep;
 
 public interface SecurityCheckFactory
 {
-
 	public SecurityCheckConfig createNewSecurityCheck( String name );
 
 	public SecurityCheck buildSecurityCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent );
@@ -38,7 +37,4 @@ public interface SecurityCheckFactory
 	public String getSecurityCheckDescription();
 
 	public String getSecurityCheckIconPath();
-
-	public boolean isHttpMonitor();
-
 }
