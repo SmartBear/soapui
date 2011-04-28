@@ -1065,7 +1065,7 @@ public class RestTestRequestStep extends WsdlTestStepWithProperties implements R
 		@Override
 		public boolean isRequestPart()
 		{
-			return false;
+			return true;
 		}
 
 		@Override
