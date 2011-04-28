@@ -14,6 +14,8 @@ package com.eviware.soapui.support;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
@@ -64,31 +66,45 @@ public class SecurityCheckUtil
 		return result;
 	}
 
-	public static boolean contains( SubmitContext context, String content, String token, boolean useRegEx )
+	public static String contains( SubmitContext context, String content, String token, boolean useRegEx )
 	{
 		if( token == null )
 			token = "";
 		String replToken = PropertyExpander.expandProperties( context, token );
+		String result = null;
 
 		if( replToken.length() > 0 )
 		{
-			int ix = -1;
-
 			if( useRegEx )
 			{
-				if( content.matches( replToken ) )
-					ix = 0;
+				boolean grouped = false;
+				String orgToken = token;
+
+				if( token.startsWith( "(?s).*" ) && token.endsWith( ".*" ) )
+				{
+					token = "(?s)((.*)(" + token.substring( 6, token.length() - 2 ) + ")(.*))";
+					grouped = true;
+				}
+
+				Pattern pattern = Pattern.compile( token );
+				Matcher matcher = pattern.matcher( content );
+
+				if( matcher.matches() )
+				{
+					if( grouped && matcher.groupCount() > 2 )
+						result = content.substring( matcher.start( 3 ), matcher.end( 3 ) );
+					else
+						result = content.substring( matcher.start(), matcher.end() );
+				}
 			}
 			else
 			{
-				ix = content.toUpperCase().indexOf( replToken.toUpperCase() );
+				if( content.toUpperCase().indexOf( replToken.toUpperCase() ) >= 0 )
+					result = replToken;
 			}
-
-			if( ix == -1 )
-				return false;
 		}
 
-		return true;
+		return result;
 	}
 
 	public static RestParamsPropertyHolder getSoapRequestParams( AbstractHttpRequest<?> request )

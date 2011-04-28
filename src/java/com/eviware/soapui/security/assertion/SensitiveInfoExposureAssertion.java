@@ -29,6 +29,7 @@ import javax.swing.JScrollPane;
 import org.apache.xmlbeans.XmlObject;
 import org.jdesktop.swingx.JXTable;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
@@ -117,24 +118,32 @@ public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion impleme
 		String response = messageExchange.getResponseContent();
 		Set<String> messages = new HashSet<String>();
 
-		for( String token : checkMap.keySet() )
+		try
 		{
-			boolean useRegexp = token.trim().startsWith( PREFIX );
-			String description = !checkMap.get( token ).equals( "" ) ? checkMap.get( token ) : token;
-			if( useRegexp )
+			for( String token : checkMap.keySet() )
 			{
-				token = token.substring( token.indexOf( PREFIX ) + 1 );
-			}
-
-			if( SecurityCheckUtil.contains( context, response, token, useRegexp ) )
-			{
-				String message = description;
-				if( !messages.contains( message ) )
+				boolean useRegexp = token.trim().startsWith( PREFIX );
+				String description = !checkMap.get( token ).equals( "" ) ? checkMap.get( token ) : token;
+				if( useRegexp )
 				{
-					assertionErrorList.add( new AssertionError( message ) );
-					messages.add( message );
+					token = token.substring( token.indexOf( PREFIX ) + 1 );
+				}
+
+				String match = SecurityCheckUtil.contains( context, response, token, useRegexp );
+				if( match != null )
+				{
+					String message = description + " - Token [" + token + "] found [" + match + "]";
+					if( !messages.contains( message ) )
+					{
+						assertionErrorList.add( new AssertionError( message ) );
+						messages.add( message );
+					}
 				}
 			}
+		}
+		catch( Throwable e )
+		{
+			SoapUI.logError( e );
 		}
 
 		if( !messages.isEmpty() )

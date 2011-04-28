@@ -48,7 +48,9 @@ public class ParameterExposureAssertion extends WsdlMessageAssertion implements 
 		for( String value : parameterExposureCheckConfig.getParameterExposureStringsList() )
 		{
 			value = context.expand( value );// property expansion support
-			if( SecurityCheckUtil.contains( context, new String( messageExchange.getRawResponseData() ), value, false ) )
+			String match = SecurityCheckUtil.contains( context, new String( messageExchange.getRawResponseData() ), value,
+					false );
+			if( match != null )
 			{
 				String message = "Content that is sent in request '" + value
 						+ "' is exposed in response. Possibility for XSS script attack in: "
