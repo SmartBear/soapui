@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,15 +30,15 @@ import javax.swing.table.TableCellEditor;
 
 import org.jdesktop.swingx.JXTable;
 
-import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.MaliciousAttachmentSecurityCheckConfig;
+import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
+import com.eviware.soapui.model.iface.Attachment;
+import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.settings.ProjectSettings;
 import com.eviware.soapui.support.HelpActionMarker;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.components.JFormComponent;
 import com.eviware.soapui.support.components.JXToolBar;
-import com.eviware.soapui.support.types.StringList;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
@@ -53,12 +52,14 @@ public class MaliciousAttachmentMutationsPanel
 
 	private JFormDialog dialog;
 	private MaliciousAttachmentSecurityCheckConfig config;
+	private TestStep testStep;
 
 	private ListToTablesHolder holder = new ListToTablesHolder();
 
-	public MaliciousAttachmentMutationsPanel( MaliciousAttachmentSecurityCheckConfig config )
+	public MaliciousAttachmentMutationsPanel( MaliciousAttachmentSecurityCheckConfig config, TestStep testStep )
 	{
 		this.config = config;
+		this.testStep = testStep;
 		dialog = ( JFormDialog )ADialogBuilder.buildDialog( MutationSettings.class );
 		dialog.getFormField( MutationSettings.MUTATIONS_PANEL ).setProperty( "component", createMutationsPanel() );
 		dialog.getFormField( MutationSettings.MUTATIONS_PANEL ).setProperty( "dimension", new Dimension( 720, 320 ) );
@@ -69,7 +70,19 @@ public class MaliciousAttachmentMutationsPanel
 	{
 		FileListFormComponent filesList = new FileListFormComponent();
 		holder.setFilesList( filesList );
-		filesList.setData( new String[] { "workspace/soapUI-core-DEV/copyrightInXsd.groovy", "file2", "file3" } );
+
+		Attachment[] data = new Attachment[] {};
+		if( testStep instanceof WsdlTestRequestStep )
+		{
+			Attachment[] attachments = ( ( WsdlTestRequestStep )testStep ).getHttpRequest().getAttachments();
+			data = new Attachment[attachments.length];
+			for( int i = 0; i < attachments.length; i++ )
+			{
+				data[i] = ( ( WsdlTestRequestStep )testStep ).getHttpRequest().getAttachmentAt( i );
+			}
+		}
+
+		filesList.setData( data );
 		JScrollPane scrollPane = new JScrollPane( filesList );
 		return scrollPane;
 	}
@@ -177,12 +190,12 @@ public class MaliciousAttachmentMutationsPanel
 		final static String CONTENT_TYPE = "Content type";
 	}
 
-	class FileListFormComponent extends JPanel implements JFormComponent, ActionListener
+	class FileListFormComponent extends JPanel
 	{
 		private DefaultListModel listModel;
 		private JList list;
-		private String oldSelection;
-		private String currentSelection;
+		private Attachment oldSelection;
+		private Attachment currentSelection;
 
 		public FileListFormComponent()
 		{
@@ -200,7 +213,7 @@ public class MaliciousAttachmentMutationsPanel
 
 				public void valueChanged( ListSelectionEvent e )
 				{
-					currentSelection = ( String )listModel.get( list.getSelectedIndex() );
+					currentSelection = ( Attachment )listModel.get( list.getSelectedIndex() );
 					holder.refresh( oldSelection, currentSelection );
 					oldSelection = currentSelection;
 				}
@@ -212,37 +225,10 @@ public class MaliciousAttachmentMutationsPanel
 			if( list.getModel().getSize() != 0 )
 			{
 				list.setSelectedIndex( 0 );
-				return ( String )list.getSelectedValue();
+				Attachment attachment = ( Attachment )list.getSelectedValue();
+				return ( attachment != null ) ? attachment.getName() : "";
 			}
 			return "";
-		}
-
-		public void setValue( String value )
-		{
-			String[] oldData = getData();
-			listModel.clear();
-
-			try
-			{
-				StringList stringList = StringList.fromXml( value );
-
-				String[] files = stringList.toStringArray();
-				for( String file : files )
-					if( file.trim().length() > 0 )
-						listModel.addElement( file );
-
-				firePropertyChange( "data", oldData, getData() );
-			}
-			catch( Exception e )
-			{
-				SoapUI.logError( e );
-			}
-		}
-
-		public String getValue()
-		{
-			StringList result = new StringList( listModel.toArray() );
-			return result.toXml();
 		}
 
 		public JList getList()
@@ -250,60 +236,29 @@ public class MaliciousAttachmentMutationsPanel
 			return list;
 		}
 
-		public void actionPerformed( ActionEvent e )
+		public Attachment[] getData()
 		{
-			String[] oldData = getData();
-
-			int selectedIndex = list.getSelectedIndex();
-
-			String elm = ( String )listModel.getElementAt( selectedIndex );
-			String value = UISupport.prompt( "Specify value", "Edit..", elm );
-
-			if( value != null )
-			{
-				listModel.setElementAt( value, selectedIndex );
-				firePropertyChange( "options", oldData, getData() );
-			}
-		}
-
-		public String[] getData()
-		{
-			String[] result = new String[listModel.size()];
+			Attachment[] result = new Attachment[listModel.size()];
 			for( int c = 0; c < result.length; c++ )
-				result[c] = ( String )listModel.get( c );
+				result[c] = ( Attachment )listModel.get( c );
 
 			return result;
 		}
 
-		public void setData( String[] strings )
+		public void setData( Attachment[] attachments )
 		{
-			String[] oldData = getData();
+			Attachment[] oldData = getData();
 
 			listModel.clear();
-			if( strings != null )
+			if( attachments != null )
 			{
-				for( String str : strings )
+				for( Attachment att : attachments )
 				{
-					listModel.addElement( str );
+					listModel.addElement( att );
 				}
 			}
 
-			firePropertyChange( "options", oldData, getData() );
-		}
-
-		public String[] getOptions()
-		{
-			return getData();
-		}
-
-		public void setOptions( String[] options )
-		{
-			setData( options );
-		}
-
-		public void addItem( String valueOf )
-		{
-			listModel.addElement( valueOf );
+			firePropertyChange( "attachments", oldData, getData() );
 		}
 	}
 
@@ -367,13 +322,13 @@ public class MaliciousAttachmentMutationsPanel
 			}
 		}
 
-		public void refresh( String oldItem, String newItem )
+		public void refresh( Attachment oldItem, Attachment newItem )
 		{
 			if( oldItem != null )
 			{
-				save( oldItem );
+				save( oldItem.getName() );
 			}
-			load( newItem );
+			load( newItem.getName() );
 		}
 
 		public void addResultToGenerateTable( File file, String contentType, Boolean enabled )
