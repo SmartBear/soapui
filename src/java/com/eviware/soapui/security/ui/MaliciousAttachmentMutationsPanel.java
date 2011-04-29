@@ -53,10 +53,8 @@ public class MaliciousAttachmentMutationsPanel
 
 	private JFormDialog dialog;
 	private MaliciousAttachmentSecurityCheckConfig config;
-	private MutationTableModel generateTableModel;
-	private MutationTableModel replaceTableModel;
 
-	private Map<String, Object> tableMap = new HashMap<String, Object>();
+	private ListToTablesHolder holder = new ListToTablesHolder();
 
 	public MaliciousAttachmentMutationsPanel( MaliciousAttachmentSecurityCheckConfig config )
 	{
@@ -64,12 +62,13 @@ public class MaliciousAttachmentMutationsPanel
 		dialog = ( JFormDialog )ADialogBuilder.buildDialog( MutationSettings.class );
 		dialog.getFormField( MutationSettings.MUTATIONS_PANEL ).setProperty( "component", createMutationsPanel() );
 		dialog.getFormField( MutationSettings.MUTATIONS_PANEL ).setProperty( "dimension", new Dimension( 720, 320 ) );
-		refresh( tableMap );
+		holder.refresh();
 	}
 
 	private JComponent buildFilesList()
 	{
 		FileListFormComponent filesList = new FileListFormComponent();
+		holder.setFilesList( filesList );
 		filesList.setData( new String[] { "workspace/soapUI-core-DEV/copyrightInXsd.groovy", "file2", "file3" } );
 		JScrollPane scrollPane = new JScrollPane( filesList );
 		return scrollPane;
@@ -79,15 +78,19 @@ public class MaliciousAttachmentMutationsPanel
 	{
 		JFormDialog tablesDialog = ( JFormDialog )ADialogBuilder.buildDialog( MutationTables.class );
 
-		generateTableModel = new GenerateMutationTableModel();
+		MutationTableModel generateTableModel = new GenerateMutationTableModel();
 		tablesDialog.getFormField( MutationTables.GENERATE_FILE ).setProperty( "dimension", new Dimension( 410, 120 ) );
 		tablesDialog.getFormField( MutationTables.GENERATE_FILE ).setProperty( "component",
 				buildTable( generateTableModel, false ) );
 
-		replaceTableModel = new ReplaceMutationTableModel();
+		MutationTableModel replaceTableModel = new ReplaceMutationTableModel();
 		tablesDialog.getFormField( MutationTables.REPLACE_FILE ).setProperty( "dimension", new Dimension( 410, 120 ) );
 		tablesDialog.getFormField( MutationTables.REPLACE_FILE ).setProperty( "component",
 				buildTable( replaceTableModel, true ) );
+
+		holder.setGenerateTableModel( generateTableModel );
+		holder.setReplaceTableModel( replaceTableModel );
+		holder.setTablesDialog( tablesDialog );
 
 		return tablesDialog.getPanel();
 	}
@@ -140,17 +143,6 @@ public class MaliciousAttachmentMutationsPanel
 		return panel;
 	}
 
-	private void refresh( Map<String, Object> map )
-	{
-		// if( filesList != null )
-		// {
-		// filesList.initialize();
-		// }
-		//
-		// tablesDialog.getFormField( MutationTables.SELECTED_FILE ).setValue( key
-		// );
-	}
-
 	public JComponent getPanel()
 	{
 		return dialog.getPanel();
@@ -189,6 +181,8 @@ public class MaliciousAttachmentMutationsPanel
 	{
 		private DefaultListModel listModel;
 		private JList list;
+		private String oldSelection;
+		private String currentSelection;
 
 		public FileListFormComponent()
 		{
@@ -206,19 +200,21 @@ public class MaliciousAttachmentMutationsPanel
 
 				public void valueChanged( ListSelectionEvent e )
 				{
-					String selectedFile = ( String )listModel.get( list.getSelectedIndex() );
-					// MaliciousAttachmentMutationsPanel.this.refresh( tableMap,
-					// selectedFile );
+					currentSelection = ( String )listModel.get( list.getSelectedIndex() );
+					holder.refresh( oldSelection, currentSelection );
+					oldSelection = currentSelection;
 				}
 			} );
 		}
 
-		public void initialize()
+		public String getFirstItem()
 		{
 			if( list.getModel().getSize() != 0 )
 			{
 				list.setSelectedIndex( 0 );
+				return ( String )list.getSelectedValue();
 			}
+			return "";
 		}
 
 		public void setValue( String value )
@@ -311,6 +307,143 @@ public class MaliciousAttachmentMutationsPanel
 		}
 	}
 
+	class ListToTablesHolder
+	{
+		FileListFormComponent filesList;
+		MutationTableModel generateTableModel;
+		MutationTableModel replaceTableModel;
+		JFormDialog tablesDialog;
+
+		Map<String, List<FileElement>> generateMap = new HashMap<String, List<FileElement>>();
+		Map<String, List<FileElement>> replaceMap = new HashMap<String, List<FileElement>>();
+		Map<String, Boolean> removeMap = new HashMap<String, Boolean>();
+
+		public JFormDialog getTablesDialog()
+		{
+			return tablesDialog;
+		}
+
+		public void setTablesDialog( JFormDialog tablesDialog )
+		{
+			this.tablesDialog = tablesDialog;
+		}
+
+		public FileListFormComponent getFilesList()
+		{
+			return filesList;
+		}
+
+		public void setFilesList( FileListFormComponent filesList )
+		{
+			this.filesList = filesList;
+		}
+
+		public MutationTableModel getGenerateTableModel()
+		{
+			return generateTableModel;
+		}
+
+		public void setGenerateTableModel( MutationTableModel generateTableModel )
+		{
+			this.generateTableModel = generateTableModel;
+		}
+
+		public MutationTableModel getReplaceTableModel()
+		{
+			return replaceTableModel;
+		}
+
+		public void setReplaceTableModel( MutationTableModel replaceTableModel )
+		{
+			this.replaceTableModel = replaceTableModel;
+		}
+
+		public void refresh()
+		{
+			if( filesList != null )
+			{
+				String item = filesList.getFirstItem();
+				tablesDialog.getFormField( MutationTables.SELECTED_FILE ).setValue( item );
+			}
+		}
+
+		public void refresh( String oldItem, String newItem )
+		{
+			if( oldItem != null )
+			{
+				save( oldItem );
+			}
+			load( newItem );
+		}
+
+		public void addResultToGenerateTable( File file, String contentType, Boolean enabled )
+		{
+			generateTableModel.addResult( file, contentType, enabled );
+		}
+
+		public void addResultToReplaceTable( File file, String contentType, Boolean enabled )
+		{
+			replaceTableModel.addResult( file, contentType, enabled );
+		}
+
+		private void save( String item )
+		{
+			List<FileElement> generateList = new ArrayList<FileElement>();
+			List<FileElement> replaceList = new ArrayList<FileElement>();
+
+			for( int i = 0; i < generateTableModel.getRowCount(); i++ )
+			{
+				generateList.add( generateTableModel.getRowValue( i ) );
+			}
+
+			for( int i = 0; i < replaceTableModel.getRowCount(); i++ )
+			{
+				replaceList.add( replaceTableModel.getRowValue( i ) );
+			}
+
+			Boolean remove = tablesDialog.getBooleanValue( MutationTables.REMOVE_FILE );
+
+			generateMap.put( item, generateList );
+			replaceMap.put( item, replaceList );
+			removeMap.put( item, remove );
+
+		}
+
+		private void load( String item )
+		{
+			List<FileElement> generateList = generateMap.get( item );
+			List<FileElement> replaceList = replaceMap.get( item );
+			Boolean remove = removeMap.get( item );
+
+			tablesDialog.setValue( MutationTables.SELECTED_FILE, item );
+
+			generateTableModel.clear();
+			replaceTableModel.clear();
+			tablesDialog.setBooleanValue( MutationTables.REMOVE_FILE, new Boolean( false ) );
+
+			if( remove != null )
+			{
+				tablesDialog.setBooleanValue( MutationTables.REMOVE_FILE, remove );
+			}
+
+			if( generateList != null )
+			{
+				for( FileElement element : generateList )
+				{
+					generateTableModel.addResult( element.getFile(), element.getContentType(), element.isEnabled() );
+				}
+			}
+
+			if( replaceList != null )
+			{
+				for( FileElement element : replaceList )
+				{
+					replaceTableModel.addResult( element.getFile(), element.getContentType(), element.isEnabled() );
+				}
+			}
+		}
+	}
+
 	class FileElementHolder
 	{
 		List<FileElement> list;
@@ -342,6 +475,14 @@ public class MaliciousAttachmentMutationsPanel
 			else
 			{
 				return 0;
+			}
+		}
+
+		protected void clear()
+		{
+			if( list != null )
+			{
+				list.clear();
 			}
 		}
 
@@ -380,14 +521,19 @@ public class MaliciousAttachmentMutationsPanel
 			this.enabled = enabled;
 		}
 
-		public String getName()
+		public String getFileName()
 		{
 			return file.getAbsolutePath();
 		}
 
-		public long getLength()
+		public long getFileLength()
 		{
 			return file.length();
+		}
+
+		public File getFile()
+		{
+			return file;
 		}
 
 		public String getContentType()
@@ -420,6 +566,17 @@ public class MaliciousAttachmentMutationsPanel
 		{
 			holder.removeElement( i );
 			fireTableDataChanged();
+		}
+
+		public void clear()
+		{
+			holder.clear();
+			fireTableDataChanged();
+		}
+
+		public FileElement getRowValue( int rowIndex )
+		{
+			return holder.getList().get( rowIndex );
 		}
 
 		public abstract int getColumnCount();
@@ -478,7 +635,7 @@ public class MaliciousAttachmentMutationsPanel
 				switch( columnIndex )
 				{
 				case 0 :
-					return element.getLength();
+					return element.getFileLength();
 				case 1 :
 					return element.getContentType();
 				case 2 :
@@ -562,9 +719,9 @@ public class MaliciousAttachmentMutationsPanel
 				switch( columnIndex )
 				{
 				case 0 :
-					return element.getName();
+					return element.getFileName();
 				case 1 :
-					return element.getLength();
+					return element.getFileLength();
 				case 2 :
 					return element.getContentType();
 				case 3 :
@@ -620,7 +777,7 @@ public class MaliciousAttachmentMutationsPanel
 			if( returnVal == JFileChooser.APPROVE_OPTION )
 			{
 				// TODO: actually replace file
-				replaceTableModel.addResult( fileChooser.getSelectedFile(),
+				holder.addResultToReplaceTable( fileChooser.getSelectedFile(),
 						new MimetypesFileTypeMap().getContentType( fileChooser.getSelectedFile() ), true );
 
 			}
@@ -664,7 +821,7 @@ public class MaliciousAttachmentMutationsPanel
 				}
 
 				// TODO: actually generate file
-				generateTableModel.addResult( new File( "file" ), contentType, true );
+				holder.addResultToGenerateTable( new File( "file" ), contentType, true );
 			}
 		}
 	}
