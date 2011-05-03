@@ -47,8 +47,8 @@ public class SecurityConfigurationDialogBuilder
 	public static final String PARAMETERS_NAME = "Parameters";
 	public static final String OPTIONAL_NAME = "###Optional";
 
-	private GroovyEditorComponent setupGroovyEditor;
-	private GroovyEditorComponent tearDownGroovyEditor;
+	// private GroovyEditorComponent setupGroovyEditor;
+	// private GroovyEditorComponent tearDownGroovyEditor;
 
 	public XFormDialog buildSecurityCheckConfigurationDialog( SecurityCheck securityCheck )
 	{
