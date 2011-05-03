@@ -33,10 +33,10 @@ import com.eviware.x.form.XFormField;
 import com.eviware.x.form.XFormFieldListener;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.APage;
 import com.eviware.x.form.support.XFormRadioGroup;
+import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.impl.swing.JFormDialog;
 import com.eviware.x.impl.swing.JTabbedFormDialog;
 
@@ -54,8 +54,8 @@ public class SecurityConfigurationDialogBuilder
 	{
 
 		return buildSecurityCheckConfigurationDialog( securityCheck.getConfigName(),
-				securityCheck.getConfigDescription(), securityCheck.getIcon(), securityCheck.getHelpURL(),
-				securityCheck.getComponent(), securityCheck );
+				securityCheck.getConfigDescription(), securityCheck.getIcon(), securityCheck.getHelpURL(), securityCheck
+						.getComponent(), securityCheck );
 	}
 
 	/**
@@ -166,6 +166,17 @@ public class SecurityConfigurationDialogBuilder
 				{
 					UISupport.showErrorMessage( "Delay value must be integer number" );
 				}
+			}
+		} );
+		XFormField applyToFailedTests = dialog.getFormField( Strategy.APPLY_TO_FAILED_STEPS );
+		applyToFailedTests.setValue( String.valueOf( securityCheck.isApplyForFailedStep() ) );
+		applyToFailedTests.addFormFieldListener( new XFormFieldListener()
+		{
+
+			@Override
+			public void valueChanged( XFormField sourceField, String newValue, String oldValue )
+			{
+				securityCheck.setApplyForFailedTestStep( Boolean.parseBoolean( newValue ) );
 			}
 		} );
 
@@ -328,6 +339,9 @@ public class SecurityConfigurationDialogBuilder
 
 		@AField( description = "Request Delay", name = "Request Delay(ms)", type = AFieldType.INT )
 		public final static String DELAY = "Request Delay(ms)";
+
+		@AField( description = "Apply to Failed TestSteps", name = "Apply to Failed TestSteps", type = AFieldType.BOOLEAN )
+		public final static String APPLY_TO_FAILED_STEPS = "Apply to Failed TestSteps";
 
 	}
 

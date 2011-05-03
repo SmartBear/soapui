@@ -50,8 +50,8 @@ import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.security.SecurityCheck;
 import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
+import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestRunner.Status;
-import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunContext;
@@ -814,9 +814,10 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 		}
 
 		@Override
-		public void beforeStep( TestCaseRunner testRunner, SecurityTestRunContext runContext, TestStep testStep )
+		public void beforeStep( TestCaseRunner testRunner, SecurityTestRunContext runContext,
+				TestStepResult testStepResult )
 		{
-			startStepLogEntryAdded = securityTestLog.addSecurityTestStepResult( testStep );
+			startStepLogEntryAdded = securityTestLog.addSecurityTestStepResult( testStepResult.getTestStep() );
 		}
 
 		@Override

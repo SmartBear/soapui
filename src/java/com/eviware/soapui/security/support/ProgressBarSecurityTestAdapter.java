@@ -20,12 +20,14 @@ import javax.swing.JProgressBar;
 
 import com.eviware.soapui.model.security.SecurityCheck;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
+import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestRunner.Status;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunnerImpl;
 import com.eviware.soapui.security.result.SecurityCheckRequestResult;
 import com.eviware.soapui.security.result.SecurityCheckResult;
+import com.eviware.soapui.security.result.SecurityTestStepResult;
 import com.eviware.soapui.security.result.SecurityResult.ResultStatus;
 
 /**
@@ -48,6 +50,7 @@ public class ProgressBarSecurityTestAdapter
 	private static final String STATE_DONE = "Done";
 	private static final String STATE_CANCEL = "Canceled";
 	private int alertsCounter;
+	private int previousMaxCheckPosition;
 
 	public ProgressBarSecurityTestAdapter( JProgressBar progressBar, SecurityTest securityTest, JLabel cntLabel )
 	{
@@ -131,7 +134,22 @@ public class ProgressBarSecurityTestAdapter
 					progressBar.setForeground( OK_COLOR );
 			}
 
-			progressBar.setValue( runContext.getCurrentCheckOnSecurityTestIndex() + 1 );
+			// progressBar.setValue(
+			// runContext.getCurrentCheckOnSecurityTestIndex() + 1 );
+		}
+
+		@Override
+		public void beforeStep( TestCaseRunner testRunner, SecurityTestRunContext runContext,
+				TestStepResult testStepResult )
+		{
+			previousMaxCheckPosition = progressBar.getValue();
+		}
+
+		@Override
+		public void afterStep( TestCaseRunner testRunner, SecurityTestRunContext runContext, SecurityTestStepResult result )
+		{
+			int currentStepChecksCount = securityTest.getTestStepSecurityChecksCount( result.getTestStep().getId() );
+			progressBar.setValue( previousMaxCheckPosition + currentStepChecksCount );
 		}
 
 		public void afterRun( TestCaseRunner testRunner, SecurityTestRunContext runContext )

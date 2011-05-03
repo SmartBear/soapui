@@ -26,6 +26,8 @@ import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.model.security.SecurityCheck;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
+import com.eviware.soapui.model.testsuite.TestStepResult;
+import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunnerImpl;
@@ -95,13 +97,14 @@ public class ProgressBarSecurityTestStepAdapter
 		private int totalAlertsCounter;
 
 		@Override
-		public void beforeStep( TestCaseRunner testRunner, SecurityTestRunContext runContext, TestStep ts )
+		public void beforeStep( TestCaseRunner testRunner, SecurityTestRunContext runContext, TestStepResult tsr )
 		{
-			if( ts.getId().equals( testStep.getId() ) )
+			if( tsr.getTestStep().getId().equals( testStep.getId() ) )
 			{
-				progressBar.getModel().setMaximum(
-						( ( SecurityTestRunnerImpl )testRunner ).getSecurityTest().getTestStepSecurityChecksCount(
-								testStep.getId() ) );
+				int count = securityTest.getStepSecurityApplicableChecksCount( tsr );
+				// int maximum = securityTest.getTestStepSecurityChecksCount(
+				// testStep.getId() );
+				progressBar.getModel().setMaximum( count );
 
 				progressBar.setString( STATE_RUN );
 				progressBar.setForeground( OK_COLOR );

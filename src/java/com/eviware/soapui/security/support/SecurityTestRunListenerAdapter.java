@@ -14,7 +14,7 @@ package com.eviware.soapui.security.support;
 
 import com.eviware.soapui.model.security.SecurityCheck;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
-import com.eviware.soapui.model.testsuite.TestStep;
+import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.result.SecurityCheckRequestResult;
 import com.eviware.soapui.security.result.SecurityCheckResult;
@@ -35,7 +35,7 @@ public class SecurityTestRunListenerAdapter implements SecurityTestRunListener
 	}
 
 	@Override
-	public void beforeStep( TestCaseRunner testRunner, SecurityTestRunContext runContext, TestStep testStep )
+	public void beforeStep( TestCaseRunner testRunner, SecurityTestRunContext runContext, TestStepResult testStepResult )
 	{
 	}
 

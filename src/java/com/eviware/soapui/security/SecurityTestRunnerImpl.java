@@ -27,6 +27,7 @@ import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.TestAssertion;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
+import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
 import com.eviware.soapui.security.result.SecurityCheckResult;
 import com.eviware.soapui.security.result.SecurityTestStepResult;
 import com.eviware.soapui.security.result.SecurityResult.ResultStatus;
@@ -146,14 +147,6 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 		securityTestStepListeners = securityTest.getTestStepRunListeners( currentStep );
 		if( !currentStep.isDisabled() )
 		{
-			for( int i = 0; i < securityTestListeners.length; i++ )
-			{
-				securityTestListeners[i].beforeStep( this, getRunContext(), currentStep );
-			}
-			for( int i = 0; i < securityTestStepListeners.length; i++ )
-			{
-				securityTestStepListeners[i].beforeStep( this, getRunContext(), currentStep );
-			}
 			TestStepResult stepResult = runTestStep( currentStep, true, true );
 			if( stepResult == null )
 				jumpExit = true;
@@ -166,6 +159,14 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 				securityTestListeners[i].afterOriginalStep( this, getRunContext(), securityStepResult );
 			}
 
+			for( int i = 0; i < securityTestListeners.length; i++ )
+			{
+				securityTestListeners[i].beforeStep( this, getRunContext(), stepResult );
+			}
+			for( int i = 0; i < securityTestStepListeners.length; i++ )
+			{
+				securityTestStepListeners[i].beforeStep( this, getRunContext(), stepResult );
+			}
 			Map<String, List<SecurityCheck>> secCheckMap = securityTest.getSecurityChecksMap();
 			if( secCheckMap.containsKey( currentStep.getId() ) )
 			{
@@ -173,27 +174,30 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 				for( int i = 0; i < testStepChecksList.size(); i++ )
 				{
 					SecurityCheck securityCheck = testStepChecksList.get( i );
-					runContext.setCurrentCheckIndex( i );
-					runContext.setCurrentCheckOnSecurityTestIndex( currentCheckOnSecurityTestIndex++ );
-					SecurityCheckResult securityCheckResult = runTestStepSecurityCheck( runContext, currentStep,
-							securityCheck );
-					securityStepResult.addSecurityCheckResult( securityCheckResult );
-					if( securityCheckResult.isCanceled() )
+					if( stepResult.getStatus() != TestStepStatus.FAILED || securityCheck.isApplyForFailedStep() )
 					{
-						jumpExit = true;
-						break;
-					}
-					else if( securityCheckResult.getStatus() == ResultStatus.FAILED )
-					{
-						if( getTestRunnable().getFailOnError() )
+						runContext.setCurrentCheckIndex( i );
+						runContext.setCurrentCheckOnSecurityTestIndex( currentCheckOnSecurityTestIndex++ );
+						SecurityCheckResult securityCheckResult = runTestStepSecurityCheck( runContext, currentStep,
+								securityCheck );
+						securityStepResult.addSecurityCheckResult( securityCheckResult );
+						if( securityCheckResult.isCanceled() )
 						{
-							// setError( stepResult.getError() );
-							fail( "Cancelling due to failed security scan" );
+							jumpExit = true;
+							break;
 						}
-						else
+						else if( securityCheckResult.getStatus() == ResultStatus.FAILED )
 						{
-							getRunContext().setProperty( SecurityTestRunner.Status.class.getName(),
-									SecurityTestRunner.Status.FAILED );
+							if( getTestRunnable().getFailOnError() )
+							{
+								// setError( stepResult.getError() );
+								fail( "Cancelling due to failed security scan" );
+							}
+							else
+							{
+								getRunContext().setProperty( SecurityTestRunner.Status.class.getName(),
+										SecurityTestRunner.Status.FAILED );
+							}
 						}
 					}
 				}

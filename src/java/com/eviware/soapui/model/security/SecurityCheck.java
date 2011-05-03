@@ -103,4 +103,8 @@ public interface SecurityCheck extends ModelItem, Assertable
 	void copyConfig( SecurityCheckConfig backupCheckConfig );
 
 	void addWsdlAssertion( String assertionLabel );
+
+	boolean isApplyForFailedStep();
+
+	void setApplyForFailedTestStep( boolean apply );
 }
