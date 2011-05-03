@@ -208,7 +208,6 @@ public class SecurityConfigurationDialogBuilder
 	public XFormDialog buildSecurityCheckConfigurationDialog( String name, String description, ImageIcon icon,
 			String helpUrl, JComponent component, SecurityCheck securityCheck )
 	{
-
 		XFormDialog dialog = null;
 		if( component == null )
 		{
@@ -223,6 +222,7 @@ public class SecurityConfigurationDialogBuilder
 				dialog = ADialogBuilder.buildDialog( OptionalDialogWithParameters.class );
 			else
 				dialog = ADialogBuilder.buildDialog( OptionalDialog.class );
+
 			dialog.getFormField( OptionalDialog.OPTIONAL ).setProperty( "component", component );
 			dialog.getFormField( OptionalDialog.OPTIONAL ).setProperty( "dimension", component.getPreferredSize() );
 		}
@@ -303,11 +303,11 @@ public class SecurityConfigurationDialogBuilder
 		@APage( name = "Advanced" )
 		public final static AdvancedSettings ADVANCED = null;
 
-		@APage( name = "SetUp" )
-		public final static SetupScript SETUP = null;
-
-		@APage( name = "TearDown" )
-		public final static TearDownScript TEARDOWN = null;
+		// @APage( name = "SetUp" )
+		// public final static SetupScript SETUP = null;
+		//
+		// @APage( name = "TearDown" )
+		// public final static TearDownScript TEARDOWN = null;
 	}
 
 	@AForm( description = "Assertions", name = "Assertions" )
