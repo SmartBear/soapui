@@ -103,7 +103,7 @@ public class SecurityCheckResult implements SecurityResult
 				public void actionPerformed( ActionEvent e )
 				{
 					UISupport.showInfoMessage( "Scan [" + getSecurityCheck().getName() + "] ran with status ["
-							+ getStatus() + "]", "SecurityScan Result" );
+							+ getExecutionProgressStatus() + "]", "SecurityScan Result" );
 				}
 			} );
 		}

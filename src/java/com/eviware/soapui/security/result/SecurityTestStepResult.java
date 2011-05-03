@@ -83,7 +83,7 @@ public class SecurityTestStepResult implements SecurityResult
 				public void actionPerformed( ActionEvent e )
 				{
 					UISupport.showInfoMessage( "Step [" + getTestStep().getName() + "] ran with security status ["
-							+ getStatus() + "]", "TestStep Result" );
+							+ getExecutionProgressStatus() + "]", "TestStep Result" );
 				}
 			} );
 		}
