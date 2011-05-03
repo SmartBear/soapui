@@ -60,9 +60,4 @@ public class GroovySecurityCheckFactory extends AbstractSecurityCheckFactory
 		return securityCheckConfig;
 	}
 
-	@Override
-	public boolean isHttpMonitor()
-	{
-		return true;
-	}
 }

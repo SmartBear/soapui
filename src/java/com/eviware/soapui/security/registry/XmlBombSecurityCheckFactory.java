@@ -57,9 +57,4 @@ public class XmlBombSecurityCheckFactory extends AbstractSecurityCheckFactory
 		return securityCheckConfig;
 	}
 
-	@Override
-	public boolean isHttpMonitor()
-	{
-		return false;
-	}
 }

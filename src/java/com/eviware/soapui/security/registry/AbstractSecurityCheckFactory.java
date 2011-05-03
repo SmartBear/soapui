@@ -70,9 +70,4 @@ public abstract class AbstractSecurityCheckFactory implements SecurityCheckFacto
 		return pathToIcon;
 	}
 
-	public boolean isHttpMonitor()
-	{
-		return false;
-	}
-
 }

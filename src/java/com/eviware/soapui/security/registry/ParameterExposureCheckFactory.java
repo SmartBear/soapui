@@ -56,9 +56,4 @@ public class ParameterExposureCheckFactory extends AbstractSecurityCheckFactory
 		return securityCheckConfig;
 	}
 
-	@Override
-	public boolean isHttpMonitor()
-	{
-		return true;
-	}
 }

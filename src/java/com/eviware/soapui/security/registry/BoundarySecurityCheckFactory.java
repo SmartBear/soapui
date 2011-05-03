@@ -45,12 +45,6 @@ public class BoundarySecurityCheckFactory extends AbstractSecurityCheckFactory
 	}
 
 	@Override
-	public boolean isHttpMonitor()
-	{
-		return true;
-	}
-
-	@Override
 	public AbstractSecurityCheck buildSecurityCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent )
 	{
 		return new BoundarySecurityCheck( testStep, config, parent, null );

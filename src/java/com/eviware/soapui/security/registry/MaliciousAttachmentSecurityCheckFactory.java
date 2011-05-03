@@ -57,9 +57,4 @@ public class MaliciousAttachmentSecurityCheckFactory extends AbstractSecurityChe
 		return securityCheckConfig;
 	}
 
-	@Override
-	public boolean isHttpMonitor()
-	{
-		return false;
-	}
 }
