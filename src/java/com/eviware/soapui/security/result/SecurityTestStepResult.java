@@ -235,7 +235,7 @@ public class SecurityTestStepResult implements SecurityResult
 	public String getSecurityTestLog()
 	{
 		StringBuffer tl = new StringBuffer().append( "TestStep " ).append( " [" ).append( testStep.getName() ).append(
-				"] " ).append( getOriginalTestStepResult().getStatus().toString() ).append( ": took " ).append(
+				"] " ).append( getExecutionProgressStatus().toString() ).append( ": took " ).append(
 				getOriginalTestStepResult().getTimeTaken() ).append( " ms" );
 		tl.append( testLog );
 		return tl.toString();

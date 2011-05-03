@@ -14,13 +14,16 @@ package com.eviware.soapui.security.result;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import com.eviware.soapui.impl.wsdl.teststeps.actions.ShowMessageExchangeAction;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.security.SecurityCheck;
+import com.eviware.soapui.security.check.AbstractSecurityCheckWithProperties;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.DefaultActionList;
+import com.eviware.soapui.support.types.StringToStringMap;
 
 /**
  * A SecurityCheck result represents result of one request (modified by a
@@ -79,8 +82,7 @@ public class SecurityCheckRequestResult implements SecurityResult
 		}
 		if( !addedAction )
 		{
-			actionList
-					.addAction( new ShowMessageExchangeAction( this.getMessageExchange(), "SecurityScanRequest" ), true );
+			actionList.addAction( new ShowMessageExchangeAction( this.getMessageExchange(), "SecurityScanRequest" ), true );
 			addedAction = true;
 		}
 		return actionList;
@@ -190,6 +192,39 @@ public class SecurityCheckRequestResult implements SecurityResult
 	{
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public String getChangedParamsInfo( int requestCount )
+	{
+		StringToStringMap changedParams = null;
+
+		if( getMessageExchange() != null )
+		{
+			changedParams = StringToStringMap.fromXml( getMessageExchange().getProperties().get(
+					AbstractSecurityCheckWithProperties.SECURITY_CHANGED_PARAMETERS ) );
+		}
+		else
+		{
+			changedParams = new StringToStringMap();
+		}
+		StringBuilder changedParamsInfo = new StringBuilder();
+		changedParamsInfo.append( "[" );
+		Iterator<String> keys = changedParams.keySet().iterator();
+		while( keys.hasNext() )
+		{
+			String param = ( String )keys.next();
+			String value = changedParams.get( param );
+			changedParamsInfo.append( param + "=" + value + "," );
+		}
+		changedParamsInfo.replace( changedParamsInfo.length() - 1, changedParamsInfo.length(), "]" );
+
+		StringBuilder checkRequestResultStr = new StringBuilder( "[" + getSecurityCheck().getName() + "] Request "
+				+ requestCount + " - " + getStatus() );
+		if( changedParamsInfo.length() > 1 )
+		{
+			checkRequestResultStr.append( " - " + changedParamsInfo.toString() );
+		}
+		return checkRequestResultStr.toString();
 	}
 
 }

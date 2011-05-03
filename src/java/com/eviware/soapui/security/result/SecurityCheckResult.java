@@ -57,6 +57,7 @@ public class SecurityCheckResult implements SecurityResult
 	private boolean hasRequestsWithWarnings;
 	private ResultStatus executionProgressStatus;
 	private ResultStatus logIconStatus;
+	private int requestCount = 0;
 
 	public SecurityCheckResult( SecurityCheck securityCheck )
 	{
@@ -66,6 +67,7 @@ public class SecurityCheckResult implements SecurityResult
 		logIconStatus = ResultStatus.INITIALIZED;
 		securityRequestResultList = new ArrayList<SecurityCheckRequestResult>();
 		timeStamp = System.currentTimeMillis();
+		requestCount = 0;
 	}
 
 	public List<SecurityCheckRequestResult> getSecurityRequestResultList()
@@ -117,6 +119,7 @@ public class SecurityCheckResult implements SecurityResult
 			securityRequestResultList.add( secReqResult );
 
 		timeTaken += secReqResult.getTimeTaken();
+		requestCount++ ;
 
 		if( !hasAddedRequests )
 		{
@@ -144,8 +147,9 @@ public class SecurityCheckResult implements SecurityResult
 		executionProgressStatus = status;
 
 		this.testLog.append( "\nSecurityRequest " ).append( securityRequestResultList.indexOf( secReqResult ) ).append(
-				secReqResult.getStatus().toString() ).append( ": took " ).append( secReqResult.getTimeTaken() ).append(
-				" ms" );
+				secReqResult.getStatus().toString() ).append( secReqResult.getChangedParamsInfo( requestCount ) );
+		// append( ": took " ).append( secReqResult.getTimeTaken() ).append(
+		// " ms" );
 		for( String s : secReqResult.getMessages() )
 			testLog.append( "\n -> " ).append( s );
 
@@ -207,8 +211,8 @@ public class SecurityCheckResult implements SecurityResult
 	public String getSecurityTestLog()
 	{
 		StringBuffer tl = new StringBuffer().append( "\nSecurityScan " ).append( " [" ).append(
-				securityCheck.getTestStep().getName() ).append( "] " ).append( status.toString() ).append( ": took " )
-				.append( timeTaken ).append( " ms" );
+				securityCheck.getTestStep().getName() ).append( "] " ).append( executionProgressStatus.toString() ).append(
+				": took " ).append( timeTaken ).append( " ms" );
 		tl.append( testLog );
 		return tl.toString();
 	}

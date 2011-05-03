@@ -197,38 +197,9 @@ public class SecurityTestLogModel extends AbstractListModel
 		int size = items.size();
 		requestCount++ ;
 
-		StringToStringMap changedParams = null;
-
-		if( securityCheckRequestResult.getMessageExchange() != null )
-		{
-			changedParams = StringToStringMap.fromXml( securityCheckRequestResult.getMessageExchange().getProperties()
-					.get( AbstractSecurityCheckWithProperties.SECURITY_CHANGED_PARAMETERS ) );
-		}
-		else
-		{
-			changedParams = new StringToStringMap();
-		}
-		StringBuilder changedParamsInfo = new StringBuilder();
-		changedParamsInfo.append( "[" );
-		Iterator<String> keys = changedParams.keySet().iterator();
-		while( keys.hasNext() )
-		{
-			String param = ( String )keys.next();
-			String value = changedParams.get( param );
-			changedParamsInfo.append( param + "=" + value + "," );
-		}
-		changedParamsInfo.replace( changedParamsInfo.length() - 1, changedParamsInfo.length(), "]" );
-
 		SoftReference<SecurityResult> checkReqResultRef = new SoftReference<SecurityResult>( securityCheckRequestResult );
 
-		StringBuilder checkRequestResultStr = new StringBuilder( "["
-				+ securityCheckRequestResult.getSecurityCheck().getName() + "] Request " + requestCount + " - "
-				+ securityCheckRequestResult.getStatus() );
-		if( changedParamsInfo.length() > 1 )
-		{
-			checkRequestResultStr.append( " - " + changedParamsInfo.toString() );
-		}
-		items.add( checkRequestResultStr.toString() );
+		items.add( securityCheckRequestResult.getChangedParamsInfo( requestCount ) );
 		results.add( checkReqResultRef );
 
 		for( String msg : securityCheckRequestResult.getMessages() )
