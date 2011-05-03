@@ -55,4 +55,8 @@ public class RequestFileAttachment extends FileAttachment<AbstractHttpRequest<?>
 		else
 			return getModelItem().getAttachmentPart( getPart() ).getAttachmentType();
 	}
+	
+	public String toString() {
+		return getName();
+	}
 }
