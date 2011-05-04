@@ -348,7 +348,7 @@ public class HttpTestRequestDesktopPanel extends
 		assertionsPanel.setEnabled( enabled );
 
 		if( SoapUI.getTestMonitor().hasRunningLoadTest( getRequest().getTestCase() )
-				|| !SoapUI.getTestMonitor().hasRunningSecurityTest( getModelItem().getTestCase() ) )
+				|| SoapUI.getTestMonitor().hasRunningSecurityTest( getModelItem().getTestCase() ) )
 		{
 			getRequest().removeSubmitListener( this );
 		}
