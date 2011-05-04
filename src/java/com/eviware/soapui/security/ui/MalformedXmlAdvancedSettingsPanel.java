@@ -11,13 +11,10 @@
  */
 package com.eviware.soapui.security.ui;
 
-import java.awt.Dimension;
-
 import javax.swing.JComponent;
 
 import com.eviware.soapui.config.MalformedXmlAttributeConfig;
 import com.eviware.soapui.config.MalformedXmlConfig;
-import com.eviware.soapui.security.ui.MaliciousAttachmentMutationsPanel.MutationSettings;
 import com.eviware.x.form.XFormField;
 import com.eviware.x.form.XFormFieldListener;
 import com.eviware.x.form.support.ADialogBuilder;

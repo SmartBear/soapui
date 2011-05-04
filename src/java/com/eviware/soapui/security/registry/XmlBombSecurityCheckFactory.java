@@ -52,8 +52,6 @@ public class XmlBombSecurityCheckFactory extends AbstractSecurityCheckFactory
 		SecurityCheckConfig securityCheckConfig = SecurityCheckConfig.Factory.newInstance();
 		securityCheckConfig.setType( XmlBombSecurityCheck.TYPE );
 		securityCheckConfig.setName( name );
-		XmlBombSecurityCheckConfig xbsc = XmlBombSecurityCheckConfig.Factory.newInstance();
-		securityCheckConfig.setConfig( xbsc );
 		return securityCheckConfig;
 	}
 
