@@ -1,21 +1,20 @@
 package com.eviware.soapui.security.support;
 
 import java.io.File;
-import java.io.IOException;
 
-import com.eviware.soapui.impl.wsdl.AttachmentContainer;
+import javax.swing.table.AbstractTableModel;
+
 import com.eviware.soapui.security.tools.AttachmentElement;
 import com.eviware.soapui.security.tools.AttachmentHolder;
 import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.editor.inspectors.attachments.AttachmentsTableModel;
 
-public abstract class MaliciousAttachmentTableModel extends AttachmentsTableModel
+public abstract class MaliciousAttachmentTableModel extends AbstractTableModel // AttachmentsTableModel
 {
 
-	public MaliciousAttachmentTableModel( AttachmentContainer request )
-	{
-		super( request );
-	}
+	// public MaliciousAttachmentTableModel( AttachmentContainer request )
+	// {
+	// super( request );
+	// }
 
 	protected AttachmentHolder holder = new AttachmentHolder();
 
@@ -29,10 +28,10 @@ public abstract class MaliciousAttachmentTableModel extends AttachmentsTableMode
 		try
 		{
 			holder.addElement( file, contentType, enabled, cached );
-			addFile( file, cached );
+			// addFile( file, cached );
 			fireTableDataChanged();
 		}
-		catch( IOException e )
+		catch( Exception e )
 		{
 			UISupport.showErrorMessage( e );
 		}
@@ -43,7 +42,7 @@ public abstract class MaliciousAttachmentTableModel extends AttachmentsTableMode
 		if( UISupport.confirm( "Remove selected attachments?", "Remove Attachments" ) )
 		{
 			holder.removeElement( i );
-			removeAttachment( new int[] { i } );
+			// removeAttachment( new int[] { i } );
 			fireTableDataChanged();
 		}
 	}

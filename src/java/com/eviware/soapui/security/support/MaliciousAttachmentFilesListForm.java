@@ -10,6 +10,10 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import com.eviware.soapui.config.AttachmentConfig;
+import com.eviware.soapui.config.MaliciousAttachmentConfig;
+import com.eviware.soapui.config.MaliciousAttachmentElementConfig;
+import com.eviware.soapui.config.MaliciousAttachmentSecurityCheckConfig;
 import com.eviware.soapui.model.iface.Attachment;
 
 public class MaliciousAttachmentFilesListForm extends JPanel
@@ -18,10 +22,16 @@ public class MaliciousAttachmentFilesListForm extends JPanel
 	private JList list;
 	private Attachment oldSelection;
 	private Attachment currentSelection;
+	private MaliciousAttachmentSecurityCheckConfig config;
+	final MaliciousAttachmentListToTableHolder holder;
 
-	public MaliciousAttachmentFilesListForm( final MaliciousAttachmentListToTableHolder holder )
+	public MaliciousAttachmentFilesListForm( MaliciousAttachmentSecurityCheckConfig config,
+			MaliciousAttachmentListToTableHolder holder )
 	{
 		super( new BorderLayout() );
+
+		this.config = config;
+		this.holder = holder;
 
 		listModel = new DefaultListModel();
 		list = new JList( listModel );
@@ -35,8 +45,9 @@ public class MaliciousAttachmentFilesListForm extends JPanel
 
 			public void valueChanged( ListSelectionEvent e )
 			{
-				currentSelection = ( Attachment )listModel.get( list.getSelectedIndex() );
-				holder.refresh( oldSelection, currentSelection );
+				currentSelection = ( list.getSelectedIndex() == -1 ) ? null : ( Attachment )listModel.get( list
+						.getSelectedIndex() );
+				MaliciousAttachmentFilesListForm.this.holder.refresh( oldSelection, currentSelection );
 				oldSelection = currentSelection;
 			}
 		} );
@@ -62,21 +73,60 @@ public class MaliciousAttachmentFilesListForm extends JPanel
 	{
 		Attachment[] result = new Attachment[listModel.size()];
 		for( int c = 0; c < result.length; c++ )
+		{
 			result[c] = ( Attachment )listModel.get( c );
-
+		}
 		return result;
 	}
 
 	public void setData( Attachment[] attachments )
 	{
 		Attachment[] oldData = getData();
+		MaliciousAttachmentSecurityCheckConfig copy = ( MaliciousAttachmentSecurityCheckConfig )config.copy();
 
 		listModel.clear();
+		config.getElementList().clear();
+
 		if( attachments != null )
 		{
 			for( Attachment att : attachments )
 			{
 				listModel.addElement( att );
+
+				// add empty element
+				MaliciousAttachmentElementConfig newElement = config.addNewElement();
+				newElement.setKey( att.getName() );
+
+				for( MaliciousAttachmentElementConfig element : copy.getElementList() )
+				{
+					if( element.getKey().equals( att.getName() ) )
+					{
+						newElement.setRemove( element.getRemove() );
+
+						for( MaliciousAttachmentConfig el : element.getGenerateAttachmentList() )
+						{
+							MaliciousAttachmentConfig newEl = newElement.addNewGenerateAttachment();
+							AttachmentConfig newElAttachment = newEl.addNewAttachment();
+							newEl.setEnabled( el.getEnabled() );
+							newElAttachment.setSize( el.getAttachment().getSize() );
+							newElAttachment.setContentType( el.getAttachment().getContentType() );
+
+							// holder.addResultToGenerateTable( );
+						}
+
+						for( MaliciousAttachmentConfig el : element.getReplaceAttachmentList() )
+						{
+							MaliciousAttachmentConfig newEl = newElement.addNewReplaceAttachment();
+							AttachmentConfig newElAttachment = newEl.addNewAttachment();
+							newEl.setEnabled( el.getEnabled() );
+							newElAttachment.setSize( el.getAttachment().getSize() );
+							newElAttachment.setContentType( el.getAttachment().getContentType() );
+
+							// holder.addResultToReplaceTable();
+						}
+						break;
+					}
+				}
 			}
 		}
 

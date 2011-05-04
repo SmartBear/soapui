@@ -5,6 +5,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Random;
 
+import com.eviware.soapui.support.StringUtils;
+import com.eviware.soapui.support.editor.inspectors.attachments.ContentTypeHandler;
+
 public class RandomFile
 {
 
@@ -13,13 +16,14 @@ public class RandomFile
 
 	private final Random random = new Random();
 
-	public RandomFile( int length, String name ) throws IOException
+	public RandomFile( int length, String name, String contentType ) throws IOException
 	{
 		this.length = length;
-		file = File.createTempFile( "attachment-" + name, ".xxx" );
+		file = File.createTempFile( StringUtils.createFileName( name, '-' ),
+				"." + ContentTypeHandler.getExtensionForContentType( contentType ) );
 	}
 
-	public void next() throws IOException
+	public File next() throws IOException
 	{
 		FileOutputStream out = new FileOutputStream( file );
 		long used = 0;
@@ -30,6 +34,8 @@ public class RandomFile
 			out.write( random.nextInt() );
 		}
 		out.close();
+
+		return file;
 	}
 
 }

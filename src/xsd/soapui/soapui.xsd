@@ -1931,15 +1931,14 @@
 					<xsd:element name="tearDownScript" type="tns:Script"
 						maxOccurs="1" minOccurs="0">
 					</xsd:element>
-					<xsd:element name="assertion"
-						type="tns:TestAssertion" maxOccurs="unbounded" minOccurs="0">
+					<xsd:element name="assertion" type="tns:TestAssertion"
+						maxOccurs="unbounded" minOccurs="0">
 					</xsd:element>
 					<xsd:element name="testStep" type="tns:TestStep"></xsd:element>
-					<xsd:element name="checkedPameters"
-						type="tns:CheckedParametersList" minOccurs="1" maxOccurs="1">
+					<xsd:element name="checkedPameters" type="tns:CheckedParametersList"
+						minOccurs="1" maxOccurs="1">
 					</xsd:element>
-					<xsd:element name="executionStrategy"
-						type="tns:ExecutionStrategy">
+					<xsd:element name="executionStrategy" type="tns:ExecutionStrategy">
 					</xsd:element>
 				</xsd:sequence>
 				<xsd:attribute name="type" type="xsd:string"></xsd:attribute>
@@ -2006,26 +2005,28 @@
 		<xsd:attribute name="xmlAttachmentPrefix" type="xsd:string"></xsd:attribute>
 	</xsd:complexType>
 
-	<xsd:complexType name="GenerateFileMaliciousAttachment">
-		<xsd:attribute name="size" type="xsd:string"></xsd:attribute>
-		<xsd:attribute name="contentType" type="xsd:int"></xsd:attribute>
-		<xsd:attribute name="enable" type="xsd:boolean"></xsd:attribute>
+	<xsd:complexType name="MaliciousAttachment">
+		<xsd:sequence>
+			<xsd:element name="attachment" type="tns:Attachment"></xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="enabled" type="xsd:boolean"></xsd:attribute>
 	</xsd:complexType>
 
-	<xsd:complexType name="ReplaceFileMaliciousAttachment">
-		<xsd:attribute name="filename" type="xsd:string"></xsd:attribute>
-		<xsd:attribute name="size" type="xsd:string"></xsd:attribute>
-		<xsd:attribute name="contentType" type="xsd:int"></xsd:attribute>
-		<xsd:attribute name="enable" type="xsd:boolean"></xsd:attribute>
+	<xsd:complexType name="MaliciousAttachmentElement">
+		<xsd:sequence>
+			<xsd:element name="replaceAttachment" type="tns:MaliciousAttachment"
+				maxOccurs="unbounded" minOccurs="0"></xsd:element>
+			<xsd:element name="generateAttachment" type="tns:MaliciousAttachment"
+				maxOccurs="unbounded" minOccurs="0"></xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="key" type="xsd:string"></xsd:attribute>
+		<xsd:attribute name="remove" type="xsd:boolean"></xsd:attribute>
 	</xsd:complexType>
 
 	<xsd:complexType name="MaliciousAttachmentSecurityCheck">
 		<xsd:sequence>
-			<xsd:element name="generateFileList" type="tns:GenerateFileMaliciousAttachment"
+			<xsd:element name="element" type="tns:MaliciousAttachmentElement"
 				minOccurs="0" maxOccurs="unbounded"></xsd:element>
-			<xsd:element name="replaceFileList" type="tns:ReplaceFileMaliciousAttachment"
-				minOccurs="0" maxOccurs="unbounded"></xsd:element>
-			<xsd:element name="remove" type="xsd:boolean"></xsd:element>
 		</xsd:sequence>
 		<xsd:attribute name="requestTimeout" type="xsd:int"></xsd:attribute>
 	</xsd:complexType>

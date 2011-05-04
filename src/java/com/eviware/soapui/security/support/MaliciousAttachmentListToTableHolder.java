@@ -78,7 +78,10 @@ public class MaliciousAttachmentListToTableHolder
 		{
 			save( oldItem.getName() );
 		}
-		load( newItem.getName() );
+		if( newItem != null )
+		{
+			load( newItem.getName() );
+		}
 	}
 
 	public void addResultToGenerateTable( File file, String contentType, Boolean enabled, Boolean cached )
@@ -111,7 +114,6 @@ public class MaliciousAttachmentListToTableHolder
 		generateMap.put( item, generateList );
 		replaceMap.put( item, replaceList );
 		removeMap.put( item, remove );
-
 	}
 
 	private void load( String item )
@@ -135,8 +137,8 @@ public class MaliciousAttachmentListToTableHolder
 		{
 			for( AttachmentElement element : generateList )
 			{
-				generateTableModel.addResult( element.getAttachment(), element.getContentType(), element.isEnabled(),
-						element.isCached() );
+				generateTableModel.addResult( element.getFile(), element.getContentType(), element.getEnabled(),
+						element.getCached() );
 			}
 		}
 
@@ -144,10 +146,9 @@ public class MaliciousAttachmentListToTableHolder
 		{
 			for( AttachmentElement element : replaceList )
 			{
-				replaceTableModel.addResult( element.getAttachment(), element.getContentType(), element.isEnabled(),
-						element.isCached() );
+				replaceTableModel.addResult( element.getFile(), element.getContentType(), element.getEnabled(),
+						element.getCached() );
 			}
 		}
 	}
-
 }

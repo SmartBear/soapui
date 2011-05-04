@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class AttachmentHolder
 {
 
@@ -17,7 +16,7 @@ public class AttachmentHolder
 			list = new ArrayList<AttachmentElement>();
 		}
 
-		list.add( new AttachmentElement( file, contentType, enabled, cached ) );
+		list.add( new AttachmentElement( file, enabled, cached ) );
 	}
 
 	public void removeElement( int i )

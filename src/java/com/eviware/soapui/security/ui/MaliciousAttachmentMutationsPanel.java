@@ -21,10 +21,10 @@ import javax.swing.table.TableCellEditor;
 
 import org.jdesktop.swingx.JXTable;
 
+import com.eviware.soapui.config.AttachmentConfig;
+import com.eviware.soapui.config.MaliciousAttachmentConfig;
+import com.eviware.soapui.config.MaliciousAttachmentElementConfig;
 import com.eviware.soapui.config.MaliciousAttachmentSecurityCheckConfig;
-import com.eviware.soapui.impl.wsdl.AttachmentContainer;
-import com.eviware.soapui.impl.wsdl.MutableAttachmentContainer;
-import com.eviware.soapui.impl.wsdl.support.PathUtils;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.testsuite.TestStep;
@@ -54,7 +54,7 @@ public class MaliciousAttachmentMutationsPanel
 	private JFormDialog dialog;
 	private MaliciousAttachmentSecurityCheckConfig config;
 	private TestStep testStep;
-	private AttachmentContainer container;
+	// private AttachmentContainer container;
 
 	private MaliciousAttachmentListToTableHolder holder = new MaliciousAttachmentListToTableHolder();
 
@@ -63,39 +63,42 @@ public class MaliciousAttachmentMutationsPanel
 		this.config = config;
 		this.testStep = testStep;
 
-		if( testStep instanceof WsdlTestRequestStep )
-		{
-			WsdlTestRequestStep wsdlTestRequestStep = ( WsdlTestRequestStep )testStep;
-
-			if( wsdlTestRequestStep.getTestRequest() instanceof MutableAttachmentContainer )
-			{
-				container = ( MutableAttachmentContainer )wsdlTestRequestStep.getTestRequest();
-			}
-		}
+		// if( testStep instanceof WsdlTestRequestStep )
+		// {
+		// WsdlTestRequestStep wsdlTestRequestStep = ( WsdlTestRequestStep
+		// )testStep;
+		//
+		// if( wsdlTestRequestStep.getTestRequest() instanceof
+		// MutableAttachmentContainer )
+		// {
+		// container = ( MutableAttachmentContainer
+		// )wsdlTestRequestStep.getTestRequest();
+		// }
+		// }
 
 		dialog = ( JFormDialog )ADialogBuilder.buildDialog( MutationSettings.class );
 		dialog.getFormField( MutationSettings.MUTATIONS_PANEL ).setProperty( "component", createMutationsPanel() );
 		dialog.getFormField( MutationSettings.MUTATIONS_PANEL ).setProperty( "dimension", new Dimension( 720, 320 ) );
+
+		initConfig();
 		holder.refresh();
+	}
+
+	private void initConfig()
+	{
+		if( config != null )
+		{
+			// init empty configs for all existing attachments
+
+			// also delete configs for all removed attachments
+
+		}
 	}
 
 	private JComponent buildFilesList()
 	{
-		MaliciousAttachmentFilesListForm filesList = new MaliciousAttachmentFilesListForm( holder );
+		MaliciousAttachmentFilesListForm filesList = new MaliciousAttachmentFilesListForm( config, holder );
 		holder.setFilesList( filesList );
-
-		Attachment[] data = new Attachment[] {};
-		if( testStep instanceof WsdlTestRequestStep )
-		{
-			Attachment[] attachments = ( ( WsdlTestRequestStep )testStep ).getHttpRequest().getAttachments();
-			data = new Attachment[attachments.length];
-			for( int i = 0; i < attachments.length; i++ )
-			{
-				data[i] = ( ( WsdlTestRequestStep )testStep ).getTestRequest().getAttachmentAt( i );
-			}
-		}
-
-		filesList.setData( data );
 		JScrollPane scrollPane = new JScrollPane( filesList );
 		return scrollPane;
 	}
@@ -104,12 +107,12 @@ public class MaliciousAttachmentMutationsPanel
 	{
 		JFormDialog tablesDialog = ( JFormDialog )ADialogBuilder.buildDialog( MutationTables.class );
 
-		MaliciousAttachmentTableModel generateTableModel = new MaliciousAttachmentGenerateTableModel( container );
+		MaliciousAttachmentTableModel generateTableModel = new MaliciousAttachmentGenerateTableModel( config );
 		tablesDialog.getFormField( MutationTables.GENERATE_FILE ).setProperty( "dimension", new Dimension( 410, 120 ) );
 		tablesDialog.getFormField( MutationTables.GENERATE_FILE ).setProperty( "component",
 				buildTable( generateTableModel, false ) );
 
-		MaliciousAttachmentTableModel replaceTableModel = new MaliciousAttachmentReplaceTableModel( container );
+		MaliciousAttachmentTableModel replaceTableModel = new MaliciousAttachmentReplaceTableModel( config );
 		tablesDialog.getFormField( MutationTables.REPLACE_FILE ).setProperty( "dimension", new Dimension( 410, 120 ) );
 		tablesDialog.getFormField( MutationTables.REPLACE_FILE ).setProperty( "component",
 				buildTable( replaceTableModel, true ) );
@@ -134,13 +137,14 @@ public class MaliciousAttachmentMutationsPanel
 		if( add )
 		{
 			toolbar.add( UISupport.createToolbarButton( new AddFileAction() ) );
+			toolbar.add( UISupport.createToolbarButton( new RemoveReplacementFileAction( tableModel, table ) ) );
 		}
 		else
 		{
 			toolbar.add( UISupport.createToolbarButton( new GenerateFileAction() ) );
+			toolbar.add( UISupport.createToolbarButton( new RemoveGeneratedFileAction( tableModel, table ) ) );
 		}
 
-		toolbar.add( UISupport.createToolbarButton( new RemoveFileAction( tableModel, table ) ) );
 		toolbar.add( UISupport.createToolbarButton( new HelpAction( "www.soapui.org" ) ) );
 
 		panel.add( toolbar, BorderLayout.PAGE_START );
@@ -171,6 +175,22 @@ public class MaliciousAttachmentMutationsPanel
 
 	public JComponent getPanel()
 	{
+		MaliciousAttachmentFilesListForm filesList = holder.getFilesList();
+
+		Attachment[] data = new Attachment[] {};
+		if( testStep instanceof WsdlTestRequestStep )
+		{
+			Attachment[] attachments = ( ( WsdlTestRequestStep )testStep ).getHttpRequest().getAttachments();
+			data = new Attachment[attachments.length];
+			for( int i = 0; i < attachments.length; i++ )
+			{
+				data[i] = ( ( WsdlTestRequestStep )testStep ).getTestRequest().getAttachmentAt( i );
+			}
+		}
+
+		filesList.setData( data );
+		holder.refresh();
+
 		return dialog.getPanel();
 	}
 
@@ -206,7 +226,6 @@ public class MaliciousAttachmentMutationsPanel
 	public class AddFileAction extends AbstractAction
 	{
 		private JFileChooser fileChooser;
-		private String projectRoot = ProjectSettings.PROJECT_ROOT;
 
 		public AddFileAction()
 		{
@@ -222,7 +241,10 @@ public class MaliciousAttachmentMutationsPanel
 
 			}
 
-			String root = PathUtils.getExpandedResourceRoot( container.getModelItem() );
+			// String root = PathUtils.getExpandedResourceRoot(
+			// container.getModelItem() );
+			String root = ProjectSettings.PROJECT_ROOT;
+
 			if( StringUtils.hasContent( root ) )
 			{
 				fileChooser.setCurrentDirectory( new File( root ) );
@@ -241,6 +263,19 @@ public class MaliciousAttachmentMutationsPanel
 				}
 
 				holder.addResultToReplaceTable( file, new MimetypesFileTypeMap().getContentType( file ), true, retval );
+
+				for( MaliciousAttachmentElementConfig element : config.getElementList() )
+				{
+					if( element.getKey().equals( holder.getTablesDialog().getValue( MutationTables.SELECTED_FILE ) ) )
+					{
+						MaliciousAttachmentConfig maliciousAtt = element.addNewGenerateAttachment();
+						AttachmentConfig attachment = maliciousAtt.addNewAttachment();
+						maliciousAtt.setEnabled( true );
+						attachment.setTempFilename( file.getName() );
+						attachment.setSize( file.length() );
+						attachment.setContentType( new MimetypesFileTypeMap().getContentType( file ) );
+					}
+				}
 			}
 		}
 	}
@@ -283,24 +318,36 @@ public class MaliciousAttachmentMutationsPanel
 
 				try
 				{
-					new RandomFile( newSizeInt, "xxx" ).next();
-					holder.addResultToGenerateTable( new File( "xxx" ), contentType, true, true );
+					File rFile = new RandomFile( newSizeInt, "attachment", contentType ).next();
+
+					holder.addResultToGenerateTable( rFile, new MimetypesFileTypeMap().getContentType( rFile ), true, true );
+
+					for( MaliciousAttachmentElementConfig element : config.getElementList() )
+					{
+						if( element.getKey().equals( holder.getTablesDialog().getValue( MutationTables.SELECTED_FILE ) ) )
+						{
+							MaliciousAttachmentConfig maliciousAtt = element.addNewReplaceAttachment();
+							AttachmentConfig att = maliciousAtt.addNewAttachment();
+							maliciousAtt.setEnabled( true );
+							att.setSize( rFile.length() );
+							att.setContentType( new MimetypesFileTypeMap().getContentType( rFile ) );
+						}
+					}
 				}
 				catch( Exception e1 )
 				{
 					UISupport.showErrorMessage( e1 );
 				}
-
 			}
 		}
 	}
 
-	public class RemoveFileAction extends AbstractAction
+	public class RemoveReplacementFileAction extends AbstractAction
 	{
 		private MaliciousAttachmentTableModel tableModel;
 		private JXTable table;
 
-		public RemoveFileAction( MaliciousAttachmentTableModel tableModel, JXTable table )
+		public RemoveReplacementFileAction( MaliciousAttachmentTableModel tableModel, JXTable table )
 		{
 			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/remove_property.gif" ) );
 			putValue( Action.SHORT_DESCRIPTION, "Remove file" );
@@ -315,8 +362,51 @@ public class MaliciousAttachmentMutationsPanel
 			if( row >= 0 )
 			{
 				tableModel.removeResult( row );
-			}
 
+				for( int i = 0; i < config.getElementList().size(); i++ )
+				{
+					MaliciousAttachmentElementConfig element = config.getElementList().get( i );
+
+					if( element.getKey().equals( holder.getTablesDialog().getValue( MutationTables.SELECTED_FILE ) ) )
+					{
+						element.getReplaceAttachmentList().remove( row );
+					}
+				}
+			}
+		}
+	}
+
+	public class RemoveGeneratedFileAction extends AbstractAction
+	{
+		private MaliciousAttachmentTableModel tableModel;
+		private JXTable table;
+
+		public RemoveGeneratedFileAction( MaliciousAttachmentTableModel tableModel, JXTable table )
+		{
+			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/remove_property.gif" ) );
+			putValue( Action.SHORT_DESCRIPTION, "Remove file" );
+
+			this.tableModel = tableModel;
+			this.table = table;
+		}
+
+		public void actionPerformed( ActionEvent e )
+		{
+			int row = table.getSelectedRow();
+			if( row >= 0 )
+			{
+				tableModel.removeResult( row );
+
+				for( int i = 0; i < config.getElementList().size(); i++ )
+				{
+					MaliciousAttachmentElementConfig element = config.getElementList().get( i );
+
+					if( element.getKey().equals( holder.getTablesDialog().getValue( MutationTables.SELECTED_FILE ) ) )
+					{
+						element.getGenerateAttachmentList().remove( row );
+					}
+				}
+			}
 		}
 	}
 

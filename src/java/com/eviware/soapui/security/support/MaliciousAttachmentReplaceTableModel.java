@@ -1,14 +1,16 @@
 package com.eviware.soapui.security.support;
 
-import com.eviware.soapui.impl.wsdl.AttachmentContainer;
+import com.eviware.soapui.config.MaliciousAttachmentSecurityCheckConfig;
 import com.eviware.soapui.security.tools.AttachmentElement;
 
 public class MaliciousAttachmentReplaceTableModel extends MaliciousAttachmentTableModel
 {
 
-	public MaliciousAttachmentReplaceTableModel( AttachmentContainer request )
+	private MaliciousAttachmentSecurityCheckConfig config;
+
+	public MaliciousAttachmentReplaceTableModel( MaliciousAttachmentSecurityCheckConfig config )
 	{
-		super( request );
+		this.config = config;
 	}
 
 	public Class<?> getColumnClass( int columnIndex )
@@ -59,13 +61,13 @@ public class MaliciousAttachmentReplaceTableModel extends MaliciousAttachmentTab
 			switch( columnIndex )
 			{
 			case 0 :
-				return element.isCached() ? element.getName() : element.getPath();
+				return ( element.getCached() ) ? element.getFile().getName() : element.getFile().getAbsolutePath();
 			case 1 :
 				return element.getSize();
 			case 2 :
 				return element.getContentType();
 			case 3 :
-				return element.isEnabled();
+				return element.getEnabled();
 			}
 		}
 

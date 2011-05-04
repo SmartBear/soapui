@@ -23,14 +23,13 @@ import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Attachment;
-import com.eviware.soapui.model.iface.MessageExchange;
+import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.security.ui.MaliciousAttachmentAdvancedSettingsPanel;
 import com.eviware.soapui.security.ui.MaliciousAttachmentMutationsPanel;
-import com.eviware.soapui.support.types.StringToStringMap;
 
 public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 {
@@ -83,20 +82,22 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 		return config;
 	}
 
-	protected StringToStringMap update( TestStep testStep, SecurityTestRunContext context ) throws Exception
+	/*
+	 * Set attachments
+	 */
+	private void updateRequestContent( TestStep testStep, SecurityTestRunContext context )
 	{
-		return null;
 
 	}
 
 	@Override
-	protected void execute( SecurityTestRunner runner, TestStep testStep, SecurityTestRunContext context )
+	protected void execute( SecurityTestRunner securityTestRunner, TestStep testStep, SecurityTestRunContext context )
 	{
 		try
 		{
-			StringToStringMap paramsUpdated = update( testStep, context );
-			MessageExchange message = ( MessageExchange )testStep.run( ( TestCaseRunner )runner, context );
-			// createMessageExchange( paramsUpdated, message );
+			updateRequestContent( testStep, context );
+			getTestStep().run( ( TestCaseRunner )securityTestRunner,
+					( TestCaseRunContext )securityTestRunner.getRunContext() );
 		}
 		catch( Exception e )
 		{
@@ -117,6 +118,7 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 
 		Attachment attach = request.attachFile( file, false );
 		attach.setContentType( contentType );
+		file.delete();
 
 		return attach;
 	}

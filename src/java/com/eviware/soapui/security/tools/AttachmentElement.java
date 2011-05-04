@@ -6,29 +6,32 @@ import javax.activation.MimetypesFileTypeMap;
 
 public class AttachmentElement
 {
+	private File file;
+	private String contentType;
+	private Boolean cached;
+	private Boolean enabled;
 
-	File file;
-	String contentType;
-	Boolean enabled;
-	Boolean cached;
-
-	AttachmentElement( File file, String contentType, Boolean enabled, Boolean cached )
+	AttachmentElement( File file, Boolean enabled, Boolean cached )
 	{
 		this.file = file;
-		this.contentType = contentType;
 		this.enabled = enabled;
 		this.cached = cached;
+		this.contentType = new MimetypesFileTypeMap().getContentType(file);
 	}
 
-	public void setAttachment( File file )
+	public File getFile()
+	{
+		return file;
+	}
+
+	public void setFile( File file )
 	{
 		this.file = file;
-		this.contentType = new MimetypesFileTypeMap().getContentType( file );
 	}
 
-	public void setContentType( String contentType )
+	public Boolean getEnabled()
 	{
-		this.contentType = contentType;
+		return enabled;
 	}
 
 	public void setEnabled( Boolean enabled )
@@ -36,14 +39,14 @@ public class AttachmentElement
 		this.enabled = enabled;
 	}
 
-	public String getName()
+	public Boolean getCached()
 	{
-		return file.getName();
+		return cached;
 	}
 
-	public String getPath()
+	public void setCached( Boolean cached )
 	{
-		return file.getPath();
+		this.cached = cached;
 	}
 
 	public long getSize()
@@ -51,24 +54,13 @@ public class AttachmentElement
 		return file.length();
 	}
 
-	public File getAttachment()
-	{
-		return file;
-	}
-
 	public String getContentType()
 	{
-		return this.contentType;
+		return contentType;
 	}
 
-	public Boolean isEnabled()
+	public void setContentType( String contentType )
 	{
-		return enabled;
+		this.contentType = contentType;
 	}
-
-	public Boolean isCached()
-	{
-		return cached;
-	}
-
 }

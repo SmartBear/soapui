@@ -1,16 +1,16 @@
 package com.eviware.soapui.security.support;
 
-import java.io.File;
-
-import com.eviware.soapui.impl.wsdl.AttachmentContainer;
+import com.eviware.soapui.config.MaliciousAttachmentSecurityCheckConfig;
 import com.eviware.soapui.security.tools.AttachmentElement;
 
 public class MaliciousAttachmentGenerateTableModel extends MaliciousAttachmentTableModel
 {
 
-	public MaliciousAttachmentGenerateTableModel( AttachmentContainer request )
+	private MaliciousAttachmentSecurityCheckConfig config;
+
+	public MaliciousAttachmentGenerateTableModel( MaliciousAttachmentSecurityCheckConfig config )
 	{
-		super( request );
+		this.config = config;
 	}
 
 	public Class<?> getColumnClass( int columnIndex )
@@ -63,7 +63,7 @@ public class MaliciousAttachmentGenerateTableModel extends MaliciousAttachmentTa
 			case 1 :
 				return element.getContentType();
 			case 2 :
-				return element.isEnabled();
+				return element.getEnabled();
 			}
 		}
 
@@ -76,13 +76,11 @@ public class MaliciousAttachmentGenerateTableModel extends MaliciousAttachmentTa
 		{
 			return;
 		}
+
 		AttachmentElement element = holder.getList().get( row );
 
 		switch( column )
 		{
-		case 0 :
-			element.setAttachment( ( File )aValue );
-			break;
 		case 1 :
 			element.setContentType( ( String )aValue );
 			break;
