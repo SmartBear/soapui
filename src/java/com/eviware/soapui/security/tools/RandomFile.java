@@ -1,7 +1,8 @@
 package com.eviware.soapui.security.tools;
 
+import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Random;
 
@@ -25,7 +26,7 @@ public class RandomFile
 
 	public File next() throws IOException
 	{
-		FileOutputStream out = new FileOutputStream( file );
+		BufferedWriter out = new BufferedWriter( new FileWriter( file ) );
 		long used = 0;
 
 		while( used <= length )
@@ -33,6 +34,7 @@ public class RandomFile
 			used++ ;
 			out.write( random.nextInt() );
 		}
+		out.flush();
 		out.close();
 
 		return file;

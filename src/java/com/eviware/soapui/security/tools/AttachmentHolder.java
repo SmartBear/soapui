@@ -16,7 +16,7 @@ public class AttachmentHolder
 			list = new ArrayList<AttachmentElement>();
 		}
 
-		list.add( new AttachmentElement( file, enabled, cached ) );
+		list.add( new AttachmentElement( file, contentType, enabled, cached ) );
 	}
 
 	public void removeElement( int i )

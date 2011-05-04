@@ -2,8 +2,6 @@ package com.eviware.soapui.security.tools;
 
 import java.io.File;
 
-import javax.activation.MimetypesFileTypeMap;
-
 public class AttachmentElement
 {
 	private File file;
@@ -11,12 +9,12 @@ public class AttachmentElement
 	private Boolean cached;
 	private Boolean enabled;
 
-	AttachmentElement( File file, Boolean enabled, Boolean cached )
+	AttachmentElement( File file, String contentType, Boolean enabled, Boolean cached )
 	{
 		this.file = file;
 		this.enabled = enabled;
 		this.cached = cached;
-		this.contentType = new MimetypesFileTypeMap().getContentType(file);
+		this.contentType = contentType;
 	}
 
 	public File getFile()

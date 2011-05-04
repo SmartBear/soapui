@@ -2,6 +2,7 @@ package com.eviware.soapui.security.support;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.io.File;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
@@ -111,7 +112,8 @@ public class MaliciousAttachmentFilesListForm extends JPanel
 							newElAttachment.setSize( el.getAttachment().getSize() );
 							newElAttachment.setContentType( el.getAttachment().getContentType() );
 
-							// holder.addResultToGenerateTable( );
+							holder.addResultToGenerateTable( new File( el.getAttachment().getTempFilename() ), el
+									.getAttachment().getContentType(), el.getEnabled(), true );
 						}
 
 						for( MaliciousAttachmentConfig el : element.getReplaceAttachmentList() )
@@ -122,7 +124,8 @@ public class MaliciousAttachmentFilesListForm extends JPanel
 							newElAttachment.setSize( el.getAttachment().getSize() );
 							newElAttachment.setContentType( el.getAttachment().getContentType() );
 
-							// holder.addResultToReplaceTable();
+							holder.addResultToReplaceTable( new File( el.getAttachment().getTempFilename() ), el
+									.getAttachment().getContentType(), el.getEnabled(), true );
 						}
 						break;
 					}
