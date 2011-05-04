@@ -46,8 +46,8 @@ public class SecurityTestStepResult implements SecurityResult
 	private TestStepResult originalTestStepResult;
 	private DefaultActionList actionList;
 	private boolean hasAddedRequests;
-	private ResultStatus executionProgressStatus;
-	private ResultStatus logIconStatus;
+	private ResultStatus executionProgressStatus = ResultStatus.UNKNOWN;;
+	private ResultStatus logIconStatus = ResultStatus.UNKNOWN;;
 
 	public SecurityTestStepResult( TestStep testStep, TestStepResult originalResult )
 	{
@@ -66,6 +66,11 @@ public class SecurityTestStepResult implements SecurityResult
 	public ResultStatus getStatus()
 	{
 		return status;
+	}
+
+	public void setStatus( ResultStatus status )
+	{
+		this.status = status;
 	}
 
 	/**
@@ -234,9 +239,9 @@ public class SecurityTestStepResult implements SecurityResult
 	 */
 	public String getSecurityTestLog()
 	{
-		StringBuffer tl = new StringBuffer().append( "TestStep " ).append( " [" ).append( testStep.getName() ).append(
-				"] " ).append( getExecutionProgressStatus().toString() ).append( ": took " ).append(
-				getOriginalTestStepResult().getTimeTaken() ).append( " ms" );
+		StringBuffer tl = new StringBuffer().append( "Step " ).append( " [" ).append( testStep.getName() ).append( "] " )
+				.append( getExecutionProgressStatus().toString() ).append( ": took " ).append(
+						getOriginalTestStepResult().getTimeTaken() ).append( " ms" );
 		tl.append( testLog );
 		return tl.toString();
 	}

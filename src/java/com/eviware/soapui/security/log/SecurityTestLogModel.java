@@ -181,9 +181,11 @@ public class SecurityTestLogModel extends AbstractListModel
 		{
 			SecurityCheck securityCheck = securityCheckResult.getSecurityCheck();
 			securityCheckResult.detectMissingItems();
-			items.set( startCheckIndex, "SecurityScan " + checkCount + " [" + securityCheck.getName() + "] "
-					+ securityCheckResult.getExecutionProgressStatus() + ", time taken = "
-					+ securityCheckResult.getTimeTaken() );
+			StringBuilder outStr = new StringBuilder( "SecurityScan " );
+			outStr.append( checkCount ).append( " [" ).append( securityCheck.getName() ).append( "] " ).append(
+					securityCheckResult.getExecutionProgressStatus() ).append( ", took = " ).append(
+					securityCheckResult.getTimeTaken() );
+			items.set( startCheckIndex, outStr.toString() );
 			SoftReference<SecurityResult> checkResultRef = new SoftReference<SecurityResult>( securityCheckResult );
 			results.set( startCheckIndex, checkResultRef );
 

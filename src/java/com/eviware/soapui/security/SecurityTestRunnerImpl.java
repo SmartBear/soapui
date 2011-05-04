@@ -201,6 +201,11 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 						}
 					}
 				}
+				// in case no security check is executed
+				if( securityStepResult.getExecutionProgressStatus() == ResultStatus.INITIALIZED )
+				{
+					securityStepResult.setExecutionProgressStatus( ResultStatus.UNKNOWN );
+				}
 				securityTest.putSecurityTestStepResult( currentStep, securityStepResult );
 			}
 			for( int i = 0; i < securityTestStepListeners.length; i++ )

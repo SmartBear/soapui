@@ -146,10 +146,7 @@ public class SecurityCheckResult implements SecurityResult
 		logIconStatus = status;
 		executionProgressStatus = status;
 
-		this.testLog.append( "\nSecurityRequest " ).append( securityRequestResultList.indexOf( secReqResult ) ).append(
-				secReqResult.getStatus().toString() ).append( secReqResult.getChangedParamsInfo( requestCount ) );
-		// append( ": took " ).append( secReqResult.getTimeTaken() ).append(
-		// " ms" );
+		this.testLog.append( "\n" ).append( secReqResult.getChangedParamsInfo( requestCount ) );
 		for( String s : secReqResult.getMessages() )
 			testLog.append( "\n -> " ).append( s );
 
@@ -210,9 +207,9 @@ public class SecurityCheckResult implements SecurityResult
 	 */
 	public String getSecurityTestLog()
 	{
-		StringBuffer tl = new StringBuffer().append( "\nSecurityScan " ).append( " [" ).append(
-				securityCheck.getTestStep().getName() ).append( "] " ).append( executionProgressStatus.toString() ).append(
-				": took " ).append( timeTaken ).append( " ms" );
+		StringBuffer tl = new StringBuffer().append( "\nSecurityScan " ).append( " [" ).append( securityCheck.getName() )
+				.append( "] " ).append( executionProgressStatus.toString() ).append( ": took " ).append( timeTaken )
+				.append( " ms" );
 		tl.append( testLog );
 		return tl.toString();
 	}

@@ -224,6 +224,7 @@ public class SecurityCheckRequestResult implements SecurityResult
 		{
 			checkRequestResultStr.append( " - " + changedParamsInfo.toString() );
 		}
+		checkRequestResultStr.append( ": took " ).append( getTimeTaken() ).append( " ms" );
 		return checkRequestResultStr.toString();
 	}
 
