@@ -14,10 +14,14 @@ package com.eviware.soapui.security.check;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JComponent;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.config.MaliciousAttachmentConfig;
+import com.eviware.soapui.config.MaliciousAttachmentElementConfig;
 import com.eviware.soapui.config.MaliciousAttachmentSecurityCheckConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
@@ -28,8 +32,10 @@ import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
+import com.eviware.soapui.security.tools.RandomFile;
 import com.eviware.soapui.security.ui.MaliciousAttachmentAdvancedSettingsPanel;
 import com.eviware.soapui.security.ui.MaliciousAttachmentMutationsPanel;
+import com.eviware.soapui.support.UISupport;
 
 public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 {
@@ -41,6 +47,8 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 
 	private MaliciousAttachmentAdvancedSettingsPanel advancedSettingsPanel;
 	private MaliciousAttachmentMutationsPanel mutationsPanel;
+
+	private boolean run = false;
 
 	public MaliciousAttachmentSecurityCheck( SecurityCheckConfig newConfig, ModelItem parent, String icon,
 			TestStep testStep )
@@ -87,7 +95,45 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 	 */
 	private void updateRequestContent( TestStep testStep, SecurityTestRunContext context )
 	{
+		// add attachments
+		for( MaliciousAttachmentElementConfig element : config.getElementList() )
+		{
+			// remove all attachments
+			if( element.getRemove() )
+			{
+				removeAttachment( testStep, element.getKey() );
+			}
+			else
+			{
+				// first, remove original attachments
+				removeAttachment( testStep, element.getKey() );
 
+				// then, add specified ones
+				addAttachments( testStep, element.getGenerateAttachmentList() );
+				addAttachments( testStep, element.getReplaceAttachmentList() );
+			}
+		}
+	}
+
+	private void addAttachments( TestStep testStep, List<MaliciousAttachmentConfig> list )
+	{
+		for( MaliciousAttachmentConfig element : list )
+		{
+			File file = new File( element.getFilename() );
+
+			try
+			{
+				if( !file.exists() )
+				{
+					file = new RandomFile( element.getSize(), "attachment", element.getContentType() ).next();
+				}
+				addAttachment( testStep, file, element.getContentType() );
+			}
+			catch( IOException e )
+			{
+				UISupport.showErrorMessage( e );
+			}
+		}
 	}
 
 	@Override
@@ -116,11 +162,30 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 	{
 		AbstractHttpRequest<?> request = ( AbstractHttpRequest<?> )getRequest( testStep );
 
-		Attachment attach = request.attachFile( file, false );
+		Attachment attach = request.attachFile( file, true );
 		attach.setContentType( contentType );
-		file.delete();
+		file.deleteOnExit();
 
 		return attach;
+	}
+
+	private void removeAttachment( TestStep testStep, String name )
+	{
+		AbstractHttpRequest<?> request = ( AbstractHttpRequest<?> )getRequest( testStep );
+		List<Attachment> toRemove = new ArrayList<Attachment>();
+
+		for( Attachment attachment : request.getAttachments() )
+		{
+			if( attachment.getName().equals( name ) )
+			{
+				toRemove.add( attachment );
+			}
+		}
+		for( Attachment remove : toRemove )
+		{
+			request.removeAttachment( remove );
+		}
+
 	}
 
 	@Override
@@ -135,8 +200,15 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 	@Override
 	protected boolean hasNext( TestStep testStep, SecurityTestRunContext context )
 	{
-		// TODO Auto-generated method stub
-		return false;
+		if( run )
+		{
+			run = false;
+		}
+		else
+		{
+			run = true;
+		}
+		return run;
 	}
 
 	@Override

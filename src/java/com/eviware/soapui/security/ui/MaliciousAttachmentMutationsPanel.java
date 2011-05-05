@@ -253,10 +253,10 @@ public class MaliciousAttachmentMutationsPanel
 				data[i] = ( ( WsdlTestRequestStep )testStep ).getTestRequest().getAttachmentAt( i );
 			}
 		}
-		
+
 		filesList.setData( data );
 		holder.refresh();
-		
+
 		return dialog.getPanel();
 	}
 
@@ -374,26 +374,25 @@ public class MaliciousAttachmentMutationsPanel
 
 			if( dialog.getReturnValue() == XFormDialog.OK_OPTION )
 			{
-				int newSizeInt = 0;
+				Long newSize = 0L;
 				String newSizeString = dialog.getValue( GenerateFile.SIZE );
 				String contentType = dialog.getFormField( GenerateFile.CONTENT_TYPE ).getValue();
 
 				try
 				{
-					newSizeInt = Integer.parseInt( newSizeString ) * 1024 * 1024;
+					newSize = Long.parseLong( newSizeString ) * 1024 * 1024;
 				}
 				catch( NumberFormatException nfe )
 				{
-					UISupport.showErrorMessage( "Size must be integer number" );
+					UISupport.showErrorMessage( "Size must be numeric value" );
 					return;
 				}
 
 				try
 				{
-					File file = new RandomFile( newSizeInt, "attachment", contentType ).next();
+					File file = new RandomFile( newSize, "attachment", contentType ).next();
 
 					String filename = file.getAbsolutePath();
-					Long size = file.length();
 					Boolean enabled = new Boolean( true );
 					Boolean cached = new Boolean( true );
 
@@ -403,7 +402,7 @@ public class MaliciousAttachmentMutationsPanel
 						{
 							MaliciousAttachmentConfig att = element.addNewGenerateAttachment();
 							att.setFilename( filename );
-							att.setSize( size );
+							att.setSize( newSize );
 							att.setContentType( contentType );
 							att.setEnabled( enabled );
 							att.setCached( cached );
