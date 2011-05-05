@@ -79,4 +79,5 @@ public interface TestRunner
 
 	public TestRunnable getTestRunnable();
 
+	public boolean isRunning();
 }
