@@ -1,10 +1,8 @@
 package com.eviware.soapui.security.support;
 
-import java.io.File;
-
 import javax.swing.table.AbstractTableModel;
 
-import com.eviware.soapui.security.tools.AttachmentElement;
+import com.eviware.soapui.config.MaliciousAttachmentConfig;
 import com.eviware.soapui.security.tools.AttachmentHolder;
 import com.eviware.soapui.support.UISupport;
 
@@ -23,20 +21,6 @@ public abstract class MaliciousAttachmentTableModel extends AbstractTableModel /
 		return holder.size();
 	}
 
-	public void addResult( File file, String contentType, Boolean enabled, Boolean cached )
-	{
-		try
-		{
-			holder.addElement( file, contentType, enabled, cached );
-			// addFile( file, cached );
-			fireTableDataChanged();
-		}
-		catch( Exception e )
-		{
-			UISupport.showErrorMessage( e );
-		}
-	}
-
 	public void removeResult( int i )
 	{
 		if( UISupport.confirm( "Remove selected attachments?", "Remove Attachments" ) )
@@ -53,7 +37,7 @@ public abstract class MaliciousAttachmentTableModel extends AbstractTableModel /
 		fireTableDataChanged();
 	}
 
-	public AttachmentElement getRowValue( int rowIndex )
+	public MaliciousAttachmentConfig getRowValue( int rowIndex )
 	{
 		return holder.getList().get( rowIndex );
 	}
@@ -64,4 +48,5 @@ public abstract class MaliciousAttachmentTableModel extends AbstractTableModel /
 
 	public abstract Object getValueAt( int rowIndex, int columnIndex );
 
+	public abstract void addResult( MaliciousAttachmentConfig config );
 }

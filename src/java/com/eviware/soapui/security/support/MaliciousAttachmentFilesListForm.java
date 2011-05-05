@@ -2,7 +2,6 @@ package com.eviware.soapui.security.support;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.io.File;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
@@ -11,11 +10,11 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import com.eviware.soapui.config.AttachmentConfig;
 import com.eviware.soapui.config.MaliciousAttachmentConfig;
 import com.eviware.soapui.config.MaliciousAttachmentElementConfig;
 import com.eviware.soapui.config.MaliciousAttachmentSecurityCheckConfig;
 import com.eviware.soapui.model.iface.Attachment;
+import com.eviware.soapui.security.ui.MaliciousAttachmentMutationsPanel.MutationTables;
 
 public class MaliciousAttachmentFilesListForm extends JPanel
 {
@@ -94,45 +93,52 @@ public class MaliciousAttachmentFilesListForm extends JPanel
 			{
 				listModel.addElement( att );
 
+				holder.getGenerateTableModel().clear();
+				holder.getReplaceTableModel().clear();
+				holder.getTablesDialog().setBooleanValue( MutationTables.REMOVE_FILE, new Boolean( false ) );
+
 				// add empty element
 				MaliciousAttachmentElementConfig newElement = config.addNewElement();
-				newElement.setKey( att.getName() );
 
 				for( MaliciousAttachmentElementConfig element : copy.getElementList() )
 				{
 					if( element.getKey().equals( att.getName() ) )
 					{
+						newElement.setKey( att.getName() );
 						newElement.setRemove( element.getRemove() );
+						holder.getTablesDialog().setBooleanValue( MutationTables.REMOVE_FILE, element.getRemove() );
 
 						for( MaliciousAttachmentConfig el : element.getGenerateAttachmentList() )
 						{
 							MaliciousAttachmentConfig newEl = newElement.addNewGenerateAttachment();
-							AttachmentConfig newElAttachment = newEl.addNewAttachment();
+							newEl.setFilename( el.getFilename() );
+							newEl.setSize( el.getSize() );
+							newEl.setContentType( el.getContentType() );
 							newEl.setEnabled( el.getEnabled() );
-							newElAttachment.setSize( el.getAttachment().getSize() );
-							newElAttachment.setContentType( el.getAttachment().getContentType() );
+							newEl.setCached( el.getCached() );
 
-							holder.addResultToGenerateTable( new File( el.getAttachment().getTempFilename() ), el
-									.getAttachment().getContentType(), el.getEnabled(), true );
+							holder.addResultToGenerateTable( newEl );
 						}
 
 						for( MaliciousAttachmentConfig el : element.getReplaceAttachmentList() )
 						{
 							MaliciousAttachmentConfig newEl = newElement.addNewReplaceAttachment();
-							AttachmentConfig newElAttachment = newEl.addNewAttachment();
+							newEl.setFilename( el.getFilename() );
+							newEl.setSize( el.getSize() );
+							newEl.setContentType( el.getContentType() );
 							newEl.setEnabled( el.getEnabled() );
-							newElAttachment.setSize( el.getAttachment().getSize() );
-							newElAttachment.setContentType( el.getAttachment().getContentType() );
+							newEl.setCached( el.getCached() );
 
-							holder.addResultToReplaceTable( new File( el.getAttachment().getTempFilename() ), el
-									.getAttachment().getContentType(), el.getEnabled(), true );
+							holder.addResultToReplaceTable( newEl );
 						}
+
+						holder.refresh( att, null );
 						break;
 					}
 				}
 			}
-		}
 
-		firePropertyChange( "attachments", oldData, getData() );
+			firePropertyChange( "attachments", oldData, getData() );
+		}
 	}
 }

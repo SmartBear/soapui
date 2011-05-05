@@ -17,7 +17,7 @@ public class RandomFile
 
 	private final Random random = new Random();
 
-	public RandomFile( int length, String name, String contentType ) throws IOException
+	public RandomFile( long length, String name, String contentType ) throws IOException
 	{
 		this.length = length;
 		file = File.createTempFile( StringUtils.createFileName( name, '-' ),

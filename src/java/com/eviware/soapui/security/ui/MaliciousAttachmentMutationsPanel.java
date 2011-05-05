@@ -10,6 +10,7 @@ import javax.activation.MimetypesFileTypeMap;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
@@ -17,11 +18,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableCellEditor;
 
 import org.jdesktop.swingx.JXTable;
 
-import com.eviware.soapui.config.AttachmentConfig;
 import com.eviware.soapui.config.MaliciousAttachmentConfig;
 import com.eviware.soapui.config.MaliciousAttachmentElementConfig;
 import com.eviware.soapui.config.MaliciousAttachmentSecurityCheckConfig;
@@ -41,19 +43,25 @@ import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.x.form.XFormDialog;
+import com.eviware.x.form.XFormField;
+import com.eviware.x.form.XFormFieldListener;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.support.AForm;
+import com.eviware.x.impl.swing.JCheckBoxFormField;
 import com.eviware.x.impl.swing.JFormDialog;
 import com.eviware.x.impl.swing.JTextFieldFormField;
 
 public class MaliciousAttachmentMutationsPanel
 {
-
 	private JFormDialog dialog;
 	private MaliciousAttachmentSecurityCheckConfig config;
 	private TestStep testStep;
+	private JButton addGeneratedButton;
+	private JButton removeGeneratedButton;
+	private JButton addReplacementButton;
+	private JButton removeReplacementButton;
 	// private AttachmentContainer container;
 
 	private MaliciousAttachmentListToTableHolder holder = new MaliciousAttachmentListToTableHolder();
@@ -79,20 +87,6 @@ public class MaliciousAttachmentMutationsPanel
 		dialog = ( JFormDialog )ADialogBuilder.buildDialog( MutationSettings.class );
 		dialog.getFormField( MutationSettings.MUTATIONS_PANEL ).setProperty( "component", createMutationsPanel() );
 		dialog.getFormField( MutationSettings.MUTATIONS_PANEL ).setProperty( "dimension", new Dimension( 720, 320 ) );
-
-		initConfig();
-		holder.refresh();
-	}
-
-	private void initConfig()
-	{
-		if( config != null )
-		{
-			// init empty configs for all existing attachments
-
-			// also delete configs for all removed attachments
-
-		}
 	}
 
 	private JComponent buildFilesList()
@@ -107,48 +101,120 @@ public class MaliciousAttachmentMutationsPanel
 	{
 		JFormDialog tablesDialog = ( JFormDialog )ADialogBuilder.buildDialog( MutationTables.class );
 
-		MaliciousAttachmentTableModel generateTableModel = new MaliciousAttachmentGenerateTableModel( config );
+		MaliciousAttachmentTableModel generateTableModel = new MaliciousAttachmentGenerateTableModel();
 		tablesDialog.getFormField( MutationTables.GENERATE_FILE ).setProperty( "dimension", new Dimension( 410, 120 ) );
 		tablesDialog.getFormField( MutationTables.GENERATE_FILE ).setProperty( "component",
-				buildTable( generateTableModel, false ) );
+				buildGenerateTable( generateTableModel ) );
 
-		MaliciousAttachmentTableModel replaceTableModel = new MaliciousAttachmentReplaceTableModel( config );
+		MaliciousAttachmentTableModel replaceTableModel = new MaliciousAttachmentReplaceTableModel();
 		tablesDialog.getFormField( MutationTables.REPLACE_FILE ).setProperty( "dimension", new Dimension( 410, 120 ) );
 		tablesDialog.getFormField( MutationTables.REPLACE_FILE ).setProperty( "component",
-				buildTable( replaceTableModel, true ) );
+				buildReplacementTable( replaceTableModel ) );
 
 		holder.setGenerateTableModel( generateTableModel );
 		holder.setReplaceTableModel( replaceTableModel );
 		holder.setTablesDialog( tablesDialog );
 
+		JCheckBoxFormField remove = ( JCheckBoxFormField )tablesDialog.getFormField( MutationTables.REMOVE_FILE );
+		remove.addFormFieldListener( new XFormFieldListener()
+		{
+			@Override
+			public void valueChanged( XFormField sourceField, String newValue, String oldValue )
+			{
+				for( MaliciousAttachmentElementConfig element : config.getElementList() )
+				{
+					if( element.getKey().equals( holder.getTablesDialog().getValue( MutationTables.SELECTED_FILE ) ) )
+					{
+						element.setRemove( Boolean.parseBoolean( newValue ) );
+						break;
+					}
+				}
+			}
+		} );
+
 		return tablesDialog.getPanel();
 	}
 
-	protected JPanel buildTable( MaliciousAttachmentTableModel tableModel, boolean add )
+	protected JPanel buildGenerateTable( MaliciousAttachmentTableModel tableModel )
 	{
-		JPanel panel = new JPanel( new BorderLayout() );
-		JXTable table = new JXTable( tableModel );
+		final JPanel panel = new JPanel( new BorderLayout() );
+		final JXTable table = new JXTable( tableModel );
 		setupTable( table );
 		JScrollPane tableScrollPane = new JScrollPane( table );
 		tableScrollPane.setBorder( BorderFactory.createEmptyBorder() );
 
 		JXToolBar toolbar = UISupport.createToolbar();
 
-		if( add )
-		{
-			toolbar.add( UISupport.createToolbarButton( new AddFileAction() ) );
-			toolbar.add( UISupport.createToolbarButton( new RemoveReplacementFileAction( tableModel, table ) ) );
-		}
-		else
-		{
-			toolbar.add( UISupport.createToolbarButton( new GenerateFileAction() ) );
-			toolbar.add( UISupport.createToolbarButton( new RemoveGeneratedFileAction( tableModel, table ) ) );
-		}
+		addGeneratedButton = UISupport.createToolbarButton( new GenerateFileAction() );
+		toolbar.add( addGeneratedButton );
+
+		removeGeneratedButton = UISupport.createToolbarButton( new RemoveGeneratedFileAction( tableModel, table ) );
+		toolbar.add( removeGeneratedButton );
+		removeGeneratedButton.setEnabled( false );
 
 		toolbar.add( UISupport.createToolbarButton( new HelpAction( "www.soapui.org" ) ) );
 
 		panel.add( toolbar, BorderLayout.PAGE_START );
 		panel.add( tableScrollPane, BorderLayout.CENTER );
+
+		table.getSelectionModel().addListSelectionListener( new ListSelectionListener()
+		{
+			public void valueChanged( ListSelectionEvent e )
+			{
+				if( addGeneratedButton != null )
+				{
+					addGeneratedButton.setEnabled( holder.getFilesList().getList().getModel().getSize() > 0 );
+				}
+
+				if( removeGeneratedButton != null )
+				{
+					removeGeneratedButton.setEnabled( table.getSelectedRowCount() > 0 );
+				}
+			}
+		} );
+
+		panel.setBorder( BorderFactory.createLineBorder( new Color( 0 ), 1 ) );
+
+		return panel;
+	}
+
+	protected JPanel buildReplacementTable( MaliciousAttachmentTableModel tableModel )
+	{
+		final JPanel panel = new JPanel( new BorderLayout() );
+		final JXTable table = new JXTable( tableModel );
+		setupTable( table );
+		JScrollPane tableScrollPane = new JScrollPane( table );
+		tableScrollPane.setBorder( BorderFactory.createEmptyBorder() );
+
+		JXToolBar toolbar = UISupport.createToolbar();
+
+		addReplacementButton = UISupport.createToolbarButton( new AddFileAction() );
+		toolbar.add( addReplacementButton );
+
+		removeReplacementButton = UISupport.createToolbarButton( new RemoveReplacementFileAction( tableModel, table ) );
+		toolbar.add( removeReplacementButton );
+		removeReplacementButton.setEnabled( false );
+
+		toolbar.add( UISupport.createToolbarButton( new HelpAction( "www.soapui.org" ) ) );
+
+		panel.add( toolbar, BorderLayout.PAGE_START );
+		panel.add( tableScrollPane, BorderLayout.CENTER );
+
+		table.getSelectionModel().addListSelectionListener( new ListSelectionListener()
+		{
+			public void valueChanged( ListSelectionEvent e )
+			{
+				if( addReplacementButton != null )
+				{
+					addReplacementButton.setEnabled( holder.getFilesList().getList().getModel().getSize() > 0 );
+				}
+
+				if( removeReplacementButton != null )
+				{
+					removeReplacementButton.setEnabled( table.getSelectedRowCount() > 0 );
+				}
+			}
+		} );
 
 		panel.setBorder( BorderFactory.createLineBorder( new Color( 0 ), 1 ) );
 
@@ -187,10 +253,10 @@ public class MaliciousAttachmentMutationsPanel
 				data[i] = ( ( WsdlTestRequestStep )testStep ).getTestRequest().getAttachmentAt( i );
 			}
 		}
-
+		
 		filesList.setData( data );
 		holder.refresh();
-
+		
 		return dialog.getPanel();
 	}
 
@@ -262,18 +328,24 @@ public class MaliciousAttachmentMutationsPanel
 					return;
 				}
 
-				holder.addResultToReplaceTable( file, new MimetypesFileTypeMap().getContentType( file ), true, retval );
+				String filename = file.getAbsolutePath();
+				Long size = file.length();
+				String contentType = new MimetypesFileTypeMap().getContentType( file );
+				Boolean enabled = new Boolean( true );
+				Boolean cached = retval;
 
 				for( MaliciousAttachmentElementConfig element : config.getElementList() )
 				{
 					if( element.getKey().equals( holder.getTablesDialog().getValue( MutationTables.SELECTED_FILE ) ) )
 					{
-						MaliciousAttachmentConfig maliciousAtt = element.addNewGenerateAttachment();
-						AttachmentConfig attachment = maliciousAtt.addNewAttachment();
-						maliciousAtt.setEnabled( true );
-						attachment.setTempFilename( file.getName() );
-						attachment.setSize( file.length() );
-						attachment.setContentType( new MimetypesFileTypeMap().getContentType( file ) );
+						MaliciousAttachmentConfig att = element.addNewReplaceAttachment();
+						att.setFilename( filename );
+						att.setSize( size );
+						att.setContentType( contentType );
+						att.setEnabled( enabled );
+						att.setCached( cached );
+
+						holder.addResultToReplaceTable( att );
 					}
 				}
 			}
@@ -318,19 +390,25 @@ public class MaliciousAttachmentMutationsPanel
 
 				try
 				{
-					File rFile = new RandomFile( newSizeInt, "attachment", contentType ).next();
+					File file = new RandomFile( newSizeInt, "attachment", contentType ).next();
 
-					holder.addResultToGenerateTable( rFile, new MimetypesFileTypeMap().getContentType( rFile ), true, true );
+					String filename = file.getAbsolutePath();
+					Long size = file.length();
+					Boolean enabled = new Boolean( true );
+					Boolean cached = new Boolean( true );
 
 					for( MaliciousAttachmentElementConfig element : config.getElementList() )
 					{
 						if( element.getKey().equals( holder.getTablesDialog().getValue( MutationTables.SELECTED_FILE ) ) )
 						{
-							MaliciousAttachmentConfig maliciousAtt = element.addNewReplaceAttachment();
-							AttachmentConfig att = maliciousAtt.addNewAttachment();
-							maliciousAtt.setEnabled( true );
-							att.setSize( rFile.length() );
-							att.setContentType( new MimetypesFileTypeMap().getContentType( rFile ) );
+							MaliciousAttachmentConfig att = element.addNewGenerateAttachment();
+							att.setFilename( filename );
+							att.setSize( size );
+							att.setContentType( contentType );
+							att.setEnabled( enabled );
+							att.setCached( cached );
+
+							holder.addResultToGenerateTable( att );
 						}
 					}
 				}

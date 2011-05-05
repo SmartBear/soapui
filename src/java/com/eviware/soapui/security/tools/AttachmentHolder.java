@@ -1,22 +1,23 @@
 package com.eviware.soapui.security.tools;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.eviware.soapui.config.MaliciousAttachmentConfig;
 
 public class AttachmentHolder
 {
 
-	List<AttachmentElement> list;
+	List<MaliciousAttachmentConfig> list;
 
-	public void addElement( File file, String contentType, Boolean enabled, Boolean cached )
+	public void addElement( MaliciousAttachmentConfig config )
 	{
 		if( list == null )
 		{
-			list = new ArrayList<AttachmentElement>();
+			list = new ArrayList<MaliciousAttachmentConfig>();
 		}
 
-		list.add( new AttachmentElement( file, contentType, enabled, cached ) );
+		list.add( config );
 	}
 
 	public void removeElement( int i )
@@ -47,7 +48,7 @@ public class AttachmentHolder
 		}
 	}
 
-	public List<AttachmentElement> getList()
+	public List<MaliciousAttachmentConfig> getList()
 	{
 		return list;
 	}

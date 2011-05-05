@@ -1997,8 +1997,8 @@
 			<xsd:element name="ExternalDTD" type="tns:DTDType"
 				maxOccurs="unbounded" minOccurs="0">
 			</xsd:element>
-			<xsd:element name="xmlBombs" type="xsd:string"
-				maxOccurs="unbounded" minOccurs="0">
+			<xsd:element name="xmlBombs" type="xsd:string" maxOccurs="unbounded"
+				minOccurs="0">
 			</xsd:element>
 			<xsd:element name="internalDTD" type="tns:DTDType"
 				minOccurs="0" maxOccurs="unbounded">
@@ -2011,10 +2011,11 @@
 	</xsd:complexType>
 
 	<xsd:complexType name="MaliciousAttachment">
-		<xsd:sequence>
-			<xsd:element name="attachment" type="tns:Attachment"></xsd:element>
-		</xsd:sequence>
+		<xsd:attribute name="filename" type="xsd:string"></xsd:attribute>
+		<xsd:attribute name="size" type="xsd:long"></xsd:attribute>
+		<xsd:attribute name="contentType" type="xsd:string"></xsd:attribute>
 		<xsd:attribute name="enabled" type="xsd:boolean"></xsd:attribute>
+		<xsd:attribute name="cached" type="xsd:boolean"></xsd:attribute>
 	</xsd:complexType>
 
 	<xsd:complexType name="MaliciousAttachmentElement">
@@ -2160,8 +2161,8 @@
 
 	<xsd:complexType name="DTDType">
 		<xsd:sequence>
-            <xsd:element name="reference" type="xsd:string"></xsd:element>
-            <xsd:element name="value" type="xsd:string"></xsd:element>
+			<xsd:element name="reference" type="xsd:string"></xsd:element>
+			<xsd:element name="value" type="xsd:string"></xsd:element>
 		</xsd:sequence>
 	</xsd:complexType>
 

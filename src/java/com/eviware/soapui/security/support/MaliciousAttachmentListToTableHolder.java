@@ -1,13 +1,12 @@
 package com.eviware.soapui.security.support;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.eviware.soapui.config.MaliciousAttachmentConfig;
 import com.eviware.soapui.model.iface.Attachment;
-import com.eviware.soapui.security.tools.AttachmentElement;
 import com.eviware.soapui.security.ui.MaliciousAttachmentMutationsPanel.MutationTables;
 import com.eviware.x.impl.swing.JFormDialog;
 
@@ -19,8 +18,8 @@ public class MaliciousAttachmentListToTableHolder
 	MaliciousAttachmentTableModel replaceTableModel;
 	JFormDialog tablesDialog;
 
-	Map<String, List<AttachmentElement>> generateMap = new HashMap<String, List<AttachmentElement>>();
-	Map<String, List<AttachmentElement>> replaceMap = new HashMap<String, List<AttachmentElement>>();
+	Map<String, List<MaliciousAttachmentConfig>> generateMap = new HashMap<String, List<MaliciousAttachmentConfig>>();
+	Map<String, List<MaliciousAttachmentConfig>> replaceMap = new HashMap<String, List<MaliciousAttachmentConfig>>();
 	Map<String, Boolean> removeMap = new HashMap<String, Boolean>();
 
 	public JFormDialog getTablesDialog()
@@ -69,6 +68,7 @@ public class MaliciousAttachmentListToTableHolder
 		{
 			String item = filesList.getFirstItem();
 			tablesDialog.getFormField( MutationTables.SELECTED_FILE ).setValue( item );
+			load( item );
 		}
 	}
 
@@ -77,27 +77,28 @@ public class MaliciousAttachmentListToTableHolder
 		if( oldItem != null )
 		{
 			save( oldItem.getName() );
-		}
-		if( newItem != null )
-		{
-			load( newItem.getName() );
+
+			if( newItem != null )
+			{
+				load( newItem.getName() );
+			}
 		}
 	}
 
-	public void addResultToGenerateTable( File file, String contentType, Boolean enabled, Boolean cached )
+	public void addResultToGenerateTable( MaliciousAttachmentConfig config )
 	{
-		generateTableModel.addResult( file, contentType, enabled, cached );
+		generateTableModel.addResult( config );
 	}
 
-	public void addResultToReplaceTable( File file, String contentType, Boolean enabled, Boolean cached )
+	public void addResultToReplaceTable( MaliciousAttachmentConfig config )
 	{
-		replaceTableModel.addResult( file, contentType, enabled, cached );
+		replaceTableModel.addResult( config );
 	}
 
 	private void save( String item )
 	{
-		List<AttachmentElement> generateList = new ArrayList<AttachmentElement>();
-		List<AttachmentElement> replaceList = new ArrayList<AttachmentElement>();
+		List<MaliciousAttachmentConfig> generateList = new ArrayList<MaliciousAttachmentConfig>();
+		List<MaliciousAttachmentConfig> replaceList = new ArrayList<MaliciousAttachmentConfig>();
 
 		for( int i = 0; i < generateTableModel.getRowCount(); i++ )
 		{
@@ -118,8 +119,8 @@ public class MaliciousAttachmentListToTableHolder
 
 	private void load( String item )
 	{
-		List<AttachmentElement> generateList = generateMap.get( item );
-		List<AttachmentElement> replaceList = replaceMap.get( item );
+		List<MaliciousAttachmentConfig> generateList = generateMap.get( item );
+		List<MaliciousAttachmentConfig> replaceList = replaceMap.get( item );
 		Boolean remove = removeMap.get( item );
 
 		tablesDialog.setValue( MutationTables.SELECTED_FILE, item );
@@ -135,19 +136,17 @@ public class MaliciousAttachmentListToTableHolder
 
 		if( generateList != null )
 		{
-			for( AttachmentElement element : generateList )
+			for( MaliciousAttachmentConfig element : generateList )
 			{
-				generateTableModel.addResult( element.getFile(), element.getContentType(), element.getEnabled(),
-						element.getCached() );
+				generateTableModel.addResult( element );
 			}
 		}
 
 		if( replaceList != null )
 		{
-			for( AttachmentElement element : replaceList )
+			for( MaliciousAttachmentConfig element : replaceList )
 			{
-				replaceTableModel.addResult( element.getFile(), element.getContentType(), element.getEnabled(),
-						element.getCached() );
+				replaceTableModel.addResult( element );
 			}
 		}
 	}

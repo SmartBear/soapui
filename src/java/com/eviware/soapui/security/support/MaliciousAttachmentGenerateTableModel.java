@@ -1,17 +1,10 @@
 package com.eviware.soapui.security.support;
 
-import com.eviware.soapui.config.MaliciousAttachmentSecurityCheckConfig;
-import com.eviware.soapui.security.tools.AttachmentElement;
+import com.eviware.soapui.config.MaliciousAttachmentConfig;
+import com.eviware.soapui.support.UISupport;
 
 public class MaliciousAttachmentGenerateTableModel extends MaliciousAttachmentTableModel
 {
-
-	private MaliciousAttachmentSecurityCheckConfig config;
-
-	public MaliciousAttachmentGenerateTableModel( MaliciousAttachmentSecurityCheckConfig config )
-	{
-		this.config = config;
-	}
 
 	public Class<?> getColumnClass( int columnIndex )
 	{
@@ -52,7 +45,7 @@ public class MaliciousAttachmentGenerateTableModel extends MaliciousAttachmentTa
 
 	public Object getValueAt( int rowIndex, int columnIndex )
 	{
-		AttachmentElement element = holder.getList().get( rowIndex );
+		MaliciousAttachmentConfig element = holder.getList().get( rowIndex );
 
 		if( element != null )
 		{
@@ -77,7 +70,7 @@ public class MaliciousAttachmentGenerateTableModel extends MaliciousAttachmentTa
 			return;
 		}
 
-		AttachmentElement element = holder.getList().get( row );
+		MaliciousAttachmentConfig element = holder.getList().get( row );
 
 		switch( column )
 		{
@@ -87,6 +80,20 @@ public class MaliciousAttachmentGenerateTableModel extends MaliciousAttachmentTa
 		case 2 :
 			element.setEnabled( ( Boolean )aValue );
 			break;
+		}
+	}
+
+	public void addResult( MaliciousAttachmentConfig config )
+	{
+		try
+		{
+			holder.addElement( config );
+			// addFile( file, cached );
+			fireTableDataChanged();
+		}
+		catch( Exception e )
+		{
+			UISupport.showErrorMessage( e );
 		}
 	}
 

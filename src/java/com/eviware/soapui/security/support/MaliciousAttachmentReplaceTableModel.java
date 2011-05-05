@@ -1,17 +1,12 @@
 package com.eviware.soapui.security.support;
 
-import com.eviware.soapui.config.MaliciousAttachmentSecurityCheckConfig;
-import com.eviware.soapui.security.tools.AttachmentElement;
+import java.io.File;
+
+import com.eviware.soapui.config.MaliciousAttachmentConfig;
+import com.eviware.soapui.support.UISupport;
 
 public class MaliciousAttachmentReplaceTableModel extends MaliciousAttachmentTableModel
 {
-
-	private MaliciousAttachmentSecurityCheckConfig config;
-
-	public MaliciousAttachmentReplaceTableModel( MaliciousAttachmentSecurityCheckConfig config )
-	{
-		this.config = config;
-	}
 
 	public Class<?> getColumnClass( int columnIndex )
 	{
@@ -54,14 +49,15 @@ public class MaliciousAttachmentReplaceTableModel extends MaliciousAttachmentTab
 
 	public Object getValueAt( int rowIndex, int columnIndex )
 	{
-		AttachmentElement element = holder.getList().get( rowIndex );
+		MaliciousAttachmentConfig element = holder.getList().get( rowIndex );
 
 		if( element != null )
 		{
 			switch( columnIndex )
 			{
 			case 0 :
-				return ( element.getCached() ) ? element.getFile().getName() : element.getFile().getAbsolutePath();
+				return ( element.getCached() ) ? new File( element.getFilename() ).getName() : new File(
+						element.getFilename() ).getAbsolutePath();
 			case 1 :
 				return element.getSize();
 			case 2 :
@@ -80,7 +76,8 @@ public class MaliciousAttachmentReplaceTableModel extends MaliciousAttachmentTab
 		{
 			return;
 		}
-		AttachmentElement element = holder.getList().get( row );
+
+		MaliciousAttachmentConfig element = holder.getList().get( row );
 
 		switch( column )
 		{
@@ -90,6 +87,20 @@ public class MaliciousAttachmentReplaceTableModel extends MaliciousAttachmentTab
 		case 3 :
 			element.setEnabled( ( Boolean )aValue );
 			break;
+		}
+	}
+
+	public void addResult( MaliciousAttachmentConfig config )
+	{
+		try
+		{
+			holder.addElement( config );
+			// addFile( file, cached );
+			fireTableDataChanged();
+		}
+		catch( Exception e )
+		{
+			UISupport.showErrorMessage( e );
 		}
 	}
 
