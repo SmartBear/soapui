@@ -220,8 +220,8 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 				if( XmlUtils.seemsToBeXml( value ) )
 				{
 					XmlObjectTreeModel model = null;
-					model = new XmlObjectTreeModel( property.getSchemaType().getTypeSystem(),
-							XmlObject.Factory.parse( value ) );
+					model = new XmlObjectTreeModel( property.getSchemaType().getTypeSystem(), XmlObject.Factory
+							.parse( value ) );
 					for( SecurityCheckedParameter param : getParameterHolder().getParameterList() )
 					{
 						if( param.getXpath() == null || param.getXpath().trim().length() == 0 )
@@ -509,6 +509,10 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 			return;
 		}
 		SecurityCheckedParameter parameter = getParameterAt( row );
+		if( parameter == null )
+		{
+			return;
+		}
 		String name = parameter.getName();
 		String xpath = parameter.getXpath();
 		TestProperty tp = getTestStep().getProperty( name );
@@ -517,8 +521,8 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 		{
 			try
 			{
-				xmlObjectTreeModel = new XmlObjectTreeModel( tp.getSchemaType().getTypeSystem(),
-						XmlObject.Factory.parse( tp.getValue() ) );
+				xmlObjectTreeModel = new XmlObjectTreeModel( tp.getSchemaType().getTypeSystem(), XmlObject.Factory
+						.parse( tp.getValue() ) );
 			}
 			catch( XmlException e )
 			{
