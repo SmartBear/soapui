@@ -119,7 +119,7 @@ public class SecurityTestLogModel extends AbstractListModel
 		if( ( errorsOnly && result.getStatus() != ResultStatus.FAILED )
 				|| ( startStepLogEntryAdded && !hasChecksToProcess ) )
 		{
-			stepCount-- ;
+			// stepCount-- ;
 			int size = items.size() - 1;
 			while( size >= startStepIndex )
 			{
