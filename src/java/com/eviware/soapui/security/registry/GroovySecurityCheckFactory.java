@@ -54,7 +54,6 @@ public class GroovySecurityCheckFactory extends AbstractSecurityCheckFactory
 		securityCheckConfig.setName( name );
 		GroovySecurityCheckConfig groovyscc = GroovySecurityCheckConfig.Factory.newInstance();
 		groovyscc.setExecuteScript( ScriptConfig.Factory.newInstance() );
-		groovyscc.setAnalyzeScript( ScriptConfig.Factory.newInstance() );
 		// securityCheckConfig.changeType( GroovySecurityCheckConfig.type );
 		securityCheckConfig.setConfig( groovyscc );
 		return securityCheckConfig;

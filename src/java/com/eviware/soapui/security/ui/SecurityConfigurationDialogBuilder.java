@@ -27,7 +27,6 @@ import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.security.assertion.SecurityAssertionPanel;
 import com.eviware.soapui.security.check.AbstractSecurityCheckWithProperties;
 import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.components.GroovyEditorComponent;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.XFormField;
 import com.eviware.x.form.XFormFieldListener;

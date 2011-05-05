@@ -14,43 +14,77 @@ package com.eviware.soapui.security.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
 
-import javax.swing.JTextField;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 
+import com.eviware.soapui.impl.wsdl.panels.teststeps.support.AbstractGroovyEditorModel;
+import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.security.SecurityCheck;
+import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.security.check.GroovySecurityCheck;
-import com.eviware.soapui.support.components.SimpleForm;
+import com.eviware.soapui.support.components.GroovyEditorComponent;
 
 public class GroovySecurityCheckPanel extends SecurityCheckConfigPanel
 {
 	protected static final String SCRIPT_FIELD = "Script";
 
 	private GroovySecurityCheck groovyCheck;
+	private GroovyEditorComponent groovyEditor;
 
-	public GroovySecurityCheckPanel( GroovySecurityCheck secCheck )
+	public GroovySecurityCheckPanel( GroovySecurityCheck securityCheck )
 	{
 		super( new BorderLayout() );
 
-		groovyCheck = secCheck;
+		groovyCheck = securityCheck;
 
-		form = new SimpleForm();
-		form.addSpace( 5 );
-
-		// form.setDefaultTextFieldColumns( 50 );
-
-		JTextField scriptTextArea = form.appendTextField( SCRIPT_FIELD, "Script to use" );
-		scriptTextArea.setSize( new Dimension( 400, 600 ) );
-		// scriptTextArea.setText(secCheck.getScript());
-
-		add( form.getPanel() );
+		add( buildSetupScriptPanel( securityCheck ) );
 	}
 
 	@Override
 	public void save()
 	{
-		String scriptStr = form.getComponentValue( SCRIPT_FIELD );
 
-		// groovyCheck.setScript(scriptStr);
+	}
 
+	private class ScriptGroovyEditorModel extends AbstractGroovyEditorModel
+	{
+		@Override
+		public Action createRunAction()
+		{
+			return new AbstractAction()
+			{
+
+				public void actionPerformed( ActionEvent e )
+				{
+					// nothing happens!
+				}
+			};
+		}
+
+		public ScriptGroovyEditorModel( ModelItem modelItem )
+		{
+			super( new String[] { "parameters", "log", "context", "securityScan", "testStep" }, modelItem, "" );
+		}
+
+		public String getScript()
+		{
+			return ( ( GroovySecurityCheck )getModelItem() ).getExecuteScript();
+		}
+
+		public void setScript( String text )
+		{
+			( ( GroovySecurityCheck )getModelItem() ).setExecuteScript( text );
+		}
+	}
+
+	protected GroovyEditorComponent buildSetupScriptPanel( SecurityCheck securityCheck )
+	{
+		groovyEditor = new GroovyEditorComponent( new ScriptGroovyEditorModel( ( ( Assertable )securityCheck )
+				.getModelItem() ), null );
+		groovyEditor.setPreferredSize( new Dimension( 385, 150 ) );
+		return groovyEditor;
 	}
 
 }

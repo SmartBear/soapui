@@ -73,7 +73,7 @@ public class GroovyEditorComponent extends JPanel implements PropertyChangeListe
 		insertCodeButton.setEnabled( enabled );
 	}
 
-	private void buildToolbar( GroovyEditorModel editorModel, String helpUrl )
+	protected void buildToolbar( GroovyEditorModel editorModel, String helpUrl )
 	{
 		if( toolBar == null )
 		{

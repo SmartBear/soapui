@@ -1967,7 +1967,6 @@
 		<xsd:sequence>
 			<xsd:element name="executeScript" type="tns:Script">
 			</xsd:element>
-			<xsd:element name="analyzeScript" type="tns:Script"></xsd:element>
 		</xsd:sequence>
 	</xsd:complexType>
 
