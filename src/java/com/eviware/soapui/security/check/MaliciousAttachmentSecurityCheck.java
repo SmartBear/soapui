@@ -25,9 +25,10 @@ import com.eviware.soapui.config.MaliciousAttachmentElementConfig;
 import com.eviware.soapui.config.MaliciousAttachmentSecurityCheckConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
+import com.eviware.soapui.impl.wsdl.WsdlRequest;
+import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStepResult;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Attachment;
-import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTestRunContext;
@@ -48,7 +49,7 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 	private MaliciousAttachmentAdvancedSettingsPanel advancedSettingsPanel;
 	private MaliciousAttachmentMutationsPanel mutationsPanel;
 
-	private boolean run = false;
+	private int currentIndex = 0;
 
 	public MaliciousAttachmentSecurityCheck( SecurityCheckConfig newConfig, ModelItem parent, String icon,
 			TestStep testStep )
@@ -127,6 +128,7 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 				{
 					file = new RandomFile( element.getSize(), "attachment", element.getContentType() ).next();
 				}
+
 				addAttachment( testStep, file, element.getContentType() );
 			}
 			catch( IOException e )
@@ -142,8 +144,9 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 		try
 		{
 			updateRequestContent( testStep, context );
-			getTestStep().run( ( TestCaseRunner )securityTestRunner,
-					( TestCaseRunContext )securityTestRunner.getRunContext() );
+			WsdlTestRequestStepResult message = ( WsdlTestRequestStepResult )testStep.run(
+					( TestCaseRunner )securityTestRunner, context );
+			// message.setRequestContent( "", false );
 		}
 		catch( Exception e )
 		{
@@ -160,9 +163,9 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 
 	private Attachment addAttachment( TestStep testStep, File file, String contentType ) throws IOException
 	{
-		AbstractHttpRequest<?> request = ( AbstractHttpRequest<?> )getRequest( testStep );
-
-		Attachment attach = request.attachFile( file, true );
+		WsdlRequest request = ( WsdlRequest )getRequest( testStep );
+		request.setInlineFilesEnabled( false );
+		Attachment attach = request.attachFile( file, false );
 		attach.setContentType( contentType );
 		file.deleteOnExit();
 
@@ -200,15 +203,27 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 	@Override
 	protected boolean hasNext( TestStep testStep, SecurityTestRunContext context )
 	{
-		if( run )
+		boolean hasNext = currentIndex++ < getAttachmentsCount();
+
+		if( !hasNext )
 		{
-			run = false;
+			currentIndex = 0;
 		}
-		else
+
+		return hasNext;
+	}
+
+	private Integer getAttachmentsCount()
+	{
+		Integer count = 0;
+
+		for( MaliciousAttachmentElementConfig element : config.getElementList() )
 		{
-			run = true;
+			count += element.getGenerateAttachmentList().size();
+			count += element.getReplaceAttachmentList().size();
 		}
-		return run;
+
+		return count;
 	}
 
 	@Override
