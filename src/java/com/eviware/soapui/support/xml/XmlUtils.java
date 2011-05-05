@@ -60,6 +60,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.ProcessingInstruction;
 import org.w3c.dom.Text;
+import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -1320,7 +1321,20 @@ public final class XmlUtils
 			if( StringUtils.isNullOrEmpty( str ) )
 				return false;
 
-			return null != XmlObject.Factory.parse( str );
+			XmlOptions options = new XmlOptions();
+			options.put( "http://xml.org/sax/features/external-general-entities",  false );
+			options.put( "http://xml.org/sax/features/external-parameter-entities",  false );
+			options.setEntityResolver( new EntityResolver()
+			{
+				
+				@Override
+				public InputSource resolveEntity( String arg0, String arg1 ) throws SAXException, IOException
+				{
+					// TODO Auto-generated method stub
+					return null;
+				}
+			});
+			return null != XmlObject.Factory.parse( str, options );
 		}
 		catch( Throwable e )
 		{

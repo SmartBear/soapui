@@ -10,4 +10,5 @@
   <!ENTITY lol8 "&lol7;&lol7;&lol7;&lol7;&lol7;&lol7;&lol7;&lol7;&lol7;&lol7;">
   <!ENTITY lol9 "&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;">
 ]>
-<lolz>&lol9;</lolz>
+<!-- change xxx to &lol9;-->
+<lolz>xxx</lolz>

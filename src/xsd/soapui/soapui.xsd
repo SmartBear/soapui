@@ -1993,20 +1993,12 @@
 
 	<xsd:complexType name="XmlBombSecurityCheck">
 		<xsd:sequence>
-			<xsd:element name="ExternalDTD" type="tns:DTDType"
-				maxOccurs="unbounded" minOccurs="0">
-			</xsd:element>
 			<xsd:element name="xmlBombs" type="xsd:string" maxOccurs="unbounded"
 				minOccurs="0">
-			</xsd:element>
-			<xsd:element name="internalDTD" type="tns:DTDType"
-				minOccurs="0" maxOccurs="unbounded">
 			</xsd:element>
 		</xsd:sequence>
 		<xsd:attribute name="attachXmlBomb" type="xsd:boolean"></xsd:attribute>
 		<xsd:attribute name="xmlAttachmentPrefix" type="xsd:string"></xsd:attribute>
-		<xsd:attribute name="useExternalDTD" type="xsd:boolean"></xsd:attribute>
-		<xsd:attribute name="useInternalDTD" type="xsd:boolean"></xsd:attribute>
 	</xsd:complexType>
 
 	<xsd:complexType name="MaliciousAttachment">
@@ -2155,13 +2147,6 @@
 			<xsd:element name="message" type="xsd:string"></xsd:element>
 			<xsd:element name="pattern" type="xsd:string" maxOccurs="unbounded"
 				minOccurs="1"></xsd:element>
-		</xsd:sequence>
-	</xsd:complexType>
-
-	<xsd:complexType name="DTDType">
-		<xsd:sequence>
-			<xsd:element name="reference" type="xsd:string"></xsd:element>
-			<xsd:element name="value" type="xsd:string"></xsd:element>
 		</xsd:sequence>
 	</xsd:complexType>
 
