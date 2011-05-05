@@ -625,8 +625,8 @@ public class UISupport
 
 		if( ex.toString().length() > 100 )
 		{
-			dialogs.showExtendedInfo( "Error", "An error of type " + ex.getClass().getSimpleName() + " occured.",
-					ex.toString(), null );
+			dialogs.showExtendedInfo( "Error", "An error of type " + ex.getClass().getSimpleName() + " occured.", ex
+					.toString(), null );
 		}
 		else
 		{
@@ -807,8 +807,8 @@ public class UISupport
 
 	public static void initDialogActions( final JDialog dialog, Action helpAction, JButton defaultButton )
 	{
-		dialog.getRootPane().getInputMap( JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT )
-				.put( KeyStroke.getKeyStroke( KeyEvent.VK_ESCAPE, 0 ), "ESCAPE" );
+		dialog.getRootPane().getInputMap( JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT ).put(
+				KeyStroke.getKeyStroke( KeyEvent.VK_ESCAPE, 0 ), "ESCAPE" );
 		dialog.getRootPane().getActionMap().put( "ESCAPE", new AbstractAction()
 		{
 			public void actionPerformed( ActionEvent e )
@@ -822,20 +822,17 @@ public class UISupport
 
 		if( helpAction != null )
 		{
-			dialog.getRootPane().getInputMap( JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT )
-					.put( KeyStroke.getKeyStroke( KeyEvent.VK_F1, 0 ), "HELP" );
+			dialog.getRootPane().getInputMap( JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT ).put(
+					KeyStroke.getKeyStroke( KeyEvent.VK_F1, 0 ), "HELP" );
 			dialog.getRootPane().getActionMap().put( "HELP", helpAction );
 		}
 	}
 
 	public static <T extends JComponent> T addTitledBorder( T component, String title )
 	{
-		component
-				.setBorder( BorderFactory.createCompoundBorder(
-						BorderFactory.createEmptyBorder( 3, 0, 0, 0 ),
-						BorderFactory.createCompoundBorder(
-								BorderFactory.createTitledBorder( BorderFactory.createEmptyBorder(), title ),
-								component.getBorder() ) ) );
+		component.setBorder( BorderFactory.createCompoundBorder( BorderFactory.createEmptyBorder( 3, 0, 0, 0 ),
+				BorderFactory.createCompoundBorder( BorderFactory.createTitledBorder( BorderFactory.createEmptyBorder(),
+						title ), component.getBorder() ) ) );
 
 		return component;
 	}
@@ -962,6 +959,21 @@ public class UISupport
 		JButton result = new JButton( icon );
 		result.setPreferredSize( TOOLBAR_BUTTON_DIMENSION );
 		return result;
+	}
+
+	public static String getIconPath( ImageIcon icon )
+	{
+		String path = "";
+		for( String icnPath : iconCache.keySet() )
+		{
+			ImageIcon icn = iconCache.get( icnPath );
+			if( icon.equals( icn ) )
+			{
+				path = icnPath;
+				break;
+			}
+		}
+		return path;
 	}
 
 	public static Font getEditorFont()
