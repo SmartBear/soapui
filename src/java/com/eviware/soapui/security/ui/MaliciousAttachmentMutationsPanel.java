@@ -334,6 +334,8 @@ public class MaliciousAttachmentMutationsPanel
 				Boolean enabled = new Boolean( true );
 				Boolean cached = retval;
 
+				boolean added = false;
+
 				for( MaliciousAttachmentElementConfig element : config.getElementList() )
 				{
 					if( holder.getTablesDialog().getValue( MutationTables.SELECTED_FILE ).equals( element.getKey() ) )
@@ -346,7 +348,13 @@ public class MaliciousAttachmentMutationsPanel
 						att.setCached( cached );
 
 						holder.addResultToReplaceTable( att );
+						added = true;
 					}
+				}
+
+				if( !added )
+				{
+					UISupport.showErrorMessage( "No attachments found in test step" );
 				}
 			}
 		}
@@ -396,6 +404,8 @@ public class MaliciousAttachmentMutationsPanel
 					Boolean enabled = new Boolean( true );
 					Boolean cached = new Boolean( true );
 
+					boolean added = false;
+
 					for( MaliciousAttachmentElementConfig element : config.getElementList() )
 					{
 						if( holder.getTablesDialog().getValue( MutationTables.SELECTED_FILE ).equals( element.getKey() ) )
@@ -408,7 +418,14 @@ public class MaliciousAttachmentMutationsPanel
 							att.setCached( cached );
 
 							holder.addResultToGenerateTable( att );
+
+							added = true;
 						}
+					}
+
+					if( !added )
+					{
+						UISupport.showErrorMessage( "No attachments found in test step" );
 					}
 				}
 				catch( Exception e1 )
