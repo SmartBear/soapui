@@ -283,8 +283,8 @@ public class MaliciousAttachmentMutationsPanel
 	@AForm( description = "Generate File Mutation", name = "Generate File Mutation" )
 	public interface GenerateFile
 	{
-		@AField( description = "Size(Mbyte)", name = "Size(Mbyte)", type = AFieldType.INT )
-		final static String SIZE = "Size(Mbyte)";
+		@AField( description = "Size(bytes)", name = "Size(bytes)", type = AFieldType.INT )
+		final static String SIZE = "Size(bytes)";
 		@AField( description = "Content type", name = "Content type", type = AFieldType.STRING )
 		final static String CONTENT_TYPE = "Content type";
 	}
@@ -336,7 +336,7 @@ public class MaliciousAttachmentMutationsPanel
 
 				for( MaliciousAttachmentElementConfig element : config.getElementList() )
 				{
-					if( element.getKey().equals( holder.getTablesDialog().getValue( MutationTables.SELECTED_FILE ) ) )
+					if( holder.getTablesDialog().getValue( MutationTables.SELECTED_FILE ).equals( element.getKey() ) )
 					{
 						MaliciousAttachmentConfig att = element.addNewReplaceAttachment();
 						att.setFilename( filename );
@@ -380,7 +380,7 @@ public class MaliciousAttachmentMutationsPanel
 
 				try
 				{
-					newSize = Long.parseLong( newSizeString ) * 1024 * 1024;
+					newSize = Long.parseLong( newSizeString );
 				}
 				catch( NumberFormatException nfe )
 				{
@@ -398,7 +398,7 @@ public class MaliciousAttachmentMutationsPanel
 
 					for( MaliciousAttachmentElementConfig element : config.getElementList() )
 					{
-						if( element.getKey().equals( holder.getTablesDialog().getValue( MutationTables.SELECTED_FILE ) ) )
+						if( holder.getTablesDialog().getValue( MutationTables.SELECTED_FILE ).equals( element.getKey() ) )
 						{
 							MaliciousAttachmentConfig att = element.addNewGenerateAttachment();
 							att.setFilename( filename );
@@ -444,7 +444,7 @@ public class MaliciousAttachmentMutationsPanel
 				{
 					MaliciousAttachmentElementConfig element = config.getElementList().get( i );
 
-					if( element.getKey().equals( holder.getTablesDialog().getValue( MutationTables.SELECTED_FILE ) ) )
+					if( holder.getTablesDialog().getValue( MutationTables.SELECTED_FILE ).equals( element.getKey() ) )
 					{
 						element.getReplaceAttachmentList().remove( row );
 					}
@@ -478,7 +478,7 @@ public class MaliciousAttachmentMutationsPanel
 				{
 					MaliciousAttachmentElementConfig element = config.getElementList().get( i );
 
-					if( element.getKey().equals( holder.getTablesDialog().getValue( MutationTables.SELECTED_FILE ) ) )
+					if( holder.getTablesDialog().getValue( MutationTables.SELECTED_FILE ).equals( element.getKey() ) )
 					{
 						element.getGenerateAttachmentList().remove( row );
 					}
@@ -521,6 +521,27 @@ public class MaliciousAttachmentMutationsPanel
 	protected TableCellEditor getDefaultCellEditor()
 	{
 		return new XPathCellRender();
+	}
+
+	public MaliciousAttachmentSecurityCheckConfig getConfig()
+	{
+		return config;
+	}
+
+	public void setConfig( MaliciousAttachmentSecurityCheckConfig config )
+	{
+		this.config = config;
+	}
+
+	public void updateConfig( MaliciousAttachmentSecurityCheckConfig config )
+	{
+		setConfig( config );
+
+		MaliciousAttachmentFilesListForm filesList = holder.getFilesList();
+		if( filesList != null )
+		{
+			filesList.updateConfig( config );
+		}
 	}
 
 }

@@ -52,6 +52,16 @@ public class MaliciousAttachmentAdvancedSettingsPanel
 		return dialog.getPanel();
 	}
 
+	public MaliciousAttachmentSecurityCheckConfig getConfig()
+	{
+		return config;
+	}
+
+	public void setConfig( MaliciousAttachmentSecurityCheckConfig config )
+	{
+		this.config = config;
+	}
+
 	@AForm( description = "Malicious Attachment Configuration", name = "Malicious Attachment Configuration" )
 	protected interface AdvancedSettings
 	{

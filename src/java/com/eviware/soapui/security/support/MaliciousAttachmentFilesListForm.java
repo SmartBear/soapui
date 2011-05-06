@@ -141,4 +141,9 @@ public class MaliciousAttachmentFilesListForm extends JPanel
 			firePropertyChange( "attachments", oldData, getData() );
 		}
 	}
+
+	public void updateConfig( MaliciousAttachmentSecurityCheckConfig config )
+	{
+		this.config = config;
+	}
 }
