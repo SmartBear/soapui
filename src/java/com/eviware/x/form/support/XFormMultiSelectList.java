@@ -56,6 +56,8 @@ public class XFormMultiSelectList extends AbstractSwingXFormField<JPanel> implem
 	PropertyChangeSupport pcs = new PropertyChangeSupport( this );
 	private int[] defaultIndex;
 	private Color defaultColor;
+	private SelectAllAction selectAllAction;
+	private UnselectAllAction unselectAllAction;
 
 	public XFormMultiSelectList( String[] values )
 	{
@@ -79,7 +81,7 @@ public class XFormMultiSelectList extends AbstractSwingXFormField<JPanel> implem
 			{
 				int index = list.locationToIndex( e.getPoint() );
 
-				if( index != -1 )
+				if( index != -1 && list.isEnabled() )
 				{
 					int[] oldValue = getSelectedIndexes();
 					selected.set( index, !selected.get( index ) );
@@ -101,9 +103,9 @@ public class XFormMultiSelectList extends AbstractSwingXFormField<JPanel> implem
 	{
 		JXToolBar toolbar = UISupport.createSmallToolbar();
 
-		toolbar.addFixed( new JButton( new SelectAllAction() ) );
+		toolbar.addFixed( new JButton( selectAllAction = new SelectAllAction() ) );
 		toolbar.addRelatedGap();
-		toolbar.addFixed( new JButton( new UnselectAllAction() ) );
+		toolbar.addFixed( new JButton( unselectAllAction = new UnselectAllAction() ) );
 
 		return toolbar;
 	}
@@ -278,4 +280,12 @@ public class XFormMultiSelectList extends AbstractSwingXFormField<JPanel> implem
 		pcs.removePropertyChangeListener( listener );
 	}
 
+	@Override
+	public void setEnabled( boolean enabled )
+	{
+		super.setEnabled( enabled );
+		list.setEnabled( enabled );
+		selectAllAction.setEnabled( enabled );
+		unselectAllAction.setEnabled( enabled );
+	}
 }
