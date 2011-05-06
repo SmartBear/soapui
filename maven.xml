@@ -226,8 +226,9 @@
         <ant:copy todir="${maven.jnlp.dir}"
                   file="${pom.getDependencyPath('teamdev:jxbrowser')}"/>
 
-        <ant:copy todir="${maven.jnlp.dir}"
-                  file="${pom.getDependencyPath('teamdev:jniwrap')}"/>
+        <!-- removed in jxbrowser 2.8 -->
+        <!-- ant:copy todir="${maven.jnlp.dir}"
+                  file="${pom.getDependencyPath('teamdev:jniwrap')}"/-->
 
         <ant:copy todir="${maven.jnlp.dir}"
                   file="${pom.getDependencyPath('teamdev:tuxpack')}"/>
