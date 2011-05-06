@@ -6,7 +6,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Random;
 
+import javax.swing.SwingUtilities;
+
 import com.eviware.soapui.support.StringUtils;
+import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.editor.inspectors.attachments.ContentTypeHandler;
 
 public class RandomFile
@@ -26,16 +29,44 @@ public class RandomFile
 
 	public File next() throws IOException
 	{
-		BufferedWriter out = new BufferedWriter( new FileWriter( file ) );
-		long used = 0;
 
-		while( used <= length )
+		SwingUtilities.invokeLater( new Runnable()
 		{
-			used++ ;
-			out.write( random.nextInt() );
-		}
-		out.flush();
-		out.close();
+			public void run()
+			{
+				BufferedWriter out = null;
+				try
+				{
+					out = new BufferedWriter( new FileWriter( file ) );
+					long used = 0;
+
+					while( used <= length )
+					{
+						used++ ;
+						out.write( random.nextInt() );
+					}
+					out.flush();
+					out.close();
+				}
+				catch( IOException e )
+				{
+					UISupport.showErrorMessage( e );
+				}
+				finally
+				{
+					if( out != null )
+					{
+						try
+						{
+							out.close();
+						}
+						catch( IOException e )
+						{
+						}
+					}
+				}
+			}
+		} );
 
 		return file;
 	}
