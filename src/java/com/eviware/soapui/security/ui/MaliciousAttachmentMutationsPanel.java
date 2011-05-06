@@ -17,6 +17,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.KeyStroke;
+import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -35,6 +36,7 @@ import com.eviware.soapui.security.support.MaliciousAttachmentGenerateTableModel
 import com.eviware.soapui.security.support.MaliciousAttachmentListToTableHolder;
 import com.eviware.soapui.security.support.MaliciousAttachmentReplaceTableModel;
 import com.eviware.soapui.security.support.MaliciousAttachmentTableModel;
+import com.eviware.soapui.security.tools.AttachmentElement;
 import com.eviware.soapui.security.tools.RandomFile;
 import com.eviware.soapui.settings.ProjectSettings;
 import com.eviware.soapui.support.HelpActionMarker;
@@ -121,12 +123,19 @@ public class MaliciousAttachmentMutationsPanel
 			@Override
 			public void valueChanged( XFormField sourceField, String newValue, String oldValue )
 			{
-				for( MaliciousAttachmentElementConfig element : config.getElementList() )
+				int idx = holder.getFilesList().getList().getSelectedIndex();
+				if( idx != -1 )
 				{
-					if( element.getKey().equals( holder.getTablesDialog().getValue( MutationTables.SELECTED_FILE ) ) )
+					ListModel listModel = holder.getFilesList().getList().getModel();
+					String key = ( ( AttachmentElement )listModel.getElementAt( idx ) ).getId();
+
+					for( MaliciousAttachmentElementConfig element : config.getElementList() )
 					{
-						element.setRemove( Boolean.parseBoolean( newValue ) );
-						break;
+						if( key.equals( element.getKey() ) )
+						{
+							element.setRemove( Boolean.parseBoolean( newValue ) );
+							break;
+						}
 					}
 				}
 			}
@@ -336,19 +345,26 @@ public class MaliciousAttachmentMutationsPanel
 
 				boolean added = false;
 
-				for( MaliciousAttachmentElementConfig element : config.getElementList() )
+				int idx = holder.getFilesList().getList().getSelectedIndex();
+				if( idx != -1 )
 				{
-					if( holder.getTablesDialog().getValue( MutationTables.SELECTED_FILE ).equals( element.getKey() ) )
-					{
-						MaliciousAttachmentConfig att = element.addNewReplaceAttachment();
-						att.setFilename( filename );
-						att.setSize( size );
-						att.setContentType( contentType );
-						att.setEnabled( enabled );
-						att.setCached( cached );
+					ListModel listModel = holder.getFilesList().getList().getModel();
+					String key = ( ( AttachmentElement )listModel.getElementAt( idx ) ).getId();
 
-						holder.addResultToReplaceTable( att );
-						added = true;
+					for( MaliciousAttachmentElementConfig element : config.getElementList() )
+					{
+						if( key.equals( element.getKey() ) )
+						{
+							MaliciousAttachmentConfig att = element.addNewReplaceAttachment();
+							att.setFilename( filename );
+							att.setSize( size );
+							att.setContentType( contentType );
+							att.setEnabled( enabled );
+							att.setCached( cached );
+
+							holder.addResultToReplaceTable( att );
+							added = true;
+						}
 					}
 				}
 
@@ -406,26 +422,33 @@ public class MaliciousAttachmentMutationsPanel
 
 					boolean added = false;
 
-					for( MaliciousAttachmentElementConfig element : config.getElementList() )
+					int idx = holder.getFilesList().getList().getSelectedIndex();
+					if( idx != -1 )
 					{
-						if( holder.getTablesDialog().getValue( MutationTables.SELECTED_FILE ).equals( element.getKey() ) )
+						ListModel listModel = holder.getFilesList().getList().getModel();
+						String key = ( ( AttachmentElement )listModel.getElementAt( idx ) ).getId();
+
+						for( MaliciousAttachmentElementConfig element : config.getElementList() )
 						{
-							MaliciousAttachmentConfig att = element.addNewGenerateAttachment();
-							att.setFilename( filename );
-							att.setSize( newSize );
-							att.setContentType( contentType );
-							att.setEnabled( enabled );
-							att.setCached( cached );
+							if( key.equals( element.getKey() ) )
+							{
+								MaliciousAttachmentConfig att = element.addNewGenerateAttachment();
+								att.setFilename( filename );
+								att.setSize( newSize );
+								att.setContentType( contentType );
+								att.setEnabled( enabled );
+								att.setCached( cached );
 
-							holder.addResultToGenerateTable( att );
+								holder.addResultToGenerateTable( att );
 
-							added = true;
+								added = true;
+							}
 						}
-					}
 
-					if( !added )
-					{
-						UISupport.showErrorMessage( "No attachments found in test step" );
+						if( !added )
+						{
+							UISupport.showErrorMessage( "No attachments found in test step" );
+						}
 					}
 				}
 				catch( Exception e1 )
@@ -457,13 +480,20 @@ public class MaliciousAttachmentMutationsPanel
 			{
 				tableModel.removeResult( row );
 
-				for( int i = 0; i < config.getElementList().size(); i++ )
+				int idx = holder.getFilesList().getList().getSelectedIndex();
+				if( idx != -1 )
 				{
-					MaliciousAttachmentElementConfig element = config.getElementList().get( i );
-
-					if( holder.getTablesDialog().getValue( MutationTables.SELECTED_FILE ).equals( element.getKey() ) )
+					ListModel listModel = holder.getFilesList().getList().getModel();
+					String key = ( ( AttachmentElement )listModel.getElementAt( idx ) ).getId();
+					
+					for( int i = 0; i < config.getElementList().size(); i++ )
 					{
-						element.getReplaceAttachmentList().remove( row );
+						MaliciousAttachmentElementConfig element = config.getElementList().get( i );
+
+						if( key.equals( element.getKey() ) )
+						{
+							element.getReplaceAttachmentList().remove( row );
+						}
 					}
 				}
 			}
@@ -491,13 +521,20 @@ public class MaliciousAttachmentMutationsPanel
 			{
 				tableModel.removeResult( row );
 
-				for( int i = 0; i < config.getElementList().size(); i++ )
+				int idx = holder.getFilesList().getList().getSelectedIndex();
+				if( idx != -1 )
 				{
-					MaliciousAttachmentElementConfig element = config.getElementList().get( i );
+					ListModel listModel = holder.getFilesList().getList().getModel();
+					String key = ( ( AttachmentElement )listModel.getElementAt( idx ) ).getId();
 
-					if( holder.getTablesDialog().getValue( MutationTables.SELECTED_FILE ).equals( element.getKey() ) )
+					for( int i = 0; i < config.getElementList().size(); i++ )
 					{
-						element.getGenerateAttachmentList().remove( row );
+						MaliciousAttachmentElementConfig element = config.getElementList().get( i );
+
+						if( key.equals( element.getKey() ) )
+						{
+							element.getGenerateAttachmentList().remove( row );
+						}
 					}
 				}
 			}

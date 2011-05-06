@@ -14,14 +14,15 @@ import com.eviware.soapui.config.MaliciousAttachmentConfig;
 import com.eviware.soapui.config.MaliciousAttachmentElementConfig;
 import com.eviware.soapui.config.MaliciousAttachmentSecurityCheckConfig;
 import com.eviware.soapui.model.iface.Attachment;
+import com.eviware.soapui.security.tools.AttachmentElement;
 import com.eviware.soapui.security.ui.MaliciousAttachmentMutationsPanel.MutationTables;
 
 public class MaliciousAttachmentFilesListForm extends JPanel
 {
 	private DefaultListModel listModel;
 	private JList list;
-	private Attachment oldSelection;
-	private Attachment currentSelection;
+	private AttachmentElement oldSelection;
+	private AttachmentElement currentSelection;
 	private MaliciousAttachmentSecurityCheckConfig config;
 	final MaliciousAttachmentListToTableHolder holder;
 
@@ -45,7 +46,7 @@ public class MaliciousAttachmentFilesListForm extends JPanel
 
 			public void valueChanged( ListSelectionEvent e )
 			{
-				currentSelection = ( list.getSelectedIndex() == -1 ) ? null : ( Attachment )listModel.get( list
+				currentSelection = ( list.getSelectedIndex() == -1 ) ? null : ( AttachmentElement )listModel.get( list
 						.getSelectedIndex() );
 				MaliciousAttachmentFilesListForm.this.holder.refresh( oldSelection, currentSelection );
 				oldSelection = currentSelection;
@@ -53,15 +54,14 @@ public class MaliciousAttachmentFilesListForm extends JPanel
 		} );
 	}
 
-	public String getFirstItem()
+	public AttachmentElement getFirstItem()
 	{
 		if( list.getModel().getSize() != 0 )
 		{
 			list.setSelectedIndex( 0 );
-			Attachment attachment = ( Attachment )list.getSelectedValue();
-			return ( attachment != null ) ? attachment.getName() : "";
+			return ( AttachmentElement )list.getSelectedValue();
 		}
-		return "";
+		return null;
 	}
 
 	public JList getList()
@@ -69,19 +69,19 @@ public class MaliciousAttachmentFilesListForm extends JPanel
 		return list;
 	}
 
-	public Attachment[] getData()
+	public AttachmentElement[] getData()
 	{
-		Attachment[] result = new Attachment[listModel.size()];
+		AttachmentElement[] result = new AttachmentElement[listModel.size()];
 		for( int c = 0; c < result.length; c++ )
 		{
-			result[c] = ( Attachment )listModel.get( c );
+			result[c] = ( AttachmentElement )listModel.get( c );
 		}
 		return result;
 	}
 
 	public void setData( Attachment[] attachments )
 	{
-		Attachment[] oldData = getData();
+		AttachmentElement[] oldData = getData();
 		MaliciousAttachmentSecurityCheckConfig copy = ( MaliciousAttachmentSecurityCheckConfig )config.copy();
 
 		listModel.clear();
@@ -91,7 +91,20 @@ public class MaliciousAttachmentFilesListForm extends JPanel
 		{
 			for( Attachment att : attachments )
 			{
-				listModel.addElement( att );
+				//dedup
+				int count = 0;
+				for( int i = 0; i < listModel.getSize(); i++ )
+				{
+
+					AttachmentElement element = ( AttachmentElement )listModel.getElementAt( i );
+					if( element.getAttachment().getName().equals( att.getName() ) )
+					{
+						count++ ;
+					}
+				}
+
+				AttachmentElement attEl = new AttachmentElement( att, count );
+				listModel.addElement( attEl );
 
 				holder.getGenerateTableModel().clear();
 				holder.getReplaceTableModel().clear();
@@ -100,11 +113,13 @@ public class MaliciousAttachmentFilesListForm extends JPanel
 				// add empty element
 				MaliciousAttachmentElementConfig newElement = config.addNewElement();
 
+				newElement.setKey( attEl.getId() );
+
 				for( MaliciousAttachmentElementConfig element : copy.getElementList() )
 				{
-					if( element.getKey().equals( att.getName() ) )
+					if( attEl.getId().equals( element.getKey() ) )
 					{
-						newElement.setKey( att.getName() );
+						newElement.setKey( attEl.getId() );
 						newElement.setRemove( element.getRemove() );
 						holder.getTablesDialog().setBooleanValue( MutationTables.REMOVE_FILE, element.getRemove() );
 
@@ -132,7 +147,7 @@ public class MaliciousAttachmentFilesListForm extends JPanel
 							holder.addResultToReplaceTable( newEl );
 						}
 
-						holder.refresh( att, null );
+						holder.refresh( attEl, null );
 						break;
 					}
 				}

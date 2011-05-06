@@ -111,12 +111,12 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 			// remove all attachments
 			if( element.getRemove() )
 			{
-				removeAttachment( testStep, element.getKey() );
+				removeAttachment( testStep, element.getKey().substring( 0, element.getKey().indexOf( ":" ) ) );
 			}
 			else
 			{
 				// first, remove original attachments
-				removeAttachment( testStep, element.getKey() );
+				removeAttachment( testStep, element.getKey().substring( 0, element.getKey().indexOf( ":" ) ) );
 
 				// then, add specified ones
 				addAttachments( testStep, element.getGenerateAttachmentList(), true );
@@ -265,4 +265,19 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 		return advancedSettingsPanel.getPanel();
 	}
 
+	@Override
+	public void copyConfig( SecurityCheckConfig config )
+	{
+		super.copyConfig( config );
+
+		if( advancedSettingsPanel != null )
+		{
+			advancedSettingsPanel.setConfig( ( MaliciousAttachmentSecurityCheckConfig )getConfig().getConfig() );
+		}
+
+		if( mutationsPanel != null )
+		{
+			mutationsPanel.updateConfig( ( MaliciousAttachmentSecurityCheckConfig )getConfig().getConfig() );
+		}
+	}
 }

@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.eviware.soapui.config.MaliciousAttachmentConfig;
-import com.eviware.soapui.model.iface.Attachment;
+import com.eviware.soapui.security.tools.AttachmentElement;
 import com.eviware.soapui.security.ui.MaliciousAttachmentMutationsPanel.MutationTables;
 import com.eviware.x.impl.swing.JFormDialog;
 
@@ -66,21 +66,22 @@ public class MaliciousAttachmentListToTableHolder
 	{
 		if( filesList != null )
 		{
-			String item = filesList.getFirstItem();
-			tablesDialog.getFormField( MutationTables.SELECTED_FILE ).setValue( item );
+			AttachmentElement item = filesList.getFirstItem();
+			String label = (item != null) ? item.getAttachment().getName() : "";
+			tablesDialog.getFormField( MutationTables.SELECTED_FILE ).setValue( label );
 			load( item );
 		}
 	}
 
-	public void refresh( Attachment oldItem, Attachment newItem )
+	public void refresh( AttachmentElement oldItem, AttachmentElement newItem )
 	{
 		if( oldItem != null )
 		{
-			save( oldItem.getName() );
+			save( oldItem );
 
 			if( newItem != null )
 			{
-				load( newItem.getName() );
+				load( newItem );
 			}
 		}
 	}
@@ -95,7 +96,7 @@ public class MaliciousAttachmentListToTableHolder
 		replaceTableModel.addResult( config );
 	}
 
-	private void save( String item )
+	private void save( AttachmentElement item )
 	{
 		List<MaliciousAttachmentConfig> generateList = new ArrayList<MaliciousAttachmentConfig>();
 		List<MaliciousAttachmentConfig> replaceList = new ArrayList<MaliciousAttachmentConfig>();
@@ -112,18 +113,18 @@ public class MaliciousAttachmentListToTableHolder
 
 		Boolean remove = tablesDialog.getBooleanValue( MutationTables.REMOVE_FILE );
 
-		generateMap.put( item, generateList );
-		replaceMap.put( item, replaceList );
-		removeMap.put( item, remove );
+		generateMap.put( item.getId(), generateList );
+		replaceMap.put( item.getId(), replaceList );
+		removeMap.put( item.getId(), remove );
 	}
 
-	private void load( String item )
+	private void load( AttachmentElement item )
 	{
-		List<MaliciousAttachmentConfig> generateList = generateMap.get( item );
-		List<MaliciousAttachmentConfig> replaceList = replaceMap.get( item );
-		Boolean remove = removeMap.get( item );
+		List<MaliciousAttachmentConfig> generateList = generateMap.get( item.getId() );
+		List<MaliciousAttachmentConfig> replaceList = replaceMap.get( item.getId() );
+		Boolean remove = removeMap.get( item.getId() );
 
-		tablesDialog.setValue( MutationTables.SELECTED_FILE, item );
+		tablesDialog.setValue( MutationTables.SELECTED_FILE, item.getAttachment().getName() );
 
 		generateTableModel.clear();
 		replaceTableModel.clear();
