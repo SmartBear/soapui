@@ -28,7 +28,7 @@ import org.jdesktop.swingx.JXTable;
 import com.eviware.soapui.config.MaliciousAttachmentConfig;
 import com.eviware.soapui.config.MaliciousAttachmentElementConfig;
 import com.eviware.soapui.config.MaliciousAttachmentSecurityCheckConfig;
-import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.support.MaliciousAttachmentFilesListForm;
@@ -253,13 +253,13 @@ public class MaliciousAttachmentMutationsPanel
 		MaliciousAttachmentFilesListForm filesList = holder.getFilesList();
 
 		Attachment[] data = new Attachment[] {};
-		if( testStep instanceof WsdlTestRequestStep )
+		if( testStep instanceof HttpTestRequestStep )
 		{
-			Attachment[] attachments = ( ( WsdlTestRequestStep )testStep ).getHttpRequest().getAttachments();
+			Attachment[] attachments = ( ( HttpTestRequestStep )testStep ).getHttpRequest().getAttachments();
 			data = new Attachment[attachments.length];
 			for( int i = 0; i < attachments.length; i++ )
 			{
-				data[i] = ( ( WsdlTestRequestStep )testStep ).getTestRequest().getAttachmentAt( i );
+				data[i] = ( ( HttpTestRequestStep )testStep ).getTestRequest().getAttachmentAt( i );
 			}
 		}
 

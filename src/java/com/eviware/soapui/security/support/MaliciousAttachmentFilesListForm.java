@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 
 import javax.swing.DefaultListModel;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -16,6 +17,7 @@ import com.eviware.soapui.config.MaliciousAttachmentSecurityCheckConfig;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.security.tools.AttachmentElement;
 import com.eviware.soapui.security.ui.MaliciousAttachmentMutationsPanel.MutationTables;
+import com.eviware.soapui.support.UISupport;
 
 public class MaliciousAttachmentFilesListForm extends JPanel
 {
@@ -33,6 +35,10 @@ public class MaliciousAttachmentFilesListForm extends JPanel
 
 		this.config = config;
 		this.holder = holder;
+
+		JPanel p = UISupport.createEmptyPanel( 3, 3, 3, 3 );
+		p.add( new JLabel( "<html><b>Existing Attachments</b></html>" ), BorderLayout.WEST );
+		add( p, BorderLayout.NORTH );
 
 		listModel = new DefaultListModel();
 		list = new JList( listModel );
@@ -52,6 +58,8 @@ public class MaliciousAttachmentFilesListForm extends JPanel
 				oldSelection = currentSelection;
 			}
 		} );
+
+		setBorder( null );
 	}
 
 	public AttachmentElement getFirstItem()
