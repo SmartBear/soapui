@@ -111,12 +111,12 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 			// remove all attachments
 			if( element.getRemove() )
 			{
-				removeAttachment( testStep, element.getKey().substring( 0, element.getKey().indexOf( ":" ) ) );
+				removeAttachment( testStep, element.getKey() );
 			}
 			else
 			{
 				// first, remove original attachments
-				removeAttachment( testStep, element.getKey().substring( 0, element.getKey().indexOf( ":" ) ) );
+					removeAttachment( testStep, element.getKey() );
 
 				// then, add specified ones
 				addAttachments( testStep, element.getGenerateAttachmentList(), true );
@@ -197,14 +197,14 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 		return attach;
 	}
 
-	private void removeAttachment( TestStep testStep, String name )
+	private void removeAttachment( TestStep testStep, String id )
 	{
 		WsdlRequest request = ( WsdlRequest )getRequest( testStep );
 		List<Attachment> toRemove = new ArrayList<Attachment>();
 
 		for( Attachment attachment : request.getAttachments() )
 		{
-			if( attachment.getName().equals( name ) )
+			if( attachment.getId().equals( id ) )
 			{
 				toRemove.add( attachment );
 			}

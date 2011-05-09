@@ -59,4 +59,10 @@ public class RequestFileAttachment extends FileAttachment<AbstractHttpRequest<?>
 	public String toString() {
 		return getName();
 	}
+
+	@Override
+	public String getId()
+	{
+		return getConfig().getId();
+	}
 }

@@ -20,6 +20,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -93,6 +94,7 @@ public abstract class FileAttachment<T extends AbstractWsdlModelItem<?>> impleme
 		config.setName( file.getName() );
 		config.setContentType( ContentTypeHandler.getContentTypeFromFilename( file.getName() ) );
 		config.setContentId( file.getName() );
+		config.setId( UUID.randomUUID().toString() );
 
 		// cache locally if specified
 		if( cache )

@@ -56,4 +56,10 @@ public class MockFileAttachment extends FileAttachment<WsdlMockResponse>
 			return AttachmentEncoding.NONE;
 		}
 	}
+
+	@Override
+	public String getId()
+	{
+		return null;
+	}
 }

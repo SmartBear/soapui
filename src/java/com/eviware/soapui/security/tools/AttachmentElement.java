@@ -7,10 +7,10 @@ public class AttachmentElement
 	private Attachment attachment;
 	private String id;
 
-	public AttachmentElement( Attachment attachment, int id )
+	public AttachmentElement( Attachment attachment, String id )
 	{
 		this.attachment = attachment;
-		this.id = attachment.getName() + ":" + id;
+		this.id = id;
 	}
 
 	public Attachment getAttachment()

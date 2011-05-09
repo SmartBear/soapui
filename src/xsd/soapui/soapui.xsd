@@ -746,6 +746,7 @@
 			</xsd:element>
 			<xsd:element name="data" type="xsd:base64Binary"
 				maxOccurs="1" minOccurs="0"></xsd:element>
+			<xsd:element name="id" type="xsd:string"></xsd:element>
 		</xsd:sequence>
 	</xsd:complexType>
 

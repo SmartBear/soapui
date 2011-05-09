@@ -444,11 +444,10 @@ public class MaliciousAttachmentMutationsPanel
 								added = true;
 							}
 						}
-
-						if( !added )
-						{
-							UISupport.showErrorMessage( "No attachments found in test step" );
-						}
+					}
+					if( !added )
+					{
+						UISupport.showErrorMessage( "No attachments found in test step" );
 					}
 				}
 				catch( Exception e1 )
@@ -485,7 +484,7 @@ public class MaliciousAttachmentMutationsPanel
 				{
 					ListModel listModel = holder.getFilesList().getList().getModel();
 					String key = ( ( AttachmentElement )listModel.getElementAt( idx ) ).getId();
-					
+
 					for( int i = 0; i < config.getElementList().size(); i++ )
 					{
 						MaliciousAttachmentElementConfig element = config.getElementList().get( i );

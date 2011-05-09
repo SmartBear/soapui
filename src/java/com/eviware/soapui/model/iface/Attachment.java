@@ -57,4 +57,6 @@ public interface Attachment
 	public AttachmentEncoding getEncoding();
 
 	public String getContentEncoding();
+	
+	public String getId();
 }

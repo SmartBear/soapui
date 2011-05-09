@@ -81,29 +81,19 @@ public class MaliciousAttachmentFilesListForm extends JPanel
 
 	public void setData( Attachment[] attachments )
 	{
-		AttachmentElement[] oldData = getData();
 		MaliciousAttachmentSecurityCheckConfig copy = ( MaliciousAttachmentSecurityCheckConfig )config.copy();
 
 		listModel.clear();
 		config.getElementList().clear();
+		holder.getGenerateTableModel().clear();
+		holder.getReplaceTableModel().clear();
+		holder.getTablesDialog().setBooleanValue( MutationTables.REMOVE_FILE, new Boolean( false ) );
 
 		if( attachments != null )
 		{
 			for( Attachment att : attachments )
 			{
-				//dedup
-				int count = 0;
-				for( int i = 0; i < listModel.getSize(); i++ )
-				{
-
-					AttachmentElement element = ( AttachmentElement )listModel.getElementAt( i );
-					if( element.getAttachment().getName().equals( att.getName() ) )
-					{
-						count++ ;
-					}
-				}
-
-				AttachmentElement attEl = new AttachmentElement( att, count );
+				AttachmentElement attEl = new AttachmentElement( att, att.getId() );
 				listModel.addElement( attEl );
 
 				holder.getGenerateTableModel().clear();
@@ -152,8 +142,6 @@ public class MaliciousAttachmentFilesListForm extends JPanel
 					}
 				}
 			}
-
-			firePropertyChange( "attachments", oldData, getData() );
 		}
 	}
 

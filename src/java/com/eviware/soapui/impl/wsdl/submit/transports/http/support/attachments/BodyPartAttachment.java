@@ -267,4 +267,10 @@ public class BodyPartAttachment implements Attachment
 		else
 			return "binary";
 	}
+
+	@Override
+	public String getId()
+	{
+		return null;
+	}
 }
