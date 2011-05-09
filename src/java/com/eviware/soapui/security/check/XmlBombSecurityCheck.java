@@ -179,10 +179,12 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheckWithProperties
 		 */
 		for( SecurityCheckedParameter param : getParameterHolder().getParameterList() )
 		{
+			ArrayList<String> mutations = parameterMutations.get( param );
+			if( mutations != null && !mutations.isEmpty() )
 			{
-				testStep.getProperties().get( param.getName() ).setValue( parameterMutations.get( param ).get( 0 ) );
-				params.put( param.getLabel(), parameterMutations.get( param ).get( 0 ) );
-				parameterMutations.get( param ).remove( 0 );
+				testStep.getProperties().get( param.getName() ).setValue( mutations.get( 0 ) );
+				params.put( param.getLabel(), mutations.get( 0 ) );
+				mutations.remove( 0 );
 				break;
 			}
 		}

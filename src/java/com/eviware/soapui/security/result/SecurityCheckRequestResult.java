@@ -198,7 +198,7 @@ public class SecurityCheckRequestResult implements SecurityResult
 	{
 		StringToStringMap changedParams = null;
 
-		if( getMessageExchange() != null )
+		if( getMessageExchange() != null && getMessageExchange().getProperties() != null )
 		{
 			changedParams = StringToStringMap.fromXml( getMessageExchange().getProperties().get(
 					AbstractSecurityCheckWithProperties.SECURITY_CHANGED_PARAMETERS ) );
