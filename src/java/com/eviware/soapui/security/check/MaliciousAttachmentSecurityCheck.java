@@ -105,6 +105,8 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 	 */
 	private void updateRequestContent( TestStep testStep, SecurityTestRunContext context )
 	{
+		setRequestTimeout( testStep, config.getRequestTimeout() );
+
 		// add attachments
 		for( MaliciousAttachmentElementConfig element : config.getElementList() )
 		{
@@ -116,7 +118,7 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 			else
 			{
 				// first, remove original attachments
-					removeAttachment( testStep, element.getKey() );
+				removeAttachment( testStep, element.getKey() );
 
 				// then, add specified ones
 				addAttachments( testStep, element.getGenerateAttachmentList(), true );
@@ -213,6 +215,13 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 		{
 			request.removeAttachment( remove );
 		}
+
+	}
+
+	private void setRequestTimeout( TestStep testStep, int timeout )
+	{
+		WsdlRequest request = ( WsdlRequest )getRequest( testStep );
+		request.setTimeout( String.valueOf( timeout ) );
 
 	}
 

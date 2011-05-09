@@ -34,6 +34,11 @@ public class MaliciousAttachmentAdvancedSettingsPanel
 			@Override
 			public void valueChanged( XFormField sourceField, String newValue, String oldValue )
 			{
+				
+				if (newValue == null || newValue.trim().length() == 0) {
+					return;
+				}
+				
 				try
 				{
 					int val = Integer.valueOf( newValue );
