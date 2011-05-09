@@ -60,7 +60,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.ProcessingInstruction;
 import org.w3c.dom.Text;
-import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -1321,20 +1320,25 @@ public final class XmlUtils
 			if( StringUtils.isNullOrEmpty( str ) )
 				return false;
 
-			XmlOptions options = new XmlOptions();
-			options.put( "http://xml.org/sax/features/external-general-entities",  false );
-			options.put( "http://xml.org/sax/features/external-parameter-entities",  false );
-			options.setEntityResolver( new EntityResolver()
-			{
-				
-				@Override
-				public InputSource resolveEntity( String arg0, String arg1 ) throws SAXException, IOException
-				{
-					// TODO Auto-generated method stub
-					return null;
-				}
-			});
-			return null != XmlObject.Factory.parse( str, options );
+			XmlObject.Factory.parse( str );
+
+			// SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
+			// saxParserFactory.setNamespaceAware( true );
+			// saxParserFactory.setValidating( false );
+			// saxParserFactory.setFeature( XMLConstants.FEATURE_SECURE_PROCESSING,
+			// true );
+			// SAXParser p = saxParserFactory.newSAXParser();
+			// p.parse( new StringInputStream( str ), new HandlerBase()
+			// {
+			//
+			// @Override
+			// public InputSource resolveEntity( String arg0, String arg1 ) throws
+			// SAXException
+			// {
+			// return null;
+			// }
+			// } );
+			return true;
 		}
 		catch( Throwable e )
 		{
