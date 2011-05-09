@@ -14,9 +14,11 @@ package com.eviware.x.form.support;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.swing.AbstractButton;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.ButtonModel;
@@ -115,5 +117,13 @@ public class XFormRadioGroup extends AbstractSwingXFormField<JPanel> implements 
 	public int[] getSelectedIndexes()
 	{
 		return new int[] { items.indexOf( getValue() ) };
+	}
+
+	public void setDisabled()
+	{
+		for( Enumeration<AbstractButton> buttons = buttonGroup.getElements(); buttons.hasMoreElements(); )
+		{
+			buttons.nextElement().setEnabled( false );
+		}
 	}
 }

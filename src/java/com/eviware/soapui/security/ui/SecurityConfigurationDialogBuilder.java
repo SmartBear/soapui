@@ -140,9 +140,15 @@ public class SecurityConfigurationDialogBuilder
 			else
 				strategy.setValue( strategyOptions[1] );
 		}
+
+		// default is ONE_BY_ONE
+		if( securityCheck.getExecutionStrategy().getImmutable() )
+		{
+			strategy.setDisabled();
+		}
+		
 		strategy.addFormFieldListener( new XFormFieldListener()
 		{
-
 			@Override
 			public void valueChanged( XFormField sourceField, String newValue, String oldValue )
 			{
@@ -154,7 +160,7 @@ public class SecurityConfigurationDialogBuilder
 
 			}
 		} );
-
+		
 		XFormField delay = dialog.getFormField( Strategy.DELAY );
 		delay.setValue( String.valueOf( securityCheck.getExecutionStrategy().getDelay() ) );
 

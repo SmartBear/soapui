@@ -64,7 +64,8 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheckWithProperties
 			initXmlBombConfig();
 		else
 			xmlBombConfig = ( XmlBombSecurityCheckConfig )config.getConfig();
-
+		
+		getExecutionStrategy().setImmutable( true );
 	}
 
 	private void initXmlBombConfig()

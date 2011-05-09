@@ -84,6 +84,8 @@ public class GroovySecurityCheck extends AbstractSecurityCheckWithProperties
 		}
 
 		scriptEngine = SoapUIScriptEngineRegistry.create( this );
+		
+		getExecutionStrategy().setImmutable( true );
 	}
 
 	@Override

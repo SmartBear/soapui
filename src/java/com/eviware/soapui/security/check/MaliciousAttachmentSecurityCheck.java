@@ -63,6 +63,8 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 		{
 			config = ( ( MaliciousAttachmentSecurityCheckConfig )newConfig.getConfig() );
 		}
+		
+		getExecutionStrategy().setImmutable( true );
 	}
 
 	/**

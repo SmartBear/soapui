@@ -69,4 +69,14 @@ public class ExecutionStrategyHolder
 		this.config = config;
 	}
 
+	public Boolean getImmutable()
+	{
+		return config.getImmutable();
+	}
+
+	public void setImmutable( Boolean immutable )
+	{
+		config.setImmutable( immutable );
+	}
+
 }
