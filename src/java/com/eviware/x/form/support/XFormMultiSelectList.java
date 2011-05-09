@@ -213,7 +213,9 @@ public class XFormMultiSelectList extends AbstractSwingXFormField<JPanel> implem
 
 		public void actionPerformed( ActionEvent e )
 		{
+			int[] oldValue = getSelectedIndexes();
 			setSelectedOptions( getOptions() );
+			pcs.firePropertyChange( "select", oldValue, getSelectedIndexes() );
 		}
 	}
 
@@ -227,7 +229,9 @@ public class XFormMultiSelectList extends AbstractSwingXFormField<JPanel> implem
 
 		public void actionPerformed( ActionEvent e )
 		{
+			int[] oldValue = getSelectedIndexes();
 			setSelectedOptions( new String[0] );
+			pcs.firePropertyChange( "select", oldValue, getSelectedIndexes() );
 		}
 	}
 
