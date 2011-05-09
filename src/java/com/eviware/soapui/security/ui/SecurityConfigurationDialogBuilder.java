@@ -32,10 +32,10 @@ import com.eviware.x.form.XFormField;
 import com.eviware.x.form.XFormFieldListener;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
+import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.APage;
 import com.eviware.x.form.support.XFormRadioGroup;
-import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.impl.swing.JFormDialog;
 import com.eviware.x.impl.swing.JTabbedFormDialog;
 
@@ -53,8 +53,8 @@ public class SecurityConfigurationDialogBuilder
 	{
 
 		return buildSecurityCheckConfigurationDialog( securityCheck.getConfigName(),
-				securityCheck.getConfigDescription(), securityCheck.getIcon(), securityCheck.getHelpURL(), securityCheck
-						.getComponent(), securityCheck );
+				securityCheck.getConfigDescription(), securityCheck.getIcon(), securityCheck.getHelpURL(),
+				securityCheck.getComponent(), securityCheck );
 	}
 
 	/**
@@ -70,7 +70,9 @@ public class SecurityConfigurationDialogBuilder
 	{
 		XFormField field = dialog.getFormField( PARAMETERS_NAME );
 		if( field != null )
+		{
 			addParameterTable( securityCheck, field );
+		}
 
 		Container content = ( ( JFormDialog )dialog ).getDialog().getContentPane();
 
@@ -89,12 +91,12 @@ public class SecurityConfigurationDialogBuilder
 
 		JTabbedFormDialog tabDialog = ( ( JTabbedFormDialog )ADialogBuilder.buildTabbedDialog( TabsForm.class, null ) );
 
-		tabDialog.setResizable( true );
-		// tabDialog.setSize( 420, 400 );
+		// tabDialog.setResizable( true );
+		// tabDialog.setSize( 600, 400 );
 
 		tabDialog.getFormField( Assertions.ASSERTIONS ).setProperty( "component",
 				new SecurityAssertionPanel( ( Assertable )securityCheck ) );
-		tabDialog.getFormField( Assertions.ASSERTIONS ).setProperty( "dimension", new Dimension( 345, 260 ) );
+		tabDialog.getFormField( Assertions.ASSERTIONS ).setProperty( "dimension", new Dimension( 345, 170 ) );
 
 		// tabDialog.getFormField( SetupScript.SCRIPT ).setProperty( "component",
 		// buildSetupScriptPanel( securityCheck ) );
@@ -109,11 +111,17 @@ public class SecurityConfigurationDialogBuilder
 
 		tabDialog.getFormField( AdvancedSettings.SETTINGS ).setProperty( "component",
 				new JScrollPane( securityCheck.getAdvancedSettingsPanel() ) );
-		tabDialog.getFormField( AdvancedSettings.SETTINGS ).setProperty( "dimension", new Dimension( 410, 260 ) );
+		tabDialog.getFormField( AdvancedSettings.SETTINGS ).setProperty( "dimension", new Dimension( 410, 170 ) );
 
 		addStrategyPanel( tabDialog, securityCheck );
 		tabs.setProperty( "component", tabDialog.getTabs() );
-		tabs.setProperty( "dimension", new Dimension( 420, 300 ) );
+		tabs.setProperty( "dimension", new Dimension( 420, 170 ) );
+
+		XFormField parametersFormField = dialog.getFormField( PARAMETERS_NAME );
+		if( parametersFormField != null )
+		{
+			parametersFormField.setProperty( "preferredSize", new Dimension( 400, 150 ) );
+		}
 
 	}
 
@@ -262,13 +270,11 @@ public class SecurityConfigurationDialogBuilder
 	@AForm( description = "Configure Security Scan", name = "Configure Security Scan", helpUrl = HelpUrls.MOCKASWAR_HELP_URL )
 	protected interface DialogWithParameters
 	{
-
 		@AField( description = "Parameters to Scan", name = PARAMETERS_NAME, type = AFieldType.COMPONENT )
 		public final static String PARAMETERS = PARAMETERS_NAME;
 
 		@AField( description = "Tabs", name = TABS_NAME, type = AFieldType.COMPONENT )
 		public final static String TABS = TABS_NAME;
-
 	}
 
 	@AForm( description = "Configure Security Scan", name = "Configure Security Scan", helpUrl = HelpUrls.MOCKASWAR_HELP_URL )

@@ -279,14 +279,15 @@ public class MaliciousAttachmentMutationsPanel
 	@AForm( description = "Malicious Attachment Mutation Tables", name = "Malicious Attachment Mutation Tables" )
 	public interface MutationTables
 	{
-		@AField( description = "Selected", name = "Selected", type = AFieldType.LABEL )
-		final static String SELECTED_FILE = "Selected";
-		@AField( description = "Generate file", name = "Generate file", type = AFieldType.COMPONENT )
-		final static String GENERATE_FILE = "Generate file";
-		@AField( description = "Replace file", name = "Replace file", type = AFieldType.COMPONENT )
-		final static String REPLACE_FILE = "Replace file";
-		@AField( description = "Remove file", name = "Do not send attachment", type = AFieldType.BOOLEAN )
-		final static String REMOVE_FILE = "Do not send attachment";
+		@AField( description = "<html><b>Specify below how selected attachment should be mutated</b></html>", name = "###Label", type = AFieldType.LABEL )
+		final static String LABEL = "###Label";
+
+		@AField( description = "Generate file", name = "Generate", type = AFieldType.COMPONENT )
+		final static String GENERATE_FILE = "Generate";
+		@AField( description = "Replace file", name = "Replace", type = AFieldType.COMPONENT )
+		final static String REPLACE_FILE = "Replace";
+		@AField( description = "Do not send the attachment with the request", name = "Remove", type = AFieldType.BOOLEAN )
+		final static String REMOVE_FILE = "Remove";
 	}
 
 	@AForm( description = "Generate File Mutation", name = "Generate File Mutation" )

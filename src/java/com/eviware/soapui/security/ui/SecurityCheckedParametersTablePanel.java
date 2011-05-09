@@ -12,6 +12,7 @@
 package com.eviware.soapui.security.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -73,6 +74,7 @@ public class SecurityCheckedParametersTablePanel extends JPanel implements ListS
 		this.model = model;
 		initRequestPartProperties( properties );
 		init();
+		setPreferredSize( new Dimension( 100, 100 ) );
 	}
 
 	private void initRequestPartProperties( Map<String, TestProperty> properties )

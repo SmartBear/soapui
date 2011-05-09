@@ -359,7 +359,7 @@ public class ADialogBuilder
 			field = form.addComponent( name, new JMultilineLabelTextField() );
 			break;
 		case LABEL :
-			field = form.addComponent( name, new JLabelFormField() );
+			field = form.addComponent( name, new JLabelFormField( description ) );
 			break;
 		case SEPARATOR :
 			form.addSeparator( description );

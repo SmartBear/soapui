@@ -103,8 +103,7 @@ public class SQLInjectionCheck extends AbstractSecurityCheckWithProperties
 	@Override
 	public JComponent getComponent()
 	{
-		return new JLabel(
-				"<html><pre>SQL String  <i>Default strings for SQL injection applied (can be changed under advanced settings)</i></pre></html>" );
+		return new JLabel( "Strings for SQL injection can be changed under advanced settings" );
 	}
 
 	@Override

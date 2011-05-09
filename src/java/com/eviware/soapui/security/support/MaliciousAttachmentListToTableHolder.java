@@ -68,7 +68,7 @@ public class MaliciousAttachmentListToTableHolder
 		{
 			AttachmentElement item = filesList.getFirstItem();
 			String label = ( item != null ) ? item.getAttachment().getName() : "";
-			tablesDialog.getFormField( MutationTables.SELECTED_FILE ).setValue( label );
+			// tablesDialog.getFormField( MutationTables.LABEL ).setValue( label );
 			if( item != null )
 			{
 				load( item );
@@ -127,7 +127,8 @@ public class MaliciousAttachmentListToTableHolder
 		List<MaliciousAttachmentConfig> replaceList = replaceMap.get( item.getId() );
 		Boolean remove = removeMap.get( item.getId() );
 
-		tablesDialog.setValue( MutationTables.SELECTED_FILE, item.getAttachment().getName() );
+		// tablesDialog.setValue( MutationTables.LABEL,
+		// item.getAttachment().getName() );
 
 		generateTableModel.clear();
 		replaceTableModel.clear();
