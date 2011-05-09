@@ -37,7 +37,6 @@ import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStepResult;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Attachment;
-import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.security.SecurityCheckedParameter;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
@@ -151,9 +150,10 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheckWithProperties
 		{
 			StringToStringMap updatedParams = update( testStep, context );
 			addAttachement( testStep );
-			WsdlTestRequestStepResult message = ( WsdlTestRequestStepResult )testStep.run( ( TestCaseRunner )securityTestRunner, context );
+			WsdlTestRequestStepResult message = ( WsdlTestRequestStepResult )testStep.run(
+					( TestCaseRunner )securityTestRunner, context );
 			message.setRequestContent( "", false );
-			createMessageExchange( updatedParams, message );
+			createMessageExchange( updatedParams, message, context );
 		}
 		catch( XmlException e )
 		{

@@ -41,8 +41,8 @@ import com.eviware.soapui.security.boundary.BoundaryRestrictionUtill;
 import com.eviware.soapui.security.ui.InvalidTypesTable;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel;
-import com.eviware.soapui.support.xml.XmlObjectTreeModel.XmlTreeNode;
 import com.eviware.soapui.support.xml.XmlUtils;
+import com.eviware.soapui.support.xml.XmlObjectTreeModel.XmlTreeNode;
 
 public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperties
 {
@@ -142,7 +142,7 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 			StringToStringMap updatedParams = updateRequestContent( testStep, context );
 			MessageExchange message = ( MessageExchange )testStep.run( ( TestCaseRunner )securityTestRunner, context );
 
-			createMessageExchange( updatedParams, message );
+			createMessageExchange( updatedParams, message, context );
 		}
 		catch( XmlException e )
 		{

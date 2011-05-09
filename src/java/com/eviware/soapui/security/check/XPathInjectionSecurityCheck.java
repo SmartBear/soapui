@@ -38,12 +38,12 @@ import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel;
-import com.eviware.soapui.support.xml.XmlObjectTreeModel.XmlTreeNode;
 import com.eviware.soapui.support.xml.XmlUtils;
+import com.eviware.soapui.support.xml.XmlObjectTreeModel.XmlTreeNode;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.support.AForm;
+import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.impl.swing.JFormDialog;
 import com.eviware.x.impl.swing.JStringListFormField;
 
@@ -106,7 +106,7 @@ public class XPathInjectionSecurityCheck extends AbstractSecurityCheckWithProper
 		{
 			StringToStringMap paramsUpdated = update( testStep, context );
 			MessageExchange message = ( MessageExchange )testStep.run( ( TestCaseRunner )runner, context );
-			createMessageExchange( paramsUpdated, message );
+			createMessageExchange( paramsUpdated, message, context );
 		}
 		catch( XmlException e )
 		{
@@ -175,8 +175,8 @@ public class XPathInjectionSecurityCheck extends AbstractSecurityCheckWithProper
 				if( XmlUtils.seemsToBeXml( value ) )
 				{
 					XmlObjectTreeModel model = null;
-					model = new XmlObjectTreeModel( property.getSchemaType().getTypeSystem(),
-							XmlObject.Factory.parse( value ) );
+					model = new XmlObjectTreeModel( property.getSchemaType().getTypeSystem(), XmlObject.Factory
+							.parse( value ) );
 					for( SecurityCheckedParameter param : getParameterHolder().getParameterList() )
 					{
 						if( !param.isChecked() )
@@ -186,8 +186,8 @@ public class XPathInjectionSecurityCheck extends AbstractSecurityCheckWithProper
 						{
 							if( parameterMutations.containsKey( param ) )
 							{
-								testStep.getProperties().get( param.getName() )
-										.setValue( parameterMutations.get( param ).get( 0 ) );
+								testStep.getProperties().get( param.getName() ).setValue(
+										parameterMutations.get( param ).get( 0 ) );
 								params.put( param.getLabel(), parameterMutations.get( param ).get( 0 ) );
 								parameterMutations.get( param ).remove( 0 );
 							}
@@ -255,8 +255,8 @@ public class XPathInjectionSecurityCheck extends AbstractSecurityCheckWithProper
 
 					XmlObjectTreeModel model = null;
 
-					model = new XmlObjectTreeModel( property.getSchemaType().getTypeSystem(),
-							XmlObject.Factory.parse( value ) );
+					model = new XmlObjectTreeModel( property.getSchemaType().getTypeSystem(), XmlObject.Factory
+							.parse( value ) );
 
 					XmlTreeNode[] nodes = model.selectTreeNodes( context.expand( parameter.getXpath() ) );
 

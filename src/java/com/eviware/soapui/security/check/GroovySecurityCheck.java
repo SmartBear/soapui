@@ -54,7 +54,7 @@ public class GroovySecurityCheck extends AbstractSecurityCheckWithProperties
 	private SoapUIScriptEngine scriptEngine;
 
 	private StringToStringMap parameters;
-//	private TestStepResult stepResult;
+	// private TestStepResult stepResult;
 
 	// private TestProperty response;
 
@@ -160,7 +160,7 @@ public class GroovySecurityCheck extends AbstractSecurityCheckWithProperties
 			}
 
 			MessageExchange message = ( MessageExchange )testStep.run( ( TestCaseRunner )securityTestRunner, context );
-			createMessageExchange( clearNullValues( parameters ), message );
+			createMessageExchange( clearNullValues( parameters ), message, context );
 
 		}
 		catch( Exception e )
@@ -254,8 +254,6 @@ public class GroovySecurityCheck extends AbstractSecurityCheckWithProperties
 		public final static String ANALYZE = "Verify Results";
 
 	}
-
-
 
 	@Override
 	public String getConfigDescription()

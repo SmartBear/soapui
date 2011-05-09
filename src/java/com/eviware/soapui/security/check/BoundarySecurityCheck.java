@@ -40,8 +40,8 @@ import com.eviware.soapui.security.boundary.enumeration.EnumerationValues;
 import com.eviware.soapui.support.SecurityCheckUtil;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel;
-import com.eviware.soapui.support.xml.XmlObjectTreeModel.XmlTreeNode;
 import com.eviware.soapui.support.xml.XmlUtils;
+import com.eviware.soapui.support.xml.XmlObjectTreeModel.XmlTreeNode;
 
 public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 {
@@ -79,7 +79,7 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 
 			updateRequestProperty( testStep, mutation );
 			MessageExchange message = ( MessageExchange )testStep.run( ( TestCaseRunner )securityTestRunner, context );
-			createMessageExchange( mutation.getMutatedParameters(), message );
+			createMessageExchange( mutation.getMutatedParameters(), message, context );
 		}
 	}
 
@@ -300,7 +300,7 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 			{
 				SoapUI.logError( e );
 			}
-			
+
 			return checkIfEmptyStack( context );
 		}
 

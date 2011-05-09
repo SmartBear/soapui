@@ -12,6 +12,7 @@ import com.eviware.soapui.model.support.XPathReference;
 import com.eviware.soapui.model.support.XPathReferenceContainer;
 import com.eviware.soapui.model.support.XPathReferenceImpl;
 import com.eviware.soapui.model.testsuite.TestStep;
+import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.support.SecurityCheckedParameterHolder;
 import com.eviware.soapui.security.support.SecurityCheckedParameterImpl;
 import com.eviware.soapui.support.types.StringToStringMap;
@@ -126,8 +127,14 @@ public abstract class AbstractSecurityCheckWithProperties extends AbstractSecuri
 		}
 	}
 
-	protected void createMessageExchange( StringToStringMap updatedParams, MessageExchange message )
+	protected void createMessageExchange( StringToStringMap updatedParams, MessageExchange message,
+			SecurityTestRunContext context )
 	{
+		for( String param : updatedParams.keySet() )
+		{
+			String value = context.expand( updatedParams.get( param ) );
+			updatedParams.put( param, value );
+		}
 		message.getProperties().put( SECURITY_CHANGED_PARAMETERS, updatedParams.toXml() );
 		getSecurityCheckRequestResult().setMessageExchange( message );
 	}

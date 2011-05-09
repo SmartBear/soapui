@@ -99,7 +99,7 @@ public class MalformedXmlSecurityCheck extends AbstractSecurityCheckWithProperti
 		{
 			StringToStringMap paramsUpdated = update( testStep, context );
 			MessageExchange message = ( MessageExchange )testStep.run( ( TestCaseRunner )runner, context );
-			createMessageExchange( paramsUpdated, message );
+			createMessageExchange( paramsUpdated, message, context );
 		}
 		catch( XmlException e )
 		{
