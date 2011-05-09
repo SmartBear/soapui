@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.swing.JComponent;
-import javax.swing.JLabel;
 
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlString;
@@ -64,7 +63,7 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheckWithProperties
 			initXmlBombConfig();
 		else
 			xmlBombConfig = ( XmlBombSecurityCheckConfig )config.getConfig();
-		
+
 		getExecutionStrategy().setImmutable( true );
 	}
 
@@ -213,13 +212,6 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheckWithProperties
 			}
 		}
 
-	}
-
-	@Override
-	public JComponent getComponent()
-	{
-		return new JLabel(
-				"<html><pre>Bomb  <i>Default bombs applied (can be changed under advanced settings)</i></pre></html>" );
 	}
 
 	@Override

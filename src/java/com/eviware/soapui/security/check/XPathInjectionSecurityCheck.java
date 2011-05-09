@@ -20,6 +20,7 @@ import java.util.Map;
 
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
@@ -36,14 +37,15 @@ import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
+import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel;
-import com.eviware.soapui.support.xml.XmlUtils;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel.XmlTreeNode;
+import com.eviware.soapui.support.xml.XmlUtils;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.AField.AFieldType;
+import com.eviware.x.form.support.AForm;
 import com.eviware.x.impl.swing.JFormDialog;
 import com.eviware.x.impl.swing.JStringListFormField;
 
@@ -95,8 +97,9 @@ public class XPathInjectionSecurityCheck extends AbstractSecurityCheckWithProper
 	@Override
 	public JComponent getComponent()
 	{
-		return new JLabel(
-				"<html><pre>XPath String  <i>Default strings for XPath injection applied (can be changed under advanced settings)</i></pre></html>" );
+		JPanel p = UISupport.createEmptyPanel( 5, 75, 0, 5 );
+		p.add( new JLabel( "Strings for XPath injection can be changed under advanced settings" ) );
+		return p;
 	}
 
 	@Override
@@ -175,8 +178,8 @@ public class XPathInjectionSecurityCheck extends AbstractSecurityCheckWithProper
 				if( XmlUtils.seemsToBeXml( value ) )
 				{
 					XmlObjectTreeModel model = null;
-					model = new XmlObjectTreeModel( property.getSchemaType().getTypeSystem(), XmlObject.Factory
-							.parse( value ) );
+					model = new XmlObjectTreeModel( property.getSchemaType().getTypeSystem(),
+							XmlObject.Factory.parse( value ) );
 					for( SecurityCheckedParameter param : getParameterHolder().getParameterList() )
 					{
 						if( !param.isChecked() )
@@ -186,8 +189,8 @@ public class XPathInjectionSecurityCheck extends AbstractSecurityCheckWithProper
 						{
 							if( parameterMutations.containsKey( param ) )
 							{
-								testStep.getProperties().get( param.getName() ).setValue(
-										parameterMutations.get( param ).get( 0 ) );
+								testStep.getProperties().get( param.getName() )
+										.setValue( parameterMutations.get( param ).get( 0 ) );
 								params.put( param.getLabel(), parameterMutations.get( param ).get( 0 ) );
 								parameterMutations.get( param ).remove( 0 );
 							}
@@ -255,8 +258,8 @@ public class XPathInjectionSecurityCheck extends AbstractSecurityCheckWithProper
 
 					XmlObjectTreeModel model = null;
 
-					model = new XmlObjectTreeModel( property.getSchemaType().getTypeSystem(), XmlObject.Factory
-							.parse( value ) );
+					model = new XmlObjectTreeModel( property.getSchemaType().getTypeSystem(),
+							XmlObject.Factory.parse( value ) );
 
 					XmlTreeNode[] nodes = model.selectTreeNodes( context.expand( parameter.getXpath() ) );
 

@@ -60,10 +60,10 @@ import com.eviware.soapui.security.actions.CloneParametersAction;
 import com.eviware.soapui.security.check.AbstractSecurityCheckWithProperties;
 import com.eviware.soapui.security.log.JSecurityTestRunLog;
 import com.eviware.soapui.security.support.SecurityTestRunListenerAdapter;
+import com.eviware.soapui.security.ui.SecurityConfigurationDialog;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.swing.TreePathUtils;
-import com.eviware.x.form.XFormDialog;
 
 /**
  * A panel showing a scrollable list of TestSteps in a SecurityTest.
@@ -305,12 +305,10 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 				return;
 			}
 
-			XFormDialog dialog = SoapUI.getSoapUICore().getSecurityCheckRegistry().getUIBuilder()
+			SecurityConfigurationDialog dialog = SoapUI.getSoapUICore().getSecurityCheckRegistry().getUIBuilder()
 					.buildSecurityCheckConfigurationDialog( ( SecurityCheck )securityCheck );
 
-			dialog.show();
-
-			if( dialog.getReturnValue() == XFormDialog.CANCEL_OPTION )
+			if( !dialog.configure() )
 			{
 				SecurityCheckNode securityCheckNode = ( SecurityCheckNode )node.getLastChild();
 
@@ -340,12 +338,10 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 			{
 				SecurityCheckConfig backupCheckConfig = ( SecurityCheckConfig )securityCheck.getConfig().copy();
 
-				XFormDialog dialog = SoapUI.getSoapUICore().getSecurityCheckRegistry().getUIBuilder()
+				SecurityConfigurationDialog dialog = SoapUI.getSoapUICore().getSecurityCheckRegistry().getUIBuilder()
 						.buildSecurityCheckConfigurationDialog( ( SecurityCheck )securityCheck );
 
-				dialog.show();
-
-				if( dialog.getReturnValue() == XFormDialog.CANCEL_OPTION )
+				if( !dialog.configure() )
 				{
 					securityCheck.copyConfig( backupCheckConfig );
 				}
@@ -533,12 +529,10 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 			{
 				SecurityCheckConfig backupCheckConfig = ( SecurityCheckConfig )securityCheck.getConfig().copy();
 
-				XFormDialog dialog = SoapUI.getSoapUICore().getSecurityCheckRegistry().getUIBuilder()
+				SecurityConfigurationDialog dialog = SoapUI.getSoapUICore().getSecurityCheckRegistry().getUIBuilder()
 						.buildSecurityCheckConfigurationDialog( ( SecurityCheck )securityCheck );
 
-				dialog.show();
-
-				if( dialog.getReturnValue() == XFormDialog.CANCEL_OPTION )
+				if( !dialog.configure() )
 				{
 					securityCheck.copyConfig( backupCheckConfig );
 				}

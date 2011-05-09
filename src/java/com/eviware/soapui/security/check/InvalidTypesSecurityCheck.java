@@ -11,6 +11,7 @@
  */
 package com.eviware.soapui.security.check;
 
+import java.awt.BorderLayout;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.Map;
 
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 import org.apache.xmlbeans.SchemaType;
 import org.apache.xmlbeans.XmlException;
@@ -39,10 +41,11 @@ import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.security.boundary.BoundaryRestrictionUtill;
 import com.eviware.soapui.security.ui.InvalidTypesTable;
+import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel;
-import com.eviware.soapui.support.xml.XmlUtils;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel.XmlTreeNode;
+import com.eviware.soapui.support.xml.XmlUtils;
 
 public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperties
 {
@@ -119,7 +122,9 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 	@Override
 	public JComponent getComponent()
 	{
-		return typeLabel.getJLabel();
+		JPanel panel = UISupport.createEmptyPanel( 5, 75, 0, 5 );
+		panel.add( typeLabel.getJLabel(), BorderLayout.CENTER );
+		return panel;
 	}
 
 	@Override
@@ -220,8 +225,8 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 				if( XmlUtils.seemsToBeXml( value ) )
 				{
 					XmlObjectTreeModel model = null;
-					model = new XmlObjectTreeModel( property.getSchemaType().getTypeSystem(), XmlObject.Factory
-							.parse( value ) );
+					model = new XmlObjectTreeModel( property.getSchemaType().getTypeSystem(),
+							XmlObject.Factory.parse( value ) );
 					for( SecurityCheckedParameter param : getParameterHolder().getParameterList() )
 					{
 						if( param.getXpath() == null || param.getXpath().trim().length() == 0 )
@@ -505,7 +510,7 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 	{
 		if( row == -1 )
 		{
-			typeLabel.setJlabel( "<html><pre>    </pre></html>" );
+			typeLabel.setJlabel( "- no parameter selected -" );
 			return;
 		}
 		SecurityCheckedParameter parameter = getParameterAt( row );
@@ -521,8 +526,8 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 		{
 			try
 			{
-				xmlObjectTreeModel = new XmlObjectTreeModel( tp.getSchemaType().getTypeSystem(), XmlObject.Factory
-						.parse( tp.getValue() ) );
+				xmlObjectTreeModel = new XmlObjectTreeModel( tp.getSchemaType().getTypeSystem(),
+						XmlObject.Factory.parse( tp.getValue() ) );
 			}
 			catch( XmlException e )
 			{
@@ -533,18 +538,21 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 
 			if( treeNodes.length == 0 )
 			{
-				typeLabel.setJlabel( "<html><pre>    </pre></html>" );
+				typeLabel.setJlabel( "" );
 				return;
 			}
 
 			SchemaTypeImpl simpleType = ( SchemaTypeImpl )treeNodes[0].getSchemaType();
 			XmlObjectTreeModel model2 = new XmlObjectTreeModel( simpleType.getTypeSystem(), simpleType.getParseObject() );
 			List<String> list = BoundaryRestrictionUtill.getType( model2.getRootNode(), new ArrayList<String>() );
-			typeLabel.setJlabel( list.toString() );
+			if( list.isEmpty() )
+				typeLabel.setJlabel( "parameter has type [" + simpleType.getName().toString() + "]" );
+			else
+				typeLabel.setJlabel( "parameter has types [" + list.toString() + "]" );
 		}
 		else
 		{
-			typeLabel.setJlabel( "<html><pre>    </pre></html>" );
+			typeLabel.setJlabel( "- no parameter selected ->" );
 		}
 
 	}

@@ -24,6 +24,7 @@ import java.util.Stack;
 
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.ParameterExposureCheckConfig;
@@ -40,13 +41,14 @@ import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.security.SecurityTestRunnerImpl;
 import com.eviware.soapui.security.assertion.ParameterExposureAssertion;
 import com.eviware.soapui.support.SecurityCheckUtil;
+import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel.XmlTreeNode;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.AField.AFieldType;
+import com.eviware.x.form.support.AForm;
 import com.eviware.x.impl.swing.JFormDialog;
 import com.eviware.x.impl.swing.JStringListFormField;
 
@@ -145,8 +147,9 @@ public class ParameterExposureCheck extends AbstractSecurityCheckWithProperties
 	@Override
 	public JComponent getComponent()
 	{
-		return new JLabel(
-				"<html><pre>Parameter Exposure <i>Default values applied (can be changed under advanced settings)</i></pre></html>" );
+		JPanel p = UISupport.createEmptyPanel( 5, 75, 0, 5 );
+		p.add( new JLabel( "Strings for Cross Site Scripting can be configured under Advanced Settings" ) );
+		return p;
 	}
 
 	@Override

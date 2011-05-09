@@ -11,12 +11,14 @@
  */
 package com.eviware.soapui.security.check;
 
+import java.awt.BorderLayout;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 import org.apache.xmlbeans.XmlAnySimpleType;
 import org.apache.xmlbeans.XmlException;
@@ -38,10 +40,11 @@ import com.eviware.soapui.security.boundary.AbstractBoundary;
 import com.eviware.soapui.security.boundary.BoundaryRestrictionUtill;
 import com.eviware.soapui.security.boundary.enumeration.EnumerationValues;
 import com.eviware.soapui.support.SecurityCheckUtil;
+import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel;
-import com.eviware.soapui.support.xml.XmlUtils;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel.XmlTreeNode;
+import com.eviware.soapui.support.xml.XmlUtils;
 
 public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 {
@@ -61,7 +64,9 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 	@Override
 	public JComponent getComponent()
 	{
-		return restrictionLabel.getJLabel();
+		JPanel panel = UISupport.createEmptyPanel( 5, 75, 0, 5 );
+		panel.add( restrictionLabel.getJLabel(), BorderLayout.CENTER );
+		return panel;
 	}
 
 	@Override
@@ -152,8 +157,8 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 						else
 						{
 							SchemaTypeImpl simpleType = ( SchemaTypeImpl )mynode.getSchemaType();
-							XmlObjectTreeModel model2 = new XmlObjectTreeModel( simpleType.getTypeSystem(), simpleType
-									.getParseObject() );
+							XmlObjectTreeModel model2 = new XmlObjectTreeModel( simpleType.getTypeSystem(),
+									simpleType.getParseObject() );
 							extractRestrictions( model2, context, mynode, model, scp, stsmap );
 						}
 					}
@@ -352,7 +357,7 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 
 	public class RestrictionLabel
 	{
-		private String text = "<html><pre>    </pre></html>";
+		private String text = "";
 		private JLabel jlabel = new JLabel();
 		private int limit = 70;
 		{
@@ -378,14 +383,13 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 		{
 			return jlabel;
 		}
-
 	}
 
 	public void refreshRestrictionLabel( int row )
 	{
 		if( row == -1 )
 		{
-			restrictionLabel.setJlabel( "<html><pre>    </pre></html>" );
+			restrictionLabel.setJlabel( "- no parameter selected -" );
 			return;
 		}
 
@@ -401,8 +405,8 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 		{
 			try
 			{
-				xmlObjectTreeModel = new XmlObjectTreeModel( tp.getSchemaType().getTypeSystem(), XmlObject.Factory
-						.parse( tp.getValue() ) );
+				xmlObjectTreeModel = new XmlObjectTreeModel( tp.getSchemaType().getTypeSystem(),
+						XmlObject.Factory.parse( tp.getValue() ) );
 			}
 			catch( XmlException e )
 			{
@@ -437,7 +441,7 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 		}
 		else
 		{
-			restrictionLabel.setJlabel( "<html><pre>    </pre></html>" );
+			restrictionLabel.setJlabel( "- no parameter selected -" );
 		}
 	}
 

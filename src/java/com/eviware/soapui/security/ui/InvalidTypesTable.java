@@ -12,6 +12,7 @@
 package com.eviware.soapui.security.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -106,6 +107,7 @@ public class InvalidTypesTable extends JPanel
 		table = new JXTable( model );
 
 		add( new JScrollPane( table ), BorderLayout.CENTER );
+		setPreferredSize( new Dimension( 100, 200 ) );
 
 	}
 

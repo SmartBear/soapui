@@ -33,10 +33,25 @@ import com.eviware.soapui.support.components.JButtonBar;
 public abstract class SimpleDialog extends JDialog
 {
 	protected JButtonBar buttons = null;
+	private final String title;
+	private final String description;
+	private final String helpUrl;
+	private final boolean okAndCancel;
+	private boolean initialized = false;
 
 	public SimpleDialog( String title, String description, String helpUrl, boolean okAndCancel )
 	{
 		super( UISupport.getMainFrame(), title, true );
+		this.title = title;
+		this.description = description;
+		this.helpUrl = helpUrl;
+		this.okAndCancel = okAndCancel;
+	}
+
+	private synchronized void init()
+	{
+		if( initialized )
+			return;
 
 		buttons = UISupport.initDialogActions( buildActions( helpUrl, okAndCancel ), this );
 		buttons.setBorder( BorderFactory.createEmptyBorder( 5, 0, 0, 0 ) );
@@ -57,6 +72,8 @@ public abstract class SimpleDialog extends JDialog
 		modifyButtons();
 
 		pack();
+
+		initialized = true;
 	}
 
 	/*
@@ -96,6 +113,8 @@ public abstract class SimpleDialog extends JDialog
 	@Override
 	public void setVisible( boolean b )
 	{
+		init();
+
 		if( b )
 			beforeShow();
 		else

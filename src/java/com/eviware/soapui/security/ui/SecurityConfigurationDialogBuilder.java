@@ -49,12 +49,15 @@ public class SecurityConfigurationDialogBuilder
 	// private GroovyEditorComponent setupGroovyEditor;
 	// private GroovyEditorComponent tearDownGroovyEditor;
 
-	public XFormDialog buildSecurityCheckConfigurationDialog( SecurityCheck securityCheck )
+	public SecurityConfigurationDialog buildSecurityCheckConfigurationDialog( SecurityCheck securityCheck )
 	{
+		return new SecurityConfigurationDialog( securityCheck );
 
-		return buildSecurityCheckConfigurationDialog( securityCheck.getConfigName(),
-				securityCheck.getConfigDescription(), securityCheck.getIcon(), securityCheck.getHelpURL(),
-				securityCheck.getComponent(), securityCheck );
+		// return buildSecurityCheckConfigurationDialog(
+		// securityCheck.getConfigName(),
+		// securityCheck.getConfigDescription(), securityCheck.getIcon(),
+		// securityCheck.getHelpURL(),
+		// securityCheck.getComponent(), securityCheck );
 	}
 
 	/**
@@ -146,7 +149,7 @@ public class SecurityConfigurationDialogBuilder
 		{
 			strategy.setDisabled();
 		}
-		
+
 		strategy.addFormFieldListener( new XFormFieldListener()
 		{
 			@Override
@@ -160,7 +163,7 @@ public class SecurityConfigurationDialogBuilder
 
 			}
 		} );
-		
+
 		XFormField delay = dialog.getFormField( Strategy.DELAY );
 		delay.setValue( String.valueOf( securityCheck.getExecutionStrategy().getDelay() ) );
 
@@ -229,7 +232,7 @@ public class SecurityConfigurationDialogBuilder
 				.getTestStep().getProperties(), ( AbstractSecurityCheckWithProperties )securityCheck ) );
 	}
 
-	public XFormDialog buildSecurityCheckConfigurationDialog( String name, String description, ImageIcon icon,
+	private XFormDialog buildSecurityCheckConfigurationDialog( String name, String description, ImageIcon icon,
 			String helpUrl, JComponent component, SecurityCheck securityCheck )
 	{
 		XFormDialog dialog = null;
