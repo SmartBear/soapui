@@ -88,6 +88,12 @@ public class SecurityConfigurationDialog extends SimpleDialog
 			}
 		}
 
+		Dimension prefSize = mainPanel.getPreferredSize();
+		int prefHeight = ( int )( prefSize.getHeight() + 170 );
+		int prefWidth = ( int )Math.max( prefSize.getWidth(), 600 );
+
+		mainPanel.setPreferredSize( new Dimension( prefWidth, prefHeight ) );
+
 		mainPanel.add( buildTabs(), BorderLayout.CENTER );
 
 		return mainPanel;
