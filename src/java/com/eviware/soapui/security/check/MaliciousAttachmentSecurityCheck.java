@@ -107,7 +107,10 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 	 */
 	private void updateRequestContent( TestStep testStep, SecurityTestRunContext context )
 	{
-		setRequestTimeout( testStep, config.getRequestTimeout() );
+		if( config.getRequestTimeout() > 0 )
+		{
+			setRequestTimeout( testStep, config.getRequestTimeout() );
+		}
 
 		// add attachments
 		for( MaliciousAttachmentElementConfig element : config.getElementList() )
