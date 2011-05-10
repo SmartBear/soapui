@@ -28,7 +28,7 @@ import org.jdesktop.swingx.JXTable;
 import com.eviware.soapui.config.MaliciousAttachmentConfig;
 import com.eviware.soapui.config.MaliciousAttachmentElementConfig;
 import com.eviware.soapui.config.MaliciousAttachmentSecurityCheckConfig;
-import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
+import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.support.MaliciousAttachmentFilesListForm;
@@ -64,14 +64,17 @@ public class MaliciousAttachmentMutationsPanel
 	private JButton removeGeneratedButton;
 	private JButton addReplacementButton;
 	private JButton removeReplacementButton;
+	private WsdlRequest request;
 	// private AttachmentContainer container;
 
 	private MaliciousAttachmentListToTableHolder holder = new MaliciousAttachmentListToTableHolder();
 
-	public MaliciousAttachmentMutationsPanel( MaliciousAttachmentSecurityCheckConfig config, TestStep testStep )
+	public MaliciousAttachmentMutationsPanel( MaliciousAttachmentSecurityCheckConfig config, TestStep testStep,
+			WsdlRequest request )
 	{
 		this.config = config;
 		this.testStep = testStep;
+		this.request = request;
 
 		// if( testStep instanceof WsdlTestRequestStep )
 		// {
@@ -252,15 +255,10 @@ public class MaliciousAttachmentMutationsPanel
 	{
 		MaliciousAttachmentFilesListForm filesList = holder.getFilesList();
 
-		Attachment[] data = new Attachment[] {};
-		if( testStep instanceof HttpTestRequestStep )
+		Attachment[] data = new Attachment[request.getAttachments().length];
+		for( int i = 0; i < request.getAttachments().length; i++ )
 		{
-			Attachment[] attachments = ( ( HttpTestRequestStep )testStep ).getHttpRequest().getAttachments();
-			data = new Attachment[attachments.length];
-			for( int i = 0; i < attachments.length; i++ )
-			{
-				data[i] = ( ( HttpTestRequestStep )testStep ).getTestRequest().getAttachmentAt( i );
-			}
+			data[i] = request.getAttachmentAt( i );
 		}
 
 		filesList.setData( data );

@@ -67,7 +67,8 @@ public class MaliciousAttachmentListToTableHolder
 		if( filesList != null )
 		{
 			AttachmentElement item = filesList.getFirstItem();
-			String label = ( item != null ) ? item.getAttachment().getName() : "";
+			// String label = ( item != null ) ? item.getAttachment().getName() :
+			// "";
 			// tablesDialog.getFormField( MutationTables.LABEL ).setValue( label );
 			if( item != null )
 			{
