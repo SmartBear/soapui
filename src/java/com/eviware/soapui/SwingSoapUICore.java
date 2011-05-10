@@ -156,7 +156,7 @@ public class SwingSoapUICore extends DefaultSoapUICore
 		return fileName;
 	}
 
-	private void addExternalActions( String folder, ClassLoader classLoader )
+	protected void addExternalActions( String folder, ClassLoader classLoader )
 	{
 		File[] actionFiles = new File( folder ).listFiles();
 		if( actionFiles != null )
