@@ -156,7 +156,7 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 				}
 				catch( IOException e )
 				{
-					UISupport.showErrorMessage( e );
+					SoapUI.logError( e );
 				}
 			}
 		}
