@@ -198,18 +198,18 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		securityTestListeners = ( ( SecurityTest )getParent() ).getSecurityTestRunListeners();
 
 		// setStatus( Status.INITIALIZED );
-//		try
-//		{
-//			runSetupScript( securityTestRunner, context );
-//		}
-//		catch( Exception e )
-//		{
-//			SoapUI.log.error( "Exception during Test Execution", e );
-//
-//			// need fix
-//			securityCheckResult.setStatus( ResultStatus.FAILED );
-//
-//		}
+		// try
+		// {
+		// runSetupScript( securityTestRunner, context );
+		// }
+		// catch( Exception e )
+		// {
+		// SoapUI.log.error( "Exception during Test Execution", e );
+		//
+		// // need fix
+		// securityCheckResult.setStatus( ResultStatus.FAILED );
+		//
+		// }
 		PropertyChangeNotifier notifier = new PropertyChangeNotifier();
 
 		while( hasNext( testStep, context ) )
@@ -347,24 +347,25 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	 * eviware.soapui.security.SecurityTestRunner,
 	 * com.eviware.soapui.security.SecurityTestRunContext)
 	 */
-//	public Object runTearDownScript( SecurityTestRunner runner, SecurityTestRunContext context ) throws Exception
-//	{
-//		String script = getTearDownScript();
-//		if( StringUtils.isNullOrEmpty( script ) )
-//			return null;
-//
-//		if( tearDownScriptEngine == null )
-//		{
-//			tearDownScriptEngine = SoapUIScriptEngineRegistry.create( this );
-//			tearDownScriptEngine.setScript( script );
-//		}
-//
-//		tearDownScriptEngine.setVariable( "context", context );
-//		tearDownScriptEngine.setVariable( "testCase", this );
-//		tearDownScriptEngine.setVariable( "testRunner", runner );
-//		tearDownScriptEngine.setVariable( "log", SoapUI.ensureGroovyLog() );
-//		return tearDownScriptEngine.run();
-//	}
+	// public Object runTearDownScript( SecurityTestRunner runner,
+	// SecurityTestRunContext context ) throws Exception
+	// {
+	// String script = getTearDownScript();
+	// if( StringUtils.isNullOrEmpty( script ) )
+	// return null;
+	//
+	// if( tearDownScriptEngine == null )
+	// {
+	// tearDownScriptEngine = SoapUIScriptEngineRegistry.create( this );
+	// tearDownScriptEngine.setScript( script );
+	// }
+	//
+	// tearDownScriptEngine.setVariable( "context", context );
+	// tearDownScriptEngine.setVariable( "testCase", this );
+	// tearDownScriptEngine.setVariable( "testRunner", runner );
+	// tearDownScriptEngine.setVariable( "log", SoapUI.ensureGroovyLog() );
+	// return tearDownScriptEngine.run();
+	// }
 
 	/*
 	 * (non-Javadoc)
@@ -374,24 +375,25 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	 * .soapui.security.SecurityTestRunner,
 	 * com.eviware.soapui.security.SecurityTestRunContext)
 	 */
-//	public Object runSetupScript( SecurityTestRunner runner, SecurityTestRunContext context ) throws Exception
-//	{
-//		String script = getSetupScript();
-//		if( StringUtils.isNullOrEmpty( script ) )
-//			return null;
-//
-//		if( setupScriptEngine == null )
-//		{
-//			setupScriptEngine = SoapUIScriptEngineRegistry.create( this );
-//			setupScriptEngine.setScript( script );
-//		}
-//
-//		setupScriptEngine.setVariable( "securityScan", this );
-//		setupScriptEngine.setVariable( "context", context );
-//		setupScriptEngine.setVariable( "securityRunner", runner );
-//		setupScriptEngine.setVariable( "log", SoapUI.ensureGroovyLog() );
-//		return setupScriptEngine.run();
-//	}
+	// public Object runSetupScript( SecurityTestRunner runner,
+	// SecurityTestRunContext context ) throws Exception
+	// {
+	// String script = getSetupScript();
+	// if( StringUtils.isNullOrEmpty( script ) )
+	// return null;
+	//
+	// if( setupScriptEngine == null )
+	// {
+	// setupScriptEngine = SoapUIScriptEngineRegistry.create( this );
+	// setupScriptEngine.setScript( script );
+	// }
+	//
+	// setupScriptEngine.setVariable( "securityScan", this );
+	// setupScriptEngine.setVariable( "context", context );
+	// setupScriptEngine.setVariable( "securityRunner", runner );
+	// setupScriptEngine.setVariable( "log", SoapUI.ensureGroovyLog() );
+	// return setupScriptEngine.run();
+	// }
 
 	/*
 	 * (non-Javadoc)
@@ -540,6 +542,9 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		if( securityCheckResult != null )
 			for( SecurityCheckRequestResult result : securityCheckResult.getSecurityRequestResultList() )
 			{
+				if( result.getMessageExchange() == null )
+					return;
+				
 				assertion.assertResponse( result.getMessageExchange(), new WsdlSubmitContext( testStep ) );
 			}
 	}
@@ -553,6 +558,9 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		if( securityCheckResult != null )
 			for( SecurityCheckRequestResult result : securityCheckResult.getSecurityRequestResultList() )
 			{
+				if( result.getMessageExchange() == null )
+					return;
+				
 				assertion.assertRequest( result.getMessageExchange(), new WsdlSubmitContext( testStep ) );
 			}
 	}

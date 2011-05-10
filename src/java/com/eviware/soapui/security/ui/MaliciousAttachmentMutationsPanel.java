@@ -30,7 +30,6 @@ import com.eviware.soapui.config.MaliciousAttachmentElementConfig;
 import com.eviware.soapui.config.MaliciousAttachmentSecurityCheckConfig;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.model.iface.Attachment;
-import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.support.MaliciousAttachmentFilesListForm;
 import com.eviware.soapui.security.support.MaliciousAttachmentGenerateTableModel;
 import com.eviware.soapui.security.support.MaliciousAttachmentListToTableHolder;
@@ -59,7 +58,6 @@ public class MaliciousAttachmentMutationsPanel
 {
 	private JFormDialog dialog;
 	private MaliciousAttachmentSecurityCheckConfig config;
-	private TestStep testStep;
 	private JButton addGeneratedButton;
 	private JButton removeGeneratedButton;
 	private JButton addReplacementButton;
@@ -69,11 +67,9 @@ public class MaliciousAttachmentMutationsPanel
 
 	private MaliciousAttachmentListToTableHolder holder = new MaliciousAttachmentListToTableHolder();
 
-	public MaliciousAttachmentMutationsPanel( MaliciousAttachmentSecurityCheckConfig config, TestStep testStep,
-			WsdlRequest request )
+	public MaliciousAttachmentMutationsPanel( MaliciousAttachmentSecurityCheckConfig config, WsdlRequest request )
 	{
 		this.config = config;
-		this.testStep = testStep;
 		this.request = request;
 
 		// if( testStep instanceof WsdlTestRequestStep )

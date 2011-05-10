@@ -231,8 +231,7 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 	public JComponent getComponent()
 	{
 		if( mutationsPanel == null )
-			mutationsPanel = new MaliciousAttachmentMutationsPanel( config, getTestStep(),
-					( WsdlRequest )getRequest( getTestStep() ) );
+			mutationsPanel = new MaliciousAttachmentMutationsPanel( config, ( WsdlRequest )getRequest( getTestStep() ) );
 
 		return mutationsPanel.getPanel();
 	}
