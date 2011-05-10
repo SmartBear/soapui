@@ -47,7 +47,7 @@ public class GroovySecurityCheck extends AbstractSecurityCheckWithProperties
 {
 	public static final String SCRIPT_PROPERTY = GroovySecurityCheck.class.getName() + "@script";
 	public static final String TYPE = "GroovySecurityCheck";
-	public static final String NAME = "Groovy Script";
+	public static final String NAME = "Custom Script";
 	private GroovySecurityCheckConfig groovyscc;
 	private Boolean hasNext = true;
 	private Object scriptResult;
@@ -245,28 +245,16 @@ public class GroovySecurityCheck extends AbstractSecurityCheckWithProperties
 		return TYPE;
 	}
 
-	@AForm( description = "Configure Groovy Types Scan", name = "Invalid Groovy Security Scan", helpUrl = HelpUrls.MOCKASWAR_HELP_URL )
-	protected interface GroovySecurityConfigDialog
-	{
-
-		@AField( description = "Modify request", name = "Modify Request", type = AFieldType.COMPONENT )
-		public final static String EXECUTE = "Modify Request";
-
-		@AField( description = "Verify Results", name = "Verify Results", type = AFieldType.COMPONENT )
-		public final static String ANALYZE = "Verify Results";
-
-	}
-
 	@Override
 	public String getConfigDescription()
 	{
-		return "Configuration for Groovy Security Scan";
+		return "Configuration for Custom Script Security Scan";
 	}
 
 	@Override
 	public String getConfigName()
 	{
-		return "Configuration for Groovy Security Scan";
+		return "Configuration for Custom Script Security Scan";
 	}
 
 	@Override

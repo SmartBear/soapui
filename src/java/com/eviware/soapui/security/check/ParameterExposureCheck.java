@@ -65,6 +65,8 @@ public class ParameterExposureCheck extends AbstractSecurityCheckWithProperties
 	public static final String TYPE = "ParameterExposureCheck";
 	public static final String NAME = "Cross Site Scripting";
 	public static final String PARAMETER_EXPOSURE_CHECK_CONFIG = "CrossSiteScriptingScanConfig";
+	public static final String TEST_CASE_RUNNER = "testCaseRunner";
+	public static final String TEST_STEP = "testStep";
 	private ParameterExposureCheckConfig parameterExposureCheckConfig;
 	StrategyTypeConfig.Enum strategy = StrategyTypeConfig.ONE_BY_ONE;
 
@@ -135,6 +137,7 @@ public class ParameterExposureCheck extends AbstractSecurityCheckWithProperties
 	@Override
 	protected void execute( SecurityTestRunner securityTestRunner, TestStep testStep, SecurityTestRunContext context )
 	{
+		sendToContext( context, testStep, securityTestRunner );
 		PropertyMutation mutation = PropertyMutation.popMutation( context );
 		if( mutation != null )
 		{
@@ -142,6 +145,18 @@ public class ParameterExposureCheck extends AbstractSecurityCheckWithProperties
 					context );
 			createMessageExchange( mutation.getMutatedParameters(), message, context );
 		}
+	}
+
+	private void sendToContext( SecurityTestRunContext context, TestStep testStep, SecurityTestRunner securityTestRunner )
+	{
+		context.put( TEST_CASE_RUNNER, securityTestRunner );
+		context.put( TEST_STEP, testStep );
+	}
+
+	private void removeFromContext( SecurityTestRunContext context )
+	{
+		context.remove( TEST_CASE_RUNNER );
+		context.remove( TEST_STEP );
 	}
 
 	@Override
@@ -184,6 +199,7 @@ public class ParameterExposureCheck extends AbstractSecurityCheckWithProperties
 		{
 			context.remove( PropertyMutation.REQUEST_MUTATIONS_STACK );
 			context.remove( PARAMETER_EXPOSURE_CHECK_CONFIG );
+			removeFromContext(context);
 			return false;
 		}
 		else

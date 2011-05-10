@@ -270,6 +270,8 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		return securityCheckResult;
 	}
 
+
+
 	protected void clear()
 	{
 
