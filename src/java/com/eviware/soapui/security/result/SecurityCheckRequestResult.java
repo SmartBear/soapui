@@ -214,6 +214,10 @@ public class SecurityCheckRequestResult implements SecurityResult
 		{
 			String param = ( String )keys.next();
 			String value = changedParams.get( param );
+			if( value.length() > SecurityCheckResult.MAX_SECURITY_CHANGED_PARAMETERS_LENGTH )
+			{
+				value = value.substring( 0, SecurityCheckResult.MAX_SECURITY_CHANGED_PARAMETERS_LENGTH );
+			}
 			changedParamsInfo.append( param + "=" + value + "," );
 		}
 		changedParamsInfo.replace( changedParamsInfo.length() - 1, changedParamsInfo.length(), "]" );

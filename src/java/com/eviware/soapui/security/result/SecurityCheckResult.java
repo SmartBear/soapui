@@ -58,6 +58,8 @@ public class SecurityCheckResult implements SecurityResult
 	private ResultStatus executionProgressStatus;
 	private ResultStatus logIconStatus;
 	private int requestCount = 0;
+	public final static int MAX_REQ_LOG_ENTRY_LENGTH = 100;
+	public final static int MAX_SECURITY_CHANGED_PARAMETERS_LENGTH = 100;
 
 	public SecurityCheckResult( SecurityCheck securityCheck )
 	{
@@ -148,7 +150,13 @@ public class SecurityCheckResult implements SecurityResult
 
 		this.testLog.append( "\n" ).append( secReqResult.getChangedParamsInfo( requestCount ) );
 		for( String s : secReqResult.getMessages() )
+		{
+			if( s.length() > MAX_REQ_LOG_ENTRY_LENGTH )
+			{
+				s = s.substring( 0, MAX_REQ_LOG_ENTRY_LENGTH );
+			}
 			testLog.append( "\n -> " ).append( s );
+		}
 
 		hasAddedRequests = true;
 	}
