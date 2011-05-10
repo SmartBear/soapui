@@ -73,9 +73,9 @@ public class CrossSiteScriptSeparateHTMLAssertion extends WsdlMessageAssertion i
 	private String script;
 	private GroovyEditorModel groovyEditorModel;
 	private SoapUIScriptEngine scriptEngine;
-	
-	 MessageExchange messageExchange;
-	 SubmitContext context;
+
+	MessageExchange messageExchange;
+	SubmitContext context;
 
 	public CrossSiteScriptSeparateHTMLAssertion( TestAssertionConfig assertionConfig, Assertable assertable )
 	{
@@ -149,7 +149,11 @@ public class CrossSiteScriptSeparateHTMLAssertion extends WsdlMessageAssertion i
 
 		try
 		{
-			scriptEngine.run();
+			Object result = scriptEngine.run();
+			if( result instanceof List )
+			{
+				urls = ( List<String> )result;
+			}
 		}
 		catch( Exception ex )
 		{
@@ -243,12 +247,17 @@ public class CrossSiteScriptSeparateHTMLAssertion extends WsdlMessageAssertion i
 					try
 					{
 						result = scriptEngine.run();
+						if( result instanceof List )
+						{
+							urls = ( List<String> )result;
+						}
 						String generatedUrls = "";
 						for( String url : urls )
 						{
-							generatedUrls +=  "\n" +url;
+							generatedUrls += "\n" + url;
 						}
-						UISupport.showInfoMessage( "Generated urls :" + generatedUrls + " \n\nScript result" + ( ( result == null ) ? "" : ": " + result + "" ) ) ;
+						UISupport.showInfoMessage( "Generated urls :" + generatedUrls + " \n\nScript result"
+								+ ( ( result == null ) ? "" : ": " + result + "" ) );
 					}
 					catch( Exception ex )
 					{
