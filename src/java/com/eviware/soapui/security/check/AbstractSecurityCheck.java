@@ -29,6 +29,7 @@ import com.eviware.soapui.impl.wsdl.support.assertions.AssertionsSupport;
 import com.eviware.soapui.impl.wsdl.teststeps.TestRequest;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequest;
+import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry.AssertableType;
 import com.eviware.soapui.model.ModelItem;
@@ -715,8 +716,8 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	@Override
 	public Interface getInterface()
 	{
-		if( testStep instanceof WsdlTestRequest )
-			return ( ( WsdlTestRequest )testStep ).getInterface();
+		if( testStep instanceof WsdlTestRequestStep )
+			return ( ( WsdlTestRequestStep )testStep ).getInterface();
 
 		return null;
 	}
@@ -726,38 +727,6 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	{
 		return this;
 	}
-
-	// @Override
-	// public AssertionStatus assertRequest( MessageExchange messageExchange,
-	// SubmitContext context )
-	// {
-	// AssertionStatus result = null;
-	//
-	// try
-	// {
-	// PropertyChangeNotifier notifier = new PropertyChangeNotifier();
-	//
-	// if( messageExchange != null )
-	// {
-	// context.setProperty( SECURITY_CHECK_REQUEST_RESULT,
-	// getSecurityCheckRequestResult() );
-	//
-	// for( WsdlMessageAssertion assertion : assertionsSupport.getAssertionList()
-	// )
-	// {
-	// result = assertion.assertRequest( messageExchange, context );
-	// setStatus( result, assertion );
-	// }
-	//
-	// notifier.notifyChange();
-	// }
-	// }
-	// catch( Exception e )
-	// {
-	// e.printStackTrace();
-	// }
-	// return result;
-	// }
 
 	public AssertionStatus assertResponse( MessageExchange messageExchange, SubmitContext context )
 	{
