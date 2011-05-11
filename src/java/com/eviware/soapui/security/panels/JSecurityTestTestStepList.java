@@ -318,6 +318,8 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 				securityTest.removeSecurityCheck( testStep, ( SecurityCheck )securityCheck );
 				cellRender.remove( securityCheckNode );
 			}
+
+			dialog.release();
 		}
 
 	}
@@ -348,6 +350,8 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 				{
 					securityCheck.copyConfig( backupCheckConfig );
 				}
+
+				dialog.release();
 			}
 		}
 	}
@@ -539,6 +543,8 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 				{
 					securityCheck.copyConfig( backupCheckConfig );
 				}
+
+				dialog.release();
 			}
 		}
 		else

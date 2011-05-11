@@ -39,7 +39,7 @@ import com.eviware.x.impl.swing.JFormDialog;
 
 public class SecurityConfigurationDialog extends SimpleDialog
 {
-	private final SecurityCheck securityCheck;
+	private SecurityCheck securityCheck;
 	private boolean result;
 
 	public SecurityConfigurationDialog( SecurityCheck securityCheck )
@@ -212,4 +212,9 @@ public class SecurityConfigurationDialog extends SimpleDialog
 		return result;
 	}
 
+	public void release()
+	{
+		securityCheck = null;
+		dispose();
+	}
 }
