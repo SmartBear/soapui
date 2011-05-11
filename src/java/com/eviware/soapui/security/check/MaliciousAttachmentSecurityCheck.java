@@ -24,6 +24,7 @@ import com.eviware.soapui.config.MaliciousAttachmentConfig;
 import com.eviware.soapui.config.MaliciousAttachmentElementConfig;
 import com.eviware.soapui.config.MaliciousAttachmentSecurityCheckConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
+import com.eviware.soapui.config.StrategyTypeConfig;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStepResult;
 import com.eviware.soapui.model.ModelItem;
@@ -48,7 +49,8 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 	private MaliciousAttachmentAdvancedSettingsPanel advancedSettingsPanel;
 	private MaliciousAttachmentMutationsPanel mutationsPanel;
 
-	private int currentIndex = 0;
+	private int elementIndex = -1;
+	private int valueIndex = -1;
 
 	public MaliciousAttachmentSecurityCheck( SecurityCheckConfig newConfig, ModelItem parent, String icon,
 			TestStep testStep )
@@ -63,8 +65,6 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 		{
 			config = ( ( MaliciousAttachmentSecurityCheckConfig )newConfig.getConfig() );
 		}
-
-		getExecutionStrategy().setImmutable( true );
 	}
 
 	/**
@@ -103,7 +103,8 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 	}
 
 	/*
-	 * Set attachments
+	 * Set attachments. Strategy determines the number of existing attachments
+	 * used (one/all)
 	 */
 	private void updateRequestContent( TestStep testStep, SecurityTestRunContext context )
 	{
@@ -112,55 +113,115 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 			setRequestTimeout( testStep, config.getRequestTimeout() );
 		}
 
-		// add attachments
-		for( MaliciousAttachmentElementConfig element : config.getElementList() )
+		if( getExecutionStrategy().getStrategy() == StrategyTypeConfig.ONE_BY_ONE )
 		{
-			// remove all attachments
-			if( element.getRemove() )
+			if( elementIndex < config.getElementList().size() )
 			{
-				removeAttachment( testStep, element.getKey() );
-			}
-			else
-			{
-				// first, remove original attachments
-				removeAttachment( testStep, element.getKey() );
+				if( elementIndex == -1 )
+				{
+					elementIndex++ ;
+				}
 
-				// then, add specified ones
-				addAttachments( testStep, element.getGenerateAttachmentList(), true );
-				addAttachments( testStep, element.getReplaceAttachmentList(), false );
+				MaliciousAttachmentElementConfig element = config.getElementList().get( elementIndex );
+
+				removeAttachments( testStep, element.getKey(), false );
+				if( element.getRemove() )
+				{
+					removeAttachments( testStep, element.getKey(), true );
+				}
+
+				if( valueIndex < element.getGenerateAttachmentList().size() + element.getReplaceAttachmentList().size() - 1 )
+				{
+					valueIndex++ ;
+
+					addAttachments( testStep, element, valueIndex );
+				}
+
+				if( valueIndex == element.getGenerateAttachmentList().size() + element.getReplaceAttachmentList().size()
+						- 1 )
+				{
+					valueIndex = -1;
+					elementIndex++ ;
+				}
+			}
+		}
+		else if( getExecutionStrategy().getStrategy() == StrategyTypeConfig.ALL_AT_ONCE )
+		{
+			for( MaliciousAttachmentElementConfig element : config.getElementList() )
+			{
+				if( elementIndex == -1 )
+				{
+					elementIndex++ ;
+				}
+
+				if( element.getRemove() )
+				{
+					removeAttachments( testStep, element.getKey(), true );
+				}
+
+				if( valueIndex < element.getGenerateAttachmentList().size() + element.getReplaceAttachmentList().size() - 1 )
+				{
+					valueIndex++ ;
+
+					addAttachments( testStep, element, valueIndex );
+				}
+
+				if( valueIndex == element.getGenerateAttachmentList().size() + element.getReplaceAttachmentList().size()
+						- 1 )
+				{
+					valueIndex = -1;
+					elementIndex++ ;
+				}
 			}
 		}
 	}
 
-	private void addAttachments( TestStep testStep, List<MaliciousAttachmentConfig> list, boolean generated )
+	private void addAttachments( TestStep testStep, MaliciousAttachmentElementConfig element, int counter )
 	{
-		for( MaliciousAttachmentConfig element : list )
+		if( counter == -1 )
 		{
-			File file = new File( element.getFilename() );
+			return;
+		}
 
-			if( element.getEnabled() )
+		boolean generated = false;
+		List<MaliciousAttachmentConfig> list = null;
+
+		if( counter < element.getGenerateAttachmentList().size() )
+		{
+			generated = true;
+			list = element.getGenerateAttachmentList();
+		}
+		else
+		{
+			list = element.getReplaceAttachmentList();
+			counter = counter - element.getGenerateAttachmentList().size();
+		}
+
+		MaliciousAttachmentConfig value = list.get( counter );
+		File file = new File( value.getFilename() );
+
+		if( value.getEnabled() )
+		{
+			try
 			{
-				try
+				if( !file.exists() )
 				{
-					if( !file.exists() )
+					if( generated )
 					{
-						if( generated )
-						{
-							file = new RandomFile( element.getSize(), "attachment", element.getContentType() ).next();
-						}
-						else
-						{
-							UISupport.showErrorMessage( "Missing file: " + file.getName() );
-							return;
-						}
+						file = new RandomFile( value.getSize(), "attachment", value.getContentType() ).next();
 					}
+					else
+					{
+						UISupport.showErrorMessage( "Missing file: " + file.getName() );
+						return;
+					}
+				}
 
-					addAttachment( testStep, file, element.getContentType(), generated );
-				}
-				catch( IOException e )
-				{
-					SoapUI.logError( e );
-				}
+				addAttachment( testStep, file, value.getContentType(), generated );
+			}
+			catch( IOException e )
+			{
+				SoapUI.logError( e );
 			}
 		}
 	}
@@ -204,16 +265,26 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 		return attach;
 	}
 
-	private void removeAttachment( TestStep testStep, String id )
+	private void removeAttachments( TestStep testStep, String key, boolean equals )
 	{
 		WsdlRequest request = ( WsdlRequest )getRequest( testStep );
 		List<Attachment> toRemove = new ArrayList<Attachment>();
 
 		for( Attachment attachment : request.getAttachments() )
 		{
-			if( attachment.getId().equals( id ) )
+			if( equals )
 			{
-				toRemove.add( attachment );
+				if( attachment.getId().equals( key ) )
+				{
+					toRemove.add( attachment );
+				}
+			}
+			else
+			{
+				if( !attachment.getId().equals( key ) )
+				{
+					toRemove.add( attachment );
+				}
 			}
 		}
 		for( Attachment remove : toRemove )
@@ -242,11 +313,12 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 	@Override
 	protected boolean hasNext( TestStep testStep, SecurityTestRunContext context )
 	{
-		boolean hasNext = currentIndex++ < 1;
+		boolean hasNext = elementIndex < config.getElementList().size();
 
 		if( !hasNext )
 		{
-			currentIndex = 0;
+			elementIndex = -1;
+			valueIndex = -1;
 		}
 
 		return hasNext;
