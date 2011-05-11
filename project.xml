@@ -50,7 +50,7 @@
 			<report>jutils-lint4j-plugin</report>
 		-->
 	</reports>
-	<currentVersion>4.0.0-SNAPSHOT</currentVersion>
+	<currentVersion>4.0-beta1</currentVersion>
 	<package>com.eviware.soapui</package>
 	<url>http://www.soapui.org</url>
 	<versions>
@@ -422,7 +422,7 @@
 		<dependency>
 			<groupId>groovy</groupId>
 			<artifactId>groovy-all</artifactId>
-			<version>1.7.5</version>
+			<version>1.8.0</version>
 			<type>jar</type>
 			<url>http://groovy.codehaus.org/</url>
 			<properties>
@@ -568,7 +568,7 @@
 		<dependency>
 			<groupId>eviware</groupId>
 			<artifactId>soapui-xmlbeans</artifactId>
-			<version>4.0.0-SNAPSHOT</version>
+			<version>4.0-beta1</version>
 			<type>jar</type>
 			<properties>
 				<jnlp.jar>true</jnlp.jar>
