@@ -64,9 +64,9 @@ public class SecurityConfigurationDialog extends SimpleDialog
 			JPanel topPanel = UISupport.createEmptyPanel( 0, 0, 10, 10 );
 			topPanel.add( buildParametersTable(), BorderLayout.CENTER );
 
-			JPanel p = UISupport.createEmptyPanel( 5, 5, 0, 10 );
+			JPanel p = UISupport.createEmptyPanel( 5, 3, 0, 0 );
 			JLabel jLabel = new JLabel( "Parameters:" );
-			jLabel.setPreferredSize( new Dimension( 60, 20 ) );
+			jLabel.setPreferredSize( new Dimension( 72, 20 ) );
 			p.add( jLabel, BorderLayout.NORTH );
 
 			topPanel.add( p, BorderLayout.WEST );
