@@ -353,38 +353,40 @@ public class XPathInjectionSecurityCheck extends AbstractSecurityCheckWithProper
 			{
 				String[] newOptions = ( String[] )evt.getNewValue();
 				String[] oldOptions = ( String[] )evt.getOldValue();
-				// added
-				if( newOptions.length > oldOptions.length )
-				{
-					// new element is always added to the end
-					String[] newValue = ( String[] )evt.getNewValue();
-					String itemToAdd = newValue[newValue.length - 1];
-					xpathList.addXpathList( itemToAdd );
-				}
-				// removed
-				if( newOptions.length < oldOptions.length )
-				{
-					/*
-					 * items with same index should me same. first one in oldOptions
-					 * that does not match is element that is removed.
-					 */
-					for( int cnt = 0; cnt < oldOptions.length; cnt++ )
-					{
-						if( cnt < newOptions.length )
-						{
-							if( newOptions[cnt] != oldOptions[cnt] )
-							{
-								xpathList.removeXpathList( cnt );
-								break;
-							}
-						}
-						else
-						{
-							// this is border case, last lement in array is removed.
-							xpathList.removeXpathList( oldOptions.length - 1 );
-						}
-					}
-				}
+//				// added
+//				if( newOptions.length > oldOptions.length )
+//				{
+//					// new element is always added to the end
+//					String[] newValue = ( String[] )evt.getNewValue();
+//					String itemToAdd = newValue[newValue.length - 1];
+//					xpathList.addXpathList( itemToAdd );
+//				}
+//				// removed
+//				if( newOptions.length < oldOptions.length )
+//				{
+//					/*
+//					 * items with same index should me same. first one in oldOptions
+//					 * that does not match is element that is removed.
+//					 */
+//					for( int cnt = 0; cnt < oldOptions.length; cnt++ )
+//					{
+//						if( cnt < newOptions.length )
+//						{
+//							if( newOptions[cnt] != oldOptions[cnt] )
+//							{
+//								xpathList.removeXpathList( cnt );
+//								break;
+//							}
+//						}
+//						else
+//						{
+//							// this is border case, last lement in array is removed.
+//							xpathList.removeXpathList( oldOptions.length - 1 );
+//						}
+//					}
+//				}
+				
+				xpathList.setXpathListArray( newOptions );
 			}
 		} );
 
