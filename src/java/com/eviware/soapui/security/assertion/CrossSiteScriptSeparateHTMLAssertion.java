@@ -18,6 +18,7 @@ import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.JScrollPane;
 
 import org.apache.xmlbeans.XmlObject;
 
@@ -289,16 +290,17 @@ public class CrossSiteScriptSeparateHTMLAssertion extends WsdlMessageAssertion i
 
 	protected GroovyEditorComponent buildGroovyPanel()
 	{
-		GroovyEditorComponent groovyEditor = new GroovyEditorComponent( groovyEditorModel, null );
-		groovyEditor.setPreferredSize( new Dimension( 485, 300 ) );
-		return groovyEditor;
+		return new GroovyEditorComponent( groovyEditorModel, null );
 	}
 
 	protected void buildDialog()
 	{
 		dialog = ADialogBuilder.buildDialog( CrossSiteScripSeparateHTMLConfigDialog.class );
+		dialog.setSize( 600, 600);
 		dialog.getFormField( CrossSiteScripSeparateHTMLConfigDialog.GROOVY )
-				.setProperty( "component", buildGroovyPanel() );
+				.setProperty( "component", new JScrollPane( buildGroovyPanel()) );
+		dialog.getFormField( CrossSiteScripSeparateHTMLConfigDialog.GROOVY )
+		.setProperty( "dimension",new Dimension( 450, 450 )  );
 	}
 
 	// TODO : update help URL
