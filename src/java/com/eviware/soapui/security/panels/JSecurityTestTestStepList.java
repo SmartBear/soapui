@@ -18,6 +18,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Insets;
 import java.awt.Rectangle;
+import java.awt.ScrollPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -91,6 +92,7 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 	private SecurityTreeCellRender cellRender;
 	private SecurityCheckTree treeModel;
 	private InternalSecurityTestRunListener testRunListener;
+	private JScrollPane scrollPane;
 
 	public JSecurityTestTestStepList( SecurityTest securityTest, JSecurityTestRunLog securityTestLog )
 	{
@@ -133,8 +135,10 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 		securityTestTree.setRowHeight( 30 );
 		securityTestTree.setToggleClickCount( 0 );
 		securityTestTree.setBackground( new Color( 240, 240, 240 ) );
+		securityTestTree.setScrollsOnExpand( true );
 		add( toolbar, BorderLayout.NORTH );
-		JScrollPane scrollPane = new JScrollPane( securityTestTree );
+		scrollPane = new JScrollPane( securityTestTree );
+		scrollPane.setHorizontalScrollBarPolicy( JScrollPane.HORIZONTAL_SCROLLBAR_NEVER );
 		add( scrollPane, BorderLayout.CENTER );
 		securityTest.getTestCase().getTestSuite().addTestSuiteListener( testSuiteListener );
 		securityTest.addSecurityTestListener( this );
@@ -640,7 +644,12 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 				{
 					Rectangle dimensions = super.getNodeDimensions( value, row, depth, expanded, size );
 					Insets insets = tree.getInsets();
-					dimensions.width = tree.getWidth() - getRowX( row, depth ) - insets.right;
+					if( scrollPane == null )
+						dimensions.width = tree.getWidth() - getRowX( row, depth ) - insets.right;
+					else
+					{
+						dimensions.width = scrollPane.getViewport().getWidth() - getRowX( row, depth ) - insets.right;
+					}
 					return dimensions;
 				}
 			};
