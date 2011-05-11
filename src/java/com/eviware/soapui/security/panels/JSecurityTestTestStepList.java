@@ -18,7 +18,6 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Insets;
 import java.awt.Rectangle;
-import java.awt.ScrollPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -690,6 +689,7 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 	{
 		cellRender.release();
 		securityTest.getTestCase().getTestSuite().removeTestSuiteListener( testSuiteListener );
+		securityTest.removeSecurityTestListener( this );
 		securityTest.removeSecurityTestRunListener( testRunListener );
 
 	}

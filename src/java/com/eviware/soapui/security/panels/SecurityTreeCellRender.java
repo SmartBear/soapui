@@ -295,6 +295,7 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 
 		public void release()
 		{
+			testStep.removePropertyChangeListener( TestStep.ICON_PROPERTY, TestStepCellRender.this );
 			progressBarAdapter.release();
 			testStep = null;
 			securityTest = null;
@@ -432,7 +433,7 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 	public void release()
 	{
 		for( DefaultMutableTreeNode key : componentTree.keySet() )
-			if( key instanceof ReleasableNode )
+			if( componentTree.get( key ) instanceof ReleasableNode )
 			{
 				( ( ReleasableNode )componentTree.get( key ) ).release();
 			}
