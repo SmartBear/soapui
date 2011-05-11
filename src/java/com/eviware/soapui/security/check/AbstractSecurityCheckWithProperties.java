@@ -89,7 +89,7 @@ public abstract class AbstractSecurityCheckWithProperties extends AbstractSecuri
 
 	public SecurityCheckedParameter getParameterAt( int i )
 	{
-		if( !getParameterHolder().getParameterList().isEmpty() )
+		if( !getParameterHolder().getParameterList().isEmpty() && getParameterHolder().getParameterList().size() > i )
 			return getParameterHolder().getParameterList().get( i );
 		else
 			return null;
