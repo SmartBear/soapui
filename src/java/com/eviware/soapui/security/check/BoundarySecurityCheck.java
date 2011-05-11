@@ -429,13 +429,21 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 			else
 			{
 				SchemaTypeImpl simpleType = ( SchemaTypeImpl )treeNodes[0].getSchemaType();
-				XmlObjectTreeModel model2 = new XmlObjectTreeModel( simpleType.getTypeSystem(), simpleType.getParseObject() );
-				list = BoundaryRestrictionUtill.getRestrictions( model2.getRootNode(), new ArrayList<String>() );
-				if( list.isEmpty() )
+				if( simpleType != null && !simpleType.isNoType() )
 				{
-					list.add( "No restrictions in schema are specified for this parameter!" );
+					XmlObjectTreeModel model2 = new XmlObjectTreeModel( simpleType.getTypeSystem(),
+							simpleType.getParseObject() );
+					list = BoundaryRestrictionUtill.getRestrictions( model2.getRootNode(), new ArrayList<String>() );
+					if( list.isEmpty() )
+					{
+						list.add( "No restrictions in schema are specified for this parameter!" );
+					}
+					restrictionLabel.setJlabel( list.toString() );
 				}
-				restrictionLabel.setJlabel( list.toString() );
+				else
+				{
+					restrictionLabel.setJlabel( "parameter is missing type in schema" );
+				}
 			}
 
 		}

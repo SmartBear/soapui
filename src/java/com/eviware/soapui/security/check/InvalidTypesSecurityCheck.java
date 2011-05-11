@@ -543,12 +543,19 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 			}
 
 			SchemaTypeImpl simpleType = ( SchemaTypeImpl )treeNodes[0].getSchemaType();
-			XmlObjectTreeModel model2 = new XmlObjectTreeModel( simpleType.getTypeSystem(), simpleType.getParseObject() );
-			List<String> list = BoundaryRestrictionUtill.getType( model2.getRootNode(), new ArrayList<String>() );
-			if( list.isEmpty() )
-				typeLabel.setJlabel( "parameter has type [" + simpleType.getName().toString() + "]" );
+			if( simpleType != null && !simpleType.isNoType() )
+			{
+				XmlObjectTreeModel model2 = new XmlObjectTreeModel( simpleType.getTypeSystem(), simpleType.getParseObject() );
+				List<String> list = BoundaryRestrictionUtill.getType( model2.getRootNode(), new ArrayList<String>() );
+				if( list.isEmpty() )
+					typeLabel.setJlabel( "parameter has type [" + simpleType.getName() + "]" );
+				else
+					typeLabel.setJlabel( "parameter has types [" + list.toString() + "]" );
+			}
 			else
-				typeLabel.setJlabel( "parameter has types [" + list.toString() + "]" );
+			{
+				typeLabel.setJlabel( "parameter is missing type in schema" );
+			}
 		}
 		else
 		{
