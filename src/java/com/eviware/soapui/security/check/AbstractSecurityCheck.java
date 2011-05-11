@@ -28,7 +28,6 @@ import com.eviware.soapui.impl.wsdl.support.assertions.AssertableConfig;
 import com.eviware.soapui.impl.wsdl.support.assertions.AssertionsSupport;
 import com.eviware.soapui.impl.wsdl.teststeps.TestRequest;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
-import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequest;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry.AssertableType;
@@ -77,7 +76,6 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	private SoapUIScriptEngine tearDownScriptEngine;
 	private ExecutionStrategyHolder executionStrategy;
 	private TestStep originalTestStepClone;
-	private SecurityTestRunListener[] securityTestListeners = new SecurityTestRunListener[0];
 	private boolean applyForFailedTests;
 
 	public AbstractSecurityCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent, String icon )
@@ -196,7 +194,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 			SecurityTestRunner securityTestRunner )
 	{
 		securityCheckResult = new SecurityCheckResult( this );
-		securityTestListeners = ( ( SecurityTest )getParent() ).getSecurityTestRunListeners();
+		SecurityTestRunListener[] securityTestListeners = ( ( SecurityTest )getParent() ).getSecurityTestRunListeners();
 
 		// setStatus( Status.INITIALIZED );
 		// try
@@ -270,8 +268,6 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		// }
 		return securityCheckResult;
 	}
-
-
 
 	protected void clear()
 	{
@@ -547,7 +543,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 			{
 				if( result.getMessageExchange() == null )
 					return;
-				
+
 				assertion.assertResponse( result.getMessageExchange(), new WsdlSubmitContext( testStep ) );
 			}
 	}
@@ -563,7 +559,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 			{
 				if( result.getMessageExchange() == null )
 					return;
-				
+
 				assertion.assertRequest( result.getMessageExchange(), new WsdlSubmitContext( testStep ) );
 			}
 	}
