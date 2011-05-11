@@ -446,6 +446,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 		testStepList.release();
 		setupGroovyEditor.release();
 		tearDownGroovyEditor.release();
+		functionalTestLog.release();
 		return super.release();
 	}
 

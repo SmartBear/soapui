@@ -41,6 +41,8 @@ public class SecurityConfigurationDialog extends SimpleDialog
 {
 	private SecurityCheck securityCheck;
 	private boolean result;
+	private JTabbedPane tabs;
+	private SecurityCheckedParametersTablePanel parametersTable;
 
 	public SecurityConfigurationDialog( SecurityCheck securityCheck )
 	{
@@ -101,7 +103,7 @@ public class SecurityConfigurationDialog extends SimpleDialog
 
 	protected Component buildParametersTable()
 	{
-		SecurityCheckedParametersTablePanel parametersTable = new SecurityCheckedParametersTablePanel(
+		parametersTable = new SecurityCheckedParametersTablePanel(
 				new SecurityParametersTableModel(
 						( ( AbstractSecurityCheckWithProperties )securityCheck ).getParameterHolder() ), securityCheck
 						.getTestStep().getProperties(), ( AbstractSecurityCheckWithProperties )securityCheck );
@@ -112,10 +114,8 @@ public class SecurityConfigurationDialog extends SimpleDialog
 
 	protected Component buildTabs()
 	{
-		JTabbedPane tabs = new JTabbedPane();
-
+		tabs = new JTabbedPane();
 		tabs.addTab( "Assertions", new SecurityAssertionPanel( securityCheck ) );
-
 		tabs.addTab( "Strategy", buildStrategyTab() );
 
 		JComponent advancedSettingsPanel = securityCheck.getAdvancedSettingsPanel();
@@ -215,6 +215,7 @@ public class SecurityConfigurationDialog extends SimpleDialog
 	public void release()
 	{
 		securityCheck = null;
+		tabs.removeAll();
 		dispose();
 	}
 }

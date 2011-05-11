@@ -51,11 +51,14 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 	private JTree tree;
 	Color selected = new Color( 215, 215, 215 );
 	Color unselected = new Color( 228, 228, 228 );
+	private boolean released;
 
 	@Override
 	public Component getTreeCellRendererComponent( JTree arg0, Object node, boolean sel, boolean exp, boolean leaf,
 			int arg5, boolean arg6 )
 	{
+		if( released )
+			return null;
 
 		Component result = null;
 		this.tree = arg0;
@@ -432,6 +435,7 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 
 	public void release()
 	{
+		released = true;
 		for( DefaultMutableTreeNode key : componentTree.keySet() )
 			if( componentTree.get( key ) instanceof ReleasableNode )
 			{
