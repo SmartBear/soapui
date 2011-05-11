@@ -38,6 +38,29 @@ import com.eviware.soapui.security.result.SecurityResult.ResultStatus;
 /**
  * Class that keeps a JProgressBars state in sync with a SecurityTest
  * 
+ * Progress bar status can be: 
+ * 1. In Progreess while test is running.
+ * 2. Done when test is done.
+ * 3. Canced when is canceled execution
+ * 4. Missing Assertions/Parameters if assertions/parameters are missing in security scan.
+ * 
+ * Importance/power of states:
+ * 1. Missing Assertions
+ * 2. Missing Parameters
+ * 3. Cancel
+ * 4. Done
+ * 5. In Progress
+ * 
+ * Progress bar color can be: 
+ * 1. OK
+ * 2. FAILED
+ * 3. MISSING_ASSERTION - same color if parameters are missing.
+ * 
+ * Color power:
+ * 1. FAILED
+ * 2. MISSING_ASSERTION
+ * 3. OK
+ * 
  */
 
 public class ProgressBarSecurityTestStepAdapter
@@ -73,7 +96,6 @@ public class ProgressBarSecurityTestStepAdapter
 		internalTestRunListener = new InternalTestRunListener();
 		if( progressBar != null && cntLabel != null )
 		{
-			// this.progressBar.setBackground( UNKNOWN_COLOR );
 			this.counterLabel.setPreferredSize( new Dimension( 50, 18 ) );
 			this.counterLabel.setHorizontalTextPosition( SwingConstants.CENTER );
 			this.counterLabel.setHorizontalAlignment( SwingConstants.CENTER );
@@ -148,6 +170,7 @@ public class ProgressBarSecurityTestStepAdapter
 		{
 			if( securityCheck.getTestStep().getId().equals( testStep.getId() ) )
 			{
+				// set progress bar color/state based on/if there is result
 				if( securityCheck.getSecurityCheckResult() != null
 						&& securityCheck.getSecurityCheckResult().getStatus() != ResultStatus.CANCELED )
 				{
@@ -156,20 +179,23 @@ public class ProgressBarSecurityTestStepAdapter
 						progressBar.setString( STATE_RUN );
 						progressBar.setForeground( OK_COLOR );
 					}
-					if( securityCheck.getAssertionCount() == 0 )
-					{
-						if( !progressBar.getForeground().equals( FAILED_COLOR ) )
-							progressBar.setForeground( MISSING_ASSERTION_COLOR );
-						progressBar.setString( STATE_MISSING_ASSERTIONS );
-					}
-					if( securityCheck instanceof AbstractSecurityCheckWithProperties
-							&& ( ( AbstractSecurityCheckWithProperties )securityCheck ).getParameterHolder()
-									.getParameterList().size() == 0 )
-					{
-						if( !progressBar.getForeground().equals( FAILED_COLOR ) )
-							progressBar.setForeground( MISSING_ASSERTION_COLOR );
+				}
+				// report is there is no assertions.
+				if( securityCheck.getAssertionCount() == 0 )
+				{
+					if( !progressBar.getForeground().equals( FAILED_COLOR ) )
+						progressBar.setForeground( MISSING_ASSERTION_COLOR );
+					progressBar.setString( STATE_MISSING_ASSERTIONS );
+				}
+				// or if there is no parameters.
+				if( securityCheck instanceof AbstractSecurityCheckWithProperties
+						&& ( ( AbstractSecurityCheckWithProperties )securityCheck ).getParameterHolder()
+						.getParameterList().size() == 0 )
+				{
+					if( !progressBar.getForeground().equals( FAILED_COLOR ) )
+						progressBar.setForeground( MISSING_ASSERTION_COLOR );
+					if( !progressBar.getString().equals( STATE_MISSING_ASSERTIONS ) )
 						progressBar.setString( STATE_MISSING_PARAMETERS );
-					}
 				}
 			}
 		}
