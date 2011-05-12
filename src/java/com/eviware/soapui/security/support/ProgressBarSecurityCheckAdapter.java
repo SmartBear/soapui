@@ -46,8 +46,6 @@ public class ProgressBarSecurityCheckAdapter extends SecurityTestRunListenerAdap
 	public ProgressBarSecurityCheckAdapter( JTree tree, SecurityCheckNode node, JProgressBar progressBar,
 			SecurityCheck securityCheck, SecurityTest securityTest, JLabel cntLabel )
 	{
-		System.out.println( "Creating" );
-
 		this.tree = tree;
 		this.node = node;
 		this.progressBar = progressBar;
@@ -67,8 +65,6 @@ public class ProgressBarSecurityCheckAdapter extends SecurityTestRunListenerAdap
 
 	public void release()
 	{
-		System.out.println( "Releasing" );
-
 		securityTest.removeSecurityTestRunListener( this );
 		securityTest = null;
 		securityCheck = null;
