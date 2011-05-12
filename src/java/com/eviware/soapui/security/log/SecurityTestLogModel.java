@@ -13,26 +13,21 @@
 package com.eviware.soapui.security.log;
 
 import java.lang.ref.SoftReference;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.AbstractListModel;
 
 import org.apache.commons.collections.list.TreeList;
 
-import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.model.security.SecurityCheck;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.check.AbstractSecurityCheck;
-import com.eviware.soapui.security.check.AbstractSecurityCheckWithProperties;
 import com.eviware.soapui.security.result.SecurityCheckRequestResult;
 import com.eviware.soapui.security.result.SecurityCheckResult;
 import com.eviware.soapui.security.result.SecurityResult;
 import com.eviware.soapui.security.result.SecurityTestStepResult;
 import com.eviware.soapui.security.result.SecurityResult.ResultStatus;
-import com.eviware.soapui.support.types.StringToStringMap;
 
 /**
  * SecurityTestLog
@@ -155,7 +150,6 @@ public class SecurityTestLogModel extends AbstractListModel
 			{
 				// when log max size is exceeded skip updating the raw since it
 				// won't be visible anyway
-				System.out.println( "*******" + startStepIndex );
 			}
 		}
 		currentStepEntriesCount = 0;
@@ -225,7 +219,6 @@ public class SecurityTestLogModel extends AbstractListModel
 			{
 				// when log max size is exceeded skip updating the raw since it
 				// won't be visible anyway
-				System.out.println( "*******" + startCheckIndex );
 			}
 
 		}
