@@ -147,32 +147,28 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 		}
 		else if( getExecutionStrategy().getStrategy() == StrategyTypeConfig.ALL_AT_ONCE )
 		{
+			if( elementIndex == -1 )
+			{
+				elementIndex++ ;
+			}
+
 			for( MaliciousAttachmentElementConfig element : config.getElementList() )
 			{
-				if( elementIndex == -1 )
-				{
-					elementIndex++ ;
-				}
-
 				if( element.getRemove() )
 				{
 					removeAttachments( testStep, element.getKey(), true );
 				}
+				
+				int valIndex = valueIndex;
 
-				if( valueIndex < element.getGenerateAttachmentList().size() + element.getReplaceAttachmentList().size() - 1 )
+				if( valIndex < element.getGenerateAttachmentList().size() + element.getReplaceAttachmentList().size() - 1 )
 				{
-					valueIndex++ ;
-
-					addAttachments( testStep, element, valueIndex );
-				}
-
-				if( valueIndex == element.getGenerateAttachmentList().size() + element.getReplaceAttachmentList().size()
-						- 1 )
-				{
-					valueIndex = -1;
-					elementIndex++ ;
+					valIndex++ ;
+					addAttachments( testStep, element, valIndex );
 				}
 			}
+			elementIndex++ ;
+			valueIndex++ ;
 		}
 	}
 
