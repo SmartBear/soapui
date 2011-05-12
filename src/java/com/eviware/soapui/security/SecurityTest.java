@@ -834,6 +834,8 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 					{
 						removeSecurityCheck( targetTestStep, oldCheck );
 						addSecurityCheck( targetTestStep, factory, newCheckConfig );
+					} else {
+						return false;
 					}
 					break;
 				}
