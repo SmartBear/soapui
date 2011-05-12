@@ -43,9 +43,8 @@ import com.eviware.soapui.impl.wsdl.teststeps.assertions.soap.WSAResponseAsserti
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.soap.WSSStatusAssertion;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.TestAssertion;
-import com.eviware.soapui.security.assertion.CrossSiteScriptSeparateHTMLAssertion;
+import com.eviware.soapui.security.assertion.CrossSiteScriptAssertion;
 import com.eviware.soapui.security.assertion.InvalidHttpStatusCodesAssertion;
-import com.eviware.soapui.security.assertion.ParameterExposureAssertion;
 import com.eviware.soapui.security.assertion.SensitiveInfoExposureAssertion;
 import com.eviware.soapui.security.assertion.ValidHttpStatusCodesAssertion;
 import com.eviware.soapui.support.types.StringToStringMap;
@@ -89,8 +88,7 @@ public class TestAssertionRegistry
 		addAssertion( new ValidHttpStatusCodesAssertion.Factory() );
 		addAssertion( new InvalidHttpStatusCodesAssertion.Factory() );
 		addAssertion( new SensitiveInfoExposureAssertion.Factory() );
-		addAssertion( new ParameterExposureAssertion.Factory() );
-		addAssertion( new CrossSiteScriptSeparateHTMLAssertion.Factory() );
+		addAssertion( new CrossSiteScriptAssertion.Factory() );
 
 		for( TestAssertionFactory factory : SoapUI.getFactoryRegistry().getFactories( TestAssertionFactory.class ) )
 		{

@@ -64,11 +64,13 @@ import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.AField.AFieldType;
 
-public class CrossSiteScriptSeparateHTMLAssertion extends WsdlMessageAssertion implements ResponseAssertion
+public class CrossSiteScriptAssertion extends WsdlMessageAssertion implements ResponseAssertion
 {
-	public static final String ID = "CrosSiteScriptSeparateHTML";
-	public static final String LABEL = "Cross Site Scripting Separate HTML";
+	public static final String ID = "CrosSiteScript";
+	public static final String LABEL = "Cross Site Scripting Detection";
 	public static final String GROOVY_SCRIPT = "groovyScript";
+	public static final String CHECK_RESPONSE = "checkResponse";
+	public static final String CHECK_SEPARATE_HTML = "checkSeparateHTML";
 
 	private XFormDialog dialog;
 	private String script;
@@ -78,7 +80,10 @@ public class CrossSiteScriptSeparateHTMLAssertion extends WsdlMessageAssertion i
 	MessageExchange messageExchange;
 	SubmitContext context;
 
-	public CrossSiteScriptSeparateHTMLAssertion( TestAssertionConfig assertionConfig, Assertable assertable )
+	private boolean checkResponse;
+	private boolean checkSeparateHTML;
+
+	public CrossSiteScriptAssertion( TestAssertionConfig assertionConfig, Assertable assertable )
 	{
 		super( assertionConfig, assertable, false, true, false, true );
 		groovyEditorModel = new GroovyEditorModel( this );
@@ -90,6 +95,8 @@ public class CrossSiteScriptSeparateHTMLAssertion extends WsdlMessageAssertion i
 	{
 		XmlObjectConfigurationReader reader = new XmlObjectConfigurationReader( getConfiguration() );
 		script = reader.readString( GROOVY_SCRIPT, "" );
+		checkResponse = reader.readBoolean( CHECK_RESPONSE, true );
+		checkSeparateHTML = reader.readBoolean( CHECK_SEPARATE_HTML, false );
 		groovyEditorModel.setScript( script );
 	}
 
@@ -106,8 +113,37 @@ public class CrossSiteScriptSeparateHTMLAssertion extends WsdlMessageAssertion i
 
 		ParameterExposureCheckConfig parameterExposureCheckConfig = ( ParameterExposureCheckConfig )context
 				.getProperty( ParameterExposureCheck.PARAMETER_EXPOSURE_CHECK_CONFIG );
-		boolean throwException = false;
+
 		List<AssertionError> assertionErrorList = new ArrayList<AssertionError>();
+		boolean throwExceptionCheckResponse = false;
+
+		if( checkResponse )
+		{
+			throwExceptionCheckResponse = checkResponse( messageExchange, context, parameterExposureCheckConfig,
+					 assertionErrorList );
+		}
+
+		boolean throwExceptionCheckSeparateHTML = false;
+		if( checkSeparateHTML )
+		{
+			throwExceptionCheckSeparateHTML = checkSeparateHTML( messageExchange, context, testStep, securityTestRunner,
+					urls, parameterExposureCheckConfig,  assertionErrorList );
+		}
+
+		if( throwExceptionCheckResponse || throwExceptionCheckSeparateHTML )
+		{
+			throw new AssertionException( assertionErrorList.toArray( new AssertionError[assertionErrorList.size()] ) );
+		}
+
+		return "OK";
+	}
+
+	private boolean checkSeparateHTML( MessageExchange messageExchange, SubmitContext context, TestStep testStep,
+			SecurityTestRunner securityTestRunner, List<String> urls,
+			ParameterExposureCheckConfig parameterExposureCheckConfig,
+			List<AssertionError> assertionErrorList )
+	{
+		boolean throwException = false;
 		for( String url : urls )
 		{
 			HttpTestRequestStep httpRequest = createHttpRequest( ( WsdlTestStep )testStep, url );
@@ -129,12 +165,29 @@ public class CrossSiteScriptSeparateHTMLAssertion extends WsdlMessageAssertion i
 				}
 			}
 		}
-		if( throwException )
-		{
-			throw new AssertionException( assertionErrorList.toArray( new AssertionError[assertionErrorList.size()] ) );
-		}
+		return throwException;
+	}
 
-		return "OK";
+	private boolean checkResponse( MessageExchange messageExchange, SubmitContext context,
+			ParameterExposureCheckConfig parameterExposureCheckConfig, List<AssertionError> assertionErrorList )
+	{
+		boolean throwException = false;
+		for( String value : parameterExposureCheckConfig.getParameterExposureStringsList() )
+		{
+			value = context.expand( value );// property expansion support
+			String match = SecurityCheckUtil.contains( context, new String( messageExchange.getRawResponseData() ), value,
+					false );
+			if( match != null )
+			{
+				String shortValue = value.length() > 25 ? value.substring( 0, 22 ) + "... " : value;
+				String message = "Content that is sent in request '" + shortValue
+						+ "' is exposed in response. Possibility for XSS script attack in: "
+						+ messageExchange.getModelItem().getName();
+				assertionErrorList.add( new AssertionError( message ) );
+				throwException = true;
+			}
+		}
+		return throwException;
 	}
 
 	private List<String> submitScript( MessageExchange messageExchange, SubmitContext context )
@@ -189,15 +242,15 @@ public class CrossSiteScriptSeparateHTMLAssertion extends WsdlMessageAssertion i
 	{
 		public Factory()
 		{
-			super( CrossSiteScriptSeparateHTMLAssertion.ID, CrossSiteScriptSeparateHTMLAssertion.LABEL,
-					CrossSiteScriptSeparateHTMLAssertion.class, ParameterExposureCheck.class );
+			super( CrossSiteScriptAssertion.ID, CrossSiteScriptAssertion.LABEL,
+					CrossSiteScriptAssertion.class, ParameterExposureCheck.class );
 
 		}
 
 		@Override
 		public Class<? extends WsdlMessageAssertion> getAssertionClassType()
 		{
-			return CrossSiteScriptSeparateHTMLAssertion.class;
+			return CrossSiteScriptAssertion.class;
 		}
 	}
 
@@ -212,6 +265,8 @@ public class CrossSiteScriptSeparateHTMLAssertion extends WsdlMessageAssertion i
 	{
 		XmlObjectConfigurationBuilder builder = new XmlObjectConfigurationBuilder();
 		builder.add( GROOVY_SCRIPT, script );
+		builder.add( CHECK_RESPONSE, checkResponse );
+		builder.add( CHECK_SEPARATE_HTML, checkSeparateHTML );
 		return builder.finish();
 	}
 
@@ -223,6 +278,10 @@ public class CrossSiteScriptSeparateHTMLAssertion extends WsdlMessageAssertion i
 		dialog.show();
 		if( dialog.getReturnValue() == XFormDialog.OK_OPTION )
 		{
+			checkResponse = Boolean.valueOf( dialog.getFormField( CrossSiteScripSeparateHTMLConfigDialog.CHECK_RESPONSE )
+					.getValue() );
+			checkSeparateHTML = Boolean.valueOf( dialog.getFormField(
+					CrossSiteScripSeparateHTMLConfigDialog.CHECK_SEPARATE_HTML ).getValue() );
 			setConfiguration( createConfiguration() );
 		}
 		return true;
@@ -296,17 +355,25 @@ public class CrossSiteScriptSeparateHTMLAssertion extends WsdlMessageAssertion i
 	protected void buildDialog()
 	{
 		dialog = ADialogBuilder.buildDialog( CrossSiteScripSeparateHTMLConfigDialog.class );
-		dialog.setSize( 600, 600);
-		dialog.getFormField( CrossSiteScripSeparateHTMLConfigDialog.GROOVY )
-				.setProperty( "component", new JScrollPane( buildGroovyPanel()) );
-		dialog.getFormField( CrossSiteScripSeparateHTMLConfigDialog.GROOVY )
-		.setProperty( "dimension",new Dimension( 450, 450 )  );
+		dialog.setSize( 600, 600 );
+		dialog.setBooleanValue( CrossSiteScripSeparateHTMLConfigDialog.CHECK_RESPONSE, checkResponse );
+		dialog.setBooleanValue( CrossSiteScripSeparateHTMLConfigDialog.CHECK_SEPARATE_HTML, checkSeparateHTML );
+		dialog.getFormField( CrossSiteScripSeparateHTMLConfigDialog.GROOVY ).setProperty( "component",
+				new JScrollPane( buildGroovyPanel() ) );
+		dialog.getFormField( CrossSiteScripSeparateHTMLConfigDialog.GROOVY ).setProperty( "dimension",
+				new Dimension( 450, 400 ) );
 	}
 
 	// TODO : update help URL
 	@AForm( description = "", name = "Cross Site Scripting on Separate HTML", helpUrl = HelpUrls.HELP_URL_ROOT )
 	protected interface CrossSiteScripSeparateHTMLConfigDialog
 	{
+		@AField( description = "Check Imediate Response", name = "Check Response", type = AFieldType.BOOLEAN )
+		public final static String CHECK_RESPONSE = "Check Response";
+
+		@AField( description = "Check Response on URLs Specified in Script", name = "Check Separate HTML", type = AFieldType.BOOLEAN )
+		public final static String CHECK_SEPARATE_HTML = "Check Separate HTML";
+
 		@AField( description = "", name = "Custom script that returns list of urls to check for XSS", type = AFieldType.LABEL )
 		public final static String LABEL = "Custom script that returns list of urls to check for XSS";
 

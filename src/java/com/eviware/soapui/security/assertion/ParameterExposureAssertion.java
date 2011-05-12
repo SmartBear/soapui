@@ -27,10 +27,10 @@ import com.eviware.soapui.model.testsuite.ResponseAssertion;
 import com.eviware.soapui.security.check.ParameterExposureCheck;
 import com.eviware.soapui.support.SecurityCheckUtil;
 
-public class ParameterExposureAssertion extends WsdlMessageAssertion implements ResponseAssertion
+ class ParameterExposureAssertion extends WsdlMessageAssertion implements ResponseAssertion
 {
-	public static final String ID = "Parameter Exposure";
-	public static final String LABEL = "Cross Site Scripting Detection";
+//	public static final String ID = "Parameter Exposure";
+//	public static final String LABEL = "Cross Site Scripting Detection";
 
 	public ParameterExposureAssertion( TestAssertionConfig assertionConfig, Assertable assertable )
 	{
@@ -45,6 +45,21 @@ public class ParameterExposureAssertion extends WsdlMessageAssertion implements 
 				.getProperty( ParameterExposureCheck.PARAMETER_EXPOSURE_CHECK_CONFIG );
 		boolean throwException = false;
 		List<AssertionError> assertionErrorList = new ArrayList<AssertionError>();
+		throwException = assertImediateResponse( messageExchange, context, parameterExposureCheckConfig, throwException,
+				assertionErrorList );
+
+		if( throwException )
+		{
+			throw new AssertionException( assertionErrorList.toArray( new AssertionError[assertionErrorList.size()] ) );
+		}
+
+		return "OK";
+	}
+
+	private boolean assertImediateResponse( MessageExchange messageExchange, SubmitContext context,
+			ParameterExposureCheckConfig parameterExposureCheckConfig, boolean throwException,
+			List<AssertionError> assertionErrorList )
+	{
 		for( String value : parameterExposureCheckConfig.getParameterExposureStringsList() )
 		{
 			value = context.expand( value );// property expansion support
@@ -59,30 +74,24 @@ public class ParameterExposureAssertion extends WsdlMessageAssertion implements 
 				throwException = true;
 			}
 		}
-
-		if( throwException )
-		{
-			throw new AssertionException( assertionErrorList.toArray( new AssertionError[assertionErrorList.size()] ) );
-		}
-
-		return "OK";
+		return throwException;
 	}
 
-	public static class Factory extends AbstractTestAssertionFactory
-	{
-		public Factory()
-		{
-			super( ParameterExposureAssertion.ID, ParameterExposureAssertion.LABEL, ParameterExposureAssertion.class,
-					ParameterExposureCheck.class );
-
-		}
-
-		@Override
-		public Class<? extends WsdlMessageAssertion> getAssertionClassType()
-		{
-			return ParameterExposureAssertion.class;
-		}
-	}
+//	public static class Factory extends AbstractTestAssertionFactory
+//	{
+//		public Factory()
+//		{
+////			super( ParameterExposureAssertion.ID, ParameterExposureAssertion.LABEL, ParameterExposureAssertion.class,
+////					ParameterExposureCheck.class );
+//
+//		}
+//
+//		@Override
+//		public Class<? extends WsdlMessageAssertion> getAssertionClassType()
+//		{
+//			return ParameterExposureAssertion.class;
+//		}
+//	}
 
 	@Override
 	protected String internalAssertRequest( MessageExchange messageExchange, SubmitContext context )

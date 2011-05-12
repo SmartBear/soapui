@@ -39,7 +39,7 @@ import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.security.SecurityTestRunnerImpl;
-import com.eviware.soapui.security.assertion.ParameterExposureAssertion;
+import com.eviware.soapui.security.assertion.CrossSiteScriptAssertion;
 import com.eviware.soapui.support.SecurityCheckUtil;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.types.StringToStringMap;
@@ -47,8 +47,8 @@ import com.eviware.soapui.support.xml.XmlObjectTreeModel;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel.XmlTreeNode;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.support.AForm;
+import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.impl.swing.JFormDialog;
 import com.eviware.x.impl.swing.JStringListFormField;
 
@@ -107,9 +107,9 @@ public class ParameterExposureCheck extends AbstractSecurityCheckWithProperties
 	{
 		super.initAssertions();
 
-		if( assertionsSupport.getAssertionByName( ParameterExposureAssertion.LABEL ) == null )
+		if( assertionsSupport.getAssertionByName( CrossSiteScriptAssertion.LABEL ) == null )
 		{
-			assertionsSupport.addWsdlAssertion( ParameterExposureAssertion.LABEL );
+			assertionsSupport.addWsdlAssertion( CrossSiteScriptAssertion.LABEL );
 		}
 	}
 
