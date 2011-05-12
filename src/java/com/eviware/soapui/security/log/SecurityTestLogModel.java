@@ -13,6 +13,7 @@
 package com.eviware.soapui.security.log;
 
 import java.lang.ref.SoftReference;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -21,6 +22,7 @@ import javax.swing.AbstractListModel;
 
 import org.apache.commons.collections.list.TreeList;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.model.security.SecurityCheck;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.check.AbstractSecurityCheck;
@@ -45,8 +47,8 @@ public class SecurityTestLogModel extends AbstractListModel
 	private int stepCount;
 	private int checkCount;
 	private int requestCount;
-	private int startCheckIndex;
-	private int startStepIndex;
+	private int currentCheckEntriesCount;
+	private int currentStepEntriesCount;
 
 	public synchronized Object getElementAt( int arg0 )
 	{
@@ -95,14 +97,15 @@ public class SecurityTestLogModel extends AbstractListModel
 		stepCount++ ;
 		checkCount = 0;
 
+		currentStepEntriesCount = 0;
 		int size = items.size();
-		startStepIndex = size;
 		if( AbstractSecurityCheck.isSecurable( testStep ) )
 		{
 			SecurityTestStepResult result = new SecurityTestStepResult( testStep, null );
 			SoftReference<SecurityResult> stepResultRef = new SoftReference<SecurityResult>( result );
 			items.add( "Step " + stepCount + " [" + result.getTestStep().getName() + "] " );
 			results.add( stepResultRef );
+
 			fireIntervalAdded( this, size, items.size() - 1 );
 			enforceMaxSize();
 			return true;
@@ -116,6 +119,11 @@ public class SecurityTestLogModel extends AbstractListModel
 	public synchronized void updateSecurityTestStepResult( SecurityTestStepResult result, boolean errorsOnly,
 			boolean hasChecksToProcess, boolean startStepLogEntryAdded )
 	{
+		int startStepIndex = 0;
+		if( items.size() > currentStepEntriesCount )
+		{
+			startStepIndex = items.size() - currentStepEntriesCount - 1;
+		}
 		if( ( errorsOnly && result.getStatus() != ResultStatus.FAILED )
 				|| ( startStepLogEntryAdded && !hasChecksToProcess ) )
 		{
@@ -132,20 +140,30 @@ public class SecurityTestLogModel extends AbstractListModel
 		else if( startStepLogEntryAdded )
 		{
 
-			items.set( startStepIndex, "Step " + stepCount + " [" + result.getTestStep().getName() + "] "
-					+ result.getExecutionProgressStatus() + ": took " + result.getTimeTaken() + " ms" );
-
-			SoftReference<SecurityResult> stepResultRef = new SoftReference<SecurityResult>( result );
-			results.set( startStepIndex, stepResultRef );
-
-			fireContentsChanged( this, startStepIndex, startStepIndex );
+			try
+			{
+				if( startStepIndex > 0 && startStepIndex < maxSize )
+				{
+					items.set( startStepIndex, "Step " + stepCount + " [" + result.getTestStep().getName() + "] "
+							+ result.getExecutionProgressStatus() + ": took " + result.getTimeTaken() + " ms" );
+					SoftReference<SecurityResult> stepResultRef = new SoftReference<SecurityResult>( result );
+					results.set( startStepIndex, stepResultRef );
+					fireContentsChanged( this, startStepIndex, startStepIndex );
+				}
+			}
+			catch( IndexOutOfBoundsException e )
+			{
+				// when log max size is exceeded skip updating the raw since it
+				// won't be visible anyway
+				System.out.println( "*******" + startStepIndex );
+			}
 		}
+		currentStepEntriesCount = 0;
 	}
 
 	public synchronized void addSecurityCheckResult( SecurityCheck securityCheck )
 	{
 		int size = items.size();
-		startCheckIndex = size;
 		checkCount++ ;
 		requestCount = 0;
 
@@ -154,6 +172,8 @@ public class SecurityTestLogModel extends AbstractListModel
 
 		items.add( "SecurityScan " + checkCount + " [" + securityCheck.getName() + "] " );
 		results.add( checkResultRef );
+		currentCheckEntriesCount = 0;
+		currentStepEntriesCount++ ;
 
 		fireIntervalAdded( this, size, items.size() - 1 );
 		enforceMaxSize();
@@ -163,6 +183,11 @@ public class SecurityTestLogModel extends AbstractListModel
 	// similar info known only after finished
 	public synchronized void updateSecurityCheckResult( SecurityCheckResult securityCheckResult, boolean errorsOnly )
 	{
+		int startCheckIndex = 0;
+		if( items.size() > currentCheckEntriesCount )
+		{
+			startCheckIndex = items.size() - currentCheckEntriesCount - 1;
+		}
 		if( errorsOnly && securityCheckResult.getStatus() != ResultStatus.FAILED )
 		{
 			// remove all entries for the securityCheck that had no warnings
@@ -185,11 +210,23 @@ public class SecurityTestLogModel extends AbstractListModel
 			outStr.append( checkCount ).append( " [" ).append( securityCheck.getName() ).append( "] " ).append(
 					securityCheckResult.getExecutionProgressStatus() ).append( ", took = " ).append(
 					securityCheckResult.getTimeTaken() );
-			items.set( startCheckIndex, outStr.toString() );
-			SoftReference<SecurityResult> checkResultRef = new SoftReference<SecurityResult>( securityCheckResult );
-			results.set( startCheckIndex, checkResultRef );
-
-			fireContentsChanged( this, startCheckIndex, startCheckIndex );
+			try
+			{
+				if( startCheckIndex > 0 && startCheckIndex < maxSize )
+				{
+					items.set( startCheckIndex, outStr.toString() );
+					SoftReference<SecurityResult> checkResultRef = new SoftReference<SecurityResult>( securityCheckResult );
+					results.set( startCheckIndex, checkResultRef );
+					currentCheckEntriesCount = 0;
+					fireContentsChanged( this, startCheckIndex, startCheckIndex );
+				}
+			}
+			catch( IndexOutOfBoundsException e )
+			{
+				// when log max size is exceeded skip updating the raw since it
+				// won't be visible anyway
+				System.out.println( "*******" + startCheckIndex );
+			}
 
 		}
 	}
@@ -203,11 +240,15 @@ public class SecurityTestLogModel extends AbstractListModel
 
 		items.add( securityCheckRequestResult.getChangedParamsInfo( requestCount ) );
 		results.add( checkReqResultRef );
+		currentCheckEntriesCount++ ;
+		currentStepEntriesCount++ ;
 
 		for( String msg : securityCheckRequestResult.getMessages() )
 		{
 			items.add( " -> " + msg );
 			results.add( checkReqResultRef );
+			currentCheckEntriesCount++ ;
+			currentStepEntriesCount++ ;
 		}
 
 		fireIntervalAdded( this, size, items.size() - 1 );
