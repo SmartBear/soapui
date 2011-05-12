@@ -11,16 +11,61 @@
  */
 package com.eviware.soapui.security.assertion;
 
+import java.awt.Component;
+
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.ListCellRenderer;
+
 import com.eviware.soapui.impl.wsdl.panels.teststeps.AssertionsPanel;
 import com.eviware.soapui.model.testsuite.Assertable;
+import com.eviware.soapui.model.testsuite.TestAssertion;
 
 public class SecurityAssertionPanel extends AssertionsPanel
 {
+
 	public SecurityAssertionPanel( Assertable assertable )
 	{
 		super( assertable );
+	}
 
-		getAssertionsList().setToolTipText( "Assertions for this security scan." );
+	@Override
+	protected void initListAndModel()
+	{
+		assertionListModel = new SecurityAssertionListModel();
+		assertionList = new JList( assertionListModel );
+		assertionList.setToolTipText( "Assertions for this security scan." );
+		assertionList.setCellRenderer( new SecurityAssertionCellRenderer() );
+	}
+
+	protected class SecurityAssertionListModel extends AssertionListModel
+	{
+
+		protected void addAssertion( TestAssertion assertion )
+		{
+			assertion.addPropertyChangeListener( this );
+			items.add( assertion );
+		}
+	}
+
+	private class SecurityAssertionCellRenderer extends JLabel implements ListCellRenderer
+	{
+
+		@Override
+		public Component getListCellRendererComponent( JList list, Object value, int index, boolean isSelected,
+				boolean cellHasFocus )
+		{
+			setEnabled( list.isEnabled() );
+
+			TestAssertion assertion = ( TestAssertion )value;
+			setText( assertion.getLabel() );
+
+			if( assertion.isDisabled() && isEnabled() )
+				setEnabled( false );
+
+			return this;
+		}
+
 	}
 
 }

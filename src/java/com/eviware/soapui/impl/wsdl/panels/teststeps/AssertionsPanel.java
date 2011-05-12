@@ -63,8 +63,8 @@ import com.eviware.soapui.support.components.JXToolBar;
 
 public class AssertionsPanel extends JPanel
 {
-	private AssertionListModel assertionListModel;
-	private JList assertionList;
+	protected AssertionListModel assertionListModel;
+	protected JList assertionList;
 	private JPopupMenu assertionListPopup;
 	private final Assertable assertable;
 	private AddAssertionAction addAssertionAction;
@@ -78,10 +78,8 @@ public class AssertionsPanel extends JPanel
 		super( new BorderLayout() );
 		this.assertable = assertable;
 
-		assertionListModel = new AssertionListModel();
-		assertionList = new JList( assertionListModel );
-		assertionList.setToolTipText( "Assertions for this request" );
-		assertionList.setCellRenderer( new AssertionCellRenderer() );
+		initListAndModel();
+		
 		assertionList.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
 
 		assertionListPopup = new JPopupMenu();
@@ -185,6 +183,17 @@ public class AssertionsPanel extends JPanel
 		add( buildToolbar(), BorderLayout.NORTH );
 	}
 
+	/**
+	 * 
+	 */
+	protected void initListAndModel()
+	{
+		assertionListModel = new AssertionListModel();
+		assertionList = new JList( assertionListModel );
+		assertionList.setToolTipText( "Assertions for this request" );
+		assertionList.setCellRenderer( new AssertionCellRenderer() );
+	}
+
 	private JComponent buildToolbar()
 	{
 		configureAssertionAction = new ConfigureAssertionAction();
@@ -283,9 +292,9 @@ public class AssertionsPanel extends JPanel
 		}
 	}
 
-	private class AssertionListModel extends AbstractListModel implements PropertyChangeListener, AssertionsListener
+	protected class AssertionListModel extends AbstractListModel implements PropertyChangeListener, AssertionsListener
 	{
-		private List<Object> items = new ArrayList<Object>();
+		protected List<Object> items = new ArrayList<Object>();
 
 		public AssertionListModel()
 		{
@@ -373,7 +382,7 @@ public class AssertionsPanel extends JPanel
 			}
 		}
 
-		private void addAssertion( TestAssertion assertion )
+		protected void addAssertion( TestAssertion assertion )
 		{
 			assertion.addPropertyChangeListener( this );
 			items.add( assertion );
