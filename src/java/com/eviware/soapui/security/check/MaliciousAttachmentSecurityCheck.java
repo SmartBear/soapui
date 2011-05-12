@@ -115,12 +115,13 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 
 		if( getExecutionStrategy().getStrategy() == StrategyTypeConfig.ONE_BY_ONE )
 		{
+			if( elementIndex == -1 )
+			{
+				elementIndex++ ;
+			}
+
 			if( elementIndex < config.getElementList().size() )
 			{
-				if( elementIndex == -1 )
-				{
-					elementIndex++ ;
-				}
 
 				MaliciousAttachmentElementConfig element = config.getElementList().get( elementIndex );
 
@@ -158,7 +159,7 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 				{
 					removeAttachments( testStep, element.getKey(), true );
 				}
-				
+
 				int valIndex = valueIndex;
 
 				if( valIndex < element.getGenerateAttachmentList().size() + element.getReplaceAttachmentList().size() - 1 )
