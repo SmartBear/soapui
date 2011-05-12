@@ -80,7 +80,7 @@ public class JSecurityTestRunLog extends JPanel
 	{
 		super( new BorderLayout() );
 		this.settings = securityTest.getSettings();
-		logListModel = securityTest.getSecurityTestLog();
+		logListModel = new SecurityTestLogModel();
 		errorsOnly = settings.getBoolean( OptionsForm.class.getName() + "@errors_only" );
 		buildUI();
 	}

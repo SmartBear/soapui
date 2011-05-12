@@ -67,7 +67,7 @@ public class JFunctionalTestRunLog extends JPanel
 	public JFunctionalTestRunLog( SecurityTest securityTest )
 	{
 		super( new BorderLayout() );
-		logListModel = securityTest.getFunctionalTestLog();
+		logListModel = new FunctionalTestLogModel();
 		buildUI();
 	}
 
