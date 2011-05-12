@@ -214,7 +214,7 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 					}
 				}
 
-				addAttachment( testStep, file, value.getContentType(), generated );
+				addAttachment( testStep, file, value.getContentType(), generated, value.getCached() );
 			}
 			catch( IOException e )
 			{
@@ -246,12 +246,12 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 		return TYPE;
 	}
 
-	private Attachment addAttachment( TestStep testStep, File file, String contentType, boolean generated )
+	private Attachment addAttachment( TestStep testStep, File file, String contentType, boolean generated, boolean cache )
 			throws IOException
 	{
 		WsdlRequest request = ( WsdlRequest )getRequest( testStep );
 		request.setInlineFilesEnabled( false );
-		Attachment attach = request.attachFile( file, false );
+		Attachment attach = request.attachFile( file, cache );
 		attach.setContentType( contentType );
 
 		if( generated )
