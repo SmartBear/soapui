@@ -29,6 +29,7 @@ import com.eviware.soapui.impl.wsdl.loadtest.strategy.LoadStrategy;
 import com.eviware.soapui.impl.wsdl.loadtest.strategy.SimpleLoadStrategy;
 import com.eviware.soapui.impl.wsdl.loadtest.strategy.ThreadCountChangeLoadStrategy;
 import com.eviware.soapui.impl.wsdl.loadtest.strategy.VarianceLoadStrategy;
+import com.eviware.soapui.settings.HttpSettings;
 
 public class ContextMapping
 {
@@ -39,6 +40,7 @@ public class ContextMapping
 	public static final String MOCK_SERVICE = "mockService";
 	public static final String PATH = "path";
 	public static final String PORT = "port";
+	private static final String CLOSE_CONNECTIONS_AFTER_REQUEST = "closeConnectionsAfterRequest";
 
 	private static final String SOAPUI_RUNNER_LABEL = "soapuiSamplerLabel";
 	public static final String LOADUI_TEST_CASE_NAME = "loaduiTestCaseName";
@@ -188,6 +190,11 @@ public class ContextMapping
 				createProperyValue( File.class, loadTest.getTestCase().getTestSuite().getProject().getPath() ) );
 		properties.put( TEST_SUITE, createProperyValue( String.class, loadTest.getTestCase().getTestSuite().getName() ) );
 		properties.put( TEST_CASE, createProperyValue( String.class, loadTest.getTestCase().getName() ) );
+
+		properties.put(
+				CLOSE_CONNECTIONS_AFTER_REQUEST,
+				createProperyValue( Boolean.class,
+						Boolean.toString( loadTest.getSettings().getBoolean( HttpSettings.CLOSE_CONNECTIONS ) ) ) );
 
 		context.put( LOADUI_PROJECT_NAME, loadUIProject );
 		context.put( LOADUI_TEST_CASE_NAME, loadUITestCase );
