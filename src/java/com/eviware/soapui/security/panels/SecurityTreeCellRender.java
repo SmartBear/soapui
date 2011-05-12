@@ -57,10 +57,15 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 	public Component getTreeCellRendererComponent( JTree arg0, Object node, boolean sel, boolean exp, boolean leaf,
 			int arg5, boolean arg6 )
 	{
-		if( released )
-			return null;
-
 		Component result = null;
+		if( released ) {
+			if( node instanceof TestStepNode )
+				result = getTreeCellRendererTestNode( arg0, ( TestStepNode )node, sel, exp, leaf, arg5, arg6 );
+			if( node instanceof SecurityCheckNode )
+				result = getTreeCellRendererSecurityCheckNode( arg0, ( SecurityCheckNode )node, sel, exp, leaf, arg5, arg6 );
+			return result;
+		}
+
 		this.tree = arg0;
 
 		if( componentTree.containsKey( node ) )
