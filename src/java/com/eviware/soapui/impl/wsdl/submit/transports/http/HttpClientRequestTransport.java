@@ -276,6 +276,9 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 			HttpState httpState ) throws Exception
 	{
 		ExtendedGetMethod getMethod = new ExtendedGetMethod();
+		for( Header header : httpMethod.getRequestHeaders() )
+			getMethod.addRequestHeader( header );
+
 		URI uri = new URI( httpMethod.getResponseHeader( "Location" ).getValue(), true );
 		getMethod.setURI( uri );
 		HostConfiguration host = new HostConfiguration();
