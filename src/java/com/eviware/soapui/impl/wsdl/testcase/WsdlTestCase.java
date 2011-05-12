@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -344,10 +345,9 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 					break;
 			}
 
-			name = UISupport.prompt(
-					"TestStep name must be unique, please specify new name for step\n" + "[" + testStep.getName()
-							+ "] in TestCase [" + getTestSuite().getProject().getName() + "->" + getTestSuite().getName()
-							+ "->" + getName() + "]", "Change TestStep name", name );
+			name = UISupport.prompt( "TestStep name must be unique, please specify new name for step\n" + "["
+					+ testStep.getName() + "] in TestCase [" + getTestSuite().getProject().getName() + "->"
+					+ getTestSuite().getName() + "->" + getName() + "]", "Change TestStep name", name );
 
 			if( name == null )
 				return false;
@@ -432,8 +432,8 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 
 	public WsdlTestStep addTestStep( String type, String name )
 	{
-		TestStepConfig newStepConfig = WsdlTestStepRegistry.getInstance().getFactory( type )
-				.createNewTestStep( this, name );
+		TestStepConfig newStepConfig = WsdlTestStepRegistry.getInstance().getFactory( type ).createNewTestStep( this,
+				name );
 		if( newStepConfig != null )
 		{
 			return addTestStep( newStepConfig );
@@ -456,8 +456,8 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 
 	public WsdlTestStep insertTestStep( String type, String name, int index )
 	{
-		TestStepConfig newStepConfig = WsdlTestStepRegistry.getInstance().getFactory( type )
-				.createNewTestStep( this, name );
+		TestStepConfig newStepConfig = WsdlTestStepRegistry.getInstance().getFactory( type ).createNewTestStep( this,
+				name );
 		if( newStepConfig != null )
 		{
 			return insertTestStep( newStepConfig, index, false );
@@ -594,8 +594,13 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 		for( SecurityTest securityTest : getSecurityTestList() )
 		{
 			List<SecurityCheck> testStepChecks = securityTest.getTestStepSecurityChecks( testStep.getId() );
-			for( SecurityCheck chk : testStepChecks )
+			for( Iterator<SecurityCheck> iterator = testStepChecks.iterator(); iterator.hasNext()
+					&& !testStepChecks.isEmpty(); )
 			{
+				// >>iterator.hasNext() && !testStepChecks.isEmpty()<< 
+				// this is quick fix to bypass ConcurentModdificationException
+				// consider refactoring
+				SecurityCheck chk = iterator.next();
 				securityTest.removeSecurityCheck( testStep, chk );
 			}
 
