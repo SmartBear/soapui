@@ -133,7 +133,7 @@ public class ProgressBarSecurityTestStepAdapter
 				counterLabel.setText( "" );
 				counterLabel.setOpaque( false );
 
-				totalAlertsCounter = 0;
+//				totalAlertsCounter = 0;
 				( ( DefaultTreeModel )tree.getModel() ).nodeChanged( node );
 			}
 		}
