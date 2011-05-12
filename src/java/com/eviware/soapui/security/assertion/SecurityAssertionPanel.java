@@ -63,6 +63,20 @@ public class SecurityAssertionPanel extends AssertionsPanel
 			if( assertion.isDisabled() && isEnabled() )
 				setEnabled( false );
 
+			if( isSelected )
+			{
+				setBackground( list.getSelectionBackground() );
+				setForeground( list.getSelectionForeground() );
+			}
+			else
+			{
+				setBackground( list.getBackground() );
+				setForeground( list.getForeground() );
+			}
+
+			setFont( list.getFont() );
+			setOpaque( true );
+			
 			return this;
 		}
 
