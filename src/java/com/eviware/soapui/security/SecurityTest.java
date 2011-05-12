@@ -272,6 +272,37 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 		}
 		removeSecurityCheckFromMapByTestStepId( testStep.getId(), securityCheck );
 	}
+	
+	public void removeSecurityCheckWhenRemoveTestStep( TestStep testStep, SecurityCheck securityCheck )
+	{
+		List<TestStepSecurityTestConfig> testStepSecurityTestList = getConfig().getTestStepSecurityTestList();
+		if( !testStepSecurityTestList.isEmpty() )
+		{
+			for( int i = 0; i < testStepSecurityTestList.size(); i++ )
+			{
+				TestStepSecurityTestConfig testStepSecurityTest = testStepSecurityTestList.get( i );
+				if( testStepSecurityTest.getTestStepId().equals( testStep.getId() ) )
+				{
+					List<SecurityCheckConfig> securityCheckList = testStepSecurityTest.getTestStepSecurityCheckList();
+					Iterator<SecurityCheckConfig> secListIterator = securityCheckList.iterator();
+					while( secListIterator.hasNext() )
+					{
+						SecurityCheckConfig current = secListIterator.next();
+						if( current.getName().equals( securityCheck.getName() ) )
+						{
+							secListIterator.remove();
+							break;
+						}
+					}
+					if( securityCheckList.isEmpty() )
+					{
+						getConfig().removeTestStepSecurityTest( i );
+					}
+					// listModel.securityCheckRemoved( securityCheck );
+				}
+			}
+		}
+	}
 
 	private void removeSecurityCheckFromMapByTestStepId( String testStepId, SecurityCheck securityCheck )
 	{

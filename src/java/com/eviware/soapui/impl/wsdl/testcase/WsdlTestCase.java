@@ -594,14 +594,11 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 		for( SecurityTest securityTest : getSecurityTestList() )
 		{
 			List<SecurityCheck> testStepChecks = securityTest.getTestStepSecurityChecks( testStep.getId() );
-			for( Iterator<SecurityCheck> iterator = testStepChecks.iterator(); iterator.hasNext()
-					&& !testStepChecks.isEmpty(); )
+			for( Iterator<SecurityCheck> iterator = testStepChecks.iterator(); iterator.hasNext(); )
 			{
-				// >>iterator.hasNext() && !testStepChecks.isEmpty()<< 
-				// this is quick fix to bypass ConcurentModdificationException
-				// consider refactoring
 				SecurityCheck chk = iterator.next();
-				securityTest.removeSecurityCheck( testStep, chk );
+				securityTest.removeSecurityCheckWhenRemoveTestStep(  testStep, chk );
+				iterator.remove();
 			}
 
 		}
