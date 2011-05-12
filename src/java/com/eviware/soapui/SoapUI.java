@@ -1373,7 +1373,7 @@ public class SoapUI
 							+ props.getProperty( "build.number" ) + ", Build Date " + props.getProperty( "build.date" )
 							+ "</strong></font></p></body></html>",
 
-					new Dimension( 470, 350 ) );
+					new Dimension( 470, 375 ) );
 		}
 	}
 
