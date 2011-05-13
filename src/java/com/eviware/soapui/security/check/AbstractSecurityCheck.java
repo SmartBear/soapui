@@ -13,6 +13,7 @@
 package com.eviware.soapui.security.check;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -218,8 +219,10 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 			securityCheckResult.addSecurityRequestResult( getSecurityCheckRequestResult() );
 			for( int i = 0; i < securityTestListeners.length; i++ )
 			{
-				securityTestListeners[i].afterSecurityCheckRequest( ( SecurityTestRunnerImpl )securityTestRunner, context,
-						securityCheckRequestResult );
+				if( Arrays.asList( ( ( SecurityTest )getParent() ).getSecurityTestRunListeners() ).contains(
+						securityTestListeners[i] ) )
+					securityTestListeners[i].afterSecurityCheckRequest( ( SecurityTestRunnerImpl )securityTestRunner,
+							context, securityCheckRequestResult );
 			}
 
 			try

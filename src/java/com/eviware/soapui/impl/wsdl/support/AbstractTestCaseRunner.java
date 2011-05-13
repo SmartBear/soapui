@@ -12,6 +12,7 @@
 
 package com.eviware.soapui.impl.wsdl.support;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -221,7 +222,9 @@ public abstract class AbstractTestCaseRunner<T extends TestRunnable, T2 extends 
 	{
 		for( int i = 0; i < testRunListeners.length; i++ )
 		{
-			testRunListeners[i].beforeStep( this, getRunContext(), testStep );
+			if( Arrays.asList( getTestCase().getTestRunListeners() ).contains( testRunListeners[i] ) )
+				testRunListeners[i].beforeStep( this, getRunContext(), testStep );
+
 			if( !isRunning() )
 				return null;
 		}
@@ -237,7 +240,8 @@ public abstract class AbstractTestCaseRunner<T extends TestRunnable, T2 extends 
 
 		for( int i = 0; i < testRunListeners.length; i++ )
 		{
-			testRunListeners[i].afterStep( this, getRunContext(), stepResult );
+			if( Arrays.asList( getTestCase().getTestRunListeners() ).contains( testRunListeners[i] ) )
+				testRunListeners[i].afterStep( this, getRunContext(), stepResult );
 		}
 
 		// discard?
@@ -286,7 +290,8 @@ public abstract class AbstractTestCaseRunner<T extends TestRunnable, T2 extends 
 		{
 			try
 			{
-				testRunListeners[i].afterRun( this, getRunContext() );
+				if( Arrays.asList( getTestCase().getTestRunListeners() ).contains( testRunListeners[i] ) )
+					testRunListeners[i].afterRun( this, getRunContext() );
 			}
 			catch( Throwable t )
 			{
@@ -305,7 +310,8 @@ public abstract class AbstractTestCaseRunner<T extends TestRunnable, T2 extends 
 		{
 			try
 			{
-				testRunListeners[i].beforeRun( this, getRunContext() );
+				if( Arrays.asList( getTestCase().getTestRunListeners() ).contains( testRunListeners[i] ) )
+					testRunListeners[i].beforeRun( this, getRunContext() );
 			}
 			catch( Throwable t )
 			{
