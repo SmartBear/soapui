@@ -75,8 +75,8 @@ public class ProgressBarSecurityCheckAdapter extends SecurityTestRunListenerAdap
 			SecurityCheckRequestResult securityCheckReqResult )
 	{
 
-		if( securityCheckReqResult.getSecurityCheck().getTestStep().getId()
-				.equals( this.securityCheck.getTestStep().getId() )
+		if( securityCheckReqResult.getSecurityCheck().getTestStep().getId().equals(
+				this.securityCheck.getTestStep().getId() )
 				&& this.securityCheck.getName().equals( securityCheckReqResult.getSecurityCheck().getName() ) )
 		{
 			if( securityCheck.getAssertionCount() == 0 )
@@ -121,7 +121,10 @@ public class ProgressBarSecurityCheckAdapter extends SecurityTestRunListenerAdap
 						cntLabel.setText( prePostFix + alertsCounter + prePostFix );
 					}
 
+					if( progressBar.getValue() >= progressBar.getMaximum() * .9 )
+						progressBar.setMaximum( progressBar.getMaximum() + 5  );
 					progressBar.setValue( progressBar.getValue() + 1 );
+
 				}
 			}
 			( ( DefaultTreeModel )tree.getModel() ).nodeChanged( node );
