@@ -462,7 +462,8 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 					return false;
 				if( retval.booleanValue() )
 				{
-					runner.cancel( null );
+					if( runner != null )
+						runner.cancel( null );
 				}
 			}
 		}
@@ -470,7 +471,8 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 		{
 			if( runner != null && runner.getStatus() == TestCaseRunner.Status.RUNNING )
 			{
-				runner.cancel( null );
+				if( runner != null )
+					runner.cancel( null );
 			}
 		}
 
@@ -510,8 +512,8 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 				public void actionPerformed( ActionEvent e )
 				{
 
-					MockSecurityTestRunner securityTestRunner = new MockSecurityTestRunner(
-							SecurityTestDesktopPanel.this.getModelItem() );
+					MockSecurityTestRunner securityTestRunner = new MockSecurityTestRunner( SecurityTestDesktopPanel.this
+							.getModelItem() );
 					try
 					{
 						SecurityTestDesktopPanel.this.getModelItem().runStartupScript(
@@ -555,8 +557,8 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 				{
 					try
 					{
-						MockSecurityTestRunner securityTestRunner = new MockSecurityTestRunner(
-								SecurityTestDesktopPanel.this.getModelItem() );
+						MockSecurityTestRunner securityTestRunner = new MockSecurityTestRunner( SecurityTestDesktopPanel.this
+								.getModelItem() );
 						SecurityTestDesktopPanel.this.getModelItem().runTearDownScript(
 								( SecurityTestRunContext )securityTestRunner.getRunContext(), securityTestRunner );
 					}

@@ -560,7 +560,8 @@ public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase
 					return false;
 				if( retval.booleanValue() )
 				{
-					runner.cancel( null );
+					if( runner != null )
+						runner.cancel( null );
 				}
 			}
 		}
@@ -568,7 +569,8 @@ public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase
 		{
 			if( runner != null && runner.getStatus() == TestCaseRunner.Status.RUNNING )
 			{
-				runner.cancel( null );
+				if( runner != null )
+					runner.cancel( null );
 			}
 		}
 
@@ -712,8 +714,8 @@ public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase
 
 			int ix = testStepList.getTestStepList().getSelectedIndex();
 
-			String name = UISupport.prompt( "Specify name for new step", ix == -1 ? "Add Step" : "Insert Step",
-					factory.getTestStepName() );
+			String name = UISupport.prompt( "Specify name for new step", ix == -1 ? "Add Step" : "Insert Step", factory
+					.getTestStepName() );
 			if( name != null )
 			{
 				TestStepConfig newTestStepConfig = factory.createNewTestStep( getModelItem(), name );
