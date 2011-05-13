@@ -30,9 +30,9 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.ParameterExposureCheckConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.config.StrategyTypeConfig;
+import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStepResult;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.security.SecurityCheckedParameter;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
@@ -141,8 +141,9 @@ public class ParameterExposureCheck extends AbstractSecurityCheckWithProperties
 		PropertyMutation mutation = PropertyMutation.popMutation( context );
 		if( mutation != null )
 		{
-			MessageExchange message = ( MessageExchange )mutation.getTestStep().run( ( TestCaseRunner )securityTestRunner,
-					context );
+			WsdlTestRequestStepResult message = ( WsdlTestRequestStepResult )mutation.getTestStep().run(
+					( TestCaseRunner )securityTestRunner, context );
+			message.setRequestContent( "", false );
 			createMessageExchange( mutation.getMutatedParameters(), message, context );
 		}
 	}
@@ -199,7 +200,7 @@ public class ParameterExposureCheck extends AbstractSecurityCheckWithProperties
 		{
 			context.remove( PropertyMutation.REQUEST_MUTATIONS_STACK );
 			context.remove( PARAMETER_EXPOSURE_CHECK_CONFIG );
-			removeFromContext(context);
+			removeFromContext( context );
 			return false;
 		}
 		else
@@ -272,7 +273,7 @@ public class ParameterExposureCheck extends AbstractSecurityCheckWithProperties
 							{
 								PropertyMutation oneByOnePropertyMutation = new PropertyMutation();
 								oneByOnePropertyMutation.setPropertyName( scp.getName() );
-								oneByOnePropertyMutation.setPropertyValue( model.getXmlObject().toString() );
+								oneByOnePropertyMutation.setPropertyValue( unescapEscaped( model.getXmlObject().toString() ) );
 								stsmap.put( scp.getLabel(), mynode.getNodeText() );
 								oneByOnePropertyMutation.setMutatedParameters( stsmap );
 								oneByOnePropertyMutation.updateRequestProperty( testStepCopy );
@@ -282,7 +283,7 @@ public class ParameterExposureCheck extends AbstractSecurityCheckWithProperties
 							else
 							{
 								allAtOncePropertyMutation.setPropertyName( scp.getName() );
-								allAtOncePropertyMutation.setPropertyValue( model.getXmlObject().toString() );
+								allAtOncePropertyMutation.setPropertyValue( unescapEscaped( model.getXmlObject().toString() ) );
 								stsmap.put( scp.getLabel(), mynode.getNodeText() );
 								allAtOncePropertyMutation.setMutatedParameters( stsmap );
 								allAtOncePropertyMutation.updateRequestProperty( testStepCopy );
@@ -323,6 +324,11 @@ public class ParameterExposureCheck extends AbstractSecurityCheckWithProperties
 				allAtOncePropertyMutation.addMutation( context );
 			}
 		}
+	}
+
+	private String unescapEscaped( String value )
+	{
+		return value.replaceAll( "&lt;", "<" );
 	}
 
 	@Override
