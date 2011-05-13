@@ -130,7 +130,14 @@ public class SecurityTestLogModel extends AbstractListModel
 				results.remove( size );
 				size-- ;
 			}
-			fireIntervalRemoved( this, startStepIndex, size );
+			if( startStepIndex > 0 )
+			{
+				fireIntervalRemoved( this, startStepIndex, size );
+			}
+			else
+			{
+				fireIntervalRemoved( this, 0, size );
+			}
 		}
 		else if( startStepLogEntryAdded )
 		{
@@ -193,7 +200,14 @@ public class SecurityTestLogModel extends AbstractListModel
 				results.remove( size );
 				size-- ;
 			}
-			fireIntervalRemoved( this, startCheckIndex, size );
+			if( startCheckIndex > 0 )
+			{
+				fireIntervalRemoved( this, startCheckIndex, size );
+			}
+			else
+			{
+				fireIntervalRemoved( this, startCheckIndex, size );
+			}
 
 		}
 		else
