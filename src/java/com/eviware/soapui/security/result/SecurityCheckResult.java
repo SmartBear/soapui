@@ -274,4 +274,20 @@ public class SecurityCheckResult implements SecurityResult
 	{
 		return logIconStatus;
 	}
+
+	public String getSecurityCheckName()
+	{
+		return getSecurityCheck().getName();
+	}
+
+	public String getLogIconStatusString()
+	{
+		return logIconStatus.toString();
+	}
+
+	public String getStatusString()
+	{
+		return status.toString();
+	}
+
 }

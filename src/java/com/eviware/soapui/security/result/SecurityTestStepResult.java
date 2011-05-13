@@ -47,7 +47,7 @@ public class SecurityTestStepResult implements SecurityResult
 	private DefaultActionList actionList;
 	private boolean hasAddedRequests;
 	private ResultStatus executionProgressStatus = ResultStatus.UNKNOWN;;
-	private ResultStatus logIconStatus = ResultStatus.UNKNOWN;;
+	private ResultStatus logIconStatus = ResultStatus.UNKNOWN;
 
 	public SecurityTestStepResult( TestStep testStep, TestStepResult originalResult )
 	{
@@ -268,4 +268,20 @@ public class SecurityTestStepResult implements SecurityResult
 	{
 		return logIconStatus;
 	}
+
+	public String getSecurityTestStepName()
+	{
+		return getTestStep().getName();
+	}
+
+	public String getLogIconStatusString()
+	{
+		return logIconStatus.toString();
+	}
+
+	public String getStatusString()
+	{
+		return status.toString();
+	}
+
 }
