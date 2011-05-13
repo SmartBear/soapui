@@ -281,7 +281,7 @@ public class JSecurityTestRunLog extends JPanel
 		@AField( name = "Max Rows", description = "Sets the maximum number of rows to keep in the log", type = AFieldType.INT )
 		public static final String MAXROWS = "Max Rows";
 
-		@AField( name = "Errors Only", description = "Logs only TestStep errors in the log", type = AFieldType.BOOLEAN )
+		@AField( name = "Warnings Only", description = "Logs only TestStep warnings in the log", type = AFieldType.BOOLEAN )
 		public static final String ERRORSONLY = "Errors Only";
 
 		@AField( name = "Follow", description = "Follow log content", type = AFieldType.BOOLEAN )
