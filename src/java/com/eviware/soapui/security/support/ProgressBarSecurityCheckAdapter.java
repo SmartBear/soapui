@@ -83,7 +83,7 @@ public class ProgressBarSecurityCheckAdapter extends SecurityTestRunListenerAdap
 			{
 				progressBar.setForeground( MISSING_ASSERTION_COLOR );
 				progressBar.setString( STATE_MISSING_ASSERTIONS );
-				progressBar.setValue( 100 );
+				progressBar.setValue( progressBar.getMaximum() );
 			}
 			else if( this.securityCheck instanceof AbstractSecurityCheckWithProperties )
 			{
@@ -95,7 +95,7 @@ public class ProgressBarSecurityCheckAdapter extends SecurityTestRunListenerAdap
 				{
 					progressBar.setForeground( MISSING_ASSERTION_COLOR );
 					progressBar.setString( STATE_MISSING_PARAMETERS );
-					progressBar.setValue( 100 );
+					progressBar.setValue( progressBar.getMaximum() );
 				}
 				else
 				{
@@ -173,7 +173,7 @@ public class ProgressBarSecurityCheckAdapter extends SecurityTestRunListenerAdap
 						progressBar.setString( STATE_MISSING_PARAMETERS );
 					}
 				}
-				progressBar.setValue( 100 );
+				progressBar.setValue( progressBar.getMaximum() );
 			}
 			else
 			{
