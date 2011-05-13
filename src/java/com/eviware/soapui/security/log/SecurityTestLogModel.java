@@ -117,10 +117,12 @@ public class SecurityTestLogModel extends AbstractListModel
 		int startStepIndex = 0;
 		if( items.size() > currentStepEntriesCount )
 		{
-			startStepIndex = items.size() - currentStepEntriesCount - 1;
+			if( currentStepEntriesCount > 0 )
+				startStepIndex = items.size() - currentStepEntriesCount - 1;
+			else
+				startStepIndex = items.size();
 		}
-		if( ( errorsOnly && result.getStatus() != ResultStatus.FAILED )
-				|| ( startStepLogEntryAdded && !hasChecksToProcess ) )
+		if( ( errorsOnly && !result.isHasChecksWithWarnings() ) || ( startStepLogEntryAdded && !hasChecksToProcess ) )
 		{
 			// stepCount-- ;
 			int size = items.size() - 1;
@@ -130,7 +132,7 @@ public class SecurityTestLogModel extends AbstractListModel
 				results.remove( size );
 				size-- ;
 			}
-			if( startStepIndex > 0 )
+			if( startStepIndex > 0 && size > 0 )
 			{
 				fireIntervalRemoved( this, startStepIndex, size );
 			}
@@ -187,9 +189,12 @@ public class SecurityTestLogModel extends AbstractListModel
 		int startCheckIndex = 0;
 		if( items.size() > currentCheckEntriesCount )
 		{
-			startCheckIndex = items.size() - currentCheckEntriesCount - 1;
+			if( currentCheckEntriesCount > 0 )
+				startCheckIndex = items.size() - currentCheckEntriesCount - 1;
+			else
+				startCheckIndex = items.size();
 		}
-		if( errorsOnly && securityCheckResult.getStatus() != ResultStatus.FAILED )
+		if( errorsOnly && !securityCheckResult.isHasRequestsWithWarnings() )
 		{
 			// remove all entries for the securityCheck that had no warnings
 			checkCount-- ;

@@ -48,6 +48,9 @@ public class SecurityTestStepResult implements SecurityResult
 	private boolean hasAddedRequests;
 	private ResultStatus executionProgressStatus = ResultStatus.UNKNOWN;;
 	private ResultStatus logIconStatus = ResultStatus.UNKNOWN;
+	// indicates if log entries need to be deleted when logging only warnings
+	// (status not suitable since can be canceled with warnings)
+	private boolean hasChecksWithWarnings;
 
 	public SecurityTestStepResult( TestStep testStep, TestStepResult originalResult )
 	{
@@ -168,6 +171,16 @@ public class SecurityTestStepResult implements SecurityResult
 		this.testLog.append( securityCheckResult.getSecurityTestLog() );
 
 		hasAddedRequests = true;
+
+		if( securityCheckResult.isHasRequestsWithWarnings() )
+		{
+			hasChecksWithWarnings = true;
+		}
+	}
+
+	public boolean isHasChecksWithWarnings()
+	{
+		return hasChecksWithWarnings;
 	}
 
 	public long getTimeTaken()
