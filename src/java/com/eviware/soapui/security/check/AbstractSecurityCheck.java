@@ -64,7 +64,6 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		ResponseAssertion, SecurityCheck// , RequestAssertion
 {
 	// configuration of specific request modification
-	// private SecurityCheckConfig config;
 	private boolean disabled = false;
 	private SecurityCheckResult securityCheckResult;
 	private SecurityCheckRequestResult securityCheckRequestResult;
@@ -196,32 +195,13 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		securityCheckResult = new SecurityCheckResult( this );
 		SecurityTestRunListener[] securityTestListeners = ( ( SecurityTest )getParent() ).getSecurityTestRunListeners();
 
-		// setStatus( Status.INITIALIZED );
-		// try
-		// {
-		// runSetupScript( securityTestRunner, context );
-		// }
-		// catch( Exception e )
-		// {
-		// SoapUI.log.error( "Exception during Test Execution", e );
-		//
-		// // need fix
-		// securityCheckResult.setStatus( ResultStatus.FAILED );
-		//
-		// }
 		PropertyChangeNotifier notifier = new PropertyChangeNotifier();
-
+		boolean noMutations = true;
 		while( hasNext( testStep, context ) )
 		{
+			noMutations = false;
 			if( ( ( SecurityTestRunnerImpl )securityTestRunner ).isCanceled() )
 			{
-				// if( securityCheckResult.getStatus().equals( ResultStatus.OK )
-				// || securityCheckResult.getStatus().equals( ResultStatus.FAILED )
-				// )
-				// {
-				// securityCheckResult.setExecutionProgressStatus(
-				// securityCheckResult.getStatus() );
-				// }
 				securityCheckResult.setStatus( ResultStatus.CANCELED );
 				clear();
 				return securityCheckResult;
@@ -233,8 +213,6 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 			execute( securityTestRunner, originalTestStepClone, context );
 			notifier.notifyChange();
 			securityCheckRequestResult.stopTimer();
-			// assertRequest( getSecurityCheckRequestResult().getMessageExchange(),
-			// context );
 			assertResponse( getSecurityCheckRequestResult().getMessageExchange(), context );
 			// add to summary result
 			securityCheckResult.addSecurityRequestResult( getSecurityCheckRequestResult() );
@@ -254,18 +232,10 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 			}
 		}
 
-		// try
-		// {
-		// runTearDownScript( securityTestRunner, context );
-		// }
-		// catch( Exception e )
-		// {
-		// SoapUI.log.error( "Exception during Test Execution", e );
-		//
-		// // need fix
-		// securityCheckResult.setStatus( ResultStatus.FAILED );
-		//
-		// }
+		if( noMutations)
+		{
+			securityCheckResult.setStatus( ResultStatus.NOTHING_TO_SEND );
+		}
 		return securityCheckResult;
 	}
 
@@ -338,61 +308,6 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		testStep = step;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.eviware.soapui.security.check.SecurityCheck#runTearDownScript(com.
-	 * eviware.soapui.security.SecurityTestRunner,
-	 * com.eviware.soapui.security.SecurityTestRunContext)
-	 */
-	// public Object runTearDownScript( SecurityTestRunner runner,
-	// SecurityTestRunContext context ) throws Exception
-	// {
-	// String script = getTearDownScript();
-	// if( StringUtils.isNullOrEmpty( script ) )
-	// return null;
-	//
-	// if( tearDownScriptEngine == null )
-	// {
-	// tearDownScriptEngine = SoapUIScriptEngineRegistry.create( this );
-	// tearDownScriptEngine.setScript( script );
-	// }
-	//
-	// tearDownScriptEngine.setVariable( "context", context );
-	// tearDownScriptEngine.setVariable( "testCase", this );
-	// tearDownScriptEngine.setVariable( "testRunner", runner );
-	// tearDownScriptEngine.setVariable( "log", SoapUI.ensureGroovyLog() );
-	// return tearDownScriptEngine.run();
-	// }
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.eviware.soapui.security.check.SecurityCheck#runSetupScript(com.eviware
-	 * .soapui.security.SecurityTestRunner,
-	 * com.eviware.soapui.security.SecurityTestRunContext)
-	 */
-	// public Object runSetupScript( SecurityTestRunner runner,
-	// SecurityTestRunContext context ) throws Exception
-	// {
-	// String script = getSetupScript();
-	// if( StringUtils.isNullOrEmpty( script ) )
-	// return null;
-	//
-	// if( setupScriptEngine == null )
-	// {
-	// setupScriptEngine = SoapUIScriptEngineRegistry.create( this );
-	// setupScriptEngine.setScript( script );
-	// }
-	//
-	// setupScriptEngine.setVariable( "securityScan", this );
-	// setupScriptEngine.setVariable( "context", context );
-	// setupScriptEngine.setVariable( "securityRunner", runner );
-	// setupScriptEngine.setVariable( "log", SoapUI.ensureGroovyLog() );
-	// return setupScriptEngine.run();
-	// }
 
 	/*
 	 * (non-Javadoc)
@@ -466,25 +381,6 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		return null;
 	}
 
-	// private class PropertyChangeNotifier
-	// {
-	// private AssertionStatus oldStatus;
-	//
-	// public PropertyChangeNotifier()
-	// {
-	// oldStatus = getAssertionStatus();
-	// }
-	//
-	// public void notifyChange()
-	// {
-	// AssertionStatus newStatus = getAssertionStatus();
-	//
-	// if( oldStatus != newStatus )
-	// notifyPropertyChanged( STATUS_PROPERTY, oldStatus, newStatus );
-	//
-	// oldStatus = newStatus;
-	// }
-	// }
 	private class PropertyChangeNotifier
 	{
 		private ResultStatus oldStatus;

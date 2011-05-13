@@ -252,6 +252,10 @@ public class SecurityCheckResult implements SecurityResult
 	public void detectMissingItems()
 	{
 		SecurityCheck securityCheck = getSecurityCheck();
+		if( getStatus().equals( ResultStatus.NOTHING_TO_SEND ) )
+		{
+			executionProgressStatus = ResultStatus.NOTHING_TO_SEND;
+		}
 		if( securityCheck instanceof AbstractSecurityCheckWithProperties
 				&& ( ( AbstractSecurityCheckWithProperties )securityCheck ).getParameterHolder().getParameterList().size() == 0 )
 		{
@@ -267,6 +271,7 @@ public class SecurityCheckResult implements SecurityResult
 		{
 			executionProgressStatus = ResultStatus.CANCELED;
 		}
+		
 	}
 
 	@Override

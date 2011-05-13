@@ -1,4 +1,5 @@
 /*
+
  *  soapUI, copyright (C) 2004-2011 eviware.com 
  *
  *  soapUI is free software; you can redistribute it and/or modify it under the 
@@ -127,7 +128,6 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 				{
 					XmlTreeNode mynode = treeNodes[0];
 
-					// !!!!!!!!!!!!!!work only for simple types
 					if( mynode.isLeaf() )
 					{
 						if( mynode.getSchemaType() != null && mynode.getSchemaType().getEnumerationValues() != null
@@ -176,24 +176,6 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 		}
 	}
 
-	// private XmlObjectTreeModel getXmlObjectTreeModel( TestStep testStep,
-	// SecurityCheckedParameter scp )
-	// {
-	// try
-	// {
-	// TestProperty tp = testStep.getProperty( scp.getName() );
-	// if( tp.getSchemaType() != null )
-	// {
-	// return new XmlObjectTreeModel( tp.getSchemaType().getTypeSystem(),
-	// XmlObject.Factory.parse( tp.getValue() ) );
-	// }
-	// }
-	// catch( Exception e )
-	// {
-	// SoapUI.logError( e );
-	// }
-	// return null;
-	// }
 
 	@SuppressWarnings( "unchecked" )
 	private void addMutation( SecurityTestRunContext context, PropertyMutation mutation )
@@ -320,6 +302,7 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 			return true;
 		}
 	}
+
 
 	@SuppressWarnings( "unchecked" )
 	private boolean checkIfEmptyStack( SecurityTestRunContext context )
