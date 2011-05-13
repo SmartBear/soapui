@@ -44,8 +44,8 @@ import com.eviware.soapui.security.ui.InvalidTypesTable;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel;
-import com.eviware.soapui.support.xml.XmlObjectTreeModel.XmlTreeNode;
 import com.eviware.soapui.support.xml.XmlUtils;
+import com.eviware.soapui.support.xml.XmlObjectTreeModel.XmlTreeNode;
 
 public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperties
 {
@@ -225,8 +225,8 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 				if( XmlUtils.seemsToBeXml( value ) )
 				{
 					XmlObjectTreeModel model = null;
-					model = new XmlObjectTreeModel( property.getSchemaType().getTypeSystem(),
-							XmlObject.Factory.parse( value ) );
+					model = new XmlObjectTreeModel( property.getSchemaType().getTypeSystem(), XmlObject.Factory
+							.parse( value ) );
 					for( SecurityCheckedParameter param : getParameterHolder().getParameterList() )
 					{
 						if( param.getXpath() == null || param.getXpath().trim().length() == 0 )
@@ -469,7 +469,7 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 	@Override
 	public String getHelpURL()
 	{
-		return "http://www.soapui.org";
+		return "http://soapui.org/Security/invalid-types.html";
 	}
 
 	@Override
@@ -526,8 +526,8 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperti
 		{
 			try
 			{
-				xmlObjectTreeModel = new XmlObjectTreeModel( tp.getSchemaType().getTypeSystem(),
-						XmlObject.Factory.parse( tp.getValue() ) );
+				xmlObjectTreeModel = new XmlObjectTreeModel( tp.getSchemaType().getTypeSystem(), XmlObject.Factory
+						.parse( tp.getValue() ) );
 			}
 			catch( XmlException e )
 			{

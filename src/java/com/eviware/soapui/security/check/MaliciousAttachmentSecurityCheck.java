@@ -336,7 +336,7 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 	@Override
 	public String getHelpURL()
 	{
-		return "http://www.soapui.org";
+		return "http://soapui.org/Security/malicious-attachment.html";
 	}
 
 	@Override

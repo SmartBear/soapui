@@ -346,6 +346,6 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheckWithProperties
 	@Override
 	public String getHelpURL()
 	{
-		return "http://www.soapui.org";
+		return "http://soapui.org/Security/xml-bomb.html";
 	}
 }

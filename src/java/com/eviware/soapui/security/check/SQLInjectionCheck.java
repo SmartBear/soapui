@@ -16,7 +16,6 @@ import java.awt.Dimension;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,12 +41,12 @@ import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel;
-import com.eviware.soapui.support.xml.XmlObjectTreeModel.XmlTreeNode;
 import com.eviware.soapui.support.xml.XmlUtils;
+import com.eviware.soapui.support.xml.XmlObjectTreeModel.XmlTreeNode;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.support.AForm;
+import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.impl.swing.JFormDialog;
 import com.eviware.x.impl.swing.JStringListFormField;
 
@@ -341,7 +340,7 @@ public class SQLInjectionCheck extends AbstractSecurityCheckWithProperties
 	@Override
 	public String getHelpURL()
 	{
-		return "http://www.soapui.org";
+		return "http://soapui.org/Security/sql-injection.html";
 	}
 
 	@Override
@@ -361,43 +360,44 @@ public class SQLInjectionCheck extends AbstractSecurityCheckWithProperties
 				String[] newOptions = ( String[] )evt.getNewValue();
 				String[] oldOptions = ( String[] )evt.getOldValue();
 
-//				// added
-//				if( newOptions.length > oldOptions.length )
-//				{
-//					// new element is always added to the end
-//					String[] newValue = ( String[] )evt.getNewValue();
-//					String itemToAdd = newValue[newValue.length - 1];
-//					sqlInjectionConfig.addSqlInjectionStrings( itemToAdd );
-//				}
-//				else
-//				// removed
-//				if( newOptions.length < oldOptions.length )
-//				{
-//					/*
-//					 * items with same index should be same. first one in oldOptions
-//					 * that does not match is element that is removed.
-//					 */
-//					for( int cnt = 0; cnt < oldOptions.length; cnt++ )
-//					{
-//						if( cnt < newOptions.length )
-//						{
-//							if( newOptions[cnt] != oldOptions[cnt] )
-//							{
-//								sqlInjectionConfig.removeSqlInjectionStrings( cnt );
-//								break;
-//							}
-//						}
-//						else
-//						{
-//							// this is border case, last lement in array is removed.
-//							sqlInjectionConfig.removeSqlInjectionStrings( oldOptions.length - 1 );
-//						}
-//					}
-//				}
-//				else
-//				{
-					sqlInjectionConfig.setSqlInjectionStringsArray( newOptions );
-//				}
+				// // added
+				// if( newOptions.length > oldOptions.length )
+				// {
+				// // new element is always added to the end
+				// String[] newValue = ( String[] )evt.getNewValue();
+				// String itemToAdd = newValue[newValue.length - 1];
+				// sqlInjectionConfig.addSqlInjectionStrings( itemToAdd );
+				// }
+				// else
+				// // removed
+				// if( newOptions.length < oldOptions.length )
+				// {
+				// /*
+				// * items with same index should be same. first one in oldOptions
+				// * that does not match is element that is removed.
+				// */
+				// for( int cnt = 0; cnt < oldOptions.length; cnt++ )
+				// {
+				// if( cnt < newOptions.length )
+				// {
+				// if( newOptions[cnt] != oldOptions[cnt] )
+				// {
+				// sqlInjectionConfig.removeSqlInjectionStrings( cnt );
+				// break;
+				// }
+				// }
+				// else
+				// {
+				// // this is border case, last lement in array is removed.
+				// sqlInjectionConfig.removeSqlInjectionStrings( oldOptions.length -
+				// 1 );
+				// }
+				// }
+				// }
+				// else
+				// {
+				sqlInjectionConfig.setSqlInjectionStringsArray( newOptions );
+				// }
 			}
 		} );
 

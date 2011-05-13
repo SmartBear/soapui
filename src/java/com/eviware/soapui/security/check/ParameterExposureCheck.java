@@ -346,7 +346,7 @@ public class ParameterExposureCheck extends AbstractSecurityCheckWithProperties
 	@Override
 	public String getHelpURL()
 	{
-		return "http://www.soapui.org";
+		return "http://soapui.org/Security/cross-site-scripting.html";
 	}
 
 	@Override

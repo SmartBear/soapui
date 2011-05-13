@@ -18,7 +18,6 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.GroovySecurityCheckConfig;
 import com.eviware.soapui.config.ScriptConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
-import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.security.SecurityCheckedParameter;
@@ -34,9 +33,6 @@ import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel.XmlTreeNode;
-import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AForm;
-import com.eviware.x.form.support.AField.AFieldType;
 
 /**
  * 
@@ -84,7 +80,7 @@ public class GroovySecurityCheck extends AbstractSecurityCheckWithProperties
 		}
 
 		scriptEngine = SoapUIScriptEngineRegistry.create( this );
-		
+
 		getExecutionStrategy().setImmutable( true );
 	}
 
@@ -260,7 +256,7 @@ public class GroovySecurityCheck extends AbstractSecurityCheckWithProperties
 	@Override
 	public String getHelpURL()
 	{
-		return "http://www.soapui.org";
+		return "http://soapui.org/Security/script-custom-scan.html";
 	}
 
 }

@@ -44,8 +44,8 @@ import com.eviware.soapui.support.SecurityCheckUtil;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel;
-import com.eviware.soapui.support.xml.XmlObjectTreeModel.XmlTreeNode;
 import com.eviware.soapui.support.xml.XmlUtils;
+import com.eviware.soapui.support.xml.XmlObjectTreeModel.XmlTreeNode;
 
 public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 {
@@ -157,8 +157,8 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 						else
 						{
 							SchemaTypeImpl simpleType = ( SchemaTypeImpl )mynode.getSchemaType();
-							XmlObjectTreeModel model2 = new XmlObjectTreeModel( simpleType.getTypeSystem(),
-									simpleType.getParseObject() );
+							XmlObjectTreeModel model2 = new XmlObjectTreeModel( simpleType.getTypeSystem(), simpleType
+									.getParseObject() );
 							extractRestrictions( model2, context, mynode, model, scp, stsmap );
 						}
 					}
@@ -175,7 +175,6 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 			addMutation( context, pm );
 		}
 	}
-
 
 	@SuppressWarnings( "unchecked" )
 	private void addMutation( SecurityTestRunContext context, PropertyMutation mutation )
@@ -303,7 +302,6 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 		}
 	}
 
-
 	@SuppressWarnings( "unchecked" )
 	private boolean checkIfEmptyStack( SecurityTestRunContext context )
 	{
@@ -335,7 +333,7 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 	@Override
 	public String getHelpURL()
 	{
-		return "http://www.soapui.org";
+		return "http://soapui.org/Security/boundary-check.html";
 	}
 
 	public class RestrictionLabel
@@ -388,8 +386,8 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 		{
 			try
 			{
-				xmlObjectTreeModel = new XmlObjectTreeModel( tp.getSchemaType().getTypeSystem(),
-						XmlObject.Factory.parse( tp.getValue() ) );
+				xmlObjectTreeModel = new XmlObjectTreeModel( tp.getSchemaType().getTypeSystem(), XmlObject.Factory
+						.parse( tp.getValue() ) );
 			}
 			catch( XmlException e )
 			{
@@ -414,8 +412,8 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 				SchemaTypeImpl simpleType = ( SchemaTypeImpl )treeNodes[0].getSchemaType();
 				if( simpleType != null && !simpleType.isNoType() )
 				{
-					XmlObjectTreeModel model2 = new XmlObjectTreeModel( simpleType.getTypeSystem(),
-							simpleType.getParseObject() );
+					XmlObjectTreeModel model2 = new XmlObjectTreeModel( simpleType.getTypeSystem(), simpleType
+							.getParseObject() );
 					list = BoundaryRestrictionUtill.getRestrictions( model2.getRootNode(), new ArrayList<String>() );
 					if( list.isEmpty() )
 					{

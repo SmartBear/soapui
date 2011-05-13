@@ -40,12 +40,12 @@ import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel;
-import com.eviware.soapui.support.xml.XmlObjectTreeModel.XmlTreeNode;
 import com.eviware.soapui.support.xml.XmlUtils;
+import com.eviware.soapui.support.xml.XmlObjectTreeModel.XmlTreeNode;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.support.AForm;
+import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.impl.swing.JFormDialog;
 import com.eviware.x.impl.swing.JStringListFormField;
 
@@ -178,8 +178,8 @@ public class XPathInjectionSecurityCheck extends AbstractSecurityCheckWithProper
 				if( XmlUtils.seemsToBeXml( value ) )
 				{
 					XmlObjectTreeModel model = null;
-					model = new XmlObjectTreeModel( property.getSchemaType().getTypeSystem(),
-							XmlObject.Factory.parse( value ) );
+					model = new XmlObjectTreeModel( property.getSchemaType().getTypeSystem(), XmlObject.Factory
+							.parse( value ) );
 					for( SecurityCheckedParameter param : getParameterHolder().getParameterList() )
 					{
 						if( !param.isChecked() )
@@ -189,8 +189,8 @@ public class XPathInjectionSecurityCheck extends AbstractSecurityCheckWithProper
 						{
 							if( parameterMutations.containsKey( param ) )
 							{
-								testStep.getProperties().get( param.getName() )
-										.setValue( parameterMutations.get( param ).get( 0 ) );
+								testStep.getProperties().get( param.getName() ).setValue(
+										parameterMutations.get( param ).get( 0 ) );
 								params.put( param.getLabel(), parameterMutations.get( param ).get( 0 ) );
 								parameterMutations.get( param ).remove( 0 );
 							}
@@ -258,8 +258,8 @@ public class XPathInjectionSecurityCheck extends AbstractSecurityCheckWithProper
 
 					XmlObjectTreeModel model = null;
 
-					model = new XmlObjectTreeModel( property.getSchemaType().getTypeSystem(),
-							XmlObject.Factory.parse( value ) );
+					model = new XmlObjectTreeModel( property.getSchemaType().getTypeSystem(), XmlObject.Factory
+							.parse( value ) );
 
 					XmlTreeNode[] nodes = model.selectTreeNodes( context.expand( parameter.getXpath() ) );
 
@@ -298,7 +298,7 @@ public class XPathInjectionSecurityCheck extends AbstractSecurityCheckWithProper
 	@Override
 	public String getHelpURL()
 	{
-		return "http://www.soapui.org";
+		return "http://soapui.org/Security/xpath-injection.html";
 	}
 
 	@Override
@@ -353,39 +353,39 @@ public class XPathInjectionSecurityCheck extends AbstractSecurityCheckWithProper
 			{
 				String[] newOptions = ( String[] )evt.getNewValue();
 				String[] oldOptions = ( String[] )evt.getOldValue();
-//				// added
-//				if( newOptions.length > oldOptions.length )
-//				{
-//					// new element is always added to the end
-//					String[] newValue = ( String[] )evt.getNewValue();
-//					String itemToAdd = newValue[newValue.length - 1];
-//					xpathList.addXpathList( itemToAdd );
-//				}
-//				// removed
-//				if( newOptions.length < oldOptions.length )
-//				{
-//					/*
-//					 * items with same index should me same. first one in oldOptions
-//					 * that does not match is element that is removed.
-//					 */
-//					for( int cnt = 0; cnt < oldOptions.length; cnt++ )
-//					{
-//						if( cnt < newOptions.length )
-//						{
-//							if( newOptions[cnt] != oldOptions[cnt] )
-//							{
-//								xpathList.removeXpathList( cnt );
-//								break;
-//							}
-//						}
-//						else
-//						{
-//							// this is border case, last lement in array is removed.
-//							xpathList.removeXpathList( oldOptions.length - 1 );
-//						}
-//					}
-//				}
-				
+				// // added
+				// if( newOptions.length > oldOptions.length )
+				// {
+				// // new element is always added to the end
+				// String[] newValue = ( String[] )evt.getNewValue();
+				// String itemToAdd = newValue[newValue.length - 1];
+				// xpathList.addXpathList( itemToAdd );
+				// }
+				// // removed
+				// if( newOptions.length < oldOptions.length )
+				// {
+				// /*
+				// * items with same index should me same. first one in oldOptions
+				// * that does not match is element that is removed.
+				// */
+				// for( int cnt = 0; cnt < oldOptions.length; cnt++ )
+				// {
+				// if( cnt < newOptions.length )
+				// {
+				// if( newOptions[cnt] != oldOptions[cnt] )
+				// {
+				// xpathList.removeXpathList( cnt );
+				// break;
+				// }
+				// }
+				// else
+				// {
+				// // this is border case, last lement in array is removed.
+				// xpathList.removeXpathList( oldOptions.length - 1 );
+				// }
+				// }
+				// }
+
 				xpathList.setXpathListArray( newOptions );
 			}
 		} );

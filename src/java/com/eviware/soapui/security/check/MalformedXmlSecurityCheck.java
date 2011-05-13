@@ -154,10 +154,11 @@ public class MalformedXmlSecurityCheck extends AbstractSecurityCheckWithProperti
 								// node
 								// start
 								int cnt2 = 0;
-								// if have more than one node that matches xpath, find next one.
+								// if have more than one node that matches xpath, find
+								// next one.
 								while( cnt2 < cnt )
 								{
-									start = value.indexOf( "<" + nodes[cnt].getNodeName(), start + 1);
+									start = value.indexOf( "<" + nodes[cnt].getNodeName(), start + 1 );
 									cnt2++ ;
 								}
 								// get node xml
@@ -231,7 +232,7 @@ public class MalformedXmlSecurityCheck extends AbstractSecurityCheckWithProperti
 											int cnt2 = 0;
 											while( cnt2 < cnt )
 											{
-												start = value.indexOf( "<" + nodes[cnt].getNodeName(), start + 1);
+												start = value.indexOf( "<" + nodes[cnt].getNodeName(), start + 1 );
 												cnt2++ ;
 											}
 											String nodeXml = getXmlForNode( nodes[cnt] );
@@ -486,7 +487,7 @@ public class MalformedXmlSecurityCheck extends AbstractSecurityCheckWithProperti
 	@Override
 	public String getHelpURL()
 	{
-		return "http://www.soapui.org";
+		return "http://soapui.org/Security/malformed-xml.html";
 	}
 
 	@Override
