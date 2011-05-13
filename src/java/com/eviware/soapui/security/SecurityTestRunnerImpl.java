@@ -157,18 +157,19 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 			SecurityTestStepResult securityStepResult = new SecurityTestStepResult( currentStep, stepResult );
 			for( int i = 0; i < securityTestListeners.length; i++ )
 			{
-				if( Arrays.asList( getTestCase().getTestRunListeners() ).contains( securityTestListeners[i] ) )
+				if( Arrays.asList( getSecurityTest().getSecurityTestRunListeners() ).contains( securityTestListeners[i] ) )
 					securityTestListeners[i].afterOriginalStep( this, getRunContext(), securityStepResult );
 			}
 
 			for( int i = 0; i < securityTestListeners.length; i++ )
 			{
-				if( Arrays.asList( getTestCase().getTestRunListeners() ).contains( securityTestListeners[i] ) )
+				if( Arrays.asList( getSecurityTest().getSecurityTestRunListeners() ).contains( securityTestListeners[i] ) )
 					securityTestListeners[i].beforeStep( this, getRunContext(), stepResult );
 			}
 			for( int i = 0; i < securityTestStepListeners.length; i++ )
 			{
-				if( Arrays.asList( getTestCase().getTestRunListeners() ).contains( securityTestStepListeners[i] ) )
+				if( Arrays.asList( getSecurityTest().getSecurityTestRunListeners() )
+						.contains( securityTestStepListeners[i] ) )
 					securityTestStepListeners[i].beforeStep( this, getRunContext(), stepResult );
 			}
 			Map<String, List<SecurityCheck>> secCheckMap = securityTest.getSecurityChecksMap();
@@ -214,12 +215,13 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 			}
 			for( int i = 0; i < securityTestStepListeners.length; i++ )
 			{
-				if( Arrays.asList( getTestCase().getTestRunListeners() ).contains( securityTestStepListeners[i] ) )
+				if( Arrays.asList( getSecurityTest().getSecurityTestRunListeners() )
+						.contains( securityTestStepListeners[i] ) )
 					securityTestStepListeners[i].afterStep( this, getRunContext(), securityStepResult );
 			}
 			for( int i = 0; i < securityTestListeners.length; i++ )
 			{
-				if( Arrays.asList( getTestCase().getTestRunListeners() ).contains( securityTestListeners[i] ) )
+				if( Arrays.asList( getSecurityTest().getSecurityTestRunListeners() ).contains( securityTestListeners[i] ) )
 					securityTestListeners[i].afterStep( this, getRunContext(), securityStepResult );
 			}
 			if( jumpExit )
@@ -244,12 +246,12 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 		SecurityCheckResult result = null;
 		for( int j = 0; j < securityTestStepListeners.length; j++ )
 		{
-			if( Arrays.asList( getTestCase().getTestRunListeners() ).contains( securityTestStepListeners[j] ) )
+			if( Arrays.asList( getSecurityTest().getSecurityTestRunListeners() ).contains( securityTestStepListeners[j] ) )
 				securityTestStepListeners[j].beforeSecurityCheck( this, runContext, securityCheck );
 		}
 		for( int j = 0; j < securityTestListeners.length; j++ )
 		{
-			if( Arrays.asList( getTestCase().getTestRunListeners() ).contains( securityTestListeners[j] ) )
+			if( Arrays.asList( getSecurityTest().getSecurityTestRunListeners() ).contains( securityTestListeners[j] ) )
 				securityTestListeners[j].beforeSecurityCheck( this, runContext, securityCheck );
 		}
 		result = securityCheck.run( cloneForSecurityCheck( ( WsdlTestStep )currentStep ), runContext, this );
@@ -259,12 +261,12 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 		}
 		for( int j = 0; j < securityTestStepListeners.length; j++ )
 		{
-			if( Arrays.asList( getTestCase().getTestRunListeners() ).contains( securityTestStepListeners[j] ) )
+			if( Arrays.asList( getSecurityTest().getSecurityTestRunListeners() ).contains( securityTestStepListeners[j] ) )
 				securityTestStepListeners[j].afterSecurityCheck( this, runContext, result );
 		}
 		for( int j = 0; j < securityTestListeners.length; j++ )
 		{
-			if( Arrays.asList( getTestCase().getTestRunListeners() ).contains( securityTestListeners[j] ) )
+			if( Arrays.asList( getSecurityTest().getSecurityTestRunListeners() ).contains( securityTestListeners[j] ) )
 				securityTestListeners[j].afterSecurityCheck( this, runContext, result );
 		}
 		return result;
@@ -291,8 +293,8 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 		{
 			try
 			{
-				if( Arrays.asList( getTestCase().getTestRunListeners() ).contains( securityTestListeners[i] ) )
-				securityTestListeners[i].beforeRun( this, getRunContext() );
+				if( Arrays.asList( getSecurityTest().getSecurityTestRunListeners() ).contains( securityTestListeners[i] ) )
+					securityTestListeners[i].beforeRun( this, getRunContext() );
 			}
 			catch( Throwable t )
 			{
@@ -322,7 +324,7 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 		{
 			try
 			{
-				if( Arrays.asList( getTestCase().getTestRunListeners() ).contains( securityTestListeners[i] ) )
+				if( Arrays.asList( getSecurityTest().getSecurityTestRunListeners() ).contains( securityTestListeners[i] ) )
 					securityTestListeners[i].afterRun( this, getRunContext() );
 			}
 			catch( Throwable t )
