@@ -301,6 +301,8 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 				return;
 
 			SecurityCheck securityCheck = securityTest.addNewSecurityCheck( testStep, name );
+			
+			securityTestTree.setSelectionPath( new TreePath( node.getPath() ) );
 
 			if( securityCheck == null )
 			{
@@ -376,7 +378,7 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 			{
 
 				securityTest.removeSecurityCheck( testStep, ( SecurityCheck )securityCheck );
-//				cellRender.remove( node );
+				// cellRender.remove( node );
 			}
 		}
 	}
@@ -704,7 +706,7 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 	public void securityCheckAdded( SecurityCheck securityCheck )
 	{
 		treeModel.addSecurityCheckNode( securityTestTree, securityCheck );
-		
+
 	}
 
 	@Override
@@ -712,7 +714,7 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 	{
 		cellRender.remove( treeModel.getSecurityCheckNode( securityCheck ) );
 		treeModel.removeSecurityCheckNode( securityCheck );
-		
+
 	}
 
 	/**
