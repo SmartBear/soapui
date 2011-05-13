@@ -83,6 +83,7 @@ public class AttachmentUtils
 	public static final QName XOP_HREF_QNAME = new QName( "href" );
 	private static final QName XOP_INCLUDE_QNAME = new QName( "http://www.w3.org/2004/08/xop/include", "Include" );
 	public static final String ROOTPART_SOAPUI_ORG = "<rootpart@soapui.org>";
+	public static final long MAX_SIZE_IN_MEMORY_ATTACHMENT = 500 * 1024;
 
 	public static boolean prepareMessagePart( WsdlAttachmentContainer container, MimeMultipart mp,
 			MessageXmlPart messagePart, StringToStringMap contentIds ) throws Exception, MessagingException
@@ -204,8 +205,8 @@ public class AttachmentUtils
 								{
 									if( new File( filename ).exists() )
 									{
-									inlineData( cursor, schemaType, new FileInputStream( filename ) );
-								}
+										inlineData( cursor, schemaType, new FileInputStream( filename ) );
+									}
 									else
 									{
 										Attachment att = getAttachmentForFilename( container, filename );
@@ -641,10 +642,13 @@ public class AttachmentUtils
 			List<Attachment> attachments ) throws MessagingException
 	{
 		MimeMultipart multipart = new MimeMultipart( "mixed" );
+		long totalSize = 0;
+
 		for( int c = 0; c < attachments.size(); c++ )
 		{
 			Attachment att = attachments.get( c );
 			String contentType = att.getContentType();
+			totalSize += att.getSize();
 
 			MimeBodyPart part = contentType.startsWith( "text/" ) ? new MimeBodyPart() : new PreencodedMimeBodyPart(
 					"binary" );
@@ -655,7 +659,15 @@ public class AttachmentUtils
 		}
 
 		MimeBodyPart part = new PreencodedMimeBodyPart( "binary" );
-		part.setDataHandler( new DataHandler( new MultipartAttachmentDataSource( multipart ) ) );
+
+		if( totalSize > MAX_SIZE_IN_MEMORY_ATTACHMENT )
+		{
+			part.setDataHandler( new DataHandler( new MultipartAttachmentFileDataSource( multipart ) ) );
+		}
+		else
+		{
+			part.setDataHandler( new DataHandler( new MultipartAttachmentDataSource( multipart ) ) );
+		}
 
 		Attachment attachment = attachments.get( 0 );
 		initPartContentId( contentIds, part, attachment, true );

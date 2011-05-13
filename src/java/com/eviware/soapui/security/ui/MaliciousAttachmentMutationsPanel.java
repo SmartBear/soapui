@@ -36,13 +36,13 @@ import com.eviware.soapui.security.support.MaliciousAttachmentListToTableHolder;
 import com.eviware.soapui.security.support.MaliciousAttachmentReplaceTableModel;
 import com.eviware.soapui.security.support.MaliciousAttachmentTableModel;
 import com.eviware.soapui.security.tools.AttachmentElement;
-import com.eviware.soapui.security.tools.RandomFile;
 import com.eviware.soapui.settings.ProjectSettings;
 import com.eviware.soapui.support.HelpActionMarker;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
+import com.eviware.soapui.support.editor.inspectors.attachments.ContentTypeHandler;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.XFormField;
 import com.eviware.x.form.XFormFieldListener;
@@ -63,7 +63,6 @@ public class MaliciousAttachmentMutationsPanel
 	private JButton addReplacementButton;
 	private JButton removeReplacementButton;
 	private WsdlRequest request;
-	// private AttachmentContainer container;
 
 	private MaliciousAttachmentListToTableHolder holder = new MaliciousAttachmentListToTableHolder();
 
@@ -71,19 +70,6 @@ public class MaliciousAttachmentMutationsPanel
 	{
 		this.config = config;
 		this.request = request;
-
-		// if( testStep instanceof WsdlTestRequestStep )
-		// {
-		// WsdlTestRequestStep wsdlTestRequestStep = ( WsdlTestRequestStep
-		// )testStep;
-		//
-		// if( wsdlTestRequestStep.getTestRequest() instanceof
-		// MutableAttachmentContainer )
-		// {
-		// container = ( MutableAttachmentContainer
-		// )wsdlTestRequestStep.getTestRequest();
-		// }
-		// }
 
 		dialog = ( JFormDialog )ADialogBuilder.buildDialog( MutationSettings.class );
 		dialog.getFormField( MutationSettings.MUTATIONS_PANEL ).setProperty( "component", createMutationsPanel() );
@@ -310,9 +296,6 @@ public class MaliciousAttachmentMutationsPanel
 				fileChooser = new JFileChooser();
 
 			}
-
-			// String root = PathUtils.getExpandedResourceRoot(
-			// container.getModelItem() );
 			String root = ProjectSettings.PROJECT_ROOT;
 
 			if( StringUtils.hasContent( root ) )
@@ -409,8 +392,8 @@ public class MaliciousAttachmentMutationsPanel
 
 				try
 				{
-					File file = new RandomFile( newSize, "attachment", contentType ).next();
-
+					File file = File.createTempFile( StringUtils.createFileName( "attachment", '-' ), "."
+							+ ContentTypeHandler.getExtensionForContentType( contentType ) );
 					String filename = file.getAbsolutePath();
 					Boolean enabled = new Boolean( true );
 					Boolean cached = new Boolean( true );

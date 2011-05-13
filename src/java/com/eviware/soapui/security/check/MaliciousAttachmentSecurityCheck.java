@@ -26,9 +26,9 @@ import com.eviware.soapui.config.MaliciousAttachmentSecurityCheckConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.config.StrategyTypeConfig;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
-import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStepResult;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Attachment;
+import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTestRunContext;
@@ -74,6 +74,32 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 	{
 		getConfig().setConfig( MaliciousAttachmentSecurityCheckConfig.Factory.newInstance() );
 		config = ( MaliciousAttachmentSecurityCheckConfig )getConfig().getConfig();
+	}
+
+	private void generateFiles()
+	{
+		if( config != null )
+		{
+			for( MaliciousAttachmentElementConfig element : config.getElementList() )
+			{
+				for( MaliciousAttachmentConfig value : element.getGenerateAttachmentList() )
+				{
+					File file = new File( value.getFilename() );
+
+					try
+					{
+						if( !file.exists() || file.length() == 0 )
+						{
+							file = new RandomFile( value.getSize(), value.getFilename(), value.getContentType() ).next();
+						}
+					}
+					catch( IOException e )
+					{
+						SoapUI.logError( e );
+					}
+				}
+			}
+		}
 	}
 
 	@Override
@@ -203,15 +229,8 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 			{
 				if( !file.exists() )
 				{
-					if( generated )
-					{
-						file = new RandomFile( value.getSize(), "attachment", value.getContentType() ).next();
-					}
-					else
-					{
-						UISupport.showErrorMessage( "Missing file: " + file.getName() );
-						return;
-					}
+					UISupport.showErrorMessage( "Missing file: " + file.getName() );
+					return;
 				}
 
 				addAttachment( testStep, file, value.getContentType(), generated, value.getCached() );
@@ -228,10 +247,9 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 	{
 		try
 		{
+			generateFiles();
 			updateRequestContent( testStep, context );
-			WsdlTestRequestStepResult message = ( WsdlTestRequestStepResult )testStep.run(
-					( TestCaseRunner )securityTestRunner, context );
-			message.setRequestContent( "", false );
+			MessageExchange message = ( MessageExchange )testStep.run( ( TestCaseRunner )securityTestRunner, context );
 		}
 		catch( Exception e )
 		{
@@ -253,11 +271,6 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 		request.setInlineFilesEnabled( false );
 		Attachment attach = request.attachFile( file, cache );
 		attach.setContentType( contentType );
-
-		if( generated )
-		{
-			file.deleteOnExit();
-		}
 
 		return attach;
 	}
