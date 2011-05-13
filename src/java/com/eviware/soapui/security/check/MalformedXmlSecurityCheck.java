@@ -149,16 +149,20 @@ public class MalformedXmlSecurityCheck extends AbstractSecurityCheckWithProperti
 							for( int cnt = 0; cnt < nodes.length; cnt++ )
 							{
 								// find right node
+								// this finds where node that needs updateing begins
 								int start = value.indexOf( "<" + nodes[cnt].getNodeName() ); // keeps
 								// node
 								// start
 								int cnt2 = 0;
+								// if have more than one node that matches xpath, find next one.
 								while( cnt2 < cnt )
 								{
-									start = value.indexOf( "<" + nodes[cnt].getNodeName(), start );
+									start = value.indexOf( "<" + nodes[cnt].getNodeName(), start + 1);
 									cnt2++ ;
 								}
+								// get node xml
 								String nodeXml = getXmlForNode( nodes[cnt] );
+								// find end of target xml node
 								int end = value.indexOf( "<" + nodes[cnt].getNodeName(), start + 1 );
 								if( end <= 0 )
 								{
@@ -174,6 +178,7 @@ public class MalformedXmlSecurityCheck extends AbstractSecurityCheckWithProperti
 								}
 								if( end <= 0 || end <= start )
 									break;
+								// replace node with right value
 								buffer.replace( start, end + 1, parameterMutations.get( param ).get( 0 ) );
 							}
 							params.put( param.getLabel(), parameterMutations.get( param ).get( 0 ) );
@@ -226,7 +231,7 @@ public class MalformedXmlSecurityCheck extends AbstractSecurityCheckWithProperti
 											int cnt2 = 0;
 											while( cnt2 < cnt )
 											{
-												start = value.indexOf( "<" + nodes[cnt].getNodeName(), start );
+												start = value.indexOf( "<" + nodes[cnt].getNodeName(), start + 1);
 												cnt2++ ;
 											}
 											String nodeXml = getXmlForNode( nodes[cnt] );
