@@ -11,6 +11,7 @@
  */
 package com.eviware.soapui.security.assertion;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
@@ -59,6 +60,8 @@ import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationBuilder;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
 import com.eviware.x.form.XFormDialog;
+import com.eviware.x.form.XFormField;
+import com.eviware.x.form.XFormFieldListener;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AForm;
@@ -120,14 +123,14 @@ public class CrossSiteScriptAssertion extends WsdlMessageAssertion implements Re
 		if( checkResponse )
 		{
 			throwExceptionCheckResponse = checkResponse( messageExchange, context, parameterExposureCheckConfig,
-					 assertionErrorList );
+					assertionErrorList );
 		}
 
 		boolean throwExceptionCheckSeparateHTML = false;
 		if( checkSeparateHTML )
 		{
 			throwExceptionCheckSeparateHTML = checkSeparateHTML( messageExchange, context, testStep, securityTestRunner,
-					urls, parameterExposureCheckConfig,  assertionErrorList );
+					urls, parameterExposureCheckConfig, assertionErrorList );
 		}
 
 		if( throwExceptionCheckResponse || throwExceptionCheckSeparateHTML )
@@ -140,8 +143,7 @@ public class CrossSiteScriptAssertion extends WsdlMessageAssertion implements Re
 
 	private boolean checkSeparateHTML( MessageExchange messageExchange, SubmitContext context, TestStep testStep,
 			SecurityTestRunner securityTestRunner, List<String> urls,
-			ParameterExposureCheckConfig parameterExposureCheckConfig,
-			List<AssertionError> assertionErrorList )
+			ParameterExposureCheckConfig parameterExposureCheckConfig, List<AssertionError> assertionErrorList )
 	{
 		boolean throwException = false;
 		for( String url : urls )
@@ -242,8 +244,8 @@ public class CrossSiteScriptAssertion extends WsdlMessageAssertion implements Re
 	{
 		public Factory()
 		{
-			super( CrossSiteScriptAssertion.ID, CrossSiteScriptAssertion.LABEL,
-					CrossSiteScriptAssertion.class, ParameterExposureCheck.class );
+			super( CrossSiteScriptAssertion.ID, CrossSiteScriptAssertion.LABEL, CrossSiteScriptAssertion.class,
+					ParameterExposureCheck.class );
 
 		}
 
@@ -358,24 +360,38 @@ public class CrossSiteScriptAssertion extends WsdlMessageAssertion implements Re
 		dialog.setSize( 600, 600 );
 		dialog.setBooleanValue( CrossSiteScripSeparateHTMLConfigDialog.CHECK_RESPONSE, checkResponse );
 		dialog.setBooleanValue( CrossSiteScripSeparateHTMLConfigDialog.CHECK_SEPARATE_HTML, checkSeparateHTML );
+		final GroovyEditorComponent groovyEditorComponent = buildGroovyPanel();
 		dialog.getFormField( CrossSiteScripSeparateHTMLConfigDialog.GROOVY ).setProperty( "component",
-				new JScrollPane( buildGroovyPanel() ) );
+				new JScrollPane( groovyEditorComponent ) );
 		dialog.getFormField( CrossSiteScripSeparateHTMLConfigDialog.GROOVY ).setProperty( "dimension",
 				new Dimension( 450, 400 ) );
+		dialog.getFormField( CrossSiteScripSeparateHTMLConfigDialog.CHECK_SEPARATE_HTML ).addFormFieldListener(
+				new XFormFieldListener()
+				{
+
+					@Override
+					public void valueChanged( XFormField sourceField, String newValue, String oldValue )
+					{
+						groovyEditorComponent.setEnabled( new Boolean( newValue ) );
+					}
+
+				} );
+
+		groovyEditorComponent.setEnabled( checkSeparateHTML );
 	}
 
 	// TODO : update help URL
 	@AForm( description = "", name = "Cross Site Scripting on Separate HTML", helpUrl = HelpUrls.HELP_URL_ROOT )
 	protected interface CrossSiteScripSeparateHTMLConfigDialog
 	{
-		@AField( description = "Check Imediate Response", name = "Check Response", type = AFieldType.BOOLEAN )
-		public final static String CHECK_RESPONSE = "Check Response";
+		@AField( description = "Check Imediate Response", name = "###Check Response", type = AFieldType.BOOLEAN )
+		public final static String CHECK_RESPONSE = "###Check Response";
 
-		@AField( description = "Check Response on URLs Specified in Script", name = "Check Separate HTML", type = AFieldType.BOOLEAN )
-		public final static String CHECK_SEPARATE_HTML = "Check Separate HTML";
+		@AField( description = "Check Response from URLs specified in Custom Script", name = "###Check Separate HTML", type = AFieldType.BOOLEAN )
+		public final static String CHECK_SEPARATE_HTML = "###Check Separate HTML";
 
-		@AField( description = "", name = "Custom script that returns list of urls to check for XSS", type = AFieldType.LABEL )
-		public final static String LABEL = "Custom script that returns list of urls to check for XSS";
+		@AField( description = "", name = "Enter Custom Script that returns a list of URLs to check for Cross Site Scripts ", type = AFieldType.LABEL )
+		public final static String LABEL = "Enter Custom Script that returns a list of URLs to check for Cross Site Scripts ";
 
 		@AField( description = "Groovy script", name = "###Groovy url list", type = AFieldType.COMPONENT )
 		public final static String GROOVY = "###Groovy url list";
