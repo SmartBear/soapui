@@ -45,7 +45,6 @@ public class SecurityCheckRequestResult implements SecurityResult
 	private long size;
 	private boolean discarded;
 	private MessageExchange messageExchange;
-	public StringBuffer testLog = new StringBuffer();
 	private DefaultActionList actionList;
 	private boolean addedAction;
 

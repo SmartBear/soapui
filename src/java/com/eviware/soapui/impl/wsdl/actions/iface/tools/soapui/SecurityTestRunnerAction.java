@@ -17,7 +17,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.StringTokenizer;
 
 import javax.swing.Action;
 
@@ -62,6 +61,7 @@ public class SecurityTestRunnerAction extends AbstractToolsAction<WsdlProject>
 	private static final String TESTCASE = "TestCase";
 	private static final String TESTRUNNERPATH = "Security TestRunner Path";
 	private static final String SECURITY_TEST_NAME = "SecurityTestName";
+	private static final String SAVEPROJECT = "Save Project";
 
 	private XForm mainForm;
 
@@ -169,6 +169,7 @@ public class SecurityTestRunnerAction extends AbstractToolsAction<WsdlProject>
 		} );
 
 		mainForm.addComboBox( SECURITY_TEST_NAME, new String[] {}, "The Security Test to run" );
+		mainForm.addCheckBox( SAVEPROJECT, "Saves project before running" ).setEnabled( !modelItem.isRemote() );
 		mainForm.addSeparator();
 		mainForm.addTextField( TESTRUNNERPATH, "Folder containing SecurityTestRunner.bat to use", XForm.FieldType.FOLDER );
 
@@ -233,6 +234,8 @@ public class SecurityTestRunnerAction extends AbstractToolsAction<WsdlProject>
 
 			testCases.add( 0, ALL_VALUE );
 			mainForm.setOptions( TESTCASE, testCases.toArray() );
+
+			mainForm.getComponent( SAVEPROJECT ).setEnabled( !modelItem.isRemote() );
 		}
 
 		StringToStringMap values = super.initValues( modelItem, param );
@@ -270,6 +273,16 @@ public class SecurityTestRunnerAction extends AbstractToolsAction<WsdlProject>
 		else
 			builder.directory( new File( testRunnerDir ) );
 
+		if( mainForm.getComponentValue( SAVEPROJECT ).equals( Boolean.TRUE.toString() ) )
+		{
+			modelItem.save();
+		}
+		else if( StringUtils.isNullOrEmpty( modelItem.getPath() ) )
+		{
+			UISupport.showErrorMessage( "Project [" + modelItem.getName() + "] has not been saved to file." );
+			return;
+		}
+
 		if( log.isDebugEnabled() )
 			log.debug( "Launching security testrunner in directory [" + builder.directory() + "] with arguments ["
 					+ args.toString() + "]" );
@@ -299,29 +312,13 @@ public class SecurityTestRunnerAction extends AbstractToolsAction<WsdlProject>
 		if( !values.get( TESTCASE ).equals( ALL_VALUE ) )
 			builder.addString( TESTCASE, "-c", "" );
 
-		addPropertyArguments( builder );
+		if( !values.get( SECURITY_TEST_NAME ).equals( ALL_VALUE ) )
+			builder.addString( SECURITY_TEST_NAME, "-n", "" );
 
 		builder.addArgs( new String[] { modelItem.getPath() } );
 
 		addToolArgs( values, builder );
 
 		return builder;
-	}
-
-	private void addPropertyArguments( ArgumentBuilder builder )
-	{
-		List<String> propertyArguments = new ArrayList<String>();
-
-		builder.addArgs( propertyArguments.toArray( new String[propertyArguments.size()] ) );
-	}
-
-	private void addProperties( List<String> propertyArguments, String propertiyDomain, String arg )
-	{
-		StringTokenizer tokenizer = new StringTokenizer( getDialog().getValue( propertiyDomain ) );
-
-		while( tokenizer.hasMoreTokens() )
-		{
-			propertyArguments.add( arg + tokenizer.nextToken() );
-		}
 	}
 }

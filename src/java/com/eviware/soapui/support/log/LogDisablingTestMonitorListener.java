@@ -65,8 +65,9 @@ public final class LogDisablingTestMonitorListener extends TestMonitorListenerAd
 	{
 		if( securityTestRunners.isEmpty() )
 		{
-			Logger.getLogger( SoapUI.class ).info( "Disabling logs during securitytests" );
-			Logger.getLogger( "httpclient.wire" ).setLevel( Level.OFF );
+			// Logger.getLogger( SoapUI.class ).info(
+			// "Disabling logs during securitytests" );
+			// Logger.getLogger( "httpclient.wire" ).setLevel( Level.OFF );
 
 			// if( !SoapUI.getSettings().getBoolean(
 			// UISettings.DONT_DISABLE_GROOVY_LOG ) )

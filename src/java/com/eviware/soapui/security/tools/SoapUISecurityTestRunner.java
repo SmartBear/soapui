@@ -54,10 +54,14 @@ import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.model.testsuite.TestSuiteRunner;
 import com.eviware.soapui.report.JUnitReportCollector;
 import com.eviware.soapui.security.SecurityTest;
-import com.eviware.soapui.security.SecurityTestRunnerImpl;
+import com.eviware.soapui.security.SecurityTestRunContext;
+import com.eviware.soapui.security.SecurityTestRunner;
+import com.eviware.soapui.security.result.SecurityCheckRequestResult;
+import com.eviware.soapui.security.result.SecurityCheckResult;
+import com.eviware.soapui.security.result.SecurityResult.ResultStatus;
+import com.eviware.soapui.security.support.SecurityTestRunListenerAdapter;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
-import com.eviware.soapui.support.types.StringToObjectMap;
 import com.eviware.soapui.tools.AbstractSoapUITestRunner;
 
 /**
@@ -90,8 +94,12 @@ public class SoapUISecurityTestRunner extends AbstractSoapUITestRunner
 	private int testCaseCount;
 	private int testStepCount;
 	private int testAssertionCount;
+	private int securityTestCount;
+	private int securityScanCount;
+	private int securityScanRequestCount;
+	private int securityScanAlertCount;
 
-	private boolean printReport;
+	private boolean printReport = true;
 	private boolean exportAll;
 	private boolean ignoreErrors;
 	private boolean junitReport;
@@ -146,7 +154,6 @@ public class SoapUISecurityTestRunner extends AbstractSoapUITestRunner
 	private void setSecurityTestName( String securityTestName )
 	{
 		this.securityTestName = securityTestName;
-
 	}
 
 	private String validateTestCase()
@@ -433,10 +440,10 @@ public class SoapUISecurityTestRunner extends AbstractSoapUITestRunner
 		System.out.println( "Time Taken: " + timeTaken + "ms" );
 		System.out.println( "Total TestSuites: " + testSuiteCount );
 		System.out.println( "Total TestCases: " + testCaseCount + " (" + failedTests.size() + " failed)" );
-		System.out.println( "Total TestSteps: " + testStepCount );
-		System.out.println( "Total Request Assertions: " + testAssertionCount );
-		System.out.println( "Total Failed Assertions: " + assertions.size() );
-		System.out.println( "Total Exported Results: " + exportCount );
+		System.out.println( "Total SecurityTests: " + securityTestCount );
+		System.out.println( "Total SecurityScans: " + securityScanCount );
+		System.out.println( "Total SecurityScan Requests: " + securityScanRequestCount );
+		System.out.println( "Total Failed SecurityScan Requests: " + securityScanAlertCount );
 	}
 
 	/**
@@ -450,7 +457,6 @@ public class SoapUISecurityTestRunner extends AbstractSoapUITestRunner
 	{
 		try
 		{
-			log.info( ( "Running TestSuite [" + suite.getName() + "], runType = " + suite.getRunType() ) );
 			for( TestCase testCase : suite.getTestCaseList() )
 			{
 				runTestCase( ( WsdlTestCase )testCase );
@@ -479,12 +485,11 @@ public class SoapUISecurityTestRunner extends AbstractSoapUITestRunner
 	{
 		try
 		{
-			log.info( "Running TestCase [" + testCase.getName() + "]" );
 			for( SecurityTest securityTest : testCase.getSecurityTestList() )
 			{
-				runSecurityTest( securityTest );
+				if( StringUtils.isNullOrEmpty( securityTestName ) || securityTest.getName().equals( securityTestName ) )
+					runSecurityTest( securityTest );
 			}
-
 		}
 		catch( Exception e )
 		{
@@ -497,12 +502,33 @@ public class SoapUISecurityTestRunner extends AbstractSoapUITestRunner
 	 */
 	protected void runSecurityTest( SecurityTest securityTest )
 	{
-		SecurityTestRunnerImpl testRunner = new SecurityTestRunnerImpl( securityTest, new StringToObjectMap() );
-		testRunner.start( false );
+		securityTest.addSecurityTestRunListener( new SecurityTestRunListenerAdapter()
+		{
+			@Override
+			public void afterSecurityCheckRequest( TestCaseRunner testRunner, SecurityTestRunContext runContext,
+					SecurityCheckRequestResult securityCheckReqResult )
+			{
+				securityScanRequestCount++ ;
+				if( securityCheckReqResult.getStatus() == ResultStatus.FAILED )
+					securityScanAlertCount++ ;
+			}
+
+			@Override
+			public void afterSecurityCheck( TestCaseRunner testRunner, SecurityTestRunContext runContext,
+					SecurityCheckResult securityCheckResult )
+			{
+				securityScanCount++ ;
+			}
+		} );
+
+		log.info( "Running SecurityTest [" + securityTest.getName() + "] in TestCase ["
+				+ securityTest.getTestCase().getName() + "] in TestSuite ["
+				+ securityTest.getTestCase().getTestSuite().getName() + "]" );
+
+		SecurityTestRunner runner = securityTest.run( null, false );
 		// log.info( "\n" + securityTest.getSecurityTestLog().getMessages() );
-		// log.info( "SecurityTest [" + securityTest.getName() + "] finished  in "
-		// + ( testRunner.getTimeTaken() )
-		// + "ms" );
+		log.info( "SecurityTest [" + securityTest.getName() + "] finished with status [" + runner.getStatus() + "] in "
+				+ ( runner.getTimeTaken() ) + "ms" );
 	}
 
 	/**
