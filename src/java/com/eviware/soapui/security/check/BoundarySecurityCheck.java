@@ -287,7 +287,7 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 				SoapUI.logError( e );
 			}
 
-			return checkIfEmptyStack( context );
+			return checkIfStackHasContent( context );
 		}
 
 		Stack<PropertyMutation> stack = ( Stack<PropertyMutation> )context.get( REQUEST_MUTATIONS_STACK );
@@ -303,11 +303,14 @@ public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
 	}
 
 	@SuppressWarnings( "unchecked" )
-	private boolean checkIfEmptyStack( SecurityTestRunContext context )
+	private boolean checkIfStackHasContent( SecurityTestRunContext context )
 	{
 		Stack<PropertyMutation> stack = ( Stack<PropertyMutation> )context.get( REQUEST_MUTATIONS_STACK );
 		if( stack.empty() )
+		{
+			context.remove( REQUEST_MUTATIONS_STACK );
 			return false;
+		}
 		else
 			return true;
 	}
