@@ -1,5 +1,78 @@
 Welcome to soapUI!
 
+2011-05-17 : 4.0 beta1
+--------------------------------------------------------------------------------
+Major New Feature:
+- Security Testing for scanning your target services for common functional vulnerabilities:
+  - SQL Injection
+  - XPath Injection
+  - Boundary Scan
+  - Invalid Datatype
+  - Cross Site Scripting
+  - XML Bomb
+  - Malicious Attachment
+  - Malformed XML
+  - Custom Scan
+
+Minor New Features:
+- Introduced factory extension mechanism for easily adding your own TestSteps, Assertions, etc.  (Ecosystem)
+- Added possibility to override JUnitReportCollector for creating custom JUnit style reports (Analytics)
+- Added possibility to ignore XML comments in XPath assertions (Functional Testing)
+- Improved error messages when WSDL loading fails (Technology Support)
+- Added custom multi-value delimiter for REST parameter values (Functional Testing)
+- Added global setting for normalizing forward slashes (which was always performed previously) (Functional Testing)
+- Added support for property expansions in output folder for command-line runners (Automation)
+- Improved WADL importer support for referenced representations and parameters (Technology Support)
+- Added adding of Quotes “”to File DataSink (Functional Testing)
+- Added Digest Algorithm setting to WS-Security Signature entry (Technology Support)
+- Improved handling of internal errors in Schema Validation (Functional Testing)
+- Added encoding property to File DataSink (if you need to write files with some other charset than the system one) (Functional Testing)
+- Improved creation of CSV Files in File DataSink (Functional Testing)
+- Improved installer to install the tutorials in custom location (Ecosystem)
+- Improved installer to install the Browser Component in soapUI directory instead of local profile (Ecosystem)
+- Improved error messages when trying to install a Renewal license over a Trial (Ecosystem)
+- Improved REST Resource resolution for REST TestRequests when there are multiple resources  with the same path (Functional Testing)
+- Improved Redirect handling to always use GET (Functional Testing)
+- General Stability and Performance improvements
+
+Bugs Fixed:
+- Fixed duplicate retrieval of web pages when BrowserComponent was enabled
+- Fixed support for Composite projects in MockAsWar functionality
+- Fixed Composite Projects with regard to renaming of REST Resources and Services
+- Fixed double encoding of Template URL parameters
+- Fixed forward-slashes in WAR file create by DeployAsWar and removed unnecessary jars
+- Fixed support for composite projects in DeployAsWar packaging
+- Fixed Reliable Messaging sequence identifier
+- Fixed loading of XSDs and WSDLs with leading or trailing whitespace
+- Fixed loading of projects with filenames containing non-URL characters
+- Fixed incorrect replacing of SOAP Header content when updating a WSDL with Header definitions
+- Fixed normalization of filenames when exporting TestCases or TestSuites
+- Fixed synchronization of shared File DataSinks
+- Fixed combo-box editor in Mode column for Service Endpoints for REST services
+- Fixed automatic setting of WS-A version when WS-RM version 1.0 is selected
+- Fixed normalization of column names to XML names when generating XML from a JDBC ResultSet
+- Fixed wildcards for CDATA sections in the XPath Contains assertion
+- Fixed error when running MockServices containing definition parts with unexpected content types
+- Fixed potential NPEs in DataSource cleanup and StringList constructors
+- Fixed QName extraction of REST Request Representations
+- Fixed Null Pointer Exception in HTTP and REST request editor when Browser Component is disabled
+- Fixed truncating of property values when writing to Excel DataSink if they are over 32k and also added corresponding warning to soapUI log
+- Fixed crash on extremely large tooltips; internal limit now set to 500 characters for tooltips in the outline editor showing node values
+- Fixed width of XPath Assertion configuration dialog to show the "Select Content" options
+- Fixed WADL importing of child resources with same path; these are now merged into a single resource
+- Fixed layouting of DataSink and DataSource config panels and fixed GroovyD DataSource/DataSink editors and Get Data popups
+- Fixed handling of WADL parameters with non XSD types in the soapUI Pro Form Editor
+- Fixed double encoding of Template URL parameters
+- Fixed forward-slashes in WAR file create by DeployAsWar and removed unnecessary jars
+- Fixed Raw view for JDBC Requests to show expanded variables
+- Fixed incorrect TestSuite Jasper Report Template 
+- Fixed duplicate saving of standard projects in pro version
+
+Updated Libraries:
+- JXBrowser 2.8
+- Groovy 1.8.0
+- Bundled JRE 1.6.0_25
+
 2010-10-18 : 3.6.1
 --------------------------------------------------------------------------------
 
