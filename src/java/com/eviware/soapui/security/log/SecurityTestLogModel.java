@@ -92,7 +92,7 @@ public class SecurityTestLogModel extends AbstractListModel
 		stepCount++ ;
 		checkCount = 0;
 
-		currentStepEntriesCount = 0;
+		currentStepEntriesCount = 1;
 		int size = items.size();
 		if( AbstractSecurityCheck.isSecurable( testStep ) )
 		{
@@ -118,7 +118,7 @@ public class SecurityTestLogModel extends AbstractListModel
 		if( items.size() > currentStepEntriesCount )
 		{
 			if( currentStepEntriesCount > 0 )
-				startStepIndex = items.size() - currentStepEntriesCount - 1;
+				startStepIndex = items.size() - currentStepEntriesCount;
 			else
 				startStepIndex = items.size();
 		}
@@ -175,7 +175,7 @@ public class SecurityTestLogModel extends AbstractListModel
 
 		items.add( "SecurityScan " + checkCount + " [" + securityCheck.getName() + "] " );
 		results.add( checkResultRef );
-		currentCheckEntriesCount = 0;
+		currentCheckEntriesCount = 1;
 		currentStepEntriesCount++ ;
 
 		fireIntervalAdded( this, size, items.size() - 1 );
@@ -190,7 +190,7 @@ public class SecurityTestLogModel extends AbstractListModel
 		if( items.size() > currentCheckEntriesCount )
 		{
 			if( currentCheckEntriesCount > 0 )
-				startCheckIndex = items.size() - currentCheckEntriesCount - 1;
+				startCheckIndex = items.size() - currentCheckEntriesCount;
 			else
 				startCheckIndex = items.size();
 		}
