@@ -221,7 +221,8 @@ public interface HelpUrls
 	public static final String MOCKASWAR_HELP_URL = HELP_URL_ROOT + "mock/mock_as_war.html";
 
 	public static final String MANUALTESTSTEP_HELP_URL = "";
-	
+
 	public static final String SECURITYTESTEDITOR_HELP_URL = "http://www.soapui.org/Security/working-with-security-tests.html";
+	public static final String SECURITY_HELP_ROOT = "http://www.soapui.org/Security";
 
 }
