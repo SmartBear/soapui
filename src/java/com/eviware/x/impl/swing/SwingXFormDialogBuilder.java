@@ -71,8 +71,8 @@ public class SwingXFormDialogBuilder extends XFormDialogBuilder
 	public ActionList buildOkCancelActions()
 	{
 		DefaultActionList actions = new DefaultActionList( "Actions" );
-		actions.addAction( new OKAction( dialog ) );
-		actions.addAction( new CancelAction( dialog ) );
+		actions.addAction( new OKAction() );
+		actions.addAction( new CancelAction() );
 		return actions;
 	}
 
@@ -81,9 +81,9 @@ public class SwingXFormDialogBuilder extends XFormDialogBuilder
 	{
 		DefaultActionList actions = new DefaultActionList( "Actions" );
 		actions.addAction( new HelpAction( url ) );
-		OKAction okAction = new OKAction( dialog );
+		OKAction okAction = new OKAction();
 		actions.addAction( okAction );
-		actions.addAction( new CancelAction( dialog ) );
+		actions.addAction( new CancelAction() );
 		actions.setDefaultAction( okAction );
 		return actions;
 	}
@@ -96,14 +96,11 @@ public class SwingXFormDialogBuilder extends XFormDialogBuilder
 		return actions;
 	}
 
-	protected final static class OKAction extends AbstractAction
+	protected final class OKAction extends AbstractAction
 	{
-		private final SwingXFormDialog dialog;
-
-		public OKAction( SwingXFormDialog dialog )
+		public OKAction()
 		{
 			super( "OK" );
-			this.dialog = dialog;
 		}
 
 		public void actionPerformed( ActionEvent e )
@@ -116,14 +113,11 @@ public class SwingXFormDialogBuilder extends XFormDialogBuilder
 		}
 	}
 
-	protected final static class CancelAction extends AbstractAction
+	protected final class CancelAction extends AbstractAction
 	{
-		private SwingXFormDialog dialog;
-
-		public CancelAction( SwingXFormDialog dialog )
+		public CancelAction()
 		{
 			super( "Cancel" );
-			this.dialog = dialog;
 		}
 
 		public void actionPerformed( ActionEvent e )

@@ -49,7 +49,7 @@ public class JWizardDialogBuilder extends SwingXFormDialogBuilder
 	{
 		DefaultActionList actions = new DefaultActionList( "Actions" );
 		actions.addAction( new NextAction() );
-		actions.addAction( new CancelAction( dialog ) );
+		actions.addAction( new CancelAction() );
 		return actions;
 	}
 }
