@@ -218,6 +218,10 @@ public class JTabbedFormDialog extends SwingXFormDialog
 	public void release()
 	{
 		dialog.dispose();
+		tabs.removeAll();
+
+		dialog = null;
+		tabs = null;
 	}
 
 	public JComponent getTabs()

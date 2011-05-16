@@ -21,7 +21,6 @@ import com.eviware.soapui.support.action.swing.DefaultActionList;
 
 public class JWizardDialogBuilder extends SwingXFormDialogBuilder
 {
-
 	private SwingXFormDialog dialog;
 
 	public JWizardDialogBuilder( String name )
@@ -50,7 +49,7 @@ public class JWizardDialogBuilder extends SwingXFormDialogBuilder
 	{
 		DefaultActionList actions = new DefaultActionList( "Actions" );
 		actions.addAction( new NextAction() );
-		actions.addAction( new CancelAction() );
+		actions.addAction( new CancelAction( dialog ) );
 		return actions;
 	}
 }
