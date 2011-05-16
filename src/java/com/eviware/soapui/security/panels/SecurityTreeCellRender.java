@@ -49,7 +49,7 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 
 	Map<DefaultMutableTreeNode, Component> componentTree = new HashMap<DefaultMutableTreeNode, Component>();
 	private JTree tree;
-	Color selected = new Color( 215, 215, 215 );
+	Color selected = new Color( 205, 205, 205 );
 	Color unselected = new Color( 228, 228, 228 );
 	private boolean released;
 
