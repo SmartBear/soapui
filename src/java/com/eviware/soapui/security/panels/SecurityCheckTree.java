@@ -25,13 +25,14 @@ public class SecurityCheckTree extends DefaultTreeModel
 {
 
 	private SecurityTest securityTest;
+	private SecurityTreeRootNode treeNode;
 
-	public SecurityCheckTree( SecurityTest securityTest )
+	public SecurityCheckTree( SecurityTest securityTest, SecurityTreeRootNode treeNode )
 	{
-		super( new SecurityTreeRootNode( securityTest ) );
+		super( treeNode );
 
 		this.securityTest = securityTest;
-
+		this.treeNode = treeNode;
 	}
 
 	public void insertNodeInto( TestStep testStep )
@@ -97,7 +98,6 @@ public class SecurityCheckTree extends DefaultTreeModel
 		SecurityCheckNode node = getSecurityCheckNode( securityCheck );
 		removeNodeFromParent( node );
 		nodeStructureChanged( testStepNode );
-
 	}
 
 	/**
@@ -119,6 +119,14 @@ public class SecurityCheckTree extends DefaultTreeModel
 		insertNodeInto( node, ( MutableTreeNode )root, index2 + offset );
 
 		return new TreePath( node.getPath() );
+	}
+
+	public void release()
+	{
+		if( securityTest != null )
+		{
+			securityTest.removePropertyChangeListener( treeNode );
+		}
 	}
 
 }

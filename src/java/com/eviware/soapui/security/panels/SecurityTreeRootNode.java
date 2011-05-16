@@ -70,4 +70,12 @@ public class SecurityTreeRootNode extends DefaultMutableTreeNode implements Prop
 	{
 		new TestStepNode( this, testStep, securityTest.getSecurityChecksMap().get( testStep.getId() ) );
 	}
+
+	public void release()
+	{
+		if( securityTest != null )
+		{
+			securityTest.removePropertyChangeListener( this );
+		}
+	}
 }

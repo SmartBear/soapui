@@ -120,7 +120,7 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 		testStepPopUp.addSeparator();
 		testStepPopUp.add( new ShowOnlineHelpAction( HelpUrls.RESPONSE_ASSERTIONS_HELP_URL ) );
 
-		treeModel = new SecurityCheckTree( securityTest );
+		treeModel = new SecurityCheckTree( securityTest, new SecurityTreeRootNode( securityTest ) );
 		securityTestTree = new JXTree( treeModel );
 		securityTestTree.putClientProperty( "JTree.lineStyle", "None" );
 		securityTestTree.setUI( new CustomTreeUI() );
@@ -699,7 +699,9 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 		securityTest.getTestCase().getTestSuite().removeTestSuiteListener( testSuiteListener );
 		securityTest.removeSecurityTestListener( this );
 		securityTest.removeSecurityTestRunListener( testRunListener );
-
+		if (treeModel != null) {
+			treeModel.release();
+		}
 	}
 
 	@Override
@@ -714,7 +716,6 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 	{
 		cellRender.remove( treeModel.getSecurityCheckNode( securityCheck ) );
 		treeModel.removeSecurityCheckNode( securityCheck );
-
 	}
 
 	/**
