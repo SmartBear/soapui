@@ -144,7 +144,7 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 			label.setBorder( BorderFactory.createEmptyBorder( 5, 5, 5, 5 ) );
 			label.setEnabled( !testStep.isDisabled() );
 			testStep.addPropertyChangeListener( TestStep.ICON_PROPERTY, TestStepCellRender.this );
-
+			testStep.addPropertyChangeListener( TestStep.DISABLED_PROPERTY, TestStepCellRender.this );
 			innerLeftPanel = new JPanel( new BorderLayout() );
 
 			if( exp )
@@ -251,6 +251,7 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 		{
 			label.setIcon( testStep.getIcon() );
 			( ( DefaultTreeModel )tree.getModel() ).nodeChanged( node );
+			label.setEnabled( !testStep.isDisabled() );
 		}
 
 		@Override
