@@ -103,10 +103,9 @@ public class SecurityConfigurationDialog extends SimpleDialog
 
 	protected Component buildParametersTable()
 	{
-		parametersTable = new SecurityCheckedParametersTablePanel(
-				new SecurityParametersTableModel(
-						( ( AbstractSecurityCheckWithProperties )securityCheck ).getParameterHolder() ), securityCheck
-						.getTestStep().getProperties(), ( AbstractSecurityCheckWithProperties )securityCheck );
+		parametersTable = new SecurityCheckedParametersTablePanel( new SecurityParametersTableModel(
+				( ( AbstractSecurityCheckWithProperties )securityCheck ).getParameterHolder() ), securityCheck
+				.getTestStep().getProperties(), ( AbstractSecurityCheckWithProperties )securityCheck );
 
 		parametersTable.setPreferredSize( new Dimension( 400, 150 ) );
 		return parametersTable;

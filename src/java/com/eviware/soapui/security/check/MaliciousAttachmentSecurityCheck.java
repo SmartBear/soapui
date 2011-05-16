@@ -28,7 +28,6 @@ import com.eviware.soapui.config.StrategyTypeConfig;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Attachment;
-import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTestRunContext;
@@ -249,7 +248,7 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 		{
 			generateFiles();
 			updateRequestContent( testStep, context );
-			MessageExchange message = ( MessageExchange )testStep.run( ( TestCaseRunner )securityTestRunner, context );
+			testStep.run( ( TestCaseRunner )securityTestRunner, context );
 		}
 		catch( Exception e )
 		{
@@ -376,4 +375,17 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 			mutationsPanel.updateConfig( ( MaliciousAttachmentSecurityCheckConfig )getConfig().getConfig() );
 		}
 	}
+
+	@Override
+	public void release()
+	{
+		if( advancedSettingsPanel != null )
+			advancedSettingsPanel.release();
+
+		if( mutationsPanel != null )
+			mutationsPanel.release();
+
+		super.release();
+	}
+
 }

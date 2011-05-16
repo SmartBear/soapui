@@ -235,7 +235,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 			}
 		}
 
-		if( noMutations)
+		if( noMutations )
 		{
 			securityCheckResult.setStatus( ResultStatus.NOTHING_TO_SEND );
 		}
@@ -310,7 +310,6 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	{
 		testStep = step;
 	}
-
 
 	/*
 	 * (non-Javadoc)
@@ -773,7 +772,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	 */
 	public abstract String getHelpURL();
 
-	private void setSecurityCheckRequestResult( SecurityCheckRequestResult securityCheckRequestResult )
+	protected void setSecurityCheckRequestResult( SecurityCheckRequestResult securityCheckRequestResult )
 	{
 		this.securityCheckRequestResult = securityCheckRequestResult;
 	}

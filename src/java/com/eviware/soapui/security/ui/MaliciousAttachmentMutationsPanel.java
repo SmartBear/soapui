@@ -575,4 +575,10 @@ public class MaliciousAttachmentMutationsPanel
 		}
 	}
 
+	public void release()
+	{
+		dialog.release();
+		config = null;
+		request = null;
+	}
 }

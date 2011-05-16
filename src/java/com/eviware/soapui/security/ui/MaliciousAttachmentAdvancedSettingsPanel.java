@@ -34,11 +34,12 @@ public class MaliciousAttachmentAdvancedSettingsPanel
 			@Override
 			public void valueChanged( XFormField sourceField, String newValue, String oldValue )
 			{
-				
-				if (newValue == null || newValue.trim().length() == 0) {
+
+				if( newValue == null || newValue.trim().length() == 0 )
+				{
 					return;
 				}
-				
+
 				try
 				{
 					int val = Integer.valueOf( newValue );
@@ -72,5 +73,11 @@ public class MaliciousAttachmentAdvancedSettingsPanel
 	{
 		@AField( description = "Request timeout(ms)", name = "Request timeout(ms)", type = AFieldType.INT )
 		final static String REQUEST_TIMEOUT = "Request timeout(ms)";
+	}
+
+	public void release()
+	{
+		dialog.release();
+		config = null;
 	}
 }

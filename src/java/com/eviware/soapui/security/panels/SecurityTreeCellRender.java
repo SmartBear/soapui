@@ -58,7 +58,8 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 			int arg5, boolean arg6 )
 	{
 		Component result = null;
-		if( released ) {
+		if( released )
+		{
 			if( node instanceof TestStepNode )
 				result = getTreeCellRendererTestNode( arg0, ( TestStepNode )node, sel, exp, leaf, arg5, arg6 );
 			if( node instanceof SecurityCheckNode )
@@ -305,6 +306,7 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 		public void release()
 		{
 			testStep.removePropertyChangeListener( TestStep.ICON_PROPERTY, TestStepCellRender.this );
+			testStep.removePropertyChangeListener( TestStep.DISABLED_PROPERTY, TestStepCellRender.this );
 			progressBarAdapter.release();
 			testStep = null;
 			securityTest = null;

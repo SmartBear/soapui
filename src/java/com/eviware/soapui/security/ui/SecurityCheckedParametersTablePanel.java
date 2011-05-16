@@ -205,7 +205,6 @@ public class SecurityCheckedParametersTablePanel extends JPanel implements ListS
 
 	class AddNewParameterAction extends AbstractAction
 	{
-
 		public AddNewParameterAction()
 		{
 			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/add_property.gif" ) );
@@ -219,12 +218,10 @@ public class SecurityCheckedParametersTablePanel extends JPanel implements ListS
 			dialog.show();
 			model.fireTableDataChanged();
 		}
-
 	}
 
 	class RemoveParameterAction extends AbstractAction
 	{
-
 		public RemoveParameterAction()
 		{
 			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/remove_property.gif" ) );

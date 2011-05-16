@@ -107,4 +107,6 @@ public interface SecurityCheck extends ModelItem, Assertable
 	boolean isApplyForFailedStep();
 
 	void setApplyForFailedTestStep( boolean apply );
+
+	void release();
 }
