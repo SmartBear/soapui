@@ -66,7 +66,7 @@ public class AssertionsPanel extends JPanel
 	protected AssertionListModel assertionListModel;
 	protected JList assertionList;
 	private JPopupMenu assertionListPopup;
-	private final Assertable assertable;
+	private Assertable assertable;
 	private AddAssertionAction addAssertionAction;
 	private ConfigureAssertionAction configureAssertionAction;
 	private RemoveAssertionAction removeAssertionAction;
@@ -79,7 +79,7 @@ public class AssertionsPanel extends JPanel
 		this.assertable = assertable;
 
 		initListAndModel();
-		
+
 		assertionList.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
 
 		assertionListPopup = new JPopupMenu();
@@ -456,6 +456,7 @@ public class AssertionsPanel extends JPanel
 	public void release()
 	{
 		assertionListModel.release();
+		assertable = null;
 	}
 
 	public class ConfigureAssertionAction extends AbstractAction

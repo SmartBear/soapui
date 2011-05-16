@@ -27,7 +27,6 @@ import com.eviware.soapui.support.types.StringToStringMap;
 public abstract class AbstractSecurityCheckWithProperties extends AbstractSecurityCheck implements
 		XPathReferenceContainer
 {
-
 	public static final String SECURITY_CHANGED_PARAMETERS = "SecurityChangedParameters";
 	private SecurityCheckedParameterHolder parameterHolder;
 
@@ -54,7 +53,10 @@ public abstract class AbstractSecurityCheckWithProperties extends AbstractSecuri
 	{
 		super.copyConfig( config );
 		getConfig().setCheckedPameters( config.getCheckedPameters() );
-		setParameterHolder( new SecurityCheckedParameterHolder( this, config.getCheckedPameters() ) );
+		if( parameterHolder != null )
+			parameterHolder.release();
+
+		parameterHolder = new SecurityCheckedParameterHolder( this, config.getCheckedPameters() );
 	}
 
 	public XPathReference[] getXPathReferences()
@@ -137,5 +139,13 @@ public abstract class AbstractSecurityCheckWithProperties extends AbstractSecuri
 		}
 		message.getProperties().put( SECURITY_CHANGED_PARAMETERS, updatedParams.toXml() );
 		getSecurityCheckRequestResult().setMessageExchange( message );
+	}
+
+	@Override
+	public void release()
+	{
+		if( parameterHolder != null )
+			parameterHolder.release();
+		super.release();
 	}
 }

@@ -47,8 +47,8 @@ import com.eviware.soapui.support.xml.XmlObjectTreeModel;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel.XmlTreeNode;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.AField.AFieldType;
+import com.eviware.x.form.support.AForm;
 import com.eviware.x.impl.swing.JFormDialog;
 import com.eviware.x.impl.swing.JStringListFormField;
 
@@ -71,6 +71,7 @@ public class ParameterExposureCheck extends AbstractSecurityCheckWithProperties
 	StrategyTypeConfig.Enum strategy = StrategyTypeConfig.ONE_BY_ONE;
 
 	List<String> defaultParameterExposureStrings = new ArrayList<String>();
+	private JFormDialog dialog;
 
 	public ParameterExposureCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent, String icon )
 	{
@@ -352,7 +353,7 @@ public class ParameterExposureCheck extends AbstractSecurityCheckWithProperties
 	@Override
 	public JComponent getAdvancedSettingsPanel()
 	{
-		JFormDialog dialog = ( JFormDialog )ADialogBuilder.buildDialog( AdvancedSettings.class );
+		dialog = ( JFormDialog )ADialogBuilder.buildDialog( AdvancedSettings.class );
 		JStringListFormField stringField = ( JStringListFormField )dialog
 				.getFormField( AdvancedSettings.PARAMETER_EXPOSURE_STRINGS );
 		stringField.setOptions( parameterExposureCheckConfig.getParameterExposureStringsList().toArray() );
@@ -401,6 +402,15 @@ public class ParameterExposureCheck extends AbstractSecurityCheckWithProperties
 		} );
 
 		return dialog.getPanel();
+	}
+
+	@Override
+	public void release()
+	{
+		if( dialog != null )
+			dialog.release();
+
+		super.release();
 	}
 
 	@AForm( description = "Cross Site Scripting", name = "Cross Site Scripting" )

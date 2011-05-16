@@ -23,7 +23,6 @@ import com.eviware.soapui.model.testsuite.TestAssertion;
 
 public class SecurityAssertionPanel extends AssertionsPanel
 {
-
 	public SecurityAssertionPanel( Assertable assertable )
 	{
 		super( assertable );
@@ -40,7 +39,6 @@ public class SecurityAssertionPanel extends AssertionsPanel
 
 	protected class SecurityAssertionListModel extends AssertionListModel
 	{
-
 		protected void addAssertion( TestAssertion assertion )
 		{
 			assertion.addPropertyChangeListener( this );
@@ -76,7 +74,7 @@ public class SecurityAssertionPanel extends AssertionsPanel
 
 			setFont( list.getFont() );
 			setOpaque( true );
-			
+
 			return this;
 		}
 

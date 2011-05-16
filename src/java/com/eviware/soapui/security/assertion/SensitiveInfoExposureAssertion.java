@@ -278,6 +278,15 @@ public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion impleme
 
 	}
 
+	@Override
+	public void release()
+	{
+		if( dialog != null )
+			dialog.release();
+
+		super.release();
+	}
+
 	public JPanel getForm()
 	{
 		if( sensitiveInfoTableForm == null )

@@ -244,12 +244,10 @@ public class SecurityCheckedParameterHolder extends SecurityCheckParameterListen
 	{
 		// TODO Auto-generated method stub
 		// we do not cate for this
-
 	}
 
 	public void release()
 	{
 		securityCheck.getTestStep().removeTestPropertyListener( this );
 	}
-
 }

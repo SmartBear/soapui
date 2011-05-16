@@ -207,6 +207,11 @@ public class ProjectSensitiveInformationPanel
 			sensitivInformationTableModel.removeRows( tokenTable.getSelectedRows() );
 			save();
 		}
+	}
 
+	public void release()
+	{
+		if( dialog != null )
+			dialog.release();
 	}
 }

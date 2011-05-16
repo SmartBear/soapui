@@ -78,6 +78,7 @@ public class MaliciousAttachmentAdvancedSettingsPanel
 	public void release()
 	{
 		dialog.release();
+		dialog = null;
 		config = null;
 	}
 }

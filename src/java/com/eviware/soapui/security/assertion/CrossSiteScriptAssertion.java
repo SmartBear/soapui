@@ -11,7 +11,6 @@
  */
 package com.eviware.soapui.security.assertion;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
@@ -64,8 +63,8 @@ import com.eviware.x.form.XFormField;
 import com.eviware.x.form.XFormFieldListener;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.AField.AFieldType;
+import com.eviware.x.form.support.AForm;
 
 public class CrossSiteScriptAssertion extends WsdlMessageAssertion implements ResponseAssertion
 {
@@ -378,6 +377,15 @@ public class CrossSiteScriptAssertion extends WsdlMessageAssertion implements Re
 				} );
 
 		groovyEditorComponent.setEnabled( checkSeparateHTML );
+	}
+
+	@Override
+	public void release()
+	{
+		if( dialog != null )
+			dialog.release();
+
+		super.release();
 	}
 
 	// TODO : update help URL

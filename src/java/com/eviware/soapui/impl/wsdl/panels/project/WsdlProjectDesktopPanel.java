@@ -114,8 +114,7 @@ public class WsdlProjectDesktopPanel extends ModelItemDesktopPanel<WsdlProject>
 		mainTabs.addTab( "TestSuites", null, testSuitesPanel = buildTestSuitesTab(),
 				"Shows and runs all TestSuites in project" );
 		mainTabs.addTab( "WS-Security Configurations", null, buildWSSTab(), "Manages Security-related configurations" );
-		mainTabs
-				.addTab( "Security Scan Defaults", null, buildSecConfigTab(), "Manages Security related configurations" );
+		mainTabs.addTab( "Security Scan Defaults", null, buildSecConfigTab(), "Manages Security related configurations" );
 	}
 
 	private Component buildSecConfigTab()
@@ -370,6 +369,7 @@ public class WsdlProjectDesktopPanel extends ModelItemDesktopPanel<WsdlProject>
 
 		SoapUI.getNavigator().getMainTree().getModel().removeTreeModelListener( treeModelListener );
 		wssTabPanel.release();
+		sensitiveInfoPanel.release();
 
 		inspectorPanel.release();
 		testSuitesPanel.release();

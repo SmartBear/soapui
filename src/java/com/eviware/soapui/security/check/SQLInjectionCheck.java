@@ -41,12 +41,12 @@ import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel;
-import com.eviware.soapui.support.xml.XmlUtils;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel.XmlTreeNode;
+import com.eviware.soapui.support.xml.XmlUtils;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.AField.AFieldType;
+import com.eviware.x.form.support.AForm;
 import com.eviware.x.impl.swing.JFormDialog;
 import com.eviware.x.impl.swing.JStringListFormField;
 
@@ -73,6 +73,7 @@ public class SQLInjectionCheck extends AbstractSecurityCheckWithProperties
 			"test� UNION select 1, @@version, 1, 1;�" };
 
 	private boolean mutation;
+	private JFormDialog dialog;
 
 	public SQLInjectionCheck( SecurityCheckConfig config, ModelItem parent, String icon, TestStep testStep )
 	{
@@ -190,8 +191,8 @@ public class SQLInjectionCheck extends AbstractSecurityCheckWithProperties
 				if( XmlUtils.seemsToBeXml( value ) )
 				{
 					XmlObjectTreeModel model = null;
-					model = new XmlObjectTreeModel( property.getSchemaType().getTypeSystem(), XmlObject.Factory
-							.parse( value ) );
+					model = new XmlObjectTreeModel( property.getSchemaType().getTypeSystem(),
+							XmlObject.Factory.parse( value ) );
 					for( SecurityCheckedParameter param : getParameterHolder().getParameterList() )
 					{
 						if( !param.isChecked() )
@@ -201,8 +202,8 @@ public class SQLInjectionCheck extends AbstractSecurityCheckWithProperties
 						{
 							if( parameterMutations.containsKey( param ) )
 							{
-								testStep.getProperties().get( param.getName() ).setValue(
-										parameterMutations.get( param ).get( 0 ) );
+								testStep.getProperties().get( param.getName() )
+										.setValue( parameterMutations.get( param ).get( 0 ) );
 								params.put( param.getLabel(), parameterMutations.get( param ).get( 0 ) );
 								parameterMutations.get( param ).remove( 0 );
 							}
@@ -270,8 +271,8 @@ public class SQLInjectionCheck extends AbstractSecurityCheckWithProperties
 
 					XmlObjectTreeModel model = null;
 
-					model = new XmlObjectTreeModel( property.getSchemaType().getTypeSystem(), XmlObject.Factory
-							.parse( value ) );
+					model = new XmlObjectTreeModel( property.getSchemaType().getTypeSystem(),
+							XmlObject.Factory.parse( value ) );
 
 					XmlTreeNode[] nodes = model.selectTreeNodes( context.expand( parameter.getXpath() ) );
 
@@ -346,7 +347,7 @@ public class SQLInjectionCheck extends AbstractSecurityCheckWithProperties
 	@Override
 	public JComponent getAdvancedSettingsPanel()
 	{
-		JFormDialog dialog = ( JFormDialog )ADialogBuilder.buildDialog( AdvancedSettings.class );
+		dialog = ( JFormDialog )ADialogBuilder.buildDialog( AdvancedSettings.class );
 		JStringListFormField stringField = ( JStringListFormField )dialog
 				.getFormField( AdvancedSettings.INJECTION_STRINGS );
 		stringField.setOptions( sqlInjectionConfig.getSqlInjectionStringsList().toArray() );
@@ -402,6 +403,15 @@ public class SQLInjectionCheck extends AbstractSecurityCheckWithProperties
 		} );
 
 		return dialog.getPanel();
+	}
+
+	@Override
+	public void release()
+	{
+		if( dialog != null )
+			dialog.release();
+
+		super.release();
 	}
 
 	@AForm( description = "SQL Injection Strings", name = "SQL Injection Strings" )

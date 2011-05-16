@@ -43,6 +43,8 @@ public class SecurityConfigurationDialog extends SimpleDialog
 	private boolean result;
 	private JTabbedPane tabs;
 	private SecurityCheckedParametersTablePanel parametersTable;
+	private SecurityAssertionPanel securityAssertionPanel;
+	private XFormDialog strategyDialog;
 
 	public SecurityConfigurationDialog( SecurityCheck securityCheck )
 	{
@@ -114,7 +116,8 @@ public class SecurityConfigurationDialog extends SimpleDialog
 	protected Component buildTabs()
 	{
 		tabs = new JTabbedPane();
-		tabs.addTab( "Assertions", new SecurityAssertionPanel( securityCheck ) );
+		securityAssertionPanel = new SecurityAssertionPanel( securityCheck );
+		tabs.addTab( "Assertions", securityAssertionPanel );
 		tabs.addTab( "Strategy", buildStrategyTab() );
 
 		JComponent advancedSettingsPanel = securityCheck.getAdvancedSettingsPanel();
@@ -126,9 +129,9 @@ public class SecurityConfigurationDialog extends SimpleDialog
 
 	protected Component buildStrategyTab()
 	{
-		XFormDialog dialog = ADialogBuilder.buildDialog( SecurityConfigurationDialogBuilder.Strategy.class, null );
+		strategyDialog = ADialogBuilder.buildDialog( SecurityConfigurationDialogBuilder.Strategy.class, null );
 
-		XFormRadioGroup strategy = ( XFormRadioGroup )dialog.getFormField( Strategy.STRATEGY );
+		XFormRadioGroup strategy = ( XFormRadioGroup )strategyDialog.getFormField( Strategy.STRATEGY );
 		final String[] strategyOptions = new String[] { "One by One", "All At Once" };
 		strategy.setOptions( strategyOptions );
 
@@ -162,7 +165,7 @@ public class SecurityConfigurationDialog extends SimpleDialog
 			}
 		} );
 
-		XFormField delay = dialog.getFormField( Strategy.DELAY );
+		XFormField delay = strategyDialog.getFormField( Strategy.DELAY );
 		delay.setValue( String.valueOf( securityCheck.getExecutionStrategy().getDelay() ) );
 
 		delay.addFormFieldListener( new XFormFieldListener()
@@ -182,7 +185,7 @@ public class SecurityConfigurationDialog extends SimpleDialog
 				}
 			}
 		} );
-		XFormField applyToFailedTests = dialog.getFormField( Strategy.APPLY_TO_FAILED_STEPS );
+		XFormField applyToFailedTests = strategyDialog.getFormField( Strategy.APPLY_TO_FAILED_STEPS );
 		applyToFailedTests.setValue( String.valueOf( securityCheck.isApplyForFailedStep() ) );
 		applyToFailedTests.addFormFieldListener( new XFormFieldListener()
 		{
@@ -194,7 +197,7 @@ public class SecurityConfigurationDialog extends SimpleDialog
 			}
 		} );
 
-		return ( ( JFormDialog )dialog ).getPanel();
+		return ( ( JFormDialog )strategyDialog ).getPanel();
 	}
 
 	@Override
@@ -213,8 +216,17 @@ public class SecurityConfigurationDialog extends SimpleDialog
 
 	public void release()
 	{
+		if( strategyDialog != null )
+		{
+			strategyDialog.release();
+			strategyDialog = null;
+		}
+
+		securityAssertionPanel.release();
+		securityAssertionPanel = null;
 		securityCheck = null;
 		tabs.removeAll();
+		tabs = null;
 		dispose();
 	}
 }

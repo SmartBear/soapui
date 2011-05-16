@@ -65,6 +65,7 @@ public class MaliciousAttachmentMutationsPanel
 	private WsdlRequest request;
 
 	private MaliciousAttachmentListToTableHolder holder = new MaliciousAttachmentListToTableHolder();
+	private JFormDialog tablesDialog;
 
 	public MaliciousAttachmentMutationsPanel( MaliciousAttachmentSecurityCheckConfig config, WsdlRequest request )
 	{
@@ -86,7 +87,7 @@ public class MaliciousAttachmentMutationsPanel
 
 	private JComponent buildTables()
 	{
-		JFormDialog tablesDialog = ( JFormDialog )ADialogBuilder.buildDialog( MutationTables.class );
+		tablesDialog = ( JFormDialog )ADialogBuilder.buildDialog( MutationTables.class );
 
 		MaliciousAttachmentTableModel generateTableModel = new MaliciousAttachmentGenerateTableModel();
 		tablesDialog.getFormField( MutationTables.GENERATE_FILE ).setProperty( "dimension", new Dimension( 410, 120 ) );
@@ -577,8 +578,10 @@ public class MaliciousAttachmentMutationsPanel
 
 	public void release()
 	{
+		tablesDialog.release();
 		dialog.release();
 		config = null;
+		dialog = null;
 		request = null;
 	}
 }
