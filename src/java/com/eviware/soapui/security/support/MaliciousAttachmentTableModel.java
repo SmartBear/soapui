@@ -6,13 +6,8 @@ import com.eviware.soapui.config.MaliciousAttachmentConfig;
 import com.eviware.soapui.security.tools.AttachmentHolder;
 import com.eviware.soapui.support.UISupport;
 
-public abstract class MaliciousAttachmentTableModel extends AbstractTableModel // AttachmentsTableModel
+public abstract class MaliciousAttachmentTableModel extends AbstractTableModel 
 {
-
-	// public MaliciousAttachmentTableModel( AttachmentContainer request )
-	// {
-	// super( request );
-	// }
 
 	protected AttachmentHolder holder = new AttachmentHolder();
 
@@ -26,7 +21,6 @@ public abstract class MaliciousAttachmentTableModel extends AbstractTableModel /
 		if( UISupport.confirm( "Remove selected attachments?", "Remove Attachments" ) )
 		{
 			holder.removeElement( i );
-			// removeAttachment( new int[] { i } );
 			fireTableDataChanged();
 		}
 	}

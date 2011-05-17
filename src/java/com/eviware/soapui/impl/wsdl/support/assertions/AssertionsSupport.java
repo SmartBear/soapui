@@ -163,6 +163,8 @@ public class AssertionsSupport implements PropertyChangeListener
 	{
 		for( WsdlMessageAssertion assertion : assertions )
 			assertion.release();
+		
+		assertionsListeners.clear();
 	}
 
 	public Iterator<WsdlMessageAssertion> iterator()

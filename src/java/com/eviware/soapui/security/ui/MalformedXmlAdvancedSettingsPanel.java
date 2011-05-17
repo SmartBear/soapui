@@ -206,5 +206,13 @@ public class MalformedXmlAdvancedSettingsPanel
 		public final static String NEW_ATTRIBUTE_VALUE = "New attribute value";
 
 	}
+	
+	public void release()
+	{
+		dialog.release();
+		dialog = null;
+		configuration = null;
+		attributeConfig = null;
+	}
 
 }

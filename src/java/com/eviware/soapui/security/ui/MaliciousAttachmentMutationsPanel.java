@@ -583,5 +583,7 @@ public class MaliciousAttachmentMutationsPanel
 		config = null;
 		dialog = null;
 		request = null;
+		holder.release();
+		holder = null;
 	}
 }

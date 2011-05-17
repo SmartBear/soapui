@@ -156,4 +156,13 @@ public class MaliciousAttachmentListToTableHolder
 			}
 		}
 	}
+	
+	public void release() {
+		filesList.release();
+		filesList = null;
+		tablesDialog.release();
+		generateMap = null;
+		replaceMap = null;
+		removeMap = null;
+	}
 }

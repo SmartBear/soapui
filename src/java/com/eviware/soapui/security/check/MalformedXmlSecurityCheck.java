@@ -541,5 +541,14 @@ public class MalformedXmlSecurityCheck extends AbstractSecurityCheckWithProperti
 
 		return advancedSettingsPanel.getPanel();
 	}
+	
+	@Override
+	public void release()
+	{
+		if( advancedSettingsPanel != null )
+			advancedSettingsPanel.release();
+
+		super.release();
+	}
 
 }

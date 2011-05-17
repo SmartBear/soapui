@@ -157,4 +157,10 @@ public class MaliciousAttachmentFilesListForm extends JPanel
 	{
 		this.config = config;
 	}
+
+	public void release()
+	{
+		list = null;
+		config = null;
+	}
 }

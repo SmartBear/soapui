@@ -56,6 +56,7 @@ import com.eviware.soapui.security.result.SecurityResult.ResultStatus;
 import com.eviware.soapui.security.support.FailedSecurityMessageExchange;
 import com.eviware.soapui.security.support.SecurityTestRunListener;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
+import com.eviware.soapui.support.types.StringToStringMap;
 
 /**
  * @author robert
@@ -824,5 +825,13 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	public void setApplyForFailedTestStep( boolean apply )
 	{
 		getConfig().setApplyForFailedStep( apply );
+	}
+
+	public void release()
+	{
+		if( assertionsSupport != null )
+		{
+			assertionsSupport.release();
+		}
 	}
 }
