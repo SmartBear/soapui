@@ -294,5 +294,13 @@ public class SecurityCheckResult implements SecurityResult
 	{
 		return status.toString();
 	}
+	
+	public void release() {
+		if (securityRequestResultList != null) {
+			securityRequestResultList.clear();
+		}
+		
+		securityCheck = null;
+	}
 
 }

@@ -91,6 +91,12 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 		super.release();
 
 		securityTestRunListeners.clear();
+		if( securityTestStepResultMap != null )
+		{
+			securityTestStepResultMap.clear();
+		}
+		securityChecksMap.clear();
+		securityTestListeners.clear();
 	}
 
 	/**

@@ -230,5 +230,9 @@ public class SecurityCheckRequestResult implements SecurityResult
 		checkRequestResultStr.append( ": took " ).append( getTimeTaken() ).append( " ms" );
 		return checkRequestResultStr.toString();
 	}
+	
+	public void release() {
+		securityCheck = null;
+	}
 
 }

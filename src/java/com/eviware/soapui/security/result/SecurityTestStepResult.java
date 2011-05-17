@@ -152,8 +152,7 @@ public class SecurityTestStepResult implements SecurityResult
 			logIconStatus = securityCheckResult.getLogIconStatus();
 		}
 		else if( ( securityCheckResult.getLogIconStatus().equals( ResultStatus.MISSING_ASSERTIONS ) || securityCheckResult
-				.getLogIconStatus().equals( ResultStatus.MISSING_PARAMETERS ) )
-				&& logIconStatus != ResultStatus.FAILED )
+				.getLogIconStatus().equals( ResultStatus.MISSING_PARAMETERS ) ) && logIconStatus != ResultStatus.FAILED )
 		{
 			logIconStatus = securityCheckResult.getLogIconStatus();
 		}
@@ -253,8 +252,8 @@ public class SecurityTestStepResult implements SecurityResult
 	public String getSecurityTestLog()
 	{
 		StringBuffer tl = new StringBuffer().append( "Step " ).append( " [" ).append( testStep.getName() ).append( "] " )
-				.append( getExecutionProgressStatus().toString() ).append( ": took " ).append(
-						getOriginalTestStepResult().getTimeTaken() ).append( " ms" );
+				.append( getExecutionProgressStatus().toString() ).append( ": took " )
+				.append( getOriginalTestStepResult().getTimeTaken() ).append( " ms" );
 		tl.append( testLog );
 		return tl.toString();
 	}
@@ -295,6 +294,14 @@ public class SecurityTestStepResult implements SecurityResult
 	public String getStatusString()
 	{
 		return status.toString();
+	}
+
+	public void release()
+	{
+		if( securityCheckResultList != null )
+		{
+			securityCheckResultList.clear();
+		}
 	}
 
 }
