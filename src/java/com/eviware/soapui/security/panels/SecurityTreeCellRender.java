@@ -51,6 +51,7 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 	private JTree tree;
 	Color selected = new Color( 205, 205, 205 );
 	Color unselected = new Color( 228, 228, 228 );
+	Color noSecurable = new Color( 102, 102, 102 );
 	private boolean released;
 
 	@Override
@@ -143,7 +144,7 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 				label = new JLabel( testStep.getLabel(), SwingConstants.LEFT );
 			label.setIcon( testStep.getIcon() );
 			label.setBorder( BorderFactory.createEmptyBorder( 5, 5, 5, 5 ) );
-			label.setEnabled( !testStep.isDisabled() );
+			label.setEnabled( !testStep.isDisabled() && AbstractSecurityCheck.isSecurable( testStep ) );
 			testStep.addPropertyChangeListener( TestStep.ICON_PROPERTY, TestStepCellRender.this );
 			testStep.addPropertyChangeListener( TestStep.DISABLED_PROPERTY, TestStepCellRender.this );
 			innerLeftPanel = new JPanel( new BorderLayout() );
@@ -216,24 +217,33 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 
 		public void setSelected( boolean sel )
 		{
-			if( sel )
+			if( AbstractSecurityCheck.isSecurable( testStep ) )
 			{
-				this.setBackground( selected );
-				this.label.setBackground( selected );
-				this.innerLeftPanel.setBackground( selected );
-				expandCollapseBtn.setBackground( selected );
-				if( progressPanel != null )
+				if( sel )
+				{
+					this.setBackground( selected );
+					this.label.setBackground( selected );
+					this.innerLeftPanel.setBackground( selected );
+					expandCollapseBtn.setBackground( selected );
 					progressPanel.setBackground( selected );
 
+				}
+				else
+				{
+					this.setBackground( unselected );
+					this.label.setBackground( unselected );
+					this.innerLeftPanel.setBackground( unselected );
+					expandCollapseBtn.setBackground( unselected );
+					progressPanel.setBackground( unselected );
+				}
 			}
 			else
 			{
-				this.setBackground( unselected );
-				this.label.setBackground( unselected );
-				this.innerLeftPanel.setBackground( unselected );
-				expandCollapseBtn.setBackground( unselected );
-				if( progressPanel != null )
-					progressPanel.setBackground( unselected );
+				this.setBackground( noSecurable );
+				this.setBackground( noSecurable );
+				this.label.setBackground( noSecurable );
+				this.innerLeftPanel.setBackground( noSecurable );
+				expandCollapseBtn.setBackground( noSecurable );
 			}
 		}
 
@@ -251,8 +261,9 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 		public void propertyChange( PropertyChangeEvent arg0 )
 		{
 			label.setIcon( testStep.getIcon() );
+			label.setEnabled( !testStep.isDisabled() && AbstractSecurityCheck.isSecurable( testStep ) );
+			updateLabel();
 			( ( DefaultTreeModel )tree.getModel() ).nodeChanged( node );
-			label.setEnabled( !testStep.isDisabled() );
 		}
 
 		@Override
@@ -293,6 +304,8 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 					label.setText( testStep.getLabel() + " (0 scans)" );
 				}
 			}
+			else
+				label.setText( testStep.getLabel() );
 		}
 
 		public boolean isOnExpandButton( int x, int y )
