@@ -65,15 +65,15 @@ public class SecurityConfigurationDialog extends SimpleDialog
 
 		if( securityCheck instanceof AbstractSecurityCheckWithProperties )
 		{
-			JPanel topPanel = UISupport.createEmptyPanel( 0, 0, 10, 10 );
+			JPanel topPanel = UISupport.createEmptyPanel( 0, 0, 10, 0 );
 			topPanel.add( buildParametersTable(), BorderLayout.CENTER );
 
-			JPanel p = UISupport.createEmptyPanel( 5, 3, 0, 0 );
+			JPanel p = UISupport.createEmptyPanel( 5, 0, 5, 0 );
 			JLabel jLabel = new JLabel( "Parameters:" );
 			jLabel.setPreferredSize( new Dimension( 72, 20 ) );
 			p.add( jLabel, BorderLayout.NORTH );
 
-			topPanel.add( p, BorderLayout.WEST );
+			topPanel.add( p, BorderLayout.NORTH );
 
 			JComponent component = securityCheck.getComponent();
 			if( component != null )
