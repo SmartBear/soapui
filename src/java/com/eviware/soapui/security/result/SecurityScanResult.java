@@ -26,8 +26,8 @@ import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.DefaultActionList;
 
 /**
- * A SecurityCheck result represents result of one request (modified by a
- * security  and run)
+ * A SecurityScan result represents result of one request (modified by a
+ * security scan and run)
  * 
  * @author dragica.soldo
  */
@@ -39,7 +39,7 @@ public class SecurityScanResult implements SecurityResult
 	 * status is set to SecurityStatus.INITIALIZED but goes to
 	 * SecurityStatus.UNKNOWN first time any scanRequestResult is added.
 	 * INITIALIZED status is necessary to be able to detect when logging if
-	 * SecurityCheck is just started and no status icon should be added, or it
+	 * SecurityScan is just started and no status icon should be added, or it
 	 * went through execution and gone into any other status, including UNKNOWN
 	 * if no assertion is added, when status icon should be added to log
 	 */
@@ -280,7 +280,7 @@ public class SecurityScanResult implements SecurityResult
 		return logIconStatus;
 	}
 
-	public String getSecurityCheckName()
+	public String getSecurityScanName()
 	{
 		return getSecurityScan().getName();
 	}

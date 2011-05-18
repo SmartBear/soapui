@@ -1,6 +1,6 @@
 package com.eviware.soapui.model.security;
 
-public interface SecurityCheckParameterListener
+public interface SecurityScanParameterListener
 {
 
 	void parameterNameChanged( SecurityCheckedParameter parameter, String oldName, String newName );

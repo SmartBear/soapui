@@ -122,7 +122,7 @@ public class ProgressBarSecurityTestStepAdapter
 			if( tsr.getTestStep().getId().equals( testStep.getId() ) )
 			{
 				int count = securityTest.getStepSecurityApplicableScansCount( tsr );
-				// int maximum = securityTest.getTestStepSecurityChecksCount(
+				// int maximum = securityTest.getTestStepSecurityScansCount(
 				// testStep.getId() );
 				progressBar.getModel().setMaximum( count );
 
@@ -221,7 +221,7 @@ public class ProgressBarSecurityTestStepAdapter
 				}
 				else if( securityCheckResult.getStatus() == ResultStatus.OK )
 				{
-					// can not change to OK color if any of previous checks
+					// can not change to OK color if any of previous scans
 					// failed or missing assertions/parameters
 					if( !progressBar.getForeground().equals( FAILED_COLOR )
 							&& !progressBar.getForeground().equals( MISSING_ASSERTION_COLOR ) )
@@ -240,7 +240,7 @@ public class ProgressBarSecurityTestStepAdapter
 				SecurityScanRequestResult securityCheckReqResult )
 		{
 
-			if( securityCheckReqResult.getSecurityCheck().getTestStep().getId().equals( testStep.getId() ) )
+			if( securityCheckReqResult.getSecurityScan().getTestStep().getId().equals( testStep.getId() ) )
 			{
 				if( securityCheckReqResult.getStatus() == ResultStatus.FAILED )
 				{

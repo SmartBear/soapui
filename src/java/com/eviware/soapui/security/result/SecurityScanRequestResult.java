@@ -26,8 +26,8 @@ import com.eviware.soapui.support.action.swing.DefaultActionList;
 import com.eviware.soapui.support.types.StringToStringMap;
 
 /**
- * A SecurityCheck result represents result of one request (modified by a
- * security check and run)
+ * A SecurityScan result represents result of one request (modified by a
+ * security scan and run)
  * 
  * @author dragica.soldo
  */
@@ -64,7 +64,7 @@ public class SecurityScanRequestResult implements SecurityResult
 		this.status = status;
 	}
 
-	public SecurityScan getSecurityCheck()
+	public SecurityScan getSecurityScan()
 	{
 		return securityCheck;
 	}
@@ -77,7 +77,7 @@ public class SecurityScanRequestResult implements SecurityResult
 	{
 		if( actionList == null )
 		{
-			actionList = new DefaultActionList( getSecurityCheck().getName() );
+			actionList = new DefaultActionList( getSecurityScan().getName() );
 		}
 		if( !addedAction )
 		{
@@ -221,7 +221,7 @@ public class SecurityScanRequestResult implements SecurityResult
 		}
 		changedParamsInfo.replace( changedParamsInfo.length() - 1, changedParamsInfo.length(), "]" );
 
-		StringBuilder checkRequestResultStr = new StringBuilder( "[" + getSecurityCheck().getName() + "] Request "
+		StringBuilder checkRequestResultStr = new StringBuilder( "[" + getSecurityScan().getName() + "] Request "
 				+ requestCount + " - " + getStatus() );
 		if( changedParamsInfo.length() > 1 )
 		{

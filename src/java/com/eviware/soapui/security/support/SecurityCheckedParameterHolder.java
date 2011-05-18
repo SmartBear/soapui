@@ -10,18 +10,18 @@ import java.util.Set;
 import com.eviware.soapui.config.CheckedParameterConfig;
 import com.eviware.soapui.config.CheckedParametersListConfig;
 import com.eviware.soapui.model.security.SecurityScan;
-import com.eviware.soapui.model.security.SecurityCheckParameterHolderListener;
+import com.eviware.soapui.model.security.SecurityScanParameterHolderListener;
 import com.eviware.soapui.model.security.SecurityCheckedParameter;
 import com.eviware.soapui.model.testsuite.TestPropertyListener;
 
 /**
- * Holder for SecurityCheckPameters, which are request parameters on which
- * security check is applied.
+ * Holder for SecurityScanPameters, which are request parameters on which
+ * security scan is applied.
  * 
  * @author robert
  * 
  */
-public class SecurityCheckedParameterHolder extends SecurityCheckParameterListenerAdapter implements
+public class SecurityCheckedParameterHolder extends SecurityScanParameterListenerAdapter implements
 		TestPropertyListener
 {
 
@@ -31,7 +31,7 @@ public class SecurityCheckedParameterHolder extends SecurityCheckParameterListen
 	private List<SecurityCheckedParameter> params = new ArrayList<SecurityCheckedParameter>();
 	private Map<String, SecurityCheckedParameter> paramsMap = new HashMap<String, SecurityCheckedParameter>();
 
-	private Set<SecurityCheckParameterHolderListener> listeners = new HashSet<SecurityCheckParameterHolderListener>();
+	private Set<SecurityScanParameterHolderListener> listeners = new HashSet<SecurityScanParameterHolderListener>();
 
 	public SecurityCheckedParameterHolder( SecurityScan securityCheck, CheckedParametersListConfig checkedPameters )
 	{
@@ -46,12 +46,12 @@ public class SecurityCheckedParameterHolder extends SecurityCheckParameterListen
 		securityCheck.getTestStep().addTestPropertyListener( this );
 	}
 
-	public void addParameterListener( SecurityCheckParameterHolderListener listener )
+	public void addParameterListener( SecurityScanParameterHolderListener listener )
 	{
 		listeners.add( listener );
 	}
 
-	public void removeParameterListener( SecurityCheckParameterHolderListener listener )
+	public void removeParameterListener( SecurityScanParameterHolderListener listener )
 	{
 		listeners.remove( listener );
 	}
@@ -114,13 +114,13 @@ public class SecurityCheckedParameterHolder extends SecurityCheckParameterListen
 
 	public void fireParameterAdded( SecurityCheckedParameter parameter )
 	{
-		for( SecurityCheckParameterHolderListener listener : listeners )
+		for( SecurityScanParameterHolderListener listener : listeners )
 			listener.parameterAdded( parameter );
 	}
 
 	public void fireParameterRemoved( SecurityCheckedParameter parameter )
 	{
-		for( SecurityCheckParameterHolderListener listener : listeners )
+		for( SecurityScanParameterHolderListener listener : listeners )
 			listener.parameterRemoved( parameter );
 	}
 
@@ -146,7 +146,7 @@ public class SecurityCheckedParameterHolder extends SecurityCheckParameterListen
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * com.eviware.soapui.security.support.SecurityCheckParameterListenerAdapter
+	 * com.eviware.soapui.security.support.SecurityScanParameterListenerAdapter
 	 * #parameterLabelChanged
 	 * (com.eviware.soapui.model.security.SecurityCheckedParameter,
 	 * java.lang.String, java.lang.String)

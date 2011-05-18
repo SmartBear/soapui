@@ -6,7 +6,7 @@ package com.eviware.soapui.model.security;
  * @author robert
  * 
  */
-public interface SecurityCheckParameterHolderListener
+public interface SecurityScanParameterHolderListener
 {
 
 	/**

@@ -1,21 +1,21 @@
 package com.eviware.soapui.security.support;
 
-import com.eviware.soapui.model.security.SecurityCheckParameterListener;
+import com.eviware.soapui.model.security.SecurityScanParameterListener;
 import com.eviware.soapui.model.security.SecurityCheckedParameter;
 
 /**
- * Adapter class for SecurityCheckParameterListener
+ * Adapter class for SecurityScanParameterListener
  * 
  * @author robert
  * 
  */
-public class SecurityCheckParameterListenerAdapter implements SecurityCheckParameterListener
+public class SecurityScanParameterListenerAdapter implements SecurityScanParameterListener
 {
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.eviware.soapui.model.security.SecurityCheckParameterListener#
+	 * @see com.eviware.soapui.model.security.SecurityScanParameterListener#
 	 * parameterCheckedChanged
 	 * (com.eviware.soapui.model.security.SecurityCheckedParameter)
 	 */
@@ -29,7 +29,7 @@ public class SecurityCheckParameterListenerAdapter implements SecurityCheckParam
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.eviware.soapui.model.security.SecurityCheckParameterListener#
+	 * @see com.eviware.soapui.model.security.SecurityScanParameterListener#
 	 * parameterLabelChanged
 	 * (com.eviware.soapui.model.security.SecurityCheckedParameter,
 	 * java.lang.String, java.lang.String)
@@ -44,7 +44,7 @@ public class SecurityCheckParameterListenerAdapter implements SecurityCheckParam
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.eviware.soapui.model.security.SecurityCheckParameterListener#
+	 * @see com.eviware.soapui.model.security.SecurityScanParameterListener#
 	 * parameterNameChanged
 	 * (com.eviware.soapui.model.security.SecurityCheckedParameter,
 	 * java.lang.String, java.lang.String)
@@ -59,7 +59,7 @@ public class SecurityCheckParameterListenerAdapter implements SecurityCheckParam
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.eviware.soapui.model.security.SecurityCheckParameterListener#
+	 * @see com.eviware.soapui.model.security.SecurityScanParameterListener#
 	 * parameterTypeChanged
 	 * (com.eviware.soapui.model.security.SecurityCheckedParameter,
 	 * java.lang.String, java.lang.String)
@@ -74,7 +74,7 @@ public class SecurityCheckParameterListenerAdapter implements SecurityCheckParam
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.eviware.soapui.model.security.SecurityCheckParameterListener#
+	 * @see com.eviware.soapui.model.security.SecurityScanParameterListener#
 	 * parameterXPathChanged
 	 * (com.eviware.soapui.model.security.SecurityCheckedParameter,
 	 * java.lang.String, java.lang.String)
