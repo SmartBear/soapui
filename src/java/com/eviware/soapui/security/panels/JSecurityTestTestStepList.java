@@ -312,7 +312,7 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 			}
 
 			SecurityConfigurationDialog dialog = SoapUI.getSoapUICore().getSecurityScanRegistry().getUIBuilder()
-					.buildSecurityCheckConfigurationDialog( ( SecurityScan )securityCheck );
+					.buildSecurityScanConfigurationDialog( ( SecurityScan )securityCheck );
 
 			if( !dialog.configure() )
 			{
@@ -374,7 +374,7 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 				SecurityCheckConfig backupCheckConfig = ( SecurityCheckConfig )securityCheck.getConfig().copy();
 
 				SecurityConfigurationDialog dialog = SoapUI.getSoapUICore().getSecurityScanRegistry().getUIBuilder()
-						.buildSecurityCheckConfigurationDialog( ( SecurityScan )securityCheck );
+						.buildSecurityScanConfigurationDialog( ( SecurityScan )securityCheck );
 
 				if( !dialog.configure() )
 				{
@@ -567,7 +567,7 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 				SecurityCheckConfig backupCheckConfig = ( SecurityCheckConfig )securityCheck.getConfig().copy();
 
 				SecurityConfigurationDialog dialog = SoapUI.getSoapUICore().getSecurityScanRegistry().getUIBuilder()
-						.buildSecurityCheckConfigurationDialog( ( SecurityScan )securityCheck );
+						.buildSecurityScanConfigurationDialog( ( SecurityScan )securityCheck );
 
 				if( !dialog.configure() )
 				{

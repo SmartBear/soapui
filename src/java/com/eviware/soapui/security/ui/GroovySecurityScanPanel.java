@@ -26,7 +26,7 @@ import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.security.scan.GroovySecurityScan;
 import com.eviware.soapui.support.components.GroovyEditorComponent;
 
-public class GroovySecurityScanPanel extends SecurityCheckConfigPanel
+public class GroovySecurityScanPanel extends SecurityScanConfigPanel
 {
 	protected static final String SCRIPT_FIELD = "Script";
 

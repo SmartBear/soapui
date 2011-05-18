@@ -49,15 +49,15 @@ public class SecurityConfigurationDialogBuilder
 	// private GroovyEditorComponent setupGroovyEditor;
 	// private GroovyEditorComponent tearDownGroovyEditor;
 
-	public SecurityConfigurationDialog buildSecurityCheckConfigurationDialog( SecurityScan securityCheck )
+	public SecurityConfigurationDialog buildSecurityScanConfigurationDialog( SecurityScan securityCheck )
 	{
 		return new SecurityConfigurationDialog( securityCheck );
 
-		// return buildSecurityCheckConfigurationDialog(
-		// securityCheck.getConfigName(),
-		// securityCheck.getConfigDescription(), securityCheck.getIcon(),
-		// securityCheck.getHelpURL(),
-		// securityCheck.getComponent(), securityCheck );
+		// return buildSecurityScanConfigurationDialog(
+		// securityScan.getConfigName(),
+		// securityScan.getConfigDescription(), securityScan.getIcon(),
+		// securityScan.getHelpURL(),
+		// securityScan.getComponent(), securityScan );
 	}
 
 	/**
@@ -198,7 +198,7 @@ public class SecurityConfigurationDialogBuilder
 
 	}
 
-	// private GroovyEditorComponent buildTearDownScriptPanel( SecurityCheck
+	// private GroovyEditorComponent buildTearDownScriptPanel( SecurityScan
 	// securityCheck )
 	// {
 	// tearDownGroovyEditor = new GroovyEditorComponent( new
@@ -207,7 +207,7 @@ public class SecurityConfigurationDialogBuilder
 	// return tearDownGroovyEditor;
 	// }
 	//
-	// protected GroovyEditorComponent buildSetupScriptPanel( SecurityCheck
+	// protected GroovyEditorComponent buildSetupScriptPanel( SecurityScan
 	// securityCheck )
 	// {
 	// setupGroovyEditor = new GroovyEditorComponent( new
@@ -232,7 +232,7 @@ public class SecurityConfigurationDialogBuilder
 				.getTestStep().getProperties(), ( AbstractSecurityScanWithProperties )securityCheck ) );
 	}
 
-	private XFormDialog buildSecurityCheckConfigurationDialog( String name, String description, ImageIcon icon,
+	private XFormDialog buildSecurityScanConfigurationDialog( String name, String description, ImageIcon icon,
 			String helpUrl, JComponent component, SecurityScan securityCheck )
 	{
 		XFormDialog dialog = null;
@@ -400,12 +400,12 @@ public class SecurityConfigurationDialogBuilder
 	//
 	// // MockSecurityTestRunner securityTestRunner = new
 	// // MockSecurityTestRunner(
-	// // ( SecurityTest )( ( SecurityCheck
+	// // ( SecurityTest )( ( SecurityScan
 	// // )SetupScriptGroovyEditorModel.this.getModelItem()
 	// // ).getParent() );
 	// // try
 	// // {
-	// // ( ( SecurityCheck
+	// // ( ( SecurityScan
 	// // )SetupScriptGroovyEditorModel.this.getModelItem()
 	// // ).runSetupScript(
 	// // securityTestRunner, ( SecurityTestRunContext
@@ -450,10 +450,10 @@ public class SecurityConfigurationDialogBuilder
 	// // {
 	// // MockSecurityTestRunner securityTestRunner = new
 	// // MockSecurityTestRunner(
-	// // ( SecurityTest )( ( SecurityCheck
+	// // ( SecurityTest )( ( SecurityScan
 	// // )TearDownScriptGroovyEditorModel.this.getModelItem() )
 	// // .getParent() );
-	// // ( ( SecurityCheck
+	// // ( ( SecurityScan
 	// // )TearDownScriptGroovyEditorModel.this.getModelItem()
 	// // ).runTearDownScript(
 	// // securityTestRunner, ( SecurityTestRunContext
@@ -475,12 +475,12 @@ public class SecurityConfigurationDialogBuilder
 	//
 	// public String getScript()
 	// {
-	// return ( ( SecurityCheck )getModelItem() ).getTearDownScript();
+	// return ( ( SecurityScan )getModelItem() ).getTearDownScript();
 	// }
 	//
 	// public void setScript( String text )
 	// {
-	// ( ( SecurityCheck )getModelItem() ).setTearDownScript( text );
+	// ( ( SecurityScan )getModelItem() ).setTearDownScript( text );
 	// }
 	//
 	// }

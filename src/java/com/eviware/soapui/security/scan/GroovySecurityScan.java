@@ -26,7 +26,7 @@ import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.security.ui.GroovySecurityScanPanel;
-import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
+import com.eviware.soapui.security.ui.SecurityScanConfigPanel;
 import com.eviware.soapui.support.SecurityScanUtil;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
@@ -231,7 +231,7 @@ public class GroovySecurityScan extends AbstractSecurityScanWithProperties
 	}
 
 	@Override
-	public SecurityCheckConfigPanel getComponent()
+	public SecurityScanConfigPanel getComponent()
 	{
 		return new GroovySecurityScanPanel( this );
 	}
