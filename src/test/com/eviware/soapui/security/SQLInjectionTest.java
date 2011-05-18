@@ -20,7 +20,7 @@ import org.junit.Test;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.SecurityCheckConfig;
-import com.eviware.soapui.security.scan.SQLInjectionCheck;
+import com.eviware.soapui.security.scan.SQLInjectionScan;
 
 /**
  * @author dragica.soldo
@@ -38,15 +38,15 @@ public class SQLInjectionTest extends AbstractSecurityTestCaseWithMockService
 	{
 		super.setUp();
 		testStepName = "HTTP Test Request";
-		securityCheckType = SQLInjectionCheck.TYPE;
-		securityCheckName = SQLInjectionCheck.NAME;
+		securityCheckType = SQLInjectionScan.TYPE;
+		securityCheckName = SQLInjectionScan.NAME;
 	}
 
 	@Override
 	protected void addSecurityCheckConfig( SecurityCheckConfig securityCheckConfig )
 	{
 
-		SQLInjectionCheck sqlCheck = ( SQLInjectionCheck )SoapUI.getSoapUICore().getSecurityCheckRegistry()
+		SQLInjectionScan sqlCheck = ( SQLInjectionScan )SoapUI.getSoapUICore().getSecurityCheckRegistry()
 				.getFactory( securityCheckType ).buildSecurityCheck( testStep, securityCheckConfig, null );
 
 		List<String> params = new ArrayList<String>();

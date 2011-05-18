@@ -23,17 +23,17 @@ import com.eviware.soapui.impl.wsdl.panels.teststeps.support.AbstractGroovyEdito
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.security.SecurityScan;
 import com.eviware.soapui.model.testsuite.Assertable;
-import com.eviware.soapui.security.scan.GroovySecurityCheck;
+import com.eviware.soapui.security.scan.GroovySecurityScan;
 import com.eviware.soapui.support.components.GroovyEditorComponent;
 
-public class GroovySecurityCheckPanel extends SecurityCheckConfigPanel
+public class GroovySecurityScanPanel extends SecurityCheckConfigPanel
 {
 	protected static final String SCRIPT_FIELD = "Script";
 
-	private GroovySecurityCheck groovyCheck;
+	private GroovySecurityScan groovyCheck;
 	private GroovyEditorComponent groovyEditor;
 
-	public GroovySecurityCheckPanel( GroovySecurityCheck securityCheck )
+	public GroovySecurityScanPanel( GroovySecurityScan securityCheck )
 	{
 		super( new BorderLayout() );
 
@@ -70,12 +70,12 @@ public class GroovySecurityCheckPanel extends SecurityCheckConfigPanel
 
 		public String getScript()
 		{
-			return ( ( GroovySecurityCheck )getModelItem() ).getExecuteScript();
+			return ( ( GroovySecurityScan )getModelItem() ).getExecuteScript();
 		}
 
 		public void setScript( String text )
 		{
-			( ( GroovySecurityCheck )getModelItem() ).setExecuteScript( text );
+			( ( GroovySecurityScan )getModelItem() ).setExecuteScript( text );
 		}
 	}
 

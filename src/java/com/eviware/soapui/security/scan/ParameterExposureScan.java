@@ -60,26 +60,27 @@ import com.eviware.x.impl.swing.JStringListFormField;
  * @author nebojsa.tasic
  */
 
-public class ParameterExposureCheck extends AbstractSecurityScanWithProperties
+public class ParameterExposureScan extends AbstractSecurityScanWithProperties
 {
-	public static final String TYPE = "ParameterExposureCheck";
+	public static final String TYPE = "ParameterExposureCheck"; //temp
+	public static final String TYPE2 = "ParameterExposureScan";
 	public static final String NAME = "Cross Site Scripting";
-	public static final String PARAMETER_EXPOSURE_CHECK_CONFIG = "CrossSiteScriptingScanConfig";
+	public static final String PARAMETER_EXPOSURE_SCAN_CONFIG = "CrossSiteScriptingScanConfig";
 	public static final String TEST_CASE_RUNNER = "testCaseRunner";
 	public static final String TEST_STEP = "testStep";
-	private ParameterExposureCheckConfig parameterExposureCheckConfig;
+	private ParameterExposureCheckConfig parameterExposureScanConfig;
 	StrategyTypeConfig.Enum strategy = StrategyTypeConfig.ONE_BY_ONE;
 
 	List<String> defaultParameterExposureStrings = new ArrayList<String>();
 	private JFormDialog dialog;
 
-	public ParameterExposureCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent, String icon )
+	public ParameterExposureScan( TestStep testStep, SecurityCheckConfig config, ModelItem parent, String icon )
 	{
 		super( testStep, config, parent, icon );
 		if( config.getConfig() == null || !( config.getConfig() instanceof ParameterExposureCheckConfig ) )
 			initConfig();
 		else
-			parameterExposureCheckConfig = ( ParameterExposureCheckConfig )getConfig().getConfig();
+			parameterExposureScanConfig = ( ParameterExposureCheckConfig )getConfig().getConfig();
 
 	}
 
@@ -118,9 +119,9 @@ public class ParameterExposureCheck extends AbstractSecurityScanWithProperties
 	{
 		initDefaultVectors();
 		getConfig().setConfig( ParameterExposureCheckConfig.Factory.newInstance() );
-		parameterExposureCheckConfig = ( ParameterExposureCheckConfig )getConfig().getConfig();
+		parameterExposureScanConfig = ( ParameterExposureCheckConfig )getConfig().getConfig();
 
-		parameterExposureCheckConfig.setParameterExposureStringsArray( defaultParameterExposureStrings
+		parameterExposureScanConfig.setParameterExposureStringsArray( defaultParameterExposureStrings
 				.toArray( new String[defaultParameterExposureStrings.size()] ) );
 	}
 
@@ -129,9 +130,9 @@ public class ParameterExposureCheck extends AbstractSecurityScanWithProperties
 	{
 		super.updateSecurityConfig( config );
 
-		if( parameterExposureCheckConfig != null )
+		if( parameterExposureScanConfig != null )
 		{
-			parameterExposureCheckConfig = ( ParameterExposureCheckConfig )getConfig().getConfig();
+			parameterExposureScanConfig = ( ParameterExposureCheckConfig )getConfig().getConfig();
 		}
 	}
 
@@ -183,7 +184,7 @@ public class ParameterExposureCheck extends AbstractSecurityScanWithProperties
 		{
 			Stack<PropertyMutation> requestMutationsList = new Stack<PropertyMutation>();
 			context.put( PropertyMutation.REQUEST_MUTATIONS_STACK, requestMutationsList );
-			context.put( PARAMETER_EXPOSURE_CHECK_CONFIG, parameterExposureCheckConfig );
+			context.put( PARAMETER_EXPOSURE_SCAN_CONFIG, parameterExposureScanConfig );
 			try
 			{
 				extractMutations( testStep, context );
@@ -200,7 +201,7 @@ public class ParameterExposureCheck extends AbstractSecurityScanWithProperties
 		if( stack.empty() )
 		{
 			context.remove( PropertyMutation.REQUEST_MUTATIONS_STACK );
-			context.remove( PARAMETER_EXPOSURE_CHECK_CONFIG );
+			context.remove( PARAMETER_EXPOSURE_SCAN_CONFIG );
 			removeFromContext( context );
 			return false;
 		}
@@ -223,7 +224,7 @@ public class ParameterExposureCheck extends AbstractSecurityScanWithProperties
 	private void extractMutations( TestStep testStep, SecurityTestRunContext context )
 	{
 		strategy = getExecutionStrategy().getStrategy();
-		for( String value : parameterExposureCheckConfig.getParameterExposureStringsList() )
+		for( String value : parameterExposureScanConfig.getParameterExposureStringsList() )
 		{
 			// property expansion support
 			value = context.expand( value );
@@ -240,7 +241,7 @@ public class ParameterExposureCheck extends AbstractSecurityScanWithProperties
 				{
 					stsmap = new StringToStringMap();
 					model = SecurityScanUtil.getXmlObjectTreeModel( testStep, scp );
-					testStepCopy = SecurityTestRunnerImpl.cloneTestStepForSecurityCheck( ( WsdlTestStep )testStep );
+					testStepCopy = SecurityTestRunnerImpl.cloneTestStepForSecurityScan( ( WsdlTestStep )testStep );
 				}
 				else
 				{
@@ -250,7 +251,7 @@ public class ParameterExposureCheck extends AbstractSecurityScanWithProperties
 					}
 					if( testStepCopy == null )
 					{
-						testStepCopy = SecurityTestRunnerImpl.cloneTestStepForSecurityCheck( ( WsdlTestStep )testStep );
+						testStepCopy = SecurityTestRunnerImpl.cloneTestStepForSecurityScan( ( WsdlTestStep )testStep );
 					}
 				}
 
@@ -356,7 +357,7 @@ public class ParameterExposureCheck extends AbstractSecurityScanWithProperties
 		dialog = ( JFormDialog )ADialogBuilder.buildDialog( AdvancedSettings.class );
 		JStringListFormField stringField = ( JStringListFormField )dialog
 				.getFormField( AdvancedSettings.PARAMETER_EXPOSURE_STRINGS );
-		stringField.setOptions( parameterExposureCheckConfig.getParameterExposureStringsList().toArray() );
+		stringField.setOptions( parameterExposureScanConfig.getParameterExposureStringsList().toArray() );
 		stringField.setProperty( "dimension", new Dimension( 470, 150 ) );
 		stringField.getComponent().addPropertyChangeListener( "options", new PropertyChangeListener()
 		{
@@ -372,7 +373,7 @@ public class ParameterExposureCheck extends AbstractSecurityScanWithProperties
 					// new element is always added to the end
 					String[] newValue = ( String[] )evt.getNewValue();
 					String itemToAdd = newValue[newValue.length - 1];
-					parameterExposureCheckConfig.addParameterExposureStrings( itemToAdd );
+					parameterExposureScanConfig.addParameterExposureStrings( itemToAdd );
 				}
 				// removed
 				if( newOptions.length < oldOptions.length )
@@ -387,14 +388,14 @@ public class ParameterExposureCheck extends AbstractSecurityScanWithProperties
 						{
 							if( newOptions[cnt] != oldOptions[cnt] )
 							{
-								parameterExposureCheckConfig.removeParameterExposureStrings( cnt );
+								parameterExposureScanConfig.removeParameterExposureStrings( cnt );
 								break;
 							}
 						}
 						else
 						{
 							// this is border case, last lement in array is removed.
-							parameterExposureCheckConfig.removeParameterExposureStrings( oldOptions.length - 1 );
+							parameterExposureScanConfig.removeParameterExposureStrings( oldOptions.length - 1 );
 						}
 					}
 				}

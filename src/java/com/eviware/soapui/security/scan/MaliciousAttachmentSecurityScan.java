@@ -38,10 +38,11 @@ import com.eviware.soapui.security.ui.MaliciousAttachmentAdvancedSettingsPanel;
 import com.eviware.soapui.security.ui.MaliciousAttachmentMutationsPanel;
 import com.eviware.soapui.support.UISupport;
 
-public class MaliciousAttachmentSecurityCheck extends AbstractSecurityScan
+public class MaliciousAttachmentSecurityScan extends AbstractSecurityScan
 {
 
-	public static final String TYPE = "MaliciousAttachmentSecurityCheck";
+	public static final String TYPE = "MaliciousAttachmentSecurityCheck"; //temp
+	public static final String TYPE2 = "MaliciousAttachmentSecurityScan";
 	public static final String NAME = "Malicious Attachment";
 
 	private MaliciousAttachmentSecurityCheckConfig config;
@@ -52,7 +53,7 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityScan
 	private int elementIndex = -1;
 	private int valueIndex = -1;
 
-	public MaliciousAttachmentSecurityCheck( SecurityCheckConfig newConfig, ModelItem parent, String icon,
+	public MaliciousAttachmentSecurityScan( SecurityCheckConfig newConfig, ModelItem parent, String icon,
 			TestStep testStep )
 	{
 		super( testStep, newConfig, parent, icon );

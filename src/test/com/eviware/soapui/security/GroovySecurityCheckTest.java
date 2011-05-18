@@ -16,7 +16,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.eviware.soapui.config.SecurityCheckConfig;
-import com.eviware.soapui.security.scan.GroovySecurityCheck;
+import com.eviware.soapui.security.scan.GroovySecurityScan;
 
 /**
  * @author nebojsa.tasic
@@ -34,13 +34,13 @@ public class GroovySecurityCheckTest extends AbstractSecurityTestCaseWithMockSer
 	{
 		super.setUp();
 		testStepName = "SEK to USD Test";
-		securityCheckType = GroovySecurityCheck.TYPE;
-		securityCheckName = GroovySecurityCheck.TYPE;
+		securityCheckType = GroovySecurityScan.TYPE;
+		securityCheckName = GroovySecurityScan.TYPE;
 	}
 
 	protected void addSecurityCheckConfig( SecurityCheckConfig securityCheckConfig )
 	{
-		GroovySecurityCheck gsc = new GroovySecurityCheck( testStep, securityCheckConfig, null, null );
+		GroovySecurityScan gsc = new GroovySecurityScan( testStep, securityCheckConfig, null, null );
 		gsc.setExecuteScript( "println('');println \"this is print from GroovySecurityScan on test step '${testStep.name}'\";println('')" );
 	}
 

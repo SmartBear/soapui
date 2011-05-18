@@ -57,10 +57,11 @@ import com.eviware.x.impl.swing.JStringListFormField;
  * @author soapui team
  */
 
-public class SQLInjectionCheck extends AbstractSecurityScanWithProperties
+public class SQLInjectionScan extends AbstractSecurityScanWithProperties
 {
 
-	public static final String TYPE = "SQLInjectionCheck";
+	public static final String TYPE = "SQLInjectionCheck"; //temp
+	public static final String TYPE2 = "SQLInjectionScan";
 	public static final String NAME = "SQL Injection";
 
 	private SQLInjectionCheckConfig sqlInjectionConfig;
@@ -75,7 +76,7 @@ public class SQLInjectionCheck extends AbstractSecurityScanWithProperties
 	private boolean mutation;
 	private JFormDialog dialog;
 
-	public SQLInjectionCheck( SecurityCheckConfig config, ModelItem parent, String icon, TestStep testStep )
+	public SQLInjectionScan( SecurityCheckConfig config, ModelItem parent, String icon, TestStep testStep )
 	{
 		super( testStep, config, parent, icon );
 		if( config.getConfig() == null || !( config.getConfig() instanceof SQLInjectionCheckConfig ) )

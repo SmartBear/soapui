@@ -31,13 +31,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import com.eviware.soapui.security.scan.XmlBombSecurityCheck;
+import com.eviware.soapui.security.scan.XmlBombSecurityScan;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.components.SimpleForm;
 
 @SuppressWarnings( "serial" )
-public class XmlBombSecurityCheckConfigPanel extends JPanel
+public class XmlBombSecurityScanConfigPanel extends JPanel
 {
 	private static final String ATTACHMENT_PREFIX_FIELD = "Attachment Prefix Field";
 	private static final String ENABLE_ATTACHMENT_FIELD = "Send bomb as attachment";
@@ -53,9 +53,9 @@ public class XmlBombSecurityCheckConfigPanel extends JPanel
 	protected int internalPosition;
 	protected int externalPosition;
 	private SimpleForm form;
-	private XmlBombSecurityCheck xmlChk;
+	private XmlBombSecurityScan xmlChk;
 
-	public XmlBombSecurityCheckConfigPanel( XmlBombSecurityCheck xmlCheck )
+	public XmlBombSecurityScanConfigPanel( XmlBombSecurityScan xmlCheck )
 	{
 		super( new BorderLayout() );
 

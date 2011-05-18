@@ -19,7 +19,7 @@ import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.scan.AbstractSecurityScan;
-import com.eviware.soapui.security.scan.ParameterExposureCheck;
+import com.eviware.soapui.security.scan.ParameterExposureScan;
 
 /**
  * Factory for creation parameter exposure check
@@ -32,7 +32,7 @@ public class ParameterExposureCheckFactory extends AbstractSecurityCheckFactory
 
 	public ParameterExposureCheckFactory()
 	{
-		super( ParameterExposureCheck.TYPE, ParameterExposureCheck.NAME, "Preforms a scan for Parameter Exposure",
+		super( ParameterExposureScan.TYPE, ParameterExposureScan.NAME, "Preforms a scan for Parameter Exposure",
 				"/parameter_exposure_check_script.gif" );
 	}
 
@@ -44,14 +44,14 @@ public class ParameterExposureCheckFactory extends AbstractSecurityCheckFactory
 	@Override
 	public AbstractSecurityScan buildSecurityCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent )
 	{
-		return new ParameterExposureCheck( testStep, config, parent, null );
+		return new ParameterExposureScan( testStep, config, parent, null );
 	}
 
 	@Override
 	public SecurityCheckConfig createNewSecurityCheck( String name )
 	{
 		SecurityCheckConfig securityCheckConfig = SecurityCheckConfig.Factory.newInstance();
-		securityCheckConfig.setType( ParameterExposureCheck.TYPE );
+		securityCheckConfig.setType( ParameterExposureScan.TYPE );
 		securityCheckConfig.setName( name );
 		return securityCheckConfig;
 	}

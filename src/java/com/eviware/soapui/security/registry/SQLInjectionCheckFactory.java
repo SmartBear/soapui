@@ -19,7 +19,7 @@ import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.scan.AbstractSecurityScan;
-import com.eviware.soapui.security.scan.SQLInjectionCheck;
+import com.eviware.soapui.security.scan.SQLInjectionScan;
 
 /**
  * Factory for creation GroovyScript steps
@@ -32,7 +32,7 @@ public class SQLInjectionCheckFactory extends AbstractSecurityCheckFactory
 
 	public SQLInjectionCheckFactory()
 	{
-		super( SQLInjectionCheck.TYPE, SQLInjectionCheck.NAME, "Preforms a scan for SQL Injection Vulnerabilities",
+		super( SQLInjectionScan.TYPE, SQLInjectionScan.NAME, "Preforms a scan for SQL Injection Vulnerabilities",
 				"/sql_injection_check_script.gif" );
 	}
 
@@ -45,14 +45,14 @@ public class SQLInjectionCheckFactory extends AbstractSecurityCheckFactory
 	@Override
 	public AbstractSecurityScan buildSecurityCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent )
 	{
-		return new SQLInjectionCheck( config, parent, null, testStep );
+		return new SQLInjectionScan( config, parent, null, testStep );
 	}
 
 	@Override
 	public SecurityCheckConfig createNewSecurityCheck( String name )
 	{
 		SecurityCheckConfig securityCheckConfig = SecurityCheckConfig.Factory.newInstance();
-		securityCheckConfig.setType( SQLInjectionCheck.TYPE );
+		securityCheckConfig.setType( SQLInjectionScan.TYPE );
 		securityCheckConfig.setName( name );
 		return securityCheckConfig;
 	}

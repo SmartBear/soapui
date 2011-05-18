@@ -24,7 +24,7 @@ import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.model.testsuite.AssertionException;
 import com.eviware.soapui.model.testsuite.ResponseAssertion;
-import com.eviware.soapui.security.scan.ParameterExposureCheck;
+import com.eviware.soapui.security.scan.ParameterExposureScan;
 import com.eviware.soapui.support.SecurityScanUtil;
 
  class ParameterExposureAssertion extends WsdlMessageAssertion implements ResponseAssertion
@@ -42,7 +42,7 @@ import com.eviware.soapui.support.SecurityScanUtil;
 			throws AssertionException
 	{
 		ParameterExposureCheckConfig parameterExposureCheckConfig = ( ParameterExposureCheckConfig )context
-				.getProperty( ParameterExposureCheck.PARAMETER_EXPOSURE_CHECK_CONFIG );
+				.getProperty( ParameterExposureScan.PARAMETER_EXPOSURE_SCAN_CONFIG );
 		boolean throwException = false;
 		List<AssertionError> assertionErrorList = new ArrayList<AssertionError>();
 		throwException = assertImediateResponse( messageExchange, context, parameterExposureCheckConfig, throwException,

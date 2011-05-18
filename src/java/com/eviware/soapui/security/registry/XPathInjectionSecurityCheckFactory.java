@@ -19,21 +19,21 @@ import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.scan.AbstractSecurityScan;
-import com.eviware.soapui.security.scan.XPathInjectionSecurityCheck;
+import com.eviware.soapui.security.scan.XPathInjectionSecurityScan;
 
 public class XPathInjectionSecurityCheckFactory extends AbstractSecurityCheckFactory
 {
 
 	public XPathInjectionSecurityCheckFactory()
 	{
-		super( XPathInjectionSecurityCheck.TYPE, XPathInjectionSecurityCheck.NAME,
+		super( XPathInjectionSecurityScan.TYPE, XPathInjectionSecurityScan.NAME,
 				"Preforms a scan for XPath Injection Vulerabilities", null );
 	}
 
 	@Override
 	public AbstractSecurityScan buildSecurityCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent )
 	{
-		return new XPathInjectionSecurityCheck( testStep, config, parent, null );
+		return new XPathInjectionSecurityScan( testStep, config, parent, null );
 	}
 
 	@Override
@@ -47,7 +47,7 @@ public class XPathInjectionSecurityCheckFactory extends AbstractSecurityCheckFac
 	public SecurityCheckConfig createNewSecurityCheck( String name )
 	{
 		SecurityCheckConfig securityCheckConfig = SecurityCheckConfig.Factory.newInstance();
-		securityCheckConfig.setType( XPathInjectionSecurityCheck.TYPE );
+		securityCheckConfig.setType( XPathInjectionSecurityScan.TYPE );
 		securityCheckConfig.setName( name );
 		return securityCheckConfig;
 	}

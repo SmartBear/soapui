@@ -17,7 +17,7 @@ import org.junit.Test;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.SecurityCheckConfig;
-import com.eviware.soapui.security.scan.ParameterExposureCheck;
+import com.eviware.soapui.security.scan.ParameterExposureScan;
 import com.eviware.soapui.support.types.StringToObjectMap;
 
 /**
@@ -36,8 +36,8 @@ public class ParameterExposureTest extends AbstractSecurityTestCaseWithMockServi
 	{
 		super.setUp();
 		testStepName = "HTTP Test Request";
-		securityCheckType = ParameterExposureCheck.TYPE;
-		securityCheckName = ParameterExposureCheck.NAME;
+		securityCheckType = ParameterExposureScan.TYPE;
+		securityCheckName = ParameterExposureScan.NAME;
 	}
 
 	@Override

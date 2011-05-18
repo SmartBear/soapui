@@ -47,10 +47,11 @@ import com.eviware.soapui.support.xml.XmlObjectTreeModel;
 import com.eviware.soapui.support.xml.XmlUtils;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel.XmlTreeNode;
 
-public class InvalidTypesSecurityCheck extends AbstractSecurityScanWithProperties
+public class InvalidTypesSecurityScan extends AbstractSecurityScanWithProperties
 {
 
 	public final static String TYPE = "InvalidTypesSecurityCheck";
+	public final static String TYPE2 = "InvalidTypesSecurityScan"; //temp
 	public final static String NAME = "Invalid Types";
 
 	private InvalidTypesForSOAP invalidTypes;
@@ -61,7 +62,7 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityScanWithPropertie
 
 	private boolean mutation;
 
-	public InvalidTypesSecurityCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent, String icon )
+	public InvalidTypesSecurityScan( TestStep testStep, SecurityCheckConfig config, ModelItem parent, String icon )
 	{
 		super( testStep, config, parent, icon );
 
@@ -113,11 +114,11 @@ public class InvalidTypesSecurityCheck extends AbstractSecurityScanWithPropertie
 	}
 
 	/*
-	 * There is no advanced settings/special for this security check
+	 * There is no advanced settings/special for this security scan
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * com.eviware.soapui.security.check.AbstractSecurityCheck#getComponent()
+	 * com.eviware.soapui.security.scan.AbstractSecurityScan#getComponent()
 	 */
 	@Override
 	public JComponent getComponent()

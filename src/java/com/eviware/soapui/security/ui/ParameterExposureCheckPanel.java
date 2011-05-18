@@ -19,7 +19,7 @@ import java.awt.event.KeyListener;
 
 import javax.swing.JTextField;
 
-import com.eviware.soapui.security.scan.ParameterExposureCheck;
+import com.eviware.soapui.security.scan.ParameterExposureScan;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.components.SimpleForm;
 
@@ -32,9 +32,9 @@ public class ParameterExposureCheckPanel extends SecurityCheckConfigPanel
 {
 	protected static final String MINIMUM_CHARACTERS_FIELD = "Minimum Characters";
 
-	private ParameterExposureCheck parameterCheck;
+	private ParameterExposureScan parameterCheck;
 
-	public ParameterExposureCheckPanel( ParameterExposureCheck parameterCheck )
+	public ParameterExposureCheckPanel( ParameterExposureScan parameterCheck )
 	{
 		super( new BorderLayout() );
 

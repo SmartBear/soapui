@@ -43,10 +43,11 @@ import com.eviware.soapui.support.xml.XmlUtils;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel.AttributeXmlTreeNode;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel.XmlTreeNode;
 
-public class MalformedXmlSecurityCheck extends AbstractSecurityScanWithProperties
+public class MalformedXmlSecurityScan extends AbstractSecurityScanWithProperties
 {
 
-	public static final String TYPE = "MalformedXmlSecurityCheck";
+	public static final String TYPE = "MalformedXmlSecurityCheck"; //temp
+	public static final String TYPE2 = "MalformedXmlSecurityScan";
 	public static final String NAME = "Malformed XML";
 	private Map<SecurityCheckedParameter, ArrayList<String>> parameterMutations = new HashMap<SecurityCheckedParameter, ArrayList<String>>();
 	private boolean mutation;
@@ -54,7 +55,7 @@ public class MalformedXmlSecurityCheck extends AbstractSecurityScanWithPropertie
 	private MalformedXmlAttributeConfig malformedAttributeConfig;
 	private MalformedXmlAdvancedSettingsPanel advancedSettingsPanel;
 
-	public MalformedXmlSecurityCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent, String icon )
+	public MalformedXmlSecurityScan( TestStep testStep, SecurityCheckConfig config, ModelItem parent, String icon )
 	{
 		super( testStep, config, parent, icon );
 		if( config.getConfig() == null || !( config.getConfig() instanceof MalformedXmlConfig ) )

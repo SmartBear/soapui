@@ -16,21 +16,21 @@ import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.scan.AbstractSecurityScan;
-import com.eviware.soapui.security.scan.MalformedXmlSecurityCheck;
+import com.eviware.soapui.security.scan.MalformedXmlSecurityScan;
 
 public class MalformedXmlSecurityCheckFactory extends AbstractSecurityCheckFactory
 {
 
 	public MalformedXmlSecurityCheckFactory()
 	{
-		super( MalformedXmlSecurityCheck.TYPE, MalformedXmlSecurityCheck.NAME,
+		super( MalformedXmlSecurityScan.TYPE, MalformedXmlSecurityScan.NAME,
 				"Preforms a scan for Malformed XML Vulerabilities", null );
 	}
 
 	@Override
 	public AbstractSecurityScan buildSecurityCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent )
 	{
-		return new MalformedXmlSecurityCheck( testStep, config, parent, null );
+		return new MalformedXmlSecurityScan( testStep, config, parent, null );
 	}
 
 	@Override
@@ -43,7 +43,7 @@ public class MalformedXmlSecurityCheckFactory extends AbstractSecurityCheckFacto
 	public SecurityCheckConfig createNewSecurityCheck( String name )
 	{
 		SecurityCheckConfig securityCheckConfig = SecurityCheckConfig.Factory.newInstance();
-		securityCheckConfig.setType( MalformedXmlSecurityCheck.TYPE );
+		securityCheckConfig.setType( MalformedXmlSecurityScan.TYPE );
 		securityCheckConfig.setName( name );
 		return securityCheckConfig;
 	}

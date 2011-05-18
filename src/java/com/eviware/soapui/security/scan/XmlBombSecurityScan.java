@@ -41,13 +41,14 @@ import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
-import com.eviware.soapui.security.ui.XmlBombSecurityCheckConfigPanel;
+import com.eviware.soapui.security.ui.XmlBombSecurityScanConfigPanel;
 import com.eviware.soapui.support.types.StringToStringMap;
 
-public class XmlBombSecurityCheck extends AbstractSecurityScanWithProperties
+public class XmlBombSecurityScan extends AbstractSecurityScanWithProperties
 {
 
-	public static final String TYPE = "XmlBombSecurityCheck";
+	public static final String TYPE = "XmlBombSecurityCheck"; //temp
+	public static final String TYPE2 = "XmlBombSecurityScan";
 	public static final String NAME = "XML Bomb";
 	private static final String DEFAULT_PREFIX = "xmlbomb";
 
@@ -56,7 +57,7 @@ public class XmlBombSecurityCheck extends AbstractSecurityScanWithProperties
 	private Map<SecurityCheckedParameter, ArrayList<String>> parameterMutations = new HashMap<SecurityCheckedParameter, ArrayList<String>>();
 	private boolean mutation;
 
-	public XmlBombSecurityCheck( SecurityCheckConfig config, ModelItem parent, String icon, TestStep testStep )
+	public XmlBombSecurityScan( SecurityCheckConfig config, ModelItem parent, String icon, TestStep testStep )
 	{
 		super( testStep, config, parent, icon );
 		if( config.getConfig() == null || !( config.getConfig() instanceof XmlBombSecurityCheckConfig ) )
@@ -217,7 +218,7 @@ public class XmlBombSecurityCheck extends AbstractSecurityScanWithProperties
 	@Override
 	public JComponent getAdvancedSettingsPanel()
 	{
-		return new XmlBombSecurityCheckConfigPanel( this );
+		return new XmlBombSecurityScanConfigPanel( this );
 	}
 
 	@Override

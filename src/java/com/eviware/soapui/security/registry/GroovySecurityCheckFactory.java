@@ -18,7 +18,7 @@ import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.scan.AbstractSecurityScan;
-import com.eviware.soapui.security.scan.GroovySecurityCheck;
+import com.eviware.soapui.security.scan.GroovySecurityScan;
 
 /**
  * Factory for creation GroovyScript steps
@@ -31,7 +31,7 @@ public class GroovySecurityCheckFactory extends AbstractSecurityCheckFactory
 
 	public GroovySecurityCheckFactory()
 	{
-		super( GroovySecurityCheck.TYPE, GroovySecurityCheck.NAME,
+		super( GroovySecurityScan.TYPE, GroovySecurityScan.NAME,
 				"Executes the specified groovy script for security scan", "/groovy_security_check_script.gif" );
 	}
 
@@ -43,14 +43,14 @@ public class GroovySecurityCheckFactory extends AbstractSecurityCheckFactory
 	@Override
 	public AbstractSecurityScan buildSecurityCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent )
 	{
-		return new GroovySecurityCheck( testStep, config, parent, null );
+		return new GroovySecurityScan( testStep, config, parent, null );
 	}
 
 	@Override
 	public SecurityCheckConfig createNewSecurityCheck( String name )
 	{
 		SecurityCheckConfig securityCheckConfig = SecurityCheckConfig.Factory.newInstance();
-		securityCheckConfig.setType( GroovySecurityCheck.TYPE );
+		securityCheckConfig.setType( GroovySecurityScan.TYPE );
 		securityCheckConfig.setName( name );
 		GroovySecurityCheckConfig groovyscc = GroovySecurityCheckConfig.Factory.newInstance();
 		groovyscc.setExecuteScript( ScriptConfig.Factory.newInstance() );

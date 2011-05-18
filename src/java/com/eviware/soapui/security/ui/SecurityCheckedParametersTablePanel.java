@@ -35,7 +35,7 @@ import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.security.actions.CloneParametersAction;
 import com.eviware.soapui.security.scan.AbstractSecurityScanWithProperties;
 import com.eviware.soapui.security.scan.BoundarySecurityScan;
-import com.eviware.soapui.security.scan.InvalidTypesSecurityCheck;
+import com.eviware.soapui.security.scan.InvalidTypesSecurityScan;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.DefaultActionList;
 import com.eviware.soapui.support.components.JUndoableTextArea;
@@ -111,9 +111,9 @@ public class SecurityCheckedParametersTablePanel extends JPanel implements ListS
 		{
 			( ( BoundarySecurityScan )securityCheck ).refreshRestrictionLabel( -1 );
 		}
-		if( securityCheck instanceof InvalidTypesSecurityCheck )
+		if( securityCheck instanceof InvalidTypesSecurityScan )
 		{
-			( ( InvalidTypesSecurityCheck )securityCheck ).refreshRestrictionLabel( -1 );
+			( ( InvalidTypesSecurityScan )securityCheck ).refreshRestrictionLabel( -1 );
 		}
 	}
 
@@ -415,9 +415,9 @@ public class SecurityCheckedParametersTablePanel extends JPanel implements ListS
 		{
 			( ( BoundarySecurityScan )securityCheck ).refreshRestrictionLabel( dlsm.getAnchorSelectionIndex() );
 		}
-		if( securityCheck instanceof InvalidTypesSecurityCheck )
+		if( securityCheck instanceof InvalidTypesSecurityScan )
 		{
-			( ( InvalidTypesSecurityCheck )securityCheck ).refreshRestrictionLabel( dlsm.getAnchorSelectionIndex() );
+			( ( InvalidTypesSecurityScan )securityCheck ).refreshRestrictionLabel( dlsm.getAnchorSelectionIndex() );
 		}
 	}
 }

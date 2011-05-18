@@ -25,7 +25,7 @@ import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
-import com.eviware.soapui.security.ui.GroovySecurityCheckPanel;
+import com.eviware.soapui.security.ui.GroovySecurityScanPanel;
 import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
 import com.eviware.soapui.support.SecurityScanUtil;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
@@ -39,10 +39,11 @@ import com.eviware.soapui.support.xml.XmlObjectTreeModel.XmlTreeNode;
  * @author soapui team
  */
 
-public class GroovySecurityCheck extends AbstractSecurityScanWithProperties
+public class GroovySecurityScan extends AbstractSecurityScanWithProperties
 {
-	public static final String SCRIPT_PROPERTY = GroovySecurityCheck.class.getName() + "@script";
+	public static final String SCRIPT_PROPERTY = GroovySecurityScan.class.getName() + "@script";
 	public static final String TYPE = "GroovySecurityCheck";
+	public static final String TYPE2 = "GroovySecurityScan";//temp
 	public static final String NAME = "Custom Script";
 	private GroovySecurityCheckConfig groovyscc;
 	private Boolean hasNext = true;
@@ -56,7 +57,7 @@ public class GroovySecurityCheck extends AbstractSecurityScanWithProperties
 
 	private static final String PARAMETERS_INITIALIZED = "parameterInitialized";
 
-	public GroovySecurityCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent, String icon )
+	public GroovySecurityScan( TestStep testStep, SecurityCheckConfig config, ModelItem parent, String icon )
 	{
 
 		super( testStep, config, parent, icon );
@@ -232,7 +233,7 @@ public class GroovySecurityCheck extends AbstractSecurityScanWithProperties
 	@Override
 	public SecurityCheckConfigPanel getComponent()
 	{
-		return new GroovySecurityCheckPanel( this );
+		return new GroovySecurityScanPanel( this );
 	}
 
 	@Override

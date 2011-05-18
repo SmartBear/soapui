@@ -18,7 +18,7 @@ import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.scan.AbstractSecurityScan;
-import com.eviware.soapui.security.scan.MaliciousAttachmentSecurityCheck;
+import com.eviware.soapui.security.scan.MaliciousAttachmentSecurityScan;
 
 /**
  * Factory for creation GroovyScript steps
@@ -31,7 +31,7 @@ public class MaliciousAttachmentSecurityCheckFactory extends AbstractSecurityChe
 
 	public MaliciousAttachmentSecurityCheckFactory()
 	{
-		super( MaliciousAttachmentSecurityCheck.TYPE, MaliciousAttachmentSecurityCheck.NAME,
+		super( MaliciousAttachmentSecurityScan.TYPE, MaliciousAttachmentSecurityScan.NAME,
 				"Performs a scan for Malicious Attachment Vulnerabilities", null);
 	}
 
@@ -43,14 +43,14 @@ public class MaliciousAttachmentSecurityCheckFactory extends AbstractSecurityChe
 	@Override
 	public AbstractSecurityScan buildSecurityCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent )
 	{
-		return new MaliciousAttachmentSecurityCheck( config, parent, null, testStep );
+		return new MaliciousAttachmentSecurityScan( config, parent, null, testStep );
 	}
 
 	@Override
 	public SecurityCheckConfig createNewSecurityCheck( String name )
 	{
 		SecurityCheckConfig securityCheckConfig = SecurityCheckConfig.Factory.newInstance();
-		securityCheckConfig.setType( MaliciousAttachmentSecurityCheck.TYPE );
+		securityCheckConfig.setType( MaliciousAttachmentSecurityScan.TYPE );
 		securityCheckConfig.setName( name );
 		MaliciousAttachmentSecurityCheckConfig sic = MaliciousAttachmentSecurityCheckConfig.Factory.newInstance();
 		securityCheckConfig.setConfig( sic );

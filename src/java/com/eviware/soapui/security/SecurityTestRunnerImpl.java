@@ -118,7 +118,7 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 	 * @param sourceTestStep
 	 * @return TestStep
 	 */
-	public static TestStep cloneTestStepForSecurityCheck( WsdlTestStep sourceTestStep )
+	public static TestStep cloneTestStepForSecurityScan( WsdlTestStep sourceTestStep )
 	{
 		WsdlTestStep clonedTestStep = null;
 		TestStepConfig testStepConfig = ( TestStepConfig )sourceTestStep.getConfig().copy();

@@ -18,7 +18,7 @@ import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.scan.AbstractSecurityScan;
-import com.eviware.soapui.security.scan.XmlBombSecurityCheck;
+import com.eviware.soapui.security.scan.XmlBombSecurityScan;
 
 /**
  * Factory for creation GroovyScript steps
@@ -31,7 +31,7 @@ public class XmlBombSecurityCheckFactory extends AbstractSecurityCheckFactory
 
 	public XmlBombSecurityCheckFactory()
 	{
-		super( XmlBombSecurityCheck.TYPE, XmlBombSecurityCheck.NAME, "Performs a scan for XML Bomb Vulnerabilities",
+		super( XmlBombSecurityScan.TYPE, XmlBombSecurityScan.NAME, "Performs a scan for XML Bomb Vulnerabilities",
 				"/xml_bomb_security_check_script.gif" );
 	}
 
@@ -43,14 +43,14 @@ public class XmlBombSecurityCheckFactory extends AbstractSecurityCheckFactory
 	@Override
 	public AbstractSecurityScan buildSecurityCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent )
 	{
-		return new XmlBombSecurityCheck( config, parent, null, testStep );
+		return new XmlBombSecurityScan( config, parent, null, testStep );
 	}
 
 	@Override
 	public SecurityCheckConfig createNewSecurityCheck( String name )
 	{
 		SecurityCheckConfig securityCheckConfig = SecurityCheckConfig.Factory.newInstance();
-		securityCheckConfig.setType( XmlBombSecurityCheck.TYPE );
+		securityCheckConfig.setType( XmlBombSecurityScan.TYPE );
 		securityCheckConfig.setName( name );
 		return securityCheckConfig;
 	}

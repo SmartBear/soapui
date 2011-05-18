@@ -50,7 +50,7 @@ import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.security.SecurityTestRunnerImpl;
-import com.eviware.soapui.security.scan.ParameterExposureCheck;
+import com.eviware.soapui.security.scan.ParameterExposureScan;
 import com.eviware.soapui.support.SecurityScanUtil;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.GroovyEditorComponent;
@@ -106,15 +106,15 @@ public class CrossSiteScriptAssertion extends WsdlMessageAssertion implements Re
 	protected String internalAssertResponse( MessageExchange messageExchange, SubmitContext context )
 			throws AssertionException
 	{
-		TestStep testStep = ( TestStep )context.getProperty( ParameterExposureCheck.TEST_STEP );
-		testStep = SecurityTestRunnerImpl.cloneTestStepForSecurityCheck( ( WsdlTestStep )testStep );
+		TestStep testStep = ( TestStep )context.getProperty( ParameterExposureScan.TEST_STEP );
+		testStep = SecurityTestRunnerImpl.cloneTestStepForSecurityScan( ( WsdlTestStep )testStep );
 		SecurityTestRunner securityTestRunner = ( SecurityTestRunner )context
-				.getProperty( ParameterExposureCheck.TEST_CASE_RUNNER );
+				.getProperty( ParameterExposureScan.TEST_CASE_RUNNER );
 
 		List<String> urls = submitScript( messageExchange, context );
 
 		ParameterExposureCheckConfig parameterExposureCheckConfig = ( ParameterExposureCheckConfig )context
-				.getProperty( ParameterExposureCheck.PARAMETER_EXPOSURE_CHECK_CONFIG );
+				.getProperty( ParameterExposureScan.PARAMETER_EXPOSURE_SCAN_CONFIG );
 
 		List<AssertionError> assertionErrorList = new ArrayList<AssertionError>();
 		boolean throwExceptionCheckResponse = false;
@@ -244,7 +244,7 @@ public class CrossSiteScriptAssertion extends WsdlMessageAssertion implements Re
 		public Factory()
 		{
 			super( CrossSiteScriptAssertion.ID, CrossSiteScriptAssertion.LABEL, CrossSiteScriptAssertion.class,
-					ParameterExposureCheck.class );
+					ParameterExposureScan.class );
 
 		}
 
