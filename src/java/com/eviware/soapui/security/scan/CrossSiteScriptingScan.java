@@ -60,10 +60,10 @@ import com.eviware.x.impl.swing.JStringListFormField;
  * @author nebojsa.tasic
  */
 
-public class ParameterExposureScan extends AbstractSecurityScanWithProperties
+public class CrossSiteScriptingScan extends AbstractSecurityScanWithProperties
 {
 	public static final String TYPE = "ParameterExposureCheck"; //temp
-	public static final String TYPE2 = "ParameterExposureScan";
+	public static final String TYPE2 = " CrossSiteScriptingScan";
 	public static final String NAME = "Cross Site Scripting";
 	public static final String PARAMETER_EXPOSURE_SCAN_CONFIG = "CrossSiteScriptingScanConfig";
 	public static final String TEST_CASE_RUNNER = "testCaseRunner";
@@ -74,7 +74,7 @@ public class ParameterExposureScan extends AbstractSecurityScanWithProperties
 	List<String> defaultParameterExposureStrings = new ArrayList<String>();
 	private JFormDialog dialog;
 
-	public ParameterExposureScan( TestStep testStep, SecurityCheckConfig config, ModelItem parent, String icon )
+	public CrossSiteScriptingScan( TestStep testStep, SecurityCheckConfig config, ModelItem parent, String icon )
 	{
 		super( testStep, config, parent, icon );
 		if( config.getConfig() == null || !( config.getConfig() instanceof ParameterExposureCheckConfig ) )

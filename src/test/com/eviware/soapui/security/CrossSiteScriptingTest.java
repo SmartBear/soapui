@@ -17,14 +17,14 @@ import org.junit.Test;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.SecurityCheckConfig;
-import com.eviware.soapui.security.scan.ParameterExposureScan;
+import com.eviware.soapui.security.scan.CrossSiteScriptingScan;
 import com.eviware.soapui.support.types.StringToObjectMap;
 
 /**
  * @author dragica.soldo
  * 
  */
-public class ParameterExposureTest extends AbstractSecurityTestCaseWithMockService
+public class CrossSiteScriptingTest extends AbstractSecurityTestCaseWithMockService
 {
 
 	/**
@@ -36,8 +36,8 @@ public class ParameterExposureTest extends AbstractSecurityTestCaseWithMockServi
 	{
 		super.setUp();
 		testStepName = "HTTP Test Request";
-		securityCheckType = ParameterExposureScan.TYPE;
-		securityCheckName = ParameterExposureScan.NAME;
+		securityCheckType = CrossSiteScriptingScan.TYPE;
+		securityCheckName = CrossSiteScriptingScan.NAME;
 	}
 
 	@Override

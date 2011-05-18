@@ -19,41 +19,42 @@ import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.scan.AbstractSecurityScan;
-import com.eviware.soapui.security.scan.ParameterExposureScan;
+import com.eviware.soapui.security.scan.FuzzerSecurityScan;
 
 /**
- * Factory for creation parameter exposure check
+ * Factory for creation Fuzzer scan
  * 
- * @author soapUI team
+ * @author nebojsa.tasic
  */
 
-public class ParameterExposureCheckFactory extends AbstractSecurityCheckFactory
+public class FuzzerSecurityScanFactory extends AbstractSecurityCheckFactory
 {
 
-	public ParameterExposureCheckFactory()
+	public FuzzerSecurityScanFactory()
 	{
-		super( ParameterExposureScan.TYPE, ParameterExposureScan.NAME, "Preforms a scan for Parameter Exposure",
-				"/parameter_exposure_check_script.gif" );
-	}
-
-	public boolean canCreate( TestStep testStep )
-	{
-		return testStep instanceof WsdlTestRequestStep || testStep instanceof RestTestRequestStep || testStep instanceof HttpTestRequestStep;
-	}
-
-	@Override
-	public AbstractSecurityScan buildSecurityScan( TestStep testStep, SecurityCheckConfig config, ModelItem parent )
-	{
-		return new ParameterExposureScan( testStep, config, parent, null );
+		super( FuzzerSecurityScan.TYPE, FuzzerSecurityScan.NAME, "Executes the specified fuzzer security scan",
+				"/fuzzer_security_scan.gif" );
 	}
 
 	@Override
 	public SecurityCheckConfig createNewSecurityScan( String name )
 	{
 		SecurityCheckConfig securityCheckConfig = SecurityCheckConfig.Factory.newInstance();
-		securityCheckConfig.setType( ParameterExposureScan.TYPE );
+		securityCheckConfig.setType( FuzzerSecurityScan.TYPE );
 		securityCheckConfig.setName( name );
 		return securityCheckConfig;
 	}
 
+	@Override
+	public AbstractSecurityScan buildSecurityScan( TestStep testStep, SecurityCheckConfig config, ModelItem parent )
+	{
+		return new FuzzerSecurityScan( testStep, config, parent, null );
+	}
+
+	@Override
+	public boolean canCreate( TestStep testStep )
+	{
+		return testStep instanceof WsdlTestRequestStep || testStep instanceof RestTestRequestStep
+				|| testStep instanceof HttpTestRequestStep;
+	}
 }

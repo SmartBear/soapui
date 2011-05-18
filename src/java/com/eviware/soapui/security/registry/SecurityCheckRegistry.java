@@ -39,7 +39,7 @@ public class SecurityCheckRegistry
 	public SecurityCheckRegistry()
 	{
 		addFactory( new GroovySecurityCheckFactory() );
-		addFactory( new ParameterExposureCheckFactory() );
+		addFactory( new CrossSiteScriptingScanFactory() );
 		addFactory( new XmlBombSecurityCheckFactory() );
 		addFactory( new MaliciousAttachmentSecurityCheckFactory() );
 		// this is actually working
@@ -48,7 +48,8 @@ public class SecurityCheckRegistry
 		addFactory( new BoundarySecurityCheckFactory() );
 		addFactory( new SQLInjectionCheckFactory() );
 		addFactory( new MalformedXmlSecurityCheckFactory() );
-
+		addFactory( new FuzzerSecurityScanFactory() );
+		
 		for( SecurityScanFactory factory : SoapUI.getFactoryRegistry().getFactories( SecurityScanFactory.class ) )
 		{
 			addFactory( factory );
