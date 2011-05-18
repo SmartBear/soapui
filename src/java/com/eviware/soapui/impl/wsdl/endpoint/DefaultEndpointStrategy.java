@@ -175,7 +175,10 @@ public class DefaultEndpointStrategy implements EndpointStrategy, PropertyExpans
 					}
 					catch( Exception e )
 					{
-						e.printStackTrace();
+						// we can hide this exception for now, it could happen for
+						// invalid property-expansions, etc
+						// if the endpoint really is wrong there will be other
+						// exception later on
 					}
 				}
 			}
