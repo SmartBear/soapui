@@ -15,8 +15,8 @@
         <jar href="engine-ie-jxbrowser-2.8.jar"/>
         <jar href="engine-webkit-jxbrowser-2.8.jar"/>
         <!--jar href="mshtml-jxbrowser-2.8.jar"/-->
-        <jar href="slf4j-api-1.5.8"/>
-        <jar href="slf4j-log4j12-1.5.8"/>
+        <jar href="slf4j-api-1.5.8.jar"/>
+        <jar href="slf4j-log4j12-1.5.8.jar"/>
         <jar href="jxbrowser-2.8.jar"/>
         <property name="jws.jxbrowser.com.teamdev.www" value="true"/>
 	</resources>
