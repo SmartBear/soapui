@@ -24,7 +24,7 @@ import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.model.testsuite.AssertionException;
 import com.eviware.soapui.model.testsuite.ResponseAssertion;
-import com.eviware.soapui.security.check.ParameterExposureCheck;
+import com.eviware.soapui.security.scan.ParameterExposureCheck;
 import com.eviware.soapui.support.SecurityCheckUtil;
 
  class ParameterExposureAssertion extends WsdlMessageAssertion implements ResponseAssertion

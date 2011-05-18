@@ -17,8 +17,8 @@ import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestStep;
-import com.eviware.soapui.security.check.AbstractSecurityCheck;
-import com.eviware.soapui.security.check.BoundarySecurityCheck;
+import com.eviware.soapui.security.scan.AbstractSecurityCheck;
+import com.eviware.soapui.security.scan.BoundarySecurityCheck;
 
 /**
  * Factory for creation Boundary checks

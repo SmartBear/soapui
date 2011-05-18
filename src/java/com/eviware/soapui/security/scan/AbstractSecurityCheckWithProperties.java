@@ -1,4 +1,4 @@
-package com.eviware.soapui.security.check;
+package com.eviware.soapui.security.scan;
 
 import java.util.ArrayList;
 import java.util.List;

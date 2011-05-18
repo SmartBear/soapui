@@ -15,8 +15,8 @@ import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestStep;
-import com.eviware.soapui.security.check.AbstractSecurityCheck;
-import com.eviware.soapui.security.check.MalformedXmlSecurityCheck;
+import com.eviware.soapui.security.scan.AbstractSecurityCheck;
+import com.eviware.soapui.security.scan.MalformedXmlSecurityCheck;
 
 public class MalformedXmlSecurityCheckFactory extends AbstractSecurityCheckFactory
 {

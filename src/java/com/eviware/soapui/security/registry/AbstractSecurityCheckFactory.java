@@ -15,7 +15,7 @@ package com.eviware.soapui.security.registry;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestStep;
-import com.eviware.soapui.security.check.AbstractSecurityCheck;
+import com.eviware.soapui.security.scan.AbstractSecurityCheck;
 
 /**
  * Abstract factory behaviour for SecurityCheck factories

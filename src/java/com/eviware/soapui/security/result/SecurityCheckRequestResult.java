@@ -20,7 +20,7 @@ import java.util.List;
 import com.eviware.soapui.impl.wsdl.teststeps.actions.ShowMessageExchangeAction;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.security.SecurityCheck;
-import com.eviware.soapui.security.check.AbstractSecurityCheckWithProperties;
+import com.eviware.soapui.security.scan.AbstractSecurityCheckWithProperties;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.DefaultActionList;
 import com.eviware.soapui.support.types.StringToStringMap;

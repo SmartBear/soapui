@@ -50,7 +50,7 @@ import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.security.SecurityTestRunnerImpl;
-import com.eviware.soapui.security.check.ParameterExposureCheck;
+import com.eviware.soapui.security.scan.ParameterExposureCheck;
 import com.eviware.soapui.support.SecurityCheckUtil;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.GroovyEditorComponent;

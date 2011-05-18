@@ -16,7 +16,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.eviware.soapui.config.SecurityCheckConfig;
-import com.eviware.soapui.security.check.GroovySecurityCheck;
+import com.eviware.soapui.security.scan.GroovySecurityCheck;
 
 /**
  * @author nebojsa.tasic

@@ -13,11 +13,11 @@ import com.eviware.soapui.model.security.SecurityCheck;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunContext;
-import com.eviware.soapui.security.check.AbstractSecurityCheckWithProperties;
 import com.eviware.soapui.security.panels.SecurityCheckNode;
 import com.eviware.soapui.security.result.SecurityCheckRequestResult;
 import com.eviware.soapui.security.result.SecurityCheckResult;
 import com.eviware.soapui.security.result.SecurityResult.ResultStatus;
+import com.eviware.soapui.security.scan.AbstractSecurityCheckWithProperties;
 
 public class ProgressBarSecurityCheckAdapter extends SecurityTestRunListenerAdapter
 {

@@ -17,8 +17,8 @@ import com.eviware.soapui.config.XmlBombSecurityCheckConfig;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestStep;
-import com.eviware.soapui.security.check.AbstractSecurityCheck;
-import com.eviware.soapui.security.check.XmlBombSecurityCheck;
+import com.eviware.soapui.security.scan.AbstractSecurityCheck;
+import com.eviware.soapui.security.scan.XmlBombSecurityCheck;
 
 /**
  * Factory for creation GroovyScript steps

@@ -20,7 +20,7 @@ import org.junit.Test;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.SecurityCheckConfig;
-import com.eviware.soapui.security.check.SQLInjectionCheck;
+import com.eviware.soapui.security.scan.SQLInjectionCheck;
 
 /**
  * @author dragica.soldo

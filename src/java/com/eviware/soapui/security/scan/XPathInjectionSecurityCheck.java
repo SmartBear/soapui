@@ -9,7 +9,7 @@
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
-package com.eviware.soapui.security.check;
+package com.eviware.soapui.security.scan;
 
 import java.awt.Dimension;
 import java.beans.PropertyChangeEvent;

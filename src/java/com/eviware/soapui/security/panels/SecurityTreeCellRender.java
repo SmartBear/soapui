@@ -38,7 +38,7 @@ import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.security.SecurityCheck;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTest;
-import com.eviware.soapui.security.check.AbstractSecurityCheck;
+import com.eviware.soapui.security.scan.AbstractSecurityCheck;
 import com.eviware.soapui.security.support.ProgressBarSecurityCheckAdapter;
 import com.eviware.soapui.security.support.ProgressBarSecurityTestStepAdapter;
 import com.eviware.soapui.support.UISupport;

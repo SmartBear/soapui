@@ -22,12 +22,12 @@ import org.apache.commons.collections.list.TreeList;
 
 import com.eviware.soapui.model.security.SecurityCheck;
 import com.eviware.soapui.model.testsuite.TestStep;
-import com.eviware.soapui.security.check.AbstractSecurityCheck;
 import com.eviware.soapui.security.result.SecurityCheckRequestResult;
 import com.eviware.soapui.security.result.SecurityCheckResult;
 import com.eviware.soapui.security.result.SecurityResult;
 import com.eviware.soapui.security.result.SecurityTestStepResult;
 import com.eviware.soapui.security.result.SecurityResult.ResultStatus;
+import com.eviware.soapui.security.scan.AbstractSecurityCheck;
 
 /**
  * SecurityTestLog

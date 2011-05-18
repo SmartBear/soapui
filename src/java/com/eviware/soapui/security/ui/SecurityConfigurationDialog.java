@@ -27,7 +27,7 @@ import com.eviware.soapui.impl.wsdl.actions.project.SimpleDialog;
 import com.eviware.soapui.model.security.SecurityCheck;
 import com.eviware.soapui.model.security.SecurityParametersTableModel;
 import com.eviware.soapui.security.assertion.SecurityAssertionPanel;
-import com.eviware.soapui.security.check.AbstractSecurityCheckWithProperties;
+import com.eviware.soapui.security.scan.AbstractSecurityCheckWithProperties;
 import com.eviware.soapui.security.ui.SecurityConfigurationDialogBuilder.Strategy;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.x.form.XFormDialog;

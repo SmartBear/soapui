@@ -17,7 +17,7 @@ import org.junit.Test;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.SecurityCheckConfig;
-import com.eviware.soapui.security.check.ParameterExposureCheck;
+import com.eviware.soapui.security.scan.ParameterExposureCheck;
 import com.eviware.soapui.support.types.StringToObjectMap;
 
 /**

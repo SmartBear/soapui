@@ -31,7 +31,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import com.eviware.soapui.security.check.XmlBombSecurityCheck;
+import com.eviware.soapui.security.scan.XmlBombSecurityCheck;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.components.SimpleForm;

@@ -19,7 +19,7 @@ import java.awt.event.KeyListener;
 
 import javax.swing.JTextField;
 
-import com.eviware.soapui.security.check.ParameterExposureCheck;
+import com.eviware.soapui.security.scan.ParameterExposureCheck;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.components.SimpleForm;
 

@@ -20,7 +20,7 @@ import java.util.List;
 import javax.swing.AbstractAction;
 
 import com.eviware.soapui.model.security.SecurityCheck;
-import com.eviware.soapui.security.check.AbstractSecurityCheckWithProperties;
+import com.eviware.soapui.security.scan.AbstractSecurityCheckWithProperties;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.DefaultActionList;

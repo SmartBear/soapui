@@ -17,8 +17,8 @@ import com.eviware.soapui.config.ScriptConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestStep;
-import com.eviware.soapui.security.check.AbstractSecurityCheck;
-import com.eviware.soapui.security.check.GroovySecurityCheck;
+import com.eviware.soapui.security.scan.AbstractSecurityCheck;
+import com.eviware.soapui.security.scan.GroovySecurityCheck;
 
 /**
  * Factory for creation GroovyScript steps
