@@ -234,6 +234,25 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 		}
 	}
 
+	private final class InternalNavigationAdapter extends NavigationAdapter
+	{
+		@Override
+		public void navigationFinished( NavigationFinishedEvent evt )
+		{
+			if( evt.getUrl().equals( SoapUI.PUSH_PAGE_URL ) && !( NavigationStatusCode.OK == evt.getStatusCode() ) )
+				browser.navigate( SoapUI.PUSH_PAGE_ERROR_URL );
+		}
+	}
+
+	private final class InternalHttpSecurityHandler implements HttpSecurityHandler
+	{
+		@Override
+		public HttpSecurityAction onSecurityProblem( Set<SecurityProblem> arg0 )
+		{
+			return HttpSecurityAction.CONTINUE;
+		}
+	}
+
 	private static final class RecordingHttpListener implements Runnable
 	{
 		public void run()
@@ -571,29 +590,15 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 			browser.getServices().setPromptService( new DefaultPromptService() );
 		}
 
-		// ignore security errors
-		browser.setHttpSecurityHandler( new HttpSecurityHandler()
-		{
-			@Override
-			public HttpSecurityAction onSecurityProblem( Set<SecurityProblem> arg0 )
-			{
-				return HttpSecurityAction.CONTINUE;
-			}
-		} );
+		internalHttpSecurityHandler = new InternalHttpSecurityHandler();
+		browser.setHttpSecurityHandler( internalHttpSecurityHandler );
 
 		internalNavigationListener = new InternalBrowserNavigationListener();
 		browser.addNavigationListener( internalNavigationListener );
 		browser.addStatusListener( this );
 
-		browser.addNavigationListener( new NavigationAdapter()
-		{
-			@Override
-			public void navigationFinished( NavigationFinishedEvent evt )
-			{
-				if( evt.getUrl().equals( SoapUI.PUSH_PAGE_URL ) && !( NavigationStatusCode.OK == evt.getStatusCode() ) )
-					browser.navigate( SoapUI.PUSH_PAGE_ERROR_URL );
-			}
-		} );
+		internalNavigationAdapter = new InternalNavigationAdapter();
+		browser.addNavigationListener( internalNavigationAdapter );
 
 		panel.add( browser.getComponent(), BorderLayout.CENTER );
 		return true;
@@ -646,6 +651,8 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 			browser.stop();
 			browser.dispose();
 			browser.removeNavigationListener( internalNavigationListener );
+			browser.removeNavigationListener( internalNavigationAdapter );
+			browser.setHttpSecurityHandler( null );
 			browser.removeStatusListener( this );
 
 			panel.removeAll();
@@ -665,6 +672,8 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 
 		try
 		{
+			// browser.navigate( contextUri );
+
 			browser.setContent( contentAsString, contextUri );
 			pcs.firePropertyChange( "content", null, null );
 		}
@@ -901,7 +910,6 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 		{
 			proxyConf.setHttpHost( "" );
 		}
-
 	}
 
 	private PropertyChangeSupport pcs = new PropertyChangeSupport( this );
@@ -922,6 +930,8 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 	 * @see http://developer.mozilla.org/en/Observer_Notifications
 	 */
 	public static final String EVENT_HTTP_ON_MODIFY_REQUEST = "http-on-modify-request";
+	private InternalHttpSecurityHandler internalHttpSecurityHandler;
+	private InternalNavigationAdapter internalNavigationAdapter;
 
 	public void registerHttpListener()
 	{
