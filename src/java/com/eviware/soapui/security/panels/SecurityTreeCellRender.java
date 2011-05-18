@@ -346,6 +346,7 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 
 			this.node = node;
 			this.securityCheck = ( SecurityScan )node.getSecurityScan();
+			this.securityCheck.addPropertyChangeListener( this );
 			label = new JLabel( securityCheck.getName(), SwingConstants.LEFT );
 			label.setIcon( UISupport.createImageIcon( "/securityTest.png" ) );
 			label.setBorder( BorderFactory.createEmptyBorder( 5, 45, 5, 5 ) );
@@ -356,7 +357,6 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 
 			progressBar = new JProgressBar();
 			progressPanel = new JPanel( new FlowLayout( FlowLayout.LEFT, 10, 0 ) );
-			// progressBar.setBackground( UNKNOWN_COLOR );
 			progressBar.setValue( 0 );
 			progressBar.setStringPainted( true );
 			progressBar.setString( "" );
@@ -419,7 +419,8 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 		@Override
 		public void propertyChange( PropertyChangeEvent arg0 )
 		{
-			// label.setIcon( testStep.getIcon() );
+			label.setEnabled( !securityCheck.isDisabled() );
+			( ( DefaultTreeModel )tree.getModel() ).nodeChanged( node );
 		}
 
 		@Override

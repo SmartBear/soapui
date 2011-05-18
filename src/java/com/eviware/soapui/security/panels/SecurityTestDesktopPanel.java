@@ -19,6 +19,7 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -419,7 +420,17 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 		public void actionPerformed( ActionEvent e )
 		{
 			canceled = false;
-			runSecurityTest();
+			// shouldRun is indicator is there any security scan that can be run
+			// meaning security scan have at least one scan and it is not disabled.
+			boolean shouldRun = false;
+			for( List<SecurityScan> scanList : securityTest.getSecurityScansMap().values() )
+				for( SecurityScan scan : scanList )
+					if( !scan.isDisabled() )
+						shouldRun = true;
+			if( shouldRun )
+				runSecurityTest();
+			else
+				UISupport.showInfoMessage( "No Security Scans avaialable to run.", "Security Test Warning" );
 		}
 	}
 
