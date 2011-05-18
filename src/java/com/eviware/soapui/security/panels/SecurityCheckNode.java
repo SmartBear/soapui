@@ -2,14 +2,14 @@ package com.eviware.soapui.security.panels;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
-import com.eviware.soapui.model.security.SecurityCheck;
+import com.eviware.soapui.model.security.SecurityScan;
 
 public class SecurityCheckNode extends DefaultMutableTreeNode
 {
 
-	private SecurityCheck securityCheck;
+	private SecurityScan securityCheck;
 
-	public SecurityCheckNode( SecurityCheck sc )
+	public SecurityCheckNode( SecurityScan sc )
 	{
 		this.securityCheck = sc;
 	}
@@ -20,7 +20,7 @@ public class SecurityCheckNode extends DefaultMutableTreeNode
 		return securityCheck.toString();
 	}
 
-	public SecurityCheck getSecurityCheck()
+	public SecurityScan getSecurityCheck()
 	{
 		return securityCheck;
 	}

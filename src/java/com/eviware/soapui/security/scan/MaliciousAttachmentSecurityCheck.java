@@ -38,7 +38,7 @@ import com.eviware.soapui.security.ui.MaliciousAttachmentAdvancedSettingsPanel;
 import com.eviware.soapui.security.ui.MaliciousAttachmentMutationsPanel;
 import com.eviware.soapui.support.UISupport;
 
-public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
+public class MaliciousAttachmentSecurityCheck extends AbstractSecurityScan
 {
 
 	public static final String TYPE = "MaliciousAttachmentSecurityCheck";
@@ -250,12 +250,12 @@ public class MaliciousAttachmentSecurityCheck extends AbstractSecurityCheck
 			generateFiles();
 			updateRequestContent( testStep, context );
 			MessageExchange message = ( MessageExchange )testStep.run( ( TestCaseRunner )securityTestRunner, context );
-			getSecurityCheckRequestResult().setMessageExchange( message );
+			getSecurityScanRequestResult().setMessageExchange( message );
 		}
 		catch( Exception e )
 		{
 			SoapUI.logError( e, "[MaliciousAttachmentSecurityScan]Property value is not valid xml!" );
-			reportSecurityCheckException( "Property value is not XML or XPath is wrong!" );
+			reportSecurityScanException( "Property value is not XML or XPath is wrong!" );
 		}
 	}
 

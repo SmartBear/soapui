@@ -158,12 +158,12 @@ public class XmlBombSecurityCheck extends AbstractSecurityCheckWithProperties
 		catch( XmlException e )
 		{
 			SoapUI.logError( e, "[XmlBombSecurityScan]XPath seems to be invalid!" );
-			reportSecurityCheckException( "Property value is not XML or XPath is wrong!" );
+			reportSecurityScanException( "Property value is not XML or XPath is wrong!" );
 		}
 		catch( Exception e )
 		{
 			SoapUI.logError( e, "[XmlBombSecurityScan]Property value is not valid xml!" );
-			reportSecurityCheckException( "Property value is not XML or XPath is wrong!" );
+			reportSecurityScanException( "Property value is not XML or XPath is wrong!" );
 		}
 	}
 

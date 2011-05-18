@@ -18,7 +18,7 @@ import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestStep;
-import com.eviware.soapui.security.scan.AbstractSecurityCheck;
+import com.eviware.soapui.security.scan.AbstractSecurityScan;
 import com.eviware.soapui.security.scan.XPathInjectionSecurityCheck;
 
 public class XPathInjectionSecurityCheckFactory extends AbstractSecurityCheckFactory
@@ -31,7 +31,7 @@ public class XPathInjectionSecurityCheckFactory extends AbstractSecurityCheckFac
 	}
 
 	@Override
-	public AbstractSecurityCheck buildSecurityCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent )
+	public AbstractSecurityScan buildSecurityCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent )
 	{
 		return new XPathInjectionSecurityCheck( testStep, config, parent, null );
 	}

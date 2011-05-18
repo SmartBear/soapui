@@ -35,10 +35,10 @@ import javax.swing.tree.TreeCellRenderer;
 
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.security.SecurityCheck;
+import com.eviware.soapui.model.security.SecurityScan;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTest;
-import com.eviware.soapui.security.scan.AbstractSecurityCheck;
+import com.eviware.soapui.security.scan.AbstractSecurityScan;
 import com.eviware.soapui.security.support.ProgressBarSecurityCheckAdapter;
 import com.eviware.soapui.security.support.ProgressBarSecurityTestStepAdapter;
 import com.eviware.soapui.support.UISupport;
@@ -125,7 +125,7 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 			this.node = node;
 			this.testStep = ( WsdlTestStep )node.getTestStep();
 			securityTest = ( ( SecurityTreeRootNode )node.getParent() ).getSecurityTest();
-			if( AbstractSecurityCheck.isSecurable( testStep ) )
+			if( AbstractSecurityScan.isSecurable( testStep ) )
 			{
 				if( securityTest.getSecurityChecksMap().get( testStep.getId() ) != null )
 				{
@@ -144,7 +144,7 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 				label = new JLabel( testStep.getLabel(), SwingConstants.LEFT );
 			label.setIcon( testStep.getIcon() );
 			label.setBorder( BorderFactory.createEmptyBorder( 5, 5, 5, 5 ) );
-			label.setEnabled( !testStep.isDisabled() && AbstractSecurityCheck.isSecurable( testStep ) );
+			label.setEnabled( !testStep.isDisabled() && AbstractSecurityScan.isSecurable( testStep ) );
 			testStep.addPropertyChangeListener( TestStep.ICON_PROPERTY, TestStepCellRender.this );
 			testStep.addPropertyChangeListener( TestStep.DISABLED_PROPERTY, TestStepCellRender.this );
 			innerLeftPanel = new JPanel( new BorderLayout() );
@@ -165,7 +165,7 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 
 			innerLeftPanel.add( expandCollapseBtn, BorderLayout.WEST );
 
-			if( AbstractSecurityCheck.isSecurable( testStep ) )
+			if( AbstractSecurityScan.isSecurable( testStep ) )
 			{
 				progressBar = new JProgressBar();
 
@@ -217,7 +217,7 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 
 		public void setSelected( boolean sel )
 		{
-			if( AbstractSecurityCheck.isSecurable( testStep ) )
+			if( AbstractSecurityScan.isSecurable( testStep ) )
 			{
 				if( sel )
 				{
@@ -261,7 +261,7 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 		public void propertyChange( PropertyChangeEvent arg0 )
 		{
 			label.setIcon( testStep.getIcon() );
-			label.setEnabled( !testStep.isDisabled() && AbstractSecurityCheck.isSecurable( testStep ) );
+			label.setEnabled( !testStep.isDisabled() && AbstractSecurityScan.isSecurable( testStep ) );
 			updateLabel();
 			( ( DefaultTreeModel )tree.getModel() ).nodeChanged( node );
 		}
@@ -289,7 +289,7 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 		@Override
 		public void updateLabel()
 		{
-			if( AbstractSecurityCheck.isSecurable( testStep ) )
+			if( AbstractSecurityScan.isSecurable( testStep ) )
 			{
 				if( securityTest.getSecurityChecksMap().get( testStep.getId() ) != null )
 				{
@@ -330,7 +330,7 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 	public class SecurityCheckCellRender extends JPanel implements PropertyChangeListener, CustomTreeNode,
 			ReleasableNode
 	{
-		private SecurityCheck securityCheck;
+		private SecurityScan securityCheck;
 		private JProgressBar progressBar;
 		private JLabel label;
 		private ProgressBarSecurityCheckAdapter progressBarAdapter;
@@ -345,7 +345,7 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 			super( new BorderLayout() );
 
 			this.node = node;
-			this.securityCheck = ( SecurityCheck )node.getSecurityCheck();
+			this.securityCheck = ( SecurityScan )node.getSecurityCheck();
 			label = new JLabel( securityCheck.getName(), SwingConstants.LEFT );
 			label.setIcon( UISupport.createImageIcon( "/securityTest.png" ) );
 			label.setBorder( BorderFactory.createEmptyBorder( 5, 45, 5, 5 ) );
@@ -382,7 +382,7 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 			setBorder( BorderFactory.createMatteBorder( 0, 0, 1, 0, Color.black ) );
 
 			progressBarAdapter = new ProgressBarSecurityCheckAdapter( tree, this.node, progressBar, securityCheck,
-					( SecurityTest )( ( SecurityCheck )securityCheck ).getParent(), cntLabel );
+					( SecurityTest )( ( SecurityScan )securityCheck ).getParent(), cntLabel );
 
 		}
 

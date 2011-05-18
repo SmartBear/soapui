@@ -9,7 +9,7 @@ import java.util.Set;
 
 import com.eviware.soapui.config.CheckedParameterConfig;
 import com.eviware.soapui.config.CheckedParametersListConfig;
-import com.eviware.soapui.model.security.SecurityCheck;
+import com.eviware.soapui.model.security.SecurityScan;
 import com.eviware.soapui.model.security.SecurityCheckParameterHolderListener;
 import com.eviware.soapui.model.security.SecurityCheckedParameter;
 import com.eviware.soapui.model.testsuite.TestPropertyListener;
@@ -25,7 +25,7 @@ public class SecurityCheckedParameterHolder extends SecurityCheckParameterListen
 		TestPropertyListener
 {
 
-	private SecurityCheck securityCheck;
+	private SecurityScan securityCheck;
 	private CheckedParametersListConfig paramsConfig;
 
 	private List<SecurityCheckedParameter> params = new ArrayList<SecurityCheckedParameter>();
@@ -33,7 +33,7 @@ public class SecurityCheckedParameterHolder extends SecurityCheckParameterListen
 
 	private Set<SecurityCheckParameterHolderListener> listeners = new HashSet<SecurityCheckParameterHolderListener>();
 
-	public SecurityCheckedParameterHolder( SecurityCheck securityCheck, CheckedParametersListConfig checkedPameters )
+	public SecurityCheckedParameterHolder( SecurityScan securityCheck, CheckedParametersListConfig checkedPameters )
 	{
 		this.securityCheck = securityCheck;
 		this.paramsConfig = checkedPameters;

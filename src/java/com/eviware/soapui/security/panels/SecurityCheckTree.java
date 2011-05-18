@@ -16,7 +16,7 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreePath;
 
-import com.eviware.soapui.model.security.SecurityCheck;
+import com.eviware.soapui.model.security.SecurityScan;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTest;
 
@@ -64,7 +64,7 @@ public class SecurityCheckTree extends DefaultTreeModel
 		return null;
 	}
 
-	protected SecurityCheckNode getSecurityCheckNode( SecurityCheck securityCheck )
+	protected SecurityCheckNode getSecurityCheckNode( SecurityScan securityCheck )
 	{
 		TestStepNode testStepNode = getTestStepNode( securityCheck.getTestStep() );
 		for( int cnt = 0; cnt < testStepNode.getChildCount(); cnt++ )
@@ -76,7 +76,7 @@ public class SecurityCheckTree extends DefaultTreeModel
 		return null;
 	}
 
-	public void addSecurityCheckNode( JTree tree, SecurityCheck securityCheck )
+	public void addSecurityCheckNode( JTree tree, SecurityScan securityCheck )
 	{
 		TestStepNode node = getTestStepNode( securityCheck.getTestStep() );
 		if( node != null )
@@ -92,7 +92,7 @@ public class SecurityCheckTree extends DefaultTreeModel
 		}
 	}
 
-	public void removeSecurityCheckNode( SecurityCheck securityCheck )
+	public void removeSecurityCheckNode( SecurityScan securityCheck )
 	{
 		TestStepNode testStepNode = getTestStepNode( securityCheck.getTestStep() );
 		SecurityCheckNode node = getSecurityCheckNode( securityCheck );

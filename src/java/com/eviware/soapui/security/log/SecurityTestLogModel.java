@@ -20,14 +20,14 @@ import javax.swing.AbstractListModel;
 
 import org.apache.commons.collections.list.TreeList;
 
-import com.eviware.soapui.model.security.SecurityCheck;
+import com.eviware.soapui.model.security.SecurityScan;
 import com.eviware.soapui.model.testsuite.TestStep;
-import com.eviware.soapui.security.result.SecurityCheckRequestResult;
-import com.eviware.soapui.security.result.SecurityCheckResult;
+import com.eviware.soapui.security.result.SecurityScanRequestResult;
+import com.eviware.soapui.security.result.SecurityScanResult;
 import com.eviware.soapui.security.result.SecurityResult;
 import com.eviware.soapui.security.result.SecurityTestStepResult;
 import com.eviware.soapui.security.result.SecurityResult.ResultStatus;
-import com.eviware.soapui.security.scan.AbstractSecurityCheck;
+import com.eviware.soapui.security.scan.AbstractSecurityScan;
 
 /**
  * SecurityTestLog
@@ -94,7 +94,7 @@ public class SecurityTestLogModel extends AbstractListModel
 
 		currentStepEntriesCount = 1;
 		int size = items.size();
-		if( AbstractSecurityCheck.isSecurable( testStep ) )
+		if( AbstractSecurityScan.isSecurable( testStep ) )
 		{
 			SecurityTestStepResult result = new SecurityTestStepResult( testStep, null );
 			SoftReference<SecurityResult> stepResultRef = new SoftReference<SecurityResult>( result );
@@ -164,13 +164,13 @@ public class SecurityTestLogModel extends AbstractListModel
 		currentStepEntriesCount = 0;
 	}
 
-	public synchronized void addSecurityCheckResult( SecurityCheck securityCheck )
+	public synchronized void addSecurityCheckResult( SecurityScan securityCheck )
 	{
 		int size = items.size();
 		checkCount++ ;
 		requestCount = 0;
 
-		SecurityCheckResult securityCheckResult = securityCheck.getSecurityCheckResult();
+		SecurityScanResult securityCheckResult = securityCheck.getSecurityScanResult();
 		SoftReference<SecurityResult> checkResultRef = new SoftReference<SecurityResult>( securityCheckResult );
 
 		items.add( "SecurityScan " + checkCount + " [" + securityCheck.getName() + "] " );
@@ -184,7 +184,7 @@ public class SecurityTestLogModel extends AbstractListModel
 
 	// updates log entry for security check with the status, time taken, and
 	// similar info known only after finished
-	public synchronized void updateSecurityCheckResult( SecurityCheckResult securityCheckResult, boolean errorsOnly )
+	public synchronized void updateSecurityCheckResult( SecurityScanResult securityCheckResult, boolean errorsOnly )
 	{
 		int startCheckIndex = 0;
 		if( items.size() > currentCheckEntriesCount )
@@ -217,7 +217,7 @@ public class SecurityTestLogModel extends AbstractListModel
 		}
 		else
 		{
-			SecurityCheck securityCheck = securityCheckResult.getSecurityCheck();
+			SecurityScan securityCheck = securityCheckResult.getSecurityCheck();
 			securityCheckResult.detectMissingItems();
 			StringBuilder outStr = new StringBuilder( "SecurityScan " );
 			outStr.append( checkCount ).append( " [" ).append( securityCheck.getName() ).append( "] " ).append(
@@ -243,7 +243,7 @@ public class SecurityTestLogModel extends AbstractListModel
 		}
 	}
 
-	public synchronized void addSecurityCheckRequestResult( SecurityCheckRequestResult securityCheckRequestResult )
+	public synchronized void addSecurityCheckRequestResult( SecurityScanRequestResult securityCheckRequestResult )
 	{
 		int size = items.size();
 		requestCount++ ;
@@ -297,7 +297,7 @@ public class SecurityTestLogModel extends AbstractListModel
 		}
 	}
 
-	public synchronized int getIndexOfSecurityCheck( SecurityCheck check )
+	public synchronized int getIndexOfSecurityCheck( SecurityScan check )
 	{
 		for( int i = 0; i < results.size(); i++ )
 		{
@@ -305,9 +305,9 @@ public class SecurityTestLogModel extends AbstractListModel
 			if( result != null )
 			{
 				SecurityResult referent = result.get();
-				if( referent instanceof SecurityCheckResult )
+				if( referent instanceof SecurityScanResult )
 				{
-					if( ( ( SecurityCheckResult )referent ).getSecurityCheck() == check )
+					if( ( ( SecurityScanResult )referent ).getSecurityCheck() == check )
 					{
 						return i;
 					}

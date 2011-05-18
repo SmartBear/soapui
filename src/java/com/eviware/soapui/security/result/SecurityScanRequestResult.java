@@ -19,7 +19,7 @@ import java.util.List;
 
 import com.eviware.soapui.impl.wsdl.teststeps.actions.ShowMessageExchangeAction;
 import com.eviware.soapui.model.iface.MessageExchange;
-import com.eviware.soapui.model.security.SecurityCheck;
+import com.eviware.soapui.model.security.SecurityScan;
 import com.eviware.soapui.security.scan.AbstractSecurityCheckWithProperties;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.DefaultActionList;
@@ -32,12 +32,12 @@ import com.eviware.soapui.support.types.StringToStringMap;
  * @author dragica.soldo
  */
 
-public class SecurityCheckRequestResult implements SecurityResult
+public class SecurityScanRequestResult implements SecurityResult
 {
 	private static final String[] EMPTY_MESSAGES = new String[0];
 	public final static String TYPE = "SecurityScanRequestResult";
 	private ResultStatus status = ResultStatus.UNKNOWN;
-	private SecurityCheck securityCheck;
+	private SecurityScan securityCheck;
 	private List<String> messages = new ArrayList<String>();
 	private long timeTaken;
 	private long startTime;
@@ -48,7 +48,7 @@ public class SecurityCheckRequestResult implements SecurityResult
 	private DefaultActionList actionList;
 	private boolean addedAction;
 
-	public SecurityCheckRequestResult( SecurityCheck securityCheck )
+	public SecurityScanRequestResult( SecurityScan securityCheck )
 	{
 		this.securityCheck = securityCheck;
 		timeStamp = System.currentTimeMillis();
@@ -64,7 +64,7 @@ public class SecurityCheckRequestResult implements SecurityResult
 		this.status = status;
 	}
 
-	public SecurityCheck getSecurityCheck()
+	public SecurityScan getSecurityCheck()
 	{
 		return securityCheck;
 	}
@@ -213,9 +213,9 @@ public class SecurityCheckRequestResult implements SecurityResult
 		{
 			String param = ( String )keys.next();
 			String value = changedParams.get( param );
-			if( value.length() > SecurityCheckResult.MAX_SECURITY_CHANGED_PARAMETERS_LENGTH )
+			if( value.length() > SecurityScanResult.MAX_SECURITY_CHANGED_PARAMETERS_LENGTH )
 			{
-				value = value.substring( 0, SecurityCheckResult.MAX_SECURITY_CHANGED_PARAMETERS_LENGTH );
+				value = value.substring( 0, SecurityScanResult.MAX_SECURITY_CHANGED_PARAMETERS_LENGTH );
 			}
 			changedParamsInfo.append( param + "=" + value + "," );
 		}

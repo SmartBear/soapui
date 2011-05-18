@@ -27,7 +27,7 @@ import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.security.SecurityTest;
-import com.eviware.soapui.security.scan.AbstractSecurityCheck;
+import com.eviware.soapui.security.scan.AbstractSecurityScan;
 import com.eviware.soapui.security.scan.AbstractSecurityCheckWithProperties;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
@@ -114,7 +114,7 @@ public class CloneParametersAction extends AbstractAction
 		List<String> namesList = new ArrayList<String>();
 		for( TestStep testStep : testStepList )
 		{
-			if( AbstractSecurityCheck.isSecurable( testStep ) )
+			if( AbstractSecurityScan.isSecurable( testStep ) )
 			{
 				namesList.add( testStep.getName() );
 			}

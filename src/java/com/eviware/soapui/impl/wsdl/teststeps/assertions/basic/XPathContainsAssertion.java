@@ -67,7 +67,7 @@ import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
-import com.eviware.soapui.model.security.SecurityCheck;
+import com.eviware.soapui.model.security.SecurityScan;
 import com.eviware.soapui.model.support.XPathReference;
 import com.eviware.soapui.model.support.XPathReferenceContainer;
 import com.eviware.soapui.model.support.XPathReferenceImpl;
@@ -542,8 +542,8 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
 			WsdlTestRunContext context = null;
 			if( getAssertable().getModelItem() instanceof TestStep )
 				context = new WsdlTestRunContext( ( TestStep )getAssertable().getModelItem() );
-			else if( getAssertable().getModelItem() instanceof SecurityCheck )
-				context = new WsdlTestRunContext( ( ( SecurityCheck )getAssertable().getModelItem() ).getTestStep() );
+			else if( getAssertable().getModelItem() instanceof SecurityScan )
+				context = new WsdlTestRunContext( ( ( SecurityScan )getAssertable().getModelItem() ).getTestStep() );
 
 			String expandedPath = PropertyExpander.expandProperties( context, txt.trim() );
 

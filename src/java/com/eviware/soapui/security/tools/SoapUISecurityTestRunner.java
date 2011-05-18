@@ -56,8 +56,8 @@ import com.eviware.soapui.report.JUnitReportCollector;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
-import com.eviware.soapui.security.result.SecurityCheckRequestResult;
-import com.eviware.soapui.security.result.SecurityCheckResult;
+import com.eviware.soapui.security.result.SecurityScanRequestResult;
+import com.eviware.soapui.security.result.SecurityScanResult;
 import com.eviware.soapui.security.result.SecurityResult.ResultStatus;
 import com.eviware.soapui.security.support.SecurityTestRunListenerAdapter;
 import com.eviware.soapui.support.StringUtils;
@@ -505,8 +505,8 @@ public class SoapUISecurityTestRunner extends AbstractSoapUITestRunner
 		securityTest.addSecurityTestRunListener( new SecurityTestRunListenerAdapter()
 		{
 			@Override
-			public void afterSecurityCheckRequest( TestCaseRunner testRunner, SecurityTestRunContext runContext,
-					SecurityCheckRequestResult securityCheckReqResult )
+			public void afterSecurityScanRequest( TestCaseRunner testRunner, SecurityTestRunContext runContext,
+					SecurityScanRequestResult securityCheckReqResult )
 			{
 				securityScanRequestCount++ ;
 				if( securityCheckReqResult.getStatus() == ResultStatus.FAILED )
@@ -515,7 +515,7 @@ public class SoapUISecurityTestRunner extends AbstractSoapUITestRunner
 
 			@Override
 			public void afterSecurityCheck( TestCaseRunner testRunner, SecurityTestRunContext runContext,
-					SecurityCheckResult securityCheckResult )
+					SecurityScanResult securityCheckResult )
 			{
 				securityScanCount++ ;
 			}

@@ -44,7 +44,7 @@ import com.eviware.soapui.impl.wsdl.teststeps.registry.HttpRequestStepFactory;
 import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestStepFactory;
 import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestStepRegistry;
 import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.security.SecurityCheck;
+import com.eviware.soapui.model.security.SecurityScan;
 import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.model.testsuite.LoadTest;
 import com.eviware.soapui.model.testsuite.TestCase;
@@ -593,10 +593,10 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 		testSteps.remove( ix );
 		for( SecurityTest securityTest : getSecurityTestList() )
 		{
-			List<SecurityCheck> testStepChecks = securityTest.getTestStepSecurityChecks( testStep.getId() );
-			for( Iterator<SecurityCheck> iterator = testStepChecks.iterator(); iterator.hasNext(); )
+			List<SecurityScan> testStepChecks = securityTest.getTestStepSecurityChecks( testStep.getId() );
+			for( Iterator<SecurityScan> iterator = testStepChecks.iterator(); iterator.hasNext(); )
 			{
-				SecurityCheck chk = iterator.next();
+				SecurityScan chk = iterator.next();
 				securityTest.removeSecurityCheckWhenRemoveTestStep(  testStep, chk );
 				iterator.remove();
 			}
@@ -1028,7 +1028,7 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 			{
 				TestStep oldStep = oldTestCase.getTestStepAt( i );
 				TestStep newStep = getTestStepAt( i );
-				for( SecurityCheck secCheck : secTest.getTestStepSecurityChecks( oldStep.getId() ) )
+				for( SecurityScan secCheck : secTest.getTestStepSecurityChecks( oldStep.getId() ) )
 				{
 					newSecurityTest.importSecurityCheck( newStep, secCheck, true );
 				}

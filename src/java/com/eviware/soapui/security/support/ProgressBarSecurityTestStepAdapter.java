@@ -23,14 +23,14 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
-import com.eviware.soapui.model.security.SecurityCheck;
+import com.eviware.soapui.model.security.SecurityScan;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunContext;
-import com.eviware.soapui.security.result.SecurityCheckRequestResult;
-import com.eviware.soapui.security.result.SecurityCheckResult;
+import com.eviware.soapui.security.result.SecurityScanRequestResult;
+import com.eviware.soapui.security.result.SecurityScanResult;
 import com.eviware.soapui.security.result.SecurityTestStepResult;
 import com.eviware.soapui.security.result.SecurityResult.ResultStatus;
 import com.eviware.soapui.security.scan.AbstractSecurityCheckWithProperties;
@@ -166,13 +166,13 @@ public class ProgressBarSecurityTestStepAdapter
 
 		@Override
 		public void beforeSecurityCheck( TestCaseRunner testRunner, SecurityTestRunContext runContext,
-				SecurityCheck securityCheck )
+				SecurityScan securityCheck )
 		{
 			if( securityCheck.getTestStep().getId().equals( testStep.getId() ) )
 			{
 				// set progress bar color/state based on/if there is result
-				if( securityCheck.getSecurityCheckResult() != null
-						&& securityCheck.getSecurityCheckResult().getStatus() != ResultStatus.CANCELED )
+				if( securityCheck.getSecurityScanResult() != null
+						&& securityCheck.getSecurityScanResult().getStatus() != ResultStatus.CANCELED )
 				{
 					if( progressBar.getString().equals( "" ) )
 					{
@@ -201,7 +201,7 @@ public class ProgressBarSecurityTestStepAdapter
 		}
 
 		public void afterSecurityCheck( TestCaseRunner testRunner, SecurityTestRunContext runContext,
-				SecurityCheckResult securityCheckResult )
+				SecurityScanResult securityCheckResult )
 		{
 
 			if( securityCheckResult.getSecurityCheck().getTestStep().getId().equals( testStep.getId() ) )
@@ -236,8 +236,8 @@ public class ProgressBarSecurityTestStepAdapter
 		}
 
 		@Override
-		public void afterSecurityCheckRequest( TestCaseRunner testRunner, SecurityTestRunContext runContext,
-				SecurityCheckRequestResult securityCheckReqResult )
+		public void afterSecurityScanRequest( TestCaseRunner testRunner, SecurityTestRunContext runContext,
+				SecurityScanRequestResult securityCheckReqResult )
 		{
 
 			if( securityCheckReqResult.getSecurityCheck().getTestStep().getId().equals( testStep.getId() ) )

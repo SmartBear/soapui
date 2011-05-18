@@ -21,7 +21,7 @@ import javax.swing.JScrollPane;
 
 import com.eviware.soapui.config.StrategyTypeConfig;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
-import com.eviware.soapui.model.security.SecurityCheck;
+import com.eviware.soapui.model.security.SecurityScan;
 import com.eviware.soapui.model.security.SecurityParametersTableModel;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.security.assertion.SecurityAssertionPanel;
@@ -49,7 +49,7 @@ public class SecurityConfigurationDialogBuilder
 	// private GroovyEditorComponent setupGroovyEditor;
 	// private GroovyEditorComponent tearDownGroovyEditor;
 
-	public SecurityConfigurationDialog buildSecurityCheckConfigurationDialog( SecurityCheck securityCheck )
+	public SecurityConfigurationDialog buildSecurityCheckConfigurationDialog( SecurityScan securityCheck )
 	{
 		return new SecurityConfigurationDialog( securityCheck );
 
@@ -69,7 +69,7 @@ public class SecurityConfigurationDialogBuilder
 	 * @param dialog
 	 */
 	private void buildBasicDialog( String name, String description, ImageIcon icon, String helpUrl,
-			SecurityCheck securityCheck, XFormDialog dialog )
+			SecurityScan securityCheck, XFormDialog dialog )
 	{
 		XFormField field = dialog.getFormField( PARAMETERS_NAME );
 		if( field != null )
@@ -128,7 +128,7 @@ public class SecurityConfigurationDialogBuilder
 
 	}
 
-	private void addStrategyPanel( XFormDialog dialog, final SecurityCheck securityCheck )
+	private void addStrategyPanel( XFormDialog dialog, final SecurityScan securityCheck )
 	{
 		XFormRadioGroup strategy = ( XFormRadioGroup )dialog.getFormField( Strategy.STRATEGY );
 		final String[] strategyOptions = new String[] { "One by One", "All At Once" };
@@ -225,7 +225,7 @@ public class SecurityConfigurationDialogBuilder
 	 * 
 	 * @param field
 	 */
-	protected void addParameterTable( SecurityCheck securityCheck, XFormField field )
+	protected void addParameterTable( SecurityScan securityCheck, XFormField field )
 	{
 		field.setProperty( "component", new SecurityCheckedParametersTablePanel( new SecurityParametersTableModel(
 				( ( AbstractSecurityCheckWithProperties )securityCheck ).getParameterHolder() ), securityCheck
@@ -233,7 +233,7 @@ public class SecurityConfigurationDialogBuilder
 	}
 
 	private XFormDialog buildSecurityCheckConfigurationDialog( String name, String description, ImageIcon icon,
-			String helpUrl, JComponent component, SecurityCheck securityCheck )
+			String helpUrl, JComponent component, SecurityScan securityCheck )
 	{
 		XFormDialog dialog = null;
 		if( component == null )

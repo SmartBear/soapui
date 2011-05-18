@@ -24,7 +24,7 @@ import javax.swing.JTabbedPane;
 
 import com.eviware.soapui.config.StrategyTypeConfig;
 import com.eviware.soapui.impl.wsdl.actions.project.SimpleDialog;
-import com.eviware.soapui.model.security.SecurityCheck;
+import com.eviware.soapui.model.security.SecurityScan;
 import com.eviware.soapui.model.security.SecurityParametersTableModel;
 import com.eviware.soapui.security.assertion.SecurityAssertionPanel;
 import com.eviware.soapui.security.scan.AbstractSecurityCheckWithProperties;
@@ -39,21 +39,21 @@ import com.eviware.x.impl.swing.JFormDialog;
 
 public class SecurityConfigurationDialog extends SimpleDialog
 {
-	private SecurityCheck securityCheck;
+	private SecurityScan securityCheck;
 	private boolean result;
 	private JTabbedPane tabs;
 	private SecurityCheckedParametersTablePanel parametersTable;
 	private SecurityAssertionPanel securityAssertionPanel;
 	private XFormDialog strategyDialog;
 
-	public SecurityConfigurationDialog( SecurityCheck securityCheck )
+	public SecurityConfigurationDialog( SecurityScan securityCheck )
 	{
 		super( securityCheck.getName(), securityCheck.getDescription(), securityCheck.getHelpURL() );
 
 		this.securityCheck = securityCheck;
 	}
 
-	public SecurityCheck getSecurityCheck()
+	public SecurityScan getSecurityCheck()
 	{
 		return securityCheck;
 	}

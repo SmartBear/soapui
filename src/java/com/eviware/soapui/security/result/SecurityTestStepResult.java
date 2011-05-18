@@ -38,7 +38,7 @@ public class SecurityTestStepResult implements SecurityResult
 	public static final String TYPE = "SecurityTestStepResult";
 	private TestStep testStep;
 	private long size;
-	private List<SecurityCheckResult> securityCheckResultList;
+	private List<SecurityScanResult> securityCheckResultList;
 	private boolean discarded;
 	private long timeTaken = 0;
 	private long timeStamp;
@@ -56,12 +56,12 @@ public class SecurityTestStepResult implements SecurityResult
 	{
 		this.testStep = testStep;
 		executionProgressStatus = ResultStatus.INITIALIZED;
-		securityCheckResultList = new ArrayList<SecurityCheckResult>();
+		securityCheckResultList = new ArrayList<SecurityScanResult>();
 		timeStamp = System.currentTimeMillis();
 		this.originalTestStepResult = originalResult;
 	}
 
-	public List<SecurityCheckResult> getSecurityCheckResultList()
+	public List<SecurityScanResult> getSecurityCheckResultList()
 	{
 		return securityCheckResultList;
 	}
@@ -99,7 +99,7 @@ public class SecurityTestStepResult implements SecurityResult
 		return actionList;
 	}
 
-	public void addSecurityCheckResult( SecurityCheckResult securityCheckResult )
+	public void addSecurityCheckResult( SecurityScanResult securityCheckResult )
 	{
 		if( securityCheckResultList != null )
 			securityCheckResultList.add( securityCheckResult );

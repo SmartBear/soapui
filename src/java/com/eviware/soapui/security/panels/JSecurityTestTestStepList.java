@@ -47,7 +47,7 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
-import com.eviware.soapui.model.security.SecurityCheck;
+import com.eviware.soapui.model.security.SecurityScan;
 import com.eviware.soapui.model.support.TestSuiteListenerAdapter;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
@@ -300,7 +300,7 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 			if( type == null || type.trim().length() == 0 )
 				return;
 
-			SecurityCheck securityCheck = securityTest.addNewSecurityCheck( testStep, name );
+			SecurityScan securityCheck = securityTest.addNewSecurityCheck( testStep, name );
 			
 			securityTestTree.setSelectionPath( new TreePath( node.getPath() ) );
 
@@ -311,13 +311,13 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 			}
 
 			SecurityConfigurationDialog dialog = SoapUI.getSoapUICore().getSecurityCheckRegistry().getUIBuilder()
-					.buildSecurityCheckConfigurationDialog( ( SecurityCheck )securityCheck );
+					.buildSecurityCheckConfigurationDialog( ( SecurityScan )securityCheck );
 
 			if( !dialog.configure() )
 			{
 				SecurityCheckNode securityCheckNode = ( SecurityCheckNode )node.getLastChild();
 
-				securityTest.removeSecurityCheck( testStep, ( SecurityCheck )securityCheck );
+				securityTest.removeSecurityCheck( testStep, ( SecurityScan )securityCheck );
 				cellRender.remove( securityCheckNode );
 			}
 
@@ -339,14 +339,14 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 		public void actionPerformed( ActionEvent e )
 		{
 			SecurityCheckNode node = ( SecurityCheckNode )securityTestTree.getLastSelectedPathComponent();
-			SecurityCheck securityCheck = node.getSecurityCheck();
+			SecurityScan securityCheck = node.getSecurityCheck();
 
 			if( securityCheck.isConfigurable() )
 			{
 				SecurityCheckConfig backupCheckConfig = ( SecurityCheckConfig )securityCheck.getConfig().copy();
 
 				SecurityConfigurationDialog dialog = SoapUI.getSoapUICore().getSecurityCheckRegistry().getUIBuilder()
-						.buildSecurityCheckConfigurationDialog( ( SecurityCheck )securityCheck );
+						.buildSecurityCheckConfigurationDialog( ( SecurityScan )securityCheck );
 
 				if( !dialog.configure() )
 				{
@@ -371,13 +371,13 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 		public void actionPerformed( ActionEvent e )
 		{
 			SecurityCheckNode node = ( SecurityCheckNode )securityTestTree.getLastSelectedPathComponent();
-			SecurityCheck securityCheck = node.getSecurityCheck();
+			SecurityScan securityCheck = node.getSecurityCheck();
 
 			TestStep testStep = ( ( TestStepNode )node.getParent() ).getTestStep();
 			if( UISupport.confirm( "Remove security scan [" + securityCheck.getName() + "]", "Remove SecurityScan" ) )
 			{
 
-				securityTest.removeSecurityCheck( testStep, ( SecurityCheck )securityCheck );
+				securityTest.removeSecurityCheck( testStep, ( SecurityScan )securityCheck );
 				// cellRender.remove( node );
 			}
 		}
@@ -424,7 +424,7 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 
 		@Override
 		public void beforeSecurityCheck( TestCaseRunner testRunner, SecurityTestRunContext runContext,
-				SecurityCheck securityCheck )
+				SecurityScan securityCheck )
 		{
 			securityTestTree.setSelectionRow( securityTestTree.getRowForPath( new TreePath( treeModel
 					.getSecurityCheckNode( securityCheck ).getPath() ) ) );
@@ -531,7 +531,7 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 		{
 			if( securityTest.isRunning() )
 				return;
-			SecurityCheck securityCheck = ( ( SecurityCheckNode )securityTestTree.getLastSelectedPathComponent() )
+			SecurityScan securityCheck = ( ( SecurityCheckNode )securityTestTree.getLastSelectedPathComponent() )
 					.getSecurityCheck();
 
 			if( securityCheck.isConfigurable() )
@@ -539,7 +539,7 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 				SecurityCheckConfig backupCheckConfig = ( SecurityCheckConfig )securityCheck.getConfig().copy();
 
 				SecurityConfigurationDialog dialog = SoapUI.getSoapUICore().getSecurityCheckRegistry().getUIBuilder()
-						.buildSecurityCheckConfigurationDialog( ( SecurityCheck )securityCheck );
+						.buildSecurityCheckConfigurationDialog( ( SecurityScan )securityCheck );
 
 				if( !dialog.configure() )
 				{
@@ -705,14 +705,14 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 	}
 
 	@Override
-	public void securityCheckAdded( SecurityCheck securityCheck )
+	public void securityCheckAdded( SecurityScan securityCheck )
 	{
 		treeModel.addSecurityCheckNode( securityTestTree, securityCheck );
 
 	}
 
 	@Override
-	public void securityCheckRemoved( SecurityCheck securityCheck )
+	public void securityCheckRemoved( SecurityScan securityCheck )
 	{
 		cellRender.remove( treeModel.getSecurityCheckNode( securityCheck ) );
 		treeModel.removeSecurityCheckNode( securityCheck );

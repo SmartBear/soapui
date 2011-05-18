@@ -14,14 +14,14 @@ package com.eviware.soapui.security.registry;
 
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.security.SecurityCheck;
+import com.eviware.soapui.model.security.SecurityScan;
 import com.eviware.soapui.model.testsuite.TestStep;
 
 public interface SecurityCheckFactory
 {
 	public SecurityCheckConfig createNewSecurityCheck( String name );
 
-	public SecurityCheck buildSecurityCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent );
+	public SecurityScan buildSecurityCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent );
 
 	public String getSecurityCheckType();
 

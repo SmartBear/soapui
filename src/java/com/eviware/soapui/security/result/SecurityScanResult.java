@@ -19,7 +19,7 @@ import java.util.List;
 
 import javax.swing.AbstractAction;
 
-import com.eviware.soapui.model.security.SecurityCheck;
+import com.eviware.soapui.model.security.SecurityScan;
 import com.eviware.soapui.security.scan.AbstractSecurityCheckWithProperties;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.ActionList;
@@ -32,7 +32,7 @@ import com.eviware.soapui.support.action.swing.DefaultActionList;
  * @author dragica.soldo
  */
 
-public class SecurityCheckResult implements SecurityResult
+public class SecurityScanResult implements SecurityResult
 {
 	public final static String TYPE = "SecurityScanResult";
 	/**
@@ -44,10 +44,10 @@ public class SecurityCheckResult implements SecurityResult
 	 * if no assertion is added, when status icon should be added to log
 	 */
 	private ResultStatus status;
-	public SecurityCheck securityCheck;
+	public SecurityScan securityCheck;
 	private long size;
 	private boolean discarded;
-	private List<SecurityCheckRequestResult> securityRequestResultList;
+	private List<SecurityScanRequestResult> securityRequestResultList;
 	private long timeTaken = 0;
 	private long timeStamp;
 	public StringBuffer testLog = new StringBuffer();
@@ -61,18 +61,18 @@ public class SecurityCheckResult implements SecurityResult
 	public final static int MAX_REQ_LOG_ENTRY_LENGTH = 100;
 	public final static int MAX_SECURITY_CHANGED_PARAMETERS_LENGTH = 100;
 
-	public SecurityCheckResult( SecurityCheck securityCheck )
+	public SecurityScanResult( SecurityScan securityCheck )
 	{
 		this.securityCheck = securityCheck;
 		status = ResultStatus.INITIALIZED;
 		executionProgressStatus = ResultStatus.INITIALIZED;
 		logIconStatus = ResultStatus.INITIALIZED;
-		securityRequestResultList = new ArrayList<SecurityCheckRequestResult>();
+		securityRequestResultList = new ArrayList<SecurityScanRequestResult>();
 		timeStamp = System.currentTimeMillis();
 		requestCount = 0;
 	}
 
-	public List<SecurityCheckRequestResult> getSecurityRequestResultList()
+	public List<SecurityScanRequestResult> getSecurityRequestResultList()
 	{
 		return securityRequestResultList;
 	}
@@ -87,7 +87,7 @@ public class SecurityCheckResult implements SecurityResult
 		this.status = status;
 	}
 
-	public SecurityCheck getSecurityCheck()
+	public SecurityScan getSecurityCheck()
 	{
 		return securityCheck;
 	}
@@ -115,7 +115,7 @@ public class SecurityCheckResult implements SecurityResult
 		return actionList;
 	}
 
-	public void addSecurityRequestResult( SecurityCheckRequestResult secReqResult )
+	public void addSecurityRequestResult( SecurityScanRequestResult secReqResult )
 	{
 		if( securityRequestResultList != null )
 			securityRequestResultList.add( secReqResult );
@@ -251,7 +251,7 @@ public class SecurityCheckResult implements SecurityResult
 
 	public void detectMissingItems()
 	{
-		SecurityCheck securityCheck = getSecurityCheck();
+		SecurityScan securityCheck = getSecurityCheck();
 		if( getStatus().equals( ResultStatus.NOTHING_TO_SEND ) )
 		{
 			executionProgressStatus = ResultStatus.NOTHING_TO_SEND;

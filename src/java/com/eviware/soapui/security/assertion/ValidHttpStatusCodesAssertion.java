@@ -25,7 +25,7 @@ import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.AbstractTestAssertionFactory;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.iface.SubmitContext;
-import com.eviware.soapui.model.security.SecurityCheck;
+import com.eviware.soapui.model.security.SecurityScan;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.model.testsuite.AssertionException;
@@ -118,7 +118,7 @@ public class ValidHttpStatusCodesAssertion extends WsdlMessageAssertion implemen
 		public Factory()
 		{
 			super( ValidHttpStatusCodesAssertion.ID, ValidHttpStatusCodesAssertion.LABEL,
-					ValidHttpStatusCodesAssertion.class, new Class[] { SecurityCheck.class, AbstractHttpRequest.class } );
+					ValidHttpStatusCodesAssertion.class, new Class[] { SecurityScan.class, AbstractHttpRequest.class } );
 		}
 
 		@Override

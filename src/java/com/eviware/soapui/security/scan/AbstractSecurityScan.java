@@ -36,7 +36,7 @@ import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.iface.SubmitContext;
-import com.eviware.soapui.model.security.SecurityCheck;
+import com.eviware.soapui.model.security.SecurityScan;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.model.testsuite.AssertionsListener;
@@ -50,8 +50,8 @@ import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.security.SecurityTestRunnerImpl;
-import com.eviware.soapui.security.result.SecurityCheckRequestResult;
-import com.eviware.soapui.security.result.SecurityCheckResult;
+import com.eviware.soapui.security.result.SecurityScanRequestResult;
+import com.eviware.soapui.security.result.SecurityScanResult;
 import com.eviware.soapui.security.result.SecurityResult.ResultStatus;
 import com.eviware.soapui.security.support.FailedSecurityMessageExchange;
 import com.eviware.soapui.security.support.SecurityTestRunListener;
@@ -61,13 +61,13 @@ import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
  * @author robert
  * 
  */
-public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<SecurityCheckConfig> implements
-		ResponseAssertion, SecurityCheck// , RequestAssertion
+public abstract class AbstractSecurityScan extends AbstractWsdlModelItem<SecurityCheckConfig> implements
+		ResponseAssertion, SecurityScan// , RequestAssertion
 {
 	// configuration of specific request modification
 	private boolean disabled = false;
-	private SecurityCheckResult securityCheckResult;
-	private SecurityCheckRequestResult securityCheckRequestResult;
+	private SecurityScanResult securityScanResult;
+	private SecurityScanRequestResult securityScanRequestResult;
 	private TestStep testStep;
 	protected AssertionsSupport assertionsSupport;
 
@@ -78,7 +78,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	private TestStep originalTestStepClone;
 	private boolean applyForFailedTests;
 
-	public AbstractSecurityCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent, String icon )
+	public AbstractSecurityScan( TestStep testStep, SecurityCheckConfig config, ModelItem parent, String icon )
 	{
 		super( config, parent, icon );
 		if( config == null )
@@ -102,7 +102,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		}
 
 		/*
-		 * if security check have no strategy ( like large attahments, set its
+		 * if security scan have no strategy ( like large attahments, set its
 		 * value to StrategyTypeConfig.NO_STRATEGY.
 		 */
 		setExecutionStrategy( new ExecutionStrategyHolder( config.getExecutionStrategy() ) );
@@ -138,7 +138,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * com.eviware.soapui.security.check.SecurityCheck#updateSecurityConfig(com
+	 * com.eviware.soapui.security.scan.SecurityScan#updateSecurityConfig(com
 	 * .eviware.soapui.config.SecurityCheckConfig)
 	 */
 	public void updateSecurityConfig( SecurityCheckConfig config )
@@ -184,16 +184,15 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.eviware.soapui.security.check.SecurityCheck#run(com.eviware.soapui
+	 * @see com.eviware.soapui.security.scan.SecurityScan#run(com.eviware.soapui
 	 * .model.testsuite.TestStep,
 	 * com.eviware.soapui.security.SecurityTestRunContext,
 	 * com.eviware.soapui.security.SecurityTestRunner)
 	 */
-	public SecurityCheckResult run( TestStep testStep, SecurityTestRunContext context,
+	public SecurityScanResult run( TestStep testStep, SecurityTestRunContext context,
 			SecurityTestRunner securityTestRunner )
 	{
-		securityCheckResult = new SecurityCheckResult( this );
+		securityScanResult = new SecurityScanResult( this );
 		SecurityTestRunListener[] securityTestListeners = ( ( SecurityTest )getParent() ).getSecurityTestRunListeners();
 
 		PropertyChangeNotifier notifier = new PropertyChangeNotifier();
@@ -203,26 +202,26 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 			noMutations = false;
 			if( ( ( SecurityTestRunnerImpl )securityTestRunner ).isCanceled() )
 			{
-				securityCheckResult.setStatus( ResultStatus.CANCELED );
+				securityScanResult.setStatus( ResultStatus.CANCELED );
 				clear();
-				return securityCheckResult;
+				return securityScanResult;
 			}
-			securityCheckRequestResult = new SecurityCheckRequestResult( this );
-			securityCheckRequestResult.startTimer();
+			securityScanRequestResult = new SecurityScanRequestResult( this );
+			securityScanRequestResult.startTimer();
 			originalTestStepClone = ( ( SecurityTestRunnerImpl )securityTestRunner )
-					.cloneForSecurityCheck( ( WsdlTestStep )this.testStep );
+					.cloneForSecurityScan( ( WsdlTestStep )this.testStep );
 			execute( securityTestRunner, originalTestStepClone, context );
 			notifier.notifyChange();
-			securityCheckRequestResult.stopTimer();
-			assertResponse( getSecurityCheckRequestResult().getMessageExchange(), context );
+			securityScanRequestResult.stopTimer();
+			assertResponse( getSecurityScanRequestResult().getMessageExchange(), context );
 			// add to summary result
-			securityCheckResult.addSecurityRequestResult( getSecurityCheckRequestResult() );
+			securityScanResult.addSecurityRequestResult( getSecurityScanRequestResult() );
 			for( int i = 0; i < securityTestListeners.length; i++ )
 			{
 				if( Arrays.asList( ( ( SecurityTest )getParent() ).getSecurityTestRunListeners() ).contains(
 						securityTestListeners[i] ) )
-					securityTestListeners[i].afterSecurityCheckRequest( ( SecurityTestRunnerImpl )securityTestRunner,
-							context, securityCheckRequestResult );
+					securityTestListeners[i].afterSecurityScanRequest( ( SecurityTestRunnerImpl )securityTestRunner,
+							context, securityScanRequestResult );
 			}
 
 			try
@@ -237,9 +236,9 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 
 		if( noMutations )
 		{
-			securityCheckResult.setStatus( ResultStatus.NOTHING_TO_SEND );
+			securityScanResult.setStatus( ResultStatus.NOTHING_TO_SEND );
 		}
-		return securityCheckResult;
+		return securityScanResult;
 	}
 
 	protected void clear()
@@ -248,14 +247,14 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	}
 
 	/**
-	 * should be implemented in every particular check it executes one request,
-	 * modified by securityCheck if necessary and internally adds messages for
-	 * logging to SecurityCheckRequestResult
+	 * should be implemented in every particular scan it executes one request,
+	 * modified by securityScan if necessary and internally adds messages for
+	 * logging to SecurityScanRequestResult
 	 */
 	abstract protected void execute( SecurityTestRunner runner, TestStep testStep, SecurityTestRunContext context );
 
 	/**
-	 * checks if specific SecurityCheck still has modifications left
+	 * checks if specific SecurityScan still has modifications left
 	 * 
 	 * @param testStep2
 	 * @param context
@@ -265,7 +264,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.eviware.soapui.security.check.SecurityCheck#isConfigurable()
+	 * @see com.eviware.soapui.security.scan.SecurityScan#isConfigurable()
 	 */
 
 	public boolean isConfigurable()
@@ -274,7 +273,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	}
 
 	/**
-	 * Overide if Security Check have Optional component
+	 * Overide if SecurityScan have Optional component
 	 */
 	@Override
 	public JComponent getComponent()
@@ -285,14 +284,14 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.eviware.soapui.security.check.SecurityCheck#getType()
+	 * @see com.eviware.soapui.security.scan.SecurityScan#getType()
 	 */
 	public abstract String getType();
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.eviware.soapui.security.check.SecurityCheck#getTestStep()
+	 * @see com.eviware.soapui.security.scan.SecurityScan#getTestStep()
 	 */
 	public TestStep getTestStep()
 	{
@@ -302,8 +301,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.eviware.soapui.security.check.SecurityCheck#setTestStep(com.eviware
+	 * @see com.eviware.soapui.security.scan.SecurityScan#setTestStep(com.eviware
 	 * .soapui.model.testsuite.TestStep)
 	 */
 	public void setTestStep( TestStep step )
@@ -314,7 +312,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.eviware.soapui.security.check.SecurityCheck#isDisabled()
+	 * @see com.eviware.soapui.security.scan.SecurityScan#isDisabled()
 	 */
 	public boolean isDisabled()
 	{
@@ -324,7 +322,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.eviware.soapui.security.check.SecurityCheck#setDisabled(boolean)
+	 * @see com.eviware.soapui.security.scan.SecurityScan#setDisabled(boolean)
 	 */
 	public void setDisabled( boolean disabled )
 	{
@@ -347,8 +345,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.eviware.soapui.security.check.SecurityCheck#getExecutionStrategy()
+	 * @see com.eviware.soapui.security.scan.SecurityScan#getExecutionStrategy()
 	 */
 	public ExecutionStrategyHolder getExecutionStrategy()
 	{
@@ -359,7 +356,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * com.eviware.soapui.security.check.SecurityCheck#setExecutionStrategy(com
+	 * com.eviware.soapui.security.scan.SecurityScan#setExecutionStrategy(com
 	 * .eviware.soapui.security.ExecutionStrategyHolder)
 	 */
 	public void setExecutionStrategy( ExecutionStrategyHolder executionStrategyHolder )
@@ -436,8 +433,8 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	 */
 	private void assertResponses( WsdlMessageAssertion assertion )
 	{
-		if( securityCheckResult != null )
-			for( SecurityCheckRequestResult result : securityCheckResult.getSecurityRequestResultList() )
+		if( securityScanResult != null )
+			for( SecurityScanRequestResult result : securityScanResult.getSecurityRequestResultList() )
 			{
 				if( result.getMessageExchange() == null )
 					return;
@@ -452,8 +449,8 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	 */
 	private void assertRequests( WsdlMessageAssertion assertion )
 	{
-		if( securityCheckResult != null )
-			for( SecurityCheckRequestResult result : securityCheckResult.getSecurityRequestResultList() )
+		if( securityScanResult != null )
+			for( SecurityScanRequestResult result : securityScanResult.getSecurityRequestResultList() )
 			{
 				if( result.getMessageExchange() == null )
 					return;
@@ -527,7 +524,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		if( cnt == 0 )
 			return currentStatus;
 
-		if( securityCheckResult != null && securityCheckResult.getStatus() == ResultStatus.OK )
+		if( securityScanResult != null && securityScanResult.getStatus() == ResultStatus.OK )
 			currentStatus = AssertionStatus.VALID;
 		else
 			currentStatus = AssertionStatus.FAILED;
@@ -537,7 +534,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 
 	public ResultStatus getSecurityStatus()
 	{
-		return securityCheckResult != null ? securityCheckResult.getStatus() : ResultStatus.UNKNOWN;
+		return securityScanResult != null ? securityScanResult.getStatus() : ResultStatus.UNKNOWN;
 	}
 
 	@Override
@@ -585,7 +582,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * com.eviware.soapui.security.check.SecurityCheck#getAssertionsSupport()
+	 * com.eviware.soapui.security.scan.SecurityScan#getAssertionsSupport()
 	 */
 	public AssertionsSupport getAssertionsSupport()
 	{
@@ -632,7 +629,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 
 			if( messageExchange != null )
 			{
-				context.setProperty( SECURITY_CHECK_REQUEST_RESULT, getSecurityCheckRequestResult() );
+				context.setProperty( SECURITY_SCAN_REQUEST_RESULT, getSecurityScanRequestResult() );
 
 				for( WsdlMessageAssertion assertion : assertionsSupport.getAssertionList() )
 				{
@@ -658,7 +655,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	}
 
 	/**
-	 * Sets SecurityCheckStatus based on the status of all assertions added
+	 * Sets SecurityScanStatus based on the status of all assertions added
 	 * 
 	 * @param result
 	 * @param assertion
@@ -667,16 +664,16 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	{
 		if( result == AssertionStatus.FAILED )
 		{
-			getSecurityCheckRequestResult().setStatus( ResultStatus.FAILED );
+			getSecurityScanRequestResult().setStatus( ResultStatus.FAILED );
 		}
 		else if( result == AssertionStatus.VALID )
 		{
-			getSecurityCheckRequestResult().setStatus( ResultStatus.OK );
+			getSecurityScanRequestResult().setStatus( ResultStatus.OK );
 
 		}
 		else if( result == AssertionStatus.UNKNOWN )
 		{
-			getSecurityCheckRequestResult().setStatus( ResultStatus.UNKNOWN );
+			getSecurityScanRequestResult().setStatus( ResultStatus.UNKNOWN );
 		}
 	}
 
@@ -685,14 +682,14 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 		if( result == AssertionStatus.FAILED )
 		{
 			for( AssertionError error : assertion.getErrors() )
-				getSecurityCheckRequestResult().addMessage( error.getMessage() );
+				getSecurityScanRequestResult().addMessage( error.getMessage() );
 		}
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.eviware.soapui.security.check.SecurityCheck#getSetupScript()
+	 * @see com.eviware.soapui.security.scan.SecurityScan#getSetupScript()
 	 */
 	public String getSetupScript()
 	{
@@ -705,7 +702,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * com.eviware.soapui.security.check.SecurityCheck#setSetupScript(java.lang
+	 * com.eviware.soapui.security.scan.SecurityScan#setSetupScript(java.lang
 	 * .String)
 	 */
 	public void setSetupScript( String text )
@@ -721,7 +718,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.eviware.soapui.security.check.SecurityCheck#getTearDownScript()
+	 * @see com.eviware.soapui.security.scan.SecurityScan#getTearDownScript()
 	 */
 	public String getTearDownScript()
 	{
@@ -734,7 +731,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * com.eviware.soapui.security.check.SecurityCheck#setTearDownScript(java
+	 * com.eviware.soapui.security.scan.SecurityScan#setTearDownScript(java
 	 * .lang.String)
 	 */
 	public void setTearDownScript( String text )
@@ -751,7 +748,7 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.eviware.soapui.security.check.SecurityCheck#getConfigName()
+	 * @see com.eviware.soapui.security.scan.SecurityScan#getConfigName()
 	 */
 	public abstract String getConfigName();
 
@@ -760,30 +757,30 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * com.eviware.soapui.security.check.SecurityCheck#getConfigDescription()
+	 * com.eviware.soapui.security.scan.SecurityScan#getConfigDescription()
 	 */
 	public abstract String getConfigDescription();
 
-	// help url used for configuration panel ( help for this check )
+	// help url used for configuration panel ( help for this scan )
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.eviware.soapui.security.check.SecurityCheck#getHelpURL()
+	 * @see com.eviware.soapui.security.scan.SecurityScan#getHelpURL()
 	 */
 	public abstract String getHelpURL();
 
-	protected void setSecurityCheckRequestResult( SecurityCheckRequestResult securityCheckRequestResult )
+	protected void setSecurityScanRequestResult( SecurityScanRequestResult securityScanRequestResult )
 	{
-		this.securityCheckRequestResult = securityCheckRequestResult;
+		this.securityScanRequestResult = securityScanRequestResult;
 	}
 
-	protected SecurityCheckRequestResult getSecurityCheckRequestResult()
+	protected SecurityScanRequestResult getSecurityScanRequestResult()
 	{
-		return securityCheckRequestResult;
+		return securityScanRequestResult;
 	}
 
 	/**
-	 * Overide if Security Check needs advanced settings
+	 * Overide if SecurityScan needs advanced settings
 	 */
 	@Override
 	public JComponent getAdvancedSettingsPanel()
@@ -792,20 +789,20 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 	}
 
 	@Override
-	public SecurityCheckResult getSecurityCheckResult()
+	public SecurityScanResult getSecurityScanResult()
 	{
-		return securityCheckResult;
+		return securityScanResult;
 	}
 
 	/**
 	 * @param message
 	 * @param testStep
 	 */
-	protected void reportSecurityCheckException( String message )
+	protected void reportSecurityScanException( String message )
 	{
-		getSecurityCheckRequestResult().setMessageExchange( new FailedSecurityMessageExchange() );
-		getSecurityCheckRequestResult().setStatus( ResultStatus.FAILED );
-		getSecurityCheckRequestResult().addMessage( message );
+		getSecurityScanRequestResult().setMessageExchange( new FailedSecurityMessageExchange() );
+		getSecurityScanRequestResult().setStatus( ResultStatus.FAILED );
+		getSecurityScanRequestResult().addMessage( message );
 	}
 
 	@Override
@@ -834,16 +831,16 @@ public abstract class AbstractSecurityCheck extends AbstractWsdlModelItem<Securi
 			assertionsSupport = null;
 		}
 
-		if( securityCheckResult != null )
+		if( securityScanResult != null )
 		{
-			securityCheckResult.release();
-			securityCheckResult = null;
+			securityScanResult.release();
+			securityScanResult = null;
 		}
 
-		if( securityCheckRequestResult != null )
+		if( securityScanRequestResult != null )
 		{
-			securityCheckRequestResult.release();
-			securityCheckRequestResult = null;
+			securityScanRequestResult.release();
+			securityScanRequestResult = null;
 		}
 	}
 }

@@ -12,7 +12,7 @@
 
 package com.eviware.soapui.security;
 
-import com.eviware.soapui.model.security.SecurityCheck;
+import com.eviware.soapui.model.security.SecurityScan;
 
 /**
  * Listener for security check events
@@ -22,8 +22,8 @@ import com.eviware.soapui.model.security.SecurityCheck;
 
 public interface SecurityTestListener
 {
-	public void securityCheckAdded( SecurityCheck securityCheck );
+	public void securityCheckAdded( SecurityScan securityCheck );
 
-	public void securityCheckRemoved( SecurityCheck securityCheck );
+	public void securityCheckRemoved( SecurityScan securityCheck );
 
 }

@@ -13,7 +13,7 @@
 package com.eviware.soapui.security;
 
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
-import com.eviware.soapui.model.security.SecurityCheck;
+import com.eviware.soapui.model.security.SecurityScan;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.security.result.SecurityTestStepResult;
@@ -121,7 +121,7 @@ public class SecurityTestRunContext extends WsdlTestRunContext
 		this.originalTestStepResult = originalTestStepResult;
 	}
 
-	public SecurityCheck getCurrentCheck()
+	public SecurityScan getCurrentCheck()
 	{
 		int testStepCheckCount = 0;
 		if( securityTest != null )

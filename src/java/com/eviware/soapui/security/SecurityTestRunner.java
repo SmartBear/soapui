@@ -12,10 +12,10 @@
 
 package com.eviware.soapui.security;
 
-import com.eviware.soapui.model.security.SecurityCheck;
+import com.eviware.soapui.model.security.SecurityScan;
 import com.eviware.soapui.model.testsuite.TestRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
-import com.eviware.soapui.security.result.SecurityCheckResult;
+import com.eviware.soapui.security.result.SecurityScanResult;
 
 /**
  * SecurityTestRunner
@@ -26,8 +26,8 @@ public interface SecurityTestRunner extends TestRunner
 {
 	public SecurityTest getSecurityTest();
 
-	public SecurityCheckResult runTestStepSecurityCheck( SecurityTestRunContext runContext, TestStep testStep,
-			SecurityCheck securityCheck );
+	public SecurityScanResult runTestStepSecurityCheck( SecurityTestRunContext runContext, TestStep testStep,
+			SecurityScan securityCheck );
 
 	// Removed the rest cause I don't think we need them, since
 	// SecurityTestRunnerImpl extends WsdlTestCaseRunner

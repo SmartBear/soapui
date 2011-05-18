@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
-import com.eviware.soapui.model.security.SecurityCheck;
+import com.eviware.soapui.model.security.SecurityScan;
 import com.eviware.soapui.model.testsuite.SamplerTestStep;
 import com.eviware.soapui.model.testsuite.TestStep;
 
@@ -13,7 +13,7 @@ public class TestStepNode extends DefaultMutableTreeNode
 
 	private TestStep testStep;
 
-	public TestStepNode( SecurityTreeRootNode securityTreeRootNode, TestStep step, List<SecurityCheck> list )
+	public TestStepNode( SecurityTreeRootNode securityTreeRootNode, TestStep step, List<SecurityScan> list )
 	{
 		this.testStep = step;
 		if( step instanceof SamplerTestStep )
@@ -24,7 +24,7 @@ public class TestStepNode extends DefaultMutableTreeNode
 			children = null;
 		}
 		if( list != null )
-			for( SecurityCheck sc : list )
+			for( SecurityScan sc : list )
 				add( new SecurityCheckNode( sc ) );
 	}
 

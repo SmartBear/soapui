@@ -17,7 +17,7 @@ import com.eviware.soapui.config.ScriptConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestStep;
-import com.eviware.soapui.security.scan.AbstractSecurityCheck;
+import com.eviware.soapui.security.scan.AbstractSecurityScan;
 import com.eviware.soapui.security.scan.GroovySecurityCheck;
 
 /**
@@ -41,7 +41,7 @@ public class GroovySecurityCheckFactory extends AbstractSecurityCheckFactory
 	}
 
 	@Override
-	public AbstractSecurityCheck buildSecurityCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent )
+	public AbstractSecurityScan buildSecurityCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent )
 	{
 		return new GroovySecurityCheck( testStep, config, parent, null );
 	}

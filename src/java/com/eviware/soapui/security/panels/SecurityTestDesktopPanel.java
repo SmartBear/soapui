@@ -47,7 +47,7 @@ import com.eviware.soapui.impl.wsdl.panels.teststeps.support.PropertyHolderTable
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.security.SecurityCheck;
+import com.eviware.soapui.model.security.SecurityScan;
 import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStepResult;
@@ -60,8 +60,8 @@ import com.eviware.soapui.security.SecurityTestRunnerImpl;
 import com.eviware.soapui.security.actions.SecurityTestOptionsAction;
 import com.eviware.soapui.security.log.JFunctionalTestRunLog;
 import com.eviware.soapui.security.log.JSecurityTestRunLog;
-import com.eviware.soapui.security.result.SecurityCheckRequestResult;
-import com.eviware.soapui.security.result.SecurityCheckResult;
+import com.eviware.soapui.security.result.SecurityScanRequestResult;
+import com.eviware.soapui.security.result.SecurityScanResult;
 import com.eviware.soapui.security.result.SecurityTestStepResult;
 import com.eviware.soapui.security.result.SecurityResult.ResultStatus;
 import com.eviware.soapui.security.support.ProgressBarSecurityTestAdapter;
@@ -767,14 +767,14 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 
 		@Override
 		public void beforeSecurityCheck( TestCaseRunner testRunner, SecurityTestRunContext runContext,
-				SecurityCheck securityCheck )
+				SecurityScan securityCheck )
 		{
 			securityTestLog.addSecurityCheckResult( securityCheck );
 		}
 
 		@Override
 		public void afterSecurityCheck( TestCaseRunner testRunner, SecurityTestRunContext runContext,
-				SecurityCheckResult securityCheckResult )
+				SecurityScanResult securityCheckResult )
 		{
 			securityTestLog.updateSecurityCheckResult( securityCheckResult );
 
@@ -812,8 +812,8 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 		}
 
 		@Override
-		public void afterSecurityCheckRequest( TestCaseRunner testRunner, SecurityTestRunContext runContext,
-				SecurityCheckRequestResult securityCheckReqResult )
+		public void afterSecurityScanRequest( TestCaseRunner testRunner, SecurityTestRunContext runContext,
+				SecurityScanRequestResult securityCheckReqResult )
 		{
 			securityTestLog.addSecurityCheckRequestResult( securityCheckReqResult );
 		}

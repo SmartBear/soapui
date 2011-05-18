@@ -9,13 +9,13 @@ import javax.swing.JTree;
 import javax.swing.SwingConstants;
 import javax.swing.tree.DefaultTreeModel;
 
-import com.eviware.soapui.model.security.SecurityCheck;
+import com.eviware.soapui.model.security.SecurityScan;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.panels.SecurityCheckNode;
-import com.eviware.soapui.security.result.SecurityCheckRequestResult;
-import com.eviware.soapui.security.result.SecurityCheckResult;
+import com.eviware.soapui.security.result.SecurityScanRequestResult;
+import com.eviware.soapui.security.result.SecurityScanResult;
 import com.eviware.soapui.security.result.SecurityResult.ResultStatus;
 import com.eviware.soapui.security.scan.AbstractSecurityCheckWithProperties;
 
@@ -35,7 +35,7 @@ public class ProgressBarSecurityCheckAdapter extends SecurityTestRunListenerAdap
 	private JTree tree;
 	private SecurityCheckNode node;
 	private JProgressBar progressBar;
-	private SecurityCheck securityCheck;
+	private SecurityScan securityCheck;
 	private SecurityTest securityTest;
 	private int alertsCounter = 0;
 	private String prePostFix = " ";
@@ -44,7 +44,7 @@ public class ProgressBarSecurityCheckAdapter extends SecurityTestRunListenerAdap
 	private Color defaultBackground;
 
 	public ProgressBarSecurityCheckAdapter( JTree tree, SecurityCheckNode node, JProgressBar progressBar,
-			SecurityCheck securityCheck, SecurityTest securityTest, JLabel cntLabel )
+			SecurityScan securityCheck, SecurityTest securityTest, JLabel cntLabel )
 	{
 		this.tree = tree;
 		this.node = node;
@@ -71,8 +71,8 @@ public class ProgressBarSecurityCheckAdapter extends SecurityTestRunListenerAdap
 	}
 
 	@Override
-	public void afterSecurityCheckRequest( TestCaseRunner testRunner, SecurityTestRunContext runContext,
-			SecurityCheckRequestResult securityCheckReqResult )
+	public void afterSecurityScanRequest( TestCaseRunner testRunner, SecurityTestRunContext runContext,
+			SecurityScanRequestResult securityCheckReqResult )
 	{
 
 		if( securityCheckReqResult.getSecurityCheck().getTestStep().getId().equals(
@@ -148,7 +148,7 @@ public class ProgressBarSecurityCheckAdapter extends SecurityTestRunListenerAdap
 
 	@Override
 	public void afterSecurityCheck( TestCaseRunner testRunner, SecurityTestRunContext runContext,
-			SecurityCheckResult securityCheckResult )
+			SecurityScanResult securityCheckResult )
 	{
 		if( securityCheckResult.getSecurityCheck().getTestStep().getId()
 				.equals( this.securityCheck.getTestStep().getId() )
@@ -186,7 +186,7 @@ public class ProgressBarSecurityCheckAdapter extends SecurityTestRunListenerAdap
 
 	@Override
 	public void beforeSecurityCheck( TestCaseRunner testRunner, SecurityTestRunContext runContext,
-			SecurityCheck securityCheck )
+			SecurityScan securityCheck )
 	{
 		if( securityCheck.getTestStep().getId().equals( this.securityCheck.getTestStep().getId() )
 				&& this.securityCheck.getName().equals( securityCheck.getName() ) )

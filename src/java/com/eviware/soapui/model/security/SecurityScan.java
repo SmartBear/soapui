@@ -11,18 +11,18 @@ import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.ExecutionStrategyHolder;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
-import com.eviware.soapui.security.result.SecurityCheckResult;
+import com.eviware.soapui.security.result.SecurityScanResult;
 
-public interface SecurityCheck extends ModelItem, Assertable
+public interface SecurityScan extends ModelItem, Assertable
 {
 
-	public static final String SECURITY_CHECK_REQUEST_RESULT = "SecurityScanRequestResult";
+	public static final String SECURITY_SCAN_REQUEST_RESULT = "SecurityScanRequestResult";
 	public static final String SECURITY_CHECK_RESPONSE_RESULT = "SecurityScanResponseResult";
-	public static final String STATUS_PROPERTY = SecurityCheck.class.getName() + "@status";
+	public static final String STATUS_PROPERTY = SecurityScan.class.getName() + "@status";
 
 	void updateSecurityConfig( SecurityCheckConfig config );
 
-	SecurityCheckResult run( TestStep testStep, SecurityTestRunContext context, SecurityTestRunner securityTestRunner );
+	SecurityScanResult run( TestStep testStep, SecurityTestRunContext context, SecurityTestRunner securityTestRunner );
 
 	boolean isConfigurable();
 
@@ -96,7 +96,7 @@ public interface SecurityCheck extends ModelItem, Assertable
 	 */
 	JComponent getAdvancedSettingsPanel();
 
-	public SecurityCheckResult getSecurityCheckResult();
+	public SecurityScanResult getSecurityScanResult();
 
 	XmlObject getConfig();
 

@@ -38,12 +38,12 @@ import javax.swing.ListCellRenderer;
 import org.apache.log4j.Logger;
 
 import com.eviware.soapui.impl.wsdl.testcase.TestCaseLogItem;
-import com.eviware.soapui.model.security.SecurityCheck;
+import com.eviware.soapui.model.security.SecurityScan;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTest;
-import com.eviware.soapui.security.result.SecurityCheckRequestResult;
-import com.eviware.soapui.security.result.SecurityCheckResult;
+import com.eviware.soapui.security.result.SecurityScanRequestResult;
+import com.eviware.soapui.security.result.SecurityScanResult;
 import com.eviware.soapui.security.result.SecurityResult;
 import com.eviware.soapui.security.result.SecurityTestStepResult;
 import com.eviware.soapui.security.result.SecurityResult.ResultStatus;
@@ -142,7 +142,7 @@ public class JSecurityTestRunLog extends JPanel
 		boldTexts.clear();
 	}
 
-	public synchronized void locateSecurityCheck( SecurityCheck check )
+	public synchronized void locateSecurityCheck( SecurityScan check )
 	{
 		try
 		{
@@ -192,7 +192,7 @@ public class JSecurityTestRunLog extends JPanel
 		}
 	}
 
-	public synchronized void addSecurityCheckResult( SecurityCheck securityCheck )
+	public synchronized void addSecurityCheckResult( SecurityScan securityCheck )
 	{
 		logListModel.addSecurityCheckResult( securityCheck );
 		if( follow )
@@ -208,7 +208,7 @@ public class JSecurityTestRunLog extends JPanel
 		}
 	}
 
-	public synchronized void updateSecurityCheckResult( SecurityCheckResult checkResult )
+	public synchronized void updateSecurityCheckResult( SecurityScanResult checkResult )
 	{
 		logListModel.updateSecurityCheckResult( checkResult, errorsOnly );
 		if( follow )
@@ -224,9 +224,9 @@ public class JSecurityTestRunLog extends JPanel
 		}
 	}
 
-	public synchronized void addSecurityCheckRequestResult( SecurityCheckRequestResult checkRequestResult )
+	public synchronized void addSecurityCheckRequestResult( SecurityScanRequestResult checkRequestResult )
 	{
-		if( errorsOnly && checkRequestResult.getStatus() != SecurityCheckRequestResult.ResultStatus.FAILED )
+		if( errorsOnly && checkRequestResult.getStatus() != SecurityScanRequestResult.ResultStatus.FAILED )
 			return;
 
 		logListModel.addSecurityCheckRequestResult( checkRequestResult );
@@ -464,7 +464,7 @@ public class JSecurityTestRunLog extends JPanel
 			SecurityResult result = logListModel.getTestStepResultAt( index );
 			if( result != null )
 			{
-				if( result.getResultType().equals( SecurityCheckRequestResult.TYPE ) )
+				if( result.getResultType().equals( SecurityScanRequestResult.TYPE ) )
 				{
 					hyperlinkLabel.setText( getText() );
 					hyperlinkLabel.setBackground( getBackground() );
@@ -474,7 +474,7 @@ public class JSecurityTestRunLog extends JPanel
 
 					hyperlinkLabel.setBorder( BorderFactory.createEmptyBorder( 0, 24, 3, 3 ) );
 				}
-				else if( result.getResultType().equals( SecurityCheckResult.TYPE ) )
+				else if( result.getResultType().equals( SecurityScanResult.TYPE ) )
 				{
 					hyperlinkLabel.setText( getText() );
 					hyperlinkLabel.setBackground( getBackground() );

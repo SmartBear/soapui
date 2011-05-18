@@ -23,13 +23,13 @@ import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestStepFactory;
 import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestStepRegistry;
-import com.eviware.soapui.model.security.SecurityCheck;
+import com.eviware.soapui.model.security.SecurityScan;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.TestAssertion;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
-import com.eviware.soapui.security.result.SecurityCheckResult;
+import com.eviware.soapui.security.result.SecurityScanResult;
 import com.eviware.soapui.security.result.SecurityTestStepResult;
 import com.eviware.soapui.security.result.SecurityResult.ResultStatus;
 import com.eviware.soapui.security.support.SecurityTestRunListener;
@@ -92,7 +92,7 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 	 * @param sourceTestStep
 	 * @return TestStep
 	 */
-	public TestStep cloneForSecurityCheck( WsdlTestStep sourceTestStep )
+	public TestStep cloneForSecurityScan( WsdlTestStep sourceTestStep )
 	{
 		WsdlTestStep clonedTestStep = null;
 		TestStepConfig testStepConfig = ( TestStepConfig )sourceTestStep.getConfig().copy();
@@ -172,18 +172,18 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 						.contains( securityTestStepListeners[i] ) )
 					securityTestStepListeners[i].beforeStep( this, getRunContext(), stepResult );
 			}
-			Map<String, List<SecurityCheck>> secCheckMap = securityTest.getSecurityChecksMap();
+			Map<String, List<SecurityScan>> secCheckMap = securityTest.getSecurityChecksMap();
 			if( secCheckMap.containsKey( currentStep.getId() ) )
 			{
-				List<SecurityCheck> testStepChecksList = secCheckMap.get( currentStep.getId() );
+				List<SecurityScan> testStepChecksList = secCheckMap.get( currentStep.getId() );
 				for( int i = 0; i < testStepChecksList.size(); i++ )
 				{
-					SecurityCheck securityCheck = testStepChecksList.get( i );
+					SecurityScan securityCheck = testStepChecksList.get( i );
 					if( stepResult.getStatus() != TestStepStatus.FAILED || securityCheck.isApplyForFailedStep() )
 					{
 						runContext.setCurrentCheckIndex( i );
 						runContext.setCurrentCheckOnSecurityTestIndex( currentCheckOnSecurityTestIndex++ );
-						SecurityCheckResult securityCheckResult = runTestStepSecurityCheck( runContext, currentStep,
+						SecurityScanResult securityCheckResult = runTestStepSecurityCheck( runContext, currentStep,
 								securityCheck );
 						securityStepResult.addSecurityCheckResult( securityCheckResult );
 						if( securityCheckResult.isCanceled() )
@@ -240,10 +240,10 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 
 	}
 
-	public SecurityCheckResult runTestStepSecurityCheck( SecurityTestRunContext runContext, TestStep currentStep,
-			SecurityCheck securityCheck )
+	public SecurityScanResult runTestStepSecurityCheck( SecurityTestRunContext runContext, TestStep currentStep,
+			SecurityScan securityCheck )
 	{
-		SecurityCheckResult result = null;
+		SecurityScanResult result = null;
 		for( int j = 0; j < securityTestStepListeners.length; j++ )
 		{
 			if( Arrays.asList( getSecurityTest().getSecurityTestRunListeners() ).contains( securityTestStepListeners[j] ) )
@@ -254,7 +254,7 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 			if( Arrays.asList( getSecurityTest().getSecurityTestRunListeners() ).contains( securityTestListeners[j] ) )
 				securityTestListeners[j].beforeSecurityCheck( this, runContext, securityCheck );
 		}
-		result = securityCheck.run( cloneForSecurityCheck( ( WsdlTestStep )currentStep ), runContext, this );
+		result = securityCheck.run( cloneForSecurityScan( ( WsdlTestStep )currentStep ), runContext, this );
 		if( securityTest.getFailOnError() && result.getStatus() == ResultStatus.FAILED )
 		{
 			fail( "Cancelling due to failed security scan" );
