@@ -24,9 +24,11 @@ import javax.swing.BorderFactory;
 import javax.swing.DefaultListSelectionModel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableColumn;
 
 import org.jdesktop.swingx.JXTable;
 
@@ -57,6 +59,8 @@ import com.eviware.x.impl.swing.SwingXFormDialog;
 public class SecurityCheckedParametersTablePanel extends JPanel implements ListSelectionListener
 {
 
+	protected static final int LABEL_NAME_COLUMN_WIDTH = 120;
+	protected static final int ENABLE_COLUMN_WIDTH = 70;
 	static final String CHOOSE_TEST_PROPERTY = "Choose Test Property";
 	protected SecurityParametersTableModel model;
 	protected JXToolBar toolbar;
@@ -74,6 +78,7 @@ public class SecurityCheckedParametersTablePanel extends JPanel implements ListS
 		this.model = model;
 		initRequestPartProperties( properties );
 		init();
+		defineColumnWidth();
 		setPreferredSize( new Dimension( 100, 100 ) );
 	}
 
@@ -102,8 +107,9 @@ public class SecurityCheckedParametersTablePanel extends JPanel implements ListS
 		add( toolbar, BorderLayout.NORTH );
 		table = new JXTable( model );
 		table.getSelectionModel().addListSelectionListener( this );
-
+		defineColumnWidth();
 		table.setDefaultEditor( String.class, getDefaultCellEditor() );
+
 		add( new JScrollPane( table ), BorderLayout.CENTER );
 
 		pathPane = new JUndoableTextArea();
@@ -115,6 +121,28 @@ public class SecurityCheckedParametersTablePanel extends JPanel implements ListS
 		{
 			( ( InvalidTypesSecurityScan )securityCheck ).refreshRestrictionLabel( -1 );
 		}
+	}
+
+	/**
+	 * 
+	 */
+	protected void defineColumnWidth()
+	{
+		// enable column
+		TableColumn col = table.getColumnModel().getColumn( 3 );
+		col.setMaxWidth( ENABLE_COLUMN_WIDTH );
+		col.setPreferredWidth( ENABLE_COLUMN_WIDTH );
+		col.setMinWidth( ENABLE_COLUMN_WIDTH );
+		// label
+		col = table.getColumnModel().getColumn( 0 );
+		col.setMaxWidth( LABEL_NAME_COLUMN_WIDTH );
+		col.setPreferredWidth( LABEL_NAME_COLUMN_WIDTH );
+		col.setMinWidth( LABEL_NAME_COLUMN_WIDTH );
+		// name
+		col = table.getColumnModel().getColumn( 1 );
+		col.setMaxWidth( LABEL_NAME_COLUMN_WIDTH );
+		col.setPreferredWidth( LABEL_NAME_COLUMN_WIDTH );
+		col.setMinWidth( LABEL_NAME_COLUMN_WIDTH );
 	}
 
 	/**
@@ -262,8 +290,8 @@ public class SecurityCheckedParametersTablePanel extends JPanel implements ListS
 			}
 			else
 			{
-				if( !model.addParameter( dialog.getValue( AddParameterDialog.LABEL ),
-						dialog.getValue( AddParameterDialog.NAME ), pathPane.getText() ) )
+				if( !model.addParameter( dialog.getValue( AddParameterDialog.LABEL ), dialog
+						.getValue( AddParameterDialog.NAME ), pathPane.getText() ) )
 					UISupport.showErrorMessage( "Label have to be unique!" );
 			}
 		}
@@ -367,8 +395,8 @@ public class SecurityCheckedParametersTablePanel extends JPanel implements ListS
 			}
 			else
 			{
-				if( model.addParameter( dialog.getValue( AddParameterDialog.LABEL ),
-						dialog.getValue( AddParameterDialog.NAME ), pathPane.getText() ) )
+				if( model.addParameter( dialog.getValue( AddParameterDialog.LABEL ), dialog
+						.getValue( AddParameterDialog.NAME ), pathPane.getText() ) )
 				{
 					JComboBoxFormField nameField = ( JComboBoxFormField )dialog.getFormField( AddParameterDialog.NAME );
 					nameField.setSelectedOptions( new Object[] { nameField.getOptions()[0] } );
