@@ -55,7 +55,6 @@ import com.eviware.soapui.security.result.SecurityScanResult;
 import com.eviware.soapui.security.result.SecurityResult.ResultStatus;
 import com.eviware.soapui.security.support.FailedSecurityMessageExchange;
 import com.eviware.soapui.security.support.SecurityTestRunListener;
-import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 
 /**
  * @author robert
@@ -72,11 +71,8 @@ public abstract class AbstractSecurityScan extends AbstractWsdlModelItem<Securit
 	protected AssertionsSupport assertionsSupport;
 
 	private AssertionStatus currentStatus;
-	private SoapUIScriptEngine setupScriptEngine;
-	private SoapUIScriptEngine tearDownScriptEngine;
 	private ExecutionStrategyHolder executionStrategy;
 	private TestStep originalTestStepClone;
-	private boolean applyForFailedTests;
 
 	public AbstractSecurityScan( TestStep testStep, SecurityCheckConfig config, ModelItem parent, String icon )
 	{
@@ -122,8 +118,6 @@ public abstract class AbstractSecurityScan extends AbstractWsdlModelItem<Securit
 		getConfig().setType( config.getType() );
 		getConfig().setName( config.getName() );
 		getConfig().setConfig( config.getConfig() );
-		getConfig().setSetupScript( config.getSetupScript() );
-		getConfig().setTearDownScript( config.getTearDownScript() );
 		getConfig().setTestStep( config.getTestStep() );
 
 		TestAssertionConfig[] assertions = config.getAssertionList().toArray( new TestAssertionConfig[0] );
@@ -684,64 +678,6 @@ public abstract class AbstractSecurityScan extends AbstractWsdlModelItem<Securit
 			for( AssertionError error : assertion.getErrors() )
 				getSecurityScanRequestResult().addMessage( error.getMessage() );
 		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.eviware.soapui.security.scan.SecurityScan#getSetupScript()
-	 */
-	public String getSetupScript()
-	{
-		if( getConfig().getSetupScript() == null )
-			getConfig().addNewSetupScript();
-		return getConfig().getSetupScript().getStringValue();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.eviware.soapui.security.scan.SecurityScan#setSetupScript(java.lang
-	 * .String)
-	 */
-	public void setSetupScript( String text )
-	{
-		if( getConfig().getSetupScript() == null )
-			getConfig().addNewSetupScript();
-		getConfig().getSetupScript().setStringValue( text );
-
-		if( setupScriptEngine != null )
-			setupScriptEngine.setScript( text );
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.eviware.soapui.security.scan.SecurityScan#getTearDownScript()
-	 */
-	public String getTearDownScript()
-	{
-		if( getConfig().getTearDownScript() == null )
-			getConfig().addNewTearDownScript();
-		return getConfig().getTearDownScript().getStringValue();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.eviware.soapui.security.scan.SecurityScan#setTearDownScript(java
-	 * .lang.String)
-	 */
-	public void setTearDownScript( String text )
-	{
-		if( getConfig().getTearDownScript() == null )
-			getConfig().addNewTearDownScript();
-		getConfig().getTearDownScript().setStringValue( text );
-
-		if( tearDownScriptEngine != null )
-			tearDownScriptEngine.setScript( text );
 	}
 
 	// name used in configuration panel

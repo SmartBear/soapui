@@ -171,8 +171,6 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 		newSecurityScan.setType( newSecScanConfig.getType() );
 		newSecurityScan.setName( newSecScanConfig.getName() );
 		newSecurityScan.setConfig( newSecScanConfig.getConfig() );
-		newSecurityScan.setSetupScript( newSecScanConfig.getSetupScript() );
-		newSecurityScan.setTearDownScript( newSecScanConfig.getTearDownScript() );
 		newSecurityScan.setAssertionArray( newSecScanConfig.getAssertionList().toArray( new TestAssertionConfig[0] ) );
 		newSecurityScan.setTestStep( newSecScanConfig.getTestStep() );
 		newSecurityScan.setCheckedPameters( newSecScanConfig.getCheckedPameters() );
