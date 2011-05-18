@@ -122,7 +122,7 @@ public class SecurityTestLogModel extends AbstractListModel
 			else
 				startStepIndex = items.size();
 		}
-		if( ( errorsOnly && !result.isHasChecksWithWarnings() ) || ( startStepLogEntryAdded && !hasChecksToProcess ) )
+		if( ( errorsOnly && !result.isHasScansWithWarnings() ) || ( startStepLogEntryAdded && !hasChecksToProcess ) )
 		{
 			// stepCount-- ;
 			int size = items.size() - 1;

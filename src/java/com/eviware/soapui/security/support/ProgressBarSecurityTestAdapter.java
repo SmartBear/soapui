@@ -95,7 +95,7 @@ public class ProgressBarSecurityTestAdapter
 		}
 
 		@Override
-		public void beforeSecurityCheck( TestCaseRunner testRunner, SecurityTestRunContext runContext,
+		public void beforeSecurityScan( TestCaseRunner testRunner, SecurityTestRunContext runContext,
 				SecurityScan securityCheck )
 		{
 
@@ -106,12 +106,12 @@ public class ProgressBarSecurityTestAdapter
 			{
 				progressBar.setString( STATE_RUN + ":" + securityCheck.getTestStep().getName() + " - "
 						+ securityCheck.getName() );
-				progressBar.setValue( runContext.getCurrentCheckOnSecurityTestIndex() );
+				progressBar.setValue( runContext.getCurrentScanOnSecurityTestIndex() );
 			}
 		}
 
 		@Override
-		public void afterSecurityCheck( TestCaseRunner testRunner, SecurityTestRunContext runContext,
+		public void afterSecurityScan( TestCaseRunner testRunner, SecurityTestRunContext runContext,
 				SecurityScanResult securityCheckResult )
 		{
 			if( securityCheckResult.getStatus() == ResultStatus.CANCELED )

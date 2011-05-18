@@ -38,7 +38,7 @@ public class MockSecurityTestRunner extends AbstractMockTestRunner<SecurityTest>
 	}
 
 	@Override
-	public SecurityScanResult runTestStepSecurityCheck( SecurityTestRunContext runContext, TestStep testStep,
+	public SecurityScanResult runTestStepSecurityScan( SecurityTestRunContext runContext, TestStep testStep,
 			SecurityScan securityCheck )
 	{
 		return securityCheck.run( cloneForSecurityCheck( ( WsdlTestStep )testStep ), runContext, null );

@@ -44,16 +44,16 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 	private SecurityTestRunListener[] securityTestListeners = new SecurityTestRunListener[0];
 	private SecurityTestRunListener[] securityTestStepListeners = new SecurityTestRunListener[0];
 	/**
-	 * holds index of current securityCheck out of summary number of checks on
-	 * SecxurityTest level used in main progress bar on SecurityTest
+	 * holds index of current securityScan out of summary number of scans on
+	 * SecurityTest level used in main progress bar on SecurityTest
 	 */
-	private int currentCheckOnSecurityTestIndex;
+	private int currentScanOnSecurityTestIndex;
 
 	public SecurityTestRunnerImpl( SecurityTest test, StringToObjectMap properties )
 	{
 		super( test, properties );
 		this.securityTest = test;
-		this.currentCheckOnSecurityTestIndex = 0;
+		this.currentScanOnSecurityTestIndex = 0;
 	}
 
 	public SecurityTestRunContext createContext( StringToObjectMap properties )
@@ -140,7 +140,7 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 	protected int runCurrentTestStep( SecurityTestRunContext runContext, int currentStepIndex )
 	{
 		// flag for detecting if running has been interrupted either by canceling
-		// securityCheckRequest
+		// securityScanRequest
 		// or if request result is null(backward compatibility for running
 		// TestCase )
 		boolean jumpExit = false;
@@ -172,26 +172,26 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 						.contains( securityTestStepListeners[i] ) )
 					securityTestStepListeners[i].beforeStep( this, getRunContext(), stepResult );
 			}
-			Map<String, List<SecurityScan>> secCheckMap = securityTest.getSecurityScansMap();
-			if( secCheckMap.containsKey( currentStep.getId() ) )
+			Map<String, List<SecurityScan>> secScanMap = securityTest.getSecurityScansMap();
+			if( secScanMap.containsKey( currentStep.getId() ) )
 			{
-				List<SecurityScan> testStepChecksList = secCheckMap.get( currentStep.getId() );
-				for( int i = 0; i < testStepChecksList.size(); i++ )
+				List<SecurityScan> testStepScansList = secScanMap.get( currentStep.getId() );
+				for( int i = 0; i < testStepScansList.size(); i++ )
 				{
-					SecurityScan securityCheck = testStepChecksList.get( i );
-					if( stepResult.getStatus() != TestStepStatus.FAILED || securityCheck.isApplyForFailedStep() )
+					SecurityScan securityScan = testStepScansList.get( i );
+					if( stepResult.getStatus() != TestStepStatus.FAILED || securityScan.isApplyForFailedStep() )
 					{
-						runContext.setCurrentCheckIndex( i );
-						runContext.setCurrentCheckOnSecurityTestIndex( currentCheckOnSecurityTestIndex++ );
-						SecurityScanResult securityCheckResult = runTestStepSecurityCheck( runContext, currentStep,
-								securityCheck );
-						securityStepResult.addSecurityCheckResult( securityCheckResult );
-						if( securityCheckResult.isCanceled() )
+						runContext.setCurrentScanIndex( i );
+						runContext.setCurrentScanOnSecurityTestIndex( currentScanOnSecurityTestIndex++ );
+						SecurityScanResult securityScanResult = runTestStepSecurityScan( runContext, currentStep,
+								securityScan );
+						securityStepResult.addSecurityScanResult( securityScanResult );
+						if( securityScanResult.isCanceled() )
 						{
 							jumpExit = true;
 							break;
 						}
-						else if( securityCheckResult.getStatus() == ResultStatus.FAILED )
+						else if( securityScanResult.getStatus() == ResultStatus.FAILED )
 						{
 							if( getTestRunnable().getFailOnError() )
 							{
@@ -206,7 +206,7 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 						}
 					}
 				}
-				// in case no security check is executed
+				// in case no security scan is executed
 				if( securityStepResult.getStatus() == ResultStatus.INITIALIZED )
 				{
 					securityStepResult.setStatus( ResultStatus.UNKNOWN );
@@ -240,21 +240,21 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 
 	}
 
-	public SecurityScanResult runTestStepSecurityCheck( SecurityTestRunContext runContext, TestStep currentStep,
-			SecurityScan securityCheck )
+	public SecurityScanResult runTestStepSecurityScan( SecurityTestRunContext runContext, TestStep currentStep,
+			SecurityScan securityScan )
 	{
 		SecurityScanResult result = null;
 		for( int j = 0; j < securityTestStepListeners.length; j++ )
 		{
 			if( Arrays.asList( getSecurityTest().getSecurityTestRunListeners() ).contains( securityTestStepListeners[j] ) )
-				securityTestStepListeners[j].beforeSecurityCheck( this, runContext, securityCheck );
+				securityTestStepListeners[j].beforeSecurityScan( this, runContext, securityScan );
 		}
 		for( int j = 0; j < securityTestListeners.length; j++ )
 		{
 			if( Arrays.asList( getSecurityTest().getSecurityTestRunListeners() ).contains( securityTestListeners[j] ) )
-				securityTestListeners[j].beforeSecurityCheck( this, runContext, securityCheck );
+				securityTestListeners[j].beforeSecurityScan( this, runContext, securityScan );
 		}
-		result = securityCheck.run( cloneForSecurityScan( ( WsdlTestStep )currentStep ), runContext, this );
+		result = securityScan.run( cloneForSecurityScan( ( WsdlTestStep )currentStep ), runContext, this );
 		if( securityTest.getFailOnError() && result.getStatus() == ResultStatus.FAILED )
 		{
 			fail( "Cancelling due to failed security scan" );
@@ -262,12 +262,12 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 		for( int j = 0; j < securityTestStepListeners.length; j++ )
 		{
 			if( Arrays.asList( getSecurityTest().getSecurityTestRunListeners() ).contains( securityTestStepListeners[j] ) )
-				securityTestStepListeners[j].afterSecurityCheck( this, runContext, result );
+				securityTestStepListeners[j].afterSecurityScan( this, runContext, result );
 		}
 		for( int j = 0; j < securityTestListeners.length; j++ )
 		{
 			if( Arrays.asList( getSecurityTest().getSecurityTestRunListeners() ).contains( securityTestListeners[j] ) )
-				securityTestListeners[j].afterSecurityCheck( this, runContext, result );
+				securityTestListeners[j].afterSecurityScan( this, runContext, result );
 		}
 		return result;
 	}

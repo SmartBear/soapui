@@ -165,7 +165,7 @@ public class ProgressBarSecurityTestStepAdapter
 		}
 
 		@Override
-		public void beforeSecurityCheck( TestCaseRunner testRunner, SecurityTestRunContext runContext,
+		public void beforeSecurityScan( TestCaseRunner testRunner, SecurityTestRunContext runContext,
 				SecurityScan securityCheck )
 		{
 			if( securityCheck.getTestStep().getId().equals( testStep.getId() ) )
@@ -200,7 +200,7 @@ public class ProgressBarSecurityTestStepAdapter
 			}
 		}
 
-		public void afterSecurityCheck( TestCaseRunner testRunner, SecurityTestRunContext runContext,
+		public void afterSecurityScan( TestCaseRunner testRunner, SecurityTestRunContext runContext,
 				SecurityScanResult securityCheckResult )
 		{
 
@@ -230,7 +230,7 @@ public class ProgressBarSecurityTestStepAdapter
 					}
 				}
 
-				progressBar.setValue( ( ( SecurityTestRunContext )runContext ).getCurrentCheckIndex() + 1 );
+				progressBar.setValue( ( ( SecurityTestRunContext )runContext ).getCurrentScanIndex() + 1 );
 				( ( DefaultTreeModel )tree.getModel() ).nodeChanged( node );
 			}
 		}

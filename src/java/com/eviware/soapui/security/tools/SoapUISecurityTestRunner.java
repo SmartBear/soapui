@@ -514,7 +514,7 @@ public class SoapUISecurityTestRunner extends AbstractSoapUITestRunner
 			}
 
 			@Override
-			public void afterSecurityCheck( TestCaseRunner testRunner, SecurityTestRunContext runContext,
+			public void afterSecurityScan( TestCaseRunner testRunner, SecurityTestRunContext runContext,
 					SecurityScanResult securityCheckResult )
 			{
 				securityScanCount++ ;

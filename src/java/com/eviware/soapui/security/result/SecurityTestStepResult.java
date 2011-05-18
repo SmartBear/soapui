@@ -27,7 +27,7 @@ import com.eviware.soapui.support.action.swing.DefaultActionList;
 
 /**
  * Security result of a TestStep represents summary result of all TestStep
- * security checks
+ * security scans
  * 
  * @author dragica.soldo
  */
@@ -38,7 +38,7 @@ public class SecurityTestStepResult implements SecurityResult
 	public static final String TYPE = "SecurityTestStepResult";
 	private TestStep testStep;
 	private long size;
-	private List<SecurityScanResult> securityCheckResultList;
+	private List<SecurityScanResult> securityScanResultList;
 	private boolean discarded;
 	private long timeTaken = 0;
 	private long timeStamp;
@@ -50,20 +50,20 @@ public class SecurityTestStepResult implements SecurityResult
 	private ResultStatus logIconStatus = ResultStatus.UNKNOWN;
 	// indicates if log entries need to be deleted when logging only warnings
 	// (status not suitable since can be canceled with warnings)
-	private boolean hasChecksWithWarnings;
+	private boolean hasScansWithWarnings;
 
 	public SecurityTestStepResult( TestStep testStep, TestStepResult originalResult )
 	{
 		this.testStep = testStep;
 		executionProgressStatus = ResultStatus.INITIALIZED;
-		securityCheckResultList = new ArrayList<SecurityScanResult>();
+		securityScanResultList = new ArrayList<SecurityScanResult>();
 		timeStamp = System.currentTimeMillis();
 		this.originalTestStepResult = originalResult;
 	}
 
-	public List<SecurityScanResult> getSecurityCheckResultList()
+	public List<SecurityScanResult> getSecurityScanResultList()
 	{
-		return securityCheckResultList;
+		return securityScanResultList;
 	}
 
 	public ResultStatus getStatus()
@@ -99,46 +99,46 @@ public class SecurityTestStepResult implements SecurityResult
 		return actionList;
 	}
 
-	public void addSecurityCheckResult( SecurityScanResult securityCheckResult )
+	public void addSecurityScanResult( SecurityScanResult securityScanResult )
 	{
-		if( securityCheckResultList != null )
-			securityCheckResultList.add( securityCheckResult );
+		if( securityScanResultList != null )
+			securityScanResultList.add( securityScanResult );
 
-		timeTaken += securityCheckResult.getTimeTaken();
+		timeTaken += securityScanResult.getTimeTaken();
 
 		if( !hasAddedRequests )
 		{
-			status = securityCheckResult.getStatus();
+			status = securityScanResult.getStatus();
 		}
 		else if( status != ResultStatus.FAILED )
 		{
-			status = securityCheckResult.getStatus();
+			status = securityScanResult.getStatus();
 		}
 
-		securityCheckResult.detectMissingItems();
-		if( securityCheckResult.getExecutionProgressStatus().equals( ResultStatus.CANCELED ) )
+		securityScanResult.detectMissingItems();
+		if( securityScanResult.getExecutionProgressStatus().equals( ResultStatus.CANCELED ) )
 		{
-			executionProgressStatus = securityCheckResult.getExecutionProgressStatus();
+			executionProgressStatus = securityScanResult.getExecutionProgressStatus();
 		}
-		else if( securityCheckResult.getExecutionProgressStatus().equals( ResultStatus.MISSING_PARAMETERS )
+		else if( securityScanResult.getExecutionProgressStatus().equals( ResultStatus.MISSING_PARAMETERS )
 				&& executionProgressStatus != ResultStatus.CANCELED )
 		{
 			executionProgressStatus = ResultStatus.MISSING_PARAMETERS;
 		}
-		else if( securityCheckResult.getExecutionProgressStatus().equals( ResultStatus.MISSING_ASSERTIONS )
+		else if( securityScanResult.getExecutionProgressStatus().equals( ResultStatus.MISSING_ASSERTIONS )
 				&& executionProgressStatus != ResultStatus.CANCELED
 				&& executionProgressStatus != ResultStatus.MISSING_PARAMETERS )
 		{
 			executionProgressStatus = ResultStatus.MISSING_ASSERTIONS;
 		}
-		else if( securityCheckResult.getExecutionProgressStatus().equals( ResultStatus.FAILED )
+		else if( securityScanResult.getExecutionProgressStatus().equals( ResultStatus.FAILED )
 				&& executionProgressStatus != ResultStatus.CANCELED
 				&& executionProgressStatus != ResultStatus.MISSING_PARAMETERS
 				&& executionProgressStatus != ResultStatus.MISSING_ASSERTIONS )
 		{
 			executionProgressStatus = ResultStatus.FAILED;
 		}
-		else if( securityCheckResult.getExecutionProgressStatus().equals( ResultStatus.OK )
+		else if( securityScanResult.getExecutionProgressStatus().equals( ResultStatus.OK )
 				&& executionProgressStatus != ResultStatus.CANCELED
 				&& executionProgressStatus != ResultStatus.MISSING_PARAMETERS
 				&& executionProgressStatus != ResultStatus.MISSING_ASSERTIONS
@@ -147,16 +147,16 @@ public class SecurityTestStepResult implements SecurityResult
 			executionProgressStatus = ResultStatus.OK;
 		}
 
-		if( securityCheckResult.getLogIconStatus().equals( ResultStatus.FAILED ) )
+		if( securityScanResult.getLogIconStatus().equals( ResultStatus.FAILED ) )
 		{
-			logIconStatus = securityCheckResult.getLogIconStatus();
+			logIconStatus = securityScanResult.getLogIconStatus();
 		}
-		else if( ( securityCheckResult.getLogIconStatus().equals( ResultStatus.MISSING_ASSERTIONS ) || securityCheckResult
+		else if( ( securityScanResult.getLogIconStatus().equals( ResultStatus.MISSING_ASSERTIONS ) || securityScanResult
 				.getLogIconStatus().equals( ResultStatus.MISSING_PARAMETERS ) ) && logIconStatus != ResultStatus.FAILED )
 		{
-			logIconStatus = securityCheckResult.getLogIconStatus();
+			logIconStatus = securityScanResult.getLogIconStatus();
 		}
-		else if( securityCheckResult.getLogIconStatus().equals( ResultStatus.OK ) && logIconStatus != ResultStatus.FAILED
+		else if( securityScanResult.getLogIconStatus().equals( ResultStatus.OK ) && logIconStatus != ResultStatus.FAILED
 				&& logIconStatus != ResultStatus.MISSING_ASSERTIONS && logIconStatus != ResultStatus.MISSING_PARAMETERS )
 		{
 			logIconStatus = ResultStatus.OK;
@@ -167,19 +167,19 @@ public class SecurityTestStepResult implements SecurityResult
 		// securityCheckResultList.indexOf( securityCheckResult ) ).append(
 		// securityCheckResult.getStatus().toString() ).append( ": took " )
 		// .append( securityCheckResult.getTimeTaken() ).append( " ms" );
-		this.testLog.append( securityCheckResult.getSecurityTestLog() );
+		this.testLog.append( securityScanResult.getSecurityTestLog() );
 
 		hasAddedRequests = true;
 
-		if( securityCheckResult.isHasRequestsWithWarnings() )
+		if( securityScanResult.isHasRequestsWithWarnings() )
 		{
-			hasChecksWithWarnings = true;
+			hasScansWithWarnings = true;
 		}
 	}
 
-	public boolean isHasChecksWithWarnings()
+	public boolean isHasScansWithWarnings()
 	{
-		return hasChecksWithWarnings;
+		return hasScansWithWarnings;
 	}
 
 	public long getTimeTaken()
@@ -298,9 +298,9 @@ public class SecurityTestStepResult implements SecurityResult
 
 	public void release()
 	{
-		if( securityCheckResultList != null )
+		if( securityScanResultList != null )
 		{
-			securityCheckResultList.clear();
+			securityScanResultList.clear();
 		}
 	}
 

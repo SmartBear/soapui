@@ -147,7 +147,7 @@ public class ProgressBarSecurityCheckAdapter extends SecurityTestRunListenerAdap
 	}
 
 	@Override
-	public void afterSecurityCheck( TestCaseRunner testRunner, SecurityTestRunContext runContext,
+	public void afterSecurityScan( TestCaseRunner testRunner, SecurityTestRunContext runContext,
 			SecurityScanResult securityCheckResult )
 	{
 		if( securityCheckResult.getSecurityCheck().getTestStep().getId()
@@ -185,7 +185,7 @@ public class ProgressBarSecurityCheckAdapter extends SecurityTestRunListenerAdap
 	}
 
 	@Override
-	public void beforeSecurityCheck( TestCaseRunner testRunner, SecurityTestRunContext runContext,
+	public void beforeSecurityScan( TestCaseRunner testRunner, SecurityTestRunContext runContext,
 			SecurityScan securityCheck )
 	{
 		if( securityCheck.getTestStep().getId().equals( this.securityCheck.getTestStep().getId() )

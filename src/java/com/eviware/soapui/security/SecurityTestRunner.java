@@ -26,8 +26,8 @@ public interface SecurityTestRunner extends TestRunner
 {
 	public SecurityTest getSecurityTest();
 
-	public SecurityScanResult runTestStepSecurityCheck( SecurityTestRunContext runContext, TestStep testStep,
-			SecurityScan securityCheck );
+	public SecurityScanResult runTestStepSecurityScan( SecurityTestRunContext runContext, TestStep testStep,
+			SecurityScan securityScan );
 
 	// Removed the rest cause I don't think we need them, since
 	// SecurityTestRunnerImpl extends WsdlTestCaseRunner

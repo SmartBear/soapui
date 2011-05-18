@@ -423,7 +423,7 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 	{
 
 		@Override
-		public void beforeSecurityCheck( TestCaseRunner testRunner, SecurityTestRunContext runContext,
+		public void beforeSecurityScan( TestCaseRunner testRunner, SecurityTestRunContext runContext,
 				SecurityScan securityCheck )
 		{
 			securityTestTree.setSelectionRow( securityTestTree.getRowForPath( new TreePath( treeModel

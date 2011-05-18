@@ -39,12 +39,12 @@ public interface SecurityTestRunListener
 	public void afterOriginalStep( TestCaseRunner testRunner, SecurityTestRunContext runContext,
 			SecurityTestStepResult result );
 
-	public void beforeSecurityCheck( TestCaseRunner testRunner, SecurityTestRunContext runContext,
-			SecurityScan securityCheck );
+	public void beforeSecurityScan( TestCaseRunner testRunner, SecurityTestRunContext runContext,
+			SecurityScan securityScan );
 
-	public void afterSecurityCheck( TestCaseRunner testRunner, SecurityTestRunContext runContext,
-			SecurityScanResult securityCheckResult );
+	public void afterSecurityScan( TestCaseRunner testRunner, SecurityTestRunContext runContext,
+			SecurityScanResult securityScanResult );
 
 	public void afterSecurityScanRequest( TestCaseRunner testRunner, SecurityTestRunContext runContext,
-			SecurityScanRequestResult securityCheckReqResult );
+			SecurityScanRequestResult securityScanReqResult );
 }
