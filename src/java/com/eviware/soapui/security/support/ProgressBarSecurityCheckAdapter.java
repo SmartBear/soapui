@@ -17,7 +17,7 @@ import com.eviware.soapui.security.panels.SecurityCheckNode;
 import com.eviware.soapui.security.result.SecurityScanRequestResult;
 import com.eviware.soapui.security.result.SecurityScanResult;
 import com.eviware.soapui.security.result.SecurityResult.ResultStatus;
-import com.eviware.soapui.security.scan.AbstractSecurityCheckWithProperties;
+import com.eviware.soapui.security.scan.AbstractSecurityScanWithProperties;
 
 public class ProgressBarSecurityCheckAdapter extends SecurityTestRunListenerAdapter
 {
@@ -85,12 +85,12 @@ public class ProgressBarSecurityCheckAdapter extends SecurityTestRunListenerAdap
 				progressBar.setString( STATE_MISSING_ASSERTIONS );
 				progressBar.setValue( progressBar.getMaximum() );
 			}
-			else if( this.securityCheck instanceof AbstractSecurityCheckWithProperties )
+			else if( this.securityCheck instanceof AbstractSecurityScanWithProperties )
 			{
-				if( ( ( AbstractSecurityCheckWithProperties )this.securityCheck ).getParameterHolder() != null
-						&& ( ( AbstractSecurityCheckWithProperties )this.securityCheck ).getParameterHolder()
+				if( ( ( AbstractSecurityScanWithProperties )this.securityCheck ).getParameterHolder() != null
+						&& ( ( AbstractSecurityScanWithProperties )this.securityCheck ).getParameterHolder()
 								.getParameterList() != null
-						&& ( ( AbstractSecurityCheckWithProperties )this.securityCheck ).getParameterHolder()
+						&& ( ( AbstractSecurityScanWithProperties )this.securityCheck ).getParameterHolder()
 								.getParameterList().size() == 0 )
 				{
 					progressBar.setForeground( MISSING_ASSERTION_COLOR );
@@ -161,12 +161,12 @@ public class ProgressBarSecurityCheckAdapter extends SecurityTestRunListenerAdap
 					progressBar.setForeground( MISSING_ASSERTION_COLOR );
 					progressBar.setString( STATE_MISSING_ASSERTIONS );
 				}
-				else if( this.securityCheck instanceof AbstractSecurityCheckWithProperties )
+				else if( this.securityCheck instanceof AbstractSecurityScanWithProperties )
 				{
-					if( ( ( AbstractSecurityCheckWithProperties )this.securityCheck ).getParameterHolder() != null
-							&& ( ( AbstractSecurityCheckWithProperties )this.securityCheck ).getParameterHolder()
+					if( ( ( AbstractSecurityScanWithProperties )this.securityCheck ).getParameterHolder() != null
+							&& ( ( AbstractSecurityScanWithProperties )this.securityCheck ).getParameterHolder()
 									.getParameterList() != null
-							&& ( ( AbstractSecurityCheckWithProperties )this.securityCheck ).getParameterHolder()
+							&& ( ( AbstractSecurityScanWithProperties )this.securityCheck ).getParameterHolder()
 									.getParameterList().size() == 0 )
 					{
 						progressBar.setForeground( MISSING_ASSERTION_COLOR );

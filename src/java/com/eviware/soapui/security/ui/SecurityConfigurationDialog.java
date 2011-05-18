@@ -27,7 +27,7 @@ import com.eviware.soapui.impl.wsdl.actions.project.SimpleDialog;
 import com.eviware.soapui.model.security.SecurityScan;
 import com.eviware.soapui.model.security.SecurityParametersTableModel;
 import com.eviware.soapui.security.assertion.SecurityAssertionPanel;
-import com.eviware.soapui.security.scan.AbstractSecurityCheckWithProperties;
+import com.eviware.soapui.security.scan.AbstractSecurityScanWithProperties;
 import com.eviware.soapui.security.ui.SecurityConfigurationDialogBuilder.Strategy;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.x.form.XFormDialog;
@@ -63,7 +63,7 @@ public class SecurityConfigurationDialog extends SimpleDialog
 	{
 		JPanel mainPanel = UISupport.createEmptyPanel( 5, 5, 5, 5 );
 
-		if( securityCheck instanceof AbstractSecurityCheckWithProperties )
+		if( securityCheck instanceof AbstractSecurityScanWithProperties )
 		{
 			JPanel topPanel = UISupport.createEmptyPanel( 0, 0, 10, 0 );
 			topPanel.add( buildParametersTable(), BorderLayout.CENTER );
@@ -106,8 +106,8 @@ public class SecurityConfigurationDialog extends SimpleDialog
 	protected Component buildParametersTable()
 	{
 		parametersTable = new SecurityCheckedParametersTablePanel( new SecurityParametersTableModel(
-				( ( AbstractSecurityCheckWithProperties )securityCheck ).getParameterHolder() ), securityCheck
-				.getTestStep().getProperties(), ( AbstractSecurityCheckWithProperties )securityCheck );
+				( ( AbstractSecurityScanWithProperties )securityCheck ).getParameterHolder() ), securityCheck
+				.getTestStep().getProperties(), ( AbstractSecurityScanWithProperties )securityCheck );
 
 		parametersTable.setPreferredSize( new Dimension( 400, 150 ) );
 		return parametersTable;

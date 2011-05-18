@@ -47,7 +47,7 @@ import com.eviware.soapui.support.xml.XmlObjectTreeModel;
 import com.eviware.soapui.support.xml.XmlUtils;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel.XmlTreeNode;
 
-public class InvalidTypesSecurityCheck extends AbstractSecurityCheckWithProperties
+public class InvalidTypesSecurityCheck extends AbstractSecurityScanWithProperties
 {
 
 	public final static String TYPE = "InvalidTypesSecurityCheck";

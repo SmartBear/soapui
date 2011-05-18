@@ -33,7 +33,7 @@ import com.eviware.soapui.security.result.SecurityScanRequestResult;
 import com.eviware.soapui.security.result.SecurityScanResult;
 import com.eviware.soapui.security.result.SecurityTestStepResult;
 import com.eviware.soapui.security.result.SecurityResult.ResultStatus;
-import com.eviware.soapui.security.scan.AbstractSecurityCheckWithProperties;
+import com.eviware.soapui.security.scan.AbstractSecurityScanWithProperties;
 
 /**
  * Class that keeps a JProgressBars state in sync with a SecurityTest
@@ -188,8 +188,8 @@ public class ProgressBarSecurityTestStepAdapter
 					progressBar.setString( STATE_MISSING_ASSERTIONS );
 				}
 				// or if there is no parameters.
-				if( securityCheck instanceof AbstractSecurityCheckWithProperties
-						&& ( ( AbstractSecurityCheckWithProperties )securityCheck ).getParameterHolder()
+				if( securityCheck instanceof AbstractSecurityScanWithProperties
+						&& ( ( AbstractSecurityScanWithProperties )securityCheck ).getParameterHolder()
 						.getParameterList().size() == 0 )
 				{
 					if( !progressBar.getForeground().equals( FAILED_COLOR ) )

@@ -58,7 +58,7 @@ import com.eviware.soapui.security.SecurityTestListener;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.actions.CloneParametersAction;
 import com.eviware.soapui.security.log.JSecurityTestRunLog;
-import com.eviware.soapui.security.scan.AbstractSecurityCheckWithProperties;
+import com.eviware.soapui.security.scan.AbstractSecurityScanWithProperties;
 import com.eviware.soapui.security.support.SecurityTestRunListenerAdapter;
 import com.eviware.soapui.security.ui.SecurityConfigurationDialog;
 import com.eviware.soapui.support.UISupport;
@@ -480,11 +480,11 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 		addSecurityCheckAction.setEnabled( false );
 		configureSecurityCheckAction.setEnabled( true );
 		removeSecurityCheckAction.setEnabled( true );
-		if( ( ( SecurityCheckNode )securityTestTree.getLastSelectedPathComponent() ).getSecurityCheck() instanceof AbstractSecurityCheckWithProperties )
+		if( ( ( SecurityCheckNode )securityTestTree.getLastSelectedPathComponent() ).getSecurityCheck() instanceof AbstractSecurityScanWithProperties )
 		{
 			cloneParametersAction.setEnabled( true );
 			cloneParametersAction
-					.setSecurityCheck( ( AbstractSecurityCheckWithProperties )( ( SecurityCheckNode )securityTestTree
+					.setSecurityCheck( ( AbstractSecurityScanWithProperties )( ( SecurityCheckNode )securityTestTree
 							.getLastSelectedPathComponent() ).getSecurityCheck() );
 		}
 	}
@@ -596,7 +596,7 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 		{
 			if( node instanceof SecurityCheckNode )
 			{
-				if( ( ( SecurityCheckNode )node ).getSecurityCheck() instanceof AbstractSecurityCheckWithProperties )
+				if( ( ( SecurityCheckNode )node ).getSecurityCheck() instanceof AbstractSecurityScanWithProperties )
 					securityCheckWithPropertiesPopUp.show( securityTestTree, e.getX(), e.getY() );
 				else
 					securityCheckPopUp.show( securityTestTree, e.getX(), e.getY() );

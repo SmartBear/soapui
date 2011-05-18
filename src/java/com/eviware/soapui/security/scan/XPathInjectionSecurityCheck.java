@@ -49,7 +49,7 @@ import com.eviware.x.form.support.AForm;
 import com.eviware.x.impl.swing.JFormDialog;
 import com.eviware.x.impl.swing.JStringListFormField;
 
-public class XPathInjectionSecurityCheck extends AbstractSecurityCheckWithProperties
+public class XPathInjectionSecurityCheck extends AbstractSecurityScanWithProperties
 {
 
 	public static final String TYPE = "XPathInjectionSecurityCheck";

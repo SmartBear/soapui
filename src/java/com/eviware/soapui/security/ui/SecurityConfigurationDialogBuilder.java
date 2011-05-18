@@ -25,7 +25,7 @@ import com.eviware.soapui.model.security.SecurityScan;
 import com.eviware.soapui.model.security.SecurityParametersTableModel;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.security.assertion.SecurityAssertionPanel;
-import com.eviware.soapui.security.scan.AbstractSecurityCheckWithProperties;
+import com.eviware.soapui.security.scan.AbstractSecurityScanWithProperties;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.XFormField;
@@ -228,8 +228,8 @@ public class SecurityConfigurationDialogBuilder
 	protected void addParameterTable( SecurityScan securityCheck, XFormField field )
 	{
 		field.setProperty( "component", new SecurityCheckedParametersTablePanel( new SecurityParametersTableModel(
-				( ( AbstractSecurityCheckWithProperties )securityCheck ).getParameterHolder() ), securityCheck
-				.getTestStep().getProperties(), ( AbstractSecurityCheckWithProperties )securityCheck ) );
+				( ( AbstractSecurityScanWithProperties )securityCheck ).getParameterHolder() ), securityCheck
+				.getTestStep().getProperties(), ( AbstractSecurityScanWithProperties )securityCheck ) );
 	}
 
 	private XFormDialog buildSecurityCheckConfigurationDialog( String name, String description, ImageIcon icon,
@@ -238,14 +238,14 @@ public class SecurityConfigurationDialogBuilder
 		XFormDialog dialog = null;
 		if( component == null )
 		{
-			if( securityCheck instanceof AbstractSecurityCheckWithProperties )
+			if( securityCheck instanceof AbstractSecurityScanWithProperties )
 				dialog = ADialogBuilder.buildDialog( DialogWithParameters.class );
 			else
 				dialog = ADialogBuilder.buildDialog( DefaultDialog.class );
 		}
 		else
 		{
-			if( securityCheck instanceof AbstractSecurityCheckWithProperties )
+			if( securityCheck instanceof AbstractSecurityScanWithProperties )
 				dialog = ADialogBuilder.buildDialog( OptionalDialogWithParameters.class );
 			else
 				dialog = ADialogBuilder.buildDialog( OptionalDialog.class );

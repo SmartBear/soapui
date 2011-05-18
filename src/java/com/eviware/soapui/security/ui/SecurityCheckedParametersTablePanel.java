@@ -33,7 +33,7 @@ import org.jdesktop.swingx.JXTable;
 import com.eviware.soapui.model.security.SecurityParametersTableModel;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.security.actions.CloneParametersAction;
-import com.eviware.soapui.security.scan.AbstractSecurityCheckWithProperties;
+import com.eviware.soapui.security.scan.AbstractSecurityScanWithProperties;
 import com.eviware.soapui.security.scan.BoundarySecurityCheck;
 import com.eviware.soapui.security.scan.InvalidTypesSecurityCheck;
 import com.eviware.soapui.support.UISupport;
@@ -65,10 +65,10 @@ public class SecurityCheckedParametersTablePanel extends JPanel implements ListS
 	protected DefaultActionList actionList;
 	protected JUndoableTextArea pathPane;
 	protected XFormDialog dialog;
-	protected AbstractSecurityCheckWithProperties securityCheck;
+	protected AbstractSecurityScanWithProperties securityCheck;
 
 	public SecurityCheckedParametersTablePanel( SecurityParametersTableModel model,
-			Map<String, TestProperty> properties, AbstractSecurityCheckWithProperties securityCheck )
+			Map<String, TestProperty> properties, AbstractSecurityScanWithProperties securityCheck )
 	{
 		this.securityCheck = securityCheck;
 		this.model = model;

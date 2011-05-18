@@ -57,7 +57,7 @@ import com.eviware.x.impl.swing.JStringListFormField;
  * @author soapui team
  */
 
-public class SQLInjectionCheck extends AbstractSecurityCheckWithProperties
+public class SQLInjectionCheck extends AbstractSecurityScanWithProperties
 {
 
 	public static final String TYPE = "SQLInjectionCheck";

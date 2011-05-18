@@ -43,7 +43,7 @@ import com.eviware.soapui.support.xml.XmlUtils;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel.AttributeXmlTreeNode;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel.XmlTreeNode;
 
-public class MalformedXmlSecurityCheck extends AbstractSecurityCheckWithProperties
+public class MalformedXmlSecurityCheck extends AbstractSecurityScanWithProperties
 {
 
 	public static final String TYPE = "MalformedXmlSecurityCheck";

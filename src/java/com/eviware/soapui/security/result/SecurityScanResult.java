@@ -20,7 +20,7 @@ import java.util.List;
 import javax.swing.AbstractAction;
 
 import com.eviware.soapui.model.security.SecurityScan;
-import com.eviware.soapui.security.scan.AbstractSecurityCheckWithProperties;
+import com.eviware.soapui.security.scan.AbstractSecurityScanWithProperties;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.DefaultActionList;
@@ -256,8 +256,8 @@ public class SecurityScanResult implements SecurityResult
 		{
 			executionProgressStatus = ResultStatus.NOTHING_TO_SEND;
 		}
-		if( securityCheck instanceof AbstractSecurityCheckWithProperties
-				&& ( ( AbstractSecurityCheckWithProperties )securityCheck ).getParameterHolder().getParameterList().size() == 0 )
+		if( securityCheck instanceof AbstractSecurityScanWithProperties
+				&& ( ( AbstractSecurityScanWithProperties )securityCheck ).getParameterHolder().getParameterList().size() == 0 )
 		{
 			logIconStatus = ResultStatus.MISSING_PARAMETERS;
 			executionProgressStatus = ResultStatus.MISSING_PARAMETERS;

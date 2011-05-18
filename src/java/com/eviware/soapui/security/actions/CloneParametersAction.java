@@ -28,7 +28,7 @@ import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.scan.AbstractSecurityScan;
-import com.eviware.soapui.security.scan.AbstractSecurityCheckWithProperties;
+import com.eviware.soapui.security.scan.AbstractSecurityScanWithProperties;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.DefaultActionList;
@@ -49,7 +49,7 @@ public class CloneParametersAction extends AbstractAction
 
 	private XFormDialog dialog;
 	protected DefaultActionList actionList;
-	private AbstractSecurityCheckWithProperties securityCheck;
+	private AbstractSecurityScanWithProperties securityCheck;
 
 	public CloneParametersAction()
 	{
@@ -59,7 +59,7 @@ public class CloneParametersAction extends AbstractAction
 		setEnabled( false );
 	}
 
-	public CloneParametersAction( AbstractSecurityCheckWithProperties securityCheck )
+	public CloneParametersAction( AbstractSecurityScanWithProperties securityCheck )
 	{
 		super( "Clone SecurityScan Parameters" );
 		putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/clone_parameters.gif" ) );
@@ -75,7 +75,7 @@ public class CloneParametersAction extends AbstractAction
 		// model.fireTableDataChanged();
 	}
 
-	public void setSecurityCheck( AbstractSecurityCheckWithProperties securityCheck )
+	public void setSecurityCheck( AbstractSecurityScanWithProperties securityCheck )
 	{
 		this.securityCheck = securityCheck;
 	}
@@ -167,7 +167,7 @@ public class CloneParametersAction extends AbstractAction
 
 		for( String checkName : targetSecurityChecks )
 		{
-			AbstractSecurityCheckWithProperties targetSecurityCheck = ( AbstractSecurityCheckWithProperties )targetSecurityTest
+			AbstractSecurityScanWithProperties targetSecurityCheck = ( AbstractSecurityScanWithProperties )targetSecurityTest
 					.getTestStepSecurityCheckByName( targetTestStep.getId(), checkName );
 
 			for( int i : indexes )
@@ -309,7 +309,7 @@ public class CloneParametersAction extends AbstractAction
 						String testStepName = dialog.getValue( CloneParameterDialog.TARGET_TESTSTEP );
 						TestStep testStep = testCase.getTestStepByName( testStepName );
 						String[] securityCheckNames = ModelSupport.getNames( securityTest.getTestStepSecurityCheckByType(
-								testStep.getId(), AbstractSecurityCheckWithProperties.class ) );
+								testStep.getId(), AbstractSecurityScanWithProperties.class ) );
 						dialog.setOptions( CloneParameterDialog.TARGET_SECURITYCHECK, securityCheckNames );
 					}
 					else
@@ -360,7 +360,7 @@ public class CloneParametersAction extends AbstractAction
 					String testStepName = dialog.getValue( CloneParameterDialog.TARGET_TESTSTEP );
 					TestStep testStep = testCase.getTestStepByName( testStepName );
 					String[] securityCheckNames = ModelSupport.getNames( securityTest.getTestStepSecurityCheckByType(
-							testStep.getId(), AbstractSecurityCheckWithProperties.class ) );
+							testStep.getId(), AbstractSecurityScanWithProperties.class ) );
 					dialog.setOptions( CloneParameterDialog.TARGET_SECURITYCHECK, securityCheckNames );
 				}
 				else
@@ -384,7 +384,7 @@ public class CloneParametersAction extends AbstractAction
 				TestStep testStep = testCase.getTestStepByName( newValue );
 
 				String[] securityCheckNames = ModelSupport.getNames( securityTest.getTestStepSecurityCheckByType(
-						testStep.getId(), AbstractSecurityCheckWithProperties.class ) );
+						testStep.getId(), AbstractSecurityScanWithProperties.class ) );
 				dialog.setOptions( CloneParameterDialog.TARGET_SECURITYCHECK, securityCheckNames );
 			}
 		} );
@@ -401,7 +401,7 @@ public class CloneParametersAction extends AbstractAction
 				TestStep testStep = testCase.getTestStepByName( testStepName );
 
 				String[] securityCheckNames = ModelSupport.getNames( securityTest.getTestStepSecurityCheckByType(
-						testStep.getId(), AbstractSecurityCheckWithProperties.class ) );
+						testStep.getId(), AbstractSecurityScanWithProperties.class ) );
 				dialog.setOptions( CloneParameterDialog.TARGET_SECURITYCHECK, securityCheckNames );
 			}
 		} );
@@ -426,7 +426,7 @@ public class CloneParametersAction extends AbstractAction
 		TestStep testStep = wsdlTestCase.getTestStepByName( testStepName );
 
 		String[] securityCheckNames = ModelSupport.getNames( securityTest.getTestStepSecurityCheckByType(
-				testStep.getId(), AbstractSecurityCheckWithProperties.class ) );
+				testStep.getId(), AbstractSecurityScanWithProperties.class ) );
 		dialog.setOptions( CloneParameterDialog.TARGET_SECURITYCHECK, securityCheckNames );
 
 		dialog.setOptions( CloneParameterDialog.PARAMETERS, securityCheck.getParameterHolder().getParameterLabels() );

@@ -44,7 +44,7 @@ import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.security.ui.XmlBombSecurityCheckConfigPanel;
 import com.eviware.soapui.support.types.StringToStringMap;
 
-public class XmlBombSecurityCheck extends AbstractSecurityCheckWithProperties
+public class XmlBombSecurityCheck extends AbstractSecurityScanWithProperties
 {
 
 	public static final String TYPE = "XmlBombSecurityCheck";

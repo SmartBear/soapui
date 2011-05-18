@@ -39,7 +39,7 @@ import com.eviware.soapui.support.xml.XmlObjectTreeModel.XmlTreeNode;
  * @author soapui team
  */
 
-public class GroovySecurityCheck extends AbstractSecurityCheckWithProperties
+public class GroovySecurityCheck extends AbstractSecurityScanWithProperties
 {
 	public static final String SCRIPT_PROPERTY = GroovySecurityCheck.class.getName() + "@script";
 	public static final String TYPE = "GroovySecurityCheck";

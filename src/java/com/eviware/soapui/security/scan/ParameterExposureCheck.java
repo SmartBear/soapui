@@ -60,7 +60,7 @@ import com.eviware.x.impl.swing.JStringListFormField;
  * @author nebojsa.tasic
  */
 
-public class ParameterExposureCheck extends AbstractSecurityCheckWithProperties
+public class ParameterExposureCheck extends AbstractSecurityScanWithProperties
 {
 	public static final String TYPE = "ParameterExposureCheck";
 	public static final String NAME = "Cross Site Scripting";

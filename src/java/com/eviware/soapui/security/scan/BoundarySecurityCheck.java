@@ -47,7 +47,7 @@ import com.eviware.soapui.support.xml.XmlObjectTreeModel;
 import com.eviware.soapui.support.xml.XmlUtils;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel.XmlTreeNode;
 
-public class BoundarySecurityCheck extends AbstractSecurityCheckWithProperties
+public class BoundarySecurityCheck extends AbstractSecurityScanWithProperties
 {
 
 	public static final String TYPE = "BoundaryCheck";

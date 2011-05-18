@@ -19,18 +19,18 @@ import com.eviware.soapui.support.types.StringToStringMap;
 
 /**
  * 
- * These are for Security Checks that mutate parameters.
+ * These are for Security Scans that mutate parameters.
  * 
  * @author robert
  * 
  */
-public abstract class AbstractSecurityCheckWithProperties extends AbstractSecurityScan implements
+public abstract class AbstractSecurityScanWithProperties extends AbstractSecurityScan implements
 		XPathReferenceContainer
 {
 	public static final String SECURITY_CHANGED_PARAMETERS = "SecurityChangedParameters";
 	private SecurityCheckedParameterHolder parameterHolder;
 
-	public AbstractSecurityCheckWithProperties( TestStep testStep, SecurityCheckConfig config, ModelItem parent,
+	public AbstractSecurityScanWithProperties( TestStep testStep, SecurityCheckConfig config, ModelItem parent,
 			String icon )
 	{
 		super( testStep, config, parent, icon );
