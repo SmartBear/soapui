@@ -59,7 +59,7 @@ import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.AField.AFieldType;
 
 /**
- * Panel for displaying SecurityChecks Results
+ * Panel for displaying SecurityScan Results
  * 
  * @author dragica.soldo
  */
@@ -142,11 +142,11 @@ public class JSecurityTestRunLog extends JPanel
 		boldTexts.clear();
 	}
 
-	public synchronized void locateSecurityCheck( SecurityScan check )
+	public synchronized void locateSecurityScan( SecurityScan check )
 	{
 		try
 		{
-			int idx = logListModel.getIndexOfSecurityCheck( check );
+			int idx = logListModel.getIndexOfSecurityScan( check );
 			if( idx != -1 )
 			{
 				testLogList.ensureIndexIsVisible( idx );
@@ -192,9 +192,9 @@ public class JSecurityTestRunLog extends JPanel
 		}
 	}
 
-	public synchronized void addSecurityCheckResult( SecurityScan securityCheck )
+	public synchronized void addSecurityScanResult( SecurityScan securityCheck )
 	{
-		logListModel.addSecurityCheckResult( securityCheck );
+		logListModel.addSecurityScanResult( securityCheck );
 		if( follow )
 		{
 			try
@@ -208,9 +208,9 @@ public class JSecurityTestRunLog extends JPanel
 		}
 	}
 
-	public synchronized void updateSecurityCheckResult( SecurityScanResult checkResult )
+	public synchronized void updateSecurityScanResult( SecurityScanResult checkResult )
 	{
-		logListModel.updateSecurityCheckResult( checkResult, errorsOnly );
+		logListModel.updateSecurityScanResult( checkResult, errorsOnly );
 		if( follow )
 		{
 			try
@@ -224,12 +224,12 @@ public class JSecurityTestRunLog extends JPanel
 		}
 	}
 
-	public synchronized void addSecurityCheckRequestResult( SecurityScanRequestResult checkRequestResult )
+	public synchronized void addSecurityScanRequestResult( SecurityScanRequestResult checkRequestResult )
 	{
 		if( errorsOnly && checkRequestResult.getStatus() != SecurityScanRequestResult.ResultStatus.FAILED )
 			return;
 
-		logListModel.addSecurityCheckRequestResult( checkRequestResult );
+		logListModel.addSecurityScanRequestResult( checkRequestResult );
 		if( follow )
 		{
 			try

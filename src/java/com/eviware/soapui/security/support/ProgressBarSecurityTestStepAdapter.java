@@ -204,7 +204,7 @@ public class ProgressBarSecurityTestStepAdapter
 				SecurityScanResult securityCheckResult )
 		{
 
-			if( securityCheckResult.getSecurityCheck().getTestStep().getId().equals( testStep.getId() ) )
+			if( securityCheckResult.getSecurityScan().getTestStep().getId().equals( testStep.getId() ) )
 			{
 
 				if( securityCheckResult.getStatus() == ResultStatus.CANCELED )

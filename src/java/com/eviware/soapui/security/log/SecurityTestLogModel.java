@@ -22,11 +22,10 @@ import org.apache.commons.collections.list.TreeList;
 
 import com.eviware.soapui.model.security.SecurityScan;
 import com.eviware.soapui.model.testsuite.TestStep;
+import com.eviware.soapui.security.result.SecurityResult;
 import com.eviware.soapui.security.result.SecurityScanRequestResult;
 import com.eviware.soapui.security.result.SecurityScanResult;
-import com.eviware.soapui.security.result.SecurityResult;
 import com.eviware.soapui.security.result.SecurityTestStepResult;
-import com.eviware.soapui.security.result.SecurityResult.ResultStatus;
 import com.eviware.soapui.security.scan.AbstractSecurityScan;
 
 /**
@@ -82,8 +81,8 @@ public class SecurityTestLogModel extends AbstractListModel
 	}
 
 	/**
-	 *called before TestStep SecurityChecks just to mark beginning of TestStep
-	 * SecurityLog part to be updated after step checks finish with proper values
+	 * called before TestStep SecurityScans just to mark beginning of TestStep
+	 * SecurityLog part to be updated after step scans finish with proper values
 	 * 
 	 * @return true - if added, false - otherwise
 	 */
@@ -148,8 +147,10 @@ public class SecurityTestLogModel extends AbstractListModel
 			{
 				if( startStepIndex > 0 && startStepIndex < maxSize )
 				{
-					items.set( startStepIndex, "Step " + stepCount + " [" + result.getTestStep().getName() + "] "
-							+ result.getExecutionProgressStatus() + ": took " + result.getTimeTaken() + " ms" );
+					items.set(
+							startStepIndex,
+							"Step " + stepCount + " [" + result.getTestStep().getName() + "] "
+									+ result.getExecutionProgressStatus() + ": took " + result.getTimeTaken() + " ms" );
 					SoftReference<SecurityResult> stepResultRef = new SoftReference<SecurityResult>( result );
 					results.set( startStepIndex, stepResultRef );
 					fireContentsChanged( this, startStepIndex, startStepIndex );
@@ -164,7 +165,7 @@ public class SecurityTestLogModel extends AbstractListModel
 		currentStepEntriesCount = 0;
 	}
 
-	public synchronized void addSecurityCheckResult( SecurityScan securityCheck )
+	public synchronized void addSecurityScanResult( SecurityScan securityCheck )
 	{
 		int size = items.size();
 		checkCount++ ;
@@ -182,9 +183,9 @@ public class SecurityTestLogModel extends AbstractListModel
 		enforceMaxSize();
 	}
 
-	// updates log entry for security check with the status, time taken, and
+	// updates log entry for security scan with the status, time taken, and
 	// similar info known only after finished
-	public synchronized void updateSecurityCheckResult( SecurityScanResult securityCheckResult, boolean errorsOnly )
+	public synchronized void updateSecurityScanResult( SecurityScanResult securityCheckResult, boolean errorsOnly )
 	{
 		int startCheckIndex = 0;
 		if( items.size() > currentCheckEntriesCount )
@@ -217,12 +218,12 @@ public class SecurityTestLogModel extends AbstractListModel
 		}
 		else
 		{
-			SecurityScan securityCheck = securityCheckResult.getSecurityCheck();
+			SecurityScan securityCheck = securityCheckResult.getSecurityScan();
 			securityCheckResult.detectMissingItems();
 			StringBuilder outStr = new StringBuilder( "SecurityScan " );
-			outStr.append( checkCount ).append( " [" ).append( securityCheck.getName() ).append( "] " ).append(
-					securityCheckResult.getExecutionProgressStatus() ).append( ", took = " ).append(
-					securityCheckResult.getTimeTaken() );
+			outStr.append( checkCount ).append( " [" ).append( securityCheck.getName() ).append( "] " )
+					.append( securityCheckResult.getExecutionProgressStatus() ).append( ", took = " )
+					.append( securityCheckResult.getTimeTaken() );
 			try
 			{
 				if( startCheckIndex > 0 && startCheckIndex < maxSize )
@@ -243,7 +244,7 @@ public class SecurityTestLogModel extends AbstractListModel
 		}
 	}
 
-	public synchronized void addSecurityCheckRequestResult( SecurityScanRequestResult securityCheckRequestResult )
+	public synchronized void addSecurityScanRequestResult( SecurityScanRequestResult securityCheckRequestResult )
 	{
 		int size = items.size();
 		requestCount++ ;
@@ -297,7 +298,7 @@ public class SecurityTestLogModel extends AbstractListModel
 		}
 	}
 
-	public synchronized int getIndexOfSecurityCheck( SecurityScan check )
+	public synchronized int getIndexOfSecurityScan( SecurityScan check )
 	{
 		for( int i = 0; i < results.size(); i++ )
 		{
@@ -307,7 +308,7 @@ public class SecurityTestLogModel extends AbstractListModel
 				SecurityResult referent = result.get();
 				if( referent instanceof SecurityScanResult )
 				{
-					if( ( ( SecurityScanResult )referent ).getSecurityCheck() == check )
+					if( ( ( SecurityScanResult )referent ).getSecurityScan() == check )
 					{
 						return i;
 					}

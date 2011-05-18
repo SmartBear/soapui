@@ -150,9 +150,9 @@ public class ProgressBarSecurityCheckAdapter extends SecurityTestRunListenerAdap
 	public void afterSecurityScan( TestCaseRunner testRunner, SecurityTestRunContext runContext,
 			SecurityScanResult securityCheckResult )
 	{
-		if( securityCheckResult.getSecurityCheck().getTestStep().getId()
+		if( securityCheckResult.getSecurityScan().getTestStep().getId()
 				.equals( this.securityCheck.getTestStep().getId() )
-				&& this.securityCheck.getName().equals( securityCheckResult.getSecurityCheck().getName() ) )
+				&& this.securityCheck.getName().equals( securityCheckResult.getSecurityScan().getName() ) )
 		{
 			if( securityCheckResult.getStatus() != ResultStatus.CANCELED )
 			{

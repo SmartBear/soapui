@@ -769,14 +769,14 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 		public void beforeSecurityScan( TestCaseRunner testRunner, SecurityTestRunContext runContext,
 				SecurityScan securityCheck )
 		{
-			securityTestLog.addSecurityCheckResult( securityCheck );
+			securityTestLog.addSecurityScanResult( securityCheck );
 		}
 
 		@Override
 		public void afterSecurityScan( TestCaseRunner testRunner, SecurityTestRunContext runContext,
 				SecurityScanResult securityCheckResult )
 		{
-			securityTestLog.updateSecurityCheckResult( securityCheckResult );
+			securityTestLog.updateSecurityScanResult( securityCheckResult );
 
 			if( securityCheckResult.getStatus() == ResultStatus.CANCELED
 					&& securityCheckResult.isHasRequestsWithWarnings() )
@@ -815,7 +815,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 		public void afterSecurityScanRequest( TestCaseRunner testRunner, SecurityTestRunContext runContext,
 				SecurityScanRequestResult securityCheckReqResult )
 		{
-			securityTestLog.addSecurityCheckRequestResult( securityCheckReqResult );
+			securityTestLog.addSecurityScanRequestResult( securityCheckReqResult );
 		}
 
 		@Override

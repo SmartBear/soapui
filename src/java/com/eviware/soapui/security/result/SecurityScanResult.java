@@ -27,7 +27,7 @@ import com.eviware.soapui.support.action.swing.DefaultActionList;
 
 /**
  * A SecurityCheck result represents result of one request (modified by a
- * security check and run)
+ * security  and run)
  * 
  * @author dragica.soldo
  */
@@ -37,7 +37,7 @@ public class SecurityScanResult implements SecurityResult
 	public final static String TYPE = "SecurityScanResult";
 	/**
 	 * status is set to SecurityStatus.INITIALIZED but goes to
-	 * SecurityStatus.UNKNOWN first time any checkRequestResult is added.
+	 * SecurityStatus.UNKNOWN first time any scanRequestResult is added.
 	 * INITIALIZED status is necessary to be able to detect when logging if
 	 * SecurityCheck is just started and no status icon should be added, or it
 	 * went through execution and gone into any other status, including UNKNOWN
@@ -87,7 +87,7 @@ public class SecurityScanResult implements SecurityResult
 		this.status = status;
 	}
 
-	public SecurityScan getSecurityCheck()
+	public SecurityScan getSecurityScan()
 	{
 		return securityCheck;
 	}
@@ -100,13 +100,13 @@ public class SecurityScanResult implements SecurityResult
 	{
 		if( actionList == null )
 		{
-			actionList = new DefaultActionList( getSecurityCheck().getName() );
+			actionList = new DefaultActionList( getSecurityScan().getName() );
 			actionList.setDefaultAction( new AbstractAction()
 			{
 
 				public void actionPerformed( ActionEvent e )
 				{
-					UISupport.showInfoMessage( "Scan [" + getSecurityCheck().getName() + "] ran with status ["
+					UISupport.showInfoMessage( "Scan [" + getSecurityScan().getName() + "] ran with status ["
 							+ getExecutionProgressStatus() + "]", "SecurityScan Result" );
 				}
 			} );
@@ -251,7 +251,7 @@ public class SecurityScanResult implements SecurityResult
 
 	public void detectMissingItems()
 	{
-		SecurityScan securityCheck = getSecurityCheck();
+		SecurityScan securityCheck = getSecurityScan();
 		if( getStatus().equals( ResultStatus.NOTHING_TO_SEND ) )
 		{
 			executionProgressStatus = ResultStatus.NOTHING_TO_SEND;
@@ -282,7 +282,7 @@ public class SecurityScanResult implements SecurityResult
 
 	public String getSecurityCheckName()
 	{
-		return getSecurityCheck().getName();
+		return getSecurityScan().getName();
 	}
 
 	public String getLogIconStatusString()

@@ -503,7 +503,7 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 	{
 		if( securityTest.isRunning() )
 			return;
-		securityTestLog.locateSecurityCheck( ( ( SecurityCheckNode )securityTestTree.getLastSelectedPathComponent() )
+		securityTestLog.locateSecurityScan( ( ( SecurityCheckNode )securityTestTree.getLastSelectedPathComponent() )
 				.getSecurityCheck() );
 		addSecurityCheckAction.setEnabled( false );
 		configureSecurityCheckAction.setEnabled( true );
@@ -512,7 +512,7 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 		{
 			cloneParametersAction.setEnabled( true );
 			cloneParametersAction
-					.setSecurityCheck( ( AbstractSecurityScanWithProperties )( ( SecurityCheckNode )securityTestTree
+					.setSecurityScan( ( AbstractSecurityScanWithProperties )( ( SecurityCheckNode )securityTestTree
 							.getLastSelectedPathComponent() ).getSecurityCheck() );
 		}
 	}
