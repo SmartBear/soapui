@@ -41,5 +41,5 @@ public interface SoapUICore
 
 	public SoapUIExtensionClassLoader getExtensionClassLoader();
 
-	public SecurityCheckRegistry getSecurityCheckRegistry();
+	public SecurityCheckRegistry getSecurityScanRegistry();
 }

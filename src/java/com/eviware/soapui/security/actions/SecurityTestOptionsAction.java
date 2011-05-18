@@ -77,7 +77,7 @@ public class SecurityTestOptionsAction extends AbstractSoapUIAction<SecurityTest
 		StringToStringMap values = new StringToStringMap();
 
 		values.put( FAIL_ON_ERROR, String.valueOf( securityTest.getFailOnError() ) );
-		values.put( FAIL_SECURITYTEST_ON_ERROR, String.valueOf( securityTest.getFailSecurityTestOnCheckErrors() ) );
+		values.put( FAIL_SECURITYTEST_ON_ERROR, String.valueOf( securityTest.getFailSecurityTestOnScanErrors() ) );
 		// values.put( SOCKET_TIMEOUT, String.valueOf( securityTest.getSettings()
 		// .getString( HttpSettings.SOCKET_TIMEOUT, "" ) ) );
 		// values.put( TESTCASE_TIMEOUT, String.valueOf( securityTest.getTimeout()
@@ -92,7 +92,7 @@ public class SecurityTestOptionsAction extends AbstractSoapUIAction<SecurityTest
 			try
 			{
 				securityTest.setFailOnError( Boolean.parseBoolean( values.get( FAIL_ON_ERROR ) ) );
-				securityTest.setFailSecurityTestOnCheckErrors( Boolean.parseBoolean( values
+				securityTest.setFailSecurityTestOnScanErrors( Boolean.parseBoolean( values
 						.get( FAIL_SECURITYTEST_ON_ERROR ) ) );
 				// securityTest.setTimeout( Long.parseLong( values.get(
 				// TESTCASE_TIMEOUT ) ) );

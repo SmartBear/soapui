@@ -43,13 +43,13 @@ public class SQLInjectionCheckFactory extends AbstractSecurityCheckFactory
 	}
 
 	@Override
-	public AbstractSecurityScan buildSecurityCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent )
+	public AbstractSecurityScan buildSecurityScan( TestStep testStep, SecurityCheckConfig config, ModelItem parent )
 	{
 		return new SQLInjectionScan( config, parent, null, testStep );
 	}
 
 	@Override
-	public SecurityCheckConfig createNewSecurityCheck( String name )
+	public SecurityCheckConfig createNewSecurityScan( String name )
 	{
 		SecurityCheckConfig securityCheckConfig = SecurityCheckConfig.Factory.newInstance();
 		securityCheckConfig.setType( SQLInjectionScan.TYPE );

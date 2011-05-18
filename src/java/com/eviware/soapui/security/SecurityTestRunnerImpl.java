@@ -172,7 +172,7 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 						.contains( securityTestStepListeners[i] ) )
 					securityTestStepListeners[i].beforeStep( this, getRunContext(), stepResult );
 			}
-			Map<String, List<SecurityScan>> secCheckMap = securityTest.getSecurityChecksMap();
+			Map<String, List<SecurityScan>> secCheckMap = securityTest.getSecurityScansMap();
 			if( secCheckMap.containsKey( currentStep.getId() ) )
 			{
 				List<SecurityScan> testStepChecksList = secCheckMap.get( currentStep.getId() );
@@ -373,7 +373,7 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 	protected void failTestRunnableOnErrors( SecurityTestRunContext runContext )
 	{
 		if( runContext.getProperty( SecurityTestRunner.Status.class.getName() ) == SecurityTestRunner.Status.FAILED
-				&& getTestRunnable().getFailSecurityTestOnCheckErrors() )
+				&& getTestRunnable().getFailSecurityTestOnScanErrors() )
 		{
 			fail( "Failing due to failed security scan" );
 		}

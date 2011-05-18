@@ -684,7 +684,7 @@ public class DefaultSoapUICore implements SoapUICore
 	}
 
 	@Override
-	public SecurityCheckRegistry getSecurityCheckRegistry()
+	public SecurityCheckRegistry getSecurityScanRegistry()
 	{
 		if( securityCheckRegistry == null )
 			initSecurityCheckRegistry();

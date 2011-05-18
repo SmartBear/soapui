@@ -45,7 +45,7 @@ public class SecurityTreeRootNode extends DefaultMutableTreeNode implements Prop
 	{
 		for( TestStep step : securityTest.getTestCase().getTestStepList() )
 		{
-			add( new TestStepNode( this, step, securityTest.getSecurityChecksMap().get( step.getId() ) ) );
+			add( new TestStepNode( this, step, securityTest.getSecurityScansMap().get( step.getId() ) ) );
 		}
 	}
 
@@ -68,7 +68,7 @@ public class SecurityTreeRootNode extends DefaultMutableTreeNode implements Prop
 
 	public void add( TestStep testStep )
 	{
-		new TestStepNode( this, testStep, securityTest.getSecurityChecksMap().get( testStep.getId() ) );
+		new TestStepNode( this, testStep, securityTest.getSecurityScansMap().get( testStep.getId() ) );
 	}
 
 	public void release()

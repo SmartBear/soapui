@@ -127,12 +127,12 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 			securityTest = ( ( SecurityTreeRootNode )node.getParent() ).getSecurityTest();
 			if( AbstractSecurityScan.isSecurable( testStep ) )
 			{
-				if( securityTest.getSecurityChecksMap().get( testStep.getId() ) != null )
+				if( securityTest.getSecurityScansMap().get( testStep.getId() ) != null )
 				{
-					String labelText = securityTest.getSecurityChecksMap().get( testStep.getId() ).size() == 1 ? securityTest
-							.getSecurityChecksMap().get( testStep.getId() ).size()
+					String labelText = securityTest.getSecurityScansMap().get( testStep.getId() ).size() == 1 ? securityTest
+							.getSecurityScansMap().get( testStep.getId() ).size()
 							+ " scan)"
-							: securityTest.getSecurityChecksMap().get( testStep.getId() ).size() + " scans)";
+							: securityTest.getSecurityScansMap().get( testStep.getId() ).size() + " scans)";
 					label = new JLabel( testStep.getLabel() + " (" + labelText, SwingConstants.LEFT );
 				}
 				else
@@ -157,8 +157,8 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 			expandCollapseBtn.setBorder( null );
 			expandCollapseBtn.setEnabled( false );
 
-			if( securityTest.getSecurityChecksMap().get( testStep.getId() ) == null
-					|| securityTest.getSecurityChecksMap().get( testStep.getId() ).size() == 0 )
+			if( securityTest.getSecurityScansMap().get( testStep.getId() ) == null
+					|| securityTest.getSecurityScansMap().get( testStep.getId() ).size() == 0 )
 				expandCollapseBtn.setVisible( false );
 			else
 				expandCollapseBtn.setVisible( true );
@@ -269,8 +269,8 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 		@Override
 		public void setExpandedIcon( boolean exp )
 		{
-			if( securityTest.getSecurityChecksMap().get( testStep.getId() ) == null
-					|| securityTest.getSecurityChecksMap().get( testStep.getId() ).size() == 0 )
+			if( securityTest.getSecurityScansMap().get( testStep.getId() ) == null
+					|| securityTest.getSecurityScansMap().get( testStep.getId() ).size() == 0 )
 			{
 				expandCollapseBtn.setVisible( false );
 				innerLeftPanel.setBorder( BorderFactory.createEmptyBorder( 0, 21, 0, 0 ) );
@@ -291,12 +291,12 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 		{
 			if( AbstractSecurityScan.isSecurable( testStep ) )
 			{
-				if( securityTest.getSecurityChecksMap().get( testStep.getId() ) != null )
+				if( securityTest.getSecurityScansMap().get( testStep.getId() ) != null )
 				{
-					String labelText = securityTest.getSecurityChecksMap().get( testStep.getId() ).size() == 1 ? securityTest
-							.getSecurityChecksMap().get( testStep.getId() ).size()
+					String labelText = securityTest.getSecurityScansMap().get( testStep.getId() ).size() == 1 ? securityTest
+							.getSecurityScansMap().get( testStep.getId() ).size()
 							+ " scan)"
-							: securityTest.getSecurityChecksMap().get( testStep.getId() ).size() + " scans)";
+							: securityTest.getSecurityScansMap().get( testStep.getId() ).size() + " scans)";
 					label.setText( testStep.getLabel() + " (" + labelText );
 				}
 				else

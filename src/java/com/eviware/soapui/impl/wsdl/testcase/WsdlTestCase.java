@@ -593,11 +593,11 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 		testSteps.remove( ix );
 		for( SecurityTest securityTest : getSecurityTestList() )
 		{
-			List<SecurityScan> testStepChecks = securityTest.getTestStepSecurityChecks( testStep.getId() );
+			List<SecurityScan> testStepChecks = securityTest.getTestStepSecurityScans( testStep.getId() );
 			for( Iterator<SecurityScan> iterator = testStepChecks.iterator(); iterator.hasNext(); )
 			{
 				SecurityScan chk = iterator.next();
-				securityTest.removeSecurityCheckWhenRemoveTestStep(  testStep, chk );
+				securityTest.removeSecurityScanWhenRemoveTestStep(  testStep, chk );
 				iterator.remove();
 			}
 
@@ -1028,9 +1028,9 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 			{
 				TestStep oldStep = oldTestCase.getTestStepAt( i );
 				TestStep newStep = getTestStepAt( i );
-				for( SecurityScan secCheck : secTest.getTestStepSecurityChecks( oldStep.getId() ) )
+				for( SecurityScan secCheck : secTest.getTestStepSecurityScans( oldStep.getId() ) )
 				{
-					newSecurityTest.importSecurityCheck( newStep, secCheck, true );
+					newSecurityTest.importSecurityScan( newStep, secCheck, true );
 				}
 			}
 		}

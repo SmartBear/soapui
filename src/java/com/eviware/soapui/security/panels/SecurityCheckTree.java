@@ -38,7 +38,7 @@ public class SecurityCheckTree extends DefaultTreeModel
 	public void insertNodeInto( TestStep testStep )
 	{
 		TestStepNode testStepNode = new TestStepNode( ( SecurityTreeRootNode )root, testStep, securityTest
-				.getSecurityChecksMap().get( testStep.getId() ) );
+				.getSecurityScansMap().get( testStep.getId() ) );
 		insertNodeInto( testStepNode, ( MutableTreeNode )root, root.getChildCount() );
 		nodeStructureChanged( root );
 	}

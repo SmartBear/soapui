@@ -17,11 +17,11 @@ import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.security.SecurityScan;
 import com.eviware.soapui.model.testsuite.TestStep;
 
-public interface SecurityCheckFactory
+public interface SecurityScanFactory
 {
-	public SecurityCheckConfig createNewSecurityCheck( String name );
+	public SecurityCheckConfig createNewSecurityScan( String name );
 
-	public SecurityScan buildSecurityCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent );
+	public SecurityScan buildSecurityScan( TestStep testStep, SecurityCheckConfig config, ModelItem parent );
 
 	public String getSecurityCheckType();
 

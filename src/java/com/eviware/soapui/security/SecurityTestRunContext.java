@@ -126,14 +126,14 @@ public class SecurityTestRunContext extends WsdlTestRunContext
 		int testStepCheckCount = 0;
 		if( securityTest != null )
 		{
-			testStepCheckCount = securityTest.getSecurityCheckCount();
+			testStepCheckCount = securityTest.getSecurityScanCount();
 		}
 		if( currentCheckIndex < 0 || currentCheckIndex >= testStepCheckCount )
 			return null;
 
 		if( securityTest != null )
 		{
-			return securityTest.getTestStepSecurityCheckAt( getCurrentStep().getId(), getCurrentCheckIndex() );
+			return securityTest.getTestStepSecurityScanAt( getCurrentStep().getId(), getCurrentCheckIndex() );
 		}
 		return null;
 	}

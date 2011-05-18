@@ -28,7 +28,7 @@ public class MalformedXmlSecurityCheckFactory extends AbstractSecurityCheckFacto
 	}
 
 	@Override
-	public AbstractSecurityScan buildSecurityCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent )
+	public AbstractSecurityScan buildSecurityScan( TestStep testStep, SecurityCheckConfig config, ModelItem parent )
 	{
 		return new MalformedXmlSecurityScan( testStep, config, parent, null );
 	}
@@ -40,7 +40,7 @@ public class MalformedXmlSecurityCheckFactory extends AbstractSecurityCheckFacto
 	}
 
 	@Override
-	public SecurityCheckConfig createNewSecurityCheck( String name )
+	public SecurityCheckConfig createNewSecurityScan( String name )
 	{
 		SecurityCheckConfig securityCheckConfig = SecurityCheckConfig.Factory.newInstance();
 		securityCheckConfig.setType( MalformedXmlSecurityScan.TYPE );

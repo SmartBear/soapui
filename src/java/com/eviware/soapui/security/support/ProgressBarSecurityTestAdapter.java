@@ -76,11 +76,11 @@ public class ProgressBarSecurityTestAdapter
 		public void beforeRun( TestCaseRunner testRunner, SecurityTestRunContext runContext )
 		{
 
-			int maximum = ( ( SecurityTestRunnerImpl )testRunner ).getSecurityTest().getSecurityCheckCount();
+			int maximum = ( ( SecurityTestRunnerImpl )testRunner ).getSecurityTest().getSecurityScanCount();
 
-			for( String key : securityTest.getSecurityChecksMap().keySet() )
+			for( String key : securityTest.getSecurityScansMap().keySet() )
 			{
-				List<SecurityScan> securityCheckList = securityTest.getSecurityChecksMap().get( key );
+				List<SecurityScan> securityCheckList = securityTest.getSecurityScansMap().get( key );
 				if( securityCheckList.size() > 0 )
 					if( securityCheckList.get( 0 ).getTestStep().isDisabled() )
 						maximum -= securityCheckList.size();
@@ -148,7 +148,7 @@ public class ProgressBarSecurityTestAdapter
 		@Override
 		public void afterStep( TestCaseRunner testRunner, SecurityTestRunContext runContext, SecurityTestStepResult result )
 		{
-			int currentStepChecksCount = securityTest.getTestStepSecurityChecksCount( result.getTestStep().getId() );
+			int currentStepChecksCount = securityTest.getTestStepSecurityScansCount( result.getTestStep().getId() );
 			progressBar.setValue( previousMaxCheckPosition + currentStepChecksCount );
 		}
 

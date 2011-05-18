@@ -121,7 +121,7 @@ public class ProgressBarSecurityTestStepAdapter
 		{
 			if( tsr.getTestStep().getId().equals( testStep.getId() ) )
 			{
-				int count = securityTest.getStepSecurityApplicableChecksCount( tsr );
+				int count = securityTest.getStepSecurityApplicableScansCount( tsr );
 				// int maximum = securityTest.getTestStepSecurityChecksCount(
 				// testStep.getId() );
 				progressBar.getModel().setMaximum( count );

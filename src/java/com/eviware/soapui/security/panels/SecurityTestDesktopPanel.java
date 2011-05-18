@@ -222,7 +222,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 
 	private Component buildRunnerBar()
 	{
-		progressBar = new JProgressBar( 0, getModelItem().getSecurityCheckCount() );
+		progressBar = new JProgressBar( 0, getModelItem().getSecurityScanCount() );
 
 		JPanel progressPanel = new JPanel( new BorderLayout( 10, 0 ) );
 
@@ -828,7 +828,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 		@Override
 		public void afterStep( TestCaseRunner testRunner, SecurityTestRunContext runContext, SecurityTestStepResult result )
 		{
-			boolean hasChecksToProcess = securityTest.getTestStepSecurityChecksCount( result.getTestStep().getId() ) > 0;
+			boolean hasChecksToProcess = securityTest.getTestStepSecurityScansCount( result.getTestStep().getId() ) > 0;
 			securityTestLog.updateSecurityTestStepResult( result, hasChecksToProcess, startStepLogEntryAdded );
 			if( result.getStatus() == ResultStatus.FAILED )
 			{

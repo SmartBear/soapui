@@ -282,9 +282,9 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 
 			TestStep testStep = node.getTestStep();
 
-			String[] availableChecksNames = SoapUI.getSoapUICore().getSecurityCheckRegistry()
+			String[] availableChecksNames = SoapUI.getSoapUICore().getSecurityScanRegistry()
 					.getAvailableSecurityChecksNames( testStep );
-			availableChecksNames = securityTest.getAvailableSecurityCheckNames( testStep, availableChecksNames );
+			availableChecksNames = securityTest.getAvailableSecurityScanNames( testStep, availableChecksNames );
 
 			if( availableChecksNames == null || availableChecksNames.length == 0 )
 			{
@@ -296,11 +296,11 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 			if( name == null || name.trim().length() == 0 )
 				return;
 
-			String type = SoapUI.getSoapUICore().getSecurityCheckRegistry().getSecurityCheckTypeForName( name );
+			String type = SoapUI.getSoapUICore().getSecurityScanRegistry().getSecurityScanTypeForName( name );
 			if( type == null || type.trim().length() == 0 )
 				return;
 
-			SecurityScan securityCheck = securityTest.addNewSecurityCheck( testStep, name );
+			SecurityScan securityCheck = securityTest.addNewSecurityScan( testStep, name );
 			
 			securityTestTree.setSelectionPath( new TreePath( node.getPath() ) );
 
@@ -310,14 +310,14 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 				return;
 			}
 
-			SecurityConfigurationDialog dialog = SoapUI.getSoapUICore().getSecurityCheckRegistry().getUIBuilder()
+			SecurityConfigurationDialog dialog = SoapUI.getSoapUICore().getSecurityScanRegistry().getUIBuilder()
 					.buildSecurityCheckConfigurationDialog( ( SecurityScan )securityCheck );
 
 			if( !dialog.configure() )
 			{
 				SecurityCheckNode securityCheckNode = ( SecurityCheckNode )node.getLastChild();
 
-				securityTest.removeSecurityCheck( testStep, ( SecurityScan )securityCheck );
+				securityTest.removeSecurityScan( testStep, ( SecurityScan )securityCheck );
 				cellRender.remove( securityCheckNode );
 			}
 
@@ -345,7 +345,7 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 			{
 				SecurityCheckConfig backupCheckConfig = ( SecurityCheckConfig )securityCheck.getConfig().copy();
 
-				SecurityConfigurationDialog dialog = SoapUI.getSoapUICore().getSecurityCheckRegistry().getUIBuilder()
+				SecurityConfigurationDialog dialog = SoapUI.getSoapUICore().getSecurityScanRegistry().getUIBuilder()
 						.buildSecurityCheckConfigurationDialog( ( SecurityScan )securityCheck );
 
 				if( !dialog.configure() )
@@ -377,7 +377,7 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 			if( UISupport.confirm( "Remove security scan [" + securityCheck.getName() + "]", "Remove SecurityScan" ) )
 			{
 
-				securityTest.removeSecurityCheck( testStep, ( SecurityScan )securityCheck );
+				securityTest.removeSecurityScan( testStep, ( SecurityScan )securityCheck );
 				// cellRender.remove( node );
 			}
 		}
@@ -538,7 +538,7 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 			{
 				SecurityCheckConfig backupCheckConfig = ( SecurityCheckConfig )securityCheck.getConfig().copy();
 
-				SecurityConfigurationDialog dialog = SoapUI.getSoapUICore().getSecurityCheckRegistry().getUIBuilder()
+				SecurityConfigurationDialog dialog = SoapUI.getSoapUICore().getSecurityScanRegistry().getUIBuilder()
 						.buildSecurityCheckConfigurationDialog( ( SecurityScan )securityCheck );
 
 				if( !dialog.configure() )
@@ -705,14 +705,14 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 	}
 
 	@Override
-	public void securityCheckAdded( SecurityScan securityCheck )
+	public void securityScanAdded( SecurityScan securityCheck )
 	{
 		treeModel.addSecurityCheckNode( securityTestTree, securityCheck );
 
 	}
 
 	@Override
-	public void securityCheckRemoved( SecurityScan securityCheck )
+	public void securityScanRemoved( SecurityScan securityCheck )
 	{
 		cellRender.remove( treeModel.getSecurityCheckNode( securityCheck ) );
 		treeModel.removeSecurityCheckNode( securityCheck );

@@ -41,13 +41,13 @@ public class XmlBombSecurityCheckFactory extends AbstractSecurityCheckFactory
 	}
 
 	@Override
-	public AbstractSecurityScan buildSecurityCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent )
+	public AbstractSecurityScan buildSecurityScan( TestStep testStep, SecurityCheckConfig config, ModelItem parent )
 	{
 		return new XmlBombSecurityScan( config, parent, null, testStep );
 	}
 
 	@Override
-	public SecurityCheckConfig createNewSecurityCheck( String name )
+	public SecurityCheckConfig createNewSecurityScan( String name )
 	{
 		SecurityCheckConfig securityCheckConfig = SecurityCheckConfig.Factory.newInstance();
 		securityCheckConfig.setType( XmlBombSecurityScan.TYPE );

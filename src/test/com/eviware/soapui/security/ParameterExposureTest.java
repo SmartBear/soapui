@@ -44,8 +44,8 @@ public class ParameterExposureTest extends AbstractSecurityTestCaseWithMockServi
 	protected void addSecurityCheckConfig( SecurityCheckConfig securityCheckConfig )
 	{
 
-		SoapUI.getSoapUICore().getSecurityCheckRegistry().getFactory( securityCheckType )
-				.buildSecurityCheck( testStep, securityCheckConfig, null );
+		SoapUI.getSoapUICore().getSecurityScanRegistry().getFactory( securityCheckType )
+				.buildSecurityScan( testStep, securityCheckConfig, null );
 
 	}
 

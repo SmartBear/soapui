@@ -33,7 +33,7 @@ import com.eviware.soapui.support.types.StringToStringMap;
 public class SecurityCheckRegistry
 {
 	protected static SecurityCheckRegistry instance;
-	private Map<String, SecurityCheckFactory> availableSecurityChecks = new HashMap<String, SecurityCheckFactory>();
+	private Map<String, SecurityScanFactory> availableSecurityChecks = new HashMap<String, SecurityScanFactory>();
 	private StringToStringMap securityCheckNames = new StringToStringMap();
 
 	public SecurityCheckRegistry()
@@ -49,7 +49,7 @@ public class SecurityCheckRegistry
 		addFactory( new SQLInjectionCheckFactory() );
 		addFactory( new MalformedXmlSecurityCheckFactory() );
 
-		for( SecurityCheckFactory factory : SoapUI.getFactoryRegistry().getFactories( SecurityCheckFactory.class ) )
+		for( SecurityScanFactory factory : SoapUI.getFactoryRegistry().getFactories( SecurityScanFactory.class ) )
 		{
 			addFactory( factory );
 		}
@@ -63,11 +63,11 @@ public class SecurityCheckRegistry
 	 *           The securityCheck to get the factory for
 	 * @return
 	 */
-	public SecurityCheckFactory getFactory( String type )
+	public SecurityScanFactory getFactory( String type )
 	{
 		for( String cc : availableSecurityChecks.keySet() )
 		{
-			SecurityCheckFactory scf = availableSecurityChecks.get( cc );
+			SecurityScanFactory scf = availableSecurityChecks.get( cc );
 			if( scf.getSecurityCheckType().equals( type ) )
 				return scf;
 
@@ -82,9 +82,9 @@ public class SecurityCheckRegistry
 	 *           The securityCheck name to get the factory for
 	 * @return
 	 */
-	public SecurityCheckFactory getFactoryByName( String name )
+	public SecurityScanFactory getFactoryByName( String name )
 	{
-		String type = getSecurityCheckTypeForName( name );
+		String type = getSecurityScanTypeForName( name );
 
 		if( type != null )
 		{
@@ -99,7 +99,7 @@ public class SecurityCheckRegistry
 	 * 
 	 * @param factory
 	 */
-	public void addFactory( SecurityCheckFactory factory )
+	public void addFactory( SecurityScanFactory factory )
 	{
 		removeFactory( factory.getSecurityCheckType() );
 		availableSecurityChecks.put( factory.getSecurityCheckName(), factory );
@@ -115,7 +115,7 @@ public class SecurityCheckRegistry
 	{
 		for( String scfName : availableSecurityChecks.keySet() )
 		{
-			SecurityCheckFactory csf = availableSecurityChecks.get( scfName );
+			SecurityScanFactory csf = availableSecurityChecks.get( scfName );
 			if( csf.getSecurityCheckType().equals( type ) )
 			{
 				availableSecurityChecks.remove( scfName );
@@ -161,7 +161,7 @@ public class SecurityCheckRegistry
 	{
 		List<String> result = new ArrayList<String>();
 
-		for( SecurityCheckFactory securityCheck : availableSecurityChecks.values() )
+		for( SecurityScanFactory securityCheck : availableSecurityChecks.values() )
 		{
 			result.add( securityCheck.getSecurityCheckName() );
 		}
@@ -177,7 +177,7 @@ public class SecurityCheckRegistry
 	{
 		List<String> result = new ArrayList<String>();
 
-		for( SecurityCheckFactory securityCheck : availableSecurityChecks.values() )
+		for( SecurityScanFactory securityCheck : availableSecurityChecks.values() )
 		{
 			if( securityCheck.canCreate( testStep ) )
 				result.add( securityCheck.getSecurityCheckName() );
@@ -194,7 +194,7 @@ public class SecurityCheckRegistry
 		return new SecurityConfigurationDialogBuilder();
 	}
 
-	public String getSecurityCheckTypeForName( String name )
+	public String getSecurityScanTypeForName( String name )
 	{
 		return securityCheckNames.get( name );
 	}

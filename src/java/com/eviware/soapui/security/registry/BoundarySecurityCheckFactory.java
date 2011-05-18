@@ -36,7 +36,7 @@ public class BoundarySecurityCheckFactory extends AbstractSecurityCheckFactory
 	}
 
 	@Override
-	public SecurityCheckConfig createNewSecurityCheck( String name )
+	public SecurityCheckConfig createNewSecurityScan( String name )
 	{
 		SecurityCheckConfig securityCheckConfig = SecurityCheckConfig.Factory.newInstance();
 		securityCheckConfig.setType( BoundarySecurityScan.TYPE );
@@ -45,7 +45,7 @@ public class BoundarySecurityCheckFactory extends AbstractSecurityCheckFactory
 	}
 
 	@Override
-	public AbstractSecurityScan buildSecurityCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent )
+	public AbstractSecurityScan buildSecurityScan( TestStep testStep, SecurityCheckConfig config, ModelItem parent )
 	{
 		return new BoundarySecurityScan( testStep, config, parent, null );
 	}

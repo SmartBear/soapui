@@ -23,7 +23,7 @@ import com.eviware.soapui.security.scan.AbstractSecurityScan;
  * @author soapui team
  */
 
-public abstract class AbstractSecurityCheckFactory implements SecurityCheckFactory
+public abstract class AbstractSecurityCheckFactory implements SecurityScanFactory
 {
 	private final String type;
 	private final String name;
@@ -38,9 +38,9 @@ public abstract class AbstractSecurityCheckFactory implements SecurityCheckFacto
 		this.pathToIcon = pathToIcon;
 	}
 
-	public abstract SecurityCheckConfig createNewSecurityCheck( String name );
+	public abstract SecurityCheckConfig createNewSecurityScan( String name );
 
-	public abstract AbstractSecurityScan buildSecurityCheck( TestStep testStep, SecurityCheckConfig config,
+	public abstract AbstractSecurityScan buildSecurityScan( TestStep testStep, SecurityCheckConfig config,
 			ModelItem parent );
 
 	public String getSecurityCheckType()
