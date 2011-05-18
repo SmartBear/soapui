@@ -25,7 +25,7 @@ public class TestStepNode extends DefaultMutableTreeNode
 		}
 		if( list != null )
 			for( SecurityScan sc : list )
-				add( new SecurityCheckNode( sc ) );
+				add( new SecurityScanNode( sc ) );
 	}
 
 	@Override

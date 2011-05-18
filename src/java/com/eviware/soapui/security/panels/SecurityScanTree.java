@@ -21,13 +21,13 @@ import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTest;
 
 @SuppressWarnings( "serial" )
-public class SecurityCheckTree extends DefaultTreeModel
+public class SecurityScanTree extends DefaultTreeModel
 {
 
 	private SecurityTest securityTest;
 	private SecurityTreeRootNode treeNode;
 
-	public SecurityCheckTree( SecurityTest securityTest, SecurityTreeRootNode treeNode )
+	public SecurityScanTree( SecurityTest securityTest, SecurityTreeRootNode treeNode )
 	{
 		super( treeNode );
 
@@ -64,24 +64,24 @@ public class SecurityCheckTree extends DefaultTreeModel
 		return null;
 	}
 
-	protected SecurityCheckNode getSecurityCheckNode( SecurityScan securityCheck )
+	protected SecurityScanNode getSecurityScanNode( SecurityScan securityCheck )
 	{
 		TestStepNode testStepNode = getTestStepNode( securityCheck.getTestStep() );
 		for( int cnt = 0; cnt < testStepNode.getChildCount(); cnt++ )
 		{
-			SecurityCheckNode node = ( SecurityCheckNode )testStepNode.getChildAt( cnt );
-			if( node.getSecurityCheck().getType().equals( securityCheck.getType() ) )
+			SecurityScanNode node = ( SecurityScanNode )testStepNode.getChildAt( cnt );
+			if( node.getSecurityScan().getType().equals( securityCheck.getType() ) )
 				return node;
 		}
 		return null;
 	}
 
-	public void addSecurityCheckNode( JTree tree, SecurityScan securityCheck )
+	public void addSecurityScanNode( JTree tree, SecurityScan securityCheck )
 	{
 		TestStepNode node = getTestStepNode( securityCheck.getTestStep() );
 		if( node != null )
 		{
-			SecurityCheckNode newNode = new SecurityCheckNode( securityCheck );
+			SecurityScanNode newNode = new SecurityScanNode( securityCheck );
 			insertNodeInto( newNode, node, node.getChildCount() );
 			nodeStructureChanged( node );
 			for( int row = 0; row < tree.getRowCount(); row++ )
@@ -92,10 +92,10 @@ public class SecurityCheckTree extends DefaultTreeModel
 		}
 	}
 
-	public void removeSecurityCheckNode( SecurityScan securityCheck )
+	public void removeSecurityScanNode( SecurityScan securityCheck )
 	{
 		TestStepNode testStepNode = getTestStepNode( securityCheck.getTestStep() );
-		SecurityCheckNode node = getSecurityCheckNode( securityCheck );
+		SecurityScanNode node = getSecurityScanNode( securityCheck );
 		removeNodeFromParent( node );
 		nodeStructureChanged( testStepNode );
 	}

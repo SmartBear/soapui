@@ -39,7 +39,7 @@ import com.eviware.soapui.model.security.SecurityScan;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.scan.AbstractSecurityScan;
-import com.eviware.soapui.security.support.ProgressBarSecurityCheckAdapter;
+import com.eviware.soapui.security.support.ProgressBarSecurityScanAdapter;
 import com.eviware.soapui.security.support.ProgressBarSecurityTestStepAdapter;
 import com.eviware.soapui.support.UISupport;
 
@@ -63,8 +63,8 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 		{
 			if( node instanceof TestStepNode )
 				result = getTreeCellRendererTestNode( arg0, ( TestStepNode )node, sel, exp, leaf, arg5, arg6 );
-			if( node instanceof SecurityCheckNode )
-				result = getTreeCellRendererSecurityCheckNode( arg0, ( SecurityCheckNode )node, sel, exp, leaf, arg5, arg6 );
+			if( node instanceof SecurityScanNode )
+				result = getTreeCellRendererSecurityScanNode( arg0, ( SecurityScanNode )node, sel, exp, leaf, arg5, arg6 );
 			return result;
 		}
 
@@ -82,18 +82,18 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 		{
 			if( node instanceof TestStepNode )
 				result = getTreeCellRendererTestNode( arg0, ( TestStepNode )node, sel, exp, leaf, arg5, arg6 );
-			if( node instanceof SecurityCheckNode )
-				result = getTreeCellRendererSecurityCheckNode( arg0, ( SecurityCheckNode )node, sel, exp, leaf, arg5, arg6 );
+			if( node instanceof SecurityScanNode )
+				result = getTreeCellRendererSecurityScanNode( arg0, ( SecurityScanNode )node, sel, exp, leaf, arg5, arg6 );
 
 			componentTree.put( ( DefaultMutableTreeNode )node, result );
 		}
 		return result;
 	}
 
-	private Component getTreeCellRendererSecurityCheckNode( JTree arg0, SecurityCheckNode node, boolean sel,
+	private Component getTreeCellRendererSecurityScanNode( JTree arg0, SecurityScanNode node, boolean sel,
 			boolean arg3, boolean arg4, int arg5, boolean arg6 )
 	{
-		return new SecurityCheckCellRender( arg0, node, sel, arg3, arg4, arg5, arg6 );
+		return new SecurityScanCellRender( arg0, node, sel, arg3, arg4, arg5, arg6 );
 	}
 
 	private Component getTreeCellRendererTestNode( JTree arg0, TestStepNode node, boolean sel, boolean arg3,
@@ -137,7 +137,7 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 				}
 				else
 				{
-					label = new JLabel( testStep.getLabel() + " (0 checks)", SwingConstants.LEFT );
+					label = new JLabel( testStep.getLabel() + " (0 scans)", SwingConstants.LEFT );
 				}
 			}
 			else
@@ -327,25 +327,25 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 
 	}
 
-	public class SecurityCheckCellRender extends JPanel implements PropertyChangeListener, CustomTreeNode,
+	public class SecurityScanCellRender extends JPanel implements PropertyChangeListener, CustomTreeNode,
 			ReleasableNode
 	{
 		private SecurityScan securityCheck;
 		private JProgressBar progressBar;
 		private JLabel label;
-		private ProgressBarSecurityCheckAdapter progressBarAdapter;
+		private ProgressBarSecurityScanAdapter progressBarAdapter;
 		private JPanel progressPanel;
 		private JLabel cntLabel;
-		private SecurityCheckNode node;
+		private SecurityScanNode node;
 		private JPanel leftInnerPanel;
 
-		public SecurityCheckCellRender( JTree tree, SecurityCheckNode node, boolean sel, boolean arg3, boolean arg4,
+		public SecurityScanCellRender( JTree tree, SecurityScanNode node, boolean sel, boolean arg3, boolean arg4,
 				int arg5, boolean arg6 )
 		{
 			super( new BorderLayout() );
 
 			this.node = node;
-			this.securityCheck = ( SecurityScan )node.getSecurityCheck();
+			this.securityCheck = ( SecurityScan )node.getSecurityScan();
 			label = new JLabel( securityCheck.getName(), SwingConstants.LEFT );
 			label.setIcon( UISupport.createImageIcon( "/securityTest.png" ) );
 			label.setBorder( BorderFactory.createEmptyBorder( 5, 45, 5, 5 ) );
@@ -381,7 +381,7 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 			setSelected( sel );
 			setBorder( BorderFactory.createMatteBorder( 0, 0, 1, 0, Color.black ) );
 
-			progressBarAdapter = new ProgressBarSecurityCheckAdapter( tree, this.node, progressBar, securityCheck,
+			progressBarAdapter = new ProgressBarSecurityScanAdapter( tree, this.node, progressBar, securityCheck,
 					( SecurityTest )( ( SecurityScan )securityCheck ).getParent(), cntLabel );
 
 		}

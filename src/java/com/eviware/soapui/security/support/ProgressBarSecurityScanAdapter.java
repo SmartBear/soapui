@@ -13,13 +13,13 @@ import com.eviware.soapui.model.security.SecurityScan;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunContext;
-import com.eviware.soapui.security.panels.SecurityCheckNode;
+import com.eviware.soapui.security.panels.SecurityScanNode;
 import com.eviware.soapui.security.result.SecurityScanRequestResult;
 import com.eviware.soapui.security.result.SecurityScanResult;
 import com.eviware.soapui.security.result.SecurityResult.ResultStatus;
 import com.eviware.soapui.security.scan.AbstractSecurityScanWithProperties;
 
-public class ProgressBarSecurityCheckAdapter extends SecurityTestRunListenerAdapter
+public class ProgressBarSecurityScanAdapter extends SecurityTestRunListenerAdapter
 {
 
 	private static final Color OK_COLOR = new Color( 0, 204, 102 );
@@ -33,7 +33,7 @@ public class ProgressBarSecurityCheckAdapter extends SecurityTestRunListenerAdap
 	private static final String STATE_MISSING_PARAMETERS = "Missing Parameters";
 
 	private JTree tree;
-	private SecurityCheckNode node;
+	private SecurityScanNode node;
 	private JProgressBar progressBar;
 	private SecurityScan securityCheck;
 	private SecurityTest securityTest;
@@ -43,7 +43,7 @@ public class ProgressBarSecurityCheckAdapter extends SecurityTestRunListenerAdap
 	private JLabel cntLabel;
 	private Color defaultBackground;
 
-	public ProgressBarSecurityCheckAdapter( JTree tree, SecurityCheckNode node, JProgressBar progressBar,
+	public ProgressBarSecurityScanAdapter( JTree tree, SecurityScanNode node, JProgressBar progressBar,
 			SecurityScan securityCheck, SecurityTest securityTest, JLabel cntLabel )
 	{
 		this.tree = tree;
