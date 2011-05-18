@@ -18,10 +18,10 @@ import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.scan.AbstractSecurityScan;
 import com.eviware.soapui.security.scan.MalformedXmlSecurityScan;
 
-public class MalformedXmlSecurityCheckFactory extends AbstractSecurityCheckFactory
+public class MalformedXmlSecurityScanFactory extends AbstractSecurityScanFactory
 {
 
-	public MalformedXmlSecurityCheckFactory()
+	public MalformedXmlSecurityScanFactory()
 	{
 		super( MalformedXmlSecurityScan.TYPE, MalformedXmlSecurityScan.NAME,
 				"Preforms a scan for Malformed XML Vulerabilities", null );

@@ -37,7 +37,7 @@ import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.monitor.JettyMockEngine;
 import com.eviware.soapui.monitor.MockEngine;
-import com.eviware.soapui.security.registry.SecurityCheckRegistry;
+import com.eviware.soapui.security.registry.SecurityScanRegistry;
 import com.eviware.soapui.settings.HttpSettings;
 import com.eviware.soapui.settings.ProxySettings;
 import com.eviware.soapui.settings.SecuritySettings;
@@ -80,7 +80,7 @@ public class DefaultSoapUICore implements SoapUICore
 
 	public boolean isSavingSettings;
 
-	protected SecurityCheckRegistry securityCheckRegistry;
+	protected SecurityScanRegistry securityCheckRegistry;
 
 	public boolean getInitialImport()
 	{
@@ -680,11 +680,11 @@ public class DefaultSoapUICore implements SoapUICore
 
 	protected void initSecurityCheckRegistry()
 	{
-		securityCheckRegistry = SecurityCheckRegistry.getInstance();
+		securityCheckRegistry = SecurityScanRegistry.getInstance();
 	}
 
 	@Override
-	public SecurityCheckRegistry getSecurityScanRegistry()
+	public SecurityScanRegistry getSecurityScanRegistry()
 	{
 		if( securityCheckRegistry == null )
 			initSecurityCheckRegistry();

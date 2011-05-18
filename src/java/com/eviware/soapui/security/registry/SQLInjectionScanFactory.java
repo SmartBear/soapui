@@ -12,13 +12,14 @@
 
 package com.eviware.soapui.security.registry;
 
-import com.eviware.soapui.config.MaliciousAttachmentSecurityCheckConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
+import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.scan.AbstractSecurityScan;
-import com.eviware.soapui.security.scan.MaliciousAttachmentSecurityScan;
+import com.eviware.soapui.security.scan.SQLInjectionScan;
 
 /**
  * Factory for creation GroovyScript steps
@@ -26,34 +27,33 @@ import com.eviware.soapui.security.scan.MaliciousAttachmentSecurityScan;
  * @author soapUI team
  */
 
-public class MaliciousAttachmentSecurityCheckFactory extends AbstractSecurityCheckFactory
+public class SQLInjectionScanFactory extends AbstractSecurityScanFactory
 {
 
-	public MaliciousAttachmentSecurityCheckFactory()
+	public SQLInjectionScanFactory()
 	{
-		super( MaliciousAttachmentSecurityScan.TYPE, MaliciousAttachmentSecurityScan.NAME,
-				"Performs a scan for Malicious Attachment Vulnerabilities", null);
+		super( SQLInjectionScan.TYPE, SQLInjectionScan.NAME, "Preforms a scan for SQL Injection Vulnerabilities",
+				"/sql_injection_check_script.gif" );
 	}
 
 	public boolean canCreate( TestStep testStep )
 	{
-		return testStep instanceof WsdlTestRequestStep;
+		return testStep instanceof WsdlTestRequestStep || testStep instanceof RestTestRequestStep
+				|| testStep instanceof HttpTestRequestStep;
 	}
 
 	@Override
 	public AbstractSecurityScan buildSecurityScan( TestStep testStep, SecurityCheckConfig config, ModelItem parent )
 	{
-		return new MaliciousAttachmentSecurityScan( config, parent, null, testStep );
+		return new SQLInjectionScan( config, parent, null, testStep );
 	}
 
 	@Override
 	public SecurityCheckConfig createNewSecurityScan( String name )
 	{
 		SecurityCheckConfig securityCheckConfig = SecurityCheckConfig.Factory.newInstance();
-		securityCheckConfig.setType( MaliciousAttachmentSecurityScan.TYPE );
+		securityCheckConfig.setType( SQLInjectionScan.TYPE );
 		securityCheckConfig.setName( name );
-		MaliciousAttachmentSecurityCheckConfig sic = MaliciousAttachmentSecurityCheckConfig.Factory.newInstance();
-		securityCheckConfig.setConfig( sic );
 		return securityCheckConfig;
 	}
 

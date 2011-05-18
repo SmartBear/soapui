@@ -9,10 +9,10 @@ import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.scan.AbstractSecurityScan;
 import com.eviware.soapui.security.scan.InvalidTypesSecurityScan;
 
-public class InvalidTypesSecurityCheckFactory extends AbstractSecurityCheckFactory
+public class InvalidTypesSecurityScanFactory extends AbstractSecurityScanFactory
 {
 
-	public InvalidTypesSecurityCheckFactory()
+	public InvalidTypesSecurityScanFactory()
 	{
 		super( InvalidTypesSecurityScan.TYPE, InvalidTypesSecurityScan.NAME,
 				"Tries to break application and get information on system", "/information_exposure_check.gif" );

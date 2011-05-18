@@ -13,46 +13,45 @@
 package com.eviware.soapui.security.registry;
 
 import com.eviware.soapui.config.SecurityCheckConfig;
-import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.scan.AbstractSecurityScan;
-import com.eviware.soapui.security.scan.BoundarySecurityScan;
+import com.eviware.soapui.security.scan.XmlBombSecurityScan;
 
 /**
- * Factory for creation Boundary checks
+ * Factory for creation GroovyScript steps
  * 
- * @author nebojsa.tasic
+ * @author soapUI team
  */
 
-public class BoundarySecurityCheckFactory extends AbstractSecurityCheckFactory
+public class XmlBombSecurityScanFactory extends AbstractSecurityScanFactory
 {
 
-	public BoundarySecurityCheckFactory()
+	public XmlBombSecurityScanFactory()
 	{
-		super( BoundarySecurityScan.TYPE, BoundarySecurityScan.NAME, "Executes the specified boundary security scan",
-				"/boundary_security_check.gif" );
+		super( XmlBombSecurityScan.TYPE, XmlBombSecurityScan.NAME, "Performs a scan for XML Bomb Vulnerabilities",
+				"/xml_bomb_security_check_script.gif" );
+	}
+
+	public boolean canCreate( TestStep testStep )
+	{
+		return testStep instanceof WsdlTestRequestStep;
+	}
+
+	@Override
+	public AbstractSecurityScan buildSecurityScan( TestStep testStep, SecurityCheckConfig config, ModelItem parent )
+	{
+		return new XmlBombSecurityScan( config, parent, null, testStep );
 	}
 
 	@Override
 	public SecurityCheckConfig createNewSecurityScan( String name )
 	{
 		SecurityCheckConfig securityCheckConfig = SecurityCheckConfig.Factory.newInstance();
-		securityCheckConfig.setType( BoundarySecurityScan.TYPE );
+		securityCheckConfig.setType( XmlBombSecurityScan.TYPE );
 		securityCheckConfig.setName( name );
 		return securityCheckConfig;
 	}
 
-	@Override
-	public AbstractSecurityScan buildSecurityScan( TestStep testStep, SecurityCheckConfig config, ModelItem parent )
-	{
-		return new BoundarySecurityScan( testStep, config, parent, null );
-	}
-
-	@Override
-	public boolean canCreate( TestStep testStep )
-	{
-		return testStep instanceof WsdlTestRequestStep || testStep instanceof RestTestRequestStep;
-	}
 }

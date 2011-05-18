@@ -12,13 +12,13 @@
 
 package com.eviware.soapui.security.registry;
 
-import com.eviware.soapui.config.GroovySecurityCheckConfig;
-import com.eviware.soapui.config.ScriptConfig;
+import com.eviware.soapui.config.MaliciousAttachmentSecurityCheckConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
+import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.scan.AbstractSecurityScan;
-import com.eviware.soapui.security.scan.GroovySecurityScan;
+import com.eviware.soapui.security.scan.MaliciousAttachmentSecurityScan;
 
 /**
  * Factory for creation GroovyScript steps
@@ -26,36 +26,34 @@ import com.eviware.soapui.security.scan.GroovySecurityScan;
  * @author soapUI team
  */
 
-public class GroovySecurityCheckFactory extends AbstractSecurityCheckFactory
+public class MaliciousAttachmentSecurityScanFactory extends AbstractSecurityScanFactory
 {
 
-	public GroovySecurityCheckFactory()
+	public MaliciousAttachmentSecurityScanFactory()
 	{
-		super( GroovySecurityScan.TYPE, GroovySecurityScan.NAME,
-				"Executes the specified groovy script for security scan", "/groovy_security_check_script.gif" );
+		super( MaliciousAttachmentSecurityScan.TYPE, MaliciousAttachmentSecurityScan.NAME,
+				"Performs a scan for Malicious Attachment Vulnerabilities", null);
 	}
 
 	public boolean canCreate( TestStep testStep )
 	{
-		return true;
+		return testStep instanceof WsdlTestRequestStep;
 	}
 
 	@Override
 	public AbstractSecurityScan buildSecurityScan( TestStep testStep, SecurityCheckConfig config, ModelItem parent )
 	{
-		return new GroovySecurityScan( testStep, config, parent, null );
+		return new MaliciousAttachmentSecurityScan( config, parent, null, testStep );
 	}
 
 	@Override
 	public SecurityCheckConfig createNewSecurityScan( String name )
 	{
 		SecurityCheckConfig securityCheckConfig = SecurityCheckConfig.Factory.newInstance();
-		securityCheckConfig.setType( GroovySecurityScan.TYPE );
+		securityCheckConfig.setType( MaliciousAttachmentSecurityScan.TYPE );
 		securityCheckConfig.setName( name );
-		GroovySecurityCheckConfig groovyscc = GroovySecurityCheckConfig.Factory.newInstance();
-		groovyscc.setExecuteScript( ScriptConfig.Factory.newInstance() );
-		// securityCheckConfig.changeType( GroovySecurityCheckConfig.type );
-		securityCheckConfig.setConfig( groovyscc );
+		MaliciousAttachmentSecurityCheckConfig sic = MaliciousAttachmentSecurityCheckConfig.Factory.newInstance();
+		securityCheckConfig.setConfig( sic );
 		return securityCheckConfig;
 	}
 

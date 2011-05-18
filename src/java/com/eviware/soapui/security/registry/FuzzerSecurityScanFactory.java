@@ -27,7 +27,7 @@ import com.eviware.soapui.security.scan.FuzzerSecurityScan;
  * @author nebojsa.tasic
  */
 
-public class FuzzerSecurityScanFactory extends AbstractSecurityCheckFactory
+public class FuzzerSecurityScanFactory extends AbstractSecurityScanFactory
 {
 
 	public FuzzerSecurityScanFactory()

@@ -23,7 +23,7 @@ public interface SecurityScanFactory
 
 	public SecurityScan buildSecurityScan( TestStep testStep, SecurityCheckConfig config, ModelItem parent );
 
-	public String getSecurityCheckType();
+	public String getSecurityScanType();
 
 	/**
 	 * True for test step on which this check could be applied.
@@ -32,9 +32,9 @@ public interface SecurityScanFactory
 	 */
 	public boolean canCreate( TestStep testStep );
 
-	public String getSecurityCheckName();
+	public String getSecurityScanName();
 
-	public String getSecurityCheckDescription();
+	public String getSecurityScanDescription();
 
-	public String getSecurityCheckIconPath();
+	public String getSecurityScanIconPath();
 }

@@ -22,12 +22,12 @@ import com.eviware.soapui.security.scan.AbstractSecurityScan;
 import com.eviware.soapui.security.scan.CrossSiteScriptingScan;
 
 /**
- * Factory for creation parameter exposure check
+ * Factory for creation parameter exposure scan
  * 
  * @author soapUI team
  */
 
-public class CrossSiteScriptingScanFactory extends AbstractSecurityCheckFactory
+public class CrossSiteScriptingScanFactory extends AbstractSecurityScanFactory
 {
 
 	public CrossSiteScriptingScanFactory()

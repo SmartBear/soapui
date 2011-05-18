@@ -21,10 +21,10 @@ import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.scan.AbstractSecurityScan;
 import com.eviware.soapui.security.scan.XPathInjectionSecurityScan;
 
-public class XPathInjectionSecurityCheckFactory extends AbstractSecurityCheckFactory
+public class XPathInjectionSecurityScanFactory extends AbstractSecurityScanFactory
 {
 
-	public XPathInjectionSecurityCheckFactory()
+	public XPathInjectionSecurityScanFactory()
 	{
 		super( XPathInjectionSecurityScan.TYPE, XPathInjectionSecurityScan.NAME,
 				"Preforms a scan for XPath Injection Vulerabilities", null );

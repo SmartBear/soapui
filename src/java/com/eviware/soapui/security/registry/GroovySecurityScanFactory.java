@@ -12,14 +12,13 @@
 
 package com.eviware.soapui.security.registry;
 
+import com.eviware.soapui.config.GroovySecurityCheckConfig;
+import com.eviware.soapui.config.ScriptConfig;
 import com.eviware.soapui.config.SecurityCheckConfig;
-import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
-import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
-import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.scan.AbstractSecurityScan;
-import com.eviware.soapui.security.scan.SQLInjectionScan;
+import com.eviware.soapui.security.scan.GroovySecurityScan;
 
 /**
  * Factory for creation GroovyScript steps
@@ -27,33 +26,36 @@ import com.eviware.soapui.security.scan.SQLInjectionScan;
  * @author soapUI team
  */
 
-public class SQLInjectionCheckFactory extends AbstractSecurityCheckFactory
+public class GroovySecurityScanFactory extends AbstractSecurityScanFactory
 {
 
-	public SQLInjectionCheckFactory()
+	public GroovySecurityScanFactory()
 	{
-		super( SQLInjectionScan.TYPE, SQLInjectionScan.NAME, "Preforms a scan for SQL Injection Vulnerabilities",
-				"/sql_injection_check_script.gif" );
+		super( GroovySecurityScan.TYPE, GroovySecurityScan.NAME,
+				"Executes the specified groovy script for security scan", "/groovy_security_check_script.gif" );
 	}
 
 	public boolean canCreate( TestStep testStep )
 	{
-		return testStep instanceof WsdlTestRequestStep || testStep instanceof RestTestRequestStep
-				|| testStep instanceof HttpTestRequestStep;
+		return true;
 	}
 
 	@Override
 	public AbstractSecurityScan buildSecurityScan( TestStep testStep, SecurityCheckConfig config, ModelItem parent )
 	{
-		return new SQLInjectionScan( config, parent, null, testStep );
+		return new GroovySecurityScan( testStep, config, parent, null );
 	}
 
 	@Override
 	public SecurityCheckConfig createNewSecurityScan( String name )
 	{
 		SecurityCheckConfig securityCheckConfig = SecurityCheckConfig.Factory.newInstance();
-		securityCheckConfig.setType( SQLInjectionScan.TYPE );
+		securityCheckConfig.setType( GroovySecurityScan.TYPE );
 		securityCheckConfig.setName( name );
+		GroovySecurityCheckConfig groovyscc = GroovySecurityCheckConfig.Factory.newInstance();
+		groovyscc.setExecuteScript( ScriptConfig.Factory.newInstance() );
+		// securityCheckConfig.changeType( GroovySecurityCheckConfig.type );
+		securityCheckConfig.setConfig( groovyscc );
 		return securityCheckConfig;
 	}
 

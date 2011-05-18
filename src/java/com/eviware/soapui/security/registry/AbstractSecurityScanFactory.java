@@ -18,19 +18,19 @@ import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.scan.AbstractSecurityScan;
 
 /**
- * Abstract factory behaviour for SecurityCheck factories
+ * Abstract factory behaviour for SecurityScan factories
  * 
  * @author soapui team
  */
 
-public abstract class AbstractSecurityCheckFactory implements SecurityScanFactory
+public abstract class AbstractSecurityScanFactory implements SecurityScanFactory
 {
 	private final String type;
 	private final String name;
 	private final String description;
 	protected final String pathToIcon;
 
-	public AbstractSecurityCheckFactory( String typeName, String name, String description, String pathToIcon )
+	public AbstractSecurityScanFactory( String typeName, String name, String description, String pathToIcon )
 	{
 		this.type = typeName;
 		this.name = name;
@@ -43,29 +43,29 @@ public abstract class AbstractSecurityCheckFactory implements SecurityScanFactor
 	public abstract AbstractSecurityScan buildSecurityScan( TestStep testStep, SecurityCheckConfig config,
 			ModelItem parent );
 
-	public String getSecurityCheckType()
+	public String getSecurityScanType()
 	{
 		return type;
 	}
 
 	/**
-	 * True for test step on which this check could be aplied.
+	 * True for test step on which this scan could be aplied.
 	 * 
 	 * @return
 	 */
 	public abstract boolean canCreate( TestStep testStep );
 
-	public String getSecurityCheckName()
+	public String getSecurityScanName()
 	{
 		return name;
 	}
 
-	public String getSecurityCheckDescription()
+	public String getSecurityScanDescription()
 	{
 		return description;
 	}
 
-	public String getSecurityCheckIconPath()
+	public String getSecurityScanIconPath()
 	{
 		return pathToIcon;
 	}
