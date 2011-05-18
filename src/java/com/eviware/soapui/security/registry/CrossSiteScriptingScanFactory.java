@@ -22,7 +22,7 @@ import com.eviware.soapui.security.scan.AbstractSecurityScan;
 import com.eviware.soapui.security.scan.CrossSiteScriptingScan;
 
 /**
- * Factory for creation parameter exposure scan
+ * Factory for creation cross site scripting scan
  * 
  * @author soapUI team
  */

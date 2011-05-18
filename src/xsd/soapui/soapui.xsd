@@ -2150,4 +2150,12 @@
 		</xsd:sequence>
 	</xsd:complexType>
 
+
+	<xsd:complexType name="FuzzerScan">
+		<xsd:sequence>
+			<xsd:element name="minimal" type="xsd:int"></xsd:element>
+			<xsd:element name="maximal" type="xsd:int"></xsd:element>
+			<xsd:element name="numberOfRequest" type="xsd:int"></xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
 </xsd:schema>

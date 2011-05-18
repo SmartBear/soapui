@@ -201,7 +201,7 @@ public class GroovySecurityScan extends AbstractSecurityScanWithProperties
 		return hasNext;
 	}
 
-	private StringToStringMap clearNullValues( StringToStringMap parameters2 )
+	private StringToStringMap clearNullValues( StringToStringMap parameters )
 	{
 		StringToStringMap params = new StringToStringMap();
 		for( String key : parameters.keySet() )
