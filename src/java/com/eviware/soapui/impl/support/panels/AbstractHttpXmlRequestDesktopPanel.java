@@ -61,7 +61,7 @@ public abstract class AbstractHttpXmlRequestDesktopPanel<T extends ModelItem, T2
 		}
 	}
 
-	public class HttpRequestDocument extends AbstractXmlDocument implements PropertyChangeListener
+	public static class HttpRequestDocument extends AbstractXmlDocument implements PropertyChangeListener
 	{
 		private final HttpRequestInterface<?> modelItem;
 		private boolean updating;
@@ -111,7 +111,7 @@ public abstract class AbstractHttpXmlRequestDesktopPanel<T extends ModelItem, T2
 		}
 	}
 
-	public class HttpResponseDocument extends AbstractXmlDocument implements PropertyChangeListener
+	public static class HttpResponseDocument extends AbstractXmlDocument implements PropertyChangeListener
 	{
 		private final HttpRequestInterface<?> modelItem;
 

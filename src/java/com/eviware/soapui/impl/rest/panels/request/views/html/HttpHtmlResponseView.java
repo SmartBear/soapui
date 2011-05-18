@@ -18,8 +18,6 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.FileOutputStream;
-import java.io.IOException;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -49,7 +47,7 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 	private HttpRequestInterface<?> httpRequest;
 	private JPanel panel;
 	private BrowserComponent browser;
-	private static JToggleButton recordButton;
+	private JToggleButton recordButton;
 	private boolean recordHttpTrafic;
 	private MessageExchangeModelItem messageExchangeModelItem;
 	private boolean hasResponseForRecording;

@@ -349,7 +349,9 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 		{
 			super.release();
 			if( inputArea != null )
+			{
 				inputArea.removeFocusListener( inputAreaFocusListener );
+			}
 		}
 	}
 
