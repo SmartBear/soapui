@@ -179,6 +179,9 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 				for( int i = 0; i < testStepScansList.size(); i++ )
 				{
 					SecurityScan securityScan = testStepScansList.get( i );
+					// if security scan is disabled skip it.
+					if( securityScan.isDisabled() )
+						continue;
 					if( stepResult.getStatus() != TestStepStatus.FAILED || securityScan.isApplyForFailedStep() )
 					{
 						runContext.setCurrentScanIndex( i );

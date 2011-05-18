@@ -12,6 +12,8 @@
 
 package com.eviware.soapui.security.scan;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -57,14 +59,16 @@ import com.eviware.soapui.security.support.FailedSecurityMessageExchange;
 import com.eviware.soapui.security.support.SecurityTestRunListener;
 
 /**
+ * 
+ * Implementation that is common for all security scans. Support for security
+ * workflow.
+ * 
  * @author robert
  * 
  */
 public abstract class AbstractSecurityScan extends AbstractWsdlModelItem<SecurityCheckConfig> implements
-		ResponseAssertion, SecurityScan// , RequestAssertion
+		ResponseAssertion, SecurityScan
 {
-	// configuration of specific request modification
-	private boolean disabled = false;
 	private SecurityScanResult securityScanResult;
 	private SecurityScanRequestResult securityScanRequestResult;
 	private TestStep testStep;
@@ -73,6 +77,7 @@ public abstract class AbstractSecurityScan extends AbstractWsdlModelItem<Securit
 	private AssertionStatus currentStatus;
 	private ExecutionStrategyHolder executionStrategy;
 	private TestStep originalTestStepClone;
+	private PropertyChangeSupport pcs = new PropertyChangeSupport( this );
 
 	public AbstractSecurityScan( TestStep testStep, SecurityCheckConfig config, ModelItem parent, String icon )
 	{
@@ -98,8 +103,8 @@ public abstract class AbstractSecurityScan extends AbstractWsdlModelItem<Securit
 		}
 
 		/*
-		 * if security scan have no strategy ( like large attahments, set its
-		 * value to StrategyTypeConfig.NO_STRATEGY.
+		 * if security scan have no strategy, set its value to
+		 * StrategyTypeConfig.NO_STRATEGY.
 		 */
 		setExecutionStrategy( new ExecutionStrategyHolder( config.getExecutionStrategy() ) );
 
@@ -109,6 +114,8 @@ public abstract class AbstractSecurityScan extends AbstractWsdlModelItem<Securit
 		initAssertions();
 
 		setApplyForFailedTestStep( config.getApplyForFailedStep() );
+		if( !config.isSetDisabled() )
+			setDisabled( false );
 	}
 
 	@Override
@@ -310,7 +317,7 @@ public abstract class AbstractSecurityScan extends AbstractWsdlModelItem<Securit
 	 */
 	public boolean isDisabled()
 	{
-		return disabled;
+		return getConfig().getDisabled();
 	}
 
 	/*
@@ -320,8 +327,9 @@ public abstract class AbstractSecurityScan extends AbstractWsdlModelItem<Securit
 	 */
 	public void setDisabled( boolean disabled )
 	{
-		this.disabled = disabled;
-
+		boolean oldValue = isDisabled();
+		getConfig().setDisabled( disabled );
+		pcs.firePropertyChange( "disabled", oldValue, disabled );
 	}
 
 	public static boolean isSecurable( TestStep testStep )
@@ -353,9 +361,11 @@ public abstract class AbstractSecurityScan extends AbstractWsdlModelItem<Securit
 	 * com.eviware.soapui.security.scan.SecurityScan#setExecutionStrategy(com
 	 * .eviware.soapui.security.ExecutionStrategyHolder)
 	 */
-	public void setExecutionStrategy( ExecutionStrategyHolder executionStrategyHolder )
+	public void setExecutionStrategy( ExecutionStrategyHolder executionStrategy )
 	{
-		this.executionStrategy = executionStrategyHolder;
+		ExecutionStrategyHolder oldValue = getExecutionStrategy();
+		this.executionStrategy = executionStrategy;
+		pcs.firePropertyChange( "executionStrategy", oldValue, executionStrategy );
 	}
 
 	protected TestRequest getOriginalResult( SecurityTestRunnerImpl securityRunner, TestStep testStep )
@@ -575,8 +585,7 @@ public abstract class AbstractSecurityScan extends AbstractWsdlModelItem<Securit
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.eviware.soapui.security.scan.SecurityScan#getAssertionsSupport()
+	 * @see com.eviware.soapui.security.scan.SecurityScan#getAssertionsSupport()
 	 */
 	public AssertionsSupport getAssertionsSupport()
 	{
@@ -692,8 +701,7 @@ public abstract class AbstractSecurityScan extends AbstractWsdlModelItem<Securit
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.eviware.soapui.security.scan.SecurityScan#getConfigDescription()
+	 * @see com.eviware.soapui.security.scan.SecurityScan#getConfigDescription()
 	 */
 	public abstract String getConfigDescription();
 
@@ -778,5 +786,16 @@ public abstract class AbstractSecurityScan extends AbstractWsdlModelItem<Securit
 			securityScanRequestResult.release();
 			securityScanRequestResult = null;
 		}
+
+	}
+
+	public void addPropertyChangeListener( PropertyChangeListener listener )
+	{
+		pcs.addPropertyChangeListener( listener );
+	}
+
+	public void removePropertyChangeListener( PropertyChangeListener listener )
+	{
+		pcs.removePropertyChangeListener( listener );
 	}
 }

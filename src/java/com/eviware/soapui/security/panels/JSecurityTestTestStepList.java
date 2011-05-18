@@ -92,6 +92,7 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 	private SecurityCheckTree treeModel;
 	private InternalSecurityTestRunListener testRunListener;
 	private JScrollPane scrollPane;
+	private EnableDisableSecurityScan enableDisableSecurityScan;
 
 	public JSecurityTestTestStepList( SecurityTest securityTest, JSecurityTestRunLog securityTestLog )
 	{
@@ -101,14 +102,14 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 		JXToolBar toolbar = initToolbar();
 
 		securityCheckPopUp = new JPopupMenu();
-		securityCheckPopUp.add( addSecurityCheckAction );
+		securityCheckPopUp.add( enableDisableSecurityScan = new EnableDisableSecurityScan() );
 		securityCheckPopUp.add( configureSecurityCheckAction );
 		securityCheckPopUp.addSeparator();
 		securityCheckPopUp.add( removeSecurityCheckAction );
 		securityCheckPopUp.add( new ShowOnlineHelpAction( HelpUrls.RESPONSE_ASSERTIONS_HELP_URL ) );
 
 		securityCheckWithPropertiesPopUp = new JPopupMenu();
-		securityCheckWithPropertiesPopUp.add( addSecurityCheckAction );
+		securityCheckWithPropertiesPopUp.add( enableDisableSecurityScan );
 		securityCheckWithPropertiesPopUp.add( configureSecurityCheckAction );
 		securityCheckWithPropertiesPopUp.add( cloneParametersAction );
 		securityCheckWithPropertiesPopUp.addSeparator();
@@ -301,7 +302,7 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 				return;
 
 			SecurityScan securityCheck = securityTest.addNewSecurityScan( testStep, name );
-			
+
 			securityTestTree.setSelectionPath( new TreePath( node.getPath() ) );
 
 			if( securityCheck == null )
@@ -322,6 +323,33 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 			}
 
 			dialog.release();
+		}
+
+	}
+
+	public class EnableDisableSecurityScan extends AbstractAction
+	{
+
+		EnableDisableSecurityScan()
+		{
+			super( "Enable Scan" );
+			putValue( Action.SHORT_DESCRIPTION, "Enables/Disables Security Scan" );
+		}
+
+		@Override
+		public void actionPerformed( ActionEvent arg0 )
+		{
+			SecurityCheckNode node = ( SecurityCheckNode )securityTestTree.getLastSelectedPathComponent();
+			SecurityScan securityScan = node.getSecurityCheck();
+			securityScan.setDisabled( !securityScan.isDisabled() );
+		}
+
+		public void setText( boolean disabled )
+		{
+			if( disabled )
+				this.putValue( Action.NAME, "Enable Security Scan" );
+			else
+				this.putValue( Action.NAME, "Disable Security Scan" );
 		}
 
 	}
@@ -596,7 +624,9 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 		{
 			if( node instanceof SecurityCheckNode )
 			{
-				if( ( ( SecurityCheckNode )node ).getSecurityCheck() instanceof AbstractSecurityScanWithProperties )
+				SecurityScan scan = ( ( SecurityCheckNode )node ).getSecurityCheck();
+				enableDisableSecurityScan.setText( scan.isDisabled() );
+				if( scan instanceof AbstractSecurityScanWithProperties )
 					securityCheckWithPropertiesPopUp.show( securityTestTree, e.getX(), e.getY() );
 				else
 					securityCheckPopUp.show( securityTestTree, e.getX(), e.getY() );
@@ -699,7 +729,8 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 		securityTest.getTestCase().getTestSuite().removeTestSuiteListener( testSuiteListener );
 		securityTest.removeSecurityTestListener( this );
 		securityTest.removeSecurityTestRunListener( testRunListener );
-		if (treeModel != null) {
+		if( treeModel != null )
+		{
 			treeModel.release();
 		}
 	}
