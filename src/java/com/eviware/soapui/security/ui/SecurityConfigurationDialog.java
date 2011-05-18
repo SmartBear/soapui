@@ -176,6 +176,8 @@ public class SecurityConfigurationDialog extends SimpleDialog
 			{
 				try
 				{
+					if( "".equals( newValue ) )
+						return;
 					Integer.valueOf( newValue );
 					securityCheck.getExecutionStrategy().setDelay( Integer.valueOf( newValue ) );
 				}
