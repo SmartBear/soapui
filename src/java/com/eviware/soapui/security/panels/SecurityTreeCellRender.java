@@ -432,8 +432,7 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 		@Override
 		public void updateLabel()
 		{
-			// TODO Auto-generated method stub
-
+			label.setEnabled( !securityCheck.isDisabled() );
 		}
 
 	}
