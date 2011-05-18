@@ -51,7 +51,7 @@ import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.security.SecurityTestRunnerImpl;
 import com.eviware.soapui.security.scan.ParameterExposureCheck;
-import com.eviware.soapui.support.SecurityCheckUtil;
+import com.eviware.soapui.support.SecurityScanUtil;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.GroovyEditorComponent;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
@@ -154,7 +154,7 @@ public class CrossSiteScriptAssertion extends WsdlMessageAssertion implements Re
 			for( String value : parameterExposureCheckConfig.getParameterExposureStringsList() )
 			{
 				value = context.expand( value );// property expansion support
-				String match = SecurityCheckUtil.contains( context, new String( messageExchange2.getRawResponseData() ),
+				String match = SecurityScanUtil.contains( context, new String( messageExchange2.getRawResponseData() ),
 						value, false );
 				if( match != null )
 				{
@@ -176,7 +176,7 @@ public class CrossSiteScriptAssertion extends WsdlMessageAssertion implements Re
 		for( String value : parameterExposureCheckConfig.getParameterExposureStringsList() )
 		{
 			value = context.expand( value );// property expansion support
-			String match = SecurityCheckUtil.contains( context, new String( messageExchange.getRawResponseData() ), value,
+			String match = SecurityScanUtil.contains( context, new String( messageExchange.getRawResponseData() ), value,
 					false );
 			if( match != null )
 			{

@@ -18,7 +18,7 @@ import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.scan.AbstractSecurityScan;
-import com.eviware.soapui.security.scan.BoundarySecurityCheck;
+import com.eviware.soapui.security.scan.BoundarySecurityScan;
 
 /**
  * Factory for creation Boundary checks
@@ -31,7 +31,7 @@ public class BoundarySecurityCheckFactory extends AbstractSecurityCheckFactory
 
 	public BoundarySecurityCheckFactory()
 	{
-		super( BoundarySecurityCheck.TYPE, BoundarySecurityCheck.NAME, "Executes the specified boundary security scan",
+		super( BoundarySecurityScan.TYPE, BoundarySecurityScan.NAME, "Executes the specified boundary security scan",
 				"/boundary_security_check.gif" );
 	}
 
@@ -39,7 +39,7 @@ public class BoundarySecurityCheckFactory extends AbstractSecurityCheckFactory
 	public SecurityCheckConfig createNewSecurityCheck( String name )
 	{
 		SecurityCheckConfig securityCheckConfig = SecurityCheckConfig.Factory.newInstance();
-		securityCheckConfig.setType( BoundarySecurityCheck.TYPE );
+		securityCheckConfig.setType( BoundarySecurityScan.TYPE );
 		securityCheckConfig.setName( name );
 		return securityCheckConfig;
 	}
@@ -47,7 +47,7 @@ public class BoundarySecurityCheckFactory extends AbstractSecurityCheckFactory
 	@Override
 	public AbstractSecurityScan buildSecurityCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent )
 	{
-		return new BoundarySecurityCheck( testStep, config, parent, null );
+		return new BoundarySecurityScan( testStep, config, parent, null );
 	}
 
 	@Override

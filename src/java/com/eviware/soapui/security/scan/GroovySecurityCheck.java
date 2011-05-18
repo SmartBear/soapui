@@ -27,7 +27,7 @@ import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.security.ui.GroovySecurityCheckPanel;
 import com.eviware.soapui.security.ui.SecurityCheckConfigPanel;
-import com.eviware.soapui.support.SecurityCheckUtil;
+import com.eviware.soapui.support.SecurityScanUtil;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
 import com.eviware.soapui.support.types.StringToStringMap;
@@ -134,7 +134,7 @@ public class GroovySecurityCheck extends AbstractSecurityScanWithProperties
 				{
 					if( scp.isChecked() && scp.getXpath().trim().length() > 0 )
 					{
-						model = SecurityCheckUtil.getXmlObjectTreeModel( testStep, scp );
+						model = SecurityScanUtil.getXmlObjectTreeModel( testStep, scp );
 						XmlTreeNode[] treeNodes = null;
 						treeNodes = model.selectTreeNodes( context.expand( scp.getXpath() ) );
 						if( treeNodes.length > 0 )

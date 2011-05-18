@@ -40,24 +40,25 @@ import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.security.boundary.AbstractBoundary;
 import com.eviware.soapui.security.boundary.BoundaryRestrictionUtill;
 import com.eviware.soapui.security.boundary.enumeration.EnumerationValues;
-import com.eviware.soapui.support.SecurityCheckUtil;
+import com.eviware.soapui.support.SecurityScanUtil;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel;
 import com.eviware.soapui.support.xml.XmlUtils;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel.XmlTreeNode;
 
-public class BoundarySecurityCheck extends AbstractSecurityScanWithProperties
+public class BoundarySecurityScan extends AbstractSecurityScanWithProperties
 {
 
 	public static final String TYPE = "BoundaryCheck";
+	public static final String TYPE2 = "BoundaryScan";//temp
 	public static final String NAME = "Boundary Scan";
 	private static final String REQUEST_MUTATIONS_STACK = "RequestMutationsStack";
 	private RestrictionLabel restrictionLabel = new RestrictionLabel();
 
 	StrategyTypeConfig.Enum strategy = StrategyTypeConfig.ONE_BY_ONE;
 
-	public BoundarySecurityCheck( TestStep testStep, SecurityCheckConfig config, ModelItem parent, String icon )
+	public BoundarySecurityScan( TestStep testStep, SecurityCheckConfig config, ModelItem parent, String icon )
 	{
 		super( testStep, config, parent, icon );
 	}
@@ -112,13 +113,13 @@ public class BoundarySecurityCheck extends AbstractSecurityScanWithProperties
 				if( strategy.equals( StrategyTypeConfig.ONE_BY_ONE ) )
 				{
 					stsmap = new StringToStringMap();
-					model = SecurityCheckUtil.getXmlObjectTreeModel( testStep, scp );
+					model = SecurityScanUtil.getXmlObjectTreeModel( testStep, scp );
 				}
 				else
 				{
 					if( model == null )
 					{
-						model = SecurityCheckUtil.getXmlObjectTreeModel( testStep, scp );
+						model = SecurityScanUtil.getXmlObjectTreeModel( testStep, scp );
 					}
 
 				}
@@ -336,7 +337,7 @@ public class BoundarySecurityCheck extends AbstractSecurityScanWithProperties
 	@Override
 	public String getHelpURL()
 	{
-		return "http://soapui.org/Security/boundary-check.html";
+		return "http://www.soapui.org/Security/boundary-scan.html";
 	}
 
 	public class RestrictionLabel

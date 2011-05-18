@@ -25,7 +25,7 @@ import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.model.testsuite.AssertionException;
 import com.eviware.soapui.model.testsuite.ResponseAssertion;
 import com.eviware.soapui.security.scan.ParameterExposureCheck;
-import com.eviware.soapui.support.SecurityCheckUtil;
+import com.eviware.soapui.support.SecurityScanUtil;
 
  class ParameterExposureAssertion extends WsdlMessageAssertion implements ResponseAssertion
 {
@@ -63,7 +63,7 @@ import com.eviware.soapui.support.SecurityCheckUtil;
 		for( String value : parameterExposureCheckConfig.getParameterExposureStringsList() )
 		{
 			value = context.expand( value );// property expansion support
-			String match = SecurityCheckUtil.contains( context, new String( messageExchange.getRawResponseData() ), value,
+			String match = SecurityScanUtil.contains( context, new String( messageExchange.getRawResponseData() ), value,
 					false );
 			if( match != null )
 			{

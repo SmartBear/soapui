@@ -40,7 +40,7 @@ import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.security.SecurityTestRunnerImpl;
 import com.eviware.soapui.security.assertion.CrossSiteScriptAssertion;
-import com.eviware.soapui.support.SecurityCheckUtil;
+import com.eviware.soapui.support.SecurityScanUtil;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel;
@@ -239,14 +239,14 @@ public class ParameterExposureCheck extends AbstractSecurityScanWithProperties
 				if( strategy.equals( StrategyTypeConfig.ONE_BY_ONE ) )
 				{
 					stsmap = new StringToStringMap();
-					model = SecurityCheckUtil.getXmlObjectTreeModel( testStep, scp );
+					model = SecurityScanUtil.getXmlObjectTreeModel( testStep, scp );
 					testStepCopy = SecurityTestRunnerImpl.cloneTestStepForSecurityCheck( ( WsdlTestStep )testStep );
 				}
 				else
 				{
 					if( model == null )
 					{
-						model = SecurityCheckUtil.getXmlObjectTreeModel( testStep, scp );
+						model = SecurityScanUtil.getXmlObjectTreeModel( testStep, scp );
 					}
 					if( testStepCopy == null )
 					{

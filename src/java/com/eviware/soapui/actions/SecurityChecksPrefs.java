@@ -25,7 +25,7 @@ import javax.swing.event.ListSelectionListener;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.DefaultPropertyTableHolderModel;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.PropertyHolderTable;
 import com.eviware.soapui.model.settings.Settings;
-import com.eviware.soapui.support.SecurityCheckUtil;
+import com.eviware.soapui.support.SecurityScanUtil;
 import com.eviware.soapui.support.components.SimpleForm;
 import com.eviware.soapui.support.types.StringToStringMap;
 
@@ -48,7 +48,7 @@ public class SecurityChecksPrefs implements Prefs
 			securityChecksForm = new SimpleForm();
 
 			PropertyHolderTable propertyHolderTable = new PropertyHolderTable(
-					SecurityCheckUtil.getGlobalSensitiveInformationExposureTokens() )
+					SecurityScanUtil.getGlobalSensitiveInformationExposureTokens() )
 			{
 				protected JTable buildPropertiesTable()
 				{
@@ -113,7 +113,7 @@ public class SecurityChecksPrefs implements Prefs
 
 	public void getFormValues( Settings settings )
 	{
-		SecurityCheckUtil.saveGlobalSecuritySettings();
+		SecurityScanUtil.saveGlobalSecuritySettings();
 	}
 
 	public String getTitle()

@@ -45,7 +45,7 @@ import com.eviware.soapui.model.testsuite.AssertionException;
 import com.eviware.soapui.model.testsuite.ResponseAssertion;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.security.SensitiveInformationPropertyHolder;
-import com.eviware.soapui.support.SecurityCheckUtil;
+import com.eviware.soapui.support.SecurityScanUtil;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
@@ -129,7 +129,7 @@ public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion impleme
 					token = token.substring( token.indexOf( PREFIX ) + 1 );
 				}
 
-				String match = SecurityCheckUtil.contains( context, response, token, useRegexp );
+				String match = SecurityScanUtil.contains( context, response, token, useRegexp );
 				if( match != null )
 				{
 					String message = description + " - Token [" + token + "] found [" + match + "]";
@@ -160,12 +160,12 @@ public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion impleme
 		checkMap.putAll( createMapFromTable() );
 		if( includeProjectSpecific )
 		{
-			checkMap.putAll( SecurityCheckUtil.projectEntriesList( this ) );
+			checkMap.putAll( SecurityScanUtil.projectEntriesList( this ) );
 		}
 
 		if( includeGlobal )
 		{
-			checkMap.putAll( SecurityCheckUtil.globalEntriesList() );
+			checkMap.putAll( SecurityScanUtil.globalEntriesList() );
 		}
 		Map<String, String> expandedMap = propertyExpansionSupport( checkMap, context );
 		return expandedMap;

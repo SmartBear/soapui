@@ -50,7 +50,7 @@ import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel;
 import com.eviware.soapui.support.xml.XmlUtils;
 
-public class SecurityCheckUtil
+public class SecurityScanUtil
 {
 	private static SettingsTestPropertyHolder globalSensitiveInformationExposureTokens;
 
