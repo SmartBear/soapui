@@ -34,6 +34,7 @@ import com.eviware.soapui.config.SoapuiSettingsDocumentConfig;
 import com.eviware.soapui.impl.settings.XmlBeansSettingsImpl;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.monitor.JettyMockEngine;
 import com.eviware.soapui.monitor.MockEngine;
@@ -46,6 +47,7 @@ import com.eviware.soapui.settings.WSISettings;
 import com.eviware.soapui.settings.WebRecordingSettings;
 import com.eviware.soapui.settings.WsaSettings;
 import com.eviware.soapui.settings.WsdlSettings;
+import com.eviware.soapui.support.SecurityScanUtil;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.action.SoapUIActionRegistry;
 import com.eviware.soapui.support.factory.SoapUIFactoryRegistry;
@@ -412,6 +414,8 @@ public class DefaultSoapUICore implements SoapUICore
 	 */
 	public String saveSettings() throws Exception
 	{
+		PropertyExpansionUtils.saveGlobalProperties();
+		SecurityScanUtil.saveGlobalSecuritySettings();
 		isSavingSettings = true;
 		try
 		{
