@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.config.SecurityCheckConfig;
+import com.eviware.soapui.config.SecurityScanConfig;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.ui.SecurityConfigurationDialogBuilder;
 import com.eviware.soapui.support.types.StringToStringMap;
@@ -144,7 +144,7 @@ public class SecurityScanRegistry
 	 *           A configuration to check the factory for
 	 * @return
 	 */
-	public boolean hasFactory( SecurityCheckConfig config )
+	public boolean hasFactory( SecurityScanConfig config )
 	{
 		return getFactory( config.getType() ) != null;
 	}

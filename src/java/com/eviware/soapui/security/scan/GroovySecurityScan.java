@@ -15,9 +15,9 @@ package com.eviware.soapui.security.scan;
 import java.util.List;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.config.GroovySecurityCheckConfig;
+import com.eviware.soapui.config.GroovySecurityScanConfig;
 import com.eviware.soapui.config.ScriptConfig;
-import com.eviware.soapui.config.SecurityCheckConfig;
+import com.eviware.soapui.config.SecurityScanConfig;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.security.SecurityCheckedParameter;
@@ -41,11 +41,11 @@ import com.eviware.soapui.support.xml.XmlObjectTreeModel.XmlTreeNode;
 
 public class GroovySecurityScan extends AbstractSecurityScanWithProperties
 {
+	
 	public static final String SCRIPT_PROPERTY = GroovySecurityScan.class.getName() + "@script";
-	public static final String TYPE = "GroovySecurityCheck";
-	public static final String TYPE2 = "GroovySecurityScan";//temp
+	public static final String TYPE = "GroovySecurityScan";
 	public static final String NAME = "Custom Script";
-	private GroovySecurityCheckConfig groovyscc;
+	private GroovySecurityScanConfig groovyscc;
 	private Boolean hasNext = true;
 	private Object scriptResult;
 	private SoapUIScriptEngine scriptEngine;
@@ -57,13 +57,13 @@ public class GroovySecurityScan extends AbstractSecurityScanWithProperties
 
 	private static final String PARAMETERS_INITIALIZED = "parameterInitialized";
 
-	public GroovySecurityScan( TestStep testStep, SecurityCheckConfig config, ModelItem parent, String icon )
+	public GroovySecurityScan( TestStep testStep, SecurityScanConfig config, ModelItem parent, String icon )
 	{
 
 		super( testStep, config, parent, icon );
 		if( config.getConfig() == null )
 		{
-			groovyscc = GroovySecurityCheckConfig.Factory.newInstance();
+			groovyscc = GroovySecurityScanConfig.Factory.newInstance();
 			groovyscc.setExecuteScript( ScriptConfig.Factory.newInstance() );
 			groovyscc.getExecuteScript().setLanguage( "groovy" );
 			groovyscc.getExecuteScript().setStringValue( "" );
@@ -71,7 +71,7 @@ public class GroovySecurityScan extends AbstractSecurityScanWithProperties
 		}
 		else
 		{
-			groovyscc = ( GroovySecurityCheckConfig )config.getConfig();
+			groovyscc = ( GroovySecurityScanConfig )config.getConfig();
 			if( groovyscc.getExecuteScript() == null )
 			{
 				groovyscc.setExecuteScript( ScriptConfig.Factory.newInstance() );

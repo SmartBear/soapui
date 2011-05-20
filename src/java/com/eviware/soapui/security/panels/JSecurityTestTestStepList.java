@@ -46,7 +46,7 @@ import javax.swing.tree.TreeSelectionModel;
 import org.jdesktop.swingx.JXTree;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.config.SecurityCheckConfig;
+import com.eviware.soapui.config.SecurityScanConfig;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.security.SecurityScan;
@@ -405,7 +405,7 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 
 			if( securityCheck.isConfigurable() )
 			{
-				SecurityCheckConfig backupCheckConfig = ( SecurityCheckConfig )securityCheck.getConfig().copy();
+				SecurityScanConfig backupCheckConfig = ( SecurityScanConfig )securityCheck.getConfig().copy();
 
 				SecurityConfigurationDialog dialog = SoapUI.getSoapUICore().getSecurityScanRegistry().getUIBuilder()
 						.buildSecurityScanConfigurationDialog( ( SecurityScan )securityCheck );
@@ -651,7 +651,7 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 
 			if( securityCheck.isConfigurable() )
 			{
-				SecurityCheckConfig backupCheckConfig = ( SecurityCheckConfig )securityCheck.getConfig().copy();
+				SecurityScanConfig backupCheckConfig = ( SecurityScanConfig )securityCheck.getConfig().copy();
 
 				SecurityConfigurationDialog dialog = SoapUI.getSoapUICore().getSecurityScanRegistry().getUIBuilder()
 						.buildSecurityScanConfigurationDialog( ( SecurityScan )securityCheck );

@@ -44,17 +44,37 @@ import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.config.CrossSiteScriptingScanConfig;
+import com.eviware.soapui.config.GroovySecurityCheckConfig;
+import com.eviware.soapui.config.GroovySecurityScanConfig;
 import com.eviware.soapui.config.InterfaceConfig;
+import com.eviware.soapui.config.InvalidSecurityCheckConfig;
+import com.eviware.soapui.config.InvalidSecurityScanConfig;
+import com.eviware.soapui.config.MaliciousAttachmentConfig;
+import com.eviware.soapui.config.MaliciousAttachmentElementConfig;
+import com.eviware.soapui.config.MaliciousAttachmentSecurityCheckConfig;
+import com.eviware.soapui.config.MaliciousAttachmentSecurityScanConfig;
 import com.eviware.soapui.config.MockServiceConfig;
 import com.eviware.soapui.config.MockServiceDocumentConfig;
+import com.eviware.soapui.config.ParameterExposureCheckConfig;
 import com.eviware.soapui.config.ProjectConfig;
+import com.eviware.soapui.config.SQLInjectionCheckConfig;
+import com.eviware.soapui.config.SQLInjectionScanConfig;
+import com.eviware.soapui.config.SchemaTypeForSecurityCheckConfig;
+import com.eviware.soapui.config.SchemaTypeForSecurityScanConfig;
+import com.eviware.soapui.config.SecurityCheckConfig;
+import com.eviware.soapui.config.SecurityScanConfig;
 import com.eviware.soapui.config.SecurityTestConfig;
 import com.eviware.soapui.config.SoapuiProjectDocumentConfig;
+import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.config.TestCaseConfig;
+import com.eviware.soapui.config.TestStepSecurityTestConfig;
 import com.eviware.soapui.config.TestSuiteConfig;
 import com.eviware.soapui.config.TestSuiteDocumentConfig;
 import com.eviware.soapui.config.TestSuiteRunTypesConfig;
 import com.eviware.soapui.config.TestSuiteRunTypesConfig.Enum;
+import com.eviware.soapui.config.XmlBombSecurityCheckConfig;
+import com.eviware.soapui.config.XmlBombSecurityScanConfig;
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.WsdlInterfaceFactory;
 import com.eviware.soapui.impl.rest.support.RestRequestConverter.RestConversionException;
@@ -302,6 +322,9 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 			}
 
 			log.info( "Loaded project from [" + file.toString() + "]" );
+
+			// TODO remove this after beta2
+			updateChecksToScans( getConfig() );
 
 			try
 			{
@@ -1922,5 +1945,170 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 				null );
 		resolver.setShowOkMessage( false );
 		resolver.resolve( mockService );
+	}
+
+	// we switch from check to scan, and then we work with scans only
+	// quick and dirty way to get this done
+	private static Map<String, String> checkToScanMap = initCheckToScanMap();
+
+	private static Map<String, String> initCheckToScanMap()
+	{
+		Map<String, String> map = new HashMap<String, String>();
+		map.put( "BoundaryCheck", "BoundaryScan" );
+		map.put( "ParameterExposureCheck", "CrossSiteScriptingScan" );
+		map.put( "FuzzingScan", "FuzzingScan" );
+		map.put( "GroovySecurityCheck", "GroovySecurityScan" );
+		map.put( "InvalidTypesSecurityCheck", "InvalidTypesSecurityScan" );
+		map.put( "MalformedXmlSecurityCheck", "MalformedXmlSecurityScan" );
+		map.put( "MaliciousAttachmentSecurityCheck", "MaliciousAttachmentSecurityScan" );
+		map.put( "SQLInjectionCheck", "SQLInjectionScan" );
+		map.put( "XmlBombSecurityCheck", "XmlBombSecurityScan" );
+		map.put( "XPathInjectionSecurityCheck", "XPathInjectionSecurityScan" );
+		return map;
+	}
+
+	protected void updateChecksToScans( ProjectConfig config )
+	{
+		for( TestSuiteConfig testSuite : config.getTestSuiteList() )
+		{
+			for( TestCaseConfig testCase : testSuite.getTestCaseList() )
+			{
+				for( SecurityTestConfig securityTest : testCase.getSecurityTestList() )
+				{
+					if( securityTest.getFailSecurityTestOnCheckErrors() )
+					{
+						securityTest.setFailSecurityTestOnScanErrors( securityTest.getFailSecurityTestOnCheckErrors() );
+					}
+
+					for( TestStepSecurityTestConfig testStep : securityTest.getTestStepSecurityTestList() )
+					{
+						// get all checks
+						List<SecurityCheckConfig> checkList = testStep.getTestStepSecurityCheckList();
+
+						// transform to scans
+						for( SecurityCheckConfig check : checkList )
+						{
+							SecurityScanConfig scan = testStep.addNewTestStepSecurityScan();
+
+							scan.setName( check.getName() );
+							scan.setTestStep( check.getTestStep() );
+							scan.setExecutionStrategy( check.getExecutionStrategy() );
+							scan.setType( checkToScanMap.get( check.getType() ) );
+
+							for( TestAssertionConfig assertion : check.getAssertionList() )
+							{
+								TestAssertionConfig assertion2 = scan.addNewAssertion();
+
+								assertion2.setConfiguration( assertion.getConfiguration() );
+								assertion2.setType( assertion.getType() );
+								assertion2.setName( assertion.getName() );
+								if( assertion.isSetDescription() )
+								{
+									assertion2.setDescription( assertion.getDescription() );
+								}
+								if( assertion.isSetDisabled() )
+								{
+									assertion2.setDisabled( assertion.getDisabled() );
+								}
+								if( assertion.isSetId() )
+								{
+									assertion2.setId( assertion.getId() );
+								}
+								if( assertion.isSetTimestamp() )
+								{
+									assertion2.setTimestamp( assertion.getTimestamp() );
+								}
+							}
+
+							scan.setCheckedParameters( check.getCheckedPameters() );
+
+							XmlObject obj = check.getConfig();
+
+							if( obj instanceof InvalidSecurityCheckConfig )
+							{
+								InvalidSecurityScanConfig obj2 = InvalidSecurityScanConfig.Factory.newInstance();
+								for( SchemaTypeForSecurityCheckConfig el : ( ( InvalidSecurityCheckConfig )obj )
+										.getTypesListList() )
+								{
+									SchemaTypeForSecurityScanConfig type = obj2.addNewTypesList();
+									type.setType( el.getType() );
+									type.setValue( el.getValue() );
+								}
+							}
+							else if( obj instanceof GroovySecurityCheckConfig )
+							{
+								GroovySecurityScanConfig obj2 = GroovySecurityScanConfig.Factory.newInstance();
+								obj2.setExecuteScript( ( ( GroovySecurityCheckConfig )obj ).getExecuteScript() );
+							}
+							else if( obj instanceof ParameterExposureCheckConfig )
+							{
+								CrossSiteScriptingScanConfig obj2 = CrossSiteScriptingScanConfig.Factory.newInstance();
+								for( String el : ( ( ParameterExposureCheckConfig )obj ).getParameterExposureStringsList() )
+								{
+									obj2.addParameterExposureStrings( el );
+								}
+							}
+							else if( obj instanceof MaliciousAttachmentSecurityCheckConfig )
+							{
+								MaliciousAttachmentSecurityScanConfig obj2 = MaliciousAttachmentSecurityScanConfig.Factory
+										.newInstance();
+								obj2.setRequestTimeout( ( ( MaliciousAttachmentSecurityCheckConfig )obj ).getRequestTimeout() );
+								for( MaliciousAttachmentElementConfig el : ( ( MaliciousAttachmentSecurityCheckConfig )obj )
+										.getElementList() )
+								{
+									MaliciousAttachmentElementConfig el2 = obj2.addNewElement();
+									el2.setKey( el.getKey() );
+									el2.setRemove( el.getRemove() );
+									for( MaliciousAttachmentConfig gen : el.getGenerateAttachmentList() )
+									{
+										MaliciousAttachmentConfig gen2 = el2.addNewGenerateAttachment();
+										gen2.setCached( gen.getCached() );
+										gen2.setContentType( gen.getContentType() );
+										gen2.setEnabled( gen.getEnabled() );
+										gen2.setFilename( gen.getFilename() );
+										gen2.setSize( gen.getSize() );
+									}
+									for( MaliciousAttachmentConfig repl : el.getReplaceAttachmentList() )
+									{
+										MaliciousAttachmentConfig repl2 = el2.addNewReplaceAttachment();
+										repl2.setCached( repl.getCached() );
+										repl2.setContentType( repl.getContentType() );
+										repl2.setEnabled( repl.getEnabled() );
+										repl2.setFilename( repl.getFilename() );
+										repl2.setSize( repl.getSize() );
+									}
+								}
+							}
+							else if( obj instanceof SQLInjectionCheckConfig )
+							{
+								SQLInjectionScanConfig obj2 = SQLInjectionScanConfig.Factory.newInstance();
+								for( String el : ( ( SQLInjectionCheckConfig )obj ).getSqlInjectionStringsList() )
+								{
+									obj2.addSqlInjectionStrings( el );
+								}
+							}
+							else if( obj instanceof XmlBombSecurityCheckConfig )
+							{
+								XmlBombSecurityScanConfig obj2 = XmlBombSecurityScanConfig.Factory.newInstance();
+								obj2.setAttachXmlBomb( ( ( XmlBombSecurityCheckConfig )obj ).getAttachXmlBomb() );
+								obj2.setXmlAttachmentPrefix( ( ( XmlBombSecurityCheckConfig )obj ).getXmlAttachmentPrefix() );
+								for( String el : ( ( XmlBombSecurityCheckConfig )obj ).getXmlBombsList() )
+								{
+									obj2.addXmlBombs( el );
+								}
+							}
+							else
+							{
+								// boundary scan, malformed xml, xpath
+								scan.setConfig( obj );
+							}
+						}
+
+						// finally, remove checks
+						testStep.setTestStepSecurityCheckArray( new SecurityCheckConfig[0] );
+					}
+				}
+			}
+		}
 	}
 }

@@ -16,7 +16,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.config.SecurityCheckConfig;
+import com.eviware.soapui.config.SecurityScanConfig;
 import com.eviware.soapui.security.scan.CrossSiteScriptingScan;
 import com.eviware.soapui.support.types.StringToObjectMap;
 
@@ -41,11 +41,11 @@ public class CrossSiteScriptingTest extends AbstractSecurityTestCaseWithMockServ
 	}
 
 	@Override
-	protected void addSecurityCheckConfig( SecurityCheckConfig securityCheckConfig )
+	protected void addSecurityScanConfig( SecurityScanConfig securityScanConfig )
 	{
 
 		SoapUI.getSoapUICore().getSecurityScanRegistry().getFactory( securityCheckType )
-				.buildSecurityScan( testStep, securityCheckConfig, null );
+				.buildSecurityScan( testStep, securityScanConfig, null );
 
 	}
 

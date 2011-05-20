@@ -13,7 +13,7 @@ import javax.swing.event.ListSelectionListener;
 
 import com.eviware.soapui.config.MaliciousAttachmentConfig;
 import com.eviware.soapui.config.MaliciousAttachmentElementConfig;
-import com.eviware.soapui.config.MaliciousAttachmentSecurityCheckConfig;
+import com.eviware.soapui.config.MaliciousAttachmentSecurityScanConfig;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.security.tools.AttachmentElement;
 import com.eviware.soapui.security.ui.MaliciousAttachmentMutationsPanel.MutationTables;
@@ -25,10 +25,10 @@ public class MaliciousAttachmentFilesListForm extends JPanel
 	private JList list;
 	private AttachmentElement oldSelection;
 	private AttachmentElement currentSelection;
-	private MaliciousAttachmentSecurityCheckConfig config;
+	private MaliciousAttachmentSecurityScanConfig config;
 	final MaliciousAttachmentListToTableHolder holder;
 
-	public MaliciousAttachmentFilesListForm( MaliciousAttachmentSecurityCheckConfig config,
+	public MaliciousAttachmentFilesListForm( MaliciousAttachmentSecurityScanConfig config,
 			MaliciousAttachmentListToTableHolder holder )
 	{
 		super( new BorderLayout() );
@@ -89,7 +89,7 @@ public class MaliciousAttachmentFilesListForm extends JPanel
 
 	public void setData( Attachment[] attachments )
 	{
-		MaliciousAttachmentSecurityCheckConfig copy = ( MaliciousAttachmentSecurityCheckConfig )config.copy();
+		MaliciousAttachmentSecurityScanConfig copy = ( MaliciousAttachmentSecurityScanConfig )config.copy();
 
 		listModel.clear();
 		config.getElementList().clear();
@@ -153,7 +153,7 @@ public class MaliciousAttachmentFilesListForm extends JPanel
 		}
 	}
 
-	public void updateConfig( MaliciousAttachmentSecurityCheckConfig config )
+	public void updateConfig( MaliciousAttachmentSecurityScanConfig config )
 	{
 		this.config = config;
 	}

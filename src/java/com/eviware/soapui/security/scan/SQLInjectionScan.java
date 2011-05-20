@@ -27,8 +27,8 @@ import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.config.SQLInjectionCheckConfig;
-import com.eviware.soapui.config.SecurityCheckConfig;
+import com.eviware.soapui.config.SQLInjectionScanConfig;
+import com.eviware.soapui.config.SecurityScanConfig;
 import com.eviware.soapui.config.StrategyTypeConfig;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.MessageExchange;
@@ -60,11 +60,10 @@ import com.eviware.x.impl.swing.JStringListFormField;
 public class SQLInjectionScan extends AbstractSecurityScanWithProperties
 {
 
-	public static final String TYPE = "SQLInjectionCheck"; //temp
-	public static final String TYPE2 = "SQLInjectionScan";
+	public static final String TYPE = "SQLInjectionScan";
 	public static final String NAME = "SQL Injection";
 
-	private SQLInjectionCheckConfig sqlInjectionConfig;
+	private SQLInjectionScanConfig sqlInjectionConfig;
 
 	private Map<SecurityCheckedParameter, ArrayList<String>> parameterMutations = new HashMap<SecurityCheckedParameter, ArrayList<String>>();
 
@@ -76,31 +75,31 @@ public class SQLInjectionScan extends AbstractSecurityScanWithProperties
 	private boolean mutation;
 	private JFormDialog dialog;
 
-	public SQLInjectionScan( SecurityCheckConfig config, ModelItem parent, String icon, TestStep testStep )
+	public SQLInjectionScan( SecurityScanConfig config, ModelItem parent, String icon, TestStep testStep )
 	{
 		super( testStep, config, parent, icon );
-		if( config.getConfig() == null || !( config.getConfig() instanceof SQLInjectionCheckConfig ) )
+		if( config.getConfig() == null || !( config.getConfig() instanceof SQLInjectionScanConfig ) )
 			initSqlInjectionConfig();
 		else
-			sqlInjectionConfig = ( SQLInjectionCheckConfig )getConfig().getConfig();
+			sqlInjectionConfig = ( SQLInjectionScanConfig )getConfig().getConfig();
 	}
 
 	private void initSqlInjectionConfig()
 	{
-		getConfig().setConfig( SQLInjectionCheckConfig.Factory.newInstance() );
-		sqlInjectionConfig = ( SQLInjectionCheckConfig )getConfig().getConfig();
+		getConfig().setConfig( SQLInjectionScanConfig.Factory.newInstance() );
+		sqlInjectionConfig = ( SQLInjectionScanConfig )getConfig().getConfig();
 
 		sqlInjectionConfig.setSqlInjectionStringsArray( defaultSqlInjectionStrings );
 	}
 
 	@Override
-	public void updateSecurityConfig( SecurityCheckConfig config )
+	public void updateSecurityConfig( SecurityScanConfig config )
 	{
 		super.updateSecurityConfig( config );
 
 		if( sqlInjectionConfig != null )
 		{
-			sqlInjectionConfig = ( SQLInjectionCheckConfig )getConfig().getConfig();
+			sqlInjectionConfig = ( SQLInjectionScanConfig )getConfig().getConfig();
 		}
 	}
 

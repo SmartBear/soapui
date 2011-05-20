@@ -12,9 +12,9 @@
 
 package com.eviware.soapui.security.registry;
 
-import com.eviware.soapui.config.GroovySecurityCheckConfig;
+import com.eviware.soapui.config.GroovySecurityScanConfig;
 import com.eviware.soapui.config.ScriptConfig;
-import com.eviware.soapui.config.SecurityCheckConfig;
+import com.eviware.soapui.config.SecurityScanConfig;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.scan.AbstractSecurityScan;
@@ -41,20 +41,20 @@ public class GroovySecurityScanFactory extends AbstractSecurityScanFactory
 	}
 
 	@Override
-	public AbstractSecurityScan buildSecurityScan( TestStep testStep, SecurityCheckConfig config, ModelItem parent )
+	public AbstractSecurityScan buildSecurityScan( TestStep testStep, SecurityScanConfig config, ModelItem parent )
 	{
 		return new GroovySecurityScan( testStep, config, parent, null );
 	}
 
 	@Override
-	public SecurityCheckConfig createNewSecurityScan( String name )
+	public SecurityScanConfig createNewSecurityScan( String name )
 	{
-		SecurityCheckConfig securityCheckConfig = SecurityCheckConfig.Factory.newInstance();
+		SecurityScanConfig securityCheckConfig = SecurityScanConfig.Factory.newInstance();
 		securityCheckConfig.setType( GroovySecurityScan.TYPE );
 		securityCheckConfig.setName( name );
-		GroovySecurityCheckConfig groovyscc = GroovySecurityCheckConfig.Factory.newInstance();
+		GroovySecurityScanConfig groovyscc = GroovySecurityScanConfig.Factory.newInstance();
 		groovyscc.setExecuteScript( ScriptConfig.Factory.newInstance() );
-		// securityCheckConfig.changeType( GroovySecurityCheckConfig.type );
+		// securityCheckConfig.changeType( GroovySecurityScanConfig.type );
 		securityCheckConfig.setConfig( groovyscc );
 		return securityCheckConfig;
 	}

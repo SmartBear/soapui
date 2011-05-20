@@ -11,7 +11,7 @@
  */
 package com.eviware.soapui.security.registry;
 
-import com.eviware.soapui.config.SecurityCheckConfig;
+import com.eviware.soapui.config.SecurityScanConfig;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestStep;
@@ -28,7 +28,7 @@ public class MalformedXmlSecurityScanFactory extends AbstractSecurityScanFactory
 	}
 
 	@Override
-	public AbstractSecurityScan buildSecurityScan( TestStep testStep, SecurityCheckConfig config, ModelItem parent )
+	public AbstractSecurityScan buildSecurityScan( TestStep testStep, SecurityScanConfig config, ModelItem parent )
 	{
 		return new MalformedXmlSecurityScan( testStep, config, parent, null );
 	}
@@ -40,9 +40,9 @@ public class MalformedXmlSecurityScanFactory extends AbstractSecurityScanFactory
 	}
 
 	@Override
-	public SecurityCheckConfig createNewSecurityScan( String name )
+	public SecurityScanConfig createNewSecurityScan( String name )
 	{
-		SecurityCheckConfig securityCheckConfig = SecurityCheckConfig.Factory.newInstance();
+		SecurityScanConfig securityCheckConfig = SecurityScanConfig.Factory.newInstance();
 		securityCheckConfig.setType( MalformedXmlSecurityScan.TYPE );
 		securityCheckConfig.setName( name );
 		return securityCheckConfig;

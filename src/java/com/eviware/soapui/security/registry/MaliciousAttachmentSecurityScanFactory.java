@@ -12,8 +12,8 @@
 
 package com.eviware.soapui.security.registry;
 
-import com.eviware.soapui.config.MaliciousAttachmentSecurityCheckConfig;
-import com.eviware.soapui.config.SecurityCheckConfig;
+import com.eviware.soapui.config.MaliciousAttachmentSecurityScanConfig;
+import com.eviware.soapui.config.SecurityScanConfig;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestStep;
@@ -41,18 +41,18 @@ public class MaliciousAttachmentSecurityScanFactory extends AbstractSecurityScan
 	}
 
 	@Override
-	public AbstractSecurityScan buildSecurityScan( TestStep testStep, SecurityCheckConfig config, ModelItem parent )
+	public AbstractSecurityScan buildSecurityScan( TestStep testStep, SecurityScanConfig config, ModelItem parent )
 	{
 		return new MaliciousAttachmentSecurityScan( config, parent, null, testStep );
 	}
 
 	@Override
-	public SecurityCheckConfig createNewSecurityScan( String name )
+	public SecurityScanConfig createNewSecurityScan( String name )
 	{
-		SecurityCheckConfig securityCheckConfig = SecurityCheckConfig.Factory.newInstance();
+		SecurityScanConfig securityCheckConfig = SecurityScanConfig.Factory.newInstance();
 		securityCheckConfig.setType( MaliciousAttachmentSecurityScan.TYPE );
 		securityCheckConfig.setName( name );
-		MaliciousAttachmentSecurityCheckConfig sic = MaliciousAttachmentSecurityCheckConfig.Factory.newInstance();
+		MaliciousAttachmentSecurityScanConfig sic = MaliciousAttachmentSecurityScanConfig.Factory.newInstance();
 		securityCheckConfig.setConfig( sic );
 		return securityCheckConfig;
 	}

@@ -23,8 +23,8 @@ import javax.swing.JScrollPane;
 import org.apache.xmlbeans.XmlObject;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.config.CrossSiteScriptingScanConfig;
 import com.eviware.soapui.config.HttpRequestConfig;
-import com.eviware.soapui.config.ParameterExposureCheckConfig;
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.config.TestStepConfig;
 import com.eviware.soapui.impl.support.HttpUtils;
@@ -113,7 +113,7 @@ public class CrossSiteScriptAssertion extends WsdlMessageAssertion implements Re
 
 		List<String> urls = submitScript( messageExchange, context );
 
-		ParameterExposureCheckConfig parameterExposureCheckConfig = ( ParameterExposureCheckConfig )context
+		CrossSiteScriptingScanConfig parameterExposureCheckConfig = ( CrossSiteScriptingScanConfig )context
 				.getProperty( CrossSiteScriptingScan.PARAMETER_EXPOSURE_SCAN_CONFIG );
 
 		List<AssertionError> assertionErrorList = new ArrayList<AssertionError>();
@@ -142,7 +142,7 @@ public class CrossSiteScriptAssertion extends WsdlMessageAssertion implements Re
 
 	private boolean checkSeparateHTML( MessageExchange messageExchange, SubmitContext context, TestStep testStep,
 			SecurityTestRunner securityTestRunner, List<String> urls,
-			ParameterExposureCheckConfig parameterExposureCheckConfig, List<AssertionError> assertionErrorList )
+			CrossSiteScriptingScanConfig parameterExposureCheckConfig, List<AssertionError> assertionErrorList )
 	{
 		boolean throwException = false;
 		for( String url : urls )
@@ -170,7 +170,7 @@ public class CrossSiteScriptAssertion extends WsdlMessageAssertion implements Re
 	}
 
 	private boolean checkResponse( MessageExchange messageExchange, SubmitContext context,
-			ParameterExposureCheckConfig parameterExposureCheckConfig, List<AssertionError> assertionErrorList )
+			CrossSiteScriptingScanConfig parameterExposureCheckConfig, List<AssertionError> assertionErrorList )
 	{
 		boolean throwException = false;
 		for( String value : parameterExposureCheckConfig.getParameterExposureStringsList() )

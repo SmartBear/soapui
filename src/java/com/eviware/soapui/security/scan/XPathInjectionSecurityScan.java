@@ -26,7 +26,7 @@ import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.config.SecurityCheckConfig;
+import com.eviware.soapui.config.SecurityScanConfig;
 import com.eviware.soapui.config.StrategyTypeConfig;
 import com.eviware.soapui.config.XPathInjectionConfig;
 import com.eviware.soapui.model.ModelItem;
@@ -52,8 +52,7 @@ import com.eviware.x.impl.swing.JStringListFormField;
 public class XPathInjectionSecurityScan extends AbstractSecurityScanWithProperties
 {
 
-	public static final String TYPE = "XPathInjectionSecurityCheck"; //temp
-	public static final String TYPE2 = "XPathInjectionSecurityScan";
+	public static final String TYPE = "XPathInjectionSecurityScan";
 	public static final String NAME = "XPath Injection";
 
 	private XPathInjectionConfig xpathList;
@@ -67,7 +66,7 @@ public class XPathInjectionSecurityScan extends AbstractSecurityScanWithProperti
 	private boolean mutation;
 	private JFormDialog dialog;
 
-	public XPathInjectionSecurityScan( TestStep testStep, SecurityCheckConfig config, ModelItem parent, String icon )
+	public XPathInjectionSecurityScan( TestStep testStep, SecurityScanConfig config, ModelItem parent, String icon )
 	{
 		super( testStep, config, parent, icon );
 
@@ -78,7 +77,7 @@ public class XPathInjectionSecurityScan extends AbstractSecurityScanWithProperti
 	}
 
 	@Override
-	public void updateSecurityConfig( SecurityCheckConfig config )
+	public void updateSecurityConfig( SecurityScanConfig config )
 	{
 		super.updateSecurityConfig( config );
 

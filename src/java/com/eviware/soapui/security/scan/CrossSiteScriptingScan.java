@@ -27,8 +27,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.config.ParameterExposureCheckConfig;
-import com.eviware.soapui.config.SecurityCheckConfig;
+import com.eviware.soapui.config.CrossSiteScriptingScanConfig;
+import com.eviware.soapui.config.SecurityScanConfig;
 import com.eviware.soapui.config.StrategyTypeConfig;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStepResult;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
@@ -62,25 +62,25 @@ import com.eviware.x.impl.swing.JStringListFormField;
 
 public class CrossSiteScriptingScan extends AbstractSecurityScanWithProperties
 {
-	public static final String TYPE = "ParameterExposureCheck"; //temp
-	public static final String TYPE2 = " CrossSiteScriptingScan";
+
+	public static final String TYPE = "CrossSiteScriptingScan";
 	public static final String NAME = "Cross Site Scripting";
 	public static final String PARAMETER_EXPOSURE_SCAN_CONFIG = "CrossSiteScriptingScanConfig";
 	public static final String TEST_CASE_RUNNER = "testCaseRunner";
 	public static final String TEST_STEP = "testStep";
-	private ParameterExposureCheckConfig parameterExposureScanConfig;
+	private CrossSiteScriptingScanConfig cssConfig;
 	StrategyTypeConfig.Enum strategy = StrategyTypeConfig.ONE_BY_ONE;
 
 	List<String> defaultParameterExposureStrings = new ArrayList<String>();
 	private JFormDialog dialog;
 
-	public CrossSiteScriptingScan( TestStep testStep, SecurityCheckConfig config, ModelItem parent, String icon )
+	public CrossSiteScriptingScan( TestStep testStep, SecurityScanConfig config, ModelItem parent, String icon )
 	{
 		super( testStep, config, parent, icon );
-		if( config.getConfig() == null || !( config.getConfig() instanceof ParameterExposureCheckConfig ) )
+		if( config.getConfig() == null || !( config.getConfig() instanceof CrossSiteScriptingScanConfig ) )
 			initConfig();
 		else
-			parameterExposureScanConfig = ( ParameterExposureCheckConfig )getConfig().getConfig();
+			cssConfig = ( CrossSiteScriptingScanConfig )getConfig().getConfig();
 
 	}
 
@@ -118,21 +118,21 @@ public class CrossSiteScriptingScan extends AbstractSecurityScanWithProperties
 	private void initConfig()
 	{
 		initDefaultVectors();
-		getConfig().setConfig( ParameterExposureCheckConfig.Factory.newInstance() );
-		parameterExposureScanConfig = ( ParameterExposureCheckConfig )getConfig().getConfig();
+		getConfig().setConfig( CrossSiteScriptingScanConfig.Factory.newInstance() );
+		cssConfig = ( CrossSiteScriptingScanConfig )getConfig().getConfig();
 
-		parameterExposureScanConfig.setParameterExposureStringsArray( defaultParameterExposureStrings
+		cssConfig.setParameterExposureStringsArray( defaultParameterExposureStrings
 				.toArray( new String[defaultParameterExposureStrings.size()] ) );
 	}
 
 	@Override
-	public void updateSecurityConfig( SecurityCheckConfig config )
+	public void updateSecurityConfig( SecurityScanConfig config )
 	{
 		super.updateSecurityConfig( config );
 
-		if( parameterExposureScanConfig != null )
+		if( cssConfig != null )
 		{
-			parameterExposureScanConfig = ( ParameterExposureCheckConfig )getConfig().getConfig();
+			cssConfig = ( CrossSiteScriptingScanConfig )getConfig().getConfig();
 		}
 	}
 
@@ -184,7 +184,7 @@ public class CrossSiteScriptingScan extends AbstractSecurityScanWithProperties
 		{
 			Stack<PropertyMutation> requestMutationsList = new Stack<PropertyMutation>();
 			context.put( PropertyMutation.REQUEST_MUTATIONS_STACK, requestMutationsList );
-			context.put( PARAMETER_EXPOSURE_SCAN_CONFIG, parameterExposureScanConfig );
+			context.put( PARAMETER_EXPOSURE_SCAN_CONFIG, cssConfig );
 			try
 			{
 				extractMutations( testStep, context );
@@ -224,7 +224,7 @@ public class CrossSiteScriptingScan extends AbstractSecurityScanWithProperties
 	private void extractMutations( TestStep testStep, SecurityTestRunContext context )
 	{
 		strategy = getExecutionStrategy().getStrategy();
-		for( String value : parameterExposureScanConfig.getParameterExposureStringsList() )
+		for( String value : cssConfig.getParameterExposureStringsList() )
 		{
 			// property expansion support
 			value = context.expand( value );
@@ -357,7 +357,7 @@ public class CrossSiteScriptingScan extends AbstractSecurityScanWithProperties
 		dialog = ( JFormDialog )ADialogBuilder.buildDialog( AdvancedSettings.class );
 		JStringListFormField stringField = ( JStringListFormField )dialog
 				.getFormField( AdvancedSettings.PARAMETER_EXPOSURE_STRINGS );
-		stringField.setOptions( parameterExposureScanConfig.getParameterExposureStringsList().toArray() );
+		stringField.setOptions( cssConfig.getParameterExposureStringsList().toArray() );
 		stringField.setProperty( "dimension", new Dimension( 470, 150 ) );
 		stringField.getComponent().addPropertyChangeListener( "options", new PropertyChangeListener()
 		{
@@ -373,7 +373,7 @@ public class CrossSiteScriptingScan extends AbstractSecurityScanWithProperties
 					// new element is always added to the end
 					String[] newValue = ( String[] )evt.getNewValue();
 					String itemToAdd = newValue[newValue.length - 1];
-					parameterExposureScanConfig.addParameterExposureStrings( itemToAdd );
+					cssConfig.addParameterExposureStrings( itemToAdd );
 				}
 				// removed
 				if( newOptions.length < oldOptions.length )
@@ -388,14 +388,14 @@ public class CrossSiteScriptingScan extends AbstractSecurityScanWithProperties
 						{
 							if( newOptions[cnt] != oldOptions[cnt] )
 							{
-								parameterExposureScanConfig.removeParameterExposureStrings( cnt );
+								cssConfig.removeParameterExposureStrings( cnt );
 								break;
 							}
 						}
 						else
 						{
 							// this is border case, last lement in array is removed.
-							parameterExposureScanConfig.removeParameterExposureStrings( oldOptions.length - 1 );
+							cssConfig.removeParameterExposureStrings( oldOptions.length - 1 );
 						}
 					}
 				}

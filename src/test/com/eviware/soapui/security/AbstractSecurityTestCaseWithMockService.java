@@ -21,7 +21,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.eviware.soapui.config.SecurityCheckConfig;
+import com.eviware.soapui.config.SecurityScanConfig;
 import com.eviware.soapui.config.SecurityTestConfig;
 import com.eviware.soapui.config.TestStepSecurityTestConfig;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
@@ -115,8 +115,8 @@ public class AbstractSecurityTestCaseWithMockService extends TestCase
 	protected SecurityTest createSecurityTest()
 	{
 		SecurityTest securityTest = new SecurityTest( testCase, config );
-		SecurityCheckConfig securityCheckConfig = addCheckToConfig();
-		addSecurityCheckConfig( securityCheckConfig );
+		SecurityScanConfig securityCheckConfig = addCheckToConfig();
+		addSecurityScanConfig( securityCheckConfig );
 		return securityTest;
 	}
 
@@ -124,22 +124,22 @@ public class AbstractSecurityTestCaseWithMockService extends TestCase
 	 * adds specific config which is ANY TYPE in soapui.xsd implement it by
 	 * create specific SecurityTest with constructor
 	 */
-	protected void addSecurityCheckConfig( SecurityCheckConfig securityCheckConfig )
+	protected void addSecurityScanConfig( SecurityScanConfig securityCheckConfig )
 	{
 
 	}
 
 	/*
-	 * creates basic SecurityCheckConfig
+	 * creates basic SecurityScanConfig
 	 */
-	protected SecurityCheckConfig addCheckToConfig()
+	protected SecurityScanConfig addCheckToConfig()
 	{
 		testStep = testCase.getTestStepByName( testStepName );
 
 		TestStepSecurityTestConfig testStepSecurityTest = config.addNewTestStepSecurityTest();
 		testStepSecurityTest.setTestStepId( testStep.getId() );
 
-		SecurityCheckConfig securityCheckConfig = testStepSecurityTest.addNewTestStepSecurityCheck();
+		SecurityScanConfig securityCheckConfig = testStepSecurityTest.addNewTestStepSecurityScan();
 		securityCheckConfig.setType( securityCheckType );
 		securityCheckConfig.setName( securityCheckName );
 

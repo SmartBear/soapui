@@ -4,7 +4,7 @@ import javax.swing.JComponent;
 
 import org.apache.xmlbeans.XmlObject;
 
-import com.eviware.soapui.config.SecurityCheckConfig;
+import com.eviware.soapui.config.SecurityScanConfig;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.TestStep;
@@ -20,7 +20,7 @@ public interface SecurityScan extends ModelItem, Assertable
 	public static final String SECURITY_CHECK_RESPONSE_RESULT = "SecurityScanResponseResult";
 	public static final String STATUS_PROPERTY = SecurityScan.class.getName() + "@status";
 
-	void updateSecurityConfig( SecurityCheckConfig config );
+	void updateSecurityConfig( SecurityScanConfig config );
 
 	SecurityScanResult run( TestStep testStep, SecurityTestRunContext context, SecurityTestRunner securityTestRunner );
 
@@ -100,7 +100,7 @@ public interface SecurityScan extends ModelItem, Assertable
 
 	XmlObject getConfig();
 
-	void copyConfig( SecurityCheckConfig backupCheckConfig );
+	void copyConfig( SecurityScanConfig backupCheckConfig );
 
 	void addWsdlAssertion( String assertionLabel );
 

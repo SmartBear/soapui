@@ -15,7 +15,7 @@ package com.eviware.soapui.security;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.eviware.soapui.config.SecurityCheckConfig;
+import com.eviware.soapui.config.SecurityScanConfig;
 import com.eviware.soapui.security.scan.GroovySecurityScan;
 
 /**
@@ -38,9 +38,9 @@ public class GroovySecurityCheckTest extends AbstractSecurityTestCaseWithMockSer
 		securityCheckName = GroovySecurityScan.TYPE;
 	}
 
-	protected void addSecurityCheckConfig( SecurityCheckConfig securityCheckConfig )
+	protected void addSecurityScanConfig( SecurityScanConfig securityScanConfig )
 	{
-		GroovySecurityScan gsc = new GroovySecurityScan( testStep, securityCheckConfig, null, null );
+		GroovySecurityScan gsc = new GroovySecurityScan( testStep, securityScanConfig, null, null );
 		gsc.setExecuteScript( "println('');println \"this is print from GroovySecurityScan on test step '${testStep.name}'\";println('')" );
 	}
 

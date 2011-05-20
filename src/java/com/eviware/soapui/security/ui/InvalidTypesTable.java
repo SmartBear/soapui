@@ -28,8 +28,8 @@ import javax.swing.table.AbstractTableModel;
 import org.apache.xmlbeans.SchemaType;
 import org.jdesktop.swingx.JXTable;
 
-import com.eviware.soapui.config.InvalidSecurityCheckConfig;
-import com.eviware.soapui.config.SchemaTypeForSecurityCheckConfig;
+import com.eviware.soapui.config.InvalidSecurityScanConfig;
+import com.eviware.soapui.config.SchemaTypeForSecurityScanConfig;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.x.form.XFormDialog;
@@ -88,7 +88,7 @@ public class InvalidTypesTable extends JPanel
 		}
 	};
 
-	public InvalidTypesTable( InvalidSecurityCheckConfig invalidTypeConfig )
+	public InvalidTypesTable( InvalidSecurityScanConfig invalidTypeConfig )
 	{
 		this.model = new InvalidTypeTableModel( invalidTypeConfig );
 		init();
@@ -154,10 +154,10 @@ public class InvalidTypesTable extends JPanel
 	private class InvalidTypeTableModel extends AbstractTableModel
 	{
 
-		private InvalidSecurityCheckConfig data;
+		private InvalidSecurityScanConfig data;
 		private String[] columns = { "Type Name", "Type Value" };
 
-		public InvalidTypeTableModel( InvalidSecurityCheckConfig invalidTypeConfig )
+		public InvalidTypeTableModel( InvalidSecurityScanConfig invalidTypeConfig )
 		{
 			this.data = invalidTypeConfig;
 		}
@@ -173,7 +173,7 @@ public class InvalidTypesTable extends JPanel
 
 		public void addNewType( int type, String value )
 		{
-			SchemaTypeForSecurityCheckConfig newtype = data.addNewTypesList();
+			SchemaTypeForSecurityScanConfig newtype = data.addNewTypesList();
 			newtype.setType( type );
 			newtype.setValue( value );
 
@@ -189,7 +189,7 @@ public class InvalidTypesTable extends JPanel
 		@Override
 		public void setValueAt( Object aValue, int rowIndex, int columnIndex )
 		{
-			SchemaTypeForSecurityCheckConfig paramType = data.getTypesListList().get( rowIndex );
+			SchemaTypeForSecurityScanConfig paramType = data.getTypesListList().get( rowIndex );
 
 			paramType.setValue( ( String )aValue );
 

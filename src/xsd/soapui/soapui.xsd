@@ -1917,6 +1917,9 @@
 				<xsd:attribute name="failSecurityTestOnCheckErrors"
 					type="xsd:boolean">
 				</xsd:attribute>
+				<xsd:attribute name="failSecurityTestOnScanErrors"
+					type="xsd:boolean">
+				</xsd:attribute>
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
@@ -1926,20 +1929,44 @@
 			<xsd:extension base="tns:ModelItem">
 				<xsd:sequence>
 					<xsd:element name="config" type="xsd:anyType"></xsd:element>
-					<xsd:element name="assertion"
-						type="tns:TestAssertion" maxOccurs="unbounded" minOccurs="0">
+					<xsd:element name="assertion" type="tns:TestAssertion"
+						maxOccurs="unbounded" minOccurs="0">
 					</xsd:element>
 					<xsd:element name="testStep" type="tns:TestStep"></xsd:element>
-					<xsd:element name="checkedPameters"
-						type="tns:CheckedParametersList" minOccurs="1" maxOccurs="1">
+					<xsd:element name="checkedPameters" type="tns:CheckedParametersList"
+						minOccurs="1" maxOccurs="1">
 					</xsd:element>
-					<xsd:element name="executionStrategy"
-						type="tns:ExecutionStrategy">
+					<xsd:element name="checkedParameters" type="tns:CheckedParametersList"
+						minOccurs="1" maxOccurs="1">
+					</xsd:element>
+					<xsd:element name="executionStrategy" type="tns:ExecutionStrategy">
 					</xsd:element>
 				</xsd:sequence>
 				<xsd:attribute name="type" type="xsd:string"></xsd:attribute>
-				<xsd:attribute name="applyForFailedStep"
-					type="xsd:boolean">
+				<xsd:attribute name="applyForFailedStep" type="xsd:boolean">
+				</xsd:attribute>
+				<xsd:attribute name="disabled" type="xsd:boolean"></xsd:attribute>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<xsd:complexType name="SecurityScan">
+		<xsd:complexContent>
+			<xsd:extension base="tns:ModelItem">
+				<xsd:sequence>
+					<xsd:element name="config" type="xsd:anyType"></xsd:element>
+					<xsd:element name="assertion" type="tns:TestAssertion"
+						maxOccurs="unbounded" minOccurs="0">
+					</xsd:element>
+					<xsd:element name="testStep" type="tns:TestStep"></xsd:element>
+					<xsd:element name="checkedParameters" type="tns:CheckedParametersList"
+						minOccurs="1" maxOccurs="1">
+					</xsd:element>
+					<xsd:element name="executionStrategy" type="tns:ExecutionStrategy">
+					</xsd:element>
+				</xsd:sequence>
+				<xsd:attribute name="type" type="xsd:string"></xsd:attribute>
+				<xsd:attribute name="applyForFailedStep" type="xsd:boolean">
 				</xsd:attribute>
 				<xsd:attribute name="disabled" type="xsd:boolean"></xsd:attribute>
 			</xsd:extension>
@@ -1951,10 +1978,20 @@
 			<xsd:element name="testStepId" type="xsd:string"></xsd:element>
 			<xsd:element name="testStepSecurityCheck" type="tns:SecurityCheck"
 				maxOccurs="unbounded" minOccurs="1"></xsd:element>
+			<xsd:element name="testStepSecurityScan" type="tns:SecurityScan"
+				maxOccurs="unbounded" minOccurs="1"></xsd:element>
 		</xsd:sequence>
 	</xsd:complexType>
 
 	<xsd:complexType name="ParameterExposureCheck">
+		<xsd:sequence>
+			<xsd:element name="parameterExposureStrings" type="xsd:string"
+				maxOccurs="unbounded" minOccurs="0">
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="CrossSiteScriptingScan">
 		<xsd:sequence>
 			<xsd:element name="parameterExposureStrings" type="xsd:string"
 				maxOccurs="unbounded" minOccurs="0">
@@ -1969,6 +2006,13 @@
 		</xsd:sequence>
 	</xsd:complexType>
 
+	<xsd:complexType name="GroovySecurityScan">
+		<xsd:sequence>
+			<xsd:element name="executeScript" type="tns:Script">
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+
 	<xsd:complexType name="ReflectedXSSCheck">
 		<xsd:sequence>
 			<xsd:element name="paramToCheck" type="xsd:string"
@@ -1976,7 +2020,21 @@
 		</xsd:sequence>
 	</xsd:complexType>
 
+	<xsd:complexType name="ReflectedXSSScan">
+		<xsd:sequence>
+			<xsd:element name="paramToCheck" type="xsd:string"
+				maxOccurs="unbounded" minOccurs="0"></xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+
 	<xsd:complexType name="SQLInjectionCheck">
+		<xsd:sequence>
+			<xsd:element name="sqlInjectionStrings" type="xsd:string"
+				minOccurs="0" maxOccurs="unbounded"></xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="SQLInjectionScan">
 		<xsd:sequence>
 			<xsd:element name="sqlInjectionStrings" type="xsd:string"
 				minOccurs="0" maxOccurs="unbounded"></xsd:element>
@@ -1991,6 +2049,16 @@
 	</xsd:complexType>
 
 	<xsd:complexType name="XmlBombSecurityCheck">
+		<xsd:sequence>
+			<xsd:element name="xmlBombs" type="xsd:string" maxOccurs="unbounded"
+				minOccurs="0">
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="attachXmlBomb" type="xsd:boolean"></xsd:attribute>
+		<xsd:attribute name="xmlAttachmentPrefix" type="xsd:string"></xsd:attribute>
+	</xsd:complexType>
+
+	<xsd:complexType name="XmlBombSecurityScan">
 		<xsd:sequence>
 			<xsd:element name="xmlBombs" type="xsd:string" maxOccurs="unbounded"
 				minOccurs="0">
@@ -2020,6 +2088,14 @@
 	</xsd:complexType>
 
 	<xsd:complexType name="MaliciousAttachmentSecurityCheck">
+		<xsd:sequence>
+			<xsd:element name="element" type="tns:MaliciousAttachmentElement"
+				minOccurs="0" maxOccurs="unbounded"></xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="requestTimeout" type="xsd:int"></xsd:attribute>
+	</xsd:complexType>
+
+	<xsd:complexType name="MaliciousAttachmentSecurityScan">
 		<xsd:sequence>
 			<xsd:element name="element" type="tns:MaliciousAttachmentElement"
 				minOccurs="0" maxOccurs="unbounded"></xsd:element>
@@ -2079,7 +2155,21 @@
 		</xsd:sequence>
 	</xsd:complexType>
 
+	<xsd:complexType name="InvalidSecurityScan">
+		<xsd:sequence>
+			<xsd:element name="typesList" type="tns:SchemaTypeForSecurityScan"
+				minOccurs="1" maxOccurs="unbounded"></xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+
 	<xsd:complexType name="SchemaTypeForSecurityCheck">
+		<xsd:sequence>
+			<xsd:element name="type" type="xsd:int"></xsd:element>
+			<xsd:element name="value" type="xsd:string"></xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="SchemaTypeForSecurityScan">
 		<xsd:sequence>
 			<xsd:element name="type" type="xsd:int"></xsd:element>
 			<xsd:element name="value" type="xsd:string"></xsd:element>

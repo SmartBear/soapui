@@ -14,7 +14,7 @@ package com.eviware.soapui.security.scan;
 import javax.swing.JComponent;
 
 import com.eviware.soapui.config.FuzzerScanConfig;
-import com.eviware.soapui.config.SecurityCheckConfig;
+import com.eviware.soapui.config.SecurityScanConfig;
 import com.eviware.soapui.config.StrategyTypeConfig;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.MessageExchange;
@@ -45,7 +45,7 @@ public class FuzzerSecurityScan extends AbstractSecurityScanWithProperties
 	private int minimal;
 	private int maximal;
 
-	public FuzzerSecurityScan( TestStep testStep, SecurityCheckConfig config, ModelItem parent, String icon )
+	public FuzzerSecurityScan( TestStep testStep, SecurityScanConfig config, ModelItem parent, String icon )
 	{
 		super( testStep, config, parent, icon );
 		if( config.getConfig() == null || !( config.getConfig() instanceof FuzzerScanConfig ) )

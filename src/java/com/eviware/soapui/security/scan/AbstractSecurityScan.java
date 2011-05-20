@@ -22,7 +22,7 @@ import java.util.Map;
 import javax.swing.JComponent;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.config.SecurityCheckConfig;
+import com.eviware.soapui.config.SecurityScanConfig;
 import com.eviware.soapui.config.StrategyTypeConfig;
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
@@ -66,7 +66,7 @@ import com.eviware.soapui.security.support.SecurityTestRunListener;
  * @author robert
  * 
  */
-public abstract class AbstractSecurityScan extends AbstractWsdlModelItem<SecurityCheckConfig> implements
+public abstract class AbstractSecurityScan extends AbstractWsdlModelItem<SecurityScanConfig> implements
 		ResponseAssertion, SecurityScan
 {
 	private SecurityScanResult securityScanResult;
@@ -79,12 +79,12 @@ public abstract class AbstractSecurityScan extends AbstractWsdlModelItem<Securit
 	private TestStep originalTestStepClone;
 	private PropertyChangeSupport pcs = new PropertyChangeSupport( this );
 
-	public AbstractSecurityScan( TestStep testStep, SecurityCheckConfig config, ModelItem parent, String icon )
+	public AbstractSecurityScan( TestStep testStep, SecurityScanConfig config, ModelItem parent, String icon )
 	{
 		super( config, parent, icon );
 		if( config == null )
 		{
-			config = SecurityCheckConfig.Factory.newInstance();
+			config = SecurityScanConfig.Factory.newInstance();
 			setConfig( config );
 		}
 
@@ -108,8 +108,8 @@ public abstract class AbstractSecurityScan extends AbstractWsdlModelItem<Securit
 		 */
 		setExecutionStrategy( new ExecutionStrategyHolder( config.getExecutionStrategy() ) );
 
-		if( config.getCheckedPameters() == null )
-			config.addNewCheckedPameters();
+		if( config.getCheckedParameters() == null )
+			config.addNewCheckedParameters();
 
 		initAssertions();
 
@@ -119,7 +119,7 @@ public abstract class AbstractSecurityScan extends AbstractWsdlModelItem<Securit
 	}
 
 	@Override
-	public void copyConfig( SecurityCheckConfig config )
+	public void copyConfig( SecurityScanConfig config )
 	{
 		super.setConfig( config );
 		getConfig().setType( config.getType() );
@@ -140,9 +140,9 @@ public abstract class AbstractSecurityScan extends AbstractWsdlModelItem<Securit
 	 * 
 	 * @see
 	 * com.eviware.soapui.security.scan.SecurityScan#updateSecurityConfig(com
-	 * .eviware.soapui.config.SecurityCheckConfig)
+	 * .eviware.soapui.config.SecurityScanConfig)
 	 */
-	public void updateSecurityConfig( SecurityCheckConfig config )
+	public void updateSecurityConfig( SecurityScanConfig config )
 	{
 		setConfig( config );
 

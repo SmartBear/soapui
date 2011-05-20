@@ -12,7 +12,7 @@
 
 package com.eviware.soapui.security.registry;
 
-import com.eviware.soapui.config.SecurityCheckConfig;
+import com.eviware.soapui.config.SecurityScanConfig;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
@@ -31,7 +31,7 @@ public class XPathInjectionSecurityScanFactory extends AbstractSecurityScanFacto
 	}
 
 	@Override
-	public AbstractSecurityScan buildSecurityScan( TestStep testStep, SecurityCheckConfig config, ModelItem parent )
+	public AbstractSecurityScan buildSecurityScan( TestStep testStep, SecurityScanConfig config, ModelItem parent )
 	{
 		return new XPathInjectionSecurityScan( testStep, config, parent, null );
 	}
@@ -44,9 +44,9 @@ public class XPathInjectionSecurityScanFactory extends AbstractSecurityScanFacto
 	}
 
 	@Override
-	public SecurityCheckConfig createNewSecurityScan( String name )
+	public SecurityScanConfig createNewSecurityScan( String name )
 	{
-		SecurityCheckConfig securityCheckConfig = SecurityCheckConfig.Factory.newInstance();
+		SecurityScanConfig securityCheckConfig = SecurityScanConfig.Factory.newInstance();
 		securityCheckConfig.setType( XPathInjectionSecurityScan.TYPE );
 		securityCheckConfig.setName( name );
 		return securityCheckConfig;

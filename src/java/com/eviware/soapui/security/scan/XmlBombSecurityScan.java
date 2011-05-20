@@ -30,8 +30,8 @@ import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlString;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.config.SecurityCheckConfig;
-import com.eviware.soapui.config.XmlBombSecurityCheckConfig;
+import com.eviware.soapui.config.SecurityScanConfig;
+import com.eviware.soapui.config.XmlBombSecurityScanConfig;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStepResult;
 import com.eviware.soapui.model.ModelItem;
@@ -47,31 +47,30 @@ import com.eviware.soapui.support.types.StringToStringMap;
 public class XmlBombSecurityScan extends AbstractSecurityScanWithProperties
 {
 
-	public static final String TYPE = "XmlBombSecurityCheck"; //temp
-	public static final String TYPE2 = "XmlBombSecurityScan";
+	public static final String TYPE = "XmlBombSecurityScan";
 	public static final String NAME = "XML Bomb";
 	private static final String DEFAULT_PREFIX = "xmlbomb";
 
 	private int currentIndex = 0;
-	private XmlBombSecurityCheckConfig xmlBombConfig;
+	private XmlBombSecurityScanConfig xmlBombConfig;
 	private Map<SecurityCheckedParameter, ArrayList<String>> parameterMutations = new HashMap<SecurityCheckedParameter, ArrayList<String>>();
 	private boolean mutation;
 
-	public XmlBombSecurityScan( SecurityCheckConfig config, ModelItem parent, String icon, TestStep testStep )
+	public XmlBombSecurityScan( SecurityScanConfig config, ModelItem parent, String icon, TestStep testStep )
 	{
 		super( testStep, config, parent, icon );
-		if( config.getConfig() == null || !( config.getConfig() instanceof XmlBombSecurityCheckConfig ) )
+		if( config.getConfig() == null || !( config.getConfig() instanceof XmlBombSecurityScanConfig ) )
 			initXmlBombConfig();
 		else
-			xmlBombConfig = ( XmlBombSecurityCheckConfig )config.getConfig();
+			xmlBombConfig = ( XmlBombSecurityScanConfig )config.getConfig();
 
 		getExecutionStrategy().setImmutable( true );
 	}
 
 	private void initXmlBombConfig()
 	{
-		getConfig().setConfig( XmlBombSecurityCheckConfig.Factory.newInstance() );
-		xmlBombConfig = ( XmlBombSecurityCheckConfig )getConfig().getConfig();
+		getConfig().setConfig( XmlBombSecurityScanConfig.Factory.newInstance() );
+		xmlBombConfig = ( XmlBombSecurityScanConfig )getConfig().getConfig();
 
 		xmlBombConfig.setAttachXmlBomb( false );
 		xmlBombConfig.setXmlAttachmentPrefix( DEFAULT_PREFIX );

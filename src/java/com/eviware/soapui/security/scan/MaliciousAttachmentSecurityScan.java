@@ -22,8 +22,8 @@ import javax.swing.JComponent;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.MaliciousAttachmentConfig;
 import com.eviware.soapui.config.MaliciousAttachmentElementConfig;
-import com.eviware.soapui.config.MaliciousAttachmentSecurityCheckConfig;
-import com.eviware.soapui.config.SecurityCheckConfig;
+import com.eviware.soapui.config.MaliciousAttachmentSecurityScanConfig;
+import com.eviware.soapui.config.SecurityScanConfig;
 import com.eviware.soapui.config.StrategyTypeConfig;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.model.ModelItem;
@@ -40,12 +40,11 @@ import com.eviware.soapui.support.UISupport;
 
 public class MaliciousAttachmentSecurityScan extends AbstractSecurityScan
 {
-
-	public static final String TYPE = "MaliciousAttachmentSecurityCheck"; //temp
-	public static final String TYPE2 = "MaliciousAttachmentSecurityScan";
+	
+	public static final String TYPE = "MaliciousAttachmentSecurityScan";
 	public static final String NAME = "Malicious Attachment";
 
-	private MaliciousAttachmentSecurityCheckConfig config;
+	private MaliciousAttachmentSecurityScanConfig config;
 
 	private MaliciousAttachmentAdvancedSettingsPanel advancedSettingsPanel;
 	private MaliciousAttachmentMutationsPanel mutationsPanel;
@@ -53,18 +52,18 @@ public class MaliciousAttachmentSecurityScan extends AbstractSecurityScan
 	private int elementIndex = -1;
 	private int valueIndex = -1;
 
-	public MaliciousAttachmentSecurityScan( SecurityCheckConfig newConfig, ModelItem parent, String icon,
+	public MaliciousAttachmentSecurityScan( SecurityScanConfig newConfig, ModelItem parent, String icon,
 			TestStep testStep )
 	{
 		super( testStep, newConfig, parent, icon );
 
-		if( newConfig.getConfig() == null || !( newConfig.getConfig() instanceof MaliciousAttachmentSecurityCheckConfig ) )
+		if( newConfig.getConfig() == null || !( newConfig.getConfig() instanceof MaliciousAttachmentSecurityScanConfig ) )
 		{
 			initConfig();
 		}
 		else
 		{
-			config = ( ( MaliciousAttachmentSecurityCheckConfig )newConfig.getConfig() );
+			config = ( ( MaliciousAttachmentSecurityScanConfig )newConfig.getConfig() );
 		}
 	}
 
@@ -73,8 +72,8 @@ public class MaliciousAttachmentSecurityScan extends AbstractSecurityScan
 	 */
 	protected void initConfig()
 	{
-		getConfig().setConfig( MaliciousAttachmentSecurityCheckConfig.Factory.newInstance() );
-		config = ( MaliciousAttachmentSecurityCheckConfig )getConfig().getConfig();
+		getConfig().setConfig( MaliciousAttachmentSecurityScanConfig.Factory.newInstance() );
+		config = ( MaliciousAttachmentSecurityScanConfig )getConfig().getConfig();
 	}
 
 	private void generateFiles()
@@ -104,27 +103,27 @@ public class MaliciousAttachmentSecurityScan extends AbstractSecurityScan
 	}
 
 	@Override
-	public void updateSecurityConfig( SecurityCheckConfig config )
+	public void updateSecurityConfig( SecurityScanConfig config )
 	{
 		super.updateSecurityConfig( config );
 
 		if( this.config != null )
 		{
-			this.config = ( MaliciousAttachmentSecurityCheckConfig )getConfig().getConfig();
+			this.config = ( MaliciousAttachmentSecurityScanConfig )getConfig().getConfig();
 		}
 
 		if( advancedSettingsPanel != null )
 		{
-			advancedSettingsPanel.setConfig( ( MaliciousAttachmentSecurityCheckConfig )getConfig().getConfig() );
+			advancedSettingsPanel.setConfig( ( MaliciousAttachmentSecurityScanConfig )getConfig().getConfig() );
 		}
 
 		if( mutationsPanel != null )
 		{
-			mutationsPanel.updateConfig( ( MaliciousAttachmentSecurityCheckConfig )getConfig().getConfig() );
+			mutationsPanel.updateConfig( ( MaliciousAttachmentSecurityScanConfig )getConfig().getConfig() );
 		}
 	}
 
-	public MaliciousAttachmentSecurityCheckConfig getMaliciousAttachmentSecurityCheckConfig()
+	public MaliciousAttachmentSecurityScanConfig getMaliciousAttachmentSecurityScanConfig()
 	{
 		return config;
 	}
@@ -364,18 +363,18 @@ public class MaliciousAttachmentSecurityScan extends AbstractSecurityScan
 	}
 
 	@Override
-	public void copyConfig( SecurityCheckConfig config )
+	public void copyConfig( SecurityScanConfig config )
 	{
 		super.copyConfig( config );
 
 		if( advancedSettingsPanel != null )
 		{
-			advancedSettingsPanel.setConfig( ( MaliciousAttachmentSecurityCheckConfig )getConfig().getConfig() );
+			advancedSettingsPanel.setConfig( ( MaliciousAttachmentSecurityScanConfig )getConfig().getConfig() );
 		}
 
 		if( mutationsPanel != null )
 		{
-			mutationsPanel.updateConfig( ( MaliciousAttachmentSecurityCheckConfig )getConfig().getConfig() );
+			mutationsPanel.updateConfig( ( MaliciousAttachmentSecurityScanConfig )getConfig().getConfig() );
 		}
 	}
 

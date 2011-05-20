@@ -26,7 +26,7 @@ import org.apache.xmlbeans.XmlOptions;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.MalformedXmlAttributeConfig;
 import com.eviware.soapui.config.MalformedXmlConfig;
-import com.eviware.soapui.config.SecurityCheckConfig;
+import com.eviware.soapui.config.SecurityScanConfig;
 import com.eviware.soapui.config.StrategyTypeConfig;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.MessageExchange;
@@ -39,15 +39,14 @@ import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.security.ui.MalformedXmlAdvancedSettingsPanel;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel;
-import com.eviware.soapui.support.xml.XmlUtils;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel.AttributeXmlTreeNode;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel.XmlTreeNode;
+import com.eviware.soapui.support.xml.XmlUtils;
 
 public class MalformedXmlSecurityScan extends AbstractSecurityScanWithProperties
 {
-
-	public static final String TYPE = "MalformedXmlSecurityCheck"; //temp
-	public static final String TYPE2 = "MalformedXmlSecurityScan";
+	
+	public static final String TYPE = "MalformedXmlSecurityScan";
 	public static final String NAME = "Malformed XML";
 	private Map<SecurityCheckedParameter, ArrayList<String>> parameterMutations = new HashMap<SecurityCheckedParameter, ArrayList<String>>();
 	private boolean mutation;
@@ -55,7 +54,7 @@ public class MalformedXmlSecurityScan extends AbstractSecurityScanWithProperties
 	private MalformedXmlAttributeConfig malformedAttributeConfig;
 	private MalformedXmlAdvancedSettingsPanel advancedSettingsPanel;
 
-	public MalformedXmlSecurityScan( TestStep testStep, SecurityCheckConfig config, ModelItem parent, String icon )
+	public MalformedXmlSecurityScan( TestStep testStep, SecurityScanConfig config, ModelItem parent, String icon )
 	{
 		super( testStep, config, parent, icon );
 		if( config.getConfig() == null || !( config.getConfig() instanceof MalformedXmlConfig ) )
@@ -203,8 +202,8 @@ public class MalformedXmlSecurityScan extends AbstractSecurityScanWithProperties
 				{
 					StringBuffer buffer = new StringBuffer( value );
 					XmlObjectTreeModel model = null;
-					model = new XmlObjectTreeModel( property.getSchemaType().getTypeSystem(), XmlObject.Factory
-							.parse( value ) );
+					model = new XmlObjectTreeModel( property.getSchemaType().getTypeSystem(),
+							XmlObject.Factory.parse( value ) );
 					for( SecurityCheckedParameter param : getParameterHolder().getParameterList() )
 					{
 						if( param.getXpath() == null || param.getXpath().trim().length() == 0 )
@@ -329,8 +328,7 @@ public class MalformedXmlSecurityScan extends AbstractSecurityScanWithProperties
 			else
 			{
 				buffer.delete( nodeXml.lastIndexOf( "/" ), nodeXml.length() );
-				buffer
-						.append( ">" + malformedXmlConfig.getNewElementValue() + "</" + node.getDomNode().getNodeName() + ">" );
+				buffer.append( ">" + malformedXmlConfig.getNewElementValue() + "</" + node.getDomNode().getNodeName() + ">" );
 			}
 			result.add( buffer.toString() );
 		}
@@ -392,8 +390,8 @@ public class MalformedXmlSecurityScan extends AbstractSecurityScanWithProperties
 				// cut start tag and remove '/' from end tag
 				buffer = new StringBuffer( nodeXml );
 				buffer.delete( 0, buffer.indexOf( ">" ) + 1 );
-				buffer.delete( buffer.indexOf( "</" + node.getDomNode().getNodeName() + ">" ) + 1, buffer.indexOf( "</"
-						+ node.getDomNode().getNodeName() + ">" ) + 2 );
+				buffer.delete( buffer.indexOf( "</" + node.getDomNode().getNodeName() + ">" ) + 1,
+						buffer.indexOf( "</" + node.getDomNode().getNodeName() + ">" ) + 2 );
 				result.add( buffer.toString() );
 			}
 			else
@@ -542,7 +540,7 @@ public class MalformedXmlSecurityScan extends AbstractSecurityScanWithProperties
 
 		return advancedSettingsPanel.getPanel();
 	}
-	
+
 	@Override
 	public void release()
 	{

@@ -3,7 +3,7 @@ package com.eviware.soapui.security.scan;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.eviware.soapui.config.SecurityCheckConfig;
+import com.eviware.soapui.config.SecurityScanConfig;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.MessageExchange;
@@ -30,12 +30,12 @@ public abstract class AbstractSecurityScanWithProperties extends AbstractSecurit
 	public static final String SECURITY_CHANGED_PARAMETERS = "SecurityChangedParameters";
 	private SecurityCheckedParameterHolder parameterHolder;
 
-	public AbstractSecurityScanWithProperties( TestStep testStep, SecurityCheckConfig config, ModelItem parent,
+	public AbstractSecurityScanWithProperties( TestStep testStep, SecurityScanConfig config, ModelItem parent,
 			String icon )
 	{
 		super( testStep, config, parent, icon );
 
-		setParameterHolder( new SecurityCheckedParameterHolder( this, getConfig().getCheckedPameters() ) );
+		setParameterHolder( new SecurityCheckedParameterHolder( this, getConfig().getCheckedParameters() ) );
 	}
 
 	public SecurityCheckedParameterHolder getParameterHolder()
@@ -49,14 +49,14 @@ public abstract class AbstractSecurityScanWithProperties extends AbstractSecurit
 	}
 
 	@Override
-	public void copyConfig( SecurityCheckConfig config )
+	public void copyConfig( SecurityScanConfig config )
 	{
 		super.copyConfig( config );
-		getConfig().setCheckedPameters( config.getCheckedPameters() );
+		getConfig().setCheckedParameters( config.getCheckedParameters() );
 		if( parameterHolder != null )
 			parameterHolder.release();
 
-		parameterHolder = new SecurityCheckedParameterHolder( this, config.getCheckedPameters() );
+		parameterHolder = new SecurityCheckedParameterHolder( this, config.getCheckedParameters() );
 	}
 
 	public XPathReference[] getXPathReferences()
@@ -79,13 +79,13 @@ public abstract class AbstractSecurityScanWithProperties extends AbstractSecurit
 	}
 
 	@Override
-	public void updateSecurityConfig( SecurityCheckConfig config )
+	public void updateSecurityConfig( SecurityScanConfig config )
 	{
 		super.updateSecurityConfig( config );
 
-		if( getParameterHolder() != null && getConfig().getCheckedPameters() != null )
+		if( getParameterHolder() != null && getConfig().getCheckedParameters() != null )
 		{
-			getParameterHolder().updateConfig( config.getCheckedPameters() );
+			getParameterHolder().updateConfig( config.getCheckedParameters() );
 		}
 	}
 

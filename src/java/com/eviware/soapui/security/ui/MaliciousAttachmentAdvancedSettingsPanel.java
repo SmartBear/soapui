@@ -2,7 +2,7 @@ package com.eviware.soapui.security.ui;
 
 import javax.swing.JComponent;
 
-import com.eviware.soapui.config.MaliciousAttachmentSecurityCheckConfig;
+import com.eviware.soapui.config.MaliciousAttachmentSecurityScanConfig;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.x.form.XFormField;
 import com.eviware.x.form.XFormFieldListener;
@@ -15,9 +15,9 @@ import com.eviware.x.impl.swing.JFormDialog;
 public class MaliciousAttachmentAdvancedSettingsPanel
 {
 	private JFormDialog dialog;
-	private MaliciousAttachmentSecurityCheckConfig config;
+	private MaliciousAttachmentSecurityScanConfig config;
 
-	public MaliciousAttachmentAdvancedSettingsPanel( MaliciousAttachmentSecurityCheckConfig config )
+	public MaliciousAttachmentAdvancedSettingsPanel( MaliciousAttachmentSecurityScanConfig config )
 	{
 		this.config = config;
 		dialog = ( JFormDialog )ADialogBuilder.buildDialog( AdvancedSettings.class );
@@ -58,12 +58,12 @@ public class MaliciousAttachmentAdvancedSettingsPanel
 		return dialog.getPanel();
 	}
 
-	public MaliciousAttachmentSecurityCheckConfig getConfig()
+	public MaliciousAttachmentSecurityScanConfig getConfig()
 	{
 		return config;
 	}
 
-	public void setConfig( MaliciousAttachmentSecurityCheckConfig config )
+	public void setConfig( MaliciousAttachmentSecurityScanConfig config )
 	{
 		this.config = config;
 	}

@@ -27,9 +27,9 @@ import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.impl.schema.SchemaTypeImpl;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.config.InvalidSecurityCheckConfig;
-import com.eviware.soapui.config.SchemaTypeForSecurityCheckConfig;
-import com.eviware.soapui.config.SecurityCheckConfig;
+import com.eviware.soapui.config.InvalidSecurityScanConfig;
+import com.eviware.soapui.config.SchemaTypeForSecurityScanConfig;
+import com.eviware.soapui.config.SecurityScanConfig;
 import com.eviware.soapui.config.StrategyTypeConfig;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.MessageExchange;
@@ -44,64 +44,63 @@ import com.eviware.soapui.security.ui.InvalidTypesTable;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel;
-import com.eviware.soapui.support.xml.XmlUtils;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel.XmlTreeNode;
+import com.eviware.soapui.support.xml.XmlUtils;
 
 public class InvalidTypesSecurityScan extends AbstractSecurityScanWithProperties
 {
 
-	public final static String TYPE = "InvalidTypesSecurityCheck";
-	public final static String TYPE2 = "InvalidTypesSecurityScan"; //temp
+	public final static String TYPE = "InvalidTypesSecurityScan";
 	public final static String NAME = "Invalid Types";
 
 	private InvalidTypesForSOAP invalidTypes;
 	private TypeLabel typeLabel = new TypeLabel();
-	private InvalidSecurityCheckConfig invalidTypeConfig;
+	private InvalidSecurityScanConfig invalidTypeConfig;
 
 	private Map<SecurityCheckedParameter, ArrayList<String>> parameterMutations = new HashMap<SecurityCheckedParameter, ArrayList<String>>();
 
 	private boolean mutation;
 
-	public InvalidTypesSecurityScan( TestStep testStep, SecurityCheckConfig config, ModelItem parent, String icon )
+	public InvalidTypesSecurityScan( TestStep testStep, SecurityScanConfig config, ModelItem parent, String icon )
 	{
 		super( testStep, config, parent, icon );
 
-		if( config.getConfig() == null || !( config.getConfig() instanceof InvalidSecurityCheckConfig ) )
+		if( config.getConfig() == null || !( config.getConfig() instanceof InvalidSecurityScanConfig ) )
 			initInvalidTypesConfig();
 		else
-			invalidTypeConfig = ( InvalidSecurityCheckConfig )config.getConfig();
+			invalidTypeConfig = ( InvalidSecurityScanConfig )config.getConfig();
 
 	}
 
 	@Override
-	public void updateSecurityConfig( SecurityCheckConfig config )
+	public void updateSecurityConfig( SecurityScanConfig config )
 	{
 		super.updateSecurityConfig( config );
 
 		if( invalidTypeConfig != null )
 		{
-			invalidTypeConfig = ( InvalidSecurityCheckConfig )getConfig().getConfig();
+			invalidTypeConfig = ( InvalidSecurityScanConfig )getConfig().getConfig();
 		}
 	}
 
-	public InvalidSecurityCheckConfig getInvalidTypeConfig()
+	public InvalidSecurityScanConfig getInvalidTypeConfig()
 	{
 		if( invalidTypeConfig == null || getConfig().getConfig() == null
-				|| !( getConfig().getConfig() instanceof InvalidSecurityCheckConfig ) )
+				|| !( getConfig().getConfig() instanceof InvalidSecurityScanConfig ) )
 			initInvalidTypesConfig();
 		return invalidTypeConfig;
 	}
 
 	private void initInvalidTypesConfig()
 	{
-		getConfig().setConfig( InvalidSecurityCheckConfig.Factory.newInstance() );
-		invalidTypeConfig = ( InvalidSecurityCheckConfig )getConfig().getConfig();
+		getConfig().setConfig( InvalidSecurityScanConfig.Factory.newInstance() );
+		invalidTypeConfig = ( InvalidSecurityScanConfig )getConfig().getConfig();
 		invalidTypes = new InvalidTypesForSOAP();
 
 		// add all types..
 		for( int key : invalidTypes.getDefaultTypeMap().keySet() )
 		{
-			SchemaTypeForSecurityCheckConfig newType = invalidTypeConfig.addNewTypesList();
+			SchemaTypeForSecurityScanConfig newType = invalidTypeConfig.addNewTypesList();
 			newType.setValue( invalidTypes.getDefaultTypeMap().get( key ) );
 			newType.setType( key );
 		}
@@ -114,11 +113,9 @@ public class InvalidTypesSecurityScan extends AbstractSecurityScanWithProperties
 	}
 
 	/*
-	 * There is no advanced settings/special for this security scan
-	 * (non-Javadoc)
+	 * There is no advanced settings/special for this security scan (non-Javadoc)
 	 * 
-	 * @see
-	 * com.eviware.soapui.security.scan.AbstractSecurityScan#getComponent()
+	 * @see com.eviware.soapui.security.scan.AbstractSecurityScan#getComponent()
 	 */
 	@Override
 	public JComponent getComponent()
@@ -226,8 +223,8 @@ public class InvalidTypesSecurityScan extends AbstractSecurityScanWithProperties
 				if( XmlUtils.seemsToBeXml( value ) )
 				{
 					XmlObjectTreeModel model = null;
-					model = new XmlObjectTreeModel( property.getSchemaType().getTypeSystem(), XmlObject.Factory
-							.parse( value ) );
+					model = new XmlObjectTreeModel( property.getSchemaType().getTypeSystem(),
+							XmlObject.Factory.parse( value ) );
 					for( SecurityCheckedParameter param : getParameterHolder().getParameterList() )
 					{
 						if( param.getXpath() == null || param.getXpath().trim().length() == 0 )
@@ -290,7 +287,7 @@ public class InvalidTypesSecurityScan extends AbstractSecurityScanWithProperties
 				// no xpath, just put invalid type value in parameter value
 				if( parameter.getXpath() == null || parameter.getXpath().trim().length() == 0 )
 				{
-					for( SchemaTypeForSecurityCheckConfig invalidType : invalidTypeConfig.getTypesListList() )
+					for( SchemaTypeForSecurityScanConfig invalidType : invalidTypeConfig.getTypesListList() )
 					{
 
 						if( !parameterMutations.containsKey( parameter ) )
@@ -317,9 +314,9 @@ public class InvalidTypesSecurityScan extends AbstractSecurityScanWithProperties
 						XmlTreeNode[] nodes = model.selectTreeNodes( context.expand( parameter.getXpath() ) );
 
 						// for each invalid type set all nodes
-						List<SchemaTypeForSecurityCheckConfig> invalidTypes = invalidTypeConfig.getTypesListList();
+						List<SchemaTypeForSecurityScanConfig> invalidTypes = invalidTypeConfig.getTypesListList();
 
-						for( SchemaTypeForSecurityCheckConfig type : invalidTypes )
+						for( SchemaTypeForSecurityScanConfig type : invalidTypes )
 						{
 
 							if( nodes.length > 0 )
@@ -527,8 +524,8 @@ public class InvalidTypesSecurityScan extends AbstractSecurityScanWithProperties
 		{
 			try
 			{
-				xmlObjectTreeModel = new XmlObjectTreeModel( tp.getSchemaType().getTypeSystem(), XmlObject.Factory
-						.parse( tp.getValue() ) );
+				xmlObjectTreeModel = new XmlObjectTreeModel( tp.getSchemaType().getTypeSystem(),
+						XmlObject.Factory.parse( tp.getValue() ) );
 			}
 			catch( XmlException e )
 			{

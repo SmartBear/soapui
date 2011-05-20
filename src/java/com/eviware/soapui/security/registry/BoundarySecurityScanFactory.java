@@ -12,7 +12,7 @@
 
 package com.eviware.soapui.security.registry;
 
-import com.eviware.soapui.config.SecurityCheckConfig;
+import com.eviware.soapui.config.SecurityScanConfig;
 import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
@@ -36,16 +36,16 @@ public class BoundarySecurityScanFactory extends AbstractSecurityScanFactory
 	}
 
 	@Override
-	public SecurityCheckConfig createNewSecurityScan( String name )
+	public SecurityScanConfig createNewSecurityScan( String name )
 	{
-		SecurityCheckConfig securityCheckConfig = SecurityCheckConfig.Factory.newInstance();
+		SecurityScanConfig securityCheckConfig = SecurityScanConfig.Factory.newInstance();
 		securityCheckConfig.setType( BoundarySecurityScan.TYPE );
 		securityCheckConfig.setName( name );
 		return securityCheckConfig;
 	}
 
 	@Override
-	public AbstractSecurityScan buildSecurityScan( TestStep testStep, SecurityCheckConfig config, ModelItem parent )
+	public AbstractSecurityScan buildSecurityScan( TestStep testStep, SecurityScanConfig config, ModelItem parent )
 	{
 		return new BoundarySecurityScan( testStep, config, parent, null );
 	}

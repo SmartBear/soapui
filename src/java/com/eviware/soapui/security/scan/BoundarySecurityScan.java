@@ -27,7 +27,7 @@ import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.impl.schema.SchemaTypeImpl;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.config.SecurityCheckConfig;
+import com.eviware.soapui.config.SecurityScanConfig;
 import com.eviware.soapui.config.StrategyTypeConfig;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.MessageExchange;
@@ -44,21 +44,20 @@ import com.eviware.soapui.support.SecurityScanUtil;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel;
-import com.eviware.soapui.support.xml.XmlUtils;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel.XmlTreeNode;
+import com.eviware.soapui.support.xml.XmlUtils;
 
 public class BoundarySecurityScan extends AbstractSecurityScanWithProperties
 {
 
-	public static final String TYPE = "BoundaryCheck";
-	public static final String TYPE2 = "BoundaryScan";//temp
+	public static final String TYPE = "BoundaryScan";
 	public static final String NAME = "Boundary Scan";
 	private static final String REQUEST_MUTATIONS_STACK = "RequestMutationsStack";
 	private RestrictionLabel restrictionLabel = new RestrictionLabel();
 
 	StrategyTypeConfig.Enum strategy = StrategyTypeConfig.ONE_BY_ONE;
 
-	public BoundarySecurityScan( TestStep testStep, SecurityCheckConfig config, ModelItem parent, String icon )
+	public BoundarySecurityScan( TestStep testStep, SecurityScanConfig config, ModelItem parent, String icon )
 	{
 		super( testStep, config, parent, icon );
 	}
@@ -158,8 +157,8 @@ public class BoundarySecurityScan extends AbstractSecurityScanWithProperties
 						else
 						{
 							SchemaTypeImpl simpleType = ( SchemaTypeImpl )mynode.getSchemaType();
-							XmlObjectTreeModel model2 = new XmlObjectTreeModel( simpleType.getTypeSystem(), simpleType
-									.getParseObject() );
+							XmlObjectTreeModel model2 = new XmlObjectTreeModel( simpleType.getTypeSystem(),
+									simpleType.getParseObject() );
 							extractRestrictions( model2, context, mynode, model, scp, stsmap );
 						}
 					}
@@ -390,8 +389,8 @@ public class BoundarySecurityScan extends AbstractSecurityScanWithProperties
 		{
 			try
 			{
-				xmlObjectTreeModel = new XmlObjectTreeModel( tp.getSchemaType().getTypeSystem(), XmlObject.Factory
-						.parse( tp.getValue() ) );
+				xmlObjectTreeModel = new XmlObjectTreeModel( tp.getSchemaType().getTypeSystem(),
+						XmlObject.Factory.parse( tp.getValue() ) );
 			}
 			catch( XmlException e )
 			{
@@ -416,8 +415,8 @@ public class BoundarySecurityScan extends AbstractSecurityScanWithProperties
 				SchemaTypeImpl simpleType = ( SchemaTypeImpl )treeNodes[0].getSchemaType();
 				if( simpleType != null && !simpleType.isNoType() )
 				{
-					XmlObjectTreeModel model2 = new XmlObjectTreeModel( simpleType.getTypeSystem(), simpleType
-							.getParseObject() );
+					XmlObjectTreeModel model2 = new XmlObjectTreeModel( simpleType.getTypeSystem(),
+							simpleType.getParseObject() );
 					list = BoundaryRestrictionUtill.getRestrictions( model2.getRootNode(), new ArrayList<String>() );
 					if( list.isEmpty() )
 					{

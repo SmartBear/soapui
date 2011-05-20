@@ -27,7 +27,7 @@ import org.jdesktop.swingx.JXTable;
 
 import com.eviware.soapui.config.MaliciousAttachmentConfig;
 import com.eviware.soapui.config.MaliciousAttachmentElementConfig;
-import com.eviware.soapui.config.MaliciousAttachmentSecurityCheckConfig;
+import com.eviware.soapui.config.MaliciousAttachmentSecurityScanConfig;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.security.support.MaliciousAttachmentFilesListForm;
@@ -57,7 +57,7 @@ import com.eviware.x.impl.swing.JTextFieldFormField;
 public class MaliciousAttachmentMutationsPanel
 {
 	private JFormDialog dialog;
-	private MaliciousAttachmentSecurityCheckConfig config;
+	private MaliciousAttachmentSecurityScanConfig config;
 	private JButton addGeneratedButton;
 	private JButton removeGeneratedButton;
 	private JButton addReplacementButton;
@@ -67,7 +67,7 @@ public class MaliciousAttachmentMutationsPanel
 	private MaliciousAttachmentListToTableHolder holder = new MaliciousAttachmentListToTableHolder();
 	private JFormDialog tablesDialog;
 
-	public MaliciousAttachmentMutationsPanel( MaliciousAttachmentSecurityCheckConfig config, WsdlRequest request )
+	public MaliciousAttachmentMutationsPanel( MaliciousAttachmentSecurityScanConfig config, WsdlRequest request )
 	{
 		this.config = config;
 		this.request = request;
@@ -555,17 +555,17 @@ public class MaliciousAttachmentMutationsPanel
 		return new XPathCellRender();
 	}
 
-	public MaliciousAttachmentSecurityCheckConfig getConfig()
+	public MaliciousAttachmentSecurityScanConfig getConfig()
 	{
 		return config;
 	}
 
-	public void setConfig( MaliciousAttachmentSecurityCheckConfig config )
+	public void setConfig( MaliciousAttachmentSecurityScanConfig config )
 	{
 		this.config = config;
 	}
 
-	public void updateConfig( MaliciousAttachmentSecurityCheckConfig config )
+	public void updateConfig( MaliciousAttachmentSecurityScanConfig config )
 	{
 		setConfig( config );
 

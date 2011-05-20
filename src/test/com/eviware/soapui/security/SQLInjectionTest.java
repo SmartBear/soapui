@@ -19,7 +19,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.config.SecurityCheckConfig;
+import com.eviware.soapui.config.SecurityScanConfig;
 import com.eviware.soapui.security.scan.SQLInjectionScan;
 
 /**
@@ -43,11 +43,11 @@ public class SQLInjectionTest extends AbstractSecurityTestCaseWithMockService
 	}
 
 	@Override
-	protected void addSecurityCheckConfig( SecurityCheckConfig securityCheckConfig )
+	protected void addSecurityScanConfig( SecurityScanConfig securityScanConfig )
 	{
 
 		SQLInjectionScan sqlCheck = ( SQLInjectionScan )SoapUI.getSoapUICore().getSecurityScanRegistry()
-				.getFactory( securityCheckType ).buildSecurityScan( testStep, securityCheckConfig, null );
+				.getFactory( securityCheckType ).buildSecurityScan( testStep, securityScanConfig, null );
 
 		List<String> params = new ArrayList<String>();
 		params.add( "q" );
