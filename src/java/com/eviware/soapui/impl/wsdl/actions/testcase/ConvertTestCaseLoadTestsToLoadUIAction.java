@@ -14,6 +14,8 @@ package com.eviware.soapui.impl.wsdl.actions.testcase;
 
 import java.io.IOException;
 
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.actions.project.StartLoadUI;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
@@ -42,59 +44,64 @@ public class ConvertTestCaseLoadTestsToLoadUIAction extends AbstractSoapUIAction
 	@Override
 	public void perform( WsdlTestCase testCase, Object param )
 	{
-		if( !StartLoadUI.testCajoConnection() )
-		{
-			if( UISupport.confirm( StartLoadUI.LOADUI_LAUNCH_QUESTION, StartLoadUI.LOADUI_LAUNCH_TITLE ) )
-			{
-				StartLoadUI.launchLoadUI();
-			}
-			return;
-		}
-		XFormDialog dialog = ADialogBuilder.buildDialog( TestCaseForm.class );
 
-		dialog.setOptions( TestCaseForm.LOADUIPROJECT, IntegrationUtils.getAvailableProjects() );
-		if( !StringUtils.isNullOrEmpty( IntegrationUtils.getOpenedProjectName() ) )
+		if( IntegrationUtils.forceSaveProject( testCase.getTestSuite().getProject() ) )
 		{
-			dialog.setValue( TestCaseForm.LOADUIPROJECT, IntegrationUtils.getOpenedProjectName() );
-		}
-		else
-		{
-			dialog.setValue( TestCaseForm.LOADUIPROJECT, IntegrationUtils.CREATE_NEW_OPTION );
-		}
-		dialog.setOptions( TestCaseForm.LOADTESTS, ModelSupport.getNames( testCase.getLoadTestList() ) );
-		if( dialog.show() )
-		{
-			if( dialog.getReturnValue() == XFormDialog.OK_OPTION )
+
+			if( !StartLoadUI.testCajoConnection() )
 			{
-				String loadUIProject = dialog.getValue( TestCaseForm.LOADUIPROJECT );
-				String openedProjectName = IntegrationUtils.getOpenedProjectName();
-				if( !StringUtils.isNullOrEmpty( openedProjectName ) && !loadUIProject.equals( openedProjectName ) )
+				if( UISupport.confirm( StartLoadUI.LOADUI_LAUNCH_QUESTION, StartLoadUI.LOADUI_LAUNCH_TITLE ) )
 				{
-					if( UISupport.confirm( "Close currently open [" + IntegrationUtils.getOpenedProjectName()
-							+ "] loadUI project", "Close loadUI project" ) )
+					StartLoadUI.launchLoadUI();
+				}
+				return;
+			}
+			XFormDialog dialog = ADialogBuilder.buildDialog( TestCaseForm.class );
+
+			dialog.setOptions( TestCaseForm.LOADUIPROJECT, IntegrationUtils.getAvailableProjects() );
+			if( !StringUtils.isNullOrEmpty( IntegrationUtils.getOpenedProjectName() ) )
+			{
+				dialog.setValue( TestCaseForm.LOADUIPROJECT, IntegrationUtils.getOpenedProjectName() );
+			}
+			else
+			{
+				dialog.setValue( TestCaseForm.LOADUIPROJECT, IntegrationUtils.CREATE_NEW_OPTION );
+			}
+			dialog.setOptions( TestCaseForm.LOADTESTS, ModelSupport.getNames( testCase.getLoadTestList() ) );
+			if( dialog.show() )
+			{
+				if( dialog.getReturnValue() == XFormDialog.OK_OPTION )
+				{
+					String loadUIProject = dialog.getValue( TestCaseForm.LOADUIPROJECT );
+					String openedProjectName = IntegrationUtils.getOpenedProjectName();
+					if( !StringUtils.isNullOrEmpty( openedProjectName ) && !loadUIProject.equals( openedProjectName ) )
 					{
-						IntegrationUtils.closeOpenedLoadUIProject();
+						if( UISupport.confirm( "Close currently open [" + IntegrationUtils.getOpenedProjectName()
+								+ "] loadUI project", "Close loadUI project" ) )
+						{
+							IntegrationUtils.closeOpenedLoadUIProject();
+						}
+						else
+						{
+							return;
+						}
 					}
-					else
+					String[] soapuiLoadTests = StringUtils.toStringArray( ( ( XFormMultiSelectList )dialog
+							.getFormField( TestCaseForm.LOADTESTS ) ).getSelectedOptions() );
+					if( soapuiLoadTests.length == 0 )
 					{
+						UISupport.showErrorMessage( "No LoadTests selected." );
 						return;
 					}
-				}
-				String[] soapuiLoadTests = StringUtils.toStringArray( ( ( XFormMultiSelectList )dialog
-						.getFormField( TestCaseForm.LOADTESTS ) ).getSelectedOptions() );
-				if( soapuiLoadTests.length == 0 )
-				{
-					UISupport.showErrorMessage( "No LoadTests selected." );
-					return;
-				}
-				try
-				{
-					IntegrationUtils.exportMultipleLoadTestToLoadUI( testCase, soapuiLoadTests, loadUIProject );
-				}
-				catch( IOException e )
-				{
-					UISupport.showInfoMessage( "Error while opening selected loadUI project" );
-					return;
+					try
+					{
+						IntegrationUtils.exportMultipleLoadTestToLoadUI( testCase, soapuiLoadTests, loadUIProject );
+					}
+					catch( IOException e )
+					{
+						UISupport.showInfoMessage( "Error while opening selected loadUI project" );
+						return;
+					}
 				}
 			}
 		}

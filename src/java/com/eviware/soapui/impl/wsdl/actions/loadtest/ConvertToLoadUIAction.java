@@ -15,6 +15,8 @@ package com.eviware.soapui.impl.wsdl.actions.loadtest;
 import java.io.IOException;
 import java.util.HashMap;
 
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.actions.project.StartLoadUI;
 import com.eviware.soapui.impl.wsdl.loadtest.WsdlLoadTest;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
@@ -43,83 +45,87 @@ public class ConvertToLoadUIAction extends AbstractSoapUIAction<WsdlLoadTest>
 
 	public void perform( WsdlLoadTest loadTest, Object param )
 	{
-		if( !StartLoadUI.testCajoConnection() )
+		if( IntegrationUtils.forceSaveProject( loadTest.getTestCase().getTestSuite().getProject() ) )
 		{
-			if( UISupport.confirm( StartLoadUI.LOADUI_LAUNCH_QUESTION, StartLoadUI.LOADUI_LAUNCH_TITLE ) )
+			if( !StartLoadUI.testCajoConnection() )
 			{
-				StartLoadUI.launchLoadUI();
+				if( UISupport.confirm( StartLoadUI.LOADUI_LAUNCH_QUESTION, StartLoadUI.LOADUI_LAUNCH_TITLE ) )
+				{
+					StartLoadUI.launchLoadUI();
+				}
+				return;
 			}
-			return;
-		}
-		if( dialog == null )
-			dialog = ADialogBuilder.buildDialog( Form.class );
 
-		dialog.getFormField( Form.PROJECT ).addFormFieldListener( new XFormFieldListener()
-		{
+			if( dialog == null )
+				dialog = ADialogBuilder.buildDialog( Form.class );
 
-			public void valueChanged( XFormField sourceField, String newValue, String oldValue )
+			dialog.getFormField( Form.PROJECT ).addFormFieldListener( new XFormFieldListener()
 			{
-				dialog.setOptions( Form.TESTCASE, IntegrationUtils.getAvailableTestCases( newValue ) );
-				if( dialog.getValue( Form.TESTCASE ).equals( IntegrationUtils.CREATE_ON_PROJECT_LEVEL ) )
-				{
-					dialog.setOptions( Form.SOAPUIRUNNER,
-							IntegrationUtils.getAvailableRunners( newValue, IntegrationUtils.CREATE_ON_PROJECT_LEVEL ) );
-				}
-			}
-		} );
-		dialog.getFormField( Form.TESTCASE ).addFormFieldListener( new XFormFieldListener()
-		{
 
-			public void valueChanged( XFormField sourceField, String newValue, String oldValue )
+				public void valueChanged( XFormField sourceField, String newValue, String oldValue )
+				{
+					dialog.setOptions( Form.TESTCASE, IntegrationUtils.getAvailableTestCases( newValue ) );
+					if( dialog.getValue( Form.TESTCASE ).equals( IntegrationUtils.CREATE_ON_PROJECT_LEVEL ) )
+					{
+						dialog.setOptions( Form.SOAPUIRUNNER, IntegrationUtils.getAvailableRunners( newValue,
+								IntegrationUtils.CREATE_ON_PROJECT_LEVEL ) );
+					}
+				}
+			} );
+			dialog.getFormField( Form.TESTCASE ).addFormFieldListener( new XFormFieldListener()
 			{
-				if( newValue.equals( IntegrationUtils.CREATE_NEW_OPTION ) )
+
+				public void valueChanged( XFormField sourceField, String newValue, String oldValue )
 				{
-					dialog.setOptions( Form.SOAPUIRUNNER, new String[] { IntegrationUtils.CREATE_NEW_OPTION } );
+					if( newValue.equals( IntegrationUtils.CREATE_NEW_OPTION ) )
+					{
+						dialog.setOptions( Form.SOAPUIRUNNER, new String[] { IntegrationUtils.CREATE_NEW_OPTION } );
+					}
+					else
+					{
+						dialog.setOptions( Form.SOAPUIRUNNER, IntegrationUtils.getAvailableRunners( dialog
+								.getValue( Form.PROJECT ), newValue ) );
+					}
 				}
-				else
-				{
-					dialog.setOptions( Form.SOAPUIRUNNER,
-							IntegrationUtils.getAvailableRunners( dialog.getValue( Form.PROJECT ), newValue ) );
-				}
+			} );
+
+			dialog.setOptions( Form.PROJECT, IntegrationUtils.getAvailableProjects() );
+			if( !StringUtils.isNullOrEmpty( IntegrationUtils.getOpenedProjectName() ) )
+			{
+				dialog.setValue( Form.PROJECT, IntegrationUtils.getOpenedProjectName() );
 			}
-		} );
+			else
+			{
+				dialog.setValue( Form.PROJECT, IntegrationUtils.CREATE_NEW_OPTION );
+			}
+			dialog.setOptions( Form.TESTCASE, IntegrationUtils.getAvailableTestCases( dialog.getValue( Form.PROJECT ) ) );
+			if( !dialog.getValue( Form.PROJECT ).equals( IntegrationUtils.getOpenedProjectName() ) )
+			{
+				dialog.setValue( Form.TESTCASE, IntegrationUtils.CREATE_ON_PROJECT_LEVEL );
+			}
 
-		dialog.setOptions( Form.PROJECT, IntegrationUtils.getAvailableProjects() );
-		if( !StringUtils.isNullOrEmpty( IntegrationUtils.getOpenedProjectName() ) )
-		{
-			dialog.setValue( Form.PROJECT, IntegrationUtils.getOpenedProjectName() );
-		}
-		else
-		{
-			dialog.setValue( Form.PROJECT, IntegrationUtils.CREATE_NEW_OPTION );
-		}
-		dialog.setOptions( Form.TESTCASE, IntegrationUtils.getAvailableTestCases( dialog.getValue( Form.PROJECT ) ) );
-		if( !dialog.getValue( Form.PROJECT ).equals( IntegrationUtils.getOpenedProjectName() ) )
-		{
-			dialog.setValue( Form.TESTCASE, IntegrationUtils.CREATE_ON_PROJECT_LEVEL );
-		}
-
-		dialog.setOptions( Form.SOAPUIRUNNER,
-				IntegrationUtils.getAvailableRunners( dialog.getValue( Form.PROJECT ), dialog.getValue( Form.TESTCASE ) ) );
-		dialog.setValue( Form.SOAPUIRUNNER, IntegrationUtils.CREATE_NEW_OPTION );
-		if( dialog.show() )
-		{
-			String targetProjectString = dialog.getValue( Form.PROJECT );
-			String targetTestCaseName = !dialog.getValue( Form.TESTCASE )
-					.equals( IntegrationUtils.CREATE_ON_PROJECT_LEVEL ) ? dialog.getValue( Form.TESTCASE ) : null;
-			String targetRunnerName = dialog.getValue( Form.SOAPUIRUNNER );
-			String openedProjectName = IntegrationUtils.getOpenedProjectName();
-			if( !StringUtils.isNullOrEmpty( openedProjectName ) && !targetProjectString.equals( openedProjectName ) )
-				if( UISupport.confirm( "Close currently open [" + IntegrationUtils.getOpenedProjectName()
-						+ "] loadUI project", "Close loadUI project" ) )
-				{
-					IntegrationUtils.closeOpenedLoadUIProject();
-				}
-				else
-				{
-					return;
-				}
-			exportToLoadUI( loadTest, targetProjectString, targetTestCaseName, targetRunnerName );
+			dialog.setOptions( Form.SOAPUIRUNNER, IntegrationUtils.getAvailableRunners( dialog.getValue( Form.PROJECT ),
+					dialog.getValue( Form.TESTCASE ) ) );
+			dialog.setValue( Form.SOAPUIRUNNER, IntegrationUtils.CREATE_NEW_OPTION );
+			if( dialog.show() )
+			{
+				String targetProjectString = dialog.getValue( Form.PROJECT );
+				String targetTestCaseName = !dialog.getValue( Form.TESTCASE ).equals(
+						IntegrationUtils.CREATE_ON_PROJECT_LEVEL ) ? dialog.getValue( Form.TESTCASE ) : null;
+				String targetRunnerName = dialog.getValue( Form.SOAPUIRUNNER );
+				String openedProjectName = IntegrationUtils.getOpenedProjectName();
+				if( !StringUtils.isNullOrEmpty( openedProjectName ) && !targetProjectString.equals( openedProjectName ) )
+					if( UISupport.confirm( "Close currently open [" + IntegrationUtils.getOpenedProjectName()
+							+ "] loadUI project", "Close loadUI project" ) )
+					{
+						IntegrationUtils.closeOpenedLoadUIProject();
+					}
+					else
+					{
+						return;
+					}
+				exportToLoadUI( loadTest, targetProjectString, targetTestCaseName, targetRunnerName );
+			}
 		}
 	}
 

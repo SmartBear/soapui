@@ -774,6 +774,7 @@ public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase
 		return runner == null ? lastRunner : runner;
 	}
 
+	@SuppressWarnings( "serial" )
 	public class SynchronizeWithLoadUIAction extends AbstractAction
 	{
 		public SynchronizeWithLoadUIAction()
@@ -785,20 +786,21 @@ public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase
 		public void actionPerformed( ActionEvent e )
 		{
 			WsdlProject project = testCase.getTestSuite().getProject();
-			try
-			{
-				if( StringUtils.hasContent( project.getPath() ) || project.getWorkspace() == null )
-					project.save();
-				else
-					project.save( project.getWorkspace().getProjectRoot() );
-			}
-			catch( IOException e1 )
-			{
-				UISupport.showErrorMessage( "Failed to save project; " + e1 );
-			}
+//			try
+//			{
+//				if( StringUtils.hasContent( project.getPath() ) || project.getWorkspace() == null )
+//					project.save();
+//				else
+//					project.save( project.getWorkspace().getProjectRoot() );
+//			}
+//			catch( IOException e1 )
+//			{
+//				UISupport.showErrorMessage( "Failed to save project; " + e1 );
+//			}
 			// IntegrationUtils.removeLoadUILoadedProject( new File(
 			// project.getPath() ) );
-			IntegrationUtils.bringLoadUIToFront();
+			if( IntegrationUtils.forceSaveProject( project ) )
+				IntegrationUtils.bringLoadUIToFront();
 		}
 	}
 

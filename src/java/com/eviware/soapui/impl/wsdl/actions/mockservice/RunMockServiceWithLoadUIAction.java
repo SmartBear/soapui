@@ -15,6 +15,8 @@ package com.eviware.soapui.impl.wsdl.actions.mockservice;
 import java.io.IOException;
 import java.util.HashMap;
 
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.actions.project.StartLoadUI;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockService;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
@@ -42,122 +44,126 @@ public class RunMockServiceWithLoadUIAction extends AbstractSoapUIAction<WsdlMoc
 
 	public void perform( WsdlMockService mockService, Object param )
 	{
-		if( !StartLoadUI.testCajoConnection() )
-		{
-			if( UISupport.confirm( StartLoadUI.LOADUI_LAUNCH_QUESTION, StartLoadUI.LOADUI_LAUNCH_TITLE ) )
-			{
-				StartLoadUI.launchLoadUI();
-			}
-			return;
-		}
-		final String soapUIMockService = mockService.getName();
-		final String mockServicePath = mockService.getPath();
-		final String mockservicePort = Integer.toString( mockService.getPort() );
-		// final String soapUITestSuite = mockService.getTestSuite().getName();
-		final String soapUIProjectPath = mockService.getProject().getPath();
-		if( dialog == null )
-			dialog = ADialogBuilder.buildDialog( Form.class );
 
-		dialog.getFormField( Form.PROJECT ).addFormFieldListener( new XFormFieldListener()
+		if( IntegrationUtils.forceSaveProject( mockService.getProject() ) )
 		{
 
-			public void valueChanged( XFormField sourceField, String newValue, String oldValue )
+			if( !StartLoadUI.testCajoConnection() )
 			{
-				dialog.setOptions( Form.TESTCASE, IntegrationUtils.getAvailableTestCases( newValue ) );
-				if( dialog.getValue( Form.TESTCASE ).equals( IntegrationUtils.CREATE_ON_PROJECT_LEVEL ) )
+				if( UISupport.confirm( StartLoadUI.LOADUI_LAUNCH_QUESTION, StartLoadUI.LOADUI_LAUNCH_TITLE ) )
 				{
-					dialog.setOptions( Form.MOCKSERVICERUNNER,
-							IntegrationUtils.getAvailableRunners( newValue, IntegrationUtils.CREATE_ON_PROJECT_LEVEL ) );
+					StartLoadUI.launchLoadUI();
 				}
+				return;
 			}
-		} );
-		dialog.getFormField( Form.TESTCASE ).addFormFieldListener( new XFormFieldListener()
-		{
 
-			public void valueChanged( XFormField sourceField, String newValue, String oldValue )
+			final String soapUIMockService = mockService.getName();
+			final String mockServicePath = mockService.getPath();
+			final String mockservicePort = Integer.toString( mockService.getPort() );
+			// final String soapUITestSuite = mockService.getTestSuite().getName();
+			final String soapUIProjectPath = mockService.getProject().getPath();
+			if( dialog == null )
+				dialog = ADialogBuilder.buildDialog( Form.class );
+
+			dialog.getFormField( Form.PROJECT ).addFormFieldListener( new XFormFieldListener()
 			{
-				if( newValue.equals( IntegrationUtils.CREATE_NEW_OPTION ) )
-				{
-					dialog.setOptions( Form.MOCKSERVICERUNNER, new String[] { IntegrationUtils.CREATE_NEW_OPTION } );
-				}
-				else
-				{
-					dialog.setOptions( Form.MOCKSERVICERUNNER,
-							IntegrationUtils.getAvailableMockServiceRunners( dialog.getValue( Form.PROJECT ), newValue ) );
-				}
-			}
-		} );
 
-		dialog.setOptions( Form.PROJECT, IntegrationUtils.getAvailableProjects() );
-		if( !StringUtils.isNullOrEmpty( IntegrationUtils.getOpenedProjectName() ) )
-		{
-			dialog.setValue( Form.PROJECT, IntegrationUtils.getOpenedProjectName() );
-		}
-		else
-		{
-			dialog.setValue( Form.PROJECT, IntegrationUtils.CREATE_NEW_OPTION );
-		}
-		dialog.setOptions( Form.TESTCASE, IntegrationUtils.getAvailableTestCases( dialog.getValue( Form.PROJECT ) ) );
-		if( !dialog.getValue( Form.PROJECT ).equals( IntegrationUtils.getOpenedProjectName() ) )
-		{
-			dialog.setValue( Form.TESTCASE, IntegrationUtils.CREATE_ON_PROJECT_LEVEL );
-		}
-
-		dialog.setOptions(
-				Form.MOCKSERVICERUNNER,
-				IntegrationUtils.getAvailableMockServiceRunners( dialog.getValue( Form.PROJECT ),
-						dialog.getValue( Form.TESTCASE ) ) );
-		dialog.setValue( Form.MOCKSERVICERUNNER, IntegrationUtils.CREATE_NEW_OPTION );
-		if( dialog.show() )
-		{
-			String targetProjectString = dialog.getValue( Form.PROJECT );
-			String targetTestCaseName = !dialog.getValue( Form.TESTCASE )
-					.equals( IntegrationUtils.CREATE_ON_PROJECT_LEVEL ) ? dialog.getValue( Form.TESTCASE ) : null;
-			String targetMockRunnerNameName = dialog.getValue( Form.MOCKSERVICERUNNER );
-			if( dialog.getReturnValue() == XFormDialog.OK_OPTION )
-			{
-				String openedProjectName = IntegrationUtils.getOpenedProjectName();
-				if( !StringUtils.isNullOrEmpty( openedProjectName ) && !targetProjectString.equals( openedProjectName ) )
-					if( UISupport.confirm( "Close currently open [" + IntegrationUtils.getOpenedProjectName()
-							+ "] loadUI project", "Close loadUI project" ) )
+				public void valueChanged( XFormField sourceField, String newValue, String oldValue )
+				{
+					dialog.setOptions( Form.TESTCASE, IntegrationUtils.getAvailableTestCases( newValue ) );
+					if( dialog.getValue( Form.TESTCASE ).equals( IntegrationUtils.CREATE_ON_PROJECT_LEVEL ) )
 					{
-						IntegrationUtils.closeOpenedLoadUIProject();
+						dialog.setOptions( Form.MOCKSERVICERUNNER, IntegrationUtils.getAvailableRunners( newValue,
+								IntegrationUtils.CREATE_ON_PROJECT_LEVEL ) );
+					}
+				}
+			} );
+			dialog.getFormField( Form.TESTCASE ).addFormFieldListener( new XFormFieldListener()
+			{
+
+				public void valueChanged( XFormField sourceField, String newValue, String oldValue )
+				{
+					if( newValue.equals( IntegrationUtils.CREATE_NEW_OPTION ) )
+					{
+						dialog.setOptions( Form.MOCKSERVICERUNNER, new String[] { IntegrationUtils.CREATE_NEW_OPTION } );
 					}
 					else
 					{
-						return;
+						dialog.setOptions( Form.MOCKSERVICERUNNER, IntegrationUtils.getAvailableMockServiceRunners( dialog
+								.getValue( Form.PROJECT ), newValue ) );
 					}
+				}
+			} );
 
-				HashMap<String, String> createdRunnerSettings = null;
-				try
-				{
-					createdRunnerSettings = IntegrationUtils.createMockServiceRunner( soapUIProjectPath, soapUIMockService,
-							mockServicePath, mockservicePort, targetProjectString, targetTestCaseName,
-							targetMockRunnerNameName );
-				}
-				catch( IOException e )
-				{
-					UISupport.showInfoMessage( "Error while opening selected loadUI project" );
-					return;
-				}
-				// if( createdRunnerSettings != null )
-				// {
-				// String creationInfo =
-				// "MockService Runner created/updated under project: '"
-				// + createdRunnerSettings.get( ContextMapping.LOADUI_PROJECT_NAME )
-				// + "'";
-				// if( targetTestCaseName != null && !targetTestCaseName.equals(
-				// IntegrationUtils.CREATE_ON_PROJECT_LEVEL ) )
-				// {
-				// creationInfo += ", TestCase: '" + createdRunnerSettings.get(
-				// ContextMapping.LOADUI_TEST_CASE_NAME )
-				// + "'";
-				// }
-				// UISupport.showInfoMessage( creationInfo,
-				// IntegrationUtils.LOADU_INFO_DIALOG_TITLE );
-				// }
+			dialog.setOptions( Form.PROJECT, IntegrationUtils.getAvailableProjects() );
+			if( !StringUtils.isNullOrEmpty( IntegrationUtils.getOpenedProjectName() ) )
+			{
+				dialog.setValue( Form.PROJECT, IntegrationUtils.getOpenedProjectName() );
+			}
+			else
+			{
+				dialog.setValue( Form.PROJECT, IntegrationUtils.CREATE_NEW_OPTION );
+			}
+			dialog.setOptions( Form.TESTCASE, IntegrationUtils.getAvailableTestCases( dialog.getValue( Form.PROJECT ) ) );
+			if( !dialog.getValue( Form.PROJECT ).equals( IntegrationUtils.getOpenedProjectName() ) )
+			{
+				dialog.setValue( Form.TESTCASE, IntegrationUtils.CREATE_ON_PROJECT_LEVEL );
 			}
 
+			dialog.setOptions( Form.MOCKSERVICERUNNER, IntegrationUtils.getAvailableMockServiceRunners( dialog
+					.getValue( Form.PROJECT ), dialog.getValue( Form.TESTCASE ) ) );
+			dialog.setValue( Form.MOCKSERVICERUNNER, IntegrationUtils.CREATE_NEW_OPTION );
+			if( dialog.show() )
+			{
+				String targetProjectString = dialog.getValue( Form.PROJECT );
+				String targetTestCaseName = !dialog.getValue( Form.TESTCASE ).equals(
+						IntegrationUtils.CREATE_ON_PROJECT_LEVEL ) ? dialog.getValue( Form.TESTCASE ) : null;
+				String targetMockRunnerNameName = dialog.getValue( Form.MOCKSERVICERUNNER );
+				if( dialog.getReturnValue() == XFormDialog.OK_OPTION )
+				{
+					String openedProjectName = IntegrationUtils.getOpenedProjectName();
+					if( !StringUtils.isNullOrEmpty( openedProjectName ) && !targetProjectString.equals( openedProjectName ) )
+						if( UISupport.confirm( "Close currently open [" + IntegrationUtils.getOpenedProjectName()
+								+ "] loadUI project", "Close loadUI project" ) )
+						{
+							IntegrationUtils.closeOpenedLoadUIProject();
+						}
+						else
+						{
+							return;
+						}
+
+					HashMap<String, String> createdRunnerSettings = null;
+					try
+					{
+						createdRunnerSettings = IntegrationUtils.createMockServiceRunner( soapUIProjectPath,
+								soapUIMockService, mockServicePath, mockservicePort, targetProjectString, targetTestCaseName,
+								targetMockRunnerNameName );
+					}
+					catch( IOException e )
+					{
+						UISupport.showInfoMessage( "Error while opening selected loadUI project" );
+						return;
+					}
+					// if( createdRunnerSettings != null )
+					// {
+					// String creationInfo =
+					// "MockService Runner created/updated under project: '"
+					// + createdRunnerSettings.get(
+					// ContextMapping.LOADUI_PROJECT_NAME )
+					// + "'";
+					// if( targetTestCaseName != null && !targetTestCaseName.equals(
+					// IntegrationUtils.CREATE_ON_PROJECT_LEVEL ) )
+					// {
+					// creationInfo += ", TestCase: '" + createdRunnerSettings.get(
+					// ContextMapping.LOADUI_TEST_CASE_NAME )
+					// + "'";
+					// }
+					// UISupport.showInfoMessage( creationInfo,
+					// IntegrationUtils.LOADU_INFO_DIALOG_TITLE );
+					// }
+				}
+			}
 		}
 	}
 

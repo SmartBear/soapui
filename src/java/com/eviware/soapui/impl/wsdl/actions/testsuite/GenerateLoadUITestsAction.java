@@ -14,6 +14,8 @@ package com.eviware.soapui.impl.wsdl.actions.testsuite;
 
 import java.io.IOException;
 
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
 import com.eviware.soapui.impl.wsdl.actions.project.StartLoadUI;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
@@ -42,68 +44,73 @@ public class GenerateLoadUITestsAction extends AbstractSoapUIAction<WsdlTestSuit
 
 	public void perform( WsdlTestSuite testSuite, Object param )
 	{
-		if( !StartLoadUI.testCajoConnection() )
+		if( IntegrationUtils.forceSaveProject( testSuite.getProject() ) )
 		{
-			if( UISupport.confirm( StartLoadUI.LOADUI_LAUNCH_QUESTION, StartLoadUI.LOADUI_LAUNCH_TITLE ) )
+
+			if( !StartLoadUI.testCajoConnection() )
 			{
-				StartLoadUI.launchLoadUI();
-			}
-			return;
-		}
-		this.testSuite = testSuite;
-		final String soapUITestSuite = testSuite.getName();
-		final String soapUIProjectPath = testSuite.getProject().getPath();
-
-		XFormDialog dialog = ADialogBuilder.buildDialog( Form.class );
-
-		dialog.setOptions( Form.LOADUIPROJECT, IntegrationUtils.getAvailableProjects() );
-		if( !StringUtils.isNullOrEmpty( IntegrationUtils.getOpenedProjectName() ) )
-		{
-			dialog.setValue( Form.LOADUIPROJECT, IntegrationUtils.getOpenedProjectName() );
-		}
-		else
-		{
-			dialog.setValue( Form.LOADUIPROJECT, IntegrationUtils.CREATE_NEW_OPTION );
-		}
-		dialog.setOptions( Form.TESTCASES, ModelSupport.getNames( testSuite.getTestCaseList() ) );
-		dialog.setValue( Form.LEVEL, "Project Level" );
-
-		if( dialog.show() )
-		{
-
-			if( dialog.getReturnValue() == XFormDialog.OK_OPTION )
-			{
-				int levelToAdd = dialog.getValueIndex( Form.LEVEL );
-				String loadUIProject = dialog.getValue( Form.LOADUIPROJECT );
-				String openedProjectName = IntegrationUtils.getOpenedProjectName();
-				if( !StringUtils.isNullOrEmpty( openedProjectName ) && !loadUIProject.equals( openedProjectName ) )
+				if( UISupport.confirm( StartLoadUI.LOADUI_LAUNCH_QUESTION, StartLoadUI.LOADUI_LAUNCH_TITLE ) )
 				{
-					if( UISupport.confirm( "Close currently open [" + IntegrationUtils.getOpenedProjectName()
-							+ "] loadUI project", "Close loadUI project" ) )
+					StartLoadUI.launchLoadUI();
+				}
+				return;
+			}
+
+			this.testSuite = testSuite;
+			final String soapUITestSuite = testSuite.getName();
+			final String soapUIProjectPath = testSuite.getProject().getPath();
+
+			XFormDialog dialog = ADialogBuilder.buildDialog( Form.class );
+
+			dialog.setOptions( Form.LOADUIPROJECT, IntegrationUtils.getAvailableProjects() );
+			if( !StringUtils.isNullOrEmpty( IntegrationUtils.getOpenedProjectName() ) )
+			{
+				dialog.setValue( Form.LOADUIPROJECT, IntegrationUtils.getOpenedProjectName() );
+			}
+			else
+			{
+				dialog.setValue( Form.LOADUIPROJECT, IntegrationUtils.CREATE_NEW_OPTION );
+			}
+			dialog.setOptions( Form.TESTCASES, ModelSupport.getNames( testSuite.getTestCaseList() ) );
+			dialog.setValue( Form.LEVEL, "Project Level" );
+
+			if( dialog.show() )
+			{
+
+				if( dialog.getReturnValue() == XFormDialog.OK_OPTION )
+				{
+					int levelToAdd = dialog.getValueIndex( Form.LEVEL );
+					String loadUIProject = dialog.getValue( Form.LOADUIPROJECT );
+					String openedProjectName = IntegrationUtils.getOpenedProjectName();
+					if( !StringUtils.isNullOrEmpty( openedProjectName ) && !loadUIProject.equals( openedProjectName ) )
 					{
-						IntegrationUtils.closeOpenedLoadUIProject();
+						if( UISupport.confirm( "Close currently open [" + IntegrationUtils.getOpenedProjectName()
+								+ "] loadUI project", "Close loadUI project" ) )
+						{
+							IntegrationUtils.closeOpenedLoadUIProject();
+						}
+						else
+						{
+							return;
+						}
 					}
-					else
+					String[] soapuiTestCases = StringUtils.toStringArray( ( ( XFormMultiSelectList )dialog
+							.getFormField( Form.TESTCASES ) ).getSelectedOptions() );
+					if( soapuiTestCases.length == 0 )
 					{
+						UISupport.showErrorMessage( "No TestCases selected." );
 						return;
 					}
-				}
-				String[] soapuiTestCases = StringUtils.toStringArray( ( ( XFormMultiSelectList )dialog
-						.getFormField( Form.TESTCASES ) ).getSelectedOptions() );
-				if( soapuiTestCases.length == 0 )
-				{
-					UISupport.showErrorMessage( "No TestCases selected." );
-					return;
-				}
-				try
-				{
-					IntegrationUtils.generateTestSuiteLoadTests( soapUIProjectPath, soapUITestSuite, soapuiTestCases,
-							loadUIProject, levelToAdd );
-				}
-				catch( IOException e )
-				{
-					UISupport.showInfoMessage( "Error while opening selected loadUI project" );
-					return;
+					try
+					{
+						IntegrationUtils.generateTestSuiteLoadTests( soapUIProjectPath, soapUITestSuite, soapuiTestCases,
+								loadUIProject, levelToAdd );
+					}
+					catch( IOException e )
+					{
+						UISupport.showInfoMessage( "Error while opening selected loadUI project" );
+						return;
+					}
 				}
 			}
 		}

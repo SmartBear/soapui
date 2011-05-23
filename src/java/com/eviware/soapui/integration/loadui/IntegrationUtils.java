@@ -19,10 +19,12 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
 import com.eviware.soapui.impl.wsdl.loadtest.WsdlLoadTest;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.integration.impl.CajoClient;
+import com.eviware.soapui.support.UISupport;
 
 public class IntegrationUtils
 {
@@ -479,6 +481,40 @@ public class IntegrationUtils
 		}
 
 		return names;
+	}
+
+	/**
+	 * 
+	 * When exporting soapUI project to loadUI, loadUI uses project file to get
+	 * resources so soapUI project need to be saved for loadUI be able to pick
+	 * all changes if there is any.
+	 * 
+	 * @param project
+	 * @return
+	 */
+	public static boolean forceSaveProject( WsdlProject project )
+	{
+
+		if( UISupport.confirm( "Project needs to be saved before it gets exported! Save it?", "Save Project" ) )
+		{
+			try
+			{
+				project.save();
+				return true;
+			}
+			catch( IOException e )
+			{
+				SoapUI.logError( e );
+				UISupport.showErrorMessage( "Error saving project file!. Export Operation Aborted!" );
+				return false;
+			}
+		}
+		else
+		{
+			UISupport.showInfoMessage( "Export Operation Aborted!" );
+			return false;
+		}
+
 	}
 
 }
