@@ -12,9 +12,14 @@
 
 package com.eviware.soapui.tools;
 
+import java.io.File;
+
 import org.apache.commons.cli.CommandLine;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.wsdl.WsdlProject;
+import com.eviware.soapui.model.project.ProjectFactoryRegistry;
+import com.eviware.soapui.settings.ProjectSettings;
 
 public class SoapUIMockAsWarGenerator extends AbstractSoapUIRunner
 {
@@ -100,8 +105,23 @@ public class SoapUIMockAsWarGenerator extends AbstractSoapUIRunner
 	@Override
 	protected boolean runRunner() throws Exception
 	{
-		MockAsWar mockAsWar = new MockAsWar( getProjectFile(), getSettingsFile(), getOutputFolder(), warFile,
-				includeLibraries, includeActions, includeListeners, localEndpoint, enableWebUI );
+		WsdlProject project = ( WsdlProject )ProjectFactoryRegistry.getProjectFactory( "wsdl" ).createNew(
+				getProjectFile(), getProjectPassword() );
+
+		String pFile = getProjectFile();
+
+		project.getSettings().setString( ProjectSettings.SHADOW_PASSWORD, null );
+
+		File tmpProjectFile = new File( System.getProperty( "java.io.tmpdir" ) );
+		tmpProjectFile = new File( tmpProjectFile, project.getName() + "-project.xml" );
+
+		project.beforeSave();
+		project.saveIn( tmpProjectFile );
+
+		pFile = tmpProjectFile.getAbsolutePath();
+
+		MockAsWar mockAsWar = new MockAsWar( pFile, getSettingsFile(), getOutputFolder(), warFile, includeLibraries,
+				includeActions, includeListeners, localEndpoint, enableWebUI );
 
 		mockAsWar.createMockAsWarArchive();
 		return true;
