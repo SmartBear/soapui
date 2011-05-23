@@ -55,48 +55,48 @@ import com.eviware.x.impl.swing.JTextAreaFormField;
 
 public class TestRunnerAction extends AbstractToolsAction<WsdlProject>
 {
-	private static final String ALL_VALUE = "<all>";
-	private static final String ENDPOINT = "Endpoint";
-	private static final String HOSTPORT = "Host:Port";
-	private static final String TESTSUITE = "TestSuite";
-	private static final String TESTCASE = "TestCase";
-	private static final String USERNAME = "Username";
-	private static final String PASSWORD = "Password";
-	private static final String WSSTYPE = "WSS Password Type";
-	private static final String DOMAIN = "Domain";
-	private static final String PRINTREPORT = "Print Report";
-	private static final String ROOTFOLDER = "Root Folder";
-	private static final String EXPORTJUNITRESULTS = "Export JUnit Results";
-	private static final String EXPORTALL = "Export All";
-	private static final String ENABLEUI = "Enable UI";
-	private static final String TESTRUNNERPATH = "TestRunner Path";
-	private static final String SAVEPROJECT = "Save Project";
-	private static final String ADDSETTINGS = "Add Settings";
-	private static final String OPEN_REPORT = "Open Report";
-	private static final String COVERAGE = "Coverage Report";
-	private static final String PROJECTPASSWORD = "Project Password";
-	private static final String SOAPUISETTINGSPASSWORD = "soapui-setings.xml Password";
-	private static final String IGNOREERRORS = "Ignore Errors";
-	private static final String GENERATEREPORTSEACHTESTCASE = "Report to Generate";
-	private static final String REPORTFORMAT = "Report Format(s)";
-	private static final String SAVEAFTER = "Save After";
-	private static final String GLOBALPROPERTIES = "Global Properties";
-	private static final String SYSTEMPROPERTIES = "System Properties";
-	private static final String PROJECTPROPERTIES = "Project Properties";
+	protected static final String ALL_VALUE = "<all>";
+	protected static final String ENDPOINT = "Endpoint";
+	protected static final String HOSTPORT = "Host:Port";
+	protected static final String TESTSUITE = "TestSuite";
+	protected static final String TESTCASE = "TestCase";
+	protected static final String USERNAME = "Username";
+	protected static final String PASSWORD = "Password";
+	protected static final String WSSTYPE = "WSS Password Type";
+	protected static final String DOMAIN = "Domain";
+	protected static final String PRINTREPORT = "Print Report";
+	protected static final String ROOTFOLDER = "Root Folder";
+	protected static final String EXPORTJUNITRESULTS = "Export JUnit Results";
+	protected static final String EXPORTALL = "Export All";
+	protected static final String ENABLEUI = "Enable UI";
+	protected static final String TESTRUNNERPATH = "TestRunner Path";
+	protected static final String SAVEPROJECT = "Save Project";
+	protected static final String ADDSETTINGS = "Add Settings";
+	protected static final String OPEN_REPORT = "Open Report";
+	protected static final String COVERAGE = "Coverage Report";
+	protected static final String PROJECTPASSWORD = "Project Password";
+	protected static final String SOAPUISETTINGSPASSWORD = "soapui-setings.xml Password";
+	protected static final String IGNOREERRORS = "Ignore Errors";
+	protected static final String GENERATEREPORTSEACHTESTCASE = "Report to Generate";
+	protected static final String REPORTFORMAT = "Report Format(s)";
+	protected static final String SAVEAFTER = "Save After";
+	protected static final String GLOBALPROPERTIES = "Global Properties";
+	protected static final String SYSTEMPROPERTIES = "System Properties";
+	protected static final String PROJECTPROPERTIES = "Project Properties";
 
-	private XForm mainForm;
+	protected XForm mainForm;
 
 	private final static Logger log = Logger.getLogger( TestRunnerAction.class );
 
 	public static final String SOAPUI_ACTION_ID = "TestRunnerAction";
 
-	private XForm advForm;
-	private XForm propertyForm;
-	private XForm reportForm;
+	protected XForm advForm;
+	protected XForm propertyForm;
+	protected XForm reportForm;
 
-	private List<TestSuite> testSuites;
+	protected List<TestSuite> testSuites;
 
-	private boolean proVersion;
+	protected boolean proVersion;
 
 	public TestRunnerAction()
 	{
@@ -198,7 +198,7 @@ public class TestRunnerAction extends AbstractToolsAction<WsdlProject>
 				"Specify arguments for launching soapUI TestRunner", UISupport.TOOL_ICON );
 	}
 
-	private JTextAreaFormField createTextArea()
+	protected JTextAreaFormField createTextArea()
 	{
 		JTextAreaFormField textArea = new JTextAreaFormField();
 		textArea.setWidth( 40 );
@@ -213,7 +213,7 @@ public class TestRunnerAction extends AbstractToolsAction<WsdlProject>
 	 * @param modelItem
 	 * @return boolean
 	 */
-	private boolean isProVersion( WsdlProject modelItem )
+	protected boolean isProVersion( WsdlProject modelItem )
 	{
 		if( modelItem.getClass().getName().contains( "WsdlProjectPro" ) )
 		{
@@ -331,7 +331,7 @@ public class TestRunnerAction extends AbstractToolsAction<WsdlProject>
 		toolHost.run( new ProcessToolRunner( builder, "soapUI TestRunner", modelItem, args ) );
 	}
 
-	private ArgumentBuilder buildArgs( WsdlProject modelItem ) throws IOException
+	protected ArgumentBuilder buildArgs( WsdlProject modelItem ) throws IOException
 	{
 		XFormDialog dialog = getDialog();
 		if( dialog == null )
@@ -401,7 +401,7 @@ public class TestRunnerAction extends AbstractToolsAction<WsdlProject>
 		return builder;
 	}
 
-	private void addPropertyArguments( ArgumentBuilder builder )
+	protected void addPropertyArguments( ArgumentBuilder builder )
 	{
 		List<String> propertyArguments = new ArrayList<String>();
 
@@ -412,7 +412,7 @@ public class TestRunnerAction extends AbstractToolsAction<WsdlProject>
 		builder.addArgs( propertyArguments.toArray( new String[propertyArguments.size()] ) );
 	}
 
-	private void addProperties( List<String> propertyArguments, String propertiyDomain, String arg )
+	protected void addProperties( List<String> propertyArguments, String propertiyDomain, String arg )
 	{
 		StringTokenizer tokenizer = new StringTokenizer( getDialog().getValue( propertiyDomain ) );
 

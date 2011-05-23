@@ -17,6 +17,7 @@ import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.support.action.SoapUIAction;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
+import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.SecurityTestRunnerAction;
 
 public class SecurityTestSecurityTestRunnerAction extends AbstractSoapUIAction<SecurityTest>
 {

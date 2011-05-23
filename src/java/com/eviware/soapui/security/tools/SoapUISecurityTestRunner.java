@@ -63,6 +63,8 @@ import com.eviware.soapui.security.support.SecurityTestRunListenerAdapter;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.tools.AbstractSoapUITestRunner;
+import com.eviware.soapui.tools.SoapUITestCaseRunner;
+import com.eviware.soapui.tools.AbstractSoapUIRunner.SoapUIOptions;
 
 /**
  * Standalone security test-runner used from maven-plugin, can also be used from
@@ -75,7 +77,7 @@ import com.eviware.soapui.tools.AbstractSoapUITestRunner;
  * @author nebojsa.tasic
  */
 
-public class SoapUISecurityTestRunner extends AbstractSoapUITestRunner
+public class SoapUISecurityTestRunner extends SoapUITestCaseRunner
 {
 	public static final String SOAPUI_EXPORT_SEPARATOR = "soapui.export.separator";
 
@@ -86,8 +88,6 @@ public class SoapUISecurityTestRunner extends AbstractSoapUITestRunner
 	private String securityTestName;
 	private List<TestAssertion> assertions = new ArrayList<TestAssertion>();
 	private Map<TestAssertion, WsdlTestStepResult> assertionResults = new HashMap<TestAssertion, WsdlTestStepResult>();
-	// private List<TestCaseRunner> runningTests = new
-	// ArrayList<TestCaseRunner>();
 	private List<TestCase> failedTests = new ArrayList<TestCase>();
 
 	private int testSuiteCount;
@@ -123,9 +123,13 @@ public class SoapUISecurityTestRunner extends AbstractSoapUITestRunner
 		System.exit( new SoapUISecurityTestRunner().runFromCommandLine( args ) );
 	}
 
+
+	
 	protected boolean processCommandLine( CommandLine cmd )
 	{
 		String message = "";
+		if( cmd.hasOption( "e" ) )
+			setEndpoint( cmd.getOptionValue( "e" ) );
 
 		if( cmd.hasOption( "s" ) )
 		{
@@ -133,14 +137,79 @@ public class SoapUISecurityTestRunner extends AbstractSoapUITestRunner
 			setTestSuite( testSuite );
 			message += validateTestSuite();
 		}
+
 		if( cmd.hasOption( "c" ) )
 		{
 			String testCase = getCommandLineOptionSubstSpace( cmd, "c" );
 			setTestCase( testCase );
 			message += validateTestCase();
 		}
+
 		if( cmd.hasOption( "n" ) )
 			setSecurityTestName( cmd.getOptionValue( "n" ) );
+		
+		if( cmd.hasOption( "u" ) )
+			setUsername( cmd.getOptionValue( "u" ) );
+
+		if( cmd.hasOption( "p" ) )
+			setPassword( cmd.getOptionValue( "p" ) );
+
+		if( cmd.hasOption( "w" ) )
+			setWssPasswordType( cmd.getOptionValue( "w" ) );
+
+		if( cmd.hasOption( "d" ) )
+			setDomain( cmd.getOptionValue( "d" ) );
+
+		if( cmd.hasOption( "h" ) )
+			setHost( cmd.getOptionValue( "h" ) );
+
+		if( cmd.hasOption( "f" ) )
+			setOutputFolder( getCommandLineOptionSubstSpace( cmd, "f" ) );
+
+		if( cmd.hasOption( "t" ) )
+			setSettingsFile( getCommandLineOptionSubstSpace( cmd, "t" ) );
+
+		if( cmd.hasOption( "x" ) )
+		{
+			setProjectPassword( cmd.getOptionValue( "x" ) );
+		}
+
+		if( cmd.hasOption( "v" ) )
+		{
+			setSoapUISettingsPassword( cmd.getOptionValue( "v" ) );
+		}
+
+		if( cmd.hasOption( "D" ) )
+		{
+			setSystemProperties( cmd.getOptionValues( "D" ) );
+		}
+
+		if( cmd.hasOption( "G" ) )
+		{
+			setGlobalProperties( cmd.getOptionValues( "G" ) );
+		}
+
+		if( cmd.hasOption( "P" ) )
+		{
+			setProjectProperties( cmd.getOptionValues( "P" ) );
+		}
+
+		setIgnoreError( cmd.hasOption( "I" ) );
+		setEnableUI( cmd.hasOption( "i" ) );
+		setPrintReport( cmd.hasOption( "r" ) );
+		setExportAll( cmd.hasOption( "a" ) );
+		if( cmd.hasOption( "A" ) )
+		{
+			setExportAll( true );
+			System.setProperty( SOAPUI_EXPORT_SEPARATOR, File.separator );
+		}
+
+		setJUnitReport( cmd.hasOption( "j" ) );
+
+		if( cmd.hasOption( "m" ) )
+			setMaxErrors( Integer.parseInt( cmd.getOptionValue( "m" ) ) );
+
+		setSaveAfterRun( cmd.hasOption( "S" ) );
 
 		if( message.length() > 0 )
 		{
@@ -183,60 +252,39 @@ public class SoapUISecurityTestRunner extends AbstractSoapUITestRunner
 
 	}
 
-	public void setMaxErrors( int maxErrors )
-	{
-		this.maxErrors = maxErrors;
-	}
+	
 
-	protected int getMaxErrors()
-	{
-		return maxErrors;
-	}
-
-	public void setSaveAfterRun( boolean saveAfterRun )
-	{
-		this.saveAfterRun = saveAfterRun;
-	}
-
-	public void setProjectPassword( String projectPassword )
-	{
-		this.projectPassword = projectPassword;
-	}
-
-	public String getProjectPassword()
-	{
-		return projectPassword;
-	}
-
+	
+	
 	protected SoapUIOptions initCommandLineOptions()
 	{
-		SoapUIOptions options = new SoapUIOptions( "security test runner" );
+		SoapUIOptions options = new SoapUIOptions( "testrunner" );
+		options.addOption( "e", true, "Sets the endpoint" );
 		options.addOption( "s", true, "Sets the testsuite" );
 		options.addOption( "c", true, "Sets the testcase" );
 		options.addOption( "n", true, "Sets the security test name" );
+		options.addOption( "u", true, "Sets the username" );
+		options.addOption( "p", true, "Sets the password" );
+		options.addOption( "w", true, "Sets the WSS password type, either 'Text' or 'Digest'" );
+		options.addOption( "i", false, "Enables Swing UI for scripts" );
+		options.addOption( "d", true, "Sets the domain" );
+		options.addOption( "h", true, "Sets the host" );
+		options.addOption( "r", false, "Prints a small summary report" );
+		options.addOption( "f", true, "Sets the output folder to export results to" );
+		options.addOption( "j", false, "Sets the output to include JUnit XML reports" );
+		options.addOption( "m", false, "Sets the maximum number of TestStep errors to save for each testcase" );
+		options.addOption( "a", false, "Turns on exporting of all results" );
+		options.addOption( "A", false, "Turns on exporting of all results using folders instead of long filenames" );
+		options.addOption( "t", true, "Sets the soapui-settings.xml file to use" );
+		options.addOption( "x", true, "Sets project password for decryption if project is encrypted" );
+		options.addOption( "v", true, "Sets password for soapui-settings.xml file" );
+		options.addOption( "D", true, "Sets system property with name=value" );
+		options.addOption( "G", true, "Sets global property with name=value" );
+		options.addOption( "P", true, "Sets or overrides project property with name=value" );
+		options.addOption( "I", false, "Do not stop if error occurs, ignore them" );
+		options.addOption( "S", false, "Saves the project after running the tests" );
 
 		return options;
-	}
-
-	/**
-	 * Add console appender to groovy log
-	 */
-
-	public void setExportAll( boolean exportAll )
-	{
-		this.exportAll = exportAll;
-	}
-
-	public void setJUnitReport( boolean junitReport )
-	{
-		this.junitReport = junitReport;
-		if( junitReport )
-			reportCollector = createJUnitReportCollector();
-	}
-
-	protected JUnitReportCollector createJUnitReportCollector()
-	{
-		return new JUnitReportCollector( maxErrors );
 	}
 
 	public SoapUISecurityTestRunner()
@@ -249,23 +297,7 @@ public class SoapUISecurityTestRunner extends AbstractSoapUITestRunner
 		super( title );
 	}
 
-	/**
-	 * Controls if a short test summary should be printed after the test runs
-	 * 
-	 * @param printReport
-	 *           a flag controlling if a summary should be printed
-	 */
-
-	public void setPrintReport( boolean printReport )
-	{
-		this.printReport = printReport;
-	}
-
-	public void setIgnoreError( boolean ignoreErrors )
-	{
-		this.ignoreErrors = ignoreErrors;
-	}
-
+	
 	public boolean runRunner() throws Exception
 	{
 		initGroovyLog();

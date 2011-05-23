@@ -50,7 +50,8 @@ import com.eviware.x.form.XFormFieldListener;
  * 
  * @author nebojsa.tasic
  */
-
+@Deprecated 
+// use com.eviware.soapui.impl.wsdl.actions.iface.tools.support.SecurityTestRunnerAction instead
 public class SecurityTestRunnerAction extends AbstractToolsAction<WsdlProject>
 {
 	private static final String SH = ".sh";
