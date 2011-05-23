@@ -100,7 +100,7 @@ public class TestCaseOptionsAction extends AbstractSoapUIAction<WsdlTestCase>
 					new AMFXFormFieldListener() );
 			amfForm.addTextField( AMF_ENDPOINT, "AMF Authorization endpoint", FieldType.TEXT );
 			amfForm.addTextField( AMF_LOGIN, "AMF Authorization usernmae", FieldType.TEXT );
-			amfForm.addTextField( AMF_PASSWORD, "AMF Authorization password", FieldType.TEXT );
+			amfForm.addTextField( AMF_PASSWORD, "AMF Authorization password", FieldType.PASSWORD );
 
 			dialog = builder.buildDialog( builder.buildOkCancelHelpActions( HelpUrls.TESTCASEOPTIONS_HELP_URL ),
 					"Specify general options for this TestCase", UISupport.OPTIONS_ICON );
