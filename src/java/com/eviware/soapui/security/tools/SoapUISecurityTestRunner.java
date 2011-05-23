@@ -258,7 +258,7 @@ public class SoapUISecurityTestRunner extends SoapUITestCaseRunner
 	
 	protected SoapUIOptions initCommandLineOptions()
 	{
-		SoapUIOptions options = new SoapUIOptions( "testrunner" );
+		SoapUIOptions options = new SoapUIOptions( "securitytestrunner" );
 		options.addOption( "e", true, "Sets the endpoint" );
 		options.addOption( "s", true, "Sets the testsuite" );
 		options.addOption( "c", true, "Sets the testcase" );

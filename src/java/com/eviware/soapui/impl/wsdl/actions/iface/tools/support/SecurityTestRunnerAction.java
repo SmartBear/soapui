@@ -11,6 +11,7 @@
  */
 package com.eviware.soapui.impl.wsdl.actions.iface.tools.support;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,12 +21,16 @@ import org.apache.log4j.Logger;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
+import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.soapui.TestRunnerAction;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
+import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
+import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.security.SecurityTest;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.x.form.XForm;
@@ -42,11 +47,11 @@ public class SecurityTestRunnerAction extends TestRunnerAction
 	private static final String SECURITYTESTRUNNER = "securitytestrunner";
 	private static final String SECURITY_TEST_NAME = "SecurityTestName";
 	protected static final String TESTRUNNERPATH = "SecurityTestRunner Path";
-	
+
 	public static final String SOAPUI_ACTION_ID = "SecurityTestRunnerAction";
-	
+
 	private final static Logger log = Logger.getLogger( SecurityTestRunnerAction.class );
-	
+
 	protected XFormDialog buildDialog( WsdlProject modelItem )
 	{
 		if( modelItem == null )
@@ -57,9 +62,83 @@ public class SecurityTestRunnerAction extends TestRunnerAction
 		XFormDialogBuilder builder = XFormFactory.createDialogBuilder( "Launch SecurityTestRunner" );
 		createTestCaseRunnerTabs( modelItem, builder );
 
-		//TODO: update help URL
+		// TODO: update help URL
 		return builder.buildDialog( buildDefaultActions( HelpUrls.TESTRUNNER_HELP_URL, modelItem ),
 				"Specify arguments for launching soapUI Security TestRunner", UISupport.TOOL_ICON );
+	}
+
+	protected StringToStringMap initValues( WsdlProject modelItem, Object param )
+	{
+		if( modelItem != null && mainForm != null )
+		{
+			List<String> endpoints = new ArrayList<String>();
+
+			for( Interface iface : modelItem.getInterfaceList() )
+			{
+				for( String endpoint : iface.getEndpoints() )
+				{
+					if( !endpoints.contains( endpoint ) )
+						endpoints.add( endpoint );
+				}
+			}
+
+			endpoints.add( 0, null );
+			advForm.setOptions( ENDPOINT, endpoints.toArray() );
+
+			testSuites = modelItem.getTestSuiteList();
+			for( int c = 0; c < testSuites.size(); c++ )
+			{
+				if( testSuites.get( c ).getTestCaseCount() == 0 )
+				{
+					testSuites.remove( c );
+					c-- ;
+				}
+			}
+
+			mainForm.setOptions( TESTSUITE, ModelSupport.getNames( new String[] { ALL_VALUE }, testSuites ) );
+
+			List<String> testCases = new ArrayList<String>();
+
+			for( TestSuite testSuite : testSuites )
+			{
+				for( TestCase testCase : testSuite.getTestCaseList() )
+				{
+					if( !testCases.contains( testCase.getName() ) )
+						testCases.add( testCase.getName() );
+				}
+			}
+
+			testCases.add( 0, ALL_VALUE );
+			mainForm.setOptions( TESTCASE, testCases.toArray() );
+		}
+		else if( mainForm != null )
+		{
+			mainForm.setOptions( ENDPOINT, new String[] { null } );
+		}
+
+		StringToStringMap values = super.initValues( modelItem, param );
+
+		if( mainForm != null )
+		{
+			if( param instanceof WsdlTestCase )
+			{
+				mainForm.getFormField( TESTSUITE ).setValue( ( ( WsdlTestCase )param ).getTestSuite().getName() );
+				mainForm.getFormField( TESTCASE ).setValue( ( ( WsdlTestCase )param ).getName() );
+				
+				// TODO: initialize security dropdown!!!!!!!!!!!!!!!!!
+				values.put( TESTSUITE, ( ( WsdlTestCase )param ).getTestSuite().getName() );
+				values.put( TESTCASE, ( ( WsdlTestCase )param ).getName() );
+			}
+			else if( param instanceof WsdlTestSuite )
+			{
+				mainForm.getFormField( TESTSUITE ).setValue( ( ( WsdlTestSuite )param ).getName() );
+				values.put( TESTSUITE, ( ( WsdlTestSuite )param ).getName() );
+			}
+
+			mainForm.getComponent( SAVEPROJECT ).setEnabled( !modelItem.isRemote() );
+		}
+
+		return values;
 	}
 
 	private void createTestCaseRunnerTabs( WsdlProject modelItem, XFormDialogBuilder builder )
@@ -102,52 +181,53 @@ public class SecurityTestRunnerAction extends TestRunnerAction
 					}
 				} );
 
-		mainForm.addComboBox( TESTCASE, new String[] {}, "The TestCase to run" ).addFormFieldListener( new XFormFieldListener()
-		{
-
-			public void valueChanged( XFormField sourceField, String newValue, String oldValue )
-			{
-				List<String> securityTests = new ArrayList<String>();
-				String st = mainForm.getComponentValue( SECURITY_TEST_NAME );
-
-				if( newValue.equals( ALL_VALUE ) )
+		mainForm.addComboBox( TESTCASE, new String[] {}, "The TestCase to run" ).addFormFieldListener(
+				new XFormFieldListener()
 				{
-					for( TestSuite testSuite : testSuites )
+
+					public void valueChanged( XFormField sourceField, String newValue, String oldValue )
 					{
-						for( TestCase testCase : testSuite.getTestCaseList() )
+						List<String> securityTests = new ArrayList<String>();
+						String st = mainForm.getComponentValue( SECURITY_TEST_NAME );
+
+						if( newValue.equals( ALL_VALUE ) )
 						{
-							for( SecurityTest securityTest : testCase.getSecurityTestList() )
+							for( TestSuite testSuite : testSuites )
 							{
-								if( !securityTests.contains( securityTest.getName() ) )
-									securityTests.add( securityTest.getName() );
+								for( TestCase testCase : testSuite.getTestCaseList() )
+								{
+									for( SecurityTest securityTest : testCase.getSecurityTestList() )
+									{
+										if( !securityTests.contains( securityTest.getName() ) )
+											securityTests.add( securityTest.getName() );
+									}
+								}
 							}
 						}
-					}
-				}
-				else
-				{
-					TestCase testCase = null;
-					try
-					{
-						testCase = getModelItem().getTestSuiteByName( mainForm.getComponentValue( TESTSUITE ) )
-								.getTestCaseByName( mainForm.getComponentValue( TESTCASE ) );
-					}
-					catch( NullPointerException npe )
-					{
-					}
-					if( testCase != null )
-						securityTests.addAll( Arrays.asList( ModelSupport.getNames( testCase.getSecurityTestList() ) ) );
-				}
+						else
+						{
+							TestCase testCase = null;
+							try
+							{
+								testCase = getModelItem().getTestSuiteByName( mainForm.getComponentValue( TESTSUITE ) )
+										.getTestCaseByName( mainForm.getComponentValue( TESTCASE ) );
+							}
+							catch( NullPointerException npe )
+							{
+							}
+							if( testCase != null )
+								securityTests.addAll( Arrays.asList( ModelSupport.getNames( testCase.getSecurityTestList() ) ) );
+						}
 
-				securityTests.add( 0, ALL_VALUE );
-				mainForm.setOptions( SECURITY_TEST_NAME, securityTests.toArray() );
+						securityTests.add( 0, ALL_VALUE );
+						mainForm.setOptions( SECURITY_TEST_NAME, securityTests.toArray() );
 
-				if( securityTests.contains( st ) )
-				{
-					mainForm.getFormField( SECURITY_TEST_NAME ).setValue( st );
-				}
-			}
-		} );
+						if( securityTests.contains( st ) )
+						{
+							mainForm.getFormField( SECURITY_TEST_NAME ).setValue( st );
+						}
+					}
+				} );
 		mainForm.addComboBox( SECURITY_TEST_NAME, new String[] {}, "The Security Test to run" );
 		mainForm.addSeparator();
 
@@ -192,7 +272,7 @@ public class SecurityTestRunnerAction extends TestRunnerAction
 		setToolsSettingsAction( null );
 		buildArgsForm( builder, false, "TestRunner" );
 	}
-	
+
 	protected ArgumentBuilder buildArgs( WsdlProject modelItem ) throws IOException
 	{
 		XFormDialog dialog = getDialog();
@@ -207,7 +287,7 @@ public class SecurityTestRunnerAction extends TestRunnerAction
 
 		ArgumentBuilder builder = new ArgumentBuilder( values );
 
-		builder.startScript( "testrunner", ".bat", ".sh" );
+		builder.startScript( SECURITYTESTRUNNER, BAT, SH );
 
 		builder.addString( ENDPOINT, "-e", "" );
 		builder.addString( HOSTPORT, "-h", "" );
@@ -217,7 +297,7 @@ public class SecurityTestRunnerAction extends TestRunnerAction
 
 		if( !values.get( TESTCASE ).equals( ALL_VALUE ) )
 			builder.addString( TESTCASE, "-c", "" );
-		
+
 		if( !values.get( SECURITY_TEST_NAME ).equals( ALL_VALUE ) )
 			builder.addString( SECURITY_TEST_NAME, "-n", "" );
 
@@ -265,5 +345,34 @@ public class SecurityTestRunnerAction extends TestRunnerAction
 
 		return builder;
 	}
-	
+
+	protected void generate( StringToStringMap values, ToolHost toolHost, WsdlProject modelItem ) throws Exception
+	{
+		String testRunnerDir = mainForm.getComponentValue( TESTRUNNERPATH );
+
+		ProcessBuilder builder = new ProcessBuilder();
+		ArgumentBuilder args = buildArgs( modelItem );
+		builder.command( args.getArgs() );
+		if( StringUtils.isNullOrEmpty( testRunnerDir ) )
+			builder.directory( new File( "." ) );
+		else
+			builder.directory( new File( testRunnerDir ) );
+
+		if( mainForm.getComponentValue( SAVEPROJECT ).equals( Boolean.TRUE.toString() ) )
+		{
+			modelItem.save();
+		}
+		else if( StringUtils.isNullOrEmpty( modelItem.getPath() ) )
+		{
+			UISupport.showErrorMessage( "Project [" + modelItem.getName() + "] has not been saved to file." );
+			return;
+		}
+
+		if( log.isDebugEnabled() )
+			log.debug( "Launching testrunner in directory [" + builder.directory() + "] with arguments ["
+					+ args.toString() + "]" );
+
+		toolHost.run( new ProcessToolRunner( builder, "soapUI TestRunner", modelItem, args ) );
+	}
+
 }
