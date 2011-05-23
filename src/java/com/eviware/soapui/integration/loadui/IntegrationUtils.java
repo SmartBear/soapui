@@ -499,8 +499,13 @@ public class IntegrationUtils
 		{
 			try
 			{
-				project.save();
-				return true;
+				if( project.save() )
+					return true;
+				else
+				{
+					UISupport.showInfoMessage( "Export Operation Aborted!" );
+					return false;
+				}
 			}
 			catch( IOException e )
 			{
