@@ -47,7 +47,7 @@ public abstract class MerlinCrypto extends WssCryptoBase
 		SimpleBindingForm form = new SimpleBindingForm( new PresentationModel<MerlinCrypto>( this ) );
 
 		form.appendTextField( "keystore", "Keystore", "The keystore file" );
-		form.appendTextField( "password", "Password", "The keystore password" );
+		form.appendPasswordField( "password", "Password", "The keystore password" );
 		form.appendComboBox( "type", "Type", new String[] { "JKS", "PKCS12" }, "The keystore type" );
 
 		form.addRightComponent( validateButton = new JButton( "Validate" ) );

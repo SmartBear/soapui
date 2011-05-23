@@ -111,7 +111,7 @@ public class Axis1XWSDL2JavaAction extends AbstractToolsAction<Interface>
 		advForm.addNameSpaceTable( NAMESPACE_MAPPING, modelItem );
 
 		advForm.addTextField( USERNAME, messages.get( "Dialog.Advanced.Username" ), XForm.FieldType.TEXT );
-		advForm.addTextField( PASSWORD, messages.get( "Dialog.Advanced.Password" ), XForm.FieldType.TEXT );
+		advForm.addTextField( PASSWORD, messages.get( "Dialog.Advanced.Password" ), XForm.FieldType.PASSWORD );
 
 		buildArgsForm( builder, true, "WSDL2Java" ); //$NON-NLS-1$
 

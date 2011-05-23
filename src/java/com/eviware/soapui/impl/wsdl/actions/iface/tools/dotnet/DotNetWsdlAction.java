@@ -100,11 +100,11 @@ public class DotNetWsdlAction extends AbstractToolsAction<Interface>
 
 		XForm httpForm = builder.createForm( "HTTP settings" );
 		httpForm.addTextField( USERNAME, "username to access the WSDL-URI", XForm.FieldType.TEXT );
-		httpForm.addTextField( PASSWORD, "password to access the WSDL-URI", XForm.FieldType.TEXT );
+		httpForm.addTextField( PASSWORD, "password to access the WSDL-URI", XForm.FieldType.PASSWORD );
 		httpForm.addTextField( DOMAIN, "domain to access the WSDL-URI", XForm.FieldType.TEXT );
 		httpForm.addTextField( PROXY, "username to access the WSDL-URI", XForm.FieldType.TEXT );
 		httpForm.addTextField( PROXYUSERNAME, "proxy username to access the WSDL-URI", XForm.FieldType.TEXT );
-		httpForm.addTextField( PROXYPASSWORD, "proxy password to access the WSDL-URI", XForm.FieldType.TEXT );
+		httpForm.addTextField( PROXYPASSWORD, "proxy password to access the WSDL-URI", XForm.FieldType.PASSWORD );
 		httpForm.addTextField( PROXYDOMAIN, "proxy domain to access the WSDL-URI", XForm.FieldType.TEXT );
 
 		buildArgsForm( builder, false, "wsdl.exe" );
