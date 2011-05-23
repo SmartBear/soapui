@@ -48,6 +48,7 @@ public abstract class AbstractSoapUIRunner implements CmdLineRunner
 	protected final Logger log = Logger.getLogger( getClass() );
 	private String settingsFile;
 	private String soapUISettingsPassword;
+	private String projectPassword;
 
 	private boolean enableUI;
 	private String outputFolder;
@@ -139,8 +140,8 @@ public abstract class AbstractSoapUIRunner implements CmdLineRunner
 	{
 		if( SoapUI.getSoapUICore() == null )
 		{
-		SoapUI.setSoapUICore( createSoapUICore(), true );
-		SoapUI.initGCTimer();
+			SoapUI.setSoapUICore( createSoapUICore(), true );
+			SoapUI.initGCTimer();
 		}
 
 		SoapUIClassLoaderState state = SoapUIExtensionClassLoader.ensure();
@@ -408,5 +409,15 @@ public abstract class AbstractSoapUIRunner implements CmdLineRunner
 	public boolean isEnableUI()
 	{
 		return enableUI;
+	}
+
+	public String getProjectPassword()
+	{
+		return projectPassword;
+	}
+
+	public void setProjectPassword( String projectPassword )
+	{
+		this.projectPassword = projectPassword;
 	}
 }
