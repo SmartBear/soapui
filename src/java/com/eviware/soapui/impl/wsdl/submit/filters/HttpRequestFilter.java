@@ -186,7 +186,7 @@ public class HttpRequestFilter extends AbstractRequestFilter
 		}
 
 		if( request.getSettings().getBoolean( HttpSettings.FORWARD_SLASHES ) )
-		path = PathUtils.fixForwardSlashesInPath( path );
+			path = PathUtils.fixForwardSlashesInPath( path );
 
 		if( PathUtils.isHttpPath( path ) )
 		{
@@ -275,7 +275,8 @@ public class HttpRequestFilter extends AbstractRequestFilter
 		}
 		else if( request.hasRequestBody() && httpMethod instanceof EntityEnclosingMethod )
 		{
-			httpMethod.setRequestHeader( "Content-Type", getContentTypeHeader( request.getMediaType(), encoding ) );
+			if( StringUtils.hasContent( request.getMediaType() ) )
+				httpMethod.setRequestHeader( "Content-Type", getContentTypeHeader( request.getMediaType(), encoding ) );
 
 			if( request.isPostQueryString() )
 			{
