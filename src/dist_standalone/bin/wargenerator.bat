@@ -35,4 +35,4 @@ if "%SOAPUI_HOME%\" == "" goto START
 
 rem ********* run soapui loadtest runner ***********
 
-"%JAVA%" %JAVA_OPTS% com.eviware.soapui.SoapUIMockAsWarGenerator %*
+"%JAVA%" %JAVA_OPTS% com.eviware.soapui.tools.SoapUIMockAsWarGenerator %*

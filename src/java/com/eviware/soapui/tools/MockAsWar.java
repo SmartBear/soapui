@@ -64,13 +64,13 @@ public class MockAsWar
 		this.localEndpoint = localEndpoint;
 		this.projectFile = new File( projectPath );
 		this.settingsFile = StringUtils.hasContent( settingsPath ) ? new File( settingsPath ) : null;
-		this.warDir = warDir.length() > 0 ? new File( warDir ) : new File( System.getProperty( "java.io.tmpdir" ),
-				"warasmock" );
+		this.warDir = StringUtils.hasContent( warDir ) ? new File( warDir ) : new File(
+				System.getProperty( "java.io.tmpdir" ), "warasmock" );
 		if( !this.warDir.exists() )
 		{
 			this.warDir.mkdir();
 		}
-		this.warFile = warFile.length() == 0 ? null : new File( warFile );
+		this.warFile = !StringUtils.hasContent( warFile ) ? null : new File( warFile );
 		this.includeExt = includeExt;
 		this.includeActions = actions;
 		this.includeListeners = listeners;
@@ -267,6 +267,7 @@ public class MockAsWar
 	{
 		if( warDir.isDirectory() )
 		{
+			log.info( "Creating WAR directory in [" + warDir.getAbsolutePath() + "]" );
 			webInf = new File( warDir, "WEB-INF" );
 			if( !( webInf.mkdir() || webInf.exists() ) )
 			{

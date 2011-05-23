@@ -115,6 +115,7 @@ public class JarPackager
 		{
 			byte buffer[] = new byte[BUFFER_SIZE];
 			// Open archive file
+			log.info( "Creating archive [" + archiveFile.getAbsolutePath() + "]" );
 			FileOutputStream stream = new FileOutputStream( archiveFile );
 			JarOutputStream out = new JarOutputStream( stream, new Manifest() );
 

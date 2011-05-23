@@ -20,6 +20,7 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.model.project.ProjectFactoryRegistry;
 import com.eviware.soapui.settings.ProjectSettings;
+import com.eviware.soapui.support.StringUtils;
 
 public class SoapUIMockAsWarGenerator extends AbstractSoapUIRunner
 {
@@ -120,10 +121,15 @@ public class SoapUIMockAsWarGenerator extends AbstractSoapUIRunner
 
 		pFile = tmpProjectFile.getAbsolutePath();
 
+		String endpoint = StringUtils.hasContent( localEndpoint ) ? localEndpoint : project.getName();
+
+		log.info( "Creating WAR file with endpoint [" + endpoint + "]" );
+
 		MockAsWar mockAsWar = new MockAsWar( pFile, getSettingsFile(), getOutputFolder(), warFile, includeLibraries,
-				includeActions, includeListeners, localEndpoint, enableWebUI );
+				includeActions, includeListeners, endpoint, enableWebUI );
 
 		mockAsWar.createMockAsWarArchive();
+		log.info( "WAR Generation complete" );
 		return true;
 	}
 
