@@ -51,7 +51,7 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 	private JTree tree;
 	Color selected = new Color( 205, 205, 205 );
 	Color unselected = new Color( 228, 228, 228 );
-	Color noSecurable = new Color( 102, 102, 102 );
+//	Color noSecurable = new Color( 102, 102, 102 );
 	private boolean released;
 
 	@Override
@@ -90,8 +90,8 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 		return result;
 	}
 
-	private Component getTreeCellRendererSecurityScanNode( JTree arg0, SecurityScanNode node, boolean sel,
-			boolean arg3, boolean arg4, int arg5, boolean arg6 )
+	private Component getTreeCellRendererSecurityScanNode( JTree arg0, SecurityScanNode node, boolean sel, boolean arg3,
+			boolean arg4, int arg5, boolean arg6 )
 	{
 		return new SecurityScanCellRender( arg0, node, sel, arg3, arg4, arg5, arg6 );
 	}
@@ -131,8 +131,7 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 				{
 					String labelText = securityTest.getSecurityScansMap().get( testStep.getId() ).size() == 1 ? securityTest
 							.getSecurityScansMap().get( testStep.getId() ).size()
-							+ " scan)"
-							: securityTest.getSecurityScansMap().get( testStep.getId() ).size() + " scans)";
+							+ " scan)" : securityTest.getSecurityScansMap().get( testStep.getId() ).size() + " scans)";
 					label = new JLabel( testStep.getLabel() + " (" + labelText, SwingConstants.LEFT );
 				}
 				else
@@ -239,11 +238,10 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 			}
 			else
 			{
-				this.setBackground( noSecurable );
-				this.setBackground( noSecurable );
-				this.label.setBackground( noSecurable );
-				this.innerLeftPanel.setBackground( noSecurable );
-				expandCollapseBtn.setBackground( noSecurable );
+				this.setBackground( unselected );
+				this.label.setBackground( unselected );
+				this.innerLeftPanel.setBackground( unselected );
+				expandCollapseBtn.setBackground( unselected );
 			}
 		}
 
@@ -295,8 +293,7 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 				{
 					String labelText = securityTest.getSecurityScansMap().get( testStep.getId() ).size() == 1 ? securityTest
 							.getSecurityScansMap().get( testStep.getId() ).size()
-							+ " scan)"
-							: securityTest.getSecurityScansMap().get( testStep.getId() ).size() + " scans)";
+							+ " scan)" : securityTest.getSecurityScansMap().get( testStep.getId() ).size() + " scans)";
 					label.setText( testStep.getLabel() + " (" + labelText );
 				}
 				else
@@ -327,8 +324,7 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 
 	}
 
-	public class SecurityScanCellRender extends JPanel implements PropertyChangeListener, CustomTreeNode,
-			ReleasableNode
+	public class SecurityScanCellRender extends JPanel implements PropertyChangeListener, CustomTreeNode, ReleasableNode
 	{
 		private SecurityScan securityCheck;
 		private JProgressBar progressBar;
