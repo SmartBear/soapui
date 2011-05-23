@@ -43,6 +43,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.TransferHandler;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableCellRenderer;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
@@ -63,9 +64,10 @@ import com.eviware.soapui.support.xml.XmlUtils;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.support.AForm;
+import com.eviware.x.form.support.AField.AFieldType;
 
+@SuppressWarnings( "serial" )
 public class PropertyHolderTable extends JPanel
 {
 	protected final TestPropertyHolder holder;
@@ -132,6 +134,8 @@ public class PropertyHolderTable extends JPanel
 			dropTarget.setDefaultActions( DnDConstants.ACTION_COPY_OR_MOVE );
 		}
 
+		// Set render this only for value column. In this cell render we handle password shadowing.
+		propertiesTable.getColumnModel().getColumn( 1 ).setCellRenderer( new PropertiesTableCellRenderer() );
 		return propertiesTable;
 	}
 
@@ -726,6 +730,36 @@ public class PropertyHolderTable extends JPanel
 			}
 
 			return false;
+		}
+	}
+
+	/**
+	 * Idea is that all values which property name starts or ends with 'password' case insesitive be
+	 * shadowed.
+	 * 
+	 * This cell render in applied only on property value column.
+	 * 
+	 * @author robert
+	 *
+	 */
+	private static class PropertiesTableCellRenderer extends DefaultTableCellRenderer
+	{
+		public Component getTableCellRendererComponent( JTable table, Object value, boolean isSelected, boolean hasFocus,
+				int row, int column )
+		{
+			Component component = super.getTableCellRendererComponent( table, value, isSelected, hasFocus, row, column );
+			if( value instanceof String )
+			{
+				if( value != null && ( ( String )value ).length() > 0 )
+				{
+					String val = (( String )table.getValueAt( row, 0 )).toLowerCase();
+					if( val.startsWith( "password" ) || val.endsWith( "password" ) )
+						component = super.getTableCellRendererComponent( table, "**************", isSelected, hasFocus, row,
+								column );
+				}
+			}
+
+			return component;
 		}
 	}
 }

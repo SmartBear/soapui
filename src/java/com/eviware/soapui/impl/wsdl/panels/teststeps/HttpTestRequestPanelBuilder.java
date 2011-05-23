@@ -73,7 +73,7 @@ public class HttpTestRequestPanelBuilder extends EmptyPanelBuilder<HttpTestReque
 
 		// security / authentication
 		table.addProperty( "Username", "username", true );
-		table.addProperty( "Password", "password", true );
+		table.addPropertyShadow( "Password", "password", true );
 		table.addProperty( "Domain", "domain", true );
 
 		StringList keystores = new StringList( ( ( WsdlProject )request.getTestStep().getTestCase().getTestSuite()

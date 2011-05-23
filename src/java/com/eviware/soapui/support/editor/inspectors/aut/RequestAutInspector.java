@@ -49,7 +49,7 @@ public class RequestAutInspector extends AbstractXmlInspector
 			form = new SimpleBindingForm( new PresentationModel<AbstractHttpRequest<?>>( request ) );
 			form.addSpace( 5 );
 			form.appendTextField( "username", "Username", "The username to use for HTTP Authentication" );
-			form.appendTextField( "password", "Password", "The password to use for HTTP Authentication" );
+			form.appendPasswordField( "password", "Password", "The password to use for HTTP Authentication" );
 			form.appendTextField( "domain", "Domain", "The domain to use for HTTP Authentication" );
 
 			if( request instanceof WsdlRequest )
