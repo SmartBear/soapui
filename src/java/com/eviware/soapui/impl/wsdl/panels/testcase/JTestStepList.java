@@ -351,6 +351,7 @@ public class JTestStepList extends JPanel
 				if( testStep.getTestCase() == testCase )
 				{
 					testStep.addPropertyChangeListener( TestStepListModel.this );
+//					setSelectedValue( testStep, true );
 					fireIntervalAdded( TestStepListModel.this, ix, ix );
 				}
 			}

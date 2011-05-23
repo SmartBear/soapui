@@ -513,7 +513,7 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 
 	public WsdlTestStep insertTestStep( TestStepConfig stepConfig, int ix, boolean clearIds )
 	{
-		TestStepConfig newStepConfig = ix == -1 ? getConfig().addNewTestStep() : getConfig().insertNewTestStep( ix + 1);
+		TestStepConfig newStepConfig = ix == -1 ? getConfig().addNewTestStep() : getConfig().insertNewTestStep( ix );
 		newStepConfig.set( stepConfig );
 		WsdlTestStep testStep = createTestStepFromConfig( newStepConfig );
 
@@ -530,12 +530,12 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 		if( ix == -1 )
 			testSteps.add( testStep );
 		else
-			testSteps.add( ix + 1, testStep );
+			testSteps.add( ix , testStep );
 
 		testStep.afterLoad();
 
 		if( getTestSuite() != null )
-			( getTestSuite() ).fireTestStepAdded( testStep, ix == -1 ? testSteps.size() - 1 : ix + 1 );
+			( getTestSuite() ).fireTestStepAdded( testStep, ix == -1 ? testSteps.size() - 1 : ix );
 
 		notifyPropertyChanged( "testSteps", null, testStep );
 

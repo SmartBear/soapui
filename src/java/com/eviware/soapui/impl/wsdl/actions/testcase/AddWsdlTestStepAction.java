@@ -57,7 +57,8 @@ public class AddWsdlTestStepAction extends AbstractSoapUIAction<WsdlTestCase>
 		if( newTestStepConfig != null )
 		{
 			WsdlTestStep testStep = testCase.addTestStep( newTestStepConfig );
-			UISupport.selectAndShow( testStep );
+			if( testStep != null )
+				UISupport.selectAndShow( testStep );
 		}
 	}
 }
