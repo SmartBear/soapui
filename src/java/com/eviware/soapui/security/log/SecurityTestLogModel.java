@@ -26,6 +26,7 @@ import com.eviware.soapui.security.result.SecurityResult;
 import com.eviware.soapui.security.result.SecurityScanRequestResult;
 import com.eviware.soapui.security.result.SecurityScanResult;
 import com.eviware.soapui.security.result.SecurityTestStepResult;
+import com.eviware.soapui.security.result.SecurityResult.ResultStatus;
 import com.eviware.soapui.security.scan.AbstractSecurityScan;
 
 /**
@@ -147,10 +148,9 @@ public class SecurityTestLogModel extends AbstractListModel
 			{
 				if( startStepIndex > 0 && startStepIndex < maxSize )
 				{
-					items.set(
-							startStepIndex,
-							"Step " + stepCount + " [" + result.getTestStep().getName() + "] "
-									+ result.getExecutionProgressStatus() + ": took " + result.getTimeTaken() + " ms" );
+					String statusToDisplay = getStatusToDisplay( result.getExecutionProgressStatus() );
+					items.set( startStepIndex, "Step " + stepCount + " [" + result.getTestStep().getName() + "] "
+							+ statusToDisplay + ": took " + result.getTimeTaken() + " ms" );
 					SoftReference<SecurityResult> stepResultRef = new SoftReference<SecurityResult>( result );
 					results.set( startStepIndex, stepResultRef );
 					fireContentsChanged( this, startStepIndex, startStepIndex );
@@ -163,6 +163,30 @@ public class SecurityTestLogModel extends AbstractListModel
 			}
 		}
 		currentStepEntriesCount = 0;
+	}
+
+	private String getStatusToDisplay( ResultStatus result )
+	{
+		String statusToDisplay = "";
+		switch( result )
+		{
+		case FAILED :
+			statusToDisplay = "Alerts";
+			break;
+		case OK :
+			statusToDisplay = "No Alerts";
+			break;
+		case SKIPPED :
+			statusToDisplay = "Skipped";
+			break;
+		case MISSING_ASSERTIONS :
+			statusToDisplay = "Missing Assertions";
+			break;
+		case MISSING_PARAMETERS :
+			statusToDisplay = "Missing Parameters";
+			break;
+		}
+		return statusToDisplay;
 	}
 
 	public synchronized void addSecurityScanResult( SecurityScan securityCheck )
@@ -221,9 +245,9 @@ public class SecurityTestLogModel extends AbstractListModel
 			SecurityScan securityCheck = securityCheckResult.getSecurityScan();
 			securityCheckResult.detectMissingItems();
 			StringBuilder outStr = new StringBuilder( "SecurityScan " );
-			outStr.append( checkCount ).append( " [" ).append( securityCheck.getName() ).append( "] " )
-					.append( securityCheckResult.getExecutionProgressStatus() ).append( ", took = " )
-					.append( securityCheckResult.getTimeTaken() );
+			String statusToDisplay = getStatusToDisplay( securityCheckResult.getExecutionProgressStatus() );
+			outStr.append( checkCount ).append( " [" ).append( securityCheck.getName() ).append( "] " ).append(
+					statusToDisplay ).append( ", took = " ).append( securityCheckResult.getTimeTaken() );
 			try
 			{
 				if( startCheckIndex > 0 && startCheckIndex < maxSize )
