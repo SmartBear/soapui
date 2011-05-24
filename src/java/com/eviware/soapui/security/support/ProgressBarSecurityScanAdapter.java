@@ -122,7 +122,7 @@ public class ProgressBarSecurityScanAdapter extends SecurityTestRunListenerAdapt
 					}
 
 					if( progressBar.getValue() >= progressBar.getMaximum() * .9 )
-						progressBar.setMaximum( progressBar.getMaximum() + 5  );
+						progressBar.setMaximum( progressBar.getMaximum() + 5 );
 					progressBar.setValue( progressBar.getValue() + 1 );
 
 				}
@@ -150,27 +150,43 @@ public class ProgressBarSecurityScanAdapter extends SecurityTestRunListenerAdapt
 	public void afterSecurityScan( TestCaseRunner testRunner, SecurityTestRunContext runContext,
 			SecurityScanResult securityCheckResult )
 	{
-		if( securityCheckResult.getSecurityScan().getTestStep().getId()
-				.equals( this.securityCheck.getTestStep().getId() )
+		if( securityCheckResult.getSecurityScan().getTestStep().getId().equals( this.securityCheck.getTestStep().getId() )
 				&& this.securityCheck.getName().equals( securityCheckResult.getSecurityScan().getName() ) )
 		{
 			if( securityCheckResult.getStatus() != ResultStatus.CANCELED )
 			{
+
 				if( securityCheck.getAssertionCount() == 0 )
 				{
 					progressBar.setForeground( MISSING_ASSERTION_COLOR );
 					progressBar.setString( STATE_MISSING_ASSERTIONS );
 				}
-				else if( this.securityCheck instanceof AbstractSecurityScanWithProperties )
+				else
 				{
-					if( ( ( AbstractSecurityScanWithProperties )this.securityCheck ).getParameterHolder() != null
-							&& ( ( AbstractSecurityScanWithProperties )this.securityCheck ).getParameterHolder()
-									.getParameterList() != null
-							&& ( ( AbstractSecurityScanWithProperties )this.securityCheck ).getParameterHolder()
-									.getParameterList().size() == 0 )
+					if( this.securityCheck instanceof AbstractSecurityScanWithProperties )
 					{
-						progressBar.setForeground( MISSING_ASSERTION_COLOR );
-						progressBar.setString( STATE_MISSING_PARAMETERS );
+						if( ( ( AbstractSecurityScanWithProperties )this.securityCheck ).getParameterHolder() != null
+								&& ( ( AbstractSecurityScanWithProperties )this.securityCheck ).getParameterHolder()
+										.getParameterList() != null
+								&& ( ( AbstractSecurityScanWithProperties )this.securityCheck ).getParameterHolder()
+										.getParameterList().size() == 0 )
+						{
+							progressBar.setForeground( MISSING_ASSERTION_COLOR );
+							progressBar.setString( STATE_MISSING_PARAMETERS );
+						}
+						else if( securityCheckResult.getStatus() == ResultStatus.NOTHING_TO_SEND )
+						{
+							progressBar.setForeground( defaultBackground );
+							progressBar.setString( "SKIPPED" );
+						}
+					}
+					else
+					{
+						if( securityCheckResult.getStatus() == ResultStatus.NOTHING_TO_SEND )
+						{
+							progressBar.setForeground( defaultBackground );
+							progressBar.setString( "SKIPPED" );
+						}
 					}
 				}
 				progressBar.setValue( progressBar.getMaximum() );
