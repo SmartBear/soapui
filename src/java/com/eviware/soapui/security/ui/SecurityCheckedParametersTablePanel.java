@@ -69,12 +69,12 @@ public class SecurityCheckedParametersTablePanel extends JPanel implements ListS
 	protected DefaultActionList actionList;
 	protected JUndoableTextArea pathPane;
 	protected XFormDialog dialog;
-	protected AbstractSecurityScanWithProperties securityCheck;
+	protected AbstractSecurityScanWithProperties securityScan;
 
 	public SecurityCheckedParametersTablePanel( SecurityParametersTableModel model,
 			Map<String, TestProperty> properties, AbstractSecurityScanWithProperties securityCheck )
 	{
-		this.securityCheck = securityCheck;
+		this.securityScan = securityCheck;
 		this.model = model;
 		initRequestPartProperties( properties );
 		init();
@@ -101,7 +101,7 @@ public class SecurityCheckedParametersTablePanel extends JPanel implements ListS
 		toolbar.add( UISupport.createToolbarButton( new AddNewParameterAction() ) );
 		toolbar.add( UISupport.createToolbarButton( new RemoveParameterAction() ) );
 		toolbar.add( UISupport.createToolbarButton( new CopyParameterAction() ) );
-		toolbar.add( UISupport.createToolbarButton( new CloneParametersAction( securityCheck ) ) );
+		toolbar.add( UISupport.createToolbarButton( new CloneParametersAction( securityScan ) ) );
 		toolbar.addGlue();
 
 		add( toolbar, BorderLayout.NORTH );
@@ -113,13 +113,13 @@ public class SecurityCheckedParametersTablePanel extends JPanel implements ListS
 		add( new JScrollPane( table ), BorderLayout.CENTER );
 
 		pathPane = new JUndoableTextArea();
-		if( securityCheck instanceof BoundarySecurityScan )
+		if( securityScan instanceof BoundarySecurityScan )
 		{
-			( ( BoundarySecurityScan )securityCheck ).refreshRestrictionLabel( -1 );
+			( ( BoundarySecurityScan )securityScan ).refreshRestrictionLabel( -1 );
 		}
-		if( securityCheck instanceof InvalidTypesSecurityScan )
+		if( securityScan instanceof InvalidTypesSecurityScan )
 		{
-			( ( InvalidTypesSecurityScan )securityCheck ).refreshRestrictionLabel( -1 );
+			( ( InvalidTypesSecurityScan )securityScan ).refreshRestrictionLabel( -1 );
 		}
 	}
 
@@ -439,13 +439,13 @@ public class SecurityCheckedParametersTablePanel extends JPanel implements ListS
 	public void valueChanged( ListSelectionEvent lse )
 	{
 		DefaultListSelectionModel dlsm = ( ( DefaultListSelectionModel )lse.getSource() );
-		if( securityCheck instanceof BoundarySecurityScan )
+		if( securityScan instanceof BoundarySecurityScan )
 		{
-			( ( BoundarySecurityScan )securityCheck ).refreshRestrictionLabel( dlsm.getAnchorSelectionIndex() );
+			( ( BoundarySecurityScan )securityScan ).refreshRestrictionLabel( dlsm.getAnchorSelectionIndex() );
 		}
-		if( securityCheck instanceof InvalidTypesSecurityScan )
+		if( securityScan instanceof InvalidTypesSecurityScan )
 		{
-			( ( InvalidTypesSecurityScan )securityCheck ).refreshRestrictionLabel( dlsm.getAnchorSelectionIndex() );
+			( ( InvalidTypesSecurityScan )securityScan ).refreshRestrictionLabel( dlsm.getAnchorSelectionIndex() );
 		}
 	}
 }

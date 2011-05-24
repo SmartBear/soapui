@@ -53,7 +53,7 @@ public class SecurityConfigurationDialog extends SimpleDialog
 		this.securityCheck = securityCheck;
 	}
 
-	public SecurityScan getSecurityCheck()
+	public SecurityScan getSecurityScan()
 	{
 		return securityCheck;
 	}

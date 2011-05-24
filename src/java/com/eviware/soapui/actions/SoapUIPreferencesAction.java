@@ -83,7 +83,7 @@ public class SoapUIPreferencesAction extends AbstractAction
 		addPrefs( new AnnotatedSettingsPrefs( WsaSettings.class, WSA_SETTINGS ) );
 		addPrefs( new LoadUIPrefs( LOADUI_SETTINGS ) );
 		addPrefs( new AnnotatedSettingsPrefs( WebRecordingSettings.class, WEBRECORDING_SETTINGS ) );
-		addPrefs( new SecurityChecksPrefs( GLOBAL_SENSITIVE_INFORMATION_TOKENS ) );
+		addPrefs( new SecurityScansPrefs( GLOBAL_SENSITIVE_INFORMATION_TOKENS ) );
 
 		for( PrefsFactory factory : SoapUI.getFactoryRegistry().getFactories( PrefsFactory.class ) )
 		{

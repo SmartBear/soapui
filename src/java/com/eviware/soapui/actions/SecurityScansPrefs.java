@@ -29,23 +29,23 @@ import com.eviware.soapui.support.SecurityScanUtil;
 import com.eviware.soapui.support.components.SimpleForm;
 import com.eviware.soapui.support.types.StringToStringMap;
 
-public class SecurityChecksPrefs implements Prefs
+public class SecurityScansPrefs implements Prefs
 {
 
 	public static final String GLOBAL_SENSITIVE_INFORMATION_TOKENS = "Global Sensitive Information Tokens";
-	private SimpleForm securityChecksForm;
+	private SimpleForm securityScansForm;
 	private final String title;
 
-	public SecurityChecksPrefs( String title )
+	public SecurityScansPrefs( String title )
 	{
 		this.title = title;
 	}
 
 	public SimpleForm getForm()
 	{
-		if( securityChecksForm == null )
+		if( securityScansForm == null )
 		{
-			securityChecksForm = new SimpleForm();
+			securityScansForm = new SimpleForm();
 
 			PropertyHolderTable propertyHolderTable = new PropertyHolderTable(
 					SecurityScanUtil.getGlobalSensitiveInformationExposureTokens() )
@@ -103,12 +103,12 @@ public class SecurityChecksPrefs implements Prefs
 				}
 			};
 			propertyHolderTable.setPreferredSize( new Dimension( 200, 300 ) );
-			securityChecksForm.append( new JLabel( title ) );
-			securityChecksForm.addSpace();
-			securityChecksForm.addComponent( propertyHolderTable );
+			securityScansForm.append( new JLabel( title ) );
+			securityScansForm.addSpace();
+			securityScansForm.addComponent( propertyHolderTable );
 		}
 
-		return securityChecksForm;
+		return securityScansForm;
 	}
 
 	public void getFormValues( Settings settings )

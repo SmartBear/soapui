@@ -157,7 +157,7 @@ public class SecurityScanRegistry
 	 *           used in the http monitor
 	 * @return A String Array containing the names of all the scans
 	 */
-	public String[] getAvailableSecurityChecksNames()
+	public String[] getAvailableSecurityScansNames()
 	{
 		List<String> result = new ArrayList<String>();
 
@@ -173,7 +173,7 @@ public class SecurityScanRegistry
 	}
 
 	// TODO drso: test and implement properly
-	public String[] getAvailableSecurityChecksNames( TestStep testStep )
+	public String[] getAvailableSecurityScansNames( TestStep testStep )
 	{
 		List<String> result = new ArrayList<String>();
 

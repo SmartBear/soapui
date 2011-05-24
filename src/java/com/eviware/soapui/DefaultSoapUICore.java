@@ -82,7 +82,7 @@ public class DefaultSoapUICore implements SoapUICore
 
 	public boolean isSavingSettings;
 
-	protected SecurityScanRegistry securityCheckRegistry;
+	protected SecurityScanRegistry securityScanRegistry;
 
 	public boolean getInitialImport()
 	{
@@ -682,16 +682,16 @@ public class DefaultSoapUICore implements SoapUICore
 		factoryRegistry = new SoapUIFactoryRegistry( null );
 	}
 
-	protected void initSecurityCheckRegistry()
+	protected void initSecurityScanRegistry()
 	{
-		securityCheckRegistry = SecurityScanRegistry.getInstance();
+		securityScanRegistry = SecurityScanRegistry.getInstance();
 	}
 
 	@Override
 	public SecurityScanRegistry getSecurityScanRegistry()
 	{
-		if( securityCheckRegistry == null )
-			initSecurityCheckRegistry();
-		return securityCheckRegistry;
+		if( securityScanRegistry == null )
+			initSecurityScanRegistry();
+		return securityScanRegistry;
 	}
 }

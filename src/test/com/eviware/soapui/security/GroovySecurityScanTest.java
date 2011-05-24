@@ -22,7 +22,7 @@ import com.eviware.soapui.security.scan.GroovySecurityScan;
  * @author nebojsa.tasic
  * 
  */
-public class GroovySecurityCheckTest extends AbstractSecurityTestCaseWithMockService
+public class GroovySecurityScanTest extends AbstractSecurityTestCaseWithMockService
 {
 
 	/**
