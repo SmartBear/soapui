@@ -40,7 +40,7 @@ import com.eviware.soapui.support.UISupport;
 
 public class MaliciousAttachmentSecurityScan extends AbstractSecurityScan
 {
-	
+
 	public static final String TYPE = "MaliciousAttachmentSecurityScan";
 	public static final String NAME = "Malicious Attachment";
 
@@ -65,6 +65,7 @@ public class MaliciousAttachmentSecurityScan extends AbstractSecurityScan
 		{
 			config = ( ( MaliciousAttachmentSecurityScanConfig )newConfig.getConfig() );
 		}
+
 	}
 
 	/**
@@ -324,7 +325,10 @@ public class MaliciousAttachmentSecurityScan extends AbstractSecurityScan
 	@Override
 	protected boolean hasNext( TestStep testStep, SecurityTestRunContext context )
 	{
-		boolean hasNext = elementIndex < config.getElementList().size();
+
+		WsdlRequest request = ( WsdlRequest )getRequest( testStep );
+
+		boolean hasNext = request.getAttachmentCount() == 0 ? false : elementIndex < config.getElementList().size();
 
 		if( !hasNext )
 		{
