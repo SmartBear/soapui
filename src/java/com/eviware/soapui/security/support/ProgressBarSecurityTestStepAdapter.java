@@ -150,7 +150,7 @@ public class ProgressBarSecurityTestStepAdapter
 						STATE_MISSING_PARAMETERS ) ) )
 				{
 					SecurityTestStepResult results = securityTest.getSecurityTestStepResultMap().get( testStep );
-					if( results.getStatus() == ResultStatus.NOTHING_TO_SEND ) {
+					if( results.getStatus() == ResultStatus.SKIPPED ) {
 						progressBar.setString( "SKIPPED" );
 						progressBar.setForeground( UNKNOWN_COLOR );
 					}

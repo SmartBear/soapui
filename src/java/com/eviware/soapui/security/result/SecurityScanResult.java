@@ -252,9 +252,9 @@ public class SecurityScanResult implements SecurityResult
 	public void detectMissingItems()
 	{
 		SecurityScan securityCheck = getSecurityScan();
-		if( getStatus().equals( ResultStatus.NOTHING_TO_SEND ) )
+		if( getStatus().equals( ResultStatus.SKIPPED ) )
 		{
-			executionProgressStatus = ResultStatus.NOTHING_TO_SEND;
+			executionProgressStatus = ResultStatus.SKIPPED;
 		}
 		if( securityCheck instanceof AbstractSecurityScanWithProperties
 				&& ( ( AbstractSecurityScanWithProperties )securityCheck ).getParameterHolder().getParameterList().size() == 0 )

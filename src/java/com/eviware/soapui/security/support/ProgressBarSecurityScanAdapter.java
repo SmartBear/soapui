@@ -174,7 +174,7 @@ public class ProgressBarSecurityScanAdapter extends SecurityTestRunListenerAdapt
 							progressBar.setForeground( MISSING_ASSERTION_COLOR );
 							progressBar.setString( STATE_MISSING_PARAMETERS );
 						}
-						else if( securityCheckResult.getStatus() == ResultStatus.NOTHING_TO_SEND )
+						else if( securityCheckResult.getStatus() == ResultStatus.SKIPPED )
 						{
 							progressBar.setForeground( defaultBackground );
 							progressBar.setString( "SKIPPED" );
@@ -182,7 +182,7 @@ public class ProgressBarSecurityScanAdapter extends SecurityTestRunListenerAdapt
 					}
 					else
 					{
-						if( securityCheckResult.getStatus() == ResultStatus.NOTHING_TO_SEND )
+						if( securityCheckResult.getStatus() == ResultStatus.SKIPPED )
 						{
 							progressBar.setForeground( defaultBackground );
 							progressBar.setString( "SKIPPED" );

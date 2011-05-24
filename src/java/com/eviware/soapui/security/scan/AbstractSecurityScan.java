@@ -237,7 +237,7 @@ public abstract class AbstractSecurityScan extends AbstractWsdlModelItem<Securit
 
 		if( noMutations )
 		{
-			securityScanResult.setStatus( ResultStatus.NOTHING_TO_SEND );
+			securityScanResult.setStatus( ResultStatus.SKIPPED );
 		}
 		return securityScanResult;
 	}
