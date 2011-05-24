@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -78,7 +79,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 
 		setPropertiesConfig( getConfig().getProperties() );
 
-		securityTestStepResultMap = new HashMap<TestStep, SecurityTestStepResult>();
+		securityTestStepResultMap = new LinkedHashMap<TestStep, SecurityTestStepResult>();
 
 		for( SecurityTestRunListener listener : SoapUI.getListenerRegistry().getListeners( SecurityTestRunListener.class ) )
 		{
