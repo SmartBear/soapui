@@ -15,10 +15,13 @@ package com.eviware.soapui.security.result;
 import java.awt.event.ActionEvent;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.AbstractAction;
 
+import com.eviware.soapui.model.security.SecurityScan;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.support.UISupport;
@@ -39,6 +42,7 @@ public class SecurityTestStepResult implements SecurityResult
 	private TestStep testStep;
 	private long size;
 	private List<SecurityScanResult> securityScanResultList;
+	private Map<SecurityScan, SecurityScanResult> securityScanResultsMap;
 	private boolean discarded;
 	private long timeTaken = 0;
 	private long timeStamp;
@@ -57,6 +61,7 @@ public class SecurityTestStepResult implements SecurityResult
 		this.testStep = testStep;
 		executionProgressStatus = ResultStatus.INITIALIZED;
 		securityScanResultList = new ArrayList<SecurityScanResult>();
+		securityScanResultsMap = new HashMap<SecurityScan, SecurityScanResult>();
 		timeStamp = System.currentTimeMillis();
 		this.originalTestStepResult = originalResult;
 	}
@@ -64,6 +69,11 @@ public class SecurityTestStepResult implements SecurityResult
 	public List<SecurityScanResult> getSecurityScanResultList()
 	{
 		return securityScanResultList;
+	}
+
+	public SecurityScanResult getSecurityScanResult( SecurityScan scan )
+	{
+		return securityScanResultsMap.get( scan );
 	}
 
 	public ResultStatus getStatus()
@@ -103,6 +113,10 @@ public class SecurityTestStepResult implements SecurityResult
 	{
 		if( securityScanResultList != null )
 			securityScanResultList.add( securityScanResult );
+		if( securityScanResultsMap != null )
+		{
+			securityScanResultsMap.put( securityScanResult.getSecurityScan(), securityScanResult );
+		}
 
 		timeTaken += securityScanResult.getTimeTaken();
 
@@ -152,7 +166,8 @@ public class SecurityTestStepResult implements SecurityResult
 			logIconStatus = securityScanResult.getLogIconStatus();
 		}
 		else if( ( securityScanResult.getLogIconStatus().equals( ResultStatus.MISSING_ASSERTIONS ) || securityScanResult
-				.getLogIconStatus().equals( ResultStatus.MISSING_PARAMETERS ) ) && logIconStatus != ResultStatus.FAILED )
+				.getLogIconStatus().equals( ResultStatus.MISSING_PARAMETERS ) )
+				&& logIconStatus != ResultStatus.FAILED )
 		{
 			logIconStatus = securityScanResult.getLogIconStatus();
 		}
@@ -252,8 +267,8 @@ public class SecurityTestStepResult implements SecurityResult
 	public String getSecurityTestLog()
 	{
 		StringBuffer tl = new StringBuffer().append( "Step " ).append( " [" ).append( testStep.getName() ).append( "] " )
-				.append( getExecutionProgressStatus().toString() ).append( ": took " )
-				.append( getOriginalTestStepResult().getTimeTaken() ).append( " ms" );
+				.append( getExecutionProgressStatus().toString() ).append( ": took " ).append(
+						getOriginalTestStepResult().getTimeTaken() ).append( " ms" );
 		tl.append( testLog );
 		return tl.toString();
 	}
