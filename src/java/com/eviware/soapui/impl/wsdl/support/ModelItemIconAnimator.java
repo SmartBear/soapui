@@ -64,11 +64,38 @@ public class ModelItemIconAnimator<T extends AbstractAnimatableModelItem<?>> imp
 
 	public void start()
 	{
-		if( !enabled || future != null )
+		System.out.println( "Enable " + enabled );
+		System.out.println( "Future " + future );
+		if( !enabled )
 			return;
 
-		stopped = false;
-		future = SoapUI.getThreadPool().submit( this );
+		/*
+		 * mock service to be run needs to be stopped first.
+		 * 
+		 * if service is restart action occurs while it is running, than run()
+		 * needs to finish first so service can be started again. If that is 
+		 * case than force stopping mock service.
+		 * 
+		 */
+		if( isStopped() )
+		{
+			if( future != null && !future.isDone() )
+			{
+				future.cancel( true );
+				while( future != null )
+					try
+					{
+						Thread.sleep( 500 );
+					}
+					catch( InterruptedException e )
+					{
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+			}
+			stopped = false;
+			future = SoapUI.getThreadPool().submit( this );
+		}
 	}
 
 	public ImageIcon getBaseIcon()
@@ -108,6 +135,7 @@ public class ModelItemIconAnimator<T extends AbstractAnimatableModelItem<?>> imp
 			catch( InterruptedException e )
 			{
 				SoapUI.logError( e );
+				stopped = true;
 			}
 		}
 
