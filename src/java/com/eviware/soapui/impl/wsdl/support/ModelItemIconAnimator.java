@@ -64,8 +64,6 @@ public class ModelItemIconAnimator<T extends AbstractAnimatableModelItem<?>> imp
 
 	public void start()
 	{
-		System.out.println( "Enable " + enabled );
-		System.out.println( "Future " + future );
 		if( !enabled )
 			return;
 
