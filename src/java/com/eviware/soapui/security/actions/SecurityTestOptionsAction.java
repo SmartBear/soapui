@@ -34,10 +34,8 @@ public class SecurityTestOptionsAction extends AbstractSoapUIAction<SecurityTest
 {
 	private static final String FAIL_ON_ERROR = "Abort on Error";
 	private static final String FAIL_SECURITYTEST_ON_ERROR = "Fail SecurityTest on Error";
-	private static final String SOCKET_TIMEOUT = "Socket timeout";
+	private static final String SKIP_DATA_SOURCE_LOOPS = "Skip DataSource Loops";
 	public static final String SOAPUI_ACTION_ID = "SecurityTestOptionsAction";
-	private static final String SECURITYTEST_TIMEOUT = "SecurityTest timeout";
-	private static final String MAXRESULTS = "Max Results";
 
 	private XFormDialog dialog;
 	private XForm form;
@@ -62,13 +60,7 @@ public class SecurityTestOptionsAction extends AbstractSoapUIAction<SecurityTest
 				}
 			} );
 			form.addCheckBox( FAIL_SECURITYTEST_ON_ERROR, "Fail SecurityTest if it has failed TestSteps" );
-			// form.addTextField( SOCKET_TIMEOUT, "Socket timeout in milliseconds",
-			// FieldType.TEXT );
-			// form.addTextField( SECURITYTEST_TIMEOUT,
-			// "Timeout in milliseconds for entire SecurityTest", FieldType.TEXT );
-			// form.addTextField( MAXRESULTS,
-			// "Maximum number of TestStep results to keep in memory during a run",
-			// FieldType.TEXT );
+			form.addCheckBox( SKIP_DATA_SOURCE_LOOPS, "Skip DataSource Loop while running the SecurityTests" );
 
 			dialog = builder.buildDialog( builder.buildOkCancelHelpActions( HelpUrls.TESTCASEOPTIONS_HELP_URL ),
 					"Specify general options for this SecurityTest", UISupport.OPTIONS_ICON );
@@ -78,13 +70,7 @@ public class SecurityTestOptionsAction extends AbstractSoapUIAction<SecurityTest
 
 		values.put( FAIL_ON_ERROR, String.valueOf( securityTest.getFailOnError() ) );
 		values.put( FAIL_SECURITYTEST_ON_ERROR, String.valueOf( securityTest.getFailSecurityTestOnScanErrors() ) );
-		// values.put( SOCKET_TIMEOUT, String.valueOf( securityTest.getSettings()
-		// .getString( HttpSettings.SOCKET_TIMEOUT, "" ) ) );
-		// values.put( TESTCASE_TIMEOUT, String.valueOf( securityTest.getTimeout()
-		// ) );
-		// values.put( MAXRESULTS, String.valueOf( securityTest.getMaxResults() )
-		// );
-
+		values.put( SKIP_DATA_SOURCE_LOOPS, String.valueOf( securityTest.getSkipDataSourceLoops() ) );
 		values = dialog.show( values );
 
 		if( dialog.getReturnValue() == XFormDialog.OK_OPTION )
@@ -92,20 +78,9 @@ public class SecurityTestOptionsAction extends AbstractSoapUIAction<SecurityTest
 			try
 			{
 				securityTest.setFailOnError( Boolean.parseBoolean( values.get( FAIL_ON_ERROR ) ) );
-				securityTest.setFailSecurityTestOnScanErrors( Boolean.parseBoolean( values
-						.get( FAIL_SECURITYTEST_ON_ERROR ) ) );
-				// securityTest.setTimeout( Long.parseLong( values.get(
-				// TESTCASE_TIMEOUT ) ) );
-				// securityTest.setMaxResults( Integer.parseInt( values.get(
-				// MAXRESULTS ) ) );
-
-				// String timeout = values.get( SOCKET_TIMEOUT );
-				// if( timeout.trim().length() == 0 )
-				// securityTest.getSettings().clearSetting(
-				// HttpSettings.SOCKET_TIMEOUT );
-				// else
-				// securityTest.getSettings().setString(
-				// HttpSettings.SOCKET_TIMEOUT, timeout );
+				securityTest.setFailSecurityTestOnScanErrors( Boolean
+						.parseBoolean( values.get( FAIL_SECURITYTEST_ON_ERROR ) ) );
+				securityTest.setSkipDataSourceLoops( Boolean.parseBoolean( values.get( SKIP_DATA_SOURCE_LOOPS ) ) );
 
 			}
 			catch( Exception e1 )

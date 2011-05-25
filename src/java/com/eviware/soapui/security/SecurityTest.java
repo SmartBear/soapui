@@ -58,6 +58,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 	public final static String TEARDOWN_SCRIPT_PROPERTY = SecurityTest.class.getName() + "@tearDownScript";
 	public final static String FAIL_ON_SCANS_ERRORS_PROPERTY = SecurityTest.class.getName() + "@failOnScansErrors";
 	public final static String FAIL_ON_ERROR_PROPERTY = SecurityTest.class.getName() + "@failOnError";
+	public final static String SKIP_DATASOURCE_LOOP_PROPERTY = SecurityTest.class.getName() + "@skipDataSourceLoop";
 	private WsdlTestCase testCase;
 	private Set<SecurityTestRunListener> securityTestRunListeners = new HashSet<SecurityTestRunListener>();
 	private Map<TestStep, Set<SecurityTestRunListener>> securityTestStepRunListeners = new HashMap<TestStep, Set<SecurityTestRunListener>>();
@@ -358,9 +359,8 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 									if( testStepSecurityTestListConfig.getTestStepId().equals( ts.getId() ) )
 									{
 										testStep = ts;
-										SecurityScan securityScan = SoapUI.getSoapUICore().getSecurityScanRegistry()
-												.getFactory( secScanConfig.getType() )
-												.buildSecurityScan( testStep, secScanConfig, this );
+										SecurityScan securityScan = SoapUI.getSoapUICore().getSecurityScanRegistry().getFactory(
+												secScanConfig.getType() ).buildSecurityScan( testStep, secScanConfig, this );
 										scanList.add( securityScan );
 									}
 							}
@@ -592,8 +592,8 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 				if( testStepSecurityTest.getTestStepId().equals( testStep.getId() ) )
 				{
 					List<SecurityScanConfig> securityScanList = testStepSecurityTest.getTestStepSecurityScanList();
-					SecurityScanFactory factory = SoapUI.getSoapUICore().getSecurityScanRegistry()
-							.getFactory( securityScan.getType() );
+					SecurityScanFactory factory = SoapUI.getSoapUICore().getSecurityScanRegistry().getFactory(
+							securityScan.getType() );
 					SecurityScanConfig newSecScanConfig = ( SecurityScanConfig )securityScan.getConfig().copy();
 					SecurityScan newSecScan = factory.buildSecurityScan( testStep, newSecScanConfig, this );
 
@@ -687,6 +687,21 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 		}
 	}
 
+	public boolean getSkipDataSourceLoops()
+	{
+		return getConfig().getSkipDataSourceLoops();
+	}
+
+	public void setSkipDataSourceLoops( boolean skipDataSourceLoops )
+	{
+		boolean old = getSkipDataSourceLoops();
+		if( old != skipDataSourceLoops )
+		{
+			getConfig().setSkipDataSourceLoops( skipDataSourceLoops );
+			notifyPropertyChanged( SKIP_DATASOURCE_LOOP_PROPERTY, old, skipDataSourceLoops );
+		}
+	}
+
 	public void addTestStepRunListener( TestStep testStep, SecurityTestRunListener listener )
 	{
 		if( listener == null )
@@ -772,8 +787,8 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 	public boolean canAddSecurityScan( TestStep testStep, String securityScanName )
 	{
 		boolean hasScansOfType = false;
-		String securityScanType = SoapUI.getSoapUICore().getSecurityScanRegistry()
-				.getSecurityScanTypeForName( securityScanName );
+		String securityScanType = SoapUI.getSoapUICore().getSecurityScanRegistry().getSecurityScanTypeForName(
+				securityScanName );
 
 		for( SecurityScan scan : getTestStepSecurityScans( testStep.getId() ) )
 		{
@@ -817,8 +832,8 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 
 		SecurityScanConfig newScanConfig = SecurityScanConfig.Factory.newInstance();
 		newScanConfig.set( newConfig );
-		SecurityScanFactory factory = SoapUI.getSoapUICore().getSecurityScanRegistry()
-				.getFactory( newScanConfig.getType() );
+		SecurityScanFactory factory = SoapUI.getSoapUICore().getSecurityScanRegistry().getFactory(
+				newScanConfig.getType() );
 		boolean targetStepHasScans = getTestStepSecurityScansCount( targetTestStep.getId() ) > 0;
 		if( targetStepHasScans )
 		{
@@ -881,5 +896,16 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 	protected boolean skipTest( TestStep testStep )
 	{
 		return false;
+	}
+
+	public void resetAllScansSkipFurtherRunning()
+	{
+		for( String testStepId : getSecurityScansMap().keySet() )
+		{
+			for( SecurityScan scan : getTestStepSecurityScans( testStepId ) )
+			{
+				scan.setSkipFurtherRunning( false );
+			}
+		}
 	}
 }

@@ -146,7 +146,7 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 		boolean jumpExit = false;
 		TestStep currentStep = runContext.getCurrentStep();
 		securityTestStepListeners = securityTest.getTestStepRunListeners( currentStep );
-		if( !currentStep.isDisabled() )
+		if( !currentStep.isDisabled() && !securityTest.skipTest( currentStep ) )
 		{
 			TestStepResult stepResult = runTestStep( currentStep, true, true );
 			if( stepResult == null )
@@ -180,7 +180,7 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 				{
 					SecurityScan securityScan = testStepScansList.get( i );
 					// if security scan is disabled skip it.
-					if( securityScan.isDisabled() )
+					if( securityScan.isDisabled() || securityScan.isSkipFurtherRunning() )
 						continue;
 					if( stepResult.getStatus() != TestStepStatus.FAILED || securityScan.isApplyForFailedStep() )
 					{
@@ -258,6 +258,10 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 				securityTestListeners[j].beforeSecurityScan( this, runContext, securityScan );
 		}
 		result = securityScan.run( cloneForSecurityScan( ( WsdlTestStep )currentStep ), runContext, this );
+		if( securityScan.isRunOnlyOnce() )
+		{
+			securityScan.setSkipFurtherRunning( true );
+		}
 		if( securityTest.getFailOnError() && result.getStatus() == ResultStatus.FAILED )
 		{
 			fail( "Cancelling due to failed security scan" );
@@ -289,6 +293,7 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 	 */
 	protected void notifyBeforeRun()
 	{
+		securityTest.resetAllScansSkipFurtherRunning();
 		if( securityTestListeners == null || securityTestListeners.length == 0 )
 			return;
 

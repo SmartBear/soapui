@@ -1175,6 +1175,8 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 	{
 		SecurityTest securityTest = buildSecurityTest( getConfig().addNewSecurityTest() );
 		securityTest.setName( name );
+		securityTest.setFailOnError( true );
+		securityTest.setSkipDataSourceLoops( false );
 		securityTests.add( securityTest );
 
 		( getTestSuite() ).fireSecurityTestAdded( securityTest );

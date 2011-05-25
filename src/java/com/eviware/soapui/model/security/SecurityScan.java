@@ -108,5 +108,16 @@ public interface SecurityScan extends ModelItem, Assertable
 
 	void setApplyForFailedTestStep( boolean apply );
 
+	boolean isRunOnlyOnce();
+
+	void setRunOnlyOnce( boolean runOnlyOnce );
+
+	/*
+	 * indicates in case of runOnlyOnce set if the scan was already run that once
+	 */
+	boolean isSkipFurtherRunning();
+
+	void setSkipFurtherRunning( boolean skipFurtherRunning );
+
 	void release();
 }

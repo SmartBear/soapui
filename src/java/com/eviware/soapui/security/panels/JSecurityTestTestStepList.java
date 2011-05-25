@@ -336,6 +336,8 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 				return;
 
 			SecurityScan securityScan = securityTest.addNewSecurityScan( testStep, name );
+			securityScan.setRunOnlyOnce( true );
+
 
 			securityTestTree.setSelectionPath( new TreePath( node.getPath() ) );
 

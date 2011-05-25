@@ -78,6 +78,7 @@ public abstract class AbstractSecurityScan extends AbstractWsdlModelItem<Securit
 	private ExecutionStrategyHolder executionStrategy;
 	private TestStep originalTestStepClone;
 	private PropertyChangeSupport pcs = new PropertyChangeSupport( this );
+	private boolean skipFurtherRunning;
 
 	public AbstractSecurityScan( TestStep testStep, SecurityScanConfig config, ModelItem parent, String icon )
 	{
@@ -767,6 +768,18 @@ public abstract class AbstractSecurityScan extends AbstractWsdlModelItem<Securit
 		getConfig().setApplyForFailedStep( apply );
 	}
 
+	@Override
+	public boolean isRunOnlyOnce()
+	{
+		return getConfig().getRunOnlyOnce();
+	}
+
+	@Override
+	public void setRunOnlyOnce( boolean runOnlyOnce )
+	{
+		getConfig().setRunOnlyOnce( runOnlyOnce );
+	}
+
 	public void release()
 	{
 		if( assertionsSupport != null )
@@ -795,4 +808,17 @@ public abstract class AbstractSecurityScan extends AbstractWsdlModelItem<Securit
 	{
 		pcs.removePropertyChangeListener( listener );
 	}
+
+	@Override
+	public boolean isSkipFurtherRunning()
+	{
+		return skipFurtherRunning;
+	}
+
+	@Override
+	public void setSkipFurtherRunning( boolean skipFurtherRunning )
+	{
+		this.skipFurtherRunning = skipFurtherRunning;
+	}
+
 }

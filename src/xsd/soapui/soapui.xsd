@@ -1900,17 +1900,18 @@
 					<xsd:element name="tearDownScript" type="tns:Script"
 						maxOccurs="1" minOccurs="0">
 					</xsd:element>
-					<xsd:element name="testStepSecurityTest" type="tns:TestStepSecurityTest"
-						maxOccurs="unbounded" minOccurs="1">
+					<xsd:element name="testStepSecurityTest"
+						type="tns:TestStepSecurityTest" maxOccurs="unbounded"
+						minOccurs="1">
 					</xsd:element>
-					<xsd:element name="properties" type="tns:PropertiesType"
-						maxOccurs="1" minOccurs="0">
+					<xsd:element name="properties"
+						type="tns:PropertiesType" maxOccurs="1" minOccurs="0">
 					</xsd:element>
 					<xsd:element name="reportScript" type="tns:Script"
 						minOccurs="0" maxOccurs="1">
 					</xsd:element>
-					<xsd:element name="reportParameters" type="tns:PropertiesType"
-						minOccurs="0" maxOccurs="1">
+					<xsd:element name="reportParameters"
+						type="tns:PropertiesType" minOccurs="0" maxOccurs="1">
 					</xsd:element>
 				</xsd:sequence>
 				<xsd:attribute name="failOnError" type="xsd:boolean"></xsd:attribute>
@@ -1920,6 +1921,7 @@
 				<xsd:attribute name="failSecurityTestOnScanErrors"
 					type="xsd:boolean">
 				</xsd:attribute>
+				<xsd:attribute name="skipDataSourceLoops" type="xsd:boolean"></xsd:attribute>
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
@@ -1929,21 +1931,23 @@
 			<xsd:extension base="tns:ModelItem">
 				<xsd:sequence>
 					<xsd:element name="config" type="xsd:anyType"></xsd:element>
-					<xsd:element name="assertion" type="tns:TestAssertion"
-						maxOccurs="unbounded" minOccurs="0">
+					<xsd:element name="assertion"
+						type="tns:TestAssertion" maxOccurs="unbounded" minOccurs="0">
 					</xsd:element>
 					<xsd:element name="testStep" type="tns:TestStep"></xsd:element>
-					<xsd:element name="checkedPameters" type="tns:CheckedParametersList"
-						minOccurs="1" maxOccurs="1">
+					<xsd:element name="checkedPameters"
+						type="tns:CheckedParametersList" minOccurs="1" maxOccurs="1">
 					</xsd:element>
-					<xsd:element name="checkedParameters" type="tns:CheckedParametersList"
-						minOccurs="1" maxOccurs="1">
+					<xsd:element name="checkedParameters"
+						type="tns:CheckedParametersList" minOccurs="1" maxOccurs="1">
 					</xsd:element>
-					<xsd:element name="executionStrategy" type="tns:ExecutionStrategy">
+					<xsd:element name="executionStrategy"
+						type="tns:ExecutionStrategy">
 					</xsd:element>
 				</xsd:sequence>
 				<xsd:attribute name="type" type="xsd:string"></xsd:attribute>
-				<xsd:attribute name="applyForFailedStep" type="xsd:boolean">
+				<xsd:attribute name="applyForFailedStep"
+					type="xsd:boolean">
 				</xsd:attribute>
 				<xsd:attribute name="disabled" type="xsd:boolean"></xsd:attribute>
 			</xsd:extension>
@@ -1955,20 +1959,23 @@
 			<xsd:extension base="tns:ModelItem">
 				<xsd:sequence>
 					<xsd:element name="config" type="xsd:anyType"></xsd:element>
-					<xsd:element name="assertion" type="tns:TestAssertion"
-						maxOccurs="unbounded" minOccurs="0">
+					<xsd:element name="assertion"
+						type="tns:TestAssertion" maxOccurs="unbounded" minOccurs="0">
 					</xsd:element>
 					<xsd:element name="testStep" type="tns:TestStep"></xsd:element>
-					<xsd:element name="checkedParameters" type="tns:CheckedParametersList"
-						minOccurs="1" maxOccurs="1">
+					<xsd:element name="checkedParameters"
+						type="tns:CheckedParametersList" minOccurs="1" maxOccurs="1">
 					</xsd:element>
-					<xsd:element name="executionStrategy" type="tns:ExecutionStrategy">
+					<xsd:element name="executionStrategy"
+						type="tns:ExecutionStrategy">
 					</xsd:element>
 				</xsd:sequence>
 				<xsd:attribute name="type" type="xsd:string"></xsd:attribute>
-				<xsd:attribute name="applyForFailedStep" type="xsd:boolean">
+				<xsd:attribute name="applyForFailedStep"
+					type="xsd:boolean">
 				</xsd:attribute>
 				<xsd:attribute name="disabled" type="xsd:boolean"></xsd:attribute>
+				<xsd:attribute name="runOnlyOnce" type="xsd:boolean"></xsd:attribute>
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>

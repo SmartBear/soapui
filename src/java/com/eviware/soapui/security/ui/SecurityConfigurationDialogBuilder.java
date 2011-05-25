@@ -195,6 +195,17 @@ public class SecurityConfigurationDialogBuilder
 				securityCheck.setApplyForFailedTestStep( Boolean.parseBoolean( newValue ) );
 			}
 		} );
+		XFormField runOnlyOnce = dialog.getFormField( Strategy.RUN_ONLY_ONCE );
+		runOnlyOnce.setValue( String.valueOf( securityCheck.isRunOnlyOnce() ) );
+		runOnlyOnce.addFormFieldListener( new XFormFieldListener()
+		{
+
+			@Override
+			public void valueChanged( XFormField sourceField, String newValue, String oldValue )
+			{
+				securityCheck.setRunOnlyOnce( Boolean.parseBoolean( newValue ) );
+			}
+		} );
 
 	}
 
@@ -228,8 +239,8 @@ public class SecurityConfigurationDialogBuilder
 	protected void addParameterTable( SecurityScan securityCheck, XFormField field )
 	{
 		field.setProperty( "component", new SecurityCheckedParametersTablePanel( new SecurityParametersTableModel(
-				( ( AbstractSecurityScanWithProperties )securityCheck ).getParameterHolder() ), securityCheck
-				.getTestStep().getProperties(), ( AbstractSecurityScanWithProperties )securityCheck ) );
+				( ( AbstractSecurityScanWithProperties )securityCheck ).getParameterHolder() ), securityCheck.getTestStep()
+				.getProperties(), ( AbstractSecurityScanWithProperties )securityCheck ) );
 	}
 
 	private XFormDialog buildSecurityScanConfigurationDialog( String name, String description, ImageIcon icon,
@@ -356,6 +367,10 @@ public class SecurityConfigurationDialogBuilder
 
 		@AField( description = "Apply to Failed TestSteps", name = "Apply to Failed TestSteps", type = AFieldType.BOOLEAN )
 		public final static String APPLY_TO_FAILED_STEPS = "Apply to Failed TestSteps";
+
+		//indicates if security scan should run only once in case of DataSource Loop involved
+		@AField( description = "Run only once", name = "Run only once", type = AFieldType.BOOLEAN )
+		public final static String RUN_ONLY_ONCE = "Run only once";
 
 	}
 

@@ -198,6 +198,18 @@ public class SecurityConfigurationDialog extends SimpleDialog
 				securityCheck.setApplyForFailedTestStep( Boolean.parseBoolean( newValue ) );
 			}
 		} );
+		XFormField runOnlyOnce = strategyDialog.getFormField( Strategy.RUN_ONLY_ONCE );
+		runOnlyOnce.setValue( String.valueOf( securityCheck.isRunOnlyOnce() ) );
+		runOnlyOnce.addFormFieldListener( new XFormFieldListener()
+		{
+
+			@Override
+			public void valueChanged( XFormField sourceField, String newValue, String oldValue )
+			{
+				securityCheck.setRunOnlyOnce( Boolean.parseBoolean( newValue ) );
+			}
+		} );
+
 
 		return ( ( JFormDialog )strategyDialog ).getPanel();
 	}
