@@ -772,19 +772,16 @@ public abstract class AbstractSecurityScan extends AbstractWsdlModelItem<Securit
 		if( assertionsSupport != null )
 		{
 			assertionsSupport.release();
-			assertionsSupport = null;
 		}
 
 		if( securityScanResult != null )
 		{
 			securityScanResult.release();
-			securityScanResult = null;
 		}
 
 		if( securityScanRequestResult != null )
 		{
 			securityScanRequestResult.release();
-			securityScanRequestResult = null;
 		}
 
 	}
