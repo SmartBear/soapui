@@ -42,13 +42,25 @@ import com.eviware.soapui.security.scan.AbstractSecurityScanWithProperties;
  * when test is done. 3. Canced when is canceled execution 4. Missing
  * Assertions/Parameters if assertions/parameters are missing in security scan.
  * 
- * Importance/power of states: 1. Missing Assertions 2. Missing Parameters 3.
- * Cancel 4. Done 5. In Progress
+ * Importance/power of states: 
+ * 1. Missing Assertions 
+ * 2. Missing Parameters 
+ * 3. Cancel 
+ * 4. Done 
+ * 5. In Progress
+ * 6. SKIPPED
  * 
- * Progress bar color can be: 1. OK 2. FAILED 3. MISSING_ASSERTION - same color
+ * Progress bar color can be: 
+ * 1. OK 
+ * 2. FAILED 
+ * 3. MISSING_ASSERTION - same color
+ * 
  * if parameters are missing.
  * 
- * Color power: 1. FAILED 2. MISSING_ASSERTION 3. OK
+ * Color power: 
+ * 1. FAILED 
+ * 2. MISSING_ASSERTION 
+ * 3. OK
  * 
  */
 
@@ -111,8 +123,6 @@ public class ProgressBarSecurityTestStepAdapter
 			if( tsr.getTestStep().getId().equals( testStep.getId() ) )
 			{
 				int count = securityTest.getStepSecurityApplicableScansCount( tsr );
-				// int maximum = securityTest.getTestStepSecurityScansCount(
-				// testStep.getId() );
 				progressBar.getModel().setMaximum( count );
 
 				progressBar.setString( STATE_RUN );
@@ -122,7 +132,6 @@ public class ProgressBarSecurityTestStepAdapter
 				counterLabel.setText( "" );
 				counterLabel.setOpaque( false );
 
-				// totalAlertsCounter = 0;
 				( ( DefaultTreeModel )tree.getModel() ).nodeChanged( node );
 			}
 		}
@@ -150,7 +159,24 @@ public class ProgressBarSecurityTestStepAdapter
 						STATE_MISSING_PARAMETERS ) ) )
 				{
 					SecurityTestStepResult results = securityTest.getSecurityTestStepResultMap().get( testStep );
-					if( results.getStatus() == ResultStatus.SKIPPED ) {
+					/*
+					 * This is hack since SecurityTestStepResult.getStatus() do not returs real state of execution.
+					 * SKIPPED state overides all except FAILED , which is wrong.
+					 * 
+					 */
+					boolean skipped = true;
+					for( SecurityScanResult res : results.getSecurityScanResultList() )
+					{
+						if( res.getStatus() == ResultStatus.SKIPPED )
+							continue;
+						else
+						{
+							skipped = false;
+							break;
+						}
+					}
+					if( skipped )
+					{
 						progressBar.setString( "SKIPPED" );
 						progressBar.setForeground( UNKNOWN_COLOR );
 					}
