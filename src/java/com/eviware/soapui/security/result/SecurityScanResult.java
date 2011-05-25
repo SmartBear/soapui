@@ -66,7 +66,7 @@ public class SecurityScanResult implements SecurityResult
 		this.securityCheck = securityCheck;
 		status = ResultStatus.INITIALIZED;
 		executionProgressStatus = ResultStatus.INITIALIZED;
-		logIconStatus = ResultStatus.INITIALIZED;
+		logIconStatus = ResultStatus.UNKNOWN;
 		securityRequestResultList = new ArrayList<SecurityScanRequestResult>();
 		timeStamp = System.currentTimeMillis();
 		requestCount = 0;

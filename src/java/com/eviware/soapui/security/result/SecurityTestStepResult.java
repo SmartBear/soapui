@@ -115,37 +115,43 @@ public class SecurityTestStepResult implements SecurityResult
 		}
 
 		securityScanResult.detectMissingItems();
-		if( securityScanResult.getExecutionProgressStatus().equals( ResultStatus.CANCELED ) )
+		if( !hasAddedRequests )
 		{
 			executionProgressStatus = securityScanResult.getExecutionProgressStatus();
 		}
-		else if( securityScanResult.getExecutionProgressStatus().equals( ResultStatus.MISSING_PARAMETERS )
-				&& executionProgressStatus != ResultStatus.CANCELED )
+		else
 		{
-			executionProgressStatus = ResultStatus.MISSING_PARAMETERS;
+			if( securityScanResult.getExecutionProgressStatus().equals( ResultStatus.CANCELED ) )
+			{
+				executionProgressStatus = securityScanResult.getExecutionProgressStatus();
+			}
+			else if( securityScanResult.getExecutionProgressStatus().equals( ResultStatus.MISSING_PARAMETERS )
+					&& executionProgressStatus != ResultStatus.CANCELED )
+			{
+				executionProgressStatus = ResultStatus.MISSING_PARAMETERS;
+			}
+			else if( securityScanResult.getExecutionProgressStatus().equals( ResultStatus.MISSING_ASSERTIONS )
+					&& executionProgressStatus != ResultStatus.CANCELED
+					&& executionProgressStatus != ResultStatus.MISSING_PARAMETERS )
+			{
+				executionProgressStatus = ResultStatus.MISSING_ASSERTIONS;
+			}
+			else if( securityScanResult.getExecutionProgressStatus().equals( ResultStatus.FAILED )
+					&& executionProgressStatus != ResultStatus.CANCELED
+					&& executionProgressStatus != ResultStatus.MISSING_PARAMETERS
+					&& executionProgressStatus != ResultStatus.MISSING_ASSERTIONS )
+			{
+				executionProgressStatus = ResultStatus.FAILED;
+			}
+			else if( securityScanResult.getExecutionProgressStatus().equals( ResultStatus.OK )
+					&& executionProgressStatus != ResultStatus.CANCELED
+					&& executionProgressStatus != ResultStatus.MISSING_PARAMETERS
+					&& executionProgressStatus != ResultStatus.MISSING_ASSERTIONS
+					&& executionProgressStatus != ResultStatus.FAILED )
+			{
+				executionProgressStatus = ResultStatus.OK;
+			}
 		}
-		else if( securityScanResult.getExecutionProgressStatus().equals( ResultStatus.MISSING_ASSERTIONS )
-				&& executionProgressStatus != ResultStatus.CANCELED
-				&& executionProgressStatus != ResultStatus.MISSING_PARAMETERS )
-		{
-			executionProgressStatus = ResultStatus.MISSING_ASSERTIONS;
-		}
-		else if( securityScanResult.getExecutionProgressStatus().equals( ResultStatus.FAILED )
-				&& executionProgressStatus != ResultStatus.CANCELED
-				&& executionProgressStatus != ResultStatus.MISSING_PARAMETERS
-				&& executionProgressStatus != ResultStatus.MISSING_ASSERTIONS )
-		{
-			executionProgressStatus = ResultStatus.FAILED;
-		}
-		else if( securityScanResult.getExecutionProgressStatus().equals( ResultStatus.OK )
-				&& executionProgressStatus != ResultStatus.CANCELED
-				&& executionProgressStatus != ResultStatus.MISSING_PARAMETERS
-				&& executionProgressStatus != ResultStatus.MISSING_ASSERTIONS
-				&& executionProgressStatus != ResultStatus.FAILED )
-		{
-			executionProgressStatus = ResultStatus.OK;
-		}
-
 		if( securityScanResult.getLogIconStatus().equals( ResultStatus.FAILED ) )
 		{
 			logIconStatus = securityScanResult.getLogIconStatus();
