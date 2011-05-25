@@ -180,23 +180,32 @@ public class MaliciousAttachmentSecurityScan extends AbstractSecurityScan
 				elementIndex++ ;
 			}
 
-			for( MaliciousAttachmentElementConfig element : config.getElementList() )
-			{
-				if( element.getRemove() )
-				{
-					removeAttachments( testStep, element.getKey(), true );
-				}
-
-				int valIndex = valueIndex;
-
-				if( valIndex < element.getGenerateAttachmentList().size() + element.getReplaceAttachmentList().size() - 1 )
-				{
-					valIndex++ ;
-					addAttachments( testStep, element, valIndex );
-				}
-			}
-			elementIndex++ ;
+			executeAllAtOnce( testStep );
 			valueIndex++ ;
+		}
+	}
+
+	private void executeAllAtOnce( TestStep testStep )
+	{
+		for( MaliciousAttachmentElementConfig element : config.getElementList() )
+		{
+			if( element.getRemove() )
+			{
+				removeAttachments( testStep, element.getKey(), true );
+			}
+
+			int valIndex = valueIndex;
+
+			if( valIndex < element.getGenerateAttachmentList().size() + element.getReplaceAttachmentList().size() - 1 )
+			{
+				valIndex++ ;
+				addAttachments( testStep, element, valIndex );
+			}
+
+			if( valIndex + 1 > element.getGenerateAttachmentList().size() + element.getReplaceAttachmentList().size() - 1 )
+			{
+				elementIndex++ ;
+			}
 		}
 	}
 
