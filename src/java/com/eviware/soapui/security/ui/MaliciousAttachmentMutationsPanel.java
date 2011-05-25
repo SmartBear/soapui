@@ -156,11 +156,6 @@ public class MaliciousAttachmentMutationsPanel
 		{
 			public void valueChanged( ListSelectionEvent e )
 			{
-				if( addGeneratedButton != null )
-				{
-					addGeneratedButton.setEnabled( holder.getFilesList().getList().getModel().getSize() > 0 );
-				}
-
 				if( removeGeneratedButton != null )
 				{
 					removeGeneratedButton.setEnabled( table.getSelectedRowCount() > 0 );
@@ -199,11 +194,6 @@ public class MaliciousAttachmentMutationsPanel
 		{
 			public void valueChanged( ListSelectionEvent e )
 			{
-				if( addReplacementButton != null )
-				{
-					addReplacementButton.setEnabled( holder.getFilesList().getList().getModel().getSize() > 0 );
-				}
-
 				if( removeReplacementButton != null )
 				{
 					removeReplacementButton.setEnabled( table.getSelectedRowCount() > 0 );
