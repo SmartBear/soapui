@@ -83,32 +83,11 @@ public class SoapUISecurityTestRunner extends SoapUITestCaseRunner
 
 	public static final String TITLE = "soapUI " + SoapUI.SOAPUI_VERSION + " Security Test Runner";
 
-	private String testSuite;
-	private String testCase;
 	private String securityTestName;
-	private List<TestAssertion> assertions = new ArrayList<TestAssertion>();
-	private Map<TestAssertion, WsdlTestStepResult> assertionResults = new HashMap<TestAssertion, WsdlTestStepResult>();
-	private List<TestCase> failedTests = new ArrayList<TestCase>();
-
-	private int testSuiteCount;
-	private int testCaseCount;
-	private int testStepCount;
-	private int testAssertionCount;
 	private int securityTestCount;
 	private int securityScanCount;
 	private int securityScanRequestCount;
 	private int securityScanAlertCount;
-
-	private boolean printReport = true;
-	private boolean exportAll;
-	private boolean ignoreErrors;
-	private boolean junitReport;
-	private int exportCount;
-	private int maxErrors = 5;
-	private JUnitReportCollector reportCollector;
-	// private WsdlProject project;
-	private String projectPassword;
-	private boolean saveAfterRun;
 
 	/**
 	 * Runs the tests in the specified soapUI project file, see soapUI xdocs for
@@ -123,101 +102,12 @@ public class SoapUISecurityTestRunner extends SoapUITestCaseRunner
 		System.exit( new SoapUISecurityTestRunner().runFromCommandLine( args ) );
 	}
 
-
-	
 	protected boolean processCommandLine( CommandLine cmd )
 	{
-		String message = "";
-		if( cmd.hasOption( "e" ) )
-			setEndpoint( cmd.getOptionValue( "e" ) );
-
-		if( cmd.hasOption( "s" ) )
-		{
-			String testSuite = getCommandLineOptionSubstSpace( cmd, "s" );
-			setTestSuite( testSuite );
-			message += validateTestSuite();
-		}
-
-		if( cmd.hasOption( "c" ) )
-		{
-			String testCase = getCommandLineOptionSubstSpace( cmd, "c" );
-			setTestCase( testCase );
-			message += validateTestCase();
-		}
-
 		if( cmd.hasOption( "n" ) )
 			setSecurityTestName( cmd.getOptionValue( "n" ) );
-		
-		if( cmd.hasOption( "u" ) )
-			setUsername( cmd.getOptionValue( "u" ) );
 
-		if( cmd.hasOption( "p" ) )
-			setPassword( cmd.getOptionValue( "p" ) );
-
-		if( cmd.hasOption( "w" ) )
-			setWssPasswordType( cmd.getOptionValue( "w" ) );
-
-		if( cmd.hasOption( "d" ) )
-			setDomain( cmd.getOptionValue( "d" ) );
-
-		if( cmd.hasOption( "h" ) )
-			setHost( cmd.getOptionValue( "h" ) );
-
-		if( cmd.hasOption( "f" ) )
-			setOutputFolder( getCommandLineOptionSubstSpace( cmd, "f" ) );
-
-		if( cmd.hasOption( "t" ) )
-			setSettingsFile( getCommandLineOptionSubstSpace( cmd, "t" ) );
-
-		if( cmd.hasOption( "x" ) )
-		{
-			setProjectPassword( cmd.getOptionValue( "x" ) );
-		}
-
-		if( cmd.hasOption( "v" ) )
-		{
-			setSoapUISettingsPassword( cmd.getOptionValue( "v" ) );
-		}
-
-		if( cmd.hasOption( "D" ) )
-		{
-			setSystemProperties( cmd.getOptionValues( "D" ) );
-		}
-
-		if( cmd.hasOption( "G" ) )
-		{
-			setGlobalProperties( cmd.getOptionValues( "G" ) );
-		}
-
-		if( cmd.hasOption( "P" ) )
-		{
-			setProjectProperties( cmd.getOptionValues( "P" ) );
-		}
-
-		setIgnoreError( cmd.hasOption( "I" ) );
-		setEnableUI( cmd.hasOption( "i" ) );
-		setPrintReport( cmd.hasOption( "r" ) );
-		setExportAll( cmd.hasOption( "a" ) );
-		if( cmd.hasOption( "A" ) )
-		{
-			setExportAll( true );
-			System.setProperty( SOAPUI_EXPORT_SEPARATOR, File.separator );
-		}
-
-		setJUnitReport( cmd.hasOption( "j" ) );
-
-		if( cmd.hasOption( "m" ) )
-			setMaxErrors( Integer.parseInt( cmd.getOptionValue( "m" ) ) );
-
-		setSaveAfterRun( cmd.hasOption( "S" ) );
-
-		if( message.length() > 0 )
-		{
-			log.error( message );
-			return false;
-		}
-
-		return true;
+		return super.processCommandLine( cmd );
 	}
 
 	private void setSecurityTestName( String securityTestName )
@@ -225,64 +115,11 @@ public class SoapUISecurityTestRunner extends SoapUITestCaseRunner
 		this.securityTestName = securityTestName;
 	}
 
-	private String validateTestCase()
-	{
 
-		WsdlProject project = ( WsdlProject )ProjectFactoryRegistry.getProjectFactory( "wsdl" ).createNew(
-				getProjectFile(), getProjectPassword() );
-
-		if( project.getTestSuiteByName( testSuite ) == null )
-			return "Test Suite with name:'" + testSuite + "' is missing from project:'" + project.getName() + "' \n";
-
-		if( project.getTestSuiteByName( testSuite ).getTestCaseByName( testCase ) == null )
-			return "Test Case with name:'" + testCase + "' is missing from testSuite:'" + testSuite + "' \n";
-
-		return "";
-	}
-
-	private String validateTestSuite()
-	{
-		WsdlProject project = ( WsdlProject )ProjectFactoryRegistry.getProjectFactory( "wsdl" ).createNew(
-				getProjectFile(), getProjectPassword() );
-
-		if( project.getTestSuiteByName( testSuite ) == null )
-			return "Test Suite with name:'" + testSuite + "' is missing from project:'" + project.getName() + "' \n";
-
-		return "";
-
-	}
-
-	
-
-	
-	
 	protected SoapUIOptions initCommandLineOptions()
 	{
-		SoapUIOptions options = new SoapUIOptions( "securitytestrunner" );
-		options.addOption( "e", true, "Sets the endpoint" );
-		options.addOption( "s", true, "Sets the testsuite" );
-		options.addOption( "c", true, "Sets the testcase" );
+		SoapUIOptions options = super.initCommandLineOptions();
 		options.addOption( "n", true, "Sets the security test name" );
-		options.addOption( "u", true, "Sets the username" );
-		options.addOption( "p", true, "Sets the password" );
-		options.addOption( "w", true, "Sets the WSS password type, either 'Text' or 'Digest'" );
-		options.addOption( "i", false, "Enables Swing UI for scripts" );
-		options.addOption( "d", true, "Sets the domain" );
-		options.addOption( "h", true, "Sets the host" );
-		options.addOption( "r", false, "Prints a small summary report" );
-		options.addOption( "f", true, "Sets the output folder to export results to" );
-		options.addOption( "j", false, "Sets the output to include JUnit XML reports" );
-		options.addOption( "m", false, "Sets the maximum number of TestStep errors to save for each testcase" );
-		options.addOption( "a", false, "Turns on exporting of all results" );
-		options.addOption( "A", false, "Turns on exporting of all results using folders instead of long filenames" );
-		options.addOption( "t", true, "Sets the soapui-settings.xml file to use" );
-		options.addOption( "x", true, "Sets project password for decryption if project is encrypted" );
-		options.addOption( "v", true, "Sets password for soapui-settings.xml file" );
-		options.addOption( "D", true, "Sets system property with name=value" );
-		options.addOption( "G", true, "Sets global property with name=value" );
-		options.addOption( "P", true, "Sets or overrides project property with name=value" );
-		options.addOption( "I", false, "Do not stop if error occurs, ignore them" );
-		options.addOption( "S", false, "Saves the project after running the tests" );
 
 		return options;
 	}
@@ -297,7 +134,6 @@ public class SoapUISecurityTestRunner extends SoapUITestCaseRunner
 		super( title );
 	}
 
-	
 	public boolean runRunner() throws Exception
 	{
 		initGroovyLog();

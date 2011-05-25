@@ -76,29 +76,29 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 
 	public static final String TITLE = "soapUI " + SoapUI.SOAPUI_VERSION + " TestCase Runner";
 
-	private String testSuite;
-	private String testCase;
-	private List<TestAssertion> assertions = new ArrayList<TestAssertion>();
-	private Map<TestAssertion, WsdlTestStepResult> assertionResults = new HashMap<TestAssertion, WsdlTestStepResult>();
+	protected String testSuite;
+	protected String testCase;
+	protected List<TestAssertion> assertions = new ArrayList<TestAssertion>();
+	protected Map<TestAssertion, WsdlTestStepResult> assertionResults = new HashMap<TestAssertion, WsdlTestStepResult>();
 	// private List<TestCaseRunner> runningTests = new
 	// ArrayList<TestCaseRunner>();
-	private List<TestCase> failedTests = new ArrayList<TestCase>();
+	protected List<TestCase> failedTests = new ArrayList<TestCase>();
 
-	private int testSuiteCount;
-	private int testCaseCount;
-	private int testStepCount;
-	private int testAssertionCount;
+	protected int testSuiteCount;
+	protected int testCaseCount;
+	protected int testStepCount;
+	protected int testAssertionCount;
 
-	private boolean printReport;
-	private boolean exportAll;
-	private boolean ignoreErrors;
-	private boolean junitReport;
-	private int exportCount;
-	private int maxErrors = 5;
-	private JUnitReportCollector reportCollector;
-	// private WsdlProject project;
-	private String projectPassword;
-	private boolean saveAfterRun;
+	protected boolean printReport;
+	protected boolean exportAll;
+	protected boolean ignoreErrors;
+	protected boolean junitReport;
+	protected int exportCount;
+	protected int maxErrors = 5;
+	protected JUnitReportCollector reportCollector;
+	// protected WsdlProject project;
+	protected String projectPassword;
+	protected boolean saveAfterRun;
 
 	/**
 	 * Runs the tests in the specified soapUI project file, see soapUI xdocs for
@@ -741,7 +741,7 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 		testCaseCount++ ;
 	}
 
-	private class InternalProjectRunListener extends ProjectRunListenerAdapter
+	protected class InternalProjectRunListener extends ProjectRunListenerAdapter
 	{
 		public void afterTestSuite( ProjectRunner projectRunner, ProjectRunContext runContext, TestSuiteRunner testRunner )
 		{
