@@ -69,9 +69,15 @@ public class MockAsWarServlet extends HttpServlet
 			String mockServiceEndpoint = initMockServiceParameters();
 
 			logger.info( "Loading project" );
+
 			project = new WsdlProject( getServletContext().getRealPath( getInitParameter( "projectFile" ) ) );
 
-			logger.info( "Starting MockService(s)" );
+			if( project == null || project.getName() == null )
+				project = new WsdlProject( getServletContext().getResource( "/" + getInitParameter( "projectFile" ) )
+						.toString() );
+
+			if( project == null )
+				logger.info( "Starting MockService(s)" );
 
 			for( MockService mockService : project.getMockServiceList() )
 			{
@@ -95,7 +101,8 @@ public class MockAsWarServlet extends HttpServlet
 		if( StringUtils.hasContent( getInitParameter( "listeners" ) ) )
 		{
 			logger.info( "Init listeners" );
-			System.setProperty( "soapui.ext.listeners", getServletContext().getRealPath( getInitParameter( "listeners" ) ) );
+			System
+					.setProperty( "soapui.ext.listeners", getServletContext().getRealPath( getInitParameter( "listeners" ) ) );
 		}
 		else
 		{
@@ -238,14 +245,14 @@ public class MockAsWarServlet extends HttpServlet
 					{
 						synchronized( results )
 						{
-					while( maxResults > 0 && results.size() > maxResults )
-					{
-						results.remove( 0 );
-					}
-					if( result != null )
-					{
-						results.add( result );
-					}
+							while( maxResults > 0 && results.size() > maxResults )
+							{
+								results.remove( 0 );
+							}
+							if( result != null )
+							{
+								results.add( result );
+							}
 						}
 					}
 					return;
@@ -348,6 +355,7 @@ public class MockAsWarServlet extends HttpServlet
 
 		out.print( "<h3><img src=\"header_logo.jpg\"> soapUI MockServices Log for project [" + project.getName()
 				+ "]</h3>" + "<p style=\"text-align: left\">WSDLs:" );
+
 		for( MockRunner mockRunner : mockRunners )
 		{
 			String overviewUrl = ( ( WsdlMockRunner )mockRunner ).getOverviewUrl();
@@ -372,20 +380,25 @@ public class MockAsWarServlet extends HttpServlet
 		}
 
 		out.print( "<table border=\"1\">" );
-		out.print( "<tr><td></td><td>Timestamp</td><td>Time Taken</td><td>MockOperation</td><td>MockResponse</td><td>MockService</td></tr>" );
+		out
+				.print( "<tr><td></td><td>Timestamp</td><td>Time Taken</td><td>MockOperation</td><td>MockResponse</td><td>MockService</td></tr>" );
 
 		int cnt = 1;
 
 		for( MockResult result : results )
 		{
 
-			out.print( "<tr><td>" + ( cnt++ ) + "</td>" );
-			out.print( "<td><a target=\"detail\" href=\"detail?" + result.hashCode() + "\">"
-					+ new java.util.Date( result.getTimestamp() ) + "</a></td>" );
-			out.print( "<td>" + result.getTimeTaken() + "</td>" );
-			out.print( "<td>" + result.getMockOperation().getName() + "</td>" );
-			out.print( "<td>" + result.getMockResponse().getName() + "</td>" );
-			out.print( "<td>" + result.getMockOperation().getMockService().getName() + "</td></tr>" );
+			if( result != null )
+			{
+				out.print( "<tr><td>" + ( cnt++ ) + "</td>" );
+				out.print( "<td><a target=\"detail\" href=\"detail?" + result.hashCode() + "\">"
+						+ new java.util.Date( result.getTimestamp() ) + "</a></td>" );
+				out.print( "<td>" + result.getTimeTaken() + "</td>" );
+				out.print( "<td>" + result.getMockOperation().getName() + "</td>" );
+				if( result.getMockResponse() != null )
+					out.print( "<td>" + result.getMockResponse().getName() + "</td>" );
+				out.print( "<td>" + result.getMockOperation().getMockService().getName() + "</td></tr>" );
+			}
 		}
 
 		out.print( "</table>" );
