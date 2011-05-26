@@ -699,8 +699,8 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 			{
 				securityTestLog.addText( "SecurityTest canceled [" + testRunner.getReason() + "], time taken = "
 						+ securityRunner.getTimeTaken() );
-				functionalTestLog.addText( "Test canceled [" + testRunner.getReason() + "], time taken = "
-						+ securityRunner.getTimeTaken() );
+				functionalTestLog.addText( "FunctionalTest canceled [" + testRunner.getReason() + "], time taken = "
+						+ securityRunner.getFunctionalTimeTaken() );
 			}
 			else if( testRunner.getStatus() == SecurityTestRunner.Status.FAILED )
 			{
@@ -718,12 +718,12 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 				if( functionalStatus == ResultStatus.OK )
 				{
 					functionalTestLog.addText( "FunctionalTest finished with status [" + functionalStatus
-							+ "], time taken = " + securityRunner.getTimeTaken() );
+							+ "], time taken = " + securityRunner.getFunctionalTimeTaken() );
 				}
 				else if( functionalStatus == ResultStatus.FAILED )
 				{
 					functionalTestLog.addText( "FunctionalTest failed [Failing due to failed test step], time taken = "
-							+ securityRunner.getTimeTaken() );
+							+ securityRunner.getFunctionalTimeTaken() );
 				}
 			}
 			else
@@ -733,12 +733,12 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 				if( functionalStatus == ResultStatus.OK )
 				{
 					functionalTestLog.addText( "FunctionalTest finished with status [" + functionalStatus
-							+ "], time taken = " + securityRunner.getTimeTaken() );
+							+ "], time taken = " + securityRunner.getFunctionalTimeTaken() );
 				}
 				else if( functionalStatus == ResultStatus.FAILED )
 				{
 					functionalTestLog.addText( "FunctionalTest failed [Failing due to failed test step], time taken = "
-							+ securityRunner.getTimeTaken() );
+							+ securityRunner.getFunctionalTimeTaken() );
 				}
 			}
 

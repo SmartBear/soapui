@@ -381,9 +381,14 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 		return securityTestStepResultMap;
 	}
 
+	public void clearSecurityTestStepResultMap()
+	{
+		securityTestStepResultMap.clear();
+	}
+
 	/**
 	 * Puts result of a SecurityTest on a TestStep level to a map, if map
-	 * previously contained value for specified TestStep it is beeing replaced
+	 * previously contained value for specified TestStep it is being replaced
 	 * with the new result value
 	 * 
 	 * @param testStep

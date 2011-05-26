@@ -43,6 +43,7 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 	// private boolean stopped;
 	private SecurityTestRunListener[] securityTestListeners = new SecurityTestRunListener[0];
 	private SecurityTestRunListener[] securityTestStepListeners = new SecurityTestRunListener[0];
+	private long timeTaken;
 	/**
 	 * holds index of current securityScan out of summary number of scans on
 	 * SecurityTest level used in main progress bar on SecurityTest
@@ -215,6 +216,7 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 					securityStepResult.setStatus( ResultStatus.UNKNOWN );
 				}
 				securityTest.putSecurityTestStepResult( currentStep, securityStepResult );
+				timeTaken += securityStepResult.getTimeTaken();
 			}
 			for( int i = 0; i < securityTestStepListeners.length; i++ )
 			{
@@ -293,7 +295,7 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 	 */
 	protected void notifyBeforeRun()
 	{
-		securityTest.resetAllScansSkipFurtherRunning();
+		reset();
 		if( securityTestListeners == null || securityTestListeners.length == 0 )
 			return;
 
@@ -311,6 +313,13 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 		}
 		super.notifyBeforeRun();
 
+	}
+
+	private void reset()
+	{
+		securityTest.resetAllScansSkipFurtherRunning();
+		securityTest.clearSecurityTestStepResultMap();
+		timeTaken = 0;
 	}
 
 	/*
@@ -385,6 +394,16 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 		{
 			fail( "Failing due to failed security scan" );
 		}
+	}
+
+	public long getTimeTaken()
+	{
+		return timeTaken;
+	}
+
+	public long getFunctionalTimeTaken()
+	{
+		return super.getTimeTaken();
 	}
 
 }
