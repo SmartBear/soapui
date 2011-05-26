@@ -125,8 +125,12 @@ public class ProgressBarSecurityTestStepAdapter
 				int count = securityTest.getStepSecurityApplicableScansCount( tsr );
 				progressBar.getModel().setMaximum( count );
 
-				progressBar.setString( STATE_RUN );
-				progressBar.setForeground( OK_COLOR );
+				if( securityTest.getSecurityScansMap().get( testStep.getId() ) != null
+						&& securityTest.getSecurityScansMap().get( testStep.getId() ).size() > 0 )
+				{
+					progressBar.setString( STATE_RUN );
+					progressBar.setForeground( OK_COLOR );
+				}
 				progressBar.setBackground( Color.white );
 				progressBar.setValue( 0 );
 				counterLabel.setText( "" );
@@ -156,7 +160,8 @@ public class ProgressBarSecurityTestStepAdapter
 			{
 				if( !( progressBar.getString().equals( STATE_CANCEL )
 						|| progressBar.getString().equals( STATE_MISSING_ASSERTIONS ) || progressBar.getString().equals(
-						STATE_MISSING_PARAMETERS ) ) )
+						STATE_MISSING_PARAMETERS ) )
+						&& securityTest.getSecurityTestStepResultMap().get( testStep ) != null )
 				{
 					SecurityTestStepResult results = securityTest.getSecurityTestStepResultMap().get( testStep );
 					/*
@@ -189,30 +194,34 @@ public class ProgressBarSecurityTestStepAdapter
 
 		@Override
 		public void beforeSecurityScan( TestCaseRunner testRunner, SecurityTestRunContext runContext,
-				SecurityScan securityCheck )
+				SecurityScan securityScan )
 		{
-			if( securityCheck.getTestStep().getId().equals( testStep.getId() ) )
+			if( securityScan.getTestStep().getId().equals( testStep.getId() ) )
 			{
 				// set progress bar color/state based on/if there is result
-				if( securityCheck.getSecurityScanResult() != null
-						&& securityCheck.getSecurityScanResult().getStatus() != ResultStatus.CANCELED )
+				if( securityScan.getSecurityScanResult() != null
+						&& securityScan.getSecurityScanResult().getStatus() != ResultStatus.CANCELED )
 				{
 					if( progressBar.getString().equals( "" ) )
 					{
-						progressBar.setString( STATE_RUN );
-						progressBar.setForeground( OK_COLOR );
+						if( securityTest.getSecurityScansMap().get( testStep.getId() ) != null
+								&& securityTest.getSecurityScansMap().get( testStep.getId() ).size() > 0 )
+						{
+							progressBar.setString( STATE_RUN );
+							progressBar.setForeground( OK_COLOR );
+						}
 					}
 				}
 				// report is there is no assertions.
-				if( securityCheck.getAssertionCount() == 0 )
+				if( securityScan.getAssertionCount() == 0 )
 				{
 					if( !progressBar.getForeground().equals( FAILED_COLOR ) )
 						progressBar.setForeground( MISSING_ASSERTION_COLOR );
 					progressBar.setString( STATE_MISSING_ASSERTIONS );
 				}
 				// or if there is no parameters.
-				if( securityCheck instanceof AbstractSecurityScanWithProperties
-						&& ( ( AbstractSecurityScanWithProperties )securityCheck ).getParameterHolder().getParameterList()
+				if( securityScan instanceof AbstractSecurityScanWithProperties
+						&& ( ( AbstractSecurityScanWithProperties )securityScan ).getParameterHolder().getParameterList()
 								.size() == 0 )
 				{
 					if( !progressBar.getForeground().equals( FAILED_COLOR ) )
