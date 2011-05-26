@@ -178,9 +178,7 @@ public class SoapUISecurityTestRunner extends SoapUITestCaseRunner implements Se
 		{
 			for( TestCase testCase : testCasesToRun )
 			{
-				testCase.addTestRunListener( this );
 				runTestCase( ( WsdlTestCase )testCase );
-				testCase.removeTestRunListener( this );
 			}
 		}
 		else if( testSuite != null )
@@ -361,7 +359,7 @@ public class SoapUISecurityTestRunner extends SoapUITestCaseRunner implements Se
 			{
 
 				securityTest.addSecurityTestRunListener( this );
-				
+
 				if( StringUtils.isNullOrEmpty( securityTestName ) || securityTest.getName().equals( securityTestName ) )
 					runSecurityTest( securityTest );
 			}
@@ -506,24 +504,31 @@ public class SoapUISecurityTestRunner extends SoapUITestCaseRunner implements Se
 	{
 		TestStep currentStep = runContext.getCurrentStep();
 
-		if( currentStep instanceof Assertable )
+		// if( currentStep instanceof Assertable )
+		// {
+		// Assertable requestStep = ( Assertable )currentStep;
+		// for( int c = 0; c < requestStep.getAssertionCount(); c++ )
+		// {
+		// TestAssertion assertion = requestStep.getAssertionAt( c );
+		// log.info( "Assertion [" + assertion.getName() + "] has status " +
+		// assertion.getStatus() );
+		// if( assertion.getStatus() == AssertionStatus.FAILED )
+		// {
+		// for( AssertionError error : assertion.getErrors() )
+		// log.error( "ASSERTION FAILED -> " + error.getMessage() );
+		//
+		// assertions.add( assertion );
+		// assertionResults.put( assertion, ( SecurityTestStepResult )result );
+		// }
+		//
+		// testAssertionCount++ ;
+		// }
+		// }
+
+		String securityTestName = "";
+		if( !result.getSecurityScanResultList().isEmpty() )
 		{
-			Assertable requestStep = ( Assertable )currentStep;
-			for( int c = 0; c < requestStep.getAssertionCount(); c++ )
-			{
-				TestAssertion assertion = requestStep.getAssertionAt( c );
-				log.info( "Assertion [" + assertion.getName() + "] has status " + assertion.getStatus() );
-				if( assertion.getStatus() == AssertionStatus.FAILED )
-				{
-					for( AssertionError error : assertion.getErrors() )
-						log.error( "ASSERTION FAILED -> " + error.getMessage() );
-
-					assertions.add( assertion );
-					assertionResults.put( assertion, ( SecurityTestStepResult )result );
-				}
-
-				testAssertionCount++ ;
-			}
+			securityTestName = result.getSecurityScanResultList().get( 0 ).getSecurityScanName();
 		}
 
 		String countPropertyName = currentStep.getName() + " run count";
@@ -542,7 +547,9 @@ public class SoapUISecurityTestRunner extends SoapUITestCaseRunner implements Se
 				String exportSeparator = System.getProperty( SOAPUI_EXPORT_SEPARATOR, "-" );
 
 				TestCase tc = currentStep.getTestCase();
-				String nameBase = StringUtils.createFileName( tc.getTestSuite().getName(), '_' ) + exportSeparator
+
+				String nameBase = StringUtils.createFileName( securityTestName, '_' ) + exportSeparator
+						+ StringUtils.createFileName( tc.getTestSuite().getName(), '_' ) + exportSeparator
 						+ StringUtils.createFileName( tc.getName(), '_' ) + exportSeparator
 						+ StringUtils.createFileName( currentStep.getName(), '_' ) + "-" + count.longValue() + "-"
 						+ result.getStatus();
@@ -556,7 +563,8 @@ public class SoapUISecurityTestRunner extends SoapUITestCaseRunner implements Se
 					WsdlRunTestCaseTestStep runTestCaseTestStep = ( WsdlRunTestCaseTestStep )runContext
 							.getProperty( "#CallingRunTestCaseStep#" );
 
-					nameBase = StringUtils.createFileName( ctc.getTestSuite().getName(), '_' ) + exportSeparator
+					nameBase = StringUtils.createFileName( securityTestName, '_' ) + exportSeparator
+							+ StringUtils.createFileName( ctc.getTestSuite().getName(), '_' ) + exportSeparator
 							+ StringUtils.createFileName( ctc.getName(), '_' ) + exportSeparator
 							+ StringUtils.createFileName( runTestCaseTestStep.getName(), '_' ) + exportSeparator
 							+ StringUtils.createFileName( tc.getTestSuite().getName(), '_' ) + exportSeparator

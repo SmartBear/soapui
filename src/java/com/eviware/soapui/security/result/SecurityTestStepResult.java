@@ -210,6 +210,41 @@ public class SecurityTestStepResult implements SecurityResult
 
 	public void writeTo( PrintWriter writer )
 	{
+		for( SecurityScanResult scanResult : securityScanResultList )
+		{
+			int i = 0;
+			for( SecurityScanRequestResult scanRequestResult : scanResult.getSecurityRequestResultList() )
+			{
+				writer.println();
+				writer.println( "----------------------------------------------------------------------------------" );
+				writer.println( scanRequestResult.getChangedParamsInfo( i ) );
+				for( String message : scanRequestResult.getMessages() )
+				{
+					writer.println( "->" + message );
+				}
+				writer.println();
+				writer.println( "Properties -----------------------------------------------------------------------" );
+				writer.println();
+				for( String name : scanRequestResult.getMessageExchange().getProperties().keySet() )
+				{
+					if( scanRequestResult.getMessageExchange().getProperties().get( name ) != null )
+						writer.println( name + " = " + scanRequestResult.getMessageExchange().getProperties().get( name ) );
+				}
+				writer.println();
+				writer.println( "Request ---------------------------------------------------------------------------" );
+				writer.println();
+				writer.println( new String( scanRequestResult.getMessageExchange().getRawRequestData() ) );
+				writer.println();
+				writer.println( "Response --------------------------------------------------------------------------" );
+				writer.println();
+				writer.println( new String( scanRequestResult.getMessageExchange().getRawRequestData() ) );
+				writer.println( "-----------------------------------------------------------------------------------" );
+				writer.println();
+				writer.println();
+				i++ ;
+			}
+
+		}
 
 	}
 
