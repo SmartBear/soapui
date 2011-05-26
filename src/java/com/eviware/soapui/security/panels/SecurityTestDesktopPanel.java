@@ -430,7 +430,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 			if( shouldRun )
 				runSecurityTest();
 			else
-				UISupport.showInfoMessage( "No Security Scans avaialable to run.", "Security Test Warning" );
+				UISupport.showInfoMessage( "No Security Scans available to run.", "Security Test Warning" );
 		}
 	}
 

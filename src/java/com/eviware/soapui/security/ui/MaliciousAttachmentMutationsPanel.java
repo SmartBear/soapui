@@ -65,6 +65,7 @@ public class MaliciousAttachmentMutationsPanel
 	private WsdlRequest request;
 
 	private MaliciousAttachmentListToTableHolder holder = new MaliciousAttachmentListToTableHolder();
+
 	private JFormDialog tablesDialog;
 
 	public MaliciousAttachmentMutationsPanel( MaliciousAttachmentSecurityScanConfig config, WsdlRequest request )
@@ -564,6 +565,11 @@ public class MaliciousAttachmentMutationsPanel
 		{
 			filesList.updateConfig( config );
 		}
+	}
+	
+	public MaliciousAttachmentListToTableHolder getHolder()
+	{
+		return holder;
 	}
 
 	public void release()

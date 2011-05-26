@@ -12,6 +12,8 @@
 
 package com.eviware.soapui.security.scan;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,6 +27,7 @@ import com.eviware.soapui.config.MaliciousAttachmentElementConfig;
 import com.eviware.soapui.config.MaliciousAttachmentSecurityScanConfig;
 import com.eviware.soapui.config.SecurityScanConfig;
 import com.eviware.soapui.config.StrategyTypeConfig;
+import com.eviware.soapui.impl.wsdl.AttachmentContainer;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Attachment;
@@ -38,7 +41,7 @@ import com.eviware.soapui.security.ui.MaliciousAttachmentAdvancedSettingsPanel;
 import com.eviware.soapui.security.ui.MaliciousAttachmentMutationsPanel;
 import com.eviware.soapui.support.UISupport;
 
-public class MaliciousAttachmentSecurityScan extends AbstractSecurityScan
+public class MaliciousAttachmentSecurityScan extends AbstractSecurityScan implements PropertyChangeListener
 {
 
 	public static final String TYPE = "MaliciousAttachmentSecurityScan";
@@ -51,6 +54,8 @@ public class MaliciousAttachmentSecurityScan extends AbstractSecurityScan
 
 	private int elementIndex = -1;
 	private int valueIndex = -1;
+
+	private WsdlRequest request;
 
 	public MaliciousAttachmentSecurityScan( SecurityScanConfig newConfig, ModelItem parent, String icon,
 			TestStep testStep )
@@ -66,6 +71,8 @@ public class MaliciousAttachmentSecurityScan extends AbstractSecurityScan
 			config = ( ( MaliciousAttachmentSecurityScanConfig )newConfig.getConfig() );
 		}
 
+		request = ( ( WsdlRequest )getRequest( testStep ) );
+		request.addAttachmentsChangeListener( this );
 	}
 
 	/**
@@ -149,9 +156,7 @@ public class MaliciousAttachmentSecurityScan extends AbstractSecurityScan
 
 			if( elementIndex < config.getElementList().size() )
 			{
-
 				MaliciousAttachmentElementConfig element = config.getElementList().get( elementIndex );
-
 				removeAttachments( testStep, element.getKey(), false );
 				if( element.getRemove() )
 				{
@@ -161,7 +166,6 @@ public class MaliciousAttachmentSecurityScan extends AbstractSecurityScan
 				if( valueIndex < element.getGenerateAttachmentList().size() + element.getReplaceAttachmentList().size() - 1 )
 				{
 					valueIndex++ ;
-
 					addAttachments( testStep, element, valueIndex );
 				}
 
@@ -257,10 +261,12 @@ public class MaliciousAttachmentSecurityScan extends AbstractSecurityScan
 	{
 		try
 		{
+			request.removeAttachmentsChangeListener( this );
 			generateFiles();
 			updateRequestContent( testStep, context );
 			MessageExchange message = ( MessageExchange )testStep.run( ( TestCaseRunner )securityTestRunner, context );
 			getSecurityScanRequestResult().setMessageExchange( message );
+			request.addAttachmentsChangeListener( this );
 		}
 		catch( Exception e )
 		{
@@ -288,8 +294,8 @@ public class MaliciousAttachmentSecurityScan extends AbstractSecurityScan
 
 	private void removeAttachments( TestStep testStep, String key, boolean equals )
 	{
-		WsdlRequest request = ( WsdlRequest )getRequest( testStep );
 		List<Attachment> toRemove = new ArrayList<Attachment>();
+		WsdlRequest request = ( WsdlRequest )getRequest( testStep );
 
 		for( Attachment attachment : request.getAttachments() )
 		{
@@ -334,9 +340,7 @@ public class MaliciousAttachmentSecurityScan extends AbstractSecurityScan
 	@Override
 	protected boolean hasNext( TestStep testStep, SecurityTestRunContext context )
 	{
-
 		WsdlRequest request = ( WsdlRequest )getRequest( testStep );
-
 		boolean hasNext = request.getAttachmentCount() == 0 ? false : elementIndex < config.getElementList().size();
 
 		if( !hasNext )
@@ -400,7 +404,70 @@ public class MaliciousAttachmentSecurityScan extends AbstractSecurityScan
 		if( mutationsPanel != null )
 			mutationsPanel.release();
 
+		if( request != null )
+			request.removeAttachmentsChangeListener( this );
+
 		super.release();
 	}
 
+	private void addedAttachment( Attachment attachment )
+	{
+		if( config != null )
+		{
+			MaliciousAttachmentElementConfig element = config.addNewElement();
+			element.setKey( attachment.getId() );
+		}
+	}
+
+	private void removedAttachment( Attachment attachment )
+	{
+		if( config != null )
+		{
+			int idx = -1;
+
+			for( int i = 0; i < config.getElementList().size(); i++ )
+			{
+				MaliciousAttachmentElementConfig element = config.getElementList().get( i );
+				if( attachment.getId().equals( element.getKey() ) )
+				{
+					idx = i;
+					break;
+				}
+			}
+
+			if( idx != -1 )
+			{
+				config.removeElement( idx );
+			}
+		}
+
+		if( mutationsPanel != null )
+		{
+			mutationsPanel.getHolder().removeAttachment( attachment.getId() );
+		}
+	}
+
+	@Override
+	public void propertyChange( PropertyChangeEvent evt )
+	{
+		if( AttachmentContainer.ATTACHMENTS_PROPERTY.equals( evt.getPropertyName() ) )
+		{
+			if( evt.getOldValue() == null && evt.getNewValue() != null )
+			{
+				if( evt.getNewValue() instanceof Attachment )
+				{
+					Attachment attachment = ( Attachment )evt.getNewValue();
+					addedAttachment( attachment );
+				}
+			}
+			else if( evt.getOldValue() != null && evt.getNewValue() == null )
+			{
+				if( evt.getOldValue() instanceof Attachment )
+				{
+					Attachment attachment = ( Attachment )evt.getOldValue();
+					removedAttachment( attachment );
+				}
+			}
+		}
+	}
 }

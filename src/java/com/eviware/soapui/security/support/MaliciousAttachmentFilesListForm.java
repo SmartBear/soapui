@@ -117,7 +117,6 @@ public class MaliciousAttachmentFilesListForm extends JPanel
 				{
 					if( attEl.getId().equals( element.getKey() ) )
 					{
-						newElement.setKey( attEl.getId() );
 						newElement.setRemove( element.getRemove() );
 						holder.getTablesDialog().setBooleanValue( MutationTables.REMOVE_FILE, element.getRemove() );
 
