@@ -132,7 +132,7 @@ public class ModelItemIconAnimator<T extends AbstractAnimatableModelItem<?>> imp
 			}
 			catch( InterruptedException e )
 			{
-				SoapUI.log( "Mock Service Force Stopped!" );
+//				SoapUI.log( "Mock Service Force Stopped!" );
 				stopped = true;
 			}
 		}
