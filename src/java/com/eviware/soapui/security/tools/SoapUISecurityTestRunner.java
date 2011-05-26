@@ -31,14 +31,13 @@ import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCaseRunner;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlRunTestCaseTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
-import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStepResult;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.project.ProjectFactoryRegistry;
+import com.eviware.soapui.model.security.SecurityScan;
 import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.model.support.ProjectRunListenerAdapter;
 import com.eviware.soapui.model.testsuite.Assertable;
-import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
 import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.model.testsuite.ProjectRunContext;
 import com.eviware.soapui.model.testsuite.ProjectRunner;
@@ -46,25 +45,27 @@ import com.eviware.soapui.model.testsuite.TestAssertion;
 import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
-import com.eviware.soapui.model.testsuite.TestRunner.Status;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
-import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
 import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.model.testsuite.TestSuiteRunner;
+import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
+import com.eviware.soapui.model.testsuite.TestRunner.Status;
+import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
 import com.eviware.soapui.report.JUnitReportCollector;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
+import com.eviware.soapui.security.result.SecurityResult;
 import com.eviware.soapui.security.result.SecurityScanRequestResult;
 import com.eviware.soapui.security.result.SecurityScanResult;
+import com.eviware.soapui.security.result.SecurityTestStepResult;
 import com.eviware.soapui.security.result.SecurityResult.ResultStatus;
+import com.eviware.soapui.security.support.SecurityTestRunListener;
 import com.eviware.soapui.security.support.SecurityTestRunListenerAdapter;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
-import com.eviware.soapui.tools.AbstractSoapUITestRunner;
 import com.eviware.soapui.tools.SoapUITestCaseRunner;
-import com.eviware.soapui.tools.AbstractSoapUIRunner.SoapUIOptions;
 
 /**
  * Standalone security test-runner used from maven-plugin, can also be used from
@@ -77,12 +78,12 @@ import com.eviware.soapui.tools.AbstractSoapUIRunner.SoapUIOptions;
  * @author nebojsa.tasic
  */
 
-public class SoapUISecurityTestRunner extends SoapUITestCaseRunner
+public class SoapUISecurityTestRunner extends SoapUITestCaseRunner implements SecurityTestRunListener
 {
 	public static final String SOAPUI_EXPORT_SEPARATOR = "soapui.export.separator";
 
 	public static final String TITLE = "soapUI " + SoapUI.SOAPUI_VERSION + " Security Test Runner";
-
+	private Map<TestAssertion, SecurityTestStepResult> assertionResults = new HashMap<TestAssertion, SecurityTestStepResult>();
 	private String securityTestName;
 	private int securityTestCount;
 	private int securityScanCount;
@@ -114,7 +115,6 @@ public class SoapUISecurityTestRunner extends SoapUITestCaseRunner
 	{
 		this.securityTestName = securityTestName;
 	}
-
 
 	protected SoapUIOptions initCommandLineOptions()
 	{
@@ -177,7 +177,11 @@ public class SoapUISecurityTestRunner extends SoapUITestCaseRunner
 		if( testCasesToRun.size() > 0 )
 		{
 			for( TestCase testCase : testCasesToRun )
+			{
+				testCase.addTestRunListener( this );
 				runTestCase( ( WsdlTestCase )testCase );
+				testCase.removeTestRunListener( this );
+			}
 		}
 		else if( testSuite != null )
 		{
@@ -279,7 +283,7 @@ public class SoapUISecurityTestRunner extends SoapUITestCaseRunner
 			buf.append( assertion.getName() + " in [" + assertable.getModelItem().getName() + "] failed;\n" );
 			buf.append( Arrays.toString( assertion.getErrors() ) + "\n" );
 
-			WsdlTestStepResult result = assertionResults.get( assertion );
+			SecurityTestStepResult result = assertionResults.get( assertion );
 			StringWriter stringWriter = new StringWriter();
 			PrintWriter writer = new PrintWriter( stringWriter );
 			result.writeTo( writer );
@@ -355,6 +359,9 @@ public class SoapUISecurityTestRunner extends SoapUITestCaseRunner
 		{
 			for( SecurityTest securityTest : testCase.getSecurityTestList() )
 			{
+
+				securityTest.addSecurityTestRunListener( this );
+				
 				if( StringUtils.isNullOrEmpty( securityTestName ) || securityTest.getName().equals( securityTestName ) )
 					runSecurityTest( securityTest );
 			}
@@ -439,7 +446,64 @@ public class SoapUISecurityTestRunner extends SoapUITestCaseRunner
 
 	public void afterStep( TestCaseRunner testRunner, TestCaseRunContext runContext, TestStepResult result )
 	{
-		super.afterStep( testRunner, runContext, result );
+
+	}
+
+	public void afterRun( TestCaseRunner testRunner, TestCaseRunContext runContext )
+	{
+		log.info( "Finished running soapUI testcase [" + testRunner.getTestCase().getName() + "], time taken: "
+				+ testRunner.getTimeTaken() + "ms, status: " + testRunner.getStatus() );
+
+		if( testRunner.getStatus() == Status.FAILED )
+		{
+			failedTests.add( testRunner.getTestCase() );
+		}
+
+		testCaseCount++ ;
+	}
+
+	private class InternalProjectRunListener extends ProjectRunListenerAdapter
+	{
+		public void afterTestSuite( ProjectRunner projectRunner, ProjectRunContext runContext, TestSuiteRunner testRunner )
+		{
+			testSuiteCount++ ;
+		}
+	}
+
+	@Override
+	public void afterOriginalStep( TestCaseRunner testRunner, SecurityTestRunContext runContext,
+			SecurityTestStepResult result )
+	{
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void afterRun( TestCaseRunner testRunner, SecurityTestRunContext runContext )
+	{
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void afterSecurityScan( TestCaseRunner testRunner, SecurityTestRunContext runContext,
+			SecurityScanResult securityScanResult )
+	{
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void afterSecurityScanRequest( TestCaseRunner testRunner, SecurityTestRunContext runContext,
+			SecurityScanRequestResult securityScanReqResult )
+	{
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void afterStep( TestCaseRunner testRunner, SecurityTestRunContext runContext, SecurityTestStepResult result )
+	{
 		TestStep currentStep = runContext.getCurrentStep();
 
 		if( currentStep instanceof Assertable )
@@ -455,7 +519,7 @@ public class SoapUISecurityTestRunner extends SoapUITestCaseRunner
 						log.error( "ASSERTION FAILED -> " + error.getMessage() );
 
 					assertions.add( assertion );
-					assertionResults.put( assertion, ( WsdlTestStepResult )result );
+					assertionResults.put( assertion, ( SecurityTestStepResult )result );
 				}
 
 				testAssertionCount++ ;
@@ -471,7 +535,7 @@ public class SoapUISecurityTestRunner extends SoapUITestCaseRunner
 
 		runContext.setProperty( countPropertyName, new Long( count.longValue() + 1 ) );
 
-		if( result.getStatus() == TestStepStatus.FAILED || exportAll )
+		if( result.getStatus() == SecurityResult.ResultStatus.FAILED || exportAll )
 		{
 			try
 			{
@@ -504,7 +568,7 @@ public class SoapUISecurityTestRunner extends SoapUITestCaseRunner
 				String absoluteOutputFolder = getAbsoluteOutputFolder( ModelSupport.getModelItemProject( tc ) );
 				String fileName = absoluteOutputFolder + File.separator + nameBase + ".txt";
 
-				if( result.getStatus() == TestStepStatus.FAILED )
+				if( result.getStatus() == SecurityResult.ResultStatus.FAILED )
 					log.error( currentStep.getName() + " failed, exporting to [" + fileName + "]" );
 
 				new File( fileName ).getParentFile().mkdirs();
@@ -553,26 +617,28 @@ public class SoapUISecurityTestRunner extends SoapUITestCaseRunner
 		}
 
 		testStepCount++ ;
+
 	}
 
-	public void afterRun( TestCaseRunner testRunner, TestCaseRunContext runContext )
+	@Override
+	public void beforeRun( TestCaseRunner testRunner, SecurityTestRunContext runContext )
 	{
-		log.info( "Finished running soapUI testcase [" + testRunner.getTestCase().getName() + "], time taken: "
-				+ testRunner.getTimeTaken() + "ms, status: " + testRunner.getStatus() );
+		// TODO Auto-generated method stub
 
-		if( testRunner.getStatus() == Status.FAILED )
-		{
-			failedTests.add( testRunner.getTestCase() );
-		}
-
-		testCaseCount++ ;
 	}
 
-	private class InternalProjectRunListener extends ProjectRunListenerAdapter
+	@Override
+	public void beforeSecurityScan( TestCaseRunner testRunner, SecurityTestRunContext runContext,
+			SecurityScan securityScan )
 	{
-		public void afterTestSuite( ProjectRunner projectRunner, ProjectRunContext runContext, TestSuiteRunner testRunner )
-		{
-			testSuiteCount++ ;
-		}
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void beforeStep( TestCaseRunner testRunner, SecurityTestRunContext runContext, TestStepResult testStepResult )
+	{
+		// TODO Auto-generated method stub
+
 	}
 }
