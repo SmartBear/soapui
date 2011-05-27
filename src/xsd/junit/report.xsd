@@ -45,7 +45,7 @@
   	<xs:sequence>
   		<xs:element ref="tns:failure" minOccurs="0" maxOccurs="1" />
   		<xs:element ref="tns:error" minOccurs="0" maxOccurs="1" />
-  		<xs:element name="securityTest" type="tns:securityTestType" minOccurs="0" maxOccurs="unbounded"></xs:element>
+  		<xs:element name="securityTest" type="tns:securityTest" minOccurs="0" maxOccurs="unbounded"></xs:element>
   	</xs:sequence>
   	<xs:attribute name="name" type="xs:string"></xs:attribute>
   	<xs:attribute name="time" type="xs:string"></xs:attribute>
@@ -84,9 +84,9 @@
 		</xs:sequence>
 	</xs:complexType>
 
-	<xs:complexType name="securityTestType">
+	<xs:complexType name="securityTest">
 		<xs:sequence>
-			<xs:element name="securityScan" type="tns:securityScanType"
+			<xs:element name="securityScan" type="tns:securityScan"
 				minOccurs="0" maxOccurs="unbounded">
 			</xs:element>
 
@@ -95,9 +95,9 @@
 		<xs:attribute name="time" type="xs:string"></xs:attribute>
 	</xs:complexType>
 
-	<xs:complexType name="securityScanType">
+	<xs:complexType name="securityScan">
 		<xs:sequence>
-			<xs:element name="request" type="tns:requestType"
+			<xs:element name="request" type="tns:mutation"
 				minOccurs="0" maxOccurs="unbounded">
 			</xs:element>
 
@@ -106,10 +106,14 @@
 		<xs:attribute name="status" type="xs:string"></xs:attribute>
 	</xs:complexType>
 
-	<xs:complexType name="requestType">
+	<xs:complexType name="mutation">
 
+		<xs:sequence>
+			<xs:element name="message" type="xs:string" maxOccurs="unbounded" minOccurs="0"></xs:element>
+		</xs:sequence>
 		<xs:attribute name="request" type="xs:string"></xs:attribute>
 		<xs:attribute name="response" type="xs:string"></xs:attribute>
 		<xs:attribute name="status" type="xs:string"></xs:attribute>
+
 	</xs:complexType>
 </xs:schema>
