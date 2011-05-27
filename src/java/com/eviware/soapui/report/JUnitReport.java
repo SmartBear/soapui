@@ -23,6 +23,7 @@ import org.apache.xmlbeans.XmlOptions;
 import com.eviware.soapui.junit.FailureDocument.Failure;
 import com.eviware.soapui.junit.Properties;
 import com.eviware.soapui.junit.Property;
+import com.eviware.soapui.junit.SecurityTest;
 import com.eviware.soapui.junit.Testcase;
 import com.eviware.soapui.junit.Testsuite;
 import com.eviware.soapui.junit.TestsuiteDocument;
@@ -99,6 +100,11 @@ public class JUnitReport
 		totalTime += time;
 		return testcase;
 	}
+	
+//	private SecurityTest addSecuritytest()
+//	{
+////		SecurityTest sectest = testsuiteDoc.getTestsuite().getT
+//	}
 
 	public Testcase addTestCaseWithFailure( String name, double time, String failure, String stacktrace )
 	{
