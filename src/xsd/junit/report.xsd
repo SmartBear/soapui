@@ -97,7 +97,7 @@
 
 	<xs:complexType name="securityScan">
 		<xs:sequence>
-			<xs:element name="request" type="tns:mutation"
+			<xs:element name="mutation" type="tns:mutation"
 				minOccurs="0" maxOccurs="unbounded">
 			</xs:element>
 
