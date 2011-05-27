@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -26,6 +27,7 @@ import com.eviware.soapui.config.LoadTestConfig;
 import com.eviware.soapui.config.SecurityTestConfig;
 import com.eviware.soapui.config.TestCaseConfig;
 import com.eviware.soapui.config.TestCaseDocumentConfig;
+import com.eviware.soapui.config.TestStepSecurityTestConfig;
 import com.eviware.soapui.config.TestSuiteConfig;
 import com.eviware.soapui.config.TestSuiteRunTypesConfig;
 import com.eviware.soapui.config.TestSuiteRunTypesConfig.Enum;
@@ -34,8 +36,10 @@ import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestSuiteRunner;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.security.SecurityScan;
 import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.model.testsuite.TestCase;
+import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.model.testsuite.TestSuiteListener;
 import com.eviware.soapui.model.testsuite.TestSuiteRunContext;
@@ -619,8 +623,8 @@ public class WsdlTestSuite extends AbstractTestPropertyHolderWsdlModelItem<TestS
 			getConfig().removeTestCase( ix );
 		}
 
-		TestCaseConfig newConfig = ( TestCaseConfig )getConfig().insertNewTestCase( ix ).set( newTestCase )
-				.changeType( TestCaseConfig.type );
+		TestCaseConfig newConfig = ( TestCaseConfig )getConfig().insertNewTestCase( ix ).set( newTestCase ).changeType(
+				TestCaseConfig.type );
 		testCase = buildTestCase( newConfig, false );
 		testCases.add( ix, testCase );
 		testCase.afterLoad();
@@ -631,7 +635,7 @@ public class WsdlTestSuite extends AbstractTestPropertyHolderWsdlModelItem<TestS
 
 	public void importTestCase( File file )
 	{
-		TestCaseConfig testCaseNewConfig = null;
+		TestCaseConfig importTestCaseConfig = null;
 
 		if( !file.exists() )
 		{
@@ -641,20 +645,39 @@ public class WsdlTestSuite extends AbstractTestPropertyHolderWsdlModelItem<TestS
 
 		try
 		{
-			testCaseNewConfig = TestCaseDocumentConfig.Factory.parse( file ).getTestCase();
+			importTestCaseConfig = TestCaseDocumentConfig.Factory.parse( file ).getTestCase();
 		}
 		catch( Exception e )
 		{
 			SoapUI.logError( e );
 		}
 
-		if( testCaseNewConfig != null )
+		if( importTestCaseConfig != null )
 		{
-			TestCaseConfig newConfig = ( TestCaseConfig )getConfig().addNewTestCase().set( testCaseNewConfig )
+			TestCaseConfig newConfig = ( TestCaseConfig )getConfig().addNewTestCase().set( importTestCaseConfig )
 					.changeType( TestCaseConfig.type );
 			WsdlTestCase newTestCase = buildTestCase( newConfig, false );
 			ModelSupport.unsetIds( newTestCase );
+
+			/*
+			 * security test keeps reference to test step by id, which gets changed
+			 * during importing, so old values needs to be rewritten to new ones.
+			 * 
+			 * Create tarnsition table ( old id , new id ) and use it to replace 
+			 * all old ids in new imported test case. 
+			 */
+			LinkedHashMap<String, String> oldNewIds = new LinkedHashMap<String, String>();
+			for( int cnt = 0; cnt < importTestCaseConfig.getTestStepList().size(); cnt++ )
+				oldNewIds.put( importTestCaseConfig.getTestStepList().get( cnt ).getId(), newTestCase.getTestStepList()
+						.get( cnt ).getId() );
+
+			for( SecurityTest scan : newTestCase.getSecurityTests().values() )
+				for( TestStepSecurityTestConfig secStepConfig : scan.getConfig().getTestStepSecurityTestList() )
+					if( oldNewIds.containsKey( secStepConfig.getTestStepId() ) )
+						secStepConfig.setTestStepId( oldNewIds.get( secStepConfig.getTestStepId() ) );
+
 			newTestCase.afterLoad();
+
 			testCases.add( newTestCase );
 			fireTestCaseAdded( newTestCase );
 
@@ -697,8 +720,6 @@ public class WsdlTestSuite extends AbstractTestPropertyHolderWsdlModelItem<TestS
 			testCase.importSecurityTests( oldTestSuite, oldTestCase );
 		}
 
-		// for( WsdlTestCase testCase : testCases )
-		// testCase.afterCopy( oldTestSuite, null );
 	}
 
 	public WsdlTestSuiteRunner run( StringToObjectMap context, boolean async )
