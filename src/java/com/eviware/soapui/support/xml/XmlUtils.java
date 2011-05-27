@@ -175,7 +175,7 @@ public final class XmlUtils
 	{
 		try
 		{
-			XmlObject xmlObject = XmlObject.Factory.parse( dom.getDocumentElement(), createDefaultXmlOptions() );
+			XmlObject xmlObject = XmlObject.Factory.parse( dom.getDocumentElement() );
 			serializePretty( xmlObject, writer );
 		}
 		catch( Exception e )
@@ -329,7 +329,7 @@ public final class XmlUtils
 	{
 		try
 		{
-			XmlObject xmlObject = XmlObject.Factory.parse( elm, createDefaultXmlOptions() );
+			XmlObject xmlObject = XmlObject.Factory.parse( elm );
 			xmlObject.save( writer );
 		}
 		catch( XmlException e )
@@ -342,7 +342,7 @@ public final class XmlUtils
 	{
 		try
 		{
-			XmlObject xmlObject = XmlObject.Factory.parse( node, createDefaultXmlOptions() );
+			XmlObject xmlObject = XmlObject.Factory.parse( node );
 			return prettyPrint ? xmlObject.xmlText( new XmlOptions().setSavePrettyPrint() ) : xmlObject.xmlText();
 		}
 		catch( XmlException e )
@@ -557,8 +557,8 @@ public final class XmlUtils
 		XmlCursor cursor = null;
 		try
 		{
-			XmlObject sourceXml = XmlObject.Factory.parse( source, createDefaultXmlOptions() );
-			XmlObject destXml = XmlObject.Factory.parse( dest, createDefaultXmlOptions() );
+			XmlObject sourceXml = XmlObject.Factory.parse( source );
+			XmlObject destXml = XmlObject.Factory.parse( dest );
 
 			cursor = sourceXml.newCursor();
 			cursor.toNextToken();
