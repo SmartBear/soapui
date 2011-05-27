@@ -499,28 +499,10 @@ public class SoapUISecurityTestRunner extends SoapUITestCaseRunner implements Se
 	@Override
 	public void afterStep( TestCaseRunner testRunner, SecurityTestRunContext runContext, SecurityTestStepResult result )
 	{
+		if( !printReport )
+			return;
 		TestStep currentStep = runContext.getCurrentStep();
 
-		// if( currentStep instanceof Assertable )
-		// {
-		// Assertable requestStep = ( Assertable )currentStep;
-		// for( int c = 0; c < requestStep.getAssertionCount(); c++ )
-		// {
-		// TestAssertion assertion = requestStep.getAssertionAt( c );
-		// log.info( "Assertion [" + assertion.getName() + "] has status " +
-		// assertion.getStatus() );
-		// if( assertion.getStatus() == AssertionStatus.FAILED )
-		// {
-		// for( AssertionError error : assertion.getErrors() )
-		// log.error( "ASSERTION FAILED -> " + error.getMessage() );
-		//
-		// assertions.add( assertion );
-		// assertionResults.put( assertion, ( SecurityTestStepResult )result );
-		// }
-		//
-		// testAssertionCount++ ;
-		// }
-		// }
 
 		String securityTestName = "";
 		if( !result.getSecurityScanResultList().isEmpty() )
