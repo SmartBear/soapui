@@ -132,15 +132,15 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 			}
 		}
 
-		if( !forLoadTest )
-		{
+//		if( !forLoadTest )
+//		{
 			List<SecurityTestConfig> securityTestConfigs = config.getSecurityTestList();
 			for( SecurityTestConfig tsc : securityTestConfigs )
 			{
 				SecurityTest securityTest = buildSecurityTest( tsc );
 				securityTests.add( securityTest );
 			}
-		}
+//		}
 
 		// init default configs
 		if( !config.isSetFailOnError() )
