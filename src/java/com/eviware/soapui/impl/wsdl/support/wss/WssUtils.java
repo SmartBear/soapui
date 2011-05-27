@@ -37,7 +37,8 @@ public class WssUtils
 		try
 		{
 			SoapVersion soapVersion = wsaContainer.getOperation().getInterface().getSoapVersion();
-			XmlObject xmlContentObject = XmlObject.Factory.parse( content );
+//			XmlObject xmlContentObject = XmlObject.Factory.parse( content );
+			XmlObject xmlContentObject = XmlUtils.createXmlObject( content );
 			Element header = ( Element )SoapUtils.getHeaderElement( xmlContentObject, soapVersion, true ).getDomNode();
 
 			NodeList headerProps = XmlUtils.getChildElements( header );

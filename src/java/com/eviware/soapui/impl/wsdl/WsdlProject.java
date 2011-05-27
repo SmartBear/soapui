@@ -106,7 +106,6 @@ import com.eviware.soapui.model.testsuite.ProjectRunner;
 import com.eviware.soapui.model.testsuite.TestRunnable;
 import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.model.testsuite.TestSuite.TestSuiteRunType;
-import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.settings.ProjectSettings;
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.settings.WsdlSettings;
@@ -119,6 +118,7 @@ import com.eviware.soapui.support.resolver.ResolveDialog;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
 import com.eviware.soapui.support.types.StringToObjectMap;
+import com.eviware.soapui.support.xml.XmlUtils;
 
 /**
  * WSDL project implementation
@@ -480,7 +480,9 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 			{
 				try
 				{
-					projectDocument.getSoapuiProject().set( XmlObject.Factory.parse( decryptedData ) );
+					// projectDocument.getSoapuiProject().set(
+					// XmlObject.Factory.parse( decryptedData ) );
+					projectDocument.getSoapuiProject().set( XmlUtils.createXmlObject( decryptedData ) );
 					wrongPasswordSupplied = false;
 				}
 				catch( XmlException e )
@@ -1628,8 +1630,8 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 		}
 		else
 		{
-			TestSuiteConfig config = ( TestSuiteConfig )projectDocument.getSoapuiProject().addNewTestSuite().set(
-					newTestSuiteConfig.getTestSuite() );
+			TestSuiteConfig config = ( TestSuiteConfig )projectDocument.getSoapuiProject().addNewTestSuite()
+					.set( newTestSuiteConfig.getTestSuite() );
 			WsdlTestSuite testSuite = buildTestSuite( config );
 
 			ModelSupport.unsetIds( testSuite );
@@ -1639,12 +1641,12 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 			 * security test keeps reference to test step by id, which gets changed
 			 * during importing, so old values needs to be rewritten to new ones.
 			 * 
-			 * Create tarnsition table ( old id , new id ) and use it to replace 
-			 * all old ids in new imported test case. 
+			 * Create tarnsition table ( old id , new id ) and use it to replace
+			 * all old ids in new imported test case.
 			 * 
 			 * Here needs to be done for all test cases separatly.
 			 */
-			for( int cnt2 = 0; cnt2 < config.getTestCaseList().size() ; cnt2++ )
+			for( int cnt2 = 0; cnt2 < config.getTestCaseList().size(); cnt2++ )
 			{
 				TestCaseConfig newTestCase = config.getTestCaseList().get( cnt2 );
 				TestCaseConfig importTestCaseConfig = newTestSuiteConfig.getTestSuite().getTestCaseList().get( cnt2 );
@@ -1951,8 +1953,8 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 		}
 		else
 		{
-			MockServiceConfig config = ( MockServiceConfig )projectDocument.getSoapuiProject().addNewMockService().set(
-					newMockServiceConfig.getMockService() );
+			MockServiceConfig config = ( MockServiceConfig )projectDocument.getSoapuiProject().addNewMockService()
+					.set( newMockServiceConfig.getMockService() );
 			WsdlMockService mockService = new WsdlMockService( this, config );
 
 			ModelSupport.unsetIds( mockService );

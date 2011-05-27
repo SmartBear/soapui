@@ -31,6 +31,7 @@ import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.wadl.WadlDefinitionContext;
 import com.eviware.soapui.impl.wsdl.submit.RestMessageExchange;
 import com.eviware.soapui.model.testsuite.AssertionError;
+import com.eviware.soapui.support.xml.XmlUtils;
 
 public class WadlValidator
 {
@@ -120,7 +121,9 @@ public class WadlValidator
 	{
 		try
 		{
-			XmlObject xmlObject = XmlObject.Factory.parse( messageExchange.getResponseContentAsXml() );
+			// XmlObject xmlObject = XmlObject.Factory.parse(
+			// messageExchange.getResponseContentAsXml() );
+			XmlObject xmlObject = XmlUtils.createXmlObject( messageExchange.getResponseContentAsXml() );
 			Element docElement = ( ( Document )xmlObject.getDomNode() ).getDocumentElement();
 
 			return new QName( docElement.getNamespaceURI(), docElement.getLocalName() );

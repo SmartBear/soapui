@@ -17,6 +17,7 @@ import org.apache.xmlbeans.XmlBeans;
 import org.apache.xmlbeans.XmlObject;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.support.xml.XmlUtils;
 
 /**
  * Default XmlDocument that works on an existing XmlObject
@@ -48,7 +49,8 @@ public class XmlObjectXmlDocument extends AbstractXmlDocument
 		try
 		{
 			String old = getXml();
-			xmlObject = XmlObject.Factory.parse( xml );
+			// xmlObject = XmlObject.Factory.parse( xml );
+			xmlObject = XmlUtils.createXmlObject( xml );
 			fireXmlChanged( old, getXml() );
 		}
 		catch( Exception e )

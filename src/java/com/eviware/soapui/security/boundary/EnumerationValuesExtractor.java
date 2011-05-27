@@ -17,13 +17,13 @@ import java.util.List;
 
 import org.apache.xmlbeans.XmlAnySimpleType;
 import org.apache.xmlbeans.XmlException;
-import org.apache.xmlbeans.XmlObject;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequest;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel.XmlTreeNode;
+import com.eviware.soapui.support.xml.XmlUtils;
 
 /**
  * 
@@ -42,8 +42,12 @@ public class EnumerationValuesExtractor
 		this.request = request;
 		try
 		{
+			// model = new XmlObjectTreeModel(
+			// request.getOperation().getInterface().getDefinitionContext()
+			// .getSchemaTypeSystem(), XmlObject.Factory.parse(
+			// request.getRequestContent() ) );
 			model = new XmlObjectTreeModel( request.getOperation().getInterface().getDefinitionContext()
-					.getSchemaTypeSystem(), XmlObject.Factory.parse( request.getRequestContent() ) );
+					.getSchemaTypeSystem(), XmlUtils.createXmlObject( request.getRequestContent() ) );
 		}
 		catch( Exception e )
 		{

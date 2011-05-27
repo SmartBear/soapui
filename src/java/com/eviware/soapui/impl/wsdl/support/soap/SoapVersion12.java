@@ -29,6 +29,7 @@ import com.eviware.soapui.SoapUIExtensionClassLoader;
 import com.eviware.soapui.SoapUIExtensionClassLoader.SoapUIClassLoaderState;
 import com.eviware.soapui.impl.wsdl.support.Constants;
 import com.eviware.soapui.support.StringUtils;
+import com.eviware.soapui.support.xml.XmlUtils;
 
 /**
  * SoapVersion for SOAP 1.2
@@ -54,10 +55,16 @@ public class SoapVersion12 extends AbstractSoapVersion
 
 		try
 		{
-			soapSchemaXml = XmlObject.Factory.parse( SoapUI.class
+			// soapSchemaXml = XmlObject.Factory.parse( SoapUI.class
+			// .getResource(
+			// "/com/eviware/soapui/resources/xsds/soapEnvelope12.xsd" ) );
+			soapSchemaXml = XmlUtils.createXmlObject( SoapUI.class
 					.getResource( "/com/eviware/soapui/resources/xsds/soapEnvelope12.xsd" ) );
 			soapSchema = XmlBeans.loadXsd( new XmlObject[] { soapSchemaXml } );
-			soapEncodingXml = XmlObject.Factory.parse( SoapUI.class
+			// soapEncodingXml = XmlObject.Factory.parse( SoapUI.class
+			// .getResource(
+			// "/com/eviware/soapui/resources/xsds/soapEncoding12.xsd" ) );
+			soapEncodingXml = XmlUtils.createXmlObject( SoapUI.class
 					.getResource( "/com/eviware/soapui/resources/xsds/soapEncoding12.xsd" ) );
 		}
 		catch( Exception e )

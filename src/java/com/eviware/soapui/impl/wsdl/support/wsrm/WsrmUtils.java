@@ -45,6 +45,7 @@ import com.eviware.soapui.model.iface.Response;
 import com.eviware.soapui.model.iface.Submit.Status;
 import com.eviware.soapui.model.propertyexpansion.DefaultPropertyExpansionContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
+import com.eviware.soapui.support.xml.XmlUtils;
 
 public class WsrmUtils
 {
@@ -80,7 +81,8 @@ public class WsrmUtils
 
 		try
 		{
-			xmlContentObject = XmlObject.Factory.parse( content );
+			// xmlContentObject = XmlObject.Factory.parse( content );
+			xmlContentObject = XmlUtils.createXmlObject( content );
 		}
 		catch( Exception e )
 		{
@@ -189,7 +191,9 @@ public class WsrmUtils
 
 		try
 		{
-			XmlObject object = XmlObject.Factory.parse( openSequenceMessageContent );
+			// XmlObject object = XmlObject.Factory.parse(
+			// openSequenceMessageContent );
+			XmlObject object = XmlUtils.createXmlObject( openSequenceMessageContent );
 			XmlCursor cursor = object.newCursor();
 
 			cursor.toFirstContentToken();
@@ -252,7 +256,8 @@ public class WsrmUtils
 			}
 			Response response = wsdlSubmit.getResponse();
 			String responseContent = response.getContentAsString();
-			XmlObject xml = XmlObject.Factory.parse( responseContent );
+			// XmlObject xml = XmlObject.Factory.parse( responseContent );
+			XmlObject xml = XmlUtils.createXmlObject( responseContent );
 			XmlCursor cursor = xml.newCursor();
 			cursor.toFirstContentToken();
 			cursor.toFirstChild();
@@ -325,7 +330,9 @@ public class WsrmUtils
 
 			try
 			{
-				XmlObject object = XmlObject.Factory.parse( openSequenceMessageContent );
+				// XmlObject object = XmlObject.Factory.parse(
+				// openSequenceMessageContent );
+				XmlObject object = XmlUtils.createXmlObject( openSequenceMessageContent );
 				XmlCursor cursor = object.newCursor();
 
 				cursor.toFirstContentToken();
@@ -370,7 +377,8 @@ public class WsrmUtils
 				}
 				Response response = wsdlSubmit.getResponse();
 				String responseContent = response.getContentAsString();
-				XmlObject xml = XmlObject.Factory.parse( responseContent );
+				// XmlObject xml = XmlObject.Factory.parse( responseContent );
+				XmlObject xml = XmlUtils.createXmlObject( responseContent );
 
 				XmlOptions options = new XmlOptions();
 
@@ -428,7 +436,9 @@ public class WsrmUtils
 
 		try
 		{
-			XmlObject object = XmlObject.Factory.parse( terminateSequenceRequestContent );
+			// XmlObject object = XmlObject.Factory.parse(
+			// terminateSequenceRequestContent );
+			XmlObject object = XmlUtils.createXmlObject( terminateSequenceRequestContent );
 			XmlCursor cursor = object.newCursor();
 
 			cursor.toFirstContentToken();
@@ -503,7 +513,9 @@ public class WsrmUtils
 
 		try
 		{
-			XmlObject object = XmlObject.Factory.parse( openSequenceMessageContent );
+			// XmlObject object = XmlObject.Factory.parse(
+			// openSequenceMessageContent );
+			XmlObject object = XmlUtils.createXmlObject( openSequenceMessageContent );
 			XmlCursor cursor = object.newCursor();
 
 			cursor.toFirstContentToken();
@@ -550,7 +562,8 @@ public class WsrmUtils
 			}
 			Response response = wsdlSubmit.getResponse();
 			String responseContent = response.getContentAsString();
-			XmlObject xml = XmlObject.Factory.parse( responseContent );
+			// XmlObject xml = XmlObject.Factory.parse( responseContent );
+			XmlObject xml = XmlUtils.createXmlObject( responseContent );
 			XmlObject result = xml.selectPath( "Envelope/Header/SequenceAcknowledgment" )[0];
 
 			if( result != null )

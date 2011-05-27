@@ -28,6 +28,7 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.SoapUIExtensionClassLoader;
 import com.eviware.soapui.SoapUIExtensionClassLoader.SoapUIClassLoaderState;
 import com.eviware.soapui.impl.wsdl.support.Constants;
+import com.eviware.soapui.support.xml.XmlUtils;
 
 /**
  * SoapVersion for SOAP 1.1
@@ -63,14 +64,20 @@ public class SoapVersion11 extends AbstractSoapVersion
 			options.setCompileNoUpaRule();
 			options.setValidateTreatLaxAsSkip();
 
-			soapSchemaXml = XmlObject.Factory.parse(
+			// soapSchemaXml = XmlObject.Factory.parse(
+			// SoapUI.class.getResource(
+			// "/com/eviware/soapui/resources/xsds/soapEnvelope.xsd" ), options );
+			soapSchemaXml = XmlUtils.createXmlObject(
 					SoapUI.class.getResource( "/com/eviware/soapui/resources/xsds/soapEnvelope.xsd" ), options );
 			soapSchema = XmlBeans.loadXsd( new XmlObject[] { soapSchemaXml } );
 
 			soapEnvelopeType = soapSchema.findDocumentType( envelopeQName );
 			soapFaultType = soapSchema.findDocumentType( faultQName );
 
-			soapEncodingXml = XmlObject.Factory.parse(
+			// soapEncodingXml = XmlObject.Factory.parse(
+			// SoapUI.class.getResource(
+			// "/com/eviware/soapui/resources/xsds/soapEncoding.xsd" ), options );
+			soapEncodingXml = XmlUtils.createXmlObject(
 					SoapUI.class.getResource( "/com/eviware/soapui/resources/xsds/soapEncoding.xsd" ), options );
 		}
 		catch( Exception e )

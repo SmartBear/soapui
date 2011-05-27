@@ -23,6 +23,7 @@ import org.apache.xmlbeans.XmlOptions;
 import com.eviware.soapui.impl.support.definition.DefinitionCache;
 import com.eviware.soapui.impl.support.definition.InterfaceDefinitionPart;
 import com.eviware.soapui.impl.wsdl.support.wsdl.AbstractWsdlDefinitionLoader;
+import com.eviware.soapui.support.xml.XmlUtils;
 
 /**
  * WsdlLoader for cached definitions
@@ -98,7 +99,9 @@ public class InterfaceCacheDefinitionLoader extends AbstractWsdlDefinitionLoader
 
 	public static XmlObject getPartContent( InterfaceDefinitionPart part ) throws XmlException
 	{
-		return XmlObject.Factory.parse( part.getContent(), new XmlOptions().setLoadLineNumbers() );
+		// return XmlObject.Factory.parse( part.getContent(), new
+		// XmlOptions().setLoadLineNumbers() );
+		return XmlUtils.createXmlObject( part.getContent(), new XmlOptions().setLoadLineNumbers() );
 	}
 
 	public void close()

@@ -23,7 +23,6 @@ import javax.swing.JPanel;
 
 import org.apache.xmlbeans.XmlAnySimpleType;
 import org.apache.xmlbeans.XmlException;
-import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.impl.schema.SchemaTypeImpl;
 
 import com.eviware.soapui.SoapUI;
@@ -389,8 +388,11 @@ public class BoundarySecurityScan extends AbstractSecurityScanWithProperties
 		{
 			try
 			{
+				// xmlObjectTreeModel = new XmlObjectTreeModel(
+				// tp.getSchemaType().getTypeSystem(),
+				// XmlObject.Factory.parse( tp.getValue() ) );
 				xmlObjectTreeModel = new XmlObjectTreeModel( tp.getSchemaType().getTypeSystem(),
-						XmlObject.Factory.parse( tp.getValue() ) );
+						XmlUtils.createXmlObject( tp.getValue() ) );
 			}
 			catch( XmlException e )
 			{

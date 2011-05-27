@@ -29,6 +29,7 @@ import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.iface.SubmitListener;
 import com.eviware.soapui.support.components.SimpleBindingForm;
 import com.eviware.soapui.support.editor.xml.XmlInspector;
+import com.eviware.soapui.support.xml.XmlUtils;
 
 /*
  *  soapUI, copyright (C) 2004-2011 eviware.com 
@@ -86,7 +87,8 @@ public class WsdlRequestWsrmInspector extends AbstractWsrmInspector implements X
 			XmlOptions options = new XmlOptions();
 			try
 			{
-				XmlObject xml = XmlObject.Factory.parse( content );
+				// XmlObject xml = XmlObject.Factory.parse( content );
+				XmlObject xml = XmlUtils.createXmlObject( content );
 
 				String namespaceDeclaration = "declare namespace wsrm='" + request.getWsrmConfig().getVersionNameSpace()
 						+ "';";

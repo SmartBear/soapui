@@ -27,6 +27,7 @@ import com.eviware.soapui.impl.wadl.inference.ConflictHandler;
 import com.eviware.soapui.impl.wadl.inference.InferredSchema;
 import com.eviware.soapui.impl.wadl.inference.schema.SchemaSystem;
 import com.eviware.soapui.inferredSchema.SchemaSetConfig;
+import com.eviware.soapui.support.xml.XmlUtils;
 
 /*
  *  soapUI, copyright (C) 2004-2011 eviware.com 
@@ -71,7 +72,9 @@ public class InferredSchemaImpl implements InferredSchema
 		{
 			for( String namespace : getNamespaces() )
 			{
-				schemas.add( XmlObject.Factory.parse( getXsdForNamespace( namespace ).toString() ) );
+				// schemas.add( XmlObject.Factory.parse( getXsdForNamespace(
+				// namespace ).toString() ) );
+				schemas.add( XmlUtils.createXmlObject( getXsdForNamespace( namespace ).toString() ) );
 			}
 			return XmlBeans.compileXsd( sts, schemas.toArray( new XmlObject[0] ), XmlBeans.getBuiltinTypeSystem(), null );
 		}

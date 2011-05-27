@@ -17,7 +17,6 @@ import javax.swing.tree.TreePath;
 import javax.wsdl.Definition;
 
 import org.apache.xmlbeans.XmlException;
-import org.apache.xmlbeans.XmlObject;
 
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequest;
@@ -62,8 +61,12 @@ public class SchemeTypeExtractor
 
 	public TreeMap<String, NodeInfo> extract() throws XmlException, Exception
 	{
+		// XmlObjectTreeModel model = new XmlObjectTreeModel(
+		// request.getOperation().getInterface().getDefinitionContext()
+		// .getSchemaTypeSystem(), XmlObject.Factory.parse(
+		// request.getRequestContent() ) );
 		XmlObjectTreeModel model = new XmlObjectTreeModel( request.getOperation().getInterface().getDefinitionContext()
-				.getSchemaTypeSystem(), XmlObject.Factory.parse( request.getRequestContent() ) );
+				.getSchemaTypeSystem(), XmlUtils.createXmlObject( request.getRequestContent() ) );
 
 		nodes = getElements( model.getRootNode() );
 

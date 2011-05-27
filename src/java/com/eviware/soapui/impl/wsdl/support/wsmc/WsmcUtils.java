@@ -36,6 +36,7 @@ import com.eviware.soapui.model.iface.Request.SubmitException;
 import com.eviware.soapui.model.iface.Response;
 import com.eviware.soapui.model.iface.Submit.Status;
 import com.eviware.soapui.model.propertyexpansion.DefaultPropertyExpansionContext;
+import com.eviware.soapui.support.xml.XmlUtils;
 
 public class WsmcUtils
 {
@@ -74,7 +75,9 @@ public class WsmcUtils
 
 		try
 		{
-			XmlObject object = XmlObject.Factory.parse( makeConnectionMessageContent );
+			// XmlObject object = XmlObject.Factory.parse(
+			// makeConnectionMessageContent );
+			XmlObject object = XmlUtils.createXmlObject( makeConnectionMessageContent );
 			XmlCursor cursor = object.newCursor();
 
 			cursor.toFirstContentToken();
@@ -118,7 +121,8 @@ public class WsmcUtils
 			}
 			Response response = wsdlSubmit.getResponse();
 			String responseContent = response.getContentAsString();
-			XmlObject xml = XmlObject.Factory.parse( responseContent );
+			// XmlObject xml = XmlObject.Factory.parse( responseContent );
+			XmlObject xml = XmlUtils.createXmlObject( responseContent );
 			XmlCursor cursor = xml.newCursor();
 			cursor.toFirstContentToken();
 			cursor.toFirstChild();

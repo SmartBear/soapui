@@ -479,11 +479,15 @@ public class WsdlInterfaceDesktopPanel extends ModelItemDesktopPanel<WsdlInterfa
 
 			JXEditTextArea inputArea = JXEditTextArea.createXmlEditor( false );
 			StringWriter writer = new StringWriter();
-			XmlUtils.serializePretty( XmlObject.Factory.parse( content ), writer );
+			// XmlUtils.serializePretty( XmlObject.Factory.parse( content ), writer
+			// );
+			XmlUtils.serializePretty( XmlUtils.createXmlObject( content ), writer );
 			String xmlString = writer.toString();
 
-			// reparse so linenumbers are correct
-			XmlObject xmlObject = XmlObject.Factory.parse( xmlString, new XmlOptions().setLoadLineNumbers() );
+			// reparse so line numbers are correct
+			// XmlObject xmlObject = XmlObject.Factory.parse( xmlString, new
+			// XmlOptions().setLoadLineNumbers() );
+			XmlObject xmlObject = XmlUtils.createXmlObject( xmlString, new XmlOptions().setLoadLineNumbers() );
 
 			inputArea.setText( xmlString );
 			inputArea.setEditable( false );

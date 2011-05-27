@@ -74,7 +74,8 @@ public class RemoveEmptyContentRequestFilter extends AbstractRequestFilter
 
 		try
 		{
-			XmlObject xmlObject = XmlObject.Factory.parse( content );
+			// XmlObject xmlObject = XmlObject.Factory.parse( content );
+			XmlObject xmlObject = XmlUtils.createXmlObject( content );
 			cursor = xmlObject.newCursor();
 
 			cursor.toNextToken();

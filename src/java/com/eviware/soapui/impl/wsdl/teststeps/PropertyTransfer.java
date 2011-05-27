@@ -329,7 +329,10 @@ public class PropertyTransfer implements PropertyChangeNotifier
 		try
 		{
 			String sourcePropertyValue = sourceProperty.getValue();
-			XmlObject sourceXmlObject = sourcePropertyValue == null ? null : XmlObject.Factory.parse( sourcePropertyValue );
+			// XmlObject sourceXmlObject = sourcePropertyValue == null ? null :
+			// XmlObject.Factory.parse( sourcePropertyValue );
+			XmlObject sourceXmlObject = sourcePropertyValue == null ? null : XmlUtils
+					.createXmlObject( sourcePropertyValue );
 			sourceXml = sourceXmlObject == null ? null : sourceXmlObject.newCursor();
 		}
 		catch( XmlException e )
@@ -342,7 +345,8 @@ public class PropertyTransfer implements PropertyChangeNotifier
 		try
 		{
 			String targetPropertyValue = targetProperty.getValue();
-			targetXmlObject = XmlObject.Factory.parse( targetPropertyValue );
+			// targetXmlObject = XmlObject.Factory.parse( targetPropertyValue );
+			targetXmlObject = XmlUtils.createXmlObject( targetPropertyValue );
 			targetXml = targetXmlObject.newCursor();
 		}
 		catch( XmlException e )
@@ -566,7 +570,9 @@ public class PropertyTransfer implements PropertyChangeNotifier
 			return null;
 		}
 
-		XmlObject sourceXml = sourceValue == null ? null : XmlObject.Factory.parse( sourceValue );
+		// XmlObject sourceXml = sourceValue == null ? null :
+		// XmlObject.Factory.parse( sourceValue );
+		XmlObject sourceXml = sourceValue == null ? null : XmlUtils.createXmlObject( sourceValue );
 		XmlCursor sourceCursor = sourceValue == null ? null : sourceXml.newCursor();
 
 		try

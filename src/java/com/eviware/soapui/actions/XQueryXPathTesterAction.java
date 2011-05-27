@@ -180,7 +180,9 @@ public class XQueryXPathTesterAction extends AbstractAction
 		{
 			try
 			{
-				XmlObject xmlObject = XmlObject.Factory.parse( inputArea.getText() );
+				// XmlObject xmlObject = XmlObject.Factory.parse(
+				// inputArea.getText() );
+				XmlObject xmlObject = XmlUtils.createXmlObject( inputArea.getText() );
 				XmlObject[] objects;
 
 				// xquery?

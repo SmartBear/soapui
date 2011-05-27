@@ -29,6 +29,7 @@ import com.eviware.soapui.impl.wsdl.support.Constants;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.types.StringToStringMap;
+import com.eviware.soapui.support.xml.XmlUtils;
 
 public abstract class AbstractDefinitionExporter<T extends Interface> implements DefinitionExporter
 {
@@ -70,7 +71,8 @@ public abstract class AbstractDefinitionExporter<T extends Interface> implements
 
 		for( InterfaceDefinitionPart part : partList )
 		{
-			XmlObject obj = XmlObject.Factory.parse( part.getContent() );
+			// XmlObject obj = XmlObject.Factory.parse( part.getContent() );
+			XmlObject obj = XmlUtils.createXmlObject( part.getContent() );
 			replaceImportsAndIncludes( obj, urlToFileMap, part.getUrl() );
 			postProcessing( obj, part );
 			obj.save( new File( outFolder, urlToFileMap.get( part.getUrl() ) ) );
@@ -99,7 +101,8 @@ public abstract class AbstractDefinitionExporter<T extends Interface> implements
 
 		for( InterfaceDefinitionPart part : partList )
 		{
-			XmlObject obj = XmlObject.Factory.parse( part.getContent() );
+			// XmlObject obj = XmlObject.Factory.parse( part.getContent() );
+			XmlObject obj = XmlUtils.createXmlObject( part.getContent() );
 			replaceImportsAndIncludes( obj, urlToFileMap, part.getUrl() );
 			String urlString = urlToFileMap.get( part.getUrl() );
 			if( urlString.startsWith( urlPrefix ) )

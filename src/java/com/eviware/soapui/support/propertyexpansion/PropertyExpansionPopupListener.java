@@ -31,8 +31,6 @@ import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import javax.swing.text.JTextComponent;
 
-import org.apache.xmlbeans.XmlObject;
-
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
 import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
@@ -175,7 +173,7 @@ public class PropertyExpansionPopupListener implements PopupMenuListener
 				targetMenu.add( createPropertyMenu( "Step " + ( c + 1 ) + ": [" + testStep.getName() + "]", testStep ) );
 			}
 		}
-		
+
 		if( securityTest != null )
 			targetMenu.add( createPropertyMenu( "SecurityTest: [" + securityTest.getName() + "]", securityTest ) );
 	}
@@ -263,7 +261,8 @@ public class PropertyExpansionPopupListener implements PopupMenuListener
 
 				if( XmlUtils.seemsToBeXml( val ) )
 				{
-					XmlObject.Factory.parse( val );
+					// XmlObject.Factory.parse( val );
+					XmlUtils.createXmlObject( val );
 					sourceXPath = UISupport.selectXPath( "Select XPath", "Select source xpath for property transfer", val,
 							null );
 				}

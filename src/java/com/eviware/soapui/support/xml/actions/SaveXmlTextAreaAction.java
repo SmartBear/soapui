@@ -27,6 +27,7 @@ import org.apache.xmlbeans.XmlObject;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.xml.JXEditTextArea;
+import com.eviware.soapui.support.xml.XmlUtils;
 
 /**
  * Saves the XML of a JXmlTextArea to a file
@@ -60,7 +61,8 @@ public class SaveXmlTextAreaAction extends AbstractAction
 		{
 			try
 			{
-				XmlObject xml = XmlObject.Factory.parse( textArea.getText() );
+				// XmlObject xml = XmlObject.Factory.parse( textArea.getText() );
+				XmlObject xml = XmlUtils.createXmlObject( textArea.getText() );
 				xml.save( file );
 			}
 			catch( XmlException e1 )

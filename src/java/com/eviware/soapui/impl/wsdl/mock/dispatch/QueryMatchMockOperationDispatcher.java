@@ -688,7 +688,8 @@ public class QueryMatchMockOperationDispatcher extends AbstractMockOperationDisp
 
 			try
 			{
-				XmlObject xmlObject = XmlObject.Factory.parse( content );
+				// XmlObject xmlObject = XmlObject.Factory.parse( content );
+				XmlObject xmlObject = XmlUtils.createXmlObject( content );
 				cursor = xmlObject.newCursor();
 				cursor.selectPath( selectedQuery.getQuery() );
 				if( !cursor.toNextSelection() )

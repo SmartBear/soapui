@@ -111,7 +111,8 @@ public abstract class AbstractDefinitionCache<T extends AbstractInterface<?>> im
 				if( node.getNodeType() == Node.TEXT_NODE )
 				{
 					domNode = XmlUtils.parseXml( node.getNodeValue() );
-					xmlObject = XmlObject.Factory.parse( domNode );
+					// xmlObject = XmlObject.Factory.parse( domNode );
+					xmlObject = XmlUtils.createXmlObject( domNode );
 				}
 			}
 

@@ -16,7 +16,6 @@ import java.io.ByteArrayInputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import org.apache.xmlbeans.XmlObject;
 import org.w3c.dom.Document;
 import org.w3c.tidy.Tidy;
 
@@ -40,7 +39,9 @@ public class HtmlMediaTypeHandler implements MediaTypeHandler
 
 		try
 		{
-			XmlObject.Factory.parse( new ByteArrayInputStream( content.getBytes() ) );
+			// XmlObject.Factory.parse( new ByteArrayInputStream(
+			// content.getBytes() ) );
+			XmlUtils.createXmlObject( new ByteArrayInputStream( content.getBytes() ) );
 			return content;
 		}
 		catch( Exception e )

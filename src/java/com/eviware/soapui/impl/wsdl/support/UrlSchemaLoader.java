@@ -18,6 +18,7 @@ import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
 
 import com.eviware.soapui.impl.wsdl.support.xsd.SchemaLoader;
+import com.eviware.soapui.support.xml.XmlUtils;
 
 public class UrlSchemaLoader implements SchemaLoader
 {
@@ -30,7 +31,8 @@ public class UrlSchemaLoader implements SchemaLoader
 
 	public XmlObject loadXmlObject( String wsdlUrl, XmlOptions options ) throws Exception
 	{
-		return XmlObject.Factory.parse( new URL( wsdlUrl ), options );
+		// return XmlObject.Factory.parse( new URL( wsdlUrl ), options );
+		return XmlUtils.createXmlObject( new URL( wsdlUrl ), options );
 	}
 
 	public String getBaseURI()

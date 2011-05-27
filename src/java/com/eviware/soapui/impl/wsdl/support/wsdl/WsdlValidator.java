@@ -305,7 +305,8 @@ public class WsdlValidator
 			throw new Exception( "Missing schema types for message" );
 		}
 
-		XmlObject msgXml = XmlObject.Factory.parse( messageContent );
+		// XmlObject msgXml = XmlObject.Factory.parse( messageContent );
+		XmlObject msgXml = XmlUtils.createXmlObject( messageContent );
 		Part[] parts = isResponse ? WsdlUtils.getOutputParts( bindingOperation ) : WsdlUtils
 				.getInputParts( bindingOperation );
 		if( parts == null || parts.length == 0 )
@@ -418,7 +419,8 @@ public class WsdlValidator
 			xmlOptions.setLoadLineNumbers();
 			xmlOptions.setErrorListener( errors );
 			xmlOptions.setLoadLineNumbers( XmlOptions.LOAD_LINE_NUMBERS_END_ELEMENT );
-			XmlObject.Factory.parse( request, xmlOptions );
+			// XmlObject.Factory.parse( request, xmlOptions );
+			XmlUtils.createXmlObject( request, xmlOptions );
 		}
 		catch( XmlException e )
 		{
@@ -490,7 +492,9 @@ public class WsdlValidator
 					XmlOptions xmlOptions = new XmlOptions();
 					xmlOptions.setLoadLineNumbers();
 					xmlOptions.setLoadLineNumbers( XmlOptions.LOAD_LINE_NUMBERS_END_ELEMENT );
-					XmlObject xml = XmlObject.Factory.parse( message, xmlOptions );
+					// XmlObject xml = XmlObject.Factory.parse( message, xmlOptions
+					// );
+					XmlObject xml = XmlUtils.createXmlObject( message, xmlOptions );
 
 					XmlObject[] paths = xml.selectPath( "declare namespace env='"
 							+ wsdlContext.getSoapVersion().getEnvelopeNamespace() + "';"
@@ -742,7 +746,7 @@ public class WsdlValidator
 
 		try
 		{
-		obj.validate( xmlOptions );
+			obj.validate( xmlOptions );
 		}
 		catch( Exception e )
 		{

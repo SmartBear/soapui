@@ -39,7 +39,6 @@ import javax.swing.text.Document;
 
 import org.apache.xmlbeans.XmlError;
 import org.apache.xmlbeans.XmlException;
-import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
 
 import com.eviware.soapui.SoapUI;
@@ -58,6 +57,7 @@ import com.eviware.soapui.support.editor.xml.XmlLocation;
 import com.eviware.soapui.support.editor.xml.support.ValidationError;
 import com.eviware.soapui.support.swing.SoapUISplitPaneUI;
 import com.eviware.soapui.support.xml.JXEditTextArea;
+import com.eviware.soapui.support.xml.XmlUtils;
 import com.eviware.soapui.support.xml.actions.FormatXmlAction;
 import com.eviware.soapui.support.xml.actions.InsertBase64FileTextAreaAction;
 import com.eviware.soapui.support.xml.actions.LoadXmlTextAreaAction;
@@ -294,7 +294,9 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
 	{
 		try
 		{
-			XmlObject.Factory.parse( xml, new XmlOptions().setLoadLineNumbers() );
+			// XmlObject.Factory.parse( xml, new XmlOptions().setLoadLineNumbers()
+			// );
+			XmlUtils.createXmlObject( xml, new XmlOptions().setLoadLineNumbers() );
 		}
 		catch( XmlException e )
 		{

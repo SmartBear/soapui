@@ -170,7 +170,8 @@ public class XQueryContainsAssertion extends WsdlMessageAssertion implements Req
 			if( expectedContent == null )
 				return "Missing content for XQuery Assertion";
 
-			XmlObject xml = XmlObject.Factory.parse( response );
+			// XmlObject xml = XmlObject.Factory.parse( response );
+			XmlObject xml = XmlUtils.createXmlObject( response );
 			String expandedPath = PropertyExpander.expandProperties( context, path );
 			XmlObject[] items = xml.execQuery( expandedPath );
 
@@ -179,7 +180,8 @@ public class XQueryContainsAssertion extends WsdlMessageAssertion implements Req
 
 			try
 			{
-				contentObj = XmlObject.Factory.parse( expandedContent );
+				// contentObj = XmlObject.Factory.parse( expandedContent );
+				contentObj = XmlUtils.createXmlObject( expandedContent );
 			}
 			catch( Exception e )
 			{
@@ -412,7 +414,8 @@ public class XQueryContainsAssertion extends WsdlMessageAssertion implements Req
 				return;
 			}
 
-			XmlObject xml = XmlObject.Factory.parse( assertableContent );
+			// XmlObject xml = XmlObject.Factory.parse( assertableContent );
+			XmlObject xml = XmlUtils.createXmlObject( assertableContent );
 
 			String txt = pathArea == null || !pathArea.isVisible() ? getPath() : pathArea.getSelectedText();
 			if( txt == null )

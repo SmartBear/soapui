@@ -215,7 +215,8 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
 			if( ignoreComments )
 				options.setLoadStripComments();
 
-			XmlObject xml = XmlObject.Factory.parse( response, options );
+			// XmlObject xml = XmlObject.Factory.parse( response, options );
+			XmlObject xml = XmlUtils.createXmlObject( response, options );
 			String expandedPath = PropertyExpander.expandProperties( context, path );
 			XmlObject[] items = xml.selectPath( expandedPath );
 			AssertedXPathsContainer assertedXPathsContainer = ( AssertedXPathsContainer )context
@@ -231,7 +232,9 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
 			{
 				try
 				{
-					contentObj = XmlObject.Factory.parse( expandedContent, options );
+					// contentObj = XmlObject.Factory.parse( expandedContent, options
+					// );
+					contentObj = XmlUtils.createXmlObject( expandedContent, options );
 				}
 				catch( Exception e )
 				{
@@ -533,7 +536,8 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
 				return;
 			}
 
-			XmlObject xml = XmlObject.Factory.parse( assertableContent );
+			// XmlObject xml = XmlObject.Factory.parse( assertableContent );
+			XmlObject xml = XmlUtils.createXmlObject( assertableContent );
 
 			String txt = pathArea == null || !pathArea.isVisible() ? getPath() : pathArea.getSelectedText();
 			if( txt == null )

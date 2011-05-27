@@ -56,6 +56,7 @@ import com.eviware.soapui.model.settings.SettingsListener;
 import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
+import com.eviware.soapui.support.xml.XmlUtils;
 
 /**
  * XML-Schema related tools
@@ -166,7 +167,8 @@ public class SchemaUtils
 
 	private static void loadDefaultSchema( URL url ) throws Exception
 	{
-		XmlObject xmlObject = XmlObject.Factory.parse( url );
+		// XmlObject xmlObject = XmlObject.Factory.parse( url );
+		XmlObject xmlObject = XmlUtils.createXmlObject( url );
 		if( !( ( Document )xmlObject.getDomNode() ).getDocumentElement().getNamespaceURI().equals( Constants.XSD_NS ) )
 			return;
 
@@ -197,7 +199,7 @@ public class SchemaUtils
 			if( e instanceof SchemaException )
 				throw ( SchemaException )e;
 			else
-			throw new SchemaException( "Error loading schema types", e );
+				throw new SchemaException( "Error loading schema types", e );
 		}
 		finally
 		{
@@ -409,7 +411,8 @@ public class SchemaUtils
 				{
 					XmlCursor xmlCursor = schemas[i].newCursor();
 					String xmlText = xmlCursor.getObject().xmlText( options );
-					schemas[i] = XmlObject.Factory.parse( xmlText, options );
+					// schemas[i] = XmlObject.Factory.parse( xmlText, options );
+					schemas[i] = XmlUtils.createXmlObject( xmlText, options );
 					schemas[i].documentProperties().setSourceName( wsdlUrl );
 
 					result.put( wsdlUrl + "@" + ( i + 1 ), schemas[i] );

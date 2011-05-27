@@ -192,7 +192,8 @@ public class WsaValidator
 		String content = messageExchange.getRequestContent();
 		SoapVersion soapVersion = messageExchange.getOperation().getInterface().getSoapVersion();
 
-		XmlObject xmlObject = XmlObject.Factory.parse( content );
+		// XmlObject xmlObject = XmlObject.Factory.parse( content );
+		XmlObject xmlObject = XmlUtils.createXmlObject( content );
 		header = ( Element )SoapUtils.getHeaderElement( xmlObject, soapVersion, true ).getDomNode();
 
 		wsaVersionNameSpace = getWsaVersion( xmlObject, soapVersion );
@@ -296,8 +297,11 @@ public class WsaValidator
 		String content = messageExchange.getResponseContent();
 		SoapVersion soapVersion = messageExchange.getOperation().getInterface().getSoapVersion();
 
-		XmlObject requestXmlObject = XmlObject.Factory.parse( messageExchange.getRequestContent() );
-		XmlObject xmlObject = XmlObject.Factory.parse( content );
+		// XmlObject requestXmlObject = XmlObject.Factory.parse(
+		// messageExchange.getRequestContent() );
+		XmlObject requestXmlObject = XmlUtils.createXmlObject( messageExchange.getRequestContent() );
+		// XmlObject xmlObject = XmlObject.Factory.parse( content );
+		XmlObject xmlObject = XmlUtils.createXmlObject( content );
 		header = ( Element )SoapUtils.getHeaderElement( xmlObject, soapVersion, true ).getDomNode();
 
 		wsaVersionNameSpace = getWsaVersion( xmlObject, soapVersion );

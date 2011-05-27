@@ -109,7 +109,9 @@ public class WsdlMimeMessageResponse extends MimeMessageResponse implements Wsdl
 	{
 		try
 		{
-			XmlObject xmlObject = XmlObject.Factory.parse( getContentAsString() );
+			// XmlObject xmlObject = XmlObject.Factory.parse( getContentAsString()
+			// );
+			XmlObject xmlObject = XmlUtils.createXmlObject( getContentAsString() );
 			XmlObject[] includes = xmlObject
 					.selectPath( "declare namespace xop='http://www.w3.org/2004/08/xop/include'; //xop:Include" );
 

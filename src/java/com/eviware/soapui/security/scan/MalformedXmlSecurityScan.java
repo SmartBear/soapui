@@ -20,7 +20,6 @@ import java.util.Map;
 import javax.swing.JComponent;
 
 import org.apache.xmlbeans.XmlException;
-import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
 
 import com.eviware.soapui.SoapUI;
@@ -45,7 +44,7 @@ import com.eviware.soapui.support.xml.XmlUtils;
 
 public class MalformedXmlSecurityScan extends AbstractSecurityScanWithProperties
 {
-	
+
 	public static final String TYPE = "MalformedXmlSecurityScan";
 	public static final String NAME = "Malformed XML";
 	private Map<SecurityCheckedParameter, ArrayList<String>> parameterMutations = new HashMap<SecurityCheckedParameter, ArrayList<String>>();
@@ -142,8 +141,11 @@ public class MalformedXmlSecurityScan extends AbstractSecurityScanWithProperties
 							// no value, do nothing.
 							if( value == null || value.trim().equals( "" ) )
 								continue;
+							// XmlObjectTreeModel model = new XmlObjectTreeModel(
+							// property.getSchemaType().getTypeSystem(),
+							// XmlObject.Factory.parse( value ) );
 							XmlObjectTreeModel model = new XmlObjectTreeModel( property.getSchemaType().getTypeSystem(),
-									XmlObject.Factory.parse( value ) );
+									XmlUtils.createXmlObject( value ) );
 							XmlTreeNode[] nodes = model.selectTreeNodes( context.expand( param.getXpath() ) );
 							StringBuffer buffer = new StringBuffer( value );
 							for( int cnt = 0; cnt < nodes.length; cnt++ )
@@ -202,8 +204,11 @@ public class MalformedXmlSecurityScan extends AbstractSecurityScanWithProperties
 				{
 					StringBuffer buffer = new StringBuffer( value );
 					XmlObjectTreeModel model = null;
+					// model = new XmlObjectTreeModel(
+					// property.getSchemaType().getTypeSystem(),
+					// XmlObject.Factory.parse( value ) );
 					model = new XmlObjectTreeModel( property.getSchemaType().getTypeSystem(),
-							XmlObject.Factory.parse( value ) );
+							XmlUtils.createXmlObject( value ) );
 					for( SecurityCheckedParameter param : getParameterHolder().getParameterList() )
 					{
 						if( param.getXpath() == null || param.getXpath().trim().length() == 0 )
@@ -295,8 +300,11 @@ public class MalformedXmlSecurityScan extends AbstractSecurityScanWithProperties
 
 						// we have something that looks like xpath, or hope so.
 
+						// XmlObjectTreeModel model = new XmlObjectTreeModel(
+						// property.getSchemaType().getTypeSystem(),
+						// XmlObject.Factory.parse( value ) );
 						XmlObjectTreeModel model = new XmlObjectTreeModel( property.getSchemaType().getTypeSystem(),
-								XmlObject.Factory.parse( value ) );
+								XmlUtils.createXmlObject( value ) );
 						XmlTreeNode[] nodes = model.selectTreeNodes( context.expand( parameter.getXpath() ) );
 
 						if( nodes.length > 0 && !( nodes[0] instanceof AttributeXmlTreeNode ) )

@@ -52,7 +52,8 @@ public class PolicyUtils
 			{
 				InterfaceDefinitionPart part = parts.get( i );
 				String content = part.getContent();
-				XmlObject xml = XmlObject.Factory.parse( content );
+				// XmlObject xml = XmlObject.Factory.parse( content );
+				XmlObject xml = XmlUtils.createXmlObject( content );
 				// include paths for both namespaces
 				XmlObject[] paths = xml.selectPath( "declare namespace wsp='" + WS_W3_POLICY_NAMESPACE + "';"
 						+ "//wsp:Policy" );

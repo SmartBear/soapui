@@ -132,7 +132,8 @@ public class SoapMessageBuilder implements MessageBuilder
 		String emptyResponse = buildEmptyMessage( soapVersion );
 		try
 		{
-			XmlObject xmlObject = XmlObject.Factory.parse( emptyResponse );
+			// XmlObject xmlObject = XmlObject.Factory.parse( emptyResponse );
+			XmlObject xmlObject = XmlUtils.createXmlObject( emptyResponse );
 			XmlCursor cursor = xmlObject.newCursor();
 
 			if( cursor.toChild( soapVersion.getEnvelopeQName() ) && cursor.toChild( soapVersion.getBodyQName() ) )
@@ -582,7 +583,8 @@ public class SoapMessageBuilder implements MessageBuilder
 		XmlCursor cursor = null;
 		try
 		{
-			XmlObject xmlObject = XmlObject.Factory.parse( faultResponse );
+			// XmlObject xmlObject = XmlObject.Factory.parse( faultResponse );
+			XmlObject xmlObject = XmlUtils.createXmlObject( faultResponse );
 			XmlObject[] detail = xmlObject.selectPath( "//detail" );
 			if( detail.length > 0 )
 			{

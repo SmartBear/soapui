@@ -24,7 +24,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.apache.xmlbeans.XmlException;
-import org.apache.xmlbeans.XmlObject;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.SQLInjectionScanConfig;
@@ -169,8 +168,11 @@ public class SQLInjectionScan extends AbstractSecurityScanWithProperties
 							// no value, do nothing.
 							if( value == null || value.trim().equals( "" ) )
 								continue;
+							// XmlObjectTreeModel model = new XmlObjectTreeModel(
+							// property.getSchemaType().getTypeSystem(),
+							// XmlObject.Factory.parse( value ) );
 							XmlObjectTreeModel model = new XmlObjectTreeModel( property.getSchemaType().getTypeSystem(),
-									XmlObject.Factory.parse( value ) );
+									XmlUtils.createXmlObject( value ) );
 							XmlTreeNode[] nodes = model.selectTreeNodes( context.expand( param.getXpath() ) );
 							for( XmlTreeNode node : nodes )
 								node.setValue( 1, parameterMutations.get( param ).get( 0 ) );
@@ -191,8 +193,11 @@ public class SQLInjectionScan extends AbstractSecurityScanWithProperties
 				if( XmlUtils.seemsToBeXml( value ) )
 				{
 					XmlObjectTreeModel model = null;
+					// model = new XmlObjectTreeModel(
+					// property.getSchemaType().getTypeSystem(),
+					// XmlObject.Factory.parse( value ) );
 					model = new XmlObjectTreeModel( property.getSchemaType().getTypeSystem(),
-							XmlObject.Factory.parse( value ) );
+							XmlUtils.createXmlObject( value ) );
 					for( SecurityCheckedParameter param : getParameterHolder().getParameterList() )
 					{
 						if( !param.isChecked() )
@@ -271,8 +276,11 @@ public class SQLInjectionScan extends AbstractSecurityScanWithProperties
 
 					XmlObjectTreeModel model = null;
 
+					// model = new XmlObjectTreeModel(
+					// property.getSchemaType().getTypeSystem(),
+					// XmlObject.Factory.parse( value ) );
 					model = new XmlObjectTreeModel( property.getSchemaType().getTypeSystem(),
-							XmlObject.Factory.parse( value ) );
+							XmlUtils.createXmlObject( value ) );
 
 					XmlTreeNode[] nodes = model.selectTreeNodes( context.expand( parameter.getXpath() ) );
 

@@ -23,7 +23,6 @@ import java.util.Properties;
 import java.util.Set;
 
 import org.apache.xmlbeans.XmlException;
-import org.apache.xmlbeans.XmlObject;
 import org.w3c.dom.Node;
 
 import com.eviware.soapui.SoapUI;
@@ -33,6 +32,7 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestStep;
+import com.eviware.soapui.support.xml.XmlUtils;
 
 public class GroovyUtils
 {
@@ -56,7 +56,9 @@ public class GroovyUtils
 	{
 		try
 		{
-			return new XmlHolder( XmlObject.Factory.parse( xmlPropertyOrString ) );
+			// return new XmlHolder( XmlObject.Factory.parse( xmlPropertyOrString )
+			// );
+			return new XmlHolder( XmlUtils.createXmlObject( xmlPropertyOrString ) );
 		}
 		catch( Exception e )
 		{
@@ -87,7 +89,8 @@ public class GroovyUtils
 
 	public final String getXml( Node node ) throws XmlException
 	{
-		return XmlObject.Factory.parse( node ).xmlText();
+		// return XmlObject.Factory.parse( node ).xmlText();
+		return XmlUtils.createXmlObject( node ).xmlText();
 	}
 
 	private static Set<String> registeredDrivers = new HashSet<String>();

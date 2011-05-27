@@ -12,12 +12,14 @@
 
 package com.eviware.soapui.support.xml;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -36,11 +38,14 @@ import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 
 import net.sf.saxon.expr.Token;
 import net.sf.saxon.expr.Tokenizer;
 
 import org.apache.log4j.Logger;
+import org.apache.xerces.util.SecurityManager;
 import org.apache.xml.serialize.OutputFormat;
 import org.apache.xml.serialize.XMLSerializer;
 import org.apache.xmlbeans.SchemaType;
@@ -62,6 +67,7 @@ import org.w3c.dom.ProcessingInstruction;
 import org.w3c.dom.Text;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
@@ -160,7 +166,7 @@ public final class XmlUtils
 		}
 		catch( IOException e )
 		{
-			log.error( "Failed to seraialize: " + e );
+			log.error( "Failed to serialize: " + e );
 		}
 		return null;
 	}
@@ -169,7 +175,7 @@ public final class XmlUtils
 	{
 		try
 		{
-			XmlObject xmlObject = XmlObject.Factory.parse( dom.getDocumentElement() );
+			XmlObject xmlObject = XmlObject.Factory.parse( dom.getDocumentElement(), createDefaultXmlOptions() );
 			serializePretty( xmlObject, writer );
 		}
 		catch( Exception e )
@@ -194,6 +200,126 @@ public final class XmlUtils
 		xmlObject.save( writer, options );
 	}
 
+	public static XmlObject createXmlObject( InputStream input, XmlOptions xmlOptions ) throws XmlException
+	{
+		try
+		{
+			return XmlObject.Factory.parse( input, xmlOptions );
+		}
+		catch( Exception e )
+		{
+			throw new XmlException( e.toString() );
+		}
+	}
+
+	public static XmlObject createXmlObject( String input, XmlOptions xmlOptions ) throws XmlException
+	{
+		return XmlObject.Factory.parse( input, xmlOptions );
+	}
+
+	public static XmlObject createXmlObject( URL input, XmlOptions xmlOptions ) throws XmlException
+	{
+		try
+		{
+			return XmlObject.Factory.parse( input, xmlOptions );
+		}
+		catch( Exception e )
+		{
+			throw new XmlException( e.toString() );
+		}
+	}
+
+	public static XmlObject createXmlObject( Node input, XmlOptions xmlOptions ) throws XmlException
+	{
+		return XmlObject.Factory.parse( input, xmlOptions );
+	}
+
+	public static XmlObject createXmlObject( File input, XmlOptions xmlOptions ) throws XmlException
+	{
+		try
+		{
+			return XmlObject.Factory.parse( input, xmlOptions );
+		}
+		catch( Exception e )
+		{
+			throw new XmlException( e.toString() );
+		}
+	}
+
+	public static XmlObject createXmlObject( InputStream input ) throws XmlException
+	{
+		try
+		{
+			return XmlObject.Factory.parse( input );
+		}
+		catch( Exception e )
+		{
+			throw new XmlException( e.toString() );
+		}
+	}
+
+	public static XmlObject createXmlObject( String input ) throws XmlException
+	{
+		return XmlObject.Factory.parse( input );
+	}
+
+	public static XmlObject createXmlObject( URL input ) throws XmlException
+	{
+		try
+		{
+			return XmlObject.Factory.parse( input );
+		}
+		catch( Exception e )
+		{
+			throw new XmlException( e.toString() );
+		}
+	}
+
+	public static XmlObject createXmlObject( Node input ) throws XmlException
+	{
+		return XmlObject.Factory.parse( input );
+	}
+
+	public static XmlObject createXmlObject( File input ) throws XmlException
+	{
+		try
+		{
+			return XmlObject.Factory.parse( input );
+		}
+		catch( Exception e )
+		{
+			throw new XmlException( e.toString() );
+		}
+	}
+
+	/**
+	 * XmlOptions configuration used in preventing XML Bomb
+	 * 
+	 * @return XmlOptions
+	 */
+	public static XmlOptions createDefaultXmlOptions()
+	{
+		XmlOptions xmlOptions;
+
+		try
+		{
+			SAXParser saxParser = SAXParserFactory.newInstance().newSAXParser();
+			SecurityManager securityManager = new SecurityManager();
+			// Default seems to be 64000!
+			securityManager.setEntityExpansionLimit( 16 );
+
+			saxParser.setProperty( "http://apache.org/xml/properties/security-manager", securityManager );
+			XMLReader xmlReader = saxParser.getXMLReader();
+			xmlOptions = new XmlOptions().setLoadUseXMLReader( xmlReader );
+		}
+		catch( Exception e )
+		{
+			xmlOptions = new XmlOptions();
+			log.error( "Error creating XmlOptions; " + e.getMessage(), e );
+		}
+		return xmlOptions;
+	}
+
 	public static void serialize( Document dom, Writer writer ) throws IOException
 	{
 		serialize( dom.getDocumentElement(), writer );
@@ -203,7 +329,7 @@ public final class XmlUtils
 	{
 		try
 		{
-			XmlObject xmlObject = XmlObject.Factory.parse( elm );
+			XmlObject xmlObject = XmlObject.Factory.parse( elm, createDefaultXmlOptions() );
 			xmlObject.save( writer );
 		}
 		catch( XmlException e )
@@ -216,7 +342,7 @@ public final class XmlUtils
 	{
 		try
 		{
-			XmlObject xmlObject = XmlObject.Factory.parse( node );
+			XmlObject xmlObject = XmlObject.Factory.parse( node, createDefaultXmlOptions() );
 			return prettyPrint ? xmlObject.xmlText( new XmlOptions().setSavePrettyPrint() ) : xmlObject.xmlText();
 		}
 		catch( XmlException e )
@@ -431,8 +557,8 @@ public final class XmlUtils
 		XmlCursor cursor = null;
 		try
 		{
-			XmlObject sourceXml = XmlObject.Factory.parse( source );
-			XmlObject destXml = XmlObject.Factory.parse( dest );
+			XmlObject sourceXml = XmlObject.Factory.parse( source, createDefaultXmlOptions() );
+			XmlObject destXml = XmlObject.Factory.parse( dest, createDefaultXmlOptions() );
 
 			cursor = sourceXml.newCursor();
 			cursor.toNextToken();

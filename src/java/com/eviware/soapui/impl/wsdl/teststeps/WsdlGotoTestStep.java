@@ -44,6 +44,7 @@ import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.xml.XmlUtils;
 
 /**
  * TestStep that moves execution to another step based on the contents of a XML
@@ -267,7 +268,9 @@ public class WsdlGotoTestStep extends WsdlTestStepWithProperties implements XPat
 			if( getType().equals( GotoConditionTypeConfig.XPATH.toString() ) )
 			{
 				TestRequest testRequest = previousStep.getTestRequest();
-				XmlObject xmlObject = XmlObject.Factory.parse( testRequest.getResponse().getContentAsXml() );
+				// XmlObject xmlObject = XmlObject.Factory.parse(
+				// testRequest.getResponse().getContentAsXml() );
+				XmlObject xmlObject = XmlUtils.createXmlObject( testRequest.getResponse().getContentAsXml() );
 
 				String expression = PropertyExpander.expandProperties( context, getExpression() );
 				XmlObject[] selectPath = xmlObject.selectPath( expression );

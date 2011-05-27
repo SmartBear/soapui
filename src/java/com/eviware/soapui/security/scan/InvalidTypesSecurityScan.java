@@ -23,7 +23,6 @@ import javax.swing.JPanel;
 
 import org.apache.xmlbeans.SchemaType;
 import org.apache.xmlbeans.XmlException;
-import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.impl.schema.SchemaTypeImpl;
 
 import com.eviware.soapui.SoapUI;
@@ -198,8 +197,11 @@ public class InvalidTypesSecurityScan extends AbstractSecurityScanWithProperties
 							if( XmlUtils.seemsToBeXml( value ) )
 							// try
 							{
+								// XmlObjectTreeModel model = new XmlObjectTreeModel(
+								// property.getSchemaType().getTypeSystem(),
+								// XmlObject.Factory.parse( value ) );
 								XmlObjectTreeModel model = new XmlObjectTreeModel( property.getSchemaType().getTypeSystem(),
-										XmlObject.Factory.parse( value ) );
+										XmlUtils.createXmlObject( value ) );
 								XmlTreeNode[] nodes = model.selectTreeNodes( context.expand( param.getXpath() ) );
 								for( XmlTreeNode node : nodes )
 									node.setValue( 1, parameterMutations.get( param ).get( 0 ) );
@@ -223,8 +225,12 @@ public class InvalidTypesSecurityScan extends AbstractSecurityScanWithProperties
 				if( XmlUtils.seemsToBeXml( value ) )
 				{
 					XmlObjectTreeModel model = null;
+					// model = new XmlObjectTreeModel(
+					// property.getSchemaType().getTypeSystem(),
+					// XmlObject.Factory.parse( value ) );
 					model = new XmlObjectTreeModel( property.getSchemaType().getTypeSystem(),
-							XmlObject.Factory.parse( value ) );
+							XmlUtils.createXmlObject( value ) );
+
 					for( SecurityCheckedParameter param : getParameterHolder().getParameterList() )
 					{
 						if( param.getXpath() == null || param.getXpath().trim().length() == 0 )
@@ -308,8 +314,11 @@ public class InvalidTypesSecurityScan extends AbstractSecurityScanWithProperties
 					if( XmlUtils.seemsToBeXml( value ) )
 					{
 
+						// XmlObjectTreeModel model = new XmlObjectTreeModel(
+						// property.getSchemaType().getTypeSystem(),
+						// XmlObject.Factory.parse( value ) );
 						XmlObjectTreeModel model = new XmlObjectTreeModel( property.getSchemaType().getTypeSystem(),
-								XmlObject.Factory.parse( value ) );
+								XmlUtils.createXmlObject( value ) );
 
 						XmlTreeNode[] nodes = model.selectTreeNodes( context.expand( parameter.getXpath() ) );
 
@@ -524,8 +533,11 @@ public class InvalidTypesSecurityScan extends AbstractSecurityScanWithProperties
 		{
 			try
 			{
+				// xmlObjectTreeModel = new XmlObjectTreeModel(
+				// tp.getSchemaType().getTypeSystem(),
+				// XmlObject.Factory.parse( tp.getValue() ) );
 				xmlObjectTreeModel = new XmlObjectTreeModel( tp.getSchemaType().getTypeSystem(),
-						XmlObject.Factory.parse( tp.getValue() ) );
+						XmlUtils.createXmlObject( tp.getValue() ) );
 			}
 			catch( XmlException e )
 			{

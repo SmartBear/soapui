@@ -113,7 +113,10 @@ public class SecurityScanUtil
 				RestParametersConfig.Factory.newInstance() );
 		try
 		{
-			XmlObject requestXml = XmlObject.Factory.parse( request.getRequestContent(), new XmlOptions()
+			// XmlObject requestXml = XmlObject.Factory.parse(
+			// request.getRequestContent(), new XmlOptions()
+			// .setLoadStripWhitespace().setLoadStripComments() );
+			XmlObject requestXml = XmlUtils.createXmlObject( request.getRequestContent(), new XmlOptions()
 					.setLoadStripWhitespace().setLoadStripComments() );
 			Node[] nodes = XmlUtils.selectDomNodes( requestXml, "//text()" );
 
@@ -172,7 +175,10 @@ public class SecurityScanUtil
 			TestProperty tp = testStep.getProperty( scp.getName() );
 			if( tp.getSchemaType() != null && XmlUtils.seemsToBeXml( tp.getValue() ) )
 			{
-				return new XmlObjectTreeModel( tp.getSchemaType().getTypeSystem(), XmlObject.Factory.parse( tp.getValue() ) );
+				// return new XmlObjectTreeModel(
+				// tp.getSchemaType().getTypeSystem(), XmlObject.Factory.parse(
+				// tp.getValue() ) );
+				return new XmlObjectTreeModel( tp.getSchemaType().getTypeSystem(), XmlUtils.createXmlObject( tp.getValue() ) );
 			}
 		}
 		catch( Exception e )

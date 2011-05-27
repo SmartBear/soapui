@@ -14,7 +14,8 @@ package com.eviware.soapui.support.editor.xml.support;
 
 import org.apache.xmlbeans.SchemaTypeSystem;
 import org.apache.xmlbeans.XmlBeans;
-import org.apache.xmlbeans.XmlObject;
+
+import com.eviware.soapui.support.xml.XmlUtils;
 
 /**
  * Default XmlDocument that works on a standard xml string
@@ -48,7 +49,9 @@ public class DefaultXmlDocument extends AbstractXmlDocument
 
 		try
 		{
-			typeSystem = XmlObject.Factory.parse( xml ).schemaType().getTypeSystem();
+			// typeSystem = XmlObject.Factory.parse( xml
+			// ).schemaType().getTypeSystem();
+			typeSystem = XmlUtils.createXmlObject( xml ).schemaType().getTypeSystem();
 			return typeSystem;
 		}
 		catch( Exception e )

@@ -34,12 +34,14 @@ public class XmlHolder implements Map<String, Object>
 
 	public XmlHolder( String xml ) throws XmlException
 	{
-		xmlObject = XmlObject.Factory.parse( xml );
+		// xmlObject = XmlObject.Factory.parse( xml );
+		xmlObject = XmlUtils.createXmlObject( xml );
 	}
 
 	public XmlHolder( Node node ) throws XmlException
 	{
-		xmlObject = XmlObject.Factory.parse( node );
+		// xmlObject = XmlObject.Factory.parse( node );
+		xmlObject = XmlUtils.createXmlObject( node );
 	}
 
 	public XmlHolder( XmlObject xmlObject ) throws XmlException

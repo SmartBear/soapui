@@ -549,7 +549,8 @@ public class WsdlUtils
 		if( WsdlUtils.isOutputSoapEncoded( bindingOperation ) )
 			throw new Exception( "SOAP-Encoded messages not supported" );
 
-		XmlObject xml = XmlObject.Factory.parse( message );
+		// XmlObject xml = XmlObject.Factory.parse( message );
+		XmlObject xml = XmlUtils.createXmlObject( message );
 		XmlObject[] msgPaths = xml.selectPath( "declare namespace env='" + soapVersion.getEnvelopeNamespace() + "';"
 				+ "$this/env:Envelope/env:Body/env:Fault" );
 		if( msgPaths.length == 0 )
@@ -1122,7 +1123,8 @@ public class WsdlUtils
 				if( node.getNodeType() == Node.TEXT_NODE )
 				{
 					domNode = XmlUtils.parseXml( node.getNodeValue() );
-					xmlObject = XmlObject.Factory.parse( domNode );
+					// xmlObject = XmlObject.Factory.parse( domNode );
+					xmlObject = XmlUtils.createXmlObject( domNode );
 				}
 			}
 
@@ -1250,7 +1252,9 @@ public class WsdlUtils
 		String requestMessageId = null;
 		try
 		{
-			XmlObject xmlObject = XmlObject.Factory.parse( messageExchange.getRequestContent() );
+			// XmlObject xmlObject = XmlObject.Factory.parse(
+			// messageExchange.getRequestContent() );
+			XmlObject xmlObject = XmlUtils.createXmlObject( messageExchange.getRequestContent() );
 			SoapVersion soapVersion = messageExchange.getOperation().getInterface().getSoapVersion();
 
 			Element header = ( Element )SoapUtils.getHeaderElement( xmlObject, soapVersion, true ).getDomNode();
@@ -1273,7 +1277,9 @@ public class WsdlUtils
 	{
 		try
 		{
-			XmlObject xmlObject = XmlObject.Factory.parse( messageExchange.getRequestContent() );
+			// XmlObject xmlObject = XmlObject.Factory.parse(
+			// messageExchange.getRequestContent() );
+			XmlObject xmlObject = XmlUtils.createXmlObject( messageExchange.getRequestContent() );
 			SoapVersion soapVersion = messageExchange.getOperation().getInterface().getSoapVersion();
 
 			Element header = ( Element )SoapUtils.getHeaderElement( xmlObject, soapVersion, true ).getDomNode();
@@ -1297,7 +1303,9 @@ public class WsdlUtils
 	{
 		try
 		{
-			XmlObject xmlObject = XmlObject.Factory.parse( messageExchange.getRequestContent() );
+			// XmlObject xmlObject = XmlObject.Factory.parse(
+			// messageExchange.getRequestContent() );
+			XmlObject xmlObject = XmlUtils.createXmlObject( messageExchange.getRequestContent() );
 			SoapVersion soapVersion = messageExchange.getOperation().getInterface().getSoapVersion();
 
 			Element header = ( Element )SoapUtils.getHeaderElement( xmlObject, soapVersion, true ).getDomNode();
@@ -1321,7 +1329,9 @@ public class WsdlUtils
 	{
 		try
 		{
-			XmlObject xmlObject = XmlObject.Factory.parse( messageExchange.getResponseContent() );
+			// XmlObject xmlObject = XmlObject.Factory.parse(
+			// messageExchange.getResponseContent() );
+			XmlObject xmlObject = XmlUtils.createXmlObject( messageExchange.getResponseContent() );
 			SoapVersion soapVersion = messageExchange.getOperation().getInterface().getSoapVersion();
 
 			Element body = ( Element )SoapUtils.getBodyElement( xmlObject, soapVersion ).getDomNode();

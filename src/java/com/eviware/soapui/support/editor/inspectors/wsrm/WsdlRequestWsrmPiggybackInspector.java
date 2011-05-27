@@ -22,6 +22,7 @@ import com.eviware.soapui.model.iface.Submit;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.iface.SubmitListener;
 import com.eviware.soapui.support.editor.xml.XmlInspector;
+import com.eviware.soapui.support.xml.XmlUtils;
 
 public class WsdlRequestWsrmPiggybackInspector extends AbstractWsrmInspector implements XmlInspector, SubmitListener
 {
@@ -51,7 +52,8 @@ public class WsdlRequestWsrmPiggybackInspector extends AbstractWsrmInspector imp
 			XmlOptions options = new XmlOptions();
 			try
 			{
-				XmlObject xml = XmlObject.Factory.parse( content );
+				// XmlObject xml = XmlObject.Factory.parse( content );
+				XmlObject xml = XmlUtils.createXmlObject( content );
 
 				String namespaceDeclaration = "declare namespace wsrm='" + request.getWsrmConfig().getVersionNameSpace()
 						+ "';";

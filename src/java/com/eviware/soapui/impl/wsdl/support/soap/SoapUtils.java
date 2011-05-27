@@ -52,7 +52,8 @@ public class SoapUtils
 		// check manually before resource intensive xpath
 		if( responseContent.indexOf( ":Fault" ) > 0 || responseContent.indexOf( "<Fault" ) > 0 )
 		{
-			XmlObject xml = XmlObject.Factory.parse( responseContent );
+			// XmlObject xml = XmlObject.Factory.parse( responseContent );
+			XmlObject xml = XmlUtils.createXmlObject( responseContent );
 			XmlObject[] paths = xml.selectPath( "declare namespace env='" + soapVersion.getEnvelopeNamespace() + "';"
 					+ "//env:Fault" );
 			if( paths.length > 0 )
@@ -470,7 +471,8 @@ public class SoapUtils
 
 	public static String removeEmptySoapHeaders( String content, SoapVersion soapVersion ) throws XmlException
 	{
-		XmlObject xmlObject = XmlObject.Factory.parse( content );
+		// XmlObject xmlObject = XmlObject.Factory.parse( content );
+		XmlObject xmlObject = XmlUtils.createXmlObject( content );
 		XmlObject[] selectPath = xmlObject.selectPath( "declare namespace soap='" + soapVersion.getEnvelopeNamespace()
 				+ "';/soap:Envelope/soap:Header" );
 		if( selectPath.length > 0 )
@@ -490,7 +492,9 @@ public class SoapUtils
 	{
 		try
 		{
-			return deduceSoapVersion( requestContentType, XmlObject.Factory.parse( requestContent ) );
+			// return deduceSoapVersion( requestContentType,
+			// XmlObject.Factory.parse( requestContent ) );
+			return deduceSoapVersion( requestContentType, XmlUtils.createXmlObject( requestContent ) );
 		}
 		catch( XmlException e )
 		{
@@ -502,7 +506,8 @@ public class SoapUtils
 	{
 		try
 		{
-			XmlObject source = XmlObject.Factory.parse( requestContent );
+			// XmlObject source = XmlObject.Factory.parse( requestContent );
+			XmlObject source = XmlUtils.createXmlObject( requestContent );
 			String headerXPath = "declare namespace ns='" + soapVersion.getEnvelopeNamespace() + "'; //ns:Header";
 			XmlObject[] header = source.selectPath( headerXPath );
 			if( header.length == 1 )
@@ -511,7 +516,8 @@ public class SoapUtils
 				NodeList childNodes = headerElm.getChildNodes();
 				if( childNodes.getLength() > 0 )
 				{
-					XmlObject dest = XmlObject.Factory.parse( newRequest );
+					// XmlObject dest = XmlObject.Factory.parse( newRequest );
+					XmlObject dest = XmlUtils.createXmlObject( newRequest );
 					header = dest.selectPath( headerXPath );
 					Element destElm = null;
 

@@ -23,7 +23,6 @@ import java.util.Vector;
 
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpParser;
-import org.apache.xmlbeans.XmlObject;
 import org.w3c.dom.Document;
 
 import com.eviware.soapui.SoapUI;
@@ -377,8 +376,11 @@ public class TcpMonWsdlMonitorMessageExchange extends WsdlMonitorMessageExchange
 				operations.add( ( WsdlOperation )operation );
 		}
 
+		// return SoapUtils.findOperationForRequest( soapVersion, soapAction,
+		// XmlObject.Factory.parse( getRequestContent() ), operations, true,
+		// false, getRequestAttachments() );
 		return SoapUtils.findOperationForRequest( soapVersion, soapAction,
-				XmlObject.Factory.parse( getRequestContent() ), operations, true, false, getRequestAttachments() );
+				XmlUtils.createXmlObject( getRequestContent() ), operations, true, false, getRequestAttachments() );
 	}
 
 	public void setRequestHost( String requestHost )

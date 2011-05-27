@@ -18,7 +18,6 @@ import java.awt.event.ItemListener;
 import javax.swing.JCheckBox;
 
 import org.apache.xmlbeans.XmlCursor;
-import org.apache.xmlbeans.XmlObject;
 
 import com.eviware.soapui.impl.rest.RestRepresentation;
 import com.eviware.soapui.impl.rest.RestRequest;
@@ -30,6 +29,7 @@ import com.eviware.soapui.model.iface.SubmitListener;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
+import com.eviware.soapui.support.xml.XmlUtils;
 
 public class RestRequestRepresentationsInspector extends AbstractRestRepresentationsInspector implements SubmitListener
 {
@@ -118,7 +118,9 @@ public class RestRequestRepresentationsInspector extends AbstractRestRepresentat
 			{
 				try
 				{
-					XmlCursor cursor = XmlObject.Factory.parse( xmlContent ).newCursor();
+					// XmlCursor cursor = XmlObject.Factory.parse( xmlContent
+					// ).newCursor();
+					XmlCursor cursor = XmlUtils.createXmlObject( xmlContent ).newCursor();
 					cursor.toFirstChild();
 					representation.setElement( cursor.getName() );
 				}

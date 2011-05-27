@@ -28,12 +28,11 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.text.html.HTMLEditorKit;
 
-import org.apache.xmlbeans.XmlObject;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.support.DefaultHyperlinkListener;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
+import com.eviware.soapui.support.xml.XmlUtils;
 
 /**
  * Panel for displaying a WS-I Report
@@ -107,7 +106,9 @@ public class WSIReportPanel extends JPanel
 
 		if( logFile != null )
 		{
-			String logFileContent = XmlObject.Factory.parse( logFile ).toString();
+			// String logFileContent = XmlObject.Factory.parse( logFile
+			// ).toString();
+			String logFileContent = XmlUtils.createXmlObject( logFile ).toString();
 			JTextArea logContent = new JTextArea();
 			logContent.setEditable( false );
 			logContent.setText( logFileContent );

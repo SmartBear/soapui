@@ -117,10 +117,14 @@ public class CachedWsdlLoader extends WsdlLoader
 		{
 			Node domNode = part.getContent().getDomNode();
 			String nodeValue = XmlUtils.getNodeValue( domNode );
-			return XmlObject.Factory.parse( nodeValue, new XmlOptions().setLoadLineNumbers() );
+			// return XmlObject.Factory.parse( nodeValue, new
+			// XmlOptions().setLoadLineNumbers() );
+			return XmlUtils.createXmlObject( nodeValue, new XmlOptions().setLoadLineNumbers() );
 		}
 
-		return XmlObject.Factory.parse( part.getContent().toString(), new XmlOptions().setLoadLineNumbers() );
+		// return XmlObject.Factory.parse( part.getContent().toString(), new
+		// XmlOptions().setLoadLineNumbers() );
+		return XmlUtils.createXmlObject( part.getContent().toString(), new XmlOptions().setLoadLineNumbers() );
 	}
 
 	/**
@@ -153,11 +157,14 @@ public class CachedWsdlLoader extends WsdlLoader
 			XmlObject obj = null;
 			if( config.getType() == DefinitionCacheTypeConfig.TEXT )
 			{
-				obj = XmlObject.Factory.parse( XmlUtils.getNodeValue( part.getContent().getDomNode() ) );
+				// obj = XmlObject.Factory.parse( XmlUtils.getNodeValue(
+				// part.getContent().getDomNode() ) );
+				obj = XmlUtils.createXmlObject( XmlUtils.getNodeValue( part.getContent().getDomNode() ) );
 			}
 			else
 			{
-				obj = XmlObject.Factory.parse( part.getContent().toString() );
+				// obj = XmlObject.Factory.parse( part.getContent().toString() );
+				obj = XmlUtils.createXmlObject( part.getContent().toString() );
 			}
 
 			replaceImportsAndIncludes( obj, urlToFileMap, part.getUrl() );

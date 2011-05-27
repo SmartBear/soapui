@@ -25,6 +25,7 @@ import com.eviware.soapui.impl.support.definition.support.AbstractDefinitionLoad
 import com.eviware.soapui.impl.wsdl.support.PathUtils;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
+import com.eviware.soapui.support.xml.XmlUtils;
 import com.eviware.x.dialogs.XProgressMonitor;
 
 /**
@@ -106,7 +107,8 @@ public abstract class AbstractWsdlDefinitionLoader extends AbstractDefinitionLoa
 				monitor.setProgress( progressIndex, "Loading [" + url + "]" );
 
 			options.setLoadLineNumbers();
-			return XmlObject.Factory.parse( load( url ), options );
+			// return XmlObject.Factory.parse( load( url ), options );
+			return XmlUtils.createXmlObject( load( url ), options );
 		}
 		catch( Exception e )
 		{

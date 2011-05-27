@@ -21,7 +21,6 @@ import java.util.List;
 import javax.swing.JCheckBox;
 
 import org.apache.xmlbeans.XmlCursor;
-import org.apache.xmlbeans.XmlObject;
 
 import com.eviware.soapui.impl.rest.RestRepresentation;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
@@ -33,6 +32,7 @@ import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.iface.SubmitListener;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
+import com.eviware.soapui.support.xml.XmlUtils;
 
 public class RestResponseRepresentationsInspector extends AbstractRestRepresentationsInspector implements
 		SubmitListener
@@ -137,7 +137,9 @@ public class RestResponseRepresentationsInspector extends AbstractRestRepresenta
 				// response.getContentType().equals("application/xml")) {
 				try
 				{
-					XmlCursor cursor = XmlObject.Factory.parse( xmlContent ).newCursor();
+					// XmlCursor cursor = XmlObject.Factory.parse( xmlContent
+					// ).newCursor();
+					XmlCursor cursor = XmlUtils.createXmlObject( xmlContent ).newCursor();
 					cursor.toFirstChild();
 					representation.setElement( cursor.getName() );
 				}

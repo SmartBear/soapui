@@ -89,7 +89,8 @@ public class ResolverUtils
 		{
 			String value = property instanceof TestProperty ? ( ( TestProperty )property ).getValue() : property
 					.toString();
-			XmlObject xmlObject = XmlObject.Factory.parse( value );
+			// XmlObject xmlObject = XmlObject.Factory.parse( value );
+			XmlObject xmlObject = XmlUtils.createXmlObject( value );
 			String ns = xpath.trim().startsWith( "declare namespace" ) ? "" : XmlUtils.declareXPathNamespaces( xmlObject );
 			Node domNode = XmlUtils.selectFirstDomNode( xmlObject, ns + xpath );
 			return domNode == null ? null : XmlUtils.getValueForMatch( domNode, false );

@@ -28,6 +28,7 @@ import com.eviware.soapui.impl.support.definition.support.InvalidDefinitionExcep
 import com.eviware.soapui.impl.wsdl.support.PathUtils;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
+import com.eviware.soapui.support.xml.XmlUtils;
 
 /**
  * Abstract WSDLLocator for loading definitions from either URL or cache..
@@ -108,7 +109,8 @@ public abstract class WsdlLoader extends AbstractDefinitionLoader implements Wsd
 
 			options.setLoadLineNumbers();
 			String content = Tools.readAll( load( url ), 0 ).toString().trim();
-			return XmlObject.Factory.parse( content, options );
+			// return XmlObject.Factory.parse( content, options );
+			return XmlUtils.createXmlObject( content, options );
 		}
 		catch( Exception e )
 		{

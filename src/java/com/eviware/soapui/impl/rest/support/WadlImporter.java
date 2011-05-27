@@ -79,7 +79,8 @@ public class WadlImporter
 	{
 		try
 		{
-			XmlObject xmlObject = XmlObject.Factory.parse( new URL( wadlUrl ) );
+			// XmlObject xmlObject = XmlObject.Factory.parse( new URL( wadlUrl ) );
+			XmlObject xmlObject = XmlUtils.createXmlObject( new URL( wadlUrl ) );
 
 			Element element = ( ( Document )xmlObject.getDomNode() ).getDocumentElement();
 
@@ -232,12 +233,12 @@ public class WadlImporter
 			param = resolveParameter( param );
 			if( param != null )
 			{
-			String nm = param.getName();
-			RestParamProperty prop = newResource.hasProperty( nm ) ? newResource.getProperty( nm ) : newResource
-					.addProperty( nm );
+				String nm = param.getName();
+				RestParamProperty prop = newResource.hasProperty( nm ) ? newResource.getProperty( nm ) : newResource
+						.addProperty( nm );
 
-			initParam( param, prop );
-		}
+				initParam( param, prop );
+			}
 		}
 
 		for( Method method : resource.getMethodList() )
@@ -264,17 +265,17 @@ public class WadlImporter
 							param = resolveParameter( param );
 							if( param != null )
 							{
-							String nm = param.getName();
+								String nm = param.getName();
 								RestParamProperty prop = restMethod.hasProperty( nm ) ? restMethod.getProperty( nm )
 										: restMethod.addProperty( nm );
 
-							initParam( param, prop );
+								initParam( param, prop );
+							}
 						}
 					}
 				}
 			}
 		}
-	}
 	}
 
 	private RestMethod initMethod( RestResource newResource, Method method )
@@ -308,9 +309,9 @@ public class WadlImporter
 				param = resolveParameter( param );
 				if( param != null )
 				{
-				RestParamProperty p = restMethod.addProperty( param.getName() );
-				initParam( param, p );
-			}
+					RestParamProperty p = restMethod.addProperty( param.getName() );
+					initParam( param, p );
+				}
 			}
 
 			for( Representation representation : method.getRequest().getRepresentationList() )
@@ -343,7 +344,10 @@ public class WadlImporter
 							cursor.dispose();
 							XmlOptions options = new XmlOptions();
 							options.setLoadAdditionalNamespaces( map );
-							XmlObject obj = XmlObject.Factory.parse(
+							// XmlObject obj = XmlObject.Factory.parse(
+							// content.replaceFirst( "<(([a-z]+:)?)fault ",
+							// "<$1representation " ), options );
+							XmlObject obj = XmlUtils.createXmlObject(
 									content.replaceFirst( "<(([a-z]+:)?)fault ", "<$1representation " ), options );
 							RepresentationDocument representation = ( RepresentationDocument )obj
 									.changeType( RepresentationDocument.type );
@@ -477,7 +481,7 @@ public class WadlImporter
 
 			if( !href.startsWith( "#" ) )
 			{
-			ApplicationDocument applicationDocument = loadReferencedWadl( href );
+				ApplicationDocument applicationDocument = loadReferencedWadl( href );
 				app = applicationDocument.getApplication();
 			}
 

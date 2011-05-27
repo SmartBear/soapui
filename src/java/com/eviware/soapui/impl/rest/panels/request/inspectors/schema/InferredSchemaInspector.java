@@ -125,7 +125,8 @@ public class InferredSchemaInspector extends AbstractXmlInspector implements Sub
 			}
 			XmlOptions options = new XmlOptions().setLoadSubstituteNamespaces( Collections.singletonMap( "",
 					defaultNamespace ) );
-			xml = XmlObject.Factory.parse( content, options );
+			// xml = XmlObject.Factory.parse( content, options );
+			xml = XmlUtils.createXmlObject( content, options );
 		}
 		catch( XmlException e )
 		{

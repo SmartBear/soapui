@@ -79,7 +79,8 @@ public class XmlUtilsTestCase extends TestCase
 				+ "<soapenv:Header/><soapenv:Body><ord:purchaseOrder><productId>?</productId>"
 				+ "</ord:purchaseOrder></soapenv:Body></soapenv:Envelope>";
 
-		XmlObject xml = XmlObject.Factory.parse( str );
+		// XmlObject xml = XmlObject.Factory.parse( str );
+		XmlObject xml = XmlUtils.createXmlObject( str );
 		XmlObject xmlobj = xml.selectPath( "//productId" )[0];
 		String xpath = XmlUtils.createXPath( xmlobj.getDomNode() );
 		assertEquals( xmlobj, xml.selectPath( xpath )[0] );
@@ -101,7 +102,8 @@ public class XmlUtilsTestCase extends TestCase
 				+ "<soapenv:Header/><soapenv:Body><purchaseOrder xmlns=\"http://test\"><productId>?</productId>"
 				+ "</purchaseOrder></soapenv:Body></soapenv:Envelope>";
 
-		XmlObject xml = XmlObject.Factory.parse( str );
+		// XmlObject xml = XmlObject.Factory.parse( str );
+		XmlObject xml = XmlUtils.createXmlObject( str );
 		XmlObject xmlobj = xml.selectPath( "declare namespace ns='http://test';//ns:productId" )[0];
 		String xpath = XmlUtils.createXPath( xmlobj.getDomNode() );
 		System.out.println( "created path: " + xpath );
@@ -111,7 +113,8 @@ public class XmlUtilsTestCase extends TestCase
 	public void testGetFirstChildElementNS() throws XmlException
 	{
 		String xml = "<SofEnvelope><partnerid>test</partnerid><sessionID>asdadasdasd</sessionID></SofEnvelope>";
-		XmlObject xmlObject = XmlObject.Factory.parse( xml );
+		// XmlObject xmlObject = XmlObject.Factory.parse( xml );
+		XmlObject xmlObject = XmlUtils.createXmlObject( xml );
 
 		Element documentElement = ( ( Document )xmlObject.getDomNode() ).getDocumentElement();
 		assertNotNull( XmlUtils.getFirstChildElementNS( documentElement, new QName( "", "partnerid" ) ) );

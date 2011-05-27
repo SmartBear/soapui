@@ -28,6 +28,7 @@ import org.apache.xmlbeans.XmlObject;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlContext;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlUtils;
+import com.eviware.soapui.support.xml.XmlUtils;
 
 /**
  * XmlObject based wrapper for manipulation, etc..
@@ -73,7 +74,8 @@ public class MessageXmlObject
 	{
 		if( messageObj == null )
 		{
-			messageObj = XmlObject.Factory.parse( getMessageContent() );
+			// messageObj = XmlObject.Factory.parse( getMessageContent() );
+			messageObj = XmlUtils.createXmlObject( getMessageContent(), XmlUtils.createDefaultXmlOptions() );
 		}
 
 		return messageObj;

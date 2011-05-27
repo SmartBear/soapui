@@ -103,7 +103,8 @@ public class WsaUtils
 		this.context = context;
 		try
 		{
-			xmlContentObject = XmlObject.Factory.parse( content );
+			// xmlContentObject = XmlObject.Factory.parse( content );
+			xmlContentObject = XmlUtils.createXmlObject( content );
 		}
 		catch( Exception e )
 		{

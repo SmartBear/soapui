@@ -45,6 +45,7 @@ import com.eviware.soapui.impl.wsdl.support.Constants;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.types.StringToStringMap;
+import com.eviware.soapui.support.xml.XmlUtils;
 
 public class WadlGenerator
 {
@@ -97,7 +98,9 @@ public class WadlGenerator
 			options.setLoadSubstituteNamespaces( subst );
 			try
 			{
-				return XmlObject.Factory.parse( applicationDocument.xmlText(), options );
+				// return XmlObject.Factory.parse( applicationDocument.xmlText(),
+				// options );
+				return XmlUtils.createXmlObject( applicationDocument.xmlText(), options );
 			}
 			catch( XmlException e )
 			{

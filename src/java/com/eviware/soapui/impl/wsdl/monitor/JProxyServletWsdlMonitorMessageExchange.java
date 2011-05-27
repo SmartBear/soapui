@@ -27,7 +27,6 @@ import java.util.Vector;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.httpclient.Header;
-import org.apache.xmlbeans.XmlObject;
 import org.w3c.dom.Document;
 
 import com.eviware.soapui.SoapUI;
@@ -275,7 +274,8 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
 	{
 		try
 		{
-			XmlObject.Factory.parse( getRequestContent() );
+			// XmlObject.Factory.parse( getRequestContent() );
+			XmlUtils.createXmlObject( getRequestContent() );
 		}
 		catch( Exception e )
 		{
@@ -315,7 +315,9 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
 
 	private WsdlOperation findOperation() throws Exception
 	{
-		soapVersion = SoapUtils.deduceSoapVersion( requestContentType, XmlObject.Factory.parse( getRequestContent() ) );
+		// soapVersion = SoapUtils.deduceSoapVersion( requestContentType,
+		// XmlObject.Factory.parse( getRequestContent() ) );
+		soapVersion = SoapUtils.deduceSoapVersion( requestContentType, XmlUtils.createXmlObject( getRequestContent() ) );
 		if( soapVersion == null )
 			throw new Exception( "Unrecognized SOAP Version" );
 
@@ -328,8 +330,11 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
 				operations.add( ( WsdlOperation )operation );
 		}
 
+		// return SoapUtils.findOperationForRequest( soapVersion, soapAction,
+		// XmlObject.Factory.parse( getRequestContent() ), operations, true,
+		// false, getRequestAttachments() );
 		return SoapUtils.findOperationForRequest( soapVersion, soapAction,
-				XmlObject.Factory.parse( getRequestContent() ), operations, true, false, getRequestAttachments() );
+				XmlUtils.createXmlObject( getRequestContent() ), operations, true, false, getRequestAttachments() );
 	}
 
 	private void processRequestWss( IncomingWss incomingRequestWss ) throws IOException
