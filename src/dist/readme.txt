@@ -1,5 +1,32 @@
 Welcome to soapUI!
 
+2011-05-31 : 4.0 beta2
+-------------------------------------------------------------------------------
+Major New Features:
+- Added a "Fuzzing Scan" to the list of Security Scans 
+- Improved Command-line Security-Test runner to support all TestCase Runner options and custom JUnit-Style report (Security, Automation)
+- Added wargenerator command-line utility that creates war files from soapui projects
+
+Minor Improvements
+- Added option to run Security Scans only once in TestCase with complex flow logic (Security)
+- Fixed all password fields in soapUI to use masked input (Functional Testing)
+- Improved feedback in Security Test log (Security)
+- Added new wargenerator command-line utility for generating war files for a Project  (Mocking, Automation)
+- General UI Improvements
+
+Bug Fixes
+- Generated WAR files now work on WebLogic
+- Fixed syncing of file system with composite projects  and non-alphanumeric characters in TestCase names
+- Fixed ignoring of DataSource StartRow with shared DataSources
+- Fixed inserting of new TestSteps to be after selected TestStep
+- Fixed correct generation of loadUI Tests from soapUI Simple Strategy LoadTests
+- Fixed saving of project file when syncing to loadUI
+- REST Coverage was not being calculated correctly for child resources
+
+Library Updates
+- Jasper Reports 4.0.2
+- Jetty 6.1.26
+
 2011-05-17 : 4.0 beta1
 --------------------------------------------------------------------------------
 Major New Feature:
