@@ -82,7 +82,7 @@ public class WsdlMockResultMessageExchange extends AbstractWsdlMessageExchange<M
 
 	public StringToStringsMap getResponseHeaders()
 	{
-		return mockResult == null ? null : mockResult.getResponseHeaders();
+		return mockResult == null ? new StringToStringsMap() : mockResult.getResponseHeaders();
 	}
 
 	public WsdlOperation getOperation()

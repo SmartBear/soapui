@@ -288,7 +288,7 @@ public class RestRequestStepResult extends WsdlTestStepResult implements Respons
 	public StringToStringsMap getResponseHeaders()
 	{
 		if( response == null )
-			return null;
+			return new StringToStringsMap();
 
 		return response.getResponseHeaders();
 	}

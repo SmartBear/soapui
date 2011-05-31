@@ -79,7 +79,7 @@ public class WsdlMockRequestMessageExchange extends AbstractWsdlMessageExchange<
 
 	public StringToStringsMap getResponseHeaders()
 	{
-		return null;
+		return new StringToStringsMap();
 	}
 
 	public long getTimeTaken()

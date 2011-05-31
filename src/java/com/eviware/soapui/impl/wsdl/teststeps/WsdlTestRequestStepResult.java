@@ -285,7 +285,7 @@ public class WsdlTestRequestStepResult extends WsdlTestStepResult implements Res
 
 	public StringToStringsMap getResponseHeaders()
 	{
-		return getResponse() == null ? null : getResponse().getResponseHeaders();
+		return getResponse() == null ? new StringToStringsMap() : getResponse().getResponseHeaders();
 	}
 
 	public long getTimestamp()

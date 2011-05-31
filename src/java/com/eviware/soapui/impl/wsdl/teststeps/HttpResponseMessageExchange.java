@@ -107,7 +107,7 @@ public class HttpResponseMessageExchange extends AbstractMessageExchange<HttpReq
 		if( response == null )
 			response = getModelItem().getResponse();
 
-		return response == null ? null : response.getResponseHeaders();
+		return response == null ? new StringToStringsMap() : response.getResponseHeaders();
 	}
 
 	public long getTimeTaken()

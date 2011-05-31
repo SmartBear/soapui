@@ -53,7 +53,7 @@ public abstract class AbstractNonHttpMessageExchange<T extends ModelItem> extend
 
 	public StringToStringsMap getResponseHeaders()
 	{
-		return null;
+		return new StringToStringsMap();
 	}
 
 	public StringToStringsMap getRequestHeaders()
