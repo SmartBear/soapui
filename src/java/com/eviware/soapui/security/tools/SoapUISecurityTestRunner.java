@@ -108,7 +108,7 @@ public class SoapUISecurityTestRunner extends SoapUITestCaseRunner implements Se
 		return super.processCommandLine( cmd );
 	}
 
-	private void setSecurityTestName( String securityTestName )
+	public void setSecurityTestName( String securityTestName )
 	{
 		this.securityTestName = securityTestName;
 	}
