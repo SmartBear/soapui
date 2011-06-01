@@ -12,6 +12,7 @@
 
 package com.eviware.soapui.security.actions;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.support.UISupport;
@@ -32,6 +33,12 @@ public class DeleteSecurityTestAction extends AbstractSoapUIAction<SecurityTest>
 
 	public void perform( SecurityTest securityTest, Object param )
 	{
+
+		if( SoapUI.getTestMonitor().hasRunningSecurityTest( ( securityTest.getTestCase() ) ) )
+		{
+			UISupport.showErrorMessage( "Cannot remove test while tests are running" );
+			return;
+		}
 
 		if( UISupport.confirm( "Remove SecurityTest [" + securityTest.getName() + "] from test-case",
 				"Remove SecurityTest" ) )
