@@ -83,7 +83,9 @@ public class ProgressBarSecurityScanAdapter extends SecurityTestRunListenerAdapt
 			{
 				progressBar.setForeground( MISSING_ASSERTION_COLOR );
 				progressBar.setString( STATE_MISSING_ASSERTIONS );
-				progressBar.setValue( progressBar.getMaximum() );
+				if( progressBar.getValue() >= progressBar.getMaximum() * .9 )
+					progressBar.setMaximum( progressBar.getMaximum() + 5 );
+				progressBar.setValue( progressBar.getValue() + 1 );
 			}
 			else if( this.securityCheck instanceof AbstractSecurityScanWithProperties )
 			{
