@@ -182,5 +182,10 @@ public class FuzzerSecurityScan extends AbstractSecurityScanWithProperties
 	{
 		return TYPE;
 	}
+	
+	protected void clear()
+	{
+		numberOfRequests = null;
+	}
 
 }
