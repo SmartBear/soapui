@@ -363,6 +363,9 @@ public class ADialogBuilder
 			break;
 		case SEPARATOR :
 			form.addSeparator( description );
+		case RADIOGROUP_TOP_BUTTON :
+			field = form.addComponent( name, new XFormRadioGroupTopButtonPosition( values ) );
+			break;
 		default :
 			System.out.println( "Unsupported field type: " + type );
 		}

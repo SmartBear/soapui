@@ -37,9 +37,9 @@ import com.eviware.x.impl.swing.AbstractSwingXFormField;
 
 public class XFormRadioGroup extends AbstractSwingXFormField<JPanel> implements XFormOptionsField
 {
-	private ButtonGroup buttonGroup;
-	private Map<String, ButtonModel> models = new HashMap<String, ButtonModel>();
-	private StringList items = new StringList();
+	protected ButtonGroup buttonGroup;
+	protected Map<String, ButtonModel> models = new HashMap<String, ButtonModel>();
+	protected StringList items = new StringList();
 
 	public XFormRadioGroup( String[] values )
 	{
@@ -68,6 +68,7 @@ public class XFormRadioGroup extends AbstractSwingXFormField<JPanel> implements 
 	public void addItem( Object value )
 	{
 		JRadioButton button = new JRadioButton( String.valueOf( value ) );
+
 		button.setActionCommand( String.valueOf( value ) );
 		button.addActionListener( new ActionListener()
 		{
