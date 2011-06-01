@@ -213,10 +213,13 @@ public class MalformedXmlSecurityScan extends AbstractSecurityScanWithProperties
 					{
 						if( param.getXpath() == null || param.getXpath().trim().length() == 0 )
 						{
-							testStep.getProperties().get( param.getName() )
-									.setValue( parameterMutations.get( param ).get( 0 ) );
-							params.put( param.getLabel(), parameterMutations.get( param ).get( 0 ) );
-							parameterMutations.get( param ).remove( 0 );
+							if( parameterMutations.containsKey( param ) )
+							{
+								testStep.getProperties().get( param.getName() )
+										.setValue( parameterMutations.get( param ).get( 0 ) );
+								params.put( param.getLabel(), parameterMutations.get( param ).get( 0 ) );
+								parameterMutations.get( param ).remove( 0 );
+							}
 						}
 						else
 						{
