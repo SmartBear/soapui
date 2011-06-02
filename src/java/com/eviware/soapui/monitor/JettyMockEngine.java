@@ -197,19 +197,19 @@ public class JettyMockEngine implements MockEngine
 	}
 
 	private void updateSslConnectorSettings()
+	{
+		sslConnector.setKeystore( SoapUI.getSettings().getString( SSLSettings.MOCK_KEYSTORE, null ) );
+		sslConnector.setPassword( SoapUI.getSettings().getString( SSLSettings.MOCK_PASSWORD, null ) );
+		sslConnector.setKeyPassword( SoapUI.getSettings().getString( SSLSettings.MOCK_KEYSTORE_PASSWORD, null ) );
+		String truststore = SoapUI.getSettings().getString( SSLSettings.MOCK_TRUSTSTORE, null );
+		if( StringUtils.hasContent( truststore ) )
 		{
-			sslConnector.setKeystore( SoapUI.getSettings().getString( SSLSettings.MOCK_KEYSTORE, null ) );
-			sslConnector.setPassword( SoapUI.getSettings().getString( SSLSettings.MOCK_PASSWORD, null ) );
-			sslConnector.setKeyPassword( SoapUI.getSettings().getString( SSLSettings.MOCK_KEYSTORE_PASSWORD, null ) );
-			String truststore = SoapUI.getSettings().getString( SSLSettings.MOCK_TRUSTSTORE, null );
-			if( StringUtils.hasContent( truststore ) )
-			{
-				sslConnector.setTruststore( truststore );
+			sslConnector.setTruststore( truststore );
 			sslConnector.setTrustPassword( SoapUI.getSettings().getString( SSLSettings.MOCK_TRUSTSTORE_PASSWORD, null ) );
-			}
+		}
 
-			sslConnector.setPort( ( int )SoapUI.getSettings().getLong( SSLSettings.MOCK_PORT, 443 ) );
-			sslConnector.setNeedClientAuth( SoapUI.getSettings().getBoolean( SSLSettings.CLIENT_AUTHENTICATION ) );
+		sslConnector.setPort( ( int )SoapUI.getSettings().getLong( SSLSettings.MOCK_PORT, 443 ) );
+		sslConnector.setNeedClientAuth( SoapUI.getSettings().getBoolean( SSLSettings.CLIENT_AUTHENTICATION ) );
 	}
 
 	public void stopMockService( MockRunner runner )
@@ -686,7 +686,7 @@ public class JettyMockEngine implements MockEngine
 			if( map != null )
 			{
 				List<MockRunner> wsdlMockRunners = map.get( request.getPathInfo() );
-				if( wsdlMockRunners == null && request.getMethod().equals( "GET" ) )
+				if( wsdlMockRunners == null )
 				{
 					for( String root : map.keySet() )
 					{
