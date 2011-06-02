@@ -175,10 +175,10 @@ public class AddSignatureEntry extends WssEntryBase
 			if( keyIdentifierType != 0 )
 				wssSign.setKeyIdentifierType( keyIdentifierType );
 
-			if( StringUtils.hasContent( signatureAlgorithm ) )
+			if( StringUtils.hasContent( signatureAlgorithm ) && !signatureAlgorithm.equals( DEFAULT_OPTION ) )
 				wssSign.setSignatureAlgorithm( signatureAlgorithm );
 
-			if( StringUtils.hasContent( signatureCanonicalization ) )
+			if( StringUtils.hasContent( signatureCanonicalization ) && !signatureCanonicalization.equals( DEFAULT_OPTION ) )
 				wssSign.setSigCanonicalization( signatureCanonicalization );
 
 			wssSign.setUseSingleCertificate( useSingleCert );
