@@ -100,6 +100,7 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 	private EnableSecurityScans enableSecurityScansAction;
 	private DisableSecurityScans disableSecurityScansAction;
 	private ShowOnlineHelpAction showOnlineHelpAction;
+	private OpenTestStepEditorAction openTestStepEditorAction;
 
 	public JSecurityTestTestStepList( SecurityTest securityTest, JSecurityTestRunLog securityTestLog )
 	{
@@ -221,6 +222,7 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 
 	protected void initTestStepPopUpActions()
 	{
+		testStepPopUp.add( openTestStepEditorAction );
 		testStepPopUp.add( addSecurityScanAction );
 	}
 
@@ -254,6 +256,7 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 		configureSecurityScanAction = new ConfigureSecurityScanAction();
 		removeSecurityScanAction = new RemoveSecurityScanAction();
 		cloneParametersAction = new CloneParametersAction();
+		openTestStepEditorAction = new OpenTestStepEditorAction();
 
 		toolbar.addFixed( UISupport.createToolbarButton( addSecurityScanAction ) );
 		toolbar.addFixed( UISupport.createToolbarButton( configureSecurityScanAction ) );
@@ -313,6 +316,26 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 		}
 	}
 
+	public class OpenTestStepEditorAction extends AbstractAction
+	{
+
+		public OpenTestStepEditorAction()
+		{
+			super( "Open Editor" );
+
+			putValue( Action.SHORT_DESCRIPTION, "Opens the editor for this TestStep" );
+			setEnabled( true );
+		}
+
+		@Override
+		public void actionPerformed( ActionEvent e )
+		{
+			TestStepNode node = ( TestStepNode )securityTestTree.getLastSelectedPathComponent();
+			UISupport.selectAndShow( ( ( TestStepNode )node ).getTestStep() );
+		}
+
+	}
+
 	// toolbar actions
 	public class AddSecurityScanAction extends AbstractAction
 	{
@@ -335,8 +358,8 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 
 			TestStep testStep = node.getTestStep();
 
-			String[] availableScanNames = SoapUI.getSoapUICore().getSecurityScanRegistry()
-					.getAvailableSecurityScansNames( testStep );
+			String[] availableScanNames = SoapUI.getSoapUICore().getSecurityScanRegistry().getAvailableSecurityScansNames(
+					testStep );
 			availableScanNames = securityTest.getAvailableSecurityScanNames( testStep, availableScanNames );
 
 			if( availableScanNames == null || availableScanNames.length == 0 )
