@@ -98,7 +98,7 @@ public class AssertionsPanel extends JPanel
 				if( ix == -1 )
 				{
 					assertionListPopup.addSeparator();
-					assertionListPopup.add( new ShowOnlineHelpAction( HelpUrls.RESPONSE_ASSERTIONS_HELP_URL ) );
+					assertionListPopup.add( new ShowOnlineHelpAction( getHelpUrl()) );
 					return;
 				}
 
@@ -205,7 +205,7 @@ public class AssertionsPanel extends JPanel
 		addToolbarButtons( toolbar );
 
 		toolbar.addGlue();
-		toolbar.add( new ShowOnlineHelpAction( HelpUrls.REQUEST_ASSERTIONS_HELP_URL ) );
+		toolbar.add( new ShowOnlineHelpAction(getHelpUrl()) );
 
 		assertionList.addListSelectionListener( new ListSelectionListener()
 		{
@@ -558,5 +558,9 @@ public class AssertionsPanel extends JPanel
 	public JList getAssertionsList()
 	{
 		return assertionList;
+	}
+	
+	public String getHelpUrl(){
+		return HelpUrls.RESPONSE_ASSERTIONS_HELP_URL ;
 	}
 }

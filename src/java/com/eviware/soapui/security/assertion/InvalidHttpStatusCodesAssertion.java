@@ -169,7 +169,7 @@ public class InvalidHttpStatusCodesAssertion extends WsdlMessageAssertion implem
 				40 );
 
 		// TODO : update help URL
-		dialog = builder.buildDialog( builder.buildOkCancelHelpActions( HelpUrls.HELP_URL_ROOT ), "Specify codes",
+		dialog = builder.buildDialog( builder.buildOkCancelHelpActions( HelpUrls.SECURITY_INVALID_HTTP_CODES_ASSERTION_HELP ), "Specify codes",
 				UISupport.OPTIONS_ICON );
 	}
 

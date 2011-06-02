@@ -389,7 +389,7 @@ public class CrossSiteScriptAssertion extends WsdlMessageAssertion implements Re
 	}
 
 	// TODO : update help URL
-	@AForm( description = "", name = "Cross Site Scripting on Separate HTML", helpUrl = HelpUrls.HELP_URL_ROOT )
+	@AForm( description = "", name = "Cross Site Scripting on Separate HTML", helpUrl = HelpUrls.SECURITY_XSS_ASSERTION_HELP )
 	protected interface CrossSiteScripSeparateHTMLConfigDialog
 	{
 		@AField( description = "Check Imediate Response", name = "###Check Response", type = AFieldType.BOOLEAN )

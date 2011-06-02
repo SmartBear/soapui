@@ -223,6 +223,13 @@ public interface HelpUrls
 	public static final String MANUALTESTSTEP_HELP_URL = "";
 
 	public static final String SECURITYTESTEDITOR_HELP_URL = "http://www.soapui.org/Security/working-with-security-tests.html";
-	public static final String SECURITY_HELP_ROOT = "http://www.soapui.org/Security";
-
+	public static final String SECURITY_HELP_ROOT = "http://www.soapui.org/Security/getting-started.html";
+	
+	public static final String SECURITY_ASSERTION_HELP = "http://www.soapui.org/Security/security-scans-overview.html#3-security-scan-assertions";
+	public static final String SECURITY_XSS_ASSERTION_HELP = "http://www.soapui.org/Security/cross-site-scripting.html";
+	public static final String SECURITY_INVALID_HTTP_CODES_ASSERTION_HELP = "http://www.soapui.org/Security/security-scans-overview.html#3-1-invalid-http-codes";
+	public static final String SECURITY_VALID_HTTP_CODES_ASSERTION_HELP = "http://www.soapui.org/Security/security-scans-overview.html#3-2-valid-http-codes";
+	public static final String SECURITY_SENSITIVE_INFORMATION_EXPOSURE_ASSERTION_HELP = "http://www.soapui.org/Security/security-scans-overview.html#3-3-system-information-exposure";
+	
+	
 }

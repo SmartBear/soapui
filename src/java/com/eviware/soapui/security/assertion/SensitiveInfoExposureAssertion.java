@@ -263,7 +263,7 @@ public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion impleme
 	}
 
 	// TODO : update help URL
-	@AForm( description = "Configure Sensitive Information Exposure Assertion", name = "Sensitive Information Exposure Assertion", helpUrl = HelpUrls.HELP_URL_ROOT )
+	@AForm( description = "Configure Sensitive Information Exposure Assertion", name = "Sensitive Information Exposure Assertion", helpUrl = HelpUrls.SECURITY_SENSITIVE_INFORMATION_EXPOSURE_ASSERTION_HELP )
 	protected interface SensitiveInformationConfigDialog
 	{
 

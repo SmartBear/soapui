@@ -18,6 +18,7 @@ import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 
 import com.eviware.soapui.impl.wsdl.panels.teststeps.AssertionsPanel;
+import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.TestAssertion;
 
@@ -78,6 +79,11 @@ public class SecurityAssertionPanel extends AssertionsPanel
 			return this;
 		}
 
+	}
+
+	public String getHelpUrl()
+	{
+		return HelpUrls.SECURITY_ASSERTION_HELP;
 	}
 
 }
