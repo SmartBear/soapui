@@ -73,7 +73,7 @@ public class SoapUIEasySSLProtocolSocketFactory extends EasySSLProtocolSocketFac
 		}
 	}
 
-	private Socket enableSocket( SSLSocket socket )
+	private synchronized Socket enableSocket( SSLSocket socket )
 	{
 		socket.getSession().invalidate();
 
@@ -84,7 +84,7 @@ public class SoapUIEasySSLProtocolSocketFactory extends EasySSLProtocolSocketFac
 		{
 			socket.setEnabledProtocols( protocols.split( "," ) );
 		}
-		else
+		else if( socket.getSupportedProtocols() != null )
 		{
 			socket.setEnabledProtocols( socket.getSupportedProtocols() );
 		}
@@ -93,7 +93,7 @@ public class SoapUIEasySSLProtocolSocketFactory extends EasySSLProtocolSocketFac
 		{
 			socket.setEnabledCipherSuites( ciphers.split( "," ) );
 		}
-		else
+		else if( socket.getSupportedCipherSuites() != null )
 		{
 			socket.setEnabledCipherSuites( socket.getSupportedCipherSuites() );
 		}
