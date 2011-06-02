@@ -97,6 +97,9 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 	private EnableDisableSecurityScan enableDisableSecurityScan;
 	private JPopupMenu multySecurityScanPopUp;
 	protected boolean multypopupvisible;
+	private EnableSecurityScans enableSecurityScansAction;
+	private DisableSecurityScans disableSecurityScansAction;
+	private ShowOnlineHelpAction showOnlineHelpAction;
 
 	public JSecurityTestTestStepList( SecurityTest securityTest, JSecurityTestRunLog securityTestLog )
 	{
@@ -110,7 +113,8 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 		securityScanPopUp.add( configureSecurityScanAction );
 		securityScanPopUp.addSeparator();
 		securityScanPopUp.add( removeSecurityScanAction );
-		securityScanPopUp.add( new ShowOnlineHelpAction( HelpUrls.RESPONSE_ASSERTIONS_HELP_URL ) );
+		showOnlineHelpAction = new ShowOnlineHelpAction( HelpUrls.RESPONSE_ASSERTIONS_HELP_URL );
+		securityScanPopUp.add( showOnlineHelpAction );
 
 		securityScanWithPropertiesPopUp = new JPopupMenu();
 		securityScanWithPropertiesPopUp.add( enableDisableSecurityScan );
@@ -118,14 +122,12 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 		securityScanWithPropertiesPopUp.add( cloneParametersAction );
 		securityScanWithPropertiesPopUp.addSeparator();
 		securityScanWithPropertiesPopUp.add( removeSecurityScanAction );
-		securityScanWithPropertiesPopUp.add( new ShowOnlineHelpAction( HelpUrls.RESPONSE_ASSERTIONS_HELP_URL ) );
+		securityScanWithPropertiesPopUp.add( showOnlineHelpAction );
 
 		multySecurityScanPopUp = new JPopupMenu();
-		multySecurityScanPopUp.add( new EnableSecurityScans() );
-		multySecurityScanPopUp.add( new DisableSecurityScans() );
-		multySecurityScanPopUp.addSeparator();
-		multySecurityScanPopUp.add( removeSecurityScanAction );
-		multySecurityScanPopUp.add( new ShowOnlineHelpAction( HelpUrls.RESPONSE_ASSERTIONS_HELP_URL ) );
+		enableSecurityScansAction = new EnableSecurityScans();
+		disableSecurityScansAction = new DisableSecurityScans();
+		populateMultySecurityScanPopup( true, true );
 		multySecurityScanPopUp.addPopupMenuListener( new PopupMenuListener()
 		{
 
@@ -184,6 +186,22 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 		}
 		this.securityTestLog = securityTestLog;
 
+	}
+
+	private void populateMultySecurityScanPopup( boolean addEnableAction, boolean addDisableAction )
+	{
+		multySecurityScanPopUp.removeAll();
+		if( addEnableAction )
+		{
+			multySecurityScanPopUp.add( enableSecurityScansAction );
+		}
+		if( addDisableAction )
+		{
+			multySecurityScanPopUp.add( disableSecurityScansAction );
+		}
+		multySecurityScanPopUp.addSeparator();
+		multySecurityScanPopUp.add( removeSecurityScanAction );
+		multySecurityScanPopUp.add( showOnlineHelpAction );
 	}
 
 	protected SecurityTest getSecurityTest()
@@ -337,7 +355,6 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 
 			SecurityScan securityScan = securityTest.addNewSecurityScan( testStep, name );
 			securityScan.setRunOnlyOnce( true );
-
 
 			securityTestTree.setSelectionPath( new TreePath( node.getPath() ) );
 
@@ -728,11 +745,42 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 				}
 				else if( securityTestTree.getSelectionRows().length > 1 )
 				{
+					// check if selected are all enabled/disabled
+					populateMultySecurityScanPopup( true, true );
+					boolean hasEnabledScans = false;
+					boolean hasDisabledScans = false;
+
+					for( TreePath path2 : securityTestTree.getSelectionPaths() )
+					{
+						if( path2.getLastPathComponent() instanceof SecurityScanNode )
+						{
+							if( ( ( SecurityScanNode )path2.getLastPathComponent() ).getSecurityScan().isDisabled() )
+							{
+								hasDisabledScans = true;
+							}
+							else
+							{
+								hasEnabledScans = true;
+							}
+						}
+					}
+
+					if( hasEnabledScans && !hasDisabledScans )
+					{
+						populateMultySecurityScanPopup( false, true );
+					}
+					else if( !hasEnabledScans && hasDisabledScans )
+					{
+						populateMultySecurityScanPopup( true, false );
+					}
+
 					multySecurityScanPopUp.show( securityTestTree, e.getX(), e.getY() );
 				}
 			}
 			else if( ( ( TestStepNode )node ).getTestStep() instanceof Securable )
+			{
 				testStepPopUp.show( securityTestTree, e.getX(), e.getY() );
+			}
 		}
 	}
 
