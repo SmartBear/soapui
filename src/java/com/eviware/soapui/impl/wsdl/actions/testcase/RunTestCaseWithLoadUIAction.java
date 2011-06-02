@@ -27,8 +27,8 @@ import com.eviware.x.form.XFormField;
 import com.eviware.x.form.XFormFieldListener;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.AField.AFieldType;
+import com.eviware.x.form.support.AForm;
 
 public class RunTestCaseWithLoadUIAction extends AbstractSoapUIAction<WsdlTestCase>
 {
@@ -71,8 +71,8 @@ public class RunTestCaseWithLoadUIAction extends AbstractSoapUIAction<WsdlTestCa
 					dialog.setOptions( Form.TESTCASE, IntegrationUtils.getAvailableTestCases( newValue ) );
 					if( dialog.getValue( Form.TESTCASE ).equals( IntegrationUtils.CREATE_ON_PROJECT_LEVEL ) )
 					{
-						dialog.setOptions( Form.SOAPUIRUNNER, IntegrationUtils.getAvailableRunners( newValue,
-								IntegrationUtils.CREATE_ON_PROJECT_LEVEL ) );
+						dialog.setOptions( Form.SOAPUIRUNNER,
+								IntegrationUtils.getAvailableRunners( newValue, IntegrationUtils.CREATE_ON_PROJECT_LEVEL ) );
 					}
 				}
 			} );
@@ -87,8 +87,8 @@ public class RunTestCaseWithLoadUIAction extends AbstractSoapUIAction<WsdlTestCa
 					}
 					else
 					{
-						dialog.setOptions( Form.SOAPUIRUNNER, IntegrationUtils.getAvailableRunners( dialog
-								.getValue( Form.PROJECT ), newValue ) );
+						dialog.setOptions( Form.SOAPUIRUNNER,
+								IntegrationUtils.getAvailableRunners( dialog.getValue( Form.PROJECT ), newValue ) );
 					}
 				}
 			} );
@@ -108,8 +108,8 @@ public class RunTestCaseWithLoadUIAction extends AbstractSoapUIAction<WsdlTestCa
 				dialog.setValue( Form.TESTCASE, IntegrationUtils.CREATE_ON_PROJECT_LEVEL );
 			}
 
-			dialog.setOptions( Form.SOAPUIRUNNER, IntegrationUtils.getAvailableRunners( dialog.getValue( Form.PROJECT ),
-					dialog.getValue( Form.TESTCASE ) ) );
+			dialog.setOptions( Form.SOAPUIRUNNER,
+					IntegrationUtils.getAvailableRunners( dialog.getValue( Form.PROJECT ), dialog.getValue( Form.TESTCASE ) ) );
 			dialog.setValue( Form.SOAPUIRUNNER, IntegrationUtils.CREATE_NEW_OPTION );
 
 			dialog.setOptions( Form.GENERATOR, new String[] { EMPTY_OPTION, "Fixed Rate", "Variance", "Random", "Ramp",
@@ -130,16 +130,11 @@ public class RunTestCaseWithLoadUIAction extends AbstractSoapUIAction<WsdlTestCa
 				if( dialog.getReturnValue() == XFormDialog.OK_OPTION )
 				{
 					String openedProjectName = IntegrationUtils.getOpenedProjectName();
-					if( !StringUtils.isNullOrEmpty( openedProjectName ) && !targetProjectString.equals( openedProjectName ) )
-						if( UISupport.confirm( "Close currently open [" + IntegrationUtils.getOpenedProjectName()
-								+ "] loadUI project", "Close loadUI project" ) )
-						{
-							IntegrationUtils.closeOpenedLoadUIProject();
-						}
-						else
-						{
-							return;
-						}
+					if( !StringUtils.isNullOrEmpty( openedProjectName ) && !targetProjectString.equals( openedProjectName )
+							&& IntegrationUtils.checkOpenedLoadUIProjectForClose() )
+					{
+						return;
+					}
 
 					HashMap<String, String> createdRunnerSettings = null;
 					try

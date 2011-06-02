@@ -24,6 +24,7 @@ import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
 import com.eviware.soapui.impl.wsdl.loadtest.WsdlLoadTest;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.integration.impl.CajoClient;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 
 public class IntegrationUtils
@@ -400,16 +401,104 @@ public class IntegrationUtils
 		}
 	}
 
-	public static void closeOpenedLoadUIProject()
+	/**
+	 * Closes currently opened project in loadUI.
+	 * 
+	 * @param saveProject
+	 *           If true project will be saved before closing. If false project
+	 *           will be closed without saving.
+	 */
+	public static void closeOpenedLoadUIProject( boolean saveProject )
 	{
 		try
 		{
+			if( saveProject )
+			{
+				CajoClient.getInstance().invoke( "saveOpenedProject", null );
+			}
 			CajoClient.getInstance().invoke( "closeOpenedProject", null );
 		}
 		catch( Exception e )
 		{
 			SoapUI.log.error( "Error while invoking cajo server in loadui ", e );
 		}
+	}
+
+	/**
+	 * Checks if currently opened project in loadUI is dirty.
+	 * 
+	 * @return true if project is dirty, false if it is not, null if there is no
+	 *         opened project.
+	 */
+	public static Boolean isOpenedProjectDirty()
+	{
+		Boolean result = null;
+		try
+		{
+			result = ( Boolean )CajoClient.getInstance().invoke( "isOpenedProjectDirty", null );
+		}
+		catch( Exception e )
+		{
+			SoapUI.log.error( "Error while invoking cajo server in loadui ", e );
+		}
+		return result;
+	}
+
+	/**
+	 * Checks the state of currently opened loadUI project and asks user what to
+	 * do with it. When project is dirty user is prompted with the following
+	 * options: Yes - save and close, No - close without saving, Cancel - don't
+	 * close project. When project is not dirty available options are: Yes -
+	 * close project, No - don't close. If there is no opened project user is not
+	 * prompted since there is no project to close.
+	 * 
+	 * @return true if operation is canceled, false if not.
+	 */
+	public static boolean checkOpenedLoadUIProjectForClose()
+	{
+		String openedProjectName = getOpenedProjectName();
+		if( StringUtils.isNullOrEmpty( openedProjectName ) )
+		{
+			// there is no opened project, so return false (don't cancel operation)
+			return false;
+		}
+
+		// holds user decision if project should be closed (true) or not
+		// (false or null)
+		Boolean close = null;
+		// holds user decision if project should be saved before close (true) or
+		// not (false or null). This makes sense only if close is true.
+		Boolean saveProject = null;
+
+		Boolean isDirty = isOpenedProjectDirty();
+		if( isDirty != null && isDirty )
+		{
+			// display Yes-No-Cancel dialog. Yes = true (save and close), No =
+			// false (close without saving), Cancel = null (dont't close at all)
+			saveProject = UISupport.confirmOrCancel( "Save currently open [" + openedProjectName
+					+ "] loadUI project before closing?", "Save loadUI project" );
+
+			// when saveProject is not null user decided to close project (with or
+			// without saving). when it is null user clicked cancel so don't close.
+			close = saveProject != null;
+		}
+		else
+		{
+			// project is not dirty so display Yes-No dialog. Yes = true (close),
+			// No = false (don't close)
+			close = UISupport.confirm( "Currently open [" + openedProjectName
+					+ "] loadUI project will be closed. Continue?", "Close loadUI project" );
+		}
+
+		// method result. Set to true if user canceled operation and to false if
+		// project was closed.
+		boolean quit = true;
+		if( close != null && close )
+		{
+			closeOpenedLoadUIProject( saveProject != null && saveProject );
+			quit = false;
+		}
+		return quit;
 	}
 
 	public static String[] getAvailableProjects()

@@ -90,17 +90,10 @@ public class ConvertTestSuiteLoadTestsToLoadUIAction extends AbstractSoapUIActio
 				{
 					String loadUIProject = dialog.getValue( TestSuiteForm.LOADUIPROJECT );
 					String openedProjectName = IntegrationUtils.getOpenedProjectName();
-					if( !StringUtils.isNullOrEmpty( openedProjectName ) && !loadUIProject.equals( openedProjectName ) )
+					if( !StringUtils.isNullOrEmpty( openedProjectName ) && !loadUIProject.equals( openedProjectName )
+							&& IntegrationUtils.checkOpenedLoadUIProjectForClose() )
 					{
-						if( UISupport.confirm( "Close currently open [" + IntegrationUtils.getOpenedProjectName()
-								+ "] loadUI project", "Close loadUI project" ) )
-						{
-							IntegrationUtils.closeOpenedLoadUIProject();
-						}
-						else
-						{
-							return;
-						}
+						return;
 					}
 					String[] soapuiLoadTests = StringUtils.toStringArray( ( ( XFormMultiSelectList )dialog
 							.getFormField( TestSuiteForm.LOADTESTS ) ).getSelectedOptions() );

@@ -15,8 +15,6 @@ package com.eviware.soapui.impl.wsdl.actions.loadtest;
 import java.io.IOException;
 import java.util.HashMap;
 
-import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.actions.project.StartLoadUI;
 import com.eviware.soapui.impl.wsdl.loadtest.WsdlLoadTest;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
@@ -67,8 +65,8 @@ public class ConvertToLoadUIAction extends AbstractSoapUIAction<WsdlLoadTest>
 					dialog.setOptions( Form.TESTCASE, IntegrationUtils.getAvailableTestCases( newValue ) );
 					if( dialog.getValue( Form.TESTCASE ).equals( IntegrationUtils.CREATE_ON_PROJECT_LEVEL ) )
 					{
-						dialog.setOptions( Form.SOAPUIRUNNER, IntegrationUtils.getAvailableRunners( newValue,
-								IntegrationUtils.CREATE_ON_PROJECT_LEVEL ) );
+						dialog.setOptions( Form.SOAPUIRUNNER,
+								IntegrationUtils.getAvailableRunners( newValue, IntegrationUtils.CREATE_ON_PROJECT_LEVEL ) );
 					}
 				}
 			} );
@@ -83,8 +81,8 @@ public class ConvertToLoadUIAction extends AbstractSoapUIAction<WsdlLoadTest>
 					}
 					else
 					{
-						dialog.setOptions( Form.SOAPUIRUNNER, IntegrationUtils.getAvailableRunners( dialog
-								.getValue( Form.PROJECT ), newValue ) );
+						dialog.setOptions( Form.SOAPUIRUNNER,
+								IntegrationUtils.getAvailableRunners( dialog.getValue( Form.PROJECT ), newValue ) );
 					}
 				}
 			} );
@@ -104,8 +102,8 @@ public class ConvertToLoadUIAction extends AbstractSoapUIAction<WsdlLoadTest>
 				dialog.setValue( Form.TESTCASE, IntegrationUtils.CREATE_ON_PROJECT_LEVEL );
 			}
 
-			dialog.setOptions( Form.SOAPUIRUNNER, IntegrationUtils.getAvailableRunners( dialog.getValue( Form.PROJECT ),
-					dialog.getValue( Form.TESTCASE ) ) );
+			dialog.setOptions( Form.SOAPUIRUNNER,
+					IntegrationUtils.getAvailableRunners( dialog.getValue( Form.PROJECT ), dialog.getValue( Form.TESTCASE ) ) );
 			dialog.setValue( Form.SOAPUIRUNNER, IntegrationUtils.CREATE_NEW_OPTION );
 			if( dialog.show() )
 			{
@@ -114,16 +112,11 @@ public class ConvertToLoadUIAction extends AbstractSoapUIAction<WsdlLoadTest>
 						IntegrationUtils.CREATE_ON_PROJECT_LEVEL ) ? dialog.getValue( Form.TESTCASE ) : null;
 				String targetRunnerName = dialog.getValue( Form.SOAPUIRUNNER );
 				String openedProjectName = IntegrationUtils.getOpenedProjectName();
-				if( !StringUtils.isNullOrEmpty( openedProjectName ) && !targetProjectString.equals( openedProjectName ) )
-					if( UISupport.confirm( "Close currently open [" + IntegrationUtils.getOpenedProjectName()
-							+ "] loadUI project", "Close loadUI project" ) )
-					{
-						IntegrationUtils.closeOpenedLoadUIProject();
-					}
-					else
-					{
-						return;
-					}
+				if( !StringUtils.isNullOrEmpty( openedProjectName ) && !targetProjectString.equals( openedProjectName )
+						&& IntegrationUtils.checkOpenedLoadUIProjectForClose() )
+				{
+					return;
+				}
 				exportToLoadUI( loadTest, targetProjectString, targetTestCaseName, targetRunnerName );
 			}
 		}

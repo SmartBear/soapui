@@ -14,8 +14,6 @@ package com.eviware.soapui.impl.wsdl.actions.testcase;
 
 import java.io.IOException;
 
-import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.actions.project.StartLoadUI;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
@@ -74,17 +72,10 @@ public class ConvertTestCaseLoadTestsToLoadUIAction extends AbstractSoapUIAction
 				{
 					String loadUIProject = dialog.getValue( TestCaseForm.LOADUIPROJECT );
 					String openedProjectName = IntegrationUtils.getOpenedProjectName();
-					if( !StringUtils.isNullOrEmpty( openedProjectName ) && !loadUIProject.equals( openedProjectName ) )
+					if( !StringUtils.isNullOrEmpty( openedProjectName ) && !loadUIProject.equals( openedProjectName )
+							&& IntegrationUtils.checkOpenedLoadUIProjectForClose() )
 					{
-						if( UISupport.confirm( "Close currently open [" + IntegrationUtils.getOpenedProjectName()
-								+ "] loadUI project", "Close loadUI project" ) )
-						{
-							IntegrationUtils.closeOpenedLoadUIProject();
-						}
-						else
-						{
-							return;
-						}
+						return;
 					}
 					String[] soapuiLoadTests = StringUtils.toStringArray( ( ( XFormMultiSelectList )dialog
 							.getFormField( TestCaseForm.LOADTESTS ) ).getSelectedOptions() );

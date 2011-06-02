@@ -15,8 +15,6 @@ package com.eviware.soapui.impl.wsdl.actions.mockservice;
 import java.io.IOException;
 import java.util.HashMap;
 
-import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.actions.project.StartLoadUI;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockService;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
@@ -73,8 +71,8 @@ public class RunMockServiceWithLoadUIAction extends AbstractSoapUIAction<WsdlMoc
 					dialog.setOptions( Form.TESTCASE, IntegrationUtils.getAvailableTestCases( newValue ) );
 					if( dialog.getValue( Form.TESTCASE ).equals( IntegrationUtils.CREATE_ON_PROJECT_LEVEL ) )
 					{
-						dialog.setOptions( Form.MOCKSERVICERUNNER, IntegrationUtils.getAvailableRunners( newValue,
-								IntegrationUtils.CREATE_ON_PROJECT_LEVEL ) );
+						dialog.setOptions( Form.MOCKSERVICERUNNER,
+								IntegrationUtils.getAvailableRunners( newValue, IntegrationUtils.CREATE_ON_PROJECT_LEVEL ) );
 					}
 				}
 			} );
@@ -89,8 +87,8 @@ public class RunMockServiceWithLoadUIAction extends AbstractSoapUIAction<WsdlMoc
 					}
 					else
 					{
-						dialog.setOptions( Form.MOCKSERVICERUNNER, IntegrationUtils.getAvailableMockServiceRunners( dialog
-								.getValue( Form.PROJECT ), newValue ) );
+						dialog.setOptions( Form.MOCKSERVICERUNNER,
+								IntegrationUtils.getAvailableMockServiceRunners( dialog.getValue( Form.PROJECT ), newValue ) );
 					}
 				}
 			} );
@@ -110,8 +108,10 @@ public class RunMockServiceWithLoadUIAction extends AbstractSoapUIAction<WsdlMoc
 				dialog.setValue( Form.TESTCASE, IntegrationUtils.CREATE_ON_PROJECT_LEVEL );
 			}
 
-			dialog.setOptions( Form.MOCKSERVICERUNNER, IntegrationUtils.getAvailableMockServiceRunners( dialog
-					.getValue( Form.PROJECT ), dialog.getValue( Form.TESTCASE ) ) );
+			dialog.setOptions(
+					Form.MOCKSERVICERUNNER,
+					IntegrationUtils.getAvailableMockServiceRunners( dialog.getValue( Form.PROJECT ),
+							dialog.getValue( Form.TESTCASE ) ) );
 			dialog.setValue( Form.MOCKSERVICERUNNER, IntegrationUtils.CREATE_NEW_OPTION );
 			if( dialog.show() )
 			{
@@ -122,16 +122,11 @@ public class RunMockServiceWithLoadUIAction extends AbstractSoapUIAction<WsdlMoc
 				if( dialog.getReturnValue() == XFormDialog.OK_OPTION )
 				{
 					String openedProjectName = IntegrationUtils.getOpenedProjectName();
-					if( !StringUtils.isNullOrEmpty( openedProjectName ) && !targetProjectString.equals( openedProjectName ) )
-						if( UISupport.confirm( "Close currently open [" + IntegrationUtils.getOpenedProjectName()
-								+ "] loadUI project", "Close loadUI project" ) )
-						{
-							IntegrationUtils.closeOpenedLoadUIProject();
-						}
-						else
-						{
-							return;
-						}
+					if( !StringUtils.isNullOrEmpty( openedProjectName ) && !targetProjectString.equals( openedProjectName )
+							&& IntegrationUtils.checkOpenedLoadUIProjectForClose() )
+					{
+						return;
+					}
 
 					HashMap<String, String> createdRunnerSettings = null;
 					try
