@@ -74,7 +74,7 @@ public class SQLInjectionScan extends AbstractSecurityScanWithProperties
 	private boolean mutation;
 	private JFormDialog dialog;
 
-	public SQLInjectionScan( SecurityScanConfig config, ModelItem parent, String icon, TestStep testStep )
+	public SQLInjectionScan( TestStep testStep, SecurityScanConfig config, ModelItem parent, String icon )
 	{
 		super( testStep, config, parent, icon );
 		if( config.getConfig() == null || !( config.getConfig() instanceof SQLInjectionScanConfig ) )
@@ -196,8 +196,8 @@ public class SQLInjectionScan extends AbstractSecurityScanWithProperties
 					// model = new XmlObjectTreeModel(
 					// property.getSchemaType().getTypeSystem(),
 					// XmlObject.Factory.parse( value ) );
-					model = new XmlObjectTreeModel( property.getSchemaType().getTypeSystem(),
-							XmlUtils.createXmlObject( value ) );
+					model = new XmlObjectTreeModel( property.getSchemaType().getTypeSystem(), XmlUtils
+							.createXmlObject( value ) );
 					for( SecurityCheckedParameter param : getParameterHolder().getParameterList() )
 					{
 						if( !param.isChecked() )
@@ -207,8 +207,8 @@ public class SQLInjectionScan extends AbstractSecurityScanWithProperties
 						{
 							if( parameterMutations.containsKey( param ) )
 							{
-								testStep.getProperties().get( param.getName() )
-										.setValue( parameterMutations.get( param ).get( 0 ) );
+								testStep.getProperties().get( param.getName() ).setValue(
+										parameterMutations.get( param ).get( 0 ) );
 								params.put( param.getLabel(), parameterMutations.get( param ).get( 0 ) );
 								parameterMutations.get( param ).remove( 0 );
 							}
@@ -279,8 +279,8 @@ public class SQLInjectionScan extends AbstractSecurityScanWithProperties
 					// model = new XmlObjectTreeModel(
 					// property.getSchemaType().getTypeSystem(),
 					// XmlObject.Factory.parse( value ) );
-					model = new XmlObjectTreeModel( property.getSchemaType().getTypeSystem(),
-							XmlUtils.createXmlObject( value ) );
+					model = new XmlObjectTreeModel( property.getSchemaType().getTypeSystem(), XmlUtils
+							.createXmlObject( value ) );
 
 					XmlTreeNode[] nodes = model.selectTreeNodes( context.expand( parameter.getXpath() ) );
 

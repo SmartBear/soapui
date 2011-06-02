@@ -15,13 +15,13 @@ public class InvalidTypesSecurityScanFactory extends AbstractSecurityScanFactory
 	public InvalidTypesSecurityScanFactory()
 	{
 		super( InvalidTypesSecurityScan.TYPE, InvalidTypesSecurityScan.NAME,
-				"Tries to break application and get information on system", "/information_exposure_check.gif" );
+				"Tries to break application and get information on system", "/invalid_types_scan.gif" );
 	}
 
 	@Override
 	public AbstractSecurityScan buildSecurityScan( TestStep testStep, SecurityScanConfig config, ModelItem parent )
 	{
-		return new InvalidTypesSecurityScan( testStep, config, parent, null );
+		return new InvalidTypesSecurityScan( testStep, config, parent, "/invalid_types_scan.gif" );
 	}
 
 	@Override

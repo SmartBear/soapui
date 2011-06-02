@@ -48,7 +48,7 @@ public class FuzzerSecurityScanFactory extends AbstractSecurityScanFactory
 	@Override
 	public AbstractSecurityScan buildSecurityScan( TestStep testStep, SecurityScanConfig config, ModelItem parent )
 	{
-		return new FuzzerSecurityScan( testStep, config, parent, null );
+		return new FuzzerSecurityScan( testStep, config, parent, "/fuzzer_security_scan.gif" );
 	}
 
 	@Override

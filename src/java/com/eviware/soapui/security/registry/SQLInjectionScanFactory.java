@@ -33,7 +33,7 @@ public class SQLInjectionScanFactory extends AbstractSecurityScanFactory
 	public SQLInjectionScanFactory()
 	{
 		super( SQLInjectionScan.TYPE, SQLInjectionScan.NAME, "Preforms a scan for SQL Injection Vulnerabilities",
-				"/sql_injection_check_script.gif" );
+				"/sql_injection_scan.gif" );
 	}
 
 	public boolean canCreate( TestStep testStep )
@@ -45,7 +45,7 @@ public class SQLInjectionScanFactory extends AbstractSecurityScanFactory
 	@Override
 	public AbstractSecurityScan buildSecurityScan( TestStep testStep, SecurityScanConfig config, ModelItem parent )
 	{
-		return new SQLInjectionScan( config, parent, null, testStep );
+		return new SQLInjectionScan( testStep, config, parent, "/sql_injection_scan.gif" );
 	}
 
 	@Override

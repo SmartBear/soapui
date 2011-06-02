@@ -27,13 +27,13 @@ public class XPathInjectionSecurityScanFactory extends AbstractSecurityScanFacto
 	public XPathInjectionSecurityScanFactory()
 	{
 		super( XPathInjectionSecurityScan.TYPE, XPathInjectionSecurityScan.NAME,
-				"Preforms a scan for XPath Injection Vulerabilities", null );
+				"Preforms a scan for XPath Injection Vulerabilities", "/xpath_injection_scan.gif" );
 	}
 
 	@Override
 	public AbstractSecurityScan buildSecurityScan( TestStep testStep, SecurityScanConfig config, ModelItem parent )
 	{
-		return new XPathInjectionSecurityScan( testStep, config, parent, null );
+		return new XPathInjectionSecurityScan( testStep, config, parent, "/xpath_injection_scan.gif" );
 	}
 
 	@Override

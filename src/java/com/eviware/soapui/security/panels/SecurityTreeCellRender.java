@@ -37,6 +37,7 @@ import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.security.SecurityScan;
 import com.eviware.soapui.model.testsuite.TestStep;
+import com.eviware.soapui.model.util.ModelItemIconFactory;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.scan.AbstractSecurityScan;
 import com.eviware.soapui.security.support.ProgressBarSecurityScanAdapter;
@@ -51,7 +52,7 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 	private JTree tree;
 	Color selected = new Color( 205, 205, 205 );
 	Color unselected = new Color( 228, 228, 228 );
-//	Color noSecurable = new Color( 102, 102, 102 );
+	//	Color noSecurable = new Color( 102, 102, 102 );
 	private boolean released;
 
 	@Override
@@ -344,7 +345,8 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 			this.securityCheck = ( SecurityScan )node.getSecurityScan();
 			this.securityCheck.addPropertyChangeListener( this );
 			label = new JLabel( securityCheck.getName(), SwingConstants.LEFT );
-			label.setIcon( UISupport.createImageIcon( "/securityTest.png" ) );
+			String iconPath = UISupport.getIconPath( securityCheck.getIcon() );
+			label.setIcon( UISupport.createImageIcon( iconPath ) );
 			label.setBorder( BorderFactory.createEmptyBorder( 5, 45, 5, 5 ) );
 			label.setEnabled( !securityCheck.isDisabled() );
 			leftInnerPanel = new JPanel( new BorderLayout() );
@@ -385,7 +387,6 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 		public void release()
 		{
 			progressBarAdapter.release();
-			securityCheck = null;
 		}
 
 		public void reset()

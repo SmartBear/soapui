@@ -32,7 +32,7 @@ public class GroovySecurityScanFactory extends AbstractSecurityScanFactory
 	public GroovySecurityScanFactory()
 	{
 		super( GroovySecurityScan.TYPE, GroovySecurityScan.NAME,
-				"Executes the specified groovy script for security scan", "/groovy_security_check_script.gif" );
+				"Executes the specified groovy script for security scan", "/groovy_script_scan.gif" );
 	}
 
 	public boolean canCreate( TestStep testStep )
@@ -43,7 +43,7 @@ public class GroovySecurityScanFactory extends AbstractSecurityScanFactory
 	@Override
 	public AbstractSecurityScan buildSecurityScan( TestStep testStep, SecurityScanConfig config, ModelItem parent )
 	{
-		return new GroovySecurityScan( testStep, config, parent, null );
+		return new GroovySecurityScan( testStep, config, parent, "/groovy_script_scan.gif" );
 	}
 
 	@Override

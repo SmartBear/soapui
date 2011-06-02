@@ -33,7 +33,7 @@ public class CrossSiteScriptingScanFactory extends AbstractSecurityScanFactory
 	public CrossSiteScriptingScanFactory()
 	{
 		super( CrossSiteScriptingScan.TYPE, CrossSiteScriptingScan.NAME, "Preforms a scan for Cross Site Scripting",
-				"/cross_site_script.gif" );
+				"/cross_site_script_scan.gif" );
 	}
 
 	public boolean canCreate( TestStep testStep )
@@ -44,7 +44,7 @@ public class CrossSiteScriptingScanFactory extends AbstractSecurityScanFactory
 	@Override
 	public AbstractSecurityScan buildSecurityScan( TestStep testStep, SecurityScanConfig config, ModelItem parent )
 	{
-		return new CrossSiteScriptingScan( testStep, config, parent, null );
+		return new CrossSiteScriptingScan( testStep, config, parent, "/cross_site_script_scan.gif" );
 	}
 
 	@Override

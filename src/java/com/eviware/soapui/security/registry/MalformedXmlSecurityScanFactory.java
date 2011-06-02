@@ -24,13 +24,13 @@ public class MalformedXmlSecurityScanFactory extends AbstractSecurityScanFactory
 	public MalformedXmlSecurityScanFactory()
 	{
 		super( MalformedXmlSecurityScan.TYPE, MalformedXmlSecurityScan.NAME,
-				"Preforms a scan for Malformed XML Vulerabilities", null );
+				"Preforms a scan for Malformed XML Vulerabilities", "/malformed_xml_scan.gif" );
 	}
 
 	@Override
 	public AbstractSecurityScan buildSecurityScan( TestStep testStep, SecurityScanConfig config, ModelItem parent )
 	{
-		return new MalformedXmlSecurityScan( testStep, config, parent, null );
+		return new MalformedXmlSecurityScan( testStep, config, parent, "/malformed_xml_scan.gif" );
 	}
 
 	@Override

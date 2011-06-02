@@ -57,8 +57,8 @@ public class MaliciousAttachmentSecurityScan extends AbstractSecurityScan implem
 
 	private WsdlRequest request;
 
-	public MaliciousAttachmentSecurityScan( SecurityScanConfig newConfig, ModelItem parent, String icon,
-			TestStep testStep )
+	public MaliciousAttachmentSecurityScan( TestStep testStep, SecurityScanConfig newConfig, ModelItem parent,
+			String icon )
 	{
 		super( testStep, newConfig, parent, icon );
 

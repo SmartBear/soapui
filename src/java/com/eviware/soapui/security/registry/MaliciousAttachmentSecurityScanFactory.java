@@ -32,7 +32,7 @@ public class MaliciousAttachmentSecurityScanFactory extends AbstractSecurityScan
 	public MaliciousAttachmentSecurityScanFactory()
 	{
 		super( MaliciousAttachmentSecurityScan.TYPE, MaliciousAttachmentSecurityScan.NAME,
-				"Performs a scan for Malicious Attachment Vulnerabilities", null);
+				"Performs a scan for Malicious Attachment Vulnerabilities", "/malicious_attachment_scan.gif" );
 	}
 
 	public boolean canCreate( TestStep testStep )
@@ -43,7 +43,7 @@ public class MaliciousAttachmentSecurityScanFactory extends AbstractSecurityScan
 	@Override
 	public AbstractSecurityScan buildSecurityScan( TestStep testStep, SecurityScanConfig config, ModelItem parent )
 	{
-		return new MaliciousAttachmentSecurityScan( config, parent, null, testStep );
+		return new MaliciousAttachmentSecurityScan( testStep, config, parent, "/malicious_attachment_scan.gif" );
 	}
 
 	@Override

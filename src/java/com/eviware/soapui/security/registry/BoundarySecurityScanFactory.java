@@ -32,7 +32,7 @@ public class BoundarySecurityScanFactory extends AbstractSecurityScanFactory
 	public BoundarySecurityScanFactory()
 	{
 		super( BoundarySecurityScan.TYPE, BoundarySecurityScan.NAME, "Executes the specified boundary security scan",
-				"/boundary_security_check.gif" );
+				"/boundary_scan.gif" );
 	}
 
 	@Override
@@ -47,7 +47,7 @@ public class BoundarySecurityScanFactory extends AbstractSecurityScanFactory
 	@Override
 	public AbstractSecurityScan buildSecurityScan( TestStep testStep, SecurityScanConfig config, ModelItem parent )
 	{
-		return new BoundarySecurityScan( testStep, config, parent, null );
+		return new BoundarySecurityScan( testStep, config, parent, "/boundary_scan.gif" );
 	}
 
 	@Override

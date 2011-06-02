@@ -56,7 +56,7 @@ public class XmlBombSecurityScan extends AbstractSecurityScanWithProperties
 	private Map<SecurityCheckedParameter, ArrayList<String>> parameterMutations = new HashMap<SecurityCheckedParameter, ArrayList<String>>();
 	private boolean mutation;
 
-	public XmlBombSecurityScan( SecurityScanConfig config, ModelItem parent, String icon, TestStep testStep )
+	public XmlBombSecurityScan( TestStep testStep, SecurityScanConfig config, ModelItem parent, String icon )
 	{
 		super( testStep, config, parent, icon );
 		if( config.getConfig() == null || !( config.getConfig() instanceof XmlBombSecurityScanConfig ) )

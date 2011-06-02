@@ -31,7 +31,7 @@ public class XmlBombSecurityScanFactory extends AbstractSecurityScanFactory
 	public XmlBombSecurityScanFactory()
 	{
 		super( XmlBombSecurityScan.TYPE, XmlBombSecurityScan.NAME, "Performs a scan for XML Bomb Vulnerabilities",
-				"/xml_bomb_security_check_script.gif" );
+				"/xml_bomb_scan.gif" );
 	}
 
 	public boolean canCreate( TestStep testStep )
@@ -42,7 +42,7 @@ public class XmlBombSecurityScanFactory extends AbstractSecurityScanFactory
 	@Override
 	public AbstractSecurityScan buildSecurityScan( TestStep testStep, SecurityScanConfig config, ModelItem parent )
 	{
-		return new XmlBombSecurityScan( config, parent, null, testStep );
+		return new XmlBombSecurityScan( testStep, config, parent, "/xml_bomb_scan.gif" );
 	}
 
 	@Override
