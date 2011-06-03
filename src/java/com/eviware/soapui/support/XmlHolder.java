@@ -51,7 +51,7 @@ public class XmlHolder implements Map<String, Object>
 
 	public XmlHolder( PropertyExpansionContext context, String propertyRef ) throws XmlException
 	{
-		this( context.getProperty( propertyRef ).toString() );
+		this( String.valueOf( context.getProperty( propertyRef ) ) );
 
 		this.context = context;
 		this.propertyRef = propertyRef;
