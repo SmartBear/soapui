@@ -27,8 +27,8 @@ import com.eviware.soapui.config.MaliciousAttachmentElementConfig;
 import com.eviware.soapui.config.MaliciousAttachmentSecurityScanConfig;
 import com.eviware.soapui.config.SecurityScanConfig;
 import com.eviware.soapui.config.StrategyTypeConfig;
+import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.AttachmentContainer;
-import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.iface.MessageExchange;
@@ -55,7 +55,7 @@ public class MaliciousAttachmentSecurityScan extends AbstractSecurityScan implem
 	private int elementIndex = -1;
 	private int valueIndex = -1;
 
-	private WsdlRequest request;
+	private AbstractHttpRequest<?> request;
 
 	public MaliciousAttachmentSecurityScan( TestStep testStep, SecurityScanConfig newConfig, ModelItem parent,
 			String icon )
@@ -71,7 +71,7 @@ public class MaliciousAttachmentSecurityScan extends AbstractSecurityScan implem
 			config = ( ( MaliciousAttachmentSecurityScanConfig )newConfig.getConfig() );
 		}
 
-		request = ( ( WsdlRequest )getRequest( testStep ) );
+		request = ( ( AbstractHttpRequest<?> )getRequest( testStep ) );
 		request.addAttachmentsChangeListener( this );
 	}
 
@@ -284,8 +284,7 @@ public class MaliciousAttachmentSecurityScan extends AbstractSecurityScan implem
 	private Attachment addAttachment( TestStep testStep, File file, String contentType, boolean generated, boolean cache )
 			throws IOException
 	{
-		WsdlRequest request = ( WsdlRequest )getRequest( testStep );
-		request.setInlineFilesEnabled( false );
+		AbstractHttpRequest<?> request = ( AbstractHttpRequest<?> )getRequest( testStep );
 		Attachment attach = request.attachFile( file, cache );
 		attach.setContentType( contentType );
 
@@ -295,7 +294,7 @@ public class MaliciousAttachmentSecurityScan extends AbstractSecurityScan implem
 	private void removeAttachments( TestStep testStep, String key, boolean equals )
 	{
 		List<Attachment> toRemove = new ArrayList<Attachment>();
-		WsdlRequest request = ( WsdlRequest )getRequest( testStep );
+		AbstractHttpRequest<?> request = ( AbstractHttpRequest<?> )getRequest( testStep );
 
 		for( Attachment attachment : request.getAttachments() )
 		{
@@ -323,7 +322,7 @@ public class MaliciousAttachmentSecurityScan extends AbstractSecurityScan implem
 
 	private void setRequestTimeout( TestStep testStep, int timeout )
 	{
-		WsdlRequest request = ( WsdlRequest )getRequest( testStep );
+		AbstractHttpRequest<?> request = ( AbstractHttpRequest<?> )getRequest( testStep );
 		request.setTimeout( String.valueOf( timeout ) );
 
 	}
@@ -332,7 +331,8 @@ public class MaliciousAttachmentSecurityScan extends AbstractSecurityScan implem
 	public JComponent getComponent()
 	{
 		if( mutationsPanel == null )
-			mutationsPanel = new MaliciousAttachmentMutationsPanel( config, ( WsdlRequest )getRequest( getTestStep() ) );
+			mutationsPanel = new MaliciousAttachmentMutationsPanel( config,
+					( AbstractHttpRequest<?> )getRequest( getTestStep() ) );
 
 		return mutationsPanel.getPanel();
 	}
@@ -340,7 +340,7 @@ public class MaliciousAttachmentSecurityScan extends AbstractSecurityScan implem
 	@Override
 	protected boolean hasNext( TestStep testStep, SecurityTestRunContext context )
 	{
-		WsdlRequest request = ( WsdlRequest )getRequest( testStep );
+		AbstractHttpRequest<?> request = ( AbstractHttpRequest<?> )getRequest( testStep );
 		boolean hasNext = request.getAttachmentCount() == 0 ? false : elementIndex < config.getElementList().size();
 
 		if( !hasNext )

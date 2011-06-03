@@ -28,7 +28,7 @@ import org.jdesktop.swingx.JXTable;
 import com.eviware.soapui.config.MaliciousAttachmentConfig;
 import com.eviware.soapui.config.MaliciousAttachmentElementConfig;
 import com.eviware.soapui.config.MaliciousAttachmentSecurityScanConfig;
-import com.eviware.soapui.impl.wsdl.WsdlRequest;
+import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.security.support.MaliciousAttachmentFilesListForm;
@@ -63,13 +63,13 @@ public class MaliciousAttachmentMutationsPanel
 	private JButton removeGeneratedButton;
 	private JButton addReplacementButton;
 	private JButton removeReplacementButton;
-	private WsdlRequest request;
+	private AbstractHttpRequest<?> request;
 
 	private MaliciousAttachmentListToTableHolder holder = new MaliciousAttachmentListToTableHolder();
 
 	private JFormDialog tablesDialog;
 
-	public MaliciousAttachmentMutationsPanel( MaliciousAttachmentSecurityScanConfig config, WsdlRequest request )
+	public MaliciousAttachmentMutationsPanel( MaliciousAttachmentSecurityScanConfig config, AbstractHttpRequest<?> request )
 	{
 		this.config = config;
 		this.request = request;
