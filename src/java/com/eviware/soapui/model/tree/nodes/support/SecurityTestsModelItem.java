@@ -32,7 +32,7 @@ public class SecurityTestsModelItem extends EmptyModelItem
 
 	public SecurityTestsModelItem( TestCase testCase )
 	{
-		super( createLabel( testCase ), UISupport.createImageIcon( "/securityTest.png" ) );
+		super( createLabel( testCase ), UISupport.createImageIcon( "/security_test.gif" ) );
 		this.testCase = testCase;
 
 		testCase.getTestSuite().addTestSuiteListener( listener );

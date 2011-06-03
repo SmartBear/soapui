@@ -73,7 +73,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 
 	public SecurityTest( WsdlTestCase testCase, SecurityTestConfig config )
 	{
-		super( config, testCase, "/securityTest.png" );
+		super( config, testCase, "/security_test.gif" );
 		this.testCase = testCase;
 		if( !getConfig().isSetProperties() )
 			getConfig().addNewProperties();

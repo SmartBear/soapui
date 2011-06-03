@@ -344,7 +344,7 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 			super( "Add SecurityScan" );
 
 			putValue( Action.SHORT_DESCRIPTION, "Adds a security scan to this item" );
-			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/addSecurityCheck.gif" ) );
+			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/add_security_scan.gif" ) );
 			setEnabled( false );
 		}
 
@@ -468,7 +468,7 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 		{
 			super( "Remove SecurityScan" );
 			putValue( Action.SHORT_DESCRIPTION, "Removes the selected security scan" );
-			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/remove_securityCheck.gif" ) );
+			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/remove_security_scan.gif" ) );
 			setEnabled( false );
 		}
 

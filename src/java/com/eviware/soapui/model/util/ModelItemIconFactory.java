@@ -51,7 +51,7 @@ public class ModelItemIconFactory
 		modelItemIcons.put( Request.class, "/request.gif" );
 		modelItemIcons.put( Operation.class, "/operation.gif" );
 		modelItemIcons.put( Interface.class, "/interface.gif" );
-		modelItemIcons.put( SecurityTest.class, "/securityTest.png" );
+		modelItemIcons.put( SecurityTest.class, "/security_test.gif" );
 
 	}
 
