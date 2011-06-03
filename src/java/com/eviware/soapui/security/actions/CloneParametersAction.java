@@ -38,9 +38,9 @@ import com.eviware.x.form.XFormFieldListener;
 import com.eviware.x.form.XFormOptionsField;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.XFormMultiSelectList;
+import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.impl.swing.JFormDialog;
 import com.eviware.x.impl.swing.SwingXFormDialog;
 
@@ -359,8 +359,8 @@ public class CloneParametersAction extends AbstractAction
 					SecurityTest securityTest = testCase.getSecurityTestByName( securityTestName );
 					String testStepName = dialog.getValue( CloneParameterDialog.TARGET_TESTSTEP );
 					TestStep testStep = testCase.getTestStepByName( testStepName );
-					String[] securityScanNames = ModelSupport.getNames( securityTest.getTestStepSecurityScanByType(
-							testStep.getId(), AbstractSecurityScanWithProperties.class ) );
+					String[] securityScanNames = ModelSupport.getNames( securityTest.getTestStepSecurityScanByType( testStep
+							.getId(), AbstractSecurityScanWithProperties.class ) );
 					dialog.setOptions( CloneParameterDialog.TARGET_SECURITYSCAN, securityScanNames );
 				}
 				else
@@ -383,8 +383,8 @@ public class CloneParametersAction extends AbstractAction
 				SecurityTest securityTest = testCase.getSecurityTestByName( securityTestName );
 				TestStep testStep = testCase.getTestStepByName( newValue );
 
-				String[] securityScanNames = ModelSupport.getNames( securityTest.getTestStepSecurityScanByType(
-						testStep.getId(), AbstractSecurityScanWithProperties.class ) );
+				String[] securityScanNames = ModelSupport.getNames( securityTest.getTestStepSecurityScanByType( testStep
+						.getId(), AbstractSecurityScanWithProperties.class ) );
 				dialog.setOptions( CloneParameterDialog.TARGET_SECURITYSCAN, securityScanNames );
 			}
 		} );
@@ -400,16 +400,16 @@ public class CloneParametersAction extends AbstractAction
 				String testStepName = dialog.getValue( CloneParameterDialog.TARGET_TESTSTEP );
 				TestStep testStep = testCase.getTestStepByName( testStepName );
 
-				String[] securityScanNames = ModelSupport.getNames( securityTest.getTestStepSecurityScanByType(
-						testStep.getId(), AbstractSecurityScanWithProperties.class ) );
+				String[] securityScanNames = ModelSupport.getNames( securityTest.getTestStepSecurityScanByType( testStep
+						.getId(), AbstractSecurityScanWithProperties.class ) );
 				dialog.setOptions( CloneParameterDialog.TARGET_SECURITYSCAN, securityScanNames );
 			}
 		} );
 
 		WsdlTestCase wsdlTestCase = ( WsdlTestCase )securityScan.getTestStep().getTestCase();
 
-		dialog.setOptions( CloneParameterDialog.TARGET_TESTSUITE,
-				ModelSupport.getNames( wsdlTestCase.getTestSuite().getProject().getTestSuiteList() ) );
+		dialog.setOptions( CloneParameterDialog.TARGET_TESTSUITE, ModelSupport.getNames( wsdlTestCase.getTestSuite()
+				.getProject().getTestSuiteList() ) );
 		dialog.setValue( CloneParameterDialog.TARGET_TESTSUITE, wsdlTestCase.getTestSuite().getName() );
 
 		List<TestCase> wsdlTestCaseList = wsdlTestCase.getTestSuite().getTestCaseList();
@@ -417,16 +417,16 @@ public class CloneParametersAction extends AbstractAction
 		dialog.setValue( CloneParameterDialog.TARGET_TESTCASE, wsdlTestCase.getName() );
 
 		dialog.setOptions( CloneParameterDialog.TARGET_TESTSTEP, getSecurableTestStepsNames( wsdlTestCase ) );
-		dialog.setOptions( CloneParameterDialog.TARGET_SECURITYTEST,
-				ModelSupport.getNames( wsdlTestCase.getSecurityTestList() ) );
+		dialog.setOptions( CloneParameterDialog.TARGET_SECURITYTEST, ModelSupport.getNames( wsdlTestCase
+				.getSecurityTestList() ) );
 
 		String securityTestName = dialog.getValue( CloneParameterDialog.TARGET_SECURITYTEST );
 		SecurityTest securityTest = wsdlTestCase.getSecurityTestByName( securityTestName );
 		String testStepName = dialog.getValue( CloneParameterDialog.TARGET_TESTSTEP );
 		TestStep testStep = wsdlTestCase.getTestStepByName( testStepName );
 
-		String[] securityScanNames = ModelSupport.getNames( securityTest.getTestStepSecurityScanByType(
-				testStep.getId(), AbstractSecurityScanWithProperties.class ) );
+		String[] securityScanNames = ModelSupport.getNames( securityTest.getTestStepSecurityScanByType( testStep.getId(),
+				AbstractSecurityScanWithProperties.class ) );
 		dialog.setOptions( CloneParameterDialog.TARGET_SECURITYSCAN, securityScanNames );
 
 		dialog.setOptions( CloneParameterDialog.PARAMETERS, securityScan.getParameterHolder().getParameterLabels() );
@@ -443,20 +443,20 @@ public class CloneParametersAction extends AbstractAction
 		@AField( name = "Parameters", description = "The Parameters to clone", type = AFieldType.MULTILIST )
 		public final static String PARAMETERS = "Parameters";
 
-		@AField( name = "SecurityScans", description = "The SecurityScans to clone to", type = AFieldType.MULTILIST )
-		public final static String TARGET_SECURITYSCAN = "SecurityScans";
-
-		@AField( name = "Target TestStep", description = "The target TestStep for the cloned Parameter(s)", type = AFieldType.ENUMERATION )
-		public final static String TARGET_TESTSTEP = "Target TestStep";
-
-		@AField( name = "Target SecurityTest", description = "The target SecurityTest for the cloned Parameter(s)", type = AFieldType.ENUMERATION )
-		public final static String TARGET_SECURITYTEST = "Target SecurityTest";
+		@AField( name = "Target TestSuite", description = "The target TestSuite for the cloned Parameter(s)", type = AFieldType.ENUMERATION )
+		public final static String TARGET_TESTSUITE = "Target TestSuite";
 
 		@AField( name = "Target TestCase", description = "The target TestCase for the cloned Parameter(s)", type = AFieldType.ENUMERATION )
 		public final static String TARGET_TESTCASE = "Target TestCase";
 
-		@AField( name = "Target TestSuite", description = "The target TestSuite for the cloned Parameter(s)", type = AFieldType.ENUMERATION )
-		public final static String TARGET_TESTSUITE = "Target TestSuite";
+		@AField( name = "Target SecurityTest", description = "The target SecurityTest for the cloned Parameter(s)", type = AFieldType.ENUMERATION )
+		public final static String TARGET_SECURITYTEST = "Target SecurityTest";
+
+		@AField( name = "Target TestStep", description = "The target TestStep for the cloned Parameter(s)", type = AFieldType.ENUMERATION )
+		public final static String TARGET_TESTSTEP = "Target TestStep";
+
+		@AField( name = "Target SecurityScans", description = "The SecurityScans to clone to", type = AFieldType.MULTILIST )
+		public final static String TARGET_SECURITYSCAN = "Target SecurityScans";
 
 		@AField( name = "Overwrite", description = "Overwrite existing parameters", type = AFieldType.BOOLEAN )
 		public final static String OVERWRITE = "Overwrite";
