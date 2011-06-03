@@ -24,6 +24,7 @@ import javax.swing.Action;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableRowSorter;
 
 import org.apache.xmlbeans.SchemaType;
 import org.jdesktop.swingx.JXTable;
@@ -35,8 +36,8 @@ import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.support.AForm;
+import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.impl.swing.JComboBoxFormField;
 
 /**
@@ -105,7 +106,9 @@ public class InvalidTypesTable extends JPanel
 
 		add( toolbar, BorderLayout.NORTH );
 		table = new JXTable( model );
-
+		TableRowSorter<InvalidTypeTableModel> sorter = new TableRowSorter<InvalidTypeTableModel>( model );
+		table.setRowSorter( sorter );
+		table.toggleSortOrder( 0);
 		add( new JScrollPane( table ), BorderLayout.CENTER );
 		setPreferredSize( new Dimension( 100, 200 ) );
 
