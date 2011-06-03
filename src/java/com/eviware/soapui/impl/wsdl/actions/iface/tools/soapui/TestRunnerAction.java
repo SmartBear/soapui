@@ -103,6 +103,11 @@ public class TestRunnerAction extends AbstractToolsAction<WsdlProject>
 		super( "Launch TestRunner", "Launch command-line TestRunner for this project" );
 	}
 
+	public TestRunnerAction( String name, String description )
+	{
+		super( name, description );
+	}
+
 	protected XFormDialog buildDialog( WsdlProject modelItem )
 	{
 		if( modelItem == null )

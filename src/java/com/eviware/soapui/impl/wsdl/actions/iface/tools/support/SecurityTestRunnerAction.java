@@ -52,6 +52,13 @@ public class SecurityTestRunnerAction extends TestRunnerAction
 
 	private final static Logger log = Logger.getLogger( SecurityTestRunnerAction.class );
 
+	
+	public SecurityTestRunnerAction()
+	{
+		super( "Launch Security TestRunner", "Launch command-line SecurityTestRunner for this project" );
+	}
+
+	
 	protected XFormDialog buildDialog( WsdlProject modelItem )
 	{
 		if( modelItem == null )
