@@ -101,8 +101,7 @@ public class MockAsWarServlet extends HttpServlet
 		if( StringUtils.hasContent( getInitParameter( "listeners" ) ) )
 		{
 			logger.info( "Init listeners" );
-			System
-					.setProperty( "soapui.ext.listeners", getServletContext().getRealPath( getInitParameter( "listeners" ) ) );
+			System.setProperty( "soapui.ext.listeners", getServletContext().getRealPath( getInitParameter( "listeners" ) ) );
 		}
 		else
 		{
@@ -119,17 +118,22 @@ public class MockAsWarServlet extends HttpServlet
 			logger.info( "Actions not set!" );
 		}
 
-		if( StringUtils.hasContent( getInitParameter( "soapuiSettings" ) ) )
+		if( SoapUI.getSoapUICore() == null )
 		{
-			logger.info( "Init settings" );
-			SoapUI.setSoapUICore( new MockServletSoapUICore( getServletContext(), getInitParameter( "soapuiSettings" ) ),
-					true );
+			if( StringUtils.hasContent( getInitParameter( "soapuiSettings" ) ) )
+			{
+				logger.info( "Init settings" );
+				SoapUI.setSoapUICore(
+						new MockServletSoapUICore( getServletContext(), getInitParameter( "soapuiSettings" ) ), true );
+			}
+			else
+			{
+				logger.info( "Settings not set!" );
+				SoapUI.setSoapUICore( new MockServletSoapUICore( getServletContext() ), true );
+			}
 		}
 		else
-		{
-			logger.info( "Settings not set!" );
-			SoapUI.setSoapUICore( new MockServletSoapUICore( getServletContext() ), true );
-		}
+			logger.info( "SoapUI core already exists, reusing existing one" );
 
 		if( StringUtils.hasContent( getInitParameter( "enableWebUI" ) ) )
 		{
@@ -380,8 +384,7 @@ public class MockAsWarServlet extends HttpServlet
 		}
 
 		out.print( "<table border=\"1\">" );
-		out
-				.print( "<tr><td></td><td>Timestamp</td><td>Time Taken</td><td>MockOperation</td><td>MockResponse</td><td>MockService</td></tr>" );
+		out.print( "<tr><td></td><td>Timestamp</td><td>Time Taken</td><td>MockOperation</td><td>MockResponse</td><td>MockService</td></tr>" );
 
 		int cnt = 1;
 
