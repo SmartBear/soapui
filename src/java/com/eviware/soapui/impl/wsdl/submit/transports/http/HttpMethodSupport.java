@@ -163,7 +163,7 @@ public final class HttpMethodSupport
 				e.printStackTrace();
 			}
 
-			if( decompress )
+			if( decompress && responseBody.length > 0 )
 			{
 				String compressionAlg = HttpClientSupport.getResponseCompressionType( httpMethod );
 				if( compressionAlg != null )
