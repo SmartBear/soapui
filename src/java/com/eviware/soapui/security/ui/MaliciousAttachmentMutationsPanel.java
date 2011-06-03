@@ -29,6 +29,7 @@ import com.eviware.soapui.config.MaliciousAttachmentConfig;
 import com.eviware.soapui.config.MaliciousAttachmentElementConfig;
 import com.eviware.soapui.config.MaliciousAttachmentSecurityScanConfig;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
+import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.security.support.MaliciousAttachmentFilesListForm;
 import com.eviware.soapui.security.support.MaliciousAttachmentGenerateTableModel;
@@ -148,7 +149,7 @@ public class MaliciousAttachmentMutationsPanel
 		toolbar.add( removeGeneratedButton );
 		removeGeneratedButton.setEnabled( false );
 
-		toolbar.add( UISupport.createToolbarButton( new HelpAction( "www.soapui.org" ) ) );
+		toolbar.add( UISupport.createToolbarButton( new HelpAction( HelpUrls.SECURITY_MALICIOUS_ATTACHMENT_HELP ) ) );
 
 		panel.add( toolbar, BorderLayout.PAGE_START );
 		panel.add( tableScrollPane, BorderLayout.CENTER );
@@ -186,7 +187,7 @@ public class MaliciousAttachmentMutationsPanel
 		toolbar.add( removeReplacementButton );
 		removeReplacementButton.setEnabled( false );
 
-		toolbar.add( UISupport.createToolbarButton( new HelpAction( "www.soapui.org" ) ) );
+		toolbar.add( UISupport.createToolbarButton( new HelpAction( HelpUrls.SECURITY_MALICIOUS_ATTACHMENT_HELP ) ) );
 
 		panel.add( toolbar, BorderLayout.PAGE_START );
 		panel.add( tableScrollPane, BorderLayout.CENTER );
@@ -566,7 +567,7 @@ public class MaliciousAttachmentMutationsPanel
 			filesList.updateConfig( config );
 		}
 	}
-	
+
 	public MaliciousAttachmentListToTableHolder getHolder()
 	{
 		return holder;

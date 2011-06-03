@@ -230,6 +230,7 @@ public interface HelpUrls
 	public static final String SECURITY_INVALID_HTTP_CODES_ASSERTION_HELP = "http://www.soapui.org/Security/security-scans-overview.html#3-1-invalid-http-codes";
 	public static final String SECURITY_VALID_HTTP_CODES_ASSERTION_HELP = "http://www.soapui.org/Security/security-scans-overview.html#3-2-valid-http-codes";
 	public static final String SECURITY_SENSITIVE_INFORMATION_EXPOSURE_ASSERTION_HELP = "http://www.soapui.org/Security/security-scans-overview.html#3-3-system-information-exposure";
+	public static final String SECURITY_MALICIOUS_ATTACHMENT_HELP = "http://www.soapui.org/Security/malicious-attachment.html";
 	
 	
 }
