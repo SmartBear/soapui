@@ -112,7 +112,7 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 		private SecurityTest securityTest;
 		private Icon collapsed = UISupport.createImageIcon( "/plus.gif" );
 		private Icon expanded = UISupport.createImageIcon( "/minus.gif" );
-		private JButton expandCollapseBtn;
+		private JLabel expandCollapseBtn;
 		private DefaultMutableTreeNode node;
 		private JPanel innerLeftPanel;
 		private JPanel progressPanel;
@@ -150,11 +150,10 @@ public class SecurityTreeCellRender implements TreeCellRenderer
 			innerLeftPanel = new JPanel( new BorderLayout() );
 
 			if( exp )
-				expandCollapseBtn = new JButton( expanded );
+				expandCollapseBtn = new JLabel( expanded );
 			else
-				expandCollapseBtn = new JButton( collapsed );
+				expandCollapseBtn = new JLabel( collapsed );
 
-			expandCollapseBtn.setBorder( null );
 			expandCollapseBtn.setEnabled( false );
 
 			if( securityTest.getSecurityScansMap().get( testStep.getId() ) == null
