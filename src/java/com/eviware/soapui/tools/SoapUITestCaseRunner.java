@@ -25,6 +25,7 @@ import java.util.Map;
 import org.apache.commons.cli.CommandLine;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.config.TestSuiteRunTypesConfig;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlProjectRunner;
@@ -363,53 +364,53 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 							+ "] is missing in Project [" + project.getName() + "]" );
 			}
 
-		// decide what to run
-		if( testCasesToRun.size() > 0 )
-		{
-			for( TestCase testCase : testCasesToRun )
-				runTestCase( ( WsdlTestCase )testCase );
-		}
-		else if( testSuite != null )
-		{
-			WsdlTestSuite ts = project.getTestSuiteByName( testSuite );
-			if( ts == null )
-				throw new Exception( "TestSuite with name [" + testSuite + "] not found in project" );
+			// decide what to run
+			if( testCasesToRun.size() > 0 )
+			{
+				for( TestCase testCase : testCasesToRun )
+					runTestCase( ( WsdlTestCase )testCase );
+			}
+			else if( testSuite != null )
+			{
+				WsdlTestSuite ts = project.getTestSuiteByName( testSuite );
+				if( ts == null )
+					throw new Exception( "TestSuite with name [" + testSuite + "] not found in project" );
+				else
+					runSuite( ts );
+			}
 			else
-				runSuite( ts );
-		}
-		else
-		{
-			runProject( project );
-		}
-
-		long timeTaken = ( System.nanoTime() - startTime ) / 1000000;
-
-		if( printReport )
-		{
-			printReport( timeTaken );
-		}
-
-		exportReports( project );
-
-		if( saveAfterRun && !project.isRemote() )
-		{
-			try
 			{
-				project.save();
+				runProject( project );
 			}
-			catch( Throwable t )
+
+			long timeTaken = ( System.nanoTime() - startTime ) / 1000000;
+
+			if( printReport )
 			{
-				log.error( "Failed to save project", t );
+				printReport( timeTaken );
 			}
-		}
 
-		if( ( assertions.size() > 0 || failedTests.size() > 0 ) && !ignoreErrors )
-		{
-			throwFailureException();
-		}
+			exportReports( project );
 
-		return true;
-	}
+			if( saveAfterRun && !project.isRemote() )
+			{
+				try
+				{
+					project.save();
+				}
+				catch( Throwable t )
+				{
+					log.error( "Failed to save project", t );
+				}
+			}
+
+			if( ( assertions.size() > 0 || failedTests.size() > 0 ) && !ignoreErrors )
+			{
+				throwFailureException();
+			}
+
+			return true;
+		}
 		finally
 		{
 			for( int c = 0; c < project.getTestSuiteCount(); c++ )
@@ -440,7 +441,8 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 		try
 		{
 			log.info( ( "Running Project [" + project.getName() + "], runType = " + project.getRunType() ) );
-			WsdlProjectRunner runner = project.run( new StringToObjectMap(), false );
+			WsdlProjectRunner runner = project.run( new StringToObjectMap(), project.getRunType().equals(
+					TestSuiteRunTypesConfig.PARALLELL ) );
 			log.info( "Project [" + project.getName() + "] finished with status [" + runner.getStatus() + "] in "
 					+ runner.getTimeTaken() + "ms" );
 		}
@@ -535,7 +537,8 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 		try
 		{
 			log.info( ( "Running TestSuite [" + suite.getName() + "], runType = " + suite.getRunType() ) );
-			WsdlTestSuiteRunner runner = suite.run( new StringToObjectMap(), false );
+			WsdlTestSuiteRunner runner = suite.run( new StringToObjectMap(), suite.getRunType().equals(
+					TestSuiteRunTypesConfig.PARALLELL ) );
 			log.info( "TestSuite [" + suite.getName() + "] finished with status [" + runner.getStatus() + "] in "
 					+ ( runner.getTimeTaken() ) + "ms" );
 		}
