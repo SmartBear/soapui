@@ -26,6 +26,7 @@ import org.apache.xmlbeans.XmlException;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.LoadTestConfig;
 import com.eviware.soapui.config.LoadTestLimitTypesConfig;
+import com.eviware.soapui.config.SecurityTestConfig;
 import com.eviware.soapui.config.TestCaseConfig;
 import com.eviware.soapui.impl.wsdl.loadtest.log.LoadTestLogMessageEntry;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
@@ -670,6 +671,7 @@ public class WsdlLoadTestRunner implements LoadTestRunner
 			{
 				blueprintConfig = TestCaseConfig.Factory.parse( testCase.getConfig().xmlText() );
 				blueprintConfig.setLoadTestArray( new LoadTestConfig[0] );
+				blueprintConfig.setSecurityTestArray( new SecurityTestConfig[0] );
 			}
 			catch( XmlException e )
 			{
