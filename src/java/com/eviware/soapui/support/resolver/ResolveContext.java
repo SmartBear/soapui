@@ -133,6 +133,7 @@ public class ResolveContext<T extends AbstractWsdlModelItem<?>>
 			return result;
 		}
 
+		@SuppressWarnings( "unchecked" )
 		@Override
 		public boolean equals( Object obj )
 		{
@@ -169,7 +170,7 @@ public class ResolveContext<T extends AbstractWsdlModelItem<?>>
 			return true;
 		}
 
-		@SuppressWarnings( "unchecked" )
+		@SuppressWarnings( "rawtypes" )
 		private ResolveContext getOuterType()
 		{
 			return ResolveContext.this;
