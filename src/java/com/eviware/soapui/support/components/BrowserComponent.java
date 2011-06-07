@@ -76,6 +76,8 @@ import com.eviware.soapui.support.xml.XmlUtils;
 import com.teamdev.jxbrowser.Browser;
 import com.teamdev.jxbrowser.BrowserFactory;
 import com.teamdev.jxbrowser.BrowserType;
+import com.teamdev.jxbrowser.Configurable;
+import com.teamdev.jxbrowser.Feature;
 import com.teamdev.jxbrowser.NewWindowContainer;
 import com.teamdev.jxbrowser.NewWindowManager;
 import com.teamdev.jxbrowser.NewWindowParams;
@@ -193,6 +195,8 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 				// panel.add( buildToolbar(), BorderLayout.NORTH );
 
 				initBrowser();
+				
+				configureBrowser();
 
 				browser.navigate( "about:blank" );
 			}
@@ -601,6 +605,7 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 		browser.addNavigationListener( internalNavigationAdapter );
 
 		panel.add( browser.getComponent(), BorderLayout.CENTER );
+
 		return true;
 	}
 
@@ -660,6 +665,24 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 		}
 	}
 
+	private void configureBrowser()
+	{
+		if( browser != null )
+		{
+			Configurable contentSettings = browser.getConfigurable();
+
+			if( SoapUI.isJXBrowserPluginsDisabled() )
+			{
+				contentSettings.disableFeature( Feature.PLUGINS );
+			}
+			else
+			{
+				contentSettings.enableFeature( Feature.PLUGINS );
+			}
+		}
+
+	}
+
 	public void setContent( String contentAsString, String contextUri )
 	{
 		if( SoapUI.isJXBrowserDisabled() )
@@ -669,6 +692,8 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 		{
 			initBrowser();
 		}
+
+		configureBrowser();
 
 		try
 		{
@@ -693,6 +718,8 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 		{
 			initBrowser();
 		}
+
+		configureBrowser();
 
 		browser.setContent( content );
 		pcs.firePropertyChange( "content", null, null );
@@ -1031,6 +1058,8 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 		{
 			initBrowser();
 		}
+		
+		configureBrowser();
 
 		if( postData != null && postData.length() > 0 )
 		{

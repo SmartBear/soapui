@@ -67,6 +67,7 @@ public interface UISettings
 
 	@Setting( name = "Disable Browser", description = "(disables integrated browser component)", type = SettingType.BOOLEAN )
 	public static final String DISABLE_BROWSER = UISettings.class.getSimpleName() + "@disable-browser";
+	public static final String DISABLE_BROWSER_PLUGINS = UISettings.class.getSimpleName() + "@disable-browser-plugins";
 
 	public final static String NO_RESIZE_REQUEST_EDITOR = UISettings.class.getSimpleName() + "@no_resize_request_editor";
 	public final static String START_WITH_REQUEST_TABS = UISettings.class.getSimpleName() + "@start_with_request_tabs";

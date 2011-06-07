@@ -1016,6 +1016,10 @@ public class SoapUI
 
 		return false;
 	}
+	
+	public static boolean isJXBrowserPluginsDisabled() {
+		return getSettings().getBoolean( UISettings.DISABLE_BROWSER_PLUGINS );
+	}
 
 	public static void shutdown()
 	{

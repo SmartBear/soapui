@@ -55,6 +55,7 @@ public class UIPrefs implements Prefs
 	public static final String WRAP_RAW_MESSAGES = "Wrap content in Raw Message Viewers";
 	public static final String DISABLE_TOOLTIPS = "Disable Tooltips";
 	public static final String DISABLE_BROWSER = "Disable Browser";
+	public static final String DISABLE_BROWSER_PLUGINS = "Disable Plugins in Browser";
 
 	private SimpleForm editorForm;
 	private final String title;
@@ -129,6 +130,7 @@ public class UIPrefs implements Prefs
 			editorForm.appendCheckBox( WRAP_RAW_MESSAGES, "Wraps content in Raw Message Viewers", false );
 			editorForm.appendSeparator();
 			editorForm.appendCheckBox( DISABLE_BROWSER, "Disables integrated Browser component", false );
+			editorForm.appendCheckBox( DISABLE_BROWSER_PLUGINS, "Disables plugins in Browser component", false );
 		}
 
 		return editorForm;
@@ -176,6 +178,7 @@ public class UIPrefs implements Prefs
 		settings.setString( UISettings.RAW_REQUEST_MESSAGE_SIZE, values.get( RAW_REQUEST_MESSAGE_SIZE ) );
 		settings.setBoolean( UISettings.WRAP_RAW_MESSAGES, values.getBoolean( WRAP_RAW_MESSAGES ) );
 		settings.setBoolean( UISettings.DISABLE_BROWSER, values.getBoolean( DISABLE_BROWSER ) );
+		settings.setBoolean( UISettings.DISABLE_BROWSER_PLUGINS, values.getBoolean( DISABLE_BROWSER_PLUGINS ) );
 
 		SoapUI.initAutoSaveTimer();
 		SoapUI.initGCTimer();
@@ -220,6 +223,7 @@ public class UIPrefs implements Prefs
 		values.put( RAW_REQUEST_MESSAGE_SIZE, settings.getString( UISettings.RAW_REQUEST_MESSAGE_SIZE, "10000" ) );
 		values.put( WRAP_RAW_MESSAGES, settings.getBoolean( UISettings.WRAP_RAW_MESSAGES ) );
 		values.put( DISABLE_BROWSER, settings.getBoolean( UISettings.DISABLE_BROWSER ) );
+		values.put( DISABLE_BROWSER_PLUGINS, settings.getBoolean( UISettings.DISABLE_BROWSER_PLUGINS ) );
 
 		return values;
 	}
