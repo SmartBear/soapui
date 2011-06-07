@@ -34,4 +34,4 @@ if "%SOAPUI_HOME%\" == "" goto START
 
 rem ********* run soapui testcase runner ***********
 
-"%JAVA%" %JAVA_OPTS% -cp "%CLASSPATH%" com.eviware.soapui.security.tools.SoapUISecurityTestRunner %*
+"%JAVA%" %JAVA_OPTS% -cp "%CLASSPATH%" com.eviware.soapui.tools.SoapUISecurityTestRunner %*

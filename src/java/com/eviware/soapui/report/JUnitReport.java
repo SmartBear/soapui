@@ -14,7 +14,6 @@ package com.eviware.soapui.report;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -22,11 +21,8 @@ import java.util.Set;
 import org.apache.xmlbeans.XmlOptions;
 
 import com.eviware.soapui.junit.FailureDocument.Failure;
-import com.eviware.soapui.junit.Mutation;
 import com.eviware.soapui.junit.Properties;
 import com.eviware.soapui.junit.Property;
-import com.eviware.soapui.junit.SecurityScan;
-import com.eviware.soapui.junit.SecurityTest;
 import com.eviware.soapui.junit.Testcase;
 import com.eviware.soapui.junit.Testsuite;
 import com.eviware.soapui.junit.TestsuiteDocument;
@@ -42,7 +38,6 @@ public class JUnitReport
 	double totalTime;
 	StringBuffer systemOut;
 	StringBuffer systemErr;
-	private HashMap<String, ArrayList<SecurityScan>> securityTestScanMap = new HashMap<String, ArrayList<SecurityScan>>();
 
 	public JUnitReport()
 	{
@@ -63,6 +58,11 @@ public class JUnitReport
 	public void setTestSuiteName( String name )
 	{
 		testsuiteDoc.getTestsuite().setName( name );
+	}
+
+	public void setPackage( String pkg )
+	{
+		testsuiteDoc.getTestsuite().setPackage( pkg );
 	}
 
 	public void setNoofErrorsInTestSuite( int errors )
@@ -104,28 +104,6 @@ public class JUnitReport
 		totalTime += time;
 		return testcase;
 	}
-
-	public SecurityTest addSecurityTest( Testcase testcase, String name )
-	{
-		SecurityTest securityTest = testcase.addNewSecurityTest();
-		securityTest.setName( name );
-		securityTestScanMap.put( name, new ArrayList<SecurityScan>() );
-		return securityTest;
-	}
-
-	public SecurityScan addSecurityScan( SecurityTest securityTest, String name )
-	{
-		SecurityScan scan = securityTest.addNewSecurityScan();
-		scan.setName( name );
-		
-		return scan;
-	}
-	
-	public Mutation addRequest( SecurityScan scan) {
-		Mutation mutation = scan.addNewMutation();
-		return mutation;
-	}
-
 
 	public Testcase addTestCaseWithFailure( String name, double time, String failure, String stacktrace )
 	{
@@ -175,6 +153,7 @@ public class JUnitReport
 	{
 		finishReport();
 
+		@SuppressWarnings( "rawtypes" )
 		Map prefixes = new HashMap();
 		prefixes.put( "", "http://eviware.com/soapui/junit" );
 

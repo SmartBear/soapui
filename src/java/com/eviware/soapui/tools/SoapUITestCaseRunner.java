@@ -56,6 +56,7 @@ import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
 import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.model.testsuite.TestSuiteRunner;
 import com.eviware.soapui.report.JUnitReportCollector;
+import com.eviware.soapui.report.JUnitSecurityReportCollector;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.types.StringToObjectMap;
@@ -74,32 +75,31 @@ import com.eviware.soapui.support.types.StringToObjectMap;
 public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 {
 	public static final String SOAPUI_EXPORT_SEPARATOR = "soapui.export.separator";
-
 	public static final String TITLE = "soapUI " + SoapUI.SOAPUI_VERSION + " TestCase Runner";
 
-	protected String testSuite;
-	protected String testCase;
-	protected List<TestAssertion> assertions = new ArrayList<TestAssertion>();
-	protected Map<TestAssertion, WsdlTestStepResult> assertionResults = new HashMap<TestAssertion, WsdlTestStepResult>();
+	private String testSuite;
+	private String testCase;
+	private List<TestAssertion> assertions = new ArrayList<TestAssertion>();
+	private Map<TestAssertion, WsdlTestStepResult> assertionResults = new HashMap<TestAssertion, WsdlTestStepResult>();
 	// private List<TestCaseRunner> runningTests = new
 	// ArrayList<TestCaseRunner>();
-	protected List<TestCase> failedTests = new ArrayList<TestCase>();
+	private List<TestCase> failedTests = new ArrayList<TestCase>();
 
-	protected int testSuiteCount;
-	protected int testCaseCount;
-	protected int testStepCount;
-	protected int testAssertionCount;
+	private int testSuiteCount;
+	private int testCaseCount;
+	private int testStepCount;
+	private int testAssertionCount;
 
-	protected boolean printReport;
-	protected boolean exportAll;
-	protected boolean ignoreErrors;
-	protected boolean junitReport;
-	protected int exportCount;
-	protected int maxErrors = 5;
-	protected JUnitReportCollector reportCollector;
+	private boolean printReport;
+	private boolean exportAll;
+	private boolean ignoreErrors;
+	private boolean junitReport;
+	private int exportCount;
+	private int maxErrors = 5;
+	private JUnitReportCollector reportCollector;
 	// protected WsdlProject project;
-	protected String projectPassword;
-	protected boolean saveAfterRun;
+	private String projectPassword;
+	private boolean saveAfterRun;
 
 	/**
 	 * Runs the tests in the specified soapUI project file, see soapUI xdocs for
@@ -272,12 +272,12 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 	{
 		this.junitReport = junitReport;
 		if( junitReport )
-			reportCollector = createJUnitReportCollector();
+			reportCollector = createJUnitSecurityReportCollector();
 	}
 
-	protected JUnitReportCollector createJUnitReportCollector()
+	protected JUnitSecurityReportCollector createJUnitSecurityReportCollector()
 	{
-		return JUnitReportCollector.createNew( maxErrors );
+		return new JUnitSecurityReportCollector();
 	}
 
 	public SoapUITestCaseRunner()
@@ -441,8 +441,8 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 		try
 		{
 			log.info( ( "Running Project [" + project.getName() + "], runType = " + project.getRunType() ) );
-			WsdlProjectRunner runner = project.run( new StringToObjectMap(), project.getRunType().equals(
-					TestSuiteRunTypesConfig.PARALLELL ) );
+			WsdlProjectRunner runner = project.run( new StringToObjectMap(),
+					project.getRunType().equals( TestSuiteRunTypesConfig.PARALLELL ) );
 			log.info( "Project [" + project.getName() + "] finished with status [" + runner.getStatus() + "] in "
 					+ runner.getTimeTaken() + "ms" );
 		}
@@ -537,8 +537,8 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 		try
 		{
 			log.info( ( "Running TestSuite [" + suite.getName() + "], runType = " + suite.getRunType() ) );
-			WsdlTestSuiteRunner runner = suite.run( new StringToObjectMap(), suite.getRunType().equals(
-					TestSuiteRunTypesConfig.PARALLELL ) );
+			WsdlTestSuiteRunner runner = suite.run( new StringToObjectMap(),
+					suite.getRunType().equals( TestSuiteRunTypesConfig.PARALLELL ) );
 			log.info( "TestSuite [" + suite.getName() + "] finished with status [" + runner.getStatus() + "] in "
 					+ ( runner.getTimeTaken() ) + "ms" );
 		}
@@ -751,4 +751,40 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 			testSuiteCount++ ;
 		}
 	}
+
+	public String getTestSuite()
+	{
+		return testSuite;
+	}
+
+	public String getTestCase()
+	{
+		return testCase;
+	}
+
+	public boolean isJUnitReport()
+	{
+		return junitReport;
+	}
+
+	public boolean isIgnoreErrors()
+	{
+		return ignoreErrors;
+	}
+
+	public void setIgnoreErrors( boolean ignoreErrors )
+	{
+		this.ignoreErrors = ignoreErrors;
+	}
+
+	public boolean isPrintReport()
+	{
+		return printReport;
+	}
+
+	public boolean isSaveAfterRun()
+	{
+		return saveAfterRun;
+	}
+
 }

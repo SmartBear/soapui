@@ -12,21 +12,23 @@
 
 package com.eviware.soapui.report;
 
-import com.eviware.soapui.junit.Mutation;
-import com.eviware.soapui.junit.SecurityTest;
+import java.util.List;
+
 import com.eviware.soapui.junit.Testcase;
 import com.eviware.soapui.model.security.SecurityScan;
 import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
-import com.eviware.soapui.model.testsuite.TestSuite;
+import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
+import com.eviware.soapui.security.result.SecurityResult.ResultStatus;
 import com.eviware.soapui.security.result.SecurityScanRequestResult;
 import com.eviware.soapui.security.result.SecurityScanResult;
 import com.eviware.soapui.security.result.SecurityTestStepResult;
 import com.eviware.soapui.security.support.SecurityTestRunListener;
+import com.eviware.soapui.support.xml.XmlUtils;
 
 /**
  * Collects Security Test results and creates JUnitReports
@@ -36,65 +38,65 @@ import com.eviware.soapui.security.support.SecurityTestRunListener;
 
 public class JUnitSecurityReportCollector extends JUnitReportCollector implements SecurityTestRunListener
 {
-
 	@Override
 	public void afterOriginalStep( TestCaseRunner testRunner, SecurityTestRunContext runContext,
 			SecurityTestStepResult result )
 	{
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void afterRun( TestCaseRunner testRunner, SecurityTestRunContext runContext )
 	{
-
 		TestCase testCase = testRunner.getTestCase();
-		TestSuite testSuite = testCase.getTestSuite();
-		//		if( !reports.containsKey( testSuite.getName() ) )
-		{
-			JUnitReport report = new JUnitReport();
-			report.setTestSuiteName( testSuite.getProject().getName() + "." + testSuite.getName() );
-			Testcase secTestCase = report.addTestCase( testCase.getName(), 0 );
-			SecurityTest juSecurityTest = report.addSecurityTest( secTestCase, ( ( SecurityTestRunner )testRunner )
-					.getSecurityTest().getName() );
 
-			for( TestStep ts : ( ( SecurityTestRunner )testRunner ).getSecurityTest().getSecurityTestStepResultMap()
-					.keySet() )
+		SecurityTest securityTest = ( ( SecurityTestRunner )testRunner ).getSecurityTest();
+
+		JUnitReport report = new JUnitReport();
+		String reportName = securityTest.getName();
+		report.setTestSuiteName( reportName );
+		report.setPackage( testCase.getTestSuite().getProject().getName() );
+		int errorCount = 0;
+
+		for( TestStep ts : testCase.getTestStepList() )
+		{
+			SecurityTestStepResult secuTestStepResult = securityTest.getSecurityTestStepResultMap().get( ts );
+			if( secuTestStepResult != null )
 			{
-				SecurityTestStepResult secuTestStepResult = ( ( SecurityTestRunner )testRunner ).getSecurityTest()
-						.getSecurityTestStepResultMap().get( ts );
 				for( SecurityScanResult scanResult : secuTestStepResult.getSecurityScanResultList() )
 				{
+					List<SecurityScanRequestResult> resultList = scanResult.getSecurityRequestResultList();
+					Testcase secTestCase = report.addTestCase( ts.getName() + " - " + scanResult.getSecurityScanName(),
+							scanResult.getTimeTaken() );
 
-					com.eviware.soapui.junit.SecurityScan juSecurityScan = report.addSecurityScan( juSecurityTest,
-							scanResult.getSecurityScanName() );
-					int i = 0;
-					for( SecurityScanRequestResult scanRequestResult : scanResult.getSecurityRequestResultList() )
+					secTestCase.setPackage( testCase.getTestSuite().getProject().getName() );
+
+					for( int i = 0; i < resultList.size(); i++ )
 					{
-						Mutation mutation = juSecurityScan.addNewMutation();
-						mutation.addMessage( scanRequestResult.getChangedParamsInfo( i ) );
-						for( String message : scanRequestResult.getMessages() )
+						SecurityScanRequestResult scanRequestResult = resultList.get( i );
+						if( scanRequestResult.getStatus() == ResultStatus.FAILED )
 						{
-							mutation.addMessage( message );
-						}
-						for( String name : scanRequestResult.getMessageExchange().getProperties().keySet() )
-						{
-							if( scanRequestResult.getMessageExchange().getProperties().get( name ) != null )
-								;
-							mutation.addMessage( name + " = "
-									+ scanRequestResult.getMessageExchange().getProperties().get( name ) );
-						}
-						mutation.setRequest( new String( scanRequestResult.getMessageExchange().getRawRequestData() ) );
-						mutation.setResponse( new String( scanRequestResult.getMessageExchange().getRawRequestData() ) );
-						i++ ;
-					}
+							StringBuffer result = new StringBuffer();
+							result.append( "<pre>" )
+									.append( XmlUtils.entitize( scanRequestResult.getChangedParamsInfo( i + 1 ) ) )
+									.append( "</pre>" );
 
+							for( String message : scanRequestResult.getMessages() )
+							{
+								result.append( "<pre>" ).append( XmlUtils.entitize( message ) ).append( "</pre>" );
+							}
+
+							secTestCase.addNewError().setStringValue( result.toString() );
+							errorCount++ ;
+						}
+					}
 				}
 			}
-			reports.put( testSuite.getName(), report );
-		}
 
+			report.setNoofErrorsInTestSuite( errorCount );
+			report.setTotalTime( testRunner.getTimeTaken() );
+
+			reports.put( reportName, report );
+		}
 	}
 
 	@Override
@@ -108,15 +110,11 @@ public class JUnitSecurityReportCollector extends JUnitReportCollector implement
 	public void afterSecurityScanRequest( TestCaseRunner testRunner, SecurityTestRunContext runContext,
 			SecurityScanRequestResult securityScanReqResult )
 	{
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void afterStep( TestCaseRunner testRunner, SecurityTestRunContext runContext, SecurityTestStepResult result )
 	{
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -134,7 +132,5 @@ public class JUnitSecurityReportCollector extends JUnitReportCollector implement
 	@Override
 	public void beforeStep( TestCaseRunner testRunner, SecurityTestRunContext runContext, TestStepResult testStepResult )
 	{
-		// TODO Auto-generated method stub
-
 	}
 }
