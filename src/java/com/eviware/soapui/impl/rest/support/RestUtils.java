@@ -350,4 +350,28 @@ public class RestUtils
 		// "\\|\\|", "|" ) );
 		// return parts;
 	}
+
+	/**
+	 * specificaly used for adding empty parameters also in the list when
+	 * "send empty parameters" are checked in HTTP TestRequest Properties
+	 * 
+	 * @param paramStr
+	 * @param delimiter
+	 * @return
+	 */
+	public static List<String> splitMultipleParametersEmptyIncluded( String paramStr, String delimiter )
+	{
+		StringList result = new StringList();
+
+		if( !StringUtils.hasContent( delimiter ) )
+		{
+			result.add( paramStr );
+		}
+		else
+		{
+			result.addAll( paramStr.split( delimiter ) );
+		}
+
+		return result;
+	}
 }

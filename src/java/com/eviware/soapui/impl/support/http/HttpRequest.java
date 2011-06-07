@@ -412,4 +412,15 @@ public class HttpRequest extends AbstractHttpRequest<HttpRequestConfig> implemen
 
 		return result.toArray();
 	}
+	
+	public boolean isSendEmptyParameters()
+	{
+		return getSettings().getBoolean( "sendEmptyParameters" );
+	}
+	
+	
+	public void setSendEmptyParameters( boolean sendEmptyParameters )
+	{
+		getSettings().setBoolean( "sendEmptyParameters", sendEmptyParameters );
+	}
 }
