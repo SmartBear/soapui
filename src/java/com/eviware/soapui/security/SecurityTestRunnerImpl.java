@@ -209,6 +209,14 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 							}
 						}
 					}
+					else
+					{
+						SecurityScanResult securityScanResult = new SecurityScanResult( securityScan );
+						securityScanResult.setStatus( ResultStatus.SKIPPED );
+						securityStepResult.addSecurityScanResult( securityScanResult );
+						
+						runAfterListeners( runContext, securityScanResult );
+					}
 				}
 				// in case no security scan is executed
 				if( securityStepResult.getStatus() == ResultStatus.INITIALIZED )
@@ -245,6 +253,24 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 
 	}
 
+	/**
+	 * @param runContext
+	 * @param securityScanResult
+	 */
+	private void runAfterListeners( SecurityTestRunContext runContext, SecurityScanResult securityScanResult )
+	{
+		for( int j = 0; j < securityTestStepListeners.length; j++ )
+		{
+			if( Arrays.asList( getSecurityTest().getSecurityTestRunListeners() ).contains( securityTestStepListeners[j] ) )
+				securityTestStepListeners[j].afterSecurityScan( this, runContext, securityScanResult );
+		}
+		for( int j = 0; j < securityTestListeners.length; j++ )
+		{
+			if( Arrays.asList( getSecurityTest().getSecurityTestRunListeners() ).contains( securityTestListeners[j] ) )
+				securityTestListeners[j].afterSecurityScan( this, runContext, securityScanResult );
+		}
+	}
+
 	public SecurityScanResult runTestStepSecurityScan( SecurityTestRunContext runContext, TestStep currentStep,
 			SecurityScan securityScan )
 	{
@@ -268,16 +294,7 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 		{
 			fail( "Cancelling due to failed security scan" );
 		}
-		for( int j = 0; j < securityTestStepListeners.length; j++ )
-		{
-			if( Arrays.asList( getSecurityTest().getSecurityTestRunListeners() ).contains( securityTestStepListeners[j] ) )
-				securityTestStepListeners[j].afterSecurityScan( this, runContext, result );
-		}
-		for( int j = 0; j < securityTestListeners.length; j++ )
-		{
-			if( Arrays.asList( getSecurityTest().getSecurityTestRunListeners() ).contains( securityTestListeners[j] ) )
-				securityTestListeners[j].afterSecurityScan( this, runContext, result );
-		}
+		runAfterListeners( runContext, result );
 		return result;
 	}
 

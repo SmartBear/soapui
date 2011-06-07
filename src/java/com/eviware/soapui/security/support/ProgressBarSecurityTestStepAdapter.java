@@ -165,11 +165,14 @@ public class ProgressBarSecurityTestStepAdapter
 				{
 					SecurityTestStepResult results = securityTest.getSecurityTestStepResultMap().get( testStep );
 					/*
-					 * This is hack since SecurityTestStepResult.getStatus() do not returs real state of execution.
+					 * This is hack since SecurityTestStepResult.getStatus() do not 
+					 * returns real state of execution.
+					 *
 					 * SKIPPED state overides all except FAILED , which is wrong.
 					 * 
 					 */
-					boolean skipped = true;
+					boolean skipped = results.getSecurityScanResultList().size() > 0 ;
+					
 					for( SecurityScanResult res : results.getSecurityScanResultList() )
 					{
 						if( res.getStatus() == ResultStatus.SKIPPED )

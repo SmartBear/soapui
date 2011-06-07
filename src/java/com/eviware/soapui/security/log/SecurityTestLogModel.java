@@ -20,6 +20,7 @@ import javax.swing.AbstractListModel;
 
 import org.apache.commons.collections.list.TreeList;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.model.security.SecurityScan;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.result.SecurityResult;
@@ -34,6 +35,7 @@ import com.eviware.soapui.security.scan.AbstractSecurityScan;
  * 
  * @author soapUI team
  */
+@SuppressWarnings( { "serial", "unchecked" } )
 public class SecurityTestLogModel extends AbstractListModel
 {
 	private List<Object> items = Collections.synchronizedList( new TreeList() );
