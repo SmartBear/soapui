@@ -72,14 +72,17 @@ public class PropertyExpansionPopupListener implements PopupMenuListener
 		this.targetMenu = transferMenu;
 	}
 
+	@Override
 	public void popupMenuCanceled( PopupMenuEvent arg0 )
 	{
 	}
 
+	@Override
 	public void popupMenuWillBecomeInvisible( PopupMenuEvent arg0 )
 	{
 	}
 
+	@Override
 	public void popupMenuWillBecomeVisible( PopupMenuEvent arg0 )
 	{
 		// create transfer menus
@@ -202,7 +205,7 @@ public class PropertyExpansionPopupListener implements PopupMenuListener
 
 	public class TransferFromPropertyActionInvoker extends AbstractAction
 	{
-		private TestPropertyHolder sourceStep;
+		private final TestPropertyHolder sourceStep;
 		private String sourceProperty;
 
 		public TransferFromPropertyActionInvoker( TestPropertyHolder sourceStep, String sourceProperty )
@@ -218,6 +221,7 @@ public class PropertyExpansionPopupListener implements PopupMenuListener
 			this.sourceStep = testStep;
 		}
 
+		@Override
 		public void actionPerformed( ActionEvent arg0 )
 		{
 			if( sourceProperty == null && sourceStep instanceof MutableTestPropertyHolder )
@@ -286,7 +290,7 @@ public class PropertyExpansionPopupListener implements PopupMenuListener
 			if( !StringUtils.hasContent( sourceXPath ) && StringUtils.hasContent( valueForCreation )
 					&& !property.isReadOnly() )
 			{
-				valueForCreation = UISupport.prompt( "Init property value to", "Get Data", valueForCreation );
+				valueForCreation = UISupport.prompt( "Initialize property value to", "Get Data", valueForCreation );
 				if( valueForCreation != null )
 				{
 					property.setValue( valueForCreation );
