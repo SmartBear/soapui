@@ -35,6 +35,7 @@ import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.IAfterRequestInjection;
 import com.eviware.soapui.impl.wsdl.support.CompressedStringSupport;
+import com.eviware.soapui.impl.wsdl.support.ExternalDependency;
 import com.eviware.soapui.impl.wsdl.support.FileAttachment;
 import com.eviware.soapui.impl.wsdl.support.ModelItemIconAnimator;
 import com.eviware.soapui.impl.wsdl.support.RequestFileAttachment;
@@ -168,6 +169,7 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 		return attachments.get( index );
 	}
 
+	@SuppressWarnings( "rawtypes" )
 	public void setAttachmentAt( int index, Attachment attachment )
 	{
 		if( attachments.size() > index )
@@ -681,6 +683,15 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 
 		for( FileAttachment<?> attachment : attachments )
 			attachment.resolve( context );
+	}
+
+	@Override
+	public void addExternalDependencies( List<ExternalDependency> dependencies )
+	{
+		super.addExternalDependencies( dependencies );
+
+		for( FileAttachment<?> attachment : attachments )
+			attachment.addExternalDependency( dependencies );
 	}
 
 	public boolean hasEndpoint()

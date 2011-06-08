@@ -12,6 +12,7 @@
 
 package com.eviware.soapui.impl.wsdl;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -20,6 +21,7 @@ import javax.swing.ImageIcon;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.ModelItemConfig;
 import com.eviware.soapui.impl.settings.XmlBeansSettingsImpl;
+import com.eviware.soapui.impl.wsdl.support.ExternalDependency;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.support.AbstractAnimatableModelItem;
 import com.eviware.soapui.model.support.ModelSupport;
@@ -182,6 +184,28 @@ public abstract class AbstractWsdlModelItem<T extends ModelItemConfig> extends
 			if( modelItem instanceof AbstractWsdlModelItem<?> )
 			{
 				( ( AbstractWsdlModelItem<?> )modelItem ).resolve( context );
+			}
+		}
+	}
+
+	public List<ExternalDependency> getExternalDependencies()
+	{
+		List<ExternalDependency> result = new ArrayList<ExternalDependency>();
+		addExternalDependencies( result );
+		return result;
+	}
+
+	protected void addExternalDependencies( List<ExternalDependency> dependencies )
+	{
+		List<? extends ModelItem> children = getChildren();
+		if( children == null )
+			return;
+
+		for( ModelItem modelItem : children )
+		{
+			if( modelItem instanceof AbstractWsdlModelItem<?> )
+			{
+				( ( AbstractWsdlModelItem<?> )modelItem ).addExternalDependencies( dependencies );
 			}
 		}
 	}

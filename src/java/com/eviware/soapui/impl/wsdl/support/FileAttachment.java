@@ -20,6 +20,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -313,10 +314,8 @@ public abstract class FileAttachment<T extends AbstractWsdlModelItem<?>> impleme
 
 	public void resolve( ResolveContext<?> context )
 	{
-		if( isCached() )
-			return;
-
-		urlProperty.resolveFile( context, "Missing attachment [" + getName() + "]", null, null, false );
+		if( !isCached() )
+			urlProperty.resolveFile( context, "Missing attachment [" + getName() + "]", null, null, false );
 	}
 
 	public String getContentEncoding()
@@ -328,5 +327,11 @@ public abstract class FileAttachment<T extends AbstractWsdlModelItem<?>> impleme
 			return "hex";
 		else
 			return "binary";
+	}
+
+	public void addExternalDependency( List<ExternalDependency> dependencies )
+	{
+		if( !isCached() )
+			dependencies.add( new PathPropertyExternalDependency( urlProperty ) );
 	}
 }

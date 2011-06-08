@@ -12,6 +12,8 @@
 
 package com.eviware.soapui.impl.support;
 
+import java.util.List;
+
 import javax.swing.ImageIcon;
 
 import org.apache.log4j.Logger;
@@ -23,6 +25,7 @@ import com.eviware.soapui.impl.wsdl.MutableAttachmentContainer;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.IAfterRequestInjection;
+import com.eviware.soapui.impl.wsdl.support.ExternalDependency;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.model.iface.SubmitContext;
@@ -128,6 +131,8 @@ public interface AbstractHttpRequestInterface<T extends AbstractRequestConfig> e
 	public abstract void setResponse( HttpResponse response, SubmitContext context );
 
 	public abstract void resolve( ResolveContext<?> context );
+
+	public abstract void addExternalDependencies( List<ExternalDependency> dependencies );
 
 	public abstract boolean hasEndpoint();
 
