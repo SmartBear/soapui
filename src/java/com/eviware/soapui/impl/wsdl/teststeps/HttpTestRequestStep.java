@@ -34,6 +34,7 @@ import com.eviware.soapui.impl.support.http.HttpRequest;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.WsdlSubmit;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
+import com.eviware.soapui.impl.wsdl.support.ExternalDependency;
 import com.eviware.soapui.impl.wsdl.support.assertions.AssertedXPathsContainer;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
@@ -619,6 +620,13 @@ public class HttpTestRequestStep extends WsdlTestStepWithProperties implements H
 		super.resolve( context );
 
 		testRequest.resolve( context );
+	}
+	
+	@Override
+	protected void addExternalDependencies( List<ExternalDependency> dependencies )
+	{
+		super.addExternalDependencies( dependencies );
+		testRequest.addExternalDependencies( dependencies );
 	}
 
 	private class InternalTestPropertyListener extends TestPropertyListenerAdapter
