@@ -122,16 +122,6 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 	private SecurityTestRunner lastRunner;
 	private SecurityTest securityTest;
 	private JXToolBar toolbar;
-	public JXToolBar getToolbar()
-	{
-		return toolbar;
-	}
-
-	public void setToolbar( JXToolBar toolbar )
-	{
-		this.toolbar = toolbar;
-	}
-
 	private InternalSecurityTestRunListener securityTestRunListener = new InternalSecurityTestRunListener();
 	private JLabel cntLabel;
 	private JComponentInspector<?> securityLogInspector;
