@@ -26,6 +26,8 @@ import javax.swing.ImageIcon;
 import com.eviware.soapui.config.PropertiesStepConfig;
 import com.eviware.soapui.config.TestStepConfig;
 import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
+import com.eviware.soapui.impl.wsdl.support.ExternalDependency;
+import com.eviware.soapui.impl.wsdl.support.PathPropertyExternalDependency;
 import com.eviware.soapui.impl.wsdl.support.XmlBeansPropertiesTestPropertyHolder;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
@@ -425,6 +427,13 @@ public class WsdlPropertiesTestStep extends WsdlTestStep implements MutableTestP
 	public boolean hasProperty( String name )
 	{
 		return propertyHolderSupport.hasProperty( name );
+	}
+
+	public void addExternalDependency( List<ExternalDependency> dependencies )
+	{
+		super.addExternalDependencies( dependencies );
+		dependencies.add( new PathPropertyExternalDependency( targetProperty ) );
+		dependencies.add( new PathPropertyExternalDependency( sourceProperty ) );
 	}
 
 	@Override
