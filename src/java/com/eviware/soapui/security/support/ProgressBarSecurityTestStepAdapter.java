@@ -171,8 +171,8 @@ public class ProgressBarSecurityTestStepAdapter
 					 * SKIPPED state overides all except FAILED , which is wrong.
 					 * 
 					 */
-					boolean skipped = results.getSecurityScanResultList().size() > 0 ;
-					
+					boolean skipped = results.getSecurityScanResultList().size() > 0;
+
 					for( SecurityScanResult res : results.getSecurityScanResultList() )
 					{
 						if( res.getStatus() == ResultStatus.SKIPPED )
@@ -189,10 +189,15 @@ public class ProgressBarSecurityTestStepAdapter
 						progressBar.setForeground( UNKNOWN_COLOR );
 					}
 					else
+					{
 						progressBar.setString( STATE_DONE );
+					}
 				}
 			}
-			progressBar.setBackground( UNKNOWN_COLOR );
+			else
+				progressBar.setBackground( UNKNOWN_COLOR );
+			progressBar.setValue( progressBar.getMaximum() == 0 ? 1 : progressBar.getMaximum() );
+			( ( DefaultTreeModel )tree.getModel() ).nodeChanged( node );
 		}
 
 		@Override
@@ -256,6 +261,24 @@ public class ProgressBarSecurityTestStepAdapter
 				}
 				else if( securityCheckResult.getStatus() == ResultStatus.OK )
 				{
+					SecurityScan securityScan = securityCheckResult.getSecurityScan();
+					if( securityScan.getAssertionCount() == 0 )
+					{
+						if( !progressBar.getForeground().equals( FAILED_COLOR ) )
+							progressBar.setForeground( MISSING_ASSERTION_COLOR );
+						progressBar.setString( STATE_MISSING_ASSERTIONS );
+					}
+					// or if there is no parameters.
+					if( securityScan instanceof AbstractSecurityScanWithProperties
+							&& ( ( AbstractSecurityScanWithProperties )securityScan ).getParameterHolder().getParameterList()
+									.size() == 0 )
+					{
+						if( !progressBar.getForeground().equals( FAILED_COLOR ) )
+							progressBar.setForeground( MISSING_ASSERTION_COLOR );
+						if( !progressBar.getString().equals( STATE_MISSING_ASSERTIONS ) )
+							progressBar.setString( STATE_MISSING_PARAMETERS );
+					}
+
 					// can not change to OK color if any of previous scans
 					// failed or missing assertions/parameters
 					if( !progressBar.getForeground().equals( FAILED_COLOR )

@@ -167,11 +167,10 @@ public class ProgressBarSecurityScanAdapter extends SecurityTestRunListenerAdapt
 				{
 					if( this.securityCheck instanceof AbstractSecurityScanWithProperties )
 					{
-						if( ( ( AbstractSecurityScanWithProperties )this.securityCheck ).getParameterHolder() != null
-								&& ( ( AbstractSecurityScanWithProperties )this.securityCheck ).getParameterHolder()
-										.getParameterList() != null
-								&& ( ( AbstractSecurityScanWithProperties )this.securityCheck ).getParameterHolder()
-										.getParameterList().size() == 0 )
+						AbstractSecurityScanWithProperties scanWithProperties = ( AbstractSecurityScanWithProperties )this.securityCheck;
+						if( scanWithProperties.getParameterHolder() != null
+								&& ( scanWithProperties.getParameterHolder().getParameterList() != null && ( scanWithProperties
+										.getParameterHolder().getParameterList().size() == 0 ) ) )
 						{
 							progressBar.setForeground( MISSING_ASSERTION_COLOR );
 							progressBar.setString( STATE_MISSING_PARAMETERS );
@@ -192,6 +191,8 @@ public class ProgressBarSecurityScanAdapter extends SecurityTestRunListenerAdapt
 					}
 				}
 				progressBar.setValue( progressBar.getMaximum() );
+				if ( progressBar.getString().equals( "" ) )
+					progressBar.setString( STATE_RUN );
 			}
 			else
 			{
