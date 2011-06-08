@@ -38,8 +38,8 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
-import com.eviware.soapui.impl.rest.support.RestUtils;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder.ParameterStyle;
+import com.eviware.soapui.impl.rest.support.RestUtils;
 import com.eviware.soapui.impl.support.http.HttpRequestInterface;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransport;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.AttachmentDataSource;
@@ -90,8 +90,8 @@ public class HttpRequestFilter extends AbstractRequestFilter
 			responseProperties.put( param.getName(), value );
 
 			List<String> valueParts = sendEmptyParameters( request ) ? RestUtils.splitMultipleParametersEmptyIncluded(
-					value, request.getMultiValueDelimiter() ) : RestUtils.splitMultipleParameters( value, request
-					.getMultiValueDelimiter() );
+					value, request.getMultiValueDelimiter() ) : RestUtils.splitMultipleParameters( value,
+					request.getMultiValueDelimiter() );
 
 			// skip HEADER and TEMPLATE parameter encoding (TEMPLATE is encoded by
 			// the URI handling further down)
@@ -211,7 +211,18 @@ public class HttpRequestFilter extends AbstractRequestFilter
 		}
 		else if( StringUtils.hasContent( path ) )
 		{
-			httpMethod.setPath( path );
+			try
+			{
+				// URI(String) automatically URLencodes the input, so we need to
+				// decode it first...
+				URI uri = new URI( path, false );
+				httpMethod.setPath( uri.toString() );
+			}
+			catch( Exception e )
+			{
+				e.printStackTrace();
+				httpMethod.setPath( path );
+			}
 		}
 
 		if( query.length() > 0 && !request.isPostQueryString() )
@@ -237,8 +248,8 @@ public class HttpRequestFilter extends AbstractRequestFilter
 			{
 				if( request.hasRequestBody() && httpMethod instanceof EntityEnclosingMethod )
 				{
-					String requestContent = PropertyExpander.expandProperties( context, request.getRequestContent(), request
-							.isEntitizeProperties() );
+					String requestContent = PropertyExpander.expandProperties( context, request.getRequestContent(),
+							request.isEntitizeProperties() );
 					if( StringUtils.hasContent( requestContent ) )
 					{
 						initRootPart( request, requestContent, formMp );
@@ -290,8 +301,8 @@ public class HttpRequestFilter extends AbstractRequestFilter
 			}
 			else
 			{
-				String requestContent = PropertyExpander.expandProperties( context, request.getRequestContent(), request
-						.isEntitizeProperties() );
+				String requestContent = PropertyExpander.expandProperties( context, request.getRequestContent(),
+						request.isEntitizeProperties() );
 				List<Attachment> attachments = new ArrayList<Attachment>();
 
 				for( Attachment attachment : request.getAttachments() )
@@ -331,8 +342,8 @@ public class HttpRequestFilter extends AbstractRequestFilter
 							( ( EntityEnclosingMethod )httpMethod ).setRequestEntity( new InputStreamRequestEntity(
 									attachments.get( 0 ).getInputStream() ) );
 
-							httpMethod.setRequestHeader( "Content-Type", getContentTypeHeader( request.getMediaType(),
-									encoding ) );
+							httpMethod.setRequestHeader( "Content-Type",
+									getContentTypeHeader( request.getMediaType(), encoding ) );
 						}
 
 						if( ( ( EntityEnclosingMethod )httpMethod ).getRequestEntity() == null )
@@ -350,8 +361,8 @@ public class HttpRequestFilter extends AbstractRequestFilter
 							RestRequestMimeMessageRequestEntity mimeMessageRequestEntity = new RestRequestMimeMessageRequestEntity(
 									message, request );
 							( ( EntityEnclosingMethod )httpMethod ).setRequestEntity( mimeMessageRequestEntity );
-							httpMethod.setRequestHeader( "Content-Type", getContentTypeHeader( mimeMessageRequestEntity
-									.getContentType(), encoding ) );
+							httpMethod.setRequestHeader( "Content-Type",
+									getContentTypeHeader( mimeMessageRequestEntity.getContentType(), encoding ) );
 							httpMethod.setRequestHeader( "MIME-Version", "1.0" );
 						}
 					}
