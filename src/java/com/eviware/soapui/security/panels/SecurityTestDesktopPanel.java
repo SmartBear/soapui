@@ -122,6 +122,16 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 	private SecurityTestRunner lastRunner;
 	private SecurityTest securityTest;
 	private JXToolBar toolbar;
+	public JXToolBar getToolbar()
+	{
+		return toolbar;
+	}
+
+	public void setToolbar( JXToolBar toolbar )
+	{
+		this.toolbar = toolbar;
+	}
+
 	private InternalSecurityTestRunListener securityTestRunListener = new InternalSecurityTestRunListener();
 	private JLabel cntLabel;
 	private JComponentInspector<?> securityLogInspector;
@@ -341,7 +351,7 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 		return panel;
 	}
 
-	private Component buildToolbar()
+	protected Component buildToolbar()
 	{
 		toolbar = UISupport.createToolbar();
 
@@ -372,6 +382,16 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 		toolbar.add( UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.SECURITYTESTEDITOR_HELP_URL ) ) );
 
 		return toolbar;
+	}
+
+	public JButton getOptionsButton()
+	{
+		return optionsButton;
+	}
+
+	public void setOptionsButton( JButton optionsButton )
+	{
+		this.optionsButton = optionsButton;
 	}
 
 	protected void addToolbarActions( JToolBar toolbar )

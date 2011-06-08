@@ -34,7 +34,6 @@ public class SecurityTestOptionsAction extends AbstractSoapUIAction<SecurityTest
 {
 	private static final String FAIL_ON_ERROR = "Abort on Error";
 	private static final String FAIL_SECURITYTEST_ON_ERROR = "Fail SecurityTest on Error";
-	private static final String SKIP_DATA_SOURCE_LOOPS = "Skip DataSource Loops";
 	public static final String SOAPUI_ACTION_ID = "SecurityTestOptionsAction";
 
 	private XFormDialog dialog;
@@ -60,7 +59,6 @@ public class SecurityTestOptionsAction extends AbstractSoapUIAction<SecurityTest
 				}
 			} );
 			form.addCheckBox( FAIL_SECURITYTEST_ON_ERROR, "Fail SecurityTest if it has failed TestSteps" );
-			form.addCheckBox( SKIP_DATA_SOURCE_LOOPS, "Skip DataSource Loop while running the SecurityTests" );
 
 			dialog = builder.buildDialog( builder.buildOkCancelHelpActions( HelpUrls.TESTCASEOPTIONS_HELP_URL ),
 					"Specify general options for this SecurityTest", UISupport.OPTIONS_ICON );
@@ -70,7 +68,6 @@ public class SecurityTestOptionsAction extends AbstractSoapUIAction<SecurityTest
 
 		values.put( FAIL_ON_ERROR, String.valueOf( securityTest.getFailOnError() ) );
 		values.put( FAIL_SECURITYTEST_ON_ERROR, String.valueOf( securityTest.getFailSecurityTestOnScanErrors() ) );
-		values.put( SKIP_DATA_SOURCE_LOOPS, String.valueOf( securityTest.getSkipDataSourceLoops() ) );
 		values = dialog.show( values );
 
 		if( dialog.getReturnValue() == XFormDialog.OK_OPTION )
@@ -80,7 +77,6 @@ public class SecurityTestOptionsAction extends AbstractSoapUIAction<SecurityTest
 				securityTest.setFailOnError( Boolean.parseBoolean( values.get( FAIL_ON_ERROR ) ) );
 				securityTest.setFailSecurityTestOnScanErrors( Boolean
 						.parseBoolean( values.get( FAIL_SECURITYTEST_ON_ERROR ) ) );
-				securityTest.setSkipDataSourceLoops( Boolean.parseBoolean( values.get( SKIP_DATA_SOURCE_LOOPS ) ) );
 
 			}
 			catch( Exception e1 )
