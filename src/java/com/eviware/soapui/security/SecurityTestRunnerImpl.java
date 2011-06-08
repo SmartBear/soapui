@@ -32,6 +32,7 @@ import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
 import com.eviware.soapui.security.result.SecurityScanResult;
 import com.eviware.soapui.security.result.SecurityTestStepResult;
 import com.eviware.soapui.security.result.SecurityResult.ResultStatus;
+import com.eviware.soapui.security.scan.AbstractSecurityScanWithProperties;
 import com.eviware.soapui.security.support.SecurityTestRunListener;
 import com.eviware.soapui.support.types.StringToObjectMap;
 
@@ -188,7 +189,18 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 					if( stepResult.getStatus() == TestStepStatus.FAILED && !securityScan.isApplyForFailedStep() )
 					{
 						SecurityScanResult securityScanResult = new SecurityScanResult( securityScan );
-						securityScanResult.setStatus( ResultStatus.SKIPPED );
+						if( securityScan.getAssertionCount() > 0 )
+							securityScanResult.setStatus( ResultStatus.OK );
+						else if( securityScan instanceof AbstractSecurityScanWithProperties )
+						{
+							if( ( ( AbstractSecurityScanWithProperties )securityScan ).getParameterHolder().getParameterList()
+									.size() > 0 )
+								securityScanResult.setStatus( ResultStatus.OK );
+							else
+								securityScanResult.setStatus( ResultStatus.SKIPPED );
+						}
+						else
+							securityScanResult.setStatus( ResultStatus.SKIPPED );
 						securityStepResult.addSecurityScanResult( securityScanResult );
 
 						runAfterListeners( runContext, securityScanResult );
