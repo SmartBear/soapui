@@ -18,6 +18,9 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -38,6 +41,7 @@ import com.eviware.soapui.model.iface.Request.SubmitException;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.BrowserComponent;
 import com.eviware.soapui.support.components.JXToolBar;
+import com.eviware.soapui.support.editor.inspectors.attachments.ContentTypeHandler;
 import com.eviware.soapui.support.editor.views.AbstractXmlEditorView;
 import com.eviware.soapui.support.editor.xml.XmlEditor;
 
@@ -144,18 +148,46 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 	{
 		if( httpResponse != null && httpResponse.getContentAsString() != null )
 		{
-			try
-			{
-				browser.setContent( new String( httpResponse.getContentAsString().getBytes( "utf-8" ) ), httpResponse
-						.getURL().toURI().toString() );
+			String contentType = httpResponse.getContentType();
 
-				// browser.navigate( httpResponse.getURL().toURI().toString(),
-				// httpResponse.getRequestContent(), null );
-				hasResponseForRecording = true;
-			}
-			catch( Throwable e )
+			if( contentType != null )
 			{
-				e.printStackTrace();
+				if( isSupportedContentType( contentType ) )
+				{
+					try
+					{
+						String ext = ContentTypeHandler.getExtensionForContentType( contentType );
+						File temp = File.createTempFile( "response", "." + ext );
+						FileOutputStream fileOutputStream = new FileOutputStream( temp );
+						writeHttpBody( httpResponse.getRawResponseData(), fileOutputStream );
+						fileOutputStream.close();
+						browser.navigate( temp.toURI().toURL().toString(), null );
+						temp.deleteOnExit();
+						hasResponseForRecording = true;
+					}
+					catch( Throwable e )
+					{
+						e.printStackTrace();
+					}
+				}
+				else
+				{
+					try
+					{
+						browser.setContent( new String( httpResponse.getContentAsString().getBytes( "utf-8" ) ), httpResponse
+								.getURL().toURI().toString() );
+						hasResponseForRecording = true;
+					}
+					catch( Throwable e )
+					{
+						e.printStackTrace();
+					}
+				}
+			}
+			else
+			{
+				browser.setContent( "unsupported content-type [" + contentType + "]" );
+				hasResponseForRecording = false;
 			}
 		}
 		else
@@ -163,6 +195,34 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 			browser.setContent( "<missing content>" );
 			hasResponseForRecording = false;
 		}
+	}
+
+	private boolean isSupportedContentType( String contentType )
+	{
+		return contentType != null && contentType.trim().toLowerCase().startsWith( "image" );
+	}
+
+	private void writeHttpBody( byte[] rawResponse, FileOutputStream out ) throws IOException
+	{
+		int index = 0;
+		byte[] divider = "\r\n\r\n".getBytes();
+		for( ; index < ( rawResponse.length - divider.length ); index++ )
+		{
+			int i;
+			for( i = 0; i < divider.length; i++ )
+			{
+				if( rawResponse[index + i] != divider[i] )
+					break;
+			}
+
+			if( i == divider.length )
+			{
+				out.write( rawResponse, index + divider.length, rawResponse.length - ( index + divider.length ) );
+				return;
+			}
+		}
+
+		out.write( rawResponse );
 	}
 
 	private Component buildToolbar()
