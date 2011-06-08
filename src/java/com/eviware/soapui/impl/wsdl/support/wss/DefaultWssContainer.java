@@ -24,6 +24,7 @@ import com.eviware.soapui.config.IncomingWssConfig;
 import com.eviware.soapui.config.KeyMaterialCryptoConfig;
 import com.eviware.soapui.config.OutgoingWssConfig;
 import com.eviware.soapui.config.WssContainerConfig;
+import com.eviware.soapui.impl.wsdl.support.ExternalDependency;
 import com.eviware.soapui.impl.wsdl.support.wss.crypto.KeyMaterialWssCrypto;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
@@ -366,6 +367,14 @@ public class DefaultWssContainer implements WssContainer
 		for( int c = 0; c < outgoingWssConfigs.size(); c++ )
 		{
 			outgoingWssConfigs.get( c ).resolve( context );
+		}
+	}
+	
+	public void addExternalDependency( List<ExternalDependency> dependencies )
+	{
+		for( int c = 0; c < cryptos.size(); c++ )
+		{
+			( ( KeyMaterialWssCrypto )cryptos.get( c ) ).addExternalDependency( dependencies );
 		}
 	}
 

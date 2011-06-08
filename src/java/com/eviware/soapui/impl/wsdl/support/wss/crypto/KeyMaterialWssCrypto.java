@@ -17,6 +17,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.KeyStore;
+import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.ssl.KeyStoreBuilder;
@@ -28,6 +29,8 @@ import org.apache.ws.security.components.crypto.Merlin;
 import com.eviware.soapui.config.KeyMaterialCryptoConfig;
 import com.eviware.soapui.config.WSSCryptoConfig;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
+import com.eviware.soapui.impl.wsdl.support.ExternalDependency;
+import com.eviware.soapui.impl.wsdl.support.PathPropertyExternalDependency;
 import com.eviware.soapui.impl.wsdl.support.wss.DefaultWssContainer;
 import com.eviware.soapui.impl.wsdl.support.wss.WssContainer;
 import com.eviware.soapui.impl.wsdl.support.wss.WssCrypto;
@@ -263,5 +266,10 @@ public class KeyMaterialWssCrypto implements WssCrypto
 	public void resolve( ResolveContext<?> context )
 	{
 		sourceProperty.resolveFile( context, "Missing keystore/certificate file" );
+	}
+	
+	public void addExternalDependency( List<ExternalDependency> dependencies )
+	{
+			dependencies.add( new PathPropertyExternalDependency( sourceProperty ) );
 	}
 }

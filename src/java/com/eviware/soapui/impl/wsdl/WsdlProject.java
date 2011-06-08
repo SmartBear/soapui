@@ -83,6 +83,7 @@ import com.eviware.soapui.impl.settings.XmlBeansSettingsImpl;
 import com.eviware.soapui.impl.support.AbstractInterface;
 import com.eviware.soapui.impl.wsdl.endpoint.DefaultEndpointStrategy;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockService;
+import com.eviware.soapui.impl.wsdl.support.ExternalDependency;
 import com.eviware.soapui.impl.wsdl.support.PathUtils;
 import com.eviware.soapui.impl.wsdl.support.wsdl.UrlWsdlLoader;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlLoader;
@@ -1473,6 +1474,12 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 
 		return result.toArray( new PropertyExpansion[result.size()] );
 
+	}
+	@Override
+	protected void addExternalDependencies( List<ExternalDependency> dependencies )
+	{
+		super.addExternalDependencies( dependencies );
+		wssContainer.addExternalDependency( dependencies );
 	}
 
 	public String getPropertiesLabel()
