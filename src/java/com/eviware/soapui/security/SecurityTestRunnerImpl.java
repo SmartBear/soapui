@@ -183,7 +183,17 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 					// if security scan is disabled skip it.
 					if( securityScan.isDisabled() || securityScan.isSkipFurtherRunning() )
 						continue;
-					if( stepResult.getStatus() != TestStepStatus.FAILED || securityScan.isApplyForFailedStep() )
+					//if step is failed and scan not applicable to failed steps just set it to skipped
+					//run scan otherwise
+					if( stepResult.getStatus() == TestStepStatus.FAILED && !securityScan.isApplyForFailedStep() )
+					{
+						SecurityScanResult securityScanResult = new SecurityScanResult( securityScan );
+						securityScanResult.setStatus( ResultStatus.SKIPPED );
+						securityStepResult.addSecurityScanResult( securityScanResult );
+
+						runAfterListeners( runContext, securityScanResult );
+					}
+					else
 					{
 						runContext.setCurrentScanIndex( i );
 						runContext.setCurrentScanOnSecurityTestIndex( currentScanOnSecurityTestIndex++ );
@@ -208,14 +218,6 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 										SecurityTestRunner.Status.FAILED );
 							}
 						}
-					}
-					else
-					{
-						SecurityScanResult securityScanResult = new SecurityScanResult( securityScan );
-						securityScanResult.setStatus( ResultStatus.SKIPPED );
-						securityStepResult.addSecurityScanResult( securityScanResult );
-						
-						runAfterListeners( runContext, securityScanResult );
 					}
 				}
 				// in case no security scan is executed
