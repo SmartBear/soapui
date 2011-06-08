@@ -52,6 +52,7 @@ import com.eviware.soapui.impl.wsdl.mock.WsdlMockRequest;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResult;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
+import com.eviware.soapui.model.mock.MockResponse;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.support.AbstractPropertyChangeNotifier;
 import com.eviware.soapui.support.StringUtils;
@@ -250,6 +251,22 @@ public class QueryMatchMockOperationDispatcher extends AbstractMockOperationDisp
 						if( value.equals( XmlUtils.getValueForMatch( cursor ) ) )
 						{
 							request.getRequestContext().put( "usedQueryMatch", query.getName() );
+
+							WsdlMockResponse resp = null;
+							for( MockResponse mockResponse : this.getMockOperation().getMockResponses() )
+							{
+								if( query.getResponse().equals( mockResponse.getName() ) )
+								{
+									resp = ( WsdlMockResponse )mockResponse;
+								}
+							}
+							// return getMockOperation().getMockResponseByName(
+							// query.getResponse() );
+							if( resp != null )
+							{
+								return resp;
+							}
+
 							return getMockOperation().getMockResponseByName( query.getResponse() );
 						}
 					}

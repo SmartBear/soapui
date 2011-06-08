@@ -455,6 +455,9 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 				if( testMockResponse == null )
 					initTestMockResponse( context );
 
+				if( !mockRunner.isRunning() )
+					mockRunner.start();
+
 				long timeout = getTimeout();
 				synchronized( mockRunListener )
 				{
@@ -1353,7 +1356,6 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 		return getOperation().createRequest( true );
 	}
 
-	@SuppressWarnings( "unchecked" )
 	@Override
 	public void resolve( ResolveContext<?> context )
 	{
@@ -1407,6 +1409,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 			if( context.hasThisModelItem( this, "Missing Operation in Project", mockResponseStepConfig.getInterface()
 					+ "/" + mockResponseStepConfig.getOperation() ) )
 			{
+				@SuppressWarnings( "rawtypes" )
 				PathToResolve path = context.getPath( this, "Missing Operation in Project",
 						mockResponseStepConfig.getInterface() + "/" + mockResponseStepConfig.getOperation() );
 				path.setSolved( true );

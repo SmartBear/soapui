@@ -50,8 +50,7 @@ public class WsdlMockRunContext implements MockRunContext, Map<String, Object>, 
 		this.mockService = mockService;
 		this.context = context;
 
-		properties = ( DefaultPropertyExpansionContext )( context == null ? new DefaultPropertyExpansionContext(
-				mockService ) : context.getProperties() );
+		reset();
 	}
 
 	public WsdlMockService getMockService()
@@ -351,5 +350,11 @@ public class WsdlMockRunContext implements MockRunContext, Map<String, Object>, 
 	public MockRunner getMockRunner()
 	{
 		return mockService.getMockRunner();
+	}
+
+	public void reset()
+	{
+		properties = ( DefaultPropertyExpansionContext )( context == null ? new DefaultPropertyExpansionContext(
+				mockService ) : context.getProperties() );
 	}
 }

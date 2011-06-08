@@ -41,7 +41,6 @@ import com.eviware.soapui.impl.WsdlInterfaceFactory;
 import com.eviware.soapui.impl.support.definition.export.WsdlDefinitionExporter;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
-import com.eviware.soapui.impl.wsdl.support.soap.SoapMessageBuilder;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapUtils;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlUtils;
@@ -94,21 +93,11 @@ public class WsdlMockRunner extends AbstractMockRunner
 		for( WsdlInterface iface : interfaces )
 			iface.getWsdlContext().loadIfNecessary();
 
+		initWsdlCache();
+
 		mockContext = new WsdlMockRunContext( mockService, context );
 
-		mockService.runStartScript( mockContext, this );
-
-		SoapUI.getMockEngine().startMockService( this );
-		running = true;
-
-		MockRunListener[] mockRunListeners = mockService.getMockRunListeners();
-
-		for( MockRunListener listener : mockRunListeners )
-		{
-			listener.onMockRunnerStart( this );
-		}
-
-		initWsdlCache();
+		start();
 	}
 
 	private void initWsdlCache()
@@ -296,20 +285,21 @@ public class WsdlMockRunner extends AbstractMockRunner
 				if( mockOperation != null )
 				{
 					long startTime = System.nanoTime();
-					try
-					{
-						result = mockOperation.dispatchRequest( mockRequest );
-					}
-					catch( DispatchException e )
-					{
-						result = new WsdlMockResult( mockRequest );
-
-						String fault = SoapMessageBuilder.buildFault( "Server", e.getMessage(), mockRequest.getSoapVersion() );
-						result.setResponseContent( fault );
-						result.setMockOperation( mockOperation );
-
-						mockRequest.getHttpResponse().getWriter().write( fault );
-					}
+					// try
+					// {
+					result = mockOperation.dispatchRequest( mockRequest );
+					// }
+					// catch( DispatchException e )
+					// {
+					// result = new WsdlMockResult( mockRequest );
+					//
+					// String fault = SoapMessageBuilder.buildFault( "Server",
+					// e.getMessage(), mockRequest.getSoapVersion() );
+					// result.setResponseContent( fault );
+					// result.setMockOperation( mockOperation );
+					//
+					// mockRequest.getHttpResponse().getWriter().write( fault );
+					// }
 
 					if( mockRequest.getHttpRequest() instanceof org.mortbay.jetty.Request )
 						( ( org.mortbay.jetty.Request )mockRequest.getHttpRequest() ).setHandled( true );
@@ -669,5 +659,24 @@ public class WsdlMockRunner extends AbstractMockRunner
 	public void setLogEnabled( boolean logEnabled )
 	{
 		this.logEnabled = logEnabled;
+	}
+
+	public void start() throws Exception
+	{
+		if( running )
+			return;
+
+		mockContext.reset();
+		mockService.runStartScript( mockContext, this );
+
+		SoapUI.getMockEngine().startMockService( this );
+		running = true;
+
+		MockRunListener[] mockRunListeners = mockService.getMockRunListeners();
+
+		for( MockRunListener listener : mockRunListeners )
+		{
+			listener.onMockRunnerStart( this );
+		}
 	}
 }

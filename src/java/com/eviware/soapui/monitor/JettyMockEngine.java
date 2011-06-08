@@ -720,8 +720,9 @@ public class JettyMockEngine implements MockEngine
 							}
 							catch( DispatchException e )
 							{
-								log.debug( wsdlMockRunner.getMockService().getName() + " was unable to dispatch mock request ",
-										e );
+								// log.debug( wsdlMockRunner.getMockService().getName()
+								// + " was unable to dispatch mock request ",
+								// e );
 
 								ex = e;
 							}
