@@ -25,7 +25,6 @@ import java.util.Map;
 import org.apache.commons.cli.CommandLine;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.config.TestSuiteRunTypesConfig;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlProjectRunner;
@@ -41,7 +40,6 @@ import com.eviware.soapui.model.project.ProjectFactoryRegistry;
 import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.model.support.ProjectRunListenerAdapter;
 import com.eviware.soapui.model.testsuite.Assertable;
-import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
 import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.model.testsuite.ProjectRunContext;
 import com.eviware.soapui.model.testsuite.ProjectRunner;
@@ -49,12 +47,14 @@ import com.eviware.soapui.model.testsuite.TestAssertion;
 import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
-import com.eviware.soapui.model.testsuite.TestRunner.Status;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
-import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
 import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.model.testsuite.TestSuiteRunner;
+import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
+import com.eviware.soapui.model.testsuite.TestRunner.Status;
+import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
+import com.eviware.soapui.model.testsuite.TestSuite.TestSuiteRunType;
 import com.eviware.soapui.report.JUnitReportCollector;
 import com.eviware.soapui.report.JUnitSecurityReportCollector;
 import com.eviware.soapui.support.StringUtils;
@@ -442,7 +442,7 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 		{
 			log.info( ( "Running Project [" + project.getName() + "], runType = " + project.getRunType() ) );
 			WsdlProjectRunner runner = project.run( new StringToObjectMap(),
-					project.getRunType().equals( TestSuiteRunTypesConfig.PARALLELL ) );
+					project.getRunType() == TestSuiteRunType.PARALLEL );
 			log.info( "Project [" + project.getName() + "] finished with status [" + runner.getStatus() + "] in "
 					+ runner.getTimeTaken() + "ms" );
 		}
@@ -538,7 +538,7 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 		{
 			log.info( ( "Running TestSuite [" + suite.getName() + "], runType = " + suite.getRunType() ) );
 			WsdlTestSuiteRunner runner = suite.run( new StringToObjectMap(),
-					suite.getRunType().equals( TestSuiteRunTypesConfig.PARALLELL ) );
+					suite.getRunType() == TestSuiteRunType.PARALLEL );
 			log.info( "TestSuite [" + suite.getName() + "] finished with status [" + runner.getStatus() + "] in "
 					+ ( runner.getTimeTaken() ) + "ms" );
 		}
