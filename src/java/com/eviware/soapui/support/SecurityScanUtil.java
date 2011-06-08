@@ -193,7 +193,7 @@ public class SecurityScanUtil
 		globalSensitiveInformationExposureTokens = new SettingsTestPropertyHolder( SoapUI.getSettings(), null,
 				GlobalPropertySettings.SECURITY_CHECKS_PROPERTIES );
 
-		String propFile = System.getProperty( "soapuisecurity.properties" );
+		String propFile = System.getProperty( "soapui.security.exposure.tokens" );
 		if( StringUtils.hasContent( propFile ) )
 			globalSensitiveInformationExposureTokens.addPropertiesFromFile( propFile );
 
