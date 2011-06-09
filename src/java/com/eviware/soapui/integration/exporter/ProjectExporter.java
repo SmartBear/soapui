@@ -1,0 +1,267 @@
+/*
+ *  soapUI, copyright (C) 2004-2011 eviware.com 
+ *
+ *  soapUI is free software; you can redistribute it and/or modify it under the 
+ *  terms of version 2.1 of the GNU Lesser General Public License as published by 
+ *  the Free Software Foundation.
+ *
+ *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ *  See the GNU Lesser General Public License for more details at gnu.org.
+ */
+package com.eviware.soapui.integration.exporter;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.xmlbeans.XmlException;
+
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.wsdl.WsdlProject;
+import com.eviware.soapui.impl.wsdl.support.ExternalDependency;
+import com.eviware.soapui.model.project.ProjectFactoryRegistry;
+import com.eviware.soapui.support.SoapUIException;
+
+/**
+ * Project exporting means that copy of existing project with copies of all
+ * external dependencies will be put in one directory and packed together.
+ * 
+ * Project copy will resolve all its dependency to dependency copies. Paths have
+ * to be relative to the project file.
+ * 
+ * @author robert
+ *
+ */
+public class ProjectExporter
+{
+
+	private static final int BUFFER = 1024;
+	private WsdlProject project;
+	private WsdlProject projectCopy;
+	private final int TEMP_DIR_ATTEMPTS = 10000;
+	private File tmpDir;
+
+	public ProjectExporter( WsdlProject project )
+	{
+		this.project = project;
+	}
+
+	/**
+	 * 
+	 * Creates packed project on given path
+	 * 
+	 * @param exportPath
+	 * @return
+	 * @throws SoapUIException 
+	 * @throws XmlException 
+	 * @throws IOException 
+	 */
+	public boolean exportProject( String exportPath ) throws IOException, XmlException, SoapUIException
+	{
+
+		boolean result = false;
+		if( ( tmpDir = createTemporaryDirectory() ) != null )
+		{
+			if( createProjectCopy() )
+			{
+				if( copyDependencies() )
+				{
+					projectCopy.setResourceRoot( "${projectDir}" );
+					projectCopy.save();
+					if( packageAll( exportPath ) )
+						result = true;
+				}
+			}
+			deleteDir( tmpDir );
+		}
+		return result;
+	}
+
+	/**
+	 * Compress temporary directory and save it on given path.
+	 * 
+	 * @param exportPath
+	 * @return
+	 * @throws IOException 
+	 */
+	private boolean packageAll( String exportPath )
+	{
+		if( !exportPath.endsWith( ".zip" ) )
+			exportPath = exportPath + ".zip";
+		
+		BufferedInputStream origin = null;
+		ZipOutputStream out;
+		boolean result = true;
+		try
+		{
+			FileOutputStream dest = new FileOutputStream( exportPath );
+			out = new ZipOutputStream( new BufferedOutputStream( dest ) );
+			byte data[] = new byte[BUFFER];
+			// get a list of files from current directory
+
+			String files[] = tmpDir.list();
+
+			for( int i = 0; i < files.length; i++ )
+			{
+				//				System.out.println( "Adding: " + files[i] );
+				FileInputStream fi = new FileInputStream( new File( tmpDir, files[i] ) );
+				origin = new BufferedInputStream( fi, BUFFER );
+				ZipEntry entry = new ZipEntry( files[i] );
+				out.putNextEntry( entry );
+				int count;
+				while( ( count = origin.read( data, 0, BUFFER ) ) != -1 )
+				{
+					out.write( data, 0, count );
+				}
+				origin.close();
+			}
+			out.close();
+		}
+		catch( IOException e )
+		{
+			// TODO: handle exception
+			result = false;
+		}
+		return result;
+	}
+
+	public static void unpackageAll( String archive, String path )
+	{
+		try
+		{
+			BufferedOutputStream dest = null;
+			FileInputStream fis = new FileInputStream( archive );
+			ZipInputStream zis = new ZipInputStream( new BufferedInputStream( fis ) );
+			ZipEntry entry;
+			while( ( entry = zis.getNextEntry() ) != null )
+			{
+				int count;
+				byte data[] = new byte[BUFFER];
+				// write the files to the disk
+				FileOutputStream fos = new FileOutputStream( path + File.separator + entry.getName() );
+				dest = new BufferedOutputStream( fos, BUFFER );
+				while( ( count = zis.read( data, 0, BUFFER ) ) != -1 )
+				{
+					dest.write( data, 0, count );
+				}
+				dest.flush();
+				dest.close();
+			}
+			zis.close();
+		}
+		catch( Exception e )
+		{
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Do actual dependency coping and updating project's copy 
+	 * dependecy path.
+	 * @throws IOException 
+	 */
+	private boolean copyDependencies() throws IOException
+	{
+		boolean result = true;
+		projectCopy.setResourceRoot( "${projectDir}" );
+		List<ExternalDependency> dependencies = projectCopy.getExternalDependencies();
+		for( ExternalDependency depedency : dependencies )
+		{
+			switch( depedency.getType() )
+			{
+			case FILE :
+				File originalDependency = new File( depedency.getPath() );
+				if( originalDependency.exists() )
+				{
+					File targetDependency = new File( tmpDir, originalDependency.getName() );
+					FileUtils.copyFile( originalDependency, targetDependency );
+					depedency.updatePath( targetDependency.getPath() );
+				}
+				else
+				{
+					SoapUI.log.warn( "Do not exists on local file system [" + originalDependency.getPath() + "]" );
+				}
+				break;
+			case FOLDER :
+				originalDependency = new File( depedency.getPath() );
+				File targetDependency = new File( tmpDir, originalDependency.getName() );
+				targetDependency.mkdir();
+				FileUtils.copyDirectory( originalDependency, targetDependency, false );
+				depedency.updatePath( targetDependency.getPath() );
+				break;
+			default :
+				break;
+			}
+		}
+
+		return result;
+	}
+
+	/**
+	 * Creates project copy and save it in temporary directory.
+	 * Set copy's project path and resource root to ${projectDir}
+	 * 
+	 * @return
+	 * @throws IOException 
+	 * @throws SoapUIException 
+	 * @throws XmlException 
+	 */
+	private boolean createProjectCopy() throws IOException, XmlException, SoapUIException
+	{
+		project.saveIn( new File( tmpDir, project.getName()+ "-soapui-project.xml" ) );
+
+		projectCopy = ( WsdlProject )ProjectFactoryRegistry.getProjectFactory( "wsdl" ).createNew(
+				new File( tmpDir, project.getName()+ "-soapui-project.xml" ).getAbsolutePath() );//new WsdlProject( new File( tmpDir, project.getName() + ".xml" ).getAbsolutePath() );
+
+		return projectCopy != null;
+	}
+
+	/**
+	 * Creates temporary directory where package will be created
+	 * 
+	 * @return if operation is successuful 
+	 */
+	private File createTemporaryDirectory()
+	{
+		File baseDir = new File( System.getProperty( "java.io.tmpdir" ) );
+		String baseName = System.currentTimeMillis() + "-";
+
+		for( int counter = 0; counter < TEMP_DIR_ATTEMPTS; counter++ )
+		{
+			File tempDir = new File( baseDir, baseName + counter );
+			if( tempDir.mkdir() )
+			{
+				return tempDir;
+			}
+		}
+		return null;
+	}
+
+	private boolean deleteDir( File dir )
+	{
+		if( dir.isDirectory() )
+		{
+			String[] children = dir.list();
+			for( int i = 0; i < children.length; i++ )
+			{
+				boolean success = deleteDir( new File( dir, children[i] ) );
+				if( !success )
+				{
+					return false;
+				}
+			}
+		}
+
+		// The directory is now empty so delete it
+		return dir.delete();
+	}
+}
