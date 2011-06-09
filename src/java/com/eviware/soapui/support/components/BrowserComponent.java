@@ -58,6 +58,7 @@ import org.mozilla.xpcom.XPCOMException;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.panels.request.views.html.HttpHtmlResponseView;
 import com.eviware.soapui.impl.rest.support.RestUtils;
+import com.eviware.soapui.impl.wsdl.support.http.ProxyUtils;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequest;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
@@ -120,40 +121,14 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 	// private static boolean disabled;
 	private NavigationListener internalNavigationListener;
 	private HttpHtmlResponseView httpHtmlResponseView;
-	private static Boolean initialized = false;
 	private static SoapUINewWindowManager newWindowManager;
 	private static Map<nsIDOMWindow, BrowserComponent> browserMap = new HashMap<nsIDOMWindow, BrowserComponent>();
 	private static Map<BrowserComponent, Map<String, RecordedRequest>> browserRecordingMap = new HashMap<BrowserComponent, Map<String, RecordedRequest>>();
 	private final boolean addStatusBar;
 
-	static
-	{
-		initialize();
-	}
-
 	public BrowserComponent( boolean addToolbar, boolean addStatusBar )
 	{
 		this.addStatusBar = addStatusBar;
-	}
-
-	public synchronized static void initialize()
-	{
-		if( initialized )
-			return;
-
-		try
-		{
-			if( !SoapUI.isJXBrowserDisabled() )
-			{
-				Xpcom.initialize();
-			}
-
-			initialized = true;
-		}
-		catch( Throwable t )
-		{
-			t.printStackTrace();
-		}
 	}
 
 	// public static void setDisabled( boolean disabled )
@@ -175,7 +150,13 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 		if( SoapUI.isJXBrowserDisabled() )
 		{
 			JEditorPane jxbrowserDisabledPanel = new JEditorPane();
-			jxbrowserDisabledPanel.setText( "browser component disabled" );
+			jxbrowserDisabledPanel.setText( "Browser Component disabled" );
+			panel.add( jxbrowserDisabledPanel );
+		}
+		else if( !BrowserType.Mozilla.isSupported() )
+		{
+			JEditorPane jxbrowserDisabledPanel = new JEditorPane();
+			jxbrowserDisabledPanel.setText( "Browser Component not supported on this platform" );
 			panel.add( jxbrowserDisabledPanel );
 		}
 		else
@@ -195,7 +176,7 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 				// panel.add( buildToolbar(), BorderLayout.NORTH );
 
 				initBrowser();
-				
+
 				configureBrowser();
 
 				browser.navigate( "about:blank" );
@@ -874,68 +855,69 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 
 	private static boolean proxyAuthenticationInitialized = false;
 
-	public synchronized static void updateProxy( boolean proxyEnabled )
+	public static void updateJXBrowserProxy()
 	{
-		if( SoapUI.isJXBrowserDisabled() )
-			return;
-
-		initialize();
-
 		ProxyConfiguration proxyConf = Services.getProxyConfiguration();
 		if( proxyConf == null )
 			return;
 
-		proxyConf.setType( ProxyConfiguration.MANUAL );
-
-		if( !proxyAuthenticationInitialized )
+		try
 		{
-			proxyConf.setPoxyAuthenticationHandler( ProxyServerType.HTTP, new PoxyAuthenticationHandler()
+			proxyConf.setType( ProxyConfiguration.MANUAL );
+
+			if( !proxyAuthenticationInitialized )
 			{
-				public ProxyServerAuthInfo authenticationRequired()
+				proxyConf.setPoxyAuthenticationHandler( ProxyServerType.HTTP, new PoxyAuthenticationHandler()
 				{
-					Settings settings = SoapUI.getSettings();
-					PropertyExpansionContext context = null;
+					public ProxyServerAuthInfo authenticationRequired()
+					{
+						Settings settings = SoapUI.getSettings();
+						PropertyExpansionContext context = null;
 
-					String proxyUsername = PropertyExpander.expandProperties( context,
-							settings.getString( ProxySettings.USERNAME, null ) );
-					String proxyPassword = PropertyExpander.expandProperties( context,
-							settings.getString( ProxySettings.PASSWORD, null ) );
+						String proxyUsername = PropertyExpander.expandProperties( context,
+								settings.getString( ProxySettings.USERNAME, null ) );
+						String proxyPassword = PropertyExpander.expandProperties( context,
+								settings.getString( ProxySettings.PASSWORD, null ) );
 
-					return new ProxyServerAuthInfo( proxyUsername, proxyPassword );
-				}
-			} );
+						return new ProxyServerAuthInfo( proxyUsername, proxyPassword );
+					}
+				} );
 
-			proxyAuthenticationInitialized = true;
-		}
+				proxyAuthenticationInitialized = true;
+			}
 
-		if( proxyEnabled )
-		{
-			Settings settings = SoapUI.getSettings();
-			PropertyExpansionContext context = null;
-
-			// check system properties first
-			String proxyHost = System.getProperty( "http.proxyHost" );
-			String proxyPort = System.getProperty( "http.proxyPort" );
-
-			if( proxyHost == null )
-				proxyHost = PropertyExpander.expandProperties( context, settings.getString( ProxySettings.HOST, "" ) );
-
-			if( proxyPort == null )
-				proxyPort = PropertyExpander.expandProperties( context, settings.getString( ProxySettings.PORT, "" ) );
-
-			proxyConf.setHttpHost( proxyHost );
-			proxyConf.setHttpPort( Integer.parseInt( proxyPort ) );
-			// check excludes
-			String[] excludes = PropertyExpander.expandProperties( context,
-					settings.getString( ProxySettings.EXCLUDES, "" ) ).split( "," );
-			for( String url : excludes )
+			if( ProxyUtils.isProxyEnabled() )
 			{
-				proxyConf.setSkipProxyFor( url );
+				Settings settings = SoapUI.getSettings();
+				PropertyExpansionContext context = null;
+
+				// check system properties first
+				String proxyHost = System.getProperty( "http.proxyHost" );
+				String proxyPort = System.getProperty( "http.proxyPort" );
+
+				if( proxyHost == null )
+					proxyHost = PropertyExpander.expandProperties( context, settings.getString( ProxySettings.HOST, "" ) );
+
+				if( proxyPort == null )
+					proxyPort = PropertyExpander.expandProperties( context, settings.getString( ProxySettings.PORT, "" ) );
+
+				proxyConf.setHttpHost( proxyHost );
+				proxyConf.setHttpPort( Integer.parseInt( proxyPort ) );
+				// check excludes
+				String[] excludes = PropertyExpander.expandProperties( context,
+						settings.getString( ProxySettings.EXCLUDES, "" ) ).split( "," );
+				for( String url : excludes )
+				{
+					proxyConf.setSkipProxyFor( url );
+				}
+			}
+			else
+			{
+				proxyConf.setHttpHost( "" );
 			}
 		}
-		else
+		catch( Throwable e )
 		{
-			proxyConf.setHttpHost( "" );
 		}
 	}
 
@@ -1058,8 +1040,9 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 		{
 			initBrowser();
 		}
-		
+
 		configureBrowser();
+		updateJXBrowserProxy();
 
 		if( postData != null && postData.length() > 0 )
 		{

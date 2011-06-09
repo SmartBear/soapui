@@ -32,7 +32,6 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.settings.ProxySettings;
 import com.eviware.soapui.support.StringUtils;
-import com.eviware.soapui.support.components.BrowserComponent;
 
 /**
  * Utilities for setting proxy-servers correctly
@@ -71,10 +70,10 @@ public class ProxyUtils
 				{
 					hostConfiguration.setProxy( proxyHost, Integer.parseInt( proxyPort ) );
 
-					String proxyUsername = PropertyExpander.expandProperties( context, settings.getString(
-							ProxySettings.USERNAME, null ) );
-					String proxyPassword = PropertyExpander.expandProperties( context, settings.getString(
-							ProxySettings.PASSWORD, null ) );
+					String proxyUsername = PropertyExpander.expandProperties( context,
+							settings.getString( ProxySettings.USERNAME, null ) );
+					String proxyPassword = PropertyExpander.expandProperties( context,
+							settings.getString( ProxySettings.PASSWORD, null ) );
 
 					if( proxyUsername != null && proxyPassword != null )
 					{
@@ -179,8 +178,5 @@ public class ProxyUtils
 	public static void setProxyEnabled( boolean proxyEnabled )
 	{
 		ProxyUtils.proxyEnabled = proxyEnabled;
-		if( !SoapUI.isJXBrowserDisabled() )
-			BrowserComponent.updateProxy( proxyEnabled );
 	}
-
 }
