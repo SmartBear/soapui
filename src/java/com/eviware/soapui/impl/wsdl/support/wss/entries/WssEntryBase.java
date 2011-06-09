@@ -227,11 +227,11 @@ public abstract class WssEntryBase implements WssEntry, PropertyExpansionContain
 			Component result = super.getListCellRendererComponent( list, value, index, isSelected, cellHasFocus );
 
 			if( value.equals( 0 ) )
-				setText( "<none>" );
+				setText( "Issuer Name and Serial Number" );
 			else if( value.equals( 1 ) )
 				setText( "Binary Security Token" );
-			else if( value.equals( 2 ) )
-				setText( "Issuer Name and Serial Number" );
+			// else if( value.equals( 2 ) )
+			// setText( "Issuer Name and Serial Number" );
 			else if( value.equals( 3 ) )
 				setText( "X509 Certificate" );
 			else if( value.equals( 4 ) )

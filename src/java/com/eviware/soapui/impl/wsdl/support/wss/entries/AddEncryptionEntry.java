@@ -95,7 +95,7 @@ public class AddEncryptionEntry extends WssEntryBase
 		form.appendPasswordField( "password", "Password",
 				"The password for the key to use for encryption (if it is private)" );
 
-		form.appendComboBox( "keyIdentifierType", "Key Identifier Type", new Integer[] { 0, 1, 2, 3, 4, 5, 6, 8 },
+		form.appendComboBox( "keyIdentifierType", "Key Identifier Type", new Integer[] { 0, 1, 3, 4, 5, 6, 8 },
 				"Sets which key identifier to use" ).setRenderer( new KeyIdentifierTypeRenderer() );
 
 		( embeddedKeyNameTextField = form.appendTextField( "embeddedKeyName", "Embedded Key Name",
@@ -267,6 +267,8 @@ public class AddEncryptionEntry extends WssEntryBase
 
 			wsEncrypt.setUserInfo( context.expand( getUsername() ) );
 
+			// default is
+			// http://ws.apache.org/wss4j/apidocs/org/apache/ws/security/WSConstants.html#ISSUER_SERIAL
 			if( getKeyIdentifierType() != 0 )
 			{
 				wsEncrypt.setKeyIdentifierType( getKeyIdentifierType() );

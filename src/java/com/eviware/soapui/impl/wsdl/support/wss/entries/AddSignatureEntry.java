@@ -93,7 +93,7 @@ public class AddSignatureEntry extends WssEntryBase
 		// form.appendTextField( "username", "Alias", "The certificate alias" );
 		form.appendPasswordField( "password", "Password", "The certificate password" );
 
-		form.appendComboBox( "keyIdentifierType", "Key Identifier Type", new Integer[] { 0, 1, 2, 3, 4 },
+		form.appendComboBox( "keyIdentifierType", "Key Identifier Type", new Integer[] { 0, 1, 3, 4 },
 				"Sets which key identifier to use" ).setRenderer( new KeyIdentifierTypeRenderer() );
 		form.appendComboBox( "signatureAlgorithm", "Signature Algorithm", new String[] { DEFAULT_OPTION, WSConstants.RSA,
 				WSConstants.DSA, XMLSignature.ALGO_ID_MAC_HMAC_SHA1, XMLSignature.ALGO_ID_MAC_HMAC_SHA256,
@@ -172,6 +172,8 @@ public class AddSignatureEntry extends WssEntryBase
 			WSSecSignature wssSign = new WSSecSignature();
 			wssSign.setUserInfo( context.expand( getUsername() ), context.expand( getPassword() ) );
 
+			// default is
+			// http://ws.apache.org/wss4j/apidocs/org/apache/ws/security/WSConstants.html#ISSUER_SERIAL
 			if( keyIdentifierType != 0 )
 				wssSign.setKeyIdentifierType( keyIdentifierType );
 
