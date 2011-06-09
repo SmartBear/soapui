@@ -142,6 +142,7 @@ public class InvalidHttpStatusCodesAssertion extends WsdlMessageAssertion implem
 		return builder.finish();
 	}
 
+	@Override
 	public boolean configure()
 	{
 		if( dialog == null )
@@ -165,11 +166,12 @@ public class InvalidHttpStatusCodesAssertion extends WsdlMessageAssertion implem
 		XFormDialogBuilder builder = XFormFactory.createDialogBuilder( "Invalid HTTP status codes Assertion" );
 		XForm mainForm = builder.createForm( "Basic" );
 
-		mainForm.addTextField( CODES, "Coma separated not acceptable status codes", XForm.FieldType.TEXTAREA ).setWidth(
+		mainForm.addTextField( CODES, "Comma-separated not acceptable status codes", XForm.FieldType.TEXTAREA ).setWidth(
 				40 );
 
 		// TODO : update help URL
-		dialog = builder.buildDialog( builder.buildOkCancelHelpActions( HelpUrls.SECURITY_INVALID_HTTP_CODES_ASSERTION_HELP ), "Specify codes",
+		dialog = builder.buildDialog(
+				builder.buildOkCancelHelpActions( HelpUrls.SECURITY_INVALID_HTTP_CODES_ASSERTION_HELP ), "Specify codes",
 				UISupport.OPTIONS_ICON );
 	}
 
