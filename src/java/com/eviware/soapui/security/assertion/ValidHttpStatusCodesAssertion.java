@@ -142,6 +142,7 @@ public class ValidHttpStatusCodesAssertion extends WsdlMessageAssertion implemen
 		return builder.finish();
 	}
 
+	@Override
 	public boolean configure()
 	{
 		if( dialog == null )
@@ -165,10 +166,11 @@ public class ValidHttpStatusCodesAssertion extends WsdlMessageAssertion implemen
 		XFormDialogBuilder builder = XFormFactory.createDialogBuilder( "Valid HTTP status codes Assertion" );
 		XForm mainForm = builder.createForm( "Basic" );
 
-		mainForm.addTextField( CODES, "Coma separated acceptable status codes", XForm.FieldType.TEXTAREA ).setWidth( 40 );
+		mainForm.addTextField( CODES, "Comma-separated acceptable status codes", XForm.FieldType.TEXTAREA ).setWidth( 40 );
 
 		// TODO : update help URL
-		dialog = builder.buildDialog( builder.buildOkCancelHelpActions( HelpUrls.SECURITY_VALID_HTTP_CODES_ASSERTION_HELP ), "Specify codes",
+		dialog = builder.buildDialog(
+				builder.buildOkCancelHelpActions( HelpUrls.SECURITY_VALID_HTTP_CODES_ASSERTION_HELP ), "Specify codes",
 				UISupport.OPTIONS_ICON );
 	}
 
