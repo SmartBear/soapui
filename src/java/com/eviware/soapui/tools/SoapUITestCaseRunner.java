@@ -88,6 +88,7 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 	private int testSuiteCount;
 	private int testCaseCount;
 	private int testStepCount;
+	
 	private int testAssertionCount;
 
 	private boolean printReport;
@@ -505,6 +506,11 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 		throw new Exception( buf.toString() );
 	}
 
+	public boolean isExportAll()
+	{
+		return exportAll;
+	}
+
 	public void exportJUnitReports( JUnitReportCollector collector, String folder, WsdlProject project )
 			throws Exception
 	{
@@ -785,6 +791,46 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 	public boolean isSaveAfterRun()
 	{
 		return saveAfterRun;
+	}
+
+	public List<TestCase> getFailedTests()
+	{
+		return failedTests;
+	}
+	
+	public List<TestAssertion> getAssertions()
+	{
+		return assertions;
+	}
+
+	public boolean isJunitReport()
+	{
+		return junitReport;
+	}
+
+	public int getExportCount()
+	{
+		return exportCount;
+	}
+
+	public void setExportCount( int exportCount )
+	{
+		this.exportCount = exportCount;
+	}
+
+	public Map<TestAssertion, WsdlTestStepResult> getAssertionResults()
+	{
+		return assertionResults;
+	}
+	
+	public int getTestStepCount()
+	{
+		return testStepCount;
+	}
+
+	public void setTestStepCount( int testStepCount )
+	{
+		this.testStepCount = testStepCount;
 	}
 
 }

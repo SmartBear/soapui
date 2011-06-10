@@ -12,6 +12,10 @@
 
 package com.eviware.soapui.tools;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,8 +25,13 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
+import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCaseRunner;
+import com.eviware.soapui.impl.wsdl.teststeps.WsdlRunTestCaseTestStep;
+import com.eviware.soapui.model.iface.Attachment;
+import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.project.ProjectFactoryRegistry;
 import com.eviware.soapui.model.security.SecurityScan;
+import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
@@ -33,11 +42,15 @@ import com.eviware.soapui.report.JUnitSecurityReportCollector;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
-import com.eviware.soapui.security.result.SecurityResult.ResultStatus;
+import com.eviware.soapui.security.result.SecurityResult;
 import com.eviware.soapui.security.result.SecurityScanRequestResult;
 import com.eviware.soapui.security.result.SecurityScanResult;
+import com.eviware.soapui.security.result.SecurityTestStepResult;
+import com.eviware.soapui.security.result.SecurityResult.ResultStatus;
+import com.eviware.soapui.security.support.SecurityTestRunListener;
 import com.eviware.soapui.security.support.SecurityTestRunListenerAdapter;
 import com.eviware.soapui.support.StringUtils;
+import com.eviware.soapui.support.Tools;
 
 /**
  * Standalone security test-runner used from maven-plugin, can also be used from
@@ -50,7 +63,7 @@ import com.eviware.soapui.support.StringUtils;
  * @author nebojsa.tasic
  */
 
-public class SoapUISecurityTestRunner extends SoapUITestCaseRunner
+public class SoapUISecurityTestRunner extends SoapUITestCaseRunner implements SecurityTestRunListener
 {
 	public static final String SOAPUI_EXPORT_SEPARATOR = "soapui.export.separator";
 
@@ -60,6 +73,7 @@ public class SoapUISecurityTestRunner extends SoapUITestCaseRunner
 	private int securityScanCount;
 	private int securityScanRequestCount;
 	private int securityScanAlertCount;
+	private List<SecurityTestStepResult> failedResults = new ArrayList<SecurityTestStepResult>();
 	private JUnitSecurityReportCollector reportCollector = new JUnitSecurityReportCollector();
 
 	/**
@@ -109,7 +123,7 @@ public class SoapUISecurityTestRunner extends SoapUITestCaseRunner
 	public boolean runRunner() throws Exception
 	{
 		initGroovyLog();
-
+		getAssertions().clear();
 		String projectFile = getProjectFile();
 
 		WsdlProject project = ( WsdlProject )ProjectFactoryRegistry.getProjectFactory( "wsdl" ).createNew( projectFile,
@@ -226,6 +240,13 @@ public class SoapUISecurityTestRunner extends SoapUITestCaseRunner
 		}
 	}
 
+	protected void addListeners( TestCase tc )
+	{
+		tc.addTestRunListener( this );
+		if( isJunitReport() )
+			tc.addTestRunListener( reportCollector );
+	}
+
 	public void exportJUnitReports( JUnitSecurityReportCollector collector, String folder, WsdlProject project )
 			throws Exception
 	{
@@ -281,6 +302,9 @@ public class SoapUISecurityTestRunner extends SoapUITestCaseRunner
 		{
 			for( SecurityTest securityTest : testCase.getSecurityTestList() )
 			{
+
+				securityTest.addSecurityTestRunListener( this );
+
 				if( StringUtils.isNullOrEmpty( securityTestName ) || securityTest.getName().equals( securityTestName ) )
 					runSecurityTest( securityTest );
 			}
@@ -306,7 +330,9 @@ public class SoapUISecurityTestRunner extends SoapUITestCaseRunner
 			{
 				securityScanRequestCount++ ;
 				if( securityCheckReqResult.getStatus() == ResultStatus.FAILED )
+				{
 					securityScanAlertCount++ ;
+				}
 
 				log.info( securityCheckReqResult.getSecurityScan().getName() + " - "
 						+ securityCheckReqResult.getChangedParamsInfo( ++requestIndex ) );
@@ -326,6 +352,13 @@ public class SoapUISecurityTestRunner extends SoapUITestCaseRunner
 				requestIndex = 0;
 			}
 
+			@Override
+			public void afterStep( TestCaseRunner testRunner, SecurityTestRunContext runContext,
+					SecurityTestStepResult result )
+			{
+				if( result.getStatus() == ResultStatus.FAILED )
+					failedResults.add( result );
+			}
 		} );
 
 		if( isJUnitReport() )
@@ -356,8 +389,177 @@ public class SoapUISecurityTestRunner extends SoapUITestCaseRunner
 	{
 	}
 
+	@Override
+	public void afterStep( TestCaseRunner testRunner, SecurityTestRunContext runContext, SecurityTestStepResult result )
+	{
+		if( !isPrintReport() )
+			return;
+
+		TestStep currentStep = runContext.getCurrentStep();
+
+		String securityTestName = "";
+		String securityScanName = "";
+		if( !result.getSecurityScanResultList().isEmpty() )
+		{
+			securityTestName = result.getSecurityScanResultList().get( 0 ).getSecurityScan().getParent().getName();
+			securityScanName = result.getSecurityScanResultList().get( 0 ).getSecurityScanName();
+		}
+
+		String countPropertyName = currentStep.getName() + " run count";
+		Long count = new Long( getExportCount() );// ( Long
+		// )runContext.getProperty(
+		// countPropertyName );
+		if( count == null )
+		{
+			count = new Long( 0 );
+		}
+
+		runContext.setProperty( countPropertyName, new Long( count.longValue() + 1 ) );
+
+		if( result.getStatus() == SecurityResult.ResultStatus.FAILED || isExportAll() )
+		{
+			try
+			{
+				String exportSeparator = System.getProperty( SOAPUI_EXPORT_SEPARATOR, "-" );
+
+				TestCase tc = currentStep.getTestCase();
+
+				String nameBase = StringUtils.createFileName( securityTestName, '_' ) + exportSeparator
+						+ StringUtils.createFileName( securityScanName, '_' ) + exportSeparator
+						+ StringUtils.createFileName( tc.getTestSuite().getName(), '_' ) + exportSeparator
+						+ StringUtils.createFileName( tc.getName(), '_' ) + exportSeparator
+						+ StringUtils.createFileName( currentStep.getName(), '_' ) + "-" + count.longValue() + "-"
+						+ result.getStatus();
+
+				WsdlTestCaseRunner callingTestCaseRunner = ( WsdlTestCaseRunner )runContext
+						.getProperty( "#CallingTestCaseRunner#" );
+
+				if( callingTestCaseRunner != null )
+				{
+					WsdlTestCase ctc = callingTestCaseRunner.getTestCase();
+					WsdlRunTestCaseTestStep runTestCaseTestStep = ( WsdlRunTestCaseTestStep )runContext
+							.getProperty( "#CallingRunTestCaseStep#" );
+
+					nameBase = StringUtils.createFileName( securityTestName, '_' ) + exportSeparator
+							+ StringUtils.createFileName( ctc.getTestSuite().getName(), '_' ) + exportSeparator
+							+ StringUtils.createFileName( ctc.getName(), '_' ) + exportSeparator
+							+ StringUtils.createFileName( runTestCaseTestStep.getName(), '_' ) + exportSeparator
+							+ StringUtils.createFileName( tc.getTestSuite().getName(), '_' ) + exportSeparator
+							+ StringUtils.createFileName( tc.getName(), '_' ) + exportSeparator
+							+ StringUtils.createFileName( currentStep.getName(), '_' ) + "-" + count.longValue() + "-"
+							+ result.getStatus();
+				}
+
+				String absoluteOutputFolder = getAbsoluteOutputFolder( ModelSupport.getModelItemProject( tc ) );
+				String fileName = absoluteOutputFolder + File.separator + nameBase + ".txt";
+
+				if( result.getStatus() == SecurityResult.ResultStatus.FAILED )
+					log.error( currentStep.getName() + " failed, exporting to [" + fileName + "]" );
+
+				new File( fileName ).getParentFile().mkdirs();
+
+				PrintWriter writer = new PrintWriter( fileName );
+				result.writeTo( writer );
+				writer.close();
+
+				// write attachments
+				if( result instanceof MessageExchange )
+				{
+					Attachment[] attachments = ( ( MessageExchange )result ).getResponseAttachments();
+					if( attachments != null && attachments.length > 0 )
+					{
+						for( int c = 0; c < attachments.length; c++ )
+						{
+							fileName = nameBase + "-attachment-" + ( c + 1 ) + ".";
+
+							Attachment attachment = attachments[c];
+							String contentType = attachment.getContentType();
+							if( !"application/octet-stream".equals( contentType ) && contentType != null
+									&& contentType.indexOf( '/' ) != -1 )
+							{
+								fileName += contentType.substring( contentType.lastIndexOf( '/' ) + 1 );
+							}
+							else
+							{
+								fileName += "dat";
+							}
+
+							fileName = absoluteOutputFolder + File.separator + fileName;
+
+							FileOutputStream outFile = new FileOutputStream( fileName );
+							Tools.writeAll( outFile, attachment.getInputStream() );
+							outFile.close();
+						}
+					}
+				}
+
+				setExportCount( getExportCount() + 1 );
+			}
+			catch( Exception e )
+			{
+				log.error( "Error saving failed result: " + e, e );
+			}
+		}
+
+		setTestStepCount( getTestStepCount() + 1 );
+
+	}
+
 	public void afterRun( TestCaseRunner testRunner, TestCaseRunContext runContext )
 	{
+	}
+
+	@Override
+	public void afterOriginalStep( TestCaseRunner testRunner, SecurityTestRunContext runContext,
+			SecurityTestStepResult result )
+	{
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void afterRun( TestCaseRunner testRunner, SecurityTestRunContext runContext )
+	{
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void afterSecurityScan( TestCaseRunner testRunner, SecurityTestRunContext runContext,
+			SecurityScanResult securityScanResult )
+	{
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void afterSecurityScanRequest( TestCaseRunner testRunner, SecurityTestRunContext runContext,
+			SecurityScanRequestResult securityScanReqResult )
+	{
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void beforeRun( TestCaseRunner testRunner, SecurityTestRunContext runContext )
+	{
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void beforeSecurityScan( TestCaseRunner testRunner, SecurityTestRunContext runContext,
+			SecurityScan securityScan )
+	{
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void beforeStep( TestCaseRunner testRunner, SecurityTestRunContext runContext, TestStepResult testStepResult )
+	{
+		// TODO Auto-generated method stub
+
 	}
 
 }
