@@ -139,9 +139,14 @@ public class UrlWsdlLoader extends WsdlLoader implements DefinitionLoader
 		}
 
 		// wait for method to catch up - required in unit tests..
-		while( !aborted && getMethod.getResponseBody() == null )
+		// limited looping to 10 loops because of eclipse plugin which entered 
+		// endless loop without it
+		// 
+		int counter = 0;
+		while( !aborted && getMethod.getResponseBody() == null && counter < 10 )
 		{
 			Thread.sleep( 200 );
+			counter++ ;
 		}
 
 		try
@@ -329,8 +334,8 @@ public class UrlWsdlLoader extends WsdlLoader implements DefinitionLoader
 					UISupport.getUIUtils().runInUIThreadIfSWT( showDialog );
 					if( showDialog.result )
 					{
-						UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(
-								showDialog.values.get( "Username" ), showDialog.values.get( "Password" ) );
+						UsernamePasswordCredentials credentials = new UsernamePasswordCredentials( showDialog.values
+								.get( "Username" ), showDialog.values.get( "Password" ) );
 						cache.put( key, credentials );
 						return credentials;
 					}
