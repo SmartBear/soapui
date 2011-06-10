@@ -45,20 +45,18 @@ public class SecurityTestRunnerAction extends TestRunnerAction
 	private static final String SH = ".sh";
 	private static final String BAT = ".bat";
 	private static final String SECURITYTESTRUNNER = "securitytestrunner";
-	private static final String SECURITY_TEST_NAME = "SecurityTestName";
+	private static final String SECURITYTEST = "SecurityTest";
 	protected static final String TESTRUNNERPATH = "SecurityTestRunner Path";
-
 	public static final String SOAPUI_ACTION_ID = "SecurityTestRunnerAction";
+	private static final String ALL_VALUE = "<all>";
 
 	private final static Logger log = Logger.getLogger( SecurityTestRunnerAction.class );
 
-	
 	public SecurityTestRunnerAction()
 	{
 		super( "Launch Security TestRunner", "Launch command-line SecurityTestRunner for this project" );
 	}
 
-	
 	protected XFormDialog buildDialog( WsdlProject modelItem )
 	{
 		if( modelItem == null )
@@ -117,6 +115,23 @@ public class SecurityTestRunnerAction extends TestRunnerAction
 
 			testCases.add( 0, ALL_VALUE );
 			mainForm.setOptions( TESTCASE, testCases.toArray() );
+
+			List<String> securityTests = new ArrayList<String>();
+
+			for( TestSuite testSuite : testSuites )
+			{
+				for( TestCase testCase : testSuite.getTestCaseList() )
+				{
+					for( SecurityTest securityTest : testCase.getSecurityTestList() )
+					{
+						if( !securityTests.contains( securityTest.getName() ) )
+							securityTests.add( securityTest.getName() );
+					}
+				}
+			}
+
+			securityTests.add( 0, ALL_VALUE );
+			mainForm.setOptions( SECURITYTEST, securityTests.toArray() );
 		}
 		else if( mainForm != null )
 		{
@@ -131,8 +146,7 @@ public class SecurityTestRunnerAction extends TestRunnerAction
 			{
 				mainForm.getFormField( TESTSUITE ).setValue( ( ( WsdlTestCase )param ).getTestSuite().getName() );
 				mainForm.getFormField( TESTCASE ).setValue( ( ( WsdlTestCase )param ).getName() );
-				
-				// TODO: initialize security dropdown!!!!!!!!!!!!!!!!!
+
 				values.put( TESTSUITE, ( ( WsdlTestCase )param ).getTestSuite().getName() );
 				values.put( TESTCASE, ( ( WsdlTestCase )param ).getName() );
 			}
@@ -195,7 +209,7 @@ public class SecurityTestRunnerAction extends TestRunnerAction
 					public void valueChanged( XFormField sourceField, String newValue, String oldValue )
 					{
 						List<String> securityTests = new ArrayList<String>();
-						String st = mainForm.getComponentValue( SECURITY_TEST_NAME );
+						String st = mainForm.getComponentValue( SECURITYTEST );
 
 						if( newValue.equals( ALL_VALUE ) )
 						{
@@ -227,15 +241,15 @@ public class SecurityTestRunnerAction extends TestRunnerAction
 						}
 
 						securityTests.add( 0, ALL_VALUE );
-						mainForm.setOptions( SECURITY_TEST_NAME, securityTests.toArray() );
+						mainForm.setOptions( SECURITYTEST, securityTests.toArray() );
 
 						if( securityTests.contains( st ) )
 						{
-							mainForm.getFormField( SECURITY_TEST_NAME ).setValue( st );
+							mainForm.getFormField( SECURITYTEST ).setValue( st );
 						}
 					}
 				} );
-		mainForm.addComboBox( SECURITY_TEST_NAME, new String[] {}, "The Security Test to run" );
+		mainForm.addComboBox( SECURITYTEST, new String[] {}, "The Security Test to run" );
 		mainForm.addSeparator();
 
 		mainForm.addCheckBox( ENABLEUI, "Enables UI components in scripts" );
@@ -305,8 +319,8 @@ public class SecurityTestRunnerAction extends TestRunnerAction
 		if( !values.get( TESTCASE ).equals( ALL_VALUE ) )
 			builder.addString( TESTCASE, "-c", "" );
 
-		if( !values.get( SECURITY_TEST_NAME ).equals( ALL_VALUE ) )
-			builder.addString( SECURITY_TEST_NAME, "-n", "" );
+		if( !values.get( SECURITYTEST ).equals( ALL_VALUE ) )
+			builder.addString( SECURITYTEST, "-n", "" );
 
 		builder.addString( USERNAME, "-u", "" );
 		builder.addStringShadow( PASSWORD, "-p", "" );
