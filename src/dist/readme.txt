@@ -1,5 +1,10 @@
 Welcome to soapUI!
 
+2011-06-14 : 4.0 Final 
+-------------------------------------------------------------------------------
+Please see http://www.soapui.org/About-SoapUI/whats-new-in-soapui-40.html for an overview 
+of all the new great features and more details on fixes in the final release!
+
 2011-05-31 : 4.0 beta2
 -------------------------------------------------------------------------------
 Major New Features:
