@@ -37,6 +37,7 @@ import javax.swing.ListCellRenderer;
 
 import org.apache.log4j.Logger;
 
+import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.TestCaseLogItem;
 import com.eviware.soapui.model.security.SecurityScan;
 import com.eviware.soapui.model.settings.Settings;
@@ -256,10 +257,10 @@ public class JSecurityTestRunLog extends JPanel
 			if( optionsDialog == null )
 				optionsDialog = ADialogBuilder.buildDialog( OptionsForm.class );
 
-			optionsDialog.setIntValue( OptionsForm.MAXROWS, ( int )settings.getLong( OptionsForm.class.getName()
-					+ "@max_rows", 1000 ) );
-			optionsDialog.setBooleanValue( OptionsForm.ERRORSONLY, settings.getBoolean( OptionsForm.class.getName()
-					+ "@errors_only" ) );
+			optionsDialog.setIntValue( OptionsForm.MAXROWS,
+					( int )settings.getLong( OptionsForm.class.getName() + "@max_rows", 1000 ) );
+			optionsDialog.setBooleanValue( OptionsForm.ERRORSONLY,
+					settings.getBoolean( OptionsForm.class.getName() + "@errors_only" ) );
 			optionsDialog.setBooleanValue( OptionsForm.FOLLOW, follow );
 
 			if( optionsDialog.show() )
@@ -275,7 +276,7 @@ public class JSecurityTestRunLog extends JPanel
 		}
 	}
 
-	@AForm( name = "Log Options", description = "Set options for the run log below" )
+	@AForm( name = "Log Options", description = "Set options for the run log below", helpUrl = HelpUrls.SECURITY_SCANS_OVERVIEW )
 	private static interface OptionsForm
 	{
 		@AField( name = "Max Rows", description = "Sets the maximum number of rows to keep in the log", type = AFieldType.INT )

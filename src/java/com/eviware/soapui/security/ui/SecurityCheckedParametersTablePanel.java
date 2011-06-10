@@ -24,7 +24,6 @@ import javax.swing.BorderFactory;
 import javax.swing.DefaultListSelectionModel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableCellEditor;
@@ -32,6 +31,7 @@ import javax.swing.table.TableColumn;
 
 import org.jdesktop.swingx.JXTable;
 
+import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.security.SecurityParametersTableModel;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.security.actions.CloneParametersAction;
@@ -290,8 +290,8 @@ public class SecurityCheckedParametersTablePanel extends JPanel implements ListS
 			}
 			else
 			{
-				if( !model.addParameter( dialog.getValue( AddParameterDialog.LABEL ), dialog
-						.getValue( AddParameterDialog.NAME ), pathPane.getText() ) )
+				if( !model.addParameter( dialog.getValue( AddParameterDialog.LABEL ),
+						dialog.getValue( AddParameterDialog.NAME ), pathPane.getText() ) )
 					UISupport.showErrorMessage( "Label have to be unique!" );
 			}
 		}
@@ -395,8 +395,8 @@ public class SecurityCheckedParametersTablePanel extends JPanel implements ListS
 			}
 			else
 			{
-				if( model.addParameter( dialog.getValue( AddParameterDialog.LABEL ), dialog
-						.getValue( AddParameterDialog.NAME ), pathPane.getText() ) )
+				if( model.addParameter( dialog.getValue( AddParameterDialog.LABEL ),
+						dialog.getValue( AddParameterDialog.NAME ), pathPane.getText() ) )
 				{
 					JComboBoxFormField nameField = ( JComboBoxFormField )dialog.getFormField( AddParameterDialog.NAME );
 					nameField.setSelectedOptions( new Object[] { nameField.getOptions()[0] } );
@@ -415,7 +415,7 @@ public class SecurityCheckedParametersTablePanel extends JPanel implements ListS
 		return ( ( JTextFieldFormField )dialog.getFormField( AddParameterDialog.LABEL ) ).getComponent();
 	}
 
-	@AForm( description = "Add New Security Test Step Parameter", name = "Configure Security Test Step Parameters" )
+	@AForm( description = "Add New Security Test Step Parameter", name = "Configure Security Test Step Parameters", helpUrl = HelpUrls.SECURITY_SCANS_OVERVIEW )
 	interface AddParameterDialog
 	{
 		@AField( description = "Parameter Name", name = "Parameter Name", type = AFieldType.ENUMERATION )

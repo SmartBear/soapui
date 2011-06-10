@@ -31,6 +31,7 @@ import org.jdesktop.swingx.JXTable;
 
 import com.eviware.soapui.config.InvalidSecurityScanConfig;
 import com.eviware.soapui.config.SchemaTypeForSecurityScanConfig;
+import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.x.form.XFormDialog;
@@ -108,7 +109,7 @@ public class InvalidTypesTable extends JPanel
 		table = new JXTable( model );
 		TableRowSorter<InvalidTypeTableModel> sorter = new TableRowSorter<InvalidTypeTableModel>( model );
 		table.setRowSorter( sorter );
-		table.toggleSortOrder( 0);
+		table.toggleSortOrder( 0 );
 		add( new JScrollPane( table ), BorderLayout.CENTER );
 		setPreferredSize( new Dimension( 100, 200 ) );
 
@@ -323,7 +324,7 @@ public class InvalidTypesTable extends JPanel
 		}
 	}
 
-	@AForm( description = "Add new type", name = "Add new type" )
+	@AForm( description = "Add new type", name = "Add new type", helpUrl = HelpUrls.SECURITY_SCANS_OVERVIEW )
 	protected interface AddParameterActionDialog
 	{
 

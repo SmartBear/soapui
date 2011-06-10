@@ -18,6 +18,7 @@ import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 
+import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.project.Project;
@@ -359,8 +360,8 @@ public class CloneParametersAction extends AbstractAction
 					SecurityTest securityTest = testCase.getSecurityTestByName( securityTestName );
 					String testStepName = dialog.getValue( CloneParameterDialog.TARGET_TESTSTEP );
 					TestStep testStep = testCase.getTestStepByName( testStepName );
-					String[] securityScanNames = ModelSupport.getNames( securityTest.getTestStepSecurityScanByType( testStep
-							.getId(), AbstractSecurityScanWithProperties.class ) );
+					String[] securityScanNames = ModelSupport.getNames( securityTest.getTestStepSecurityScanByType(
+							testStep.getId(), AbstractSecurityScanWithProperties.class ) );
 					dialog.setOptions( CloneParameterDialog.TARGET_SECURITYSCAN, securityScanNames );
 				}
 				else
@@ -383,8 +384,8 @@ public class CloneParametersAction extends AbstractAction
 				SecurityTest securityTest = testCase.getSecurityTestByName( securityTestName );
 				TestStep testStep = testCase.getTestStepByName( newValue );
 
-				String[] securityScanNames = ModelSupport.getNames( securityTest.getTestStepSecurityScanByType( testStep
-						.getId(), AbstractSecurityScanWithProperties.class ) );
+				String[] securityScanNames = ModelSupport.getNames( securityTest.getTestStepSecurityScanByType(
+						testStep.getId(), AbstractSecurityScanWithProperties.class ) );
 				dialog.setOptions( CloneParameterDialog.TARGET_SECURITYSCAN, securityScanNames );
 			}
 		} );
@@ -400,16 +401,16 @@ public class CloneParametersAction extends AbstractAction
 				String testStepName = dialog.getValue( CloneParameterDialog.TARGET_TESTSTEP );
 				TestStep testStep = testCase.getTestStepByName( testStepName );
 
-				String[] securityScanNames = ModelSupport.getNames( securityTest.getTestStepSecurityScanByType( testStep
-						.getId(), AbstractSecurityScanWithProperties.class ) );
+				String[] securityScanNames = ModelSupport.getNames( securityTest.getTestStepSecurityScanByType(
+						testStep.getId(), AbstractSecurityScanWithProperties.class ) );
 				dialog.setOptions( CloneParameterDialog.TARGET_SECURITYSCAN, securityScanNames );
 			}
 		} );
 
 		WsdlTestCase wsdlTestCase = ( WsdlTestCase )securityScan.getTestStep().getTestCase();
 
-		dialog.setOptions( CloneParameterDialog.TARGET_TESTSUITE, ModelSupport.getNames( wsdlTestCase.getTestSuite()
-				.getProject().getTestSuiteList() ) );
+		dialog.setOptions( CloneParameterDialog.TARGET_TESTSUITE,
+				ModelSupport.getNames( wsdlTestCase.getTestSuite().getProject().getTestSuiteList() ) );
 		dialog.setValue( CloneParameterDialog.TARGET_TESTSUITE, wsdlTestCase.getTestSuite().getName() );
 
 		List<TestCase> wsdlTestCaseList = wsdlTestCase.getTestSuite().getTestCaseList();
@@ -417,8 +418,8 @@ public class CloneParametersAction extends AbstractAction
 		dialog.setValue( CloneParameterDialog.TARGET_TESTCASE, wsdlTestCase.getName() );
 
 		dialog.setOptions( CloneParameterDialog.TARGET_TESTSTEP, getSecurableTestStepsNames( wsdlTestCase ) );
-		dialog.setOptions( CloneParameterDialog.TARGET_SECURITYTEST, ModelSupport.getNames( wsdlTestCase
-				.getSecurityTestList() ) );
+		dialog.setOptions( CloneParameterDialog.TARGET_SECURITYTEST,
+				ModelSupport.getNames( wsdlTestCase.getSecurityTestList() ) );
 
 		String securityTestName = dialog.getValue( CloneParameterDialog.TARGET_SECURITYTEST );
 		SecurityTest securityTest = wsdlTestCase.getSecurityTestByName( securityTestName );
@@ -436,8 +437,7 @@ public class CloneParametersAction extends AbstractAction
 		return dialog;
 	}
 
-	// TODO: link with security scanss documentation url
-	@AForm( description = "Specify target TestSuite/TestCase/Security Test(s)/Security Scan(s) and select Parameters to clone", name = "Clone Parameters", icon = UISupport.TOOL_ICON_PATH )
+	@AForm( description = "Specify target TestSuite/TestCase/Security Test(s)/Security Scan(s) and select Parameters to clone", name = "Clone Parameters", icon = UISupport.TOOL_ICON_PATH, helpUrl = HelpUrls.SECURITY_SCANS_OVERVIEW )
 	private interface CloneParameterDialog
 	{
 		@AField( name = "Parameters", description = "The Parameters to clone", type = AFieldType.MULTILIST )
