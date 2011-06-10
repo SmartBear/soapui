@@ -69,7 +69,8 @@ public class MaliciousAttachmentMutationsPanel
 
 	private JFormDialog tablesDialog;
 
-	public MaliciousAttachmentMutationsPanel( MaliciousAttachmentSecurityScanConfig config, AbstractHttpRequest<?> request )
+	public MaliciousAttachmentMutationsPanel( MaliciousAttachmentSecurityScanConfig config,
+			AbstractHttpRequest<?> request )
 	{
 		this.config = config;
 		this.request = request;
@@ -156,6 +157,7 @@ public class MaliciousAttachmentMutationsPanel
 
 		table.getSelectionModel().addListSelectionListener( new ListSelectionListener()
 		{
+			@Override
 			public void valueChanged( ListSelectionEvent e )
 			{
 				if( removeGeneratedButton != null )
@@ -194,6 +196,7 @@ public class MaliciousAttachmentMutationsPanel
 
 		table.getSelectionModel().addListSelectionListener( new ListSelectionListener()
 		{
+			@Override
 			public void valueChanged( ListSelectionEvent e )
 			{
 				if( removeReplacementButton != null )
@@ -266,8 +269,8 @@ public class MaliciousAttachmentMutationsPanel
 	@AForm( description = "Generate File Mutation", name = "Generate File Mutation" )
 	public interface GenerateFile
 	{
-		@AField( description = "Size(bytes)", name = "Size(bytes)", type = AFieldType.INT )
-		final static String SIZE = "Size(bytes)";
+		@AField( description = "Size (bytes)", name = "Size (bytes)", type = AFieldType.INT )
+		final static String SIZE = "Size (bytes)";
 		@AField( description = "Content type", name = "Content type", type = AFieldType.STRING )
 		final static String CONTENT_TYPE = "Content type";
 	}
@@ -282,6 +285,7 @@ public class MaliciousAttachmentMutationsPanel
 			putValue( Action.SHORT_DESCRIPTION, "Add file" );
 		}
 
+		@Override
 		public void actionPerformed( ActionEvent e )
 		{
 			if( fileChooser == null )
@@ -357,6 +361,7 @@ public class MaliciousAttachmentMutationsPanel
 			putValue( Action.SHORT_DESCRIPTION, "Generate file" );
 		}
 
+		@Override
 		public void actionPerformed( ActionEvent e )
 		{
 			if( dialog == null )
@@ -431,8 +436,8 @@ public class MaliciousAttachmentMutationsPanel
 
 	public class RemoveReplacementFileAction extends AbstractAction
 	{
-		private MaliciousAttachmentTableModel tableModel;
-		private JXTable table;
+		private final MaliciousAttachmentTableModel tableModel;
+		private final JXTable table;
 
 		public RemoveReplacementFileAction( MaliciousAttachmentTableModel tableModel, JXTable table )
 		{
@@ -443,6 +448,7 @@ public class MaliciousAttachmentMutationsPanel
 			this.table = table;
 		}
 
+		@Override
 		public void actionPerformed( ActionEvent e )
 		{
 			int row = table.getSelectedRow();
@@ -472,8 +478,8 @@ public class MaliciousAttachmentMutationsPanel
 
 	public class RemoveGeneratedFileAction extends AbstractAction
 	{
-		private MaliciousAttachmentTableModel tableModel;
-		private JXTable table;
+		private final MaliciousAttachmentTableModel tableModel;
+		private final JXTable table;
 
 		public RemoveGeneratedFileAction( MaliciousAttachmentTableModel tableModel, JXTable table )
 		{
@@ -484,6 +490,7 @@ public class MaliciousAttachmentMutationsPanel
 			this.table = table;
 		}
 
+		@Override
 		public void actionPerformed( ActionEvent e )
 		{
 			int row = table.getSelectedRow();
@@ -536,6 +543,7 @@ public class MaliciousAttachmentMutationsPanel
 			putValue( Action.SMALL_ICON, UISupport.HELP_ICON );
 		}
 
+		@Override
 		public void actionPerformed( ActionEvent e )
 		{
 			Tools.openURL( url );
