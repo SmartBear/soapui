@@ -65,7 +65,7 @@ public class StandaloneSoapUICore extends SwingSoapUICore
 		try
 		{
 			// TODO check for this silent mode detection?
-			if( !SoapUI.isJXBrowserDisabled() && PlatformContext.isMacOS() )
+			if( !SoapUI.isJXBrowserDisabled( true ) && PlatformContext.isMacOS() )
 			{
 				javax.swing.UIManager.setLookAndFeel( UIManager.getCrossPlatformLookAndFeelClassName() );
 			}

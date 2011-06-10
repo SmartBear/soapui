@@ -131,32 +131,12 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 		this.addStatusBar = addStatusBar;
 	}
 
-	// public static void setDisabled( boolean disabled )
-	// {
-	// BrowserComponent.disabled = disabled;
-	// }
-
-	/**
-	 * @deprecated
-	 */
-
-	public static boolean isJXBrowserDisabled()
-	{
-		return SoapUI.isJXBrowserDisabled();
-	}
-
 	public Component getComponent()
 	{
 		if( SoapUI.isJXBrowserDisabled() )
 		{
 			JEditorPane jxbrowserDisabledPanel = new JEditorPane();
-			jxbrowserDisabledPanel.setText( "Browser Component disabled" );
-			panel.add( jxbrowserDisabledPanel );
-		}
-		else if( !BrowserType.Mozilla.isSupported() )
-		{
-			JEditorPane jxbrowserDisabledPanel = new JEditorPane();
-			jxbrowserDisabledPanel.setText( "Browser Component not supported on this platform" );
+			jxbrowserDisabledPanel.setText( "Browser Component disabled or not available on this platform" );
 			panel.add( jxbrowserDisabledPanel );
 		}
 		else

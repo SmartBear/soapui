@@ -111,7 +111,6 @@ import com.eviware.soapui.monitor.MockEngine;
 import com.eviware.soapui.monitor.TestMonitor;
 import com.eviware.soapui.settings.ProxySettings;
 import com.eviware.soapui.settings.UISettings;
-import com.eviware.soapui.support.SecurityScanUtil;
 import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
@@ -156,6 +155,7 @@ import com.eviware.x.impl.swing.SwingDialogs;
 import com.jgoodies.looks.HeaderStyle;
 import com.jgoodies.looks.Options;
 import com.jniwrapper.PlatformContext;
+import com.teamdev.jxbrowser.BrowserType;
 
 /**
  * Main SoapUI entry point.
@@ -714,7 +714,7 @@ public class SoapUI
 		mainArgs = args;
 
 		SoapUIRunner soapuiRunner = new SoapUIRunner();
-		if( !SoapUI.isJXBrowserDisabled() && PlatformContext.isMacOS() )
+		if( !SoapUI.isJXBrowserDisabled( true ) && PlatformContext.isMacOS() )
 		{
 			SwingUtilities.invokeLater( soapuiRunner );
 		}
@@ -794,7 +794,7 @@ public class SoapUI
 		Thread.sleep( 500 );
 		splash.setVisible( false );
 
-		if( getSettings().getBoolean( UISettings.SHOW_STARTUP_PAGE ) && !SoapUI.isJXBrowserDisabled() )
+		if( getSettings().getBoolean( UISettings.SHOW_STARTUP_PAGE ) && !SoapUI.isJXBrowserDisabled( true ) )
 		{
 			SwingUtilities.invokeLater( new Runnable()
 			{
@@ -997,6 +997,11 @@ public class SoapUI
 
 	public static boolean isJXBrowserDisabled()
 	{
+		return isJXBrowserDisabled( false );
+	}
+
+	public static boolean isJXBrowserDisabled( boolean allowNative )
+	{
 		if( UISupport.isHeadless() )
 			return true;
 
@@ -1010,14 +1015,19 @@ public class SoapUI
 		if( getSoapUICore() != null && getSettings().getBoolean( UISettings.DISABLE_BROWSER ) )
 			return true;
 
+		if( !disable.equals( "false" ) && allowNative == true
+				&& ( BrowserType.Mozilla.isSupported() || BrowserType.IE.isSupported() || BrowserType.Safari.isSupported() ) )
+			return false;
+
 		if( !disable.equals( "false" )
 				&& ( !PlatformContext.isMacOS() && "64".equals( System.getProperty( "sun.arch.data.model" ) ) ) )
 			return true;
 
 		return false;
 	}
-	
-	public static boolean isJXBrowserPluginsDisabled() {
+
+	public static boolean isJXBrowserPluginsDisabled()
+	{
 		return getSettings().getBoolean( UISettings.DISABLE_BROWSER_PLUGINS );
 	}
 

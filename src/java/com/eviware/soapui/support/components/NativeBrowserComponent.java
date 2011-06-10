@@ -43,7 +43,6 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.xml.XmlUtils;
 import com.teamdev.jxbrowser.Browser;
 import com.teamdev.jxbrowser.BrowserFactory;
-import com.teamdev.jxbrowser.BrowserType;
 import com.teamdev.jxbrowser.Configurable;
 import com.teamdev.jxbrowser.Feature;
 import com.teamdev.jxbrowser.events.NavigationAdapter;
@@ -79,16 +78,10 @@ public class NativeBrowserComponent implements nsIWebProgressListener, nsIWeakRe
 
 	public Component getComponent()
 	{
-		if( SoapUI.isJXBrowserDisabled() )
+		if( SoapUI.isJXBrowserDisabled( true ) )
 		{
 			JEditorPane jxbrowserDisabledPanel = new JEditorPane();
-			jxbrowserDisabledPanel.setText( "browser component disabled" );
-			panel.add( jxbrowserDisabledPanel );
-		}
-		else if( !BrowserType.Mozilla.isSupported() && !BrowserType.IE.isSupported() && !BrowserType.Safari.isSupported() )
-		{
-			JEditorPane jxbrowserDisabledPanel = new JEditorPane();
-			jxbrowserDisabledPanel.setText( "Browser Component not supported on this platform" );
+			jxbrowserDisabledPanel.setText( "browser component disabled or not available on this platform" );
 			panel.add( jxbrowserDisabledPanel );
 		}
 		else
@@ -186,7 +179,7 @@ public class NativeBrowserComponent implements nsIWebProgressListener, nsIWeakRe
 
 	public synchronized boolean initBrowser()
 	{
-		if( browser != null || SoapUI.isJXBrowserDisabled() )
+		if( browser != null || SoapUI.isJXBrowserDisabled( true ) )
 			return false;
 
 		browser = BrowserFactory.createBrowser();
@@ -251,7 +244,7 @@ public class NativeBrowserComponent implements nsIWebProgressListener, nsIWeakRe
 
 	public void setContent( String contentAsString, String contextUri )
 	{
-		if( SoapUI.isJXBrowserDisabled() )
+		if( SoapUI.isJXBrowserDisabled( true ) )
 			return;
 
 		if( browser == null )
@@ -277,7 +270,7 @@ public class NativeBrowserComponent implements nsIWebProgressListener, nsIWeakRe
 
 	public void setContent( String content )
 	{
-		if( SoapUI.isJXBrowserDisabled() )
+		if( SoapUI.isJXBrowserDisabled( true ) )
 			return;
 
 		if( browser == null )
@@ -480,7 +473,7 @@ public class NativeBrowserComponent implements nsIWebProgressListener, nsIWeakRe
 
 	public void navigate( String url, String postData, String errorPage )
 	{
-		if( SoapUI.isJXBrowserDisabled() )
+		if( SoapUI.isJXBrowserDisabled( true ) )
 			return;
 
 		if( errorPage != null )
