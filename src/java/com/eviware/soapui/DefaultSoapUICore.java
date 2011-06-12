@@ -143,6 +143,7 @@ public class DefaultSoapUICore implements SoapUICore
 		initCoreComponents();
 		initExtensions( getExtensionClassLoader() );
 
+		// this is to provoke initialization
 		SoapVersion.Soap11.equals( SoapVersion.Soap12 );
 	}
 

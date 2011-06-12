@@ -157,7 +157,7 @@ public class RestUtils
 					item = "{" + property.getName() + "}";
 				}
 			}
-			catch( Exception e )
+			catch( Throwable e )
 			{
 			}
 

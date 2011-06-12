@@ -132,15 +132,15 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 			}
 		}
 
-//		if( !forLoadTest )
-//		{
-			List<SecurityTestConfig> securityTestConfigs = config.getSecurityTestList();
-			for( SecurityTestConfig tsc : securityTestConfigs )
-			{
-				SecurityTest securityTest = buildSecurityTest( tsc );
-				securityTests.add( securityTest );
-			}
-//		}
+		// if( !forLoadTest )
+		// {
+		List<SecurityTestConfig> securityTestConfigs = config.getSecurityTestList();
+		for( SecurityTestConfig tsc : securityTestConfigs )
+		{
+			SecurityTest securityTest = buildSecurityTest( tsc );
+			securityTests.add( securityTest );
+		}
+		// }
 
 		// init default configs
 		if( !config.isSetFailOnError() )
@@ -345,9 +345,10 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 					break;
 			}
 
-			name = UISupport.prompt( "TestStep name must be unique, please specify new name for step\n" + "["
-					+ testStep.getName() + "] in TestCase [" + getTestSuite().getProject().getName() + "->"
-					+ getTestSuite().getName() + "->" + getName() + "]", "Change TestStep name", name );
+			name = UISupport.prompt(
+					"TestStep name must be unique, please specify new name for step\n" + "[" + testStep.getName()
+							+ "] in TestCase [" + getTestSuite().getProject().getName() + "->" + getTestSuite().getName()
+							+ "->" + getName() + "]", "Change TestStep name", name );
 
 			if( name == null )
 				return false;
@@ -432,8 +433,8 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 
 	public WsdlTestStep addTestStep( String type, String name )
 	{
-		TestStepConfig newStepConfig = WsdlTestStepRegistry.getInstance().getFactory( type ).createNewTestStep( this,
-				name );
+		TestStepConfig newStepConfig = WsdlTestStepRegistry.getInstance().getFactory( type )
+				.createNewTestStep( this, name );
 		if( newStepConfig != null )
 		{
 			return addTestStep( newStepConfig );
@@ -456,8 +457,8 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 
 	public WsdlTestStep insertTestStep( String type, String name, int index )
 	{
-		TestStepConfig newStepConfig = WsdlTestStepRegistry.getInstance().getFactory( type ).createNewTestStep( this,
-				name );
+		TestStepConfig newStepConfig = WsdlTestStepRegistry.getInstance().getFactory( type )
+				.createNewTestStep( this, name );
 		if( newStepConfig != null )
 		{
 			return insertTestStep( newStepConfig, index, false );
@@ -530,7 +531,7 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 		if( ix == -1 )
 			testSteps.add( testStep );
 		else
-			testSteps.add( ix , testStep );
+			testSteps.add( ix, testStep );
 
 		testStep.afterLoad();
 
@@ -597,7 +598,7 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 			for( Iterator<SecurityScan> iterator = testStepChecks.iterator(); iterator.hasNext(); )
 			{
 				SecurityScan chk = iterator.next();
-				securityTest.removeSecurityScanWhenRemoveTestStep(  testStep, chk );
+				securityTest.removeSecurityScanWhenRemoveTestStep( testStep, chk );
 				iterator.remove();
 			}
 

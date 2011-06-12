@@ -358,8 +358,8 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 
 			TestStep testStep = node.getTestStep();
 
-			String[] availableScanNames = SoapUI.getSoapUICore().getSecurityScanRegistry().getAvailableSecurityScansNames(
-					testStep );
+			String[] availableScanNames = SoapUI.getSoapUICore().getSecurityScanRegistry()
+					.getAvailableSecurityScansNames( testStep );
 			availableScanNames = securityTest.getAvailableSecurityScanNames( testStep, availableScanNames );
 
 			if( availableScanNames == null || availableScanNames.length == 0 )
@@ -377,15 +377,15 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 				return;
 
 			SecurityScan securityScan = securityTest.addNewSecurityScan( testStep, name );
-			securityScan.setRunOnlyOnce( true );
-
-			securityTestTree.setSelectionPath( new TreePath( node.getPath() ) );
-
 			if( securityScan == null )
 			{
 				UISupport.showErrorMessage( "Failed to add security scan" );
 				return;
 			}
+
+			securityScan.setRunOnlyOnce( true );
+
+			securityTestTree.setSelectionPath( new TreePath( node.getPath() ) );
 
 			SecurityConfigurationDialog dialog = SoapUI.getSoapUICore().getSecurityScanRegistry().getUIBuilder()
 					.buildSecurityScanConfigurationDialog( ( SecurityScan )securityScan );
@@ -474,6 +474,11 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 
 		public void actionPerformed( ActionEvent e )
 		{
+			if( securityTest.isRunning() )
+			{
+				UISupport.showErrorMessage( "Can not delete SecurityScan while the SecurityTest is running" );
+				return;
+			}
 
 			if( securityTestTree.getSelectionCount() == 1 )
 			{
@@ -506,7 +511,6 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
 
 	public class EnableSecurityScans extends AbstractAction
 	{
-
 		EnableSecurityScans()
 		{
 			super( "Enable Scans" );

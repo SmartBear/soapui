@@ -31,12 +31,11 @@ import org.mortbay.util.IO;
 
 import com.eviware.soapui.SoapUI;
 
-public class Server extends org.mortbay.jetty.Server
+public class JettyServer extends org.mortbay.jetty.Server
 {
+	private Logger log = Logger.getLogger( JettyServer.class );
 
-	private Logger log = Logger.getLogger( Server.class );
-
-	public Server()
+	public JettyServer()
 	{
 		super();
 		if( SoapUI.getLogMonitor() == null || SoapUI.getLogMonitor().getLogArea( "jetty log" ) == null )

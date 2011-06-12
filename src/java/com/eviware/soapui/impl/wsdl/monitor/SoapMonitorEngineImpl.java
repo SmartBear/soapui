@@ -19,7 +19,7 @@ import org.mortbay.jetty.servlet.ServletHolder;
 
 import com.eviware.soapui.impl.wsdl.actions.monitor.SoapMonitorAction;
 import com.eviware.soapui.impl.wsdl.monitor.jettyproxy.ProxyServlet;
-import com.eviware.soapui.impl.wsdl.monitor.jettyproxy.Server;
+import com.eviware.soapui.impl.wsdl.monitor.jettyproxy.JettyServer;
 import com.eviware.soapui.impl.wsdl.monitor.jettyproxy.TunnelServlet;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.monitor.SoapUIJettyThreadPool;
@@ -31,7 +31,7 @@ public class SoapMonitorEngineImpl implements SoapMonitorEngine
 	private static final String ROOT = "/";
 	private static final String HTTP = "http://";
 	private static final String HTTPS = "https://";
-	Server server = new Server();
+	JettyServer server = new JettyServer();
 	SocketConnector connector = new SocketConnector();
 	private SslSocketConnector sslConnector;
 	private String sslEndpoint = null;
