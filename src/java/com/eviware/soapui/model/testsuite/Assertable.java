@@ -58,6 +58,8 @@ public interface Assertable
 
 	public ModelItem getModelItem();
 
+	public TestStep getTestStep();
+
 	public Interface getInterface();
 
 	public TestAssertion cloneAssertion( TestAssertion source, String name );

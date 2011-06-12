@@ -353,7 +353,7 @@ public class GroovyScriptAssertion extends WsdlMessageAssertion implements Reque
 
 			public void actionPerformed( ActionEvent e )
 			{
-				TestStep testStep = ( TestStep )getAssertable().getModelItem();
+				TestStep testStep = getAssertable().getTestStep();
 				MessageExchange exchange = null;
 
 				if( testStep instanceof WsdlTestRequestStep )

@@ -22,7 +22,6 @@ import javax.swing.Action;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.AbstractGroovyEditorModel;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.security.SecurityScan;
-import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.security.scan.GroovySecurityScan;
 import com.eviware.soapui.support.components.GroovyEditorComponent;
 
@@ -81,8 +80,7 @@ public class GroovySecurityScanPanel extends SecurityScanConfigPanel
 
 	protected GroovyEditorComponent buildSetupScriptPanel( SecurityScan securityCheck )
 	{
-		groovyEditor = new GroovyEditorComponent( new ScriptGroovyEditorModel( ( ( Assertable )securityCheck )
-				.getModelItem() ), null );
+		groovyEditor = new GroovyEditorComponent( new ScriptGroovyEditorModel( securityCheck.getModelItem() ), null );
 		groovyEditor.setPreferredSize( new Dimension( 385, 150 ) );
 		return groovyEditor;
 	}

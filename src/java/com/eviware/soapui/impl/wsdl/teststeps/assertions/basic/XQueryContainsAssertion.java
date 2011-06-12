@@ -68,7 +68,6 @@ import com.eviware.soapui.model.testsuite.AssertionException;
 import com.eviware.soapui.model.testsuite.RequestAssertion;
 import com.eviware.soapui.model.testsuite.ResponseAssertion;
 import com.eviware.soapui.model.testsuite.TestProperty;
-import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JUndoableTextArea;
@@ -421,7 +420,7 @@ public class XQueryContainsAssertion extends WsdlMessageAssertion implements Req
 			if( txt == null )
 				txt = pathArea == null ? "" : pathArea.getText();
 
-			WsdlTestRunContext context = new WsdlTestRunContext( ( TestStep )getAssertable().getModelItem() );
+			WsdlTestRunContext context = new WsdlTestRunContext( getAssertable().getTestStep() );
 
 			String expandedPath = PropertyExpander.expandProperties( context, txt.trim() );
 
@@ -563,8 +562,8 @@ public class XQueryContainsAssertion extends WsdlMessageAssertion implements Req
 
 			try
 			{
-				String msg = assertContent( getAssertable().getAssertableContent(), new WsdlTestRunContext(
-						( TestStep )getAssertable().getModelItem() ), "Response" );
+				String msg = assertContent( getAssertable().getAssertableContent(), new WsdlTestRunContext( getAssertable()
+						.getTestStep() ), "Response" );
 				UISupport.showInfoMessage( msg, "Success" );
 			}
 			catch( AssertionException e )
@@ -630,7 +629,7 @@ public class XQueryContainsAssertion extends WsdlMessageAssertion implements Req
 
 		if( StringUtils.hasContent( getPath() ) )
 		{
-			TestModelItem testStep = ( TestModelItem )getAssertable().getModelItem();
+			TestModelItem testStep = getAssertable().getTestStep();
 			TestProperty property = testStep instanceof WsdlTestRequestStep ? testStep.getProperty( "Response" )
 					: testStep.getProperty( "Request" );
 			result.add( new XPathReferenceImpl( "XQuery for " + getName() + " XQueryContainsAssertion in "
