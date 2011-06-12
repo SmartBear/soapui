@@ -76,6 +76,7 @@ import com.eviware.soapui.support.types.StringToStringsMap;
 import com.eviware.soapui.support.xml.XmlUtils;
 import com.teamdev.jxbrowser.Browser;
 import com.teamdev.jxbrowser.BrowserFactory;
+import com.teamdev.jxbrowser.BrowserServices;
 import com.teamdev.jxbrowser.BrowserType;
 import com.teamdev.jxbrowser.Configurable;
 import com.teamdev.jxbrowser.Feature;
@@ -93,15 +94,15 @@ import com.teamdev.jxbrowser.events.StatusListener;
 import com.teamdev.jxbrowser.mozilla.MozillaBrowser;
 import com.teamdev.jxbrowser.mozilla.MozillaCookieStorage;
 import com.teamdev.jxbrowser.prompt.DefaultPromptService;
+import com.teamdev.jxbrowser.proxy.AuthenticationHandler;
+import com.teamdev.jxbrowser.proxy.ProxyConfig;
+import com.teamdev.jxbrowser.proxy.ProxyServer;
+import com.teamdev.jxbrowser.proxy.ProxyServerLogin;
+import com.teamdev.jxbrowser.proxy.ServerType;
 import com.teamdev.jxbrowser.security.HttpSecurityAction;
 import com.teamdev.jxbrowser.security.HttpSecurityHandler;
 import com.teamdev.jxbrowser.security.SecurityProblem;
 import com.teamdev.jxbrowser1.mozilla.MozillaWebBrowser;
-import com.teamdev.xpcom.PoxyAuthenticationHandler;
-import com.teamdev.xpcom.ProxyConfiguration;
-import com.teamdev.xpcom.ProxyServerAuthInfo;
-import com.teamdev.xpcom.ProxyServerType;
-import com.teamdev.xpcom.Services;
 import com.teamdev.xpcom.Xpcom;
 import com.teamdev.xpcom.util.XPCOMManager;
 
@@ -837,19 +838,20 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 
 	public static void updateJXBrowserProxy()
 	{
-		ProxyConfiguration proxyConf = Services.getProxyConfiguration();
+		ProxyConfig proxyConf = BrowserServices.getInstance().getProxyConfig();
 		if( proxyConf == null )
 			return;
 
 		try
 		{
-			proxyConf.setType( ProxyConfiguration.MANUAL );
+			proxyConf.setAutoDetectForNetwork( false );
 
 			if( !proxyAuthenticationInitialized )
 			{
-				proxyConf.setPoxyAuthenticationHandler( ProxyServerType.HTTP, new PoxyAuthenticationHandler()
+				proxyConf.setAuthenticationHandler( ServerType.HTTP, new AuthenticationHandler()
 				{
-					public ProxyServerAuthInfo authenticationRequired()
+					@Override
+					public ProxyServerLogin authenticationRequired( ServerType arg0 )
 					{
 						Settings settings = SoapUI.getSettings();
 						PropertyExpansionContext context = null;
@@ -859,7 +861,7 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 						String proxyPassword = PropertyExpander.expandProperties( context,
 								settings.getString( ProxySettings.PASSWORD, null ) );
 
-						return new ProxyServerAuthInfo( proxyUsername, proxyPassword );
+						return new ProxyServerLogin( proxyUsername, proxyPassword );
 					}
 				} );
 
@@ -881,19 +883,14 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 				if( proxyPort == null )
 					proxyPort = PropertyExpander.expandProperties( context, settings.getString( ProxySettings.PORT, "" ) );
 
-				proxyConf.setHttpHost( proxyHost );
-				proxyConf.setHttpPort( Integer.parseInt( proxyPort ) );
+				proxyConf.setProxy( ServerType.HTTP, new ProxyServer( proxyHost, Integer.parseInt( proxyPort ) ) );
 				// check excludes
-				String[] excludes = PropertyExpander.expandProperties( context,
-						settings.getString( ProxySettings.EXCLUDES, "" ) ).split( "," );
-				for( String url : excludes )
-				{
-					proxyConf.setSkipProxyFor( url );
-				}
+				proxyConf.setExceptions( PropertyExpander.expandProperties( context,
+						settings.getString( ProxySettings.EXCLUDES, "" ) ) );
 			}
 			else
 			{
-				proxyConf.setHttpHost( "" );
+				proxyConf.setDirectConnection();
 			}
 		}
 		catch( Throwable e )
