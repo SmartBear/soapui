@@ -23,7 +23,6 @@ import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
@@ -37,7 +36,6 @@ import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.security.SecurityScan;
 import com.eviware.soapui.model.testsuite.TestStep;
-import com.eviware.soapui.model.util.ModelItemIconFactory;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.scan.AbstractSecurityScan;
 import com.eviware.soapui.security.support.ProgressBarSecurityScanAdapter;

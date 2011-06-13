@@ -29,10 +29,10 @@ import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunContext;
+import com.eviware.soapui.security.result.SecurityResult.ResultStatus;
 import com.eviware.soapui.security.result.SecurityScanRequestResult;
 import com.eviware.soapui.security.result.SecurityScanResult;
 import com.eviware.soapui.security.result.SecurityTestStepResult;
-import com.eviware.soapui.security.result.SecurityResult.ResultStatus;
 import com.eviware.soapui.security.scan.AbstractSecurityScanWithProperties;
 
 /**
@@ -42,25 +42,14 @@ import com.eviware.soapui.security.scan.AbstractSecurityScanWithProperties;
  * when test is done. 3. Canced when is canceled execution 4. Missing
  * Assertions/Parameters if assertions/parameters are missing in security scan.
  * 
- * Importance/power of states: 
- * 1. Missing Assertions 
- * 2. Missing Parameters 
- * 3. Cancel 
- * 4. Done 
- * 5. In Progress
- * 6. SKIPPED
+ * Importance/power of states: 1. Missing Assertions 2. Missing Parameters 3.
+ * Cancel 4. Done 5. In Progress 6. SKIPPED
  * 
- * Progress bar color can be: 
- * 1. OK 
- * 2. FAILED 
- * 3. MISSING_ASSERTION - same color
+ * Progress bar color can be: 1. OK 2. FAILED 3. MISSING_ASSERTION - same color
  * 
  * if parameters are missing.
  * 
- * Color power: 
- * 1. FAILED 
- * 2. MISSING_ASSERTION 
- * 3. OK
+ * Color power: 1. FAILED 2. MISSING_ASSERTION 3. OK
  * 
  */
 
@@ -151,6 +140,12 @@ public class ProgressBarSecurityTestStepAdapter
 
 			totalAlertsCounter = 0;
 			( ( DefaultTreeModel )tree.getModel() ).nodeChanged( node );
+
+			if( progressBar != null )
+			{
+				progressBar.setForeground( UNKNOWN_COLOR );
+				progressBar.setBackground( UNKNOWN_COLOR );
+			}
 		}
 
 		@Override
@@ -165,11 +160,10 @@ public class ProgressBarSecurityTestStepAdapter
 				{
 					SecurityTestStepResult results = securityTest.getSecurityTestStepResultMap().get( testStep );
 					/*
-					 * This is hack since SecurityTestStepResult.getStatus() do not 
+					 * This is hack since SecurityTestStepResult.getStatus() do not
 					 * returns real state of execution.
-					 *
-					 * SKIPPED state overides all except FAILED , which is wrong.
 					 * 
+					 * SKIPPED state overides all except FAILED , which is wrong.
 					 */
 					boolean skipped = results.getSecurityScanResultList().size() > 0;
 
