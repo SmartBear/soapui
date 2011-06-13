@@ -744,7 +744,7 @@
 		<dependency>
 			<groupId>teamdev</groupId>
 			<artifactId>jxbrowser</artifactId>
-			<version>2.8</version>
+			<version>2.8.28035</version>
 			<type>jar</type>
 			<properties>
 				<jnlp.jar>true</jnlp.jar>
@@ -753,19 +753,6 @@
 				<eclipse.jar>true</eclipse.jar>
 			</properties>
 		</dependency>
-		<!-- removed in jxbrowser 2.8 -->
-		<!-- dependency>
-			<groupId>teamdev</groupId>
-			<artifactId>jniwrap</artifactId>
-			<version>native</version>
-			<type>jar</type>
-			<properties>
-				<jnlp.jar>true</jnlp.jar>
-				<jnlp.extension.dir>.</jnlp.extension.dir>
-				<jnlp.extension.jnlp>teamdev.jnlp</jnlp.extension.jnlp>
-				<eclipse.jar>true</eclipse.jar>
-			</properties>
-		</dependency-->
 		<dependency>
 			<groupId>teamdev</groupId>
 			<artifactId>tuxpack</artifactId>
@@ -793,7 +780,7 @@
 		<dependency>
 			<groupId>teamdev</groupId>
 			<artifactId>xulrunner-windows</artifactId>
-			<version>2.8</version>
+			<version>2.8.28035</version>
 			<type>jar</type>
 			<properties>
 				<jnlp.jar>true</jnlp.jar>
@@ -805,7 +792,7 @@
 		<dependency>
 			<groupId>teamdev</groupId>
 			<artifactId>xulrunner-linux64</artifactId>
-			<version>2.8</version>
+			<version>2.8.28035</version>
 			<type>jar</type>
 			<properties>
 				<jnlp.jar>true</jnlp.jar>
@@ -817,7 +804,7 @@
 		<dependency>
 			<groupId>teamdev</groupId>
 			<artifactId>xulrunner-linux</artifactId>
-			<version>2.8</version>
+			<version>2.8.28035</version>
 			<type>jar</type>
 			<properties>
 				<jnlp.jar>true</jnlp.jar>
@@ -829,7 +816,7 @@
 		<dependency>
 			<groupId>teamdev</groupId>
 			<artifactId>xulrunner-mac</artifactId>
-			<version>2.8</version>
+			<version>2.8.28035</version>
 			<type>jar</type>
 			<properties>
 				<jnlp.jar>true</jnlp.jar>
@@ -841,7 +828,7 @@
 		<dependency>
 			<groupId>teamdev</groupId>
 			<artifactId>MozillaGlue</artifactId>
-			<version>jxbrowser-2.8</version>
+			<version>2.8.28035</version>
 			<type>jar</type>
 			<properties>
 				<jnlp.jar>true</jnlp.jar>
@@ -850,7 +837,7 @@
 		<dependency>
 			<groupId>teamdev</groupId>
 			<artifactId>MozillaInterfaces</artifactId>
-			<version>jxbrowser-2.8</version>
+			<version>2.8.28035</version>
 			<type>jar</type>
 			<properties>
 				<jnlp.jar>true</jnlp.jar>
@@ -859,7 +846,7 @@
 		<dependency>
 			<groupId>teamdev</groupId>
 			<artifactId>engine-gecko</artifactId>
-			<version>jxbrowser-2.8</version>
+			<version>2.8.28035</version>
 			<type>jar</type>
 			<properties>
 				<jnlp.jar>true</jnlp.jar>
@@ -868,7 +855,7 @@
 		<dependency>
 			<groupId>teamdev</groupId>
 			<artifactId>engine-ie</artifactId>
-			<version>jxbrowser-2.8</version>
+			<version>2.8.28035</version>
 			<type>jar</type>
 			<properties>
 				<jnlp.jar>true</jnlp.jar>
@@ -877,22 +864,12 @@
 		<dependency>
 			<groupId>teamdev</groupId>
 			<artifactId>engine-webkit</artifactId>
-			<version>jxbrowser-2.8</version>
+			<version>2.8.28035</version>
 			<type>jar</type>
 			<properties>
 				<jnlp.jar>true</jnlp.jar>
 			</properties>
 		</dependency>
-		<!-- removed in jxbrowser 2.8 -->
-		<!-- dependency>
-			<groupId>teamdev</groupId>
-			<artifactId>mshtml</artifactId>
-			<version>jxbrowser-2.8</version>
-			<type>jar</type>
-			<properties>
-				<jnlp.jar>true</jnlp.jar>
-			</properties>
-		</dependency-->
 		<dependency>
 			<groupId>teamdev</groupId>
 			<artifactId>slf4j-api</artifactId>
