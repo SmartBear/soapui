@@ -79,10 +79,10 @@
       </dirEntry>
       <dirEntry mountPoint="318" file="${compiler:DIST_ROOT}/lib" overwrite="4" shared="false" mode="644" uninstallMode="0" excludeSuffixes="" dirMode="755">
         <exclude>
-          <entry location="xulrunner-linux-2.8.jar" fileType="regular" />
-          <entry location="xulrunner-linux64-2.8.jar" fileType="regular" />
-          <entry location="xulrunner-mac-2.8.jar" fileType="regular" />
-          <entry location="xulrunner-windows-2.8.jar" fileType="regular" />
+          <entry location="xulrunner-linux-2.8.28035.jar" fileType="regular" />
+          <entry location="xulrunner-linux64-2.8.28035.jar" fileType="regular" />
+          <entry location="xulrunner-mac-2.8.28035.jar" fileType="regular" />
+          <entry location="xulrunner-windows-2.8.28035.jar" fileType="regular" />
         </exclude>
       </dirEntry>
       <dirEntry mountPoint="399" file="${compiler:DIST_ROOT}/licenses" overwrite="4" shared="false" mode="644" uninstallMode="0" excludeSuffixes="" dirMode="755">
@@ -159,8 +159,8 @@
       </dirEntry>
       <fileEntry mountPoint="2236" file="${compiler:DIST_ROOT}/lib/xulrunner-windows-2.8.28035.jar" overwrite="4" shared="false" mode="644" uninstallMode="0" />
       <fileEntry mountPoint="2237" file="${compiler:DIST_ROOT}/lib/xulrunner-mac-2.8.28035.jar" overwrite="4" shared="false" mode="644" uninstallMode="0" />
-      <fileEntry mountPoint="2238" file="${compiler:DIST_ROOT}/lib/xulrunner-linux64-2.8.28035.jar" overwrite="4" shared="false" mode="644" uninstallMode="0" />
       <fileEntry mountPoint="2238" file="${compiler:DIST_ROOT}/lib/xulrunner-linux-2.8.28035.jar" overwrite="4" shared="false" mode="644" uninstallMode="0" />
+      <fileEntry mountPoint="2238" file="${compiler:DIST_ROOT}/lib/xulrunner-linux64-2.8.28035.jar" overwrite="4" shared="false" mode="644" uninstallMode="0" />
       <dirEntry mountPoint="2392" file="${compiler:DIST_ROOT}/Tutorials" overwrite="4" shared="false" mode="644" uninstallMode="0" excludeSuffixes="" dirMode="755">
         <exclude />
       </dirEntry>
