@@ -313,6 +313,7 @@
             <j:file name="${maven.build.dir}/dist/bin/${sh.name}" omitXmlDeclaration="true">${shfile}</j:file>
         </j:forEach>
 
+<echo>copying from ${maven.build.dir}/docs/jnlp/${pom.currentVersion} to ${maven.build.dir}/dist/lib</echo>
         <ant:copy todir="${maven.build.dir}/dist/lib">
             <ant:fileset dir="${maven.build.dir}/docs/jnlp/${pom.currentVersion}" excludes="**/soapui-${pom.currentVersion}.jar">
             <!-- ant:exclude name="xulrunner*.jar"/-->
