@@ -1,6 +1,3 @@
 #Mon May 23 14:19:13 CEST 2011
 build.number=[internal]
->>>>>>>=.r41
 build.date=2011/05/23 14\:19
-<<<<<<<=.mine
-=\=\=\=\=\=\=
