@@ -12,7 +12,10 @@
 
 package com.eviware.soapui.support;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -44,6 +47,7 @@ import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.assertion.SensitiveInfoExposureAssertion;
 import com.eviware.soapui.security.panels.ProjectSensitiveInformationPanel;
+import com.eviware.soapui.security.scan.GroovySecurityScan;
 import com.eviware.soapui.settings.GlobalPropertySettings;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
@@ -141,8 +145,8 @@ public class SecurityScanUtil
 		Project project = ModelSupport.getModelItemProject( sensitiveInfoExposureAssertion );
 		AbstractWsdlModelItem<ModelItemConfig> modelItem = ( AbstractWsdlModelItem<ModelItemConfig> )project
 				.getModelItem();
-		XmlObjectConfigurationReader reader = new XmlObjectConfigurationReader(
-				( ( ProjectConfig )modelItem.getConfig() ).getSensitiveInformation() );
+		XmlObjectConfigurationReader reader = new XmlObjectConfigurationReader( ( ( ProjectConfig )modelItem.getConfig() )
+				.getSensitiveInformation() );
 		String[] strngArray = reader.readStrings( ProjectSensitiveInformationPanel.PROJECT_SPECIFIC_EXPOSURE_LIST );
 		if( strngArray != null )
 		{
@@ -207,8 +211,8 @@ public class SecurityScanUtil
 				String description = regex.getDescription();
 				for( String pattern : regex.getPatternList() )
 				{
-					globalSensitiveInformationExposureTokens.setPropertyValue( "~(?s).*" + pattern + ".*",
-							"[" + regex.getName() + "] " + description );
+					globalSensitiveInformationExposureTokens.setPropertyValue( "~(?s).*" + pattern + ".*", "["
+							+ regex.getName() + "] " + description );
 				}
 			}
 		}
@@ -236,4 +240,41 @@ public class SecurityScanUtil
 		return globalSensitiveInformationExposureTokens;
 	}
 
+	/**
+	 * checks if scan is applicable for provided testStep
+	 * 
+	 * @param testStep
+	 * @param scanName
+	 * @return
+	 */
+	public static boolean scanIsApplicableForTestStep( TestStep testStep, String scanName )
+	{
+		List<String> list = Arrays.asList( SoapUI.getSoapUICore().getSecurityScanRegistry()
+				.getAvailableSecurityScansNames( testStep ) );
+		return list.contains( scanName );
+	}
+
+	/**
+	 * @param excludeCustomScript
+	 * @return list of security scan names from SecurityScanRegistry optionally excluding Custom Script scan
+	 */
+	public static List<String> getAllSecurityScanNames( boolean excludeCustomScript )
+	{
+		if( excludeCustomScript )
+		{
+			List<String> newList = new ArrayList<String>();
+			for( String name : SoapUI.getSoapUICore().getSecurityScanRegistry().getAvailableSecurityScansNames() )
+			{
+				if( name.equals( GroovySecurityScan.NAME ) )
+					continue;
+
+				newList.add( name );
+			}
+			return newList;
+		}
+		else
+		{
+			return Arrays.asList( SoapUI.getSoapUICore().getSecurityScanRegistry().getAvailableSecurityScansNames() );
+		}
+	}
 }

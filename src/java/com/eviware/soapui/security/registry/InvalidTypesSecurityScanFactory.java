@@ -27,8 +27,7 @@ public class InvalidTypesSecurityScanFactory extends AbstractSecurityScanFactory
 	@Override
 	public boolean canCreate( TestStep testStep )
 	{
-		return testStep instanceof WsdlTestRequestStep || testStep instanceof RestTestRequestStep
-				|| testStep instanceof HttpTestRequestStep;
+		return testStep instanceof WsdlTestRequestStep || testStep instanceof RestTestRequestStep;
 	}
 
 	@Override
