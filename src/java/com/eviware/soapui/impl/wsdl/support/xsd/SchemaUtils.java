@@ -336,8 +336,11 @@ public class SchemaUtils
 	public static void getSchemas( String wsdlUrl, Map<String, XmlObject> existing, SchemaLoader loader, String tns )
 			throws SchemaException
 	{
+
 		if( existing.containsKey( wsdlUrl ) )
+		{
 			return;
+		}
 
 		// if( add )
 		// existing.put( wsdlUrl, null );
