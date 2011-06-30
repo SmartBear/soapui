@@ -541,7 +541,7 @@ public class Tools
 
 	public static String normalizeFileSeparators( String input )
 	{
-		if( input != null && input.trim().length() > 0 && input.startsWith( "file:" ) )
+		if( input != null && input.startsWith( "file:" ) )
 		{
 			input = input.replace( '/', File.separatorChar );
 			input = input.replace( '\\', File.separatorChar );
