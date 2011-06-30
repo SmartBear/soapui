@@ -38,7 +38,6 @@ import com.eviware.soapui.impl.wsdl.support.soap.Soap12HttpBindingImporter;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapJMSBindingImporter;
 import com.eviware.soapui.impl.wsdl.support.soap.TibcoSoapJMSBindingImporter;
 import com.eviware.soapui.settings.WsdlSettings;
-import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
 
 /**
@@ -83,7 +82,7 @@ public class WsdlImporter
 	public static WsdlInterface[] importWsdl( WsdlProject project, String wsdlUrl, QName bindingName,
 			WsdlLoader wsdlLoader ) throws Exception
 	{
-		wsdlUrl = Tools.normalizeFileSeparators( wsdlUrl );
+		//wsdlUrl = Tools.normalizeFileSeparators( wsdlUrl );
 		WsdlContext wsdlContext = new WsdlContext( wsdlUrl );
 		if( !wsdlContext.load( wsdlLoader ) )
 		{
