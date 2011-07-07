@@ -13,6 +13,7 @@
 package com.eviware.soapui.impl.rest;
 
 import static org.junit.Assert.assertEquals;
+import junit.framework.JUnit4TestAdapter;
 
 import org.junit.Test;
 
@@ -20,6 +21,11 @@ import com.eviware.soapui.impl.wsdl.WsdlProject;
 
 public class RestResourceTestCase
 {
+	public static junit.framework.Test suite()
+	{
+		return new JUnit4TestAdapter( RestResourceTestCase.class );
+	}
+
 	@Test
 	public void shouldGetTemplateParams() throws Exception
 	{
