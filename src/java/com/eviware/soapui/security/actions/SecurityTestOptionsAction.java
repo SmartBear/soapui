@@ -60,7 +60,7 @@ public class SecurityTestOptionsAction extends AbstractSoapUIAction<SecurityTest
 			} );
 			form.addCheckBox( FAIL_SECURITYTEST_ON_ERROR, "Fail SecurityTest if it has failed TestSteps" );
 
-			dialog = builder.buildDialog( builder.buildOkCancelHelpActions( HelpUrls.TESTCASEOPTIONS_HELP_URL ),
+			dialog = builder.buildDialog( builder.buildOkCancelHelpActions( HelpUrls.SECURITYTESTEDITOR_HELP_URL ),
 					"Specify general options for this SecurityTest", UISupport.OPTIONS_ICON );
 		}
 
