@@ -12,6 +12,8 @@
 
 package com.eviware.soapui.security;
 
+import junit.framework.JUnit4TestAdapter;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -24,11 +26,11 @@ import com.eviware.soapui.security.scan.GroovySecurityScan;
  */
 public class GroovySecurityScanTest extends AbstractSecurityTestCaseWithMockService
 {
+	public static junit.framework.Test suite()
+	{
+		return new JUnit4TestAdapter( GroovySecurityScanTest.class );
+	}
 
-	/**
-	 * 
-	 * @throws java.lang.Exception
-	 */
 	@Before
 	public void setUp() throws Exception
 	{
@@ -45,6 +47,7 @@ public class GroovySecurityScanTest extends AbstractSecurityTestCaseWithMockServ
 	}
 
 	@Test
+	// TODO add proper test
 	public void testLogTestEnded()
 	{
 		// SecurityTestRunnerImpl testRunner = new SecurityTestRunnerImpl(
@@ -60,6 +63,7 @@ public class GroovySecurityScanTest extends AbstractSecurityTestCaseWithMockServ
 	}
 
 	@Test
+	// TODO add proper test
 	public void testFinished()
 	{
 		// SecurityTestRunnerImpl testRunner = new SecurityTestRunnerImpl(
@@ -70,7 +74,6 @@ public class GroovySecurityScanTest extends AbstractSecurityTestCaseWithMockServ
 		// assertTrue( "Test Step failed so as GroovySecurityScan",
 		// !testRunner.getStatus().equals(
 		// TestRunner.Status.FINISHED ) );
-
 	}
 
 }

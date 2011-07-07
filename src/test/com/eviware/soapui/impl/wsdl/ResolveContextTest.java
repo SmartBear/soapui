@@ -12,44 +12,67 @@
 
 package com.eviware.soapui.impl.wsdl;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertTrue;
+import junit.framework.JUnit4TestAdapter;
+
+import org.junit.Test;
 
 import com.eviware.soapui.impl.wsdl.support.PathUtils;
 import com.eviware.soapui.support.Tools;
 
-public class ResolveContextTest extends TestCase
+public class ResolveContextTest
 {
-	public void testRelativizePath()
+	public static junit.framework.Test suite()
 	{
-		testFilePath( "test.txt", "c:\\dir\\test.txt", "c:\\dir" );
-		testFilePath( "dir2\\test.txt", "c:\\dir\\dir2\\test.txt", "c:\\dir" );
-		testFilePath( "..\\test.txt", "c:\\dir\\dir2\\test.txt", "c:\\dir\\dir2\\dir3" );
-		testFilePath( "dir\\test.txt", "c:\\dir\\test.txt", "c:\\" );
-		testFilePath( "..\\test.txt", "c:\\dir\\test.txt", "c:\\dir\\anotherDir" );
-		testFilePath( "..\\dir2\\test.txt", "c:\\dir\\dir2\\test.txt", "c:\\dir\\anotherDir" );
+		return new JUnit4TestAdapter( ResolveContextTest.class );
+	}
+
+	@Test
+	public void shouldRelativizePath()
+	{
+		assertTrue( testFilePath( "test.txt", "c:\\dir\\test.txt", "c:\\dir" ) );
+		assertTrue( testFilePath( "dir2\\test.txt", "c:\\dir\\dir2\\test.txt", "c:\\dir" ) );
+		assertTrue( testFilePath( "..\\test.txt", "c:\\dir\\dir2\\test.txt", "c:\\dir\\dir2\\dir3" ) );
+		assertTrue( testFilePath( "dir\\test.txt", "c:\\dir\\test.txt", "c:\\" ) );
+		assertTrue( testFilePath( "..\\test.txt", "c:\\dir\\test.txt", "c:\\dir\\anotherDir" ) );
+		assertTrue( testFilePath( "..\\dir2\\test.txt", "c:\\dir\\dir2\\test.txt", "c:\\dir\\anotherDir" ) );
 
 		testUrl( "test.txt", "http://www.test.com/dir/test.txt", "http://www.test.com/dir" );
 		testUrl( "dir2/test.txt", "http://www.test.com/dir/dir2/test.txt", "http://www.test.com/dir" );
 		testUrl( "../test.txt?test", "http://www.test.com/dir/dir2/test.txt?test", "http://www.test.com/dir/dir2/dir3" );
 	}
 
-	private void testFilePath( String relativePath, String absolutePath, String rootPath )
+	private boolean testFilePath( String relativePath, String absolutePath, String rootPath )
 	{
-		assertEquals( relativePath, PathUtils.relativize( absolutePath, rootPath ) );
+		Boolean rValue = relativePath.equals( PathUtils.relativize( absolutePath, rootPath ) );
+
+		if( !rValue )
+		{
+			return rValue;
+		}
 
 		if( !rootPath.endsWith( "\\" ) )
 			rootPath += "\\";
 
-		assertEquals( absolutePath, Tools.joinRelativeUrl( rootPath, relativePath ) );
+		rValue = absolutePath.equals( Tools.joinRelativeUrl( rootPath, relativePath ) );
+
+		return rValue;
 	}
 
-	private void testUrl( String relativePath, String absolutePath, String rootPath )
+	private boolean testUrl( String relativePath, String absolutePath, String rootPath )
 	{
-		assertEquals( relativePath, PathUtils.relativize( absolutePath, rootPath ) );
+		Boolean rValue = relativePath.equals( PathUtils.relativize( absolutePath, rootPath ) );
+
+		if( !rValue )
+		{
+			return rValue;
+		}
 
 		if( !rootPath.endsWith( "/" ) )
 			rootPath += "/";
 
-		assertEquals( absolutePath, Tools.joinRelativeUrl( rootPath, relativePath ) );
+		rValue = absolutePath.equals( Tools.joinRelativeUrl( rootPath, relativePath ) );
+
+		return rValue;
 	}
 }

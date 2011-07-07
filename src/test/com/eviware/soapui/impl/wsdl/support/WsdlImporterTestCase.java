@@ -12,8 +12,17 @@
 
 package com.eviware.soapui.impl.wsdl.support;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import javax.wsdl.BindingOperation;
 import javax.wsdl.Definition;
+
+import junit.framework.JUnit4TestAdapter;
+
+import org.junit.Test;
 
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
@@ -27,6 +36,12 @@ import com.eviware.soapui.support.TestCaseWithJetty;
 
 public class WsdlImporterTestCase extends TestCaseWithJetty
 {
+	public static junit.framework.Test suite()
+	{
+		return new JUnit4TestAdapter( WsdlImporterTestCase.class );
+	}
+
+	@Test
 	public void testOneWayOperationImport() throws Exception
 	{
 		WsdlProject project = new WsdlProject();

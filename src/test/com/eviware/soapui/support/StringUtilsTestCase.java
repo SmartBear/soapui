@@ -12,10 +12,20 @@
 
 package com.eviware.soapui.support;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import junit.framework.JUnit4TestAdapter;
 
-public class StringUtilsTestCase extends TestCase
+import org.junit.Test;
+
+public class StringUtilsTestCase
 {
+	public static junit.framework.Test suite()
+	{
+		return new JUnit4TestAdapter( StringUtilsTestCase.class );
+	}
+
+	@Test
 	public void testUnquote() throws Exception
 	{
 		assertEquals( "test", StringUtils.unquote( "\"test\"" ) );
@@ -26,6 +36,7 @@ public class StringUtilsTestCase extends TestCase
 		assertEquals( "test", StringUtils.unquote( "test" ) );
 	}
 
+	@Test
 	public void testQuote() throws Exception
 	{
 		assertNull( StringUtils.quote( null ) );
@@ -36,6 +47,7 @@ public class StringUtilsTestCase extends TestCase
 		assertEquals( "\"\"\"", StringUtils.quote( "\"" ) );
 	}
 
+	@Test
 	public void testCreateXmlName() throws Exception
 	{
 		assertEquals( "helloThere", StringUtils.createXmlName( "hello there" ) );
@@ -45,6 +57,7 @@ public class StringUtilsTestCase extends TestCase
 		assertEquals( "tb_table.column", StringUtils.createXmlName( "tb_table.column" ) );
 	}
 
+	@Test
 	public void testReplaceAll() throws Exception
 	{
 		assertEquals( "<a>\n\n</a>", "<a>\n<test>--remove--</test>\n</a>".replaceAll( "<(.+)>--remove--</(\\1)>", "" ) );

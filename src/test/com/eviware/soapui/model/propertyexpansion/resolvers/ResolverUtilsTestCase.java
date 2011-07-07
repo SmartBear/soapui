@@ -12,10 +12,19 @@
 
 package com.eviware.soapui.model.propertyexpansion.resolvers;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import junit.framework.JUnit4TestAdapter;
 
-public class ResolverUtilsTestCase extends TestCase
+import org.junit.Test;
+
+public class ResolverUtilsTestCase
 {
+	public static junit.framework.Test suite()
+	{
+		return new JUnit4TestAdapter( ResolverUtilsTestCase.class );
+	}
+
+	@Test
 	public void testExtractXPathPropertyValue() throws Exception
 	{
 		assertEquals( "audi", ResolverUtils.extractXPathPropertyValue( "<test><bil>audi</bil></test>", "//bil" ) );

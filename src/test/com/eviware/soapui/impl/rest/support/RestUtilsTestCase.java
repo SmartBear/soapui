@@ -12,9 +12,14 @@
 
 package com.eviware.soapui.impl.rest.support;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import java.io.File;
 
-import junit.framework.TestCase;
+import junit.framework.JUnit4TestAdapter;
+
+import org.junit.Test;
 
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
@@ -23,9 +28,16 @@ import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.rest.RestServiceFactory;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 
-public class RestUtilsTestCase extends TestCase
+public class RestUtilsTestCase
 {
-	public void testExtractTemplateParams() throws Exception
+
+	public static junit.framework.Test suite()
+	{
+		return new JUnit4TestAdapter( RestUtilsTestCase.class );
+	}
+
+	@Test
+	public void shouldExtractTemplateParams() throws Exception
 	{
 		String path = "/{id}/test/{test}/test";
 
@@ -35,7 +47,8 @@ public class RestUtilsTestCase extends TestCase
 		assertEquals( "test", params[1] );
 	}
 
-	public void testImportWadl() throws Exception
+	@Test
+	public void shouldImportWadl() throws Exception
 	{
 		WsdlProject project = new WsdlProject();
 		RestService service = ( RestService )project.addNewInterface( "Test", RestServiceFactory.REST_TYPE );

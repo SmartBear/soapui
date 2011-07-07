@@ -12,17 +12,26 @@
 
 package com.eviware.soapui.impl.wsdl;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.List;
 
-import junit.framework.TestCase;
+import junit.framework.JUnit4TestAdapter;
 
 import org.apache.xmlbeans.XmlCursor;
+import org.junit.Test;
 
 import com.eviware.soapui.config.TestCaseConfig;
 import com.eviware.soapui.config.TestStepConfig;
 
-public class MoveXmlTestCase extends TestCase
+public class MoveXmlTestCase
 {
+	public static junit.framework.Test suite()
+	{
+		return new JUnit4TestAdapter( MoveXmlTestCase.class );
+	}
+
+	@Test
 	public void testMoveXml() throws Exception
 	{
 		TestCaseConfig testCase = TestCaseConfig.Factory.newInstance();

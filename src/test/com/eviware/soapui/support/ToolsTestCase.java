@@ -12,11 +12,21 @@
 
 package com.eviware.soapui.support;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import junit.framework.JUnit4TestAdapter;
 
-public class ToolsTestCase extends TestCase
+import org.junit.Test;
+
+public class ToolsTestCase
 {
-	public void testTokenizeArgs() throws Exception
+	public static junit.framework.Test suite()
+	{
+		return new JUnit4TestAdapter( ToolsTestCase.class );
+	}
+
+	@Test
+	public void shouldTokenizeArgs() throws Exception
 	{
 		assertNull( Tools.tokenizeArgs( "" ) );
 

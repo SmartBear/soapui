@@ -12,27 +12,36 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import junit.framework.JUnit4TestAdapter;
+
+import org.junit.Before;
+import org.junit.Test;
 
 import com.eviware.soapui.config.PropertyTransferConfig;
 import com.eviware.soapui.impl.wsdl.WsdlSubmitContext;
 import com.eviware.soapui.model.support.DefaultTestStepProperty;
 
-public class PropertyTransferTestCase extends TestCase
+public class PropertyTransferTestCase
 {
+	public static junit.framework.Test suite()
+	{
+		return new JUnit4TestAdapter( PropertyTransferTestCase.class );
+	}
+
 	private PropertyTransfer transfer;
 	private DefaultTestStepProperty sourceProperty;
 	private DefaultTestStepProperty targetProperty;
 
-	protected void setUp() throws Exception
+	@Before
+	public void setUp() throws Exception
 	{
-		super.setUp();
-
 		transfer = new PropertyTransfer( null, PropertyTransferConfig.Factory.newInstance() );
 		sourceProperty = new DefaultTestStepProperty( "source", null );
 		targetProperty = new DefaultTestStepProperty( "target", null );
 	}
 
+	@Test
 	public void testStringToStringTransfer() throws Exception
 	{
 		PropertyTransfer transfer = new PropertyTransfer( null, PropertyTransferConfig.Factory.newInstance() );
@@ -45,6 +54,7 @@ public class PropertyTransferTestCase extends TestCase
 		assertEquals( sourceProperty.getValue(), targetProperty.getValue() );
 	}
 
+	@Test
 	public void testStringToXmlTransfer() throws Exception
 	{
 		sourceProperty.setValue( "audi" );
@@ -66,6 +76,7 @@ public class PropertyTransferTestCase extends TestCase
 		assertEquals( "<bil><name test=\"audi\">audi</name></bil>", targetProperty.getValue() );
 	}
 
+	@Test
 	public void testXmlToStringTransfer() throws Exception
 	{
 		sourceProperty.setValue( "<bil><name>audi</name></bil>" );
@@ -77,6 +88,7 @@ public class PropertyTransferTestCase extends TestCase
 		assertEquals( "audi", targetProperty.getValue() );
 	}
 
+	@Test
 	public void testXmlToStringNullTransfer() throws Exception
 	{
 		sourceProperty.setValue( "<bil></bil>" );
@@ -88,6 +100,7 @@ public class PropertyTransferTestCase extends TestCase
 		assertEquals( null, targetProperty.getValue() );
 	}
 
+	@Test
 	public void testTextXmlToXmlTransfer() throws Exception
 	{
 		sourceProperty.setValue( "<bil><name>audi</name></bil>" );
@@ -105,6 +118,7 @@ public class PropertyTransferTestCase extends TestCase
 		assertEquals( "<bil><name test=\"test\">audi</name></bil>", targetProperty.getValue() );
 	}
 
+	@Test
 	public void testTextContentXmlToXmlTransfer() throws Exception
 	{
 		sourceProperty.setValue( "<bil><name>audi</name></bil>" );
@@ -119,6 +133,7 @@ public class PropertyTransferTestCase extends TestCase
 		assertEquals( "<bil><name2>audi</name2></bil>", targetProperty.getValue() );
 	}
 
+	@Test
 	public void testTextXmlToXmlNullTransfer() throws Exception
 	{
 		sourceProperty.setValue( "<bil><name/></bil>" );
@@ -132,6 +147,7 @@ public class PropertyTransferTestCase extends TestCase
 		assertEquals( "<bil><name/></bil>", targetProperty.getValue() );
 	}
 
+	@Test
 	public void testAttributeXmlToXmlTransfer() throws Exception
 	{
 		sourceProperty.setValue( "<bil><name value=\"fiat\" value2=\"volvo\">alfa</name></bil>" );
@@ -156,6 +172,7 @@ public class PropertyTransferTestCase extends TestCase
 		assertEquals( "<bil><name test=\"volvo\">fiat</name></bil>", targetProperty.getValue() );
 	}
 
+	@Test
 	public void testElementXmlToXmlTransfer() throws Exception
 	{
 		sourceProperty.setValue( "<bil><name>audi</name></bil>" );
@@ -177,6 +194,7 @@ public class PropertyTransferTestCase extends TestCase
 		assertEquals( sourceProperty.getValue(), targetProperty.getValue() );
 	}
 
+	@Test
 	public void testElementWithNsXmlToXmlTransfer() throws Exception
 	{
 		sourceProperty.setValue( "<ns1:bil xmlns:ns1=\"ns1\"><ns1:name>audi</ns1:name></ns1:bil>" );

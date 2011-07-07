@@ -22,10 +22,18 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
-import junit.framework.TestCase;
+import junit.framework.JUnit4TestAdapter;
 
-public class MimeMessageTestCase extends TestCase
+import org.junit.Test;
+
+public class MimeMessageTestCase
 {
+	public static junit.framework.Test suite()
+	{
+		return new JUnit4TestAdapter( MimeMessageTestCase.class );
+	}
+
+	@Test
 	public void testMimeMessage() throws Exception
 	{
 		Session session = Session.getDefaultInstance( new Properties() );

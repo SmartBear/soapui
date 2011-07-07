@@ -12,12 +12,21 @@
 
 package com.eviware.soapui.impl.wsdl.actions.iface.tools.support;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import junit.framework.JUnit4TestAdapter;
+
+import org.junit.Test;
 
 import com.eviware.soapui.support.types.StringToStringMap;
 
-public class ArgumentBuilderTestCase extends TestCase
+public class ArgumentBuilderTestCase
 {
+	public static junit.framework.Test suite()
+	{
+		return new JUnit4TestAdapter( ArgumentBuilderTestCase.class );
+	}
+
+	@Test
 	public void testUnix() throws Exception
 	{
 		ArgumentBuilder builder = new ArgumentBuilder( new StringToStringMap() );

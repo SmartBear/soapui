@@ -12,6 +12,8 @@
 
 package com.eviware.soapui.impl.wsdl.support.xsd;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -19,7 +21,9 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
-import junit.framework.TestCase;
+import junit.framework.JUnit4TestAdapter;
+
+import org.junit.Test;
 
 import com.eviware.soapui.config.StringListConfig;
 
@@ -27,9 +31,15 @@ import com.eviware.soapui.config.StringListConfig;
  * 
  * @author lars
  */
-public class SettingUtilsTestCase extends TestCase
+public class SettingUtilsTestCase
 {
-	public void testqnameValues2String() throws Exception
+	public static junit.framework.Test suite()
+	{
+		return new JUnit4TestAdapter( SettingUtilsTestCase.class );
+	}
+
+	@Test
+	public void testQnameValues2String() throws Exception
 	{
 		LinkedHashMap<QName, String[]> valueMap = new LinkedHashMap<QName, String[]>();
 		valueMap.put( new QName( "x" ), new String[] { "1", "2", "3" } );

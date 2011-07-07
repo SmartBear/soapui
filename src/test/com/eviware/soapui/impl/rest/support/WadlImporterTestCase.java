@@ -12,14 +12,23 @@
 
 package com.eviware.soapui.impl.rest.support;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import junit.framework.JUnit4TestAdapter;
+
+import org.junit.Test;
 
 import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.rest.RestServiceFactory;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 
-public class WadlImporterTestCase extends TestCase
+public class WadlImporterTestCase
 {
+	public static junit.framework.Test suite()
+	{
+		return new JUnit4TestAdapter( WadlImporterTestCase.class );
+	}
+
+	@Test
 	public void testWadlImporter() throws Exception
 	{
 		WsdlProject project = new WsdlProject();

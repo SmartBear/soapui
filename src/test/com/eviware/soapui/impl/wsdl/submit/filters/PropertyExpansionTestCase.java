@@ -12,9 +12,11 @@
 
 package com.eviware.soapui.impl.wsdl.submit.filters;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import junit.framework.JUnit4TestAdapter;
 
 import org.apache.log4j.Logger;
+import org.junit.Test;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
@@ -29,8 +31,14 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.settings.GlobalPropertySettings;
 
-public class PropertyExpansionTestCase extends TestCase
+public class PropertyExpansionTestCase
 {
+	public static junit.framework.Test suite()
+	{
+		return new JUnit4TestAdapter( PropertyExpansionTestCase.class );
+	}
+
+	@Test
 	public void testExpansion() throws Exception
 	{
 		WsdlSubmitContext context = new WsdlSubmitContext( null );
@@ -50,6 +58,7 @@ public class PropertyExpansionTestCase extends TestCase
 		assertEquals( "", PropertyExpander.expandProperties( context, "${testa}" ) );
 	}
 
+	@Test
 	public void testRecursiveExpansion() throws Exception
 	{
 		WsdlSubmitContext context = new WsdlSubmitContext( null );
@@ -63,6 +72,7 @@ public class PropertyExpansionTestCase extends TestCase
 		assertEquals( "${exp}", PropertyExpander.expandProperties( context, "${exp}" ) );
 	}
 
+	@Test
 	public void testNestedExpansion() throws Exception
 	{
 		WsdlSubmitContext context = new WsdlSubmitContext( null );
@@ -81,6 +91,7 @@ public class PropertyExpansionTestCase extends TestCase
 		assertEquals( "hello", PropertyExpander.expandProperties( context, "${#testxml#${testxpath}}" ) );
 	}
 
+	@Test
 	public void testXPathExpansion() throws Exception
 	{
 		WsdlSubmitContext context = new WsdlSubmitContext( null );
@@ -89,6 +100,7 @@ public class PropertyExpansionTestCase extends TestCase
 		assertEquals( "hello", PropertyExpander.expandProperties( context, "${#test#//value/text()}" ) );
 	}
 
+	@Test
 	public void testScopedPropertyExpansion() throws Exception
 	{
 		WsdlProject project = new WsdlProject();

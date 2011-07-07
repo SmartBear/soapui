@@ -12,12 +12,21 @@
 
 package com.eviware.soapui.impl.wsdl.support;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import junit.framework.JUnit4TestAdapter;
+
+import org.junit.Test;
 
 import com.eviware.soapui.support.Tools;
 
-public class JoinRelativeUrlTestCase extends TestCase
+public class JoinRelativeUrlTestCase
 {
+	public static junit.framework.Test suite()
+	{
+		return new JUnit4TestAdapter( JoinRelativeUrlTestCase.class );
+	}
+
+	@Test
 	public void testJoin() throws Exception
 	{
 		assertEquals( "http://test:8080/my/root/test.xsd",

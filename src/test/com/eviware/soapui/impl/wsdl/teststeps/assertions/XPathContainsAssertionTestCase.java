@@ -12,32 +12,45 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps.assertions;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
-import junit.framework.TestCase;
+import junit.framework.JUnit4TestAdapter;
 
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
+import org.junit.Before;
+import org.junit.Test;
 
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.wsdl.WsdlSubmitContext;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.XPathContainsAssertion;
 import com.eviware.soapui.model.testsuite.AssertionException;
 
-public class XPathContainsAssertionTestCase extends TestCase
+public class XPathContainsAssertionTestCase
 {
+	public static junit.framework.Test suite()
+	{
+		return new JUnit4TestAdapter( XPathContainsAssertionTestCase.class );
+	}
+
 	private String testResponse;
 	private XPathContainsAssertion assertion;
 	private String testBody;
 
-	protected void setUp() throws Exception
+	@Before
+	public void setUp() throws Exception
 	{
 		testResponse = readResource( "/testResponse.xml" );
 		testBody = readResource( "/testBody.xml" );
 		assertion = new XPathContainsAssertion( TestAssertionConfig.Factory.newInstance(), null );
 	}
 
+	@Test
 	public void testCreate() throws Exception
 	{
 		TestAssertionConfig config = createConfig( "testPath", "testContent" );
@@ -51,6 +64,7 @@ public class XPathContainsAssertionTestCase extends TestCase
 		String str = conf.xmlText();
 	}
 
+	@Test
 	public void testFullContentMatch() throws Exception
 	{
 		assertion.setPath( "/" );
@@ -59,6 +73,7 @@ public class XPathContainsAssertionTestCase extends TestCase
 		assertNotNull( assertion.assertContent( testResponse, new WsdlSubmitContext( null ), "" ) );
 	}
 
+	@Test
 	public void testFullBodyMatch() throws Exception
 	{
 		assertion.setPath( "declare namespace urn='urn:schema:v1:companyservice:applications:bis.bonnier.se';"
@@ -69,6 +84,7 @@ public class XPathContainsAssertionTestCase extends TestCase
 		assertNotNull( assertion.assertContent( testResponse, new WsdlSubmitContext( null ), "" ) );
 	}
 
+	@Test
 	public void testAttributeMatch() throws Exception
 	{
 		assertion.setPath( "declare namespace env='http://schemas.xmlsoap.org/soap/envelope/';"
@@ -80,6 +96,7 @@ public class XPathContainsAssertionTestCase extends TestCase
 		assertNotNull( assertion.assertContent( testResponse, new WsdlSubmitContext( null ), "" ) );
 	}
 
+	@Test
 	public void testElementMatch() throws Exception
 	{
 		assertion.setPath( "declare namespace urn='urn:schema:v1:companyservice:applications:bis.bonnier.se';"
@@ -90,6 +107,7 @@ public class XPathContainsAssertionTestCase extends TestCase
 		assertNotNull( assertion.assertContent( testResponse, new WsdlSubmitContext( null ), "" ) );
 	}
 
+	@Test
 	public void testElementTextMatch() throws Exception
 	{
 		assertion.setPath( "declare namespace env='http://schemas.xmlsoap.org/soap/envelope/';"
@@ -101,6 +119,7 @@ public class XPathContainsAssertionTestCase extends TestCase
 		assertNotNull( assertion.assertContent( testResponse, new WsdlSubmitContext( null ), "" ) );
 	}
 
+	@Test
 	public void testFragmentMatch() throws Exception
 	{
 		assertion.setPath( "declare namespace urn='urn:schema:v1:companyservice:applications:bis.bonnier.se';"
@@ -110,6 +129,7 @@ public class XPathContainsAssertionTestCase extends TestCase
 		assertNotNull( assertion.assertContent( testResponse, new WsdlSubmitContext( null ), "" ) );
 	}
 
+	@Test
 	public void testFragmentWithCommentMatch() throws Exception
 	{
 		assertion.setPath( "declare namespace urn='urn:schema:v1:companyservice:applications:bis.bonnier.se';"
@@ -133,6 +153,7 @@ public class XPathContainsAssertionTestCase extends TestCase
 		assertNotNull( assertion.assertContent( testResponse, new WsdlSubmitContext( null ), "" ) );
 	}
 
+	@Test
 	public void testAnyFragmentMatch() throws Exception
 	{
 		assertion.setExpectedContent( readResource( "/testFragment.xml" ) );
@@ -141,6 +162,7 @@ public class XPathContainsAssertionTestCase extends TestCase
 		assertNotNull( assertion.assertContent( testResponse, new WsdlSubmitContext( null ), "" ) );
 	}
 
+	@Test
 	public void testLastElementTextMatch() throws Exception
 	{
 		assertion.setPath( "//company[last()]/companyName/text()" );
@@ -149,6 +171,7 @@ public class XPathContainsAssertionTestCase extends TestCase
 		assertNotNull( assertion.assertContent( testResponse, new WsdlSubmitContext( null ), "" ) );
 	}
 
+	@Test
 	public void testElementCountMatch() throws Exception
 	{
 		assertion.setPath( "count(//company)" );
@@ -157,6 +180,7 @@ public class XPathContainsAssertionTestCase extends TestCase
 		assertNotNull( assertion.assertContent( testResponse, new WsdlSubmitContext( null ), "" ) );
 	}
 
+	@Test
 	public void testAnyElementTextMatch() throws Exception
 	{
 		assertion.setPath( "declare namespace env='http://schemas.xmlsoap.org/soap/envelope/';"
@@ -168,6 +192,7 @@ public class XPathContainsAssertionTestCase extends TestCase
 		assertNotNull( assertion.assertContent( testResponse, new WsdlSubmitContext( null ), "" ) );
 	}
 
+	@Test
 	public void testAnyElementTextFail() throws Exception
 	{
 		assertion.setPath( "declare namespace env='http://schemas.xmlsoap.org/soap/envelope/';"
@@ -186,6 +211,7 @@ public class XPathContainsAssertionTestCase extends TestCase
 		}
 	}
 
+	@Test
 	public void testComplexMatch() throws Exception
 	{
 		String response = "<response><book>" + "<bookID>1012</bookID>" + "<author type=\"humanBeing\" href=\"#ID_1\"/>"

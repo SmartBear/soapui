@@ -12,22 +12,33 @@
 
 package com.eviware.soapui.support.xml;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import junit.framework.JUnit4TestAdapter;
 
-public class XPathDataTestCase extends TestCase
+import org.junit.Test;
+
+public class XPathDataTestCase
 {
+	public static junit.framework.Test suite()
+	{
+		return new JUnit4TestAdapter( XPathDataTestCase.class );
+	}
+
+	@Test
 	public void test1() throws Exception
 	{
 		XPathData data = new XPathData( "//in/name", false );
 		assertEquals( "//in/name", data.getFullPath() );
 	}
 
+	@Test
 	public void testText() throws Exception
 	{
 		XPathData data = new XPathData( "//in/name/text()", false );
 		assertEquals( "//in/name/text()", data.getFullPath() );
 	}
 
+	@Test
 	public void testCount() throws Exception
 	{
 		XPathData data = new XPathData( "count(//in/name)", false );
@@ -35,6 +46,7 @@ public class XPathDataTestCase extends TestCase
 		assertEquals( "count", data.getFunction() );
 	}
 
+	@Test
 	public void testCountWithNamespace() throws Exception
 	{
 		String namespace = "declare namespace tes='http://www.example.org/TestService/';\n";
@@ -43,30 +55,32 @@ public class XPathDataTestCase extends TestCase
 		assertEquals( "count", data.getFunction() );
 	}
 
+	@Test
 	public void testStripXPath() throws Exception
 	{
-		checkStripXPath( "//abc", "//abc" );
-		checkStripXPath( "//abc", "//abc[1]" );
-		checkStripXPath( "//abc", "//abc[a > 3]" );
-		checkStripXPath( "//abc", "//abc/text()" );
-		checkStripXPath( "//abc", "count(//abc)" );
-		checkStripXPath( "//abc", "count( //abc)" );
-		checkStripXPath( "//abc", "exists(//abc)" );
-		checkStripXPath( "//abc", "exists( //abc)" );
+		assertEquals( "//abc", checkStripXPath( "//abc" ) );
+		assertEquals( "//abc", checkStripXPath( "//abc[1]" ) );
+		assertEquals( "//abc", checkStripXPath( "//abc[a > 3]" ) );
+		assertEquals( "//abc", checkStripXPath( "//abc/text()" ) );
+		assertEquals( "//abc", checkStripXPath( "count(//abc)" ) );
+		assertEquals( "//abc", checkStripXPath( "count( //abc)" ) );
+		assertEquals( "//abc", checkStripXPath( "exists(//abc)" ) );
+		assertEquals( "//abc", checkStripXPath( "exists( //abc)" ) );
 
 		String ns = "declare namespace ns1='http://abc.com';\n";
-		checkStripXPath( ns + "//abc", ns + "//abc[1]" );
-		checkStripXPath( ns + "//abc", ns + "//abc/text()" );
-		checkStripXPath( ns + "//abc", ns + "exists(//abc)" );
+		assertEquals( ns + "//abc", checkStripXPath( ns + "//abc[1]" ) );
+		assertEquals( ns + "//abc", checkStripXPath( ns + "//abc/text()" ) );
+		assertEquals( ns + "//abc", checkStripXPath( ns + "exists(//abc)" ) );
 	}
 
-	private void checkStripXPath( String expected, String org )
+	private String checkStripXPath( String org )
 	{
 		XPathData xpath = new XPathData( org, true );
 		xpath.strip();
-		assertEquals( expected, xpath.getXPath() );
+		return xpath.getXPath();
 	}
 
+	@Test
 	public void testReplaceNameInPathOrQuery() throws Exception
 	{
 		String exp = "//test:test/bil[@name='test ']/@test > 0 and count(//test[bil/text()='test'] = 5";

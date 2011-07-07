@@ -12,11 +12,20 @@
 
 package com.eviware.soapui.impl.wsdl.support;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import junit.framework.JUnit4TestAdapter;
 
-public class PathUtilsTestCase extends TestCase
+import org.junit.Test;
+
+public class PathUtilsTestCase
 {
-	public void testRelativize() throws Exception
+	public static junit.framework.Test suite()
+	{
+		return new JUnit4TestAdapter( PathUtilsTestCase.class );
+	}
+
+	@Test
+	public void shouldRelativize() throws Exception
 	{
 		assertEquals( "c:\\test\\file.txt", PathUtils.relativize( "c:\\test\\file.txt", "d:\\" ) );
 		assertEquals( "c:/test/file.txt", PathUtils.relativize( "c:/test/file.txt", "d:\\" ) );

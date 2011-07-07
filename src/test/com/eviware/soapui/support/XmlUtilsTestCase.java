@@ -12,20 +12,30 @@
 
 package com.eviware.soapui.support;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import javax.xml.namespace.QName;
 
-import junit.framework.TestCase;
+import junit.framework.JUnit4TestAdapter;
 
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
+import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import com.eviware.soapui.support.xml.XmlUtils;
 
-public class XmlUtilsTestCase extends TestCase
+public class XmlUtilsTestCase
 {
+	public static junit.framework.Test suite()
+	{
+		return new JUnit4TestAdapter( XmlUtilsTestCase.class );
+	}
+
+	@Test
 	public void testGetElementIndex() throws Exception
 	{
 		Document dom = XmlUtils.parseXml( "<h1><p>p1</p><h2>lkj</h2><p>p2</p></h1>" );
@@ -44,6 +54,7 @@ public class XmlUtilsTestCase extends TestCase
 		assertEquals( "/h1[1]/p[2]", XmlUtils.getElementPath( ( Element )nl.item( 1 ) ) );
 	}
 
+	@Test
 	public void testTransferValues() throws Exception
 	{
 		String doc1 = "<h1><p>p1</p><h2 test=\"bil\">lkj</h2></h1>";
@@ -53,6 +64,7 @@ public class XmlUtilsTestCase extends TestCase
 		assertEquals( "<h1><p>p1</p><h2 test=\"bil\">lkj</h2><p>p2</p></h1>", result );
 	}
 
+	@Test
 	public void testTransferValuesWithList() throws Exception
 	{
 		String doc1 = "<h1><p>p1</p><p>p2</p><h2 test=\"bil\">lkj</h2></h1>";
@@ -62,6 +74,7 @@ public class XmlUtilsTestCase extends TestCase
 		assertEquals( "<h1><p>p1</p><p>p2</p><h2 test=\"bil\">lkj</h2><p>p2</p></h1>", result );
 	}
 
+	@Test
 	public void testTransferValuesNS() throws Exception
 	{
 		String doc1 = "<ns:h1 xmlns:ns=\"test\"><ns:p>p1</ns:p><ns:h2 test=\"bil\">lkj</ns:h2></ns:h1>";
@@ -72,6 +85,7 @@ public class XmlUtilsTestCase extends TestCase
 				result );
 	}
 
+	@Test
 	public void testCreateXPath() throws Exception
 	{
 		String str = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" "
@@ -95,6 +109,7 @@ public class XmlUtilsTestCase extends TestCase
 		assertEquals( xmlobj, xml.selectPath( ns + xpath )[0] );
 	}
 
+	@Test
 	public void testCreateXPath2() throws Exception
 	{
 		String str = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" "
@@ -110,6 +125,7 @@ public class XmlUtilsTestCase extends TestCase
 		assertEquals( xmlobj, xml.selectPath( xpath )[0] );
 	}
 
+	@Test
 	public void testGetFirstChildElementNS() throws XmlException
 	{
 		String xml = "<SofEnvelope><partnerid>test</partnerid><sessionID>asdadasdasd</sessionID></SofEnvelope>";
@@ -122,6 +138,5 @@ public class XmlUtilsTestCase extends TestCase
 
 		assertNotNull( XmlUtils.getFirstChildElementNS( documentElement, "", "partnerid" ) );
 		assertNotNull( XmlUtils.getFirstChildElementNS( documentElement, null, "partnerid" ) );
-
 	}
 }

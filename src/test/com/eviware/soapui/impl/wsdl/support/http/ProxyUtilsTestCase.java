@@ -12,10 +12,20 @@
 
 package com.eviware.soapui.impl.wsdl.support.http;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import junit.framework.JUnit4TestAdapter;
 
-public class ProxyUtilsTestCase extends TestCase
+import org.junit.Test;
+
+public class ProxyUtilsTestCase
 {
+	public static junit.framework.Test suite()
+	{
+		return new JUnit4TestAdapter( ProxyUtilsTestCase.class );
+	}
+
+	@Test
 	public void testExcludes()
 	{
 		assertFalse( ProxyUtils.excludes( new String[] { "" }, "www.test.com", 8080 ) );

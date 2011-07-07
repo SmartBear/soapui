@@ -12,9 +12,13 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps;
 
+import static org.junit.Assert.assertNotNull;
+
 import java.io.File;
 
-import junit.framework.TestCase;
+import junit.framework.JUnit4TestAdapter;
+
+import org.junit.Test;
 
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.panels.support.MockTestRunContext;
@@ -23,8 +27,14 @@ import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestSuite;
 
-public class WsdlRequestStepTestCase extends TestCase
+public class WsdlRequestStepTestCase
 {
+	public static junit.framework.Test suite()
+	{
+		return new JUnit4TestAdapter( WsdlRequestStepTestCase.class );
+	}
+
+	@Test
 	public void testAssert() throws Exception
 	{
 		WsdlProject project = new WsdlProject( "src" + File.separatorChar + "test-resources" + File.separatorChar
@@ -41,6 +51,5 @@ public class WsdlRequestStepTestCase extends TestCase
 
 		WsdlTestRequestStepResult wsdlResult = ( WsdlTestRequestStepResult )result;
 		assertNotNull( wsdlResult );
-		// assertEquals(TestStepResult.TestStepStatus.OK, wsdlResult.getStatus());
 	}
 }

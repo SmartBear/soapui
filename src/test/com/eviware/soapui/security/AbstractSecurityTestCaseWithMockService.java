@@ -12,10 +12,12 @@
 
 package com.eviware.soapui.security;
 
+import static org.junit.Assert.assertTrue;
+
 import java.io.File;
 import java.util.List;
 
-import junit.framework.TestCase;
+import junit.framework.JUnit4TestAdapter;
 
 import org.junit.After;
 import org.junit.Before;
@@ -37,8 +39,13 @@ import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestSuite;
 
-public class AbstractSecurityTestCaseWithMockService extends TestCase
+public class AbstractSecurityTestCaseWithMockService
 {
+	public static junit.framework.Test suite()
+	{
+		return new JUnit4TestAdapter( AbstractSecurityTestCaseWithMockService.class );
+	}
+
 	WsdlTestCase testCase;
 	WsdlTestStep testStep;
 	SecurityTestConfig config = SecurityTestConfig.Factory.newInstance();
@@ -97,9 +104,6 @@ public class AbstractSecurityTestCaseWithMockService extends TestCase
 		}
 	}
 
-	/**
-	 * @throws java.lang.Exception
-	 */
 	@After
 	public void tearDown() throws Exception
 	{
@@ -149,7 +153,7 @@ public class AbstractSecurityTestCaseWithMockService extends TestCase
 	@Test
 	public void testDummy()
 	{
-
 		assertTrue( "Dummy SecurityTest", true );
 	}
+
 }

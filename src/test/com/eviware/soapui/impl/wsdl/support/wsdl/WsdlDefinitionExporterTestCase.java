@@ -12,10 +12,16 @@
 
 package com.eviware.soapui.impl.wsdl.support.wsdl;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.io.File;
 import java.io.IOException;
 
+import junit.framework.JUnit4TestAdapter;
+
 import org.apache.xmlbeans.XmlException;
+import org.junit.Test;
 
 import com.eviware.soapui.impl.support.definition.export.WsdlDefinitionExporter;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
@@ -25,7 +31,13 @@ import com.eviware.soapui.support.TestCaseWithJetty;
 
 public class WsdlDefinitionExporterTestCase extends TestCaseWithJetty
 {
-	public void testSaveDefinition() throws Exception
+	public static junit.framework.Test suite()
+	{
+		return new JUnit4TestAdapter( WsdlDefinitionExporterTestCase.class );
+	}
+
+	@Test
+	public void shouldSaveDefinition() throws Exception
 	{
 		testLoader( "http://localhost:8082/test1/TestService.wsdl" );
 		testLoader( "http://localhost:8082/test2/TestService.wsdl" );

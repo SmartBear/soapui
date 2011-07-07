@@ -12,15 +12,26 @@
 
 package com.eviware.soapui.tools;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+
 import java.io.File;
 
-import junit.framework.TestCase;
+import junit.framework.JUnit4TestAdapter;
+
+import org.junit.Test;
 
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.support.Tools;
 
-public class TestCaseRunnerTestCase extends TestCase
+public class TestCaseRunnerTestCase
 {
+	public static junit.framework.Test suite()
+	{
+		return new JUnit4TestAdapter( TestCaseRunnerTestCase.class );
+	}
+
+	@Test
 	public void testReplaceHost() throws Exception
 	{
 		assertEquals( "http://test2:8080/test", Tools.replaceHost( "http://test:8080/test", "test2" ) );
@@ -36,6 +47,7 @@ public class TestCaseRunnerTestCase extends TestCase
 		assertEquals( "http://test2:8081/test", Tools.replaceHost( "http://test:8080/test", "test2:8081" ) );
 	}
 
+	@Test
 	public void testInvalidTestCaseName() throws Exception
 	{
 		SoapUITestCaseRunner runner = new SoapUITestCaseRunner();
@@ -56,6 +68,7 @@ public class TestCaseRunnerTestCase extends TestCase
 		assertFalse( failed );
 	}
 
+	@Test
 	public void testPropertyExpansionInOutputFolder() throws Exception
 	{
 		SoapUITestCaseRunner runner = new SoapUITestCaseRunner();
@@ -67,6 +80,7 @@ public class TestCaseRunnerTestCase extends TestCase
 		assertEquals( "/dev/test", runner.getAbsoluteOutputFolder( project ) );
 	}
 
+	@Test
 	public void testInvalidTestCaseWithValidTestSuiteName() throws Exception
 	{
 		SoapUITestCaseRunner runner = new SoapUITestCaseRunner();
@@ -89,6 +103,7 @@ public class TestCaseRunnerTestCase extends TestCase
 		assertFalse( failed );
 	}
 
+	@Test
 	public void testInvalidTestSuiteName() throws Exception
 	{
 		SoapUITestCaseRunner runner = new SoapUITestCaseRunner();
@@ -109,6 +124,7 @@ public class TestCaseRunnerTestCase extends TestCase
 		assertFalse( failed );
 	}
 
+	@Test
 	public void testTestCaseRunner() throws Exception
 	{
 		SoapUITestCaseRunner runner = new SoapUITestCaseRunner();
@@ -116,13 +132,13 @@ public class TestCaseRunnerTestCase extends TestCase
 		// assertTrue( runner.run() );
 	}
 
+	@Test
 	public void testValidTestSuiteAndTestCaseName() throws Exception
 	{
 		SoapUITestCaseRunner runner = new SoapUITestCaseRunner();
 		runner.setProjectFile( new File( "src/test-resources/sample-soapui-project.xml" ).toURI().toString() );
 		runner.setTestSuite( "Test Suite" );
 		runner.setTestCase( "Test Conversions" );
-
 		// assertTrue( runner.run() );
 	}
 }

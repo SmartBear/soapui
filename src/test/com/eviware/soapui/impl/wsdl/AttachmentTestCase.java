@@ -12,15 +12,25 @@
 
 package com.eviware.soapui.impl.wsdl;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.File;
 
-import junit.framework.TestCase;
+import junit.framework.JUnit4TestAdapter;
+
+import org.junit.Test;
 
 import com.eviware.soapui.impl.WsdlInterfaceFactory;
 
-public class AttachmentTestCase extends TestCase
+public class AttachmentTestCase
 {
-	public void test() throws Exception
+	public static junit.framework.Test suite()
+	{
+		return new JUnit4TestAdapter( AttachmentTestCase.class );
+	}
+
+	@Test
+	public void shouldHaveAttachments() throws Exception
 	{
 		String wsdlUrl = new File( "src/test-resources/attachment-test.wsdl" ).toURI().toURL().toString();
 		WsdlProject project = new WsdlProject();

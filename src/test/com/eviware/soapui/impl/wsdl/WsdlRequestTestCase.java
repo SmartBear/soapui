@@ -12,12 +12,23 @@
 
 package com.eviware.soapui.impl.wsdl;
 
+import static org.junit.Assert.assertNotNull;
+import junit.framework.JUnit4TestAdapter;
+
+import org.junit.Test;
+
 import com.eviware.soapui.impl.WsdlInterfaceFactory;
 import com.eviware.soapui.model.iface.Response;
 import com.eviware.soapui.support.TestCaseWithJetty;
 
 public class WsdlRequestTestCase extends TestCaseWithJetty
 {
+	public static junit.framework.Test suite()
+	{
+		return new JUnit4TestAdapter( WsdlRequestTestCase.class );
+	}
+
+	@Test
 	public void testRequest() throws Exception
 	{
 		// create new project
@@ -43,9 +54,9 @@ public class WsdlRequestTestCase extends TestCaseWithJetty
 		Response response = submit.getResponse();
 
 		// print the response
-		// String content = response.getContentAsString();
+		String content = response.getContentAsString();
 		// System.out.println( content );
-		// assertNotNull( content );
+		assertNotNull( content );
 	}
 	/*
 	 * public void testMemory() throws Exception { try { // create new project

@@ -12,16 +12,26 @@
 
 package com.eviware.soapui.impl.wsdl;
 
+import static org.junit.Assert.assertNotNull;
+
 import java.io.File;
 
-import junit.framework.TestCase;
+import junit.framework.JUnit4TestAdapter;
+
+import org.junit.Test;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.model.workspace.Workspace;
 import com.eviware.soapui.model.workspace.WorkspaceFactory;
 
-public class WorkspaceTestCase extends TestCase
+public class WorkspaceTestCase
 {
+	public static junit.framework.Test suite()
+	{
+		return new JUnit4TestAdapter( WorkspaceTestCase.class );
+	}
+
+	@Test
 	public void testWorkspaceImpl() throws Exception
 	{
 		Workspace workspace = WorkspaceFactory.getInstance().openWorkspace(
@@ -29,7 +39,7 @@ public class WorkspaceTestCase extends TestCase
 
 		for( int c = 0; c < workspace.getProjectCount(); c++ )
 		{
-			System.out.println( workspace.getProjectAt( c ).getName() );
+			assertNotNull( workspace.getProjectAt( c ).getName() );
 		}
 	}
 }

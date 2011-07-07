@@ -12,8 +12,11 @@
 
 package com.eviware.soapui.support;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertTrue;
+import junit.framework.JUnit4TestAdapter;
 
+import org.junit.Before;
+import org.junit.Test;
 import org.mortbay.jetty.Handler;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.handler.DefaultHandler;
@@ -22,11 +25,17 @@ import org.mortbay.jetty.handler.ResourceHandler;
 
 import com.eviware.soapui.SoapUI;
 
-public class TestCaseWithJetty extends TestCase
+public class TestCaseWithJetty
 {
+	public static junit.framework.Test suite()
+	{
+		return new JUnit4TestAdapter( TestCaseWithJetty.class );
+	}
+
 	private static Server server;
 
-	protected void setUp() throws Exception
+	@Before
+	public synchronized void setUp() throws Exception
 	{
 		if( server != null )
 		{
@@ -51,8 +60,9 @@ public class TestCaseWithJetty extends TestCase
 		}
 	}
 
+	@Test
 	public void testDummy() throws Exception
 	{
-		assertTrue( 1 == 1 );
+		assertTrue( true );
 	}
 }

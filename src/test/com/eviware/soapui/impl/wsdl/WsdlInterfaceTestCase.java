@@ -12,16 +12,26 @@
 
 package com.eviware.soapui.impl.wsdl;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import junit.framework.JUnit4TestAdapter;
+
+import org.junit.Before;
+import org.junit.Test;
 
 import com.eviware.soapui.config.WsdlInterfaceConfig;
 
-public class WsdlInterfaceTestCase extends TestCase
+public class WsdlInterfaceTestCase
 {
+	public static junit.framework.Test suite()
+	{
+		return new JUnit4TestAdapter( WsdlInterfaceTestCase.class );
+	}
+
 	private WsdlProject project;
 	private WsdlInterfaceConfig interfaceConfig;
 	private WsdlInterface iface;
 
+	@Before
 	public void setUp() throws Exception
 	{
 		project = new WsdlProject();
@@ -31,6 +41,7 @@ public class WsdlInterfaceTestCase extends TestCase
 		assertEquals( 0, iface.getEndpoints().length );
 	}
 
+	@Test
 	public void testAddEndpoints() throws Exception
 	{
 		iface.addEndpoint( "testEndpoint" );
@@ -47,6 +58,7 @@ public class WsdlInterfaceTestCase extends TestCase
 		assertEquals( "testEndpoint2", iface.getEndpoints()[1] );
 	}
 
+	@Test
 	public void testRemoveEndpoints() throws Exception
 	{
 		iface.addEndpoint( "testEndpoint" );

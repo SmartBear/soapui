@@ -11,16 +11,23 @@
  */
 package com.eviware.soapui.security.boundary;
 
+import static org.junit.Assert.assertTrue;
+
 import java.text.ParseException;
 import java.util.Calendar;
 
-import junit.framework.TestCase;
+import junit.framework.JUnit4TestAdapter;
 
 import org.junit.Before;
 import org.junit.Test;
 
-public class DateBoundaryTest extends TestCase
+public class DateBoundaryTest
 {
+	public static junit.framework.Test suite()
+	{
+		return new JUnit4TestAdapter( DateBoundaryTest.class );
+	}
+
 	DateTimeBoundary dateBoundary;
 	String today;
 
@@ -75,8 +82,4 @@ public class DateBoundaryTest extends TestCase
 		assertTrue( calendar1.after( calendar2 ) );
 	}
 
-	public void testTrue() throws Exception
-	{
-		assertTrue( true );
-	}
 }

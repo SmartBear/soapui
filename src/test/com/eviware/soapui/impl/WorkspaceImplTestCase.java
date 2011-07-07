@@ -14,13 +14,22 @@ package com.eviware.soapui.impl;
 
 import java.io.File;
 
+import junit.framework.JUnit4TestAdapter;
 import junit.framework.TestCase;
+
+import org.junit.Before;
+import org.junit.Test;
 
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 
 public class WorkspaceImplTestCase extends TestCase
 {
-	@Override
+	public static junit.framework.Test suite()
+	{
+		return new JUnit4TestAdapter( WorkspaceImplTestCase.class );
+	}
+
+	@Before
 	protected void setUp() throws Exception
 	{
 		File file = new File( "test-workspace.xml" );
@@ -32,6 +41,7 @@ public class WorkspaceImplTestCase extends TestCase
 			file.delete();
 	}
 
+	@Test
 	public void testProjectRoot() throws Exception
 	{
 		File wsFile = new File( "test-workspace.xml" );

@@ -12,20 +12,33 @@
 
 package com.eviware.soapui.impl.wsdl.support;
 
+import static org.junit.Assert.assertNotNull;
+
 import java.io.File;
 
-import junit.framework.TestCase;
+import junit.framework.JUnit4TestAdapter;
+
+import org.apache.xmlbeans.SchemaTypeSystem;
+import org.junit.Test;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.support.wsdl.UrlWsdlLoader;
 import com.eviware.soapui.impl.wsdl.support.xsd.SchemaUtils;
 
-public class SchemaUtilsDefaultNSTestCase extends TestCase
+public class SchemaUtilsDefaultNSTestCase
 {
+	public static junit.framework.Test suite()
+	{
+		return new JUnit4TestAdapter( SchemaUtilsDefaultNSTestCase.class );
+	}
+
+	@Test
 	public void testLoadNS() throws Exception
 	{
 		SoapUI.initDefaultCore();
 		File file = new File( "src\\test-resources\\chameleon\\chameleon.wsdl" );
-		SchemaUtils.loadSchemaTypes( file.toURL().toString(), new UrlWsdlLoader( file.toURL().toString() ) );
+		SchemaTypeSystem sts = SchemaUtils.loadSchemaTypes( file.toURI().toURL().toString(), new UrlWsdlLoader( file
+				.toURI().toURL().toString() ) );
+		assertNotNull( sts );
 	}
 }
