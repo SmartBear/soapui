@@ -12,13 +12,16 @@
 
 package com.eviware.soapui.impl.rest;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
 
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 
-public class RestResourceTestCase extends TestCase
+public class RestResourceTestCase
 {
-	public void testGetTemplateParams() throws Exception
+	@Test
+	public void shouldGetTemplateParams() throws Exception
 	{
 		WsdlProject project = new WsdlProject();
 		RestService restService = ( RestService )project.addNewInterface( "Test", RestServiceFactory.REST_TYPE );

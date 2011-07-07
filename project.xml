@@ -202,6 +202,7 @@
 			<properties>
 				<jnlp.jar>true</jnlp.jar>
 			</properties>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>fife</groupId>
