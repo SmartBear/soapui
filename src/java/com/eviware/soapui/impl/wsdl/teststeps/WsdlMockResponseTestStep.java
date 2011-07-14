@@ -1447,7 +1447,10 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 				else
 				{
 					initTestMockResponse( runContext );
-					mockRunListener.setWaiting( true );
+					if( mockRunListener != null )
+					{
+						mockRunListener.setWaiting( true );
+					}
 				}
 			}
 		}
