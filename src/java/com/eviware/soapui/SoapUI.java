@@ -722,6 +722,12 @@ public class SoapUI
 		{
 			soapuiRunner.run();
 		}
+		SoapUIVersionUpdate.getLatestVersionAvailable();
+		if( SoapUIVersionUpdate.isNewMajorReleaseAvailable() )
+		{
+			SoapUIVersionUpdate.promptForNewVersionDownload();
+		}
+
 	}
 
 	public static String[] getMainArgs()
@@ -1375,9 +1381,7 @@ public class SoapUI
 				SoapUI.logError( e1 );
 			}
 
-			UISupport.showExtendedInfo(
-					"About soapUI",
-					null,
+			UISupport.showExtendedInfo( "About soapUI", null,
 					"<html><body><p align=center> <font face=\"Verdana,Arial,Helvetica\"><strong><img src=\"" + splashURI
 							+ "\"><br>soapUI " + SOAPUI_VERSION + ", copyright (C) 2004-2011 eviware software ab<br>"
 							+ "<a href=\"http://www.soapui.org\">http://www.soapui.org</a> | "
