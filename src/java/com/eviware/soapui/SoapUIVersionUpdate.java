@@ -11,11 +11,17 @@
  */
 package com.eviware.soapui;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.net.URL;
 
+import javax.swing.AbstractAction;
+import javax.swing.BorderFactory;
+import javax.swing.JDialog;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -24,24 +30,21 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
-import com.eviware.soapui.impl.wsdl.actions.support.OpenUrlAction;
 import com.eviware.soapui.support.StringUtils;
+import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.action.swing.ActionList;
-import com.eviware.soapui.support.action.swing.DefaultActionList;
-import com.eviware.soapui.support.xml.XmlUtils;
+import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.x.form.XFormDialog;
-import com.eviware.x.form.support.ADialogBuilder;
-import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AForm;
-import com.eviware.x.form.support.AField.AFieldType;
 
 public class SoapUIVersionUpdate
 {
-	private final static String MAJOR_VERSION = "major";
-	private final static String MINOR_VERSION = "minor";
+	private static final String MAJOR_VERSION = "major";
+	private static final String MINOR_VERSION = "minor";
+	private static final String LATEST_VERSION_XML_LOCATION = "http://www.soapui.org/version/soapui-latest-version.xml";
 
+	//	JDialog dialog
+
+	XFormDialog formDialog;
 	private static String latestVersion;
 	private static String releaseNotes;
 	private static String versionType;
@@ -56,33 +59,16 @@ public class SoapUIVersionUpdate
 
 	}
 
-	public static void getLatestVersionAvailable2()
-	{
-		InputStream in;
-		try
-		{
-			File file = new File( "E:\\eviware\\soapui-version.xml" );
-			in = new FileInputStream( file );
-			Document doc = XmlUtils.parse( in );
-			doc.getDocumentElement().normalize();
-			NodeList nodeLst = doc.getElementsByTagName( "version" );
-		}
-		catch( FileNotFoundException e )
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-	}
-
 	public static void getLatestVersionAvailable()
 	{
 		try
 		{
-			File file = new File( "E:\\eviware\\soapui-version.xml" );
+			//			File file = new File( LATEST_VERSION_XML_LOCATION );
+
+			URL versionUrl = new URL( LATEST_VERSION_XML_LOCATION );
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 			DocumentBuilder db = dbf.newDocumentBuilder();
-			Document doc = db.parse( file );
+			Document doc = db.parse( versionUrl.openStream() );
 			doc.getDocumentElement().normalize();
 			NodeList nodeLst = doc.getElementsByTagName( "version" );
 
@@ -141,24 +127,84 @@ public class SoapUIVersionUpdate
 		return latestVersion;
 	}
 
-	public static boolean promptForNewVersionDownload()
+	public static void showNewVersionDownloadDialog()
 	{
 
-		ActionList actions = new DefaultActionList();
-		actions.addAction( new ShowOnlineHelpAction( "http://www.eviware.com/nightly-builds" ) );
-		//		actions.addAction( createBuyLicenseAction() );
-		actions.addAction( new OpenUrlAction( "Download latest version", "ccc" ) );
-		XFormDialog dialog = ADialogBuilder.buildDialog( Form.class, actions );
-		dialog.show();
+		JPanel versionUpdatePanel = new JPanel( new BorderLayout() );
+		JDialog dialog = new JDialog();
+		versionUpdatePanel.setBorder( BorderFactory.createEmptyBorder( 3, 3, 3, 3 ) );
+		versionUpdatePanel.add(
+				UISupport.buildDescription( "New Version of soapUI is Available", "soapUI update available", null ),
+				BorderLayout.NORTH );
+		JTextArea text = new JTextArea( getReleaseNotes() );
+		text.setEditable( false );
+		text.setBorder( BorderFactory.createLineBorder( Color.black ) );
+		versionUpdatePanel.add( text, BorderLayout.CENTER );
+		JXToolBar toolbar = UISupport.createToolbar();
+		toolbar.add( new IgnoreUpdateAction() );
+		toolbar.addGlue();
+		toolbar.addSeparator();
+		toolbar.add( new RemindLaterAction() );
+		toolbar.add( new OpenDownloadUrlAction( "Download latest version", "http://www.eviware.com/nightly-builds",
+				dialog ) );
+		versionUpdatePanel.add( toolbar, BorderLayout.SOUTH );
+		dialog.setTitle( "New Version Update" );
+		dialog.setIconImage( null );
 
-		return false;
+		dialog.setModal( true );
+		dialog.getContentPane().add( versionUpdatePanel );
+		dialog.setSize( new Dimension( 500, 400 ) );
+		UISupport.centerDialog( dialog, SoapUI.getFrame() );
+		dialog.setVisible( true );
+		//TODO position window
 	}
 
-	@AForm( description = "Enter soapUI Pro license data as obtained at purchase", name = "soapUI Pro License", helpUrl = "", icon = UISupport.TOOL_ICON_PATH )
-	public interface Form
+	protected static class IgnoreUpdateAction extends AbstractAction
 	{
-		@AField( description = "The license file", name = "License File", type = AFieldType.FILE )
-		public final static String LICENSEFILE = "License File";
+		public IgnoreUpdateAction()
+		{
+			super( "Ignore This Update" );
+		}
+
+		public void actionPerformed( ActionEvent e )
+		{
+			//TODO implement action
+		}
+	}
+
+	protected static class RemindLaterAction extends AbstractAction
+	{
+		public RemindLaterAction()
+		{
+			super( "Remind Me Later" );
+		}
+
+		public void actionPerformed( ActionEvent e )
+		{
+			//TODO implement action
+		}
+	}
+
+	public static class OpenDownloadUrlAction extends AbstractAction
+	{
+		private final String url;
+		private JDialog dialog;
+
+		public OpenDownloadUrlAction( String title, String url, JDialog dialog )
+		{
+			super( title );
+			this.url = url;
+			this.dialog = dialog;
+		}
+
+		public void actionPerformed( ActionEvent e )
+		{
+			if( url == null )
+				UISupport.showErrorMessage( "Missing url" );
+			else
+				Tools.openURL( url );
+			dialog.setVisible( false );
+		}
 	}
 
 }
