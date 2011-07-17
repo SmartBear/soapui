@@ -15,12 +15,15 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.io.File;
+import java.io.FileInputStream;
 import java.net.URL;
 
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -64,11 +67,13 @@ public class SoapUIVersionUpdate
 		try
 		{
 			//			File file = new File( LATEST_VERSION_XML_LOCATION );
+			File file = new File( "E:\\eviware\\soapui-version.xml" );
+			FileInputStream in = new FileInputStream( file );
 
 			URL versionUrl = new URL( LATEST_VERSION_XML_LOCATION );
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 			DocumentBuilder db = dbf.newDocumentBuilder();
-			Document doc = db.parse( versionUrl.openStream() );
+			Document doc = db.parse( in );
 			doc.getDocumentElement().normalize();
 			NodeList nodeLst = doc.getElementsByTagName( "version" );
 
@@ -133,13 +138,13 @@ public class SoapUIVersionUpdate
 		JPanel versionUpdatePanel = new JPanel( new BorderLayout() );
 		JDialog dialog = new JDialog();
 		versionUpdatePanel.setBorder( BorderFactory.createEmptyBorder( 3, 3, 3, 3 ) );
-		versionUpdatePanel.add(
-				UISupport.buildDescription( "New Version of soapUI is Available", "soapUI update available", null ),
-				BorderLayout.NORTH );
+		versionUpdatePanel.add( UISupport.buildDescription( "New Version of soapUI is Available",
+				"soapUI update available", null ), BorderLayout.NORTH );
 		JTextArea text = new JTextArea( getReleaseNotes() );
 		text.setEditable( false );
 		text.setBorder( BorderFactory.createLineBorder( Color.black ) );
-		versionUpdatePanel.add( text, BorderLayout.CENTER );
+		JScrollPane scb = new JScrollPane( text );
+		versionUpdatePanel.add( scb, BorderLayout.CENTER );
 		JXToolBar toolbar = UISupport.createToolbar();
 		toolbar.add( new IgnoreUpdateAction() );
 		toolbar.addGlue();
