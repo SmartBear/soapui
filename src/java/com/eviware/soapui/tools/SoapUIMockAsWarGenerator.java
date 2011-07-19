@@ -59,7 +59,7 @@ public class SoapUIMockAsWarGenerator extends AbstractSoapUIRunner
 	@Override
 	protected boolean processCommandLine( CommandLine cmd )
 	{
-		setEnableUI( cmd.hasOption( 'w' ) );
+		setEnableWebUI( cmd.hasOption( 'w' ) );
 		setIncludeActions( cmd.hasOption( 'a' ) );
 		setIncludeLibraries( cmd.hasOption( 'x' ) );
 		setIncludeListeners( cmd.hasOption( 'l' ) );
