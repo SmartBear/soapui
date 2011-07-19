@@ -70,6 +70,7 @@ import com.eviware.soapui.actions.ShowSystemPropertiesAction;
 import com.eviware.soapui.actions.SoapUIPreferencesAction;
 import com.eviware.soapui.actions.StartHermesJMSButtonAction;
 import com.eviware.soapui.actions.SwitchDesktopPanelAction;
+import com.eviware.soapui.actions.VersionUpdateAction;
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.actions.ImportWsdlProjectAction;
 import com.eviware.soapui.impl.actions.NewWsdlProjectAction;
@@ -409,6 +410,8 @@ public class SoapUI
 		helpMenu.addSeparator();
 		helpMenu.add( new ShowSystemPropertiesAction() );
 		helpMenu.addSeparator();
+		helpMenu.add( new VersionUpdateAction() );
+		helpMenu.addSeparator();
 		helpMenu.add( new OpenUrlAction( "soapui.org", "http://www.soapui.org" ) );
 		helpMenu.add( new ShowOnlineHelpAction( "soapUI Pro Trial", HelpUrls.TRIAL_URL,
 				"Apply for soapUI Pro Trial License", "/favicon.png" ) );
@@ -627,6 +630,8 @@ public class SoapUI
 				startSoapUI( mainArgs, "soapUI " + SOAPUI_VERSION + " " + brandedTitleExt, SOAPUI_SPLASH,
 						new StandaloneSoapUICore( true ) );
 
+				new SoapUIVersionUpdate().checkForNewVersion( false );
+
 				CajoServer.getInstance().start();
 			}
 			catch( Exception e )
@@ -828,12 +833,6 @@ public class SoapUI
 				}
 			}
 		}
-		SoapUIVersionUpdate.getLatestVersionAvailable();
-		if( SoapUIVersionUpdate.isNewMajorReleaseAvailable() )
-		{
-			SoapUIVersionUpdate.showNewVersionDownloadDialog();
-		}
-
 		return soapUI;
 	}
 
@@ -1381,7 +1380,9 @@ public class SoapUI
 				SoapUI.logError( e1 );
 			}
 
-			UISupport.showExtendedInfo( "About soapUI", null,
+			UISupport.showExtendedInfo(
+					"About soapUI",
+					null,
 					"<html><body><p align=center> <font face=\"Verdana,Arial,Helvetica\"><strong><img src=\"" + splashURI
 							+ "\"><br>soapUI " + SOAPUI_VERSION + ", copyright (C) 2004-2011 eviware software ab<br>"
 							+ "<a href=\"http://www.soapui.org\">http://www.soapui.org</a> | "
