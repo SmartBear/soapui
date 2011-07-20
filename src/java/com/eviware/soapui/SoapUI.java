@@ -112,6 +112,7 @@ import com.eviware.soapui.monitor.MockEngine;
 import com.eviware.soapui.monitor.TestMonitor;
 import com.eviware.soapui.settings.ProxySettings;
 import com.eviware.soapui.settings.UISettings;
+import com.eviware.soapui.settings.VersionUpdateSettings;
 import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
@@ -630,7 +631,8 @@ public class SoapUI
 				startSoapUI( mainArgs, "soapUI " + SOAPUI_VERSION + " " + brandedTitleExt, SOAPUI_SPLASH,
 						new StandaloneSoapUICore( true ) );
 
-				new SoapUIVersionUpdate().checkForNewVersion( false );
+				if( isAutoUpdateVersion() )
+					new SoapUIVersionUpdate().checkForNewVersion( false );
 
 				CajoServer.getInstance().start();
 			}
@@ -1778,4 +1780,10 @@ public class SoapUI
 	{
 		return soapUIRunner;
 	}
+
+	public static boolean isAutoUpdateVersion()
+	{
+		return getSettings().getBoolean( VersionUpdateSettings.AUTO_CHECK_VERSION_UPDATE );
+	}
+
 }

@@ -27,6 +27,7 @@ import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.settings.HttpSettings;
 import com.eviware.soapui.settings.SSLSettings;
 import com.eviware.soapui.settings.SecuritySettings;
+import com.eviware.soapui.settings.VersionUpdateSettings;
 import com.eviware.soapui.settings.WSISettings;
 import com.eviware.soapui.settings.WebRecordingSettings;
 import com.eviware.soapui.settings.WsaSettings;
@@ -56,6 +57,7 @@ public class SoapUIPreferencesAction extends AbstractAction
 	public static final String LOADUI_SETTINGS = "loadUI Settings";
 	public static final String WEBRECORDING_SETTINGS = "Web Recording Settings";
 	public static final String GLOBAL_SENSITIVE_INFORMATION_TOKENS = "Global Sensitive Information Tokens";
+	public static final String VERSIONUPDATE_SETTINGS = "Version Update Settings";
 	private SwingConfigurationDialogImpl dialog;
 	private JTabbedPane tabs;
 	private List<Prefs> prefs = new ArrayList<Prefs>();
@@ -84,6 +86,7 @@ public class SoapUIPreferencesAction extends AbstractAction
 		addPrefs( new LoadUIPrefs( LOADUI_SETTINGS ) );
 		addPrefs( new AnnotatedSettingsPrefs( WebRecordingSettings.class, WEBRECORDING_SETTINGS ) );
 		addPrefs( new SecurityScansPrefs( GLOBAL_SENSITIVE_INFORMATION_TOKENS ) );
+		addPrefs( new AnnotatedSettingsPrefs( VersionUpdateSettings.class, VERSIONUPDATE_SETTINGS ) );
 
 		for( PrefsFactory factory : SoapUI.getFactoryRegistry().getFactories( PrefsFactory.class ) )
 		{

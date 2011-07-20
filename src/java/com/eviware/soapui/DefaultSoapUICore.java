@@ -43,6 +43,7 @@ import com.eviware.soapui.settings.HttpSettings;
 import com.eviware.soapui.settings.ProxySettings;
 import com.eviware.soapui.settings.SecuritySettings;
 import com.eviware.soapui.settings.UISettings;
+import com.eviware.soapui.settings.VersionUpdateSettings;
 import com.eviware.soapui.settings.WSISettings;
 import com.eviware.soapui.settings.WebRecordingSettings;
 import com.eviware.soapui.settings.WsaSettings;
@@ -330,6 +331,7 @@ public class DefaultSoapUICore implements SoapUICore
 		setIfNotSet( WsaSettings.USE_DEFAULT_RELATES_TO, true );
 		setIfNotSet( WsaSettings.OVERRIDE_EXISTING_HEADERS, false );
 		setIfNotSet( WsaSettings.ENABLE_FOR_OPTIONAL, false );
+		setIfNotSet( VersionUpdateSettings.AUTO_CHECK_VERSION_UPDATE, true );
 
 		boolean setWsiDir = false;
 		String wsiLocationString = settings.getString( WSISettings.WSI_LOCATION, null );
