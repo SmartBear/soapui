@@ -532,11 +532,15 @@ public class WsdlUtils
 
 			if( soap12Fault != null && soap12Fault.getName() != null )
 			{
-				result.addAll( operation.getFault( soap12Fault.getName() ).getMessage().getOrderedParts( null ) );
+				Fault fault = operation.getFault( soap12Fault.getName() );
+				if( fault != null && fault.getMessage() != null )
+					result.addAll( fault.getMessage().getOrderedParts( null ) );
 			}
 			else
 			{
-				result.addAll( operation.getFault( faultName ).getMessage().getOrderedParts( null ) );
+				Fault fault = operation.getFault( faultName );
+				if( fault != null && fault.getMessage() != null )
+					result.addAll( fault.getMessage().getOrderedParts( null ) );
 			}
 		}
 
