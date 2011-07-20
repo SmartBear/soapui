@@ -56,11 +56,14 @@ public class SoapUIVersionUpdate
 	private String coreDownloadLink;
 	private String proDownloadLink;
 
-	public void getLatestVersionAvailable( Document doc )
+	public void getLatestVersionAvailable( URL versionUrl )
 	{
 		try
 		{
 
+			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+			DocumentBuilder db = dbf.newDocumentBuilder();
+			Document doc = db.parse( versionUrl.openStream() );
 			doc.getDocumentElement().normalize();
 			NodeList nodeLst = doc.getElementsByTagName( "version" );
 
@@ -106,10 +109,9 @@ public class SoapUIVersionUpdate
 		}
 	}
 
-	protected Document getVersionDocument() throws MalformedURLException, ParserConfigurationException, SAXException,
-			IOException
+	protected Document getVersionDocument( URL versionUrl ) throws MalformedURLException, ParserConfigurationException,
+			SAXException, IOException
 	{
-		URL versionUrl = new URL( LATEST_VERSION_XML_LOCATION );
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder db = dbf.newDocumentBuilder();
 		Document doc = db.parse( versionUrl.openStream() );
@@ -196,12 +198,16 @@ public class SoapUIVersionUpdate
 	{
 		try
 		{
-			getLatestVersionAvailable( getVersionDocument() );
+			getLatestVersionAvailable( new URL( LATEST_VERSION_XML_LOCATION ) );
 		}
 		catch( Exception e )
 		{
-			// TODO check if info needs to be shown about corrupted functionality
-			UISupport.showInfoMessage( "Currently no new version available", "No New Version" );
+			if( helpAction )
+			{
+				// TODO check if info needs to be shown about corrupted functionality
+				UISupport.showInfoMessage( "Currently no new version available", "No New Version" );
+			}
+			return;
 		}
 		if( isNewMajorReleaseAvailable() && ( !skipThisVersion() || helpAction ) )
 			showNewMajorVersionDownloadDialog();
