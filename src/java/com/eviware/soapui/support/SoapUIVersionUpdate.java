@@ -16,6 +16,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.swing.AbstractAction;
@@ -26,11 +27,13 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.support.components.JXToolBar;
@@ -42,6 +45,7 @@ public class SoapUIVersionUpdate
 	private static final String MINOR_VERSION = "minor";
 	private static final String LATEST_VERSION_XML_LOCATION = "http://www.soapui.org/version/soapui-latest-version.xml";
 	public static final String VERSION_TO_SKIP = SoapUI.class.getName() + "@versionToSkip";
+	private static final String NO_RELEASE_NOTES_INFO = "<tr><td>Sorry! No Release notes currently available.</td></tr>";
 
 	//	JDialog dialog
 
@@ -52,15 +56,11 @@ public class SoapUIVersionUpdate
 	private String coreDownloadLink;
 	private String proDownloadLink;
 
-	private void getLatestVersionAvailable()
+	public void getLatestVersionAvailable( Document doc )
 	{
 		try
 		{
 
-			URL versionUrl = new URL( LATEST_VERSION_XML_LOCATION );
-			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-			DocumentBuilder db = dbf.newDocumentBuilder();
-			Document doc = db.parse( versionUrl.openStream() );
 			doc.getDocumentElement().normalize();
 			NodeList nodeLst = doc.getElementsByTagName( "version" );
 
@@ -106,6 +106,16 @@ public class SoapUIVersionUpdate
 		}
 	}
 
+	protected Document getVersionDocument() throws MalformedURLException, ParserConfigurationException, SAXException,
+			IOException
+	{
+		URL versionUrl = new URL( LATEST_VERSION_XML_LOCATION );
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		DocumentBuilder db = dbf.newDocumentBuilder();
+		Document doc = db.parse( versionUrl.openStream() );
+		return doc;
+	}
+
 	private boolean isNewMajorReleaseAvailable()
 	{
 		return !StringUtils.isNullOrEmpty( versionType ) && versionType.equals( MAJOR_VERSION )
@@ -144,6 +154,7 @@ public class SoapUIVersionUpdate
 		}
 		catch( IOException e )
 		{
+			text.setText( NO_RELEASE_NOTES_INFO );
 			SoapUI.logError( e );
 		}
 		JScrollPane scb = new JScrollPane( text );
@@ -183,7 +194,15 @@ public class SoapUIVersionUpdate
 
 	public void checkForNewVersion( boolean helpAction )
 	{
-		getLatestVersionAvailable();
+		try
+		{
+			getLatestVersionAvailable( getVersionDocument() );
+		}
+		catch( Exception e )
+		{
+			// TODO check if info needs to be shown about corrupted functionality
+			UISupport.showInfoMessage( "Currently no new version available", "No New Version" );
+		}
 		if( isNewMajorReleaseAvailable() && ( !skipThisVersion() || helpAction ) )
 			showNewMajorVersionDownloadDialog();
 		else if( isNewMinorReleaseAvailable() && ( !skipThisVersion() || helpAction ) )
@@ -262,4 +281,8 @@ public class SoapUIVersionUpdate
 		return proDownloadLink;
 	}
 
+	protected String getVersionType()
+	{
+		return versionType;
+	}
 }
