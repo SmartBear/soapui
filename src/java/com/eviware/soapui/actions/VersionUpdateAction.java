@@ -16,7 +16,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 
-import com.eviware.soapui.SoapUIVersionUpdate;
+import com.eviware.soapui.support.SoapUIVersionUpdate;
 
 public class VersionUpdateAction extends AbstractAction
 {
