@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <install4j version="4.2.8" transformSequenceNumber="2">
-  <directoryPresets config="${compiler:DIST_ROOT}/lib/xulrunner-linux64-2.8.28035.jar" />
+  <directoryPresets config="${compiler:SRC_ROOT}/install4j/loadUI/loadUIInstalMAC.sh" />
   <application name="soapUI ${compiler:VERSION_NUMBER}${compiler:BRANDED_TITLE}" distributionSourceDir="" applicationId="5517-2803-0637-4585" mediaDir="./media" mediaFilePattern="${compiler:sys.shortName}_${compiler:sys.platform}_${compiler:sys.version}" compression="6" lzmaCompression="false" pack200Compression="false" excludeSignedFromPacking="true" keepModificationTimes="false" missingFilesStrategy="warn" shortName="soapUI" publisher="eviware software ab" publisherWeb="http://www.eviware.com" version="${compiler:VERSION_NUMBER}" allPathsRelative="true" backupOnSave="false" autoSave="true" convertDotsToUnderscores="true" macSignature="????" installerName="" javaMinVersion="1.6" javaMaxVersion="" allowBetaVM="true" jdkMode="runtimeJre" jdkName="">
     <languages skipLanguageSelection="false" languageSelectionInPrincipalLanguage="false">
       <principalLanguage id="en" customLocalizationFile="" />
@@ -39,6 +39,7 @@
       <fileset name="xulrunner-mac" id="2232" />
       <fileset name="xulrunner-linux" id="2234" />
       <fileset name="Tutorials" id="2390" />
+      <fileset name="loadUI-installer" id="2808" />
     </filesets>
     <roots>
       <root id="1842" fileset="1841" location="" />
@@ -53,6 +54,7 @@
       <root id="2233" fileset="2232" location="" />
       <root id="2235" fileset="2234" location="" />
       <root id="2391" fileset="2390" location="" />
+      <root id="2809" fileset="2808" location="" />
     </roots>
     <mountPoints>
       <mountPoint id="321" root="" location="bin" mode="755" />
@@ -72,6 +74,7 @@
       <mountPoint id="2237" root="2233" location="lib" mode="755" />
       <mountPoint id="2238" root="2235" location="lib" mode="755" />
       <mountPoint id="2392" root="2391" location="soapUI-Tutorials" mode="755" />
+      <mountPoint id="2810" root="2809" location="tempLoadUI" mode="755" />
     </mountPoints>
     <entries>
       <dirEntry mountPoint="321" file="${compiler:DIST_ROOT}/bin" overwrite="4" shared="false" mode="644" uninstallMode="0" excludeSuffixes="*.bat,*.sh" dirMode="755">
@@ -164,6 +167,9 @@
       <dirEntry mountPoint="2392" file="${compiler:DIST_ROOT}/Tutorials" overwrite="4" shared="false" mode="644" uninstallMode="0" excludeSuffixes="" dirMode="755">
         <exclude />
       </dirEntry>
+      <fileEntry mountPoint="2810" file="${compiler:SRC_ROOT}/install4j/loadUI/loadUIInstalMAC.sh" overwrite="4" shared="false" mode="644" uninstallMode="0" />
+      <fileEntry mountPoint="2810" file="${compiler:SRC_ROOT}/install4j/loadUI/loadUIInstall.bat" overwrite="4" shared="false" mode="644" uninstallMode="0" />
+      <fileEntry mountPoint="2810" file="${compiler:SRC_ROOT}/install4j/loadUI/loadUIInstall.sh" overwrite="4" shared="false" mode="644" uninstallMode="0" />
     </entries>
     <components>
       <component name="SoapUI" id="132" displayDescription="false" selected="true" mandatory="true" downloadable="false">
@@ -200,6 +206,13 @@
         <description>Install tutorial content</description>
         <include all="false">
           <entry location=".i4j_fileset_2390" fileType="regular" />
+        </include>
+        <dependencies />
+      </component>
+      <component name="Install loadUI" id="2811" displayDescription="false" selected="true" mandatory="false" downloadable="false">
+        <description />
+        <include all="false">
+          <entry location=".i4j_fileset_2808" fileType="regular" />
         </include>
         <dependencies />
       </component>
@@ -1157,6 +1170,68 @@ return component!=null;</condition>
                 <condition>boolean installTutorials = context.getBooleanVariable("installTutorials");
 return installTutorials;</condition>
               </action>
+              <action name="Set loadUI install mode for linux" id="2813" beanClass="com.install4j.runtime.beans.actions.files.SetModeAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.files.SetModeAction">
+                      <void property="file">
+                        <object class="java.io.File">
+                          <string>tempLoadUI/loadUIInstall.${installer:EXTENSION}</string>
+                        </object>
+                      </void>
+                      <void property="mode">
+                        <string>755</string>
+                      </void>
+                    </object>
+                  </java>
+                </serializedBean>
+                <condition>InstallationComponentSetup component =context.getInstallationComponentById("2808");
+
+return component!=null;</condition>
+              </action>
+              <action name="Set loadUI install mode for MAC" id="2814" beanClass="com.install4j.runtime.beans.actions.files.SetModeAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.files.SetModeAction">
+                      <void property="file">
+                        <object class="java.io.File">
+                          <string>tempLoadUI/loadUIInstallMAC.${installer:EXTENSION}</string>
+                        </object>
+                      </void>
+                      <void property="mode">
+                        <string>755</string>
+                      </void>
+                    </object>
+                  </java>
+                </serializedBean>
+                <condition>InstallationComponentSetup component =context.getInstallationComponentById("2808");
+
+return component!=null;</condition>
+              </action>
+              <action name="install loadUI" id="2812" beanClass="com.install4j.runtime.beans.actions.misc.RunExecutableAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="3" errorMessage="Problem with installing loadUI">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.misc.RunExecutableAction">
+                      <void property="executable">
+                        <object class="java.io.File">
+                          <string>tempLoadUI/loadUIInstall${installer:WhatOS}.${installer:EXTENSION}</string>
+                        </object>
+                      </void>
+                      <void property="keepConsoleWindow">
+                        <boolean>true</boolean>
+                      </void>
+                      <void property="workingDirectory">
+                        <object class="java.io.File">
+                          <string>tempLoadUI</string>
+                        </object>
+                      </void>
+                    </object>
+                  </java>
+                </serializedBean>
+                <condition>InstallationComponentSetup component =context.getInstallationComponentById("2808");
+
+return component!=null;</condition>
+              </action>
             </actions>
             <formComponents />
           </screen>
@@ -1171,7 +1246,7 @@ return installTutorials;</condition>
             <preActivation />
             <postActivation />
             <actions>
-              <action name="tempHermes folder delete" id="1333" beanClass="com.install4j.runtime.beans.actions.files.DeleteFileAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+              <action name="tempHermes folder delete" id="1333" beanClass="com.install4j.runtime.beans.actions.files.DeleteFileAction" enabled="false" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
                 <serializedBean>
                   <java class="java.beans.XMLDecoder">
                     <object class="com.install4j.runtime.beans.actions.files.DeleteFileAction">
