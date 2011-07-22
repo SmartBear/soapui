@@ -731,6 +731,9 @@ URL=http://www.soapui.org]]>
           <variable name="CERT_PATH" value="${maven.install4j.cert}"/>
           <variable name="WIN_DLLS_PATH" value="${maven.install4j.cert}"/>
           <variable name="HERMES_INSTALLER" value="${maven.hermes.installer}"/>
+          <variable name="LOADUI_DOWNLOADER" value="${maven.loadUI.downloader}"/>
+          <variable name="LOADUI_INSTALLER_URL" value="${maven.loadUI.installer.url}"/>
+          <variable name="LOADUI_VERSION_NUMBER" value="${maven.loadUI.version.number}"/>
           <j:if test="${!empty(branded)}">
           	<variable name="BRANDED_TITLE" value=" ${soapui.app.title}"/>
           </j:if>
