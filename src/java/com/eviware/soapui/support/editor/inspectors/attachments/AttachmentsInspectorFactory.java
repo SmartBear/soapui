@@ -88,7 +88,9 @@ public class AttachmentsInspectorFactory implements RequestInspectorFactory, Res
 
 		public int getAttachmentCount()
 		{
-			return request.getMessageExchange() == null ? 0 : request.getMessageExchange().getRequestAttachments().length;
+			return request.getMessageExchange() == null ? 0
+					: ( request.getMessageExchange().getRequestAttachments() == null ? 0 : request.getMessageExchange()
+							.getRequestAttachments().length );
 		}
 
 		public HttpAttachmentPart getAttachmentPart( String partName )
