@@ -1175,6 +1175,21 @@ return component!=null;</condition>
                 <condition>boolean installTutorials = context.getBooleanVariable("installTutorials");
 return installTutorials;</condition>
               </action>
+              <action name="" id="3470" beanClass="com.install4j.runtime.beans.actions.update.DownloadFileAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.update.DownloadFileAction">
+                      <void property="targetFile">
+                        <string />
+                      </void>
+                      <void property="url">
+                        <string />
+                      </void>
+                    </object>
+                  </java>
+                </serializedBean>
+                <condition />
+              </action>
             </actions>
             <formComponents />
           </screen>
@@ -1191,7 +1206,7 @@ return component!=null;</condition>
             <preActivation />
             <postActivation />
             <actions>
-              <group name="download and install loadUI" id="3418" beanClass="com.install4j.runtime.beans.groups.ActionGroup" enabled="true" commentSet="false" comment="">
+              <group name="download and install loadUI" id="3418" beanClass="com.install4j.runtime.beans.groups.ActionGroup" enabled="false" commentSet="false" comment="">
                 <serializedBean>
                   <java class="java.beans.XMLDecoder">
                     <object class="com.install4j.runtime.beans.groups.ActionGroup">
@@ -1371,6 +1386,39 @@ return component!=null;</condition>
                   </action>
                 </beans>
               </group>
+              <action name="" id="3471" beanClass="com.install4j.runtime.beans.actions.update.DownloadFileAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.update.DownloadFileAction">
+                      <void property="targetFile">
+                        <string>${installer:sys.userHome}</string>
+                      </void>
+                      <void property="url">
+                        <string>${compiler:LOADUI_INSTALLER_URL}loadUI-${compiler:LOADUI_VERSION_NUMBER}.${installer:EXTENSION}</string>
+                      </void>
+                    </object>
+                  </java>
+                </serializedBean>
+                <condition>InstallationComponentSetup component =context.getInstallationComponentById("2811");
+
+return component!=null;</condition>
+              </action>
+              <action name="" id="3478" beanClass="com.install4j.runtime.beans.actions.misc.RunExecutableAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.misc.RunExecutableAction">
+                      <void property="executable">
+                        <object class="java.io.File">
+                          <string>${installer:sys.userHome}loadUI-${compiler:LOADUI_VERSION_NUMBER}.${installer:EXTENSION}</string>
+                        </object>
+                      </void>
+                    </object>
+                  </java>
+                </serializedBean>
+                <condition>InstallationComponentSetup component =context.getInstallationComponentById("2811");
+
+return component!=null;</condition>
+              </action>
             </actions>
             <formComponents>
               <formComponent name="" id="3410" beanClass="com.install4j.runtime.beans.formcomponents.CheckboxComponent" enabled="true" commentSet="false" comment="" insetTop="" insetLeft="" insetBottom="" insetRight="" resetInitOnPrevious="false">
