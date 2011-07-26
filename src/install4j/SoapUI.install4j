@@ -1383,11 +1383,6 @@ return component!=null;</condition>
                       <void property="initiallySelected">
                         <boolean>true</boolean>
                       </void>
-                      <void property="labelIconFile">
-                        <object class="com.install4j.api.beans.ExternalFile">
-                          <string>C:/Users/dragica.soldo.MOGUL/Desktop/icon_32x32.png</string>
-                        </object>
-                      </void>
                       <void property="variableName">
                         <string>installLoadUI</string>
                       </void>
