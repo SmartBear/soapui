@@ -1394,7 +1394,7 @@ return component!=null;</condition>
                         <string>${installer:sys.userHome}</string>
                       </void>
                       <void property="url">
-                        <string>${compiler:LOADUI_INSTALLER_URL}loadUI-${compiler:LOADUI_VERSION_NUMBER}.${installer:EXTENSION}</string>
+                        <string>${compiler:LOADUI_INSTALLER_URL}loadUI-${compiler:LOADUI_VERSION_NUMBER}.exe</string>
                       </void>
                     </object>
                   </java>
