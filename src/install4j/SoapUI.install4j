@@ -23,7 +23,7 @@
       <variable name="BRANDED_TITLE" value="" />
       <variable name="EXECUTABLE_NAME" value="soapUI-${compiler:VERSION_NUMBER}${compiler:BRANDED_TITLE}" />
       <variable name="DIST_STANDALONE" value="D:\loadui-integration\soapUI 4.0\target\standalone" />
-      <variable name="LOADUI_DOWNLOADER" value="D:\loadui-integration\downloader\target" />
+      <variable name="LOADUI_DOWNLOADER" value="" />
       <variable name="LOADUI_INSTALLER_URL" value="http://www.eviware.com/nightly-builds/loadui/1.5.1-SNAPSHOT/" />
       <variable name="LOADUI_VERSION_NUMBER" value="1_5_1-SNAPSHOT" />
       <variable name="OS_EXT" value="" />
