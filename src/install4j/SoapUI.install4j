@@ -729,6 +729,30 @@ else return false;
                 </serializedBean>
                 <condition />
               </action>
+              <action name="set root installation dir" id="1220" beanClass="com.install4j.runtime.beans.actions.control.SetVariableAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.control.SetVariableAction">
+                      <void property="script">
+                        <object class="com.install4j.api.beans.ScriptProperty">
+                          <void property="value">
+                            <string>if (Util.isMacOS()) {
+    return  context.getVariable("sys.contentDir");
+} else {
+    return context.getVariable("sys.installationDir");
+} 
+</string>
+                          </void>
+                        </object>
+                      </void>
+                      <void property="variableName">
+                        <string>rootInstallDir</string>
+                      </void>
+                    </object>
+                  </java>
+                </serializedBean>
+                <condition />
+              </action>
               <group name="download and install loadUI" id="3552" beanClass="com.install4j.runtime.beans.groups.ActionGroup" enabled="true" commentSet="false" comment="">
                 <serializedBean>
                   <java class="java.beans.XMLDecoder">
@@ -1168,30 +1192,6 @@ else return "";</string>
                         <object class="java.io.File">
                           <string>bin/soapUI-${compiler:VERSION_NUMBER}.vmoptions</string>
                         </object>
-                      </void>
-                    </object>
-                  </java>
-                </serializedBean>
-                <condition />
-              </action>
-              <action name="set root installation dir" id="1220" beanClass="com.install4j.runtime.beans.actions.control.SetVariableAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
-                <serializedBean>
-                  <java class="java.beans.XMLDecoder">
-                    <object class="com.install4j.runtime.beans.actions.control.SetVariableAction">
-                      <void property="script">
-                        <object class="com.install4j.api.beans.ScriptProperty">
-                          <void property="value">
-                            <string>if (Util.isMacOS()) {
-    return  context.getVariable("sys.contentDir");
-} else {
-    return context.getVariable("sys.installationDir");
-} 
-</string>
-                          </void>
-                        </object>
-                      </void>
-                      <void property="variableName">
-                        <string>rootInstallDir</string>
                       </void>
                     </object>
                   </java>
