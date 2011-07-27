@@ -399,6 +399,93 @@ return component.isSelected();</string>
             </actions>
             <formComponents />
           </screen>
+          <screen name="" id="3409" beanClass="com.install4j.runtime.beans.screens.FormScreen" enabled="true" commentSet="false" comment="" rollbackBarrier="false" backButton="2" finishScreen="false">
+            <serializedBean>
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.screens.FormScreen" />
+              </java>
+            </serializedBean>
+            <condition />
+            <validation />
+            <preActivation />
+            <postActivation />
+            <actions />
+            <formComponents>
+              <formComponent name="" id="3410" beanClass="com.install4j.runtime.beans.formcomponents.CheckboxComponent" enabled="true" commentSet="false" comment="" insetTop="" insetLeft="" insetBottom="" insetRight="" resetInitOnPrevious="false">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.formcomponents.CheckboxComponent">
+                      <void property="checkboxText">
+                        <string>Install  loadUI</string>
+                      </void>
+                      <void property="initiallySelected">
+                        <boolean>true</boolean>
+                      </void>
+                      <void property="labelText">
+                        <string>Download and install loadUI</string>
+                      </void>
+                      <void property="variableName">
+                        <string>installLoadUI</string>
+                      </void>
+                    </object>
+                  </java>
+                </serializedBean>
+                <initScript />
+                <visibiltyScript />
+              </formComponent>
+              <formComponent name="" id="3411" beanClass="com.install4j.runtime.beans.formcomponents.TextAreaComponent" enabled="false" commentSet="false" comment="" insetTop="" insetLeft="" insetBottom="" insetRight="" resetInitOnPrevious="false">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.formcomponents.TextAreaComponent">
+                      <void property="initialText">
+                        <string>Please select if you want to download and install loadUI
+read more...</string>
+                      </void>
+                      <void property="variableName">
+                        <string>loadUINotes</string>
+                      </void>
+                    </object>
+                  </java>
+                </serializedBean>
+                <initScript />
+                <visibiltyScript />
+              </formComponent>
+              <formComponent name="" id="3568" beanClass="com.install4j.runtime.beans.formcomponents.MultilineLabelComponent" enabled="true" commentSet="false" comment="" insetTop="" insetLeft="" insetBottom="" insetRight="" resetInitOnPrevious="false">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.formcomponents.MultilineLabelComponent">
+                      <void property="labelText">
+                        <string>Let’s get crunching.
+
+loadUI1.5 has a great new statistical analysis function with real-time data, 
+right at your fingertips. Drag and drop pre-built analyses, synch and follow 
+charts and compare retrospective data all in an intuitive format. 
+All in one place. And all for free.</string>
+                      </void>
+                    </object>
+                  </java>
+                </serializedBean>
+                <initScript />
+                <visibiltyScript />
+              </formComponent>
+              <formComponent name="" id="3412" beanClass="com.install4j.runtime.beans.formcomponents.HyperlinkLabelComponent" enabled="true" commentSet="false" comment="" insetTop="" insetLeft="" insetBottom="" insetRight="" resetInitOnPrevious="false">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.formcomponents.HyperlinkLabelComponent">
+                      <void property="hyperlinkText">
+                        <string>loadUILink</string>
+                      </void>
+                      <void property="url">
+                        <string>http://www.loadUI.org</string>
+                      </void>
+                    </object>
+                  </java>
+                </serializedBean>
+                <initScript />
+                <visibiltyScript />
+              </formComponent>
+            </formComponents>
+          </screen>
           <screen name="Display Hermes license agreement" id="1478" beanClass="com.install4j.runtime.beans.screens.LicenseScreen" enabled="true" commentSet="false" comment="" rollbackBarrier="false" backButton="2" finishScreen="false">
             <serializedBean>
               <java class="java.beans.XMLDecoder">
@@ -1170,21 +1257,7 @@ return component!=null;</condition>
                 <condition>boolean installTutorials = context.getBooleanVariable("installTutorials");
 return installTutorials;</condition>
               </action>
-            </actions>
-            <formComponents />
-          </screen>
-          <screen name="" id="3409" beanClass="com.install4j.runtime.beans.screens.FormScreen" enabled="true" commentSet="false" comment="" rollbackBarrier="false" backButton="2" finishScreen="false">
-            <serializedBean>
-              <java class="java.beans.XMLDecoder">
-                <object class="com.install4j.runtime.beans.screens.FormScreen" />
-              </java>
-            </serializedBean>
-            <condition />
-            <validation />
-            <preActivation />
-            <postActivation />
-            <actions>
-              <group name="download and install loadUI" id="3537" beanClass="com.install4j.runtime.beans.groups.ActionGroup" enabled="true" commentSet="false" comment="">
+              <group name="download and install loadUI" id="3552" beanClass="com.install4j.runtime.beans.groups.ActionGroup" enabled="true" commentSet="false" comment="">
                 <serializedBean>
                   <java class="java.beans.XMLDecoder">
                     <object class="com.install4j.runtime.beans.groups.ActionGroup">
@@ -1199,7 +1272,7 @@ return installTutorials;</condition>
                   </java>
                 </serializedBean>
                 <beans>
-                  <action name="Set windows loadUI.download.url" id="3538" beanClass="com.install4j.runtime.beans.actions.text.ModifyTextFileAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                  <action name="Set windows loadUI.download.url" id="3553" beanClass="com.install4j.runtime.beans.actions.text.ModifyTextFileAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
                     <serializedBean>
                       <java class="java.beans.XMLDecoder">
                         <object class="com.install4j.runtime.beans.actions.text.ModifyTextFileAction">
@@ -1222,7 +1295,7 @@ return installTutorials;</condition>
                     </serializedBean>
                     <condition />
                   </action>
-                  <action name="Set windows loadUI.temp.file" id="3539" beanClass="com.install4j.runtime.beans.actions.text.ModifyTextFileAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                  <action name="Set windows loadUI.temp.file" id="3554" beanClass="com.install4j.runtime.beans.actions.text.ModifyTextFileAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
                     <serializedBean>
                       <java class="java.beans.XMLDecoder">
                         <object class="com.install4j.runtime.beans.actions.text.ModifyTextFileAction">
@@ -1245,7 +1318,7 @@ return installTutorials;</condition>
                     </serializedBean>
                     <condition />
                   </action>
-                  <action name="Set windows64bit loadUI.download.url" id="3540" beanClass="com.install4j.runtime.beans.actions.text.ModifyTextFileAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                  <action name="Set windows64bit loadUI.download.url" id="3555" beanClass="com.install4j.runtime.beans.actions.text.ModifyTextFileAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
                     <serializedBean>
                       <java class="java.beans.XMLDecoder">
                         <object class="com.install4j.runtime.beans.actions.text.ModifyTextFileAction">
@@ -1268,7 +1341,7 @@ return installTutorials;</condition>
                     </serializedBean>
                     <condition />
                   </action>
-                  <action name="Set windows64bit loadUI.temp.file" id="3541" beanClass="com.install4j.runtime.beans.actions.text.ModifyTextFileAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                  <action name="Set windows64bit loadUI.temp.file" id="3556" beanClass="com.install4j.runtime.beans.actions.text.ModifyTextFileAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
                     <serializedBean>
                       <java class="java.beans.XMLDecoder">
                         <object class="com.install4j.runtime.beans.actions.text.ModifyTextFileAction">
@@ -1291,7 +1364,7 @@ return installTutorials;</condition>
                     </serializedBean>
                     <condition />
                   </action>
-                  <action name="Set linux loadUI.download.url" id="3542" beanClass="com.install4j.runtime.beans.actions.text.ModifyTextFileAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                  <action name="Set linux loadUI.download.url" id="3557" beanClass="com.install4j.runtime.beans.actions.text.ModifyTextFileAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
                     <serializedBean>
                       <java class="java.beans.XMLDecoder">
                         <object class="com.install4j.runtime.beans.actions.text.ModifyTextFileAction">
@@ -1314,7 +1387,7 @@ return installTutorials;</condition>
                     </serializedBean>
                     <condition />
                   </action>
-                  <action name="Set linux loadUI.temp.file" id="3543" beanClass="com.install4j.runtime.beans.actions.text.ModifyTextFileAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                  <action name="Set linux loadUI.temp.file" id="3558" beanClass="com.install4j.runtime.beans.actions.text.ModifyTextFileAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
                     <serializedBean>
                       <java class="java.beans.XMLDecoder">
                         <object class="com.install4j.runtime.beans.actions.text.ModifyTextFileAction">
@@ -1337,7 +1410,7 @@ return installTutorials;</condition>
                     </serializedBean>
                     <condition />
                   </action>
-                  <action name="set loadUIInstall unix mode" id="3544" beanClass="com.install4j.runtime.beans.actions.files.SetModeAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="Couldn't set access mode forloadUIInstall.sh">
+                  <action name="set loadUIInstall unix mode" id="3559" beanClass="com.install4j.runtime.beans.actions.files.SetModeAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="Couldn't set access mode forloadUIInstall.sh">
                     <serializedBean>
                       <java class="java.beans.XMLDecoder">
                         <object class="com.install4j.runtime.beans.actions.files.SetModeAction">
@@ -1354,7 +1427,7 @@ return installTutorials;</condition>
                     </serializedBean>
                     <condition />
                   </action>
-                  <action name="Set mac loadUI.download.url" id="3545" beanClass="com.install4j.runtime.beans.actions.text.ModifyTextFileAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                  <action name="Set mac loadUI.download.url" id="3560" beanClass="com.install4j.runtime.beans.actions.text.ModifyTextFileAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
                     <serializedBean>
                       <java class="java.beans.XMLDecoder">
                         <object class="com.install4j.runtime.beans.actions.text.ModifyTextFileAction">
@@ -1377,7 +1450,7 @@ return installTutorials;</condition>
                     </serializedBean>
                     <condition />
                   </action>
-                  <action name="Set mac loadUI.temp.file" id="3546" beanClass="com.install4j.runtime.beans.actions.text.ModifyTextFileAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                  <action name="Set mac loadUI.temp.file" id="3561" beanClass="com.install4j.runtime.beans.actions.text.ModifyTextFileAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
                     <serializedBean>
                       <java class="java.beans.XMLDecoder">
                         <object class="com.install4j.runtime.beans.actions.text.ModifyTextFileAction">
@@ -1400,7 +1473,7 @@ return installTutorials;</condition>
                     </serializedBean>
                     <condition />
                   </action>
-                  <action name="set loadUIInstallMac unix mode" id="3547" beanClass="com.install4j.runtime.beans.actions.files.SetModeAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="Couldn't set access mode forloadUIInstall.sh">
+                  <action name="set loadUIInstallMac unix mode" id="3562" beanClass="com.install4j.runtime.beans.actions.files.SetModeAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="Couldn't set access mode forloadUIInstall.sh">
                     <serializedBean>
                       <java class="java.beans.XMLDecoder">
                         <object class="com.install4j.runtime.beans.actions.files.SetModeAction">
@@ -1417,7 +1490,7 @@ return installTutorials;</condition>
                     </serializedBean>
                     <condition />
                   </action>
-                  <action name="Set loadUI downloader mode for linux" id="3548" beanClass="com.install4j.runtime.beans.actions.files.SetModeAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                  <action name="Set loadUI downloader mode for linux" id="3563" beanClass="com.install4j.runtime.beans.actions.files.SetModeAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
                     <serializedBean>
                       <java class="java.beans.XMLDecoder">
                         <object class="com.install4j.runtime.beans.actions.files.SetModeAction">
@@ -1436,7 +1509,7 @@ return installTutorials;</condition>
 
 return component!=null;</condition>
                   </action>
-                  <action name="Set  loadUI downloader mode for MAC" id="3549" beanClass="com.install4j.runtime.beans.actions.files.SetModeAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                  <action name="Set  loadUI downloader mode for MAC" id="3564" beanClass="com.install4j.runtime.beans.actions.files.SetModeAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
                     <serializedBean>
                       <java class="java.beans.XMLDecoder">
                         <object class="com.install4j.runtime.beans.actions.files.SetModeAction">
@@ -1455,7 +1528,7 @@ return component!=null;</condition>
 
 return component!=null;</condition>
                   </action>
-                  <action name="Set MAC OS" id="3550" beanClass="com.install4j.runtime.beans.actions.control.SetVariableAction" enabled="false" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                  <action name="Set MAC OS" id="3565" beanClass="com.install4j.runtime.beans.actions.control.SetVariableAction" enabled="false" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
                     <serializedBean>
                       <java class="java.beans.XMLDecoder">
                         <object class="com.install4j.runtime.beans.actions.control.SetVariableAction">
@@ -1477,7 +1550,7 @@ else return "";</string>
                     </serializedBean>
                     <condition />
                   </action>
-                  <action name="download and install loadUI" id="3551" beanClass="com.install4j.runtime.beans.actions.misc.RunExecutableAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="failed to start loadUI downloader ">
+                  <action name="download and install loadUI" id="3566" beanClass="com.install4j.runtime.beans.actions.misc.RunExecutableAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="failed to start loadUI downloader ">
                     <serializedBean>
                       <java class="java.beans.XMLDecoder">
                         <object class="com.install4j.runtime.beans.actions.misc.RunExecutableAction">
@@ -1511,7 +1584,7 @@ else return "";</string>
                   </action>
                 </beans>
               </group>
-              <action name="remove tempLoadUI" id="3532" beanClass="com.install4j.runtime.beans.actions.files.DeleteFileAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+              <action name="remove tempLoadUI" id="3567" beanClass="com.install4j.runtime.beans.actions.files.DeleteFileAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
                 <serializedBean>
                   <java class="java.beans.XMLDecoder">
                     <object class="com.install4j.runtime.beans.actions.files.DeleteFileAction">
@@ -1529,60 +1602,7 @@ else return "";</string>
                 <condition>!context.getBooleanVariable("installLoadUI")</condition>
               </action>
             </actions>
-            <formComponents>
-              <formComponent name="" id="3410" beanClass="com.install4j.runtime.beans.formcomponents.CheckboxComponent" enabled="true" commentSet="false" comment="" insetTop="" insetLeft="" insetBottom="" insetRight="" resetInitOnPrevious="false">
-                <serializedBean>
-                  <java class="java.beans.XMLDecoder">
-                    <object class="com.install4j.runtime.beans.formcomponents.CheckboxComponent">
-                      <void property="checkboxText">
-                        <string>Download and install  loadUI</string>
-                      </void>
-                      <void property="initiallySelected">
-                        <boolean>true</boolean>
-                      </void>
-                      <void property="variableName">
-                        <string>installLoadUI</string>
-                      </void>
-                    </object>
-                  </java>
-                </serializedBean>
-                <initScript />
-                <visibiltyScript />
-              </formComponent>
-              <formComponent name="" id="3411" beanClass="com.install4j.runtime.beans.formcomponents.TextAreaComponent" enabled="true" commentSet="false" comment="" insetTop="" insetLeft="" insetBottom="" insetRight="" resetInitOnPrevious="false">
-                <serializedBean>
-                  <java class="java.beans.XMLDecoder">
-                    <object class="com.install4j.runtime.beans.formcomponents.TextAreaComponent">
-                      <void property="initialText">
-                        <string>Please select if you want to download and install loadUI
-read more...</string>
-                      </void>
-                      <void property="variableName">
-                        <string>loadUINotes</string>
-                      </void>
-                    </object>
-                  </java>
-                </serializedBean>
-                <initScript />
-                <visibiltyScript />
-              </formComponent>
-              <formComponent name="" id="3412" beanClass="com.install4j.runtime.beans.formcomponents.HyperlinkLabelComponent" enabled="true" commentSet="false" comment="" insetTop="" insetLeft="" insetBottom="" insetRight="" resetInitOnPrevious="false">
-                <serializedBean>
-                  <java class="java.beans.XMLDecoder">
-                    <object class="com.install4j.runtime.beans.formcomponents.HyperlinkLabelComponent">
-                      <void property="hyperlinkText">
-                        <string>loadUILink</string>
-                      </void>
-                      <void property="url">
-                        <string>http://www.loadUI.org</string>
-                      </void>
-                    </object>
-                  </java>
-                </serializedBean>
-                <initScript />
-                <visibiltyScript />
-              </formComponent>
-            </formComponents>
+            <formComponents />
           </screen>
           <screen name="" id="11" beanClass="com.install4j.runtime.beans.screens.FinishedScreen" enabled="true" commentSet="false" comment="" rollbackBarrier="false" backButton="2" finishScreen="true">
             <serializedBean>
