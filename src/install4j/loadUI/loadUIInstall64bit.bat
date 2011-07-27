@@ -1,1 +1,1 @@
-java -jar downloader-1.0-SNAPSHOT.jar loadUI.download.url
+java -jar downloader-1.0-SNAPSHOT.jar loadUI.download.url loadUI.temp.path

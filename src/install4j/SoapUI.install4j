@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <install4j version="4.2.8" transformSequenceNumber="2">
-  <directoryPresets config="${compiler:SRC_ROOT}/install4j/loadUI/loadUIInstallMac.sh" />
+  <directoryPresets config="${compiler:SRC_ROOT}/install4j/loadUI/loadUIInstallMAC.sh" />
   <application name="soapUI ${compiler:VERSION_NUMBER}${compiler:BRANDED_TITLE}" distributionSourceDir="" applicationId="5517-2803-0637-4585" mediaDir="./media" mediaFilePattern="${compiler:sys.shortName}_${compiler:sys.platform}_${compiler:sys.version}" compression="6" lzmaCompression="false" pack200Compression="false" excludeSignedFromPacking="true" keepModificationTimes="false" missingFilesStrategy="warn" shortName="soapUI" publisher="eviware software ab" publisherWeb="http://www.eviware.com" version="${compiler:VERSION_NUMBER}" allPathsRelative="true" backupOnSave="false" autoSave="true" convertDotsToUnderscores="true" macSignature="????" installerName="" javaMinVersion="1.6" javaMaxVersion="" allowBetaVM="true" jdkMode="runtimeJre" jdkName="">
     <languages skipLanguageSelection="false" languageSelectionInPrincipalLanguage="false">
       <principalLanguage id="en" customLocalizationFile="" />
@@ -172,7 +172,7 @@
         <exclude />
       </dirEntry>
       <fileEntry mountPoint="3057" file="${compiler:LOADUI_DOWNLOADER}" overwrite="4" shared="false" mode="644" uninstallMode="0" />
-      <fileEntry mountPoint="3057" file="${compiler:SRC_ROOT}/install4j/loadUI/loadUIInstallMac.sh" overwrite="4" shared="false" mode="644" uninstallMode="0" />
+      <fileEntry mountPoint="3057" file="${compiler:SRC_ROOT}/install4j/loadUI/loadUIInstallMAC.sh" overwrite="4" shared="false" mode="644" uninstallMode="0" />
       <fileEntry mountPoint="3057" file="${compiler:SRC_ROOT}/install4j/loadUI/loadUIInstall.bat" overwrite="4" shared="false" mode="644" uninstallMode="0" />
       <fileEntry mountPoint="3057" file="${compiler:SRC_ROOT}/install4j/loadUI/loadUIInstall.sh" overwrite="4" shared="false" mode="644" uninstallMode="0" />
     </entries>
@@ -1206,7 +1206,7 @@ return component!=null;</condition>
             <preActivation />
             <postActivation />
             <actions>
-              <group name="download and install loadUI" id="3418" beanClass="com.install4j.runtime.beans.groups.ActionGroup" enabled="false" commentSet="false" comment="">
+              <group name="download and install loadUI" id="3418" beanClass="com.install4j.runtime.beans.groups.ActionGroup" enabled="true" commentSet="false" comment="">
                 <serializedBean>
                   <java class="java.beans.XMLDecoder">
                     <object class="com.install4j.runtime.beans.groups.ActionGroup">
@@ -1244,6 +1244,29 @@ return component!=null;</condition>
                     </serializedBean>
                     <condition />
                   </action>
+                  <action name="Set windows loadUI.temp.file" id="3526" beanClass="com.install4j.runtime.beans.actions.text.ModifyTextFileAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                    <serializedBean>
+                      <java class="java.beans.XMLDecoder">
+                        <object class="com.install4j.runtime.beans.actions.text.ModifyTextFileAction">
+                          <void property="encoding">
+                            <string />
+                          </void>
+                          <void property="file">
+                            <object class="java.io.File">
+                              <string>tempLoadUI${installer:FILE_SEPARATOR}loadUIInstall.bat</string>
+                            </object>
+                          </void>
+                          <void property="replaceValue">
+                            <string>${installer:sys.installationDir}${installer:FILE_SEPARATOR}tempLoadUI</string>
+                          </void>
+                          <void property="searchValue">
+                            <string>loadUI.temp.path</string>
+                          </void>
+                        </object>
+                      </java>
+                    </serializedBean>
+                    <condition />
+                  </action>
                   <action name="Set linux loadUI.download.url" id="3420" beanClass="com.install4j.runtime.beans.actions.text.ModifyTextFileAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
                     <serializedBean>
                       <java class="java.beans.XMLDecoder">
@@ -1267,6 +1290,46 @@ return component!=null;</condition>
                     </serializedBean>
                     <condition />
                   </action>
+                  <action name="Set linux loadUI.temp.file" id="3527" beanClass="com.install4j.runtime.beans.actions.text.ModifyTextFileAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                    <serializedBean>
+                      <java class="java.beans.XMLDecoder">
+                        <object class="com.install4j.runtime.beans.actions.text.ModifyTextFileAction">
+                          <void property="encoding">
+                            <string />
+                          </void>
+                          <void property="file">
+                            <object class="java.io.File">
+                              <string>tempLoadUI${installer:FILE_SEPARATOR}loadUIInstall.sh</string>
+                            </object>
+                          </void>
+                          <void property="replaceValue">
+                            <string>${installer:rootInstallDir}${installer:FILE_SEPARATOR}tempLoadUI</string>
+                          </void>
+                          <void property="searchValue">
+                            <string>loadUI.temp.path</string>
+                          </void>
+                        </object>
+                      </java>
+                    </serializedBean>
+                    <condition />
+                  </action>
+                  <action name="set loadUIInstall unix mode" id="3529" beanClass="com.install4j.runtime.beans.actions.files.SetModeAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="Couldn't set access mode forloadUIInstall.sh">
+                    <serializedBean>
+                      <java class="java.beans.XMLDecoder">
+                        <object class="com.install4j.runtime.beans.actions.files.SetModeAction">
+                          <void property="file">
+                            <object class="java.io.File">
+                              <string>${installer:rootInstallDir}/tempLoadUI/loadUIInstall.sh</string>
+                            </object>
+                          </void>
+                          <void property="mode">
+                            <string>755</string>
+                          </void>
+                        </object>
+                      </java>
+                    </serializedBean>
+                    <condition />
+                  </action>
                   <action name="Set mac loadUI.download.url" id="3421" beanClass="com.install4j.runtime.beans.actions.text.ModifyTextFileAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
                     <serializedBean>
                       <java class="java.beans.XMLDecoder">
@@ -1284,6 +1347,46 @@ return component!=null;</condition>
                           </void>
                           <void property="searchValue">
                             <string>loadUI.download.url</string>
+                          </void>
+                        </object>
+                      </java>
+                    </serializedBean>
+                    <condition />
+                  </action>
+                  <action name="Set mac loadUI.temp.file" id="3528" beanClass="com.install4j.runtime.beans.actions.text.ModifyTextFileAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                    <serializedBean>
+                      <java class="java.beans.XMLDecoder">
+                        <object class="com.install4j.runtime.beans.actions.text.ModifyTextFileAction">
+                          <void property="encoding">
+                            <string />
+                          </void>
+                          <void property="file">
+                            <object class="java.io.File">
+                              <string>tempLoadUI${installer:FILE_SEPARATOR}loadUIInstallMAC.sh</string>
+                            </object>
+                          </void>
+                          <void property="replaceValue">
+                            <string>Replace value	${installer:sys.installationDir}${installer:FILE_SEPARATOR}tempLoadUI</string>
+                          </void>
+                          <void property="searchValue">
+                            <string>loadUI.temp.path</string>
+                          </void>
+                        </object>
+                      </java>
+                    </serializedBean>
+                    <condition />
+                  </action>
+                  <action name="set loadUIInstallMac unix mode" id="3530" beanClass="com.install4j.runtime.beans.actions.files.SetModeAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="Couldn't set access mode forloadUIInstall.sh">
+                    <serializedBean>
+                      <java class="java.beans.XMLDecoder">
+                        <object class="com.install4j.runtime.beans.actions.files.SetModeAction">
+                          <void property="file">
+                            <object class="java.io.File">
+                              <string>${installer:rootInstallDir}/tempLoadUI/loadUIInstalMAC.sh</string>
+                            </object>
+                          </void>
+                          <void property="mode">
+                            <string>755</string>
                           </void>
                         </object>
                       </java>
@@ -1386,7 +1489,7 @@ return component!=null;</condition>
                   </action>
                 </beans>
               </group>
-              <action name="" id="3471" beanClass="com.install4j.runtime.beans.actions.update.DownloadFileAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+              <action name="" id="3471" beanClass="com.install4j.runtime.beans.actions.update.DownloadFileAction" enabled="false" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
                 <serializedBean>
                   <java class="java.beans.XMLDecoder">
                     <object class="com.install4j.runtime.beans.actions.update.DownloadFileAction">
@@ -1403,7 +1506,7 @@ return component!=null;</condition>
 
 return component!=null;</condition>
               </action>
-              <action name="" id="3478" beanClass="com.install4j.runtime.beans.actions.misc.RunExecutableAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+              <action name="" id="3478" beanClass="com.install4j.runtime.beans.actions.misc.RunExecutableAction" enabled="false" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
                 <serializedBean>
                   <java class="java.beans.XMLDecoder">
                     <object class="com.install4j.runtime.beans.actions.misc.RunExecutableAction">
