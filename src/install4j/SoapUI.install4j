@@ -190,6 +190,7 @@
           <entry location=".i4j_fileset_2230" fileType="regular" />
           <entry location=".i4j_fileset_2232" fileType="regular" />
           <entry location=".i4j_fileset_2234" fileType="regular" />
+          <entry location=".i4j_external_2809/tempLoadUI" fileType="regular" />
         </include>
         <dependencies />
       </component>
@@ -211,13 +212,6 @@
         <description>Install tutorial content</description>
         <include all="false">
           <entry location=".i4j_fileset_2390" fileType="regular" />
-        </include>
-        <dependencies />
-      </component>
-      <component name="Install loadUI" id="2811" displayDescription="false" selected="true" mandatory="false" downloadable="false">
-        <description />
-        <include all="false">
-          <entry location=".i4j_external_2809/tempLoadUI" fileType="regular" />
         </include>
         <dependencies />
       </component>
@@ -1199,9 +1193,7 @@ return installTutorials;</condition>
                 <object class="com.install4j.runtime.beans.screens.FormScreen" />
               </java>
             </serializedBean>
-            <condition>InstallationComponentSetup component =context.getInstallationComponentById("2811");
-
-return component!=null;</condition>
+            <condition />
             <validation />
             <preActivation />
             <postActivation />
@@ -1489,38 +1481,22 @@ return component!=null;</condition>
                   </action>
                 </beans>
               </group>
-              <action name="" id="3471" beanClass="com.install4j.runtime.beans.actions.update.DownloadFileAction" enabled="false" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+              <action name="remove tempLoadUI" id="3532" beanClass="com.install4j.runtime.beans.actions.files.DeleteFileAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
                 <serializedBean>
                   <java class="java.beans.XMLDecoder">
-                    <object class="com.install4j.runtime.beans.actions.update.DownloadFileAction">
-                      <void property="targetFile">
-                        <string>${installer:sys.userHome}</string>
-                      </void>
-                      <void property="url">
-                        <string>${compiler:LOADUI_INSTALLER_URL}loadUI-${compiler:LOADUI_VERSION_NUMBER}.exe</string>
-                      </void>
-                    </object>
-                  </java>
-                </serializedBean>
-                <condition>InstallationComponentSetup component =context.getInstallationComponentById("2811");
-
-return component!=null;</condition>
-              </action>
-              <action name="" id="3478" beanClass="com.install4j.runtime.beans.actions.misc.RunExecutableAction" enabled="false" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
-                <serializedBean>
-                  <java class="java.beans.XMLDecoder">
-                    <object class="com.install4j.runtime.beans.actions.misc.RunExecutableAction">
-                      <void property="executable">
+                    <object class="com.install4j.runtime.beans.actions.files.DeleteFileAction">
+                      <void property="file">
                         <object class="java.io.File">
-                          <string>${installer:sys.userHome}loadUI-${compiler:LOADUI_VERSION_NUMBER}.${installer:EXTENSION}</string>
+                          <string>tempLoadUI</string>
                         </object>
                       </void>
+                      <void property="recurse">
+                        <boolean>true</boolean>
+                      </void>
                     </object>
                   </java>
                 </serializedBean>
-                <condition>InstallationComponentSetup component =context.getInstallationComponentById("2811");
-
-return component!=null;</condition>
+                <condition>!context.getBooleanVariable("installLoadUI")</condition>
               </action>
             </actions>
             <formComponents>
