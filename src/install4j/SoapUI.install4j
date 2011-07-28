@@ -961,7 +961,7 @@ else return false;
                             </object>
                           </void>
                           <void property="replaceValue">
-                            <string>Replace value	${installer:sys.installationDir}${installer:FILE_SEPARATOR}tempLoadUI</string>
+                            <string>${installer:sys.installationDir}${installer:FILE_SEPARATOR}tempLoadUI</string>
                           </void>
                           <void property="searchValue">
                             <string>loadUI.temp.path</string>
