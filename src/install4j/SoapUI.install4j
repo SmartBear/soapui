@@ -936,7 +936,7 @@ else return false;
                             </object>
                           </void>
                           <void property="replaceValue">
-                            <string>${compiler:LOADUI_INSTALLER_URL}loadUI_macos-${compiler:LOADUI_VERSION_NUMBER}.dmg</string>
+                            <string>${compiler:LOADUI_INSTALLER_URL}loadUI_macos_${compiler:LOADUI_VERSION_NUMBER}.dmg</string>
                           </void>
                           <void property="searchValue">
                             <string>loadUI.download.url</string>
