@@ -975,7 +975,7 @@ else return false;
                         <object class="com.install4j.runtime.beans.actions.files.SetModeAction">
                           <void property="file">
                             <object class="java.io.File">
-                              <string>${installer:rootInstallDir}/tempLoadUI/loadUIInstalMAC.sh</string>
+                              <string>${installer:rootInstallDir}/tempLoadUI/loadUIInstallMAC.sh</string>
                             </object>
                           </void>
                           <void property="mode">
