@@ -1,2 +1,2 @@
 #!/bin/sh
-java -jar downloader-1.0-SNAPSHOT.jar loadUI.download.url loadUI.temp.path
+java -jar ../lib/downloader-1.0-SNAPSHOT.jar loadUI.download.url loadUI.temp.path

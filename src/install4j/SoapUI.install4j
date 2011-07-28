@@ -79,6 +79,7 @@
       <mountPoint id="2238" root="2235" location="lib" mode="755" />
       <mountPoint id="2392" root="2391" location="soapUI-Tutorials" mode="755" />
       <mountPoint id="3057" root="2809" location="tempLoadUI" mode="755" />
+      <mountPoint id="3662" root="2809" location="lib" mode="755" />
     </mountPoints>
     <entries>
       <dirEntry mountPoint="321" file="${compiler:DIST_ROOT}/bin" overwrite="4" shared="false" mode="644" uninstallMode="0" excludeSuffixes="*.bat,*.sh" dirMode="755">
@@ -171,11 +172,11 @@
       <dirEntry mountPoint="2392" file="${compiler:DIST_ROOT}/Tutorials" overwrite="4" shared="false" mode="644" uninstallMode="0" excludeSuffixes="" dirMode="755">
         <exclude />
       </dirEntry>
-      <fileEntry mountPoint="3057" file="${compiler:LOADUI_DOWNLOADER}" overwrite="4" shared="false" mode="644" uninstallMode="0" />
       <fileEntry mountPoint="3057" file="${compiler:SRC_ROOT}/install4j/loadUI/loadUIInstallMAC.sh" overwrite="4" shared="false" mode="644" uninstallMode="0" />
       <fileEntry mountPoint="3057" file="${compiler:SRC_ROOT}/install4j/loadUI/loadUIInstall.bat" overwrite="4" shared="false" mode="644" uninstallMode="0" />
       <fileEntry mountPoint="3057" file="${compiler:SRC_ROOT}/install4j/loadUI/loadUIInstall.sh" overwrite="4" shared="false" mode="644" uninstallMode="0" />
       <fileEntry mountPoint="3057" file="${compiler:SRC_ROOT}/install4j/loadUI/loadUIInstall64bit.bat" overwrite="4" shared="false" mode="644" uninstallMode="0" />
+      <fileEntry mountPoint="3662" file="${compiler:LOADUI_DOWNLOADER}" overwrite="4" shared="false" mode="644" uninstallMode="0" />
     </entries>
     <components>
       <component name="SoapUI" id="132" displayDescription="false" selected="true" mandatory="true" downloadable="false">
@@ -192,6 +193,7 @@
           <entry location=".i4j_fileset_2232" fileType="regular" />
           <entry location=".i4j_fileset_2234" fileType="regular" />
           <entry location=".i4j_external_2809/tempLoadUI" fileType="regular" />
+          <entry location=".i4j_external_2809/lib" fileType="regular" />
         </include>
         <dependencies />
       </component>
