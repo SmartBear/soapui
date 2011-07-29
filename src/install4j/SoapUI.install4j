@@ -963,7 +963,7 @@ else return false;
                           </void>
                           <void property="file">
                             <object class="java.io.File">
-                              <string>tempLoadUI${installer:FILE_SEPARATOR}loadUIInstall.sh</string>
+                              <string>${installer:sys.userHome}/tempLoadUI/loadUIInstall.sh</string>
                             </object>
                           </void>
                           <void property="replaceValue">
