@@ -59,6 +59,7 @@
       <root id="2235" fileset="2234" location="" />
       <root id="2391" fileset="2390" location="" />
       <root id="2809" fileset="2808" location="" />
+      <root id="3778" fileset="2808" location="${installer:sys.userHome}" />
     </roots>
     <mountPoints>
       <mountPoint id="321" root="" location="bin" mode="755" />
@@ -78,8 +79,8 @@
       <mountPoint id="2237" root="2233" location="lib" mode="755" />
       <mountPoint id="2238" root="2235" location="lib" mode="755" />
       <mountPoint id="2392" root="2391" location="soapUI-Tutorials" mode="755" />
-      <mountPoint id="3057" root="2809" location="tempLoadUI" mode="755" />
       <mountPoint id="3662" root="2809" location="lib" mode="755" />
+      <mountPoint id="3779" root="3778" location="tempLoadUI" mode="755" />
     </mountPoints>
     <entries>
       <dirEntry mountPoint="321" file="${compiler:DIST_ROOT}/bin" overwrite="4" shared="false" mode="644" uninstallMode="0" excludeSuffixes="*.bat,*.sh" dirMode="755">
@@ -172,11 +173,11 @@
       <dirEntry mountPoint="2392" file="${compiler:DIST_ROOT}/Tutorials" overwrite="4" shared="false" mode="644" uninstallMode="0" excludeSuffixes="" dirMode="755">
         <exclude />
       </dirEntry>
-      <fileEntry mountPoint="3057" file="${compiler:SRC_ROOT}/install4j/loadUI/loadUIInstallMAC.sh" overwrite="4" shared="false" mode="644" uninstallMode="0" />
-      <fileEntry mountPoint="3057" file="${compiler:SRC_ROOT}/install4j/loadUI/loadUIInstall.bat" overwrite="4" shared="false" mode="644" uninstallMode="0" />
-      <fileEntry mountPoint="3057" file="${compiler:SRC_ROOT}/install4j/loadUI/loadUIInstall.sh" overwrite="4" shared="false" mode="644" uninstallMode="0" />
-      <fileEntry mountPoint="3057" file="${compiler:SRC_ROOT}/install4j/loadUI/loadUIInstall64bit.bat" overwrite="4" shared="false" mode="644" uninstallMode="0" />
       <fileEntry mountPoint="3662" file="${compiler:LOADUI_DOWNLOADER}" overwrite="4" shared="false" mode="644" uninstallMode="0" />
+      <fileEntry mountPoint="3779" file="${compiler:SRC_ROOT}/install4j/loadUI/loadUIInstallMAC.sh" overwrite="4" shared="false" mode="644" uninstallMode="0" />
+      <fileEntry mountPoint="3779" file="${compiler:SRC_ROOT}/install4j/loadUI/loadUIInstall.bat" overwrite="4" shared="false" mode="644" uninstallMode="0" />
+      <fileEntry mountPoint="3779" file="${compiler:SRC_ROOT}/install4j/loadUI/loadUIInstall.sh" overwrite="4" shared="false" mode="644" uninstallMode="0" />
+      <fileEntry mountPoint="3779" file="${compiler:SRC_ROOT}/install4j/loadUI/loadUIInstall64bit.bat" overwrite="4" shared="false" mode="644" uninstallMode="0" />
     </entries>
     <components>
       <component name="SoapUI" id="132" displayDescription="false" selected="true" mandatory="true" downloadable="false">
@@ -192,8 +193,7 @@
           <entry location=".i4j_fileset_2230" fileType="regular" />
           <entry location=".i4j_fileset_2232" fileType="regular" />
           <entry location=".i4j_fileset_2234" fileType="regular" />
-          <entry location=".i4j_external_2809/tempLoadUI" fileType="regular" />
-          <entry location=".i4j_external_2809/lib" fileType="regular" />
+          <entry location=".i4j_fileset_2808" fileType="regular" />
         </include>
         <dependencies />
       </component>
@@ -779,7 +779,7 @@ else return false;
                           </void>
                           <void property="file">
                             <object class="java.io.File">
-                              <string>tempLoadUI${installer:FILE_SEPARATOR}loadUIInstall.bat</string>
+                              <string>${installer:sys.userHome}/tempLoadUI/loadUIInstall.bat</string>
                             </object>
                           </void>
                           <void property="replaceValue">
@@ -802,14 +802,37 @@ else return false;
                           </void>
                           <void property="file">
                             <object class="java.io.File">
-                              <string>tempLoadUI${installer:FILE_SEPARATOR}loadUIInstall.bat</string>
+                              <string>${installer:sys.userHome}/tempLoadUI/loadUIInstall.bat</string>
                             </object>
                           </void>
                           <void property="replaceValue">
-                            <string>${installer:sys.installationDir}${installer:FILE_SEPARATOR}tempLoadUI</string>
+                            <string>${installer:sys.userHome}${installer:FILE_SEPARATOR}tempLoadUI</string>
                           </void>
                           <void property="searchValue">
                             <string>loadUI.temp.path</string>
+                          </void>
+                        </object>
+                      </java>
+                    </serializedBean>
+                    <condition />
+                  </action>
+                  <action name="Set windows soapui.home" id="3771" beanClass="com.install4j.runtime.beans.actions.text.ModifyTextFileAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                    <serializedBean>
+                      <java class="java.beans.XMLDecoder">
+                        <object class="com.install4j.runtime.beans.actions.text.ModifyTextFileAction">
+                          <void property="encoding">
+                            <string />
+                          </void>
+                          <void property="file">
+                            <object class="java.io.File">
+                              <string>${installer:sys.userHome}/tempLoadUI/loadUIInstall.bat</string>
+                            </object>
+                          </void>
+                          <void property="replaceValue">
+                            <string>${installer:rootInstallDir}</string>
+                          </void>
+                          <void property="searchValue">
+                            <string>soapui.home</string>
                           </void>
                         </object>
                       </java>
@@ -825,7 +848,7 @@ else return false;
                           </void>
                           <void property="file">
                             <object class="java.io.File">
-                              <string>tempLoadUI${installer:FILE_SEPARATOR}loadUIInstall64bit.bat</string>
+                              <string>${installer:sys.userHome}/tempLoadUI/loadUIInstall64bit.bat</string>
                             </object>
                           </void>
                           <void property="replaceValue">
@@ -848,14 +871,37 @@ else return false;
                           </void>
                           <void property="file">
                             <object class="java.io.File">
-                              <string>tempLoadUI${installer:FILE_SEPARATOR}loadUIInstall64bit.bat</string>
+                              <string>${installer:sys.userHome}/tempLoadUI/loadUIInstall64bit.bat</string>
                             </object>
                           </void>
                           <void property="replaceValue">
-                            <string>${installer:sys.installationDir}${installer:FILE_SEPARATOR}tempLoadUI</string>
+                            <string>${installer:sys.userHome}${installer:FILE_SEPARATOR}tempLoadUI</string>
                           </void>
                           <void property="searchValue">
                             <string>loadUI.temp.path</string>
+                          </void>
+                        </object>
+                      </java>
+                    </serializedBean>
+                    <condition />
+                  </action>
+                  <action name="Set windows64bit soapui.home" id="3772" beanClass="com.install4j.runtime.beans.actions.text.ModifyTextFileAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                    <serializedBean>
+                      <java class="java.beans.XMLDecoder">
+                        <object class="com.install4j.runtime.beans.actions.text.ModifyTextFileAction">
+                          <void property="encoding">
+                            <string />
+                          </void>
+                          <void property="file">
+                            <object class="java.io.File">
+                              <string>${installer:sys.userHome}/tempLoadUI/loadUIInstall64bit.bat</string>
+                            </object>
+                          </void>
+                          <void property="replaceValue">
+                            <string>${installer:rootInstallDir}</string>
+                          </void>
+                          <void property="searchValue">
+                            <string>soapui.home</string>
                           </void>
                         </object>
                       </java>
@@ -871,7 +917,7 @@ else return false;
                           </void>
                           <void property="file">
                             <object class="java.io.File">
-                              <string>tempLoadUI${installer:FILE_SEPARATOR}loadUIInstall.sh</string>
+                              <string>${installer:sys.userHome}/tempLoadUI/loadUIInstall.sh</string>
                             </object>
                           </void>
                           <void property="replaceValue">
@@ -894,14 +940,37 @@ else return false;
                           </void>
                           <void property="file">
                             <object class="java.io.File">
+                              <string>${installer:sys.userHome}/tempLoadUI/loadUIInstall.sh</string>
+                            </object>
+                          </void>
+                          <void property="replaceValue">
+                            <string>${installer:sys.userHome}${installer:FILE_SEPARATOR}tempLoadUI</string>
+                          </void>
+                          <void property="searchValue">
+                            <string>loadUI.temp.path</string>
+                          </void>
+                        </object>
+                      </java>
+                    </serializedBean>
+                    <condition />
+                  </action>
+                  <action name="Set linux soapui.home" id="3773" beanClass="com.install4j.runtime.beans.actions.text.ModifyTextFileAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                    <serializedBean>
+                      <java class="java.beans.XMLDecoder">
+                        <object class="com.install4j.runtime.beans.actions.text.ModifyTextFileAction">
+                          <void property="encoding">
+                            <string />
+                          </void>
+                          <void property="file">
+                            <object class="java.io.File">
                               <string>tempLoadUI${installer:FILE_SEPARATOR}loadUIInstall.sh</string>
                             </object>
                           </void>
                           <void property="replaceValue">
-                            <string>${installer:rootInstallDir}${installer:FILE_SEPARATOR}tempLoadUI</string>
+                            <string>${installer:rootInstallDir}</string>
                           </void>
                           <void property="searchValue">
-                            <string>loadUI.temp.path</string>
+                            <string>soapui.home</string>
                           </void>
                         </object>
                       </java>
@@ -914,7 +983,7 @@ else return false;
                         <object class="com.install4j.runtime.beans.actions.files.SetModeAction">
                           <void property="file">
                             <object class="java.io.File">
-                              <string>${installer:rootInstallDir}/tempLoadUI/loadUIInstall.sh</string>
+                              <string>${installer:sys.userHome}/tempLoadUI/loadUIInstall.sh</string>
                             </object>
                           </void>
                           <void property="mode">
@@ -934,7 +1003,7 @@ else return false;
                           </void>
                           <void property="file">
                             <object class="java.io.File">
-                              <string>tempLoadUI${installer:FILE_SEPARATOR}loadUIInstallMAC.sh</string>
+                              <string>${installer:sys.userHome}/tempLoadUI/loadUIInstallMAC.sh</string>
                             </object>
                           </void>
                           <void property="replaceValue">
@@ -957,14 +1026,37 @@ else return false;
                           </void>
                           <void property="file">
                             <object class="java.io.File">
-                              <string>tempLoadUI${installer:FILE_SEPARATOR}loadUIInstallMAC.sh</string>
+                              <string>${installer:sys.userHome}/tempLoadUI/loadUIInstallMAC.sh</string>
                             </object>
                           </void>
                           <void property="replaceValue">
-                            <string>${installer:sys.installationDir}${installer:FILE_SEPARATOR}tempLoadUI</string>
+                            <string>${installer:sys.userHome}${installer:FILE_SEPARATOR}tempLoadUI</string>
                           </void>
                           <void property="searchValue">
                             <string>loadUI.temp.path</string>
+                          </void>
+                        </object>
+                      </java>
+                    </serializedBean>
+                    <condition />
+                  </action>
+                  <action name="Set mac soapui.home" id="3774" beanClass="com.install4j.runtime.beans.actions.text.ModifyTextFileAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                    <serializedBean>
+                      <java class="java.beans.XMLDecoder">
+                        <object class="com.install4j.runtime.beans.actions.text.ModifyTextFileAction">
+                          <void property="encoding">
+                            <string />
+                          </void>
+                          <void property="file">
+                            <object class="java.io.File">
+                              <string>${installer:sys.userHome}/tempLoadUI/loadUIInstallMAC.sh</string>
+                            </object>
+                          </void>
+                          <void property="replaceValue">
+                            <string>${installer:rootInstallDir}</string>
+                          </void>
+                          <void property="searchValue">
+                            <string>soapui.home</string>
                           </void>
                         </object>
                       </java>
@@ -977,7 +1069,7 @@ else return false;
                         <object class="com.install4j.runtime.beans.actions.files.SetModeAction">
                           <void property="file">
                             <object class="java.io.File">
-                              <string>${installer:rootInstallDir}/tempLoadUI/loadUIInstallMAC.sh</string>
+                              <string>${installer:sys.userHome}/tempLoadUI/loadUIInstallMAC.sh</string>
                             </object>
                           </void>
                           <void property="mode">
@@ -994,7 +1086,7 @@ else return false;
                         <object class="com.install4j.runtime.beans.actions.misc.RunExecutableAction">
                           <void property="executable">
                             <object class="java.io.File">
-                              <string>tempLoadUI/loadUIInstall${compiler:OS_EXT}.${installer:EXTENSION}</string>
+                              <string>${installer:sys.userHome}/tempLoadUI/loadUIInstall${compiler:OS_EXT}.${installer:EXTENSION}</string>
                             </object>
                           </void>
                           <void property="keepConsoleWindow">
@@ -1018,7 +1110,7 @@ else return false;
                     <object class="com.install4j.runtime.beans.actions.files.DeleteFileAction">
                       <void property="file">
                         <object class="java.io.File">
-                          <string>tempLoadUI</string>
+                          <string>${installer:sys.userHome}/tempLoadUI</string>
                         </object>
                       </void>
                       <void property="recurse">
