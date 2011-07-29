@@ -1562,9 +1562,7 @@ return installTutorials;</condition>
                     </object>
                   </java>
                 </serializedBean>
-                <condition>InstallationComponentSetup component =context.getInstallationComponentById("1263");
-
-return component!=null;</condition>
+                <condition />
               </action>
               <action name="" id="413" beanClass="com.install4j.runtime.beans.actions.finish.ShowFileAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
                 <serializedBean>
