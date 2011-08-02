@@ -15,6 +15,7 @@ package com.eviware.soapui.support.jdbc;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.regex.Matcher;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
@@ -42,6 +43,7 @@ public class JdbcUtils
 		String masskedPass = connStr.replace( PASS_TEMPLATE, "#####" );
 		if( connStr.contains( PASS_TEMPLATE ) )
 		{
+			pass = Matcher.quoteReplacement( pass );
 			connStr = connStr.replaceFirst( PASS_TEMPLATE, pass );
 		}
 		try
