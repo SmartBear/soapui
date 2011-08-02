@@ -207,8 +207,8 @@ public class RestRequestStepResult extends WsdlTestStepResult implements Respons
 			}
 		}
 
-		if( StringUtils.hasContent( requestContent ) )
-			writer.println( "\r\n" + requestContent );
+		if( StringUtils.hasContent( new String( response.getRawRequestData() ) ) )
+			writer.println( "\r\n" +  new String( response.getRawRequestData() ) ) ;
 		else
 			writer.println( "\r\n- missing request / garbage collected -" );
 
