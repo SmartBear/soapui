@@ -1004,41 +1004,62 @@
 			<artifactId>mockito-all</artifactId>
 			<version>1.8.5</version>
 			<scope>test</scope>
+			<properties>
+				<jnlp.jar>true</jnlp.jar>
+			</properties>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
 			<version>4.1.1</version>
 			<scope>compile</scope>
+			<properties>
+				<jnlp.jar>true</jnlp.jar>
+			</properties>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpmime</artifactId>
 			<version>4.1.1</version>
 			<scope>compile</scope>
+			<properties>
+				<jnlp.jar>true</jnlp.jar>
+			</properties>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient-cache</artifactId>
 			<version>4.1.1</version>
 			<scope>compile</scope>
+			<properties>
+				<jnlp.jar>true</jnlp.jar>
+			</properties>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpcore</artifactId>
 			<version>4.1.1</version>
 			<scope>compile</scope>
+			<properties>
+				<jnlp.jar>true</jnlp.jar>
+			</properties>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpcore-nio</artifactId>
 			<version>4.1.1</version>
 			<scope>compile</scope>
+			<properties>
+				<jnlp.jar>true</jnlp.jar>
+			</properties>
 		</dependency>
 		<dependency>
 			<groupId>org.samba.jcifs</groupId>
 			<artifactId>jcifs</artifactId>
 			<version>1.2.9</version>
+			<properties>
+				<jnlp.jar>true</jnlp.jar>
+			</properties>
 		</dependency>
 	</dependencies>
 	<build>
