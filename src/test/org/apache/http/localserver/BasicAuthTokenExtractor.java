@@ -27,8 +27,6 @@
 
 package org.apache.http.localserver;
 
-import junit.framework.JUnit4TestAdapter;
-
 import org.apache.commons.codec.BinaryDecoder;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Base64;
@@ -41,10 +39,6 @@ import org.apache.http.util.EncodingUtils;
 
 public class BasicAuthTokenExtractor
 {
-	public static junit.framework.Test suite()
-	{
-		return new JUnit4TestAdapter( BasicAuthTokenExtractor.class );
-	}
 
 	public String extract( final HttpRequest request ) throws HttpException
 	{
