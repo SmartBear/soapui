@@ -10,6 +10,10 @@ import java.io.OutputStreamWriter;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 
+import junit.framework.Assert;
+
+import org.junit.Test;
+
 public class EchoClient
 {
 	public static void main( String[] arstring )
@@ -38,5 +42,11 @@ public class EchoClient
 		{
 			exception.printStackTrace();
 		}
+	}
+
+	@Test
+	public void test()
+	{
+		Assert.assertTrue( true );
 	}
 }

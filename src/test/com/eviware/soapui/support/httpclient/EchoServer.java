@@ -8,6 +8,10 @@ import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
 import javax.net.ssl.SSLSocket;
 
+import junit.framework.Assert;
+
+import org.junit.Test;
+
 public class EchoServer
 {
 	public static void main( String[] arstring )
@@ -33,5 +37,11 @@ public class EchoServer
 		{
 			exception.printStackTrace();
 		}
+	}
+
+	@Test
+	public void test()
+	{
+		Assert.assertTrue( true );
 	}
 }
