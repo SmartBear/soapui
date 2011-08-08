@@ -26,7 +26,7 @@ import java.util.Vector;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.httpclient.Header;
+import org.apache.http.Header;
 import org.w3c.dom.Document;
 
 import com.eviware.soapui.SoapUI;
@@ -532,7 +532,7 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
 
 	public void setResponseHeader( ExtendedHttpMethod method )
 	{
-		Header[] headers = method.getResponseHeaders();
+		Header[] headers = method.getAllHeaders();
 		for( Header header : headers )
 		{
 			String name = header.getName();

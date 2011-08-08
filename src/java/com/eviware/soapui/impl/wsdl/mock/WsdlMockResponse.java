@@ -738,7 +738,7 @@ public class WsdlMockResponse extends AbstractWsdlModelItem<MockResponseConfig> 
 			MimeMessageMockResponseEntity mimeMessageRequestEntity = new MimeMessageMockResponseEntity( message, isXOP,
 					this );
 
-			response.addHeader( "Content-Type", mimeMessageRequestEntity.getContentType() );
+			response.addHeader( "Content-Type", mimeMessageRequestEntity.getContentType().getValue() );
 			response.addHeader( "MIME-Version", "1.0" );
 			mimeMessageRequestEntity.writeRequest( outData );
 		}

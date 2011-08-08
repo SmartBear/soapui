@@ -12,11 +12,9 @@
 
 package com.eviware.soapui.impl.wsdl.submit.filters;
 
-import org.apache.commons.httpclient.HostConfiguration;
-import org.apache.commons.httpclient.HttpState;
+import org.apache.http.protocol.HttpContext;
 
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransport;
 import com.eviware.soapui.impl.wsdl.support.http.ProxyUtils;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
@@ -34,11 +32,9 @@ public class HttpProxyRequestFilter extends AbstractRequestFilter
 	{
 		// init proxy settings
 		Settings settings = wsdlRequest.getSettings();
-		HostConfiguration hostConfiguration = ( HostConfiguration )context
-				.getProperty( BaseHttpRequestTransport.HOST_CONFIGURATION );
-		HttpState httpState = ( HttpState )context.getProperty( SubmitContext.HTTP_STATE_PROPERTY );
+		HttpContext httpState = ( HttpContext )context.getProperty( SubmitContext.HTTP_STATE_PROPERTY );
 
 		String endpoint = PropertyExpander.expandProperties( context, wsdlRequest.getEndpoint() );
-		ProxyUtils.initProxySettings( settings, httpState, hostConfiguration, endpoint, context );
+		ProxyUtils.initProxySettings( settings, httpState, endpoint, context );
 	}
 }

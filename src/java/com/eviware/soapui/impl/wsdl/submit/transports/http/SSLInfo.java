@@ -17,7 +17,6 @@ import java.security.cert.Certificate;
 
 import javax.net.ssl.SSLPeerUnverifiedException;
 import javax.net.ssl.SSLSession;
-import javax.net.ssl.SSLSocket;
 
 /**
  * Holder for SSL-Related details for a request/response interchange
@@ -34,10 +33,8 @@ public class SSLInfo
 	private Certificate[] peerCertificates;
 	private boolean peerUnverified;
 
-	public SSLInfo( SSLSocket socket )
+	public SSLInfo( SSLSession session )
 	{
-		SSLSession session = socket.getSession();
-
 		cipherSuite = session.getCipherSuite();
 		localPrincipal = session.getLocalPrincipal();
 		localCertificates = session.getLocalCertificates();

@@ -19,12 +19,15 @@ import java.net.UnknownHostException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.httpclient.Credentials;
-import org.apache.commons.httpclient.HostConfiguration;
-import org.apache.commons.httpclient.HttpState;
-import org.apache.commons.httpclient.NTCredentials;
-import org.apache.commons.httpclient.UsernamePasswordCredentials;
-import org.apache.commons.httpclient.auth.AuthScope;
+import org.apache.http.HttpHost;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.AuthState;
+import org.apache.http.auth.Credentials;
+import org.apache.http.auth.NTCredentials;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.protocol.ClientContext;
+import org.apache.http.protocol.ExecutionContext;
+import org.apache.http.protocol.HttpContext;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
@@ -43,9 +46,10 @@ public class ProxyUtils
 {
 	private static boolean proxyEnabled = SoapUI.getSettings().getBoolean( ProxySettings.ENABLE_PROXY );
 
-	public static HostConfiguration initProxySettings( Settings settings, HttpState httpState,
-			HostConfiguration hostConfiguration, String urlString, PropertyExpansionContext context )
+	public static void initProxySettings( Settings settings, HttpContext httpContext, String urlString,
+			PropertyExpansionContext context )
 	{
+		HttpHost proxy = null;
 		boolean enabled = proxyEnabled;
 
 		// check system properties first
@@ -68,7 +72,7 @@ public class ProxyUtils
 
 				if( !excludes( excludes, url.getHost(), url.getPort() ) )
 				{
-					hostConfiguration.setProxy( proxyHost, Integer.parseInt( proxyPort ) );
+					proxy = new HttpHost( proxyHost, Integer.parseInt( proxyPort ) );
 
 					String proxyUsername = PropertyExpander.expandProperties( context,
 							settings.getString( ProxySettings.USERNAME, null ) );
@@ -92,7 +96,11 @@ public class ProxyUtils
 							}
 						}
 
-						httpState.setProxyCredentials( AuthScope.ANY, proxyCreds );
+						httpContext.setAttribute( ExecutionContext.HTTP_PROXY_HOST, proxy );
+						AuthState authState = new AuthState();
+						authState.setAuthScope( new AuthScope( AuthScope.ANY_HOST, AuthScope.ANY_PORT ) );
+						authState.setCredentials( proxyCreds );
+						httpContext.setAttribute( ClientContext.PROXY_AUTH_STATE, authState );
 					}
 				}
 			}
@@ -101,8 +109,6 @@ public class ProxyUtils
 				SoapUI.logError( e );
 			}
 		}
-
-		return hostConfiguration;
 	}
 
 	public static boolean excludes( String[] excludes, String proxyHost, int proxyPort )

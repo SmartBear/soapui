@@ -14,7 +14,6 @@ package com.eviware.soapui.impl.wsdl.submit.transports.http;
 
 import java.net.URL;
 
-import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
 import com.eviware.soapui.model.iface.Response;
 
@@ -28,7 +27,7 @@ public interface HttpResponse extends Response
 
 	public abstract URL getURL();
 
-	public RestRequestInterface.RequestMethod getMethod();
+	public String getMethod();
 
 	public String getHttpVersion();
 

@@ -15,18 +15,19 @@ package com.eviware.soapui.impl.wsdl.monitor;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
-import org.apache.commons.httpclient.HostConfiguration;
-import org.apache.commons.httpclient.HttpMethod;
+import org.apache.http.HttpRequest;
+
+import com.eviware.soapui.impl.wsdl.support.http.SoapUIHostConfiguration;
 
 public class MonitorListenerAdapter implements MonitorListener
 {
 	public void afterProxy( SoapMonitor soapMonitor, ServletRequest request, ServletResponse response,
-			HttpMethod method, WsdlMonitorMessageExchange capturedData )
+			HttpRequest method, WsdlMonitorMessageExchange capturedData )
 	{
 	}
 
 	public void beforeProxy( SoapMonitor soapMonitor, ServletRequest request, ServletResponse response,
-			HttpMethod method, HostConfiguration hostConfiguration )
+			HttpRequest method, SoapUIHostConfiguration hostConfiguration )
 	{
 	}
 

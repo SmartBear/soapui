@@ -14,15 +14,17 @@ package com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods;
 
 import java.io.IOException;
 
-import org.apache.commons.httpclient.HttpConnection;
-import org.apache.commons.httpclient.HttpException;
-import org.apache.commons.httpclient.HttpState;
-import org.apache.commons.httpclient.methods.PostMethod;
+import javax.net.ssl.SSLSession;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpPost;
 
 import com.eviware.soapui.impl.rest.RestRequestInterface;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedEntityEnclosingHttpMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpMethodSupport;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.SSLInfo;
+import com.eviware.soapui.support.uri.EncodingUtil;
 
 /**
  * Extended PostMethod that supports limiting of response size and detailed
@@ -31,7 +33,7 @@ import com.eviware.soapui.impl.wsdl.submit.transports.http.SSLInfo;
  * @author Ole.Matzura
  */
 
-public final class ExtendedPostMethod extends PostMethod implements ExtendedHttpMethod
+public final class ExtendedPostMethod extends HttpPost implements ExtendedEntityEnclosingHttpMethod
 {
 	private HttpMethodSupport httpMethodSupport;
 	private IAfterRequestInjection afterRequestInjection;
@@ -39,13 +41,13 @@ public final class ExtendedPostMethod extends PostMethod implements ExtendedHttp
 
 	public ExtendedPostMethod()
 	{
-		httpMethodSupport = new HttpMethodSupport( this );
+		httpMethodSupport = new HttpMethodSupport();
 	}
 
 	public ExtendedPostMethod( String url )
 	{
 		super( url );
-		httpMethodSupport = new HttpMethodSupport( this );
+		httpMethodSupport = new HttpMethodSupport();
 	}
 
 	public String getDumpFile()
@@ -58,33 +60,25 @@ public final class ExtendedPostMethod extends PostMethod implements ExtendedHttp
 		httpMethodSupport.setDumpFile( dumpFile );
 	}
 
-	@Override
-	public boolean getFollowRedirects()
-	{
-		return followRedirects;
-	}
-
-	@Override
-	public void setFollowRedirects( boolean followRedirects )
-	{
-		this.followRedirects = followRedirects;
-	}
-
 	public boolean hasResponse()
 	{
 		return httpMethodSupport.hasResponse();
 	}
 
-	protected void readResponse( HttpState arg0, HttpConnection arg1 ) throws IOException, HttpException
+	public void afterReadResponse( SSLSession session )
 	{
-		super.readResponse( arg0, arg1 );
-		httpMethodSupport.afterReadResponse( arg0, arg1 );
+		httpMethodSupport.afterReadResponse( session );
 	}
 
 	@Override
 	public String getResponseCharSet()
 	{
 		return httpMethodSupport.getResponseCharset();
+	}
+
+	public HttpEntity getRequestEntity()
+	{
+		return super.getEntity();
 	}
 
 	public long getMaxSize()
@@ -102,10 +96,9 @@ public final class ExtendedPostMethod extends PostMethod implements ExtendedHttp
 		return httpMethodSupport.getResponseReadTime();
 	}
 
-	protected void writeRequest( HttpState arg0, HttpConnection arg1 ) throws IOException, HttpException
+	public void afterWriteRequest()
 	{
-		super.writeRequest( arg0, arg1 );
-		httpMethodSupport.afterWriteRequest( arg0, arg1 );
+		httpMethodSupport.afterWriteRequest();
 		if( afterRequestInjection != null )
 			afterRequestInjection.executeAfterRequest();
 	}
@@ -140,9 +133,9 @@ public final class ExtendedPostMethod extends PostMethod implements ExtendedHttp
 		return httpMethodSupport.getResponseContentType();
 	}
 
-	public RestRequestInterface.RequestMethod getMethod()
+	public String getMethod()
 	{
-		return RestRequestInterface.RequestMethod.POST;
+		return RestRequestInterface.RequestMethod.POST.toString();
 	}
 
 	public void setAfterRequestInjection( IAfterRequestInjection injection )
@@ -175,4 +168,31 @@ public final class ExtendedPostMethod extends PostMethod implements ExtendedHttp
 		httpMethodSupport.setDecompress( decompress );
 	}
 
+	public void setHttpResponse( HttpResponse httpResponse )
+	{
+		httpMethodSupport.setHttpResponse( httpResponse );
+	}
+
+	public HttpResponse getHttpResponse()
+	{
+		return httpMethodSupport.getHttpResponse();
+	}
+
+	public boolean hasHttpResponse()
+	{
+		return httpMethodSupport.hasHttpResponse();
+	}
+
+	public String getResponseBodyAsString() throws IOException
+	{
+		byte[] rawdata = getResponseBody();
+		if( rawdata != null )
+		{
+			return EncodingUtil.getString( rawdata, getResponseCharSet() );
+		}
+		else
+		{
+			return null;
+		}
+	}
 }

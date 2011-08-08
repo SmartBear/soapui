@@ -12,7 +12,7 @@
 
 package com.eviware.soapui.impl.wsdl.submit.filters;
 
-import org.apache.commons.httpclient.HttpMethod;
+import org.apache.http.HttpRequest;
 
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
@@ -30,7 +30,7 @@ public class SoapHeadersRequestFilter extends AbstractRequestFilter
 {
 	public void filterWsdlRequest( SubmitContext context, WsdlRequest wsdlRequest )
 	{
-		HttpMethod postMethod = ( HttpMethod )context.getProperty( BaseHttpRequestTransport.HTTP_METHOD );
+		HttpRequest postMethod = ( HttpRequest )context.getProperty( BaseHttpRequestTransport.HTTP_METHOD );
 
 		WsdlInterface wsdlInterface = ( WsdlInterface )wsdlRequest.getOperation().getInterface();
 
@@ -40,13 +40,13 @@ public class SoapHeadersRequestFilter extends AbstractRequestFilter
 		SoapVersion soapVersion = wsdlInterface.getSoapVersion();
 		String soapAction = wsdlRequest.isSkipSoapAction() ? null : wsdlRequest.getAction();
 
-		postMethod.setRequestHeader( "Content-Type", soapVersion.getContentTypeHttpHeader( encoding, soapAction ) );
+		postMethod.setHeader( "Content-Type", soapVersion.getContentTypeHttpHeader( encoding, soapAction ) );
 
 		if( !wsdlRequest.isSkipSoapAction() )
 		{
 			String soapActionHeader = soapVersion.getSoapActionHeader( soapAction );
 			if( soapActionHeader != null )
-				postMethod.setRequestHeader( "SOAPAction", soapActionHeader );
+				postMethod.setHeader( "SOAPAction", soapActionHeader );
 		}
 	}
 }

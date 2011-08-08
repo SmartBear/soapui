@@ -49,8 +49,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 
 import org.apache.commons.collections.list.TreeList;
-import org.apache.commons.httpclient.HostConfiguration;
-import org.apache.commons.httpclient.HttpMethod;
+import org.apache.http.HttpRequest;
 import org.jdesktop.swingx.JXTable;
 import org.jdesktop.swingx.decorator.Filter;
 import org.jdesktop.swingx.decorator.FilterPipeline;
@@ -71,6 +70,7 @@ import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.support.MessageExchangeModelItem;
 import com.eviware.soapui.impl.wsdl.support.MessageExchangeRequestMessageEditor;
 import com.eviware.soapui.impl.wsdl.support.MessageExchangeResponseMessageEditor;
+import com.eviware.soapui.impl.wsdl.support.http.SoapUIHostConfiguration;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequest;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
@@ -1512,14 +1512,14 @@ public class SoapMonitor extends JPanel
 		}
 	}
 
-	public void fireBeforeProxy( ServletRequest request, ServletResponse response, HttpMethod method,
-			HostConfiguration hostConfiguration )
+	public void fireBeforeProxy( ServletRequest request, ServletResponse response, HttpRequest httpRequest,
+			SoapUIHostConfiguration hostConfiguration )
 	{
 		for( MonitorListener listener : listeners.get() )
 		{
 			try
 			{
-				listener.beforeProxy( this, request, response, method, hostConfiguration );
+				listener.beforeProxy( this, request, response, httpRequest, hostConfiguration );
 			}
 			catch( Throwable t )
 			{
@@ -1528,14 +1528,14 @@ public class SoapMonitor extends JPanel
 		}
 	}
 
-	public void fireAfterProxy( ServletRequest request, ServletResponse response, HttpMethod method,
+	public void fireAfterProxy( ServletRequest request, ServletResponse response, HttpRequest httpRequest,
 			WsdlMonitorMessageExchange capturedData )
 	{
 		for( MonitorListener listener : listeners.get() )
 		{
 			try
 			{
-				listener.afterProxy( this, request, response, method, capturedData );
+				listener.afterProxy( this, request, response, httpRequest, capturedData );
 			}
 			catch( Throwable t )
 			{

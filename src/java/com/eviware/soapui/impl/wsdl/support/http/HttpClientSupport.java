@@ -13,23 +13,32 @@
 package com.eviware.soapui.impl.wsdl.support.http;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.security.GeneralSecurityException;
 import java.security.KeyManagementException;
+import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 
-import org.apache.commons.httpclient.Header;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpMethod;
-import org.apache.commons.httpclient.contrib.ssl.EasySSLProtocolSocketFactory;
-import org.apache.commons.httpclient.protocol.Protocol;
-import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
-import org.apache.commons.ssl.KeyMaterial;
+import org.apache.http.Header;
+import org.apache.http.HttpRequest;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.params.AuthPolicy;
+import org.apache.http.conn.scheme.PlainSocketFactory;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.tsccm.BasicPooledConnAdapter;
+import org.apache.http.params.CoreConnectionPNames;
+import org.apache.http.protocol.HttpContext;
 import org.apache.log4j.Logger;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
 import com.eviware.soapui.impl.wsdl.support.CompressionSupport;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.settings.SettingsListener;
@@ -53,105 +62,77 @@ public class HttpClientSupport
 
 	private static class Helper
 	{
-		private HttpClient httpClient;
+		private DefaultHttpClient httpClient;
 		private final static Logger log = Logger.getLogger( HttpClientSupport.Helper.class );
-		private SoapUIEasySSLProtocolSocketFactory easySSL;
 		private SoapUIMultiThreadedHttpConnectionManager connectionManager;
+		private KeyStore trustStore;
+		private SoapUISSLSocketFactory socketFactory;
 
 		public Helper()
 		{
+			Settings settings = SoapUI.getSettings();
+
 			try
 			{
-				easySSL = new SoapUIEasySSLProtocolSocketFactory();
-				initSSL( easySSL );
+				trustStore = initTrustStore();
 
-				Protocol easyhttps = new Protocol( "https", ( ProtocolSocketFactory )easySSL, 443 );
-				Protocol.registerProtocol( "https", easyhttps );
+				socketFactory = new SoapUISSLSocketFactory( trustStore );
+
+				SchemeRegistry registry = new SchemeRegistry();
+				registry.register( new Scheme( "http", 80, PlainSocketFactory.getSocketFactory() ) );
+				registry.register( new Scheme( "https", 443, socketFactory ) );
+
+				connectionManager = new SoapUIMultiThreadedHttpConnectionManager( registry );
+				connectionManager.setMaxConnectionsPerHost( ( int )settings.getLong( HttpSettings.MAX_CONNECTIONS_PER_HOST,
+						500 ) );
+				connectionManager.setMaxTotalConnections( ( int )settings
+						.getLong( HttpSettings.MAX_TOTAL_CONNECTIONS, 2000 ) );
+
+				httpClient = new DefaultHttpClient( connectionManager );
+				httpClient.getAuthSchemes().register( AuthPolicy.NTLM, new NTLMSchemeFactory() );
+				httpClient.getAuthSchemes().register( AuthPolicy.SPNEGO, new NTLMSchemeFactory() );
 			}
 			catch( Throwable e )
 			{
 				SoapUI.log( e );
 			}
 
-			Settings settings = SoapUI.getSettings();
-
-			connectionManager = new SoapUIMultiThreadedHttpConnectionManager();
-			connectionManager.getParams().setDefaultMaxConnectionsPerHost(
-					( int )settings.getLong( HttpSettings.MAX_CONNECTIONS_PER_HOST, 500 ) );
-			connectionManager.getParams().setMaxTotalConnections(
-					( int )settings.getLong( HttpSettings.MAX_TOTAL_CONNECTIONS, 2000 ) );
-			httpClient = new HttpClient( connectionManager );
-
 			settings.addSettingsListener( new SSLSettingsListener() );
 		}
 
-		private void initSSL( EasySSLProtocolSocketFactory easySSL ) throws IOException, GeneralSecurityException
-		{
-			initKeyMaterial( easySSL );
-
-			/*
-			 * Commented out for now - EasySSLProtocolSocketFactory already trusts
-			 * everything! Below is some code that might work for when SoapUI moves
-			 * away from "EasySSLProtocolSocketFactory".
-			 * 
-			 * String trustStore = settings.getString( SSLSettings.TRUSTSTORE, null
-			 * ); trustStore = trustStore != null ? trustStore.trim() : ""; pass =
-			 * settings.getString( SSLSettings.TRUSTSTORE_PASSWORD, "" ); pwd =
-			 * pass.toCharArray(); if ( !"".equals( trustStore ) ) { File f = new
-			 * File( trustStore ); if ( f.exists() ) { TrustMaterial tm = null; try
-			 * { tm = new TrustMaterial( trustStore, pwd ); } catch (
-			 * GeneralSecurityException gse ) { String trimmedPass = pass.trim();
-			 * if ( "".equals( trimmedPass ) ) { // If the password is all spaces,
-			 * then we'll allow // loading of the TrustMaterial without a password.
-			 * tm = new TrustMaterial( trustStore ); } else { log.error(
-			 * "Failed to load TrustMaterial: " + gse ); } } if ( tm != null ) {
-			 * easySSL.setTrustMaterial( tm ); log.info(
-			 * "Added TrustStore from file [" + trustStore + "]" ); } } else {
-			 * log.error( "Missing trustStore [" + trustStore + "]" ); } }
-			 */
-		}
-
-		private void initKeyMaterial( EasySSLProtocolSocketFactory easySSL ) throws IOException,
-				NoSuchAlgorithmException, KeyStoreException, KeyManagementException, CertificateException
-		{
-			Settings settings = SoapUI.getSettings();
-
-			String keyStore = settings.getString( SSLSettings.KEYSTORE, null );
-			keyStore = keyStore != null ? keyStore.trim() : "";
-			String pass = settings.getString( SSLSettings.KEYSTORE_PASSWORD, "" );
-			char[] pwd = pass.toCharArray();
-			if( !"".equals( keyStore ) )
-			{
-				log.info( "Initializing KeyStore" );
-
-				File f = new File( keyStore );
-				if( f.exists() )
-				{
-					KeyMaterial km = null;
-					try
-					{
-						km = new KeyMaterial( keyStore, pwd );
-						log.info( "Set KeyMaterial from file [" + keyStore + "]" );
-					}
-					catch( GeneralSecurityException gse )
-					{
-						SoapUI.logError( gse );
-					}
-					if( km != null )
-					{
-						easySSL.setKeyMaterial( km );
-					}
-				}
-			}
-			else
-			{
-				easySSL.setKeyMaterial( null );
-			}
-		}
-
-		public HttpClient getHttpClient()
+		public DefaultHttpClient getHttpClient()
 		{
 			return httpClient;
+		}
+
+		public HttpResponse execute( SoapUIHostConfiguration hostConfiguration, ExtendedHttpMethod method,
+				HttpContext httpContext ) throws ClientProtocolException, IOException
+		{
+			method.afterWriteRequest();
+			HttpResponse httpResponse = httpClient.execute( hostConfiguration.getHttpHost(), ( HttpRequest )method,
+					httpContext );
+			BasicPooledConnAdapter connection = ( BasicPooledConnAdapter )httpContext.getAttribute( "http.connection" );
+			method.afterReadResponse( connection.getSSLSession() );
+			method.setHttpResponse( httpResponse );
+			return httpResponse;
+		}
+
+		public HttpResponse execute( ExtendedHttpMethod method, HttpContext httpContext ) throws ClientProtocolException,
+				IOException
+		{
+			method.afterWriteRequest();
+			HttpResponse httpResponse = httpClient.execute( ( HttpUriRequest )method, httpContext );
+			method.setHttpResponse( httpResponse );
+			return httpResponse;
+		}
+
+		public HttpResponse execute( SoapUIHostConfiguration hostConfiguration, ExtendedHttpMethod method )
+				throws ClientProtocolException, IOException
+		{
+			method.afterWriteRequest();
+			HttpResponse httpResponse = httpClient.execute( hostConfiguration.getHttpHost(), method );
+			method.setHttpResponse( httpResponse );
+			return httpResponse;
 		}
 
 		public final class SSLSettingsListener implements SettingsListener
@@ -166,7 +147,7 @@ public class HttpClientSupport
 					try
 					{
 						log.info( "Updating keyStore.." );
-						initKeyMaterial( easySSL );
+						initTrustStore();
 					}
 					catch( Throwable e )
 					{
@@ -176,12 +157,12 @@ public class HttpClientSupport
 				else if( name.equals( HttpSettings.MAX_CONNECTIONS_PER_HOST ) )
 				{
 					log.info( "Updating max connections per host to " + newValue );
-					connectionManager.getParams().setDefaultMaxConnectionsPerHost( Integer.parseInt( newValue ) );
+					connectionManager.setMaxConnectionsPerHost( Integer.parseInt( newValue ) );
 				}
 				else if( name.equals( HttpSettings.MAX_TOTAL_CONNECTIONS ) )
 				{
 					log.info( "Updating max total connections host to " + newValue );
-					connectionManager.getParams().setMaxTotalConnections( Integer.parseInt( newValue ) );
+					connectionManager.setMaxTotalConnections( Integer.parseInt( newValue ) );
 				}
 			}
 
@@ -191,7 +172,7 @@ public class HttpClientSupport
 				try
 				{
 					log.info( "Updating keyStore.." );
-					initKeyMaterial( easySSL );
+					initTrustStore();
 				}
 				catch( Throwable e )
 				{
@@ -200,29 +181,88 @@ public class HttpClientSupport
 			}
 		}
 
+		public KeyStore initTrustStore() throws KeyStoreException, NoSuchAlgorithmException, CertificateException,
+				IOException, UnrecoverableKeyException, KeyManagementException
+		{
+			trustStore = KeyStore.getInstance( KeyStore.getDefaultType() );
+
+			Settings settings = SoapUI.getSettings();
+
+			String keyStoreUrl = settings.getString( SSLSettings.KEYSTORE, null );
+			keyStoreUrl = keyStoreUrl != null ? keyStoreUrl.trim() : "";
+			String pass = settings.getString( SSLSettings.KEYSTORE_PASSWORD, "" );
+			char[] pwd = pass.toCharArray();
+
+			if( keyStoreUrl.trim().length() > 0 )
+			{
+				File f = new File( keyStoreUrl );
+
+				if( f.exists() )
+				{
+					log.info( "Initializing KeyStore" );
+
+					FileInputStream instream = new FileInputStream( f );
+
+					try
+					{
+						trustStore.load( instream, pwd );
+					}
+					finally
+					{
+						try
+						{
+							instream.close();
+						}
+						catch( Exception ignore )
+						{
+						}
+					}
+				}
+			}
+
+			return trustStore;
+		}
 	}
 
-	public static HttpClient getHttpClient()
+	public static DefaultHttpClient getHttpClient()
 	{
 		return helper.getHttpClient();
 	}
 
-	public static void applyHttpSettings( HttpMethod httpMethod, Settings settings )
+	public static HttpResponse execute( SoapUIHostConfiguration hostConfiguration, ExtendedHttpMethod method,
+			HttpContext httpContext ) throws ClientProtocolException, IOException
+	{
+		return helper.execute( hostConfiguration, method, httpContext );
+	}
+
+	public static HttpResponse execute( ExtendedHttpMethod method, HttpContext httpContext )
+			throws ClientProtocolException, IOException
+	{
+		return helper.execute( method, httpContext );
+	}
+
+	public static HttpResponse execute( SoapUIHostConfiguration hostConfiguration, ExtendedHttpMethod method )
+			throws ClientProtocolException, IOException
+	{
+		return helper.execute( hostConfiguration, method );
+	}
+
+	public static void applyHttpSettings( HttpRequest httpMethod, Settings settings )
 	{
 		// user agent?
 		String userAgent = settings.getString( HttpSettings.USER_AGENT, null );
 		if( userAgent != null && userAgent.length() > 0 )
-			httpMethod.setRequestHeader( "User-Agent", userAgent );
+			httpMethod.setHeader( "User-Agent", userAgent );
 
 		// timeout?
 		long timeout = settings.getLong( HttpSettings.SOCKET_TIMEOUT, HttpSettings.DEFAULT_SOCKET_TIMEOUT );
-		httpMethod.getParams().setSoTimeout( ( int )timeout );
+		httpMethod.getParams().setParameter( CoreConnectionPNames.SO_TIMEOUT, ( int )timeout );
 	}
 
-	public static String getResponseCompressionType( HttpMethod method )
+	public static String getResponseCompressionType( HttpResponse httpResponse )
 	{
-		Header contentType = method.getResponseHeader( "Content-Type" );
-		Header contentEncoding = method.getResponseHeader( "Content-Encoding" );
+		Header contentType = httpResponse.getEntity().getContentType();
+		Header contentEncoding = httpResponse.getEntity().getContentEncoding();
 
 		return getCompressionType( contentType == null ? null : contentType.getValue(), contentEncoding == null ? null
 				: contentEncoding.getValue() );

@@ -14,15 +14,17 @@ package com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods;
 
 import java.io.IOException;
 
-import org.apache.commons.httpclient.HttpConnection;
-import org.apache.commons.httpclient.HttpException;
-import org.apache.commons.httpclient.HttpState;
-import org.apache.commons.httpclient.methods.PutMethod;
+import javax.net.ssl.SSLSession;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpPut;
 
 import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpMethodSupport;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.SSLInfo;
+import com.eviware.soapui.support.uri.EncodingUtil;
 
 /**
  * Extended PostMethod that supports limiting of response size and detailed
@@ -31,14 +33,13 @@ import com.eviware.soapui.impl.wsdl.submit.transports.http.SSLInfo;
  * @author Ole.Matzura
  */
 
-public final class ExtendedPutMethod extends PutMethod implements ExtendedHttpMethod
+public final class ExtendedPutMethod extends HttpPut implements ExtendedHttpMethod
 {
 	private HttpMethodSupport httpMethodSupport;
-	private boolean followRedirects;
 
 	public ExtendedPutMethod()
 	{
-		httpMethodSupport = new HttpMethodSupport( this );
+		httpMethodSupport = new HttpMethodSupport();
 	}
 
 	public String getDumpFile()
@@ -56,28 +57,20 @@ public final class ExtendedPutMethod extends PutMethod implements ExtendedHttpMe
 		return httpMethodSupport.hasResponse();
 	}
 
-	protected void readResponse( HttpState arg0, HttpConnection arg1 ) throws IOException, HttpException
+	public void afterReadResponse( SSLSession session )
 	{
-		super.readResponse( arg0, arg1 );
-		httpMethodSupport.afterReadResponse( arg0, arg1 );
-	}
-
-	@Override
-	public boolean getFollowRedirects()
-	{
-		return followRedirects;
-	}
-
-	@Override
-	public void setFollowRedirects( boolean followRedirects )
-	{
-		this.followRedirects = followRedirects;
+		httpMethodSupport.afterReadResponse( session );
 	}
 
 	@Override
 	public String getResponseCharSet()
 	{
 		return httpMethodSupport.getResponseCharset();
+	}
+
+	public HttpEntity getRequestEntity()
+	{
+		return super.getEntity();
 	}
 
 	public long getMaxSize()
@@ -95,10 +88,9 @@ public final class ExtendedPutMethod extends PutMethod implements ExtendedHttpMe
 		return httpMethodSupport.getResponseReadTime();
 	}
 
-	protected void writeRequest( HttpState arg0, HttpConnection arg1 ) throws IOException, HttpException
+	public void afterWriteRequest()
 	{
-		super.writeRequest( arg0, arg1 );
-		httpMethodSupport.afterWriteRequest( arg0, arg1 );
+		httpMethodSupport.afterWriteRequest();
 	}
 
 	public void initStartTime()
@@ -131,9 +123,9 @@ public final class ExtendedPutMethod extends PutMethod implements ExtendedHttpMe
 		return httpMethodSupport.getResponseContentType();
 	}
 
-	public RestRequestInterface.RequestMethod getMethod()
+	public String getMethod()
 	{
-		return RestRequestInterface.RequestMethod.PUT;
+		return RestRequestInterface.RequestMethod.PUT.toString();
 	}
 
 	public Throwable getFailureCause()
@@ -159,5 +151,33 @@ public final class ExtendedPutMethod extends PutMethod implements ExtendedHttpMe
 	public void setDecompress( boolean decompress )
 	{
 		httpMethodSupport.setDecompress( decompress );
+	}
+
+	public void setHttpResponse( HttpResponse httpResponse )
+	{
+		httpMethodSupport.setHttpResponse( httpResponse );
+	}
+
+	public HttpResponse getHttpResponse()
+	{
+		return httpMethodSupport.getHttpResponse();
+	}
+
+	public boolean hasHttpResponse()
+	{
+		return httpMethodSupport.hasHttpResponse();
+	}
+
+	public String getResponseBodyAsString() throws IOException
+	{
+		byte[] rawdata = getResponseBody();
+		if( rawdata != null )
+		{
+			return EncodingUtil.getString( rawdata, getResponseCharSet() );
+		}
+		else
+		{
+			return null;
+		}
 	}
 }

@@ -23,9 +23,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.httpclient.HostConfiguration;
-import org.apache.commons.httpclient.HttpState;
-import org.apache.commons.httpclient.methods.ByteArrayRequestEntity;
+import org.apache.http.entity.ByteArrayEntity;
+import org.apache.http.protocol.BasicHttpContext;
+import org.apache.http.protocol.HttpContext;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPostMethod;
@@ -78,7 +78,7 @@ public class SoapUIAMFConnection
 	private int responseCounter;
 
 	private ExtendedPostMethod postMethod;
-	private HttpState httpState = new HttpState();
+	private HttpContext httpState = new BasicHttpContext();
 	private PropertyExpansionContext context;
 
 	public int getObjectEncoding()
@@ -296,11 +296,7 @@ public class SoapUIAMFConnection
 	public void close()
 	{
 		// Clear the URL connection and URL.
-		if( postMethod != null )
-		{
-			postMethod.releaseConnection();
-			postMethod = null;
-		}
+		postMethod = null;
 		url = null;
 
 		serializationContext = null;
@@ -351,7 +347,11 @@ public class SoapUIAMFConnection
 		HttpResponseInfo httpResponseInfo = null;
 		try
 		{
-			int responseCode = postMethod.getStatusCode();
+			int responseCode = 0;
+			if( postMethod.hasHttpResponse() )
+			{
+				responseCode = postMethod.getHttpResponse().getStatusLine().getStatusCode();
+			}
 			String responseMessage = postMethod.getResponseBodyAsString();
 			httpResponseInfo = new HttpResponseInfo( responseCode, responseMessage );
 		}
@@ -476,14 +476,12 @@ public class SoapUIAMFConnection
 		// internalConnect.
 		internalConnect();
 
-		postMethod.setRequestEntity( new ByteArrayRequestEntity( outBuffer.toByteArray() ) );
-		HostConfiguration hostConfiguration = new HostConfiguration();
+		postMethod.setEntity( new ByteArrayEntity( outBuffer.toByteArray() ) );
 
 		ProxyUtils.initProxySettings( context.getModelItem() == null ? SoapUI.getSettings() : context.getModelItem()
-				.getSettings(), httpState, hostConfiguration, url, context );
+				.getSettings(), httpState, url, context );
 
-		HttpClientSupport.getHttpClient().executeMethod( hostConfiguration, postMethod, httpState );
-
+		HttpClientSupport.execute( postMethod, httpState );
 		context.setProperty( AMFResponse.AMF_POST_METHOD, postMethod );
 
 		return processHttpResponse( responseBodyInputStream() );
@@ -508,7 +506,7 @@ public class SoapUIAMFConnection
 			{
 				String key = element.getKey();
 				String value = element.getValue();
-				postMethod.setRequestHeader( key, value );
+				postMethod.setHeader( key, value );
 			}
 		}
 	}

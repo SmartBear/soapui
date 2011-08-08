@@ -20,7 +20,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 
-import org.apache.commons.httpclient.Header;
+import org.apache.http.Header;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPostMethod;
@@ -129,32 +129,32 @@ public class AMFResponse extends AbstractResponse<AMFRequest>
 			ByteArrayOutputStream rawResponse = new ByteArrayOutputStream();
 			ByteArrayOutputStream rawRequest = new ByteArrayOutputStream();
 
-			if( !postMethod.isFailed() )
+			if( !postMethod.isFailed() && postMethod.hasHttpResponse() )
 			{
-				rawResponse.write( String.valueOf( postMethod.getStatusLine() ).getBytes() );
+				rawResponse.write( String.valueOf( postMethod.getHttpResponse().getStatusLine() ).getBytes() );
 				rawResponse.write( "\r\n".getBytes() );
 			}
 
 			rawRequest.write( ( postMethod.getMethod() + " " + postMethod.getURI().toString() + " "
-					+ postMethod.getParams().getVersion().toString() + "\r\n" ).getBytes() );
+					+ postMethod.getProtocolVersion().toString() + "\r\n" ).getBytes() );
 
-			Header[] headers = postMethod.getRequestHeaders();
+			Header[] headers = postMethod.getAllHeaders();
 			for( Header header : headers )
 			{
 				requestHeaders.add( header.getName(), header.getValue() );
-				rawRequest.write( header.toExternalForm().getBytes() );
+				rawRequest.write( toExternalForm( header ).getBytes() );
 			}
 
-			if( !postMethod.isFailed() )
+			if( !postMethod.isFailed() && postMethod.hasHttpResponse() )
 			{
-				headers = postMethod.getResponseHeaders();
+				headers = postMethod.getHttpResponse().getAllHeaders();
 				for( Header header : headers )
 				{
 					responseHeaders.add( header.getName(), header.getValue() );
-					rawResponse.write( header.toExternalForm().getBytes() );
+					rawResponse.write( toExternalForm( header ).getBytes() );
 				}
 
-				responseHeaders.add( "#status#", String.valueOf( postMethod.getStatusLine() ) );
+				responseHeaders.add( "#status#", String.valueOf( postMethod.getHttpResponse().getStatusLine() ) );
 			}
 
 			if( postMethod.getRequestEntity() != null )
@@ -162,7 +162,7 @@ public class AMFResponse extends AbstractResponse<AMFRequest>
 				rawRequest.write( "\r\n".getBytes() );
 				if( postMethod.getRequestEntity().isRepeatable() )
 				{
-					postMethod.getRequestEntity().writeRequest( rawRequest );
+					postMethod.getEntity().writeTo( rawRequest );
 				}
 				else
 					rawRequest.write( "<request data not available>".getBytes() );
@@ -223,6 +223,17 @@ public class AMFResponse extends AbstractResponse<AMFRequest>
 	public StringToStringMap getResponseAMFHeaders()
 	{
 		return responseAMFHeaders;
+	}
+
+	/**
+	 * Returns a {@link String} representation of the header.
+	 * 
+	 * @return stringHEAD
+	 */
+	public String toExternalForm( Header header )
+	{
+		return( ( null == header.getName() ? "" : header.getName() ) + ": "
+				+ ( null == header.getValue() ? "" : header.getValue() ) + "\r\n" );
 	}
 
 }

@@ -12,9 +12,11 @@
 
 package com.eviware.soapui.impl.wsdl.submit.filters;
 
-import org.apache.commons.httpclient.HttpVersion;
-import org.apache.commons.httpclient.methods.EntityEnclosingMethod;
-import org.apache.commons.httpclient.params.HttpMethodParams;
+import org.apache.http.HttpEntityEnclosingRequest;
+import org.apache.http.HttpVersion;
+import org.apache.http.client.params.ClientPNames;
+import org.apache.http.params.CoreProtocolPNames;
+import org.apache.http.params.HttpConnectionParams;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
@@ -45,38 +47,38 @@ public class HttpSettingsRequestFilter extends AbstractRequestFilter
 		// close connections?
 		if( settings.getBoolean( HttpSettings.CLOSE_CONNECTIONS ) )
 		{
-			httpMethod.setRequestHeader( "Connection", "close" );
+			httpMethod.setHeader( "Connection", "close" );
 		}
 
 		// close connections?
-		if( settings.getBoolean( HttpSettings.EXPECT_CONTINUE ) && httpMethod instanceof EntityEnclosingMethod )
+		if( settings.getBoolean( HttpSettings.EXPECT_CONTINUE ) && httpMethod instanceof HttpEntityEnclosingRequest )
 		{
-			httpMethod.getParams().setParameter( HttpMethodParams.USE_EXPECT_CONTINUE, Boolean.TRUE );
+			httpMethod.getParams().setParameter( CoreProtocolPNames.USE_EXPECT_CONTINUE, Boolean.TRUE );
 		}
 
 		// compress request?
 		String compressionAlg = settings.getString( HttpSettings.REQUEST_COMPRESSION, "None" );
 		if( !"None".equals( compressionAlg ) )
-			httpMethod.setRequestHeader( "Content-Encoding", compressionAlg );
+			httpMethod.setHeader( "Content-Encoding", compressionAlg );
 
 		// accept compressed responses?
 		if( settings.getBoolean( HttpSettings.RESPONSE_COMPRESSION ) )
 		{
-			httpMethod.setRequestHeader( "Accept-Encoding", CompressionSupport.getAvailableAlgorithms( "," ) );
+			httpMethod.setHeader( "Accept-Encoding", CompressionSupport.getAvailableAlgorithms( "," ) );
 		}
 
 		String httpVersion = settings.getString( HttpSettings.HTTP_VERSION, "1.1" );
 		if( httpVersion.equals( HttpSettings.HTTP_VERSION_1_1 ) )
 		{
-			httpMethod.getParams().setVersion( HttpVersion.HTTP_1_1 );
+			httpMethod.getParams().setParameter( CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1 );
 		}
 		else if( httpVersion.equals( HttpSettings.HTTP_VERSION_1_0 ) )
 		{
-			httpMethod.getParams().setVersion( HttpVersion.HTTP_1_0 );
+			httpMethod.getParams().setParameter( CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_0 );
 		}
 		else if( httpVersion.equals( HttpSettings.HTTP_VERSION_0_9 ) )
 		{
-			httpMethod.getParams().setVersion( HttpVersion.HTTP_1_1 );
+			httpMethod.getParams().setParameter( CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1 );
 		}
 
 		// max size..
@@ -87,7 +89,7 @@ public class HttpSettingsRequestFilter extends AbstractRequestFilter
 			httpMethod.setMaxSize( maxSize );
 
 		// follow redirects is false; handled in transport
-		httpMethod.setFollowRedirects( false );
+		HttpClientSupport.getHttpClient().getParams().setParameter( ClientPNames.HANDLE_REDIRECTS, false );
 
 		// apply global settings
 		HttpClientSupport.applyHttpSettings( httpMethod, settings );
@@ -97,7 +99,7 @@ public class HttpSettingsRequestFilter extends AbstractRequestFilter
 		{
 			try
 			{
-				httpMethod.getParams().setSoTimeout( Integer.parseInt( timeout ) );
+				HttpConnectionParams.setSoTimeout( httpMethod.getParams(), Integer.parseInt( timeout ) );
 			}
 			catch( NumberFormatException e )
 			{

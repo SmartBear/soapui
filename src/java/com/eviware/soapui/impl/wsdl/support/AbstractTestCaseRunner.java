@@ -17,7 +17,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.collections.list.TreeList;
-import org.apache.commons.httpclient.HttpState;
+import org.apache.http.protocol.BasicHttpContext;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
@@ -95,7 +95,7 @@ public abstract class AbstractTestCaseRunner<T extends TestRunnable, T2 extends 
 		// create state for testcase if specified
 		if( testCase.getKeepSession() )
 		{
-			runContext.setProperty( SubmitContext.HTTP_STATE_PROPERTY, new HttpState() );
+			runContext.setProperty( SubmitContext.HTTP_STATE_PROPERTY, new BasicHttpContext() );
 		}
 
 		fillInTestRunnableListeners();

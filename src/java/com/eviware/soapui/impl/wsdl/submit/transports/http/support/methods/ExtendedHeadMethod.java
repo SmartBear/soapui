@@ -14,16 +14,17 @@ package com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods;
 
 import java.io.IOException;
 
-import org.apache.commons.httpclient.HttpConnection;
-import org.apache.commons.httpclient.HttpException;
-import org.apache.commons.httpclient.HttpState;
-import org.apache.commons.httpclient.methods.HeadMethod;
-import org.apache.commons.httpclient.methods.RequestEntity;
+import javax.net.ssl.SSLSession;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpHead;
 
 import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpMethodSupport;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.SSLInfo;
+import com.eviware.soapui.support.uri.EncodingUtil;
 
 /**
  * Extended PostMethod that supports limiting of response size and detailed
@@ -32,13 +33,13 @@ import com.eviware.soapui.impl.wsdl.submit.transports.http.SSLInfo;
  * @author Ole.Matzura
  */
 
-public final class ExtendedHeadMethod extends HeadMethod implements ExtendedHttpMethod
+public final class ExtendedHeadMethod extends HttpHead implements ExtendedHttpMethod
 {
 	private HttpMethodSupport httpMethodSupport;
 
 	public ExtendedHeadMethod()
 	{
-		httpMethodSupport = new HttpMethodSupport( this );
+		httpMethodSupport = new HttpMethodSupport();
 	}
 
 	public String getDumpFile()
@@ -56,16 +57,20 @@ public final class ExtendedHeadMethod extends HeadMethod implements ExtendedHttp
 		return httpMethodSupport.hasResponse();
 	}
 
-	protected void readResponse( HttpState arg0, HttpConnection arg1 ) throws IOException, HttpException
+	public void afterReadResponse( SSLSession session )
 	{
-		super.readResponse( arg0, arg1 );
-		httpMethodSupport.afterReadResponse( arg0, arg1 );
+		httpMethodSupport.afterReadResponse( session );
 	}
 
 	@Override
 	public String getResponseCharSet()
 	{
 		return httpMethodSupport.getResponseCharset();
+	}
+
+	public HttpEntity getRequestEntity()
+	{
+		return null;
 	}
 
 	public long getMaxSize()
@@ -83,10 +88,9 @@ public final class ExtendedHeadMethod extends HeadMethod implements ExtendedHttp
 		return httpMethodSupport.getResponseReadTime();
 	}
 
-	protected void writeRequest( HttpState arg0, HttpConnection arg1 ) throws IOException, HttpException
+	public void afterWriteRequest()
 	{
-		super.writeRequest( arg0, arg1 );
-		httpMethodSupport.afterWriteRequest( arg0, arg1 );
+		httpMethodSupport.afterWriteRequest();
 	}
 
 	public void initStartTime()
@@ -104,11 +108,6 @@ public final class ExtendedHeadMethod extends HeadMethod implements ExtendedHttp
 		return httpMethodSupport.getStartTime();
 	}
 
-	public byte[] getResponseBody() throws IOException
-	{
-		return httpMethodSupport.getResponseBody();
-	}
-
 	public SSLInfo getSSLInfo()
 	{
 		return httpMethodSupport.getSSLInfo();
@@ -119,14 +118,9 @@ public final class ExtendedHeadMethod extends HeadMethod implements ExtendedHttp
 		return httpMethodSupport.getResponseContentType();
 	}
 
-	public RequestEntity getRequestEntity()
+	public String getMethod()
 	{
-		return null;
-	}
-
-	public RestRequestInterface.RequestMethod getMethod()
-	{
-		return RestRequestInterface.RequestMethod.HEAD;
+		return RestRequestInterface.RequestMethod.HEAD.toString();
 	}
 
 	public Throwable getFailureCause()
@@ -152,6 +146,39 @@ public final class ExtendedHeadMethod extends HeadMethod implements ExtendedHttp
 	public void setDecompress( boolean decompress )
 	{
 		httpMethodSupport.setDecompress( decompress );
+	}
+
+	public void setHttpResponse( HttpResponse httpResponse )
+	{
+		httpMethodSupport.setHttpResponse( httpResponse );
+	}
+
+	public HttpResponse getHttpResponse()
+	{
+		return httpMethodSupport.getHttpResponse();
+	}
+
+	public boolean hasHttpResponse()
+	{
+		return httpMethodSupport.hasHttpResponse();
+	}
+
+	public byte[] getResponseBody() throws IOException
+	{
+		return httpMethodSupport.getResponseBody();
+	}
+
+	public String getResponseBodyAsString() throws IOException
+	{
+		byte[] rawdata = getResponseBody();
+		if( rawdata != null )
+		{
+			return EncodingUtil.getString( rawdata, getResponseCharSet() );
+		}
+		else
+		{
+			return null;
+		}
 	}
 
 }

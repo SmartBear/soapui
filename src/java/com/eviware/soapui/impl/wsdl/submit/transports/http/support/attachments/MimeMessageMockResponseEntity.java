@@ -19,7 +19,9 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
-import org.apache.commons.httpclient.methods.RequestEntity;
+import org.apache.http.Header;
+import org.apache.http.entity.BasicHttpEntity;
+import org.apache.http.message.BasicHeader;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
@@ -32,7 +34,7 @@ import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
  * @author ole.matzura
  */
 
-public class MimeMessageMockResponseEntity implements RequestEntity
+public class MimeMessageMockResponseEntity extends BasicHttpEntity
 {
 	private final MimeMessage message;
 	private final boolean isXOP;
@@ -60,7 +62,7 @@ public class MimeMessageMockResponseEntity implements RequestEntity
 		}
 	}
 
-	public String getContentType()
+	public Header getContentType()
 	{
 		try
 		{
@@ -70,14 +72,14 @@ public class MimeMessageMockResponseEntity implements RequestEntity
 			{
 				String header = message.getHeader( "Content-Type" )[0];
 
-				return AttachmentUtils.buildMTOMContentType( header, null, soapVersion );
+				return new BasicHeader( "Content-Type", AttachmentUtils.buildMTOMContentType( header, null, soapVersion ) );
 			}
 			else
 			{
 				String header = message.getHeader( "Content-Type" )[0];
 				int ix = header.indexOf( "boundary" );
-				return "multipart/related; type=\"" + soapVersion.getContentType() + "\"; start=\""
-						+ AttachmentUtils.ROOTPART_SOAPUI_ORG + "\"; " + header.substring( ix );
+				return new BasicHeader( "Content-Type", "multipart/related; type=\"" + soapVersion.getContentType()
+						+ "\"; start=\"" + AttachmentUtils.ROOTPART_SOAPUI_ORG + "\"; " + header.substring( ix ) );
 			}
 		}
 		catch( MessagingException e )

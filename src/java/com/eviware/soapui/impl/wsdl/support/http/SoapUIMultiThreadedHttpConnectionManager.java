@@ -13,31 +13,34 @@
 package com.eviware.soapui.impl.wsdl.support.http;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
-import java.net.InetAddress;
 import java.net.Socket;
-import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.WeakHashMap;
+import java.util.concurrent.TimeUnit;
 
-import org.apache.commons.httpclient.ConnectionPoolTimeoutException;
-import org.apache.commons.httpclient.HostConfiguration;
-import org.apache.commons.httpclient.HttpConnection;
-import org.apache.commons.httpclient.HttpConnectionManager;
-import org.apache.commons.httpclient.HttpException;
-import org.apache.commons.httpclient.params.HttpConnectionManagerParams;
-import org.apache.commons.httpclient.params.HttpConnectionParams;
-import org.apache.commons.httpclient.protocol.Protocol;
-import org.apache.commons.httpclient.util.IdleConnectionHandler;
+import org.apache.http.HttpConnection;
+import org.apache.http.HttpException;
+import org.apache.http.HttpHost;
+import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.conn.ConnectionPoolTimeoutException;
+import org.apache.http.conn.routing.HttpRoute;
+import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.impl.conn.DefaultClientConnection;
+import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpParams;
+import org.apache.http.protocol.ExecutionContext;
 import org.apache.log4j.Logger;
+
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransport;
 
 /**
  * Manages a set of HttpConnections for various HostConfigurations. Modified to
@@ -50,7 +53,7 @@ import org.apache.log4j.Logger;
  * 
  * @since 2.0
  */
-public class SoapUIMultiThreadedHttpConnectionManager implements HttpConnectionManager
+public class SoapUIMultiThreadedHttpConnectionManager extends ThreadSafeClientConnManager
 {
 
 	// -------------------------------------------------------- Class Variables
@@ -86,6 +89,11 @@ public class SoapUIMultiThreadedHttpConnectionManager implements HttpConnectionM
 	 * Holds references to all active instances of this class.
 	 */
 	private static WeakHashMap ALL_CONNECTION_MANAGERS = new WeakHashMap();
+
+	/**
+	 * Connection eviction policy
+	 */
+	IdleConnectionMonitorThread idleConnectionHandler = new IdleConnectionMonitorThread( this );
 
 	// ---------------------------------------------------------- Class Methods
 
@@ -152,7 +160,7 @@ public class SoapUIMultiThreadedHttpConnectionManager implements HttpConnectionM
 	 * @see #removeReferenceToConnection(HttpConnection)
 	 */
 	private static void storeReferenceToConnection( HttpConnectionWithReference connection,
-			HostConfiguration hostConfiguration, ConnectionPool connectionPool )
+			SoapUIHostConfiguration hostConfiguration, ConnectionPool connectionPool )
 	{
 
 		ConnectionSource source = new ConnectionSource();
@@ -184,7 +192,7 @@ public class SoapUIMultiThreadedHttpConnectionManager implements HttpConnectionM
 	{
 
 		// keep a list of the connections to be closed
-		ArrayList<HttpConnection> connectionsToClose = new ArrayList<HttpConnection>();
+		ArrayList<DefaultClientConnection> connectionsToClose = new ArrayList<DefaultClientConnection>();
 
 		synchronized( REFERENCE_TO_CONNECTION_SOURCE )
 		{
@@ -197,7 +205,7 @@ public class SoapUIMultiThreadedHttpConnectionManager implements HttpConnectionM
 				if( source.connectionPool == connectionPool )
 				{
 					referenceIter.remove();
-					HttpConnection connection = ( HttpConnection )ref.get();
+					DefaultClientConnection connection = ( DefaultClientConnection )ref.get();
 					if( connection != null )
 					{
 						connectionsToClose.add( connection );
@@ -210,12 +218,19 @@ public class SoapUIMultiThreadedHttpConnectionManager implements HttpConnectionM
 		// avoid holding the lock for too long
 		for( Iterator i = connectionsToClose.iterator(); i.hasNext(); )
 		{
-			HttpConnection connection = ( HttpConnection )i.next();
-			connection.close();
+			DefaultClientConnection connection = ( DefaultClientConnection )i.next();
+			try
+			{
+				connection.close();
+			}
+			catch( IOException e )
+			{
+				SoapUI.logError( e );
+			}
 			// remove the reference to the connection manager. this ensures
 			// that the we don't accidentally end up here again
-			connection.setHttpConnectionManager( null );
-			connection.releaseConnection();
+			//						connection.setHttpConnectionManager( null );
+
 		}
 	}
 
@@ -227,8 +242,7 @@ public class SoapUIMultiThreadedHttpConnectionManager implements HttpConnectionM
 	 * @param connection
 	 *           the connection to remove the reference for
 	 * 
-	 * @see #storeReferenceToConnection(HttpConnection, HostConfiguration,
-	 *      ConnectionPool)
+	 * @see #storeReferenceToConnection(HttpConnection, HttpHost, ConnectionPool)
 	 */
 	private static void removeReferenceToConnection( HttpConnectionWithReference connection )
 	{
@@ -244,7 +258,7 @@ public class SoapUIMultiThreadedHttpConnectionManager implements HttpConnectionM
 	/**
 	 * Collection of parameters associated with this connection manager.
 	 */
-	private HttpConnectionManagerParams params = new HttpConnectionManagerParams();
+	HttpParams params = new BasicHttpParams();
 
 	/** Connection Pool */
 	private ConnectionPool connectionPool;
@@ -253,16 +267,16 @@ public class SoapUIMultiThreadedHttpConnectionManager implements HttpConnectionM
 
 	// ----------------------------------------------------------- Constructors
 
-	/**
-	 * No-args constructor
-	 */
-	public SoapUIMultiThreadedHttpConnectionManager()
+	public SoapUIMultiThreadedHttpConnectionManager( SchemeRegistry registry )
 	{
+		super( registry );
+
 		this.connectionPool = new ConnectionPool();
 		synchronized( ALL_CONNECTION_MANAGERS )
 		{
 			ALL_CONNECTION_MANAGERS.put( this, null );
 		}
+		idleConnectionHandler.start();
 	}
 
 	// ------------------------------------------------------- Instance Methods
@@ -287,112 +301,47 @@ public class SoapUIMultiThreadedHttpConnectionManager implements HttpConnectionM
 				connectionPool.shutdown();
 			}
 		}
+		idleConnectionHandler.shutdown();
+
+		super.shutdown();
 	}
 
 	/**
-	 * Gets the staleCheckingEnabled value to be set on HttpConnections that are
-	 * created.
-	 * 
-	 * @return <code>true</code> if stale checking will be enabled on
-	 *         HttpConnections
-	 * 
-	 * @see HttpConnection#isStaleCheckingEnabled()
-	 * 
-	 * @deprecated Use
-	 *             {@link HttpConnectionManagerParams#isStaleCheckingEnabled()},
-	 *             {@link HttpConnectionManager#getParams()}.
-	 */
-	public boolean isConnectionStaleCheckingEnabled()
-	{
-		return this.params.isStaleCheckingEnabled();
-	}
-
-	/**
-	 * Sets the staleCheckingEnabled value to be set on HttpConnections that are
-	 * created.
-	 * 
-	 * @param connectionStaleCheckingEnabled
-	 *           <code>true</code> if stale checking will be enabled on
-	 *           HttpConnections
-	 * 
-	 * @see HttpConnection#setStaleCheckingEnabled(boolean)
-	 * 
-	 * @deprecated Use
-	 *             {@link HttpConnectionManagerParams#setStaleCheckingEnabled(boolean)}
-	 *             , {@link HttpConnectionManager#getParams()}.
-	 */
-	public void setConnectionStaleCheckingEnabled( boolean connectionStaleCheckingEnabled )
-	{
-		this.params.setStaleCheckingEnabled( connectionStaleCheckingEnabled );
-	}
-
-	/**
-	 * Sets the maximum number of connections allowed for a given
-	 * HostConfiguration. Per RFC 2616 section 8.1.4, this value defaults to 2.
-	 * 
-	 * @param maxHostConnections
-	 *           the number of connections allowed for each hostConfiguration
-	 * 
-	 * @deprecated Use
-	 *             {@link HttpConnectionManagerParams#setDefaultMaxConnectionsPerHost(int)}
-	 *             , {@link HttpConnectionManager#getParams()}.
+	 * @since HttpClient 4.1
 	 */
 	public void setMaxConnectionsPerHost( int maxHostConnections )
 	{
-		this.params.setDefaultMaxConnectionsPerHost( maxHostConnections );
+		super.setDefaultMaxPerRoute( maxHostConnections );
 	}
 
 	/**
-	 * Gets the maximum number of connections allowed for a given
-	 * hostConfiguration.
-	 * 
-	 * @return The maximum number of connections allowed for a given
-	 *         hostConfiguration.
-	 * 
-	 * @deprecated Use
-	 *             {@link HttpConnectionManagerParams#getDefaultMaxConnectionsPerHost()}
-	 *             , {@link HttpConnectionManager#getParams()}.
+	 * @since HttpClient 4.1
 	 */
 	public int getMaxConnectionsPerHost()
 	{
-		return this.params.getDefaultMaxConnectionsPerHost();
+		return super.getDefaultMaxPerRoute();
 	}
 
 	/**
-	 * Sets the maximum number of connections allowed for this connection
-	 * manager.
-	 * 
-	 * @param maxTotalConnections
-	 *           the maximum number of connections allowed
-	 * 
-	 * @deprecated Use
-	 *             {@link HttpConnectionManagerParams#setMaxTotalConnections(int)}
-	 *             , {@link HttpConnectionManager#getParams()}.
+	 * @since HttpClient 4.1
 	 */
 	public void setMaxTotalConnections( int maxTotalConnections )
 	{
-		this.params.setMaxTotalConnections( maxTotalConnections );
+		super.setMaxTotal( maxTotalConnections );
 	}
 
 	/**
-	 * Gets the maximum number of connections allowed for this connection
-	 * manager.
-	 * 
-	 * @return The maximum number of connections allowed
-	 * 
-	 * @deprecated Use
-	 *             {@link HttpConnectionManagerParams#getMaxTotalConnections()},
-	 *             {@link HttpConnectionManager#getParams()}.
+	 * @since HttpClient 4.1
 	 */
 	public int getMaxTotalConnections()
 	{
-		return this.params.getMaxTotalConnections();
+		return super.getMaxTotal();
 	}
 
 	/**
-	 * @see HttpConnectionManager#getConnection(HostConfiguration)
+	 * @see HttpConnectionManager#getConnection(HttpHost)
 	 */
-	public HttpConnection getConnection( HostConfiguration hostConfiguration )
+	public DefaultClientConnection getConnection( SoapUIHostConfiguration hostConfiguration )
 	{
 
 		while( true )
@@ -433,7 +382,7 @@ public class SoapUIMultiThreadedHttpConnectionManager implements HttpConnectionM
 	 * 
 	 * @since 3.0
 	 */
-	public HttpConnection getConnectionWithTimeout( HostConfiguration hostConfiguration, long timeout )
+	public DefaultClientConnection getConnectionWithTimeout( SoapUIHostConfiguration hostConfiguration, long timeout )
 			throws ConnectionPoolTimeoutException
 	{
 
@@ -449,49 +398,30 @@ public class SoapUIMultiThreadedHttpConnectionManager implements HttpConnectionM
 			LOG.debug( "HttpConnectionManager.getConnection:  config = " + hostConfiguration + ", timeout = " + timeout );
 		}
 
-		final HttpConnection conn = doGetConnection( hostConfiguration, timeout );
-		conn.getParams().setParameter( SoapUIHostConfiguration.SOAPUI_SSL_CONFIG,
-				hostConfiguration.getParams().getParameter( SoapUIHostConfiguration.SOAPUI_SSL_CONFIG ) );
+		final DefaultClientConnection conn = doGetConnection( hostConfiguration, timeout );
+		conn.setAttribute( BaseHttpRequestTransport.SOAPUI_SSL_CONFIG, HttpClientSupport.getHttpClient().getParams()
+				.getParameter( BaseHttpRequestTransport.SOAPUI_SSL_CONFIG ) );
 
 		// wrap the connection in an adapter so we can ensure it is used
 		// only once
 		return new HttpConnectionAdapter( conn );
 	}
 
-	/**
-	 * @see HttpConnectionManager#getConnection(HostConfiguration, long)
-	 * 
-	 * @deprecated Use #getConnectionWithTimeout(HostConfiguration, long)
-	 */
-	public HttpConnection getConnection( HostConfiguration hostConfiguration, long timeout ) throws HttpException
-	{
-
-		LOG.trace( "enter HttpConnectionManager.getConnection(HostConfiguration, long)" );
-		try
-		{
-			return getConnectionWithTimeout( hostConfiguration, timeout );
-		}
-		catch( ConnectionPoolTimeoutException e )
-		{
-			throw new HttpException( e.getMessage() );
-		}
-	}
-
-	private HttpConnection doGetConnection( HostConfiguration hostConfiguration, long timeout )
+	private DefaultClientConnection doGetConnection( SoapUIHostConfiguration hostConfiguration, long timeout )
 			throws ConnectionPoolTimeoutException
 	{
 
-		HttpConnection connection = null;
+		DefaultClientConnection connection = null;
 
-		int maxHostConnections = this.params.getMaxConnectionsPerHost( hostConfiguration );
-		int maxTotalConnections = this.params.getMaxTotalConnections();
+		int maxHostConnections = super.getMaxForRoute( new HttpRoute( hostConfiguration.getHttpHost() ) );
+		int maxTotalConnections = super.getMaxTotal();
 
 		synchronized( connectionPool )
 		{
 
 			// we clone the hostConfiguration
 			// so that it cannot be changed once the connection has been retrieved
-			hostConfiguration = new SoapUIHostConfiguration( hostConfiguration );
+			hostConfiguration = new SoapUIHostConfiguration( hostConfiguration.getHttpHost() );
 			HostConnectionPool hostPool = connectionPool.getHostPool( hostConfiguration, true );
 			WaitingThread waitingThread = null;
 
@@ -515,7 +445,6 @@ public class SoapUIMultiThreadedHttpConnectionManager implements HttpConnectionM
 					connection = connectionPool.getFreeConnection( hostConfiguration );
 
 					// have room to make more
-					//
 				}
 				else if( ( hostPool.numConnections < maxHostConnections )
 						&& ( connectionPool.numConnections < maxTotalConnections ) )
@@ -542,7 +471,6 @@ public class SoapUIMultiThreadedHttpConnectionManager implements HttpConnectionM
 				{
 					// TODO: keep track of which hostConfigurations have waiting
 					// threads, so they avoid being sacrificed before necessary
-
 					try
 					{
 
@@ -625,7 +553,7 @@ public class SoapUIMultiThreadedHttpConnectionManager implements HttpConnectionM
 	 *           The host configuration
 	 * @return The total number of pooled connections
 	 */
-	public int getConnectionsInPool( HostConfiguration hostConfiguration )
+	public int getConnectionsInPool( SoapUIHostConfiguration hostConfiguration )
 	{
 		synchronized( connectionPool )
 		{
@@ -650,53 +578,27 @@ public class SoapUIMultiThreadedHttpConnectionManager implements HttpConnectionM
 		}
 	}
 
-	/**
-	 * Gets the number of connections in use for this configuration.
-	 * 
-	 * @param hostConfiguration
-	 *           the key that connections are tracked on
-	 * @return the number of connections in use
-	 * 
-	 * @deprecated Use {@link #getConnectionsInPool(HostConfiguration)}
-	 */
-	public int getConnectionsInUse( HostConfiguration hostConfiguration )
-	{
-		return getConnectionsInPool( hostConfiguration );
-	}
+	//	/**
+	//	 * Deletes all closed connections. Only connections currently owned by the
+	//	 * connection manager are processed.
+	//	 * 
+	//	 * @see HttpConnection#isOpen()
+	//	 * 
+	//	 * @since 3.0
+	//	 */
+	//	public void deleteClosedConnections()
+	//	{
+	//		connectionPool.deleteClosedConnections();
+	//	}
 
-	/**
-	 * Gets the total number of connections in use.
-	 * 
-	 * @return the total number of connections in use
-	 * 
-	 * @deprecated Use {@link #getConnectionsInPool()}
-	 */
-	public int getConnectionsInUse()
-	{
-		return getConnectionsInPool();
-	}
-
-	/**
-	 * Deletes all closed connections. Only connections currently owned by the
-	 * connection manager are processed.
-	 * 
-	 * @see HttpConnection#isOpen()
-	 * 
-	 * @since 3.0
-	 */
-	public void deleteClosedConnections()
-	{
-		connectionPool.deleteClosedConnections();
-	}
-
-	/**
-	 * @since 3.0
-	 */
-	public void closeIdleConnections( long idleTimeout )
-	{
-		connectionPool.closeIdleConnections( idleTimeout );
-		deleteClosedConnections();
-	}
+	//	/**
+	//	 * @since 3.0
+	//	 */
+	//	public void closeIdleConnections( long idleTimeout, TimeUnit timeUnit )
+	//	{
+	//		this.closeIdleConnections( idleTimeout, timeUnit );
+	//		deleteClosedConnections();
+	//	}
 
 	/**
 	 * Make the given HttpConnection available for use by other requests. If
@@ -706,7 +608,7 @@ public class SoapUIMultiThreadedHttpConnectionManager implements HttpConnectionM
 	 * @param conn
 	 *           the HttpConnection to make available.
 	 */
-	public void releaseConnection( HttpConnection conn )
+	public void releaseConnection( DefaultClientConnection conn )
 	{
 		LOG.trace( "enter HttpConnectionManager.releaseConnection(HttpConnection)" );
 
@@ -722,27 +624,27 @@ public class SoapUIMultiThreadedHttpConnectionManager implements HttpConnectionM
 		}
 
 		// make sure that the response has been read.
-		finishLastResponse( conn );
+		//		finishLastResponse( conn );
 
 		connectionPool.freeConnection( conn );
 	}
 
-	private void finishLastResponse( HttpConnection conn )
-	{
-		InputStream lastResponse = conn.getLastResponseInputStream();
-		if( lastResponse != null )
-		{
-			conn.setLastResponseInputStream( null );
-			try
-			{
-				lastResponse.close();
-			}
-			catch( IOException ioe )
-			{
-				conn.close();
-			}
-		}
-	}
+	//	private void finishLastResponse( SocketHttpClientConnection conn )
+	//	{
+	//		InputStream lastResponse = conn.getLastResponseInputStream();
+	//		if( lastResponse != null )
+	//		{
+	//			conn.setLastResponseInputStream( null );
+	//			try
+	//			{
+	//				lastResponse.close();
+	//			}
+	//			catch( IOException ioe )
+	//			{
+	//				conn.close();
+	//			}
+	//		}
+	//	}
 
 	/**
 	 * Gets the host configuration for a connection.
@@ -751,24 +653,28 @@ public class SoapUIMultiThreadedHttpConnectionManager implements HttpConnectionM
 	 *           the connection to get the configuration of
 	 * @return a new HostConfiguration
 	 */
-	private HostConfiguration configurationForConnection( HttpConnection conn )
+	private SoapUIHostConfiguration configurationForConnection( DefaultClientConnection conn )
 	{
+		SoapUIHostConfiguration connectionConfiguration = new SoapUIHostConfiguration( conn.getTargetHost() );
 
-		HostConfiguration connectionConfiguration = new SoapUIHostConfiguration();
-
-		connectionConfiguration.setHost( conn.getHost(), conn.getPort(), conn.getProtocol() );
-		if( conn.getLocalAddress() != null )
+		//		if( conn.getLocalAddress() != null )
+		//		{
+		//			connectionConfiguration.setLocalAddress( conn.getLocalAddress() );
+		//		}
+		if( conn.getAttribute( ExecutionContext.HTTP_PROXY_HOST ) != null )
 		{
-			connectionConfiguration.setLocalAddress( conn.getLocalAddress() );
-		}
-		if( conn.getProxyHost() != null )
-		{
-			connectionConfiguration.setProxy( conn.getProxyHost(), conn.getProxyPort() );
+			HttpClientSupport.getHttpClient().getParams()
+					.setParameter( ExecutionContext.HTTP_PROXY_HOST, conn.getAttribute( ExecutionContext.HTTP_PROXY_HOST ) );
 		}
 
-		if( conn.getParams().getParameter( SoapUIHostConfiguration.SOAPUI_SSL_CONFIG ) != null )
-			connectionConfiguration.getParams().setParameter( SoapUIHostConfiguration.SOAPUI_SSL_CONFIG,
-					conn.getParams().getParameter( SoapUIHostConfiguration.SOAPUI_SSL_CONFIG ) );
+		if( conn.getAttribute( BaseHttpRequestTransport.SOAPUI_SSL_CONFIG ) != null )
+		{
+			HttpClientSupport
+					.getHttpClient()
+					.getParams()
+					.setParameter( BaseHttpRequestTransport.SOAPUI_SSL_CONFIG,
+							conn.getAttribute( BaseHttpRequestTransport.SOAPUI_SSL_CONFIG ) );
+		}
 
 		return connectionConfiguration;
 	}
@@ -781,7 +687,7 @@ public class SoapUIMultiThreadedHttpConnectionManager implements HttpConnectionM
 	 * 
 	 * @see HttpConnectionManagerParams
 	 */
-	public HttpConnectionManagerParams getParams()
+	public HttpParams getParams()
 	{
 		return this.params;
 	}
@@ -794,7 +700,7 @@ public class SoapUIMultiThreadedHttpConnectionManager implements HttpConnectionM
 	 * 
 	 * @see HttpConnectionManagerParams
 	 */
-	public void setParams( final HttpConnectionManagerParams params )
+	public void setParams( final HttpParams params )
 	{
 		if( params == null )
 		{
@@ -821,7 +727,7 @@ public class SoapUIMultiThreadedHttpConnectionManager implements HttpConnectionM
 		 */
 		private final Map mapHosts = new HashMap();
 
-		private IdleConnectionHandler idleConnectionHandler = new IdleConnectionHandler();
+		//		private IdleConnectionHandler idleConnectionHandler = new IdleConnectionHandler();
 
 		/** The number of created connections */
 		private int numConnections = 0;
@@ -835,9 +741,16 @@ public class SoapUIMultiThreadedHttpConnectionManager implements HttpConnectionM
 			Iterator<?> iter = freeConnections.iterator();
 			while( iter.hasNext() )
 			{
-				HttpConnection conn = ( HttpConnection )iter.next();
+				DefaultClientConnection conn = ( DefaultClientConnection )iter.next();
 				iter.remove();
-				conn.close();
+				try
+				{
+					conn.close();
+				}
+				catch( IOException e )
+				{
+					SoapUI.logError( e );
+				}
 			}
 
 			// close all connections that have been checked out
@@ -857,7 +770,7 @@ public class SoapUIMultiThreadedHttpConnectionManager implements HttpConnectionM
 			mapHosts.clear();
 
 			// remove all references to connections
-			idleConnectionHandler.removeAll();
+			//			idleConnectionHandler.removeAll();
 		}
 
 		/**
@@ -867,7 +780,7 @@ public class SoapUIMultiThreadedHttpConnectionManager implements HttpConnectionM
 		 *           the configuration for the connection
 		 * @return a new connection or <code>null</code> if none are available
 		 */
-		public synchronized HttpConnection createConnection( HostConfiguration hostConfiguration )
+		public synchronized DefaultClientConnection createConnection( SoapUIHostConfiguration hostConfiguration )
 		{
 			HostConnectionPool hostPool = getHostPool( hostConfiguration, true );
 			if( LOG.isDebugEnabled() )
@@ -875,8 +788,8 @@ public class SoapUIMultiThreadedHttpConnectionManager implements HttpConnectionM
 				LOG.debug( "Allocating new connection, hostConfig=" + hostConfiguration );
 			}
 			HttpConnectionWithReference connection = new HttpConnectionWithReference( hostConfiguration );
-			connection.getParams().setDefaults( SoapUIMultiThreadedHttpConnectionManager.this.params );
-			connection.setHttpConnectionManager( SoapUIMultiThreadedHttpConnectionManager.this );
+			//connection.getParams().setDefaults( SoapUIMultiThreadedHttpConnectionManager.this.params );
+			//connection.setHttpConnectionManager( SoapUIMultiThreadedHttpConnectionManager.this );
 			numConnections++ ;
 			hostPool.numConnections++ ;
 
@@ -894,7 +807,7 @@ public class SoapUIMultiThreadedHttpConnectionManager implements HttpConnectionM
 		 * @param config
 		 *           the host configuration of the connection that was lost
 		 */
-		public synchronized void handleLostConnection( HostConfiguration config )
+		public synchronized void handleLostConnection( SoapUIHostConfiguration config )
 		{
 			HostConnectionPool hostPool = getHostPool( config, true );
 			hostPool.numConnections-- ;
@@ -920,7 +833,7 @@ public class SoapUIMultiThreadedHttpConnectionManager implements HttpConnectionM
 		 * @return a pool (list) of connections available for the given config, or
 		 *         <code>null</code> if neither found nor created
 		 */
-		public synchronized HostConnectionPool getHostPool( HostConfiguration hostConfiguration, boolean create )
+		public synchronized HostConnectionPool getHostPool( SoapUIHostConfiguration hostConfiguration, boolean create )
 		{
 			LOG.trace( "enter HttpConnectionManager.ConnectionPool.getHostPool(HostConfiguration)" );
 
@@ -944,7 +857,7 @@ public class SoapUIMultiThreadedHttpConnectionManager implements HttpConnectionM
 		 *           the configuraton for the connection pool
 		 * @return an available connection for the given config
 		 */
-		public synchronized HttpConnection getFreeConnection( HostConfiguration hostConfiguration )
+		public synchronized DefaultClientConnection getFreeConnection( SoapUIHostConfiguration hostConfiguration )
 		{
 
 			HttpConnectionWithReference connection = null;
@@ -964,7 +877,7 @@ public class SoapUIMultiThreadedHttpConnectionManager implements HttpConnectionM
 				}
 
 				// remove the connection from the timeout handler
-				idleConnectionHandler.remove( connection );
+				//				idleConnectionHandler.remove( connection );
 			}
 			else if( LOG.isDebugEnabled() )
 			{
@@ -983,7 +896,7 @@ public class SoapUIMultiThreadedHttpConnectionManager implements HttpConnectionM
 
 			while( iter.hasNext() )
 			{
-				HttpConnection conn = ( HttpConnection )iter.next();
+				DefaultClientConnection conn = ( DefaultClientConnection )iter.next();
 				if( !conn.isOpen() )
 				{
 					iter.remove();
@@ -999,7 +912,7 @@ public class SoapUIMultiThreadedHttpConnectionManager implements HttpConnectionM
 		 */
 		public synchronized void closeIdleConnections( long idleTimeout )
 		{
-			idleConnectionHandler.closeIdleConnections( idleTimeout );
+			//					idleConnectionHandler.closeIdleConnections( idleTimeout );
 		}
 
 		/**
@@ -1014,17 +927,24 @@ public class SoapUIMultiThreadedHttpConnectionManager implements HttpConnectionM
 		 * @param connection
 		 *           The connection to delete
 		 */
-		private synchronized void deleteConnection( HttpConnection connection )
+		private synchronized void deleteConnection( DefaultClientConnection connection )
 		{
 
-			HostConfiguration connectionConfiguration = configurationForConnection( connection );
+			SoapUIHostConfiguration connectionConfiguration = configurationForConnection( connection );
 
 			if( LOG.isDebugEnabled() )
 			{
 				LOG.debug( "Reclaiming connection, hostConfig=" + connectionConfiguration );
 			}
 
-			connection.close();
+			try
+			{
+				connection.close();
+			}
+			catch( IOException e )
+			{
+				SoapUI.logError( e );
+			}
 
 			HostConnectionPool hostPool = getHostPool( connectionConfiguration, true );
 
@@ -1038,7 +958,7 @@ public class SoapUIMultiThreadedHttpConnectionManager implements HttpConnectionM
 			}
 
 			// remove the connection from the timeout handler
-			idleConnectionHandler.remove( connection );
+			//			idleConnectionHandler.remove( connection );
 		}
 
 		/**
@@ -1047,7 +967,7 @@ public class SoapUIMultiThreadedHttpConnectionManager implements HttpConnectionM
 		public synchronized void deleteLeastUsedConnection()
 		{
 
-			HttpConnection connection = ( HttpConnection )freeConnections.removeFirst();
+			DefaultClientConnection connection = ( DefaultClientConnection )freeConnections.removeFirst();
 
 			if( connection != null )
 			{
@@ -1067,7 +987,7 @@ public class SoapUIMultiThreadedHttpConnectionManager implements HttpConnectionM
 		 *           the host config to use for notifying
 		 * @see #notifyWaitingThread(HostConnectionPool)
 		 */
-		public synchronized void notifyWaitingThread( HostConfiguration configuration )
+		public synchronized void notifyWaitingThread( SoapUIHostConfiguration configuration )
 		{
 			notifyWaitingThread( getHostPool( configuration, true ) );
 		}
@@ -1124,10 +1044,10 @@ public class SoapUIMultiThreadedHttpConnectionManager implements HttpConnectionM
 		 * @param conn
 		 *           a connection that is no longer being used
 		 */
-		public void freeConnection( HttpConnection conn )
+		public void freeConnection( DefaultClientConnection conn )
 		{
 
-			HostConfiguration connectionConfiguration = configurationForConnection( conn );
+			SoapUIHostConfiguration connectionConfiguration = configurationForConnection( conn );
 
 			if( LOG.isDebugEnabled() )
 			{
@@ -1142,7 +1062,14 @@ public class SoapUIMultiThreadedHttpConnectionManager implements HttpConnectionM
 					// the connection manager has been shutdown, release the
 					// connection's
 					// resources and get out of here
-					conn.close();
+					try
+					{
+						conn.close();
+					}
+					catch( IOException e )
+					{
+						SoapUI.logError( e );
+					}
 					return;
 				}
 
@@ -1171,7 +1098,7 @@ public class SoapUIMultiThreadedHttpConnectionManager implements HttpConnectionM
 				}
 
 				// register the connection with the timeout handler
-				idleConnectionHandler.add( conn );
+				//				idleConnectionHandler.add( conn );
 
 				notifyWaitingThread( hostPool );
 			}
@@ -1189,7 +1116,7 @@ public class SoapUIMultiThreadedHttpConnectionManager implements HttpConnectionM
 		public ConnectionPool connectionPool;
 
 		/** The connection's host configuration */
-		public HostConfiguration hostConfiguration;
+		public SoapUIHostConfiguration hostConfiguration;
 	}
 
 	/**
@@ -1199,7 +1126,7 @@ public class SoapUIMultiThreadedHttpConnectionManager implements HttpConnectionM
 	private static class HostConnectionPool
 	{
 		/** The hostConfig this pool is for */
-		public HostConfiguration hostConfiguration;
+		public SoapUIHostConfiguration hostConfiguration;
 
 		/** The list of free connections */
 		public LinkedList freeConnections = new LinkedList();
@@ -1312,22 +1239,24 @@ public class SoapUIMultiThreadedHttpConnectionManager implements HttpConnectionM
 	/**
 	 * A connection that keeps a reference to itself.
 	 */
-	public static class HttpConnectionWithReference extends HttpConnection implements ConnectionWithSocket
+	public static class HttpConnectionWithReference extends DefaultClientConnection implements ConnectionWithSocket
 	{
 
 		public WeakReference reference = new WeakReference( this, REFERENCE_QUEUE );
 
+		private SoapUIHostConfiguration hostConfiguration;
+
 		/**
 		 * @param hostConfiguration
 		 */
-		public HttpConnectionWithReference( HostConfiguration hostConfiguration )
-		{
-			super( hostConfiguration );
-		}
-
 		public Socket getConnectionSocket()
 		{
 			return getSocket();
+		}
+
+		public HttpConnectionWithReference( SoapUIHostConfiguration hostConfiguration )
+		{
+			this.hostConfiguration = hostConfiguration;
 		}
 
 	}
@@ -1336,22 +1265,21 @@ public class SoapUIMultiThreadedHttpConnectionManager implements HttpConnectionM
 	 * An HttpConnection wrapper that ensures a connection cannot be used once
 	 * released.
 	 */
-	public static class HttpConnectionAdapter extends HttpConnection implements ConnectionWithSocket
+	public static class HttpConnectionAdapter extends DefaultClientConnection implements ConnectionWithSocket
 	{
 
 		// the wrapped connection
-		private HttpConnection wrappedConnection;
+		private DefaultClientConnection wrappedConnection;
 
 		/**
 		 * Creates a new HttpConnectionAdapter.
 		 * 
-		 * @param connection
+		 * @param conn
 		 *           the connection to be wrapped
 		 */
-		public HttpConnectionAdapter( HttpConnection connection )
+		public HttpConnectionAdapter( DefaultClientConnection conn )
 		{
-			super( connection.getHost(), connection.getPort(), connection.getProtocol() );
-			this.wrappedConnection = connection;
+			this.wrappedConnection = conn;
 		}
 
 		/**
@@ -1365,718 +1293,14 @@ public class SoapUIMultiThreadedHttpConnectionManager implements HttpConnectionM
 		}
 
 		/**
-		 * @return HttpConnection
+		 * @return DefaultHttpClientConnection
 		 */
-		HttpConnection getWrappedConnection()
+		DefaultClientConnection getWrappedConnection()
 		{
 			return wrappedConnection;
 		}
 
-		public void close()
-		{
-			if( hasConnection() )
-			{
-				wrappedConnection.close();
-			}
-			else
-			{
-				// do nothing
-			}
-		}
-
-		public InetAddress getLocalAddress()
-		{
-			if( hasConnection() )
-			{
-				return wrappedConnection.getLocalAddress();
-			}
-			else
-			{
-				return null;
-			}
-		}
-
-		/**
-		 * @deprecated
-		 */
-		public boolean isStaleCheckingEnabled()
-		{
-			if( hasConnection() )
-			{
-				return wrappedConnection.isStaleCheckingEnabled();
-			}
-			else
-			{
-				return false;
-			}
-		}
-
-		public void setLocalAddress( InetAddress localAddress )
-		{
-			if( hasConnection() )
-			{
-				wrappedConnection.setLocalAddress( localAddress );
-			}
-			else
-			{
-				throw new IllegalStateException( "Connection has been released" );
-			}
-		}
-
-		/**
-		 * @deprecated
-		 */
-		public void setStaleCheckingEnabled( boolean staleCheckEnabled )
-		{
-			if( hasConnection() )
-			{
-				wrappedConnection.setStaleCheckingEnabled( staleCheckEnabled );
-			}
-			else
-			{
-				throw new IllegalStateException( "Connection has been released" );
-			}
-		}
-
-		public String getHost()
-		{
-			if( hasConnection() )
-			{
-				return wrappedConnection.getHost();
-			}
-			else
-			{
-				return null;
-			}
-		}
-
-		public HttpConnectionManager getHttpConnectionManager()
-		{
-			if( hasConnection() )
-			{
-				return wrappedConnection.getHttpConnectionManager();
-			}
-			else
-			{
-				return null;
-			}
-		}
-
-		public InputStream getLastResponseInputStream()
-		{
-			if( hasConnection() )
-			{
-				return wrappedConnection.getLastResponseInputStream();
-			}
-			else
-			{
-				return null;
-			}
-		}
-
-		public int getPort()
-		{
-			if( hasConnection() )
-			{
-				return wrappedConnection.getPort();
-			}
-			else
-			{
-				return -1;
-			}
-		}
-
-		public Protocol getProtocol()
-		{
-			if( hasConnection() )
-			{
-				return wrappedConnection.getProtocol();
-			}
-			else
-			{
-				return null;
-			}
-		}
-
-		public String getProxyHost()
-		{
-			if( hasConnection() )
-			{
-				return wrappedConnection.getProxyHost();
-			}
-			else
-			{
-				return null;
-			}
-		}
-
-		public int getProxyPort()
-		{
-			if( hasConnection() )
-			{
-				return wrappedConnection.getProxyPort();
-			}
-			else
-			{
-				return -1;
-			}
-		}
-
-		public OutputStream getRequestOutputStream() throws IOException, IllegalStateException
-		{
-			if( hasConnection() )
-			{
-				return wrappedConnection.getRequestOutputStream();
-			}
-			else
-			{
-				return null;
-			}
-		}
-
-		public InputStream getResponseInputStream() throws IOException, IllegalStateException
-		{
-			if( hasConnection() )
-			{
-				return wrappedConnection.getResponseInputStream();
-			}
-			else
-			{
-				return null;
-			}
-		}
-
-		public boolean isOpen()
-		{
-			if( hasConnection() )
-			{
-				return wrappedConnection.isOpen();
-			}
-			else
-			{
-				return false;
-			}
-		}
-
-		public boolean closeIfStale() throws IOException
-		{
-			if( hasConnection() )
-			{
-				return wrappedConnection.closeIfStale();
-			}
-			else
-			{
-				return false;
-			}
-		}
-
-		public boolean isProxied()
-		{
-			if( hasConnection() )
-			{
-				return wrappedConnection.isProxied();
-			}
-			else
-			{
-				return false;
-			}
-		}
-
-		public boolean isResponseAvailable() throws IOException
-		{
-			if( hasConnection() )
-			{
-				return wrappedConnection.isResponseAvailable();
-			}
-			else
-			{
-				return false;
-			}
-		}
-
-		public boolean isResponseAvailable( int timeout ) throws IOException
-		{
-			if( hasConnection() )
-			{
-				return wrappedConnection.isResponseAvailable( timeout );
-			}
-			else
-			{
-				return false;
-			}
-		}
-
-		public boolean isSecure()
-		{
-			if( hasConnection() )
-			{
-				return wrappedConnection.isSecure();
-			}
-			else
-			{
-				return false;
-			}
-		}
-
-		public boolean isTransparent()
-		{
-			if( hasConnection() )
-			{
-				return wrappedConnection.isTransparent();
-			}
-			else
-			{
-				return false;
-			}
-		}
-
-		public void open() throws IOException
-		{
-			if( hasConnection() )
-			{
-				wrappedConnection.open();
-			}
-			else
-			{
-				throw new IllegalStateException( "Connection has been released" );
-			}
-		}
-
-		/**
-		 * @deprecated
-		 */
-		public void print( String data ) throws IOException, IllegalStateException
-		{
-			if( hasConnection() )
-			{
-				wrappedConnection.print( data );
-			}
-			else
-			{
-				throw new IllegalStateException( "Connection has been released" );
-			}
-		}
-
-		public void printLine() throws IOException, IllegalStateException
-		{
-			if( hasConnection() )
-			{
-				wrappedConnection.printLine();
-			}
-			else
-			{
-				throw new IllegalStateException( "Connection has been released" );
-			}
-		}
-
-		/**
-		 * @deprecated
-		 */
-		public void printLine( String data ) throws IOException, IllegalStateException
-		{
-			if( hasConnection() )
-			{
-				wrappedConnection.printLine( data );
-			}
-			else
-			{
-				throw new IllegalStateException( "Connection has been released" );
-			}
-		}
-
-		/**
-		 * @deprecated
-		 */
-		public String readLine() throws IOException, IllegalStateException
-		{
-			if( hasConnection() )
-			{
-				return wrappedConnection.readLine();
-			}
-			else
-			{
-				throw new IllegalStateException( "Connection has been released" );
-			}
-		}
-
-		public String readLine( String charset ) throws IOException, IllegalStateException
-		{
-			if( hasConnection() )
-			{
-				return wrappedConnection.readLine( charset );
-			}
-			else
-			{
-				throw new IllegalStateException( "Connection has been released" );
-			}
-		}
-
-		public void releaseConnection()
-		{
-			if( !isLocked() && hasConnection() )
-			{
-				HttpConnection wrappedConnection = this.wrappedConnection;
-				this.wrappedConnection = null;
-				wrappedConnection.releaseConnection();
-			}
-			else
-			{
-				// do nothing
-			}
-		}
-
-		/**
-		 * @deprecated
-		 */
-		public void setConnectionTimeout( int timeout )
-		{
-			if( hasConnection() )
-			{
-				wrappedConnection.setConnectionTimeout( timeout );
-			}
-			else
-			{
-				// do nothing
-			}
-		}
-
-		public void setHost( String host ) throws IllegalStateException
-		{
-			if( hasConnection() )
-			{
-				wrappedConnection.setHost( host );
-			}
-			else
-			{
-				// do nothing
-			}
-		}
-
-		public void setHttpConnectionManager( HttpConnectionManager httpConnectionManager )
-		{
-			if( hasConnection() )
-			{
-				wrappedConnection.setHttpConnectionManager( httpConnectionManager );
-			}
-			else
-			{
-				// do nothing
-			}
-		}
-
-		public void setLastResponseInputStream( InputStream inStream )
-		{
-			if( hasConnection() )
-			{
-				wrappedConnection.setLastResponseInputStream( inStream );
-			}
-			else
-			{
-				// do nothing
-			}
-		}
-
-		public void setPort( int port ) throws IllegalStateException
-		{
-			if( hasConnection() )
-			{
-				wrappedConnection.setPort( port );
-			}
-			else
-			{
-				// do nothing
-			}
-		}
-
-		public void setProtocol( Protocol protocol )
-		{
-			if( hasConnection() )
-			{
-				wrappedConnection.setProtocol( protocol );
-			}
-			else
-			{
-				// do nothing
-			}
-		}
-
-		public void setProxyHost( String host ) throws IllegalStateException
-		{
-			if( hasConnection() )
-			{
-				wrappedConnection.setProxyHost( host );
-			}
-			else
-			{
-				// do nothing
-			}
-		}
-
-		public void setProxyPort( int port ) throws IllegalStateException
-		{
-			if( hasConnection() )
-			{
-				wrappedConnection.setProxyPort( port );
-			}
-			else
-			{
-				// do nothing
-			}
-		}
-
-		/**
-		 * @deprecated
-		 */
-		public void setSoTimeout( int timeout ) throws SocketException, IllegalStateException
-		{
-			if( hasConnection() )
-			{
-				wrappedConnection.setSoTimeout( timeout );
-			}
-			else
-			{
-				// do nothing
-			}
-		}
-
-		/**
-		 * @deprecated
-		 */
-		public void shutdownOutput()
-		{
-			if( hasConnection() )
-			{
-				wrappedConnection.shutdownOutput();
-			}
-			else
-			{
-				// do nothing
-			}
-		}
-
-		public void tunnelCreated() throws IllegalStateException, IOException
-		{
-			if( hasConnection() )
-			{
-				wrappedConnection.tunnelCreated();
-			}
-			else
-			{
-				// do nothing
-			}
-		}
-
-		public void write( byte[] data, int offset, int length ) throws IOException, IllegalStateException
-		{
-			if( hasConnection() )
-			{
-				wrappedConnection.write( data, offset, length );
-			}
-			else
-			{
-				throw new IllegalStateException( "Connection has been released" );
-			}
-		}
-
-		public void write( byte[] data ) throws IOException, IllegalStateException
-		{
-			if( hasConnection() )
-			{
-				wrappedConnection.write( data );
-			}
-			else
-			{
-				throw new IllegalStateException( "Connection has been released" );
-			}
-		}
-
-		public void writeLine() throws IOException, IllegalStateException
-		{
-			if( hasConnection() )
-			{
-				wrappedConnection.writeLine();
-			}
-			else
-			{
-				throw new IllegalStateException( "Connection has been released" );
-			}
-		}
-
-		public void writeLine( byte[] data ) throws IOException, IllegalStateException
-		{
-			if( hasConnection() )
-			{
-				wrappedConnection.writeLine( data );
-			}
-			else
-			{
-				throw new IllegalStateException( "Connection has been released" );
-			}
-		}
-
-		public void flushRequestOutputStream() throws IOException
-		{
-			if( hasConnection() )
-			{
-				wrappedConnection.flushRequestOutputStream();
-			}
-			else
-			{
-				throw new IllegalStateException( "Connection has been released" );
-			}
-		}
-
-		/**
-		 * @deprecated
-		 */
-		public int getSoTimeout() throws SocketException
-		{
-			if( hasConnection() )
-			{
-				return wrappedConnection.getSoTimeout();
-			}
-			else
-			{
-				throw new IllegalStateException( "Connection has been released" );
-			}
-		}
-
-		/**
-		 * @deprecated
-		 */
-		public String getVirtualHost()
-		{
-			if( hasConnection() )
-			{
-				return wrappedConnection.getVirtualHost();
-			}
-			else
-			{
-				throw new IllegalStateException( "Connection has been released" );
-			}
-		}
-
-		/**
-		 * @deprecated
-		 */
-		public void setVirtualHost( String host ) throws IllegalStateException
-		{
-			if( hasConnection() )
-			{
-				wrappedConnection.setVirtualHost( host );
-			}
-			else
-			{
-				throw new IllegalStateException( "Connection has been released" );
-			}
-		}
-
-		public int getSendBufferSize() throws SocketException
-		{
-			if( hasConnection() )
-			{
-				return wrappedConnection.getSendBufferSize();
-			}
-			else
-			{
-				throw new IllegalStateException( "Connection has been released" );
-			}
-		}
-
-		/**
-		 * @deprecated
-		 */
-		public void setSendBufferSize( int sendBufferSize ) throws SocketException
-		{
-			if( hasConnection() )
-			{
-				wrappedConnection.setSendBufferSize( sendBufferSize );
-			}
-			else
-			{
-				throw new IllegalStateException( "Connection has been released" );
-			}
-		}
-
-		public HttpConnectionParams getParams()
-		{
-			if( hasConnection() )
-			{
-				return wrappedConnection.getParams();
-			}
-			else
-			{
-				throw new IllegalStateException( "Connection has been released" );
-			}
-		}
-
-		public void setParams( final HttpConnectionParams params )
-		{
-			if( hasConnection() )
-			{
-				wrappedConnection.setParams( params );
-			}
-			else
-			{
-				throw new IllegalStateException( "Connection has been released" );
-			}
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see
-		 * org.apache.commons.httpclient.HttpConnection#print(java.lang.String,
-		 * java.lang.String)
-		 */
-		public void print( String data, String charset ) throws IOException, IllegalStateException
-		{
-			if( hasConnection() )
-			{
-				wrappedConnection.print( data, charset );
-			}
-			else
-			{
-				throw new IllegalStateException( "Connection has been released" );
-			}
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see
-		 * org.apache.commons.httpclient.HttpConnection#printLine(java.lang.String
-		 * , java.lang.String)
-		 */
-		public void printLine( String data, String charset ) throws IOException, IllegalStateException
-		{
-			if( hasConnection() )
-			{
-				wrappedConnection.printLine( data, charset );
-			}
-			else
-			{
-				throw new IllegalStateException( "Connection has been released" );
-			}
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.apache.commons.httpclient.HttpConnection#setSocketTimeout(int)
-		 */
-		public void setSocketTimeout( int timeout ) throws SocketException, IllegalStateException
-		{
-			if( hasConnection() )
-			{
-				wrappedConnection.setSocketTimeout( timeout );
-			}
-			else
-			{
-				throw new IllegalStateException( "Connection has been released" );
-			}
-		}
-
+		@Override
 		public Socket getConnectionSocket()
 		{
 			if( wrappedConnection instanceof ConnectionWithSocket )
@@ -2087,4 +1311,49 @@ public class SoapUIMultiThreadedHttpConnectionManager implements HttpConnectionM
 
 	}
 
+	public static class IdleConnectionMonitorThread extends Thread
+	{
+		private final ClientConnectionManager connMgr;
+		private volatile boolean shutdown;
+
+		public IdleConnectionMonitorThread( ClientConnectionManager connMgr )
+		{
+			super();
+			this.connMgr = connMgr;
+		}
+
+		@Override
+		public void run()
+		{
+			try
+			{
+				while( !shutdown )
+				{
+					synchronized( this )
+					{
+						wait( 5000 );
+						// Close expired connections
+						connMgr.closeExpiredConnections();
+						// Optionally, close connections
+						// that have been idle longer than 30 sec
+						connMgr.closeIdleConnections( 30, TimeUnit.SECONDS );
+					}
+				}
+			}
+			catch( InterruptedException ex )
+			{
+				// terminate
+			}
+		}
+
+		public void shutdown()
+		{
+			shutdown = true;
+			synchronized( this )
+			{
+				notifyAll();
+			}
+		}
+
+	}
 }

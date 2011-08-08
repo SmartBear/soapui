@@ -12,8 +12,7 @@
 
 package com.eviware.soapui.impl.wsdl.submit.filters;
 
-import org.apache.commons.httpclient.HttpMethod;
-import org.apache.commons.httpclient.URI;
+import org.apache.http.client.methods.HttpRequestBase;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
@@ -22,6 +21,7 @@ import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.settings.HttpSettings;
 import com.eviware.soapui.support.StringUtils;
+import com.eviware.soapui.support.uri.URI;
 
 /**
  * RequestFilter that adds SOAP specific headers
@@ -34,7 +34,7 @@ public class EndpointRequestFilter extends AbstractRequestFilter
 	@Override
 	public void filterAbstractHttpRequest( SubmitContext context, AbstractHttpRequest<?> request )
 	{
-		HttpMethod httpMethod = ( HttpMethod )context.getProperty( BaseHttpRequestTransport.HTTP_METHOD );
+		HttpRequestBase httpMethod = ( HttpRequestBase )context.getProperty( BaseHttpRequestTransport.HTTP_METHOD );
 
 		String strURL = request.getEndpoint();
 		strURL = PropertyExpander.expandProperties( context, strURL );
@@ -44,7 +44,7 @@ public class EndpointRequestFilter extends AbstractRequestFilter
 			{
 				URI uri = new URI( strURL, request.getSettings().getBoolean( HttpSettings.ENCODED_URLS ) );
 				context.setProperty( BaseHttpRequestTransport.REQUEST_URI, uri );
-				httpMethod.setURI( uri );
+				httpMethod.setURI( new java.net.URI( uri.toString() ) );
 			}
 		}
 		catch( Exception e )

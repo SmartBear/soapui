@@ -26,12 +26,13 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.PreencodedMimeBodyPart;
 
-import org.apache.commons.httpclient.HttpMethod;
-import org.apache.commons.httpclient.URI;
-import org.apache.commons.httpclient.methods.ByteArrayRequestEntity;
-import org.apache.commons.httpclient.methods.EntityEnclosingMethod;
-import org.apache.commons.httpclient.methods.InputStreamRequestEntity;
-import org.apache.commons.httpclient.methods.StringRequestEntity;
+import org.apache.http.HttpEntityEnclosingRequest;
+import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
+import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.client.utils.URIUtils;
+import org.apache.http.entity.ByteArrayEntity;
+import org.apache.http.entity.InputStreamEntity;
+import org.apache.http.entity.StringEntity;
 import org.apache.xmlbeans.XmlBoolean;
 
 import com.eviware.soapui.SoapUI;
@@ -56,6 +57,7 @@ import com.eviware.soapui.settings.HttpSettings;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.editor.inspectors.attachments.ContentTypeHandler;
 import com.eviware.soapui.support.types.StringToStringMap;
+import com.eviware.soapui.support.uri.URI;
 
 /**
  * RequestFilter that adds SOAP specific headers
@@ -69,7 +71,7 @@ public class HttpRequestFilter extends AbstractRequestFilter
 	@Override
 	public void filterHttpRequest( SubmitContext context, HttpRequestInterface<?> request )
 	{
-		HttpMethod httpMethod = ( HttpMethod )context.getProperty( BaseHttpRequestTransport.HTTP_METHOD );
+		HttpRequestBase httpMethod = ( HttpRequestBase )context.getProperty( BaseHttpRequestTransport.HTTP_METHOD );
 
 		String path = PropertyExpander.expandProperties( context, request.getPath() );
 		StringBuffer query = new StringBuffer();
@@ -78,7 +80,7 @@ public class HttpRequestFilter extends AbstractRequestFilter
 				.getProperty( BaseHttpRequestTransport.RESPONSE_PROPERTIES );
 
 		MimeMultipart formMp = "multipart/form-data".equals( request.getMediaType() )
-				&& httpMethod instanceof EntityEnclosingMethod ? new MimeMultipart() : null;
+				&& httpMethod instanceof HttpEntityEnclosingRequestBase ? new MimeMultipart() : null;
 
 		RestParamsPropertyHolder params = request.getParams();
 
@@ -138,7 +140,7 @@ public class HttpRequestFilter extends AbstractRequestFilter
 			{
 			case HEADER :
 				for( String valuePart : valueParts )
-					httpMethod.addRequestHeader( param.getName(), valuePart );
+					httpMethod.addHeader( param.getName(), valuePart );
 				break;
 			case QUERY :
 				if( formMp == null || !request.isPostQueryString() )
@@ -162,7 +164,7 @@ public class HttpRequestFilter extends AbstractRequestFilter
 					}
 					catch( MessagingException e )
 					{
-						e.printStackTrace();
+						SoapUI.logError( e );
 					}
 				}
 
@@ -202,11 +204,11 @@ public class HttpRequestFilter extends AbstractRequestFilter
 				// decode it first...
 				URI uri = new URI( path, false );
 				context.setProperty( BaseHttpRequestTransport.REQUEST_URI, uri );
-				httpMethod.setURI( uri );
+				httpMethod.setURI( new java.net.URI( uri.toString() ) );
 			}
 			catch( Exception e )
 			{
-				e.printStackTrace();
+				SoapUI.logError( e );
 			}
 		}
 		else if( StringUtils.hasContent( path ) )
@@ -216,18 +218,28 @@ public class HttpRequestFilter extends AbstractRequestFilter
 				// URI(String) automatically URLencodes the input, so we need to
 				// decode it first...
 				URI uri = new URI( path, false );
-				httpMethod.setPath( uri.toString() );
+				httpMethod.setURI( new java.net.URI( uri.toString() ) );
 			}
 			catch( Exception e )
 			{
-				e.printStackTrace();
-				httpMethod.setPath( path );
+				SoapUI.logError( e );
 			}
 		}
 
 		if( query.length() > 0 && !request.isPostQueryString() )
 		{
-			httpMethod.setQueryString( query.toString() );
+			try
+			{
+				URI uri = ( URI )context.getProperty( BaseHttpRequestTransport.REQUEST_URI );
+				java.net.URI tempUri = URIUtils.createURI( uri.getScheme(), uri.getHost(), uri.getPort(), path,
+						query.toString(), null );
+				context.setProperty( BaseHttpRequestTransport.REQUEST_URI, new URI( tempUri.toString(), false ) );
+				httpMethod.setURI( tempUri );
+			}
+			catch( Exception e )
+			{
+				SoapUI.logError( e );
+			}
 		}
 
 		if( request instanceof RestRequest )
@@ -235,7 +247,7 @@ public class HttpRequestFilter extends AbstractRequestFilter
 			String acceptEncoding = ( ( RestRequest )request ).getAccept();
 			if( StringUtils.hasContent( acceptEncoding ) )
 			{
-				httpMethod.setRequestHeader( "Accept", acceptEncoding );
+				httpMethod.setHeader( "Accept", acceptEncoding );
 			}
 		}
 
@@ -246,7 +258,7 @@ public class HttpRequestFilter extends AbstractRequestFilter
 			// create request message
 			try
 			{
-				if( request.hasRequestBody() && httpMethod instanceof EntityEnclosingMethod )
+				if( request.hasRequestBody() && httpMethod instanceof HttpEntityEnclosingRequest )
 				{
 					String requestContent = PropertyExpander.expandProperties( context, request.getRequestContent(),
 							request.isEntitizeProperties() );
@@ -281,23 +293,30 @@ public class HttpRequestFilter extends AbstractRequestFilter
 				message.saveChanges();
 				RestRequestMimeMessageRequestEntity mimeMessageRequestEntity = new RestRequestMimeMessageRequestEntity(
 						message, request );
-				( ( EntityEnclosingMethod )httpMethod ).setRequestEntity( mimeMessageRequestEntity );
-				httpMethod.setRequestHeader( "Content-Type", mimeMessageRequestEntity.getContentType() );
-				httpMethod.setRequestHeader( "MIME-Version", "1.0" );
+				( ( HttpEntityEnclosingRequest )httpMethod ).setEntity( mimeMessageRequestEntity );
+				httpMethod.setHeader( "Content-Type", mimeMessageRequestEntity.getContentType().getValue() );
+				httpMethod.setHeader( "MIME-Version", "1.0" );
 			}
 			catch( Throwable e )
 			{
 				SoapUI.logError( e );
 			}
 		}
-		else if( request.hasRequestBody() && httpMethod instanceof EntityEnclosingMethod )
+		else if( request.hasRequestBody() && httpMethod instanceof HttpEntityEnclosingRequest )
 		{
 			if( StringUtils.hasContent( request.getMediaType() ) )
-				httpMethod.setRequestHeader( "Content-Type", getContentTypeHeader( request.getMediaType(), encoding ) );
+				httpMethod.setHeader( "Content-Type", getContentTypeHeader( request.getMediaType(), encoding ) );
 
 			if( request.isPostQueryString() )
 			{
-				( ( EntityEnclosingMethod )httpMethod ).setRequestEntity( new StringRequestEntity( query.toString() ) );
+				try
+				{
+					( ( HttpEntityEnclosingRequest )httpMethod ).setEntity( new StringEntity( query.toString() ) );
+				}
+				catch( UnsupportedEncodingException e )
+				{
+					SoapUI.logError( e );
+				}
 			}
 			else
 			{
@@ -318,11 +337,11 @@ public class HttpRequestFilter extends AbstractRequestFilter
 					try
 					{
 						byte[] content = encoding == null ? requestContent.getBytes() : requestContent.getBytes( encoding );
-						( ( EntityEnclosingMethod )httpMethod ).setRequestEntity( new ByteArrayRequestEntity( content ) );
+						( ( HttpEntityEnclosingRequest )httpMethod ).setEntity( new ByteArrayEntity( content ) );
 					}
 					catch( UnsupportedEncodingException e )
 					{
-						( ( EntityEnclosingMethod )httpMethod ).setRequestEntity( new ByteArrayRequestEntity( requestContent
+						( ( HttpEntityEnclosingRequest )httpMethod ).setEntity( new ByteArrayEntity( requestContent
 								.getBytes() ) );
 					}
 				}
@@ -339,14 +358,13 @@ public class HttpRequestFilter extends AbstractRequestFilter
 						}
 						else if( attachments.size() == 1 )
 						{
-							( ( EntityEnclosingMethod )httpMethod ).setRequestEntity( new InputStreamRequestEntity(
-									attachments.get( 0 ).getInputStream() ) );
+							( ( HttpEntityEnclosingRequest )httpMethod ).setEntity( new InputStreamEntity( attachments.get( 0 )
+									.getInputStream(), -1 ) );
 
-							httpMethod.setRequestHeader( "Content-Type",
-									getContentTypeHeader( request.getMediaType(), encoding ) );
+							httpMethod.setHeader( "Content-Type", getContentTypeHeader( request.getMediaType(), encoding ) );
 						}
 
-						if( ( ( EntityEnclosingMethod )httpMethod ).getRequestEntity() == null )
+						if( ( ( HttpEntityEnclosingRequest )httpMethod ).getEntity() == null )
 						{
 							if( mp == null )
 								mp = new MimeMultipart();
@@ -360,15 +378,15 @@ public class HttpRequestFilter extends AbstractRequestFilter
 							message.saveChanges();
 							RestRequestMimeMessageRequestEntity mimeMessageRequestEntity = new RestRequestMimeMessageRequestEntity(
 									message, request );
-							( ( EntityEnclosingMethod )httpMethod ).setRequestEntity( mimeMessageRequestEntity );
-							httpMethod.setRequestHeader( "Content-Type",
-									getContentTypeHeader( mimeMessageRequestEntity.getContentType(), encoding ) );
-							httpMethod.setRequestHeader( "MIME-Version", "1.0" );
+							( ( HttpEntityEnclosingRequest )httpMethod ).setEntity( mimeMessageRequestEntity );
+							httpMethod.setHeader( "Content-Type",
+									getContentTypeHeader( mimeMessageRequestEntity.getContentType().getValue(), encoding ) );
+							httpMethod.setHeader( "MIME-Version", "1.0" );
 						}
 					}
 					catch( Exception e )
 					{
-						e.printStackTrace();
+						SoapUI.logError( e );
 					}
 				}
 			}
@@ -436,4 +454,5 @@ public class HttpRequestFilter extends AbstractRequestFilter
 		DataHandler dataHandler = new DataHandler( new RestRequestDataSource( wsdlRequest, requestContent ) );
 		rootPart.setDataHandler( dataHandler );
 	}
+
 }

@@ -12,49 +12,45 @@
 
 package com.eviware.soapui.impl.wsdl.support.http;
 
-import org.apache.commons.httpclient.HostConfiguration;
-import org.apache.commons.httpclient.util.LangUtils;
+import org.apache.http.HttpHost;
+import org.apache.http.protocol.BasicHttpContext;
 
-public class SoapUIHostConfiguration extends HostConfiguration
+public class SoapUIHostConfiguration extends BasicHttpContext
 {
-
-	public static final String SOAPUI_SSL_CONFIG = "soapui.sslConfig";
+	private HttpHost httpHost;
 
 	public SoapUIHostConfiguration()
 	{
-		super();
 	}
 
-	public SoapUIHostConfiguration( final HostConfiguration hostConfiguration )
+	public SoapUIHostConfiguration( HttpHost httpHost )
 	{
-		super( hostConfiguration );
+		this.httpHost = httpHost;
+	}
+
+	public SoapUIHostConfiguration( String httpHost )
+	{
+		this.httpHost = new HttpHost( httpHost );
+	}
+
+	public SoapUIHostConfiguration( String host, int port )
+	{
+		this.httpHost = new HttpHost( host, port );
+	}
+
+	public void setHttpHost( HttpHost httpHost )
+	{
+		this.httpHost = httpHost;
+	}
+
+	public HttpHost getHttpHost()
+	{
+		return httpHost;
 	}
 
 	public Object clone()
 	{
-		return new SoapUIHostConfiguration( this );
+		return new SoapUIHostConfiguration( this.httpHost );
 	}
 
-	public synchronized boolean equals( final Object o )
-	{
-
-		boolean result = super.equals( o );
-		if( result && o instanceof SoapUIHostConfiguration )
-		{
-			SoapUIHostConfiguration that = ( SoapUIHostConfiguration )o;
-			return LangUtils.equals( getParams().getParameter( SOAPUI_SSL_CONFIG ),
-					that.getParams().getParameter( SOAPUI_SSL_CONFIG ) );
-		}
-		else
-		{
-			return false;
-		}
-	}
-
-	public synchronized int hashCode()
-	{
-		int hash = super.hashCode();
-		hash = LangUtils.hashCode( hash, getParams().getParameter( SOAPUI_SSL_CONFIG ) );
-		return hash;
-	}
 }

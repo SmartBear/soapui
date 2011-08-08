@@ -19,7 +19,9 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
-import org.apache.commons.httpclient.methods.RequestEntity;
+import org.apache.http.Header;
+import org.apache.http.entity.BasicHttpEntity;
+import org.apache.http.message.BasicHeader;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.http.HttpRequestInterface;
@@ -31,7 +33,7 @@ import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.W
  * @author ole.matzura
  */
 
-public class HttpRequestMimeMessageRequestEntity implements RequestEntity
+public class HttpRequestMimeMessageRequestEntity extends BasicHttpEntity
 {
 	private final MimeMessage message;
 	private final HttpRequestInterface<?> restRequest;
@@ -57,21 +59,21 @@ public class HttpRequestMimeMessageRequestEntity implements RequestEntity
 		}
 	}
 
-	public String getContentType()
+	public Header getContentType()
 	{
 		try
 		{
 			String header = message.getHeader( "Content-Type" )[0];
 			int ix = header.indexOf( "boundary" );
 
-			return restRequest.getMediaType() + "; " + header.substring( ix );
+			return new BasicHeader( "Content-Type", restRequest.getMediaType() + "; " + header.substring( ix ) );
 		}
 		catch( MessagingException e )
 		{
 			SoapUI.logError( e );
 		}
 
-		return restRequest.getMediaType();
+		return new BasicHeader( "Content-Type", restRequest.getMediaType() );
 	}
 
 	public boolean isRepeatable()

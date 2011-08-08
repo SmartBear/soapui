@@ -14,6 +14,7 @@ package com.eviware.soapui.impl.wsdl.endpoint;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -23,9 +24,7 @@ import java.util.Set;
 
 import javax.swing.JComponent;
 
-import org.apache.commons.httpclient.HttpMethod;
-import org.apache.commons.httpclient.URI;
-import org.apache.commons.httpclient.URIException;
+import org.apache.http.client.methods.HttpRequestBase;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.DefaultEndpointStrategyConfig;
@@ -52,6 +51,7 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpansionsResult;
 import com.eviware.soapui.model.support.ProjectListenerAdapter;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.types.StringList;
+import com.eviware.soapui.support.uri.URI;
 
 public class DefaultEndpointStrategy implements EndpointStrategy, PropertyExpansionContainer
 {
@@ -140,20 +140,27 @@ public class DefaultEndpointStrategy implements EndpointStrategy, PropertyExpans
 
 	public void filterRequest( SubmitContext context, Request wsdlRequest )
 	{
-		HttpMethod httpMethod = ( HttpMethod )context.getProperty( BaseHttpRequestTransport.HTTP_METHOD );
-		URI uri = ( URI )context.getProperty( BaseHttpRequestTransport.REQUEST_URI );
+		HttpRequestBase httpMethod = ( HttpRequestBase )context.getProperty( BaseHttpRequestTransport.HTTP_METHOD );
+		URI tempUri = ( URI )context.getProperty( BaseHttpRequestTransport.REQUEST_URI );
+		java.net.URI uri = null;
+
+		try
+		{
+			uri = new java.net.URI( tempUri.toString() );
+		}
+		catch( URISyntaxException e )
+		{
+			SoapUI.logError( e );
+		}
+
 		if( uri == null )
 		{
-			try
-			{
-				uri = httpMethod.getURI();
-			}
-			catch( URIException e )
-			{
-				SoapUI.logError( e,
-						"Error for path: " + httpMethod.getPath() + ", QueryString: " + httpMethod.getQueryString() );
-				return;
-			}
+			uri = httpMethod.getURI();
+		}
+
+		if( uri == null )
+		{
+			return;
 		}
 
 		EndpointDefaults def = defaults.get( uri.toString() );
@@ -166,8 +173,8 @@ public class DefaultEndpointStrategy implements EndpointStrategy, PropertyExpans
 				{
 					try
 					{
-						URL tempUri = new URL( PropertyExpander.expandProperties( context, ep ) );
-						if( tempUri.toString().equals( uri.toString() ) )
+						URL tempUrl = new URL( PropertyExpander.expandProperties( context, ep ) );
+						if( tempUrl.toString().equals( uri.toString() ) )
 						{
 							def = defaults.get( ep );
 							break;

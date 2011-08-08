@@ -14,24 +14,28 @@ package com.eviware.soapui.impl.wsdl.support.wsdl;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
+import java.net.InetAddress;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.httpclient.Credentials;
-import org.apache.commons.httpclient.HostConfiguration;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpState;
-import org.apache.commons.httpclient.NTCredentials;
-import org.apache.commons.httpclient.UsernamePasswordCredentials;
-import org.apache.commons.httpclient.auth.AuthScheme;
-import org.apache.commons.httpclient.auth.CredentialsNotAvailableException;
-import org.apache.commons.httpclient.auth.CredentialsProvider;
-import org.apache.commons.httpclient.auth.NTLMScheme;
-import org.apache.commons.httpclient.auth.RFC2617Scheme;
-import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.Credentials;
+import org.apache.http.auth.NTCredentials;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.params.AuthPolicy;
+import org.apache.http.client.params.ClientPNames;
+import org.apache.http.client.protocol.ClientContext;
+import org.apache.http.entity.BufferedHttpEntity;
+import org.apache.http.impl.auth.BasicScheme;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.protocol.BasicHttpContext;
+import org.apache.http.protocol.HttpContext;
+import org.apache.http.util.EntityUtils;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.definition.DefinitionLoader;
@@ -59,13 +63,14 @@ import com.eviware.x.form.XFormFactory;
 
 public class UrlWsdlLoader extends WsdlLoader implements DefinitionLoader
 {
-	private HttpState state;
-	protected GetMethod getMethod;
+	private HttpContext state;
+	protected HttpGet getMethod;
 	private boolean aborted;
 	protected Map<String, byte[]> urlCache = new HashMap<String, byte[]>();
 	protected boolean finished;
 	private boolean useWorker;
 	private ModelItem contextModelItem;
+	private org.apache.http.HttpResponse httpResponse;
 
 	public UrlWsdlLoader( String url )
 	{
@@ -76,7 +81,7 @@ public class UrlWsdlLoader extends WsdlLoader implements DefinitionLoader
 	{
 		super( url );
 		this.contextModelItem = contextModelItem;
-		state = new HttpState();
+		state = new BasicHttpContext();
 	}
 
 	public boolean isUseWorker()
@@ -141,48 +146,39 @@ public class UrlWsdlLoader extends WsdlLoader implements DefinitionLoader
 		// wait for method to catch up - required in unit tests..
 		// limited looping to 10 loops because of eclipse plugin which entered 
 		// endless loop without it
-		// 
 		int counter = 0;
-		while( !aborted && getMethod.getResponseBody() == null && counter < 10 )
+		byte[] content = EntityUtils.toByteArray( new BufferedHttpEntity( httpResponse.getEntity() ) );
+		while( !aborted && content == null && counter < 10 )
 		{
 			Thread.sleep( 200 );
 			counter++ ;
 		}
 
-		try
+		if( aborted )
 		{
-			if( aborted )
+			throw new Exception( "Load of url [" + url + "] was aborted" );
+		}
+		else
+		{
+			if( content != null )
 			{
-				throw new Exception( "Load of url [" + url + "] was aborted" );
+				String compressionAlg = HttpClientSupport.getResponseCompressionType( httpResponse );
+				if( compressionAlg != null )
+					content = CompressionSupport.decompress( compressionAlg, content );
+
+				urlCache.put( url, content );
+				String newUrl = getMethod.getURI().toString();
+				if( !url.equals( newUrl ) )
+					log.info( "BaseURI was redirected to [" + newUrl + "]" );
+				setNewBaseURI( newUrl );
+				urlCache.put( newUrl, content );
+				return new ByteArrayInputStream( content );
 			}
 			else
 			{
-				byte[] content = getMethod.getResponseBody();
-				if( content != null )
-				{
-					String compressionAlg = HttpClientSupport.getResponseCompressionType( getMethod );
-					if( compressionAlg != null )
-						content = CompressionSupport.decompress( compressionAlg, content );
-
-					urlCache.put( url, content );
-					String newUrl = getMethod.getURI().getURI();
-					if( !url.equals( newUrl ) )
-						log.info( "BaseURI was redirected to [" + newUrl + "]" );
-					setNewBaseURI( newUrl );
-					urlCache.put( newUrl, content );
-					return new ByteArrayInputStream( content );
-				}
-				else
-				{
-					throw new Exception( "Failed to load url; " + getMethod.getStatusCode() + " - "
-							+ getMethod.getStatusText() );
-				}
+				throw new Exception( "Failed to load url; " + httpResponse.getStatusLine().getStatusCode() + " - "
+						+ httpResponse.getStatusLine().getReasonPhrase() );
 			}
-		}
-
-		finally
-		{
-			getMethod.releaseConnection();
 		}
 	}
 
@@ -194,18 +190,15 @@ public class UrlWsdlLoader extends WsdlLoader implements DefinitionLoader
 
 	protected void createGetMethod( String url )
 	{
-		getMethod = new GetMethod( url );
-		getMethod.setFollowRedirects( true );
-		getMethod.setDoAuthentication( true );
-		getMethod.getParams().setParameter( CredentialsProvider.PROVIDER, new WsdlCredentialsProvider() );
+		getMethod = new HttpGet( url );
+		HttpClientSupport.getHttpClient().getParams().setParameter( ClientPNames.HANDLE_REDIRECTS, true );
+		getMethod.getParams().setParameter( ClientContext.CREDS_PROVIDER, new WsdlCredentialsProvider() );
 
+		// there's alternative version in examples directory
 		if( SoapUI.getSettings().getBoolean( HttpSettings.AUTHENTICATE_PREEMPTIVELY ) )
 		{
-			HttpClientSupport.getHttpClient().getParams().setAuthenticationPreemptive( true );
-		}
-		else
-		{
-			HttpClientSupport.getHttpClient().getParams().setAuthenticationPreemptive( false );
+			UsernamePasswordCredentials creds = new UsernamePasswordCredentials( getUsername(), getPassword() );
+			getMethod.addHeader( BasicScheme.authenticate( creds, "utf-8", false ) );
 		}
 	}
 
@@ -213,17 +206,16 @@ public class UrlWsdlLoader extends WsdlLoader implements DefinitionLoader
 	{
 		public Object construct()
 		{
-			HttpClient httpClient = HttpClientSupport.getHttpClient();
+			DefaultHttpClient httpClient = HttpClientSupport.getHttpClient();
 			try
 			{
 				Settings soapuiSettings = SoapUI.getSettings();
 
 				HttpClientSupport.applyHttpSettings( getMethod, soapuiSettings );
-				HostConfiguration hostConfiguration = ProxyUtils.initProxySettings( soapuiSettings, state,
-						new HostConfiguration(), getMethod.getURI().toString(), contextModelItem == null ? null
-								: new DefaultPropertyExpansionContext( contextModelItem ) );
+				ProxyUtils.initProxySettings( soapuiSettings, state, getMethod.getURI().toString(),
+						contextModelItem == null ? null : new DefaultPropertyExpansionContext( contextModelItem ) );
 
-				httpClient.executeMethod( hostConfiguration, getMethod, state );
+				httpResponse = httpClient.execute( getMethod, state );
 			}
 			catch( Exception e )
 			{
@@ -270,89 +262,89 @@ public class UrlWsdlLoader extends WsdlLoader implements DefinitionLoader
 		{
 		}
 
-		public Credentials getCredentials( final AuthScheme authscheme, final String host, int port, boolean proxy )
-				throws CredentialsNotAvailableException
+		public Credentials getCredentials( final AuthScope authScope )
 		{
-			String key = String.valueOf( authscheme ) + "-" + host + "-" + port + "-" + proxy;
+			if( authScope == null )
+			{
+				throw new IllegalArgumentException( "Authentication scope may not be null" );
+			}
+
+			String key = authScope.getHost() + "-" + authScope.getPort() + "-" + authScope.getRealm() + "-"
+					+ authScope.getScheme();
 			if( cache.containsKey( key ) )
+			{
 				return cache.get( key );
-
-			if( authscheme == null )
-			{
-				return null;
 			}
-			try
+
+			String pw = getPassword();
+			if( pw == null )
+				pw = "";
+
+			if( AuthPolicy.NTLM.equals( authScope.getScheme() ) || AuthPolicy.SPNEGO.equals( authScope.getScheme() ) )
 			{
-				String pw = getPassword();
-				if( pw == null )
-					pw = "";
-
-				if( authscheme instanceof NTLMScheme )
+				String workstation = "";
+				try
 				{
-					if( hasCredentials() )
-					{
-						log.info( "Returning url credentials" );
-						return new NTCredentials( getUsername(), pw, host, null );
-					}
-
-					log.info( host + ":" + port + " requires Windows authentication" );
-					if( ntDialog == null )
-					{
-						buildNtDialog();
-					}
-
-					StringToStringMap values = new StringToStringMap();
-					values.put( "Info", "Authentication required for [" + host + ":" + port + "]" );
-					ntDialog.setValues( values );
-
-					if( ntDialog.show() )
-					{
-						values = ntDialog.getValues();
-						NTCredentials credentials = new NTCredentials( values.get( "Username" ), values.get( "Password" ),
-								host, values.get( "Domain" ) );
-
-						cache.put( key, credentials );
-						return credentials;
-					}
-					else
-						throw new CredentialsNotAvailableException( "Operation cancelled" );
+					workstation = InetAddress.getLocalHost().getHostName();
 				}
-				else if( authscheme instanceof RFC2617Scheme )
+				catch( UnknownHostException e )
 				{
-					if( hasCredentials() )
-					{
-						log.info( "Returning url credentials" );
-						UsernamePasswordCredentials credentials = new UsernamePasswordCredentials( getUsername(), pw );
-						cache.put( key, credentials );
-						return credentials;
-					}
-
-					log.info( host + ":" + port + " requires authentication with the realm '" + authscheme.getRealm() + "'" );
-					ShowDialog showDialog = new ShowDialog();
-					showDialog.values.put( "Info", "Authentication required for [" + host + ":" + port + "]" );
-
-					UISupport.getUIUtils().runInUIThreadIfSWT( showDialog );
-					if( showDialog.result )
-					{
-						UsernamePasswordCredentials credentials = new UsernamePasswordCredentials( showDialog.values
-								.get( "Username" ), showDialog.values.get( "Password" ) );
-						cache.put( key, credentials );
-						return credentials;
-					}
-					else
-						throw new CredentialsNotAvailableException( "Operation cancelled" );
-
 				}
-				else
+
+				if( hasCredentials() )
 				{
-					throw new CredentialsNotAvailableException( "Unsupported authentication scheme: "
-							+ authscheme.getSchemeName() );
+					log.info( "Returning url credentials" );
+					return new NTCredentials( getUsername(), pw, workstation, null );
+				}
+
+				log.info( authScope.getHost() + ":" + authScope.getPort() + " requires Windows authentication" );
+				if( ntDialog == null )
+				{
+					buildNtDialog();
+				}
+
+				StringToStringMap values = new StringToStringMap();
+				values.put( "Info", "Authentication required for [" + authScope.getHost() + ":" + authScope.getPort() + "]" );
+				ntDialog.setValues( values );
+
+				if( ntDialog.show() )
+				{
+					values = ntDialog.getValues();
+					NTCredentials credentials = new NTCredentials( values.get( "Username" ), values.get( "Password" ),
+							workstation, values.get( "Domain" ) );
+
+					cache.put( key, credentials );
+					return credentials;
 				}
 			}
-			catch( IOException e )
+			else if( AuthPolicy.BASIC.equals( authScope.getScheme() ) || AuthPolicy.DIGEST.equals( authScope.getScheme() )
+					|| AuthPolicy.SPNEGO.equals( authScope.getScheme() ) )
 			{
-				throw new CredentialsNotAvailableException( e.getMessage(), e );
+				if( hasCredentials() )
+				{
+					log.info( "Returning url credentials" );
+					UsernamePasswordCredentials credentials = new UsernamePasswordCredentials( getUsername(), pw );
+					cache.put( key, credentials );
+					return credentials;
+				}
+
+				log.info( authScope.getHost() + ":" + authScope.getPort() + " requires authentication with the realm '"
+						+ authScope.getRealm() + "'" );
+				ShowDialog showDialog = new ShowDialog();
+				showDialog.values.put( "Info",
+						"Authentication required for [" + authScope.getHost() + ":" + authScope.getPort() + "]" );
+
+				UISupport.getUIUtils().runInUIThreadIfSWT( showDialog );
+				if( showDialog.result )
+				{
+					UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(
+							showDialog.values.get( "Username" ), showDialog.values.get( "Password" ) );
+					cache.put( key, credentials );
+					return credentials;
+				}
 			}
+
+			return null;
 		}
 
 		private void buildBasicDialog()
@@ -398,6 +390,14 @@ public class UrlWsdlLoader extends WsdlLoader implements DefinitionLoader
 					values = basicDialog.getValues();
 				}
 			}
+		}
+
+		public void clear()
+		{
+		}
+
+		public void setCredentials( AuthScope arg0, Credentials arg1 )
+		{
 		}
 	}
 

@@ -12,9 +12,9 @@
 
 package com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments;
 
-import org.apache.commons.httpclient.Header;
-import org.apache.commons.httpclient.HeaderElement;
-import org.apache.commons.httpclient.NameValuePair;
+import org.apache.http.Header;
+import org.apache.http.HeaderElement;
+import org.apache.http.NameValuePair;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.AbstractHttpOperation;
@@ -54,27 +54,31 @@ public class MimeMessageResponse extends BaseHttpResponse
 			postResponseDataSource = new PostResponseDataSource( httpMethod );
 			responseContentLength = postResponseDataSource.getDataSize();
 
-			Header h = httpMethod.getResponseHeader( "Content-Type" );
-			HeaderElement[] elements = h.getElements();
+			Header h = httpMethod.hasHttpResponse() ? httpMethod.getHttpResponse().getEntity().getContentType() : null;
 
-			String rootPartId = null;
-
-			for( HeaderElement element : elements )
+			if( h != null )
 			{
-				String name = element.getName().toUpperCase();
-				if( name.startsWith( "MULTIPART/" ) )
+				HeaderElement[] elements = h.getElements();
+
+				String rootPartId = null;
+
+				for( HeaderElement element : elements )
 				{
-					NameValuePair parameter = element.getParameterByName( "start" );
-					if( parameter != null )
-						rootPartId = parameter.getValue();
+					String name = element.getName().toUpperCase();
+					if( name.startsWith( "MULTIPART/" ) )
+					{
+						NameValuePair parameter = element.getParameterByName( "start" );
+						if( parameter != null )
+							rootPartId = parameter.getValue();
+					}
 				}
+
+				mmSupport = new MultipartMessageSupport( postResponseDataSource, rootPartId,
+						( AbstractHttpOperation )httpRequest.getOperation(), false, httpRequest.isPrettyPrint() );
+
+				if( httpRequest.getSettings().getBoolean( HttpSettings.INCLUDE_RESPONSE_IN_TIME_TAKEN ) )
+					this.timeTaken += httpMethod.getResponseReadTime();
 			}
-
-			mmSupport = new MultipartMessageSupport( postResponseDataSource, rootPartId,
-					( AbstractHttpOperation )httpRequest.getOperation(), false, httpRequest.isPrettyPrint() );
-
-			if( httpRequest.getSettings().getBoolean( HttpSettings.INCLUDE_RESPONSE_IN_TIME_TAKEN ) )
-				this.timeTaken += httpMethod.getResponseReadTime();
 		}
 		catch( Exception e )
 		{

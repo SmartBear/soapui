@@ -21,8 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import org.apache.commons.httpclient.Header;
-import org.apache.commons.httpclient.HttpParser;
+import org.apache.http.Header;
 import org.w3c.dom.Document;
 
 import com.eviware.soapui.SoapUI;
@@ -41,6 +40,7 @@ import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.types.StringToStringsMap;
+import com.eviware.soapui.support.uri.HttpParser;
 import com.eviware.soapui.support.xml.XmlUtils;
 
 public class TcpMonWsdlMonitorMessageExchange extends WsdlMonitorMessageExchange

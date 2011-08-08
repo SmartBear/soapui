@@ -18,20 +18,18 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.Socket;
 
-import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSession;
 
-import org.apache.commons.httpclient.Header;
-import org.apache.commons.httpclient.HeaderElement;
-import org.apache.commons.httpclient.HttpConnection;
-import org.apache.commons.httpclient.HttpMethodBase;
-import org.apache.commons.httpclient.HttpState;
-import org.apache.commons.httpclient.NameValuePair;
+import org.apache.http.Header;
+import org.apache.http.HeaderElement;
+import org.apache.http.HttpEntity;
+import org.apache.http.NameValuePair;
+import org.apache.http.entity.BufferedHttpEntity;
+import org.apache.http.util.EntityUtils;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.support.CompressionSupport;
-import com.eviware.soapui.impl.wsdl.support.http.ConnectionWithSocket;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 import com.eviware.soapui.settings.HttpSettings;
 import com.eviware.soapui.support.StringUtils;
@@ -44,7 +42,7 @@ import com.eviware.soapui.support.Tools;
  * @author Ole.Matzura
  */
 
-public final class HttpMethodSupport
+public class HttpMethodSupport
 {
 	private long timeTaken;
 	private long startTime;
@@ -55,14 +53,12 @@ public final class HttpMethodSupport
 
 	private SSLInfo sslInfo;
 	private String dumpFile;
-	private final HttpMethodBase httpMethod;
 	private Throwable failureCause;
 	private boolean decompress;
+	private org.apache.http.HttpResponse httpResponse;
 
-	public HttpMethodSupport( HttpMethodBase httpMethod )
+	public HttpMethodSupport()
 	{
-		this.httpMethod = httpMethod;
-
 		decompress = !SoapUI.getSettings().getBoolean( HttpSettings.DISABLE_RESPONSE_DECOMPRESSION );
 	}
 
@@ -86,15 +82,11 @@ public final class HttpMethodSupport
 		this.dumpFile = dumpFile;
 	}
 
-	public void afterReadResponse( HttpState arg0, HttpConnection arg1 )
+	public void afterReadResponse( SSLSession session )
 	{
-		if( arg1 instanceof ConnectionWithSocket )
+		if( session != null )
 		{
-			Socket socket = ( ( ConnectionWithSocket )arg1 ).getConnectionSocket();
-			if( socket instanceof SSLSocket )
-			{
-				sslInfo = new SSLInfo( ( SSLSocket )socket );
-			}
+			sslInfo = new SSLInfo( session );
 		}
 	}
 
@@ -108,7 +100,7 @@ public final class HttpMethodSupport
 		this.maxSize = maxSize;
 	}
 
-	public void afterWriteRequest( HttpState arg0, HttpConnection arg1 )
+	public void afterWriteRequest()
 	{
 		if( startTime == 0 )
 			startTime = System.nanoTime();
@@ -132,108 +124,6 @@ public final class HttpMethodSupport
 		return startTime;
 	}
 
-	public byte[] getResponseBody() throws IOException
-	{
-		if( responseBody != null )
-			return responseBody;
-
-		long contentLength = httpMethod.getResponseContentLength();
-		long now = System.nanoTime();
-
-		InputStream instream = httpMethod.getResponseBodyAsStream();
-
-		if( maxSize == 0 || ( contentLength >= 0 && contentLength <= maxSize ) )
-		{
-			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			if( instream != null )
-				Tools.writeAll( out, instream );
-
-			responseReadTime = System.nanoTime() - now;
-			responseBody = out.toByteArray();
-
-			try
-			{
-				if( StringUtils.hasContent( dumpFile ) )
-				{
-					Tools.writeAll( new FileOutputStream( dumpFile ), new ByteArrayInputStream( responseBody ) );
-				}
-			}
-			catch( IOException e )
-			{
-				e.printStackTrace();
-			}
-
-			if( decompress && responseBody.length > 0 )
-			{
-				String compressionAlg = HttpClientSupport.getResponseCompressionType( httpMethod );
-				if( compressionAlg != null )
-				{
-					try
-					{
-						responseBody = CompressionSupport.decompress( compressionAlg, responseBody );
-					}
-					catch( Exception e )
-					{
-						IOException ioe = new IOException( "Decompression of response failed" );
-						ioe.initCause( e );
-						throw ioe;
-					}
-				}
-			}
-		}
-		else
-		{
-			try
-			{
-				if( StringUtils.hasContent( dumpFile ) && instream != null )
-				{
-					FileOutputStream fileOutputStream = new FileOutputStream( dumpFile );
-					Tools.writeAll( fileOutputStream, instream );
-					responseReadTime = System.nanoTime() - now;
-					fileOutputStream.close();
-					instream = new FileInputStream( dumpFile );
-				}
-			}
-			catch( IOException e )
-			{
-				e.printStackTrace();
-			}
-
-			ByteArrayOutputStream outstream = instream == null ? new ByteArrayOutputStream() : Tools.readAll( instream,
-					maxSize );
-
-			if( responseReadTime == 0 )
-				responseReadTime = System.nanoTime() - now;
-
-			responseBody = outstream.toByteArray();
-		}
-
-		// convert to ms
-		responseReadTime /= 1000000;
-
-		return responseBody;
-	}
-
-	public byte[] getDecompressedResponseBody() throws IOException
-	{
-		String compressionAlg = HttpClientSupport.getResponseCompressionType( httpMethod );
-		if( compressionAlg != null )
-		{
-			try
-			{
-				return CompressionSupport.decompress( compressionAlg, responseBody );
-			}
-			catch( Exception e )
-			{
-				IOException ioe = new IOException( "Decompression of response failed" );
-				ioe.initCause( e );
-				throw ioe;
-			}
-		}
-
-		return responseBody;
-	}
-
 	public SSLInfo getSSLInfo()
 	{
 		return sslInfo;
@@ -241,18 +131,42 @@ public final class HttpMethodSupport
 
 	public String getResponseContentType()
 	{
-		Header[] headers = httpMethod.getResponseHeaders( "Content-Type" );
-		if( headers != null && headers.length > 0 && headers[0].getElements().length > 0 )
+		if( hasHttpResponse() )
 		{
-			return headers[0].getElements()[0].getName();
+			if( httpResponse.getEntity().getContentType() != null )
+			{
+				return httpResponse.getEntity().getContentType().getValue();
+			}
 		}
-
 		return null;
 	}
 
 	public long getResponseReadTime()
 	{
 		return responseReadTime;
+	}
+
+	public byte[] getDecompressedResponseBody() throws IOException
+	{
+		if( hasHttpResponse() )
+		{
+			String compressionAlg = HttpClientSupport.getResponseCompressionType( httpResponse );
+			if( compressionAlg != null )
+			{
+				try
+				{
+					return CompressionSupport.decompress( compressionAlg, responseBody );
+				}
+				catch( Exception e )
+				{
+					IOException ioe = new IOException( "Decompression of response failed" );
+					ioe.initCause( e );
+					throw ioe;
+				}
+			}
+		}
+
+		return responseBody;
 	}
 
 	/**
@@ -263,31 +177,34 @@ public final class HttpMethodSupport
 
 	public String getResponseCharset()
 	{
-		Header header = httpMethod.getResponseHeader( "Content-Type" );
-		if( header != null )
+		if( hasHttpResponse() )
 		{
-			for( HeaderElement headerElement : header.getElements() )
+			Header header = httpResponse.getEntity().getContentType();
+			if( header != null )
 			{
-				NameValuePair parameter = headerElement.getParameterByName( "charset" );
-				if( parameter != null )
-					return parameter.getValue();
-			}
-		}
-
-		Header contentEncodingHeader = httpMethod.getResponseHeader( "Content-Encoding" );
-		if( contentEncodingHeader != null )
-		{
-			try
-			{
-				String value = contentEncodingHeader.getValue();
-				if( CompressionSupport.getAvailableAlgorithm( value ) == null )
+				for( HeaderElement headerElement : header.getElements() )
 				{
-					new String( "" ).getBytes( value );
-					return value;
+					NameValuePair parameter = headerElement.getParameterByName( "charset" );
+					if( parameter != null )
+						return parameter.getValue();
 				}
 			}
-			catch( Exception e )
+
+			Header contentEncodingHeader = httpResponse.getEntity().getContentEncoding();
+			if( contentEncodingHeader != null )
 			{
+				try
+				{
+					String value = contentEncodingHeader.getValue();
+					if( CompressionSupport.getAvailableAlgorithm( value ) == null )
+					{
+						new String( "" ).getBytes( value );
+						return value;
+					}
+				}
+				catch( Exception e )
+				{
+				}
 			}
 		}
 
@@ -312,5 +229,109 @@ public final class HttpMethodSupport
 	public boolean hasResponse()
 	{
 		return responseBody != null;
+	}
+
+	public org.apache.http.HttpResponse getHttpResponse()
+	{
+		return httpResponse;
+	}
+
+	public void setHttpResponse( org.apache.http.HttpResponse httpResponse )
+	{
+		this.httpResponse = httpResponse;
+	}
+
+	public boolean hasHttpResponse()
+	{
+		return httpResponse != null;
+	}
+
+	public byte[] getResponseBody() throws IOException
+	{
+		if( responseBody != null )
+			return responseBody;
+
+		if( hasHttpResponse() )
+		{
+			HttpEntity bufferedEntity = new BufferedHttpEntity( httpResponse.getEntity() );
+			long contentLength = bufferedEntity.getContentLength();
+			long now = System.nanoTime();
+
+			InputStream instream = bufferedEntity.getContent();
+
+			try
+			{
+				if( maxSize == 0 || ( contentLength >= 0 && contentLength <= maxSize ) )
+				{
+					responseReadTime = System.nanoTime() - now;
+					responseBody = EntityUtils.toByteArray( bufferedEntity );
+
+					try
+					{
+						if( StringUtils.hasContent( dumpFile ) )
+						{
+							Tools.writeAll( new FileOutputStream( dumpFile ), new ByteArrayInputStream( responseBody ) );
+						}
+					}
+					catch( IOException e )
+					{
+						e.printStackTrace();
+					}
+
+					if( decompress && responseBody.length > 0 )
+					{
+						String compressionAlg = HttpClientSupport.getResponseCompressionType( httpResponse );
+						if( compressionAlg != null )
+						{
+							try
+							{
+								responseBody = CompressionSupport.decompress( compressionAlg, responseBody );
+							}
+							catch( Exception e )
+							{
+								IOException ioe = new IOException( "Decompression of response failed" );
+								ioe.initCause( e );
+								throw ioe;
+							}
+						}
+					}
+				}
+				else
+				{
+					try
+					{
+						if( StringUtils.hasContent( dumpFile ) && instream != null )
+						{
+							FileOutputStream fileOutputStream = new FileOutputStream( dumpFile );
+							Tools.writeAll( fileOutputStream, instream );
+							responseReadTime = System.nanoTime() - now;
+							fileOutputStream.close();
+							instream = new FileInputStream( dumpFile );
+						}
+					}
+					catch( IOException e )
+					{
+						e.printStackTrace();
+					}
+
+					ByteArrayOutputStream outstream = instream == null ? new ByteArrayOutputStream() : Tools.readAll(
+							instream, maxSize );
+
+					if( responseReadTime == 0 )
+						responseReadTime = System.nanoTime() - now;
+
+					responseBody = outstream.toByteArray();
+				}
+			}
+			finally
+			{
+				instream.close();
+			}
+		}
+
+		// convert to ms
+		responseReadTime /= 1000000;
+
+		return responseBody;
 	}
 }

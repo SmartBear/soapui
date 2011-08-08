@@ -20,9 +20,9 @@ import javax.xml.namespace.QName;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
-import org.apache.commons.httpclient.Header;
-import org.apache.commons.httpclient.HeaderElement;
-import org.apache.commons.httpclient.NameValuePair;
+import org.apache.http.Header;
+import org.apache.http.HeaderElement;
+import org.apache.http.NameValuePair;
 import org.apache.xmlbeans.SchemaGlobalElement;
 import org.apache.xmlbeans.SchemaType;
 import org.apache.xmlbeans.SchemaTypeSystem;
@@ -60,17 +60,21 @@ public class WsdlMimeMessageResponse extends MimeMessageResponse implements Wsdl
 
 		String multipartType = null;
 
-		Header h = httpMethod.getResponseHeader( "Content-Type" );
-		HeaderElement[] elements = h.getElements();
+		Header h = httpMethod.hasHttpResponse() ? httpMethod.getHttpResponse().getEntity().getContentType() : null;
 
-		for( HeaderElement element : elements )
+		if( h != null )
 		{
-			String name = element.getName().toUpperCase();
-			if( name.startsWith( "MULTIPART/" ) )
+			HeaderElement[] elements = h.getElements();
+
+			for( HeaderElement element : elements )
 			{
-				NameValuePair parameter = element.getParameterByName( "type" );
-				if( parameter != null )
-					multipartType = parameter.getValue();
+				String name = element.getName().toUpperCase();
+				if( name.startsWith( "MULTIPART/" ) )
+				{
+					NameValuePair parameter = element.getParameterByName( "type" );
+					if( parameter != null )
+						multipartType = parameter.getValue();
+				}
 			}
 		}
 

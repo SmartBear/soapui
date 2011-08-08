@@ -14,9 +14,9 @@ package com.eviware.soapui.impl.wsdl.submit.filters;
 
 import java.io.ByteArrayOutputStream;
 
-import org.apache.commons.httpclient.methods.ByteArrayRequestEntity;
-import org.apache.commons.httpclient.methods.EntityEnclosingMethod;
-import org.apache.commons.httpclient.methods.RequestEntity;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpEntityEnclosingRequest;
+import org.apache.http.entity.ByteArrayEntity;
 import org.apache.log4j.Logger;
 
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
@@ -42,16 +42,16 @@ public class HttpCompressionRequestFilter extends AbstractRequestFilter
 			{
 				ExtendedHttpMethod method = ( ExtendedHttpMethod )context
 						.getProperty( BaseHttpRequestTransport.HTTP_METHOD );
-				if( method instanceof EntityEnclosingMethod )
+				if( method instanceof HttpEntityEnclosingRequest )
 				{
-					RequestEntity requestEntity = method.getRequestEntity();
+					HttpEntity requestEntity = ( ( HttpEntityEnclosingRequest )method ).getEntity();
 					if( requestEntity != null )
 					{
 						ByteArrayOutputStream tempOut = new ByteArrayOutputStream();
-						requestEntity.writeRequest( tempOut );
+						requestEntity.writeTo( tempOut );
 
 						byte[] compressedData = CompressionSupport.compress( compressionAlg, tempOut.toByteArray() );
-						( ( EntityEnclosingMethod )method ).setRequestEntity( new ByteArrayRequestEntity( compressedData ) );
+						( ( HttpEntityEnclosingRequest )method ).setEntity( new ByteArrayEntity( compressedData ) );
 					}
 				}
 			}

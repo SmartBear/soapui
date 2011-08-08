@@ -12,7 +12,7 @@
 
 package com.eviware.soapui.impl.wsdl.submit.filters;
 
-import org.apache.commons.httpclient.Header;
+import org.apache.http.Header;
 
 import com.eviware.soapui.impl.settings.XmlBeansSettingsImpl;
 import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
@@ -35,8 +35,12 @@ public class HttpPackagingResponseFilter extends AbstractRequestFilter
 		ExtendedHttpMethod httpMethod = ( ExtendedHttpMethod )context.getProperty( BaseHttpRequestTransport.HTTP_METHOD );
 		String requestContent = ( String )context.getProperty( BaseHttpRequestTransport.REQUEST_CONTENT );
 
-		// check content-type for multiplart
-		Header responseContentTypeHeader = httpMethod.getResponseHeader( "Content-Type" );
+		// check content-type for multipart
+		Header responseContentTypeHeader = null;
+		if( httpMethod.hasHttpResponse() )
+		{
+			responseContentTypeHeader = httpMethod.getHttpResponse().getEntity().getContentType();
+		}
 		Response response = null;
 		if( request instanceof WsdlRequest )
 			response = wsdlRequest( context, ( WsdlRequest )request, httpMethod, responseContentTypeHeader, requestContent );
@@ -45,6 +49,7 @@ public class HttpPackagingResponseFilter extends AbstractRequestFilter
 					requestContent );
 
 		context.setProperty( BaseHttpRequestTransport.RESPONSE, response );
+
 	}
 
 	private Response wsdlRequest( SubmitContext context, WsdlRequest request, ExtendedHttpMethod httpMethod,

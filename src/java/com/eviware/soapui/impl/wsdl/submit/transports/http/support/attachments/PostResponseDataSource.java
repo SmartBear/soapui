@@ -42,13 +42,11 @@ public class PostResponseDataSource implements DataSource
 
 		try
 		{
-			data = postMethod.getResponseBody(); // Tools.readAll(
-																// postMethod.getResponseBodyAsStream(),
-																// 0 ).toByteArray();
+			data = postMethod.getResponseBody();
 
 			if( !SoapUI.getSettings().getBoolean( HttpSettings.DISABLE_RESPONSE_DECOMPRESSION ) )
 			{
-				String compressionAlg = HttpClientSupport.getResponseCompressionType( postMethod );
+				String compressionAlg = HttpClientSupport.getResponseCompressionType( postMethod.getHttpResponse() );
 				if( compressionAlg != null )
 					data = CompressionSupport.decompress( compressionAlg, data );
 			}
@@ -66,7 +64,7 @@ public class PostResponseDataSource implements DataSource
 
 	public String getContentType()
 	{
-		return postMethod.getResponseHeader( "Content-Type" ).getValue();
+		return postMethod.getResponseContentType();
 	}
 
 	public InputStream getInputStream() throws IOException
@@ -76,7 +74,8 @@ public class PostResponseDataSource implements DataSource
 
 	public String getName()
 	{
-		return postMethod.getName() + " response for " + postMethod.getPath().toString();
+		return postMethod.getRequestLine().getMethod() + " response for "
+				+ postMethod.getRequestLine().getUri().toString();
 	}
 
 	public OutputStream getOutputStream() throws IOException

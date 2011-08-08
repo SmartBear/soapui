@@ -12,7 +12,7 @@
 
 package com.eviware.soapui.impl.wsdl.submit.filters;
 
-import org.apache.commons.httpclient.HttpMethod;
+import org.apache.http.HttpRequest;
 
 import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransport;
@@ -31,10 +31,10 @@ public class RestRequestFilter extends HttpRequestFilter
 	public void filterRestRequest( SubmitContext context, RestRequestInterface request )
 	{
 		String acceptEncoding = request.getAccept();
-		HttpMethod httpMethod = ( HttpMethod )context.getProperty( BaseHttpRequestTransport.HTTP_METHOD );
+		HttpRequest httpMethod = ( HttpRequest )context.getProperty( BaseHttpRequestTransport.HTTP_METHOD );
 		if( StringUtils.hasContent( acceptEncoding ) )
 		{
-			httpMethod.setRequestHeader( "Accept", acceptEncoding );
+			httpMethod.setHeader( "Accept", acceptEncoding );
 		}
 		filterHttpRequest( context, request );
 	}

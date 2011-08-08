@@ -12,16 +12,15 @@
 
 package com.eviware.soapui.impl.wsdl.submit.filters;
 
-import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
-import org.apache.commons.httpclient.Credentials;
-import org.apache.commons.httpclient.NTCredentials;
-import org.apache.commons.httpclient.UsernamePasswordCredentials;
-import org.apache.commons.httpclient.auth.AuthScheme;
-import org.apache.commons.httpclient.auth.CredentialsNotAvailableException;
-import org.apache.commons.httpclient.auth.CredentialsProvider;
-import org.apache.commons.httpclient.auth.NTLMScheme;
-import org.apache.commons.httpclient.auth.RFC2617Scheme;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.Credentials;
+import org.apache.http.auth.NTCredentials;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.params.AuthPolicy;
 import org.apache.log4j.Logger;
 
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
@@ -43,45 +42,62 @@ public final class WsdlRequestCredentialsProvider implements CredentialsProvider
 		this.wsdlRequest = wsdlRequest;
 	}
 
-	public Credentials getCredentials( final AuthScheme authscheme, final String host, int port, boolean proxy )
-			throws CredentialsNotAvailableException
+	public Credentials getCredentials( final AuthScope authScope )
+
 	{
 		if( checkedCredentials )
-			throw new CredentialsNotAvailableException( "Missing valid credentials" );
-
-		if( authscheme == null )
 		{
-			return null;
+			throw new IllegalArgumentException( "Missing valid credentials" );
 		}
+
+		if( authScope == null )
+		{
+			throw new IllegalArgumentException( "Authentication scope may not be null" );
+		}
+
 		try
 		{
 			String password = wsdlRequest.getPassword();
 			if( password == null )
 				password = "";
 
-			if( authscheme instanceof NTLMScheme )
+			if( AuthPolicy.NTLM.equals( authScope.getScheme() ) )
 			{
-				logger.info( host + ":" + port + " requires Windows authentication" );
-				return new NTCredentials( wsdlRequest.getUsername(), password, host, wsdlRequest.getDomain() );
+				logger.info( authScope.getHost() + ":" + authScope.getPort() + " requires Windows authentication" );
+
+				String workstation = "";
+				try
+				{
+					workstation = InetAddress.getLocalHost().getHostName();
+				}
+				catch( UnknownHostException e )
+				{
+				}
+				return new NTCredentials( wsdlRequest.getUsername(), password, workstation, wsdlRequest.getDomain() );
+
 			}
-			else if( authscheme instanceof RFC2617Scheme )
+			else if( AuthPolicy.BASIC.equals( authScope.getScheme() ) || AuthPolicy.DIGEST.equals( authScope.getScheme() )
+					|| AuthPolicy.SPNEGO.equals( authScope.getScheme() ) )
 			{
-				logger.info( host + ":" + port + " requires authentication with the realm '" + authscheme.getRealm() + "'" );
+				logger.info( authScope.getHost() + ":" + authScope.getPort() + " requires authentication with the realm '"
+						+ authScope.getRealm() + "'" );
 				return new UsernamePasswordCredentials( wsdlRequest.getUsername(), password );
 			}
-			else
-			{
-				throw new CredentialsNotAvailableException( "Unsupported authentication scheme: "
-						+ authscheme.getSchemeName() );
-			}
-		}
-		catch( IOException e )
-		{
-			throw new CredentialsNotAvailableException( e.getMessage(), e );
 		}
 		finally
 		{
 			checkedCredentials = true;
 		}
+
+		logger.error( "Unsupported authentication scheme: " + authScope.getScheme() );
+		return null;
+	}
+
+	public void clear()
+	{
+	}
+
+	public void setCredentials( AuthScope arg0, Credentials arg1 )
+	{
 	}
 }

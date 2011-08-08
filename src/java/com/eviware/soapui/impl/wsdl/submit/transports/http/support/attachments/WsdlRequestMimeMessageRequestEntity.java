@@ -14,13 +14,16 @@ package com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
-import org.apache.commons.httpclient.methods.RequestEntity;
+import org.apache.http.Header;
+import org.apache.http.entity.AbstractHttpEntity;
+import org.apache.http.message.BasicHeader;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
@@ -32,7 +35,7 @@ import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
  * @author ole.matzura
  */
 
-public class WsdlRequestMimeMessageRequestEntity implements RequestEntity
+public class WsdlRequestMimeMessageRequestEntity extends AbstractHttpEntity
 {
 	private final MimeMessage message;
 	private final boolean isXOP;
@@ -50,7 +53,7 @@ public class WsdlRequestMimeMessageRequestEntity implements RequestEntity
 		try
 		{
 			DummyOutputStream out = new DummyOutputStream();
-			writeRequest( out );
+			writeTo( out );
 			return out.getSize();
 		}
 		catch( Exception e )
@@ -60,7 +63,7 @@ public class WsdlRequestMimeMessageRequestEntity implements RequestEntity
 		}
 	}
 
-	public String getContentType()
+	public Header getContentType()
 	{
 		try
 		{
@@ -70,15 +73,16 @@ public class WsdlRequestMimeMessageRequestEntity implements RequestEntity
 			{
 				String header = message.getHeader( "Content-Type" )[0];
 
-				return AttachmentUtils.buildMTOMContentType( header, wsdlRequest.getAction(), soapVersion );
+				return new BasicHeader( "Content-Type", AttachmentUtils.buildMTOMContentType( header,
+						wsdlRequest.getAction(), soapVersion ) );
 			}
 			else
 			{
 				String header = message.getHeader( "Content-Type" )[0];
 				int ix = header.indexOf( "boundary" );
 
-				return "multipart/related; type=\"" + soapVersion.getContentType() + "\"; " + "start=\""
-						+ AttachmentUtils.ROOTPART_SOAPUI_ORG + "\"; " + header.substring( ix );
+				return new BasicHeader( "Content-Type", "multipart/related; type=\"" + soapVersion.getContentType()
+						+ "\"; " + "start=\"" + AttachmentUtils.ROOTPART_SOAPUI_ORG + "\"; " + header.substring( ix ) );
 			}
 		}
 		catch( MessagingException e )
@@ -94,7 +98,29 @@ public class WsdlRequestMimeMessageRequestEntity implements RequestEntity
 		return true;
 	}
 
-	public void writeRequest( OutputStream arg0 ) throws IOException
+	@Override
+	public InputStream getContent() throws IOException, IllegalStateException
+	{
+		try
+		{
+			return message.getInputStream();
+		}
+		catch( MessagingException e )
+		{
+			SoapUI.logError( e );
+		}
+
+		return null;
+	}
+
+	@Override
+	public boolean isStreaming()
+	{
+		return false;
+	}
+
+	@Override
+	public void writeTo( OutputStream arg0 ) throws IOException
 	{
 		try
 		{
@@ -130,4 +156,5 @@ public class WsdlRequestMimeMessageRequestEntity implements RequestEntity
 			return size;
 		}
 	}
+
 }

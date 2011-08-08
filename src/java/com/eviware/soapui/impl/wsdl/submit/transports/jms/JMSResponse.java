@@ -24,7 +24,6 @@ import javax.jms.Message;
 import javax.jms.TextMessage;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.rest.RestRequestInterface.RequestMethod;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.SSLInfo;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.WsdlResponse;
@@ -238,7 +237,7 @@ public class JMSResponse implements WsdlResponse
 		return null;
 	}
 
-	public RequestMethod getMethod()
+	public String getMethod()
 	{
 		return null;
 	}

@@ -442,7 +442,7 @@ public class WsaUtils
 
 			if( httpMethod != null && wsaContainer.getWsaConfig().isAddDefaultTo() )
 			{
-				String defaultTo = httpMethod.getURI().toString();
+				String defaultTo = httpMethod.getRequestLine().getUri().toString();
 				header = processWsaProperty( header, override, wsaPrefix + ":To", defaultTo, false );
 			}
 			else

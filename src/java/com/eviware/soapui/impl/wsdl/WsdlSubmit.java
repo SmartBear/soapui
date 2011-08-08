@@ -136,9 +136,13 @@ public final class WsdlSubmit<T extends AbstractHttpRequestInterface<?>> impleme
 		catch( Exception e1 )
 		{
 			error = e1;
-			status = Status.ERROR;
-			logger.error( "Exception in request: " + e1 );
-			SoapUI.logError( e1 );
+
+			if( status != Status.CANCELED )
+			{
+				status = Status.ERROR;
+				logger.error( "Exception in request: " + e1 );
+				SoapUI.logError( e1 );
+			}
 			if( response == null )
 				response = ( Response )submitContext.getProperty( BaseHttpRequestTransport.RESPONSE );
 		}

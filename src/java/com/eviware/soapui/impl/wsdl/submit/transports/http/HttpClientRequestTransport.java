@@ -12,17 +12,17 @@
 
 package com.eviware.soapui.impl.wsdl.submit.transports.http;
 
-import java.net.InetAddress;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.httpclient.Header;
-import org.apache.commons.httpclient.HostConfiguration;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpMethodBase;
-import org.apache.commons.httpclient.HttpState;
-import org.apache.commons.httpclient.URI;
-import org.apache.log4j.Logger;
+import org.apache.http.Header;
+import org.apache.http.HttpHost;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.protocol.BasicHttpContext;
+import org.apache.http.protocol.HttpContext;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
@@ -49,9 +49,9 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.settings.HttpSettings;
-import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.types.StringToStringsMap;
+import com.eviware.soapui.support.uri.URI;
 
 /**
  * HTTP transport that uses HttpClient to send/receive SOAP messages
@@ -62,7 +62,6 @@ import com.eviware.soapui.support.types.StringToStringsMap;
 public class HttpClientRequestTransport implements BaseHttpRequestTransport
 {
 	private List<RequestFilter> filters = new ArrayList<RequestFilter>();
-	private final static Logger log = Logger.getLogger( HttpClientRequestTransport.class );
 
 	public HttpClientRequestTransport()
 	{
@@ -80,7 +79,7 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 
 	public void abortRequest( SubmitContext submitContext )
 	{
-		HttpMethodBase postMethod = ( HttpMethodBase )submitContext.getProperty( HTTP_METHOD );
+		HttpRequestBase postMethod = ( HttpRequestBase )submitContext.getProperty( HTTP_METHOD );
 		if( postMethod != null )
 			postMethod.abort();
 	}
@@ -89,29 +88,31 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 	{
 		AbstractHttpRequestInterface<?> httpRequest = ( AbstractHttpRequestInterface<?> )request;
 
-		HttpClient httpClient = HttpClientSupport.getHttpClient();
+		DefaultHttpClient httpClient = HttpClientSupport.getHttpClient();
 		ExtendedHttpMethod httpMethod = createHttpMethod( httpRequest );
-		boolean createdState = false;
 
-		HttpState httpState = ( HttpState )submitContext.getProperty( SubmitContext.HTTP_STATE_PROPERTY );
-		if( httpState == null )
+		boolean createdContext = false;
+		HttpContext httpContext = ( HttpContext )submitContext.getProperty( SubmitContext.HTTP_STATE_PROPERTY );
+		if( httpContext == null )
 		{
-			httpState = new HttpState();
-			submitContext.setProperty( SubmitContext.HTTP_STATE_PROPERTY, httpState );
-			createdState = true;
+			httpContext = new BasicHttpContext();
+			submitContext.setProperty( SubmitContext.HTTP_STATE_PROPERTY, httpContext );
+			createdContext = true;
 		}
-
-		HostConfiguration hostConfiguration = new HostConfiguration();
 
 		String localAddress = System.getProperty( "soapui.bind.address", httpRequest.getBindAddress() );
 		if( localAddress == null || localAddress.trim().length() == 0 )
 			localAddress = SoapUI.getSettings().getString( HttpSettings.BIND_ADDRESS, null );
 
+		SoapUIHostConfiguration hostConfiguration = new SoapUIHostConfiguration();
+		org.apache.http.HttpResponse httpResponse = null;
+
 		if( localAddress != null && localAddress.trim().length() > 0 )
 		{
 			try
 			{
-				hostConfiguration.setLocalAddress( InetAddress.getByName( localAddress ) );
+				hostConfiguration = new SoapUIHostConfiguration( java.net.InetAddress.getByName( localAddress )
+						.getHostName() );
 			}
 			catch( Exception e )
 			{
@@ -143,7 +144,7 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 			// first remove so we don't get any unwanted duplicates
 			for( String header : headers.keySet() )
 			{
-				httpMethod.removeRequestHeader( header );
+				httpMethod.removeHeaders( header );
 			}
 
 			// now add
@@ -152,7 +153,7 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 				for( String headerValue : headers.get( header ) )
 				{
 					headerValue = PropertyExpander.expandProperties( submitContext, headerValue );
-					httpMethod.addRequestHeader( header, headerValue );
+					httpMethod.addHeader( header, headerValue );
 				}
 			}
 
@@ -167,31 +168,30 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 
 			if( crypto != null && WssCrypto.STATUS_OK.equals( crypto.getStatus() ) )
 			{
-				hostConfiguration.getParams().setParameter( SoapUIHostConfiguration.SOAPUI_SSL_CONFIG,
-						crypto.getSource() + " " + crypto.getPassword() );
+				httpMethod.getParams().setParameter( SOAPUI_SSL_CONFIG, crypto.getSource() + " " + crypto.getPassword() );
 			}
 
 			// dump file?
 			httpMethod.setDumpFile( PathUtils.expandPath( httpRequest.getDumpFile(),
 					( AbstractWsdlModelItem<?> )httpRequest, submitContext ) );
 
-			// fix absolute URIs due to peculiarity in httpclient
-			URI uri = ( URI )submitContext.getProperty( BaseHttpRequestTransport.REQUEST_URI );
-			if( uri != null && uri.isAbsoluteURI() )
-			{
-				hostConfiguration.setHost( uri.getHost(), uri.getPort() );
-				String str = uri.toString();
-				int ix = str.indexOf( '/', str.indexOf( "//" ) + 2 );
-				if( ix != -1 )
-				{
-					uri = new URI( str.substring( ix ), true );
-					String qs = httpMethod.getQueryString();
-					httpMethod.setURI( uri );
-					if( StringUtils.hasContent( qs ) )
-						httpMethod.setQueryString( qs );
+			URI tempUri = ( URI )submitContext.getProperty( BaseHttpRequestTransport.REQUEST_URI );
 
-					submitContext.setProperty( BaseHttpRequestTransport.REQUEST_URI, uri );
-				}
+			java.net.URI uri = null;
+			try
+			{
+				uri = new java.net.URI( tempUri.toString() );
+			}
+			catch( URISyntaxException e )
+			{
+				SoapUI.logError( e );
+			}
+
+			if( uri != null && uri.isAbsolute() )
+			{
+				hostConfiguration.setHttpHost( new HttpHost( uri.getHost(), uri.getPort(), uri.getScheme() ) );
+				httpMethod.setURI( uri );
+				submitContext.setProperty( BaseHttpRequestTransport.REQUEST_URI, new URI( uri.toString(), false ) );
 			}
 
 			// include request time?
@@ -199,13 +199,11 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 				httpMethod.initStartTime();
 
 			// submit!
-			httpClient.executeMethod( hostConfiguration, httpMethod, httpState );
-			httpMethod.getTimeTaken();
+			httpResponse = HttpClientSupport.execute( hostConfiguration, httpMethod, httpContext );
 
-			if( isRedirectResponse( httpMethod ) && httpRequest.isFollowRedirects() )
+			if( isRedirectResponse( httpResponse.getStatusLine().getStatusCode() ) && httpRequest.isFollowRedirects() )
 			{
-				ExtendedGetMethod returnMethod = followRedirects( httpClient, 0, httpMethod, httpState );
-				httpMethod.releaseConnection();
+				ExtendedGetMethod returnMethod = followRedirects( httpClient, 0, httpMethod, httpResponse, httpContext );
 				httpMethod = returnMethod;
 				submitContext.setProperty( HTTP_METHOD, httpMethod );
 			}
@@ -242,14 +240,7 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 				response.setProperty( key, responseProperties.get( key ) );
 			}
 
-			if( httpMethod != null )
-			{
-				httpMethod.releaseConnection();
-			}
-			else
-				log.error( "PostMethod is null" );
-
-			if( createdState )
+			if( createdContext )
 			{
 				submitContext.setProperty( SubmitContext.HTTP_STATE_PROPERTY, null );
 			}
@@ -258,9 +249,9 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 		return ( Response )submitContext.getProperty( BaseHttpRequestTransport.RESPONSE );
 	}
 
-	private boolean isRedirectResponse( ExtendedHttpMethod httpMethod )
+	private boolean isRedirectResponse( int statusCode )
 	{
-		switch( httpMethod.getStatusCode() )
+		switch( statusCode )
 		{
 		case 301 :
 		case 302 :
@@ -273,29 +264,30 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 	}
 
 	private ExtendedGetMethod followRedirects( HttpClient httpClient, int redirectCount, ExtendedHttpMethod httpMethod,
-			HttpState httpState ) throws Exception
+			org.apache.http.HttpResponse httpResponse, HttpContext httpContext ) throws Exception
 	{
 		ExtendedGetMethod getMethod = new ExtendedGetMethod();
-		for( Header header : httpMethod.getRequestHeaders() )
-			getMethod.addRequestHeader( header );
+		for( Header header : httpMethod.getAllHeaders() )
+			getMethod.addHeader( header );
 
-		URI uri = new URI( httpMethod.getResponseHeader( "Location" ).getValue(), true );
+		java.net.URI uri = new java.net.URI( httpResponse.getFirstHeader( "Location" ).getValue() );
+		SoapUIHostConfiguration hostConfiguration = new SoapUIHostConfiguration( new HttpHost( uri.getHost(),
+				uri.getPort(), uri.getScheme() ) );
 		getMethod.setURI( uri );
-		HostConfiguration host = new HostConfiguration();
-		host.setHost( uri );
-		httpClient.executeMethod( host, getMethod, httpState );
-		if( isRedirectResponse( getMethod ) )
+		org.apache.http.HttpResponse response = HttpClientSupport.execute( hostConfiguration, getMethod, httpContext );
+
+		if( isRedirectResponse( response.getStatusLine().getStatusCode() ) )
 		{
 			if( redirectCount == 10 )
 				throw new Exception( "Maximum number of Redirects reached [10]" );
 
 			try
 			{
-				return followRedirects( httpClient, redirectCount + 1, getMethod, httpState );
+				return followRedirects( httpClient, redirectCount + 1, getMethod, response, httpContext );
 			}
 			finally
 			{
-				getMethod.releaseConnection();
+				//getMethod.releaseConnection();
 			}
 		}
 		else
@@ -309,11 +301,11 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 		String requestContent = ( String )submitContext.getProperty( BaseHttpRequestTransport.REQUEST_CONTENT );
 
 		// check content-type for multiplart
-		Header responseContentTypeHeader = httpMethod.getResponseHeader( "Content-Type" );
+		String responseContentTypeHeader = httpMethod.hasHttpResponse() ? httpMethod.getHttpResponse().getEntity()
+				.getContentType().toString() : null;
 		Response response = null;
 
-		if( responseContentTypeHeader != null
-				&& responseContentTypeHeader.getValue().toUpperCase().startsWith( "MULTIPART" ) )
+		if( responseContentTypeHeader != null && responseContentTypeHeader.toUpperCase().startsWith( "MULTIPART" ) )
 		{
 			response = new MimeMessageResponse( httpRequest, httpMethod, requestContent, submitContext );
 		}
@@ -352,5 +344,4 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 		extendedPostMethod.setAfterRequestInjection( httpRequest.getAfterRequestInjection() );
 		return extendedPostMethod;
 	}
-
 }

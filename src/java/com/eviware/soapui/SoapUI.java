@@ -568,7 +568,7 @@ public class SoapUI
 	{
 		SoapUI.logMonitor = logMonitor;
 		logMonitor.addLogArea( defaultName, "com.eviware.soapui", hasDefault ).setLevel( Level.DEBUG );
-		logMonitor.addLogArea( "http log", "httpclient.wire", false ).setLevel( Level.DEBUG );
+		logMonitor.addLogArea( "http log", "org.apache.http.wire", false ).setLevel( Level.DEBUG );
 		logMonitor.addLogArea( "jetty log", "jetty", false ).setLevel( Level.INFO );
 		logMonitor.addLogArea( "error log", "soapui.errorlog", false ).setLevel( Level.DEBUG );
 		logMonitor.addLogArea( "wsrm log", "wsrm", false ).setLevel( Level.INFO );

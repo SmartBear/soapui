@@ -15,6 +15,7 @@ package com.eviware.soapui.impl.wsdl.monitor.jettyproxy;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashSet;
@@ -29,13 +30,15 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.httpclient.Header;
-import org.apache.commons.httpclient.HostConfiguration;
-import org.apache.commons.httpclient.HttpState;
-import org.apache.commons.httpclient.URI;
-import org.apache.commons.httpclient.methods.InputStreamRequestEntity;
+import org.apache.http.Header;
+import org.apache.http.HttpHost;
+import org.apache.http.HttpResponse;
+import org.apache.http.entity.InputStreamEntity;
+import org.apache.http.protocol.BasicHttpContext;
+import org.apache.http.protocol.HttpContext;
 import org.mortbay.util.IO;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.actions.monitor.SoapMonitorAction;
 import com.eviware.soapui.impl.wsdl.actions.monitor.SoapMonitorAction.LaunchForm;
@@ -46,6 +49,7 @@ import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedGetMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPostMethod;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
+import com.eviware.soapui.impl.wsdl.support.http.SoapUIHostConfiguration;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.support.types.StringToStringsMap;
 
@@ -55,7 +59,7 @@ public class ProxyServlet implements Servlet
 	protected ServletContext context;
 	protected SoapMonitor monitor;
 	protected WsdlProject project;
-	protected HttpState httpState = new HttpState();
+	protected HttpContext httpState = new BasicHttpContext();
 	protected Settings settings;
 
 	static HashSet<String> dontProxyHeaders = new HashSet<String>();
@@ -156,38 +160,66 @@ public class ProxyServlet implements Servlet
 				String val = ( String )vals.nextElement();
 				if( val != null )
 				{
-					method.setRequestHeader( lhdr, val );
+					method.setHeader( lhdr, val );
 					xForwardedFor |= "X-Forwarded-For".equalsIgnoreCase( hdr );
 				}
 			}
 		}
 
 		// Proxy headers
-		method.setRequestHeader( "Via", "SoapUI Monitor" );
+		method.setHeader( "Via", "SoapUI Monitor" );
 		if( !xForwardedFor )
-			method.addRequestHeader( "X-Forwarded-For", request.getRemoteAddr() );
+			method.addHeader( "X-Forwarded-For", request.getRemoteAddr() );
 
 		if( method instanceof ExtendedPostMethod )
-			( ( ExtendedPostMethod )method ).setRequestEntity( new InputStreamRequestEntity( capture, request
-					.getContentType() ) );
-
-		HostConfiguration hostConfiguration = new HostConfiguration();
+		{
+			( ( ExtendedPostMethod )method ).setEntity( new InputStreamEntity( capture, -1 ) );
+		}
 
 		StringBuffer url = new StringBuffer( "http://" );
 		url.append( httpRequest.getServerName() );
 		if( httpRequest.getServerPort() != 80 )
 			url.append( ":" + httpRequest.getServerPort() );
+
+		java.net.URI tempUri = null;
+
 		if( httpRequest.getServletPath() != null )
 		{
 			url.append( httpRequest.getServletPath() );
-			method.setPath( httpRequest.getServletPath() );
+
+			try
+			{
+				tempUri = new java.net.URI( url.toString() );
+				method.setURI( tempUri );
+			}
+			catch( URISyntaxException e )
+			{
+				SoapUI.logError( e );
+			}
+
 			if( httpRequest.getQueryString() != null )
 			{
 				url.append( "?" + httpRequest.getQueryString() );
-				method.setPath( httpRequest.getServletPath() + "?" + httpRequest.getQueryString() );
+
+				try
+				{
+					tempUri = new java.net.URI( url.toString() );
+					method.setURI( tempUri );
+				}
+				catch( URISyntaxException e )
+				{
+					SoapUI.logError( e );
+				}
 			}
 		}
-		hostConfiguration.setHost( new URI( url.toString(), true ) );
+
+		SoapUIHostConfiguration hostConfiguration = new SoapUIHostConfiguration();
+		if( tempUri != null )
+		{
+			hostConfiguration.setHttpHost( new HttpHost( tempUri.getHost(), tempUri.getPort(), tempUri.getScheme() ) );
+		}
+
+		HttpResponse httpResponse = null;
 
 		// SoapUI.log("PROXY to:" + url);
 
@@ -196,12 +228,12 @@ public class ProxyServlet implements Servlet
 		if( settings.getBoolean( LaunchForm.SSLTUNNEL_REUSESTATE ) )
 		{
 			if( httpState == null )
-				httpState = new HttpState();
-			HttpClientSupport.getHttpClient().executeMethod( hostConfiguration, method, httpState );
+				httpState = new BasicHttpContext();
+			httpResponse = HttpClientSupport.execute( hostConfiguration, method, httpState );
 		}
 		else
 		{
-			HttpClientSupport.getHttpClient().executeMethod( hostConfiguration, method );
+			httpResponse = HttpClientSupport.execute( hostConfiguration, method );
 		}
 
 		// wait for transaction to end and store it.
@@ -210,8 +242,8 @@ public class ProxyServlet implements Servlet
 		capturedData.setRequest( capture.getCapturedData() );
 		capturedData.setRawResponseBody( method.getResponseBody() );
 		capturedData.setResponseHeader( method );
-		capturedData.setRawRequestData( getRequestToBytes( request.toString(), method, capture ) );
-		capturedData.setRawResponseData( getResponseToBytes( response.toString(), method,
+		capturedData.setRawRequestData( getRequestToBytes( request.toString(), capture ) );
+		capturedData.setRawResponseData( getResponseToBytes( response.toString(), httpResponse,
 				capturedData.getRawResponseBody() ) );
 		capturedData.setResponseContent( new String( method.getDecompressedResponseBody() ) );
 
@@ -223,26 +255,26 @@ public class ProxyServlet implements Servlet
 			// capturedData = null;
 
 			// copy headers to response
-			HttpServletResponse httpResponse = ( HttpServletResponse )response;
+			HttpServletResponse httpServletResponse = ( HttpServletResponse )response;
 			for( String name : responseHeaders.keySet() )
 			{
 				for( String header : responseHeaders.get( name ) )
-					httpResponse.addHeader( name, header );
+					httpServletResponse.addHeader( name, header );
 			}
 
-			IO.copy( new ByteArrayInputStream( capturedData.getRawResponseBody() ), httpResponse.getOutputStream() );
+			IO.copy( new ByteArrayInputStream( capturedData.getRawResponseBody() ), httpServletResponse.getOutputStream() );
 		}
 
 		synchronized( this )
 		{
-			if( checkContentType( method ) )
+			if( checkContentType( httpResponse ) )
 			{
 				monitor.addMessageExchange( capturedData );
 			}
 		}
 	}
 
-	private boolean checkContentType( ExtendedHttpMethod method )
+	private boolean checkContentType( HttpResponse httpResponse )
 	{
 		String[] contentTypes = settings
 				.getString( LaunchForm.SET_CONTENT_TYPES, SoapMonitorAction.defaultContentTypes() ).split( "," );
@@ -252,7 +284,7 @@ public class ProxyServlet implements Servlet
 			contentTypelist.add( ct.trim().replace( "*", "" ) );
 		}
 
-		Header[] headers = method.getResponseHeaders( "Content-Type" );
+		Header[] headers = httpResponse.getHeaders( "Content-Type" );
 		for( Header header : headers )
 		{
 			for( String contentType : contentTypelist )
@@ -266,11 +298,11 @@ public class ProxyServlet implements Servlet
 		return false;
 	}
 
-	private byte[] getResponseToBytes( String status, ExtendedHttpMethod postMethod, byte[] res )
+	private byte[] getResponseToBytes( String status, HttpResponse httpResponse, byte[] res )
 	{
 		String response = status.trim() + "\r\n";
 
-		Header[] headers = postMethod.getResponseHeaders();
+		Header[] headers = httpResponse.getAllHeaders();
 		for( Header header : headers )
 		{
 			response += header.toString().trim() + "\r\n";
@@ -290,7 +322,7 @@ public class ProxyServlet implements Servlet
 		return out.toByteArray();
 	}
 
-	private byte[] getRequestToBytes( String footer, ExtendedHttpMethod postMethod, CaptureInputStream capture )
+	private byte[] getRequestToBytes( String footer, CaptureInputStream capture )
 	{
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 

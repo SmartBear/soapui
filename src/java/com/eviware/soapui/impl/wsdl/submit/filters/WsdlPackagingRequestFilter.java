@@ -21,7 +21,7 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.PreencodedMimeBodyPart;
 
-import org.apache.commons.httpclient.methods.ByteArrayRequestEntity;
+import org.apache.http.entity.ByteArrayEntity;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
@@ -96,7 +96,7 @@ public class WsdlPackagingRequestFilter extends AbstractRequestFilter
 					StringUtils.unquote( wsdlRequest.getEncoding() ) );
 			byte[] content = StringUtils.isNullOrEmpty( encoding ) ? requestContent.getBytes() : requestContent
 					.getBytes( encoding );
-			postMethod.setRequestEntity( new ByteArrayRequestEntity( content ) );
+			postMethod.setEntity( new ByteArrayEntity( content ) );
 		}
 		else
 		{
@@ -116,9 +116,9 @@ public class WsdlPackagingRequestFilter extends AbstractRequestFilter
 			message.saveChanges();
 			WsdlRequestMimeMessageRequestEntity mimeMessageRequestEntity = new WsdlRequestMimeMessageRequestEntity(
 					message, isXOP, wsdlRequest );
-			postMethod.setRequestEntity( mimeMessageRequestEntity );
-			postMethod.setRequestHeader( "Content-Type", mimeMessageRequestEntity.getContentType() );
-			postMethod.setRequestHeader( "MIME-Version", "1.0" );
+			postMethod.setEntity( mimeMessageRequestEntity );
+			postMethod.setHeader( mimeMessageRequestEntity.getContentType() );
+			postMethod.setHeader( "MIME-Version", "1.0" );
 		}
 
 		return requestContent;

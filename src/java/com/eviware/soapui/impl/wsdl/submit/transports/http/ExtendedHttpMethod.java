@@ -13,13 +13,15 @@
 package com.eviware.soapui.impl.wsdl.submit.transports.http;
 
 import java.io.IOException;
+import java.net.URI;
 
-import org.apache.commons.httpclient.HttpMethod;
-import org.apache.commons.httpclient.methods.RequestEntity;
+import javax.net.ssl.SSLSession;
 
-import com.eviware.soapui.impl.rest.RestRequestInterface;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpRequest;
+import org.apache.http.client.methods.HttpUriRequest;
 
-public interface ExtendedHttpMethod extends HttpMethod
+public interface ExtendedHttpMethod extends HttpRequest, HttpUriRequest
 {
 	public long getMaxSize();
 
@@ -39,11 +41,9 @@ public interface ExtendedHttpMethod extends HttpMethod
 
 	public String getResponseContentType();
 
-	public RequestEntity getRequestEntity();
+	public String getMethod();
 
 	public void setDumpFile( String dumpFile );
-
-	public RestRequestInterface.RequestMethod getMethod();
 
 	public void setFailed( Throwable t );
 
@@ -56,4 +56,22 @@ public interface ExtendedHttpMethod extends HttpMethod
 	public byte[] getDecompressedResponseBody() throws IOException;
 
 	public void setDecompress( boolean decompress );
+
+	public void setURI( URI uri );
+
+	public void setHttpResponse( org.apache.http.HttpResponse httpResponse );
+
+	public org.apache.http.HttpResponse getHttpResponse();
+
+	public boolean hasHttpResponse();
+
+	public byte[] getResponseBody() throws IOException;
+
+	public String getResponseBodyAsString() throws IOException;
+
+	public HttpEntity getRequestEntity();
+
+	public void afterReadResponse( SSLSession session );
+
+	public void afterWriteRequest();
 }

@@ -12,25 +12,23 @@
 
 package com.eviware.soapui.impl.wsdl.submit.filters;
 
-import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
-import org.apache.commons.httpclient.Credentials;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpMethod;
-import org.apache.commons.httpclient.HttpState;
-import org.apache.commons.httpclient.NTCredentials;
-import org.apache.commons.httpclient.UsernamePasswordCredentials;
-import org.apache.commons.httpclient.auth.AuthScheme;
-import org.apache.commons.httpclient.auth.AuthScope;
-import org.apache.commons.httpclient.auth.CredentialsNotAvailableException;
-import org.apache.commons.httpclient.auth.CredentialsProvider;
-import org.apache.commons.httpclient.auth.NTLMScheme;
-import org.apache.commons.httpclient.auth.RFC2617Scheme;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.Credentials;
+import org.apache.http.auth.NTCredentials;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.client.params.AuthPolicy;
+import org.apache.http.impl.auth.BasicScheme;
 import org.apache.log4j.Logger;
 
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransport;
+import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.settings.Settings;
@@ -73,37 +71,19 @@ public class HttpAuthenticationRequestFilter extends AbstractRequestFilter
 	public static void initRequestCredentials( SubmitContext context, String username, Settings settings,
 			String password, String domain )
 	{
-		HttpClient httpClient = ( HttpClient )context.getProperty( BaseHttpRequestTransport.HTTP_CLIENT );
-		HttpMethod httpMethod = ( HttpMethod )context.getProperty( BaseHttpRequestTransport.HTTP_METHOD );
+		HttpRequestBase httpMethod = ( HttpRequestBase )context.getProperty( BaseHttpRequestTransport.HTTP_METHOD );
 
-		if( StringUtils.isNullOrEmpty( username ) && StringUtils.isNullOrEmpty( password ) )
-		{
-			httpClient.getParams().setAuthenticationPreemptive( false );
-			httpMethod.setDoAuthentication( false );
-		}
-		else
+		if( !StringUtils.isNullOrEmpty( username ) && !StringUtils.isNullOrEmpty( password ) )
 		{
 			// set preemptive authentication
 			if( settings.getBoolean( HttpSettings.AUTHENTICATE_PREEMPTIVELY ) )
 			{
-				httpClient.getParams().setAuthenticationPreemptive( true );
-				HttpState state = ( HttpState )context.getProperty( SubmitContext.HTTP_STATE_PROPERTY );
-
-				if( state != null )
-				{
-					Credentials defaultcreds = new UsernamePasswordCredentials( username, password == null ? "" : password );
-					state.setCredentials( AuthScope.ANY, defaultcreds );
-				}
-			}
-			else
-			{
-				httpClient.getParams().setAuthenticationPreemptive( false );
+				UsernamePasswordCredentials creds = new UsernamePasswordCredentials( username, password );
+				httpMethod.addHeader( BasicScheme.authenticate( creds, "utf-8", false ) );
 			}
 
-			httpMethod.getParams().setParameter( CredentialsProvider.PROVIDER,
+			HttpClientSupport.getHttpClient().setCredentialsProvider(
 					new UPDCredentialsProvider( username, password, domain ) );
-
-			httpMethod.setDoAuthentication( true );
 		}
 	}
 
@@ -122,43 +102,54 @@ public class HttpAuthenticationRequestFilter extends AbstractRequestFilter
 			this.domain = domain;
 		}
 
-		public Credentials getCredentials( final AuthScheme authscheme, final String host, int port, boolean proxy )
-				throws CredentialsNotAvailableException
+		public Credentials getCredentials( final AuthScope authScope )
 		{
 			if( checkedCredentials )
-				throw new CredentialsNotAvailableException( "Missing valid credentials" );
-
-			if( authscheme == null )
-			{
 				return null;
+
+			if( authScope == null )
+			{
+				throw new IllegalArgumentException( "Authentication scope may not be null" );
 			}
+
 			try
 			{
-				if( authscheme instanceof NTLMScheme )
+				if( AuthPolicy.NTLM.equals( authScope.getScheme() ) )
 				{
-					logger.info( host + ":" + port + " requires Windows authentication" );
-					return new NTCredentials( username, password, host, domain );
+					logger.info( authScope.getHost() + ":" + authScope.getPort() + " requires Windows authentication" );
+
+					String workstation = "";
+					try
+					{
+						workstation = InetAddress.getLocalHost().getHostName();
+					}
+					catch( UnknownHostException e )
+					{
+					}
+					return new NTCredentials( username, password, workstation, domain );
 				}
-				else if( authscheme instanceof RFC2617Scheme )
+				else if( AuthPolicy.BASIC.equals( authScope.getScheme() )
+						|| AuthPolicy.DIGEST.equals( authScope.getScheme() )
+						|| AuthPolicy.SPNEGO.equals( authScope.getScheme() ) )
 				{
-					logger.info( host + ":" + port + " requires authentication with the realm '" + authscheme.getRealm()
-							+ "'" );
+					logger.info( authScope.getHost() + ":" + authScope.getPort()
+							+ " requires authentication with the realm '" + authScope.getRealm() + "'" );
 					return new UsernamePasswordCredentials( username, password );
 				}
-				else
-				{
-					throw new CredentialsNotAvailableException( "Unsupported authentication scheme: "
-							+ authscheme.getSchemeName() );
-				}
-			}
-			catch( IOException e )
-			{
-				throw new CredentialsNotAvailableException( e.getMessage(), e );
 			}
 			finally
 			{
 				checkedCredentials = true;
 			}
+			return null;
+		}
+
+		public void clear()
+		{
+		}
+
+		public void setCredentials( final AuthScope authscope, final Credentials credentials )
+		{
 		}
 	}
 }

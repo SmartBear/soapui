@@ -12,9 +12,10 @@
 
 package com.eviware.soapui.impl.wsdl.submit.filters;
 
-import org.apache.commons.httpclient.HttpVersion;
-import org.apache.commons.httpclient.methods.EntityEnclosingMethod;
-import org.apache.commons.httpclient.methods.RequestEntity;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpEntityEnclosingRequest;
+import org.apache.http.HttpVersion;
+import org.apache.http.entity.AbstractHttpEntity;
 
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransport;
@@ -33,15 +34,14 @@ public class PostPackagingRequestFilter extends AbstractRequestFilter
 		Settings settings = request.getSettings();
 
 		// chunking?
-		if( httpMethod.getParams().getVersion().equals( HttpVersion.HTTP_1_1 )
-				&& httpMethod instanceof EntityEnclosingMethod )
+		if( httpMethod.getProtocolVersion().equals( HttpVersion.HTTP_1_1 )
+				&& httpMethod instanceof HttpEntityEnclosingRequest )
 		{
-			EntityEnclosingMethod entityEnclosingMethod = ( ( EntityEnclosingMethod )httpMethod );
+			HttpEntityEnclosingRequest entityEnclosingMethod = ( ( HttpEntityEnclosingRequest )httpMethod );
 			long limit = settings.getLong( HttpSettings.CHUNKING_THRESHOLD, -1 );
-			RequestEntity requestEntity = entityEnclosingMethod.getRequestEntity();
-			entityEnclosingMethod.setContentChunked( limit >= 0 && requestEntity != null ? requestEntity
+			HttpEntity requestEntity = entityEnclosingMethod.getEntity();
+			( ( AbstractHttpEntity )requestEntity ).setChunked( limit >= 0 && requestEntity != null ? requestEntity
 					.getContentLength() > limit : false );
 		}
 	}
-
 }
