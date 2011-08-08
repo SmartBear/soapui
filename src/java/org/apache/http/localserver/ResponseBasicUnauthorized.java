@@ -29,38 +29,21 @@ package org.apache.http.localserver;
 
 import java.io.IOException;
 
-import junit.framework.Assert;
-import junit.framework.JUnit4TestAdapter;
-
 import org.apache.http.HttpException;
-import org.apache.http.HttpRequest;
-import org.apache.http.HttpRequestInterceptor;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpResponseInterceptor;
+import org.apache.http.HttpStatus;
+import org.apache.http.auth.AUTH;
 import org.apache.http.protocol.HttpContext;
-import org.junit.Test;
 
-public class RequestBasicAuth implements HttpRequestInterceptor
+public class ResponseBasicUnauthorized implements HttpResponseInterceptor
 {
-	public static junit.framework.Test suite()
+	public void process( final HttpResponse response, final HttpContext context ) throws HttpException, IOException
 	{
-		return new JUnit4TestAdapter( RequestBasicAuth.class );
+		if( response.getStatusLine().getStatusCode() == HttpStatus.SC_UNAUTHORIZED )
+		{
+			response.addHeader( AUTH.WWW_AUTH, "Basic realm=\"test realm\"" );
+		}
 	}
 
-	private final BasicAuthTokenExtractor authTokenExtractor;
-
-	public RequestBasicAuth()
-	{
-		super();
-		this.authTokenExtractor = new BasicAuthTokenExtractor();
-	}
-
-	public void process( final HttpRequest request, final HttpContext context ) throws HttpException, IOException
-	{
-		context.setAttribute( "creds", this.authTokenExtractor.extract( request ) );
-	}
-
-	@Test
-	public void test()
-	{
-		Assert.assertTrue( true );
-	}
 }

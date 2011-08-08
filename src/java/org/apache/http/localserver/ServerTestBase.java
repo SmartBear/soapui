@@ -31,9 +31,6 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
-import junit.framework.Assert;
-import junit.framework.JUnit4TestAdapter;
-
 import org.apache.http.HttpHost;
 import org.apache.http.HttpVersion;
 import org.apache.http.conn.scheme.PlainSocketFactory;
@@ -50,7 +47,6 @@ import org.apache.http.protocol.HttpRequestExecutor;
 import org.apache.http.protocol.RequestConnControl;
 import org.apache.http.protocol.RequestContent;
 import org.junit.Before;
-import org.junit.Test;
 
 /**
  * Base class for tests using {@link LocalTestServer LocalTestServer}. Note that
@@ -62,10 +58,6 @@ import org.junit.Test;
  */
 public abstract class ServerTestBase extends BasicServerTestBase
 {
-	public static junit.framework.Test suite()
-	{
-		return new JUnit4TestAdapter( ServerTestBase.class );
-	}
 
 	/** The available schemes. */
 	protected SchemeRegistry supportedSchemes;
@@ -190,9 +182,4 @@ public abstract class ServerTestBase extends BasicServerTestBase
 		return conn;
 	}
 
-	@Test
-	public void test()
-	{
-		Assert.assertTrue( true );
-	}
 }
