@@ -29,24 +29,31 @@ package org.apache.http.localserver;
 
 import java.io.IOException;
 
+import junit.framework.JUnit4TestAdapter;
+
 import org.apache.http.HttpException;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.protocol.HttpContext;
 
-public class RequestBasicAuth implements HttpRequestInterceptor {
+public class RequestBasicAuth implements HttpRequestInterceptor
+{
+	public static junit.framework.Test suite()
+	{
+		return new JUnit4TestAdapter( RequestBasicAuth.class );
+	}
 
-    private final BasicAuthTokenExtractor authTokenExtractor;
+	private final BasicAuthTokenExtractor authTokenExtractor;
 
-    public RequestBasicAuth() {
-        super();
-        this.authTokenExtractor = new BasicAuthTokenExtractor();
-    }
+	public RequestBasicAuth()
+	{
+		super();
+		this.authTokenExtractor = new BasicAuthTokenExtractor();
+	}
 
-    public void process(
-            final HttpRequest request,
-            final HttpContext context) throws HttpException, IOException {
-        context.setAttribute("creds", this.authTokenExtractor.extract(request));
-    }
+	public void process( final HttpRequest request, final HttpContext context ) throws HttpException, IOException
+	{
+		context.setAttribute( "creds", this.authTokenExtractor.extract( request ) );
+	}
 
 }

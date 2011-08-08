@@ -2,6 +2,8 @@ package com.eviware.soapui.support.httpclient;
 
 import java.io.IOException;
 
+import junit.framework.JUnit4TestAdapter;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
@@ -21,6 +23,12 @@ import com.eviware.soapui.impl.wsdl.support.http.NTLMSchemeFactory;
 
 public class TestJCIFS
 {
+
+	public static junit.framework.Test suite()
+	{
+		return new JUnit4TestAdapter( TestJCIFS.class );
+	}
+
 	@Test
 	public void test() throws ParseException, IOException
 	{

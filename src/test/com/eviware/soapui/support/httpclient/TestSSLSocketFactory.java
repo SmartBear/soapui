@@ -45,6 +45,8 @@ import javax.net.ssl.SSLSocket;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 
+import junit.framework.JUnit4TestAdapter;
+
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -64,6 +66,11 @@ import org.junit.Test;
  */
 public class TestSSLSocketFactory extends BasicServerTestBase
 {
+
+	public static junit.framework.Test suite()
+	{
+		return new JUnit4TestAdapter( TestSSLSocketFactory.class );
+	}
 
 	private KeyManagerFactory createKeyManagerFactory() throws NoSuchAlgorithmException
 	{

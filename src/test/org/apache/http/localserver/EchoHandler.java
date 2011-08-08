@@ -30,6 +30,8 @@ package org.apache.http.localserver;
 import java.io.IOException;
 import java.util.Locale;
 
+import junit.framework.JUnit4TestAdapter;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpEntityEnclosingRequest;
 import org.apache.http.HttpException;
@@ -42,68 +44,74 @@ import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.HttpRequestHandler;
 import org.apache.http.util.EntityUtils;
 
-
-
 /**
  * A handler that echos the incoming request entity.
- *
- *
- *
+ * 
+ * 
+ * 
  * <!-- empty lines to avoid 'svn diff' problems -->
  */
-public class EchoHandler
-    implements HttpRequestHandler {
+public class EchoHandler implements HttpRequestHandler
+{
+	public static junit.framework.Test suite()
+	{
+		return new JUnit4TestAdapter( EchoHandler.class );
+	}
 
-    // public default constructor
+	// public default constructor
 
-    /**
-     * Handles a request by echoing the incoming request entity.
-     * If there is no request entity, an empty document is returned.
-     *
-     * @param request   the request
-     * @param response  the response
-     * @param context   the context
-     *
-     * @throws HttpException    in case of a problem
-     * @throws IOException      in case of an IO problem
-     */
-    public void handle(final HttpRequest request,
-                       final HttpResponse response,
-                       final HttpContext context)
-        throws HttpException, IOException {
+	/**
+	 * Handles a request by echoing the incoming request entity. If there is no
+	 * request entity, an empty document is returned.
+	 * 
+	 * @param request
+	 *           the request
+	 * @param response
+	 *           the response
+	 * @param context
+	 *           the context
+	 * 
+	 * @throws HttpException
+	 *            in case of a problem
+	 * @throws IOException
+	 *            in case of an IO problem
+	 */
+	public void handle( final HttpRequest request, final HttpResponse response, final HttpContext context )
+			throws HttpException, IOException
+	{
 
-        String method = request.getRequestLine().getMethod().toUpperCase(Locale.ENGLISH);
-        if (!"GET".equals(method) &&
-            !"POST".equals(method) &&
-            !"PUT".equals(method)
-            ) {
-            throw new MethodNotSupportedException
-                (method + " not supported by " + getClass().getName());
-        }
+		String method = request.getRequestLine().getMethod().toUpperCase( Locale.ENGLISH );
+		if( !"GET".equals( method ) && !"POST".equals( method ) && !"PUT".equals( method ) )
+		{
+			throw new MethodNotSupportedException( method + " not supported by " + getClass().getName() );
+		}
 
-        HttpEntity entity = null;
-        if (request instanceof HttpEntityEnclosingRequest)
-            entity = ((HttpEntityEnclosingRequest)request).getEntity();
+		HttpEntity entity = null;
+		if( request instanceof HttpEntityEnclosingRequest )
+			entity = ( ( HttpEntityEnclosingRequest )request ).getEntity();
 
-        // For some reason, just putting the incoming entity into
-        // the response will not work. We have to buffer the message.
-        byte[] data;
-        if (entity == null) {
-            data = new byte [0];
-        } else {
-            data = EntityUtils.toByteArray(entity);
-        }
+		// For some reason, just putting the incoming entity into
+		// the response will not work. We have to buffer the message.
+		byte[] data;
+		if( entity == null )
+		{
+			data = new byte[0];
+		}
+		else
+		{
+			data = EntityUtils.toByteArray( entity );
+		}
 
-        ByteArrayEntity bae = new ByteArrayEntity(data);
-        if (entity != null) {
-            bae.setContentType(entity.getContentType());
-        }
-        entity = bae;
+		ByteArrayEntity bae = new ByteArrayEntity( data );
+		if( entity != null )
+		{
+			bae.setContentType( entity.getContentType() );
+		}
+		entity = bae;
 
-        response.setStatusCode(HttpStatus.SC_OK);
-        response.setEntity(entity);
+		response.setStatusCode( HttpStatus.SC_OK );
+		response.setEntity( entity );
 
-    } // handle
-
+	} // handle
 
 } // class EchoHandler
