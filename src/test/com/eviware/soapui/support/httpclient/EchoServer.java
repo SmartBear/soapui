@@ -9,11 +9,20 @@ import javax.net.ssl.SSLServerSocketFactory;
 import javax.net.ssl.SSLSocket;
 
 import junit.framework.Assert;
+import junit.framework.JUnit4TestAdapter;
 
 import org.junit.Test;
 
+import com.eviware.soapui.support.TestCaseWithJetty;
+
 public class EchoServer
 {
+
+	public static junit.framework.Test suite()
+	{
+		return new JUnit4TestAdapter( TestCaseWithJetty.class );
+	}
+
 	public static void main( String[] arstring )
 	{
 		try
