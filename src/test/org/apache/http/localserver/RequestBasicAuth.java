@@ -29,12 +29,14 @@ package org.apache.http.localserver;
 
 import java.io.IOException;
 
+import junit.framework.Assert;
 import junit.framework.JUnit4TestAdapter;
 
 import org.apache.http.HttpException;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.protocol.HttpContext;
+import org.junit.Test;
 
 public class RequestBasicAuth implements HttpRequestInterceptor
 {
@@ -56,4 +58,9 @@ public class RequestBasicAuth implements HttpRequestInterceptor
 		context.setAttribute( "creds", this.authTokenExtractor.extract( request ) );
 	}
 
+	@Test
+	public void test()
+	{
+		Assert.assertTrue( true );
+	}
 }

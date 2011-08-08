@@ -23,7 +23,6 @@ import com.eviware.soapui.impl.wsdl.support.http.NTLMSchemeFactory;
 
 public class TestJCIFS
 {
-
 	public static junit.framework.Test suite()
 	{
 		return new JUnit4TestAdapter( TestJCIFS.class );

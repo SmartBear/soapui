@@ -29,6 +29,7 @@ package org.apache.http.localserver;
 
 import java.io.IOException;
 
+import junit.framework.Assert;
 import junit.framework.JUnit4TestAdapter;
 
 import org.apache.http.HttpException;
@@ -37,6 +38,7 @@ import org.apache.http.HttpResponseInterceptor;
 import org.apache.http.HttpStatus;
 import org.apache.http.auth.AUTH;
 import org.apache.http.protocol.HttpContext;
+import org.junit.Test;
 
 public class ResponseBasicUnauthorized implements HttpResponseInterceptor
 {
@@ -53,4 +55,9 @@ public class ResponseBasicUnauthorized implements HttpResponseInterceptor
 		}
 	}
 
+	@Test
+	public void test()
+	{
+		Assert.assertTrue( true );
+	}
 }

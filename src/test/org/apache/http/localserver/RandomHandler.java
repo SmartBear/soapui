@@ -33,6 +33,7 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.Locale;
 
+import junit.framework.Assert;
 import junit.framework.JUnit4TestAdapter;
 
 import org.apache.http.HttpException;
@@ -43,6 +44,7 @@ import org.apache.http.MethodNotSupportedException;
 import org.apache.http.entity.AbstractHttpEntity;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.HttpRequestHandler;
+import org.junit.Test;
 
 /**
  * A handler that generates random data.
@@ -263,4 +265,9 @@ public class RandomHandler implements HttpRequestHandler
 
 	} // class RandomEntity
 
+	@Test
+	public void test()
+	{
+		Assert.assertTrue( true );
+	}
 } // class RandomHandler

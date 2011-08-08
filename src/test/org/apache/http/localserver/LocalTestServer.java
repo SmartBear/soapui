@@ -40,6 +40,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLServerSocketFactory;
 
+import junit.framework.Assert;
 import junit.framework.JUnit4TestAdapter;
 
 import org.apache.http.ConnectionReuseStrategy;
@@ -66,6 +67,7 @@ import org.apache.http.protocol.ResponseConnControl;
 import org.apache.http.protocol.ResponseContent;
 import org.apache.http.protocol.ResponseDate;
 import org.apache.http.protocol.ResponseServer;
+import org.junit.Test;
 
 /**
  * Local HTTP server for tests that require one. Based on the
@@ -463,4 +465,9 @@ public class LocalTestServer
 
 	}
 
+	@Test
+	public void test()
+	{
+		Assert.assertTrue( true );
+	}
 }
