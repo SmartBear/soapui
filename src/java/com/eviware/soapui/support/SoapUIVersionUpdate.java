@@ -126,14 +126,30 @@ public class SoapUIVersionUpdate
 
 	private boolean isNewMajorReleaseAvailable()
 	{
+		String soapuiVersion = SoapUI.SOAPUI_VERSION;
+		int snapshot = soapuiVersion.indexOf( "SNAPSHOT" );
+		//if version is snapshot strip SNAPSHOT
+		if( snapshot > 0 )
+		{
+			soapuiVersion = soapuiVersion.substring( 0, snapshot - 1 );
+		}
+		//TODO uncoment on release 
 		return !StringUtils.isNullOrEmpty( versionType ) && versionType.equals( MAJOR_VERSION )
-				&& SoapUI.SOAPUI_VERSION.compareTo( getLatestVersion() ) < 0;
+				&& soapuiVersion.compareTo( getLatestVersion() ) <= 0;
 	}
 
 	private boolean isNewMinorReleaseAvailable()
 	{
+		String soapuiVersion = SoapUI.SOAPUI_VERSION;
+		int snapshot = soapuiVersion.indexOf( "SNAPSHOT" );
+		//if version is snapshot strip SNAPSHOT
+		if( snapshot > 0 )
+		{
+			soapuiVersion = soapuiVersion.substring( 0, snapshot - 1 );
+		}
+		//TODO uncoment on release 
 		return !StringUtils.isNullOrEmpty( versionType ) && versionType.equals( MINOR_VERSION )
-				&& SoapUI.SOAPUI_VERSION.compareTo( getLatestVersion() ) < 0;
+				&& soapuiVersion.compareTo( getLatestVersion() ) <= 0;
 	}
 
 	public String getReleaseNotesCore()
