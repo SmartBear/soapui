@@ -87,7 +87,7 @@ public class SoapUIVersionUpdate
 				NodeList vrsnNmbr = vrsnNmbrElmnt.getChildNodes();
 				latestVersion = ( ( Node )vrsnNmbr.item( 0 ) ).getNodeValue().toString();
 
-				NodeList rlsNtsElmntLst = fstElmnt.getElementsByTagName( "release-notes" );
+				NodeList rlsNtsElmntLst = fstElmnt.getElementsByTagName( "release-notes-core" );
 				Element rlsNtsElmnt = ( Element )rlsNtsElmntLst.item( 0 );
 				NodeList rlsNts = rlsNtsElmnt.getChildNodes();
 				releaseNotesCore = ( ( Node )rlsNts.item( 0 ) ).getNodeValue().toString();
