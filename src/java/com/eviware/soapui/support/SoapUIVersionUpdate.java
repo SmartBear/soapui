@@ -45,16 +45,17 @@ public class SoapUIVersionUpdate
 	private static final String MINOR_VERSION = "minor";
 	private static final String LATEST_VERSION_XML_LOCATION = "http://www.soapui.org/version/soapui-latest-version.xml";
 	public static final String VERSION_TO_SKIP = SoapUI.class.getName() + "@versionToSkip";
-	private static final String NO_RELEASE_NOTES_INFO = "<tr><td>Sorry! No Release notes currently available.</td></tr>";
+	protected static final String NO_RELEASE_NOTES_INFO = "<tr><td>Sorry! No Release notes currently available.</td></tr>";
 
 	//	JDialog dialog
 
 	XFormDialog formDialog;
 	private String latestVersion;
-	private String releaseNotes;
+	private String releaseNotesCore;
+	private String releaseNotesPro;
 	private String versionType;
-	private String coreDownloadLink;
-	private String proDownloadLink;
+	private String downloadLinkCore;
+	private String downloadLinkPro;
 
 	public void getLatestVersionAvailable( URL versionUrl )
 	{
@@ -89,17 +90,22 @@ public class SoapUIVersionUpdate
 				NodeList rlsNtsElmntLst = fstElmnt.getElementsByTagName( "release-notes" );
 				Element rlsNtsElmnt = ( Element )rlsNtsElmntLst.item( 0 );
 				NodeList rlsNts = rlsNtsElmnt.getChildNodes();
-				releaseNotes = ( ( Node )rlsNts.item( 0 ) ).getNodeValue().toString();
+				releaseNotesCore = ( ( Node )rlsNts.item( 0 ) ).getNodeValue().toString();
 
-				NodeList coreDownloadNtsElmntLst = fstElmnt.getElementsByTagName( "core-download-link" );
+				NodeList rlsNtsElmntLstPro = fstElmnt.getElementsByTagName( "release-notes-pro" );
+				Element rlsNtsElmntPro = ( Element )rlsNtsElmntLstPro.item( 0 );
+				NodeList rlsNtsPro = rlsNtsElmntPro.getChildNodes();
+				releaseNotesPro = ( ( Node )rlsNtsPro.item( 0 ) ).getNodeValue().toString();
+
+				NodeList coreDownloadNtsElmntLst = fstElmnt.getElementsByTagName( "download-link-core" );
 				Element coreDownloadNtsElmnt = ( Element )coreDownloadNtsElmntLst.item( 0 );
 				NodeList coreDownloadNts = coreDownloadNtsElmnt.getChildNodes();
-				coreDownloadLink = ( ( Node )coreDownloadNts.item( 0 ) ).getNodeValue().toString();
+				downloadLinkCore = ( ( Node )coreDownloadNts.item( 0 ) ).getNodeValue().toString();
 
-				NodeList proDownloadNtsElmntElmntLst = fstElmnt.getElementsByTagName( "pro-download-link" );
+				NodeList proDownloadNtsElmntElmntLst = fstElmnt.getElementsByTagName( "download-link-pro" );
 				Element proDownloadNtsElmnt = ( Element )proDownloadNtsElmntElmntLst.item( 0 );
 				NodeList proDownloadNts = proDownloadNtsElmnt.getChildNodes();
-				proDownloadLink = ( ( Node )proDownloadNts.item( 0 ) ).getNodeValue().toString();
+				downloadLinkPro = ( ( Node )proDownloadNts.item( 0 ) ).getNodeValue().toString();
 			}
 			//			}
 		}
@@ -130,9 +136,14 @@ public class SoapUIVersionUpdate
 				&& SoapUI.SOAPUI_VERSION.compareTo( getLatestVersion() ) < 0;
 	}
 
-	public String getReleaseNotes()
+	public String getReleaseNotesCore()
 	{
-		return releaseNotes;
+		return releaseNotesCore;
+	}
+
+	public String getReleaseNotesPro()
+	{
+		return releaseNotesPro;
 	}
 
 	public String getLatestVersion()
@@ -147,18 +158,7 @@ public class SoapUIVersionUpdate
 		JDialog dialog = new JDialog();
 		versionUpdatePanel.add( UISupport.buildDescription( "New Version of soapUI is Available", "", null ),
 				BorderLayout.NORTH );
-		JEditorPane text = new JEditorPane();
-		try
-		{
-			text.setPage( getReleaseNotes() );
-			text.setEditable( false );
-			text.setBorder( BorderFactory.createLineBorder( Color.black ) );
-		}
-		catch( IOException e )
-		{
-			text.setText( NO_RELEASE_NOTES_INFO );
-			SoapUI.logError( e );
-		}
+		JEditorPane text = createReleaseNotesPane();
 		JScrollPane scb = new JScrollPane( text );
 		versionUpdatePanel.add( scb, BorderLayout.CENTER );
 		JXToolBar toolbar = buildToolbar( dialog );
@@ -172,14 +172,31 @@ public class SoapUIVersionUpdate
 		dialog.setVisible( true );
 	}
 
+	protected JEditorPane createReleaseNotesPane()
+	{
+		JEditorPane text = new JEditorPane();
+		try
+		{
+			text.setPage( getReleaseNotesCore() );
+			text.setEditable( false );
+			text.setBorder( BorderFactory.createLineBorder( Color.black ) );
+		}
+		catch( IOException e )
+		{
+			text.setText( NO_RELEASE_NOTES_INFO );
+			SoapUI.logError( e );
+		}
+		return text;
+	}
+
 	protected JXToolBar buildToolbar( JDialog dialog )
 	{
 		JXToolBar toolbar = UISupport.createToolbar();
 		toolbar.add( new IgnoreUpdateAction( dialog ) );
+		toolbar.add( new RemindLaterAction( dialog ) );
 		toolbar.addGlue();
 		toolbar.addSeparator();
-		toolbar.add( new RemindLaterAction( dialog ) );
-		toolbar.add( new OpenDownloadUrlAction( "Download latest version", getCoreDownloadLink(), dialog ) );
+		toolbar.add( new OpenDownloadUrlAction( "Download latest version", getDownloadLinkCore(), dialog ) );
 		return toolbar;
 	}
 
@@ -274,17 +291,17 @@ public class SoapUIVersionUpdate
 
 	protected String getDownloadLink()
 	{
-		return getCoreDownloadLink();
+		return getDownloadLinkCore();
 	}
 
-	protected String getCoreDownloadLink()
+	protected String getDownloadLinkCore()
 	{
-		return coreDownloadLink;
+		return downloadLinkCore;
 	}
 
-	protected String getProDownloadLink()
+	protected String getDownloadLinkPro()
 	{
-		return proDownloadLink;
+		return downloadLinkPro;
 	}
 
 	protected String getVersionType()

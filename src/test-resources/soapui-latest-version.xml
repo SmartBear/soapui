@@ -1,13 +1,14 @@
 <!-- version type is either minor or major, no need for both in at once-->
 <version>
-<version-type>major</version-type>
-<version-number>4.5.1</version-number>
-<release-notes>http://www.soapui.org/version/release-notes.html</release-notes>
-<core-download-link>http://sourceforge.net/projects/soapui/files/soapui/4.0/</core-download-link>
-<pro-download-link>http://www.eviware.com/Download-soapUI/download-soapui-pro.html</pro-download-link>
+<version-type>minor</version-type>
+<version-number>4.0.1</version-number>
+<release-notes-core>http://www.soapui.org/version/release-notes-core-4_0_1.html</release-notes-core>
+<release-notes-pro>http://www.soapui.org/version/release-notes-pro-4_0_1.html</release-notes-pro>
+<download-link-core>http://sourceforge.net/projects/soapui/files/soapui/4.0</download-link-core>
+<download-link-pro>http://www.eviware.com/Download-soapUI/download-soapui-pro.html</download-link-pro>
 </version>
 <!--version>
 <version-type>minor</version-type>
-<version-number>4.0.1</version-number>
+<version-number>4.5.1</version-number>
 <release-notes>This is latest minor version available, download?</release-notes>
 </version-->

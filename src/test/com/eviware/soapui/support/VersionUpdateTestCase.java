@@ -33,9 +33,10 @@ public class VersionUpdateTestCase
 		versionUpdate.getLatestVersionAvailable( SoapUI.class.getResource( "/soapui-latest-version.xml" ) );
 
 		assertNotNull( versionUpdate.getLatestVersion() );
-		assertNotNull( versionUpdate.getReleaseNotes() );
-		assertNotNull( versionUpdate.getCoreDownloadLink() );
-		assertNotNull( versionUpdate.getProDownloadLink() );
+		assertNotNull( versionUpdate.getReleaseNotesCore() );
+		assertNotNull( versionUpdate.getReleaseNotesPro() );
+		assertNotNull( versionUpdate.getDownloadLinkCore() );
+		assertNotNull( versionUpdate.getDownloadLinkPro() );
 		assertNotNull( versionUpdate.getVersionType() );
 	}
 
