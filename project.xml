@@ -1003,7 +1003,7 @@
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-all</artifactId>
 			<version>1.8.5</version>
-			<scope>test</scope>
+			<type>jar</type>
 			<properties>
 				<jnlp.jar>true</jnlp.jar>
 			</properties>
@@ -1012,7 +1012,7 @@
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
 			<version>4.1.1</version>
-			<scope>compile</scope>
+			<type>jar</type>
 			<properties>
 				<jnlp.jar>true</jnlp.jar>
 			</properties>
@@ -1021,7 +1021,7 @@
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpmime</artifactId>
 			<version>4.1.1</version>
-			<scope>compile</scope>
+			<type>jar</type>
 			<properties>
 				<jnlp.jar>true</jnlp.jar>
 			</properties>
@@ -1030,7 +1030,7 @@
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient-cache</artifactId>
 			<version>4.1.1</version>
-			<scope>compile</scope>
+			<type>jar</type>
 			<properties>
 				<jnlp.jar>true</jnlp.jar>
 			</properties>
@@ -1039,7 +1039,7 @@
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpcore</artifactId>
 			<version>4.1.1</version>
-			<scope>compile</scope>
+			<type>jar</type>
 			<properties>
 				<jnlp.jar>true</jnlp.jar>
 			</properties>
@@ -1048,7 +1048,7 @@
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpcore-nio</artifactId>
 			<version>4.1.1</version>
-			<scope>compile</scope>
+			<type>jar</type>
 			<properties>
 				<jnlp.jar>true</jnlp.jar>
 			</properties>
@@ -1057,6 +1057,7 @@
 			<groupId>org.samba.jcifs</groupId>
 			<artifactId>jcifs</artifactId>
 			<version>1.2.9</version>
+			<type>jar</type>
 			<properties>
 				<jnlp.jar>true</jnlp.jar>
 			</properties>
