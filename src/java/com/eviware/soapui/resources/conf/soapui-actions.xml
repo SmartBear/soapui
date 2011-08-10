@@ -386,6 +386,13 @@
 		actionClass="com.eviware.soapui.impl.actions.multi.MultiTestStepEnableAction" />
 	<tns:action id="MultiTestStepDisableAction"
 		actionClass="com.eviware.soapui.impl.actions.multi.MultiTestStepDisableAction" />
+	<tns:action id="MultiAssertionDeleteAction"
+		actionClass="com.eviware.soapui.impl.actions.multi.MultiAssertionDeleteAction" />
+<!-- 	<tns:action id="MultiAssertionEnableAction"
+		actionClass="com.eviware.soapui.impl.actions.multi.MultiAssertionEnableAction" />
+	<tns:action id="MultiAssertionDisableAction"
+		actionClass="com.eviware.soapui.impl.actions.multi.MultiAssertionDisableAction" />
+		 -->
 
 
 
@@ -472,10 +479,8 @@
 		<tns:actionMapping actionId="LoadTestRunnerAction" />
 		<tns:actionMapping actionId="SoapMonitorAction" />
 		<tns:actionMapping actionId="SecurityTestRunnerAction" />
-		<!--
-			<tns:actionMapping actionId="SeperatorAction"/> <tns:actionMapping
-			actionId="WSToolsJava2WsdlAction"/>
-		-->
+		<!-- <tns:actionMapping actionId="SeperatorAction"/> <tns:actionMapping 
+			actionId="WSToolsJava2WsdlAction"/> -->
 		<tns:actionMapping actionId="SeperatorAction" />
 		<tns:actionMapping actionId="AddNewTestSuiteAction"
 			keyStroke="menu T" />
@@ -547,9 +552,7 @@
 		<tns:actionMapping actionId="SeperatorAction" />
 		<tns:actionMapping groupId="WsdlInterfaceGenerateActions"
 			name="Generate Code" />
-		<!--
-			<tns:actionMapping actionId="WSToolsRegenerateJava2WsdlAction"/>
-		-->
+		<!-- <tns:actionMapping actionId="WSToolsRegenerateJava2WsdlAction"/> -->
 		<tns:actionMapping actionId="SeperatorAction" />
 		<tns:actionMapping actionId="WSIAnalyzeAction"
 			keyStroke="ctrl alt W" />
@@ -1085,6 +1088,9 @@
 			keyStroke="DELETE" />
 		<tns:actionMapping actionId="MultiTestStepEnableAction" />
 		<tns:actionMapping actionId="MultiTestStepDisableAction" />
+		<tns:actionMapping actionId="MultiAssertionDeleteAction" />
+	<!--	<tns:actionMapping actionId="MultiAssertionEnableAction" />
+		<tns:actionMapping actionId="MultiAssertionDisableAction" /> -->
 	</tns:actionGroup>
 
 </tns:soapui-actions>

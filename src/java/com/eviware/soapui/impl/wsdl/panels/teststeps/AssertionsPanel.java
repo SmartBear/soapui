@@ -80,7 +80,7 @@ public class AssertionsPanel extends JPanel
 
 		initListAndModel();
 
-		assertionList.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
+		assertionList.setSelectionMode( ListSelectionModel.MULTIPLE_INTERVAL_SELECTION );
 
 		assertionListPopup = new JPopupMenu();
 		addAssertionAction = new AddAssertionAction( assertable );
@@ -98,7 +98,7 @@ public class AssertionsPanel extends JPanel
 				if( ix == -1 )
 				{
 					assertionListPopup.addSeparator();
-					assertionListPopup.add( new ShowOnlineHelpAction( getHelpUrl()) );
+					assertionListPopup.add( new ShowOnlineHelpAction( getHelpUrl() ) );
 					return;
 				}
 
@@ -205,7 +205,7 @@ public class AssertionsPanel extends JPanel
 		addToolbarButtons( toolbar );
 
 		toolbar.addGlue();
-		toolbar.add( new ShowOnlineHelpAction(getHelpUrl()) );
+		toolbar.add( new ShowOnlineHelpAction( getHelpUrl() ) );
 
 		assertionList.addListSelectionListener( new ListSelectionListener()
 		{
@@ -497,11 +497,40 @@ public class AssertionsPanel extends JPanel
 
 		public void actionPerformed( ActionEvent e )
 		{
-			int ix = assertionList.getSelectedIndex();
-			if( ix == -1 )
+
+			List<TestAssertion> removeAssertionList = new ArrayList<TestAssertion>();
+			int indices[] = assertionList.getSelectedIndices();
+
+			if( indices.length == 0 )
 				return;
 
-			TestAssertion assertion = assertionListModel.getAssertionAt( ix );
+			for( int i : indices )
+			{
+				removeAssertionList.add( assertionListModel.getAssertionAt( i ) );
+			}
+
+			if( removeAssertionList.size() == 1 )
+			{
+				removeSingleAssertion( removeAssertionList.get( 0 ) );
+			}
+			else
+			{
+				removeMultipleAssertions( removeAssertionList );
+			}
+
+		}
+
+		private void removeMultipleAssertions( List<TestAssertion> removeAssertionList )
+		{
+			if( UISupport.confirm( "Remove all selected assertions?", "Remove Multiple Assertions" ) )
+			{
+				for( TestAssertion ta : removeAssertionList )
+					assertable.removeAssertion( ta );
+			}
+		}
+
+		private void removeSingleAssertion( TestAssertion assertion )
+		{
 			if( UISupport.confirm( "Remove assertion [" + assertion.getName() + "]", "Remove Assertion" ) )
 			{
 				assertable.removeAssertion( assertion );
@@ -559,8 +588,9 @@ public class AssertionsPanel extends JPanel
 	{
 		return assertionList;
 	}
-	
-	public String getHelpUrl(){
-		return HelpUrls.RESPONSE_ASSERTIONS_HELP_URL ;
+
+	public String getHelpUrl()
+	{
+		return HelpUrls.RESPONSE_ASSERTIONS_HELP_URL;
 	}
 }
