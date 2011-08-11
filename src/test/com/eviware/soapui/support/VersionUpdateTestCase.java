@@ -37,7 +37,6 @@ public class VersionUpdateTestCase
 		assertNotNull( versionUpdate.getReleaseNotesPro() );
 		assertNotNull( versionUpdate.getDownloadLinkCore() );
 		assertNotNull( versionUpdate.getDownloadLinkPro() );
-		assertNotNull( versionUpdate.getVersionType() );
 	}
 
 }

@@ -21,6 +21,7 @@ import java.net.URL;
 
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JEditorPane;
 import javax.swing.JPanel;
@@ -36,14 +37,11 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.x.form.XFormDialog;
 
 public class SoapUIVersionUpdate
 {
-	private static final String MAJOR_VERSION = "major";
-	private static final String MINOR_VERSION = "minor";
-	private static final String LATEST_VERSION_XML_LOCATION = "http://www.soapui.org/version/soapui-latest-version.xml";
+	private static final String LATEST_VERSION_XML_LOCATION = "http://www.soapui.org/version/soapui-version.xml";
 	public static final String VERSION_TO_SKIP = SoapUI.class.getName() + "@versionToSkip";
 	protected static final String NO_RELEASE_NOTES_INFO = "<tr><td>Sorry! No Release notes currently available.</td></tr>";
 
@@ -53,7 +51,6 @@ public class SoapUIVersionUpdate
 	private String latestVersion;
 	private String releaseNotesCore;
 	private String releaseNotesPro;
-	private String versionType;
 	private String downloadLinkCore;
 	private String downloadLinkPro;
 
@@ -77,10 +74,6 @@ public class SoapUIVersionUpdate
 			{
 
 				Element fstElmnt = ( Element )fstNode;
-				NodeList vrsnTypeElmntLst = fstElmnt.getElementsByTagName( "version-type" );
-				Element vrsnTypeElmnt = ( Element )vrsnTypeElmntLst.item( 0 );
-				NodeList vrsnType = vrsnTypeElmnt.getChildNodes();
-				versionType = ( ( Node )vrsnType.item( 0 ) ).getNodeValue().toString();
 
 				NodeList vrsnNmbrElmntLst = fstElmnt.getElementsByTagName( "version-number" );
 				Element vrsnNmbrElmnt = ( Element )vrsnNmbrElmntLst.item( 0 );
@@ -124,7 +117,7 @@ public class SoapUIVersionUpdate
 		return doc;
 	}
 
-	private boolean isNewMajorReleaseAvailable()
+	private boolean isNewReleaseAvailable()
 	{
 		String soapuiVersion = SoapUI.SOAPUI_VERSION;
 		int snapshot = soapuiVersion.indexOf( "SNAPSHOT" );
@@ -134,22 +127,7 @@ public class SoapUIVersionUpdate
 			soapuiVersion = soapuiVersion.substring( 0, snapshot - 1 );
 		}
 		//TODO uncoment on release 
-		return !StringUtils.isNullOrEmpty( versionType ) && versionType.equals( MAJOR_VERSION )
-				&& soapuiVersion.compareTo( getLatestVersion() ) <= 0;
-	}
-
-	private boolean isNewMinorReleaseAvailable()
-	{
-		String soapuiVersion = SoapUI.SOAPUI_VERSION;
-		int snapshot = soapuiVersion.indexOf( "SNAPSHOT" );
-		//if version is snapshot strip SNAPSHOT
-		if( snapshot > 0 )
-		{
-			soapuiVersion = soapuiVersion.substring( 0, snapshot - 1 );
-		}
-		//TODO uncoment on release 
-		return !StringUtils.isNullOrEmpty( versionType ) && versionType.equals( MINOR_VERSION )
-				&& soapuiVersion.compareTo( getLatestVersion() ) <= 0;
+		return !StringUtils.isNullOrEmpty( getLatestVersion() ) && soapuiVersion.compareTo( getLatestVersion() ) <= 0;
 	}
 
 	public String getReleaseNotesCore()
@@ -167,7 +145,7 @@ public class SoapUIVersionUpdate
 		return latestVersion;
 	}
 
-	public void showNewMajorVersionDownloadDialog()
+	public void showNewVersionDownloadDialog()
 	{
 
 		JPanel versionUpdatePanel = new JPanel( new BorderLayout() );
@@ -177,7 +155,7 @@ public class SoapUIVersionUpdate
 		JEditorPane text = createReleaseNotesPane();
 		JScrollPane scb = new JScrollPane( text );
 		versionUpdatePanel.add( scb, BorderLayout.CENTER );
-		JXToolBar toolbar = buildToolbar( dialog );
+		JPanel toolbar = buildToolbar( dialog );
 		versionUpdatePanel.add( toolbar, BorderLayout.SOUTH );
 		dialog.setTitle( "New Version Update" );
 
@@ -205,21 +183,19 @@ public class SoapUIVersionUpdate
 		return text;
 	}
 
-	protected JXToolBar buildToolbar( JDialog dialog )
+	protected JPanel buildToolbar( JDialog dialog )
 	{
-		JXToolBar toolbar = UISupport.createToolbar();
-		toolbar.add( new IgnoreUpdateAction( dialog ) );
-		toolbar.add( new RemindLaterAction( dialog ) );
-		toolbar.addGlue();
-		toolbar.addSeparator();
-		toolbar.add( new OpenDownloadUrlAction( "Download latest version", getDownloadLinkCore(), dialog ) );
-		return toolbar;
-	}
-
-	public void showNewMinorVersionDownloadDialog()
-	{
-		//TODO implement minor, for now left the same
-		showNewMajorVersionDownloadDialog();
+		JPanel toolbarPanel = new JPanel( new BorderLayout() );
+		JPanel leftBtns = new JPanel();
+		leftBtns.add( new JButton( ( new IgnoreUpdateAction( dialog ) ) ) );
+		leftBtns.add( new JButton( new RemindLaterAction( dialog ) ) );
+		JButton createToolbarButton = new JButton( new OpenDownloadUrlAction( "Download latest version",
+				getDownloadLinkCore(), dialog ) );
+		JPanel rightBtn = new JPanel();
+		rightBtn.add( createToolbarButton );
+		toolbarPanel.add( leftBtns, BorderLayout.WEST );
+		toolbarPanel.add( rightBtn, BorderLayout.EAST );
+		return toolbarPanel;
 	}
 
 	public boolean skipThisVersion()
@@ -242,10 +218,8 @@ public class SoapUIVersionUpdate
 			}
 			return;
 		}
-		if( isNewMajorReleaseAvailable() && ( !skipThisVersion() || helpAction ) )
-			showNewMajorVersionDownloadDialog();
-		else if( isNewMinorReleaseAvailable() && ( !skipThisVersion() || helpAction ) )
-			showNewMinorVersionDownloadDialog();
+		if( isNewReleaseAvailable() && ( !skipThisVersion() || helpAction ) )
+			showNewVersionDownloadDialog();
 		else if( helpAction )
 			UISupport.showInfoMessage( "Currently no new version available", "No New Version" );
 	}
@@ -305,11 +279,6 @@ public class SoapUIVersionUpdate
 		}
 	}
 
-	protected String getDownloadLink()
-	{
-		return getDownloadLinkCore();
-	}
-
 	protected String getDownloadLinkCore()
 	{
 		return downloadLinkCore;
@@ -320,8 +289,4 @@ public class SoapUIVersionUpdate
 		return downloadLinkPro;
 	}
 
-	protected String getVersionType()
-	{
-		return versionType;
-	}
 }
