@@ -1640,6 +1640,9 @@ public class JEditTextArea extends JComponent implements Scrollable
 				String selection = ( ( String )clipboard.getContents( this ).getTransferData( DataFlavor.stringFlavor ) )
 						.replace( '\r', '\n' );
 
+				// after previous in come cases we get double \n so just remove one
+				selection = selection.replace( "\n\n", "\n" );
+
 				int repeatCount = inputHandler.getRepeatCount();
 				StringBuffer buf = new StringBuffer();
 				for( int i = 0; i < repeatCount; i++ )
