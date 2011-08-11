@@ -187,11 +187,10 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 				SoapUI.logError( e );
 			}
 
+			// fix absolute URIs due to peculiarity in httpclient
 			if( uri != null && uri.isAbsolute() )
 			{
 				hostConfiguration.setHttpHost( new HttpHost( uri.getHost(), uri.getPort(), uri.getScheme() ) );
-				httpMethod.setURI( uri );
-				submitContext.setProperty( BaseHttpRequestTransport.REQUEST_URI, new URI( uri.toString(), false ) );
 			}
 
 			// include request time?

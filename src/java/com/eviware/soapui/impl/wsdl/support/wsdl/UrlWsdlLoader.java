@@ -47,6 +47,7 @@ import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.propertyexpansion.DefaultPropertyExpansionContext;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.settings.HttpSettings;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.swing.SwingWorker;
 import com.eviware.soapui.support.types.StringToStringMap;
@@ -194,11 +195,13 @@ public class UrlWsdlLoader extends WsdlLoader implements DefinitionLoader
 		HttpClientSupport.getHttpClient().getParams().setParameter( ClientPNames.HANDLE_REDIRECTS, true );
 		getMethod.getParams().setParameter( ClientContext.CREDS_PROVIDER, new WsdlCredentialsProvider() );
 
-		// there's alternative version in examples directory
 		if( SoapUI.getSettings().getBoolean( HttpSettings.AUTHENTICATE_PREEMPTIVELY ) )
 		{
-			UsernamePasswordCredentials creds = new UsernamePasswordCredentials( getUsername(), getPassword() );
-			getMethod.addHeader( BasicScheme.authenticate( creds, "utf-8", false ) );
+			if( !StringUtils.isNullOrEmpty( getUsername() ) && !StringUtils.isNullOrEmpty( getPassword() ) )
+			{
+				UsernamePasswordCredentials creds = new UsernamePasswordCredentials( getUsername(), getPassword() );
+				getMethod.addHeader( BasicScheme.authenticate( creds, "utf-8", false ) );
+			}
 		}
 	}
 

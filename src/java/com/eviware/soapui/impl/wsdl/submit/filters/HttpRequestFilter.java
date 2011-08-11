@@ -14,6 +14,7 @@ package com.eviware.soapui.impl.wsdl.submit.filters;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -213,16 +214,29 @@ public class HttpRequestFilter extends AbstractRequestFilter
 		}
 		else if( StringUtils.hasContent( path ) )
 		{
+			java.net.URI oldUri = httpMethod.getURI();
+
 			try
 			{
 				// URI(String) automatically URLencodes the input, so we need to
 				// decode it first...
-				URI uri = new URI( path, false );
+				URI uri = new URI( URIUtils.createURI( oldUri.getScheme(), oldUri.getHost(), oldUri.getPort(), path,
+						oldUri.getQuery(), oldUri.getFragment() ).toString(), false );
 				httpMethod.setURI( new java.net.URI( uri.toString() ) );
 			}
 			catch( Exception e )
 			{
 				SoapUI.logError( e );
+
+				try
+				{
+					httpMethod.setURI( URIUtils.createURI( oldUri.getScheme(), oldUri.getHost(), oldUri.getPort(), path,
+							oldUri.getQuery(), oldUri.getFragment() ) );
+				}
+				catch( URISyntaxException e1 )
+				{
+					SoapUI.logError( e1 );
+				}
 			}
 		}
 
