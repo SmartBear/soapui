@@ -12,6 +12,7 @@
 package com.eviware.soapui.actions;
 
 import java.io.File;
+import java.util.List;
 
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.actions.ImportWsdlProjectAction;
@@ -48,11 +49,12 @@ public class ImportPackedProject extends AbstractSoapUIAction<WorkspaceImpl>
 			if( dest.getAbsoluteFile() == null )
 				return;
 			ProjectExporter.unpackageAll( fileName, dest.getAbsolutePath() );
+			List<String> contents = ProjectExporter.getZipContents( fileName );
 
 			for( String fName : dest.list() )
-				if( fName.endsWith( "-soapui-project.xml" ) )
+				if( contents.contains( fName ) && fName.endsWith( "-soapui-project.xml" ) )
 				{
-					new ImportWsdlProjectAction().perform( workspace, new File( dest, fName).getAbsoluteFile() );
+					new ImportWsdlProjectAction().perform( workspace, new File( dest, fName ).getAbsoluteFile() );
 					break;
 				}
 

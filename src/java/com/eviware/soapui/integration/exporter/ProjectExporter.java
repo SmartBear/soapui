@@ -17,8 +17,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipException;
+import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
@@ -39,7 +43,7 @@ import com.eviware.soapui.support.SoapUIException;
  * to be relative to the project file.
  * 
  * @author robert
- *
+ * 
  */
 public class ProjectExporter
 {
@@ -61,9 +65,9 @@ public class ProjectExporter
 	 * 
 	 * @param exportPath
 	 * @return
-	 * @throws SoapUIException 
-	 * @throws XmlException 
-	 * @throws IOException 
+	 * @throws SoapUIException
+	 * @throws XmlException
+	 * @throws IOException
 	 */
 	public boolean exportProject( String exportPath ) throws IOException, XmlException, SoapUIException
 	{
@@ -91,13 +95,13 @@ public class ProjectExporter
 	 * 
 	 * @param exportPath
 	 * @return
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	private boolean packageAll( String exportPath )
 	{
 		if( !exportPath.endsWith( ".zip" ) )
 			exportPath = exportPath + ".zip";
-		
+
 		BufferedInputStream origin = null;
 		ZipOutputStream out;
 		boolean result = true;
@@ -160,14 +164,38 @@ public class ProjectExporter
 		}
 		catch( Exception e )
 		{
-			e.printStackTrace();
+			SoapUI.logError( e );
 		}
 	}
 
+	public static List<String> getZipContents( String archive )
+	{
+		List<String> contents = new ArrayList<String>();
+
+		try
+		{
+			ZipFile zipFile = new ZipFile( archive );
+			for( Enumeration<? extends ZipEntry> em1 = zipFile.entries(); em1.hasMoreElements(); )
+			{
+				contents.add( em1.nextElement().toString() );
+			}
+		}
+		catch( ZipException ze )
+		{
+			SoapUI.logError( ze );
+		}
+		catch( IOException e )
+		{
+			SoapUI.logError( e );
+		}
+
+		return contents;
+	}
+
 	/**
-	 * Do actual dependency coping and updating project's copy 
-	 * dependecy path.
-	 * @throws IOException 
+	 * Do actual dependency coping and updating project's copy dependecy path.
+	 * 
+	 * @throws IOException
 	 */
 	private boolean copyDependencies() throws IOException
 	{
@@ -207,20 +235,20 @@ public class ProjectExporter
 	}
 
 	/**
-	 * Creates project copy and save it in temporary directory.
-	 * Set copy's project path and resource root to ${projectDir}
+	 * Creates project copy and save it in temporary directory. Set copy's
+	 * project path and resource root to ${projectDir}
 	 * 
 	 * @return
-	 * @throws IOException 
-	 * @throws SoapUIException 
-	 * @throws XmlException 
+	 * @throws IOException
+	 * @throws SoapUIException
+	 * @throws XmlException
 	 */
 	private boolean createProjectCopy() throws IOException, XmlException, SoapUIException
 	{
-		project.saveIn( new File( tmpDir, project.getName()+ "-soapui-project.xml" ) );
+		project.saveIn( new File( tmpDir, project.getName() + "-soapui-project.xml" ) );
 
 		projectCopy = ( WsdlProject )ProjectFactoryRegistry.getProjectFactory( "wsdl" ).createNew(
-				new File( tmpDir, project.getName()+ "-soapui-project.xml" ).getAbsolutePath() );//new WsdlProject( new File( tmpDir, project.getName() + ".xml" ).getAbsolutePath() );
+				new File( tmpDir, project.getName() + "-soapui-project.xml" ).getAbsolutePath() );//new WsdlProject( new File( tmpDir, project.getName() + ".xml" ).getAbsolutePath() );
 
 		return projectCopy != null;
 	}
@@ -228,7 +256,7 @@ public class ProjectExporter
 	/**
 	 * Creates temporary directory where package will be created
 	 * 
-	 * @return if operation is successuful 
+	 * @return if operation is successuful
 	 */
 	private File createTemporaryDirectory()
 	{
