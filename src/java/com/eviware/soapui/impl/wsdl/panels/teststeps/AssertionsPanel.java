@@ -45,6 +45,7 @@ import javax.swing.event.PopupMenuListener;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.teststeps.actions.AddAssertionAction;
+import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.model.testsuite.AssertionsListener;
@@ -101,9 +102,21 @@ public class AssertionsPanel extends JPanel
 					assertionListPopup.add( new ShowOnlineHelpAction( getHelpUrl() ) );
 					return;
 				}
+				int[] indices = assertionList.getSelectedIndices();
+				if( indices.length == 1 )
+				{
+					TestAssertion assertion = assertionListModel.getAssertionAt( ix );
+					ActionSupport.addActions( ActionListBuilder.buildActions( assertion ), assertionListPopup );
 
-				TestAssertion assertion = assertionListModel.getAssertionAt( ix );
-				ActionSupport.addActions( ActionListBuilder.buildActions( assertion ), assertionListPopup );
+				}
+				else
+				{
+					TestAssertion[] testAssertion = new TestAssertion[indices.length];
+					for( int c = 0; c < indices.length; c++ )
+						testAssertion[c] = assertionListModel.getAssertionAt( indices[c] );
+
+					ActionSupport.addActions( ActionListBuilder.buildMultiActions( testAssertion ), assertionListPopup );
+				}
 			}
 
 			public void popupMenuWillBecomeInvisible( PopupMenuEvent e )
@@ -162,19 +175,31 @@ public class AssertionsPanel extends JPanel
 				if( ix == -1 )
 					return;
 
-				TestAssertion assertion = assertionListModel.getAssertionAt( ix );
-				if( e.getKeyChar() == KeyEvent.VK_ENTER )
+				int[] indices = assertionList.getSelectedIndices();
+				if( indices.length == 1 )
 				{
-					if( assertion.isConfigurable() )
-						assertion.configure();
+					TestAssertion assertion = assertionListModel.getAssertionAt( ix );
+					if( e.getKeyChar() == KeyEvent.VK_ENTER )
+					{
+						if( assertion.isConfigurable() )
+							assertion.configure();
+					}
+					else
+					{
+						ActionList actions = ActionListBuilder.buildActions( assertion );
+						if( actions != null )
+						{
+							actions.dispatchKeyEvent( e );
+						}
+					}
 				}
 				else
 				{
-					ActionList actions = ActionListBuilder.buildActions( assertion );
-					if( actions != null )
-					{
-						actions.dispatchKeyEvent( e );
-					}
+					TestAssertion[] testAssertion = new TestAssertion[indices.length];
+					for( int c = 0; c < indices.length; c++ )
+						testAssertion[c] = assertionListModel.getAssertionAt( indices[c] );
+
+					ActionSupport.addActions( ActionListBuilder.buildMultiActions( testAssertion ), assertionListPopup );
 				}
 			}
 		} );

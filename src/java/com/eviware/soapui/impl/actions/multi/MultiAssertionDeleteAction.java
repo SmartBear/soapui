@@ -12,7 +12,6 @@
 
 package com.eviware.soapui.impl.actions.multi;
 
-import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.TestAssertion;
@@ -34,13 +33,14 @@ public class MultiAssertionDeleteAction extends AbstractSoapUIMultiAction<ModelI
 		{
 			for( ModelItem target : targets )
 			{
-				( ( Assertable )target ).removeAssertion( ( TestAssertion )target );
+				( ( Assertable )target.getParent() ).removeAssertion( ( TestAssertion )target );
 			}
 		}
 	}
 
 	public boolean applies( ModelItem target )
 	{
-		return( target instanceof Assertable );
+		return( target instanceof TestAssertion );
 	}
+	
 }
