@@ -53,9 +53,9 @@ public class ProxyUtils
 		// check system properties first
 		String proxyHost = System.getProperty( "http.proxyHost" );
 		String proxyPort = System.getProperty( "http.proxyPort" );
-		if( proxyHost == null && enabled )
+		if( proxyHost == null )
 			proxyHost = PropertyExpander.expandProperties( context, settings.getString( ProxySettings.HOST, "" ) );
-		if( proxyPort == null && proxyHost != null && enabled )
+		if( proxyPort == null && proxyHost != null )
 			proxyPort = PropertyExpander.expandProperties( context, settings.getString( ProxySettings.PORT, "" ) );
 
 		if( !StringUtils.isNullOrEmpty( proxyHost ) && !StringUtils.isNullOrEmpty( proxyPort ) )
@@ -94,9 +94,18 @@ public class ProxyUtils
 							}
 						}
 
-						HttpClientSupport.getHttpClient().getCredentialsProvider()
-								.setCredentials( new AuthScope( proxy.getHostName(), proxy.getPort() ), proxyCreds );
-						HttpClientSupport.getHttpClient().getParams().setParameter( ConnRoutePNames.DEFAULT_PROXY, proxy );
+						if( enabled )
+						{
+							HttpClientSupport.getHttpClient().getCredentialsProvider()
+									.setCredentials( new AuthScope( proxy.getHostName(), proxy.getPort() ), proxyCreds );
+							HttpClientSupport.getHttpClient().getParams().setParameter( ConnRoutePNames.DEFAULT_PROXY, proxy );
+						}
+						else
+						{
+							HttpClientSupport.getHttpClient().getCredentialsProvider()
+									.setCredentials( new AuthScope( proxy.getHostName(), proxy.getPort() ), null );
+							HttpClientSupport.getHttpClient().getParams().removeParameter( ConnRoutePNames.DEFAULT_PROXY );
+						}
 					}
 				}
 			}
