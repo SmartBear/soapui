@@ -21,12 +21,10 @@ import java.util.regex.Pattern;
 
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.AuthState;
 import org.apache.http.auth.Credentials;
 import org.apache.http.auth.NTCredentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.protocol.ClientContext;
-import org.apache.http.protocol.ExecutionContext;
+import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.protocol.HttpContext;
 
 import com.eviware.soapui.SoapUI;
@@ -96,11 +94,9 @@ public class ProxyUtils
 							}
 						}
 
-						httpContext.setAttribute( ExecutionContext.HTTP_PROXY_HOST, proxy );
-						AuthState authState = new AuthState();
-						authState.setAuthScope( new AuthScope( AuthScope.ANY_HOST, AuthScope.ANY_PORT ) );
-						authState.setCredentials( proxyCreds );
-						httpContext.setAttribute( ClientContext.PROXY_AUTH_STATE, authState );
+						HttpClientSupport.getHttpClient().getCredentialsProvider()
+								.setCredentials( new AuthScope( proxy.getHostName(), proxy.getPort() ), proxyCreds );
+						HttpClientSupport.getHttpClient().getParams().setParameter( ConnRoutePNames.DEFAULT_PROXY, proxy );
 					}
 				}
 			}
