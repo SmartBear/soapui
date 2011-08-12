@@ -39,7 +39,6 @@ import org.mozilla.xpcom.Mozilla;
 import org.mozilla.xpcom.XPCOMException;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.xml.XmlUtils;
 import com.teamdev.jxbrowser.Browser;
@@ -71,7 +70,6 @@ public class NativeBrowserComponent implements nsIWebProgressListener, nsIWeakRe
 	// private static boolean disabled;
 	private final boolean addStatusBar;
 	private com.eviware.soapui.support.components.NativeBrowserComponent.InternalNavigationAdapter internalNavigationAdapter;
-	private com.eviware.soapui.support.components.NativeBrowserComponent.InternalNavigationToSystemAdapter internalDefaultBrowserAdapter;
 
 	public NativeBrowserComponent( boolean addToolbar, boolean addStatusBar )
 	{
@@ -142,15 +140,6 @@ public class NativeBrowserComponent implements nsIWebProgressListener, nsIWeakRe
 		{
 			if( evt.getUrl().equals( SoapUI.PUSH_PAGE_URL ) && !( NavigationStatusCode.OK == evt.getStatusCode() ) )
 				browser.navigate( SoapUI.PUSH_PAGE_ERROR_URL );
-		}
-	}
-
-	private final class InternalNavigationToSystemAdapter extends NavigationAdapter
-	{
-		@Override
-		public void navigationFinished( NavigationFinishedEvent evt )
-		{
-			Tools.openURL( evt.getUrl() );
 		}
 	}
 
@@ -511,25 +500,6 @@ public class NativeBrowserComponent implements nsIWebProgressListener, nsIWeakRe
 
 		if( showingErrorPage )
 			showingErrorPage = false;
-	}
-
-	public void navigateSystemBrowser( String url )
-	{
-		if( SoapUI.isJXBrowserDisabled( true ) )
-			return;
-
-		this.url = url;
-
-		if( browser == null )
-		{
-			initBrowser();
-		}
-
-		configureBrowser();
-		BrowserComponent.updateJXBrowserProxy();
-
-		browser.navigate( url );
-
 	}
 
 }

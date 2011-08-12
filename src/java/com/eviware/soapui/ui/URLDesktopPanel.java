@@ -41,31 +41,6 @@ public class URLDesktopPanel extends DefaultDesktopPanel
 			navigate( url, null, true );
 	}
 
-	public URLDesktopPanel( String url ) throws InterruptedException, InvocationTargetException
-	{
-		super( "", "", new JPanel( new BorderLayout() ) );
-
-		JPanel panel = ( JPanel )getComponent();
-
-		browser = new NativeBrowserComponent( true, false );
-		panel.add( browser.getComponent(), BorderLayout.CENTER );
-
-		if( StringUtils.hasContent( url ) )
-			navigate( url, true );
-	}
-
-	public void navigate( String url, boolean async )
-	{
-		if( async )
-		{
-			SwingUtilities.invokeLater( new Navigator( url, "" ) );
-		}
-		else
-		{
-			browser.navigateSystemBrowser( url );
-		}
-	}
-
 	public void navigate( String url, String errorUrl, boolean async )
 	{
 		if( async )
@@ -104,7 +79,7 @@ public class URLDesktopPanel extends DefaultDesktopPanel
 		public void run()
 		{
 
-			browser.navigateSystemBrowser( url );
+			browser.navigate( url, errorUrl );
 
 		}
 	}
