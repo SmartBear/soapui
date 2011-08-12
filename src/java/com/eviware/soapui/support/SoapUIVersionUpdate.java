@@ -130,6 +130,11 @@ public class SoapUIVersionUpdate
 		return !StringUtils.isNullOrEmpty( getLatestVersion() ) && soapuiVersion.compareTo( getLatestVersion() ) <= 0;
 	}
 
+	protected String getReleaseNotes()
+	{
+		return getReleaseNotesCore();
+	}
+
 	public String getReleaseNotesCore()
 	{
 		return releaseNotesCore;
@@ -161,7 +166,7 @@ public class SoapUIVersionUpdate
 
 		dialog.setModal( true );
 		dialog.getContentPane().add( versionUpdatePanel );
-		dialog.setSize( new Dimension( 500, 400 ) );
+		dialog.setSize( new Dimension( 500, 640 ) );
 		UISupport.centerDialog( dialog, SoapUI.getFrame() );
 		dialog.setVisible( true );
 	}
@@ -171,7 +176,7 @@ public class SoapUIVersionUpdate
 		JEditorPane text = new JEditorPane();
 		try
 		{
-			text.setPage( getReleaseNotesCore() );
+			text.setPage( getReleaseNotes() );
 			text.setEditable( false );
 			text.setBorder( BorderFactory.createLineBorder( Color.black ) );
 		}
