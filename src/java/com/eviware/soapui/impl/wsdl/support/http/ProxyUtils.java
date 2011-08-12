@@ -102,8 +102,6 @@ public class ProxyUtils
 						}
 						else
 						{
-							HttpClientSupport.getHttpClient().getCredentialsProvider()
-									.setCredentials( new AuthScope( proxy.getHostName(), proxy.getPort() ), null );
 							HttpClientSupport.getHttpClient().getParams().removeParameter( ConnRoutePNames.DEFAULT_PROXY );
 						}
 					}
