@@ -37,6 +37,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.ui.URLDesktopPanel;
 import com.eviware.x.form.XFormDialog;
 
 public class SoapUIVersionUpdate
@@ -130,6 +131,11 @@ public class SoapUIVersionUpdate
 		return !StringUtils.isNullOrEmpty( getLatestVersion() ) && soapuiVersion.compareTo( getLatestVersion() ) <= 0;
 	}
 
+	protected String getReleaseNotes()
+	{
+		return getReleaseNotesCore();
+	}
+
 	public String getReleaseNotesCore()
 	{
 		return releaseNotesCore;
@@ -152,8 +158,10 @@ public class SoapUIVersionUpdate
 		JDialog dialog = new JDialog();
 		versionUpdatePanel.add( UISupport.buildDescription( "New Version of soapUI is Available", "", null ),
 				BorderLayout.NORTH );
-		JEditorPane text = createReleaseNotesPane();
-		JScrollPane scb = new JScrollPane( text );
+		URLDesktopPanel urlPanel = createReleaseNotesPanel();
+		JScrollPane scb = new JScrollPane( urlPanel.getComponent() );
+		//		JEditorPane text = createReleaseNotesPane();
+		//		JScrollPane scb = new JScrollPane( text );
 		versionUpdatePanel.add( scb, BorderLayout.CENTER );
 		JPanel toolbar = buildToolbar( dialog );
 		versionUpdatePanel.add( toolbar, BorderLayout.SOUTH );
@@ -161,9 +169,25 @@ public class SoapUIVersionUpdate
 
 		dialog.setModal( true );
 		dialog.getContentPane().add( versionUpdatePanel );
-		dialog.setSize( new Dimension( 500, 400 ) );
+		dialog.setSize( new Dimension( 500, 640 ) );
 		UISupport.centerDialog( dialog, SoapUI.getFrame() );
 		dialog.setVisible( true );
+	}
+
+	protected URLDesktopPanel createReleaseNotesPanel()
+	{
+		URLDesktopPanel urlDesktopPanel = null;
+		try
+		{
+			urlDesktopPanel = new URLDesktopPanel( getReleaseNotes() );
+			//			urlDesktopPanel.navigate( getReleaseNotes(), SoapUI.PUSH_PAGE_ERROR_URL, true );
+		}
+		catch( Throwable t )
+		{
+			t.printStackTrace();
+		}
+
+		return urlDesktopPanel;
 	}
 
 	protected JEditorPane createReleaseNotesPane()
