@@ -30,6 +30,8 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.CrossSiteScriptingScanConfig;
 import com.eviware.soapui.config.SecurityScanConfig;
 import com.eviware.soapui.config.StrategyTypeConfig;
+import com.eviware.soapui.impl.wsdl.teststeps.RestRequestStepResult;
+import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStepResult;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.model.ModelItem;
@@ -143,10 +145,20 @@ public class CrossSiteScriptingScan extends AbstractSecurityScanWithProperties
 		PropertyMutation mutation = PropertyMutation.popMutation( context );
 		if( mutation != null )
 		{
-			WsdlTestRequestStepResult message = ( WsdlTestRequestStepResult )mutation.getTestStep().run(
-					( TestCaseRunner )securityTestRunner, context );
-			message.setRequestContent( "", false );
-			createMessageExchange( mutation.getMutatedParameters(), message, context );
+			if( testStep instanceof RestTestRequestStep )
+			{
+				RestRequestStepResult message = ( RestRequestStepResult )mutation.getTestStep().run(
+						( TestCaseRunner )securityTestRunner, context );
+				message.setRequestContent( "" );
+				createMessageExchange(  mutation.getMutatedParameters(), message, context );
+			}
+			else
+			{
+				WsdlTestRequestStepResult message = ( WsdlTestRequestStepResult )mutation.getTestStep().run(
+						( TestCaseRunner )securityTestRunner, context );
+				message.setRequestContent( "", false );
+				createMessageExchange( mutation.getMutatedParameters(), message, context );
+			}
 		}
 	}
 
