@@ -23,7 +23,9 @@ import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.AbstractAction;
 import javax.swing.AbstractListModel;
@@ -549,8 +551,18 @@ public class AssertionsPanel extends JPanel
 		{
 			if( UISupport.confirm( "Remove all selected assertions?", "Remove Multiple Assertions" ) )
 			{
-				for( TestAssertion ta : removeAssertionList )
-					assertable.removeAssertion( ta );
+			// remove duplicates
+				Set<TestAssertion> assertions = new HashSet<TestAssertion>();
+
+				for( ModelItem target : removeAssertionList )
+				{
+					assertions.add( ( TestAssertion )target );
+				}
+
+				for( TestAssertion assertion : assertions )
+				{
+					( ( Assertable )assertion.getParent() ).removeAssertion( assertion );
+				}
 			}
 		}
 

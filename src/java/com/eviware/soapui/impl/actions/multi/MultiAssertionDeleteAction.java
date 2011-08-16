@@ -12,6 +12,9 @@
 
 package com.eviware.soapui.impl.actions.multi;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.TestAssertion;
@@ -31,12 +34,21 @@ public class MultiAssertionDeleteAction extends AbstractSoapUIMultiAction<ModelI
 	{
 		if( UISupport.confirm( "Delete selected Assertions?", "Delete Assertions" ) )
 		{
+			// remove duplicates
+			Set<TestAssertion> assertions = new HashSet<TestAssertion>();
+
 			for( ModelItem target : targets )
 			{
-				( ( Assertable )target.getParent() ).removeAssertion( ( TestAssertion )target );
+				assertions.add( ( TestAssertion )target );
+			}
+
+			for( TestAssertion assertion : assertions )
+			{
+				( ( Assertable )assertion.getParent() ).removeAssertion( assertion );
 			}
 		}
 	}
+
 
 	public boolean applies( ModelItem target )
 	{
