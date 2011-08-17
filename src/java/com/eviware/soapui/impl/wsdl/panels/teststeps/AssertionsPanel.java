@@ -44,6 +44,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.teststeps.actions.AddAssertionAction;
@@ -52,6 +53,7 @@ import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.model.testsuite.AssertionsListener;
 import com.eviware.soapui.model.testsuite.TestAssertion;
+import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.ActionListBuilder;
@@ -530,7 +532,11 @@ public class AssertionsPanel extends JPanel
 
 			if( indices.length == 0 )
 				return;
-
+			if ( SoapUI.getTestMonitor().hasRunningTestCase( ( TestCase )assertionListModel.getAssertionAt( indices[0] ).getParent().getParent() ) ) {
+				UISupport.showInfoMessage( "Can not remove assertion(s) while test case is running" );
+				return;
+			}
+			
 			for( int i : indices )
 			{
 				removeAssertionList.add( assertionListModel.getAssertionAt( i ) );

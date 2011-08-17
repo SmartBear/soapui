@@ -15,9 +15,11 @@ package com.eviware.soapui.impl.actions.multi;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.TestAssertion;
+import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIMultiAction;
 
@@ -34,6 +36,10 @@ public class MultiAssertionDeleteAction extends AbstractSoapUIMultiAction<ModelI
 	{
 		if( UISupport.confirm( "Delete selected Assertions?", "Delete Assertions" ) )
 		{
+			if ( SoapUI.getTestMonitor().hasRunningTestCase( ( TestCase )targets[0].getParent().getParent() ) ) {
+				UISupport.showInfoMessage( "Can not remove assertion(s) while test case is running" );
+				return;
+			}
 			// remove duplicates
 			Set<TestAssertion> assertions = new HashSet<TestAssertion>();
 
