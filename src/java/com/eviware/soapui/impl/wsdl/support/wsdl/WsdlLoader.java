@@ -12,6 +12,7 @@
 
 package com.eviware.soapui.impl.wsdl.support.wsdl;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.net.URL;
 
@@ -23,9 +24,11 @@ import org.apache.xmlbeans.XmlOptions;
 import org.xml.sax.InputSource;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.actions.SoapUIPreferencesAction;
 import com.eviware.soapui.impl.support.definition.support.AbstractDefinitionLoader;
 import com.eviware.soapui.impl.support.definition.support.InvalidDefinitionException;
 import com.eviware.soapui.impl.wsdl.support.PathUtils;
+import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.xml.XmlUtils;
@@ -108,9 +111,16 @@ public abstract class WsdlLoader extends AbstractDefinitionLoader implements Wsd
 				monitor.setProgress( progressIndex, "Loading [" + url + "]" );
 
 			options.setLoadLineNumbers();
-			String content = Tools.readAll( load( url ), 0 ).toString().trim();
-			// return XmlObject.Factory.parse( content, options );
-			return XmlUtils.createXmlObject( content, options );
+
+			if( Boolean.TRUE.equals( ( ( Boolean )SoapUI.getSettings().getBoolean( WsdlSettings.TRIM_WSDL ) ) ) )
+			{
+				String content = Tools.readAll( load( url ), 0 ).toString().trim();
+				return XmlUtils.createXmlObject( new ByteArrayInputStream( content.getBytes() ), options );
+			}
+			else
+			{
+				return XmlUtils.createXmlObject( load( url ), options );
+			}
 		}
 		catch( Exception e )
 		{

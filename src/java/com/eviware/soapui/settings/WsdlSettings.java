@@ -71,6 +71,10 @@ public interface WsdlSettings
 
 	public static final String XML_GENERATION_SKIP_COMMENTS = WsdlSettings.class.getSimpleName() + "@"
 			+ "xml-generation-skip-comments";
+	
+	@Setting( name = "Trim WSDL", description = "Trims leading and trailing whitespaces from WSDL file (might not work on non 8 bit encoding)", type = SettingType.BOOLEAN )
+	public final static String TRIM_WSDL = WsdlSettings.class.getSimpleName() + "@"
+			+ "trim-wsdl";
 
 	// @Setting( name="Always Attachments",
 	// description="always allow attachments despite of definition",
