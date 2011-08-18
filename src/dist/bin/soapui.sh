@@ -29,7 +29,7 @@ export SOAPUI_HOME
 
 export SOAPUI_CLASSPATH
 
-JAVA_OPTS="-Xms128m -Xmx1024m -Dsoapui.properties=soapui.properties -Dsoapui.home=$SOAPUI_HOME"
+JAVA_OPTS="-d32 -Xms128m -Xmx1024m -Dsoapui.properties=soapui.properties -Dsoapui.home=$SOAPUI_HOME"
 
 if [ $SOAPUI_HOME != "" ] 
 then
@@ -38,6 +38,7 @@ then
     JAVA_OPTS="$JAVA_OPTS -Dsoapui.ext.actions=$SOAPUI_HOME/bin/actions"
 	JAVA_OPTS="$JAVA_OPTS -Djava.library.path=$SOAPUI_HOME/bin"
 	JAVA_OPTS="$JAVA_OPTS -Dwsi.dir=$SOAPUI_HOME/wsi-test-tools"
+	JAVA_OPTS="$JAVA_OPTS -d32"
 #uncomment to disable browser component
 #   JAVA_OPTS="$JAVA_OPTS -Dsoapui.jxbrowser.disable=true"
 fi
