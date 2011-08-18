@@ -119,15 +119,32 @@ public class SoapUIVersionUpdate
 
 	private boolean isNewReleaseAvailable()
 	{
-		String soapuiVersion = SoapUI.SOAPUI_VERSION;
-		int snapshot = soapuiVersion.indexOf( "SNAPSHOT" );
+		String currentSoapuiVersion = SoapUI.SOAPUI_VERSION;
+		int snapshotIndex = currentSoapuiVersion.indexOf( "SNAPSHOT" );
+		boolean isSnapshot = snapshotIndex > 0;
 		//if version is snapshot strip SNAPSHOT
-		if( snapshot > 0 )
+		if( isSnapshot )
 		{
-			soapuiVersion = soapuiVersion.substring( 0, snapshot - 1 );
+			currentSoapuiVersion = currentSoapuiVersion.substring( 0, snapshotIndex - 1 );
 		}
-		//TODO uncoment on release 
-		return !StringUtils.isNullOrEmpty( getLatestVersion() ) && soapuiVersion.compareTo( getLatestVersion() ) <= 0;
+
+		String latestVersion = getLatestVersion();
+
+		if( StringUtils.isNullOrEmpty( latestVersion ) )
+			return false;
+
+		// user has to be notified when SNAPSHOT version became OFFICIAL 
+		if( isSnapshot && currentSoapuiVersion.equals( latestVersion ) )
+		{
+			return true;
+		}
+
+		if( currentSoapuiVersion.compareTo( latestVersion ) < 0 )
+		{
+			return true;
+		}
+
+		return false;
 	}
 
 	protected String getReleaseNotes()
