@@ -456,9 +456,10 @@ public class SoapUISecurityTestRunner extends SoapUITestCaseRunner implements Se
 				if( result.getStatus() == SecurityResult.ResultStatus.FAILED )
 					log.error( currentStep.getName() + " failed, exporting to [" + fileName + "]" );
 
-				new File( fileName ).getParentFile().mkdirs();
+				File file  = new File( fileName );
+				file.getParentFile().mkdirs();
 
-				PrintWriter writer = new PrintWriter( fileName );
+				PrintWriter writer = new PrintWriter( file );
 				result.writeTo( writer );
 				writer.close();
 
