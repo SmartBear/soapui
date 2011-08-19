@@ -532,11 +532,10 @@ public class AssertionsPanel extends JPanel
 
 			if( indices.length == 0 )
 				return;
-			if ( SoapUI.getTestMonitor().hasRunningTestCase( ( TestCase )assertionListModel.getAssertionAt( indices[0] ).getParent().getParent() ) ) {
-				UISupport.showInfoMessage( "Can not remove assertion(s) while test case is running" );
+
+			if( hasRunningTestCase( indices[0] ) )
 				return;
-			}
-			
+
 			for( int i : indices )
 			{
 				removeAssertionList.add( assertionListModel.getAssertionAt( i ) );
@@ -553,11 +552,30 @@ public class AssertionsPanel extends JPanel
 
 		}
 
+		private boolean hasRunningTestCase( int assertionIndex )
+		{
+			if( assertionListModel.getAssertionAt( assertionIndex ).getParent().getParent() instanceof TestCase )
+				if( SoapUI.getTestMonitor().hasRunningTestCase(
+						( TestCase )assertionListModel.getAssertionAt( assertionIndex ).getParent().getParent() ) )
+				{
+					UISupport.showInfoMessage( "Can not remove assertion(s) while test case is running" );
+					return true;
+				}
+			if( assertionListModel.getAssertionAt( assertionIndex ).getParent().getParent().getParent() instanceof TestCase )
+				if( SoapUI.getTestMonitor().hasRunningSecurityTest(
+						( TestCase )assertionListModel.getAssertionAt( assertionIndex ).getParent().getParent().getParent() ) )
+				{
+					UISupport.showInfoMessage( "Can not remove assertion(s) while test case is running" );
+					return true;
+				}
+			return false;
+		}
+
 		private void removeMultipleAssertions( List<TestAssertion> removeAssertionList )
 		{
 			if( UISupport.confirm( "Remove all selected assertions?", "Remove Multiple Assertions" ) )
 			{
-			// remove duplicates
+				// remove duplicates
 				Set<TestAssertion> assertions = new HashSet<TestAssertion>();
 
 				for( ModelItem target : removeAssertionList )
