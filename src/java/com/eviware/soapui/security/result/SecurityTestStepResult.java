@@ -237,7 +237,7 @@ public class SecurityTestStepResult implements SecurityResult
 				writer.println();
 				writer.println( "Response --------------------------------------------------------------------------" );
 				writer.println();
-				writer.println( new String( scanRequestResult.getMessageExchange().getRawRequestData() ) );
+				writer.println( new String( scanRequestResult.getMessageExchange().getRawResponseData() ) );
 				writer.println( "-----------------------------------------------------------------------------------" );
 				writer.println();
 				writer.println();
