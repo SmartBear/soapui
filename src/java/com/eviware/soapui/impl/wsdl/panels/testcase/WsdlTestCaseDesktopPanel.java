@@ -18,7 +18,6 @@ import java.awt.Dimension;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DragSource;
 import java.awt.event.ActionEvent;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -78,6 +77,7 @@ import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.action.SoapUIAction;
 import com.eviware.soapui.support.action.swing.SwingActionDelegate;
 import com.eviware.soapui.support.components.GroovyEditorComponent;
 import com.eviware.soapui.support.components.GroovyEditorInspector;
@@ -92,7 +92,7 @@ import com.eviware.soapui.support.dnd.JListDragAndDropable;
 import com.eviware.soapui.support.dnd.SoapUIDragAndDropHandler;
 import com.eviware.soapui.support.swing.ComponentBag;
 import com.eviware.soapui.support.types.StringToObjectMap;
-import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
+import com.eviware.soapui.ui.support.KeySensitiveModelItemDesktopPanel;
 
 /**
  * WsdlTestCase desktop panel
@@ -100,7 +100,8 @@ import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
  * @author Ole.Matzura
  */
 
-public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase>
+@SuppressWarnings( "serial" )
+public class WsdlTestCaseDesktopPanel extends KeySensitiveModelItemDesktopPanel<WsdlTestCase>
 {
 	private JProgressBar progressBar;
 	private JTestStepList testStepList;
@@ -714,8 +715,8 @@ public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase
 
 			int ix = testStepList.getTestStepList().getSelectedIndex();
 
-			String name = UISupport.prompt( "Specify name for new step", ix == -1 ? "Add Step" : "Insert Step", factory
-					.getTestStepName() );
+			String name = UISupport.prompt( "Specify name for new step", ix == -1 ? "Add Step" : "Insert Step",
+					factory.getTestStepName() );
 			if( name != null )
 			{
 				TestStepConfig newTestStepConfig = factory.createNewTestStep( getModelItem(), name );
@@ -774,7 +775,6 @@ public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase
 		return runner == null ? lastRunner : runner;
 	}
 
-	@SuppressWarnings( "serial" )
 	public class SynchronizeWithLoadUIAction extends AbstractAction
 	{
 		public SynchronizeWithLoadUIAction()
@@ -786,22 +786,36 @@ public class WsdlTestCaseDesktopPanel extends ModelItemDesktopPanel<WsdlTestCase
 		public void actionPerformed( ActionEvent e )
 		{
 			WsdlProject project = testCase.getTestSuite().getProject();
-//			try
-//			{
-//				if( StringUtils.hasContent( project.getPath() ) || project.getWorkspace() == null )
-//					project.save();
-//				else
-//					project.save( project.getWorkspace().getProjectRoot() );
-//			}
-//			catch( IOException e1 )
-//			{
-//				UISupport.showErrorMessage( "Failed to save project; " + e1 );
-//			}
+			//			try
+			//			{
+			//				if( StringUtils.hasContent( project.getPath() ) || project.getWorkspace() == null )
+			//					project.save();
+			//				else
+			//					project.save( project.getWorkspace().getProjectRoot() );
+			//			}
+			//			catch( IOException e1 )
+			//			{
+			//				UISupport.showErrorMessage( "Failed to save project; " + e1 );
+			//			}
 			// IntegrationUtils.removeLoadUILoadedProject( new File(
 			// project.getPath() ) );
 			if( IntegrationUtils.forceSaveProject( project ) )
 				IntegrationUtils.bringLoadUIToFront();
 		}
+	}
+
+	@Override
+	protected void renameModelItem()
+	{
+		SoapUIAction<ModelItem> renameAction = SoapUI.getActionRegistry().getAction( "RenameTestCaseAction" );
+		renameAction.perform( getModelItem(), null );
+	}
+
+	@Override
+	protected void cloneModelItem()
+	{
+		SoapUIAction<ModelItem> cloneAction = SoapUI.getActionRegistry().getAction( "CloneTestCaseAction" );
+		cloneAction.perform( getModelItem(), null );
 	}
 
 }

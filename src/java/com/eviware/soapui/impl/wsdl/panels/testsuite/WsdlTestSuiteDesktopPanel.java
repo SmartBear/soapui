@@ -1,5 +1,5 @@
 /*
- *  soapUI, copyright (C) 2004-2011 eviware.com 
+ *  soapUI, copyright (C) 2004-2011 smartbear.com 
  *
  *  soapUI is free software; you can redistribute it and/or modify it under the 
  *  terms of version 2.1 of the GNU Lesser General Public License as published by 
@@ -33,6 +33,7 @@ import javax.swing.JTextArea;
 import javax.swing.JToggleButton;
 import javax.swing.text.Document;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
 import com.eviware.soapui.impl.wsdl.actions.testsuite.AddNewTestCaseAction;
@@ -57,6 +58,7 @@ import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.action.SoapUIAction;
 import com.eviware.soapui.support.action.swing.SwingActionDelegate;
 import com.eviware.soapui.support.components.GroovyEditorComponent;
 import com.eviware.soapui.support.components.GroovyEditorInspector;
@@ -67,7 +69,7 @@ import com.eviware.soapui.support.components.JInspectorPanelFactory;
 import com.eviware.soapui.support.components.JUndoableTextArea;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.types.StringToObjectMap;
-import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
+import com.eviware.soapui.ui.support.KeySensitiveModelItemDesktopPanel;
 
 /**
  * DesktopPanel for WsdlTestSuite
@@ -76,7 +78,7 @@ import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
  */
 
 @SuppressWarnings( "serial" )
-public class WsdlTestSuiteDesktopPanel extends ModelItemDesktopPanel<WsdlTestSuite>
+public class WsdlTestSuiteDesktopPanel extends KeySensitiveModelItemDesktopPanel<WsdlTestSuite>
 {
 	private JProgressBar progressBar;
 	private JTestSuiteTestCaseList testCaseList;
@@ -545,6 +547,22 @@ public class WsdlTestSuiteDesktopPanel extends ModelItemDesktopPanel<WsdlTestSui
 	public WsdlTestSuiteRunner getTestSuiteRunner()
 	{
 		return testSuiteRunner;
+	}
+
+	@Override
+	protected void renameModelItem()
+	{
+		SoapUIAction<ModelItem> renameAction = SoapUI.getActionRegistry().getAction( "RenameTestSuiteAction" );
+		
+		renameAction.perform( getModelItem(), null );
+	}
+
+	@Override
+	protected void cloneModelItem()
+	{
+		SoapUIAction<ModelItem> cloneAction = SoapUI.getActionRegistry().getAction( "CloneTestSuiteAction" );
+		
+		cloneAction.perform( getModelItem(), null );
 	}
 
 }
