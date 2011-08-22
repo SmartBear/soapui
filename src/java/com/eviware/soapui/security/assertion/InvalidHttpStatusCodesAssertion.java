@@ -56,7 +56,7 @@ public class InvalidHttpStatusCodesAssertion extends WsdlMessageAssertion implem
 
 	public InvalidHttpStatusCodesAssertion( TestAssertionConfig assertionConfig, Assertable assertable )
 	{
-		super( assertionConfig, assertable, false, true, false, true );
+		super( assertionConfig, assertable, false, true, false, false );
 
 		init();
 	}

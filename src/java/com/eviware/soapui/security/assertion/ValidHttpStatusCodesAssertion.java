@@ -56,7 +56,7 @@ public class ValidHttpStatusCodesAssertion extends WsdlMessageAssertion implemen
 
 	public ValidHttpStatusCodesAssertion( TestAssertionConfig assertionConfig, Assertable assertable )
 	{
-		super( assertionConfig, assertable, false, true, false, true );
+		super( assertionConfig, assertable, false, true, false, false );
 
 		init();
 	}
