@@ -1,5 +1,5 @@
 /*
- *  soapUI, copyright (C) 2004-2011 eviware.com 
+ *  soapUI, copyright (C) 2004-2011 smartbear.com 
  *
  *  soapUI is free software; you can redistribute it and/or modify it under the 
  *  terms of version 2.1 of the GNU Lesser General Public License as published by 
@@ -47,6 +47,7 @@ import com.eviware.x.impl.swing.JComboBoxFormField;
  * @author robert
  * 
  */
+@SuppressWarnings( "serial" )
 public class InvalidTypesTable extends JPanel
 {
 
@@ -168,9 +169,20 @@ public class InvalidTypesTable extends JPanel
 
 		public void removeRows( int[] selectedRows )
 		{
+			@SuppressWarnings( "rawtypes" )
 			List toRemove = new ArrayList();
+			/*
+			 * since we are using TableRowSorter you need to cpnvert between view
+			 * and model.
+			 */
+			for( int i = 0; i < selectedRows.length; i++ )
+			{
+				selectedRows[i] = table.convertRowIndexToModel( selectedRows[i] );
+			}
 			for( int index : selectedRows )
+			{
 				toRemove.add( data.getTypesListList().get( index ) );
+			}
 			data.getTypesListList().removeAll( toRemove );
 			fireTableDataChanged();
 		}
