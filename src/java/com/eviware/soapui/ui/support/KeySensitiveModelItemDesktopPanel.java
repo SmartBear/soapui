@@ -17,6 +17,14 @@ import java.awt.event.KeyListener;
 
 import com.eviware.soapui.model.ModelItem;
 
+/**
+ * 
+ * Adds KeyListener to panels and handles it.
+ * 
+ * @author robert.nemet
+ *
+ * @param <T>
+ */
 @SuppressWarnings( "serial" )
 public abstract class KeySensitiveModelItemDesktopPanel<T extends ModelItem> extends ModelItemDesktopPanel<T> implements
 		KeyListener
@@ -64,9 +72,9 @@ public abstract class KeySensitiveModelItemDesktopPanel<T extends ModelItem> ext
 
 	}
 
-	protected abstract void renameModelItem();
+	protected void renameModelItem(){};
 	
-	protected abstract void cloneModelItem();
+	protected void cloneModelItem(){};
 	
 	
 }
