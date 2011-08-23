@@ -27,6 +27,7 @@ import com.eviware.soapui.config.SoapUIActionGroupConfig;
 import com.eviware.soapui.config.SoapUIActionMappingConfig;
 import com.eviware.soapui.config.SoapUIActionsConfig;
 import com.eviware.soapui.config.SoapuiActionsDocumentConfig;
+import com.eviware.soapui.impl.wsdl.loadtest.WsdlLoadTest;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 import com.eviware.soapui.support.action.support.DefaultActionMapping;
@@ -277,5 +278,12 @@ public class SoapUIActionRegistry
 	public <T extends ModelItem> SoapUIActionGroup<T> getActionGroup( String groupId )
 	{
 		return actionGroups.get( groupId );
+	}
+
+	public void performAction( String soapUIActionId, ModelItem modelItem, Object param )
+	{
+		SoapUIAction<ModelItem> action = getAction( soapUIActionId );
+		if( action != null )
+			action.perform( modelItem, param );
 	}
 }

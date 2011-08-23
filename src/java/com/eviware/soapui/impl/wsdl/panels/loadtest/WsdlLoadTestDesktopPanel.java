@@ -69,7 +69,7 @@ import com.eviware.soapui.support.components.JInspectorPanelFactory;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.ui.desktop.DesktopPanel;
 import com.eviware.soapui.ui.support.DesktopListenerAdapter;
-import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
+import com.eviware.soapui.ui.support.KeySensitiveModelItemDesktopPanel;
 import com.jgoodies.forms.builder.ButtonBarBuilder;
 
 /**
@@ -78,12 +78,12 @@ import com.jgoodies.forms.builder.ButtonBarBuilder;
  * @author Ole.Matzura
  */
 
-public class WsdlLoadTestDesktopPanel extends ModelItemDesktopPanel<WsdlLoadTest> implements PropertyChangeListener
+@SuppressWarnings( "serial" )
+public class WsdlLoadTestDesktopPanel extends KeySensitiveModelItemDesktopPanel<WsdlLoadTest> implements PropertyChangeListener
 {
 	private static final String SECONDS_LIMIT = "Seconds";
 	private static final String RUNS_LIMIT = "Total Runs";
 	private static final String RUNS_PER_THREAD_LIMIT = "Runs per Thread";
-	private JPanel contentPanel;
 	@SuppressWarnings( "unused" )
 	private JSplitPane mainSplit;
 	@SuppressWarnings( "unused" )
@@ -137,12 +137,15 @@ public class WsdlLoadTestDesktopPanel extends ModelItemDesktopPanel<WsdlLoadTest
 
 	private void buildUI()
 	{
-		contentPanel = new JPanel( new BorderLayout() );
+		// why we need contentPanel???!
+		
+//		contentPanel = new JPanel( new BorderLayout() );
 
-		contentPanel.add( buildToolbar(), BorderLayout.NORTH );
-		contentPanel.add( buildContent(), BorderLayout.CENTER );
+		add( buildToolbar(), BorderLayout.NORTH );
+		add( buildContent(), BorderLayout.CENTER );
 
-		contentPanel.setPreferredSize( new Dimension( 600, 500 ) );
+    	setPreferredSize( new Dimension( 600, 500 ) );
+//		add( contentPanel , BorderLayout.CENTER);
 	}
 
 	private JComponent buildContent()
@@ -382,10 +385,10 @@ public class WsdlLoadTestDesktopPanel extends ModelItemDesktopPanel<WsdlLoadTest
 		return release();
 	}
 
-	public JComponent getComponent()
-	{
-		return contentPanel;
-	}
+//	public JComponent getComponent()
+//	{
+//		return contentPanel;
+//	}
 
 	private final class InternalDesktopListener extends DesktopListenerAdapter
 	{
@@ -715,5 +718,17 @@ public class WsdlLoadTestDesktopPanel extends ModelItemDesktopPanel<WsdlLoadTest
 		{
 			WsdlLoadTestDesktopPanel.this.getModelItem().setTearDownScript( text );
 		}
+	}
+
+	@Override
+	protected void renameModelItem()
+	{
+		SoapUI.getActionRegistry().performAction( "RenameLoadTestAction", getModelItem(), null );
+	}
+
+	@Override
+	protected void cloneModelItem()
+	{
+		SoapUI.getActionRegistry().performAction( "CloneLoadTestAction", getModelItem(), null );
 	}
 }

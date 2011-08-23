@@ -77,7 +77,6 @@ import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.action.SoapUIAction;
 import com.eviware.soapui.support.action.swing.SwingActionDelegate;
 import com.eviware.soapui.support.components.GroovyEditorComponent;
 import com.eviware.soapui.support.components.GroovyEditorInspector;
@@ -807,15 +806,13 @@ public class WsdlTestCaseDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 	@Override
 	protected void renameModelItem()
 	{
-		SoapUIAction<ModelItem> renameAction = SoapUI.getActionRegistry().getAction( "RenameTestCaseAction" );
-		renameAction.perform( getModelItem(), null );
+		SoapUI.getActionRegistry().performAction( "RenameTestCaseAction", getModelItem(), null);
 	}
 
 	@Override
 	protected void cloneModelItem()
 	{
-		SoapUIAction<ModelItem> cloneAction = SoapUI.getActionRegistry().getAction( "CloneTestCaseAction" );
-		cloneAction.perform( getModelItem(), null );
+		SoapUI.getActionRegistry().performAction( "CloneTestCaseAction", getModelItem(), null );
 	}
 
 }

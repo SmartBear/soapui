@@ -81,7 +81,7 @@ import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.swing.AbstractListMouseListener;
 import com.eviware.soapui.support.swing.ModelItemListKeyListener;
 import com.eviware.soapui.support.swing.ModelItemListMouseListener;
-import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
+import com.eviware.soapui.ui.support.KeySensitiveModelItemDesktopPanel;
 
 /**
  * DesktopPanel for WsdlMockServices
@@ -89,7 +89,9 @@ import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
  * @author ole.matzura
  */
 
-public class WsdlMockServiceDesktopPanel extends ModelItemDesktopPanel<WsdlMockService>
+
+@SuppressWarnings( "serial" )
+public class WsdlMockServiceDesktopPanel extends KeySensitiveModelItemDesktopPanel<WsdlMockService>
 {
 	private JButton runButton;
 	private WsdlMockRunner mockRunner;
@@ -969,5 +971,17 @@ public class WsdlMockServiceDesktopPanel extends ModelItemDesktopPanel<WsdlMockS
 				}
 			};
 		}
+	}
+
+	@Override
+	protected void renameModelItem()
+	{
+		SoapUI.getActionRegistry().performAction( "RenameMockServiceAction", getModelItem(), null );
+	}
+
+	@Override
+	protected void cloneModelItem()
+	{
+		SoapUI.getActionRegistry().performAction( "CloneMockServiceAction", getModelItem(), null );
 	}
 }

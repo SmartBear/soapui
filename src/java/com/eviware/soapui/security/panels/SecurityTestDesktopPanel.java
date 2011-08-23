@@ -39,6 +39,7 @@ import javax.swing.ListModel;
 import javax.swing.SwingConstants;
 import javax.swing.text.Document;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.panels.support.MockSecurityTestRunner;
 import com.eviware.soapui.impl.wsdl.panels.testcase.actions.SetCredentialsAction;
@@ -83,7 +84,7 @@ import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.dnd.JListDragAndDropable;
 import com.eviware.soapui.support.swing.ComponentBag;
 import com.eviware.soapui.support.types.StringToObjectMap;
-import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
+import com.eviware.soapui.ui.support.KeySensitiveModelItemDesktopPanel;
 
 /**
  * SecurityTest desktop panel
@@ -97,7 +98,7 @@ import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
  */
 
 @SuppressWarnings( "serial" )
-public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest>
+public class SecurityTestDesktopPanel extends KeySensitiveModelItemDesktopPanel<SecurityTest>
 {
 	private JSecurityTestTestStepList testStepList;
 	private JProgressBar progressBar;
@@ -861,5 +862,17 @@ public class SecurityTestDesktopPanel extends ModelItemDesktopPanel<SecurityTest
 					securityStatus = ResultStatus.OK;
 			}
 		}
+	}
+	
+	@Override
+	protected void renameModelItem()
+	{
+		SoapUI.getActionRegistry().performAction( "RenameSecurityTestAction", getModelItem(), null );
+	}
+
+	@Override
+	protected void cloneModelItem()
+	{
+		SoapUI.getActionRegistry().performAction( "CloneSecurityTestAction", getModelItem(), null );		
 	}
 }
