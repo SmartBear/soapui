@@ -1,5 +1,5 @@
 /*
- *  soapUI, copyright (C) 2004-2011 eviware.com 
+ *  soapUI, copyright (C) 2004-2011 smartbear.com 
  *
  *  soapUI is free software; you can redistribute it and/or modify it under the 
  *  terms of version 2.1 of the GNU Lesser General Public License as published by 
@@ -68,7 +68,7 @@ public class SetCredentialsAction extends AbstractAction
 		dialog = new JDialog( UISupport.getMainFrame(), "Set TestCase Credentials" );
 		form = new SimpleForm();
 		form.appendTextField( USERNAME, "Username to use for authentication" );
-		form.appendTextField( PASSWORD, "Password to use for authentication" );
+		form.appendPasswordField( PASSWORD, "Password to use for authentication" );
 		form.appendTextField( DOMAIN, "Domain to specify (for NTLM)" );
 		form.getPanel().setBorder( BorderFactory.createEmptyBorder( 0, 0, 10, 0 ) );
 
