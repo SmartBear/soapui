@@ -1,5 +1,5 @@
 /*
- *  soapUI, copyright (C) 2004-2011 eviware.com 
+ *  soapUI, copyright (C) 2004-2011 smartbear.com 
  *
  *  soapUI is free software; you can redistribute it and/or modify it under the 
  *  terms of version 2.1 of the GNU Lesser General Public License as published by 
@@ -618,6 +618,8 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 
 		public synchronized void onMockResult( MockResult result )
 		{
+			System.out.println( "in onMockResult for [" + getName() + "] for result " + result.hashCode() );
+
 			// is this for us?
 			if( this.lastResult == null && waiting && result.getMockResponse() == testMockResponse )
 			{
@@ -628,8 +630,10 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 				notifyPropertyChanged( "lastResult", null, lastResult );
 
 				// stop runner -> NO, we can't stop, mockengine is still writing
-				// response..
-				// mockRunner.stop();
+				// response.. 
+				// actually we have to - but this is not a problem if soapUI has been configured to leave the mockengine running 
+				// in which case it won't terminate the connector during the response
+				mockRunner.stop();
 
 				// testMockResponse.setMockResult( null );
 
@@ -1417,40 +1421,40 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 		}
 	}
 
+	private void startListening( TestCaseRunContext runContext )
+	{
+		if( testMockResponse == null )
+		{
+			initTestMockResponse( runContext );
+		}
+		else if( !mockRunner.isRunning() )
+		{
+			try
+			{
+				mockRunner.start();
+			}
+			catch( Exception e )
+			{
+				SoapUI.logError( e );
+			}
+		}
+		mockRunListener.setWaiting( true );
+	}
+
 	private class InternalTestRunListener extends TestRunListenerAdapter
 	{
 		@Override
 		public void beforeStep( TestCaseRunner testRunner, TestCaseRunContext runContext, TestStep testStep )
 		{
-			if( runContext.getCurrentStep() == startTestStep && testMockResponse == null )
+			if( runContext.getCurrentStep() == startTestStep )
 			{
 				if( startTestStep instanceof WsdlMockResponseTestStep )
 				{
-					// WsdlMockResponseTestStep testStep = (WsdlMockResponseTestStep)
-					// startTestStep;
-					//
-					// if( testStep.getLastResult() != null )
-					// {
-					// System.out.println( "StartStep [" + testStep.getName() +
-					// "] already has result; preparing [" + getName() + "]" );
-					// initTestMockResponse( runContext );
-					// mockRunListener.setWaiting( true );
-					// }
-					// else
-					// {
-					// System.out.println( "Adding StartStepMockRunListener from [" +
-					// getName() + "] to [" + startTestStep.getName() + "]" );
-					// startStepMockRunListener = new StartStepMockRunListener(
-					// runContext, (WsdlMockResponseTestStep) startTestStep );
-					// }
+					// do nothing - this is done in the StartStepMockRunListener instead
 				}
 				else
 				{
-					initTestMockResponse( runContext );
-					if( mockRunListener != null )
-					{
-						mockRunListener.setWaiting( true );
-					}
+					startListening( runContext );
 				}
 			}
 		}
@@ -1477,9 +1481,8 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 
 		public void propertyChange( PropertyChangeEvent evt )
 		{
-			System.out.println( "Starting to listen for request to " + getName() );
-			initTestMockResponse( runContext );
-			mockRunListener.setWaiting( true );
+			//			System.out.println( "Starting to listen for request to " + getName() );
+			startListening( runContext );
 		}
 	}
 
