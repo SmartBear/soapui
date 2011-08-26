@@ -1,5 +1,5 @@
 /*
- *  soapUI, copyright (C) 2004-2011 eviware.com 
+ *  soapUI, copyright (C) 2004-2011 smartbear.com 
  *
  *  soapUI is free software; you can redistribute it and/or modify it under the 
  *  terms of version 2.1 of the GNU Lesser General Public License as published by 
@@ -37,6 +37,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.TransferHandler;
+import javax.swing.UIDefaults;
+import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -56,6 +58,7 @@ import com.eviware.soapui.support.StringUtils;
  * @author Ole.Matzura
  */
 
+@SuppressWarnings( "serial" )
 public class JPropertiesTable<T> extends JPanel
 {
 	public final static Object[] BOOLEAN_OPTIONS = new Object[] { Boolean.TRUE, Boolean.FALSE };
@@ -87,13 +90,34 @@ public class JPropertiesTable<T> extends JPanel
 
 		add( new JScrollPane( table ), BorderLayout.CENTER );
 		titledBorder = BorderFactory.createTitledBorder( BorderFactory.createEmptyBorder(), title );
-		titledBorder.setTitleFont( titledBorder.getTitleFont().deriveFont( Font.PLAIN, 11 ) );
+		/*
+		 * Java 7 issue
+		 * 
+		 * old: titledBorder.setTitleFont( titledBorder.getTitleFont().deriveFont(
+		 * Font.PLAIN, 11 ) ); titledBorder.getTitleFont() return null in Java 7
+		 */
+		Font defaultUIFont = getUIDefaultFont();
+		if( defaultUIFont != null )
+			titledBorder.setTitleFont( getUIDefaultFont().deriveFont( Font.PLAIN, 11 ) );
 
 		if( title != null )
 			setBorder( titledBorder );
 
 		table.setBackground( Color.WHITE );
 		setPreferredSize( table.getPreferredSize() );
+	}
+
+	private Font getUIDefaultFont()
+	{
+		UIDefaults uidefs = UIManager.getLookAndFeelDefaults();
+		for( Object key : uidefs.keySet() )
+		{
+			if( uidefs.get( key ) instanceof Font )
+			{
+				return uidefs.getFont( key );
+			}
+		}
+		return null;
 	}
 
 	public void setTitle( String title )

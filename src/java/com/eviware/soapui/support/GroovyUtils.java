@@ -18,9 +18,11 @@ import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.DriverPropertyInfo;
 import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import org.apache.xmlbeans.XmlException;
 import org.w3c.dom.Node;
@@ -150,6 +152,19 @@ public class GroovyUtils
 		public boolean jdbcCompliant()
 		{
 			return this.driver.jdbcCompliant();
+		}
+
+		/* (non-Javadoc)
+		 * @see java.sql.Driver#getParentLogger()
+		 * 
+		 *  Java 7 issue
+		 *  
+		 *  this method is need by java.sql.Driver interface in Java 7
+		 */
+		public Logger getParentLogger() throws SQLFeatureNotSupportedException
+		{
+			// TODO Auto-generated method stub
+			return null;
 		}
 	}
 }
