@@ -416,9 +416,11 @@ public class SoapUI
 		helpMenu.addSeparator();
 		helpMenu.add( new VersionUpdateAction() );
 		helpMenu.addSeparator();
-		helpMenu.add( new OpenUrlAction( "soapui.org", "http://www.soapui.org" ) );
 		helpMenu.add( new ShowOnlineHelpAction( "soapUI Pro Trial", HelpUrls.TRIAL_URL,
 				"Apply for soapUI Pro Trial License", "/favicon.png" ) );
+		helpMenu.addSeparator();
+		helpMenu.add( new OpenUrlAction( "soapui.org", "http://www.soapui.org" ) );
+		helpMenu.add( new OpenUrlAction( "smartbear.com", "http://smartbear.com" ) );
 		helpMenu.addSeparator();
 		helpMenu.add( new AboutAction() );
 		return helpMenu;
