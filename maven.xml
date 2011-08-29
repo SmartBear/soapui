@@ -730,6 +730,7 @@ URL=http://www.soapui.org]]>
           <variable name="SIGNTOOL_PATH" value="${maven.install4j.signtool}"/>
           <variable name="CERT_PATH" value="${maven.install4j.cert}"/>
           <variable name="WIN_DLLS_PATH" value="${maven.install4j.cert}"/>
+          <variable name="CERT_PASS" value="${maven.install4j.cert.pass}"/>
           <variable name="HERMES_INSTALLER" value="${maven.hermes.installer}"/>
           <variable name="LOADUI_DOWNLOADER" value="${maven.loadUI.downloader}"/>
           <variable name="LOADUI_INSTALLER_URL" value="${maven.loadUI.installer.url}"/>
