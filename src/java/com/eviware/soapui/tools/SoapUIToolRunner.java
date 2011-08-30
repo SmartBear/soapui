@@ -46,6 +46,7 @@ public class SoapUIToolRunner extends AbstractSoapUIRunner implements ToolHost, 
 
 	private RunnerStatus status;
 	private String projectPassword;
+	private String[] runnerGlobalProperties = new String[] {};
 
 	public static String TITLE = "soapUI " + SoapUI.SOAPUI_VERSION + " Tool Runner";
 
@@ -242,13 +243,19 @@ public class SoapUIToolRunner extends AbstractSoapUIRunner implements ToolHost, 
 
 		if( cmd.hasOption( "G" ) )
 		{
-			setGlobalProperties( cmd.getOptionValues( "G" ) );
+			runnerGlobalProperties = cmd.getOptionValues( "G" );
 		}
 
 		if( cmd.hasOption( "f" ) )
 			setOutputFolder( cmd.getOptionValue( "f" ) );
 
 		return true;
+	}
+
+	@Override
+	protected String[] getRunnerGlobalProperties()
+	{
+		return runnerGlobalProperties;
 	}
 
 	public void setProjectPassword( String projectPassword )
