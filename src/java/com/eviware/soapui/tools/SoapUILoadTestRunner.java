@@ -64,7 +64,6 @@ public class SoapUILoadTestRunner extends AbstractSoapUITestRunner implements Lo
 	private int limit = -1;
 	private long threadCount = -1;
 	private boolean saveAfterRun;
-	private String[] runnerGlobalProperties = new String[] {};
 
 	public static String TITLE = "soapUI " + SoapUI.SOAPUI_VERSION + " LoadTest Runner";
 
@@ -150,7 +149,7 @@ public class SoapUILoadTestRunner extends AbstractSoapUITestRunner implements Lo
 
 		if( cmd.hasOption( "G" ) )
 		{
-			runnerGlobalProperties = cmd.getOptionValues( "G" );
+			setGlobalProperties( cmd.getOptionValues( "G" ) );
 		}
 
 		if( cmd.hasOption( "P" ) )
@@ -165,12 +164,6 @@ public class SoapUILoadTestRunner extends AbstractSoapUITestRunner implements Lo
 		}
 
 		return true;
-	}
-
-	@Override
-	protected String[] getRunnerGlobalProperties()
-	{
-		return runnerGlobalProperties;
 	}
 
 	public void setLimit( int limit )

@@ -40,7 +40,6 @@ import com.eviware.soapui.model.project.ProjectFactoryRegistry;
 import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.model.support.ProjectRunListenerAdapter;
 import com.eviware.soapui.model.testsuite.Assertable;
-import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
 import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.model.testsuite.ProjectRunContext;
 import com.eviware.soapui.model.testsuite.ProjectRunner;
@@ -48,13 +47,14 @@ import com.eviware.soapui.model.testsuite.TestAssertion;
 import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
-import com.eviware.soapui.model.testsuite.TestRunner.Status;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
-import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
 import com.eviware.soapui.model.testsuite.TestSuite;
-import com.eviware.soapui.model.testsuite.TestSuite.TestSuiteRunType;
 import com.eviware.soapui.model.testsuite.TestSuiteRunner;
+import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
+import com.eviware.soapui.model.testsuite.TestRunner.Status;
+import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
+import com.eviware.soapui.model.testsuite.TestSuite.TestSuiteRunType;
 import com.eviware.soapui.report.JUnitReportCollector;
 import com.eviware.soapui.report.JUnitSecurityReportCollector;
 import com.eviware.soapui.support.StringUtils;
@@ -88,7 +88,7 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 	private int testSuiteCount;
 	private int testCaseCount;
 	private int testStepCount;
-
+	
 	private int testAssertionCount;
 
 	private boolean printReport;
@@ -101,7 +101,6 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 	// protected WsdlProject project;
 	private String projectPassword;
 	private boolean saveAfterRun;
-	private String[] runnerGlobalProperties = new String[] {};
 
 	/**
 	 * Runs the tests in the specified soapUI project file, see soapUI xdocs for
@@ -172,7 +171,7 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 
 		if( cmd.hasOption( "G" ) )
 		{
-			runnerGlobalProperties = cmd.getOptionValues( "G" );
+			setGlobalProperties( cmd.getOptionValues( "G" ) );
 		}
 
 		if( cmd.hasOption( "P" ) )
@@ -204,12 +203,6 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 		}
 
 		return true;
-	}
-
-	@Override
-	protected String[] getRunnerGlobalProperties()
-	{
-		return runnerGlobalProperties;
 	}
 
 	public void setMaxErrors( int maxErrors )
@@ -804,7 +797,7 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 	{
 		return failedTests;
 	}
-
+	
 	public List<TestAssertion> getAssertions()
 	{
 		return assertions;
@@ -829,7 +822,7 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 	{
 		return assertionResults;
 	}
-
+	
 	public int getTestStepCount()
 	{
 		return testStepCount;

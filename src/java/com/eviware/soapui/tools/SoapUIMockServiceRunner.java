@@ -50,7 +50,6 @@ public class SoapUIMockServiceRunner extends AbstractSoapUIRunner
 	private String projectPassword;
 	private WsdlProject project;
 	private boolean saveAfterRun;
-	private String[] runnerGlobalProperties = new String[] {};
 
 	public static String TITLE = "soapUI " + SoapUI.SOAPUI_VERSION + " MockService Runner";
 
@@ -288,7 +287,7 @@ public class SoapUIMockServiceRunner extends AbstractSoapUIRunner
 
 		if( cmd.hasOption( "G" ) )
 		{
-			runnerGlobalProperties = cmd.getOptionValues( "G" );
+			setGlobalProperties( cmd.getOptionValues( "G" ) );
 		}
 
 		if( cmd.hasOption( "P" ) )
@@ -297,12 +296,6 @@ public class SoapUIMockServiceRunner extends AbstractSoapUIRunner
 		}
 
 		return true;
-	}
-
-	@Override
-	protected String[] getRunnerGlobalProperties()
-	{
-		return runnerGlobalProperties;
 	}
 
 	public void setProjectPassword( String projectPassword )

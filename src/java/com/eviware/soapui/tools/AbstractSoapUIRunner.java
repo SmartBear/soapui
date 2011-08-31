@@ -15,7 +15,9 @@ package com.eviware.soapui.tools;
 import java.io.File;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -53,6 +55,7 @@ public abstract class AbstractSoapUIRunner implements CmdLineRunner
 	private boolean enableUI;
 	private String outputFolder;
 	private String[] projectProperties;
+	private Map<String, String> runnerGlobalProperties = new HashMap<String, String>();
 
 	public AbstractSoapUIRunner( String title )
 	{
@@ -143,7 +146,10 @@ public abstract class AbstractSoapUIRunner implements CmdLineRunner
 			SoapUI.setSoapUICore( createSoapUICore(), true );
 			SoapUI.initGCTimer();
 		}
-		setGlobalProperties( getRunnerGlobalProperties() );
+		for( String name : runnerGlobalProperties.keySet() )
+		{
+			PropertyExpansionUtils.getGlobalProperties().setPropertyValue( name, runnerGlobalProperties.get( name ) );
+		}
 
 		SoapUIClassLoaderState state = SoapUIExtensionClassLoader.ensure();
 
@@ -178,12 +184,6 @@ public abstract class AbstractSoapUIRunner implements CmdLineRunner
 	protected abstract SoapUIOptions initCommandLineOptions();
 
 	protected abstract boolean runRunner() throws Exception;
-
-	/**
-	 * method for getting global properties which are set when launching the
-	 * runner introduced for setting properties after creating the soapUI core
-	 */
-	protected abstract String[] getRunnerGlobalProperties();
 
 	protected String getCommandLineOptionSubstSpace( CommandLine cmd, String key )
 	{
@@ -363,7 +363,8 @@ public abstract class AbstractSoapUIRunner implements CmdLineRunner
 				String name = option.substring( 0, ix );
 				String value = option.substring( ix + 1 );
 				log.info( "Setting global property [" + name + "] to [" + value + "]" );
-				PropertyExpansionUtils.getGlobalProperties().setPropertyValue( name, value );
+				//				PropertyExpansionUtils.getGlobalProperties().setPropertyValue( name, value );
+				runnerGlobalProperties.put( name, value );
 			}
 		}
 	}

@@ -192,10 +192,4 @@ public class SoapUIMockAsWarGenerator extends AbstractSoapUIRunner
 	{
 		this.warFile = warFile;
 	}
-
-	@Override
-	protected String[] getRunnerGlobalProperties()
-	{
-		return new String[] {};
-	}
 }
