@@ -205,7 +205,7 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 		@Override
 		public void navigationFinished( NavigationFinishedEvent evt )
 		{
-			if( evt.getUrl().equals( SoapUI.PUSH_PAGE_URL ) && !( NavigationStatusCode.OK == evt.getStatusCode() ) )
+			if( evt.getUrl().equals( SoapUI.PUSH_PAGE_URL ) && !( evt.getStatusCode().equals( NavigationStatusCode.OK ) ) )
 				browser.navigate( SoapUI.PUSH_PAGE_ERROR_URL );
 		}
 	}
