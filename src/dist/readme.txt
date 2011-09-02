@@ -1,6 +1,13 @@
 Welcome to soapUI!
 
-2011-06-14 : 4.0 Final 
+2011-09-12 : 4.0.1 Bugs Fixed
+-------------------------------------------------------------------------------
+Please see http://soapui.org/About-SoapUI/soapui-40-bugs-fixed.html for an overview 
+of the bugs fixed in this release.
+
+
+
+2011-06-14 : 4.0 The Security Release - Final 
 -------------------------------------------------------------------------------
 Please see http://www.soapui.org/About-SoapUI/whats-new-in-soapui-40.html for an overview 
 of all the new great features and more details on fixes in the final release!
