@@ -1,5 +1,5 @@
 /*
- *  soapUI, copyright (C) 2004-2011 eviware.com 
+ *  soapUI, copyright (C) 2004-2011 smartbear.com 
  *
  *  soapUI is free software; you can redistribute it and/or modify it under the 
  *  terms of version 2.1 of the GNU Lesser General Public License as published by 
@@ -16,8 +16,11 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
+import java.net.Proxy;
 import java.net.URL;
+import java.net.URLConnection;
 
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
@@ -37,11 +40,16 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.wsdl.support.http.ProxyUtils;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
+import com.eviware.soapui.model.settings.Settings;
+import com.eviware.soapui.settings.ProxySettings;
 import com.eviware.x.form.XFormDialog;
 
 public class SoapUIVersionUpdate
 {
-	private static final String LATEST_VERSION_XML_LOCATION = "http://www.soapui.org/version/soapui-version.xml";
+	private static final String LATEST_VERSION_XML_LOCATION = "http://dl.eviware.com/version-update/soapui-version.xml";
 	public static final String VERSION_TO_SKIP = SoapUI.class.getName() + "@versionToSkip";
 	protected static final String NO_RELEASE_NOTES_INFO = "<tr><td>Sorry! No Release notes currently available.</td></tr>";
 
@@ -54,20 +62,41 @@ public class SoapUIVersionUpdate
 	private String downloadLinkCore;
 	private String downloadLinkPro;
 
-	public void getLatestVersionAvailable( URL versionUrl )
+	public void getLatestVersionAvailable( URL versionUrl ) throws Exception
 	{
 		try
 		{
 
+			URLConnection connection = null;
+			if( ProxyUtils.isProxyEnabled() )
+			{
+				Settings settings = SoapUI.getSettings();
+				PropertyExpansionContext context = null;
+
+				// check system properties first
+				String proxyHost = System.getProperty( "http.proxyHost" );
+				String proxyPort = System.getProperty( "http.proxyPort" );
+
+				if( proxyHost == null )
+					proxyHost = PropertyExpander.expandProperties( context, settings.getString( ProxySettings.HOST, "" ) );
+
+				if( proxyPort == null )
+					proxyPort = PropertyExpander.expandProperties( context, settings.getString( ProxySettings.PORT, "" ) );
+				Proxy proxy = new Proxy( Proxy.Type.HTTP, new InetSocketAddress( proxyHost, Integer.parseInt( proxyPort ) ) );
+
+				connection = versionUrl.openConnection( proxy );
+
+			}
+			else
+			{
+				connection = versionUrl.openConnection();
+			}
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 			DocumentBuilder db = dbf.newDocumentBuilder();
-			Document doc = db.parse( versionUrl.openStream() );
+			Document doc = db.parse( connection.getInputStream() );
 			doc.getDocumentElement().normalize();
 			NodeList nodeLst = doc.getElementsByTagName( "version" );
 
-			// in case we decide to have separate entries for core/pro minor/major 
-			//			for( int s = 0; s < nodeLst.getLength(); s++ )
-			//			{
 			Node fstNode = nodeLst.item( 0 );
 
 			if( fstNode.getNodeType() == Node.ELEMENT_NODE )
@@ -100,11 +129,11 @@ public class SoapUIVersionUpdate
 				NodeList proDownloadNts = proDownloadNtsElmnt.getChildNodes();
 				downloadLinkPro = ( ( Node )proDownloadNts.item( 0 ) ).getNodeValue().toString();
 			}
-			//			}
 		}
 		catch( Exception e )
 		{
-			SoapUI.logError( e );
+			SoapUI.logError( e, "Network Error for Version Update or Proxy" );
+			throw e;
 		}
 	}
 
@@ -233,11 +262,7 @@ public class SoapUIVersionUpdate
 		}
 		catch( Exception e )
 		{
-			if( helpAction )
-			{
-				// TODO check if info needs to be shown about corrupted functionality
-				UISupport.showInfoMessage( "Currently no new version available", "No New Version" );
-			}
+			UISupport.showErrorMessage( "Could not check for new version due network problem!" );
 			return;
 		}
 		if( isNewReleaseAvailable() && ( !skipThisVersion() || helpAction ) )
