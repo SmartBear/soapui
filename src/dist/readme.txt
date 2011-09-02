@@ -1012,4 +1012,4 @@ Get started by running one of the soapUI scripts in the bin folder..
 Good Luck and happy soaping!
 
 Ole
-ole@eviware.com
+ole.lensmar@smartbear.com
