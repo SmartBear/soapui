@@ -92,9 +92,10 @@ public class HttpRequestFilter extends AbstractRequestFilter
 			String value = PropertyExpander.expandProperties( context, param.getValue() );
 			responseProperties.put( param.getName(), value );
 
-			List<String> valueParts = sendEmptyParameters( request ) ? RestUtils.splitMultipleParametersEmptyIncluded(
-					value, request.getMultiValueDelimiter() ) : RestUtils.splitMultipleParameters( value,
-					request.getMultiValueDelimiter() );
+			List<String> valueParts = sendEmptyParameters( request )
+					|| ( !StringUtils.hasContent( value ) && param.getRequired() ) ? RestUtils
+					.splitMultipleParametersEmptyIncluded( value, request.getMultiValueDelimiter() ) : RestUtils
+					.splitMultipleParameters( value, request.getMultiValueDelimiter() );
 
 			// skip HEADER and TEMPLATE parameter encoding (TEMPLATE is encoded by
 			// the URI handling further down)
