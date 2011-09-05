@@ -221,32 +221,22 @@ public class HttpRequestFilter extends AbstractRequestFilter
 			{
 				// URI(String) automatically URLencodes the input, so we need to
 				// decode it first...
-				URI uri = new URI( URIUtils.createURI( oldUri.getScheme(), oldUri.getHost(), oldUri.getPort(), path,
-						oldUri.getQuery(), oldUri.getFragment() ).toString(), false );
-				httpMethod.setURI( new java.net.URI( uri.toString() ) );
+				httpMethod.setURI( URIUtils.createURI( oldUri.getScheme(), oldUri.getHost(), oldUri.getPort(), path,
+							oldUri.getQuery(), oldUri.getFragment() ) );
 			}
 			catch( Exception e )
 			{
 				SoapUI.logError( e );
-
-				try
-				{
-					httpMethod.setURI( URIUtils.createURI( oldUri.getScheme(), oldUri.getHost(), oldUri.getPort(), path,
-							oldUri.getQuery(), oldUri.getFragment() ) );
-				}
-				catch( URISyntaxException e1 )
-				{
-					SoapUI.logError( e1 );
-				}
 			}
 		}
 
 		if( query.length() > 0 && !request.isPostQueryString() )
 		{
+			java.net.URI oldUri = httpMethod.getURI();
+		
 			try
 			{
-				URI uri = ( URI )context.getProperty( BaseHttpRequestTransport.REQUEST_URI );
-				java.net.URI tempUri = URIUtils.createURI( uri.getScheme(), uri.getHost(), uri.getPort(), path,
+				java.net.URI tempUri = URIUtils.createURI( oldUri.getScheme(), oldUri.getHost(), oldUri.getPort(), oldUri.getPath(),
 						query.toString(), null );
 				context.setProperty( BaseHttpRequestTransport.REQUEST_URI, new URI( tempUri.toString(), false ) );
 				httpMethod.setURI( tempUri );
