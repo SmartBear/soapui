@@ -1195,7 +1195,7 @@ else return "";</string>
                         </void>
                       </void>
                       <void property="programGroupName">
-                        <string>${compiler:sys.fullName}</string>
+                        <string>SmartBear\${compiler:sys.fullName}</string>
                       </void>
                     </object>
                   </java>
