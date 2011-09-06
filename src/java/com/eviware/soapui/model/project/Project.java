@@ -92,4 +92,5 @@ public interface Project extends TestModelItem
 	public void inspect();
 
 	public int getIndexOfTestSuite( TestSuite testSuite );
+
 }

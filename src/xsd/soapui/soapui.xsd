@@ -80,6 +80,9 @@
 					</xsd:element>
 					<xsd:element name="sensitiveInformation" type="tns:SensitiveInformation"
 						maxOccurs="1" minOccurs="0"></xsd:element>
+					<xsd:element name="environment" type="tns:Environment"
+						maxOccurs="unbounded" minOccurs="0">
+					</xsd:element>
 				</xsd:sequence>
 				<xsd:attribute name="soapui-version" type="xsd:string">
 				</xsd:attribute>
@@ -91,6 +94,8 @@
 				<xsd:attribute name="runType" type="tns:TestSuiteRunTypes">
 				</xsd:attribute>
 				<xsd:attribute name="scriptLibrary" type="xsd:string"></xsd:attribute>
+				<xsd:attribute name="activeEnvironment" type="xsd:string">
+				</xsd:attribute>
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
@@ -1900,18 +1905,17 @@
 					<xsd:element name="tearDownScript" type="tns:Script"
 						maxOccurs="1" minOccurs="0">
 					</xsd:element>
-					<xsd:element name="testStepSecurityTest"
-						type="tns:TestStepSecurityTest" maxOccurs="unbounded"
-						minOccurs="1">
+					<xsd:element name="testStepSecurityTest" type="tns:TestStepSecurityTest"
+						maxOccurs="unbounded" minOccurs="1">
 					</xsd:element>
-					<xsd:element name="properties"
-						type="tns:PropertiesType" maxOccurs="1" minOccurs="0">
+					<xsd:element name="properties" type="tns:PropertiesType"
+						maxOccurs="1" minOccurs="0">
 					</xsd:element>
 					<xsd:element name="reportScript" type="tns:Script"
 						minOccurs="0" maxOccurs="1">
 					</xsd:element>
-					<xsd:element name="reportParameters"
-						type="tns:PropertiesType" minOccurs="0" maxOccurs="1">
+					<xsd:element name="reportParameters" type="tns:PropertiesType"
+						minOccurs="0" maxOccurs="1">
 					</xsd:element>
 				</xsd:sequence>
 				<xsd:attribute name="failOnError" type="xsd:boolean"></xsd:attribute>
@@ -1931,23 +1935,21 @@
 			<xsd:extension base="tns:ModelItem">
 				<xsd:sequence>
 					<xsd:element name="config" type="xsd:anyType"></xsd:element>
-					<xsd:element name="assertion"
-						type="tns:TestAssertion" maxOccurs="unbounded" minOccurs="0">
+					<xsd:element name="assertion" type="tns:TestAssertion"
+						maxOccurs="unbounded" minOccurs="0">
 					</xsd:element>
 					<xsd:element name="testStep" type="tns:TestStep"></xsd:element>
-					<xsd:element name="checkedPameters"
-						type="tns:CheckedParametersList" minOccurs="1" maxOccurs="1">
+					<xsd:element name="checkedPameters" type="tns:CheckedParametersList"
+						minOccurs="1" maxOccurs="1">
 					</xsd:element>
-					<xsd:element name="checkedParameters"
-						type="tns:CheckedParametersList" minOccurs="1" maxOccurs="1">
+					<xsd:element name="checkedParameters" type="tns:CheckedParametersList"
+						minOccurs="1" maxOccurs="1">
 					</xsd:element>
-					<xsd:element name="executionStrategy"
-						type="tns:ExecutionStrategy">
+					<xsd:element name="executionStrategy" type="tns:ExecutionStrategy">
 					</xsd:element>
 				</xsd:sequence>
 				<xsd:attribute name="type" type="xsd:string"></xsd:attribute>
-				<xsd:attribute name="applyForFailedStep"
-					type="xsd:boolean">
+				<xsd:attribute name="applyForFailedStep" type="xsd:boolean">
 				</xsd:attribute>
 				<xsd:attribute name="disabled" type="xsd:boolean"></xsd:attribute>
 			</xsd:extension>
@@ -1959,20 +1961,18 @@
 			<xsd:extension base="tns:ModelItem">
 				<xsd:sequence>
 					<xsd:element name="config" type="xsd:anyType"></xsd:element>
-					<xsd:element name="assertion"
-						type="tns:TestAssertion" maxOccurs="unbounded" minOccurs="0">
+					<xsd:element name="assertion" type="tns:TestAssertion"
+						maxOccurs="unbounded" minOccurs="0">
 					</xsd:element>
 					<xsd:element name="testStep" type="tns:TestStep"></xsd:element>
-					<xsd:element name="checkedParameters"
-						type="tns:CheckedParametersList" minOccurs="1" maxOccurs="1">
+					<xsd:element name="checkedParameters" type="tns:CheckedParametersList"
+						minOccurs="1" maxOccurs="1">
 					</xsd:element>
-					<xsd:element name="executionStrategy"
-						type="tns:ExecutionStrategy">
+					<xsd:element name="executionStrategy" type="tns:ExecutionStrategy">
 					</xsd:element>
 				</xsd:sequence>
 				<xsd:attribute name="type" type="xsd:string"></xsd:attribute>
-				<xsd:attribute name="applyForFailedStep"
-					type="xsd:boolean">
+				<xsd:attribute name="applyForFailedStep" type="xsd:boolean">
 				</xsd:attribute>
 				<xsd:attribute name="disabled" type="xsd:boolean"></xsd:attribute>
 				<xsd:attribute name="runOnlyOnce" type="xsd:boolean"></xsd:attribute>
@@ -2255,4 +2255,38 @@
 			<xsd:element name="numberOfRequest" type="xsd:int"></xsd:element>
 		</xsd:sequence>
 	</xsd:complexType>
+
+
+	<xsd:complexType name="Environment">
+		<xsd:complexContent>
+			<xsd:extension base="tns:ModelItem">
+				<xsd:sequence>
+					<xsd:element name="service" type="tns:Service"
+						maxOccurs="unbounded" minOccurs="0">
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<xsd:complexType name="Service">
+		<xsd:complexContent>
+			<xsd:extension base="tns:ModelItem">
+				<xsd:sequence>
+					<xsd:element name="interfaceId" type="xsd:string"
+						maxOccurs="1" minOccurs="1">
+					</xsd:element>
+					<xsd:element name="endpoint" type="tns:Endpoint"
+						maxOccurs="1" minOccurs="0">
+					</xsd:element>
+				</xsd:sequence>
+				<xsd:attribute name="proxyHost" type="xsd:string"></xsd:attribute>
+				<xsd:attribute name="proxyPort" type="xsd:string"></xsd:attribute>
+				<xsd:attribute name="proxyUsername" type="xsd:string"></xsd:attribute>
+				<xsd:attribute name="proxyPassword" type="xsd:string"></xsd:attribute>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+
 </xsd:schema>

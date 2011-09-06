@@ -139,7 +139,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 	protected List<AbstractInterface<?>> interfaces = new ArrayList<AbstractInterface<?>>();
 	protected List<WsdlTestSuite> testSuites = new ArrayList<WsdlTestSuite>();
 	protected List<WsdlMockService> mockServices = new ArrayList<WsdlMockService>();
-	private Set<ProjectListener> projectListeners = new HashSet<ProjectListener>();
+	protected Set<ProjectListener> projectListeners = new HashSet<ProjectListener>();
 	protected SoapuiProjectDocumentConfig projectDocument;
 	private ImageIcon disabledIcon;
 	private ImageIcon closedIcon;
@@ -1475,6 +1475,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 		return result.toArray( new PropertyExpansion[result.size()] );
 
 	}
+
 	@Override
 	protected void addExternalDependencies( List<ExternalDependency> dependencies )
 	{
@@ -2146,4 +2147,5 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 			}
 		}
 	}
+
 }

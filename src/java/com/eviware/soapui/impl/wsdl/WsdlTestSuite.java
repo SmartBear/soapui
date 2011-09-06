@@ -36,10 +36,8 @@ import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestSuiteRunner;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.security.SecurityScan;
 import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.model.testsuite.TestCase;
-import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.model.testsuite.TestSuiteListener;
 import com.eviware.soapui.model.testsuite.TestSuiteRunContext;
@@ -623,8 +621,8 @@ public class WsdlTestSuite extends AbstractTestPropertyHolderWsdlModelItem<TestS
 			getConfig().removeTestCase( ix );
 		}
 
-		TestCaseConfig newConfig = ( TestCaseConfig )getConfig().insertNewTestCase( ix ).set( newTestCase ).changeType(
-				TestCaseConfig.type );
+		TestCaseConfig newConfig = ( TestCaseConfig )getConfig().insertNewTestCase( ix ).set( newTestCase )
+				.changeType( TestCaseConfig.type );
 		testCase = buildTestCase( newConfig, false );
 		testCases.add( ix, testCase );
 		testCase.afterLoad();
@@ -663,8 +661,8 @@ public class WsdlTestSuite extends AbstractTestPropertyHolderWsdlModelItem<TestS
 			 * security test keeps reference to test step by id, which gets changed
 			 * during importing, so old values needs to be rewritten to new ones.
 			 * 
-			 * Create tarnsition table ( old id , new id ) and use it to replace 
-			 * all old ids in new imported test case. 
+			 * Create tarnsition table ( old id , new id ) and use it to replace
+			 * all old ids in new imported test case.
 			 */
 			LinkedHashMap<String, String> oldNewIds = new LinkedHashMap<String, String>();
 			for( int cnt = 0; cnt < importTestCaseConfig.getTestStepList().size(); cnt++ )

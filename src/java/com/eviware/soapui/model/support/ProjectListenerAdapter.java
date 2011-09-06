@@ -12,6 +12,7 @@
 
 package com.eviware.soapui.model.support;
 
+import com.eviware.soapui.model.environment.Environment;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.mock.MockService;
 import com.eviware.soapui.model.project.Project;
@@ -64,6 +65,18 @@ public class ProjectListenerAdapter implements ProjectListener
 	}
 
 	public void beforeSave( Project project )
+	{
+	}
+
+	public void environmentAdded( Environment env )
+	{
+	}
+
+	public void environmentRemoved( Environment env )
+	{
+	}
+
+	public void environmentSwitched( Environment oldEnvironment, Environment newEnvironment )
 	{
 	}
 }

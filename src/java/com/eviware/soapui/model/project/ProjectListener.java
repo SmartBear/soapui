@@ -12,6 +12,7 @@
 
 package com.eviware.soapui.model.project;
 
+import com.eviware.soapui.model.environment.Environment;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.mock.MockService;
 import com.eviware.soapui.model.testsuite.TestSuite;
@@ -43,4 +44,10 @@ public interface ProjectListener
 	void afterLoad( Project project );
 
 	void beforeSave( Project project );
+
+	void environmentAdded( Environment env );
+
+	void environmentRemoved( Environment env );
+
+	void environmentSwitched( Environment oldEnvironment, Environment newEnvironment );
 }
