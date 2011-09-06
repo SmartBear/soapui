@@ -1,5 +1,6 @@
 package com.eviware.soapui.model.environment;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -18,7 +19,7 @@ public class EnvironmentImpl extends AbstractWsdlModelItem<EnvironmentConfig> im
 {
 
 	private final static Logger log = Logger.getLogger( EnvironmentImpl.class );
-	private List<ServiceImpl> services;
+	private List<ServiceImpl> services = new ArrayList<ServiceImpl>();
 	private Project project;
 	private Set<EnvironmentListener> environmentListeners = new HashSet<EnvironmentListener>();
 
@@ -33,7 +34,6 @@ public class EnvironmentImpl extends AbstractWsdlModelItem<EnvironmentConfig> im
 			services.add( buildService( serviceList.get( i ) ) );
 		}
 
-		// how these listeners get added to registry ??
 		for( EnvironmentListener listener : SoapUI.getListenerRegistry().getListeners( EnvironmentListener.class ) )
 		{
 			addEnvironmentListener( listener );
@@ -94,12 +94,15 @@ public class EnvironmentImpl extends AbstractWsdlModelItem<EnvironmentConfig> im
 		ServiceImpl service = buildService( getConfig().addNewService() );
 		service.setEnvironment( this );
 		service.setName( name );
-		String[] endpoints = project.getInterfaceByName( name ).getEndpoints();
-		if( endpoints != null && endpoints.length > 0 )
+		if( project != null )
 		{
-			EndpointImpl newEndpoint = new EndpointImpl( service.getConfig().addNewEndpoint(), service );
-			newEndpoint.getConfig().setStringValue( endpoints[0] );
-			service.setEndpoint( newEndpoint );
+			String[] endpoints = project.getInterfaceByName( name ).getEndpoints();
+			if( endpoints != null && endpoints.length > 0 )
+			{
+				EndpointImpl newEndpoint = new EndpointImpl( service.getConfig().addNewEndpoint(), service );
+				newEndpoint.getConfig().setStringValue( endpoints[0] );
+				service.setEndpoint( newEndpoint );
+			}
 		}
 		services.add( service );
 		fireServiceAdded( service );

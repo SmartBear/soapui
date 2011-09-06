@@ -23,7 +23,6 @@ public class ServiceImpl extends AbstractWsdlModelItem<ServiceConfig> implements
 
 		this.setEndpoint( buildEndpoint( config.getEndpoint() ) );
 
-		// how these listeners get added to registry ??
 		for( ServiceListener listener : SoapUI.getListenerRegistry().getListeners( ServiceListener.class ) )
 		{
 			addServiceListener( listener );
