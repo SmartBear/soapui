@@ -110,7 +110,8 @@ public class SecurityCheckedParametersTablePanel extends JPanel implements ListS
 		defineColumnWidth();
 		table.setDefaultEditor( String.class, getDefaultCellEditor() );
 
-		add( new JScrollPane( table ), BorderLayout.CENTER );
+		JScrollPane scrollPane = new JScrollPane( table );
+		add( scrollPane, BorderLayout.CENTER );
 
 		pathPane = new JUndoableTextArea();
 		if( securityScan instanceof BoundarySecurityScan )

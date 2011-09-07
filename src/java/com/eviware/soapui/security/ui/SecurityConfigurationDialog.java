@@ -16,6 +16,8 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -24,8 +26,8 @@ import javax.swing.JTabbedPane;
 
 import com.eviware.soapui.config.StrategyTypeConfig;
 import com.eviware.soapui.impl.wsdl.actions.project.SimpleDialog;
-import com.eviware.soapui.model.security.SecurityScan;
 import com.eviware.soapui.model.security.SecurityParametersTableModel;
+import com.eviware.soapui.model.security.SecurityScan;
 import com.eviware.soapui.security.assertion.SecurityAssertionPanel;
 import com.eviware.soapui.security.scan.AbstractSecurityScanWithProperties;
 import com.eviware.soapui.security.ui.SecurityConfigurationDialogBuilder.Strategy;
@@ -61,10 +63,13 @@ public class SecurityConfigurationDialog extends SimpleDialog
 	@Override
 	protected Component buildContent()
 	{
-		JPanel mainPanel = UISupport.createEmptyPanel( 5, 5, 5, 5 );
+		JPanel mainPanel = new JPanel();
 
 		if( securityCheck instanceof AbstractSecurityScanWithProperties )
 		{
+			mainPanel.setLayout( new BoxLayout( mainPanel, BoxLayout.Y_AXIS ) );
+			mainPanel.setBorder( BorderFactory.createEmptyBorder( 5, 5, 5, 5 ) );
+
 			JPanel topPanel = UISupport.createEmptyPanel( 0, 0, 10, 0 );
 			topPanel.add( buildParametersTable(), BorderLayout.CENTER );
 
@@ -79,10 +84,13 @@ public class SecurityConfigurationDialog extends SimpleDialog
 			if( component != null )
 				topPanel.add( component, BorderLayout.SOUTH );
 
-			mainPanel.add( topPanel, BorderLayout.NORTH );
+			mainPanel.add( topPanel );
 		}
 		else
 		{
+			mainPanel.setLayout( new BorderLayout() );
+			mainPanel.setBorder( BorderFactory.createEmptyBorder( 5, 5, 5, 5 ) );
+
 			JComponent component = securityCheck.getComponent();
 			if( component != null )
 			{
@@ -106,10 +114,13 @@ public class SecurityConfigurationDialog extends SimpleDialog
 	protected Component buildParametersTable()
 	{
 		parametersTable = new SecurityCheckedParametersTablePanel( new SecurityParametersTableModel(
-				( ( AbstractSecurityScanWithProperties )securityCheck ).getParameterHolder() ), securityCheck
-				.getTestStep().getProperties(), ( AbstractSecurityScanWithProperties )securityCheck );
+				( ( AbstractSecurityScanWithProperties )securityCheck ).getParameterHolder() ), securityCheck.getTestStep()
+				.getProperties(), ( AbstractSecurityScanWithProperties )securityCheck );
 
 		parametersTable.setPreferredSize( new Dimension( 400, 150 ) );
+		parametersTable.setMinimumSize( new Dimension( 400, 150 ) );
+		parametersTable.setMaximumSize( new Dimension( Integer.MAX_VALUE, Integer.MAX_VALUE ) );
+
 		return parametersTable;
 	}
 
@@ -123,6 +134,9 @@ public class SecurityConfigurationDialog extends SimpleDialog
 		JComponent advancedSettingsPanel = securityCheck.getAdvancedSettingsPanel();
 		if( advancedSettingsPanel != null )
 			tabs.addTab( "Advanced", new JScrollPane( advancedSettingsPanel ) );
+
+		tabs.setMaximumSize( new Dimension( Integer.MAX_VALUE, Integer.MAX_VALUE ) );
+		tabs.setPreferredSize( new Dimension( 400, 150 ) );
 
 		return tabs;
 	}
@@ -209,7 +223,6 @@ public class SecurityConfigurationDialog extends SimpleDialog
 				securityCheck.setRunOnlyOnce( Boolean.parseBoolean( newValue ) );
 			}
 		} );
-
 
 		return ( ( JFormDialog )strategyDialog ).getPanel();
 	}
