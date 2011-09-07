@@ -416,6 +416,11 @@ public class DefaultEndpointStrategy implements EndpointStrategy, PropertyExpans
 	{
 		private final EndpointConfig endpointConfig;
 
+		public EndpointConfig getEndpointConfig()
+		{
+			return endpointConfig;
+		}
+
 		public EndpointDefaults( EndpointConfig endpointConfig )
 		{
 			this.endpointConfig = endpointConfig;
