@@ -112,6 +112,12 @@ public class SimpleForm
 		rowSpec = new RowSpec( rowAlignment + ":pref" );
 	}
 
+	public void setRowAlignment( String alignment, String size, String resize )
+	{
+		this.rowAlignment = alignment + ":" + size + ":" + resize;
+		rowSpec = new RowSpec( rowAlignment );
+	}
+
 	public int getRowSpacing()
 	{
 		return rowSpacing;
