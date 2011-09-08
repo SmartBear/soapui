@@ -10,4 +10,8 @@ public interface Environment
 	public Project getProject();
 
 	public void release();
+
+	public Service addNewService( String name );
+
+	public void removeService( Service service );
 }
