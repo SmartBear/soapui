@@ -14,4 +14,5 @@ public interface Environment
 	public Service addNewService( String name );
 
 	public void removeService( Service service );
+
 }
