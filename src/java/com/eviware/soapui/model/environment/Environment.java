@@ -27,4 +27,6 @@ public interface Environment
 
 	public void removeService( Service service );
 
+	public String getName();
+
 }
