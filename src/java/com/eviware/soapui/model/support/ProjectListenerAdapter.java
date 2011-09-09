@@ -72,7 +72,7 @@ public class ProjectListenerAdapter implements ProjectListener
 	{
 	}
 
-	public void environmentRemoved( Environment env )
+	public void environmentRemoved( Environment env, int index )
 	{
 	}
 
