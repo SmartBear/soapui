@@ -397,6 +397,7 @@ public class RestTestRequestStep extends WsdlTestStepWithProperties implements R
 							"Missing REST Method", ModelSupport.getNames( restResource.getRestMethodList() ) );
 				}
 
+				restRequestStepConfig.setMethodName( mn );
 				return restResource.getRestMethodByName( mn );
 			}
 		}
