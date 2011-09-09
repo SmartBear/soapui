@@ -262,7 +262,7 @@ public class SoapUIVersionUpdate
 		}
 		catch( Exception e )
 		{
-			UISupport.showErrorMessage( "Could not check for new version due network problem!" );
+			SoapUI.log( e.getMessage() );
 			return;
 		}
 		if( isNewReleaseAvailable() && ( !skipThisVersion() || helpAction ) )
