@@ -29,16 +29,13 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransport;
+import com.eviware.soapui.impl.wsdl.support.BrowserCredentials;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.settings.HttpSettings;
 import com.eviware.soapui.support.StringUtils;
-import com.teamdev.jxbrowser.BrowserServices;
-import com.teamdev.jxbrowser.prompt.CloseStatus;
-import com.teamdev.jxbrowser.prompt.DefaultPromptService;
-import com.teamdev.jxbrowser.prompt.LoginParams;
 
 /**
  * RequestFilter for setting preemptive authentication and related credentials
@@ -70,18 +67,12 @@ public class HttpAuthenticationRequestFilter extends AbstractRequestFilter
 		if( StringUtils.isNullOrEmpty( wssPasswordType ) )
 		{
 			initRequestCredentials( context, username, settings, password, domain );
+
 			if( !SoapUI.isJXBrowserDisabled() )
 			{
-				initBrowserCredentials( username, password );
+				BrowserCredentials.initBrowserCredentials( username, password );
 			}
 		}
-	}
-
-	public static void initBrowserCredentials( String username, String password )
-	{
-		BrowserServices browserServices = BrowserServices.getInstance();
-		SoapUIBrowserPromptService promptService = new SoapUIBrowserPromptService( username, password );
-		browserServices.setPromptService( promptService );
 	}
 
 	public static void initRequestCredentials( SubmitContext context, String username, Settings settings,
@@ -169,23 +160,4 @@ public class HttpAuthenticationRequestFilter extends AbstractRequestFilter
 		}
 	}
 
-	public static class SoapUIBrowserPromptService extends DefaultPromptService
-	{
-		private String username;
-		private String password;
-
-		public SoapUIBrowserPromptService( String username, String password )
-		{
-			this.username = username;
-			this.password = password;
-		}
-
-		@Override
-		public CloseStatus loginRequested( LoginParams params )
-		{
-			params.setUserName( username );
-			params.setPassword( password );
-			return CloseStatus.OK;
-		}
-	}
 }
