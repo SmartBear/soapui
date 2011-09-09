@@ -25,6 +25,7 @@ import org.apache.http.client.params.AuthPolicy;
 import org.apache.http.impl.auth.BasicScheme;
 import org.apache.log4j.Logger;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransport;
@@ -69,7 +70,10 @@ public class HttpAuthenticationRequestFilter extends AbstractRequestFilter
 		if( StringUtils.isNullOrEmpty( wssPasswordType ) )
 		{
 			initRequestCredentials( context, username, settings, password, domain );
-			initBrowserCredentials( username, password );
+			if( !SoapUI.isJXBrowserDisabled() )
+			{
+				initBrowserCredentials( username, password );
+			}
 		}
 	}
 
