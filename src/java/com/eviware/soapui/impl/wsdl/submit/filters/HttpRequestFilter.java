@@ -14,7 +14,6 @@ package com.eviware.soapui.impl.wsdl.submit.filters;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
-import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -132,7 +131,7 @@ public class HttpRequestFilter extends AbstractRequestFilter
 					valueParts.set( i, valueParts.get( i ).replaceAll( "\\+", "%20" ) );
 			}
 
-			if( !sendEmptyParameters( request ) )
+			if( param.getStyle() == ParameterStyle.QUERY && !sendEmptyParameters( request ) )
 			{
 				if( !StringUtils.hasContent( value ) && !param.getRequired() )
 					continue;
@@ -222,7 +221,7 @@ public class HttpRequestFilter extends AbstractRequestFilter
 				// URI(String) automatically URLencodes the input, so we need to
 				// decode it first...
 				httpMethod.setURI( URIUtils.createURI( oldUri.getScheme(), oldUri.getHost(), oldUri.getPort(), path,
-							oldUri.getQuery(), oldUri.getFragment() ) );
+						oldUri.getQuery(), oldUri.getFragment() ) );
 			}
 			catch( Exception e )
 			{
@@ -233,11 +232,11 @@ public class HttpRequestFilter extends AbstractRequestFilter
 		if( query.length() > 0 && !request.isPostQueryString() )
 		{
 			java.net.URI oldUri = httpMethod.getURI();
-		
+
 			try
 			{
-				java.net.URI tempUri = URIUtils.createURI( oldUri.getScheme(), oldUri.getHost(), oldUri.getPort(), oldUri.getPath(),
-						query.toString(), null );
+				java.net.URI tempUri = URIUtils.createURI( oldUri.getScheme(), oldUri.getHost(), oldUri.getPort(),
+						oldUri.getPath(), query.toString(), null );
 				context.setProperty( BaseHttpRequestTransport.REQUEST_URI, new URI( tempUri.toString(), false ) );
 				httpMethod.setURI( tempUri );
 			}
