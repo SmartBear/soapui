@@ -15,6 +15,7 @@ package com.eviware.soapui.integration.loadui;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -59,64 +60,36 @@ public class IntegrationUtils
 
 	public static List<String> getProjectsNames()
 	{
-		List<String> testCaseNames = new ArrayList<String>();
-		try
-		{
-			testCaseNames = ( List<String> )CajoClient.getInstance().invoke( "getProjetcs", null );
-		}
-		catch( Exception e )
-		{
-			SoapUI.log.error( "Error while invoking cajo server in loadui ", e );
-		}
-
-		return testCaseNames;
+		return invokeRemoteGettingStringList( "getProjects", null );
 	}
 
 	public static List<String> getTestCasesNames()
 	{
-		List<String> testCaseNames = new ArrayList<String>();
-		try
-		{
-			testCaseNames = ( List<String> )CajoClient.getInstance().invoke( "getTestCases", null );
-		}
-		catch( Exception e )
-		{
-			SoapUI.log.error( "Error while invoking cajo server in loadui ", e );
-		}
-
-		return testCaseNames;
+		return invokeRemoteGettingStringList( "getTestCases", null );
 	}
 
 	public static List<String> getSoapUISamplersNames( String projectName, String testCaseName )
 	{
-		List<String> soapUISamplersNames = new ArrayList<String>();
-		try
-		{
-			soapUISamplersNames = ( List<String> )CajoClient.getInstance().invoke( "getSoapUIRunners",
-					new String[] { projectName, testCaseName } );
-		}
-		catch( Exception e )
-		{
-			SoapUI.log.error( "Error while invoking cajo server in loadui ", e );
-		}
-
-		return soapUISamplersNames;
+		return invokeRemoteGettingStringList( "getSoapUIRunners", new String[] { projectName, testCaseName } );
 	}
 
 	public static List<String> getMockServiceRunnersNames( String projectName, String testCaseName )
 	{
-		List<String> mockServiceRunnersNames = new ArrayList<String>();
+		return invokeRemoteGettingStringList( "getMockServiceRunners", new String[] { projectName, testCaseName } );
+	}
+
+	@SuppressWarnings( "unchecked" )
+	private static List<String> invokeRemoteGettingStringList( String methodName, Object args )
+	{
 		try
 		{
-			mockServiceRunnersNames = ( List<String> )CajoClient.getInstance().invoke( "getMockServiceRunners",
-					new String[] { projectName, testCaseName } );
+			return ( List<String> )CajoClient.getInstance().invoke( methodName, args );
 		}
 		catch( Exception e )
 		{
 			SoapUI.log.error( "Error while invoking cajo server in loadui ", e );
+			return Collections.emptyList();
 		}
-
-		return mockServiceRunnersNames;
 	}
 
 	public static boolean isProjectOpened( String projectName )
