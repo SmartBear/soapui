@@ -76,7 +76,7 @@ public class ProjectListenerAdapter implements ProjectListener
 	{
 	}
 
-	public void environmentSwitched( Environment oldEnvironment, Environment newEnvironment )
+	public void environmentSwitched( Environment environment )
 	{
 	}
 }

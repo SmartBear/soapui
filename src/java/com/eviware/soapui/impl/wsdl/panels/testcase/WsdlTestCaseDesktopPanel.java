@@ -34,7 +34,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JToggleButton;
-import javax.swing.JToolBar;
 import javax.swing.ListModel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
@@ -294,7 +293,7 @@ public class WsdlTestCaseDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 
 	private Component buildToolbar()
 	{
-		JToolBar toolbar = UISupport.createToolbar();
+		JXToolBar toolbar = UISupport.createToolbar();
 
 		runButton = UISupport.createToolbarButton( new RunTestCaseAction() );
 		optionsButton = UISupport.createToolbarButton( SwingActionDelegate.createDelegate(
@@ -337,7 +336,7 @@ public class WsdlTestCaseDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 		return toolbar;
 	}
 
-	protected void addToolbarActions( JToolBar toolbar )
+	protected void addToolbarActions( JXToolBar toolbar )
 	{
 		toolbar.add( runButton );
 		toolbar.add( cancelButton );
@@ -806,7 +805,7 @@ public class WsdlTestCaseDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 	@Override
 	protected void renameModelItem()
 	{
-		SoapUI.getActionRegistry().performAction( "RenameTestCaseAction", getModelItem(), null);
+		SoapUI.getActionRegistry().performAction( "RenameTestCaseAction", getModelItem(), null );
 	}
 
 	@Override

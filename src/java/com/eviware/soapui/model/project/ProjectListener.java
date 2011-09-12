@@ -49,5 +49,5 @@ public interface ProjectListener
 
 	void environmentRemoved( Environment env, int index );
 
-	void environmentSwitched( Environment oldEnvironment, Environment newEnvironment );
+	void environmentSwitched( Environment environment );
 }
