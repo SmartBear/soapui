@@ -2280,7 +2280,15 @@
 						maxOccurs="1" minOccurs="0">
 					</xsd:element>
 				</xsd:sequence>
-				<xsd:attribute name="proxyHost" type="xsd:string"></xsd:attribute>
+                <xsd:attribute name="type">
+					<xsd:simpleType>
+						<xsd:restriction base="xsd:string">
+							<xsd:enumeration value="SOAP"></xsd:enumeration>
+							<xsd:enumeration value="REST"></xsd:enumeration>
+						</xsd:restriction>
+					</xsd:simpleType>
+				</xsd:attribute>
+                <xsd:attribute name="proxyHost" type="xsd:string"></xsd:attribute>
 				<xsd:attribute name="proxyPort" type="xsd:string"></xsd:attribute>
 				<xsd:attribute name="proxyUsername" type="xsd:string"></xsd:attribute>
 				<xsd:attribute name="proxyPassword" type="xsd:string"></xsd:attribute>

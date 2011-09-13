@@ -12,6 +12,7 @@
 
 package com.eviware.soapui.model.environment;
 
+import com.eviware.soapui.config.ServiceConfig;
 import com.eviware.soapui.model.project.Project;
 
 public interface Environment
@@ -23,7 +24,7 @@ public interface Environment
 
 	public void release();
 
-	public Service addNewService( String name );
+	public Service addNewService( String name, ServiceConfig.Type.Enum serviceType );
 
 	public void removeService( Service service );
 

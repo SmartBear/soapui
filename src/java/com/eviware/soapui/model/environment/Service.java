@@ -12,6 +12,8 @@
 
 package com.eviware.soapui.model.environment;
 
+import com.eviware.soapui.config.ServiceConfig;
+
 public interface Service
 {
 
@@ -26,5 +28,7 @@ public interface Service
 	public void release();
 
 	public String getName();
+
+	public ServiceConfig.Type.Enum getType();
 
 }
