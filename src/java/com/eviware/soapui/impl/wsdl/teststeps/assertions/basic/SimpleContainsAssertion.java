@@ -81,6 +81,10 @@ public class SimpleContainsAssertion extends WsdlMessageAssertion implements Req
 			token = "";
 		String replToken = PropertyExpander.expandProperties( context, token );
 
+		
+		replToken = normalize( replToken );
+		content = normalize( content );
+		
 		if( replToken.length() > 0 )
 		{
 			int ix = -1;
@@ -100,6 +104,12 @@ public class SimpleContainsAssertion extends WsdlMessageAssertion implements Req
 		}
 
 		return "Response contains token [" + replToken + "]";
+	}
+
+	private String normalize( String string )
+	{
+		string = string.replaceAll( "\r\n", "\n");
+		return string;
 	}
 
 	public boolean configure()
