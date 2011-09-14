@@ -268,7 +268,7 @@ public class SoapUIVersionUpdate
 		if( isNewReleaseAvailable() && ( !skipThisVersion() || helpAction ) )
 			showNewVersionDownloadDialog();
 		else if( helpAction )
-			UISupport.showInfoMessage( "Currently no new version available", "No New Version" );
+			UISupport.showInfoMessage( "You are running the latest version of soapUI!", "Version Check" );
 	}
 
 	protected class IgnoreUpdateAction extends AbstractAction
