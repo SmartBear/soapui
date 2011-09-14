@@ -81,7 +81,10 @@ public class SimpleNotContainsAssertion extends WsdlMessageAssertion implements 
 			token = "";
 
 		String replToken = PropertyExpander.expandProperties( context, token );
-
+		
+		replToken = normalize( replToken );
+		content = normalize( content );
+		
 		if( replToken.length() > 0 )
 		{
 			int ix = -1;
@@ -103,6 +106,14 @@ public class SimpleNotContainsAssertion extends WsdlMessageAssertion implements 
 		return type + " does not contain token [" + replToken + "]";
 	}
 
+	
+	private String normalize( String string )
+	{
+		string = string.replaceAll( "\r\n", "\n");
+		return string;
+	}
+	
+	
 	public boolean configure()
 	{
 		if( dialog == null )
