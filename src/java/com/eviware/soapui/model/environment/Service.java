@@ -29,8 +29,6 @@ public interface Service
 
 	public String getName();
 
-	public void setName( String name );
-
 	public ServiceConfig.Type.Enum getType();
 
 }
