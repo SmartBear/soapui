@@ -148,6 +148,16 @@ public class RequestTransportRegistry
 		return transport;
 	}
 
+	public static synchronized RequestTransport getTransport( String protocol ) throws MissingTransportException
+	{
+		RequestTransport transport = transports.get( protocol );
+
+		if( transport == null )
+			throw new MissingTransportException( "Missing transport for protocol [" + protocol + "]" );
+
+		return transport;
+	}
+
 	public static void addTransport( String key, RequestTransport rt )
 	{
 		transports.put( key, rt );
@@ -168,4 +178,5 @@ public class RequestTransportRegistry
 			super( msg );
 		}
 	}
+
 }
