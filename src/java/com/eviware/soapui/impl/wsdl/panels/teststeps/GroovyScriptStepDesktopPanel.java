@@ -283,7 +283,7 @@ public class GroovyScriptStepDesktopPanel extends ModelItemDesktopPanel<WsdlGroo
 						// ugly...
 						editor.selectError( message );
 
-						UISupport.showErrorMessage( er.toString() );
+						UISupport.showErrorMessage(StringUtils.join( result.getMessages(), "\n" ));
 						editor.requestFocus();
 					}
 					else if( result.getMessages().length > 0 )

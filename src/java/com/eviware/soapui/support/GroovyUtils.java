@@ -13,6 +13,9 @@
 package com.eviware.soapui.support;
 
 import java.io.File;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.DriverManager;
@@ -23,6 +26,8 @@ import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.xmlbeans.XmlException;
 import org.w3c.dom.Node;
@@ -115,6 +120,33 @@ public class GroovyUtils
 		}
 	}
 
+	/**
+	 * extracts error line number from groovy stact trace
+	 * 
+	 * @return line number
+	 */
+	public static String extractErrorLineNumber( Throwable t )
+	{
+		try
+		{
+			Writer wresult = new StringWriter();
+			PrintWriter printWriter = new PrintWriter( wresult );
+			t.printStackTrace( printWriter );
+			String stackTrace = wresult.toString();
+
+			Pattern p = Pattern.compile( "at Script\\d+\\.run\\(Script\\d+\\.groovy:(\\d+)\\)" );
+			Matcher m = p.matcher( stackTrace );
+			m.find();
+			String b = m.group( 1 );
+			return b;
+		}
+		catch( Exception e )
+		{
+			SoapUI.logError( e, "cannot get error line number!" );
+			return null;
+		}
+	}
+
 	static class DriverShim implements Driver
 	{
 		private Driver driver;
@@ -154,12 +186,14 @@ public class GroovyUtils
 			return this.driver.jdbcCompliant();
 		}
 
-		/* (non-Javadoc)
+		/*
+		 * (non-Javadoc)
+		 * 
 		 * @see java.sql.Driver#getParentLogger()
 		 * 
-		 *  Java 7 issue
-		 *  
-		 *  this method is need by java.sql.Driver interface in Java 7
+		 * Java 7 issue
+		 * 
+		 * this method is need by java.sql.Driver interface in Java 7
 		 */
 		public Logger getParentLogger() throws SQLFeatureNotSupportedException
 		{

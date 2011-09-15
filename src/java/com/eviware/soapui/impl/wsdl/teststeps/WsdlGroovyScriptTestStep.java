@@ -29,6 +29,7 @@ import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestRunner.Status;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
+import com.eviware.soapui.support.GroovyUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
@@ -163,9 +164,12 @@ public class WsdlGroovyScriptTestStep extends WsdlTestStepWithProperties impleme
 		}
 		catch( Throwable e )
 		{
+			String errorLineNumber = GroovyUtils.extractErrorLineNumber( e );
+
 			SoapUI.logError( e );
 			result.stopTimer();
-			result.addMessage( e.getMessage() );
+			result.addMessage( e.toString() );
+			result.addMessage( "error at line: " + errorLineNumber );
 			result.setError( e );
 			result.setStatus( TestStepStatus.FAILED );
 		}
