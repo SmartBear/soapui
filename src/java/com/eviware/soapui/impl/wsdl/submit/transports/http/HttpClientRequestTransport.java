@@ -53,6 +53,8 @@ import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.types.StringToStringsMap;
 import com.eviware.soapui.support.uri.URI;
 
+import edu.umd.cs.findbugs.annotations.CheckForNull;
+
 /**
  * HTTP transport that uses HttpClient to send/receive SOAP messages
  * 
@@ -75,6 +77,39 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 	public void removeRequestFilter( RequestFilter filter )
 	{
 		filters.remove( filter );
+	}
+
+	public <T> void replaceRequestFilter( Class<T> filterClass, RequestFilter newFilter )
+	{
+		RequestFilter filter = findFilterByType( filterClass );
+
+		if( filter != null )
+		{
+			for( int i = 0; i < filters.size(); i++ )
+			{
+				RequestFilter oldFilter = filters.get( i );
+				if( oldFilter == filter )
+				{
+					filters.remove( i );
+					filters.add( i, newFilter );
+					break;
+				}
+			}
+		}
+	}
+
+	@CheckForNull
+	public <T extends Object> RequestFilter findFilterByType( Class<T> filterType )
+	{
+		for( int i = 0; i < filters.size(); i++ )
+		{
+			RequestFilter filter = filters.get( i );
+			if( filter.getClass() == filterType )
+			{
+				return filter;
+			}
+		}
+		return null;
 	}
 
 	public void abortRequest( SubmitContext submitContext )
