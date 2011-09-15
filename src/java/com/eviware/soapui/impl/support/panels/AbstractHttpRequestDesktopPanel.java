@@ -79,7 +79,7 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 	private JComponent endpointComponent;
 	private JButton submitButton;
 	private JButton cancelButton;
-	private EndpointsComboBoxModel endpointsModel;
+	protected EndpointsComboBoxModel endpointsModel;
 	private JEditorStatusBarWithProgress statusBar;
 	private JButton splitButton;
 	private Submit submit;
@@ -121,9 +121,14 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 		}
 	}
 
-	protected void init( T2 request )
+	public void setEndpointsModel( T2 request )
 	{
 		this.endpointsModel = new EndpointsComboBoxModel( request );
+	}
+
+	protected void init( T2 request )
+	{
+		setEndpointsModel( request );
 
 		request.addSubmitListener( this );
 		request.addPropertyChangeListener( this );

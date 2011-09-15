@@ -39,7 +39,7 @@ public class EndpointsComboBoxModel implements ComboBoxModel, PropertyChangeList
 	private static final String DELETE_ENDPOINT = "[delete current]";
 
 	private Set<ListDataListener> listeners = new HashSet<ListDataListener>();
-	private String[] endpoints;
+	protected String[] endpoints;
 	private AbstractHttpRequestInterface<?> request;
 
 	public EndpointsComboBoxModel( AbstractHttpRequestInterface<?> request )
@@ -49,6 +49,11 @@ public class EndpointsComboBoxModel implements ComboBoxModel, PropertyChangeList
 		request.addPropertyChangeListener( this );
 		if( request.getOperation() != null )
 			request.getOperation().getInterface().addPropertyChangeListener( this );
+	}
+
+	public AbstractHttpRequestInterface<?> getRequest()
+	{
+		return request;
 	}
 
 	public void setSelectedItem( Object anItem )
@@ -121,12 +126,18 @@ public class EndpointsComboBoxModel implements ComboBoxModel, PropertyChangeList
 		notifyContentsChanged();
 	}
 
-	private void initEndpoints()
+	protected void initEndpoints()
 	{
 		if( request.getOperation() != null )
 			endpoints = request.getOperation().getInterface().getEndpoints();
 		else
 			endpoints = new String[0];
+	}
+
+	public void setEndpoints( String[] endpoints )
+	{
+		this.endpoints = endpoints;
+		notifyContentsChanged();
 	}
 
 	private void notifyContentsChanged()
