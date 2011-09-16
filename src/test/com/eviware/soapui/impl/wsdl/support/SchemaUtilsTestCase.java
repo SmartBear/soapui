@@ -40,7 +40,7 @@ public class SchemaUtilsTestCase extends TestCaseWithJetty
 	@Test
 	public void testFileImport() throws Exception
 	{
-		File file = new File( "src\\test-resources\\test1\\TestService.wsdl" );
+		File file = new File( "src" + File.separator + "test-resources" + File.separator + "test1" + File.separator + "TestService.wsdl" );
 		validate( file.toURI().toURL().toString(), 3 );
 	}
 
@@ -48,35 +48,35 @@ public class SchemaUtilsTestCase extends TestCaseWithJetty
 	public void testHttpImport() throws Exception
 	{
 		validate( "http://localhost:8082/test1/TestService.wsdl", 3 );
-		validate( new File( "src\\test-resources\\test1\\TestService.wsdl" ).toURI().toURL().toString(), 3 );
+		validate( new File( "src" + File.separator + "test-resources" + File.separator + "test1" + File.separator + "TestService.wsdl" ).toURI().toURL().toString(), 3 );
 	}
 
 	@Test
 	public void testHttpImport2() throws Exception
 	{
 		validate( "http://localhost:8082/test2/TestService.wsdl", 3 );
-		validate( new File( "src\\test-resources\\test2\\TestService.wsdl" ).toURI().toURL().toString(), 3 );
+		validate( new File( "src" + File.separator + "test-resources" + File.separator + "test2" + File.separator + "TestService.wsdl" ).toURI().toURL().toString(), 3 );
 	}
 
 	@Test
 	public void testHttpImport3() throws Exception
 	{
 		validate( "http://localhost:8082/test3/TestService.wsdl", 3 );
-		validate( new File( "src\\test-resources\\test3\\TestService.wsdl" ).toURI().toURL().toString(), 3 );
+		validate( new File( "src" + File.separator + "test-resources" + File.separator + "test3" + File.separator + "TestService.wsdl" ).toURI().toURL().toString(), 3 );
 	}
 
 	@Test
 	public void testHttpImport4() throws Exception
 	{
 		validate( "http://localhost:8082/test4/TestService.wsdl", 3 );
-		validate( new File( "src\\test-resources\\test4\\TestService.wsdl" ).toURI().toURL().toString(), 3 );
+		validate( new File( "src" + File.separator + "test-resources" + File.separator + "test4" + File.separator + "TestService.wsdl" ).toURI().toURL().toString(), 3 );
 	}
 
 	@Test
 	public void testHttpImport5() throws Exception
 	{
 		validate( "http://localhost:8082/test5/TestService.wsdl", 4 );
-		validate( new File( "src\\test-resources\\test5\\TestService.wsdl" ).toURI().toURL().toString(), 4 );
+		validate( new File( "src" + File.separator + "test-resources" + File.separator + "test5" + File.separator + "TestService.wsdl" ).toURI().toURL().toString(), 4 );
 	}
 
 	@Test
@@ -85,7 +85,7 @@ public class SchemaUtilsTestCase extends TestCaseWithJetty
 		SchemaTypeLoader schemaTypes = validate( "http://localhost:8082/test6/TestService.wsdl", 4 );
 		assertNotNull( schemaTypes.findType( new QName( "http://schemas.eviware.com/TestService/v2/", "TestType" ) ) );
 
-		schemaTypes = validate( new File( "src\\test-resources\\test6\\TestService.wsdl" ).toURI().toURL().toString(), 4 );
+		schemaTypes = validate( new File( "src" + File.separator + "test-resources" + File.separator + "test6" + File.separator + "TestService.wsdl" ).toURI().toURL().toString(), 4 );
 		assertNotNull( schemaTypes.findType( new QName( "http://schemas.eviware.com/TestService/v2/", "TestType" ) ) );
 	}
 
@@ -95,7 +95,7 @@ public class SchemaUtilsTestCase extends TestCaseWithJetty
 		SchemaTypeLoader schemaTypes = validate( "http://localhost:8082/test7/TestService.wsdl", 4 );
 		assertNotNull( schemaTypes.findType( new QName( "http://schemas.eviware.com/TestService/v2/", "TestType" ) ) );
 
-		schemaTypes = validate( new File( "src\\test-resources\\test7\\TestService.wsdl" ).toURI().toURL().toString(), 4 );
+		schemaTypes = validate( new File( "src" + File.separator + "test-resources" + File.separator + "test7" + File.separator + "TestService.wsdl" ).toURI().toURL().toString(), 4 );
 		assertNotNull( schemaTypes.findType( new QName( "http://schemas.eviware.com/TestService/v2/", "TestType" ) ) );
 	}
 
@@ -105,7 +105,7 @@ public class SchemaUtilsTestCase extends TestCaseWithJetty
 		SchemaTypeLoader schemaTypes = validate( "http://localhost:8082/test8/TestService.wsdl", 4 );
 		assertNotNull( schemaTypes.findType( new QName( "http://schemas.eviware.com/TestService/v2/", "TestType" ) ) );
 
-		schemaTypes = validate( new File( "src\\test-resources\\test8\\TestService.wsdl" ).toURI().toURL().toString(), 4 );
+		schemaTypes = validate( new File( "src" + File.separator + "test-resources" + File.separator + "test8" + File.separator + "TestService.wsdl" ).toURI().toURL().toString(), 4 );
 		assertNotNull( schemaTypes.findType( new QName( "http://schemas.eviware.com/TestService/v2/", "TestType" ) ) );
 	}
 
@@ -119,7 +119,7 @@ public class SchemaUtilsTestCase extends TestCaseWithJetty
 		assertNotNull( schemaTypes.findType( new QName( "http://testcase/one", "OneType" ) ) );
 		assertNotNull( schemaTypes.findType( new QName( "http://testcase/two", "TwoType" ) ) );
 
-		url = new File( "src\\test-resources\\test9\\testcase.wsdl" ).toURI().toURL().toString();
+		url = new File( "src" + File.separator + "test-resources" + File.separator + "test9" + File.separator + "testcase.wsdl" ).toURI().toURL().toString();
 		schemaTypes = SchemaUtils.loadSchemaTypes( url, new UrlWsdlLoader( url ) );
 		assertNotNull( schemaTypes.findElement( new QName( "http://testcase/wsdl", "One" ) ) );
 		assertNotNull( schemaTypes.findElement( new QName( "http://testcase/wsdl", "Two" ) ) );
@@ -142,7 +142,7 @@ public class SchemaUtilsTestCase extends TestCaseWithJetty
 	@Test
 	public void testWadlImport() throws Exception
 	{
-		String file = new File( "src\\test-resources\\wadl\\YahooSearch.wadl" ).toURI().toURL().toString();
+		String file = new File( "src" + File.separator + "test-resources" + File.separator + "wadl" + File.separator + "YahooSearch.wadl" ).toURI().toURL().toString();
 		SchemaTypeLoader types = SchemaUtils.loadSchemaTypes( file, new UrlSchemaLoader( file ) );
 
 		assertNotNull( types.findElement( new QName( "urn:yahoo:yn", "ResultSet" ) ) );

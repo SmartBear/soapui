@@ -13,6 +13,9 @@
 package com.eviware.soapui.impl.wsdl;
 
 import static org.junit.Assert.assertTrue;
+
+import java.io.File;
+
 import junit.framework.JUnit4TestAdapter;
 
 import org.junit.Test;
@@ -30,12 +33,12 @@ public class ResolveContextTest
 	@Test
 	public void shouldRelativizePath()
 	{
-		assertTrue( testFilePath( "test.txt", "c:\\dir\\test.txt", "c:\\dir" ) );
-		assertTrue( testFilePath( "dir2\\test.txt", "c:\\dir\\dir2\\test.txt", "c:\\dir" ) );
-		assertTrue( testFilePath( "..\\test.txt", "c:\\dir\\dir2\\test.txt", "c:\\dir\\dir2\\dir3" ) );
-		assertTrue( testFilePath( "dir\\test.txt", "c:\\dir\\test.txt", "c:\\" ) );
-		assertTrue( testFilePath( "..\\test.txt", "c:\\dir\\test.txt", "c:\\dir\\anotherDir" ) );
-		assertTrue( testFilePath( "..\\dir2\\test.txt", "c:\\dir\\dir2\\test.txt", "c:\\dir\\anotherDir" ) );
+		assertTrue( testFilePath( "test.txt", "c:" + File.separator + "dir" + File.separator + "test.txt", "c:" + File.separator + "dir" ) );
+		assertTrue( testFilePath( "dir2" + File.separator + "test.txt", "c:" + File.separator + "dir" + File.separator + "dir2" + File.separator + "test.txt", "c:" + File.separator + "dir" ) );
+		assertTrue( testFilePath( ".." + File.separator + "test.txt", "c:" + File.separator + "dir" + File.separator + "dir2" + File.separator + "test.txt", "c:" + File.separator + "dir" + File.separator + "dir2" + File.separator + "dir3" ) );
+		assertTrue( testFilePath( "dir" + File.separator + "test.txt", "c:" + File.separator + "dir" + File.separator + "test.txt", "c:" + File.separator + "" ) );
+		assertTrue( testFilePath( ".." + File.separator + "test.txt", "c:" + File.separator + "dir" + File.separator + "test.txt", "c:" + File.separator + "dir" + File.separator + "anotherDir" ) );
+		assertTrue( testFilePath( ".." + File.separator + "dir2" + File.separator + "test.txt", "c:" + File.separator + "dir" + File.separator + "dir2" + File.separator + "test.txt", "c:" + File.separator + "dir" + File.separator + "anotherDir" ) );
 
 		testUrl( "test.txt", "http://www.test.com/dir/test.txt", "http://www.test.com/dir" );
 		testUrl( "dir2/test.txt", "http://www.test.com/dir/dir2/test.txt", "http://www.test.com/dir" );
@@ -51,8 +54,8 @@ public class ResolveContextTest
 			return rValue;
 		}
 
-		if( !rootPath.endsWith( "\\" ) )
-			rootPath += "\\";
+		if( !rootPath.endsWith(File.separator))
+			rootPath += File.separator;
 
 		rValue = absolutePath.equals( Tools.joinRelativeUrl( rootPath, relativePath ) );
 

@@ -13,6 +13,9 @@
 package com.eviware.soapui.impl.wsdl.support;
 
 import static org.junit.Assert.assertEquals;
+
+import java.io.File;
+
 import junit.framework.JUnit4TestAdapter;
 
 import org.junit.Test;
@@ -41,8 +44,8 @@ public class JoinRelativeUrlTestCase
 				Tools.joinRelativeUrl( "http://test:8080/my/root/test.wsdl", "../../bil/test.xsd" ) );
 		assertEquals( "http://test:8080/bil/test.xsd",
 				Tools.joinRelativeUrl( "http://test:8080/my/root/test.wsdl", "././../../bil/test/.././test.xsd" ) );
-		assertEquals( "file:c:\\bil\\xsd\\test.xsd", Tools.joinRelativeUrl( "file:c:\\bil\\test.wsdl", "./xsd/test.xsd" ) );
-		assertEquals( "file:c:\\bil\\xsd\\test.xsd",
+		assertEquals( "file:c:" + File.separator + "bil" + File.separator + "xsd" + File.separator + "test.xsd", Tools.joinRelativeUrl( "file:c:\\bil\\test.wsdl", "./xsd/test.xsd" ) );
+		assertEquals( "file:c:" + File.separator + "bil" + File.separator + "xsd" + File.separator + "test.xsd",
 				Tools.joinRelativeUrl( "file:c:\\bil\\test\\test\\test.wsdl", "..\\..\\xsd\\test.xsd" ) );
 	}
 }

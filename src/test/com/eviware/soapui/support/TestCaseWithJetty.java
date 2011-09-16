@@ -13,6 +13,9 @@
 package com.eviware.soapui.support;
 
 import static org.junit.Assert.assertTrue;
+
+import java.io.File;
+
 import junit.framework.JUnit4TestAdapter;
 
 import org.junit.Before;
@@ -44,7 +47,7 @@ public class TestCaseWithJetty
 
 		server = new Server( 8082 );
 		ResourceHandler resource_handler = new ResourceHandler();
-		resource_handler.setResourceBase( ".\\src\\test-resources" );
+		resource_handler.setResourceBase( "." + File.separator + "src" + File.separator + "test-resources" );
 
 		HandlerList handlers = new HandlerList();
 		handlers.setHandlers( new Handler[] { resource_handler, new DefaultHandler() } );
