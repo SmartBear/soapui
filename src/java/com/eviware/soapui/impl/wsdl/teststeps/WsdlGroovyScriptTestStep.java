@@ -169,7 +169,8 @@ public class WsdlGroovyScriptTestStep extends WsdlTestStepWithProperties impleme
 			SoapUI.logError( e );
 			result.stopTimer();
 			result.addMessage( e.toString() );
-			result.addMessage( "error at line: " + errorLineNumber );
+			if( errorLineNumber != null )
+				result.addMessage( "error at line: " + errorLineNumber );
 			result.setError( e );
 			result.setStatus( TestStepStatus.FAILED );
 		}
