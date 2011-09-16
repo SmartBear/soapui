@@ -90,6 +90,8 @@ import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlLoader;
 import com.eviware.soapui.impl.wsdl.support.wss.DefaultWssContainer;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlProjectRunner;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.environment.DefaultEnvironment;
+import com.eviware.soapui.model.environment.Environment;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.mock.MockService;
 import com.eviware.soapui.model.project.EndpointStrategy;
@@ -170,6 +172,8 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 	private SoapUIScriptEngine afterRunScriptEngine;
 	private SoapUIScriptEngine beforeRunScriptEngine;
 	private Set<ProjectRunListener> runListeners = new HashSet<ProjectRunListener>();
+
+	protected Environment environment;
 
 	protected final static Logger log = Logger.getLogger( WsdlProject.class );
 
@@ -369,6 +373,8 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 
 			endpointStrategy.init( this );
 
+			setActiveEnvironment( DefaultEnvironment.getInstance() );
+
 			if( !getConfig().isSetProperties() )
 				getConfig().addNewProperties();
 
@@ -407,6 +413,16 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 		{
 			UISupport.resetCursor();
 		}
+	}
+
+	public Environment getActiveEnvironment()
+	{
+		return environment;
+	}
+
+	public void setActiveEnvironment( Environment environment )
+	{
+		this.environment = environment;
 	}
 
 	protected WsdlTestSuite buildTestSuite( TestSuiteConfig config )
