@@ -173,7 +173,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 	private SoapUIScriptEngine beforeRunScriptEngine;
 	private Set<ProjectRunListener> runListeners = new HashSet<ProjectRunListener>();
 
-	protected Environment environment;
+	private Environment environment;
 
 	protected final static Logger log = Logger.getLogger( WsdlProject.class );
 
@@ -296,6 +296,10 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 			if( getSettings() != null )
 			{
 				setProjectRoot( path );
+			}
+			if( getConfig() != null && this.environment == null )
+			{
+				setActiveEnvironment( DefaultEnvironment.getInstance() );
 			}
 
 			addPropertyChangeListener( this );
@@ -422,7 +426,12 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 
 	public void setActiveEnvironment( Environment environment )
 	{
-		this.environment = environment;
+		if( !environment.equals( this.environment ) )
+		{
+			this.environment = environment;
+			getConfig().setActiveEnvironment( environment.getName() );
+			fireEnvironmentSwitched( environment );
+		}
 	}
 
 	protected WsdlTestSuite buildTestSuite( TestSuiteConfig config )
@@ -1050,6 +1059,36 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 		for( int c = 0; c < a.length; c++ )
 		{
 			a[c].mockServiceRemoved( mockService );
+		}
+	}
+
+	public void fireEnvironmentAdded( Environment env )
+	{
+		ProjectListener[] a = projectListeners.toArray( new ProjectListener[projectListeners.size()] );
+
+		for( int c = 0; c < a.length; c++ )
+		{
+			a[c].environmentAdded( env );
+		}
+	}
+
+	private void fireEnvironmentSwitched( Environment environment )
+	{
+		ProjectListener[] a = projectListeners.toArray( new ProjectListener[projectListeners.size()] );
+
+		for( int c = 0; c < a.length; c++ )
+		{
+			a[c].environmentSwitched( environment );
+		}
+	}
+
+	public void fireEnvironmentRemoved( Environment env, int index )
+	{
+		ProjectListener[] a = projectListeners.toArray( new ProjectListener[projectListeners.size()] );
+
+		for( int c = 0; c < a.length; c++ )
+		{
+			a[c].environmentRemoved( env, index );
 		}
 	}
 
