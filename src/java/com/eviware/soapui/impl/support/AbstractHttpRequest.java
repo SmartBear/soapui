@@ -380,17 +380,14 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 
 	public void setEndpoint( String endpoint )
 	{
-		String old = getEndpoint();
-		if( old != null && old.equals( endpoint ) )
-			return;
-
-		getConfig().setEndpoint( endpoint );
-		notifyPropertyChanged( ENDPOINT_PROPERTY, old, endpoint );
+		getOperation().getInterface().getProject().getEndpointSupport()
+				.setEndpoint( ( AbstractHttpRequest<AbstractRequestConfig> )this, endpoint );
 	}
 
 	public String getEndpoint()
 	{
-		return getConfig().getEndpoint();
+		return getOperation().getInterface().getProject().getEndpointSupport()
+				.getEndpoint( ( AbstractHttpRequest<AbstractRequestConfig> )this );
 	}
 
 	public String getEncoding()

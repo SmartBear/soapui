@@ -81,6 +81,7 @@ import com.eviware.soapui.impl.WsdlInterfaceFactory;
 import com.eviware.soapui.impl.rest.support.RestRequestConverter.RestConversionException;
 import com.eviware.soapui.impl.settings.XmlBeansSettingsImpl;
 import com.eviware.soapui.impl.support.AbstractInterface;
+import com.eviware.soapui.impl.support.EndpointSupport;
 import com.eviware.soapui.impl.wsdl.endpoint.DefaultEndpointStrategy;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockService;
 import com.eviware.soapui.impl.wsdl.support.ExternalDependency;
@@ -174,6 +175,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 	private Set<ProjectRunListener> runListeners = new HashSet<ProjectRunListener>();
 
 	private Environment environment;
+	protected EndpointSupport endpointSupport;
 
 	protected final static Logger log = Logger.getLogger( WsdlProject.class );
 
@@ -215,6 +217,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 		this.workspace = workspace;
 		this.path = path;
 		this.projectPassword = projectPassword;
+		endpointSupport = new EndpointSupport();
 
 		for( ProjectListener listener : SoapUI.getListenerRegistry().getListeners( ProjectListener.class ) )
 		{
@@ -309,6 +312,11 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 	public boolean isRemote()
 	{
 		return remote;
+	}
+
+	public EndpointSupport getEndpointSupport()
+	{
+		return endpointSupport;
 	}
 
 	public void loadProject( URL file ) throws SoapUIException
