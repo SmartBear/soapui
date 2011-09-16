@@ -42,7 +42,7 @@ public class TestJCIFS
 			NTCredentials creds = new NTCredentials( "testuser", "kebabsalladT357", "", "" );
 			httpClient.getCredentialsProvider().setCredentials( AuthScope.ANY, creds );
 
-			HttpHost target = new HttpHost( "192.168.104.10", 81, "http" );
+			HttpHost target = new HttpHost( "dev-appsrv01.eviware.local", 81, "http" );
 			HttpContext localContext = new BasicHttpContext();
 			HttpGet httpget = new HttpGet( "/" );
 
