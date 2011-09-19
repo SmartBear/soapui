@@ -30,7 +30,7 @@ public interface Environment
 
 	public String getName();
 
-	public void addNewProperty( String name, String value );
+	public Property addNewProperty( String name, String value );
 
 	public void removeProperty( String name );
 

@@ -61,8 +61,9 @@ public class DefaultEnvironment implements Environment
 	{
 	}
 
-	public void addNewProperty( String name, String value )
+	public Property addNewProperty( String name, String value )
 	{
+		return null;
 	}
 
 	public void removeProperty( String name )

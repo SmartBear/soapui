@@ -2262,7 +2262,7 @@
 			<xsd:element name="service" type="tns:Service"
 				maxOccurs="unbounded" minOccurs="0">
 			</xsd:element>
-			<xsd:element name="properties" type="tns:PropertiesType" maxOccurs="1" minOccurs="0"></xsd:element>
+			<xsd:element name="property" type="tns:Property" maxOccurs="unbounded" minOccurs="0"></xsd:element>
 		</xsd:sequence>
 		<xsd:attribute name="name" type="xsd:string"></xsd:attribute>
 	</xsd:complexType>
