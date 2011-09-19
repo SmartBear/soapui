@@ -442,6 +442,11 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 		}
 	}
 
+	public boolean isEnvironmentMode()
+	{
+		return false;
+	}
+
 	protected WsdlTestSuite buildTestSuite( TestSuiteConfig config )
 	{
 		return new WsdlTestSuite( this, config );

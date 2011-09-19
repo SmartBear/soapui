@@ -45,6 +45,7 @@ import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.support.components.ModelItemXmlEditor;
 import com.eviware.soapui.impl.support.components.RequestMessageXmlEditor;
 import com.eviware.soapui.impl.support.components.ResponseMessageXmlEditor;
+import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Attachment;
@@ -803,6 +804,18 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 	public boolean isHasClosed()
 	{
 		return hasClosed;
+	}
+
+	protected void enableEndpointCombo( final JComboBox endpointCombo, WsdlProject project )
+	{
+		if( project.isEnvironmentMode() )
+		{
+			endpointCombo.setEnabled( false );
+		}
+		else
+		{
+			endpointCombo.setEnabled( true );
+		}
 	}
 
 }
