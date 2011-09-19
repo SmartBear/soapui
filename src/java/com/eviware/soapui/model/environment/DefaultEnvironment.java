@@ -60,4 +60,16 @@ public class DefaultEnvironment implements Environment
 	public void removeService( Service service )
 	{
 	}
+
+	public void addNewProperty( String name, String value )
+	{
+	}
+
+	public void removeProperty( String name )
+	{
+	}
+
+	public void setProperty( String name, String value )
+	{
+	}
 }
