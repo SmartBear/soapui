@@ -39,7 +39,7 @@ public class EndpointsComboBoxModel implements ComboBoxModel, PropertyChangeList
 	private static final String DELETE_ENDPOINT = "[delete current]";
 
 	private Set<ListDataListener> listeners = new HashSet<ListDataListener>();
-	protected String[] endpoints;
+	private String[] endpoints;
 	private AbstractHttpRequestInterface<?> request;
 
 	public EndpointsComboBoxModel( AbstractHttpRequestInterface<?> request )
@@ -138,6 +138,11 @@ public class EndpointsComboBoxModel implements ComboBoxModel, PropertyChangeList
 	{
 		this.endpoints = endpoints;
 		notifyContentsChanged();
+	}
+
+	public String[] getEndpoints()
+	{
+		return endpoints;
 	}
 
 	protected void notifyContentsChanged()
