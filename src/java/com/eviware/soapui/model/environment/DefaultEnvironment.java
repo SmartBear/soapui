@@ -69,7 +69,12 @@ public class DefaultEnvironment implements Environment
 	{
 	}
 
-	public void setProperty( String name, String value )
+	public void changePropertyName( String name, String value )
 	{
 	}
+
+	public void changePropertyValue( String name, String value )
+	{
+	}
+
 }
