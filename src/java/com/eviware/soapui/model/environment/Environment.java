@@ -32,10 +32,12 @@ public interface Environment
 
 	public Property addNewProperty( String name, String value );
 
-	public void removeProperty( String name );
+	public void removeProperty( Property property );
 
 	public void changePropertyName( String name, String value );
 
 	public void changePropertyValue( String name, String value );
+
+	public void moveProperty( String name, int idx );
 
 }

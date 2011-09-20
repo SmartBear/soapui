@@ -66,7 +66,7 @@ public class DefaultEnvironment implements Environment
 		return null;
 	}
 
-	public void removeProperty( String name )
+	public void removeProperty( Property property )
 	{
 	}
 
@@ -75,6 +75,10 @@ public class DefaultEnvironment implements Environment
 	}
 
 	public void changePropertyValue( String name, String value )
+	{
+	}
+
+	public void moveProperty( String name, int idx )
 	{
 	}
 
