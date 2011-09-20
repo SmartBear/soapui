@@ -79,6 +79,16 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 		filters.remove( filter );
 	}
 
+	public <T> void removeRequestFilter( Class<T> filterClass )
+	{
+		RequestFilter filter = findFilterByType( filterClass );
+
+		if( filter != null )
+		{
+			removeRequestFilter( filter );
+		}
+	}
+
 	public <T> void replaceRequestFilter( Class<T> filterClass, RequestFilter newFilter )
 	{
 		RequestFilter filter = findFilterByType( filterClass );

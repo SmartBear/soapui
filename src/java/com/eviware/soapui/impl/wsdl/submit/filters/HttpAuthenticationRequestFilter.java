@@ -15,13 +15,16 @@ package com.eviware.soapui.impl.wsdl.submit.filters;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+import org.apache.http.Header;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
 import org.apache.http.auth.NTCredentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.params.AuthPolicy;
+import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.impl.auth.BasicScheme;
 import org.apache.log4j.Logger;
 
@@ -30,7 +33,6 @@ import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransport;
 import com.eviware.soapui.impl.wsdl.support.BrowserCredentials;
-import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.settings.Settings;
@@ -86,10 +88,11 @@ public class HttpAuthenticationRequestFilter extends AbstractRequestFilter
 			if( settings.getBoolean( HttpSettings.AUTHENTICATE_PREEMPTIVELY ) )
 			{
 				UsernamePasswordCredentials creds = new UsernamePasswordCredentials( username, password );
-				httpMethod.addHeader( BasicScheme.authenticate( creds, "utf-8", false ) );
+				Header header = BasicScheme.authenticate( creds, "utf-8", false );
+				httpMethod.removeHeaders( "Authorization" );
+				httpMethod.addHeader( header );
 			}
-
-			HttpClientSupport.getHttpClient().setCredentialsProvider(
+			( ( HttpUriRequest )httpMethod ).getParams().setParameter( ClientContext.CREDS_PROVIDER,
 					new UPDCredentialsProvider( username, password, domain ) );
 		}
 	}
