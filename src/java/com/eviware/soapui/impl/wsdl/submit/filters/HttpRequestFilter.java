@@ -214,12 +214,9 @@ public class HttpRequestFilter extends AbstractRequestFilter
 		}
 		else if( StringUtils.hasContent( path ) )
 		{
-			java.net.URI oldUri = httpMethod.getURI();
-
 			try
 			{
-				// URI(String) automatically URLencodes the input, so we need to
-				// decode it first...
+				java.net.URI oldUri = httpMethod.getURI();
 				httpMethod.setURI( URIUtils.createURI( oldUri.getScheme(), oldUri.getHost(), oldUri.getPort(), path,
 						oldUri.getQuery(), oldUri.getFragment() ) );
 			}
@@ -237,7 +234,6 @@ public class HttpRequestFilter extends AbstractRequestFilter
 			{
 				java.net.URI tempUri = URIUtils.createURI( oldUri.getScheme(), oldUri.getHost(), oldUri.getPort(),
 						oldUri.getPath(), query.toString(), null );
-				context.setProperty( BaseHttpRequestTransport.REQUEST_URI, new URI( tempUri.toString(), false ) );
 				httpMethod.setURI( tempUri );
 			}
 			catch( Exception e )

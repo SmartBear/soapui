@@ -12,7 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.submit.transports.http;
 
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +19,7 @@ import org.apache.http.Header;
 import org.apache.http.HttpHost;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.client.utils.URIUtils;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
@@ -220,22 +220,21 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 			httpMethod.setDumpFile( PathUtils.expandPath( httpRequest.getDumpFile(),
 					( AbstractWsdlModelItem<?> )httpRequest, submitContext ) );
 
-			URI tempUri = ( URI )submitContext.getProperty( BaseHttpRequestTransport.REQUEST_URI );
-
-			java.net.URI uri = null;
-			try
-			{
-				uri = new java.net.URI( tempUri.toString() );
-			}
-			catch( URISyntaxException e )
-			{
-				SoapUI.logError( e );
-			}
-
 			// fix absolute URIs due to peculiarity in httpclient
-			if( uri != null && uri.isAbsolute() )
+			URI uri = ( URI )submitContext.getProperty( BaseHttpRequestTransport.REQUEST_URI );
+			if( uri != null && uri.isAbsoluteURI() )
 			{
 				hostConfiguration.setHttpHost( new HttpHost( uri.getHost(), uri.getPort(), uri.getScheme() ) );
+				String str = uri.toString();
+				int ix = str.indexOf( '/', str.indexOf( "//" ) + 2 );
+				if( ix != -1 )
+				{
+					uri = new URI( str.substring( ix ), true );
+					java.net.URI oldUri = httpMethod.getURI();
+					httpMethod.setURI( URIUtils.createURI( oldUri.getScheme(), oldUri.getHost(), oldUri.getPort(),
+							uri.getPath(), oldUri.getQuery(), oldUri.getFragment() ) );
+					submitContext.setProperty( BaseHttpRequestTransport.REQUEST_URI, uri );
+				}
 			}
 
 			// include request time?
