@@ -54,6 +54,8 @@ import com.eviware.soapui.model.iface.Submit;
 import com.eviware.soapui.model.iface.Submit.Status;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.iface.SubmitListener;
+import com.eviware.soapui.model.project.Project;
+import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
@@ -315,7 +317,14 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 	public void setEnabled( boolean enabled )
 	{
 		if( endpointComponent != null )
-			endpointComponent.setEnabled( enabled );
+		{
+			WsdlProject project = ( WsdlProject )ModelSupport.getModelItemProject( getModelItem() );
+			if( project.isEnvironmentMode() )
+				endpointComponent.setEnabled( false );
+			else
+				endpointComponent.setEnabled( true );
+
+		}
 
 		requestEditor.setEditable( enabled );
 		if( responseEditor != null )
