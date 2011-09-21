@@ -64,6 +64,11 @@ public abstract class AbstractTestPropertyHolderWsdlModelItem<T extends ModelIte
 		}
 	}
 
+	protected XmlBeansPropertiesTestPropertyHolder getPropertyHolderSupport()
+	{
+		return propertyHolderSupport;
+	}
+
 	private String createPropertyName( String str )
 	{
 		if( str == null )
