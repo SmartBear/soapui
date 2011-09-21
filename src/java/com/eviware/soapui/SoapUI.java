@@ -101,6 +101,8 @@ import com.eviware.soapui.integration.impl.CajoServer;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.PanelBuilder;
 import com.eviware.soapui.model.TestPropertyHolder;
+import com.eviware.soapui.model.environment.EnvironmentListener;
+import com.eviware.soapui.model.environment.Property;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.settings.SettingsListener;
@@ -1121,6 +1123,11 @@ public class SoapUI
 
 				if( selectedPropertyHolderTable != null )
 				{
+					if( modelItem instanceof WsdlProject )
+					{
+						WsdlProject project = ( WsdlProject )modelItem;
+						project.clearEnvironmentListeners();
+					}
 					selectedPropertyHolderTable.release();
 					selectedPropertyHolderTable = null;
 				}
@@ -1132,6 +1139,18 @@ public class SoapUI
 					if( !( modelItem instanceof WsdlProject ) || ( ( WsdlProject )modelItem ).isOpen() )
 					{
 						selectedPropertyHolderTable = new PropertyHolderTable( ( TestPropertyHolder )modelItem );
+
+						if( modelItem instanceof WsdlProject )
+						{
+							WsdlProject project = ( WsdlProject )modelItem;
+							project.addEnvironmentListener( new EnvironmentListener()
+							{
+								public void propertyValueChanged( Property property )
+								{
+									selectedPropertyHolderTable.getPropertiesModel().fireTableDataChanged();
+								}
+							} );
+						}
 					}
 				}
 

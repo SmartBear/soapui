@@ -93,6 +93,8 @@ import com.eviware.soapui.impl.wsdl.testcase.WsdlProjectRunner;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.environment.DefaultEnvironment;
 import com.eviware.soapui.model.environment.Environment;
+import com.eviware.soapui.model.environment.EnvironmentListener;
+import com.eviware.soapui.model.environment.Property;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.mock.MockService;
 import com.eviware.soapui.model.project.EndpointStrategy;
@@ -161,6 +163,8 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 	private String projectPassword = null;
 	private String hermesConfig;
 	private boolean wrongPasswordSupplied;
+
+	protected Set<EnvironmentListener> environmentListeners = new HashSet<EnvironmentListener>();
 
 	/*
 	 * 3 state flag: 1. 0 - project not encrypted 2. 1 - encrypted , good
@@ -1136,6 +1140,16 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 		}
 	}
 
+	public void firePropertyValueChanged( Property property )
+	{
+		EnvironmentListener[] a = environmentListeners.toArray( new EnvironmentListener[environmentListeners.size()] );
+
+		for( int c = 0; c < a.length; c++ )
+		{
+			a[c].propertyValueChanged( property );
+		}
+	}
+
 	public boolean isDisabled()
 	{
 		return disabled;
@@ -1220,6 +1234,8 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 		}
 
 		projectListeners.clear();
+
+		environmentListeners.clear();
 
 		if( afterLoadScriptEngine != null )
 			afterLoadScriptEngine.release();
@@ -2069,6 +2085,21 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 		map.put( "XmlBombSecurityCheck", "XmlBombSecurityScan" );
 		map.put( "XPathInjectionSecurityCheck", "XPathInjectionSecurityScan" );
 		return map;
+	}
+
+	public void addEnvironmentListener( EnvironmentListener listener )
+	{
+		environmentListeners.add( listener );
+	}
+
+	public void removeEnvironmentListener( EnvironmentListener listener )
+	{
+		environmentListeners.remove( listener );
+	}
+
+	public void clearEnvironmentListeners()
+	{
+		environmentListeners.clear();
 	}
 
 	protected void updateChecksToScans( ProjectConfig config )

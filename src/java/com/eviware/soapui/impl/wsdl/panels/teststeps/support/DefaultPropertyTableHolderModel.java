@@ -16,11 +16,14 @@ import javax.swing.table.AbstractTableModel;
 
 import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
 import com.eviware.soapui.model.TestPropertyHolder;
+import com.eviware.soapui.model.environment.EnvironmentListener;
+import com.eviware.soapui.model.environment.Property;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.types.StringList;
 
-public class DefaultPropertyTableHolderModel extends AbstractTableModel implements PropertyHolderTableModel
+public class DefaultPropertyTableHolderModel extends AbstractTableModel implements PropertyHolderTableModel,
+		EnvironmentListener
 {
 	private StringList names = new StringList();
 	private final TestPropertyHolder holder;
@@ -130,4 +133,10 @@ public class DefaultPropertyTableHolderModel extends AbstractTableModel implemen
 
 		return null;
 	}
+
+	public void propertyValueChanged( Property property )
+	{
+		fireTableDataChanged();
+	}
+
 }
