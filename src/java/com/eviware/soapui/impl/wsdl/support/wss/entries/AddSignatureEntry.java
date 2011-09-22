@@ -186,7 +186,8 @@ public class AddSignatureEntry extends WssEntryBase
 			wssSign.setUseSingleCertificate( useSingleCert );
 
 			/* ADDED: Set the digest algorithm to the selected one */
-			wssSign.setDigestAlgo( digestAlgorithm );
+			if( StringUtils.hasContent( digestAlgorithm ) )
+				wssSign.setDigestAlgo( digestAlgorithm );
 
 			Vector<WSEncryptionPart> wsParts = createWSParts( parts );
 			if( !wsParts.isEmpty() )
