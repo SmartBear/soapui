@@ -156,15 +156,6 @@ public class XmlBeansPropertiesTestPropertyHolder implements MutableTestProperty
 		}
 	}
 
-	private void firePropertyValueChanged( String name, String oldValue, String newValue )
-	{
-		TestPropertyListener[] listenersArray = listeners.toArray( new TestPropertyListener[listeners.size()] );
-		for( TestPropertyListener listener : listenersArray )
-		{
-			listener.propertyValueChanged( name, oldValue, newValue );
-		}
-	}
-
 	public TestProperty addProperty( String name )
 	{
 		PropertyConfig propertyConfig = config.addNewProperty();
@@ -345,6 +336,11 @@ public class XmlBeansPropertiesTestPropertyHolder implements MutableTestProperty
 			firePropertyValueChanged( getName(), oldValue, value );
 		}
 
+		public void firePropertyValueChanged( String name, String oldValue, String newValue )
+		{
+			XmlBeansPropertiesTestPropertyHolder.this.firePropertyValueChanged( name, oldValue, newValue );
+		}
+
 		public boolean isReadOnly()
 		{
 			return false;
@@ -390,6 +386,15 @@ public class XmlBeansPropertiesTestPropertyHolder implements MutableTestProperty
 			return super.hashCode();
 		}
 
+	}
+
+	public void firePropertyValueChanged( String name, String oldValue, String newValue )
+	{
+		TestPropertyListener[] listenersArray = listeners.toArray( new TestPropertyListener[listeners.size()] );
+		for( TestPropertyListener listener : listenersArray )
+		{
+			listener.propertyValueChanged( name, oldValue, newValue );
+		}
 	}
 
 	public int saveTo( String fileName ) throws IOException

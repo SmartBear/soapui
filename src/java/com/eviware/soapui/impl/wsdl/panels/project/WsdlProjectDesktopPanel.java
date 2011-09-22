@@ -351,6 +351,10 @@ public class WsdlProjectDesktopPanel extends ModelItemDesktopPanel<WsdlProject>
 	{
 		JPanel panel = new JPanel( new BorderLayout() );
 		propertiesTable = new PropertyHolderTable( getModelItem() );
+		if( getModelItem() instanceof WsdlProject )
+		{
+			( ( WsdlProject )getModelItem() ).addProjectListener( propertiesTable.getProjectListener() );
+		}
 		panel.add( propertiesTable, BorderLayout.CENTER );
 		return panel;
 	}
