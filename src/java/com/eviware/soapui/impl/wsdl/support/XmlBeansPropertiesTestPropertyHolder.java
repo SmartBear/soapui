@@ -377,6 +377,19 @@ public class XmlBeansPropertiesTestPropertyHolder implements MutableTestProperty
 			return XmlBeans.getBuiltinTypeSystem().findType( getType() );
 		}
 
+		@Override
+		public boolean equals( Object obj )
+		{
+			TestProperty testProperty = ( TestProperty )obj;
+			return getModelItem().equals( testProperty.getModelItem() ) && getName().equals( testProperty.getName() );
+		}
+
+		@Override
+		public int hashCode()
+		{
+			return super.hashCode();
+		}
+
 	}
 
 	public int saveTo( String fileName ) throws IOException

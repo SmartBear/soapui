@@ -54,7 +54,7 @@ public class GlobalPropertyResolver implements PropertyResolver
 
 			for( Object key : properties.keySet() )
 			{
-				result.put( key.toString(), new EnviromentTestProperty( key ) );
+				result.put( key.toString(), new SystemEnviromentTestProperty( key ) );
 			}
 
 			return result;
@@ -78,7 +78,7 @@ public class GlobalPropertyResolver implements PropertyResolver
 		public TestProperty getProperty( String name )
 		{
 			Map<String, String> properties = System.getenv();
-			return properties.containsKey( name ) ? new EnviromentTestProperty( name ) : null;
+			return properties.containsKey( name ) ? new SystemEnviromentTestProperty( name ) : null;
 		}
 
 		public TestProperty getPropertyAt( int index )
@@ -119,11 +119,11 @@ public class GlobalPropertyResolver implements PropertyResolver
 		{
 		}
 
-		private class EnviromentTestProperty implements TestProperty
+		private class SystemEnviromentTestProperty implements TestProperty
 		{
 			private final Object key;
 
-			public EnviromentTestProperty( Object key )
+			public SystemEnviromentTestProperty( Object key )
 			{
 				this.key = key;
 			}
