@@ -47,9 +47,11 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
+import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.teststeps.AMFRequestTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.JdbcRequestTestStep;
 import com.eviware.soapui.model.TestPropertyHolder;
+import com.eviware.soapui.model.environment.EnvironmentListener;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionImpl;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
@@ -64,8 +66,8 @@ import com.eviware.soapui.support.xml.XmlUtils;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.AField.AFieldType;
+import com.eviware.x.form.support.AForm;
 
 @SuppressWarnings( "serial" )
 public class PropertyHolderTable extends JPanel
@@ -80,6 +82,7 @@ public class PropertyHolderTable extends JPanel
 	protected LoadPropertiesAction loadPropertiesAction;
 	protected MovePropertyUpAction movePropertyUpAction;
 	protected MovePropertyDownAction movePropertyDownAction;
+	private EnvironmentListener environmentListener;
 
 	public PropertyHolderTable( TestPropertyHolder holder )
 	{
@@ -216,6 +219,12 @@ public class PropertyHolderTable extends JPanel
 			propertiesTable.getCellEditor().stopCellEditing();
 
 		holder.removeTestPropertyListener( testPropertyListener );
+
+		if( holder instanceof WsdlProject )
+		{
+			WsdlProject project = ( WsdlProject )holder;
+			project.removeEnvironmentListener( environmentListener );
+		}
 	}
 
 	public void setEnabled( boolean enabled )
@@ -734,13 +743,13 @@ public class PropertyHolderTable extends JPanel
 	}
 
 	/**
-	 * Idea is that all values which property name starts or ends with 'password' case insesitive be
-	 * shadowed.
+	 * Idea is that all values which property name starts or ends with 'password'
+	 * case insesitive be shadowed.
 	 * 
 	 * This cell render in applied only on property value column.
 	 * 
 	 * @author robert
-	 *
+	 * 
 	 */
 	private static class PropertiesTableCellRenderer extends DefaultTableCellRenderer
 	{
@@ -752,7 +761,7 @@ public class PropertyHolderTable extends JPanel
 			{
 				if( value != null && ( ( String )value ).length() > 0 )
 				{
-					String val = (( String )table.getValueAt( row, 0 )).toLowerCase();
+					String val = ( ( String )table.getValueAt( row, 0 ) ).toLowerCase();
 					if( val.startsWith( "password" ) || val.endsWith( "password" ) )
 						component = super.getTableCellRendererComponent( table, "**************", isSelected, hasFocus, row,
 								column );
@@ -761,5 +770,15 @@ public class PropertyHolderTable extends JPanel
 
 			return component;
 		}
+	}
+
+	public EnvironmentListener getEnvironmentListener()
+	{
+		return environmentListener;
+	}
+
+	public void setEnvironmentListener( EnvironmentListener environmentListener )
+	{
+		this.environmentListener = environmentListener;
 	}
 }

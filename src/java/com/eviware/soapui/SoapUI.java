@@ -1123,11 +1123,6 @@ public class SoapUI
 
 				if( selectedPropertyHolderTable != null )
 				{
-					if( modelItem instanceof WsdlProject )
-					{
-						WsdlProject project = ( WsdlProject )modelItem;
-						//						project.clearEnvironmentListeners();
-					}
 					selectedPropertyHolderTable.release();
 					selectedPropertyHolderTable = null;
 				}
@@ -1143,13 +1138,15 @@ public class SoapUI
 						if( modelItem instanceof WsdlProject )
 						{
 							WsdlProject project = ( WsdlProject )modelItem;
-							project.addEnvironmentListener( new EnvironmentListener()
+							EnvironmentListener environmentListener = new EnvironmentListener()
 							{
 								public void propertyValueChanged( Property property )
 								{
 									selectedPropertyHolderTable.getPropertiesModel().fireTableDataChanged();
 								}
-							} );
+							};
+							project.addEnvironmentListener( environmentListener );
+							selectedPropertyHolderTable.setEnvironmentListener( environmentListener );
 						}
 					}
 				}
