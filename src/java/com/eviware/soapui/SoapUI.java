@@ -1126,7 +1126,7 @@ public class SoapUI
 					if( modelItem instanceof WsdlProject )
 					{
 						WsdlProject project = ( WsdlProject )modelItem;
-						project.clearEnvironmentListeners();
+						//						project.clearEnvironmentListeners();
 					}
 					selectedPropertyHolderTable.release();
 					selectedPropertyHolderTable = null;

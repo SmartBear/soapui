@@ -2097,11 +2097,6 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 		environmentListeners.remove( listener );
 	}
 
-	public void clearEnvironmentListeners()
-	{
-		environmentListeners.clear();
-	}
-
 	protected void updateChecksToScans( ProjectConfig config )
 	{
 		for( TestSuiteConfig testSuite : config.getTestSuiteList() )
