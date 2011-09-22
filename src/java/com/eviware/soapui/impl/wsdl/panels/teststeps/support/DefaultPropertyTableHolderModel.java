@@ -139,4 +139,9 @@ public class DefaultPropertyTableHolderModel extends AbstractTableModel implemen
 		fireTableDataChanged();
 	}
 
+	public void propertyMoved()
+	{
+		fireTableDataChanged();
+	}
+
 }
