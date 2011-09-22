@@ -19,8 +19,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -49,7 +49,7 @@ public class XmlBeansPropertiesTestPropertyHolder implements MutableTestProperty
 {
 	private PropertiesTypeConfig config;
 	private List<PropertiesStepProperty> properties = new ArrayList<PropertiesStepProperty>();
-	private Map<String, PropertiesStepProperty> propertyMap = new HashMap<String, PropertiesStepProperty>();
+	private Map<String, PropertiesStepProperty> propertyMap = new LinkedHashMap<String, PropertiesStepProperty>();
 	private Set<TestPropertyListener> listeners = new HashSet<TestPropertyListener>();
 	private ModelItem modelItem;
 	private Properties overrideProperties;
@@ -396,7 +396,7 @@ public class XmlBeansPropertiesTestPropertyHolder implements MutableTestProperty
 
 	public Map<String, TestProperty> getProperties()
 	{
-		Map<String, TestProperty> result = new HashMap<String, TestProperty>();
+		Map<String, TestProperty> result = new LinkedHashMap<String, TestProperty>();
 		for( TestProperty property : propertyMap.values() )
 		{
 			result.put( property.getName(), property );
