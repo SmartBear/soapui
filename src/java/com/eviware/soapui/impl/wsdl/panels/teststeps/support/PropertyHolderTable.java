@@ -51,13 +51,19 @@ import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.teststeps.AMFRequestTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.JdbcRequestTestStep;
 import com.eviware.soapui.model.TestPropertyHolder;
+import com.eviware.soapui.model.environment.Environment;
 import com.eviware.soapui.model.environment.EnvironmentListener;
+import com.eviware.soapui.model.iface.Interface;
+import com.eviware.soapui.model.mock.MockService;
+import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionImpl;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
+import com.eviware.soapui.model.support.ProjectListenerAdapter;
 import com.eviware.soapui.model.support.TestPropertyUtils;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestPropertyListener;
+import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.model.tree.nodes.PropertyTreeNode.PropertyModelItem;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
@@ -83,6 +89,7 @@ public class PropertyHolderTable extends JPanel
 	protected MovePropertyUpAction movePropertyUpAction;
 	protected MovePropertyDownAction movePropertyDownAction;
 	private EnvironmentListener environmentListener;
+	private ProjectListenerAdapter projectListener;
 
 	public PropertyHolderTable( TestPropertyHolder holder )
 	{
@@ -103,6 +110,14 @@ public class PropertyHolderTable extends JPanel
 
 		add( scrollPane, BorderLayout.CENTER );
 		add( buildToolbar(), BorderLayout.NORTH );
+
+		projectListener = new ProjectListenerAdapter()
+		{
+			public void environmentSwitched( Environment environment )
+			{
+				getPropertiesModel().fireTableDataChanged();
+			}
+		};
 	}
 
 	protected JTable buildPropertiesTable()
@@ -224,7 +239,10 @@ public class PropertyHolderTable extends JPanel
 		{
 			WsdlProject project = ( WsdlProject )holder;
 			project.removeEnvironmentListener( environmentListener );
+			project.removeProjectListener( projectListener );
 		}
+
+		projectListener = null;
 	}
 
 	public void setEnabled( boolean enabled )
@@ -780,5 +798,67 @@ public class PropertyHolderTable extends JPanel
 	public void setEnvironmentListener( EnvironmentListener environmentListener )
 	{
 		this.environmentListener = environmentListener;
+	}
+
+	public void interfaceAdded( Interface iface )
+	{
+	}
+
+	public void interfaceRemoved( Interface iface )
+	{
+	}
+
+	public void interfaceUpdated( Interface iface )
+	{
+	}
+
+	public void testSuiteAdded( TestSuite testSuite )
+	{
+	}
+
+	public void testSuiteRemoved( TestSuite testSuite )
+	{
+	}
+
+	public void testSuiteMoved( TestSuite testSuite, int index, int offset )
+	{
+	}
+
+	public void mockServiceAdded( MockService mockService )
+	{
+	}
+
+	public void mockServiceRemoved( MockService mockService )
+	{
+	}
+
+	public void afterLoad( Project project )
+	{
+	}
+
+	public void beforeSave( Project project )
+	{
+	}
+
+	public void environmentAdded( Environment env )
+	{
+	}
+
+	public void environmentRemoved( Environment env, int index )
+	{
+	}
+
+	public void environmentSwitched( Environment environment )
+	{
+	}
+
+	public ProjectListenerAdapter getProjectListener()
+	{
+		return projectListener;
+	}
+
+	public void setProjectListener( ProjectListenerAdapter projectListener )
+	{
+		this.projectListener = projectListener;
 	}
 }

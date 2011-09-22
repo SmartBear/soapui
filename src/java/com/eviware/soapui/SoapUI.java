@@ -1147,6 +1147,7 @@ public class SoapUI
 							};
 							project.addEnvironmentListener( environmentListener );
 							selectedPropertyHolderTable.setEnvironmentListener( environmentListener );
+							project.addProjectListener( selectedPropertyHolderTable.getProjectListener() );
 						}
 					}
 				}
