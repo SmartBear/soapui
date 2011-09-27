@@ -30,7 +30,9 @@ import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
@@ -38,6 +40,7 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableColumn;
 
 import com.eviware.soapui.config.EndpointConfig;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
@@ -54,9 +57,11 @@ import com.eviware.soapui.model.iface.Operation;
 import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestSuite;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.components.MetricsPanel;
+import com.l2fprod.common.swing.renderer.DefaultCellRenderer;
 
 public class DefaultEndpointStrategyConfigurationPanel extends JPanel implements PropertyChangeListener
 {
@@ -83,6 +88,13 @@ public class DefaultEndpointStrategyConfigurationPanel extends JPanel implements
 	{
 		tableModel = iface instanceof WsdlInterface ? new WsdlEndpointsTableModel() : new RestEndpointsTableModel();
 		table = new JTable( tableModel );
+
+		TableColumn passwordColumn = table.getColumnModel().getColumn( tableModel.getPasswordColumnIndex() );
+		JPasswordField textField = new JPasswordField();
+		textField.setBorder( BorderFactory.createEmptyBorder() );
+		DefaultCellEditor cellEditor = new DefaultCellEditor( textField );
+		passwordColumn.setCellEditor( cellEditor );
+
 		table.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
 		table.getSelectionModel().addListSelectionListener( new ListSelectionListener()
 		{
@@ -123,6 +135,12 @@ public class DefaultEndpointStrategyConfigurationPanel extends JPanel implements
 							new DefaultCellEditor( new JComboBox( new String[] { EndpointConfig.Mode.OVERRIDE.toString(),
 									EndpointConfig.Mode.COMPLEMENT.toString(), EndpointConfig.Mode.COPY.toString() } ) ) );
 		}
+		InternalRowCellrenderer internalRowCellRendered = new InternalRowCellrenderer();
+		for( int c = 0; c < table.getColumnCount(); c++ )
+		{
+			table.getColumnModel().getColumn( c ).setCellRenderer( internalRowCellRendered );
+		}
+		setBackground( Color.WHITE );
 
 		table.getTableHeader().setReorderingAllowed( false );
 
@@ -345,6 +363,8 @@ public class DefaultEndpointStrategyConfigurationPanel extends JPanel implements
 			return iface == null ? 0 : iface.getEndpoints().length;
 		}
 
+		public abstract int getPasswordColumnIndex();
+
 		@Override
 		public boolean isCellEditable( int rowIndex, int columnIndex )
 		{
@@ -382,6 +402,12 @@ public class DefaultEndpointStrategyConfigurationPanel extends JPanel implements
 			}
 
 			return null;
+		}
+
+		@Override
+		public int getPasswordColumnIndex()
+		{
+			return 2;
 		}
 
 		public Object getValueAt( int rowIndex, int columnIndex )
@@ -445,6 +471,7 @@ public class DefaultEndpointStrategyConfigurationPanel extends JPanel implements
 			}
 			}
 		}
+
 	}
 
 	private class WsdlEndpointsTableModel extends EndpointsTableModel
@@ -480,6 +507,12 @@ public class DefaultEndpointStrategyConfigurationPanel extends JPanel implements
 			}
 
 			return null;
+		}
+
+		@Override
+		public int getPasswordColumnIndex()
+		{
+			return 2;
 		}
 
 		public Object getValueAt( int rowIndex, int columnIndex )
@@ -630,4 +663,46 @@ public class DefaultEndpointStrategyConfigurationPanel extends JPanel implements
 	{
 		tableModel.refresh();
 	}
+
+	public static class InternalRowCellrenderer extends DefaultCellRenderer
+	{
+		@Override
+		public Component getTableCellRendererComponent( JTable table, Object value, boolean isSelected, boolean hasFocus,
+				int row, int column )
+		{
+			Component component;
+			DefaultCellEditor cellEditor = ( DefaultCellEditor )table.getCellEditor( row, column );
+			if( cellEditor.getComponent() instanceof JPasswordField && value instanceof String )
+			{
+				if( value != null && ( ( String )value ).length() > 0 )
+				{
+					component = super.getTableCellRendererComponent( table, "**************", isSelected, hasFocus, row,
+							column );
+				}
+				else
+				{
+					component = super.getTableCellRendererComponent( table, value, isSelected, hasFocus, row, column );
+				}
+			}
+			else
+			{
+				component = super.getTableCellRendererComponent( table, value, isSelected, hasFocus, row, column );
+			}
+			if( component instanceof JComponent )
+			{
+				// do not set tooltip as value for password field, it has no sense.
+				if( value != null && StringUtils.hasContent( value.toString() )
+						&& !( cellEditor.getComponent() instanceof JPasswordField ) )
+				{
+					( ( JComponent )component ).setToolTipText( value.toString() );
+				}
+				else
+				{
+					( ( JComponent )component ).setToolTipText( null );
+				}
+			}
+			return component;
+		}
+	}
+
 }
