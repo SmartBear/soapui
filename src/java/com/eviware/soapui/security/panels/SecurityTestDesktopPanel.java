@@ -374,6 +374,11 @@ public class SecurityTestDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 
 		return toolbar;
 	}
+	
+	protected JButton getSetEndpointButton()
+	{
+		return setEndpointButton;
+	}
 
 	public JButton getOptionsButton()
 	{

@@ -291,7 +291,7 @@ public class WsdlTestCaseDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 		return panel;
 	}
 
-	private Component buildToolbar()
+	protected Component buildToolbar()
 	{
 		JXToolBar toolbar = UISupport.createToolbar();
 
@@ -334,6 +334,11 @@ public class WsdlTestCaseDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 		toolbar.add( UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.TESTCASEEDITOR_HELP_URL ) ) );
 
 		return toolbar;
+	}
+
+	protected JButton getSetEndpointButton()
+	{
+		return setEndpointButton;
 	}
 
 	protected void addToolbarActions( JXToolBar toolbar )

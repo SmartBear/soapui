@@ -46,33 +46,40 @@ public class OpenRequestForMockResponseAction extends AbstractSoapUIAction<WsdlM
 
 		String[] names = ModelSupport.getNames( operation.getRequestList(), new String[] { "-> Create New" } );
 
-		String name = ( String )UISupport.prompt( "Select Request for Operation [" + operation.getName() + "] "
-				+ "to open or create", "Open Request", names );
-		if( name != null )
+		if( operation.getInterface().getProject().isEnvironmentMode() )
 		{
-			WsdlRequest request = operation.getRequestByName( name );
-			if( request == null )
+			UISupport.showInfoMessage( "Do you wish to activate the Default Environment?" );
+		}
+		else
+		{
+			String name = ( String )UISupport.prompt( "Select Request for Operation [" + operation.getName() + "] "
+					+ "to open or create", "Open Request", names );
+			if( name != null )
 			{
-				name = UISupport.prompt( "Specify name of new request", "Open Request",
-						"Request " + ( operation.getRequestCount() + 1 ) );
-				if( name == null )
-					return;
-
-				boolean createOptional = operation.getSettings().getBoolean(
-						WsdlSettings.XML_GENERATION_ALWAYS_INCLUDE_OPTIONAL_ELEMENTS );
-				if( !createOptional )
-					createOptional = UISupport.confirm( "Create optional elements from schema?", "Create Request" );
-
-				request = operation.addNewRequest( name );
-				String requestContent = operation.createRequest( createOptional );
-				if( requestContent != null )
+				WsdlRequest request = operation.getRequestByName( name );
+				if( request == null )
 				{
-					request.setRequestContent( requestContent );
-				}
-			}
+					name = UISupport.prompt( "Specify name of new request", "Open Request",
+							"Request " + ( operation.getRequestCount() + 1 ) );
+					if( name == null )
+						return;
 
-			request.setEndpoint( mockResponse.getMockOperation().getMockService().getLocalEndpoint() );
-			UISupport.selectAndShow( request );
+					boolean createOptional = operation.getSettings().getBoolean(
+							WsdlSettings.XML_GENERATION_ALWAYS_INCLUDE_OPTIONAL_ELEMENTS );
+					if( !createOptional )
+						createOptional = UISupport.confirm( "Create optional elements from schema?", "Create Request" );
+
+					request = operation.addNewRequest( name );
+					String requestContent = operation.createRequest( createOptional );
+					if( requestContent != null )
+					{
+						request.setRequestContent( requestContent );
+					}
+				}
+
+				request.setEndpoint( mockResponse.getMockOperation().getMockService().getLocalEndpoint() );
+				UISupport.selectAndShow( request );
+			}
 		}
 	}
 }
