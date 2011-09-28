@@ -1,6 +1,7 @@
 package com.eviware.soapui.support.httpclient;
 
 import java.io.IOException;
+import java.net.UnknownHostException;
 
 import junit.framework.JUnit4TestAdapter;
 
@@ -12,7 +13,6 @@ import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.NTCredentials;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.params.AuthPolicy;
-import org.apache.http.conn.HttpHostConnectException;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
@@ -63,7 +63,7 @@ public class TestJCIFS
 
 			Assert.assertEquals( response1.getStatusLine().getStatusCode(), 200 );
 		}
-		catch( HttpHostConnectException e )
+		catch( UnknownHostException e )
 		{
 			/* ignore */
 		}
