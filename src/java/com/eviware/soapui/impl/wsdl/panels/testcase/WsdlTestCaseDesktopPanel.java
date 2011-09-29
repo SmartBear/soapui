@@ -164,6 +164,17 @@ public class WsdlTestCaseDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 	{
 		stateDependantComponents.setEnabled( !SoapUI.getTestMonitor().hasRunningLoadTest( getModelItem() )
 				&& !SoapUI.getTestMonitor().hasRunningSecurityTest( getModelItem() ) );
+
+		//disable setting endpoint if in environment mode
+		WsdlProject project = getModelItem().getTestSuite().getProject();
+		if( project.isEnvironmentMode() )
+		{
+			getSetEndpointButton().setEnabled( false );
+		}
+		else
+		{
+			getSetEndpointButton().setEnabled( true );
+		}
 	}
 
 	private void buildUI()
