@@ -52,6 +52,8 @@ import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 import com.eviware.soapui.impl.wsdl.support.http.SoapUIHostConfiguration;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.support.types.StringToStringsMap;
+import com.eviware.soapui.support.uri.URI;
+import com.eviware.soapui.support.uri.URIException;
 
 public class ProxyServlet implements Servlet
 {
@@ -73,6 +75,8 @@ public class ProxyServlet implements Servlet
 		dontProxyHeaders.add( "proxy-authorization" );
 		dontProxyHeaders.add( "proxy-authenticate" );
 		dontProxyHeaders.add( "upgrade" );
+		// after update to httpclient 4.1
+		dontProxyHeaders.add( "content-length" );
 	}
 
 	public ProxyServlet( SoapMonitor soapMonitor )
@@ -151,9 +155,6 @@ public class ProxyServlet implements Servlet
 			if( connectionHeader != null && connectionHeader.indexOf( lhdr ) >= 0 )
 				continue;
 
-			if( "content-length".equals( lhdr ) )
-				contentLength = request.getContentLength();
-
 			Enumeration<?> vals = httpRequest.getHeaders( hdr );
 			while( vals.hasMoreElements() )
 			{
@@ -173,7 +174,9 @@ public class ProxyServlet implements Servlet
 
 		if( method instanceof ExtendedPostMethod )
 		{
-			( ( ExtendedPostMethod )method ).setEntity( new InputStreamEntity( capture, -1 ) );
+			InputStreamEntity entity = new InputStreamEntity( capture, -1 );
+			entity.setContentType( request.getContentType() );
+			( ( ExtendedPostMethod )method ).setEntity( entity );
 		}
 
 		StringBuffer url = new StringBuffer( "http://" );
@@ -181,16 +184,12 @@ public class ProxyServlet implements Servlet
 		if( httpRequest.getServerPort() != 80 )
 			url.append( ":" + httpRequest.getServerPort() );
 
-		java.net.URI tempUri = null;
-
 		if( httpRequest.getServletPath() != null )
 		{
 			url.append( httpRequest.getServletPath() );
-
 			try
 			{
-				tempUri = new java.net.URI( url.toString() );
-				method.setURI( tempUri );
+				method.setURI( new java.net.URI( url.toString() ) );
 			}
 			catch( URISyntaxException e )
 			{
@@ -200,11 +199,9 @@ public class ProxyServlet implements Servlet
 			if( httpRequest.getQueryString() != null )
 			{
 				url.append( "?" + httpRequest.getQueryString() );
-
 				try
 				{
-					tempUri = new java.net.URI( url.toString() );
-					method.setURI( tempUri );
+					method.setURI( new java.net.URI( url.toString() ) );
 				}
 				catch( URISyntaxException e )
 				{
@@ -214,15 +211,19 @@ public class ProxyServlet implements Servlet
 		}
 
 		SoapUIHostConfiguration hostConfiguration = new SoapUIHostConfiguration();
-		if( tempUri != null )
+		try
 		{
-			hostConfiguration.setHttpHost( new HttpHost( tempUri.getHost(), tempUri.getPort(), tempUri.getScheme() ) );
+			URI uri = new URI( url.toString(), true );
+			hostConfiguration.setHttpHost( new HttpHost( uri.getHost(), uri.getPort(), uri.getScheme() ) );
+		}
+		catch( URIException e )
+		{
+			SoapUI.logError( e );
 		}
 
 		HttpResponse httpResponse = null;
 
 		// SoapUI.log("PROXY to:" + url);
-
 		monitor.fireBeforeProxy( request, response, method, hostConfiguration );
 
 		if( settings.getBoolean( LaunchForm.SSLTUNNEL_REUSESTATE ) )

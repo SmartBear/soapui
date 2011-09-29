@@ -114,6 +114,9 @@ public class TunnelServlet extends ProxyServlet
 			String hdr = ( String )headerNames.nextElement();
 			String lhdr = hdr.toLowerCase();
 
+			if( "content-length".equals( lhdr ) )
+				continue;
+
 			if( "host".equals( lhdr ) )
 			{
 				Enumeration<?> vals = httpRequest.getHeaders( hdr );
@@ -137,22 +140,34 @@ public class TunnelServlet extends ProxyServlet
 					postMethod.addHeader( hdr, val );
 				}
 			}
-
 		}
 
 		if( postMethod instanceof ExtendedPostMethod )
 		{
-			( ( ExtendedPostMethod )postMethod ).setEntity( new InputStreamEntity( capture, -1 ) );
+			InputStreamEntity entity = new InputStreamEntity( capture, -1 );
+			entity.setContentType( request.getContentType() );
+			( ( ExtendedPostMethod )postMethod ).setEntity( entity );
 		}
 
-		SoapUIHostConfiguration hostConfiguration = new SoapUIHostConfiguration( this.prot + sslEndPoint );
+		java.net.URI uri = null;
+		SoapUIHostConfiguration hostConfiguration = new SoapUIHostConfiguration();
+		try
+		{
+			uri = new java.net.URI( this.prot + sslEndPoint );
+			hostConfiguration.setHttpHost( new HttpHost( uri.getHost(), uri.getPort(), uri.getScheme() ) );
+		}
+		catch( URISyntaxException e )
+		{
+			SoapUI.logError( e );
+		}
+
 		postMethod.getParams().setParameter(
 				BaseHttpRequestTransport.SOAPUI_SSL_CONFIG,
 				settings.getString( SecurityTabForm.SSLTUNNEL_KEYSTOREPATH, "" ) + " "
 						+ settings.getString( SecurityTabForm.SSLTUNNEL_KEYSTOREPASSWORD, "" ) );
 
-		ProxyUtils.initProxySettings( settings, httpState, prot + sslEndPoint, new DefaultPropertyExpansionContext(
-				project ) );
+		ProxyUtils.initProxySettings( settings, postMethod, httpState, prot + sslEndPoint,
+				new DefaultPropertyExpansionContext( project ) );
 
 		String path = null;
 		if( sslEndPoint.indexOf( "/" ) < 0 )
@@ -160,16 +175,12 @@ public class TunnelServlet extends ProxyServlet
 		else
 			path = sslEndPoint.substring( sslEndPoint.indexOf( "/" ), sslEndPoint.length() );
 
-		HttpHost httpHost = hostConfiguration.getHttpHost();
-
-		if( httpHost != null )
+		if( uri != null )
 		{
-			java.net.URI uri;
 			try
 			{
-				uri = URIUtils.createURI( httpHost.getSchemeName(), httpHost.getHostName(), httpHost.getPort(), path,
-						httpRequest.getQueryString(), null );
-				postMethod.setURI( uri );
+				postMethod.setURI( URIUtils.createURI( uri.getScheme(), uri.getHost(), uri.getPort(), path, uri.getQuery(),
+						uri.getFragment() ) );
 			}
 			catch( URISyntaxException e )
 			{
@@ -227,7 +238,7 @@ public class TunnelServlet extends ProxyServlet
 		Header[] headers = postMethod.getAllHeaders();
 		for( Header header : headers )
 		{
-			response += header.toString();
+			response += header.toString().trim() + "\n";
 		}
 		response += "\n";
 		response += XmlUtils.prettyPrintXml( new String( res ) );

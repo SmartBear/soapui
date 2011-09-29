@@ -24,7 +24,11 @@ import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
 import org.apache.http.auth.NTCredentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.conn.params.ConnRoutePNames;
+import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.protocol.HttpContext;
 
 import com.eviware.soapui.SoapUI;
@@ -44,18 +48,18 @@ public class ProxyUtils
 {
 	private static boolean proxyEnabled = SoapUI.getSettings().getBoolean( ProxySettings.ENABLE_PROXY );
 
-	public static void initProxySettings( Settings settings, HttpContext httpContext, String urlString,
-			PropertyExpansionContext context )
+	public static void initProxySettings( Settings settings, HttpUriRequest httpMethod, HttpContext httpContext,
+			String urlString, PropertyExpansionContext context )
 	{
-		HttpHost proxy = null;
 		boolean enabled = proxyEnabled;
+		CredentialsProvider credsProvider = new BasicCredentialsProvider();
 
 		// check system properties first
 		String proxyHost = System.getProperty( "http.proxyHost" );
 		String proxyPort = System.getProperty( "http.proxyPort" );
-		if( proxyHost == null )
+		if( proxyHost == null && enabled )
 			proxyHost = PropertyExpander.expandProperties( context, settings.getString( ProxySettings.HOST, "" ) );
-		if( proxyPort == null && proxyHost != null )
+		if( proxyPort == null && proxyHost != null && enabled )
 			proxyPort = PropertyExpander.expandProperties( context, settings.getString( ProxySettings.PORT, "" ) );
 
 		if( !StringUtils.isNullOrEmpty( proxyHost ) && !StringUtils.isNullOrEmpty( proxyPort ) )
@@ -70,7 +74,7 @@ public class ProxyUtils
 
 				if( !excludes( excludes, url.getHost(), url.getPort() ) )
 				{
-					proxy = new HttpHost( proxyHost, Integer.parseInt( proxyPort ) );
+					HttpHost proxy = new HttpHost( proxyHost, Integer.parseInt( proxyPort ) );
 
 					String proxyUsername = PropertyExpander.expandProperties( context,
 							settings.getString( ProxySettings.USERNAME, null ) );
@@ -79,8 +83,7 @@ public class ProxyUtils
 
 					if( proxyUsername != null && proxyPassword != null )
 					{
-						Credentials proxyCreds = new UsernamePasswordCredentials( proxyUsername, proxyPassword == null ? ""
-								: proxyPassword );
+						Credentials proxyCreds = new UsernamePasswordCredentials( proxyUsername, proxyPassword );
 
 						// check for nt-username
 						int ix = proxyUsername.indexOf( '\\' );
@@ -93,17 +96,9 @@ public class ProxyUtils
 								proxyCreds = new NTCredentials( user, proxyPassword, proxyHost, domain );
 							}
 						}
-
-						if( enabled )
-						{
-							HttpClientSupport.getHttpClient().getCredentialsProvider()
-									.setCredentials( new AuthScope( proxy.getHostName(), proxy.getPort() ), proxyCreds );
-							HttpClientSupport.getHttpClient().getParams().setParameter( ConnRoutePNames.DEFAULT_PROXY, proxy );
-						}
-						else
-						{
-							HttpClientSupport.getHttpClient().getParams().removeParameter( ConnRoutePNames.DEFAULT_PROXY );
-						}
+						credsProvider.setCredentials( new AuthScope( proxy.getHostName(), proxy.getPort() ), proxyCreds );
+						httpMethod.getParams().setParameter( ClientContext.CREDS_PROVIDER, credsProvider );
+						httpMethod.getParams().setParameter( ConnRoutePNames.DEFAULT_PROXY, proxy );
 					}
 				}
 			}

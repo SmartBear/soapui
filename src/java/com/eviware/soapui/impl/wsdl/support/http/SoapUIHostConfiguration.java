@@ -13,9 +13,8 @@
 package com.eviware.soapui.impl.wsdl.support.http;
 
 import org.apache.http.HttpHost;
-import org.apache.http.protocol.BasicHttpContext;
 
-public class SoapUIHostConfiguration extends BasicHttpContext
+public class SoapUIHostConfiguration
 {
 	private HttpHost httpHost;
 
@@ -46,11 +45,6 @@ public class SoapUIHostConfiguration extends BasicHttpContext
 	public HttpHost getHttpHost()
 	{
 		return httpHost;
-	}
-
-	public Object clone()
-	{
-		return new SoapUIHostConfiguration( this.httpHost );
 	}
 
 }
