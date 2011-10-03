@@ -683,7 +683,7 @@ public class WsdlTestSuite extends AbstractTestPropertyHolderWsdlModelItem<TestS
 		}
 		else
 		{
-			UISupport.showErrorMessage( "Not valild test case xml" );
+			UISupport.showErrorMessage( "Not valid test case xml" );
 		}
 	}
 

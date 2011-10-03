@@ -737,7 +737,7 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 	{
 		return docrootProperty.get();
 	}
-	
+
 	@Override
 	public void addExternalDependencies( List<ExternalDependency> dependencies )
 	{
@@ -817,7 +817,7 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 		}
 		else
 		{
-			UISupport.showErrorMessage( "Not valild mock operation xml" );
+			UISupport.showErrorMessage( "Not valid mock operation xml" );
 		}
 	}
 
