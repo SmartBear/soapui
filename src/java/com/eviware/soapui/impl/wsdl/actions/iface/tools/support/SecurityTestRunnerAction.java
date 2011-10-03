@@ -67,7 +67,6 @@ public class SecurityTestRunnerAction extends TestRunnerAction
 		XFormDialogBuilder builder = XFormFactory.createDialogBuilder( "Launch SecurityTestRunner" );
 		createTestCaseRunnerTabs( modelItem, builder );
 
-		// TODO: update help URL
 		return builder.buildDialog( buildDefaultActions( HelpUrls.TESTRUNNER_HELP_URL, modelItem ),
 				"Specify arguments for launching soapUI Security TestRunner", UISupport.TOOL_ICON );
 	}
@@ -137,6 +136,8 @@ public class SecurityTestRunnerAction extends TestRunnerAction
 		{
 			mainForm.setOptions( ENDPOINT, new String[] { null } );
 		}
+
+		initEnvironment( modelItem );
 
 		StringToStringMap values = super.initValues( modelItem, param );
 
@@ -263,6 +264,8 @@ public class SecurityTestRunnerAction extends TestRunnerAction
 		mainForm.addCheckBox( SAVEAFTER, "Sets to save the project file after tests have been run" );
 
 		advForm = builder.createForm( "Overrides" );
+		advForm.addComboBox( ENVIRONMENT, new String[] { "Default" }, "The environment to set for all requests" )
+				.setEnabled( proVersion );
 		advForm.addComboBox( ENDPOINT, new String[] { "" }, "endpoint to forward to" );
 		advForm.addTextField( HOSTPORT, "Host:Port to use for requests", XForm.FieldType.TEXT );
 		advForm.addSeparator();
@@ -338,6 +341,7 @@ public class SecurityTestRunnerAction extends TestRunnerAction
 			builder.addBoolean( COVERAGE, "-g" );
 			builder.addString( GENERATEREPORTSEACHTESTCASE, "-R", "" );
 			builder.addString( REPORTFORMAT, "-F", "" );
+			builder.addString( ENVIRONMENT, "-E", "" );
 		}
 
 		builder.addStringShadow( PROJECTPASSWORD, "-x", "" );

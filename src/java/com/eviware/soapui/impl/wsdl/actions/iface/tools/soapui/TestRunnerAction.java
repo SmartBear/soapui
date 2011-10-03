@@ -56,6 +56,7 @@ import com.eviware.x.impl.swing.JTextAreaFormField;
 public class TestRunnerAction extends AbstractToolsAction<WsdlProject>
 {
 	protected static final String ALL_VALUE = "<all>";
+	protected static final String ENVIRONMENT = "Environment";
 	protected static final String ENDPOINT = "Endpoint";
 	protected static final String HOSTPORT = "Host:Port";
 	protected static final String TESTSUITE = "TestSuite";
@@ -169,6 +170,8 @@ public class TestRunnerAction extends AbstractToolsAction<WsdlProject>
 		mainForm.addCheckBox( SAVEAFTER, "Sets to save the project file after tests have been run" );
 
 		advForm = builder.createForm( "Overrides" );
+		advForm.addComboBox( ENVIRONMENT, new String[] { "Default" }, "The environment to set for all requests" )
+				.setEnabled( proVersion );
 		advForm.addComboBox( ENDPOINT, new String[] { "" }, "endpoint to forward to" );
 		advForm.addTextField( HOSTPORT, "Host:Port to use for requests", XForm.FieldType.TEXT );
 		advForm.addSeparator();
@@ -283,6 +286,8 @@ public class TestRunnerAction extends AbstractToolsAction<WsdlProject>
 			mainForm.setOptions( ENDPOINT, new String[] { null } );
 		}
 
+		initEnvironment( modelItem );
+
 		StringToStringMap values = super.initValues( modelItem, param );
 
 		if( mainForm != null )
@@ -377,6 +382,7 @@ public class TestRunnerAction extends AbstractToolsAction<WsdlProject>
 			builder.addBoolean( COVERAGE, "-g" );
 			builder.addString( GENERATEREPORTSEACHTESTCASE, "-R", "" );
 			builder.addString( REPORTFORMAT, "-F", "" );
+			builder.addString( ENVIRONMENT, "-E", "" );
 		}
 
 		builder.addStringShadow( PROJECTPASSWORD, "-x", "" );
@@ -426,4 +432,9 @@ public class TestRunnerAction extends AbstractToolsAction<WsdlProject>
 			propertyArguments.add( arg + tokenizer.nextToken() );
 		}
 	}
+
+	protected void initEnvironment( final WsdlProject modelItem )
+	{
+	}
+
 }

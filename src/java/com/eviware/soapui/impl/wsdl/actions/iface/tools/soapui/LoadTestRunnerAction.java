@@ -56,6 +56,7 @@ import com.eviware.x.impl.swing.JTextAreaFormField;
 public class LoadTestRunnerAction extends AbstractToolsAction<WsdlProject>
 {
 	private static final String ALL_VALUE = "<all>";
+	protected static final String ENVIRONMENT = "Environment";
 	private static final String ENDPOINT = "Endpoint";
 	private static final String HOSTPORT = "Host:Port";
 	private static final String LIMIT = "Limit";
@@ -85,7 +86,7 @@ public class LoadTestRunnerAction extends AbstractToolsAction<WsdlProject>
 	private XForm mainForm;
 	private final static Logger log = Logger.getLogger( LoadTestRunnerAction.class );
 	public static final String SOAPUI_ACTION_ID = "LoadTestRunnerAction";
-	private XForm advForm;
+	protected XForm advForm;
 	private XForm propertyForm;
 	private XForm reportForm;
 
@@ -140,6 +141,8 @@ public class LoadTestRunnerAction extends AbstractToolsAction<WsdlProject>
 		mainForm.addTextField( SOAPUISETTINGSPASSWORD, "Set soapui-settings.xml password", XForm.FieldType.PASSWORD );
 
 		advForm = builder.createForm( "Overrides" );
+		advForm.addComboBox( ENVIRONMENT, new String[] { "Default" }, "The environment to set for all requests" )
+				.setEnabled( proVersion );
 		advForm.addComboBox( ENDPOINT, new String[] { "" }, "endpoint to forward to" );
 		advForm.addTextField( HOSTPORT, "Host:Port to use for requests", XForm.FieldType.TEXT );
 		advForm.addTextField( LIMIT, "Limit for LoadTest", XForm.FieldType.TEXT );
@@ -237,6 +240,8 @@ public class LoadTestRunnerAction extends AbstractToolsAction<WsdlProject>
 			mainForm.setOptions( ENDPOINT, new String[] { null } );
 		}
 
+		initEnvironment( modelItem );
+
 		StringToStringMap values = super.initValues( modelItem, param );
 		updateCombos();
 
@@ -332,6 +337,7 @@ public class LoadTestRunnerAction extends AbstractToolsAction<WsdlProject>
 			builder.addBoolean( OPEN_REPORT, "-o" );
 			builder.addString( GENERATEREPORTSEACHTESTCASE, "-R", "" );
 			builder.addStrings( REPORTFORMAT, "-F", "," );
+			builder.addString( ENVIRONMENT, "-E", "" );
 		}
 
 		addPropertyArguments( builder );
@@ -437,5 +443,9 @@ public class LoadTestRunnerAction extends AbstractToolsAction<WsdlProject>
 		{
 			propertyArguments.add( arg + tokenizer.nextToken() );
 		}
+	}
+
+	protected void initEnvironment( final WsdlProject modelItem )
+	{
 	}
 }
