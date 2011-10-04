@@ -40,6 +40,7 @@ import com.eviware.soapui.model.project.ProjectFactoryRegistry;
 import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.model.support.ProjectRunListenerAdapter;
 import com.eviware.soapui.model.testsuite.Assertable;
+import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
 import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.model.testsuite.ProjectRunContext;
 import com.eviware.soapui.model.testsuite.ProjectRunner;
@@ -47,14 +48,13 @@ import com.eviware.soapui.model.testsuite.TestAssertion;
 import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
+import com.eviware.soapui.model.testsuite.TestRunner.Status;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
-import com.eviware.soapui.model.testsuite.TestSuite;
-import com.eviware.soapui.model.testsuite.TestSuiteRunner;
-import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
-import com.eviware.soapui.model.testsuite.TestRunner.Status;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
+import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.model.testsuite.TestSuite.TestSuiteRunType;
+import com.eviware.soapui.model.testsuite.TestSuiteRunner;
 import com.eviware.soapui.report.JUnitReportCollector;
 import com.eviware.soapui.report.JUnitSecurityReportCollector;
 import com.eviware.soapui.support.StringUtils;
@@ -88,7 +88,7 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 	private int testSuiteCount;
 	private int testCaseCount;
 	private int testStepCount;
-	
+
 	private int testAssertionCount;
 
 	private boolean printReport;
@@ -797,7 +797,7 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 	{
 		return failedTests;
 	}
-	
+
 	public List<TestAssertion> getAssertions()
 	{
 		return assertions;
@@ -822,7 +822,7 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 	{
 		return assertionResults;
 	}
-	
+
 	public int getTestStepCount()
 	{
 		return testStepCount;
