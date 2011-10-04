@@ -57,16 +57,16 @@ public class LoadTestRunnerAction extends AbstractToolsAction<WsdlProject>
 {
 	private static final String ALL_VALUE = "<all>";
 	protected static final String ENVIRONMENT = "Environment";
-	private static final String ENDPOINT = "Endpoint";
-	private static final String HOSTPORT = "Host:Port";
+	protected static final String ENDPOINT = "Endpoint";
+	protected static final String HOSTPORT = "Host:Port";
 	private static final String LIMIT = "Limit";
 	private static final String TESTSUITE = "TestSuite";
 	private static final String TESTCASE = "TestCase";
 	private static final String LOADTEST = "LoadTest";
 	private static final String THREADCOUNT = "ThreadCount";
-	private static final String USERNAME = "Username";
-	private static final String PASSWORD = "Password";
-	private static final String DOMAIN = "Domain";
+	protected static final String USERNAME = "Username";
+	protected static final String PASSWORD = "Password";
+	protected static final String DOMAIN = "Domain";
 	private static final String PRINTREPORTSTATISTICS = "Print Report Statistics";
 	private static final String ROOTFOLDER = "Root Folder";
 	private static final String TESTRUNNERPATH = "TestRunner Path";
@@ -75,7 +75,7 @@ public class LoadTestRunnerAction extends AbstractToolsAction<WsdlProject>
 	private static final String PROJECTPASSWORD = "Project Password";
 	private static final String SOAPUISETTINGSPASSWORD = "soapui-setings.xml Password";
 	private static final String SAVEAFTER = "Save After";
-	private static final String WSSTYPE = "WSS Password Type";
+	protected static final String WSSTYPE = "WSS Password Type";
 	private static final String OPEN_REPORT = "Open Report";
 	private static final String GENERATEREPORTSEACHTESTCASE = "Report to Generate";
 	private static final String REPORTFORMAT = "Report Format(s)";
