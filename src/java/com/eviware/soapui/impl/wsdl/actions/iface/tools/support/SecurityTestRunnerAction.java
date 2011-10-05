@@ -264,8 +264,7 @@ public class SecurityTestRunnerAction extends TestRunnerAction
 		mainForm.addCheckBox( SAVEAFTER, "Sets to save the project file after tests have been run" );
 
 		advForm = builder.createForm( "Overrides" );
-		advForm.addComboBox( ENVIRONMENT, new String[] { "Default" }, "The environment to set for all requests" )
-				.setEnabled( proVersion );
+		advForm.addComboBox( ENVIRONMENT, new String[] { "Default" }, "#PO#The environment to set for all requests" ).setEnabled( proVersion );
 		advForm.addComboBox( ENDPOINT, new String[] { "" }, "endpoint to forward to" );
 		advForm.addTextField( HOSTPORT, "Host:Port to use for requests", XForm.FieldType.TEXT );
 		advForm.addSeparator();
