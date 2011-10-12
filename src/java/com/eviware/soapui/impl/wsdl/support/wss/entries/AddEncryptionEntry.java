@@ -24,6 +24,7 @@ import javax.swing.JTextField;
 
 import org.apache.ws.security.WSConstants;
 import org.apache.ws.security.WSEncryptionPart;
+import org.apache.ws.security.WSSConfig;
 import org.apache.ws.security.components.crypto.Crypto;
 import org.apache.ws.security.message.WSSecEncrypt;
 import org.apache.ws.security.message.WSSecHeader;
@@ -110,11 +111,6 @@ public class AddEncryptionEntry extends WssEntryBase
 		form.appendComboBox( "encKeyTransport", "Key Encryption Algorithm", new String[] { DEFAULT_OPTION,
 				WSConstants.KEYTRANSPORT_RSA15, WSConstants.KEYTRANSPORT_RSAOEP },
 				"Sets the algorithm to encode the symmetric key" );
-
-		form.appendComboBox( "encryptionCanonicalization", "Encryption Canonicalization", new String[] { DEFAULT_OPTION,
-				WSConstants.C14N_OMIT_COMMENTS, WSConstants.C14N_WITH_COMMENTS, WSConstants.C14N_EXCL_OMIT_COMMENTS,
-				WSConstants.C14N_EXCL_WITH_COMMENTS },
-				"Set the name of an optional canonicalization algorithm to use before encryption" );
 
 		form.appendCheckBox( "encryptSymmetricKey", "Create Encrypted Key",
 				"Indicates whether to encrypt the symmetric key into an EncryptedKey or not" );
@@ -255,8 +251,7 @@ public class AddEncryptionEntry extends WssEntryBase
 		StringWriter writer = null;
 
 		try
-		{
-			WSSecEncrypt wsEncrypt = new WSSecEncrypt();
+		{			
 			WssCrypto wssCrypto = getWssContainer().getCryptoByName( crypto );
 			if( wssCrypto == null )
 			{
@@ -264,7 +259,11 @@ public class AddEncryptionEntry extends WssEntryBase
 			}
 
 			Crypto crypto = wssCrypto.getCrypto();
-
+			
+			WSSecEncrypt wsEncrypt = new WSSecEncrypt();
+			WSSConfig wssConfig = WSSConfig.getNewInstance();
+			wsEncrypt.setWsConfig( wssConfig );
+		
 			wsEncrypt.setUserInfo( context.expand( getUsername() ) );
 
 			// default is
@@ -288,11 +287,6 @@ public class AddEncryptionEntry extends WssEntryBase
 			if( !getEncKeyTransport().equals( DEFAULT_OPTION ) )
 			{
 				wsEncrypt.setKeyEnc( getEncKeyTransport() );
-			}
-
-			if( !getEncryptionCanonicalization().equals( DEFAULT_OPTION ) )
-			{
-				wsEncrypt.setEncCanonicalization( getEncryptionCanonicalization() );
 			}
 
 			wsEncrypt.setEncryptSymmKey( isEncryptSymmetricKey() );

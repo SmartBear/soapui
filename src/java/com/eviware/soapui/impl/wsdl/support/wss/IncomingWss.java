@@ -13,6 +13,8 @@
 package com.eviware.soapui.impl.wsdl.support.wss;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 import java.util.Vector;
 
 import javax.security.auth.callback.Callback;
@@ -22,6 +24,7 @@ import javax.security.auth.callback.UnsupportedCallbackException;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.ws.security.WSPasswordCallback;
 import org.apache.ws.security.WSSecurityEngine;
+import org.apache.ws.security.WSSecurityEngineResult;
 import org.apache.ws.security.WSSecurityException;
 import org.apache.ws.security.components.crypto.Crypto;
 import org.apache.ws.security.util.WSSecurityUtil;
@@ -91,7 +94,6 @@ public class IncomingWss
 		wssConfig.setSignatureCrypto( arg0 );
 	}
 
-	@SuppressWarnings( "unchecked" )
 	public Vector<Object> processIncoming( Document soapDocument, PropertyExpansionContext context )
 			throws WSSecurityException
 	{
@@ -102,7 +104,7 @@ public class IncomingWss
 
 		try
 		{
-			WSSecurityEngine wssecurityEngine = WSSecurityEngine.getInstance();
+			WSSecurityEngine wssecurityEngine = new WSSecurityEngine();
 			WssCrypto signatureCrypto = getWssContainer().getCryptoByName( getSignatureCrypto() );
 			WssCrypto decryptCrypto = getWssContainer().getCryptoByName( getDecryptCrypto() );
 			Crypto sig = signatureCrypto == null ? null : signatureCrypto.getCrypto();
@@ -116,8 +118,14 @@ public class IncomingWss
 			else if( dec == null )
 				dec = sig;
 
-			return wssecurityEngine.processSecurityHeader( soapDocument, ( String )null, new WSSCallbackHandler( dec ),
-					sig, dec );
+			List<WSSecurityEngineResult> incomingResult = wssecurityEngine.processSecurityHeader( soapDocument,
+					( String )null, new WSSCallbackHandler( dec ), sig, dec );
+
+			Vector<Object> wssResult = new Vector<Object>();
+			wssResult.setSize( incomingResult.size() );
+			Collections.copy( wssResult, incomingResult );
+			return wssResult;
+
 		}
 		catch( WSSecurityException e )
 		{

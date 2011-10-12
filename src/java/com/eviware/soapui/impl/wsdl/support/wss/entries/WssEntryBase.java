@@ -28,6 +28,8 @@ import javax.swing.JComponent;
 import javax.swing.JList;
 
 import org.apache.ws.security.WSEncryptionPart;
+import org.apache.ws.security.WSSecurityException;
+import org.apache.ws.security.components.crypto.Merlin;
 
 import com.eviware.soapui.config.WSSEntryConfig;
 import com.eviware.soapui.impl.wsdl.support.wss.OutgoingWss;
@@ -264,7 +266,22 @@ public abstract class WssEntryBase implements WssEntry, PropertyExpansionContain
 
 		void update( WssCrypto crypto )
 		{
-			keyStore = crypto == null || crypto.getCrypto() == null ? null : crypto.getCrypto().getKeyStore();
+			try
+			{
+				if( crypto == null || crypto.getCrypto() == null )
+				{
+					keyStore = null;
+				}
+				else
+				{
+					Merlin merlinCrypto = ( Merlin )crypto.getCrypto();
+					keyStore = merlinCrypto.getKeyStore();
+				}
+			}
+			catch( WSSecurityException wssecurityException )
+			{
+				wssecurityException.printStackTrace();
+			}
 
 			if( keyStore != null )
 			{

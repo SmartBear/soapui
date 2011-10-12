@@ -15,6 +15,7 @@ package com.eviware.soapui.impl.wsdl.support.wss;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.ws.security.WSSecurityException;
 import org.apache.ws.security.message.WSSecHeader;
 import org.apache.ws.security.util.WSSecurityUtil;
 import org.w3c.dom.Document;
@@ -130,7 +131,7 @@ public class OutgoingWss implements PropertyExpansionContainer
 		return config;
 	}
 
-	public void processOutgoing( Document soapDocument, PropertyExpansionContext context )
+	public void processOutgoing( Document soapDocument, PropertyExpansionContext context ) throws WSSecurityException
 	{
 		Element header = WSSecurityUtil.findWsseSecurityHeaderBlock( soapDocument, soapDocument.getDocumentElement(),
 				false );

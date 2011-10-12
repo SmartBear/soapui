@@ -69,7 +69,7 @@ public class KeyMaterialWssCrypto implements WssCrypto
 		};
 	}
 
-	public Crypto getCrypto()
+	public Merlin getCrypto()
 	{
 		try
 		{
@@ -245,7 +245,7 @@ public class KeyMaterialWssCrypto implements WssCrypto
 		}
 
 		@Override
-		protected String getCryptoProvider()
+		public String getCryptoProvider()
 		{
 			return config.getCryptoProvider();
 		}

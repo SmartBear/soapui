@@ -16,6 +16,7 @@ import java.io.IOException;
 
 import org.apache.ws.security.WSConstants;
 import org.apache.ws.security.WSSConfig;
+import org.apache.ws.security.WSSecurityException;
 import org.apache.ws.security.message.WSSecHeader;
 import org.apache.ws.security.message.WSSecTimestamp;
 import org.apache.ws.security.message.WSSecUsernameToken;
@@ -64,7 +65,7 @@ public class WssAuthenticationRequestFilter extends AbstractWssRequestFilter
 	}
 
 	public static void setWssHeaders( SubmitContext context, String username, String password, String pwType,
-			String wsTimestamp ) throws SAXException, IOException
+			String wsTimestamp ) throws SAXException, IOException, WSSecurityException
 	{
 		Document doc = getWssDocument( context );
 
@@ -122,7 +123,7 @@ public class WssAuthenticationRequestFilter extends AbstractWssRequestFilter
 		updateWssDocument( context, doc );
 	}
 
-	private static Element setWsTimestampToken( String ttl, Document doc )
+	private static Element setWsTimestampToken( String ttl, Document doc ) throws WSSecurityException
 	{
 		WSSecTimestamp addTimestamp = new WSSecTimestamp();
 		addTimestamp.setTimeToLive( Integer.parseInt( ttl ) );
@@ -138,7 +139,8 @@ public class WssAuthenticationRequestFilter extends AbstractWssRequestFilter
 		return addTimestamp.getElement();
 	}
 
-	private static Element setWssUsernameToken( String username, String password, String pwType, Document doc )
+	private static Element setWssUsernameToken( String username, String password, String pwType, Document doc ) 
+			throws WSSecurityException
 	{
 		WSSecUsernameToken wsa = new WSSecUsernameToken();
 		if( WsdlRequest.PW_TYPE_DIGEST.equals( pwType ) )

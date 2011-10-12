@@ -639,9 +639,9 @@
 			</properties>
 		</dependency>
 		<dependency>
-			<groupId>xml-security</groupId>
+			<groupId>org.apache.santuario</groupId>
 			<artifactId>xmlsec</artifactId>
-			<version>1.4.3</version>
+			<version>1.4.5</version>
 			<type>jar</type>
 			<properties>
 				<jnlp.jar>true</jnlp.jar>
@@ -650,7 +650,7 @@
 		<dependency>
 			<groupId>opensaml</groupId>
 			<artifactId>opensaml</artifactId>
-			<version>1.1</version>
+			<version>2.5.1</version>
 			<type>jar</type>
 			<properties>
 				<jnlp.jar>true</jnlp.jar>
@@ -695,7 +695,7 @@
 		<dependency>
 			<groupId>wss4j</groupId>
 			<artifactId>wss4j</artifactId>
-			<version>1.5.8</version>
+			<version>1.6.2</version>
 			<type>jar</type>
 			<properties>
 				<jnlp.jar>true</jnlp.jar>
