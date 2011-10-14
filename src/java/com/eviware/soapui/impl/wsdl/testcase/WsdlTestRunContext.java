@@ -12,6 +12,9 @@
 
 package com.eviware.soapui.impl.wsdl.testcase;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.model.TestModelItem;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
@@ -34,6 +37,7 @@ public class WsdlTestRunContext extends AbstractSubmitContext<TestModelItem> imp
 	private final TestCaseRunner testRunner;
 	private int currentStepIndex;
 	private TestCase testCase;
+	private PropertyChangeSupport pcs = new PropertyChangeSupport( this );
 
 	public WsdlTestRunContext( TestCaseRunner testRunner, StringToObjectMap properties, TestModelItem testModelItem )
 	{
@@ -61,7 +65,10 @@ public class WsdlTestRunContext extends AbstractSubmitContext<TestModelItem> imp
 	@Override
 	public void setProperty( String name, Object value )
 	{
+		Object oldValue = new Object();
 		super.setProperty( name, value, getTestCase() );
+		if( pcs != null )
+			pcs.firePropertyChange( name, oldValue, value );
 	}
 
 	public int getCurrentStepIndex()
@@ -149,5 +156,15 @@ public class WsdlTestRunContext extends AbstractSubmitContext<TestModelItem> imp
 	public Settings getSettings()
 	{
 		return testCase == null ? SoapUI.getSettings() : testCase.getSettings();
+	}
+
+	public void addPropertyChangeListener( PropertyChangeListener listener )
+	{
+		pcs.addPropertyChangeListener( listener );
+	}
+
+	public void removePropertyChangeListener( PropertyChangeListener listener )
+	{
+		pcs.removePropertyChangeListener( listener );
 	}
 }
