@@ -49,6 +49,7 @@ import com.eviware.soapui.impl.wsdl.support.wss.WssContainerListener;
 import com.eviware.soapui.impl.wsdl.support.wss.WssCrypto;
 import com.eviware.soapui.impl.wsdl.support.wss.WssEntry;
 import com.eviware.soapui.impl.wsdl.support.wss.WssEntryRegistry;
+import com.eviware.soapui.impl.wsdl.support.wss.crypto.CryptoType;
 import com.eviware.soapui.impl.wsdl.support.wss.crypto.KeyMaterialWssCrypto;
 import com.eviware.soapui.impl.wsdl.support.wss.support.KeystoresComboBoxModel;
 import com.eviware.soapui.model.support.ModelSupport;
@@ -66,10 +67,7 @@ public class WSSTabPanel extends JPanel
 	private JComboBox incomingWssSignatureCryptoComboBox;
 	private JTable outgoingWssTable;
 	private RemoveOutgoingWssAction removeOutgoingWssAction;
-	// private JPanel entriesConfigPanel;
 	private JButton removeOutgoingEntryButton;
-	// private JList entryList;
-	// private WssEntriesListModel entriesModel;
 	private WssEntry selectedEntry;
 	private OutgoingWss selectedOutgoing;
 	private JButton addOutgoingEntryButton;
@@ -99,7 +97,7 @@ public class WSSTabPanel extends JPanel
 		JTabbedPane tabs = new JTabbedPane();
 		tabs.addTab( "Outgoing WS-Security Configurations", buildOutgoingConfigurationsTab() );
 		tabs.addTab( "Incoming WS-Security Configurations", buildIncomingConfigurationsTab() );
-		tabs.addTab( "Keystores / Certificates", buildCryptosTable() );
+		tabs.addTab( "Keystores / Truststores", buildCryptosTable() );
 
 		tabs.setMinimumSize( new Dimension( 10, 10 ) );
 
@@ -156,7 +154,6 @@ public class WSSTabPanel extends JPanel
 				selectedOutgoing = selectedRow == -1 ? null : wssContainer.getOutgoingWssAt( selectedRow );
 				removeOutgoingWssAction.setEnabled( selectedRow != -1 );
 				addOutgoingEntryButton.setEnabled( selectedRow != -1 );
-				// entriesModel.setOutgoingWss( selectedOutgoing );
 
 				entriesTabs.removeAll();
 				if( selectedOutgoing != null )
@@ -189,40 +186,11 @@ public class WSSTabPanel extends JPanel
 
 		entriesTabs.getParent().setVisible( false );
 
-		// JSplitPane split = UISupport.createHorizontalSplit(
-		// buildOutgoingEntryList(), buildOutgoingEntryConfigPanel() );
-		// split.setDividerLocation( 150 );
-		//
-		// panel.add( split, BorderLayout.CENTER );
-
 		return panel;
 	}
 
-	// private Component buildOutgoingEntryConfigPanel()
-	// {
-	// entriesConfigPanel = new JPanel( new BorderLayout() );
-	// entriesConfigPanel.setBorder( BorderFactory.createEmptyBorder( 5, 5, 5, 5
-	// ) );
-	// JScrollPane scrollPane = new JScrollPane( entriesConfigPanel );
-	// scrollPane.setBorder( null );
-	// return scrollPane;
-	// }
-
 	private Component buildOutgoingEntryList()
 	{
-		// entriesModel = new WssEntriesListModel();
-		// entryList = new JList( entriesModel );
-		// entryList.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
-		// entryList.addListSelectionListener( new ListSelectionListener()
-		// {
-		// public void valueChanged( ListSelectionEvent e )
-		// {
-		// int index = entryList.getSelectedIndex();
-		// setSelectedEntry( index == -1 ? null : ( ( WssEntry )
-		// entriesModel.getElementAt( index ) ) );
-		// }
-		// } );
-		//
 		entriesTabs = new JTabbedPane();
 		entriesTabs.addChangeListener( new ChangeListener()
 		{
@@ -235,26 +203,8 @@ public class WSSTabPanel extends JPanel
 			}
 		} );
 
-		// return new JScrollPane( entryList );
 		return UISupport.createTabPanel( entriesTabs, true );
 	}
-
-	// protected void setSelectedEntry( WssEntry entry )
-	// {
-	// this.selectedEntry = entry;
-	// entriesConfigPanel.removeAll();
-	//
-	// if( entry != null )
-	// {
-	// entriesConfigPanel.add( selectedEntry.getConfigurationPanel(),
-	// BorderLayout.CENTER );
-	// }
-	//
-	// removeOutgoingEntryButton.setEnabled( entry != null );
-	//
-	// entriesConfigPanel.revalidate();
-	// entriesConfigPanel.repaint();
-	// }
 
 	private Component buildOutgoingEntriesToolbar()
 	{
@@ -297,21 +247,10 @@ public class WSSTabPanel extends JPanel
 			}
 		} );
 
-		// StringList providers = new StringList();
-		// providers.add( "<Default>" );
-		// for( Provider provider : Security.getProviders())
-		// {
-		// providers.add( provider.getName() );
-		// }
-		//
-		// JComboBox comboBox = new JComboBox( providers.toArray() );
-		// cryptosTable.getColumn( 5 ).setCellEditor( new DefaultCellEditor(
-		// comboBox ) );
-
-		cryptosTable.getColumnModel().getColumn( 2 ).setCellEditor( new DefaultCellEditor( new JPasswordField() ) );
-		cryptosTable.getColumnModel().getColumn( 2 ).setCellRenderer( new PasswordTableCellRenderer() );
-		cryptosTable.getColumnModel().getColumn( 4 ).setCellEditor( new DefaultCellEditor( new JPasswordField() ) );
-		cryptosTable.getColumnModel().getColumn( 4 ).setCellRenderer( new PasswordTableCellRenderer() );
+		cryptosTable.getColumnModel().getColumn( 3 ).setCellEditor( new DefaultCellEditor( new JPasswordField() ) );
+		cryptosTable.getColumnModel().getColumn( 3 ).setCellRenderer( new PasswordTableCellRenderer() );
+		cryptosTable.getColumnModel().getColumn( 5 ).setCellEditor( new DefaultCellEditor( new JPasswordField() ) );
+		cryptosTable.getColumnModel().getColumn( 5 ).setCellRenderer( new PasswordTableCellRenderer() );
 
 		p.add( new JScrollPane( cryptosTable ), BorderLayout.CENTER );
 
@@ -323,7 +262,8 @@ public class WSSTabPanel extends JPanel
 	{
 		JXToolBar toolbar = UISupport.createSmallToolbar();
 
-		toolbar.addFixed( UISupport.createToolbarButton( new AddCryptoAction() ) );
+		toolbar.addFixed( UISupport.createToolbarButton( new AddKeystoreAction() ) );
+		toolbar.addFixed( UISupport.createToolbarButton( new AddTruststoreAction() ) );
 		removeCryptoAction = new RemoveCryptoAction();
 		toolbar.addFixed( UISupport.createToolbarButton( removeCryptoAction ) );
 		toolbar.addGlue();
@@ -348,8 +288,6 @@ public class WSSTabPanel extends JPanel
 	private Component buildMainToolbar()
 	{
 		JXToolBar toolbar = UISupport.createSmallToolbar();
-		// toolbar.addFixed( UISupport.createToolbarButton( new
-		// ImportWssSettingsAction() ));
 		toolbar.addGlue();
 		toolbar.addFixed( UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.WSS_HELP_URL ) ) );
 		return toolbar;
@@ -386,8 +324,9 @@ public class WSSTabPanel extends JPanel
 
 		public int getColumnCount()
 		{
+			// FIXME: Why not remove??
 			// hide last column since this is autodetected in commons-ssl-0.3.10
-			return 5;
+			return 6;
 		}
 
 		@Override
@@ -396,16 +335,18 @@ public class WSSTabPanel extends JPanel
 			switch( column )
 			{
 			case 0 :
-				return "Source";
+				return "Type";
 			case 1 :
-				return "Status";
+				return "Source";
 			case 2 :
-				return "Password";
+				return "Status";
 			case 3 :
-				return "Default Alias";
+				return "Password";
 			case 4 :
-				return "Alias Password";
+				return "Default Alias";
 			case 5 :
+				return "Alias Password";
+			case 6 :
 				return "Security Provider";
 			}
 
@@ -430,16 +371,18 @@ public class WSSTabPanel extends JPanel
 			switch( columnIndex )
 			{
 			case 0 :
-				return crypto.getSource();
+				return crypto.getType();
 			case 1 :
-				return crypto.getStatus();
+				return crypto.getSource();
 			case 2 :
-				return crypto.getPassword();
+				return crypto.getStatus();
 			case 3 :
-				return crypto.getDefaultAlias();
+				return crypto.getPassword();
 			case 4 :
-				return crypto.getAliasPassword();
+				return crypto.getDefaultAlias();
 			case 5 :
+				return crypto.getAliasPassword();
+			case 6 :
 				return StringUtils.hasContent( crypto.getCryptoProvider() ) ? crypto.getCryptoProvider() : DEFAULT_OPTION;
 			}
 
@@ -455,16 +398,16 @@ public class WSSTabPanel extends JPanel
 
 			switch( columnIndex )
 			{
-			case 2 :
+			case 3 :
 				crypto.setPassword( aValue.toString() );
 				break;
-			case 3 :
+			case 4 :
 				crypto.setDefaultAlias( aValue.toString() );
 				break;
-			case 4 :
+			case 5 :
 				crypto.setAliasPassword( aValue.toString() );
 				break;
-			case 5 :
+			case 6 :
 				crypto.setCryptoProvider( aValue.toString() );
 				break;
 			}
@@ -487,12 +430,12 @@ public class WSSTabPanel extends JPanel
 		}
 	}
 
-	private class AddCryptoAction extends AbstractAction
+	private class AddKeystoreAction extends AbstractAction
 	{
-		public AddCryptoAction()
+		public AddKeystoreAction()
 		{
-			putValue( SMALL_ICON, UISupport.createImageIcon( "/add_property.gif" ) );
-			putValue( SHORT_DESCRIPTION, "Adds a new crypto to this configuration" );
+			putValue( SMALL_ICON, UISupport.createImageIcon( "/keystore.gif" ) );
+			putValue( SHORT_DESCRIPTION, "Adds a new keystore to this configuration" );
 		}
 
 		public void actionPerformed( ActionEvent e )
@@ -500,9 +443,30 @@ public class WSSTabPanel extends JPanel
 			File file = UISupport.getFileDialogs().open( this, "Select Key Material", null, null, null );
 			if( file != null )
 			{
-				String password = UISupport
-						.prompt( "Specify password for [" + file.getName() + "]", "Add Key Material", "" );
-				wssContainer.addCrypto( file.getAbsolutePath(), password );
+				String password = new String( UISupport.promptPassword( "Specify password for [" + file.getName() + "]",
+						"Add Key Material" ) );
+				wssContainer.addCrypto( file.getAbsolutePath(), password, CryptoType.KEYSTORE );
+				cryptosTable.setRowSelectionInterval( cryptosTable.getRowCount() - 1, cryptosTable.getRowCount() - 1 );
+			}
+		}
+	}
+
+	private class AddTruststoreAction extends AbstractAction
+	{
+		public AddTruststoreAction()
+		{
+			putValue( SMALL_ICON, UISupport.createImageIcon( "/truststore.gif" ) );
+			putValue( SHORT_DESCRIPTION, "Adds a new truststore to this configuration" );
+		}
+
+		public void actionPerformed( ActionEvent e )
+		{
+			File file = UISupport.getFileDialogs().open( this, "Select Key Material", null, null, null );
+			if( file != null )
+			{
+				String password = new String( UISupport.promptPassword( "Specify password for [" + file.getName() + "]",
+						"Add Key Material" ) );
+				wssContainer.addCrypto( file.getAbsolutePath(), password, CryptoType.TRUSTSTORE );
 				cryptosTable.setRowSelectionInterval( cryptosTable.getRowCount() - 1, cryptosTable.getRowCount() - 1 );
 			}
 		}
@@ -837,64 +801,6 @@ public class WSSTabPanel extends JPanel
 		}
 	}
 
-	// private class WssEntriesListModel extends AbstractListModel
-	// {
-	// private List<WssEntry> entries = new ArrayList<WssEntry>();
-	//
-	// public WssEntriesListModel()
-	// {
-	// }
-	//
-	// public void release()
-	// {
-	// entries.clear();
-	// }
-	//
-	// public void setOutgoingWss( OutgoingWss outgoingWss )
-	// {
-	// if( entries.size() > 0 )
-	// {
-	// int sz = entries.size();
-	// entries.clear();
-	// fireIntervalRemoved( this, 0, sz-1 );
-	// }
-	//
-	// if( outgoingWss == null )
-	// return;
-	//
-	// entries.addAll( outgoingWss.getEntries() );
-	//
-	// if( !entries.isEmpty())
-	// fireIntervalAdded( this, 0, entries.size()-1 );
-	// }
-	//
-	// public Object getElementAt( int index )
-	// {
-	// return entries.get( index );
-	// }
-	//
-	// public int getSize()
-	// {
-	// return entries == null ? 0 : entries.size();
-	// }
-	//
-	// public void entryAdded( WssEntry entry )
-	// {
-	// entries.add( entry );
-	// fireIntervalAdded( this, entries.size() - 1, entries.size() - 1 );
-	// }
-	//
-	// public void entryRemoved( WssEntry entry )
-	// {
-	// int ix = entries.indexOf( entry );
-	// if( ix != -1 )
-	// {
-	// entries.remove( ix );
-	// fireIntervalRemoved( this, ix, ix );
-	// }
-	// }
-	// }
-
 	public class AddOutgoingEntryAction extends AbstractAction
 	{
 		public AddOutgoingEntryAction()
@@ -915,10 +821,6 @@ public class WSSTabPanel extends JPanel
 			{
 				WssEntry entry = selectedOutgoing.addEntry( type );
 				entriesTabs.setSelectedComponent( entry.getConfigurationPanel() );
-
-				// entriesTabs.addTab( entry.getLabel(),
-				// entry.getConfigurationPanel() );
-				// entryList.setSelectedValue( entry, true );
 			}
 		}
 	}
@@ -979,7 +881,6 @@ public class WSSTabPanel extends JPanel
 				entriesTabs.addTab( entry.getLabel(), entry.getConfigurationPanel() );
 				entriesTabs.getParent().setVisible( true );
 			}
-			// entriesModel.entryAdded( entry );
 		}
 
 		public void outgoingWssEntryRemoved( WssEntry entry )
@@ -992,7 +893,6 @@ public class WSSTabPanel extends JPanel
 
 				entriesTabs.getParent().setVisible( entriesTabs.getTabCount() > 0 );
 			}
-			// entriesModel.entryRemoved( entry );
 		}
 
 		public void outgoingWssRemoved( OutgoingWss outgoingWss )

@@ -236,6 +236,7 @@ public class SwingDialogs implements XDialogs
 	 */
 	public char[] promptPassword( String question, String title )
 	{
+		//FIXME Dialog does not get centered around the main window
 		JPasswordField passwordField = new JPasswordField();
 		passwordField.addAncestorListener( new FocusAncestorListener( passwordField ) );
 		JLabel qLabel = new JLabel( question );
@@ -266,3 +267,4 @@ public class SwingDialogs implements XDialogs
 		}
 	}
 }
+

@@ -153,7 +153,8 @@ public class IncomingWss
 					if( StringUtils.hasContent( getDecryptPassword() ) )
 						cb.setPassword( getDecryptPassword() );
 					else
-						cb.setPassword( UISupport.prompt( "Password required for WSS processing", "Specify Password", "" ) );
+						cb.setPassword( new String( UISupport.promptPassword( "Password required for WSS processing",
+								"Specify Password" ) ) );
 
 					if( cb.getUsage() == WSPasswordCallback.ENCRYPTED_KEY_TOKEN )
 					{

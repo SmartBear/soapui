@@ -25,6 +25,7 @@ import com.eviware.soapui.config.KeyMaterialCryptoConfig;
 import com.eviware.soapui.config.OutgoingWssConfig;
 import com.eviware.soapui.config.WssContainerConfig;
 import com.eviware.soapui.impl.wsdl.support.ExternalDependency;
+import com.eviware.soapui.impl.wsdl.support.wss.crypto.CryptoType;
 import com.eviware.soapui.impl.wsdl.support.wss.crypto.KeyMaterialWssCrypto;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
@@ -89,9 +90,9 @@ public class DefaultWssContainer implements WssContainer
 		return new ArrayList<WssCrypto>( cryptos );
 	}
 
-	public WssCrypto addCrypto( String source, String password )
+	public WssCrypto addCrypto( String source, String password, CryptoType type )
 	{
-		KeyMaterialWssCrypto result = new KeyMaterialWssCrypto( getConfig().addNewCrypto(), this, source, password );
+		KeyMaterialWssCrypto result = new KeyMaterialWssCrypto( getConfig().addNewCrypto(), this, source, password, type );
 		cryptos.add( result );
 
 		fireCryptoAdded( result );
@@ -320,10 +321,12 @@ public class DefaultWssContainer implements WssContainer
 		return result.toStringArray();
 	}
 
+	// FIXME: Why is this method empty?
 	public void importConfig( WssContainer wssContainer )
 	{
 	}
 
+	// FIXME: Not used?
 	public void resetConfig( WssContainerConfig config )
 	{
 		getConfig().set( config );
@@ -369,7 +372,7 @@ public class DefaultWssContainer implements WssContainer
 			outgoingWssConfigs.get( c ).resolve( context );
 		}
 	}
-	
+
 	public void addExternalDependency( List<ExternalDependency> dependencies )
 	{
 		for( int c = 0; c < cryptos.size(); c++ )
@@ -378,6 +381,7 @@ public class DefaultWssContainer implements WssContainer
 		}
 	}
 
+	// FIXME: Why is this method empty?
 	public void release()
 	{
 	}

@@ -13,21 +13,17 @@
 package com.eviware.soapui.impl.wsdl.support.wss.crypto;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.KeyStore;
 import java.util.List;
 import java.util.Properties;
 
-import org.apache.commons.ssl.KeyStoreBuilder;
-import org.apache.commons.ssl.Util;
 import org.apache.ws.security.components.crypto.CredentialException;
-import org.apache.ws.security.components.crypto.Crypto;
 import org.apache.ws.security.components.crypto.Merlin;
+import org.apache.ws.security.util.Loader;
 
 import com.eviware.soapui.config.KeyMaterialCryptoConfig;
-import com.eviware.soapui.config.WSSCryptoConfig;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.support.ExternalDependency;
 import com.eviware.soapui.impl.wsdl.support.PathPropertyExternalDependency;
@@ -39,6 +35,8 @@ import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.resolver.ResolveContext;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
+
 public class KeyMaterialWssCrypto implements WssCrypto
 {
 	private KeyMaterialCryptoConfig config;
@@ -46,11 +44,13 @@ public class KeyMaterialWssCrypto implements WssCrypto
 	private KeyStore keyStore;
 	private BeanPathPropertySupport sourceProperty;
 
-	public KeyMaterialWssCrypto( KeyMaterialCryptoConfig config2, WssContainer container, String source, String password )
+	public KeyMaterialWssCrypto( KeyMaterialCryptoConfig config2, WssContainer container, String source,
+			String password, CryptoType type )
 	{
 		this( config2, container );
 		setSource( source );
 		setPassword( password );
+		this.setType( type );
 	}
 
 	public KeyMaterialWssCrypto( KeyMaterialCryptoConfig cryptoConfig, WssContainer container2 )
@@ -74,14 +74,22 @@ public class KeyMaterialWssCrypto implements WssCrypto
 		try
 		{
 			Properties properties = new Properties();
-			properties.put( "org.apache.ws.security.crypto.merlin.file", sourceProperty.expand() );
-			properties.put( "org.apache.ws.security.crypto.merlin.keystore.provider", "this" );
-			if( StringUtils.hasContent( getDefaultAlias() ) )
-				properties.put( "org.apache.ws.security.crypto.merlin.keystore.alias", getDefaultAlias() );
-			if( StringUtils.hasContent( getAliasPassword() ) )
-				properties.put( "org.apache.ws.security.crypto.merlin.alias.password", getAliasPassword() );
 
-			return new KeyMaterialCrypto( properties );
+			properties.put( "org.apache.ws.security.crypto.merlin.keystore.provider", "this" );
+
+			if( getType() == CryptoType.TRUSTSTORE )
+			{
+				properties.put( "org.apache.ws.security.crypto.merlin.truststore.file", sourceProperty.expand() );
+			}
+			else
+			{
+				properties.put( "org.apache.ws.security.crypto.merlin.keystore.file", sourceProperty.expand() );
+				if( StringUtils.hasContent( getDefaultAlias() ) )
+					properties.put( "org.apache.ws.security.crypto.merlin.keystore.alias", getDefaultAlias() );
+			}
+
+			KeyMaterialCrypto keyMaterialCrypto = new KeyMaterialCrypto( properties );
+			return keyMaterialCrypto;
 		}
 		catch( Exception e )
 		{
@@ -121,6 +129,9 @@ public class KeyMaterialWssCrypto implements WssCrypto
 		keyStore = null;
 	}
 
+	/*
+	 * This loads the keystore / truststore file
+	 */
 	public KeyStore load() throws Exception
 	{
 		if( keyStore != null )
@@ -130,16 +141,22 @@ public class KeyMaterialWssCrypto implements WssCrypto
 		{
 			UISupport.setHourglassCursor();
 
-			if( StringUtils.hasContent( getDefaultAlias() ) && StringUtils.hasContent( getAliasPassword() ) )
-			{
-				keyStore = KeyStoreBuilder.build( Util.streamToBytes( new FileInputStream( sourceProperty.expand() ) ),
-						getDefaultAlias().getBytes(), getPassword().toCharArray(), getAliasPassword().toCharArray() );
-			}
-			else
-				keyStore = KeyStoreBuilder.build( Util.streamToBytes( new FileInputStream( sourceProperty.expand() ) ),
-						StringUtils.hasContent( getPassword() ) ? getPassword().toCharArray() : null );
-
+			ClassLoader loader = Loader.getClassLoader( KeyMaterialWssCrypto.class );
+			InputStream input = Merlin.loadInputStream( loader, sourceProperty.expand() );
+			keyStore = KeyStore.getInstance( KeyStore.getDefaultType() );
+			keyStore.load( input, getPassword().toCharArray() );
 			return keyStore;
+
+			//			if( StringUtils.hasContent( getDefaultAlias() ) && StringUtils.hasContent( getAliasPassword() ) )
+			//			{
+			//				keyStore = KeyStoreBuilder.build( Util.streamToBytes( new FileInputStream( sourceProperty.expand() ) ),
+			//						getDefaultAlias().getBytes(), getPassword().toCharArray(), getAliasPassword().toCharArray() );
+			//			}
+			//			else
+			//				keyStore = KeyStoreBuilder.build( Util.streamToBytes( new FileInputStream( sourceProperty.expand() ) ),
+			//						StringUtils.hasContent( getPassword() ) ? getPassword().toCharArray() : null );
+			//
+			//			return keyStore;
 		}
 		catch( Throwable t )
 		{
@@ -203,11 +220,6 @@ public class KeyMaterialWssCrypto implements WssCrypto
 		getWssContainer().fireCryptoUpdated( this );
 	}
 
-	public void udpateConfig( WSSCryptoConfig config )
-	{
-		// this.config = config;
-	}
-
 	public String toString()
 	{
 		return getLabel();
@@ -263,13 +275,31 @@ public class KeyMaterialWssCrypto implements WssCrypto
 		getWssContainer().fireCryptoUpdated( this );
 	}
 
+	public CryptoType getType()
+	{
+		String typeConfig = config.getType();
+
+		// Default to Keystore if type is not saved in configuration
+		if( typeConfig == null )
+		{
+			typeConfig = CryptoType.KEYSTORE.name();
+		}
+		CryptoType type = CryptoType.valueOf( typeConfig );
+		return type;
+	}
+
+	public void setType( @NonNull CryptoType type )
+	{
+		config.setType( type.name() );
+	}
+
 	public void resolve( ResolveContext<?> context )
 	{
 		sourceProperty.resolveFile( context, "Missing keystore/certificate file" );
 	}
-	
+
 	public void addExternalDependency( List<ExternalDependency> dependencies )
 	{
-			dependencies.add( new PathPropertyExternalDependency( sourceProperty ) );
+		dependencies.add( new PathPropertyExternalDependency( sourceProperty ) );
 	}
 }

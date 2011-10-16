@@ -15,8 +15,6 @@ package com.eviware.soapui.impl.wsdl.support.wss;
 import org.apache.ws.security.WSSecurityException;
 import org.apache.ws.security.components.crypto.Crypto;
 
-import com.eviware.soapui.config.WSSCryptoConfig;
-
 public interface WssCrypto
 {
 	String STATUS_OK = "OK";
@@ -26,8 +24,6 @@ public interface WssCrypto
 	public String getLabel();
 
 	public WssContainer getWssContainer();
-
-	public void udpateConfig( WSSCryptoConfig config );
 
 	public String getSource();
 

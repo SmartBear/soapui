@@ -1316,6 +1316,7 @@
 		<xsd:sequence>
 			<xsd:element name="source" type="xsd:string"></xsd:element>
 			<xsd:element name="password" type="xsd:string"></xsd:element>
+            <xsd:element name="type" type="xsd:string"></xsd:element>
 			<xsd:element name="defaultAlias" type="xsd:string"
 				maxOccurs="1" minOccurs="0">
 			</xsd:element>
