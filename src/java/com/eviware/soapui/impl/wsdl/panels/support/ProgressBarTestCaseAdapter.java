@@ -122,6 +122,8 @@ public class ProgressBarTestCaseAdapter
 
 			progressBar.getModel().setMaximum( testRunner.getTestCase().getTestStepCount() );
 			progressBar.setForeground( Color.GREEN.darker() );
+			progressBar.setValue( 0 );
+			progressBar.setString( "" );
 		}
 
 		public void beforeStep( TestCaseRunner testRunner, TestCaseRunContext runContext, TestStep testStep )
