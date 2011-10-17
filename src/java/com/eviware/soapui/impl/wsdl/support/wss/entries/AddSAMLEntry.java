@@ -20,7 +20,9 @@ import javax.swing.JScrollPane;
 
 import org.apache.ws.security.message.WSSecHeader;
 import org.apache.ws.security.message.WSSecSAMLToken;
+import org.apache.ws.security.saml.ext.AssertionWrapper;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.WSSEntryConfig;
@@ -90,13 +92,11 @@ public class AddSAMLEntry extends WssEntryBase
 
 		try
 		{
-			WSSecSAMLToken samlToken = new WSSecSAMLToken();
-			Document dom = XmlUtils.parseXml( XmlUtils.stripWhitespaces( context.expand( samlAssertion ) ) );
-			//SAMLAssertion assertion = new SAMLAssertion( dom.getDocumentElement() );
-			
-			// TODO In 1.6.2, the assertion object need to of type AssertionWrapper
-			// FIXME Implement SAML2 support
-			//samlToken.build( doc, assertion, secHeader );
+			Document samlAssertionDOM = XmlUtils.parseXml( XmlUtils.stripWhitespaces( context.expand( samlAssertion ) ) );
+			Element samlAssertionRootElement = samlAssertionDOM.getDocumentElement();
+			AssertionWrapper assertion = new AssertionWrapper( samlAssertionRootElement );
+			WSSecSAMLToken wsSign = new WSSecSAMLToken();
+			wsSign.build( doc, assertion, secHeader );
 		}
 		catch( Exception e )
 		{

@@ -28,8 +28,7 @@ public class WssEntryRegistry extends AbstractRegistry<WssEntry, WSSEntryConfig,
 	{
 		mapType( AddUsernameEntry.TYPE, AddUsernameEntry.class );
 		mapType( AddTimestampEntry.TYPE, AddTimestampEntry.class );
-		// FIXME SAML (2) support disabled until fully implemented (see SOAP-2741).
-		//mapType( AddSAMLEntry.TYPE, AddSAMLEntry.class );
+		mapType( AddSAMLEntry.TYPE, AddSAMLEntry.class );
 		mapType( AddSignatureEntry.TYPE, AddSignatureEntry.class );
 		mapType( AddEncryptionEntry.TYPE, AddEncryptionEntry.class );
 	}
