@@ -942,6 +942,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 		String message = null;
 		String infoMessage = null;
 		String requestName = jdbcRequestTestStep.getName();
+		String rawSql = "";
 
 		if( status == Status.CANCELED )
 		{
@@ -960,6 +961,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 				message = "response time: " + response.getTimeTaken() + "ms (" + response.getContentLength() + " bytes)";
 				infoMessage = "Got response for [" + requestName + "] in " + response.getTimeTaken() + "ms ("
 						+ response.getContentLength() + " bytes)";
+				rawSql = ( ( JdbcSubmit )submit ).getRawSql();
 
 				if( !splitButton.isEnabled() )
 					requestTabs.setSelectedIndex( 1 );
@@ -967,7 +969,8 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 				responseEditor.requestFocus();
 			}
 		}
-
+		if( !StringUtils.isNullOrEmpty( rawSql ) )
+			logMessages( "Sql executed: " + rawSql, rawSql );
 		logMessages( message, infoMessage );
 
 		if( getModelItem().getSettings().getBoolean( UISettings.AUTO_VALIDATE_RESPONSE ) )

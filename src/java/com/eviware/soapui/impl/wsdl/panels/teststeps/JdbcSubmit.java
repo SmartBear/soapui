@@ -322,6 +322,11 @@ public class JdbcSubmit implements Submit, Runnable
 		}
 	}
 
+	public String getRawSql()
+	{
+		return rawSql;
+	}
+
 	protected String createResponse()
 	{
 		try
