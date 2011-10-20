@@ -97,7 +97,7 @@ public class WSSTabPanel extends JPanel
 		JTabbedPane tabs = new JTabbedPane();
 		tabs.addTab( "Outgoing WS-Security Configurations", buildOutgoingConfigurationsTab() );
 		tabs.addTab( "Incoming WS-Security Configurations", buildIncomingConfigurationsTab() );
-		tabs.addTab( "Keystores / Truststores", buildCryptosTable() );
+		tabs.addTab( "Keystores", buildCryptosTable() );
 
 		tabs.setMinimumSize( new Dimension( 10, 10 ) );
 
