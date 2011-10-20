@@ -488,6 +488,11 @@ public class SimpleForm
 		panel.add( component, cc.xyw( 2, row, 4 ) );
 	}
 
+	public void removeComponent( JComponent component )
+	{
+		panel.remove( component );
+	}
+
 	public void setValues( Map<String, String> values )
 	{
 		for( Iterator<String> i = values.keySet().iterator(); i.hasNext(); )
