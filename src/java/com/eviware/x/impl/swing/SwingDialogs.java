@@ -28,6 +28,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
+import javax.swing.SwingUtilities;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
 
@@ -236,35 +237,42 @@ public class SwingDialogs implements XDialogs
 	 */
 	public char[] promptPassword( String question, String title )
 	{
-		//FIXME Dialog does not get centered around the main window
 		JPasswordField passwordField = new JPasswordField();
-		passwordField.addAncestorListener( new FocusAncestorListener( passwordField ) );
+		passwordField.addAncestorListener( new RequestFocusListener() );
 		JLabel qLabel = new JLabel( question );
-		JOptionPane.showConfirmDialog( null, new Object[] { qLabel, passwordField }, title, JOptionPane.OK_CANCEL_OPTION );
+		JOptionPane.showConfirmDialog( parent, new Object[] { qLabel, passwordField }, title,
+				JOptionPane.OK_CANCEL_OPTION );
 		return passwordField.getPassword();
 	}
 
-	private final class FocusAncestorListener implements AncestorListener
+	/*
+	 * Used to give focus to password field, instead of the default OK button in
+	 * the confirmation dialog.
+	 */
+	private static class RequestFocusListener implements AncestorListener
 	{
-		private final JComponent component;
-
-		public FocusAncestorListener( JComponent component )
+		public void ancestorAdded( final AncestorEvent e )
 		{
-			this.component = component;
+			final AncestorListener al = this;
+			SwingUtilities.invokeLater( new Runnable()
+			{
+
+				@Override
+				public void run()
+				{
+					JComponent component = ( JComponent )e.getComponent();
+					component.requestFocusInWindow();
+					component.removeAncestorListener( al );
+				}
+			} );
 		}
 
-		public void ancestorAdded( AncestorEvent event )
-		{
-			component.requestFocusInWindow();
-		}
-
-		public void ancestorMoved( AncestorEvent event )
+		public void ancestorMoved( AncestorEvent e )
 		{
 		}
 
-		public void ancestorRemoved( AncestorEvent event )
+		public void ancestorRemoved( AncestorEvent e )
 		{
 		}
 	}
 }
-
