@@ -13,7 +13,7 @@
     </searchSequence>
     <variables>
       <variable name="SOAPUI_HOME" value="${installer:sys.installationDir}" />
-      <variable name="DIST_ROOT" value="D:\loadui-integration\soapUI 4.0\target\dist" />
+      <variable name="DIST_ROOT" value="d:\workspace\soapUI 4.5.0\target\dist" />
       <variable name="RESOURCES_HOME" value="" />
       <variable name="VERSION_NUMBER" value="" />
       <variable name="SRC_ROOT" value="" />
@@ -23,7 +23,7 @@
       <variable name="HERMES_INSTALLER" value="D:\backups\instalacije\hermes-installer-1.13.jar" />
       <variable name="BRANDED_TITLE" value="" />
       <variable name="EXECUTABLE_NAME" value="soapUI-${compiler:VERSION_NUMBER}${compiler:BRANDED_TITLE}" />
-      <variable name="DIST_STANDALONE" value="D:\loadui-integration\soapUI 4.0\target\standalone" />
+      <variable name="DIST_STANDALONE" value="d:\workspace\soapUI 4.5.0\target\standalone" />
       <variable name="LOADUI_DOWNLOADER" value="" />
       <variable name="LOADUI_INSTALLER_URL" value="http://www.eviware.com/nightly-builds/loadui/1.5.1-SNAPSHOT/" />
       <variable name="LOADUI_VERSION_NUMBER" value="1_5_1-SNAPSHOT" />
@@ -89,10 +89,10 @@
       </dirEntry>
       <dirEntry mountPoint="318" file="${compiler:DIST_ROOT}/lib" overwrite="4" shared="false" mode="644" uninstallMode="0" excludeSuffixes="" dirMode="755">
         <exclude>
-          <entry location="xulrunner-linux-2.8.28035.jar" fileType="regular" />
-          <entry location="xulrunner-linux64-2.8.28035.jar" fileType="regular" />
-          <entry location="xulrunner-mac-2.8.28035.jar" fileType="regular" />
-          <entry location="xulrunner-windows-2.8.28035.jar" fileType="regular" />
+          <entry location="xulrunner-linux-2.9.1.jar" fileType="regular" />
+          <entry location="xulrunner-linux64-2.9.1.jar" fileType="regular" />
+          <entry location="xulrunner-mac-2.9.1.jar" fileType="regular" />
+          <entry location="xulrunner-windows-2.9.1.jar" fileType="regular" />
         </exclude>
       </dirEntry>
       <dirEntry mountPoint="399" file="${compiler:DIST_ROOT}/licenses" overwrite="4" shared="false" mode="644" uninstallMode="0" excludeSuffixes="" dirMode="755">
