@@ -141,8 +141,8 @@ public class DefaultSoapUICore implements SoapUICore
 		loadExternalLibraries();
 		initSettings( settingsFile == null ? DEFAULT_SETTINGS_FILE : settingsFile );
 
-		initCoreComponents();
 		initExtensions( getExtensionClassLoader() );
+		initCoreComponents();
 
 		// this is to provoke initialization
 		SoapVersion.Soap11.equals( SoapVersion.Soap12 );
