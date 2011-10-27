@@ -31,6 +31,7 @@ import com.eviware.soapui.model.propertyexpansion.resolvers.SubmitPropertyResolv
 import com.eviware.soapui.model.propertyexpansion.resolvers.TestRunPropertyResolver;
 import com.eviware.soapui.settings.GlobalPropertySettings;
 import com.eviware.soapui.support.StringUtils;
+import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlUtils;
 
 /**
@@ -44,6 +45,8 @@ public class PropertyExpander
 	private List<PropertyResolver> propertyResolvers = new ArrayList<PropertyResolver>();
 	private static List<PropertyResolver> defaultResolvers = new ArrayList<PropertyResolver>();
 	private static PropertyExpander defaultExpander;
+	private static boolean debuggingMode;
+	private static StringToStringMap debuggingExpandedProperties;
 
 	static
 	{
@@ -64,6 +67,7 @@ public class PropertyExpander
 		}
 
 		defaultExpander = new PropertyExpander( true );
+		debuggingExpandedProperties = new StringToStringMap();
 	}
 
 	public PropertyExpander( boolean addDefaultResolvers )
@@ -183,6 +187,10 @@ public class PropertyExpander
 					if( entitize )
 						propertyValue = XmlUtils.entitize( propertyValue );
 
+					if( debuggingMode )
+					{
+						debuggingExpandedProperties.put( propertyName, propertyValue );
+					}
 					buf.append( propertyValue );
 				}
 				else
@@ -217,6 +225,21 @@ public class PropertyExpander
 	public static String expandProperties( ModelItem contextModelItem, String content )
 	{
 		return defaultExpander.expand( contextModelItem, content );
+	}
+
+	public static void setDebuggingMode( boolean debug )
+	{
+		debuggingMode = debug;
+	}
+
+	public static StringToStringMap getDebuggingExpandedProperties()
+	{
+		return debuggingExpandedProperties;
+	}
+
+	public static void clearDebuggingExpandedProperties()
+	{
+		debuggingExpandedProperties.clear();
 	}
 
 }
