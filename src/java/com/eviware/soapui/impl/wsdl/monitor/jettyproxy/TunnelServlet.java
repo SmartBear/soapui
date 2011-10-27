@@ -235,7 +235,7 @@ public class TunnelServlet extends ProxyServlet
 	{
 		String response = footer;
 
-		Header[] headers = postMethod.getAllHeaders();
+		Header[] headers = postMethod.getHttpResponse().getAllHeaders();
 		for( Header header : headers )
 		{
 			response += header.toString().trim() + "\n";

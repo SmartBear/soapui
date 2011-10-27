@@ -32,7 +32,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.http.Header;
 import org.apache.http.HttpHost;
-import org.apache.http.HttpResponse;
 import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
@@ -221,8 +220,6 @@ public class ProxyServlet implements Servlet
 			SoapUI.logError( e );
 		}
 
-		HttpResponse httpResponse = null;
-
 		// SoapUI.log("PROXY to:" + url);
 		monitor.fireBeforeProxy( request, response, method, hostConfiguration );
 
@@ -230,11 +227,11 @@ public class ProxyServlet implements Servlet
 		{
 			if( httpState == null )
 				httpState = new BasicHttpContext();
-			httpResponse = HttpClientSupport.execute( hostConfiguration, method, httpState );
+			HttpClientSupport.execute( hostConfiguration, method, httpState );
 		}
 		else
 		{
-			httpResponse = HttpClientSupport.execute( hostConfiguration, method );
+			HttpClientSupport.execute( hostConfiguration, method );
 		}
 
 		// wait for transaction to end and store it.
@@ -244,7 +241,7 @@ public class ProxyServlet implements Servlet
 		capturedData.setRawResponseBody( method.getResponseBody() );
 		capturedData.setResponseHeader( method );
 		capturedData.setRawRequestData( getRequestToBytes( request.toString(), capture ) );
-		capturedData.setRawResponseData( getResponseToBytes( response.toString(), httpResponse,
+		capturedData.setRawResponseData( getResponseToBytes( response.toString(), method,
 				capturedData.getRawResponseBody() ) );
 		capturedData.setResponseContent( new String( method.getDecompressedResponseBody() ) );
 
@@ -268,14 +265,14 @@ public class ProxyServlet implements Servlet
 
 		synchronized( this )
 		{
-			if( checkContentType( httpResponse ) )
+			if( checkContentType( method ) )
 			{
 				monitor.addMessageExchange( capturedData );
 			}
 		}
 	}
 
-	private boolean checkContentType( HttpResponse httpResponse )
+	private boolean checkContentType( ExtendedHttpMethod method )
 	{
 		String[] contentTypes = settings
 				.getString( LaunchForm.SET_CONTENT_TYPES, SoapMonitorAction.defaultContentTypes() ).split( "," );
@@ -285,7 +282,7 @@ public class ProxyServlet implements Servlet
 			contentTypelist.add( ct.trim().replace( "*", "" ) );
 		}
 
-		Header[] headers = httpResponse.getHeaders( "Content-Type" );
+		Header[] headers = method.getHttpResponse().getHeaders( "Content-Type" );
 		for( Header header : headers )
 		{
 			for( String contentType : contentTypelist )
@@ -299,11 +296,11 @@ public class ProxyServlet implements Servlet
 		return false;
 	}
 
-	private byte[] getResponseToBytes( String status, HttpResponse httpResponse, byte[] res )
+	private byte[] getResponseToBytes( String status, ExtendedHttpMethod method, byte[] res )
 	{
 		String response = status.trim() + "\r\n";
 
-		Header[] headers = httpResponse.getAllHeaders();
+		Header[] headers = method.getHttpResponse().getAllHeaders();
 		for( Header header : headers )
 		{
 			response += header.toString().trim() + "\r\n";
