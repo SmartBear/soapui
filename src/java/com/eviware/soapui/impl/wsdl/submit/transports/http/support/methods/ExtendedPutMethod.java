@@ -21,7 +21,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPut;
 
 import com.eviware.soapui.impl.rest.RestRequestInterface;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedEntityEnclosingHttpMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpMethodSupport;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.SSLInfo;
 import com.eviware.soapui.support.uri.EncodingUtil;
@@ -33,7 +33,7 @@ import com.eviware.soapui.support.uri.EncodingUtil;
  * @author Ole.Matzura
  */
 
-public final class ExtendedPutMethod extends HttpPut implements ExtendedHttpMethod
+public final class ExtendedPutMethod extends HttpPut implements ExtendedEntityEnclosingHttpMethod
 {
 	private HttpMethodSupport httpMethodSupport;
 

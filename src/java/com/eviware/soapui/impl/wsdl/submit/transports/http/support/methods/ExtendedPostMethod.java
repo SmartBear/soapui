@@ -37,7 +37,6 @@ public final class ExtendedPostMethod extends HttpPost implements ExtendedEntity
 {
 	private HttpMethodSupport httpMethodSupport;
 	private IAfterRequestInjection afterRequestInjection;
-	private boolean followRedirects;
 
 	public ExtendedPostMethod()
 	{

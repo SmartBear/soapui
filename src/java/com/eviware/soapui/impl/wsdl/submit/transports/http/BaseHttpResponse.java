@@ -68,7 +68,6 @@ public abstract class BaseHttpResponse implements HttpResponse
 		this.httpRequest = new WeakReference<AbstractHttpRequestInterface<?>>( httpRequest );
 		this.timeTaken = httpMethod.getTimeTaken();
 
-		method = httpMethod.getMethod();
 		version = httpMethod.getProtocolVersion().toString();
 
 		try

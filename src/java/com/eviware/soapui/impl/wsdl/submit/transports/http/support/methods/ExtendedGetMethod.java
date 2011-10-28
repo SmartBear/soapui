@@ -147,11 +147,6 @@ public final class ExtendedGetMethod extends HttpGet implements ExtendedHttpMeth
 		httpMethodSupport.setDecompress( decompress );
 	}
 
-	public boolean expectContinue()
-	{
-		return false;
-	}
-
 	public HttpEntity getEntity()
 	{
 		return null;
