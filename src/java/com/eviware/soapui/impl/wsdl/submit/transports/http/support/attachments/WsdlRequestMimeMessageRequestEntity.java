@@ -116,6 +116,17 @@ public class WsdlRequestMimeMessageRequestEntity extends AbstractHttpEntity
 	@Override
 	public boolean isStreaming()
 	{
+		try
+		{
+			if( message.getInputStream() != null )
+			{
+				return true;
+			}
+		}
+		catch( Exception e )
+		{/* ignore */
+		}
+
 		return false;
 	}
 
