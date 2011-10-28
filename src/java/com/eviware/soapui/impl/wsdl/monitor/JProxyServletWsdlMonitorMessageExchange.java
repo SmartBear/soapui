@@ -532,7 +532,7 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
 
 	public void setResponseHeader( ExtendedHttpMethod method )
 	{
-		Header[] headers = method.getHttpResponse().getAllHeaders();
+		Header[] headers = method.getAllHeaders();
 		for( Header header : headers )
 		{
 			String name = header.getName();
