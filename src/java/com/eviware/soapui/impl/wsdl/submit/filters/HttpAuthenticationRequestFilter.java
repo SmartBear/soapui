@@ -22,10 +22,10 @@ import org.apache.http.auth.NTCredentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.params.AuthPolicy;
 import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.impl.auth.BasicScheme;
+import org.apache.http.protocol.HttpContext;
 import org.apache.log4j.Logger;
 
 import com.eviware.soapui.SoapUI;
@@ -81,6 +81,7 @@ public class HttpAuthenticationRequestFilter extends AbstractRequestFilter
 			String password, String domain )
 	{
 		HttpRequestBase httpMethod = ( HttpRequestBase )context.getProperty( BaseHttpRequestTransport.HTTP_METHOD );
+		HttpContext httpContext = ( HttpContext )context.getProperty( SubmitContext.HTTP_STATE_PROPERTY );
 
 		if( !StringUtils.isNullOrEmpty( username ) && !StringUtils.isNullOrEmpty( password ) )
 		{
@@ -92,7 +93,8 @@ public class HttpAuthenticationRequestFilter extends AbstractRequestFilter
 				httpMethod.removeHeaders( "Authorization" );
 				httpMethod.addHeader( header );
 			}
-			( ( HttpUriRequest )httpMethod ).getParams().setParameter( ClientContext.CREDS_PROVIDER,
+
+			httpContext.setAttribute( ClientContext.CREDS_PROVIDER,
 					new UPDCredentialsProvider( username, password, domain ) );
 		}
 	}

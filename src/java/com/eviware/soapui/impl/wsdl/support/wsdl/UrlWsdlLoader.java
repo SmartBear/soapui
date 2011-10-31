@@ -192,8 +192,8 @@ public class UrlWsdlLoader extends WsdlLoader implements DefinitionLoader
 	protected void createGetMethod( String url )
 	{
 		getMethod = new HttpGet( url );
-		HttpClientSupport.getHttpClient().getParams().setParameter( ClientPNames.HANDLE_REDIRECTS, true );
-		getMethod.getParams().setParameter( ClientContext.CREDS_PROVIDER, new WsdlCredentialsProvider() );
+		state.setAttribute( ClientPNames.HANDLE_REDIRECTS, true );
+		state.setAttribute( ClientContext.CREDS_PROVIDER, new WsdlCredentialsProvider() );
 
 		if( SoapUI.getSettings().getBoolean( HttpSettings.AUTHENTICATE_PREEMPTIVELY ) )
 		{

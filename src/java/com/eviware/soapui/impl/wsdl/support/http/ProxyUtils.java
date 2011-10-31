@@ -97,7 +97,7 @@ public class ProxyUtils
 							}
 						}
 						credsProvider.setCredentials( new AuthScope( proxy.getHostName(), proxy.getPort() ), proxyCreds );
-						httpMethod.getParams().setParameter( ClientContext.CREDS_PROVIDER, credsProvider );
+						httpContext.setAttribute( ClientContext.CREDS_PROVIDER, credsProvider );
 						httpMethod.getParams().setParameter( ConnRoutePNames.DEFAULT_PROXY, proxy );
 					}
 				}
