@@ -379,7 +379,14 @@ public class XmlBeansPropertiesTestPropertyHolder implements MutableTestProperty
 			if( obj instanceof TestProperty )
 			{
 				TestProperty testProperty = ( TestProperty )obj;
-				return getModelItem().equals( testProperty.getModelItem() ) && getName().equals( testProperty.getName() );
+				if( getModelItem() != null && testProperty.getModelItem() != null )
+				{
+					return getModelItem().equals( testProperty.getModelItem() ) && getName().equals( testProperty.getName() );
+				}
+				else
+				{
+					return getName().equals( testProperty.getName() );
+				}
 			}
 			else
 			{
