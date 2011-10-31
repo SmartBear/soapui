@@ -65,7 +65,7 @@ public class HttpClientSupport
 		private DefaultHttpClient httpClient;
 		private final static Logger log = Logger.getLogger( HttpClientSupport.Helper.class );
 		private SoapUIMultiThreadedHttpConnectionManager connectionManager;
-		private KeyStore trustStore;
+		private KeyStore keyStore;
 		private SoapUISSLSocketFactory socketFactory;
 
 		public Helper()
@@ -74,9 +74,9 @@ public class HttpClientSupport
 
 			try
 			{
-				trustStore = initTrustStore();
+				keyStore = initKeyStore();
 
-				socketFactory = new SoapUISSLSocketFactory( trustStore );
+				socketFactory = new SoapUISSLSocketFactory( keyStore );
 
 				SchemeRegistry registry = new SchemeRegistry();
 				registry.register( new Scheme( "http", 80, PlainSocketFactory.getSocketFactory() ) );
@@ -147,7 +147,7 @@ public class HttpClientSupport
 					try
 					{
 						log.info( "Updating keyStore.." );
-						initTrustStore();
+						initKeyStore();
 					}
 					catch( Throwable e )
 					{
@@ -172,7 +172,7 @@ public class HttpClientSupport
 				try
 				{
 					log.info( "Updating keyStore.." );
-					initTrustStore();
+					initKeyStore();
 				}
 				catch( Throwable e )
 				{
@@ -181,10 +181,10 @@ public class HttpClientSupport
 			}
 		}
 
-		public KeyStore initTrustStore() throws KeyStoreException, NoSuchAlgorithmException, CertificateException,
+		public KeyStore initKeyStore() throws KeyStoreException, NoSuchAlgorithmException, CertificateException,
 				IOException, UnrecoverableKeyException, KeyManagementException
 		{
-			trustStore = KeyStore.getInstance( KeyStore.getDefaultType() );
+			keyStore = KeyStore.getInstance( KeyStore.getDefaultType() );
 
 			Settings settings = SoapUI.getSettings();
 
@@ -205,7 +205,7 @@ public class HttpClientSupport
 
 					try
 					{
-						trustStore.load( instream, pwd );
+						keyStore.load( instream, pwd );
 					}
 					finally
 					{
@@ -220,7 +220,7 @@ public class HttpClientSupport
 				}
 			}
 
-			return trustStore;
+			return keyStore;
 		}
 	}
 
