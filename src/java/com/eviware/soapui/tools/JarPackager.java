@@ -1,5 +1,5 @@
 /*
- *  soapUI, copyright (C) 2004-2011 eviware.com 
+ *  soapUI, copyright (C) 2004-2011 smartbear.com 
  *
  *  soapUI is free software; you can redistribute it and/or modify it under the 
  *  terms of version 2.1 of the GNU Lesser General Public License as published by 
@@ -15,6 +15,7 @@ package com.eviware.soapui.tools;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.jar.JarEntry;
@@ -51,13 +52,27 @@ public class JarPackager
 			for( File file : fromFiles )
 			{
 				File toFile = new File( toDir, file.getName() );
-				try
+				if( file.isDirectory() )
 				{
-					copyFile( file, toFile );
+					if( toFile.exists() || toFile.mkdir() )
+					{
+						copyAllFromTo( file, toFile, filter );
+					}
+					else
+					{
+						log.error( "Could not create directory " + toFile.getAbsolutePath() );
+					}
 				}
-				catch( IOException e )
+				else
 				{
-					log.error( e.getMessage(), e );
+					try
+					{
+						copyFile( file, toFile );
+					}
+					catch( IOException e )
+					{
+						log.error( e.getMessage(), e );
+					}
 				}
 			}
 		}
@@ -153,7 +168,11 @@ public class JarPackager
 			stream.close();
 			log.info( "Adding completed OK" );
 		}
-		catch( Exception ex )
+		catch( FileNotFoundException ex )
+		{
+			log.error( ex.getMessage(), ex );
+		}
+		catch( IOException ex )
 		{
 			log.error( ex.getMessage(), ex );
 		}
