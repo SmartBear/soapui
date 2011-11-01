@@ -38,13 +38,12 @@ public class ArgumentBuilder
 
 	public ArgumentBuilder( StringToStringMap values )
 	{
+		values = escapeQuotes( values );
 		this.values = values;
 	}
 
 	public List<String> getArgs()
 	{
-		ArrayList<String> result = new ArrayList<String>();
-
 		if( isUnix )
 		{
 			// sh -c requires all args in one string..
@@ -56,26 +55,28 @@ public class ArgumentBuilder
 				buf.append( escapeUnixArg( args.get( c ) ) );
 			}
 
+			ArrayList<String> result = new ArrayList<String>();
 			result.add( args.get( 0 ) );
 			result.add( args.get( 1 ) );
 			result.add( buf.toString() );
+			return result;
 		}
 		else
 		{
-			result = new ArrayList<String>( args );
+			return new ArrayList<String>( args );
 		}
-
-		return escapeQuotes( result );
 	}
 
-	private List<String> escapeQuotes( List<String> list )
+	private StringToStringMap escapeQuotes( StringToStringMap values )
 	{
-		List<String> result = new ArrayList<String>();
-		for( String el : list )
+		StringToStringMap map = new StringToStringMap();
+		for( String key : values.keySet() )
 		{
-			result.add( internalEscapeQuotes( el ) );
+			String oldValue = values.get( key );
+			String newValue = internalEscapeQuotes( oldValue );
+			map.put( key, newValue );
 		}
-		return result;
+		return map;
 	}
 
 	private String internalEscapeQuotes( String str )
