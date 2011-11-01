@@ -59,8 +59,6 @@ public class ArgumentBuilder
 			result.add( args.get( 0 ) );
 			result.add( args.get( 1 ) );
 			result.add( buf.toString() );
-
-			return result;
 		}
 		else
 		{
