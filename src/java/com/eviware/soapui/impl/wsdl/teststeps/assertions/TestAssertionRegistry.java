@@ -203,7 +203,8 @@ public class TestAssertionRegistry
 			if( assertion.isAllowMultiple() )
 				continue;
 
-			if( assertion.getClass().equals( availableAssertions.get( getAssertionTypeForName( name ) ) ) )
+			if( assertion.getClass().equals(
+					availableAssertions.get( getAssertionTypeForName( name ) ).getAssertionClassType() ) )
 			{
 				return false;
 			}

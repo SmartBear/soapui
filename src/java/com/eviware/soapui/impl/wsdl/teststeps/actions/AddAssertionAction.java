@@ -12,14 +12,16 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps.actions;
 
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 
+import com.eviware.soapui.impl.wsdl.actions.project.SimpleDialog;
+import com.eviware.soapui.impl.wsdl.panels.assertions.AddAssertionPanel;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry;
 import com.eviware.soapui.model.testsuite.Assertable;
-import com.eviware.soapui.model.testsuite.TestAssertion;
 import com.eviware.soapui.support.UISupport;
 
 /**
@@ -51,26 +53,30 @@ public class AddAssertionAction extends AbstractAction
 			return;
 		}
 
-		String selection = ( String )UISupport.prompt( "Select assertion to add", "Select Assertion", assertions );
-		if( selection == null )
-			return;
+		//		String selection = ( String )UISupport.prompt( "Select assertion to add", "Select Assertion", assertions );
+		SimpleDialog addAssertionPanel = new AddAssertionPanel( assertable );
+		addAssertionPanel.setSize( new Dimension( 800, 900 ) );
+		addAssertionPanel.setVisible( true );
 
-		if( !TestAssertionRegistry.getInstance().canAddMultipleAssertions( selection, assertable ) )
-		{
-			UISupport.showErrorMessage( "This assertion can only be added once" );
-			return;
-		}
-
-		TestAssertion assertion = assertable.addAssertion( selection );
-		if( assertion == null )
-		{
-			UISupport.showErrorMessage( "Failed to add assertion" );
-			return;
-		}
-
-		if( assertion.isConfigurable() )
-		{
-			assertion.configure();
-		}
+		//		if( selection == null )
+		//			return;
+		//
+		//		if( !TestAssertionRegistry.getInstance().canAddMultipleAssertions( selection, assertable ) )
+		//		{
+		//			UISupport.showErrorMessage( "This assertion can only be added once" );
+		//			return;
+		//		}
+		//
+		//		TestAssertion assertion = assertable.addAssertion( selection );
+		//		if( assertion == null )
+		//		{
+		//			UISupport.showErrorMessage( "Failed to add assertion" );
+		//			return;
+		//		}
+		//
+		//		if( assertion.isConfigurable() )
+		//		{
+		//			assertion.configure();
+		//		}
 	}
 }
