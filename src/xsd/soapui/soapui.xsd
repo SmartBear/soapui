@@ -427,23 +427,25 @@
 					<xsd:element name="tearDownScript" type="tns:Script"
 						maxOccurs="1" minOccurs="0">
 					</xsd:element>
-					<xsd:element name="properties" type="tns:PropertiesType"
-						maxOccurs="1" minOccurs="0">
+					<xsd:element name="properties"
+						type="tns:PropertiesType" maxOccurs="1" minOccurs="0">
 					</xsd:element>
-					<xsd:element name="requirements" type="tns:RequirementsType"
-						maxOccurs="1" minOccurs="0">
+					<xsd:element name="requirements"
+						type="tns:RequirementsType" maxOccurs="1" minOccurs="0">
 					</xsd:element>
-					<xsd:element name="reportTemplates" type="tns:ReportTemplate"
-						maxOccurs="unbounded" minOccurs="0">
+					<xsd:element name="reportTemplates"
+						type="tns:ReportTemplate" maxOccurs="unbounded" minOccurs="0">
 					</xsd:element>
 					<xsd:element name="reportScript" type="tns:Script"
 						maxOccurs="1" minOccurs="0">
 					</xsd:element>
-					<xsd:element name="reportParameters" type="tns:PropertiesType"
-						minOccurs="0" maxOccurs="1">
+					<xsd:element name="reportParameters"
+						type="tns:PropertiesType" minOccurs="0" maxOccurs="1">
 					</xsd:element>
-					<xsd:element name="securityTest" type="tns:SecurityTest"
-						maxOccurs="unbounded" minOccurs="0"></xsd:element>
+					<xsd:element name="securityTest"
+						type="tns:SecurityTest" maxOccurs="unbounded" minOccurs="0">
+					</xsd:element>
+					<xsd:element name="breakPoints" type="tns:BreakPoint" maxOccurs="unbounded" minOccurs="0"></xsd:element>
 				</xsd:sequence>
 				<xsd:attribute name="keepSession" type="xsd:boolean"
 					use="optional">
@@ -2304,4 +2306,11 @@
 	<xsd:simpleType name="typeType">
 		<xsd:restriction base="xsd:string"></xsd:restriction>
 	</xsd:simpleType>
+
+	<xsd:complexType name="BreakPoint">
+		<xsd:sequence>
+			<xsd:element name="testStepId" type="xsd:string"></xsd:element>
+			<xsd:element name="status" type="xsd:string"></xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
 </xsd:schema>
