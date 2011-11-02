@@ -41,27 +41,6 @@ import com.eviware.soapui.support.components.JXToolBar;
 
 public class AddAssertionPanel extends SimpleDialog
 {
-	private final static String VALIDATE_RESPONSE_CONTENT_CATEGORY = "Validate Response Content";
-	private final static String STATUS_CATEGORY = "Compliance, Status and Standards";
-	private final static String SCRIPT_CATEGORY = "Script";
-	private final static String SLA_CATEGORY = "SLA";
-	private final static String JMS_CATEGORY = "JMS";
-	private final static String SECURITY_CATEGORY = "Security";
-
-	private final static String XPATH_MATCH = "XPath Match";
-	private final static String XQUERY_MATCH = "XQuery Match";
-	private final static String NOT_CONTAINS = "Not Contains";
-	private final static String CONTAINS = "Contains";
-
-	private final static String INVALID_CODES = "Invalid HTTP Status Codes";
-	private final static String WS_SECURITY_STATUS = "WS Security Status";
-	private final static String NOT_SOAP_FAULT = "Not Soap Fault";
-	private final static String VALID_CODES = "Valid HTTP Status Codes";
-	private final static String SOAP_RESPONSE = "SOAP Response";
-	private final static String WS_ADDRESSING_RESPONSE = "WS Addressing Response";
-	private final static String SCHEMA_COMPLIANCE = "Schema Compliance";
-	private final static String SOAP_FAULT = "SOAP Fault";
-
 	private JXList categoriesList;
 	private JXTable assertionsTable;
 	private Assertable assertable;
@@ -70,42 +49,14 @@ public class AddAssertionPanel extends SimpleDialog
 	private JPanel assertionListPanel;
 	private LinkedHashSet<String> assertions;
 	private InternalListSelectionListener selectionListener = new InternalListSelectionListener();
+	private LinkedHashMap<String, LinkedHashSet<String>> categoriesAssertionsMap;
 
 	public AddAssertionPanel( Assertable assertable )
 	{
 		super( "Select Assertion", "Select which assertion to add", "" );
 		this.assertable = assertable;
-	}
+		categoriesAssertionsMap = AssertionCategoryMapping.getCategoriesAssertionsMap( assertable );
 
-	public static String[] getAssertionCategories()
-	{
-		return new String[] { VALIDATE_RESPONSE_CONTENT_CATEGORY, STATUS_CATEGORY, SCRIPT_CATEGORY, SLA_CATEGORY,
-				JMS_CATEGORY, SECURITY_CATEGORY };
-	}
-
-	public static LinkedHashMap<String, LinkedHashSet<String>> getCategoriesAssertionsMap()
-	{
-		LinkedHashMap<String, LinkedHashSet<String>> categoriesAssertionsMap = new LinkedHashMap<String, LinkedHashSet<String>>();
-		LinkedHashSet<String> validatingResponseAssertionsSet = new LinkedHashSet<String>();
-		validatingResponseAssertionsSet.add( XPATH_MATCH );
-		validatingResponseAssertionsSet.add( XQUERY_MATCH );
-		validatingResponseAssertionsSet.add( NOT_CONTAINS );
-		validatingResponseAssertionsSet.add( CONTAINS );
-		categoriesAssertionsMap.put( VALIDATE_RESPONSE_CONTENT_CATEGORY, validatingResponseAssertionsSet );
-
-		LinkedHashSet<String> statusAssertionsSet = new LinkedHashSet<String>();
-		statusAssertionsSet.clear();
-		statusAssertionsSet.add( INVALID_CODES );
-		statusAssertionsSet.add( WS_SECURITY_STATUS );
-		statusAssertionsSet.add( NOT_SOAP_FAULT );
-		statusAssertionsSet.add( VALID_CODES );
-		statusAssertionsSet.add( SOAP_RESPONSE );
-		statusAssertionsSet.add( WS_ADDRESSING_RESPONSE );
-		statusAssertionsSet.add( SCHEMA_COMPLIANCE );
-		statusAssertionsSet.add( SOAP_FAULT );
-		categoriesAssertionsMap.put( STATUS_CATEGORY, statusAssertionsSet );
-
-		return categoriesAssertionsMap;
 	}
 
 	@Override
@@ -142,7 +93,7 @@ public class AddAssertionPanel extends SimpleDialog
 	private Component buildCategoriesList()
 	{
 		JPanel panel = new JPanel( new BorderLayout() );
-		AssertionCategoriesListModel listModel = new AssertionCategoriesListModel( getCategoriesAssertionsMap().keySet() );
+		AssertionCategoriesListModel listModel = new AssertionCategoriesListModel( categoriesAssertionsMap.keySet() );
 		categoriesList = new JXList( listModel );
 		categoriesList.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
 		categoriesList.addListSelectionListener( new ListSelectionListener()
@@ -151,9 +102,9 @@ public class AddAssertionPanel extends SimpleDialog
 			public void valueChanged( ListSelectionEvent arg0 )
 			{
 				String category = ( String )categoriesList.getSelectedValue();
-				if( category != null && getCategoriesAssertionsMap().containsKey( category ) )
+				if( category != null && categoriesAssertionsMap.containsKey( category ) )
 				{
-					assertions = getCategoriesAssertionsMap().get( category );
+					assertions = categoriesAssertionsMap.get( category );
 					assertionsListTableModel.setListEntriesSet( assertions );
 					assertionsListTableModel.fireTableDataChanged();
 				}
