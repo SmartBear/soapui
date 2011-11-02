@@ -183,7 +183,7 @@ public class AddAssertionPanel extends SimpleDialog
 		@Override
 		public void valueChanged( ListSelectionEvent e )
 		{
-			if( assertionsTable.getSelectedRow() > 0 )
+			if( assertionsTable.getSelectedRow() >= 0 )
 				addAssertionAction.setEnabled( true );
 			else
 				addAssertionAction.setEnabled( false );
