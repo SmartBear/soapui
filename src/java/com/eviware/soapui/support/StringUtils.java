@@ -461,4 +461,15 @@ public class StringUtils
 		Arrays.sort( names );
 		return names;
 	}
+
+	/*
+	 * Sets string to default value if empty or null.
+	 */
+	public static String defaultIfEmpty( String testString, String defaultString )
+	{
+		String result = testString;
+		if( isNullOrEmpty( testString ) )
+			result = defaultString;
+		return result;
+	}
 }
