@@ -76,6 +76,8 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
 	private byte[] responseRaw = null;
 	private String requestMethod = null;
 	private Map<String, String> httpRequestParameters;
+	private int statusCode;
+	private String responseStatusLine;
 
 	public JProxyServletWsdlMonitorMessageExchange( WsdlProject project )
 	{
@@ -522,7 +524,7 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
 
 	public int getResponseStatusCode()
 	{
-		return 0;
+		return statusCode;
 	}
 
 	public String getResponseContentType()
@@ -570,6 +572,16 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
 	public Map<String, String> getHttpRequestParameters()
 	{
 		return httpRequestParameters;
+	}
+
+	public void setResponseStatusCode( int statusCode )
+	{
+		this.statusCode = statusCode;
+	}
+
+	public void setResponseStatusLine( String responseStatusLine )
+	{
+		this.responseStatusLine = responseStatusLine;
 	}
 
 }

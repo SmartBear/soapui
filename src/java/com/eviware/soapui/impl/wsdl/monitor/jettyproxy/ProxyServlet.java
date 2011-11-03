@@ -31,7 +31,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.http.Header;
+import org.apache.http.HttpEntityEnclosingRequest;
 import org.apache.http.HttpHost;
+import org.apache.http.client.params.ClientPNames;
 import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
@@ -41,15 +43,19 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.actions.monitor.SoapMonitorAction;
 import com.eviware.soapui.impl.wsdl.actions.monitor.SoapMonitorAction.LaunchForm;
-import com.eviware.soapui.impl.wsdl.monitor.CaptureInputStream;
 import com.eviware.soapui.impl.wsdl.monitor.JProxyServletWsdlMonitorMessageExchange;
 import com.eviware.soapui.impl.wsdl.monitor.SoapMonitor;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedGetMethod;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedHeadMethod;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedOptionsMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPostMethod;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPutMethod;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedTraceMethod;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 import com.eviware.soapui.impl.wsdl.support.http.SoapUIHostConfiguration;
 import com.eviware.soapui.model.settings.Settings;
+import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.types.StringToStringsMap;
 import com.eviware.soapui.support.uri.URI;
 import com.eviware.soapui.support.uri.URIException;
@@ -115,10 +121,29 @@ public class ProxyServlet implements Servlet
 		HttpServletRequest httpRequest = ( HttpServletRequest )request;
 		if( httpRequest.getMethod().equals( "GET" ) )
 			method = new ExtendedGetMethod();
-		else
+		else if( httpRequest.getMethod().equals( "POST" ) )
 			method = new ExtendedPostMethod();
+		else if( httpRequest.getMethod().equals( "PUT" ) )
+			method = new ExtendedPutMethod();
+		else if( httpRequest.getMethod().equals( "HEAD" ) )
+			method = new ExtendedHeadMethod();
+		else if( httpRequest.getMethod().equals( "OPTIONS" ) )
+			method = new ExtendedOptionsMethod();
+		else if( httpRequest.getMethod().equals( "TRACE" ) )
+			method = new ExtendedTraceMethod();
+		else
+			method = new ExtendedGetMethod();
 
 		method.setDecompress( false );
+
+		ByteArrayOutputStream requestBody = null;
+		if( method instanceof HttpEntityEnclosingRequest )
+		{
+			requestBody = Tools.readAll( request.getInputStream(), 0 );
+			InputStreamEntity entity = new InputStreamEntity( new ByteArrayInputStream( requestBody.toByteArray() ), -1 );
+			entity.setContentType( request.getContentType() );
+			( ( HttpEntityEnclosingRequest )method ).setEntity( entity );
+		}
 
 		// for this create ui server and port, properties.
 		JProxyServletWsdlMonitorMessageExchange capturedData = new JProxyServletWsdlMonitorMessageExchange( project );
@@ -128,7 +153,7 @@ public class ProxyServlet implements Servlet
 		capturedData.setHttpRequestParameters( httpRequest );
 		capturedData.setTargetURL( httpRequest.getRequestURL().toString() );
 
-		CaptureInputStream capture = new CaptureInputStream( httpRequest.getInputStream() );
+		//		CaptureInputStream capture = new CaptureInputStream( httpRequest.getInputStream() );
 
 		// check connection header
 		String connectionHeader = httpRequest.getHeader( "Connection" );
@@ -170,13 +195,6 @@ public class ProxyServlet implements Servlet
 		method.setHeader( "Via", "SoapUI Monitor" );
 		if( !xForwardedFor )
 			method.addHeader( "X-Forwarded-For", request.getRemoteAddr() );
-
-		if( method instanceof ExtendedPostMethod )
-		{
-			InputStreamEntity entity = new InputStreamEntity( capture, -1 );
-			entity.setContentType( request.getContentType() );
-			( ( ExtendedPostMethod )method ).setEntity( entity );
-		}
 
 		StringBuffer url = new StringBuffer( "http://" );
 		url.append( httpRequest.getServerName() );
@@ -220,7 +238,7 @@ public class ProxyServlet implements Servlet
 			SoapUI.logError( e );
 		}
 
-		// SoapUI.log("PROXY to:" + url);
+		method.getParams().setParameter( ClientPNames.HANDLE_REDIRECTS, false );
 		monitor.fireBeforeProxy( request, response, method, hostConfiguration );
 
 		if( settings.getBoolean( LaunchForm.SSLTUNNEL_REUSESTATE ) )
@@ -237,15 +255,21 @@ public class ProxyServlet implements Servlet
 		// wait for transaction to end and store it.
 		capturedData.stopCapture();
 
-		capturedData.setRequest( capture.getCapturedData() );
+		capturedData.setRequest( requestBody == null ? null : requestBody.toByteArray() );
 		capturedData.setRawResponseBody( method.getResponseBody() );
 		capturedData.setResponseHeader( method );
-		capturedData.setRawRequestData( getRequestToBytes( request.toString(), capture ) );
-		capturedData.setRawResponseData( getResponseToBytes( response.toString(), method,
-				capturedData.getRawResponseBody() ) );
+		capturedData.setRawRequestData( getRequestToBytes( request.toString(), method, requestBody ) );
+		capturedData.setRawResponseData( getResponseToBytes( method, capturedData.getRawResponseBody() ) );
 		capturedData.setResponseContent( new String( method.getDecompressedResponseBody() ) );
+		capturedData.setResponseStatusCode( method.hasHttpResponse() ? method.getHttpResponse().getStatusLine()
+				.getStatusCode() : null );
+		capturedData.setResponseStatusLine( method.hasHttpResponse() ? method.getHttpResponse().getStatusLine()
+				.toString() : null );
 
 		monitor.fireAfterProxy( request, response, method, capturedData );
+
+		( ( HttpServletResponse )response ).setStatus( method.hasHttpResponse() ? method.getHttpResponse()
+				.getStatusLine().getStatusCode() : null );
 
 		if( !response.isCommitted() )
 		{
@@ -282,45 +306,57 @@ public class ProxyServlet implements Servlet
 			contentTypelist.add( ct.trim().replace( "*", "" ) );
 		}
 
-		Header[] headers = method.getHttpResponse().getHeaders( "Content-Type" );
-		for( Header header : headers )
+		if( method.hasHttpResponse() )
 		{
-			for( String contentType : contentTypelist )
+			Header[] headers = method.getHttpResponse().getHeaders( "Content-Type" );
+			if( headers.length == 0 )
+				return true;
+
+			for( Header header : headers )
 			{
-				if( header.getValue().indexOf( contentType ) > 0 )
+				for( String contentType : contentTypelist )
 				{
-					return true;
+					if( header.getValue().indexOf( contentType ) > 0 )
+					{
+						return true;
+					}
 				}
 			}
 		}
 		return false;
 	}
 
-	private byte[] getResponseToBytes( String status, ExtendedHttpMethod method, byte[] res )
+	private byte[] getResponseToBytes( ExtendedHttpMethod method, byte[] res )
 	{
-		String response = status.trim() + "\r\n";
-
-		Header[] headers = method.getHttpResponse().getAllHeaders();
-		for( Header header : headers )
-		{
-			response += header.toString().trim() + "\r\n";
-		}
-		response += "\r\n";
-
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		try
+		StringBuffer response = new StringBuffer();
+
+		if( method.hasHttpResponse() )
 		{
-			out.write( response.getBytes() );
-			out.write( res );
-		}
-		catch( IOException e )
-		{
-			e.printStackTrace();
+			response.append( method.getHttpResponse().getStatusLine().toString() );
+			response.append( "\r\n" );
+
+			Header[] headers = method.getHttpResponse().getAllHeaders();
+			for( Header header : headers )
+			{
+				response.append( header.toString().trim() ).append( "\r\n" );
+			}
+			response.append( "\r\n" );
+
+			try
+			{
+				out.write( response.toString().getBytes() );
+				out.write( res );
+			}
+			catch( IOException e )
+			{
+				e.printStackTrace();
+			}
 		}
 		return out.toByteArray();
 	}
 
-	private byte[] getRequestToBytes( String footer, CaptureInputStream capture )
+	private byte[] getRequestToBytes( String footer, ExtendedHttpMethod method, ByteArrayOutputStream requestBody )
 	{
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 
@@ -328,7 +364,8 @@ public class ProxyServlet implements Servlet
 		{
 			out.write( footer.trim().getBytes() );
 			out.write( "\r\n\r\n".getBytes() );
-			out.write( capture.getCapturedData() );
+			if( requestBody != null )
+				out.write( requestBody.toByteArray() );
 		}
 		catch( IOException e )
 		{

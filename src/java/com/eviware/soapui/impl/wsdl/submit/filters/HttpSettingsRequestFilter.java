@@ -89,7 +89,7 @@ public class HttpSettingsRequestFilter extends AbstractRequestFilter
 			httpMethod.setMaxSize( maxSize );
 
 		// follow redirects is false; handled in transport
-		HttpClientSupport.getHttpClient().getParams().setParameter( ClientPNames.HANDLE_REDIRECTS, false );
+		httpMethod.getParams().setParameter( ClientPNames.HANDLE_REDIRECTS, false );
 
 		// apply global settings
 		HttpClientSupport.applyHttpSettings( httpMethod, settings );

@@ -24,7 +24,6 @@ import org.apache.xmlbeans.XmlOptions;
 import org.xml.sax.InputSource;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.actions.SoapUIPreferencesAction;
 import com.eviware.soapui.impl.support.definition.support.AbstractDefinitionLoader;
 import com.eviware.soapui.impl.support.definition.support.InvalidDefinitionException;
 import com.eviware.soapui.impl.wsdl.support.PathUtils;
@@ -134,7 +133,7 @@ public abstract class WsdlLoader extends AbstractDefinitionLoader implements Wsd
 					throw ex;
 				}
 			}
-
+			e.printStackTrace();
 			log.error( "Failed to load url [" + url + "]" );
 			throw new InvalidDefinitionException( "Error loading [" + url + "]: " + e );
 		}
