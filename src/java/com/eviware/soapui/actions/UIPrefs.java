@@ -22,6 +22,7 @@ import javax.swing.ToolTipManager;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.settings.UISettings;
+import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.components.SimpleForm;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.ui.desktop.DesktopRegistry;
@@ -106,7 +107,9 @@ public class UIPrefs implements Prefs
 				editorForm.appendSeparator();
 				editorForm.appendComboBox( DESKTOP_TYPE, DesktopRegistry.getInstance().getNames(),
 						"Select the type of desktop to use" );
-				editorForm.appendCheckBox( NATIVE_LAF, "Use native Look & Feel (requires restart)", true );
+				JCheckBox cb = editorForm.appendCheckBox( NATIVE_LAF, "Use native Look & Feel (requires restart)", true );
+				if( Tools.isMacLion() )
+					cb.setEnabled( false );
 			}
 
 			editorForm.appendSeparator();

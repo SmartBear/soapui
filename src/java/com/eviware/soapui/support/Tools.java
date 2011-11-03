@@ -548,4 +548,18 @@ public class Tools
 		}
 		return input;
 	}
+
+	public static boolean isMacLion()
+	{
+		String osName = System.getProperty( "os.name" );
+		String osVersion = System.getProperty( "os.version" );
+		if( osName.equals( "Mac OS X" ) && osVersion.startsWith( "10.7" ) )
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 }

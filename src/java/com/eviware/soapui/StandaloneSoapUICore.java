@@ -20,6 +20,7 @@ import javax.swing.UIManager;
 import javax.swing.plaf.ColorUIResource;
 
 import com.eviware.soapui.settings.UISettings;
+import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.ui.desktop.DesktopRegistry;
 import com.eviware.soapui.ui.desktop.standalone.StandaloneDesktopFactory;
 import com.jgoodies.looks.plastic.PlasticXPLookAndFeel;
@@ -64,8 +65,12 @@ public class StandaloneSoapUICore extends SwingSoapUICore
 	{
 		try
 		{
-			// TODO check for this silent mode detection?
-			if( !SoapUI.isJXBrowserDisabled( true ) && PlatformContext.isMacOS() )
+			// force for mac OS Lion to be native LF ()
+			if( Tools.isMacLion() )
+			{
+				javax.swing.UIManager.setLookAndFeel( UIManager.getSystemLookAndFeelClassName() );
+			}
+			else if( !SoapUI.isJXBrowserDisabled( true ) && PlatformContext.isMacOS() )
 			{
 				javax.swing.UIManager.setLookAndFeel( UIManager.getCrossPlatformLookAndFeelClassName() );
 			}
