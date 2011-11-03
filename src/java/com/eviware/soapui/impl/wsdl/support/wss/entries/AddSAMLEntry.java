@@ -23,6 +23,7 @@ import org.apache.ws.security.message.WSSecHeader;
 import org.apache.ws.security.saml.WSSecSignatureSAML;
 import org.apache.ws.security.saml.ext.AssertionWrapper;
 import org.apache.ws.security.saml.ext.SAMLParms;
+import org.apache.ws.security.saml.ext.builder.SAML1Constants;
 import org.apache.ws.security.saml.ext.builder.SAML2Constants;
 import org.w3c.dom.Document;
 
@@ -30,6 +31,7 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.WSSEntryConfig;
 import com.eviware.soapui.impl.wsdl.support.wss.OutgoingWss;
 import com.eviware.soapui.impl.wsdl.support.wss.WssCrypto;
+import com.eviware.soapui.impl.wsdl.support.wss.saml.callback.SAML1CallbackHandler;
 import com.eviware.soapui.impl.wsdl.support.wss.saml.callback.SAML2CallbackHandler;
 import com.eviware.soapui.impl.wsdl.support.wss.support.KeystoresComboBoxModel;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
@@ -47,7 +49,7 @@ public class AddSAMLEntry extends WssEntryBase
 {
 	public static final String TYPE = "SAML";
 
-	private static final String DEFAULT_SAML_VERSION = "2.0";
+	private static final String DEFAULT_SAML_VERSION = "1.1";
 	private static final String DEFAULT_ASSERTION_TYPE = "Authentication";
 	private static final String DEFAULT_SIGNING_TYPE = "Holder-of-key";
 
@@ -121,7 +123,7 @@ public class AddSAMLEntry extends WssEntryBase
 
 		SimpleBindingForm form = new SimpleBindingForm( new PresentationModel<AddSignatureEntry>( this ) );
 		form.addSpace( 5 );
-		form.appendComboBox( "samlVersion", "SAML version", new String[] { DEFAULT_SAML_VERSION },
+		form.appendComboBox( "samlVersion", "SAML version", new String[] { DEFAULT_SAML_VERSION, "2.0" },
 				"Choose the SAML version" );
 		form.appendComboBox( "assertionType", "Assertion type", new String[] { DEFAULT_ASSERTION_TYPE },
 				"Choose the type of assertion" );
@@ -166,14 +168,27 @@ public class AddSAMLEntry extends WssEntryBase
 				throw new Exception( "Missing crypto [" + crypto + "] for signature entry" );
 
 			}
-			SAML2CallbackHandler callbackHandler = new SAML2CallbackHandler( wssCrypto.getCrypto(),
-					context.expand( getUsername() ), subjectName, subjectQualifier );
-			callbackHandler.setStatement( SAML2CallbackHandler.Statement.AUTHN );
-			callbackHandler.setConfirmationMethod( SAML2Constants.CONF_HOLDER_KEY );
-			callbackHandler.setIssuer( issuer );
 
 			SAMLParms samlParms = new SAMLParms();
-			samlParms.setCallbackHandler( callbackHandler );
+			// FIXME Remove duplication by polymorphism
+			if( samlVersion.equals( DEFAULT_SAML_VERSION ) )
+			{
+				SAML1CallbackHandler callbackHandler = new SAML1CallbackHandler( wssCrypto.getCrypto(),
+						context.expand( getUsername() ), subjectName, subjectQualifier );
+				callbackHandler.setConfirmationMethod( SAML1Constants.CONF_HOLDER_KEY );
+				callbackHandler.setStatement( SAML1CallbackHandler.Statement.AUTHN );
+				callbackHandler.setIssuer( issuer );
+				samlParms.setCallbackHandler( callbackHandler );
+			}
+			else
+			{
+				SAML2CallbackHandler callbackHandler = new SAML2CallbackHandler( wssCrypto.getCrypto(),
+						context.expand( getUsername() ), subjectName, subjectQualifier );
+				callbackHandler.setStatement( SAML2CallbackHandler.Statement.AUTHN );
+				callbackHandler.setConfirmationMethod( SAML2Constants.CONF_HOLDER_KEY );
+				callbackHandler.setIssuer( issuer );
+				samlParms.setCallbackHandler( callbackHandler );
+			}
 
 			AssertionWrapper assertion = new AssertionWrapper( samlParms );
 			assertion.signAssertion( context.expand( getUsername() ), context.expand( getPassword() ),
