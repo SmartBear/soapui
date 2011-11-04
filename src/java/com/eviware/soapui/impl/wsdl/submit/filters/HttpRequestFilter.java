@@ -203,7 +203,7 @@ public class HttpRequestFilter extends AbstractRequestFilter
 			{
 				// URI(String) automatically URLencodes the input, so we need to
 				// decode it first...
-				URI uri = new URI( path, false );
+				URI uri = new URI( path, request.getSettings().getBoolean( HttpSettings.ENCODED_URLS ) );
 				context.setProperty( BaseHttpRequestTransport.REQUEST_URI, uri );
 				httpMethod.setURI( new java.net.URI( uri.toString() ) );
 			}
