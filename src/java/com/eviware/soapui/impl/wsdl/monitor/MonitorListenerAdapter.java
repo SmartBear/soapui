@@ -17,8 +17,6 @@ import javax.servlet.ServletResponse;
 
 import org.apache.http.HttpRequest;
 
-import com.eviware.soapui.impl.wsdl.support.http.SoapUIHostConfiguration;
-
 public class MonitorListenerAdapter implements MonitorListener
 {
 	public void afterProxy( SoapMonitor soapMonitor, ServletRequest request, ServletResponse response,
@@ -27,7 +25,7 @@ public class MonitorListenerAdapter implements MonitorListener
 	}
 
 	public void beforeProxy( SoapMonitor soapMonitor, ServletRequest request, ServletResponse response,
-			HttpRequest method, SoapUIHostConfiguration hostConfiguration )
+			HttpRequest method )
 	{
 	}
 

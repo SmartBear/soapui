@@ -70,7 +70,6 @@ import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.support.MessageExchangeModelItem;
 import com.eviware.soapui.impl.wsdl.support.MessageExchangeRequestMessageEditor;
 import com.eviware.soapui.impl.wsdl.support.MessageExchangeResponseMessageEditor;
-import com.eviware.soapui.impl.wsdl.support.http.SoapUIHostConfiguration;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequest;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
@@ -1512,14 +1511,13 @@ public class SoapMonitor extends JPanel
 		}
 	}
 
-	public void fireBeforeProxy( ServletRequest request, ServletResponse response, HttpRequest httpRequest,
-			SoapUIHostConfiguration hostConfiguration )
+	public void fireBeforeProxy( ServletRequest request, ServletResponse response, HttpRequest httpRequest )
 	{
 		for( MonitorListener listener : listeners.get() )
 		{
 			try
 			{
-				listener.beforeProxy( this, request, response, httpRequest, hostConfiguration );
+				listener.beforeProxy( this, request, response, httpRequest );
 			}
 			catch( Throwable t )
 			{

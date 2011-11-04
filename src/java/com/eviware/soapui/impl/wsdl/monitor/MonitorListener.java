@@ -17,16 +17,13 @@ import javax.servlet.ServletResponse;
 
 import org.apache.http.HttpRequest;
 
-import com.eviware.soapui.impl.wsdl.support.http.SoapUIHostConfiguration;
-
 public interface MonitorListener
 {
 	void onRequest( SoapMonitor soapMonitor, ServletRequest request, ServletResponse response );
 
 	void onMessageExchange( WsdlMonitorMessageExchange messageExchange );
 
-	void beforeProxy( SoapMonitor soapMonitor, ServletRequest request, ServletResponse response,
-			HttpRequest httpRequest, SoapUIHostConfiguration httpHost );
+	void beforeProxy( SoapMonitor soapMonitor, ServletRequest request, ServletResponse response, HttpRequest httpRequest );
 
 	void afterProxy( SoapMonitor soapMonitor, ServletRequest request, ServletResponse response, HttpRequest httpRequest,
 			WsdlMonitorMessageExchange capturedData );

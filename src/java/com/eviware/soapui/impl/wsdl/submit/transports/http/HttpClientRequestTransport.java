@@ -12,14 +12,14 @@
 
 package com.eviware.soapui.impl.wsdl.submit.transports.http;
 
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.Header;
-import org.apache.http.HttpHost;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.client.utils.URIUtils;
+import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
@@ -40,7 +40,6 @@ import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.Exten
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedTraceMethod;
 import com.eviware.soapui.impl.wsdl.support.PathUtils;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
-import com.eviware.soapui.impl.wsdl.support.http.SoapUIHostConfiguration;
 import com.eviware.soapui.impl.wsdl.support.wss.WssCrypto;
 import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.model.iface.Response;
@@ -149,15 +148,12 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 		if( localAddress == null || localAddress.trim().length() == 0 )
 			localAddress = SoapUI.getSettings().getString( HttpSettings.BIND_ADDRESS, null );
 
-		SoapUIHostConfiguration hostConfiguration = new SoapUIHostConfiguration();
 		org.apache.http.HttpResponse httpResponse = null;
-
 		if( localAddress != null && localAddress.trim().length() > 0 )
 		{
 			try
 			{
-				hostConfiguration = new SoapUIHostConfiguration( java.net.InetAddress.getByName( localAddress )
-						.getHostName() );
+				httpMethod.getParams().setParameter( ConnRoutePNames.LOCAL_ADDRESS, InetAddress.getByName( localAddress ) );
 			}
 			catch( Exception e )
 			{
@@ -170,7 +166,6 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 		submitContext.setProperty( POST_METHOD, httpMethod );
 		submitContext.setProperty( HTTP_CLIENT, httpClient );
 		submitContext.setProperty( REQUEST_CONTENT, httpRequest.getRequestContent() );
-		submitContext.setProperty( HOST_CONFIGURATION, hostConfiguration );
 		submitContext.setProperty( WSDL_REQUEST, httpRequest );
 		submitContext.setProperty( RESPONSE_PROPERTIES, new StringToStringMap() );
 
@@ -224,15 +219,15 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 			URI uri = ( URI )submitContext.getProperty( BaseHttpRequestTransport.REQUEST_URI );
 			if( uri != null && uri.isAbsoluteURI() )
 			{
-				hostConfiguration.setHttpHost( new HttpHost( uri.getHost(), uri.getPort(), uri.getScheme() ) );
 				String str = uri.toString();
 				int ix = str.indexOf( '/', str.indexOf( "//" ) + 2 );
 				if( ix != -1 )
 				{
 					uri = new URI( str.substring( ix ), true );
 					java.net.URI oldUri = httpMethod.getURI();
-					httpMethod.setURI( URIUtils.createURI( oldUri.getScheme(), oldUri.getHost(), oldUri.getPort(),
-							uri.getPath(), oldUri.getQuery(), oldUri.getFragment() ) );
+					httpMethod.setURI( new java.net.URI( oldUri.getScheme(), oldUri.getUserInfo(), oldUri.getHost(), oldUri
+							.getPort(), ( uri.getPath() ) == null ? "/" : uri.getPath(), oldUri.getQuery(), oldUri
+							.getFragment() ) );
 					submitContext.setProperty( BaseHttpRequestTransport.REQUEST_URI, uri );
 				}
 			}
@@ -242,7 +237,7 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 				httpMethod.initStartTime();
 
 			// submit!
-			httpResponse = HttpClientSupport.execute( hostConfiguration, httpMethod, httpContext );
+			httpResponse = HttpClientSupport.execute( httpMethod, httpContext );
 
 			if( isRedirectResponse( httpResponse.getStatusLine().getStatusCode() ) && httpRequest.isFollowRedirects() )
 			{
@@ -314,10 +309,8 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 			getMethod.addHeader( header );
 
 		java.net.URI uri = new java.net.URI( httpResponse.getFirstHeader( "Location" ).getValue() );
-		SoapUIHostConfiguration hostConfiguration = new SoapUIHostConfiguration( new HttpHost( uri.getHost(),
-				uri.getPort(), uri.getScheme() ) );
 		getMethod.setURI( uri );
-		org.apache.http.HttpResponse response = HttpClientSupport.execute( hostConfiguration, getMethod, httpContext );
+		org.apache.http.HttpResponse response = HttpClientSupport.execute( getMethod, httpContext );
 
 		if( isRedirectResponse( response.getStatusLine().getStatusCode() ) )
 		{

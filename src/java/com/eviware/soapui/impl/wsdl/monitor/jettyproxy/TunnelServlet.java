@@ -26,7 +26,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.http.Header;
-import org.apache.http.HttpHost;
 import org.apache.http.client.utils.URIUtils;
 import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.protocol.BasicHttpContext;
@@ -44,7 +43,6 @@ import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.Exten
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPostMethod;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 import com.eviware.soapui.impl.wsdl.support.http.ProxyUtils;
-import com.eviware.soapui.impl.wsdl.support.http.SoapUIHostConfiguration;
 import com.eviware.soapui.model.propertyexpansion.DefaultPropertyExpansionContext;
 import com.eviware.soapui.support.types.StringToStringsMap;
 import com.eviware.soapui.support.xml.XmlUtils;
@@ -117,6 +115,9 @@ public class TunnelServlet extends ProxyServlet
 			if( "content-length".equals( lhdr ) )
 				continue;
 
+			if( "transfer-encoding".equals( lhdr ) )
+				continue;
+
 			if( "host".equals( lhdr ) )
 			{
 				Enumeration<?> vals = httpRequest.getHeaders( hdr );
@@ -150,11 +151,9 @@ public class TunnelServlet extends ProxyServlet
 		}
 
 		java.net.URI uri = null;
-		SoapUIHostConfiguration hostConfiguration = new SoapUIHostConfiguration();
 		try
 		{
 			uri = new java.net.URI( this.prot + sslEndPoint );
-			hostConfiguration.setHttpHost( new HttpHost( uri.getHost(), uri.getPort(), uri.getScheme() ) );
 		}
 		catch( URISyntaxException e )
 		{
@@ -188,17 +187,17 @@ public class TunnelServlet extends ProxyServlet
 			}
 		}
 
-		monitor.fireBeforeProxy( request, response, postMethod, hostConfiguration );
+		monitor.fireBeforeProxy( request, response, postMethod );
 
 		if( settings.getBoolean( LaunchForm.SSLTUNNEL_REUSESTATE ) )
 		{
 			if( httpState == null )
 				httpState = new BasicHttpContext();
-			HttpClientSupport.execute( hostConfiguration, postMethod, httpState );
+			HttpClientSupport.execute( postMethod, httpState );
 		}
 		else
 		{
-			HttpClientSupport.execute( hostConfiguration, postMethod );
+			HttpClientSupport.execute( postMethod );
 		}
 		capturedData.stopCapture();
 

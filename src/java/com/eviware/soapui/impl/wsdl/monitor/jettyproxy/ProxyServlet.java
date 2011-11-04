@@ -32,7 +32,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntityEnclosingRequest;
-import org.apache.http.HttpHost;
 import org.apache.http.client.params.ClientPNames;
 import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.protocol.BasicHttpContext;
@@ -53,12 +52,9 @@ import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.Exten
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPutMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedTraceMethod;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
-import com.eviware.soapui.impl.wsdl.support.http.SoapUIHostConfiguration;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.types.StringToStringsMap;
-import com.eviware.soapui.support.uri.URI;
-import com.eviware.soapui.support.uri.URIException;
 
 public class ProxyServlet implements Servlet
 {
@@ -80,8 +76,6 @@ public class ProxyServlet implements Servlet
 		dontProxyHeaders.add( "proxy-authorization" );
 		dontProxyHeaders.add( "proxy-authenticate" );
 		dontProxyHeaders.add( "upgrade" );
-		// after update to httpclient 4.1
-		dontProxyHeaders.add( "content-length" );
 	}
 
 	public ProxyServlet( SoapMonitor soapMonitor )
@@ -179,6 +173,12 @@ public class ProxyServlet implements Servlet
 			if( connectionHeader != null && connectionHeader.indexOf( lhdr ) >= 0 )
 				continue;
 
+			if( "content-length".equals( lhdr ) )
+			{
+				contentLength = request.getContentLength();
+				continue;
+			}
+
 			Enumeration<?> vals = httpRequest.getHeaders( hdr );
 			while( vals.hasMoreElements() )
 			{
@@ -227,29 +227,18 @@ public class ProxyServlet implements Servlet
 			}
 		}
 
-		SoapUIHostConfiguration hostConfiguration = new SoapUIHostConfiguration();
-		try
-		{
-			URI uri = new URI( url.toString(), true );
-			hostConfiguration.setHttpHost( new HttpHost( uri.getHost(), uri.getPort(), uri.getScheme() ) );
-		}
-		catch( URIException e )
-		{
-			SoapUI.logError( e );
-		}
-
 		method.getParams().setParameter( ClientPNames.HANDLE_REDIRECTS, false );
-		monitor.fireBeforeProxy( request, response, method, hostConfiguration );
+		monitor.fireBeforeProxy( request, response, method );
 
 		if( settings.getBoolean( LaunchForm.SSLTUNNEL_REUSESTATE ) )
 		{
 			if( httpState == null )
 				httpState = new BasicHttpContext();
-			HttpClientSupport.execute( hostConfiguration, method, httpState );
+			HttpClientSupport.execute( method, httpState );
 		}
 		else
 		{
-			HttpClientSupport.execute( hostConfiguration, method );
+			HttpClientSupport.execute( method );
 		}
 
 		// wait for transaction to end and store it.

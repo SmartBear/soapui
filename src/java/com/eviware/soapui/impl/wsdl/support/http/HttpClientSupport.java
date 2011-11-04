@@ -32,7 +32,6 @@ import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.tsccm.BasicPooledConnAdapter;
 import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.protocol.HttpContext;
 import org.apache.log4j.Logger;
@@ -105,18 +104,6 @@ public class HttpClientSupport
 			return httpClient;
 		}
 
-		public HttpResponse execute( SoapUIHostConfiguration hostConfiguration, ExtendedHttpMethod method,
-				HttpContext httpContext ) throws ClientProtocolException, IOException
-		{
-			method.afterWriteRequest();
-			HttpResponse httpResponse = httpClient.execute( hostConfiguration.getHttpHost(), ( HttpRequest )method,
-					httpContext );
-			BasicPooledConnAdapter connection = ( BasicPooledConnAdapter )httpContext.getAttribute( "http.connection" );
-			method.afterReadResponse( connection.getSSLSession() );
-			method.setHttpResponse( httpResponse );
-			return httpResponse;
-		}
-
 		public HttpResponse execute( ExtendedHttpMethod method, HttpContext httpContext ) throws ClientProtocolException,
 				IOException
 		{
@@ -126,11 +113,10 @@ public class HttpClientSupport
 			return httpResponse;
 		}
 
-		public HttpResponse execute( SoapUIHostConfiguration hostConfiguration, ExtendedHttpMethod method )
-				throws ClientProtocolException, IOException
+		public HttpResponse execute( ExtendedHttpMethod method ) throws ClientProtocolException, IOException
 		{
 			method.afterWriteRequest();
-			HttpResponse httpResponse = httpClient.execute( hostConfiguration.getHttpHost(), method );
+			HttpResponse httpResponse = httpClient.execute( ( HttpUriRequest )method );
 			method.setHttpResponse( httpResponse );
 			return httpResponse;
 		}
@@ -229,22 +215,15 @@ public class HttpClientSupport
 		return helper.getHttpClient();
 	}
 
-	public static HttpResponse execute( SoapUIHostConfiguration hostConfiguration, ExtendedHttpMethod method,
-			HttpContext httpContext ) throws ClientProtocolException, IOException
-	{
-		return helper.execute( hostConfiguration, method, httpContext );
-	}
-
 	public static HttpResponse execute( ExtendedHttpMethod method, HttpContext httpContext )
 			throws ClientProtocolException, IOException
 	{
 		return helper.execute( method, httpContext );
 	}
 
-	public static HttpResponse execute( SoapUIHostConfiguration hostConfiguration, ExtendedHttpMethod method )
-			throws ClientProtocolException, IOException
+	public static HttpResponse execute( ExtendedHttpMethod method ) throws ClientProtocolException, IOException
 	{
-		return helper.execute( hostConfiguration, method );
+		return helper.execute( method );
 	}
 
 	public static void applyHttpSettings( HttpRequest httpMethod, Settings settings )

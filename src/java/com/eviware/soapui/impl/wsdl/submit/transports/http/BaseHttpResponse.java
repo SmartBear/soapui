@@ -59,15 +59,15 @@ public abstract class BaseHttpResponse implements HttpResponse
 	private boolean downloadIncludedResources;
 	private Attachment[] attachments = new Attachment[0];
 	protected HTMLPageSourceDownloader downloader;
-	private ExtendedHttpMethod httpMethod;
+	private int statusCode;
 
 	public BaseHttpResponse( ExtendedHttpMethod httpMethod, AbstractHttpRequestInterface<?> httpRequest,
 			PropertyExpansionContext context )
 	{
-		this.httpMethod = httpMethod;
 		this.httpRequest = new WeakReference<AbstractHttpRequestInterface<?>>( httpRequest );
 		this.timeTaken = httpMethod.getTimeTaken();
 
+		method = httpMethod.getMethod();
 		version = httpMethod.getProtocolVersion().toString();
 
 		try
@@ -99,12 +99,9 @@ public abstract class BaseHttpResponse implements HttpResponse
 			{
 				this.timestamp = System.currentTimeMillis();
 				this.contentType = httpMethod.getResponseContentType();
-
-				if( httpMethod.hasResponse() )
-				{
-					this.sslInfo = httpMethod.getSSLInfo();
-				}
-
+				this.statusCode = httpMethod.hasHttpResponse() ? httpMethod.getHttpResponse().getStatusLine()
+						.getStatusCode() : 0;
+				this.sslInfo = httpMethod.getSSLInfo();
 				this.url = httpMethod.getURI().toURL();
 			}
 			catch( Throwable e )
@@ -355,8 +352,7 @@ public abstract class BaseHttpResponse implements HttpResponse
 
 	public int getStatusCode()
 	{
-		// status code is not initialized in BasicStatusLine so we set it here to zero
-		return httpMethod.hasHttpResponse() ? httpMethod.getHttpResponse().getStatusLine().getStatusCode() : 0;
+		return statusCode;
 	}
 
 	public Attachment[] getAttachments()
