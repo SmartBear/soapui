@@ -49,7 +49,8 @@ public class AddSAMLEntry extends WssEntryBase
 {
 	public static final String TYPE = "SAML";
 
-	private static final String DEFAULT_SAML_VERSION = "1.1";
+	public static final String DEFAULT_SAML_VERSION = "1.1";
+	public static final String SAML_VERSION_2 = "2.0";
 	private static final String DEFAULT_ASSERTION_TYPE = "Authentication";
 	private static final String DEFAULT_SIGNING_TYPE = "Holder-of-key";
 
@@ -123,7 +124,7 @@ public class AddSAMLEntry extends WssEntryBase
 
 		SimpleBindingForm form = new SimpleBindingForm( new PresentationModel<AddSignatureEntry>( this ) );
 		form.addSpace( 5 );
-		form.appendComboBox( "samlVersion", "SAML version", new String[] { DEFAULT_SAML_VERSION, "2.0" },
+		form.appendComboBox( "samlVersion", "SAML version", new String[] { DEFAULT_SAML_VERSION, SAML_VERSION_2 },
 				"Choose the SAML version" );
 		form.appendComboBox( "assertionType", "Assertion type", new String[] { DEFAULT_ASSERTION_TYPE },
 				"Choose the type of assertion" );

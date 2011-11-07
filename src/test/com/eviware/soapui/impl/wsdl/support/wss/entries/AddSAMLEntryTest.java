@@ -34,7 +34,6 @@ import org.apache.ws.security.message.WSSecHeader;
 import org.apache.ws.security.util.Loader;
 import org.apache.xmlbeans.XmlObject;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -43,7 +42,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.eviware.soapui.config.WSSEntryConfig;
-import com.eviware.soapui.impl.wsdl.ResolveContextTest;
 import com.eviware.soapui.impl.wsdl.support.wss.OutgoingWss;
 import com.eviware.soapui.impl.wsdl.support.wss.WssContainer;
 import com.eviware.soapui.impl.wsdl.support.wss.WssCrypto;
@@ -62,7 +60,7 @@ public class AddSAMLEntryTest
 	}
 
 	private static final String ISSUER = "www.issuer.com";
-	private static final String KEYSTORE_PATH = "resources/keys/keystore.jks";
+	private static final String KEYSTORE_PATH = "keys/keystore.jks";
 	private static final String KEYSTORE_PASSWORD = "foobar42";
 	private static final String KEY_PASSWORD = "foobar42";
 	private static final String ALIAS = "certificatekey";
@@ -105,14 +103,14 @@ public class AddSAMLEntryTest
 		addSamlEntry = new AddSAMLEntry();
 		addSamlEntry.init( wssEntryConfigMock, outgoingWssMock );
 
-		createCrypto();
-	}
+		when( wssEntryConfigMock.getConfiguration() ).thenReturn( xmlObjectMock );
 
-	// FIXME The keystore can't be found by Maven... why is that. Do it have to be in the com.eviware folder?
-	@Ignore
-	@Test
-	public void testProcessSignedSAML2AuthenticationAssertionUsingHolderOfKey() throws WSSecurityException
-	{
+		addSamlEntry.setIssuer( ISSUER );
+		addSamlEntry.setSubjectQualifier( SUBJECT_QUALIFIER );
+		addSamlEntry.setSubjectName( SUBJECT_NAME );
+
+		createCrypto();
+
 		when( outgoingWssMock.getWssContainer() ).thenReturn( wssContainerMock );
 		when( wssContainerMock.getCryptoByName( anyString() ) ).thenReturn( wssCryptoMock );
 		when( wssCryptoMock.getCrypto() ).thenReturn( crypto );
@@ -120,29 +118,49 @@ public class AddSAMLEntryTest
 		when( outgoingWssMock.getPassword() ).thenReturn( KEY_PASSWORD );
 		when( contextMock.expand( ALIAS ) ).thenReturn( ALIAS );
 		when( contextMock.expand( KEY_PASSWORD ) ).thenReturn( KEY_PASSWORD );
-		when( wssEntryConfigMock.getConfiguration() ).thenReturn( xmlObjectMock );
+	}
 
-		addSamlEntry.setIssuer( ISSUER );
-		addSamlEntry.setSubjectQualifier( SUBJECT_QUALIFIER );
-		addSamlEntry.setSubjectName( SUBJECT_NAME );
+	// FIXME The keystore can't be found by Maven... why is that. Do it have to be in the com.eviware folder?
+	@Test
+	public void testProcessSignedSAML1AuthenticationAssertionUsingHolderOfKey() throws WSSecurityException
+	{
+
+		addSamlEntry.setSamlVersion( AddSAMLEntry.DEFAULT_SAML_VERSION );
+
+		addSamlEntry.process( secHeader, doc, contextMock );
+
+		Node assertionNode = getAndAssertNodeByTagName( "saml1:Assertion" );
+
+		Node issuerNode = assertionNode.getAttributes().getNamedItem( "Issuer" );
+		assertEquals( issuerNode.getNodeValue(), ISSUER );
+
+		Node subjectNode = getAndAssertNodeByTagName( "saml1:NameIdentifier" );
+		assertEquals( getFirstChildValue( subjectNode ), SUBJECT_NAME );
+
+		Node nameQualifierNode = subjectNode.getAttributes().getNamedItem( "NameQualifier" );
+		assertEquals( nameQualifierNode.getNodeValue(), SUBJECT_QUALIFIER );
+	}
+
+	@Test
+	public void testProcessSignedSAML2AuthenticationAssertionUsingHolderOfKey() throws WSSecurityException
+	{
+		addSamlEntry.setSamlVersion( AddSAMLEntry.SAML_VERSION_2 );
 
 		addSamlEntry.process( secHeader, doc, contextMock );
 
 		getAndAssertNodeByTagName( "saml2:Assertion" );
 
-		// FIXME Figure out why Maven doesn't find the getTextContent method
-
 		Node issuerNode = getAndAssertNodeByTagName( "saml2:Issuer" );
-		// assertEquals( issuerNode.getTextContent(), ISSUER );
+		assertEquals( getFirstChildValue( issuerNode ), ISSUER );
 
 		Node subjectNode = getAndAssertNodeByTagName( "saml2:NameID" );
-		// assertEquals( subjectNode.getTextContent(), SUBJECT_NAME );
+		assertEquals( getFirstChildValue( subjectNode ), SUBJECT_NAME );
 
 		Node nameQualifierNode = subjectNode.getAttributes().getNamedItem( "NameQualifier" );
-		//  assertEquals( nameQualifierNode.getTextContent(), SUBJECT_QUALIFIER );
+		assertEquals( nameQualifierNode.getNodeValue(), SUBJECT_QUALIFIER );
 	}
 
-	// FIXME Could we make the finding of nodes simpler?
+	// FIXME Could we make the finding of nodes simpler? XPath?
 	private Node getAndAssertNodeByTagName( String tagName )
 	{
 		NodeList nodeList = doc.getElementsByTagName( tagName );
@@ -151,6 +169,11 @@ public class AddSAMLEntryTest
 		Node node = nodeList.item( 0 );
 		assertNotNull( node );
 		return node;
+	}
+
+	private String getFirstChildValue( Node node )
+	{
+		return node.getFirstChild().getNodeValue();
 	}
 
 	private void createCrypto() throws KeyStoreException, CredentialException, IOException, NoSuchAlgorithmException,
