@@ -69,6 +69,7 @@ public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion impleme
 	private static final String ASSERTION_SPECIFIC_EXPOSURE_LIST = "AssertionSpecificExposureList";
 	private static final String INCLUDE_GLOBAL = "IncludeGlobal";
 	private static final String INCLUDE_PROJECT_SPECIFIC = "IncludeProjectSpecific";
+	public static final String DESCRIPTION = "Sensitive Information Exposure desc goes here...";
 	private boolean includeGlobal;
 	private boolean includeProjectSpecific;
 	private JPanel sensitiveInfoTableForm;

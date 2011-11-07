@@ -12,11 +12,11 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps.actions;
 
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.SwingUtilities;
 
 import com.eviware.soapui.impl.wsdl.actions.project.SimpleDialog;
 import com.eviware.soapui.impl.wsdl.panels.assertions.AddAssertionPanel;
@@ -33,6 +33,7 @@ import com.eviware.soapui.support.UISupport;
 public class AddAssertionAction extends AbstractAction
 {
 	private final Assertable assertable;
+	SimpleDialog addAssertionPanel;
 
 	public AddAssertionAction( Assertable assertable )
 	{
@@ -54,9 +55,14 @@ public class AddAssertionAction extends AbstractAction
 		}
 
 		//		String selection = ( String )UISupport.prompt( "Select assertion to add", "Select Assertion", assertions );
-		SimpleDialog addAssertionPanel = new AddAssertionPanel( assertable );
-		addAssertionPanel.setSize( new Dimension( 800, 900 ) );
-		addAssertionPanel.setVisible( true );
+		addAssertionPanel = new AddAssertionPanel( assertable );
+		SwingUtilities.invokeLater( new Runnable()
+		{
+			public void run()
+			{
+				addAssertionPanel.setVisible( true );
+			}
+		} );
 
 		//		if( selection == null )
 		//			return;

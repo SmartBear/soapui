@@ -109,6 +109,7 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
 
 	public static final String ID = "XPath Match";
 	public static final String LABEL = "XPath Match";
+	public static final String DESCRIPTION = "XPath Match....assertion for...";
 	private JCheckBox allowWildcardsCheckBox;
 	private JCheckBox ignoreNamespaceDifferencesCheckBox;
 	private JCheckBox ignoreCommentsCheckBox;

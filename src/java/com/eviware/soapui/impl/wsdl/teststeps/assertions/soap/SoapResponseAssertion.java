@@ -36,6 +36,7 @@ public class SoapResponseAssertion extends WsdlMessageAssertion implements Respo
 {
 	public static final String ID = "SOAP Response";
 	public static final String LABEL = "SOAP Response";
+	public static final String DESCRIPTION = "SOAP Response desc goes here...";
 
 	public SoapResponseAssertion( TestAssertionConfig assertionConfig, Assertable assertable )
 	{

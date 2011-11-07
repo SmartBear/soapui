@@ -35,6 +35,7 @@ public class JMSStatusAssertion extends WsdlMessageAssertion implements Response
 {
 	public static final String ID = "JMS Status";
 	public static final String LABEL = "JMS Status";
+	public static final String DESCRIPTION = "JMS Status desc...";
 
 	public JMSStatusAssertion( TestAssertionConfig assertionConfig, Assertable assertable )
 	{

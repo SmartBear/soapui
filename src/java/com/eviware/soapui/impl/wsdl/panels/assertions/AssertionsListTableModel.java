@@ -17,13 +17,13 @@ import javax.swing.table.DefaultTableModel;
 
 public class AssertionsListTableModel extends DefaultTableModel
 {
-	LinkedHashSet<String> listEntriesSet;
+	LinkedHashSet<AssertionListEntry> listEntriesSet;
 
 	public AssertionsListTableModel()
 	{
 	}
 
-	public void setListEntriesSet( LinkedHashSet<String> listEntriesSet )
+	public void setListEntriesSet( LinkedHashSet<AssertionListEntry> listEntriesSet )
 	{
 		this.listEntriesSet = listEntriesSet;
 	}
@@ -53,6 +53,6 @@ public class AssertionsListTableModel extends DefaultTableModel
 		if( listEntriesSet != null )
 			return listEntriesSet.toArray()[rowIndex];
 		else
-			return "Please select category";
+			return new AssertionListEntry( "Please select category", "" );
 	}
 }

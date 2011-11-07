@@ -12,7 +12,10 @@
 package com.eviware.soapui.impl.wsdl.panels.assertions;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -23,6 +26,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
+import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -38,6 +43,8 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.DefaultActionList;
 import com.eviware.soapui.support.components.JXToolBar;
+import com.eviware.soapui.support.components.SimpleForm;
+import com.l2fprod.common.swing.renderer.DefaultCellRenderer;
 
 public class AddAssertionPanel extends SimpleDialog
 {
@@ -46,10 +53,11 @@ public class AddAssertionPanel extends SimpleDialog
 	private Assertable assertable;
 	private AddAssertionAction addAssertionAction;
 	private AssertionsListTableModel assertionsListTableModel;
-	private JPanel assertionListPanel;
-	private LinkedHashSet<String> assertions;
+	//	private JPanel assertionListPanel;
+	private LinkedHashSet<AssertionListEntry> assertions;
 	private InternalListSelectionListener selectionListener = new InternalListSelectionListener();
-	private LinkedHashMap<String, LinkedHashSet<String>> categoriesAssertionsMap;
+	private LinkedHashMap<String, LinkedHashSet<AssertionListEntry>> categoriesAssertionsMap;
+	private SimpleForm assertionsForm;
 
 	public AddAssertionPanel( Assertable assertable )
 	{
@@ -75,19 +83,39 @@ public class AddAssertionPanel extends SimpleDialog
 
 		mainPanel.add( toolbar, BorderLayout.NORTH );
 		mainPanel.add( splitPane, BorderLayout.CENTER );
+		//		mainPanel.add( buildSourcePanel(), BorderLayout.SOUTH );
 		return mainPanel;
 	}
 
+	//	private Component buildSourcePanel()
+	//	{
+	//		SimpleForm form = new SimpleForm();
+	//		JComboBox testStepCombo = new JComboBox( new String[] { "TestStep1", "TestStep2" } );
+	//		testStepCombo.setEnabled( false );
+	//		form.addLeftComponent( testStepCombo );
+	//		JComboBox propertiesCombo = new JComboBox( new String[] { "Prop 1", "Prop 2" } );
+	//		propertiesCombo.setEnabled( false );
+	//		form.addRightComponent( propertiesCombo );
+	//		return form.getPanel();
+	//	}
+
 	private Component buildAssertionsList()
 	{
-		assertionListPanel = new JPanel( new BorderLayout() );
+		assertionsForm = new SimpleForm();
+
+		//		assertionListPanel = new JPanel( new BorderLayout() );
 		assertionsListTableModel = new AssertionsListTableModel();
 		assertionsTable = new JXTable( assertionsListTableModel );
 		assertionsTable.setTableHeader( null );
 		assertionsTable.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
 		assertionsTable.getSelectionModel().addListSelectionListener( selectionListener );
-		assertionListPanel.add( new JScrollPane( assertionsTable ) );
-		return assertionListPanel;
+		assertionsTable.setRowHeight( 50 );
+
+		InternalCellRenderer assertionEntryRenderer = new InternalCellRenderer();
+		assertionsTable.getColumnModel().getColumn( 0 ).setCellRenderer( assertionEntryRenderer );
+		//		assertionListPanel.add( new JScrollPane( assertionsTable ) );
+		assertionsForm.addComponent( new JScrollPane( assertionsTable ) );
+		return assertionsForm.getPanel();
 	}
 
 	private Component buildCategoriesList()
@@ -106,6 +134,9 @@ public class AddAssertionPanel extends SimpleDialog
 				{
 					assertions = categoriesAssertionsMap.get( category );
 					assertionsListTableModel.setListEntriesSet( assertions );
+					InternalCellRenderer assertionEntryRenderer = new InternalCellRenderer();
+					assertionsTable.getColumnModel().getColumn( 0 ).setCellRenderer( assertionEntryRenderer );
+
 					assertionsListTableModel.fireTableDataChanged();
 				}
 			}
@@ -118,7 +149,7 @@ public class AddAssertionPanel extends SimpleDialog
 	protected boolean handleOk()
 	{
 		int selectedRow = assertionsTable.getSelectedRow();
-		String selection = ( String )assertionsListTableModel.getValueAt( selectedRow, 0 );
+		String selection = ( ( AssertionListEntry )assertionsListTableModel.getValueAt( selectedRow, 0 ) ).getName();
 		if( selection == null )
 			return false;
 
@@ -184,9 +215,13 @@ public class AddAssertionPanel extends SimpleDialog
 		public void valueChanged( ListSelectionEvent e )
 		{
 			if( assertionsTable.getSelectedRow() >= 0 )
+			{
 				addAssertionAction.setEnabled( true );
+			}
 			else
+			{
 				addAssertionAction.setEnabled( false );
+			}
 
 		}
 
@@ -207,6 +242,52 @@ public class AddAssertionPanel extends SimpleDialog
 
 		}
 
+	}
+
+	private class InternalCellRenderer extends DefaultCellRenderer
+	{
+
+		private Font boldFont;
+		private Font plainFont;
+
+		@Override
+		public Component getTableCellRendererComponent( JTable table, Object value, boolean isSelected, boolean hasFocus,
+				int row, int column )
+		{
+
+			Component result = super.getTableCellRendererComponent( table, value, isSelected, hasFocus, row, column );
+
+			boldFont = getFont().deriveFont( Font.BOLD );
+
+			String str = ( ( AssertionListEntry )value ).getName();
+			JLabel label = new JLabel( str );
+			label.setFont( boldFont );
+
+			JTextArea text = new JTextArea( ( ( AssertionListEntry )value ).getDescription() );
+			//			text.setEditable( false );
+			SimpleForm form = new SimpleForm();
+
+			form.addComponent( label );
+			form.addComponent( text );
+
+			if( isSelected )
+			{
+				text.setBackground( Color.LIGHT_GRAY );
+				form.getPanel().setBackground( Color.LIGHT_GRAY );
+			}
+			else
+			{
+				text.setBackground( Color.WHITE );
+				form.getPanel().setBackground( Color.WHITE );
+			}
+			return form.getPanel();
+		}
+	}
+
+	@Override
+	protected void beforeShow()
+	{
+		setSize( new Dimension( 650, 500 ) );
 	}
 
 }

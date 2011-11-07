@@ -42,6 +42,7 @@ public class ResponseSLAAssertion extends WsdlMessageAssertion implements Respon
 {
 	public static final String ID = "Response SLA Assertion";
 	public static final String LABEL = "Response SLA";
+	public static final String DESCRIPTION = "Response SLA desc..";
 	private String SLA;
 
 	/**

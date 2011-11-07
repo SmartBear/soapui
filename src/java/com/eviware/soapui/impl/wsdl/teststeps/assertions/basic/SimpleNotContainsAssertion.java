@@ -58,6 +58,7 @@ public class SimpleNotContainsAssertion extends WsdlMessageAssertion implements 
 	private static final String IGNORE_CASE = "Ignore Case";
 	private static final String USE_REGEX = "Regular Expression";
 	public static final String LABEL = "Not Contains";
+	public static final String DESCRIPTION = "Simple NotContains desc.......";
 
 	public SimpleNotContainsAssertion( TestAssertionConfig assertionConfig, Assertable assertable )
 	{
@@ -81,10 +82,10 @@ public class SimpleNotContainsAssertion extends WsdlMessageAssertion implements 
 			token = "";
 
 		String replToken = PropertyExpander.expandProperties( context, token );
-		
+
 		replToken = normalize( replToken );
 		content = normalize( content );
-		
+
 		if( replToken.length() > 0 )
 		{
 			int ix = -1;
@@ -106,14 +107,12 @@ public class SimpleNotContainsAssertion extends WsdlMessageAssertion implements 
 		return type + " does not contain token [" + replToken + "]";
 	}
 
-	
 	private String normalize( String string )
 	{
-		string = string.replaceAll( "\r\n", "\n");
+		string = string.replaceAll( "\r\n", "\n" );
 		return string;
 	}
-	
-	
+
 	public boolean configure()
 	{
 		if( dialog == null )

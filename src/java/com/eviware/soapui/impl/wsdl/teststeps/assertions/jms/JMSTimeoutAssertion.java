@@ -35,6 +35,7 @@ public class JMSTimeoutAssertion extends WsdlMessageAssertion implements Respons
 {
 	public static final String ID = "JMS Timeout";
 	public static final String LABEL = "JMS Timeout";
+	public static final String DESCRIPTION = "JMS Timeout desc...";
 
 	public JMSTimeoutAssertion( TestAssertionConfig assertionConfig, Assertable assertable )
 	{

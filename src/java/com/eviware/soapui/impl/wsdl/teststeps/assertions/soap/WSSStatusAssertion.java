@@ -38,6 +38,7 @@ public class WSSStatusAssertion extends WsdlMessageAssertion implements Response
 {
 	public static final String ID = "WSS Status Assertion";
 	public static final String LABEL = "WS-Security Status";
+	public static final String DESCRIPTION = "WSS Status Assertion description goes here...";
 
 	/**
 	 * Constructor for our assertion.

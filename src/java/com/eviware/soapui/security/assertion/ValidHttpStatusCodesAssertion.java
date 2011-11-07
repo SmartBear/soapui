@@ -53,6 +53,7 @@ public class ValidHttpStatusCodesAssertion extends WsdlMessageAssertion implemen
 	private String codes;
 	private XFormDialog dialog;
 	private static final String CODES = "codes";
+	public static final String DESCRIPTION = "Valid HTTP Status Codes description goes here...";
 
 	public ValidHttpStatusCodesAssertion( TestAssertionConfig assertionConfig, Assertable assertable )
 	{

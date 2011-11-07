@@ -98,6 +98,7 @@ public class XQueryContainsAssertion extends WsdlMessageAssertion implements Req
 
 	public static final String ID = "XQuery Match";
 	public static final String LABEL = "XQuery Match";
+	public static final String DESCRIPTION = "XQuery Match desc...";
 	private JCheckBox allowWildcardsCheckBox;
 
 	public XQueryContainsAssertion( TestAssertionConfig assertionConfig, Assertable assertable )

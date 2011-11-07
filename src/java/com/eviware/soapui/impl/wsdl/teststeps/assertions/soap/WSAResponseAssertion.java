@@ -66,6 +66,7 @@ public class WSAResponseAssertion extends WsdlMessageAssertion implements Reques
 	private static final String ASSERT_RELATES_TO = "wsa:RelatesTo";
 	private static final String ASSERT_REPLY_TO_REF_PARAMS = "wsa:ReplyTo ReferenceParameters";
 	private static final String ASSERT_FAULT_TO_REF_PARAMS = "wsa:FaultTo ReferenceParameters";
+	public static final String DESCRIPTION = "WS-Addressing Response desc goes here...";
 
 	/**
 	 * Constructor for our assertion.

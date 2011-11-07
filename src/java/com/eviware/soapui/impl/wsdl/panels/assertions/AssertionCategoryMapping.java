@@ -49,116 +49,132 @@ public class AssertionCategoryMapping
 				JMS_CATEGORY, SECURITY_CATEGORY };
 	}
 
-	public static LinkedHashMap<String, LinkedHashSet<String>> getCategoriesAssertionsMap( Assertable assertable )
+	public static LinkedHashMap<String, LinkedHashSet<AssertionListEntry>> getCategoriesAssertionsMap(
+			Assertable assertable )
 	{
-		LinkedHashMap<String, LinkedHashSet<String>> categoriesAssertionsMap = new LinkedHashMap<String, LinkedHashSet<String>>();
+		LinkedHashMap<String, LinkedHashSet<AssertionListEntry>> categoriesAssertionsMap = new LinkedHashMap<String, LinkedHashSet<AssertionListEntry>>();
 		String[] assertions = TestAssertionRegistry.getInstance().getAvailableAssertionNames( assertable );
 
-		LinkedHashSet<String> validatingResponseAssertionsSet = new LinkedHashSet<String>();
+		LinkedHashSet<AssertionListEntry> validatingResponseAssertionsSet = new LinkedHashSet<AssertionListEntry>();
 		for( String availableAssertion : assertions )
 		{
 			if( availableAssertion.equals( XPathContainsAssertion.LABEL ) )
 			{
-				validatingResponseAssertionsSet.add( availableAssertion );
+				validatingResponseAssertionsSet.add( new AssertionListEntry( XPathContainsAssertion.LABEL,
+						XPathContainsAssertion.DESCRIPTION ) );
 			}
 			if( availableAssertion.equals( XQueryContainsAssertion.LABEL ) )
 			{
-				validatingResponseAssertionsSet.add( availableAssertion );
+				validatingResponseAssertionsSet.add( new AssertionListEntry( XQueryContainsAssertion.LABEL,
+						XQueryContainsAssertion.DESCRIPTION ) );
 			}
 			if( availableAssertion.equals( SimpleContainsAssertion.LABEL ) )
 			{
-				validatingResponseAssertionsSet.add( availableAssertion );
+				validatingResponseAssertionsSet.add( new AssertionListEntry( SimpleContainsAssertion.LABEL,
+						SimpleContainsAssertion.DESCRIPTION ) );
 			}
 			if( availableAssertion.equals( SimpleNotContainsAssertion.LABEL ) )
 			{
-				validatingResponseAssertionsSet.add( availableAssertion );
+				validatingResponseAssertionsSet.add( new AssertionListEntry( SimpleNotContainsAssertion.LABEL,
+						SimpleNotContainsAssertion.DESCRIPTION ) );
 			}
 		}
 		if( validatingResponseAssertionsSet.size() > 0 )
 			categoriesAssertionsMap.put( VALIDATE_RESPONSE_CONTENT_CATEGORY, validatingResponseAssertionsSet );
 
-		LinkedHashSet<String> statusAssertionsSet = new LinkedHashSet<String>();
+		LinkedHashSet<AssertionListEntry> statusAssertionsSet = new LinkedHashSet<AssertionListEntry>();
 		for( String availableAssertion : assertions )
 		{
 			if( availableAssertion.equals( InvalidHttpStatusCodesAssertion.LABEL ) )
 			{
-				statusAssertionsSet.add( availableAssertion );
+				statusAssertionsSet.add( new AssertionListEntry( InvalidHttpStatusCodesAssertion.LABEL,
+						InvalidHttpStatusCodesAssertion.DESCRIPTION ) );
 			}
 			if( availableAssertion.equals( WSSStatusAssertion.LABEL ) )
 			{
-				statusAssertionsSet.add( availableAssertion );
+				statusAssertionsSet
+						.add( new AssertionListEntry( WSSStatusAssertion.LABEL, WSSStatusAssertion.DESCRIPTION ) );
 			}
 			if( availableAssertion.equals( NotSoapFaultAssertion.LABEL ) )
 			{
-				statusAssertionsSet.add( availableAssertion );
+				statusAssertionsSet.add( new AssertionListEntry( NotSoapFaultAssertion.LABEL,
+						NotSoapFaultAssertion.DESCRIPTION ) );
 			}
 			if( availableAssertion.equals( ValidHttpStatusCodesAssertion.LABEL ) )
 			{
-				statusAssertionsSet.add( availableAssertion );
+				statusAssertionsSet.add( new AssertionListEntry( ValidHttpStatusCodesAssertion.LABEL,
+						ValidHttpStatusCodesAssertion.DESCRIPTION ) );
 			}
 			if( availableAssertion.equals( SoapResponseAssertion.LABEL ) )
 			{
-				statusAssertionsSet.add( availableAssertion );
+				statusAssertionsSet.add( new AssertionListEntry( SoapResponseAssertion.LABEL,
+						SoapResponseAssertion.DESCRIPTION ) );
 			}
 			if( availableAssertion.equals( WSAResponseAssertion.LABEL ) )
 			{
-				statusAssertionsSet.add( availableAssertion );
+				statusAssertionsSet.add( new AssertionListEntry( WSAResponseAssertion.LABEL,
+						WSAResponseAssertion.DESCRIPTION ) );
 			}
 			if( availableAssertion.equals( SchemaComplianceAssertion.LABEL ) )
 			{
-				statusAssertionsSet.add( availableAssertion );
+				statusAssertionsSet.add( new AssertionListEntry( SchemaComplianceAssertion.LABEL,
+						SchemaComplianceAssertion.DESCRIPTION ) );
 			}
 			if( availableAssertion.equals( SoapFaultAssertion.LABEL ) )
 			{
-				statusAssertionsSet.add( availableAssertion );
+				statusAssertionsSet
+						.add( new AssertionListEntry( SoapFaultAssertion.LABEL, SoapFaultAssertion.DESCRIPTION ) );
 			}
 		}
 		if( statusAssertionsSet.size() > 0 )
 			categoriesAssertionsMap.put( STATUS_CATEGORY, statusAssertionsSet );
 
-		LinkedHashSet<String> scriptAssertionsSet = new LinkedHashSet<String>();
+		LinkedHashSet<AssertionListEntry> scriptAssertionsSet = new LinkedHashSet<AssertionListEntry>();
 		for( String availableAssertion : assertions )
 		{
 			if( availableAssertion.equals( GroovyScriptAssertion.LABEL ) )
 			{
-				scriptAssertionsSet.add( availableAssertion );
+				scriptAssertionsSet.add( new AssertionListEntry( GroovyScriptAssertion.LABEL,
+						GroovyScriptAssertion.DESCRIPTION ) );
 			}
 		}
 		if( scriptAssertionsSet.size() > 0 )
 			categoriesAssertionsMap.put( SCRIPT_CATEGORY, scriptAssertionsSet );
 
-		LinkedHashSet<String> slaAssertionsSet = new LinkedHashSet<String>();
+		LinkedHashSet<AssertionListEntry> slaAssertionsSet = new LinkedHashSet<AssertionListEntry>();
 		for( String availableAssertion : assertions )
 		{
 			if( availableAssertion.equals( ResponseSLAAssertion.LABEL ) )
 			{
-				slaAssertionsSet.add( availableAssertion );
+				slaAssertionsSet
+						.add( new AssertionListEntry( ResponseSLAAssertion.LABEL, ResponseSLAAssertion.DESCRIPTION ) );
 			}
 		}
 		if( slaAssertionsSet.size() > 0 )
 			categoriesAssertionsMap.put( SLA_CATEGORY, slaAssertionsSet );
 
-		LinkedHashSet<String> jmsAssertionsSet = new LinkedHashSet<String>();
+		LinkedHashSet<AssertionListEntry> jmsAssertionsSet = new LinkedHashSet<AssertionListEntry>();
 		for( String availableAssertion : assertions )
 		{
 			if( availableAssertion.equals( JMSStatusAssertion.LABEL ) )
 			{
-				jmsAssertionsSet.add( availableAssertion );
+				jmsAssertionsSet.add( new AssertionListEntry( JMSStatusAssertion.LABEL, JMSStatusAssertion.DESCRIPTION ) );
 			}
 			if( availableAssertion.equals( JMSTimeoutAssertion.LABEL ) )
 			{
-				jmsAssertionsSet.add( availableAssertion );
+				jmsAssertionsSet.add( new AssertionListEntry( JMSTimeoutAssertion.LABEL, JMSTimeoutAssertion.DESCRIPTION ) );
 			}
 		}
 		if( jmsAssertionsSet.size() > 0 )
 			categoriesAssertionsMap.put( JMS_CATEGORY, jmsAssertionsSet );
 
-		LinkedHashSet<String> securityAssertionsSet = new LinkedHashSet<String>();
+		LinkedHashSet<AssertionListEntry> securityAssertionsSet = new LinkedHashSet<AssertionListEntry>();
 		for( String availableAssertion : assertions )
 		{
 			if( availableAssertion.equals( SensitiveInfoExposureAssertion.LABEL ) )
 			{
-				securityAssertionsSet.add( availableAssertion );
+				securityAssertionsSet.add( new AssertionListEntry( SensitiveInfoExposureAssertion.LABEL,
+						SensitiveInfoExposureAssertion.DESCRIPTION ) );
 			}
 		}
 		if( securityAssertionsSet.size() > 0 )

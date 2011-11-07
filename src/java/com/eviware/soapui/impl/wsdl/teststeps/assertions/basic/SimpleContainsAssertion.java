@@ -58,6 +58,7 @@ public class SimpleContainsAssertion extends WsdlMessageAssertion implements Req
 	private static final String IGNORE_CASE = "Ignore Case";
 	private static final String USE_REGEX = "Regular Expression";
 	public static final String LABEL = "Contains";
+	public static final String DESCRIPTION = "Simple Contains desc...";
 
 	public SimpleContainsAssertion( TestAssertionConfig assertionConfig, Assertable assertable )
 	{
@@ -81,10 +82,9 @@ public class SimpleContainsAssertion extends WsdlMessageAssertion implements Req
 			token = "";
 		String replToken = PropertyExpander.expandProperties( context, token );
 
-		
 		replToken = normalize( replToken );
 		content = normalize( content );
-		
+
 		if( replToken.length() > 0 )
 		{
 			int ix = -1;
@@ -108,7 +108,7 @@ public class SimpleContainsAssertion extends WsdlMessageAssertion implements Req
 
 	private String normalize( String string )
 	{
-		string = string.replaceAll( "\r\n", "\n");
+		string = string.replaceAll( "\r\n", "\n" );
 		return string;
 	}
 
