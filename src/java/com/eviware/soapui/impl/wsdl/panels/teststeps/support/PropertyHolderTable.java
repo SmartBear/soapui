@@ -769,7 +769,7 @@ public class PropertyHolderTable extends JPanel
 	 * @author robert
 	 * 
 	 */
-	private static class PropertiesTableCellRenderer extends DefaultTableCellRenderer
+	protected static class PropertiesTableCellRenderer extends DefaultTableCellRenderer
 	{
 		public Component getTableCellRendererComponent( JTable table, Object value, boolean isSelected, boolean hasFocus,
 				int row, int column )
