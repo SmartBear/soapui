@@ -105,6 +105,7 @@ public class AddAssertionPanel extends SimpleDialog
 		assertionsTable.setTableHeader( null );
 		assertionsTable.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
 		assertionsTable.getSelectionModel().addListSelectionListener( selectionListener );
+		assertionsTable.setEditable( false );
 		assertionsTable.setGridColor( Color.BLACK );
 		assertionsTable.setRowHeight( 40 );
 
