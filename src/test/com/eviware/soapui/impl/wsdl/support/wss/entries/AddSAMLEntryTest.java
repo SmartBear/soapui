@@ -12,7 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.support.wss.entries;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
@@ -24,8 +23,14 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
+
 import junit.framework.JUnit4TestAdapter;
 
+import org.apache.ws.commons.util.NamespaceContextImpl;
 import org.apache.ws.security.WSSConfig;
 import org.apache.ws.security.WSSecurityException;
 import org.apache.ws.security.components.crypto.CredentialException;
@@ -38,8 +43,6 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import com.eviware.soapui.config.WSSEntryConfig;
 import com.eviware.soapui.impl.wsdl.support.wss.OutgoingWss;
@@ -76,6 +79,8 @@ public class AddSAMLEntryTest
 	private Merlin crypto;
 	private Document doc;
 	private WSSecHeader secHeader;
+	private XPathFactory factory;
+	private XPath xpath;
 
 	@Mock
 	private PropertyExpansionContext contextMock;
@@ -89,11 +94,14 @@ public class AddSAMLEntryTest
 	private WssCrypto wssCryptoMock;
 	@Mock
 	private XmlObject xmlObjectMock;
+	private NamespaceContextImpl namespaceContext;
 
 	@Before
 	public void setUp() throws Exception
 	{
 		MockitoAnnotations.initMocks( this );
+
+		initXpath();
 
 		doc = XmlUtils.parseXml( SAMPLE_SOAP_MESSAGE );
 
@@ -120,60 +128,40 @@ public class AddSAMLEntryTest
 		when( contextMock.expand( KEY_PASSWORD ) ).thenReturn( KEY_PASSWORD );
 	}
 
-	// FIXME The keystore can't be found by Maven... why is that. Do it have to be in the com.eviware folder?
 	@Test
-	public void testProcessSignedSAML1AuthenticationAssertionUsingHolderOfKey() throws WSSecurityException
+	public void testProcessSignedSAML1AuthenticationAssertionUsingHolderOfKey() throws WSSecurityException,
+			XPathExpressionException
 	{
-
 		addSamlEntry.setSamlVersion( AddSAMLEntry.DEFAULT_SAML_VERSION );
-
 		addSamlEntry.process( secHeader, doc, contextMock );
 
-		Node assertionNode = getAndAssertNodeByTagName( "saml1:Assertion" );
-
-		Node issuerNode = assertionNode.getAttributes().getNamedItem( "Issuer" );
-		assertEquals( issuerNode.getNodeValue(), ISSUER );
-
-		Node subjectNode = getAndAssertNodeByTagName( "saml1:NameIdentifier" );
-		assertEquals( getFirstChildValue( subjectNode ), SUBJECT_NAME );
-
-		Node nameQualifierNode = subjectNode.getAttributes().getNamedItem( "NameQualifier" );
-		assertEquals( nameQualifierNode.getNodeValue(), SUBJECT_QUALIFIER );
+		assertNotNull( xpath.evaluate( "//saml1:Assertion", doc, XPathConstants.NODE ) );
+		assertNotNull( xpath.evaluate( "//saml1:Assertion[@Issuer]", doc, XPathConstants.NODE ) );
+		assertNotNull( xpath.evaluate( "//saml1:NameIdentifier", doc, XPathConstants.NODE ) );
+		assertNotNull( xpath.evaluate( "//saml1:NameIdentifier[@NameQualifier]", doc, XPathConstants.NODE ) );
 	}
 
 	@Test
-	public void testProcessSignedSAML2AuthenticationAssertionUsingHolderOfKey() throws WSSecurityException
+	public void testProcessSignedSAML2AuthenticationAssertionUsingHolderOfKey() throws WSSecurityException,
+			XPathExpressionException
 	{
 		addSamlEntry.setSamlVersion( AddSAMLEntry.SAML_VERSION_2 );
-
 		addSamlEntry.process( secHeader, doc, contextMock );
 
-		getAndAssertNodeByTagName( "saml2:Assertion" );
-
-		Node issuerNode = getAndAssertNodeByTagName( "saml2:Issuer" );
-		assertEquals( getFirstChildValue( issuerNode ), ISSUER );
-
-		Node subjectNode = getAndAssertNodeByTagName( "saml2:NameID" );
-		assertEquals( getFirstChildValue( subjectNode ), SUBJECT_NAME );
-
-		Node nameQualifierNode = subjectNode.getAttributes().getNamedItem( "NameQualifier" );
-		assertEquals( nameQualifierNode.getNodeValue(), SUBJECT_QUALIFIER );
+		assertNotNull( xpath.evaluate( "//saml2:Assertion", doc, XPathConstants.NODE ) );
+		assertNotNull( xpath.evaluate( "//saml2:Issuer", doc, XPathConstants.NODE ) );
+		assertNotNull( xpath.evaluate( "//saml2:NameID", doc, XPathConstants.NODE ) );
+		assertNotNull( xpath.evaluate( "//saml2:NameID[@NameQualifier]", doc, XPathConstants.NODE ) );
 	}
 
-	// FIXME Could we make the finding of nodes simpler? XPath?
-	private Node getAndAssertNodeByTagName( String tagName )
+	private void initXpath()
 	{
-		NodeList nodeList = doc.getElementsByTagName( tagName );
-		assertNotNull( nodeList );
-		assertEquals( nodeList.getLength(), 1 );
-		Node node = nodeList.item( 0 );
-		assertNotNull( node );
-		return node;
-	}
-
-	private String getFirstChildValue( Node node )
-	{
-		return node.getFirstChild().getNodeValue();
+		factory = XPathFactory.newInstance();
+		namespaceContext = new NamespaceContextImpl();
+		namespaceContext.startPrefixMapping( "saml1", "urn:oasis:names:tc:SAML:1.0:assertion" );
+		namespaceContext.startPrefixMapping( "saml2", "urn:oasis:names:tc:SAML:2.0:assertion" );
+		xpath = factory.newXPath();
+		xpath.setNamespaceContext( namespaceContext );
 	}
 
 	private void createCrypto() throws KeyStoreException, CredentialException, IOException, NoSuchAlgorithmException,
