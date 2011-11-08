@@ -53,6 +53,6 @@ public class AssertionsListTableModel extends DefaultTableModel
 		if( listEntriesSet != null )
 			return listEntriesSet.toArray()[rowIndex];
 		else
-			return new AssertionListEntry( "Please select category", "" );
+			return null;
 	}
 }
