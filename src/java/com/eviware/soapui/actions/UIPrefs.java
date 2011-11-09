@@ -108,8 +108,10 @@ public class UIPrefs implements Prefs
 				editorForm.appendComboBox( DESKTOP_TYPE, DesktopRegistry.getInstance().getNames(),
 						"Select the type of desktop to use" );
 				JCheckBox cb = editorForm.appendCheckBox( NATIVE_LAF, "Use native Look & Feel (requires restart)", true );
-				if( Tools.isMacLion() )
+				if( Tools.isMacLion() ) {
+					cb.setSelected( true );
 					cb.setEnabled( false );
+				}
 			}
 
 			editorForm.appendSeparator();
