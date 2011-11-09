@@ -18,10 +18,6 @@ public class SoapUIHostConfiguration
 {
 	private HttpHost httpHost;
 
-	public SoapUIHostConfiguration()
-	{
-	}
-
 	public SoapUIHostConfiguration( HttpHost httpHost )
 	{
 		this.httpHost = httpHost;
