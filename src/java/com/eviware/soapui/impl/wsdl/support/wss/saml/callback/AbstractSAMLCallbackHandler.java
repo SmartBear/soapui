@@ -11,6 +11,13 @@
  */
 package com.eviware.soapui.impl.wsdl.support.wss.saml.callback;
 
+import java.security.cert.X509Certificate;
+import java.util.Collections;
+import java.util.List;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
 import org.apache.ws.security.WSConstants;
 import org.apache.ws.security.components.crypto.Crypto;
 import org.apache.ws.security.message.WSSecEncryptedKey;
@@ -18,22 +25,16 @@ import org.apache.ws.security.saml.ext.SAMLCallback;
 import org.apache.ws.security.saml.ext.bean.ActionBean;
 import org.apache.ws.security.saml.ext.bean.AttributeBean;
 import org.apache.ws.security.saml.ext.bean.AttributeStatementBean;
-import org.apache.ws.security.saml.ext.bean.AuthenticationStatementBean;
 import org.apache.ws.security.saml.ext.bean.AuthDecisionStatementBean;
+import org.apache.ws.security.saml.ext.bean.AuthenticationStatementBean;
 import org.apache.ws.security.saml.ext.bean.KeyInfoBean;
+import org.apache.ws.security.saml.ext.bean.KeyInfoBean.CERT_IDENTIFIER;
 import org.apache.ws.security.saml.ext.bean.SubjectBean;
 import org.apache.ws.security.saml.ext.bean.SubjectLocalityBean;
-import org.apache.ws.security.saml.ext.bean.KeyInfoBean.CERT_IDENTIFIER;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import javax.security.auth.callback.CallbackHandler;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
-import java.security.cert.X509Certificate;
-import java.util.Collections;
-import java.util.List;
+import com.eviware.soapui.impl.wsdl.support.wss.entries.AddSAMLEntry;
 
 /*
  * @author Erik R. Yverling
@@ -42,7 +43,7 @@ import java.util.List;
  * default it creates an authentication assertion.
  * 
  */
-public abstract class AbstractSAMLCallbackHandler implements CallbackHandler
+public abstract class AbstractSAMLCallbackHandler implements SAMLCallbackHandler
 {
 
 	public enum Statement
@@ -74,75 +75,90 @@ public abstract class AbstractSAMLCallbackHandler implements CallbackHandler
 		this.subjectQualifier = subjectQualifier;
 	}
 
-	public void setConfirmationMethod( String confMethod )
-	{
-		confirmationMethod = confMethod;
-	}
-
-	public void setStatement( Statement statement )
-	{
-		this.statement = statement;
-	}
-
+	@Override
 	public void setCertIdentifier( CERT_IDENTIFIER certIdentifier )
 	{
 		this.certIdentifier = certIdentifier;
 	}
 
+	@Override
 	public void setCerts( X509Certificate[] certs )
 	{
 		this.certs = certs;
 	}
 
+	@Override
 	public byte[] getEphemeralKey()
 	{
 		return ephemeralKey;
 	}
 
+	@Override
 	public void setIssuer( String issuer )
 	{
 		this.issuer = issuer;
 	}
 
+	@Override
 	public void setSubjectNameIDFormat( String subjectNameIDFormat )
 	{
 		this.subjectNameIDFormat = subjectNameIDFormat;
 	}
 
+	@Override
 	public void setSubjectLocality( String ipAddress, String dnsAddress )
 	{
 		this.subjectLocalityIpAddress = ipAddress;
 		this.subjectLocalityDnsAddress = dnsAddress;
 	}
 
+	@Override
 	public void setResource( String resource )
 	{
 		this.resource = resource;
 	}
 
+	@Override
 	public void setCustomAttributeValues( List<?> customAttributeValues )
 	{
 		this.customAttributeValues = customAttributeValues;
 	}
 
+	@Override
 	public Crypto getCrypto()
 	{
 		return crypto;
 	}
 
+	@Override
 	public void setCrypto( Crypto crypto )
 	{
 		this.crypto = crypto;
 	}
 
+	@Override
 	public String getAlias()
 	{
 		return alias;
 	}
 
+	@Override
 	public void setAlias( String alias )
 	{
 		this.alias = alias;
+	}
+
+	@Override
+	public void setStatement( String statement )
+	{
+		if( statement.equals( AddSAMLEntry.ASSERTION__ASSERTION_TYPE ) )
+		{
+			this.statement = Statement.AUTHN;
+		}
+		else if( statement.equals( AddSAMLEntry.ATTRIBUTE_ASSERTION_TYPE ) )
+		{
+			this.statement = Statement.ATTR;
+		}
 	}
 
 	/**

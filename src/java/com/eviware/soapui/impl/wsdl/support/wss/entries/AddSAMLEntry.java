@@ -23,8 +23,6 @@ import org.apache.ws.security.message.WSSecHeader;
 import org.apache.ws.security.saml.WSSecSignatureSAML;
 import org.apache.ws.security.saml.ext.AssertionWrapper;
 import org.apache.ws.security.saml.ext.SAMLParms;
-import org.apache.ws.security.saml.ext.builder.SAML1Constants;
-import org.apache.ws.security.saml.ext.builder.SAML2Constants;
 import org.w3c.dom.Document;
 
 import com.eviware.soapui.SoapUI;
@@ -33,6 +31,7 @@ import com.eviware.soapui.impl.wsdl.support.wss.OutgoingWss;
 import com.eviware.soapui.impl.wsdl.support.wss.WssCrypto;
 import com.eviware.soapui.impl.wsdl.support.wss.saml.callback.SAML1CallbackHandler;
 import com.eviware.soapui.impl.wsdl.support.wss.saml.callback.SAML2CallbackHandler;
+import com.eviware.soapui.impl.wsdl.support.wss.saml.callback.SAMLCallbackHandler;
 import com.eviware.soapui.impl.wsdl.support.wss.support.KeystoresComboBoxModel;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionsResult;
@@ -42,42 +41,38 @@ import com.eviware.soapui.support.xml.XmlObjectConfigurationBuilder;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
 import com.jgoodies.binding.PresentationModel;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
-
 // FIXME Why is the entries named Add* consider changing to a noun
 public class AddSAMLEntry extends WssEntryBase
 {
+	// TODO Some of these should be enums if possible.
+
 	public static final String TYPE = "SAML";
 
-	public static final String DEFAULT_SAML_VERSION = "1.1";
+	public static final String SAML_VERSION_1 = "1.1";
 	public static final String SAML_VERSION_2 = "2.0";
-	private static final String DEFAULT_ASSERTION_TYPE = "Authentication";
-	private static final String DEFAULT_SIGNING_TYPE = "Holder-of-key";
+
+	public static final String ASSERTION__ASSERTION_TYPE = "Authentication";
+	public static final String ATTRIBUTE_ASSERTION_TYPE = "Attribute";
+
+	public static final String HOLDER_OF_KEY_SIGNING_TYPE = "Holder-of-key";
 
 	// FIXME How should be support input for these fields? How are they used?
 	private static final String DEFAULT_SUBJECT_NAME = "uid=joe,ou=people,ou=saml-demo,o=example.com";
 
-	private static final String DEFAULT_DIGEST_ALGORITHM = "http://www.w3.org/2001/04/xmlenc#sha256";
-	private static final String DEFAULT_SIGNATURE_ALGORITHM = "http://www.w3.org/2001/04/xmldsig-more#rsa-sha256";
+	private static final String SHA256_DIGEST_ALGORITHM = "http://www.w3.org/2001/04/xmlenc#sha256";
+	private static final String RSA_SHA256_SIGNATURE_ALGORITHM = "http://www.w3.org/2001/04/xmldsig-more#rsa-sha256";
 
 	private KeyAliasComboBoxModel keyAliasComboBoxModel;
 	private InternalWssContainerListener wssContainerListener;
 
-	// TODO Some of these should be enums if possible.
-
-	@NonNull
 	private String samlVersion;
-	@NonNull
 	private String assertionType;
-	@NonNull
 	private String signingType;
 	private String crypto;
 	private String issuer;
 	private String subjectName;
 	private String subjectQualifier;
-	@NonNull
 	private String digestAlgorithm;
-	@NonNull
 	private String signatureAlgorithm;
 
 	public void init( WSSEntryConfig config, OutgoingWss container )
@@ -85,21 +80,23 @@ public class AddSAMLEntry extends WssEntryBase
 		super.init( config, container, TYPE );
 	}
 
+	// TODO How can we make FindBugs that these fields will always be initialized and be able to add NonNull annotations?
 	@Override
 	protected void load( XmlObjectConfigurationReader reader )
 	{
 		// FIXME This seams much better than the inline if-case found in AddSignatureEntry and others. Refactor!
-		samlVersion = StringUtils.defaultIfEmpty( reader.readString( "samlVersion", null ), DEFAULT_SAML_VERSION );
-		assertionType = StringUtils.defaultIfEmpty( reader.readString( "assertionType", null ), DEFAULT_ASSERTION_TYPE );
-		signingType = StringUtils.defaultIfEmpty( reader.readString( "signingType", null ), DEFAULT_SIGNING_TYPE );
+		samlVersion = StringUtils.defaultIfEmpty( reader.readString( "samlVersion", null ), SAML_VERSION_1 );
+		assertionType = StringUtils
+				.defaultIfEmpty( reader.readString( "assertionType", null ), ASSERTION__ASSERTION_TYPE );
+		signingType = StringUtils.defaultIfEmpty( reader.readString( "signingType", null ), HOLDER_OF_KEY_SIGNING_TYPE );
 		crypto = reader.readString( "crypto", null );
 		issuer = reader.readString( "issuer", null );
 		subjectName = StringUtils.defaultIfEmpty( reader.readString( "subjectName", null ), DEFAULT_SUBJECT_NAME );
 		subjectQualifier = reader.readString( "subjectQualifier", null );
 		digestAlgorithm = StringUtils.defaultIfEmpty( reader.readString( "digestAlgorithm", null ),
-				DEFAULT_DIGEST_ALGORITHM );
+				SHA256_DIGEST_ALGORITHM );
 		signatureAlgorithm = StringUtils.defaultIfEmpty( reader.readString( "signatureAlgorithm", null ),
-				DEFAULT_SIGNATURE_ALGORITHM );
+				RSA_SHA256_SIGNATURE_ALGORITHM );
 	}
 
 	@Override
@@ -124,11 +121,11 @@ public class AddSAMLEntry extends WssEntryBase
 
 		SimpleBindingForm form = new SimpleBindingForm( new PresentationModel<AddSignatureEntry>( this ) );
 		form.addSpace( 5 );
-		form.appendComboBox( "samlVersion", "SAML version", new String[] { DEFAULT_SAML_VERSION, SAML_VERSION_2 },
+		form.appendComboBox( "samlVersion", "SAML version", new String[] { SAML_VERSION_1, SAML_VERSION_2 },
 				"Choose the SAML version" );
-		form.appendComboBox( "assertionType", "Assertion type", new String[] { DEFAULT_ASSERTION_TYPE },
-				"Choose the type of assertion" );
-		form.appendComboBox( "signingType", "Signing type", new String[] { DEFAULT_SIGNING_TYPE },
+		form.appendComboBox( "assertionType", "Assertion type", new String[] { ASSERTION__ASSERTION_TYPE,
+				ATTRIBUTE_ASSERTION_TYPE }, "Choose the type of assertion" );
+		form.appendComboBox( "signingType", "Signing type", new String[] { HOLDER_OF_KEY_SIGNING_TYPE },
 				"Choose the type of signing" );
 		form.appendComboBox( "crypto", "Keystore",
 				new KeystoresComboBoxModel( getWssContainer(), getWssContainer().getCryptoByName( crypto ) ),
@@ -149,10 +146,10 @@ public class AddSAMLEntry extends WssEntryBase
 		form.appendTextField( "issuer", "Issuer", "The issuer" );
 		form.appendTextField( "subjectName", "Subject Name", "The subject qualifier" );
 		form.appendTextField( "subjectQualifier", "Subject Qualifier", "The subject qualifier" );
-		form.appendComboBox( "digestAlgorithm", "Digest algorithm", new String[] { DEFAULT_DIGEST_ALGORITHM },
+		form.appendComboBox( "digestAlgorithm", "Digest algorithm", new String[] { SHA256_DIGEST_ALGORITHM },
 				"Set the digest algorithm" );
-		form.appendComboBox( "signatureAlgorithm", "Signature algorithm", new String[] { DEFAULT_SIGNATURE_ALGORITHM },
-				"Set the signature algorithm" );
+		form.appendComboBox( "signatureAlgorithm", "Signature algorithm",
+				new String[] { RSA_SHA256_SIGNATURE_ALGORITHM }, "Set the signature algorithm" );
 
 		return new JScrollPane( form.getPanel() );
 	}
@@ -171,25 +168,24 @@ public class AddSAMLEntry extends WssEntryBase
 			}
 
 			SAMLParms samlParms = new SAMLParms();
-			// FIXME Remove duplication by polymorphism
-			if( samlVersion.equals( DEFAULT_SAML_VERSION ) )
+			SAMLCallbackHandler callbackHandler = null;
+
+			if( samlVersion.equals( SAML_VERSION_1 ) )
 			{
-				SAML1CallbackHandler callbackHandler = new SAML1CallbackHandler( wssCrypto.getCrypto(),
-						context.expand( getUsername() ), subjectName, subjectQualifier );
-				callbackHandler.setConfirmationMethod( SAML1Constants.CONF_HOLDER_KEY );
-				callbackHandler.setStatement( SAML1CallbackHandler.Statement.AUTHN );
-				callbackHandler.setIssuer( issuer );
-				samlParms.setCallbackHandler( callbackHandler );
+				callbackHandler = new SAML1CallbackHandler( wssCrypto.getCrypto(), context.expand( getUsername() ),
+						subjectName, subjectQualifier );
 			}
-			else
+			else if( samlVersion.equals( SAML_VERSION_2 ) )
 			{
-				SAML2CallbackHandler callbackHandler = new SAML2CallbackHandler( wssCrypto.getCrypto(),
-						context.expand( getUsername() ), subjectName, subjectQualifier );
-				callbackHandler.setStatement( SAML2CallbackHandler.Statement.AUTHN );
-				callbackHandler.setConfirmationMethod( SAML2Constants.CONF_HOLDER_KEY );
-				callbackHandler.setIssuer( issuer );
-				samlParms.setCallbackHandler( callbackHandler );
+				callbackHandler = new SAML2CallbackHandler( wssCrypto.getCrypto(), context.expand( getUsername() ),
+						subjectName, subjectQualifier );
 			}
+
+			callbackHandler.setConfirmationMethod( signingType );
+			callbackHandler.setIssuer( issuer );
+			callbackHandler.setStatement( assertionType );
+
+			samlParms.setCallbackHandler( callbackHandler );
 
 			AssertionWrapper assertion = new AssertionWrapper( samlParms );
 			assertion.signAssertion( context.expand( getUsername() ), context.expand( getPassword() ),
@@ -198,8 +194,22 @@ public class AddSAMLEntry extends WssEntryBase
 			WSSecSignatureSAML wsSign = new WSSecSignatureSAML();
 			wsSign.setUserInfo( context.expand( getUsername() ), context.expand( getPassword() ) );
 			wsSign.setDigestAlgo( digestAlgorithm );
-			wsSign.setSignatureAlgorithm( signatureAlgorithm );
-			wsSign.setKeyIdentifierType( WSConstants.BST_DIRECT_REFERENCE );
+
+			// Assertion type
+
+			if( assertionType.equals( ASSERTION__ASSERTION_TYPE ) )
+			{
+				wsSign.setSignatureAlgorithm( signatureAlgorithm );
+				wsSign.setKeyIdentifierType( WSConstants.BST_DIRECT_REFERENCE );
+			}
+			else if( assertionType.equals( ATTRIBUTE_ASSERTION_TYPE ) )
+			{
+				wsSign.setKeyIdentifierType( WSConstants.X509_KEY_IDENTIFIER );
+				wsSign.setSignatureAlgorithm( WSConstants.HMAC_SHA256 );
+
+				byte[] ephemeralKey = callbackHandler.getEphemeralKey();
+				wsSign.setSecretKey( ephemeralKey );
+			}
 
 			wsSign.build( doc, wssCrypto.getCrypto(), assertion, null, null, null, secHeader );
 		}

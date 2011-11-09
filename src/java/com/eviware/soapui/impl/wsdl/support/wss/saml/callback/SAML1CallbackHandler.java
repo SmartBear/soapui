@@ -25,10 +25,10 @@ import org.apache.ws.security.saml.ext.bean.SubjectBean;
 import org.apache.ws.security.saml.ext.builder.SAML1Constants;
 import org.opensaml.common.SAMLVersion;
 
+import com.eviware.soapui.impl.wsdl.support.wss.entries.AddSAMLEntry;
+
 /**
  * @author Erik R. Yverling
- * 
- *         FIXME This is very similar to SAML2CallbackHandler. Refactor!
  * 
  *         A Callback Handler implementation for a SAML 1.1 assertion. By
  *         default it creates an authentication assertion using Sender Vouches.
@@ -86,4 +86,12 @@ public class SAML1CallbackHandler extends AbstractSAMLCallbackHandler
 		}
 	}
 
+	@Override
+	public void setConfirmationMethod( String signingType )
+	{
+		if( signingType.equals( AddSAMLEntry.HOLDER_OF_KEY_SIGNING_TYPE ) )
+		{
+			confirmationMethod = SAML1Constants.CONF_HOLDER_KEY;
+		}
+	}
 }

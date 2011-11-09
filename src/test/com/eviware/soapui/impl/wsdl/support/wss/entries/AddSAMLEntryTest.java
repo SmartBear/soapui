@@ -132,8 +132,10 @@ public class AddSAMLEntryTest
 	public void testProcessSignedSAML1AuthenticationAssertionUsingHolderOfKey() throws WSSecurityException,
 			XPathExpressionException
 	{
-		addSamlEntry.setSamlVersion( AddSAMLEntry.DEFAULT_SAML_VERSION );
+		addSamlEntry.setSamlVersion( AddSAMLEntry.SAML_VERSION_1 );
 		addSamlEntry.process( secHeader, doc, contextMock );
+
+		assertNotNull( xpath.evaluate( "//saml1:AuthenticationStatement", doc, XPathConstants.NODE ) );
 
 		assertNotNull( xpath.evaluate( "//saml1:Assertion", doc, XPathConstants.NODE ) );
 		assertNotNull( xpath.evaluate( "//saml1:Assertion[@Issuer]", doc, XPathConstants.NODE ) );
@@ -148,10 +150,38 @@ public class AddSAMLEntryTest
 		addSamlEntry.setSamlVersion( AddSAMLEntry.SAML_VERSION_2 );
 		addSamlEntry.process( secHeader, doc, contextMock );
 
+		assertNotNull( xpath.evaluate( "//saml2:AuthnStatement", doc, XPathConstants.NODE ) );
+
 		assertNotNull( xpath.evaluate( "//saml2:Assertion", doc, XPathConstants.NODE ) );
 		assertNotNull( xpath.evaluate( "//saml2:Issuer", doc, XPathConstants.NODE ) );
 		assertNotNull( xpath.evaluate( "//saml2:NameID", doc, XPathConstants.NODE ) );
 		assertNotNull( xpath.evaluate( "//saml2:NameID[@NameQualifier]", doc, XPathConstants.NODE ) );
+	}
+
+	@Test
+	public void testProcessSignedSAML1AttributeAssertionUsingHolderOfKey() throws WSSecurityException,
+			XPathExpressionException
+	{
+		addSamlEntry.setSamlVersion( AddSAMLEntry.SAML_VERSION_1 );
+		addSamlEntry.setAssertionType( AddSAMLEntry.ATTRIBUTE_ASSERTION_TYPE );
+		addSamlEntry.process( secHeader, doc, contextMock );
+
+		assertNotNull( xpath.evaluate( "//saml1:AttributeStatement", doc, XPathConstants.NODE ) );
+
+		assertNotNull( xpath.evaluate( "//saml1:Assertion", doc, XPathConstants.NODE ) );
+	}
+
+	@Test
+	public void testProcessSignedSAML2AttributeAssertionUsingHolderOfKey() throws WSSecurityException,
+			XPathExpressionException
+	{
+		addSamlEntry.setSamlVersion( AddSAMLEntry.SAML_VERSION_2 );
+		addSamlEntry.setAssertionType( AddSAMLEntry.ATTRIBUTE_ASSERTION_TYPE );
+		addSamlEntry.process( secHeader, doc, contextMock );
+
+		assertNotNull( xpath.evaluate( "//saml2:AttributeStatement", doc, XPathConstants.NODE ) );
+
+		assertNotNull( xpath.evaluate( "//saml2:Assertion", doc, XPathConstants.NODE ) );
 	}
 
 	private void initXpath()

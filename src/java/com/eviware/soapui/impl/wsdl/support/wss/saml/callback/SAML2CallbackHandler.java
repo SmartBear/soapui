@@ -25,6 +25,8 @@ import org.apache.ws.security.saml.ext.bean.SubjectBean;
 import org.apache.ws.security.saml.ext.builder.SAML2Constants;
 import org.opensaml.common.SAMLVersion;
 
+import com.eviware.soapui.impl.wsdl.support.wss.entries.AddSAMLEntry;
+
 /**
  * @author Erik R. Yverling
  * 
@@ -83,4 +85,12 @@ public class SAML2CallbackHandler extends AbstractSAMLCallbackHandler
 		}
 	}
 
+	@Override
+	public void setConfirmationMethod( String signingType )
+	{
+		if( signingType.equals( AddSAMLEntry.HOLDER_OF_KEY_SIGNING_TYPE ) )
+		{
+			confirmationMethod = SAML2Constants.CONF_HOLDER_KEY;
+		}
+	}
 }
