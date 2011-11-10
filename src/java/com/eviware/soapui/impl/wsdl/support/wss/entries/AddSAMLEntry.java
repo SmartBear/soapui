@@ -51,10 +51,11 @@ public class AddSAMLEntry extends WssEntryBase
 	public static final String SAML_VERSION_1 = "1.1";
 	public static final String SAML_VERSION_2 = "2.0";
 
-	public static final String ASSERTION__ASSERTION_TYPE = "Authentication";
+	public static final String AUTHENTICATION_ASSERTION_TYPE = "Authentication";
 	public static final String ATTRIBUTE_ASSERTION_TYPE = "Attribute";
 
 	public static final String HOLDER_OF_KEY_SIGNING_TYPE = "Holder-of-key";
+	public static final String SENDER_VOUCHES_SIGNING_TYPE = "Sender vouches";
 
 	// FIXME How should be support input for these fields? How are they used?
 	private static final String DEFAULT_SUBJECT_NAME = "uid=joe,ou=people,ou=saml-demo,o=example.com";
@@ -86,8 +87,8 @@ public class AddSAMLEntry extends WssEntryBase
 	{
 		// FIXME This seams much better than the inline if-case found in AddSignatureEntry and others. Refactor!
 		samlVersion = StringUtils.defaultIfEmpty( reader.readString( "samlVersion", null ), SAML_VERSION_1 );
-		assertionType = StringUtils
-				.defaultIfEmpty( reader.readString( "assertionType", null ), ASSERTION__ASSERTION_TYPE );
+		assertionType = StringUtils.defaultIfEmpty( reader.readString( "assertionType", null ),
+				AUTHENTICATION_ASSERTION_TYPE );
 		signingType = StringUtils.defaultIfEmpty( reader.readString( "signingType", null ), HOLDER_OF_KEY_SIGNING_TYPE );
 		crypto = reader.readString( "crypto", null );
 		issuer = reader.readString( "issuer", null );
@@ -123,10 +124,10 @@ public class AddSAMLEntry extends WssEntryBase
 		form.addSpace( 5 );
 		form.appendComboBox( "samlVersion", "SAML version", new String[] { SAML_VERSION_1, SAML_VERSION_2 },
 				"Choose the SAML version" );
-		form.appendComboBox( "assertionType", "Assertion type", new String[] { ASSERTION__ASSERTION_TYPE,
+		form.appendComboBox( "assertionType", "Assertion type", new String[] { AUTHENTICATION_ASSERTION_TYPE,
 				ATTRIBUTE_ASSERTION_TYPE }, "Choose the type of assertion" );
-		form.appendComboBox( "signingType", "Signing type", new String[] { HOLDER_OF_KEY_SIGNING_TYPE },
-				"Choose the type of signing" );
+		form.appendComboBox( "signingType", "Signing type", new String[] { HOLDER_OF_KEY_SIGNING_TYPE,
+				SENDER_VOUCHES_SIGNING_TYPE }, "Choose the type of signing" );
 		form.appendComboBox( "crypto", "Keystore",
 				new KeystoresComboBoxModel( getWssContainer(), getWssContainer().getCryptoByName( crypto ) ),
 				"Selects the Keystore containing the key to use for signing the SAML message" ).addItemListener(
@@ -193,25 +194,36 @@ public class AddSAMLEntry extends WssEntryBase
 
 			WSSecSignatureSAML wsSign = new WSSecSignatureSAML();
 			wsSign.setUserInfo( context.expand( getUsername() ), context.expand( getPassword() ) );
-			wsSign.setDigestAlgo( digestAlgorithm );
 
-			// Assertion type
+			// FIXME Figure out which fields that's not applicable for a certain type of assertion or signing and disable those
 
-			if( assertionType.equals( ASSERTION__ASSERTION_TYPE ) )
+			if( signingType.equals( SENDER_VOUCHES_SIGNING_TYPE ) )
 			{
-				wsSign.setSignatureAlgorithm( signatureAlgorithm );
 				wsSign.setKeyIdentifierType( WSConstants.BST_DIRECT_REFERENCE );
+
+				wsSign.build( doc, null, assertion, wssCrypto.getCrypto(), context.expand( getUsername() ),
+						context.expand( getPassword() ), secHeader );
 			}
-			else if( assertionType.equals( ATTRIBUTE_ASSERTION_TYPE ) )
+			else if( signingType.equals( HOLDER_OF_KEY_SIGNING_TYPE ) )
 			{
-				wsSign.setKeyIdentifierType( WSConstants.X509_KEY_IDENTIFIER );
-				wsSign.setSignatureAlgorithm( WSConstants.HMAC_SHA256 );
+				wsSign.setDigestAlgo( digestAlgorithm );
 
-				byte[] ephemeralKey = callbackHandler.getEphemeralKey();
-				wsSign.setSecretKey( ephemeralKey );
+				if( assertionType.equals( AUTHENTICATION_ASSERTION_TYPE ) )
+				{
+					wsSign.setKeyIdentifierType( WSConstants.BST_DIRECT_REFERENCE );
+					wsSign.setSignatureAlgorithm( signatureAlgorithm );
+				}
+				else if( assertionType.equals( ATTRIBUTE_ASSERTION_TYPE ) )
+				{
+					wsSign.setKeyIdentifierType( WSConstants.X509_KEY_IDENTIFIER );
+					wsSign.setSignatureAlgorithm( WSConstants.HMAC_SHA256 );
+
+					byte[] ephemeralKey = callbackHandler.getEphemeralKey();
+					wsSign.setSecretKey( ephemeralKey );
+
+				}
+				wsSign.build( doc, wssCrypto.getCrypto(), assertion, null, null, null, secHeader );
 			}
-
-			wsSign.build( doc, wssCrypto.getCrypto(), assertion, null, null, null, secHeader );
 		}
 		catch( Exception e )
 		{

@@ -151,7 +151,7 @@ public abstract class AbstractSAMLCallbackHandler implements SAMLCallbackHandler
 	@Override
 	public void setStatement( String statement )
 	{
-		if( statement.equals( AddSAMLEntry.ASSERTION__ASSERTION_TYPE ) )
+		if( statement.equals( AddSAMLEntry.AUTHENTICATION_ASSERTION_TYPE ) )
 		{
 			this.statement = Statement.AUTHN;
 		}

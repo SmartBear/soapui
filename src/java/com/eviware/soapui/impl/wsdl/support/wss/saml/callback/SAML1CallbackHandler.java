@@ -93,5 +93,9 @@ public class SAML1CallbackHandler extends AbstractSAMLCallbackHandler
 		{
 			confirmationMethod = SAML1Constants.CONF_HOLDER_KEY;
 		}
+		else if( signingType.equals( AddSAMLEntry.SENDER_VOUCHES_SIGNING_TYPE ) )
+		{
+			confirmationMethod = SAML1Constants.CONF_SENDER_VOUCHES;
+		}
 	}
 }
