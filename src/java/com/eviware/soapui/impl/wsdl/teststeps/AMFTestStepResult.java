@@ -128,7 +128,8 @@ public class AMFTestStepResult extends WsdlTestStepResult implements AssertedXPa
 
 	public StringToStringsMap getRequestHeaders()
 	{
-		return new StringToStringsMap();
+		return softResponse != null && softResponse.get() != null ? softResponse.get().getRequestHeaders()
+				: new StringToStringsMap();
 	}
 
 	public Attachment[] getResponseAttachments()
@@ -153,7 +154,8 @@ public class AMFTestStepResult extends WsdlTestStepResult implements AssertedXPa
 
 	public StringToStringsMap getResponseHeaders()
 	{
-		return new StringToStringsMap();
+		return softResponse != null && softResponse.get() != null ? softResponse.get().getResponseHeaders()
+				: new StringToStringsMap();
 	}
 
 	public long getTimestamp()
