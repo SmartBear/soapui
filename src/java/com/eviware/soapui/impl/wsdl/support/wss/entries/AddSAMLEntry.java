@@ -20,6 +20,7 @@ import javax.swing.JScrollPane;
 
 import org.apache.ws.security.WSConstants;
 import org.apache.ws.security.message.WSSecHeader;
+import org.apache.ws.security.message.WSSecSAMLToken;
 import org.apache.ws.security.saml.WSSecSignatureSAML;
 import org.apache.ws.security.saml.ext.AssertionWrapper;
 import org.apache.ws.security.saml.ext.SAMLParms;
@@ -53,9 +54,10 @@ public class AddSAMLEntry extends WssEntryBase
 
 	public static final String AUTHENTICATION_ASSERTION_TYPE = "Authentication";
 	public static final String ATTRIBUTE_ASSERTION_TYPE = "Attribute";
+	public static final String AUTHORIZATION_ASSERTION_TYPE = "Authorization";
 
-	public static final String HOLDER_OF_KEY_SIGNING_TYPE = "Holder-of-key";
-	public static final String SENDER_VOUCHES_SIGNING_TYPE = "Sender vouches";
+	public static final String HOLDER_OF_KEY_CONFIRMATION_TYPE = "Holder-of-key";
+	public static final String SENDER_VOUCHES_CONFIRMATION_TYPE = "Sender vouches";
 
 	// FIXME How should be support input for these fields? How are they used?
 	private static final String DEFAULT_SUBJECT_NAME = "uid=joe,ou=people,ou=saml-demo,o=example.com";
@@ -68,13 +70,14 @@ public class AddSAMLEntry extends WssEntryBase
 
 	private String samlVersion;
 	private String assertionType;
-	private String signingType;
+	private String confirmationType;
 	private String crypto;
 	private String issuer;
 	private String subjectName;
 	private String subjectQualifier;
 	private String digestAlgorithm;
 	private String signatureAlgorithm;
+	private boolean signed;
 
 	public void init( WSSEntryConfig config, OutgoingWss container )
 	{
@@ -85,27 +88,26 @@ public class AddSAMLEntry extends WssEntryBase
 	@Override
 	protected void load( XmlObjectConfigurationReader reader )
 	{
-		// FIXME This seams much better than the inline if-case found in AddSignatureEntry and others. Refactor!
-		samlVersion = StringUtils.defaultIfEmpty( reader.readString( "samlVersion", null ), SAML_VERSION_1 );
-		assertionType = StringUtils.defaultIfEmpty( reader.readString( "assertionType", null ),
-				AUTHENTICATION_ASSERTION_TYPE );
-		signingType = StringUtils.defaultIfEmpty( reader.readString( "signingType", null ), HOLDER_OF_KEY_SIGNING_TYPE );
+		// FIXME Use the def (default) parameter instead ffs!
+		samlVersion = reader.readString( "samlVersion", SAML_VERSION_1 );
+		signed = reader.readBoolean( "signed", false );
+		assertionType = reader.readString( "assertionType", AUTHENTICATION_ASSERTION_TYPE );
+		confirmationType = reader.readString( "confirmationType", SENDER_VOUCHES_CONFIRMATION_TYPE );
 		crypto = reader.readString( "crypto", null );
 		issuer = reader.readString( "issuer", null );
-		subjectName = StringUtils.defaultIfEmpty( reader.readString( "subjectName", null ), DEFAULT_SUBJECT_NAME );
+		subjectName = reader.readString( "subjectName", DEFAULT_SUBJECT_NAME );
 		subjectQualifier = reader.readString( "subjectQualifier", null );
-		digestAlgorithm = StringUtils.defaultIfEmpty( reader.readString( "digestAlgorithm", null ),
-				SHA256_DIGEST_ALGORITHM );
-		signatureAlgorithm = StringUtils.defaultIfEmpty( reader.readString( "signatureAlgorithm", null ),
-				RSA_SHA256_SIGNATURE_ALGORITHM );
+		digestAlgorithm = reader.readString( "digestAlgorithm", SHA256_DIGEST_ALGORITHM );
+		signatureAlgorithm = reader.readString( "signatureAlgorithm", RSA_SHA256_SIGNATURE_ALGORITHM );
 	}
 
 	@Override
 	protected void save( XmlObjectConfigurationBuilder builder )
 	{
 		builder.add( "samlVersion", samlVersion );
+		builder.add( "signed", signed );
 		builder.add( "assertionType", assertionType );
-		builder.add( "signingType", signingType );
+		builder.add( "confirmationType", confirmationType );
 		builder.add( "crypto", crypto );
 		builder.add( "issuer", issuer );
 		builder.add( "subjectName", subjectName );
@@ -124,10 +126,11 @@ public class AddSAMLEntry extends WssEntryBase
 		form.addSpace( 5 );
 		form.appendComboBox( "samlVersion", "SAML version", new String[] { SAML_VERSION_1, SAML_VERSION_2 },
 				"Choose the SAML version" );
+		form.appendCheckBox( "signed", "Signed", "Should the message be signed" );
 		form.appendComboBox( "assertionType", "Assertion type", new String[] { AUTHENTICATION_ASSERTION_TYPE,
-				ATTRIBUTE_ASSERTION_TYPE }, "Choose the type of assertion" );
-		form.appendComboBox( "signingType", "Signing type", new String[] { HOLDER_OF_KEY_SIGNING_TYPE,
-				SENDER_VOUCHES_SIGNING_TYPE }, "Choose the type of signing" );
+				ATTRIBUTE_ASSERTION_TYPE, AUTHORIZATION_ASSERTION_TYPE }, "Choose the type of assertion" );
+		form.appendComboBox( "confirmationType", "Confirmation type", new String[] { SENDER_VOUCHES_CONFIRMATION_TYPE,
+				HOLDER_OF_KEY_CONFIRMATION_TYPE }, "Choose the type of confirmation" );
 		form.appendComboBox( "crypto", "Keystore",
 				new KeystoresComboBoxModel( getWssContainer(), getWssContainer().getCryptoByName( crypto ) ),
 				"Selects the Keystore containing the key to use for signing the SAML message" ).addItemListener(
@@ -159,71 +162,96 @@ public class AddSAMLEntry extends WssEntryBase
 	{
 		try
 		{
-			// FIXME Add a helper method for this since it's used alot
-			WssCrypto wssCrypto = getWssContainer().getCryptoByName( crypto );
-
-			if( wssCrypto == null )
-			{
-				throw new Exception( "Missing crypto [" + crypto + "] for signature entry" );
-
-			}
-
 			SAMLParms samlParms = new SAMLParms();
 			SAMLCallbackHandler callbackHandler = null;
 
-			if( samlVersion.equals( SAML_VERSION_1 ) )
+			if( !signed )
 			{
-				callbackHandler = new SAML1CallbackHandler( wssCrypto.getCrypto(), context.expand( getUsername() ),
-						subjectName, subjectQualifier );
-			}
-			else if( samlVersion.equals( SAML_VERSION_2 ) )
-			{
-				callbackHandler = new SAML2CallbackHandler( wssCrypto.getCrypto(), context.expand( getUsername() ),
-						subjectName, subjectQualifier );
-			}
+				WSSecSAMLToken wsSecSAMLToken = new WSSecSAMLToken();
 
-			callbackHandler.setConfirmationMethod( signingType );
-			callbackHandler.setIssuer( issuer );
-			callbackHandler.setStatement( assertionType );
-
-			samlParms.setCallbackHandler( callbackHandler );
-
-			AssertionWrapper assertion = new AssertionWrapper( samlParms );
-			assertion.signAssertion( context.expand( getUsername() ), context.expand( getPassword() ),
-					wssCrypto.getCrypto(), false );
-
-			WSSecSignatureSAML wsSign = new WSSecSignatureSAML();
-			wsSign.setUserInfo( context.expand( getUsername() ), context.expand( getPassword() ) );
-
-			// FIXME Figure out which fields that's not applicable for a certain type of assertion or signing and disable those
-
-			if( signingType.equals( SENDER_VOUCHES_SIGNING_TYPE ) )
-			{
-				wsSign.setKeyIdentifierType( WSConstants.BST_DIRECT_REFERENCE );
-
-				wsSign.build( doc, null, assertion, wssCrypto.getCrypto(), context.expand( getUsername() ),
-						context.expand( getPassword() ), secHeader );
-			}
-			else if( signingType.equals( HOLDER_OF_KEY_SIGNING_TYPE ) )
-			{
-				wsSign.setDigestAlgo( digestAlgorithm );
-
-				if( assertionType.equals( AUTHENTICATION_ASSERTION_TYPE ) )
+				if( samlVersion.equals( SAML_VERSION_1 ) )
 				{
-					wsSign.setKeyIdentifierType( WSConstants.BST_DIRECT_REFERENCE );
-					wsSign.setSignatureAlgorithm( signatureAlgorithm );
+					callbackHandler = new SAML1CallbackHandler( subjectName, subjectQualifier );
 				}
-				else if( assertionType.equals( ATTRIBUTE_ASSERTION_TYPE ) )
+				else if( samlVersion.equals( SAML_VERSION_2 ) )
 				{
-					wsSign.setKeyIdentifierType( WSConstants.X509_KEY_IDENTIFIER );
-					wsSign.setSignatureAlgorithm( WSConstants.HMAC_SHA256 );
-
-					byte[] ephemeralKey = callbackHandler.getEphemeralKey();
-					wsSign.setSecretKey( ephemeralKey );
-
+					callbackHandler = new SAML2CallbackHandler( subjectName, subjectQualifier );
 				}
-				wsSign.build( doc, wssCrypto.getCrypto(), assertion, null, null, null, secHeader );
+
+				callbackHandler.setConfirmationMethod( confirmationType );
+				callbackHandler.setIssuer( issuer );
+				callbackHandler.setStatement( assertionType );
+
+				samlParms.setCallbackHandler( callbackHandler );
+				AssertionWrapper assertion = new AssertionWrapper( samlParms );
+
+				wsSecSAMLToken.build( doc, assertion, secHeader );
 			}
+			else
+			{
+				WSSecSignatureSAML wsSecSignatureSAML = new WSSecSignatureSAML();
+				// FIXME Add a helper method for this since it's used alot
+				WssCrypto wssCrypto = getWssContainer().getCryptoByName( crypto );
+
+				if( wssCrypto == null )
+				{
+					throw new Exception( "Missing crypto [" + crypto + "] for signature entry" );
+				}
+
+				if( samlVersion.equals( SAML_VERSION_1 ) )
+				{
+					callbackHandler = new SAML1CallbackHandler( wssCrypto.getCrypto(), context.expand( getUsername() ),
+							subjectName, subjectQualifier );
+				}
+				else if( samlVersion.equals( SAML_VERSION_2 ) )
+				{
+					callbackHandler = new SAML2CallbackHandler( wssCrypto.getCrypto(), context.expand( getUsername() ),
+							subjectName, subjectQualifier );
+				}
+
+				callbackHandler.setConfirmationMethod( confirmationType );
+				callbackHandler.setIssuer( issuer );
+				callbackHandler.setStatement( assertionType );
+
+				samlParms.setCallbackHandler( callbackHandler );
+
+				AssertionWrapper assertion = new AssertionWrapper( samlParms );
+				assertion.signAssertion( context.expand( getUsername() ), context.expand( getPassword() ),
+						wssCrypto.getCrypto(), false );
+
+				wsSecSignatureSAML.setUserInfo( context.expand( getUsername() ), context.expand( getPassword() ) );
+
+				// FIXME Figure out which fields that's not applicable for a certain type of assertion or signing and disable those
+
+				if( confirmationType.equals( SENDER_VOUCHES_CONFIRMATION_TYPE ) )
+				{
+					wsSecSignatureSAML.setKeyIdentifierType( WSConstants.BST_DIRECT_REFERENCE );
+
+					wsSecSignatureSAML.build( doc, null, assertion, wssCrypto.getCrypto(), context.expand( getUsername() ),
+							context.expand( getPassword() ), secHeader );
+				}
+				else if( confirmationType.equals( HOLDER_OF_KEY_CONFIRMATION_TYPE ) )
+				{
+					wsSecSignatureSAML.setDigestAlgo( digestAlgorithm );
+
+					if( assertionType.equals( AUTHENTICATION_ASSERTION_TYPE ) )
+					{
+						wsSecSignatureSAML.setKeyIdentifierType( WSConstants.BST_DIRECT_REFERENCE );
+						wsSecSignatureSAML.setSignatureAlgorithm( signatureAlgorithm );
+					}
+					else if( assertionType.equals( ATTRIBUTE_ASSERTION_TYPE ) )
+					{
+						wsSecSignatureSAML.setKeyIdentifierType( WSConstants.X509_KEY_IDENTIFIER );
+						wsSecSignatureSAML.setSignatureAlgorithm( WSConstants.HMAC_SHA256 );
+
+						byte[] ephemeralKey = callbackHandler.getEphemeralKey();
+						wsSecSignatureSAML.setSecretKey( ephemeralKey );
+
+					}
+					wsSecSignatureSAML.build( doc, wssCrypto.getCrypto(), assertion, null, null, null, secHeader );
+				}
+			}
+
 		}
 		catch( Exception e )
 		{
@@ -268,14 +296,14 @@ public class AddSAMLEntry extends WssEntryBase
 		saveConfig();
 	}
 
-	public String getSigningType()
+	public String getConfirmationType()
 	{
-		return signingType;
+		return confirmationType;
 	}
 
-	public void setSigningType( String signingType )
+	public void setConfirmationType( String confirmationType )
 	{
-		this.signingType = signingType;
+		this.confirmationType = confirmationType;
 		saveConfig();
 	}
 
@@ -343,6 +371,16 @@ public class AddSAMLEntry extends WssEntryBase
 	{
 		this.signatureAlgorithm = signatureAlgorithm;
 		saveConfig();
+	}
+
+	public boolean isSigned()
+	{
+		return signed;
+	}
+
+	public void setSigned( boolean signed )
+	{
+		this.signed = signed;
 	}
 
 	private final class InternalWssContainerListener extends WssContainerListenerAdapter

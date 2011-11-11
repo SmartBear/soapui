@@ -67,10 +67,22 @@ public abstract class AbstractSAMLCallbackHandler implements SAMLCallbackHandler
 	private Crypto crypto;
 	private String alias;
 
+	/**
+	 * Use this for signed assertion
+	 */
 	public AbstractSAMLCallbackHandler( Crypto crypto, String alias, String subjectName, String subjectQualifier )
 	{
 		this.crypto = crypto;
 		this.alias = alias;
+		this.subjectName = subjectName;
+		this.subjectQualifier = subjectQualifier;
+	}
+
+	/**
+	 * Use this is for unsigned assertions
+	 */
+	public AbstractSAMLCallbackHandler( String subjectName, String subjectQualifier )
+	{
 		this.subjectName = subjectName;
 		this.subjectQualifier = subjectQualifier;
 	}
@@ -158,6 +170,10 @@ public abstract class AbstractSAMLCallbackHandler implements SAMLCallbackHandler
 		else if( statement.equals( AddSAMLEntry.ATTRIBUTE_ASSERTION_TYPE ) )
 		{
 			this.statement = Statement.ATTR;
+		}
+		else if( statement.equals( AddSAMLEntry.AUTHORIZATION_ASSERTION_TYPE ) )
+		{
+			this.statement = Statement.AUTHZ;
 		}
 	}
 

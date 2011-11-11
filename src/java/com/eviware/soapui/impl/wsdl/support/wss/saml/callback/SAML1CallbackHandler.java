@@ -47,8 +47,13 @@ public class SAML1CallbackHandler extends AbstractSAMLCallbackHandler
 			cryptoType.setAlias( alias );
 			certs = crypto.getX509Certificates( cryptoType );
 		}
-
+		// FIXME Should we always default to Sender Vouches?
 		confirmationMethod = SAML1Constants.CONF_SENDER_VOUCHES;
+	}
+
+	public SAML1CallbackHandler( String subjectName, String subjectQualifier )
+	{
+		super( subjectName, subjectQualifier );
 	}
 
 	public void handle( Callback[] callbacks ) throws IOException, UnsupportedCallbackException
@@ -89,11 +94,11 @@ public class SAML1CallbackHandler extends AbstractSAMLCallbackHandler
 	@Override
 	public void setConfirmationMethod( String signingType )
 	{
-		if( signingType.equals( AddSAMLEntry.HOLDER_OF_KEY_SIGNING_TYPE ) )
+		if( signingType.equals( AddSAMLEntry.HOLDER_OF_KEY_CONFIRMATION_TYPE ) )
 		{
 			confirmationMethod = SAML1Constants.CONF_HOLDER_KEY;
 		}
-		else if( signingType.equals( AddSAMLEntry.SENDER_VOUCHES_SIGNING_TYPE ) )
+		else if( signingType.equals( AddSAMLEntry.SENDER_VOUCHES_CONFIRMATION_TYPE ) )
 		{
 			confirmationMethod = SAML1Constants.CONF_SENDER_VOUCHES;
 		}

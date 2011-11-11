@@ -22,7 +22,6 @@ import org.apache.ws.security.components.crypto.CryptoType;
 import org.apache.ws.security.saml.ext.SAMLCallback;
 import org.apache.ws.security.saml.ext.bean.KeyInfoBean;
 import org.apache.ws.security.saml.ext.bean.SubjectBean;
-import org.apache.ws.security.saml.ext.builder.SAML1Constants;
 import org.apache.ws.security.saml.ext.builder.SAML2Constants;
 import org.opensaml.common.SAMLVersion;
 
@@ -47,7 +46,13 @@ public class SAML2CallbackHandler extends AbstractSAMLCallbackHandler
 			cryptoType.setAlias( alias );
 			certs = crypto.getX509Certificates( cryptoType );
 		}
+		// FIXME Should we always default to Sender Vouches?
 		confirmationMethod = SAML2Constants.CONF_SENDER_VOUCHES;
+	}
+
+	public SAML2CallbackHandler( String subjectName, String subjectQualifier )
+	{
+		super( subjectName, subjectQualifier );
 	}
 
 	public void handle( Callback[] callbacks ) throws IOException, UnsupportedCallbackException
@@ -89,11 +94,11 @@ public class SAML2CallbackHandler extends AbstractSAMLCallbackHandler
 	@Override
 	public void setConfirmationMethod( String signingType )
 	{
-		if( signingType.equals( AddSAMLEntry.HOLDER_OF_KEY_SIGNING_TYPE ) )
+		if( signingType.equals( AddSAMLEntry.HOLDER_OF_KEY_CONFIRMATION_TYPE ) )
 		{
 			confirmationMethod = SAML2Constants.CONF_HOLDER_KEY;
 		}
-		else if( signingType.equals( AddSAMLEntry.SENDER_VOUCHES_SIGNING_TYPE ) )
+		else if( signingType.equals( AddSAMLEntry.SENDER_VOUCHES_CONFIRMATION_TYPE ) )
 		{
 			confirmationMethod = SAML2Constants.CONF_SENDER_VOUCHES;
 		}
