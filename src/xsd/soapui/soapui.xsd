@@ -2313,4 +2313,26 @@
 			<xsd:element name="status" type="xsd:string"></xsd:element>
 		</xsd:sequence>
 	</xsd:complexType>
+
+	<xsd:complexType name="ResponseCompareElement">
+		<xsd:sequence>
+			<xsd:element name="xpath" type="xsd:string"></xsd:element>
+			<xsd:element name="element" type="xsd:string"></xsd:element>
+			<xsd:element name="value" type="xsd:string"></xsd:element>
+			<xsd:element name="type" type="xsd:string"></xsd:element>
+			<xsd:element name="operator" type="xsd:string"></xsd:element>
+			<xsd:element name="enabled" type="xsd:boolean"></xsd:element>
+			<xsd:element name="expectedValue" type="xsd:string"></xsd:element>
+			<xsd:element name="hasValue" type="xsd:boolean"></xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="ResponseCompareAssertion">
+		<xsd:sequence>
+			<xsd:element name="elements"
+				type="tns:ResponseCompareElement">
+			</xsd:element>
+			<xsd:element name="xmlSchema" type="xsd:string"></xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
 </xsd:schema>
