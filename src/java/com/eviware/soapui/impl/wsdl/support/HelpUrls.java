@@ -233,4 +233,6 @@ public interface HelpUrls
 	public static final String SECURITY_MALICIOUS_ATTACHMENT_HELP = "http://www.soapui.org/Security/malicious-attachment.html";
 
 	public static final String SECURITY_SCANS_OVERVIEW = "http://www.soapui.org/Security/security-scans-overview.html";
+
+	public static final String RESPONSECOMARTE_HELP_URL = "";
 }
