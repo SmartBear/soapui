@@ -20,4 +20,10 @@ public class AssertionListEntry
 	{
 		return description;
 	}
+
+	@Override
+	public String toString()
+	{
+		return name + " " + description;
+	}
 }

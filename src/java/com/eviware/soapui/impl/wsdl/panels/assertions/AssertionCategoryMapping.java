@@ -36,12 +36,12 @@ import com.eviware.soapui.security.assertion.ValidHttpStatusCodesAssertion;
 
 public class AssertionCategoryMapping
 {
-	private final static String VALIDATE_RESPONSE_CONTENT_CATEGORY = "Validate Response Content";
-	private final static String STATUS_CATEGORY = "Compliance, Status and Standards";
-	private final static String SCRIPT_CATEGORY = "Script";
-	private final static String SLA_CATEGORY = "SLA";
-	private final static String JMS_CATEGORY = "JMS";
-	private final static String SECURITY_CATEGORY = "Security";
+	public final static String VALIDATE_RESPONSE_CONTENT_CATEGORY = "Validate Response Content";
+	public final static String STATUS_CATEGORY = "Compliance, Status and Standards";
+	public final static String SCRIPT_CATEGORY = "Script";
+	public final static String SLA_CATEGORY = "SLA";
+	public final static String JMS_CATEGORY = "JMS";
+	public final static String SECURITY_CATEGORY = "Security";
 
 	public static String[] getAssertionCategories()
 	{

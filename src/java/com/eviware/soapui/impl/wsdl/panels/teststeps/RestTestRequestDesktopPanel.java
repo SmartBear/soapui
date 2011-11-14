@@ -23,6 +23,7 @@ import javax.swing.ListModel;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.panels.request.AbstractRestRequestDesktopPanel;
 import com.eviware.soapui.impl.support.components.ModelItemXmlEditor;
+import com.eviware.soapui.impl.wsdl.actions.testsuite.AddNewTestCaseAction;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequest;
@@ -43,6 +44,7 @@ import com.eviware.soapui.monitor.support.TestMonitorListenerAdapter;
 import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.support.ListDataChangeListener;
 import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.action.swing.SwingActionDelegate;
 import com.eviware.soapui.support.components.JComponentInspector;
 import com.eviware.soapui.support.components.JInspectorPanel;
 import com.eviware.soapui.support.components.JInspectorPanelFactory;
@@ -165,7 +167,8 @@ public class RestTestRequestDesktopPanel extends AbstractRestRequestDesktopPanel
 
 	protected JComponent buildToolbar()
 	{
-		addAssertionButton = createActionButton( new AddAssertionAction( getRequest() ), true );
+		addAssertionButton = createActionButton( SwingActionDelegate.createDelegate(
+				AddAssertionAction.SOAPUI_ACTION_ID, getRequest().getTestStep(), null, "/addAssertion.gif" ), true );
 		return super.buildToolbar();
 	}
 

@@ -284,4 +284,10 @@ public class AddAssertionPanel extends SimpleDialog
 		setSize( new Dimension( 650, 500 ) );
 	}
 
+	public void setCategoriesAssertionsMap(
+			LinkedHashMap<String, LinkedHashSet<AssertionListEntry>> categoriesAssertionsMap )
+	{
+		this.categoriesAssertionsMap = categoriesAssertionsMap;
+	}
+
 }

@@ -279,6 +279,8 @@
 		actionClass="com.eviware.soapui.impl.wsdl.teststeps.actions.ChangeOperationAction" />
 	<tns:action id="SetWaitTimeAction"
 		actionClass="com.eviware.soapui.impl.wsdl.teststeps.SetWaitTimeAction" />
+	<tns:action id="AddAssertionAction"
+		actionClass="com.eviware.soapui.impl.wsdl.teststeps.actions.AddAssertionAction" />
 
 	<!-- WsdlMessageAssertion Actions -->
 	<tns:action id="RenameAssertionAction"

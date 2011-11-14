@@ -14,15 +14,16 @@ package com.eviware.soapui.impl.wsdl.teststeps.actions;
 
 import java.awt.event.ActionEvent;
 
-import javax.swing.AbstractAction;
-import javax.swing.Action;
 import javax.swing.SwingUtilities;
 
 import com.eviware.soapui.impl.wsdl.actions.project.SimpleDialog;
 import com.eviware.soapui.impl.wsdl.panels.assertions.AddAssertionPanel;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry;
 import com.eviware.soapui.model.testsuite.Assertable;
+import com.eviware.soapui.model.testsuite.SamplerTestStep;
+import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 
 /**
  * Adds a WsdlAssertion to a WsdlTestRequest
@@ -30,18 +31,24 @@ import com.eviware.soapui.support.UISupport;
  * @author Ole.Matzura
  */
 
-public class AddAssertionAction extends AbstractAction
+public class AddAssertionAction extends AbstractSoapUIAction<TestStep>
 {
-	private final Assertable assertable;
+	public static final String SOAPUI_ACTION_ID = "AddAssertionAction";
+	private Assertable assertable;
 	SimpleDialog addAssertionPanel;
+
+	public AddAssertionAction()
+	{
+		super( "Change Operation", "Changes the Interface Operation for this Test Request" );
+	}
 
 	public AddAssertionAction( Assertable assertable )
 	{
 		super( "Add Assertion" );
 		this.assertable = assertable;
 
-		putValue( Action.SHORT_DESCRIPTION, "Adds an assertion to this item" );
-		putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/addAssertion.gif" ) );
+		//		putValue( Action.SHORT_DESCRIPTION, "Adds an assertion to this item" );
+		//		putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/addAssertion.gif" ) );
 	}
 
 	public void actionPerformed( ActionEvent e )
@@ -84,5 +91,29 @@ public class AddAssertionAction extends AbstractAction
 		//		{
 		//			assertion.configure();
 		//		}
+	}
+
+	@Override
+	public void perform( TestStep target, Object param )
+	{
+		this.assertable = ( ( SamplerTestStep )target );
+		String[] assertions = TestAssertionRegistry.getInstance().getAvailableAssertionNames( assertable );
+
+		if( assertions == null || assertions.length == 0 )
+		{
+			UISupport.showErrorMessage( "No assertions available for this message" );
+			return;
+		}
+
+		//		String selection = ( String )UISupport.prompt( "Select assertion to add", "Select Assertion", assertions );
+		addAssertionPanel = new AddAssertionPanel( assertable );
+		SwingUtilities.invokeLater( new Runnable()
+		{
+			public void run()
+			{
+				addAssertionPanel.setVisible( true );
+			}
+		} );
+
 	}
 }
