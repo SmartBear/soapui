@@ -223,7 +223,14 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 				int ix = str.indexOf( '/', str.indexOf( "//" ) + 2 );
 				if( ix != -1 )
 				{
-					uri = new URI( str.substring( ix ), true );
+					if( httpMethod.getURI() != null && httpMethod.getURI().getPath() != null )
+					{
+						uri = new URI( str.substring( ix ) + httpMethod.getURI().getPath(), true );
+					}
+					else
+					{
+						uri = new URI( str.substring( ix ), true );
+					}
 					java.net.URI oldUri = httpMethod.getURI();
 					httpMethod.setURI( new java.net.URI( oldUri.getScheme(), oldUri.getUserInfo(), oldUri.getHost(), oldUri
 							.getPort(), ( uri.getPath() ) == null ? "/" : uri.getPath(), oldUri.getQuery(), oldUri
