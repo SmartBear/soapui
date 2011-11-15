@@ -1096,21 +1096,37 @@
             <groupId>org.opensaml</groupId>
             <artifactId>xmltooling</artifactId>
             <version>1.3.1</version>
+            <type>jar</type>
+            <properties>
+                <jnlp.jar>true</jnlp.jar>
+            </properties>
         </dependency>
         <dependency>
             <groupId>org.opensaml</groupId>
             <artifactId>openws</artifactId>
             <version>1.4.2-1</version>
+            <type>jar</type>
+            <properties>
+                <jnlp.jar>true</jnlp.jar>
+            </properties>
         </dependency>
         <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
             <version>1.6.2</version>
+            <type>jar</type>
+            <properties>
+                <jnlp.jar>true</jnlp.jar>
+            </properties>
         </dependency>
         <dependency>
             <groupId>org.apache.ws.commons.util</groupId>
             <artifactId>ws-commons-util</artifactId>
             <version>1.0.2</version>
+            <type>jar</type>
+            <properties>
+                <jnlp.jar>true</jnlp.jar>
+            </properties>
         </dependency>
     </dependencies>
 
