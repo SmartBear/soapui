@@ -148,7 +148,13 @@ public class UrlWsdlLoader extends WsdlLoader implements DefinitionLoader
 		// limited looping to 10 loops because of eclipse plugin which entered 
 		// endless loop without it
 		int counter = 0;
-		byte[] content = EntityUtils.toByteArray( new BufferedHttpEntity( httpResponse.getEntity() ) );
+		byte[] content = null;
+
+		if( httpResponse != null )
+		{
+			content = EntityUtils.toByteArray( new BufferedHttpEntity( httpResponse.getEntity() ) );
+		}
+
 		while( !aborted && content == null && counter < 10 )
 		{
 			Thread.sleep( 200 );

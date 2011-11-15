@@ -228,13 +228,11 @@ public class HttpRequestFilter extends AbstractRequestFilter
 
 		if( query.length() > 0 && !request.isPostQueryString() )
 		{
-			java.net.URI oldUri = httpMethod.getURI();
-
 			try
 			{
-				java.net.URI tempUri = URIUtils.createURI( oldUri.getScheme(), oldUri.getHost(), oldUri.getPort(),
-						oldUri.getPath(), query.toString(), null );
-				httpMethod.setURI( tempUri );
+				java.net.URI oldUri = httpMethod.getURI();
+				httpMethod.setURI( URIUtils.createURI( oldUri.getScheme(), oldUri.getHost(), oldUri.getPort(),
+						oldUri.getPath(), query.toString(), oldUri.getFragment() ) );
 			}
 			catch( Exception e )
 			{
