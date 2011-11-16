@@ -2324,6 +2324,7 @@
 			<xsd:element name="expectedValue" type="xsd:string"></xsd:element>
 			<xsd:element name="hasValue" type="xsd:boolean"></xsd:element>
 			<xsd:element name="value" type="xsd:string"></xsd:element>
+			<xsd:element name="numberType" type="xsd:boolean"></xsd:element>
 		</xsd:sequence>
 	</xsd:complexType>
 
