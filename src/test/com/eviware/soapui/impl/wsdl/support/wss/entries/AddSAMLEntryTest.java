@@ -44,10 +44,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.tidy.Attribute;
 
 import com.eviware.soapui.config.WSSEntryConfig;
 import com.eviware.soapui.impl.wsdl.support.wss.OutgoingWss;
