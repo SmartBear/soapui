@@ -42,11 +42,22 @@ public class AssertionCategoryMapping
 	public final static String SLA_CATEGORY = "SLA";
 	public final static String JMS_CATEGORY = "JMS";
 	public final static String SECURITY_CATEGORY = "Security";
+	public final static String RECENTLY_USED = "Recently used";
 
 	public static String[] getAssertionCategories()
 	{
 		return new String[] { VALIDATE_RESPONSE_CONTENT_CATEGORY, STATUS_CATEGORY, SCRIPT_CATEGORY, SLA_CATEGORY,
-				JMS_CATEGORY, SECURITY_CATEGORY };
+				JMS_CATEGORY, SECURITY_CATEGORY, RECENTLY_USED };
+	}
+
+	private static void addRecentlyAddedAssertions(
+			LinkedHashMap<String, LinkedHashSet<AssertionListEntry>> categoriesAssertionsMap )
+	{
+		LinkedHashSet<AssertionListEntry> recentlyUsedSet = new LinkedHashSet<AssertionListEntry>();
+		//		recentlyUsedSet.add( new AssertionListEntry( SimpleNotContainsAssertion.LABEL,
+		//				SimpleNotContainsAssertion.DESCRIPTION ) );
+		if( recentlyUsedSet.size() > 0 )
+			categoriesAssertionsMap.put( RECENTLY_USED, recentlyUsedSet );
 	}
 
 	public static LinkedHashMap<String, LinkedHashSet<AssertionListEntry>> getCategoriesAssertionsMap(
@@ -54,6 +65,8 @@ public class AssertionCategoryMapping
 	{
 		LinkedHashMap<String, LinkedHashSet<AssertionListEntry>> categoriesAssertionsMap = new LinkedHashMap<String, LinkedHashSet<AssertionListEntry>>();
 		String[] assertions = TestAssertionRegistry.getInstance().getAvailableAssertionNames( assertable );
+
+		addRecentlyAddedAssertions( categoriesAssertionsMap );
 
 		LinkedHashSet<AssertionListEntry> validatingResponseAssertionsSet = new LinkedHashSet<AssertionListEntry>();
 		for( String availableAssertion : assertions )
