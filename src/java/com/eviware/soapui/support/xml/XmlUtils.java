@@ -745,9 +745,14 @@ public final class XmlUtils
 		return buf.toString();
 	}
 
+	public static String createXPath( Node domNode, boolean normalize )
+	{
+		return createXPath( domNode, false, false, false, null, normalize );
+	}
+
 	public static String createXPath( Node node )
 	{
-		return createXPath( node, false, false, false, null );
+		return createXPath( node, false );
 	}
 
 	public static String createAbsoluteXPath( Node node )
@@ -763,13 +768,25 @@ public final class XmlUtils
 	public static String createXPath( Node node, boolean anonymous, boolean selectText, boolean absolute,
 			XPathModifier modifier )
 	{
-		XPathData xpathData = createXPathData( node, anonymous, selectText, absolute );
+		return createXPath( node, anonymous, selectText, absolute, modifier, false );
+	}
+
+	public static String createXPath( Node node, boolean anonymous, boolean selectText, boolean absolute,
+			XPathModifier modifier, boolean normalize )
+	{
+		XPathData xpathData = createXPathData( node, anonymous, selectText, absolute, normalize );
 		if( xpathData == null )
 			return null;
 		return xpathData.buildXPath( modifier );
 	}
 
 	public static XPathData createXPathData( Node node, boolean anonymous, boolean selectText, boolean absolute )
+	{
+		return createXPathData( node, anonymous, selectText, absolute, false );
+	}
+
+	public static XPathData createXPathData( Node node, boolean anonymous, boolean selectText, boolean absolute,
+			boolean normalize )
 	{
 		StringToStringMap nsMap = new StringToStringMap();
 		List<String> pathComponents = new ArrayList<String>();
@@ -783,7 +800,7 @@ public final class XmlUtils
 		// }
 		if( node.getNodeType() == Node.ATTRIBUTE_NODE )
 		{
-			if( namespaceURI != null && namespaceURI.length() > 0 )
+			if( normalize || ( namespaceURI != null && namespaceURI.length() > 0 ) )
 			{
 				String prefix = node.getPrefix();
 				if( prefix == null || prefix.length() == 0 )
@@ -815,7 +832,7 @@ public final class XmlUtils
 			String pc = null;
 
 			namespaceURI = node.getNamespaceURI();
-			if( namespaceURI != null && namespaceURI.length() > 0 )
+			if( normalize || ( namespaceURI != null && namespaceURI.length() > 0 ) )
 			{
 				String prefix = node.getPrefix();
 				if( prefix == null || prefix.length() == 0 )
@@ -858,7 +875,7 @@ public final class XmlUtils
 			String ns = nsMap.get( namespaceURI );
 			String pc = null;
 
-			if( ns == null && namespaceURI != null && namespaceURI.length() > 0 )
+			if( normalize || ( ns == null && namespaceURI != null && namespaceURI.length() > 0 ) )
 			{
 				String prefix = node.getPrefix();
 				if( prefix == null || prefix.length() == 0 )
