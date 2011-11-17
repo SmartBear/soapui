@@ -217,7 +217,8 @@ public class HttpRequestFilter extends AbstractRequestFilter
 			try
 			{
 				java.net.URI oldUri = httpMethod.getURI();
-				String pathToSet = StringUtils.hasContent( oldUri.getPath() ) ? oldUri.getPath() + path : path;
+				String pathToSet = StringUtils.hasContent( oldUri.getPath() ) && !"/".equals( oldUri.getPath() ) ? oldUri
+						.getPath() + path : path;
 				java.net.URI newUri = URIUtils.createURI( oldUri.getScheme(), oldUri.getHost(), oldUri.getPort(),
 						pathToSet, oldUri.getQuery(), oldUri.getFragment() );
 				httpMethod.setURI( newUri );
