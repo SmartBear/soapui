@@ -59,9 +59,14 @@ public class AssertionCategoryMapping
 
 		for( String name : recentAssertionHandler.get() )
 		{
-			if( recentAssertionHandler.canAssert( name, assertable ) )
+			String type = recentAssertionHandler.getAssertionTypeByName( name );
+
+			if( type != null )
 			{
-				recentlyUsedSet.add( recentAssertionHandler.getAssertionListEntry( name ) );
+				if( recentAssertionHandler.canAssert( type, assertable ) )
+				{
+					recentlyUsedSet.add( recentAssertionHandler.getAssertionListEntry( type ) );
+				}
 			}
 		}
 

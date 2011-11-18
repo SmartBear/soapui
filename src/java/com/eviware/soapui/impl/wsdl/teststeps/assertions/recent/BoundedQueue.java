@@ -29,6 +29,11 @@ public class BoundedQueue
 		this.queue = new LinkedList<String>();
 	}
 
+	public void remove( String e )
+	{
+		this.queue.remove( e );
+	}
+
 	public void add( String e )
 	{
 		if( this.queue.contains( e ) )
