@@ -24,18 +24,21 @@ public class JCollapsibleTablePanel extends JCollapsiblePanel
 
 	private JTable table;
 	private JTable table2;
+	private String title;
 
 	
 	public JCollapsibleTablePanel( JTable table, String title )
 	{
 		super( new JPanel(), title );
 		setTables( table, null );
+		this.title = title;
 	}
 
 	public JCollapsibleTablePanel( JTable table, JTable table2, String title )
 	{
 		super( new JPanel(), title );
 		setTables( table, table2 );
+		this.title = title;
 	}
 
 	public void setTables( JTable table, JTable table2 )
@@ -61,5 +64,9 @@ public class JCollapsibleTablePanel extends JCollapsiblePanel
 	public JTable[] getTables()
 	{
 		return new JTable[] { table, table2 };
+	}
+	
+	public String getTitle() {
+		return title;
 	}
 }
