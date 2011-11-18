@@ -172,16 +172,14 @@ public class TestAssertionRegistry
 		REQUEST, RESPONSE, BOTH
 	}
 
-	public AssertionListEntry getAssertionListEntry( String name )
+	public AssertionListEntry getAssertionListEntry( String type )
 	{
-		String type = getAssertionTypeForName( name );
 		TestAssertionFactory factory = availableAssertions.get( type );
 		return factory.getAssertionListEntry();
 	}
 
-	public boolean canAssert( String name, Assertable assertable )
+	public boolean canAssert( String type, Assertable assertable )
 	{
-		String type = getAssertionTypeForName( name );
 		TestAssertionFactory factory = availableAssertions.get( type );
 		return factory.canAssert( assertable );
 	}

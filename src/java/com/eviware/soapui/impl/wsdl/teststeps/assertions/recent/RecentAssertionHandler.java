@@ -34,14 +34,14 @@ public class RecentAssertionHandler
 		}
 	}
 
-	public boolean canAssert( String name, Assertable assertable )
+	public boolean canAssert( String type, Assertable assertable )
 	{
-		return TestAssertionRegistry.getInstance().canAssert( name, assertable );
+		return TestAssertionRegistry.getInstance().canAssert( type, assertable );
 	}
 
-	public AssertionListEntry getAssertionListEntry( String name )
+	public AssertionListEntry getAssertionListEntry( String type )
 	{
-		return TestAssertionRegistry.getInstance().getAssertionListEntry( name );
+		return TestAssertionRegistry.getInstance().getAssertionListEntry( type );
 	}
 
 	public void add( String assertion )
@@ -52,7 +52,7 @@ public class RecentAssertionHandler
 
 	public List<String> get()
 	{
-		return bq.getByAlphabeticalOrder();
+		return this.bq.getByAlphabeticalOrder();
 	}
 
 	private void save()
