@@ -38,6 +38,7 @@ import org.jdesktop.swingx.JXTable;
 
 import com.eviware.soapui.impl.wsdl.actions.project.SimpleDialog;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry;
+import com.eviware.soapui.impl.wsdl.teststeps.assertions.recent.RecentAssertionHandler;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.TestAssertion;
 import com.eviware.soapui.support.UISupport;
@@ -62,13 +63,14 @@ public class AddAssertionPanel extends SimpleDialog
 	private JCheckBox hideDescCB;
 	private InternalCellRenderer assertionEntryRenderer = new InternalCellRenderer();
 	private InternalHideDescListener hideDescListener = new InternalHideDescListener();
+	protected RecentAssertionHandler recentAssertionHandler = new RecentAssertionHandler();
 
 	public AddAssertionPanel( Assertable assertable )
 	{
 		super( "Select Assertion", "Select which assertion to add", "" );
 		this.assertable = assertable;
-		categoriesAssertionsMap = AssertionCategoryMapping.getCategoriesAssertionsMap( assertable );
-
+		categoriesAssertionsMap = AssertionCategoryMapping
+				.getCategoriesAssertionsMap( assertable, recentAssertionHandler );
 	}
 
 	@Override
@@ -161,11 +163,14 @@ public class AddAssertionPanel extends SimpleDialog
 			return false;
 		}
 
+		recentAssertionHandler.add( assertion.getName() );
+
 		if( assertion.isConfigurable() )
 		{
 			assertion.configure();
 			return true;
 		}
+
 		return true;
 	}
 

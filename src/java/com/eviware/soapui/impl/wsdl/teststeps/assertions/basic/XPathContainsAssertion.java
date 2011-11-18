@@ -54,6 +54,7 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
+import com.eviware.soapui.impl.wsdl.panels.assertions.AssertionListEntry;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.support.assertions.AssertedXPathImpl;
 import com.eviware.soapui.impl.wsdl.support.assertions.AssertedXPathsContainer;
@@ -806,6 +807,12 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
 		public Class<? extends WsdlMessageAssertion> getAssertionClassType()
 		{
 			return XPathContainsAssertion.class;
+		}
+
+		@Override
+		public AssertionListEntry getAssertionListEntry()
+		{
+			return new AssertionListEntry( XPathContainsAssertion.LABEL, XPathContainsAssertion.DESCRIPTION );
 		}
 	}
 }

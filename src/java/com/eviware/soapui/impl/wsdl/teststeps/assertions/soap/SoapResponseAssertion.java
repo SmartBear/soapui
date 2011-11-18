@@ -14,6 +14,7 @@ package com.eviware.soapui.impl.wsdl.teststeps.assertions.soap;
 
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
+import com.eviware.soapui.impl.wsdl.panels.assertions.AssertionListEntry;
 import com.eviware.soapui.impl.wsdl.submit.WsdlMessageExchange;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlContext;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlValidator;
@@ -80,6 +81,12 @@ public class SoapResponseAssertion extends WsdlMessageAssertion implements Respo
 		public Class<? extends WsdlMessageAssertion> getAssertionClassType()
 		{
 			return SoapResponseAssertion.class;
+		}
+
+		@Override
+		public AssertionListEntry getAssertionListEntry()
+		{
+			return new AssertionListEntry( SoapResponseAssertion.LABEL, SoapResponseAssertion.DESCRIPTION );
 		}
 	}
 

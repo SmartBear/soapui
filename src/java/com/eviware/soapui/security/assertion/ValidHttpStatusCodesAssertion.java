@@ -20,6 +20,7 @@ import org.apache.xmlbeans.XmlObject;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
+import com.eviware.soapui.impl.wsdl.panels.assertions.AssertionListEntry;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.AbstractTestAssertionFactory;
@@ -126,6 +127,12 @@ public class ValidHttpStatusCodesAssertion extends WsdlMessageAssertion implemen
 		public Class<? extends WsdlMessageAssertion> getAssertionClassType()
 		{
 			return ValidHttpStatusCodesAssertion.class;
+		}
+
+		@Override
+		public AssertionListEntry getAssertionListEntry()
+		{
+			return new AssertionListEntry( ValidHttpStatusCodesAssertion.LABEL, ValidHttpStatusCodesAssertion.DESCRIPTION );
 		}
 	}
 

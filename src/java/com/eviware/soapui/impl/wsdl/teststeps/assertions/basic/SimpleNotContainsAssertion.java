@@ -18,6 +18,7 @@ import java.util.List;
 import org.apache.xmlbeans.XmlObject;
 
 import com.eviware.soapui.config.TestAssertionConfig;
+import com.eviware.soapui.impl.wsdl.panels.assertions.AssertionListEntry;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.AbstractTestAssertionFactory;
@@ -205,6 +206,12 @@ public class SimpleNotContainsAssertion extends WsdlMessageAssertion implements 
 		public Class<? extends WsdlMessageAssertion> getAssertionClassType()
 		{
 			return SimpleNotContainsAssertion.class;
+		}
+
+		@Override
+		public AssertionListEntry getAssertionListEntry()
+		{
+			return new AssertionListEntry( SimpleNotContainsAssertion.LABEL, SimpleNotContainsAssertion.DESCRIPTION );
 		}
 	}
 }

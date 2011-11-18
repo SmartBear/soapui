@@ -14,6 +14,7 @@ package com.eviware.soapui.impl.wsdl.teststeps.assertions.jms;
 
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
+import com.eviware.soapui.impl.wsdl.panels.assertions.AssertionListEntry;
 import com.eviware.soapui.impl.wsdl.submit.transports.jms.HermesJmsRequestTransport;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.AbstractTestAssertionFactory;
@@ -74,6 +75,12 @@ public class JMSStatusAssertion extends WsdlMessageAssertion implements Response
 		public Class<? extends WsdlMessageAssertion> getAssertionClassType()
 		{
 			return JMSStatusAssertion.class;
+		}
+
+		@Override
+		public AssertionListEntry getAssertionListEntry()
+		{
+			return new AssertionListEntry( JMSStatusAssertion.LABEL, JMSStatusAssertion.DESCRIPTION );
 		}
 	}
 }

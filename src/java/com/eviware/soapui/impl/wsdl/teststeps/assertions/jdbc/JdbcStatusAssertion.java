@@ -14,6 +14,7 @@ package com.eviware.soapui.impl.wsdl.teststeps.assertions.jdbc;
 
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
+import com.eviware.soapui.impl.wsdl.panels.assertions.AssertionListEntry;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.JdbcSubmit;
 import com.eviware.soapui.impl.wsdl.teststeps.JdbcRequestTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
@@ -30,6 +31,7 @@ public class JdbcStatusAssertion extends WsdlMessageAssertion implements Respons
 {
 	public static final String ID = "JDBC Status";
 	public static final String LABEL = "JDBC Status";
+	public static final String DESCRIPTION = "JDBC Status......assertion for....";
 
 	public JdbcStatusAssertion( TestAssertionConfig assertionConfig, Assertable assertable )
 	{
@@ -74,6 +76,12 @@ public class JdbcStatusAssertion extends WsdlMessageAssertion implements Respons
 		public Class<? extends WsdlMessageAssertion> getAssertionClassType()
 		{
 			return JdbcStatusAssertion.class;
+		}
+
+		@Override
+		public AssertionListEntry getAssertionListEntry()
+		{
+			return new AssertionListEntry( JdbcStatusAssertion.LABEL, JdbcStatusAssertion.DESCRIPTION );
 		}
 	}
 }

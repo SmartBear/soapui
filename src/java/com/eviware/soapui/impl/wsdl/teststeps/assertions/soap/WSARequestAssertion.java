@@ -17,6 +17,7 @@ import org.apache.xmlbeans.XmlObject;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.TestAssertionConfig;
+import com.eviware.soapui.impl.wsdl.panels.assertions.AssertionListEntry;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.WsaAssertionConfiguration;
 import com.eviware.soapui.impl.wsdl.submit.WsdlMessageExchange;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
@@ -50,6 +51,7 @@ public class WSARequestAssertion extends WsdlMessageAssertion implements Request
 {
 	public static final String ID = "WS-A Request Assertion";
 	public static final String LABEL = "WS-Addressing Request";
+	public static final String DESCRIPTION = "WS-Addressing Request....assertion for...";
 	private WsaAssertionConfiguration wsaAssertionConfiguration;
 	private boolean assertWsaAction;
 	private boolean assertWsaTo;
@@ -106,6 +108,12 @@ public class WSARequestAssertion extends WsdlMessageAssertion implements Request
 		public Class<? extends WsdlMessageAssertion> getAssertionClassType()
 		{
 			return WSARequestAssertion.class;
+		}
+
+		@Override
+		public AssertionListEntry getAssertionListEntry()
+		{
+			return new AssertionListEntry( WSARequestAssertion.LABEL, WSARequestAssertion.DESCRIPTION );
 		}
 	}
 

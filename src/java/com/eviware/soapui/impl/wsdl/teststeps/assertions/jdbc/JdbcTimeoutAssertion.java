@@ -14,6 +14,7 @@ package com.eviware.soapui.impl.wsdl.teststeps.assertions.jdbc;
 
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
+import com.eviware.soapui.impl.wsdl.panels.assertions.AssertionListEntry;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.JdbcSubmit;
 import com.eviware.soapui.impl.wsdl.teststeps.JdbcRequestTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
@@ -30,6 +31,7 @@ public class JdbcTimeoutAssertion extends WsdlMessageAssertion implements Respon
 {
 	public static final String ID = "JDBC Timeout";
 	public static final String LABEL = "JDBC Timeout";
+	public static final String DESCRIPTION = "JDBC Timeout....assertion for....";
 
 	public JdbcTimeoutAssertion( TestAssertionConfig assertionConfig, Assertable assertable )
 	{
@@ -75,6 +77,12 @@ public class JdbcTimeoutAssertion extends WsdlMessageAssertion implements Respon
 		public Class<? extends WsdlMessageAssertion> getAssertionClassType()
 		{
 			return JdbcTimeoutAssertion.class;
+		}
+
+		@Override
+		public AssertionListEntry getAssertionListEntry()
+		{
+			return new AssertionListEntry( JdbcTimeoutAssertion.LABEL, JdbcTimeoutAssertion.DESCRIPTION );
 		}
 	}
 }

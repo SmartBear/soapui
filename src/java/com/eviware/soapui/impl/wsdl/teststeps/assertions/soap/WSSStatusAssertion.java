@@ -16,6 +16,7 @@ import java.util.Vector;
 
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
+import com.eviware.soapui.impl.wsdl.panels.assertions.AssertionListEntry;
 import com.eviware.soapui.impl.wsdl.submit.WsdlMessageExchange;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMockResponseTestStep;
@@ -102,6 +103,12 @@ public class WSSStatusAssertion extends WsdlMessageAssertion implements Response
 		public Class<? extends WsdlMessageAssertion> getAssertionClassType()
 		{
 			return WSSStatusAssertion.class;
+		}
+
+		@Override
+		public AssertionListEntry getAssertionListEntry()
+		{
+			return new AssertionListEntry( WSSStatusAssertion.LABEL, WSSStatusAssertion.DESCRIPTION );
 		}
 	}
 }

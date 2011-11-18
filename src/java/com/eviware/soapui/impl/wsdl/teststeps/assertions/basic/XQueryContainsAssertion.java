@@ -48,6 +48,7 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
+import com.eviware.soapui.impl.wsdl.panels.assertions.AssertionListEntry;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
@@ -651,6 +652,12 @@ public class XQueryContainsAssertion extends WsdlMessageAssertion implements Req
 		public Class<? extends WsdlMessageAssertion> getAssertionClassType()
 		{
 			return XQueryContainsAssertion.class;
+		}
+
+		@Override
+		public AssertionListEntry getAssertionListEntry()
+		{
+			return new AssertionListEntry( XQueryContainsAssertion.LABEL, XQueryContainsAssertion.DESCRIPTION );
 		}
 	}
 }

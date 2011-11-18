@@ -26,6 +26,7 @@ import com.eviware.soapui.impl.wadl.WadlDefinitionContext;
 import com.eviware.soapui.impl.wadl.support.WadlValidator;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
+import com.eviware.soapui.impl.wsdl.panels.assertions.AssertionListEntry;
 import com.eviware.soapui.impl.wsdl.submit.RestMessageExchange;
 import com.eviware.soapui.impl.wsdl.submit.WsdlMessageExchange;
 import com.eviware.soapui.impl.wsdl.support.PathUtils;
@@ -328,6 +329,12 @@ public class SchemaComplianceAssertion extends WsdlMessageAssertion implements R
 		public Class<? extends WsdlMessageAssertion> getAssertionClassType()
 		{
 			return SchemaComplianceAssertion.class;
+		}
+
+		@Override
+		public AssertionListEntry getAssertionListEntry()
+		{
+			return new AssertionListEntry( SchemaComplianceAssertion.LABEL, SchemaComplianceAssertion.DESCRIPTION );
 		}
 	}
 }

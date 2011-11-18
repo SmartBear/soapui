@@ -16,6 +16,7 @@ import java.util.List;
 
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.support.http.HttpRequest;
+import com.eviware.soapui.impl.wsdl.panels.assertions.AssertionListEntry;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HTMLPageSourceDownloader;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.AbstractTestAssertionFactory;
@@ -32,6 +33,7 @@ public class HttpDownloadAllResourcesAssertion extends WsdlMessageAssertion impl
 {
 	public static final String ID = "HTTP Download all resources";
 	public static final String LABEL = "HTTP Download all resources";
+	public static final String DESCRIPTION = "HTTP Download.....assertion for...";
 
 	public HttpDownloadAllResourcesAssertion( TestAssertionConfig assertionConfig, Assertable assertable )
 	{
@@ -77,6 +79,13 @@ public class HttpDownloadAllResourcesAssertion extends WsdlMessageAssertion impl
 		public Class<? extends WsdlMessageAssertion> getAssertionClassType()
 		{
 			return HttpDownloadAllResourcesAssertion.class;
+		}
+
+		@Override
+		public AssertionListEntry getAssertionListEntry()
+		{
+			return new AssertionListEntry( HttpDownloadAllResourcesAssertion.LABEL,
+					HttpDownloadAllResourcesAssertion.DESCRIPTION );
 		}
 	}
 }

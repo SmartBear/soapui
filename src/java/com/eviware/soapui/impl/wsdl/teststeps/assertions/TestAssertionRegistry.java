@@ -21,6 +21,7 @@ import org.apache.log4j.Logger;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.TestAssertionConfig;
+import com.eviware.soapui.impl.wsdl.panels.assertions.AssertionListEntry;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.GroovyScriptAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.ResponseSLAAssertion;
@@ -62,7 +63,7 @@ public class TestAssertionRegistry
 	private StringToStringMap assertionLabels = new StringToStringMap();
 	private final static Logger log = Logger.getLogger( TestAssertionRegistry.class );
 
-	public TestAssertionRegistry()
+	private TestAssertionRegistry()
 	{
 		addAssertion( new SoapResponseAssertion.Factory() );
 		addAssertion( new SoapRequestAssertion.Factory() );
@@ -169,6 +170,20 @@ public class TestAssertionRegistry
 	public enum AssertableType
 	{
 		REQUEST, RESPONSE, BOTH
+	}
+
+	public AssertionListEntry getAssertionListEntry( String name )
+	{
+		String type = getAssertionTypeForName( name );
+		TestAssertionFactory factory = availableAssertions.get( type );
+		return factory.getAssertionListEntry();
+	}
+
+	public boolean canAssert( String name, Assertable assertable )
+	{
+		String type = getAssertionTypeForName( name );
+		TestAssertionFactory factory = availableAssertions.get( type );
+		return factory.canAssert( assertable );
 	}
 
 	public String[] getAvailableAssertionNames( Assertable assertable )

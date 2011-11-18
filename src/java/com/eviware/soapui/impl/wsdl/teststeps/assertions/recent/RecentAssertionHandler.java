@@ -12,7 +12,12 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps.assertions.recent;
 
+import java.util.List;
+
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.wsdl.panels.assertions.AssertionListEntry;
+import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry;
+import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.settings.RecentAssertionSettings;
 import com.eviware.soapui.support.types.StringList;
 
@@ -23,6 +28,20 @@ public class RecentAssertionHandler
 	public RecentAssertionHandler()
 	{
 		bq = new BoundedQueue();
+		for( String el : load() )
+		{
+			bq.add( el );
+		}
+	}
+
+	public boolean canAssert( String name, Assertable assertable )
+	{
+		return TestAssertionRegistry.getInstance().canAssert( name, assertable );
+	}
+
+	public AssertionListEntry getAssertionListEntry( String name )
+	{
+		return TestAssertionRegistry.getInstance().getAssertionListEntry( name );
 	}
 
 	public void add( String assertion )
@@ -31,9 +50,9 @@ public class RecentAssertionHandler
 		save();
 	}
 
-	public StringList get()
+	public List<String> get()
 	{
-		return load();
+		return bq.getByAlphabeticalOrder();
 	}
 
 	private void save()

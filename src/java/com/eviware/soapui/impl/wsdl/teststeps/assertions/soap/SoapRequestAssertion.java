@@ -13,6 +13,7 @@
 package com.eviware.soapui.impl.wsdl.teststeps.assertions.soap;
 
 import com.eviware.soapui.config.TestAssertionConfig;
+import com.eviware.soapui.impl.wsdl.panels.assertions.AssertionListEntry;
 import com.eviware.soapui.impl.wsdl.submit.WsdlMessageExchange;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlContext;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlValidator;
@@ -36,6 +37,7 @@ public class SoapRequestAssertion extends WsdlMessageAssertion implements Reques
 {
 	public static final String ID = "SOAP Request";
 	public static final String LABEL = "SOAP Request";
+	public static final String DESCRIPTION = "SOAP Request....assertion for....";
 
 	public SoapRequestAssertion( TestAssertionConfig assertionConfig, Assertable assertable )
 	{
@@ -80,6 +82,12 @@ public class SoapRequestAssertion extends WsdlMessageAssertion implements Reques
 		public Class<? extends WsdlMessageAssertion> getAssertionClassType()
 		{
 			return SoapRequestAssertion.class;
+		}
+
+		@Override
+		public AssertionListEntry getAssertionListEntry()
+		{
+			return new AssertionListEntry( SoapRequestAssertion.LABEL, SoapRequestAssertion.DESCRIPTION );
 		}
 	}
 

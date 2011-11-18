@@ -24,6 +24,7 @@ import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.XPathContainsAsse
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.XQueryContainsAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.jms.JMSStatusAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.jms.JMSTimeoutAssertion;
+import com.eviware.soapui.impl.wsdl.teststeps.assertions.recent.RecentAssertionHandler;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.soap.NotSoapFaultAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.soap.SoapFaultAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.soap.SoapResponseAssertion;
@@ -51,22 +52,30 @@ public class AssertionCategoryMapping
 	}
 
 	private static void addRecentlyAddedAssertions(
-			LinkedHashMap<String, LinkedHashSet<AssertionListEntry>> categoriesAssertionsMap )
+			LinkedHashMap<String, LinkedHashSet<AssertionListEntry>> categoriesAssertionsMap, Assertable assertable,
+			RecentAssertionHandler recentAssertionHandler )
 	{
 		LinkedHashSet<AssertionListEntry> recentlyUsedSet = new LinkedHashSet<AssertionListEntry>();
-		//		recentlyUsedSet.add( new AssertionListEntry( SimpleNotContainsAssertion.LABEL,
-		//				SimpleNotContainsAssertion.DESCRIPTION ) );
+
+		for( String name : recentAssertionHandler.get() )
+		{
+			if( recentAssertionHandler.canAssert( name, assertable ) )
+			{
+				recentlyUsedSet.add( recentAssertionHandler.getAssertionListEntry( name ) );
+			}
+		}
+
 		if( recentlyUsedSet.size() > 0 )
 			categoriesAssertionsMap.put( RECENTLY_USED, recentlyUsedSet );
 	}
 
 	public static LinkedHashMap<String, LinkedHashSet<AssertionListEntry>> getCategoriesAssertionsMap(
-			Assertable assertable )
+			Assertable assertable, RecentAssertionHandler recentAssertionHandler )
 	{
 		LinkedHashMap<String, LinkedHashSet<AssertionListEntry>> categoriesAssertionsMap = new LinkedHashMap<String, LinkedHashSet<AssertionListEntry>>();
 		String[] assertions = TestAssertionRegistry.getInstance().getAvailableAssertionNames( assertable );
 
-		addRecentlyAddedAssertions( categoriesAssertionsMap );
+		addRecentlyAddedAssertions( categoriesAssertionsMap, assertable, recentAssertionHandler );
 
 		LinkedHashSet<AssertionListEntry> validatingResponseAssertionsSet = new LinkedHashSet<AssertionListEntry>();
 		for( String availableAssertion : assertions )

@@ -28,6 +28,7 @@ import com.eviware.soapui.config.HttpRequestConfig;
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.config.TestStepConfig;
 import com.eviware.soapui.impl.support.HttpUtils;
+import com.eviware.soapui.impl.wsdl.panels.assertions.AssertionListEntry;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.AbstractGroovyEditorModel;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
@@ -70,6 +71,7 @@ public class CrossSiteScriptAssertion extends WsdlMessageAssertion implements Re
 {
 	public static final String ID = "CrosSiteScript";
 	public static final String LABEL = "Cross Site Scripting Detection";
+	public static final String DESCRIPTION = "Cross Site Scripting....assertion for...";
 	public static final String GROOVY_SCRIPT = "groovyScript";
 	public static final String CHECK_RESPONSE = "checkResponse";
 	public static final String CHECK_SEPARATE_HTML = "checkSeparateHTML";
@@ -252,6 +254,12 @@ public class CrossSiteScriptAssertion extends WsdlMessageAssertion implements Re
 		public Class<? extends WsdlMessageAssertion> getAssertionClassType()
 		{
 			return CrossSiteScriptAssertion.class;
+		}
+
+		@Override
+		public AssertionListEntry getAssertionListEntry()
+		{
+			return new AssertionListEntry( CrossSiteScriptAssertion.LABEL, CrossSiteScriptAssertion.DESCRIPTION );
 		}
 	}
 
