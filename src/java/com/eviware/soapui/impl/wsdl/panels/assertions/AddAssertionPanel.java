@@ -163,7 +163,7 @@ public class AddAssertionPanel extends SimpleDialog
 			return false;
 		}
 
-		recentAssertionHandler.add( TestAssertionRegistry.getInstance().getAssertionTypeForName( selection ) );
+		recentAssertionHandler.add( selection );
 
 		if( assertion.isConfigurable() )
 		{

@@ -57,11 +57,11 @@ public class AssertionCategoryMapping
 	{
 		LinkedHashSet<AssertionListEntry> recentlyUsedSet = new LinkedHashSet<AssertionListEntry>();
 
-		for( String type : recentAssertionHandler.get() )
+		for( String name : recentAssertionHandler.get() )
 		{
-			if( recentAssertionHandler.canAssert( type, assertable ) )
+			if( recentAssertionHandler.canAssert( name, assertable ) )
 			{
-				recentlyUsedSet.add( recentAssertionHandler.getAssertionListEntry( type ) );
+				recentlyUsedSet.add( recentAssertionHandler.getAssertionListEntry( name ) );
 			}
 		}
 

@@ -34,13 +34,15 @@ public class RecentAssertionHandler
 		}
 	}
 
-	public boolean canAssert( String type, Assertable assertable )
+	public boolean canAssert( String name, Assertable assertable )
 	{
+		String type = TestAssertionRegistry.getInstance().getAssertionTypeForName( name );
 		return TestAssertionRegistry.getInstance().canAssert( type, assertable );
 	}
 
-	public AssertionListEntry getAssertionListEntry( String type )
+	public AssertionListEntry getAssertionListEntry( String name )
 	{
+		String type = TestAssertionRegistry.getInstance().getAssertionTypeForName( name );
 		return TestAssertionRegistry.getInstance().getAssertionListEntry( type );
 	}
 
