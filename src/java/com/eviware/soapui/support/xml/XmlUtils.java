@@ -800,10 +800,10 @@ public final class XmlUtils
 		// }
 		if( node.getNodeType() == Node.ATTRIBUTE_NODE )
 		{
-			if( normalize || ( namespaceURI != null && namespaceURI.length() > 0 ) )
+			if( namespaceURI != null && namespaceURI.length() > 0 )
 			{
 				String prefix = node.getPrefix();
-				if( prefix == null || prefix.length() == 0 )
+				if( normalize || prefix == null || prefix.length() == 0 )
 					prefix = "ns" + nsCnt++ ;
 
 				nsMap.put( namespaceURI, prefix );
@@ -832,10 +832,10 @@ public final class XmlUtils
 			String pc = null;
 
 			namespaceURI = node.getNamespaceURI();
-			if( normalize || ( namespaceURI != null && namespaceURI.length() > 0 ) )
+			if( namespaceURI != null && namespaceURI.length() > 0 )
 			{
 				String prefix = node.getPrefix();
-				if( prefix == null || prefix.length() == 0 )
+				if( normalize || prefix == null || prefix.length() == 0 )
 					prefix = "ns" + nsCnt++ ;
 
 				while( !nsMap.containsKey( namespaceURI ) && nsMap.containsValue( prefix ) )
@@ -875,10 +875,10 @@ public final class XmlUtils
 			String ns = nsMap.get( namespaceURI );
 			String pc = null;
 
-			if( normalize || ( ns == null && namespaceURI != null && namespaceURI.length() > 0 ) )
+			if( ns == null && namespaceURI != null && namespaceURI.length() > 0 )
 			{
 				String prefix = node.getPrefix();
-				if( prefix == null || prefix.length() == 0 )
+				if( normalize || prefix == null || prefix.length() == 0 )
 					prefix = "ns" + nsCnt++ ;
 
 				while( !nsMap.containsKey( namespaceURI ) && nsMap.containsValue( prefix ) )
