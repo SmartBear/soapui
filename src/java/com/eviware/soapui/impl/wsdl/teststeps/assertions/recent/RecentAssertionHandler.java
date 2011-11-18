@@ -59,7 +59,7 @@ public class RecentAssertionHandler
 
 	public void add( String assertion )
 	{
-		bq.add( assertion );
+		this.bq.add( assertion );
 		save();
 	}
 
