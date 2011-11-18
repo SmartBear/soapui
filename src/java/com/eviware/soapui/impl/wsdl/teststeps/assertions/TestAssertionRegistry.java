@@ -175,13 +175,27 @@ public class TestAssertionRegistry
 	public AssertionListEntry getAssertionListEntry( String type )
 	{
 		TestAssertionFactory factory = availableAssertions.get( type );
-		return factory.getAssertionListEntry();
+		if( factory != null )
+		{
+			return factory.getAssertionListEntry();
+		}
+		else
+		{
+			return null;
+		}
 	}
 
 	public boolean canAssert( String type, Assertable assertable )
 	{
 		TestAssertionFactory factory = availableAssertions.get( type );
-		return factory.canAssert( assertable );
+		if( factory != null )
+		{
+			return factory.canAssert( assertable );
+		}
+		else
+		{
+			return false;
+		}
 	}
 
 	public String[] getAvailableAssertionNames( Assertable assertable )
