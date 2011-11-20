@@ -302,8 +302,21 @@ public class PropertyExpansionPopupListener implements PopupMenuListener
 	public static void addMenu( JPopupMenu popup, String menuName, ModelItem item, PropertyExpansionTarget component )
 	{
 		ScrollableMenu menu = new ScrollableMenu( menuName );
-		popup.add( menu );
-		popup.addPopupMenuListener( new PropertyExpansionPopupListener( menu, item, component ) );
+		menu.setName( menuName );
+		boolean contains = false;
+		for( int i = 0; i < popup.getComponentCount(); i++ )
+		{
+			if( menu.getName() != null && menu.getName().equals( popup.getComponent( i ).getName() ) )
+			{
+				contains = true;
+				break;
+			}
+		}
+		if( !contains )
+		{
+			popup.add( menu );
+			popup.addPopupMenuListener( new PropertyExpansionPopupListener( menu, item, component ) );
+		}
 	}
 
 	public static void enable( JTextComponent textField, ModelItem modelItem, JPopupMenu popup )
