@@ -19,6 +19,8 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 
@@ -64,6 +66,7 @@ public class AddAssertionPanel extends SimpleDialog
 	private InternalCellRenderer assertionEntryRenderer = new InternalCellRenderer();
 	private InternalHideDescListener hideDescListener = new InternalHideDescListener();
 	protected RecentAssertionHandler recentAssertionHandler = new RecentAssertionHandler();
+	AssertionListMouseAdapter mouseAdapter = new AssertionListMouseAdapter();
 
 	public AddAssertionPanel( Assertable assertable )
 	{
@@ -110,6 +113,7 @@ public class AddAssertionPanel extends SimpleDialog
 		assertionsTable.setEditable( false );
 		assertionsTable.setGridColor( Color.BLACK );
 		assertionsTable.setRowHeight( 40 );
+		assertionsTable.addMouseListener( mouseAdapter );
 
 		assertionsTable.getColumnModel().getColumn( 0 ).setCellRenderer( assertionEntryRenderer );
 		assertionsForm.addComponent( assertionsTable );
@@ -238,6 +242,7 @@ public class AddAssertionPanel extends SimpleDialog
 	public void release()
 	{
 		assertionsTable.getSelectionModel().removeListSelectionListener( selectionListener );
+		assertionsTable.removeMouseListener( mouseAdapter );
 		hideDescCB.removeItemListener( hideDescListener );
 	}
 
@@ -293,6 +298,19 @@ public class AddAssertionPanel extends SimpleDialog
 			LinkedHashMap<String, LinkedHashSet<AssertionListEntry>> categoriesAssertionsMap )
 	{
 		this.categoriesAssertionsMap = categoriesAssertionsMap;
+	}
+
+	public class AssertionListMouseAdapter extends MouseAdapter
+	{
+		@Override
+		public void mouseClicked( MouseEvent e )
+		{
+			if( e.getClickCount() == 2 )
+			{
+				handleOk();
+				setVisible( false );
+			}
+		}
 	}
 
 }
