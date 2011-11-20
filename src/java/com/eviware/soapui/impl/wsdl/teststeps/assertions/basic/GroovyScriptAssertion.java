@@ -38,6 +38,7 @@ import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
+import com.eviware.soapui.impl.wsdl.panels.assertions.AssertionCategoryMapping;
 import com.eviware.soapui.impl.wsdl.panels.assertions.AssertionListEntry;
 import com.eviware.soapui.impl.wsdl.panels.mockoperation.WsdlMockResponseMessageExchange;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.AbstractGroovyEditorModel;
@@ -423,6 +424,12 @@ public class GroovyScriptAssertion extends WsdlMessageAssertion implements Reque
 		public Factory()
 		{
 			super( GroovyScriptAssertion.ID, GroovyScriptAssertion.LABEL, GroovyScriptAssertion.class );
+		}
+
+		@Override
+		public String getCategory()
+		{
+			return AssertionCategoryMapping.SCRIPT_CATEGORY;
 		}
 
 		@Override

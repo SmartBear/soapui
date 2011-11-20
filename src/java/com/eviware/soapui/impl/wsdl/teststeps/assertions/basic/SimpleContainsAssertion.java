@@ -18,6 +18,7 @@ import java.util.List;
 import org.apache.xmlbeans.XmlObject;
 
 import com.eviware.soapui.config.TestAssertionConfig;
+import com.eviware.soapui.impl.wsdl.panels.assertions.AssertionCategoryMapping;
 import com.eviware.soapui.impl.wsdl.panels.assertions.AssertionListEntry;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
@@ -211,6 +212,12 @@ public class SimpleContainsAssertion extends WsdlMessageAssertion implements Req
 		public Factory()
 		{
 			super( SimpleContainsAssertion.ID, SimpleContainsAssertion.LABEL, SimpleContainsAssertion.class );
+		}
+
+		@Override
+		public String getCategory()
+		{
+			return AssertionCategoryMapping.VALIDATE_RESPONSE_CONTENT_CATEGORY;
 		}
 
 		@Override

@@ -26,6 +26,7 @@ import com.eviware.soapui.impl.wadl.WadlDefinitionContext;
 import com.eviware.soapui.impl.wadl.support.WadlValidator;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
+import com.eviware.soapui.impl.wsdl.panels.assertions.AssertionCategoryMapping;
 import com.eviware.soapui.impl.wsdl.panels.assertions.AssertionListEntry;
 import com.eviware.soapui.impl.wsdl.submit.RestMessageExchange;
 import com.eviware.soapui.impl.wsdl.submit.WsdlMessageExchange;
@@ -316,6 +317,12 @@ public class SchemaComplianceAssertion extends WsdlMessageAssertion implements R
 		public Factory()
 		{
 			super( SchemaComplianceAssertion.ID, SchemaComplianceAssertion.LABEL, SchemaComplianceAssertion.class );
+		}
+
+		@Override
+		public String getCategory()
+		{
+			return AssertionCategoryMapping.STATUS_CATEGORY;
 		}
 
 		@Override

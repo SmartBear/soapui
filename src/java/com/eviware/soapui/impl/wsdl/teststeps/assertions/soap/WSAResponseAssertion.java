@@ -18,6 +18,7 @@ import org.apache.xmlbeans.XmlObject;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
+import com.eviware.soapui.impl.wsdl.panels.assertions.AssertionCategoryMapping;
 import com.eviware.soapui.impl.wsdl.panels.assertions.AssertionListEntry;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.WsaAssertionConfiguration;
 import com.eviware.soapui.impl.wsdl.submit.WsdlMessageExchange;
@@ -96,6 +97,12 @@ public class WSAResponseAssertion extends WsdlMessageAssertion implements Reques
 		public Factory()
 		{
 			super( WSAResponseAssertion.ID, WSAResponseAssertion.LABEL, WSAResponseAssertion.class, WsdlRequest.class );
+		}
+
+		@Override
+		public String getCategory()
+		{
+			return AssertionCategoryMapping.STATUS_CATEGORY;
 		}
 
 		@Override

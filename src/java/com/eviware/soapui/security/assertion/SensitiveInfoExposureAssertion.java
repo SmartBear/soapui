@@ -32,6 +32,7 @@ import org.jdesktop.swingx.JXTable;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
+import com.eviware.soapui.impl.wsdl.panels.assertions.AssertionCategoryMapping;
 import com.eviware.soapui.impl.wsdl.panels.assertions.AssertionListEntry;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
@@ -190,6 +191,12 @@ public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion impleme
 		{
 			super( SensitiveInfoExposureAssertion.ID, SensitiveInfoExposureAssertion.LABEL,
 					SensitiveInfoExposureAssertion.class, new Class[] { SecurityScan.class, AbstractHttpRequest.class } );
+		}
+
+		@Override
+		public String getCategory()
+		{
+			return AssertionCategoryMapping.SECURITY_CATEGORY;
 		}
 
 		@Override

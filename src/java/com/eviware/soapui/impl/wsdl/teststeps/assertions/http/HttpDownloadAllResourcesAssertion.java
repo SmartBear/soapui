@@ -82,6 +82,12 @@ public class HttpDownloadAllResourcesAssertion extends WsdlMessageAssertion impl
 		}
 
 		@Override
+		public String getCategory()
+		{
+			return "";
+		}
+
+		@Override
 		public AssertionListEntry getAssertionListEntry()
 		{
 			return new AssertionListEntry( HttpDownloadAllResourcesAssertion.LABEL,

@@ -14,6 +14,7 @@ package com.eviware.soapui.impl.wsdl.teststeps.assertions.jms;
 
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
+import com.eviware.soapui.impl.wsdl.panels.assertions.AssertionCategoryMapping;
 import com.eviware.soapui.impl.wsdl.panels.assertions.AssertionListEntry;
 import com.eviware.soapui.impl.wsdl.submit.transports.jms.HermesJmsRequestTransport;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
@@ -72,6 +73,12 @@ public class JMSTimeoutAssertion extends WsdlMessageAssertion implements Respons
 		public Factory()
 		{
 			super( JMSTimeoutAssertion.ID, JMSTimeoutAssertion.LABEL, JMSTimeoutAssertion.class, WsdlRequest.class );
+		}
+
+		@Override
+		public String getCategory()
+		{
+			return AssertionCategoryMapping.JMS_CATEGORY;
 		}
 
 		@Override

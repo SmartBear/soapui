@@ -13,6 +13,7 @@
 package com.eviware.soapui.impl.wsdl.teststeps.assertions.soap;
 
 import com.eviware.soapui.config.TestAssertionConfig;
+import com.eviware.soapui.impl.wsdl.panels.assertions.AssertionCategoryMapping;
 import com.eviware.soapui.impl.wsdl.panels.assertions.AssertionListEntry;
 import com.eviware.soapui.impl.wsdl.submit.WsdlMessageExchange;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlContext;
@@ -76,6 +77,12 @@ public class SoapRequestAssertion extends WsdlMessageAssertion implements Reques
 		{
 			super( SoapRequestAssertion.ID, SoapRequestAssertion.LABEL, SoapRequestAssertion.class,
 					WsdlMockResponseTestStep.class );
+		}
+
+		@Override
+		public String getCategory()
+		{
+			return AssertionCategoryMapping.STATUS_CATEGORY;
 		}
 
 		@Override

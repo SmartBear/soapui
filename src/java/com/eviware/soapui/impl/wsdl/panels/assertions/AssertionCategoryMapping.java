@@ -44,6 +44,7 @@ public class AssertionCategoryMapping
 	public final static String JMS_CATEGORY = "JMS";
 	public final static String SECURITY_CATEGORY = "Security";
 	public final static String RECENTLY_USED = "Recently used";
+	public static final String JDBC_CATEGORY = "JDBC";
 
 	public static String[] getAssertionCategories()
 	{

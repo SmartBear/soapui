@@ -14,6 +14,7 @@ package com.eviware.soapui.impl.wsdl.teststeps.assertions.jdbc;
 
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
+import com.eviware.soapui.impl.wsdl.panels.assertions.AssertionCategoryMapping;
 import com.eviware.soapui.impl.wsdl.panels.assertions.AssertionListEntry;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.JdbcSubmit;
 import com.eviware.soapui.impl.wsdl.teststeps.JdbcRequestTestStep;
@@ -64,6 +65,12 @@ public class JdbcStatusAssertion extends WsdlMessageAssertion implements Respons
 		public Factory()
 		{
 			super( JdbcStatusAssertion.ID, JdbcStatusAssertion.LABEL, JdbcStatusAssertion.class, WsdlRequest.class );
+		}
+
+		@Override
+		public String getCategory()
+		{
+			return AssertionCategoryMapping.JDBC_CATEGORY;
 		}
 
 		@Override

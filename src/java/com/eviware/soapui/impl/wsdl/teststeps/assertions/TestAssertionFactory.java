@@ -31,4 +31,6 @@ public interface TestAssertionFactory
 	public String getAssertionLabel();
 
 	public AssertionListEntry getAssertionListEntry();
+
+	public String getCategory();
 }

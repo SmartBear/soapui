@@ -251,6 +251,12 @@ public class CrossSiteScriptAssertion extends WsdlMessageAssertion implements Re
 		}
 
 		@Override
+		public String getCategory()
+		{
+			return "";
+		}
+
+		@Override
 		public Class<? extends WsdlMessageAssertion> getAssertionClassType()
 		{
 			return CrossSiteScriptAssertion.class;
