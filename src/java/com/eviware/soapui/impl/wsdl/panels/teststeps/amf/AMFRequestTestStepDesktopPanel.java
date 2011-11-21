@@ -57,7 +57,6 @@ import com.eviware.soapui.impl.support.components.ModelItemXmlEditor;
 import com.eviware.soapui.impl.support.components.RequestMessageXmlEditor;
 import com.eviware.soapui.impl.support.components.ResponseMessageXmlEditor;
 import com.eviware.soapui.impl.support.panels.AbstractHttpRequestDesktopPanel;
-import com.eviware.soapui.impl.wsdl.actions.testsuite.AddNewTestCaseAction;
 import com.eviware.soapui.impl.wsdl.panels.support.TestRunComponentEnabler;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.AssertionsPanel;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.DefaultPropertyTableHolderModel;
@@ -88,7 +87,6 @@ import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.action.swing.SwingActionDelegate;
 import com.eviware.soapui.support.actions.ChangeSplitPaneOrientationAction;
 import com.eviware.soapui.support.components.JComponentInspector;
 import com.eviware.soapui.support.components.JEditorStatusBarWithProgress;
@@ -182,8 +180,7 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 		tabsButton.setPreferredSize( UISupport.TOOLBAR_BUTTON_DIMENSION );
 		splitButton = createActionButton( new ChangeSplitPaneOrientationAction( requestSplitPane ), true );
 
-		addAssertionButton = UISupport.createToolbarButton( SwingActionDelegate.createDelegate(
-				AddAssertionAction.SOAPUI_ACTION_ID, amfRequestTestStep.getTestStep(), null, "/addAssertion.gif" ) );
+		addAssertionButton = UISupport.createToolbarButton( new AddAssertionAction( amfRequestTestStep ) );
 		addAssertionButton.setEnabled( true );
 
 		requestTabs = new JTabbedPane();

@@ -75,7 +75,7 @@ public class JMSStatusAssertion extends WsdlMessageAssertion implements Response
 		@Override
 		public String getCategory()
 		{
-			return AssertionCategoryMapping.STATUS_CATEGORY;
+			return AssertionCategoryMapping.JMS_CATEGORY;
 		}
 
 		@Override

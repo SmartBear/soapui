@@ -26,4 +26,10 @@ public class AssertionListEntry
 	{
 		return name + " " + description;
 	}
+
+	@Override
+	public int hashCode()
+	{
+		return name.length() + description.length();
+	}
 }

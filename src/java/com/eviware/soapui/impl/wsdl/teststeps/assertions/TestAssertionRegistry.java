@@ -14,6 +14,8 @@ package com.eviware.soapui.impl.wsdl.teststeps.assertions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -21,6 +23,7 @@ import org.apache.log4j.Logger;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.TestAssertionConfig;
+import com.eviware.soapui.impl.wsdl.panels.assertions.AssertionCategoryMapping;
 import com.eviware.soapui.impl.wsdl.panels.assertions.AssertionListEntry;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.GroovyScriptAssertion;
@@ -196,6 +199,30 @@ public class TestAssertionRegistry
 		{
 			return false;
 		}
+	}
+
+	public LinkedHashMap<String, LinkedHashSet<AssertionListEntry>> getCategoriesAssertionsMap( Assertable assertable )
+	{
+		LinkedHashMap<String, LinkedHashSet<AssertionListEntry>> categoryAssertionsMap = new LinkedHashMap<String, LinkedHashSet<AssertionListEntry>>();
+		for( String category : AssertionCategoryMapping.getAssertionCategories() )
+		{
+			LinkedHashSet<AssertionListEntry> assertionCategorySet = new LinkedHashSet<AssertionListEntry>();
+			categoryAssertionsMap.put( category, assertionCategorySet );
+		}
+
+		for( TestAssertionFactory assertion : availableAssertions.values() )
+		{
+			LinkedHashSet<AssertionListEntry> set;
+			if( assertion.canAssert( assertable ) )
+			{
+				set = categoryAssertionsMap.get( assertion.getCategory() );
+				set.add( assertion.getAssertionListEntry() );
+				categoryAssertionsMap.put( assertion.getCategory(), set );
+
+			}
+		}
+
+		return categoryAssertionsMap;
 	}
 
 	public String[] getAvailableAssertionNames( Assertable assertable )

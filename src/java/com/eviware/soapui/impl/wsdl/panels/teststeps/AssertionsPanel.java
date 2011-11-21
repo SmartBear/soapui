@@ -58,7 +58,6 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.ActionListBuilder;
 import com.eviware.soapui.support.action.swing.ActionSupport;
-import com.eviware.soapui.support.action.swing.SwingActionDelegate;
 import com.eviware.soapui.support.components.JXToolBar;
 
 /**
@@ -73,7 +72,7 @@ public class AssertionsPanel extends JPanel
 	protected JList assertionList;
 	private JPopupMenu assertionListPopup;
 	private Assertable assertable;
-	private Action addAssertionAction;
+	private AddAssertionAction addAssertionAction;
 	private ConfigureAssertionAction configureAssertionAction;
 	private RemoveAssertionAction removeAssertionAction;
 	private MoveAssertionUpAction moveAssertionUpAction;
@@ -89,8 +88,7 @@ public class AssertionsPanel extends JPanel
 		assertionList.setSelectionMode( ListSelectionModel.MULTIPLE_INTERVAL_SELECTION );
 
 		assertionListPopup = new JPopupMenu();
-		addAssertionAction = SwingActionDelegate.createDelegate( AddAssertionAction.SOAPUI_ACTION_ID,
-				assertable.getTestStep(), null, "/addAssertion.gif" );
+		addAssertionAction = new AddAssertionAction( assertable );
 		assertionListPopup.add( addAssertionAction );
 
 		assertionListPopup.addPopupMenuListener( new PopupMenuListener()
