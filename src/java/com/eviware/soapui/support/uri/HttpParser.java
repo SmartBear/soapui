@@ -43,14 +43,8 @@ public class HttpParser
 				break;
 			}
 
-			// Parse the header name and value
-			// Check for folded headers first
-			// Detect LWS-char see HTTP/1.0 or HTTP/1.1 Section 2.2
-			// discussion on folded headers
 			if( ( line.charAt( 0 ) == ' ' ) || ( line.charAt( 0 ) == '\t' ) )
 			{
-				// we have continuation folded header
-				// so append value
 				if( value != null )
 				{
 					value.append( ' ' );
@@ -59,14 +53,11 @@ public class HttpParser
 			}
 			else
 			{
-				// make sure we save the previous name,value pair if present
 				if( name != null )
 				{
 					headers.add( new BasicHeader( name, value.toString() ) );
 				}
 
-				// Otherwise we should have normal HTTP header line
-				// Parse the header name and value
 				int colon = line.indexOf( ":" );
 				if( colon < 0 )
 				{
@@ -78,7 +69,6 @@ public class HttpParser
 
 		}
 
-		// make sure we save the last name,value pair if present
 		if( name != null )
 		{
 			headers.add( new BasicHeader( name, value.toString() ) );

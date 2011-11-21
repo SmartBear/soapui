@@ -26,6 +26,7 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.PreencodedMimeBodyPart;
 
+import org.apache.commons.httpclient.URI;
 import org.apache.http.HttpEntityEnclosingRequest;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpRequestBase;
@@ -57,7 +58,6 @@ import com.eviware.soapui.settings.HttpSettings;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.editor.inspectors.attachments.ContentTypeHandler;
 import com.eviware.soapui.support.types.StringToStringMap;
-import com.eviware.soapui.support.uri.URI;
 
 /**
  * RequestFilter that adds SOAP specific headers

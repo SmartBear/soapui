@@ -12,6 +12,7 @@
 
 package com.eviware.soapui.impl.wsdl.submit.filters;
 
+import org.apache.commons.httpclient.URI;
 import org.apache.http.client.methods.HttpRequestBase;
 
 import com.eviware.soapui.SoapUI;
@@ -21,7 +22,6 @@ import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.settings.HttpSettings;
 import com.eviware.soapui.support.StringUtils;
-import com.eviware.soapui.support.uri.URI;
 
 /**
  * RequestFilter that adds SOAP specific headers

@@ -24,6 +24,7 @@ import java.util.Set;
 
 import javax.swing.JComponent;
 
+import org.apache.commons.httpclient.URI;
 import org.apache.http.client.methods.HttpRequestBase;
 
 import com.eviware.soapui.SoapUI;
@@ -51,7 +52,6 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpansionsResult;
 import com.eviware.soapui.model.support.ProjectListenerAdapter;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.types.StringList;
-import com.eviware.soapui.support.uri.URI;
 
 public class DefaultEndpointStrategy implements EndpointStrategy, PropertyExpansionContainer
 {

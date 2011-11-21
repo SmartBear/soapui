@@ -16,6 +16,7 @@ import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.httpclient.URI;
 import org.apache.http.Header;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpRequestBase;
@@ -50,7 +51,6 @@ import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.settings.HttpSettings;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.types.StringToStringsMap;
-import com.eviware.soapui.support.uri.URI;
 
 import edu.umd.cs.findbugs.annotations.CheckForNull;
 
