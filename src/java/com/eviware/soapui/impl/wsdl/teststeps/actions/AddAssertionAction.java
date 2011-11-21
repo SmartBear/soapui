@@ -96,7 +96,7 @@ public class AddAssertionAction extends AbstractSoapUIAction<TestStep>
 	@Override
 	public void perform( TestStep target, Object param )
 	{
-		this.assertable = ( ( SamplerTestStep )target );
+		this.assertable = ( ( SamplerTestStep )target ).getTestRequest();
 		String[] assertions = TestAssertionRegistry.getInstance().getAvailableAssertionNames( assertable );
 
 		if( assertions == null || assertions.length == 0 )
