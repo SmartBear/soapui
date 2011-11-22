@@ -36,6 +36,7 @@ import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.Exten
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedGetMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedHeadMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedOptionsMethod;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPatchMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPostMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPutMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedTraceMethod;
@@ -372,6 +373,8 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 				return new ExtendedOptionsMethod();
 			case TRACE :
 				return new ExtendedTraceMethod();
+			case PATCH :
+				return new ExtendedPatchMethod();
 			}
 		}
 

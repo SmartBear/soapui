@@ -108,7 +108,8 @@ public class HttpRequest extends AbstractHttpRequest<HttpRequestConfig> implemen
 	public boolean hasRequestBody()
 	{
 		RestRequestInterface.RequestMethod method = getMethod();
-		return method == RestRequestInterface.RequestMethod.POST || method == RestRequestInterface.RequestMethod.PUT;
+		return method == RestRequestInterface.RequestMethod.POST || method == RestRequestInterface.RequestMethod.PUT
+				|| method == RestRequestInterface.RequestMethod.PATCH;
 	}
 
 	@Override
@@ -238,7 +239,8 @@ public class HttpRequest extends AbstractHttpRequest<HttpRequestConfig> implemen
 		}
 
 		if( getMethod() == RestRequestInterface.RequestMethod.POST
-				|| getMethod() == RestRequestInterface.RequestMethod.PUT )
+				|| getMethod() == RestRequestInterface.RequestMethod.PUT
+				|| getMethod() == RestRequestInterface.RequestMethod.PATCH )
 		{
 			result.add( new HttpContentPart() );
 		}
@@ -412,13 +414,12 @@ public class HttpRequest extends AbstractHttpRequest<HttpRequestConfig> implemen
 
 		return result.toArray();
 	}
-	
+
 	public boolean isSendEmptyParameters()
 	{
 		return getSettings().getBoolean( "sendEmptyParameters" );
 	}
-	
-	
+
 	public void setSendEmptyParameters( boolean sendEmptyParameters )
 	{
 		getSettings().setBoolean( "sendEmptyParameters", sendEmptyParameters );

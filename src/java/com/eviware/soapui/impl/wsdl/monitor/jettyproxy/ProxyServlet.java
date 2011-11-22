@@ -48,6 +48,7 @@ import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedGetMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedHeadMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedOptionsMethod;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPatchMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPostMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPutMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedTraceMethod;
@@ -125,6 +126,8 @@ public class ProxyServlet implements Servlet
 			method = new ExtendedOptionsMethod();
 		else if( httpRequest.getMethod().equals( "TRACE" ) )
 			method = new ExtendedTraceMethod();
+		else if( httpRequest.getMethod().equals( "PATCH" ) )
+			method = new ExtendedPatchMethod();
 		else
 			method = new ExtendedGetMethod();
 

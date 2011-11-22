@@ -26,17 +26,17 @@ public interface RestRequestInterface extends HttpRequestInterface<RestRequestCo
 
 	public enum RequestMethod
 	{
-		GET, POST, PUT, DELETE, HEAD, OPTIONS, TRACE;
+		GET, POST, PUT, DELETE, HEAD, OPTIONS, TRACE, PATCH;
 
 		public static String[] getMethodsAsStringArray()
 		{
 			return new String[] { GET.toString(), POST.toString(), PUT.toString(), DELETE.toString(), HEAD.toString(),
-					OPTIONS.toString(), TRACE.toString() };
+					OPTIONS.toString(), TRACE.toString(), PATCH.toString() };
 		}
 
 		public static RequestMethod[] getMethods()
 		{
-			return new RequestMethod[] { GET, POST, PUT, DELETE, HEAD, OPTIONS, TRACE };
+			return new RequestMethod[] { GET, POST, PUT, DELETE, HEAD, OPTIONS, TRACE, PATCH };
 		}
 	}
 

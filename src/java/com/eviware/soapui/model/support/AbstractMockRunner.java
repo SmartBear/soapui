@@ -52,6 +52,12 @@ public abstract class AbstractMockRunner implements MockRunner
 		throw new DispatchException( "Unsupported HTTP Method: DELETE" );
 	}
 
+	public MockResult dispatchPatchRequest( HttpServletRequest request, HttpServletResponse response )
+			throws DispatchException
+	{
+		throw new DispatchException( "Unsupported HTTP Method: PATCH" );
+	}
+
 	public MockResult dispatchRequest( HttpServletRequest request, HttpServletResponse response )
 			throws DispatchException
 	{
@@ -67,6 +73,8 @@ public abstract class AbstractMockRunner implements MockRunner
 			return dispatchPutRequest( request, response );
 		else if( method.equals( "DELETE" ) )
 			return dispatchDeleteRequest( request, response );
+		else if( method.equals( "PATCH" ) )
+			return dispatchPatchRequest( request, response );
 
 		throw new DispatchException( "Unsupported HTTP Method: " + method );
 	}

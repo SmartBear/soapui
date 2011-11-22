@@ -111,7 +111,8 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 		}
 
 		if( getMethod() == RestRequestInterface.RequestMethod.POST
-				|| getMethod() == RestRequestInterface.RequestMethod.PUT )
+				|| getMethod() == RestRequestInterface.RequestMethod.PUT
+				|| getMethod() == RestRequestInterface.RequestMethod.PATCH )
 		{
 			result.add( new RestContentPart() );
 		}
