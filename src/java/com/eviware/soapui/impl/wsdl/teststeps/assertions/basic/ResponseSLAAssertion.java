@@ -139,7 +139,7 @@ public class ResponseSLAAssertion extends WsdlMessageAssertion implements Respon
 		@Override
 		public String getCategory()
 		{
-			return AssertionCategoryMapping.STATUS_CATEGORY;
+			return AssertionCategoryMapping.SLA_CATEGORY;
 		}
 
 		@Override

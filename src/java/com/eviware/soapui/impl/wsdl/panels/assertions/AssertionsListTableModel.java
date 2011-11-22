@@ -11,19 +11,19 @@
  */
 package com.eviware.soapui.impl.wsdl.panels.assertions;
 
-import java.util.LinkedHashSet;
+import java.util.SortedSet;
 
 import javax.swing.table.DefaultTableModel;
 
 public class AssertionsListTableModel extends DefaultTableModel
 {
-	LinkedHashSet<AssertionListEntry> listEntriesSet;
+	SortedSet<AssertionListEntry> listEntriesSet;
 
 	public AssertionsListTableModel()
 	{
 	}
 
-	public void setListEntriesSet( LinkedHashSet<AssertionListEntry> listEntriesSet )
+	public void setListEntriesSet( SortedSet<AssertionListEntry> listEntriesSet )
 	{
 		this.listEntriesSet = listEntriesSet;
 	}

@@ -1,6 +1,6 @@
 package com.eviware.soapui.impl.wsdl.panels.assertions;
 
-public class AssertionListEntry
+public class AssertionListEntry implements Comparable<AssertionListEntry>
 {
 	private String name;
 	private String description;
@@ -32,4 +32,11 @@ public class AssertionListEntry
 	{
 		return name.length() + description.length();
 	}
+
+	@Override
+	public int compareTo( AssertionListEntry o )
+	{
+		return name.compareToIgnoreCase( o.getName() );
+	}
+
 }

@@ -15,9 +15,10 @@ package com.eviware.soapui.impl.wsdl.teststeps.assertions;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.apache.log4j.Logger;
 
@@ -201,24 +202,31 @@ public class TestAssertionRegistry
 		}
 	}
 
-	public LinkedHashMap<String, LinkedHashSet<AssertionListEntry>> getCategoriesAssertionsMap( Assertable assertable )
+	public LinkedHashMap<String, SortedSet<AssertionListEntry>> addCategoriesAssertionsMap( Assertable assertable,
+			LinkedHashMap<String, SortedSet<AssertionListEntry>> categoryAssertionsMap )
 	{
-		LinkedHashMap<String, LinkedHashSet<AssertionListEntry>> categoryAssertionsMap = new LinkedHashMap<String, LinkedHashSet<AssertionListEntry>>();
 		for( String category : AssertionCategoryMapping.getAssertionCategories() )
 		{
-			LinkedHashSet<AssertionListEntry> assertionCategorySet = new LinkedHashSet<AssertionListEntry>();
+			SortedSet<AssertionListEntry> assertionCategorySet = new TreeSet<AssertionListEntry>();
 			categoryAssertionsMap.put( category, assertionCategorySet );
 		}
 
 		for( TestAssertionFactory assertion : availableAssertions.values() )
 		{
-			LinkedHashSet<AssertionListEntry> set;
+			SortedSet<AssertionListEntry> set;
 			if( assertion.canAssert( assertable ) )
 			{
 				set = categoryAssertionsMap.get( assertion.getCategory() );
 				set.add( assertion.getAssertionListEntry() );
 				categoryAssertionsMap.put( assertion.getCategory(), set );
 
+			}
+		}
+		for( String category : AssertionCategoryMapping.getAssertionCategories() )
+		{
+			if( categoryAssertionsMap.get( category ).isEmpty() )
+			{
+				categoryAssertionsMap.remove( category );
 			}
 		}
 

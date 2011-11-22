@@ -22,7 +22,7 @@ import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
+import java.util.SortedSet;
 
 import javax.swing.AbstractAction;
 import javax.swing.JCheckBox;
@@ -58,9 +58,9 @@ public class AddAssertionPanel extends SimpleDialog
 	private AddAssertionAction addAssertionAction;
 	private AssertionsListTableModel assertionsListTableModel;
 	//	private JPanel assertionListPanel;
-	private LinkedHashSet<AssertionListEntry> assertions;
+	private SortedSet<AssertionListEntry> assertions;
 	private InternalListSelectionListener selectionListener = new InternalListSelectionListener();
-	private LinkedHashMap<String, LinkedHashSet<AssertionListEntry>> categoriesAssertionsMap;
+	private LinkedHashMap<String, SortedSet<AssertionListEntry>> categoriesAssertionsMap;
 	private SimpleForm assertionsForm;
 	private JCheckBox hideDescCB;
 	private InternalCellRenderer assertionEntryRenderer = new InternalCellRenderer();
@@ -294,8 +294,7 @@ public class AddAssertionPanel extends SimpleDialog
 		setSize( new Dimension( 650, 500 ) );
 	}
 
-	public void setCategoriesAssertionsMap(
-			LinkedHashMap<String, LinkedHashSet<AssertionListEntry>> categoriesAssertionsMap )
+	public void setCategoriesAssertionsMap( LinkedHashMap<String, SortedSet<AssertionListEntry>> categoriesAssertionsMap )
 	{
 		this.categoriesAssertionsMap = categoriesAssertionsMap;
 	}
