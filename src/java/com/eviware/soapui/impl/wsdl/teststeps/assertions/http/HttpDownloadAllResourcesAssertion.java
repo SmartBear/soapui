@@ -16,6 +16,7 @@ import java.util.List;
 
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.support.http.HttpRequest;
+import com.eviware.soapui.impl.wsdl.panels.assertions.AssertionCategoryMapping;
 import com.eviware.soapui.impl.wsdl.panels.assertions.AssertionListEntry;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HTMLPageSourceDownloader;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
@@ -84,7 +85,8 @@ public class HttpDownloadAllResourcesAssertion extends WsdlMessageAssertion impl
 		@Override
 		public String getCategory()
 		{
-			return "";
+			//TODO change the category when decided where it really goes
+			return AssertionCategoryMapping.STATUS_CATEGORY;
 		}
 
 		@Override
