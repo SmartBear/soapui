@@ -135,8 +135,7 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
 
 	public void setExpectedContent( String expectedContent )
 	{
-		this.expectedContent = expectedContent;
-		setConfiguration( createConfiguration() );
+		setExpectedContent( expectedContent, true );
 	}
 
 	/**
@@ -568,7 +567,9 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
 				if( contentArea != null && contentArea.isVisible() )
 					contentArea.setText( stringValue );
 				else
-					setExpectedContent( stringValue );
+				{
+					setExpectedContent( stringValue, false );
+				}
 			}
 		}
 		catch( Throwable e )
@@ -581,6 +582,13 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
 			if( cursor != null )
 				cursor.dispose();
 		}
+	}
+
+	private void setExpectedContent( String expectedContent, boolean save )
+	{
+		this.expectedContent = expectedContent;
+		if( save )
+			setConfiguration( createConfiguration() );
 	}
 
 	private final class InternalDifferenceListener implements DifferenceListener
