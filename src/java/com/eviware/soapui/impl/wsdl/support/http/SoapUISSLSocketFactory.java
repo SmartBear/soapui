@@ -54,6 +54,7 @@ public class SoapUISSLSocketFactory extends SSLSocketFactory
 		// trust everyone!
 		X509TrustManager tm = new X509TrustManager()
 		{
+			@Override
 			public X509Certificate[] getAcceptedIssuers()
 			{
 				return null;
@@ -155,7 +156,8 @@ public class SoapUISSLSocketFactory extends SSLSocketFactory
 				}
 			}
 
-			factory = new SSLSocketFactory( trustStore );
+			//factory = new SSLSocketFactory( trustStore );
+			factory = new SSLSocketFactory( TLS, null, null, trustStore, null, null, ALLOW_ALL_HOSTNAME_VERIFIER );
 
 			factoryMap.put( sslConfig, factory );
 
