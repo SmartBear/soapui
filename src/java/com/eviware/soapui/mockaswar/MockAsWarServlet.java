@@ -1,5 +1,5 @@
 /*
- *  soapUI, copyright (C) 2004-2011 eviware.com 
+ *  soapUI, copyright (C) 2004-2011 smartbear.com 
  *
  *  soapUI is free software; you can redistribute it and/or modify it under the 
  *  terms of version 2.1 of the GNU Lesser General Public License as published by 
@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.collections.list.TreeList;
 import org.apache.log4j.spi.LoggingEvent;
+import org.apache.xmlbeans.XmlException;
 
 import com.eviware.soapui.DefaultSoapUICore;
 import com.eviware.soapui.SoapUI;
@@ -39,7 +40,9 @@ import com.eviware.soapui.impl.wsdl.mock.WsdlMockService;
 import com.eviware.soapui.model.mock.MockResult;
 import com.eviware.soapui.model.mock.MockRunner;
 import com.eviware.soapui.model.mock.MockService;
+import com.eviware.soapui.model.project.ProjectFactoryRegistry;
 import com.eviware.soapui.monitor.MockEngine;
+import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.editor.inspectors.attachments.ContentTypeHandler;
@@ -70,7 +73,7 @@ public class MockAsWarServlet extends HttpServlet
 
 			logger.info( "Loading project" );
 
-			project = new WsdlProject( getServletContext().getRealPath( getInitParameter( "projectFile" ) ) );
+			initProject();
 
 			if( project == null || project.getName() == null )
 				project = new WsdlProject( getServletContext().getResource( "/" + getInitParameter( "projectFile" ) )
@@ -94,6 +97,13 @@ public class MockAsWarServlet extends HttpServlet
 		{
 			logger.log( Level.SEVERE, null, ex );
 		}
+	}
+
+	protected void initProject() throws XmlException, IOException, SoapUIException
+	{
+		//		project = new WsdlProject( getServletContext().getRealPath( getInitParameter( "projectFile" ) ) );
+		project = ( WsdlProject )ProjectFactoryRegistry.getProjectFactory( "wsdl" ).createNew(
+				getServletContext().getRealPath( getInitParameter( "projectFile" ) ) );
 	}
 
 	protected String initMockServiceParameters()
@@ -220,11 +230,10 @@ public class MockAsWarServlet extends HttpServlet
 		out.println( "<hr/><b>Returned Response</b>:<pre>" + XmlUtils.entitize( result.getResponseContent() ) + "</pre>" );
 	}
 
-	private List<MockRunner> mockRunners = new ArrayList<MockRunner>();
-
 	class MockServletSoapUICore extends DefaultSoapUICore implements MockEngine
 	{
 		private final ServletContext servletContext;
+		private List<MockRunner> mockRunners = new ArrayList<MockRunner>();
 
 		public MockServletSoapUICore( ServletContext servletContext, String soapUISettings )
 		{
@@ -279,7 +288,7 @@ public class MockAsWarServlet extends HttpServlet
 				}
 				else if( pathInfo.equals( "/master" ) )
 				{
-					printMaster( request, response );
+					printMaster( request, response, mockRunners );
 				}
 				else if( pathInfo.equals( "/detail" ) )
 				{
@@ -349,7 +358,8 @@ public class MockAsWarServlet extends HttpServlet
 		}
 	}
 
-	public void printMaster( HttpServletRequest request, HttpServletResponse response ) throws IOException
+	public void printMaster( HttpServletRequest request, HttpServletResponse response, List<MockRunner> mockRunners )
+			throws IOException
 	{
 		response.setStatus( HttpServletResponse.SC_OK );
 		response.setContentType( "text/html" );

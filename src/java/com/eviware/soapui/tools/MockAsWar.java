@@ -1,5 +1,5 @@
 /*
- *  soapUI, copyright (C) 2004-2011 eviware.com 
+ *  soapUI, copyright (C) 2004-2011 smartbear.com 
  *
  *  soapUI is free software; you can redistribute it and/or modify it under the 
  *  terms of version 2.1 of the GNU Lesser General Public License as published by 
@@ -47,9 +47,10 @@ public class MockAsWar
 	private File warFile;
 	protected File webInf;
 	private File lib;
-	private File soapuiDir;
+	protected File soapuiDir;
 
 	protected Logger log = Logger.getLogger( MockAsWar.class );
+	
 	private boolean includeExt;
 	protected boolean includeActions;
 	protected boolean includeListeners;
@@ -166,8 +167,7 @@ public class MockAsWar
 				content.indexOf( SOAPUI_SETTINGS ),
 				content.indexOf( SOAPUI_SETTINGS ) + SOAPUI_SETTINGS.length(),
 				settingsFile != null && settingsFile.exists() && settingsFile.isFile() ? "WEB-INF/soapui/"
-						+ settingsFile.getName() : "" );// settingsFile.getAbsolutePath()
-																	// );
+						+ settingsFile.getName() : "" );
 		content.replace( content.indexOf( MOCKSERVICE_ENDPOINT ), content.indexOf( MOCKSERVICE_ENDPOINT )
 				+ MOCKSERVICE_ENDPOINT.length(), localEndpoint );
 
@@ -225,7 +225,7 @@ public class MockAsWar
 			fromDir = new File( System.getProperty( "soapui.home" ), mainJar[0] );
 			JarPackager.copyFileToDir( fromDir, lib );
 			// copy project and settings file to bin/war/WEB-INF/soapui/
-			JarPackager.copyFileToDir( projectFile, soapuiDir );
+			copyProjectFile();
 			if( settingsFile != null && settingsFile.exists() && settingsFile.isFile() )
 				JarPackager.copyFileToDir( settingsFile, soapuiDir );
 
@@ -248,6 +248,11 @@ public class MockAsWar
 			return true;
 		}
 		return false;
+	}
+
+	protected void copyProjectFile()
+	{
+		JarPackager.copyFileToDir( projectFile, soapuiDir );
 	}
 
 	private void copyWarResource( String resource )
@@ -311,6 +316,7 @@ public class MockAsWar
 					}
 					clearDir( listenersDir );
 				}
+				
 				return true;
 			}
 		}

@@ -29,7 +29,7 @@ public class JarPackager
 	public static int BUFFER_SIZE = 10240;
 	static Logger log = Logger.getLogger( JarPackager.class );
 
-	public static void copyFileToDir( File fromFile, File toDir )
+	public static File copyFileToDir( File fromFile, File toDir )
 	{
 		File toFile = new File( toDir, fromFile.getName() );
 		try
@@ -40,7 +40,7 @@ public class JarPackager
 		{
 			log.error( e.getMessage(), e );
 		}
-
+		return toFile;
 	}
 
 	public static void copyAllFromTo( File fromDir, File toDir, FileFilter filter )
