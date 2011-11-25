@@ -289,12 +289,15 @@
 		<xsd:complexContent>
 			<xsd:extension base="tns:ModelItem">
 				<xsd:sequence>
-					<xsd:element name="configuration" type="xsd:anyType">
+					<xsd:element name="configuration"
+						type="xsd:anyType">
 					</xsd:element>
 				</xsd:sequence>
-				<xsd:attribute name="type" type="xsd:string" use="required">
+				<xsd:attribute name="type" type="xsd:string"
+					use="required">
 				</xsd:attribute>
 				<xsd:attribute name="disabled" type="xsd:boolean"></xsd:attribute>
+				<xsd:attribute name="isGroup" type="xsd:boolean"></xsd:attribute>
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
@@ -1592,7 +1595,7 @@
 		</xsd:restriction>
 	</xsd:simpleType>
 
-	<xsd:element name="interface" type="tns:Interface"></xsd:element>
+	<xsd:element name="interface" type="tns:TestAssertion"></xsd:element>
 
 	<xsd:element name="mockService" type="tns:MockService"></xsd:element>
 
@@ -2334,6 +2337,19 @@
 				type="tns:ResponseCompareElement" maxOccurs="unbounded" minOccurs="0">
 			</xsd:element>
 			<xsd:element name="xmlSchema" type="xsd:string"></xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+
+
+	<xsd:attribute name="NewAttribute" type="xsd:string"></xsd:attribute>
+
+
+	<xsd:complexType name="GroupAssertionList">
+		<xsd:sequence>
+			<xsd:element name="assertions"
+				type="tns:TestAssertion" maxOccurs="unbounded" minOccurs="0">
+			</xsd:element>
+			<xsd:element name="operation" type="xsd:string"></xsd:element>
 		</xsd:sequence>
 	</xsd:complexType>
 </xsd:schema>
