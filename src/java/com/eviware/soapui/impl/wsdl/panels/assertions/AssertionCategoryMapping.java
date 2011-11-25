@@ -29,11 +29,13 @@ public class AssertionCategoryMapping
 	public final static String SECURITY_CATEGORY = "Security";
 	public final static String RECENTLY_USED = "Recently used";
 	public static final String JDBC_CATEGORY = "JDBC";
+	public static final String GROUPING = "GROUPING";
+	
 
 	public static String[] getAssertionCategories()
 	{
 		return new String[] { VALIDATE_RESPONSE_CONTENT_CATEGORY, STATUS_CATEGORY, SCRIPT_CATEGORY, SLA_CATEGORY,
-				JMS_CATEGORY, JDBC_CATEGORY, SECURITY_CATEGORY };
+				JMS_CATEGORY, JDBC_CATEGORY, SECURITY_CATEGORY , GROUPING};
 	}
 
 	private static SortedSet<AssertionListEntry> createRecentlyUsedSet( Assertable assertable,
