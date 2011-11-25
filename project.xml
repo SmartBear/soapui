@@ -1128,6 +1128,18 @@
                 <jnlp.jar>true</jnlp.jar>
             </properties>
         </dependency>
+        <!--  old http client needed by some 3rd party components -->
+        <dependency>
+            <groupId>commons-httpclient</groupId>
+            <artifactId>commons-httpclient</artifactId>
+            <version>3.1</version>
+            <type>jar</type>
+            <url>http://jakarta.apache.org/commons/httpclient
+            </url>
+            <properties>
+                <jnlp.jar>true</jnlp.jar>
+            </properties>
+        </dependency>
     </dependencies>
 
     <build>
