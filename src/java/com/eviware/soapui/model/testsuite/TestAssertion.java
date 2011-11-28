@@ -41,4 +41,8 @@ public interface TestAssertion extends ModelItem
 	public boolean isDisabled();
 
 	public void prepare( TestCaseRunner testRunner, TestCaseRunContext testRunContext ) throws Exception;
+
+	public boolean getIsGroup();
+
+	public int getIndexOfAssertion( TestAssertion assertion );
 }

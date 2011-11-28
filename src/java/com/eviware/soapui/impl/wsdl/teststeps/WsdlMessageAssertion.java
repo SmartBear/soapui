@@ -12,10 +12,13 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps;
 
+import java.util.List;
+
 import javax.swing.ImageIcon;
 
 import org.apache.xmlbeans.XmlObject;
 
+import com.eviware.soapui.config.GroupAssertionListConfig;
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry;
 import com.eviware.soapui.model.ModelItem;
@@ -407,6 +410,25 @@ public abstract class WsdlMessageAssertion extends AbstractModelItem implements 
 	public void prepare( TestCaseRunner testRunner, TestCaseRunContext testRunContext ) throws Exception
 	{
 		assertionStatus = AssertionStatus.UNKNOWN;
+	}
+
+	@Override
+	public boolean getIsGroup()
+	{
+		return getConfig().getIsGroup();
+	}
+
+	@Override
+	public int getIndexOfAssertion( TestAssertion assertion )
+	{
+		if( getConfig() instanceof GroupAssertionListConfig )
+		{
+			List<TestAssertionConfig> assertionConfigList = ( ( GroupAssertionListConfig )getConfig() )
+					.getAssertionsList();
+			return assertionConfigList.indexOf( ( ( WsdlMessageAssertion )assertion ).getConfig() );
+		}
+		else
+			return -1;
 	}
 
 	public void resolve( ResolveContext<?> context )
