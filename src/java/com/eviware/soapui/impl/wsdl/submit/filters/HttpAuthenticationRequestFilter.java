@@ -93,10 +93,9 @@ public class HttpAuthenticationRequestFilter extends AbstractRequestFilter
 				httpMethod.removeHeaders( "Authorization" );
 				httpMethod.addHeader( header );
 			}
-
-			httpContext.setAttribute( ClientContext.CREDS_PROVIDER,
-					new UPDCredentialsProvider( username, password, domain ) );
 		}
+
+		httpContext.setAttribute( ClientContext.CREDS_PROVIDER, new UPDCredentialsProvider( username, password, domain ) );
 	}
 
 	public static class UPDCredentialsProvider implements CredentialsProvider
@@ -126,7 +125,7 @@ public class HttpAuthenticationRequestFilter extends AbstractRequestFilter
 
 			try
 			{
-				if( AuthPolicy.NTLM.equals( authScope.getScheme() ) )
+				if( AuthPolicy.NTLM.equalsIgnoreCase( authScope.getScheme() ) )
 				{
 					logger.info( authScope.getHost() + ":" + authScope.getPort() + " requires Windows authentication" );
 
@@ -140,9 +139,9 @@ public class HttpAuthenticationRequestFilter extends AbstractRequestFilter
 					}
 					return new NTCredentials( username, password, workstation, domain );
 				}
-				else if( AuthPolicy.BASIC.equals( authScope.getScheme() )
-						|| AuthPolicy.DIGEST.equals( authScope.getScheme() )
-						|| AuthPolicy.SPNEGO.equals( authScope.getScheme() ) )
+				else if( AuthPolicy.BASIC.equalsIgnoreCase( authScope.getScheme() )
+						|| AuthPolicy.DIGEST.equalsIgnoreCase( authScope.getScheme() )
+						|| AuthPolicy.SPNEGO.equalsIgnoreCase( authScope.getScheme() ) )
 				{
 					logger.info( authScope.getHost() + ":" + authScope.getPort()
 							+ " requires authentication with the realm '" + authScope.getRealm() + "'" );

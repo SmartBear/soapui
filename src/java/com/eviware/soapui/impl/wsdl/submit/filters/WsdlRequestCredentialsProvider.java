@@ -61,7 +61,7 @@ public final class WsdlRequestCredentialsProvider implements CredentialsProvider
 			if( password == null )
 				password = "";
 
-			if( AuthPolicy.NTLM.equals( authScope.getScheme() ) )
+			if( AuthPolicy.NTLM.equalsIgnoreCase( authScope.getScheme() ) )
 			{
 				logger.info( authScope.getHost() + ":" + authScope.getPort() + " requires Windows authentication" );
 
@@ -76,8 +76,9 @@ public final class WsdlRequestCredentialsProvider implements CredentialsProvider
 				return new NTCredentials( wsdlRequest.getUsername(), password, workstation, wsdlRequest.getDomain() );
 
 			}
-			else if( AuthPolicy.BASIC.equals( authScope.getScheme() ) || AuthPolicy.DIGEST.equals( authScope.getScheme() )
-					|| AuthPolicy.SPNEGO.equals( authScope.getScheme() ) )
+			else if( AuthPolicy.BASIC.equalsIgnoreCase( authScope.getScheme() )
+					|| AuthPolicy.DIGEST.equalsIgnoreCase( authScope.getScheme() )
+					|| AuthPolicy.SPNEGO.equalsIgnoreCase( authScope.getScheme() ) )
 			{
 				logger.info( authScope.getHost() + ":" + authScope.getPort() + " requires authentication with the realm '"
 						+ authScope.getRealm() + "'" );

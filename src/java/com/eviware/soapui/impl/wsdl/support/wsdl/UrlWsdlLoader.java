@@ -289,7 +289,8 @@ public class UrlWsdlLoader extends WsdlLoader implements DefinitionLoader
 			if( pw == null )
 				pw = "";
 
-			if( AuthPolicy.NTLM.equals( authScope.getScheme() ) || AuthPolicy.SPNEGO.equals( authScope.getScheme() ) )
+			if( AuthPolicy.NTLM.equalsIgnoreCase( authScope.getScheme() )
+					|| AuthPolicy.SPNEGO.equalsIgnoreCase( authScope.getScheme() ) )
 			{
 				String workstation = "";
 				try
@@ -326,8 +327,9 @@ public class UrlWsdlLoader extends WsdlLoader implements DefinitionLoader
 					return credentials;
 				}
 			}
-			else if( AuthPolicy.BASIC.equals( authScope.getScheme() ) || AuthPolicy.DIGEST.equals( authScope.getScheme() )
-					|| AuthPolicy.SPNEGO.equals( authScope.getScheme() ) )
+			else if( AuthPolicy.BASIC.equalsIgnoreCase( authScope.getScheme() )
+					|| AuthPolicy.DIGEST.equalsIgnoreCase( authScope.getScheme() )
+					|| AuthPolicy.SPNEGO.equalsIgnoreCase( authScope.getScheme() ) )
 			{
 				if( hasCredentials() )
 				{
