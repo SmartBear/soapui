@@ -59,7 +59,7 @@ public class MockAsWarServlet extends HttpServlet
 
 	private static final long serialVersionUID = 1L;
 	protected static Logger logger = Logger.getLogger( MockAsWarServlet.class.getName() );
-	private WsdlProject project;
+	protected WsdlProject project;
 	long maxResults;
 	List<MockResult> results = new TreeList();
 	private List<LoggingEvent> events = new TreeList();
@@ -74,11 +74,10 @@ public class MockAsWarServlet extends HttpServlet
 
 			logger.info( "Loading project" );
 
-			initProject(getServletContext().getRealPath( getInitParameter( "projectFile" ) ) );
+			initProject( getServletContext().getRealPath( getInitParameter( "projectFile" ) ) );
 
 			if( project == null || project.getName() == null )
-				initProject( getServletContext().getResource( "/" + getInitParameter( "projectFile" ) )
-						.toString() );
+				initProject( getServletContext().getResource( "/" + getInitParameter( "projectFile" ) ).toString() );
 
 			if( project == null )
 				logger.info( "Starting MockService(s)" );
@@ -100,10 +99,9 @@ public class MockAsWarServlet extends HttpServlet
 		}
 	}
 
-	protected void initProject(String path) throws XmlException, IOException, SoapUIException
+	protected void initProject( String path ) throws XmlException, IOException, SoapUIException
 	{
-		//		project = new WsdlProject( getServletContext().getRealPath( getInitParameter( "projectFile" ) ) );
-		project = ( WsdlProject )ProjectFactoryRegistry.getProjectFactory( "wsdl" ).createNew(path);
+		project = ( WsdlProject )ProjectFactoryRegistry.getProjectFactory( "wsdl" ).createNew( path );
 		logger.info( "XXXXXX Loaded project " + project.getName() + " [ " + project.toString() + " ]" );
 	}
 
