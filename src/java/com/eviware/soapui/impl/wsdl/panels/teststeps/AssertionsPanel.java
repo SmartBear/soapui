@@ -201,9 +201,17 @@ public class AssertionsPanel extends JPanel
 				{
 					TestAssertion[] testAssertion = new TestAssertion[indices.length];
 					for( int c = 0; c < indices.length; c++ )
+					{
 						testAssertion[c] = assertionListModel.getAssertionAt( indices[c] );
+					}
 
-					ActionSupport.addActions( ActionListBuilder.buildMultiActions( testAssertion ), assertionListPopup );
+					ActionList actions = ActionListBuilder.buildMultiActions( testAssertion );
+					ActionSupport.addActions( actions, assertionListPopup );
+
+					if( actions != null )
+					{
+						actions.dispatchKeyEvent( e );
+					}
 				}
 			}
 		} );

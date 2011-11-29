@@ -388,11 +388,9 @@
 		actionClass="com.eviware.soapui.impl.actions.multi.MultiTestStepDisableAction" />
 	<tns:action id="MultiAssertionDeleteAction"
 		actionClass="com.eviware.soapui.impl.actions.multi.MultiAssertionDeleteAction" />
-<!-- 	<tns:action id="MultiAssertionEnableAction"
-		actionClass="com.eviware.soapui.impl.actions.multi.MultiAssertionEnableAction" />
-	<tns:action id="MultiAssertionDisableAction"
-		actionClass="com.eviware.soapui.impl.actions.multi.MultiAssertionDisableAction" />
-		 -->
+	<!-- <tns:action id="MultiAssertionEnableAction" actionClass="com.eviware.soapui.impl.actions.multi.MultiAssertionEnableAction" 
+		/> <tns:action id="MultiAssertionDisableAction" actionClass="com.eviware.soapui.impl.actions.multi.MultiAssertionDisableAction" 
+		/> -->
 
 
 
@@ -1088,9 +1086,10 @@
 			keyStroke="DELETE" />
 		<tns:actionMapping actionId="MultiTestStepEnableAction" />
 		<tns:actionMapping actionId="MultiTestStepDisableAction" />
-		<tns:actionMapping actionId="MultiAssertionDeleteAction" />
-	<!--	<tns:actionMapping actionId="MultiAssertionEnableAction" />
-		<tns:actionMapping actionId="MultiAssertionDisableAction" /> -->
+		<tns:actionMapping actionId="MultiAssertionDeleteAction"
+			keyStroke="DELETE" />
+		<!-- <tns:actionMapping actionId="MultiAssertionEnableAction" /> <tns:actionMapping 
+			actionId="MultiAssertionDisableAction" /> -->
 	</tns:actionGroup>
 
 </tns:soapui-actions>
