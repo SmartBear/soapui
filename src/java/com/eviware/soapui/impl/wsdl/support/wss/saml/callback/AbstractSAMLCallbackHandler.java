@@ -66,6 +66,7 @@ public abstract class AbstractSAMLCallbackHandler implements SAMLCallbackHandler
 	protected List<?> customAttributeValues = null;
 	private Crypto crypto;
 	private String alias;
+	private String customAttributeName;
 
 	/**
 	 * Use this for signed assertion
@@ -128,6 +129,12 @@ public abstract class AbstractSAMLCallbackHandler implements SAMLCallbackHandler
 	public void setResource( String resource )
 	{
 		this.resource = resource;
+	}
+
+	@Override
+	public void setCustomAttributeName( String customAttributeName )
+	{
+		this.customAttributeName = customAttributeName;
 	}
 
 	@Override
@@ -207,15 +214,18 @@ public abstract class AbstractSAMLCallbackHandler implements SAMLCallbackHandler
 				attrBean.setSubject( subjectBean );
 			}
 			AttributeBean attributeBean = new AttributeBean();
-			attributeBean.setSimpleName( "role" );
+			attributeBean.setSimpleName( customAttributeName );
 			if( customAttributeValues != null )
 			{
 				attributeBean.setCustomAttributeValues( customAttributeValues );
 			}
+
+			// TODO This should be removed
 			else
 			{
 				attributeBean.setAttributeValues( Collections.singletonList( "user" ) );
 			}
+
 			attrBean.setSamlAttributes( Collections.singletonList( attributeBean ) );
 			callback.setAttributeStatementData( Collections.singletonList( attrBean ) );
 		}

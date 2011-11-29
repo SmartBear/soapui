@@ -76,6 +76,7 @@ public class AddSAMLEntryTest
 	private static final String ALIAS = "certificatekey";
 	private static final String SUBJECT_QUALIFIER = "www.subject.com";
 	private static final String SUBJECT_NAME = "uid=joe,ou=people,ou=saml-demo,o=example.com";
+	private static final String ATTTRIBUTE_NAME = "attibuteName";
 
 	private static final String SAMPLE_SOAP_MESSAGE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
 			+ "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ws=\"http://ws.app4test.eviware.com/\">"
@@ -175,12 +176,16 @@ public class AddSAMLEntryTest
 		addSamlEntry.setSigned( false );
 		addSamlEntry.setAssertionType( AddSAMLEntry.ATTRIBUTE_ASSERTION_TYPE );
 		addSamlEntry.setConfirmationMethod( AddSAMLEntry.SENDER_VOUCHES_CONFIRMATION_METHOD );
+		addSamlEntry.setAttributeName( ATTTRIBUTE_NAME );
 
 		addSamlEntry.process( secHeader, doc, contextMock );
 
 		assertEquals( xpath.evaluate( "//saml1:ConfirmationMethod", doc, XPathConstants.STRING ),
 				SAML_1_SENDER_VOUCHES_NAMESPACE );
 		assertNotNull( xpath.evaluate( "//saml1:AttributeStatement", doc, XPathConstants.NODE ) );
+		assertEquals(
+				xpath.evaluate( "//saml1:AttributeStatement/saml1:Attribute/@AttributeName", doc, XPathConstants.STRING ),
+				ATTTRIBUTE_NAME );
 	}
 
 	@Test
@@ -193,9 +198,6 @@ public class AddSAMLEntryTest
 		addSamlEntry.setConfirmationMethod( AddSAMLEntry.SENDER_VOUCHES_CONFIRMATION_METHOD );
 
 		addSamlEntry.process( secHeader, doc, contextMock );
-
-		// FIXME
-		System.out.println( XmlUtils.serializePretty( doc ) );
 
 		assertEquals( xpath.evaluate( "//saml2:SubjectConfirmation/@Method", doc, XPathConstants.STRING ),
 				SAML_2_SENDER_VOUCHES_NAMESPACE );
@@ -213,9 +215,6 @@ public class AddSAMLEntryTest
 
 		addSamlEntry.process( secHeader, doc, contextMock );
 
-		// FIXME
-		System.out.println( XmlUtils.serializePretty( doc ) );
-
 		assertEquals( xpath.evaluate( "//saml1:ConfirmationMethod", doc, XPathConstants.STRING ),
 				SAML_1_SENDER_VOUCHES_NAMESPACE );
 		assertNotNull( xpath.evaluate( "//saml1:AuthorizationDecisionStatement", doc, XPathConstants.NODE ) );
@@ -231,9 +230,6 @@ public class AddSAMLEntryTest
 		addSamlEntry.setConfirmationMethod( AddSAMLEntry.SENDER_VOUCHES_CONFIRMATION_METHOD );
 
 		addSamlEntry.process( secHeader, doc, contextMock );
-
-		// FIXME
-		System.out.println( XmlUtils.serializePretty( doc ) );
 
 		assertEquals( xpath.evaluate( "//saml2:SubjectConfirmation/@Method", doc, XPathConstants.STRING ),
 				SAML_2_SENDER_VOUCHES_NAMESPACE );
@@ -280,12 +276,16 @@ public class AddSAMLEntryTest
 		addSamlEntry.setSigned( true );
 		addSamlEntry.setAssertionType( AddSAMLEntry.ATTRIBUTE_ASSERTION_TYPE );
 		addSamlEntry.setConfirmationMethod( AddSAMLEntry.HOLDER_OF_KEY_CONFIRMATION_METHOD );
+		addSamlEntry.setAttributeName( ATTTRIBUTE_NAME );
 
 		addSamlEntry.process( secHeader, doc, contextMock );
 
 		assertEquals( xpath.evaluate( "//saml1:ConfirmationMethod", doc, XPathConstants.STRING ),
 				SAML_1_HOLDER_OF_KEY_NAMESPACE );
 		assertNotNull( xpath.evaluate( "//saml1:AttributeStatement", doc, XPathConstants.NODE ) );
+		assertEquals(
+				xpath.evaluate( "//saml1:AttributeStatement/saml1:Attribute/@AttributeName", doc, XPathConstants.STRING ),
+				ATTTRIBUTE_NAME );
 	}
 
 	@Test

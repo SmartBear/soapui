@@ -57,4 +57,6 @@ public interface SAMLCallbackHandler extends CallbackHandler
 	public abstract void setStatement( String statement );
 
 	public abstract void setConfirmationMethod( String confMethod );
+
+	public abstract void setCustomAttributeName( String customAttributeName );
 }

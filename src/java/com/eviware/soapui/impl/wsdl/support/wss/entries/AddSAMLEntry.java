@@ -14,6 +14,8 @@ package com.eviware.soapui.impl.wsdl.support.wss.entries;
 
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JComponent;
 import javax.swing.JScrollPane;
@@ -34,9 +36,11 @@ import com.eviware.soapui.impl.wsdl.support.wss.saml.callback.SAML1CallbackHandl
 import com.eviware.soapui.impl.wsdl.support.wss.saml.callback.SAML2CallbackHandler;
 import com.eviware.soapui.impl.wsdl.support.wss.saml.callback.SAMLCallbackHandler;
 import com.eviware.soapui.impl.wsdl.support.wss.support.KeystoresComboBoxModel;
+import com.eviware.soapui.impl.wsdl.support.wss.support.WSPartsTable;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionsResult;
 import com.eviware.soapui.support.components.SimpleBindingForm;
+import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationBuilder;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
 import com.jgoodies.binding.PresentationModel;
@@ -77,6 +81,7 @@ public class AddSAMLEntry extends WssEntryBase
 	private String digestAlgorithm;
 	private String signatureAlgorithm;
 	private boolean signed;
+	private String attributeName;
 
 	public void init( WSSEntryConfig config, OutgoingWss container )
 	{
@@ -98,6 +103,7 @@ public class AddSAMLEntry extends WssEntryBase
 		subjectQualifier = reader.readString( "subjectQualifier", null );
 		digestAlgorithm = reader.readString( "digestAlgorithm", SHA256_DIGEST_ALGORITHM );
 		signatureAlgorithm = reader.readString( "signatureAlgorithm", RSA_SHA256_SIGNATURE_ALGORITHM );
+		attributeName = reader.readString( "attributeName", null );
 	}
 
 	@Override
@@ -113,6 +119,7 @@ public class AddSAMLEntry extends WssEntryBase
 		builder.add( "subjectQualifier", subjectQualifier );
 		builder.add( "digestAlgorithm", digestAlgorithm );
 		builder.add( "signatureAlgorithm", signatureAlgorithm );
+		builder.add( "attributeName", attributeName );
 	}
 
 	@Override
@@ -154,6 +161,9 @@ public class AddSAMLEntry extends WssEntryBase
 		form.appendComboBox( "signatureAlgorithm", "Signature algorithm",
 				new String[] { RSA_SHA256_SIGNATURE_ALGORITHM }, "Set the signature algorithm" );
 
+		form.appendTextField( "attributeName", "Attribute name", "The name of the attribute" );
+		//form.append( "AttributeValues", new WSPartsTable( attributeValues, this ) );
+
 		return new JScrollPane( form.getPanel() );
 	}
 
@@ -180,6 +190,16 @@ public class AddSAMLEntry extends WssEntryBase
 				callbackHandler.setConfirmationMethod( confirmationMethod );
 				callbackHandler.setIssuer( issuer );
 				callbackHandler.setStatement( assertionType );
+
+				// FIXME Duplicate
+				if( assertionType.equals( ATTRIBUTE_ASSERTION_TYPE ) )
+				{
+					// TODO Why is this named Custom* ?
+					callbackHandler.setCustomAttributeName( attributeName );
+					List<String> customAttributeValues = new ArrayList<String>();
+					customAttributeValues.add( "attributeValue1" );
+					callbackHandler.setCustomAttributeValues( customAttributeValues );
+				}
 
 				samlParms.setCallbackHandler( callbackHandler );
 				AssertionWrapper assertion = new AssertionWrapper( samlParms );
@@ -208,9 +228,20 @@ public class AddSAMLEntry extends WssEntryBase
 							subjectName, subjectQualifier );
 				}
 
+				// FIXME Duplicate
+				if( assertionType.equals( ATTRIBUTE_ASSERTION_TYPE ) )
+				{
+					// TODO Why is this named Custom* ?
+					callbackHandler.setCustomAttributeName( attributeName );
+					List<String> customAttributeValues = new ArrayList<String>();
+					customAttributeValues.add( "attributeValue1" );
+					callbackHandler.setCustomAttributeValues( customAttributeValues );
+				}
+
 				callbackHandler.setConfirmationMethod( confirmationMethod );
 				callbackHandler.setIssuer( issuer );
 				callbackHandler.setStatement( assertionType );
+
 				samlParms.setCallbackHandler( callbackHandler );
 
 				AssertionWrapper assertion = new AssertionWrapper( samlParms );
@@ -218,8 +249,6 @@ public class AddSAMLEntry extends WssEntryBase
 						wssCrypto.getCrypto(), false );
 
 				wsSecSignatureSAML.setUserInfo( context.expand( getUsername() ), context.expand( getPassword() ) );
-
-				// FIXME Figure out which fields that's not applicable for a certain type of assertion or signing and disable those
 
 				if( confirmationMethod.equals( SENDER_VOUCHES_CONFIRMATION_METHOD ) )
 				{
@@ -239,13 +268,14 @@ public class AddSAMLEntry extends WssEntryBase
 					}
 					else if( assertionType.equals( ATTRIBUTE_ASSERTION_TYPE ) )
 					{
+
 						wsSecSignatureSAML.setKeyIdentifierType( WSConstants.X509_KEY_IDENTIFIER );
 						wsSecSignatureSAML.setSignatureAlgorithm( WSConstants.HMAC_SHA256 );
 
 						byte[] ephemeralKey = callbackHandler.getEphemeralKey();
 						wsSecSignatureSAML.setSecretKey( ephemeralKey );
-
 					}
+
 					wsSecSignatureSAML.build( doc, wssCrypto.getCrypto(), assertion, null, null, null, secHeader );
 				}
 			}
@@ -379,6 +409,16 @@ public class AddSAMLEntry extends WssEntryBase
 	public void setSigned( boolean signed )
 	{
 		this.signed = signed;
+	}
+
+	public String getAttributeName()
+	{
+		return attributeName;
+	}
+
+	public void setAttributeName( String attributeName )
+	{
+		this.attributeName = attributeName;
 	}
 
 	private final class InternalWssContainerListener extends WssContainerListenerAdapter
