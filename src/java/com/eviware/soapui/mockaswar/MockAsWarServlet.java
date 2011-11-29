@@ -30,7 +30,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.collections.list.TreeList;
 import org.apache.log4j.spi.LoggingEvent;
 import org.apache.xmlbeans.XmlException;
-import org.mortbay.log.Log;
 
 import com.eviware.soapui.DefaultSoapUICore;
 import com.eviware.soapui.SoapUI;
@@ -102,7 +101,6 @@ public class MockAsWarServlet extends HttpServlet
 	protected void initProject( String path ) throws XmlException, IOException, SoapUIException
 	{
 		project = ( WsdlProject )ProjectFactoryRegistry.getProjectFactory( "wsdl" ).createNew( path );
-		logger.info( "XXXXXX Loaded project " + project.getName() + " [ " + project.toString() + " ]" );
 	}
 
 	protected String initMockServiceParameters()
