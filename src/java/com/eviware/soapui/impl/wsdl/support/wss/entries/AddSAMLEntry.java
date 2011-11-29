@@ -36,7 +36,6 @@ import com.eviware.soapui.impl.wsdl.support.wss.saml.callback.SAMLCallbackHandle
 import com.eviware.soapui.impl.wsdl.support.wss.support.KeystoresComboBoxModel;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionsResult;
-import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.components.SimpleBindingForm;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationBuilder;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
@@ -56,8 +55,8 @@ public class AddSAMLEntry extends WssEntryBase
 	public static final String ATTRIBUTE_ASSERTION_TYPE = "Attribute";
 	public static final String AUTHORIZATION_ASSERTION_TYPE = "Authorization";
 
-	public static final String HOLDER_OF_KEY_CONFIRMATION_TYPE = "Holder-of-key";
-	public static final String SENDER_VOUCHES_CONFIRMATION_TYPE = "Sender vouches";
+	public static final String HOLDER_OF_KEY_CONFIRMATION_METHOD = "Holder-of-key";
+	public static final String SENDER_VOUCHES_CONFIRMATION_METHOD = "Sender vouches";
 
 	// FIXME How should be support input for these fields? How are they used?
 	private static final String DEFAULT_SUBJECT_NAME = "uid=joe,ou=people,ou=saml-demo,o=example.com";
@@ -70,7 +69,7 @@ public class AddSAMLEntry extends WssEntryBase
 
 	private String samlVersion;
 	private String assertionType;
-	private String confirmationType;
+	private String confirmationMethod;
 	private String crypto;
 	private String issuer;
 	private String subjectName;
@@ -92,7 +91,7 @@ public class AddSAMLEntry extends WssEntryBase
 		samlVersion = reader.readString( "samlVersion", SAML_VERSION_1 );
 		signed = reader.readBoolean( "signed", false );
 		assertionType = reader.readString( "assertionType", AUTHENTICATION_ASSERTION_TYPE );
-		confirmationType = reader.readString( "confirmationType", SENDER_VOUCHES_CONFIRMATION_TYPE );
+		confirmationMethod = reader.readString( "confirmationMethod", SENDER_VOUCHES_CONFIRMATION_METHOD );
 		crypto = reader.readString( "crypto", null );
 		issuer = reader.readString( "issuer", null );
 		subjectName = reader.readString( "subjectName", DEFAULT_SUBJECT_NAME );
@@ -107,7 +106,7 @@ public class AddSAMLEntry extends WssEntryBase
 		builder.add( "samlVersion", samlVersion );
 		builder.add( "signed", signed );
 		builder.add( "assertionType", assertionType );
-		builder.add( "confirmationType", confirmationType );
+		builder.add( "confirmationMethod", confirmationMethod );
 		builder.add( "crypto", crypto );
 		builder.add( "issuer", issuer );
 		builder.add( "subjectName", subjectName );
@@ -129,8 +128,8 @@ public class AddSAMLEntry extends WssEntryBase
 		form.appendCheckBox( "signed", "Signed", "Should the message be signed" );
 		form.appendComboBox( "assertionType", "Assertion type", new String[] { AUTHENTICATION_ASSERTION_TYPE,
 				ATTRIBUTE_ASSERTION_TYPE, AUTHORIZATION_ASSERTION_TYPE }, "Choose the type of assertion" );
-		form.appendComboBox( "confirmationType", "Confirmation type", new String[] { SENDER_VOUCHES_CONFIRMATION_TYPE,
-				HOLDER_OF_KEY_CONFIRMATION_TYPE }, "Choose the type of confirmation" );
+		form.appendComboBox( "confirmationMethod", "Confirmation method", new String[] {
+				SENDER_VOUCHES_CONFIRMATION_METHOD, HOLDER_OF_KEY_CONFIRMATION_METHOD }, "Choose the confirmation method" );
 		form.appendComboBox( "crypto", "Keystore",
 				new KeystoresComboBoxModel( getWssContainer(), getWssContainer().getCryptoByName( crypto ) ),
 				"Selects the Keystore containing the key to use for signing the SAML message" ).addItemListener(
@@ -178,7 +177,7 @@ public class AddSAMLEntry extends WssEntryBase
 					callbackHandler = new SAML2CallbackHandler( subjectName, subjectQualifier );
 				}
 
-				callbackHandler.setConfirmationMethod( confirmationType );
+				callbackHandler.setConfirmationMethod( confirmationMethod );
 				callbackHandler.setIssuer( issuer );
 				callbackHandler.setStatement( assertionType );
 
@@ -209,10 +208,9 @@ public class AddSAMLEntry extends WssEntryBase
 							subjectName, subjectQualifier );
 				}
 
-				callbackHandler.setConfirmationMethod( confirmationType );
+				callbackHandler.setConfirmationMethod( confirmationMethod );
 				callbackHandler.setIssuer( issuer );
 				callbackHandler.setStatement( assertionType );
-
 				samlParms.setCallbackHandler( callbackHandler );
 
 				AssertionWrapper assertion = new AssertionWrapper( samlParms );
@@ -223,14 +221,14 @@ public class AddSAMLEntry extends WssEntryBase
 
 				// FIXME Figure out which fields that's not applicable for a certain type of assertion or signing and disable those
 
-				if( confirmationType.equals( SENDER_VOUCHES_CONFIRMATION_TYPE ) )
+				if( confirmationMethod.equals( SENDER_VOUCHES_CONFIRMATION_METHOD ) )
 				{
 					wsSecSignatureSAML.setKeyIdentifierType( WSConstants.BST_DIRECT_REFERENCE );
 
 					wsSecSignatureSAML.build( doc, null, assertion, wssCrypto.getCrypto(), context.expand( getUsername() ),
 							context.expand( getPassword() ), secHeader );
 				}
-				else if( confirmationType.equals( HOLDER_OF_KEY_CONFIRMATION_TYPE ) )
+				else if( confirmationMethod.equals( HOLDER_OF_KEY_CONFIRMATION_METHOD ) )
 				{
 					wsSecSignatureSAML.setDigestAlgo( digestAlgorithm );
 
@@ -296,14 +294,14 @@ public class AddSAMLEntry extends WssEntryBase
 		saveConfig();
 	}
 
-	public String getConfirmationType()
+	public String getConfirmationMethod()
 	{
-		return confirmationType;
+		return confirmationMethod;
 	}
 
-	public void setConfirmationType( String confirmationType )
+	public void setConfirmationMethod( String confirmationMethod )
 	{
-		this.confirmationType = confirmationType;
+		this.confirmationMethod = confirmationMethod;
 		saveConfig();
 	}
 

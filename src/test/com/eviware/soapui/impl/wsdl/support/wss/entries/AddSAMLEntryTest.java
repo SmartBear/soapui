@@ -142,7 +142,7 @@ public class AddSAMLEntryTest
 		addSamlEntry.setSamlVersion( AddSAMLEntry.SAML_VERSION_1 );
 		addSamlEntry.setSigned( false );
 		addSamlEntry.setAssertionType( AddSAMLEntry.AUTHENTICATION_ASSERTION_TYPE );
-		addSamlEntry.setConfirmationType( AddSAMLEntry.SENDER_VOUCHES_CONFIRMATION_TYPE );
+		addSamlEntry.setConfirmationMethod( AddSAMLEntry.SENDER_VOUCHES_CONFIRMATION_METHOD );
 
 		addSamlEntry.process( secHeader, doc, contextMock );
 
@@ -158,7 +158,7 @@ public class AddSAMLEntryTest
 		addSamlEntry.setSamlVersion( AddSAMLEntry.SAML_VERSION_2 );
 		addSamlEntry.setSigned( false );
 		addSamlEntry.setAssertionType( AddSAMLEntry.AUTHENTICATION_ASSERTION_TYPE );
-		addSamlEntry.setConfirmationType( AddSAMLEntry.SENDER_VOUCHES_CONFIRMATION_TYPE );
+		addSamlEntry.setConfirmationMethod( AddSAMLEntry.SENDER_VOUCHES_CONFIRMATION_METHOD );
 
 		addSamlEntry.process( secHeader, doc, contextMock );
 
@@ -174,7 +174,7 @@ public class AddSAMLEntryTest
 		addSamlEntry.setSamlVersion( AddSAMLEntry.SAML_VERSION_1 );
 		addSamlEntry.setSigned( false );
 		addSamlEntry.setAssertionType( AddSAMLEntry.ATTRIBUTE_ASSERTION_TYPE );
-		addSamlEntry.setConfirmationType( AddSAMLEntry.SENDER_VOUCHES_CONFIRMATION_TYPE );
+		addSamlEntry.setConfirmationMethod( AddSAMLEntry.SENDER_VOUCHES_CONFIRMATION_METHOD );
 
 		addSamlEntry.process( secHeader, doc, contextMock );
 
@@ -190,7 +190,7 @@ public class AddSAMLEntryTest
 		addSamlEntry.setSamlVersion( AddSAMLEntry.SAML_VERSION_2 );
 		addSamlEntry.setSigned( false );
 		addSamlEntry.setAssertionType( AddSAMLEntry.ATTRIBUTE_ASSERTION_TYPE );
-		addSamlEntry.setConfirmationType( AddSAMLEntry.SENDER_VOUCHES_CONFIRMATION_TYPE );
+		addSamlEntry.setConfirmationMethod( AddSAMLEntry.SENDER_VOUCHES_CONFIRMATION_METHOD );
 
 		addSamlEntry.process( secHeader, doc, contextMock );
 
@@ -209,7 +209,7 @@ public class AddSAMLEntryTest
 		addSamlEntry.setSamlVersion( AddSAMLEntry.SAML_VERSION_1 );
 		addSamlEntry.setSigned( false );
 		addSamlEntry.setAssertionType( AddSAMLEntry.AUTHORIZATION_ASSERTION_TYPE );
-		addSamlEntry.setConfirmationType( AddSAMLEntry.SENDER_VOUCHES_CONFIRMATION_TYPE );
+		addSamlEntry.setConfirmationMethod( AddSAMLEntry.SENDER_VOUCHES_CONFIRMATION_METHOD );
 
 		addSamlEntry.process( secHeader, doc, contextMock );
 
@@ -228,7 +228,7 @@ public class AddSAMLEntryTest
 		addSamlEntry.setSamlVersion( AddSAMLEntry.SAML_VERSION_2 );
 		addSamlEntry.setSigned( false );
 		addSamlEntry.setAssertionType( AddSAMLEntry.AUTHORIZATION_ASSERTION_TYPE );
-		addSamlEntry.setConfirmationType( AddSAMLEntry.SENDER_VOUCHES_CONFIRMATION_TYPE );
+		addSamlEntry.setConfirmationMethod( AddSAMLEntry.SENDER_VOUCHES_CONFIRMATION_METHOD );
 
 		addSamlEntry.process( secHeader, doc, contextMock );
 
@@ -247,7 +247,7 @@ public class AddSAMLEntryTest
 		addSamlEntry.setSamlVersion( AddSAMLEntry.SAML_VERSION_1 );
 		addSamlEntry.setSigned( true );
 		addSamlEntry.setAssertionType( AddSAMLEntry.AUTHENTICATION_ASSERTION_TYPE );
-		addSamlEntry.setConfirmationType( AddSAMLEntry.HOLDER_OF_KEY_CONFIRMATION_TYPE );
+		addSamlEntry.setConfirmationMethod( AddSAMLEntry.HOLDER_OF_KEY_CONFIRMATION_METHOD );
 
 		addSamlEntry.process( secHeader, doc, contextMock );
 
@@ -263,7 +263,7 @@ public class AddSAMLEntryTest
 		addSamlEntry.setSamlVersion( AddSAMLEntry.SAML_VERSION_2 );
 		addSamlEntry.setSigned( true );
 		addSamlEntry.setAssertionType( AddSAMLEntry.AUTHENTICATION_ASSERTION_TYPE );
-		addSamlEntry.setConfirmationType( AddSAMLEntry.HOLDER_OF_KEY_CONFIRMATION_TYPE );
+		addSamlEntry.setConfirmationMethod( AddSAMLEntry.HOLDER_OF_KEY_CONFIRMATION_METHOD );
 
 		addSamlEntry.process( secHeader, doc, contextMock );
 
@@ -279,7 +279,7 @@ public class AddSAMLEntryTest
 		addSamlEntry.setSamlVersion( AddSAMLEntry.SAML_VERSION_1 );
 		addSamlEntry.setSigned( true );
 		addSamlEntry.setAssertionType( AddSAMLEntry.ATTRIBUTE_ASSERTION_TYPE );
-		addSamlEntry.setConfirmationType( AddSAMLEntry.HOLDER_OF_KEY_CONFIRMATION_TYPE );
+		addSamlEntry.setConfirmationMethod( AddSAMLEntry.HOLDER_OF_KEY_CONFIRMATION_METHOD );
 
 		addSamlEntry.process( secHeader, doc, contextMock );
 
@@ -295,7 +295,7 @@ public class AddSAMLEntryTest
 		addSamlEntry.setSamlVersion( AddSAMLEntry.SAML_VERSION_2 );
 		addSamlEntry.setSigned( true );
 		addSamlEntry.setAssertionType( AddSAMLEntry.ATTRIBUTE_ASSERTION_TYPE );
-		addSamlEntry.setConfirmationType( AddSAMLEntry.HOLDER_OF_KEY_CONFIRMATION_TYPE );
+		addSamlEntry.setConfirmationMethod( AddSAMLEntry.HOLDER_OF_KEY_CONFIRMATION_METHOD );
 
 		addSamlEntry.process( secHeader, doc, contextMock );
 
@@ -311,7 +311,7 @@ public class AddSAMLEntryTest
 		addSamlEntry.setSamlVersion( AddSAMLEntry.SAML_VERSION_1 );
 		addSamlEntry.setSigned( true );
 		addSamlEntry.setAssertionType( AddSAMLEntry.AUTHENTICATION_ASSERTION_TYPE );
-		addSamlEntry.setConfirmationType( AddSAMLEntry.SENDER_VOUCHES_CONFIRMATION_TYPE );
+		addSamlEntry.setConfirmationMethod( AddSAMLEntry.SENDER_VOUCHES_CONFIRMATION_METHOD );
 
 		addSamlEntry.process( secHeader, doc, contextMock );
 
@@ -327,7 +327,7 @@ public class AddSAMLEntryTest
 		addSamlEntry.setSamlVersion( AddSAMLEntry.SAML_VERSION_2 );
 		addSamlEntry.setSigned( true );
 		addSamlEntry.setAssertionType( AddSAMLEntry.AUTHENTICATION_ASSERTION_TYPE );
-		addSamlEntry.setConfirmationType( AddSAMLEntry.SENDER_VOUCHES_CONFIRMATION_TYPE );
+		addSamlEntry.setConfirmationMethod( AddSAMLEntry.SENDER_VOUCHES_CONFIRMATION_METHOD );
 
 		addSamlEntry.process( secHeader, doc, contextMock );
 

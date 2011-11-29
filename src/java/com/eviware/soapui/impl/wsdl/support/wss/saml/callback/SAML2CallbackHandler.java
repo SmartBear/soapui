@@ -94,11 +94,11 @@ public class SAML2CallbackHandler extends AbstractSAMLCallbackHandler
 	@Override
 	public void setConfirmationMethod( String signingType )
 	{
-		if( signingType.equals( AddSAMLEntry.HOLDER_OF_KEY_CONFIRMATION_TYPE ) )
+		if( signingType.equals( AddSAMLEntry.HOLDER_OF_KEY_CONFIRMATION_METHOD ) )
 		{
 			confirmationMethod = SAML2Constants.CONF_HOLDER_KEY;
 		}
-		else if( signingType.equals( AddSAMLEntry.SENDER_VOUCHES_CONFIRMATION_TYPE ) )
+		else if( signingType.equals( AddSAMLEntry.SENDER_VOUCHES_CONFIRMATION_METHOD ) )
 		{
 			confirmationMethod = SAML2Constants.CONF_SENDER_VOUCHES;
 		}
