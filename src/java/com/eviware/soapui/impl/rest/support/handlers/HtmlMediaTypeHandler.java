@@ -19,6 +19,7 @@ import java.io.StringWriter;
 import org.w3c.dom.Document;
 import org.w3c.tidy.Tidy;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.support.MediaTypeHandler;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.support.StringUtils;
@@ -67,7 +68,7 @@ public class HtmlMediaTypeHandler implements MediaTypeHandler
 		}
 		catch( Throwable e )
 		{
-			e.printStackTrace();
+			SoapUI.logError( e );
 		}
 		return null;
 	}
