@@ -177,9 +177,9 @@ public class MockAsWarServlet extends HttpServlet
 		getMockServletCore().stop();
 	}
 
-	protected MockServletSoapUICore getMockServletCore()
+	protected MockAsWarCoreInterface getMockServletCore()
 	{
-		return ( MockServletSoapUICore )SoapUI.getSoapUICore();
+		return ( MockAsWarCoreInterface )SoapUI.getSoapUICore();
 	}
 
 	protected void service( HttpServletRequest request, HttpServletResponse response ) throws ServletException,
@@ -227,7 +227,7 @@ public class MockAsWarServlet extends HttpServlet
 		out.println( "<hr/><b>Returned Response</b>:<pre>" + XmlUtils.entitize( result.getResponseContent() ) + "</pre>" );
 	}
 
-	class MockServletSoapUICore extends DefaultSoapUICore implements MockEngine
+	class MockServletSoapUICore extends DefaultSoapUICore implements MockEngine, MockAsWarCoreInterface
 	{
 		private final ServletContext servletContext;
 		private List<MockRunner> mockRunners = new ArrayList<MockRunner>();
@@ -238,6 +238,15 @@ public class MockAsWarServlet extends HttpServlet
 			this.servletContext = servletContext;
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * com.eviware.soapui.mockaswar.MockAsWarCoreInterface#dispatchRequest
+		 * (javax.servlet.http.HttpServletRequest,
+		 * javax.servlet.http.HttpServletResponse)
+		 */
+		@Override
 		public void dispatchRequest( HttpServletRequest request, HttpServletResponse response ) throws DispatchException,
 				IOException
 		{
@@ -306,6 +315,12 @@ public class MockAsWarServlet extends HttpServlet
 			}
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see com.eviware.soapui.mockaswar.MockAsWarCoreInterface#stop()
+		 */
+		@Override
 		public void stop()
 		{
 			for( MockRunner mockRunner : getMockRunners() )
