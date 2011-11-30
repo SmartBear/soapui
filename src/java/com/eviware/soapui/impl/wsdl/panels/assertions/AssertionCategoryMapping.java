@@ -30,14 +30,22 @@ public class AssertionCategoryMapping
 	public final static String RECENTLY_USED = "Recently used";
 	public static final String JDBC_CATEGORY = "JDBC";
 	public static final String GROUPING = "GROUPING";
-	
 
 	public static String[] getAssertionCategories()
 	{
 		return new String[] { VALIDATE_RESPONSE_CONTENT_CATEGORY, STATUS_CATEGORY, SCRIPT_CATEGORY, SLA_CATEGORY,
-				JMS_CATEGORY, JDBC_CATEGORY, SECURITY_CATEGORY , GROUPING};
+				JMS_CATEGORY, JDBC_CATEGORY, SECURITY_CATEGORY, GROUPING };
 	}
 
+	/**
+	 * 
+	 * @param assertable
+	 * @param recentAssertionHandler
+	 * @return Set of Recently used assertion if @param assertable is not null
+	 *         only recently used assertions applicable to the @param assertable
+	 *         will be included if @param assertable is null all recently used
+	 *         assertions will be included
+	 */
 	private static SortedSet<AssertionListEntry> createRecentlyUsedSet( Assertable assertable,
 			RecentAssertionHandler recentAssertionHandler )
 	{
@@ -49,7 +57,7 @@ public class AssertionCategoryMapping
 
 			if( type != null )
 			{
-				if( recentAssertionHandler.canAssert( type, assertable ) )
+				if( assertable == null || recentAssertionHandler.canAssert( type, assertable ) )
 				{
 					recentlyUsedSet.add( recentAssertionHandler.getAssertionListEntry( type ) );
 				}
@@ -58,6 +66,15 @@ public class AssertionCategoryMapping
 		return recentlyUsedSet;
 	}
 
+	/**
+	 * 
+	 * @param assertable
+	 * @param recentAssertionHandler
+	 * @return assertion categories mapped with assertions in exact category if @param
+	 *         assertable is not null only assertions for specific @param
+	 *         assertable will be included if @param assertable is null all
+	 *         assertions are included
+	 */
 	public static LinkedHashMap<String, SortedSet<AssertionListEntry>> getCategoriesAssertionsMap(
 			Assertable assertable, RecentAssertionHandler recentAssertionHandler )
 	{
@@ -70,4 +87,5 @@ public class AssertionCategoryMapping
 		TestAssertionRegistry.getInstance().addCategoriesAssertionsMap( assertable, categoriesAssertionsMap );
 		return categoriesAssertionsMap;
 	}
+
 }

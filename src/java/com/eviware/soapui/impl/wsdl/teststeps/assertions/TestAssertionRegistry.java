@@ -202,6 +202,15 @@ public class TestAssertionRegistry
 		}
 	}
 
+	/**
+	 * 
+	 * @param assertable
+	 * @param categoryAssertionsMap
+	 * @return assertion categories mapped with assertions in exact category if @param
+	 *         assertable is not null only assertions for specific @param
+	 *         assertable will be included if @param assertable is null all
+	 *         assertions are included
+	 */
 	public LinkedHashMap<String, SortedSet<AssertionListEntry>> addCategoriesAssertionsMap( Assertable assertable,
 			LinkedHashMap<String, SortedSet<AssertionListEntry>> categoryAssertionsMap )
 	{
@@ -214,11 +223,14 @@ public class TestAssertionRegistry
 		for( TestAssertionFactory assertion : availableAssertions.values() )
 		{
 			SortedSet<AssertionListEntry> set;
-			if( assertion.canAssert( assertable ) )
+			if( assertable == null || assertion.canAssert( assertable ) )
 			{
 				set = categoryAssertionsMap.get( assertion.getCategory() );
-				set.add( assertion.getAssertionListEntry() );
-				categoryAssertionsMap.put( assertion.getCategory(), set );
+				if( set != null )
+				{
+					set.add( assertion.getAssertionListEntry() );
+					categoryAssertionsMap.put( assertion.getCategory(), set );
+				}
 
 			}
 		}
@@ -231,6 +243,11 @@ public class TestAssertionRegistry
 		}
 
 		return categoryAssertionsMap;
+	}
+
+	public Map<String, TestAssertionFactory> getAvailableAssertions()
+	{
+		return availableAssertions;
 	}
 
 	public String[] getAvailableAssertionNames( Assertable assertable )

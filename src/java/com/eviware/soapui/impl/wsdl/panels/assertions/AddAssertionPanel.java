@@ -59,7 +59,7 @@ public class AddAssertionPanel extends SimpleDialog
 	private AssertionsListTableModel assertionsListTableModel;
 	//	private JPanel assertionListPanel;
 	private SortedSet<AssertionListEntry> assertions;
-	private InternalListSelectionListener selectionListener = new InternalListSelectionListener();
+	private ListSelectionListener selectionListener;
 	private LinkedHashMap<String, SortedSet<AssertionListEntry>> categoriesAssertionsMap;
 	private SimpleForm assertionsForm;
 	private JCheckBox hideDescCB;
@@ -72,6 +72,7 @@ public class AddAssertionPanel extends SimpleDialog
 	{
 		super( "Select Assertion", "Select which assertion to add", "" );
 		this.assertable = assertable;
+		selectionListener = new InternalListSelectionListener();
 		categoriesAssertionsMap = AssertionCategoryMapping
 				.getCategoriesAssertionsMap( assertable, recentAssertionHandler );
 	}
@@ -310,6 +311,21 @@ public class AddAssertionPanel extends SimpleDialog
 				setVisible( false );
 			}
 		}
+	}
+
+	public JXTable getAssertionsTable()
+	{
+		return assertionsTable;
+	}
+
+	public AddAssertionAction getAddAssertionAction()
+	{
+		return addAssertionAction;
+	}
+
+	public void setSelectionListener( ListSelectionListener selectionListener )
+	{
+		this.selectionListener = selectionListener;
 	}
 
 }

@@ -33,7 +33,7 @@ import com.eviware.soapui.support.UISupport;
 public class AddAssertionAction extends AbstractAction
 {
 	private final Assertable assertable;
-	SimpleDialog addAssertionPanel;
+	private SimpleDialog addAssertionPanel;
 
 	public AddAssertionAction( Assertable assertable )
 	{
