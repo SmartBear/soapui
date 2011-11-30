@@ -170,19 +170,30 @@ public abstract class WssEntryBase implements WssEntry, PropertyExpansionContain
 		return getLabel();
 	}
 
-	protected List<StringToStringMap> readParts( XmlObjectConfigurationReader reader, String parameterName )
+	// Used to save values from table GUI components
+	protected List<StringToStringMap> readTableValues( XmlObjectConfigurationReader reader, String parameterName )
 	{
 		List<StringToStringMap> result = new ArrayList<StringToStringMap>();
-		String[] parts = reader.readStrings( parameterName );
-		if( parts != null && parts.length > 0 )
+		String[] tableValues = reader.readStrings( parameterName );
+		if( tableValues != null && tableValues.length > 0 )
 		{
-			for( String part : parts )
+			for( String tableValue : tableValues )
 			{
-				result.add( StringToStringMap.fromXml( part ) );
+				result.add( StringToStringMap.fromXml( tableValue ) );
 			}
 		}
 
 		return result;
+	}
+
+	// Used to read values from table GUI components
+	protected void saveTableValues( XmlObjectConfigurationBuilder builder, List<StringToStringMap> tableValues,
+			String string )
+	{
+		for( StringToStringMap tableValue : tableValues )
+		{
+			builder.add( string, tableValue.toXml() );
+		}
 	}
 
 	protected Vector<WSEncryptionPart> createWSParts( List<StringToStringMap> parts )
@@ -210,14 +221,6 @@ public abstract class WssEntryBase implements WssEntry, PropertyExpansionContain
 		}
 
 		return result;
-	}
-
-	protected void saveParts( XmlObjectConfigurationBuilder builder, List<StringToStringMap> parts, String string )
-	{
-		for( StringToStringMap part : parts )
-		{
-			builder.add( string, part.toXml() );
-		}
 	}
 
 	protected class KeyIdentifierTypeRenderer extends DefaultListCellRenderer

@@ -21,6 +21,7 @@ import javax.swing.JComponent;
 import javax.swing.JScrollPane;
 
 import org.apache.ws.security.WSConstants;
+import org.apache.ws.security.WSSecurityException;
 import org.apache.ws.security.message.WSSecHeader;
 import org.apache.ws.security.message.WSSecSAMLToken;
 import org.apache.ws.security.saml.WSSecSignatureSAML;
@@ -36,9 +37,11 @@ import com.eviware.soapui.impl.wsdl.support.wss.saml.callback.SAML1CallbackHandl
 import com.eviware.soapui.impl.wsdl.support.wss.saml.callback.SAML2CallbackHandler;
 import com.eviware.soapui.impl.wsdl.support.wss.saml.callback.SAMLCallbackHandler;
 import com.eviware.soapui.impl.wsdl.support.wss.support.KeystoresComboBoxModel;
+import com.eviware.soapui.impl.wsdl.support.wss.support.SAMLAttributeValuesTable;
 import com.eviware.soapui.impl.wsdl.support.wss.support.WSPartsTable;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionsResult;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.components.SimpleBindingForm;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationBuilder;
@@ -58,6 +61,8 @@ public class AddSAMLEntry extends WssEntryBase
 	public static final String AUTHENTICATION_ASSERTION_TYPE = "Authentication";
 	public static final String ATTRIBUTE_ASSERTION_TYPE = "Attribute";
 	public static final String AUTHORIZATION_ASSERTION_TYPE = "Authorization";
+
+	public static final String ATTRIBUTE_VALUES_VALUE_COLUMN = "value";
 
 	public static final String HOLDER_OF_KEY_CONFIRMATION_METHOD = "Holder-of-key";
 	public static final String SENDER_VOUCHES_CONFIRMATION_METHOD = "Sender vouches";
@@ -82,6 +87,7 @@ public class AddSAMLEntry extends WssEntryBase
 	private String signatureAlgorithm;
 	private boolean signed;
 	private String attributeName;
+	private List<StringToStringMap> attributeValues;
 
 	public void init( WSSEntryConfig config, OutgoingWss container )
 	{
@@ -92,7 +98,6 @@ public class AddSAMLEntry extends WssEntryBase
 	@Override
 	protected void load( XmlObjectConfigurationReader reader )
 	{
-		// FIXME Use the def (default) parameter instead ffs!
 		samlVersion = reader.readString( "samlVersion", SAML_VERSION_1 );
 		signed = reader.readBoolean( "signed", false );
 		assertionType = reader.readString( "assertionType", AUTHENTICATION_ASSERTION_TYPE );
@@ -104,6 +109,7 @@ public class AddSAMLEntry extends WssEntryBase
 		digestAlgorithm = reader.readString( "digestAlgorithm", SHA256_DIGEST_ALGORITHM );
 		signatureAlgorithm = reader.readString( "signatureAlgorithm", RSA_SHA256_SIGNATURE_ALGORITHM );
 		attributeName = reader.readString( "attributeName", null );
+		attributeValues = readTableValues( reader, "attributeValues" );
 	}
 
 	@Override
@@ -120,6 +126,7 @@ public class AddSAMLEntry extends WssEntryBase
 		builder.add( "digestAlgorithm", digestAlgorithm );
 		builder.add( "signatureAlgorithm", signatureAlgorithm );
 		builder.add( "attributeName", attributeName );
+		saveTableValues( builder, attributeValues, "attributeValues" );
 	}
 
 	@Override
@@ -132,7 +139,7 @@ public class AddSAMLEntry extends WssEntryBase
 		form.addSpace( 5 );
 		form.appendComboBox( "samlVersion", "SAML version", new String[] { SAML_VERSION_1, SAML_VERSION_2 },
 				"Choose the SAML version" );
-		form.appendCheckBox( "signed", "Signed", "Should the message be signed" );
+		form.appendCheckBox( "signed", "Signed", null );
 		form.appendComboBox( "assertionType", "Assertion type", new String[] { AUTHENTICATION_ASSERTION_TYPE,
 				ATTRIBUTE_ASSERTION_TYPE, AUTHORIZATION_ASSERTION_TYPE }, "Choose the type of assertion" );
 		form.appendComboBox( "confirmationMethod", "Confirmation method", new String[] {
@@ -162,7 +169,7 @@ public class AddSAMLEntry extends WssEntryBase
 				new String[] { RSA_SHA256_SIGNATURE_ALGORITHM }, "Set the signature algorithm" );
 
 		form.appendTextField( "attributeName", "Attribute name", "The name of the attribute" );
-		//form.append( "AttributeValues", new WSPartsTable( attributeValues, this ) );
+		form.append( "Attribute names", new SAMLAttributeValuesTable( attributeValues, this ) );
 
 		return new JScrollPane( form.getPanel() );
 	}
@@ -180,30 +187,15 @@ public class AddSAMLEntry extends WssEntryBase
 
 				if( samlVersion.equals( SAML_VERSION_1 ) )
 				{
-					callbackHandler = new SAML1CallbackHandler( subjectName, subjectQualifier );
+					callbackHandler = new SAML1CallbackHandler( context.expand( subjectName ),
+							context.expand( subjectQualifier ) );
 				}
 				else if( samlVersion.equals( SAML_VERSION_2 ) )
 				{
-					callbackHandler = new SAML2CallbackHandler( subjectName, subjectQualifier );
+					callbackHandler = new SAML2CallbackHandler( context.expand( subjectName ),
+							context.expand( subjectQualifier ) );
 				}
-
-				callbackHandler.setConfirmationMethod( confirmationMethod );
-				callbackHandler.setIssuer( issuer );
-				callbackHandler.setStatement( assertionType );
-
-				// FIXME Duplicate
-				if( assertionType.equals( ATTRIBUTE_ASSERTION_TYPE ) )
-				{
-					// TODO Why is this named Custom* ?
-					callbackHandler.setCustomAttributeName( attributeName );
-					List<String> customAttributeValues = new ArrayList<String>();
-					customAttributeValues.add( "attributeValue1" );
-					callbackHandler.setCustomAttributeValues( customAttributeValues );
-				}
-
-				samlParms.setCallbackHandler( callbackHandler );
-				AssertionWrapper assertion = new AssertionWrapper( samlParms );
-
+				AssertionWrapper assertion = createAssertion( context, samlParms, callbackHandler );
 				wsSecSAMLToken.build( doc, assertion, secHeader );
 			}
 			else
@@ -220,31 +212,16 @@ public class AddSAMLEntry extends WssEntryBase
 				if( samlVersion.equals( SAML_VERSION_1 ) )
 				{
 					callbackHandler = new SAML1CallbackHandler( wssCrypto.getCrypto(), context.expand( getUsername() ),
-							subjectName, subjectQualifier );
+							context.expand( subjectName ), context.expand( subjectQualifier ) );
 				}
 				else if( samlVersion.equals( SAML_VERSION_2 ) )
 				{
 					callbackHandler = new SAML2CallbackHandler( wssCrypto.getCrypto(), context.expand( getUsername() ),
-							subjectName, subjectQualifier );
+							context.expand( subjectName ), context.expand( subjectQualifier ) );
 				}
 
-				// FIXME Duplicate
-				if( assertionType.equals( ATTRIBUTE_ASSERTION_TYPE ) )
-				{
-					// TODO Why is this named Custom* ?
-					callbackHandler.setCustomAttributeName( attributeName );
-					List<String> customAttributeValues = new ArrayList<String>();
-					customAttributeValues.add( "attributeValue1" );
-					callbackHandler.setCustomAttributeValues( customAttributeValues );
-				}
+				AssertionWrapper assertion = createAssertion( context, samlParms, callbackHandler );
 
-				callbackHandler.setConfirmationMethod( confirmationMethod );
-				callbackHandler.setIssuer( issuer );
-				callbackHandler.setStatement( assertionType );
-
-				samlParms.setCallbackHandler( callbackHandler );
-
-				AssertionWrapper assertion = new AssertionWrapper( samlParms );
 				assertion.signAssertion( context.expand( getUsername() ), context.expand( getPassword() ),
 						wssCrypto.getCrypto(), false );
 
@@ -287,6 +264,36 @@ public class AddSAMLEntry extends WssEntryBase
 		}
 	}
 
+	private AssertionWrapper createAssertion( PropertyExpansionContext context, SAMLParms samlParms,
+			SAMLCallbackHandler callbackHandler ) throws WSSecurityException
+	{
+		if( assertionType.equals( ATTRIBUTE_ASSERTION_TYPE ) )
+		{
+			callbackHandler.setCustomAttributeName( attributeName );
+			callbackHandler.setCustomAttributeValues( extractValueColumnValues( attributeValues, context ) );
+		}
+
+		callbackHandler.setConfirmationMethod( confirmationMethod );
+		callbackHandler.setIssuer( issuer );
+		callbackHandler.setStatement( assertionType );
+
+		samlParms.setCallbackHandler( callbackHandler );
+		return new AssertionWrapper( samlParms );
+	}
+
+	// Since we only use one column for the attribute values
+	private List<String> extractValueColumnValues( List<StringToStringMap> table, PropertyExpansionContext context )
+	{
+		List<String> firstColumnValues = new ArrayList<String>();
+		for( StringToStringMap row : table )
+		{
+			String columnValue = row.get( ATTRIBUTE_VALUES_VALUE_COLUMN );
+			// TODO Add property expansion to each value
+			firstColumnValues.add( columnValue );
+		}
+		return firstColumnValues;
+	}
+
 	public void relase()
 	{
 		if( wssContainerListener != null )
@@ -299,7 +306,11 @@ public class AddSAMLEntry extends WssEntryBase
 	protected void addPropertyExpansions( PropertyExpansionsResult result )
 	{
 		super.addPropertyExpansions( result );
-		result.extractAndAddAll( "samlAssertion" );
+		result.extractAndAddAll( this, "issuer" );
+		result.extractAndAddAll( this, "subjectName" );
+		result.extractAndAddAll( this, "subjectQualifier" );
+		result.extractAndAddAll( this, "attributeName" );
+		// TODO Add property expansion refactoring for attributesValues, as with HttpTestRequestStep
 	}
 
 	public String getSamlVersion()
@@ -419,6 +430,16 @@ public class AddSAMLEntry extends WssEntryBase
 	public void setAttributeName( String attributeName )
 	{
 		this.attributeName = attributeName;
+	}
+
+	public List<StringToStringMap> getAttributeValues()
+	{
+		return attributeValues;
+	}
+
+	public void setAttributeValues( List<StringToStringMap> attributeValues )
+	{
+		this.attributeValues = attributeValues;
 	}
 
 	private final class InternalWssContainerListener extends WssContainerListenerAdapter

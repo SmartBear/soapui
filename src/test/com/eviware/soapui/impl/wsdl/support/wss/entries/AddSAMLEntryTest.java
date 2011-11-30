@@ -23,6 +23,7 @@ import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
+import java.util.Collections;
 
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
@@ -51,11 +52,14 @@ import com.eviware.soapui.impl.wsdl.support.wss.OutgoingWss;
 import com.eviware.soapui.impl.wsdl.support.wss.WssContainer;
 import com.eviware.soapui.impl.wsdl.support.wss.WssCrypto;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
+import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlUtils;
 
 /**
  * @author Erik R. Yverling
  */
+
+// FIXME Needs some refactoring love
 public class AddSAMLEntryTest
 {
 	// TODO Can these be found in the wss4j lib instead?
@@ -77,6 +81,7 @@ public class AddSAMLEntryTest
 	private static final String SUBJECT_QUALIFIER = "www.subject.com";
 	private static final String SUBJECT_NAME = "uid=joe,ou=people,ou=saml-demo,o=example.com";
 	private static final String ATTTRIBUTE_NAME = "attibuteName";
+	private static final String ATTTRIBUTE_VALUE = "attributeValue";
 
 	private static final String SAMPLE_SOAP_MESSAGE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
 			+ "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ws=\"http://ws.app4test.eviware.com/\">"
@@ -132,8 +137,13 @@ public class AddSAMLEntryTest
 		when( wssCryptoMock.getCrypto() ).thenReturn( crypto );
 		when( outgoingWssMock.getUsername() ).thenReturn( ALIAS );
 		when( outgoingWssMock.getPassword() ).thenReturn( KEY_PASSWORD );
+
 		when( contextMock.expand( ALIAS ) ).thenReturn( ALIAS );
 		when( contextMock.expand( KEY_PASSWORD ) ).thenReturn( KEY_PASSWORD );
+		when( contextMock.expand( ISSUER ) ).thenReturn( ISSUER );
+		when( contextMock.expand( SUBJECT_NAME ) ).thenReturn( SUBJECT_NAME );
+		when( contextMock.expand( SUBJECT_QUALIFIER ) ).thenReturn( SUBJECT_QUALIFIER );
+		when( contextMock.expand( ATTTRIBUTE_NAME ) ).thenReturn( ATTTRIBUTE_NAME );
 	}
 
 	@Test
@@ -178,7 +188,13 @@ public class AddSAMLEntryTest
 		addSamlEntry.setConfirmationMethod( AddSAMLEntry.SENDER_VOUCHES_CONFIRMATION_METHOD );
 		addSamlEntry.setAttributeName( ATTTRIBUTE_NAME );
 
+		StringToStringMap attributeValueRow = new StringToStringMap();
+		attributeValueRow.put( AddSAMLEntry.ATTRIBUTE_VALUES_VALUE_COLUMN, ATTTRIBUTE_VALUE );
+		addSamlEntry.setAttributeValues( Collections.singletonList( attributeValueRow ) );
+
 		addSamlEntry.process( secHeader, doc, contextMock );
+
+		System.out.println( XmlUtils.serializePretty( doc ) );
 
 		assertEquals( xpath.evaluate( "//saml1:ConfirmationMethod", doc, XPathConstants.STRING ),
 				SAML_1_SENDER_VOUCHES_NAMESPACE );
@@ -186,6 +202,8 @@ public class AddSAMLEntryTest
 		assertEquals(
 				xpath.evaluate( "//saml1:AttributeStatement/saml1:Attribute/@AttributeName", doc, XPathConstants.STRING ),
 				ATTTRIBUTE_NAME );
+		assertEquals( xpath.evaluate( "//saml1:AttributeStatement/saml1:Attribute/saml1:AttributeValue", doc,
+				XPathConstants.STRING ), ATTTRIBUTE_VALUE );
 	}
 
 	@Test
@@ -196,12 +214,24 @@ public class AddSAMLEntryTest
 		addSamlEntry.setSigned( false );
 		addSamlEntry.setAssertionType( AddSAMLEntry.ATTRIBUTE_ASSERTION_TYPE );
 		addSamlEntry.setConfirmationMethod( AddSAMLEntry.SENDER_VOUCHES_CONFIRMATION_METHOD );
+		addSamlEntry.setAttributeName( ATTTRIBUTE_NAME );
+
+		StringToStringMap attributeValueRow = new StringToStringMap();
+		attributeValueRow.put( AddSAMLEntry.ATTRIBUTE_VALUES_VALUE_COLUMN, ATTTRIBUTE_VALUE );
+		addSamlEntry.setAttributeValues( Collections.singletonList( attributeValueRow ) );
 
 		addSamlEntry.process( secHeader, doc, contextMock );
+
+		System.out.println( XmlUtils.serializePretty( doc ) );
 
 		assertEquals( xpath.evaluate( "//saml2:SubjectConfirmation/@Method", doc, XPathConstants.STRING ),
 				SAML_2_SENDER_VOUCHES_NAMESPACE );
 		assertNotNull( xpath.evaluate( "//saml2:AttributeStatement", doc, XPathConstants.NODE ) );
+		assertEquals(
+				xpath.evaluate( "//saml2:AttributeStatement/saml2:Attribute/@FriendlyName", doc, XPathConstants.STRING ),
+				ATTTRIBUTE_NAME );
+		assertEquals( xpath.evaluate( "//saml2:AttributeStatement/saml2:Attribute/saml2:AttributeValue", doc,
+				XPathConstants.STRING ), ATTTRIBUTE_VALUE );
 	}
 
 	@Test
@@ -278,6 +308,10 @@ public class AddSAMLEntryTest
 		addSamlEntry.setConfirmationMethod( AddSAMLEntry.HOLDER_OF_KEY_CONFIRMATION_METHOD );
 		addSamlEntry.setAttributeName( ATTTRIBUTE_NAME );
 
+		StringToStringMap attributeValueRow = new StringToStringMap();
+		attributeValueRow.put( AddSAMLEntry.ATTRIBUTE_VALUES_VALUE_COLUMN, ATTTRIBUTE_VALUE );
+		addSamlEntry.setAttributeValues( Collections.singletonList( attributeValueRow ) );
+
 		addSamlEntry.process( secHeader, doc, contextMock );
 
 		assertEquals( xpath.evaluate( "//saml1:ConfirmationMethod", doc, XPathConstants.STRING ),
@@ -286,6 +320,8 @@ public class AddSAMLEntryTest
 		assertEquals(
 				xpath.evaluate( "//saml1:AttributeStatement/saml1:Attribute/@AttributeName", doc, XPathConstants.STRING ),
 				ATTTRIBUTE_NAME );
+		assertEquals( xpath.evaluate( "//saml1:AttributeStatement/saml1:Attribute/saml1:AttributeValue", doc,
+				XPathConstants.STRING ), ATTTRIBUTE_VALUE );
 	}
 
 	@Test
@@ -296,12 +332,22 @@ public class AddSAMLEntryTest
 		addSamlEntry.setSigned( true );
 		addSamlEntry.setAssertionType( AddSAMLEntry.ATTRIBUTE_ASSERTION_TYPE );
 		addSamlEntry.setConfirmationMethod( AddSAMLEntry.HOLDER_OF_KEY_CONFIRMATION_METHOD );
+		addSamlEntry.setAttributeName( ATTTRIBUTE_NAME );
+
+		StringToStringMap attributeValueRow = new StringToStringMap();
+		attributeValueRow.put( AddSAMLEntry.ATTRIBUTE_VALUES_VALUE_COLUMN, ATTTRIBUTE_VALUE );
+		addSamlEntry.setAttributeValues( Collections.singletonList( attributeValueRow ) );
 
 		addSamlEntry.process( secHeader, doc, contextMock );
 
 		assertEquals( xpath.evaluate( "//saml2:SubjectConfirmation/@Method", doc, XPathConstants.STRING ),
 				SAML_2_HOLDER_OF_KEY_NAMESPACE );
 		assertNotNull( xpath.evaluate( "//saml2:AttributeStatement", doc, XPathConstants.NODE ) );
+		assertEquals(
+				xpath.evaluate( "//saml2:AttributeStatement/saml2:Attribute/@FriendlyName", doc, XPathConstants.STRING ),
+				ATTTRIBUTE_NAME );
+		assertEquals( xpath.evaluate( "//saml2:AttributeStatement/saml2:Attribute/saml2:AttributeValue", doc,
+				XPathConstants.STRING ), ATTTRIBUTE_VALUE );
 	}
 
 	@Test

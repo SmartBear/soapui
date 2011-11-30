@@ -137,7 +137,7 @@ public class AddEncryptionEntry extends WssEntryBase
 		embeddedKeyPassword = reader.readString( "embeddedKeyPassword", null );
 		encryptionCanonicalization = reader.readString( "encryptionCanonicalization", null );
 		encryptSymmetricKey = reader.readBoolean( "encryptSymmetricKey", true );
-		parts = readParts( reader, "encryptionPart" );
+		parts = readTableValues( reader, "encryptionPart" );
 	}
 
 	@Override
@@ -151,7 +151,7 @@ public class AddEncryptionEntry extends WssEntryBase
 		builder.add( "embeddedKeyPassword", embeddedKeyPassword );
 		builder.add( "encryptionCanonicalization", encryptionCanonicalization );
 		builder.add( "encryptSymmetricKey", encryptSymmetricKey );
-		saveParts( builder, parts, "encryptionPart" );
+		saveTableValues( builder, parts, "encryptionPart" );
 	}
 
 	public String getEmbeddedKeyName()
@@ -251,7 +251,7 @@ public class AddEncryptionEntry extends WssEntryBase
 		StringWriter writer = null;
 
 		try
-		{			
+		{
 			WssCrypto wssCrypto = getWssContainer().getCryptoByName( crypto );
 			if( wssCrypto == null )
 			{
@@ -259,11 +259,11 @@ public class AddEncryptionEntry extends WssEntryBase
 			}
 
 			Crypto crypto = wssCrypto.getCrypto();
-			
+
 			WSSecEncrypt wsEncrypt = new WSSecEncrypt();
 			WSSConfig wssConfig = WSSConfig.getNewInstance();
 			wsEncrypt.setWsConfig( wssConfig );
-		
+
 			wsEncrypt.setUserInfo( context.expand( getUsername() ) );
 
 			// default is

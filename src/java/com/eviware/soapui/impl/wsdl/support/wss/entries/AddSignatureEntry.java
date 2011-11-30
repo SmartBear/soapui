@@ -139,7 +139,7 @@ public class AddSignatureEntry extends WssEntryBase
 		/* ADDED: digest algorithm to use */
 		digestAlgorithm = reader.readString( "digestAlgorithm", null );
 
-		parts = readParts( reader, "signaturePart" );
+		parts = readTableValues( reader, "signaturePart" );
 	}
 
 	@Override
@@ -154,7 +154,7 @@ public class AddSignatureEntry extends WssEntryBase
 		/* ADDED: digest algorithm to use */
 		builder.add( "digestAlgorithm", digestAlgorithm );
 
-		saveParts( builder, parts, "signaturePart" );
+		saveTableValues( builder, parts, "signaturePart" );
 	}
 
 	public void process( WSSecHeader secHeader, Document doc, PropertyExpansionContext context )
