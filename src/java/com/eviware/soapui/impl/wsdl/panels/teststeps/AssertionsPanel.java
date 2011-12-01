@@ -493,6 +493,7 @@ public class AssertionsPanel extends JPanel
 	public void release()
 	{
 		assertionListModel.release();
+		addAssertionAction.release();
 		assertable = null;
 	}
 

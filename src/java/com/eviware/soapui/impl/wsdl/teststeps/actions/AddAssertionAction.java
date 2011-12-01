@@ -18,7 +18,6 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.SwingUtilities;
 
-import com.eviware.soapui.impl.wsdl.actions.project.SimpleDialog;
 import com.eviware.soapui.impl.wsdl.panels.assertions.AddAssertionPanel;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry;
 import com.eviware.soapui.model.testsuite.Assertable;
@@ -33,7 +32,7 @@ import com.eviware.soapui.support.UISupport;
 public class AddAssertionAction extends AbstractAction
 {
 	private final Assertable assertable;
-	private SimpleDialog addAssertionPanel;
+	private AddAssertionPanel addAssertionPanel;
 
 	public AddAssertionAction( Assertable assertable )
 	{
@@ -54,7 +53,6 @@ public class AddAssertionAction extends AbstractAction
 			return;
 		}
 
-		//		String selection = ( String )UISupport.prompt( "Select assertion to add", "Select Assertion", assertions );
 		addAssertionPanel = new AddAssertionPanel( assertable );
 		SwingUtilities.invokeLater( new Runnable()
 		{
@@ -64,25 +62,10 @@ public class AddAssertionAction extends AbstractAction
 			}
 		} );
 
-		//		if( selection == null )
-		//			return;
-		//
-		//		if( !TestAssertionRegistry.getInstance().canAddMultipleAssertions( selection, assertable ) )
-		//		{
-		//			UISupport.showErrorMessage( "This assertion can only be added once" );
-		//			return;
-		//		}
-		//
-		//		TestAssertion assertion = assertable.addAssertion( selection );
-		//		if( assertion == null )
-		//		{
-		//			UISupport.showErrorMessage( "Failed to add assertion" );
-		//			return;
-		//		}
-		//
-		//		if( assertion.isConfigurable() )
-		//		{
-		//			assertion.configure();
-		//		}
+	}
+
+	public void release()
+	{
+		addAssertionPanel.release();
 	}
 }
