@@ -27,6 +27,8 @@ import org.apache.ws.security.message.WSSecSAMLToken;
 import org.apache.ws.security.saml.WSSecSignatureSAML;
 import org.apache.ws.security.saml.ext.AssertionWrapper;
 import org.apache.ws.security.saml.ext.SAMLParms;
+import org.apache.xml.security.algorithms.MessageDigestAlgorithm;
+import org.apache.xml.security.signature.XMLSignature;
 import org.w3c.dom.Document;
 
 import com.eviware.soapui.SoapUI;
@@ -38,10 +40,8 @@ import com.eviware.soapui.impl.wsdl.support.wss.saml.callback.SAML2CallbackHandl
 import com.eviware.soapui.impl.wsdl.support.wss.saml.callback.SAMLCallbackHandler;
 import com.eviware.soapui.impl.wsdl.support.wss.support.KeystoresComboBoxModel;
 import com.eviware.soapui.impl.wsdl.support.wss.support.SAMLAttributeValuesTable;
-import com.eviware.soapui.impl.wsdl.support.wss.support.WSPartsTable;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionsResult;
-import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.components.SimpleBindingForm;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationBuilder;
@@ -69,9 +69,6 @@ public class AddSAMLEntry extends WssEntryBase
 
 	// FIXME How should be support input for these fields? How are they used?
 	private static final String DEFAULT_SUBJECT_NAME = "uid=joe,ou=people,ou=saml-demo,o=example.com";
-
-	private static final String SHA256_DIGEST_ALGORITHM = "http://www.w3.org/2001/04/xmlenc#sha256";
-	private static final String RSA_SHA256_SIGNATURE_ALGORITHM = "http://www.w3.org/2001/04/xmldsig-more#rsa-sha256";
 
 	private KeyAliasComboBoxModel keyAliasComboBoxModel;
 	private InternalWssContainerListener wssContainerListener;
@@ -106,8 +103,8 @@ public class AddSAMLEntry extends WssEntryBase
 		issuer = reader.readString( "issuer", null );
 		subjectName = reader.readString( "subjectName", DEFAULT_SUBJECT_NAME );
 		subjectQualifier = reader.readString( "subjectQualifier", null );
-		digestAlgorithm = reader.readString( "digestAlgorithm", SHA256_DIGEST_ALGORITHM );
-		signatureAlgorithm = reader.readString( "signatureAlgorithm", RSA_SHA256_SIGNATURE_ALGORITHM );
+		digestAlgorithm = reader.readString( "digestAlgorithm", null );
+		signatureAlgorithm = reader.readString( "signatureAlgorithm", null );
 		attributeName = reader.readString( "attributeName", null );
 		attributeValues = readTableValues( reader, "attributeValues" );
 	}
@@ -163,11 +160,14 @@ public class AddSAMLEntry extends WssEntryBase
 		form.appendTextField( "issuer", "Issuer", "The issuer" );
 		form.appendTextField( "subjectName", "Subject Name", "The subject qualifier" );
 		form.appendTextField( "subjectQualifier", "Subject Qualifier", "The subject qualifier" );
-		form.appendComboBox( "digestAlgorithm", "Digest algorithm", new String[] { SHA256_DIGEST_ALGORITHM },
-				"Set the digest algorithm" );
-		form.appendComboBox( "signatureAlgorithm", "Signature algorithm",
-				new String[] { RSA_SHA256_SIGNATURE_ALGORITHM }, "Set the signature algorithm" );
-
+		form.appendComboBox( "digestAlgorithm", "Digest Algorithm", new String[] {
+				MessageDigestAlgorithm.ALGO_ID_DIGEST_SHA1, MessageDigestAlgorithm.ALGO_ID_DIGEST_SHA256,
+				MessageDigestAlgorithm.ALGO_ID_DIGEST_SHA384, MessageDigestAlgorithm.ALGO_ID_DIGEST_SHA512 },
+				"Set the digest algorithm to use" );
+		form.appendComboBox( "signatureAlgorithm", "Signature Algorithm", new String[] { WSConstants.RSA,
+				WSConstants.DSA, XMLSignature.ALGO_ID_MAC_HMAC_SHA1, XMLSignature.ALGO_ID_MAC_HMAC_SHA256,
+				XMLSignature.ALGO_ID_MAC_HMAC_SHA384, XMLSignature.ALGO_ID_MAC_HMAC_SHA512 },
+				"Set the name of the signature encryption algorithm to use" );
 		form.appendTextField( "attributeName", "Attribute name", "The name of the attribute" );
 		form.append( "Attribute names", new SAMLAttributeValuesTable( attributeValues, this ) );
 
@@ -247,7 +247,7 @@ public class AddSAMLEntry extends WssEntryBase
 					{
 
 						wsSecSignatureSAML.setKeyIdentifierType( WSConstants.X509_KEY_IDENTIFIER );
-						wsSecSignatureSAML.setSignatureAlgorithm( WSConstants.HMAC_SHA256 );
+						wsSecSignatureSAML.setSignatureAlgorithm( signatureAlgorithm );
 
 						byte[] ephemeralKey = callbackHandler.getEphemeralKey();
 						wsSecSignatureSAML.setSecretKey( ephemeralKey );
