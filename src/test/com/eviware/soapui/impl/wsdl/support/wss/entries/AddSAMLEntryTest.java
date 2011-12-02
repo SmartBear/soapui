@@ -33,12 +33,14 @@ import javax.xml.xpath.XPathFactory;
 import junit.framework.JUnit4TestAdapter;
 
 import org.apache.ws.commons.util.NamespaceContextImpl;
+import org.apache.ws.security.WSConstants;
 import org.apache.ws.security.WSSConfig;
 import org.apache.ws.security.WSSecurityException;
 import org.apache.ws.security.components.crypto.CredentialException;
 import org.apache.ws.security.components.crypto.Merlin;
 import org.apache.ws.security.message.WSSecHeader;
 import org.apache.ws.security.util.Loader;
+import org.apache.xml.security.algorithms.MessageDigestAlgorithm;
 import org.apache.xmlbeans.XmlObject;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -129,6 +131,8 @@ public class AddSAMLEntryTest
 		addSamlEntry.setIssuer( ISSUER );
 		addSamlEntry.setSubjectQualifier( SUBJECT_QUALIFIER );
 		addSamlEntry.setSubjectName( SUBJECT_NAME );
+		addSamlEntry.setSignatureAlgorithm( WSConstants.RSA );
+		addSamlEntry.setDigestAlgorithm( MessageDigestAlgorithm.ALGO_ID_DIGEST_SHA1 );
 
 		createCrypto();
 

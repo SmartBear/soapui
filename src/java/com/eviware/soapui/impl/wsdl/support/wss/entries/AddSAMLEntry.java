@@ -103,8 +103,8 @@ public class AddSAMLEntry extends WssEntryBase
 		issuer = reader.readString( "issuer", null );
 		subjectName = reader.readString( "subjectName", DEFAULT_SUBJECT_NAME );
 		subjectQualifier = reader.readString( "subjectQualifier", null );
-		digestAlgorithm = reader.readString( "digestAlgorithm", null );
-		signatureAlgorithm = reader.readString( "signatureAlgorithm", null );
+		digestAlgorithm = reader.readString( "digestAlgorithm", MessageDigestAlgorithm.ALGO_ID_DIGEST_SHA1);
+		signatureAlgorithm = reader.readString( "signatureAlgorithm", WSConstants.RSA );
 		attributeName = reader.readString( "attributeName", null );
 		attributeValues = readTableValues( reader, "attributeValues" );
 	}
