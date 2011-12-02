@@ -165,9 +165,10 @@ public class AddSAMLEntry extends WssEntryBase
 				MessageDigestAlgorithm.ALGO_ID_DIGEST_SHA384, MessageDigestAlgorithm.ALGO_ID_DIGEST_SHA512 },
 				"Set the digest algorithm to use" );
 		form.appendComboBox( "signatureAlgorithm", "Signature Algorithm", new String[] { WSConstants.RSA,
-				WSConstants.DSA, XMLSignature.ALGO_ID_MAC_HMAC_SHA1, XMLSignature.ALGO_ID_MAC_HMAC_SHA256,
-				XMLSignature.ALGO_ID_MAC_HMAC_SHA384, XMLSignature.ALGO_ID_MAC_HMAC_SHA512 },
-				"Set the name of the signature encryption algorithm to use" );
+				WSConstants.DSA, XMLSignature.ALGO_ID_SIGNATURE_RSA_SHA256, XMLSignature.ALGO_ID_SIGNATURE_RSA_SHA384,
+				XMLSignature.ALGO_ID_SIGNATURE_RSA_SHA512, XMLSignature.ALGO_ID_MAC_HMAC_SHA1,
+				XMLSignature.ALGO_ID_MAC_HMAC_SHA256, XMLSignature.ALGO_ID_MAC_HMAC_SHA384,
+				XMLSignature.ALGO_ID_MAC_HMAC_SHA512 }, "Set the name of the signature encryption algorithm to use" );
 		form.appendTextField( "attributeName", "Attribute name", "The name of the attribute" );
 		form.append( "Attribute names", new SAMLAttributeValuesTable( attributeValues, this ) );
 
