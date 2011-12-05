@@ -13,7 +13,9 @@
 package com.eviware.soapui.model.propertyexpansion;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.SoapUIExtensionClassLoader;
@@ -29,6 +31,7 @@ import com.eviware.soapui.model.propertyexpansion.resolvers.PropertyResolver;
 import com.eviware.soapui.model.propertyexpansion.resolvers.PropertyResolverFactory;
 import com.eviware.soapui.model.propertyexpansion.resolvers.SubmitPropertyResolver;
 import com.eviware.soapui.model.propertyexpansion.resolvers.TestRunPropertyResolver;
+import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.settings.GlobalPropertySettings;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.types.StringToStringMap;
@@ -46,7 +49,7 @@ public class PropertyExpander
 	private static List<PropertyResolver> defaultResolvers = new ArrayList<PropertyResolver>();
 	private static PropertyExpander defaultExpander;
 	private static boolean debuggingMode;
-	private static StringToStringMap debuggingExpandedProperties;
+	private static Map<String, StringToStringMap> debuggingExpandedProperties;
 
 	static
 	{
@@ -67,7 +70,7 @@ public class PropertyExpander
 		}
 
 		defaultExpander = new PropertyExpander( true );
-		debuggingExpandedProperties = new StringToStringMap();
+		debuggingExpandedProperties = new HashMap<String, StringToStringMap>();
 	}
 
 	public PropertyExpander( boolean addDefaultResolvers )
@@ -187,9 +190,16 @@ public class PropertyExpander
 					if( entitize )
 						propertyValue = XmlUtils.entitize( propertyValue );
 
-					if( debuggingMode )
+					if( debuggingMode && context.getModelItem() instanceof TestCase )
 					{
-						debuggingExpandedProperties.put( propertyName, propertyValue );
+						TestCase testCase = ( TestCase )context.getModelItem();
+						StringToStringMap props = debuggingExpandedProperties.get( testCase.getId() );
+						if( props == null )
+						{
+							props = new StringToStringMap();
+						}
+						props.put( propertyName, propertyValue );
+						debuggingExpandedProperties.put( testCase.getId(), props );
 					}
 					buf.append( propertyValue );
 				}
@@ -227,19 +237,34 @@ public class PropertyExpander
 		return defaultExpander.expand( contextModelItem, content );
 	}
 
-	public static void setDebuggingMode( boolean debug )
+	public static void setDebuggingMode( String testCaseId, boolean debug )
 	{
 		debuggingMode = debug;
+		if( debug )
+		{
+			if( debuggingExpandedProperties.get( testCaseId ) == null )
+			{
+				debuggingExpandedProperties.put( testCaseId, new StringToStringMap() );
+			}
+		}
+		else
+		{
+			if( debuggingExpandedProperties.get( testCaseId ) != null )
+			{
+				debuggingExpandedProperties.remove( testCaseId );
+			}
+
+		}
 	}
 
-	public static StringToStringMap getDebuggingExpandedProperties()
+	public static StringToStringMap getDebuggingExpandedProperties( String testCaseId )
 	{
-		return debuggingExpandedProperties;
+		return debuggingExpandedProperties.get( testCaseId );
 	}
 
-	public static void clearDebuggingExpandedProperties()
+	public static void clearDebuggingExpandedProperties( String testCaseId )
 	{
-		debuggingExpandedProperties.clear();
+		debuggingExpandedProperties.remove( testCaseId );
 	}
 
 }

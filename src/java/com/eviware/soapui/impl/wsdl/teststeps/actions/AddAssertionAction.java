@@ -66,6 +66,7 @@ public class AddAssertionAction extends AbstractAction
 
 	public void release()
 	{
-		addAssertionPanel.release();
+		if( addAssertionPanel != null )
+			addAssertionPanel.release();
 	}
 }
