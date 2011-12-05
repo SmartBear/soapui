@@ -18,6 +18,8 @@ import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 
+import com.eviware.soapui.support.UISupport;
+
 @SuppressWarnings( "serial" )
 public class JCollapsibleTablePanel extends JCollapsiblePanel
 {
@@ -26,11 +28,12 @@ public class JCollapsibleTablePanel extends JCollapsiblePanel
 	private JTable table2;
 	private String title;
 
-	
 	public JCollapsibleTablePanel( JTable table, String title )
 	{
 		super( new JPanel(), title );
 		setTables( table, null );
+		setMinusIcon( UISupport.createImageIcon( "/minus.gif" ) );
+		setPlusIcon( UISupport.createImageIcon( "/plus.gif" ) );
 		this.title = title;
 	}
 
@@ -38,6 +41,8 @@ public class JCollapsibleTablePanel extends JCollapsiblePanel
 	{
 		super( new JPanel(), title );
 		setTables( table, table2 );
+		setMinusIcon( UISupport.createImageIcon( "/minus.gif" ) );
+		setPlusIcon( UISupport.createImageIcon( "/plus.gif" ) );
 		this.title = title;
 	}
 
@@ -65,8 +70,9 @@ public class JCollapsibleTablePanel extends JCollapsiblePanel
 	{
 		return new JTable[] { table, table2 };
 	}
-	
-	public String getTitle() {
+
+	public String getTitle()
+	{
 		return title;
 	}
 }

@@ -29,8 +29,8 @@ import com.eviware.soapui.support.UISupport;
 
 public class JCollapsiblePanel extends JPanel
 {
-	private static ImageIcon minusIcon = UISupport.createImageIcon( "/button1.gif" );
-	private static ImageIcon plusIcon = UISupport.createImageIcon( "/button2.gif" );
+	private ImageIcon minusIcon;
+	private ImageIcon plusIcon;
 
 	private JPanel contentPanel;
 	private JXToolBar toolbar;
@@ -40,6 +40,8 @@ public class JCollapsiblePanel extends JPanel
 	{
 		super( new BorderLayout() );
 		this.contentPanel = contentPanel;
+		minusIcon = UISupport.createImageIcon( "/button1.gif" );
+		plusIcon = UISupport.createImageIcon( "/button2.gif" );
 
 		add( contentPanel, BorderLayout.CENTER );
 		add( startToolbar( title ), BorderLayout.NORTH );
@@ -78,7 +80,7 @@ public class JCollapsiblePanel extends JPanel
 
 	public boolean isExpanded()
 	{
-		return toggleAction.getValue( Action.SMALL_ICON ) == minusIcon;
+		return toggleAction.getValue( Action.SMALL_ICON ) == getMinusIcon();
 	}
 
 	public void setExpanded( boolean expanded )
@@ -121,13 +123,13 @@ public class JCollapsiblePanel extends JPanel
 
 		public void setHide()
 		{
-			putValue( Action.SMALL_ICON, minusIcon );
+			putValue( Action.SMALL_ICON, getMinusIcon() );
 			putValue( Action.SHORT_DESCRIPTION, "Hides the content of this block" );
 		}
 
 		public void setShow()
 		{
-			putValue( Action.SMALL_ICON, plusIcon );
+			putValue( Action.SMALL_ICON, getPlusIcon() );
 			putValue( Action.SHORT_DESCRIPTION, "Shows the content of this block" );
 		}
 
@@ -140,5 +142,25 @@ public class JCollapsiblePanel extends JPanel
 	public JXToolBar getToolbar()
 	{
 		return toolbar;
+	}
+
+	public ImageIcon getMinusIcon()
+	{
+		return minusIcon;
+	}
+
+	public void setMinusIcon( ImageIcon minusIcon )
+	{
+		this.minusIcon = minusIcon;
+	}
+
+	public ImageIcon getPlusIcon()
+	{
+		return plusIcon;
+	}
+
+	public void setPlusIcon( ImageIcon plusIcon )
+	{
+		this.plusIcon = plusIcon;
 	}
 }
