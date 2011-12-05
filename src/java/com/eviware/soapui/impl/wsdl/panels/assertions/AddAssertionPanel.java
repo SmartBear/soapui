@@ -150,6 +150,8 @@ public class AddAssertionPanel extends SimpleDialog
 	@Override
 	protected boolean handleOk()
 	{
+		setVisible( false );
+
 		int selectedRow = assertionsTable.getSelectedRow();
 		String selection = ( ( AssertionListEntry )assertionsListTableModel.getValueAt( selectedRow, 0 ) ).getName();
 		if( selection == null )
@@ -206,10 +208,7 @@ public class AddAssertionPanel extends SimpleDialog
 
 		public void actionPerformed( ActionEvent e )
 		{
-			if( handleOk() )
-			{
-				setVisible( false );
-			}
+			handleOk();
 		}
 	}
 
@@ -308,7 +307,6 @@ public class AddAssertionPanel extends SimpleDialog
 			if( e.getClickCount() == 2 )
 			{
 				handleOk();
-				setVisible( false );
 			}
 		}
 	}
