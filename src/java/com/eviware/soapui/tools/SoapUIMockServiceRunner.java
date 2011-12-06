@@ -227,9 +227,18 @@ public class SoapUIMockServiceRunner extends AbstractSoapUIRunner
 		public void onMockResult( MockResult result )
 		{
 			responseCount++ ;
-			log.info( "Handled request " + responseCount + "; [" + result.getMockResponse().getMockOperation().getName()
-					+ "] with [" + result.getMockResponse().getName() + "] in [" + result.getTimeTaken() + "ms] at ["
-					+ dateFormat.format( new Date( result.getTimestamp() ) ) + "]" );
+			if( result.getMockResponse() == null )
+			{
+				log.info( "Handled request " + responseCount + " - [missing mockResponse] in [" + result.getTimeTaken()
+						+ "ms] at [" + dateFormat.format( new Date( result.getTimestamp() ) ) + "]" );
+			}
+			else
+			{
+				log.info( "Handled request " + responseCount + "; ["
+						+ result.getMockResponse().getMockOperation().getName() + "] with ["
+						+ result.getMockResponse().getName() + "] in [" + result.getTimeTaken() + "ms] at ["
+						+ dateFormat.format( new Date( result.getTimestamp() ) ) + "]" );
+			}
 		}
 	}
 
