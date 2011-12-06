@@ -552,7 +552,12 @@ public class AssertionsPanel extends JPanel
 
 			if( removeAssertionList.size() == 1 )
 			{
+				int selectedIndex = assertionList.getSelectedIndex();
 				removeSingleAssertion( removeAssertionList.get( 0 ) );
+				if( assertionList.getLastVisibleIndex() > selectedIndex )
+				{
+					assertionList.setSelectedIndex( selectedIndex );
+				}
 			}
 			else
 			{
