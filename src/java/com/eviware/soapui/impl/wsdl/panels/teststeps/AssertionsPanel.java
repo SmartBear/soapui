@@ -554,7 +554,7 @@ public class AssertionsPanel extends JPanel
 			{
 				int selectedIndex = assertionList.getSelectedIndex();
 				removeSingleAssertion( removeAssertionList.get( 0 ) );
-				if( assertionList.getLastVisibleIndex() > selectedIndex )
+				if( assertionList.getLastVisibleIndex() >= selectedIndex )
 				{
 					assertionList.setSelectedIndex( selectedIndex );
 				}
