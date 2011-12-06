@@ -34,10 +34,10 @@ import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.types.StringToStringMap;
 
 /**
-* @author Erik R. Yverling
-* 
-* Displays a table of SAML attribute values
-*/
+ * @author Erik R. Yverling
+ * 
+ *         Displays a table of SAML attribute values
+ */
 public class SAMLAttributeValuesTable extends JPanel
 {
 	private final List<StringToStringMap> attributeValues;
@@ -45,6 +45,7 @@ public class SAMLAttributeValuesTable extends JPanel
 	private AttributeValuesTableModel attributeValuesTableModel;
 	private JTable attributeValuesTable;
 	private JButton removeAttributeValueButton;
+	private JButton createAttributeValueButton;
 
 	public SAMLAttributeValuesTable( List<StringToStringMap> attributeValues, WssEntryBase entry )
 	{
@@ -73,11 +74,20 @@ public class SAMLAttributeValuesTable extends JPanel
 		setPreferredSize( new Dimension( 175, 150 ) );
 	}
 
+	@Override
+	public void setEnabled( boolean b )
+	{
+		attributeValuesTable.setEnabled( b );
+		createAttributeValueButton.setEnabled( b );
+		removeAttributeValueButton.setEnabled( b );
+	}
+
 	private Component buildToolbar()
 	{
 		JXToolBar toolbar = UISupport.createSmallToolbar();
 
-		toolbar.addFixed( UISupport.createToolbarButton( new AddAttributeValueAction() ) );
+		createAttributeValueButton = UISupport.createToolbarButton( new AddAttributeValueAction() );
+		toolbar.addFixed( createAttributeValueButton );
 		removeAttributeValueButton = UISupport.createToolbarButton( new RemoveAttributeValueAction() );
 		toolbar.addFixed( removeAttributeValueButton );
 

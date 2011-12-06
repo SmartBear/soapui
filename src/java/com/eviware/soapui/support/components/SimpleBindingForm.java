@@ -13,6 +13,7 @@
 package com.eviware.soapui.support.components;
 
 import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
@@ -71,14 +72,22 @@ public class SimpleBindingForm extends SimpleForm
 	{
 		JComboBox comboBox = super.appendComboBox( label, values, tooltip );
 		Bindings.bind( comboBox, new SelectionInList<Object>( values, pm.getModel( propertyName ) ) );
+
 		return comboBox;
 	}
-
+	
 	public JComboBox appendComboBox( String propertyName, String label, ComboBoxModel model, String tooltip )
 	{
 		JComboBox comboBox = super.appendComboBox( label, model, tooltip );
 		Bindings.bind( comboBox, new SelectionInList<Object>( model, pm.getModel( propertyName ) ) );
 		return comboBox;
+	}
+	
+	public void setComboBoxItems( String propertyName, JComboBox component, String[] items )
+	{
+		Bindings.removeComponentPropertyHandler( component );
+		component.setModel( new DefaultComboBoxModel( items ) );
+		Bindings.addComponentPropertyHandler( component, pm.getModel( propertyName ) );
 	}
 
 	public PresentationModel<?> getPresentationModel()

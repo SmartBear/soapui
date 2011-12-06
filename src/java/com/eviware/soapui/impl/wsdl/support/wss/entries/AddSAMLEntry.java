@@ -17,8 +17,12 @@ import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 
 import org.apache.ws.security.WSConstants;
 import org.apache.ws.security.WSSecurityException;
@@ -67,9 +71,6 @@ public class AddSAMLEntry extends WssEntryBase
 	public static final String HOLDER_OF_KEY_CONFIRMATION_METHOD = "Holder-of-key";
 	public static final String SENDER_VOUCHES_CONFIRMATION_METHOD = "Sender vouches";
 
-	// FIXME How should be support input for these fields? How are they used?
-	private static final String DEFAULT_SUBJECT_NAME = "uid=joe,ou=people,ou=saml-demo,o=example.com";
-
 	private KeyAliasComboBoxModel keyAliasComboBoxModel;
 	private InternalWssContainerListener wssContainerListener;
 
@@ -86,6 +87,15 @@ public class AddSAMLEntry extends WssEntryBase
 	private String attributeName;
 	private List<StringToStringMap> attributeValues;
 
+	private SimpleBindingForm form;
+	private JCheckBox signedCheckBox;
+	private JComboBox confirmationMethodComboBox;
+	private JComboBox cryptoComboBox;
+	private JComboBox keyAliasComboBox;
+	private JPasswordField passwordField;
+	private JTextField attributeNameTextField;
+	private SAMLAttributeValuesTable samlAttributeValuesTable;
+
 	public void init( WSSEntryConfig config, OutgoingWss container )
 	{
 		super.init( config, container, TYPE );
@@ -101,9 +111,9 @@ public class AddSAMLEntry extends WssEntryBase
 		confirmationMethod = reader.readString( "confirmationMethod", SENDER_VOUCHES_CONFIRMATION_METHOD );
 		crypto = reader.readString( "crypto", null );
 		issuer = reader.readString( "issuer", null );
-		subjectName = reader.readString( "subjectName", DEFAULT_SUBJECT_NAME );
+		subjectName = reader.readString( "subjectName", null );
 		subjectQualifier = reader.readString( "subjectQualifier", null );
-		digestAlgorithm = reader.readString( "digestAlgorithm", MessageDigestAlgorithm.ALGO_ID_DIGEST_SHA1);
+		digestAlgorithm = reader.readString( "digestAlgorithm", MessageDigestAlgorithm.ALGO_ID_DIGEST_SHA1 );
 		signatureAlgorithm = reader.readString( "signatureAlgorithm", WSConstants.RSA );
 		attributeName = reader.readString( "attributeName", null );
 		attributeValues = readTableValues( reader, "attributeValues" );
@@ -132,45 +142,117 @@ public class AddSAMLEntry extends WssEntryBase
 		wssContainerListener = new InternalWssContainerListener();
 		getWssContainer().addWssContainerListener( wssContainerListener );
 
-		SimpleBindingForm form = new SimpleBindingForm( new PresentationModel<AddSignatureEntry>( this ) );
+		form = new SimpleBindingForm( new PresentationModel<AddSignatureEntry>( this ) );
+
 		form.addSpace( 5 );
+
 		form.appendComboBox( "samlVersion", "SAML version", new String[] { SAML_VERSION_1, SAML_VERSION_2 },
 				"Choose the SAML version" );
-		form.appendCheckBox( "signed", "Signed", null );
-		form.appendComboBox( "assertionType", "Assertion type", new String[] { AUTHENTICATION_ASSERTION_TYPE,
-				ATTRIBUTE_ASSERTION_TYPE, AUTHORIZATION_ASSERTION_TYPE }, "Choose the type of assertion" );
-		form.appendComboBox( "confirmationMethod", "Confirmation method", new String[] {
-				SENDER_VOUCHES_CONFIRMATION_METHOD, HOLDER_OF_KEY_CONFIRMATION_METHOD }, "Choose the confirmation method" );
-		form.appendComboBox( "crypto", "Keystore",
-				new KeystoresComboBoxModel( getWssContainer(), getWssContainer().getCryptoByName( crypto ) ),
-				"Selects the Keystore containing the key to use for signing the SAML message" ).addItemListener(
-				new ItemListener()
+
+		signedCheckBox = form.appendCheckBox( "signed", "Signed", null );
+		signedCheckBox.addItemListener( new ItemListener()
+		{
+			@Override
+			public void itemStateChanged( ItemEvent e )
+			{
+				if( !signed )
 				{
-					public void itemStateChanged( ItemEvent e )
-					{
-						// FIXME This cases the drop down to be blank when changing keystore
-						keyAliasComboBoxModel.update( getWssContainer().getCryptoByName( crypto ) );
-					}
-				} );
+					form.setComboBoxItems( "confirmationMethod", confirmationMethodComboBox,
+							new String[] { SENDER_VOUCHES_CONFIRMATION_METHOD } );
+					cryptoComboBox.setEnabled( false );
+
+					keyAliasComboBox.setEnabled( false );
+					passwordField.setEnabled( false );
+				}
+				else
+				{
+					form.setComboBoxItems( "confirmationMethod", confirmationMethodComboBox, new String[] {
+							SENDER_VOUCHES_CONFIRMATION_METHOD, HOLDER_OF_KEY_CONFIRMATION_METHOD } );
+					cryptoComboBox.setEnabled( true );
+					keyAliasComboBox.setEnabled( true );
+					passwordField.setEnabled( true );
+				}
+			}
+		} );
+
+		form.appendComboBox( "assertionType", "Assertion type",
+				new String[] { AUTHENTICATION_ASSERTION_TYPE, ATTRIBUTE_ASSERTION_TYPE, AUTHORIZATION_ASSERTION_TYPE },
+				"Choose the type of assertion" ).addItemListener( new ItemListener()
+		{
+			public void itemStateChanged( ItemEvent e )
+			{
+				if( assertionType.equals( AUTHORIZATION_ASSERTION_TYPE ) )
+				{
+					signed = false;
+					signedCheckBox.setSelected( false );
+					signedCheckBox.setEnabled( false );
+				}
+				else
+				{
+					signedCheckBox.setEnabled( true );
+				}
+
+				if( assertionType.equals( ATTRIBUTE_ASSERTION_TYPE ) )
+				{
+					attributeNameTextField.setEnabled( true );
+					samlAttributeValuesTable.setEnabled( true );
+				}
+				else
+				{
+					attributeNameTextField.setEnabled( false );
+					samlAttributeValuesTable.setEnabled( false );
+				}
+			}
+		} );
+
+		confirmationMethodComboBox = form.appendComboBox( "confirmationMethod", "Confirmation method",
+				new String[] { SENDER_VOUCHES_CONFIRMATION_METHOD }, "Choose the confirmation method" );
+
+		cryptoComboBox = form.appendComboBox( "crypto", "Keystore", new KeystoresComboBoxModel( getWssContainer(),
+				getWssContainer().getCryptoByName( crypto ) ),
+				"Selects the Keystore containing the key to use for signing the SAML message" );
+		cryptoComboBox.setEnabled( false );
+		cryptoComboBox.addItemListener( new ItemListener()
+		{
+			public void itemStateChanged( ItemEvent e )
+			{
+				// FIXME This cases the drop down to be blank when changing keystore
+				keyAliasComboBoxModel.update( getWssContainer().getCryptoByName( crypto ) );
+			}
+		} );
 
 		// FIXME Why is this called username?
 		keyAliasComboBoxModel = new KeyAliasComboBoxModel( getWssContainer().getCryptoByName( crypto ) );
-		form.appendComboBox( "username", "Alias", keyAliasComboBoxModel, "The alias for the key to use for encryption" );
-		form.appendPasswordField( "password", "Password", "The certificate password" );
+		keyAliasComboBox = form.appendComboBox( "username", "Alias", keyAliasComboBoxModel,
+				"The alias for the key to use for encryption" );
+		keyAliasComboBox.setEnabled( false );
+
+		passwordField = form.appendPasswordField( "password", "Password", "The certificate password" );
+		passwordField.setEnabled( false );
+
 		form.appendTextField( "issuer", "Issuer", "The issuer" );
+
 		form.appendTextField( "subjectName", "Subject Name", "The subject qualifier" );
+
 		form.appendTextField( "subjectQualifier", "Subject Qualifier", "The subject qualifier" );
+
 		form.appendComboBox( "digestAlgorithm", "Digest Algorithm", new String[] {
 				MessageDigestAlgorithm.ALGO_ID_DIGEST_SHA1, MessageDigestAlgorithm.ALGO_ID_DIGEST_SHA256,
 				MessageDigestAlgorithm.ALGO_ID_DIGEST_SHA384, MessageDigestAlgorithm.ALGO_ID_DIGEST_SHA512 },
 				"Set the digest algorithm to use" );
+
 		form.appendComboBox( "signatureAlgorithm", "Signature Algorithm", new String[] { WSConstants.RSA,
 				WSConstants.DSA, XMLSignature.ALGO_ID_SIGNATURE_RSA_SHA256, XMLSignature.ALGO_ID_SIGNATURE_RSA_SHA384,
 				XMLSignature.ALGO_ID_SIGNATURE_RSA_SHA512, XMLSignature.ALGO_ID_MAC_HMAC_SHA1,
 				XMLSignature.ALGO_ID_MAC_HMAC_SHA256, XMLSignature.ALGO_ID_MAC_HMAC_SHA384,
 				XMLSignature.ALGO_ID_MAC_HMAC_SHA512 }, "Set the name of the signature encryption algorithm to use" );
-		form.appendTextField( "attributeName", "Attribute name", "The name of the attribute" );
-		form.append( "Attribute names", new SAMLAttributeValuesTable( attributeValues, this ) );
+
+		attributeNameTextField = form.appendTextField( "attributeName", "Attribute name", "The name of the attribute" );
+		attributeNameTextField.setEnabled( false );
+
+		samlAttributeValuesTable = new SAMLAttributeValuesTable( attributeValues, this );
+		samlAttributeValuesTable.setEnabled( false );
+		form.append( "Attribute values", samlAttributeValuesTable );
 
 		return new JScrollPane( form.getPanel() );
 	}
