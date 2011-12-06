@@ -31,6 +31,7 @@ import com.eviware.soapui.model.propertyexpansion.resolvers.PropertyResolver;
 import com.eviware.soapui.model.propertyexpansion.resolvers.PropertyResolverFactory;
 import com.eviware.soapui.model.propertyexpansion.resolvers.SubmitPropertyResolver;
 import com.eviware.soapui.model.propertyexpansion.resolvers.TestRunPropertyResolver;
+import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.settings.GlobalPropertySettings;
 import com.eviware.soapui.support.StringUtils;
@@ -190,9 +191,9 @@ public class PropertyExpander
 					if( entitize )
 						propertyValue = XmlUtils.entitize( propertyValue );
 
-					if( debuggingMode && context.getModelItem() instanceof TestCase )
+					TestCase testCase = ModelSupport.getModelItemTestCase( context.getModelItem() );
+					if( debuggingMode && testCase != null )
 					{
-						TestCase testCase = ( TestCase )context.getModelItem();
 						StringToStringMap props = debuggingExpandedProperties.get( testCase.getId() );
 						if( props == null )
 						{

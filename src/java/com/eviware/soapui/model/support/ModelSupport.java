@@ -22,6 +22,7 @@ import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
+import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.types.StringList;
 
@@ -153,6 +154,19 @@ public class ModelSupport
 		}
 
 		return ( Project )modelItem;
+	}
+
+	public static TestCase getModelItemTestCase( ModelItem modelItem )
+	{
+		if( modelItem == null )
+			return null;
+
+		while( !( modelItem instanceof TestCase ) && modelItem != null )
+		{
+			modelItem = modelItem.getParent();
+		}
+
+		return ( TestCase )modelItem;
 	}
 
 	public static String getResourceRoot( AbstractWsdlModelItem<?> testStep )
