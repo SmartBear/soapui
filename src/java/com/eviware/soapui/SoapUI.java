@@ -323,7 +323,7 @@ public class SoapUI
 			ProxyUtils.setProxyEnabled( false );
 		}
 		launchLoadUIButton = mainToolbar.add( new LaunchLoadUIButtonAction() );
-		mainToolbar.add( new ExitButtonAction() );
+		//		mainToolbar.add( new ExitButtonAction() );
 
 		mainToolbar.addGlue();
 
