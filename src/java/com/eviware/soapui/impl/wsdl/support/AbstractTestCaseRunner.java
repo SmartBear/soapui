@@ -95,7 +95,14 @@ public abstract class AbstractTestCaseRunner<T extends TestRunnable, T2 extends 
 		// create state for testcase if specified
 		if( testCase.getKeepSession() )
 		{
-			runContext.setProperty( SubmitContext.HTTP_STATE_PROPERTY, new BasicHttpContext() );
+			if( !( runContext.getProperty( SubmitContext.HTTP_STATE_PROPERTY ) instanceof BasicHttpContext ) )
+			{
+				runContext.setProperty( SubmitContext.HTTP_STATE_PROPERTY, new BasicHttpContext() );
+			}
+		}
+		else
+		{
+			runContext.setProperty( SubmitContext.HTTP_STATE_PROPERTY, null );
 		}
 
 		fillInTestRunnableListeners();
