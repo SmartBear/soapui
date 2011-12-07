@@ -11,7 +11,6 @@
  */
 package com.eviware.soapui.model.testsuite;
 
-import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
 
@@ -22,5 +21,5 @@ import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
  */
 public interface PropertyAssertion
 {
-	public AssertionStatus assertProperty( String propertyName, MessageExchange messageExchange, SubmitContext context );
+	public AssertionStatus assertProperty( String propertyName, TestStep testStep, SubmitContext context );
 }
