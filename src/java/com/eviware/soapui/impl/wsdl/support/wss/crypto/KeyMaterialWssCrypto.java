@@ -146,20 +146,10 @@ public class KeyMaterialWssCrypto implements WssCrypto
 			keyStore = KeyStore.getInstance( KeyStore.getDefaultType() );
 			keyStore.load( input, getPassword().toCharArray() );
 			return keyStore;
-
-			//			if( StringUtils.hasContent( getDefaultAlias() ) && StringUtils.hasContent( getAliasPassword() ) )
-			//			{
-			//				keyStore = KeyStoreBuilder.build( Util.streamToBytes( new FileInputStream( sourceProperty.expand() ) ),
-			//						getDefaultAlias().getBytes(), getPassword().toCharArray(), getAliasPassword().toCharArray() );
-			//			}
-			//			else
-			//				keyStore = KeyStoreBuilder.build( Util.streamToBytes( new FileInputStream( sourceProperty.expand() ) ),
-			//						StringUtils.hasContent( getPassword() ) ? getPassword().toCharArray() : null );
-			//
-			//			return keyStore;
 		}
 		catch( Throwable t )
 		{
+			keyStore = null;
 			throw new Exception( t );
 		}
 		finally

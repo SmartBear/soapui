@@ -57,6 +57,7 @@ import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
 
+// TODO Consider splitting this up into smaller entities for each main inner component
 public class WSSTabPanel extends JPanel
 {
 	private JTable cryptosTable;
