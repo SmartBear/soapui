@@ -53,9 +53,15 @@ import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
 import com.jgoodies.binding.PresentationModel;
 
 // FIXME Why is the entries named Add* consider changing to a noun
-public class AddSAMLEntry extends WssEntryBase
+
+/**
+ * @author Erik R. Yverling
+ * 
+ *         Used to generate a SAML assertion using various input components
+ */
+public class AddAutomaticSAMLEntry extends WssEntryBase
 {
-	public static final String TYPE = "SAML";
+	public static final String TYPE = "SAML (automatic)";
 
 	public static final String SAML_VERSION_1 = "1.1";
 	public static final String SAML_VERSION_2 = "2.0";
