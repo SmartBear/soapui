@@ -15,6 +15,8 @@ package com.eviware.soapui.impl.wsdl.teststeps.assertions.basic;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.sf.saxon.exslt.Sets;
+
 import org.apache.xmlbeans.XmlObject;
 
 import com.eviware.soapui.config.TestAssertionConfig;
@@ -29,10 +31,13 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.testsuite.Assertable;
+import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
 import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.model.testsuite.AssertionException;
+import com.eviware.soapui.model.testsuite.PropertyAssertion;
 import com.eviware.soapui.model.testsuite.RequestAssertion;
 import com.eviware.soapui.model.testsuite.ResponseAssertion;
+import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationBuilder;
@@ -77,6 +82,15 @@ public class SimpleContainsAssertion extends WsdlMessageAssertion implements Req
 	{
 		return assertContent( context, messageExchange.getResponseContent(), "Response" );
 	}
+	
+	@Override
+	protected String internalAssertProperty( String propertyName, TestStep testStep, SubmitContext context )
+			throws AssertionException
+	{
+		String propertyValue = testStep.getPropertyValue( propertyName );
+		assertContent( context, propertyValue, propertyName );
+		return "OK";
+	}
 
 	private String assertContent( SubmitContext context, String content, String type ) throws AssertionException
 	{
@@ -105,7 +119,7 @@ public class SimpleContainsAssertion extends WsdlMessageAssertion implements Req
 				throw new AssertionException( new AssertionError( "Missing token [" + replToken + "] in " + type ) );
 		}
 
-		return "Response contains token [" + replToken + "]";
+		return type + " contains token [" + replToken + "]";
 	}
 
 	private String normalize( String string )
@@ -232,4 +246,6 @@ public class SimpleContainsAssertion extends WsdlMessageAssertion implements Req
 			return new AssertionListEntry( SimpleContainsAssertion.LABEL, SimpleContainsAssertion.DESCRIPTION );
 		}
 	}
+
+	
 }

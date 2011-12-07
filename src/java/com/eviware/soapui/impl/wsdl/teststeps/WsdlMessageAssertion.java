@@ -37,6 +37,7 @@ import com.eviware.soapui.model.testsuite.AssertionException;
 import com.eviware.soapui.model.testsuite.TestAssertion;
 import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
+import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.resolver.ResolveContext;
 
@@ -223,8 +224,54 @@ public abstract class WsdlMessageAssertion extends AbstractModelItem implements 
 		return assertionStatus;
 	}
 
+	public AssertionStatus assertProperty( String propertyName, TestStep testStep, SubmitContext context )
+	{
+		AssertionStatus oldStatus = assertionStatus;
+		ImageIcon oldIcon = getIcon();
+
+		if( testStep.hasProperty(propertyName) )
+		{
+			assertionStatus = AssertionStatus.FAILED;
+			assertionErrors = new com.eviware.soapui.model.testsuite.AssertionError[] { new com.eviware.soapui.model.testsuite.AssertionError(
+					"property: '" + propertyName + "' does not exist" ) };
+		}
+		else
+		{
+			try
+			{
+				internalAssertProperty( propertyName, testStep, context );
+				assertionStatus = AssertionStatus.VALID;
+				assertionErrors = null;
+			}
+			catch( AssertionException e )
+			{
+				assertionStatus = AssertionStatus.FAILED;
+				assertionErrors = e.getErrors();
+			}
+			catch( Throwable e )
+			{
+				e.printStackTrace();
+				assertionStatus = AssertionStatus.FAILED;
+				assertionErrors = new com.eviware.soapui.model.testsuite.AssertionError[] { new com.eviware.soapui.model.testsuite.AssertionError(
+						e.getMessage() ) };
+			}
+		}
+
+		notifyPropertyChanged( STATUS_PROPERTY, oldStatus, assertionStatus );
+		notifyPropertyChanged( ICON_PROPERTY, oldIcon, getIcon() );
+
+		return assertionStatus;
+	}
+
 	protected abstract String internalAssertRequest( MessageExchange messageExchange, SubmitContext context )
 			throws AssertionException;
+
+	//TODO: make this abstract after implement in all assertions
+	protected String internalAssertProperty( String propertyName, TestStep testStep, SubmitContext context )
+			throws AssertionException
+	{
+		return null;
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -412,7 +459,6 @@ public abstract class WsdlMessageAssertion extends AbstractModelItem implements 
 	{
 		assertionStatus = AssertionStatus.UNKNOWN;
 	}
-
 
 	@Override
 	public int getIndexOfAssertion( TestAssertion assertion )
