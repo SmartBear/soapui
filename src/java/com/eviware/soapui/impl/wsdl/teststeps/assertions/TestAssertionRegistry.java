@@ -138,6 +138,28 @@ public class TestAssertionRegistry
 		return null;
 	}
 
+	public Class<? extends WsdlMessageAssertion> getAssertionClassType( String assertionType )
+	{
+		try
+		{
+			TestAssertionFactory factory = availableAssertions.get( assertionType );
+			if( factory == null )
+			{
+				log.error( "Missing assertion for type [" + assertionType + "]" );
+			}
+			else
+			{
+				return factory.getAssertionClassType();
+			}
+		}
+		catch( Exception e )
+		{
+			SoapUI.logError( e );
+		}
+
+		return null;
+	}
+
 	public Class<? extends WsdlMessageAssertion> getAssertionClassType( TestAssertionConfig config )
 	{
 		try
