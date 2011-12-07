@@ -297,7 +297,6 @@
 					use="required">
 				</xsd:attribute>
 				<xsd:attribute name="disabled" type="xsd:boolean"></xsd:attribute>
-				<xsd:attribute name="isGroup" type="xsd:boolean"></xsd:attribute>
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
@@ -2355,7 +2354,7 @@
 	<xsd:complexType name="GroupAssertionList">
 		<xsd:sequence>
 			<xsd:element name="assertions"
-				type="tns:TestAssertion" maxOccurs="unbounded" minOccurs="0">
+				type="tns:AssertionEntry" maxOccurs="unbounded" minOccurs="0">
 			</xsd:element>
 			<xsd:element name="operation" type="xsd:string"></xsd:element>
 		</xsd:sequence>
@@ -2370,7 +2369,8 @@
 	<xsd:complexType name="AssertionEntry">
 		<xsd:sequence>
 			<xsd:element name="id" type="xsd:string"></xsd:element>
-			<xsd:element name="testStepId" type="xsd:string"></xsd:element>
+            <xsd:element name="isGroup" type="xsd:boolean"></xsd:element>
+            <xsd:element name="testStepId" type="xsd:string"></xsd:element>
 			<xsd:element name="propertyName" type="xsd:string"></xsd:element>
 			<xsd:element name="assertion" type="tns:TestAssertion"></xsd:element>
 		</xsd:sequence>

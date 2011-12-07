@@ -18,6 +18,7 @@ import javax.swing.ImageIcon;
 
 import org.apache.xmlbeans.XmlObject;
 
+import com.eviware.soapui.config.AssertionEntryConfig;
 import com.eviware.soapui.config.GroupAssertionListConfig;
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry;
@@ -412,20 +413,15 @@ public abstract class WsdlMessageAssertion extends AbstractModelItem implements 
 		assertionStatus = AssertionStatus.UNKNOWN;
 	}
 
-	@Override
-	public boolean getIsGroup()
-	{
-		return getConfig().getIsGroup();
-	}
 
 	@Override
 	public int getIndexOfAssertion( TestAssertion assertion )
 	{
 		if( getConfig() instanceof GroupAssertionListConfig )
 		{
-			List<TestAssertionConfig> assertionConfigList = ( ( GroupAssertionListConfig )getConfig() )
+			List<AssertionEntryConfig> assertionEntryConfigList = ( ( GroupAssertionListConfig )getConfig() )
 					.getAssertionsList();
-			return assertionConfigList.indexOf( ( ( WsdlMessageAssertion )assertion ).getConfig() );
+			return assertionEntryConfigList.indexOf( ( ( WsdlMessageAssertion )assertion ).getConfig() );
 		}
 		else
 			return -1;
