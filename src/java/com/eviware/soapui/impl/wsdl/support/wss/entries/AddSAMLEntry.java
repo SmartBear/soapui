@@ -55,8 +55,6 @@ import com.jgoodies.binding.PresentationModel;
 // FIXME Why is the entries named Add* consider changing to a noun
 public class AddSAMLEntry extends WssEntryBase
 {
-	// TODO Some of these should be enums if possible.
-
 	public static final String TYPE = "SAML";
 
 	public static final String SAML_VERSION_1 = "1.1";
@@ -155,54 +153,21 @@ public class AddSAMLEntry extends WssEntryBase
 			@Override
 			public void itemStateChanged( ItemEvent e )
 			{
-				if( !signed )
-				{
-					form.setComboBoxItems( "confirmationMethod", confirmationMethodComboBox,
-							new String[] { SENDER_VOUCHES_CONFIRMATION_METHOD } );
-					cryptoComboBox.setEnabled( false );
-
-					keyAliasComboBox.setEnabled( false );
-					passwordField.setEnabled( false );
-				}
-				else
-				{
-					form.setComboBoxItems( "confirmationMethod", confirmationMethodComboBox, new String[] {
-							SENDER_VOUCHES_CONFIRMATION_METHOD, HOLDER_OF_KEY_CONFIRMATION_METHOD } );
-					cryptoComboBox.setEnabled( true );
-					keyAliasComboBox.setEnabled( true );
-					passwordField.setEnabled( true );
-				}
+				checkSigned();
 			}
+
 		} );
 
 		form.appendComboBox( "assertionType", "Assertion type",
 				new String[] { AUTHENTICATION_ASSERTION_TYPE, ATTRIBUTE_ASSERTION_TYPE, AUTHORIZATION_ASSERTION_TYPE },
 				"Choose the type of assertion" ).addItemListener( new ItemListener()
 		{
+			@Override
 			public void itemStateChanged( ItemEvent e )
 			{
-				if( assertionType.equals( AUTHORIZATION_ASSERTION_TYPE ) )
-				{
-					signed = false;
-					signedCheckBox.setSelected( false );
-					signedCheckBox.setEnabled( false );
-				}
-				else
-				{
-					signedCheckBox.setEnabled( true );
-				}
-
-				if( assertionType.equals( ATTRIBUTE_ASSERTION_TYPE ) )
-				{
-					attributeNameTextField.setEnabled( true );
-					samlAttributeValuesTable.setEnabled( true );
-				}
-				else
-				{
-					attributeNameTextField.setEnabled( false );
-					samlAttributeValuesTable.setEnabled( false );
-				}
+				checkAssertionType();
 			}
+
 		} );
 
 		confirmationMethodComboBox = form.appendComboBox( "confirmationMethod", "Confirmation method",
@@ -211,9 +176,10 @@ public class AddSAMLEntry extends WssEntryBase
 		cryptoComboBox = form.appendComboBox( "crypto", "Keystore", new KeystoresComboBoxModel( getWssContainer(),
 				getWssContainer().getCryptoByName( crypto ) ),
 				"Selects the Keystore containing the key to use for signing the SAML message" );
-		cryptoComboBox.setEnabled( false );
+
 		cryptoComboBox.addItemListener( new ItemListener()
 		{
+			@Override
 			public void itemStateChanged( ItemEvent e )
 			{
 				// FIXME This cases the drop down to be blank when changing keystore
@@ -225,10 +191,8 @@ public class AddSAMLEntry extends WssEntryBase
 		keyAliasComboBoxModel = new KeyAliasComboBoxModel( getWssContainer().getCryptoByName( crypto ) );
 		keyAliasComboBox = form.appendComboBox( "username", "Alias", keyAliasComboBoxModel,
 				"The alias for the key to use for encryption" );
-		keyAliasComboBox.setEnabled( false );
 
 		passwordField = form.appendPasswordField( "password", "Password", "The certificate password" );
-		passwordField.setEnabled( false );
 
 		form.appendTextField( "issuer", "Issuer", "The issuer" );
 
@@ -248,13 +212,65 @@ public class AddSAMLEntry extends WssEntryBase
 				XMLSignature.ALGO_ID_MAC_HMAC_SHA512 }, "Set the name of the signature encryption algorithm to use" );
 
 		attributeNameTextField = form.appendTextField( "attributeName", "Attribute name", "The name of the attribute" );
-		attributeNameTextField.setEnabled( false );
 
 		samlAttributeValuesTable = new SAMLAttributeValuesTable( attributeValues, this );
-		samlAttributeValuesTable.setEnabled( false );
 		form.append( "Attribute values", samlAttributeValuesTable );
 
+		initComponentsEnabledState();
+
 		return new JScrollPane( form.getPanel() );
+	}
+
+	private void initComponentsEnabledState()
+	{
+		checkSigned();
+		checkAssertionType();
+	}
+
+	private void checkSigned()
+	{
+		if( !signed )
+		{
+			form.setComboBoxItems( "confirmationMethod", confirmationMethodComboBox,
+					new String[] { SENDER_VOUCHES_CONFIRMATION_METHOD } );
+			confirmationMethodComboBox.setSelectedIndex( 0 );
+			cryptoComboBox.setEnabled( false );
+			keyAliasComboBox.setEnabled( false );
+			passwordField.setEnabled( false );
+		}
+		else
+		{
+			form.setComboBoxItems( "confirmationMethod", confirmationMethodComboBox, new String[] {
+					SENDER_VOUCHES_CONFIRMATION_METHOD, HOLDER_OF_KEY_CONFIRMATION_METHOD } );
+			cryptoComboBox.setEnabled( true );
+			keyAliasComboBox.setEnabled( true );
+			passwordField.setEnabled( true );
+		}
+	}
+
+	private void checkAssertionType()
+	{
+		if( assertionType.equals( AUTHORIZATION_ASSERTION_TYPE ) )
+		{
+			signed = false;
+			signedCheckBox.setSelected( false );
+			signedCheckBox.setEnabled( false );
+		}
+		else
+		{
+			signedCheckBox.setEnabled( true );
+		}
+
+		if( assertionType.equals( ATTRIBUTE_ASSERTION_TYPE ) )
+		{
+			attributeNameTextField.setEnabled( true );
+			samlAttributeValuesTable.setEnabled( true );
+		}
+		else
+		{
+			attributeNameTextField.setEnabled( false );
+			samlAttributeValuesTable.setEnabled( false );
+		}
 	}
 
 	public void process( WSSecHeader secHeader, Document doc, PropertyExpansionContext context )
@@ -503,6 +519,7 @@ public class AddSAMLEntry extends WssEntryBase
 	public void setSigned( boolean signed )
 	{
 		this.signed = signed;
+		saveConfig();
 	}
 
 	public String getAttributeName()
@@ -513,6 +530,7 @@ public class AddSAMLEntry extends WssEntryBase
 	public void setAttributeName( String attributeName )
 	{
 		this.attributeName = attributeName;
+		saveConfig();
 	}
 
 	public List<StringToStringMap> getAttributeValues()
@@ -523,6 +541,7 @@ public class AddSAMLEntry extends WssEntryBase
 	public void setAttributeValues( List<StringToStringMap> attributeValues )
 	{
 		this.attributeValues = attributeValues;
+		saveConfig();
 	}
 
 	private final class InternalWssContainerListener extends WssContainerListenerAdapter
