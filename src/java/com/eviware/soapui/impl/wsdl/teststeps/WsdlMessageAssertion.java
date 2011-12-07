@@ -229,7 +229,7 @@ public abstract class WsdlMessageAssertion extends AbstractModelItem implements 
 		AssertionStatus oldStatus = assertionStatus;
 		ImageIcon oldIcon = getIcon();
 
-		if( testStep.hasProperty(propertyName) )
+		if( !testStep.hasProperty(propertyName) )
 		{
 			assertionStatus = AssertionStatus.FAILED;
 			assertionErrors = new com.eviware.soapui.model.testsuite.AssertionError[] { new com.eviware.soapui.model.testsuite.AssertionError(
