@@ -75,19 +75,17 @@ public class SimpleBindingForm extends SimpleForm
 
 		return comboBox;
 	}
-	
+
 	public JComboBox appendComboBox( String propertyName, String label, ComboBoxModel model, String tooltip )
 	{
 		JComboBox comboBox = super.appendComboBox( label, model, tooltip );
 		Bindings.bind( comboBox, new SelectionInList<Object>( model, pm.getModel( propertyName ) ) );
 		return comboBox;
 	}
-	
-	public void setComboBoxItems( String propertyName, JComboBox component, String[] items )
+
+	public void setComboBoxItems( String propertyName, JComboBox comboBox, String[] values )
 	{
-		Bindings.removeComponentPropertyHandler( component );
-		component.setModel( new DefaultComboBoxModel( items ) );
-		Bindings.addComponentPropertyHandler( component, pm.getModel( propertyName ) );
+		Bindings.bind( comboBox, new SelectionInList<Object>( values, pm.getModel( propertyName ) ) );
 	}
 
 	public PresentationModel<?> getPresentationModel()
