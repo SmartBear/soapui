@@ -45,7 +45,7 @@ import com.eviware.soapui.support.xml.XmlUtils;
 
 public class AddManualSAMLEntry extends WssEntryBase
 {
-	public static final String TYPE = "SAML (manual)";
+	public static final String TYPE = "SAML";
 
 	private String samlAssertion;
 
