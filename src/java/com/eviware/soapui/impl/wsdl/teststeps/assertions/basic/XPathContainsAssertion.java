@@ -78,6 +78,7 @@ import com.eviware.soapui.model.testsuite.AssertionException;
 import com.eviware.soapui.model.testsuite.RequestAssertion;
 import com.eviware.soapui.model.testsuite.ResponseAssertion;
 import com.eviware.soapui.model.testsuite.TestProperty;
+import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JUndoableTextArea;
@@ -200,6 +201,17 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
 			return "Missing Response";
 		else
 			return assertContent( messageExchange.getResponseContentAsXml(), context, "Response" );
+	}
+
+	protected String internalAssertProperty( String propertyName, MessageExchange messageExchange, TestStep testStep,
+			SubmitContext context ) throws AssertionException
+	{
+		if( !XmlUtils.seemsToBeXml( testStep.getPropertyValue( propertyName ) ) )
+		{
+			throw new AssertionException( new AssertionError( "Property '" + propertyName
+					+ "' has value which is not xml!" ) );
+		}
+		return assertContent( testStep.getPropertyValue( propertyName ), context, propertyName );
 	}
 
 	public String assertContent( String response, SubmitContext context, String type ) throws AssertionException

@@ -27,6 +27,7 @@ import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.model.testsuite.AssertionException;
 import com.eviware.soapui.model.testsuite.ResponseAssertion;
+import com.eviware.soapui.model.testsuite.TestStep;
 
 /**
  * Asserts that the specified message is a valid SOAP Message
@@ -71,6 +72,12 @@ public class SoapResponseAssertion extends WsdlMessageAssertion implements Respo
 		return "Response Envelope OK";
 	}
 
+	protected String internalAssertProperty( String propertyName, MessageExchange messageExchange, TestStep testStep,
+			SubmitContext context ) throws AssertionException
+	{
+		return internalAssertResponse(  messageExchange,  context );
+	}
+	
 	public static class Factory extends AbstractTestAssertionFactory
 	{
 		public Factory()

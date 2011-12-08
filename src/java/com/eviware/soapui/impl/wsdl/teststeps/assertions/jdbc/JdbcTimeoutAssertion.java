@@ -27,6 +27,7 @@ import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.model.testsuite.AssertionException;
 import com.eviware.soapui.model.testsuite.RequestAssertion;
 import com.eviware.soapui.model.testsuite.ResponseAssertion;
+import com.eviware.soapui.model.testsuite.TestStep;
 
 public class JdbcTimeoutAssertion extends WsdlMessageAssertion implements ResponseAssertion, RequestAssertion
 {
@@ -61,6 +62,12 @@ public class JdbcTimeoutAssertion extends WsdlMessageAssertion implements Respon
 		return "JDBC Timeout OK";
 	}
 
+	protected String internalAssertProperty( String propertyName, MessageExchange messageExchange, TestStep testStep,
+			SubmitContext context ) throws AssertionException
+	{
+		return internalAssertResponse(  messageExchange,  context );
+	}
+	
 	public static class Factory extends AbstractTestAssertionFactory
 	{
 		public Factory()

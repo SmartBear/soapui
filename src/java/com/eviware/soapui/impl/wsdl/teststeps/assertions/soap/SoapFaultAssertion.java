@@ -27,6 +27,7 @@ import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.model.testsuite.AssertionException;
 import com.eviware.soapui.model.testsuite.ResponseAssertion;
+import com.eviware.soapui.model.testsuite.TestStep;
 
 /**
  * Assertion that checks that the associated WsdlTestRequests response is a SOAP
@@ -71,6 +72,12 @@ public class SoapFaultAssertion extends WsdlMessageAssertion implements Response
 			throws AssertionException
 	{
 		return null;
+	}
+	
+	protected String internalAssertProperty( String propertyName, MessageExchange messageExchange, TestStep testStep,
+			SubmitContext context ) throws AssertionException
+	{
+		return internalAssertResponse(  messageExchange,  context );
 	}
 
 	public static class Factory extends AbstractTestAssertionFactory

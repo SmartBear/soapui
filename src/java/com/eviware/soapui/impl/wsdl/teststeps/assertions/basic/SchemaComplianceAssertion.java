@@ -46,6 +46,7 @@ import com.eviware.soapui.model.testsuite.RequestAssertion;
 import com.eviware.soapui.model.testsuite.ResponseAssertion;
 import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
+import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationBuilder;
@@ -114,6 +115,14 @@ public class SchemaComplianceAssertion extends WsdlMessageAssertion implements R
 		}
 
 		throw new AssertionException( new AssertionError( "Unknown MessageExchange type" ) );
+	}
+	
+	@Override
+	protected String internalAssertProperty( String propertyName, MessageExchange messageExchange,TestStep testStep, SubmitContext context )
+			throws AssertionException
+	{
+		internalAssertResponse( messageExchange,  context );
+		return "OK";
 	}
 
 	private String assertWadlResponse( RestMessageExchange messageExchange, SubmitContext context )
