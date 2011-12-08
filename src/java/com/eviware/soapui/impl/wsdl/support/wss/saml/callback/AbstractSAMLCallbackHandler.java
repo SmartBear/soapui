@@ -71,21 +71,22 @@ public abstract class AbstractSAMLCallbackHandler implements SAMLCallbackHandler
 	/**
 	 * Use this for signed assertion
 	 */
-	public AbstractSAMLCallbackHandler( Crypto crypto, String alias, String subjectName, String subjectQualifier )
+	public AbstractSAMLCallbackHandler( Crypto crypto, String alias, String assertionTypeFriendlyName,
+			String confirmationMethodFriendlyName )
 	{
 		this.crypto = crypto;
 		this.alias = alias;
-		this.subjectName = subjectName;
-		this.subjectQualifier = subjectQualifier;
+		setStatement( assertionTypeFriendlyName );
+		setConfirmationMethod( confirmationMethodFriendlyName );
 	}
 
 	/**
 	 * Use this is for unsigned assertions
 	 */
-	public AbstractSAMLCallbackHandler( String subjectName, String subjectQualifier )
+	public AbstractSAMLCallbackHandler( String assertionTypeFriendlyName, String confirmationMethodFriendlyName )
 	{
-		this.subjectName = subjectName;
-		this.subjectQualifier = subjectQualifier;
+		setStatement( assertionTypeFriendlyName );
+		setConfirmationMethod( confirmationMethodFriendlyName );
 	}
 
 	@Override
@@ -110,6 +111,18 @@ public abstract class AbstractSAMLCallbackHandler implements SAMLCallbackHandler
 	public void setIssuer( String issuer )
 	{
 		this.issuer = issuer;
+	}
+
+	@Override
+	public void setSubjectName( String subjectName )
+	{
+		this.subjectName = subjectName;
+	}
+
+	@Override
+	public void setSubjectQualifier( String subjectQualifier )
+	{
+		this.subjectQualifier = subjectQualifier;
 	}
 
 	@Override

@@ -48,6 +48,10 @@ public interface SAMLCallbackHandler extends CallbackHandler
 
 	public abstract void setIssuer( String issuer );
 
+	public void setSubjectName( String subjectName );
+
+	public void setSubjectQualifier( String subjectQualifier );
+
 	public abstract byte[] getEphemeralKey();
 
 	public abstract void setCerts( X509Certificate[] certs );
@@ -59,4 +63,5 @@ public interface SAMLCallbackHandler extends CallbackHandler
 	public abstract void setConfirmationMethod( String confMethod );
 
 	public abstract void setCustomAttributeName( String customAttributeName );
+
 }

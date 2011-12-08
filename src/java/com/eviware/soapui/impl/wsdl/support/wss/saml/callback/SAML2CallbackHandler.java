@@ -35,10 +35,13 @@ import com.eviware.soapui.impl.wsdl.support.wss.entries.AutomaticSAMLEntry;
  */
 public class SAML2CallbackHandler extends AbstractSAMLCallbackHandler
 {
-	public SAML2CallbackHandler( Crypto crypto, String alias, String subjectName, String subjectQualifier )
-			throws Exception
+	/**
+	 * Use this for signed assertion
+	 */
+	public SAML2CallbackHandler( Crypto crypto, String alias, String assertionTypeFriendlyName,
+			String confirmationMethodFriendlyName ) throws Exception
 	{
-		super( crypto, alias, subjectName, subjectQualifier );
+		super( crypto, alias, assertionTypeFriendlyName, confirmationMethodFriendlyName );
 
 		if( certs == null )
 		{
@@ -46,13 +49,14 @@ public class SAML2CallbackHandler extends AbstractSAMLCallbackHandler
 			cryptoType.setAlias( alias );
 			certs = crypto.getX509Certificates( cryptoType );
 		}
-		// FIXME Should we always default to Sender Vouches?
-		confirmationMethod = SAML2Constants.CONF_SENDER_VOUCHES;
 	}
 
-	public SAML2CallbackHandler( String subjectName, String subjectQualifier )
+	/**
+	 * Use this is for unsigned assertions
+	 */
+	public SAML2CallbackHandler( String assertionTypeFriendlyName, String confirmationMethodFriendlyName )
 	{
-		super( subjectName, subjectQualifier );
+		super( assertionTypeFriendlyName, confirmationMethodFriendlyName );
 	}
 
 	public void handle( Callback[] callbacks ) throws IOException, UnsupportedCallbackException
@@ -92,13 +96,13 @@ public class SAML2CallbackHandler extends AbstractSAMLCallbackHandler
 	}
 
 	@Override
-	public void setConfirmationMethod( String signingType )
+	public void setConfirmationMethod( String confirmationMethodFriendlyName )
 	{
-		if( signingType.equals( AutomaticSAMLEntry.HOLDER_OF_KEY_CONFIRMATION_METHOD ) )
+		if( confirmationMethodFriendlyName.equals( AutomaticSAMLEntry.HOLDER_OF_KEY_CONFIRMATION_METHOD ) )
 		{
 			confirmationMethod = SAML2Constants.CONF_HOLDER_KEY;
 		}
-		else if( signingType.equals( AutomaticSAMLEntry.SENDER_VOUCHES_CONFIRMATION_METHOD ) )
+		else if( confirmationMethodFriendlyName.equals( AutomaticSAMLEntry.SENDER_VOUCHES_CONFIRMATION_METHOD ) )
 		{
 			confirmationMethod = SAML2Constants.CONF_SENDER_VOUCHES;
 		}

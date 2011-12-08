@@ -191,7 +191,6 @@ public class AutomaticSAMLEntry extends WssEntryBase
 			}
 		} );
 
-		// FIXME Why is this called username?
 		keyAliasComboBoxModel = new KeyAliasComboBoxModel( getWssContainer().getCryptoByName( crypto ) );
 		keyAliasComboBox = form.appendComboBox( "username", "Alias", keyAliasComboBoxModel,
 				"The alias for the key to use for encryption" );
@@ -290,13 +289,11 @@ public class AutomaticSAMLEntry extends WssEntryBase
 
 				if( samlVersion.equals( SAML_VERSION_1 ) )
 				{
-					callbackHandler = new SAML1CallbackHandler( context.expand( subjectName ),
-							context.expand( subjectQualifier ) );
+					callbackHandler = new SAML1CallbackHandler( assertionType, confirmationMethod );
 				}
 				else if( samlVersion.equals( SAML_VERSION_2 ) )
 				{
-					callbackHandler = new SAML2CallbackHandler( context.expand( subjectName ),
-							context.expand( subjectQualifier ) );
+					callbackHandler = new SAML2CallbackHandler( assertionType, confirmationMethod );
 				}
 				AssertionWrapper assertion = createAssertion( context, samlParms, callbackHandler );
 				wsSecSAMLToken.build( doc, assertion, secHeader );
@@ -315,12 +312,12 @@ public class AutomaticSAMLEntry extends WssEntryBase
 				if( samlVersion.equals( SAML_VERSION_1 ) )
 				{
 					callbackHandler = new SAML1CallbackHandler( wssCrypto.getCrypto(), context.expand( getUsername() ),
-							context.expand( subjectName ), context.expand( subjectQualifier ) );
+							assertionType, confirmationMethod );
 				}
 				else if( samlVersion.equals( SAML_VERSION_2 ) )
 				{
 					callbackHandler = new SAML2CallbackHandler( wssCrypto.getCrypto(), context.expand( getUsername() ),
-							context.expand( subjectName ), context.expand( subjectQualifier ) );
+							assertionType, confirmationMethod );
 				}
 
 				AssertionWrapper assertion = createAssertion( context, samlParms, callbackHandler );
@@ -372,13 +369,13 @@ public class AutomaticSAMLEntry extends WssEntryBase
 	{
 		if( assertionType.equals( ATTRIBUTE_ASSERTION_TYPE ) )
 		{
-			callbackHandler.setCustomAttributeName( attributeName );
+			callbackHandler.setCustomAttributeName( context.expand( attributeName ) );
 			callbackHandler.setCustomAttributeValues( extractValueColumnValues( attributeValues, context ) );
 		}
 
-		callbackHandler.setConfirmationMethod( confirmationMethod );
-		callbackHandler.setIssuer( issuer );
-		callbackHandler.setStatement( assertionType );
+		callbackHandler.setIssuer( context.expand( issuer ) );
+		callbackHandler.setSubjectName( context.expand( subjectName ) );
+		callbackHandler.setSubjectQualifier( context.expand( subjectQualifier ) );
 
 		samlParms.setCallbackHandler( callbackHandler );
 		return new AssertionWrapper( samlParms );
