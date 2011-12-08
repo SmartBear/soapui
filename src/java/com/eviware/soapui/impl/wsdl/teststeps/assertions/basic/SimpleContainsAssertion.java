@@ -15,6 +15,8 @@ package com.eviware.soapui.impl.wsdl.teststeps.assertions.basic;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.sf.saxon.exslt.Sets;
+
 import org.apache.xmlbeans.XmlObject;
 
 import com.eviware.soapui.config.TestAssertionConfig;
@@ -29,6 +31,7 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.testsuite.Assertable;
+import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
 import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.model.testsuite.AssertionException;
 import com.eviware.soapui.model.testsuite.PropertyAssertion;
@@ -51,7 +54,7 @@ import com.eviware.x.form.XFormFactory;
  * @author Ole.Matzura
  */
 
-public class SimpleContainsAssertion extends WsdlMessageAssertion implements RequestAssertion, ResponseAssertion, PropertyAssertion
+public class SimpleContainsAssertion extends WsdlMessageAssertion implements RequestAssertion, ResponseAssertion
 {
 	private String token;
 	private XFormDialog dialog;
@@ -81,11 +84,10 @@ public class SimpleContainsAssertion extends WsdlMessageAssertion implements Req
 	}
 	
 	@Override
-	protected String internalAssertProperty( String propertyName, TestStep testStep, SubmitContext context )
+	protected String internalAssertProperty( String propertyName, MessageExchange messageExchange,TestStep testStep, SubmitContext context )
 			throws AssertionException
 	{
-		String propertyValue = testStep.getPropertyValue( propertyName );
-		assertContent( context, propertyValue, propertyName );
+		assertContent( context,  testStep.getPropertyValue( propertyName ), propertyName );
 		return "OK";
 	}
 

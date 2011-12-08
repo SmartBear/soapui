@@ -33,6 +33,7 @@ import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.model.testsuite.AssertionException;
 import com.eviware.soapui.model.testsuite.RequestAssertion;
 import com.eviware.soapui.model.testsuite.ResponseAssertion;
+import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationBuilder;
@@ -78,6 +79,14 @@ public class SimpleNotContainsAssertion extends WsdlMessageAssertion implements 
 		return assertContent( context, messageExchange.getResponseContent(), "Response" );
 	}
 
+	@Override
+	protected String internalAssertProperty( String propertyName, MessageExchange messageExchange,TestStep testStep, SubmitContext context )
+			throws AssertionException
+	{
+		assertContent( context,  testStep.getPropertyValue( propertyName ), propertyName );
+		return "OK";
+	}
+	
 	private String assertContent( SubmitContext context, String content, String type ) throws AssertionException
 	{
 		if( token == null )

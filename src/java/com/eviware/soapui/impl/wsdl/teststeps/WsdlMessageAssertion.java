@@ -38,6 +38,7 @@ import com.eviware.soapui.model.testsuite.TestAssertion;
 import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.resolver.ResolveContext;
 
@@ -224,12 +225,13 @@ public abstract class WsdlMessageAssertion extends AbstractModelItem implements 
 		return assertionStatus;
 	}
 
-	public AssertionStatus assertProperty( String propertyName, TestStep testStep, SubmitContext context )
+	public AssertionStatus assertProperty( String propertyName, MessageExchange messageExchange, TestStep testStep,
+			SubmitContext context )
 	{
 		AssertionStatus oldStatus = assertionStatus;
 		ImageIcon oldIcon = getIcon();
 
-		if( !testStep.hasProperty(propertyName) )
+		if( !testStep.hasProperty( propertyName ) )
 		{
 			assertionStatus = AssertionStatus.FAILED;
 			assertionErrors = new com.eviware.soapui.model.testsuite.AssertionError[] { new com.eviware.soapui.model.testsuite.AssertionError(
@@ -239,7 +241,7 @@ public abstract class WsdlMessageAssertion extends AbstractModelItem implements 
 		{
 			try
 			{
-				internalAssertProperty( propertyName, testStep, context );
+				internalAssertProperty( propertyName, messageExchange, testStep, context );
 				assertionStatus = AssertionStatus.VALID;
 				assertionErrors = null;
 			}
@@ -267,8 +269,8 @@ public abstract class WsdlMessageAssertion extends AbstractModelItem implements 
 			throws AssertionException;
 
 	//TODO: make this abstract after implement in all assertions
-	protected String internalAssertProperty( String propertyName, TestStep testStep, SubmitContext context )
-			throws AssertionException
+	protected String internalAssertProperty( String propertyName, MessageExchange messageExchange, TestStep testStep,
+			SubmitContext context ) throws AssertionException
 	{
 		return null;
 	}

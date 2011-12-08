@@ -28,6 +28,7 @@ import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.model.testsuite.AssertionException;
 import com.eviware.soapui.model.testsuite.RequestAssertion;
 import com.eviware.soapui.model.testsuite.ResponseAssertion;
+import com.eviware.soapui.model.testsuite.TestStep;
 
 public class HttpDownloadAllResourcesAssertion extends WsdlMessageAssertion implements ResponseAssertion,
 		RequestAssertion
@@ -59,6 +60,14 @@ public class HttpDownloadAllResourcesAssertion extends WsdlMessageAssertion impl
 		}
 
 		return "HTTP Download all resources OK";
+	}
+
+	@Override
+	protected String internalAssertProperty( String propertyName,  MessageExchange messageExchange ,TestStep testStep, SubmitContext context )
+			throws AssertionException
+	{
+		internalAssertResponse( messageExchange, context );
+		return "OK";
 	}
 
 	@Override
