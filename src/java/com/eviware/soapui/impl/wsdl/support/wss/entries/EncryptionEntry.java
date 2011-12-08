@@ -46,7 +46,7 @@ import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
 import com.eviware.soapui.support.xml.XmlUtils;
 import com.jgoodies.binding.PresentationModel;
 
-public class AddEncryptionEntry extends WssEntryBase
+public class EncryptionEntry extends WssEntryBase
 {
 	private static final String DEFAULT_OPTION = "<default>";
 	public static final String TYPE = "Encryption";
@@ -72,7 +72,7 @@ public class AddEncryptionEntry extends WssEntryBase
 	@Override
 	protected JComponent buildUI()
 	{
-		SimpleBindingForm form = new SimpleBindingForm( new PresentationModel<AddSignatureEntry>( this ) );
+		SimpleBindingForm form = new SimpleBindingForm( new PresentationModel<SignatureEntry>( this ) );
 
 		form.addSpace( 5 );
 		wssContainerListener = new InternalWssContainerListener();

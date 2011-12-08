@@ -27,7 +27,7 @@ import com.eviware.soapui.support.xml.XmlObjectConfigurationBuilder;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
 import com.jgoodies.binding.PresentationModel;
 
-public class AddTimestampEntry extends WssEntryBase
+public class TimestampEntry extends WssEntryBase
 {
 	public static final String TYPE = "Timestamp";
 
@@ -42,7 +42,7 @@ public class AddTimestampEntry extends WssEntryBase
 	@Override
 	protected JComponent buildUI()
 	{
-		SimpleBindingForm form = new SimpleBindingForm( new PresentationModel<AddTimestampEntry>( this ) );
+		SimpleBindingForm form = new SimpleBindingForm( new PresentationModel<TimestampEntry>( this ) );
 		form.addSpace( 5 );
 		form.appendTextField( "timeToLive", "Time To Live", "Sets the TimeToLive value for the Timestamp Token" );
 		form.appendCheckBox( "strictTimestamp", "Millisecond Precision", "Sets precision of timestamp to milliseconds" );

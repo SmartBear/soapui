@@ -43,7 +43,7 @@ import com.eviware.soapui.support.xml.XmlUtils;
  *         Used to create a manual SAML assertion using a test editor field
  */
 
-public class AddManualSAMLEntry extends WssEntryBase
+public class ManualSAMLEntry extends WssEntryBase
 {
 	public static final String TYPE = "SAML";
 

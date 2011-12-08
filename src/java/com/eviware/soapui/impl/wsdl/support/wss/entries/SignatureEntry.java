@@ -46,7 +46,7 @@ import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
 import com.eviware.soapui.support.xml.XmlUtils;
 import com.jgoodies.binding.PresentationModel;
 
-public class AddSignatureEntry extends WssEntryBase
+public class SignatureEntry extends WssEntryBase
 {
 	private static final String DEFAULT_OPTION = "<default>";
 	public static final String TYPE = "Signature";
@@ -61,7 +61,7 @@ public class AddSignatureEntry extends WssEntryBase
 												 */
 	private List<StringToStringMap> parts = new ArrayList<StringToStringMap>();
 	private com.eviware.soapui.impl.wsdl.support.wss.entries.WssEntryBase.KeyAliasComboBoxModel keyAliasComboBoxModel;
-	private com.eviware.soapui.impl.wsdl.support.wss.entries.AddSignatureEntry.InternalWssContainerListener wssContainerListener;
+	private com.eviware.soapui.impl.wsdl.support.wss.entries.SignatureEntry.InternalWssContainerListener wssContainerListener;
 
 	public void init( WSSEntryConfig config, OutgoingWss container )
 	{
@@ -71,7 +71,7 @@ public class AddSignatureEntry extends WssEntryBase
 	@Override
 	protected JComponent buildUI()
 	{
-		SimpleBindingForm form = new SimpleBindingForm( new PresentationModel<AddSignatureEntry>( this ) );
+		SimpleBindingForm form = new SimpleBindingForm( new PresentationModel<SignatureEntry>( this ) );
 		form.addSpace( 5 );
 		wssContainerListener = new InternalWssContainerListener();
 		getWssContainer().addWssContainerListener( wssContainerListener );

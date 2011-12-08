@@ -34,7 +34,7 @@ import org.apache.ws.security.saml.ext.bean.SubjectLocalityBean;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import com.eviware.soapui.impl.wsdl.support.wss.entries.AddAutomaticSAMLEntry;
+import com.eviware.soapui.impl.wsdl.support.wss.entries.AutomaticSAMLEntry;
 
 /*
  * @author Erik R. Yverling
@@ -170,15 +170,15 @@ public abstract class AbstractSAMLCallbackHandler implements SAMLCallbackHandler
 	@Override
 	public void setStatement( String statement )
 	{
-		if( statement.equals( AddAutomaticSAMLEntry.AUTHENTICATION_ASSERTION_TYPE ) )
+		if( statement.equals( AutomaticSAMLEntry.AUTHENTICATION_ASSERTION_TYPE ) )
 		{
 			this.statement = Statement.AUTHN;
 		}
-		else if( statement.equals( AddAutomaticSAMLEntry.ATTRIBUTE_ASSERTION_TYPE ) )
+		else if( statement.equals( AutomaticSAMLEntry.ATTRIBUTE_ASSERTION_TYPE ) )
 		{
 			this.statement = Statement.ATTR;
 		}
-		else if( statement.equals( AddAutomaticSAMLEntry.AUTHORIZATION_ASSERTION_TYPE ) )
+		else if( statement.equals( AutomaticSAMLEntry.AUTHORIZATION_ASSERTION_TYPE ) )
 		{
 			this.statement = Statement.AUTHZ;
 		}

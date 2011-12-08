@@ -13,12 +13,12 @@
 package com.eviware.soapui.impl.wsdl.support.wss;
 
 import com.eviware.soapui.config.WSSEntryConfig;
-import com.eviware.soapui.impl.wsdl.support.wss.entries.AddEncryptionEntry;
-import com.eviware.soapui.impl.wsdl.support.wss.entries.AddAutomaticSAMLEntry;
-import com.eviware.soapui.impl.wsdl.support.wss.entries.AddManualSAMLEntry;
-import com.eviware.soapui.impl.wsdl.support.wss.entries.AddSignatureEntry;
-import com.eviware.soapui.impl.wsdl.support.wss.entries.AddTimestampEntry;
-import com.eviware.soapui.impl.wsdl.support.wss.entries.AddUsernameEntry;
+import com.eviware.soapui.impl.wsdl.support.wss.entries.EncryptionEntry;
+import com.eviware.soapui.impl.wsdl.support.wss.entries.AutomaticSAMLEntry;
+import com.eviware.soapui.impl.wsdl.support.wss.entries.ManualSAMLEntry;
+import com.eviware.soapui.impl.wsdl.support.wss.entries.SignatureEntry;
+import com.eviware.soapui.impl.wsdl.support.wss.entries.TimestampEntry;
+import com.eviware.soapui.impl.wsdl.support.wss.entries.UsernameEntry;
 import com.eviware.soapui.support.registry.AbstractRegistry;
 
 public class WssEntryRegistry extends AbstractRegistry<WssEntry, WSSEntryConfig, OutgoingWss>
@@ -27,12 +27,12 @@ public class WssEntryRegistry extends AbstractRegistry<WssEntry, WSSEntryConfig,
 
 	public WssEntryRegistry()
 	{
-		mapType( AddUsernameEntry.TYPE, AddUsernameEntry.class );
-		mapType( AddTimestampEntry.TYPE, AddTimestampEntry.class );
-		mapType( AddManualSAMLEntry.TYPE, AddManualSAMLEntry.class );
-		mapType( AddAutomaticSAMLEntry.TYPE, AddAutomaticSAMLEntry.class );
-		mapType( AddSignatureEntry.TYPE, AddSignatureEntry.class );
-		mapType( AddEncryptionEntry.TYPE, AddEncryptionEntry.class );
+		mapType( UsernameEntry.TYPE, UsernameEntry.class );
+		mapType( TimestampEntry.TYPE, TimestampEntry.class );
+		mapType( ManualSAMLEntry.TYPE, ManualSAMLEntry.class );
+		mapType( AutomaticSAMLEntry.TYPE, AutomaticSAMLEntry.class );
+		mapType( SignatureEntry.TYPE, SignatureEntry.class );
+		mapType( EncryptionEntry.TYPE, EncryptionEntry.class );
 	}
 
 	public static synchronized WssEntryRegistry get()

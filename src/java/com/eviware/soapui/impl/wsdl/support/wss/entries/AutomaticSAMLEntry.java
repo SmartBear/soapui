@@ -59,7 +59,7 @@ import com.jgoodies.binding.PresentationModel;
  * 
  *         Used to generate a SAML assertion using various input components
  */
-public class AddAutomaticSAMLEntry extends WssEntryBase
+public class AutomaticSAMLEntry extends WssEntryBase
 {
 	public static final String TYPE = "SAML (automatic)";
 
@@ -146,7 +146,7 @@ public class AddAutomaticSAMLEntry extends WssEntryBase
 		wssContainerListener = new InternalWssContainerListener();
 		getWssContainer().addWssContainerListener( wssContainerListener );
 
-		form = new SimpleBindingForm( new PresentationModel<AddSignatureEntry>( this ) );
+		form = new SimpleBindingForm( new PresentationModel<SignatureEntry>( this ) );
 
 		form.addSpace( 5 );
 

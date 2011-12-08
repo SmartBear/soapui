@@ -32,7 +32,7 @@ import com.eviware.soapui.support.xml.XmlObjectConfigurationBuilder;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
 import com.jgoodies.binding.PresentationModel;
 
-public class AddUsernameEntry extends WssEntryBase
+public class UsernameEntry extends WssEntryBase
 {
 	private static final String PASSWORD_DIGEST_EXT = "PasswordDigest Ext";
 
@@ -93,7 +93,7 @@ public class AddUsernameEntry extends WssEntryBase
 	@Override
 	protected JComponent buildUI()
 	{
-		SimpleBindingForm form = new SimpleBindingForm( new PresentationModel<AddUsernameEntry>( this ) );
+		SimpleBindingForm form = new SimpleBindingForm( new PresentationModel<UsernameEntry>( this ) );
 		form.addSpace( 5 );
 		form.appendTextField( "username", "Username", "The username for this token" );
 		form.appendPasswordField( "password", "Password", "The password for this token" );
