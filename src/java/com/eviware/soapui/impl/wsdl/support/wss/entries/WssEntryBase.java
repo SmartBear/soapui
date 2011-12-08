@@ -235,8 +235,6 @@ public abstract class WssEntryBase implements WssEntry, PropertyExpansionContain
 				setText( "Issuer Name and Serial Number" );
 			else if( value.equals( 1 ) )
 				setText( "Binary Security Token" );
-			// else if( value.equals( 2 ) )
-			// setText( "Issuer Name and Serial Number" );
 			else if( value.equals( 3 ) )
 				setText( "X509 Certificate" );
 			else if( value.equals( 4 ) )

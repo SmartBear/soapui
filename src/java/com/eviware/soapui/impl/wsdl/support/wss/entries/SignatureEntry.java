@@ -55,10 +55,7 @@ public class SignatureEntry extends WssEntryBase
 	private String signatureAlgorithm;
 	private boolean useSingleCert;
 	private String signatureCanonicalization;
-	private String digestAlgorithm; /*
-												 * ADDED: Combo box for selecting digest
-												 * algorithm
-												 */
+	private String digestAlgorithm;
 	private List<StringToStringMap> parts = new ArrayList<StringToStringMap>();
 	private com.eviware.soapui.impl.wsdl.support.wss.entries.WssEntryBase.KeyAliasComboBoxModel keyAliasComboBoxModel;
 	private com.eviware.soapui.impl.wsdl.support.wss.entries.SignatureEntry.InternalWssContainerListener wssContainerListener;
@@ -90,7 +87,6 @@ public class SignatureEntry extends WssEntryBase
 		keyAliasComboBoxModel = new KeyAliasComboBoxModel( getWssContainer().getCryptoByName( crypto ) );
 		form.appendComboBox( "username", "Alias", keyAliasComboBoxModel, "The alias for the key to use for encryption" );
 
-		// form.appendTextField( "username", "Alias", "The certificate alias" );
 		form.appendPasswordField( "password", "Password", "The certificate password" );
 
 		form.appendComboBox( "keyIdentifierType", "Key Identifier Type", new Integer[] { 0, 1, 3, 4 },
@@ -107,7 +103,6 @@ public class SignatureEntry extends WssEntryBase
 				WSConstants.C14N_OMIT_COMMENTS, WSConstants.C14N_WITH_COMMENTS, WSConstants.C14N_EXCL_OMIT_COMMENTS,
 				WSConstants.C14N_EXCL_WITH_COMMENTS }, "Set the canonicalization method to use." );
 
-		/* ADDED: Combo box for selecting digest algorithm */
 		form.appendComboBox( "digestAlgorithm", "Digest Algorithm", new String[] { DEFAULT_OPTION,
 				MessageDigestAlgorithm.ALGO_ID_DIGEST_NOT_RECOMMENDED_MD5, MessageDigestAlgorithm.ALGO_ID_DIGEST_SHA1,
 				MessageDigestAlgorithm.ALGO_ID_DIGEST_SHA256, MessageDigestAlgorithm.ALGO_ID_DIGEST_SHA384,
@@ -136,7 +131,6 @@ public class SignatureEntry extends WssEntryBase
 		signatureCanonicalization = reader.readString( "signatureCanonicalization", null );
 		useSingleCert = reader.readBoolean( "useSingleCert", false );
 
-		/* ADDED: digest algorithm to use */
 		digestAlgorithm = reader.readString( "digestAlgorithm", null );
 
 		parts = readTableValues( reader, "signaturePart" );
@@ -151,7 +145,6 @@ public class SignatureEntry extends WssEntryBase
 		builder.add( "signatureCanonicalization", signatureCanonicalization );
 		builder.add( "useSingleCert", useSingleCert );
 
-		/* ADDED: digest algorithm to use */
 		builder.add( "digestAlgorithm", digestAlgorithm );
 
 		saveTableValues( builder, parts, "signaturePart" );
@@ -185,7 +178,6 @@ public class SignatureEntry extends WssEntryBase
 
 			wssSign.setUseSingleCertificate( useSingleCert );
 
-			/* ADDED: Set the digest algorithm to the selected one */
 			if( StringUtils.hasContent( digestAlgorithm ) )
 				wssSign.setDigestAlgo( digestAlgorithm );
 
@@ -261,7 +253,6 @@ public class SignatureEntry extends WssEntryBase
 		saveConfig();
 	}
 
-	/* ADDED: digest algorithm */
 	public String getDigestAlgorithm()
 	{
 		return StringUtils.isNullOrEmpty( digestAlgorithm ) ? DEFAULT_OPTION : digestAlgorithm;

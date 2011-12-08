@@ -52,8 +52,6 @@ import com.eviware.soapui.support.xml.XmlObjectConfigurationBuilder;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
 import com.jgoodies.binding.PresentationModel;
 
-// FIXME Why is the entries named Add* consider changing to a noun
-
 /**
  * @author Erik R. Yverling
  * 
@@ -105,7 +103,7 @@ public class AutomaticSAMLEntry extends WssEntryBase
 		super.init( config, container, TYPE );
 	}
 
-	// TODO How can we make FindBugs that these fields will always be initialized and be able to add NonNull annotations?
+	// FIXME How can we make FindBugs that these fields will always be initialized and be able to add NonNull annotations?
 	@Override
 	protected void load( XmlObjectConfigurationReader reader )
 	{
