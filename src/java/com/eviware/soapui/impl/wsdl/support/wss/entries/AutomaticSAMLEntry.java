@@ -301,7 +301,6 @@ public class AutomaticSAMLEntry extends WssEntryBase
 			else
 			{
 				WSSecSignatureSAML wsSecSignatureSAML = new WSSecSignatureSAML();
-				// FIXME Add a helper method for this since it's used alot
 				WssCrypto wssCrypto = getWssContainer().getCryptoByName( crypto );
 
 				if( wssCrypto == null )

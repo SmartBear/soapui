@@ -57,6 +57,7 @@ import com.eviware.soapui.impl.wsdl.support.wss.WssCrypto;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlUtils;
+import com.eviware.soapui.utils.TestUtils;
 
 /**
  * @author Erik R. Yverling
@@ -78,10 +79,6 @@ public class AutomaticSAMLEntryTest
 	private static final String SUBJECT_NAME = "uid=joe,ou=people,ou=saml-demo,o=example.com";
 	private static final String ATTTRIBUTE_NAME = "attibuteName";
 	private static final String ATTTRIBUTE_VALUE = "attributeValue";
-
-	private static final String SAMPLE_SOAP_MESSAGE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-			+ "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ws=\"http://ws.app4test.eviware.com/\">"
-			+ "<soapenv:Header/>" + "<soapenv:Body>" + "<ws:getItems/>" + "</soapenv:Body>" + "</soapenv:Envelope>";
 
 	private AutomaticSAMLEntry automaticSamlEntry;
 
@@ -112,7 +109,7 @@ public class AutomaticSAMLEntryTest
 
 		initXpath();
 
-		doc = XmlUtils.parseXml( SAMPLE_SOAP_MESSAGE );
+		doc = XmlUtils.parseXml( TestUtils.SAMPLE_SOAP_MESSAGE );
 
 		secHeader = new WSSecHeader();
 		secHeader.insertSecurityHeader( doc );
