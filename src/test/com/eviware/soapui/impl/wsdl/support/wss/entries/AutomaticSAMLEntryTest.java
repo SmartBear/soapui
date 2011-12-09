@@ -39,11 +39,12 @@ import org.apache.ws.security.WSSecurityException;
 import org.apache.ws.security.components.crypto.CredentialException;
 import org.apache.ws.security.components.crypto.Merlin;
 import org.apache.ws.security.message.WSSecHeader;
+import org.apache.ws.security.saml.ext.builder.SAML1Constants;
+import org.apache.ws.security.saml.ext.builder.SAML2Constants;
 import org.apache.ws.security.util.Loader;
 import org.apache.xml.security.algorithms.MessageDigestAlgorithm;
 import org.apache.xmlbeans.XmlObject;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -61,15 +62,8 @@ import com.eviware.soapui.support.xml.XmlUtils;
  * @author Erik R. Yverling
  */
 
-// FIXME Needs some refactoring love
 public class AutomaticSAMLEntryTest
 {
-	// TODO Can these be found in the wss4j lib instead?
-	private static final String SAML_1_HOLDER_OF_KEY_NAMESPACE = "urn:oasis:names:tc:SAML:1.0:cm:holder-of-key";
-	private static final String SAML_2_HOLDER_OF_KEY_NAMESPACE = "urn:oasis:names:tc:SAML:2.0:cm:holder-of-key";
-	private static final String SAML_1_SENDER_VOUCHES_NAMESPACE = "urn:oasis:names:tc:SAML:1.0:cm:sender-vouches";
-	private static final String SAML_2_SENDER_VOUCHES_NAMESPACE = "urn:oasis:names:tc:SAML:2.0:cm:sender-vouches";
-
 	public static junit.framework.Test suite()
 	{
 		return new JUnit4TestAdapter( AutomaticSAMLEntryTest.class );
@@ -154,15 +148,13 @@ public class AutomaticSAMLEntryTest
 	public void testProcessUnsignedSAML1AuthenticationAssertionUsingSenderVouches() throws WSSecurityException,
 			XPathExpressionException
 	{
-		automaticSamlEntry.setSamlVersion( AutomaticSAMLEntry.SAML_VERSION_1 );
-		automaticSamlEntry.setSigned( false );
-		automaticSamlEntry.setAssertionType( AutomaticSAMLEntry.AUTHENTICATION_ASSERTION_TYPE );
-		automaticSamlEntry.setConfirmationMethod( AutomaticSAMLEntry.SENDER_VOUCHES_CONFIRMATION_METHOD );
+		setRequiredFields( AutomaticSAMLEntry.SAML_VERSION_1, false, AutomaticSAMLEntry.AUTHENTICATION_ASSERTION_TYPE,
+				AutomaticSAMLEntry.SENDER_VOUCHES_CONFIRMATION_METHOD );
 
 		automaticSamlEntry.process( secHeader, doc, contextMock );
 
 		assertEquals( xpath.evaluate( "//saml1:ConfirmationMethod", doc, XPathConstants.STRING ),
-				SAML_1_SENDER_VOUCHES_NAMESPACE );
+				SAML1Constants.CONF_SENDER_VOUCHES );
 		assertNotNull( xpath.evaluate( "//saml1:AuthenticationStatement", doc, XPathConstants.NODE ) );
 	}
 
@@ -170,15 +162,13 @@ public class AutomaticSAMLEntryTest
 	public void testProcessUnsignedSAML2AuthenticationAssertionUsingSenderVouches() throws WSSecurityException,
 			XPathExpressionException
 	{
-		automaticSamlEntry.setSamlVersion( AutomaticSAMLEntry.SAML_VERSION_2 );
-		automaticSamlEntry.setSigned( false );
-		automaticSamlEntry.setAssertionType( AutomaticSAMLEntry.AUTHENTICATION_ASSERTION_TYPE );
-		automaticSamlEntry.setConfirmationMethod( AutomaticSAMLEntry.SENDER_VOUCHES_CONFIRMATION_METHOD );
+		setRequiredFields( AutomaticSAMLEntry.SAML_VERSION_2, false, AutomaticSAMLEntry.AUTHENTICATION_ASSERTION_TYPE,
+				AutomaticSAMLEntry.SENDER_VOUCHES_CONFIRMATION_METHOD );
 
 		automaticSamlEntry.process( secHeader, doc, contextMock );
 
 		assertEquals( xpath.evaluate( "//saml2:SubjectConfirmation/@Method", doc, XPathConstants.STRING ),
-				SAML_2_SENDER_VOUCHES_NAMESPACE );
+				SAML2Constants.CONF_SENDER_VOUCHES );
 		assertNotNull( xpath.evaluate( "//saml2:AuthnStatement", doc, XPathConstants.NODE ) );
 	}
 
@@ -186,22 +176,17 @@ public class AutomaticSAMLEntryTest
 	public void testProcessUnsignedSAML1AttributeAssertionUsingSenderVouches() throws WSSecurityException,
 			XPathExpressionException
 	{
-		automaticSamlEntry.setSamlVersion( AutomaticSAMLEntry.SAML_VERSION_1 );
-		automaticSamlEntry.setSigned( false );
-		automaticSamlEntry.setAssertionType( AutomaticSAMLEntry.ATTRIBUTE_ASSERTION_TYPE );
-		automaticSamlEntry.setConfirmationMethod( AutomaticSAMLEntry.SENDER_VOUCHES_CONFIRMATION_METHOD );
-		automaticSamlEntry.setAttributeName( ATTTRIBUTE_NAME );
+		setRequiredFields( AutomaticSAMLEntry.SAML_VERSION_1, false, AutomaticSAMLEntry.ATTRIBUTE_ASSERTION_TYPE,
+				AutomaticSAMLEntry.SENDER_VOUCHES_CONFIRMATION_METHOD );
 
-		StringToStringMap attributeValueRow = new StringToStringMap();
-		attributeValueRow.put( AutomaticSAMLEntry.ATTRIBUTE_VALUES_VALUE_COLUMN, ATTTRIBUTE_VALUE );
-		automaticSamlEntry.setAttributeValues( Collections.singletonList( attributeValueRow ) );
+		createAttribute();
 
 		automaticSamlEntry.process( secHeader, doc, contextMock );
 
 		System.out.println( XmlUtils.serializePretty( doc ) );
 
 		assertEquals( xpath.evaluate( "//saml1:ConfirmationMethod", doc, XPathConstants.STRING ),
-				SAML_1_SENDER_VOUCHES_NAMESPACE );
+				SAML1Constants.CONF_SENDER_VOUCHES );
 		assertNotNull( xpath.evaluate( "//saml1:AttributeStatement", doc, XPathConstants.NODE ) );
 		assertEquals(
 				xpath.evaluate( "//saml1:AttributeStatement/saml1:Attribute/@AttributeName", doc, XPathConstants.STRING ),
@@ -214,22 +199,17 @@ public class AutomaticSAMLEntryTest
 	public void testProcessUnsignedSAML2AttributeAssertionUsingSenderVouches() throws WSSecurityException,
 			XPathExpressionException
 	{
-		automaticSamlEntry.setSamlVersion( AutomaticSAMLEntry.SAML_VERSION_2 );
-		automaticSamlEntry.setSigned( false );
-		automaticSamlEntry.setAssertionType( AutomaticSAMLEntry.ATTRIBUTE_ASSERTION_TYPE );
-		automaticSamlEntry.setConfirmationMethod( AutomaticSAMLEntry.SENDER_VOUCHES_CONFIRMATION_METHOD );
-		automaticSamlEntry.setAttributeName( ATTTRIBUTE_NAME );
+		setRequiredFields( AutomaticSAMLEntry.SAML_VERSION_2, false, AutomaticSAMLEntry.ATTRIBUTE_ASSERTION_TYPE,
+				AutomaticSAMLEntry.SENDER_VOUCHES_CONFIRMATION_METHOD );
 
-		StringToStringMap attributeValueRow = new StringToStringMap();
-		attributeValueRow.put( AutomaticSAMLEntry.ATTRIBUTE_VALUES_VALUE_COLUMN, ATTTRIBUTE_VALUE );
-		automaticSamlEntry.setAttributeValues( Collections.singletonList( attributeValueRow ) );
+		createAttribute();
 
 		automaticSamlEntry.process( secHeader, doc, contextMock );
 
 		System.out.println( XmlUtils.serializePretty( doc ) );
 
 		assertEquals( xpath.evaluate( "//saml2:SubjectConfirmation/@Method", doc, XPathConstants.STRING ),
-				SAML_2_SENDER_VOUCHES_NAMESPACE );
+				SAML2Constants.CONF_SENDER_VOUCHES );
 		assertNotNull( xpath.evaluate( "//saml2:AttributeStatement", doc, XPathConstants.NODE ) );
 		assertEquals(
 				xpath.evaluate( "//saml2:AttributeStatement/saml2:Attribute/@FriendlyName", doc, XPathConstants.STRING ),
@@ -242,15 +222,13 @@ public class AutomaticSAMLEntryTest
 	public void testProcessUnsignedSAML1AuthorizationAssertionUsingSenderVouches() throws WSSecurityException,
 			XPathExpressionException
 	{
-		automaticSamlEntry.setSamlVersion( AutomaticSAMLEntry.SAML_VERSION_1 );
-		automaticSamlEntry.setSigned( false );
-		automaticSamlEntry.setAssertionType( AutomaticSAMLEntry.AUTHORIZATION_ASSERTION_TYPE );
-		automaticSamlEntry.setConfirmationMethod( AutomaticSAMLEntry.SENDER_VOUCHES_CONFIRMATION_METHOD );
+		setRequiredFields( AutomaticSAMLEntry.SAML_VERSION_1, false, AutomaticSAMLEntry.AUTHORIZATION_ASSERTION_TYPE,
+				AutomaticSAMLEntry.SENDER_VOUCHES_CONFIRMATION_METHOD );
 
 		automaticSamlEntry.process( secHeader, doc, contextMock );
 
 		assertEquals( xpath.evaluate( "//saml1:ConfirmationMethod", doc, XPathConstants.STRING ),
-				SAML_1_SENDER_VOUCHES_NAMESPACE );
+				SAML1Constants.CONF_SENDER_VOUCHES );
 		assertNotNull( xpath.evaluate( "//saml1:AuthorizationDecisionStatement", doc, XPathConstants.NODE ) );
 	}
 
@@ -258,15 +236,13 @@ public class AutomaticSAMLEntryTest
 	public void testProcessUnsignedSAML2AuthorizationAssertionUsingSenderVouches() throws WSSecurityException,
 			XPathExpressionException
 	{
-		automaticSamlEntry.setSamlVersion( AutomaticSAMLEntry.SAML_VERSION_2 );
-		automaticSamlEntry.setSigned( false );
-		automaticSamlEntry.setAssertionType( AutomaticSAMLEntry.AUTHORIZATION_ASSERTION_TYPE );
-		automaticSamlEntry.setConfirmationMethod( AutomaticSAMLEntry.SENDER_VOUCHES_CONFIRMATION_METHOD );
+		setRequiredFields( AutomaticSAMLEntry.SAML_VERSION_2, false, AutomaticSAMLEntry.AUTHORIZATION_ASSERTION_TYPE,
+				AutomaticSAMLEntry.SENDER_VOUCHES_CONFIRMATION_METHOD );
 
 		automaticSamlEntry.process( secHeader, doc, contextMock );
 
 		assertEquals( xpath.evaluate( "//saml2:SubjectConfirmation/@Method", doc, XPathConstants.STRING ),
-				SAML_2_SENDER_VOUCHES_NAMESPACE );
+				SAML2Constants.CONF_SENDER_VOUCHES );
 		assertNotNull( xpath.evaluate( "//saml2:AuthzDecisionStatement", doc, XPathConstants.NODE ) );
 	}
 
@@ -274,31 +250,32 @@ public class AutomaticSAMLEntryTest
 	public void testProcessSignedSAML1AuthenticationAssertionUsingHolderOfKey() throws WSSecurityException,
 			XPathExpressionException
 	{
-		automaticSamlEntry.setSamlVersion( AutomaticSAMLEntry.SAML_VERSION_1 );
-		automaticSamlEntry.setSigned( true );
-		automaticSamlEntry.setAssertionType( AutomaticSAMLEntry.AUTHENTICATION_ASSERTION_TYPE );
-		automaticSamlEntry.setConfirmationMethod( AutomaticSAMLEntry.HOLDER_OF_KEY_CONFIRMATION_METHOD );
+		setRequiredFields( AutomaticSAMLEntry.SAML_VERSION_1, true, AutomaticSAMLEntry.AUTHENTICATION_ASSERTION_TYPE,
+				AutomaticSAMLEntry.HOLDER_OF_KEY_CONFIRMATION_METHOD );
 
 		automaticSamlEntry.process( secHeader, doc, contextMock );
 
+		System.err.println( XmlUtils.serializePretty( doc ) );
+
+		assertNotNull( xpath.evaluate( "//ds:Signature", doc, XPathConstants.NODE ) );
 		assertEquals( xpath.evaluate( "//saml1:ConfirmationMethod", doc, XPathConstants.STRING ),
-				SAML_1_HOLDER_OF_KEY_NAMESPACE );
+				SAML1Constants.CONF_HOLDER_KEY );
 		assertNotNull( xpath.evaluate( "//saml1:AuthenticationStatement", doc, XPathConstants.NODE ) );
+
 	}
 
 	@Test
 	public void testProcessSignedSAML2AuthenticationAssertionUsingHolderOfKey() throws WSSecurityException,
 			XPathExpressionException
 	{
-		automaticSamlEntry.setSamlVersion( AutomaticSAMLEntry.SAML_VERSION_2 );
-		automaticSamlEntry.setSigned( true );
-		automaticSamlEntry.setAssertionType( AutomaticSAMLEntry.AUTHENTICATION_ASSERTION_TYPE );
-		automaticSamlEntry.setConfirmationMethod( AutomaticSAMLEntry.HOLDER_OF_KEY_CONFIRMATION_METHOD );
+		setRequiredFields( AutomaticSAMLEntry.SAML_VERSION_2, true, AutomaticSAMLEntry.AUTHENTICATION_ASSERTION_TYPE,
+				AutomaticSAMLEntry.HOLDER_OF_KEY_CONFIRMATION_METHOD );
 
 		automaticSamlEntry.process( secHeader, doc, contextMock );
 
+		assertNotNull( xpath.evaluate( "//ds:Signature", doc, XPathConstants.NODE ) );
 		assertEquals( xpath.evaluate( "//saml2:SubjectConfirmation/@Method", doc, XPathConstants.STRING ),
-				SAML_2_HOLDER_OF_KEY_NAMESPACE );
+				SAML2Constants.CONF_HOLDER_KEY );
 		assertNotNull( xpath.evaluate( "//saml2:AuthnStatement", doc, XPathConstants.NODE ) );
 	}
 
@@ -306,20 +283,16 @@ public class AutomaticSAMLEntryTest
 	public void testProcessSignedSAML1AttributeAssertionUsingHolderOfKey() throws WSSecurityException,
 			XPathExpressionException
 	{
-		automaticSamlEntry.setSamlVersion( AutomaticSAMLEntry.SAML_VERSION_1 );
-		automaticSamlEntry.setSigned( true );
-		automaticSamlEntry.setAssertionType( AutomaticSAMLEntry.ATTRIBUTE_ASSERTION_TYPE );
-		automaticSamlEntry.setConfirmationMethod( AutomaticSAMLEntry.HOLDER_OF_KEY_CONFIRMATION_METHOD );
-		automaticSamlEntry.setAttributeName( ATTTRIBUTE_NAME );
+		setRequiredFields( AutomaticSAMLEntry.SAML_VERSION_1, true, AutomaticSAMLEntry.ATTRIBUTE_ASSERTION_TYPE,
+				AutomaticSAMLEntry.HOLDER_OF_KEY_CONFIRMATION_METHOD );
 
-		StringToStringMap attributeValueRow = new StringToStringMap();
-		attributeValueRow.put( AutomaticSAMLEntry.ATTRIBUTE_VALUES_VALUE_COLUMN, ATTTRIBUTE_VALUE );
-		automaticSamlEntry.setAttributeValues( Collections.singletonList( attributeValueRow ) );
+		createAttribute();
 
 		automaticSamlEntry.process( secHeader, doc, contextMock );
 
+		assertNotNull( xpath.evaluate( "//ds:Signature", doc, XPathConstants.NODE ) );
 		assertEquals( xpath.evaluate( "//saml1:ConfirmationMethod", doc, XPathConstants.STRING ),
-				SAML_1_HOLDER_OF_KEY_NAMESPACE );
+				SAML1Constants.CONF_HOLDER_KEY );
 		assertNotNull( xpath.evaluate( "//saml1:AttributeStatement", doc, XPathConstants.NODE ) );
 		assertEquals(
 				xpath.evaluate( "//saml1:AttributeStatement/saml1:Attribute/@AttributeName", doc, XPathConstants.STRING ),
@@ -332,20 +305,16 @@ public class AutomaticSAMLEntryTest
 	public void testProcessSignedSAML2AttributeAssertionUsingHolderOfKey() throws WSSecurityException,
 			XPathExpressionException
 	{
-		automaticSamlEntry.setSamlVersion( AutomaticSAMLEntry.SAML_VERSION_2 );
-		automaticSamlEntry.setSigned( true );
-		automaticSamlEntry.setAssertionType( AutomaticSAMLEntry.ATTRIBUTE_ASSERTION_TYPE );
-		automaticSamlEntry.setConfirmationMethod( AutomaticSAMLEntry.HOLDER_OF_KEY_CONFIRMATION_METHOD );
-		automaticSamlEntry.setAttributeName( ATTTRIBUTE_NAME );
+		setRequiredFields( AutomaticSAMLEntry.SAML_VERSION_2, true, AutomaticSAMLEntry.ATTRIBUTE_ASSERTION_TYPE,
+				AutomaticSAMLEntry.HOLDER_OF_KEY_CONFIRMATION_METHOD );
 
-		StringToStringMap attributeValueRow = new StringToStringMap();
-		attributeValueRow.put( AutomaticSAMLEntry.ATTRIBUTE_VALUES_VALUE_COLUMN, ATTTRIBUTE_VALUE );
-		automaticSamlEntry.setAttributeValues( Collections.singletonList( attributeValueRow ) );
+		createAttribute();
 
 		automaticSamlEntry.process( secHeader, doc, contextMock );
 
+		assertNotNull( xpath.evaluate( "//ds:Signature", doc, XPathConstants.NODE ) );
 		assertEquals( xpath.evaluate( "//saml2:SubjectConfirmation/@Method", doc, XPathConstants.STRING ),
-				SAML_2_HOLDER_OF_KEY_NAMESPACE );
+				SAML2Constants.CONF_HOLDER_KEY );
 		assertNotNull( xpath.evaluate( "//saml2:AttributeStatement", doc, XPathConstants.NODE ) );
 		assertEquals(
 				xpath.evaluate( "//saml2:AttributeStatement/saml2:Attribute/@FriendlyName", doc, XPathConstants.STRING ),
@@ -358,15 +327,14 @@ public class AutomaticSAMLEntryTest
 	public void testProcessSignedSAML1AuthenticationAssertionUsingSenderVouces() throws WSSecurityException,
 			XPathExpressionException
 	{
-		automaticSamlEntry.setSamlVersion( AutomaticSAMLEntry.SAML_VERSION_1 );
-		automaticSamlEntry.setSigned( true );
-		automaticSamlEntry.setAssertionType( AutomaticSAMLEntry.AUTHENTICATION_ASSERTION_TYPE );
-		automaticSamlEntry.setConfirmationMethod( AutomaticSAMLEntry.SENDER_VOUCHES_CONFIRMATION_METHOD );
+		setRequiredFields( AutomaticSAMLEntry.SAML_VERSION_1, true, AutomaticSAMLEntry.AUTHENTICATION_ASSERTION_TYPE,
+				AutomaticSAMLEntry.SENDER_VOUCHES_CONFIRMATION_METHOD );
 
 		automaticSamlEntry.process( secHeader, doc, contextMock );
 
+		assertNotNull( xpath.evaluate( "//ds:Signature", doc, XPathConstants.NODE ) );
 		assertEquals( xpath.evaluate( "//saml1:ConfirmationMethod", doc, XPathConstants.STRING ),
-				SAML_1_SENDER_VOUCHES_NAMESPACE );
+				SAML1Constants.CONF_SENDER_VOUCHES );
 		assertNotNull( xpath.evaluate( "//saml1:AuthenticationStatement", doc, XPathConstants.NODE ) );
 	}
 
@@ -374,15 +342,14 @@ public class AutomaticSAMLEntryTest
 	public void testProcessSignedSAML2AuthenticationAssertionUsingSenderVouches() throws WSSecurityException,
 			XPathExpressionException
 	{
-		automaticSamlEntry.setSamlVersion( AutomaticSAMLEntry.SAML_VERSION_2 );
-		automaticSamlEntry.setSigned( true );
-		automaticSamlEntry.setAssertionType( AutomaticSAMLEntry.AUTHENTICATION_ASSERTION_TYPE );
-		automaticSamlEntry.setConfirmationMethod( AutomaticSAMLEntry.SENDER_VOUCHES_CONFIRMATION_METHOD );
+		setRequiredFields( AutomaticSAMLEntry.SAML_VERSION_2, true, AutomaticSAMLEntry.AUTHENTICATION_ASSERTION_TYPE,
+				AutomaticSAMLEntry.SENDER_VOUCHES_CONFIRMATION_METHOD );
 
 		automaticSamlEntry.process( secHeader, doc, contextMock );
 
+		assertNotNull( xpath.evaluate( "//ds:Signature", doc, XPathConstants.NODE ) );
 		assertEquals( xpath.evaluate( "//saml2:SubjectConfirmation/@Method", doc, XPathConstants.STRING ),
-				SAML_2_SENDER_VOUCHES_NAMESPACE );
+				SAML2Constants.CONF_SENDER_VOUCHES );
 		assertNotNull( xpath.evaluate( "//saml2:AuthnStatement", doc, XPathConstants.NODE ) );
 
 	}
@@ -413,19 +380,13 @@ public class AutomaticSAMLEntryTest
 		assertNotNull( xpath.evaluate( "//saml2:NameID/@NameQualifier", doc, XPathConstants.NODE ) );
 	}
 
-	@Test
-	@Ignore
-	public void testDefaultValues()
-	{
-		// TODO Test the default values of the input fields
-	}
-
 	private void initXpath()
 	{
 		factory = XPathFactory.newInstance();
 		namespaceContext = new NamespaceContextImpl();
 		namespaceContext.startPrefixMapping( "saml1", "urn:oasis:names:tc:SAML:1.0:assertion" );
 		namespaceContext.startPrefixMapping( "saml2", "urn:oasis:names:tc:SAML:2.0:assertion" );
+		namespaceContext.startPrefixMapping( "ds", "http://www.w3.org/2000/09/xmldsig#" );
 		xpath = factory.newXPath();
 		xpath.setNamespaceContext( namespaceContext );
 	}
@@ -441,4 +402,21 @@ public class AutomaticSAMLEntryTest
 		keyStore.load( input, KEYSTORE_PASSWORD.toCharArray() );
 		( ( Merlin )crypto ).setKeyStore( keyStore );
 	}
+
+	private void setRequiredFields( String version, boolean signed, String assertionType, String confirmationMethod )
+	{
+		automaticSamlEntry.setSamlVersion( version );
+		automaticSamlEntry.setSigned( signed );
+		automaticSamlEntry.setAssertionType( assertionType );
+		automaticSamlEntry.setConfirmationMethod( confirmationMethod );
+	}
+
+	private void createAttribute()
+	{
+		automaticSamlEntry.setAttributeName( ATTTRIBUTE_NAME );
+		StringToStringMap attributeValueRow = new StringToStringMap();
+		attributeValueRow.put( AutomaticSAMLEntry.ATTRIBUTE_VALUES_VALUE_COLUMN, ATTTRIBUTE_VALUE );
+		automaticSamlEntry.setAttributeValues( Collections.singletonList( attributeValueRow ) );
+	}
+
 }
