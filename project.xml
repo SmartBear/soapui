@@ -1152,6 +1152,9 @@
                     <filtering>false</filtering>
                 </resource>
             </resources>
+            <excludes>
+                <exclude>**/TestUtils.java</exclude>
+            </excludes>
         </unitTest>
         <resources>
             <resource>
