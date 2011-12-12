@@ -46,6 +46,7 @@ import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.model.testsuite.AssertionException;
 import com.eviware.soapui.model.testsuite.ResponseAssertion;
 import com.eviware.soapui.model.testsuite.TestProperty;
+import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SensitiveInformationPropertyHolder;
 import com.eviware.soapui.support.SecurityScanUtil;
 import com.eviware.soapui.support.StringUtils;
@@ -136,6 +137,51 @@ public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion impleme
 				if( match != null )
 				{
 					String message = description + " - Token [" + token + "] found [" + match + "]";
+					if( !messages.contains( message ) )
+					{
+						assertionErrorList.add( new AssertionError( message ) );
+						messages.add( message );
+					}
+				}
+			}
+		}
+		catch( Throwable e )
+		{
+			SoapUI.logError( e );
+		}
+
+		if( !messages.isEmpty() )
+		{
+			throw new AssertionException( assertionErrorList.toArray( new AssertionError[assertionErrorList.size()] ) );
+		}
+
+		return "OK";
+	}
+	
+	protected String internalAssertProperty( String propertyName, MessageExchange messageExchange, TestStep testStep,
+			SubmitContext context ) throws AssertionException
+	{
+
+		Map<String, String> checkMap = createCheckMap( context );
+		List<AssertionError> assertionErrorList = new ArrayList<AssertionError>();
+		String propertyValue = testStep.getPropertyValue(propertyName);
+		Set<String> messages = new HashSet<String>();
+
+		try
+		{
+			for( String token : checkMap.keySet() )
+			{
+				boolean useRegexp = token.trim().startsWith( PREFIX );
+				String description = !checkMap.get( token ).equals( "" ) ? checkMap.get( token ) : token;
+				if( useRegexp )
+				{
+					token = token.substring( token.indexOf( PREFIX ) + 1 );
+				}
+
+				String match = SecurityScanUtil.contains( context, propertyValue, token, useRegexp );
+				if( match != null )
+				{
+					String message = description + " - Token [" + token + "] found [" + match + "] in property "+ propertyName ;
 					if( !messages.contains( message ) )
 					{
 						assertionErrorList.add( new AssertionError( message ) );

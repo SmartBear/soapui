@@ -240,6 +240,12 @@ public class CrossSiteScriptAssertion extends WsdlMessageAssertion implements Re
 				false );
 
 	}
+	
+	protected String internalAssertProperty( String propertyName, MessageExchange messageExchange, TestStep testStep,
+			SubmitContext context ) throws AssertionException
+	{
+		return internalAssertResponse(  messageExchange,  context );
+	}
 
 	public static class Factory extends AbstractTestAssertionFactory
 	{

@@ -268,12 +268,8 @@ public abstract class WsdlMessageAssertion extends AbstractModelItem implements 
 	protected abstract String internalAssertRequest( MessageExchange messageExchange, SubmitContext context )
 			throws AssertionException;
 
-	//TODO: make this abstract after implement in all assertions
-	protected String internalAssertProperty( String propertyName, MessageExchange messageExchange, TestStep testStep,
-			SubmitContext context ) throws AssertionException
-	{
-		return null;
-	}
+	protected abstract String internalAssertProperty( String propertyName, MessageExchange messageExchange,
+			TestStep testStep, SubmitContext context ) throws AssertionException;
 
 	/*
 	 * (non-Javadoc)
