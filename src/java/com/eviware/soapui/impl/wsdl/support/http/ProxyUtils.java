@@ -81,7 +81,8 @@ public class ProxyUtils
 					String proxyPassword = PropertyExpander.expandProperties( context,
 							settings.getString( ProxySettings.PASSWORD, null ) );
 
-					if( proxyUsername != null && proxyPassword != null )
+					if( proxyUsername != null && proxyPassword != null
+							&& ( proxyUsername.trim().length() > 0 && proxyPassword.trim().length() > 0 ) )
 					{
 						Credentials proxyCreds = new UsernamePasswordCredentials( proxyUsername, proxyPassword );
 
@@ -98,8 +99,8 @@ public class ProxyUtils
 						}
 						credsProvider.setCredentials( new AuthScope( proxy.getHostName(), proxy.getPort() ), proxyCreds );
 						httpContext.setAttribute( ClientContext.CREDS_PROVIDER, credsProvider );
-						httpMethod.getParams().setParameter( ConnRoutePNames.DEFAULT_PROXY, proxy );
 					}
+					httpMethod.getParams().setParameter( ConnRoutePNames.DEFAULT_PROXY, proxy );
 				}
 			}
 			catch( MalformedURLException e )
