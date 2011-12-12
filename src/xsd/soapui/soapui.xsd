@@ -2319,7 +2319,7 @@
 	
 	<xsd:complexType name="BreakPointProperties">
 		<xsd:sequence>
-			<xsd:element name="enabled" type="xsd:boolean"></xsd:element>
+			<xsd:element name="conditionEnabled" type="xsd:boolean"></xsd:element>
 			<xsd:element name="condition" type="tns:Script"></xsd:element>
 		</xsd:sequence>
 	</xsd:complexType>
