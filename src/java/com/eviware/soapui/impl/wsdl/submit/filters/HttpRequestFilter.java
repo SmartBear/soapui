@@ -205,7 +205,11 @@ public class HttpRequestFilter extends AbstractRequestFilter
 				// decode it first...
 				URI uri = new URI( path, request.getSettings().getBoolean( HttpSettings.ENCODED_URLS ) );
 				context.setProperty( BaseHttpRequestTransport.REQUEST_URI, uri );
-				httpMethod.setURI( new java.net.URI( uri.toString() ) );
+				java.net.URI oldUri = httpMethod.getURI();
+				httpMethod
+						.setURI( new java.net.URI( oldUri.getScheme(), oldUri.getUserInfo(), oldUri.getHost(), oldUri
+								.getPort(), ( uri.getPath() ) == null ? "/" : uri.getPath(), oldUri.getQuery(), oldUri
+								.getFragment() ) );
 			}
 			catch( Exception e )
 			{
