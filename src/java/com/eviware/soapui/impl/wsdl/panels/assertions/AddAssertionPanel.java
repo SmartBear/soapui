@@ -38,11 +38,13 @@ import javax.swing.event.ListSelectionListener;
 import org.jdesktop.swingx.JXList;
 import org.jdesktop.swingx.JXTable;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.actions.project.SimpleDialog;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.recent.RecentAssertionHandler;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.TestAssertion;
+import com.eviware.soapui.settings.AssertionDescriptionSettings;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.DefaultActionList;
@@ -86,6 +88,8 @@ public class AddAssertionPanel extends SimpleDialog
 		hideDescCB = new JCheckBox( "Hide descriptions" );
 		hideDescCB.setOpaque( false );
 		hideDescCB.addItemListener( hideDescListener );
+		hideDescCB
+				.setSelected( SoapUI.getSettings().getBoolean( AssertionDescriptionSettings.SHOW_ASSERTION_DESCRIPTION ) );
 		toolbar.add( new JLabel( "Assertions" ) );
 		toolbar.addGlue();
 		toolbar.add( hideDescCB );
@@ -236,6 +240,8 @@ public class AddAssertionPanel extends SimpleDialog
 		{
 			assertionsTable.getColumnModel().getColumn( 0 ).setCellRenderer( assertionEntryRenderer );
 			assertionsListTableModel.fireTableDataChanged();
+			SoapUI.getSettings().setBoolean( AssertionDescriptionSettings.SHOW_ASSERTION_DESCRIPTION,
+					arg0.getStateChange() == ItemEvent.SELECTED );
 		}
 	}
 
