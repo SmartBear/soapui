@@ -127,11 +127,11 @@ public class MockAsWarServlet extends HttpServlet
 
 		if( SoapUI.getSoapUICore() == null )
 		{
-			if( StringUtils.hasContent( getInitParameter( "soapuiSettings" ) ) )
+			if( StringUtils.hasContent( getInitParameter( "soapUISettings" ) ) )
 			{
 				logger.info( "Init settings" );
 				SoapUI.setSoapUICore(
-						new MockServletSoapUICore( getServletContext(), getInitParameter( "soapuiSettings" ) ), true );
+						new MockServletSoapUICore( getServletContext(), getInitParameter( "soapUISettings" ) ), true );
 			}
 			else
 			{
