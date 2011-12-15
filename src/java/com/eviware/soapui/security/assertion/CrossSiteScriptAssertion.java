@@ -408,7 +408,6 @@ public class CrossSiteScriptAssertion extends WsdlMessageAssertion implements Re
 		super.release();
 	}
 
-	// TODO : update help URL
 	@AForm( description = "", name = "Cross Site Scripting on Separate HTML", helpUrl = HelpUrls.SECURITY_XSS_ASSERTION_HELP )
 	protected interface CrossSiteScripSeparateHTMLConfigDialog
 	{
