@@ -183,8 +183,9 @@ public class UrlWsdlLoader extends WsdlLoader implements DefinitionLoader
 			}
 			else
 			{
-				throw new Exception( "Failed to load url; " + httpResponse.getStatusLine().getStatusCode() + " - "
-						+ httpResponse.getStatusLine().getReasonPhrase() );
+				throw new Exception( "Failed to load url; "
+						+ ( httpResponse != null ? httpResponse.getStatusLine().getStatusCode() : 0 ) + " - "
+						+ ( httpResponse != null ? httpResponse.getStatusLine().getReasonPhrase() : "" ) );
 			}
 		}
 	}

@@ -203,7 +203,7 @@ public class TunnelServlet extends ProxyServlet
 
 		capturedData.setRequest( capture.getCapturedData() );
 		capturedData.setRawResponseBody( postMethod.getResponseBody() );
-		capturedData.setResponseHeader( postMethod );
+		capturedData.setResponseHeader( postMethod.getHttpResponse() );
 		capturedData.setRawRequestData( getRequestToBytes( request.toString(), postMethod, capture ) );
 		capturedData.setRawResponseData( getResponseToBytes( response.toString(), postMethod,
 				capturedData.getRawResponseBody() ) );

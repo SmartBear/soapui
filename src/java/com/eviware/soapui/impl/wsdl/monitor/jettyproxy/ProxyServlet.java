@@ -33,7 +33,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.http.Header;
 import org.apache.http.HttpEntityEnclosingRequest;
 import org.apache.http.client.params.ClientPNames;
-import org.apache.http.entity.InputStreamEntity;
+import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.mortbay.util.IO;
@@ -77,6 +77,7 @@ public class ProxyServlet implements Servlet
 		dontProxyHeaders.add( "proxy-authorization" );
 		dontProxyHeaders.add( "proxy-authenticate" );
 		dontProxyHeaders.add( "upgrade" );
+		dontProxyHeaders.add( "content-length" );
 	}
 
 	public ProxyServlet( SoapMonitor soapMonitor )
@@ -137,7 +138,7 @@ public class ProxyServlet implements Servlet
 		if( method instanceof HttpEntityEnclosingRequest )
 		{
 			requestBody = Tools.readAll( request.getInputStream(), 0 );
-			InputStreamEntity entity = new InputStreamEntity( new ByteArrayInputStream( requestBody.toByteArray() ), -1 );
+			ByteArrayEntity entity = new ByteArrayEntity( requestBody.toByteArray() );
 			entity.setContentType( request.getContentType() );
 			( ( HttpEntityEnclosingRequest )method ).setEntity( entity );
 		}
@@ -164,7 +165,6 @@ public class ProxyServlet implements Servlet
 		// copy headers
 		boolean xForwardedFor = false;
 		@SuppressWarnings( "unused" )
-		long contentLength = -1;
 		Enumeration<?> headerNames = httpRequest.getHeaderNames();
 		while( headerNames.hasMoreElements() )
 		{
@@ -175,12 +175,6 @@ public class ProxyServlet implements Servlet
 				continue;
 			if( connectionHeader != null && connectionHeader.indexOf( lhdr ) >= 0 )
 				continue;
-
-			if( "content-length".equals( lhdr ) )
-			{
-				contentLength = request.getContentLength();
-				continue;
-			}
 
 			Enumeration<?> vals = httpRequest.getHeaders( hdr );
 			while( vals.hasMoreElements() )
@@ -249,7 +243,7 @@ public class ProxyServlet implements Servlet
 
 		capturedData.setRequest( requestBody == null ? null : requestBody.toByteArray() );
 		capturedData.setRawResponseBody( method.getResponseBody() );
-		capturedData.setResponseHeader( method );
+		capturedData.setResponseHeader( method.getHttpResponse() );
 		capturedData.setRawRequestData( getRequestToBytes( request.toString(), method, requestBody ) );
 		capturedData.setRawResponseData( getResponseToBytes( method, capturedData.getRawResponseBody() ) );
 		capturedData.setResponseContent( new String( method.getDecompressedResponseBody() ) );

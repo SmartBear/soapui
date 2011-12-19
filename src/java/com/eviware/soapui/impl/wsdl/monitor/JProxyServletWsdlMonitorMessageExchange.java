@@ -27,13 +27,13 @@ import java.util.Vector;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.http.Header;
+import org.apache.http.HttpResponse;
 import org.w3c.dom.Document;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.MultipartMessageSupport;
 import com.eviware.soapui.impl.wsdl.support.CompressionSupport;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapUtils;
@@ -532,9 +532,9 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
 		return responseContentType;
 	}
 
-	public void setResponseHeader( ExtendedHttpMethod method )
+	public void setResponseHeader( HttpResponse response )
 	{
-		Header[] headers = method.getAllHeaders();
+		Header[] headers = response.getAllHeaders();
 		for( Header header : headers )
 		{
 			String name = header.getName();
