@@ -186,6 +186,12 @@ public class RestRequestStepResult extends WsdlTestStepResult implements Respons
 	{
 		super.writeTo( writer );
 
+		if( response == null )
+		{
+			writer.println( "\r\n- missing response / garbage collected -" );
+			return;
+		}
+
 		writer.println( "\r\n----------------- Properties ------------------------------" );
 		if( properties != null )
 		{
@@ -197,37 +203,28 @@ public class RestRequestStepResult extends WsdlTestStepResult implements Respons
 		}
 
 		writer.println( "\r\n---------------- Request ---------------------------" );
-		if( response != null )
+		StringToStringsMap headers = response.getRequestHeaders();
+		for( String key : headers.keySet() )
 		{
-			StringToStringsMap headers = response.getRequestHeaders();
-			for( String key : headers.keySet() )
-			{
-				if( headers.get( key ) != null )
-					writer.println( key + ": " + headers.get( key ) );
-			}
+			if( headers.get( key ) != null )
+				writer.println( key + ": " + headers.get( key ) );
 		}
 
 		if( StringUtils.hasContent( new String( response.getRawRequestData() ) ) )
-			writer.println( "\r\n" +  new String( response.getRawRequestData() ) ) ;
-		else
-			writer.println( "\r\n- missing request / garbage collected -" );
+			writer.println( "\r\n" + new String( response.getRawRequestData() ) );
 
 		writer.println( "\r\n---------------- Response --------------------------" );
-		if( response != null )
-		{
-			StringToStringsMap headers = response.getResponseHeaders();
-			for( String key : headers.keySet() )
-			{
-				if( headers.get( key ) != null )
-					writer.println( key + ": " + headers.get( key ) );
-			}
 
-			String respContent = response.getContentAsString();
-			if( respContent != null )
-				writer.println( "\r\n" + respContent );
+		headers = response.getResponseHeaders();
+		for( String key : headers.keySet() )
+		{
+			if( headers.get( key ) != null )
+				writer.println( key + ": " + headers.get( key ) );
 		}
-		else
-			writer.println( "\r\n- missing response / garbage collected -" );
+
+		String respContent = response.getContentAsString();
+		if( respContent != null )
+			writer.println( "\r\n" + respContent );
 	}
 
 	public StringToStringMap getProperties()
