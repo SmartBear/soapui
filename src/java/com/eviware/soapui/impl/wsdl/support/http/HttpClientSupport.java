@@ -31,6 +31,7 @@ import org.apache.http.client.params.AuthPolicy;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.impl.auth.NTLMSchemeFactory;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.protocol.HttpContext;
@@ -70,31 +71,28 @@ public class HttpClientSupport
 		public Helper()
 		{
 			Settings settings = SoapUI.getSettings();
+			SchemeRegistry registry = new SchemeRegistry();
+			registry.register( new Scheme( "http", 80, PlainSocketFactory.getSocketFactory() ) );
 
 			try
 			{
 				keyStore = initKeyStore();
-
 				socketFactory = new SoapUISSLSocketFactory( keyStore );
-
-				SchemeRegistry registry = new SchemeRegistry();
-				registry.register( new Scheme( "http", 80, PlainSocketFactory.getSocketFactory() ) );
 				registry.register( new Scheme( "https", 443, socketFactory ) );
-
-				connectionManager = new SoapUIMultiThreadedHttpConnectionManager( registry );
-				connectionManager.setMaxConnectionsPerHost( ( int )settings.getLong( HttpSettings.MAX_CONNECTIONS_PER_HOST,
-						500 ) );
-				connectionManager.setMaxTotalConnections( ( int )settings
-						.getLong( HttpSettings.MAX_TOTAL_CONNECTIONS, 2000 ) );
-
-				httpClient = new DefaultHttpClient( connectionManager );
-				httpClient.getAuthSchemes().register( AuthPolicy.NTLM, new NTLMSchemeFactory() );
-				httpClient.getAuthSchemes().register( AuthPolicy.SPNEGO, new NTLMSchemeFactory() );
 			}
 			catch( Throwable e )
 			{
-				SoapUI.log( e );
+				SoapUI.logError( e );
 			}
+
+			connectionManager = new SoapUIMultiThreadedHttpConnectionManager( registry );
+			connectionManager.setMaxConnectionsPerHost( ( int )settings.getLong( HttpSettings.MAX_CONNECTIONS_PER_HOST,
+					500 ) );
+			connectionManager.setMaxTotalConnections( ( int )settings.getLong( HttpSettings.MAX_TOTAL_CONNECTIONS, 2000 ) );
+
+			httpClient = new DefaultHttpClient( connectionManager );
+			httpClient.getAuthSchemes().register( AuthPolicy.NTLM, new NTLMSchemeFactory() );
+			httpClient.getAuthSchemes().register( AuthPolicy.SPNEGO, new NTLMSchemeFactory() );
 
 			settings.addSettingsListener( new SSLSettingsListener() );
 		}
