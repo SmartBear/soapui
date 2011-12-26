@@ -28,6 +28,8 @@
       <variable name="LOADUI_INSTALLER_URL" value="http://www.eviware.com/nightly-builds/loadui/1.5.1-SNAPSHOT/" />
       <variable name="LOADUI_VERSION_NUMBER" value="1_5_1-SNAPSHOT" />
       <variable name="OS_EXT" value="" />
+      <variable name="proxy" value="" />
+      <variable name="port" value="" />
     </variables>
   </application>
   <files>
@@ -489,6 +491,109 @@ All in one place. And all for free.</string>
               </formComponent>
             </formComponents>
           </screen>
+          <group name="" id="3912" beanClass="com.install4j.runtime.beans.groups.ScreenGroup" enabled="true" commentSet="false" comment="">
+            <serializedBean>
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.groups.ScreenGroup">
+                  <void property="conditionExpression">
+                    <object class="com.install4j.api.beans.ScriptProperty">
+                      <void property="value">
+                        <string>context.getBooleanVariable("installLoadUI")</string>
+                      </void>
+                    </object>
+                  </void>
+                </object>
+              </java>
+            </serializedBean>
+            <beans>
+              <screen name="" id="3913" beanClass="com.install4j.runtime.beans.screens.FormScreen" enabled="true" commentSet="false" comment="" rollbackBarrier="false" backButton="2" finishScreen="false">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.screens.FormScreen" />
+                  </java>
+                </serializedBean>
+                <condition />
+                <validation />
+                <preActivation />
+                <postActivation />
+                <actions />
+                <formComponents>
+                  <formComponent name="" id="4007" beanClass="com.install4j.runtime.beans.formcomponents.MultilineLabelComponent" enabled="true" commentSet="false" comment="" insetTop="" insetLeft="" insetBottom="" insetRight="" resetInitOnPrevious="false">
+                    <serializedBean>
+                      <java class="java.beans.XMLDecoder">
+                        <object class="com.install4j.runtime.beans.formcomponents.MultilineLabelComponent">
+                          <void property="labelText">
+                            <string>This is where you can enter the proxy settings that Java WebStart will use when starting loadUI. Leave them blank if you do not use a proxy to reach the internet.
+</string>
+                          </void>
+                        </object>
+                      </java>
+                    </serializedBean>
+                    <initScript />
+                    <visibiltyScript />
+                  </formComponent>
+                  <formComponent name="" id="4008" beanClass="com.install4j.runtime.beans.formcomponents.TextfieldComponent" enabled="true" commentSet="false" comment="" insetTop="" insetLeft="" insetBottom="" insetRight="" resetInitOnPrevious="false">
+                    <serializedBean>
+                      <java class="java.beans.XMLDecoder">
+                        <object class="com.install4j.runtime.beans.formcomponents.TextfieldComponent">
+                          <void property="columns">
+                            <int>30</int>
+                          </void>
+                          <void property="labelText">
+                            <string>Proxy:</string>
+                          </void>
+                          <void property="variableName">
+                            <string>${compiler:proxy}</string>
+                          </void>
+                        </object>
+                      </java>
+                    </serializedBean>
+                    <initScript />
+                    <visibiltyScript />
+                  </formComponent>
+                  <formComponent name="" id="4009" beanClass="com.install4j.runtime.beans.formcomponents.TextfieldComponent" enabled="true" commentSet="false" comment="" insetTop="" insetLeft="" insetBottom="" insetRight="" resetInitOnPrevious="false">
+                    <serializedBean>
+                      <java class="java.beans.XMLDecoder">
+                        <object class="com.install4j.runtime.beans.formcomponents.TextfieldComponent">
+                          <void property="inputVerifier">
+                            <object class="com.install4j.api.beans.ScriptProperty">
+                              <void property="value">
+                                <string>try{
+    if(text == null || text.trim().length() == 0){
+        return true;
+    }
+    int i = Integer.parseInt(text);
+    if(i &gt;= 0 &amp;&amp; i &lt; 65536){
+        return true;
+    }
+    else{
+        Util.showErrorMessage("Port must be an integer between 0 and 65535!");
+        return false;
+    }
+}
+catch(Exception e){
+    Util.showErrorMessage("Port must be an integer between 0 and 65535!");
+    return false;
+}</string>
+                              </void>
+                            </object>
+                          </void>
+                          <void property="labelText">
+                            <string>Port:</string>
+                          </void>
+                          <void property="variableName">
+                            <string>${compiler:port}</string>
+                          </void>
+                        </object>
+                      </java>
+                    </serializedBean>
+                    <initScript />
+                    <visibiltyScript />
+                  </formComponent>
+                </formComponents>
+              </screen>
+            </beans>
+          </group>
           <screen name="Display Hermes license agreement" id="1478" beanClass="com.install4j.runtime.beans.screens.LicenseScreen" enabled="true" commentSet="false" comment="" rollbackBarrier="false" backButton="2" finishScreen="false">
             <serializedBean>
               <java class="java.beans.XMLDecoder">
