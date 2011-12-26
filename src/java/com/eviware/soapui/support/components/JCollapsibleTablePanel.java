@@ -14,7 +14,6 @@ package com.eviware.soapui.support.components;
 import java.awt.BorderLayout;
 
 import javax.swing.JPanel;
-import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 
@@ -25,50 +24,29 @@ public class JCollapsibleTablePanel extends JCollapsiblePanel
 {
 
 	private JTable table;
-	private JTable table2;
 	private String title;
 
 	public JCollapsibleTablePanel( JTable table, String title )
 	{
 		super( new JPanel(), title );
-		setTables( table, null );
+		setTable( table );
 		setMinusIcon( UISupport.createImageIcon( "/minus.gif" ) );
 		setPlusIcon( UISupport.createImageIcon( "/plus.gif" ) );
 		this.title = title;
 	}
 
-	public JCollapsibleTablePanel( JTable table, JTable table2, String title )
-	{
-		super( new JPanel(), title );
-		setTables( table, table2 );
-		setMinusIcon( UISupport.createImageIcon( "/minus.gif" ) );
-		setPlusIcon( UISupport.createImageIcon( "/plus.gif" ) );
-		this.title = title;
-	}
-
-	public void setTables( JTable table, JTable table2 )
+	private void setTable( JTable table )
 	{
 		this.table = table;
-		if( table2 != null )
-			this.table2 = table2;
-		else
-		{
-			this.table2 = new JTable();
-			this.table2.setVisible( false );
-		}
 		this.table.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
-		this.table2.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
 		JPanel content = new JPanel( new BorderLayout() );
-		JSplitPane sp = new JSplitPane( JSplitPane.VERTICAL_SPLIT, this.table, this.table2 );
-		sp.setContinuousLayout( true );
-		sp.setDividerSize( 0 );
-		content.add( sp, BorderLayout.CENTER );
+		content.add( table, BorderLayout.CENTER );
 		setContentPanel( content );
 	}
 
-	public JTable[] getTables()
+	public JTable getTable()
 	{
-		return new JTable[] { table, table2 };
+		return table;
 	}
 
 	public String getTitle()
