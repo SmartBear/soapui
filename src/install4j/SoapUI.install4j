@@ -523,7 +523,7 @@ All in one place. And all for free.</string>
                       <java class="java.beans.XMLDecoder">
                         <object class="com.install4j.runtime.beans.formcomponents.MultilineLabelComponent">
                           <void property="labelText">
-                            <string>This is where you can enter the proxy settings that Java WebStart will use when starting loadUI. Leave them blank if you do not use a proxy to reach the internet.
+                            <string>This is where you can enter the proxy settings to use for downloading loadUI. Leave them blank if you do not use a proxy to reach the internet.
 </string>
                           </void>
                         </object>
@@ -1190,6 +1190,16 @@ else return false;
                     <serializedBean>
                       <java class="java.beans.XMLDecoder">
                         <object class="com.install4j.runtime.beans.actions.misc.RunExecutableAction">
+                          <void property="arguments">
+                            <array class="java.lang.String" length="2">
+                              <void index="0">
+                                <string>${compiler:proxy}</string>
+                              </void>
+                              <void index="1">
+                                <string>${compiler:port}</string>
+                              </void>
+                            </array>
+                          </void>
                           <void property="executable">
                             <object class="java.io.File">
                               <string>${installer:sys.userHome}/tempLoadUI/loadUIInstall${compiler:OS_EXT}.${installer:EXTENSION}</string>
