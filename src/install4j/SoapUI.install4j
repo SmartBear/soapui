@@ -1186,28 +1186,6 @@ else return false;
                     </serializedBean>
                     <condition />
                   </action>
-                  <action name="download and install loadUI" id="3566" beanClass="com.install4j.runtime.beans.actions.misc.RunExecutableAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="failed to start loadUI downloader ">
-                    <serializedBean>
-                      <java class="java.beans.XMLDecoder">
-                        <object class="com.install4j.runtime.beans.actions.misc.RunExecutableAction">
-                          <void property="executable">
-                            <object class="java.io.File">
-                              <string>${installer:sys.userHome}/tempLoadUI/loadUIInstall${compiler:OS_EXT}.${installer:EXTENSION}</string>
-                            </object>
-                          </void>
-                          <void property="keepConsoleWindow">
-                            <boolean>true</boolean>
-                          </void>
-                          <void property="workingDirectory">
-                            <object class="java.io.File">
-                              <string>tempLoadUI</string>
-                            </object>
-                          </void>
-                        </object>
-                      </java>
-                    </serializedBean>
-                    <condition />
-                  </action>
                   <action name="Set mac proxy.host" id="4104" beanClass="com.install4j.runtime.beans.actions.text.ModifyTextFileAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
                     <serializedBean>
                       <java class="java.beans.XMLDecoder">
@@ -1386,6 +1364,28 @@ else return false;
                           </void>
                           <void property="searchValue">
                             <string>loadUI.proxy.port</string>
+                          </void>
+                        </object>
+                      </java>
+                    </serializedBean>
+                    <condition />
+                  </action>
+                  <action name="download and install loadUI" id="3566" beanClass="com.install4j.runtime.beans.actions.misc.RunExecutableAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="failed to start loadUI downloader ">
+                    <serializedBean>
+                      <java class="java.beans.XMLDecoder">
+                        <object class="com.install4j.runtime.beans.actions.misc.RunExecutableAction">
+                          <void property="executable">
+                            <object class="java.io.File">
+                              <string>${installer:sys.userHome}/tempLoadUI/loadUIInstall${compiler:OS_EXT}.${installer:EXTENSION}</string>
+                            </object>
+                          </void>
+                          <void property="keepConsoleWindow">
+                            <boolean>true</boolean>
+                          </void>
+                          <void property="workingDirectory">
+                            <object class="java.io.File">
+                              <string>tempLoadUI</string>
+                            </object>
                           </void>
                         </object>
                       </java>
