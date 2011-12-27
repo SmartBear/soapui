@@ -28,8 +28,8 @@
       <variable name="LOADUI_INSTALLER_URL" value="http://www.eviware.com/nightly-builds/loadui/1.5.1-SNAPSHOT/" />
       <variable name="LOADUI_VERSION_NUMBER" value="1_5_1-SNAPSHOT" />
       <variable name="OS_EXT" value="" />
-      <variable name="proxy" value="" />
-      <variable name="port" value="" />
+      <variable name="PROXY_HOST" value="" />
+      <variable name="PROXY_PORT" value="" />
     </variables>
   </application>
   <files>
@@ -1190,16 +1190,6 @@ else return false;
                     <serializedBean>
                       <java class="java.beans.XMLDecoder">
                         <object class="com.install4j.runtime.beans.actions.misc.RunExecutableAction">
-                          <void property="arguments">
-                            <array class="java.lang.String" length="2">
-                              <void index="0">
-                                <string>${compiler:proxy}</string>
-                              </void>
-                              <void index="1">
-                                <string>${compiler:port}</string>
-                              </void>
-                            </array>
-                          </void>
                           <void property="executable">
                             <object class="java.io.File">
                               <string>${installer:sys.userHome}/tempLoadUI/loadUIInstall${compiler:OS_EXT}.${installer:EXTENSION}</string>
@@ -1212,6 +1202,190 @@ else return false;
                             <object class="java.io.File">
                               <string>tempLoadUI</string>
                             </object>
+                          </void>
+                        </object>
+                      </java>
+                    </serializedBean>
+                    <condition />
+                  </action>
+                  <action name="Set mac proxy.host" id="4104" beanClass="com.install4j.runtime.beans.actions.text.ModifyTextFileAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                    <serializedBean>
+                      <java class="java.beans.XMLDecoder">
+                        <object class="com.install4j.runtime.beans.actions.text.ModifyTextFileAction">
+                          <void property="encoding">
+                            <string />
+                          </void>
+                          <void property="file">
+                            <object class="java.io.File">
+                              <string>${installer:sys.userHome}/tempLoadUI/loadUIInstallMAC.sh</string>
+                            </object>
+                          </void>
+                          <void property="replaceValue">
+                            <string>${compiler:PROXY_HOST}</string>
+                          </void>
+                          <void property="searchValue">
+                            <string>loadUI.proxy.host</string>
+                          </void>
+                        </object>
+                      </java>
+                    </serializedBean>
+                    <condition />
+                  </action>
+                  <action name="Set mac proxy.port" id="4105" beanClass="com.install4j.runtime.beans.actions.text.ModifyTextFileAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                    <serializedBean>
+                      <java class="java.beans.XMLDecoder">
+                        <object class="com.install4j.runtime.beans.actions.text.ModifyTextFileAction">
+                          <void property="encoding">
+                            <string />
+                          </void>
+                          <void property="file">
+                            <object class="java.io.File">
+                              <string>${installer:sys.userHome}/tempLoadUI/loadUIInstallMAC.sh</string>
+                            </object>
+                          </void>
+                          <void property="replaceValue">
+                            <string>${compiler:PROXY_PORT}</string>
+                          </void>
+                          <void property="searchValue">
+                            <string>loadUI.proxy.port</string>
+                          </void>
+                        </object>
+                      </java>
+                    </serializedBean>
+                    <condition />
+                  </action>
+                  <action name="Set linux proxy.host" id="4106" beanClass="com.install4j.runtime.beans.actions.text.ModifyTextFileAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                    <serializedBean>
+                      <java class="java.beans.XMLDecoder">
+                        <object class="com.install4j.runtime.beans.actions.text.ModifyTextFileAction">
+                          <void property="encoding">
+                            <string />
+                          </void>
+                          <void property="file">
+                            <object class="java.io.File">
+                              <string>${installer:sys.userHome}/tempLoadUI/loadUIInstall.sh</string>
+                            </object>
+                          </void>
+                          <void property="replaceValue">
+                            <string>${compiler:PROXY_HOST}</string>
+                          </void>
+                          <void property="searchValue">
+                            <string>loadUI.proxy.host</string>
+                          </void>
+                        </object>
+                      </java>
+                    </serializedBean>
+                    <condition />
+                  </action>
+                  <action name="Set linux proxy.port" id="4107" beanClass="com.install4j.runtime.beans.actions.text.ModifyTextFileAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                    <serializedBean>
+                      <java class="java.beans.XMLDecoder">
+                        <object class="com.install4j.runtime.beans.actions.text.ModifyTextFileAction">
+                          <void property="encoding">
+                            <string />
+                          </void>
+                          <void property="file">
+                            <object class="java.io.File">
+                              <string>${installer:sys.userHome}/tempLoadUI/loadUIInstall.sh</string>
+                            </object>
+                          </void>
+                          <void property="replaceValue">
+                            <string>${compiler:PROXY_PORT}</string>
+                          </void>
+                          <void property="searchValue">
+                            <string>loadUI.proxy.port</string>
+                          </void>
+                        </object>
+                      </java>
+                    </serializedBean>
+                    <condition />
+                  </action>
+                  <action name="Set windows64bit proxy.host" id="4108" beanClass="com.install4j.runtime.beans.actions.text.ModifyTextFileAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                    <serializedBean>
+                      <java class="java.beans.XMLDecoder">
+                        <object class="com.install4j.runtime.beans.actions.text.ModifyTextFileAction">
+                          <void property="encoding">
+                            <string />
+                          </void>
+                          <void property="file">
+                            <object class="java.io.File">
+                              <string>${installer:sys.userHome}/tempLoadUI/loadUIInstall64bit.bat</string>
+                            </object>
+                          </void>
+                          <void property="replaceValue">
+                            <string>${compiler:PROXY_HOST}</string>
+                          </void>
+                          <void property="searchValue">
+                            <string>loadUI.proxy.host</string>
+                          </void>
+                        </object>
+                      </java>
+                    </serializedBean>
+                    <condition />
+                  </action>
+                  <action name="Set windows64bit proxy.port" id="4109" beanClass="com.install4j.runtime.beans.actions.text.ModifyTextFileAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                    <serializedBean>
+                      <java class="java.beans.XMLDecoder">
+                        <object class="com.install4j.runtime.beans.actions.text.ModifyTextFileAction">
+                          <void property="encoding">
+                            <string />
+                          </void>
+                          <void property="file">
+                            <object class="java.io.File">
+                              <string>${installer:sys.userHome}/tempLoadUI/loadUIInstall64bit.bat</string>
+                            </object>
+                          </void>
+                          <void property="replaceValue">
+                            <string>${compiler:PROXY_PORT}</string>
+                          </void>
+                          <void property="searchValue">
+                            <string>loadUI.proxy.port</string>
+                          </void>
+                        </object>
+                      </java>
+                    </serializedBean>
+                    <condition />
+                  </action>
+                  <action name="Set windows proxy.host" id="4110" beanClass="com.install4j.runtime.beans.actions.text.ModifyTextFileAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                    <serializedBean>
+                      <java class="java.beans.XMLDecoder">
+                        <object class="com.install4j.runtime.beans.actions.text.ModifyTextFileAction">
+                          <void property="encoding">
+                            <string />
+                          </void>
+                          <void property="file">
+                            <object class="java.io.File">
+                              <string>${installer:sys.userHome}/tempLoadUI/loadUIInstall.bat</string>
+                            </object>
+                          </void>
+                          <void property="replaceValue">
+                            <string>${compiler:PROXY_HOST}</string>
+                          </void>
+                          <void property="searchValue">
+                            <string>loadUI.proxy.host</string>
+                          </void>
+                        </object>
+                      </java>
+                    </serializedBean>
+                    <condition />
+                  </action>
+                  <action name="Set windows proxy.port" id="4111" beanClass="com.install4j.runtime.beans.actions.text.ModifyTextFileAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                    <serializedBean>
+                      <java class="java.beans.XMLDecoder">
+                        <object class="com.install4j.runtime.beans.actions.text.ModifyTextFileAction">
+                          <void property="encoding">
+                            <string />
+                          </void>
+                          <void property="file">
+                            <object class="java.io.File">
+                              <string>${installer:sys.userHome}/tempLoadUI/loadUIInstall.bat</string>
+                            </object>
+                          </void>
+                          <void property="replaceValue">
+                            <string>${compiler:PROXY_PORT}</string>
+                          </void>
+                          <void property="searchValue">
+                            <string>loadUI.proxy.port</string>
                           </void>
                         </object>
                       </java>
