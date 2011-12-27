@@ -28,8 +28,6 @@
       <variable name="LOADUI_INSTALLER_URL" value="http://www.eviware.com/nightly-builds/loadui/1.5.1-SNAPSHOT/" />
       <variable name="LOADUI_VERSION_NUMBER" value="1_5_1-SNAPSHOT" />
       <variable name="OS_EXT" value="" />
-      <variable name="PROXY_HOST" value="" />
-      <variable name="PROXY_PORT" value="" />
     </variables>
   </application>
   <files>
@@ -543,7 +541,7 @@ All in one place. And all for free.</string>
                             <string>Proxy:</string>
                           </void>
                           <void property="variableName">
-                            <string>${compiler:PROXY_HOST}</string>
+                            <string>proxy_host</string>
                           </void>
                         </object>
                       </java>
@@ -582,7 +580,7 @@ catch(Exception e){
                             <string>Port:</string>
                           </void>
                           <void property="variableName">
-                            <string>${compiler:PROXY_PORT}</string>
+                            <string>proxy.port</string>
                           </void>
                         </object>
                       </java>
@@ -1199,7 +1197,7 @@ else return false;
                             </object>
                           </void>
                           <void property="replaceValue">
-                            <string>${compiler:PROXY_HOST}</string>
+                            <string>context.getVariable("proxy.host")</string>
                           </void>
                           <void property="searchValue">
                             <string>loadUI.proxy.host</string>
@@ -1222,7 +1220,7 @@ else return false;
                             </object>
                           </void>
                           <void property="replaceValue">
-                            <string>${compiler:PROXY_PORT}</string>
+                            <string>context.getVariable("proxy.port")</string>
                           </void>
                           <void property="searchValue">
                             <string>loadUI.proxy.port</string>
@@ -1245,7 +1243,7 @@ else return false;
                             </object>
                           </void>
                           <void property="replaceValue">
-                            <string>${compiler:PROXY_HOST}</string>
+                            <string>context.getVariable("proxy.host")</string>
                           </void>
                           <void property="searchValue">
                             <string>loadUI.proxy.host</string>
@@ -1268,7 +1266,7 @@ else return false;
                             </object>
                           </void>
                           <void property="replaceValue">
-                            <string>${compiler:PROXY_PORT}</string>
+                            <string>context.getVariable("proxy.port")</string>
                           </void>
                           <void property="searchValue">
                             <string>loadUI.proxy.port</string>
@@ -1291,7 +1289,7 @@ else return false;
                             </object>
                           </void>
                           <void property="replaceValue">
-                            <string>${compiler:PROXY_HOST}</string>
+                            <string>context.getVariable("proxy.host")</string>
                           </void>
                           <void property="searchValue">
                             <string>loadUI.proxy.host</string>
@@ -1314,7 +1312,7 @@ else return false;
                             </object>
                           </void>
                           <void property="replaceValue">
-                            <string>${compiler:PROXY_PORT}</string>
+                            <string>context.getVariable("proxy.port")</string>
                           </void>
                           <void property="searchValue">
                             <string>loadUI.proxy.port</string>
@@ -1337,7 +1335,7 @@ else return false;
                             </object>
                           </void>
                           <void property="replaceValue">
-                            <string>${compiler:PROXY_HOST}</string>
+                            <string>context.getVariable("proxy.host")</string>
                           </void>
                           <void property="searchValue">
                             <string>loadUI.proxy.host</string>
@@ -1360,7 +1358,7 @@ else return false;
                             </object>
                           </void>
                           <void property="replaceValue">
-                            <string>${compiler:PROXY_PORT}</string>
+                            <string>context.getVariable("proxy.port")</string>
                           </void>
                           <void property="searchValue">
                             <string>loadUI.proxy.port</string>
