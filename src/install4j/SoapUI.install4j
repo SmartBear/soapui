@@ -580,7 +580,7 @@ catch(Exception e){
                             <string>Port:</string>
                           </void>
                           <void property="variableName">
-                            <string>proxy.port</string>
+                            <string>proxy_port</string>
                           </void>
                         </object>
                       </java>
