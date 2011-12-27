@@ -543,7 +543,7 @@ All in one place. And all for free.</string>
                             <string>Proxy:</string>
                           </void>
                           <void property="variableName">
-                            <string>${compiler:proxy}</string>
+                            <string>${compiler:PROXY_HOST}</string>
                           </void>
                         </object>
                       </java>
@@ -582,7 +582,7 @@ catch(Exception e){
                             <string>Port:</string>
                           </void>
                           <void property="variableName">
-                            <string>${compiler:port}</string>
+                            <string>${compiler:PROXY_PORT}</string>
                           </void>
                         </object>
                       </java>
