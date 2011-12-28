@@ -38,6 +38,7 @@ import com.eviware.soapui.model.testsuite.PropertyAssertion;
 import com.eviware.soapui.model.testsuite.RequestAssertion;
 import com.eviware.soapui.model.testsuite.ResponseAssertion;
 import com.eviware.soapui.model.testsuite.TestStep;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationBuilder;
@@ -82,12 +83,12 @@ public class SimpleContainsAssertion extends WsdlMessageAssertion implements Req
 	{
 		return assertContent( context, messageExchange.getResponseContent(), "Response" );
 	}
-	
+
 	@Override
-	protected String internalAssertProperty( String propertyName, MessageExchange messageExchange,TestStep testStep, SubmitContext context )
-			throws AssertionException
+	protected String internalAssertProperty( String propertyName, MessageExchange messageExchange, TestStep testStep,
+			SubmitContext context ) throws AssertionException
 	{
-		assertContent( context,  testStep.getPropertyValue( propertyName ), propertyName );
+		assertContent( context, testStep.getPropertyValue( propertyName ), propertyName );
 		return "OK";
 	}
 
@@ -123,7 +124,11 @@ public class SimpleContainsAssertion extends WsdlMessageAssertion implements Req
 
 	private String normalize( String string )
 	{
-		string = string.replaceAll( "\r\n", "\n" );
+
+		if( StringUtils.isNullOrEmpty( string ) )
+		{
+			string = string.replaceAll( "\r\n", "\n" );
+		}
 		return string;
 	}
 
@@ -246,6 +251,4 @@ public class SimpleContainsAssertion extends WsdlMessageAssertion implements Req
 		}
 	}
 
-
-	
 }
