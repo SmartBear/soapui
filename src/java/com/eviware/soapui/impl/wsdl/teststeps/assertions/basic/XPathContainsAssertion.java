@@ -839,7 +839,8 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
 		@Override
 		public AssertionListEntry getAssertionListEntry()
 		{
-			return new AssertionListEntry( XPathContainsAssertion.LABEL, XPathContainsAssertion.DESCRIPTION );
+			return new AssertionListEntry( XPathContainsAssertion.ID, XPathContainsAssertion.LABEL,
+					XPathContainsAssertion.DESCRIPTION );
 		}
 	}
 }

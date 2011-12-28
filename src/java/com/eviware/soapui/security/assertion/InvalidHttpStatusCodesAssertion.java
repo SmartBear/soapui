@@ -104,11 +104,11 @@ public class InvalidHttpStatusCodesAssertion extends WsdlMessageAssertion implem
 
 		return "OK";
 	}
-	
+
 	protected String internalAssertProperty( String propertyName, MessageExchange messageExchange, TestStep testStep,
 			SubmitContext context ) throws AssertionException
 	{
-		return internalAssertResponse(  messageExchange,  context );
+		return internalAssertResponse( messageExchange, context );
 	}
 
 	private List<String> extractCodes( SubmitContext context )
@@ -146,7 +146,7 @@ public class InvalidHttpStatusCodesAssertion extends WsdlMessageAssertion implem
 		@Override
 		public AssertionListEntry getAssertionListEntry()
 		{
-			return new AssertionListEntry( InvalidHttpStatusCodesAssertion.LABEL,
+			return new AssertionListEntry( InvalidHttpStatusCodesAssertion.ID, InvalidHttpStatusCodesAssertion.LABEL,
 					InvalidHttpStatusCodesAssertion.DESCRIPTION );
 		}
 	}

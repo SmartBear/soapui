@@ -240,11 +240,11 @@ public class CrossSiteScriptAssertion extends WsdlMessageAssertion implements Re
 				false );
 
 	}
-	
+
 	protected String internalAssertProperty( String propertyName, MessageExchange messageExchange, TestStep testStep,
 			SubmitContext context ) throws AssertionException
 	{
-		return internalAssertResponse(  messageExchange,  context );
+		return internalAssertResponse( messageExchange, context );
 	}
 
 	public static class Factory extends AbstractTestAssertionFactory
@@ -271,7 +271,8 @@ public class CrossSiteScriptAssertion extends WsdlMessageAssertion implements Re
 		@Override
 		public AssertionListEntry getAssertionListEntry()
 		{
-			return new AssertionListEntry( CrossSiteScriptAssertion.LABEL, CrossSiteScriptAssertion.DESCRIPTION );
+			return new AssertionListEntry( CrossSiteScriptAssertion.ID, CrossSiteScriptAssertion.LABEL,
+					CrossSiteScriptAssertion.DESCRIPTION );
 		}
 	}
 

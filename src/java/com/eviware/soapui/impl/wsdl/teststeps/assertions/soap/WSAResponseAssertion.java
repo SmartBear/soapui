@@ -115,7 +115,8 @@ public class WSAResponseAssertion extends WsdlMessageAssertion implements Reques
 		@Override
 		public AssertionListEntry getAssertionListEntry()
 		{
-			return new AssertionListEntry( WSAResponseAssertion.LABEL, WSAResponseAssertion.DESCRIPTION );
+			return new AssertionListEntry( WSAResponseAssertion.ID, WSAResponseAssertion.LABEL,
+					WSAResponseAssertion.DESCRIPTION );
 		}
 	}
 
@@ -171,9 +172,9 @@ public class WSAResponseAssertion extends WsdlMessageAssertion implements Reques
 	protected String internalAssertProperty( String propertyName, MessageExchange messageExchange, TestStep testStep,
 			SubmitContext context ) throws AssertionException
 	{
-		return internalAssertResponse(  messageExchange,  context );
+		return internalAssertResponse( messageExchange, context );
 	}
-	
+
 	public boolean configure()
 	{
 		if( dialog == null )

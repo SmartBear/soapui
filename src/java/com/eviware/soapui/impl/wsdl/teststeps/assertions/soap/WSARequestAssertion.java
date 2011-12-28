@@ -121,7 +121,8 @@ public class WSARequestAssertion extends WsdlMessageAssertion implements Request
 		@Override
 		public AssertionListEntry getAssertionListEntry()
 		{
-			return new AssertionListEntry( WSARequestAssertion.LABEL, WSARequestAssertion.DESCRIPTION );
+			return new AssertionListEntry( WSARequestAssertion.ID, WSARequestAssertion.LABEL,
+					WSARequestAssertion.DESCRIPTION );
 		}
 	}
 
@@ -173,11 +174,11 @@ public class WSARequestAssertion extends WsdlMessageAssertion implements Request
 		// return "Response WS-Addressing is valid";
 		return null;
 	}
-	
+
 	protected String internalAssertProperty( String propertyName, MessageExchange messageExchange, TestStep testStep,
 			SubmitContext context ) throws AssertionException
 	{
-		return internalAssertResponse(  messageExchange,  context );
+		return internalAssertResponse( messageExchange, context );
 	}
 
 	public boolean configure()

@@ -71,11 +71,11 @@ public class SoapRequestAssertion extends WsdlMessageAssertion implements Reques
 
 		return "Request Envelope OK";
 	}
-	
+
 	protected String internalAssertProperty( String propertyName, MessageExchange messageExchange, TestStep testStep,
 			SubmitContext context ) throws AssertionException
 	{
-		return internalAssertResponse(  messageExchange,  context );
+		return internalAssertResponse( messageExchange, context );
 	}
 
 	public static class Factory extends AbstractTestAssertionFactory
@@ -101,7 +101,8 @@ public class SoapRequestAssertion extends WsdlMessageAssertion implements Reques
 		@Override
 		public AssertionListEntry getAssertionListEntry()
 		{
-			return new AssertionListEntry( SoapRequestAssertion.LABEL, SoapRequestAssertion.DESCRIPTION );
+			return new AssertionListEntry( SoapRequestAssertion.ID, SoapRequestAssertion.LABEL,
+					SoapRequestAssertion.DESCRIPTION );
 		}
 	}
 

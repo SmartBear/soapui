@@ -75,9 +75,9 @@ public class SoapResponseAssertion extends WsdlMessageAssertion implements Respo
 	protected String internalAssertProperty( String propertyName, MessageExchange messageExchange, TestStep testStep,
 			SubmitContext context ) throws AssertionException
 	{
-		return internalAssertResponse(  messageExchange,  context );
+		return internalAssertResponse( messageExchange, context );
 	}
-	
+
 	public static class Factory extends AbstractTestAssertionFactory
 	{
 		public Factory()
@@ -100,7 +100,8 @@ public class SoapResponseAssertion extends WsdlMessageAssertion implements Respo
 		@Override
 		public AssertionListEntry getAssertionListEntry()
 		{
-			return new AssertionListEntry( SoapResponseAssertion.LABEL, SoapResponseAssertion.DESCRIPTION );
+			return new AssertionListEntry( SoapResponseAssertion.ID, SoapResponseAssertion.LABEL,
+					SoapResponseAssertion.DESCRIPTION );
 		}
 	}
 

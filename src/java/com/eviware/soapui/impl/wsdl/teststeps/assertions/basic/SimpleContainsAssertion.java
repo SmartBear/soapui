@@ -15,8 +15,6 @@ package com.eviware.soapui.impl.wsdl.teststeps.assertions.basic;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.sf.saxon.exslt.Sets;
-
 import org.apache.xmlbeans.XmlObject;
 
 import com.eviware.soapui.config.TestAssertionConfig;
@@ -31,10 +29,8 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.testsuite.Assertable;
-import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
 import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.model.testsuite.AssertionException;
-import com.eviware.soapui.model.testsuite.PropertyAssertion;
 import com.eviware.soapui.model.testsuite.RequestAssertion;
 import com.eviware.soapui.model.testsuite.ResponseAssertion;
 import com.eviware.soapui.model.testsuite.TestStep;
@@ -247,7 +243,8 @@ public class SimpleContainsAssertion extends WsdlMessageAssertion implements Req
 		@Override
 		public AssertionListEntry getAssertionListEntry()
 		{
-			return new AssertionListEntry( SimpleContainsAssertion.LABEL, SimpleContainsAssertion.DESCRIPTION );
+			return new AssertionListEntry( SimpleContainsAssertion.ID, SimpleContainsAssertion.LABEL,
+					SimpleContainsAssertion.DESCRIPTION );
 		}
 	}
 

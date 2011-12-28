@@ -65,11 +65,11 @@ public class JMSStatusAssertion extends WsdlMessageAssertion implements Response
 	{
 		return "JMS Status OK";
 	}
-	
+
 	protected String internalAssertProperty( String propertyName, MessageExchange messageExchange, TestStep testStep,
 			SubmitContext context ) throws AssertionException
 	{
-		return internalAssertResponse(  messageExchange,  context );
+		return internalAssertResponse( messageExchange, context );
 	}
 
 	public static class Factory extends AbstractTestAssertionFactory
@@ -94,7 +94,7 @@ public class JMSStatusAssertion extends WsdlMessageAssertion implements Response
 		@Override
 		public AssertionListEntry getAssertionListEntry()
 		{
-			return new AssertionListEntry( JMSStatusAssertion.LABEL, JMSStatusAssertion.DESCRIPTION );
+			return new AssertionListEntry( JMSStatusAssertion.ID, JMSStatusAssertion.LABEL, JMSStatusAssertion.DESCRIPTION );
 		}
 	}
 }

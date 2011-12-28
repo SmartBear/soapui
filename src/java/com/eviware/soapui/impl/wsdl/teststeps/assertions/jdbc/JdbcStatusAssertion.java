@@ -28,7 +28,6 @@ import com.eviware.soapui.model.testsuite.AssertionException;
 import com.eviware.soapui.model.testsuite.RequestAssertion;
 import com.eviware.soapui.model.testsuite.ResponseAssertion;
 import com.eviware.soapui.model.testsuite.TestStep;
-import com.eviware.soapui.support.xml.XmlUtils;
 
 public class JdbcStatusAssertion extends WsdlMessageAssertion implements ResponseAssertion, RequestAssertion
 {
@@ -62,11 +61,10 @@ public class JdbcStatusAssertion extends WsdlMessageAssertion implements Respons
 		return "JDBC Status OK";
 	}
 
-	
 	protected String internalAssertProperty( String propertyName, MessageExchange messageExchange, TestStep testStep,
 			SubmitContext context ) throws AssertionException
 	{
-		return internalAssertResponse(  messageExchange,  context );
+		return internalAssertResponse( messageExchange, context );
 	}
 
 	public static class Factory extends AbstractTestAssertionFactory
@@ -97,7 +95,8 @@ public class JdbcStatusAssertion extends WsdlMessageAssertion implements Respons
 		@Override
 		public AssertionListEntry getAssertionListEntry()
 		{
-			return new AssertionListEntry( JdbcStatusAssertion.LABEL, JdbcStatusAssertion.DESCRIPTION );
+			return new AssertionListEntry( JdbcStatusAssertion.ID, JdbcStatusAssertion.LABEL,
+					JdbcStatusAssertion.DESCRIPTION );
 		}
 	}
 }

@@ -157,14 +157,14 @@ public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion impleme
 
 		return "OK";
 	}
-	
+
 	protected String internalAssertProperty( String propertyName, MessageExchange messageExchange, TestStep testStep,
 			SubmitContext context ) throws AssertionException
 	{
 
 		Map<String, String> checkMap = createCheckMap( context );
 		List<AssertionError> assertionErrorList = new ArrayList<AssertionError>();
-		String propertyValue = testStep.getPropertyValue(propertyName);
+		String propertyValue = testStep.getPropertyValue( propertyName );
 		Set<String> messages = new HashSet<String>();
 
 		try
@@ -181,7 +181,8 @@ public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion impleme
 				String match = SecurityScanUtil.contains( context, propertyValue, token, useRegexp );
 				if( match != null )
 				{
-					String message = description + " - Token [" + token + "] found [" + match + "] in property "+ propertyName ;
+					String message = description + " - Token [" + token + "] found [" + match + "] in property "
+							+ propertyName;
 					if( !messages.contains( message ) )
 					{
 						assertionErrorList.add( new AssertionError( message ) );
@@ -254,7 +255,7 @@ public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion impleme
 		@Override
 		public AssertionListEntry getAssertionListEntry()
 		{
-			return new AssertionListEntry( SensitiveInfoExposureAssertion.LABEL,
+			return new AssertionListEntry( SensitiveInfoExposureAssertion.ID, SensitiveInfoExposureAssertion.LABEL,
 					SensitiveInfoExposureAssertion.DESCRIPTION );
 		}
 	}

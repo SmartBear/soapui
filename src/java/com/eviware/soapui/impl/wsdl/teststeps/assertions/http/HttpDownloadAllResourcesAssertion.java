@@ -63,8 +63,8 @@ public class HttpDownloadAllResourcesAssertion extends WsdlMessageAssertion impl
 	}
 
 	@Override
-	protected String internalAssertProperty( String propertyName,  MessageExchange messageExchange ,TestStep testStep, SubmitContext context )
-			throws AssertionException
+	protected String internalAssertProperty( String propertyName, MessageExchange messageExchange, TestStep testStep,
+			SubmitContext context ) throws AssertionException
 	{
 		internalAssertResponse( messageExchange, context );
 		return "OK";
@@ -101,7 +101,7 @@ public class HttpDownloadAllResourcesAssertion extends WsdlMessageAssertion impl
 		@Override
 		public AssertionListEntry getAssertionListEntry()
 		{
-			return new AssertionListEntry( HttpDownloadAllResourcesAssertion.LABEL,
+			return new AssertionListEntry( HttpDownloadAllResourcesAssertion.ID, HttpDownloadAllResourcesAssertion.LABEL,
 					HttpDownloadAllResourcesAssertion.DESCRIPTION );
 		}
 	}

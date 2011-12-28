@@ -66,11 +66,11 @@ public class NotSoapFaultAssertion extends WsdlMessageAssertion implements Respo
 
 		return "Response is not a SOAP Fault";
 	}
-	
+
 	protected String internalAssertProperty( String propertyName, MessageExchange messageExchange, TestStep testStep,
 			SubmitContext context ) throws AssertionException
 	{
-		return internalAssertResponse(  messageExchange,  context );
+		return internalAssertResponse( messageExchange, context );
 	}
 
 	@Override
@@ -102,7 +102,8 @@ public class NotSoapFaultAssertion extends WsdlMessageAssertion implements Respo
 		@Override
 		public AssertionListEntry getAssertionListEntry()
 		{
-			return new AssertionListEntry( NotSoapFaultAssertion.LABEL, NotSoapFaultAssertion.DESCRIPTION );
+			return new AssertionListEntry( NotSoapFaultAssertion.ID, NotSoapFaultAssertion.LABEL,
+					NotSoapFaultAssertion.DESCRIPTION );
 		}
 	}
 }

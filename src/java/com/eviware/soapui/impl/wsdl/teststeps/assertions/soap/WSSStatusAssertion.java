@@ -91,11 +91,11 @@ public class WSSStatusAssertion extends WsdlMessageAssertion implements Response
 
 		return "WS-Security status OK";
 	}
-	
+
 	protected String internalAssertProperty( String propertyName, MessageExchange messageExchange, TestStep testStep,
 			SubmitContext context ) throws AssertionException
 	{
-		return internalAssertResponse(  messageExchange,  context );
+		return internalAssertResponse( messageExchange, context );
 	}
 
 	public static class Factory extends AbstractTestAssertionFactory
@@ -122,7 +122,7 @@ public class WSSStatusAssertion extends WsdlMessageAssertion implements Response
 		@Override
 		public AssertionListEntry getAssertionListEntry()
 		{
-			return new AssertionListEntry( WSSStatusAssertion.LABEL, WSSStatusAssertion.DESCRIPTION );
+			return new AssertionListEntry( WSSStatusAssertion.ID, WSSStatusAssertion.LABEL, WSSStatusAssertion.DESCRIPTION );
 		}
 	}
 }

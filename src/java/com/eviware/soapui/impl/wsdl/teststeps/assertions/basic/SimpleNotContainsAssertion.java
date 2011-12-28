@@ -80,13 +80,13 @@ public class SimpleNotContainsAssertion extends WsdlMessageAssertion implements 
 	}
 
 	@Override
-	protected String internalAssertProperty( String propertyName, MessageExchange messageExchange,TestStep testStep, SubmitContext context )
-			throws AssertionException
+	protected String internalAssertProperty( String propertyName, MessageExchange messageExchange, TestStep testStep,
+			SubmitContext context ) throws AssertionException
 	{
-		assertContent( context,  testStep.getPropertyValue( propertyName ), propertyName );
+		assertContent( context, testStep.getPropertyValue( propertyName ), propertyName );
 		return "OK";
 	}
-	
+
 	private String assertContent( SubmitContext context, String content, String type ) throws AssertionException
 	{
 		if( token == null )
@@ -227,7 +227,8 @@ public class SimpleNotContainsAssertion extends WsdlMessageAssertion implements 
 		@Override
 		public AssertionListEntry getAssertionListEntry()
 		{
-			return new AssertionListEntry( SimpleNotContainsAssertion.LABEL, SimpleNotContainsAssertion.DESCRIPTION );
+			return new AssertionListEntry( SimpleNotContainsAssertion.ID, SimpleNotContainsAssertion.LABEL,
+					SimpleNotContainsAssertion.DESCRIPTION );
 		}
 	}
 }

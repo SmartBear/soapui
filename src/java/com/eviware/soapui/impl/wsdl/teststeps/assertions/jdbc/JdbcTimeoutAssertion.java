@@ -65,9 +65,9 @@ public class JdbcTimeoutAssertion extends WsdlMessageAssertion implements Respon
 	protected String internalAssertProperty( String propertyName, MessageExchange messageExchange, TestStep testStep,
 			SubmitContext context ) throws AssertionException
 	{
-		return internalAssertResponse(  messageExchange,  context );
+		return internalAssertResponse( messageExchange, context );
 	}
-	
+
 	public static class Factory extends AbstractTestAssertionFactory
 	{
 		public Factory()
@@ -96,7 +96,8 @@ public class JdbcTimeoutAssertion extends WsdlMessageAssertion implements Respon
 		@Override
 		public AssertionListEntry getAssertionListEntry()
 		{
-			return new AssertionListEntry( JdbcTimeoutAssertion.LABEL, JdbcTimeoutAssertion.DESCRIPTION );
+			return new AssertionListEntry( JdbcTimeoutAssertion.ID, JdbcTimeoutAssertion.LABEL,
+					JdbcTimeoutAssertion.DESCRIPTION );
 		}
 	}
 }

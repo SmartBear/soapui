@@ -68,11 +68,11 @@ public class JMSTimeoutAssertion extends WsdlMessageAssertion implements Respons
 	{
 		return "JMS Timeout OK";
 	}
-	
+
 	protected String internalAssertProperty( String propertyName, MessageExchange messageExchange, TestStep testStep,
 			SubmitContext context ) throws AssertionException
 	{
-		return internalAssertResponse(  messageExchange,  context );
+		return internalAssertResponse( messageExchange, context );
 	}
 
 	public static class Factory extends AbstractTestAssertionFactory
@@ -97,7 +97,8 @@ public class JMSTimeoutAssertion extends WsdlMessageAssertion implements Respons
 		@Override
 		public AssertionListEntry getAssertionListEntry()
 		{
-			return new AssertionListEntry( JMSTimeoutAssertion.LABEL, JMSTimeoutAssertion.DESCRIPTION );
+			return new AssertionListEntry( JMSTimeoutAssertion.ID, JMSTimeoutAssertion.LABEL,
+					JMSTimeoutAssertion.DESCRIPTION );
 		}
 	}
 }

@@ -87,7 +87,8 @@ public class AssertionCategoryMapping
 
 		if( recentlyUsedSet.size() > 0 )
 			categoriesAssertionsMap.put( RECENTLY_USED, recentlyUsedSet );
-		TestAssertionRegistry.getInstance().addCategoriesAssertionsMap( assertable, categoriesAssertionsMap );
+		//		TestAssertionRegistry.getInstance().addCategoriesAssertionsMap( assertable, categoriesAssertionsMap );
+		TestAssertionRegistry.getInstance().addAllCategoriesMap( categoriesAssertionsMap );
 		return categoriesAssertionsMap;
 	}
 

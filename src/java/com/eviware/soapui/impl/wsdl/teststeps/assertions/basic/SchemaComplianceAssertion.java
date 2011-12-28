@@ -116,12 +116,12 @@ public class SchemaComplianceAssertion extends WsdlMessageAssertion implements R
 
 		throw new AssertionException( new AssertionError( "Unknown MessageExchange type" ) );
 	}
-	
+
 	@Override
-	protected String internalAssertProperty( String propertyName, MessageExchange messageExchange,TestStep testStep, SubmitContext context )
-			throws AssertionException
+	protected String internalAssertProperty( String propertyName, MessageExchange messageExchange, TestStep testStep,
+			SubmitContext context ) throws AssertionException
 	{
-		internalAssertResponse( messageExchange,  context );
+		internalAssertResponse( messageExchange, context );
 		return "OK";
 	}
 
@@ -350,7 +350,8 @@ public class SchemaComplianceAssertion extends WsdlMessageAssertion implements R
 		@Override
 		public AssertionListEntry getAssertionListEntry()
 		{
-			return new AssertionListEntry( SchemaComplianceAssertion.LABEL, SchemaComplianceAssertion.DESCRIPTION );
+			return new AssertionListEntry( SchemaComplianceAssertion.ID, SchemaComplianceAssertion.LABEL,
+					SchemaComplianceAssertion.DESCRIPTION );
 		}
 	}
 }

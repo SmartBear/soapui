@@ -21,7 +21,9 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.SortedSet;
 
 import javax.swing.AbstractAction;
@@ -36,7 +38,6 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import org.jdesktop.swingx.JXList;
-import org.jdesktop.swingx.JXTable;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.actions.project.SimpleDialog;
@@ -55,7 +56,7 @@ import com.l2fprod.common.swing.renderer.DefaultCellRenderer;
 public class AddAssertionPanel extends SimpleDialog
 {
 	private JXList categoriesList;
-	private JXTable assertionsTable;
+	private AssertionsListTable assertionsTable;
 	private Assertable assertable;
 	private AddAssertionAction addAssertionAction;
 	private AssertionsListTableModel assertionsListTableModel;
@@ -65,18 +66,45 @@ public class AddAssertionPanel extends SimpleDialog
 	private LinkedHashMap<String, SortedSet<AssertionListEntry>> categoriesAssertionsMap;
 	private SimpleForm assertionsForm;
 	private JCheckBox hideDescCB;
-	private InternalCellRenderer assertionEntryRenderer = new InternalCellRenderer();
+	private AssertionEntryRenderer assertionEntryRenderer = new AssertionEntryRenderer();;
 	private InternalHideDescListener hideDescListener = new InternalHideDescListener();
 	protected RecentAssertionHandler recentAssertionHandler = new RecentAssertionHandler();
-	AssertionListMouseAdapter mouseAdapter = new AssertionListMouseAdapter();
+	private AssertionListMouseAdapter mouseAdapter = new AssertionListMouseAdapter();
+	private String selectedCategory;
 
 	public AddAssertionPanel( Assertable assertable )
 	{
 		super( "Select Assertion", "Select which assertion to add", "" );
 		this.assertable = assertable;
+		assertionEntryRenderer.setAssertable( assertable );
 		selectionListener = new InternalListSelectionListener();
 		categoriesAssertionsMap = AssertionCategoryMapping
 				.getCategoriesAssertionsMap( assertable, recentAssertionHandler );
+	}
+
+	public RecentAssertionHandler getRecentAssertionHandler()
+	{
+		return recentAssertionHandler;
+	}
+
+	public AssertionEntryRenderer getAssertionEntryRenderer()
+	{
+		return assertionEntryRenderer;
+	}
+
+	public String getSelectedCategory()
+	{
+		return selectedCategory;
+	}
+
+	public void setAssertable( Assertable assertable )
+	{
+		this.assertable = assertable;
+	}
+
+	public Assertable getAssertable()
+	{
+		return assertable;
 	}
 
 	@Override
@@ -100,12 +128,17 @@ public class AddAssertionPanel extends SimpleDialog
 		return mainPanel;
 	}
 
-	private Component buildAssertionsList()
+	public AssertionListMouseAdapter getMouseAdapter()
+	{
+		return mouseAdapter;
+	}
+
+	protected Component buildAssertionsList()
 	{
 		assertionsForm = new SimpleForm();
 
 		assertionsListTableModel = new AssertionsListTableModel();
-		assertionsTable = new JXTable( assertionsListTableModel );
+		assertionsTable = new AssertionsListTable( assertionsListTableModel );
 		String category = ( String )categoriesList.getSelectedValue();
 		if( category != null && categoriesAssertionsMap.containsKey( category ) )
 		{
@@ -137,18 +170,47 @@ public class AddAssertionPanel extends SimpleDialog
 			@Override
 			public void valueChanged( ListSelectionEvent arg0 )
 			{
-				String category = ( String )categoriesList.getSelectedValue();
-				if( category != null && categoriesAssertionsMap.containsKey( category ) )
+				selectedCategory = ( String )categoriesList.getSelectedValue();
+				if( selectedCategory != null && categoriesAssertionsMap.containsKey( selectedCategory ) )
 				{
-					assertions = categoriesAssertionsMap.get( category );
+					assertions = categoriesAssertionsMap.get( selectedCategory );
 					assertionsListTableModel.setListEntriesSet( assertions );
-					assertionsTable.getColumnModel().getColumn( 0 ).setCellRenderer( assertionEntryRenderer );
+					renderAssertions();
+					populateNonSelectableIndexes();
 					assertionsListTableModel.fireTableDataChanged();
 				}
 			}
 		} );
 		panel.add( new JScrollPane( categoriesList ) );
 		return panel;
+	}
+
+	protected void renderAssertions()
+	{
+	}
+
+	protected void populateNonSelectableIndexes()
+	{
+		SortedSet<AssertionListEntry> assertionsList = getCategoriesAssertionsMap().get( getSelectedCategory() );
+		List<Integer> intList = new ArrayList<Integer>();
+		assertionsList.toArray();
+		for( int i = 0; i < assertionsList.size(); i++ )
+		{
+			AssertionListEntry assertionListEntry = ( AssertionListEntry )assertionsList.toArray()[i];
+			if( !TestAssertionRegistry.getInstance().canAssert( assertionListEntry.getTypeId(), assertable ) )
+				intList.add( i );
+		}
+		getAssertionsTable().setNonSelectableIndexes( intList );
+	}
+
+	protected void enableCategoriesList( boolean enable )
+	{
+		categoriesList.setEnabled( enable );
+	}
+
+	protected void enableApplicableAssertions()
+	{
+
 	}
 
 	@Override
@@ -252,10 +314,15 @@ public class AddAssertionPanel extends SimpleDialog
 		hideDescCB.removeItemListener( hideDescListener );
 	}
 
-	private class InternalCellRenderer extends DefaultCellRenderer
+	protected class AssertionEntryRenderer extends DefaultCellRenderer
 	{
-
+		private Assertable assertable;
 		private Font boldFont;
+
+		public void setAssertable( Assertable assertable )
+		{
+			this.assertable = assertable;
+		}
 
 		@Override
 		public Component getTableCellRendererComponent( JTable table, Object value, boolean isSelected, boolean hasFocus,
@@ -264,34 +331,49 @@ public class AddAssertionPanel extends SimpleDialog
 
 			boldFont = getFont().deriveFont( Font.BOLD );
 
-			String str = ( ( AssertionListEntry )value ).getName();
+			AssertionListEntry entry = ( AssertionListEntry )value;
+			String type = TestAssertionRegistry.getInstance().getAssertionTypeForName( entry.getName() );
+			boolean canAssert = assertable != null ? TestAssertionRegistry.getInstance().canAssert( type, assertable )
+					: true;
+
+			String str = entry.getName();
 			JLabel label = new JLabel( str );
 			label.setFont( boldFont );
-
 			JLabel desc = new JLabel( ( ( AssertionListEntry )value ).getDescription() );
+			JLabel disabledInfo = new JLabel( "Not applicable with selected Source and Property" );
+			boolean disable = !categoriesList.isEnabled() || !canAssert;
+			if( disable )
+			{
+				label.setForeground( Color.LIGHT_GRAY );
+				desc.setForeground( Color.LIGHT_GRAY );
+				disabledInfo.setForeground( Color.LIGHT_GRAY );
+			}
 			SimpleForm form = new SimpleForm();
-
 			form.addComponent( label );
-			if( !hideDescCB.isSelected() )
+			if( !isHideDescriptionSelected() )
 			{
 				form.addComponent( desc );
-				assertionsTable.setRowHeight( 40 );
+				if( disable )
+				{
+					form.addComponent( disabledInfo );
+				}
+				getAssertionsTable().setRowHeight( 60 );
 			}
 			else
 			{
-				assertionsTable.setRowHeight( 20 );
-			}
-
-			if( isSelected )
-			{
-				form.getPanel().setBackground( Color.LIGHT_GRAY );
-			}
-			else
-			{
-				form.getPanel().setBackground( Color.WHITE );
+				if( disable )
+				{
+					form.addComponent( disabledInfo );
+				}
+				getAssertionsTable().setRowHeight( 40 );
 			}
 			return form.getPanel();
 		}
+	}
+
+	protected boolean isHideDescriptionSelected()
+	{
+		return hideDescCB.isSelected();
 	}
 
 	@Override
@@ -305,19 +387,24 @@ public class AddAssertionPanel extends SimpleDialog
 		this.categoriesAssertionsMap = categoriesAssertionsMap;
 	}
 
+	public LinkedHashMap<String, SortedSet<AssertionListEntry>> getCategoriesAssertionsMap()
+	{
+		return categoriesAssertionsMap;
+	}
+
 	public class AssertionListMouseAdapter extends MouseAdapter
 	{
 		@Override
 		public void mouseClicked( MouseEvent e )
 		{
-			if( e.getClickCount() == 2 )
+			if( e.getClickCount() == 2 && !assertionsTable.getSelectionModel().isSelectionEmpty() )
 			{
 				handleOk();
 			}
 		}
 	}
 
-	public JXTable getAssertionsTable()
+	public AssertionsListTable getAssertionsTable()
 	{
 		return assertionsTable;
 	}

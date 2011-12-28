@@ -163,7 +163,7 @@ public class XQueryContainsAssertion extends WsdlMessageAssertion implements Req
 		else
 			return assertContent( messageExchange.getResponseContentAsXml(), context, "Response" );
 	}
-	
+
 	protected String internalAssertProperty( String propertyName, MessageExchange messageExchange, TestStep testStep,
 			SubmitContext context ) throws AssertionException
 	{
@@ -174,7 +174,6 @@ public class XQueryContainsAssertion extends WsdlMessageAssertion implements Req
 		}
 		return assertContent( testStep.getPropertyValue( propertyName ), context, propertyName );
 	}
-
 
 	public String assertContent( String response, SubmitContext context, String type ) throws AssertionException
 	{
@@ -677,7 +676,8 @@ public class XQueryContainsAssertion extends WsdlMessageAssertion implements Req
 		@Override
 		public AssertionListEntry getAssertionListEntry()
 		{
-			return new AssertionListEntry( XQueryContainsAssertion.LABEL, XQueryContainsAssertion.DESCRIPTION );
+			return new AssertionListEntry( XQueryContainsAssertion.ID, XQueryContainsAssertion.LABEL,
+					XQueryContainsAssertion.DESCRIPTION );
 		}
 	}
 }

@@ -250,11 +250,49 @@ public class TestAssertionRegistry
 				set = categoryAssertionsMap.get( assertion.getCategory() );
 				if( set != null )
 				{
-					set.add( assertion.getAssertionListEntry() );
+					AssertionListEntry assertionListEntry = assertion.getAssertionListEntry();
+					//					if( assertable == null && disableNonApplicable )
+					set.add( assertionListEntry );
 					categoryAssertionsMap.put( assertion.getCategory(), set );
 				}
 
 			}
+		}
+		for( String category : AssertionCategoryMapping.getAssertionCategories() )
+		{
+			if( categoryAssertionsMap.get( category ).isEmpty() )
+			{
+				categoryAssertionsMap.remove( category );
+			}
+		}
+
+		return categoryAssertionsMap;
+	}
+
+	/**
+	 * 
+	 * adds all assertions into map, to be disabled later when non applicable
+	 */
+	public LinkedHashMap<String, SortedSet<AssertionListEntry>> addAllCategoriesMap(
+			LinkedHashMap<String, SortedSet<AssertionListEntry>> categoryAssertionsMap )
+	{
+		for( String category : AssertionCategoryMapping.getAssertionCategories() )
+		{
+			SortedSet<AssertionListEntry> assertionCategorySet = new TreeSet<AssertionListEntry>();
+			categoryAssertionsMap.put( category, assertionCategorySet );
+		}
+
+		for( TestAssertionFactory assertion : availableAssertions.values() )
+		{
+			SortedSet<AssertionListEntry> set;
+			set = categoryAssertionsMap.get( assertion.getCategory() );
+			if( set != null )
+			{
+				AssertionListEntry assertionListEntry = assertion.getAssertionListEntry();
+				set.add( assertionListEntry );
+				categoryAssertionsMap.put( assertion.getCategory(), set );
+			}
+
 		}
 		for( String category : AssertionCategoryMapping.getAssertionCategories() )
 		{

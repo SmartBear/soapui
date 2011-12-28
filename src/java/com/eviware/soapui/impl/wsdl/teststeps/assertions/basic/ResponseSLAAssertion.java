@@ -14,7 +14,6 @@ package com.eviware.soapui.impl.wsdl.teststeps.assertions.basic;
 
 import org.apache.xmlbeans.XmlObject;
 
-import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.wsdl.panels.assertions.AssertionCategoryMapping;
 import com.eviware.soapui.impl.wsdl.panels.assertions.AssertionListEntry;
@@ -82,10 +81,9 @@ public class ResponseSLAAssertion extends WsdlMessageAssertion implements Respon
 		return "Response meets SLA";
 	}
 
-	
 	@Override
-	protected String internalAssertProperty( String propertyName, MessageExchange messageExchange, TestStep testStep,SubmitContext context )
-			throws AssertionException
+	protected String internalAssertProperty( String propertyName, MessageExchange messageExchange, TestStep testStep,
+			SubmitContext context ) throws AssertionException
 	{
 		return internalAssertResponse( messageExchange, context );
 	}
@@ -161,7 +159,8 @@ public class ResponseSLAAssertion extends WsdlMessageAssertion implements Respon
 		@Override
 		public AssertionListEntry getAssertionListEntry()
 		{
-			return new AssertionListEntry( ResponseSLAAssertion.LABEL, ResponseSLAAssertion.DESCRIPTION );
+			return new AssertionListEntry( ResponseSLAAssertion.ID, ResponseSLAAssertion.LABEL,
+					ResponseSLAAssertion.DESCRIPTION );
 		}
 	}
 }
