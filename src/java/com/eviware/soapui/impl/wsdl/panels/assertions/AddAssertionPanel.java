@@ -367,6 +367,14 @@ public class AddAssertionPanel extends SimpleDialog
 				}
 				getAssertionsTable().setRowHeight( 40 );
 			}
+			if( isSelected )
+			{
+				form.getPanel().setBackground( Color.LIGHT_GRAY );
+			}
+			else
+			{
+				form.getPanel().setBackground( Color.WHITE );
+			}
 			return form.getPanel();
 		}
 	}
