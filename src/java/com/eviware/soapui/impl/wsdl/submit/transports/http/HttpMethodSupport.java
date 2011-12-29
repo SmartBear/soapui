@@ -29,6 +29,7 @@ import org.apache.http.entity.BufferedHttpEntity;
 import org.apache.http.util.EntityUtils;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.metrics.HttpMetrics;
 import com.eviware.soapui.impl.wsdl.support.CompressionSupport;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 import com.eviware.soapui.settings.HttpSettings;
@@ -56,6 +57,8 @@ public class HttpMethodSupport
 	private Throwable failureCause;
 	private boolean decompress;
 	private org.apache.http.HttpResponse httpResponse;
+
+	private HttpMetrics metrics;
 
 	public HttpMethodSupport()
 	{
