@@ -35,6 +35,9 @@ public class OutgoingWss implements PropertyExpansionContainer
 {
 	public static final String WSSENTRY_PROPERTY = OutgoingWss.class.getName() + "@wssEntry";
 
+	private static final int MOVE_DOWN = 1;
+	private static final int MOVE_UP = -1;
+
 	private OutgoingWssConfig config;
 	private List<WssEntry> entries = new ArrayList<WssEntry>();
 	private final DefaultWssContainer container;
@@ -126,6 +129,31 @@ public class OutgoingWss implements PropertyExpansionContainer
 		entry.release();
 	}
 
+	public void moveEntry( WssEntry entry, int offset )
+	{
+		int indexBeforeMove = entries.indexOf( entry );
+		if( ( offset == MOVE_UP && indexBeforeMove > 0 )
+				|| ( offset == MOVE_DOWN && indexBeforeMove < entries.size() - 1 ) )
+		{
+			WssEntry adjacentEntry = entries.get( indexBeforeMove + offset );
+
+			entries.set( indexBeforeMove + offset, entry );
+			entries.set( indexBeforeMove, adjacentEntry );
+
+			WSSEntryConfig entryConfig = ( WSSEntryConfig )config.getEntryList().get( indexBeforeMove ).copy();
+			WSSEntryConfig adjacentEntryConfig = ( WSSEntryConfig )config.getEntryList().get( indexBeforeMove + offset )
+					.copy();
+
+			config.getEntryList().set( indexBeforeMove + offset, entryConfig );
+			config.getEntryList().set( indexBeforeMove, adjacentEntryConfig );
+
+			entry.updateEntryConfig( config.getEntryList().get( indexBeforeMove + offset ) );
+			adjacentEntry.updateEntryConfig( config.getEntryList().get( indexBeforeMove ) );
+
+			container.fireWssEntryMoved( entry, offset );
+		}
+	}
+
 	public OutgoingWssConfig getConfig()
 	{
 		return config;
@@ -175,7 +203,7 @@ public class OutgoingWss implements PropertyExpansionContainer
 
 		for( int c = 0; c < entries.size(); c++ )
 		{
-			entries.get( c ).udpateConfig( this.config.getEntryArray( c ) );
+			entries.get( c ).updateEntryConfig( this.config.getEntryArray( c ) );
 		}
 	}
 

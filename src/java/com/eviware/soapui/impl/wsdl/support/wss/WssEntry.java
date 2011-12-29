@@ -31,7 +31,7 @@ public interface WssEntry extends RegistryEntry<WSSEntryConfig, OutgoingWss>
 
 	public OutgoingWss getOutgoingWss();
 
-	public void udpateConfig( WSSEntryConfig config );
+	public void updateEntryConfig( WSSEntryConfig config );
 
 	public void release();
 }

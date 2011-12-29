@@ -159,7 +159,7 @@ public abstract class WssEntryBase implements WssEntry, PropertyExpansionContain
 			result.extractAndAddAll( "password" );
 	}
 
-	public void udpateConfig( WSSEntryConfig config )
+	public void updateEntryConfig( WSSEntryConfig config )
 	{
 		this.config = config;
 	}

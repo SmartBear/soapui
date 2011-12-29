@@ -65,12 +65,21 @@ public class KeystoresComboBoxModel extends AbstractListModel implements ComboBo
 		return cryptos == null ? 0 : cryptos.size();
 	}
 
+	public void release()
+	{
+		container.removeWssContainerListener( this );
+		cryptos = null;
+		selectedCrypto = null;
+	}
+
+	@Override
 	public void cryptoAdded( WssCrypto crypto )
 	{
 		cryptos.add( crypto );
 		fireIntervalAdded( this, getSize() - 1, getSize() - 1 );
 	}
 
+	@Override
 	public void cryptoRemoved( WssCrypto crypto )
 	{
 		int index = cryptos.indexOf( crypto );
@@ -78,38 +87,59 @@ public class KeystoresComboBoxModel extends AbstractListModel implements ComboBo
 		fireIntervalRemoved( this, index, index );
 	}
 
-	public void incomingWssAdded( IncomingWss incomingWss )
-	{
-	}
-
-	public void incomingWssRemoved( IncomingWss incomingWss )
-	{
-	}
-
+	@Override
 	public void outgoingWssAdded( OutgoingWss outgoingWss )
 	{
+		// TODO Auto-generated method stub
+
 	}
 
-	public void outgoingWssEntryAdded( WssEntry entry )
-	{
-	}
-
-	public void outgoingWssEntryRemoved( WssEntry entry )
-	{
-	}
-
+	@Override
 	public void outgoingWssRemoved( OutgoingWss outgoingWss )
 	{
+		// TODO Auto-generated method stub
+
 	}
 
+	@Override
+	public void outgoingWssEntryAdded( WssEntry entry )
+	{
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void outgoingWssEntryMoved( WssEntry entry, int offset )
+	{
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void outgoingWssEntryRemoved( WssEntry entry )
+	{
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void incomingWssAdded( IncomingWss incomingWss )
+	{
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void incomingWssRemoved( IncomingWss incomingWss )
+	{
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
 	public void cryptoUpdated( WssCrypto crypto )
 	{
-	}
+		// TODO Auto-generated method stub
 
-	public void release()
-	{
-		container.removeWssContainerListener( this );
-		cryptos = null;
-		selectedCrypto = null;
 	}
 }

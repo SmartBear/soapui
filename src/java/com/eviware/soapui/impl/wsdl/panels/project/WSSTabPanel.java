@@ -20,18 +20,19 @@ import java.io.File;
 import java.util.List;
 
 import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.DefaultCellEditor;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
@@ -57,9 +58,13 @@ import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
 
-// TODO Consider splitting this up into smaller entities for each main inner component
+// FIXME Consider splitting this up into smaller entities for each main inner component and put all actions into separate files
 public class WSSTabPanel extends JPanel
 {
+	private static final int ENTRIES_LIST_COMPONENT_WIDTH = 150;
+	private static final int MOVE_UP = -1;
+	private static final int MOVE_DOWN = 1;
+
 	private JTable cryptosTable;
 	private RemoveCryptoAction removeCryptoAction;
 	private RemoveIncomingWssAction removeIncomingWssAction;
@@ -68,13 +73,20 @@ public class WSSTabPanel extends JPanel
 	private JComboBox incomingWssSignatureCryptoComboBox;
 	private JTable outgoingWssTable;
 	private RemoveOutgoingWssAction removeOutgoingWssAction;
-	private JButton removeOutgoingEntryButton;
 	private WssEntry selectedEntry;
 	private OutgoingWss selectedOutgoing;
-	private JButton addOutgoingEntryButton;
 	private final WssContainer wssContainer;
 	private InternalWssContainerListener wssContainerListener;
-	private JTabbedPane entriesTabs;
+
+	private JButton addOutgoingEntryButton;
+	private JButton removeOutgoingEntryButton;
+	private JButton moveOutgoingEntryUpButton;
+	private JButton moveOutgoingEntryDownButton;
+
+	private JSplitPane entriesSplitPane;
+	private JScrollPane entriesListContainer;
+	private JList entriesList;
+	private DefaultListModel entriesListModel;
 
 	public WSSTabPanel( WssContainer wssContainer )
 	{
@@ -87,10 +99,32 @@ public class WSSTabPanel extends JPanel
 		buildUI();
 	}
 
+	public void release()
+	{
+		wssContainer.removeWssContainerListener( wssContainerListener );
+
+		( ( IncomingWssTableModel )incomingWssTable.getModel() ).release();
+		( ( OutgoingWssTableModel )outgoingWssTable.getModel() ).release();
+		( ( CryptosTableModel )cryptosTable.getModel() ).release();
+
+		( ( KeystoresComboBoxModel )incomingWssDecryptionCryptoComboBox.getModel() ).release();
+		( ( KeystoresComboBoxModel )incomingWssSignatureCryptoComboBox.getModel() ).release();
+
+		entriesListModel.removeAllElements();
+	}
+
 	private void buildUI()
 	{
 		add( buildMainToolbar(), BorderLayout.NORTH );
 		add( buildContent(), BorderLayout.CENTER );
+	}
+
+	private Component buildMainToolbar()
+	{
+		JXToolBar toolbar = UISupport.createSmallToolbar();
+		toolbar.addGlue();
+		toolbar.addFixed( UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.WSS_HELP_URL ) ) );
+		return toolbar;
 	}
 
 	private JComponent buildContent()
@@ -105,22 +139,146 @@ public class WSSTabPanel extends JPanel
 		return UISupport.createTabPanel( tabs, true );
 	}
 
-	private JPanel buildIncomingConfigurationsTab()
+	private JPanel buildOutgoingConfigurationsTab()
+	{
+		outgoingWssTable = new JTable( new OutgoingWssTableModel() );
+		outgoingWssTable.getSelectionModel().addListSelectionListener( new ListSelectionListener()
+		{
+			public void valueChanged( ListSelectionEvent e )
+			{
+				int selectedRow = outgoingWssTable.getSelectedRow();
+				selectedOutgoing = selectedRow == -1 ? null : wssContainer.getOutgoingWssAt( selectedRow );
+
+				removeOutgoingWssAction.setEnabled( selectedRow != -1 );
+				addOutgoingEntryButton.setEnabled( selectedRow != -1 );
+
+				if( selectedOutgoing != null )
+				{
+					entriesListModel.removeAllElements();
+					for( WssEntry entry : selectedOutgoing.getEntries() )
+					{
+						entriesListModel.addElement( entry );
+					}
+
+					entriesListContainer.getViewport().add( entriesList );
+					entriesSplitPane.setRightComponent( new JPanel() );
+				}
+				entriesSplitPane.setDividerLocation( ENTRIES_LIST_COMPONENT_WIDTH );
+			}
+		} );
+
+		outgoingWssTable.getColumnModel().getColumn( 2 ).setCellEditor( new DefaultCellEditor( new JPasswordField() ) );
+		outgoingWssTable.getColumnModel().getColumn( 2 ).setCellRenderer( new PasswordTableCellRenderer() );
+
+		JPanel outgoingConfigurationSplitPane = new JPanel( new BorderLayout() );
+		JSplitPane split = UISupport.createVerticalSplit( new JScrollPane( outgoingWssTable ), buildOutgoingWssDetails() );
+		split.setDividerLocation( 140 );
+		outgoingConfigurationSplitPane.add( buildOutgoingWssToolbar(), BorderLayout.NORTH );
+		outgoingConfigurationSplitPane.add( split, BorderLayout.CENTER );
+
+		JPanel outgoingConfigurationsPanel = new JPanel( new BorderLayout() );
+		outgoingConfigurationsPanel.add( outgoingConfigurationSplitPane, BorderLayout.CENTER );
+
+		return outgoingConfigurationsPanel;
+	}
+
+	private Component buildOutgoingWssToolbar()
+	{
+		JXToolBar toolbar = UISupport.createSmallToolbar();
+
+		toolbar.addFixed( UISupport.createToolbarButton( new AddOutgoingWssAction() ) );
+		removeOutgoingWssAction = new RemoveOutgoingWssAction();
+		toolbar.addFixed( UISupport.createToolbarButton( removeOutgoingWssAction ) );
+		toolbar.addGlue();
+		toolbar.addFixed( UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.OUTGOINGWSS_HELP_URL ) ) );
+
+		return toolbar;
+	}
+
+	private Component buildOutgoingWssDetails()
 	{
 		JPanel panel = new JPanel( new BorderLayout() );
+		panel.add( buildOutgoingEntriesToolbar(), BorderLayout.NORTH );
+		panel.add( buildOutgoingEntryList(), BorderLayout.CENTER );
 
-		JPanel p = new JPanel( new BorderLayout() );
-		p.add( buildIncomingWssToolbar(), BorderLayout.NORTH );
+		return panel;
+	}
 
+	private Component buildOutgoingEntriesToolbar()
+	{
+		JXToolBar toolbar = UISupport.createSmallToolbar();
+
+		addOutgoingEntryButton = UISupport.createToolbarButton( new AddOutgoingEntryAction(), false );
+		toolbar.addFixed( addOutgoingEntryButton );
+
+		removeOutgoingEntryButton = UISupport.createToolbarButton( new RemoveOutgoingEntryAction(), false );
+		toolbar.addFixed( removeOutgoingEntryButton );
+
+		moveOutgoingEntryUpButton = UISupport.createToolbarButton( new MoveOutgoingEntryUpAction(), false );
+		toolbar.addFixed( moveOutgoingEntryUpButton );
+
+		moveOutgoingEntryDownButton = UISupport.createToolbarButton( new MoveOutgoingEntryDownAction(), false );
+		toolbar.addFixed( moveOutgoingEntryDownButton );
+
+		return toolbar;
+	}
+
+	private Component buildOutgoingEntryList()
+	{
+		entriesSplitPane = UISupport.createHorizontalSplit();
+
+		entriesListContainer = new JScrollPane();
+		entriesListContainer.setMinimumSize( new Dimension( ENTRIES_LIST_COMPONENT_WIDTH, ENTRIES_LIST_COMPONENT_WIDTH ) );
+		entriesSplitPane.setLeftComponent( entriesListContainer );
+		entriesSplitPane.setDividerLocation( ENTRIES_LIST_COMPONENT_WIDTH );
+
+		setEntriesSplitPaneToEmpty();
+
+		entriesList = new JList();
+
+		entriesListModel = new DefaultListModel();
+
+		entriesList.setModel( entriesListModel );
+		entriesList.addListSelectionListener( new ListSelectionListener()
+		{
+			@Override
+			public void valueChanged( ListSelectionEvent e )
+			{
+				int selectedIndex = entriesList.getSelectedIndex();
+
+				selectedEntry = ( entriesList.getSelectedIndex() == -1 ? null : ( WssEntry )entriesListModel
+						.get( selectedIndex ) );
+
+				removeOutgoingEntryButton.setEnabled( selectedEntry != null );
+				moveOutgoingEntryUpButton.setEnabled( selectedIndex > 0 );
+				moveOutgoingEntryDownButton.setEnabled( selectedIndex > -1
+						&& selectedIndex < ( entriesListModel.getSize() - 1 ) );
+
+				if( selectedEntry != null )
+				{
+					entriesSplitPane.setRightComponent( selectedEntry.getConfigurationPanel() );
+				}
+				entriesSplitPane.setDividerLocation( ENTRIES_LIST_COMPONENT_WIDTH );
+			}
+		} );
+
+		return entriesSplitPane;
+	}
+
+	private JPanel buildIncomingConfigurationsTab()
+	{
 		incomingWssTable = new JTable( new IncomingWssTableModel() );
 		incomingWssTable.getSelectionModel().addListSelectionListener( new ListSelectionListener()
 		{
-
 			public void valueChanged( ListSelectionEvent e )
 			{
 				removeIncomingWssAction.setEnabled( incomingWssTable.getSelectedRow() != -1 );
 			}
 		} );
+
+		JPanel panel = new JPanel( new BorderLayout() );
+		JPanel p = new JPanel( new BorderLayout() );
+		p.add( buildIncomingWssToolbar(), BorderLayout.NORTH );
 
 		incomingWssDecryptionCryptoComboBox = new JComboBox( new KeystoresComboBoxModel( wssContainer, null ) );
 		incomingWssTable.getColumnModel().getColumn( 1 )
@@ -138,95 +296,16 @@ public class WSSTabPanel extends JPanel
 		return panel;
 	}
 
-	private JPanel buildOutgoingConfigurationsTab()
-	{
-		JPanel panel = new JPanel( new BorderLayout() );
-
-		JPanel p = new JPanel( new BorderLayout() );
-		p.add( buildOutgoingWssToolbar(), BorderLayout.NORTH );
-
-		outgoingWssTable = new JTable( new OutgoingWssTableModel() );
-		outgoingWssTable.getSelectionModel().addListSelectionListener( new ListSelectionListener()
-		{
-
-			public void valueChanged( ListSelectionEvent e )
-			{
-				int selectedRow = outgoingWssTable.getSelectedRow();
-				selectedOutgoing = selectedRow == -1 ? null : wssContainer.getOutgoingWssAt( selectedRow );
-				removeOutgoingWssAction.setEnabled( selectedRow != -1 );
-				addOutgoingEntryButton.setEnabled( selectedRow != -1 );
-
-				entriesTabs.removeAll();
-				if( selectedOutgoing != null )
-				{
-					for( WssEntry entry : selectedOutgoing.getEntries() )
-					{
-						entriesTabs.addTab( entry.getLabel(), entry.getConfigurationPanel() );
-					}
-				}
-
-				entriesTabs.getParent().setVisible( entriesTabs.getTabCount() > 0 );
-			}
-		} );
-
-		outgoingWssTable.getColumnModel().getColumn( 2 ).setCellEditor( new DefaultCellEditor( new JPasswordField() ) );
-		outgoingWssTable.getColumnModel().getColumn( 2 ).setCellRenderer( new PasswordTableCellRenderer() );
-
-		JSplitPane split = UISupport.createVerticalSplit( new JScrollPane( outgoingWssTable ), buildOutgoingWssDetails() );
-		split.setDividerLocation( 140 );
-		p.add( split, BorderLayout.CENTER );
-		panel.add( p, BorderLayout.CENTER );
-		return panel;
-	}
-
-	private Component buildOutgoingWssDetails()
-	{
-		JPanel panel = new JPanel( new BorderLayout() );
-		panel.add( buildOutgoingEntriesToolbar(), BorderLayout.NORTH );
-		panel.add( buildOutgoingEntryList(), BorderLayout.CENTER );
-
-		entriesTabs.getParent().setVisible( false );
-
-		return panel;
-	}
-
-	private Component buildOutgoingEntryList()
-	{
-		entriesTabs = new JTabbedPane();
-		entriesTabs.addChangeListener( new ChangeListener()
-		{
-
-			public void stateChanged( ChangeEvent e )
-			{
-				selectedEntry = entriesTabs.getSelectedIndex() == -1 ? null : selectedOutgoing.getEntries().get(
-						entriesTabs.getSelectedIndex() );
-				removeOutgoingEntryButton.setEnabled( selectedEntry != null );
-			}
-		} );
-
-		return UISupport.createTabPanel( entriesTabs, true );
-	}
-
-	private Component buildOutgoingEntriesToolbar()
+	private Component buildIncomingWssToolbar()
 	{
 		JXToolBar toolbar = UISupport.createSmallToolbar();
 
-		toolbar.addFixed( addOutgoingEntryButton = UISupport.createToolbarButton( new AddOutgoingEntryAction() ) );
-		toolbar.addFixed( removeOutgoingEntryButton = UISupport.createToolbarButton( new RemoveOutgoingEntryAction(),
-				false ) );
+		toolbar.addFixed( UISupport.createToolbarButton( new AddIncomingWssAction() ) );
+		removeIncomingWssAction = new RemoveIncomingWssAction();
+		toolbar.addFixed( UISupport.createToolbarButton( removeIncomingWssAction ) );
 
-		return toolbar;
-	}
-
-	private Component buildOutgoingWssToolbar()
-	{
-		JXToolBar toolbar = UISupport.createSmallToolbar();
-
-		toolbar.addFixed( UISupport.createToolbarButton( new AddOutgoingWssAction() ) );
-		removeOutgoingWssAction = new RemoveOutgoingWssAction();
-		toolbar.addFixed( UISupport.createToolbarButton( removeOutgoingWssAction ) );
 		toolbar.addGlue();
-		toolbar.addFixed( UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.OUTGOINGWSS_HELP_URL ) ) );
+		toolbar.addFixed( UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.INCOMINGWSS_HELP_URL ) ) );
 
 		return toolbar;
 	}
@@ -272,40 +351,232 @@ public class WSSTabPanel extends JPanel
 		return toolbar;
 	}
 
-	private Component buildIncomingWssToolbar()
+	private void setEntriesSplitPaneToEmpty()
 	{
-		JXToolBar toolbar = UISupport.createSmallToolbar();
-
-		toolbar.addFixed( UISupport.createToolbarButton( new AddIncomingWssAction() ) );
-		removeIncomingWssAction = new RemoveIncomingWssAction();
-		toolbar.addFixed( UISupport.createToolbarButton( removeIncomingWssAction ) );
-
-		toolbar.addGlue();
-		toolbar.addFixed( UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.INCOMINGWSS_HELP_URL ) ) );
-
-		return toolbar;
+		entriesListContainer.getViewport().add( new JList() );
+		entriesSplitPane.setRightComponent( new JPanel() );
 	}
 
-	private Component buildMainToolbar()
+	// :: Table models ::
+
+	public class OutgoingWssTableModel extends AbstractTableModel
 	{
-		JXToolBar toolbar = UISupport.createSmallToolbar();
-		toolbar.addGlue();
-		toolbar.addFixed( UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.WSS_HELP_URL ) ) );
-		return toolbar;
+		private List<OutgoingWss> outgoingWss;
+
+		public OutgoingWssTableModel()
+		{
+			outgoingWss = wssContainer.getOutgoingWssList();
+		}
+
+		public void release()
+		{
+			outgoingWss = null;
+		}
+
+		public int getColumnCount()
+		{
+			return 5;
+		}
+
+		@Override
+		public String getColumnName( int column )
+		{
+			switch( column )
+			{
+			case 0 :
+				return "Name";
+			case 1 :
+				return "Default Username/Alias";
+			case 2 :
+				return "Default Password";
+			case 3 :
+				return "Actor";
+			case 4 :
+				return "Must Understand";
+			}
+
+			return null;
+		}
+
+		@Override
+		public Class<?> getColumnClass( int columnIndex )
+		{
+			return columnIndex == 4 ? Boolean.class : String.class;
+		}
+
+		public int getRowCount()
+		{
+			return outgoingWss == null ? 0 : outgoingWss.size();
+		}
+
+		@Override
+		public boolean isCellEditable( int rowIndex, int columnIndex )
+		{
+			return columnIndex > 0;
+		}
+
+		public Object getValueAt( int rowIndex, int columnIndex )
+		{
+			OutgoingWss outgoing = outgoingWss.get( rowIndex );
+
+			switch( columnIndex )
+			{
+			case 0 :
+				return outgoing.getName();
+			case 1 :
+				return outgoing.getUsername();
+			case 2 :
+				return outgoing.getPassword();
+			case 3 :
+				return outgoing.getActor();
+			case 4 :
+				return outgoing.getMustUnderstand();
+			}
+
+			return null;
+		}
+
+		@Override
+		public void setValueAt( Object aValue, int rowIndex, int columnIndex )
+		{
+			OutgoingWss outgoing = outgoingWss.get( rowIndex );
+
+			switch( columnIndex )
+			{
+			case 1 :
+				outgoing.setUsername( aValue == null ? null : aValue.toString() );
+				break;
+			case 2 :
+				outgoing.setPassword( aValue == null ? null : aValue.toString() );
+				break;
+			case 3 :
+				outgoing.setActor( aValue == null ? null : aValue.toString() );
+				break;
+			case 4 :
+				outgoing.setMustUnderstand( aValue == null ? false : ( Boolean )aValue );
+				break;
+			}
+		}
+
+		public void outgoingWssAdded( OutgoingWss outgoing )
+		{
+			outgoingWss.add( outgoing );
+			fireTableRowsInserted( outgoingWss.size() - 1, outgoingWss.size() - 1 );
+		}
+
+		public void outgoingWssRemoved( OutgoingWss outgoing )
+		{
+			int ix = outgoingWss.indexOf( outgoing );
+			if( ix != -1 )
+			{
+				outgoingWss.remove( ix );
+				fireTableRowsDeleted( ix, ix );
+			}
+		}
 	}
 
-	public void release()
+	public class IncomingWssTableModel extends AbstractTableModel
 	{
-		wssContainer.removeWssContainerListener( wssContainerListener );
+		private List<IncomingWss> incomingWss;
 
-		( ( IncomingWssTableModel )incomingWssTable.getModel() ).release();
-		( ( OutgoingWssTableModel )outgoingWssTable.getModel() ).release();
-		( ( CryptosTableModel )cryptosTable.getModel() ).release();
+		public IncomingWssTableModel()
+		{
+			incomingWss = wssContainer.getIncomingWssList();
+		}
 
-		( ( KeystoresComboBoxModel )incomingWssDecryptionCryptoComboBox.getModel() ).release();
-		( ( KeystoresComboBoxModel )incomingWssSignatureCryptoComboBox.getModel() ).release();
+		public void release()
+		{
+			incomingWss = null;
+		}
 
-		entriesTabs.removeAll();
+		public int getColumnCount()
+		{
+			return 4;
+		}
+
+		@Override
+		public String getColumnName( int column )
+		{
+			switch( column )
+			{
+			case 0 :
+				return "Name";
+			case 1 :
+				return "Decrypt Keystore";
+			case 2 :
+				return "Signature Keystore";
+			case 3 :
+				return "Password";
+			}
+
+			return null;
+		}
+
+		public int getRowCount()
+		{
+			return incomingWss == null ? 0 : incomingWss.size();
+		}
+
+		@Override
+		public boolean isCellEditable( int rowIndex, int columnIndex )
+		{
+			return columnIndex > 0;
+		}
+
+		public Object getValueAt( int rowIndex, int columnIndex )
+		{
+			IncomingWss incoming = incomingWss.get( rowIndex );
+
+			switch( columnIndex )
+			{
+			case 0 :
+				return incoming.getName();
+			case 1 :
+				return wssContainer.getCryptoByName( incoming.getDecryptCrypto() );
+			case 2 :
+				return wssContainer.getCryptoByName( incoming.getSignatureCrypto() );
+			case 3 :
+				return incoming.getDecryptPassword();
+			}
+
+			return null;
+		}
+
+		@Override
+		public void setValueAt( Object aValue, int rowIndex, int columnIndex )
+		{
+			IncomingWss incoming = incomingWss.get( rowIndex );
+
+			switch( columnIndex )
+			{
+			case 1 :
+				incoming.setDecryptCrypto( aValue == null ? null : aValue.toString() );
+				break;
+			case 2 :
+				incoming.setSignatureCrypto( aValue == null ? null : aValue.toString() );
+				break;
+			case 3 :
+				incoming.setDecryptPassword( aValue == null ? null : aValue.toString() );
+				break;
+			}
+		}
+
+		public void incomingWssAdded( IncomingWss incoming )
+		{
+			incomingWss.add( incoming );
+			fireTableRowsInserted( incomingWss.size() - 1, incomingWss.size() - 1 );
+
+		}
+
+		public void incomingWssRemoved( IncomingWss incoming )
+		{
+			int ix = incomingWss.indexOf( incoming );
+			if( ix != -1 )
+			{
+				incomingWss.remove( ix );
+				fireTableRowsDeleted( ix, ix );
+			}
+		}
 	}
 
 	public class CryptosTableModel extends AbstractTableModel
@@ -431,6 +702,191 @@ public class WSSTabPanel extends JPanel
 		}
 	}
 
+	// :: Actions ::
+
+	private class AddOutgoingWssAction extends AbstractAction
+	{
+		public AddOutgoingWssAction()
+		{
+			putValue( SMALL_ICON, UISupport.createImageIcon( "/add_property.gif" ) );
+			putValue( SHORT_DESCRIPTION, "Adds a new Outgoing WSS Configuration" );
+		}
+
+		public void actionPerformed( ActionEvent e )
+		{
+			String name = UISupport.prompt( "Specify unique name for configuration", "New Outgoing WSS Configuration", "" );
+			if( StringUtils.hasContent( name ) && wssContainer.getOutgoingWssByName( name ) == null )
+			{
+				wssContainer.addOutgoingWss( name );
+				outgoingWssTable.setRowSelectionInterval( outgoingWssTable.getRowCount() - 1,
+						outgoingWssTable.getRowCount() - 1 );
+			}
+		}
+	}
+
+	private class RemoveOutgoingWssAction extends AbstractAction
+	{
+		public RemoveOutgoingWssAction()
+		{
+			putValue( SMALL_ICON, UISupport.createImageIcon( "/remove_property.gif" ) );
+			putValue( SHORT_DESCRIPTION, "Removes the selected Outgoing WSS Configuration" );
+
+			setEnabled( false );
+		}
+
+		public void actionPerformed( ActionEvent e )
+		{
+			int row = outgoingWssTable.getSelectedRow();
+			if( row == -1 )
+				return;
+
+			if( UISupport.confirm( "Removes selected configuration?", "Remove Configuration" ) )
+			{
+				wssContainer.removeOutgoingWssAt( row );
+				setEntriesSplitPaneToEmpty();
+			}
+		}
+	}
+
+	public class AddOutgoingEntryAction extends AbstractAction
+	{
+		public AddOutgoingEntryAction()
+		{
+			putValue( SHORT_DESCRIPTION, "Adds a new WSS Entry" );
+			putValue( SMALL_ICON, UISupport.createImageIcon( "/add_property.gif" ) );
+			setEnabled( false );
+		}
+
+		public void actionPerformed( ActionEvent e )
+		{
+			if( selectedOutgoing == null )
+				return;
+
+			String type = UISupport.prompt( "Select type of entry to add", "Add WSS Entry", WssEntryRegistry.get()
+					.getTypes() );
+			if( type != null )
+			{
+				selectedOutgoing.addEntry( type );
+				entriesList.setSelectedIndex( entriesListModel.getSize() - 1 );
+			}
+		}
+	}
+
+	public class RemoveOutgoingEntryAction extends AbstractAction
+	{
+		public RemoveOutgoingEntryAction()
+		{
+			putValue( SHORT_DESCRIPTION, "Removes the selected WSS-Entry" );
+			putValue( SMALL_ICON, UISupport.createImageIcon( "/remove_property.gif" ) );
+		}
+
+		public void actionPerformed( ActionEvent e )
+		{
+			if( selectedEntry == null )
+				return;
+
+			if( UISupport.confirm( "Remove entry [" + selectedEntry.getLabel() + "]", "Remove WSS Entry" ) )
+			{
+				selectedOutgoing.removeEntry( selectedEntry );
+				entriesSplitPane.setRightComponent( new JPanel() );
+			}
+		}
+	}
+
+	private class MoveOutgoingEntryUpAction extends AbstractAction
+	{
+		public MoveOutgoingEntryUpAction()
+		{
+			super( "Move entry Up" );
+			putValue( Action.SHORT_DESCRIPTION, "Moves selected entry up one row" );
+			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/up_arrow.gif" ) );
+		}
+
+		public void actionPerformed( ActionEvent e )
+		{
+			selectedOutgoing.moveEntry( selectedEntry, MOVE_UP );
+		}
+	}
+
+	private class MoveOutgoingEntryDownAction extends AbstractAction
+	{
+
+		public MoveOutgoingEntryDownAction()
+		{
+			super( "Move entry Down" );
+			putValue( Action.SHORT_DESCRIPTION, "Moves selected entry down one row" );
+			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/down_arrow.gif" ) );
+		}
+
+		public void actionPerformed( ActionEvent e )
+		{
+			selectedOutgoing.moveEntry( selectedEntry, MOVE_DOWN );
+		}
+	}
+
+	private class AddIncomingWssAction extends AbstractAction
+	{
+		public AddIncomingWssAction()
+		{
+			putValue( SMALL_ICON, UISupport.createImageIcon( "/add_property.gif" ) );
+			putValue( SHORT_DESCRIPTION, "Adds a new Incoming WSS Configuration" );
+		}
+
+		public void actionPerformed( ActionEvent e )
+		{
+			String name = UISupport.prompt( "Specify unique name for configuration", "New Incoming WSS Configuration", "" );
+			if( StringUtils.hasContent( name ) && wssContainer.getIncomingWssByName( name ) == null )
+			{
+				wssContainer.addIncomingWss( name );
+				incomingWssTable.setRowSelectionInterval( incomingWssTable.getRowCount() - 1,
+						incomingWssTable.getRowCount() - 1 );
+			}
+		}
+	}
+
+	private class RemoveIncomingWssAction extends AbstractAction
+	{
+		public RemoveIncomingWssAction()
+		{
+			putValue( SMALL_ICON, UISupport.createImageIcon( "/remove_property.gif" ) );
+			putValue( SHORT_DESCRIPTION, "Removes the selected Incoming WSS Configuration" );
+
+			setEnabled( false );
+		}
+
+		public void actionPerformed( ActionEvent e )
+		{
+			int row = incomingWssTable.getSelectedRow();
+			if( row == -1 )
+				return;
+
+			if( UISupport.confirm( "Removes selected configuration?", "Remove Configuration" ) )
+			{
+				wssContainer.removeIncomingWssAt( row );
+			}
+		}
+	}
+
+	public class ImportWssSettingsAction extends AbstractAction
+	{
+		public ImportWssSettingsAction()
+		{
+			putValue( SHORT_DESCRIPTION, "Imports an existing WS-Security configuration from another project" );
+			putValue( SMALL_ICON, UISupport.createImageIcon( "/load_properties.gif" ) );
+		}
+
+		public void actionPerformed( ActionEvent e )
+		{
+			String[] names = ModelSupport.getNames( ( ( WorkspaceImpl )SoapUI.getWorkspace() ).getOpenProjectList() );
+			String projectName = UISupport.prompt( "Select project to import from", "Import WSS Settings", names );
+			if( projectName != null )
+			{
+				WsdlProject prj = ( WsdlProject )SoapUI.getWorkspace().getProjectByName( projectName );
+				wssContainer.importConfig( prj.getWssContainer() );
+			}
+		}
+	}
+
 	private class AddKeystoreAction extends AbstractAction
 	{
 		public AddKeystoreAction()
@@ -496,435 +952,95 @@ public class WSSTabPanel extends JPanel
 		}
 	}
 
-	public class IncomingWssTableModel extends AbstractTableModel
-	{
-		private List<IncomingWss> incomingWss;
+	// :: Listeners ::
 
-		public IncomingWssTableModel()
-		{
-			incomingWss = wssContainer.getIncomingWssList();
-		}
-
-		public void release()
-		{
-			incomingWss = null;
-		}
-
-		public int getColumnCount()
-		{
-			return 4;
-		}
-
-		@Override
-		public String getColumnName( int column )
-		{
-			switch( column )
-			{
-			case 0 :
-				return "Name";
-			case 1 :
-				return "Decrypt Keystore";
-			case 2 :
-				return "Signature Keystore";
-			case 3 :
-				return "Password";
-			}
-
-			return null;
-		}
-
-		public int getRowCount()
-		{
-			return incomingWss == null ? 0 : incomingWss.size();
-		}
-
-		@Override
-		public boolean isCellEditable( int rowIndex, int columnIndex )
-		{
-			return columnIndex > 0;
-		}
-
-		public Object getValueAt( int rowIndex, int columnIndex )
-		{
-			IncomingWss incoming = incomingWss.get( rowIndex );
-
-			switch( columnIndex )
-			{
-			case 0 :
-				return incoming.getName();
-			case 1 :
-				return wssContainer.getCryptoByName( incoming.getDecryptCrypto() );
-			case 2 :
-				return wssContainer.getCryptoByName( incoming.getSignatureCrypto() );
-			case 3 :
-				return incoming.getDecryptPassword();
-			}
-
-			return null;
-		}
-
-		@Override
-		public void setValueAt( Object aValue, int rowIndex, int columnIndex )
-		{
-			IncomingWss incoming = incomingWss.get( rowIndex );
-
-			switch( columnIndex )
-			{
-			case 1 :
-				incoming.setDecryptCrypto( aValue == null ? null : aValue.toString() );
-				break;
-			case 2 :
-				incoming.setSignatureCrypto( aValue == null ? null : aValue.toString() );
-				break;
-			case 3 :
-				incoming.setDecryptPassword( aValue == null ? null : aValue.toString() );
-				break;
-			}
-		}
-
-		public void incomingWssAdded( IncomingWss incoming )
-		{
-			incomingWss.add( incoming );
-			fireTableRowsInserted( incomingWss.size() - 1, incomingWss.size() - 1 );
-
-		}
-
-		public void incomingWssRemoved( IncomingWss incoming )
-		{
-			int ix = incomingWss.indexOf( incoming );
-			if( ix != -1 )
-			{
-				incomingWss.remove( ix );
-				fireTableRowsDeleted( ix, ix );
-			}
-		}
-	}
-
-	private class AddIncomingWssAction extends AbstractAction
-	{
-		public AddIncomingWssAction()
-		{
-			putValue( SMALL_ICON, UISupport.createImageIcon( "/add_property.gif" ) );
-			putValue( SHORT_DESCRIPTION, "Adds a new Incoming WSS Configuration" );
-		}
-
-		public void actionPerformed( ActionEvent e )
-		{
-			String name = UISupport.prompt( "Specify unique name for configuration", "New Incoming WSS Configuration", "" );
-			if( StringUtils.hasContent( name ) && wssContainer.getIncomingWssByName( name ) == null )
-			{
-				wssContainer.addIncomingWss( name );
-				incomingWssTable.setRowSelectionInterval( incomingWssTable.getRowCount() - 1,
-						incomingWssTable.getRowCount() - 1 );
-			}
-		}
-	}
-
-	private class RemoveIncomingWssAction extends AbstractAction
-	{
-		public RemoveIncomingWssAction()
-		{
-			putValue( SMALL_ICON, UISupport.createImageIcon( "/remove_property.gif" ) );
-			putValue( SHORT_DESCRIPTION, "Removes the selected Incoming WSS Configuration" );
-
-			setEnabled( false );
-		}
-
-		public void actionPerformed( ActionEvent e )
-		{
-			int row = incomingWssTable.getSelectedRow();
-			if( row == -1 )
-				return;
-
-			if( UISupport.confirm( "Removes selected configuration?", "Remove Configuration" ) )
-			{
-				wssContainer.removeIncomingWssAt( row );
-			}
-		}
-	}
-
-	public class OutgoingWssTableModel extends AbstractTableModel
-	{
-		private List<OutgoingWss> outgoingWss;
-
-		public OutgoingWssTableModel()
-		{
-			outgoingWss = wssContainer.getOutgoingWssList();
-		}
-
-		public void release()
-		{
-			outgoingWss = null;
-		}
-
-		public int getColumnCount()
-		{
-			return 5;
-		}
-
-		@Override
-		public String getColumnName( int column )
-		{
-			switch( column )
-			{
-			case 0 :
-				return "Name";
-			case 1 :
-				return "Default Username/Alias";
-			case 2 :
-				return "Default Password";
-			case 3 :
-				return "Actor";
-			case 4 :
-				return "Must Understand";
-			}
-
-			return null;
-		}
-
-		@Override
-		public Class<?> getColumnClass( int columnIndex )
-		{
-			return columnIndex == 4 ? Boolean.class : String.class;
-		}
-
-		public int getRowCount()
-		{
-			return outgoingWss == null ? 0 : outgoingWss.size();
-		}
-
-		@Override
-		public boolean isCellEditable( int rowIndex, int columnIndex )
-		{
-			return columnIndex > 0;
-		}
-
-		public Object getValueAt( int rowIndex, int columnIndex )
-		{
-			OutgoingWss outgoing = outgoingWss.get( rowIndex );
-
-			switch( columnIndex )
-			{
-			case 0 :
-				return outgoing.getName();
-			case 1 :
-				return outgoing.getUsername();
-			case 2 :
-				return outgoing.getPassword();
-			case 3 :
-				return outgoing.getActor();
-			case 4 :
-				return outgoing.getMustUnderstand();
-			}
-
-			return null;
-		}
-
-		@Override
-		public void setValueAt( Object aValue, int rowIndex, int columnIndex )
-		{
-			OutgoingWss outgoing = outgoingWss.get( rowIndex );
-
-			switch( columnIndex )
-			{
-			case 1 :
-				outgoing.setUsername( aValue == null ? null : aValue.toString() );
-				break;
-			case 2 :
-				outgoing.setPassword( aValue == null ? null : aValue.toString() );
-				break;
-			case 3 :
-				outgoing.setActor( aValue == null ? null : aValue.toString() );
-				break;
-			case 4 :
-				outgoing.setMustUnderstand( aValue == null ? false : ( Boolean )aValue );
-				break;
-			}
-		}
-
-		public void outgoingWssAdded( OutgoingWss outgoing )
-		{
-			outgoingWss.add( outgoing );
-			fireTableRowsInserted( outgoingWss.size() - 1, outgoingWss.size() - 1 );
-		}
-
-		public void outgoingWssRemoved( OutgoingWss outgoing )
-		{
-			int ix = outgoingWss.indexOf( outgoing );
-			if( ix != -1 )
-			{
-				outgoingWss.remove( ix );
-				fireTableRowsDeleted( ix, ix );
-			}
-		}
-	}
-
-	private class AddOutgoingWssAction extends AbstractAction
-	{
-		public AddOutgoingWssAction()
-		{
-			putValue( SMALL_ICON, UISupport.createImageIcon( "/add_property.gif" ) );
-			putValue( SHORT_DESCRIPTION, "Adds a new Outgoing WSS Configuration" );
-		}
-
-		public void actionPerformed( ActionEvent e )
-		{
-			String name = UISupport.prompt( "Specify unique name for configuration", "New Outgoing WSS Configuration", "" );
-			if( StringUtils.hasContent( name ) && wssContainer.getOutgoingWssByName( name ) == null )
-			{
-				wssContainer.addOutgoingWss( name );
-				outgoingWssTable.setRowSelectionInterval( outgoingWssTable.getRowCount() - 1,
-						outgoingWssTable.getRowCount() - 1 );
-			}
-		}
-	}
-
-	private class RemoveOutgoingWssAction extends AbstractAction
-	{
-		public RemoveOutgoingWssAction()
-		{
-			putValue( SMALL_ICON, UISupport.createImageIcon( "/remove_property.gif" ) );
-			putValue( SHORT_DESCRIPTION, "Removes the selected Outgoing WSS Configuration" );
-
-			setEnabled( false );
-		}
-
-		public void actionPerformed( ActionEvent e )
-		{
-			int row = outgoingWssTable.getSelectedRow();
-			if( row == -1 )
-				return;
-
-			if( UISupport.confirm( "Removes selected configuration?", "Remove Configuration" ) )
-			{
-				wssContainer.removeOutgoingWssAt( row );
-			}
-		}
-	}
-
-	public class AddOutgoingEntryAction extends AbstractAction
-	{
-		public AddOutgoingEntryAction()
-		{
-			putValue( SHORT_DESCRIPTION, "Adds a new WSS Entry" );
-			putValue( SMALL_ICON, UISupport.createImageIcon( "/add_property.gif" ) );
-			setEnabled( false );
-		}
-
-		public void actionPerformed( ActionEvent e )
-		{
-			if( selectedOutgoing == null )
-				return;
-
-			String type = UISupport.prompt( "Select type of entry to add", "Add WSS Entry", WssEntryRegistry.get()
-					.getTypes() );
-			if( type != null )
-			{
-				WssEntry entry = selectedOutgoing.addEntry( type );
-				entriesTabs.setSelectedComponent( entry.getConfigurationPanel() );
-			}
-		}
-	}
-
-	public class RemoveOutgoingEntryAction extends AbstractAction
-	{
-		public RemoveOutgoingEntryAction()
-		{
-			putValue( SHORT_DESCRIPTION, "Removes the selected WSS-Entry" );
-			putValue( SMALL_ICON, UISupport.createImageIcon( "/remove_property.gif" ) );
-		}
-
-		public void actionPerformed( ActionEvent e )
-		{
-			if( selectedEntry == null )
-				return;
-
-			if( UISupport.confirm( "Remove entry [" + selectedEntry.getLabel() + "]", "Remove WSS Entry" ) )
-			{
-				selectedOutgoing.removeEntry( selectedEntry );
-			}
-		}
-	}
-
+	// FIXME Extend WssContainerListenerAdapter instead to get rid of empty method
 	private class InternalWssContainerListener implements WssContainerListener
 	{
-		public void cryptoAdded( WssCrypto crypto )
+		@Override
+		public void outgoingWssAdded( OutgoingWss outgoingWss )
 		{
-			( ( CryptosTableModel )cryptosTable.getModel() ).cryptoAdded( crypto );
+			( ( OutgoingWssTableModel )outgoingWssTable.getModel() ).outgoingWssAdded( outgoingWss );
 		}
 
-		public void cryptoRemoved( WssCrypto crypto )
+		@Override
+		public void outgoingWssRemoved( OutgoingWss outgoingWss )
 		{
-			( ( CryptosTableModel )cryptosTable.getModel() ).cryptoRemoved( crypto );
+			( ( OutgoingWssTableModel )outgoingWssTable.getModel() ).outgoingWssRemoved( outgoingWss );
 		}
 
+		@Override
+		public void outgoingWssEntryAdded( WssEntry entry )
+		{
+			if( entry.getOutgoingWss() == selectedOutgoing )
+			{
+				entriesListModel.addElement( entry );
+			}
+		}
+
+		@Override
+		public void outgoingWssEntryRemoved( WssEntry entry )
+		{
+			if( entry.getOutgoingWss() == selectedOutgoing )
+			{
+				entriesListModel.removeElement( entry );
+			}
+		}
+
+		@Override
+		public void outgoingWssEntryMoved( WssEntry entry, int offset )
+		{
+			if( entry.getOutgoingWss() == selectedOutgoing )
+			{
+				int indexBeforeMove = entriesListModel.indexOf( entry );
+				if( ( offset == MOVE_UP && indexBeforeMove > 0 )
+						|| ( offset == MOVE_DOWN && indexBeforeMove < entriesListModel.size() - 1 ) )
+				{
+					WssEntry adjacentEntry = ( WssEntry )entriesListModel.get( indexBeforeMove + offset );
+
+					entriesListModel.set( indexBeforeMove + offset, entry );
+					entriesListModel.set( indexBeforeMove, adjacentEntry );
+
+					entriesList.setSelectedIndex( indexBeforeMove + offset );
+				}
+			}
+		}
+
+		@Override
 		public void incomingWssAdded( IncomingWss incomingWss )
 		{
 			( ( IncomingWssTableModel )incomingWssTable.getModel() ).incomingWssAdded( incomingWss );
 
 		}
 
+		@Override
 		public void incomingWssRemoved( IncomingWss incomingWss )
 		{
 			( ( IncomingWssTableModel )incomingWssTable.getModel() ).incomingWssRemoved( incomingWss );
 
 		}
 
-		public void outgoingWssAdded( OutgoingWss outgoingWss )
+		@Override
+		public void cryptoAdded( WssCrypto crypto )
 		{
-			( ( OutgoingWssTableModel )outgoingWssTable.getModel() ).outgoingWssAdded( outgoingWss );
+			( ( CryptosTableModel )cryptosTable.getModel() ).cryptoAdded( crypto );
 		}
 
-		public void outgoingWssEntryAdded( WssEntry entry )
+		@Override
+		public void cryptoRemoved( WssCrypto crypto )
 		{
-			if( entry.getOutgoingWss() == selectedOutgoing )
-			{
-				entriesTabs.addTab( entry.getLabel(), entry.getConfigurationPanel() );
-				entriesTabs.getParent().setVisible( true );
-			}
+			( ( CryptosTableModel )cryptosTable.getModel() ).cryptoRemoved( crypto );
 		}
 
-		public void outgoingWssEntryRemoved( WssEntry entry )
-		{
-			if( entry.getOutgoingWss() == selectedOutgoing )
-			{
-				int ix = entriesTabs.indexOfComponent( entry.getConfigurationPanel() );
-				if( ix != -1 )
-					entriesTabs.remove( ix );
-
-				entriesTabs.getParent().setVisible( entriesTabs.getTabCount() > 0 );
-			}
-		}
-
-		public void outgoingWssRemoved( OutgoingWss outgoingWss )
-		{
-			( ( OutgoingWssTableModel )outgoingWssTable.getModel() ).outgoingWssRemoved( outgoingWss );
-		}
-
+		@Override
 		public void cryptoUpdated( WssCrypto crypto )
 		{
+			// TODO Auto-generated method stub
+
 		}
 	}
 
-	public class ImportWssSettingsAction extends AbstractAction
-	{
-		public ImportWssSettingsAction()
-		{
-			putValue( SHORT_DESCRIPTION, "Imports an existing WS-Security configuration from another project" );
-			putValue( SMALL_ICON, UISupport.createImageIcon( "/load_properties.gif" ) );
-		}
-
-		public void actionPerformed( ActionEvent e )
-		{
-			String[] names = ModelSupport.getNames( ( ( WorkspaceImpl )SoapUI.getWorkspace() ).getOpenProjectList() );
-			String projectName = UISupport.prompt( "Select project to import from", "Import WSS Settings", names );
-			if( projectName != null )
-			{
-				WsdlProject prj = ( WsdlProject )SoapUI.getWorkspace().getProjectByName( projectName );
-				wssContainer.importConfig( prj.getWssContainer() );
-			}
-		}
-	}
+	// :: Table cell renderer::
 
 	public static class PasswordTableCellRenderer extends JPasswordField implements TableCellRenderer
 	{
@@ -941,6 +1057,5 @@ public class WSSTabPanel extends JPanel
 			setText( value == null ? "" : value.toString() );
 			return this;
 		}
-
 	}
 }

@@ -116,6 +116,14 @@ public class DefaultWssContainer implements WssContainer
 		}
 	}
 
+	public void fireWssEntryMoved( WssEntry entry, int offset )
+	{
+		for( WssContainerListener listener : listeners.toArray( new WssContainerListener[listeners.size()] ) )
+		{
+			listener.outgoingWssEntryMoved( entry, offset );
+		}
+	}
+
 	public WssContainerConfig getConfig()
 	{
 		return config;

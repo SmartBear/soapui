@@ -62,6 +62,13 @@ public class WssContainerListenerAdapter implements WssContainerListener
 
 	}
 
+	@Override
+	public void outgoingWssEntryMoved( WssEntry entry, int offset )
+	{
+		// TODO Auto-generated method stub
+
+	}
+
 	public void outgoingWssRemoved( OutgoingWss outgoingWss )
 	{
 		// TODO Auto-generated method stub
@@ -73,5 +80,4 @@ public class WssContainerListenerAdapter implements WssContainerListener
 		// TODO Auto-generated method stub
 
 	}
-
 }
