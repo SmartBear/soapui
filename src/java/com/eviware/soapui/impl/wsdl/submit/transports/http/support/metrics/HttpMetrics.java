@@ -12,14 +12,12 @@
 
 package com.eviware.soapui.impl.wsdl.submit.transports.http.support.metrics;
 
-import java.util.Date;
-
 public class HttpMetrics
 {
 	// format: 2011-12-21 23:14:48 (SimpleDateFormat)
-	private Date timestamp = null;
+	private long timestamp = -1;
 	private int httpStatus = -1;
-	private int contentLength = -1;
+	private long contentLength = -1;
 
 	private long timeDNS = -1;
 	private long timeConnect = -1;
@@ -27,9 +25,17 @@ public class HttpMetrics
 	private long timeRead = -1;
 	private long timeTotal = -1;
 
+	private long startTime = -1;
+
+	private final static int TIME_DNS = 0;
+	private final static int TIME_CONNECT = 1;
+	private final static int TIME_TO_FIRST_BYTE = 2;
+	private final static int TIME_READ = 3;
+	private final static int TIME_TOTAL = 4;
+
 	public void reset()
 	{
-		timestamp = null;
+		timestamp = -1;
 		httpStatus = -1;
 		contentLength = -1;
 
@@ -38,14 +44,46 @@ public class HttpMetrics
 		timeToFirstByte = -1;
 		timeRead = -1;
 		timeTotal = -1;
+
+		startTime = -1;
 	}
 
-	public Date getTimestamp()
+	public void init()
+	{
+		startTime = System.nanoTime();
+	}
+
+	public void recordTime( int code )
+	{
+		long recordedValue = System.nanoTime() - startTime;
+		switch( code )
+		{
+		case TIME_DNS :
+			timeDNS = recordedValue;
+			break;
+		case TIME_CONNECT :
+			timeConnect = recordedValue;
+			break;
+		case TIME_TO_FIRST_BYTE :
+			timeToFirstByte = recordedValue;
+			break;
+		case TIME_READ :
+			timeRead = recordedValue;
+			break;
+		case TIME_TOTAL :
+			timeTotal = recordedValue;
+			break;
+		default :
+			throw new IllegalArgumentException( "Illegal value for recorded time" );
+		}
+	}
+
+	public long getTimestamp()
 	{
 		return timestamp;
 	}
 
-	public void setTimestamp( Date timestamp )
+	public void setTimestamp( long timestamp )
 	{
 		this.timestamp = timestamp;
 	}
@@ -60,12 +98,12 @@ public class HttpMetrics
 		this.httpStatus = httpStatus;
 	}
 
-	public int getContentLength()
+	public long getContentLength()
 	{
 		return contentLength;
 	}
 
-	public void setContentLength( int contentLength )
+	public void setContentLength( long contentLength )
 	{
 		this.contentLength = contentLength;
 	}
