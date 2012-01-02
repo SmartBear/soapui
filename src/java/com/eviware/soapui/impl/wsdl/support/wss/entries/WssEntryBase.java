@@ -36,6 +36,7 @@ import com.eviware.soapui.impl.wsdl.support.wss.OutgoingWss;
 import com.eviware.soapui.impl.wsdl.support.wss.WssContainer;
 import com.eviware.soapui.impl.wsdl.support.wss.WssCrypto;
 import com.eviware.soapui.impl.wsdl.support.wss.WssEntry;
+import com.eviware.soapui.impl.wsdl.support.wss.crypto.CryptoType;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionsResult;
@@ -276,7 +277,15 @@ public abstract class WssEntryBase implements WssEntry, PropertyExpansionContain
 				else
 				{
 					Merlin merlinCrypto = ( Merlin )crypto.getCrypto();
-					keyStore = merlinCrypto.getKeyStore();
+
+					if( crypto.getType() == CryptoType.KEYSTORE )
+					{
+						keyStore = merlinCrypto.getKeyStore();
+					}
+					else if( crypto.getType() == CryptoType.TRUSTSTORE )
+					{
+						keyStore = merlinCrypto.getTrustStore();
+					}
 				}
 			}
 			catch( WSSecurityException wssecurityException )

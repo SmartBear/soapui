@@ -17,6 +17,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.AbstractAction;
@@ -46,12 +47,12 @@ import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.support.wss.IncomingWss;
 import com.eviware.soapui.impl.wsdl.support.wss.OutgoingWss;
 import com.eviware.soapui.impl.wsdl.support.wss.WssContainer;
-import com.eviware.soapui.impl.wsdl.support.wss.WssContainerListener;
 import com.eviware.soapui.impl.wsdl.support.wss.WssCrypto;
 import com.eviware.soapui.impl.wsdl.support.wss.WssEntry;
 import com.eviware.soapui.impl.wsdl.support.wss.WssEntryRegistry;
 import com.eviware.soapui.impl.wsdl.support.wss.crypto.CryptoType;
 import com.eviware.soapui.impl.wsdl.support.wss.crypto.KeyMaterialWssCrypto;
+import com.eviware.soapui.impl.wsdl.support.wss.entries.WssContainerListenerAdapter;
 import com.eviware.soapui.impl.wsdl.support.wss.support.KeystoresComboBoxModel;
 import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.support.StringUtils;
@@ -65,8 +66,10 @@ public class WSSTabPanel extends JPanel
 	private static final int MOVE_UP = -1;
 	private static final int MOVE_DOWN = 1;
 
-	private JTable cryptosTable;
-	private RemoveCryptoAction removeCryptoAction;
+	private JTable keystoreTable;
+	private JTable truststoreTable;
+	private RemoveKeystoreAction removeKeystoreAction;
+	private RemoveTruststoreAction removeTruststoreAction;
 	private RemoveIncomingWssAction removeIncomingWssAction;
 	private JTable incomingWssTable;
 	private JComboBox incomingWssDecryptionCryptoComboBox;
@@ -105,7 +108,8 @@ public class WSSTabPanel extends JPanel
 
 		( ( IncomingWssTableModel )incomingWssTable.getModel() ).release();
 		( ( OutgoingWssTableModel )outgoingWssTable.getModel() ).release();
-		( ( CryptosTableModel )cryptosTable.getModel() ).release();
+		( ( KeystoreTableModel )keystoreTable.getModel() ).release();
+		( ( KeystoreTableModel )truststoreTable.getModel() ).release();
 
 		( ( KeystoresComboBoxModel )incomingWssDecryptionCryptoComboBox.getModel() ).release();
 		( ( KeystoresComboBoxModel )incomingWssSignatureCryptoComboBox.getModel() ).release();
@@ -132,7 +136,8 @@ public class WSSTabPanel extends JPanel
 		JTabbedPane tabs = new JTabbedPane();
 		tabs.addTab( "Outgoing WS-Security Configurations", buildOutgoingConfigurationsTab() );
 		tabs.addTab( "Incoming WS-Security Configurations", buildIncomingConfigurationsTab() );
-		tabs.addTab( "Keystores", buildCryptosTable() );
+		tabs.addTab( "Keystores", buildKeystoresTable() );
+		tabs.addTab( "Truststores", buildTruststoresTable() );
 
 		tabs.setMinimumSize( new Dimension( 10, 10 ) );
 
@@ -310,42 +315,82 @@ public class WSSTabPanel extends JPanel
 		return toolbar;
 	}
 
-	private JPanel buildCryptosTable()
+	private JPanel buildKeystoresTable()
 	{
 		JPanel panel = new JPanel( new BorderLayout() );
 		JPanel p = new JPanel( new BorderLayout() );
 
-		p.add( buildCryptosToolbar(), BorderLayout.NORTH );
+		p.add( buildKeystoreToolbar(), BorderLayout.NORTH );
 
-		cryptosTable = new JTable( new CryptosTableModel() );
-		cryptosTable.getSelectionModel().addListSelectionListener( new ListSelectionListener()
+		keystoreTable = new JTable( new KeystoreTableModel() );
+		keystoreTable.getSelectionModel().addListSelectionListener( new ListSelectionListener()
 		{
 
 			public void valueChanged( ListSelectionEvent e )
 			{
-				removeCryptoAction.setEnabled( cryptosTable.getSelectedRow() != -1 );
+				removeKeystoreAction.setEnabled( keystoreTable.getSelectedRow() != -1 );
 			}
 		} );
 
-		cryptosTable.getColumnModel().getColumn( 3 ).setCellEditor( new DefaultCellEditor( new JPasswordField() ) );
-		cryptosTable.getColumnModel().getColumn( 3 ).setCellRenderer( new PasswordTableCellRenderer() );
-		cryptosTable.getColumnModel().getColumn( 5 ).setCellEditor( new DefaultCellEditor( new JPasswordField() ) );
-		cryptosTable.getColumnModel().getColumn( 5 ).setCellRenderer( new PasswordTableCellRenderer() );
+		keystoreTable.getColumnModel().getColumn( 2 ).setCellEditor( new DefaultCellEditor( new JPasswordField() ) );
+		keystoreTable.getColumnModel().getColumn( 2 ).setCellRenderer( new PasswordTableCellRenderer() );
+		keystoreTable.getColumnModel().getColumn( 4 ).setCellEditor( new DefaultCellEditor( new JPasswordField() ) );
+		keystoreTable.getColumnModel().getColumn( 4 ).setCellRenderer( new PasswordTableCellRenderer() );
 
-		p.add( new JScrollPane( cryptosTable ), BorderLayout.CENTER );
+		p.add( new JScrollPane( keystoreTable ), BorderLayout.CENTER );
 
 		panel.add( p, BorderLayout.CENTER );
 		return panel;
 	}
 
-	private Component buildCryptosToolbar()
+	private Component buildKeystoreToolbar()
 	{
 		JXToolBar toolbar = UISupport.createSmallToolbar();
 
 		toolbar.addFixed( UISupport.createToolbarButton( new AddKeystoreAction() ) );
+		removeKeystoreAction = new RemoveKeystoreAction();
+		toolbar.addFixed( UISupport.createToolbarButton( removeKeystoreAction ) );
+		toolbar.addGlue();
+		toolbar.addFixed( UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.CRYPTOSWSS_HELP_URL ) ) );
+		return toolbar;
+	}
+
+	// FIXME The keystore and truststore table models must be keept seperated and only keystores should be in the keystore table model and vice versa
+	private Component buildTruststoresTable()
+	{
+		JPanel panel = new JPanel( new BorderLayout() );
+		JPanel p = new JPanel( new BorderLayout() );
+
+		p.add( buildTruststoreToolbar(), BorderLayout.NORTH );
+
+		truststoreTable = new JTable( new TruststoreTableModel() );
+		truststoreTable.getSelectionModel().addListSelectionListener( new ListSelectionListener()
+		{
+
+			public void valueChanged( ListSelectionEvent e )
+			{
+				removeTruststoreAction.setEnabled( truststoreTable.getSelectedRow() != -1 );
+			}
+		} );
+
+		truststoreTable.getColumnModel().getColumn( 2 ).setCellEditor( new DefaultCellEditor( new JPasswordField() ) );
+		truststoreTable.getColumnModel().getColumn( 2 ).setCellRenderer( new PasswordTableCellRenderer() );
+		truststoreTable.getColumnModel().getColumn( 4 ).setCellEditor( new DefaultCellEditor( new JPasswordField() ) );
+		truststoreTable.getColumnModel().getColumn( 4 ).setCellRenderer( new PasswordTableCellRenderer() );
+
+		p.add( new JScrollPane( truststoreTable ), BorderLayout.CENTER );
+
+		panel.add( p, BorderLayout.CENTER );
+		return panel;
+	}
+
+	private Component buildTruststoreToolbar()
+	{
+		JXToolBar toolbar = UISupport.createSmallToolbar();
+
 		toolbar.addFixed( UISupport.createToolbarButton( new AddTruststoreAction() ) );
-		removeCryptoAction = new RemoveCryptoAction();
-		toolbar.addFixed( UISupport.createToolbarButton( removeCryptoAction ) );
+		removeTruststoreAction = new RemoveTruststoreAction();
+		toolbar.addFixed( UISupport.createToolbarButton( removeTruststoreAction ) );
 		toolbar.addGlue();
 		toolbar.addFixed( UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.CRYPTOSWSS_HELP_URL ) ) );
 		return toolbar;
@@ -579,26 +624,33 @@ public class WSSTabPanel extends JPanel
 		}
 	}
 
-	public class CryptosTableModel extends AbstractTableModel
+	public class KeystoreTableModel extends AbstractTableModel
 	{
 		private static final String DEFAULT_OPTION = "<Default>";
-		private List<WssCrypto> cryptos;
+		private List<WssCrypto> keystores;
 
-		public CryptosTableModel()
+		public KeystoreTableModel()
 		{
-			cryptos = wssContainer.getCryptoList();
+			keystores = new ArrayList<WssCrypto>();
+			for( WssCrypto crypto : wssContainer.getCryptoList() )
+			{
+				if( crypto.getType() == CryptoType.KEYSTORE )
+				{
+					keystores.add( crypto );
+				}
+			}
 		}
 
 		public void release()
 		{
-			cryptos = null;
+			keystores = null;
 		}
 
 		public int getColumnCount()
 		{
 			// FIXME: Why not remove??
 			// hide last column since this is autodetected in commons-ssl-0.3.10
-			return 6;
+			return 5;
 		}
 
 		@Override
@@ -607,18 +659,16 @@ public class WSSTabPanel extends JPanel
 			switch( column )
 			{
 			case 0 :
-				return "Type";
-			case 1 :
 				return "Source";
-			case 2 :
+			case 1 :
 				return "Status";
-			case 3 :
+			case 2 :
 				return "Password";
-			case 4 :
+			case 3 :
 				return "Default Alias";
-			case 5 :
+			case 4 :
 				return "Alias Password";
-			case 6 :
+			case 5 :
 				return "Security Provider";
 			}
 
@@ -627,7 +677,7 @@ public class WSSTabPanel extends JPanel
 
 		public int getRowCount()
 		{
-			return cryptos == null ? 0 : cryptos.size();
+			return keystores == null ? 0 : keystores.size();
 		}
 
 		@Override
@@ -638,65 +688,202 @@ public class WSSTabPanel extends JPanel
 
 		public Object getValueAt( int rowIndex, int columnIndex )
 		{
-			KeyMaterialWssCrypto crypto = ( KeyMaterialWssCrypto )cryptos.get( rowIndex );
+			KeyMaterialWssCrypto keystore = ( KeyMaterialWssCrypto )keystores.get( rowIndex );
 
 			switch( columnIndex )
 			{
 			case 0 :
-				return crypto.getType();
+				return keystore.getSource();
 			case 1 :
-				return crypto.getSource();
+				return keystore.getStatus();
 			case 2 :
-				return crypto.getStatus();
+				return keystore.getPassword();
 			case 3 :
-				return crypto.getPassword();
+				return keystore.getDefaultAlias();
 			case 4 :
-				return crypto.getDefaultAlias();
+				return keystore.getAliasPassword();
 			case 5 :
-				return crypto.getAliasPassword();
-			case 6 :
-				return StringUtils.hasContent( crypto.getCryptoProvider() ) ? crypto.getCryptoProvider() : DEFAULT_OPTION;
+				return StringUtils.hasContent( keystore.getCryptoProvider() ) ? keystore.getCryptoProvider()
+						: DEFAULT_OPTION;
 			}
 
 			return null;
 		}
 
+		public WssCrypto getCryptoAt( int row )
+		{
+			return keystores.get( row );
+		}
+
 		@Override
 		public void setValueAt( Object aValue, int rowIndex, int columnIndex )
 		{
-			KeyMaterialWssCrypto crypto = ( KeyMaterialWssCrypto )cryptos.get( rowIndex );
+			KeyMaterialWssCrypto keystore = ( KeyMaterialWssCrypto )keystores.get( rowIndex );
 			if( aValue == null || aValue.equals( DEFAULT_OPTION ) )
 				aValue = "";
 
 			switch( columnIndex )
 			{
+			case 2 :
+				keystore.setPassword( aValue.toString() );
+				break;
 			case 3 :
-				crypto.setPassword( aValue.toString() );
+				keystore.setDefaultAlias( aValue.toString() );
 				break;
 			case 4 :
-				crypto.setDefaultAlias( aValue.toString() );
+				keystore.setAliasPassword( aValue.toString() );
 				break;
 			case 5 :
-				crypto.setAliasPassword( aValue.toString() );
-				break;
-			case 6 :
-				crypto.setCryptoProvider( aValue.toString() );
+				keystore.setCryptoProvider( aValue.toString() );
 				break;
 			}
 		}
 
-		public void cryptoAdded( WssCrypto crypto )
+		public void cryptoAdded( WssCrypto keystore )
 		{
-			cryptos.add( crypto );
-			fireTableRowsInserted( cryptos.size() - 1, cryptos.size() - 1 );
+			keystores.add( keystore );
+			fireTableRowsInserted( keystores.size() - 1, keystores.size() - 1 );
 		}
 
-		public void cryptoRemoved( WssCrypto crypto )
+		public void cryptoRemoved( WssCrypto keystore )
 		{
-			int ix = cryptos.indexOf( crypto );
+			int ix = keystores.indexOf( keystore );
 			if( ix != -1 )
 			{
-				cryptos.remove( ix );
+				keystores.remove( ix );
+				fireTableRowsDeleted( ix, ix );
+			}
+		}
+	}
+
+	public class TruststoreTableModel extends AbstractTableModel
+	{
+		private static final String DEFAULT_OPTION = "<Default>";
+		private List<WssCrypto> truststores;
+
+		public TruststoreTableModel()
+		{
+			truststores = new ArrayList<WssCrypto>();
+			for( WssCrypto crypto : wssContainer.getCryptoList() )
+			{
+				if( crypto.getType() == CryptoType.TRUSTSTORE )
+				{
+					truststores.add( crypto );
+				}
+			}
+
+		}
+
+		public void release()
+		{
+			truststores = null;
+		}
+
+		public int getColumnCount()
+		{
+			// FIXME: Why not remove??
+			// hide last column since this is autodetected in commons-ssl-0.3.10
+			return 5;
+		}
+
+		@Override
+		public String getColumnName( int column )
+		{
+			switch( column )
+			{
+			case 0 :
+				return "Source";
+			case 1 :
+				return "Status";
+			case 2 :
+				return "Password";
+			case 3 :
+				return "Default Alias";
+			case 4 :
+				return "Alias Password";
+			case 5 :
+				return "Security Provider";
+			}
+
+			return null;
+		}
+
+		public int getRowCount()
+		{
+			return truststores == null ? 0 : truststores.size();
+		}
+
+		@Override
+		public boolean isCellEditable( int rowIndex, int columnIndex )
+		{
+			return columnIndex > 1;
+		}
+
+		public Object getValueAt( int rowIndex, int columnIndex )
+		{
+			KeyMaterialWssCrypto truststore = ( KeyMaterialWssCrypto )truststores.get( rowIndex );
+
+			switch( columnIndex )
+			{
+			case 0 :
+				return truststore.getSource();
+			case 1 :
+				return truststore.getStatus();
+			case 2 :
+				return truststore.getPassword();
+			case 3 :
+				return truststore.getDefaultAlias();
+			case 4 :
+				return truststore.getAliasPassword();
+			case 5 :
+				return StringUtils.hasContent( truststore.getCryptoProvider() ) ? truststore.getCryptoProvider()
+						: DEFAULT_OPTION;
+			}
+
+			return null;
+		}
+
+		public WssCrypto getCryptoAt( int rowIndex )
+		{
+			return truststores.get( rowIndex );
+		}
+
+		@Override
+		public void setValueAt( Object aValue, int rowIndex, int columnIndex )
+		{
+			KeyMaterialWssCrypto truststore = ( KeyMaterialWssCrypto )truststores.get( rowIndex );
+			if( aValue == null || aValue.equals( DEFAULT_OPTION ) )
+				aValue = "";
+
+			switch( columnIndex )
+			{
+			case 2 :
+				truststore.setPassword( aValue.toString() );
+				break;
+			case 3 :
+				truststore.setDefaultAlias( aValue.toString() );
+				break;
+			case 4 :
+				truststore.setAliasPassword( aValue.toString() );
+				break;
+			case 5 :
+				truststore.setCryptoProvider( aValue.toString() );
+				break;
+			}
+		}
+
+		public void cryptoAdded( WssCrypto truststore )
+		{
+			truststores.add( truststore );
+			fireTableRowsInserted( truststores.size() - 1, truststores.size() - 1 );
+		}
+
+		public void cryptoRemoved( WssCrypto truststore )
+		{
+			int ix = truststores.indexOf( truststore );
+			if( ix != -1 )
+			{
+				truststores.remove( ix );
 				fireTableRowsDeleted( ix, ix );
 			}
 		}
@@ -891,7 +1078,7 @@ public class WSSTabPanel extends JPanel
 	{
 		public AddKeystoreAction()
 		{
-			putValue( SMALL_ICON, UISupport.createImageIcon( "/keystore.gif" ) );
+			putValue( SMALL_ICON, UISupport.createImageIcon( "/add_property.gif" ) );
 			putValue( SHORT_DESCRIPTION, "Adds a new keystore to this configuration" );
 		}
 
@@ -903,7 +1090,7 @@ public class WSSTabPanel extends JPanel
 				String password = new String( UISupport.promptPassword( "Specify password for [" + file.getName() + "]",
 						"Add Key Material" ) );
 				wssContainer.addCrypto( file.getAbsolutePath(), password, CryptoType.KEYSTORE );
-				cryptosTable.setRowSelectionInterval( cryptosTable.getRowCount() - 1, cryptosTable.getRowCount() - 1 );
+				keystoreTable.setRowSelectionInterval( keystoreTable.getRowCount() - 1, keystoreTable.getRowCount() - 1 );
 			}
 		}
 	}
@@ -912,7 +1099,7 @@ public class WSSTabPanel extends JPanel
 	{
 		public AddTruststoreAction()
 		{
-			putValue( SMALL_ICON, UISupport.createImageIcon( "/truststore.gif" ) );
+			putValue( SMALL_ICON, UISupport.createImageIcon( "/add_property.gif" ) );
 			putValue( SHORT_DESCRIPTION, "Adds a new truststore to this configuration" );
 		}
 
@@ -924,38 +1111,67 @@ public class WSSTabPanel extends JPanel
 				String password = new String( UISupport.promptPassword( "Specify password for [" + file.getName() + "]",
 						"Add Key Material" ) );
 				wssContainer.addCrypto( file.getAbsolutePath(), password, CryptoType.TRUSTSTORE );
-				cryptosTable.setRowSelectionInterval( cryptosTable.getRowCount() - 1, cryptosTable.getRowCount() - 1 );
+				truststoreTable.setRowSelectionInterval( truststoreTable.getRowCount() - 1,
+						truststoreTable.getRowCount() - 1 );
 			}
 		}
 	}
 
-	private class RemoveCryptoAction extends AbstractAction
+	private class RemoveKeystoreAction extends AbstractAction
 	{
-		public RemoveCryptoAction()
+		public RemoveKeystoreAction()
 		{
 			putValue( SMALL_ICON, UISupport.createImageIcon( "/remove_property.gif" ) );
-			putValue( SHORT_DESCRIPTION, "Removes the selected crypto from this configuration" );
+			putValue( SHORT_DESCRIPTION, "Removes the selected keystore from this configuration" );
 
 			setEnabled( false );
 		}
 
 		public void actionPerformed( ActionEvent e )
 		{
-			int row = cryptosTable.getSelectedRow();
+			int row = keystoreTable.getSelectedRow();
 			if( row == -1 )
 				return;
 
-			if( UISupport.confirm( "Removes selected crypto?", "Remove Crypto" ) )
+			KeystoreTableModel tableModel = ( KeystoreTableModel )keystoreTable.getModel();
+			WssCrypto keystore = tableModel.getCryptoAt( row );
+
+			if( UISupport.confirm( "Removes selected keystore?", "Remove Keystore" ) )
 			{
-				wssContainer.removeCryptoAt( row );
+				wssContainer.removeCrypto( keystore );
+			}
+		}
+	}
+
+	private class RemoveTruststoreAction extends AbstractAction
+	{
+		public RemoveTruststoreAction()
+		{
+			putValue( SMALL_ICON, UISupport.createImageIcon( "/remove_property.gif" ) );
+			putValue( SHORT_DESCRIPTION, "Removes the selected truststore from this configuration" );
+
+			setEnabled( false );
+		}
+
+		public void actionPerformed( ActionEvent e )
+		{
+			int row = truststoreTable.getSelectedRow();
+			if( row == -1 )
+				return;
+
+			TruststoreTableModel tableModel = ( TruststoreTableModel )truststoreTable.getModel();
+			WssCrypto truststore = tableModel.getCryptoAt( row );
+
+			if( UISupport.confirm( "Removes selected truststore?", "Remove Truststore" ) )
+			{
+				wssContainer.removeCrypto( truststore );
 			}
 		}
 	}
 
 	// :: Listeners ::
 
-	// FIXME Extend WssContainerListenerAdapter instead to get rid of empty method
-	private class InternalWssContainerListener implements WssContainerListener
+	private class InternalWssContainerListener extends WssContainerListenerAdapter
 	{
 		@Override
 		public void outgoingWssAdded( OutgoingWss outgoingWss )
@@ -1023,19 +1239,27 @@ public class WSSTabPanel extends JPanel
 		@Override
 		public void cryptoAdded( WssCrypto crypto )
 		{
-			( ( CryptosTableModel )cryptosTable.getModel() ).cryptoAdded( crypto );
+			if( crypto.getType() == CryptoType.KEYSTORE )
+			{
+				( ( KeystoreTableModel )keystoreTable.getModel() ).cryptoAdded( crypto );
+			}
+			else if( crypto.getType() == CryptoType.TRUSTSTORE )
+			{
+				( ( TruststoreTableModel )truststoreTable.getModel() ).cryptoAdded( crypto );
+			}
 		}
 
 		@Override
 		public void cryptoRemoved( WssCrypto crypto )
 		{
-			( ( CryptosTableModel )cryptosTable.getModel() ).cryptoRemoved( crypto );
-		}
-
-		@Override
-		public void cryptoUpdated( WssCrypto crypto )
-		{
-			// TODO Auto-generated method stub
+			if( crypto.getType() == CryptoType.KEYSTORE )
+			{
+				( ( KeystoreTableModel )keystoreTable.getModel() ).cryptoRemoved( crypto );
+			}
+			else if( crypto.getType() == CryptoType.TRUSTSTORE )
+			{
+				( ( TruststoreTableModel )truststoreTable.getModel() ).cryptoRemoved( crypto );
+			}
 
 		}
 	}

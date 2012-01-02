@@ -265,6 +265,7 @@ public class KeyMaterialWssCrypto implements WssCrypto
 		getWssContainer().fireCryptoUpdated( this );
 	}
 
+	@Override
 	public CryptoType getType()
 	{
 		String typeConfig = config.getType();

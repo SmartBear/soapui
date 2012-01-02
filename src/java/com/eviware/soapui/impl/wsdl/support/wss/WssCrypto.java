@@ -14,6 +14,7 @@ package com.eviware.soapui.impl.wsdl.support.wss;
 
 import org.apache.ws.security.WSSecurityException;
 import org.apache.ws.security.components.crypto.Crypto;
+import com.eviware.soapui.impl.wsdl.support.wss.crypto.CryptoType;
 
 public interface WssCrypto
 {
@@ -30,4 +31,6 @@ public interface WssCrypto
 	public String getPassword();
 
 	public String getStatus();
+
+	public CryptoType getType();
 }

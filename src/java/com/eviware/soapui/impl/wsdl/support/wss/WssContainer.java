@@ -34,9 +34,7 @@ public interface WssContainer extends PropertyExpansionContainer
 
 	public int getCryptoCount();
 
-	public WssCrypto getCryptoAt( int index );
-
-	public void removeCryptoAt( int row );
+	public void removeCrypto( @NonNull WssCrypto crypto );
 
 	public List<IncomingWss> getIncomingWssList();
 

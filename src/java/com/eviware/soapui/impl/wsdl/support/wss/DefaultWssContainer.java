@@ -134,16 +134,13 @@ public class DefaultWssContainer implements WssContainer
 		return cryptos.size();
 	}
 
-	public WssCrypto getCryptoAt( int index )
+	@Override
+	public void removeCrypto( WssCrypto crypto )
 	{
-		return cryptos.get( index );
-	}
-
-	public void removeCryptoAt( int row )
-	{
-		WssCrypto crypto = cryptos.remove( row );
+		int index = cryptos.indexOf( crypto );
+		cryptos.remove( crypto );
 		fireCryptoRemoved( crypto );
-		getConfig().removeCrypto( row );
+		getConfig().removeCrypto( index );
 	}
 
 	public List<IncomingWss> getIncomingWssList()
