@@ -68,10 +68,13 @@ public class WSSTabPanel extends JPanel
 	private static final int MOVE_UP = -1;
 	private static final int MOVE_DOWN = 1;
 
-	// FIXME Add FindBugs NonNull to these fields
+	@NonNull
 	private JTable keystoreTable;
+	@NonNull
 	private JTable truststoreTable;
+	@NonNull
 	private RemoveCryptoAction removeKeystoreAction;
+	@NonNull
 	private RemoveCryptoAction removeTruststoreAction;
 
 	private RemoveIncomingWssAction removeIncomingWssAction;
