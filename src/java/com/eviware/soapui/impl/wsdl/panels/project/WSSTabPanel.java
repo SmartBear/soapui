@@ -64,6 +64,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 // FIXME Consider splitting this up into smaller entities for each main inner component and put all actions into separate files
 public class WSSTabPanel extends JPanel
 {
+	private static final String ILLEGAL_CRYPTO_TYPE_MESSAGE = "Illegal crypto type";
 	private static final int ENTRIES_LIST_COMPONENT_WIDTH = 150;
 	private static final int MOVE_UP = -1;
 	private static final int MOVE_DOWN = 1;
@@ -326,13 +327,16 @@ public class WSSTabPanel extends JPanel
 	{
 		final JTable cryptoTable = new JTable( new CryptoTableModel( cryptoType ) );
 
-		if( cryptoType == CryptoType.KEYSTORE )
+		switch( cryptoType )
 		{
+		case KEYSTORE :
 			keystoreTable = cryptoTable;
-		}
-		else if( cryptoType == CryptoType.TRUSTSTORE )
-		{
+			break;
+		case TRUSTSTORE :
 			truststoreTable = cryptoTable;
+			break;
+		default :
+			throw new IllegalArgumentException( ILLEGAL_CRYPTO_TYPE_MESSAGE );
 		}
 
 		JPanel panel = new JPanel( new BorderLayout() );
@@ -344,13 +348,16 @@ public class WSSTabPanel extends JPanel
 		{
 			public void valueChanged( ListSelectionEvent e )
 			{
-				if( cryptoType == CryptoType.KEYSTORE )
+				switch( cryptoType )
 				{
+				case KEYSTORE :
 					removeKeystoreAction.setEnabled( cryptoTable.getSelectedRow() != -1 );
-				}
-				else if( cryptoType == CryptoType.TRUSTSTORE )
-				{
+					break;
+				case TRUSTSTORE :
 					removeTruststoreAction.setEnabled( cryptoTable.getSelectedRow() != -1 );
+					break;
+				default :
+					throw new IllegalArgumentException( ILLEGAL_CRYPTO_TYPE_MESSAGE );
 				}
 			}
 		} );
@@ -373,14 +380,18 @@ public class WSSTabPanel extends JPanel
 		toolbar.addFixed( UISupport.createToolbarButton( new AddCryptoAction( cryptoType ) ) );
 
 		RemoveCryptoAction removeCryptoAction = new RemoveCryptoAction( cryptoType );
-		if( cryptoType == CryptoType.KEYSTORE )
+		switch( cryptoType )
 		{
+		case KEYSTORE :
 			removeKeystoreAction = removeCryptoAction;
-		}
-		else if( cryptoType == CryptoType.TRUSTSTORE )
-		{
+			break;
+		case TRUSTSTORE :
 			removeTruststoreAction = removeCryptoAction;
+			break;
+		default :
+			throw new IllegalArgumentException( ILLEGAL_CRYPTO_TYPE_MESSAGE );
 		}
+
 		toolbar.addFixed( UISupport.createToolbarButton( removeCryptoAction ) );
 
 		toolbar.addGlue();
@@ -396,15 +407,15 @@ public class WSSTabPanel extends JPanel
 
 	private JTable getCryptoTable( CryptoType cryptoType )
 	{
-		if( cryptoType == CryptoType.KEYSTORE )
+		switch( cryptoType )
 		{
+		case KEYSTORE :
 			return keystoreTable;
-		}
-		else if( cryptoType == CryptoType.TRUSTSTORE )
-		{
+		case TRUSTSTORE :
 			return truststoreTable;
+		default :
+			throw new IllegalArgumentException( ILLEGAL_CRYPTO_TYPE_MESSAGE );
 		}
-		return null;
 	}
 
 	// :: Table models ::
