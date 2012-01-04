@@ -1128,6 +1128,16 @@
                 <jnlp.jar>true</jnlp.jar>
             </properties>
         </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>11.0</version>
+            <type>jar</type>
+            <properties>
+                <jnlp.jar>true</jnlp.jar>
+            </properties>
+        </dependency>
+            
         <!--  old http client needed by some 3rd party components -->
         <dependency>
             <groupId>commons-httpclient</groupId>
