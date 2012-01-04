@@ -14,6 +14,7 @@ package com.eviware.soapui.tools;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -60,6 +61,8 @@ import com.eviware.soapui.report.JUnitSecurityReportCollector;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.types.StringToObjectMap;
+import com.google.common.base.Charsets;
+import com.google.common.io.Files;
 
 /**
  * Standalone test-runner used from maven-plugin, can also be used from
@@ -81,8 +84,6 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 	private String testCase;
 	private List<TestAssertion> assertions = new ArrayList<TestAssertion>();
 	private Map<TestAssertion, WsdlTestStepResult> assertionResults = new HashMap<TestAssertion, WsdlTestStepResult>();
-	// private List<TestCaseRunner> runningTests = new
-	// ArrayList<TestCaseRunner>();
 	private List<TestCase> failedTests = new ArrayList<TestCase>();
 
 	private int testSuiteCount;
@@ -92,13 +93,13 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 	private int testAssertionCount;
 
 	private boolean printReport;
+	private boolean printAlertSiteReport;
 	private boolean exportAll;
 	private boolean ignoreErrors;
 	private boolean junitReport;
 	private int exportCount;
 	private int maxErrors = 5;
 	private JUnitReportCollector reportCollector;
-	// protected WsdlProject project;
 	private String projectPassword;
 	private boolean saveAfterRun;
 
@@ -182,7 +183,9 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 		setIgnoreError( cmd.hasOption( "I" ) );
 		setEnableUI( cmd.hasOption( "i" ) );
 		setPrintReport( cmd.hasOption( "r" ) );
+		setPrintAlertSiteReport( cmd.hasOption( "M" ) );
 		setExportAll( cmd.hasOption( "a" ) );
+
 		if( cmd.hasOption( "A" ) )
 		{
 			setExportAll( true );
@@ -243,6 +246,7 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 		options.addOption( "d", true, "Sets the domain" );
 		options.addOption( "h", true, "Sets the host" );
 		options.addOption( "r", false, "Prints a small summary report" );
+		options.addOption( "M", false, "Prints an AlertSite monitoring report" );
 		options.addOption( "f", true, "Sets the output folder to export results to" );
 		options.addOption( "j", false, "Sets the output to include JUnit XML reports" );
 		options.addOption( "m", false, "Sets the maximum number of TestStep errors to save for each testcase" );
@@ -301,6 +305,16 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 	public void setPrintReport( boolean printReport )
 	{
 		this.printReport = printReport;
+	}
+
+	public void setPrintAlertSiteReport( boolean printAlertSiteReport )
+	{
+		this.printAlertSiteReport = printAlertSiteReport;
+	}
+
+	public boolean isPrintAlertSiteReport()
+	{
+		return printAlertSiteReport;
 	}
 
 	public void setIgnoreError( boolean ignoreErrors )
@@ -446,6 +460,12 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 					project.getRunType() == TestSuiteRunType.PARALLEL );
 			log.info( "Project [" + project.getName() + "] finished with status [" + runner.getStatus() + "] in "
 					+ runner.getTimeTaken() + "ms" );
+
+			if( printAlertSiteReport )
+			{
+				generateAlertSiteReport();
+			}
+
 		}
 		catch( Exception e )
 		{
@@ -455,6 +475,24 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 		{
 			project.removeProjectRunListener( projectRunListener );
 		}
+	}
+
+	private void generateAlertSiteReport()
+	{
+		// FIXME  -- This just creates a dummy file. Need to implement actual logic for creating the report. --
+
+		final File newFile = new File( "alertsite_monitoring_report_DUMMY.xml" );
+		try
+		{
+			Files.write( "<foo>4711</foo>".getBytes(), newFile );
+			log.info( "AlertSite dummy monitoring report created" );
+		}
+		catch( IOException e )
+		{
+			log.error( "Could not create AlertSite dummy monitoring report file" );
+		}
+
+		// ----------------------------------------------------------------------------------------------------
 	}
 
 	protected void initProject( WsdlProject project ) throws Exception
