@@ -14,7 +14,6 @@ package com.eviware.soapui.tools;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -58,11 +57,10 @@ import com.eviware.soapui.model.testsuite.TestSuite.TestSuiteRunType;
 import com.eviware.soapui.model.testsuite.TestSuiteRunner;
 import com.eviware.soapui.report.JUnitReportCollector;
 import com.eviware.soapui.report.JUnitSecurityReportCollector;
+import com.eviware.soapui.report.TestCaseRunLogReport;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.types.StringToObjectMap;
-import com.google.common.base.Charsets;
-import com.google.common.io.Files;
 
 /**
  * Standalone test-runner used from maven-plugin, can also be used from
@@ -102,6 +100,7 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 	private JUnitReportCollector reportCollector;
 	private String projectPassword;
 	private boolean saveAfterRun;
+	private TestCaseRunLogReport testCaseRunLogReport;
 
 	/**
 	 * Runs the tests in the specified soapUI project file, see soapUI xdocs for
@@ -310,6 +309,10 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 	public void setPrintAlertSiteReport( boolean printAlertSiteReport )
 	{
 		this.printAlertSiteReport = printAlertSiteReport;
+		if( this.printAlertSiteReport )
+		{
+			testCaseRunLogReport = new TestCaseRunLogReport();
+		}
 	}
 
 	public boolean isPrintAlertSiteReport()
@@ -460,12 +463,6 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 					project.getRunType() == TestSuiteRunType.PARALLEL );
 			log.info( "Project [" + project.getName() + "] finished with status [" + runner.getStatus() + "] in "
 					+ runner.getTimeTaken() + "ms" );
-
-			if( printAlertSiteReport )
-			{
-				generateAlertSiteReport();
-			}
-
 		}
 		catch( Exception e )
 		{
@@ -475,24 +472,6 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 		{
 			project.removeProjectRunListener( projectRunListener );
 		}
-	}
-
-	private void generateAlertSiteReport()
-	{
-		// FIXME  -- This just creates a dummy file. Need to implement actual logic for creating the report. --
-
-		final File newFile = new File( "alertsite_monitoring_report_DUMMY.xml" );
-		try
-		{
-			Files.write( "<foo>4711</foo>".getBytes(), newFile );
-			log.info( "AlertSite dummy monitoring report created" );
-		}
-		catch( IOException e )
-		{
-			log.error( "Could not create AlertSite dummy monitoring report file" );
-		}
-
-		// ----------------------------------------------------------------------------------------------------
 	}
 
 	protected void initProject( WsdlProject project ) throws Exception
@@ -513,6 +492,9 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 		tc.addTestRunListener( this );
 		if( junitReport )
 			tc.addTestRunListener( reportCollector );
+		if( printAlertSiteReport )
+			tc.addTestRunListener( testCaseRunLogReport );
+
 	}
 
 	protected void throwFailureException() throws Exception
@@ -773,6 +755,7 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 		}
 
 		testStepCount++ ;
+
 	}
 
 	public void afterRun( TestCaseRunner testRunner, TestCaseRunContext runContext )
