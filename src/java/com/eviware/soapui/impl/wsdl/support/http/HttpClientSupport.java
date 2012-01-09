@@ -172,9 +172,13 @@ public class HttpClientSupport
 
 			Settings settings = SoapUI.getSettings();
 
-			String keyStoreUrl = settings.getString( SSLSettings.KEYSTORE, null );
+			String keyStoreUrl = System.getProperty( "soapui.ssl.keystore.location",
+					settings.getString( SSLSettings.KEYSTORE, null ) );
+
 			keyStoreUrl = keyStoreUrl != null ? keyStoreUrl.trim() : "";
-			String pass = settings.getString( SSLSettings.KEYSTORE_PASSWORD, "" );
+			String pass = System.getProperty( "soapui.ssl.keystore.password",
+					settings.getString( SSLSettings.KEYSTORE_PASSWORD, "" ) );
+
 			char[] pwd = pass.toCharArray();
 
 			if( keyStoreUrl.trim().length() > 0 )
