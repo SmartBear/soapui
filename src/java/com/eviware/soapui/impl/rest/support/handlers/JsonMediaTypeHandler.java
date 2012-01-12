@@ -45,6 +45,9 @@ public class JsonMediaTypeHandler implements MediaTypeHandler
 			if( !StringUtils.hasContent( content ) )
 				return null;
 
+			// remove nulls - workaround for bug in xmlserializer!?
+			content = content.replaceAll( "\\\\u0000", "" );
+
 			JSON json = JSONSerializer.toJSON( content );
 			XMLSerializer serializer = new XMLSerializer();
 			serializer.setTypeHintsEnabled( false );
