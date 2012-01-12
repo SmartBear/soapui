@@ -29,12 +29,16 @@ import com.eviware.soapui.support.UISupport;
 
 public class JCollapsiblePanel extends JPanel
 {
+	private static final String HIGHLIGHT_SIGN = " *";
+	
 	private ImageIcon minusIcon;
 	private ImageIcon plusIcon;
 
 	private JPanel contentPanel;
 	private JXToolBar toolbar;
 	private ToggleAction toggleAction;
+	private JLabel titleLabel;
+	private String nonHighlightedTitle;
 
 	public JCollapsiblePanel( JPanel contentPanel, String title )
 	{
@@ -52,7 +56,7 @@ public class JCollapsiblePanel extends JPanel
 		this( new JPanel(), title );
 	}
 
-	protected JXToolBar startToolbar( String title )
+	private JXToolBar startToolbar( String title )
 	{
 		toolbar = UISupport.createToolbar();
 		toolbar.setBorder( null );
@@ -69,7 +73,9 @@ public class JCollapsiblePanel extends JPanel
 
 		if( title != null )
 		{
-			JLabel titleLabel = new JLabel( title );
+			nonHighlightedTitle = title;
+			titleLabel = new JLabel( title );
+			titleLabel.setPreferredSize( new Dimension( 500, 0 ) );
 			titleLabel.setFont( titleLabel.getFont().deriveFont( Font.BOLD ) );
 			toolbar.addFixed( titleLabel );
 			toolbar.addSpace( 3 );
@@ -162,5 +168,20 @@ public class JCollapsiblePanel extends JPanel
 	public void setPlusIcon( ImageIcon plusIcon )
 	{
 		this.plusIcon = plusIcon;
+	}
+
+	public void setHighlightedTitle( boolean highlightedTitle )
+	{
+		if( highlightedTitle )
+		{
+			if( !titleLabel.getText().endsWith( HIGHLIGHT_SIGN ) )
+			{
+				titleLabel.setText( nonHighlightedTitle + HIGHLIGHT_SIGN );
+			}
+		}
+		else
+		{
+			titleLabel.setText( nonHighlightedTitle );
+		}
 	}
 }
