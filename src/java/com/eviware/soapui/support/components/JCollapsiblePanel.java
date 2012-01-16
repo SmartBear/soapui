@@ -29,8 +29,8 @@ import com.eviware.soapui.support.UISupport;
 
 public class JCollapsiblePanel extends JPanel
 {
-	private static final String HIGHLIGHT_SIGN = " *";
-	
+	private static final String HIGHLIGHT_SIGN = "* ";
+
 	private ImageIcon minusIcon;
 	private ImageIcon plusIcon;
 
@@ -174,9 +174,9 @@ public class JCollapsiblePanel extends JPanel
 	{
 		if( highlightedTitle )
 		{
-			if( !titleLabel.getText().endsWith( HIGHLIGHT_SIGN ) )
+			if( !titleLabel.getText().startsWith( HIGHLIGHT_SIGN ) )
 			{
-				titleLabel.setText( nonHighlightedTitle + HIGHLIGHT_SIGN );
+				titleLabel.setText( HIGHLIGHT_SIGN + nonHighlightedTitle );
 			}
 		}
 		else

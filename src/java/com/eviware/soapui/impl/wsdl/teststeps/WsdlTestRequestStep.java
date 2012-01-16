@@ -38,6 +38,7 @@ import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.WsdlSubmit;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.WsdlResponse;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.WsdlSinglePartHttpResponse;
 import com.eviware.soapui.impl.wsdl.support.assertions.AssertedXPathsContainer;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlUtils;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
@@ -176,8 +177,8 @@ public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements O
 			}
 		} );
 
-    	        addProperty( new DefaultTestStepProperty( "RawRequest", true, this )
-  		{
+		addProperty( new DefaultTestStepProperty( "RawRequest", true, this )
+		{
 			@Override
 			public String getValue()
 			{
@@ -319,24 +320,57 @@ public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements O
 		testRequest.setName( name );
 	}
 
-	public void propertyChange( PropertyChangeEvent arg0 )
+	public void propertyChange( PropertyChangeEvent event )
 	{
-		if( arg0.getSource() == wsdlOperation )
+		// TODO Some of these properties should be pulled up as they are common for may steps
+		// FIXME The property names shouldn't be hardcoded
+		if( event.getSource() == testRequest )
 		{
-			if( arg0.getPropertyName().equals( Operation.NAME_PROPERTY ) )
+			if( event.getNewValue() instanceof WsdlSinglePartHttpResponse )
 			{
-				requestStepConfig.setOperation( ( String )arg0.getNewValue() );
+				WsdlSinglePartHttpResponse response = ( WsdlSinglePartHttpResponse )event.getNewValue();
+				WsdlRequest request = response.getRequest();
+				byte[] rawRequest = response.getRawRequestData();
+
+				firePropertyValueChanged( "Response", String.valueOf( response ), null );
+				firePropertyValueChanged( "Request", String.valueOf( request ), null );
+				firePropertyValueChanged( "RawRequest", String.valueOf( rawRequest ), null );
+			}
+
+			if( event.getPropertyName().equals( "domain" ) )
+			{
+				delegatePropertyChange( "Domain", event );
+			}
+			else if( event.getPropertyName().equals( "password" ) )
+			{
+				delegatePropertyChange( "Password", event );
+			}
+			else if( event.getPropertyName().equals( "username" ) )
+			{
+				delegatePropertyChange( "Username", event );
+			}
+			else if( event.getPropertyName().equals( "endpoint" ) )
+			{
+				delegatePropertyChange( "Endpoint", event );
 			}
 		}
-		else if( arg0.getSource() == wsdlOperation.getInterface() )
+
+		if( event.getSource() == wsdlOperation )
 		{
-			if( arg0.getPropertyName().equals( Interface.NAME_PROPERTY ) )
+			if( event.getPropertyName().equals( Operation.NAME_PROPERTY ) )
 			{
-				requestStepConfig.setInterface( ( String )arg0.getNewValue() );
+				requestStepConfig.setOperation( ( String )event.getNewValue() );
 			}
 		}
-		else if( arg0.getPropertyName().equals( TestAssertion.CONFIGURATION_PROPERTY )
-				|| arg0.getPropertyName().equals( TestAssertion.DISABLED_PROPERTY ) )
+		else if( event.getSource() == wsdlOperation.getInterface() )
+		{
+			if( event.getPropertyName().equals( Interface.NAME_PROPERTY ) )
+			{
+				requestStepConfig.setInterface( ( String )event.getNewValue() );
+			}
+		}
+		else if( event.getPropertyName().equals( TestAssertion.CONFIGURATION_PROPERTY )
+				|| event.getPropertyName().equals( TestAssertion.DISABLED_PROPERTY ) )
 		{
 			if( getTestRequest().getResponse() != null )
 			{
@@ -345,14 +379,21 @@ public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements O
 		}
 		else
 		{
-			if( arg0.getSource() == testRequest && arg0.getPropertyName().equals( WsdlTestRequest.NAME_PROPERTY ) )
+			if( event.getSource() == testRequest && event.getPropertyName().equals( WsdlTestRequest.NAME_PROPERTY ) )
 			{
-				if( !super.getName().equals( ( String )arg0.getNewValue() ) )
-					super.setName( ( String )arg0.getNewValue() );
+				if( !super.getName().equals( ( String )event.getNewValue() ) )
+					super.setName( ( String )event.getNewValue() );
 			}
 
-			notifyPropertyChanged( arg0.getPropertyName(), arg0.getOldValue(), arg0.getNewValue() );
+			notifyPropertyChanged( event.getPropertyName(), event.getOldValue(), event.getNewValue() );
 		}
+	}
+
+	private void delegatePropertyChange( String customPropertyname, PropertyChangeEvent event )
+	{
+		firePropertyValueChanged( customPropertyname, String.valueOf( event.getOldValue() ),
+				String.valueOf( event.getNewValue() ) );
+
 	}
 
 	public TestStepResult run( TestCaseRunner runner, TestCaseRunContext runContext )
@@ -465,7 +506,7 @@ public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements O
 
 				break;
 			}
-				// default : testStepResult.setStatus( TestStepStatus.OK ); break;
+			// default : testStepResult.setStatus( TestStepStatus.OK ); break;
 			}
 		}
 
