@@ -42,6 +42,7 @@ import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.Exten
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedTraceMethod;
 import com.eviware.soapui.impl.wsdl.support.PathUtils;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
+import com.eviware.soapui.impl.wsdl.support.http.SoapUIHttpRoute;
 import com.eviware.soapui.impl.wsdl.support.wss.WssCrypto;
 import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.model.iface.Response;
@@ -209,7 +210,8 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 
 			if( crypto != null && WssCrypto.STATUS_OK.equals( crypto.getStatus() ) )
 			{
-				httpMethod.getParams().setParameter( SOAPUI_SSL_CONFIG, crypto.getSource() + " " + crypto.getPassword() );
+				httpMethod.getParams().setParameter( SoapUIHttpRoute.SOAPUI_SSL_CONFIG,
+						crypto.getSource() + " " + crypto.getPassword() );
 			}
 
 			// dump file?

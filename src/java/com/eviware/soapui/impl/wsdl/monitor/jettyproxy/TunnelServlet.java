@@ -37,12 +37,12 @@ import com.eviware.soapui.impl.wsdl.actions.monitor.SoapMonitorAction.SecurityTa
 import com.eviware.soapui.impl.wsdl.monitor.CaptureInputStream;
 import com.eviware.soapui.impl.wsdl.monitor.JProxyServletWsdlMonitorMessageExchange;
 import com.eviware.soapui.impl.wsdl.monitor.SoapMonitor;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransport;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedGetMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPostMethod;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 import com.eviware.soapui.impl.wsdl.support.http.ProxyUtils;
+import com.eviware.soapui.impl.wsdl.support.http.SoapUIHttpRoute;
 import com.eviware.soapui.model.propertyexpansion.DefaultPropertyExpansionContext;
 import com.eviware.soapui.support.types.StringToStringsMap;
 import com.eviware.soapui.support.xml.XmlUtils;
@@ -161,7 +161,7 @@ public class TunnelServlet extends ProxyServlet
 		}
 
 		postMethod.getParams().setParameter(
-				BaseHttpRequestTransport.SOAPUI_SSL_CONFIG,
+				SoapUIHttpRoute.SOAPUI_SSL_CONFIG,
 				settings.getString( SecurityTabForm.SSLTUNNEL_KEYSTOREPATH, "" ) + " "
 						+ settings.getString( SecurityTabForm.SSLTUNNEL_KEYSTOREPASSWORD, "" ) );
 

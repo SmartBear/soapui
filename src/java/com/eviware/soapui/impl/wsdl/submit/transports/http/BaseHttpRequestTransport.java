@@ -30,5 +30,4 @@ public interface BaseHttpRequestTransport extends RequestTransport
 	public static final String REQUEST_CONTENT = "requestContent";
 	public static final String RESPONSE = "httpResponse";
 	public static final String RESPONSE_PROPERTIES = "httpResponseProperties";
-	public static final String SOAPUI_SSL_CONFIG = "soapui.sslConfig";
 }
