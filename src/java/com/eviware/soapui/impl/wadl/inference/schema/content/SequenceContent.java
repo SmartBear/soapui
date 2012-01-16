@@ -41,7 +41,7 @@ import com.eviware.soapui.inferredSchema.SequenceContentConfig.ComesBefore;
  */
 public class SequenceContent implements Content
 {
-	private Schema schema;
+	private final Schema schema;
 	private Map<QName, Particle> particles;
 	private HashMap<QName, List<QName>> comesBefore;
 	private boolean completed;
@@ -77,6 +77,7 @@ public class SequenceContent implements Content
 		}
 	}
 
+	@Override
 	public SequenceContentConfig save()
 	{
 		SequenceContentConfig xml = SequenceContentConfig.Factory.newInstance();
@@ -95,6 +96,7 @@ public class SequenceContent implements Content
 		return xml;
 	}
 
+	@Override
 	public Content validate( Context context ) throws XmlException
 	{
 		XmlCursor cursor = context.getCursor();
@@ -144,6 +146,7 @@ public class SequenceContent implements Content
 		return this;
 	}
 
+	@Override
 	public String toString( String attrs )
 	{
 		if( particles.size() == 0 )
@@ -187,7 +190,8 @@ public class SequenceContent implements Content
 	{
 		for( QName item2 : before )
 		{
-			if( comesBefore.get( item ).contains( item2 ) )
+			List<QName> list = comesBefore.get( item );
+			if( list != null && list.contains( item2 ) )
 				return false;
 		}
 		return true;
