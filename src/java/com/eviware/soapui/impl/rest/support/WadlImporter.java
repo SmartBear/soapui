@@ -282,8 +282,11 @@ public class WadlImporter
 	{
 		// build name
 		String name = getFirstTitle( method.getDocList(), method.getName() );
-		if( StringUtils.hasContent( method.getId() ) )
+		String id = method.getId();
+		if( StringUtils.hasContent( id ) && !id.trim().equals( name.trim() ) )
+		{
 			name += " - " + method.getId();
+		}
 
 		// ensure unique name
 		if( newResource.getRestMethodByName( name ) != null )
