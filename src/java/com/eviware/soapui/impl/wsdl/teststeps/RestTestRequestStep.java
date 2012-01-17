@@ -42,6 +42,7 @@ import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.WsdlSubmit;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.SinglePartHttpResponse;
 import com.eviware.soapui.impl.wsdl.support.assertions.AssertedXPathsContainer;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
@@ -459,37 +460,68 @@ public class RestTestRequestStep extends WsdlTestStepWithProperties implements R
 		testRequest.updateConfig( restRequestStepConfig.getRestRequest() );
 	}
 
-	public void propertyChange( PropertyChangeEvent evt )
+	public void propertyChange( PropertyChangeEvent event )
 	{
-		if( evt.getSource() == restResource )
+
+		// TODO Some of these properties should be pulled up as they are common for may steps
+		// FIXME The property names shouldn't be hardcoded
+		if( event.getSource() == testRequest )
 		{
-			if( evt.getPropertyName().equals( RestResource.PATH_PROPERTY ) )
+			if( event.getNewValue() instanceof SinglePartHttpResponse )
+			{
+				SinglePartHttpResponse response = ( SinglePartHttpResponse )event.getNewValue();
+				firePropertyValueChanged( "Response", String.valueOf( response ), null );
+				String XMLCOntent = response.getContentAsXml();
+				firePropertyValueChanged( "ResponseAsXml", String.valueOf( XMLCOntent ), null );
+			}
+
+			if( event.getPropertyName().equals( "domain" ) )
+			{
+				delegatePropertyChange( "Domain", event );
+			}
+			else if( event.getPropertyName().equals( "password" ) )
+			{
+				delegatePropertyChange( "Password", event );
+			}
+			else if( event.getPropertyName().equals( "username" ) )
+			{
+				delegatePropertyChange( "Username", event );
+			}
+			else if( event.getPropertyName().equals( "endpoint" ) )
+			{
+				delegatePropertyChange( "Endpoint", event );
+			}
+		}
+
+		if( event.getSource() == restResource )
+		{
+			if( event.getPropertyName().equals( RestResource.PATH_PROPERTY ) )
 			{
 				getRequestStepConfig().setResourcePath( restResource.getFullPath() );
 			}
-			else if( evt.getPropertyName().equals( "childMethods" ) && restMethod == evt.getOldValue() )
+			else if( event.getPropertyName().equals( "childMethods" ) && restMethod == event.getOldValue() )
 			{
 				// TODO: Convert to HttpTestRequestStep
 				log.debug( "Removing test step due to removed Rest method" );
 				getTestCase().removeTestStep( RestTestRequestStep.this );
 			}
 		}
-		else if( restResource != null && evt.getSource() == restResource.getInterface() )
+		else if( restResource != null && event.getSource() == restResource.getInterface() )
 		{
-			if( evt.getPropertyName().equals( Interface.NAME_PROPERTY ) )
+			if( event.getPropertyName().equals( Interface.NAME_PROPERTY ) )
 			{
-				getRequestStepConfig().setService( ( String )evt.getNewValue() );
+				getRequestStepConfig().setService( ( String )event.getNewValue() );
 			}
 		}
-		else if( evt.getSource() == restMethod )
+		else if( event.getSource() == restMethod )
 		{
-			if( evt.getPropertyName().equals( RestMethod.NAME_PROPERTY ) )
+			if( event.getPropertyName().equals( RestMethod.NAME_PROPERTY ) )
 			{
-				getRequestStepConfig().setMethodName( ( String )evt.getNewValue() );
+				getRequestStepConfig().setMethodName( ( String )event.getNewValue() );
 			}
 		}
-		if( evt.getPropertyName().equals( TestAssertion.CONFIGURATION_PROPERTY )
-				|| evt.getPropertyName().equals( TestAssertion.DISABLED_PROPERTY ) )
+		if( event.getPropertyName().equals( TestAssertion.CONFIGURATION_PROPERTY )
+				|| event.getPropertyName().equals( TestAssertion.DISABLED_PROPERTY ) )
 		{
 			if( getTestRequest().getResponse() != null )
 			{
@@ -498,20 +530,27 @@ public class RestTestRequestStep extends WsdlTestStepWithProperties implements R
 		}
 		else
 		{
-			if( evt.getSource() == testRequest && evt.getPropertyName().equals( WsdlTestRequest.NAME_PROPERTY ) )
+			if( event.getSource() == testRequest && event.getPropertyName().equals( WsdlTestRequest.NAME_PROPERTY ) )
 			{
-				if( !super.getName().equals( evt.getNewValue() ) )
-					super.setName( ( String )evt.getNewValue() );
+				if( !super.getName().equals( event.getNewValue() ) )
+					super.setName( ( String )event.getNewValue() );
 			}
-			else if( evt.getSource() == testRequest && evt.getPropertyName().equals( "restMethod" ) )
+			else if( event.getSource() == testRequest && event.getPropertyName().equals( "restMethod" ) )
 			{
 				refreshRequestProperties();
 			}
 
-			notifyPropertyChanged( evt.getPropertyName(), evt.getOldValue(), evt.getNewValue() );
+			notifyPropertyChanged( event.getPropertyName(), event.getOldValue(), event.getNewValue() );
 		}
 
 		// TODO copy from HttpTestRequestStep super.propertyChange( evt );
+	}
+
+	private void delegatePropertyChange( String customPropertyname, PropertyChangeEvent event )
+	{
+		firePropertyValueChanged( customPropertyname, String.valueOf( event.getOldValue() ),
+				String.valueOf( event.getNewValue() ) );
+
 	}
 
 	public class InternalProjectListener extends ProjectListenerAdapter

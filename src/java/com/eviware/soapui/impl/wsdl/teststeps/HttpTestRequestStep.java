@@ -30,10 +30,12 @@ import com.eviware.soapui.config.TestStepConfig;
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
 import com.eviware.soapui.impl.rest.support.RestRequestConverter;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
+import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
 import com.eviware.soapui.impl.support.http.HttpRequest;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.WsdlSubmit;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.SinglePartHttpResponse;
 import com.eviware.soapui.impl.wsdl.support.ExternalDependency;
 import com.eviware.soapui.impl.wsdl.support.assertions.AssertedXPathsContainer;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
@@ -77,16 +79,11 @@ public class HttpTestRequestStep extends WsdlTestStepWithProperties implements H
 
 		if( getConfig().getConfig() != null )
 		{
-			// httpRequestConfig = (HttpRequestConfig)
-			// getConfig().getConfig().changeType( HttpRequestConfig.type );
 			httpRequestConfig = RestRequestConverter.updateIfNeeded( getConfig().getConfig() );
-			// if( httpRequestConfig != getConfig().getConfig() )
 
 			getConfig().setConfig( httpRequestConfig );
 			httpRequestConfig = ( HttpRequestConfig )getConfig().getConfig();
 			testRequest = buildTestRequest( forLoadTest );
-			// testRequest = new RestTestRequest( null,
-			// requestStepConfig.getRestRequest(), this, forLoadTest );
 			testRequest.addPropertyChangeListener( this );
 			testRequest.addTestPropertyListener( new InternalTestPropertyListener() );
 
@@ -94,8 +91,6 @@ public class HttpTestRequestStep extends WsdlTestStepWithProperties implements H
 				testRequest.setName( config.getName() );
 			else
 				config.setName( testRequest.getName() );
-
-			// testRequest.setEndpoint( testRequest.getEndpoint() );
 		}
 		else
 		{
@@ -238,10 +233,41 @@ public class HttpTestRequestStep extends WsdlTestStepWithProperties implements H
 		testRequest.setName( name );
 	}
 
-	public void propertyChange( PropertyChangeEvent evt )
+	public void propertyChange( PropertyChangeEvent event )
 	{
-		if( evt.getPropertyName().equals( TestAssertion.CONFIGURATION_PROPERTY )
-				|| evt.getPropertyName().equals( TestAssertion.DISABLED_PROPERTY ) )
+
+		// TODO Some of these properties should be pulled up as they are common for may steps
+		// FIXME The property names shouldn't be hardcoded
+		if( event.getSource() == testRequest )
+		{
+			if( event.getNewValue() instanceof SinglePartHttpResponse )
+			{
+				SinglePartHttpResponse response = ( SinglePartHttpResponse )event.getNewValue();
+				firePropertyValueChanged( "Response", String.valueOf( response ), null );
+				String XMLCOntent = response.getContentAsXml();
+				firePropertyValueChanged( "ResponseAsXml", String.valueOf( XMLCOntent ), null );
+			}
+
+			if( event.getPropertyName().equals( "domain" ) )
+			{
+				delegatePropertyChange( "Domain", event );
+			}
+			else if( event.getPropertyName().equals( "password" ) )
+			{
+				delegatePropertyChange( "Password", event );
+			}
+			else if( event.getPropertyName().equals( "username" ) )
+			{
+				delegatePropertyChange( "Username", event );
+			}
+			else if( event.getPropertyName().equals( "endpoint" ) )
+			{
+				delegatePropertyChange( "Endpoint", event );
+			}
+		}
+
+		if( event.getPropertyName().equals( TestAssertion.CONFIGURATION_PROPERTY )
+				|| event.getPropertyName().equals( TestAssertion.DISABLED_PROPERTY ) )
 		{
 			if( getTestRequest().getResponse() != null )
 			{
@@ -250,14 +276,21 @@ public class HttpTestRequestStep extends WsdlTestStepWithProperties implements H
 		}
 		else
 		{
-			if( evt.getSource() == testRequest && evt.getPropertyName().equals( WsdlTestRequest.NAME_PROPERTY ) )
+			if( event.getSource() == testRequest && event.getPropertyName().equals( WsdlTestRequest.NAME_PROPERTY ) )
 			{
-				if( !super.getName().equals( ( String )evt.getNewValue() ) )
-					super.setName( ( String )evt.getNewValue() );
+				if( !super.getName().equals( ( String )event.getNewValue() ) )
+					super.setName( ( String )event.getNewValue() );
 			}
 
-			notifyPropertyChanged( evt.getPropertyName(), evt.getOldValue(), evt.getNewValue() );
+			notifyPropertyChanged( event.getPropertyName(), event.getOldValue(), event.getNewValue() );
 		}
+	}
+
+	private void delegatePropertyChange( String customPropertyname, PropertyChangeEvent event )
+	{
+		firePropertyValueChanged( customPropertyname, String.valueOf( event.getOldValue() ),
+				String.valueOf( event.getNewValue() ) );
+
 	}
 
 	public TestStepResult run( TestCaseRunner runner, TestCaseRunContext runContext )
@@ -621,7 +654,7 @@ public class HttpTestRequestStep extends WsdlTestStepWithProperties implements H
 
 		testRequest.resolve( context );
 	}
-	
+
 	@Override
 	protected void addExternalDependencies( List<ExternalDependency> dependencies )
 	{
