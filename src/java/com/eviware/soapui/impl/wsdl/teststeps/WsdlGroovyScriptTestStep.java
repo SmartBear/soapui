@@ -150,7 +150,12 @@ public class WsdlGroovyScriptTestStep extends WsdlTestStepWithProperties impleme
 					result.stopTimer();
 
 					if( scriptResult != null )
+					{
 						result.addMessage( "Script-result: " + scriptResult.toString() );
+						// FIXME The property should not me hard coded
+						firePropertyValueChanged( "result", null, String.valueOf( result ) );
+					}
+
 				}
 
 			// testRunner status may have been changed by script..
