@@ -264,7 +264,7 @@ public class SoapUIMultiThreadedHttpConnectionManager extends ThreadSafeClientCo
 		public void openConnection( final OperatedClientConnection conn, final HttpHost target, final InetAddress local,
 				final HttpContext context, final HttpParams params ) throws IOException
 		{
-			// probably can't be static, 
+			// probably can't be static
 			HttpMetrics.getConnectTimer().start();
 			try
 			{

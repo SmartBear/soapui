@@ -21,20 +21,20 @@ public class HttpMetrics
 	private int httpStatus = -1;
 	private long contentLength = -1;
 
-	private Timer timeToFirstByteTimer;
-	private Timer readTimer;
-	private Timer totalTimer;
+	private Stopwatch timeToFirstByteTimer;
+	private Stopwatch readTimer;
+	private Stopwatch totalTimer;
 
-	private static final Timer DNSTimer = new NanoSecondTimer();
-	private static final Timer connectTimer = new NanoSecondTimer();
+	private static final Stopwatch DNSTimer = new NanoStopwatch();
+	private static final Stopwatch connectTimer = new NanoStopwatch();
 
 	private final SimpleDateFormat dateFormat = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
 
 	public HttpMetrics()
 	{
-		timeToFirstByteTimer = new NanoSecondTimer();
-		readTimer = new NanoSecondTimer();
-		totalTimer = new NanoSecondTimer();
+		timeToFirstByteTimer = new NanoStopwatch();
+		readTimer = new NanoStopwatch();
+		totalTimer = new NanoStopwatch();
 	}
 
 	public synchronized void reset()
@@ -43,27 +43,27 @@ public class HttpMetrics
 		connectTimer.reset();
 	}
 
-	public static synchronized Timer getDNSTimer()
+	public static synchronized Stopwatch getDNSTimer()
 	{
 		return DNSTimer;
 	}
 
-	public static synchronized Timer getConnectTimer()
+	public static synchronized Stopwatch getConnectTimer()
 	{
 		return connectTimer;
 	}
 
-	public Timer getTimeToFirstByteTimer()
+	public Stopwatch getTimeToFirstByteTimer()
 	{
 		return timeToFirstByteTimer;
 	}
 
-	public Timer getReadTimer()
+	public Stopwatch getReadTimer()
 	{
 		return readTimer;
 	}
 
-	public Timer getTotalTimer()
+	public Stopwatch getTotalTimer()
 	{
 		return totalTimer;
 	}

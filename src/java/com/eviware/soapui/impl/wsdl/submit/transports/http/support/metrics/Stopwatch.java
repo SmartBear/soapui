@@ -12,7 +12,7 @@
 
 package com.eviware.soapui.impl.wsdl.submit.transports.http.support.metrics;
 
-public interface Timer
+public interface Stopwatch
 {
 
 	long getStart();
