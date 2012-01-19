@@ -99,7 +99,6 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 		{
 			jdbcRequestTestStepConfig = ( JdbcRequestTestStepConfig )getConfig().getConfig().changeType(
 					JdbcRequestTestStepConfig.type );
-
 		}
 		else
 		{
@@ -129,7 +128,6 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 			{
 				return "";
 			}
-
 		};
 
 		propertyHolderSupport.addVirtualProperty( WsdlTestStepWithProperties.RESPONSE_AS_XML, responseProperty );
@@ -273,13 +271,15 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 
 				break;
 			}
-				// default : testStepResult.setStatus( TestStepStatus.OK ); break;
+			// default : testStepResult.setStatus( TestStepStatus.OK ); break;
 			}
 		}
 
 		if( isDiscardResponse() && !SoapUI.getDesktop().hasDesktopPanel( this ) )
 			jdbcRequest.setResponse( null );
 
+		// FIXME This should not be hard coded
+		firePropertyValueChanged( "ResponseAsXml", null, testStepResult.getResponseContentAsXml() );
 		return testStepResult;
 	}
 
@@ -554,10 +554,12 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 		return PropertyExpansionUtils.renameProperty( propertyHolderSupport.getProperty( name ), newName, getTestCase() ) != null;
 	}
 
-	public void addTestPropertyListener( TestPropertyListener listener )
-	{
-		propertyHolderSupport.addTestPropertyListener( listener );
-	}
+	// FIXME Remove the overridden methods in TestPropertyHolder
+
+	//	public void addTestPropertyListener( TestPropertyListener listener )
+	//	{
+	//		propertyHolderSupport.addTestPropertyListener( listener );
+	//	}
 
 	public Map<String, TestProperty> getProperties()
 	{
@@ -766,5 +768,4 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 			assertion.prepare( testRunner, testRunContext );
 		}
 	}
-
 }

@@ -472,7 +472,8 @@ public class RestTestRequestStep extends WsdlTestStepWithProperties implements R
 				SinglePartHttpResponse response = ( SinglePartHttpResponse )event.getNewValue();
 				firePropertyValueChanged( "Response", String.valueOf( response ), null );
 				String XMLContent = response.getContentAsXml();
-				firePropertyValueChanged( "ResponseAsXml", XMLContent, null );
+				// FIXME The value should not be hard coded
+				firePropertyValueChanged( "ResponseAsXml", null, XMLContent );
 			}
 
 			if( event.getPropertyName().equals( "domain" ) )
