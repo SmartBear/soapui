@@ -115,6 +115,7 @@ public class HttpMethodSupport
 	{
 		startTime = System.nanoTime();
 		metrics.getTotalTimer().start();
+		HttpMetrics.getTimeToFirstByteTimer().start();
 	}
 
 	public long getTimeTaken()

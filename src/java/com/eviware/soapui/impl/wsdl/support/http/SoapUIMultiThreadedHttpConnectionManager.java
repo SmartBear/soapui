@@ -308,7 +308,7 @@ public class SoapUIMultiThreadedHttpConnectionManager extends ThreadSafeClientCo
 			{
 				buffersize = 8192;
 			}
-			SessionInputBuffer inbuffer = new SocketInputBuffer( socket, buffersize, params );
+			SessionInputBuffer inbuffer = new SoapUISocketInputBuffer( socket, buffersize, params );
 			if( wireLog.isDebugEnabled() )
 			{
 				inbuffer = new LoggingSessionInputBuffer( inbuffer, new Wire( wireLog ),
@@ -332,6 +332,24 @@ public class SoapUIMultiThreadedHttpConnectionManager extends ThreadSafeClientCo
 						HttpProtocolParams.getHttpElementCharset( params ) );
 			}
 			return outbuffer;
+		}
+
+	}
+
+	private class SoapUISocketInputBuffer extends SocketInputBuffer
+	{
+
+		public SoapUISocketInputBuffer( Socket socket, int buffersize, HttpParams params ) throws IOException
+		{
+			super( socket, buffersize, params );
+		}
+
+		@Override
+		protected int fillBuffer() throws IOException
+		{
+			int l = super.fillBuffer();
+			HttpMetrics.getTimeToFirstByteTimer().stop();
+			return l;
 		}
 
 	}

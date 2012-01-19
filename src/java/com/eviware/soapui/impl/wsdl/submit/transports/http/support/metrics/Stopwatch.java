@@ -32,4 +32,6 @@ public interface Stopwatch
 	long getDuration();
 
 	void reset();
+
+	void add( long value );
 }

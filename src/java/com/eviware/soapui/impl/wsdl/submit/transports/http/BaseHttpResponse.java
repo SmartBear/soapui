@@ -66,6 +66,7 @@ public abstract class BaseHttpResponse implements HttpResponse
 	{
 		this.httpRequest = new WeakReference<AbstractHttpRequestInterface<?>>( httpRequest );
 		this.timeTaken = httpMethod.getTimeTaken();
+		httpMethod.getHttpMetrics().getTotalTimer().stop();
 
 		method = httpMethod.getMethod();
 		version = httpMethod.getProtocolVersion().toString();
@@ -93,7 +94,7 @@ public abstract class BaseHttpResponse implements HttpResponse
 					e.printStackTrace();
 				}
 				timeTaken += httpMethod.getResponseReadTime();
-				httpMethod.getHttpMetrics().getTotalTimer().stop();
+				httpMethod.getHttpMetrics().getTotalTimer().add( httpMethod.getHttpMetrics().getReadTimer().getDuration() );
 			}
 
 			try
@@ -137,6 +138,7 @@ public abstract class BaseHttpResponse implements HttpResponse
 				addIncludedContentsAsAttachments();
 				long after = ( new Date() ).getTime();
 				timeTaken += ( after - before );
+				httpMethod.getHttpMetrics().getTotalTimer().add( after - before );
 				context.setProperty( HTMLPageSourceDownloader.MISSING_RESOURCES_LIST, downloader.getMissingResourcesList() );
 			}
 		}

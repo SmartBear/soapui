@@ -61,4 +61,10 @@ public class NanoStopwatch implements Stopwatch
 		return System.nanoTime();
 	}
 
+	@Override
+	public void add( long value )
+	{
+		stop += value;
+	}
+
 }
