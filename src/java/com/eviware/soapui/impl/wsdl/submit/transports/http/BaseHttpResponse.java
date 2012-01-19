@@ -93,6 +93,7 @@ public abstract class BaseHttpResponse implements HttpResponse
 					e.printStackTrace();
 				}
 				timeTaken += httpMethod.getResponseReadTime();
+				httpMethod.getHttpMetrics().getTotalTimer().stop();
 			}
 
 			try
@@ -103,6 +104,9 @@ public abstract class BaseHttpResponse implements HttpResponse
 						.getStatusCode() : 0;
 				this.sslInfo = httpMethod.getSSLInfo();
 				this.url = httpMethod.getURI().toURL();
+
+				httpMethod.getHttpMetrics().setTimestamp( this.timestamp );
+				httpMethod.getHttpMetrics().setHttpStatus( this.statusCode );
 			}
 			catch( Throwable e )
 			{

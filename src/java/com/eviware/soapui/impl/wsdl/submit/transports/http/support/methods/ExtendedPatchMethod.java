@@ -25,6 +25,7 @@ import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedEntityEnclosi
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpMethodSupport;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpPatch;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.SSLInfo;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.metrics.HttpMetrics;
 
 public class ExtendedPatchMethod extends HttpPatch implements ExtendedEntityEnclosingHttpMethod
 {
@@ -178,6 +179,11 @@ public class ExtendedPatchMethod extends HttpPatch implements ExtendedEntityEncl
 		{
 			return null;
 		}
+	}
+
+	public HttpMetrics getHttpMetrics()
+	{
+		return httpMethodSupport.getHttpMetrics();
 	}
 
 }

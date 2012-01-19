@@ -13,12 +13,20 @@
 package com.eviware.soapui.impl.wsdl.support.http;
 
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.http.HttpHost;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.ClientConnectionOperator;
 import org.apache.http.conn.ClientConnectionRequest;
+import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.conn.ConnectionPoolTimeoutException;
+import org.apache.http.conn.HttpHostConnectException;
 import org.apache.http.conn.ManagedClientConnection;
 import org.apache.http.conn.OperatedClientConnection;
 import org.apache.http.conn.routing.HttpRoute;
@@ -26,11 +34,23 @@ import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.impl.conn.AbstractPoolEntry;
 import org.apache.http.impl.conn.DefaultClientConnection;
 import org.apache.http.impl.conn.DefaultClientConnectionOperator;
+import org.apache.http.impl.conn.LoggingSessionInputBuffer;
+import org.apache.http.impl.conn.LoggingSessionOutputBuffer;
+import org.apache.http.impl.conn.Wire;
 import org.apache.http.impl.conn.tsccm.BasicPoolEntry;
 import org.apache.http.impl.conn.tsccm.BasicPooledConnAdapter;
 import org.apache.http.impl.conn.tsccm.PoolEntryRequest;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
+import org.apache.http.impl.io.SocketInputBuffer;
+import org.apache.http.impl.io.SocketOutputBuffer;
+import org.apache.http.io.SessionInputBuffer;
+import org.apache.http.io.SessionOutputBuffer;
+import org.apache.http.params.HttpParams;
+import org.apache.http.params.HttpProtocolParams;
+import org.apache.http.protocol.HttpContext;
 import org.apache.log4j.Logger;
+
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.metrics.HttpMetrics;
 
 /**
  * Manages a set of HttpConnections for various HostConfigurations. Modified to
@@ -230,14 +250,88 @@ public class SoapUIMultiThreadedHttpConnectionManager extends ThreadSafeClientCo
 			SoapUIDefaultClientConnection connection = new SoapUIDefaultClientConnection();
 			return connection;
 		}
+
+		@Override
+		protected InetAddress[] resolveHostname( final String host ) throws UnknownHostException
+		{
+			HttpMetrics.getDNSTimer().start();
+			InetAddress[] inetAddress = InetAddress.getAllByName( host );
+			HttpMetrics.getDNSTimer().stop();
+			return inetAddress;
+		}
+
+		@Override
+		public void openConnection( final OperatedClientConnection conn, final HttpHost target, final InetAddress local,
+				final HttpContext context, final HttpParams params ) throws IOException
+		{
+			// probably can't be static, 
+			HttpMetrics.getConnectTimer().start();
+			try
+			{
+				super.openConnection( conn, target, local, context, params );
+			}
+			catch( HttpHostConnectException e )
+			{
+				HttpMetrics.getConnectTimer().reset();
+				throw e;
+			}
+			catch( ConnectTimeoutException e )
+			{
+				HttpMetrics.getConnectTimer().reset();
+				throw e;
+			}
+		}
 	}
 
 	private class SoapUIDefaultClientConnection extends DefaultClientConnection
 	{
 
+		private final Log wireLog = LogFactory.getLog( "org.apache.http.wire" );
+
 		public SoapUIDefaultClientConnection()
 		{
 			super();
+		}
+
+		@Override
+		public void openCompleted( boolean secure, HttpParams params ) throws IOException
+		{
+			super.openCompleted( secure, params );
+			HttpMetrics.getConnectTimer().stop();
+		}
+
+		@Override
+		protected SessionInputBuffer createSessionInputBuffer( final Socket socket, int buffersize,
+				final HttpParams params ) throws IOException
+		{
+			if( buffersize == -1 )
+			{
+				buffersize = 8192;
+			}
+			SessionInputBuffer inbuffer = new SocketInputBuffer( socket, buffersize, params );
+			if( wireLog.isDebugEnabled() )
+			{
+				inbuffer = new LoggingSessionInputBuffer( inbuffer, new Wire( wireLog ),
+						HttpProtocolParams.getHttpElementCharset( params ) );
+			}
+			return inbuffer;
+		}
+
+		@Override
+		protected SessionOutputBuffer createSessionOutputBuffer( final Socket socket, int buffersize,
+				final HttpParams params ) throws IOException
+		{
+			if( buffersize == -1 )
+			{
+				buffersize = 8192;
+			}
+			SessionOutputBuffer outbuffer = new SocketOutputBuffer( socket, buffersize, params );
+			if( wireLog.isDebugEnabled() )
+			{
+				outbuffer = new LoggingSessionOutputBuffer( outbuffer, new Wire( wireLog ),
+						HttpProtocolParams.getHttpElementCharset( params ) );
+			}
+			return outbuffer;
 		}
 
 	}
@@ -271,4 +365,5 @@ public class SoapUIMultiThreadedHttpConnectionManager extends ThreadSafeClientCo
 			super.detach();
 		}
 	}
+
 }

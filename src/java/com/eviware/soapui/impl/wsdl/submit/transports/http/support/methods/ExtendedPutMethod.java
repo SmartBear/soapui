@@ -25,6 +25,7 @@ import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedEntityEnclosingHttpMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpMethodSupport;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.SSLInfo;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.metrics.HttpMetrics;
 
 /**
  * Extended PostMethod that supports limiting of response size and detailed
@@ -179,5 +180,10 @@ public final class ExtendedPutMethod extends HttpPut implements ExtendedEntityEn
 		{
 			return null;
 		}
+	}
+
+	public HttpMetrics getHttpMetrics()
+	{
+		return httpMethodSupport.getHttpMetrics();
 	}
 }

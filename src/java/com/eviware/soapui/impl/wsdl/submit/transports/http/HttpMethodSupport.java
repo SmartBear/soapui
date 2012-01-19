@@ -58,7 +58,7 @@ public class HttpMethodSupport
 	private boolean decompress;
 	private org.apache.http.HttpResponse httpResponse;
 
-	private HttpMetrics metrics;
+	private HttpMetrics metrics = new HttpMetrics();
 
 	public HttpMethodSupport()
 	{
@@ -106,12 +106,15 @@ public class HttpMethodSupport
 	public void afterWriteRequest()
 	{
 		if( startTime == 0 )
+		{
 			startTime = System.nanoTime();
+		}
 	}
 
 	public void initStartTime()
 	{
 		startTime = System.nanoTime();
+		metrics.getTotalTimer().start();
 	}
 
 	public long getTimeTaken()
@@ -258,7 +261,9 @@ public class HttpMethodSupport
 		{
 			HttpEntity bufferedEntity = new BufferedHttpEntity( httpResponse.getEntity() );
 			long contentLength = bufferedEntity.getContentLength();
+			metrics.setContentLength( contentLength );
 			long now = System.nanoTime();
+			metrics.getReadTimer().start();
 
 			InputStream instream = bufferedEntity.getContent();
 
@@ -267,6 +272,7 @@ public class HttpMethodSupport
 				if( maxSize == 0 || ( contentLength >= 0 && contentLength <= maxSize ) )
 				{
 					responseReadTime = System.nanoTime() - now;
+					metrics.getReadTimer().stop();
 					responseBody = EntityUtils.toByteArray( bufferedEntity );
 
 					try
@@ -308,6 +314,7 @@ public class HttpMethodSupport
 							FileOutputStream fileOutputStream = new FileOutputStream( dumpFile );
 							Tools.writeAll( fileOutputStream, instream );
 							responseReadTime = System.nanoTime() - now;
+							metrics.getReadTimer().stop();
 							fileOutputStream.close();
 							instream = new FileInputStream( dumpFile );
 						}
@@ -321,7 +328,10 @@ public class HttpMethodSupport
 							instream, maxSize );
 
 					if( responseReadTime == 0 )
+					{
 						responseReadTime = System.nanoTime() - now;
+						metrics.getReadTimer().stop();
+					}
 
 					responseBody = outstream.toByteArray();
 				}
@@ -336,5 +346,10 @@ public class HttpMethodSupport
 		responseReadTime /= 1000000;
 
 		return responseBody;
+	}
+
+	public HttpMetrics getHttpMetrics()
+	{
+		return metrics;
 	}
 }
