@@ -59,7 +59,7 @@ import com.jgoodies.binding.PresentationModel;
  */
 public class AutomaticSAMLEntry extends WssEntryBase
 {
-	public static final String TYPE = "SAML (automatic)";
+	public static final String TYPE = "SAML (form based)";
 
 	public static final String SAML_VERSION_1 = "1.1";
 	public static final String SAML_VERSION_2 = "2.0";
