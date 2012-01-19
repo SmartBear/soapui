@@ -146,6 +146,8 @@ public class WsdlDelayTestStep extends WsdlTestStepWithProperties implements Pro
 		this.delayString = delayString;
 		saveDelay( getConfig() );
 		notifyPropertyChanged( WsdlTestStep.LABEL_PROPERTY, oldLabel, getLabel() );
+		// FIXME This should not be hard coded
+		firePropertyValueChanged( "delay", oldLabel, getLabel() );
 	}
 
 	public String getDelayString()
@@ -172,6 +174,7 @@ public class WsdlDelayTestStep extends WsdlTestStepWithProperties implements Pro
 		this.delayString = String.valueOf( delay );
 		saveDelay( getConfig() );
 		notifyPropertyChanged( WsdlTestStep.LABEL_PROPERTY, oldLabel, getLabel() );
+		firePropertyValueChanged( "delay", oldLabel, getLabel() );
 	}
 
 	public TestStepResult run( TestCaseRunner testRunner, TestCaseRunContext context )

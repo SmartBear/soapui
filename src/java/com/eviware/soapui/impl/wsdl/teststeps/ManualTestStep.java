@@ -159,6 +159,7 @@ public class ManualTestStep extends WsdlTestStepWithProperties implements Proper
 		}
 
 		testStepResult.stopTimer();
+		// FIXME This should not be hard coded
 		return testStepResult;
 	}
 
@@ -201,6 +202,7 @@ public class ManualTestStep extends WsdlTestStepWithProperties implements Proper
 
 		manualTestStepConfig.setExpectedResult( expectedResult );
 		notifyPropertyChanged( "expectedResult", old, expectedResult );
+		firePropertyValueChanged( "ExpectedResult", old, expectedResult );
 	}
 
 	public void resetConfigOnMove( TestStepConfig config )
