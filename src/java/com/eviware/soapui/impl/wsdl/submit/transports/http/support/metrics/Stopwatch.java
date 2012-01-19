@@ -12,6 +12,12 @@
 
 package com.eviware.soapui.impl.wsdl.submit.transports.http.support.metrics;
 
+/**
+ * 
+ * We are using this instead of org.apache.commons.lang.time.Stopwatch because
+ * we want nanosecond precision
+ * 
+ */
 public interface Stopwatch
 {
 
