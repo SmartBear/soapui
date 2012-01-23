@@ -34,8 +34,6 @@ public interface TestProperty
 
 	public QName getType();
 
-	// public enum Type { STRING };
-
 	/**
 	 * Gets the modelItem containing this property
 	 * 

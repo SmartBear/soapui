@@ -18,6 +18,7 @@ import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
 import com.eviware.soapui.model.TestPropertyHolder;
 import com.eviware.soapui.model.environment.EnvironmentListener;
 import com.eviware.soapui.model.environment.Property;
+import com.eviware.soapui.model.testsuite.EvaluatedOnReadTestProperty;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.types.StringList;
@@ -79,6 +80,7 @@ public class DefaultPropertyTableHolderModel extends AbstractTableModel implemen
 		return !holder.getProperty( names.get( rowIndex ) ).isReadOnly();
 	}
 
+	@Override
 	public void setValueAt( Object aValue, int rowIndex, int columnIndex )
 	{
 		TestProperty property = holder.getProperty( names.get( rowIndex ) );
@@ -128,12 +130,17 @@ public class DefaultPropertyTableHolderModel extends AbstractTableModel implemen
 		case 0 :
 			return property.getName();
 		case 1 :
+			if( property instanceof EvaluatedOnReadTestProperty )
+			{
+				return ( ( EvaluatedOnReadTestProperty )property ).getCurrentValue();
+			}
 			return property.getValue();
 		}
 
 		return null;
 	}
 
+	@Override
 	public void propertyValueChanged( Property property )
 	{
 		fireTableDataChanged();
@@ -143,5 +150,4 @@ public class DefaultPropertyTableHolderModel extends AbstractTableModel implemen
 	{
 		fireTableDataChanged();
 	}
-
 }
