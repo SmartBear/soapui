@@ -28,9 +28,11 @@ import com.eviware.soapui.config.AMFRequestTestStepConfig;
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.config.TestStepConfig;
 import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
+import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.amf.AMFRequest;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.amf.AMFResponse;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.amf.AMFSubmit;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.WsdlSinglePartHttpResponse;
 import com.eviware.soapui.impl.wsdl.support.AMFMessageExchange;
 import com.eviware.soapui.impl.wsdl.support.XmlBeansPropertiesTestPropertyHolder;
 import com.eviware.soapui.impl.wsdl.support.assertions.AssertableConfig;
@@ -91,6 +93,7 @@ public class AMFRequestTestStep extends WsdlTestStepWithProperties implements As
 
 	public AMFRequestTestStep( WsdlTestCase testCase, TestStepConfig config, boolean forLoadTest )
 	{
+
 		super( testCase, config, true, forLoadTest );
 
 		if( getConfig().getConfig() != null )
@@ -275,13 +278,16 @@ public class AMFRequestTestStep extends WsdlTestStepWithProperties implements As
 
 				break;
 			}
-				// default : testStepResult.setStatus( TestStepStatus.OK ); break;
+			// default : testStepResult.setStatus( TestStepStatus.OK ); break;
 			}
 		}
 
 		if( isDiscardResponse() && !SoapUI.getDesktop().hasDesktopPanel( this ) )
 			amfRequest.setResponse( null );
 
+		// FIXME This should not be hard coded
+		// FIXME This has to be tested before release
+		firePropertyValueChanged( "ResponseAsXml", null, testStepResult.getResponseContentAsXml() );
 		return testStepResult;
 	}
 
@@ -543,10 +549,12 @@ public class AMFRequestTestStep extends WsdlTestStepWithProperties implements As
 		return PropertyExpansionUtils.renameProperty( propertyHolderSupport.getProperty( name ), newName, getTestCase() ) != null;
 	}
 
-	public void addTestPropertyListener( TestPropertyListener listener )
-	{
-		propertyHolderSupport.addTestPropertyListener( listener );
-	}
+	// FIXME Remove the overridden methods in TestPropertyHolder
+
+	//	public void addTestPropertyListener( TestPropertyListener listener )
+	//	{
+	//		propertyHolderSupport.addTestPropertyListener( listener );
+	//	}
 
 	public Map<String, TestProperty> getProperties()
 	{
