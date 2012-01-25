@@ -197,7 +197,7 @@ public class AddAssertionPanel extends SimpleDialog
 		for( int i = 0; i < assertionsList.size(); i++ )
 		{
 			AssertionListEntry assertionListEntry = ( AssertionListEntry )assertionsList.toArray()[i];
-			if( !TestAssertionRegistry.getInstance().canAssert( assertionListEntry.getTypeId(), assertable ) )
+			if( !TestAssertionRegistry.getInstance().canAssert( assertionListEntry.getTypeId(), getAssertable() ) )
 				intList.add( i );
 		}
 		getAssertionsTable().setNonSelectableIndexes( intList );
