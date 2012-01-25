@@ -563,8 +563,7 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 		try
 		{
 			log.info( ( "Running TestSuite [" + suite.getName() + "], runType = " + suite.getRunType() ) );
-			WsdlTestSuiteRunner runner = suite.run( new StringToObjectMap(),
-					suite.getRunType() == TestSuiteRunType.PARALLEL );
+			WsdlTestSuiteRunner runner = suite.run( new StringToObjectMap(), false );
 			log.info( "TestSuite [" + suite.getName() + "] finished with status [" + runner.getStatus() + "] in "
 					+ ( runner.getTimeTaken() ) + "ms" );
 		}
