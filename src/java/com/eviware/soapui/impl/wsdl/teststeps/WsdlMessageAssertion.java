@@ -52,8 +52,8 @@ public abstract class WsdlMessageAssertion extends AbstractModelItem implements 
 {
 	private TestAssertionConfig assertionConfig;
 	private final Assertable assertable;
-	private AssertionStatus assertionStatus = AssertionStatus.UNKNOWN;
-	private com.eviware.soapui.model.testsuite.AssertionError[] assertionErrors;
+	protected AssertionStatus assertionStatus = AssertionStatus.UNKNOWN;
+	protected com.eviware.soapui.model.testsuite.AssertionError[] assertionErrors;
 	private ImageIcon validIcon;
 	private ImageIcon failedIcon;
 	private ImageIcon unknownIcon;

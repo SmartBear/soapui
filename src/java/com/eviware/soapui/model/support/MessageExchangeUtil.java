@@ -22,7 +22,8 @@ public class MessageExchangeUtil
 	{
 		for( TestStepResult tsr : results )
 		{
-			if( tsr.getTestStep().getId().equals( testStepId ) )
+			String id =  tsr.getTestStep().getId();
+			if(id.equals( testStepId ) )
 				return ( MessageExchange )tsr;
 		}
 		return null;
