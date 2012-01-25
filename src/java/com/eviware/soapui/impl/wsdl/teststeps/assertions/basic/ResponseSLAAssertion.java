@@ -19,6 +19,7 @@ import com.eviware.soapui.impl.wsdl.panels.assertions.AssertionCategoryMapping;
 import com.eviware.soapui.impl.wsdl.panels.assertions.AssertionListEntry;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.AbstractTestAssertionFactory;
+import com.eviware.soapui.model.TestPropertyHolder;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
@@ -26,7 +27,6 @@ import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.model.testsuite.AssertionException;
 import com.eviware.soapui.model.testsuite.ResponseAssertion;
-import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationBuilder;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
@@ -82,7 +82,7 @@ public class ResponseSLAAssertion extends WsdlMessageAssertion implements Respon
 	}
 
 	@Override
-	protected String internalAssertProperty( String propertyName, MessageExchange messageExchange, TestStep testStep,
+	protected String internalAssertProperty( String propertyName, MessageExchange messageExchange, TestPropertyHolder source,
 			SubmitContext context ) throws AssertionException
 	{
 		return internalAssertResponse( messageExchange, context );

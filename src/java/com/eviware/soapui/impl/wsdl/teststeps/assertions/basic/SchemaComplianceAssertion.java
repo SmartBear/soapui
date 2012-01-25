@@ -36,6 +36,7 @@ import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlContext;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlValidator;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.AbstractTestAssertionFactory;
+import com.eviware.soapui.model.TestPropertyHolder;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
@@ -46,7 +47,6 @@ import com.eviware.soapui.model.testsuite.RequestAssertion;
 import com.eviware.soapui.model.testsuite.ResponseAssertion;
 import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
-import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationBuilder;
@@ -118,7 +118,7 @@ public class SchemaComplianceAssertion extends WsdlMessageAssertion implements R
 	}
 
 	@Override
-	protected String internalAssertProperty( String propertyName, MessageExchange messageExchange, TestStep testStep,
+	protected String internalAssertProperty( String propertyName, MessageExchange messageExchange, TestPropertyHolder source,
 			SubmitContext context ) throws AssertionException
 	{
 		internalAssertResponse( messageExchange, context );

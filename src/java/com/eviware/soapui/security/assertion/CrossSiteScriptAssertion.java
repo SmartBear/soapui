@@ -40,6 +40,7 @@ import com.eviware.soapui.impl.wsdl.teststeps.registry.HttpRequestStepFactory;
 import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestStepFactory;
 import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestStepRegistry;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.TestPropertyHolder;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.testsuite.Assertable;
@@ -241,7 +242,7 @@ public class CrossSiteScriptAssertion extends WsdlMessageAssertion implements Re
 
 	}
 
-	protected String internalAssertProperty( String propertyName, MessageExchange messageExchange, TestStep testStep,
+	protected String internalAssertProperty( String propertyName, MessageExchange messageExchange, TestPropertyHolder source,
 			SubmitContext context ) throws AssertionException
 	{
 		return internalAssertResponse( messageExchange, context );

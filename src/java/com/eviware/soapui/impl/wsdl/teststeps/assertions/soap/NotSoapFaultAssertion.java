@@ -21,13 +21,13 @@ import com.eviware.soapui.impl.wsdl.support.soap.SoapUtils;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.AbstractTestAssertionFactory;
+import com.eviware.soapui.model.TestPropertyHolder;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.model.testsuite.AssertionException;
 import com.eviware.soapui.model.testsuite.ResponseAssertion;
-import com.eviware.soapui.model.testsuite.TestStep;
 
 /**
  * Assertion that checks that the associated WsdlTestRequests response is not a
@@ -67,7 +67,7 @@ public class NotSoapFaultAssertion extends WsdlMessageAssertion implements Respo
 		return "Response is not a SOAP Fault";
 	}
 
-	protected String internalAssertProperty( String propertyName, MessageExchange messageExchange, TestStep testStep,
+	protected String internalAssertProperty( String propertyName, MessageExchange messageExchange, TestPropertyHolder source,
 			SubmitContext context ) throws AssertionException
 	{
 		return internalAssertResponse( messageExchange, context );

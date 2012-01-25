@@ -37,6 +37,7 @@ import com.eviware.soapui.impl.wsdl.panels.assertions.AssertionListEntry;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.AbstractTestAssertionFactory;
+import com.eviware.soapui.model.TestPropertyHolder;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.security.SecurityScan;
@@ -46,7 +47,6 @@ import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.model.testsuite.AssertionException;
 import com.eviware.soapui.model.testsuite.ResponseAssertion;
 import com.eviware.soapui.model.testsuite.TestProperty;
-import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SensitiveInformationPropertyHolder;
 import com.eviware.soapui.support.SecurityScanUtil;
 import com.eviware.soapui.support.StringUtils;
@@ -158,13 +158,13 @@ public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion impleme
 		return "OK";
 	}
 
-	protected String internalAssertProperty( String propertyName, MessageExchange messageExchange, TestStep testStep,
+	protected String internalAssertProperty( String propertyName, MessageExchange messageExchange, TestPropertyHolder source,
 			SubmitContext context ) throws AssertionException
 	{
 
 		Map<String, String> checkMap = createCheckMap( context );
 		List<AssertionError> assertionErrorList = new ArrayList<AssertionError>();
-		String propertyValue = testStep.getPropertyValue( propertyName );
+		String propertyValue = source.getPropertyValue( propertyName );
 		Set<String> messages = new HashSet<String>();
 
 		try

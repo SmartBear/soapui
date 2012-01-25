@@ -54,6 +54,7 @@ import com.eviware.soapui.impl.wsdl.teststeps.WsdlMockResponseTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlResponseMessageExchange;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.AbstractTestAssertionFactory;
+import com.eviware.soapui.model.TestPropertyHolder;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.testsuite.Assertable;
@@ -137,7 +138,7 @@ public class GroovyScriptAssertion extends WsdlMessageAssertion implements Reque
 	}
 
 	@Override
-	protected String internalAssertProperty( String propertyName, MessageExchange messageExchange, TestStep testStep,
+	protected String internalAssertProperty( String propertyName, MessageExchange messageExchange, TestPropertyHolder source,
 			SubmitContext context ) throws AssertionException
 	{
 		return assertScript( messageExchange, context, SoapUI.ensureGroovyLog() );

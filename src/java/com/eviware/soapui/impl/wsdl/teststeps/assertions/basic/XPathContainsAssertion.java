@@ -64,6 +64,7 @@ import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.AbstractTestAssertionFactory;
 import com.eviware.soapui.model.TestModelItem;
+import com.eviware.soapui.model.TestPropertyHolder;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
@@ -78,7 +79,6 @@ import com.eviware.soapui.model.testsuite.AssertionException;
 import com.eviware.soapui.model.testsuite.RequestAssertion;
 import com.eviware.soapui.model.testsuite.ResponseAssertion;
 import com.eviware.soapui.model.testsuite.TestProperty;
-import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JUndoableTextArea;
@@ -203,15 +203,15 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
 			return assertContent( messageExchange.getResponseContentAsXml(), context, "Response" );
 	}
 
-	protected String internalAssertProperty( String propertyName, MessageExchange messageExchange, TestStep testStep,
+	protected String internalAssertProperty( String propertyName, MessageExchange messageExchange, TestPropertyHolder source,
 			SubmitContext context ) throws AssertionException
 	{
-		if( !XmlUtils.seemsToBeXml( testStep.getPropertyValue( propertyName ) ) )
+		if( !XmlUtils.seemsToBeXml( source.getPropertyValue( propertyName ) ) )
 		{
 			throw new AssertionException( new AssertionError( "Property '" + propertyName
 					+ "' has value which is not xml!" ) );
 		}
-		return assertContent( testStep.getPropertyValue( propertyName ), context, propertyName );
+		return assertContent( source.getPropertyValue( propertyName ), context, propertyName );
 	}
 
 	public String assertContent( String response, SubmitContext context, String type ) throws AssertionException

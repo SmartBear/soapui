@@ -23,6 +23,7 @@ import com.eviware.soapui.config.GroupAssertionListConfig;
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.TestPropertyHolder;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
@@ -37,8 +38,6 @@ import com.eviware.soapui.model.testsuite.AssertionException;
 import com.eviware.soapui.model.testsuite.TestAssertion;
 import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
-import com.eviware.soapui.model.testsuite.TestStep;
-import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.resolver.ResolveContext;
 
@@ -225,13 +224,13 @@ public abstract class WsdlMessageAssertion extends AbstractModelItem implements 
 		return assertionStatus;
 	}
 
-	public AssertionStatus assertProperty( String propertyName, MessageExchange messageExchange, TestStep testStep,
-			SubmitContext context )
+	public AssertionStatus assertProperty( String propertyName, MessageExchange messageExchange,
+			TestPropertyHolder source, SubmitContext context )
 	{
 		AssertionStatus oldStatus = assertionStatus;
 		ImageIcon oldIcon = getIcon();
 
-		if( !propertyName.equals( "Group" ) && !testStep.hasProperty( propertyName )  )
+		if( !propertyName.equals( "Group" ) && !source.hasProperty( propertyName ) )
 		{
 			assertionStatus = AssertionStatus.FAILED;
 			assertionErrors = new com.eviware.soapui.model.testsuite.AssertionError[] { new com.eviware.soapui.model.testsuite.AssertionError(
@@ -241,7 +240,7 @@ public abstract class WsdlMessageAssertion extends AbstractModelItem implements 
 		{
 			try
 			{
-				internalAssertProperty( propertyName, messageExchange, testStep, context );
+				internalAssertProperty( propertyName, messageExchange, source, context );
 				assertionStatus = AssertionStatus.VALID;
 				assertionErrors = null;
 			}
@@ -269,7 +268,7 @@ public abstract class WsdlMessageAssertion extends AbstractModelItem implements 
 			throws AssertionException;
 
 	protected abstract String internalAssertProperty( String propertyName, MessageExchange messageExchange,
-			TestStep testStep, SubmitContext context ) throws AssertionException;
+			TestPropertyHolder source, SubmitContext context ) throws AssertionException;
 
 	/*
 	 * (non-Javadoc)
