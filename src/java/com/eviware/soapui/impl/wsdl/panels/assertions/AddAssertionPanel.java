@@ -40,9 +40,14 @@ import javax.swing.event.ListSelectionListener;
 import org.jdesktop.swingx.JXList;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.wsdl.WsdlInterface;
+import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.actions.project.SimpleDialog;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.recent.RecentAssertionHandler;
+import com.eviware.soapui.model.iface.Interface;
+import com.eviware.soapui.model.project.Project;
+import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.TestAssertion;
 import com.eviware.soapui.settings.AssertionDescriptionSettings;
@@ -80,6 +85,18 @@ public class AddAssertionPanel extends SimpleDialog
 		selectionListener = new InternalListSelectionListener();
 		categoriesAssertionsMap = AssertionCategoryMapping
 				.getCategoriesAssertionsMap( assertable, recentAssertionHandler );
+		// load interfaces or have a issue with table and cell renderer
+		WsdlProject project = ( WsdlProject )ModelSupport.getModelItemProject( assertable.getModelItem() );
+		for( Interface inf : project.getInterfaceList() )
+			try
+			{
+				( ( WsdlInterface )inf ).getWsdlContext().loadIfNecessary();
+			}
+			catch( Exception e )
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 	}
 
 	public RecentAssertionHandler getRecentAssertionHandler()
@@ -333,8 +350,8 @@ public class AddAssertionPanel extends SimpleDialog
 
 			AssertionListEntry entry = ( AssertionListEntry )value;
 			String type = TestAssertionRegistry.getInstance().getAssertionTypeForName( entry.getName() );
-			boolean canAssert = assertable != null ? TestAssertionRegistry.getInstance().canAssert( type, assertable )
-					: true;
+			boolean canAssert = false;
+			canAssert = assertable != null ? TestAssertionRegistry.getInstance().canAssert( type, assertable ) : true;
 
 			String str = entry.getName();
 			JLabel label = new JLabel( str );
