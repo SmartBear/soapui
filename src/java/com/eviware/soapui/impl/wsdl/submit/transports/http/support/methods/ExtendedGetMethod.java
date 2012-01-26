@@ -41,6 +41,7 @@ public final class ExtendedGetMethod extends HttpGet implements ExtendedHttpMeth
 	public ExtendedGetMethod()
 	{
 		httpMethodSupport = new HttpMethodSupport();
+		getParams().setParameter( ExtendedHttpMethod.HTTP_METRICS, new HttpMetrics() );
 	}
 
 	public String getDumpFile()
@@ -91,6 +92,8 @@ public final class ExtendedGetMethod extends HttpGet implements ExtendedHttpMeth
 	public void initStartTime()
 	{
 		httpMethodSupport.initStartTime();
+		getHttpMetrics().getTotalTimer().start();
+		//getHttpMetrics().getTimeToFirstByteTimer().start();
 	}
 
 	public long getTimeTaken()
@@ -170,7 +173,7 @@ public final class ExtendedGetMethod extends HttpGet implements ExtendedHttpMeth
 
 	public byte[] getResponseBody() throws IOException
 	{
-		return httpMethodSupport.getResponseBody();
+		return httpMethodSupport.getResponseBody( getHttpMetrics() );
 	}
 
 	public String getResponseBodyAsString() throws IOException
@@ -188,7 +191,7 @@ public final class ExtendedGetMethod extends HttpGet implements ExtendedHttpMeth
 
 	public HttpMetrics getHttpMetrics()
 	{
-		return httpMethodSupport.getHttpMetrics();
+		return ( HttpMetrics )getParams().getParameter( ExtendedHttpMethod.HTTP_METRICS );
 	}
 
 }

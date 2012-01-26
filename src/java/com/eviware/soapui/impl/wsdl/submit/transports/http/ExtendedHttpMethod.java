@@ -21,10 +21,10 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpRequest;
 import org.apache.http.client.methods.HttpUriRequest;
 
-import com.eviware.soapui.impl.wsdl.submit.transports.http.support.metrics.HttpMetrics;
-
 public interface ExtendedHttpMethod extends HttpRequest, HttpUriRequest
 {
+	String HTTP_METRICS = "soapui-http-metrics";
+
 	public long getMaxSize();
 
 	public void setMaxSize( long maxSize );
@@ -76,6 +76,4 @@ public interface ExtendedHttpMethod extends HttpRequest, HttpUriRequest
 	public void afterReadResponse( SSLSession session );
 
 	public void afterWriteRequest();
-
-	public HttpMetrics getHttpMetrics();
 }

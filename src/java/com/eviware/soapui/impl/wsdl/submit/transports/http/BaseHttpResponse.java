@@ -26,6 +26,7 @@ import com.eviware.soapui.impl.rest.support.MediaTypeHandler;
 import com.eviware.soapui.impl.rest.support.MediaTypeHandlerRegistry;
 import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
 import com.eviware.soapui.impl.support.http.HttpRequest;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.metrics.HttpMetrics;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.teststeps.TestRequest;
 import com.eviware.soapui.model.iface.Attachment;
@@ -66,7 +67,9 @@ public abstract class BaseHttpResponse implements HttpResponse
 	{
 		this.httpRequest = new WeakReference<AbstractHttpRequestInterface<?>>( httpRequest );
 		this.timeTaken = httpMethod.getTimeTaken();
-		httpMethod.getHttpMetrics().getTotalTimer().stop();
+
+		HttpMetrics httpMetrics = ( HttpMetrics )httpMethod.getParams().getParameter( ExtendedHttpMethod.HTTP_METRICS );
+		httpMetrics.getTotalTimer().stop();
 
 		method = httpMethod.getMethod();
 		version = httpMethod.getProtocolVersion().toString();
@@ -94,7 +97,8 @@ public abstract class BaseHttpResponse implements HttpResponse
 					e.printStackTrace();
 				}
 				timeTaken += httpMethod.getResponseReadTime();
-				httpMethod.getHttpMetrics().getTotalTimer().add( httpMethod.getHttpMetrics().getReadTimer().getDuration() );
+
+				httpMetrics.getTotalTimer().add( httpMetrics.getReadTimer().getDuration() );
 			}
 
 			try
@@ -106,8 +110,8 @@ public abstract class BaseHttpResponse implements HttpResponse
 				this.sslInfo = httpMethod.getSSLInfo();
 				this.url = httpMethod.getURI().toURL();
 
-				httpMethod.getHttpMetrics().setTimestamp( this.timestamp );
-				httpMethod.getHttpMetrics().setHttpStatus( this.statusCode );
+				httpMetrics.setTimestamp( this.timestamp );
+				httpMetrics.setHttpStatus( this.statusCode );
 			}
 			catch( Throwable e )
 			{
@@ -138,7 +142,7 @@ public abstract class BaseHttpResponse implements HttpResponse
 				addIncludedContentsAsAttachments();
 				long after = ( new Date() ).getTime();
 				timeTaken += ( after - before );
-				httpMethod.getHttpMetrics().getTotalTimer().add( after - before );
+				httpMetrics.getTotalTimer().add( after - before );
 				context.setProperty( HTMLPageSourceDownloader.MISSING_RESOURCES_LIST, downloader.getMissingResourcesList() );
 			}
 		}

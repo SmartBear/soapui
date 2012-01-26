@@ -16,17 +16,15 @@ import java.text.SimpleDateFormat;
 
 public class HttpMetrics
 {
-
 	private long timestamp = -1;
 	private int httpStatus = -1;
 	private long contentLength = -1;
 
 	private Stopwatch readTimer;
 	private Stopwatch totalTimer;
-
-	private static final Stopwatch DNSTimer = new NanoStopwatch();
-	private static final Stopwatch connectTimer = new NanoStopwatch();
-	private static final Stopwatch timeToFirstByteTimer = new NanoStopwatch();
+	private Stopwatch DNSTimer;
+	private Stopwatch connectTimer;
+	private Stopwatch timeToFirstByteTimer;
 
 	private final SimpleDateFormat dateFormat = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
 
@@ -34,26 +32,31 @@ public class HttpMetrics
 	{
 		readTimer = new NanoStopwatch();
 		totalTimer = new NanoStopwatch();
+		DNSTimer = new NanoStopwatch();
+		connectTimer = new NanoStopwatch();
+		timeToFirstByteTimer = new NanoStopwatch();
 	}
 
-	public synchronized void resetGlobalWatches()
+	public void reset()
 	{
+		readTimer.reset();
+		totalTimer.reset();
 		DNSTimer.reset();
 		connectTimer.reset();
 		timeToFirstByteTimer.reset();
 	}
 
-	public static synchronized Stopwatch getDNSTimer()
+	public Stopwatch getDNSTimer()
 	{
 		return DNSTimer;
 	}
 
-	public static synchronized Stopwatch getTimeToFirstByteTimer()
+	public Stopwatch getTimeToFirstByteTimer()
 	{
 		return timeToFirstByteTimer;
 	}
 
-	public static synchronized Stopwatch getConnectTimer()
+	public Stopwatch getConnectTimer()
 	{
 		return connectTimer;
 	}
@@ -98,6 +101,7 @@ public class HttpMetrics
 		this.contentLength = contentLength;
 	}
 
+	@Override
 	public String toString()
 	{
 		StringBuffer sb = new StringBuffer();
@@ -108,5 +112,28 @@ public class HttpMetrics
 				.append( getTimeToFirstByteTimer().getDuration() ).append( " ms;read time:" )
 				.append( getReadTimer().getDuration() ).append( " ms;total time:" ).append( getTotalTimer().getDuration() );
 		return sb.toString();
+	}
+
+	@Override
+	public boolean equals( Object o )
+	{
+		if( this == o )
+		{
+			return true;
+		}
+		if( !( o instanceof HttpMetrics ) )
+		{
+			return false;
+		}
+		HttpMetrics that = ( HttpMetrics )o;
+
+		return this.toString().equals( that.toString() );
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return toString().hashCode();
+
 	}
 }

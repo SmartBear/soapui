@@ -58,8 +58,6 @@ public class HttpMethodSupport
 	private boolean decompress;
 	private org.apache.http.HttpResponse httpResponse;
 
-	private HttpMetrics metrics = new HttpMetrics();
-
 	public HttpMethodSupport()
 	{
 		decompress = !SoapUI.getSettings().getBoolean( HttpSettings.DISABLE_RESPONSE_DECOMPRESSION );
@@ -114,8 +112,6 @@ public class HttpMethodSupport
 	public void initStartTime()
 	{
 		startTime = System.nanoTime();
-		metrics.getTotalTimer().start();
-		HttpMetrics.getTimeToFirstByteTimer().start();
 	}
 
 	public long getTimeTaken()
@@ -253,7 +249,7 @@ public class HttpMethodSupport
 		return httpResponse != null;
 	}
 
-	public byte[] getResponseBody() throws IOException
+	public byte[] getResponseBody( HttpMetrics httpMetrics ) throws IOException
 	{
 		if( responseBody != null )
 			return responseBody;
@@ -262,9 +258,9 @@ public class HttpMethodSupport
 		{
 			HttpEntity bufferedEntity = new BufferedHttpEntity( httpResponse.getEntity() );
 			long contentLength = bufferedEntity.getContentLength();
-			metrics.setContentLength( contentLength );
+			httpMetrics.setContentLength( contentLength );
 			long now = System.nanoTime();
-			metrics.getReadTimer().start();
+			httpMetrics.getReadTimer().start();
 
 			InputStream instream = bufferedEntity.getContent();
 
@@ -273,7 +269,7 @@ public class HttpMethodSupport
 				if( maxSize == 0 || ( contentLength >= 0 && contentLength <= maxSize ) )
 				{
 					responseReadTime = System.nanoTime() - now;
-					metrics.getReadTimer().stop();
+					httpMetrics.getReadTimer().stop();
 					responseBody = EntityUtils.toByteArray( bufferedEntity );
 
 					try
@@ -315,7 +311,7 @@ public class HttpMethodSupport
 							FileOutputStream fileOutputStream = new FileOutputStream( dumpFile );
 							Tools.writeAll( fileOutputStream, instream );
 							responseReadTime = System.nanoTime() - now;
-							metrics.getReadTimer().stop();
+							httpMetrics.getReadTimer().stop();
 							fileOutputStream.close();
 							instream = new FileInputStream( dumpFile );
 						}
@@ -331,7 +327,7 @@ public class HttpMethodSupport
 					if( responseReadTime == 0 )
 					{
 						responseReadTime = System.nanoTime() - now;
-						metrics.getReadTimer().stop();
+						httpMetrics.getReadTimer().stop();
 					}
 
 					responseBody = outstream.toByteArray();
@@ -349,8 +345,4 @@ public class HttpMethodSupport
 		return responseBody;
 	}
 
-	public HttpMetrics getHttpMetrics()
-	{
-		return metrics;
-	}
 }

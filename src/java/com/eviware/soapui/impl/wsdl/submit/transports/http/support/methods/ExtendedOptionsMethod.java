@@ -42,6 +42,7 @@ public final class ExtendedOptionsMethod extends HttpOptions implements Extended
 	public ExtendedOptionsMethod()
 	{
 		httpMethodSupport = new HttpMethodSupport();
+		getParams().setParameter( ExtendedHttpMethod.HTTP_METRICS, new HttpMetrics() );
 	}
 
 	public String getDumpFile()
@@ -100,6 +101,8 @@ public final class ExtendedOptionsMethod extends HttpOptions implements Extended
 	public void initStartTime()
 	{
 		httpMethodSupport.initStartTime();
+		getHttpMetrics().getTotalTimer().start();
+		//getHttpMetrics().getTimeToFirstByteTimer().start();
 	}
 
 	public long getTimeTaken()
@@ -174,7 +177,7 @@ public final class ExtendedOptionsMethod extends HttpOptions implements Extended
 
 	public byte[] getResponseBody() throws IOException
 	{
-		return httpMethodSupport.getResponseBody();
+		return httpMethodSupport.getResponseBody( getHttpMetrics() );
 	}
 
 	public String getResponseBodyAsString() throws IOException
@@ -192,6 +195,6 @@ public final class ExtendedOptionsMethod extends HttpOptions implements Extended
 
 	public HttpMetrics getHttpMetrics()
 	{
-		return httpMethodSupport.getHttpMetrics();
+		return ( HttpMetrics )getParams().getParameter( ExtendedHttpMethod.HTTP_METRICS );
 	}
 }
