@@ -69,7 +69,7 @@ public class JMSTimeoutAssertion extends WsdlMessageAssertion implements Respons
 		return "JMS Timeout OK";
 	}
 
-	protected String internalAssertProperty( String propertyName, MessageExchange messageExchange, TestPropertyHolder source,
+	protected String internalAssertProperty( TestPropertyHolder source, String propertyName, MessageExchange messageExchange,
 			SubmitContext context ) throws AssertionException
 	{
 		return internalAssertResponse( messageExchange, context );

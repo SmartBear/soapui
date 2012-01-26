@@ -63,7 +63,7 @@ public class HttpDownloadAllResourcesAssertion extends WsdlMessageAssertion impl
 	}
 
 	@Override
-	protected String internalAssertProperty( String propertyName, MessageExchange messageExchange, TestPropertyHolder source,
+	protected String internalAssertProperty( TestPropertyHolder source, String propertyName, MessageExchange messageExchange,
 			SubmitContext context ) throws AssertionException
 	{
 		internalAssertResponse( messageExchange, context );

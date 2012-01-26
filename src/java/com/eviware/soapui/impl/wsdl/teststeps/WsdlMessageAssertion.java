@@ -224,8 +224,8 @@ public abstract class WsdlMessageAssertion extends AbstractModelItem implements 
 		return assertionStatus;
 	}
 
-	public AssertionStatus assertProperty( String propertyName, MessageExchange messageExchange,
-			TestPropertyHolder source, SubmitContext context )
+	public AssertionStatus assertProperty( TestPropertyHolder source, String propertyName,
+			MessageExchange messageExchange, SubmitContext context )
 	{
 		AssertionStatus oldStatus = assertionStatus;
 		ImageIcon oldIcon = getIcon();
@@ -240,7 +240,7 @@ public abstract class WsdlMessageAssertion extends AbstractModelItem implements 
 		{
 			try
 			{
-				internalAssertProperty( propertyName, messageExchange, source, context );
+				internalAssertProperty( source, propertyName, messageExchange, context );
 				assertionStatus = AssertionStatus.VALID;
 				assertionErrors = null;
 			}
@@ -267,8 +267,8 @@ public abstract class WsdlMessageAssertion extends AbstractModelItem implements 
 	protected abstract String internalAssertRequest( MessageExchange messageExchange, SubmitContext context )
 			throws AssertionException;
 
-	protected abstract String internalAssertProperty( String propertyName, MessageExchange messageExchange,
-			TestPropertyHolder source, SubmitContext context ) throws AssertionException;
+	protected abstract String internalAssertProperty( TestPropertyHolder source, String propertyName,
+			MessageExchange messageExchange, SubmitContext context ) throws AssertionException;
 
 	/*
 	 * (non-Javadoc)

@@ -203,7 +203,7 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
 			return assertContent( messageExchange.getResponseContentAsXml(), context, "Response" );
 	}
 
-	protected String internalAssertProperty( String propertyName, MessageExchange messageExchange, TestPropertyHolder source,
+	protected String internalAssertProperty( TestPropertyHolder source, String propertyName, MessageExchange messageExchange,
 			SubmitContext context ) throws AssertionException
 	{
 		if( !XmlUtils.seemsToBeXml( source.getPropertyValue( propertyName ) ) )

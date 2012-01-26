@@ -80,7 +80,7 @@ public class SimpleNotContainsAssertion extends WsdlMessageAssertion implements 
 	}
 
 	@Override
-	protected String internalAssertProperty( String propertyName, MessageExchange messageExchange, TestPropertyHolder source,
+	protected String internalAssertProperty( TestPropertyHolder source, String propertyName, MessageExchange messageExchange,
 			SubmitContext context ) throws AssertionException
 	{
 		assertContent( context, source.getPropertyValue( propertyName ), propertyName );

@@ -105,7 +105,7 @@ public class InvalidHttpStatusCodesAssertion extends WsdlMessageAssertion implem
 		return "OK";
 	}
 
-	protected String internalAssertProperty( String propertyName, MessageExchange messageExchange, TestPropertyHolder source,
+	protected String internalAssertProperty( TestPropertyHolder source, String propertyName, MessageExchange messageExchange,
 			SubmitContext context ) throws AssertionException
 	{
 		return internalAssertResponse( messageExchange, context );

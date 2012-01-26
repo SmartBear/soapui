@@ -169,7 +169,7 @@ public class WSAResponseAssertion extends WsdlMessageAssertion implements Reques
 		return "Response WS-Addressing is valid";
 	}
 
-	protected String internalAssertProperty( String propertyName, MessageExchange messageExchange, TestPropertyHolder source,
+	protected String internalAssertProperty( TestPropertyHolder source, String propertyName, MessageExchange messageExchange,
 			SubmitContext context ) throws AssertionException
 	{
 		return internalAssertResponse( messageExchange, context );
