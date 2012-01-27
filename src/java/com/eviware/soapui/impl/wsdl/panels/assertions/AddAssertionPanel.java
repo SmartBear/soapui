@@ -1,5 +1,5 @@
 /*
- *  soapUI, copyright (C) 2004-2011 eviware.com 
+ *  soapUI, copyright (C) 2004-2012 eviware.com 
  *
  *  soapUI is free software; you can redistribute it and/or modify it under the 
  *  terms of version 2.1 of the GNU Lesser General Public License as published by 
@@ -40,13 +40,13 @@ import javax.swing.event.ListSelectionListener;
 import org.jdesktop.swingx.JXList;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.actions.project.SimpleDialog;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.recent.RecentAssertionHandler;
 import com.eviware.soapui.model.iface.Interface;
-import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.TestAssertion;
@@ -60,6 +60,10 @@ import com.l2fprod.common.swing.renderer.DefaultCellRenderer;
 
 public class AddAssertionPanel extends SimpleDialog
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5770245094548607912L;
 	private JXList categoriesList;
 	private AssertionsListTable assertionsTable;
 	private Assertable assertable;
@@ -90,11 +94,14 @@ public class AddAssertionPanel extends SimpleDialog
 		for( Interface inf : project.getInterfaceList() )
 			try
 			{
-				( ( WsdlInterface )inf ).getWsdlContext().loadIfNecessary();
+				if( inf instanceof WsdlInterface )
+					( ( WsdlInterface )inf ).getWsdlContext().loadIfNecessary();
+				else
+					( ( RestService )inf ).getDefinitionContext().loadIfNecessary();
 			}
 			catch( Exception e )
 			{
-				// TODO Auto-generated catch block
+				// TODO Improve this
 				e.printStackTrace();
 			}
 	}
@@ -283,6 +290,11 @@ public class AddAssertionPanel extends SimpleDialog
 
 	protected final class AddAssertionAction extends AbstractAction
 	{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 4741995448420710392L;
+
 		public AddAssertionAction()
 		{
 			super( "Add" );
@@ -333,6 +345,10 @@ public class AddAssertionPanel extends SimpleDialog
 
 	protected class AssertionEntryRenderer extends DefaultCellRenderer
 	{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -6843334509897580699L;
 		private Assertable assertable;
 		private Font boldFont;
 
