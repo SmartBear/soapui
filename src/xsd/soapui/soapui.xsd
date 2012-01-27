@@ -2339,7 +2339,7 @@
 		</xsd:sequence>
 	</xsd:complexType>
 
-	<xsd:complexType name="ResponseCompareElement">
+	<xsd:complexType name="MessageContentElement">
 		<xsd:sequence>
 			<xsd:element name="xpath" type="xsd:string"></xsd:element>
 			<xsd:element name="element" type="xsd:string"></xsd:element>
@@ -2350,16 +2350,17 @@
 			<xsd:element name="hasValue" type="xsd:boolean"></xsd:element>
 			<xsd:element name="value" type="xsd:string"></xsd:element>
 			<xsd:element name="numberType" type="xsd:boolean"></xsd:element>
+			<xsd:element name="message" type="xsd:string"></xsd:element>
 		</xsd:sequence>
 	</xsd:complexType>
 
-	<xsd:complexType name="ResponseCompareAssertion">
+	<xsd:complexType name="MessageContentAssertion">
 		<xsd:sequence>
 			<xsd:element name="elements"
-				type="tns:ResponseCompareElement" maxOccurs="unbounded"
+				type="tns:MessageContentElement" maxOccurs="unbounded"
 				minOccurs="0">
 			</xsd:element>
-			<xsd:element name="xmlSchema" type="tns:CompressedString"></xsd:element>
+			<xsd:element name="originalMessage" type="tns:CompressedString"></xsd:element>
 		</xsd:sequence>
 	</xsd:complexType>
 

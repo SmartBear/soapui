@@ -234,5 +234,5 @@ public interface HelpUrls
 
 	public static final String SECURITY_SCANS_OVERVIEW = "http://www.soapui.org/Security/security-scans-overview.html";
 
-	public static final String RESPONSECOMPARE_HELP_URL = "";
+	public static final String MESSAGE_CONTENT_HELP_URL = "";
 }
