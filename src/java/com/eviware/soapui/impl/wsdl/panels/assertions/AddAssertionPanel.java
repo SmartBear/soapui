@@ -163,6 +163,7 @@ public class AddAssertionPanel extends SimpleDialog
 
 		assertionsListTableModel = new AssertionsListTableModel();
 		assertionsTable = new AssertionsListTable( assertionsListTableModel );
+		assertionsTable.setSelectable( false );
 		String category = ( String )categoriesList.getSelectedValue();
 		if( category != null && categoriesAssertionsMap.containsKey( category ) )
 		{
@@ -215,6 +216,7 @@ public class AddAssertionPanel extends SimpleDialog
 
 	protected void populateNonSelectableIndexes()
 	{
+		getAssertionsTable().setSelectable( true );
 		SortedSet<AssertionListEntry> assertionsList = getCategoriesAssertionsMap().get( getSelectedCategory() );
 		List<Integer> intList = new ArrayList<Integer>();
 		assertionsList.toArray();
