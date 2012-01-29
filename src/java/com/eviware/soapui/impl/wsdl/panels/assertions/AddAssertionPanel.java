@@ -136,6 +136,7 @@ public class AddAssertionPanel extends SimpleDialog
 	{
 		JPanel mainPanel = new JPanel( new BorderLayout() );
 		JSplitPane splitPane = UISupport.createHorizontalSplit( buildCategoriesList(), buildAssertionsList() );
+		getAssertionsTable().setSelectable( true );
 		JXToolBar toolbar = UISupport.createSmallToolbar();
 		hideDescCB = new JCheckBox( "Hide descriptions" );
 		hideDescCB.setOpaque( false );
@@ -163,7 +164,6 @@ public class AddAssertionPanel extends SimpleDialog
 
 		assertionsListTableModel = new AssertionsListTableModel();
 		assertionsTable = new AssertionsListTable( assertionsListTableModel );
-		assertionsTable.setSelectable( false );
 		String category = ( String )categoriesList.getSelectedValue();
 		if( category != null && categoriesAssertionsMap.containsKey( category ) )
 		{
