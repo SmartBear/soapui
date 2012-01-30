@@ -138,6 +138,7 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 		return jdbcRequestTestStepConfig;
 	}
 
+	@Override
 	public void resetConfigOnMove( TestStepConfig config )
 	{
 		super.resetConfigOnMove( config );
@@ -279,6 +280,7 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 			jdbcRequest.setResponse( null );
 
 		// FIXME This should not be hard coded
+		// FIXME This should not fire if the response is the same. Could we implement a property changed event handler instead?
 		firePropertyValueChanged( "ResponseAsXml", null, testStepResult.getResponseContentAsXml() );
 		return testStepResult;
 	}
@@ -294,6 +296,7 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 		return true;
 	}
 
+	@Override
 	public String getDefaultSourcePropertyName()
 	{
 		return "Response";
@@ -459,6 +462,7 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 		return jdbcRequest.getAssertionStatus();
 	}
 
+	@Override
 	public ImageIcon getIcon()
 	{
 		return jdbcRequest.getIcon();
@@ -561,51 +565,61 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 	//		propertyHolderSupport.addTestPropertyListener( listener );
 	//	}
 
+	@Override
 	public Map<String, TestProperty> getProperties()
 	{
 		return propertyHolderSupport.getProperties();
 	}
 
+	@Override
 	public TestProperty getProperty( String name )
 	{
 		return propertyHolderSupport.getProperty( name );
 	}
 
+	@Override
 	public TestProperty getPropertyAt( int index )
 	{
 		return propertyHolderSupport.getPropertyAt( index );
 	}
 
+	@Override
 	public int getPropertyCount()
 	{
 		return propertyHolderSupport.getPropertyCount();
 	}
 
+	@Override
 	public List<TestProperty> getPropertyList()
 	{
 		return propertyHolderSupport.getPropertyList();
 	}
 
+	@Override
 	public String[] getPropertyNames()
 	{
 		return propertyHolderSupport.getPropertyNames();
 	}
 
+	@Override
 	public String getPropertyValue( String name )
 	{
 		return propertyHolderSupport.getPropertyValue( name );
 	}
 
+	@Override
 	public void removeTestPropertyListener( TestPropertyListener listener )
 	{
 		propertyHolderSupport.removeTestPropertyListener( listener );
 	}
 
+	@Override
 	public boolean hasProperty( String name )
 	{
 		return propertyHolderSupport.hasProperty( name );
 	}
 
+	@Override
 	public void setPropertyValue( String name, String value )
 	{
 		propertyHolderSupport.setPropertyValue( name, value );
@@ -616,6 +630,7 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 		setPropertyValue( name, String.valueOf( value ) );
 	}
 
+	@Override
 	public void moveProperty( String propertyName, int targetIndex )
 	{
 		propertyHolderSupport.moveProperty( propertyName, targetIndex );
