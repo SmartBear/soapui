@@ -287,6 +287,8 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 			}
 		}
 
+		System.err.println( httpMethod.getParams().getParameter( ExtendedHttpMethod.HTTP_METRICS ) );
+
 		return ( Response )submitContext.getProperty( BaseHttpRequestTransport.RESPONSE );
 	}
 

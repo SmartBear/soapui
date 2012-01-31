@@ -108,9 +108,10 @@ public class HttpMetrics
 		sb.append( "timestamp:" ).append( dateFormat.format( getTimestamp() ) ).append( ";status:" )
 				.append( getHttpStatus() ).append( ";length:" ).append( getContentLength() ).append( ";DNS time:" )
 				.append( getDNSTimer().getDuration() ).append( " ms;connect time:" )
-				.append( getConnectTimer().getDuration() ).append( " ms;time to first byte:" )
-				.append( getTimeToFirstByteTimer().getDuration() ).append( " ms;read time:" )
-				.append( getReadTimer().getDuration() ).append( " ms;total time:" ).append( getTotalTimer().getDuration() );
+				.append( getConnectTimer().getDuration() )
+				//.append( " ms;time to first byte:" ).append( getTimeToFirstByteTimer().getDuration() )
+				.append( " ms;read time:" ).append( getReadTimer().getDuration() ).append( " ms;total time:" )
+				.append( getTotalTimer().getDuration() );
 		return sb.toString();
 	}
 
