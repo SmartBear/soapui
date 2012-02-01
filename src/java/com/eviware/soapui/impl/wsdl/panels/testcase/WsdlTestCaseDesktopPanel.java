@@ -116,7 +116,7 @@ public class WsdlTestCaseDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 	private ProgressBarTestCaseAdapter progressBarAdapter;
 	private InternalTestMonitorListener testMonitorListener;
 	public boolean canceled;
-	private JTextArea descriptionArea;
+	protected JTextArea descriptionArea;
 	private PropertyHolderTable propertiesTable;
 	private GroovyEditorComponent tearDownGroovyEditor;
 	private GroovyEditorComponent setupGroovyEditor;
@@ -129,6 +129,7 @@ public class WsdlTestCaseDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 	// private JButton convertToLoadUIButton;
 	private JButton synchronizeWithLoadUIButton;
 	private WsdlTestCase testCase;
+	private AlertSitePanel alertSitePanel;
 
 	public WsdlTestCaseDesktopPanel( WsdlTestCase testCase )
 	{
@@ -257,6 +258,8 @@ public class WsdlTestCaseDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 				"Script to run before running a TestCase" ) );
 		inspectorPanel.addInspector( new GroovyEditorInspector( buildTearDownScriptPanel(), "TearDown Script",
 				"Script to run after a TestCase Run" ) );
+
+		tabs.addTab( "Test On Demand", buildAlertSitePanel() );
 	}
 
 	protected GroovyEditorComponent buildTearDownScriptPanel()
@@ -284,7 +287,7 @@ public class WsdlTestCaseDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 		return new PropertyHolderTable( getModelItem() );
 	}
 
-	private JPanel buildDescriptionPanel()
+	protected JPanel buildDescriptionPanel()
 	{
 		JPanel panel = new JPanel( new BorderLayout() );
 		descriptionArea = new JUndoableTextArea( getModelItem().getDescription() );
@@ -829,6 +832,12 @@ public class WsdlTestCaseDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 	protected void cloneModelItem()
 	{
 		SoapUI.getActionRegistry().performAction( "CloneTestCaseAction", getModelItem(), null );
+	}
+
+	protected Component buildAlertSitePanel()
+	{
+		alertSitePanel = new AlertSitePanel();
+		return alertSitePanel;
 	}
 
 }
