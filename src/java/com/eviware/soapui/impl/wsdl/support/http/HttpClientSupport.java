@@ -1,5 +1,5 @@
 /*
- *  soapUI, copyright (C) 2004-2011 eviware.com 
+ *  soapUI, copyright (C) 2004-2011 smartbear.com 
  *
  *  soapUI is free software; you can redistribute it and/or modify it under the 
  *  terms of version 2.1 of the GNU Lesser General Public License as published by 
@@ -13,7 +13,6 @@
 package com.eviware.soapui.impl.wsdl.support.http;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.KeyStore;
@@ -22,6 +21,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 
+import org.apache.commons.ssl.KeyMaterial;
 import org.apache.http.Header;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
@@ -65,7 +65,6 @@ public class HttpClientSupport
 		private DefaultHttpClient httpClient;
 		private final static Logger log = Logger.getLogger( HttpClientSupport.Helper.class );
 		private SoapUIMultiThreadedHttpConnectionManager connectionManager;
-		private KeyStore keyStore;
 		private SoapUISSLSocketFactory socketFactory;
 
 		public Helper()
@@ -76,8 +75,7 @@ public class HttpClientSupport
 
 			try
 			{
-				keyStore = initKeyStore();
-				socketFactory = new SoapUISSLSocketFactory( keyStore );
+				socketFactory = initSocketFactory();
 				registry.register( new Scheme( "https", 443, socketFactory ) );
 			}
 			catch( Throwable e )
@@ -86,9 +84,9 @@ public class HttpClientSupport
 			}
 
 			connectionManager = new SoapUIMultiThreadedHttpConnectionManager( registry );
-			connectionManager
-					.setDefaultMaxPerRoute( ( int )settings.getLong( HttpSettings.MAX_CONNECTIONS_PER_HOST, 500 ) );
-			connectionManager.setMaxTotal( ( int )settings.getLong( HttpSettings.MAX_TOTAL_CONNECTIONS, 2000 ) );
+			//			connectionManager.setMaxConnectionsPerHost( ( int )settings.getLong( HttpSettings.MAX_CONNECTIONS_PER_HOST,
+			//					500 ) );
+			//			connectionManager.setMaxTotalConnections( ( int )settings.getLong( HttpSettings.MAX_TOTAL_CONNECTIONS, 2000 ) );
 
 			httpClient = new DefaultHttpClient( connectionManager );
 			httpClient.getAuthSchemes().register( AuthPolicy.NTLM, new NTLMSchemeFactory() );
@@ -131,7 +129,7 @@ public class HttpClientSupport
 					try
 					{
 						log.info( "Updating keyStore.." );
-						initKeyStore();
+						initSocketFactory();
 					}
 					catch( Throwable e )
 					{
@@ -141,12 +139,12 @@ public class HttpClientSupport
 				else if( name.equals( HttpSettings.MAX_CONNECTIONS_PER_HOST ) )
 				{
 					log.info( "Updating max connections per host to " + newValue );
-					connectionManager.setDefaultMaxPerRoute( Integer.parseInt( newValue ) );
+					//					connectionManager.setMaxConnectionsPerHost( Integer.parseInt( newValue ) );
 				}
 				else if( name.equals( HttpSettings.MAX_TOTAL_CONNECTIONS ) )
 				{
 					log.info( "Updating max total connections host to " + newValue );
-					connectionManager.setMaxTotal( Integer.parseInt( newValue ) );
+					//					connectionManager.setMaxTotalConnections( Integer.parseInt( newValue ) );
 				}
 			}
 
@@ -156,7 +154,7 @@ public class HttpClientSupport
 				try
 				{
 					log.info( "Updating keyStore.." );
-					initKeyStore();
+					initSocketFactory();
 				}
 				catch( Throwable e )
 				{
@@ -165,50 +163,37 @@ public class HttpClientSupport
 			}
 		}
 
-		public KeyStore initKeyStore() throws KeyStoreException, NoSuchAlgorithmException, CertificateException,
-				IOException, UnrecoverableKeyException, KeyManagementException
+		public SoapUISSLSocketFactory initSocketFactory() throws KeyStoreException, NoSuchAlgorithmException,
+				CertificateException, IOException, UnrecoverableKeyException, KeyManagementException
 		{
-			keyStore = KeyStore.getInstance( KeyStore.getDefaultType() );
-
+			KeyStore keyStore = null;
 			Settings settings = SoapUI.getSettings();
 
-			String keyStoreUrl = System.getProperty( "soapui.ssl.keystore.location",
-					settings.getString( SSLSettings.KEYSTORE, null ) );
-
+			String keyStoreUrl = settings.getString( SSLSettings.KEYSTORE, null );
 			keyStoreUrl = keyStoreUrl != null ? keyStoreUrl.trim() : "";
-			String pass = System.getProperty( "soapui.ssl.keystore.password",
-					settings.getString( SSLSettings.KEYSTORE_PASSWORD, "" ) );
-
+			String pass = settings.getString( SSLSettings.KEYSTORE_PASSWORD, "" );
 			char[] pwd = pass.toCharArray();
 
 			if( keyStoreUrl.trim().length() > 0 )
 			{
 				File f = new File( keyStoreUrl );
-
 				if( f.exists() )
 				{
 					log.info( "Initializing KeyStore" );
 
-					FileInputStream instream = new FileInputStream( f );
-
 					try
 					{
-						keyStore.load( instream, pwd );
+						KeyMaterial km = new KeyMaterial( f, pwd );
+						keyStore = km.getKeyStore();
 					}
-					finally
+					catch( Exception e )
 					{
-						try
-						{
-							instream.close();
-						}
-						catch( Exception ignore )
-						{
-						}
+						SoapUI.logError( e );
 					}
 				}
 			}
 
-			return keyStore;
+			return new SoapUISSLSocketFactory( keyStore, pass );
 		}
 	}
 

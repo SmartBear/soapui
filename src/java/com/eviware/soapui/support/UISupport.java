@@ -1,5 +1,5 @@
 /*
- *  soapUI, copyright (C) 2004-2011 eviware.com 
+ *  soapUI, copyright (C) 2004-2011 smartbear.com 
  *
  *  soapUI is free software; you can redistribute it and/or modify it under the 
  *  terms of version 2.1 of the GNU Lesser General Public License as published by 
@@ -141,8 +141,19 @@ public class UISupport
 	 * Add a classloader to find resources.
 	 * 
 	 * @param loader
+	 * @deprecated Use {@link #addResourceClassLoader(ClassLoader)} instead
 	 */
 	public static void addClassLoader( ClassLoader loader )
+	{
+		addResourceClassLoader( loader );
+	}
+
+	/**
+	 * Add a classloader to find resources.
+	 * 
+	 * @param loader
+	 */
+	public static void addResourceClassLoader( ClassLoader loader )
 	{
 		secondaryResourceLoaders.add( loader );
 	}
@@ -412,14 +423,21 @@ public class UISupport
 
 		try
 		{
-			if( path.indexOf( '/', 1 ) == -1 )
-				path = "/com/eviware/soapui/resources/images" + path;
-
-			imgURL = SoapUI.class.getResource( path );
-
-			if( imgURL == null && path.endsWith( ".gif" ) )
+			File file = new File( path );
+			if( file.exists() )
+				imgURL = file.toURI().toURL();
+			else
 			{
-				imgURL = SoapUI.class.getResource( path.substring( 0, path.length() - 4 ) + ".png" );
+				String p = path;
+				if( p.indexOf( '/', 1 ) == -1 )
+					p = "/com/eviware/soapui/resources/images" + p;
+
+				imgURL = SoapUI.class.getResource( p );
+
+				if( imgURL == null && path.endsWith( ".gif" ) )
+				{
+					imgURL = SoapUI.class.getResource( p.substring( 0, p.length() - 4 ) + ".png" );
+				}
 			}
 
 			if( imgURL == null )
@@ -429,8 +447,7 @@ public class UISupport
 		}
 		catch( Throwable t )
 		{
-			System.err.println( "Failed to find icon: " + t ); // FIXME
-			// "Failed to find icon: java.lang.StackOverflowError"
+			SoapUI.logError( t, "Failed to find icon [" + path + "]" );
 			return null;
 		}
 
@@ -625,8 +642,8 @@ public class UISupport
 
 		if( ex.toString().length() > 100 )
 		{
-			dialogs.showExtendedInfo( "Error", "An error of type " + ex.getClass().getSimpleName() + " occured.", ex
-					.toString(), null );
+			dialogs.showExtendedInfo( "Error", "An error of type " + ex.getClass().getSimpleName() + " occured.",
+					ex.toString(), null );
 		}
 		else
 		{
@@ -807,8 +824,8 @@ public class UISupport
 
 	public static void initDialogActions( final JDialog dialog, Action helpAction, JButton defaultButton )
 	{
-		dialog.getRootPane().getInputMap( JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT ).put(
-				KeyStroke.getKeyStroke( KeyEvent.VK_ESCAPE, 0 ), "ESCAPE" );
+		dialog.getRootPane().getInputMap( JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT )
+				.put( KeyStroke.getKeyStroke( KeyEvent.VK_ESCAPE, 0 ), "ESCAPE" );
 		dialog.getRootPane().getActionMap().put( "ESCAPE", new AbstractAction()
 		{
 			public void actionPerformed( ActionEvent e )
@@ -822,17 +839,20 @@ public class UISupport
 
 		if( helpAction != null )
 		{
-			dialog.getRootPane().getInputMap( JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT ).put(
-					KeyStroke.getKeyStroke( KeyEvent.VK_F1, 0 ), "HELP" );
+			dialog.getRootPane().getInputMap( JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT )
+					.put( KeyStroke.getKeyStroke( KeyEvent.VK_F1, 0 ), "HELP" );
 			dialog.getRootPane().getActionMap().put( "HELP", helpAction );
 		}
 	}
 
 	public static <T extends JComponent> T addTitledBorder( T component, String title )
 	{
-		component.setBorder( BorderFactory.createCompoundBorder( BorderFactory.createEmptyBorder( 3, 0, 0, 0 ),
-				BorderFactory.createCompoundBorder( BorderFactory.createTitledBorder( BorderFactory.createEmptyBorder(),
-						title ), component.getBorder() ) ) );
+		component
+				.setBorder( BorderFactory.createCompoundBorder(
+						BorderFactory.createEmptyBorder( 3, 0, 0, 0 ),
+						BorderFactory.createCompoundBorder(
+								BorderFactory.createTitledBorder( BorderFactory.createEmptyBorder(), title ),
+								component.getBorder() ) ) );
 
 		return component;
 	}

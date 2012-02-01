@@ -19,8 +19,11 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.security.GeneralSecurityException;
 import java.util.TimerTask;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -50,6 +53,7 @@ import com.eviware.soapui.settings.WsaSettings;
 import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.SecurityScanUtil;
 import com.eviware.soapui.support.StringUtils;
+import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.SoapUIActionRegistry;
 import com.eviware.soapui.support.factory.SoapUIFactoryRegistry;
 import com.eviware.soapui.support.listener.SoapUIListenerRegistry;
@@ -142,10 +146,55 @@ public class DefaultSoapUICore implements SoapUICore
 		initSettings( settingsFile == null ? DEFAULT_SETTINGS_FILE : settingsFile );
 
 		initExtensions( getExtensionClassLoader() );
+		initPlugins();
 		initCoreComponents();
 
 		// this is to provoke initialization
 		SoapVersion.Soap11.equals( SoapVersion.Soap12 );
+	}
+
+	protected void initPlugins()
+	{
+		File[] pluginFiles = new File( "plugins" ).listFiles();
+		if( pluginFiles != null )
+		{
+			for( File pluginFile : pluginFiles )
+			{
+				if( !pluginFile.getName().toLowerCase().endsWith( "-plugin.jar" ) )
+					continue;
+
+				try
+				{
+					log.info( "Adding plugin from [" + pluginFile.getAbsolutePath() + "]" );
+
+					// add jar to our extension classLoader
+					getExtensionClassLoader().addFile( pluginFile );
+					JarFile jarFile = new JarFile( pluginFile );
+
+					// look for factories
+					JarEntry entry = jarFile.getJarEntry( "META-INF/factories.xml" );
+					if( entry != null )
+						getFactoryRegistry().addConfig( jarFile.getInputStream( entry ), extClassLoader );
+
+					// look for listeners
+					entry = jarFile.getJarEntry( "META-INF/listeners.xml" );
+					if( entry != null )
+						getListenerRegistry().addConfig( jarFile.getInputStream( entry ), extClassLoader );
+
+					// look for actions
+					entry = jarFile.getJarEntry( "META-INF/actions.xml" );
+					if( entry != null )
+						getActionRegistry().addConfig( jarFile.getInputStream( entry ), extClassLoader );
+
+					// add jar to resource classloader so embedded images can be found with UISupport.loadImageIcon(..)
+					UISupport.addResourceClassLoader( new URLClassLoader( new URL[] { pluginFile.toURI().toURL() } ) );
+				}
+				catch( Exception e )
+				{
+					SoapUI.logError( e );
+				}
+			}
+		}
 	}
 
 	protected void initExtensions( ClassLoader extensionClassLoader )

@@ -12,7 +12,6 @@
 package com.eviware.soapui.impl.wsdl.support.http;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.security.KeyManagementException;
@@ -25,28 +24,32 @@ import java.security.cert.X509Certificate;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.net.ssl.KeyManager;
+import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import org.apache.commons.ssl.KeyMaterial;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.params.HttpParams;
 import org.apache.log4j.Logger;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransport;
 import com.eviware.soapui.support.StringUtils;
 
 public class SoapUISSLSocketFactory extends SSLSocketFactory
 {
-	private Map<String, SSLSocketFactory> factoryMap = new HashMap<String, SSLSocketFactory>();
-
+	// a cache of factories for custom certificates/Keystores at the project level - never cleared
+	private static Map<String, SSLSocketFactory> factoryMap = new HashMap<String, SSLSocketFactory>();
 	private SSLContext sslContext = SSLContext.getInstance( "TLS" );
-
 	private final static Logger log = Logger.getLogger( SoapUISSLSocketFactory.class );
 
-	public SoapUISSLSocketFactory( KeyStore keyStore ) throws KeyManagementException, UnrecoverableKeyException,
-			NoSuchAlgorithmException, KeyStoreException
+	@SuppressWarnings( "deprecation" )
+	public SoapUISSLSocketFactory( KeyStore keyStore, String keystorePassword ) throws KeyManagementException,
+			UnrecoverableKeyException, NoSuchAlgorithmException, KeyStoreException
 	{
 		super( keyStore );
 
@@ -70,8 +73,19 @@ public class SoapUISSLSocketFactory extends SSLSocketFactory
 			}
 		};
 
-		sslContext.init( null, new TrustManager[] { tm }, null );
+		if( keyStore != null )
+		{
+			KeyManagerFactory kmfactory = KeyManagerFactory.getInstance( KeyManagerFactory.getDefaultAlgorithm() );
+			kmfactory.init( keyStore, keystorePassword != null ? keystorePassword.toCharArray() : null );
+			KeyManager[] keymanagers = kmfactory.getKeyManagers();
+			sslContext.init( keymanagers, new TrustManager[] { tm }, null );
+		}
+		else
+		{
+			sslContext.init( null, new TrustManager[] { tm }, null );
+		}
 
+		setHostnameVerifier( SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER );
 	}
 
 	private synchronized SSLSocket enableSocket( SSLSocket socket )
@@ -104,19 +118,21 @@ public class SoapUISSLSocketFactory extends SSLSocketFactory
 	@Override
 	public Socket createSocket( HttpParams params ) throws IOException
 	{
-		String sslConfig = ( String )params.getParameter( SoapUIHttpRoute.SOAPUI_SSL_CONFIG );
+		String sslConfig = ( String )params.getParameter( BaseHttpRequestTransport.SOAPUI_SSL_CONFIG );
 
 		if( StringUtils.isNullOrEmpty( sslConfig ) )
 		{
 			return enableSocket( ( SSLSocket )sslContext.getSocketFactory().createSocket() );
-			//			return enableSocket( ( SSLSocket )super.createSocket( params ) );
 		}
 
 		SSLSocketFactory factory = factoryMap.get( sslConfig );
 
 		if( factory != null )
 		{
-			return enableSocket( ( SSLSocket )factory.createSocket( params ) );
+			if( factory == this )
+				return enableSocket( ( SSLSocket )sslContext.getSocketFactory().createSocket() );
+			else
+				return enableSocket( ( SSLSocket )factory.createSocket( params ) );
 		}
 
 		try
@@ -126,7 +142,7 @@ public class SoapUISSLSocketFactory extends SSLSocketFactory
 			String keyStore = sslConfig.substring( 0, ix );
 			String pwd = sslConfig.substring( ix + 1 );
 
-			KeyStore trustStore = KeyStore.getInstance( KeyStore.getDefaultType() );
+			KeyStore ks = KeyStore.getInstance( KeyStore.getDefaultType() );
 
 			if( keyStore.trim().length() > 0 )
 			{
@@ -134,30 +150,22 @@ public class SoapUISSLSocketFactory extends SSLSocketFactory
 
 				if( f.exists() )
 				{
-					log.info( "Initializing KeyStore" );
-
-					FileInputStream instream = new FileInputStream( f );
+					log.info( "Initializing Keystore from [" + keyStore + "]" );
 
 					try
 					{
-						trustStore.load( instream, pwd.toCharArray() );
+						KeyMaterial km = new KeyMaterial( f, pwd.toCharArray() );
+						ks = km.getKeyStore();
 					}
-					finally
+					catch( Exception e )
 					{
-						try
-						{
-							instream.close();
-						}
-						catch( Exception ignore )
-						{
-						}
+						SoapUI.logError( e );
+						pwd = null;
 					}
 				}
 			}
 
-			//factory = new SSLSocketFactory( trustStore );
-			factory = new SSLSocketFactory( TLS, null, null, trustStore, null, null, ALLOW_ALL_HOSTNAME_VERIFIER );
-
+			factory = new SoapUISSLSocketFactory( ks, pwd );
 			factoryMap.put( sslConfig, factory );
 
 			return enableSocket( ( SSLSocket )factory.createSocket( params ) );
