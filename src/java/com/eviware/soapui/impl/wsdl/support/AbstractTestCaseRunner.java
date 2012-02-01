@@ -53,7 +53,6 @@ public abstract class AbstractTestCaseRunner<T extends TestRunnable, T2 extends 
 	public AbstractTestCaseRunner( T modelItem, StringToObjectMap properties )
 	{
 		super( modelItem, properties );
-
 	}
 
 	public int getGotoStepIndex()
