@@ -55,6 +55,7 @@ public class AlertSitePanel extends JPanel
 		JXToolBar toolbar = UISupport.createToolbar();
 
 		toolbar.addFixed( UISupport.createToolbarButton( new RunAction() ) );
+		toolbar.addRelatedGap();
 		toolbar.addFixed( buildLocationsComboBox() );
 		toolbar.addGlue();
 		toolbar.addFixed( UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.ALERT_SITE_HELP_URL ) ) );
