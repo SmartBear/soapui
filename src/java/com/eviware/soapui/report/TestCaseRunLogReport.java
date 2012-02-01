@@ -15,11 +15,15 @@ package com.eviware.soapui.report;
 import java.io.File;
 import java.io.IOException;
 
+import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.log4j.Logger;
 
 import com.eviware.soapui.config.TestCaseRunLogDocumentConfig;
 import com.eviware.soapui.config.TestCaseRunLogDocumentConfig.TestCaseRunLog;
 import com.eviware.soapui.config.TestCaseRunLogDocumentConfig.TestCaseRunLog.TestCaseRunLogTestStep;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransport;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.metrics.HttpMetrics;
 import com.eviware.soapui.model.support.TestRunListenerAdapter;
 import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
@@ -51,6 +55,25 @@ public class TestCaseRunLogReport extends TestRunListenerAdapter
 		testCaseRunLogTestStep.setTimeTaken( Long.toString( result.getTimeTaken() ) );
 		testCaseRunLogTestStep.setStatus( result.getStatus().toString() );
 		testCaseRunLogTestStep.setMessageArray( result.getMessages() );
+
+		HttpRequestBase httpMethod = ( HttpRequestBase )runContext.getProperty( BaseHttpRequestTransport.HTTP_METHOD );
+		if( httpMethod != null )
+		{
+			Object metricsObj = httpMethod.getParams().getParameter( ExtendedHttpMethod.HTTP_METRICS );
+			if( metricsObj instanceof HttpMetrics )
+			{
+				HttpMetrics httpMetrics = ( HttpMetrics )metricsObj;
+				testCaseRunLogTestStep.setTimestamp( httpMetrics.getFormattedTimeStamp() );
+				testCaseRunLogTestStep.setHttpStatus( String.valueOf( httpMetrics.getHttpStatus() ) );
+				testCaseRunLogTestStep.setContentLength( String.valueOf( httpMetrics.getContentLength() ) );
+				testCaseRunLogTestStep.setReadTime( String.valueOf( httpMetrics.getReadTimer().getDuration() ) );
+				testCaseRunLogTestStep.setTotalTime( String.valueOf( httpMetrics.getTotalTimer().getDuration() ) );
+				testCaseRunLogTestStep.setDnsTime( String.valueOf( httpMetrics.getDNSTimer().getDuration() ) );
+				testCaseRunLogTestStep.setConnectTime( String.valueOf( httpMetrics.getConnectTimer().getDuration() ) );
+				//	testCaseRunLogTestStep.setTimeToFirstByte( String.valueOf(httpMetrics.getTimeToFirstByteTimer().getDuration() ) );
+			}
+		}
+
 		Throwable error = result.getError();
 		if( error != null )
 		{

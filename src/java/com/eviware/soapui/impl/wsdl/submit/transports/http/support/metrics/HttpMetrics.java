@@ -76,6 +76,11 @@ public class HttpMetrics
 		return timestamp;
 	}
 
+	public String getFormattedTimeStamp()
+	{
+		return dateFormat.format( getTimestamp() );
+	}
+
 	public void setTimestamp( long timestamp )
 	{
 		this.timestamp = timestamp;
@@ -105,8 +110,8 @@ public class HttpMetrics
 	public String toString()
 	{
 		StringBuffer sb = new StringBuffer();
-		sb.append( "timestamp:" ).append( dateFormat.format( getTimestamp() ) ).append( ";status:" )
-				.append( getHttpStatus() ).append( ";length:" ).append( getContentLength() ).append( ";DNS time:" )
+		sb.append( "timestamp:" ).append( getFormattedTimeStamp() ).append( ";status:" ).append( getHttpStatus() )
+				.append( ";length:" ).append( getContentLength() ).append( ";DNS time:" )
 				.append( getDNSTimer().getDuration() ).append( " ms;connect time:" )
 				.append( getConnectTimer().getDuration() ).append( " ms;time to first byte:" )
 				.append( getTimeToFirstByteTimer().getDuration() ).append( " ms;read time:" )

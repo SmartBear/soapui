@@ -289,12 +289,10 @@
 		<xsd:complexContent>
 			<xsd:extension base="tns:ModelItem">
 				<xsd:sequence>
-					<xsd:element name="configuration"
-						type="xsd:anyType">
+					<xsd:element name="configuration" type="xsd:anyType">
 					</xsd:element>
 				</xsd:sequence>
-				<xsd:attribute name="type" type="xsd:string"
-					use="required">
+				<xsd:attribute name="type" type="xsd:string" use="required">
 				</xsd:attribute>
 				<xsd:attribute name="disabled" type="xsd:boolean"></xsd:attribute>
 			</xsd:extension>
@@ -429,25 +427,26 @@
 					<xsd:element name="tearDownScript" type="tns:Script"
 						maxOccurs="1" minOccurs="0">
 					</xsd:element>
-					<xsd:element name="properties"
-						type="tns:PropertiesType" maxOccurs="1" minOccurs="0">
+					<xsd:element name="properties" type="tns:PropertiesType"
+						maxOccurs="1" minOccurs="0">
 					</xsd:element>
-					<xsd:element name="requirements"
-						type="tns:RequirementsType" maxOccurs="1" minOccurs="0">
+					<xsd:element name="requirements" type="tns:RequirementsType"
+						maxOccurs="1" minOccurs="0">
 					</xsd:element>
-					<xsd:element name="reportTemplates"
-						type="tns:ReportTemplate" maxOccurs="unbounded" minOccurs="0">
+					<xsd:element name="reportTemplates" type="tns:ReportTemplate"
+						maxOccurs="unbounded" minOccurs="0">
 					</xsd:element>
 					<xsd:element name="reportScript" type="tns:Script"
 						maxOccurs="1" minOccurs="0">
 					</xsd:element>
-					<xsd:element name="reportParameters"
-						type="tns:PropertiesType" minOccurs="0" maxOccurs="1">
+					<xsd:element name="reportParameters" type="tns:PropertiesType"
+						minOccurs="0" maxOccurs="1">
 					</xsd:element>
-					<xsd:element name="securityTest"
-						type="tns:SecurityTest" maxOccurs="unbounded" minOccurs="0">
+					<xsd:element name="securityTest" type="tns:SecurityTest"
+						maxOccurs="unbounded" minOccurs="0">
 					</xsd:element>
-					<xsd:element name="breakPoints" type="tns:BreakPoint" maxOccurs="unbounded" minOccurs="0"></xsd:element>
+					<xsd:element name="breakPoints" type="tns:BreakPoint"
+						maxOccurs="unbounded" minOccurs="0"></xsd:element>
 				</xsd:sequence>
 				<xsd:attribute name="keepSession" type="xsd:boolean"
 					use="optional">
@@ -1320,7 +1319,7 @@
 		<xsd:sequence>
 			<xsd:element name="source" type="xsd:string"></xsd:element>
 			<xsd:element name="password" type="xsd:string"></xsd:element>
-            <xsd:element name="type" type="xsd:string"></xsd:element>
+			<xsd:element name="type" type="xsd:string"></xsd:element>
 			<xsd:element name="defaultAlias" type="xsd:string"
 				maxOccurs="1" minOccurs="0">
 			</xsd:element>
@@ -1608,29 +1607,39 @@
 		</xsd:sequence>
 	</xsd:complexType>
 
-   <xsd:element name="testCaseRunLog">        
-        <xsd:complexType>
-            <xsd:sequence>
-                <xsd:element name="testCaseRunLogTestStep" maxOccurs="unbounded" minOccurs="1">
-                    <xsd:complexType>
-                        <xsd:sequence>
-                            <xsd:element name="message" type="xsd:string" maxOccurs="unbounded" minOccurs="0"/>
-                            <xsd:element name="errorMessage" type="xsd:string"/>
-                        </xsd:sequence>
-                        <xsd:attribute name="name" type="xsd:string"/>
-                        <xsd:attribute name="timeTaken" type="xsd:string"/>
-                        <!-- TODO Should this be an enum? -->
-                        <xsd:attribute name="status" type="xsd:string"/>
-                    </xsd:complexType>
-                </xsd:element>
-           </xsd:sequence>
-            <xsd:attribute name="testCase" type="xsd:string"/>
-            <xsd:attribute name="timeTaken" type="xsd:string"/>
-            <!-- TODO Should this be an enum? -->
-            <xsd:attribute name="status" type="xsd:string"/>
-        </xsd:complexType>
-    </xsd:element>
-         
+	<xsd:element name="testCaseRunLog">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="testCaseRunLogTestStep" maxOccurs="unbounded"
+					minOccurs="1">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="message" type="xsd:string"
+								maxOccurs="unbounded" minOccurs="0" />
+							<xsd:element name="errorMessage" type="xsd:string" />
+						</xsd:sequence>
+						<xsd:attribute name="name" type="xsd:string" />
+						<xsd:attribute name="timeTaken" type="xsd:string" />
+						<!-- TODO Should this be an enum? -->
+						<xsd:attribute name="status" type="xsd:string" />
+						<xsd:attribute name="timestamp" type="xsd:string"></xsd:attribute>
+						<xsd:attribute name="httpStatus" type="xsd:string"></xsd:attribute>
+						<xsd:attribute name="contentLength" type="xsd:string"></xsd:attribute>
+						<xsd:attribute name="dnsTime" type="xsd:string"></xsd:attribute>
+						<xsd:attribute name="connectTime" type="xsd:string"></xsd:attribute>
+						<xsd:attribute name="timeToFirstByte" type="xsd:string"></xsd:attribute>
+						<xsd:attribute name="readTime" type="xsd:string"></xsd:attribute>
+						<xsd:attribute name="totalTime" type="xsd:string"></xsd:attribute>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+			<xsd:attribute name="testCase" type="xsd:string" />
+			<xsd:attribute name="timeTaken" type="xsd:string" />
+			<!-- TODO Should this be an enum? -->
+			<xsd:attribute name="status" type="xsd:string" />
+		</xsd:complexType>
+	</xsd:element>
+
 	<xsd:complexType name="DriversType">
 		<xsd:sequence>
 			<xsd:element name="driver" type="tns:DriverConfig"
@@ -2279,13 +2288,14 @@
 
 	<xsd:complexType name="Environment">
 		<xsd:sequence>
-			<xsd:element name="service" type="tns:Service"
-				maxOccurs="unbounded" minOccurs="0">
+			<xsd:element name="service" type="tns:Service" maxOccurs="unbounded"
+				minOccurs="0">
 			</xsd:element>
 			<xsd:element name="property" type="tns:Property"
 				maxOccurs="unbounded" minOccurs="0">
 			</xsd:element>
-			<xsd:element name="databaseConnectionContainer" type="tns:DatabaseConnectionContainer" maxOccurs="1" minOccurs="0"></xsd:element>
+			<xsd:element name="databaseConnectionContainer" type="tns:DatabaseConnectionContainer"
+				maxOccurs="1" minOccurs="0"></xsd:element>
 		</xsd:sequence>
 		<xsd:attribute name="name" type="xsd:string"></xsd:attribute>
 	</xsd:complexType>
@@ -2296,7 +2306,7 @@
 	<xsd:complexType name="EnvironmentEndpoint">
 		<xsd:simpleContent>
 			<xsd:extension base="tns:Endpoint">
-                <xsd:attribute name="proxyHost" type="xsd:string"></xsd:attribute>
+				<xsd:attribute name="proxyHost" type="xsd:string"></xsd:attribute>
 				<xsd:attribute name="proxyPort" type="xsd:string"></xsd:attribute>
 				<xsd:attribute name="proxyUsername" type="xsd:string"></xsd:attribute>
 				<xsd:attribute name="proxyPassword" type="xsd:string"></xsd:attribute>
@@ -2306,8 +2316,10 @@
 
 	<xsd:complexType name="Service">
 		<xsd:sequence>
-			<xsd:element name="interfaceId" type="xsd:string" maxOccurs="1" minOccurs="1"></xsd:element>
-			<xsd:element name="endpoint" type="tns:EnvironmentEndpoint" maxOccurs="1" minOccurs="0"></xsd:element>
+			<xsd:element name="interfaceId" type="xsd:string"
+				maxOccurs="1" minOccurs="1"></xsd:element>
+			<xsd:element name="endpoint" type="tns:EnvironmentEndpoint"
+				maxOccurs="1" minOccurs="0"></xsd:element>
 		</xsd:sequence>
 		<xsd:attribute name="name" type="xsd:string"></xsd:attribute>
 		<xsd:attribute name="type">
@@ -2328,10 +2340,11 @@
 		<xsd:sequence>
 			<xsd:element name="testStepId" type="xsd:string"></xsd:element>
 			<xsd:element name="status" type="xsd:string"></xsd:element>
-			<xsd:element name="properties" type="tns:BreakPointProperties" maxOccurs="1" minOccurs="1"></xsd:element>
+			<xsd:element name="properties" type="tns:BreakPointProperties"
+				maxOccurs="1" minOccurs="1"></xsd:element>
 		</xsd:sequence>
 	</xsd:complexType>
-	
+
 	<xsd:complexType name="BreakPointProperties">
 		<xsd:sequence>
 			<xsd:element name="conditionEnabled" type="xsd:boolean"></xsd:element>
@@ -2356,9 +2369,8 @@
 
 	<xsd:complexType name="MessageContentAssertion">
 		<xsd:sequence>
-			<xsd:element name="elements"
-				type="tns:MessageContentElement" maxOccurs="unbounded"
-				minOccurs="0">
+			<xsd:element name="elements" type="tns:MessageContentElement"
+				maxOccurs="unbounded" minOccurs="0">
 			</xsd:element>
 			<xsd:element name="originalMessage" type="tns:CompressedString"></xsd:element>
 		</xsd:sequence>
@@ -2370,8 +2382,8 @@
 
 	<xsd:complexType name="GroupAssertionList">
 		<xsd:sequence>
-			<xsd:element name="assertions"
-				type="tns:AssertionEntry" maxOccurs="unbounded" minOccurs="0">
+			<xsd:element name="assertions" type="tns:AssertionEntry"
+				maxOccurs="unbounded" minOccurs="0">
 			</xsd:element>
 			<xsd:element name="operation" type="xsd:string"></xsd:element>
 		</xsd:sequence>
@@ -2379,7 +2391,8 @@
 
 	<xsd:complexType name="AssertionTestStep">
 		<xsd:sequence>
-			<xsd:element name="entry" type="tns:AssertionEntry" maxOccurs="unbounded" minOccurs="0"></xsd:element>
+			<xsd:element name="entry" type="tns:AssertionEntry"
+				maxOccurs="unbounded" minOccurs="0"></xsd:element>
 		</xsd:sequence>
 	</xsd:complexType>
 
