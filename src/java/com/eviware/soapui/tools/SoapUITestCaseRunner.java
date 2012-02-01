@@ -115,6 +115,7 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 		System.exit( new SoapUITestCaseRunner().runFromCommandLine( args ) );
 	}
 
+	@Override
 	protected boolean processCommandLine( CommandLine cmd )
 	{
 		String message = "";
@@ -222,16 +223,19 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 		this.saveAfterRun = saveAfterRun;
 	}
 
+	@Override
 	public void setProjectPassword( String projectPassword )
 	{
 		this.projectPassword = projectPassword;
 	}
 
+	@Override
 	public String getProjectPassword()
 	{
 		return projectPassword;
 	}
 
+	@Override
 	protected SoapUIOptions initCommandLineOptions()
 	{
 		SoapUIOptions options = new SoapUIOptions( "testrunner" );
@@ -309,10 +313,6 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 	public void setPrintAlertSiteReport( boolean printAlertSiteReport )
 	{
 		this.printAlertSiteReport = printAlertSiteReport;
-		if( this.printAlertSiteReport )
-		{
-			testCaseRunLogReport = new TestCaseRunLogReport();
-		}
 	}
 
 	public boolean isPrintAlertSiteReport()
@@ -325,6 +325,7 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 		this.ignoreErrors = ignoreErrors;
 	}
 
+	@Override
 	public boolean runRunner() throws Exception
 	{
 		initGroovyLog();
@@ -341,6 +342,11 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 
 		initProject( project );
 		ensureOutputFolder( project );
+
+		if( this.printAlertSiteReport )
+		{
+			testCaseRunLogReport = new TestCaseRunLogReport( getAbsoluteOutputFolder( project ) );
+		}
 
 		log.info( "Running soapUI tests in project [" + project.getName() + "]" );
 
@@ -625,11 +631,13 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 		this.testSuite = testSuite;
 	}
 
+	@Override
 	public void beforeRun( TestCaseRunner testRunner, TestCaseRunContext runContext )
 	{
 		log.info( "Running soapUI testcase [" + testRunner.getTestCase().getName() + "]" );
 	}
 
+	@Override
 	public void beforeStep( TestCaseRunner testRunner, TestCaseRunContext runContext, TestStep currentStep )
 	{
 		super.beforeStep( testRunner, runContext, currentStep );
@@ -638,6 +646,7 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 			log.info( "running step [" + currentStep.getName() + "]" );
 	}
 
+	@Override
 	public void afterStep( TestCaseRunner testRunner, TestCaseRunContext runContext, TestStepResult result )
 	{
 		super.afterStep( testRunner, runContext, result );
@@ -757,6 +766,7 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 
 	}
 
+	@Override
 	public void afterRun( TestCaseRunner testRunner, TestCaseRunContext runContext )
 	{
 		log.info( "Finished running soapUI testcase [" + testRunner.getTestCase().getName() + "], time taken: "
@@ -772,6 +782,7 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 
 	protected class InternalProjectRunListener extends ProjectRunListenerAdapter
 	{
+		@Override
 		public void afterTestSuite( ProjectRunner projectRunner, ProjectRunContext runContext, TestSuiteRunner testRunner )
 		{
 			testSuiteCount++ ;
@@ -852,5 +863,4 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 	{
 		this.testStepCount = testStepCount;
 	}
-
 }

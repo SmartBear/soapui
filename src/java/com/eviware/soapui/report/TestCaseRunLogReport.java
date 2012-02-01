@@ -37,12 +37,15 @@ import com.eviware.soapui.model.testsuite.TestStepResult;
  */
 public class TestCaseRunLogReport extends TestRunListenerAdapter
 {
+	private static final String REPORT_FILE_NAME = "test_case_run_log_report.xml";
 	private TestCaseRunLogDocumentConfig testCaseRunLogDocumentConfig;
 	private Logger log = Logger.getLogger( TestCaseRunLogReport.class );
 	private TestCaseRunLog testCaseRunLog;
+	private final String outputFolder;
 
-	public TestCaseRunLogReport()
+	public TestCaseRunLogReport( String outputFolder )
 	{
+		this.outputFolder = outputFolder;
 		testCaseRunLogDocumentConfig = TestCaseRunLogDocumentConfig.Factory.newInstance();
 		testCaseRunLog = testCaseRunLogDocumentConfig.addNewTestCaseRunLog();
 	}
@@ -88,8 +91,7 @@ public class TestCaseRunLogReport extends TestRunListenerAdapter
 		testCaseRunLog.setTimeTaken( Long.toString( testRunner.getTimeTaken() ) );
 		testCaseRunLog.setStatus( testRunner.getStatus().toString() );
 
-		// FIXME This should not be hard coded but configurable.
-		final File newFile = new File( "test_case_run_log_report.xml" );
+		final File newFile = new File( outputFolder, REPORT_FILE_NAME );
 
 		try
 		{
@@ -97,7 +99,7 @@ public class TestCaseRunLogReport extends TestRunListenerAdapter
 		}
 		catch( IOException e )
 		{
-			log.error( "Could not write test_case_run_log_report.xml to disk" );
+			log.error( "Could not write " + REPORT_FILE_NAME + " to disk " );
 		}
 	}
 }
