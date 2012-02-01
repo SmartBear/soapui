@@ -502,4 +502,9 @@ public class NativeBrowserComponent implements nsIWebProgressListener, nsIWeakRe
 			showingErrorPage = false;
 	}
 
+	protected Browser getBrowser()
+	{
+		return browser;
+	}
+
 }

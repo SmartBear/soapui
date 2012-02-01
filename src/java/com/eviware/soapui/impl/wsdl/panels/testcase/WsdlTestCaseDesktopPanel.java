@@ -606,6 +606,11 @@ public class WsdlTestCaseDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 		testCaseLog.release();
 		lastRunner = null;
 
+		if( alertSitePanel != null )
+		{
+			alertSitePanel.release();
+		}
+
 		return release();
 	}
 

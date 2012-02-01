@@ -22,11 +22,15 @@ import javax.swing.Action;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
+import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.components.BrowserComponent;
 import com.eviware.soapui.support.components.JXToolBar;
+import com.eviware.soapui.support.components.NativeBrowserComponent;
+import com.teamdev.jxbrowser.DefaultWebPolicyDelegate;
+import com.teamdev.jxbrowser.events.NavigationEvent;
 
 /**
  * 
@@ -37,7 +41,9 @@ public class AlertSitePanel extends JPanel
 {
 
 	private JComboBox locations;
-	private BrowserComponent browser;
+	private CustomNativeBrowserComponent browser;
+	private Action runAction;
+	private boolean useSystemBrowser;
 
 	private static String[] locationsCache = getListOfLocations();
 
@@ -48,15 +54,37 @@ public class AlertSitePanel extends JPanel
 		setOpaque( true );
 
 		add( buildToolbar(), BorderLayout.NORTH );
+
+		browser = new CustomNativeBrowserComponent( true, false );
+		add( browser.getComponent(), BorderLayout.CENTER );
+		browser.setWebPolicy();
+
+		if( runAction != null )
+		{
+			if( locationsCache.length == 0 )
+			{
+				runAction.setEnabled( false );
+			}
+		}
+	}
+
+	public void release()
+	{
+		if( browser != null )
+		{
+			browser.release();
+		}
 	}
 
 	private Component buildToolbar()
 	{
 		JXToolBar toolbar = UISupport.createToolbar();
 
-		toolbar.addFixed( UISupport.createToolbarButton( new RunAction() ) );
+		runAction = new RunAction();
+		toolbar.addFixed( UISupport.createToolbarButton( runAction ) );
 		toolbar.addRelatedGap();
-		toolbar.addFixed( buildLocationsComboBox() );
+		locations = buildLocationsComboBox();
+		toolbar.addFixed( locations );
 		toolbar.addGlue();
 		toolbar.addFixed( UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.ALERT_SITE_HELP_URL ) ) );
 
@@ -71,7 +99,8 @@ public class AlertSitePanel extends JPanel
 
 	private static String[] getListOfLocations()
 	{
-		String[] arr = { new Location( "1", "name1" ).getName(), new Location( "2", "name2" ).getName() };
+		String[] arr = { new Location( "1", "http://www.soapui.org" ).getName(),
+				new Location( "2", "http://www.loadui.org" ).getName() };
 		return arr;
 	}
 
@@ -107,6 +136,52 @@ public class AlertSitePanel extends JPanel
 
 		public void actionPerformed( ActionEvent arg0 )
 		{
+			if( locations != null )
+			{
+				String name = ( String )locations.getSelectedItem();
+
+				// TODO implement actual behavior, this is just for testing
+				if( SoapUI.isJXBrowserDisabled( true ) )
+				{
+					Tools.openURL( name );
+				}
+				else
+				{
+					browser.navigate( name, null );
+				}
+				useSystemBrowser = false;
+			}
+		}
+	}
+
+	private class CustomNativeBrowserComponent extends NativeBrowserComponent
+	{
+
+		public CustomNativeBrowserComponent( boolean addToolbar, boolean addStatusBar )
+		{
+			super( addToolbar, addStatusBar );
+		}
+
+		public void setWebPolicy()
+		{
+			if( getBrowser() != null )
+			{
+				getBrowser().getServices().setWebPolicyDelegate( new DefaultWebPolicyDelegate()
+				{
+					@Override
+					public boolean allowNavigation( NavigationEvent event )
+					{
+						if( !useSystemBrowser )
+						{
+							useSystemBrowser = true;
+							return true;
+						}
+						// return false to cancel navigation
+						Tools.openURL( event.getUrl() );
+						return false;
+					}
+				} );
+			}
 		}
 	}
 
