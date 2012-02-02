@@ -20,6 +20,7 @@ import org.apache.log4j.Logger;
 import com.eviware.soapui.config.TestCaseRunLogDocumentConfig;
 import com.eviware.soapui.config.TestCaseRunLogDocumentConfig.TestCaseRunLog;
 import com.eviware.soapui.config.TestCaseRunLogDocumentConfig.TestCaseRunLog.TestCaseRunLogTestStep;
+import com.eviware.soapui.impl.support.http.HttpRequestTestStep;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransport;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.metrics.SoapUIMetrics;
@@ -64,7 +65,7 @@ public class TestCaseRunLogReport extends TestRunListenerAdapter
 		// TODO seems that we need two configurations, metrics that handle
 		// dns + connect time (from connection manager)
 		// and all other (on request level)
-		if( httpMethod != null )
+		if( httpMethod != null && result.getTestStep() instanceof HttpRequestTestStep )
 		{
 			testCaseRunLogTestStep.setEndpoint( httpMethod.getURI().toString() );
 
