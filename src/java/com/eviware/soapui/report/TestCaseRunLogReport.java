@@ -42,6 +42,7 @@ public class TestCaseRunLogReport extends TestRunListenerAdapter
 	private Logger log = Logger.getLogger( TestCaseRunLogReport.class );
 	private TestCaseRunLog testCaseRunLog;
 	private final String outputFolder;
+	private long startTime;
 
 	public TestCaseRunLogReport( String outputFolder )
 	{
@@ -58,6 +59,7 @@ public class TestCaseRunLogReport extends TestRunListenerAdapter
 		testCaseRunLogTestStep.setTimeTaken( Long.toString( result.getTimeTaken() ) );
 		testCaseRunLogTestStep.setStatus( result.getStatus().toString() );
 		testCaseRunLogTestStep.setMessageArray( result.getMessages() );
+		testCaseRunLogTestStep.setTimestamp( SoapUIMetrics.formatTimestamp( result.getTimeStamp() ) );
 
 		ExtendedHttpMethod httpMethod = ( ExtendedHttpMethod )runContext
 				.getProperty( BaseHttpRequestTransport.HTTP_METHOD );
@@ -93,6 +95,7 @@ public class TestCaseRunLogReport extends TestRunListenerAdapter
 		testCaseRunLog.setTestCase( ( testRunner.getTestCase().getName() ) );
 		testCaseRunLog.setTimeTaken( Long.toString( testRunner.getTimeTaken() ) );
 		testCaseRunLog.setStatus( testRunner.getStatus().toString() );
+		testCaseRunLog.setTimeStamp( SoapUIMetrics.formatTimestamp( startTime ) );
 
 		final File newFile = new File( outputFolder, REPORT_FILE_NAME );
 
@@ -104,5 +107,13 @@ public class TestCaseRunLogReport extends TestRunListenerAdapter
 		{
 			log.error( "Could not write " + REPORT_FILE_NAME + " to disk " );
 		}
+	}
+
+	@Override
+	public void beforeRun( TestCaseRunner testRunner, TestCaseRunContext runContext )
+	{
+		super.beforeRun( testRunner, runContext );
+
+		startTime = System.currentTimeMillis();
 	}
 }

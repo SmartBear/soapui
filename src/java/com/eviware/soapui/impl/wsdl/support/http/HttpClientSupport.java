@@ -84,7 +84,8 @@ public class HttpClientSupport
 		@Override
 		protected HttpRequestExecutor createRequestExecutor()
 		{
-			return new SoapUIHttpRequestExecutor();
+			return super.createRequestExecutor();
+			//			return new SoapUIHttpRequestExecutor();
 		}
 	}
 

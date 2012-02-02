@@ -26,7 +26,7 @@ public class SoapUIMetrics
 	private Stopwatch connectTimer;
 	private Stopwatch timeToFirstByteTimer;
 
-	private final SimpleDateFormat dateFormat = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
+	private static final SimpleDateFormat dateFormat = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
 
 	public SoapUIMetrics()
 	{
@@ -44,6 +44,11 @@ public class SoapUIMetrics
 		DNSTimer.reset();
 		connectTimer.reset();
 		timeToFirstByteTimer.reset();
+	}
+
+	public synchronized static String formatTimestamp( long timestamp )
+	{
+		return dateFormat.format( timestamp );
 	}
 
 	public Stopwatch getDNSTimer()
@@ -139,6 +144,6 @@ public class SoapUIMetrics
 	public int hashCode()
 	{
 		return toString().hashCode();
-
 	}
+
 }

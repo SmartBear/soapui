@@ -1610,27 +1610,47 @@
 	<xsd:element name="testCaseRunLog">
 		<xsd:complexType>
 			<xsd:sequence>
-				<xsd:element name="testCaseRunLogTestStep" maxOccurs="unbounded"
-					minOccurs="1">
+				<xsd:element name="testCaseRunLogTestStep"
+					maxOccurs="unbounded" minOccurs="1">
 					<xsd:complexType>
 						<xsd:sequence>
-							<xsd:element name="message" type="xsd:string"
-								maxOccurs="unbounded" minOccurs="0" />
-							<xsd:element name="errorMessage" type="xsd:string" />
+							<xsd:element name="message"
+								type="xsd:string" maxOccurs="unbounded" minOccurs="0" />
+							<xsd:element name="errorMessage"
+								type="xsd:string" />
 						</xsd:sequence>
 						<xsd:attribute name="name" type="xsd:string" />
-						<xsd:attribute name="timeTaken" type="xsd:string" />
+						<xsd:attribute name="timeTaken"
+							type="xsd:string" />
 						<!-- TODO Should this be an enum? -->
 						<xsd:attribute name="status" type="xsd:string" />
-						<xsd:attribute name="timestamp" type="xsd:string"></xsd:attribute>
-						<xsd:attribute name="httpStatus" type="xsd:string"></xsd:attribute>
-						<xsd:attribute name="contentLength" type="xsd:string"></xsd:attribute>
-						<xsd:attribute name="dnsTime" type="xsd:string"></xsd:attribute>
-						<xsd:attribute name="connectTime" type="xsd:string"></xsd:attribute>
-						<xsd:attribute name="timeToFirstByte" type="xsd:string"></xsd:attribute>
-						<xsd:attribute name="readTime" type="xsd:string"></xsd:attribute>
-						<xsd:attribute name="totalTime" type="xsd:string"></xsd:attribute>
-						<xsd:attribute name="endpoint" type="xsd:string"></xsd:attribute>
+						<xsd:attribute name="timestamp"
+							type="xsd:string">
+						</xsd:attribute>
+						<xsd:attribute name="httpStatus"
+							type="xsd:string">
+						</xsd:attribute>
+						<xsd:attribute name="contentLength"
+							type="xsd:string">
+						</xsd:attribute>
+						<xsd:attribute name="dnsTime"
+							type="xsd:string">
+						</xsd:attribute>
+						<xsd:attribute name="connectTime"
+							type="xsd:string">
+						</xsd:attribute>
+						<xsd:attribute name="timeToFirstByte"
+							type="xsd:string">
+						</xsd:attribute>
+						<xsd:attribute name="readTime"
+							type="xsd:string">
+						</xsd:attribute>
+						<xsd:attribute name="totalTime"
+							type="xsd:string">
+						</xsd:attribute>
+						<xsd:attribute name="endpoint"
+							type="xsd:string">
+						</xsd:attribute>
 					</xsd:complexType>
 				</xsd:element>
 			</xsd:sequence>
@@ -1638,6 +1658,7 @@
 			<xsd:attribute name="timeTaken" type="xsd:string" />
 			<!-- TODO Should this be an enum? -->
 			<xsd:attribute name="status" type="xsd:string" />
+			<xsd:attribute name="timeStamp" type="xsd:string"></xsd:attribute>
 		</xsd:complexType>
 	</xsd:element>
 
