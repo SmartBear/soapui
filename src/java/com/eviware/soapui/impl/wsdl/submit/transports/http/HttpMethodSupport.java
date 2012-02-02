@@ -58,9 +58,12 @@ public class HttpMethodSupport
 	private boolean decompress;
 	private org.apache.http.HttpResponse httpResponse;
 
+	private SoapUIMetrics metrics;
+
 	public HttpMethodSupport()
 	{
 		decompress = !SoapUI.getSettings().getBoolean( HttpSettings.DISABLE_RESPONSE_DECOMPRESSION );
+		metrics = new SoapUIMetrics();
 	}
 
 	public boolean isDecompress()
@@ -249,7 +252,7 @@ public class HttpMethodSupport
 		return httpResponse != null;
 	}
 
-	public byte[] getResponseBody( SoapUIMetrics httpMetrics ) throws IOException
+	public byte[] getResponseBody() throws IOException
 	{
 		if( responseBody != null )
 			return responseBody;
@@ -258,7 +261,6 @@ public class HttpMethodSupport
 		{
 			HttpEntity bufferedEntity = new BufferedHttpEntity( httpResponse.getEntity() );
 			long contentLength = bufferedEntity.getContentLength();
-			httpMetrics.setContentLength( contentLength );
 			long now = System.nanoTime();
 
 			InputStream instream = bufferedEntity.getContent();
@@ -339,6 +341,11 @@ public class HttpMethodSupport
 		responseReadTime /= 1000000;
 
 		return responseBody;
+	}
+
+	public SoapUIMetrics getMetrics()
+	{
+		return metrics;
 	}
 
 }

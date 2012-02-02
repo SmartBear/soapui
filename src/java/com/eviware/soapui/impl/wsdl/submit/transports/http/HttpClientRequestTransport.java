@@ -21,7 +21,6 @@ import org.apache.http.Header;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.conn.params.ConnRoutePNames;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 
@@ -134,7 +133,7 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 	{
 		AbstractHttpRequestInterface<?> httpRequest = ( AbstractHttpRequestInterface<?> )request;
 
-		DefaultHttpClient httpClient = HttpClientSupport.getHttpClient();
+		HttpClientSupport.SoapUIHttpClient httpClient = HttpClientSupport.getHttpClient();
 		ExtendedHttpMethod httpMethod = createHttpMethod( httpRequest );
 
 		boolean createdContext = false;

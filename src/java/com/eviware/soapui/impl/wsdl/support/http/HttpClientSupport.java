@@ -14,6 +14,7 @@ package com.eviware.soapui.impl.wsdl.support.http;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.ProtocolException;
 import java.security.KeyManagementException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -23,22 +24,34 @@ import java.security.cert.CertificateException;
 
 import org.apache.commons.ssl.KeyMaterial;
 import org.apache.http.Header;
+import org.apache.http.HttpClientConnection;
+import org.apache.http.HttpEntityEnclosingRequest;
+import org.apache.http.HttpException;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.HttpVersion;
+import org.apache.http.ProtocolVersion;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.params.AuthPolicy;
+import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.impl.auth.NTLMSchemeFactory;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.RequestWrapper;
 import org.apache.http.params.CoreConnectionPNames;
+import org.apache.http.params.CoreProtocolPNames;
+import org.apache.http.protocol.ExecutionContext;
 import org.apache.http.protocol.HttpContext;
+import org.apache.http.protocol.HttpRequestExecutor;
 import org.apache.log4j.Logger;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.metrics.SoapUIMetrics;
 import com.eviware.soapui.impl.wsdl.support.CompressionSupport;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.settings.SettingsListener;
@@ -60,9 +73,144 @@ public class HttpClientSupport
 	 * Internal helper to ensure synchronized access..
 	 */
 
+	public static class SoapUIHttpClient extends DefaultHttpClient
+	{
+
+		public SoapUIHttpClient( final ClientConnectionManager conman )
+		{
+			super( conman, null );
+		}
+
+		@Override
+		protected HttpRequestExecutor createRequestExecutor()
+		{
+			return new SoapUIHttpRequestExecutor();
+		}
+	}
+
+	public static class SoapUIHttpRequestExecutor extends HttpRequestExecutor
+	{
+		@Override
+		public HttpResponse execute( final HttpRequest request, final HttpClientConnection conn, final HttpContext context )
+				throws IOException, HttpException
+		{
+			// -------------------------------
+			// metrics
+			// -------------------------------
+			RequestWrapper w = ( RequestWrapper )request;
+			( ( ExtendedHttpMethod )w.getOriginal() ).getMetrics().getTimeToFirstByteTimer().start();
+
+			return super.execute( request, conn, context );
+		}
+
+		/**
+		 * Send the given request over the given connection.
+		 * <p>
+		 * This method also handles the expect-continue handshake if necessary. If
+		 * it does not have to handle an expect-continue handshake, it will not
+		 * use the connection for reading or anything else that depends on data
+		 * coming in over the connection.
+		 * 
+		 * @param request
+		 *           the request to send, already {@link #preProcess preprocessed}
+		 * @param conn
+		 *           the connection over which to send the request, already
+		 *           established
+		 * @param context
+		 *           the context for sending the request
+		 * 
+		 * @return a terminal response received as part of an expect-continue
+		 *         handshake, or <code>null</code> if the expect-continue
+		 *         handshake is not used
+		 * 
+		 * @throws IOException
+		 *            in case of an I/O error.
+		 * @throws HttpException
+		 *            in case of HTTP protocol violation or a processing problem.
+		 */
+		protected HttpResponse doSendRequest( final HttpRequest request, final HttpClientConnection conn,
+				final HttpContext context ) throws IOException, HttpException
+		{
+			if( request == null )
+			{
+				throw new IllegalArgumentException( "HTTP request may not be null" );
+			}
+			if( conn == null )
+			{
+				throw new IllegalArgumentException( "HTTP connection may not be null" );
+			}
+			if( context == null )
+			{
+				throw new IllegalArgumentException( "HTTP context may not be null" );
+			}
+
+			HttpResponse response = null;
+
+			// -------------------------------
+			// metrics
+			// -------------------------------
+			RequestWrapper w = ( RequestWrapper )request;
+			SoapUIMetrics metrics = ( ( ExtendedHttpMethod )w.getOriginal() ).getMetrics();
+
+			context.setAttribute( ExecutionContext.HTTP_CONNECTION, conn );
+			context.setAttribute( ExecutionContext.HTTP_REQ_SENT, Boolean.FALSE );
+
+			conn.sendRequestHeader( request );
+			if( request instanceof HttpEntityEnclosingRequest )
+			{
+				// Check for expect-continue handshake. We have to flush the
+				// headers and wait for an 100-continue response to handle it.
+				// If we get a different response, we must not send the entity.
+				boolean sendentity = true;
+				final ProtocolVersion ver = request.getRequestLine().getProtocolVersion();
+				if( ( ( HttpEntityEnclosingRequest )request ).expectContinue() && !ver.lessEquals( HttpVersion.HTTP_1_0 ) )
+				{
+
+					conn.flush();
+					// As suggested by RFC 2616 section 8.2.3, we don't wait for a
+					// 100-continue response forever. On timeout, send the entity.
+					int tms = request.getParams().getIntParameter( CoreProtocolPNames.WAIT_FOR_CONTINUE, 2000 );
+
+					if( conn.isResponseAvailable( tms ) )
+					{
+						metrics.getTimeToFirstByteTimer().stop();
+						metrics.getReadTimer().start();
+						response = conn.receiveResponseHeader();
+						if( canResponseHaveBody( request, response ) )
+						{
+							conn.receiveResponseEntity( response );
+						}
+						metrics.getReadTimer().stop();
+						int status = response.getStatusLine().getStatusCode();
+						if( status < 200 )
+						{
+							if( status != HttpStatus.SC_CONTINUE )
+							{
+								throw new ProtocolException( "Unexpected response: " + response.getStatusLine() );
+							}
+							// discard 100-continue
+							response = null;
+						}
+						else
+						{
+							sendentity = false;
+						}
+					}
+				}
+				if( sendentity )
+				{
+					conn.sendRequestEntity( ( HttpEntityEnclosingRequest )request );
+				}
+			}
+			conn.flush();
+			context.setAttribute( ExecutionContext.HTTP_REQ_SENT, Boolean.TRUE );
+			return response;
+		}
+	}
+
 	private static class Helper
 	{
-		private DefaultHttpClient httpClient;
+		private SoapUIHttpClient httpClient;
 		private final static Logger log = Logger.getLogger( HttpClientSupport.Helper.class );
 		private SoapUIMultiThreadedHttpConnectionManager connectionManager;
 		private SoapUISSLSocketFactory socketFactory;
@@ -88,14 +236,14 @@ public class HttpClientSupport
 			//					500 ) );
 			//			connectionManager.setMaxTotalConnections( ( int )settings.getLong( HttpSettings.MAX_TOTAL_CONNECTIONS, 2000 ) );
 
-			httpClient = new DefaultHttpClient( connectionManager );
+			httpClient = new SoapUIHttpClient( connectionManager );
 			httpClient.getAuthSchemes().register( AuthPolicy.NTLM, new NTLMSchemeFactory() );
 			httpClient.getAuthSchemes().register( AuthPolicy.SPNEGO, new NTLMSchemeFactory() );
 
 			settings.addSettingsListener( new SSLSettingsListener() );
 		}
 
-		public DefaultHttpClient getHttpClient()
+		public SoapUIHttpClient getHttpClient()
 		{
 			return httpClient;
 		}
@@ -197,7 +345,7 @@ public class HttpClientSupport
 		}
 	}
 
-	public static DefaultHttpClient getHttpClient()
+	public static SoapUIHttpClient getHttpClient()
 	{
 		return helper.getHttpClient();
 	}

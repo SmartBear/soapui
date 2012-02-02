@@ -23,7 +23,6 @@ import org.apache.http.client.methods.HttpPost;
 
 import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedEntityEnclosingHttpMethod;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpMethodSupport;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.SSLInfo;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.metrics.SoapUIMetrics;
@@ -43,7 +42,6 @@ public final class ExtendedPostMethod extends HttpPost implements ExtendedEntity
 	public ExtendedPostMethod()
 	{
 		httpMethodSupport = new HttpMethodSupport();
-		getParams().setParameter( ExtendedHttpMethod.HTTP_METRICS, new SoapUIMetrics() );
 	}
 
 	public ExtendedPostMethod( String url )
@@ -108,8 +106,7 @@ public final class ExtendedPostMethod extends HttpPost implements ExtendedEntity
 	public void initStartTime()
 	{
 		httpMethodSupport.initStartTime();
-		getHttpMetrics().getTotalTimer().start();
-		//getHttpMetrics().getTimeToFirstByteTimer().start();
+		getMetrics().getTotalTimer().start();
 	}
 
 	public long getTimeTaken()
@@ -124,7 +121,7 @@ public final class ExtendedPostMethod extends HttpPost implements ExtendedEntity
 
 	public byte[] getResponseBody() throws IOException
 	{
-		return httpMethodSupport.getResponseBody( getHttpMetrics() );
+		return httpMethodSupport.getResponseBody();
 	}
 
 	public SSLInfo getSSLInfo()
@@ -200,8 +197,8 @@ public final class ExtendedPostMethod extends HttpPost implements ExtendedEntity
 		}
 	}
 
-	public SoapUIMetrics getHttpMetrics()
+	public SoapUIMetrics getMetrics()
 	{
-		return ( SoapUIMetrics )getParams().getParameter( ExtendedHttpMethod.HTTP_METRICS );
+		return httpMethodSupport.getMetrics();
 	}
 }

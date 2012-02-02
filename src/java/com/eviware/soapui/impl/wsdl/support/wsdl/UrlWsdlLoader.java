@@ -32,7 +32,6 @@ import org.apache.http.client.params.ClientPNames;
 import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.entity.BufferedHttpEntity;
 import org.apache.http.impl.auth.BasicScheme;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
@@ -216,7 +215,7 @@ public class UrlWsdlLoader extends WsdlLoader implements DefinitionLoader
 	{
 		public Object construct()
 		{
-			DefaultHttpClient httpClient = HttpClientSupport.getHttpClient();
+			HttpClientSupport.SoapUIHttpClient httpClient = HttpClientSupport.getHttpClient();
 			try
 			{
 				Settings soapuiSettings = SoapUI.getSettings();

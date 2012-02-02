@@ -41,7 +41,6 @@ public final class ExtendedHeadMethod extends HttpHead implements ExtendedHttpMe
 	public ExtendedHeadMethod()
 	{
 		httpMethodSupport = new HttpMethodSupport();
-		getParams().setParameter( ExtendedHttpMethod.HTTP_METRICS, new SoapUIMetrics() );
 	}
 
 	public String getDumpFile()
@@ -98,8 +97,7 @@ public final class ExtendedHeadMethod extends HttpHead implements ExtendedHttpMe
 	public void initStartTime()
 	{
 		httpMethodSupport.initStartTime();
-		getHttpMetrics().getTotalTimer().start();
-		//getHttpMetrics().getTimeToFirstByteTimer().start();
+		getMetrics().getTotalTimer().start();
 	}
 
 	public long getTimeTaken()
@@ -169,7 +167,7 @@ public final class ExtendedHeadMethod extends HttpHead implements ExtendedHttpMe
 
 	public byte[] getResponseBody() throws IOException
 	{
-		return httpMethodSupport.getResponseBody( getHttpMetrics() );
+		return httpMethodSupport.getResponseBody();
 	}
 
 	public String getResponseBodyAsString() throws IOException
@@ -185,8 +183,8 @@ public final class ExtendedHeadMethod extends HttpHead implements ExtendedHttpMe
 		}
 	}
 
-	public SoapUIMetrics getHttpMetrics()
+	public SoapUIMetrics getMetrics()
 	{
-		return ( SoapUIMetrics )getParams().getParameter( ExtendedHttpMethod.HTTP_METRICS );
+		return httpMethodSupport.getMetrics();
 	}
 }

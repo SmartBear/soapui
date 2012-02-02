@@ -13,14 +13,12 @@
 package com.eviware.soapui.impl.wsdl.support.http;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.net.ConnectException;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpHost;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.ClientConnectionOperator;
@@ -31,23 +29,17 @@ import org.apache.http.conn.HttpHostConnectException;
 import org.apache.http.conn.ManagedClientConnection;
 import org.apache.http.conn.OperatedClientConnection;
 import org.apache.http.conn.routing.HttpRoute;
+import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.conn.scheme.SchemeSocketFactory;
 import org.apache.http.impl.conn.AbstractPoolEntry;
 import org.apache.http.impl.conn.DefaultClientConnection;
 import org.apache.http.impl.conn.DefaultClientConnectionOperator;
-import org.apache.http.impl.conn.LoggingSessionInputBuffer;
-import org.apache.http.impl.conn.LoggingSessionOutputBuffer;
-import org.apache.http.impl.conn.Wire;
 import org.apache.http.impl.conn.tsccm.BasicPoolEntry;
 import org.apache.http.impl.conn.tsccm.BasicPooledConnAdapter;
 import org.apache.http.impl.conn.tsccm.PoolEntryRequest;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
-import org.apache.http.impl.io.SocketInputBuffer;
-import org.apache.http.impl.io.SocketOutputBuffer;
-import org.apache.http.io.SessionInputBuffer;
-import org.apache.http.io.SessionOutputBuffer;
 import org.apache.http.params.HttpParams;
-import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HttpContext;
 import org.apache.log4j.Logger;
 
@@ -240,9 +232,6 @@ public class SoapUIMultiThreadedHttpConnectionManager extends ThreadSafeClientCo
 
 	private class SoapUIClientConnectionOperator extends DefaultClientConnectionOperator
 	{
-
-		private SoapUIMetrics httpMetrics;
-
 		public SoapUIClientConnectionOperator( SchemeRegistry schemes )
 		{
 			super( schemes );
@@ -252,74 +241,109 @@ public class SoapUIMultiThreadedHttpConnectionManager extends ThreadSafeClientCo
 		public OperatedClientConnection createConnection()
 		{
 			SoapUIDefaultClientConnection connection = new SoapUIDefaultClientConnection();
+			connection.setAttribute( ExtendedHttpMethod.SOAPUI_METRICS, new SoapUIMetrics() );
 			return connection;
-		}
-
-		@Override
-		protected InetAddress[] resolveHostname( final String host ) throws UnknownHostException
-		{
-			if( httpMetrics != null )
-			{
-				httpMetrics.getDNSTimer().start();
-			}
-
-			InetAddress[] inetAddress = InetAddress.getAllByName( host );
-
-			if( httpMetrics != null )
-			{
-				httpMetrics.getDNSTimer().stop();
-			}
-
-			return inetAddress;
 		}
 
 		@Override
 		public void openConnection( final OperatedClientConnection conn, final HttpHost target, final InetAddress local,
 				final HttpContext context, final HttpParams params ) throws IOException
 		{
-			Object metricsObj = params.getParameter( ExtendedHttpMethod.HTTP_METRICS );
-			if( metricsObj instanceof SoapUIMetrics )
+			if( conn == null )
 			{
-				this.httpMetrics = ( SoapUIMetrics )metricsObj;
+				throw new IllegalArgumentException( "Connection may not be null" );
+			}
+			if( target == null )
+			{
+				throw new IllegalArgumentException( "Target host may not be null" );
+			}
+			if( params == null )
+			{
+				throw new IllegalArgumentException( "Parameters may not be null" );
+			}
+			if( conn.isOpen() )
+			{
+				throw new IllegalStateException( "Connection must not be open" );
 			}
 
-			if( httpMetrics != null )
+			// -------------------------------
+			// metrics
+			// -------------------------------
+			SoapUIMetrics metrics = ( SoapUIMetrics )( ( SoapUIDefaultClientConnection )conn )
+					.getAttribute( ExtendedHttpMethod.SOAPUI_METRICS );
+
+			Scheme schm = schemeRegistry.getScheme( target.getSchemeName() );
+			SchemeSocketFactory sf = schm.getSchemeSocketFactory();
+
+			if( metrics != null )
 			{
-				httpMetrics.getConnectTimer().start();
+				metrics.getDNSTimer().start();
+				metrics.getConnectTimer().start();
 			}
 
-			try
+			InetAddress[] addresses = resolveHostname( target.getHostName() );
+
+			if( metrics != null )
 			{
-				super.openConnection( conn, target, local, context, params );
+				metrics.getDNSTimer().stop();
 			}
-			catch( HttpHostConnectException e )
+
+			int port = schm.resolvePort( target.getPort() );
+			for( int i = 0; i < addresses.length; i++ )
 			{
-				if( httpMetrics != null )
+				InetAddress address = addresses[i];
+				boolean last = i == addresses.length - 1;
+
+				Socket sock = sf.createSocket( params );
+				conn.opening( sock, target );
+
+				InetSocketAddress remoteAddress = new InetSocketAddress( address, port );
+				InetSocketAddress localAddress = null;
+				if( local != null )
 				{
-					httpMetrics.getConnectTimer().reset();
+					localAddress = new InetSocketAddress( local, 0 );
 				}
-
-				throw e;
-			}
-			catch( ConnectTimeoutException e )
-			{
-				if( httpMetrics != null )
+				if( log.isDebugEnabled() )
 				{
-					httpMetrics.getConnectTimer().reset();
+					log.debug( "Connecting to " + remoteAddress );
 				}
-
-				throw e;
+				try
+				{
+					Socket connsock = sf.connectSocket( sock, remoteAddress, localAddress, params );
+					if( sock != connsock )
+					{
+						sock = connsock;
+						conn.opening( sock, target );
+					}
+					prepareSocket( sock, context, params );
+					conn.openCompleted( sf.isSecure( sock ), params );
+					return;
+				}
+				catch( ConnectException ex )
+				{
+					if( last )
+					{
+						throw new HttpHostConnectException( target, ex );
+					}
+				}
+				catch( ConnectTimeoutException ex )
+				{
+					if( last )
+					{
+						throw ex;
+					}
+				}
+				if( log.isDebugEnabled() )
+				{
+					log.debug( "Connect to " + remoteAddress + " timed out. "
+							+ "Connection will be retried using another IP address" );
+				}
 			}
 		}
 	}
 
 	private class SoapUIDefaultClientConnection extends DefaultClientConnection
 	{
-
-		private SoapUIMetrics httpMetrics;
-
-		private final Log wireLog = LogFactory.getLog( "org.apache.http.wire" );
-
 		public SoapUIDefaultClientConnection()
 		{
 			super();
@@ -329,118 +353,7 @@ public class SoapUIMultiThreadedHttpConnectionManager extends ThreadSafeClientCo
 		public void openCompleted( boolean secure, HttpParams params ) throws IOException
 		{
 			super.openCompleted( secure, params );
-
-			Object metricsObj = params.getParameter( ExtendedHttpMethod.HTTP_METRICS );
-			if( metricsObj instanceof SoapUIMetrics )
-			{
-				this.httpMetrics = ( SoapUIMetrics )metricsObj;
-			}
-
-			if( httpMetrics != null )
-			{
-				httpMetrics.getConnectTimer().stop();
-				httpMetrics.getTimeToFirstByteTimer().start();
-			}
-		}
-
-		@Override
-		protected SessionInputBuffer createSessionInputBuffer( final Socket socket, int buffersize,
-				final HttpParams params ) throws IOException
-		{
-			if( buffersize == -1 )
-			{
-				buffersize = 8192;
-			}
-			SessionInputBuffer inbuffer = new SoapUISocketInputBuffer( socket, buffersize, params );
-			if( wireLog.isDebugEnabled() )
-			{
-				inbuffer = new LoggingSessionInputBuffer( inbuffer, new Wire( wireLog ),
-						HttpProtocolParams.getHttpElementCharset( params ) );
-			}
-			return inbuffer;
-		}
-
-		@Override
-		protected SessionOutputBuffer createSessionOutputBuffer( final Socket socket, int buffersize,
-				final HttpParams params ) throws IOException
-		{
-			if( buffersize == -1 )
-			{
-				buffersize = 8192;
-			}
-			SessionOutputBuffer outbuffer = new SocketOutputBuffer( socket, buffersize, params );
-			if( wireLog.isDebugEnabled() )
-			{
-				outbuffer = new LoggingSessionOutputBuffer( outbuffer, new Wire( wireLog ),
-						HttpProtocolParams.getHttpElementCharset( params ) );
-			}
-			return outbuffer;
-		}
-
-	}
-
-	private class SoapUISocketInputBuffer extends SocketInputBuffer
-	{
-		private SoapUIMetrics httpMetrics;
-
-		public SoapUISocketInputBuffer( Socket socket, int buffersize, HttpParams params ) throws IOException
-		{
-			super( socket, buffersize, params );
-		}
-
-		@Override
-		protected void init( final InputStream instream, int buffersize, final HttpParams params )
-		{
-			super.init( instream, buffersize, params );
-
-			Object metricsObj = params.getParameter( ExtendedHttpMethod.HTTP_METRICS );
-			if( metricsObj instanceof SoapUIMetrics )
-			{
-				httpMetrics = ( SoapUIMetrics )metricsObj;
-			}
-		}
-
-		@Override
-		protected int fillBuffer() throws IOException
-		{
-			int l = -1;
-
-			try
-			{
-				if( httpMetrics != null )
-				{
-					if( !httpMetrics.getReadTimer().isStarted() )
-					{
-						httpMetrics.getReadTimer().start();
-					}
-				}
-
-				l = super.fillBuffer();
-
-				if( httpMetrics != null )
-				{
-					if( !httpMetrics.getReadTimer().isStopped() )
-					{
-						httpMetrics.getReadTimer().stop();
-					}
-
-					if( !httpMetrics.getTimeToFirstByteTimer().isStopped() )
-					{
-						httpMetrics.getTimeToFirstByteTimer().stop();
-					}
-				}
-			}
-			catch( IOException ioe )
-			{
-				if( httpMetrics != null )
-				{
-					httpMetrics.getReadTimer().reset();
-					httpMetrics.getTimeToFirstByteTimer().reset();
-				}
-				throw ioe;
-			}
-
-			return l;
+			( ( SoapUIMetrics )getAttribute( ExtendedHttpMethod.SOAPUI_METRICS ) ).getConnectTimer().stop();
 		}
 	}
 

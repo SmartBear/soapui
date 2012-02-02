@@ -15,7 +15,6 @@ package com.eviware.soapui.report;
 import java.io.File;
 import java.io.IOException;
 
-import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.log4j.Logger;
 
 import com.eviware.soapui.config.TestCaseRunLogDocumentConfig;
@@ -59,25 +58,25 @@ public class TestCaseRunLogReport extends TestRunListenerAdapter
 		testCaseRunLogTestStep.setStatus( result.getStatus().toString() );
 		testCaseRunLogTestStep.setMessageArray( result.getMessages() );
 
-		HttpRequestBase httpMethod = ( HttpRequestBase )runContext.getProperty( BaseHttpRequestTransport.HTTP_METHOD );
+		ExtendedHttpMethod httpMethod = ( ExtendedHttpMethod )runContext
+				.getProperty( BaseHttpRequestTransport.HTTP_METHOD );
+
+		// TODO seems that we need two configurations, metrics that handle
+		// dns + connect time (from connection manager)
+		// and all other (on request level)
 		if( httpMethod != null )
 		{
 			testCaseRunLogTestStep.setEndpoint( httpMethod.getURI().toString() );
 
-			Object metricsObj = httpMethod.getParams().getParameter( ExtendedHttpMethod.HTTP_METRICS );
-			if( metricsObj instanceof SoapUIMetrics )
-			{
-				SoapUIMetrics httpMetrics = ( SoapUIMetrics )metricsObj;
-				testCaseRunLogTestStep.setTimestamp( httpMetrics.getFormattedTimeStamp() );
-				testCaseRunLogTestStep.setHttpStatus( String.valueOf( httpMetrics.getHttpStatus() ) );
-				testCaseRunLogTestStep.setContentLength( String.valueOf( httpMetrics.getContentLength() ) );
-				testCaseRunLogTestStep.setReadTime( String.valueOf( httpMetrics.getReadTimer().getDuration() ) );
-				testCaseRunLogTestStep.setTotalTime( String.valueOf( httpMetrics.getTotalTimer().getDuration() ) );
-				testCaseRunLogTestStep.setDnsTime( String.valueOf( httpMetrics.getDNSTimer().getDuration() ) );
-				testCaseRunLogTestStep.setConnectTime( String.valueOf( httpMetrics.getConnectTimer().getDuration() ) );
-				testCaseRunLogTestStep.setTimeToFirstByte( String.valueOf( httpMetrics.getTimeToFirstByteTimer()
-						.getDuration() ) );
-			}
+			SoapUIMetrics metrics = ( SoapUIMetrics )httpMethod.getMetrics();
+			testCaseRunLogTestStep.setTimestamp( metrics.getFormattedTimeStamp() );
+			testCaseRunLogTestStep.setHttpStatus( String.valueOf( metrics.getHttpStatus() ) );
+			testCaseRunLogTestStep.setContentLength( String.valueOf( metrics.getContentLength() ) );
+			testCaseRunLogTestStep.setReadTime( String.valueOf( metrics.getReadTimer().getDuration() ) );
+			testCaseRunLogTestStep.setTotalTime( String.valueOf( metrics.getTotalTimer().getDuration() ) );
+			testCaseRunLogTestStep.setDnsTime( String.valueOf( metrics.getDNSTimer().getDuration() ) );
+			testCaseRunLogTestStep.setConnectTime( String.valueOf( metrics.getConnectTimer().getDuration() ) );
+			testCaseRunLogTestStep.setTimeToFirstByte( String.valueOf( metrics.getTimeToFirstByteTimer().getDuration() ) );
 		}
 
 		Throwable error = result.getError();
