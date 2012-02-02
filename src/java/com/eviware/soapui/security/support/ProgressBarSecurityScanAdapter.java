@@ -1,5 +1,5 @@
 /*
- *  soapUI, copyright (C) 2004-2011 eviware.com 
+ *  soapUI, copyright (C) 2004-2012 smartbear.com 
  *
  *  soapUI is free software; you can redistribute it and/or modify it under the 
  *  terms of version 2.1 of the GNU Lesser General Public License as published by 
@@ -21,6 +21,7 @@ import javax.swing.JTree;
 import javax.swing.SwingConstants;
 import javax.swing.tree.DefaultTreeModel;
 
+
 import com.eviware.soapui.model.security.SecurityScan;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.security.SecurityTest;
@@ -34,6 +35,7 @@ import com.eviware.soapui.security.scan.AbstractSecurityScanWithProperties;
 public class ProgressBarSecurityScanAdapter extends SecurityTestRunListenerAdapter
 {
 
+	private static final String SKIPPED_VALUE = "SKIPPED";
 	private static final Color OK_COLOR = new Color( 0, 204, 102 );
 	private static final Color FAILED_COLOR = new Color( 255, 102, 0 );
 	private static final Color MISSING_ASSERTION_COLOR = new Color( 204, 153, 255 );
@@ -87,8 +89,8 @@ public class ProgressBarSecurityScanAdapter extends SecurityTestRunListenerAdapt
 			SecurityScanRequestResult securityCheckReqResult )
 	{
 
-		if( securityCheckReqResult.getSecurityScan().getTestStep().getId().equals(
-				this.securityCheck.getTestStep().getId() )
+		if( securityCheckReqResult.getSecurityScan().getTestStep().getId()
+				.equals( this.securityCheck.getTestStep().getId() )
 				&& this.securityCheck.getName().equals( securityCheckReqResult.getSecurityScan().getName() ) )
 		{
 			if( securityCheck.getAssertionCount() == 0 )
@@ -190,7 +192,7 @@ public class ProgressBarSecurityScanAdapter extends SecurityTestRunListenerAdapt
 						else if( securityCheckResult.getStatus() == ResultStatus.SKIPPED )
 						{
 							progressBar.setForeground( defaultBackground );
-							progressBar.setString( "SKIPPED" );
+							progressBar.setString( SKIPPED_VALUE );
 						}
 					}
 					else
@@ -198,12 +200,15 @@ public class ProgressBarSecurityScanAdapter extends SecurityTestRunListenerAdapt
 						if( securityCheckResult.getStatus() == ResultStatus.SKIPPED )
 						{
 							progressBar.setForeground( defaultBackground );
-							progressBar.setString( "SKIPPED" );
+							progressBar.setString( SKIPPED_VALUE );
 						}
 					}
 				}
-				progressBar.setValue( progressBar.getMaximum() );
-				if ( progressBar.getString().equals( "" ) )
+				if( progressBar.getString().equals( SKIPPED_VALUE ) )
+					progressBar.setValue( 0 );
+				else
+					progressBar.setValue( progressBar.getMaximum() );
+				if( progressBar.getString().equals( "" ) )
 					progressBar.setString( STATE_RUN );
 			}
 			else
