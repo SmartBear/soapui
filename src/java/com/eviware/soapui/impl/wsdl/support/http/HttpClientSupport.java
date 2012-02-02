@@ -14,7 +14,6 @@ package com.eviware.soapui.impl.wsdl.support.http;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.ProtocolException;
 import java.security.KeyManagementException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -25,13 +24,10 @@ import java.security.cert.CertificateException;
 import org.apache.commons.ssl.KeyMaterial;
 import org.apache.http.Header;
 import org.apache.http.HttpClientConnection;
-import org.apache.http.HttpEntityEnclosingRequest;
 import org.apache.http.HttpException;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
-import org.apache.http.HttpVersion;
-import org.apache.http.ProtocolVersion;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.params.AuthPolicy;
@@ -43,8 +39,6 @@ import org.apache.http.impl.auth.NTLMSchemeFactory;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.RequestWrapper;
 import org.apache.http.params.CoreConnectionPNames;
-import org.apache.http.params.CoreProtocolPNames;
-import org.apache.http.protocol.ExecutionContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.HttpRequestExecutor;
 import org.apache.log4j.Logger;
@@ -84,53 +78,28 @@ public class HttpClientSupport
 		@Override
 		protected HttpRequestExecutor createRequestExecutor()
 		{
-			return super.createRequestExecutor();
-			//			return new SoapUIHttpRequestExecutor();
+			return new SoapUIHttpRequestExecutor();
 		}
 	}
 
 	public static class SoapUIHttpRequestExecutor extends HttpRequestExecutor
 	{
-		@Override
-		public HttpResponse execute( final HttpRequest request, final HttpClientConnection conn, final HttpContext context )
+		protected HttpResponse doSendRequest( HttpRequest request, HttpClientConnection conn, HttpContext context )
 				throws IOException, HttpException
 		{
+			HttpResponse response = super.doSendRequest( request, conn, context );
 			// -------------------------------
 			// metrics
 			// -------------------------------
 			RequestWrapper w = ( RequestWrapper )request;
-			( ( ExtendedHttpMethod )w.getOriginal() ).getMetrics().getTimeToFirstByteTimer().start();
-
-			return super.execute( request, conn, context );
+			if( w.getOriginal() instanceof ExtendedHttpMethod )
+				( ( ExtendedHttpMethod )w.getOriginal() ).getMetrics().getTimeToFirstByteTimer().start();
+			return response;
 		}
 
-		/**
-		 * Send the given request over the given connection.
-		 * <p>
-		 * This method also handles the expect-continue handshake if necessary. If
-		 * it does not have to handle an expect-continue handshake, it will not
-		 * use the connection for reading or anything else that depends on data
-		 * coming in over the connection.
-		 * 
-		 * @param request
-		 *           the request to send, already {@link #preProcess preprocessed}
-		 * @param conn
-		 *           the connection over which to send the request, already
-		 *           established
-		 * @param context
-		 *           the context for sending the request
-		 * 
-		 * @return a terminal response received as part of an expect-continue
-		 *         handshake, or <code>null</code> if the expect-continue
-		 *         handshake is not used
-		 * 
-		 * @throws IOException
-		 *            in case of an I/O error.
-		 * @throws HttpException
-		 *            in case of HTTP protocol violation or a processing problem.
-		 */
-		protected HttpResponse doSendRequest( final HttpRequest request, final HttpClientConnection conn,
-				final HttpContext context ) throws IOException, HttpException
+		@Override
+		protected HttpResponse doReceiveResponse( final HttpRequest request, final HttpClientConnection conn,
+				final HttpContext context ) throws HttpException, IOException
 		{
 			if( request == null )
 			{
@@ -146,65 +115,32 @@ public class HttpClientSupport
 			}
 
 			HttpResponse response = null;
+			int statuscode = 0;
 
-			// -------------------------------
-			// metrics
-			// -------------------------------
-			RequestWrapper w = ( RequestWrapper )request;
-			SoapUIMetrics metrics = ( ( ExtendedHttpMethod )w.getOriginal() ).getMetrics();
-
-			context.setAttribute( ExecutionContext.HTTP_CONNECTION, conn );
-			context.setAttribute( ExecutionContext.HTTP_REQ_SENT, Boolean.FALSE );
-
-			conn.sendRequestHeader( request );
-			if( request instanceof HttpEntityEnclosingRequest )
+			while( response == null || statuscode < HttpStatus.SC_OK )
 			{
-				// Check for expect-continue handshake. We have to flush the
-				// headers and wait for an 100-continue response to handle it.
-				// If we get a different response, we must not send the entity.
-				boolean sendentity = true;
-				final ProtocolVersion ver = request.getRequestLine().getProtocolVersion();
-				if( ( ( HttpEntityEnclosingRequest )request ).expectContinue() && !ver.lessEquals( HttpVersion.HTTP_1_0 ) )
+				response = conn.receiveResponseHeader();
+
+				RequestWrapper w = ( RequestWrapper )request;
+				SoapUIMetrics metrics = null;
+				if( w.getOriginal() instanceof ExtendedHttpMethod )
 				{
+					metrics = ( ( ExtendedHttpMethod )w.getOriginal() ).getMetrics();
+					metrics.getTimeToFirstByteTimer().stop();
+					metrics.getReadTimer().start();
+				}
 
-					conn.flush();
-					// As suggested by RFC 2616 section 8.2.3, we don't wait for a
-					// 100-continue response forever. On timeout, send the entity.
-					int tms = request.getParams().getIntParameter( CoreProtocolPNames.WAIT_FOR_CONTINUE, 2000 );
-
-					if( conn.isResponseAvailable( tms ) )
-					{
-						metrics.getTimeToFirstByteTimer().stop();
-						metrics.getReadTimer().start();
-						response = conn.receiveResponseHeader();
-						if( canResponseHaveBody( request, response ) )
-						{
-							conn.receiveResponseEntity( response );
-						}
+				if( canResponseHaveBody( request, response ) )
+				{
+					conn.receiveResponseEntity( response );
+					if( metrics != null )
 						metrics.getReadTimer().stop();
-						int status = response.getStatusLine().getStatusCode();
-						if( status < 200 )
-						{
-							if( status != HttpStatus.SC_CONTINUE )
-							{
-								throw new ProtocolException( "Unexpected response: " + response.getStatusLine() );
-							}
-							// discard 100-continue
-							response = null;
-						}
-						else
-						{
-							sendentity = false;
-						}
-					}
 				}
-				if( sendentity )
-				{
-					conn.sendRequestEntity( ( HttpEntityEnclosingRequest )request );
-				}
-			}
-			conn.flush();
-			context.setAttribute( ExecutionContext.HTTP_REQ_SENT, Boolean.TRUE );
+
+				statuscode = response.getStatusLine().getStatusCode();
+
+			} // while intermediate response
+
 			return response;
 		}
 	}
