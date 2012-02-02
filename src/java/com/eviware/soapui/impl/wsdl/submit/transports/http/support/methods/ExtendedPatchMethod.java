@@ -26,7 +26,7 @@ import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpMethodSupport;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpPatch;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.SSLInfo;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.support.metrics.HttpMetrics;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.metrics.SoapUIMetrics;
 
 public class ExtendedPatchMethod extends HttpPatch implements ExtendedEntityEnclosingHttpMethod
 {
@@ -36,7 +36,7 @@ public class ExtendedPatchMethod extends HttpPatch implements ExtendedEntityEncl
 	public ExtendedPatchMethod()
 	{
 		httpMethodSupport = new HttpMethodSupport();
-		getParams().setParameter( ExtendedHttpMethod.HTTP_METRICS, new HttpMetrics() );
+		getParams().setParameter( ExtendedHttpMethod.HTTP_METRICS, new SoapUIMetrics() );
 	}
 
 	public ExtendedPatchMethod( String url )
@@ -185,8 +185,8 @@ public class ExtendedPatchMethod extends HttpPatch implements ExtendedEntityEncl
 		}
 	}
 
-	public HttpMetrics getHttpMetrics()
+	public SoapUIMetrics getHttpMetrics()
 	{
-		return ( HttpMetrics )getParams().getParameter( ExtendedHttpMethod.HTTP_METRICS );
+		return ( SoapUIMetrics )getParams().getParameter( ExtendedHttpMethod.HTTP_METRICS );
 	}
 }

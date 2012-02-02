@@ -67,4 +67,14 @@ public class NanoStopwatch implements Stopwatch
 		stop += value;
 	}
 
+	public boolean isStarted()
+	{
+		return getStart() > 0;
+	}
+
+	public boolean isStopped()
+	{
+		return getStop() > 0;
+	}
+
 }

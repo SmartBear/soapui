@@ -26,7 +26,7 @@ import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedEntityEnclosi
 import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpMethodSupport;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.SSLInfo;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.support.metrics.HttpMetrics;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.metrics.SoapUIMetrics;
 
 /**
  * Extended PostMethod that supports limiting of response size and detailed
@@ -43,7 +43,7 @@ public final class ExtendedPostMethod extends HttpPost implements ExtendedEntity
 	public ExtendedPostMethod()
 	{
 		httpMethodSupport = new HttpMethodSupport();
-		getParams().setParameter( ExtendedHttpMethod.HTTP_METRICS, new HttpMetrics() );
+		getParams().setParameter( ExtendedHttpMethod.HTTP_METRICS, new SoapUIMetrics() );
 	}
 
 	public ExtendedPostMethod( String url )
@@ -200,8 +200,8 @@ public final class ExtendedPostMethod extends HttpPost implements ExtendedEntity
 		}
 	}
 
-	public HttpMetrics getHttpMetrics()
+	public SoapUIMetrics getHttpMetrics()
 	{
-		return ( HttpMetrics )getParams().getParameter( ExtendedHttpMethod.HTTP_METRICS );
+		return ( SoapUIMetrics )getParams().getParameter( ExtendedHttpMethod.HTTP_METRICS );
 	}
 }

@@ -29,7 +29,7 @@ import org.apache.http.entity.BufferedHttpEntity;
 import org.apache.http.util.EntityUtils;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.support.metrics.HttpMetrics;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.metrics.SoapUIMetrics;
 import com.eviware.soapui.impl.wsdl.support.CompressionSupport;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 import com.eviware.soapui.settings.HttpSettings;
@@ -249,7 +249,7 @@ public class HttpMethodSupport
 		return httpResponse != null;
 	}
 
-	public byte[] getResponseBody( HttpMetrics httpMetrics ) throws IOException
+	public byte[] getResponseBody( SoapUIMetrics httpMetrics ) throws IOException
 	{
 		if( responseBody != null )
 			return responseBody;
@@ -260,7 +260,6 @@ public class HttpMethodSupport
 			long contentLength = bufferedEntity.getContentLength();
 			httpMetrics.setContentLength( contentLength );
 			long now = System.nanoTime();
-			httpMetrics.getReadTimer().start();
 
 			InputStream instream = bufferedEntity.getContent();
 
@@ -269,7 +268,6 @@ public class HttpMethodSupport
 				if( maxSize == 0 || ( contentLength >= 0 && contentLength <= maxSize ) )
 				{
 					responseReadTime = System.nanoTime() - now;
-					httpMetrics.getReadTimer().stop();
 					responseBody = EntityUtils.toByteArray( bufferedEntity );
 
 					try
@@ -311,7 +309,6 @@ public class HttpMethodSupport
 							FileOutputStream fileOutputStream = new FileOutputStream( dumpFile );
 							Tools.writeAll( fileOutputStream, instream );
 							responseReadTime = System.nanoTime() - now;
-							httpMetrics.getReadTimer().stop();
 							fileOutputStream.close();
 							instream = new FileInputStream( dumpFile );
 						}
@@ -327,7 +324,6 @@ public class HttpMethodSupport
 					if( responseReadTime == 0 )
 					{
 						responseReadTime = System.nanoTime() - now;
-						httpMetrics.getReadTimer().stop();
 					}
 
 					responseBody = outstream.toByteArray();

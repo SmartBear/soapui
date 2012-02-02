@@ -52,7 +52,7 @@ import org.apache.http.protocol.HttpContext;
 import org.apache.log4j.Logger;
 
 import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.support.metrics.HttpMetrics;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.metrics.SoapUIMetrics;
 
 /**
  * Manages a set of HttpConnections for various HostConfigurations. Modified to
@@ -241,7 +241,7 @@ public class SoapUIMultiThreadedHttpConnectionManager extends ThreadSafeClientCo
 	private class SoapUIClientConnectionOperator extends DefaultClientConnectionOperator
 	{
 
-		private HttpMetrics httpMetrics;
+		private SoapUIMetrics httpMetrics;
 
 		public SoapUIClientConnectionOperator( SchemeRegistry schemes )
 		{
@@ -278,9 +278,9 @@ public class SoapUIMultiThreadedHttpConnectionManager extends ThreadSafeClientCo
 				final HttpContext context, final HttpParams params ) throws IOException
 		{
 			Object metricsObj = params.getParameter( ExtendedHttpMethod.HTTP_METRICS );
-			if( metricsObj instanceof HttpMetrics )
+			if( metricsObj instanceof SoapUIMetrics )
 			{
-				this.httpMetrics = ( HttpMetrics )metricsObj;
+				this.httpMetrics = ( SoapUIMetrics )metricsObj;
 			}
 
 			if( httpMetrics != null )
@@ -316,7 +316,7 @@ public class SoapUIMultiThreadedHttpConnectionManager extends ThreadSafeClientCo
 	private class SoapUIDefaultClientConnection extends DefaultClientConnection
 	{
 
-		private HttpMetrics httpMetrics;
+		private SoapUIMetrics httpMetrics;
 
 		private final Log wireLog = LogFactory.getLog( "org.apache.http.wire" );
 
@@ -331,14 +331,15 @@ public class SoapUIMultiThreadedHttpConnectionManager extends ThreadSafeClientCo
 			super.openCompleted( secure, params );
 
 			Object metricsObj = params.getParameter( ExtendedHttpMethod.HTTP_METRICS );
-			if( metricsObj instanceof HttpMetrics )
+			if( metricsObj instanceof SoapUIMetrics )
 			{
-				this.httpMetrics = ( HttpMetrics )metricsObj;
+				this.httpMetrics = ( SoapUIMetrics )metricsObj;
 			}
 
 			if( httpMetrics != null )
 			{
 				httpMetrics.getConnectTimer().stop();
+				httpMetrics.getTimeToFirstByteTimer().start();
 			}
 		}
 
@@ -380,7 +381,7 @@ public class SoapUIMultiThreadedHttpConnectionManager extends ThreadSafeClientCo
 
 	private class SoapUISocketInputBuffer extends SocketInputBuffer
 	{
-		private HttpMetrics httpMetrics;
+		private SoapUIMetrics httpMetrics;
 
 		public SoapUISocketInputBuffer( Socket socket, int buffersize, HttpParams params ) throws IOException
 		{
@@ -393,19 +394,52 @@ public class SoapUIMultiThreadedHttpConnectionManager extends ThreadSafeClientCo
 			super.init( instream, buffersize, params );
 
 			Object metricsObj = params.getParameter( ExtendedHttpMethod.HTTP_METRICS );
-			if( metricsObj instanceof HttpMetrics )
+			if( metricsObj instanceof SoapUIMetrics )
 			{
-				this.httpMetrics = ( HttpMetrics )metricsObj;
+				httpMetrics = ( SoapUIMetrics )metricsObj;
 			}
 		}
 
-		/**
-		 * Overriden to keep time to first byte timer!
-		 */
 		@Override
 		protected int fillBuffer() throws IOException
 		{
-			int l = super.fillBuffer();
+			int l = -1;
+
+			try
+			{
+				if( httpMetrics != null )
+				{
+					if( !httpMetrics.getReadTimer().isStarted() )
+					{
+						httpMetrics.getReadTimer().start();
+					}
+				}
+
+				l = super.fillBuffer();
+
+				if( httpMetrics != null )
+				{
+					if( !httpMetrics.getReadTimer().isStopped() )
+					{
+						httpMetrics.getReadTimer().stop();
+					}
+
+					if( !httpMetrics.getTimeToFirstByteTimer().isStopped() )
+					{
+						httpMetrics.getTimeToFirstByteTimer().stop();
+					}
+				}
+			}
+			catch( IOException ioe )
+			{
+				if( httpMetrics != null )
+				{
+					httpMetrics.getReadTimer().reset();
+					httpMetrics.getTimeToFirstByteTimer().reset();
+				}
+				throw ioe;
+			}
+
 			return l;
 		}
 	}

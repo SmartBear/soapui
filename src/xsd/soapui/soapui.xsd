@@ -1630,6 +1630,7 @@
 						<xsd:attribute name="timeToFirstByte" type="xsd:string"></xsd:attribute>
 						<xsd:attribute name="readTime" type="xsd:string"></xsd:attribute>
 						<xsd:attribute name="totalTime" type="xsd:string"></xsd:attribute>
+						<xsd:attribute name="endpoint" type="xsd:string"></xsd:attribute>
 					</xsd:complexType>
 				</xsd:element>
 			</xsd:sequence>

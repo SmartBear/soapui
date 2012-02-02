@@ -25,7 +25,7 @@ import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpMethodSupport;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.SSLInfo;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.support.metrics.HttpMetrics;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.metrics.SoapUIMetrics;
 
 /**
  * Extended PostMethod that supports limiting of response size and detailed
@@ -41,7 +41,7 @@ public final class ExtendedHeadMethod extends HttpHead implements ExtendedHttpMe
 	public ExtendedHeadMethod()
 	{
 		httpMethodSupport = new HttpMethodSupport();
-		getParams().setParameter( ExtendedHttpMethod.HTTP_METRICS, new HttpMetrics() );
+		getParams().setParameter( ExtendedHttpMethod.HTTP_METRICS, new SoapUIMetrics() );
 	}
 
 	public String getDumpFile()
@@ -185,8 +185,8 @@ public final class ExtendedHeadMethod extends HttpHead implements ExtendedHttpMe
 		}
 	}
 
-	public HttpMetrics getHttpMetrics()
+	public SoapUIMetrics getHttpMetrics()
 	{
-		return ( HttpMetrics )getParams().getParameter( ExtendedHttpMethod.HTTP_METRICS );
+		return ( SoapUIMetrics )getParams().getParameter( ExtendedHttpMethod.HTTP_METRICS );
 	}
 }

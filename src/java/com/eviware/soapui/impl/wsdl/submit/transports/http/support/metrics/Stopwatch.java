@@ -35,4 +35,8 @@ public interface Stopwatch
 
 	void add( long value );
 
+	boolean isStarted();
+
+	boolean isStopped();
+
 }

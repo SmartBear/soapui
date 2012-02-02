@@ -14,7 +14,7 @@ package com.eviware.soapui.impl.wsdl.submit.transports.http.support.metrics;
 
 import java.text.SimpleDateFormat;
 
-public class HttpMetrics
+public class SoapUIMetrics
 {
 	private long timestamp = -1;
 	private int httpStatus = -1;
@@ -28,7 +28,7 @@ public class HttpMetrics
 
 	private final SimpleDateFormat dateFormat = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
 
-	public HttpMetrics()
+	public SoapUIMetrics()
 	{
 		readTimer = new NanoStopwatch();
 		totalTimer = new NanoStopwatch();
@@ -126,11 +126,11 @@ public class HttpMetrics
 		{
 			return true;
 		}
-		if( !( o instanceof HttpMetrics ) )
+		if( !( o instanceof SoapUIMetrics ) )
 		{
 			return false;
 		}
-		HttpMetrics that = ( HttpMetrics )o;
+		SoapUIMetrics that = ( SoapUIMetrics )o;
 
 		return this.toString().equals( that.toString() );
 	}

@@ -26,7 +26,7 @@ import com.eviware.soapui.impl.rest.support.MediaTypeHandler;
 import com.eviware.soapui.impl.rest.support.MediaTypeHandlerRegistry;
 import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
 import com.eviware.soapui.impl.support.http.HttpRequest;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.support.metrics.HttpMetrics;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.metrics.SoapUIMetrics;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.teststeps.TestRequest;
 import com.eviware.soapui.model.iface.Attachment;
@@ -68,7 +68,7 @@ public abstract class BaseHttpResponse implements HttpResponse
 		this.httpRequest = new WeakReference<AbstractHttpRequestInterface<?>>( httpRequest );
 		this.timeTaken = httpMethod.getTimeTaken();
 
-		HttpMetrics httpMetrics = ( HttpMetrics )httpMethod.getParams().getParameter( ExtendedHttpMethod.HTTP_METRICS );
+		SoapUIMetrics httpMetrics = ( SoapUIMetrics )httpMethod.getParams().getParameter( ExtendedHttpMethod.HTTP_METRICS );
 		httpMetrics.getTotalTimer().stop();
 
 		method = httpMethod.getMethod();
@@ -98,7 +98,7 @@ public abstract class BaseHttpResponse implements HttpResponse
 				}
 				timeTaken += httpMethod.getResponseReadTime();
 
-				httpMetrics.getTotalTimer().add( httpMetrics.getReadTimer().getDuration() );
+				httpMetrics.getTotalTimer().add( httpMethod.getResponseReadTime() );
 			}
 
 			try

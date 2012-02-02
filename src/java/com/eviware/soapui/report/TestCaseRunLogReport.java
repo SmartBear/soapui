@@ -23,7 +23,7 @@ import com.eviware.soapui.config.TestCaseRunLogDocumentConfig.TestCaseRunLog;
 import com.eviware.soapui.config.TestCaseRunLogDocumentConfig.TestCaseRunLog.TestCaseRunLogTestStep;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransport;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.support.metrics.HttpMetrics;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.metrics.SoapUIMetrics;
 import com.eviware.soapui.model.support.TestRunListenerAdapter;
 import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
@@ -62,10 +62,12 @@ public class TestCaseRunLogReport extends TestRunListenerAdapter
 		HttpRequestBase httpMethod = ( HttpRequestBase )runContext.getProperty( BaseHttpRequestTransport.HTTP_METHOD );
 		if( httpMethod != null )
 		{
+			testCaseRunLogTestStep.setEndpoint( httpMethod.getURI().toString() );
+
 			Object metricsObj = httpMethod.getParams().getParameter( ExtendedHttpMethod.HTTP_METRICS );
-			if( metricsObj instanceof HttpMetrics )
+			if( metricsObj instanceof SoapUIMetrics )
 			{
-				HttpMetrics httpMetrics = ( HttpMetrics )metricsObj;
+				SoapUIMetrics httpMetrics = ( SoapUIMetrics )metricsObj;
 				testCaseRunLogTestStep.setTimestamp( httpMetrics.getFormattedTimeStamp() );
 				testCaseRunLogTestStep.setHttpStatus( String.valueOf( httpMetrics.getHttpStatus() ) );
 				testCaseRunLogTestStep.setContentLength( String.valueOf( httpMetrics.getContentLength() ) );
@@ -73,7 +75,8 @@ public class TestCaseRunLogReport extends TestRunListenerAdapter
 				testCaseRunLogTestStep.setTotalTime( String.valueOf( httpMetrics.getTotalTimer().getDuration() ) );
 				testCaseRunLogTestStep.setDnsTime( String.valueOf( httpMetrics.getDNSTimer().getDuration() ) );
 				testCaseRunLogTestStep.setConnectTime( String.valueOf( httpMetrics.getConnectTimer().getDuration() ) );
-				//	testCaseRunLogTestStep.setTimeToFirstByte( String.valueOf(httpMetrics.getTimeToFirstByteTimer().getDuration() ) );
+				testCaseRunLogTestStep.setTimeToFirstByte( String.valueOf( httpMetrics.getTimeToFirstByteTimer()
+						.getDuration() ) );
 			}
 		}
 
