@@ -92,6 +92,8 @@ public class SimpleNotContainsAssertion extends WsdlMessageAssertion implements 
 	{
 		if( token == null )
 			token = "";
+		if( content == null )
+			content = "";
 
 		String replToken = PropertyExpander.expandProperties( context, token );
 
@@ -121,7 +123,10 @@ public class SimpleNotContainsAssertion extends WsdlMessageAssertion implements 
 
 	private String normalize( String string )
 	{
-		string = string.replaceAll( "\r\n", "\n" );
+		if( !StringUtils.isNullOrEmpty( string ) )
+		{
+			string = string.replaceAll( "\r\n", "\n" );
+		}
 		return string;
 	}
 
@@ -236,7 +241,8 @@ public class SimpleNotContainsAssertion extends WsdlMessageAssertion implements 
 		public boolean canAssert( TestPropertyHolder modelItem, String property )
 		{
 			String content = modelItem.getPropertyValue( property );
-			return !StringUtils.isNullOrEmpty( content );
+			//			return !StringUtils.isNullOrEmpty( content );
+			return true;
 		}
 	}
 }

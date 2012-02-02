@@ -92,6 +92,8 @@ public class SimpleContainsAssertion extends WsdlMessageAssertion implements Req
 	{
 		if( token == null )
 			token = "";
+		if( content == null )
+			content = "";
 		String replToken = PropertyExpander.expandProperties( context, token );
 
 		replToken = normalize( replToken );
@@ -121,7 +123,7 @@ public class SimpleContainsAssertion extends WsdlMessageAssertion implements Req
 	private String normalize( String string )
 	{
 
-		if( StringUtils.isNullOrEmpty( string ) )
+		if( !StringUtils.isNullOrEmpty( string ) )
 		{
 			string = string.replaceAll( "\r\n", "\n" );
 		}
@@ -251,7 +253,8 @@ public class SimpleContainsAssertion extends WsdlMessageAssertion implements Req
 		public boolean canAssert( TestPropertyHolder modelItem, String property )
 		{
 			String content = modelItem.getPropertyValue( property );
-			return !StringUtils.isNullOrEmpty( content );
+			//			return !StringUtils.isNullOrEmpty( content );
+			return true;
 		}
 	}
 
