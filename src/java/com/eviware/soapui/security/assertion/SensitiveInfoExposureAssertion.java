@@ -158,8 +158,8 @@ public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion impleme
 		return "OK";
 	}
 
-	protected String internalAssertProperty( TestPropertyHolder source, String propertyName, MessageExchange messageExchange,
-			SubmitContext context ) throws AssertionException
+	protected String internalAssertProperty( TestPropertyHolder source, String propertyName,
+			MessageExchange messageExchange, SubmitContext context ) throws AssertionException
 	{
 
 		Map<String, String> checkMap = createCheckMap( context );

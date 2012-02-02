@@ -203,8 +203,8 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
 			return assertContent( messageExchange.getResponseContentAsXml(), context, "Response" );
 	}
 
-	protected String internalAssertProperty( TestPropertyHolder source, String propertyName, MessageExchange messageExchange,
-			SubmitContext context ) throws AssertionException
+	protected String internalAssertProperty( TestPropertyHolder source, String propertyName,
+			MessageExchange messageExchange, SubmitContext context ) throws AssertionException
 	{
 		if( !XmlUtils.seemsToBeXml( source.getPropertyValue( propertyName ) ) )
 		{
@@ -842,5 +842,6 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
 			return new AssertionListEntry( XPathContainsAssertion.ID, XPathContainsAssertion.LABEL,
 					XPathContainsAssertion.DESCRIPTION );
 		}
+
 	}
 }

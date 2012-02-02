@@ -164,8 +164,8 @@ public class XQueryContainsAssertion extends WsdlMessageAssertion implements Req
 			return assertContent( messageExchange.getResponseContentAsXml(), context, "Response" );
 	}
 
-	protected String internalAssertProperty( TestPropertyHolder source, String propertyName, MessageExchange messageExchange,
-			SubmitContext context ) throws AssertionException
+	protected String internalAssertProperty( TestPropertyHolder source, String propertyName,
+			MessageExchange messageExchange, SubmitContext context ) throws AssertionException
 	{
 		if( !XmlUtils.seemsToBeXml( source.getPropertyValue( propertyName ) ) )
 		{
@@ -679,5 +679,13 @@ public class XQueryContainsAssertion extends WsdlMessageAssertion implements Req
 			return new AssertionListEntry( XQueryContainsAssertion.ID, XQueryContainsAssertion.LABEL,
 					XQueryContainsAssertion.DESCRIPTION );
 		}
+
+		@Override
+		public boolean canAssert( TestPropertyHolder modelItem, String property )
+		{
+			String content = modelItem.getPropertyValue( property );
+			return XmlUtils.seemsToBeXml( content );
+		}
+
 	}
 }

@@ -81,8 +81,8 @@ public class SimpleContainsAssertion extends WsdlMessageAssertion implements Req
 	}
 
 	@Override
-	protected String internalAssertProperty( TestPropertyHolder source, String propertyName, MessageExchange messageExchange,
-			SubmitContext context ) throws AssertionException
+	protected String internalAssertProperty( TestPropertyHolder source, String propertyName,
+			MessageExchange messageExchange, SubmitContext context ) throws AssertionException
 	{
 		assertContent( context, source.getPropertyValue( propertyName ), propertyName );
 		return "OK";
@@ -245,6 +245,13 @@ public class SimpleContainsAssertion extends WsdlMessageAssertion implements Req
 		{
 			return new AssertionListEntry( SimpleContainsAssertion.ID, SimpleContainsAssertion.LABEL,
 					SimpleContainsAssertion.DESCRIPTION );
+		}
+
+		@Override
+		public boolean canAssert( TestPropertyHolder modelItem, String property )
+		{
+			String content = modelItem.getPropertyValue( property );
+			return !StringUtils.isNullOrEmpty( content );
 		}
 	}
 

@@ -242,8 +242,8 @@ public class CrossSiteScriptAssertion extends WsdlMessageAssertion implements Re
 
 	}
 
-	protected String internalAssertProperty( TestPropertyHolder source, String propertyName, MessageExchange messageExchange,
-			SubmitContext context ) throws AssertionException
+	protected String internalAssertProperty( TestPropertyHolder source, String propertyName,
+			MessageExchange messageExchange, SubmitContext context ) throws AssertionException
 	{
 		return internalAssertResponse( messageExchange, context );
 	}
@@ -274,6 +274,12 @@ public class CrossSiteScriptAssertion extends WsdlMessageAssertion implements Re
 		{
 			return new AssertionListEntry( CrossSiteScriptAssertion.ID, CrossSiteScriptAssertion.LABEL,
 					CrossSiteScriptAssertion.DESCRIPTION );
+		}
+
+		@Override
+		public boolean canAssert( TestPropertyHolder modelItem, String property )
+		{
+			return true;
 		}
 	}
 

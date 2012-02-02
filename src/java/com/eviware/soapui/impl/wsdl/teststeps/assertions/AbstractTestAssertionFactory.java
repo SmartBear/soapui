@@ -21,6 +21,7 @@ import java.util.List;
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry.AssertableType;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.TestPropertyHolder;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.TestAssertion;
 import com.eviware.soapui.support.ClassUtils;
@@ -87,6 +88,15 @@ public abstract class AbstractTestAssertionFactory implements TestAssertionFacto
 				&& classes.contains( com.eviware.soapui.model.testsuite.ResponseAssertion.class ) )
 			return true;
 
+		return false;
+	}
+
+	/*
+	 * by default assertions can not be applied to properties each assertion
+	 * needs to specify otherwise
+	 */
+	public boolean canAssert( TestPropertyHolder modelItem, String property )
+	{
 		return false;
 	}
 

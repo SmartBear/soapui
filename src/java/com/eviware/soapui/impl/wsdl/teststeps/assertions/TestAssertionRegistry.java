@@ -46,6 +46,7 @@ import com.eviware.soapui.impl.wsdl.teststeps.assertions.soap.SoapResponseAssert
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.soap.WSARequestAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.soap.WSAResponseAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.soap.WSSStatusAssertion;
+import com.eviware.soapui.model.TestModelItem;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.TestAssertion;
 import com.eviware.soapui.security.assertion.CrossSiteScriptAssertion;
@@ -217,6 +218,19 @@ public class TestAssertionRegistry
 		if( factory != null )
 		{
 			return factory.canAssert( assertable );
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	public boolean canAssert( String type, TestModelItem modelItem, String property )
+	{
+		TestAssertionFactory factory = availableAssertions.get( type );
+		if( factory != null )
+		{
+			return factory.canAssert( modelItem, property );
 		}
 		else
 		{

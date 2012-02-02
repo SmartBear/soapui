@@ -34,6 +34,7 @@ import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.model.testsuite.AssertionException;
 import com.eviware.soapui.model.testsuite.RequestAssertion;
 import com.eviware.soapui.model.testsuite.ResponseAssertion;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationBuilder;
@@ -80,8 +81,8 @@ public class SimpleNotContainsAssertion extends WsdlMessageAssertion implements 
 	}
 
 	@Override
-	protected String internalAssertProperty( TestPropertyHolder source, String propertyName, MessageExchange messageExchange,
-			SubmitContext context ) throws AssertionException
+	protected String internalAssertProperty( TestPropertyHolder source, String propertyName,
+			MessageExchange messageExchange, SubmitContext context ) throws AssertionException
 	{
 		assertContent( context, source.getPropertyValue( propertyName ), propertyName );
 		return "OK";
@@ -229,6 +230,13 @@ public class SimpleNotContainsAssertion extends WsdlMessageAssertion implements 
 		{
 			return new AssertionListEntry( SimpleNotContainsAssertion.ID, SimpleNotContainsAssertion.LABEL,
 					SimpleNotContainsAssertion.DESCRIPTION );
+		}
+
+		@Override
+		public boolean canAssert( TestPropertyHolder modelItem, String property )
+		{
+			String content = modelItem.getPropertyValue( property );
+			return !StringUtils.isNullOrEmpty( content );
 		}
 	}
 }

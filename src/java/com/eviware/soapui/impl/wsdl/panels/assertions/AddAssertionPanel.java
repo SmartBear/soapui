@@ -46,6 +46,7 @@ import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.actions.project.SimpleDialog;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.recent.RecentAssertionHandler;
+import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.model.testsuite.Assertable;
@@ -67,8 +68,16 @@ public class AddAssertionPanel extends SimpleDialog
 	private JXList categoriesList;
 	private AssertionsListTable assertionsTable;
 	private Assertable assertable;
+	public static String noPropertySelected = "<No Property>";
+	private String propertyName = noPropertySelected;
 	private AddAssertionAction addAssertionAction;
 	private AssertionsListTableModel assertionsListTableModel;
+
+	public AssertionsListTableModel getAssertionsListTableModel()
+	{
+		return assertionsListTableModel;
+	}
+
 	//	private JPanel assertionListPanel;
 	private SortedSet<AssertionListEntry> assertions;
 	private ListSelectionListener selectionListener;
@@ -119,6 +128,11 @@ public class AddAssertionPanel extends SimpleDialog
 	public String getSelectedCategory()
 	{
 		return selectedCategory;
+	}
+
+	protected String getSelectedPropertyName()
+	{
+		return noPropertySelected;
 	}
 
 	public void setAssertable( Assertable assertable )
@@ -190,24 +204,31 @@ public class AddAssertionPanel extends SimpleDialog
 		categoriesList = new JXList( listModel );
 		categoriesList.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
 		categoriesList.setSelectedIndex( 0 );
+		renderAssertions();
 		categoriesList.addListSelectionListener( new ListSelectionListener()
 		{
 			@Override
 			public void valueChanged( ListSelectionEvent arg0 )
 			{
-				selectedCategory = ( String )categoriesList.getSelectedValue();
-				if( selectedCategory != null && categoriesAssertionsMap.containsKey( selectedCategory ) )
-				{
-					assertions = categoriesAssertionsMap.get( selectedCategory );
-					assertionsListTableModel.setListEntriesSet( assertions );
-					renderAssertions();
-					populateNonSelectableIndexes();
-					assertionsListTableModel.fireTableDataChanged();
-				}
+				renderAssertionsTable();
 			}
 		} );
 		panel.add( new JScrollPane( categoriesList ) );
 		return panel;
+	}
+
+	protected void renderAssertionsTable()
+	{
+
+		selectedCategory = ( String )categoriesList.getSelectedValue();
+		if( selectedCategory != null && categoriesAssertionsMap.containsKey( selectedCategory ) )
+		{
+			assertions = categoriesAssertionsMap.get( selectedCategory );
+			assertionsListTableModel.setListEntriesSet( assertions );
+			renderAssertions();
+			populateNonSelectableIndexes();
+			assertionsListTableModel.fireTableDataChanged();
+		}
 	}
 
 	protected void renderAssertions()
@@ -223,20 +244,27 @@ public class AddAssertionPanel extends SimpleDialog
 		for( int i = 0; i < assertionsList.size(); i++ )
 		{
 			AssertionListEntry assertionListEntry = ( AssertionListEntry )assertionsList.toArray()[i];
-			if( !TestAssertionRegistry.getInstance().canAssert( assertionListEntry.getTypeId(), getAssertable() ) )
+			if( !isAssertionApplicable( assertionListEntry.getTypeId() ) )
 				intList.add( i );
 		}
 		getAssertionsTable().setNonSelectableIndexes( intList );
 	}
 
+	protected boolean isAssertionApplicable( String assertionType )
+	{
+		return TestAssertionRegistry.getInstance().canAssert( assertionType, assertable );
+	}
+
+	protected boolean isAssertionApplicable( String assertionType, ModelItem modelItem, String property )
+	{
+		//property is only used for adding assertions with selecting source and property,
+		//therefore here can be empty string, but gets its meaning in Override of this method 
+		return TestAssertionRegistry.getInstance().canAssert( assertionType, assertable );
+	}
+
 	protected void enableCategoriesList( boolean enable )
 	{
 		categoriesList.setEnabled( enable );
-	}
-
-	protected void enableApplicableAssertions()
-	{
-
 	}
 
 	@Override
@@ -369,14 +397,22 @@ public class AddAssertionPanel extends SimpleDialog
 			AssertionListEntry entry = ( AssertionListEntry )value;
 			String type = TestAssertionRegistry.getInstance().getAssertionTypeForName( entry.getName() );
 			boolean canAssert = false;
-			canAssert = assertable != null ? TestAssertionRegistry.getInstance().canAssert( type, assertable ) : true;
-
+			boolean disable = true;
+			JLabel label;
+			JLabel desc;
+			JLabel disabledInfo;
+			if( type != null && assertable != null && assertable.getModelItem() != null )
+			{
+				//TODO implement for properties
+				//			canAssert = assertable != null ? TestAssertionRegistry.getInstance().canAssert( type, assertable ) : true;
+				canAssert = isAssertionApplicable( type, assertable.getModelItem(), getSelectedPropertyName() );
+				disable = !categoriesList.isEnabled() || !canAssert;
+			}
 			String str = entry.getName();
-			JLabel label = new JLabel( str );
+			label = new JLabel( str );
 			label.setFont( boldFont );
-			JLabel desc = new JLabel( ( ( AssertionListEntry )value ).getDescription() );
-			JLabel disabledInfo = new JLabel( "Not applicable with selected Source and Property" );
-			boolean disable = !categoriesList.isEnabled() || !canAssert;
+			desc = new JLabel( ( ( AssertionListEntry )value ).getDescription() );
+			disabledInfo = new JLabel( "Not applicable with selected Source and Property" );
 			if( disable )
 			{
 				label.setForeground( Color.LIGHT_GRAY );
