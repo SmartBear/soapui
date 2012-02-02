@@ -20,6 +20,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JComboBox;
+import javax.swing.JEditorPane;
 import javax.swing.JPanel;
 
 import com.eviware.soapui.SoapUI;
@@ -55,9 +56,18 @@ public class AlertSitePanel extends JPanel
 
 		add( buildToolbar(), BorderLayout.NORTH );
 
-		browser = new CustomNativeBrowserComponent( true, false );
-		add( browser.getComponent(), BorderLayout.CENTER );
-		browser.setWebPolicy();
+		if( !SoapUI.isJXBrowserDisabled( true ) )
+		{
+			browser = new CustomNativeBrowserComponent( true, false );
+			add( browser.getComponent(), BorderLayout.CENTER );
+			browser.setWebPolicy();
+		}
+		else
+		{
+			JEditorPane jxbrowserDisabledPanel = new JEditorPane();
+			jxbrowserDisabledPanel.setText( "browser component disabled or not available on this platform" );
+			add( jxbrowserDisabledPanel, BorderLayout.CENTER );
+		}
 
 		if( runAction != null )
 		{
@@ -147,7 +157,10 @@ public class AlertSitePanel extends JPanel
 				}
 				else
 				{
-					browser.navigate( name, null );
+					if( browser != null )
+					{
+						browser.navigate( name, null );
+					}
 				}
 				useSystemBrowser = false;
 			}
