@@ -45,7 +45,9 @@ public class SoapJMSBindingImporter extends AbstractSoapBindingImporter
 		SOAPBinding soapBinding = WsdlUtils.getExtensiblityElement( list, SOAPBinding.class );
 		return soapBinding == null ? false : soapBinding.getTransportURI().startsWith(
 				"http://www.soapjms.org/2007/08/soap/bindings/JMS/" )
-				|| soapBinding.getTransportURI().startsWith( "http://www.w3.org/2008/07/soap/bindings/JMS/" ) || soapBinding.getTransportURI().startsWith( "http://www.w3.org/2010/soapjms/" );
+				|| soapBinding.getTransportURI().startsWith( "http://www.w3.org/2008/07/soap/bindings/JMS/" )
+				|| soapBinding.getTransportURI().startsWith( "http://www.w3.org/2010/soapjms/" )
+				|| soapBinding.getTransportURI().startsWith( "http://schemas.xmlsoap.org/soap/jms" );
 	}
 
 	@SuppressWarnings( "unchecked" )
