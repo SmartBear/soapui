@@ -77,4 +77,10 @@ public class NanoStopwatch implements Stopwatch
 		return getStop() > 0;
 	}
 
+	public void set( long start, long stop )
+	{
+		this.start = start;
+		this.stop = stop;
+	}
+
 }

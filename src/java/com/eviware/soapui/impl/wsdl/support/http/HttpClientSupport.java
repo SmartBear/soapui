@@ -88,9 +88,7 @@ public class HttpClientSupport
 				throws IOException, HttpException
 		{
 			HttpResponse response = super.doSendRequest( request, conn, context );
-			// -------------------------------
-			// metrics
-			// -------------------------------
+
 			RequestWrapper w = ( RequestWrapper )request;
 			if( w.getOriginal() instanceof ExtendedHttpMethod )
 				( ( ExtendedHttpMethod )w.getOriginal() ).getMetrics().getTimeToFirstByteTimer().start();
@@ -138,6 +136,12 @@ public class HttpClientSupport
 				}
 
 				statuscode = response.getStatusLine().getStatusCode();
+
+				SoapUIMetrics connectionMetrics = ( SoapUIMetrics )conn.getMetrics();
+				metrics.getConnectTimer().set( connectionMetrics.getConnectTimer().getStart(),
+						connectionMetrics.getConnectTimer().getStop() );
+				metrics.getDNSTimer().set( connectionMetrics.getDNSTimer().getStart(),
+						connectionMetrics.getDNSTimer().getStop() );
 
 			} // while intermediate response
 

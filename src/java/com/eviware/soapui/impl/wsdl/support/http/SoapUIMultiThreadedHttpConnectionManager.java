@@ -32,6 +32,7 @@ import org.apache.http.conn.routing.HttpRoute;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.scheme.SchemeSocketFactory;
+import org.apache.http.impl.HttpConnectionMetricsImpl;
 import org.apache.http.impl.conn.AbstractPoolEntry;
 import org.apache.http.impl.conn.DefaultClientConnection;
 import org.apache.http.impl.conn.DefaultClientConnectionOperator;
@@ -39,11 +40,11 @@ import org.apache.http.impl.conn.tsccm.BasicPoolEntry;
 import org.apache.http.impl.conn.tsccm.BasicPooledConnAdapter;
 import org.apache.http.impl.conn.tsccm.PoolEntryRequest;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
+import org.apache.http.io.HttpTransportMetrics;
 import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HttpContext;
 import org.apache.log4j.Logger;
 
-import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.metrics.SoapUIMetrics;
 
 /**
@@ -241,7 +242,6 @@ public class SoapUIMultiThreadedHttpConnectionManager extends ThreadSafeClientCo
 		public OperatedClientConnection createConnection()
 		{
 			SoapUIDefaultClientConnection connection = new SoapUIDefaultClientConnection();
-			connection.setAttribute( ExtendedHttpMethod.SOAPUI_METRICS, new SoapUIMetrics() );
 			return connection;
 		}
 
@@ -266,27 +266,12 @@ public class SoapUIMultiThreadedHttpConnectionManager extends ThreadSafeClientCo
 				throw new IllegalStateException( "Connection must not be open" );
 			}
 
-			// -------------------------------
-			// metrics
-			// -------------------------------
-			SoapUIMetrics metrics = ( SoapUIMetrics )( ( SoapUIDefaultClientConnection )conn )
-					.getAttribute( ExtendedHttpMethod.SOAPUI_METRICS );
-
 			Scheme schm = schemeRegistry.getScheme( target.getSchemeName() );
 			SchemeSocketFactory sf = schm.getSchemeSocketFactory();
 
-			if( metrics != null )
-			{
-				metrics.getDNSTimer().start();
-				metrics.getConnectTimer().start();
-			}
-
+			long start = System.nanoTime();
 			InetAddress[] addresses = resolveHostname( target.getHostName() );
-
-			if( metrics != null )
-			{
-				metrics.getDNSTimer().stop();
-			}
+			long dnsEnd = System.nanoTime();
 
 			int port = schm.resolvePort( target.getPort() );
 			for( int i = 0; i < addresses.length; i++ )
@@ -317,6 +302,16 @@ public class SoapUIMultiThreadedHttpConnectionManager extends ThreadSafeClientCo
 					}
 					prepareSocket( sock, context, params );
 					conn.openCompleted( sf.isSecure( sock ), params );
+					long connectEnd = System.nanoTime();
+
+					SoapUIMetrics metrics = ( SoapUIMetrics )conn.getMetrics();
+
+					if( metrics != null )
+					{
+						metrics.getDNSTimer().set( start, dnsEnd );
+						metrics.getConnectTimer().set( start, connectEnd );
+					}
+
 					return;
 				}
 				catch( ConnectException ex )
@@ -344,16 +339,20 @@ public class SoapUIMultiThreadedHttpConnectionManager extends ThreadSafeClientCo
 
 	private class SoapUIDefaultClientConnection extends DefaultClientConnection
 	{
+
 		public SoapUIDefaultClientConnection()
 		{
 			super();
 		}
 
 		@Override
-		public void openCompleted( boolean secure, HttpParams params ) throws IOException
+		/**
+		 * @since 4.1
+		 */
+		protected HttpConnectionMetricsImpl createConnectionMetrics( final HttpTransportMetrics inTransportMetric,
+				final HttpTransportMetrics outTransportMetric )
 		{
-			super.openCompleted( secure, params );
-			( ( SoapUIMetrics )getAttribute( ExtendedHttpMethod.SOAPUI_METRICS ) ).getConnectTimer().stop();
+			return new SoapUIMetrics( inTransportMetric, outTransportMetric );
 		}
 	}
 

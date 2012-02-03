@@ -64,9 +64,6 @@ public class TestCaseRunLogReport extends TestRunListenerAdapter
 		ExtendedHttpMethod httpMethod = ( ExtendedHttpMethod )runContext
 				.getProperty( BaseHttpRequestTransport.HTTP_METHOD );
 
-		// TODO seems that we need two configurations, metrics that handle
-		// dns + connect time (from connection manager)
-		// and all other (on request level)
 		if( httpMethod != null && result.getTestStep() instanceof HttpRequestTestStep )
 		{
 			testCaseRunLogTestStep.setEndpoint( httpMethod.getURI().toString() );

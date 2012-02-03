@@ -113,8 +113,8 @@ public abstract class BaseHttpResponse implements HttpResponse
 				this.sslInfo = httpMethod.getSSLInfo();
 				this.url = httpMethod.getURI().toURL();
 
-				metrics.setTimestamp( this.timestamp );
-				metrics.setHttpStatus( this.statusCode );
+				metrics.setTimestamp( getTimestamp() );
+				metrics.setHttpStatus( getStatusCode() );
 			}
 			catch( Throwable e )
 			{

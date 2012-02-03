@@ -26,6 +26,7 @@ import org.apache.http.HeaderElement;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.entity.BufferedHttpEntity;
+import org.apache.http.impl.io.HttpTransportMetricsImpl;
 import org.apache.http.util.EntityUtils;
 
 import com.eviware.soapui.SoapUI;
@@ -63,7 +64,7 @@ public class HttpMethodSupport
 	public HttpMethodSupport()
 	{
 		decompress = !SoapUI.getSettings().getBoolean( HttpSettings.DISABLE_RESPONSE_DECOMPRESSION );
-		metrics = new SoapUIMetrics();
+		metrics = new SoapUIMetrics( new HttpTransportMetricsImpl(), new HttpTransportMetricsImpl() );
 	}
 
 	public boolean isDecompress()
@@ -262,6 +263,10 @@ public class HttpMethodSupport
 			HttpEntity bufferedEntity = new BufferedHttpEntity( httpResponse.getEntity() );
 			long contentLength = bufferedEntity.getContentLength();
 			long now = System.nanoTime();
+			if( metrics != null )
+			{
+				metrics.setContentLength( contentLength );
+			}
 
 			InputStream instream = bufferedEntity.getContent();
 

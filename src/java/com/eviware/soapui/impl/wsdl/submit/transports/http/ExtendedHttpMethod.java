@@ -25,8 +25,6 @@ import com.eviware.soapui.impl.wsdl.submit.transports.http.support.metrics.SoapU
 
 public interface ExtendedHttpMethod extends HttpRequest, HttpUriRequest
 {
-	String SOAPUI_METRICS = "soapui-http-metrics";
-
 	public long getMaxSize();
 
 	public void setMaxSize( long maxSize );
