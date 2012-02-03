@@ -80,6 +80,7 @@ import com.eviware.soapui.model.testsuite.RequestAssertion;
 import com.eviware.soapui.model.testsuite.ResponseAssertion;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.support.StringUtils;
+import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JUndoableTextArea;
 import com.eviware.soapui.support.components.JXToolBar;
@@ -273,10 +274,7 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
 						String xpath = XmlUtils.createAbsoluteXPath( items[c].getDomNode() );
 						if( xpath != null )
 						{
-							XmlObject xmlObj = items[c]; // XmlObject.Factory.parse(
-							// items[c].xmlText( options
-							// ) );
-
+							XmlObject xmlObj = items[c];
 							assertedXPathImpl = new AssertedXPathImpl( this, xpath, xmlObj );
 							assertedXPathsContainer.addAssertedXPath( assertedXPathImpl );
 						}
@@ -293,16 +291,24 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
 						else
 						{
 							Node domNode = items[c].getDomNode();
-							if( domNode.getNodeType() == Node.ELEMENT_NODE )
+							switch( domNode.getNodeType() )
 							{
+							case Node.ELEMENT_NODE :
 								String expandedValue = PropertyExpander.expandProperties( context,
 										XmlUtils.getElementText( ( Element )domNode ) );
 								XMLAssert.assertEquals( expandedContent, expandedValue );
-							}
-							else
-							{
-								String expandedValue = PropertyExpander.expandProperties( context, domNode.getNodeValue() );
+								break;
+							case Node.ATTRIBUTE_NODE :
+								expandedValue = PropertyExpander.expandProperties( context, domNode.getNodeValue() );
+								if( allowWildcards )
+									Tools.assertSimilar( expandedContent, expandedValue, '*' );
+								else
+									XMLAssert.assertEquals( expandedContent, expandedValue );
+								break;
+							default :
+								expandedValue = PropertyExpander.expandProperties( context, domNode.getNodeValue() );
 								XMLAssert.assertEquals( expandedContent, expandedValue );
+								break;
 							}
 						}
 					}

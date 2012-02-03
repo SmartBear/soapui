@@ -32,6 +32,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
+import junit.framework.ComparisonFailure;
+
 import com.eviware.soapui.support.editor.inspectors.attachments.ContentTypeHandler;
 import com.eviware.soapui.support.types.StringToStringMap;
 
@@ -560,6 +562,55 @@ public class Tools
 		else
 		{
 			return false;
+		}
+	}
+
+	/**
+	 * Compares two string for similarity, allows wildcard.
+	 * 
+	 * @param expected
+	 * @param real
+	 * @param c
+	 * @throws ComparisonFailure
+	 */
+	public static void assertSimilar( String expected, String real, char wildcard ) throws ComparisonFailure
+	{
+
+		// expected == wildcard matches all
+		if( !expected.equals( String.valueOf( wildcard ) ) )
+		{
+
+			List<String> tokens = null;
+			if( wildcard == '*' || wildcard == '.' )
+				tokens = Arrays.asList( expected.split( "\\" + wildcard ) );
+			else
+				tokens = Arrays.asList( expected.split( String.valueOf( wildcard ) ) );
+
+			if( tokens.isEmpty() )
+				throw new ComparisonFailure( "Not used wildcard in expected " + "[" + wildcard + "]", expected, real );
+
+			for( int cnt = 0; cnt < tokens.size(); cnt++ )
+			{
+				if( cnt == 0 )
+				{
+					if( real.startsWith( tokens.get( cnt ) ) )
+						continue;
+					else
+						throw new ComparisonFailure( "Not matched", expected, real );
+				}
+
+				if( cnt == tokens.size() - 1 )
+				{
+					if( real.endsWith( tokens.get( cnt ) ) )
+						continue;
+					else
+						throw new ComparisonFailure( "Not matched", expected, real );
+				}
+
+				if( real.indexOf( tokens.get( cnt ) ) == -1 )
+					throw new ComparisonFailure( "Not matched", expected, real );
+			}
+
 		}
 	}
 }
