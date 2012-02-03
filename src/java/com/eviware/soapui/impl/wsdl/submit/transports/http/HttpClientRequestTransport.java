@@ -252,6 +252,8 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 		{
 			httpMethod.setFailed( t );
 
+			httpMethod.getMetrics().setTimestamp( System.currentTimeMillis() );
+
 			if( t instanceof Exception )
 				throw ( Exception )t;
 
