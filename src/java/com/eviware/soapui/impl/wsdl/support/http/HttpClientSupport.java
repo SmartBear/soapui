@@ -142,6 +142,8 @@ public class HttpClientSupport
 						connectionMetrics.getConnectTimer().getStop() );
 				metrics.getDNSTimer().set( connectionMetrics.getDNSTimer().getStart(),
 						connectionMetrics.getDNSTimer().getStop() );
+				// reset connection-level metrics
+				connectionMetrics.reset();
 
 			} // while intermediate response
 
