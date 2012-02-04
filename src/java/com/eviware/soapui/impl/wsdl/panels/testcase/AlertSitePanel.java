@@ -25,7 +25,9 @@ import javax.swing.JPanel;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
+import com.eviware.soapui.impl.testondemand.TestOnDemandCaller;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
+import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
@@ -46,11 +48,16 @@ public class AlertSitePanel extends JPanel
 	private Action runAction;
 	private boolean useSystemBrowser;
 
-	private static String[] locationsCache = getListOfLocations();
+	// FIXME This should not be hardcoded, but fetched from the location resource in the AlertSite Rest API
+	private static final String TEST_LOCATION_CODE = "10|ash.regression.alertsite.com";
 
-	public AlertSitePanel()
+	private static String[] locationsCache = getListOfLocations();
+	private final WsdlTestCase testCase;
+
+	public AlertSitePanel( WsdlTestCase testCase )
 	{
 		super( new BorderLayout() );
+		this.testCase = testCase;
 		setBackground( Color.WHITE );
 		setOpaque( true );
 
@@ -109,8 +116,7 @@ public class AlertSitePanel extends JPanel
 
 	private static String[] getListOfLocations()
 	{
-		String[] arr = { new Location( "1", "http://www.soapui.org" ).getName(),
-				new Location( "2", "http://www.loadui.org" ).getName() };
+		String[] arr = { new Location( TEST_LOCATION_CODE, TEST_LOCATION_CODE ).getName() };
 		return arr;
 	}
 
@@ -150,19 +156,31 @@ public class AlertSitePanel extends JPanel
 			{
 				String name = ( String )locations.getSelectedItem();
 
-				// TODO implement actual behavior, this is just for testing
-				if( SoapUI.isJXBrowserDisabled( true ) )
+				TestOnDemandCaller caller = new TestOnDemandCaller();
+				String redirectUrl;
+
+				// FIXME Add better error handling
+				try
 				{
-					Tools.openURL( name );
-				}
-				else
-				{
-					if( browser != null )
+					redirectUrl = caller.sendProject( testCase, name );
+
+					if( SoapUI.isJXBrowserDisabled( true ) )
 					{
-						browser.navigate( name, null );
+						Tools.openURL( redirectUrl );
 					}
+					else
+					{
+						if( browser != null )
+						{
+							browser.navigate( redirectUrl, null );
+						}
+					}
+					useSystemBrowser = false;
 				}
-				useSystemBrowser = false;
+				catch( Exception e )
+				{
+					SoapUI.logError( e );
+				}
 			}
 		}
 	}

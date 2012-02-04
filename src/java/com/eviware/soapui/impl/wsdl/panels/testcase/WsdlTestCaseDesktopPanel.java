@@ -293,6 +293,7 @@ public class WsdlTestCaseDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 		descriptionArea = new JUndoableTextArea( getModelItem().getDescription() );
 		descriptionArea.getDocument().addDocumentListener( new DocumentListenerAdapter()
 		{
+			@Override
 			public void update( Document document )
 			{
 				getModelItem().setDescription( descriptionArea.getText() );
@@ -383,21 +384,25 @@ public class WsdlTestCaseDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 
 	private final class InternalTestMonitorListener extends TestMonitorListenerAdapter
 	{
+		@Override
 		public void loadTestStarted( LoadTestRunner runner )
 		{
 			setRunningState();
 		}
 
+		@Override
 		public void loadTestFinished( LoadTestRunner runner )
 		{
 			setRunningState();
 		}
 
+		@Override
 		public void securityTestStarted( SecurityTestRunner runner )
 		{
 			setRunningState();
 		}
 
+		@Override
 		public void securityTestFinished( SecurityTestRunner runner )
 		{
 			setRunningState();
@@ -413,6 +418,7 @@ public class WsdlTestCaseDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 			dateFormat = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss.SSS" );
 		}
 
+		@Override
 		public void beforeRun( TestCaseRunner testRunner, TestCaseRunContext runContext )
 		{
 			if( SoapUI.getTestMonitor().hasRunningLoadTest( getModelItem() )
@@ -433,6 +439,7 @@ public class WsdlTestCaseDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 				runner = testRunner;
 		}
 
+		@Override
 		public synchronized void beforeStep( TestCaseRunner testRunner, TestCaseRunContext runContext,
 				final TestStep testStep )
 		{
@@ -459,6 +466,7 @@ public class WsdlTestCaseDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 			}
 		}
 
+		@Override
 		public void afterRun( TestCaseRunner testRunner, TestCaseRunContext runContext )
 		{
 			if( SoapUI.getTestMonitor().hasRunningLoadTest( getModelItem() )
@@ -507,6 +515,7 @@ public class WsdlTestCaseDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 			}
 		}
 
+		@Override
 		public void afterStep( TestCaseRunner testRunner, TestCaseRunContext runContext, TestStepResult stepResult )
 		{
 			if( SoapUI.getTestMonitor().hasRunningLoadTest( getModelItem() )
@@ -567,6 +576,7 @@ public class WsdlTestCaseDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 		}
 	}
 
+	@Override
 	public boolean onClose( boolean canCancel )
 	{
 		if( canCancel )
@@ -614,6 +624,7 @@ public class WsdlTestCaseDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 		return release();
 	}
 
+	@Override
 	public boolean dependsOn( ModelItem modelItem )
 	{
 		return modelItem == getModelItem() || modelItem == getModelItem().getTestSuite()
@@ -662,11 +673,13 @@ public class WsdlTestCaseDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 					.getModelItem(), "Setup" );
 		}
 
+		@Override
 		public String getScript()
 		{
 			return WsdlTestCaseDesktopPanel.this.getModelItem().getSetupScript();
 		}
 
+		@Override
 		public void setScript( String text )
 		{
 			WsdlTestCaseDesktopPanel.this.getModelItem().setSetupScript( text );
@@ -704,11 +717,13 @@ public class WsdlTestCaseDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 					.getModelItem(), "TearDown" );
 		}
 
+		@Override
 		public String getScript()
 		{
 			return WsdlTestCaseDesktopPanel.this.getModelItem().getTearDownScript();
 		}
 
+		@Override
 		public void setScript( String text )
 		{
 			WsdlTestCaseDesktopPanel.this.getModelItem().setTearDownScript( text );
@@ -841,7 +856,7 @@ public class WsdlTestCaseDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 
 	protected Component buildAlertSitePanel()
 	{
-		alertSitePanel = new AlertSitePanel();
+		alertSitePanel = new AlertSitePanel( getModelItem() );
 		return alertSitePanel;
 	}
 

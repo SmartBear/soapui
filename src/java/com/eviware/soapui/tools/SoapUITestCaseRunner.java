@@ -249,7 +249,7 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner
 		options.addOption( "d", true, "Sets the domain" );
 		options.addOption( "h", true, "Sets the host" );
 		options.addOption( "r", false, "Prints a small summary report" );
-		options.addOption( "M", false, "Prints an AlertSite monitoring report" );
+		options.addOption( "M", false, "Creates a Test Run Log Report in XML format" );
 		options.addOption( "f", true, "Sets the output folder to export results to" );
 		options.addOption( "j", false, "Sets the output to include JUnit XML reports" );
 		options.addOption( "m", false, "Sets the maximum number of TestStep errors to save for each testcase" );
