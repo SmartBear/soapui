@@ -12,9 +12,11 @@
 
 package com.eviware.soapui.impl.testondemand;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.io.File;
+
+import junit.framework.JUnit4TestAdapter;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -22,8 +24,6 @@ import org.junit.Test;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
-import com.eviware.soapui.model.testsuite.TestCase;
-import com.eviware.soapui.model.testsuite.TestSuite;
 
 /**
  * @author Erik R. Yverling
@@ -35,6 +35,11 @@ public class TestOnDemandCallerTest
 {
 	private static final String ALERT_SITE_REDIRECT_URL = "http://www.alertsite.com";
 	private static final String LOCATION_CODE = "10|ash.regression.alertsite.com";
+
+	public static junit.framework.Test suite()
+	{
+		return new JUnit4TestAdapter( TestOnDemandCallerTest.class );
+	}
 
 	TestOnDemandCaller caller = new TestOnDemandCaller();
 	private WsdlTestCase testCase;
