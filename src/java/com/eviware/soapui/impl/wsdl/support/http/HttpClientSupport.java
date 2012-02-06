@@ -138,12 +138,16 @@ public class HttpClientSupport
 				statuscode = response.getStatusLine().getStatusCode();
 
 				SoapUIMetrics connectionMetrics = ( SoapUIMetrics )conn.getMetrics();
-				metrics.getConnectTimer().set( connectionMetrics.getConnectTimer().getStart(),
-						connectionMetrics.getConnectTimer().getStop() );
-				metrics.getDNSTimer().set( connectionMetrics.getDNSTimer().getStart(),
-						connectionMetrics.getDNSTimer().getStop() );
-				// reset connection-level metrics
-				connectionMetrics.reset();
+
+				if( metrics != null && connectionMetrics != null )
+				{
+					metrics.getConnectTimer().set( connectionMetrics.getConnectTimer().getStart(),
+							connectionMetrics.getConnectTimer().getStop() );
+					metrics.getDNSTimer().set( connectionMetrics.getDNSTimer().getStart(),
+							connectionMetrics.getDNSTimer().getStop() );
+					// reset connection-level metrics
+					connectionMetrics.reset();
+				}
 
 			} // while intermediate response
 
