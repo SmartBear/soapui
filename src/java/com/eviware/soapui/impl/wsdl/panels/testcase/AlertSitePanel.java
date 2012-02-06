@@ -16,6 +16,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -25,6 +27,7 @@ import javax.swing.JPanel;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
+import com.eviware.soapui.impl.testondemand.Location;
 import com.eviware.soapui.impl.testondemand.TestOnDemandCaller;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
@@ -32,6 +35,7 @@ import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.components.NativeBrowserComponent;
+import com.google.common.base.Strings;
 import com.teamdev.jxbrowser.DefaultWebPolicyDelegate;
 import com.teamdev.jxbrowser.events.NavigationEvent;
 
@@ -48,11 +52,10 @@ public class AlertSitePanel extends JPanel
 	private Action runAction;
 	private boolean useSystemBrowser;
 
-	// FIXME This should not be hardcoded, but fetched from the location resource in the AlertSite Rest API
-	private static final String TEST_LOCATION_CODE = "10|ash.regression.alertsite.com";
-
-	private static String[] locationsCache = getListOfLocations();
 	private final WsdlTestCase testCase;
+	private static List<Location> locationsCache;
+
+	private TestOnDemandCaller caller = new TestOnDemandCaller();
 
 	public AlertSitePanel( WsdlTestCase testCase )
 	{
@@ -78,7 +81,7 @@ public class AlertSitePanel extends JPanel
 
 		if( runAction != null )
 		{
-			if( locationsCache.length == 0 )
+			if( locationsCache != null && locationsCache.isEmpty() )
 			{
 				runAction.setEnabled( false );
 			}
@@ -110,36 +113,12 @@ public class AlertSitePanel extends JPanel
 
 	private JComboBox buildLocationsComboBox()
 	{
-		JComboBox cb = new JComboBox( locationsCache );
+		if( locationsCache == null )
+		{
+			locationsCache = getLocationCache();
+		}
+		JComboBox cb = new JComboBox( locationsCache.toArray() );
 		return cb;
-	}
-
-	private static String[] getListOfLocations()
-	{
-		String[] arr = { new Location( TEST_LOCATION_CODE, TEST_LOCATION_CODE ).getName() };
-		return arr;
-	}
-
-	private static class Location
-	{
-		private String code;
-		private String name;
-
-		public Location( String code, String name )
-		{
-			this.code = code;
-			this.name = name;
-		}
-
-		public String getCode()
-		{
-			return this.code;
-		}
-
-		public String getName()
-		{
-			return this.name;
-		}
 	}
 
 	private class RunAction extends AbstractAction
@@ -154,28 +133,30 @@ public class AlertSitePanel extends JPanel
 		{
 			if( locations != null )
 			{
-				String name = ( String )locations.getSelectedItem();
+				Location selectedLocation = ( Location )locations.getSelectedItem();
 
-				TestOnDemandCaller caller = new TestOnDemandCaller();
 				String redirectUrl;
 
 				// FIXME Add better error handling
 				try
 				{
-					redirectUrl = caller.sendProject( testCase, name );
+					redirectUrl = caller.sendProject( testCase, selectedLocation );
 
-					if( SoapUI.isJXBrowserDisabled( true ) )
+					if( !Strings.isNullOrEmpty( redirectUrl ) )
 					{
-						Tools.openURL( redirectUrl );
-					}
-					else
-					{
-						if( browser != null )
+						if( SoapUI.isJXBrowserDisabled( true ) )
 						{
-							browser.navigate( redirectUrl, null );
+							Tools.openURL( redirectUrl );
 						}
+						else
+						{
+							if( browser != null )
+							{
+								browser.navigate( redirectUrl, null );
+							}
+						}
+						useSystemBrowser = false;
 					}
-					useSystemBrowser = false;
 				}
 				catch( Exception e )
 				{
@@ -183,6 +164,20 @@ public class AlertSitePanel extends JPanel
 				}
 			}
 		}
+	}
+
+	private List<Location> getLocationCache()
+	{
+		List<Location> locations = new ArrayList<Location>();
+		try
+		{
+			locations = caller.getLocations();
+		}
+		catch( Exception e )
+		{
+			SoapUI.logError( e );
+		}
+		return locations;
 	}
 
 	private class CustomNativeBrowserComponent extends NativeBrowserComponent

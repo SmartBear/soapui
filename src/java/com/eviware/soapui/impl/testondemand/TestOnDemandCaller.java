@@ -17,7 +17,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -25,23 +26,19 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
-import org.apache.http.HttpEntityEnclosingRequest;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.StringEntity;
-import org.apache.log4j.Logger;
-import org.apache.ws.commons.util.NamespaceContextImpl;
 import org.w3c.dom.Document;
-import org.xml.sax.InputSource;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import sun.misc.BASE64Encoder;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPostMethod;
 import com.eviware.soapui.impl.wsdl.support.CompressionSupport;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
-import com.eviware.soapui.model.workspace.Workspace;
 import com.eviware.soapui.settings.SSLSettings;
 import com.eviware.soapui.support.xml.XmlUtils;
 import com.google.common.base.Strings;
@@ -56,37 +53,83 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  */
 
 // FIXME Make this an interface?
+// FIXME the getLocations and sendProject is very similar. Refactor these!
 public class TestOnDemandCaller
 {
-	private static final String REDIRECT_URL_XPATH_EXPRESSION = "//RedirectURL";
+	// FIXME This should be the soapUI version
+	private static final String USER_AGENT = "soapUI-4.5";
+	//SoapUI.SOAPUI_VERSION;
 
-	// FIXME Should this be in a configuration file instead?
+	// FIXME Should these be in a configuration file instead?
+	private static final String LOCATIONS_URI = "https://10.0.48.172/restapi/v2/devices/list/locations";
 	private static final String UPLOAD_URI = "https://10.0.48.172/restapi/v2/devices/upload/testondemand";
 
-	// FIXME This should be removed when the AlertSite server is back up again!
-	private static final String DUMMY_UPLOAD_RESPONSE = "<Response><Status>STATUS</Status><Message>MESSAGE</Message><RedirectURL>http://www.alertsite.com</RedirectURL></Response>";
-
-	// FIXME This should be the soapUI version
-	private static final String USER_AGENT = "SOAPUI_USER_AGENT";
-
-	private final ExtendedPostMethod post = new ExtendedPostMethod();
+	private static final String REDIRECT_URL_XPATH_EXPRESSION = "//RedirectURL";
+	private static final String LOCATION_XPATH_EXPRESSION = "//Location";
+	private static final String LOCATION_CODE_XPATH_EXPRESSION = "LocCode";
+	private static final String LOCATION_NAME_XPATH_EXPRESSION = "LocName";
 
 	@NonNull
-	public String sendProject( @NonNull WsdlTestCase testCase, @NonNull String locationCode ) throws Exception
+	public List<Location> getLocations() throws Exception
 	{
+		final ExtendedPostMethod post = new ExtendedPostMethod();
+		post.setURI( new URI( LOCATIONS_URI ) );
+
+		String requestContent = "<Request api_version=\"2\"><Header><UserAgent>"
+				+ USER_AGENT
+				+ "</UserAgent></Header><Body><Command><Name>ListLocations</Name><Parameters>server_attrib=ITEST</Parameters></Command></Body></Request>";
+
+		post.setEntity( new StringEntity( requestContent ) );
+
+		SoapUI.log( "Sending request to  AlertSite:" );
+		SoapUI.log( requestContent );
+
+		HttpClientSupport.execute( post );
+
+		byte[] responseBody = post.getResponseBody();
+		SoapUI.log( "Got response from AlertSite:" );
+		SoapUI.log( new String( responseBody ) );
+
+		String reponseBodyAsString = new String( responseBody );
+		Document responseDocument = XmlUtils.parseXml( reponseBodyAsString );
+		XPathFactory factory = XPathFactory.newInstance();
+		XPath xpath = factory.newXPath();
+
+		NodeList locationNodes = ( NodeList )xpath.evaluate( LOCATION_XPATH_EXPRESSION, responseDocument,
+				XPathConstants.NODESET );
+
+		List<Location> locations = new ArrayList<Location>();
+		for( int i = 0; i < locationNodes.getLength(); i++ )
+		{
+			Node locationNode = locationNodes.item( i );
+			String name = ( String )xpath.evaluate( LOCATION_NAME_XPATH_EXPRESSION, locationNode, XPathConstants.STRING );
+			String code = ( String )xpath.evaluate( LOCATION_CODE_XPATH_EXPRESSION, locationNode, XPathConstants.STRING );
+			locations.add( new Location( code, name ) );
+		}
+
+		return locations;
+	}
+
+	@NonNull
+	public String sendProject( @NonNull WsdlTestCase testCase, @NonNull Location location ) throws Exception
+	{
+		final ExtendedPostMethod post = new ExtendedPostMethod();
 		post.setURI( new URI( UPLOAD_URI ) );
+		String locationCode = location.getCode();
 		String requestContent = createUploadRequestContents( testCase, locationCode );
+
 		byte[] compressedRequestContent = CompressionSupport.compress( CompressionSupport.ALG_GZIP,
 				requestContent.getBytes() );
 		post.setEntity( new ByteArrayEntity( compressedRequestContent ) );
 
-		// FIXME Uncomment this when the AlertSite server is back up again!
-		//			HttpClientSupport.execute( post );
-		//			byte[] responseBody = post.getResponseBody();
-		//			SoapUI.log( "Got response from AlertSite:" );
-		//			SoapUI.log( new String( responseBody ) );
+		SoapUI.log( "Sending request to  AlertSite:" );
+		SoapUI.log( requestContent );
 
-		byte[] responseBody = DUMMY_UPLOAD_RESPONSE.getBytes();
+		HttpClientSupport.execute( post );
+
+		byte[] responseBody = post.getResponseBody();
+		SoapUI.log( "Got response from AlertSite:" );
+		SoapUI.log( new String( responseBody ) );
 
 		String reponseBodyAsString = new String( responseBody );
 		Document responseDocument = XmlUtils.parseXml( reponseBodyAsString );
@@ -123,10 +166,12 @@ public class TestOnDemandCaller
 				+ "</Parameters></Command><Txn><TestSuite enctype=\"base64\">" + encodedTestSuiteName
 				+ "</TestSuite><TestCase enctype=\"base64\">" + encodedTestCaseName
 				+ "</TestCase><Content enctype=\"base64\" type=\"application/zip\">" + encodedZipedProjectFile
-				+ "</Content><Password enctype=\"base64\"> " + encodedProjectPassword
-				+ " </Password></Txn><Keystore><File enctype=\"base64\">" + encodedKeystoreFile
+				+ "</Content><Password enctype=\"base64\">" + encodedProjectPassword
+				+ "</Password></Txn><Keystore><File enctype=\"base64\">" + encodedKeystoreFile
 				+ "</File><Password enctype=\"base64\">" + encodedPassword + "</Password> </Keystore></Body></Request>";
 	}
+
+	// FIXME Make sure streams are closed when exception occurs aswell
 
 	private static byte[] getBytes( String filePath ) throws IOException
 	{
