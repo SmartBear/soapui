@@ -129,8 +129,32 @@ public class AlertSitePanel extends JPanel
 			putValue( Action.SHORT_DESCRIPTION, "Run Test On Demand report" );
 		}
 
+		private boolean hasDependencies()
+		{
+
+			return false;
+
+			//			if( testCase != null )
+			//			{
+			//				WsdlProject project = testCase.getTestSuite().getProject();
+			//				if( project.getExternalDependencies().size() > 0 )
+			//				{
+			//					return true;
+			//				}
+			//			}
+			//			return false;
+		}
+
 		public void actionPerformed( ActionEvent arg0 )
 		{
+
+			if( hasDependencies() )
+			{
+				UISupport.showErrorMessage( "Your project contains external dependencies that "
+						+ "are not supported by the Test-On-Demand functionality at this point." );
+				return;
+			}
+
 			if( locations != null )
 			{
 				Location selectedLocation = ( Location )locations.getSelectedItem();

@@ -58,9 +58,14 @@ public class TestOnDemandCaller
 	private static final String USER_AGENT = "soapUI-4.5";
 	//SoapUI.SOAPUI_VERSION;
 
+	private final static String DEV_ENDPOINT = "10.0.48.172";
+	private final static String PROD_ENDPOINT = "www.alertsite.com";
+	private final static String PROTOCOL = "https://";
+	private final static String testOnDemandEndpoint = getEndpoint();
+
 	// FIXME Should these be in a configuration file instead?
-	private static final String LOCATIONS_URI = "https://10.0.48.172/restapi/v2/devices/list/locations";
-	private static final String UPLOAD_URI = "https://10.0.48.172/restapi/v2/devices/upload/testondemand";
+	private static final String LOCATIONS_URI = testOnDemandEndpoint + "/restapi/v2/devices/list/locations";
+	private static final String UPLOAD_URI = testOnDemandEndpoint + "/restapi/v2/devices/upload/testondemand";
 
 	private static final String REDIRECT_URL_XPATH_EXPRESSION = "//RedirectURL";
 	private static final String LOCATION_XPATH_EXPRESSION = "//Location";
@@ -198,5 +203,19 @@ public class TestOnDemandCaller
 		zipedOutputStream.closeEntry();
 		zipedOutputStream.close();
 		return outputStream.toByteArray();
+	}
+
+	private static String getEndpoint()
+	{
+		String property = System.getProperty( "testOnDemandEndpoint" );
+
+		if( property == null || "dev".equals( property ) )
+		{
+			return PROTOCOL + DEV_ENDPOINT;
+		}
+		else
+		{
+			return PROTOCOL + PROD_ENDPOINT;
+		}
 	}
 }

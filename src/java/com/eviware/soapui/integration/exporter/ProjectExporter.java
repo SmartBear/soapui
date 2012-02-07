@@ -193,7 +193,7 @@ public class ProjectExporter
 	}
 
 	/**
-	 * Do actual dependency coping and updating project's copy dependecy path.
+	 * Do actual dependency copying and update project's copy dependency path.
 	 * 
 	 * @throws IOException
 	 */
@@ -202,17 +202,17 @@ public class ProjectExporter
 		boolean result = true;
 		projectCopy.setResourceRoot( "${projectDir}" );
 		List<ExternalDependency> dependencies = projectCopy.getExternalDependencies();
-		for( ExternalDependency depedency : dependencies )
+		for( ExternalDependency dependency : dependencies )
 		{
-			switch( depedency.getType() )
+			switch( dependency.getType() )
 			{
 			case FILE :
-				File originalDependency = new File( depedency.getPath() );
+				File originalDependency = new File( dependency.getPath() );
 				if( originalDependency.exists() )
 				{
 					File targetDependency = new File( tmpDir, originalDependency.getName() );
 					FileUtils.copyFile( originalDependency, targetDependency );
-					depedency.updatePath( targetDependency.getPath() );
+					dependency.updatePath( targetDependency.getPath() );
 				}
 				else
 				{
@@ -220,11 +220,11 @@ public class ProjectExporter
 				}
 				break;
 			case FOLDER :
-				originalDependency = new File( depedency.getPath() );
+				originalDependency = new File( dependency.getPath() );
 				File targetDependency = new File( tmpDir, originalDependency.getName() );
 				targetDependency.mkdir();
 				FileUtils.copyDirectory( originalDependency, targetDependency, false );
-				depedency.updatePath( targetDependency.getPath() );
+				dependency.updatePath( targetDependency.getPath() );
 				break;
 			default :
 				break;
