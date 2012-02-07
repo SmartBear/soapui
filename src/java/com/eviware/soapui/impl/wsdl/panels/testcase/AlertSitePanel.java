@@ -27,6 +27,7 @@ import javax.swing.JPanel;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
+import com.eviware.soapui.impl.testondemand.DependencyValidator;
 import com.eviware.soapui.impl.testondemand.Location;
 import com.eviware.soapui.impl.testondemand.TestOnDemandCaller;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
@@ -56,6 +57,8 @@ public class AlertSitePanel extends JPanel
 	private static List<Location> locationsCache;
 
 	private TestOnDemandCaller caller = new TestOnDemandCaller();
+
+	private DependencyValidator validator = new DependencyValidator();
 
 	public AlertSitePanel( WsdlTestCase testCase )
 	{
@@ -129,30 +132,15 @@ public class AlertSitePanel extends JPanel
 			putValue( Action.SHORT_DESCRIPTION, "Run Test On Demand report" );
 		}
 
-		private boolean hasDependencies()
-		{
-
-			return false;
-
-			//			if( testCase != null )
-			//			{
-			//				WsdlProject project = testCase.getTestSuite().getProject();
-			//				if( project.getExternalDependencies().size() > 0 )
-			//				{
-			//					return true;
-			//				}
-			//			}
-			//			return false;
-		}
-
 		public void actionPerformed( ActionEvent arg0 )
 		{
 
-			if( hasDependencies() )
+			if( validator != null && !validator.isValid( testCase ) )
 			{
-				UISupport.showErrorMessage( "Your project contains external dependencies that "
-						+ "are not supported by the Test-On-Demand functionality at this point." );
-				return;
+				// FIXME 
+				// UISupport.showErrorMessage( "Your project contains external dependencies that "
+				//		+ "are not supported by the Test-On-Demand functionality at this point." );
+				// return;
 			}
 
 			if( locations != null )
@@ -164,7 +152,7 @@ public class AlertSitePanel extends JPanel
 				// FIXME Add better error handling
 				try
 				{
-					redirectUrl = caller.sendProject( testCase, selectedLocation );
+					redirectUrl = caller.sendProject( testCase, selectedLocation, validator.getFilename() );
 
 					if( !Strings.isNullOrEmpty( redirectUrl ) )
 					{

@@ -46,8 +46,7 @@ import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
 import com.eviware.soapui.impl.support.AbstractInterface;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.impl.wsdl.support.ExternalDependency;
-import com.eviware.soapui.impl.wsdl.support.FileAttachment;
-import com.eviware.soapui.impl.wsdl.support.PathPropertyExternalDependency;
+import com.eviware.soapui.impl.wsdl.support.InterfaceExternalDependency;
 import com.eviware.soapui.impl.wsdl.support.PathUtils;
 import com.eviware.soapui.impl.wsdl.support.policy.PolicyUtils;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapMessageBuilder;
@@ -491,8 +490,8 @@ public class WsdlInterface extends AbstractInterface<WsdlInterfaceConfig>
 					list.add( newOperations.get( c ).getName() );
 
 				String retval = ( String )UISupport.prompt( "Binding operation [" + name
-						+ "] not found in new interface, select new\nbinding operation to map to", "Map Operation", list
-						.toArray(), "none/cancel - delete operation" );
+						+ "] not found in new interface, select new\nbinding operation to map to", "Map Operation",
+						list.toArray(), "none/cancel - delete operation" );
 
 				int ix = retval == null ? -1 : list.indexOf( retval ) - 1;
 
@@ -783,7 +782,7 @@ public class WsdlInterface extends AbstractInterface<WsdlInterfaceConfig>
 	public void addExternalDependencies( List<ExternalDependency> dependencies )
 	{
 		super.addExternalDependencies( dependencies );
-		dependencies.add( new PathPropertyExternalDependency( definitionProperty ) );
+		dependencies.add( new InterfaceExternalDependency( definitionProperty ) );
 	}
 
 	@SuppressWarnings( "unchecked" )
@@ -932,8 +931,8 @@ public class WsdlInterface extends AbstractInterface<WsdlInterfaceConfig>
 			getConfig().removeOperation( c );
 		}
 
-		OperationConfig newConfig = ( OperationConfig )getConfig().addNewOperation().set( reloadedOperation ).changeType(
-				OperationConfig.type );
+		OperationConfig newConfig = ( OperationConfig )getConfig().addNewOperation().set( reloadedOperation )
+				.changeType( OperationConfig.type );
 		WsdlOperation newOperation = new WsdlOperation( this, newConfig );
 		operations.add( index, newOperation );
 		newOperation.afterLoad();

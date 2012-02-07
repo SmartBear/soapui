@@ -114,12 +114,13 @@ public class TestOnDemandCaller
 	}
 
 	@NonNull
-	public String sendProject( @NonNull WsdlTestCase testCase, @NonNull Location location ) throws Exception
+	public String sendProject( @NonNull WsdlTestCase testCase, @NonNull Location location, @NonNull File filename )
+			throws Exception
 	{
 		final ExtendedPostMethod post = new ExtendedPostMethod();
 		post.setURI( new URI( UPLOAD_URI ) );
 		String locationCode = location.getCode();
-		String requestContent = createUploadRequestContents( testCase, locationCode );
+		String requestContent = createUploadRequestContents( testCase, locationCode, filename );
 
 		// FIXME The request compression is temporary disabled since the server throws an error when using it
 		//		byte[] compressedRequestContent = CompressionSupport.compress( CompressionSupport.ALG_GZIP,
@@ -144,14 +145,16 @@ public class TestOnDemandCaller
 		return ( String )xpath.evaluate( REDIRECT_URL_XPATH_EXPRESSION, responseDocument, XPathConstants.STRING );
 	}
 
-	private String createUploadRequestContents( WsdlTestCase testCase, String locationCode ) throws IOException
+	private String createUploadRequestContents( WsdlTestCase testCase, String locationCode, File filename )
+			throws IOException
 	{
 		BASE64Encoder encoder = new BASE64Encoder();
 
 		String encodedTestSuiteName = encoder.encode( testCase.getTestSuite().getName().getBytes() );
 		String encodedTestCaseName = encoder.encode( testCase.getName().getBytes() );
 
-		String projectFilePath = testCase.getTestSuite().getProject().getPath();
+		// String projectFilePath = testCase.getTestSuite().getProject().getPath();
+		String projectFilePath = filename.getAbsolutePath();
 		byte[] projectFileData = getBytes( projectFilePath );
 		byte[] zipedProjectFileData = zipBytes( testCase.getTestSuite().getProject().getName(), projectFileData );
 		String encodedZipedProjectFile = encoder.encode( zipedProjectFileData );
