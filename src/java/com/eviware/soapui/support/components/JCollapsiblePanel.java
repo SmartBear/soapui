@@ -184,4 +184,9 @@ public class JCollapsiblePanel extends JPanel
 			titleLabel.setText( nonHighlightedTitle );
 		}
 	}
+
+	public void setTitle( String title )
+	{
+		titleLabel.setText( title );
+	}
 }
