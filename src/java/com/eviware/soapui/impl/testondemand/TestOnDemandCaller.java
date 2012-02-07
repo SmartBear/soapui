@@ -26,6 +26,7 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.http.entity.StringEntity;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -50,13 +51,12 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  *         Calls the AlertSite API for running Test On Demand.
  */
 
-// FIXME Make this an interface?
+// FIXME Make this an interface? 
+// FIXME Move this to another package
 // FIXME the getLocations and sendProject is very similar. Refactor these!
 public class TestOnDemandCaller
 {
-	// FIXME This should be the soapUI version
-	private static final String USER_AGENT = "soapUI-4.5";
-	//SoapUI.SOAPUI_VERSION;
+	private static final String USER_AGENT = "soapUI-" + SoapUI.SOAPUI_VERSION;
 
 	private final static String DEV_ENDPOINT = "10.0.48.172";
 	private final static String PROD_ENDPOINT = "www.alertsite.com";
@@ -177,17 +177,22 @@ public class TestOnDemandCaller
 				+ "</File><Password enctype=\"base64\">" + encodedPassword + "</Password> </Keystore></Body></Request>";
 	}
 
-	// FIXME Make sure streams are closed when exception occurs aswell
-
 	private static byte[] getBytes( String filePath ) throws IOException
 	{
 		byte[] byteArray = new byte[0];
 		if( !Strings.isNullOrEmpty( filePath ) )
 		{
 			File file = new File( filePath );
-			FileInputStream inputStream = new FileInputStream( file );
-			byteArray = ByteStreams.toByteArray( inputStream );
-			inputStream.close();
+			FileInputStream inputStream = null;
+			try
+			{
+				inputStream = new FileInputStream( file );
+				byteArray = ByteStreams.toByteArray( inputStream );
+			}
+			finally
+			{
+				IOUtils.closeQuietly( inputStream );
+			}
 		}
 		return byteArray;
 	}
@@ -198,10 +203,16 @@ public class TestOnDemandCaller
 		ZipOutputStream zipedOutputStream = new ZipOutputStream( outputStream );
 		ZipEntry entry = new ZipEntry( filename );
 		entry.setSize( dataToBeZiped.length );
-		zipedOutputStream.putNextEntry( entry );
-		zipedOutputStream.write( dataToBeZiped );
-		zipedOutputStream.closeEntry();
-		zipedOutputStream.close();
+		try
+		{
+			zipedOutputStream.putNextEntry( entry );
+			zipedOutputStream.write( dataToBeZiped );
+		}
+		finally
+		{
+			zipedOutputStream.closeEntry();
+			zipedOutputStream.close();
+		}
 		return outputStream.toByteArray();
 	}
 
