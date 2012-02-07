@@ -74,10 +74,10 @@ public class SoapFaultAssertion extends WsdlMessageAssertion implements Response
 		return null;
 	}
 
-	protected String internalAssertProperty( TestPropertyHolder source, String propertyName, MessageExchange messageExchange,
-			SubmitContext context ) throws AssertionException
+	protected String internalAssertProperty( TestPropertyHolder source, String propertyName,
+			MessageExchange messageExchange, SubmitContext context ) throws AssertionException
 	{
-		return internalAssertResponse( messageExchange, context );
+		return null;
 	}
 
 	public static class Factory extends AbstractTestAssertionFactory

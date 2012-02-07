@@ -105,10 +105,10 @@ public class ValidHttpStatusCodesAssertion extends WsdlMessageAssertion implemen
 		return "OK";
 	}
 
-	protected String internalAssertProperty( TestPropertyHolder source, String propertyName, MessageExchange messageExchange,
-			SubmitContext context ) throws AssertionException
+	protected String internalAssertProperty( TestPropertyHolder source, String propertyName,
+			MessageExchange messageExchange, SubmitContext context ) throws AssertionException
 	{
-		return internalAssertResponse( messageExchange, context );
+		return null;
 	}
 
 	private List<String> extractCodes( SubmitContext context )

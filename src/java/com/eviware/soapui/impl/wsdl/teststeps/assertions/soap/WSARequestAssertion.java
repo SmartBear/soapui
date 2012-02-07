@@ -175,10 +175,10 @@ public class WSARequestAssertion extends WsdlMessageAssertion implements Request
 		return null;
 	}
 
-	protected String internalAssertProperty( TestPropertyHolder source, String propertyName, MessageExchange messageExchange,
-			SubmitContext context ) throws AssertionException
+	protected String internalAssertProperty( TestPropertyHolder source, String propertyName,
+			MessageExchange messageExchange, SubmitContext context ) throws AssertionException
 	{
-		return internalAssertResponse( messageExchange, context );
+		return null;
 	}
 
 	public boolean configure()

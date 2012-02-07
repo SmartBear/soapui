@@ -61,10 +61,10 @@ public class JdbcStatusAssertion extends WsdlMessageAssertion implements Respons
 		return "JDBC Status OK";
 	}
 
-	protected String internalAssertProperty( TestPropertyHolder source, String propertyName, MessageExchange messageExchange,
-			SubmitContext context ) throws AssertionException
+	protected String internalAssertProperty( TestPropertyHolder source, String propertyName,
+			MessageExchange messageExchange, SubmitContext context ) throws AssertionException
 	{
-		return internalAssertResponse( messageExchange, context );
+		return null;
 	}
 
 	public static class Factory extends AbstractTestAssertionFactory

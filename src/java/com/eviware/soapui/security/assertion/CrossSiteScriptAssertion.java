@@ -245,7 +245,8 @@ public class CrossSiteScriptAssertion extends WsdlMessageAssertion implements Re
 	protected String internalAssertProperty( TestPropertyHolder source, String propertyName,
 			MessageExchange messageExchange, SubmitContext context ) throws AssertionException
 	{
-		return internalAssertResponse( messageExchange, context );
+		//		return internalAssertResponse( messageExchange, context );
+		return null;
 	}
 
 	public static class Factory extends AbstractTestAssertionFactory
@@ -279,7 +280,7 @@ public class CrossSiteScriptAssertion extends WsdlMessageAssertion implements Re
 		@Override
 		public boolean canAssert( TestPropertyHolder modelItem, String property )
 		{
-			return true;
+			return false;
 		}
 	}
 

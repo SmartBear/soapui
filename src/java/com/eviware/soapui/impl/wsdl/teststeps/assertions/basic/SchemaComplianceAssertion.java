@@ -118,11 +118,10 @@ public class SchemaComplianceAssertion extends WsdlMessageAssertion implements R
 	}
 
 	@Override
-	protected String internalAssertProperty( TestPropertyHolder source, String propertyName, MessageExchange messageExchange,
-			SubmitContext context ) throws AssertionException
+	protected String internalAssertProperty( TestPropertyHolder source, String propertyName,
+			MessageExchange messageExchange, SubmitContext context ) throws AssertionException
 	{
-		internalAssertResponse( messageExchange, context );
-		return "OK";
+		return null;
 	}
 
 	private String assertWadlResponse( RestMessageExchange messageExchange, SubmitContext context )
