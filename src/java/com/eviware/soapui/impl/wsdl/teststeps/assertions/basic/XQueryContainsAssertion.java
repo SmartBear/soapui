@@ -32,6 +32,8 @@ import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 
+import junit.framework.ComparisonFailure;
+
 import org.apache.log4j.Logger;
 import org.apache.xmlbeans.XmlAnySimpleType;
 import org.apache.xmlbeans.XmlObject;
@@ -72,6 +74,7 @@ import com.eviware.soapui.model.testsuite.RequestAssertion;
 import com.eviware.soapui.model.testsuite.ResponseAssertion;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.support.StringUtils;
+import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JUndoableTextArea;
 import com.eviware.soapui.support.components.JXToolBar;
@@ -276,11 +279,17 @@ public class XQueryContainsAssertion extends WsdlMessageAssertion implements Req
 						&& ( diff.getId() == DifferenceEngine.TEXT_VALUE.getId() || diff.getId() == DifferenceEngine.ATTR_VALUE
 								.getId() ) )
 				{
-					if( diff.getControlNodeDetail().getValue().equals( "*" ) )
-						return Diff.RETURN_IGNORE_DIFFERENCE_NODES_IDENTICAL;
+					try
+					{
+						Tools.assertSimilar( diff.getControlNodeDetail().getValue(), diff.getTestNodeDetail().getValue(), '*' );
+					}
+					catch( ComparisonFailure e )
+					{
+						return Diff.RETURN_ACCEPT_DIFFERENCE;
+					}
 				}
 
-				return Diff.RETURN_ACCEPT_DIFFERENCE;
+				return Diff.RETURN_IGNORE_DIFFERENCE_NODES_IDENTICAL;
 			}
 
 			public void skippedComparison( Node arg0, Node arg1 )
