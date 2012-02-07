@@ -19,5 +19,5 @@ package com.eviware.soapui;
  */
 public interface SoapUISystemProperties
 {
-	public final static String TEST_ON_DEMAND_ENDPOINT = "soapui.testondemand.host";
+	public final static String TEST_ON_DEMAND_HOST = "soapui.testondemand.host";
 }
