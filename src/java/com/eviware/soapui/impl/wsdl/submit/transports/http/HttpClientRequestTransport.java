@@ -327,6 +327,13 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 		for( Header header : httpMethod.getAllHeaders() )
 			getMethod.addHeader( header );
 
+		getMethod
+				.getMetrics()
+				.getTotalTimer()
+				.set( httpMethod.getMetrics().getTotalTimer().getStart(), httpMethod.getMetrics().getTotalTimer().getStop() );
+		getMethod.getMetrics().setHttpMethod( httpMethod.getMethod() );
+		getMethod.getMetrics().setIpAddress( InetAddress.getByName( httpMethod.getURI().getHost() ).getHostAddress() );
+
 		java.net.URI uri = new java.net.URI( httpResponse.getFirstHeader( "Location" ).getValue() );
 		getMethod.setURI( uri );
 		org.apache.http.HttpResponse response = HttpClientSupport.execute( getMethod, httpContext );
