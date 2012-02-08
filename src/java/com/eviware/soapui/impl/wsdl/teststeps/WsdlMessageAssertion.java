@@ -148,7 +148,7 @@ public abstract class WsdlMessageAssertion extends AbstractModelItem implements 
 			assertionStatus = AssertionStatus.UNKNOWN;
 			assertionErrors = null;
 		}
-		else if( !messageExchange.hasResponse() && requiresResponseContent )
+		else if( messageExchange != null && !messageExchange.hasResponse() && requiresResponseContent )
 		{
 			assertionStatus = AssertionStatus.FAILED;
 			assertionErrors = new com.eviware.soapui.model.testsuite.AssertionError[] { new com.eviware.soapui.model.testsuite.AssertionError(
