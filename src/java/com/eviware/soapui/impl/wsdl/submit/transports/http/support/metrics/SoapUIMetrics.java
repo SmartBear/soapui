@@ -23,6 +23,29 @@ public class SoapUIMetrics extends HttpConnectionMetricsImpl
 	private int httpStatus = -1;
 	private long contentLength = -1;
 
+	public String getHttpMethod()
+	{
+		return httpMethod;
+	}
+
+	public void setHttpMethod( String httpMethod )
+	{
+		this.httpMethod = httpMethod;
+	}
+
+	public String getIpAddress()
+	{
+		return ipAddress;
+	}
+
+	public void setIpAddress( String ipAddress )
+	{
+		this.ipAddress = ipAddress;
+	}
+
+	private String httpMethod = "";
+	private String ipAddress = "";
+
 	private Stopwatch readTimer;
 	private Stopwatch totalTimer;
 	private Stopwatch DNSTimer;
@@ -50,6 +73,10 @@ public class SoapUIMetrics extends HttpConnectionMetricsImpl
 		DNSTimer.reset();
 		connectTimer.reset();
 		timeToFirstByteTimer.reset();
+
+		httpStatus = -1;
+		contentLength = -1;
+
 		done = true;
 	}
 

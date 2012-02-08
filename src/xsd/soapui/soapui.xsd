@@ -1651,6 +1651,12 @@
 						<xsd:attribute name="endpoint"
 							type="xsd:string">
 						</xsd:attribute>
+						<xsd:attribute name="httpMethod"
+							type="xsd:string">
+						</xsd:attribute>
+						<xsd:attribute name="ipAddress"
+							type="xsd:string">
+						</xsd:attribute>
 					</xsd:complexType>
 				</xsd:element>
 			</xsd:sequence>

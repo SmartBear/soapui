@@ -239,6 +239,9 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 				httpMethod.initStartTime();
 
 			httpMethod.getMetrics().getTotalTimer().start();
+			httpMethod.getMetrics().setHttpMethod( httpMethod.getMethod() );
+			httpMethod.getMetrics().setIpAddress( InetAddress.getByName( httpMethod.getURI().getHost() ).getHostAddress() );
+
 			// submit!
 			httpResponse = HttpClientSupport.execute( httpMethod, httpContext );
 

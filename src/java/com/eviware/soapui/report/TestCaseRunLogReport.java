@@ -15,8 +15,6 @@ package com.eviware.soapui.report;
 import java.io.File;
 import java.io.IOException;
 
-import org.apache.log4j.Logger;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.TestCaseRunLogDocumentConfig;
 import com.eviware.soapui.config.TestCaseRunLogDocumentConfig.TestCaseRunLog;
@@ -77,6 +75,8 @@ public class TestCaseRunLogReport extends TestRunListenerAdapter
 			testCaseRunLogTestStep.setDnsTime( String.valueOf( metrics.getDNSTimer().getDuration() ) );
 			testCaseRunLogTestStep.setConnectTime( String.valueOf( metrics.getConnectTimer().getDuration() ) );
 			testCaseRunLogTestStep.setTimeToFirstByte( String.valueOf( metrics.getTimeToFirstByteTimer().getDuration() ) );
+			testCaseRunLogTestStep.setHttpMethod( metrics.getHttpMethod() );
+			testCaseRunLogTestStep.setIpAddress( metrics.getIpAddress() );
 		}
 
 		Throwable error = result.getError();
