@@ -229,16 +229,27 @@ public class XQueryContainsAssertion extends WsdlMessageAssertion implements Req
 						else
 						{
 							Node domNode = items[c].getDomNode();
-							if( domNode.getNodeType() == Node.ELEMENT_NODE )
+							switch( domNode.getNodeType() )
 							{
+							case Node.ELEMENT_NODE :
 								String expandedValue = PropertyExpander.expandProperties( context,
 										XmlUtils.getElementText( ( Element )domNode ) );
+								if( allowWildcards )
+									Tools.assertSimilar( expandedContent, expandedValue, '*' );
+								else
+									XMLAssert.assertEquals( expandedContent, expandedValue );
+								break;
+							case Node.ATTRIBUTE_NODE :
+								expandedValue = PropertyExpander.expandProperties( context, domNode.getNodeValue() );
+								if( allowWildcards )
+									Tools.assertSimilar( expandedContent, expandedValue, '*' );
+								else
+									XMLAssert.assertEquals( expandedContent, expandedValue );
+								break;
+							default :
+								expandedValue = PropertyExpander.expandProperties( context, domNode.getNodeValue() );
 								XMLAssert.assertEquals( expandedContent, expandedValue );
-							}
-							else
-							{
-								String expandedValue = PropertyExpander.expandProperties( context, items[c].xmlText( options ) );
-								XMLAssert.assertEquals( expandedContent, expandedValue );
+								break;
 							}
 						}
 					}

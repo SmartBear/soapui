@@ -296,7 +296,10 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
 							case Node.ELEMENT_NODE :
 								String expandedValue = PropertyExpander.expandProperties( context,
 										XmlUtils.getElementText( ( Element )domNode ) );
-								XMLAssert.assertEquals( expandedContent, expandedValue );
+								if( allowWildcards )
+									Tools.assertSimilar( expandedContent, expandedValue, '*' );
+								else
+									XMLAssert.assertEquals( expandedContent, expandedValue );
 								break;
 							case Node.ATTRIBUTE_NODE :
 								expandedValue = PropertyExpander.expandProperties( context, domNode.getNodeValue() );
