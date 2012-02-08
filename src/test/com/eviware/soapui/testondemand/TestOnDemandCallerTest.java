@@ -10,7 +10,7 @@
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
 
-package com.eviware.soapui.impl.testondemand;
+package com.eviware.soapui.testondemand;
 
 import static org.junit.Assert.assertEquals;
 
@@ -26,6 +26,7 @@ import org.junit.Test;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
+import com.google.common.base.Strings;
 
 /**
  * @author Erik R. Yverling
@@ -33,6 +34,8 @@ import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
  *         Integration test to test the communication between soapUI and the
  *         AlertSite Rest API.
  */
+
+// FIXME We need to add the soapui.testondemand.host system property to Hudson to be able to run this
 public class TestOnDemandCallerTest
 {
 	private static final String FIRST_LOCATION_NAME = "Fort%20Lauderdale,%20FL";
@@ -41,13 +44,13 @@ public class TestOnDemandCallerTest
 	private static final String SECOND_LOCATION_NAME = "Washington,%20D.C.";
 	private static final String SECOND_LOCATION_CODE = "40|latte.regression.alertsite.com";
 
+	private TestOnDemandCaller caller;
+	private WsdlTestCase testCase;
+
 	public static junit.framework.Test suite()
 	{
 		return new JUnit4TestAdapter( TestOnDemandCallerTest.class );
 	}
-
-	TestOnDemandCaller caller = new TestOnDemandCaller();
-	private WsdlTestCase testCase;
 
 	@Before
 	public void setUp() throws Exception
@@ -56,6 +59,7 @@ public class TestOnDemandCallerTest
 				+ "sample-soapui-project.xml" );
 		WsdlTestSuite testSuite = project.getTestSuiteByName( "Test Suite" );
 		testCase = testSuite.getTestCaseByName( "Test Conversions" );
+		caller = new TestOnDemandCaller();
 	}
 
 	@Ignore
@@ -77,5 +81,7 @@ public class TestOnDemandCallerTest
 	@Test
 	public void testSendProject() throws Exception
 	{
+		String redirectUrl = caller.sendProject( testCase, new Location( FIRST_LOCATION_CODE, SECOND_LOCATION_NAME ) );
+		assert !Strings.isNullOrEmpty( redirectUrl );
 	}
 }

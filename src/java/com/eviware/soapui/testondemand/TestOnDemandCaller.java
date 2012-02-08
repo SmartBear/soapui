@@ -10,13 +10,14 @@
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
 
-package com.eviware.soapui.impl.testondemand;
+package com.eviware.soapui.testondemand;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -27,6 +28,7 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.entity.StringEntity;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -35,6 +37,7 @@ import org.w3c.dom.NodeList;
 import sun.misc.BASE64Encoder;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.SoapUISystemProperties;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPostMethod;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
@@ -51,53 +54,35 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  *         Calls the AlertSite API for running Test On Demand.
  */
 
-// FIXME Make this an interface? 
-// FIXME Move this to another package
-// FIXME the getLocations and sendProject is very similar. Refactor these!
 public class TestOnDemandCaller
 {
+	// FIXME Should these be in a configuration file instead?
+
 	private static final String USER_AGENT = "soapUI-" + SoapUI.SOAPUI_VERSION;
 
-	private final static String DEV_ENDPOINT = "10.0.48.172";
-	private final static String PROD_ENDPOINT = "www.alertsite.com";
 	private final static String PROTOCOL = "https://";
-	private final static String testOnDemandEndpoint = getEndpoint();
-
-	// FIXME Should these be in a configuration file instead?
-	private static final String LOCATIONS_URI = testOnDemandEndpoint + "/restapi/v2/devices/list/locations";
-	private static final String UPLOAD_URI = testOnDemandEndpoint + "/restapi/v2/devices/upload/testondemand";
+	private final static String PROD_HOST = "www.alertsite.com";
+	private static final String LOCATIONS_PATH = "/restapi/v2/devices/list/locations";
+	private static final String UPLOAD_PATH = "/restapi/v2/devices/upload/testondemand";
+	private final static String TEST_ON_DEMAND_DOMAIN = getDomain();
+	private static final String LOCATIONS_URI = PROTOCOL + TEST_ON_DEMAND_DOMAIN + LOCATIONS_PATH;
+	private static final String UPLOAD_URI = PROTOCOL + TEST_ON_DEMAND_DOMAIN + UPLOAD_PATH;
 
 	private static final String REDIRECT_URL_XPATH_EXPRESSION = "//RedirectURL";
 	private static final String LOCATION_XPATH_EXPRESSION = "//Location";
 	private static final String LOCATION_CODE_XPATH_EXPRESSION = "LocCode";
 	private static final String LOCATION_NAME_XPATH_EXPRESSION = "LocName";
 
+	private final XPath xpath = XPathFactory.newInstance().newXPath();
+
 	@NonNull
 	public List<Location> getLocations() throws Exception
 	{
-		final ExtendedPostMethod post = new ExtendedPostMethod();
-		post.setURI( new URI( LOCATIONS_URI ) );
-
 		String requestContent = "<Request api_version=\"2\"><Header><UserAgent>"
 				+ USER_AGENT
 				+ "</UserAgent></Header><Body><Command><Name>ListLocations</Name><Parameters>server_attrib=ITEST</Parameters></Command></Body></Request>";
 
-		post.setEntity( new StringEntity( requestContent ) );
-
-		SoapUI.log( "Sending request to  AlertSite:" );
-		SoapUI.log( requestContent );
-
-		HttpClientSupport.execute( post );
-
-		byte[] responseBody = post.getResponseBody();
-		SoapUI.log( "Got response from AlertSite:" );
-		SoapUI.log( new String( responseBody ) );
-
-		String reponseBodyAsString = new String( responseBody );
-		Document responseDocument = XmlUtils.parseXml( reponseBodyAsString );
-		XPathFactory factory = XPathFactory.newInstance();
-		XPath xpath = factory.newXPath();
-
+		Document responseDocument = makeCall( LOCATIONS_URI, requestContent );
 		NodeList locationNodes = ( NodeList )xpath.evaluate( LOCATION_XPATH_EXPRESSION, responseDocument,
 				XPathConstants.NODESET );
 
@@ -114,18 +99,27 @@ public class TestOnDemandCaller
 	}
 
 	@NonNull
-	public String sendProject( @NonNull WsdlTestCase testCase, @NonNull Location location, @NonNull File filename )
-			throws Exception
+	public String sendProject( @NonNull WsdlTestCase testCase, @NonNull Location location ) throws Exception
 	{
 		final ExtendedPostMethod post = new ExtendedPostMethod();
 		post.setURI( new URI( UPLOAD_URI ) );
 		String locationCode = location.getCode();
-		String requestContent = createUploadRequestContents( testCase, locationCode, filename );
+		String requestContent = createUploadRequestContents( testCase, locationCode );
 
 		// FIXME The request compression is temporary disabled since the server throws an error when using it
 		//		byte[] compressedRequestContent = CompressionSupport.compress( CompressionSupport.ALG_GZIP,
 		//				requestContent.getBytes() );
 		//		post.setEntity( new ByteArrayEntity( compressedRequestContent ) );
+
+		Document responseDocument = makeCall( UPLOAD_URI, requestContent );
+		return ( String )xpath.evaluate( REDIRECT_URL_XPATH_EXPRESSION, responseDocument, XPathConstants.STRING );
+	}
+
+	private Document makeCall( String uri, String requestContent ) throws URISyntaxException, ClientProtocolException,
+			IOException
+	{
+		final ExtendedPostMethod post = new ExtendedPostMethod();
+		post.setURI( new URI( uri ) );
 
 		post.setEntity( new StringEntity( requestContent ) );
 
@@ -139,22 +133,17 @@ public class TestOnDemandCaller
 		SoapUI.log( new String( responseBody ) );
 
 		String reponseBodyAsString = new String( responseBody );
-		Document responseDocument = XmlUtils.parseXml( reponseBodyAsString );
-		XPathFactory factory = XPathFactory.newInstance();
-		XPath xpath = factory.newXPath();
-		return ( String )xpath.evaluate( REDIRECT_URL_XPATH_EXPRESSION, responseDocument, XPathConstants.STRING );
+		return XmlUtils.parseXml( reponseBodyAsString );
 	}
 
-	private String createUploadRequestContents( WsdlTestCase testCase, String locationCode, File filename )
-			throws IOException
+	private String createUploadRequestContents( WsdlTestCase testCase, String locationCode ) throws IOException
 	{
 		BASE64Encoder encoder = new BASE64Encoder();
 
 		String encodedTestSuiteName = encoder.encode( testCase.getTestSuite().getName().getBytes() );
 		String encodedTestCaseName = encoder.encode( testCase.getName().getBytes() );
 
-		// String projectFilePath = testCase.getTestSuite().getProject().getPath();
-		String projectFilePath = filename.getAbsolutePath();
+		String projectFilePath = testCase.getTestSuite().getProject().getPath();
 		byte[] projectFileData = getBytes( projectFilePath );
 		byte[] zipedProjectFileData = zipBytes( testCase.getTestSuite().getProject().getName(), projectFileData );
 		String encodedZipedProjectFile = encoder.encode( zipedProjectFileData );
@@ -219,17 +208,17 @@ public class TestOnDemandCaller
 		return outputStream.toByteArray();
 	}
 
-	private static String getEndpoint()
+	private static String getDomain()
 	{
-		String property = System.getProperty( "testOnDemandEndpoint" );
+		String customEndpoint = System.getProperty( SoapUISystemProperties.TEST_ON_DEMAND_HOST );
 
-		if( property == null || "dev".equals( property ) )
+		if( customEndpoint == null )
 		{
-			return PROTOCOL + DEV_ENDPOINT;
+			return PROD_HOST;
 		}
 		else
 		{
-			return PROTOCOL + PROD_ENDPOINT;
+			return customEndpoint;
 		}
 	}
 }

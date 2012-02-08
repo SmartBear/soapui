@@ -10,7 +10,7 @@
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
 
-package com.eviware.soapui.impl.testondemand;
+package com.eviware.soapui.testondemand;
 
 import java.io.File;
 import java.io.IOException;

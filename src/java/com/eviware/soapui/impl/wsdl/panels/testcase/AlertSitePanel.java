@@ -27,15 +27,15 @@ import javax.swing.JPanel;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
-import com.eviware.soapui.impl.testondemand.DependencyValidator;
-import com.eviware.soapui.impl.testondemand.Location;
-import com.eviware.soapui.impl.testondemand.TestOnDemandCaller;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.components.NativeBrowserComponent;
+import com.eviware.soapui.testondemand.DependencyValidator;
+import com.eviware.soapui.testondemand.Location;
+import com.eviware.soapui.testondemand.TestOnDemandCaller;
 import com.google.common.base.Strings;
 import com.teamdev.jxbrowser.DefaultWebPolicyDelegate;
 import com.teamdev.jxbrowser.events.NavigationEvent;
@@ -151,7 +151,7 @@ public class AlertSitePanel extends JPanel
 				// FIXME Add better error handling
 				try
 				{
-					redirectUrl = caller.sendProject( testCase, selectedLocation, validator.getFilename() );
+					redirectUrl = caller.sendProject( testCase, selectedLocation );
 
 					if( !Strings.isNullOrEmpty( redirectUrl ) )
 					{
