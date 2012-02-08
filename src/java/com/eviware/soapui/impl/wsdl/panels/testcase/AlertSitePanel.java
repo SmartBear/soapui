@@ -137,10 +137,9 @@ public class AlertSitePanel extends JPanel
 
 			if( validator != null && !validator.isValid( testCase ) )
 			{
-				// FIXME 
-				// UISupport.showErrorMessage( "Your project contains external dependencies that "
-				//		+ "are not supported by the Test-On-Demand functionality at this point." );
-				// return;
+				UISupport.showErrorMessage( "Your project contains external dependencies that "
+						+ "are not supported by the Test-On-Demand functionality at this point." );
+				return;
 			}
 
 			if( locations != null )

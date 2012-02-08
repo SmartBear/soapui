@@ -21,6 +21,7 @@ import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.support.ExternalDependency;
 import com.eviware.soapui.impl.wsdl.support.InterfaceExternalDependency;
+import com.eviware.soapui.impl.wsdl.support.MockServiceExternalDependency;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.model.iface.Interface;
 
@@ -98,8 +99,7 @@ public class DependencyValidator
 			List<ExternalDependency> deps = project.getExternalDependencies();
 			for( ExternalDependency d : deps )
 			{
-				// interfaces are cached and we allow them
-				if( !( d instanceof InterfaceExternalDependency ) )
+				if( !( d instanceof InterfaceExternalDependency || d instanceof MockServiceExternalDependency ) )
 				{
 					return false;
 				}

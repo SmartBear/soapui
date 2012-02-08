@@ -37,8 +37,8 @@ import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.support.ExternalDependency;
+import com.eviware.soapui.impl.wsdl.support.MockServiceExternalDependency;
 import com.eviware.soapui.impl.wsdl.support.ModelItemIconAnimator;
-import com.eviware.soapui.impl.wsdl.support.PathPropertyExternalDependency;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.impl.wsdl.teststeps.BeanPathPropertySupport;
 import com.eviware.soapui.model.ModelItem;
@@ -742,7 +742,7 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 	public void addExternalDependencies( List<ExternalDependency> dependencies )
 	{
 		super.addExternalDependencies( dependencies );
-		dependencies.add( new PathPropertyExternalDependency( docrootProperty ) );
+		dependencies.add( new MockServiceExternalDependency( docrootProperty ) );
 	}
 
 	@Override
