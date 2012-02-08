@@ -13,26 +13,51 @@ package com.eviware.soapui.impl.wsdl.panels.assertions;
 
 import java.util.Set;
 
-import javax.swing.DefaultListModel;
+import javax.swing.table.DefaultTableModel;
 
-public class AssertionCategoriesListModel extends DefaultListModel
+public class AssertionCategoriesTableModel extends DefaultTableModel
 {
 	Set<String> listEntriesSet;
 
-	public AssertionCategoriesListModel( Set<String> keySet )
+	public AssertionCategoriesTableModel()
+	{
+	}
+
+	public void setLisetEntriesSet( Set<String> keySet )
 	{
 		listEntriesSet = keySet;
 	}
 
 	@Override
-	public int getSize()
+	public int getColumnCount()
 	{
-		return listEntriesSet.size();
+		return 1;
 	}
 
 	@Override
-	public Object getElementAt( int index )
+	public int getRowCount()
 	{
-		return listEntriesSet.toArray()[index];
+		if( listEntriesSet != null )
+		{
+			return listEntriesSet.size();
+		}
+		else
+		{
+			return 1;
+		}
 	}
+
+	@Override
+	public Object getValueAt( int row, int column )
+	{
+		if( listEntriesSet != null )
+		{
+			return listEntriesSet.toArray()[row];
+		}
+		else
+		{
+			return null;
+		}
+	}
+
 }
