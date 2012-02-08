@@ -91,7 +91,6 @@ public final class ExtendedGetMethod extends HttpGet implements ExtendedHttpMeth
 	public void initStartTime()
 	{
 		httpMethodSupport.initStartTime();
-		getMetrics().getTotalTimer().start();
 	}
 
 	public long getTimeTaken()

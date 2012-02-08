@@ -106,7 +106,6 @@ public final class ExtendedPostMethod extends HttpPost implements ExtendedEntity
 	public void initStartTime()
 	{
 		httpMethodSupport.initStartTime();
-		getMetrics().getTotalTimer().start();
 	}
 
 	public long getTimeTaken()

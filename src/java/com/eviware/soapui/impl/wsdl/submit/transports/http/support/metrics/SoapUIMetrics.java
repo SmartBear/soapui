@@ -29,6 +29,8 @@ public class SoapUIMetrics extends HttpConnectionMetricsImpl
 	private Stopwatch connectTimer;
 	private Stopwatch timeToFirstByteTimer;
 
+	private boolean done = false;
+
 	private static final SimpleDateFormat dateFormat = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
 
 	public SoapUIMetrics( final HttpTransportMetrics inTransportMetric, final HttpTransportMetrics outTransportMetric )
@@ -48,6 +50,12 @@ public class SoapUIMetrics extends HttpConnectionMetricsImpl
 		DNSTimer.reset();
 		connectTimer.reset();
 		timeToFirstByteTimer.reset();
+		done = true;
+	}
+
+	public boolean isDone()
+	{
+		return done;
 	}
 
 	public synchronized static String formatTimestamp( long timestamp )

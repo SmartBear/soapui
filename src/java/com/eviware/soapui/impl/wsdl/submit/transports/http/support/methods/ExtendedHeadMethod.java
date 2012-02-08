@@ -97,7 +97,6 @@ public final class ExtendedHeadMethod extends HttpHead implements ExtendedHttpMe
 	public void initStartTime()
 	{
 		httpMethodSupport.initStartTime();
-		getMetrics().getTotalTimer().start();
 	}
 
 	public long getTimeTaken()

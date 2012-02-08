@@ -40,6 +40,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.RequestWrapper;
 import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.protocol.HttpContext;
+import org.apache.http.protocol.HttpProcessor;
 import org.apache.http.protocol.HttpRequestExecutor;
 import org.apache.log4j.Logger;
 
@@ -80,10 +81,22 @@ public class HttpClientSupport
 		{
 			return new SoapUIHttpRequestExecutor();
 		}
+
 	}
 
 	public static class SoapUIHttpRequestExecutor extends HttpRequestExecutor
 	{
+
+		@Override
+		public void preProcess( final HttpRequest request, final HttpProcessor processor, final HttpContext context )
+				throws HttpException, IOException
+		{
+			RequestWrapper w = ( RequestWrapper )request;
+			if( w.getOriginal() instanceof ExtendedHttpMethod )
+				( ( ExtendedHttpMethod )w.getOriginal() ).getMetrics().getConnectTimer().stop();
+			super.preProcess( request, processor, context );
+		}
+
 		protected HttpResponse doSendRequest( HttpRequest request, HttpClientConnection conn, HttpContext context )
 				throws IOException, HttpException
 		{
@@ -139,10 +152,8 @@ public class HttpClientSupport
 
 				SoapUIMetrics connectionMetrics = ( SoapUIMetrics )conn.getMetrics();
 
-				if( metrics != null && connectionMetrics != null )
+				if( metrics != null && connectionMetrics != null && !connectionMetrics.isDone() )
 				{
-					metrics.getConnectTimer().set( connectionMetrics.getConnectTimer().getStart(),
-							connectionMetrics.getConnectTimer().getStop() );
 					metrics.getDNSTimer().set( connectionMetrics.getDNSTimer().getStart(),
 							connectionMetrics.getDNSTimer().getStop() );
 					// reset connection-level metrics
@@ -199,6 +210,7 @@ public class HttpClientSupport
 				IOException
 		{
 			method.afterWriteRequest();
+			method.getMetrics().getConnectTimer().start();
 			HttpResponse httpResponse = httpClient.execute( ( HttpUriRequest )method, httpContext );
 			method.setHttpResponse( httpResponse );
 			return httpResponse;
@@ -207,6 +219,7 @@ public class HttpClientSupport
 		public HttpResponse execute( ExtendedHttpMethod method ) throws ClientProtocolException, IOException
 		{
 			method.afterWriteRequest();
+			method.getMetrics().getConnectTimer().start();
 			HttpResponse httpResponse = httpClient.execute( ( HttpUriRequest )method );
 			method.setHttpResponse( httpResponse );
 			return httpResponse;

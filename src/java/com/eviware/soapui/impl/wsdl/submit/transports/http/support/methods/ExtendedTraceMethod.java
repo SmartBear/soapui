@@ -100,7 +100,6 @@ public final class ExtendedTraceMethod extends HttpTrace implements ExtendedHttp
 	public void initStartTime()
 	{
 		httpMethodSupport.initStartTime();
-		getMetrics().getTotalTimer().start();
 	}
 
 	public long getTimeTaken()

@@ -97,7 +97,6 @@ public final class ExtendedDeleteMethod extends HttpDelete implements ExtendedHt
 	public void initStartTime()
 	{
 		httpMethodSupport.initStartTime();
-		getMetrics().getTotalTimer().start();
 	}
 
 	public long getTimeTaken()

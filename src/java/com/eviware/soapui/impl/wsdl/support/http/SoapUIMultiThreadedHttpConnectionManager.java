@@ -302,14 +302,12 @@ public class SoapUIMultiThreadedHttpConnectionManager extends ThreadSafeClientCo
 					}
 					prepareSocket( sock, context, params );
 					conn.openCompleted( sf.isSecure( sock ), params );
-					long connectEnd = System.nanoTime();
 
 					SoapUIMetrics metrics = ( SoapUIMetrics )conn.getMetrics();
 
 					if( metrics != null )
 					{
 						metrics.getDNSTimer().set( start, dnsEnd );
-						metrics.getConnectTimer().set( start, connectEnd );
 					}
 
 					return;

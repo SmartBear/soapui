@@ -96,7 +96,6 @@ public class ExtendedPatchMethod extends HttpPatch implements ExtendedEntityEncl
 	public void initStartTime()
 	{
 		httpMethodSupport.initStartTime();
-		getMetrics().getTotalTimer().start();
 	}
 
 	public long getTimeTaken()

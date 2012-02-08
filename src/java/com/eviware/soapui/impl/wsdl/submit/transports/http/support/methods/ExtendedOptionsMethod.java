@@ -100,7 +100,6 @@ public final class ExtendedOptionsMethod extends HttpOptions implements Extended
 	public void initStartTime()
 	{
 		httpMethodSupport.initStartTime();
-		getMetrics().getTotalTimer().start();
 	}
 
 	public long getTimeTaken()

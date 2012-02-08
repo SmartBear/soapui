@@ -69,11 +69,6 @@ public abstract class BaseHttpResponse implements HttpResponse
 		this.timeTaken = httpMethod.getTimeTaken();
 
 		SoapUIMetrics metrics = httpMethod.getMetrics();
-		if( metrics != null )
-		{
-			metrics.getTotalTimer().stop();
-		}
-
 		method = httpMethod.getMethod();
 		version = httpMethod.getProtocolVersion().toString();
 
@@ -101,7 +96,7 @@ public abstract class BaseHttpResponse implements HttpResponse
 				}
 				timeTaken += httpMethod.getResponseReadTime();
 
-				metrics.getTotalTimer().add( httpMethod.getResponseReadTime() );
+				// metrics.getTotalTimer().add( httpMethod.getResponseReadTime() );
 			}
 
 			try
@@ -145,7 +140,7 @@ public abstract class BaseHttpResponse implements HttpResponse
 				addIncludedContentsAsAttachments();
 				long after = ( new Date() ).getTime();
 				timeTaken += ( after - before );
-				metrics.getTotalTimer().add( after - before );
+				// metrics.getTotalTimer().add( after - before );
 				context.setProperty( HTMLPageSourceDownloader.MISSING_RESOURCES_LIST, downloader.getMissingResourcesList() );
 			}
 		}

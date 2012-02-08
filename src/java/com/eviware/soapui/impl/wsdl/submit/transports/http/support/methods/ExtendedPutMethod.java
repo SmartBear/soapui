@@ -97,7 +97,6 @@ public final class ExtendedPutMethod extends HttpPut implements ExtendedEntityEn
 	public void initStartTime()
 	{
 		httpMethodSupport.initStartTime();
-		getMetrics().getTotalTimer().start();
 	}
 
 	public long getTimeTaken()

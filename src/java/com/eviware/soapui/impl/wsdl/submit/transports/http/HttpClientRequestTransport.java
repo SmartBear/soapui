@@ -238,6 +238,7 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 			if( settings.getBoolean( HttpSettings.INCLUDE_REQUEST_IN_TIME_TAKEN ) )
 				httpMethod.initStartTime();
 
+			httpMethod.getMetrics().getTotalTimer().start();
 			// submit!
 			httpResponse = HttpClientSupport.execute( httpMethod, httpContext );
 
@@ -252,8 +253,6 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 		{
 			httpMethod.setFailed( t );
 
-			httpMethod.getMetrics().setTimestamp( System.currentTimeMillis() );
-
 			if( t instanceof Exception )
 				throw ( Exception )t;
 
@@ -262,6 +261,19 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 		}
 		finally
 		{
+			if( !httpMethod.isFailed() )
+			{
+				if( httpMethod.getMetrics() != null )
+				{
+					httpMethod.getMetrics().getTotalTimer().stop();
+				}
+			}
+			else
+			{
+				httpMethod.getMetrics().reset();
+				httpMethod.getMetrics().setTimestamp( System.currentTimeMillis() );
+			}
+
 			for( int c = filters.size() - 1; c >= 0; c-- )
 			{
 				RequestFilter filter = filters.get( c );
