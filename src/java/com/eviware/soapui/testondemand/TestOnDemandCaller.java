@@ -29,6 +29,7 @@ import javax.xml.xpath.XPathFactory;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.StringEntity;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -39,6 +40,7 @@ import sun.misc.BASE64Encoder;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.SoapUISystemProperties;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPostMethod;
+import com.eviware.soapui.impl.wsdl.support.CompressionSupport;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.settings.SSLSettings;
@@ -106,10 +108,9 @@ public class TestOnDemandCaller
 		String locationCode = location.getCode();
 		String requestContent = createUploadRequestContents( testCase, locationCode );
 
-		// FIXME The request compression is temporary disabled since the server throws an error when using it
-		//		byte[] compressedRequestContent = CompressionSupport.compress( CompressionSupport.ALG_GZIP,
-		//				requestContent.getBytes() );
-		//		post.setEntity( new ByteArrayEntity( compressedRequestContent ) );
+		byte[] compressedRequestContent = CompressionSupport.compress( CompressionSupport.ALG_GZIP,
+				requestContent.getBytes() );
+		post.setEntity( new ByteArrayEntity( compressedRequestContent ) );
 
 		Document responseDocument = makeCall( UPLOAD_URI, requestContent );
 		return ( String )xpath.evaluate( REDIRECT_URL_XPATH_EXPRESSION, responseDocument, XPathConstants.STRING );
