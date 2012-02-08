@@ -95,10 +95,11 @@ public class SimpleContainsAssertion extends WsdlMessageAssertion implements Req
 		Strings.nullToEmpty( content );
 
 		String replToken = PropertyExpander.expandProperties( context, token );
-
+		Strings.nullToEmpty( replToken );
+		
 		replToken = normalize( replToken );
 		content = normalize( content );
-
+		
 		if( replToken.length() > 0 )
 		{
 			int ix = -1;
