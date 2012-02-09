@@ -81,7 +81,7 @@ public class TestOnDemandCallerTest
 	@Test
 	public void testSendProject() throws Exception
 	{
-		String redirectUrl = caller.sendProject( testCase, new Location( FIRST_LOCATION_CODE, SECOND_LOCATION_NAME ) );
+		String redirectUrl = caller.sendTestCase( testCase, new Location( FIRST_LOCATION_CODE, SECOND_LOCATION_NAME ) );
 		assert !Strings.isNullOrEmpty( redirectUrl );
 	}
 }
