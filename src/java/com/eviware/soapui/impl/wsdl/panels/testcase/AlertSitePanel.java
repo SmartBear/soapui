@@ -37,6 +37,9 @@ import com.eviware.soapui.support.components.NativeBrowserComponent;
 import com.eviware.soapui.testondemand.DependencyValidator;
 import com.eviware.soapui.testondemand.Location;
 import com.eviware.soapui.testondemand.TestOnDemandCaller;
+import com.eviware.x.dialogs.Worker.WorkerAdapter;
+import com.eviware.x.dialogs.XProgressDialog;
+import com.eviware.x.dialogs.XProgressMonitor;
 import com.google.common.base.Strings;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -58,8 +61,6 @@ public class AlertSitePanel extends JPanel
 	private Action runAction;
 	private final WsdlTestCase testCase;
 	private static List<Location> locationsCache;
-
-	private TestOnDemandCaller caller = new TestOnDemandCaller();
 
 	private DependencyValidator validator = new DependencyValidator();
 
@@ -147,21 +148,21 @@ public class AlertSitePanel extends JPanel
 
 			if( locationsComboBox != null )
 			{
-				locationsComboBox.getSelectedItem();
-				String redirectUrl = "http://10.0.48.172/tmp/soapui_iframe_wrapper.html";
+				Location selectedLocation = ( Location )locationsComboBox.getSelectedItem();
+				String redirectUrl = "";
 
-				//				XProgressDialog progressDialog = UISupport.getDialogs().createProgressDialog( "Upload TestCase", 3,
-				//						"Uploading TestCase..", false );
-				//				try
-				//				{
-				//					SendTestCaseWorker sendTestCaseWorker = new SendTestCaseWorker();
-				//					progressDialog.run( sendTestCaseWorker );
-				//					redirectUrl = sendTestCaseWorker.getResult();
-				//				}
-				//				catch( Exception e )
-				//				{
-				//					// TODO Auto-generated catch block
-				//				}
+				XProgressDialog progressDialog = UISupport.getDialogs().createProgressDialog( "Upload TestCase", 3,
+						"Uploading TestCase..", false );
+				SendTestCaseWorker sendTestCaseWorker = new SendTestCaseWorker( testCase, selectedLocation );
+				try
+				{
+					progressDialog.run( sendTestCaseWorker );
+				}
+				catch( Exception e )
+				{
+					SoapUI.logError( e );
+				}
+				redirectUrl = sendTestCaseWorker.getResult();
 
 				if( !Strings.isNullOrEmpty( redirectUrl ) )
 				{
@@ -178,6 +179,39 @@ public class AlertSitePanel extends JPanel
 					}
 				}
 			}
+		}
+	}
+
+	private class SendTestCaseWorker extends WorkerAdapter
+	{
+		private final WsdlTestCase testCase;
+		private final Location selectedLocation;
+		private String result = null;
+
+		public SendTestCaseWorker( WsdlTestCase testCase, Location selectedLocation )
+		{
+			this.testCase = testCase;
+			this.selectedLocation = selectedLocation;
+		}
+
+		public Object construct( XProgressMonitor monitor )
+		{
+			try
+			{
+				TestOnDemandCaller caller = new TestOnDemandCaller();
+				result = caller.sendTestCase( testCase, selectedLocation );
+			}
+			catch( Exception e )
+			{
+				log.error( "Could not upload TestCase to the selected location", e );
+				UISupport.showErrorMessage( "Could not upload TestCase to the selected location" );
+			}
+			return result;
+		}
+
+		public String getResult()
+		{
+			return result;
 		}
 	}
 

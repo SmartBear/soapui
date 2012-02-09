@@ -103,7 +103,7 @@ public class TestOnDemandCaller
 	}
 
 	@NonNull
-	public String sendProject( @NonNull WsdlTestCase testCase, @NonNull Location location ) throws Exception
+	public String sendTestCase( @NonNull WsdlTestCase testCase, @NonNull Location location ) throws Exception
 	{
 		final ExtendedPostMethod post = new ExtendedPostMethod();
 		post.setURI( new URI( UPLOAD_URI ) );
@@ -115,7 +115,14 @@ public class TestOnDemandCaller
 		post.setEntity( new ByteArrayEntity( compressedRequestContent ) );
 
 		Document responseDocument = makeCall( UPLOAD_URI, requestContent );
-		return ( String )xpath.evaluate( REDIRECT_URL_XPATH_EXPRESSION, responseDocument, XPathConstants.STRING );
+		String redirectURL = ( String )xpath.evaluate( REDIRECT_URL_XPATH_EXPRESSION, responseDocument,
+				XPathConstants.STRING );
+
+		if( Strings.isNullOrEmpty( redirectURL ) )
+		{
+			throw new RuntimeException( "The RedirectURL element is missing in the response message" );
+		}
+		return redirectURL;
 	}
 
 	private Document makeCall( String uri, String requestContent ) throws Exception
@@ -125,7 +132,7 @@ public class TestOnDemandCaller
 
 		post.setEntity( new StringEntity( requestContent ) );
 
-		// FIXME Remove the logging printouts before release!
+		// FIXME Should we remove the logging printouts before release? The upload request maybe would be to large?
 
 		log.debug( "Sending request to  AlertSite:" );
 		log.debug( requestContent );

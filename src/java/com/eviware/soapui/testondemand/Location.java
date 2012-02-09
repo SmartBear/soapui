@@ -42,11 +42,16 @@ public class Location
 
 	public String getName()
 	{
-		return name;
+		return getURLDecodedName();
 	}
 
 	@Override
 	public String toString()
+	{
+		return getURLDecodedName();
+	}
+
+	private String getURLDecodedName()
 	{
 		// We'll return the encoded name if the decoding fails
 		String decodedName = name;
