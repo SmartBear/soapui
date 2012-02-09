@@ -17,7 +17,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -28,9 +27,9 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.StringEntity;
+import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -77,9 +76,12 @@ public class TestOnDemandCaller
 
 	private final XPath xpath = XPathFactory.newInstance().newXPath();
 
+	private static final Logger log = Logger.getLogger( TestOnDemandCaller.class );
+
 	@NonNull
 	public List<Location> getLocations() throws Exception
 	{
+		//FIXME This should be made to an XMLObject
 		String requestContent = "<Request api_version=\"2\"><Header><UserAgent>"
 				+ USER_AGENT
 				+ "</UserAgent></Header><Body><Command><Name>ListLocations</Name><Parameters>server_attrib=ITEST</Parameters></Command></Body></Request>";
@@ -116,22 +118,24 @@ public class TestOnDemandCaller
 		return ( String )xpath.evaluate( REDIRECT_URL_XPATH_EXPRESSION, responseDocument, XPathConstants.STRING );
 	}
 
-	private Document makeCall( String uri, String requestContent ) throws URISyntaxException, ClientProtocolException,
-			IOException
+	private Document makeCall( String uri, String requestContent ) throws Exception
 	{
 		final ExtendedPostMethod post = new ExtendedPostMethod();
 		post.setURI( new URI( uri ) );
 
 		post.setEntity( new StringEntity( requestContent ) );
 
-		SoapUI.log( "Sending request to  AlertSite:" );
-		SoapUI.log( requestContent );
+		// FIXME Remove the logging printouts before release!
+
+		log.debug( "Sending request to  AlertSite:" );
+		log.debug( requestContent );
 
 		HttpClientSupport.execute( post );
 
 		byte[] responseBody = post.getResponseBody();
-		SoapUI.log( "Got response from AlertSite:" );
-		SoapUI.log( new String( responseBody ) );
+
+		log.debug( "Got response from AlertSite:" );
+		log.debug( new String( responseBody ) );
 
 		String reponseBodyAsString = new String( responseBody );
 		return XmlUtils.parseXml( reponseBodyAsString );

@@ -21,6 +21,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.security.GeneralSecurityException;
+import java.util.List;
 import java.util.TimerTask;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -29,6 +30,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.ssl.OpenSSL;
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
@@ -58,6 +60,7 @@ import com.eviware.soapui.support.action.SoapUIActionRegistry;
 import com.eviware.soapui.support.factory.SoapUIFactoryRegistry;
 import com.eviware.soapui.support.listener.SoapUIListenerRegistry;
 import com.eviware.soapui.support.types.StringList;
+import com.eviware.soapui.testondemand.Location;
 
 /**
  * Initializes core objects. Transform to a Spring "ApplicationContext"?
@@ -151,6 +154,7 @@ public class DefaultSoapUICore implements SoapUICore
 
 		// this is to provoke initialization
 		SoapVersion.Soap11.equals( SoapVersion.Soap12 );
+
 	}
 
 	protected void initPlugins()
@@ -745,5 +749,11 @@ public class DefaultSoapUICore implements SoapUICore
 		if( securityScanRegistry == null )
 			initSecurityScanRegistry();
 		return securityScanRegistry;
+	}
+
+	@Override
+	public List<Location> getTestOnDemandLocations()
+	{
+		throw new NotImplementedException();
 	}
 }

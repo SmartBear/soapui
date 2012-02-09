@@ -13,6 +13,7 @@
 package com.eviware.soapui;
 
 import java.io.File;
+import java.util.List;
 
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.monitor.MockEngine;
@@ -20,6 +21,7 @@ import com.eviware.soapui.security.registry.SecurityScanRegistry;
 import com.eviware.soapui.support.action.SoapUIActionRegistry;
 import com.eviware.soapui.support.factory.SoapUIFactoryRegistry;
 import com.eviware.soapui.support.listener.SoapUIListenerRegistry;
+import com.eviware.soapui.testondemand.Location;
 
 public interface SoapUICore
 {
@@ -42,4 +44,6 @@ public interface SoapUICore
 	public SoapUIExtensionClassLoader getExtensionClassLoader();
 
 	public SecurityScanRegistry getSecurityScanRegistry();
+
+	public List<Location> getTestOnDemandLocations();
 }

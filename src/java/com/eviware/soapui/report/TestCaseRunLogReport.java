@@ -15,7 +15,8 @@ package com.eviware.soapui.report;
 import java.io.File;
 import java.io.IOException;
 
-import com.eviware.soapui.SoapUI;
+import org.apache.log4j.Logger;
+
 import com.eviware.soapui.config.TestCaseRunLogDocumentConfig;
 import com.eviware.soapui.config.TestCaseRunLogDocumentConfig.TestCaseRunLog;
 import com.eviware.soapui.config.TestCaseRunLogDocumentConfig.TestCaseRunLog.TestCaseRunLogTestStep;
@@ -41,6 +42,7 @@ public class TestCaseRunLogReport extends TestRunListenerAdapter
 	private TestCaseRunLog testCaseRunLog;
 	private final String outputFolder;
 	private long startTime;
+	private final static Logger log = Logger.getLogger( TestCaseRunLogReport.class );
 
 	public TestCaseRunLogReport( String outputFolder )
 	{
@@ -66,7 +68,7 @@ public class TestCaseRunLogReport extends TestRunListenerAdapter
 		{
 			testCaseRunLogTestStep.setEndpoint( httpMethod.getURI().toString() );
 
-			SoapUIMetrics metrics = ( SoapUIMetrics )httpMethod.getMetrics();
+			SoapUIMetrics metrics = httpMethod.getMetrics();
 			testCaseRunLogTestStep.setTimestamp( metrics.getFormattedTimeStamp() );
 			testCaseRunLogTestStep.setHttpStatus( String.valueOf( metrics.getHttpStatus() ) );
 			testCaseRunLogTestStep.setContentLength( String.valueOf( metrics.getContentLength() ) );
@@ -102,7 +104,7 @@ public class TestCaseRunLogReport extends TestRunListenerAdapter
 		}
 		catch( IOException e )
 		{
-			SoapUI.logError( e, "Could not write " + REPORT_FILE_NAME + " to disk" );
+			log.error( "Could not write " + REPORT_FILE_NAME + " to disk" );
 		}
 	}
 

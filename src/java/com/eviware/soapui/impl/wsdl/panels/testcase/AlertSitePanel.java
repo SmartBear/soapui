@@ -16,7 +16,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.AbstractAction;
@@ -38,6 +37,8 @@ import com.eviware.soapui.testondemand.Location;
 import com.eviware.soapui.testondemand.TestOnDemandCaller;
 import com.google.common.base.Strings;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
+
 /**
  * 
  * Panel for displaying a AlertSite report
@@ -45,9 +46,13 @@ import com.google.common.base.Strings;
  */
 public class AlertSitePanel extends JPanel
 {
+	@NonNull
+	private JComboBox locationsComboBox;
 
-	private JComboBox locations;
+	@NonNull
 	private CustomNativeBrowserComponent browser;
+
+	@NonNull
 	private Action runAction;
 	private boolean useSystemBrowser;
 
@@ -79,11 +84,13 @@ public class AlertSitePanel extends JPanel
 			add( jxbrowserDisabledPanel, BorderLayout.CENTER );
 		}
 
-		if( runAction != null )
+		if( locationsCache.isEmpty() )
 		{
-			if( locationsCache != null && locationsCache.isEmpty() )
+			runAction.setEnabled( false );
+			locationsComboBox.setEnabled( false );
+			if( !SoapUI.isJXBrowserDisabled( true ) )
 			{
-				runAction.setEnabled( false );
+				browser.navigate( SoapUI.PUSH_PAGE_ERROR_URL, null );
 			}
 		}
 	}
@@ -103,8 +110,8 @@ public class AlertSitePanel extends JPanel
 		runAction = new RunAction();
 		toolbar.addFixed( UISupport.createToolbarButton( runAction ) );
 		toolbar.addRelatedGap();
-		locations = buildLocationsComboBox();
-		toolbar.addFixed( locations );
+		locationsComboBox = buildLocationsComboBox();
+		toolbar.addFixed( locationsComboBox );
 		toolbar.addGlue();
 		toolbar.addFixed( UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.ALERT_SITE_HELP_URL ) ) );
 
@@ -113,10 +120,7 @@ public class AlertSitePanel extends JPanel
 
 	private JComboBox buildLocationsComboBox()
 	{
-		if( locationsCache == null )
-		{
-			locationsCache = getLocationCache();
-		}
+		locationsCache = SoapUI.getSoapUICore().getTestOnDemandLocations();
 		JComboBox cb = new JComboBox( locationsCache.toArray() );
 		return cb;
 	}
@@ -139,9 +143,9 @@ public class AlertSitePanel extends JPanel
 				return;
 			}
 
-			if( locations != null )
+			if( locationsComboBox != null )
 			{
-				Location selectedLocation = ( Location )locations.getSelectedItem();
+				Location selectedLocation = ( Location )locationsComboBox.getSelectedItem();
 
 				String redirectUrl;
 
@@ -172,20 +176,6 @@ public class AlertSitePanel extends JPanel
 				}
 			}
 		}
-	}
-
-	private List<Location> getLocationCache()
-	{
-		List<Location> locations = new ArrayList<Location>();
-		try
-		{
-			locations = caller.getLocations();
-		}
-		catch( Exception e )
-		{
-			SoapUI.logError( e );
-		}
-		return locations;
 	}
 
 	private class CustomNativeBrowserComponent extends NativeBrowserComponent
