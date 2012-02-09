@@ -90,6 +90,11 @@ public final class ExtendedTraceMethod extends HttpTrace implements ExtendedHttp
 		return httpMethodSupport.getResponseReadTime();
 	}
 
+	public long getResponseReadTimeNanos()
+	{
+		return httpMethodSupport.getResponseReadTimeNanos();
+	}
+
 	public void afterWriteRequest()
 	{
 		httpMethodSupport.afterWriteRequest();

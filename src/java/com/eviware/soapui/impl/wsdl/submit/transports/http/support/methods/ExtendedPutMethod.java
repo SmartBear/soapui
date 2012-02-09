@@ -89,6 +89,11 @@ public final class ExtendedPutMethod extends HttpPut implements ExtendedEntityEn
 		return httpMethodSupport.getResponseReadTime();
 	}
 
+	public long getResponseReadTimeNanos()
+	{
+		return httpMethodSupport.getResponseReadTimeNanos();
+	}
+
 	public void afterWriteRequest()
 	{
 		httpMethodSupport.afterWriteRequest();

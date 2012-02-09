@@ -90,6 +90,11 @@ public final class ExtendedOptionsMethod extends HttpOptions implements Extended
 		return httpMethodSupport.getResponseReadTime();
 	}
 
+	public long getResponseReadTimeNanos()
+	{
+		return httpMethodSupport.getResponseReadTimeNanos();
+	}
+
 	public void afterWriteRequest()
 	{
 		httpMethodSupport.afterWriteRequest();

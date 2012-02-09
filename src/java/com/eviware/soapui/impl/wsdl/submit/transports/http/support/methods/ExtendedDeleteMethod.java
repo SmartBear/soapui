@@ -84,6 +84,11 @@ public final class ExtendedDeleteMethod extends HttpDelete implements ExtendedHt
 		return httpMethodSupport.getResponseReadTime();
 	}
 
+	public long getResponseReadTimeNanos()
+	{
+		return httpMethodSupport.getResponseReadTimeNanos();
+	}
+
 	public boolean hasResponse()
 	{
 		return httpMethodSupport.hasResponse();

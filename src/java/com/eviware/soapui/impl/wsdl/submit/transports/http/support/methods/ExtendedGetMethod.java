@@ -83,6 +83,11 @@ public final class ExtendedGetMethod extends HttpGet implements ExtendedHttpMeth
 		return httpMethodSupport.getResponseReadTime();
 	}
 
+	public long getResponseReadTimeNanos()
+	{
+		return httpMethodSupport.getResponseReadTimeNanos();
+	}
+
 	public void afterWriteRequest()
 	{
 		httpMethodSupport.afterWriteRequest();

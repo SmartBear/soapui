@@ -31,6 +31,8 @@ public interface ExtendedHttpMethod extends HttpRequest, HttpUriRequest
 
 	public long getResponseReadTime();
 
+	public long getResponseReadTimeNanos();
+
 	public void initStartTime();
 
 	public long getTimeTaken();

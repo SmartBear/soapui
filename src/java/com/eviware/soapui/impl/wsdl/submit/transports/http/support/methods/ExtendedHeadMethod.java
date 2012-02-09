@@ -89,6 +89,11 @@ public final class ExtendedHeadMethod extends HttpHead implements ExtendedHttpMe
 		return httpMethodSupport.getResponseReadTime();
 	}
 
+	public long getResponseReadTimeNanos()
+	{
+		return httpMethodSupport.getResponseReadTimeNanos();
+	}
+
 	public void afterWriteRequest()
 	{
 		httpMethodSupport.afterWriteRequest();

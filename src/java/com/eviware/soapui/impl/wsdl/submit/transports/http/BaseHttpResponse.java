@@ -16,7 +16,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.net.URL;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.http.Header;
@@ -84,20 +83,23 @@ public abstract class BaseHttpResponse implements HttpResponse
 		if( !httpMethod.isFailed() )
 		{
 			Settings settings = httpRequest.getSettings();
+
+			try
+			{
+				httpMethod.getResponseBody();
+			}
+			catch( IOException e )
+			{
+				e.printStackTrace();
+			}
+
 			if( settings.getBoolean( HttpSettings.INCLUDE_RESPONSE_IN_TIME_TAKEN ) )
 			{
-				try
-				{
-					httpMethod.getResponseBody();
-				}
-				catch( IOException e )
-				{
-					e.printStackTrace();
-				}
 				timeTaken += httpMethod.getResponseReadTime();
-
-				// metrics.getTotalTimer().add( httpMethod.getResponseReadTime() );
 			}
+
+			metrics.getReadTimer().add( httpMethod.getResponseReadTimeNanos() );
+			metrics.getTotalTimer().add( httpMethod.getResponseReadTimeNanos() );
 
 			try
 			{
@@ -136,11 +138,11 @@ public abstract class BaseHttpResponse implements HttpResponse
 
 			if( downloadIncludedResources )
 			{
-				long before = ( new Date() ).getTime();
+				long beforeNanos = System.nanoTime();
 				addIncludedContentsAsAttachments();
-				long after = ( new Date() ).getTime();
-				timeTaken += ( after - before );
-				// metrics.getTotalTimer().add( after - before );
+				long afterNanos = System.nanoTime();
+				timeTaken += ( ( afterNanos - beforeNanos ) / 1000000 );
+				metrics.getTotalTimer().add( afterNanos - beforeNanos );
 				context.setProperty( HTMLPageSourceDownloader.MISSING_RESOURCES_LIST, downloader.getMissingResourcesList() );
 			}
 		}

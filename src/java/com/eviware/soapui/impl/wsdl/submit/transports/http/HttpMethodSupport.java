@@ -150,6 +150,11 @@ public class HttpMethodSupport
 
 	public long getResponseReadTime()
 	{
+		return responseReadTime / 1000000;
+	}
+
+	public long getResponseReadTimeNanos()
+	{
 		return responseReadTime;
 	}
 
@@ -260,9 +265,9 @@ public class HttpMethodSupport
 
 		if( hasHttpResponse() )
 		{
+			long now = System.nanoTime();
 			HttpEntity bufferedEntity = new BufferedHttpEntity( httpResponse.getEntity() );
 			long contentLength = bufferedEntity.getContentLength();
-			long now = System.nanoTime();
 			if( metrics != null )
 			{
 				metrics.setContentLength( contentLength );
@@ -343,7 +348,7 @@ public class HttpMethodSupport
 		}
 
 		// convert to ms
-		responseReadTime /= 1000000;
+		//responseReadTime /= 1000000;
 
 		return responseBody;
 	}
