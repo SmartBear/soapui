@@ -24,6 +24,8 @@ import javax.swing.JComboBox;
 import javax.swing.JEditorPane;
 import javax.swing.JPanel;
 
+import org.apache.log4j.Logger;
+
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
@@ -54,14 +56,14 @@ public class AlertSitePanel extends JPanel
 
 	@NonNull
 	private Action runAction;
-	private boolean useSystemBrowser;
-
 	private final WsdlTestCase testCase;
 	private static List<Location> locationsCache;
 
 	private TestOnDemandCaller caller = new TestOnDemandCaller();
 
 	private DependencyValidator validator = new DependencyValidator();
+
+	private static final Logger log = Logger.getLogger( AlertSitePanel.class );
 
 	public AlertSitePanel( WsdlTestCase testCase )
 	{
@@ -80,7 +82,7 @@ public class AlertSitePanel extends JPanel
 		else
 		{
 			JEditorPane jxbrowserDisabledPanel = new JEditorPane();
-			jxbrowserDisabledPanel.setText( "browser component disabled or not available on this platform" );
+			jxbrowserDisabledPanel.setText( "Browser component disabled or not available on this platform" );
 			add( jxbrowserDisabledPanel, BorderLayout.CENTER );
 		}
 
@@ -145,34 +147,35 @@ public class AlertSitePanel extends JPanel
 
 			if( locationsComboBox != null )
 			{
-				Location selectedLocation = ( Location )locationsComboBox.getSelectedItem();
+				locationsComboBox.getSelectedItem();
+				String redirectUrl = "http://10.0.48.172/tmp/soapui_iframe_wrapper.html";
 
-				String redirectUrl;
+				//				XProgressDialog progressDialog = UISupport.getDialogs().createProgressDialog( "Upload TestCase", 3,
+				//						"Uploading TestCase..", false );
+				//				try
+				//				{
+				//					SendTestCaseWorker sendTestCaseWorker = new SendTestCaseWorker();
+				//					progressDialog.run( sendTestCaseWorker );
+				//					redirectUrl = sendTestCaseWorker.getResult();
+				//				}
+				//				catch( Exception e )
+				//				{
+				//					// TODO Auto-generated catch block
+				//				}
 
-				// FIXME Add better error handling
-				try
+				if( !Strings.isNullOrEmpty( redirectUrl ) )
 				{
-					redirectUrl = caller.sendProject( testCase, selectedLocation );
-
-					if( !Strings.isNullOrEmpty( redirectUrl ) )
+					if( SoapUI.isJXBrowserDisabled( true ) )
 					{
-						if( SoapUI.isJXBrowserDisabled( true ) )
-						{
-							Tools.openURL( redirectUrl );
-						}
-						else
-						{
-							if( browser != null )
-							{
-								browser.navigate( redirectUrl, null );
-							}
-						}
-						useSystemBrowser = false;
+						Tools.openURL( redirectUrl );
 					}
-				}
-				catch( Exception e )
-				{
-					SoapUI.logError( e );
+					else
+					{
+						if( browser != null )
+						{
+							browser.navigate( redirectUrl, null );
+						}
+					}
 				}
 			}
 		}
