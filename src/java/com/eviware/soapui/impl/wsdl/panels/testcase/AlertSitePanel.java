@@ -37,8 +37,6 @@ import com.eviware.soapui.testondemand.DependencyValidator;
 import com.eviware.soapui.testondemand.Location;
 import com.eviware.soapui.testondemand.TestOnDemandCaller;
 import com.google.common.base.Strings;
-import com.teamdev.jxbrowser.DefaultWebPolicyDelegate;
-import com.teamdev.jxbrowser.events.NavigationEvent;
 
 /**
  * 
@@ -73,7 +71,6 @@ public class AlertSitePanel extends JPanel
 		{
 			browser = new CustomNativeBrowserComponent( true, false );
 			add( browser.getComponent(), BorderLayout.CENTER );
-			browser.setWebPolicy();
 		}
 		else
 		{
@@ -193,33 +190,11 @@ public class AlertSitePanel extends JPanel
 
 	private class CustomNativeBrowserComponent extends NativeBrowserComponent
 	{
-
 		public CustomNativeBrowserComponent( boolean addToolbar, boolean addStatusBar )
 		{
 			super( addToolbar, addStatusBar );
 		}
 
-		public void setWebPolicy()
-		{
-			if( getBrowser() != null )
-			{
-				getBrowser().getServices().setWebPolicyDelegate( new DefaultWebPolicyDelegate()
-				{
-					@Override
-					public boolean allowNavigation( NavigationEvent event )
-					{
-						if( !useSystemBrowser )
-						{
-							useSystemBrowser = true;
-							return true;
-						}
-						// return false to cancel navigation
-						Tools.openURL( event.getUrl() );
-						return false;
-					}
-				} );
-			}
-		}
+		// TODO check if clicking a link opens a new window
 	}
-
 }
