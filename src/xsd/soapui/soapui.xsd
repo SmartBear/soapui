@@ -2431,7 +2431,6 @@
 			<xsd:element name="sourceId" type="xsd:string"></xsd:element>
 			<xsd:element name="propertyName" type="xsd:string"></xsd:element>
 			<xsd:element name="assertion" type="tns:TestAssertion"></xsd:element>
-			<xsd:element name="status" type="xsd:string"></xsd:element>
 		</xsd:sequence>
 	</xsd:complexType>
 </xsd:schema>
