@@ -43,7 +43,6 @@ import com.eviware.x.form.XForm;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.XFormDialogBuilder;
 import com.eviware.x.form.XFormFactory;
-import com.google.common.base.Strings;
 
 /**
  * Assertion that checks for the non-existence of a specified text token in the
@@ -91,10 +90,14 @@ public class SimpleNotContainsAssertion extends WsdlMessageAssertion implements 
 
 	private String assertContent( SubmitContext context, String content, String type ) throws AssertionException
 	{
-		Strings.nullToEmpty( token );
-		Strings.nullToEmpty( content );
+		if( token == null )
+			token = "";
+		if( content == null )
+			content = "";
 
 		String replToken = PropertyExpander.expandProperties( context, token );
+		if( replToken == null )
+			replToken = "";
 
 		replToken = normalize( replToken );
 		content = normalize( content );
