@@ -262,14 +262,14 @@ public class UISupport
 
 	public static void showErrorMessage( String message )
 	{
-		//		if( message.length() > 120 )
-		//		{
-		dialogs.showExtendedInfo( "Error", "An error occurred", message, null );
-		//		}
-		//		else
-		//		{
-		//			dialogs.showErrorMessage( message );
-		//		}
+		if( message.length() > 120 )
+		{
+			dialogs.showExtendedInfo( "Error", "An error occurred", message, null );
+		}
+		else
+		{
+			dialogs.showErrorMessage( message );
+		}
 	}
 
 	public static boolean confirm( String question, String title )
