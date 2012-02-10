@@ -62,7 +62,7 @@ public class AlertSitePanel extends JPanel
 	private final WsdlTestCase testCase;
 	private static List<Location> locationsCache;
 
-	private DependencyValidator validator = new DependencyValidator();
+	protected DependencyValidator validator;
 
 	private static final Logger log = Logger.getLogger( AlertSitePanel.class );
 
@@ -72,6 +72,8 @@ public class AlertSitePanel extends JPanel
 		this.testCase = testCase;
 		setBackground( Color.WHITE );
 		setOpaque( true );
+
+		setValidator();
 
 		add( buildToolbar(), BorderLayout.NORTH );
 
@@ -96,6 +98,11 @@ public class AlertSitePanel extends JPanel
 				browser.navigate( SoapUI.PUSH_PAGE_ERROR_URL, null );
 			}
 		}
+	}
+
+	protected void setValidator()
+	{
+		validator = new DependencyValidator();
 	}
 
 	public void release()

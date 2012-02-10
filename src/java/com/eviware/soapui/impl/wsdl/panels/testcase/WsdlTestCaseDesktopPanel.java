@@ -129,7 +129,7 @@ public class WsdlTestCaseDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 	// private JButton convertToLoadUIButton;
 	private JButton synchronizeWithLoadUIButton;
 	private WsdlTestCase testCase;
-	private AlertSitePanel alertSitePanel;
+	protected AlertSitePanel alertSitePanel;
 
 	public WsdlTestCaseDesktopPanel( WsdlTestCase testCase )
 	{

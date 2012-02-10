@@ -38,7 +38,7 @@ public class DependencyValidator
 	/*
 	 * make sure all interfaces are loaded
 	 */
-	private void loadInterfaces( WsdlProject project )
+	protected void loadInterfaces( WsdlProject project )
 	{
 		for( Interface inf : project.getInterfaceList() )
 			try
@@ -61,7 +61,7 @@ public class DependencyValidator
 	/*
 	 * save interfaces to project
 	 */
-	private void saveProject( WsdlProject project )
+	protected void saveProject( WsdlProject project ) throws IOException
 	{
 		boolean shouldCache = project.isCacheDefinitions();
 
@@ -76,10 +76,6 @@ public class DependencyValidator
 			project.saveIn( tempFile );
 			this.filename = tempFile;
 		}
-		catch( IOException e )
-		{
-			e.printStackTrace();
-		}
 		finally
 		{
 			project.setCacheDefinitions( shouldCache );
@@ -93,8 +89,8 @@ public class DependencyValidator
 		{
 			WsdlProject project = testCase.getTestSuite().getProject();
 
-			loadInterfaces( project );
-			saveProject( project );
+			// perform validations
+			validate( project );
 
 			List<ExternalDependency> deps = project.getExternalDependencies();
 			for( ExternalDependency d : deps )
@@ -106,6 +102,20 @@ public class DependencyValidator
 			}
 		}
 		return true;
+	}
+
+	protected void validate( WsdlProject project )
+	{
+		loadInterfaces( project );
+
+		try
+		{
+			saveProject( project );
+		}
+		catch( IOException e )
+		{
+			e.printStackTrace();
+		}
 	}
 
 }
