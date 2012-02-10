@@ -14,6 +14,7 @@ package com.eviware.soapui.impl.wsdl.support;
 
 import com.eviware.soapui.impl.wsdl.panels.teststeps.amf.AMFResponse;
 import com.eviware.soapui.impl.wsdl.teststeps.AMFRequestTestStep;
+import com.eviware.soapui.model.iface.Response;
 
 /**
  * 
@@ -28,6 +29,12 @@ public class AMFMessageExchange extends AbstractNonHttpMessageExchange<AMFReques
 	{
 		super( modelItem );
 		this.response = response;
+	}
+
+	@Override
+	public Response getResponse()
+	{
+		return response;
 	}
 
 	public String getRequestContent()

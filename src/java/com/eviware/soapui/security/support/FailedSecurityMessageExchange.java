@@ -4,6 +4,7 @@ import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.iface.Operation;
+import com.eviware.soapui.model.iface.Response;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.types.StringToStringsMap;
 
@@ -12,6 +13,13 @@ public class FailedSecurityMessageExchange implements MessageExchange
 
 	@Override
 	public String getEndpoint()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Response getResponse()
 	{
 		// TODO Auto-generated method stub
 		return null;

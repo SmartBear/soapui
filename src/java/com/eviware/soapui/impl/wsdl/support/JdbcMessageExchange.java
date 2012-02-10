@@ -14,6 +14,7 @@ package com.eviware.soapui.impl.wsdl.support;
 
 import com.eviware.soapui.impl.wsdl.panels.teststeps.JdbcResponse;
 import com.eviware.soapui.impl.wsdl.teststeps.JdbcRequestTestStep;
+import com.eviware.soapui.model.iface.Response;
 
 /**
  * 
@@ -28,6 +29,12 @@ public class JdbcMessageExchange extends AbstractNonHttpMessageExchange<JdbcRequ
 	{
 		super( modelItem );
 		this.response = response;
+	}
+
+	@Override
+	public Response getResponse()
+	{
+		return response;
 	}
 
 	public String getRequestContent()

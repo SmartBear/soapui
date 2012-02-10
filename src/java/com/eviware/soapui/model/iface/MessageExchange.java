@@ -71,5 +71,7 @@ public interface MessageExchange extends ResultContainer
 
 	public boolean hasResponse();
 
+	public Response getResponse();
+
 	public String getProperty( String name );
 }

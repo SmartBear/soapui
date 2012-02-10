@@ -19,6 +19,7 @@ import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRequest;
 import com.eviware.soapui.impl.wsdl.submit.AbstractWsdlMessageExchange;
 import com.eviware.soapui.model.iface.Attachment;
+import com.eviware.soapui.model.iface.Response;
 import com.eviware.soapui.support.types.StringToStringsMap;
 
 public class WsdlMockRequestMessageExchange extends AbstractWsdlMessageExchange<WsdlMockOperation>
@@ -34,6 +35,12 @@ public class WsdlMockRequestMessageExchange extends AbstractWsdlMessageExchange<
 	public String getEndpoint()
 	{
 		return request.getHttpRequest().getRequestURI();
+	}
+
+	@Override
+	public Response getResponse()
+	{
+		return null;
 	}
 
 	@Override

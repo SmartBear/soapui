@@ -21,6 +21,7 @@ import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.AbstractTestAssertionFactory;
 import com.eviware.soapui.model.TestPropertyHolder;
 import com.eviware.soapui.model.iface.MessageExchange;
+import com.eviware.soapui.model.iface.Response;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.testsuite.Assertable;
@@ -70,12 +71,13 @@ public class ResponseSLAAssertion extends WsdlMessageAssertion implements Respon
 	protected String internalAssertResponse( MessageExchange messageExchange, SubmitContext context )
 			throws AssertionException
 	{
+		Response response = messageExchange.getResponse();
+		long timeTaken = response == null ? messageExchange.getTimeTaken() : response.getTimeTaken();
 
 		// assert!
-		if( messageExchange.getTimeTaken() > Long.parseLong( PropertyExpander.expandProperties( context, SLA ) ) )
+		if( timeTaken > Long.parseLong( PropertyExpander.expandProperties( context, SLA ) ) )
 		{
-			throw new AssertionException( new AssertionError( "Response did not meet SLA "
-					+ messageExchange.getTimeTaken() + "/" + SLA ) );
+			throw new AssertionException( new AssertionError( "Response did not meet SLA " + timeTaken + "/" + SLA ) );
 		}
 
 		return "Response meets SLA";

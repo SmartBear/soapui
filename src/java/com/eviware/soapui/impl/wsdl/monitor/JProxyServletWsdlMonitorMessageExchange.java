@@ -41,6 +41,7 @@ import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
 import com.eviware.soapui.impl.wsdl.support.wss.IncomingWss;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.iface.Operation;
+import com.eviware.soapui.model.iface.Response;
 import com.eviware.soapui.model.propertyexpansion.DefaultPropertyExpansionContext;
 import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.support.Tools;
@@ -113,6 +114,13 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
 		capture = false;
 
 		discarded = true;
+	}
+
+	@Override
+	public Response getResponse()
+	{
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
