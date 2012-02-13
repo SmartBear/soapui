@@ -289,7 +289,7 @@ public class AlertSitePanel extends JPanel
 			}
 			catch( Exception e )
 			{
-				log.warn( COULD_NOT_GET_LOCATIONS_MESSAGE );
+				log.warn( COULD_NOT_GET_LOCATIONS_MESSAGE, e );
 			}
 			finally
 			{
