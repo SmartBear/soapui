@@ -152,7 +152,7 @@ public class WsdlProjectTestSuitesTabPanel extends JPanel
 		ButtonGroup buttonGroup = new ButtonGroup();
 
 		sequentialButton = new JToggleButton( UISupport.createImageIcon( "/sequential.gif" ), true );
-		sequentialButton.setToolTipText( "The selected TestCases are run in sequence" );
+		sequentialButton.setToolTipText( "The selected TestSuites are run in sequence" );
 		sequentialButton.setPreferredSize( UISupport.getPreferredButtonSize() );
 		sequentialButton.setSelected( project.getRunType() == TestSuiteRunType.SEQUENTIAL );
 		sequentialButton.addActionListener( new ActionListener()
@@ -166,7 +166,7 @@ public class WsdlProjectTestSuitesTabPanel extends JPanel
 		buttonGroup.add( sequentialButton );
 
 		parallellButton = new JToggleButton( UISupport.createImageIcon( "/parallell.gif" ) );
-		parallellButton.setToolTipText( "The selected TestCases are run in parallel" );
+		parallellButton.setToolTipText( "The selected TestSuites are run in parallel" );
 		parallellButton.setPreferredSize( UISupport.getPreferredButtonSize() );
 		parallellButton.setSelected( project.getRunType() == TestSuiteRunType.PARALLEL );
 		parallellButton.addActionListener( new ActionListener()
@@ -295,7 +295,7 @@ public class WsdlProjectTestSuitesTabPanel extends JPanel
 		public RunAction()
 		{
 			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/run_testcase.gif" ) );
-			putValue( Action.SHORT_DESCRIPTION, "Runs the selected TestCases" );
+			putValue( Action.SHORT_DESCRIPTION, "Runs the selected TestSuites" );
 		}
 
 		public void actionPerformed( ActionEvent e )
@@ -309,7 +309,7 @@ public class WsdlProjectTestSuitesTabPanel extends JPanel
 		public CancelAction()
 		{
 			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/stop_testcase.gif" ) );
-			putValue( Action.SHORT_DESCRIPTION, "Cancels ongoing TestCase runs" );
+			putValue( Action.SHORT_DESCRIPTION, "Cancels ongoing TestSuite runs" );
 		}
 
 		public void actionPerformed( ActionEvent e )
@@ -441,7 +441,7 @@ public class WsdlProjectTestSuitesTabPanel extends JPanel
 			testRunLog.clear();
 
 			if( project.getRunType() == TestSuiteRunType.PARALLEL )
-				testRunLog.addText( "<log disabled during parallell execution>" );
+				testRunLog.addText( "<log disabled during parallel execution>" );
 		}
 
 		public void beforeTestSuite( ProjectRunner testScenarioRunner, ProjectRunContext runContext,
