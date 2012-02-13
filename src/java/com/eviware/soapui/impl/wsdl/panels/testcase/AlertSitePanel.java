@@ -15,7 +15,9 @@ package com.eviware.soapui.impl.wsdl.panels.testcase;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.AbstractAction;
@@ -51,6 +53,13 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  */
 public class AlertSitePanel extends JPanel
 {
+	private static final String NO_LOCATIONS_FOUND_MESSAGE = "No locations found";
+	private static final String INITIALIZING_MESSAGE = "Initializing...";
+	private static final String COULD_NOT_GET_LOCATIONS_MESSAGE = "Could not get Test On Demand Locations. Check your network connection.";
+	private static final String COULD_NOT_UPLOAD_MESSAGE = "Could not upload TestCase to the selected location";
+	private static final String UPLOAD_TEST_CASE_HEADING = "Upload TestCase";
+	private static final String UPLOADING_TEST_CASE_MESSAGE = "Uploading TestCase..";
+
 	@NonNull
 	private JComboBox locationsComboBox;
 
@@ -59,8 +68,11 @@ public class AlertSitePanel extends JPanel
 
 	@NonNull
 	private Action runAction;
+
+	@NonNull
+	private static List<Location> locationsCache = new ArrayList<Location>();
+
 	private final WsdlTestCase testCase;
-	private static List<Location> locationsCache;
 
 	protected DependencyValidator validator;
 
@@ -69,6 +81,7 @@ public class AlertSitePanel extends JPanel
 	public AlertSitePanel( WsdlTestCase testCase )
 	{
 		super( new BorderLayout() );
+
 		this.testCase = testCase;
 		setBackground( Color.WHITE );
 		setOpaque( true );
@@ -76,6 +89,8 @@ public class AlertSitePanel extends JPanel
 		setValidator();
 
 		add( buildToolbar(), BorderLayout.NORTH );
+
+		initializeLocationsCache();
 
 		if( !SoapUI.isJXBrowserDisabled( true ) )
 		{
@@ -87,16 +102,6 @@ public class AlertSitePanel extends JPanel
 			JEditorPane jxbrowserDisabledPanel = new JEditorPane();
 			jxbrowserDisabledPanel.setText( "Browser component disabled or not available on this platform" );
 			add( jxbrowserDisabledPanel, BorderLayout.CENTER );
-		}
-
-		if( locationsCache.isEmpty() )
-		{
-			runAction.setEnabled( false );
-			locationsComboBox.setEnabled( false );
-			if( !SoapUI.isJXBrowserDisabled( true ) )
-			{
-				browser.navigate( SoapUI.PUSH_PAGE_ERROR_URL, null );
-			}
 		}
 	}
 
@@ -118,9 +123,10 @@ public class AlertSitePanel extends JPanel
 		JXToolBar toolbar = UISupport.createToolbar();
 
 		runAction = new RunAction();
+		runAction.setEnabled( false );
 		toolbar.addFixed( UISupport.createToolbarButton( runAction ) );
 		toolbar.addRelatedGap();
-		locationsComboBox = buildLocationsComboBox();
+		locationsComboBox = buildInitializingLocationsComboBox();
 		toolbar.addFixed( locationsComboBox );
 		toolbar.addGlue();
 		toolbar.addFixed( UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.ALERT_SITE_HELP_URL ) ) );
@@ -128,11 +134,50 @@ public class AlertSitePanel extends JPanel
 		return toolbar;
 	}
 
-	private JComboBox buildLocationsComboBox()
+	private JComboBox buildInitializingLocationsComboBox()
 	{
-		locationsCache = SoapUI.getSoapUICore().getTestOnDemandLocations();
-		JComboBox cb = new JComboBox( locationsCache.toArray() );
-		return cb;
+		JComboBox initLocationsComboBox = new JComboBox();
+		initLocationsComboBox.setPreferredSize( new Dimension( 150, 10 ) );
+		initLocationsComboBox.addItem( INITIALIZING_MESSAGE );
+		initLocationsComboBox.setEnabled( false );
+		return initLocationsComboBox;
+	}
+
+	private void initializeLocationsCache()
+	{
+		if( locationsCache.isEmpty() )
+		{
+			new TestOnDemandCallerThread().start();
+		}
+		else
+		{
+			populateLocationsComboBox();
+		}
+	}
+
+	private void populateLocationsComboBox()
+	{
+		locationsComboBox.removeAllItems();
+
+		if( locationsCache.isEmpty() )
+		{
+			locationsComboBox.addItem( NO_LOCATIONS_FOUND_MESSAGE );
+			if( !SoapUI.isJXBrowserDisabled( true ) )
+			{
+				browser.navigate( SoapUI.PUSH_PAGE_ERROR_URL, null );
+			}
+		}
+		else
+		{
+			for( Location location : locationsCache )
+			{
+				locationsComboBox.addItem( location );
+			}
+			locationsComboBox.setEnabled( true );
+			runAction.setEnabled( true );
+		}
+
+		invalidate();
 	}
 
 	private class RunAction extends AbstractAction
@@ -158,8 +203,8 @@ public class AlertSitePanel extends JPanel
 				Location selectedLocation = ( Location )locationsComboBox.getSelectedItem();
 				String redirectUrl = "";
 
-				XProgressDialog progressDialog = UISupport.getDialogs().createProgressDialog( "Upload TestCase", 3,
-						"Uploading TestCase..", false );
+				XProgressDialog progressDialog = UISupport.getDialogs().createProgressDialog( UPLOAD_TEST_CASE_HEADING, 3,
+						UPLOADING_TEST_CASE_MESSAGE, false );
 				SendTestCaseWorker sendTestCaseWorker = new SendTestCaseWorker( testCase, selectedLocation );
 				try
 				{
@@ -210,8 +255,8 @@ public class AlertSitePanel extends JPanel
 			}
 			catch( Exception e )
 			{
-				log.error( "Could not upload TestCase to the selected location", e );
-				UISupport.showErrorMessage( "Could not upload TestCase to the selected location" );
+				log.error( COULD_NOT_UPLOAD_MESSAGE, e );
+				UISupport.showErrorMessage( COULD_NOT_UPLOAD_MESSAGE );
 			}
 			return result;
 		}
@@ -230,5 +275,26 @@ public class AlertSitePanel extends JPanel
 		}
 
 		// TODO check if clicking a link opens a new window
+	}
+
+	// Used to prevent soapUI from halting while waiting for the Test On Demand server to respond
+	private class TestOnDemandCallerThread extends Thread
+	{
+		@Override
+		public void run()
+		{
+			try
+			{
+				locationsCache = new TestOnDemandCaller().getLocations();
+			}
+			catch( Exception e )
+			{
+				log.warn( COULD_NOT_GET_LOCATIONS_MESSAGE );
+			}
+			finally
+			{
+				populateLocationsComboBox();
+			}
+		}
 	}
 }

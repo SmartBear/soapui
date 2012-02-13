@@ -14,8 +14,6 @@ package com.eviware.soapui;
 
 import java.awt.Color;
 import java.awt.Insets;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
@@ -23,27 +21,18 @@ import javax.swing.plaf.ColorUIResource;
 
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.Tools;
-import com.eviware.soapui.testondemand.Location;
-import com.eviware.soapui.testondemand.TestOnDemandCaller;
 import com.eviware.soapui.ui.desktop.DesktopRegistry;
 import com.eviware.soapui.ui.desktop.standalone.StandaloneDesktopFactory;
 import com.jgoodies.looks.plastic.PlasticXPLookAndFeel;
 import com.jgoodies.looks.plastic.theme.SkyBluer;
 import com.jniwrapper.PlatformContext;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
-
 public class StandaloneSoapUICore extends SwingSoapUICore
 {
-
-	@NonNull
-	private List<Location> locations = new ArrayList<Location>();
 
 	public StandaloneSoapUICore( boolean init )
 	{
 		super();
-
-		initTestOnDemandLocations();
 
 		if( init )
 			init( DEFAULT_SETTINGS_FILE );
@@ -53,14 +42,11 @@ public class StandaloneSoapUICore extends SwingSoapUICore
 	{
 		super( null, settingsFile );
 
-		initTestOnDemandLocations();
 	}
 
 	public StandaloneSoapUICore( boolean init, boolean settingPassword, String soapUISettingsPassword )
 	{
 		super( true, soapUISettingsPassword );
-
-		initTestOnDemandLocations();
 
 		if( init )
 			init( DEFAULT_SETTINGS_FILE );
@@ -143,34 +129,6 @@ public class StandaloneSoapUICore extends SwingSoapUICore
 		public ColorUIResource getMenuItemBackground()
 		{
 			return new ColorUIResource( new Color( 248, 248, 248 ) );
-		}
-	}
-
-	@Override
-	public List<Location> getTestOnDemandLocations()
-	{
-		return locations;
-	}
-
-	private void initTestOnDemandLocations()
-	{
-		new TestOnDemandCallerThread().start();
-	}
-
-	// Used to prevent soapUI from halting while waiting for the Test On Demand server to respond
-	private class TestOnDemandCallerThread extends Thread
-	{
-		@Override
-		public void run()
-		{
-			try
-			{
-				locations = new TestOnDemandCaller().getLocations();
-			}
-			catch( Exception e )
-			{
-				log.warn( "Could not get Test On Demand Locations. Check your network connection." );
-			}
 		}
 	}
 }
