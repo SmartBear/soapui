@@ -45,6 +45,7 @@ import org.apache.http.protocol.HttpRequestExecutor;
 import org.apache.log4j.Logger;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.SoapUISystemProperties;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.metrics.SoapUIMetrics;
 import com.eviware.soapui.impl.wsdl.support.CompressionSupport;
@@ -277,9 +278,14 @@ public class HttpClientSupport
 			KeyStore keyStore = null;
 			Settings settings = SoapUI.getSettings();
 
-			String keyStoreUrl = settings.getString( SSLSettings.KEYSTORE, null );
+			String keyStoreUrl = System.getProperty( SoapUISystemProperties.SOAPUI_SSL_KEYSTORE_LOCATION,
+					settings.getString( SSLSettings.KEYSTORE, null ) );
+
 			keyStoreUrl = keyStoreUrl != null ? keyStoreUrl.trim() : "";
-			String pass = settings.getString( SSLSettings.KEYSTORE_PASSWORD, "" );
+
+			String pass = System.getProperty( SoapUISystemProperties.SOAPUI_SSL_KEYSTORE_PASSWORD,
+					settings.getString( SSLSettings.KEYSTORE_PASSWORD, "" ) );
+
 			char[] pwd = pass.toCharArray();
 
 			if( keyStoreUrl.trim().length() > 0 )
