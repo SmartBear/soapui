@@ -24,19 +24,38 @@ import com.eviware.soapui.impl.wsdl.support.wss.WssContainer;
 import com.eviware.soapui.impl.wsdl.support.wss.WssContainerListener;
 import com.eviware.soapui.impl.wsdl.support.wss.WssCrypto;
 import com.eviware.soapui.impl.wsdl.support.wss.WssEntry;
+import com.eviware.soapui.impl.wsdl.support.wss.crypto.CryptoType;
 
 public class KeystoresComboBoxModel extends AbstractListModel implements ComboBoxModel, WssContainerListener
 {
 	private List<WssCrypto> cryptos = new ArrayList<WssCrypto>();
 	private WssCrypto selectedCrypto;
 	private final WssContainer container;
+	private final boolean outgoingConfig;
 
-	public KeystoresComboBoxModel( WssContainer container, WssCrypto selectedCrypto )
+	public KeystoresComboBoxModel( WssContainer container, WssCrypto selectedCrypto, boolean outgoingWSSConfig )
 	{
 		this.container = container;
 		this.selectedCrypto = selectedCrypto;
+		this.outgoingConfig = outgoingWSSConfig;
 
-		cryptos.addAll( container.getCryptoList() );
+		List<WssCrypto> currentCryptos = container.getCryptoList();
+
+		// Only allow keystores for outgoing configuration
+		if( outgoingWSSConfig )
+		{
+			for( WssCrypto currentCrypto : currentCryptos )
+			{
+				if( currentCrypto.getType() == CryptoType.KEYSTORE )
+				{
+					cryptos.add( currentCrypto );
+				}
+			}
+		}
+		else
+		{
+			cryptos.addAll( currentCryptos );
+		}
 
 		container.addWssContainerListener( this );
 	}
@@ -75,17 +94,27 @@ public class KeystoresComboBoxModel extends AbstractListModel implements ComboBo
 	@Override
 	public void cryptoAdded( WssCrypto crypto )
 	{
-		cryptos.add( crypto );
-		fireIntervalAdded( this, getSize() - 1, getSize() - 1 );
+		// Only allow adding keystores if this is outgoing configuration
+		if( !outgoingConfig || ( outgoingConfig && crypto.getType() == CryptoType.KEYSTORE ) )
+		{
+			cryptos.add( crypto );
+			fireIntervalAdded( this, getSize() - 1, getSize() - 1 );
+		}
 	}
 
 	@Override
 	public void cryptoRemoved( WssCrypto crypto )
 	{
-		int index = cryptos.indexOf( crypto );
-		cryptos.remove( index );
-		fireIntervalRemoved( this, index, index );
+		// Only allow removing keystores if this is outgoing configuration
+		if( !outgoingConfig || ( outgoingConfig && crypto.getType() == CryptoType.KEYSTORE ) )
+		{
+			int index = cryptos.indexOf( crypto );
+			cryptos.remove( index );
+			fireIntervalRemoved( this, index, index );
+		}
 	}
+
+	// FIXME Add adapter to remove this empty methods
 
 	@Override
 	public void outgoingWssAdded( OutgoingWss outgoingWss )

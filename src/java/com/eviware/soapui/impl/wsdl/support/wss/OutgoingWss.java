@@ -24,6 +24,7 @@ import org.w3c.dom.Element;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.OutgoingWssConfig;
 import com.eviware.soapui.config.WSSEntryConfig;
+import com.eviware.soapui.impl.wsdl.support.wss.entries.ManualSAMLEntry;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
@@ -33,6 +34,8 @@ import com.eviware.soapui.support.resolver.ResolveContext;
 
 public class OutgoingWss implements PropertyExpansionContainer
 {
+	private static final String OLD_MANUAL_SAML_ENTRY_TYPE = "SAML";
+
 	public static final String WSSENTRY_PROPERTY = OutgoingWss.class.getName() + "@wssEntry";
 
 	private static final int MOVE_DOWN = 1;
@@ -49,6 +52,9 @@ public class OutgoingWss implements PropertyExpansionContainer
 
 		for( WSSEntryConfig entryConfig : config.getEntryList() )
 		{
+
+			convertOldManualSAMLEntry( entryConfig );
+
 			WssEntry entry = WssEntryRegistry.get().build( entryConfig, this );
 			if( entry != null )
 				entries.add( entry );
@@ -231,5 +237,14 @@ public class OutgoingWss implements PropertyExpansionContainer
 
 	public void resolve( ResolveContext<?> context )
 	{
+	}
+
+	// Used to support backwards compatibility (< 4.5 - 4.5)
+	private void convertOldManualSAMLEntry( WSSEntryConfig entryConfig )
+	{
+		if( entryConfig.getType().equals( OLD_MANUAL_SAML_ENTRY_TYPE ) )
+		{
+			entryConfig.setType( ManualSAMLEntry.TYPE );
+		}
 	}
 }

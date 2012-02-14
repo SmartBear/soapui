@@ -293,11 +293,11 @@ public class WSSTabPanel extends JPanel
 		JPanel p = new JPanel( new BorderLayout() );
 		p.add( buildIncomingWssToolbar(), BorderLayout.NORTH );
 
-		incomingWssDecryptionCryptoComboBox = new JComboBox( new KeystoresComboBoxModel( wssContainer, null ) );
+		incomingWssDecryptionCryptoComboBox = new JComboBox( new KeystoresComboBoxModel( wssContainer, null, false ) );
 		incomingWssTable.getColumnModel().getColumn( 1 )
 				.setCellEditor( new DefaultCellEditor( incomingWssDecryptionCryptoComboBox ) );
 
-		incomingWssSignatureCryptoComboBox = new JComboBox( new KeystoresComboBoxModel( wssContainer, null ) );
+		incomingWssSignatureCryptoComboBox = new JComboBox( new KeystoresComboBoxModel( wssContainer, null, false ) );
 		incomingWssTable.getColumnModel().getColumn( 2 )
 				.setCellEditor( new DefaultCellEditor( incomingWssSignatureCryptoComboBox ) );
 

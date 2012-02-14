@@ -59,7 +59,7 @@ import com.jgoodies.binding.PresentationModel;
  */
 public class AutomaticSAMLEntry extends WssEntryBase
 {
-	public static final String TYPE = "SAML (automatic)";
+	public static final String TYPE = "SAML (Form)";
 
 	public static final String SAML_VERSION_1 = "1.1";
 	public static final String SAML_VERSION_2 = "2.0";
@@ -178,7 +178,7 @@ public class AutomaticSAMLEntry extends WssEntryBase
 				new String[] { SENDER_VOUCHES_CONFIRMATION_METHOD }, "Choose the confirmation method" );
 
 		cryptoComboBox = form.appendComboBox( "crypto", "Keystore", new KeystoresComboBoxModel( getWssContainer(),
-				getWssContainer().getCryptoByName( crypto ) ),
+				getWssContainer().getCryptoByName( crypto ), true ),
 				"Selects the Keystore containing the key to use for signing the SAML message" );
 
 		cryptoComboBox.addItemListener( new ItemListener()

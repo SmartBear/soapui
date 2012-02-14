@@ -74,7 +74,7 @@ public class SignatureEntry extends WssEntryBase
 		getWssContainer().addWssContainerListener( wssContainerListener );
 
 		form.appendComboBox( "crypto", "Keystore",
-				new KeystoresComboBoxModel( getWssContainer(), getWssContainer().getCryptoByName( crypto ) ),
+				new KeystoresComboBoxModel( getWssContainer(), getWssContainer().getCryptoByName( crypto ), true ),
 				"Selects the Keystore containing the key to use for signing" ).addItemListener( new ItemListener()
 		{
 
@@ -116,6 +116,7 @@ public class SignatureEntry extends WssEntryBase
 		return new JScrollPane( form.getPanel() );
 	}
 
+	@Override
 	public void release()
 	{
 		if( wssContainerListener != null )

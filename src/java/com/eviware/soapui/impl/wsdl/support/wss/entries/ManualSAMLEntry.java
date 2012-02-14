@@ -45,7 +45,7 @@ import com.eviware.soapui.support.xml.XmlUtils;
 
 public class ManualSAMLEntry extends WssEntryBase
 {
-	public static final String TYPE = "SAML";
+	public static final String TYPE = "SAML (XML)";
 
 	private String samlAssertion;
 
@@ -83,6 +83,7 @@ public class ManualSAMLEntry extends WssEntryBase
 	protected void load( XmlObjectConfigurationReader reader )
 	{
 		samlAssertion = reader.readString( "samlAssertion", null );
+
 	}
 
 	@Override
