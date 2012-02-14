@@ -20,7 +20,6 @@ import java.util.List;
 import junit.framework.JUnit4TestAdapter;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.eviware.soapui.impl.wsdl.WsdlProject;
@@ -38,10 +37,10 @@ import com.google.common.base.Strings;
 // FIXME We need to add the soapui.testondemand.host system property to Hudson to be able to run this
 public class TestOnDemandCallerTest
 {
-	private static final String FIRST_LOCATION_NAME = "Fort%20Lauderdale,%20FL";
+	private static final String FIRST_LOCATION_NAME = "Fort Lauderdale, FL";
 	private static final String FIRST_LOCATION_CODE = "10|ash.regression.alertsite.com";
 
-	private static final String SECOND_LOCATION_NAME = "Washington,%20D.C.";
+	private static final String SECOND_LOCATION_NAME = "Washington, D.C.";
 	private static final String SECOND_LOCATION_CODE = "40|latte.regression.alertsite.com";
 
 	private TestOnDemandCaller caller;
@@ -62,7 +61,6 @@ public class TestOnDemandCallerTest
 		caller = new TestOnDemandCaller();
 	}
 
-	@Ignore
 	@Test
 	public void testGetLocations() throws Exception
 	{
@@ -77,7 +75,6 @@ public class TestOnDemandCallerTest
 		assertEquals( secondLocation.getCode(), SECOND_LOCATION_CODE );
 	}
 
-	@Ignore
 	@Test
 	public void testSendProject() throws Exception
 	{
