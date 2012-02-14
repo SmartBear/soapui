@@ -43,6 +43,7 @@ import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.actions.project.SimpleDialog;
+import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.recent.RecentAssertionHandler;
 import com.eviware.soapui.model.ModelItem;
@@ -93,7 +94,7 @@ public class AddAssertionPanel extends SimpleDialog
 
 	public AddAssertionPanel( Assertable assertable )
 	{
-		super( "Select Assertion", "Select which assertion to add", "" );
+		super( "Select Assertion", "Select which assertion to add", HelpUrls.ADD_ASSERTION_PANEL );
 		this.assertable = assertable;
 		assertionEntryRenderer.setAssertable( assertable );
 		categoriesListRenderer.setAssertable( assertable );
