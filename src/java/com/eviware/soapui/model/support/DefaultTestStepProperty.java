@@ -15,7 +15,6 @@ package com.eviware.soapui.model.support;
 import javax.xml.namespace.QName;
 
 import org.apache.xmlbeans.SchemaType;
-import org.apache.xmlbeans.XmlBeans;
 import org.apache.xmlbeans.XmlString;
 
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
@@ -198,7 +197,7 @@ public class DefaultTestStepProperty implements TestStepProperty, RenameableTest
 	@Override
 	public SchemaType getSchemaType()
 	{
-		return XmlBeans.getBuiltinTypeSystem().findType( getType() );
+		return XmlString.type;
 	}
 
 }
