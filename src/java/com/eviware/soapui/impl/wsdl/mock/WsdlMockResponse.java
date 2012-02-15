@@ -1,5 +1,5 @@
 /*
- *  soapUI, copyright (C) 2004-2011 eviware.com 
+ *  soapUI, copyright (C) 2004-2011 smartbear.com 
  *
  *  soapUI is free software; you can redistribute it and/or modify it under the 
  *  terms of version 2.1 of the GNU Lesser General Public License as published by 
@@ -740,7 +740,7 @@ public class WsdlMockResponse extends AbstractWsdlModelItem<MockResponseConfig> 
 
 			response.addHeader( "Content-Type", mimeMessageRequestEntity.getContentType().getValue() );
 			response.addHeader( "MIME-Version", "1.0" );
-			mimeMessageRequestEntity.writeRequest( outData );
+			mimeMessageRequestEntity.writeTo( outData );
 		}
 
 		if( outData.size() > 0 )

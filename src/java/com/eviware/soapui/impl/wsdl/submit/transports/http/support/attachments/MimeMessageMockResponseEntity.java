@@ -1,5 +1,5 @@
 /*
- *  soapUI, copyright (C) 2004-2011 eviware.com 
+ *  soapUI, copyright (C) 2004-2011 smartbear.com 
  *
  *  soapUI is free software; you can redistribute it and/or modify it under the 
  *  terms of version 2.1 of the GNU Lesser General Public License as published by 
@@ -13,6 +13,7 @@
 package com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 
 import javax.mail.MessagingException;
@@ -20,7 +21,7 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
 import org.apache.http.Header;
-import org.apache.http.entity.BasicHttpEntity;
+import org.apache.http.entity.AbstractHttpEntity;
 import org.apache.http.message.BasicHeader;
 
 import com.eviware.soapui.SoapUI;
@@ -34,7 +35,7 @@ import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
  * @author ole.matzura
  */
 
-public class MimeMessageMockResponseEntity extends BasicHttpEntity
+public class MimeMessageMockResponseEntity extends AbstractHttpEntity
 {
 	private final MimeMessage message;
 	private final boolean isXOP;
@@ -52,7 +53,7 @@ public class MimeMessageMockResponseEntity extends BasicHttpEntity
 		try
 		{
 			DummyOutputStream out = new DummyOutputStream();
-			writeRequest( out );
+			writeTo( out );
 			return out.getSize();
 		}
 		catch( Exception e )
@@ -71,7 +72,6 @@ public class MimeMessageMockResponseEntity extends BasicHttpEntity
 			if( isXOP )
 			{
 				String header = message.getHeader( "Content-Type" )[0];
-
 				return new BasicHeader( "Content-Type", AttachmentUtils.buildMTOMContentType( header, null, soapVersion ) );
 			}
 			else
@@ -95,7 +95,7 @@ public class MimeMessageMockResponseEntity extends BasicHttpEntity
 		return true;
 	}
 
-	public void writeRequest( OutputStream arg0 ) throws IOException
+	public void writeTo( OutputStream arg0 ) throws IOException
 	{
 		try
 		{
@@ -106,5 +106,24 @@ public class MimeMessageMockResponseEntity extends BasicHttpEntity
 		{
 			SoapUI.logError( e );
 		}
+	}
+
+	@Override
+	public InputStream getContent() throws IOException, IllegalStateException
+	{
+		try
+		{
+			return message.getInputStream();
+		}
+		catch( MessagingException e )
+		{
+			throw new IOException( e );
+		}
+	}
+
+	@Override
+	public boolean isStreaming()
+	{
+		return false;
 	}
 }

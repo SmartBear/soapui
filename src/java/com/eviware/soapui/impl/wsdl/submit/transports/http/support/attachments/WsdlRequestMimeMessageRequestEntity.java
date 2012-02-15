@@ -1,5 +1,5 @@
 /*
- *  soapUI, copyright (C) 2004-2011 eviware.com 
+ *  soapUI, copyright (C) 2004-2011 smartbear.com 
  *
  *  soapUI is free software; you can redistribute it and/or modify it under the 
  *  terms of version 2.1 of the GNU Lesser General Public License as published by 
@@ -93,41 +93,10 @@ public class WsdlRequestMimeMessageRequestEntity extends AbstractHttpEntity
 		return null;
 	}
 
+	@Override
 	public boolean isRepeatable()
 	{
 		return true;
-	}
-
-	@Override
-	public InputStream getContent() throws IOException, IllegalStateException
-	{
-		try
-		{
-			return message.getInputStream();
-		}
-		catch( MessagingException e )
-		{
-			SoapUI.logError( e );
-		}
-
-		return null;
-	}
-
-	@Override
-	public boolean isStreaming()
-	{
-		try
-		{
-			if( message.getInputStream() != null )
-			{
-				return true;
-			}
-		}
-		catch( Exception e )
-		{/* ignore */
-		}
-
-		return false;
 	}
 
 	@Override
@@ -142,6 +111,25 @@ public class WsdlRequestMimeMessageRequestEntity extends AbstractHttpEntity
 		{
 			SoapUI.logError( e );
 		}
+	}
+
+	@Override
+	public InputStream getContent() throws IOException
+	{
+		try
+		{
+			return message.getInputStream();
+		}
+		catch( MessagingException e )
+		{
+			throw new IOException( e );
+		}
+	}
+
+	@Override
+	public boolean isStreaming()
+	{
+		return false;
 	}
 
 	public static class DummyOutputStream extends OutputStream
@@ -167,5 +155,4 @@ public class WsdlRequestMimeMessageRequestEntity extends AbstractHttpEntity
 			return size;
 		}
 	}
-
 }
