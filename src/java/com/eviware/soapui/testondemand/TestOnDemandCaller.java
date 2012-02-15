@@ -18,7 +18,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -30,6 +32,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.log4j.Logger;
+import org.apache.xmlbeans.XmlOptions;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -38,6 +41,22 @@ import sun.misc.BASE64Encoder;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.SoapUISystemProperties;
+import com.eviware.soapui.config.TestOnDemandCommandConfig;
+import com.eviware.soapui.config.TestOnDemandContentConfig;
+import com.eviware.soapui.config.TestOnDemandFileConfig;
+import com.eviware.soapui.config.TestOnDemandHeaderConfig;
+import com.eviware.soapui.config.TestOnDemandKeystoreConfig;
+import com.eviware.soapui.config.TestOnDemandKeystorePasswordConfig;
+import com.eviware.soapui.config.TestOnDemandLocationsRequestDocumentConfig;
+import com.eviware.soapui.config.TestOnDemandLocationsRequestDocumentConfig.TestOnDemandLocationsRequest;
+import com.eviware.soapui.config.TestOnDemandLocationsRequestDocumentConfig.TestOnDemandLocationsRequest.Request;
+import com.eviware.soapui.config.TestOnDemandProjectPasswordConfig;
+import com.eviware.soapui.config.TestOnDemandTestCaseConfig;
+import com.eviware.soapui.config.TestOnDemandTestSuiteConfig;
+import com.eviware.soapui.config.TestOnDemandTxnConfig;
+import com.eviware.soapui.config.TestOnDemandUploadBodyConfig;
+import com.eviware.soapui.config.TestOnDemandUploadRequestDocumentConfig;
+import com.eviware.soapui.config.TestOnDemandUploadRequestDocumentConfig.TestOnDemandUploadRequest;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPostMethod;
 import com.eviware.soapui.impl.wsdl.support.CompressionSupport;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
@@ -59,8 +78,6 @@ public class TestOnDemandCaller
 {
 	// FIXME Should these be in a configuration file instead?
 
-	private static final String USER_AGENT = "soapUI-" + SoapUI.SOAPUI_VERSION;
-
 	private final static String PROTOCOL = "https://";
 	private final static String PROD_HOST = "www.alertsite.com";
 	private static final String LOCATIONS_PATH = "/restapi/v2/devices/list/locations";
@@ -74,6 +91,17 @@ public class TestOnDemandCaller
 	private static final String LOCATION_CODE_XPATH_EXPRESSION = "LocCode";
 	private static final String LOCATION_NAME_XPATH_EXPRESSION = "LocName";
 
+	private static final String API_VERSION = "2";
+	private static final String APPLICATION_ZIP = "application/zip";
+	private static final String BASE64 = "base64";
+	private static final String USER_AGENT = "soapUI-" + SoapUI.SOAPUI_VERSION;
+
+	private static final String LOCATIONS_NAME = "ListLocations";
+	private static final String LOCATIONS_PARAMETER = "server_attrib=ITEST";
+
+	private static final String UPLOAD_NAME = "TestOnDemand";
+	private static final String UPLOAD_PARAMETER_LOCATION_PREFIX = "test_location=";
+
 	private final XPath xpath = XPathFactory.newInstance().newXPath();
 
 	private static final Logger log = Logger.getLogger( TestOnDemandCaller.class );
@@ -81,12 +109,7 @@ public class TestOnDemandCaller
 	@NonNull
 	public List<Location> getLocations() throws Exception
 	{
-		//FIXME This should be made to an XMLObject
-		String requestContent = "<Request api_version=\"2\"><Header><UserAgent>"
-				+ USER_AGENT
-				+ "</UserAgent></Header><Body><Command><Name>ListLocations</Name><Parameters>server_attrib=ITEST</Parameters></Command></Body></Request>";
-
-		Document responseDocument = makeCall( LOCATIONS_URI, requestContent );
+		Document responseDocument = makeCall( LOCATIONS_URI, generateLocationsRequestXML() );
 		NodeList locationNodes = ( NodeList )xpath.evaluate( LOCATION_XPATH_EXPRESSION, responseDocument,
 				XPathConstants.NODESET );
 
@@ -107,8 +130,31 @@ public class TestOnDemandCaller
 	{
 		final ExtendedPostMethod post = new ExtendedPostMethod();
 		post.setURI( new URI( UPLOAD_URI ) );
+
 		String locationCode = location.getCode();
-		String requestContent = createUploadRequestContents( testCase, locationCode );
+
+		BASE64Encoder encoder = new BASE64Encoder();
+
+		String encodedTestSuiteName = encoder.encode( testCase.getTestSuite().getName().getBytes() );
+		String encodedTestCaseName = encoder.encode( testCase.getName().getBytes() );
+
+		String projectFilePath = testCase.getTestSuite().getProject().getPath();
+		byte[] projectFileData = getBytes( projectFilePath );
+		byte[] zipedProjectFileData = zipBytes( testCase.getTestSuite().getProject().getName(), projectFileData );
+		String encodedZipedProjectFile = encoder.encode( zipedProjectFileData );
+
+		String projectPassword = testCase.getTestSuite().getProject().getShadowPassword();
+		String encodedProjectPassword = encoder.encode( Strings.nullToEmpty( projectPassword ).getBytes() );
+
+		String keystoreFilePath = SoapUI.getSettings().getString( SSLSettings.KEYSTORE, "" );
+		byte[] keystoreFileData = getBytes( keystoreFilePath );
+		String encodedKeystoreFile = encoder.encode( keystoreFileData );
+
+		String encodedKeystorePassword = encoder.encode( SoapUI.getSettings()
+				.getString( SSLSettings.KEYSTORE_PASSWORD, "" ).getBytes() );
+
+		String requestContent = generateUploadRequestXML( locationCode, encodedTestSuiteName, encodedTestCaseName,
+				encodedZipedProjectFile, encodedProjectPassword, encodedKeystoreFile, encodedKeystorePassword );
 
 		byte[] compressedRequestContent = CompressionSupport.compress( CompressionSupport.ALG_GZIP,
 				requestContent.getBytes() );
@@ -134,51 +180,97 @@ public class TestOnDemandCaller
 
 		// FIXME Should we remove the logging printouts before release? The upload request maybe would be to large?
 
-		log.debug( "Sending request to  AlertSite:" );
+		log.debug( "Sending request to " + uri );
 		log.debug( requestContent );
 
 		HttpClientSupport.execute( post );
 
 		byte[] responseBody = post.getResponseBody();
 
-		log.debug( "Got response from AlertSite:" );
+		log.debug( "Got response from " + uri );
 		log.debug( new String( responseBody ) );
 
 		String reponseBodyAsString = new String( responseBody );
 		return XmlUtils.parseXml( reponseBodyAsString );
 	}
 
-	private String createUploadRequestContents( WsdlTestCase testCase, String locationCode ) throws IOException
+	private String generateLocationsRequestXML()
 	{
-		BASE64Encoder encoder = new BASE64Encoder();
+		TestOnDemandLocationsRequest locationsRequest = TestOnDemandLocationsRequestDocumentConfig.Factory.newInstance()
+				.addNewTestOnDemandLocationsRequest();
 
-		String encodedTestSuiteName = encoder.encode( testCase.getTestSuite().getName().getBytes() );
-		String encodedTestCaseName = encoder.encode( testCase.getName().getBytes() );
+		Request request = locationsRequest.addNewRequest();
+		request.setApiVersion( API_VERSION );
 
-		String projectFilePath = testCase.getTestSuite().getProject().getPath();
-		byte[] projectFileData = getBytes( projectFilePath );
-		byte[] zipedProjectFileData = zipBytes( testCase.getTestSuite().getProject().getName(), projectFileData );
-		String encodedZipedProjectFile = encoder.encode( zipedProjectFileData );
+		TestOnDemandHeaderConfig header = request.addNewHeader();
+		header.setUserAgent( USER_AGENT );
 
-		String projectPassword = testCase.getTestSuite().getProject().getShadowPassword();
-		String encodedProjectPassword = encoder.encode( Strings.nullToEmpty( projectPassword ).getBytes() );
+		TestOnDemandCommandConfig command = request.addNewBody().addNewCommand();
+		command.setName( LOCATIONS_NAME );
+		command.setParameters( LOCATIONS_PARAMETER );
+		return locationsRequest.xmlText( getXmlOptionsWithoutNamespaces() );
+	}
 
-		String keystoreFilePath = SoapUI.getSettings().getString( SSLSettings.KEYSTORE, "" );
-		byte[] keystoreFileData = getBytes( keystoreFilePath );
-		String encodedKeystoreFile = encoder.encode( keystoreFileData );
+	private String generateUploadRequestXML( String locationCode, String encodedTestSuiteName,
+			String encodedTestCaseName, String encodedZipedProjectFile, String encodedProjectPassword,
+			String encodedKeystoreFile, String encodedKeystorePassword )
+	{
+		TestOnDemandUploadRequest uploadRequestConfig = TestOnDemandUploadRequestDocumentConfig.Factory.newInstance()
+				.addNewTestOnDemandUploadRequest();
 
-		String encodedPassword = encoder.encode( SoapUI.getSettings().getString( SSLSettings.KEYSTORE_PASSWORD, "" )
-				.getBytes() );
+		com.eviware.soapui.config.TestOnDemandUploadRequestDocumentConfig.TestOnDemandUploadRequest.Request requestConfig = uploadRequestConfig
+				.addNewRequest();
+		requestConfig.setApiVersion( API_VERSION );
 
-		//FIXME This should be made to an XMLObject 
-		return "<Request api_version=\"2\"><Header><UserAgent>" + USER_AGENT
-				+ "</UserAgent></Header><Body><Command><Name>TestOnDemand</Name><Parameters>test_location=" + locationCode
-				+ "</Parameters></Command><Txn><TestSuite enctype=\"base64\">" + encodedTestSuiteName
-				+ "</TestSuite><TestCase enctype=\"base64\">" + encodedTestCaseName
-				+ "</TestCase><Content enctype=\"base64\" type=\"application/zip\">" + encodedZipedProjectFile
-				+ "</Content><Password enctype=\"base64\">" + encodedProjectPassword
-				+ "</Password></Txn><Keystore><File enctype=\"base64\">" + encodedKeystoreFile
-				+ "</File><Password enctype=\"base64\">" + encodedPassword + "</Password> </Keystore></Body></Request>";
+		TestOnDemandHeaderConfig headerConfig = requestConfig.addNewHeader();
+		headerConfig.setUserAgent( USER_AGENT );
+
+		TestOnDemandUploadBodyConfig bodyConfig = requestConfig.addNewBody();
+
+		TestOnDemandCommandConfig commandConfig = bodyConfig.addNewCommand();
+		commandConfig.setName( UPLOAD_NAME );
+		commandConfig.setParameters( UPLOAD_PARAMETER_LOCATION_PREFIX + locationCode );
+
+		TestOnDemandTxnConfig txnConfig = bodyConfig.addNewTxn();
+
+		TestOnDemandTestSuiteConfig testSuiteConfig = txnConfig.addNewTestSuite();
+		testSuiteConfig.setEnctype( BASE64 );
+		testSuiteConfig.setStringValue( encodedTestSuiteName );
+
+		TestOnDemandTestCaseConfig testCaseConfig = txnConfig.addNewTestCase();
+		testCaseConfig.setEnctype( BASE64 );
+		testCaseConfig.setStringValue( encodedTestCaseName );
+
+		TestOnDemandContentConfig contentConfig = txnConfig.addNewContent();
+		contentConfig.setEnctype( BASE64 );
+		contentConfig.setType( APPLICATION_ZIP );
+		contentConfig.setStringValue( encodedZipedProjectFile );
+
+		TestOnDemandProjectPasswordConfig projectPasswordConfig = txnConfig.addNewPassword();
+		projectPasswordConfig.setEnctype( BASE64 );
+		projectPasswordConfig.setStringValue( encodedProjectPassword );
+
+		TestOnDemandKeystoreConfig keystoreConfig = bodyConfig.addNewKeystore();
+
+		TestOnDemandFileConfig fileConfig = keystoreConfig.addNewFile();
+		fileConfig.setEnctype( BASE64 );
+		fileConfig.setStringValue( encodedKeystoreFile );
+
+		TestOnDemandKeystorePasswordConfig keystorePasswordConfig = keystoreConfig.addNewPassword();
+		keystorePasswordConfig.setEnctype( BASE64 );
+		keystorePasswordConfig.setStringValue( encodedKeystorePassword );
+
+		return uploadRequestConfig.xmlText( getXmlOptionsWithoutNamespaces() );
+	}
+
+	private XmlOptions getXmlOptionsWithoutNamespaces()
+	{
+		XmlOptions options = new XmlOptions();
+		options.setUseDefaultNamespace();
+		Map<String, String> namespaces = new HashMap<String, String>();
+		namespaces.put( "", "http://eviware.com/soapui/config" );
+		options.setSaveImplicitNamespaces( namespaces );
+		return options;
 	}
 
 	private static byte[] getBytes( String filePath ) throws IOException
