@@ -511,7 +511,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 		}
 		catch( Exception e )
 		{
-			e.printStackTrace();
+			SoapUI.logError( e );
 			return -1;
 		}
 
@@ -855,6 +855,14 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 					tempFile.deleteOnExit();
 				}
 			}
+
+			// delete tempFile here so we have it as backup in case second save fails
+			if( !tempFile.delete() )
+			{
+				SoapUI.getErrorLog().warn( "Failed to delete temporary project file; " + tempFile.getAbsolutePath() );
+				tempFile.deleteOnExit();
+			}
+
 			size = projectFile.length();
 		}
 		catch( Throwable t )
@@ -870,42 +878,23 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 		return true;
 	}
 
-	private static void normalizeLineBreak( File target, File tmpFile )
+	private static void normalizeLineBreak( File target, File tmpFile ) throws IOException
 	{
-		try
+		FileReader fr = new FileReader( tmpFile );
+		BufferedReader in = new BufferedReader( fr );
+		FileWriter fw = new FileWriter( target );
+		BufferedWriter out = new BufferedWriter( fw );
+		String line = "";
+		while( ( line = in.readLine() ) != null )
 		{
-			FileReader fr = new FileReader( tmpFile );
-			BufferedReader in = new BufferedReader( fr );
-			FileWriter fw = new FileWriter( target );
-			BufferedWriter out = new BufferedWriter( fw );
-			String line = "";
-			while( ( line = in.readLine() ) != null )
-			{
-				out.write( line );
-				out.newLine();
-				out.flush();
-			}
-			out.close();
-			fw.close();
-			in.close();
-			fr.close();
+			out.write( line );
+			out.newLine();
+			out.flush();
 		}
-		catch( FileNotFoundException e )
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		catch( IOException e )
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		if( !tmpFile.delete() )
-		{
-			SoapUI.getErrorLog().warn( "Failed to delete temporary file: " + tmpFile.getAbsolutePath() );
-			tmpFile.deleteOnExit();
-		}
+		out.close();
+		fw.close();
+		in.close();
+		fr.close();
 	}
 
 	public void beforeSave()
