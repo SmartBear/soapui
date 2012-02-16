@@ -14,7 +14,6 @@ package com.eviware.soapui.report;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Random;
 
 import org.apache.log4j.Logger;
 
@@ -55,9 +54,7 @@ public class TestCaseRunLogReport extends TestRunListenerAdapter
 
 	private boolean testRunHasFinished = false;
 
-	@Nullable
 	private TestStepResult currentTestStepResult;
-	@Nullable
 	private TestCaseRunLogTestStep currentTestCaseRunLogTestStep;
 
 	public TestCaseRunLogReport( String outputFolder )
