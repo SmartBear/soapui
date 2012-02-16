@@ -29,7 +29,6 @@ import com.eviware.soapui.model.support.TestRunListenerAdapter;
 import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStepResult;
-import com.sun.istack.internal.Nullable;
 
 /**
  * @author Erik R. Yverling
