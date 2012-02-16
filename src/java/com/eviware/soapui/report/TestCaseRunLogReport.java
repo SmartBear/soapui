@@ -14,9 +14,11 @@ package com.eviware.soapui.report;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Random;
 
 import org.apache.log4j.Logger;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.TestCaseRunLogDocumentConfig;
 import com.eviware.soapui.config.TestCaseRunLogDocumentConfig.TestCaseRunLog;
 import com.eviware.soapui.config.TestCaseRunLogDocumentConfig.TestCaseRunLog.TestCaseRunLogTestStep;
@@ -28,6 +30,7 @@ import com.eviware.soapui.model.support.TestRunListenerAdapter;
 import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStepResult;
+import com.sun.istack.internal.Nullable;
 
 /**
  * @author Erik R. Yverling
@@ -37,54 +40,73 @@ import com.eviware.soapui.model.testsuite.TestStepResult;
  */
 public class TestCaseRunLogReport extends TestRunListenerAdapter
 {
+	private static final String TEST_CASE_RUN_WAS_TERMINATED_UNEXPECTEDLY_MESSAGE = "TestCase run was terminated unexpectedly";
+	private static final String TIMEOUT_STATUS = "TIMEOUT";
+	private static final String TIMEOUT_MESSAGE = "The TestStep was interupted due to a timeout";
+
 	private static final String REPORT_FILE_NAME = "test_case_run_log_report.xml";
+
 	private TestCaseRunLogDocumentConfig testCaseRunLogDocumentConfig;
 	private TestCaseRunLog testCaseRunLog;
 	private final String outputFolder;
 	private long startTime;
+
 	private final static Logger log = Logger.getLogger( TestCaseRunLogReport.class );
+
+	private boolean testRunHasFinished = false;
+
+	@Nullable
+	private TestStepResult currentTestStepResult;
+	@Nullable
+	private TestCaseRunLogTestStep currentTestCaseRunLogTestStep;
 
 	public TestCaseRunLogReport( String outputFolder )
 	{
 		this.outputFolder = outputFolder;
 		testCaseRunLogDocumentConfig = TestCaseRunLogDocumentConfig.Factory.newInstance();
 		testCaseRunLog = testCaseRunLogDocumentConfig.addNewTestCaseRunLog();
+
+		initShutDownHook();
 	}
 
 	@Override
 	public void afterStep( TestCaseRunner testRunner, TestCaseRunContext runContext, TestStepResult result )
 	{
-		TestCaseRunLogTestStep testCaseRunLogTestStep = testCaseRunLog.addNewTestCaseRunLogTestStep();
-		testCaseRunLogTestStep.setName( result.getTestStep().getName() );
-		testCaseRunLogTestStep.setTimeTaken( Long.toString( result.getTimeTaken() ) );
-		testCaseRunLogTestStep.setStatus( result.getStatus().toString() );
-		testCaseRunLogTestStep.setMessageArray( result.getMessages() );
-		testCaseRunLogTestStep.setTimestamp( SoapUIMetrics.formatTimestamp( result.getTimeStamp() ) );
+		currentTestCaseRunLogTestStep = testCaseRunLog.addNewTestCaseRunLogTestStep();
+		currentTestStepResult = result;
+
+		currentTestCaseRunLogTestStep.setName( currentTestStepResult.getTestStep().getName() );
+		currentTestCaseRunLogTestStep.setTimeTaken( Long.toString( currentTestStepResult.getTimeTaken() ) );
+		currentTestCaseRunLogTestStep.setStatus( currentTestStepResult.getStatus().toString() );
+		currentTestCaseRunLogTestStep.setMessageArray( currentTestStepResult.getMessages() );
+		currentTestCaseRunLogTestStep
+				.setTimestamp( SoapUIMetrics.formatTimestamp( currentTestStepResult.getTimeStamp() ) );
 
 		ExtendedHttpMethod httpMethod = ( ExtendedHttpMethod )runContext
 				.getProperty( BaseHttpRequestTransport.HTTP_METHOD );
 
-		if( httpMethod != null && result.getTestStep() instanceof HttpRequestTestStep )
+		if( httpMethod != null && currentTestStepResult.getTestStep() instanceof HttpRequestTestStep )
 		{
-			testCaseRunLogTestStep.setEndpoint( httpMethod.getURI().toString() );
+			currentTestCaseRunLogTestStep.setEndpoint( httpMethod.getURI().toString() );
 
 			SoapUIMetrics metrics = httpMethod.getMetrics();
-			testCaseRunLogTestStep.setTimestamp( metrics.getFormattedTimeStamp() );
-			testCaseRunLogTestStep.setHttpStatus( String.valueOf( metrics.getHttpStatus() ) );
-			testCaseRunLogTestStep.setContentLength( String.valueOf( metrics.getContentLength() ) );
-			testCaseRunLogTestStep.setReadTime( String.valueOf( metrics.getReadTimer().getDuration() ) );
-			testCaseRunLogTestStep.setTotalTime( String.valueOf( metrics.getTotalTimer().getDuration() ) );
-			testCaseRunLogTestStep.setDnsTime( String.valueOf( metrics.getDNSTimer().getDuration() ) );
-			testCaseRunLogTestStep.setConnectTime( String.valueOf( metrics.getConnectTimer().getDuration() ) );
-			testCaseRunLogTestStep.setTimeToFirstByte( String.valueOf( metrics.getTimeToFirstByteTimer().getDuration() ) );
-			testCaseRunLogTestStep.setHttpMethod( metrics.getHttpMethod() );
-			testCaseRunLogTestStep.setIpAddress( metrics.getIpAddress() );
+			currentTestCaseRunLogTestStep.setTimestamp( metrics.getFormattedTimeStamp() );
+			currentTestCaseRunLogTestStep.setHttpStatus( String.valueOf( metrics.getHttpStatus() ) );
+			currentTestCaseRunLogTestStep.setContentLength( String.valueOf( metrics.getContentLength() ) );
+			currentTestCaseRunLogTestStep.setReadTime( String.valueOf( metrics.getReadTimer().getDuration() ) );
+			currentTestCaseRunLogTestStep.setTotalTime( String.valueOf( metrics.getTotalTimer().getDuration() ) );
+			currentTestCaseRunLogTestStep.setDnsTime( String.valueOf( metrics.getDNSTimer().getDuration() ) );
+			currentTestCaseRunLogTestStep.setConnectTime( String.valueOf( metrics.getConnectTimer().getDuration() ) );
+			currentTestCaseRunLogTestStep.setTimeToFirstByte( String.valueOf( metrics.getTimeToFirstByteTimer()
+					.getDuration() ) );
+			currentTestCaseRunLogTestStep.setHttpMethod( metrics.getHttpMethod() );
+			currentTestCaseRunLogTestStep.setIpAddress( metrics.getIpAddress() );
 		}
 
 		Throwable error = result.getError();
 		if( error != null )
 		{
-			testCaseRunLogTestStep.setErrorMessage( error.getMessage() );
+			currentTestCaseRunLogTestStep.setErrorMessage( error.getMessage() );
 		}
 	}
 
@@ -96,16 +118,9 @@ public class TestCaseRunLogReport extends TestRunListenerAdapter
 		testCaseRunLog.setStatus( testRunner.getStatus().toString() );
 		testCaseRunLog.setTimeStamp( SoapUIMetrics.formatTimestamp( startTime ) );
 
-		final File newFile = new File( outputFolder, REPORT_FILE_NAME );
+		testRunHasFinished = true;
 
-		try
-		{
-			testCaseRunLogDocumentConfig.save( newFile );
-		}
-		catch( IOException e )
-		{
-			log.error( "Could not write " + REPORT_FILE_NAME + " to disk" );
-		}
+		saveReportToFile();
 	}
 
 	@Override
@@ -115,4 +130,42 @@ public class TestCaseRunLogReport extends TestRunListenerAdapter
 
 		startTime = System.currentTimeMillis();
 	}
+
+	private void initShutDownHook()
+	{
+		Runtime.getRuntime().addShutdownHook( new Thread()
+		{
+			public void run()
+			{
+				if( !testRunHasFinished )
+				{
+					if( currentTestCaseRunLogTestStep != null )
+					{
+						log.warn( "Step [" + currentTestStepResult.getTestStep().getName()
+								+ "] was interupted due to a timeout" );
+						currentTestCaseRunLogTestStep.setName( currentTestStepResult.getTestStep().getName() );
+						currentTestCaseRunLogTestStep.setStatus( TIMEOUT_STATUS );
+						currentTestCaseRunLogTestStep.setMessageArray( new String[] { TIMEOUT_MESSAGE } );
+					}
+					log.warn( TEST_CASE_RUN_WAS_TERMINATED_UNEXPECTEDLY_MESSAGE );
+					saveReportToFile();
+				}
+			}
+		} );
+	}
+
+	private void saveReportToFile()
+	{
+		final File newFile = new File( outputFolder, REPORT_FILE_NAME );
+		try
+		{
+			testCaseRunLogDocumentConfig.save( newFile );
+		}
+		catch( IOException e )
+		{
+			log.error( "Could not write " + REPORT_FILE_NAME + " to disk" );
+			SoapUI.logError( e );
+		}
+	}
+
 }
