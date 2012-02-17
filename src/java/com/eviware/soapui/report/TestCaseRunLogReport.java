@@ -28,6 +28,7 @@ import com.eviware.soapui.impl.wsdl.submit.transports.http.support.metrics.SoapU
 import com.eviware.soapui.model.support.TestRunListenerAdapter;
 import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
+import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 
 /**
@@ -53,8 +54,8 @@ public class TestCaseRunLogReport extends TestRunListenerAdapter
 
 	private boolean testRunHasFinished = false;
 
-	private TestStepResult currentTestStepResult;
-	private TestCaseRunLogTestStep currentTestCaseRunLogTestStep;
+	private TestStep currentTestStep;
+	private TestCaseRunLogTestStep currentTestCaseRunLogTestStepConfig;
 
 	public TestCaseRunLogReport( String outputFolder )
 	{
@@ -66,43 +67,46 @@ public class TestCaseRunLogReport extends TestRunListenerAdapter
 	}
 
 	@Override
+	public void beforeStep( TestCaseRunner testRunner, TestCaseRunContext runContext, TestStep testStep )
+	{
+		currentTestStep = testStep;
+		currentTestCaseRunLogTestStepConfig = testCaseRunLog.addNewTestCaseRunLogTestStep();
+	}
+
+	@Override
 	public void afterStep( TestCaseRunner testRunner, TestCaseRunContext runContext, TestStepResult result )
 	{
-		currentTestCaseRunLogTestStep = testCaseRunLog.addNewTestCaseRunLogTestStep();
-		currentTestStepResult = result;
-
-		currentTestCaseRunLogTestStep.setName( currentTestStepResult.getTestStep().getName() );
-		currentTestCaseRunLogTestStep.setTimeTaken( Long.toString( currentTestStepResult.getTimeTaken() ) );
-		currentTestCaseRunLogTestStep.setStatus( currentTestStepResult.getStatus().toString() );
-		currentTestCaseRunLogTestStep.setMessageArray( currentTestStepResult.getMessages() );
-		currentTestCaseRunLogTestStep
-				.setTimestamp( SoapUIMetrics.formatTimestamp( currentTestStepResult.getTimeStamp() ) );
+		currentTestCaseRunLogTestStepConfig.setName( result.getTestStep().getName() );
+		currentTestCaseRunLogTestStepConfig.setTimeTaken( Long.toString( result.getTimeTaken() ) );
+		currentTestCaseRunLogTestStepConfig.setStatus( result.getStatus().toString() );
+		currentTestCaseRunLogTestStepConfig.setMessageArray( result.getMessages() );
+		currentTestCaseRunLogTestStepConfig.setTimestamp( SoapUIMetrics.formatTimestamp( result.getTimeStamp() ) );
 
 		ExtendedHttpMethod httpMethod = ( ExtendedHttpMethod )runContext
 				.getProperty( BaseHttpRequestTransport.HTTP_METHOD );
 
-		if( httpMethod != null && currentTestStepResult.getTestStep() instanceof HttpRequestTestStep )
+		if( httpMethod != null && result.getTestStep() instanceof HttpRequestTestStep )
 		{
-			currentTestCaseRunLogTestStep.setEndpoint( httpMethod.getURI().toString() );
+			currentTestCaseRunLogTestStepConfig.setEndpoint( httpMethod.getURI().toString() );
 
 			SoapUIMetrics metrics = httpMethod.getMetrics();
-			currentTestCaseRunLogTestStep.setTimestamp( metrics.getFormattedTimeStamp() );
-			currentTestCaseRunLogTestStep.setHttpStatus( String.valueOf( metrics.getHttpStatus() ) );
-			currentTestCaseRunLogTestStep.setContentLength( String.valueOf( metrics.getContentLength() ) );
-			currentTestCaseRunLogTestStep.setReadTime( String.valueOf( metrics.getReadTimer().getDuration() ) );
-			currentTestCaseRunLogTestStep.setTotalTime( String.valueOf( metrics.getTotalTimer().getDuration() ) );
-			currentTestCaseRunLogTestStep.setDnsTime( String.valueOf( metrics.getDNSTimer().getDuration() ) );
-			currentTestCaseRunLogTestStep.setConnectTime( String.valueOf( metrics.getConnectTimer().getDuration() ) );
-			currentTestCaseRunLogTestStep.setTimeToFirstByte( String.valueOf( metrics.getTimeToFirstByteTimer()
+			currentTestCaseRunLogTestStepConfig.setTimestamp( metrics.getFormattedTimeStamp() );
+			currentTestCaseRunLogTestStepConfig.setHttpStatus( String.valueOf( metrics.getHttpStatus() ) );
+			currentTestCaseRunLogTestStepConfig.setContentLength( String.valueOf( metrics.getContentLength() ) );
+			currentTestCaseRunLogTestStepConfig.setReadTime( String.valueOf( metrics.getReadTimer().getDuration() ) );
+			currentTestCaseRunLogTestStepConfig.setTotalTime( String.valueOf( metrics.getTotalTimer().getDuration() ) );
+			currentTestCaseRunLogTestStepConfig.setDnsTime( String.valueOf( metrics.getDNSTimer().getDuration() ) );
+			currentTestCaseRunLogTestStepConfig.setConnectTime( String.valueOf( metrics.getConnectTimer().getDuration() ) );
+			currentTestCaseRunLogTestStepConfig.setTimeToFirstByte( String.valueOf( metrics.getTimeToFirstByteTimer()
 					.getDuration() ) );
-			currentTestCaseRunLogTestStep.setHttpMethod( metrics.getHttpMethod() );
-			currentTestCaseRunLogTestStep.setIpAddress( metrics.getIpAddress() );
+			currentTestCaseRunLogTestStepConfig.setHttpMethod( metrics.getHttpMethod() );
+			currentTestCaseRunLogTestStepConfig.setIpAddress( metrics.getIpAddress() );
 		}
 
 		Throwable error = result.getError();
 		if( error != null )
 		{
-			currentTestCaseRunLogTestStep.setErrorMessage( error.getMessage() );
+			currentTestCaseRunLogTestStepConfig.setErrorMessage( error.getMessage() );
 		}
 	}
 
@@ -131,17 +135,17 @@ public class TestCaseRunLogReport extends TestRunListenerAdapter
 	{
 		Runtime.getRuntime().addShutdownHook( new Thread()
 		{
+			@Override
 			public void run()
 			{
 				if( !testRunHasFinished )
 				{
-					if( currentTestCaseRunLogTestStep != null )
+					if( currentTestCaseRunLogTestStepConfig != null )
 					{
-						log.warn( "Step [" + currentTestStepResult.getTestStep().getName()
-								+ "] was interupted due to a timeout" );
-						currentTestCaseRunLogTestStep.setName( currentTestStepResult.getTestStep().getName() );
-						currentTestCaseRunLogTestStep.setStatus( TIMEOUT_STATUS );
-						currentTestCaseRunLogTestStep.setMessageArray( new String[] { TIMEOUT_MESSAGE } );
+						log.warn( "Step [" + currentTestStep.getName() + "] was interupted due to a timeout" );
+						currentTestCaseRunLogTestStepConfig.setName( currentTestStep.getName() );
+						currentTestCaseRunLogTestStepConfig.setStatus( TIMEOUT_STATUS );
+						currentTestCaseRunLogTestStepConfig.setMessageArray( new String[] { TIMEOUT_MESSAGE } );
 					}
 					log.warn( TEST_CASE_RUN_WAS_TERMINATED_UNEXPECTEDLY_MESSAGE );
 					saveReportToFile();
