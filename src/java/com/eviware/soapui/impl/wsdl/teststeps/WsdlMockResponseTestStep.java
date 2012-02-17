@@ -1427,7 +1427,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 		{
 			initTestMockResponse( runContext );
 		}
-		else if( !mockRunner.isRunning() )
+		else if( mockRunner != null && !mockRunner.isRunning() )
 		{
 			try
 			{
