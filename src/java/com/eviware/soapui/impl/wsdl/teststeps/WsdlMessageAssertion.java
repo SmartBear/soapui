@@ -51,7 +51,7 @@ public abstract class WsdlMessageAssertion extends AbstractModelItem implements 
 		TestAssertion
 {
 	private TestAssertionConfig assertionConfig;
-	private final Assertable assertable;
+	private Assertable assertable;
 	protected AssertionStatus assertionStatus = AssertionStatus.UNKNOWN;
 	protected com.eviware.soapui.model.testsuite.AssertionError[] assertionErrors;
 	private ImageIcon validIcon;
@@ -357,6 +357,16 @@ public abstract class WsdlMessageAssertion extends AbstractModelItem implements 
 	public Assertable getAssertable()
 	{
 		return assertable;
+	}
+
+	/*
+	 * Assertable is possible to change when Assertion is inside
+	 * AssertionTestStep on changing source and property This method was added to
+	 * enable that change
+	 */
+	public void setAssertable( Assertable assertable )
+	{
+		this.assertable = assertable;
 	}
 
 	public String getId()
