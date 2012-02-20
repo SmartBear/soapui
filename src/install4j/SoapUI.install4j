@@ -2206,7 +2206,7 @@ return installTutorials;</condition>
     </applications>
   </installerGui>
   <mediaSets>
-    <win32 name="Windows x32" id="23" mediaFileName="soapUI-x32-${compiler:VERSION_NUMBER}" installDir="SmartBear/soapUI-${compiler:VERSION_NUMBER}" overridePrincipalLanguage="false" requires64bit="false" jreBitType="32" runPostProcessor="true" postProcessor="${compiler:SIGNTOOL_PATH} sign /v /f ${compiler:CERT_PATH} /p ${compiler:CERT_PASS} $EXECUTABLE" failOnPostProcessorError="true" includedJRE="windows-x86-1.6.0_26" manualJREEntry="false" bundleType="1" jreURL="" jreFtpURL="" jreShared="false" directDownload="false" customInstallBaseDir="" createUninstallIcon="true" contentFilesType="1" downloadURL="" runAsAdmin="false">
+    <win32 name="Windows x32" id="23" mediaFileName="soapUI-x32-${compiler:VERSION_NUMBER}" installDir="SmartBear/soapUI-${compiler:VERSION_NUMBER}" overridePrincipalLanguage="false" requires64bit="false" jreBitType="32" runPostProcessor="true" postProcessor="${compiler:SIGNTOOL_PATH} sign /v /f ${compiler:CERT_PATH} /p ${compiler:CERT_PASS} $EXECUTABLE" failOnPostProcessorError="true" includedJRE="windows-x86-1.7.0_02" manualJREEntry="false" bundleType="1" jreURL="" jreFtpURL="" jreShared="false" directDownload="false" customInstallBaseDir="" createUninstallIcon="true" contentFilesType="1" downloadURL="" runAsAdmin="false">
       <excludedLaunchers />
       <excludedComponents />
       <excludedBeans />
@@ -2224,7 +2224,7 @@ return installTutorials;</condition>
         <variable name="32-BIT-INSTALLER" value="true" />
       </variables>
     </win32>
-    <unixInstaller name="Unix Installer x32" id="196" mediaFileName="soapUI-x32-${compiler:VERSION_NUMBER}" installDir="SmartBear/soapUI-${compiler:VERSION_NUMBER}" overridePrincipalLanguage="false" requires64bit="false" jreBitType="all" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" includedJRE="linux-x86-1.6.0_26" manualJREEntry="false" bundleType="1" jreURL="" jreFtpURL="" jreShared="false" directDownload="false" customInstallBaseDir="" createUninstallIcon="true" contentFilesType="1" downloadURL="">
+    <unixInstaller name="Unix Installer x32" id="196" mediaFileName="soapUI-x32-${compiler:VERSION_NUMBER}" installDir="SmartBear/soapUI-${compiler:VERSION_NUMBER}" overridePrincipalLanguage="false" requires64bit="false" jreBitType="all" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" includedJRE="linux-x86-1.7.0_02" manualJREEntry="false" bundleType="1" jreURL="" jreFtpURL="" jreShared="false" directDownload="false" customInstallBaseDir="" createUninstallIcon="true" contentFilesType="1" downloadURL="">
       <excludedLaunchers />
       <excludedComponents />
       <excludedBeans>
@@ -2267,7 +2267,7 @@ return installTutorials;</condition>
         <variable name="OS_EXT" value="MAC" />
       </variables>
     </macos>
-    <win32 name="Windows x64" id="1215" mediaFileName="soapUI-x64-no-bundle-${compiler:VERSION_NUMBER}" installDir="SmartBear/soapUI-${compiler:VERSION_NUMBER}" overridePrincipalLanguage="false" requires64bit="true" jreBitType="64" runPostProcessor="true" postProcessor="${compiler:SIGNTOOL_PATH} sign /v /f ${compiler:CERT_PATH} /p ${compiler:CERT_PASS} $EXECUTABLE" failOnPostProcessorError="true" includedJRE="" manualJREEntry="false" bundleType="1" jreURL="" jreFtpURL="" jreShared="false" directDownload="false" customInstallBaseDir="" createUninstallIcon="true" contentFilesType="1" downloadURL="" runAsAdmin="false">
+    <win32 name="Windows x64" id="1215" mediaFileName="soapUI-x64-no-bundle-${compiler:VERSION_NUMBER}" installDir="SmartBear/soapUI-${compiler:VERSION_NUMBER}" overridePrincipalLanguage="false" requires64bit="true" jreBitType="64" runPostProcessor="true" postProcessor="${compiler:SIGNTOOL_PATH} sign /v /f ${compiler:CERT_PATH} /p ${compiler:CERT_PASS} $EXECUTABLE" failOnPostProcessorError="true" includedJRE="windows-amd64-1.7.0_02" manualJREEntry="false" bundleType="1" jreURL="" jreFtpURL="" jreShared="false" directDownload="false" customInstallBaseDir="" createUninstallIcon="true" contentFilesType="1" downloadURL="" runAsAdmin="false">
       <excludedLaunchers />
       <excludedComponents />
       <excludedBeans />
