@@ -41,7 +41,7 @@ public class TestCaseRunLogReport extends TestRunListenerAdapter
 {
 	private static final String TEST_CASE_RUN_WAS_TERMINATED_UNEXPECTEDLY_MESSAGE = "TestCase run was terminated unexpectedly";
 	private static final String TIMEOUT_STATUS = "TIMEOUT";
-	private static final String TIMEOUT_MESSAGE = "The TestStep was interupted due to a timeout";
+	private static final String TIMEOUT_MESSAGE = "The TestStep was interrupted due to a timeout";
 
 	private static final String REPORT_FILE_NAME = "test_case_run_log_report.xml";
 
@@ -142,7 +142,7 @@ public class TestCaseRunLogReport extends TestRunListenerAdapter
 				{
 					if( currentTestCaseRunLogTestStepConfig != null )
 					{
-						log.warn( "Step [" + currentTestStep.getName() + "] was interupted due to a timeout" );
+						log.warn( "Step [" + currentTestStep.getName() + "] was interrupted due to a timeout" );
 						currentTestCaseRunLogTestStepConfig.setName( currentTestStep.getName() );
 						currentTestCaseRunLogTestStepConfig.setStatus( TIMEOUT_STATUS );
 						currentTestCaseRunLogTestStepConfig.setMessageArray( new String[] { TIMEOUT_MESSAGE } );
