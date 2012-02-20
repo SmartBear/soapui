@@ -94,7 +94,11 @@ public class HttpClientSupport
 		{
 			RequestWrapper w = ( RequestWrapper )request;
 			if( w.getOriginal() instanceof ExtendedHttpMethod )
-				( ( ExtendedHttpMethod )w.getOriginal() ).getMetrics().getConnectTimer().stop();
+			{
+				SoapUIMetrics metrics = ( ( ExtendedHttpMethod )w.getOriginal() ).getMetrics();
+				metrics.getConnectTimer().stop();
+				metrics.getTimeToFirstByteTimer().start();
+			}
 			super.preProcess( request, processor, context );
 		}
 
@@ -102,10 +106,6 @@ public class HttpClientSupport
 				throws IOException, HttpException
 		{
 			HttpResponse response = super.doSendRequest( request, conn, context );
-
-			RequestWrapper w = ( RequestWrapper )request;
-			if( w.getOriginal() instanceof ExtendedHttpMethod )
-				( ( ExtendedHttpMethod )w.getOriginal() ).getMetrics().getTimeToFirstByteTimer().start();
 			return response;
 		}
 
@@ -145,8 +145,9 @@ public class HttpClientSupport
 				if( canResponseHaveBody( request, response ) )
 				{
 					conn.receiveResponseEntity( response );
-					if( metrics != null )
-						metrics.getReadTimer().stop();
+					//	if( metrics != null ) {
+					//	metrics.getReadTimer().stop();
+					// }
 				}
 
 				statuscode = response.getStatusLine().getStatusCode();
@@ -211,7 +212,10 @@ public class HttpClientSupport
 				IOException
 		{
 			method.afterWriteRequest();
-			method.getMetrics().getConnectTimer().start();
+			if( method.getMetrics() != null )
+			{
+				method.getMetrics().getConnectTimer().start();
+			}
 			HttpResponse httpResponse = httpClient.execute( ( HttpUriRequest )method, httpContext );
 			method.setHttpResponse( httpResponse );
 			return httpResponse;
@@ -220,7 +224,10 @@ public class HttpClientSupport
 		public HttpResponse execute( ExtendedHttpMethod method ) throws ClientProtocolException, IOException
 		{
 			method.afterWriteRequest();
-			method.getMetrics().getConnectTimer().start();
+			if( method.getMetrics() != null )
+			{
+				method.getMetrics().getConnectTimer().start();
+			}
 			HttpResponse httpResponse = httpClient.execute( ( HttpUriRequest )method );
 			method.setHttpResponse( httpResponse );
 			return httpResponse;

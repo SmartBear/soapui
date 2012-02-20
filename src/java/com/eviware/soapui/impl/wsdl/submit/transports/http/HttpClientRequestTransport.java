@@ -238,12 +238,22 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 			if( settings.getBoolean( HttpSettings.INCLUDE_REQUEST_IN_TIME_TAKEN ) )
 				httpMethod.initStartTime();
 
-			httpMethod.getMetrics().getTotalTimer().start();
-			httpMethod.getMetrics().setHttpMethod( httpMethod.getMethod() );
-			httpMethod.getMetrics().setIpAddress( InetAddress.getByName( httpMethod.getURI().getHost() ).getHostAddress() );
+			if( httpMethod.getMetrics() != null )
+			{
+				httpMethod.getMetrics().setHttpMethod( httpMethod.getMethod() );
+				httpMethod.getMetrics().setIpAddress(
+						InetAddress.getByName( httpMethod.getURI().getHost() ).getHostAddress() );
+				httpMethod.getMetrics().getTotalTimer().start();
+			}
 
 			// submit!
 			httpResponse = HttpClientSupport.execute( httpMethod, httpContext );
+
+			if( httpMethod.getMetrics() != null )
+			{
+				httpMethod.getMetrics().getReadTimer().stop();
+				httpMethod.getMetrics().getTotalTimer().stop();
+			}
 
 			if( isRedirectResponse( httpResponse.getStatusLine().getStatusCode() ) && httpRequest.isFollowRedirects() )
 			{
@@ -268,7 +278,14 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 			{
 				if( httpMethod.getMetrics() != null )
 				{
-					httpMethod.getMetrics().getTotalTimer().stop();
+					if( httpMethod.getMetrics().getReadTimer().getStop() == 0 )
+					{
+						httpMethod.getMetrics().getReadTimer().stop();
+					}
+					if( httpMethod.getMetrics().getTotalTimer().getStop() == 0 )
+					{
+						httpMethod.getMetrics().getTotalTimer().stop();
+					}
 				}
 			}
 			else
