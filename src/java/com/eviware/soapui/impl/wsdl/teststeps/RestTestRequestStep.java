@@ -145,26 +145,31 @@ public class RestTestRequestStep extends WsdlTestStepWithProperties implements R
 
 			public SchemaType getSchemaType()
 			{
-				try
+				String requestContent = getTestRequest().getRequestContent();
+				if( XmlUtils.seemsToBeXml( requestContent ) )
 				{
-					// first the DOM of the current request
-					Document dom = XmlUtils.parseXml( getTestRequest().getRequestContent() );
 
-					// get matching representations
-					for( RestRepresentation representation : getTestRequest().getRepresentations( Type.REQUEST,
-							getTestRequest().getMediaType() ) )
+					try
 					{
-						// is request element same as that of representation?
-						if( representation.getElement().equals( XmlUtils.getQName( dom.getDocumentElement() ) ) )
+						// first the DOM of the current request
+						Document dom = XmlUtils.parseXml( requestContent );
+
+						// get matching representations
+						for( RestRepresentation representation : getTestRequest().getRepresentations( Type.REQUEST,
+								getTestRequest().getMediaType() ) )
 						{
-							// this is it, return its type
-							return representation.getSchemaType();
+							// is request element same as that of representation?
+							if( representation.getElement().equals( XmlUtils.getQName( dom.getDocumentElement() ) ) )
+							{
+								// this is it, return its type
+								return representation.getSchemaType();
+							}
 						}
 					}
-				}
-				catch( Exception e )
-				{
-					SoapUI.logError( e );
+					catch( Throwable e )
+					{
+						SoapUI.logError( e );
+					}
 				}
 
 				// found nothing.. fall back
@@ -661,7 +666,6 @@ public class RestTestRequestStep extends WsdlTestStepWithProperties implements R
 	}
 
 	@Override
-	@SuppressWarnings( "unchecked" )
 	public void resolve( ResolveContext<?> context )
 	{
 		super.resolve( context );
