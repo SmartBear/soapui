@@ -22,6 +22,7 @@ import junit.framework.JUnit4TestAdapter;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.eviware.soapui.SoapUISystemProperties;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
@@ -64,6 +65,11 @@ public class TestOnDemandCallerTest
 	@Test
 	public void testGetLocations() throws Exception
 	{
+		if( System.getProperty( SoapUISystemProperties.TEST_ON_DEMAND_HOST ) == null )
+		{
+			return;
+		}
+
 		List<Location> locations = caller.getLocations();
 
 		Location firstLocation = locations.get( 0 );
@@ -78,6 +84,11 @@ public class TestOnDemandCallerTest
 	@Test
 	public void testSendProject() throws Exception
 	{
+		if( System.getProperty( SoapUISystemProperties.TEST_ON_DEMAND_HOST ) == null )
+		{
+			return;
+		}
+
 		String redirectUrl = caller.sendTestCase( testCase, new Location( FIRST_LOCATION_CODE, SECOND_LOCATION_NAME ) );
 		assert !Strings.isNullOrEmpty( redirectUrl );
 	}
