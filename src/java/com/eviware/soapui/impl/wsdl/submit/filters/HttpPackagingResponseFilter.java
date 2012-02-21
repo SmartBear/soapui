@@ -39,7 +39,9 @@ public class HttpPackagingResponseFilter extends AbstractRequestFilter
 		Header responseContentTypeHeader = null;
 		if( httpMethod.hasHttpResponse() )
 		{
-			responseContentTypeHeader = httpMethod.getHttpResponse().getEntity().getContentType();
+			Header[] headers = httpMethod.getHttpResponse().getHeaders( "Content-Type" );
+			if( headers != null && headers.length > 0 )
+				responseContentTypeHeader = headers[0];
 		}
 		Response response = null;
 		if( request instanceof WsdlRequest )
