@@ -323,7 +323,7 @@ public class PropertyHolderTable extends JPanel
 
 				( ( MutableTestPropertyHolder )holder ).addProperty( name );
 				final int row = holder.getPropertyNames().length - 1;
-				propertiesModel.fireTableRowsInserted( row, row );
+				propertiesModel.fireTableDataChanged();
 				SwingUtilities.invokeLater( new Runnable()
 				{
 					public void run()

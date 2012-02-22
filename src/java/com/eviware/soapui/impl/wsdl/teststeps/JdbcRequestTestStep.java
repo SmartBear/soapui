@@ -121,7 +121,7 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 	private void addResponseAsXmlVirtualProperty()
 	{
 		TestStepBeanProperty responseProperty = new TestStepBeanProperty( WsdlTestStepWithProperties.RESPONSE_AS_XML,
-				false, this, "responseContent", this )
+				true, this, "responseContent", this )
 		{
 			@Override
 			public String getDefaultValue()
@@ -131,6 +131,18 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 		};
 
 		propertyHolderSupport.addVirtualProperty( WsdlTestStepWithProperties.RESPONSE_AS_XML, responseProperty );
+	}
+
+	@Override
+	public void addTestPropertyListener( TestPropertyListener listener )
+	{
+		propertyHolderSupport.addTestPropertyListener( listener );
+	}
+
+	@Override
+	public void removeTestPropertyListener( TestPropertyListener listener )
+	{
+		propertyHolderSupport.removeTestPropertyListener( listener );
 	}
 
 	public JdbcRequestTestStepConfig getJdbcRequestTestStepConfig()
@@ -605,12 +617,6 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 	public String getPropertyValue( String name )
 	{
 		return propertyHolderSupport.getPropertyValue( name );
-	}
-
-	@Override
-	public void removeTestPropertyListener( TestPropertyListener listener )
-	{
-		propertyHolderSupport.removeTestPropertyListener( listener );
 	}
 
 	@Override

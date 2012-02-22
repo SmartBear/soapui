@@ -29,7 +29,6 @@ import java.util.Set;
 import javax.xml.namespace.QName;
 
 import org.apache.xmlbeans.SchemaType;
-import org.apache.xmlbeans.XmlBeans;
 import org.apache.xmlbeans.XmlString;
 
 import com.eviware.soapui.SoapUI;
@@ -307,6 +306,9 @@ public class XmlBeansPropertiesTestPropertyHolder implements MutableTestProperty
 
 		public String getDescription()
 		{
+			if( virtualProperty != null )
+				return virtualProperty.getDescription();
+
 			return null;
 		}
 
@@ -343,11 +345,17 @@ public class XmlBeansPropertiesTestPropertyHolder implements MutableTestProperty
 
 		public boolean isReadOnly()
 		{
+			if( virtualProperty != null )
+				return virtualProperty.isReadOnly();
+
 			return false;
 		}
 
 		public QName getType()
 		{
+			if( virtualProperty != null )
+				return virtualProperty.getType();
+
 			return XmlString.type.getName();
 		}
 
@@ -358,6 +366,9 @@ public class XmlBeansPropertiesTestPropertyHolder implements MutableTestProperty
 
 		public String getDefaultValue()
 		{
+			if( virtualProperty != null )
+				return virtualProperty.getDefaultValue();
+
 			return null;
 		}
 
@@ -370,7 +381,10 @@ public class XmlBeansPropertiesTestPropertyHolder implements MutableTestProperty
 		@Override
 		public SchemaType getSchemaType()
 		{
-			return XmlBeans.getBuiltinTypeSystem().findType( getType() );
+			if( virtualProperty != null )
+				return virtualProperty.getSchemaType();
+
+			return XmlString.type;
 		}
 
 		@Override
