@@ -269,9 +269,11 @@ public class SoapUIMultiThreadedHttpConnectionManager extends ThreadSafeClientCo
 			Scheme schm = schemeRegistry.getScheme( target.getSchemeName() );
 			SchemeSocketFactory sf = schm.getSchemeSocketFactory();
 
-			long start = System.nanoTime();
+			//long start = System.nanoTime();
+			long start = System.currentTimeMillis();
 			InetAddress[] addresses = resolveHostname( target.getHostName() );
-			long dnsEnd = System.nanoTime();
+			// long dnsEnd = System.nanoTime();
+			long dnsEnd = System.currentTimeMillis();
 
 			int port = schm.resolvePort( target.getPort() );
 			for( int i = 0; i < addresses.length; i++ )

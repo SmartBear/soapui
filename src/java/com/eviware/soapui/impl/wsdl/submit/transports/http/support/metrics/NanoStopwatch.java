@@ -23,7 +23,9 @@ public class NanoStopwatch implements Stopwatch
 	public long getDuration()
 	{
 		long nanoTime = stop - start;
-		long msTime = nanoTime / 1000000;
+		// removing time differences by excluding rounding errors
+		// so we collect data in milliseconds
+		long msTime = nanoTime;/// 1000000;
 		return msTime;
 	}
 
@@ -58,7 +60,8 @@ public class NanoStopwatch implements Stopwatch
 
 	protected long getCurrentTime()
 	{
-		return System.nanoTime();
+		// return System.nanoTime();
+		return System.currentTimeMillis();
 	}
 
 	@Override

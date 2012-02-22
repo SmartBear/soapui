@@ -98,8 +98,10 @@ public abstract class BaseHttpResponse implements HttpResponse
 				timeTaken += httpMethod.getResponseReadTime();
 			}
 
-			metrics.getReadTimer().add( httpMethod.getResponseReadTimeNanos() );
-			metrics.getTotalTimer().add( httpMethod.getResponseReadTimeNanos() );
+			// metrics.getReadTimer().add( httpMethod.getResponseReadTimeNanos() );
+			// metrics.getTotalTimer().add( httpMethod.getResponseReadTimeNanos() );
+			metrics.getReadTimer().add( httpMethod.getResponseReadTime() );
+			metrics.getTotalTimer().add( httpMethod.getResponseReadTime() );
 
 			try
 			{
