@@ -46,7 +46,7 @@ public class ResponseSLAAssertion extends WsdlMessageAssertion implements Respon
 {
 	public static final String ID = "Response SLA Assertion";
 	public static final String LABEL = "Response SLA";
-	public static final String DESCRIPTION = "Response SLA desc..";
+	public static final String DESCRIPTION = "Validates that the last received response time was within the defined limit. Applicable to Script TestSteps and TestSteps that send requests and receive responses.";
 	private String SLA;
 
 	/**

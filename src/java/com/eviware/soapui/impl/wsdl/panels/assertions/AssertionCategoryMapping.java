@@ -21,7 +21,7 @@ import com.eviware.soapui.model.testsuite.Assertable;
 
 public class AssertionCategoryMapping
 {
-	public final static String VALIDATE_RESPONSE_CONTENT_CATEGORY = "Validate Response Content";
+	public final static String VALIDATE_RESPONSE_CONTENT_CATEGORY = "Property Content";
 	public final static String STATUS_CATEGORY = "Compliance, Status and Standards";
 	public final static String SCRIPT_CATEGORY = "Script";
 	public final static String SLA_CATEGORY = "SLA";

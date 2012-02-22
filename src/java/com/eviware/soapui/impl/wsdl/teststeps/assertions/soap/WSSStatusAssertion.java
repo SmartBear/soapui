@@ -41,7 +41,7 @@ public class WSSStatusAssertion extends WsdlMessageAssertion implements Response
 {
 	public static final String ID = "WSS Status Assertion";
 	public static final String LABEL = "WS-Security Status";
-	public static final String DESCRIPTION = "WSS Status Assertion description goes here...";
+	public static final String DESCRIPTION = "Validates that the last received message contained valid WS-Security headers. Applicable to SOAP TestSteps.";
 
 	/**
 	 * Constructor for our assertion.

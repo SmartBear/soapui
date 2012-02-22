@@ -113,7 +113,7 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
 
 	public static final String ID = "XPath Match";
 	public static final String LABEL = "XPath Match";
-	public static final String DESCRIPTION = "XPath Match....assertion for...";
+	public static final String DESCRIPTION = "Uses an XPath expression to select content from the target property and compares the result to an expected value. Applicable to to any property containing XML.";
 	private JCheckBox allowWildcardsCheckBox;
 	private JCheckBox ignoreNamespaceDifferencesCheckBox;
 	private JCheckBox ignoreCommentsCheckBox;

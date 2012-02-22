@@ -62,7 +62,7 @@ public class SimpleNotContainsAssertion extends WsdlMessageAssertion implements 
 	private static final String IGNORE_CASE = "Ignore Case";
 	private static final String USE_REGEX = "Regular Expression";
 	public static final String LABEL = "Not Contains";
-	public static final String DESCRIPTION = "Simple NotContains desc.......";
+	public static final String DESCRIPTION = "Searches for the non-existence of a string token in the property value, supports regular expressions. Applicable to any property.";
 
 	public SimpleNotContainsAssertion( TestAssertionConfig assertionConfig, Assertable assertable )
 	{

@@ -34,6 +34,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -193,7 +194,6 @@ public class AddAssertionPanel extends SimpleDialog
 		assertionsTable.getSelectionModel().addListSelectionListener( selectionListener );
 		assertionsTable.setEditable( false );
 		assertionsTable.setGridColor( Color.BLACK );
-		assertionsTable.setRowHeight( 40 );
 		assertionsTable.addMouseListener( mouseAdapter );
 
 		assertionsTable.getColumnModel().getColumn( 0 ).setCellRenderer( assertionEntryRenderer );
@@ -442,7 +442,7 @@ public class AddAssertionPanel extends SimpleDialog
 			boolean canAssert = false;
 			boolean disable = true;
 			JLabel label;
-			JLabel desc;
+			JTextArea descText;
 			JLabel disabledInfo;
 			if( type != null && assertable != null && assertable.getModelItem() != null )
 			{
@@ -452,24 +452,27 @@ public class AddAssertionPanel extends SimpleDialog
 			String str = entry.getName();
 			label = new JLabel( str );
 			label.setFont( boldFont );
-			desc = new JLabel( ( ( AssertionListEntry )value ).getDescription() );
+			descText = new JTextArea( ( ( AssertionListEntry )value ).getDescription() );
+			descText.setSize( new Dimension( 80, 20 ) );
+			descText.setLineWrap( true );
+			descText.setWrapStyleWord( true );
 			disabledInfo = new JLabel( "Not applicable with selected Source and Property" );
 			if( disable )
 			{
 				label.setForeground( Color.LIGHT_GRAY );
-				desc.setForeground( Color.LIGHT_GRAY );
+				descText.setForeground( Color.LIGHT_GRAY );
 				disabledInfo.setForeground( Color.LIGHT_GRAY );
 			}
 			SimpleForm form = new SimpleForm();
 			form.addComponent( label );
 			if( !isHideDescriptionSelected() )
 			{
-				form.addComponent( desc );
-				if( disable )
-				{
-					form.addComponent( disabledInfo );
-				}
-				getAssertionsTable().setRowHeight( 60 );
+				form.addComponent( descText );
+				//				if( disable )
+				//				{
+				//					form.addComponent( disabledInfo );
+				//				}
+				getAssertionsTable().setRowHeight( 70 );
 			}
 			else
 			{

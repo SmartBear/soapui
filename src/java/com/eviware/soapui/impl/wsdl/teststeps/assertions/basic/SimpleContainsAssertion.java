@@ -62,7 +62,7 @@ public class SimpleContainsAssertion extends WsdlMessageAssertion implements Req
 	private static final String IGNORE_CASE = "Ignore Case";
 	private static final String USE_REGEX = "Regular Expression";
 	public static final String LABEL = "Contains";
-	public static final String DESCRIPTION = "Simple Contains desc...";
+	public static final String DESCRIPTION = "Searches for the existence of a string token in the property value, supports regular expressions. Applicable to any property. ";
 
 	public SimpleContainsAssertion( TestAssertionConfig assertionConfig, Assertable assertable )
 	{

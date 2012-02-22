@@ -40,7 +40,7 @@ public class NotSoapFaultAssertion extends WsdlMessageAssertion implements Respo
 {
 	public static final String ID = "SOAP Fault Assertion";
 	public static final String LABEL = "Not SOAP Fault";
-	public static final String DESCRIPTION = "Not SOAP Fault Assertion desc goes here...";
+	public static final String DESCRIPTION = "Validates that the last received message is not a SOAP Fault. Applicable to SOAP TestSteps.";
 
 	public NotSoapFaultAssertion( TestAssertionConfig assertionConfig, Assertable assertable )
 	{

@@ -82,7 +82,7 @@ public class GroovyScriptAssertion extends WsdlMessageAssertion implements Reque
 {
 	public static final String ID = "GroovyScriptAssertion";
 	public static final String LABEL = "Script Assertion";
-	public static final String DESCRIPTION = "Script Assertiond desc...";
+	public static final String DESCRIPTION = "Runs a custom script to perform arbitrary validations. Applicable to any Property.";
 	private String scriptText;
 	private SoapUIScriptEngine scriptEngine;
 	private JDialog dialog;

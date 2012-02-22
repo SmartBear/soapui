@@ -39,7 +39,7 @@ public class SoapRequestAssertion extends WsdlMessageAssertion implements Reques
 {
 	public static final String ID = "SOAP Request";
 	public static final String LABEL = "SOAP Request";
-	public static final String DESCRIPTION = "SOAP Request....assertion for....";
+	public static final String DESCRIPTION = "Validates that the last received request is a valid SOAP Request. Applicable to MockResponse TestSteps only.";
 
 	public SoapRequestAssertion( TestAssertionConfig assertionConfig, Assertable assertable )
 	{

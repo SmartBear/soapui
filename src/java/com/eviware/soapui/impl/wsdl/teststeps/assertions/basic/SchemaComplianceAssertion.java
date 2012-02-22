@@ -70,7 +70,7 @@ public class SchemaComplianceAssertion extends WsdlMessageAssertion implements R
 	private static Map<String, WsdlContext> wsdlContextMap = new HashMap<String, WsdlContext>();
 	private static final String SCHEMA_COMPLIANCE_HAS_CLEARED_CACHE_FLAG = SchemaComplianceAssertion.class.getName()
 			+ "@SchemaComplianceHasClearedCacheFlag";
-	public static final String DESCRIPTION = "Schema Compliance desc goes here...";
+	public static final String DESCRIPTION = "Validates that the last received message is compliant with the associated WSDL or WADL schema definition. Applicable to SOAP and REST TestSteps.";
 
 	public SchemaComplianceAssertion( TestAssertionConfig assertionConfig, Assertable assertable )
 	{

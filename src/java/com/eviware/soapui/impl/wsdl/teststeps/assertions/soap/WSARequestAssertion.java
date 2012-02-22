@@ -53,7 +53,7 @@ public class WSARequestAssertion extends WsdlMessageAssertion implements Request
 {
 	public static final String ID = "WS-A Request Assertion";
 	public static final String LABEL = "WS-Addressing Request";
-	public static final String DESCRIPTION = "WS-Addressing Request....assertion for...";
+	public static final String DESCRIPTION = "Validates that the last received request contains valid WS-Addressing Headers. Applicable to MockResponse TestSteps only.";
 	private WsaAssertionConfiguration wsaAssertionConfiguration;
 	private boolean assertWsaAction;
 	private boolean assertWsaTo;

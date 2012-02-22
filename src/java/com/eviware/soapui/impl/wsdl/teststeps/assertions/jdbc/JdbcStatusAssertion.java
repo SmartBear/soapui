@@ -33,7 +33,7 @@ public class JdbcStatusAssertion extends WsdlMessageAssertion implements Respons
 {
 	public static final String ID = "JDBC Status";
 	public static final String LABEL = "JDBC Status";
-	public static final String DESCRIPTION = "JDBC Status......assertion for....";
+	public static final String DESCRIPTION = "Validates that the JDBC statement of the target TestStep executed successfully. Applicable to JDBC TestSteps only.";
 
 	public JdbcStatusAssertion( TestAssertionConfig assertionConfig, Assertable assertable )
 	{

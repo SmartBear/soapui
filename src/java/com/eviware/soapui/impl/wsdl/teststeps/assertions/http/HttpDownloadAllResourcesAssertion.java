@@ -35,7 +35,7 @@ public class HttpDownloadAllResourcesAssertion extends WsdlMessageAssertion impl
 {
 	public static final String ID = "HTTP Download all resources";
 	public static final String LABEL = "HTTP Download all resources";
-	public static final String DESCRIPTION = "HTTP Download.....assertion for...";
+	public static final String DESCRIPTION = "Downloads all resources referred to be an HTML document (images, scripts, etc.) and validates that they are all available. Applicable to any property containing HTML.";
 
 	public HttpDownloadAllResourcesAssertion( TestAssertionConfig assertionConfig, Assertable assertable )
 	{

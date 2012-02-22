@@ -33,7 +33,7 @@ public class JdbcTimeoutAssertion extends WsdlMessageAssertion implements Respon
 {
 	public static final String ID = "JDBC Timeout";
 	public static final String LABEL = "JDBC Timeout";
-	public static final String DESCRIPTION = "JDBC Timeout....assertion for....";
+	public static final String DESCRIPTION = "Validates that the JDBC statement of the target TestStep did not take longer than the specified duration. Applicable to JDBC TestSteps only.";
 
 	public JdbcTimeoutAssertion( TestAssertionConfig assertionConfig, Assertable assertable )
 	{
