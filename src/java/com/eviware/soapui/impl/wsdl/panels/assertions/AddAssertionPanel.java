@@ -95,7 +95,8 @@ public class AddAssertionPanel extends SimpleDialog
 
 	public AddAssertionPanel( Assertable assertable )
 	{
-		super( "Select Assertion", "Select which assertion to add", HelpUrls.ADD_ASSERTION_PANEL );
+		super( "Add Assertion", "Select the source property and which assertion to apply below ",
+				HelpUrls.ADD_ASSERTION_PANEL );
 		this.assertable = assertable;
 		assertionEntryRenderer.setAssertable( assertable );
 		categoriesListRenderer.setAssertable( assertable );
