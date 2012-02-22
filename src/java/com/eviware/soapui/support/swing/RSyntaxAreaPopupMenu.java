@@ -112,6 +112,9 @@ public final class RSyntaxAreaPopupMenu extends JPopupMenu implements PopupMenuL
 
 		public void actionPerformed( ActionEvent e )
 		{
+			if( !textComponent.hasFocus() )
+				textComponent.requestFocusInWindow();
+
 			textComponent.paste();
 		}
 	}
@@ -139,6 +142,8 @@ public final class RSyntaxAreaPopupMenu extends JPopupMenu implements PopupMenuL
 
 		public void actionPerformed( ActionEvent e )
 		{
+			if( !textComponent.hasFocus() )
+				textComponent.requestFocusInWindow();
 			textComponent.selectAll();
 		}
 	}

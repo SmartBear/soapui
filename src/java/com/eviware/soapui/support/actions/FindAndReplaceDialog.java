@@ -14,6 +14,7 @@ package com.eviware.soapui.support.actions;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
@@ -27,6 +28,7 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.SwingUtilities;
 
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.xml.ProxyFindAndReplacable;
@@ -72,6 +74,8 @@ public class FindAndReplaceDialog extends AbstractAction
 		if( dialog == null )
 			buildDialog();
 
+		target.getEditComponent().requestFocusInWindow();
+
 		replaceCombo.setEnabled( target.isEditable() );
 		replaceAllButton.setEnabled( target.isEditable() );
 		replaceButton.setEnabled( target.isEditable() );
@@ -83,7 +87,9 @@ public class FindAndReplaceDialog extends AbstractAction
 
 	private void buildDialog()
 	{
-		dialog = new JDialog( target.getFindAndReplaceParent(), "Find / Replace" );
+		Window window = SwingUtilities.windowForComponent( target.getEditComponent() );
+
+		dialog = new JDialog( window, "Find / Replace" );
 		dialog.setModal( false );
 
 		JPanel panel = new JPanel( new BorderLayout() );

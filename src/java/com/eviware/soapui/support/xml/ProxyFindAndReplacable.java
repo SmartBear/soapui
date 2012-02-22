@@ -12,7 +12,7 @@
 
 package com.eviware.soapui.support.xml;
 
-import java.awt.Window;
+import javax.swing.JComponent;
 
 import org.syntax.jedit.JEditTextArea;
 
@@ -172,8 +172,8 @@ public class ProxyFindAndReplacable implements FindAndReplaceable
 		return end;
 	}
 
-	public Window getFindAndReplaceParent()
+	public JComponent getEditComponent()
 	{
-		return proxytarget.getFindAndReplaceParent();
+		return proxytarget.getEditComponent();
 	}
 }

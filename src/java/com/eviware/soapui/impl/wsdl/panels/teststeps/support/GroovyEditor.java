@@ -16,7 +16,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
@@ -28,9 +27,9 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
-import javax.swing.SwingUtilities;
 import javax.swing.event.CaretListener;
 import javax.swing.text.Document;
 
@@ -369,9 +368,9 @@ public class GroovyEditor extends JPanel implements JEditorStatusBarTarget, Prop
 		}
 
 		@Override
-		public Window getFindAndReplaceParent()
+		public JComponent getEditComponent()
 		{
-			return SwingUtilities.windowForComponent( editArea );
+			return editArea;
 		}
 	}
 
