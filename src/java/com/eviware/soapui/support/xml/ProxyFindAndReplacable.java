@@ -12,6 +12,8 @@
 
 package com.eviware.soapui.support.xml;
 
+import java.awt.Window;
+
 import org.syntax.jedit.JEditTextArea;
 
 import com.eviware.soapui.support.actions.FindAndReplaceable;
@@ -29,7 +31,6 @@ public class ProxyFindAndReplacable implements FindAndReplaceable
 	public ProxyFindAndReplacable( FindAndReplaceable proxytarget )
 	{
 		this.proxytarget = proxytarget;
-
 	}
 
 	public void setSBTarget()
@@ -169,5 +170,10 @@ public class ProxyFindAndReplacable implements FindAndReplaceable
 	public int getEnd()
 	{
 		return end;
+	}
+
+	public Window getFindAndReplaceParent()
+	{
+		return proxytarget.getFindAndReplaceParent();
 	}
 }

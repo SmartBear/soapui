@@ -83,7 +83,8 @@ public class FindAndReplaceDialog extends AbstractAction
 
 	private void buildDialog()
 	{
-		dialog = new JDialog( UISupport.getMainFrame(), "Find / Replace", false );
+		dialog = new JDialog( target.getFindAndReplaceParent(), "Find / Replace" );
+		dialog.setModal( false );
 
 		JPanel panel = new JPanel( new BorderLayout() );
 		findCombo = new JComboBox();

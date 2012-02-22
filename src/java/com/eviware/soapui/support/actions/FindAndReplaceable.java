@@ -12,6 +12,8 @@
 
 package com.eviware.soapui.support.actions;
 
+import java.awt.Window;
+
 /**
  * Behaviour for any component that supports Find-and-Replace
  * 
@@ -35,4 +37,6 @@ public interface FindAndReplaceable
 	public void setSelectedText( String txt );
 
 	public String getSelectedText();
+
+	public Window getFindAndReplaceParent();
 }

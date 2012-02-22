@@ -16,6 +16,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -30,6 +31,7 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.JPopupMenu;
+import javax.swing.SwingUtilities;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.event.UndoableEditListener;
 import javax.swing.text.BadLocationException;
@@ -583,5 +585,11 @@ public class JXEditTextArea extends JEditTextArea implements UndoableEditListene
 		{
 			Toolkit.getDefaultToolkit().beep();
 		}
+	}
+
+	@Override
+	public Window getFindAndReplaceParent()
+	{
+		return SwingUtilities.windowForComponent( this );
 	}
 }

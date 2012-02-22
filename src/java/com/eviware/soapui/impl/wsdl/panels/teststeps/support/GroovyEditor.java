@@ -16,6 +16,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
@@ -29,6 +30,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
 import javax.swing.event.CaretListener;
 import javax.swing.text.Document;
 
@@ -365,6 +367,12 @@ public class GroovyEditor extends JPanel implements JEditorStatusBarTarget, Prop
 		{
 			return editArea.getSelectedText();
 		}
+
+		@Override
+		public Window getFindAndReplaceParent()
+		{
+			return SwingUtilities.windowForComponent( editArea );
+		}
 	}
 
 	public void propertyChange( PropertyChangeEvent evt )
@@ -376,4 +384,5 @@ public class GroovyEditor extends JPanel implements JEditorStatusBarTarget, Prop
 			updating = false;
 		}
 	}
+
 }

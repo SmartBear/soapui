@@ -14,6 +14,7 @@ package com.eviware.soapui.support.components;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.Window;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyAdapter;
@@ -21,6 +22,7 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.event.UndoableEditListener;
 import javax.swing.undo.CannotRedoException;
@@ -208,5 +210,11 @@ public class JUndoableTextArea extends JTextArea implements Undoable, UndoableEd
 	public boolean canUndo()
 	{
 		return undoManager != null && undoManager.canUndo();
+	}
+
+	@Override
+	public Window getFindAndReplaceParent()
+	{
+		return SwingUtilities.windowForComponent( this );
 	}
 }
