@@ -226,7 +226,7 @@ abstract public class WsdlTestStep extends AbstractWsdlModelItem<TestStepConfig>
 
 	public String getPropertiesLabel()
 	{
-		return "Test Properties";
+		return "Custom Properties";
 	}
 
 	/**
