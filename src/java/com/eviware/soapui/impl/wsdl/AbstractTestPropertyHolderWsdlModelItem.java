@@ -171,6 +171,6 @@ public abstract class AbstractTestPropertyHolderWsdlModelItem<T extends ModelIte
 
 	public String getPropertiesLabel()
 	{
-		return "Test Properties";
+		return "Custom Properties";
 	}
 }

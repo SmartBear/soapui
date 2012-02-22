@@ -17,7 +17,6 @@ import java.beans.PropertyChangeListener;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -367,7 +366,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 				getConfig().addNewProperties();
 
 			setPropertiesConfig( getConfig().getProperties() );
-			
+
 			List<InterfaceConfig> interfaceConfigs = getConfig().getInterfaceList();
 			for( InterfaceConfig config : interfaceConfigs )
 			{
@@ -1555,11 +1554,6 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 	{
 		super.addExternalDependencies( dependencies );
 		wssContainer.addExternalDependency( dependencies );
-	}
-
-	public String getPropertiesLabel()
-	{
-		return "Custom Properties";
 	}
 
 	public String getShadowPassword()
