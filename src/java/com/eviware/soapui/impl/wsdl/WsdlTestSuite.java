@@ -74,6 +74,11 @@ public class WsdlTestSuite extends AbstractTestPropertyHolderWsdlModelItem<TestS
 		super( config, project, "/testSuite.gif" );
 		this.project = project;
 
+		if( !config.isSetProperties() )
+			config.addNewProperties();
+
+		setPropertiesConfig( config.getProperties() );
+		
 		List<TestCaseConfig> testCaseConfigs = config.getTestCaseList();
 		for( int i = 0; i < testCaseConfigs.size(); i++ )
 		{
@@ -93,10 +98,6 @@ public class WsdlTestSuite extends AbstractTestPropertyHolderWsdlModelItem<TestS
 			addTestSuiteRunListener( listener );
 		}
 
-		if( !config.isSetProperties() )
-			config.addNewProperties();
-
-		setPropertiesConfig( config.getProperties() );
 	}
 
 	public WsdlTestCase buildTestCase( TestCaseConfig testCaseConfig, boolean forLoadTest )

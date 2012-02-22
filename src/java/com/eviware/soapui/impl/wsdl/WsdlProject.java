@@ -363,6 +363,11 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 			{
 			}
 
+			if( !getConfig().isSetProperties() )
+				getConfig().addNewProperties();
+
+			setPropertiesConfig( getConfig().getProperties() );
+			
 			List<InterfaceConfig> interfaceConfigs = getConfig().getInterfaceList();
 			for( InterfaceConfig config : interfaceConfigs )
 			{
@@ -391,9 +396,6 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 
 			setActiveEnvironment( DefaultEnvironment.getInstance() );
 
-			if( !getConfig().isSetProperties() )
-				getConfig().addNewProperties();
-
 			if( !getConfig().isSetAbortOnError() )
 				getConfig().setAbortOnError( false );
 
@@ -403,7 +405,6 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 			if( !getConfig().isSetRunType() )
 				getConfig().setRunType( TestSuiteRunTypesConfig.SEQUENTIAL );
 
-			setPropertiesConfig( getConfig().getProperties() );
 			afterLoad();
 		}
 		catch( Exception e )

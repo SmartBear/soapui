@@ -101,6 +101,11 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 		this.testSuite = testSuite;
 		this.forLoadTest = forLoadTest;
 
+		if( !getConfig().isSetProperties() )
+			getConfig().addNewProperties();
+
+		setPropertiesConfig( getConfig().getProperties() );
+		
 		List<TestStepConfig> testStepConfigs = config.getTestStepList();
 		List<TestStepConfig> removed = new ArrayList<TestStepConfig>();
 		for( TestStepConfig tsc : testStepConfigs )
@@ -132,16 +137,13 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 			}
 		}
 
-		// if( !forLoadTest )
-		// {
 		List<SecurityTestConfig> securityTestConfigs = config.getSecurityTestList();
 		for( SecurityTestConfig tsc : securityTestConfigs )
 		{
 			SecurityTest securityTest = buildSecurityTest( tsc );
 			securityTests.add( securityTest );
 		}
-		// }
-
+		
 		// init default configs
 		if( !config.isSetFailOnError() )
 			config.setFailOnError( true );
@@ -159,11 +161,6 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 		{
 			addTestRunListener( listener );
 		}
-
-		if( !getConfig().isSetProperties() )
-			getConfig().addNewProperties();
-
-		setPropertiesConfig( getConfig().getProperties() );
 
 		WsrmTestRunListener wsrmListener = new WsrmTestRunListener();
 
