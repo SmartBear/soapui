@@ -531,7 +531,7 @@ public class AddAssertionPanel extends SimpleDialog
 			SimpleForm form = new SimpleForm();
 			form.addComponent( label );
 			label.setFont( boldFont );
-			if( disabled )
+			if( disabled || !( ( CategoriesListTable )table ).isSelectable( row ) )
 			{
 				label.setForeground( Color.GRAY );
 			}

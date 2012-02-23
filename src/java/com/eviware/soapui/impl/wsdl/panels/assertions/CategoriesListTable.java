@@ -43,4 +43,14 @@ public class CategoriesListTable extends JXTable
 		super.changeSelection( rowIndex, columnIndex, toggle, extend );
 	}
 
+	public boolean isSelectable( int index )
+	{
+		return selectableIndexes.contains( index );
+	}
+
+	public List<Integer> getSelectableIndexes()
+	{
+		return selectableIndexes;
+	}
+
 }
