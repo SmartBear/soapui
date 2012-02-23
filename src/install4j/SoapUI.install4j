@@ -294,8 +294,8 @@
                         <object class="com.install4j.api.beans.ScriptProperty">
                           <void property="value">
                             <string>long xx = Math.round(SystemInfo.getPhysicalMemory() * 0.5 / 1024 / 1024);
-if (xx &gt; 1200) {
-    xx = 1200;
+if (xx &gt; 1000) {
+    xx = 1000;
 }
 return xx;</string>
                           </void>
