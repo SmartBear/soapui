@@ -20,7 +20,6 @@ import java.util.List;
 import junit.framework.JUnit4TestAdapter;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.eviware.soapui.SoapUISystemProperties;
@@ -63,7 +62,6 @@ public class TestOnDemandCallerTest
 		caller = new TestOnDemandCaller();
 	}
 
-	@Ignore
 	@Test
 	public void testGetLocations() throws Exception
 	{
@@ -83,7 +81,6 @@ public class TestOnDemandCallerTest
 		assertEquals( secondLocation.getCode(), SECOND_LOCATION_CODE );
 	}
 
-	@Ignore
 	@Test
 	public void testSendProject() throws Exception
 	{
