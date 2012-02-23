@@ -268,7 +268,8 @@ public class SchemaComplianceAssertion extends WsdlMessageAssertion implements R
 			value = orgDef;
 		}
 
-		value = UISupport.prompt( "Specify definition url to validate by", "Configure SchemaCompliance Assertion", value );
+		value = UISupport
+				.prompt( "Specify definition url to validate by", "Configure Schema Compliance Assertion", value );
 
 		if( value == null )
 			return false;
