@@ -30,7 +30,7 @@ public interface TestRunListener
 	 *             {@link #beforeStep(TestCaseRunner, TestCaseRunContext, TestStep)}
 	 *             instead
 	 */
-
+	@Deprecated
 	public void beforeStep( TestCaseRunner testRunner, TestCaseRunContext runContext );
 
 	public void beforeStep( TestCaseRunner testRunner, TestCaseRunContext runContext, TestStep testStep );

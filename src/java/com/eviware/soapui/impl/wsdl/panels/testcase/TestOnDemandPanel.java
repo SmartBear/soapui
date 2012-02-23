@@ -48,10 +48,10 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
  * 
- * Panel for displaying a AlertSite report
+ * Panel for displaying a Test On Demand report
  * 
  */
-public class AlertSitePanel extends JPanel
+public class TestOnDemandPanel extends JPanel
 {
 	private static final String NO_LOCATIONS_FOUND_MESSAGE = "No locations found";
 	private static final String INITIALIZING_MESSAGE = "Initializing...";
@@ -76,9 +76,9 @@ public class AlertSitePanel extends JPanel
 
 	protected DependencyValidator validator;
 
-	private static final Logger log = Logger.getLogger( AlertSitePanel.class );
+	private static final Logger log = Logger.getLogger( TestOnDemandPanel.class );
 
-	public AlertSitePanel( WsdlTestCase testCase )
+	public TestOnDemandPanel( WsdlTestCase testCase )
 	{
 		super( new BorderLayout() );
 
@@ -255,7 +255,7 @@ public class AlertSitePanel extends JPanel
 			}
 			catch( Exception e )
 			{
-				log.error( COULD_NOT_UPLOAD_MESSAGE, e );
+				SoapUI.logError( e );
 				UISupport.showErrorMessage( COULD_NOT_UPLOAD_MESSAGE );
 			}
 			return result;
@@ -289,7 +289,8 @@ public class AlertSitePanel extends JPanel
 			}
 			catch( Exception e )
 			{
-				log.warn( COULD_NOT_GET_LOCATIONS_MESSAGE, e );
+				log.warn( COULD_NOT_GET_LOCATIONS_MESSAGE );
+				SoapUI.logError( e );
 			}
 			finally
 			{
