@@ -402,10 +402,17 @@ return component.isSelected();</string>
             </actions>
             <formComponents />
           </screen>
-          <screen name="" id="3409" beanClass="com.install4j.runtime.beans.screens.FormScreen" enabled="true" commentSet="false" comment="" rollbackBarrier="false" backButton="2" finishScreen="false">
+          <screen name="" id="3409" beanClass="com.install4j.runtime.beans.screens.FormScreen" enabled="true" commentSet="false" comment="" rollbackBarrier="false" backButton="1" finishScreen="false">
             <serializedBean>
               <java class="java.beans.XMLDecoder">
-                <object class="com.install4j.runtime.beans.screens.FormScreen" />
+                <object class="com.install4j.runtime.beans.screens.FormScreen">
+                  <void property="subTitle">
+                    <string>Download and Install loadUI for Load Testing</string>
+                  </void>
+                  <void property="title">
+                    <string>Install loadUI</string>
+                  </void>
+                </object>
               </java>
             </serializedBean>
             <condition />
@@ -419,30 +426,10 @@ return component.isSelected();</string>
                   <java class="java.beans.XMLDecoder">
                     <object class="com.install4j.runtime.beans.formcomponents.CheckboxComponent">
                       <void property="checkboxText">
-                        <string>Install  loadUI</string>
-                      </void>
-                      <void property="labelText">
-                        <string>Download and install loadUI</string>
+                        <string>Yes, Download and Install loadUI </string>
                       </void>
                       <void property="variableName">
                         <string>installLoadUI</string>
-                      </void>
-                    </object>
-                  </java>
-                </serializedBean>
-                <initScript />
-                <visibiltyScript />
-              </formComponent>
-              <formComponent name="" id="3411" beanClass="com.install4j.runtime.beans.formcomponents.TextAreaComponent" enabled="false" commentSet="false" comment="" insetTop="" insetLeft="" insetBottom="" insetRight="" resetInitOnPrevious="false">
-                <serializedBean>
-                  <java class="java.beans.XMLDecoder">
-                    <object class="com.install4j.runtime.beans.formcomponents.TextAreaComponent">
-                      <void property="initialText">
-                        <string>Please select if you want to download and install loadUI
-read more...</string>
-                      </void>
-                      <void property="variableName">
-                        <string>loadUINotes</string>
                       </void>
                     </object>
                   </java>
@@ -455,12 +442,16 @@ read more...</string>
                   <java class="java.beans.XMLDecoder">
                     <object class="com.install4j.runtime.beans.formcomponents.MultilineLabelComponent">
                       <void property="labelText">
-                        <string>Let’s get crunching.
+                        <string>soapUI Load Testing Companion 
 
-loadUI1.5 has a great new statistical analysis function with real-time data, 
-right at your fingertips. Drag and drop pre-built analyses, synch and follow 
-charts and compare retrospective data all in an intuitive format. 
-All in one place. And all for free.</string>
+Did you know soapUI has got a Load Test companion? Using loadUI you can run your 
+soapUI tests as advanced Load Tests making sure your Services perform under load.
+loadUI enables you to create advanced performance tests, execute them distributed
+on site or in The Cloud, create performance assertions, do sophisticated analysis
+of test results and history as well as export test reports all in one interactive
+package with an amazing GUI. 
+
+Just like soapUI, loadUI is Open Source and for Free. Try it now! </string>
                       </void>
                     </object>
                   </java>
@@ -473,7 +464,7 @@ All in one place. And all for free.</string>
                   <java class="java.beans.XMLDecoder">
                     <object class="com.install4j.runtime.beans.formcomponents.HyperlinkLabelComponent">
                       <void property="hyperlinkText">
-                        <string>loadUILink</string>
+                        <string>www.loadUI.org</string>
                       </void>
                       <void property="url">
                         <string>http://www.loadUI.org</string>
