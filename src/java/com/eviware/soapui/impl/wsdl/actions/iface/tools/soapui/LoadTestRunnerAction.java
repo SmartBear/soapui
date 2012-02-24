@@ -141,7 +141,8 @@ public class LoadTestRunnerAction extends AbstractToolsAction<WsdlProject>
 		mainForm.addTextField( SOAPUISETTINGSPASSWORD, "Set soapui-settings.xml password", XForm.FieldType.PASSWORD );
 
 		advForm = builder.createForm( "Overrides" );
-		advForm.addComboBox( ENVIRONMENT, new String[] { "Default" }, "#PO#The environment to set for all requests" ).setEnabled( proVersion );
+		advForm.addComboBox( ENVIRONMENT, new String[] { "Default" }, "The environment to set for all requests" )
+				.setEnabled( proVersion );
 		advForm.addComboBox( ENDPOINT, new String[] { "" }, "endpoint to forward to" );
 		advForm.addTextField( HOSTPORT, "Host:Port to use for requests", XForm.FieldType.TEXT );
 		advForm.addTextField( LIMIT, "Limit for LoadTest", XForm.FieldType.TEXT );
