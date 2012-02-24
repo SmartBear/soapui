@@ -457,8 +457,8 @@ public class AddAssertionPanel extends SimpleDialog
 			descText.setSize( new Dimension( 80, 20 ) );
 			descText.setLineWrap( true );
 			descText.setWrapStyleWord( true );
-			descText.setOpaque( true );
 			disabledInfo = new JLabel( "Not applicable with selected Source and Property" );
+			descText.setFont( disabledInfo.getFont() );
 			if( disable )
 			{
 				label.setForeground( Color.LIGHT_GRAY );
