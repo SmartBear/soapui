@@ -78,7 +78,7 @@ public class WsdlTestSuite extends AbstractTestPropertyHolderWsdlModelItem<TestS
 			config.addNewProperties();
 
 		setPropertiesConfig( config.getProperties() );
-		
+
 		List<TestCaseConfig> testCaseConfigs = config.getTestCaseList();
 		for( int i = 0; i < testCaseConfigs.size(); i++ )
 		{
@@ -715,7 +715,7 @@ public class WsdlTestSuite extends AbstractTestPropertyHolderWsdlModelItem<TestS
 			WsdlTestCase testCase = getTestCaseAt( i );
 			WsdlTestCase oldTestCase = oldTestSuite.getTestCaseAt( i );
 
-			testCase.afterCopy( oldTestSuite, null );
+			testCase.afterCopy( oldTestSuite, oldTestCase );
 			testCase.importSecurityTests( oldTestSuite, oldTestCase );
 		}
 
