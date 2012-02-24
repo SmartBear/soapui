@@ -852,5 +852,14 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
 					XPathContainsAssertion.DESCRIPTION );
 		}
 
+		@Override
+		public boolean canAssert( TestPropertyHolder modelItem, String property )
+		{
+			if( !modelItem.getProperty( property ).getSchemaType().isPrimitiveType() )
+				return true;
+
+			String content = modelItem.getPropertyValue( property );
+			return XmlUtils.seemsToBeXml( content );
+		}
 	}
 }

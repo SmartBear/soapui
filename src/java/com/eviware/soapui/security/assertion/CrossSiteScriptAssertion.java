@@ -276,12 +276,6 @@ public class CrossSiteScriptAssertion extends WsdlMessageAssertion implements Re
 			return new AssertionListEntry( CrossSiteScriptAssertion.ID, CrossSiteScriptAssertion.LABEL,
 					CrossSiteScriptAssertion.DESCRIPTION );
 		}
-
-		@Override
-		public boolean canAssert( TestPropertyHolder modelItem, String property )
-		{
-			return false;
-		}
 	}
 
 	@Override

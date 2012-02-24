@@ -19,8 +19,11 @@ import java.util.List;
 import java.util.Map;
 
 import javax.swing.ImageIcon;
+import javax.xml.namespace.QName;
 
 import org.apache.log4j.Logger;
+import org.apache.xmlbeans.SchemaType;
+import org.apache.xmlbeans.impl.values.XmlAnyTypeImpl;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.JdbcRequestTestStepConfig;
@@ -126,7 +129,19 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 			@Override
 			public String getDefaultValue()
 			{
-				return "";
+				return "</no-response>";
+			}
+
+			@Override
+			public QName getType()
+			{
+				return getSchemaType().getName();
+			}
+
+			@Override
+			public SchemaType getSchemaType()
+			{
+				return XmlAnyTypeImpl.type;
 			}
 		};
 
@@ -408,7 +423,9 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 
 	public String getAssertableContent()
 	{
-		return getJdbcRequest().getResponse() == null ? null : getJdbcRequest().getResponse().getContentAsString();
+		TestProperty property = getProperty( "ResponseAsXml" );
+		String value = property.getValue();
+		return StringUtils.hasContent( value ) ? value : property.getDefaultValue();
 	}
 
 	public String getResponseContent()
