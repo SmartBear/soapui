@@ -835,15 +835,22 @@ public final class XmlUtils
 			if( namespaceURI != null && namespaceURI.length() > 0 )
 			{
 				String prefix = node.getPrefix();
-				if( normalize || prefix == null || prefix.length() == 0 )
-					prefix = "ns" + nsCnt++ ;
-
-				while( !nsMap.containsKey( namespaceURI ) && nsMap.containsValue( prefix ) )
+				if( nsMap.containsKey( namespaceURI ) )
 				{
-					prefix = "ns" + nsCnt++ ;
+					prefix = nsMap.get( namespaceURI );
 				}
+				else
+				{
+					if( normalize || prefix == null || prefix.length() == 0 )
+						prefix = "ns" + nsCnt++ ;
 
-				nsMap.put( namespaceURI, prefix );
+					while( !nsMap.containsKey( namespaceURI ) && nsMap.containsValue( prefix ) )
+					{
+						prefix = "ns" + nsCnt++ ;
+					}
+
+					nsMap.put( namespaceURI, prefix );
+				}
 				pc = prefix + ":" + node.getLocalName();
 			}
 			else
@@ -1619,7 +1626,7 @@ public final class XmlUtils
 			if( nodes.length > 0 )
 				return getNodeValue( nodes[0].getDomNode() );
 		}
-		catch( XmlException e )
+		catch( Throwable e )
 		{
 			e.printStackTrace();
 		}
