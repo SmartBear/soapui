@@ -246,6 +246,8 @@ public class StringUtils
 				result.append( whitespaceChar );
 			else if( Character.isLetterOrDigit( ch ) )
 				result.append( ch );
+			else if( ch == whitespaceChar )
+				result.append( ch );
 		}
 
 		return result.toString();
