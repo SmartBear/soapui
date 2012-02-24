@@ -595,7 +595,7 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
 		}
 		catch( Throwable e )
 		{
-			UISupport.showErrorMessage( e.toString() );
+			UISupport.showErrorMessage( "Invalid XPath expression." );
 			SoapUI.logError( e );
 		}
 		finally

@@ -504,7 +504,7 @@ public class XQueryContainsAssertion extends WsdlMessageAssertion implements Req
 		}
 		catch( Throwable e )
 		{
-			UISupport.showErrorMessage( e.toString() );
+			UISupport.showErrorMessage( "Invalid XQuery expression." );
 			SoapUI.logError( e );
 		}
 		finally
