@@ -50,6 +50,7 @@ import com.eviware.soapui.support.components.SimpleBindingForm;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationBuilder;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
+import com.google.common.base.Strings;
 import com.jgoodies.binding.PresentationModel;
 
 /**
@@ -302,20 +303,25 @@ public class AutomaticSAMLEntry extends WssEntryBase
 			{
 				WSSecSignatureSAML wsSecSignatureSAML = new WSSecSignatureSAML();
 				WssCrypto wssCrypto = getWssContainer().getCryptoByName( crypto, true );
-
+				String alias = context.expand( getUsername());
+				
 				if( wssCrypto == null )
 				{
-					throw new Exception( "Missing crypto [" + crypto + "] for signature entry" );
+					throw new RuntimeException( "Missing keystore [" + crypto + "] for signature entry" );
+				} 
+				else if (Strings.isNullOrEmpty(alias)) 
+				{
+					throw new RuntimeException(" No alias was provided for the keystore '" + crypto + "'. Please check your SAML (Form) configurations"); 
 				}
 
 				if( samlVersion.equals( SAML_VERSION_1 ) )
 				{
-					callbackHandler = new SAML1CallbackHandler( wssCrypto.getCrypto(), context.expand( getUsername() ),
+					callbackHandler = new SAML1CallbackHandler( wssCrypto.getCrypto(), alias,
 							assertionType, confirmationMethod );
 				}
 				else if( samlVersion.equals( SAML_VERSION_2 ) )
 				{
-					callbackHandler = new SAML2CallbackHandler( wssCrypto.getCrypto(), context.expand( getUsername() ),
+					callbackHandler = new SAML2CallbackHandler( wssCrypto.getCrypto(), alias ,
 							assertionType, confirmationMethod );
 				}
 
