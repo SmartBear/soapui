@@ -14,6 +14,7 @@ package com.eviware.soapui.impl.wsdl.support.wss.entries;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -128,6 +129,7 @@ public class AutomaticSAMLEntryTest
 		createCrypto();
 
 		when( outgoingWssMock.getWssContainer() ).thenReturn( wssContainerMock );
+		when( wssContainerMock.getCryptoByName( anyString(), anyBoolean() ) ).thenReturn( wssCryptoMock );
 		when( wssContainerMock.getCryptoByName( anyString() ) ).thenReturn( wssCryptoMock );
 		when( wssCryptoMock.getCrypto() ).thenReturn( crypto );
 		when( outgoingWssMock.getUsername() ).thenReturn( ALIAS );
