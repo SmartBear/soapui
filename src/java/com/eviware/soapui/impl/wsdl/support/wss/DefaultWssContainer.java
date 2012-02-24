@@ -243,13 +243,32 @@ public class DefaultWssContainer implements WssContainer
 		getConfig().removeOutgoing( row );
 	}
 
-	public WssCrypto getCryptoByName( String cryptoName )
+	public WssCrypto getCryptoByName( String cryptoName, boolean outgoingWSSConfig )
 	{
 		for( WssCrypto crypto : cryptos )
+		{
 			if( crypto.getLabel().equals( cryptoName ) )
-				return crypto;
+			{
+				if( outgoingWSSConfig )
+				{
+					if( crypto.getType() == CryptoType.KEYSTORE )
+					{
+						return crypto;
+					}
+				}
+				else
+				{
+					return crypto;
+				}
+			}
+		}
 
 		return null;
+	}
+
+	public WssCrypto getCryptoByName( String cryptoName )
+	{
+		return getCryptoByName( cryptoName, false );
 	}
 
 	public IncomingWss getIncomingWssByName( String incomingName )

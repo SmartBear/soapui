@@ -301,7 +301,7 @@ public class AutomaticSAMLEntry extends WssEntryBase
 			else
 			{
 				WSSecSignatureSAML wsSecSignatureSAML = new WSSecSignatureSAML();
-				WssCrypto wssCrypto = getWssContainer().getCryptoByName( crypto );
+				WssCrypto wssCrypto = getWssContainer().getCryptoByName( crypto, true );
 
 				if( wssCrypto == null )
 				{

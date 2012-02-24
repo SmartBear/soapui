@@ -58,6 +58,8 @@ public interface WssContainer extends PropertyExpansionContainer
 
 	public WssCrypto getCryptoByName( String cryptoName );
 
+	public WssCrypto getCryptoByName( String cryptoName, boolean outgoingWSSConfig );
+
 	public OutgoingWss getOutgoingWssByName( String outgoingName );
 
 	public IncomingWss getIncomingWssByName( String incomingName );
