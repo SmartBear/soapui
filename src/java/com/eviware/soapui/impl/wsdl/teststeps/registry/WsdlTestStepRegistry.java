@@ -50,6 +50,7 @@ public class WsdlTestStepRegistry
 		addFactory( new ProPlaceholderStepFactory( "datasourceloop", "soapUI Pro DataSourceLoop", "/datasource_loop.gif" ) );
 		addFactory( new ProPlaceholderStepFactory( "datasink", "soapUI Pro DataSink", "/datasink.gif" ) );
 		addFactory( new ProPlaceholderStepFactory( "datagen", "soapUI Pro DataGen", "/datagen.gif" ) );
+		addFactory( new ProPlaceholderStepFactory( "assertionteststep", "soapUI Pro Assertion TestStep", "/unknown_assertion_step.gif" ));
 
 		for( WsdlTestStepFactory factory : SoapUI.getFactoryRegistry().getFactories( WsdlTestStepFactory.class ) )
 		{
