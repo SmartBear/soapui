@@ -444,12 +444,7 @@ return component.isSelected();</string>
                       <void property="labelText">
                         <string>soapUI Load Testing Companion 
 
-Did you know soapUI has got a Load Test companion? Using loadUI you can run your 
-soapUI tests as advanced Load Tests making sure your Services perform under load.
-loadUI enables you to create advanced performance tests, execute them distributed
-on site or in The Cloud, create performance assertions, do sophisticated analysis
-of test results and history as well as export test reports all in one interactive
-package with an amazing GUI. 
+Did you know soapUI has got a Load Test companion? Using loadUI you can run your soapUI tests as advanced Load Tests making sure your Services perform under load. loadUI enables you to create advanced performance tests, execute them distributed on site or in The Cloud, create performance assertions, do sophisticated analysis of test results and history as well as export test reports all in one interactive package with an amazing GUI.  
 
 Just like soapUI, loadUI is Open Source and for Free. Try it now! </string>
                       </void>
