@@ -95,6 +95,9 @@ public class TestAssertionRegistry
 		addAssertion( new InvalidHttpStatusCodesAssertion.Factory() );
 		addAssertion( new SensitiveInfoExposureAssertion.Factory() );
 		addAssertion( new CrossSiteScriptAssertion.Factory() );
+		
+		// pro placeh0lders
+		addAssertion( new ProAssertionPlaceHolderFactory("MessageContentAssertion", "Message Content Assertion"));
 
 		for( TestAssertionFactory factory : SoapUI.getFactoryRegistry().getFactories( TestAssertionFactory.class ) )
 		{
