@@ -447,11 +447,11 @@ return component.isSelected();</string>
                   <java class="java.beans.XMLDecoder">
                     <object class="com.install4j.runtime.beans.formcomponents.MultilineLabelComponent">
                       <void property="labelText">
-                        <string>soapUI Load Testing Companion 
+                        <string>soapUI Load Testing Companion
 
-Did you know soapUI has got a Load Test companion? Using loadUI you can run your soapUI tests as advanced Load Tests making sure your Services perform under load. loadUI enables you to create advanced performance tests, execute them distributed on site or in The Cloud, create performance assertions, do sophisticated analysis of test results and history as well as export test reports all in one interactive package with an amazing GUI.  
+Try loadUI! Using it you can run soapUI tests as advanced Load Tests making sure your Services perform under load. Create advanced performance tests, distribute them on site or in The Cloud, create assertions, do sophisticated analysis of results and export reports intreractively in an amazing GUI. 
 
-Just like soapUI, loadUI is Open Source and for Free. Try it now! </string>
+loadUI is Open Source and for Free. Try it now! </string>
                       </void>
                     </object>
                   </java>
