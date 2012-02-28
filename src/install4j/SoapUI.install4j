@@ -25,8 +25,8 @@
       <variable name="EXECUTABLE_NAME" value="soapUI-${compiler:VERSION_NUMBER}${compiler:BRANDED_TITLE}" />
       <variable name="DIST_STANDALONE" value="d:\workspace\soapUI 4.5.0\target\standalone" />
       <variable name="LOADUI_DOWNLOADER" value="" />
-      <variable name="LOADUI_INSTALLER_URL" value="http://www.eviware.com/nightly-builds/loadui/1.5.1-SNAPSHOT/" />
-      <variable name="LOADUI_VERSION_NUMBER" value="1_5_1-SNAPSHOT" />
+      <variable name="LOADUI_INSTALLER_URL" value="http://dl.eviware.com/loadui/os/2_0_b1" />
+      <variable name="LOADUI_VERSION_NUMBER" value="2_0_0_beta_1" />
       <variable name="OS_EXT" value="" />
     </variables>
   </application>
