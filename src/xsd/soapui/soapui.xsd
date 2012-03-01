@@ -1657,6 +1657,9 @@
                         <xsd:attribute name="ipAddress"
                             type="xsd:string">
                         </xsd:attribute>
+                        <xsd:attribute name="port"
+                            type="xsd:int">
+                        </xsd:attribute>
                     </xsd:complexType>
                 </xsd:element>
             </xsd:sequence>

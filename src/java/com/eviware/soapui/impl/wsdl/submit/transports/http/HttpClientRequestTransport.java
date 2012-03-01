@@ -243,6 +243,7 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 				httpMethod.getMetrics().setHttpMethod( httpMethod.getMethod() );
 				httpMethod.getMetrics().setIpAddress(
 						InetAddress.getByName( httpMethod.getURI().getHost() ).getHostAddress() );
+				httpMethod.getMetrics().setPort( httpMethod.getURI().getPort() );
 				httpMethod.getMetrics().getTotalTimer().start();
 			}
 
@@ -350,6 +351,7 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 				.set( httpMethod.getMetrics().getTotalTimer().getStart(), httpMethod.getMetrics().getTotalTimer().getStop() );
 		getMethod.getMetrics().setHttpMethod( httpMethod.getMethod() );
 		getMethod.getMetrics().setIpAddress( InetAddress.getByName( httpMethod.getURI().getHost() ).getHostAddress() );
+		getMethod.getMetrics().setPort( httpMethod.getURI().getPort() );
 
 		java.net.URI uri = new java.net.URI( httpResponse.getFirstHeader( "Location" ).getValue() );
 		getMethod.setURI( uri );

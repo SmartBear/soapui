@@ -23,28 +23,9 @@ public class SoapUIMetrics extends HttpConnectionMetricsImpl
 	private int httpStatus = -1;
 	private long contentLength = -1;
 
-	public String getHttpMethod()
-	{
-		return httpMethod;
-	}
-
-	public void setHttpMethod( String httpMethod )
-	{
-		this.httpMethod = httpMethod;
-	}
-
-	public String getIpAddress()
-	{
-		return ipAddress;
-	}
-
-	public void setIpAddress( String ipAddress )
-	{
-		this.ipAddress = ipAddress;
-	}
-
 	private String httpMethod = "";
 	private String ipAddress = "";
+	private int port = -1;
 
 	private Stopwatch readTimer;
 	private Stopwatch totalTimer;
@@ -148,6 +129,36 @@ public class SoapUIMetrics extends HttpConnectionMetricsImpl
 	public void setContentLength( long contentLength )
 	{
 		this.contentLength = contentLength;
+	}
+
+	public String getHttpMethod()
+	{
+		return httpMethod;
+	}
+
+	public void setHttpMethod( String httpMethod )
+	{
+		this.httpMethod = httpMethod;
+	}
+
+	public String getIpAddress()
+	{
+		return ipAddress;
+	}
+
+	public void setIpAddress( String ipAddress )
+	{
+		this.ipAddress = ipAddress;
+	}
+
+	public int getPort()
+	{
+		return port;
+	}
+
+	public void setPort( int port )
+	{
+		this.port = port;
 	}
 
 	@Override
