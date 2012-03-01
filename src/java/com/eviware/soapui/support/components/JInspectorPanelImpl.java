@@ -120,6 +120,7 @@ public class JInspectorPanelImpl extends JPanel implements PropertyChangeListene
 			}
 		};
 
+		inspectToolbar.setFloatable(false);
 		inspectToolbar.setRollover( true );
 		inspectToolbar.putClientProperty( Options.HEADER_STYLE_KEY, HeaderStyle.SINGLE );
 		inspectToolbar.setBorder( BorderFactory.createEmptyBorder( 3, 0, 3, 0 ) );

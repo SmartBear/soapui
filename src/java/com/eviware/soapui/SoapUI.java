@@ -294,6 +294,7 @@ public class SoapUI
 	private JComponent buildToolbar()
 	{
 		mainToolbar = new JXToolBar();
+		mainToolbar.setFloatable(false);
 		mainToolbar.setRollover( true );
 		mainToolbar.putClientProperty( Options.HEADER_STYLE_KEY, HeaderStyle.BOTH );
 		mainToolbar.add( new NewWsdlProjectActionDelegate() );
