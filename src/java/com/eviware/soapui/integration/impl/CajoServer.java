@@ -29,15 +29,15 @@ public class CajoServer
 	private String server = null;
 	private String port = DEFAULT_SOAPUI_CAJO_PORT;
 	private String itemName = "soapuiIntegration";
-	private static CajoServer instance;
 
 	public static CajoServer getInstance()
 	{
-		if( instance == null )
-		{
-			return instance = new CajoServer();
-		}
-		return instance;
+		return SingletonHolder.instance;
+	}
+
+	static class SingletonHolder
+	{
+		static CajoServer instance = new CajoServer();
 	}
 
 	private CajoServer()
