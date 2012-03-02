@@ -37,7 +37,6 @@ import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.support.definition.DefinitionLoader;
 import com.eviware.soapui.impl.wsdl.support.CompressionSupport;
 import com.eviware.soapui.impl.wsdl.support.PathUtils;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
@@ -61,7 +60,7 @@ import com.eviware.x.form.XFormFactory;
  * @author ole.matzura
  */
 
-public class UrlWsdlLoader extends WsdlLoader implements DefinitionLoader
+public class UrlWsdlLoader extends WsdlLoader
 {
 	private HttpContext state;
 	protected HttpGet getMethod;
@@ -260,7 +259,7 @@ public class UrlWsdlLoader extends WsdlLoader implements DefinitionLoader
 	 * @author ole.matzura
 	 */
 
-	private static Map<String, Credentials> cache = new HashMap<String, Credentials>();
+	private static Map<AuthScope, Credentials> cache = new HashMap<AuthScope, Credentials>();
 
 	public final class WsdlCredentialsProvider implements CredentialsProvider
 	{
@@ -278,12 +277,10 @@ public class UrlWsdlLoader extends WsdlLoader implements DefinitionLoader
 				throw new IllegalArgumentException( "Authentication scope may not be null" );
 			}
 
-			String key = authScope.getHost() + "-" + authScope.getPort() + "-" + authScope.getRealm() + "-"
-					+ authScope.getScheme();
-			if( cache.containsKey( key ) )
-			{
-				return cache.get( key );
-			}
+			//	if( cache.containsKey( authScope ) )
+			//	{
+			//	return cache.get( authScope );
+			//	}
 
 			String pw = getPassword();
 			if( pw == null )
@@ -323,19 +320,18 @@ public class UrlWsdlLoader extends WsdlLoader implements DefinitionLoader
 					NTCredentials credentials = new NTCredentials( values.get( "Username" ), values.get( "Password" ),
 							workstation, values.get( "Domain" ) );
 
-					cache.put( key, credentials );
+					cache.put( authScope, credentials );
 					return credentials;
 				}
 			}
 			else if( AuthPolicy.BASIC.equalsIgnoreCase( authScope.getScheme() )
-					|| AuthPolicy.DIGEST.equalsIgnoreCase( authScope.getScheme() )
-					|| AuthPolicy.SPNEGO.equalsIgnoreCase( authScope.getScheme() ) )
+					|| AuthPolicy.DIGEST.equalsIgnoreCase( authScope.getScheme() ) )
 			{
 				if( hasCredentials() )
 				{
 					log.info( "Returning url credentials" );
 					UsernamePasswordCredentials credentials = new UsernamePasswordCredentials( getUsername(), pw );
-					cache.put( key, credentials );
+					cache.put( authScope, credentials );
 					return credentials;
 				}
 
@@ -350,7 +346,7 @@ public class UrlWsdlLoader extends WsdlLoader implements DefinitionLoader
 				{
 					UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(
 							showDialog.values.get( "Username" ), showDialog.values.get( "Password" ) );
-					cache.put( key, credentials );
+					cache.put( authScope, credentials );
 					return credentials;
 				}
 			}
@@ -405,6 +401,7 @@ public class UrlWsdlLoader extends WsdlLoader implements DefinitionLoader
 
 		public void clear()
 		{
+			cache.clear();
 		}
 
 		public void setCredentials( AuthScope arg0, Credentials arg1 )
