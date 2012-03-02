@@ -233,12 +233,7 @@ public interface HelpUrls
 	public static final String SECURITY_MALICIOUS_ATTACHMENT_HELP = "http://www.soapui.org/Security/malicious-attachment.html";
 
 	public static final String SECURITY_SCANS_OVERVIEW = "http://www.soapui.org/Security/security-scans-overview.html";
-
-	public static final String MESSAGE_CONTENT_HELP_URL = "";
-
 	public static final String ALERT_SITE_HELP_URL = HELP_URL_ROOT + "";
+	public static final String ADD_ASSERTION_PANEL = "http://www.soapui.org/Functional-Testing/assertion-test-step.html";
 
-	public static final String CHANGE_ASSERTION_SOURCE_AND_PROPERTY = "";
-
-	public static final String ADD_ASSERTION_PANEL = "";
 }
