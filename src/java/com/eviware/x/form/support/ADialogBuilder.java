@@ -33,7 +33,6 @@ import com.eviware.x.impl.swing.JMultilineLabelTextField;
 import com.eviware.x.impl.swing.JPasswordFieldFormField;
 import com.eviware.x.impl.swing.JStringListFormField;
 import com.eviware.x.impl.swing.JTableFormField;
-import com.eviware.x.impl.swing.SwingFormFactory;
 
 /**
  * Builds XFormDialogs from AForm/AField annotated classes/interfaces
@@ -58,7 +57,7 @@ public class ADialogBuilder
 
 		MessageSupport messages = MessageSupport.getMessages( formClass );
 
-		XFormDialogBuilder builder = SwingFormFactory.createDialogBuilder( messages.get( formAnnotation.name() ) );
+		XFormDialogBuilder builder = XFormFactory.createDialogBuilder( messages.get( formAnnotation.name() ) );
 		XForm form = builder.createForm( "Basic" );
 
 		for( Field field : formClass.getFields() )
