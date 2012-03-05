@@ -46,6 +46,7 @@ import org.apache.commons.lang.NotImplementedException;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
+import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.submit.RequestFilter;
@@ -240,8 +241,17 @@ public class HermesJmsRequestTransport implements RequestTransport
 
 			if( addSoapAction )
 			{
+
 				message.setStringProperty( JMSHeader.SOAPJMS_SOAP_ACTION, request.getOperation().getName() );
-				message.setStringProperty( JMSHeader.SOAP_ACTION, request.getOperation().getName() );
+				if( request.getOperation() instanceof WsdlOperation )
+				{
+					message.setStringProperty( JMSHeader.SOAP_ACTION,
+							( ( WsdlOperation )request.getOperation() ).getAction() );
+				}
+				else
+				{
+					message.setStringProperty( JMSHeader.SOAP_ACTION, request.getOperation().getName() );
+				}
 			}
 		}
 		catch( JMSException e )

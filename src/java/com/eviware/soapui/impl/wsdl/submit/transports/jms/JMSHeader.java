@@ -55,7 +55,7 @@ public class JMSHeader
 	public static final String CLIENT_ID = "clientID";
 	public static final String SEND_AS_BYTESMESSAGE = "sendAsBytesMessage";
 	public static final String SOAP_ACTION_ADD = "soapActionAdd";
-	public static final String SOAP_ACTION = "SoapAction";
+	public static final String SOAP_ACTION = "SOAPAction";
 	public static final String SOAPJMS_SOAP_ACTION = "SOAPJMS_soapAction";
 
 	private long timeTolive = Message.DEFAULT_TIME_TO_LIVE;
