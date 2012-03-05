@@ -23,6 +23,7 @@ import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
+import org.apache.http.util.EntityUtils;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
@@ -258,6 +259,11 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 
 			if( isRedirectResponse( httpResponse.getStatusLine().getStatusCode() ) && httpRequest.isFollowRedirects() )
 			{
+				if( httpResponse.getEntity() != null )
+				{
+					EntityUtils.consume( httpResponse.getEntity() );
+				}
+
 				ExtendedGetMethod returnMethod = followRedirects( httpClient, 0, httpMethod, httpResponse, httpContext );
 				httpMethod = returnMethod;
 				submitContext.setProperty( HTTP_METHOD, httpMethod );
