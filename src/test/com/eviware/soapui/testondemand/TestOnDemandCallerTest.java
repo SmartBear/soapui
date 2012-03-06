@@ -40,6 +40,7 @@ public class TestOnDemandCallerTest
 {
 	private static final String FIRST_LOCATION_NAME = "Fort Lauderdale, FL";
 	private static final String FIRST_LOCATION_CODE = "10|ash.regression.alertsite.com";
+	private static final String[] FIRST_SERVER_IP_ADDRESSES = { "10.0.48.17", "127.0.0.1" };
 
 	private static final String SECOND_LOCATION_NAME = "Washington, D.C.";
 	private static final String SECOND_LOCATION_CODE = "40|latte.regression.alertsite.com";
@@ -89,7 +90,8 @@ public class TestOnDemandCallerTest
 			return;
 		}
 
-		String redirectUrl = caller.sendTestCase( testCase, new Location( FIRST_LOCATION_CODE, SECOND_LOCATION_NAME ) );
+		String redirectUrl = caller.sendTestCase( testCase, new Location( FIRST_LOCATION_CODE, FIRST_LOCATION_CODE,
+				FIRST_SERVER_IP_ADDRESSES ) );
 		assert !Strings.isNullOrEmpty( redirectUrl );
 	}
 }

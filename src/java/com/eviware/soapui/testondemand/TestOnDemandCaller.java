@@ -90,6 +90,7 @@ public class TestOnDemandCaller
 	private static final String LOCATION_XPATH_EXPRESSION = "//Location";
 	private static final String LOCATION_CODE_XPATH_EXPRESSION = "LocCode";
 	private static final String LOCATION_NAME_XPATH_EXPRESSION = "LocName";
+	private static final String LOCATION_SERVER_IP_ADDRESSES_XPATH_EXPRESSION = "LocIPs";
 
 	private static final String API_VERSION = "2";
 	private static final String APPLICATION_ZIP = "application/zip";
@@ -101,6 +102,8 @@ public class TestOnDemandCaller
 
 	private static final String UPLOAD_NAME = "TestOnDemand";
 	private static final String UPLOAD_PARAMETER_LOCATION_PREFIX = "test_location=";
+
+	private static final String SERVER_IP_ADDRESSES_DELIMETER = ",";
 
 	private final XPath xpath = XPathFactory.newInstance().newXPath();
 
@@ -119,7 +122,16 @@ public class TestOnDemandCaller
 			Node locationNode = locationNodes.item( i );
 			String name = ( String )xpath.evaluate( LOCATION_NAME_XPATH_EXPRESSION, locationNode, XPathConstants.STRING );
 			String code = ( String )xpath.evaluate( LOCATION_CODE_XPATH_EXPRESSION, locationNode, XPathConstants.STRING );
-			locations.add( new Location( code, name ) );
+			String unformattedServerIPAddresses = ( String )xpath.evaluate( LOCATION_SERVER_IP_ADDRESSES_XPATH_EXPRESSION,
+					locationNode, XPathConstants.STRING );
+
+			String[] serverIPAddresses = new String[0];
+			if( !unformattedServerIPAddresses.isEmpty() )
+			{
+				serverIPAddresses = unformattedServerIPAddresses.split( SERVER_IP_ADDRESSES_DELIMETER );
+			}
+
+			locations.add( new Location( code, name, serverIPAddresses ) );
 		}
 
 		return locations;

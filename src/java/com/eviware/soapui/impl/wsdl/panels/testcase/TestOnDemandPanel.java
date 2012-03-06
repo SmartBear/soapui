@@ -43,6 +43,7 @@ import com.eviware.soapui.testondemand.TestOnDemandCaller;
 import com.eviware.x.dialogs.Worker.WorkerAdapter;
 import com.eviware.x.dialogs.XProgressDialog;
 import com.eviware.x.dialogs.XProgressMonitor;
+import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -70,6 +71,11 @@ public class TestOnDemandPanel extends JPanel
 	private static final String UPLOAD_TEST_CASE_HEADING = "Upload TestCase";
 	private static final String UPLOADING_TEST_CASE_MESSAGE = "Uploading TestCase..";
 
+	private static final String SERVER_IP_ADDRESSES_PREFIX = "IP: ";
+	private static final String SERVER_IP_ADDRESSES_DELIMETER = ", ";
+	private static final String NO_SERVER_IP_ADDRESSES_MESSAGE = "<No IP addresses found>";
+
+	// FIXME This suggest using a Java 7 feature, Fix compiler level!
 	@NonNull
 	private JComboBox locationsComboBox;
 
@@ -82,7 +88,6 @@ public class TestOnDemandPanel extends JPanel
 	@NonNull
 	private static List<Location> locationsCache = new ArrayList<Location>();
 
-	// FIXME We should probably set a max lenght on this
 	@NonNull
 	JLabel serverIPAddressesLabel = new JLabel();
 
@@ -140,6 +145,10 @@ public class TestOnDemandPanel extends JPanel
 		locationsComboBox = buildInitializingLocationsComboBox();
 		locationsComboBox.addActionListener( new LocationComboBoxAction() );
 
+		// FIXME Is there a way to make this fill a the rest of the X space?
+		serverIPAddressesLabel.setPreferredSize( new Dimension( 1000, 10 ) );
+		serverIPAddressesLabel.setForeground( Color.GRAY );
+
 		toolbar.addFixed( UISupport.createToolbarButton( runAction ) );
 		toolbar.addRelatedGap();
 		toolbar.addFixed( locationsComboBox );
@@ -168,6 +177,7 @@ public class TestOnDemandPanel extends JPanel
 		}
 		else
 		{
+
 			populateLocationsComboBox();
 		}
 	}
@@ -284,20 +294,41 @@ public class TestOnDemandPanel extends JPanel
 		@Override
 		public void actionPerformed( ActionEvent e )
 		{
-			if( locationsComboBox.getSelectedItem() != null
-					&& locationsComboBox.getSelectedItem().equals( GET_MORE_LOCATIONS_MESSAGE ) )
-			{
-				openURLSafely( getMoreLocationsURL() );
-				runAction.setEnabled( false );
-			}
-			else
-			{
-				if( locationsComboBox.isEnabled() && !runAction.isEnabled() )
-				{
-					openInInternalBrowser( getFirstPageURL() );
-					runAction.setEnabled( true );
-				}
+			Object selectedItem = locationsComboBox.getSelectedItem();
 
+			if( selectedItem != null )
+			{
+				if( locationsComboBox.getSelectedItem().equals( GET_MORE_LOCATIONS_MESSAGE ) )
+				{
+					openURLSafely( getMoreLocationsURL() );
+					runAction.setEnabled( false );
+					serverIPAddressesLabel.setText( null );
+				}
+				else
+				{
+					if( locationsComboBox.isEnabled() && !runAction.isEnabled() )
+					{
+						openInInternalBrowser( getFirstPageURL() );
+						runAction.setEnabled( true );
+					}
+
+					if( selectedItem instanceof Location )
+					{
+						String[] serverIPAddresses = ( ( Location )selectedItem ).getServerIPAddresses();
+
+						if( serverIPAddresses != null && serverIPAddresses.length > 0 )
+						{
+							String severIpAddressList = Joiner.on( SERVER_IP_ADDRESSES_DELIMETER ).join( serverIPAddresses );
+							serverIPAddressesLabel.setText( SERVER_IP_ADDRESSES_PREFIX + severIpAddressList );
+						}
+						else
+						{
+							serverIPAddressesLabel.setText( SERVER_IP_ADDRESSES_PREFIX + NO_SERVER_IP_ADDRESSES_MESSAGE );
+							// FIXME: Log errors aswell?
+						}
+						invalidate();
+					}
+				}
 			}
 		}
 	}

@@ -28,11 +28,13 @@ public class Location
 {
 	private String code;
 	private String name;
+	private String[] serverIPAddresses;
 
-	public Location( String code, String name )
+	public Location( String code, String name, String[] serverIPAddresses )
 	{
 		this.code = code;
 		this.name = name;
+		this.serverIPAddresses = serverIPAddresses;
 	}
 
 	public String getCode()
@@ -45,10 +47,9 @@ public class Location
 		return getURLDecodedName();
 	}
 
-	@Override
-	public String toString()
+	public String[] getServerIPAddresses()
 	{
-		return getURLDecodedName();
+		return serverIPAddresses;
 	}
 
 	private String getURLDecodedName()
@@ -64,5 +65,11 @@ public class Location
 			SoapUI.logError( e );
 		}
 		return decodedName;
+	}
+
+	@Override
+	public String toString()
+	{
+		return getURLDecodedName();
 	}
 }
