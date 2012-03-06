@@ -20,6 +20,8 @@ import javax.swing.JSeparator;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.support.http.HttpRequestInterface;
@@ -60,7 +62,6 @@ import com.eviware.soapui.support.editor.xml.XmlEditor;
 import com.eviware.soapui.support.editor.xml.XmlEditorView;
 import com.eviware.soapui.support.editor.xml.support.ValidationError;
 import com.eviware.soapui.support.propertyexpansion.PropertyExpansionPopupListener;
-import com.eviware.soapui.support.xml.JXEditTextArea;
 
 /**
  * Factory for default "XML" source editor view in soapUI
@@ -166,10 +167,10 @@ public class XmlSourceEditorViewFactory implements ResponseEditorViewFactory, Re
 		protected void buildUI()
 		{
 			super.buildUI();
-			PropertyExpansionPopupListener.enable( getInputArea(), getModelItem() );
+			PropertyExpansionPopupListener.enable( getInputArea(), getModelItem(), getInputArea().getPopupMenu() );
 		}
 
-		protected void buildPopup( JPopupMenu inputPopup, JXEditTextArea editArea )
+		protected void buildPopup( JPopupMenu inputPopup, RSyntaxTextArea editArea )
 		{
 			super.buildPopup( inputPopup, editArea );
 
@@ -178,6 +179,7 @@ public class XmlSourceEditorViewFactory implements ResponseEditorViewFactory, Re
 			inputPopup.insert( new AddWSTimestampAction( getModelItem() ), 4 );
 			inputPopup.insert( applyMenu = new JMenu( "Outgoing WSS" ), 5 );
 			inputPopup.insert( wsaApplyMenu = new JMenu( "WS-A headers" ), 6 );
+			inputPopup.insert( new JSeparator(), 7 );
 
 			inputPopup.addPopupMenuListener( new PopupMenuListener()
 			{
@@ -247,7 +249,7 @@ public class XmlSourceEditorViewFactory implements ResponseEditorViewFactory, Re
 					getModelItem() ), false );
 		}
 
-		protected void buildPopup( JPopupMenu inputPopup, JXEditTextArea editArea )
+		protected void buildPopup( JPopupMenu inputPopup, RSyntaxTextArea editArea )
 		{
 			super.buildPopup( inputPopup, editArea );
 			// inputPopup.insert( new JSeparator(), 2 );
@@ -325,7 +327,7 @@ public class XmlSourceEditorViewFactory implements ResponseEditorViewFactory, Re
 			return getModelItem();
 		}
 
-		protected void buildPopup( JPopupMenu inputPopup, JXEditTextArea editArea )
+		protected void buildPopup( JPopupMenu inputPopup, RSyntaxTextArea editArea )
 		{
 			super.buildPopup( inputPopup, editArea );
 

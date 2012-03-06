@@ -15,9 +15,11 @@ package com.eviware.soapui.support.editor.views.xml.source;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.GridLayout;
+import java.awt.Rectangle;
 import java.awt.Toolkit;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -26,28 +28,43 @@ import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
 import javax.swing.DefaultListModel;
-import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
 import javax.swing.JSplitPane;
+import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
+import javax.swing.event.CaretListener;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 
 import org.apache.xmlbeans.XmlError;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlOptions;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
+import org.fife.ui.rtextarea.RTextScrollPane;
+import org.fife.ui.rtextarea.SearchContext;
+import org.fife.ui.rtextarea.SearchEngine;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.wsdl.panels.teststeps.support.LineNumbersPanel;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.components.JEditorStatusBar.JEditorStatusBarTarget;
 import com.eviware.soapui.support.components.PreviewCorner;
 import com.eviware.soapui.support.editor.EditorLocation;
 import com.eviware.soapui.support.editor.views.AbstractXmlEditorView;
@@ -56,12 +73,13 @@ import com.eviware.soapui.support.editor.xml.XmlEditor;
 import com.eviware.soapui.support.editor.xml.XmlLocation;
 import com.eviware.soapui.support.editor.xml.support.ValidationError;
 import com.eviware.soapui.support.swing.SoapUISplitPaneUI;
-import com.eviware.soapui.support.xml.JXEditTextArea;
 import com.eviware.soapui.support.xml.XmlUtils;
 import com.eviware.soapui.support.xml.actions.FormatXmlAction;
+import com.eviware.soapui.support.xml.actions.GoToLineAction;
 import com.eviware.soapui.support.xml.actions.InsertBase64FileTextAreaAction;
 import com.eviware.soapui.support.xml.actions.LoadXmlTextAreaAction;
 import com.eviware.soapui.support.xml.actions.SaveXmlTextAreaAction;
+import com.jgoodies.forms.builder.ButtonBarBuilder;
 
 /**
  * Default "XML" source editor view in soapUI
@@ -71,7 +89,8 @@ import com.eviware.soapui.support.xml.actions.SaveXmlTextAreaAction;
 
 public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorView<XmlDocument>
 {
-	private JXEditTextArea editArea;
+	private RSyntaxTextArea editArea;
+	private RTextScrollPane editorScrollPane;
 	private ValidateMessageXmlAction validateXmlAction;
 	private JSplitPane splitter;
 	private JScrollPane errorScrollPane;
@@ -79,16 +98,15 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
 	private FormatXmlAction formatXmlAction;
 	private SaveXmlTextAreaAction saveXmlTextAreaAction;
 	private boolean updating;
-	private JPopupMenu editorPopup;
 	public boolean isLocating;
-	private JScrollPane editorScrollPane;
 	private LoadXmlTextAreaAction loadXmlTextAreaAction;
 	private JPopupMenu inputPopup;
-	private LineNumbersPanel lineNumbersPanel;
-	private JCheckBoxMenuItem toggleLineNumbersMenuItem;
 	private PreviewCorner previewCorner;
 	private T modelItem;
 	private InsertBase64FileTextAreaAction insertBase64FileTextAreaAction;
+	private EnableLineNumbersAction enableLineNumbersAction;
+	private GoToLineAction goToLineAction;
+	private FindAndReplaceDialogView findAndReplaceDialog;
 
 	public XmlSourceEditorView( XmlEditor<XmlDocument> xmlEditor, T modelItem )
 	{
@@ -98,10 +116,12 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
 
 	protected void buildUI()
 	{
-		editArea = JXEditTextArea.createXmlEditor( false );
+		editArea = new RSyntaxTextArea( 20, 60 );
+		editArea.setSyntaxEditingStyle( SyntaxConstants.SYNTAX_STYLE_XML );
+		editArea.setCodeFoldingEnabled( true );
+		editArea.setAntiAliasingEnabled( true );
 		editArea.setMinimumSize( new Dimension( 50, 50 ) );
 		editArea.setCaretPosition( 0 );
-		editArea.setDiscardEditsOnSet( false );
 		editArea.setEnabled( false );
 		editArea.setBorder( BorderFactory.createMatteBorder( 0, 2, 0, 0, Color.WHITE ) );
 
@@ -135,13 +155,6 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
 		splitter.setDividerSize( 0 );
 		splitter.setOneTouchExpandable( true );
 
-		lineNumbersPanel = new LineNumbersPanel( editArea );
-		lineNumbersPanel.setVisible( SoapUI.getSettings().getBoolean( UISettings.SHOW_XML_LINE_NUMBERS ) );
-
-		editorPopup = new JPopupMenu();
-		buildPopup( editorPopup, editArea );
-
-		editArea.setRightClickPopup( editorPopup );
 		editArea.getDocument().addDocumentListener( new DocumentListenerAdapter()
 		{
 
@@ -156,24 +169,35 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
 			}
 		} );
 
-		editArea.getInputHandler().addKeyBinding( "A+V", validateXmlAction );
-		editArea.getInputHandler().addKeyBinding( "A+F", formatXmlAction );
-		editArea.getInputHandler().addKeyBinding( "C+S", saveXmlTextAreaAction );
-		editArea.getInputHandler().addKeyBinding( "ALT+L", new ActionListener()
-		{
-
-			public void actionPerformed( ActionEvent e )
-			{
-				lineNumbersPanel.setVisible( !lineNumbersPanel.isVisible() );
-				toggleLineNumbersMenuItem.setSelected( lineNumbersPanel.isVisible() );
-			}
-		} );
-
 		JPanel p = new JPanel( new BorderLayout() );
-		p.add( editArea, BorderLayout.CENTER );
-		p.add( lineNumbersPanel, BorderLayout.WEST );
+		editorScrollPane = new RTextScrollPane( editArea );
 
-		editorScrollPane = new JScrollPane( p );
+		buildPopup( editArea.getPopupMenu(), editArea );
+
+		if( UISupport.isMac() )
+		{
+			editArea.getInputMap().put( KeyStroke.getKeyStroke( "shift meta V" ), validateXmlAction );
+			editArea.getInputMap().put( KeyStroke.getKeyStroke( "shift meta F" ), formatXmlAction );
+			editArea.getInputMap().put( KeyStroke.getKeyStroke( "meta S" ), saveXmlTextAreaAction );
+			editArea.getInputMap().put( KeyStroke.getKeyStroke( "meta L" ), loadXmlTextAreaAction );
+			editArea.getInputMap().put( KeyStroke.getKeyStroke( "control L" ), enableLineNumbersAction );
+			editArea.getInputMap().put( KeyStroke.getKeyStroke( "control meta L" ), goToLineAction );
+		}
+		else
+		{
+			editArea.getInputMap().put( KeyStroke.getKeyStroke( "alt V" ), validateXmlAction );
+			editArea.getInputMap().put( KeyStroke.getKeyStroke( "alt F" ), formatXmlAction );
+			editArea.getInputMap().put( KeyStroke.getKeyStroke( "ctrl S" ), saveXmlTextAreaAction );
+			editArea.getInputMap().put( KeyStroke.getKeyStroke( "ctrl L" ), loadXmlTextAreaAction );
+			editArea.getInputMap().put( KeyStroke.getKeyStroke( "alt L" ), enableLineNumbersAction );
+			editArea.getInputMap().put( KeyStroke.getKeyStroke( "control alt L" ), goToLineAction );
+		}
+		editArea.getInputMap().put( KeyStroke.getKeyStroke( "F3" ), findAndReplaceDialog );
+
+		editorScrollPane.setLineNumbersEnabled( SoapUI.getSettings().getBoolean( UISettings.SHOW_XML_LINE_NUMBERS ) );
+		editorScrollPane.setFoldIndicatorEnabled( true );
+		p.add( editorScrollPane, BorderLayout.CENTER );
+
 		splitter.setTopComponent( editorScrollPane );
 		splitter.setBottomComponent( errorScrollPane );
 		splitter.setDividerLocation( 1.0 );
@@ -192,7 +216,7 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
 		return modelItem;
 	}
 
-	protected void buildPopup( JPopupMenu inputPopup, JXEditTextArea editArea )
+	protected void buildPopup( JPopupMenu inputPopup, RSyntaxTextArea editArea )
 	{
 		this.inputPopup = inputPopup;
 		validateXmlAction = new ValidateMessageXmlAction();
@@ -200,35 +224,31 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
 		saveXmlTextAreaAction = new SaveXmlTextAreaAction( editArea, "Save" );
 		loadXmlTextAreaAction = new LoadXmlTextAreaAction( editArea, "Load" );
 		insertBase64FileTextAreaAction = new InsertBase64FileTextAreaAction( editArea, "Insert File as Base64" );
-		toggleLineNumbersMenuItem = new JCheckBoxMenuItem( "Show Line Numbers", lineNumbersPanel.isVisible() );
-		toggleLineNumbersMenuItem.setAccelerator( UISupport.getKeyStroke( "alt L" ) );
-		toggleLineNumbersMenuItem.addActionListener( new ActionListener()
+		enableLineNumbersAction = new EnableLineNumbersAction( "Toggle Line Numbers" );
+		goToLineAction = new GoToLineAction( editArea, "Go To Line" );
+		findAndReplaceDialog = new FindAndReplaceDialogView();
+
+		int cnt = inputPopup.getComponentCount();
+		for( int i = cnt - 1; i >= 0; i-- )
 		{
-
-			public void actionPerformed( ActionEvent e )
+			if( inputPopup.getComponent( i ) instanceof JSeparator )
 			{
-				lineNumbersPanel.setVisible( toggleLineNumbersMenuItem.isSelected() );
+				inputPopup.remove( inputPopup.getComponent( i ) );
 			}
-		} );
+		}
 
-		inputPopup.add( validateXmlAction );
-		inputPopup.add( formatXmlAction );
+		inputPopup.insert( validateXmlAction, 0 );
+		inputPopup.insert( formatXmlAction, 1 );
 		inputPopup.addSeparator();
-		inputPopup.add( editArea.getUndoAction() );
-		inputPopup.add( editArea.getRedoAction() );
-		inputPopup.add( editArea.createCopyAction() );
-		inputPopup.add( editArea.createCutAction() );
-		inputPopup.add( editArea.createPasteAction() );
+		inputPopup.add( findAndReplaceDialog );
 		inputPopup.addSeparator();
-		inputPopup.add( editArea.getFindAndReplaceAction() );
-		inputPopup.addSeparator();
-		inputPopup.add( editArea.getGoToLineAction() );
-		inputPopup.add( toggleLineNumbersMenuItem );
-
+		inputPopup.add( goToLineAction );
+		inputPopup.add( enableLineNumbersAction );
 		inputPopup.addSeparator();
 		inputPopup.add( saveXmlTextAreaAction );
 		inputPopup.add( loadXmlTextAreaAction );
 		inputPopup.add( insertBase64FileTextAreaAction );
+
 	}
 
 	@Override
@@ -240,16 +260,357 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
 		modelItem = null;
 	}
 
+	private final class FindAndReplaceDialogView extends AbstractAction
+	{
+		private JDialog dialog;
+		private JCheckBox caseCheck;
+		private JRadioButton allButton;
+		private JRadioButton selectedLinesButton;
+		private JRadioButton forwardButton;
+		private JRadioButton backwardButton;
+		private JCheckBox wholeWordCheck;
+		private JButton findButton;
+		private JButton replaceButton;
+		private JButton replaceAllButton;
+		private JComboBox findCombo;
+		private JComboBox replaceCombo;
+		private JCheckBox wrapCheck;
+
+		public FindAndReplaceDialogView()
+		{
+			super( "Find / Replace" );
+			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "F3" ) );
+		}
+
+		@Override
+		public void actionPerformed( ActionEvent arg0 )
+		{
+			show();
+		}
+
+		public void show()
+		{
+			if( dialog == null )
+				buildDialog();
+
+			editArea.requestFocusInWindow();
+
+			replaceCombo.setEnabled( editArea.isEditable() );
+			replaceAllButton.setEnabled( editArea.isEditable() );
+			replaceButton.setEnabled( editArea.isEditable() );
+
+			UISupport.showDialog( dialog );
+			findCombo.getEditor().selectAll();
+			findCombo.requestFocus();
+		}
+
+		private void buildDialog()
+		{
+			Window window = SwingUtilities.windowForComponent( editArea );
+
+			dialog = new JDialog( window, "Find / Replace" );
+			dialog.setModal( false );
+
+			JPanel panel = new JPanel( new BorderLayout() );
+			findCombo = new JComboBox();
+			findCombo.setEditable( true );
+			replaceCombo = new JComboBox();
+			replaceCombo.setEditable( true );
+
+			// create inputs
+			GridLayout gridLayout = new GridLayout( 2, 2 );
+			gridLayout.setVgap( 5 );
+			JPanel inputPanel = new JPanel( gridLayout );
+			inputPanel.add( new JLabel( "Find:" ) );
+			inputPanel.add( findCombo );
+			inputPanel.add( new JLabel( "Replace with:" ) );
+			inputPanel.add( replaceCombo );
+			inputPanel.setBorder( BorderFactory.createEmptyBorder( 8, 8, 8, 8 ) );
+
+			// create direction panel
+			ButtonGroup directionGroup = new ButtonGroup();
+			forwardButton = new JRadioButton( "Forward", true );
+			forwardButton.setBorder( BorderFactory.createEmptyBorder( 3, 3, 3, 3 ) );
+			directionGroup.add( forwardButton );
+			backwardButton = new JRadioButton( "Backward" );
+			backwardButton.setBorder( BorderFactory.createEmptyBorder( 3, 3, 3, 3 ) );
+			directionGroup.add( backwardButton );
+
+			JPanel directionPanel = new JPanel( new GridLayout( 2, 1 ) );
+			directionPanel.add( forwardButton );
+			directionPanel.add( backwardButton );
+			directionPanel.setBorder( BorderFactory.createTitledBorder( "Direction" ) );
+
+			// create scope panel
+			ButtonGroup scopeGroup = new ButtonGroup();
+			allButton = new JRadioButton( "All", true );
+			allButton.setBorder( BorderFactory.createEmptyBorder( 3, 3, 3, 3 ) );
+			selectedLinesButton = new JRadioButton( "Selected Lines" );
+			selectedLinesButton.setBorder( BorderFactory.createEmptyBorder( 3, 3, 3, 3 ) );
+			scopeGroup.add( allButton );
+			scopeGroup.add( selectedLinesButton );
+
+			JPanel scopePanel = new JPanel( new GridLayout( 2, 1 ) );
+			scopePanel.add( allButton );
+			scopePanel.add( selectedLinesButton );
+			scopePanel.setBorder( BorderFactory.createTitledBorder( "Scope" ) );
+
+			// create options
+			caseCheck = new JCheckBox( "Case Sensitive" );
+			caseCheck.setBorder( BorderFactory.createEmptyBorder( 3, 3, 3, 3 ) );
+			wholeWordCheck = new JCheckBox( "Whole Word" );
+			wholeWordCheck.setBorder( BorderFactory.createEmptyBorder( 3, 3, 3, 3 ) );
+			wrapCheck = new JCheckBox( "Wrap Search" );
+			wrapCheck.setBorder( BorderFactory.createEmptyBorder( 3, 3, 3, 3 ) );
+			JPanel optionsPanel = new JPanel( new GridLayout( 3, 1 ) );
+			optionsPanel.add( caseCheck );
+			optionsPanel.add( wholeWordCheck );
+			optionsPanel.add( wrapCheck );
+			optionsPanel.setBorder( BorderFactory.createTitledBorder( "Options" ) );
+
+			// create panel with options
+			JPanel options = new JPanel( new GridLayout( 1, 2 ) );
+
+			JPanel radios = new JPanel( new GridLayout( 2, 1 ) );
+			radios.add( directionPanel );
+			radios.add( scopePanel );
+
+			options.add( optionsPanel );
+			options.add( radios );
+			options.setBorder( BorderFactory.createEmptyBorder( 0, 8, 0, 8 ) );
+
+			// create buttons
+			ButtonBarBuilder builder = new ButtonBarBuilder();
+			findButton = new JButton( new FindAction( findCombo ) );
+			builder.addFixed( findButton );
+			builder.addRelatedGap();
+			replaceButton = new JButton( new ReplaceAction() );
+			builder.addFixed( replaceButton );
+			builder.addRelatedGap();
+			replaceAllButton = new JButton( new ReplaceAllAction() );
+			builder.addFixed( replaceAllButton );
+			builder.addUnrelatedGap();
+			builder.addFixed( new JButton( new CloseAction( dialog ) ) );
+			builder.setBorder( BorderFactory.createEmptyBorder( 8, 8, 8, 8 ) );
+
+			// tie it up!
+			panel.add( inputPanel, BorderLayout.NORTH );
+			panel.add( options, BorderLayout.CENTER );
+			panel.add( builder.getPanel(), BorderLayout.SOUTH );
+
+			dialog.getContentPane().add( panel );
+			dialog.pack();
+			UISupport.initDialogActions( dialog, null, findButton );
+		}
+
+		protected SearchContext createSearchAndReplaceContext()
+		{
+			if( findCombo.getSelectedItem() == null )
+			{
+				return null;
+			}
+			if( replaceCombo.getSelectedItem() == null )
+			{
+				return null;
+			}
+
+			String searchExpression = findCombo.getSelectedItem().toString();
+			String replacement = replaceCombo.getSelectedItem().toString();
+
+			SearchContext context = new SearchContext();
+			context.setSearchFor( searchExpression );
+			context.setReplaceWith( replacement );
+			context.setRegularExpression( false );
+			context.setSearchForward( forwardButton.isSelected() );
+			context.setWholeWord( false );
+			return context;
+		}
+
+		protected SearchContext createSearchContext()
+		{
+			if( findCombo.getSelectedItem() == null )
+			{
+				return null;
+			}
+
+			String searchExpression = findCombo.getSelectedItem().toString();
+
+			SearchContext context = new SearchContext();
+			context.setSearchFor( searchExpression );
+			context.setRegularExpression( false );
+			context.setSearchForward( forwardButton.isSelected() );
+			context.setWholeWord( false );
+			return context;
+		}
+
+		private class FindAction extends AbstractAction
+		{
+			public FindAction( JComboBox findCombo )
+			{
+				super( "Find/Find Next" );
+			}
+
+			@Override
+			public void actionPerformed( ActionEvent e )
+			{
+				SearchContext context = createSearchContext();
+
+				if( context == null )
+				{
+					return;
+				}
+
+				boolean found = SearchEngine.find( editArea, context );
+				if( !found )
+				{
+					UISupport.showErrorMessage( "String [" + context.getSearchFor() + "] not found" );
+				}
+			}
+		}
+
+		private class ReplaceAction extends AbstractAction
+		{
+			public ReplaceAction()
+			{
+				super( "Replace/Replace Next" );
+			}
+
+			@Override
+			public void actionPerformed( ActionEvent e )
+			{
+				SearchContext context = createSearchAndReplaceContext();
+
+				if( context == null )
+				{
+					return;
+				}
+
+				boolean found = SearchEngine.replace( editArea, context );
+				if( !found )
+				{
+					UISupport.showErrorMessage( "String [" + context.getSearchFor() + "] not found" );
+				}
+			}
+
+		}
+
+		private class ReplaceAllAction extends AbstractAction
+		{
+			public ReplaceAllAction()
+			{
+				super( "Replace All" );
+			}
+
+			@Override
+			public void actionPerformed( ActionEvent e )
+			{
+				SearchContext context = createSearchAndReplaceContext();
+
+				if( context == null )
+				{
+					return;
+				}
+
+				int replaceCount = SearchEngine.replaceAll( editArea, context );
+				if( replaceCount <= 0 )
+				{
+					UISupport.showErrorMessage( "String [" + context.getSearchFor() + "] not found" );
+				}
+			}
+
+		}
+
+		private class CloseAction extends AbstractAction
+		{
+			final JDialog dialog;
+
+			public CloseAction( JDialog d )
+			{
+				super( "Close" );
+				dialog = d;
+			}
+
+			public void actionPerformed( ActionEvent e )
+			{
+				dialog.setVisible( false );
+			}
+		}
+
+	}
+
+	private final class EnableLineNumbersAction extends AbstractAction
+	{
+		EnableLineNumbersAction( String title )
+		{
+			super( title );
+			if( UISupport.isMac() )
+			{
+				putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "ctrl L" ) );
+			}
+			else
+			{
+				putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "ctrl alt L" ) );
+			}
+		}
+
+		@Override
+		public void actionPerformed( ActionEvent e )
+		{
+			editorScrollPane.setLineNumbersEnabled( !editorScrollPane.getLineNumbersEnabled() );
+		}
+
+	}
+
+	//	private final class GoToLineAction extends AbstractAction
+	//	{
+	//		public GoToLineAction( String title )
+	//		{
+	//			super( title );
+	//			putValue( Action.SHORT_DESCRIPTION, "Moves the caret to the specified line" );
+	//			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "control meta L" ) );
+	//		}
+	//
+	//		public void actionPerformed( ActionEvent e )
+	//		{
+	//			String line = UISupport.prompt( "Enter line-number to (1.." + ( editArea.getLineCount() ) + ")", "Go To Line",
+	//					String.valueOf( editArea.getCaretLineNumber() + 1 ) );
+	//
+	//			if( line != null )
+	//			{
+	//				try
+	//				{
+	//					int ln = Integer.parseInt( line ) - 1;
+	//
+	//					if( ln < 0 )
+	//					{
+	//						ln = 0;
+	//					}
+	//
+	//					if( ln >= editArea.getLineCount() )
+	//					{
+	//						ln = editArea.getLineCount() - 1;
+	//					}
+	//
+	//					editArea.scrollRectToVisible( editArea.modelToView( editArea.getLineStartOffset( ln ) ) );
+	//					editArea.setCaretPosition( editArea.getLineStartOffset( ln ) );
+	//				}
+	//				catch( Exception e1 )
+	//				{
+	//				}
+	//			}
+	//		}
+	//	}
+
 	private final static class ValidationListMouseAdapter extends MouseAdapter
 	{
 		private final JList list;
 
-		private final JXEditTextArea textArea;
+		private final RSyntaxTextArea textArea;
 
-		public ValidationListMouseAdapter( JList list, JXEditTextArea textArea )
+		public ValidationListMouseAdapter( JList list, RSyntaxTextArea editArea )
 		{
 			this.list = list;
-			this.textArea = textArea;
+			this.textArea = editArea;
 		}
 
 		public void mouseClicked( MouseEvent e )
@@ -267,7 +628,14 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
 				ValidationError error = ( ValidationError )obj;
 				if( error.getLineNumber() >= 0 )
 				{
-					textArea.setCaretPosition( textArea.getLineStartOffset( error.getLineNumber() - 1 ) );
+					try
+					{
+						textArea.setCaretPosition( textArea.getLineStartOffset( error.getLineNumber() - 1 ) );
+					}
+					catch( BadLocationException e1 )
+					{
+						SoapUI.logError( e1, "Unable to set the caret position. This is most likely a bug." );
+					}
 					textArea.requestFocus();
 				}
 				else
@@ -278,10 +646,50 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
 		}
 	}
 
-	public JXEditTextArea getInputArea()
+	public RSyntaxTextArea getInputArea()
 	{
 		getComponent();
 		return editArea;
+	}
+
+	public static class JEditorStatusBarTargetProxy implements JEditorStatusBarTarget
+	{
+		private final RSyntaxTextArea textArea;
+
+		public JEditorStatusBarTargetProxy( RSyntaxTextArea area )
+		{
+			textArea = area;
+		}
+
+		@Override
+		public void addCaretListener( CaretListener listener )
+		{
+			textArea.addCaretListener( listener );
+		}
+
+		@Override
+		public int getCaretPosition()
+		{
+			return textArea.getCaretPosition();
+		}
+
+		@Override
+		public void removeCaretListener( CaretListener listener )
+		{
+			textArea.removeCaretListener( listener );
+		}
+
+		@Override
+		public int getLineStartOffset( int line ) throws Exception
+		{
+			return textArea.getLineStartOffset( line );
+		}
+
+		@Override
+		public int getLineOfOffset( int offset ) throws Exception
+		{
+			return textArea.getLineOfOffset( offset );
+		}
 	}
 
 	public void setEditable( boolean enabled )
@@ -294,8 +702,6 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
 	{
 		try
 		{
-			// XmlObject.Factory.parse( xml, new XmlOptions().setLoadLineNumbers()
-			// );
 			XmlUtils.createXmlObject( xml, new XmlOptions().setLoadLineNumbers() );
 		}
 		catch( XmlException e )
@@ -327,7 +733,14 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
 		public ValidateMessageXmlAction()
 		{
 			super( "Validate" );
-			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "alt V" ) );
+			if( UISupport.isMac() )
+			{
+				putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "shift meta V" ) );
+			}
+			else
+			{
+				putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "alt V" ) );
+			}
 		}
 
 		public void actionPerformed( ActionEvent e )
@@ -367,11 +780,10 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
 		int line = location.getLine() - 1;
 		if( location != null && line >= 0 )
 		{
-			int caretLine = editArea.getCaretLine();
-			int offset = editArea.getLineStartOffset( line );
-
 			try
 			{
+				int caretLine = editArea.getCaretLineNumber();
+				int offset = editArea.getLineStartOffset( line );
 				editArea.setCaretPosition( offset + location.getColumn() );
 				int scrollLine = line + ( line > caretLine ? 3 : -3 );
 				if( scrollLine >= editArea.getLineCount() )
@@ -379,10 +791,14 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
 				else if( scrollLine < 0 )
 					scrollLine = 0;
 
-				editArea.scrollTo( scrollLine, location.getColumn() );
+				editArea.scrollRectToVisible( new Rectangle( scrollLine, location.getColumn() ) );
 			}
 			catch( RuntimeException e )
 			{
+			}
+			catch( BadLocationException e )
+			{
+				SoapUI.logError( e, "Unable to set the location in the XML document." );
 			}
 		}
 	}
@@ -391,14 +807,26 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
 	{
 		if( editArea == null )
 			return -1;
-		return editArea.getCaretLine();
+		return editArea.getCaretLineNumber();
 	}
 
 	public int getCurrentColumn()
 	{
 		if( editArea == null )
 			return -1;
-		return editArea.getCaretColumn();
+
+		try
+		{
+			int pos = editArea.getCaretPosition();
+			int line = editArea.getLineOfOffset( pos );
+
+			return pos - editArea.getLineStartOffset( line );
+		}
+		catch( BadLocationException e )
+		{
+			SoapUI.logError( e, "Unable to get the current column. " );
+			return -1;
+		}
 	}
 
 	public String getText()
@@ -473,7 +901,7 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
 
 	public JPopupMenu getEditorPopup()
 	{
-		return editorPopup;
+		return editArea.getPopupMenu();
 	}
 
 	public boolean hasFocus()

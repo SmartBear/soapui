@@ -20,9 +20,10 @@ import java.io.IOException;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.xml.JXEditTextArea;
 
 /**
  * Loads XML into a JXmlTextArea from a file
@@ -32,15 +33,23 @@ import com.eviware.soapui.support.xml.JXEditTextArea;
 
 public class LoadXmlTextAreaAction extends AbstractAction
 {
-	private final JXEditTextArea textArea;
+	private final RSyntaxTextArea textArea;
 	private String dialogTitle;
 
-	public LoadXmlTextAreaAction( JXEditTextArea textArea, String dialogTitle )
+	public LoadXmlTextAreaAction( RSyntaxTextArea textArea, String dialogTitle )
 	{
 		super( "Load from.." );
 		this.textArea = textArea;
 		this.dialogTitle = dialogTitle;
-		putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "menu L" ) );
+		if( UISupport.isMac() )
+		{
+			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "meta L" ) );
+		}
+		else
+		{
+			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "ctrl L" ) );
+		}
+
 	}
 
 	public void actionPerformed( ActionEvent e )

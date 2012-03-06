@@ -16,6 +16,9 @@ import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JPopupMenu;
 import javax.swing.JSeparator;
+import javax.swing.KeyStroke;
+
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 import com.eviware.soapui.impl.support.components.ModelItemXmlEditor;
 import com.eviware.soapui.impl.support.components.RequestXmlDocument;
@@ -38,7 +41,6 @@ import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.editor.views.xml.source.XmlSourceEditorView;
 import com.eviware.soapui.support.editor.xml.XmlDocument;
 import com.eviware.soapui.support.editor.xml.support.DefaultXmlDocument;
-import com.eviware.soapui.support.xml.JXEditTextArea;
 
 /**
  * Abstract DesktopPanel for WsdlRequests
@@ -121,8 +123,8 @@ public abstract class AbstractWsdlRequestDesktopPanel<T extends ModelItem, T2 ex
 			super( document );
 
 			XmlSourceEditorView<?> editor = getSourceEditor();
-			JXEditTextArea inputArea = editor.getInputArea();
-			inputArea.getInputHandler().addKeyBinding( "F5", recreateButton.getAction() );
+			RSyntaxTextArea inputArea = editor.getInputArea();
+			inputArea.getInputMap().put( KeyStroke.getKeyStroke( "F5" ), recreateButton.getAction() );
 		}
 	}
 

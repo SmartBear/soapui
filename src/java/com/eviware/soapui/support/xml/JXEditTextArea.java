@@ -55,9 +55,9 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.actions.FindAndReplaceDialog;
 import com.eviware.soapui.support.actions.FindAndReplaceable;
 import com.eviware.soapui.support.components.JEditorStatusBar.JEditorStatusBarTarget;
-import com.eviware.soapui.support.xml.actions.FormatXmlAction;
-import com.eviware.soapui.support.xml.actions.LoadXmlTextAreaAction;
-import com.eviware.soapui.support.xml.actions.SaveXmlTextAreaAction;
+import com.eviware.soapui.support.xml.actions.FormatXmlJEditAction;
+import com.eviware.soapui.support.xml.actions.LoadXmlJEditTextAreaAction;
+import com.eviware.soapui.support.xml.actions.SaveXmlJEditTextAreaAction;
 
 /**
  * JEditTextArea extension targeted specifically at XML-editing.
@@ -86,7 +86,7 @@ public class JXEditTextArea extends JEditTextArea implements UndoableEditListene
 		{
 			JPopupMenu inputPopup = new JPopupMenu();
 
-			inputPopup.add( new FormatXmlAction( editArea ) );
+			inputPopup.add( new FormatXmlJEditAction( editArea ) );
 			inputPopup.addSeparator();
 			inputPopup.add( editArea.getUndoAction() );
 			inputPopup.add( editArea.getRedoAction() );
@@ -99,8 +99,8 @@ public class JXEditTextArea extends JEditTextArea implements UndoableEditListene
 			inputPopup.add( editArea.getGoToLineAction() );
 
 			inputPopup.addSeparator();
-			inputPopup.add( new SaveXmlTextAreaAction( editArea, "Save Editor Content" ) );
-			inputPopup.add( new LoadXmlTextAreaAction( editArea, "Load Editor Content" ) );
+			inputPopup.add( new SaveXmlJEditTextAreaAction( editArea, "Save Editor Content" ) );
+			inputPopup.add( new LoadXmlJEditTextAreaAction( editArea, "Load Editor Content" ) );
 
 			editArea.setRightClickPopup( inputPopup );
 		}

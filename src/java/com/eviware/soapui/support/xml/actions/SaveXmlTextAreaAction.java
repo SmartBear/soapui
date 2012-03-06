@@ -23,10 +23,10 @@ import javax.swing.Action;
 import org.apache.log4j.Logger;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.xml.JXEditTextArea;
 import com.eviware.soapui.support.xml.XmlUtils;
 
 /**
@@ -37,16 +37,23 @@ import com.eviware.soapui.support.xml.XmlUtils;
 
 public class SaveXmlTextAreaAction extends AbstractAction
 {
-	private final JXEditTextArea textArea;
+	private final RSyntaxTextArea textArea;
 	private String dialogTitle;
 	private static final Logger log = Logger.getLogger( SaveXmlTextAreaAction.class );
 
-	public SaveXmlTextAreaAction( JXEditTextArea textArea, String dialogTitle )
+	public SaveXmlTextAreaAction( RSyntaxTextArea editArea, String dialogTitle )
 	{
 		super( "Save as.." );
-		this.textArea = textArea;
+		this.textArea = editArea;
 		this.dialogTitle = dialogTitle;
-		putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "menu S" ) );
+		if( UISupport.isMac() )
+		{
+			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "menu S" ) );
+		}
+		else
+		{
+			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "ctrl S" ) );
+		}
 	}
 
 	public void actionPerformed( ActionEvent e )

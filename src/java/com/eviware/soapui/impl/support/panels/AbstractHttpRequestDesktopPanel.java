@@ -31,11 +31,13 @@ import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JToggleButton;
+import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import org.apache.log4j.Logger;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
@@ -54,7 +56,6 @@ import com.eviware.soapui.model.iface.Submit;
 import com.eviware.soapui.model.iface.Submit.Status;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.iface.SubmitListener;
-import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.StringUtils;
@@ -63,9 +64,9 @@ import com.eviware.soapui.support.actions.ChangeSplitPaneOrientationAction;
 import com.eviware.soapui.support.components.JEditorStatusBarWithProgress;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.editor.views.xml.source.XmlSourceEditorView;
+import com.eviware.soapui.support.editor.views.xml.source.XmlSourceEditorView.JEditorStatusBarTargetProxy;
 import com.eviware.soapui.support.editor.xml.XmlDocument;
 import com.eviware.soapui.support.swing.SoapUISplitPaneUI;
-import com.eviware.soapui.support.xml.JXEditTextArea;
 import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
 
 /**
@@ -339,7 +340,7 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 			RequestMessageXmlEditor<T2, T3>
 	{
 		private InputAreaFocusListener inputAreaFocusListener;
-		private JXEditTextArea inputArea;
+		private RSyntaxTextArea inputArea;
 
 		public AbstractHttpRequestMessageEditor( T3 document )
 		{
@@ -349,10 +350,21 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 			if( editor != null )
 			{
 				inputArea = editor.getInputArea();
-				inputArea.getInputHandler().addKeyBinding( "A+ENTER", submitButton.getAction() );
-				inputArea.getInputHandler().addKeyBinding( "A+X", cancelButton.getAction() );
-				inputArea.getInputHandler().addKeyBinding( "AC+TAB", moveFocusAction );
-				inputArea.getInputHandler().addKeyBinding( "C+F4", closePanelAction );
+
+				if( UISupport.isMac() )
+				{
+					inputArea.getInputMap().put( KeyStroke.getKeyStroke( "meta ENTER" ), submitButton.getAction() );
+					inputArea.getInputMap().put( KeyStroke.getKeyStroke( "meta X" ), cancelButton.getAction() );
+					inputArea.getInputMap().put( KeyStroke.getKeyStroke( "ctrl meta TAB" ), moveFocusAction );
+					inputArea.getInputMap().put( KeyStroke.getKeyStroke( "ctrl F4" ), closePanelAction );
+				}
+				else
+				{
+					inputArea.getInputMap().put( KeyStroke.getKeyStroke( "alt ENTER" ), submitButton.getAction() );
+					inputArea.getInputMap().put( KeyStroke.getKeyStroke( "alt X" ), cancelButton.getAction() );
+					inputArea.getInputMap().put( KeyStroke.getKeyStroke( "ctrl alt TAB" ), moveFocusAction );
+					inputArea.getInputMap().put( KeyStroke.getKeyStroke( "ctrl F4" ), closePanelAction );
+				}
 
 				inputAreaFocusListener = new InputAreaFocusListener( editor );
 				inputArea.addFocusListener( inputAreaFocusListener );
@@ -373,7 +385,7 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 	public abstract class AbstractHttpResponseMessageEditor<T3 extends XmlDocument> extends
 			ResponseMessageXmlEditor<T2, T3>
 	{
-		private JXEditTextArea inputArea;
+		private RSyntaxTextArea inputArea;
 		private ResultAreaFocusListener resultAreaFocusListener;
 
 		public AbstractHttpResponseMessageEditor( T3 document )
@@ -388,10 +400,20 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 				resultAreaFocusListener = new ResultAreaFocusListener( editor );
 				inputArea.addFocusListener( resultAreaFocusListener );
 
-				inputArea.getInputHandler().addKeyBinding( "A+ENTER", submitButton.getAction() );
-				inputArea.getInputHandler().addKeyBinding( "A+X", cancelButton.getAction() );
-				inputArea.getInputHandler().addKeyBinding( "AC+TAB", moveFocusAction );
-				inputArea.getInputHandler().addKeyBinding( "C+F4", closePanelAction );
+				if( UISupport.isMac() )
+				{
+					inputArea.getInputMap().put( KeyStroke.getKeyStroke( "meta ENTER" ), submitButton.getAction() );
+					inputArea.getInputMap().put( KeyStroke.getKeyStroke( "meta X" ), cancelButton.getAction() );
+					inputArea.getInputMap().put( KeyStroke.getKeyStroke( "ctrl meta TAB" ), moveFocusAction );
+					inputArea.getInputMap().put( KeyStroke.getKeyStroke( "ctrl F4" ), closePanelAction );
+				}
+				else
+				{
+					inputArea.getInputMap().put( KeyStroke.getKeyStroke( "alt ENTER" ), submitButton.getAction() );
+					inputArea.getInputMap().put( KeyStroke.getKeyStroke( "alt X" ), cancelButton.getAction() );
+					inputArea.getInputMap().put( KeyStroke.getKeyStroke( "ctrl alt TAB" ), moveFocusAction );
+					inputArea.getInputMap().put( KeyStroke.getKeyStroke( "ctrl F4" ), closePanelAction );
+				}
 			}
 		}
 
@@ -418,7 +440,7 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 		{
 			responseHasFocus = false;
 
-			statusBar.setTarget( sourceEditor.getInputArea() );
+			statusBar.setTarget( new JEditorStatusBarTargetProxy( sourceEditor.getInputArea() ) );
 			if( !splitButton.isEnabled() )
 			{
 				requestTabs.setSelectedIndex( 0 );
@@ -460,7 +482,7 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 		{
 			responseHasFocus = true;
 
-			statusBar.setTarget( sourceEditor.getInputArea() );
+			statusBar.setTarget( new JEditorStatusBarTargetProxy( sourceEditor.getInputArea() ) );
 			if( !splitButton.isEnabled() )
 			{
 				requestTabs.setSelectedIndex( 1 );

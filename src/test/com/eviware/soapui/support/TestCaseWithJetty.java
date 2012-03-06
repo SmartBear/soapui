@@ -18,7 +18,8 @@ import java.io.File;
 
 import junit.framework.JUnit4TestAdapter;
 
-import org.junit.Before;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mortbay.jetty.Handler;
 import org.mortbay.jetty.Server;
@@ -37,8 +38,8 @@ public class TestCaseWithJetty
 
 	private static Server server;
 
-	@Before
-	public synchronized void setUp() throws Exception
+	@BeforeClass
+	public static void setUp() throws Exception
 	{
 		if( server != null )
 		{
@@ -61,6 +62,20 @@ public class TestCaseWithJetty
 		{
 			SoapUI.logError( e );
 		}
+	}
+
+	@AfterClass
+	public static void stop() throws Exception
+	{
+		try
+		{
+			server.stop();
+		}
+		catch( Exception e )
+		{
+			SoapUI.logError( e );
+		}
+
 	}
 
 	@Test

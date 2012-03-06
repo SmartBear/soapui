@@ -21,9 +21,9 @@ import javax.swing.Action;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.xml.JXEditTextArea;
 
 /**
  * Inserts a file as base64 into a JXmlTextArea at the current cursor position.
@@ -34,16 +34,23 @@ import com.eviware.soapui.support.xml.JXEditTextArea;
 
 public class InsertBase64FileTextAreaAction extends AbstractAction
 {
-	private final JXEditTextArea textArea;
+	private final RSyntaxTextArea textArea;
 	private String dialogTitle;
 
-	public InsertBase64FileTextAreaAction( JXEditTextArea textArea, String dialogTitle )
+	public InsertBase64FileTextAreaAction( RSyntaxTextArea editArea, String dialogTitle )
 	{
 		super( "Insert file as Base64" );
 
-		this.textArea = textArea;
+		this.textArea = editArea;
 		this.dialogTitle = dialogTitle;
-		putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "menu G" ) );
+		if( UISupport.isMac() )
+		{
+			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "meta G" ) );
+		}
+		else
+		{
+			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "ctrl G" ) );
+		}
 	}
 
 	public void actionPerformed( ActionEvent e )

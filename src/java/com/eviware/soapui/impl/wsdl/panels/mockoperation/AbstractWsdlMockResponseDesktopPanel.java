@@ -34,6 +34,9 @@ import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
+import javax.swing.KeyStroke;
+
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
@@ -60,7 +63,6 @@ import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.editor.views.xml.source.XmlSourceEditorView;
 import com.eviware.soapui.support.editor.xml.XmlDocument;
 import com.eviware.soapui.support.swing.SoapUISplitPaneUI;
-import com.eviware.soapui.support.xml.JXEditTextArea;
 import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
 
 /**
@@ -309,13 +311,22 @@ public class AbstractWsdlMockResponseDesktopPanel<T extends ModelItem, T2 extend
 		protected XmlSourceEditorView<?> buildSourceEditor()
 		{
 			XmlSourceEditorView<?> editor = getSourceEditor();
-			JXEditTextArea inputArea = editor.getInputArea();
+			RSyntaxTextArea inputArea = editor.getInputArea();
 
 			inputArea.addFocusListener( new InputAreaFocusListener() );
 
-			inputArea.getInputHandler().addKeyBinding( "AC+TAB", moveFocusAction );
-			inputArea.getInputHandler().addKeyBinding( "F5", recreateButton.getAction() );
-			inputArea.getInputHandler().addKeyBinding( "C+F4", closePanelAction );
+			if( UISupport.isMac() )
+			{
+				inputArea.getInputMap().put( KeyStroke.getKeyStroke( "control meta TAB" ), moveFocusAction );
+				inputArea.getInputMap().put( KeyStroke.getKeyStroke( "F5" ), recreateButton.getAction() );
+				inputArea.getInputMap().put( KeyStroke.getKeyStroke( "ctrl F4" ), closePanelAction );
+			}
+			else
+			{
+				inputArea.getInputMap().put( KeyStroke.getKeyStroke( "control alt TAB" ), moveFocusAction );
+				inputArea.getInputMap().put( KeyStroke.getKeyStroke( "F5" ), recreateButton.getAction() );
+				inputArea.getInputMap().put( KeyStroke.getKeyStroke( "ctrl F4" ), closePanelAction );
+			}
 
 			return editor;
 		}
@@ -331,11 +342,19 @@ public class AbstractWsdlMockResponseDesktopPanel<T extends ModelItem, T2 extend
 
 			if( getModelItem().getMockOperation().isBidirectional() )
 			{
-				JXEditTextArea inputArea = editor.getInputArea();
+				RSyntaxTextArea inputArea = editor.getInputArea();
 				inputArea.addFocusListener( new ResultAreaFocusListener() );
 
-				inputArea.getInputHandler().addKeyBinding( "AC+TAB", moveFocusAction );
-				inputArea.getInputHandler().addKeyBinding( "C+F4", closePanelAction );
+				if( UISupport.isMac() )
+				{
+					inputArea.getInputMap().put( KeyStroke.getKeyStroke( "control meta TAB" ), moveFocusAction );
+					inputArea.getInputMap().put( KeyStroke.getKeyStroke( "ctrl F4" ), closePanelAction );
+				}
+				else
+				{
+					inputArea.getInputMap().put( KeyStroke.getKeyStroke( "control alt TAB" ), moveFocusAction );
+					inputArea.getInputMap().put( KeyStroke.getKeyStroke( "ctrl F4" ), closePanelAction );
+				}
 
 				// TODO Ericsson: This if test was changed and moved up. Ok?
 				// if( !getModelItem().getMockOperation().isOneWay())
@@ -353,7 +372,7 @@ public class AbstractWsdlMockResponseDesktopPanel<T extends ModelItem, T2 extend
 		{
 			responseHasFocus = false;
 
-			statusBar.setTarget( requestEditor.getSourceEditor().getInputArea() );
+			//			statusBar.setTarget( requestEditor.getSourceEditor().getInputArea() );
 			if( !splitButton.isEnabled() )
 			{
 				requestTabs.setSelectedIndex( 0 );
@@ -387,7 +406,8 @@ public class AbstractWsdlMockResponseDesktopPanel<T extends ModelItem, T2 extend
 		{
 			responseHasFocus = true;
 
-			statusBar.setTarget( responseEditor.getSourceEditor().getInputArea() );
+			// What to do with this ???
+			//			statusBar.setTarget( responseEditor.getSourceEditor().getInputArea() );
 			if( !splitButton.isEnabled() )
 			{
 				requestTabs.setSelectedIndex( 1 );
