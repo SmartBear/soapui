@@ -120,6 +120,8 @@ public class TestOnDemandPanel extends JPanel
 			jxbrowserDisabledPanel.setText( "Browser component disabled or not available on this platform" );
 			add( jxbrowserDisabledPanel, BorderLayout.CENTER );
 		}
+
+		openInInternalBrowser( FIRST_PAGE_URL );
 	}
 
 	protected void setValidator()
@@ -177,7 +179,6 @@ public class TestOnDemandPanel extends JPanel
 		}
 		else
 		{
-
 			populateLocationsComboBox();
 		}
 	}
@@ -202,9 +203,6 @@ public class TestOnDemandPanel extends JPanel
 
 			locationsComboBox.setEnabled( true );
 			runAction.setEnabled( true );
-
-			openInInternalBrowser( getFirstPageURL() );
-
 		}
 
 		invalidate();
