@@ -137,6 +137,7 @@ public class TestOnDemandCaller
 		return locations;
 	}
 
+	// FIXME We should do some performance testing of large soapUI project files.
 	@NonNull
 	public String sendTestCase( @NonNull WsdlTestCase testCase, @NonNull Location location ) throws Exception
 	{

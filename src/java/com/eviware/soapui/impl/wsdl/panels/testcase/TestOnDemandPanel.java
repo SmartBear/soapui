@@ -230,7 +230,7 @@ public class TestOnDemandPanel extends JPanel
 
 	private void openInInternalBrowser( String url )
 	{
-		if( SoapUI.isJXBrowserDisabled( false ) && browser != null )
+		if( !SoapUI.isJXBrowserDisabled( true ) && browser != null )
 		{
 			browser.navigate( url, null );
 		}
