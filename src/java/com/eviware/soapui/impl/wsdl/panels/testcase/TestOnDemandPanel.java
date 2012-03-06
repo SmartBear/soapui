@@ -17,6 +17,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,9 +27,8 @@ import javax.swing.JComboBox;
 import javax.swing.JEditorPane;
 import javax.swing.JPanel;
 
-import org.apache.log4j.Logger;
-
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.SoapUISystemProperties;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
@@ -53,15 +53,24 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  */
 public class TestOnDemandPanel extends JPanel
 {
-	private static final String NO_LOCATIONS_FOUND_MESSAGE = "No locations found";
+	// FIXME This should be a URL on our servers. Replace with the real URL when it has been developed by our web dev team.
+	private static final String FIRST_PAGE_URL = "http://www.soapui.org";
+
+	private static final String GET_MORE_LOCATIONS_URL = "http://www2.smartbear.com/AlertSite_Monitor_APIs_Learn_More.html";
+	private static final String GET_MORE_LOCATIONS_MESSAGE = "Get more locations...";
+
 	private static final String INITIALIZING_MESSAGE = "Initializing...";
+
+	private static final String NO_LOCATIONS_FOUND_MESSAGE = "No locations found";
+
 	private static final String COULD_NOT_GET_LOCATIONS_MESSAGE = "Could not get Test On Demand Locations. Check your network connection.";
 	private static final String COULD_NOT_UPLOAD_MESSAGE = "Could not upload TestCase to the selected location";
+
 	private static final String UPLOAD_TEST_CASE_HEADING = "Upload TestCase";
 	private static final String UPLOADING_TEST_CASE_MESSAGE = "Uploading TestCase..";
 
 	@NonNull
-	private JComboBox locationsComboBox;
+	private JComboBox<Object> locationsComboBox;
 
 	@NonNull
 	private CustomNativeBrowserComponent browser;
@@ -75,8 +84,6 @@ public class TestOnDemandPanel extends JPanel
 	private final WsdlTestCase testCase;
 
 	protected DependencyValidator validator;
-
-	private static final Logger log = Logger.getLogger( TestOnDemandPanel.class );
 
 	public TestOnDemandPanel( WsdlTestCase testCase )
 	{
@@ -124,9 +131,12 @@ public class TestOnDemandPanel extends JPanel
 
 		runAction = new RunAction();
 		runAction.setEnabled( false );
+
+		locationsComboBox = buildInitializingLocationsComboBox();
+		locationsComboBox.addActionListener( new GetMoreLocationsAction() );
+
 		toolbar.addFixed( UISupport.createToolbarButton( runAction ) );
 		toolbar.addRelatedGap();
-		locationsComboBox = buildInitializingLocationsComboBox();
 		toolbar.addFixed( locationsComboBox );
 		toolbar.addGlue();
 		toolbar.addFixed( UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.ALERT_SITE_HELP_URL ) ) );
@@ -134,9 +144,9 @@ public class TestOnDemandPanel extends JPanel
 		return toolbar;
 	}
 
-	private JComboBox buildInitializingLocationsComboBox()
+	private JComboBox<Object> buildInitializingLocationsComboBox()
 	{
-		JComboBox initLocationsComboBox = new JComboBox();
+		JComboBox<Object> initLocationsComboBox = new JComboBox<Object>();
 		initLocationsComboBox.setPreferredSize( new Dimension( 150, 10 ) );
 		initLocationsComboBox.addItem( INITIALIZING_MESSAGE );
 		initLocationsComboBox.setEnabled( false );
@@ -162,10 +172,7 @@ public class TestOnDemandPanel extends JPanel
 		if( locationsCache.isEmpty() )
 		{
 			locationsComboBox.addItem( NO_LOCATIONS_FOUND_MESSAGE );
-			if( !SoapUI.isJXBrowserDisabled( true ) )
-			{
-				browser.navigate( SoapUI.PUSH_PAGE_ERROR_URL, null );
-			}
+			openInInternalBrowser( SoapUI.PUSH_PAGE_ERROR_URL );
 		}
 		else
 		{
@@ -173,11 +180,52 @@ public class TestOnDemandPanel extends JPanel
 			{
 				locationsComboBox.addItem( location );
 			}
+
+			locationsComboBox.addItem( GET_MORE_LOCATIONS_MESSAGE );
+
 			locationsComboBox.setEnabled( true );
 			runAction.setEnabled( true );
+
+			openInInternalBrowser( getFirstPageURL() );
 		}
 
 		invalidate();
+	}
+
+	// FIXME These guys should probably go in a utils class
+
+	private void openURLSafely( String url )
+
+	{
+		if( SoapUI.isJXBrowserDisabled( true ) )
+		{
+			Tools.openURL( url );
+		}
+		else
+		{
+			if( browser != null )
+			{
+				browser.navigate( url, null );
+			}
+		}
+	}
+
+	private void openInInternalBrowser( String url )
+	{
+		if( SoapUI.isJXBrowserDisabled( false ) && browser != null )
+		{
+			browser.navigate( url, null );
+		}
+	}
+
+	private String getFirstPageURL()
+	{
+		return System.getProperty( SoapUISystemProperties.TEST_ON_DEMAND_FIRST_PAGE_URL, FIRST_PAGE_URL );
+	}
+
+	private String getMoreLocationsURL()
+	{
+		return System.getProperty( SoapUISystemProperties.TEST_ON_DEMAND_GET_LOCATIONS_URL, GET_MORE_LOCATIONS_URL );
 	}
 
 	private class RunAction extends AbstractAction
@@ -201,7 +249,6 @@ public class TestOnDemandPanel extends JPanel
 			if( locationsComboBox != null )
 			{
 				Location selectedLocation = ( Location )locationsComboBox.getSelectedItem();
-				String redirectUrl = "";
 
 				XProgressDialog progressDialog = UISupport.getDialogs().createProgressDialog( UPLOAD_TEST_CASE_HEADING, 3,
 						UPLOADING_TEST_CASE_MESSAGE, false );
@@ -214,24 +261,46 @@ public class TestOnDemandPanel extends JPanel
 				{
 					SoapUI.logError( e );
 				}
-				redirectUrl = sendTestCaseWorker.getResult();
 
+				String redirectUrl = sendTestCaseWorker.getResult();
 				if( !Strings.isNullOrEmpty( redirectUrl ) )
 				{
-					if( SoapUI.isJXBrowserDisabled( true ) )
-					{
-						Tools.openURL( redirectUrl );
-					}
-					else
-					{
-						if( browser != null )
-						{
-							browser.navigate( redirectUrl, null );
-						}
-					}
+					openURLSafely( redirectUrl );
 				}
 			}
 		}
+	}
+
+	private class GetMoreLocationsAction implements ActionListener
+	{
+		@Override
+		public void actionPerformed( ActionEvent e )
+		{
+			if( locationsComboBox.getSelectedItem() != null
+					&& locationsComboBox.getSelectedItem().equals( GET_MORE_LOCATIONS_MESSAGE ) )
+			{
+				openURLSafely( getMoreLocationsURL() );
+				runAction.setEnabled( false );
+			}
+			else
+			{
+				if( locationsComboBox.isEnabled() && !runAction.isEnabled() )
+				{
+					openInInternalBrowser( getFirstPageURL() );
+					runAction.setEnabled( true );
+				}
+			}
+		}
+	}
+
+	private class CustomNativeBrowserComponent extends NativeBrowserComponent
+	{
+		public CustomNativeBrowserComponent( boolean addToolbar, boolean addStatusBar )
+		{
+			super( addToolbar, addStatusBar );
+		}
+
+		// TODO check if clicking a link opens a new window
 	}
 
 	private class SendTestCaseWorker extends WorkerAdapter
@@ -267,16 +336,6 @@ public class TestOnDemandPanel extends JPanel
 		}
 	}
 
-	private class CustomNativeBrowserComponent extends NativeBrowserComponent
-	{
-		public CustomNativeBrowserComponent( boolean addToolbar, boolean addStatusBar )
-		{
-			super( addToolbar, addStatusBar );
-		}
-
-		// TODO check if clicking a link opens a new window
-	}
-
 	// Used to prevent soapUI from halting while waiting for the Test On Demand server to respond
 	private class TestOnDemandCallerThread extends Thread
 	{
@@ -289,8 +348,7 @@ public class TestOnDemandPanel extends JPanel
 			}
 			catch( Exception e )
 			{
-				log.warn( COULD_NOT_GET_LOCATIONS_MESSAGE );
-				SoapUI.logError( e );
+				SoapUI.logError( e, COULD_NOT_GET_LOCATIONS_MESSAGE );
 			}
 			finally
 			{

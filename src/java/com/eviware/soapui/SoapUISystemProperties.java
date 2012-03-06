@@ -20,7 +20,10 @@ package com.eviware.soapui;
 public interface SoapUISystemProperties
 {
 	public final static String TEST_ON_DEMAND_HOST = "soapui.testondemand.host";
+	public static final String TEST_ON_DEMAND_FIRST_PAGE_URL = "soapui.testondemand.firstpage.url";
+	public static final String TEST_ON_DEMAND_GET_LOCATIONS_URL = "soapui.testondemand.getlocations.url";
 
 	public static final String SOAPUI_SSL_KEYSTORE_LOCATION = "soapui.ssl.keystore.location";
 	public static final String SOAPUI_SSL_KEYSTORE_PASSWORD = "soapui.ssl.keystore.password";
+
 }
