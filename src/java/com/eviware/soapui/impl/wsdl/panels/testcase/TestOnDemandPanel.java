@@ -54,7 +54,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 public class TestOnDemandPanel extends JPanel
 {
 	// FIXME This should be a URL on our servers. Replace with the real URL when it has been developed by our web dev team.
-	private static final String FIRST_PAGE_URL = "";
+	private static final String FIRST_PAGE_URL = "http://www.soapui.org/Appindex/test-on-demand.html";
 
 	private static final String GET_MORE_LOCATIONS_URL = "http://www2.smartbear.com/AlertSite_Monitor_APIs_Learn_More.html";
 	private static final String GET_MORE_LOCATIONS_MESSAGE = "Get more locations...";
