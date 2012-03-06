@@ -25,6 +25,7 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JComboBox;
 import javax.swing.JEditorPane;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import com.eviware.soapui.SoapUI;
@@ -70,7 +71,7 @@ public class TestOnDemandPanel extends JPanel
 	private static final String UPLOADING_TEST_CASE_MESSAGE = "Uploading TestCase..";
 
 	@NonNull
-	private JComboBox<Object> locationsComboBox;
+	private JComboBox locationsComboBox;
 
 	@NonNull
 	private CustomNativeBrowserComponent browser;
@@ -80,6 +81,10 @@ public class TestOnDemandPanel extends JPanel
 
 	@NonNull
 	private static List<Location> locationsCache = new ArrayList<Location>();
+
+	// FIXME We should probably set a max lenght on this
+	@NonNull
+	JLabel serverIPAddressesLabel = new JLabel();
 
 	private final WsdlTestCase testCase;
 
@@ -133,20 +138,22 @@ public class TestOnDemandPanel extends JPanel
 		runAction.setEnabled( false );
 
 		locationsComboBox = buildInitializingLocationsComboBox();
-		locationsComboBox.addActionListener( new GetMoreLocationsAction() );
+		locationsComboBox.addActionListener( new LocationComboBoxAction() );
 
 		toolbar.addFixed( UISupport.createToolbarButton( runAction ) );
 		toolbar.addRelatedGap();
 		toolbar.addFixed( locationsComboBox );
+		toolbar.addSpace( 10 );
+		toolbar.addFixed( serverIPAddressesLabel );
 		toolbar.addGlue();
 		toolbar.addFixed( UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.ALERT_SITE_HELP_URL ) ) );
 
 		return toolbar;
 	}
 
-	private JComboBox<Object> buildInitializingLocationsComboBox()
+	private JComboBox buildInitializingLocationsComboBox()
 	{
-		JComboBox<Object> initLocationsComboBox = new JComboBox<Object>();
+		JComboBox initLocationsComboBox = new JComboBox();
 		initLocationsComboBox.setPreferredSize( new Dimension( 150, 10 ) );
 		initLocationsComboBox.addItem( INITIALIZING_MESSAGE );
 		initLocationsComboBox.setEnabled( false );
@@ -187,6 +194,7 @@ public class TestOnDemandPanel extends JPanel
 			runAction.setEnabled( true );
 
 			openInInternalBrowser( getFirstPageURL() );
+
 		}
 
 		invalidate();
@@ -271,7 +279,7 @@ public class TestOnDemandPanel extends JPanel
 		}
 	}
 
-	private class GetMoreLocationsAction implements ActionListener
+	private class LocationComboBoxAction implements ActionListener
 	{
 		@Override
 		public void actionPerformed( ActionEvent e )
@@ -289,6 +297,7 @@ public class TestOnDemandPanel extends JPanel
 					openInInternalBrowser( getFirstPageURL() );
 					runAction.setEnabled( true );
 				}
+
 			}
 		}
 	}
