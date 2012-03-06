@@ -60,6 +60,7 @@ import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.registry.ProPlaceholderStepFactory;
 import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestStepFactory;
 import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestStepRegistry;
 import com.eviware.soapui.integration.loadui.IntegrationUtils;
@@ -237,7 +238,10 @@ public class WsdlTestCaseDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 		WsdlTestStepFactory[] factories = WsdlTestStepRegistry.getInstance().getFactories();
 		for( WsdlTestStepFactory factory : factories )
 		{
-			toolbar.addFixed( UISupport.createToolbarButton( new AddWsdlTestStepAction( factory ) ) );
+			JButton testStepButton = UISupport.createToolbarButton( new AddWsdlTestStepAction( factory ) );
+			if( factory instanceof ProPlaceholderStepFactory )
+				testStepButton.setEnabled( false );
+			toolbar.addFixed( testStepButton );
 		}
 
 		p.add( toolbar, BorderLayout.NORTH );
