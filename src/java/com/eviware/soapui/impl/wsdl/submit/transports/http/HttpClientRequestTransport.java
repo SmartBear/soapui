@@ -388,8 +388,13 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 		String requestContent = ( String )submitContext.getProperty( BaseHttpRequestTransport.REQUEST_CONTENT );
 
 		// check content-type for multiplart
-		String responseContentTypeHeader = httpMethod.hasHttpResponse() ? httpMethod.getHttpResponse().getEntity()
-				.getContentType().toString() : null;
+		String responseContentTypeHeader = null;
+		if( httpMethod.hasHttpResponse() && httpMethod.getHttpResponse().getEntity() != null )
+		{
+			Header h = httpMethod.getHttpResponse().getEntity().getContentType();
+			responseContentTypeHeader = h.toString();
+		}
+
 		Response response = null;
 
 		if( responseContentTypeHeader != null && responseContentTypeHeader.toUpperCase().startsWith( "MULTIPART" ) )

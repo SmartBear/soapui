@@ -160,7 +160,7 @@ public class AMFResponse extends AbstractResponse<AMFRequest>
 			if( postMethod.getRequestEntity() != null )
 			{
 				rawRequest.write( "\r\n".getBytes() );
-				if( postMethod.getRequestEntity().isRepeatable() )
+				if( postMethod.getRequestEntity().isRepeatable() && postMethod.getEntity() != null )
 				{
 					postMethod.getEntity().writeTo( rawRequest );
 				}

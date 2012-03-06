@@ -60,7 +60,11 @@ public class WsdlMimeMessageResponse extends MimeMessageResponse implements Wsdl
 
 		String multipartType = null;
 
-		Header h = httpMethod.hasHttpResponse() ? httpMethod.getHttpResponse().getEntity().getContentType() : null;
+		Header h = null;
+		if( httpMethod.hasHttpResponse() && httpMethod.getHttpResponse().getEntity() != null )
+		{
+			h = httpMethod.getHttpResponse().getEntity().getContentType();
+		}
 
 		if( h != null )
 		{

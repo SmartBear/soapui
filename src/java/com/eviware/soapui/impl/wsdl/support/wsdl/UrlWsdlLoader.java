@@ -148,7 +148,7 @@ public class UrlWsdlLoader extends WsdlLoader
 		int counter = 0;
 		byte[] content = null;
 
-		if( httpResponse != null )
+		if( httpResponse != null && httpResponse.getEntity() != null )
 		{
 			content = EntityUtils.toByteArray( new BufferedHttpEntity( httpResponse.getEntity() ) );
 		}

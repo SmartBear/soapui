@@ -140,9 +140,12 @@ public class HttpMethodSupport
 	{
 		if( hasHttpResponse() )
 		{
-			if( httpResponse.getEntity().getContentType() != null )
+			if( httpResponse.getEntity() != null )
 			{
-				return httpResponse.getEntity().getContentType().getValue();
+				if( httpResponse.getEntity().getContentType() != null )
+				{
+					return httpResponse.getEntity().getContentType().getValue();
+				}
 			}
 		}
 		return null;
@@ -191,7 +194,11 @@ public class HttpMethodSupport
 	{
 		if( hasHttpResponse() )
 		{
-			Header header = httpResponse.getEntity().getContentType();
+			Header header = null;
+			if( httpResponse.getEntity() != null )
+			{
+				header = httpResponse.getEntity().getContentType();
+			}
 			if( header != null )
 			{
 				for( HeaderElement headerElement : header.getElements() )
@@ -202,7 +209,12 @@ public class HttpMethodSupport
 				}
 			}
 
-			Header contentEncodingHeader = httpResponse.getEntity().getContentEncoding();
+			Header contentEncodingHeader = null;
+			if( httpResponse.getEntity() != null )
+			{
+				contentEncodingHeader = httpResponse.getEntity().getContentEncoding();
+			}
+
 			if( contentEncodingHeader != null )
 			{
 				try
@@ -263,7 +275,7 @@ public class HttpMethodSupport
 		if( responseBody != null )
 			return responseBody;
 
-		if( hasHttpResponse() )
+		if( hasHttpResponse() && httpResponse.getEntity() != null )
 		{
 			long now = System.nanoTime();
 			HttpEntity bufferedEntity = new BufferedHttpEntity( httpResponse.getEntity() );

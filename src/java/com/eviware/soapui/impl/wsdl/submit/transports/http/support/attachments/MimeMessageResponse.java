@@ -54,7 +54,11 @@ public class MimeMessageResponse extends BaseHttpResponse
 			postResponseDataSource = new PostResponseDataSource( httpMethod );
 			responseContentLength = postResponseDataSource.getDataSize();
 
-			Header h = httpMethod.hasHttpResponse() ? httpMethod.getHttpResponse().getEntity().getContentType() : null;
+			Header h = null;
+			if( httpMethod.hasHttpResponse() && httpMethod.getHttpResponse().getEntity() != null )
+			{
+				h = httpMethod.getHttpResponse().getEntity().getContentType();
+			}
 
 			if( h != null )
 			{

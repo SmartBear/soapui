@@ -348,8 +348,17 @@ public class HttpClientSupport
 
 	public static String getResponseCompressionType( HttpResponse httpResponse )
 	{
-		Header contentType = httpResponse.getEntity().getContentType();
-		Header contentEncoding = httpResponse.getEntity().getContentEncoding();
+		Header contentType = null;
+		if( httpResponse.getEntity() != null )
+		{
+			contentType = httpResponse.getEntity().getContentType();
+		}
+
+		Header contentEncoding = null;
+		if( httpResponse.getEntity() != null )
+		{
+			contentEncoding = httpResponse.getEntity().getContentEncoding();
+		}
 
 		return getCompressionType( contentType == null ? null : contentType.getValue(), contentEncoding == null ? null
 				: contentEncoding.getValue() );
