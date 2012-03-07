@@ -25,6 +25,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.Inspector;
 import com.eviware.soapui.support.components.JInspectorPanel;
 import com.eviware.soapui.support.components.JInspectorPanelFactory;
@@ -55,7 +56,11 @@ public class Editor<T extends EditorDocument> extends JPanel implements Property
 
 		setBackground( Color.LIGHT_GRAY );
 		inputTabs = new JTabbedPane( JTabbedPane.LEFT, JTabbedPane.SCROLL_TAB_LAYOUT );
-		inputTabs.setUI( new VerticalTabbedPaneUI() );
+
+		if( !UISupport.isMac() )
+		{
+			inputTabs.setUI( new VerticalTabbedPaneUI() );
+		}
 
 		inputTabs.setFont( inputTabs.getFont().deriveFont( 8 ) );
 		inputTabsChangeListener = new InputTabsChangeListener();
@@ -69,9 +74,15 @@ public class Editor<T extends EditorDocument> extends JPanel implements Property
 	{
 		views.add( editorView );
 
-		inputTabs.addTab( null, new VTextIcon( inputTabs, editorView.getTitle(), VTextIcon.ROTATE_LEFT ),
-				editorView.getComponent() );
-
+		if( UISupport.isMac() )
+		{
+			inputTabs.addTab( editorView.getTitle(), editorView.getComponent() );
+		}
+		else
+		{
+			inputTabs.addTab( null, new VTextIcon( inputTabs, editorView.getTitle(), VTextIcon.ROTATE_LEFT ),
+					editorView.getComponent() );
+		}
 		editorView.addPropertyChangeListener( this );
 		editorView.addLocationListener( this );
 
