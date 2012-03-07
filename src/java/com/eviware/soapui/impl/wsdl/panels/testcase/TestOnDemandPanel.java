@@ -59,7 +59,7 @@ public class TestOnDemandPanel extends JPanel
 	private static final String FIRST_PAGE_URL = "http://www.soapui.org/Appindex/test-on-demand.html";
 
 	private static final String GET_MORE_LOCATIONS_URL = "http://www2.smartbear.com/AlertSite_Monitor_APIs_Learn_More.html";
-	private static final String GET_MORE_LOCATIONS_MESSAGE = "Get more locations...";
+	private static final String GET_MORE_LOCATIONS_MESSAGE = "More locations trial";
 
 	private static final String INITIALIZING_MESSAGE = "Initializing...";
 
@@ -234,6 +234,11 @@ public class TestOnDemandPanel extends JPanel
 		}
 	}
 
+	private void openInExternalBrowser( String url )
+	{
+		Tools.openURL( url );
+	}
+
 	private String getFirstPageURL()
 	{
 		return System.getProperty( SoapUISystemProperties.TEST_ON_DEMAND_FIRST_PAGE_URL, FIRST_PAGE_URL );
@@ -298,7 +303,7 @@ public class TestOnDemandPanel extends JPanel
 			{
 				if( locationsComboBox.getSelectedItem().equals( GET_MORE_LOCATIONS_MESSAGE ) )
 				{
-					openURLSafely( getMoreLocationsURL() );
+					openInExternalBrowser( getMoreLocationsURL() );
 					runAction.setEnabled( false );
 					serverIPAddressesLabel.setText( null );
 				}
