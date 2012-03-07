@@ -74,6 +74,7 @@ import com.eviware.soapui.support.editor.xml.XmlLocation;
 import com.eviware.soapui.support.editor.xml.support.ValidationError;
 import com.eviware.soapui.support.swing.SoapUISplitPaneUI;
 import com.eviware.soapui.support.xml.XmlUtils;
+import com.eviware.soapui.support.xml.actions.EnableLineNumbersAction;
 import com.eviware.soapui.support.xml.actions.FormatXmlAction;
 import com.eviware.soapui.support.xml.actions.GoToLineAction;
 import com.eviware.soapui.support.xml.actions.InsertBase64FileTextAreaAction;
@@ -224,7 +225,7 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
 		saveXmlTextAreaAction = new SaveXmlTextAreaAction( editArea, "Save" );
 		loadXmlTextAreaAction = new LoadXmlTextAreaAction( editArea, "Load" );
 		insertBase64FileTextAreaAction = new InsertBase64FileTextAreaAction( editArea, "Insert File as Base64" );
-		enableLineNumbersAction = new EnableLineNumbersAction( "Toggle Line Numbers" );
+		enableLineNumbersAction = new EnableLineNumbersAction( editorScrollPane, "Toggle Line Numbers" );
 		goToLineAction = new GoToLineAction( editArea, "Go To Line" );
 		findAndReplaceDialog = new FindAndReplaceDialogView();
 
@@ -538,67 +539,27 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
 
 	}
 
-	private final class EnableLineNumbersAction extends AbstractAction
-	{
-		EnableLineNumbersAction( String title )
-		{
-			super( title );
-			if( UISupport.isMac() )
-			{
-				putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "ctrl L" ) );
-			}
-			else
-			{
-				putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "ctrl alt L" ) );
-			}
-		}
-
-		@Override
-		public void actionPerformed( ActionEvent e )
-		{
-			editorScrollPane.setLineNumbersEnabled( !editorScrollPane.getLineNumbersEnabled() );
-		}
-
-	}
-
-	//	private final class GoToLineAction extends AbstractAction
+	//	private final class EnableLineNumbersAction extends AbstractAction
 	//	{
-	//		public GoToLineAction( String title )
+	//		EnableLineNumbersAction( String title )
 	//		{
 	//			super( title );
-	//			putValue( Action.SHORT_DESCRIPTION, "Moves the caret to the specified line" );
-	//			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "control meta L" ) );
-	//		}
-	//
-	//		public void actionPerformed( ActionEvent e )
-	//		{
-	//			String line = UISupport.prompt( "Enter line-number to (1.." + ( editArea.getLineCount() ) + ")", "Go To Line",
-	//					String.valueOf( editArea.getCaretLineNumber() + 1 ) );
-	//
-	//			if( line != null )
+	//			if( UISupport.isMac() )
 	//			{
-	//				try
-	//				{
-	//					int ln = Integer.parseInt( line ) - 1;
-	//
-	//					if( ln < 0 )
-	//					{
-	//						ln = 0;
-	//					}
-	//
-	//					if( ln >= editArea.getLineCount() )
-	//					{
-	//						ln = editArea.getLineCount() - 1;
-	//					}
-	//
-	//					editArea.scrollRectToVisible( editArea.modelToView( editArea.getLineStartOffset( ln ) ) );
-	//					editArea.setCaretPosition( editArea.getLineStartOffset( ln ) );
-	//				}
-	//				catch( Exception e1 )
-	//				{
-	//				}
+	//				putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "ctrl L" ) );
+	//			}
+	//			else
+	//			{
+	//				putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "ctrl alt L" ) );
 	//			}
 	//		}
+	//
+	//		@Override
+	//		public void actionPerformed( ActionEvent e )
+	//		{
+	//			editorScrollPane.setLineNumbersEnabled( !editorScrollPane.getLineNumbersEnabled() );
+	//		}
+	//
 	//	}
 
 	private final static class ValidationListMouseAdapter extends MouseAdapter

@@ -16,17 +16,13 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
-import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
@@ -50,6 +46,8 @@ import com.eviware.soapui.support.components.JEditorStatusBar.JEditorStatusBarTa
 import com.eviware.soapui.support.scripting.groovy.GroovyScriptEngineFactory;
 import com.eviware.soapui.support.scripting.js.JsScriptEngineFactory;
 import com.eviware.soapui.support.swing.RSyntaxAreaPopupMenu;
+import com.eviware.soapui.support.xml.actions.EnableLineNumbersAction;
+import com.eviware.soapui.support.xml.actions.GoToLineAction;
 
 /**
  * Groovy editor wrapper
@@ -59,12 +57,13 @@ import com.eviware.soapui.support.swing.RSyntaxAreaPopupMenu;
 
 public class GroovyEditor extends JPanel implements JEditorStatusBarTarget, PropertyChangeListener
 {
-	private RSyntaxTextArea editArea;
+	private final RSyntaxTextArea editArea;
+	private final GoToLineAction goToLineAction;
+	private final EnableLineNumbersAction enableLineNumbersAction;
 	private GroovyEditorModel model;
-	private InternalSettingsListener settingsListener;
-	private GroovyDocumentListener groovyDocumentListener;
-	private RTextScrollPane scrollPane;
-	private JCheckBoxMenuItem toggleLineNumbersMenuItem;
+	private final InternalSettingsListener settingsListener;
+	private final GroovyDocumentListener groovyDocumentListener;
+	private final RTextScrollPane scrollPane;
 	private boolean updating;
 
 	// private JPanel lineNumbersPanel;
@@ -130,30 +129,24 @@ public class GroovyEditor extends JPanel implements JEditorStatusBarTarget, Prop
 		RSyntaxAreaPopupMenu popup = RSyntaxAreaPopupMenu.add( editArea );
 		popup.add( new FindAndReplaceDialog( findAndReplaceable ) );
 		popup.addSeparator();
-		popup.add( new GoToLineAction() );
+		goToLineAction = new GoToLineAction( editArea, "Go To Line" );
+		enableLineNumbersAction = new EnableLineNumbersAction( scrollPane, "Show Line Numbers" );
 
-		toggleLineNumbersMenuItem = new JCheckBoxMenuItem( "Show Line Numbers", scrollPane.getLineNumbersEnabled() );
-		toggleLineNumbersMenuItem.setAccelerator( UISupport.getKeyStroke( "alt L" ) );
-		toggleLineNumbersMenuItem.addActionListener( new ActionListener()
+		popup.add( goToLineAction );
+		popup.add( enableLineNumbersAction );
+
+		if( UISupport.isMac() )
 		{
-			public void actionPerformed( ActionEvent e )
-			{
-				enableLineNumbers( toggleLineNumbersMenuItem.isSelected() );
-			}
-		} );
-
-		editArea.getInputMap().put( KeyStroke.getKeyStroke( "alt L" ), new AbstractAction()
+			editArea.getInputMap().put( KeyStroke.getKeyStroke( "control meta L" ), goToLineAction );
+			editArea.getInputMap().put( KeyStroke.getKeyStroke( "control L" ), enableLineNumbersAction );
+		}
+		else
 		{
-			public void actionPerformed( ActionEvent e )
-			{
-				enableLineNumbers( !scrollPane.getLineNumbersEnabled() );
-			}
-		} );
+			editArea.getInputMap().put( KeyStroke.getKeyStroke( "control alt L" ), goToLineAction );
+			editArea.getInputMap().put( KeyStroke.getKeyStroke( "control L" ), enableLineNumbersAction );
+		}
 
-		popup.add( toggleLineNumbersMenuItem );
 		editArea.setPopupMenu( popup );
-
-		enableLineNumbers( settings.getBoolean( UISettings.SHOW_GROOVY_LINE_NUMBERS ) );
 	}
 
 	@Override
@@ -162,25 +155,6 @@ public class GroovyEditor extends JPanel implements JEditorStatusBarTarget, Prop
 		super.setEnabled( enabled );
 
 		editArea.setEnabled( enabled );
-	}
-
-	public void enableLineNumbers( boolean enable )
-	{
-		scrollPane.setLineNumbersEnabled( enable );
-		try
-		{
-			/*
-			 * if( scrollPane.getLineNumbersEnabled() ) ( ( LineNumberBorder
-			 * )scrollPane.getViewportBorder() ) .setBackground(
-			 * StandaloneSoapUICore.SoapUITheme.BACKGROUND_COLOR );
-			 */
-		}
-		catch( Exception e )
-		{
-			e.printStackTrace();
-		}
-
-		toggleLineNumbersMenuItem.setSelected( enable );
 	}
 
 	public RSyntaxTextArea getEditArea()
@@ -291,38 +265,6 @@ public class GroovyEditor extends JPanel implements JEditorStatusBarTarget, Prop
 	public void removeCaretListener( CaretListener listener )
 	{
 		editArea.removeCaretListener( listener );
-	}
-
-	private final class GoToLineAction extends AbstractAction
-	{
-		public GoToLineAction()
-		{
-			super( "Go To Line" );
-			putValue( Action.SHORT_DESCRIPTION, "Moves the caret to the specified line" );
-			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "menu alt L" ) );
-		}
-
-		public void actionPerformed( ActionEvent e )
-		{
-			String line = UISupport.prompt( "Enter line-number to (1.." + ( editArea.getLineCount() ) + ")", "Go To Line",
-					String.valueOf( editArea.getCaretLineNumber() + 1 ) );
-
-			if( line != null )
-			{
-				try
-				{
-					int ln = Integer.parseInt( line ) - 1;
-					if( ln >= 0 && ln < editArea.getLineCount() )
-					{
-						editArea.scrollRectToVisible( editArea.modelToView( editArea.getLineStartOffset( ln ) ) );
-						editArea.setCaretPosition( getLineStartOffset( ln ) );
-					}
-				}
-				catch( Exception e1 )
-				{
-				}
-			}
-		}
 	}
 
 	private class RSyntaxTextAreaFindAndReplaceable implements FindAndReplaceable
