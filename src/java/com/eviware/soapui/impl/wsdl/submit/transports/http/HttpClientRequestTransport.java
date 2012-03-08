@@ -13,6 +13,7 @@
 package com.eviware.soapui.impl.wsdl.submit.transports.http;
 
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -242,9 +243,7 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 			if( httpMethod.getMetrics() != null )
 			{
 				httpMethod.getMetrics().setHttpMethod( httpMethod.getMethod() );
-				httpMethod.getMetrics().setIpAddress(
-						InetAddress.getByName( httpMethod.getURI().getHost() ).getHostAddress() );
-				httpMethod.getMetrics().setPort( httpMethod.getURI().getPort() );
+				captureMetrics( httpMethod, httpClient );
 				httpMethod.getMetrics().getTotalTimer().start();
 			}
 
@@ -299,6 +298,7 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 			{
 				httpMethod.getMetrics().reset();
 				httpMethod.getMetrics().setTimestamp( System.currentTimeMillis() );
+				captureMetrics( httpMethod, httpClient );
 			}
 
 			for( int c = filters.size() - 1; c >= 0; c-- )
@@ -356,8 +356,7 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 				.getTotalTimer()
 				.set( httpMethod.getMetrics().getTotalTimer().getStart(), httpMethod.getMetrics().getTotalTimer().getStop() );
 		getMethod.getMetrics().setHttpMethod( httpMethod.getMethod() );
-		getMethod.getMetrics().setIpAddress( InetAddress.getByName( httpMethod.getURI().getHost() ).getHostAddress() );
-		getMethod.getMetrics().setPort( httpMethod.getURI().getPort() );
+		captureMetrics( httpMethod, httpClient );
 
 		java.net.URI uri = new java.net.URI( httpResponse.getFirstHeader( "Location" ).getValue() );
 		getMethod.setURI( uri );
@@ -437,5 +436,25 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 
 		extendedPostMethod.setAfterRequestInjection( httpRequest.getAfterRequestInjection() );
 		return extendedPostMethod;
+	}
+
+	private void captureMetrics( ExtendedHttpMethod httpMethod, HttpClient httpClient )
+	{
+		try
+		{
+			httpMethod.getMetrics().setIpAddress( InetAddress.getByName( httpMethod.getURI().getHost() ).getHostAddress() );
+			httpMethod.getMetrics().setPort(
+					httpMethod.getURI().getPort(),
+					httpClient.getConnectionManager().getSchemeRegistry().getScheme( httpMethod.getURI().getScheme() )
+							.getDefaultPort() );
+		}
+		catch( UnknownHostException uhe )
+		{
+			/* ignore */
+		}
+		catch( IllegalStateException ise )
+		{
+			/* ignore */
+		}
 	}
 }

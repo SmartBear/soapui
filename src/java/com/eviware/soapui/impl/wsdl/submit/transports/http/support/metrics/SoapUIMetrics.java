@@ -156,9 +156,16 @@ public class SoapUIMetrics extends HttpConnectionMetricsImpl
 		return port;
 	}
 
-	public void setPort( int port )
+	public void setPort( int port, int defaultPort )
 	{
-		this.port = port;
+		if( port != -1 )
+		{
+			this.port = port;
+		}
+		else
+		{
+			this.port = defaultPort;
+		}
 	}
 
 	@Override
