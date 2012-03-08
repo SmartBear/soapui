@@ -704,8 +704,8 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 		request.removePropertyChangeListener( this );
 		requestEditor.saveDocument( false );
 
-		if( responseEditor != null )
-			responseEditor.getParent().remove( responseEditor );
+		//		if( responseEditor != null )
+		//			responseEditor.getParent().remove( responseEditor );
 
 		requestEditor.getParent().remove( requestEditor );
 		requestSplitPane.removeAll();

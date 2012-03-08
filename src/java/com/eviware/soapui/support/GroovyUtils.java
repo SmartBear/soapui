@@ -111,7 +111,7 @@ public class GroovyUtils
 		{
 			Driver d = ( Driver )Class.forName( name, true, SoapUI.getSoapUICore().getExtensionClassLoader() )
 					.newInstance();
-			DriverManager.registerDriver( new DriverShim( d ) );
+			DriverManager.registerDriver( new DriverProxy( d ) );
 			registeredDrivers.add( name );
 		}
 		catch( Exception e )
@@ -147,11 +147,11 @@ public class GroovyUtils
 		}
 	}
 
-	static class DriverShim implements Driver
+	static class DriverProxy implements Driver
 	{
 		private Driver driver;
 
-		DriverShim( Driver d )
+		DriverProxy( Driver d )
 		{
 			this.driver = d;
 		}
