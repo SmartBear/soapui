@@ -345,8 +345,8 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 
 			log.info( "Loaded project from [" + file.toString() + "]" );
 
-			// TODO remove this after beta2
-			updateChecksToScans( getConfig() );
+			// TODO remove this after beta2 - this was for 4.0.0
+//			updateChecksToScans( getConfig() );
 
 			try
 			{
@@ -2081,149 +2081,149 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 		environmentListeners.remove( listener );
 	}
 
-	protected void updateChecksToScans( ProjectConfig config )
-	{
-		for( TestSuiteConfig testSuite : config.getTestSuiteList() )
-		{
-			for( TestCaseConfig testCase : testSuite.getTestCaseList() )
-			{
-				for( SecurityTestConfig securityTest : testCase.getSecurityTestList() )
-				{
-					if( securityTest.getFailSecurityTestOnCheckErrors() )
-					{
-						securityTest.setFailSecurityTestOnScanErrors( securityTest.getFailSecurityTestOnCheckErrors() );
-					}
-
-					for( TestStepSecurityTestConfig testStep : securityTest.getTestStepSecurityTestList() )
-					{
-						// get all checks
-						List<SecurityCheckConfig> checkList = testStep.getTestStepSecurityCheckList();
-
-						// transform to scans
-						for( SecurityCheckConfig check : checkList )
-						{
-							SecurityScanConfig scan = testStep.addNewTestStepSecurityScan();
-
-							scan.setName( check.getName() );
-							scan.setTestStep( check.getTestStep() );
-							scan.setExecutionStrategy( check.getExecutionStrategy() );
-							scan.setType( checkToScanMap.get( check.getType() ) );
-
-							for( TestAssertionConfig assertion : check.getAssertionList() )
-							{
-								TestAssertionConfig assertion2 = scan.addNewAssertion();
-
-								assertion2.setConfiguration( assertion.getConfiguration() );
-								assertion2.setType( assertion.getType() );
-								assertion2.setName( assertion.getName() );
-								if( assertion.isSetDescription() )
-								{
-									assertion2.setDescription( assertion.getDescription() );
-								}
-								if( assertion.isSetDisabled() )
-								{
-									assertion2.setDisabled( assertion.getDisabled() );
-								}
-								if( assertion.isSetId() )
-								{
-									assertion2.setId( assertion.getId() );
-								}
-								if( assertion.isSetTimestamp() )
-								{
-									assertion2.setTimestamp( assertion.getTimestamp() );
-								}
-							}
-
-							scan.setCheckedParameters( check.getCheckedPameters() );
-
-							XmlObject obj = check.getConfig();
-
-							if( obj instanceof InvalidSecurityCheckConfig )
-							{
-								InvalidSecurityScanConfig obj2 = InvalidSecurityScanConfig.Factory.newInstance();
-								for( SchemaTypeForSecurityCheckConfig el : ( ( InvalidSecurityCheckConfig )obj )
-										.getTypesListList() )
-								{
-									SchemaTypeForSecurityScanConfig type = obj2.addNewTypesList();
-									type.setType( el.getType() );
-									type.setValue( el.getValue() );
-								}
-							}
-							else if( obj instanceof GroovySecurityCheckConfig )
-							{
-								GroovySecurityScanConfig obj2 = GroovySecurityScanConfig.Factory.newInstance();
-								obj2.setExecuteScript( ( ( GroovySecurityCheckConfig )obj ).getExecuteScript() );
-							}
-							else if( obj instanceof ParameterExposureCheckConfig )
-							{
-								CrossSiteScriptingScanConfig obj2 = CrossSiteScriptingScanConfig.Factory.newInstance();
-								for( String el : ( ( ParameterExposureCheckConfig )obj ).getParameterExposureStringsList() )
-								{
-									obj2.addParameterExposureStrings( el );
-								}
-							}
-							else if( obj instanceof MaliciousAttachmentSecurityCheckConfig )
-							{
-								MaliciousAttachmentSecurityScanConfig obj2 = MaliciousAttachmentSecurityScanConfig.Factory
-										.newInstance();
-								obj2.setRequestTimeout( ( ( MaliciousAttachmentSecurityCheckConfig )obj ).getRequestTimeout() );
-								for( MaliciousAttachmentElementConfig el : ( ( MaliciousAttachmentSecurityCheckConfig )obj )
-										.getElementList() )
-								{
-									MaliciousAttachmentElementConfig el2 = obj2.addNewElement();
-									el2.setKey( el.getKey() );
-									el2.setRemove( el.getRemove() );
-									for( MaliciousAttachmentConfig gen : el.getGenerateAttachmentList() )
-									{
-										MaliciousAttachmentConfig gen2 = el2.addNewGenerateAttachment();
-										gen2.setCached( gen.getCached() );
-										gen2.setContentType( gen.getContentType() );
-										gen2.setEnabled( gen.getEnabled() );
-										gen2.setFilename( gen.getFilename() );
-										gen2.setSize( gen.getSize() );
-									}
-									for( MaliciousAttachmentConfig repl : el.getReplaceAttachmentList() )
-									{
-										MaliciousAttachmentConfig repl2 = el2.addNewReplaceAttachment();
-										repl2.setCached( repl.getCached() );
-										repl2.setContentType( repl.getContentType() );
-										repl2.setEnabled( repl.getEnabled() );
-										repl2.setFilename( repl.getFilename() );
-										repl2.setSize( repl.getSize() );
-									}
-								}
-							}
-							else if( obj instanceof SQLInjectionCheckConfig )
-							{
-								SQLInjectionScanConfig obj2 = SQLInjectionScanConfig.Factory.newInstance();
-								for( String el : ( ( SQLInjectionCheckConfig )obj ).getSqlInjectionStringsList() )
-								{
-									obj2.addSqlInjectionStrings( el );
-								}
-							}
-							else if( obj instanceof XmlBombSecurityCheckConfig )
-							{
-								XmlBombSecurityScanConfig obj2 = XmlBombSecurityScanConfig.Factory.newInstance();
-								obj2.setAttachXmlBomb( ( ( XmlBombSecurityCheckConfig )obj ).getAttachXmlBomb() );
-								obj2.setXmlAttachmentPrefix( ( ( XmlBombSecurityCheckConfig )obj ).getXmlAttachmentPrefix() );
-								for( String el : ( ( XmlBombSecurityCheckConfig )obj ).getXmlBombsList() )
-								{
-									obj2.addXmlBombs( el );
-								}
-							}
-							else
-							{
-								// boundary scan, malformed xml, xpath
-								scan.setConfig( obj );
-							}
-						}
-
-						// finally, remove checks
-						testStep.setTestStepSecurityCheckArray( new SecurityCheckConfig[0] );
-					}
-				}
-			}
-		}
-	}
+//	protected void updateChecksToScans( ProjectConfig config )
+//	{
+//		for( TestSuiteConfig testSuite : config.getTestSuiteList() )
+//		{
+//			for( TestCaseConfig testCase : testSuite.getTestCaseList() )
+//			{
+//				for( SecurityTestConfig securityTest : testCase.getSecurityTestList() )
+//				{
+//					if( securityTest.getFailSecurityTestOnCheckErrors() )
+//					{
+//						securityTest.setFailSecurityTestOnScanErrors( securityTest.getFailSecurityTestOnCheckErrors() );
+//					}
+//
+//					for( TestStepSecurityTestConfig testStep : securityTest.getTestStepSecurityTestList() )
+//					{
+//						// get all checks
+//						List<SecurityCheckConfig> checkList = testStep.getTestStepSecurityCheckList();
+//
+//						// transform to scans
+//						for( SecurityCheckConfig check : checkList )
+//						{
+//							SecurityScanConfig scan = testStep.addNewTestStepSecurityScan();
+//
+//							scan.setName( check.getName() );
+//							scan.setTestStep( check.getTestStep() );
+//							scan.setExecutionStrategy( check.getExecutionStrategy() );
+//							scan.setType( checkToScanMap.get( check.getType() ) );
+//
+//							for( TestAssertionConfig assertion : check.getAssertionList() )
+//							{
+//								TestAssertionConfig assertion2 = scan.addNewAssertion();
+//
+//								assertion2.setConfiguration( assertion.getConfiguration() );
+//								assertion2.setType( assertion.getType() );
+//								assertion2.setName( assertion.getName() );
+//								if( assertion.isSetDescription() )
+//								{
+//									assertion2.setDescription( assertion.getDescription() );
+//								}
+//								if( assertion.isSetDisabled() )
+//								{
+//									assertion2.setDisabled( assertion.getDisabled() );
+//								}
+//								if( assertion.isSetId() )
+//								{
+//									assertion2.setId( assertion.getId() );
+//								}
+//								if( assertion.isSetTimestamp() )
+//								{
+//									assertion2.setTimestamp( assertion.getTimestamp() );
+//								}
+//							}
+//
+//							scan.setCheckedParameters( check.getCheckedPameters() );
+//
+//							XmlObject obj = check.getConfig();
+//
+//							if( obj instanceof InvalidSecurityCheckConfig )
+//							{
+//								InvalidSecurityScanConfig obj2 = InvalidSecurityScanConfig.Factory.newInstance();
+//								for( SchemaTypeForSecurityCheckConfig el : ( ( InvalidSecurityCheckConfig )obj )
+//										.getTypesListList() )
+//								{
+//									SchemaTypeForSecurityScanConfig type = obj2.addNewTypesList();
+//									type.setType( el.getType() );
+//									type.setValue( el.getValue() );
+//								}
+//							}
+//							else if( obj instanceof GroovySecurityCheckConfig )
+//							{
+//								GroovySecurityScanConfig obj2 = GroovySecurityScanConfig.Factory.newInstance();
+//								obj2.setExecuteScript( ( ( GroovySecurityCheckConfig )obj ).getExecuteScript() );
+//							}
+//							else if( obj instanceof ParameterExposureCheckConfig )
+//							{
+//								CrossSiteScriptingScanConfig obj2 = CrossSiteScriptingScanConfig.Factory.newInstance();
+//								for( String el : ( ( ParameterExposureCheckConfig )obj ).getParameterExposureStringsList() )
+//								{
+//									obj2.addParameterExposureStrings( el );
+//								}
+//							}
+//							else if( obj instanceof MaliciousAttachmentSecurityCheckConfig )
+//							{
+//								MaliciousAttachmentSecurityScanConfig obj2 = MaliciousAttachmentSecurityScanConfig.Factory
+//										.newInstance();
+//								obj2.setRequestTimeout( ( ( MaliciousAttachmentSecurityCheckConfig )obj ).getRequestTimeout() );
+//								for( MaliciousAttachmentElementConfig el : ( ( MaliciousAttachmentSecurityCheckConfig )obj )
+//										.getElementList() )
+//								{
+//									MaliciousAttachmentElementConfig el2 = obj2.addNewElement();
+//									el2.setKey( el.getKey() );
+//									el2.setRemove( el.getRemove() );
+//									for( MaliciousAttachmentConfig gen : el.getGenerateAttachmentList() )
+//									{
+//										MaliciousAttachmentConfig gen2 = el2.addNewGenerateAttachment();
+//										gen2.setCached( gen.getCached() );
+//										gen2.setContentType( gen.getContentType() );
+//										gen2.setEnabled( gen.getEnabled() );
+//										gen2.setFilename( gen.getFilename() );
+//										gen2.setSize( gen.getSize() );
+//									}
+//									for( MaliciousAttachmentConfig repl : el.getReplaceAttachmentList() )
+//									{
+//										MaliciousAttachmentConfig repl2 = el2.addNewReplaceAttachment();
+//										repl2.setCached( repl.getCached() );
+//										repl2.setContentType( repl.getContentType() );
+//										repl2.setEnabled( repl.getEnabled() );
+//										repl2.setFilename( repl.getFilename() );
+//										repl2.setSize( repl.getSize() );
+//									}
+//								}
+//							}
+//							else if( obj instanceof SQLInjectionCheckConfig )
+//							{
+//								SQLInjectionScanConfig obj2 = SQLInjectionScanConfig.Factory.newInstance();
+//								for( String el : ( ( SQLInjectionCheckConfig )obj ).getSqlInjectionStringsList() )
+//								{
+//									obj2.addSqlInjectionStrings( el );
+//								}
+//							}
+//							else if( obj instanceof XmlBombSecurityCheckConfig )
+//							{
+//								XmlBombSecurityScanConfig obj2 = XmlBombSecurityScanConfig.Factory.newInstance();
+//								obj2.setAttachXmlBomb( ( ( XmlBombSecurityCheckConfig )obj ).getAttachXmlBomb() );
+//								obj2.setXmlAttachmentPrefix( ( ( XmlBombSecurityCheckConfig )obj ).getXmlAttachmentPrefix() );
+//								for( String el : ( ( XmlBombSecurityCheckConfig )obj ).getXmlBombsList() )
+//								{
+//									obj2.addXmlBombs( el );
+//								}
+//							}
+//							else
+//							{
+//								// boundary scan, malformed xml, xpath
+//								scan.setConfig( obj );
+//							}
+//						}
+//
+//						// finally, remove checks
+//						testStep.setTestStepSecurityCheckArray( new SecurityCheckConfig[0] );
+//					}
+//				}
+//			}
+//		}
+//	}
 
 }

@@ -28,7 +28,7 @@
  		<attainGoal name="soapui:generate-xml-beans"/>
         <attainGoal name="jar:install"/>
         <attainGoal name="jnlp"/>
-        <attainGoal name="site:generate"/>
+<!--         <attainGoal name="site:generate"/> -->
 
         <!--   <attainGoal name="soapui:generate-plugin"/>   -->
         <attainGoal name="dist:build-src"/>
@@ -758,7 +758,7 @@ URL=http://www.soapui.org]]>
 
     <goal name="soapui:publish">
         <j:set var="dist" value="${maven.soapui.publish.dist}"/>
-        <j:set var="site" value="${maven.soapui.publish.site}"/>
+ <!--       <j:set var="site" value="${maven.soapui.publish.site}"/> -->
         <j:set var="plugins" value="${maven.soapui.publish.plugins}"/>
         <j:set var="jnlp" value="${maven.soapui.jnlp.source}"/>
 
@@ -780,13 +780,13 @@ URL=http://www.soapui.org]]>
 			</j:forEach>
         </j:if>
 
-        <j:if test="${!empty(site)}">
+   <!--      <j:if test="${!empty(site)}">
             <echo>Publishing docs to ${site}</echo>
             <ant:mkdir dir="${site}"/>
             <ant:copy todir="${site}" overwrite="true">
                 <ant:fileset dir="${maven.build.dir}/docs"/>
             </ant:copy>
-        </j:if>
+        </j:if> -->
 
         <j:if test="${!empty(plugins)}">
             <echo>Publishing plugins to ${plugins}</echo>
