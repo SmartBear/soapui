@@ -70,7 +70,8 @@ public class AddAssertionPanel extends SimpleDialog
 	private CategoriesListTable categoriesListTable;
 	private AssertionsListTable assertionsTable;
 	private Assertable assertable;
-	public static final String NO_PROPERTY_SELECTED = "<No Property>";
+	public static final String NO_PROPERTY_SELECTED = "<Select Property>";
+	public static final String RESPONSE_PROPERTY = "Response";
 	private AddAssertionAction addAssertionAction;
 	private AssertionsListTableModel assertionsListTableModel;
 	private AssertionCategoriesTableModel categoriesTableModel;
@@ -137,7 +138,7 @@ public class AddAssertionPanel extends SimpleDialog
 
 	protected String getSelectedPropertyName()
 	{
-		return NO_PROPERTY_SELECTED;
+		return RESPONSE_PROPERTY;
 	}
 
 	public void setAssertable( Assertable assertable )
