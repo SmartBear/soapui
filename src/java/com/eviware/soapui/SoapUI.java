@@ -294,21 +294,21 @@ public class SoapUI
 	private JComponent buildToolbar()
 	{
 		mainToolbar = new JXToolBar();
-		mainToolbar.setFloatable(false);
+		mainToolbar.setFloatable( false );
 		mainToolbar.setRollover( true );
 		mainToolbar.putClientProperty( Options.HEADER_STYLE_KEY, HeaderStyle.BOTH );
 		mainToolbar.add( new NewWsdlProjectActionDelegate() );
 		mainToolbar.add( new ImportWsdlProjectActionDelegate() );
 		mainToolbar.add( new SaveAllActionDelegate() );
-		mainToolbar.addSeparator();
+		mainToolbar.addSpace( 2 );
 		mainToolbar.add( new ShowOnlineHelpAction( "User Guide", HelpUrls.USERGUIDE_HELP_URL,
 				"Opens the soapUI User-Guide in a browser" ) );
 		mainToolbar.add( new ShowOnlineHelpAction( "Forum", HelpUrls.FORUMS_HELP_URL,
 				"Opens the soapUI Forum in a browser", "/group_go.png" ) );
-		mainToolbar.addSeparator();
+		mainToolbar.addSpace( 2 );
 		mainToolbar.add( new ShowOnlineHelpAction( "Trial", HelpUrls.TRIAL_URL, "Apply for soapUI Pro Trial License",
 				"/favicon.png" ) );
-		mainToolbar.addSeparator();
+		mainToolbar.addSpace( 2 );
 		mainToolbar.add( new PreferencesActionDelegate() );
 		applyProxyButton = ( JToggleButton )mainToolbar.add( new JToggleButton( new ApplyProxyButtonAction() ) );
 		ProxyUtils.setProxyEnabled( getSettings().getBoolean( ProxySettings.ENABLE_PROXY ) );
