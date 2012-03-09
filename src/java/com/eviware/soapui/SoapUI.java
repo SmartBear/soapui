@@ -345,7 +345,15 @@ public class SoapUI
 		mainToolbar.add( new ToolbarForumSearchAction() );
 		mainToolbar.add( new ShowOnlineHelpAction( HelpUrls.USERGUIDE_HELP_URL ) );
 
-		mainToolbar.setBorder( BorderFactory.createEtchedBorder() );
+		for( int i = 0; i < mainToolbar.getComponentCount(); i++ )
+		{
+			if( mainToolbar.getComponent( i ) instanceof JComponent )
+			{
+				( ( JComponent )mainToolbar.getComponent( i ) ).setBorder( BorderFactory.createEmptyBorder( 4, 2, 4, 2 ) );
+			}
+		}
+
+		mainToolbar.setBorder( BorderFactory.createEmptyBorder( 3, 1, 3, 1 ) );
 
 		return mainToolbar;
 	}
