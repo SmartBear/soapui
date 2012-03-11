@@ -117,7 +117,7 @@ public class JUnitReportCollector implements TestRunListener, TestSuiteRunListen
 		{
 			if( Status.CANCELED == testRunner.getStatus() )
 			{
-				report.addTestCaseWithFailure( testCase.getName(), testRunner.getTimeTaken(), testRunner.getReason(), "" );
+				report.addTestCase( testCase.getName(), testRunner.getTimeTaken() );
 			}
 			if( Status.FAILED == testRunner.getStatus() )
 			{
