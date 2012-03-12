@@ -42,10 +42,11 @@ public class FindAndReplaceDialogView extends AbstractAction
 	private JCheckBox wrapCheck;
 	private RSyntaxTextArea editArea;
 
-	public FindAndReplaceDialogView()
+	public FindAndReplaceDialogView( RSyntaxTextArea editArea )
 	{
 		super( "Find / Replace" );
 		putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "F3" ) );
+		this.editArea = editArea;
 	}
 
 	@Override
@@ -188,7 +189,7 @@ public class FindAndReplaceDialogView extends AbstractAction
 		context.setReplaceWith( replacement );
 		context.setRegularExpression( false );
 		context.setSearchForward( forwardButton.isSelected() );
-		context.setWholeWord( false );
+		context.setWholeWord( wholeWordCheck.isSelected() );
 		return context;
 	}
 
@@ -205,7 +206,7 @@ public class FindAndReplaceDialogView extends AbstractAction
 		context.setSearchFor( searchExpression );
 		context.setRegularExpression( false );
 		context.setSearchForward( forwardButton.isSelected() );
-		context.setWholeWord( false );
+		context.setWholeWord( wholeWordCheck.isSelected() );
 		return context;
 	}
 

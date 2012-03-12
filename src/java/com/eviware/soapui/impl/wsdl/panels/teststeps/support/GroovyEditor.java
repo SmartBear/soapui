@@ -23,8 +23,8 @@ import java.beans.PropertyChangeListener;
 
 import javax.swing.Action;
 import javax.swing.BorderFactory;
-import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.KeyStroke;
 import javax.swing.event.CaretListener;
 import javax.swing.text.Document;
@@ -40,14 +40,13 @@ import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.actions.FindAndReplaceDialog;
-import com.eviware.soapui.support.actions.FindAndReplaceable;
 import com.eviware.soapui.support.components.JEditorStatusBar.JEditorStatusBarTarget;
 import com.eviware.soapui.support.scripting.groovy.GroovyScriptEngineFactory;
 import com.eviware.soapui.support.scripting.js.JsScriptEngineFactory;
-import com.eviware.soapui.support.swing.RSyntaxAreaPopupMenu;
 import com.eviware.soapui.support.xml.actions.EnableLineNumbersAction;
+import com.eviware.soapui.support.xml.actions.FormatXmlAction;
 import com.eviware.soapui.support.xml.actions.GoToLineAction;
+import com.eviware.soapui.ui.support.FindAndReplaceDialogView;
 
 /**
  * Groovy editor wrapper
@@ -60,13 +59,13 @@ public class GroovyEditor extends JPanel implements JEditorStatusBarTarget, Prop
 	private final RSyntaxTextArea editArea;
 	private final GoToLineAction goToLineAction;
 	private final EnableLineNumbersAction enableLineNumbersAction;
+	private FindAndReplaceDialogView findAndReplaceDialog;
+	private FormatXmlAction formatXmlAction;
 	private GroovyEditorModel model;
 	private final InternalSettingsListener settingsListener;
 	private final GroovyDocumentListener groovyDocumentListener;
 	private final RTextScrollPane scrollPane;
 	private boolean updating;
-
-	// private JPanel lineNumbersPanel;
 
 	public GroovyEditor( GroovyEditorModel model )
 	{
@@ -102,8 +101,6 @@ public class GroovyEditor extends JPanel implements JEditorStatusBarTarget, Prop
 
 		editArea.getInputMap().put( KeyStroke.getKeyStroke( "F3" ), "find-action" );
 		editArea.getInputMap().put( KeyStroke.getKeyStroke( "ctrl F" ), "find-action" );
-		RSyntaxTextAreaFindAndReplaceable findAndReplaceable = new RSyntaxTextAreaFindAndReplaceable();
-		editArea.getActionMap().put( "find-action", new FindAndReplaceDialog( findAndReplaceable ) );
 
 		groovyDocumentListener = new GroovyDocumentListener();
 		editArea.getDocument().addDocumentListener( groovyDocumentListener );
@@ -111,7 +108,6 @@ public class GroovyEditor extends JPanel implements JEditorStatusBarTarget, Prop
 		settingsListener = new InternalSettingsListener();
 		settings.addSettingsListener( settingsListener );
 
-		// scrollPane = new RTextScrollPane( 500, 300, editArea, true );
 		scrollPane = new RTextScrollPane( editArea, true );
 		scrollPane.setPreferredSize( new Dimension( 500, 300 ) );
 		add( scrollPane );
@@ -126,8 +122,10 @@ public class GroovyEditor extends JPanel implements JEditorStatusBarTarget, Prop
 			}
 		} );
 
-		RSyntaxAreaPopupMenu popup = RSyntaxAreaPopupMenu.add( editArea );
-		popup.add( new FindAndReplaceDialog( findAndReplaceable ) );
+		JPopupMenu popup = editArea.getPopupMenu();
+		findAndReplaceDialog = new FindAndReplaceDialogView( editArea );
+		editArea.getInputMap().put( KeyStroke.getKeyStroke( "F3" ), findAndReplaceDialog );
+		popup.add( findAndReplaceDialog );
 		popup.addSeparator();
 		goToLineAction = new GoToLineAction( editArea, "Go To Line" );
 		enableLineNumbersAction = new EnableLineNumbersAction( scrollPane, "Show Line Numbers" );
@@ -145,8 +143,7 @@ public class GroovyEditor extends JPanel implements JEditorStatusBarTarget, Prop
 			editArea.getInputMap().put( KeyStroke.getKeyStroke( "control alt L" ), goToLineAction );
 			editArea.getInputMap().put( KeyStroke.getKeyStroke( "control L" ), enableLineNumbersAction );
 		}
-
-		editArea.setPopupMenu( popup );
+		editArea.setComponentPopupMenu( popup );
 	}
 
 	@Override
@@ -265,55 +262,6 @@ public class GroovyEditor extends JPanel implements JEditorStatusBarTarget, Prop
 	public void removeCaretListener( CaretListener listener )
 	{
 		editArea.removeCaretListener( listener );
-	}
-
-	private class RSyntaxTextAreaFindAndReplaceable implements FindAndReplaceable
-	{
-		public boolean isEditable()
-		{
-			return editArea.isEditable();
-		}
-
-		public int getCaretPosition()
-		{
-			return editArea.getCaretPosition();
-		}
-
-		public String getText()
-		{
-			return editArea.getText();
-		}
-
-		public void select( int start, int end )
-		{
-			editArea.select( start, end );
-		}
-
-		public int getSelectionStart()
-		{
-			return editArea.getSelectionStart();
-		}
-
-		public int getSelectionEnd()
-		{
-			return editArea.getSelectionEnd();
-		}
-
-		public void setSelectedText( String txt )
-		{
-			editArea.replaceSelection( txt );
-		}
-
-		public String getSelectedText()
-		{
-			return editArea.getSelectedText();
-		}
-
-		@Override
-		public JComponent getEditComponent()
-		{
-			return editArea;
-		}
 	}
 
 	public void propertyChange( PropertyChangeEvent evt )

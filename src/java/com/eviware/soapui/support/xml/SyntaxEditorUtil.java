@@ -73,7 +73,7 @@ public class SyntaxEditorUtil
 		if( !readOnly )
 		{
 			formatXmlAction = formatXmlAction = new FormatXmlAction( editor );
-			FindAndReplaceDialogView findAndReplaceDialog = findAndReplaceDialog = new FindAndReplaceDialogView();
+			FindAndReplaceDialogView findAndReplaceDialog = findAndReplaceDialog = new FindAndReplaceDialogView( editor );
 			popupMenu.insert( formatXmlAction, 1 );
 			popupMenu.addSeparator();
 			popupMenu.add( findAndReplaceDialog );
