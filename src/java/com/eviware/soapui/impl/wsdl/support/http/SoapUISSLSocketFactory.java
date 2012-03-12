@@ -37,7 +37,6 @@ import org.apache.http.params.HttpParams;
 import org.apache.log4j.Logger;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransport;
 import com.eviware.soapui.support.StringUtils;
 
 public class SoapUISSLSocketFactory extends SSLSocketFactory
@@ -118,7 +117,7 @@ public class SoapUISSLSocketFactory extends SSLSocketFactory
 	@Override
 	public Socket createSocket( HttpParams params ) throws IOException
 	{
-		String sslConfig = ( String )params.getParameter( BaseHttpRequestTransport.SOAPUI_SSL_CONFIG );
+		String sslConfig = ( String )params.getParameter( SoapUIHttpRoute.SOAPUI_SSL_CONFIG );
 
 		if( StringUtils.isNullOrEmpty( sslConfig ) )
 		{
