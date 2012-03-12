@@ -173,7 +173,8 @@ public class TestOnDemandPanel extends JPanel
 	private JComboBox buildInitializingLocationsComboBox()
 	{
 		JComboBox initLocationsComboBox = new JComboBox();
-		initLocationsComboBox.setPreferredSize( new Dimension( 150, 10 ) );
+		// FIXME This should be dynamic
+		initLocationsComboBox.setPreferredSize( new Dimension( 170, 10 ) );
 		initLocationsComboBox.addItem( INITIALIZING_MESSAGE );
 		initLocationsComboBox.setEnabled( false );
 		return initLocationsComboBox;
