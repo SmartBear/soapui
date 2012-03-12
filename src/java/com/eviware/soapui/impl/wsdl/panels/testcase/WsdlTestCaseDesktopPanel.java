@@ -37,6 +37,8 @@ import javax.swing.JToggleButton;
 import javax.swing.ListModel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.text.Document;
 
 import com.eviware.soapui.SoapUI;
@@ -127,7 +129,6 @@ public class WsdlTestCaseDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 	private JInspectorPanel inspectorPanel;
 	public TestCaseRunner lastRunner;
 	private JButton runWithLoadUIButton;
-	// private JButton convertToLoadUIButton;
 	private JButton synchronizeWithLoadUIButton;
 	private WsdlTestCase testCase;
 	protected TestOnDemandPanel testOnDemandPanel;
@@ -219,12 +220,16 @@ public class WsdlTestCaseDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 	private JComponent buildContent()
 	{
 		JTabbedPane tabs = new JTabbedPane( JTabbedPane.TOP );
+
 		testStepListInspectorPanel = JInspectorPanelFactory.build( buildTestStepList(), SwingConstants.BOTTOM );
 
 		tabs.addTab( "TestSteps", testStepListInspectorPanel.getComponent() );
 
 		addTabs( tabs, testStepListInspectorPanel );
+
 		tabs.setTabLayoutPolicy( JTabbedPane.SCROLL_TAB_LAYOUT );
+
+		tabs.addChangeListener( new TestOnDemandTabChangeListener() );
 
 		return UISupport.createTabPanel( tabs, true );
 	}
@@ -342,11 +347,6 @@ public class WsdlTestCaseDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 
 		runWithLoadUIButton = UISupport.createToolbarButton( SwingActionDelegate.createDelegate(
 				RunTestCaseWithLoadUIAction.SOAPUI_ACTION_ID, getModelItem(), null, "/runTestCaseWithLoadUI.png" ) );
-		// convertToLoadUIButton = UISupport.createToolbarButton(
-		// SwingActionDelegate.createDelegate(
-		// ConvertTestCaseLoadTestsToLoadUIAction.SOAPUI_ACTION_ID,
-		// getModelItem(), null,
-		// "/convertLoadTestToLoadUI.png" ) );
 		synchronizeWithLoadUIButton = UISupport.createToolbarButton( new SynchronizeWithLoadUIAction() );
 		addToolbarActions( toolbar );
 
@@ -376,7 +376,6 @@ public class WsdlTestCaseDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 		toolbar.add( optionsButton );
 		toolbar.addSeparator();
 		toolbar.add( runWithLoadUIButton );
-		// toolbar.add( convertToLoadUIButton );
 		toolbar.add( synchronizeWithLoadUIButton );
 	}
 
@@ -384,6 +383,19 @@ public class WsdlTestCaseDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 	{
 		progressBar = new JProgressBar( 0, getModelItem().getTestStepCount() );
 		return UISupport.createProgressBarPanel( progressBar, 10, false );
+	}
+
+	private final class TestOnDemandTabChangeListener implements ChangeListener
+	{
+		@Override
+		public void stateChanged( ChangeEvent evt )
+		{
+			JTabbedPane pane = ( JTabbedPane )evt.getSource();
+			if( pane.getSelectedComponent().equals( testOnDemandPanel ) )
+			{
+				testOnDemandPanel.initializeLocationsCache();
+			}
+		}
 	}
 
 	private final class InternalTestMonitorListener extends TestMonitorListenerAdapter
@@ -863,5 +875,4 @@ public class WsdlTestCaseDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 		testOnDemandPanel = new TestOnDemandPanel( getModelItem() );
 		return testOnDemandPanel;
 	}
-
 }
