@@ -101,7 +101,7 @@ public class TestCaseRunLogReport extends TestRunListenerAdapter
 					.getDuration() ) );
 			currentTestCaseRunLogTestStepConfig.setHttpMethod( metrics.getHttpMethod() );
 			currentTestCaseRunLogTestStepConfig.setIpAddress( metrics.getIpAddress() );
-			currentTestCaseRunLogTestStepConfig.setPort( metrics.getPort() );
+			//currentTestCaseRunLogTestStepConfig.setPort( metrics.getPort() );
 		}
 
 		Throwable error = result.getError();

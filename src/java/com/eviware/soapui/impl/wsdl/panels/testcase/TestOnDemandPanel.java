@@ -83,13 +83,16 @@ public class TestOnDemandPanel extends JPanel
 	private CustomNativeBrowserComponent browser;
 
 	@NonNull
-	private Action runAction;
+	private Action sendTestCaseAction;
 
 	@NonNull
 	private static List<Location> locationsCache = new ArrayList<Location>();
 
 	@NonNull
 	JLabel serverIPAddressesLabel = new JLabel();
+
+	@NonNull
+	TestOnDemandCaller caller;
 
 	private final WsdlTestCase testCase;
 
@@ -105,9 +108,9 @@ public class TestOnDemandPanel extends JPanel
 
 		setValidator();
 
-		add( buildToolbar(), BorderLayout.NORTH );
+		setCaller();
 
-		initializeLocationsCache();
+		add( buildToolbar(), BorderLayout.NORTH );
 
 		if( !SoapUI.isJXBrowserDisabled( true ) )
 		{
@@ -129,6 +132,11 @@ public class TestOnDemandPanel extends JPanel
 		validator = new DependencyValidator();
 	}
 
+	protected void setCaller()
+	{
+		caller = new TestOnDemandCaller();
+	}
+
 	public void release()
 	{
 		if( browser != null )
@@ -141,8 +149,8 @@ public class TestOnDemandPanel extends JPanel
 	{
 		JXToolBar toolbar = UISupport.createToolbar();
 
-		runAction = new RunAction();
-		runAction.setEnabled( false );
+		sendTestCaseAction = new SendTestCaseAction();
+		sendTestCaseAction.setEnabled( false );
 
 		locationsComboBox = buildInitializingLocationsComboBox();
 		locationsComboBox.addActionListener( new LocationComboBoxAction() );
@@ -151,7 +159,7 @@ public class TestOnDemandPanel extends JPanel
 		serverIPAddressesLabel.setPreferredSize( new Dimension( 1000, 10 ) );
 		serverIPAddressesLabel.setForeground( Color.GRAY );
 
-		toolbar.addFixed( UISupport.createToolbarButton( runAction ) );
+		toolbar.addFixed( UISupport.createToolbarButton( sendTestCaseAction ) );
 		toolbar.addRelatedGap();
 		toolbar.addFixed( locationsComboBox );
 		toolbar.addSpace( 10 );
@@ -171,7 +179,7 @@ public class TestOnDemandPanel extends JPanel
 		return initLocationsComboBox;
 	}
 
-	private void initializeLocationsCache()
+	public void initializeLocationsCache()
 	{
 		if( locationsCache.isEmpty() )
 		{
@@ -202,7 +210,7 @@ public class TestOnDemandPanel extends JPanel
 			locationsComboBox.addItem( GET_MORE_LOCATIONS_MESSAGE );
 
 			locationsComboBox.setEnabled( true );
-			runAction.setEnabled( true );
+			sendTestCaseAction.setEnabled( true );
 		}
 
 		invalidate();
@@ -249,9 +257,9 @@ public class TestOnDemandPanel extends JPanel
 		return System.getProperty( SoapUISystemProperties.TEST_ON_DEMAND_GET_LOCATIONS_URL, GET_MORE_LOCATIONS_URL );
 	}
 
-	private class RunAction extends AbstractAction
+	private class SendTestCaseAction extends AbstractAction
 	{
-		public RunAction()
+		public SendTestCaseAction()
 		{
 			putValue( SMALL_ICON, UISupport.createImageIcon( "/run.gif" ) );
 			putValue( Action.SHORT_DESCRIPTION, "Run Test On Demand report" );
@@ -304,15 +312,15 @@ public class TestOnDemandPanel extends JPanel
 				if( locationsComboBox.getSelectedItem().equals( GET_MORE_LOCATIONS_MESSAGE ) )
 				{
 					openInExternalBrowser( getMoreLocationsURL() );
-					runAction.setEnabled( false );
+					sendTestCaseAction.setEnabled( false );
 					serverIPAddressesLabel.setText( null );
 				}
 				else
 				{
-					if( locationsComboBox.isEnabled() && !runAction.isEnabled() )
+					if( locationsComboBox.isEnabled() && !sendTestCaseAction.isEnabled() )
 					{
 						openInInternalBrowser( getFirstPageURL() );
-						runAction.setEnabled( true );
+						sendTestCaseAction.setEnabled( true );
 					}
 
 					if( selectedItem instanceof Location )
@@ -362,7 +370,6 @@ public class TestOnDemandPanel extends JPanel
 		{
 			try
 			{
-				TestOnDemandCaller caller = new TestOnDemandCaller();
 				result = caller.sendTestCase( testCase, selectedLocation );
 			}
 			catch( Exception e )
@@ -387,7 +394,7 @@ public class TestOnDemandPanel extends JPanel
 		{
 			try
 			{
-				locationsCache = new TestOnDemandCaller().getLocations();
+				locationsCache = caller.getLocations();
 			}
 			catch( Exception e )
 			{

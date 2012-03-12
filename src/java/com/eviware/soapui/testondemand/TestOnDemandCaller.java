@@ -57,6 +57,7 @@ import com.eviware.soapui.config.TestOnDemandTxnConfig;
 import com.eviware.soapui.config.TestOnDemandUploadBodyConfig;
 import com.eviware.soapui.config.TestOnDemandUploadRequestDocumentConfig;
 import com.eviware.soapui.config.TestOnDemandUploadRequestDocumentConfig.TestOnDemandUploadRequest;
+import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPostMethod;
 import com.eviware.soapui.impl.wsdl.support.CompressionSupport;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
@@ -78,13 +79,15 @@ public class TestOnDemandCaller
 {
 	// FIXME Should these be in a configuration file instead?
 
-	private final static String PROTOCOL = "https://";
+	private final static String DEFAULT_PROTOCOL = "https";
+	private final static String PROTOCOL_DELIMITER = "://";
 	private final static String PROD_HOST = "www.alertsite.com";
 	private static final String LOCATIONS_PATH = "/restapi/v2/devices/list/locations";
 	private static final String UPLOAD_PATH = "/restapi/v2/devices/upload/testondemand";
 	private final static String TEST_ON_DEMAND_DOMAIN = getDomain();
-	private static final String LOCATIONS_URI = PROTOCOL + TEST_ON_DEMAND_DOMAIN + LOCATIONS_PATH;
-	private static final String UPLOAD_URI = PROTOCOL + TEST_ON_DEMAND_DOMAIN + UPLOAD_PATH;
+	private static final String LOCATIONS_URI = getProtocol() + PROTOCOL_DELIMITER + TEST_ON_DEMAND_DOMAIN
+			+ LOCATIONS_PATH;
+	private static final String UPLOAD_URI = getProtocol() + PROTOCOL_DELIMITER + TEST_ON_DEMAND_DOMAIN + UPLOAD_PATH;
 
 	private static final String REDIRECT_URL_XPATH_EXPRESSION = "//RedirectURL";
 	private static final String LOCATION_XPATH_EXPRESSION = "//Location";
@@ -104,6 +107,8 @@ public class TestOnDemandCaller
 	private static final String UPLOAD_PARAMETER_LOCATION_PREFIX = "test_location=";
 
 	private static final String SERVER_IP_ADDRESSES_DELIMETER = ",";
+
+	protected static final String COULD_NOT_SAVE_TEMPORARY_PROJECT_MESSAGE = "Could not save temporary project file before sending TestCase";
 
 	private final XPath xpath = XPathFactory.newInstance().newXPath();
 
@@ -141,6 +146,7 @@ public class TestOnDemandCaller
 	@NonNull
 	public String sendTestCase( @NonNull WsdlTestCase testCase, @NonNull Location location ) throws Exception
 	{
+
 		final ExtendedPostMethod post = new ExtendedPostMethod();
 		post.setURI( new URI( UPLOAD_URI ) );
 
@@ -151,8 +157,8 @@ public class TestOnDemandCaller
 		String encodedTestSuiteName = encoder.encode( testCase.getTestSuite().getName().getBytes() );
 		String encodedTestCaseName = encoder.encode( testCase.getName().getBytes() );
 
-		String projectFilePath = testCase.getTestSuite().getProject().getPath();
-		byte[] projectFileData = getBytes( projectFilePath );
+		File tempProjectFile = saveTemporaryProject( testCase.getTestSuite().getProject() );
+		byte[] projectFileData = getBytes( tempProjectFile.getAbsolutePath() );
 		byte[] zipedProjectFileData = zipBytes( testCase.getTestSuite().getProject().getName(), projectFileData );
 		String encodedZipedProjectFile = encoder.encode( zipedProjectFileData );
 
@@ -182,6 +188,22 @@ public class TestOnDemandCaller
 			throw new RuntimeException( "The RedirectURL element is missing in the response message" );
 		}
 		return redirectURL;
+	}
+
+	// FIXME Add to utility class and make DependencyValidator.saveProject() use this
+	protected File saveTemporaryProject( WsdlProject project )
+	{
+		File tempFile = null;
+		try
+		{
+			tempFile = File.createTempFile( "project-temp-", ".xml", null );
+			project.saveIn( tempFile );
+		}
+		catch( IOException e )
+		{
+			SoapUI.logError( e, COULD_NOT_SAVE_TEMPORARY_PROJECT_MESSAGE );
+		}
+		return tempFile;
 	}
 
 	private Document makeCall( String uri, String requestContent ) throws Exception
@@ -337,5 +359,10 @@ public class TestOnDemandCaller
 		{
 			return customEndpoint;
 		}
+	}
+
+	private static String getProtocol()
+	{
+		return System.getProperty( SoapUISystemProperties.TEST_ON_DEMAND_PROTOCOL, DEFAULT_PROTOCOL );
 	}
 }
