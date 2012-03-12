@@ -40,7 +40,6 @@ import javax.swing.SwingUtilities;
 import javax.swing.text.Document;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.SoapUISystemProperties;
 import com.eviware.soapui.config.TestStepConfig;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
@@ -264,11 +263,7 @@ public class WsdlTestCaseDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 		inspectorPanel.addInspector( new GroovyEditorInspector( buildTearDownScriptPanel(), "TearDown Script",
 				"Script to run after a TestCase Run" ) );
 
-		// FIXME This must be removed when the AlertSite team has finished their implementation on the server side
-		if( System.getProperty( SoapUISystemProperties.TEST_ON_DEMAND_HOST ) != null )
-		{
-			tabs.addTab( "Test On Demand", buildTestOnDemandPanel() );
-		}
+		tabs.addTab( "Test On Demand", buildTestOnDemandPanel() );
 	}
 
 	protected GroovyEditorComponent buildTearDownScriptPanel()
