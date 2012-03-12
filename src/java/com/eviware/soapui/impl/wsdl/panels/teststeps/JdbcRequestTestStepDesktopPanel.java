@@ -56,6 +56,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.text.Document;
 
 import org.apache.log4j.Logger;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.JdbcRequestTestStepConfig;
@@ -105,9 +106,8 @@ import com.eviware.soapui.support.editor.xml.support.AbstractXmlDocument;
 import com.eviware.soapui.support.jdbc.JdbcUtils;
 import com.eviware.soapui.support.log.JLogList;
 import com.eviware.soapui.support.propertyexpansion.PropertyExpansionPopupListener;
-import com.eviware.soapui.support.swing.JXEditAreaPopupMenu;
 import com.eviware.soapui.support.types.StringToStringMap;
-import com.eviware.soapui.support.xml.JXEditTextArea;
+import com.eviware.soapui.support.xml.SyntaxEditorUtil;
 import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
 
 public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcRequestTestStep> implements
@@ -136,7 +136,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 	protected static final String QUERY_ELEMENT = "query";
 	protected static final String STOREDPROCEDURE_ELEMENT = "stored-procedure";
 	protected Connection connection;
-	protected JXEditTextArea queryArea;
+	protected RSyntaxTextArea queryArea;
 	protected JCheckBox isStoredProcedureCheckBox;
 	protected JTextField driverTextField;
 	protected JTextField connStrTextField;
@@ -524,8 +524,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 		testConnectionButton.setEnabled( enableTestConnection() );
 		submitButton.setEnabled( enableSubmit() );
 
-		queryArea = JXEditTextArea.createSqlEditor();
-		JXEditAreaPopupMenu.add( queryArea );
+		queryArea = SyntaxEditorUtil.createDefaultSQLSyntaxTextArea();
 		PropertyExpansionPopupListener.enable( queryArea, jdbcRequestTestStep );
 		queryArea.setText( jdbcRequestTestStep.getQuery() );
 		JScrollPane scrollPane = new JScrollPane( queryArea );
@@ -916,7 +915,8 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 		driverTextField.setEnabled( enabled );
 		connStrTextField.setEnabled( enabled );
 		passField.setEnabled( enabled );
-		queryArea.setEnabledAndEditable( enabled );
+		queryArea.setEnabled( enabled );
+		queryArea.setEditable( enabled );
 		isStoredProcedureCheckBox.setEnabled( enabled );
 		propertiesTableComponent.setEnabled( enabled );
 		testConnectionButton.setEnabled( enabled );

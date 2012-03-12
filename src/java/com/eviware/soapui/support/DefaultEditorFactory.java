@@ -17,11 +17,14 @@ import javax.swing.JScrollPane;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+import org.fife.ui.rtextarea.RTextScrollPane;
+
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GroovyEditor;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GroovyEditorModel;
 import com.eviware.soapui.support.EditorModel.EditorModelListener;
 import com.eviware.soapui.support.components.JUndoableTextArea;
-import com.eviware.soapui.support.xml.JXEditTextArea;
+import com.eviware.soapui.support.xml.SyntaxEditorUtil;
 
 public class DefaultEditorFactory implements EditorFactory
 {
@@ -36,10 +39,11 @@ public class DefaultEditorFactory implements EditorFactory
 
 	public JComponent buildXmlEditor( EditorModel editorModel )
 	{
-		JXEditTextArea xmlEditor = JXEditTextArea.createXmlEditor( true );
+		RSyntaxTextArea xmlEditor = SyntaxEditorUtil.createDefaultXmlSyntaxTextArea();
+		RTextScrollPane scrollPane = new RTextScrollPane( xmlEditor );
+		xmlEditor = SyntaxEditorUtil.addDefaultActions( xmlEditor, scrollPane, false );
 		xmlEditor.setText( editorModel.getEditorText() );
 		xmlEditor.getDocument().addDocumentListener( new EditorModelDocumentListener( editorModel, xmlEditor ) );
-		JScrollPane scrollPane = new JScrollPane( xmlEditor );
 		UISupport.addPreviewCorner( scrollPane, false );
 		return scrollPane;
 	}
@@ -52,9 +56,9 @@ public class DefaultEditorFactory implements EditorFactory
 	private static class EditorModelDocumentListener extends DocumentListenerAdapter implements EditorModelListener
 	{
 		private EditorModel editorModel;
-		private final JXEditTextArea xmlEditor;
+		private final RSyntaxTextArea xmlEditor;
 
-		public EditorModelDocumentListener( EditorModel editorModel, JXEditTextArea xmlEditor )
+		public EditorModelDocumentListener( EditorModel editorModel, RSyntaxTextArea xmlEditor )
 		{
 			this.editorModel = editorModel;
 			this.xmlEditor = xmlEditor;

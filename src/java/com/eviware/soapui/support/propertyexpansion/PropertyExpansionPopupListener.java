@@ -31,6 +31,8 @@ import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import javax.swing.text.JTextComponent;
 
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
 import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
@@ -55,7 +57,6 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.GroovyEditorComponent;
 import com.eviware.soapui.support.components.ShowPopupAction;
 import com.eviware.soapui.support.propertyexpansion.scrollmenu.ScrollableMenu;
-import com.eviware.soapui.support.xml.JXEditTextArea;
 import com.eviware.soapui.support.xml.XmlUtils;
 
 public class PropertyExpansionPopupListener implements PopupMenuListener
@@ -352,13 +353,13 @@ public class PropertyExpansionPopupListener implements PopupMenuListener
 		return panel;
 	}
 
-	public static void enable( JXEditTextArea textField, ModelItem modelItem )
+	public static void enable( RSyntaxTextArea textField, ModelItem modelItem )
 	{
-		JXEditTextAreaPropertyExpansionTarget target = new JXEditTextAreaPropertyExpansionTarget( textField, modelItem );
+		RSyntaxTextAreaPropertyExpansionTarget target = new RSyntaxTextAreaPropertyExpansionTarget( textField, modelItem );
 		DropTarget dropTarget = new DropTarget( textField, new PropertyExpansionDropTarget( target ) );
 		dropTarget.setDefaultActions( DnDConstants.ACTION_COPY_OR_MOVE );
 
-		JPopupMenu popup = textField.getRightClickPopup();
+		JPopupMenu popup = textField.getPopupMenu();
 
 		if( popup != null )
 		{

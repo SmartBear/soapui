@@ -37,8 +37,9 @@ import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.text.JTextComponent;
 
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+
 import com.eviware.soapui.support.swing.JTextComponentPopupMenu;
-import com.eviware.soapui.support.xml.JXEditTextArea;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
@@ -402,9 +403,9 @@ public class SimpleForm
 		{
 			( ( JFormComponent )component ).setValue( value );
 		}
-		else if( component instanceof JXEditTextArea )
+		else if( component instanceof RSyntaxTextArea )
 		{
-			( ( JXEditTextArea )component ).setText( value );
+			( ( RSyntaxTextArea )component ).setText( value );
 		}
 	}
 

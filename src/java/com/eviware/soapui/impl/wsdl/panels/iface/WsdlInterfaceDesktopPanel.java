@@ -45,6 +45,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.text.BadLocationException;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
@@ -55,8 +56,9 @@ import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlLineNumber;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+import org.fife.ui.rtextarea.RTextScrollPane;
 import org.jdesktop.swingx.JXTable;
-import org.syntax.jedit.JEditTextArea;
 import org.w3c.dom.Element;
 
 import com.eviware.soapui.SoapUI;
@@ -70,7 +72,6 @@ import com.eviware.soapui.impl.wsdl.actions.iface.ExportDefinitionAction;
 import com.eviware.soapui.impl.wsdl.actions.iface.UpdateInterfaceAction;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.wsi.WSIAnalyzeAction;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.wsi.WSIReportPanel;
-import com.eviware.soapui.impl.wsdl.panels.teststeps.support.LineNumbersPanel;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlUtils;
 import com.eviware.soapui.impl.wsdl.support.xsd.SchemaUtils;
@@ -86,7 +87,7 @@ import com.eviware.soapui.support.components.MetricsPanel.MetricType;
 import com.eviware.soapui.support.components.MetricsPanel.MetricsSection;
 import com.eviware.soapui.support.components.ProgressDialog;
 import com.eviware.soapui.support.types.StringList;
-import com.eviware.soapui.support.xml.JXEditTextArea;
+import com.eviware.soapui.support.xml.SyntaxEditorUtil;
 import com.eviware.soapui.support.xml.XmlUtils;
 import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
 import com.eviware.x.dialogs.Worker;
@@ -105,7 +106,7 @@ public class WsdlInterfaceDesktopPanel extends ModelItemDesktopPanel<WsdlInterfa
 {
 	private final static Logger logger = Logger.getLogger( WsdlInterfaceDesktopPanel.class );
 	private JTabbedPane partTabs;
-	private List<JEditTextArea> editors = new ArrayList<JEditTextArea>();
+	private List<RSyntaxTextArea> editors = new ArrayList<RSyntaxTextArea>();
 	private JTree tree;
 	private Map<String, DefaultMutableTreeNode> groupNodes = new HashMap<String, DefaultMutableTreeNode>();
 	private Map<String, TreePath> pathMap = new HashMap<String, TreePath>();
@@ -391,15 +392,22 @@ public class WsdlInterfaceDesktopPanel extends ModelItemDesktopPanel<WsdlInterfa
 					partTabs.setSelectedIndex( item.getTabIndex() );
 					statusBar.setInfo( item.getDescription() );
 
-					JEditTextArea editor = editors.get( item.getTabIndex() );
+					RSyntaxTextArea editor = editors.get( item.getTabIndex() );
 					int lineNumber = item.getLineNumber();
-					if( lineNumber > 0 && editor.getLineStartOffset( lineNumber ) >= 0 )
+					try
 					{
-						editor.setCaretPosition( editor.getLineStartOffset( lineNumber ) );
+						if( lineNumber > 0 && editor.getLineStartOffset( lineNumber ) >= 0 )
+						{
+							editor.setCaretPosition( editor.getLineStartOffset( lineNumber ) );
+						}
+						else
+						{
+							editor.setCaretPosition( 0 );
+						}
 					}
-					else
+					catch( BadLocationException e1 )
 					{
-						editor.setCaretPosition( 0 );
+						SoapUI.logError( e1, "Unable to reset the caret position" );
 					}
 				}
 
@@ -477,7 +485,7 @@ public class WsdlInterfaceDesktopPanel extends ModelItemDesktopPanel<WsdlInterfa
 			label.setBorder( BorderFactory.createEmptyBorder( 3, 3, 3, 3 ) );
 			panel.add( label, BorderLayout.NORTH );
 
-			JXEditTextArea inputArea = JXEditTextArea.createXmlEditor( false );
+			RSyntaxTextArea inputArea = SyntaxEditorUtil.createDefaultXmlSyntaxTextArea();
 			StringWriter writer = new StringWriter();
 			// XmlUtils.serializePretty( XmlObject.Factory.parse( content ), writer
 			// );
@@ -491,13 +499,12 @@ public class WsdlInterfaceDesktopPanel extends ModelItemDesktopPanel<WsdlInterfa
 
 			inputArea.setText( xmlString );
 			inputArea.setEditable( false );
-			inputArea.getPainter().setLineHighlightEnabled( true );
 
 			JPanel p = new JPanel( new BorderLayout() );
-			p.add( inputArea, BorderLayout.CENTER );
-			p.add( new LineNumbersPanel( inputArea ), BorderLayout.WEST );
-
-			panel.add( new JScrollPane( p ), BorderLayout.CENTER );
+			RTextScrollPane scrollPane = new RTextScrollPane( inputArea );
+			UISupport.addPreviewCorner( scrollPane, true );
+			p.add( scrollPane, BorderLayout.CENTER );
+			panel.add( p, BorderLayout.CENTER );
 			partTabs.addTab( title, panel );
 
 			if( tree != null )
@@ -506,7 +513,7 @@ public class WsdlInterfaceDesktopPanel extends ModelItemDesktopPanel<WsdlInterfa
 			}
 		}
 
-		private void initInspectionTree( XmlObject xmlObject, JXEditTextArea inputArea )
+		private void initInspectionTree( XmlObject xmlObject, RSyntaxTextArea inputArea )
 		{
 			DefaultMutableTreeNode treeRoot = rootNode;
 

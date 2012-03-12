@@ -16,11 +16,12 @@ import java.awt.BorderLayout;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 
 import org.apache.ws.security.message.WSSecHeader;
 import org.apache.ws.security.message.WSSecSAMLToken;
 import org.apache.ws.security.saml.ext.AssertionWrapper;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+import org.fife.ui.rtextarea.RTextScrollPane;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -32,7 +33,7 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpansionsResult;
 import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.xml.JXEditTextArea;
+import com.eviware.soapui.support.xml.SyntaxEditorUtil;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationBuilder;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
 import com.eviware.soapui.support.xml.XmlUtils;
@@ -49,7 +50,7 @@ public class ManualSAMLEntry extends WssEntryBase
 
 	private String samlAssertion;
 
-	private JXEditTextArea editor;
+	private RSyntaxTextArea editor;
 
 	public void init( WSSEntryConfig config, OutgoingWss container )
 	{
@@ -61,7 +62,12 @@ public class ManualSAMLEntry extends WssEntryBase
 	{
 		JPanel panel = new JPanel( new BorderLayout() );
 
-		editor = JXEditTextArea.createXmlEditor( true );
+		RTextScrollPane scrollPane = new RTextScrollPane( editor );
+		scrollPane.setFoldIndicatorEnabled( true );
+		scrollPane.setLineNumbersEnabled( true );
+		editor = SyntaxEditorUtil.createDefaultXmlSyntaxTextArea();
+		editor = SyntaxEditorUtil.addDefaultActions( editor, scrollPane, false );
+
 		editor.setText( samlAssertion );
 		editor.getDocument().addDocumentListener( new DocumentListenerAdapter()
 		{
@@ -74,7 +80,7 @@ public class ManualSAMLEntry extends WssEntryBase
 
 			}
 		} );
-		panel.add( new JScrollPane( editor ), BorderLayout.CENTER );
+		panel.add( scrollPane, BorderLayout.CENTER );
 
 		return UISupport.addTitledBorder( panel, "Enter SAML Assertion" );
 	}

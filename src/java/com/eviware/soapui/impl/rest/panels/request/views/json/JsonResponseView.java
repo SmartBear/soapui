@@ -19,10 +19,12 @@ import java.beans.PropertyChangeListener;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 
 import net.sf.json.JSON;
 import net.sf.json.JSONSerializer;
+
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+import org.fife.ui.rtextarea.RTextScrollPane;
 
 import com.eviware.soapui.impl.rest.support.handlers.JsonMediaTypeHandler;
 import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
@@ -33,14 +35,14 @@ import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.editor.views.AbstractXmlEditorView;
-import com.eviware.soapui.support.xml.JXEditTextArea;
+import com.eviware.soapui.support.xml.SyntaxEditorUtil;
 
 @SuppressWarnings( "unchecked" )
 public class JsonResponseView extends AbstractXmlEditorView<HttpResponseDocument> implements PropertyChangeListener
 {
 	private final HttpRequestInterface<?> httpRequest;
 	private JPanel contentPanel;
-	private JXEditTextArea contentEditor;
+	private RSyntaxTextArea contentEditor;
 	private boolean updatingRequest;
 	private JPanel panel;
 
@@ -83,12 +85,15 @@ public class JsonResponseView extends AbstractXmlEditorView<HttpResponseDocument
 	{
 		contentPanel = new JPanel( new BorderLayout() );
 
-		contentEditor = JXEditTextArea.createJavaScriptEditor();
+		contentEditor = SyntaxEditorUtil.createDefaultJavaScriptSyntaxTextArea();
 		HttpResponse response = httpRequest.getResponse();
 		if( response != null )
 			setEditorContent( response );
 
-		contentPanel.add( new JScrollPane( contentEditor ) );
+		RTextScrollPane scrollPane = new RTextScrollPane( contentEditor );
+		scrollPane.setFoldIndicatorEnabled( true );
+		scrollPane.setLineNumbersEnabled( true );
+		contentPanel.add( scrollPane );
 		contentEditor.setEditable( false );
 
 		return contentPanel;

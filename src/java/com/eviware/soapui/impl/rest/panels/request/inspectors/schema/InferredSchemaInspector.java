@@ -13,6 +13,7 @@
 package com.eviware.soapui.impl.rest.panels.request.inspectors.schema;
 
 import java.awt.BorderLayout;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -41,6 +42,7 @@ import javax.xml.namespace.QName;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.RestService;
@@ -59,7 +61,7 @@ import com.eviware.soapui.support.editor.inspectors.AbstractXmlInspector;
 import com.eviware.soapui.support.editor.views.xml.raw.RawXmlEditorFactory;
 import com.eviware.soapui.support.editor.xml.XmlDocument;
 import com.eviware.soapui.support.log.JLogList;
-import com.eviware.soapui.support.xml.JXEditTextArea;
+import com.eviware.soapui.support.xml.SyntaxEditorUtil;
 import com.eviware.soapui.support.xml.XmlUtils;
 
 /**
@@ -182,7 +184,7 @@ public class InferredSchemaInspector extends AbstractXmlInspector implements Sub
 		private JButton resolveButton;
 		private JCheckBox auto;
 		private Handler handler;
-		private JXEditTextArea xsd;
+		private RSyntaxTextArea xsd;
 		private JList schemaList;
 		public static final String AUTO_INFER_SCHEMAS = "AutoInferSchemas";
 		public static final String NO_NAMESPACE = "<no namespace>";
@@ -233,7 +235,7 @@ public class InferredSchemaInspector extends AbstractXmlInspector implements Sub
 			listPanel.setLayout( new BorderLayout() );
 			listPanel.add( toolbar, BorderLayout.NORTH );
 			listPanel.add( new JScrollPane( schemaList ), BorderLayout.CENTER );
-			xsd = JXEditTextArea.createXmlEditor( false );
+			xsd = SyntaxEditorUtil.createDefaultXmlSyntaxTextArea();
 			xsd.setEditable( false );
 			update();
 			addTab( "Schemas", new JSplitPane( JSplitPane.HORIZONTAL_SPLIT, listPanel, new JScrollPane( xsd ) ) );
@@ -281,7 +283,9 @@ public class InferredSchemaInspector extends AbstractXmlInspector implements Sub
 			{
 				xsd.setText( XmlUtils.prettyPrintXml( InferredSchemaManager.getInferredSchema( service )
 						.getXsdForNamespace( ( String )schemaList.getSelectedValue() ) ) );
-				xsd.scrollTo( 0, 0 );
+				xsd.setCaretPosition( 0 );
+				xsd.scrollRectToVisible( new Rectangle( 0, 0, ( int )( getSize().getWidth() ), ( int )( getSize()
+						.getHeight() ) ) );
 			}
 		}
 
@@ -301,7 +305,9 @@ public class InferredSchemaInspector extends AbstractXmlInspector implements Sub
 						namespace = "";
 					xsd.setText( XmlUtils.prettyPrintXml( InferredSchemaManager.getInferredSchema( service )
 							.getXsdForNamespace( namespace ) ) );
-					xsd.scrollTo( 0, 0 );
+					xsd.setCaretPosition( 0 );
+					xsd.scrollRectToVisible( new Rectangle( 0, 0, ( int )( getSize().getWidth() ), ( int )( getSize()
+							.getHeight() ) ) );
 				}
 			}
 		}

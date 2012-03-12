@@ -34,10 +34,11 @@ import javax.swing.JTextArea;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.xml.JXEditTextArea;
+import com.eviware.soapui.support.xml.SyntaxEditorUtil;
 import com.eviware.soapui.support.xml.XmlUtils;
 import com.jgoodies.forms.builder.ButtonBarBuilder;
 
@@ -51,9 +52,9 @@ public class XQueryXPathTesterAction extends AbstractAction
 {
 	private JDialog dialog;
 	private JSplitPane mainSplit;
-	private JXEditTextArea resultArea;
+	private RSyntaxTextArea resultArea;
 	private JSplitPane querySplit;
-	private JXEditTextArea inputArea;
+	private RSyntaxTextArea inputArea;
 	private JTextArea xqueryArea;
 	private JTextArea xpathArea;
 	private JTabbedPane queryTabs;
@@ -153,7 +154,7 @@ public class XQueryXPathTesterAction extends AbstractAction
 
 	private JComponent buildInputArea()
 	{
-		inputArea = JXEditTextArea.createXmlEditor( true );
+		inputArea = SyntaxEditorUtil.createDefaultXmlSyntaxTextArea();
 		return inputArea;
 	}
 
@@ -161,7 +162,7 @@ public class XQueryXPathTesterAction extends AbstractAction
 	{
 		JPanel panel = new JPanel( new BorderLayout() );
 
-		resultArea = JXEditTextArea.createXmlEditor( false );
+		resultArea = SyntaxEditorUtil.createDefaultXmlSyntaxTextArea();
 		panel.add( resultArea, BorderLayout.CENTER );
 
 		return panel;

@@ -72,6 +72,7 @@ import com.eviware.soapui.support.editor.xml.XmlDocument;
 import com.eviware.soapui.support.editor.xml.XmlEditor;
 import com.eviware.soapui.support.editor.xml.XmlLocation;
 import com.eviware.soapui.support.editor.xml.support.ValidationError;
+import com.eviware.soapui.support.propertyexpansion.PropertyExpansionPopupListener;
 import com.eviware.soapui.support.swing.SoapUISplitPaneUI;
 import com.eviware.soapui.support.xml.XmlUtils;
 import com.eviware.soapui.support.xml.actions.EnableLineNumbersAction;
@@ -96,23 +97,28 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
 	private JSplitPane splitter;
 	private JScrollPane errorScrollPane;
 	private DefaultListModel errorListModel;
-	private FormatXmlAction formatXmlAction;
-	private SaveXmlTextAreaAction saveXmlTextAreaAction;
 	private boolean updating;
 	public boolean isLocating;
-	private LoadXmlTextAreaAction loadXmlTextAreaAction;
 	private JPopupMenu inputPopup;
 	private PreviewCorner previewCorner;
 	private T modelItem;
-	private InsertBase64FileTextAreaAction insertBase64FileTextAreaAction;
+
 	private EnableLineNumbersAction enableLineNumbersAction;
 	private GoToLineAction goToLineAction;
-	private FindAndReplaceDialogView findAndReplaceDialog;
+	private SaveXmlTextAreaAction saveXmlTextAreaAction;
 
-	public XmlSourceEditorView( XmlEditor<XmlDocument> xmlEditor, T modelItem )
+	// Read only views don't need these
+	private FormatXmlAction formatXmlAction;
+	private LoadXmlTextAreaAction loadXmlTextAreaAction;
+	private InsertBase64FileTextAreaAction insertBase64FileTextAreaAction;
+	private FindAndReplaceDialogView findAndReplaceDialog;
+	private final boolean readOnly;
+
+	public XmlSourceEditorView( XmlEditor<XmlDocument> xmlEditor, T modelItem, boolean readOnly )
 	{
 		super( "XML", xmlEditor, XmlSourceEditorViewFactory.VIEW_ID );
 		this.modelItem = modelItem;
+		this.readOnly = readOnly;
 	}
 
 	protected void buildUI()
@@ -178,23 +184,31 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
 		if( UISupport.isMac() )
 		{
 			editArea.getInputMap().put( KeyStroke.getKeyStroke( "shift meta V" ), validateXmlAction );
-			editArea.getInputMap().put( KeyStroke.getKeyStroke( "shift meta F" ), formatXmlAction );
 			editArea.getInputMap().put( KeyStroke.getKeyStroke( "meta S" ), saveXmlTextAreaAction );
-			editArea.getInputMap().put( KeyStroke.getKeyStroke( "meta L" ), loadXmlTextAreaAction );
 			editArea.getInputMap().put( KeyStroke.getKeyStroke( "control L" ), enableLineNumbersAction );
 			editArea.getInputMap().put( KeyStroke.getKeyStroke( "control meta L" ), goToLineAction );
+			if( !readOnly )
+			{
+				editArea.getInputMap().put( KeyStroke.getKeyStroke( "shift meta F" ), formatXmlAction );
+				editArea.getInputMap().put( KeyStroke.getKeyStroke( "meta L" ), loadXmlTextAreaAction );
+			}
 		}
 		else
 		{
 			editArea.getInputMap().put( KeyStroke.getKeyStroke( "alt V" ), validateXmlAction );
-			editArea.getInputMap().put( KeyStroke.getKeyStroke( "alt F" ), formatXmlAction );
 			editArea.getInputMap().put( KeyStroke.getKeyStroke( "ctrl S" ), saveXmlTextAreaAction );
-			editArea.getInputMap().put( KeyStroke.getKeyStroke( "ctrl L" ), loadXmlTextAreaAction );
 			editArea.getInputMap().put( KeyStroke.getKeyStroke( "alt L" ), enableLineNumbersAction );
 			editArea.getInputMap().put( KeyStroke.getKeyStroke( "control alt L" ), goToLineAction );
+			if( !readOnly )
+			{
+				editArea.getInputMap().put( KeyStroke.getKeyStroke( "alt F" ), formatXmlAction );
+				editArea.getInputMap().put( KeyStroke.getKeyStroke( "ctrl L" ), loadXmlTextAreaAction );
+			}
 		}
-		editArea.getInputMap().put( KeyStroke.getKeyStroke( "F3" ), findAndReplaceDialog );
-
+		if( !readOnly )
+		{
+			editArea.getInputMap().put( KeyStroke.getKeyStroke( "F3" ), findAndReplaceDialog );
+		}
 		editorScrollPane.setLineNumbersEnabled( SoapUI.getSettings().getBoolean( UISettings.SHOW_XML_LINE_NUMBERS ) );
 		editorScrollPane.setFoldIndicatorEnabled( true );
 		p.add( editorScrollPane, BorderLayout.CENTER );
@@ -205,6 +219,7 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
 		splitter.setBorder( null );
 
 		previewCorner = UISupport.addPreviewCorner( getEditorScrollPane(), true );
+		PropertyExpansionPopupListener.enable( editArea, modelItem );
 	}
 
 	public JScrollPane getEditorScrollPane()
@@ -221,13 +236,17 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
 	{
 		this.inputPopup = inputPopup;
 		validateXmlAction = new ValidateMessageXmlAction();
-		formatXmlAction = new FormatXmlAction( editArea );
 		saveXmlTextAreaAction = new SaveXmlTextAreaAction( editArea, "Save" );
-		loadXmlTextAreaAction = new LoadXmlTextAreaAction( editArea, "Load" );
-		insertBase64FileTextAreaAction = new InsertBase64FileTextAreaAction( editArea, "Insert File as Base64" );
 		enableLineNumbersAction = new EnableLineNumbersAction( editorScrollPane, "Toggle Line Numbers" );
 		goToLineAction = new GoToLineAction( editArea, "Go To Line" );
-		findAndReplaceDialog = new FindAndReplaceDialogView();
+
+		if( !readOnly )
+		{
+			formatXmlAction = new FormatXmlAction( editArea );
+			loadXmlTextAreaAction = new LoadXmlTextAreaAction( editArea, "Load" );
+			insertBase64FileTextAreaAction = new InsertBase64FileTextAreaAction( editArea, "Insert File as Base64" );
+			findAndReplaceDialog = new FindAndReplaceDialogView();
+		}
 
 		int cnt = inputPopup.getComponentCount();
 		for( int i = cnt - 1; i >= 0; i-- )
@@ -239,17 +258,22 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
 		}
 
 		inputPopup.insert( validateXmlAction, 0 );
-		inputPopup.insert( formatXmlAction, 1 );
-		inputPopup.addSeparator();
-		inputPopup.add( findAndReplaceDialog );
+		if( !readOnly )
+		{
+			inputPopup.insert( formatXmlAction, 1 );
+			inputPopup.addSeparator();
+			inputPopup.add( findAndReplaceDialog );
+		}
 		inputPopup.addSeparator();
 		inputPopup.add( goToLineAction );
 		inputPopup.add( enableLineNumbersAction );
 		inputPopup.addSeparator();
 		inputPopup.add( saveXmlTextAreaAction );
-		inputPopup.add( loadXmlTextAreaAction );
-		inputPopup.add( insertBase64FileTextAreaAction );
-
+		if( !readOnly )
+		{
+			inputPopup.add( loadXmlTextAreaAction );
+			inputPopup.add( insertBase64FileTextAreaAction );
+		}
 	}
 
 	@Override

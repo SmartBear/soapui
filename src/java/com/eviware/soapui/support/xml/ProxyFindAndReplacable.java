@@ -14,7 +14,7 @@ package com.eviware.soapui.support.xml;
 
 import javax.swing.JComponent;
 
-import org.syntax.jedit.JEditTextArea;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 import com.eviware.soapui.support.actions.FindAndReplaceable;
 
@@ -115,7 +115,7 @@ public class ProxyFindAndReplacable implements FindAndReplaceable
 
 	public void setReplaceAll( boolean isReplaceAll )
 	{
-		if( proxytarget instanceof JEditTextArea )
+		if( proxytarget instanceof RSyntaxTextArea )
 		{
 			this.isReplaceAll = isReplaceAll;
 		}
@@ -147,18 +147,18 @@ public class ProxyFindAndReplacable implements FindAndReplaceable
 
 	public void flushSBText()
 	{
-		if( proxytarget instanceof JEditTextArea )
+		if( proxytarget instanceof RSyntaxTextArea )
 		{
-			( ( JEditTextArea )proxytarget ).setText( sbtartget.toString() );
+			( ( RSyntaxTextArea )proxytarget ).setText( sbtartget.toString() );
 		}
 
 	}
 
 	public void setCarretPosition( boolean forward )
 	{
-		if( proxytarget instanceof JEditTextArea )
+		if( proxytarget instanceof RSyntaxTextArea )
 		{
-			( ( JEditTextArea )proxytarget ).setCaretPosition( forward ? getEnd() : getStart() );
+			( ( RSyntaxTextArea )proxytarget ).setCaretPosition( forward ? getEnd() : getStart() );
 		}
 	}
 

@@ -26,7 +26,6 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpansionImpl;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.tree.nodes.PropertyTreeNode.PropertyModelItem;
 import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.xml.JXEditTextArea;
 import com.eviware.soapui.support.xml.XmlUtils;
 
 public final class PropertyExpansionDropTarget implements DropTargetListener
@@ -48,8 +47,6 @@ public final class PropertyExpansionDropTarget implements DropTargetListener
 	{
 		if( dtde.getDropTargetContext().getComponent() instanceof JTextComponent )
 			( ( JTextComponent )dtde.getDropTargetContext().getComponent() ).getCaret().setVisible( false );
-		else if( dtde.getDropTargetContext().getComponent() instanceof JXEditTextArea )
-			( ( JXEditTextArea )dtde.getDropTargetContext().getComponent() ).setCaretVisible( false );
 	}
 
 	public void dragOver( DropTargetDragEvent dtde )
@@ -65,17 +62,6 @@ public final class PropertyExpansionDropTarget implements DropTargetListener
 			{
 				textField.setCaretPosition( pos );
 				textField.getCaret().setVisible( true );
-			}
-		}
-
-		if( dtde.getDropTargetContext().getComponent() instanceof JXEditTextArea )
-		{
-			JXEditTextArea textField = ( JXEditTextArea )dtde.getDropTargetContext().getComponent();
-			int pos = textField.pointToOffset( dtde.getLocation() );
-			if( pos != -1 )
-			{
-				textField.setCaretPosition( pos );
-				textField.setCaretVisible( true );
 			}
 		}
 
@@ -121,8 +107,6 @@ public final class PropertyExpansionDropTarget implements DropTargetListener
 
 			if( dtde.getDropTargetContext().getComponent() instanceof JTextComponent )
 				( ( JTextComponent )dtde.getDropTargetContext().getComponent() ).getCaret().setVisible( false );
-			else if( dtde.getDropTargetContext().getComponent() instanceof JXEditTextArea )
-				( ( JXEditTextArea )dtde.getDropTargetContext().getComponent() ).setCaretVisible( false );
 		}
 	}
 

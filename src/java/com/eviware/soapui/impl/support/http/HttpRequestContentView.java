@@ -30,6 +30,8 @@ import javax.swing.JSplitPane;
 import javax.swing.SwingUtilities;
 import javax.swing.text.Document;
 
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+
 import com.eviware.soapui.impl.rest.panels.resource.RestParamsTable;
 import com.eviware.soapui.impl.rest.panels.resource.RestParamsTableModel;
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
@@ -42,7 +44,7 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.editor.views.AbstractXmlEditorView;
 import com.eviware.soapui.support.propertyexpansion.PropertyExpansionPopupListener;
-import com.eviware.soapui.support.xml.JXEditTextArea;
+import com.eviware.soapui.support.xml.SyntaxEditorUtil;
 
 @SuppressWarnings( "unchecked" )
 public class HttpRequestContentView extends AbstractXmlEditorView<HttpRequestDocument> implements
@@ -50,7 +52,7 @@ public class HttpRequestContentView extends AbstractXmlEditorView<HttpRequestDoc
 {
 	private final HttpRequestInterface<?> httpRequest;
 	private JPanel contentPanel;
-	private JXEditTextArea contentEditor;
+	private RSyntaxTextArea contentEditor;
 	private boolean updatingRequest;
 	private JComponent panel;
 	private JComboBox mediaTypeCombo;
@@ -150,7 +152,8 @@ public class HttpRequestContentView extends AbstractXmlEditorView<HttpRequestDoc
 	{
 		contentPanel = new JPanel( new BorderLayout() );
 
-		contentEditor = JXEditTextArea.createXmlEditor( true );
+		// Add popup!
+		contentEditor = SyntaxEditorUtil.createDefaultXmlSyntaxTextArea();
 		contentEditor.setText( httpRequest.getRequestContent() );
 
 		contentEditor.getDocument().addDocumentListener( new DocumentListenerAdapter()
@@ -180,7 +183,8 @@ public class HttpRequestContentView extends AbstractXmlEditorView<HttpRequestDoc
 		httpRequest.setPostQueryString( httpRequest.hasRequestBody() && httpRequest.isPostQueryString() );
 		postQueryCheckBox.setSelected( httpRequest.isPostQueryString() );
 		mediaTypeCombo.setEnabled( httpRequest.hasRequestBody() && !httpRequest.isPostQueryString() );
-		contentEditor.setEnabledAndEditable( httpRequest.hasRequestBody() && !httpRequest.isPostQueryString() );
+		contentEditor.setEnabled( httpRequest.hasRequestBody() && !httpRequest.isPostQueryString() );
+		contentEditor.setEditable( httpRequest.hasRequestBody() && !httpRequest.isPostQueryString() );
 		postQueryCheckBox.setEnabled( httpRequest.hasRequestBody() );
 	}
 
@@ -309,7 +313,8 @@ public class HttpRequestContentView extends AbstractXmlEditorView<HttpRequestDoc
 
 	public void setEditable( boolean enabled )
 	{
-		contentEditor.setEnabledAndEditable( enabled ? httpRequest.hasRequestBody() : false );
+		contentEditor.setEnabled( enabled ? httpRequest.hasRequestBody() : false );
+		contentEditor.setEditable( enabled ? httpRequest.hasRequestBody() : false );
 		mediaTypeCombo.setEnabled( enabled && !httpRequest.isPostQueryString() );
 		postQueryCheckBox.setEnabled( enabled );
 	}

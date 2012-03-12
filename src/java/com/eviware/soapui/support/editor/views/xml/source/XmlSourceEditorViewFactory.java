@@ -76,7 +76,7 @@ public class XmlSourceEditorViewFactory implements ResponseEditorViewFactory, Re
 	@SuppressWarnings( "unchecked" )
 	public XmlEditorView createEditorView( XmlEditor editor )
 	{
-		return new XmlSourceEditorView<ModelItem>( editor, null );
+		return new XmlSourceEditorView<ModelItem>( editor, null, false );
 	}
 
 	public String getViewId()
@@ -98,7 +98,7 @@ public class XmlSourceEditorViewFactory implements ResponseEditorViewFactory, Re
 		else if( modelItem instanceof MessageExchangeModelItem )
 		{
 			return new XmlSourceEditorView<MessageExchangeModelItem>( ( XmlEditor )editor,
-					( MessageExchangeModelItem )modelItem );
+					( MessageExchangeModelItem )modelItem, false );
 		}
 
 		return null;
@@ -122,15 +122,16 @@ public class XmlSourceEditorViewFactory implements ResponseEditorViewFactory, Re
 		else if( modelItem instanceof MessageExchangeModelItem )
 		{
 			return new XmlSourceEditorView<MessageExchangeModelItem>( ( XmlEditor )editor,
-					( MessageExchangeModelItem )modelItem );
+					( MessageExchangeModelItem )modelItem, true );
 		}
 		else if( modelItem instanceof JdbcRequestTestStep )
 		{
-			return new XmlSourceEditorView<JdbcRequestTestStep>( ( XmlEditor )editor, ( JdbcRequestTestStep )modelItem );
+			return new XmlSourceEditorView<JdbcRequestTestStep>( ( XmlEditor )editor, ( JdbcRequestTestStep )modelItem,
+					true );
 		}
 		else if( modelItem instanceof AMFRequestTestStep )
 		{
-			return new XmlSourceEditorView<AMFRequestTestStep>( ( XmlEditor )editor, ( AMFRequestTestStep )modelItem );
+			return new XmlSourceEditorView<AMFRequestTestStep>( ( XmlEditor )editor, ( AMFRequestTestStep )modelItem, true );
 		}
 
 		return null;
@@ -150,7 +151,7 @@ public class XmlSourceEditorViewFactory implements ResponseEditorViewFactory, Re
 		@SuppressWarnings( "unchecked" )
 		public WsdlRequestXmlSourceEditor( XmlEditor xmlEditor, WsdlRequest request )
 		{
-			super( xmlEditor, request );
+			super( xmlEditor, request, false );
 		}
 
 		protected ValidationError[] validateXml( String xml )
@@ -232,7 +233,7 @@ public class XmlSourceEditorViewFactory implements ResponseEditorViewFactory, Re
 		@SuppressWarnings( "unchecked" )
 		public WsdlMockRequestXmlSourceEditor( XmlEditor xmlEditor, WsdlMockResponse mockResponse )
 		{
-			super( xmlEditor, mockResponse );
+			super( xmlEditor, mockResponse, false );
 		}
 
 		protected ValidationError[] validateXml( String xml )
@@ -267,7 +268,7 @@ public class XmlSourceEditorViewFactory implements ResponseEditorViewFactory, Re
 		@SuppressWarnings( "unchecked" )
 		public WsdlResponseXmlSourceEditor( XmlEditor xmlEditor, WsdlRequest request )
 		{
-			super( xmlEditor, request );
+			super( xmlEditor, request, true );
 		}
 
 		protected ValidationError[] validateXml( String xml )
@@ -299,7 +300,7 @@ public class XmlSourceEditorViewFactory implements ResponseEditorViewFactory, Re
 		@SuppressWarnings( "unchecked" )
 		public WsdlMockResponseXmlSourceEditor( XmlEditor xmlEditor, WsdlMockResponse mockResponse )
 		{
-			super( xmlEditor, mockResponse );
+			super( xmlEditor, mockResponse, true );
 		}
 
 		@Override
@@ -375,7 +376,7 @@ public class XmlSourceEditorViewFactory implements ResponseEditorViewFactory, Re
 	{
 		public RestResponseXmlSourceEditor( XmlEditor<XmlDocument> xmlEditor, HttpRequestInterface<?> restRequest )
 		{
-			super( xmlEditor, restRequest );
+			super( xmlEditor, restRequest, true );
 		}
 
 		@SuppressWarnings( "unchecked" )
