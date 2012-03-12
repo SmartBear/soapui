@@ -169,8 +169,6 @@ public class WsdlTestSuiteDesktopPanel extends KeySensitiveModelItemDesktopPanel
 		toolbar.add( UISupport.createToolbarButton( runAction ) );
 		toolbar.add( UISupport.createToolbarButton( cancelAction ) );
 
-		toolbar.addRelatedGap();
-
 		ButtonGroup buttonGroup = new ButtonGroup();
 
 		sequentialButton = new JToggleButton( UISupport.createImageIcon( "/sequential.gif" ), true );
@@ -203,20 +201,11 @@ public class WsdlTestSuiteDesktopPanel extends KeySensitiveModelItemDesktopPanel
 
 		buttonGroup.add( parallellButton );
 
-		toolbar.addUnrelatedGap();
 		toolbar.add( sequentialButton );
-		toolbar.addRelatedGap();
 		toolbar.add( parallellButton );
 		generateLoadUITestsButton = UISupport.createToolbarButton( SwingActionDelegate.createDelegate(
 				GenerateLoadUITestsAction.SOAPUI_ACTION_ID, getModelItem(), null, "/runTestSuiteWithLoadUI.png" ) );
-		// convertToLoadUIButton = UISupport.createToolbarButton(
-		// SwingActionDelegate.createDelegate(
-		// ConvertTestSuiteLoadTestsToLoadUIAction.SOAPUI_ACTION_ID,
-		// getModelItem(), null,
-		// "/convertLoadTestToLoadUI.png" ) );
-		toolbar.addUnrelatedGap();
 		toolbar.add( generateLoadUITestsButton );
-		// toolbar.add( convertToLoadUIButton );
 	}
 
 	private JComponent buildTabs()

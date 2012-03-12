@@ -524,6 +524,7 @@ public class UISupport
 		JButton result = new JButton( action );
 		result.setPreferredSize( TOOLBAR_BUTTON_DIMENSION );
 		result.setText( "" );
+		result.setBorder( BorderFactory.createEmptyBorder( 4, 2, 4, 2 ) );
 		return result;
 	}
 
@@ -721,7 +722,7 @@ public class UISupport
 	public static JXToolBar createToolbar()
 	{
 		JXToolBar toolbar = new JXToolBar();
-		toolbar.setFloatable(false);
+		toolbar.setFloatable( false );
 		toolbar.addSpace( 1 );
 		toolbar.setRollover( true );
 		toolbar.putClientProperty( Options.HEADER_STYLE_KEY, HeaderStyle.SINGLE );
@@ -733,7 +734,7 @@ public class UISupport
 	public static JXToolBar createSmallToolbar()
 	{
 		JXToolBar toolbar = new JXToolBar();
-		toolbar.setFloatable(false);
+		toolbar.setFloatable( false );
 		toolbar.addSpace( 1 );
 		toolbar.setRollover( true );
 		toolbar.putClientProperty( Options.HEADER_STYLE_KEY, HeaderStyle.SINGLE );
