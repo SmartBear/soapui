@@ -236,7 +236,7 @@ public abstract class BaseHttpResponse implements HttpResponse
 					rawRequest.write( "<request data not available>".getBytes() );
 			}
 
-			if( !httpMethod.isFailed() && httpMethod.hasHttpResponse() )
+			if( !httpMethod.isFailed() && httpMethod.hasHttpResponse() && httpMethod.getResponseBody() != null )
 			{
 				rawResponse.write( "\r\n".getBytes() );
 				rawResponse.write( httpMethod.getResponseBody() );
