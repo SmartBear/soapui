@@ -13,7 +13,10 @@ package com.eviware.soapui.impl.wsdl.support.http;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.security.KeyManagementException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -21,7 +24,9 @@ import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.net.ssl.KeyManager;
@@ -32,7 +37,9 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
 import org.apache.commons.ssl.KeyMaterial;
+import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.conn.ssl.SSLSocketFactory;
+import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.log4j.Logger;
 
@@ -89,10 +96,14 @@ public class SoapUISSLSocketFactory extends SSLSocketFactory
 
 	private synchronized SSLSocket enableSocket( SSLSocket socket )
 	{
-		socket.getSession().invalidate();
-
+		String invalidateSession = System.getProperty( "soapui.https.session.invalidate" );
 		String protocols = System.getProperty( "soapui.https.protocols" );
 		String ciphers = System.getProperty( "soapui.https.ciphers" );
+
+		//		if( StringUtils.hasContent( invalidateSession ) )
+		//		{
+		socket.getSession().invalidate();
+		//		}
 
 		if( StringUtils.hasContent( protocols ) )
 		{
@@ -109,9 +120,28 @@ public class SoapUISSLSocketFactory extends SSLSocketFactory
 		}
 		else if( socket.getSupportedCipherSuites() != null )
 		{
-			socket.setEnabledCipherSuites( socket.getSupportedCipherSuites() );
+			socket.setEnabledCipherSuites( filterCipherSuites( socket.getSupportedCipherSuites() ) );
 		}
+
 		return socket;
+	}
+
+	private String[] filterCipherSuites( String[] cipherSuites )
+	{
+		List<String> filteredCipherSuites = new ArrayList<String>();
+		if( cipherSuites != null )
+		{
+			for( String cipherSuite : cipherSuites )
+			{
+				if( cipherSuite.equalsIgnoreCase( "TLS_KRB5_EXPORT_WITH_DES_CBC_40_SHA" )
+						|| cipherSuite.equalsIgnoreCase( "TLS_KRB5_EXPORT_WITH_DES_CBC_40_MD5" ) )
+				{
+					continue;
+				}
+				filteredCipherSuites.add( cipherSuite );
+			}
+		}
+		return filteredCipherSuites.toArray( new String[filteredCipherSuites.size()] );
 	}
 
 	@Override
@@ -174,5 +204,93 @@ public class SoapUISSLSocketFactory extends SSLSocketFactory
 			SoapUI.logError( gse );
 			return enableSocket( ( SSLSocket )super.createSocket( params ) );
 		}
+	}
+
+	/**
+	 * @since 4.1
+	 */
+	@Override
+	public Socket connectSocket( final Socket socket, final InetSocketAddress remoteAddress,
+			final InetSocketAddress localAddress, final HttpParams params ) throws IOException, UnknownHostException,
+			ConnectTimeoutException
+	{
+		if( remoteAddress == null )
+		{
+			throw new IllegalArgumentException( "Remote address may not be null" );
+		}
+		if( params == null )
+		{
+			throw new IllegalArgumentException( "HTTP parameters may not be null" );
+		}
+		Socket sock = socket != null ? socket : new Socket();
+		if( localAddress != null )
+		{
+			sock.setReuseAddress( HttpConnectionParams.getSoReuseaddr( params ) );
+			sock.bind( localAddress );
+		}
+
+		int connTimeout = HttpConnectionParams.getConnectionTimeout( params );
+		int soTimeout = HttpConnectionParams.getSoTimeout( params );
+
+		try
+		{
+			sock.setSoTimeout( soTimeout );
+			sock.connect( remoteAddress, connTimeout );
+		}
+		catch( SocketTimeoutException ex )
+		{
+			throw new ConnectTimeoutException( "Connect to " + remoteAddress.getHostName() + "/"
+					+ remoteAddress.getAddress() + " timed out" );
+		}
+		SSLSocket sslsock;
+		// Setup SSL layering if necessary
+		if( sock instanceof SSLSocket )
+		{
+			sslsock = ( SSLSocket )sock;
+		}
+		else
+		{
+			sslsock = ( SSLSocket )getSocketFactory().createSocket( sock, remoteAddress.getHostName(),
+					remoteAddress.getPort(), true );
+			sslsock = enableSocket( sslsock );
+		}
+		if( getHostnameVerifier() != null )
+		{
+			try
+			{
+				getHostnameVerifier().verify( remoteAddress.getHostName(), sslsock );
+				// verifyHostName() didn't blowup - good!
+			}
+			catch( IOException iox )
+			{
+				// close the socket before re-throwing the exception
+				try
+				{
+					sslsock.close();
+				}
+				catch( Exception x )
+				{ /* ignore */
+				}
+				throw iox;
+			}
+		}
+		return sslsock;
+	}
+
+	/**
+	 * @since 4.1
+	 */
+	@Override
+	public Socket createLayeredSocket( final Socket socket, final String host, final int port, final boolean autoClose )
+			throws IOException, UnknownHostException
+	{
+		SSLSocket sslSocket = ( SSLSocket )getSocketFactory().createSocket( socket, host, port, autoClose );
+		sslSocket = enableSocket( sslSocket );
+		if( getHostnameVerifier() != null )
+		{
+			getHostnameVerifier().verify( host, sslSocket );
+		}
+		// verifyHostName() didn't blowup - good!
+		return sslSocket;
 	}
 }
