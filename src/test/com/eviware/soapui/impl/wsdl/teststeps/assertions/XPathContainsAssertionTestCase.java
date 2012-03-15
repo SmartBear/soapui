@@ -166,7 +166,7 @@ public class XPathContainsAssertionTestCase
 	public void testLastElementTextMatch() throws Exception
 	{
 		assertion.setPath( "//company[last()]/companyName/text()" );
-		assertion.setExpectedContent( "Bonnier Zoo Förlag AB" );
+		assertion.setExpectedContent( "Bonnier Zoo FÃ¶rlag AB" );
 
 		assertNotNull( assertion.assertContent( testResponse, new WsdlSubmitContext( null ), "" ) );
 	}
