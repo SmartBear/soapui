@@ -18,6 +18,8 @@ import java.awt.Container;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DropTarget;
 import java.awt.event.ActionEvent;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
@@ -204,7 +206,7 @@ public class PropertyExpansionPopupListener implements PopupMenuListener
 		return menu;
 	}
 
-	public class TransferFromPropertyActionInvoker extends AbstractAction
+	private class TransferFromPropertyActionInvoker extends AbstractAction
 	{
 		private final TestPropertyHolder sourceStep;
 		private String sourceProperty;
@@ -244,6 +246,14 @@ public class PropertyExpansionPopupListener implements PopupMenuListener
 				}
 
 				( ( MutableTestPropertyHolder )sourceStep ).addProperty( sourceProperty );
+
+				String newVal = UISupport.prompt( "Specify the value of the new property '" + sourceProperty + "'",
+						"Set the value of the property", "" );
+
+				if( newVal != null )
+				{
+					sourceStep.setPropertyValue( sourceProperty, newVal );
+				}
 			}
 
 			String sourceXPath = "";
@@ -285,19 +295,35 @@ public class PropertyExpansionPopupListener implements PopupMenuListener
 			TestProperty property = sourceStep.getProperty( sourceProperty );
 			PropertyExpansion pe = new PropertyExpansionImpl( property, sourceXPath );
 
-			String valueForCreation = target.getValueForCreation();
+			String userSelectedValue = target.getValueForCreation();
 			target.insertPropertyExpansion( pe, null );
 
-			if( !StringUtils.hasContent( sourceXPath ) && StringUtils.hasContent( valueForCreation )
+			if( !StringUtils.hasContent( sourceXPath ) && StringUtils.hasContent( userSelectedValue )
 					&& !property.isReadOnly() )
 			{
-				valueForCreation = UISupport.prompt( "Initialize property value to", "Get Data", valueForCreation );
-				if( valueForCreation != null )
+				if( !userInputIsPropertyExpansion( userSelectedValue ) )
 				{
-					property.setValue( valueForCreation );
+					userSelectedValue = UISupport.prompt( "Do you want to update the value of the property? (" + val + ")",
+							"Get Data", userSelectedValue );
+					if( userSelectedValue != null )
+					{
+						property.setValue( userSelectedValue );
+					}
 				}
 			}
 		}
+	}
+
+	private static final Pattern pattern = Pattern.compile( "^\\$\\{(.*)\\}$" );
+
+	private static final boolean userInputIsPropertyExpansion( String userSelectedValue )
+	{
+		if( userSelectedValue == null )
+		{
+			return false;
+		}
+		Matcher matcher = pattern.matcher( userSelectedValue );
+		return matcher.matches();
 	}
 
 	public static void addMenu( JPopupMenu popup, String menuName, ModelItem item, PropertyExpansionTarget component )
