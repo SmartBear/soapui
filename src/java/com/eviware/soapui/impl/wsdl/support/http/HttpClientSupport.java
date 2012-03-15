@@ -21,6 +21,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 
+import org.apache.commons.logging.Log;
 import org.apache.commons.ssl.KeyMaterial;
 import org.apache.http.Header;
 import org.apache.http.HttpClientConnection;
@@ -29,7 +30,6 @@ import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.params.AuthPolicy;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.scheme.PlainSocketFactory;
@@ -71,10 +71,120 @@ public class HttpClientSupport
 
 	public static class SoapUIHttpClient extends DefaultHttpClient
 	{
+		private static class DummyLog implements Log
+		{
+			@Override
+			public void debug( Object arg0 )
+			{
+			}
+
+			@Override
+			public void debug( Object arg0, Throwable arg1 )
+			{
+			}
+
+			@Override
+			public void error( Object arg0 )
+			{
+			}
+
+			@Override
+			public void error( Object arg0, Throwable arg1 )
+			{
+			}
+
+			@Override
+			public void fatal( Object arg0 )
+			{
+			}
+
+			@Override
+			public void fatal( Object arg0, Throwable arg1 )
+			{
+			}
+
+			@Override
+			public void info( Object arg0 )
+			{
+			}
+
+			@Override
+			public void info( Object arg0, Throwable arg1 )
+			{
+			}
+
+			@Override
+			public boolean isDebugEnabled()
+			{
+				return false;
+			}
+
+			@Override
+			public boolean isErrorEnabled()
+			{
+				return false;
+			}
+
+			@Override
+			public boolean isFatalEnabled()
+			{
+				return false;
+			}
+
+			@Override
+			public boolean isInfoEnabled()
+			{
+				return false;
+			}
+
+			@Override
+			public boolean isTraceEnabled()
+			{
+				return false;
+			}
+
+			@Override
+			public boolean isWarnEnabled()
+			{
+				return false;
+			}
+
+			@Override
+			public void trace( Object arg0 )
+			{
+			}
+
+			@Override
+			public void trace( Object arg0, Throwable arg1 )
+			{
+			}
+
+			@Override
+			public void warn( Object arg0 )
+			{
+			}
+
+			@Override
+			public void warn( Object arg0, Throwable arg1 )
+			{
+			}
+		}
 
 		public SoapUIHttpClient( final ClientConnectionManager conman )
 		{
 			super( conman, null );
+
+			// Disable logging from HttpClient. Required by loadUI.
+			try
+			{
+				java.lang.reflect.Field logField = SoapUIHttpClient.class.getDeclaredField( "log" );
+				logField.setAccessible( true );
+				logField.set( this, new DummyLog() );
+			}
+			catch( Exception e )
+			{
+				e.printStackTrace();
+			}
 		}
 
 		@Override
@@ -102,6 +212,7 @@ public class HttpClientSupport
 			super.preProcess( request, processor, context );
 		}
 
+		@Override
 		protected HttpResponse doSendRequest( HttpRequest request, HttpClientConnection conn, HttpContext context )
 				throws IOException, HttpException
 		{
@@ -170,9 +281,9 @@ public class HttpClientSupport
 
 	private static class Helper
 	{
-		private SoapUIHttpClient httpClient;
+		private final SoapUIHttpClient httpClient;
 		private final static Logger log = Logger.getLogger( HttpClientSupport.Helper.class );
-		private SoapUIMultiThreadedHttpConnectionManager connectionManager;
+		private final SoapUIMultiThreadedHttpConnectionManager connectionManager;
 		private SoapUISSLSocketFactory socketFactory;
 
 		public Helper()
@@ -216,7 +327,7 @@ public class HttpClientSupport
 			{
 				method.getMetrics().getConnectTimer().start();
 			}
-			HttpResponse httpResponse = httpClient.execute( ( HttpUriRequest )method, httpContext );
+			HttpResponse httpResponse = httpClient.execute( method, httpContext );
 			method.setHttpResponse( httpResponse );
 			return httpResponse;
 		}
@@ -228,13 +339,14 @@ public class HttpClientSupport
 			{
 				method.getMetrics().getConnectTimer().start();
 			}
-			HttpResponse httpResponse = httpClient.execute( ( HttpUriRequest )method );
+			HttpResponse httpResponse = httpClient.execute( method );
 			method.setHttpResponse( httpResponse );
 			return httpResponse;
 		}
 
 		public final class SSLSettingsListener implements SettingsListener
 		{
+			@Override
 			public void settingChanged( String name, String newValue, String oldValue )
 			{
 				if( !StringUtils.hasContent( newValue ) )
