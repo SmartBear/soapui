@@ -13,7 +13,6 @@
 package com.eviware.soapui.ui.desktop.standalone;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -91,7 +90,7 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop
 		actions.addAction( closeAllAction );
 
 		// Setting Mac-like color for all platforms pending 
-		desktopPane.setBackground( new Color( 229, 229, 229 ) );
+		desktopPane.setBackground( UISupport.MAC_BACKGROUND_COLOR );
 
 		enableWindowActions();
 	}

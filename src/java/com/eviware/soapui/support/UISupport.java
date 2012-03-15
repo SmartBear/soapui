@@ -121,6 +121,7 @@ public class UISupport
 
 	public static final String DEFAULT_EDITOR_FONT = "Courier plain";
 	public static final int DEFAULT_EDITOR_FONT_SIZE = 11;
+	public static final Color MAC_BACKGROUND_COLOR = new Color( 229, 229, 229 );
 
 	static
 	{
