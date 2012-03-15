@@ -178,7 +178,7 @@
 		<echo>Adding license files for jxbrowser</echo>
 		<ant:jar destfile="${maven.build.dir}/jnlp_temp/soapui-${pom.currentVersion}.jar"
 			update="true">
-			<ant:metainf dir="${jxbrowser.dir}/license/runtime">
+			<ant:metainf dir="${jxbrowser.dir}/license/trial">
 				<ant:include name="teamdev.licenses" />
 			</ant:metainf>
 		</ant:jar>

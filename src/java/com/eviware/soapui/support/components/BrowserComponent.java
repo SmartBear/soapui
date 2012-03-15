@@ -91,6 +91,8 @@ import com.teamdev.jxbrowser.events.NavigationListener;
 import com.teamdev.jxbrowser.events.NavigationStatusCode;
 import com.teamdev.jxbrowser.events.StatusChangedEvent;
 import com.teamdev.jxbrowser.events.StatusListener;
+import com.teamdev.jxbrowser.gecko.xpcom.XPCOM;
+import com.teamdev.jxbrowser.gecko.xpcom.XPCOMManager;
 import com.teamdev.jxbrowser.mozilla.MozillaBrowser;
 import com.teamdev.jxbrowser.mozilla.MozillaCookieStorage;
 import com.teamdev.jxbrowser.prompt.DefaultPromptService;
@@ -102,9 +104,6 @@ import com.teamdev.jxbrowser.proxy.ServerType;
 import com.teamdev.jxbrowser.security.HttpSecurityAction;
 import com.teamdev.jxbrowser.security.HttpSecurityHandler;
 import com.teamdev.jxbrowser.security.SecurityProblem;
-import com.teamdev.jxbrowser1.mozilla.MozillaWebBrowser;
-import com.teamdev.xpcom.Xpcom;
-import com.teamdev.xpcom.util.XPCOMManager;
 
 public class BrowserComponent implements nsIWebProgressListener, nsIWeakReference, StatusListener
 {
@@ -413,9 +412,8 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 
 							// since there is no way to detect the source browser for
 							// the new window we just assume it is the recording one.
-							BrowserComponent browserComponent = browserMap
-									.get( ( ( ( MozillaWebBrowser )( ( MozillaBrowser )params.getParent() ).getPeer() ) )
-											.getWebBrowser().getContentDOMWindow() );
+							BrowserComponent browserComponent = browserMap.get( ( ( MozillaBrowser )params.getParent() )
+									.getPeer().getNsIWebBrowser().getContentDOMWindow() );
 							if( browserRecordingMap.containsKey( browserComponent ) )
 							{
 								browserComponent.replaceBrowser( arg0.getBrowser() );
@@ -545,7 +543,7 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 			return false;
 
 		browser = ( MozillaBrowser )BrowserFactory.createBrowser( BrowserType.Mozilla );
-		browserMap.put( ( ( MozillaWebBrowser )browser.getPeer() ).getWebBrowser().getContentDOMWindow(), this );
+		browserMap.put( browser.getPeer().getNsIWebBrowser().getContentDOMWindow(), this );
 
 		if( newWindowManager == null )
 		{
@@ -574,7 +572,7 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 	protected void replaceBrowser( Browser browser2 )
 	{
 		// remove old
-		browserMap.remove( ( ( MozillaWebBrowser )browser.getPeer() ).getWebBrowser().getContentDOMWindow() );
+		browserMap.remove( browser.getPeer().getNsIWebBrowser().getContentDOMWindow() );
 
 		browser.stop();
 		browser.removeNavigationListener( internalNavigationListener );
@@ -584,7 +582,7 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 
 		// replace
 		browser = ( MozillaBrowser )browser2;
-		browserMap.put( ( ( MozillaWebBrowser )browser.getPeer() ).getWebBrowser().getContentDOMWindow(), this );
+		browserMap.put( browser.getPeer().getNsIWebBrowser().getContentDOMWindow(), this );
 		browser.addNavigationListener( internalNavigationListener );
 		browser.addStatusListener( this );
 		panel.add( browser.getComponent(), BorderLayout.CENTER );
@@ -611,7 +609,7 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 	{
 		if( browser != null )
 		{
-			browserMap.remove( ( ( MozillaWebBrowser )browser.getPeer() ).getWebBrowser().getContentDOMWindow() );
+			browserMap.remove( browser.getPeer().getNsIWebBrowser().getContentDOMWindow() );
 			browserRecordingMap.remove( this );
 			httpHtmlResponseView = null;
 
@@ -921,7 +919,7 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 
 	public void registerHttpListener()
 	{
-		Xpcom.invokeLater( new RecordingHttpListener() );
+		XPCOM.invokeLater( new RecordingHttpListener() );
 	}
 
 	/**
