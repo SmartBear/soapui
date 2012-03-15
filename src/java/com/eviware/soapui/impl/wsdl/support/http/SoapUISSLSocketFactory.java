@@ -24,9 +24,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.net.ssl.KeyManager;
@@ -100,48 +98,30 @@ public class SoapUISSLSocketFactory extends SSLSocketFactory
 		String protocols = System.getProperty( "soapui.https.protocols" );
 		String ciphers = System.getProperty( "soapui.https.ciphers" );
 
-		//		if( StringUtils.hasContent( invalidateSession ) )
-		//		{
-		socket.getSession().invalidate();
-		//		}
+		if( StringUtils.hasContent( invalidateSession ) )
+		{
+			socket.getSession().invalidate();
+		}
 
 		if( StringUtils.hasContent( protocols ) )
 		{
 			socket.setEnabledProtocols( protocols.split( "," ) );
 		}
-		else if( socket.getSupportedProtocols() != null )
-		{
-			socket.setEnabledProtocols( socket.getSupportedProtocols() );
-		}
+		//		else if( socket.getSupportedProtocols() != null )
+		//		{
+		//			socket.setEnabledProtocols( socket.getSupportedProtocols() );
+		//		}
 
 		if( StringUtils.hasContent( ciphers ) )
 		{
 			socket.setEnabledCipherSuites( ciphers.split( "," ) );
 		}
-		else if( socket.getSupportedCipherSuites() != null )
-		{
-			socket.setEnabledCipherSuites( filterCipherSuites( socket.getSupportedCipherSuites() ) );
-		}
+		//		else if( socket.getSupportedCipherSuites() != null )
+		//		{
+		//			socket.setEnabledCipherSuites( filterCipherSuites( socket.getSupportedCipherSuites() ) );
+		//		}
 
 		return socket;
-	}
-
-	private String[] filterCipherSuites( String[] cipherSuites )
-	{
-		List<String> filteredCipherSuites = new ArrayList<String>();
-		if( cipherSuites != null )
-		{
-			for( String cipherSuite : cipherSuites )
-			{
-				if( cipherSuite.equalsIgnoreCase( "TLS_KRB5_EXPORT_WITH_DES_CBC_40_SHA" )
-						|| cipherSuite.equalsIgnoreCase( "TLS_KRB5_EXPORT_WITH_DES_CBC_40_MD5" ) )
-				{
-					continue;
-				}
-				filteredCipherSuites.add( cipherSuite );
-			}
-		}
-		return filteredCipherSuites.toArray( new String[filteredCipherSuites.size()] );
 	}
 
 	@Override
