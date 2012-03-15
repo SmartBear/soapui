@@ -358,8 +358,12 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 		getMethod.getMetrics().setHttpMethod( httpMethod.getMethod() );
 		captureMetrics( httpMethod, httpClient );
 
-		java.net.URI uri = new java.net.URI( httpResponse.getFirstHeader( "Location" ).getValue() );
-		getMethod.setURI( uri );
+		String location = httpResponse.getFirstHeader( "Location" ).getValue();
+		URI uri = new URI( new URI( httpMethod.getURI().toString(), true ), location, true );
+		java.net.URI newUri = new java.net.URI( uri.getScheme(), uri.getUserinfo(), uri.getHost(), uri.getPort(),
+				uri.getPath(), uri.getQuery(), uri.getFragment() );
+		getMethod.setURI( newUri );
+
 		org.apache.http.HttpResponse response = HttpClientSupport.execute( getMethod, httpContext );
 
 		if( isRedirectResponse( response.getStatusLine().getStatusCode() ) )
