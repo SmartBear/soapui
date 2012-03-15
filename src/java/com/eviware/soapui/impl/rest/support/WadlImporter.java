@@ -139,11 +139,11 @@ public class WadlImporter
 
 					RestResource newResource = null;
 
-					if( baseResource != null )
+					if( baseResource != null && path != null )
 					{
 						for( RestResource res : baseResource.getChildResourceList() )
 						{
-							if( res.getPath().equals( path ) )
+							if( path.equals( res.getPath() ) )
 							{
 								newResource = res;
 								break;
@@ -155,11 +155,11 @@ public class WadlImporter
 							newResource = baseResource.addNewChildResource( name, path );
 						}
 					}
-					else
+					else if( path != null )
 					{
 						for( RestResource res : service.getResourceList() )
 						{
-							if( res.getPath().equals( path ) )
+							if( path.equals( res.getPath() ) )
 							{
 								newResource = res;
 								break;
@@ -170,6 +170,10 @@ public class WadlImporter
 						{
 							newResource = service.addNewResource( name, path );
 						}
+					}
+					else
+					{
+						newResource = service.addNewResource( name, "" );
 					}
 
 					initResourceFromWadlResource( newResource, resource );
@@ -191,14 +195,17 @@ public class WadlImporter
 	{
 		for( Resource res : resource.getResourceList() )
 		{
-			String name = getFirstTitle( res.getDocList(), res.getPath() );
 			String path = res.getPath();
+			if( path == null )
+				path = "";
+
+			String name = getFirstTitle( res.getDocList(), path );
 
 			RestResource newRes = null;
 
 			for( RestResource child : newResource.getChildResourceList() )
 			{
-				if( child.getPath().equals( path ) )
+				if( path.equals( child.getPath() ) )
 				{
 					newRes = child;
 					break;
