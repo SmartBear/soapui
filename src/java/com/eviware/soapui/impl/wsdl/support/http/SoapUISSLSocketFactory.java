@@ -118,7 +118,7 @@ public class SoapUISSLSocketFactory extends SSLSocketFactory
 		}
 		//		else if( socket.getSupportedCipherSuites() != null )
 		//		{
-		//			socket.setEnabledCipherSuites( filterCipherSuites( socket.getSupportedCipherSuites() ) );
+		//			socket.setEnabledCipherSuites(  socket.getSupportedCipherSuites()  );
 		//		}
 
 		return socket;
