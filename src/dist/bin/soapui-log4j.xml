@@ -87,11 +87,6 @@
    	  <appender-ref ref="CONSOLE"/>
    </logger>
    
-   <logger name="org.apache.http">
-      <level value="ERROR"/> 
-      <appender-ref ref="CONSOLE"/>
-   </logger>
-   
    <root>
   	  <priority value="INFO" />
   	  <appender-ref ref="FILE"/>
