@@ -9,7 +9,6 @@
 	</security>
 	<resources>
         <jar href="winpack-3.8.2.jar"/>
-        <jar href="tuxpack-0.2.jar"/>
         <jar href="engine-gecko-3.0.jar"/>
         <jar href="engine-ie-3.0.jar"/>
         <jar href="engine-webkit-3.0.jar"/>
