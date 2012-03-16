@@ -214,6 +214,8 @@
         <ant:copy todir="${maven.jnlp.dir}"
                   file="${pom.getDependencyPath('teamdev:jxbrowser')}"/>
 
+        <ant:copy todir="${maven.jnlp.dir}"
+                  file="${pom.getDependencyPath('teamdev:winpack')}"/>
     </postGoal>
 
     <!-- create doc zipz -->
