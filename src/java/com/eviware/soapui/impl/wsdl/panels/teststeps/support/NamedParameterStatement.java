@@ -157,7 +157,7 @@ public class NamedParameterStatement
 		int[] indexes = ( int[] )indexMap.get( name );
 		if( indexes == null )
 		{
-			throw new IllegalArgumentException( "Parameter not found: " + name );
+			throw new IllegalArgumentException( "Parameter '" + name + "' was not found in the SQL Query. " );
 		}
 		return indexes;
 	}
