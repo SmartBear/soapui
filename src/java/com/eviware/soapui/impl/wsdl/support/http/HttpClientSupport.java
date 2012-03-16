@@ -175,16 +175,16 @@ public class HttpClientSupport
 			super( conman, null );
 
 			// Disable logging from HttpClient. Required by loadUI.
-			try
-			{
-				java.lang.reflect.Field logField = SoapUIHttpClient.class.getDeclaredField( "log" );
-				logField.setAccessible( true );
-				logField.set( this, new DummyLog() );
-			}
-			catch( Exception e )
-			{
-				e.printStackTrace();
-			}
+			//			try
+			//			{
+			//				java.lang.reflect.Field logField = SoapUIHttpClient.class.getDeclaredField( "log" );
+			//				logField.setAccessible( true );
+			//				logField.set( this, new DummyLog() );
+			//			}
+			//			catch( Exception e )
+			//			{
+			//				e.printStackTrace();
+			//			}
 		}
 
 		@Override
