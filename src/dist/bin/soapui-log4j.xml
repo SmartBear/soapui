@@ -61,6 +61,12 @@
 	 <appender-ref ref="CONSOLE"/>
    </logger>
    
+   <logger name="com.eviware.soapui.impl.wsdl.support.http">
+     <level value="WARN" />
+     <appender-ref ref="SOAPUI"/>
+     <appender-ref ref="CONSOLE"/>
+   </logger>
+   
    <logger name="soapui.errorlog">
      <level value="DEBUG" />
 	 <appender-ref ref="ERRORFILE"/>
