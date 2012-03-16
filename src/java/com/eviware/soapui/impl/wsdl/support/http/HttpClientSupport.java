@@ -21,7 +21,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 
-import org.apache.commons.logging.Log;
 import org.apache.commons.ssl.KeyMaterial;
 import org.apache.http.Header;
 import org.apache.http.HttpClientConnection;
@@ -71,120 +70,9 @@ public class HttpClientSupport
 
 	public static class SoapUIHttpClient extends DefaultHttpClient
 	{
-		private static class DummyLog implements Log
-		{
-			@Override
-			public void debug( Object arg0 )
-			{
-			}
-
-			@Override
-			public void debug( Object arg0, Throwable arg1 )
-			{
-			}
-
-			@Override
-			public void error( Object arg0 )
-			{
-			}
-
-			@Override
-			public void error( Object arg0, Throwable arg1 )
-			{
-			}
-
-			@Override
-			public void fatal( Object arg0 )
-			{
-			}
-
-			@Override
-			public void fatal( Object arg0, Throwable arg1 )
-			{
-			}
-
-			@Override
-			public void info( Object arg0 )
-			{
-			}
-
-			@Override
-			public void info( Object arg0, Throwable arg1 )
-			{
-			}
-
-			@Override
-			public boolean isDebugEnabled()
-			{
-				return false;
-			}
-
-			@Override
-			public boolean isErrorEnabled()
-			{
-				return false;
-			}
-
-			@Override
-			public boolean isFatalEnabled()
-			{
-				return false;
-			}
-
-			@Override
-			public boolean isInfoEnabled()
-			{
-				return false;
-			}
-
-			@Override
-			public boolean isTraceEnabled()
-			{
-				return false;
-			}
-
-			@Override
-			public boolean isWarnEnabled()
-			{
-				return false;
-			}
-
-			@Override
-			public void trace( Object arg0 )
-			{
-			}
-
-			@Override
-			public void trace( Object arg0, Throwable arg1 )
-			{
-			}
-
-			@Override
-			public void warn( Object arg0 )
-			{
-			}
-
-			@Override
-			public void warn( Object arg0, Throwable arg1 )
-			{
-			}
-		}
-
 		public SoapUIHttpClient( final ClientConnectionManager conman )
 		{
 			super( conman, null );
-
-			// Disable logging from HttpClient. Required by loadUI.
-			//			try
-			//			{
-			//				java.lang.reflect.Field logField = SoapUIHttpClient.class.getDeclaredField( "log" );
-			//				logField.setAccessible( true );
-			//				logField.set( this, new DummyLog() );
-			//			}
-			//			catch( Exception e )
-			//			{
-			//				e.printStackTrace();
-			//			}
 		}
 
 		@Override
