@@ -46,6 +46,7 @@ public class SyntaxEditorUtil
 	{
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
 		textArea.setSyntaxEditingStyle( type );
+		textArea.setFont( UISupport.getEditorFont() );
 		textArea.setCodeFoldingEnabled( true );
 		textArea.setAntiAliasingEnabled( true );
 		textArea.setCaretPosition( 0 );

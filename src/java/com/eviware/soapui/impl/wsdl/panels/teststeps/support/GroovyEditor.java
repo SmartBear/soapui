@@ -87,6 +87,7 @@ public class GroovyEditor extends JPanel implements JEditorStatusBarTarget, Prop
 		else if( defaultScriptLanguage.equals( JsScriptEngineFactory.ID ) )
 			editArea.setSyntaxEditingStyle( SyntaxConstants.SYNTAX_STYLE_JAVASCRIPT );
 
+		editArea.setFont( editorFont );
 		editArea.setBorder( BorderFactory.createMatteBorder( 0, 2, 0, 0, Color.WHITE ) );
 
 		editArea.setText( model.getScript() );

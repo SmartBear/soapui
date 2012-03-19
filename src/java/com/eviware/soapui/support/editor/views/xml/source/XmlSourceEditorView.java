@@ -125,6 +125,7 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
 	{
 		editArea = new RSyntaxTextArea( 20, 60 );
 		editArea.setSyntaxEditingStyle( SyntaxConstants.SYNTAX_STYLE_XML );
+		editArea.setFont( UISupport.getEditorFont() );
 		editArea.setCodeFoldingEnabled( true );
 		editArea.setAntiAliasingEnabled( true );
 		editArea.setMinimumSize( new Dimension( 50, 50 ) );
