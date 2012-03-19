@@ -100,12 +100,14 @@ public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion impleme
 		SensitiveInformationPropertyHolder siph = new SensitiveInformationPropertyHolder();
 		for( String str : assertionSpecificExposureList )
 		{
+			if ( "###".equals( str ) )
+				continue;
 			String[] tokens = str.split( "###" );
 			if( tokens.length == 2 )
 			{
 				siph.setPropertyValue( tokens[0], tokens[1] );
 			}
-			else
+			else if( tokens.length == 1 )
 			{
 				siph.setPropertyValue( tokens[0], "" );
 			}
