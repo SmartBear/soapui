@@ -17,7 +17,6 @@ import java.net.URL;
 import net.sf.json.JSON;
 import net.sf.json.JSONException;
 import net.sf.json.JSONSerializer;
-import net.sf.json.xml.XMLSerializer;
 
 import com.eviware.soapui.impl.rest.support.MediaTypeHandler;
 import com.eviware.soapui.impl.support.HttpUtils;
@@ -47,9 +46,8 @@ public class JsonMediaTypeHandler implements MediaTypeHandler
 
 			// remove nulls - workaround for bug in xmlserializer!?
 			content = content.replaceAll( "\\\\u0000", "" );
-
 			JSON json = JSONSerializer.toJSON( content );
-			XMLSerializer serializer = new XMLSerializer();
+			JsonXmlSerializer serializer = new JsonXmlSerializer();
 			serializer.setTypeHintsEnabled( false );
 			serializer.setRootName( HttpUtils.isErrorStatus( response.getStatusCode() ) ? "Fault" : "Response" );
 			URL url = response.getURL();
