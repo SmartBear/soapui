@@ -499,6 +499,7 @@ public class WsdlInterfaceDesktopPanel extends ModelItemDesktopPanel<WsdlInterfa
 
 			inputArea.setText( xmlString );
 			inputArea.setEditable( false );
+			inputArea.setFont( UISupport.getEditorFont() );
 
 			JPanel p = new JPanel( new BorderLayout() );
 			RTextScrollPane scrollPane = new RTextScrollPane( inputArea );

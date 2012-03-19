@@ -110,6 +110,7 @@ public class ViewWsdlMockResultAction extends AbstractAction
 		responseArea.setText( XmlUtils.prettyPrintXml( result.getResponseContent() ) );
 		responseArea.setEditable( false );
 		responseArea.setToolTipText( "Response Content" );
+		responseArea.setFont( UISupport.getEditorFont() );
 		RTextScrollPane scrollPane = new RTextScrollPane( responseArea );
 		scrollPane.setFoldIndicatorEnabled( true );
 		scrollPane.setLineNumbersEnabled( true );
@@ -123,6 +124,7 @@ public class ViewWsdlMockResultAction extends AbstractAction
 	private Component buildRequestTab()
 	{
 		RSyntaxTextArea resultArea = SyntaxEditorUtil.createDefaultXmlSyntaxTextArea();
+		resultArea.setFont( UISupport.getEditorFont() );
 		resultArea.setText( XmlUtils.prettyPrintXml( result.getMockRequest().getRequestContent() ) );
 		resultArea.setEditable( false );
 		resultArea.setToolTipText( "Request Content" );
