@@ -353,7 +353,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 		if( loadTestRunner == null )
 		{
 			mockService.addMockRunListener( mockRunListener );
-			mockRunner = mockService.start( ( WsdlTestRunContext )testRunContext );
+			//			mockRunner = mockService.start( ( WsdlTestRunContext )testRunContext );
 		}
 		else
 		{
@@ -420,7 +420,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 		else
 		{
 			// block other threads during loadtesting -> this should be improved!
-			synchronized( STATUS_PROPERTY )
+			//			synchronized( STATUS_PROPERTY )
 			{
 				if( loadTestRunner.getStatus() == LoadTestRunner.Status.RUNNING )
 				{
@@ -454,6 +454,11 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 			{
 				if( testMockResponse == null )
 					initTestMockResponse( context );
+
+				if( mockRunner == null )
+				{
+					mockRunner = mockService.start( context );
+				}
 
 				if( !mockRunner.isRunning() )
 					mockRunner.start();
@@ -574,6 +579,9 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 	{
 		if( mockRunListener != null )
 		{
+			if( mockRunListener.isWaiting() )
+				mockRunListener.cancel();
+
 			mockService.removeMockRunListener( mockRunListener );
 			mockRunListener = null;
 		}
@@ -1421,13 +1429,18 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 		}
 	}
 
-	private void startListening( TestCaseRunContext runContext )
+	private void startListening( TestCaseRunContext runContext ) throws Exception
 	{
+		if( mockRunner == null )
+		{
+			mockRunner = mockService.start( ( WsdlTestRunContext )runContext );
+		}
+
 		if( testMockResponse == null )
 		{
 			initTestMockResponse( runContext );
 		}
-		else if( mockRunner != null && !mockRunner.isRunning() )
+		else if( !mockRunner.isRunning() )
 		{
 			try
 			{
@@ -1454,7 +1467,14 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 				}
 				else
 				{
-					startListening( runContext );
+					try
+					{
+						startListening( runContext );
+					}
+					catch( Exception e )
+					{
+						SoapUI.logError( e );
+					}
 				}
 			}
 		}
@@ -1481,8 +1501,14 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 
 		public void propertyChange( PropertyChangeEvent evt )
 		{
-			//			System.out.println( "Starting to listen for request to " + getName() );
-			startListening( runContext );
+			try
+			{
+				startListening( runContext );
+			}
+			catch( Exception e )
+			{
+				SoapUI.logError( e );
+			}
 		}
 	}
 
