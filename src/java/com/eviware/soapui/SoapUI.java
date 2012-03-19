@@ -1417,7 +1417,7 @@ public class SoapUI
 					"<html><body><p align=center> <font face=\"Verdana,Arial,Helvetica\"><strong><img src=\"" + splashURI
 							+ "\"><br>soapUI " + SOAPUI_VERSION + ", copyright (C) 2004-2012 smartbear.com<br>"
 							+ "<a href=\"http://www.soapui.org\">http://www.soapui.org</a> | "
-							+ "<a href=\"http://www.eviware.com\">http://www.eviware.com</a><br>" + "Build "
+							+ "<a href=\"http://smartbear.com\">http://smartbear.com</a><br>" + "Build "
 							+ props.getProperty( "build.number" ) + ", Build Date " + props.getProperty( "build.date" )
 							+ "</strong></font></p></body></html>",
 
