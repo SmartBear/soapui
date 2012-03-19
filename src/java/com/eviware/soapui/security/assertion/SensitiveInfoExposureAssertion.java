@@ -76,7 +76,7 @@ public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion impleme
 	private boolean includeGlobal;
 	private boolean includeProjectSpecific;
 	private JPanel sensitiveInfoTableForm;
-	private SensitiveInformationTableModel sensitivInformationTableModel;
+	private SensitiveInformationTableModel sensitiveInformationTableModel;
 	private JXTable tokenTable;
 
 	public SensitiveInfoExposureAssertion( TestAssertionConfig assertionConfig, Assertable assertable )
@@ -110,7 +110,7 @@ public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion impleme
 				siph.setPropertyValue( tokens[0], "" );
 			}
 		}
-		sensitivInformationTableModel = new SensitiveInformationTableModel( siph );
+		sensitiveInformationTableModel = new SensitiveInformationTableModel( siph );
 	}
 
 	@Override
@@ -300,7 +300,7 @@ public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion impleme
 	private List<String> createListFromTable()
 	{
 		List<String> temp = new ArrayList<String>();
-		for( TestProperty tp : sensitivInformationTableModel.getHolder().getPropertyList() )
+		for( TestProperty tp : sensitiveInformationTableModel.getHolder().getPropertyList() )
 		{
 			String tokenPlusDescription = tp.getName() + "###" + tp.getValue();
 			temp.add( tokenPlusDescription );
@@ -311,7 +311,7 @@ public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion impleme
 	private Map<String, String> createMapFromTable()
 	{
 		Map<String, String> temp = new HashMap<String, String>();
-		for( TestProperty tp : sensitivInformationTableModel.getHolder().getPropertyList() )
+		for( TestProperty tp : sensitiveInformationTableModel.getHolder().getPropertyList() )
 		{
 			temp.put( tp.getName(), tp.getValue() );
 		}
@@ -362,7 +362,7 @@ public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion impleme
 			toolbar.add( UISupport.createToolbarButton( new AddTokenAction() ) );
 			toolbar.add( UISupport.createToolbarButton( new RemoveTokenAction() ) );
 
-			tokenTable = new JXTable( sensitivInformationTableModel );
+			tokenTable = new JXTable( sensitiveInformationTableModel );
 			tokenTable.setPreferredSize( new Dimension( 200, 100 ) );
 			sensitiveInfoTableForm.add( toolbar, BorderLayout.NORTH );
 			sensitiveInfoTableForm.add( new JScrollPane( tokenTable ), BorderLayout.CENTER );
@@ -384,11 +384,30 @@ public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion impleme
 		public void actionPerformed( ActionEvent arg0 )
 		{
 			String newToken = "";
-			newToken = UISupport.prompt( "Enter token", "New Token", newToken );
+			while( newToken.trim().length() == 0 )
+			{
+				newToken = UISupport.prompt( "Enter token", "New Token", newToken );
+
+				if( newToken == null )
+				{
+					return;
+				}
+
+				if( newToken.trim().length() == 0 )
+				{
+					UISupport.showErrorMessage( "Enter token name!" );
+				}
+			}
+
 			String newValue = "";
 			newValue = UISupport.prompt( "Enter description", "New Description", newValue );
 
-			sensitivInformationTableModel.addToken( newToken, newValue );
+			if( newValue == null )
+			{
+				newValue = "";
+			}
+
+			sensitiveInformationTableModel.addToken( newToken, newValue );
 		}
 
 	}
@@ -405,7 +424,7 @@ public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion impleme
 		@Override
 		public void actionPerformed( ActionEvent arg0 )
 		{
-			sensitivInformationTableModel.removeRows( tokenTable.getSelectedRows() );
+			sensitiveInformationTableModel.removeRows( tokenTable.getSelectedRows() );
 		}
 
 	}
