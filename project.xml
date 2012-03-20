@@ -754,7 +754,7 @@
         <dependency>
             <groupId>teamdev</groupId>
             <artifactId>xulrunner-windows</artifactId>
-            <version>2.9.1</version>
+            <version>3.0</version>
             <type>jar</type>
             <properties>
                 <jnlp.jar>true</jnlp.jar>
@@ -766,7 +766,7 @@
         <dependency>
             <groupId>teamdev</groupId>
             <artifactId>xulrunner-linux64</artifactId>
-            <version>2.9.1</version>
+            <version>3.0</version>
             <type>jar</type>
             <properties>
                 <jnlp.jar>true</jnlp.jar>
