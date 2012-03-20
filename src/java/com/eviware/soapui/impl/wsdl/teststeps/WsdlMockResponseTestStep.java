@@ -1451,7 +1451,10 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 				SoapUI.logError( e );
 			}
 		}
-		mockRunListener.setWaiting( true );
+		if( mockRunListener != null )
+		{
+			mockRunListener.setWaiting( true );
+		}
 	}
 
 	private class InternalTestRunListener extends TestRunListenerAdapter
