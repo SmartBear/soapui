@@ -57,6 +57,7 @@ import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
 import com.eviware.soapui.model.mock.MockResult;
 import com.eviware.soapui.model.mock.MockRunner;
 import com.eviware.soapui.model.mock.MockService;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.settings.HttpSettings;
 import com.eviware.soapui.settings.SSLSettings;
 import com.eviware.soapui.support.StringUtils;
@@ -134,7 +135,7 @@ public class JettyMockEngine implements MockEngine
 
 				if( mockService.getBindToHostOnly() )
 				{
-					String host = mockService.getHost();
+					String host = PropertyExpander.expandProperties( mockService, mockService.getHost() );
 					if( StringUtils.hasContent( host ) )
 					{
 						connector.setHost( host );
