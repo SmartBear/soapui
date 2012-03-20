@@ -1657,7 +1657,7 @@ else return "";</string>
                         <string>64</string>
                       </void>
                       <void property="vmOptions">
-                        <array class="java.lang.String" length="9">
+                        <array class="java.lang.String" length="10">
                           <void index="0">
                             <string>-Xms128m</string>
                           </void>
@@ -1684,6 +1684,9 @@ else return "";</string>
                           </void>
                           <void index="8">
                             <string>-Djava.library.path=${installer:rootInstallDir}/bin</string>
+                          </void>
+                          <void index="9">
+                            <string>-Djava.util.Arrays.useLegacyMergeSort=true</string>
                           </void>
                         </array>
                       </void>
