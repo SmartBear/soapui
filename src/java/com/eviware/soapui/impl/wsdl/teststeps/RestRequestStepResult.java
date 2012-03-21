@@ -28,7 +28,6 @@ import com.eviware.soapui.model.iface.Operation;
 import com.eviware.soapui.model.testsuite.AssertedXPath;
 import com.eviware.soapui.model.testsuite.MessageExchangeTestStepResult;
 import com.eviware.soapui.model.testsuite.ResponseAssertedMessageExchange;
-import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.types.StringToStringsMap;
@@ -220,8 +219,11 @@ public class RestRequestStepResult extends WsdlTestStepResult implements Respons
 				writer.println( key + ": " + headers.get( key ) );
 		}
 
-		if( StringUtils.hasContent( new String( response.getRawRequestData() ) ) )
-			writer.println( "\r\n" + new String( response.getRawRequestData() ) );
+		byte[] rawRequestData = response.getRawRequestData();
+		if( rawRequestData != null )
+		{
+			writer.println( "\r\n" + new String( rawRequestData ) );
+		}
 
 		writer.println( "\r\n---------------- Response --------------------------" );
 
