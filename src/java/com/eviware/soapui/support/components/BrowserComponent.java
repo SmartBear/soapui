@@ -429,7 +429,6 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 
 							if( browserComponent == null )
 							{
-
 								Tools.openURL( arg0.getUrl() );
 							}
 						}
@@ -575,13 +574,13 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 	{
 		if( newWindowManager == null )
 		{
-			if( forRecording )
-				registerHttpListener();
-
 			newWindowManager = new SoapUINewWindowManager();
 			browser.getServices().setNewWindowManager( newWindowManager );
 			browser.getServices().setPromptService( new DefaultPromptService() );
 		}
+
+		if( forRecording )
+			registerHttpListener();
 	}
 
 	protected void replaceBrowser( Browser browser2 )
