@@ -419,13 +419,23 @@
         <ant:mkdir dir="${soapui.maven2.repository}/eviware/soapui-xmlbeans/${pom.currentVersion}"/>
         <ant:copy todir="${soapui.maven2.repository}/eviware/soapui-xmlbeans/${pom.currentVersion}"
                   file="${maven.repo.local}/eviware/jars/soapui-xmlbeans-${pom.currentVersion}.jar"/>
-
+        <ant:copy todir="${soapui.maven2.repository}/eviware/soapui-coverage-xmlbeans/${pom.currentVersion}"
+                  file="${maven.repo.local}/eviware/jars/soapui-coverage-xmlbeans-${pom.currentVersion}.jar"/>
         <j:file name="${soapui.maven2.repository}/eviware/soapui-xmlbeans/${pom.currentVersion}/soapui-xmlbeans-${pom.currentVersion}.pom"
                 escapeText="false">
             <![CDATA[<project>
   <modelVersion>4.0.0</modelVersion>
   <groupId>eviware</groupId>
   <artifactId>soapui-xmlbeans</artifactId>
+  <version>${pom.currentVersion}</version>
+</project>]]>
+        </j:file>
+        <j:file name="${soapui.maven2.repository}/eviware/soapui-coverage-xmlbeans/${pom.currentVersion}/soapui-coverage-xmlbeans-${pom.currentVersion}.pom"
+                escapeText="false">
+            <![CDATA[<project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>eviware</groupId>
+  <artifactId>soapui-coverage-xmlbeans</artifactId>
   <version>${pom.currentVersion}</version>
 </project>]]>
         </j:file>
