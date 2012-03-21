@@ -13,6 +13,7 @@
 package com.eviware.soapui.support.httpclient;
 
 import java.io.IOException;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 
 import junit.framework.JUnit4TestAdapter;
@@ -81,6 +82,10 @@ public class TestJCIFS
 			/* ignore */
 		}
 		catch( HttpHostConnectException e )
+		{
+			/* ignore */
+		}
+		catch( SocketException e )
 		{
 			/* ignore */
 		}
