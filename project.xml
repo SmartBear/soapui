@@ -46,7 +46,7 @@
 		<!-- <report>maven-findbugs-plugin</report> <report>maven-jdepend-plugin</report> 
 			<report>maven-news-plugin</report> <report>jutils-lint4j-plugin</report> -->
     </reports>
-    <currentVersion>4.5.0-Beta2</currentVersion>
+    <currentVersion>4.5.0</currentVersion>
     <package>com.eviware.soapui</package>
     <url>http://www.soapui.org</url>
     <versions>
@@ -554,7 +554,7 @@
         <dependency>
             <groupId>eviware</groupId>
             <artifactId>soapui-xmlbeans</artifactId>
-            <version>4.5.0-Beta2</version>
+            <version>4.5.0</version>
             <type>jar</type>
             <properties>
                 <jnlp.jar>true</jnlp.jar>
