@@ -25,6 +25,7 @@ import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.NTCredentials;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.params.AuthPolicy;
+import org.apache.http.conn.HttpHostConnectException;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
@@ -76,6 +77,10 @@ public class TestJCIFS
 			Assert.assertEquals( response1.getStatusLine().getStatusCode(), 200 );
 		}
 		catch( UnknownHostException e )
+		{
+			/* ignore */
+		}
+		catch( HttpHostConnectException e )
 		{
 			/* ignore */
 		}
