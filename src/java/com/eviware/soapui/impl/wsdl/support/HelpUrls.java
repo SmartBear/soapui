@@ -234,6 +234,6 @@ public interface HelpUrls
 
 	public static final String SECURITY_SCANS_OVERVIEW = "http://www.soapui.org/Security/security-scans-overview.html";
 	public static final String ALERT_SITE_HELP_URL = HELP_URL_ROOT + "";
-	public static final String ADD_ASSERTION_PANEL = "http://www.soapui.org/Functional-Testing/assertion-test-step.html";
+	public static final String ADD_ASSERTION_PANEL = "http://www.soapui.org/Functional-Testing/getting-started-with-assertions.html#add_assertion";
 
 }
