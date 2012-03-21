@@ -1,5 +1,5 @@
 /*
- *  soapUI, copyright (C) 2004-2012 smartbear.com 
+ *  soapUI, copyright (C) 2004-2011 smartbear.com 
  *
  *  soapUI is free software; you can redistribute it and/or modify it under the 
  *  terms of version 2.1 of the GNU Lesser General Public License as published by 
@@ -33,7 +33,6 @@ import javax.swing.Action;
 import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 
 import org.mozilla.interfaces.nsIBinaryInputStream;
 import org.mozilla.interfaces.nsIDOMWindow;
@@ -155,7 +154,8 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 				// if( addToolbar )
 				// panel.add( buildToolbar(), BorderLayout.NORTH );
 
-				initBrowser();
+				if( !initBrowser() )
+					return panel;
 
 				configureBrowser();
 
@@ -205,7 +205,9 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 		public void navigationFinished( NavigationFinishedEvent evt )
 		{
 			if( evt.getUrl().equals( SoapUI.PUSH_PAGE_URL ) && !( evt.getStatusCode().equals( NavigationStatusCode.OK ) ) )
+			{
 				browser.navigate( SoapUI.PUSH_PAGE_ERROR_URL );
+			}
 		}
 	}
 
@@ -412,24 +414,23 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 
 							// since there is no way to detect the source browser for
 							// the new window we just assume it is the recording one.
-							BrowserComponent browserComponent = browserMap.get( ( ( MozillaBrowser )params.getParent() )
-									.getPeer().getNsIWebBrowser().getContentDOMWindow() );
-							if( browserRecordingMap.containsKey( browserComponent ) )
+							BrowserComponent browserComponent = null;
+							if( params.getParent() instanceof MozillaBrowser )
 							{
-								browserComponent.replaceBrowser( arg0.getBrowser() );
-							}
-							else
-							{
-								SwingUtilities.invokeLater( new Runnable()
+								browserComponent = browserMap.get( ( ( MozillaBrowser )params.getParent() ).getPeer()
+										.getNsIWebBrowser().getContentDOMWindow() );
+								if( browserRecordingMap.containsKey( browserComponent ) )
 								{
-									public void run()
-									{
-										if( UISupport.confirm( "Open [" + arg0.getUrl() + "] with system Browser?", "Open URL" ) )
-											Tools.openURL( arg0.getUrl() );
-									}
-								} );
+									browserComponent.replaceBrowser( arg0.getBrowser() );
+								}
+								else
+									browserComponent = null;
+							}
 
-								arg0.getBrowser().dispose();
+							if( browserComponent == null )
+							{
+
+								Tools.openURL( arg0.getUrl() );
 							}
 						}
 
@@ -542,31 +543,45 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 		if( browser != null || SoapUI.isJXBrowserDisabled() )
 			return false;
 
-		browser = ( MozillaBrowser )BrowserFactory.createBrowser( BrowserType.Mozilla );
-		browserMap.put( browser.getPeer().getNsIWebBrowser().getContentDOMWindow(), this );
+		try
+		{
+			browser = ( MozillaBrowser )BrowserFactory.createBrowser( BrowserType.Mozilla );
+			browserMap.put( browser.getPeer().getNsIWebBrowser().getContentDOMWindow(), this );
 
+			initNewWindowManager( browser, true );
+
+			internalHttpSecurityHandler = new InternalHttpSecurityHandler();
+			browser.setHttpSecurityHandler( internalHttpSecurityHandler );
+
+			internalNavigationListener = new InternalBrowserNavigationListener();
+			browser.addNavigationListener( internalNavigationListener );
+			browser.addStatusListener( this );
+
+			internalNavigationAdapter = new InternalNavigationAdapter();
+			browser.addNavigationListener( internalNavigationAdapter );
+
+			panel.add( browser.getComponent(), BorderLayout.CENTER );
+
+			return true;
+		}
+		catch( Throwable t )
+		{
+			SoapUI.logError( t );
+			return false;
+		}
+	}
+
+	public static void initNewWindowManager( Browser browser, boolean forRecording )
+	{
 		if( newWindowManager == null )
 		{
-			registerHttpListener();
+			if( forRecording )
+				registerHttpListener();
 
 			newWindowManager = new SoapUINewWindowManager();
 			browser.getServices().setNewWindowManager( newWindowManager );
 			browser.getServices().setPromptService( new DefaultPromptService() );
 		}
-
-		internalHttpSecurityHandler = new InternalHttpSecurityHandler();
-		browser.setHttpSecurityHandler( internalHttpSecurityHandler );
-
-		internalNavigationListener = new InternalBrowserNavigationListener();
-		browser.addNavigationListener( internalNavigationListener );
-		browser.addStatusListener( this );
-
-		internalNavigationAdapter = new InternalNavigationAdapter();
-		browser.addNavigationListener( internalNavigationAdapter );
-
-		panel.add( browser.getComponent(), BorderLayout.CENTER );
-
-		return true;
 	}
 
 	protected void replaceBrowser( Browser browser2 )
@@ -650,7 +665,8 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 
 		if( browser == null )
 		{
-			initBrowser();
+			if( !initBrowser() )
+				return;
 		}
 
 		configureBrowser();
@@ -676,7 +692,8 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 
 		if( browser == null )
 		{
-			initBrowser();
+			if( !initBrowser() )
+				return;
 		}
 
 		configureBrowser();
@@ -917,7 +934,7 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 	private InternalHttpSecurityHandler internalHttpSecurityHandler;
 	private InternalNavigationAdapter internalNavigationAdapter;
 
-	public void registerHttpListener()
+	public static void registerHttpListener()
 	{
 		XPCOM.invokeLater( new RecordingHttpListener() );
 	}
@@ -1013,7 +1030,8 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 
 		if( browser == null )
 		{
-			initBrowser();
+			if( !initBrowser() )
+				return;
 		}
 
 		configureBrowser();

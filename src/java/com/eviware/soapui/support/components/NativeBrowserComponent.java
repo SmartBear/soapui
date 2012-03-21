@@ -1,5 +1,5 @@
 /*
- *  soapUI, copyright (C) 2004-2012 smartbear.com 
+ *  soapUI, copyright (C) 2004-2011 smartbear.com 
  *
  *  soapUI is free software; you can redistribute it and/or modify it under the 
  *  terms of version 2.1 of the GNU Lesser General Public License as published by 
@@ -65,9 +65,6 @@ public class NativeBrowserComponent implements nsIWebProgressListener, nsIWeakRe
 	private boolean showingErrorPage;
 	public String url;
 	private Boolean possibleError = false;
-	@SuppressWarnings( "unused" )
-	private boolean disposed;
-	// private static boolean disabled;
 	private final boolean addStatusBar;
 	private com.eviware.soapui.support.components.NativeBrowserComponent.InternalNavigationAdapter internalNavigationAdapter;
 
@@ -124,7 +121,7 @@ public class NativeBrowserComponent implements nsIWebProgressListener, nsIWeakRe
 		return toolbar;
 	}
 
-	private final class InternalHttpSecurityHandler implements HttpSecurityHandler
+	private final static class InternalHttpSecurityHandler implements HttpSecurityHandler
 	{
 		@Override
 		public HttpSecurityAction onSecurityProblem( Set<SecurityProblem> arg0 )
@@ -139,7 +136,9 @@ public class NativeBrowserComponent implements nsIWebProgressListener, nsIWeakRe
 		public void navigationFinished( NavigationFinishedEvent evt )
 		{
 			if( evt.getUrl().equals( SoapUI.PUSH_PAGE_URL ) && !( evt.getStatusCode().equals( NavigationStatusCode.OK ) ) )
+			{
 				browser.navigate( SoapUI.PUSH_PAGE_ERROR_URL );
+			}
 		}
 	}
 
@@ -183,8 +182,9 @@ public class NativeBrowserComponent implements nsIWebProgressListener, nsIWeakRe
 			return false;
 
 		browser = BrowserFactory.createBrowser();
-
 		browser.getServices().setPromptService( new DefaultPromptService() );
+
+		BrowserComponent.initNewWindowManager( browser, false );
 
 		internalHttpSecurityHandler = new InternalHttpSecurityHandler();
 		browser.setHttpSecurityHandler( internalHttpSecurityHandler );
@@ -203,7 +203,6 @@ public class NativeBrowserComponent implements nsIWebProgressListener, nsIWeakRe
 	{
 		if( browser != null )
 		{
-			disposed = true;
 			cleanup();
 		}
 
@@ -358,6 +357,7 @@ public class NativeBrowserComponent implements nsIWebProgressListener, nsIWeakRe
 		}
 		catch( XPCOMException e )
 		{
+			SoapUI.logError( e );
 			if( possibleError && !showingErrorPage )
 				showErrorPage();
 		}
@@ -409,6 +409,7 @@ public class NativeBrowserComponent implements nsIWebProgressListener, nsIWeakRe
 		}
 		catch( XPCOMException e )
 		{
+			SoapUI.logError( e );
 			if( possibleError && !showingErrorPage )
 				showErrorPage();
 		}
@@ -501,5 +502,4 @@ public class NativeBrowserComponent implements nsIWebProgressListener, nsIWeakRe
 		if( showingErrorPage )
 			showingErrorPage = false;
 	}
-
 }
