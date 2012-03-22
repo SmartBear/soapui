@@ -123,6 +123,7 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 	private static SoapUINewWindowManager newWindowManager;
 	private static Map<nsIDOMWindow, BrowserComponent> browserMap = new HashMap<nsIDOMWindow, BrowserComponent>();
 	private static Map<BrowserComponent, Map<String, RecordedRequest>> browserRecordingMap = new HashMap<BrowserComponent, Map<String, RecordedRequest>>();
+	private static Object recordingHttpListener;
 	private final boolean addStatusBar;
 
 	public BrowserComponent( boolean addToolbar, boolean addStatusBar )
@@ -224,6 +225,8 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 	{
 		public void run()
 		{
+			recordingHttpListener = this;
+
 			final Mozilla mozilla = Mozilla.getInstance();
 			nsIServiceManager serviceManager = mozilla.getServiceManager();
 			nsIObserverService observerService = ( nsIObserverService )serviceManager.getServiceByContractID(
@@ -351,7 +354,6 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 			boolean blnObserverIsWeakReference = false;
 			observerService.addObserver( httpObserver, EVENT_HTTP_ON_MODIFY_REQUEST, blnObserverIsWeakReference );
 		}
-
 	}
 
 	public static boolean isHeaderExcluded( String header )
@@ -380,7 +382,7 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 	{
 		String request = new String( requestData );
 		int ix = request.indexOf( "Content-Type" );
-		if( ix > 0 && ix < request.length() - 14 )
+		if( ix >= 0 && ix < request.length() - 14 )
 		{
 			String contentType = request.substring( ix + 14 );
 			contentType = contentType.substring( 0, contentType.indexOf( "\n" ) - 1 );
@@ -579,7 +581,7 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 			browser.getServices().setPromptService( new DefaultPromptService() );
 		}
 
-		if( forRecording )
+		if( forRecording && recordingHttpListener == null )
 			registerHttpListener();
 	}
 
