@@ -29,7 +29,7 @@ export SOAPUI_HOME
 
 export SOAPUI_CLASSPATH
 
-JAVA_OPTS="-d32 -Xms128m -Xmx1024m -Dsoapui.properties=soapui.properties -Dsoapui.home=$SOAPUI_HOME"
+JAVA_OPTS="-Xms128m -Xmx1024m -Dsoapui.properties=soapui.properties -Dsoapui.home=$SOAPUI_HOME"
 
 if [ $SOAPUI_HOME != "" ] 
 then
