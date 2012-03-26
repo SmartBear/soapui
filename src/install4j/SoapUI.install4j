@@ -25,8 +25,8 @@
       <variable name="EXECUTABLE_NAME" value="soapUI-${compiler:VERSION_NUMBER}${compiler:BRANDED_TITLE}" />
       <variable name="DIST_STANDALONE" value="d:\workspace\soapUI 4.5.0\target\standalone" />
       <variable name="LOADUI_DOWNLOADER" value="" />
-      <variable name="LOADUI_INSTALLER_URL" value="http://dl.eviware.com/loadui/os/2_0_b2" />
-      <variable name="LOADUI_VERSION_NUMBER" value="2_0_0-beta-2" />
+      <variable name="LOADUI_INSTALLER_URL" value="http://dl.eviware.com/loadui/os/2_0" />
+      <variable name="LOADUI_VERSION_NUMBER" value="2_0_0" />
       <variable name="OS_EXT" value="" />
     </variables>
   </application>
@@ -1107,7 +1107,7 @@ else return false;
                             </object>
                           </void>
                           <void property="replaceValue">
-                            <string>${compiler:LOADUI_INSTALLER_URL}loadUI_macos_${compiler:LOADUI_VERSION_NUMBER}.dmg</string>
+                            <string>${compiler:LOADUI_INSTALLER_URL}loadUI-${compiler:LOADUI_VERSION_NUMBER}.dmg</string>
                           </void>
                           <void property="searchValue">
                             <string>loadUI.download.url</string>
@@ -2258,9 +2258,7 @@ return installTutorials;</condition>
     </unixInstaller>
     <macos name="Mac OS X Single Bundle" id="198" mediaFileName="soapUI-${compiler:VERSION_NUMBER}" installDir="SmartBear/soapUI-${compiler:VERSION_NUMBER}" overridePrincipalLanguage="false" requires64bit="false" jreBitType="32" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" customInstallBaseDir="" createUninstallIcon="true" contentFilesType="1" downloadURL="" launcherId="64">
       <excludedComponents />
-      <excludedBeans>
-        <bean refId="493" />
-      </excludedBeans>
+      <excludedBeans />
       <overriddenPrincipalLanguage id="en" customLocalizationFile="" />
       <exclude>
         <entry location=".i4j_fileset_1841" fileType="regular" />
@@ -2269,6 +2267,9 @@ return installTutorials;</condition>
         <entry location=".i4j_fileset_1859" fileType="regular" />
         <entry location=".i4j_fileset_2230" fileType="regular" />
         <entry location=".i4j_fileset_2234" fileType="regular" />
+        <entry location=".i4j_external_3778/tempLoadUI/loadUIInstall.bat" fileType="regular" />
+        <entry location=".i4j_external_3778/tempLoadUI/loadUIInstall.sh" fileType="regular" />
+        <entry location=".i4j_external_3778/tempLoadUI/loadUIInstall64bit.bat" fileType="regular" />
       </exclude>
       <variables>
         <variable name="XULRUNNER" value="xulrunner-mac" />
