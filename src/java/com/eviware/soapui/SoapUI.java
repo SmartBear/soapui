@@ -229,7 +229,7 @@ public class SoapUI
 	private static GCTimerTask gcTimerTask;
 
 	private final static ThreadPoolExecutor threadPool = ( ThreadPoolExecutor )Executors
-			.newCachedThreadPool( new SoapUIThreadCreator() );
+			.newFixedThreadPool(100, new SoapUIThreadCreator() );
 	private JTextField searchField;
 	private static JToggleButton applyProxyButton;
 	private static Logger groovyLogger;
