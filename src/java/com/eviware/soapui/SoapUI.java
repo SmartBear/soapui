@@ -229,7 +229,7 @@ public class SoapUI
 	private static GCTimerTask gcTimerTask;
 
 	private final static ThreadPoolExecutor threadPool = ( ThreadPoolExecutor )Executors
-			.newFixedThreadPool(100, new SoapUIThreadCreator() );
+			.newFixedThreadPool(getSystemPropertyAsInt("soapui.threadpool.max", 200), new SoapUIThreadCreator() );
 	private JTextField searchField;
 	private static JToggleButton applyProxyButton;
 	private static Logger groovyLogger;
@@ -242,6 +242,19 @@ public class SoapUI
 
 	private SoapUI()
 	{
+	}
+
+	private static int getSystemPropertyAsInt(String string, int defaultValue) {
+		
+		String strValue = System.getProperty("soapui.threadpool.max");
+		int parseInt = defaultValue;
+		try{
+			parseInt = Integer.parseInt(strValue);
+		}catch(Exception e){
+			// Ignore, return default
+		}
+		
+		return parseInt;
 	}
 
 	private void buildUI()
