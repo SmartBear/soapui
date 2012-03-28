@@ -130,7 +130,8 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
 		editArea.setAntiAliasingEnabled( true );
 		editArea.setMinimumSize( new Dimension( 50, 50 ) );
 		editArea.setCaretPosition( 0 );
-		editArea.setEnabled( false );
+		editArea.setEnabled( !readOnly );
+		editArea.setEditable( !readOnly );
 		editArea.setBorder( BorderFactory.createMatteBorder( 0, 2, 0, 0, Color.WHITE ) );
 
 		errorListModel = new DefaultListModel();
@@ -206,10 +207,8 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
 				editArea.getInputMap().put( KeyStroke.getKeyStroke( "ctrl L" ), loadXmlTextAreaAction );
 			}
 		}
-		if( !readOnly )
-		{
-			editArea.getInputMap().put( KeyStroke.getKeyStroke( "F3" ), findAndReplaceDialog );
-		}
+		
+		editArea.getInputMap().put( KeyStroke.getKeyStroke( "F3" ), findAndReplaceDialog );
 		editorScrollPane.setLineNumbersEnabled( SoapUI.getSettings().getBoolean( UISettings.SHOW_XML_LINE_NUMBERS ) );
 		editorScrollPane.setFoldIndicatorEnabled( true );
 		p.add( editorScrollPane, BorderLayout.CENTER );
@@ -220,7 +219,9 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
 		splitter.setBorder( null );
 
 		previewCorner = UISupport.addPreviewCorner( getEditorScrollPane(), true );
-		PropertyExpansionPopupListener.enable( editArea, modelItem );
+		if(!readOnly){
+			PropertyExpansionPopupListener.enable( editArea, modelItem );
+		}
 	}
 
 	public JScrollPane getEditorScrollPane()
@@ -240,15 +241,15 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
 		saveXmlTextAreaAction = new SaveXmlTextAreaAction( editArea, "Save" );
 		enableLineNumbersAction = new EnableLineNumbersAction( editorScrollPane, "Toggle Line Numbers" );
 		goToLineAction = new GoToLineAction( editArea, "Go To Line" );
-
+		findAndReplaceDialog = new FindAndReplaceDialogView("Find / Replace");
+		
 		if( !readOnly )
 		{
 			formatXmlAction = new FormatXmlAction( editArea );
 			loadXmlTextAreaAction = new LoadXmlTextAreaAction( editArea, "Load" );
 			insertBase64FileTextAreaAction = new InsertBase64FileTextAreaAction( editArea, "Insert File as Base64" );
-			findAndReplaceDialog = new FindAndReplaceDialogView();
 		}
-
+		
 		int cnt = inputPopup.getComponentCount();
 		for( int i = cnt - 1; i >= 0; i-- )
 		{
@@ -263,8 +264,8 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
 		{
 			inputPopup.insert( formatXmlAction, 1 );
 			inputPopup.addSeparator();
-			inputPopup.add( findAndReplaceDialog );
 		}
+		inputPopup.add( findAndReplaceDialog );
 		inputPopup.addSeparator();
 		inputPopup.add( goToLineAction );
 		inputPopup.add( enableLineNumbersAction );
@@ -301,10 +302,12 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
 		private JComboBox findCombo;
 		private JComboBox replaceCombo;
 		private JCheckBox wrapCheck;
-
-		public FindAndReplaceDialogView()
+		private final String title;
+		
+		public FindAndReplaceDialogView(String title)
 		{
-			super( "Find / Replace" );
+			super( title );
+			this.title = title;
 			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "F3" ) );
 		}
 
@@ -321,10 +324,10 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
 
 			editArea.requestFocusInWindow();
 
-			replaceCombo.setEnabled( editArea.isEditable() );
-			replaceAllButton.setEnabled( editArea.isEditable() );
-			replaceButton.setEnabled( editArea.isEditable() );
-
+			replaceCombo.setEnabled( !readOnly );
+			replaceAllButton.setEnabled( !readOnly );
+			replaceButton.setEnabled( !readOnly );
+			
 			UISupport.showDialog( dialog );
 			findCombo.getEditor().selectAll();
 			findCombo.requestFocus();
@@ -334,14 +337,14 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
 		{
 			Window window = SwingUtilities.windowForComponent( editArea );
 
-			dialog = new JDialog( window, "Find / Replace" );
+			dialog = new JDialog( window, title );
 			dialog.setModal( false );
 
 			JPanel panel = new JPanel( new BorderLayout() );
 			findCombo = new JComboBox();
 			findCombo.setEditable( true );
 			replaceCombo = new JComboBox();
-			replaceCombo.setEditable( true );
+			replaceCombo.setEditable( !readOnly );
 
 			// create inputs
 			GridLayout gridLayout = new GridLayout( 2, 2 );
@@ -447,6 +450,7 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
 			context.setSearchFor( searchExpression );
 			context.setReplaceWith( replacement );
 			context.setRegularExpression( false );
+			context.setMatchCase(caseCheck.isEnabled());
 			context.setSearchForward( forwardButton.isSelected() );
 			context.setWholeWord( false );
 			return context;
@@ -465,6 +469,7 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
 			context.setSearchFor( searchExpression );
 			context.setRegularExpression( false );
 			context.setSearchForward( forwardButton.isSelected() );
+			context.setMatchCase(caseCheck.isEnabled());
 			context.setWholeWord( false );
 			return context;
 		}
