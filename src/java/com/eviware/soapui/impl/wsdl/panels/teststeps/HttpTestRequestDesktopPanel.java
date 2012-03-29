@@ -21,7 +21,6 @@ import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.swing.JButton;
@@ -48,18 +47,19 @@ import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStepInterface;
 import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestInterface;
 import com.eviware.soapui.impl.wsdl.teststeps.actions.AddAssertionAction;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.iface.Request.SubmitException;
 import com.eviware.soapui.model.iface.Submit;
 import com.eviware.soapui.model.iface.SubmitContext;
-import com.eviware.soapui.model.iface.Request.SubmitException;
 import com.eviware.soapui.model.support.ModelSupport;
+import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
 import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.model.testsuite.AssertionsListener;
 import com.eviware.soapui.model.testsuite.LoadTestRunner;
 import com.eviware.soapui.model.testsuite.TestAssertion;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
-import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
 import com.eviware.soapui.monitor.support.TestMonitorListenerAdapter;
 import com.eviware.soapui.security.SecurityTestRunner;
+import com.eviware.soapui.support.DateUtil;
 import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.ListDataChangeListener;
 import com.eviware.soapui.support.StringUtils;
@@ -84,7 +84,6 @@ public class HttpTestRequestDesktopPanel extends
 	private JComponentInspector<?> logInspector;
 	private InternalAssertionsListener assertionsListener = new InternalAssertionsListener();
 	private long startTime;
-	private SimpleDateFormat sdf = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
 	private boolean updating;
 	private JUndoableTextField pathTextField;
 	private JCheckBox downloadResources;
@@ -394,7 +393,7 @@ public class HttpTestRequestDesktopPanel extends
 	protected void logMessages( String message, String infoMessage )
 	{
 		super.logMessages( message, infoMessage );
-		logArea.addLine( sdf.format( new Date( startTime ) ) + " - " + message );
+		logArea.addLine( DateUtil.formatFull( new Date( startTime ) ) + " - " + message );
 	}
 
 	@Override

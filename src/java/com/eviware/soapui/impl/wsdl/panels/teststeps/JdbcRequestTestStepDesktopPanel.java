@@ -25,7 +25,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -89,6 +88,7 @@ import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.monitor.support.TestMonitorListenerAdapter;
 import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.settings.UISettings;
+import com.eviware.soapui.support.DateUtil;
 import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.ListDataChangeListener;
 import com.eviware.soapui.support.SoapUIException;
@@ -157,7 +157,6 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 	private JComponentInspector<?> logInspector;
 	protected JLogList logArea;
 	private long startTime;
-	private SimpleDateFormat sdf = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
 	protected JButton reconfigureConnPropertiesButton;
 	protected PropertyHolderTable propertyHolderTable;
 	protected JdbcRequestTestStepConfig jdbcRequestTestStepConfig;
@@ -985,7 +984,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 	{
 		log.info( infoMessage );
 		statusBar.setInfo( message );
-		logArea.addLine( sdf.format( new Date( startTime ) ) + " - " + message );
+		logArea.addLine( DateUtil.formatFull( new Date( startTime ) ) + " - " + message );
 	}
 
 	public boolean beforeSubmit( Submit submit, SubmitContext context )

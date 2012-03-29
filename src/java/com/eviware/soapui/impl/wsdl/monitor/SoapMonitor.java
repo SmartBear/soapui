@@ -20,8 +20,6 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
@@ -83,6 +81,7 @@ import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.settings.ProxySettings;
+import com.eviware.soapui.support.DateUtil;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.BrowserComponent;
@@ -1049,11 +1048,9 @@ public class SoapMonitor extends JPanel
 	public class MonitorLogTableModel extends AbstractTableModel
 	{
 		private List<WsdlMonitorMessageExchange> exchanges = new TreeList();
-		private DateFormat sdf;
 
 		public MonitorLogTableModel()
 		{
-			sdf = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
 		}
 
 		public synchronized void clear()
@@ -1151,7 +1148,7 @@ public class SoapMonitor extends JPanel
 			case 0 :
 				return rowIndex;
 			case 1 :
-				return sdf.format( new Date( exchange.getTimestamp() ) );
+				return DateUtil.formatFull( new Date( exchange.getTimestamp() ) );
 			case 2 :
 				return exchange.getRequestHost();
 			case 3 :

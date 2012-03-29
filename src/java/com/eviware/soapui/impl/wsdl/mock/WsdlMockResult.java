@@ -14,7 +14,6 @@ package com.eviware.soapui.impl.wsdl.mock;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Vector;
@@ -27,6 +26,7 @@ import com.eviware.soapui.impl.wsdl.panels.mockoperation.WsdlMockResultMessageEx
 import com.eviware.soapui.impl.wsdl.teststeps.actions.ShowMessageExchangeAction;
 import com.eviware.soapui.model.mock.MockResponse;
 import com.eviware.soapui.model.mock.MockResult;
+import com.eviware.soapui.support.DateUtil;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.DefaultActionList;
 import com.eviware.soapui.support.types.StringToStringsMap;
@@ -50,8 +50,6 @@ public class WsdlMockResult implements MockResult
 	private WsdlMockOperation mockOperation;
 	private String responseContentType;
 	private int responseStatus = 200;
-
-	private SimpleDateFormat dateFormat = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss.SSS" );
 
 	public WsdlMockResult( WsdlMockRequest request ) throws Exception
 	{
@@ -238,7 +236,8 @@ public class WsdlMockResult implements MockResult
 
 	public String toString()
 	{
-		StringBuilder msg = new StringBuilder( dateFormat.format( new Date( getTimestamp() ) ) );
+		StringBuilder msg = new StringBuilder( DateUtil.formatExtraFull( new Date( getTimestamp() ) ) );
+		
 		MockResponse mockResponse = getMockResponse();
 
 		if( mockResponse == null )

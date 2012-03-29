@@ -16,7 +16,6 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.swing.AbstractAction;
@@ -27,6 +26,7 @@ import org.jdesktop.swingx.JXTable;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.loadtest.log.LoadTestLog;
 import com.eviware.soapui.impl.wsdl.loadtest.log.LoadTestLogEntry;
+import com.eviware.soapui.support.DateUtil;
 import com.eviware.soapui.support.UISupport;
 
 /**
@@ -85,8 +85,6 @@ public class ExportLoadTestLogAction extends AbstractAction
 
 	private int writeLog( PrintWriter writer )
 	{
-		SimpleDateFormat sdf = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
-
 		int cnt = 0;
 		for( int c = 0; c < loadTestLog.getSize(); c++ )
 		{
@@ -98,7 +96,7 @@ public class ExportLoadTestLogAction extends AbstractAction
 			}
 
 			LoadTestLogEntry logEntry = ( LoadTestLogEntry )loadTestLog.getElementAt( c );
-			writer.write( sdf.format( new Date( logEntry.getTimeStamp() ) ) );
+			writer.write( DateUtil.formatFull( new Date( logEntry.getTimeStamp() ) ) );
 			writer.write( ',' );
 			writer.write( logEntry.getType() );
 			writer.write( ',' );

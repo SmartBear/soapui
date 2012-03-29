@@ -17,7 +17,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -52,8 +51,8 @@ import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.security.SecurityScan;
 import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
-import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestRunner.Status;
+import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.SecurityTestRunContext;
@@ -62,13 +61,14 @@ import com.eviware.soapui.security.SecurityTestRunnerImpl;
 import com.eviware.soapui.security.actions.SecurityTestOptionsAction;
 import com.eviware.soapui.security.log.JFunctionalTestRunLog;
 import com.eviware.soapui.security.log.JSecurityTestRunLog;
+import com.eviware.soapui.security.result.SecurityResult.ResultStatus;
 import com.eviware.soapui.security.result.SecurityScanRequestResult;
 import com.eviware.soapui.security.result.SecurityScanResult;
 import com.eviware.soapui.security.result.SecurityTestStepResult;
-import com.eviware.soapui.security.result.SecurityResult.ResultStatus;
 import com.eviware.soapui.security.support.ProgressBarSecurityTestAdapter;
 import com.eviware.soapui.security.support.SecurityTestRunListenerAdapter;
 import com.eviware.soapui.settings.UISettings;
+import com.eviware.soapui.support.DateUtil;
 import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
@@ -676,11 +676,8 @@ public class SecurityTestDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 	public class InternalSecurityTestRunListener extends SecurityTestRunListenerAdapter
 	{
 
-		private SimpleDateFormat dateFormat;
-
 		public InternalSecurityTestRunListener()
 		{
-			dateFormat = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss.SSS" );
 		}
 
 		public void beforeRun( TestCaseRunner testRunner, SecurityTestRunContext runContext )
@@ -692,7 +689,7 @@ public class SecurityTestDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 			cancelButton.setEnabled( true );
 			testStepList.setEnabled( false );
 			// testStepList.setSelectedIndex( -1 );
-			String start = dateFormat.format( new Date() );
+			String start = DateUtil.formatExtraFull( new Date() );
 			securityTestLog.addText( "SecurityTest started at " + start );
 			functionalTestLog.addText( "Test started at " + start );
 

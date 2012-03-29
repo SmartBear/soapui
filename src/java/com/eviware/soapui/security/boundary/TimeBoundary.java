@@ -21,21 +21,27 @@ public class TimeBoundary extends AbstractBoundary
 
 	private static final int OFFSET = 60;
 	public static final String TIME_FORMAT = "HH:mm:ssZ";
-	public static SimpleDateFormat simpleDateFormat = new SimpleDateFormat( TIME_FORMAT );
 
+	private static final ThreadLocal<SimpleDateFormat> simpleDateFormat = new ThreadLocal<SimpleDateFormat>() {
+		@Override
+		protected SimpleDateFormat initialValue() {
+			 return new SimpleDateFormat( TIME_FORMAT );
+		}
+	};
+	
 	@Override
 	public String outOfBoundary( int restrictionAttribute, String value )
 	{
 		switch( restrictionAttribute )
 		{
 		case MAX_EXCLISIVE :
-			return BoundaryUtils.createTime( value, ( int )( Math.random() * OFFSET ), simpleDateFormat );
+			return BoundaryUtils.createTime( value, ( int )( Math.random() * OFFSET ), simpleDateFormat.get() );
 		case MIN_EXCLISIVE :
-			return BoundaryUtils.createTime( value, -( int )( Math.random() * OFFSET ), simpleDateFormat );
+			return BoundaryUtils.createTime( value, -( int )( Math.random() * OFFSET ), simpleDateFormat.get() );
 		case MAX_INCLISIVE :
-			return BoundaryUtils.createTime( value, ( int )( Math.random() * OFFSET + 1 ), simpleDateFormat );
+			return BoundaryUtils.createTime( value, ( int )( Math.random() * OFFSET + 1 ), simpleDateFormat.get() );
 		case MIN_INCLISIVE :
-			return BoundaryUtils.createTime( value, ( -( int )( Math.random() * OFFSET ) - 1 ), simpleDateFormat );
+			return BoundaryUtils.createTime( value, ( -( int )( Math.random() * OFFSET ) - 1 ), simpleDateFormat.get() );
 		default :
 			return null;
 		}

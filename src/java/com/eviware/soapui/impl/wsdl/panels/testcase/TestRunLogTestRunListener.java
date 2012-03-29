@@ -12,7 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.panels.testcase;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.swing.SwingUtilities;
@@ -23,10 +22,10 @@ import com.eviware.soapui.model.support.TestRunListenerAdapter;
 import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStepResult;
+import com.eviware.soapui.support.DateUtil;
 
 public class TestRunLogTestRunListener extends TestRunListenerAdapter
 {
-	protected SimpleDateFormat dateFormat;
 	protected final JTestRunLog runLog;
 	protected final boolean clearOnRun;
 
@@ -34,7 +33,6 @@ public class TestRunLogTestRunListener extends TestRunListenerAdapter
 	{
 		this.runLog = runLog;
 		this.clearOnRun = clearOnRun;
-		dateFormat = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss.SSS" );
 	}
 
 	public void beforeRun( TestCaseRunner testRunner, TestCaseRunContext runContext )
@@ -47,7 +45,7 @@ public class TestRunLogTestRunListener extends TestRunListenerAdapter
 			runLog.clear();
 
 		String testCaseName = testRunner.getTestCase().getName();
-		runLog.addBoldText( "TestCase [" + testCaseName + "] started at " + dateFormat.format( new Date() ) );
+		runLog.addBoldText( "TestCase [" + testCaseName + "] started at " + DateUtil.formatExtraFull( new Date() ) );
 		runLog.setStepIndex( 0 );
 	}
 

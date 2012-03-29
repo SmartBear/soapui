@@ -12,7 +12,6 @@
 
 package com.eviware.soapui.tools;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -28,6 +27,7 @@ import com.eviware.soapui.model.mock.MockRunner;
 import com.eviware.soapui.model.mock.MockService;
 import com.eviware.soapui.model.project.ProjectFactoryRegistry;
 import com.eviware.soapui.model.support.MockRunListenerAdapter;
+import com.eviware.soapui.support.DateUtil;
 
 /**
  * Standalone tool-runner used from maven-plugin, can also be used from
@@ -210,7 +210,6 @@ public class SoapUIMockServiceRunner extends AbstractSoapUIRunner
 
 	public class LogListener extends MockRunListenerAdapter
 	{
-		private SimpleDateFormat dateFormat = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss.SSS" );
 		private int responseCount;
 
 		public void onMockRunnerStart( MockRunner mockRunner )
@@ -230,14 +229,14 @@ public class SoapUIMockServiceRunner extends AbstractSoapUIRunner
 			if( result.getMockResponse() == null )
 			{
 				log.info( "Handled request " + responseCount + " - [missing mockResponse] in [" + result.getTimeTaken()
-						+ "ms] at [" + dateFormat.format( new Date( result.getTimestamp() ) ) + "]" );
+						+ "ms] at [" + DateUtil.formatExtraFull( new Date( result.getTimestamp() ) ) + "]" );
 			}
 			else
 			{
 				log.info( "Handled request " + responseCount + "; ["
 						+ result.getMockResponse().getMockOperation().getName() + "] with ["
 						+ result.getMockResponse().getName() + "] in [" + result.getTimeTaken() + "ms] at ["
-						+ dateFormat.format( new Date( result.getTimestamp() ) ) + "]" );
+						+ DateUtil.formatExtraFull( new Date( result.getTimestamp() ) ) + "]" );
 			}
 		}
 	}

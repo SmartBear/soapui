@@ -34,7 +34,7 @@ public class DateBoundaryTest
 	@Before
 	public void setUp() throws Exception
 	{
-		today = DateTimeBoundary.simpleDateFormat.format( Calendar.getInstance().getTime() );
+		today = DateTimeBoundary.simpleDateFormat.get().format( Calendar.getInstance().getTime() );
 		dateBoundary = new DateTimeBoundary();
 	}
 
@@ -44,8 +44,8 @@ public class DateBoundaryTest
 		String outOfBoundaryDate = dateBoundary.outOfBoundary( Boundary.MIN_EXCLISIVE, today );
 		Calendar calendar1 = Calendar.getInstance();
 		Calendar calendar2 = Calendar.getInstance();
-		calendar1.setTime( DateTimeBoundary.simpleDateFormat.parse( outOfBoundaryDate ) );
-		calendar2.setTime( DateTimeBoundary.simpleDateFormat.parse( today ) );
+		calendar1.setTime( DateTimeBoundary.simpleDateFormat.get().parse( outOfBoundaryDate ) );
+		calendar2.setTime( DateTimeBoundary.simpleDateFormat.get().parse( today ) );
 		assertTrue( calendar1.before( calendar2 ) || calendar1.equals( calendar2 ) );
 	}
 
@@ -55,8 +55,8 @@ public class DateBoundaryTest
 		String outOfBoundaryDate = dateBoundary.outOfBoundary( Boundary.MAX_EXCLISIVE, today );
 		Calendar calendar1 = Calendar.getInstance();
 		Calendar calendar2 = Calendar.getInstance();
-		calendar1.setTime( DateTimeBoundary.simpleDateFormat.parse( outOfBoundaryDate ) );
-		calendar2.setTime( DateTimeBoundary.simpleDateFormat.parse( today ) );
+		calendar1.setTime( DateTimeBoundary.simpleDateFormat.get().parse( outOfBoundaryDate ) );
+		calendar2.setTime( DateTimeBoundary.simpleDateFormat.get().parse( today ) );
 		assertTrue( calendar1.after( calendar2 ) || calendar1.equals( calendar2 ) );
 	}
 
@@ -66,8 +66,8 @@ public class DateBoundaryTest
 		String outOfBoundaryDate = dateBoundary.outOfBoundary( Boundary.MIN_INCLISIVE, today );
 		Calendar calendar1 = Calendar.getInstance();
 		Calendar calendar2 = Calendar.getInstance();
-		calendar1.setTime( DateTimeBoundary.simpleDateFormat.parse( outOfBoundaryDate ) );
-		calendar2.setTime( DateTimeBoundary.simpleDateFormat.parse( today ) );
+		calendar1.setTime( DateTimeBoundary.simpleDateFormat.get().parse( outOfBoundaryDate ) );
+		calendar2.setTime( DateTimeBoundary.simpleDateFormat.get().parse( today ) );
 		assertTrue( calendar1.before( calendar2 ) );
 	}
 
@@ -77,8 +77,8 @@ public class DateBoundaryTest
 		String outOfBoundaryDate = dateBoundary.outOfBoundary( Boundary.MAX_INCLISIVE, today );
 		Calendar calendar1 = Calendar.getInstance();
 		Calendar calendar2 = Calendar.getInstance();
-		calendar1.setTime( DateTimeBoundary.simpleDateFormat.parse( outOfBoundaryDate ) );
-		calendar2.setTime( DateTimeBoundary.simpleDateFormat.parse( today ) );
+		calendar1.setTime( DateTimeBoundary.simpleDateFormat.get().parse( outOfBoundaryDate ) );
+		calendar2.setTime( DateTimeBoundary.simpleDateFormat.get().parse( today ) );
 		assertTrue( calendar1.after( calendar2 ) );
 	}
 

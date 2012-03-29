@@ -12,10 +12,12 @@
 
 package com.eviware.soapui.impl.wsdl.submit.transports.http.support.metrics;
 
-import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.apache.http.impl.HttpConnectionMetricsImpl;
 import org.apache.http.io.HttpTransportMetrics;
+
+import com.eviware.soapui.support.DateUtil;
 
 public class SoapUIMetrics extends HttpConnectionMetricsImpl
 {
@@ -27,15 +29,13 @@ public class SoapUIMetrics extends HttpConnectionMetricsImpl
 	private String ipAddress = "";
 	private int port = -1;
 
-	private Stopwatch readTimer;
-	private Stopwatch totalTimer;
-	private Stopwatch DNSTimer;
-	private Stopwatch connectTimer;
-	private Stopwatch timeToFirstByteTimer;
+	private final Stopwatch readTimer;
+	private final Stopwatch totalTimer;
+	private final Stopwatch DNSTimer;
+	private final Stopwatch connectTimer;
+	private final Stopwatch timeToFirstByteTimer;
 
 	private boolean done = false;
-
-	private static final SimpleDateFormat dateFormat = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
 
 	public SoapUIMetrics( final HttpTransportMetrics inTransportMetric, final HttpTransportMetrics outTransportMetric )
 	{
@@ -66,9 +66,9 @@ public class SoapUIMetrics extends HttpConnectionMetricsImpl
 		return done;
 	}
 
-	public synchronized static String formatTimestamp( long timestamp )
+	public static String formatTimestamp( long timestamp )
 	{
-		return dateFormat.format( timestamp );
+		return DateUtil.formatFull( new Date(timestamp) );
 	}
 
 	public Stopwatch getDNSTimer()
@@ -103,7 +103,7 @@ public class SoapUIMetrics extends HttpConnectionMetricsImpl
 
 	public String getFormattedTimeStamp()
 	{
-		return dateFormat.format( getTimestamp() );
+		return DateUtil.formatFull( new Date(getTimestamp()) );
 	}
 
 	public void setTimestamp( long timestamp )

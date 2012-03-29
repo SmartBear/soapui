@@ -13,7 +13,6 @@
 package com.eviware.soapui.impl.wsdl.panels.teststeps;
 
 import java.beans.PropertyChangeEvent;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.swing.JButton;
@@ -40,6 +39,7 @@ import com.eviware.soapui.model.testsuite.TestAssertion;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.monitor.support.TestMonitorListenerAdapter;
 import com.eviware.soapui.security.SecurityTestRunner;
+import com.eviware.soapui.support.DateUtil;
 import com.eviware.soapui.support.ListDataChangeListener;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JComponentInspector;
@@ -67,7 +67,6 @@ public class WsdlTestRequestDesktopPanel extends AbstractWsdlRequestDesktopPanel
 	private JComponentInspector<?> logInspector;
 	private InternalAssertionsListener assertionsListener = new InternalAssertionsListener();
 	private long startTime;
-	private SimpleDateFormat sdf = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
 
 	public WsdlTestRequestDesktopPanel( WsdlTestRequestStep requestStep )
 	{
@@ -234,7 +233,7 @@ public class WsdlTestRequestDesktopPanel extends AbstractWsdlRequestDesktopPanel
 	protected void logMessages( String message, String infoMessage )
 	{
 		super.logMessages( message, infoMessage );
-		logArea.addLine( sdf.format( new Date( startTime ) ) + " - " + message );
+		logArea.addLine( DateUtil.formatFull( new Date( startTime ) ) + " - " + message );
 	}
 
 	@Override

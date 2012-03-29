@@ -18,7 +18,6 @@ import java.awt.Dimension;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DragSource;
 import java.awt.event.ActionEvent;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.swing.AbstractAction;
@@ -76,6 +75,7 @@ import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.monitor.support.TestMonitorListenerAdapter;
 import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.settings.UISettings;
+import com.eviware.soapui.support.DateUtil;
 import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
@@ -427,11 +427,9 @@ public class WsdlTestCaseDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 
 	public class InternalTestRunListener extends TestRunListenerAdapter
 	{
-		private SimpleDateFormat dateFormat;
 
 		public InternalTestRunListener()
 		{
-			dateFormat = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss.SSS" );
 		}
 
 		@Override
@@ -447,7 +445,7 @@ public class WsdlTestCaseDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 			testStepList.setSelectedIndex( -1 );
 			testCaseLog.clear();
 
-			testCaseLog.addText( "Test started at " + dateFormat.format( new Date() ) );
+			testCaseLog.addText( "Test started at " + DateUtil.formatExtraFull( new Date() ) );
 
 			WsdlTestCaseDesktopPanel.this.beforeRun();
 

@@ -13,7 +13,6 @@
 package com.eviware.soapui.security.log;
 
 import java.lang.ref.SoftReference;
-import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.List;
 
@@ -35,7 +34,6 @@ public class FunctionalTestLogModel extends AbstractListModel
 	private List<SoftReference<TestStepResult>> results = Collections.synchronizedList( new TreeList() );
 	private int maxSize = 100;
 	private int stepCount;
-	private SimpleDateFormat dateFormat = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss.SSS" );
 
 	public synchronized Object getElementAt( int arg0 )
 	{

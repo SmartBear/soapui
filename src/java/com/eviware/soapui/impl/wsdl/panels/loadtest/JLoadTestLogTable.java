@@ -19,7 +19,6 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -56,6 +55,7 @@ import com.eviware.soapui.impl.wsdl.loadtest.data.actions.ExportLoadTestLogActio
 import com.eviware.soapui.impl.wsdl.loadtest.log.LoadTestLog;
 import com.eviware.soapui.impl.wsdl.loadtest.log.LoadTestLogEntry;
 import com.eviware.soapui.model.testsuite.TestStep;
+import com.eviware.soapui.support.DateUtil;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.ActionSupport;
@@ -385,18 +385,16 @@ public class JLoadTestLogTable extends JPanel
 
 	private static final class TimestampTableCellRenderer extends DefaultTableCellRenderer
 	{
-		private SimpleDateFormat sdf;
 
 		private TimestampTableCellRenderer()
 		{
-			sdf = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss:SSS" );
 		}
 
 		public Component getTableCellRendererComponent( JTable table, Object value, boolean isSelected, boolean hasFocus,
 				int row, int column )
 		{
 			if( value != null )
-				setText( sdf.format( new Date( ( Long )value ) ) );
+				setText( DateUtil.formatExtraFull( new Date( ( Long )value ) ) );
 
 			if( isSelected )
 			{

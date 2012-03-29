@@ -23,6 +23,7 @@ import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestSuiteRunContext;
 import com.eviware.soapui.model.testsuite.TestSuiteRunListener;
 import com.eviware.soapui.model.testsuite.TestSuiteRunner;
+import com.eviware.soapui.support.DateUtil;
 
 public class TestRunLogTestSuiteRunListener extends TestRunLogTestRunListener implements TestSuiteRunListener
 {
@@ -40,7 +41,7 @@ public class TestRunLogTestSuiteRunListener extends TestRunLogTestRunListener im
 			runLog.clear();
 
 		String testSuiteName = testRunner.getTestRunnable().getName();
-		runLog.addBoldText( "TestSuite [" + testSuiteName + "] started at " + dateFormat.format( new Date() ) );
+		runLog.addBoldText( "TestSuite [" + testSuiteName + "] started at " + DateUtil.formatFull( new Date() ) );
 		runLog.setStepIndex( 0 );
 	}
 
