@@ -162,6 +162,8 @@
     <!-- add activation / javamail / bouncycastle to jnlp distribution -->
 
     <postGoal name="jnlp">
+        <ant:mkdir dir="${maven.build.dir}/jnlp_temp"/>
+    
         <ant:copy todir="${maven.jnlp.dir}">
             <ant:fileset dir="src/jnlp">
                 <ant:include name="*.jnlp"/>
