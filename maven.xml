@@ -849,5 +849,11 @@ URL=http://www.soapui.org]]>
                 file="${user.home}/.maven/repository/${pom.groupId}/jars/${pom.artifactId}-coverage-xmlbeans-${pom.currentVersion}.jar"
                 todir="../soapui-libs/lib"/>
     </goal>
+    
+     <goal name="soapui:apidocs">
+    	<attainGoal name="maven-jxr-plugin:report"/>
+    	<attainGoal name="javadoc"/>
+    </goal>
+    
 
 </project>
