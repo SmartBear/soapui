@@ -31,7 +31,7 @@ public class RSyntaxTextAreaPropertyExpansionTarget extends AbstractPropertyExpa
 		try
 		{
 			textField.setText( textField.getText( 0, pos ) + expansion.toString()
-					+ textField.getText( pos, textField.getText().length() - textField.getText( 0, pos ).length() - 1 ) );
+					+ textField.getText( pos, textField.getText().length() - textField.getText( 0, pos ).length()  ) );
 		}
 		catch( BadLocationException e )
 		{
