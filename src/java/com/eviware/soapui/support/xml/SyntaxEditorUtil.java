@@ -39,19 +39,30 @@ public class SyntaxEditorUtil
 
 	public static RSyntaxTextArea createDefaultSQLSyntaxTextArea()
 	{
-		return createDefaultSyntaxTextArea( SyntaxConstants.SYNTAX_STYLE_SQL );
+		RSyntaxTextArea textArea = new RSyntaxTextArea() {
+			protected void configurePopupMenu(javax.swing.JPopupMenu popupMenu){
+				// Suppress superclass behavior
+			}
+		};
+		textArea.setSyntaxEditingStyle( SyntaxConstants.SYNTAX_STYLE_SQL );
+		return decorateSyntaxArea( textArea );
 	}
 
-	private static RSyntaxTextArea createDefaultSyntaxTextArea( String type )
+	private static RSyntaxTextArea decorateSyntaxArea( RSyntaxTextArea textArea )
 	{
-		RSyntaxTextArea textArea = new RSyntaxTextArea();
-		textArea.setSyntaxEditingStyle( type );
 		textArea.setFont( UISupport.getEditorFont() );
 		textArea.setCodeFoldingEnabled( true );
 		textArea.setAntiAliasingEnabled( true );
 		textArea.setCaretPosition( 0 );
 		textArea.setBorder( BorderFactory.createMatteBorder( 0, 2, 0, 0, Color.WHITE ) );
 		return textArea;
+	}
+	
+	private static RSyntaxTextArea createDefaultSyntaxTextArea( String type )
+	{
+		RSyntaxTextArea textArea = new RSyntaxTextArea();
+		textArea.setSyntaxEditingStyle( type );
+		return decorateSyntaxArea(textArea);
 	}
 
 	public static RSyntaxTextArea addDefaultActions( RSyntaxTextArea editor, RTextScrollPane scrollPane, boolean readOnly )
