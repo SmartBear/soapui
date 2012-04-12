@@ -26,6 +26,7 @@ import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
@@ -43,12 +44,13 @@ import org.apache.log4j.Logger;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.support.StringUtils;
+import com.google.common.collect.Maps;
 
 public class SoapUISSLSocketFactory extends SSLSocketFactory
 {
 	// a cache of factories for custom certificates/Keystores at the project level - never cleared
-	private static Map<String, SSLSocketFactory> factoryMap = new HashMap<String, SSLSocketFactory>();
-	private SSLContext sslContext = SSLContext.getInstance( "TLS" );
+	private static final Map<String, SSLSocketFactory> factoryMap = new ConcurrentHashMap<String, SSLSocketFactory>();
+	private final SSLContext sslContext = SSLContext.getInstance( "TLS" );
 	private final static Logger log = Logger.getLogger( SoapUISSLSocketFactory.class );
 
 	@SuppressWarnings( "deprecation" )
