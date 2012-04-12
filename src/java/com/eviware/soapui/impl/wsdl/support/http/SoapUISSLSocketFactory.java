@@ -92,7 +92,7 @@ public class SoapUISSLSocketFactory extends SSLSocketFactory
 		setHostnameVerifier( SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER );
 	}
 
-	private synchronized SSLSocket enableSocket( SSLSocket socket )
+	private static SSLSocket enableSocket( SSLSocket socket )
 	{
 		String invalidateSession = System.getProperty( "soapui.https.session.invalidate" );
 		String protocols = System.getProperty( "soapui.https.protocols" );
