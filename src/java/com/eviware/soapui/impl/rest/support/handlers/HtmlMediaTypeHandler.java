@@ -29,7 +29,7 @@ public class HtmlMediaTypeHandler implements MediaTypeHandler
 {
 	public boolean canHandle( String contentType )
 	{
-		return contentType != null && contentType.equals( "text/html" );
+		return contentType != null && contentType.toLowerCase().contains( "text/html" );
 	}
 
 	public String createXmlRepresentation( HttpResponse response )
