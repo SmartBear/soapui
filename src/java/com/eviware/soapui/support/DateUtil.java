@@ -51,6 +51,12 @@ public class DateUtil {
 		return EXTRA_FULL_FORMAT.get().format(date);
 	}
 
+	/**
+	 * Formats: HH:mm:ss.SSS
+	 * 
+	 * @param date
+	 * @return
+	 */
 	public static String formatSimpleWithMillis(Date date) {
 		return SIMPLE_FORMAT_WITH_MILLIS.get().format(date);
 	}
