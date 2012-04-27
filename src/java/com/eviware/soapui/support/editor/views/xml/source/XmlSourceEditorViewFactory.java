@@ -300,7 +300,7 @@ public class XmlSourceEditorViewFactory implements ResponseEditorViewFactory, Re
 		@SuppressWarnings( "unchecked" )
 		public WsdlMockResponseXmlSourceEditor( XmlEditor xmlEditor, WsdlMockResponse mockResponse )
 		{
-			super( xmlEditor, mockResponse, true );
+			super( xmlEditor, mockResponse, false );
 		}
 
 		@Override
