@@ -171,7 +171,7 @@ public class SoapUI
 	public static final String DEFAULT_DESKTOP = "Default";
 	public static final String CURRENT_SOAPUI_WORKSPACE = SoapUI.class.getName() + "@workspace";
 	public final static Logger log = Logger.getLogger( SoapUI.class );
-	public final static String SOAPUI_VERSION = "4.5.0";
+	public final static String SOAPUI_VERSION = "4.5.1-SNAPSHOT";
 	public static final String DEFAULT_WORKSPACE_FILE = "default-soapui-workspace.xml";
 	public static final String SOAPUI_SPLASH = "soapui-splash.png";
 	public static final String SOAPUI_TITLE = "/com/eviware/soapui/resources/branded/branded.properties";
@@ -228,8 +228,8 @@ public class SoapUI
 	private static String[] mainArgs;
 	private static GCTimerTask gcTimerTask;
 
-	private final static ThreadPoolExecutor threadPool = ( ThreadPoolExecutor )Executors
-			.newFixedThreadPool(getSystemPropertyAsInt("soapui.threadpool.max", 200), new SoapUIThreadCreator() );
+	private final static ThreadPoolExecutor threadPool = ( ThreadPoolExecutor )Executors.newFixedThreadPool(
+			getSystemPropertyAsInt( "soapui.threadpool.max", 200 ), new SoapUIThreadCreator() );
 	private JTextField searchField;
 	private static JToggleButton applyProxyButton;
 	private static Logger groovyLogger;
@@ -244,16 +244,20 @@ public class SoapUI
 	{
 	}
 
-	private static int getSystemPropertyAsInt(String string, int defaultValue) {
-		
-		String strValue = System.getProperty("soapui.threadpool.max");
+	private static int getSystemPropertyAsInt( String string, int defaultValue )
+	{
+
+		String strValue = System.getProperty( "soapui.threadpool.max" );
 		int parseInt = defaultValue;
-		try{
-			parseInt = Integer.parseInt(strValue);
-		}catch(Exception e){
+		try
+		{
+			parseInt = Integer.parseInt( strValue );
+		}
+		catch( Exception e )
+		{
 			// Ignore, return default
 		}
-		
+
 		return parseInt;
 	}
 
