@@ -12,10 +12,14 @@
 
 package com.eviware.soapui.impl.support;
 
+import java.net.InetAddress;
+
 import com.eviware.soapui.support.StringUtils;
 
 public class HttpUtils
 {
+	private static String pingErrorMessage;
+
 	public static boolean isErrorStatus( int statusCode )
 	{
 		return statusCode >= 400;
@@ -47,5 +51,29 @@ public class HttpUtils
 			return "http://" + endpoint;
 
 		return endpoint;
+	}
+
+	public static boolean ping( String host, int timeout )
+	{
+		boolean result = false;
+		pingErrorMessage = "No Error";
+		try
+		{
+			InetAddress address = InetAddress.getByName( host );
+			result = address.isReachable( timeout );
+		}
+		catch( Exception e )
+		{
+			result = false;
+			pingErrorMessage = e.getMessage();
+		}
+		finally
+		{
+			return result;
+		}
+	}
+	
+	public static String getPingErrorMessage() {
+		return pingErrorMessage;
 	}
 }
