@@ -554,7 +554,7 @@
         <dependency>
             <groupId>eviware</groupId>
             <artifactId>soapui-xmlbeans</artifactId>
-            <version>4.5.0</version>
+            <version>4.5.1-SNAPSHOT</version>
             <type>jar</type>
             <properties>
                 <jnlp.jar>true</jnlp.jar>
