@@ -28,6 +28,9 @@ import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.AssertionException;
 
+/*
+ * This test covers bug reported in SOAPUI-3935
+ */
 public class XQueryContainsTestCase
 {
 	@Mock
