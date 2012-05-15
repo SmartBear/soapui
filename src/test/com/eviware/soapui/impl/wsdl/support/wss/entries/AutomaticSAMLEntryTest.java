@@ -64,6 +64,7 @@ import com.eviware.soapui.utils.TestUtils;
  * @author Erik R. Yverling
  */
 
+//FIXME Use the *-test keys instead of the keystore.jks
 public class AutomaticSAMLEntryTest
 {
 	public static junit.framework.Test suite()
