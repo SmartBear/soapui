@@ -90,10 +90,17 @@ public class HttpClientSupport
 		public void preProcess( final HttpRequest request, final HttpProcessor processor, final HttpContext context )
 				throws HttpException, IOException
 		{
-			RequestWrapper w = ( RequestWrapper )request;
-			if( w.getOriginal() instanceof ExtendedHttpMethod )
+			HttpRequest original = request;
+
+			if( original instanceof RequestWrapper )
 			{
-				SoapUIMetrics metrics = ( ( ExtendedHttpMethod )w.getOriginal() ).getMetrics();
+				RequestWrapper w = ( RequestWrapper )request;
+				original = w.getOriginal();
+			}
+
+			if( original instanceof ExtendedHttpMethod )
+			{
+				SoapUIMetrics metrics = ( ( ExtendedHttpMethod )original ).getMetrics();
 				metrics.getConnectTimer().stop();
 				metrics.getTimeToFirstByteTimer().start();
 			}
@@ -191,9 +198,9 @@ public class HttpClientSupport
 			}
 
 			connectionManager = new SoapUIMultiThreadedHttpConnectionManager( registry );
-			//			connectionManager.setMaxConnectionsPerHost( ( int )settings.getLong( HttpSettings.MAX_CONNECTIONS_PER_HOST,
-			//					500 ) );
-			//			connectionManager.setMaxTotalConnections( ( int )settings.getLong( HttpSettings.MAX_TOTAL_CONNECTIONS, 2000 ) );
+			connectionManager.setMaxTotal( ( int )settings.getLong( HttpSettings.MAX_TOTAL_CONNECTIONS, 2000 ) );
+			connectionManager
+					.setDefaultMaxPerRoute( ( int )settings.getLong( HttpSettings.MAX_CONNECTIONS_PER_HOST, 500 ) );
 
 			httpClient = new SoapUIHttpClient( connectionManager );
 			httpClient.getAuthSchemes().register( AuthPolicy.NTLM, new NTLMSchemeFactory() );
@@ -255,12 +262,12 @@ public class HttpClientSupport
 				else if( name.equals( HttpSettings.MAX_CONNECTIONS_PER_HOST ) )
 				{
 					log.info( "Updating max connections per host to " + newValue );
-					//					connectionManager.setMaxConnectionsPerHost( Integer.parseInt( newValue ) );
+					connectionManager.setDefaultMaxPerRoute( Integer.parseInt( newValue ) );
 				}
 				else if( name.equals( HttpSettings.MAX_TOTAL_CONNECTIONS ) )
 				{
 					log.info( "Updating max total connections host to " + newValue );
-					//					connectionManager.setMaxTotalConnections( Integer.parseInt( newValue ) );
+					connectionManager.setMaxTotal( Integer.parseInt( newValue ) );
 				}
 			}
 
