@@ -13,16 +13,29 @@
 package com.eviware.soapui.impl.wsdl.support.wss.crypto;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.InvalidKeyException;
 import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.CertificateException;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.commons.ssl.KeyStoreBuilder;
+import org.apache.commons.ssl.ProbablyBadPasswordException;
+import org.apache.commons.ssl.Util;
+import org.apache.log4j.Logger;
 import org.apache.ws.security.components.crypto.CredentialException;
 import org.apache.ws.security.components.crypto.Merlin;
 import org.apache.ws.security.util.Loader;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.KeyMaterialCryptoConfig;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.support.ExternalDependency;
@@ -34,15 +47,24 @@ import com.eviware.soapui.impl.wsdl.teststeps.BeanPathPropertySupport;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.resolver.ResolveContext;
+import com.google.common.io.Files;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public class KeyMaterialWssCrypto implements WssCrypto
 {
+	private static final String JCEKS_KEYSTORE_TYPE = "jceks";
+	private static final String JCEKS_FILE_EXTENSION = "jck";
+
+	private static final String PKCS12_KEYSTORE_TYPE = "pkcs12";
+	private static final String PKCS12_FILE_EXTENSION = "pk12";
+
 	private KeyMaterialCryptoConfig config;
 	private final WssContainer container;
 	private KeyStore keyStore;
 	private BeanPathPropertySupport sourceProperty;
+
+	private static final Logger log = Logger.getLogger( KeyMaterialWssCrypto.class );
 
 	public KeyMaterialWssCrypto( KeyMaterialCryptoConfig config2, WssContainer container, String source,
 			String password, CryptoType type )
@@ -132,6 +154,7 @@ public class KeyMaterialWssCrypto implements WssCrypto
 	/*
 	 * This loads the keystore / truststore file
 	 */
+	// FIXME Why is this method called like times in a row? 
 	public KeyStore load() throws Exception
 	{
 		if( keyStore != null )
@@ -141,21 +164,77 @@ public class KeyMaterialWssCrypto implements WssCrypto
 		{
 			UISupport.setHourglassCursor();
 
+			String crypotFilePath = sourceProperty.expand();
+			String fileExtension = Files.getFileExtension( crypotFilePath );
+			String keystoreType = fileExtensionToKeystoreType( fileExtension );
+
 			ClassLoader loader = Loader.getClassLoader( KeyMaterialWssCrypto.class );
-			InputStream input = Merlin.loadInputStream( loader, sourceProperty.expand() );
-			keyStore = KeyStore.getInstance( KeyStore.getDefaultType() );
+			InputStream input = Merlin.loadInputStream( loader, crypotFilePath );
+			keyStore = KeyStore.getInstance( keystoreType );
 			keyStore.load( input, getPassword().toCharArray() );
+
 			return keyStore;
 		}
-		catch( Throwable t )
+		catch( Exception exceptionFromNormalLoad )
 		{
-			keyStore = null;
-			throw new Exception( t );
+			log.warn( "Using fallback method to load keystore/truststore due to: " + exceptionFromNormalLoad.getMessage() );
+			try
+			{
+				keyStore = fallbackLoad();
+				return keyStore;
+			}
+			catch( Exception exceptionFromFallbackLoad )
+			{
+				keyStore = null;
+				SoapUI.logError( exceptionFromFallbackLoad, "Could not load keystore/truststore" );
+				throw new Exception( exceptionFromFallbackLoad );
+			}
 		}
 		finally
 		{
 			UISupport.resetCursor();
 		}
+	}
+
+	@NonNull
+	private String fileExtensionToKeystoreType( String fileExtension )
+	{
+		if( fileExtension.equals( PKCS12_FILE_EXTENSION ) )
+		{
+			return PKCS12_KEYSTORE_TYPE;
+		}
+		else if( fileExtension.equals( JCEKS_FILE_EXTENSION ) )
+		{
+			return JCEKS_KEYSTORE_TYPE;
+		}
+		else
+		{
+			return KeyStore.getDefaultType();
+		}
+	}
+
+	/*
+	 * This is the less preferred way to loading cryptos, but is used for
+	 * backwards compability.
+	 */
+	@javax.annotation.Nullable
+	@Deprecated
+	private KeyStore fallbackLoad() throws IOException, CertificateException, KeyStoreException,
+			NoSuchAlgorithmException, InvalidKeyException, NoSuchProviderException, ProbablyBadPasswordException,
+			UnrecoverableKeyException, FileNotFoundException
+	{
+		KeyStore fallbackKeystore = null;
+		if( StringUtils.hasContent( getDefaultAlias() ) && StringUtils.hasContent( getAliasPassword() ) )
+		{
+			fallbackKeystore = KeyStoreBuilder.build(
+					Util.streamToBytes( new FileInputStream( sourceProperty.expand() ) ), getDefaultAlias().getBytes(),
+					getPassword().toCharArray(), getAliasPassword().toCharArray() );
+		}
+		else
+			fallbackKeystore = KeyStoreBuilder.build(
+					Util.streamToBytes( new FileInputStream( sourceProperty.expand() ) ),
+					StringUtils.hasContent( getPassword() ) ? getPassword().toCharArray() : null );
+		return fallbackKeystore;
 	}
 
 	public String getStatus()
@@ -174,6 +253,7 @@ public class KeyMaterialWssCrypto implements WssCrypto
 		}
 		catch( Exception e )
 		{
+			// FIXME We should also log the error if it weren't for all repedious calls to this method.
 			return "<error: " + e.getMessage() + ">";
 		}
 	}
