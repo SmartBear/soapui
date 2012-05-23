@@ -14,6 +14,10 @@ package com.eviware.soapui.impl.rest.panels.request;
 
 import java.awt.Component;
 
+import org.opensaml.ws.wstrust.impl.AuthenticationTypeBuilder;
+
+import com.eviware.soapui.config.CredentialsConfig;
+import com.eviware.soapui.config.CredentialsConfig.AuthType;
 import com.eviware.soapui.impl.EmptyPanelBuilder;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.support.components.JPropertiesTable;
@@ -59,6 +63,8 @@ public class RestRequestPanelBuilder extends EmptyPanelBuilder<RestRequest>
 		table.addProperty( "Username", "username", true );
 		table.addPropertyShadow( "Password", "password", true );
 		table.addProperty( "Domain", "domain", true );
+		table.addProperty( "Authentication Type", "authType", new String[] { AuthType.GLOBAL_HTTP_SETTINGS.toString(),
+				AuthType.PREEMPTIVE.toString(), AuthType.NTLM_KERBEROS.toString() } );
 
 		StringList keystores = new StringList( request.getOperation().getInterface().getProject().getWssContainer()
 				.getCryptoNames() );

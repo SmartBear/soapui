@@ -18,6 +18,7 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import com.eviware.soapui.config.CredentialsConfig.AuthType;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.support.components.SimpleBindingForm;
@@ -48,9 +49,11 @@ public class RequestAutInspector extends AbstractXmlInspector
 
 			form = new SimpleBindingForm( new PresentationModel<AbstractHttpRequest<?>>( request ) );
 			form.addSpace( 5 );
+			form.appendComboBox( "authType", "Authorisation Type", new String[] { AuthType.GLOBAL_HTTP_SETTINGS.toString(),
+					AuthType.PREEMPTIVE.toString(), AuthType.NTLM_KERBEROS.toString() }, "" );
 			form.appendTextField( "username", "Username", "The username to use for HTTP Authentication" );
 			form.appendPasswordField( "password", "Password", "The password to use for HTTP Authentication" );
-			form.appendTextField( "domain", "Domain", "The domain to use for HTTP Authentication" );
+			form.appendTextField( "domain", "Domain", "The domain to use for Authentication(NTLM/Kerberos)" );
 
 			if( request instanceof WsdlRequest )
 			{

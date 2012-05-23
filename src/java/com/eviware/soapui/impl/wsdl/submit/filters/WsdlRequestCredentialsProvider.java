@@ -31,6 +31,7 @@ import com.eviware.soapui.impl.wsdl.WsdlRequest;
  * @author Ole.Matzura
  */
 
+@Deprecated
 public final class WsdlRequestCredentialsProvider implements CredentialsProvider
 {
 	private boolean checkedCredentials;

@@ -28,6 +28,7 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.AbstractRequestConfig;
 import com.eviware.soapui.config.AttachmentConfig;
 import com.eviware.soapui.config.CredentialsConfig;
+import com.eviware.soapui.config.CredentialsConfig.AuthType;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.HttpAttachmentPart;
@@ -513,6 +514,17 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 
 		return credentialsConfig.getDomain();
 	}
+	
+	public String getAuthType()
+	{
+		CredentialsConfig credentialsConfig = getConfig().getCredentials();
+		if( credentialsConfig == null )
+			credentialsConfig = getConfig().addNewCredentials();
+		if ( credentialsConfig.getAuthType() == null )
+			credentialsConfig.setAuthType( AuthType.GLOBAL_HTTP_SETTINGS );
+
+		return credentialsConfig.getAuthType().toString();
+	}
 
 	public void setUsername( String username )
 	{
@@ -545,6 +557,17 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 
 		credentialsConfig.setDomain( domain );
 		notifyPropertyChanged( "domain", old, domain );
+	}
+	
+	public void setAuthType( String authType )
+	{
+		String old = getAuthType();
+		CredentialsConfig credentialsConfig = getConfig().getCredentials();
+		if( credentialsConfig == null )
+			credentialsConfig = getConfig().addNewCredentials();
+
+		credentialsConfig.setAuthType( AuthType.Enum.forString( authType ) );
+		notifyPropertyChanged( "authType", old, authType );
 	}
 
 	public String getSslKeystore()

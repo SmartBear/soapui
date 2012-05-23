@@ -28,6 +28,8 @@ import org.apache.commons.httpclient.URI;
 import org.apache.http.client.methods.HttpRequestBase;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.config.CredentialsConfig.AuthType;
+import com.eviware.soapui.config.CredentialsConfig.AuthType.Enum;
 import com.eviware.soapui.config.DefaultEndpointStrategyConfig;
 import com.eviware.soapui.config.EndpointConfig;
 import com.eviware.soapui.config.ProjectConfig;
@@ -208,26 +210,29 @@ public class DefaultEndpointStrategy implements EndpointStrategy, PropertyExpans
 		String defPassword = PropertyExpander.expandProperties( context, def.getPassword() );
 		String defDomain = PropertyExpander.expandProperties( context, def.getDomain() );
 
+		Enum authType = AuthType.Enum.forString( wsdlRequest.getAuthType() );
+
 		if( def.getMode() == EndpointConfig.Mode.OVERRIDE )
 		{
 			overrideRequest( context, wsdlRequest, def, requestUsername, requestPassword, requestDomain, defUsername,
-					defPassword, defDomain );
+					defPassword, defDomain, authType );
 		}
 		else if( def.getMode() == EndpointConfig.Mode.COPY )
 		{
 			copyToRequest( context, wsdlRequest, def, requestUsername, requestPassword, requestDomain, defUsername,
-					defPassword, defDomain );
+					defPassword, defDomain, authType );
 		}
 		else if( def.getMode() == EndpointConfig.Mode.COMPLEMENT )
 		{
 			complementRequest( context, wsdlRequest, def, requestUsername, requestPassword, requestDomain, defUsername,
-					defPassword, defDomain );
+					defPassword, defDomain, authType );
 		}
 	}
 
 	private void overrideRequest( SubmitContext context, AbstractHttpRequestInterface<?> wsdlRequest,
 			EndpointDefaults def, String requestUsername, String requestPassword, String requestDomain,
-			String defUsername, String defPassword, String defDomain )
+			String defUsername, String defPassword, String defDomain,
+			com.eviware.soapui.config.CredentialsConfig.AuthType.Enum authType )
 	{
 		String username = StringUtils.hasContent( defUsername ) ? defUsername : requestUsername;
 		String password = StringUtils.hasContent( defPassword ) ? defPassword : requestPassword;
@@ -242,7 +247,7 @@ public class DefaultEndpointStrategy implements EndpointStrategy, PropertyExpans
 			{
 				String domain = StringUtils.hasContent( defDomain ) ? defDomain : requestDomain;
 				HttpAuthenticationRequestFilter.initRequestCredentials( context, username, project.getSettings(), password,
-						domain );
+						domain, authType );
 			}
 
 			if( StringUtils.hasContent( wssType ) || StringUtils.hasContent( wssTimeToLive ) )
@@ -265,19 +270,21 @@ public class DefaultEndpointStrategy implements EndpointStrategy, PropertyExpans
 
 	private void copyToRequest( SubmitContext context, AbstractHttpRequestInterface<?> wsdlRequest,
 			EndpointDefaults def, String requestUsername, String requestPassword, String requestDomain,
-			String defUsername, String defPassword, String defDomain )
+			String defUsername, String defPassword, String defDomain,
+			com.eviware.soapui.config.CredentialsConfig.AuthType.Enum authType )
 	{
 		// only set if not set in request
 		String wssType = def.getWssType();
 
 		if( wssType != null )
 		{
-			HttpAuthenticationRequestFilter.initRequestCredentials( context, null, project.getSettings(), null, null );
+			HttpAuthenticationRequestFilter
+					.initRequestCredentials( context, null, project.getSettings(), null, null, null );
 		}
 		else
 		{
 			HttpAuthenticationRequestFilter.initRequestCredentials( context, defUsername, project.getSettings(),
-					defPassword, defDomain );
+					defPassword, defDomain, authType );
 		}
 
 		String wssTimeToLive = def.getWssTimeToLive();
@@ -296,7 +303,8 @@ public class DefaultEndpointStrategy implements EndpointStrategy, PropertyExpans
 
 	private void complementRequest( SubmitContext context, AbstractHttpRequestInterface<?> httpRequest,
 			EndpointDefaults def, String requestUsername, String requestPassword, String requestDomain,
-			String defUsername, String defPassword, String defDomain )
+			String defUsername, String defPassword, String defDomain,
+			com.eviware.soapui.config.CredentialsConfig.AuthType.Enum authType )
 	{
 		String username = StringUtils.hasContent( requestUsername ) ? requestUsername : defUsername;
 		String password = StringUtils.hasContent( requestPassword ) ? requestPassword : defPassword;
@@ -317,7 +325,7 @@ public class DefaultEndpointStrategy implements EndpointStrategy, PropertyExpans
 			{
 				String domain = StringUtils.hasContent( requestDomain ) ? requestDomain : defDomain;
 				HttpAuthenticationRequestFilter.initRequestCredentials( context, username, project.getSettings(), password,
-						domain );
+						domain, authType );
 			}
 			else if( StringUtils.hasContent( wssType ) || StringUtils.hasContent( wssTimeToLive ) )
 			{
@@ -342,7 +350,7 @@ public class DefaultEndpointStrategy implements EndpointStrategy, PropertyExpans
 			{
 				String domain = StringUtils.hasContent( requestDomain ) ? requestDomain : defDomain;
 				HttpAuthenticationRequestFilter.initRequestCredentials( context, username, project.getSettings(), password,
-						domain );
+						domain, authType );
 			}
 		}
 	}

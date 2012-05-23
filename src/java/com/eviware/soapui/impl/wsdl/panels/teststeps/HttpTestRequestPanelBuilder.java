@@ -14,6 +14,7 @@ package com.eviware.soapui.impl.wsdl.panels.teststeps;
 
 import javax.swing.JPanel;
 
+import com.eviware.soapui.config.CredentialsConfig.AuthType;
 import com.eviware.soapui.impl.EmptyPanelBuilder;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestInterface;
@@ -75,7 +76,9 @@ public class HttpTestRequestPanelBuilder extends EmptyPanelBuilder<HttpTestReque
 		table.addProperty( "Username", "username", true );
 		table.addPropertyShadow( "Password", "password", true );
 		table.addProperty( "Domain", "domain", true );
-
+		table.addProperty( "Authentication Type", "authType", new String[] { AuthType.GLOBAL_HTTP_SETTINGS.toString(),
+				AuthType.PREEMPTIVE.toString(), AuthType.NTLM_KERBEROS.toString() } );
+		
 		StringList keystores = new StringList( ( ( WsdlProject )request.getTestStep().getTestCase().getTestSuite()
 				.getProject() ).getWssContainer().getCryptoNames() );
 		keystores.add( "" );

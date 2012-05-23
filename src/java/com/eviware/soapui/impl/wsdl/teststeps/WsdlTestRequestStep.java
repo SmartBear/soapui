@@ -134,6 +134,16 @@ public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements O
 		addProperty( new TestStepBeanProperty( "Username", false, testRequest, "username", this, true ) );
 		addProperty( new TestStepBeanProperty( "Password", false, testRequest, "password", this, true ) );
 		addProperty( new TestStepBeanProperty( "Domain", false, testRequest, "domain", this, false ) );
+		addProperty( new TestStepBeanProperty( "AuthType", false, testRequest, "authType", this,true) {
+			
+			@Override
+			public String getDefaultValue()
+			{
+				// TODO Auto-generated method stub
+				return "XXX";
+			}
+		});
+		
 		addProperty( new TestStepBeanProperty( "Request", false, testRequest, "requestContent", this, true )
 		{
 			@Override

@@ -641,6 +641,12 @@ public class AMFRequest extends AbstractAnimatableModelItem<ModelItemConfig> imp
 		return null;
 	}
 
+	@Override
+	public String getAuthType()
+	{
+		return null;
+	}
+	
 	public boolean isDiscardResponse()
 	{
 		return getSettings().getBoolean( "discardResponse" );

@@ -407,6 +407,12 @@ public class JdbcRequest extends AbstractAnimatableModelItem<ModelItemConfig> im
 		return null;
 	}
 
+	@Override
+	public String getAuthType()
+	{
+		return null;
+	}
+	
 	public boolean isDiscardResponse()
 	{
 		return getSettings().getBoolean( "discardResponse" );

@@ -29,6 +29,8 @@ import org.apache.http.protocol.HttpContext;
 import org.apache.log4j.Logger;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.config.CredentialsConfig.AuthType;
+import com.eviware.soapui.config.CredentialsConfig.AuthType.Enum;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransport;
@@ -57,6 +59,8 @@ public class HttpAuthenticationRequestFilter extends AbstractRequestFilter
 		Settings settings = wsdlRequest.getSettings();
 		String password = PropertyExpander.expandProperties( context, wsdlRequest.getPassword() );
 		String domain = PropertyExpander.expandProperties( context, wsdlRequest.getDomain() );
+		
+		Enum authtype = AuthType.Enum.forString(  wsdlRequest.getAuthType() );
 
 		String wssPasswordType = null;
 
@@ -68,7 +72,7 @@ public class HttpAuthenticationRequestFilter extends AbstractRequestFilter
 
 		if( StringUtils.isNullOrEmpty( wssPasswordType ) )
 		{
-			initRequestCredentials( context, username, settings, password, domain );
+			initRequestCredentials( context, username, settings, password, domain, authtype );
 
 			if( !SoapUI.isJXBrowserDisabled() )
 			{
@@ -78,7 +82,7 @@ public class HttpAuthenticationRequestFilter extends AbstractRequestFilter
 	}
 
 	public static void initRequestCredentials( SubmitContext context, String username, Settings settings,
-			String password, String domain )
+			String password, String domain, Enum authType )
 	{
 		HttpRequestBase httpMethod = ( HttpRequestBase )context.getProperty( BaseHttpRequestTransport.HTTP_METHOD );
 		HttpContext httpContext = ( HttpContext )context.getProperty( SubmitContext.HTTP_STATE_PROPERTY );
@@ -86,7 +90,8 @@ public class HttpAuthenticationRequestFilter extends AbstractRequestFilter
 		if( !StringUtils.isNullOrEmpty( username ) && !StringUtils.isNullOrEmpty( password ) )
 		{
 			// set preemptive authentication
-			if( settings.getBoolean( HttpSettings.AUTHENTICATE_PREEMPTIVELY ) )
+			if( ( authType.equals( AuthType.GLOBAL_HTTP_SETTINGS ) && settings.getBoolean( HttpSettings.AUTHENTICATE_PREEMPTIVELY ) )
+					|| authType.equals( AuthType.PREEMPTIVE ) )
 			{
 				UsernamePasswordCredentials creds = new UsernamePasswordCredentials( username, password );
 				Header header = BasicScheme.authenticate( creds, "utf-8", false );
@@ -101,7 +106,7 @@ public class HttpAuthenticationRequestFilter extends AbstractRequestFilter
 	public static class UPDCredentialsProvider implements CredentialsProvider
 	{
 		private boolean checkedCredentials;
-		private final static Logger logger = Logger.getLogger( WsdlRequestCredentialsProvider.class );
+		private final static Logger logger = Logger.getLogger( UPDCredentialsProvider.class );
 		private final String username;
 		private final String password;
 		private final String domain;

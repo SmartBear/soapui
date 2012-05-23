@@ -87,6 +87,8 @@ public interface AbstractHttpRequestInterface<T extends AbstractRequestConfig> e
 	public abstract String getPassword();
 
 	public abstract String getDomain();
+	
+	public abstract String getAuthType();
 
 	public abstract void setUsername( String username );
 

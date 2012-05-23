@@ -14,6 +14,7 @@ package com.eviware.soapui.impl.wsdl.panels.teststeps;
 
 import javax.swing.JPanel;
 
+import com.eviware.soapui.config.CredentialsConfig.AuthType;
 import com.eviware.soapui.impl.EmptyPanelBuilder;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequest;
@@ -66,6 +67,9 @@ public class WsdlTestRequestPanelBuilder extends EmptyPanelBuilder<WsdlTestReque
 		table.addProperty( "Username", "username", true );
 		table.addPropertyShadow( "Password", "password", true );
 		table.addProperty( "Domain", "domain", true );
+		table.addProperty( "Authentication Type", "authType", new String[] { AuthType.GLOBAL_HTTP_SETTINGS.toString(),
+				AuthType.PREEMPTIVE.toString(), AuthType.NTLM_KERBEROS.toString() } );
+		
 		table.addProperty( "WSS-Password Type", "wssPasswordType", new String[] { WsdlRequest.PW_TYPE_NONE,
 				WsdlRequest.PW_TYPE_TEXT, WsdlRequest.PW_TYPE_DIGEST } );
 		table.addProperty( "WSS TimeToLive", "wssTimeToLive", true );

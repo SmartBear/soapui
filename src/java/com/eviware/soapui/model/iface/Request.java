@@ -55,6 +55,8 @@ public interface Request extends ModelItem
 	public String getUsername();
 
 	public String getPassword();
+	
+	public String getAuthType();
 
 	public boolean dependsOn( ModelItem modelItem );
 
