@@ -62,13 +62,15 @@ public class ManualSAMLEntry extends WssEntryBase
 	{
 		JPanel panel = new JPanel( new BorderLayout() );
 
+		editor = SyntaxEditorUtil.createDefaultXmlSyntaxTextArea();
+
 		RTextScrollPane scrollPane = new RTextScrollPane( editor );
 		scrollPane.setFoldIndicatorEnabled( true );
 		scrollPane.setLineNumbersEnabled( true );
-		editor = SyntaxEditorUtil.createDefaultXmlSyntaxTextArea();
+
 		editor = SyntaxEditorUtil.addDefaultActions( editor, scrollPane, false );
 
-		editor.setText( samlAssertion );
+		editor.setText( samlAssertion == null ? "" : samlAssertion );
 		editor.getDocument().addDocumentListener( new DocumentListenerAdapter()
 		{
 
