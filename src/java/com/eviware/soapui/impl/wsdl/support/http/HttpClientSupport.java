@@ -135,15 +135,22 @@ public class HttpClientSupport
 			HttpResponse response = null;
 			int statuscode = 0;
 
+			HttpRequest original = request;
+
+			if( original instanceof RequestWrapper )
+			{
+				RequestWrapper w = ( RequestWrapper )request;
+				original = w.getOriginal();
+			}
+
 			while( response == null || statuscode < HttpStatus.SC_OK )
 			{
 				response = conn.receiveResponseHeader();
 
-				RequestWrapper w = ( RequestWrapper )request;
 				SoapUIMetrics metrics = null;
-				if( w.getOriginal() instanceof ExtendedHttpMethod )
+				if( original instanceof ExtendedHttpMethod )
 				{
-					metrics = ( ( ExtendedHttpMethod )w.getOriginal() ).getMetrics();
+					metrics = ( ( ExtendedHttpMethod )original ).getMetrics();
 					metrics.getTimeToFirstByteTimer().stop();
 					metrics.getReadTimer().start();
 				}
@@ -158,14 +165,17 @@ public class HttpClientSupport
 
 				statuscode = response.getStatusLine().getStatusCode();
 
-				SoapUIMetrics connectionMetrics = ( SoapUIMetrics )conn.getMetrics();
-
-				if( metrics != null && connectionMetrics != null && !connectionMetrics.isDone() )
+				if( conn.getMetrics() instanceof SoapUIMetrics )
 				{
-					metrics.getDNSTimer().set( connectionMetrics.getDNSTimer().getStart(),
-							connectionMetrics.getDNSTimer().getStop() );
-					// reset connection-level metrics
-					connectionMetrics.reset();
+					SoapUIMetrics connectionMetrics = ( SoapUIMetrics )conn.getMetrics();
+
+					if( metrics != null && connectionMetrics != null && !connectionMetrics.isDone() )
+					{
+						metrics.getDNSTimer().set( connectionMetrics.getDNSTimer().getStart(),
+								connectionMetrics.getDNSTimer().getStop() );
+						// reset connection-level metrics
+						connectionMetrics.reset();
+					}
 				}
 
 			} // while intermediate response
