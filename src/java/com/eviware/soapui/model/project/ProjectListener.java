@@ -50,4 +50,6 @@ public interface ProjectListener
 	void environmentRemoved( Environment env, int index );
 
 	void environmentSwitched( Environment environment );
+
+	void environmentRenamed( Environment enviroment, String oldName, String newName );
 }

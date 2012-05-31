@@ -79,4 +79,11 @@ public class ProjectListenerAdapter implements ProjectListener
 	public void environmentSwitched( Environment environment )
 	{
 	}
+
+	@Override
+	public void environmentRenamed( Environment enviroment, String oldName, String newName )
+	{
+		// TODO Auto-generated method stub
+		
+	}
 }

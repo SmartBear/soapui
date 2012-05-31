@@ -89,4 +89,10 @@ public class DefaultEnvironment implements Environment
 	{
 	}
 
+	@Override
+	public void setName( String name )
+	{
+		// TODO Auto-generated method stub
+	}
+
 }

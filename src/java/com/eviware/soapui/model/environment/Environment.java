@@ -37,5 +37,7 @@ public interface Environment
 	public void changePropertyName( String name, String value );
 
 	public void moveProperty( String name, int idx );
+	
+	public void setName(String name);
 
 }
