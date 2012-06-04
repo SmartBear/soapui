@@ -213,6 +213,8 @@ public class HttpClientSupport
 					.setDefaultMaxPerRoute( ( int )settings.getLong( HttpSettings.MAX_CONNECTIONS_PER_HOST, 500 ) );
 
 			httpClient = new SoapUIHttpClient( connectionManager );
+			// this interceptor needs to be last one added and executed.
+			httpClient.addRequestInterceptor( new HeadderRequestInterceptor(), httpClient.getRequestInterceptorCount());
 			httpClient.getAuthSchemes().register( AuthPolicy.NTLM, new NTLMSchemeFactory() );
 			httpClient.getAuthSchemes().register( AuthPolicy.SPNEGO, new NTLMSchemeFactory() );
 
@@ -397,4 +399,5 @@ public class HttpClientSupport
 	{
 		settings.addSettingsListener( helper.new SSLSettingsListener() );
 	}
+	
 }
