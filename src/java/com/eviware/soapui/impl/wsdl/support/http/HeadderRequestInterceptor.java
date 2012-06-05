@@ -20,6 +20,7 @@ import org.apache.http.HttpException;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.impl.client.EntityEnclosingRequestWrapper;
+import org.apache.http.impl.client.RequestWrapper;
 import org.apache.http.protocol.HttpContext;
 
 
@@ -38,7 +39,7 @@ public class HeadderRequestInterceptor implements HttpRequestInterceptor
 	public void process( HttpRequest request, HttpContext context ) throws HttpException, IOException
 	{
 		List<Header> wHeaders = Arrays.asList( request.getAllHeaders() );
-		HttpRequest original = ( ( EntityEnclosingRequestWrapper )request ).getOriginal();
+		HttpRequest original = ( ( RequestWrapper )request ).getOriginal();
 		List<Header> oHeaders = Arrays.asList( original.getAllHeaders() );
 		for( Header header : wHeaders )
 			if( !oHeaders.contains( header ) )
