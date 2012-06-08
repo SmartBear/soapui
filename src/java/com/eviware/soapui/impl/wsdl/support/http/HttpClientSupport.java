@@ -52,7 +52,6 @@ import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.settings.SettingsListener;
 import com.eviware.soapui.settings.HttpSettings;
 import com.eviware.soapui.settings.SSLSettings;
-import com.eviware.soapui.support.StringUtils;
 
 /**
  * HttpClient related tools
@@ -189,8 +188,7 @@ public class HttpClientSupport
 		private final SoapUIHttpClient httpClient;
 		private final static Logger log = Logger.getLogger( HttpClientSupport.Helper.class );
 		private final SoapUIMultiThreadedHttpConnectionManager connectionManager;
-//		private SoapUISSLSocketFactory socketFactory;
-		private SchemeRegistry registry;
+		private final SchemeRegistry registry;
 
 		public Helper()
 		{
