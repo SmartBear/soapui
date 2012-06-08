@@ -189,17 +189,18 @@ public class HttpClientSupport
 		private final SoapUIHttpClient httpClient;
 		private final static Logger log = Logger.getLogger( HttpClientSupport.Helper.class );
 		private final SoapUIMultiThreadedHttpConnectionManager connectionManager;
-		private SoapUISSLSocketFactory socketFactory;
+//		private SoapUISSLSocketFactory socketFactory;
+		private SchemeRegistry registry;
 
 		public Helper()
 		{
 			Settings settings = SoapUI.getSettings();
-			SchemeRegistry registry = new SchemeRegistry();
+			registry = new SchemeRegistry();
 			registry.register( new Scheme( "http", 80, PlainSocketFactory.getSocketFactory() ) );
 
 			try
 			{
-				socketFactory = initSocketFactory();
+				SoapUISSLSocketFactory socketFactory = initSocketFactory();
 				registry.register( new Scheme( "https", 443, socketFactory ) );
 			}
 			catch( Throwable e )
@@ -256,15 +257,13 @@ public class HttpClientSupport
 			@Override
 			public void settingChanged( String name, String newValue, String oldValue )
 			{
-				if( !StringUtils.hasContent( newValue ) )
-					return;
 
 				if( name.equals( SSLSettings.KEYSTORE ) || name.equals( SSLSettings.KEYSTORE_PASSWORD ) )
 				{
 					try
 					{
 						log.info( "Updating keyStore.." );
-						initSocketFactory();
+						registry.register( new Scheme( "https", 443, initSocketFactory() ) );
 					}
 					catch( Throwable e )
 					{
@@ -289,7 +288,7 @@ public class HttpClientSupport
 				try
 				{
 					log.info( "Updating keyStore.." );
-					initSocketFactory();
+					registry.register( new Scheme( "https", 443, initSocketFactory() ) );
 				}
 				catch( Throwable e )
 				{
