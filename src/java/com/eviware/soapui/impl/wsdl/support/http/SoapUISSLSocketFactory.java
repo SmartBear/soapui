@@ -24,7 +24,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -44,7 +43,6 @@ import org.apache.log4j.Logger;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.support.StringUtils;
-import com.google.common.collect.Maps;
 
 public class SoapUISSLSocketFactory extends SSLSocketFactory
 {
@@ -65,7 +63,7 @@ public class SoapUISSLSocketFactory extends SSLSocketFactory
 			@Override
 			public X509Certificate[] getAcceptedIssuers()
 			{
-				return null;
+				return new X509Certificate[] {};
 			}
 
 			@Override
@@ -92,6 +90,8 @@ public class SoapUISSLSocketFactory extends SSLSocketFactory
 		}
 
 		setHostnameVerifier( SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER );
+		
+		assert getHostnameVerifier() != SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER;
 	}
 
 	private static SSLSocket enableSocket( SSLSocket socket )
