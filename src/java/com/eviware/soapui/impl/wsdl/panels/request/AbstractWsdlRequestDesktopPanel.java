@@ -140,6 +140,7 @@ public abstract class AbstractWsdlRequestDesktopPanel<T extends ModelItem, T2 ex
 			JPopupMenu inputPopup = editor.getEditorPopup();
 			inputPopup.insert( new JSeparator(), 2 );
 			inputPopup.insert( wsiValidateAction, 3 );
+			inputPopup.insert( new JSeparator(), 4 );
 		}
 	}
 

@@ -207,7 +207,7 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
 				editArea.getInputMap().put( KeyStroke.getKeyStroke( "ctrl L" ), loadXmlTextAreaAction );
 			}
 		}
-		
+
 		editArea.getInputMap().put( KeyStroke.getKeyStroke( "F3" ), findAndReplaceDialog );
 		editorScrollPane.setLineNumbersEnabled( SoapUI.getSettings().getBoolean( UISettings.SHOW_XML_LINE_NUMBERS ) );
 		editorScrollPane.setFoldIndicatorEnabled( true );
@@ -219,7 +219,8 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
 		splitter.setBorder( null );
 
 		previewCorner = UISupport.addPreviewCorner( getEditorScrollPane(), true );
-		if(!readOnly){
+		if( !readOnly )
+		{
 			PropertyExpansionPopupListener.enable( editArea, modelItem );
 		}
 	}
@@ -241,15 +242,14 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
 		saveXmlTextAreaAction = new SaveXmlTextAreaAction( editArea, "Save" );
 		enableLineNumbersAction = new EnableLineNumbersAction( editorScrollPane, "Toggle Line Numbers" );
 		goToLineAction = new GoToLineAction( editArea, "Go To Line" );
-		findAndReplaceDialog = new FindAndReplaceDialogView("Find / Replace");
-		
+		findAndReplaceDialog = new FindAndReplaceDialogView( "Find / Replace" );
+
 		if( !readOnly )
 		{
-			formatXmlAction = new FormatXmlAction( editArea );
 			loadXmlTextAreaAction = new LoadXmlTextAreaAction( editArea, "Load" );
 			insertBase64FileTextAreaAction = new InsertBase64FileTextAreaAction( editArea, "Insert File as Base64" );
 		}
-		
+
 		int cnt = inputPopup.getComponentCount();
 		for( int i = cnt - 1; i >= 0; i-- )
 		{
@@ -260,11 +260,11 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
 		}
 
 		inputPopup.insert( validateXmlAction, 0 );
-		if( !readOnly )
-		{
-			inputPopup.insert( formatXmlAction, 1 );
-			inputPopup.addSeparator();
-		}
+
+		formatXmlAction = new FormatXmlAction( editArea );
+		inputPopup.insert( formatXmlAction, 1 );
+		inputPopup.addSeparator();
+		
 		inputPopup.add( findAndReplaceDialog );
 		inputPopup.addSeparator();
 		inputPopup.add( goToLineAction );
@@ -303,8 +303,8 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
 		private JComboBox replaceCombo;
 		private JCheckBox wrapCheck;
 		private final String title;
-		
-		public FindAndReplaceDialogView(String title)
+
+		public FindAndReplaceDialogView( String title )
 		{
 			super( title );
 			this.title = title;
@@ -327,7 +327,7 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
 			replaceCombo.setEnabled( !readOnly );
 			replaceAllButton.setEnabled( !readOnly );
 			replaceButton.setEnabled( !readOnly );
-			
+
 			UISupport.showDialog( dialog );
 			findCombo.getEditor().selectAll();
 			findCombo.requestFocus();
@@ -450,7 +450,7 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
 			context.setSearchFor( searchExpression );
 			context.setReplaceWith( replacement );
 			context.setRegularExpression( false );
-			context.setMatchCase(caseCheck.isEnabled());
+			context.setMatchCase( caseCheck.isEnabled() );
 			context.setSearchForward( forwardButton.isSelected() );
 			context.setWholeWord( false );
 			return context;
@@ -469,7 +469,7 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
 			context.setSearchFor( searchExpression );
 			context.setRegularExpression( false );
 			context.setSearchForward( forwardButton.isSelected() );
-			context.setMatchCase(caseCheck.isEnabled());
+			context.setMatchCase( caseCheck.isEnabled() );
 			context.setWholeWord( false );
 			return context;
 		}
