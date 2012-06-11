@@ -91,7 +91,6 @@ public class SoapUISSLSocketFactory extends SSLSocketFactory
 
 		setHostnameVerifier( SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER );
 		
-		assert getHostnameVerifier() != SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER;
 	}
 
 	private static SSLSocket enableSocket( SSLSocket socket )
