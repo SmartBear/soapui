@@ -311,7 +311,7 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
 			super( title );
 			this.title = title;
 			if( UISupport.isMac() )
-				putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "control meta F" ) );
+				putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "meta F" ) );
 			else
 				putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "ctrl F" ) );
 		}

@@ -46,7 +46,7 @@ public class FindAndReplaceDialogView extends AbstractAction
 	{
 		super( "Find / Replace" );
 		if( UISupport.isMac() )
-			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "control meta F" ) );
+			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "meta F" ) );
 		else
 			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "control F" ) );
 		this.editArea = editArea;
