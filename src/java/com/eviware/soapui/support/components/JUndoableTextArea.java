@@ -77,8 +77,13 @@ public class JUndoableTextArea extends JTextArea implements Undoable, UndoableEd
 					copy();
 				else if( KeyStroke.getKeyStrokeForEvent( e ).equals( UISupport.getKeyStroke( "menu V" ) ) )
 					paste();
-				else if( KeyStroke.getKeyStrokeForEvent( e ).equals( UISupport.getKeyStroke( "ctrl F" ) ) )
+				else if( UISupport.isMac()
+						&& KeyStroke.getKeyStrokeForEvent( e ).equals( UISupport.getKeyStroke( "ctrl meta F" ) ) )
 					findAndReplace();
+				else if( !UISupport.isMac()
+						&& KeyStroke.getKeyStrokeForEvent( e ).equals( UISupport.getKeyStroke( "ctrl F" ) ) )
+					findAndReplace();
+
 				else
 					return;
 
