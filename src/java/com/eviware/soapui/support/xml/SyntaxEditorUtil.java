@@ -39,8 +39,10 @@ public class SyntaxEditorUtil
 
 	public static RSyntaxTextArea createDefaultSQLSyntaxTextArea()
 	{
-		RSyntaxTextArea textArea = new RSyntaxTextArea() {
-			protected void configurePopupMenu(javax.swing.JPopupMenu popupMenu){
+		RSyntaxTextArea textArea = new RSyntaxTextArea()
+		{
+			protected void configurePopupMenu( javax.swing.JPopupMenu popupMenu )
+			{
 				// Suppress superclass behavior
 			}
 		};
@@ -57,12 +59,12 @@ public class SyntaxEditorUtil
 		textArea.setBorder( BorderFactory.createMatteBorder( 0, 2, 0, 0, Color.WHITE ) );
 		return textArea;
 	}
-	
+
 	private static RSyntaxTextArea createDefaultSyntaxTextArea( String type )
 	{
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
 		textArea.setSyntaxEditingStyle( type );
-		return decorateSyntaxArea(textArea);
+		return decorateSyntaxArea( textArea );
 	}
 
 	public static RSyntaxTextArea addDefaultActions( RSyntaxTextArea editor, RTextScrollPane scrollPane, boolean readOnly )
@@ -89,7 +91,10 @@ public class SyntaxEditorUtil
 			popupMenu.insert( formatXmlAction, 1 );
 			popupMenu.addSeparator();
 			popupMenu.add( findAndReplaceDialog );
-			editor.getInputMap().put( KeyStroke.getKeyStroke( "F3" ), findAndReplaceDialog );
+			if( UISupport.isMac() )
+				editor.getInputMap().put( KeyStroke.getKeyStroke( "meta F" ), findAndReplaceDialog );
+			else
+				editor.getInputMap().put( KeyStroke.getKeyStroke( "ctrl F" ), findAndReplaceDialog );
 		}
 		popupMenu.addSeparator();
 		popupMenu.add( goToLineAction );

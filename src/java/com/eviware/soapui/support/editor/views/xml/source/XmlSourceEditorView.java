@@ -189,7 +189,7 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
 			editArea.getInputMap().put( KeyStroke.getKeyStroke( "meta S" ), saveXmlTextAreaAction );
 			editArea.getInputMap().put( KeyStroke.getKeyStroke( "control L" ), enableLineNumbersAction );
 			editArea.getInputMap().put( KeyStroke.getKeyStroke( "control meta L" ), goToLineAction );
-			editArea.getInputMap().put( KeyStroke.getKeyStroke( "ctrl meta F" ), findAndReplaceDialog );
+			editArea.getInputMap().put( KeyStroke.getKeyStroke( "meta F" ), findAndReplaceDialog );
 			if( !readOnly )
 			{
 				editArea.getInputMap().put( KeyStroke.getKeyStroke( "shift meta F" ), formatXmlAction );

@@ -100,9 +100,6 @@ public class GroovyEditor extends JPanel implements JEditorStatusBarTarget, Prop
 			editArea.getActionMap().put( "run-action", runAction );
 		}
 
-		editArea.getInputMap().put( KeyStroke.getKeyStroke( "F3" ), "find-action" );
-		editArea.getInputMap().put( KeyStroke.getKeyStroke( "ctrl F" ), "find-action" );
-
 		groovyDocumentListener = new GroovyDocumentListener();
 		editArea.getDocument().addDocumentListener( groovyDocumentListener );
 
@@ -125,7 +122,10 @@ public class GroovyEditor extends JPanel implements JEditorStatusBarTarget, Prop
 
 		JPopupMenu popup = editArea.getPopupMenu();
 		findAndReplaceDialog = new FindAndReplaceDialogView( editArea );
-		editArea.getInputMap().put( KeyStroke.getKeyStroke( "F3" ), findAndReplaceDialog );
+		if( UISupport.isMac() )
+			editArea.getInputMap().put( KeyStroke.getKeyStroke( "meta F" ), findAndReplaceDialog );
+		else
+			editArea.getInputMap().put( KeyStroke.getKeyStroke( "ctrl F" ), findAndReplaceDialog );
 		popup.add( findAndReplaceDialog );
 		popup.addSeparator();
 		goToLineAction = new GoToLineAction( editArea, "Go To Line" );
