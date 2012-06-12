@@ -189,6 +189,7 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
 			editArea.getInputMap().put( KeyStroke.getKeyStroke( "meta S" ), saveXmlTextAreaAction );
 			editArea.getInputMap().put( KeyStroke.getKeyStroke( "control L" ), enableLineNumbersAction );
 			editArea.getInputMap().put( KeyStroke.getKeyStroke( "control meta L" ), goToLineAction );
+			editArea.getInputMap().put( KeyStroke.getKeyStroke( "ctrl meta F" ), findAndReplaceDialog );
 			if( !readOnly )
 			{
 				editArea.getInputMap().put( KeyStroke.getKeyStroke( "shift meta F" ), formatXmlAction );
@@ -201,6 +202,7 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
 			editArea.getInputMap().put( KeyStroke.getKeyStroke( "ctrl S" ), saveXmlTextAreaAction );
 			editArea.getInputMap().put( KeyStroke.getKeyStroke( "alt L" ), enableLineNumbersAction );
 			editArea.getInputMap().put( KeyStroke.getKeyStroke( "control alt L" ), goToLineAction );
+			editArea.getInputMap().put( KeyStroke.getKeyStroke( "ctrl F" ), findAndReplaceDialog );
 			if( !readOnly )
 			{
 				editArea.getInputMap().put( KeyStroke.getKeyStroke( "alt F" ), formatXmlAction );
@@ -208,7 +210,7 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
 			}
 		}
 
-		editArea.getInputMap().put( KeyStroke.getKeyStroke( "F3" ), findAndReplaceDialog );
+		
 		editorScrollPane.setLineNumbersEnabled( SoapUI.getSettings().getBoolean( UISettings.SHOW_XML_LINE_NUMBERS ) );
 		editorScrollPane.setFoldIndicatorEnabled( true );
 		p.add( editorScrollPane, BorderLayout.CENTER );
@@ -308,7 +310,10 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
 		{
 			super( title );
 			this.title = title;
-			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "F3" ) );
+			if( UISupport.isMac() )
+				putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "control meta F" ) );
+			else
+				putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "ctrl F" ) );
 		}
 
 		@Override

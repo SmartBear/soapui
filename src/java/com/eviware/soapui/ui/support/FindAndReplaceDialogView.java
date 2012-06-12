@@ -45,7 +45,10 @@ public class FindAndReplaceDialogView extends AbstractAction
 	public FindAndReplaceDialogView( RSyntaxTextArea editArea )
 	{
 		super( "Find / Replace" );
-		putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "F3" ) );
+		if( UISupport.isMac() )
+			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "control meta F" ) );
+		else
+			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "control F" ) );
 		this.editArea = editArea;
 	}
 
