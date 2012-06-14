@@ -16,12 +16,15 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
+import javax.swing.AbstractButton;
 import javax.swing.Action;
 import javax.swing.JPopupMenu;
 import javax.swing.JSeparator;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import javax.swing.text.JTextComponent;
+
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.Undoable;
@@ -39,7 +42,9 @@ public final class JTextComponentPopupMenu extends JPopupMenu implements PopupMe
 
 	public static JTextComponentPopupMenu add( JTextComponent textComponent )
 	{
-		JPopupMenu componentPopupMenu = textComponent.getComponentPopupMenu();
+		JPopupMenu componentPopupMenu = textComponent instanceof RSyntaxTextArea ? ( ( RSyntaxTextArea )textComponent )
+				.getPopupMenu() : textComponent.getComponentPopupMenu();
+		//		JPopupMenu componentPopupMenu = textComponent.getComponentPopupMenu();
 
 		// double-check
 		if( componentPopupMenu instanceof JTextComponentPopupMenu )
@@ -48,14 +53,28 @@ public final class JTextComponentPopupMenu extends JPopupMenu implements PopupMe
 		JTextComponentPopupMenu popupMenu = new JTextComponentPopupMenu( textComponent );
 		if( componentPopupMenu != null && componentPopupMenu.getComponentCount() > 0 )
 		{
-			popupMenu.insert( new JSeparator(), 0 );
 
 			while( componentPopupMenu.getComponentCount() > 0 )
 			{
 				Component comp = componentPopupMenu.getComponent( componentPopupMenu.getComponentCount() - 1 );
+				if( comp instanceof AbstractButton )
+				{
+					if( "Copy".equals( ( ( AbstractButton )comp ).getText() )
+							|| "Cut".equals( ( ( AbstractButton )comp ).getText() )
+							|| "Paste".equals( ( ( AbstractButton )comp ).getText() )
+							|| "Undo".equals( ( ( AbstractButton )comp ).getText() )
+							|| "Redo".equals( ( ( AbstractButton )comp ).getText() )
+							|| "Can\'t Redo".equals( ( ( AbstractButton )comp ).getText() ))
+					{
+						componentPopupMenu.remove( comp );
+						continue;
+					}
+					popupMenu.insert( comp, 0 );
+				}
 				componentPopupMenu.remove( comp );
-				popupMenu.insert( comp, 0 );
 			}
+
+			popupMenu.insert( new JSeparator(), 0 );
 		}
 
 		if( componentPopupMenu != null )
@@ -66,7 +85,10 @@ public final class JTextComponentPopupMenu extends JPopupMenu implements PopupMe
 			}
 		}
 
-		textComponent.setComponentPopupMenu( popupMenu );
+		if( textComponent instanceof RSyntaxTextArea )
+			( ( RSyntaxTextArea )textComponent ).setPopupMenu( popupMenu );
+		else
+			textComponent.setComponentPopupMenu( popupMenu );
 		return popupMenu;
 	}
 
@@ -75,7 +97,7 @@ public final class JTextComponentPopupMenu extends JPopupMenu implements PopupMe
 		super( "Edit" );
 		this.textComponent = textComponent;
 
-		if( textComponent instanceof Undoable )
+		if( textComponent instanceof Undoable || textComponent instanceof RSyntaxTextArea )
 		{
 			undoAction = new UndoAction();
 			add( undoAction );
@@ -212,6 +234,12 @@ public final class JTextComponentPopupMenu extends JPopupMenu implements PopupMe
 		{
 			undoAction.setEnabled( ( ( Undoable )textComponent ).canUndo() );
 			redoAction.setEnabled( ( ( Undoable )textComponent ).canRedo() );
+		}
+
+		if( textComponent instanceof RSyntaxTextArea )
+		{
+			undoAction.setEnabled( ( ( RSyntaxTextArea )textComponent ).canUndo() );
+			redoAction.setEnabled( ( ( RSyntaxTextArea )textComponent ).canRedo() );
 		}
 
 		cutAction.setEnabled( textComponent.getSelectionEnd() != textComponent.getSelectionStart() );

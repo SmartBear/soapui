@@ -73,6 +73,7 @@ import com.eviware.soapui.support.editor.xml.XmlEditor;
 import com.eviware.soapui.support.editor.xml.XmlLocation;
 import com.eviware.soapui.support.editor.xml.support.ValidationError;
 import com.eviware.soapui.support.propertyexpansion.PropertyExpansionPopupListener;
+import com.eviware.soapui.support.swing.JTextComponentPopupMenu;
 import com.eviware.soapui.support.swing.SoapUISplitPaneUI;
 import com.eviware.soapui.support.xml.XmlUtils;
 import com.eviware.soapui.support.xml.actions.EnableLineNumbersAction;
@@ -181,6 +182,8 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
 		JPanel p = new JPanel( new BorderLayout() );
 		editorScrollPane = new RTextScrollPane( editArea );
 
+		JTextComponentPopupMenu.add( editArea );
+		
 		buildPopup( editArea.getPopupMenu(), editArea );
 
 		if( UISupport.isMac() )
