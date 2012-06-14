@@ -22,7 +22,6 @@ import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
-import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -63,16 +62,16 @@ public class SoapUISSLSocketFactory extends SSLSocketFactory
 			@Override
 			public X509Certificate[] getAcceptedIssuers()
 			{
-				return new X509Certificate[] {};
+				return null;
 			}
 
 			@Override
-			public void checkClientTrusted( X509Certificate[] arg0, String arg1 ) throws CertificateException
+			public void checkClientTrusted( X509Certificate[] certs, String authType )
 			{
 			}
 
 			@Override
-			public void checkServerTrusted( X509Certificate[] arg0, String arg1 ) throws CertificateException
+			public void checkServerTrusted( X509Certificate[] certs, String authType )
 			{
 			}
 		};
@@ -90,7 +89,7 @@ public class SoapUISSLSocketFactory extends SSLSocketFactory
 		}
 
 		setHostnameVerifier( SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER );
-		
+
 	}
 
 	private static SSLSocket enableSocket( SSLSocket socket )
@@ -235,26 +234,27 @@ public class SoapUISSLSocketFactory extends SSLSocketFactory
 					remoteAddress.getPort(), true );
 			sslsock = enableSocket( sslsock );
 		}
-		if( getHostnameVerifier() != null )
-		{
-			try
-			{
-				getHostnameVerifier().verify( remoteAddress.getHostName(), sslsock );
-				// verifyHostName() didn't blowup - good!
-			}
-			catch( IOException iox )
-			{
-				// close the socket before re-throwing the exception
-				try
-				{
-					sslsock.close();
-				}
-				catch( Exception x )
-				{ /* ignore */
-				}
-				throw iox;
-			}
-		}
+		// do we need it? trust all hosts
+//		if( getHostnameVerifier() != null )
+//		{
+//			try
+//			{
+//				getHostnameVerifier().verify( remoteAddress.getHostName(), sslsock );
+//				// verifyHostName() didn't blowup - good!
+//			}
+//			catch( IOException iox )
+//			{
+//				// close the socket before re-throwing the exception
+//				try
+//				{
+//					sslsock.close();
+//				}
+//				catch( Exception x )
+//				{ /* ignore */
+//				}
+//				throw iox;
+//			}
+//		}
 		return sslsock;
 	}
 
