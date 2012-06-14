@@ -64,7 +64,7 @@ public final class JTextComponentPopupMenu extends JPopupMenu implements PopupMe
 							|| "Paste".equals( ( ( AbstractButton )comp ).getText() )
 							|| "Undo".equals( ( ( AbstractButton )comp ).getText() )
 							|| "Redo".equals( ( ( AbstractButton )comp ).getText() )
-							|| "Can\'t Redo".equals( ( ( AbstractButton )comp ).getText() ))
+							|| "Can\'t Redo".equals( ( ( AbstractButton )comp ).getText() ) )
 					{
 						componentPopupMenu.remove( comp );
 						continue;
@@ -202,7 +202,10 @@ public final class JTextComponentPopupMenu extends JPopupMenu implements PopupMe
 
 		public void actionPerformed( ActionEvent e )
 		{
-			( ( Undoable )textComponent ).undo();
+			if( textComponent instanceof RSyntaxTextArea )
+				( ( RSyntaxTextArea )textComponent ).undoLastAction();
+			else
+				( ( Undoable )textComponent ).undo();
 		}
 	}
 
@@ -216,7 +219,10 @@ public final class JTextComponentPopupMenu extends JPopupMenu implements PopupMe
 
 		public void actionPerformed( ActionEvent e )
 		{
-			( ( Undoable )textComponent ).redo();
+			if( textComponent instanceof RSyntaxTextArea )
+				( ( RSyntaxTextArea )textComponent ).redoLastAction();
+			else
+				( ( Undoable )textComponent ).redo();
 		}
 	}
 
