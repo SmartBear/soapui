@@ -43,7 +43,7 @@ public class FormatXmlAction extends AbstractAction
 	{
 		super( title );
 		putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/format_request.gif" ) );
-		putValue( Action.SHORT_DESCRIPTION, "Pretty-prints the request xml" );
+		putValue( Action.SHORT_DESCRIPTION, "Pretty-prints the xml" );
 		if( UISupport.isMac() )
 		{
 			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "shift meta F" ) );
