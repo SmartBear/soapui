@@ -267,10 +267,10 @@ public class SoapUISSLSocketFactory extends SSLSocketFactory
 	{
 		SSLSocket sslSocket = ( SSLSocket )getSocketFactory().createSocket( socket, host, port, autoClose );
 		sslSocket = enableSocket( sslSocket );
-		if( getHostnameVerifier() != null )
-		{
-			getHostnameVerifier().verify( host, sslSocket );
-		}
+//		if( getHostnameVerifier() != null )
+//		{
+//			getHostnameVerifier().verify( host, sslSocket );
+//		}
 		// verifyHostName() didn't blowup - good!
 		return sslSocket;
 	}
