@@ -41,7 +41,8 @@ public class WadlDefinitionContext extends
 
 	protected DefinitionLoader createDefinitionLoader( DefinitionCache restServiceDefinitionCache )
 	{
-		if( getInterface().isGenerated() || StringUtils.isNullOrEmpty( getInterface().getWadlUrl() ) )
+		if( getInterface() != null
+				&& ( getInterface().isGenerated() || StringUtils.isNullOrEmpty( getInterface().getWadlUrl() ) ) )
 			return new GeneratedWadlDefinitionLoader( getInterface() );
 		else
 			return new InterfaceCacheDefinitionLoader( restServiceDefinitionCache );
@@ -49,7 +50,7 @@ public class WadlDefinitionContext extends
 
 	protected DefinitionLoader createDefinitionLoader( String url )
 	{
-		if( getInterface().isGenerated() || StringUtils.isNullOrEmpty( url ) )
+		if( ( getInterface() != null && getInterface().isGenerated() ) || StringUtils.isNullOrEmpty( url ) )
 			return new GeneratedWadlDefinitionLoader( getInterface() );
 		else
 			return new UrlWsdlLoader( url, getInterface() );
