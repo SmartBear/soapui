@@ -226,23 +226,6 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 			httpMethod.setDumpFile( PathUtils.expandPath( httpRequest.getDumpFile(),
 					( AbstractWsdlModelItem<?> )httpRequest, submitContext ) );
 
-			// fix absolute URIs due to peculiarity in httpclient
-			URI uri = ( URI )submitContext.getProperty( BaseHttpRequestTransport.REQUEST_URI );
-			if( uri != null && uri.isAbsoluteURI() )
-			{
-				String str = uri.toString();
-				int ix = str.indexOf( '/', str.indexOf( "//" ) + 2 );
-				if( ix != -1 )
-				{
-					uri = new URI( str.substring( ix ), true );
-					java.net.URI oldUri = httpMethod.getURI();
-					httpMethod.setURI( new java.net.URI( oldUri.getScheme(), oldUri.getUserInfo(), oldUri.getHost(), oldUri
-							.getPort(), ( uri.getPath() ) == null ? "/" : uri.getPath(), oldUri.getQuery(), oldUri
-							.getFragment() ) );
-					submitContext.setProperty( BaseHttpRequestTransport.REQUEST_URI, uri );
-				}
-			}
-
 			// include request time?
 			if( settings.getBoolean( HttpSettings.INCLUDE_REQUEST_IN_TIME_TAKEN ) )
 				httpMethod.initStartTime();
