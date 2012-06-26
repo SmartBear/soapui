@@ -16,6 +16,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import junit.framework.JUnit4TestAdapter;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.eviware.soapui.SoapUI;
@@ -42,6 +43,7 @@ public class VersionUpdateTestCase
 	}
 
 	@Test
+	@Ignore
 	public void updateUrlOnTheCommandLineShouldTakePrecedence()
 	{
 		System.setProperty( SoapUIVersionUpdate.VERSION_UPDATE_URL_SYS_PROP_KEY, "nop" );
