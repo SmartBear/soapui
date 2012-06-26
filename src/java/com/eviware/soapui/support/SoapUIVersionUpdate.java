@@ -49,7 +49,8 @@ import com.eviware.x.form.XFormDialog;
 
 public class SoapUIVersionUpdate
 {
-	private static final String LATEST_VERSION_XML_LOCATION = "http://dl.eviware.com/version-update/soapui-version.xml";
+	static final String VERSION_UPDATE_URL_SYS_PROP_KEY = "versionUpdateUrl";
+	static final String LATEST_VERSION_XML_LOCATION = versionUpdateUrl("http://dl.eviware.com/version-update/soapui-version.xml");
 	public static final String VERSION_TO_SKIP = SoapUI.class.getName() + "@versionToSkip";
 	protected static final String NO_RELEASE_NOTES_INFO = "<tr><td>Sorry! No Release notes currently available.</td></tr>";
 
@@ -135,6 +136,11 @@ public class SoapUIVersionUpdate
 			SoapUI.logError( e, "Network Error for Version Update or Proxy" );
 			throw e;
 		}
+	}
+
+	private static String versionUpdateUrl( String defaultUrl )
+	{
+		return System.getProperty( VERSION_UPDATE_URL_SYS_PROP_KEY, defaultUrl );
 	}
 
 	protected Document getVersionDocument( URL versionUrl ) throws MalformedURLException, ParserConfigurationException,

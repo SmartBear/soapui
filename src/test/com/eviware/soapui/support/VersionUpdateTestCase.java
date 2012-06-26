@@ -11,7 +11,9 @@
  */
 package com.eviware.soapui.support;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import junit.framework.JUnit4TestAdapter;
 
 import org.junit.Test;
@@ -39,4 +41,15 @@ public class VersionUpdateTestCase
 		assertNotNull( versionUpdate.getDownloadLinkPro() );
 	}
 
+	@Test
+	public void updateUrlOnTheCommandLineShouldTakePrecedence()
+	{
+		System.setProperty( SoapUIVersionUpdate.VERSION_UPDATE_URL_SYS_PROP_KEY, "nop" );
+		
+		assertEquals("Command line property for update url did not take precedence!","nop",SoapUIVersionUpdate.LATEST_VERSION_XML_LOCATION);
+		
+		System.getProperties().remove( SoapUIVersionUpdate.VERSION_UPDATE_URL_SYS_PROP_KEY );
+		
+		assertNull("",System.getProperty( SoapUIVersionUpdate.VERSION_UPDATE_URL_SYS_PROP_KEY ));
+	}
 }
