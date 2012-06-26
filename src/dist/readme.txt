@@ -1,5 +1,10 @@
 Welcome to soapUI!
 
+2012-06-27 : 4.5.1 Bugs Fixed
+-------------------------------------------------------------------------------
+Please see http://soapui.org/About-SoapUI/soapui-451-bugs-fixed.html for an overview 
+of the bugs fixed in this release.
+
 2011-03-28: 4.5 The Big Ears Release - Final 
 -------------------------------------------------------------------------------
 Please see http://soapui.org/About-SoapUI/whats-new-in-soapui-45.html for an overview 
