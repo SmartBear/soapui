@@ -36,15 +36,15 @@ public class HeadderRequestInterceptor implements HttpRequestInterceptor
 	@Override
 	public void process( HttpRequest request, HttpContext context ) throws HttpException, IOException
 	{
-//		if( request instanceof RequestWrapper )
-//		{
+		if( request instanceof RequestWrapper )
+		{
 			List<Header> wHeaders = Arrays.asList( request.getAllHeaders() );
 			HttpRequest original = ( ( RequestWrapper )request ).getOriginal();
 			List<Header> oHeaders = Arrays.asList( original.getAllHeaders() );
 			for( Header header : wHeaders )
 				if( !oHeaders.contains( header ) )
 					original.addHeader( header.getName(), header.getValue() );
-//		}
+		}
 	}
 
 }
