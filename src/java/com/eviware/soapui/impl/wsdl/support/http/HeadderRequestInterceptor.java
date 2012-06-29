@@ -46,5 +46,4 @@ public class HeadderRequestInterceptor implements HttpRequestInterceptor
 					original.addHeader( header.getName(), header.getValue() );
 		}
 	}
-
 }
