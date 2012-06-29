@@ -19,18 +19,16 @@ import org.apache.http.Header;
 import org.apache.http.HttpException;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpRequestInterceptor;
-import org.apache.http.impl.client.EntityEnclosingRequestWrapper;
 import org.apache.http.impl.client.RequestWrapper;
 import org.apache.http.protocol.HttpContext;
 
-
 /**
- * This request interceptor checks if wrapper request have more http headers. If that is true then
- * it copies those headers in original request. This way they will be visible in raw request and 
- * accessible for users in Groovy scripts.
+ * This request interceptor checks if wrapper request have more http headers. If
+ * that is true then it copies those headers in original request. This way they
+ * will be visible in raw request and accessible for users in Groovy scripts.
  * 
  * @author robert.nemet
- *
+ * 
  */
 public class HeadderRequestInterceptor implements HttpRequestInterceptor
 {
@@ -38,13 +36,15 @@ public class HeadderRequestInterceptor implements HttpRequestInterceptor
 	@Override
 	public void process( HttpRequest request, HttpContext context ) throws HttpException, IOException
 	{
-		List<Header> wHeaders = Arrays.asList( request.getAllHeaders() );
-		HttpRequest original = ( ( RequestWrapper )request ).getOriginal();
-		List<Header> oHeaders = Arrays.asList( original.getAllHeaders() );
-		for( Header header : wHeaders )
-			if( !oHeaders.contains( header ) )
-				original.addHeader( header.getName(), header.getValue() );
-
+//		if( request instanceof RequestWrapper )
+//		{
+			List<Header> wHeaders = Arrays.asList( request.getAllHeaders() );
+			HttpRequest original = ( ( RequestWrapper )request ).getOriginal();
+			List<Header> oHeaders = Arrays.asList( original.getAllHeaders() );
+			for( Header header : wHeaders )
+				if( !oHeaders.contains( header ) )
+					original.addHeader( header.getName(), header.getValue() );
+//		}
 	}
 
 }
