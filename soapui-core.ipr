@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project relativePaths="false" version="4">
+<project version="4">
   <component name="AntConfiguration">
     <defaultAnt bundledAnt="true" />
   </component>
@@ -16,7 +16,6 @@
   </component>
   <component name="CompilerConfiguration">
     <option name="DEFAULT_COMPILER" value="Javac" />
-    <option name="DEPLOY_AFTER_MAKE" value="0" />
     <resourceExtensions>
       <entry name=".+\.(properties|xml|html|dtd|tld)" />
       <entry name=".+\.(gif|png|jpeg|jpg)" />
@@ -35,6 +34,10 @@
       <entry name="?*.keys" />
       <entry name="?*.xsl" />
     </wildcardResourcePatterns>
+    <annotationProcessing enabled="false" useClasspath="true" />
+  </component>
+  <component name="CopyrightManager" default="">
+    <module2copyright />
   </component>
   <component name="DependenciesAnalyzeManager">
     <option name="myForwardDirection" value="false" />
@@ -63,12 +66,6 @@
   <component name="FacetAutodetectingManager">
     <autodetection-disabled>
       <facet-type id="ejb" />
-      <facet-type id="web">
-        <modules>
-          <module name="soapui" />
-          <module name="soapui-license-server" />
-        </modules>
-      </facet-type>
       <facet-type id="Groovy">
         <modules>
           <module name="soapui" />
@@ -81,21 +78,15 @@
           <module name="soapui-license-server" />
         </modules>
       </facet-type>
+      <facet-type id="web">
+        <modules>
+          <module name="soapui" />
+          <module name="soapui-license-server" />
+        </modules>
+      </facet-type>
     </autodetection-disabled>
   </component>
   <component name="IdProvider" IDEtalkID="4659DEF40C02EEA88E9B59CD5ECB132C" />
-  <component name="InspectionProjectProfileManager">
-    <option name="PROJECT_PROFILE" value="Project Default" />
-    <option name="USE_PROJECT_LEVEL_SETTINGS" value="false" />
-    <scopes />
-    <profiles>
-      <profile version="1.0" is_locked="false">
-        <option name="myName" value="Project Default" />
-        <option name="myLocal" value="false" />
-      </profile>
-    </profiles>
-    <list size="0" />
-  </component>
   <component name="JavacSettings">
     <option name="DEBUGGING_INFO" value="true" />
     <option name="GENERATE_NO_WARNINGS" value="false" />
@@ -252,7 +243,6 @@
   <component name="ProjectDetails">
     <option name="projectName" value="soapui-core" />
   </component>
-  <component name="ProjectFileVersion" converted="true" />
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://C:/workspace/soapui-idea-plugin/intellij-soapui-plugin.iml" filepath="C:/workspace/soapui-idea-plugin/intellij-soapui-plugin.iml" />
@@ -288,42 +278,10 @@
             </SvnBranchConfiguration>
           </value>
         </entry>
-        <entry key="C:/workspace/soapui-idea-plugin">
-          <value>
-            <SvnBranchConfiguration>
-              <option name="trunkUrl" value="svn://svn.eviware.com/soapui/trunk" />
-            </SvnBranchConfiguration>
-          </value>
-        </entry>
-        <entry key="C:/workspace/soapui-license-server">
-          <value>
-            <SvnBranchConfiguration>
-              <option name="branchUrls">
-                <list>
-                  <option value="svn://192.168.250.4/soapui/branches" />
-                  <option value="svn://192.168.250.4/soapui/tags" />
-                </list>
-              </option>
-              <option name="trunkUrl" value="svn://192.168.250.4/soapui/trunk" />
-            </SvnBranchConfiguration>
-          </value>
-        </entry>
-        <entry key="C:/workspace/soapui-pro-new">
-          <value>
-            <SvnBranchConfiguration>
-              <option name="branchUrls">
-                <list>
-                  <option value="svn://192.168.250.4/soapui/branches" />
-                  <option value="svn://192.168.250.4/soapui/tags" />
-                </list>
-              </option>
-              <option name="trunkUrl" value="svn://192.168.250.4/soapui/trunk" />
-            </SvnBranchConfiguration>
-          </value>
-        </entry>
       </map>
     </option>
     <option name="myVersion" value="123" />
+    <option name="mySupportsUserInfoFilter" value="true" />
   </component>
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="svn" />
@@ -463,8 +421,5 @@
       <option name="useAlternate" value="false" />
     </LanguageOptions>
   </component>
-  <UsedPathMacros>
-    <macro name="MAVEN_REPO" />
-  </UsedPathMacros>
 </project>
 
