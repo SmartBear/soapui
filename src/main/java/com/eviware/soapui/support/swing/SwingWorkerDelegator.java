@@ -18,7 +18,7 @@ import com.eviware.x.dialogs.XProgressMonitor;
 
 /**
  * 
- * @author Lars Høidahl
+ * @author Lars HÃ¶idahl
  */
 public class SwingWorkerDelegator extends SwingWorker
 {

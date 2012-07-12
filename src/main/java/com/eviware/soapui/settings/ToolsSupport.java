@@ -17,7 +17,7 @@ import com.eviware.soapui.settings.impl.SettingsToolLocatorImpl;
 /**
  * Utilities for working with Tools and their locations
  * 
- * @author Lars Høidahl
+ * @author Lars HÃ¶idahl
  */
 
 public class ToolsSupport

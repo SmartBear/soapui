@@ -18,7 +18,7 @@ import com.eviware.soapui.support.UIUtils;
 
 /**
  * 
- * @author Lars Høidahl
+ * @author Lars HÃ¶idahl
  */
 public class SwingUtils implements UIUtils
 {

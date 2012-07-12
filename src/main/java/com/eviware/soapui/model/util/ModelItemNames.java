@@ -21,7 +21,7 @@ import com.eviware.soapui.model.ModelItem;
 /**
  * Utility for handling model item names.
  * 
- * @author Lars Høidahl
+ * @author Lars HÃ¶idahl
  */
 
 public class ModelItemNames<T extends ModelItem>
