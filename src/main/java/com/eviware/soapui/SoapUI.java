@@ -174,7 +174,7 @@ public class SoapUI
 	public final static String SOAPUI_VERSION = "4.5.1-SNAPSHOT";
 	public static final String DEFAULT_WORKSPACE_FILE = "default-soapui-workspace.xml";
 	public static final String SOAPUI_SPLASH = "soapui-splash.png";
-	public static final String SOAPUI_TITLE = "/com/eviware/soapui/resources/branded/branded.properties";
+	public static final String SOAPUI_TITLE = "/branded/branded.properties";
 	private static final int DEFAULT_DESKTOP_ACTIONS_COUNT = 3;
 	public static final String BUILDINFO_RESOURCE = "/com/eviware/soapui/resources/conf/buildinfo.txt";
 	public static final String PROXY_ENABLED_ICON = "/proxyEnabled.png";
