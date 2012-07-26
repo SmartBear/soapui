@@ -45,6 +45,7 @@ import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.Exten
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPutMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedTraceMethod;
 import com.eviware.soapui.impl.wsdl.support.PathUtils;
+import com.eviware.soapui.impl.wsdl.support.http.HeaderRequestInterceptor;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 import com.eviware.soapui.impl.wsdl.support.http.SoapUIHttpRoute;
 import com.eviware.soapui.impl.wsdl.support.wss.WssCrypto;
@@ -239,6 +240,9 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 
 			// submit!
 			httpResponse = HttpClientSupport.execute( httpMethod, httpContext );
+
+			// save request headers captured by interceptor
+			saveRequestHeaders( httpMethod, httpContext );
 
 			if( httpMethod.getMetrics() != null )
 			{
@@ -451,4 +455,27 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 			/* ignore */
 		}
 	}
+
+	private void saveRequestHeaders( ExtendedHttpMethod httpMethod, HttpContext httpContext )
+	{
+		List<Header> requestHeaders = ( List<Header> )httpContext
+				.getAttribute( HeaderRequestInterceptor.SOAPUI_REQUEST_HEADERS );
+
+		if( requestHeaders != null )
+		{
+			for( Header header : requestHeaders )
+			{
+				Header[] existingHeaders = httpMethod.getHeaders( header.getName() );
+
+				int c = 0;
+				for( ; c < existingHeaders.length; c++ )
+					if( existingHeaders[c].getValue().equals( header.getValue() ) )
+						break;
+
+				if( c == existingHeaders.length )
+					httpMethod.addHeader( header );
+			}
+		}
+	}
+
 }

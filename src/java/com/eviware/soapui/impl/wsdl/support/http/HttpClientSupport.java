@@ -213,7 +213,7 @@ public class HttpClientSupport
 
 			httpClient = new SoapUIHttpClient( connectionManager );
 			// this interceptor needs to be last one added and executed.
-			httpClient.addRequestInterceptor( new HeadderRequestInterceptor(), httpClient.getRequestInterceptorCount());
+			httpClient.addRequestInterceptor( new HeaderRequestInterceptor(), httpClient.getRequestInterceptorCount());
 			httpClient.getAuthSchemes().register( AuthPolicy.NTLM, new NTLMSchemeFactory() );
 			httpClient.getAuthSchemes().register( AuthPolicy.SPNEGO, new NTLMSchemeFactory() );
 
