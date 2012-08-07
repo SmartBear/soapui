@@ -408,17 +408,17 @@ public class SchemaUtils
 			{
 				existing.put( wsdlUrl, null );
 
-				XmlObject[] schemas = xmlObject.selectPath( "declare namespace s='" + Constants.XSD_NS + "' .//s:schema" );
+				XmlObject[] paths = xmlObject.selectPath( "declare namespace s='" + Constants.XSD_NS + "' .//s:schema" );
 
-				for( int i = 0; i < schemas.length; i++ )
+				for( int i = 0; i < paths.length; i++ )
 				{
-					XmlCursor xmlCursor = schemas[i].newCursor();
+					XmlCursor xmlCursor = paths[i].newCursor();
 					String xmlText = xmlCursor.getObject().xmlText( options );
-					// schemas[i] = XmlObject.Factory.parse( xmlText, options );
-					schemas[i] = XmlUtils.createXmlObject( xmlText, options );
-					schemas[i].documentProperties().setSourceName( wsdlUrl );
 
-					result.put( wsdlUrl + "@" + ( i + 1 ), schemas[i] );
+					XmlObject obj = XmlUtils.createXmlObject( xmlText, new XmlOptions() );
+					obj.documentProperties().setSourceName( wsdlUrl );
+
+					result.put( wsdlUrl + "@" + ( i + 1 ), obj );
 				}
 
 				XmlObject[] wsdlImports = xmlObject.selectPath( "declare namespace s='" + Constants.WSDL11_NS
