@@ -17,6 +17,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
 
+import java.io.File;
 import java.io.IOException;
 import java.security.KeyStore;
 
@@ -47,7 +48,9 @@ public class KeyMaterialWssCryptoTest
 		return new JUnit4TestAdapter( KeyMaterialWssCryptoTest.class );
 	}
 
-	private static final String TEST_RESOURCES_DIR = "src/test-resources/keys/";
+    // TODO hardcoded madness
+	private static final String TEST_RESOURCES_DIR = "src" + File.separator + "test"  + File.separator
+            + "resources" + File.separator + "keys" + File.separator;
 
 	private static final String CORRECT_PASSWORD = "test";
 	private static final String INCORRECT_PASSWORD = "not-correct";

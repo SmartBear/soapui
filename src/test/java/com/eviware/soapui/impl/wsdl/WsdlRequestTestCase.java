@@ -21,6 +21,7 @@ import com.eviware.soapui.impl.WsdlInterfaceFactory;
 import com.eviware.soapui.model.iface.Response;
 import com.eviware.soapui.support.TestCaseWithJetty;
 
+// TODO Move this integration test to the it folder.
 public class WsdlRequestTestCase extends TestCaseWithJetty
 {
 	public static junit.framework.Test suite()

@@ -37,8 +37,8 @@ public class WsdlRequestStepTestCase
 	@Test
 	public void testAssert() throws Exception
 	{
-		WsdlProject project = new WsdlProject( "src" + File.separatorChar + "test-resources" + File.separatorChar
-				+ "sample-soapui-project.xml" );
+		WsdlProject project = new WsdlProject( "src" + File.separatorChar + "test" + File.separatorChar
+                + "resources" + File.separatorChar + "sample-soapui-project.xml" );
 		TestSuite testSuite = project.getTestSuiteByName( "Test Suite" );
 		com.eviware.soapui.model.testsuite.TestCase testCase = testSuite.getTestCaseByName( "Test Conversions" );
 

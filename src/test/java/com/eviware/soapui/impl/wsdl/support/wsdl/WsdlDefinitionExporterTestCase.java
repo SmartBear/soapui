@@ -29,6 +29,7 @@ import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.TestCaseWithJetty;
 
+// TODO Integartion test. Move to it folder.
 public class WsdlDefinitionExporterTestCase extends TestCaseWithJetty
 {
 	public static junit.framework.Test suite()

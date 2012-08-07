@@ -34,6 +34,7 @@ import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlUtils;
 import com.eviware.soapui.model.iface.Submit;
 import com.eviware.soapui.support.TestCaseWithJetty;
 
+// TODO Integration test. Move to it folder.
 public class WsdlImporterTestCase extends TestCaseWithJetty
 {
 	public static junit.framework.Test suite()

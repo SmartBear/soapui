@@ -69,7 +69,8 @@ public class AbstractSecurityTestCaseWithMockService
 	@Before
 	public void setUp() throws Exception
 	{
-		WsdlProject project = new WsdlProject( "src" + File.separatorChar + "test-resources" + File.separatorChar
+        // TODO Hardcoded madness
+		WsdlProject project = new WsdlProject( "src" + File.separatorChar + "test" + File.separatorChar + "resources" + File.separatorChar
 				+ "sample-soapui-project.xml" );
 		TestSuite testSuite = project.getTestSuiteByName( "Test Suite" );
 		testCase = ( WsdlTestCase )testSuite.getTestCaseByName( "Test Conversions" );

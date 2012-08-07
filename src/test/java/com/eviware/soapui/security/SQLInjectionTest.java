@@ -30,6 +30,9 @@ import com.eviware.soapui.security.scan.SQLInjectionScan;
  * @author dragica.soldo
  * 
  */
+
+// TODO Remove pointless tests
+// Move the integration test to the it folder.
 public class SQLInjectionTest extends AbstractSecurityTestCaseWithMockService
 {
 	public static junit.framework.Test suite()

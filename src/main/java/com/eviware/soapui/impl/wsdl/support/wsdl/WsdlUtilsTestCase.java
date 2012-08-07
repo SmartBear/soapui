@@ -22,8 +22,9 @@ public class WsdlUtilsTestCase extends TestCase
 {
 	public void testCacheWsdl() throws Exception
 	{
-		File file = new File( "src" + File.separator + "test-resources" + File.separator + "test6" + File.separator
-				+ "TestService.wsdl" );
+        // TODO Hardcoded madness
+		File file = new File( "src" + File.separator + "test" + File.separator + "resources"
+                + File.separator + "test6" + File.separator + "TestService.wsdl" );
 
 		assertTrue( file.exists() );
 

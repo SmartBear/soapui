@@ -32,7 +32,9 @@ public class AttachmentTestCase
 	@Test
 	public void shouldHaveAttachments() throws Exception
 	{
-		String wsdlUrl = new File( "src/test-resources/attachment-test.wsdl" ).toURI().toURL().toString();
+
+        //TODO Hardcoded madness!
+		String wsdlUrl = new File( "src/test/resources/attachment-test.wsdl" ).toURI().toURL().toString();
 		WsdlProject project = new WsdlProject();
 		WsdlInterface iface = WsdlInterfaceFactory.importWsdl( project, wsdlUrl, false )[0];
 

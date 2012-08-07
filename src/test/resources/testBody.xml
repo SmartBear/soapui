@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml version="1.0" encoding="utf-8"?>
 <urn:searchResponse xmlns:urn="urn:schema:v1:companyservice:applications:bis.bonnier.se">
     <urn1:searchResult hitCount="131" xmlns:urn1="urn:v1:companysearch:common:bis.bonnier.se">
 		<company>
@@ -6,7 +6,7 @@
 			<countryRegNumber>2609296906</countryRegNumber>
 			<country>SWE</country>
 			<dunsNumber>559606293</dunsNumber>
-			<postalAddress>Kommendörsgatan 12 Ii</postalAddress>
+			<postalAddress>KommendÃ¶rsgatan 12 Ii</postalAddress>
 			<postCode>11448</postCode>
 			<town>Stockholm</town>
 			<telNumberAreaCodeOnly>08</telNumberAreaCodeOnly>
@@ -19,7 +19,7 @@
 			<countryRegNumber>3409051012</countryRegNumber>
 			<country>SWE</country>
 			<dunsNumber>558982240</dunsNumber>
-			<postalAddress>Strandvägen 55</postalAddress>
+			<postalAddress>StrandvÃ¤gen 55</postalAddress>
 			<postCode>11523</postCode>
 			<town>Stockholm</town>
 			<legalForm>453</legalForm>
@@ -30,9 +30,9 @@
 			<countryRegNumber>3605190051</countryRegNumber>
 			<country>SWE</country>
 			<dunsNumber>558989229</dunsNumber>
-			<postalAddress>Överby 6056</postalAddress>
+			<postalAddress>Ã–verby 6056</postalAddress>
 			<postCode>76193</postCode>
-			<town>Norrtälje</town>
+			<town>NorrtÃ¤lje</town>
 			<legalForm>453</legalForm>
 			<companyType>118</companyType>
 		</company>
@@ -43,9 +43,9 @@
 			<countryRegNumber>4310250669</countryRegNumber>
 			<country>SWE</country>
 			<dunsNumber>632791500</dunsNumber>
-			<postalAddress>Mörtviksvägen 128</postalAddress>
+			<postalAddress>MÃ¶rtviksvÃ¤gen 128</postalAddress>
 			<postCode>13463</postCode>
-			<town>Ingarö</town>
+			<town>IngarÃ¶</town>
 			<telNumberAreaCodeOnly>08</telNumberAreaCodeOnly>
 			<telNumberNoAreaCode>344491</telNumberNoAreaCode>
 			<legalForm>453</legalForm>
@@ -67,7 +67,7 @@
 			<countryRegNumber>4912180090</countryRegNumber>
 			<country>SWE</country>
 			<dunsNumber>353114226</dunsNumber>
-			<postalAddress>Århammar Herrgården</postalAddress>
+			<postalAddress>Ã…rhammar HerrgÃ¥rden</postalAddress>
 			<postCode>61055</postCode>
 			<town>Stigtomta</town>
 			<telNumberAreaCodeOnly>0155</telNumberAreaCodeOnly>
@@ -76,7 +76,7 @@
 			<companyType>118</companyType>
 		</company>
 		<company>
-			<companyName>Bonnier Skrivbyrå, Eva</companyName>
+			<companyName>Bonnier SkrivbyrÃ¥, Eva</companyName>
 			<countryRegNumber>5306151084</countryRegNumber>
 			<country>SWE</country>
 			<dunsNumber>353626765</dunsNumber>
@@ -104,7 +104,7 @@
 			<countryRegNumber>5403040032</countryRegNumber>
 			<country>SWE</country>
 			<dunsNumber>353716095</dunsNumber>
-			<postalAddress>Karlavägen 83</postalAddress>
+			<postalAddress>KarlavÃ¤gen 83</postalAddress>
 			<postCode>11459</postCode>
 			<town>Stockholm</town>
 			<telNumberAreaCodeOnly>08</telNumberAreaCodeOnly>
@@ -147,7 +147,7 @@
 			<companyType>1301</companyType>
 		</company>
 		<company>
-			<companyName>Bonnier Carlsen Bokförlag</companyName>
+			<companyName>Bonnier Carlsen BokfÃ¶rlag</companyName>
 			<country>SWE</country>
 			<dunsNumber>632331526</dunsNumber>
 			<postCode>11136</postCode>
@@ -170,7 +170,7 @@
 			<companyType>118</companyType>
 		</company>
 		<company>
-			<companyName>Bonnier Västfastigheter AB</companyName>
+			<companyName>Bonnier VÃ¤stfastigheter AB</companyName>
 			<countryRegNumber>5560294372</countryRegNumber>
 			<country>SWE</country>
 			<dunsNumber>353982325</dunsNumber>
@@ -198,7 +198,7 @@
 			<country>SWE</country>
 			<dunsNumber>559470583</dunsNumber>
 			<postCode>50435</postCode>
-			<town>Borås</town>
+			<town>BorÃ¥s</town>
 			<telNumberAreaCodeOnly>033</telNumberAreaCodeOnly>
 			<telNumberNoAreaCode>417525</telNumberNoAreaCode>
 			<legalForm>0</legalForm>
@@ -229,7 +229,7 @@
 			<companyType>118</companyType>
 		</company>
 		<company>
-			<companyName>Bonnier Zoo Förlag AB</companyName>
+			<companyName>Bonnier Zoo FÃ¶rlag AB</companyName>
 			<country>SWE</country>
 			<dunsNumber>509115320</dunsNumber>
 			<postCode>11350</postCode>

@@ -24,6 +24,8 @@ import com.eviware.soapui.security.scan.GroovySecurityScan;
  * @author nebojsa.tasic
  * 
  */
+// TODO Remove pointless tests
+// Move the integration test to the it folder.
 public class GroovySecurityScanTest extends AbstractSecurityTestCaseWithMockService
 {
 	public static junit.framework.Test suite()

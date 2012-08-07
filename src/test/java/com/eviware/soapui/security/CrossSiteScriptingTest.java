@@ -27,6 +27,10 @@ import com.eviware.soapui.support.types.StringToObjectMap;
  * @author dragica.soldo
  * 
  */
+
+
+// TODO Remove pointless tests
+// Move the integration test to the it folder.
 public class CrossSiteScriptingTest extends AbstractSecurityTestCaseWithMockService
 {
 	public static junit.framework.Test suite()
