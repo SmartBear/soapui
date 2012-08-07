@@ -25,7 +25,8 @@ then
 fi
 export SOAPUI_HOME
 
-@SOAPUISHCLASSPATH@
+#FIXME Get from Maven properties
+SOAPUI_CLASSPATH=$SOAPUI_HOME/soapui-5.0.0-SNAPSHOT.jar:$SOAPUI_HOME/lib/*
 
 export SOAPUI_CLASSPATH
 

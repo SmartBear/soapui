@@ -35,10 +35,12 @@
         </pluginRepository>
     </pluginRepositories>
     <scm>
-        <connection>scm:svn:svn://svn.eviware.com/soapui/trunk/core</connection>
+        <connection>scm:git:git://github.com/SmartBear/soapui.git</connection>
     </scm>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- FIXME Make this a commandline argument so it could be run at any plattform -->
+        <devenv.install4jc>/opt/install4j/bin/install4jc</devenv.install4jc>
     </properties>
 
     <!-- TODO Generate the sources in the src folder and make the normal compiler compile -->
@@ -73,14 +75,91 @@
                 </configuration>
             </plugin>
 
+            <!-- FIXME Reporting? -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>findbugs-maven-plugin</artifactId>
                 <version>2.4.0</version>
             </plugin>
 
+            <plugin>
+                <groupId>net.ju-n.maven.plugins</groupId>
+                <artifactId>maven-checksum-plugin</artifactId>
+                <version>1.0</version>
+                <configuration>
+                    <files>
+                        <!-- FIXME parameterize this better-->
+                        <file>
+                            ${project.build.directory}/${project.artifactId}-${project.version}-linux-bin.tar.gz
+                        </file>
+                    </files>
+                </configuration>
+            </plugin>
+
+            <plugin>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <version>2.3</version>
+            <configuration>
+                <descriptors>
+                    <descriptor>src/main/assembly/linux-bin.xml</descriptor>
+                    <descriptor>src/main/assembly/win32-standalone-bin.xml</descriptor>
+                </descriptors>
+            </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>com.google.code.maven-install4j</groupId>
+                <artifactId>maven-install4j-plugin</artifactId>
+                <version>0.1.1</version>
+                <configuration>
+                    <executable>${devenv.install4jc}</executable>
+                    <releaseId>${project.version}</releaseId>
+                    <attach>true</attach>
+                    <skipOnMissingExecutable>true</skipOnMissingExecutable>
+                    <!-- FIXME  Move this to src/main/install4j -->
+                    <configFile>${project.basedir}/src/install4j/SoapUI.install4j</configFile>
+                    <compilerVariables>
+                        <property>
+                            <!-- TODO what's default? -->
+                            <name>builddir</name>
+                            <value>${project.build.outputDirectory}</value>
+                        </property>
+                        <property>
+                            <name>version</name>
+                            <value>${project.parent.version}</value>
+                        </property>
+                        <!--<property>
+                        <name>resourcedir</name>
+                        <value>${basedir}/src/install4j</value>
+                    </property>
+                    <property>
+                        <name>SIGNTOOL_PATH</name>
+                        <value>${maven.install4j.signtool}</value>
+                    </property>
+                    <property>
+                        <name>CERT_PATH</name>
+                        <value>${maven.install4j.cert}</value>
+                    </property>
+                    <property>
+                        <name>CERT_PASS</name>
+                        <value>${maven.install4j.cert.pass}</value>
+                    </property>    -->
+                    </compilerVariables>
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-changelog-plugin</artifactId>
+                <version>2.2</version>
+            </plugin>
+        </plugins>
+    </reporting>
 
     <dependencies>
         <!-- XML Beans -->
