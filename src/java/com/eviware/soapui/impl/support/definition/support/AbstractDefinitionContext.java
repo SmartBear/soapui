@@ -115,6 +115,8 @@ public abstract class AbstractDefinitionContext<T extends AbstractInterface<?>, 
 		return load( null );
 	}
 
+	private static XProgressDialog progressDialog = null;
+
 	public synchronized boolean load( T2 wsdlLoader ) throws Exception
 	{
 		// only use cache if iface has been specified
@@ -127,12 +129,20 @@ public abstract class AbstractDefinitionContext<T extends AbstractInterface<?>, 
 		if( loaded )
 			return true;
 
-		// always use progressDialog since files can import http urls
-		XProgressDialog progressDialog = UISupport.getDialogs().createProgressDialog( "Loading Definition", 3,
-				"Loading definition..", true );
-
 		Loader loader = new Loader( wsdlLoader );
-		progressDialog.run( loader );
+
+		if( progressDialog != null )
+		{
+			progressDialog.run( loader );
+		}
+		else
+		{
+			// always use progressDialog since files can import http urls
+			progressDialog = UISupport.getDialogs().createProgressDialog( "Loading Definition", 3, "Loading definition..",
+					true );
+
+			progressDialog.run( loader );
+		}
 
 		// Get the value. It is the responsibility of the progressDialog to
 		// wait for the other thread to finish.
