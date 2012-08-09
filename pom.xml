@@ -163,6 +163,15 @@
 
     <dependencies>
         <!-- XML Beans -->
+    <!--
+    <dependency>
+            <groupId>org.apache.xmlbeans</groupId>
+            <artifactId>xmlbeans</artifactId>
+            <version>2.4.0</version>
+            <scope>compile</scope>
+        </dependency>
+
+
         <dependency>
             <groupId>org.apache.xmlbeans</groupId>
             <artifactId>xmlbeans-xmlpublic</artifactId>
@@ -174,6 +183,22 @@
             <artifactId>xmlbeans-xpath</artifactId>
             <version>2.4.0</version>
         </dependency>
+        -->
+
+
+        <dependency>
+            <groupId>xmlbeans</groupId>
+            <artifactId>xbean</artifactId>
+            <version>fixed-2.4.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>xmlbeans</groupId>
+            <artifactId>xbean_xpath</artifactId>
+            <version>2.4.0</version>
+            <type>jar</type>
+        </dependency>
+
 
         <!-- Static analytics -->
         <dependency>
@@ -636,12 +661,7 @@
             <version>1.0.2</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.apache.xmlbeans</groupId>
-            <artifactId>xmlbeans</artifactId>
-            <version>2.4.0</version>
-            <scope>compile</scope>
-        </dependency>
+
 
 
         <!-- TODO Not sure if thease are needed -->
