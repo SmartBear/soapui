@@ -51,32 +51,4 @@ public class WsdlProjectTestCase extends TestCaseWithJetty
 	{
 		assertTrue( new WsdlProject().isCacheDefinitions() );
 	}
-
-	// public void testImport() throws Exception
-	// {
-	// String url =
-	// "http://queue.amazonaws.com/doc/2006-04-01/QueueService.wsdl";
-	//
-	// WsdlProject project = new WsdlProject();
-	//
-	// // import amazon wsdl
-	// WsdlInterface[] result = project.importWsdl(url, true);
-	//
-	// assertEquals(2, result.length);
-	// }
-	/*
-	 * public void testImport2() throws Exception { String url =
-	 * "file:forumwsdl/invoke.wsdl";
-	 * 
-	 * SoapUI.getSettings().setString( ProxySettings.HOST, "intra0.frec.bull.fr"
-	 * ); SoapUI.getSettings().setString(ProxySettings.PORT, "8080" );
-	 * SoapUI.getSettings().setString(ProxySettings.EXCLUDES, "localhost" );
-	 * 
-	 * WsdlProject project = new WsdlProject();
-	 * 
-	 * // import amazon wsdl WsdlInterface[] result = project.importWsdl(url,
-	 * true);
-	 * 
-	 * assertEquals(1, result.length); }
-	 */
 }

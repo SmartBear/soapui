@@ -48,7 +48,7 @@ public class TestCaseWithJetty
 
 		server = new Server( 8082 );
 		ResourceHandler resource_handler = new ResourceHandler();
-		resource_handler.setResourceBase( "." + File.separator + "src" + File.separator + "test-resources" );
+		resource_handler.setResourceBase( "." + File.separator + "src" + File.separator + "test" + File.separator + "resources" );
 
 		HandlerList handlers = new HandlerList();
 		handlers.setHandlers( new Handler[] { resource_handler, new DefaultHandler() } );

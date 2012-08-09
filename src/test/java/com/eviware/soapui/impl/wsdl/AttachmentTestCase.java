@@ -49,23 +49,5 @@ public class AttachmentTestCase
 
 		assertEquals( definedAttachmentParts.length, 4 );
 		assertEquals( definedAttachmentParts[0].getName(), "ClaimPhoto" );
-
-		/*
-		 * XmlCursor cursor = xmlObject.newCursor(); //xmlObject.changeType(
-		 * docType ).newCursor(); while( !cursor.isEnddoc() ) { if(
-		 * cursor.isContainer() ) { String attributeText =
-		 * cursor.getAttributeText( new QName(
-		 * "http://www.w3.org/2004/11/xmlmime", "contentType")); if( attributeText
-		 * != null ) System.out.println( "contentType: " + attributeText);
-		 * 
-		 * SchemaType schemaType = cursor.getObject().schemaType(); if( schemaType
-		 * != null && schemaType.getName().equals( new
-		 * QName("http://ws-i.org/profiles/basic/1.1/xsd","swaRef")) ) {
-		 * System.out.println( cursor.getTextValue() ); } }
-		 * 
-		 * cursor.toNextToken();
-		 * 
-		 * }
-		 */
 	}
 }

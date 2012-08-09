@@ -59,30 +59,4 @@ public class WsdlRequestTestCase extends TestCaseWithJetty
 		// System.out.println( content );
 		assertNotNull( content );
 	}
-	/*
-	 * public void testMemory() throws Exception { try { // create new project
-	 * for( int c = 0; c < 100; c++ ) { String url =
-	 * "http://localhost:8082/soapui-tests/test1/TestService.wsdl"; //
-	 * WsdlContext context = new WsdlContext( url, SoapVersion.Soap11, null, null
-	 * ); // context.load();
-	 * 
-	 * WsdlProject project = new WsdlProject(); // WsdlInterface iface =
-	 * WsdlImporter.getInstance().importWsdl( project, url )[0]; //
-	 * project.removeInterface( iface );
-	 * 
-	 * // import amazon wsdl project.importWsdl( url, false ); //
-	 * project.release(); // project.removeInterface( iface ); //
-	 * project.release();
-	 * 
-	 * // get "Help" operation // WsdlOperation operation = (WsdlOperation)
-	 * iface.getOperationByName( "GetPage" );
-	 * 
-	 * // create a new empty request for that operation // WsdlRequest request =
-	 * operation.addNewRequest( "My request" );
-	 * 
-	 * System.out.println( "run " + c ); }
-	 * 
-	 * assertTrue( true ); } catch (RuntimeException e) { UISupport.logError( e
-	 * ); assertTrue( false ); } }
-	 */
 }
