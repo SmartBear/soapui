@@ -39,6 +39,7 @@
     </scm>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <!-- FIXME Make this a commandline argument so it could be run at any plattform -->
         <devenv.install4jc>/opt/install4j/bin/install4jc</devenv.install4jc>
     </properties>
