@@ -34,7 +34,7 @@ else
 fi
 
 #FIXME Get from Maven properties
-SOAPUI_CLASSPATH=$SOAPUI_HOME/soapui-5.0.0-SNAPSHOT.jar:$SOAPUI_HOME/lib/*
+SOAPUI_CLASSPATH=$SOAPUI_HOME/bin/soapui-5.0.0-SNAPSHOT.jar:$SOAPUI_HOME/lib/*
 
 export SOAPUI_CLASSPATH
 
