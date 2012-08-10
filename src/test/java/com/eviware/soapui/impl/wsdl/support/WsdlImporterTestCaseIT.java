@@ -35,11 +35,11 @@ import com.eviware.soapui.model.iface.Submit;
 import com.eviware.soapui.support.TestCaseWithJetty;
 
 // TODO Integration test. Move to it folder.
-public class WsdlImporterTestCase extends TestCaseWithJetty
+public class WsdlImporterTestCaseIT extends TestCaseWithJetty
 {
 	public static junit.framework.Test suite()
 	{
-		return new JUnit4TestAdapter( WsdlImporterTestCase.class );
+		return new JUnit4TestAdapter( WsdlImporterTestCaseIT.class );
 	}
 
 	@Test

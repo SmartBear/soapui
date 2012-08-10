@@ -31,11 +31,11 @@ import com.eviware.soapui.impl.wsdl.support.xsd.SchemaUtils;
 import com.eviware.soapui.support.TestCaseWithJetty;
 
 // TODO Move this integration test to the it folder.
-public class SchemaUtilsTestCase extends TestCaseWithJetty
+public class SchemaUtilsTestCaseIT extends TestCaseWithJetty
 {
 	public static junit.framework.Test suite()
 	{
-		return new JUnit4TestAdapter( SchemaUtilsTestCase.class );
+		return new JUnit4TestAdapter( SchemaUtilsTestCaseIT.class );
 	}
 
 	@Test

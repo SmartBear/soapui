@@ -22,11 +22,11 @@ import com.eviware.soapui.model.iface.Response;
 import com.eviware.soapui.support.TestCaseWithJetty;
 
 // TODO Move this integration test to the it folder.
-public class WsdlRequestTestCase extends TestCaseWithJetty
+public class WsdlRequestTestCaseIT extends TestCaseWithJetty
 {
 	public static junit.framework.Test suite()
 	{
-		return new JUnit4TestAdapter( WsdlRequestTestCase.class );
+		return new JUnit4TestAdapter( WsdlRequestTestCaseIT.class );
 	}
 
 	@Test
@@ -37,7 +37,7 @@ public class WsdlRequestTestCase extends TestCaseWithJetty
 
 		// import amazon wsdl
 		WsdlInterface iface = WsdlInterfaceFactory.importWsdl( project, "http://127.0.0.1:8082/test1/TestService.wsdl",
-				true )[0];
+true )[0];
 
 		// get "Help" operation
 		WsdlOperation operation = ( WsdlOperation )iface.getOperationByName( "GetPage" );

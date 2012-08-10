@@ -23,11 +23,11 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlImporter;
 import com.eviware.soapui.support.TestCaseWithJetty;
 
-public class WsdlProjectTestCase extends TestCaseWithJetty
+public class WsdlProjectTestCaseIT extends TestCaseWithJetty
 {
 	public static junit.framework.Test suite()
 	{
-		return new JUnit4TestAdapter( WsdlProjectTestCase.class );
+		return new JUnit4TestAdapter( WsdlProjectTestCaseIT.class );
 	}
 
 	@Test

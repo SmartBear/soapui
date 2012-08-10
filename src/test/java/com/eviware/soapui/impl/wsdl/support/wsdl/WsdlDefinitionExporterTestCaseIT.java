@@ -30,11 +30,11 @@ import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.TestCaseWithJetty;
 
 // TODO Integartion test. Move to it folder.
-public class WsdlDefinitionExporterTestCase extends TestCaseWithJetty
+public class WsdlDefinitionExporterTestCaseIT extends TestCaseWithJetty
 {
 	public static junit.framework.Test suite()
 	{
-		return new JUnit4TestAdapter( WsdlDefinitionExporterTestCase.class );
+		return new JUnit4TestAdapter( WsdlDefinitionExporterTestCaseIT.class );
 	}
 
 	@Test
