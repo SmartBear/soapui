@@ -65,6 +65,7 @@ import com.eviware.soapui.utils.TestUtils;
  */
 
 //FIXME Use the *-test keys instead of the keystore.jks
+// TODO Add test for invalid SAML version
 public class AutomaticSAMLEntryTest
 {
 	public static junit.framework.Test suite()

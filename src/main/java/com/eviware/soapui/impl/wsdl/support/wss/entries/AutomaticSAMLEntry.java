@@ -1,12 +1,12 @@
 /*
- *  soapUI, copyright (C) 2004-2012 smartbear.com 
+ *  soapUI, copyright (C) 2004-2012 smartbear.com
  *
- *  soapUI is free software; you can redistribute it and/or modify it under the 
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
+ *  soapUI is free software; you can redistribute it and/or modify it under the
+ *  terms of version 2.1 of the GNU Lesser General Public License as published by
  *  the Free Software Foundation.
  *
- *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
 
@@ -55,7 +55,7 @@ import com.jgoodies.binding.PresentationModel;
 
 /**
  * @author Erik R. Yverling
- * 
+ *
  *         Used to generate a SAML assertion using various input components
  */
 public class AutomaticSAMLEntry extends WssEntryBase
@@ -73,6 +73,8 @@ public class AutomaticSAMLEntry extends WssEntryBase
 
 	public static final String HOLDER_OF_KEY_CONFIRMATION_METHOD = "Holder-of-key";
 	public static final String SENDER_VOUCHES_CONFIRMATION_METHOD = "Sender vouches";
+
+	private static final String NOT_A_VALID_SAML_VERSION = "Not a valid SAML version" ;
 
 	private KeyAliasComboBoxModel keyAliasComboBoxModel;
 	private InternalWssContainerListener wssContainerListener;
@@ -277,8 +279,7 @@ public class AutomaticSAMLEntry extends WssEntryBase
 		}
 	}
 
-	public void process( WSSecHeader secHeader, Document doc, PropertyExpansionContext context )
-	{
+	public void process( WSSecHeader secHeader, Document doc, PropertyExpansionContext context ) {
 		try
 		{
 			SAMLParms samlParms = new SAMLParms();
@@ -296,6 +297,9 @@ public class AutomaticSAMLEntry extends WssEntryBase
 				{
 					callbackHandler = new SAML2CallbackHandler( assertionType, confirmationMethod );
 				}
+				else {
+					throw  new IllegalArgumentException(NOT_A_VALID_SAML_VERSION);
+				}
 				AssertionWrapper assertion = createAssertion( context, samlParms, callbackHandler );
 				wsSecSAMLToken.build( doc, assertion, secHeader );
 			}
@@ -304,14 +308,14 @@ public class AutomaticSAMLEntry extends WssEntryBase
 				WSSecSignatureSAML wsSecSignatureSAML = new WSSecSignatureSAML();
 				WssCrypto wssCrypto = getWssContainer().getCryptoByName( crypto, true );
 				String alias = context.expand( getUsername());
-				
+
 				if( wssCrypto == null )
 				{
 					throw new RuntimeException( "Missing keystore [" + crypto + "] for signature entry" );
-				} 
-				else if (Strings.isNullOrEmpty(alias)) 
+				}
+				else if (Strings.isNullOrEmpty(alias))
 				{
-					throw new RuntimeException(" No alias was provided for the keystore '" + crypto + "'. Please check your SAML (Form) configurations"); 
+					throw new RuntimeException(" No alias was provided for the keystore '" + crypto + "'. Please check your SAML (Form) configurations");
 				}
 
 				if( samlVersion.equals( SAML_VERSION_1 ) )
@@ -323,6 +327,9 @@ public class AutomaticSAMLEntry extends WssEntryBase
 				{
 					callbackHandler = new SAML2CallbackHandler( wssCrypto.getCrypto(), alias ,
 							assertionType, confirmationMethod );
+				}
+				else {
+					throw  new IllegalArgumentException(NOT_A_VALID_SAML_VERSION);
 				}
 
 				AssertionWrapper assertion = createAssertion( context, samlParms, callbackHandler );
@@ -370,7 +377,7 @@ public class AutomaticSAMLEntry extends WssEntryBase
 	}
 
 	private AssertionWrapper createAssertion( PropertyExpansionContext context, SAMLParms samlParms,
-			SAMLCallbackHandler callbackHandler ) throws WSSecurityException
+											  SAMLCallbackHandler callbackHandler ) throws WSSecurityException
 	{
 		if( assertionType.equals( ATTRIBUTE_ASSERTION_TYPE ) )
 		{
