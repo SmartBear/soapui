@@ -3,7 +3,7 @@
 <modelVersion>4.0.0</modelVersion>
 <groupId>com.smartbear.com</groupId>
 <artifactId>soapui</artifactId>
-<version>5.0.0-SNAPSHOT</version>
+<version>4.5.1</version>
 <packaging>jar</packaging>
 <name>soapUI</name>
 <url>http://www.soapui.org</url>
