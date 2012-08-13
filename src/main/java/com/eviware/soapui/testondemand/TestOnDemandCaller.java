@@ -12,6 +12,35 @@
 
 package com.eviware.soapui.testondemand;
 
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.SoapUISystemProperties;
+import com.eviware.soapui.config.*;
+import com.eviware.soapui.config.TestOnDemandLocationsRequestDocumentConfig.TestOnDemandLocationsRequest;
+import com.eviware.soapui.config.TestOnDemandLocationsRequestDocumentConfig.TestOnDemandLocationsRequest.Request;
+import com.eviware.soapui.config.TestOnDemandUploadRequestDocumentConfig.TestOnDemandUploadRequest;
+import com.eviware.soapui.impl.wsdl.WsdlProject;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPostMethod;
+import com.eviware.soapui.impl.wsdl.support.CompressionSupport;
+import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
+import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
+import com.eviware.soapui.settings.SSLSettings;
+import com.eviware.soapui.support.xml.XmlUtils;
+import com.google.common.base.Strings;
+import com.google.common.io.ByteStreams;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.IOUtils;
+import org.apache.http.entity.ByteArrayEntity;
+import org.apache.http.entity.StringEntity;
+import org.apache.log4j.Logger;
+import org.apache.xmlbeans.XmlOptions;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathFactory;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -23,51 +52,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathFactory;
-
-import org.apache.commons.io.IOUtils;
-import org.apache.http.entity.ByteArrayEntity;
-import org.apache.http.entity.StringEntity;
-import org.apache.log4j.Logger;
-import org.apache.xmlbeans.XmlOptions;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
-import sun.misc.BASE64Encoder;
-
-import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.SoapUISystemProperties;
-import com.eviware.soapui.config.TestOnDemandCommandConfig;
-import com.eviware.soapui.config.TestOnDemandContentConfig;
-import com.eviware.soapui.config.TestOnDemandFileConfig;
-import com.eviware.soapui.config.TestOnDemandHeaderConfig;
-import com.eviware.soapui.config.TestOnDemandKeystoreConfig;
-import com.eviware.soapui.config.TestOnDemandKeystorePasswordConfig;
-import com.eviware.soapui.config.TestOnDemandLocationsRequestDocumentConfig;
-import com.eviware.soapui.config.TestOnDemandLocationsRequestDocumentConfig.TestOnDemandLocationsRequest;
-import com.eviware.soapui.config.TestOnDemandLocationsRequestDocumentConfig.TestOnDemandLocationsRequest.Request;
-import com.eviware.soapui.config.TestOnDemandProjectPasswordConfig;
-import com.eviware.soapui.config.TestOnDemandTestCaseConfig;
-import com.eviware.soapui.config.TestOnDemandTestSuiteConfig;
-import com.eviware.soapui.config.TestOnDemandTxnConfig;
-import com.eviware.soapui.config.TestOnDemandUploadBodyConfig;
-import com.eviware.soapui.config.TestOnDemandUploadRequestDocumentConfig;
-import com.eviware.soapui.config.TestOnDemandUploadRequestDocumentConfig.TestOnDemandUploadRequest;
-import com.eviware.soapui.impl.wsdl.WsdlProject;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPostMethod;
-import com.eviware.soapui.impl.wsdl.support.CompressionSupport;
-import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
-import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
-import com.eviware.soapui.settings.SSLSettings;
-import com.eviware.soapui.support.xml.XmlUtils;
-import com.google.common.base.Strings;
-import com.google.common.io.ByteStreams;
-
-import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
  * @author Erik R. Yverling
@@ -152,24 +136,22 @@ public class TestOnDemandCaller
 
 		String locationCode = location.getCode();
 
-		BASE64Encoder encoder = new BASE64Encoder();
-
-		String encodedTestSuiteName = encoder.encode( testCase.getTestSuite().getName().getBytes() );
-		String encodedTestCaseName = encoder.encode( testCase.getName().getBytes() );
+		String encodedTestSuiteName = getBase64EncodedString( testCase.getTestSuite().getName().getBytes() );
+		String encodedTestCaseName = getBase64EncodedString( testCase.getName().getBytes() );
 
 		File tempProjectFile = saveTemporaryProject( testCase.getTestSuite().getProject() );
 		byte[] projectFileData = getBytes( tempProjectFile.getAbsolutePath() );
 		byte[] zipedProjectFileData = zipBytes( testCase.getTestSuite().getProject().getName(), projectFileData );
-		String encodedZipedProjectFile = encoder.encode( zipedProjectFileData );
+		String encodedZipedProjectFile = getBase64EncodedString( zipedProjectFileData );
 
 		String projectPassword = testCase.getTestSuite().getProject().getShadowPassword();
-		String encodedProjectPassword = encoder.encode( Strings.nullToEmpty( projectPassword ).getBytes() );
+		String encodedProjectPassword = getBase64EncodedString( Strings.nullToEmpty( projectPassword ).getBytes() );
 
 		String keystoreFilePath = SoapUI.getSettings().getString( SSLSettings.KEYSTORE, "" );
 		byte[] keystoreFileData = getBytes( keystoreFilePath );
-		String encodedKeystoreFile = encoder.encode( keystoreFileData );
+		String encodedKeystoreFile = getBase64EncodedString( keystoreFileData );
 
-		String encodedKeystorePassword = encoder.encode( SoapUI.getSettings()
+		String encodedKeystorePassword = getBase64EncodedString( SoapUI.getSettings()
 				.getString( SSLSettings.KEYSTORE_PASSWORD, "" ).getBytes() );
 
 		String requestContent = generateUploadRequestXML( locationCode, encodedTestSuiteName, encodedTestCaseName,
@@ -211,14 +193,14 @@ public class TestOnDemandCaller
 		final ExtendedPostMethod post = new ExtendedPostMethod();
 		post.setURI( new URI( uri ) );
 
-		post.setEntity( new StringEntity( requestContent ) );
+		post.setEntity(new StringEntity(requestContent));
 
 		// FIXME Should we remove the logging printouts before release? The upload request maybe would be to large?
 
-		log.debug( "Sending request to " + uri );
+		log.debug("Sending request to " + uri);
 		log.debug( requestContent );
 
-		HttpClientSupport.execute( post );
+		HttpClientSupport.execute(post);
 
 		byte[] responseBody = post.getResponseBody();
 
@@ -226,7 +208,7 @@ public class TestOnDemandCaller
 		log.debug( new String( responseBody ) );
 
 		String reponseBodyAsString = new String( responseBody );
-		return XmlUtils.parseXml( reponseBodyAsString );
+		return XmlUtils.parseXml(reponseBodyAsString);
 	}
 
 	private String generateLocationsRequestXML()
@@ -364,5 +346,9 @@ public class TestOnDemandCaller
 	private static String getProtocol()
 	{
 		return System.getProperty( SoapUISystemProperties.TEST_ON_DEMAND_PROTOCOL, DEFAULT_PROTOCOL );
+	}
+
+	private static String getBase64EncodedString(byte [] bytesToEncode) {
+		return new String(Base64.encodeBase64(bytesToEncode));
 	}
 }
