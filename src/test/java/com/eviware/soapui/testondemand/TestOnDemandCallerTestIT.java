@@ -20,7 +20,6 @@ import java.util.List;
 import junit.framework.JUnit4TestAdapter;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.eviware.soapui.SoapUISystemProperties;
@@ -37,7 +36,7 @@ import com.google.common.base.Strings;
  */
 
 // FIXME We need to add the soapui.testondemand.host system property to Nightly build Hudson to be able to run this
-public class TestOnDemandCallerTest
+public class TestOnDemandCallerTestIT
 {
 	private static final String FIRST_LOCATION_NAME = "Fort Lauderdale, FL";
 	private static final String FIRST_LOCATION_CODE = "10";
@@ -51,7 +50,7 @@ public class TestOnDemandCallerTest
 
 	public static junit.framework.Test suite()
 	{
-		return new JUnit4TestAdapter( TestOnDemandCallerTest.class );
+		return new JUnit4TestAdapter( TestOnDemandCallerTestIT.class );
 	}
 
 	@Before
