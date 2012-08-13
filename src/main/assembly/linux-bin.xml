@@ -24,6 +24,15 @@ bundled or none -->
         </excludes>
     </fileSet>
     <fileSet>
+        <directory>${basedir}/src/dist/bin</directory>
+        <outputDirectory>bin</outputDirectory>
+        <includes>
+            <include>*.sh</include>
+        </includes>
+        <lineEnding>unix</lineEnding>
+        <fileMode>0755</fileMode>
+    </fileSet>
+    <fileSet>
         <directory>${project.build.directory}</directory>
         <outputDirectory>bin</outputDirectory>
         <includes>
