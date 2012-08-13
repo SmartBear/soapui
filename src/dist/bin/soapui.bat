@@ -15,7 +15,8 @@ echo Set JAVA_HOME to the directory of your local JDK to avoid this message.
 
 rem init classpath
 
-@SOAPUICLASSPATHCOMPACT@
+:FIXME Get from Maven properties
+set CLASSPATH=%SOAPUI_HOME%\bin\soapui-5.0.0-SNAPSHOT.jar;%SOAPUI_HOME%\lib\*;
 
 rem JVM parameters, modify as appropriate
 
