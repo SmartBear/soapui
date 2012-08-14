@@ -13,6 +13,7 @@
 package com.eviware.soapui.testondemand;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.util.List;
@@ -47,6 +48,7 @@ public class TestOnDemandCallerTestIT
 
 	private TestOnDemandCaller caller;
 	private WsdlTestCase testCase;
+	private static final String NOT_THE_RIGHT_HOST = "You need to specify the host name of the test server";
 
 	public static junit.framework.Test suite()
 	{
@@ -69,7 +71,7 @@ public class TestOnDemandCallerTestIT
 	{
 		if( System.getProperty( SoapUISystemProperties.TEST_ON_DEMAND_HOST ) == null )
 		{
-			return;
+			fail(NOT_THE_RIGHT_HOST);
 		}
 
 		List<Location> locations = caller.getLocations();
@@ -88,7 +90,7 @@ public class TestOnDemandCallerTestIT
 	{
 		if( System.getProperty( SoapUISystemProperties.TEST_ON_DEMAND_HOST ) == null )
 		{
-			return;
+			fail(NOT_THE_RIGHT_HOST);
 		}
 
 		String redirectUrl = caller.sendTestCase( testCase, new Location( FIRST_LOCATION_CODE, FIRST_LOCATION_CODE,
