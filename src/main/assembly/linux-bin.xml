@@ -24,6 +24,10 @@ bundled or none -->
         </excludes>
     </fileSet>
     <fileSet>
+        <directory>${maven.wsi.root}</directory>
+        <outputDirectory>wsi-test-tools</outputDirectory>
+    </fileSet>
+    <fileSet>
         <directory>${basedir}/src/dist/bin</directory>
         <outputDirectory>bin</outputDirectory>
         <includes>
