@@ -13,18 +13,8 @@
     </searchSequence>
     <variables>
       <variable name="SOAPUI_HOME" value="${installer:sys.installationDir}" />
-      <variable name="DIST_ROOT" value="d:\workspace\soapUI 4.5.0\target\dist" />
-      <variable name="RESOURCES_HOME" value="" />
-      <variable name="VERSION_NUMBER" value="" />
-      <variable name="SRC_ROOT" value="" />
-      <variable name="SIGNTOOL_PATH" value="" />
-      <variable name="CERT_PATH" value="" />
-      <variable name="CERT_PASS" value="" />
-      <variable name="HERMES_INSTALLER" value="D:\backups\instalacije\hermes-installer-1.13.jar" />
       <variable name="BRANDED_TITLE" value="" />
       <variable name="EXECUTABLE_NAME" value="soapUI-${compiler:VERSION_NUMBER}${compiler:BRANDED_TITLE}" />
-      <variable name="DIST_STANDALONE" value="d:\workspace\soapUI 4.5.0\target\standalone" />
-      <variable name="LOADUI_DOWNLOADER" value="" />
       <variable name="LOADUI_INSTALLER_URL" value="http://dl.eviware.com/loadui/os/2_0" />
       <variable name="LOADUI_VERSION_NUMBER" value="2_0_0" />
       <variable name="OS_EXT" value="" />
@@ -2296,7 +2286,7 @@ return installTutorials;</condition>
     </win32>
   </mediaSets>
   <buildIds buildAll="false">
-    <mediaSet refId="23" />
+    <mediaSet refId="196" />
   </buildIds>
 </install4j>
 

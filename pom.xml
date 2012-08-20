@@ -101,8 +101,8 @@
             <version>2.3</version>
             <configuration>
                 <descriptors>
-                    <descriptor>src/main/assembly/linux-bin.xml</descriptor>
-                    <descriptor>src/main/assembly/win32-standalone-bin.xml</descriptor>
+                    <descriptor>src/main/assembly/dist.xml</descriptor>
+                    <descriptor>src/main/assembly/dist-standalone.xml</descriptor>
                 </descriptors>
             </configuration>
             </plugin>
@@ -120,30 +120,57 @@
                     <configFile>${project.basedir}/src/install4j/SoapUI.install4j</configFile>
                     <compilerVariables>
                         <property>
-                            <!-- TODO what's default? -->
-                            <name>builddir</name>
-                            <value>${project.build.outputDirectory}</value>
-                        </property>
-                        <property>
-                            <name>version</name>
+                            <name>VERSION_NUMBER</name>
                             <value>${project.parent.version}</value>
                         </property>
-                        <!--<property>
-                        <name>resourcedir</name>
-                        <value>${basedir}/src/install4j</value>
-                    </property>
-                    <property>
-                        <name>SIGNTOOL_PATH</name>
-                        <value>${maven.install4j.signtool}</value>
-                    </property>
-                    <property>
-                        <name>CERT_PATH</name>
-                        <value>${maven.install4j.cert}</value>
-                    </property>
-                    <property>
-                        <name>CERT_PASS</name>
-                        <value>${maven.install4j.cert.pass}</value>
-                    </property>    -->
+                        <property>
+                            <name>SRC_ROOT</name>
+                            <value>${basedir}/src</value>
+                        </property>
+                        <!-- FIXME Paramatize -->
+                        <property>
+                            <name>DIST_ROOT</name>
+                            <value>${project.build.directory}/soapui-5.0.0-SNAPSHOT-dist/soapui-5.0.0-SNAPSHOT</value>
+                        </property>
+                        <!-- FIXME Paramatize -->
+                        <property>
+                            <name>DIST_STANDALONE</name>
+                            <value>${project.build.directory}/soapui-5.0.0-SNAPSHOT-dist-standalone/soapui-5.0.0-SNAPSHOT</value>
+                        </property>
+                        <!-- FIXME Paramatize ? -->
+                        <property>
+                            <name>RESOURCES_HOME</name>
+                            <value>${basedir}/src/install4j/resources</value>
+                        </property>
+                        <property>
+                            <name>SIGNTOOL_PATH</name>
+                            <value>${maven.install4j.signtool}</value>
+                        </property>
+                        <property>
+                            <name>CERT_PATH</name>
+                            <value>${maven.install4j.cert}</value>
+                        </property>
+                        <property>
+                            <name>CERT_PASS</name>
+                            <value>${maven.install4j.cert.pass}</value>
+                        </property>
+                        <property>
+                            <name>WIN_DLLS_PATH</name>
+                            <value>${maven.install4j.cert}</value>
+                        </property>
+                        <property>
+                            <name>HERMES_INSTALLER</name>
+                            <value>${maven.hermes.installer}</value>
+                        </property>
+                        <property>
+                            <name>WIN_DLLS_PATH</name>
+                            <value>${maven.install4j.cert}</value>
+                        </property>
+                        <!-- FIXME This should not be hard coded -->
+                        <property>
+                            <name>LOADUI_DOWNLOADER</name>
+                            <value>${maven.loadUI.downloader}</value>
+                        </property>
                     </compilerVariables>
                 </configuration>
             </plugin>
@@ -733,11 +760,6 @@
             <groupId>commons-httpclient</groupId>
             <artifactId>commons-httpclient</artifactId>
             <version>3.1</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-httpclient</groupId>
-            <artifactId>commons-httpclient</artifactId>
-            <version>2.0</version>
         </dependency>
     </dependencies>
 </project>
