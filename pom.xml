@@ -119,7 +119,7 @@
                     <compilerVariables>
                         <property>
                             <name>VERSION_NUMBER</name>
-                            <value>${project.parent.version}</value>
+                            <value>${project.version}</value>
                         </property>
                         <property>
                             <name>SRC_ROOT</name>
