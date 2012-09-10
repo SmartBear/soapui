@@ -20,6 +20,7 @@ import org.apache.commons.collections.list.TreeList;
 import org.apache.http.protocol.BasicHttpContext;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
@@ -96,7 +97,7 @@ public abstract class AbstractTestCaseRunner<T extends TestRunnable, T2 extends 
 		{
 			if( !( runContext.getProperty( SubmitContext.HTTP_STATE_PROPERTY ) instanceof BasicHttpContext ) )
 			{
-				runContext.setProperty( SubmitContext.HTTP_STATE_PROPERTY, new BasicHttpContext() );
+				runContext.setProperty( SubmitContext.HTTP_STATE_PROPERTY, HttpClientSupport.createEmptyContext() );
 			}
 		}
 		else

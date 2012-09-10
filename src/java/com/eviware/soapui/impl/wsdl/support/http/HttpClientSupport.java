@@ -29,15 +29,19 @@ import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.params.AuthPolicy;
+import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.impl.auth.NTLMSchemeFactory;
+import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.RequestWrapper;
 import org.apache.http.params.CoreConnectionPNames;
+import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.HttpProcessor;
 import org.apache.http.protocol.HttpRequestExecutor;
@@ -212,8 +216,9 @@ public class HttpClientSupport
 					.setDefaultMaxPerRoute( ( int )settings.getLong( HttpSettings.MAX_CONNECTIONS_PER_HOST, 500 ) );
 
 			httpClient = new SoapUIHttpClient( connectionManager );
+
 			// this interceptor needs to be last one added and executed.
-			httpClient.addRequestInterceptor( new HeaderRequestInterceptor(), httpClient.getRequestInterceptorCount());
+			httpClient.addRequestInterceptor( new HeaderRequestInterceptor(), httpClient.getRequestInterceptorCount() );
 			httpClient.getAuthSchemes().register( AuthPolicy.NTLM, new NTLMSchemeFactory() );
 			httpClient.getAuthSchemes().register( AuthPolicy.SPNEGO, new NTLMSchemeFactory() );
 
@@ -396,5 +401,16 @@ public class HttpClientSupport
 	{
 		settings.addSettingsListener( helper.new SSLSettingsListener() );
 	}
-	
+
+	public static BasicHttpContext createEmptyContext()
+	{
+		BasicHttpContext httpContext = new BasicHttpContext();
+
+		// always use local cookie store so we don't share cookies with other threads/executions/requests
+		CookieStore cookieStore = new BasicCookieStore();
+		httpContext.setAttribute( ClientContext.COOKIE_STORE, cookieStore );
+
+		return httpContext;
+	}
+
 }

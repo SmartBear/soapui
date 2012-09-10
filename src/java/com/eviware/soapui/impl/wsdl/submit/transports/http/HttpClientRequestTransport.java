@@ -19,13 +19,9 @@ import java.util.List;
 
 import org.apache.commons.httpclient.URI;
 import org.apache.http.Header;
-import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.conn.params.ConnRoutePNames;
-import org.apache.http.impl.client.BasicCookieStore;
-import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 
@@ -146,13 +142,9 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 		HttpContext httpContext = ( HttpContext )submitContext.getProperty( SubmitContext.HTTP_STATE_PROPERTY );
 		if( httpContext == null )
 		{
-			httpContext = new BasicHttpContext();
+			httpContext = HttpClientSupport.createEmptyContext();
 			submitContext.setProperty( SubmitContext.HTTP_STATE_PROPERTY, httpContext );
 			createdContext = true;
-
-			// always use local cookie store so we don't share cookies with other threads/executions/requests
-			CookieStore cookieStore = new BasicCookieStore();
-			httpContext.setAttribute( ClientContext.COOKIE_STORE, cookieStore );
 		}
 
 		String localAddress = System.getProperty( "soapui.bind.address", httpRequest.getBindAddress() );
