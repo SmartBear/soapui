@@ -1,5 +1,4 @@
 <?xml version="1.0"?>
-
 <!-- TODO Make the XML beans inherite soapUI version number (sub project?) -->
 <!-- TODO Go through the list of dependencies and remove unused -->
 <!-- TODO Check if there is some artifacts witht he wrong group and artifacts id that is in maven central and could be removed from eviware public repo -->
@@ -11,7 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.smartbear.com</groupId>
     <artifactId>soapui</artifactId>
-    <version>5.0.0-SNAPSHOT</version>
+    <version>4.5.2-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>soapUI</name>
     <url>http://www.soapui.org</url>
@@ -128,12 +127,12 @@
                         <!-- FIXME Paramatize -->
                         <property>
                             <name>DIST_ROOT</name>
-                            <value>${project.build.directory}/soapui-5.0.0-SNAPSHOT-dist/soapui-5.0.0-SNAPSHOT</value>
+                            <value>${project.build.directory}/soapui-4.5.2-SNAPSHOT-dist/soapui-4.5.2-SNAPSHOT</value>
                         </property>
                         <!-- FIXME Paramatize -->
                         <property>
                             <name>DIST_STANDALONE</name>
-                            <value>${project.build.directory}/soapui-5.0.0-SNAPSHOT-dist-standalone/soapui-5.0.0-SNAPSHOT</value>
+                            <value>${project.build.directory}/soapui-4.5.2-SNAPSHOT-dist-standalone/soapui-4.5.2-SNAPSHOT</value>
                         </property>
                         <!-- FIXME Paramatize ? -->
                         <property>
