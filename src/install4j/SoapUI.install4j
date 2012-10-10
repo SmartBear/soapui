@@ -2300,15 +2300,7 @@ return installTutorials;</condition>
       <exclude />
       <variables />
     </macosFolderArchive>
-    <win32Archive name="Windows x64 Archive" id="4409" mediaFileName="" installDir="soapUI" overridePrincipalLanguage="false" requires64bit="true" jreBitType="64" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" includedJRE="" manualJREEntry="false">
-      <excludedLaunchers />
-      <excludedComponents />
-      <excludedBeans />
-      <overriddenPrincipalLanguage id="en" customLocalizationFile="" />
-      <exclude />
-      <variables />
-    </win32Archive>
-    <win32Archive name="Windows x32 Archive" id="4414" mediaFileName="" installDir="soapUI" overridePrincipalLanguage="false" requires64bit="false" jreBitType="32" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" includedJRE="" manualJREEntry="false">
+    <win32Archive name="Windows Archive" id="4409" mediaFileName="" installDir="soapUI" overridePrincipalLanguage="false" requires64bit="false" jreBitType="32" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" includedJRE="" manualJREEntry="false">
       <excludedLaunchers />
       <excludedComponents />
       <excludedBeans />
