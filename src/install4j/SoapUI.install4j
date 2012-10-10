@@ -53,15 +53,15 @@
       <root id="3778" fileset="2808" location="${installer:sys.userHome}" />
     </roots>
     <mountPoints>
-      <mountPoint id="321" root="" location="bin" mode="755" />
+      <mountPoint id="321" root="" location="bin" mode="777" />
       <mountPoint id="318" root="" location="lib" mode="755" />
       <mountPoint id="399" root="" location="licences" mode="755" />
       <mountPoint id="2704" root="" location=".JxBrowser" mode="755" />
       <mountPoint id="63" root="" location="" mode="755" />
-      <mountPoint id="1845" root="1842" location="bin" mode="755" />
-      <mountPoint id="1660" root="1659" location="bin" mode="755" />
-      <mountPoint id="1846" root="1844" location="bin" mode="755" />
-      <mountPoint id="1575" root="1574" location="bin" mode="755" />
+      <mountPoint id="1845" root="1842" location="bin" mode="777" />
+      <mountPoint id="1660" root="1659" location="bin" mode="777" />
+      <mountPoint id="1846" root="1844" location="bin" mode="777" />
+      <mountPoint id="1575" root="1574" location="bin" mode="777" />
       <mountPoint id="776" root="712" location="source" mode="755" />
       <mountPoint id="1334" root="1261" location="tempHermes" mode="755" />
       <mountPoint id="1955" root="1860" location="wsi-test-tools" mode="755" />
@@ -100,13 +100,13 @@
           <entry location="wsi-test-tools" fileType="regular" />
         </exclude>
       </dirEntry>
-      <fileEntry mountPoint="1845" file="${compiler:DIST_STANDALONE}/bin/soapui.sh" overwrite="4" shared="false" mode="644" uninstallMode="0" />
-      <fileEntry mountPoint="1845" file="${compiler:DIST_STANDALONE}/bin/mockservicerunner.sh" overwrite="4" shared="false" mode="644" uninstallMode="0" />
-      <fileEntry mountPoint="1845" file="${compiler:DIST_STANDALONE}/bin/loadtestrunner.sh" overwrite="4" shared="false" mode="644" uninstallMode="0" />
-      <fileEntry mountPoint="1845" file="${compiler:DIST_STANDALONE}/bin/toolrunner.sh" overwrite="4" shared="false" mode="644" uninstallMode="0" />
-      <fileEntry mountPoint="1845" file="${compiler:DIST_STANDALONE}/bin/testrunner.sh" overwrite="4" shared="false" mode="644" uninstallMode="0" />
-      <fileEntry mountPoint="1845" file="${compiler:DIST_STANDALONE}/bin/securitytestrunner.sh" overwrite="4" shared="false" mode="644" uninstallMode="0" />
-      <fileEntry mountPoint="1845" file="${compiler:DIST_STANDALONE}/bin/wargenerator.sh" overwrite="4" shared="false" mode="644" uninstallMode="0" />
+      <fileEntry mountPoint="1845" file="${compiler:DIST_STANDALONE}/bin/soapui.sh" overwrite="4" shared="false" mode="755" uninstallMode="0" />
+      <fileEntry mountPoint="1845" file="${compiler:DIST_STANDALONE}/bin/mockservicerunner.sh" overwrite="4" shared="false" mode="755" uninstallMode="0" />
+      <fileEntry mountPoint="1845" file="${compiler:DIST_STANDALONE}/bin/loadtestrunner.sh" overwrite="4" shared="false" mode="755" uninstallMode="0" />
+      <fileEntry mountPoint="1845" file="${compiler:DIST_STANDALONE}/bin/toolrunner.sh" overwrite="4" shared="false" mode="755" uninstallMode="0" />
+      <fileEntry mountPoint="1845" file="${compiler:DIST_STANDALONE}/bin/testrunner.sh" overwrite="4" shared="false" mode="755" uninstallMode="0" />
+      <fileEntry mountPoint="1845" file="${compiler:DIST_STANDALONE}/bin/securitytestrunner.sh" overwrite="4" shared="false" mode="755" uninstallMode="0" />
+      <fileEntry mountPoint="1845" file="${compiler:DIST_STANDALONE}/bin/wargenerator.sh" overwrite="4" shared="false" mode="755" uninstallMode="0" />
       <fileEntry mountPoint="1660" file="${compiler:DIST_STANDALONE}/bin/soapui.bat" overwrite="4" shared="false" mode="644" uninstallMode="0" />
       <fileEntry mountPoint="1660" file="${compiler:DIST_STANDALONE}/bin/mockservicerunner.bat" overwrite="4" shared="false" mode="644" uninstallMode="0" />
       <fileEntry mountPoint="1660" file="${compiler:DIST_STANDALONE}/bin/loadtestrunner.bat" overwrite="4" shared="false" mode="644" uninstallMode="0" />
