@@ -2284,6 +2284,14 @@ return installTutorials;</condition>
         <variable name="OS_EXT" value="64bit" />
       </variables>
     </win32>
+    <unixArchive name="Unix Archive" id="4394" mediaFileName="" installDir="soapUI" overridePrincipalLanguage="false" requires64bit="false" jreBitType="all" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" includedJRE="" manualJREEntry="false">
+      <excludedLaunchers />
+      <excludedComponents />
+      <excludedBeans />
+      <overriddenPrincipalLanguage id="en" customLocalizationFile="" />
+      <exclude />
+      <variables />
+    </unixArchive>
   </mediaSets>
   <buildIds buildAll="false">
     <mediaSet refId="196" />
