@@ -2292,6 +2292,14 @@ return installTutorials;</condition>
       <exclude />
       <variables />
     </unixArchive>
+    <macosFolderArchive name="Mac OS X Folder Archive" id="4405" mediaFileName="" installDir="soapUI" overridePrincipalLanguage="false" requires64bit="false" jreBitType="all" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false">
+      <excludedLaunchers />
+      <excludedComponents />
+      <excludedBeans />
+      <overriddenPrincipalLanguage id="en" customLocalizationFile="" />
+      <exclude />
+      <variables />
+    </macosFolderArchive>
   </mediaSets>
   <buildIds buildAll="false">
     <mediaSet refId="196" />
