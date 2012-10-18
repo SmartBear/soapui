@@ -72,7 +72,7 @@ public class DefaultSoapUICore implements SoapUICore
 	private boolean logIsInitialized;
 	private String root;
 	protected SoapuiSettingsDocumentConfig settingsDocument;
-	private MockEngine mockEngine;
+	private volatile MockEngine mockEngine;
 	private XmlBeansSettingsImpl settings;
 	private SoapUIListenerRegistry listenerRegistry;
 	private SoapUIActionRegistry actionRegistry;
@@ -596,7 +596,15 @@ public class DefaultSoapUICore implements SoapUICore
 	public MockEngine getMockEngine()
 	{
 		if( mockEngine == null )
-			mockEngine = buildMockEngine();
+		{
+			synchronized( DefaultSoapUICore.class )
+			{
+				if( mockEngine == null )
+				{
+					mockEngine = buildMockEngine();
+				}
+			}
+		}
 
 		return mockEngine;
 	}
