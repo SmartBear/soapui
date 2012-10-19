@@ -2284,7 +2284,7 @@ return installTutorials;</condition>
         <variable name="OS_EXT" value="64bit" />
       </variables>
     </win32>
-    <unixArchive name="Unix Archive" id="4394" mediaFileName="soapUI-${compiler:VERSION_NUMBER}-linux-bin" installDir="soapUI" overridePrincipalLanguage="false" requires64bit="false" jreBitType="all" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" includedJRE="" manualJREEntry="false">
+    <unixArchive name="Unix Archive" id="4394" mediaFileName="soapUI-${compiler:VERSION_NUMBER}-linux-bin" installDir="SmartBear/soapUI-${compiler:VERSION_NUMBER}" overridePrincipalLanguage="false" requires64bit="false" jreBitType="all" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" includedJRE="" manualJREEntry="false">
       <excludedLaunchers />
       <excludedComponents />
       <excludedBeans />
@@ -2292,7 +2292,7 @@ return installTutorials;</condition>
       <exclude />
       <variables />
     </unixArchive>
-    <macosFolderArchive name="Mac OS X Folder Archive" id="4405" mediaFileName="soapUI-${compiler:VERSION_NUMBER}-mac-bin" installDir="soapUI" overridePrincipalLanguage="false" requires64bit="false" jreBitType="all" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false">
+    <macosFolderArchive name="Mac OS X Folder Archive" id="4405" mediaFileName="soapUI-${compiler:VERSION_NUMBER}-mac-bin" installDir="SmartBear/soapUI-${compiler:VERSION_NUMBER}" overridePrincipalLanguage="false" requires64bit="false" jreBitType="all" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false">
       <excludedLaunchers />
       <excludedComponents />
       <excludedBeans />
@@ -2300,7 +2300,7 @@ return installTutorials;</condition>
       <exclude />
       <variables />
     </macosFolderArchive>
-    <win32Archive name="Windows Archive" id="4409" mediaFileName="soapUI-${compiler:VERSION_NUMBER}-windows-bin" installDir="soapUI" overridePrincipalLanguage="false" requires64bit="false" jreBitType="32" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" includedJRE="" manualJREEntry="false">
+    <win32Archive name="Windows Archive" id="4409" mediaFileName="soapUI-${compiler:VERSION_NUMBER}-windows-bin" installDir="SmartBear/soapUI-${compiler:VERSION_NUMBER}" overridePrincipalLanguage="false" requires64bit="false" jreBitType="32" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" includedJRE="" manualJREEntry="false">
       <excludedLaunchers />
       <excludedComponents />
       <excludedBeans />
