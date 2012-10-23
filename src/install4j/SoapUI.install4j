@@ -35,6 +35,7 @@
       <fileset name="xulrunner-linux" id="2234" />
       <fileset name="Tutorials" id="2390" />
       <fileset name="loadUI-installer" id="2808" />
+      <fileset name="logs" id="4415" />
     </filesets>
     <roots>
       <root id="1842" fileset="1841" location="" />
@@ -51,17 +52,18 @@
       <root id="2391" fileset="2390" location="" />
       <root id="2809" fileset="2808" location="" />
       <root id="3778" fileset="2808" location="${installer:sys.userHome}" />
+      <root id="4416" fileset="4415" location="" />
     </roots>
     <mountPoints>
-      <mountPoint id="321" root="" location="bin" mode="777" />
+      <mountPoint id="321" root="" location="bin" mode="755" />
       <mountPoint id="318" root="" location="lib" mode="755" />
       <mountPoint id="399" root="" location="licences" mode="755" />
       <mountPoint id="2704" root="" location=".JxBrowser" mode="755" />
       <mountPoint id="63" root="" location="" mode="755" />
       <mountPoint id="1845" root="1842" location="bin" mode="777" />
-      <mountPoint id="1660" root="1659" location="bin" mode="777" />
-      <mountPoint id="1846" root="1844" location="bin" mode="777" />
-      <mountPoint id="1575" root="1574" location="bin" mode="777" />
+      <mountPoint id="1660" root="1659" location="bin" mode="755" />
+      <mountPoint id="1846" root="1844" location="bin" mode="755" />
+      <mountPoint id="1575" root="1574" location="bin" mode="755" />
       <mountPoint id="776" root="712" location="source" mode="755" />
       <mountPoint id="1334" root="1261" location="tempHermes" mode="755" />
       <mountPoint id="1955" root="1860" location="wsi-test-tools" mode="755" />
@@ -72,6 +74,7 @@
       <mountPoint id="2392" root="2391" location="soapUI-Tutorials" mode="755" />
       <mountPoint id="3662" root="2809" location="lib" mode="755" />
       <mountPoint id="3779" root="3778" location="tempLoadUI" mode="755" />
+      <mountPoint id="4418" root="4416" location="bin" mode="755" />
     </mountPoints>
     <entries>
       <dirEntry mountPoint="321" file="${compiler:DIST_ROOT}/bin" overwrite="4" shared="false" mode="644" uninstallMode="0" excludeSuffixes="*.bat,*.sh" dirMode="755">
@@ -169,6 +172,8 @@
       <fileEntry mountPoint="3779" file="${compiler:SRC_ROOT}/install4j/loadUI/loadUIInstall.bat" overwrite="4" shared="false" mode="644" uninstallMode="0" />
       <fileEntry mountPoint="3779" file="${compiler:SRC_ROOT}/install4j/loadUI/loadUIInstall.sh" overwrite="4" shared="false" mode="644" uninstallMode="0" />
       <fileEntry mountPoint="3779" file="${compiler:SRC_ROOT}/install4j/loadUI/loadUIInstall64bit.bat" overwrite="4" shared="false" mode="644" uninstallMode="0" />
+      <fileEntry mountPoint="4418" file="${compiler:DIST_ROOT}/soapui.log" overwrite="4" shared="false" mode="755" uninstallMode="0" />
+      <fileEntry mountPoint="4418" file="${compiler:DIST_ROOT}/soapui-error.log" overwrite="4" shared="false" mode="755" uninstallMode="0" />
     </entries>
     <components>
       <component name="SoapUI" id="132" displayDescription="false" selected="true" mandatory="true" downloadable="false">
