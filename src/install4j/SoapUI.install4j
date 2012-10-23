@@ -1383,7 +1383,7 @@ else return false;
                   </action>
                 </beans>
               </group>
-              <action name="remove tempLoadUI" id="3567" beanClass="com.install4j.runtime.beans.actions.files.DeleteFileAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+              <action name="remove tempLoadUI" id="3567" beanClass="com.install4j.runtime.beans.actions.files.DeleteFileAction" enabled="false" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
                 <serializedBean>
                   <java class="java.beans.XMLDecoder">
                     <object class="com.install4j.runtime.beans.actions.files.DeleteFileAction">
