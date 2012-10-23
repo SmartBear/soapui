@@ -172,8 +172,8 @@
       <fileEntry mountPoint="3779" file="${compiler:SRC_ROOT}/install4j/loadUI/loadUIInstall.bat" overwrite="4" shared="false" mode="644" uninstallMode="0" />
       <fileEntry mountPoint="3779" file="${compiler:SRC_ROOT}/install4j/loadUI/loadUIInstall.sh" overwrite="4" shared="false" mode="644" uninstallMode="0" />
       <fileEntry mountPoint="3779" file="${compiler:SRC_ROOT}/install4j/loadUI/loadUIInstall64bit.bat" overwrite="4" shared="false" mode="644" uninstallMode="0" />
-      <fileEntry mountPoint="4418" file="${compiler:DIST_ROOT}/soapui.log" overwrite="4" shared="false" mode="777" uninstallMode="0" />
-      <fileEntry mountPoint="4418" file="${compiler:DIST_ROOT}/soapui-error.log" overwrite="4" shared="false" mode="777" uninstallMode="0" />
+      <fileEntry mountPoint="4418" file="${compiler:DIST_ROOT}/bin/soapui.log" overwrite="4" shared="false" mode="666" uninstallMode="0" />
+      <fileEntry mountPoint="4418" file="${compiler:DIST_ROOT}/bin/soapui-error.log" overwrite="4" shared="false" mode="666" uninstallMode="0" />
     </entries>
     <components>
       <component name="SoapUI" id="132" displayDescription="false" selected="true" mandatory="true" downloadable="false">
@@ -1383,7 +1383,7 @@ else return false;
                   </action>
                 </beans>
               </group>
-              <action name="remove tempLoadUI" id="3567" beanClass="com.install4j.runtime.beans.actions.files.DeleteFileAction" enabled="false" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+              <action name="remove tempLoadUI" id="3567" beanClass="com.install4j.runtime.beans.actions.files.DeleteFileAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
                 <serializedBean>
                   <java class="java.beans.XMLDecoder">
                     <object class="com.install4j.runtime.beans.actions.files.DeleteFileAction">
@@ -1903,6 +1903,67 @@ return false;</condition>
                 <condition>boolean installTutorials = context.getBooleanVariable("installTutorials");
 return installTutorials;</condition>
               </action>
+              <group name="Set log files permissions" id="4579" beanClass="com.install4j.runtime.beans.groups.ActionGroup" enabled="true" commentSet="true" comment="ss">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.groups.ActionGroup" />
+                  </java>
+                </serializedBean>
+                <beans>
+                  <action name="soapui.log on Windows" id="4580" beanClass="com.install4j.runtime.beans.actions.files.AddWindowsFileRightsAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                    <serializedBean>
+                      <java class="java.beans.XMLDecoder">
+                        <object class="com.install4j.runtime.beans.actions.files.AddWindowsFileRightsAction">
+                          <void property="all">
+                            <boolean>false</boolean>
+                          </void>
+                          <void property="file">
+                            <object class="java.io.File">
+                              <string>${compiler:DIST_ROOT}/bin/soapui.log</string>
+                            </object>
+                          </void>
+                          <void property="group">
+                            <object class="com.install4j.runtime.beans.actions.files.WindowsGroup" field="WORLD" />
+                          </void>
+                          <void property="read">
+                            <boolean>true</boolean>
+                          </void>
+                          <void property="write">
+                            <boolean>true</boolean>
+                          </void>
+                        </object>
+                      </java>
+                    </serializedBean>
+                    <condition />
+                  </action>
+                  <action name="soapui-errors.log on Windows" id="4582" beanClass="com.install4j.runtime.beans.actions.files.AddWindowsFileRightsAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                    <serializedBean>
+                      <java class="java.beans.XMLDecoder">
+                        <object class="com.install4j.runtime.beans.actions.files.AddWindowsFileRightsAction">
+                          <void property="all">
+                            <boolean>false</boolean>
+                          </void>
+                          <void property="file">
+                            <object class="java.io.File">
+                              <string>${compiler:DIST_ROOT}/bin/soapui-errors.log</string>
+                            </object>
+                          </void>
+                          <void property="group">
+                            <object class="com.install4j.runtime.beans.actions.files.WindowsGroup" field="WORLD" />
+                          </void>
+                          <void property="read">
+                            <boolean>true</boolean>
+                          </void>
+                          <void property="write">
+                            <boolean>true</boolean>
+                          </void>
+                        </object>
+                      </java>
+                    </serializedBean>
+                    <condition />
+                  </action>
+                </beans>
+              </group>
             </actions>
             <formComponents />
           </screen>
