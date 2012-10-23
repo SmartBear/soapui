@@ -16,7 +16,7 @@
       <variable name="BRANDED_TITLE" value="" />
       <variable name="EXECUTABLE_NAME" value="soapUI-${compiler:VERSION_NUMBER}${compiler:BRANDED_TITLE}" />
       <variable name="LOADUI_INSTALLER_URL" value="http://dl.eviware.com/loadui/os/2.1.1" />
-      <variable name="LOADUI_VERSION_NUMBER" value="2-1-1" />
+      <variable name="LOADUI_VERSION_NUMBER" value="2.1.1" />
       <variable name="OS_EXT" value="" />
     </variables>
   </application>
