@@ -15,8 +15,8 @@
       <variable name="SOAPUI_HOME" value="${installer:sys.installationDir}" />
       <variable name="BRANDED_TITLE" value="" />
       <variable name="EXECUTABLE_NAME" value="soapUI-${compiler:VERSION_NUMBER}${compiler:BRANDED_TITLE}" />
-      <variable name="LOADUI_INSTALLER_URL" value="http://dl.eviware.com/loadui/os/2.1.1" />
       <variable name="LOADUI_VERSION_NUMBER" value="2.1.1" />
+      <variable name="LOADUI_INSTALLER_URL" value="http://dl.eviware.com/loadui/os/${compiler:LOADUI_VERSION_NUMBER}" />
       <variable name="OS_EXT" value="" />
     </variables>
   </application>
@@ -172,8 +172,8 @@
       <fileEntry mountPoint="3779" file="${compiler:SRC_ROOT}/install4j/loadUI/loadUIInstall.bat" overwrite="4" shared="false" mode="644" uninstallMode="0" />
       <fileEntry mountPoint="3779" file="${compiler:SRC_ROOT}/install4j/loadUI/loadUIInstall.sh" overwrite="4" shared="false" mode="644" uninstallMode="0" />
       <fileEntry mountPoint="3779" file="${compiler:SRC_ROOT}/install4j/loadUI/loadUIInstall64bit.bat" overwrite="4" shared="false" mode="644" uninstallMode="0" />
-      <fileEntry mountPoint="4418" file="${compiler:DIST_ROOT}/soapui.log" overwrite="4" shared="false" mode="755" uninstallMode="0" />
-      <fileEntry mountPoint="4418" file="${compiler:DIST_ROOT}/soapui-error.log" overwrite="4" shared="false" mode="755" uninstallMode="0" />
+      <fileEntry mountPoint="4418" file="${compiler:DIST_ROOT}/soapui.log" overwrite="4" shared="false" mode="777" uninstallMode="0" />
+      <fileEntry mountPoint="4418" file="${compiler:DIST_ROOT}/soapui-error.log" overwrite="4" shared="false" mode="777" uninstallMode="0" />
     </entries>
     <components>
       <component name="SoapUI" id="132" displayDescription="false" selected="true" mandatory="true" downloadable="false">
@@ -878,7 +878,7 @@ else return false;
                             </object>
                           </void>
                           <void property="replaceValue">
-                            <string>${compiler:LOADUI_INSTALLER_URL}loadUI-${compiler:LOADUI_VERSION_NUMBER}.exe</string>
+                            <string>${compiler:LOADUI_INSTALLER_URL}/loadUI-${compiler:LOADUI_VERSION_NUMBER}.exe</string>
                           </void>
                           <void property="searchValue">
                             <string>loadUI.download.url</string>
@@ -947,7 +947,7 @@ else return false;
                             </object>
                           </void>
                           <void property="replaceValue">
-                            <string>${compiler:LOADUI_INSTALLER_URL}loadUI-${compiler:LOADUI_VERSION_NUMBER}.exe</string>
+                            <string>${compiler:LOADUI_INSTALLER_URL}/loadUI-${compiler:LOADUI_VERSION_NUMBER}.exe</string>
                           </void>
                           <void property="searchValue">
                             <string>loadUI.download.url</string>
@@ -1016,7 +1016,7 @@ else return false;
                             </object>
                           </void>
                           <void property="replaceValue">
-                            <string>${compiler:LOADUI_INSTALLER_URL}loadUI-${compiler:LOADUI_VERSION_NUMBER}.sh</string>
+                            <string>${compiler:LOADUI_INSTALLER_URL}/loadUI-${compiler:LOADUI_VERSION_NUMBER}.sh</string>
                           </void>
                           <void property="searchValue">
                             <string>loadUI.download.url</string>
@@ -1102,7 +1102,7 @@ else return false;
                             </object>
                           </void>
                           <void property="replaceValue">
-                            <string>${compiler:LOADUI_INSTALLER_URL}loadUI-${compiler:LOADUI_VERSION_NUMBER}.dmg</string>
+                            <string>${compiler:LOADUI_INSTALLER_URL}/loadUI-${compiler:LOADUI_VERSION_NUMBER}.dmg</string>
                           </void>
                           <void property="searchValue">
                             <string>loadUI.download.url</string>
