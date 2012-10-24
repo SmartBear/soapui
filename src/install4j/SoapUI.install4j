@@ -1442,7 +1442,7 @@ else return "";</string>
                             </void>
                             <void property="target">
                               <object class="java.io.File">
-                                <string>${installer:sys.installationDir}/soapUI-${compiler:VERSION_NUMBER}-JavaDoc.url</string>
+                                <string>${installer:sys.installationDir}/JavaDoc.url</string>
                               </object>
                             </void>
                           </object>
@@ -1454,7 +1454,7 @@ else return "";</string>
                             </void>
                             <void property="target">
                               <object class="java.io.File">
-                                <string>${installer:sys.installationDir}/soapUI-${compiler:VERSION_NUMBER}-UserGuide.url</string>
+                                <string>${installer:sys.installationDir}/UserGuide.url</string>
                               </object>
                             </void>
                           </object>
@@ -1466,7 +1466,7 @@ else return "";</string>
                             </void>
                             <void property="target">
                               <object class="java.io.File">
-                                <string>${installer:sys.installationDir}/soapUI-${compiler:VERSION_NUMBER}.url</string>
+                                <string>${installer:sys.installationDir}/soapUI.url</string>
                               </object>
                             </void>
                           </object>
