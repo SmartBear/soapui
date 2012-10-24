@@ -84,10 +84,28 @@
                 <artifactId>maven-checksum-plugin</artifactId>
                 <version>1.0</version>
                 <configuration>
+                    <!-- TODO parameterize this better-->
                     <files>
-                        <!-- FIXME parameterize this better-->
                         <file>
-                            ${project.build.directory}/${project.artifactId}-${project.version}-linux-bin.tar.gz
+                            ${project.build.directory}/install4j/${project.artifactId}-${project.version}-linux-bin.tar.gz
+                        </file>
+                        <file>
+                            ${project.build.directory}/install4j/${project.artifactId}-${project.version}-mac-bin.tgz
+                        </file>
+                        <file>
+                            ${project.build.directory}/install4j/${project.artifactId}-${project.version}-windows-bin.zip
+                        </file>
+                        <file>
+                            ${project.build.directory}/install4j/${project.artifactId}-${project.version}.dmg
+                        </file>
+                        <file>
+                            ${project.build.directory}/install4j/${project.artifactId}-x32-${project.version}.exe
+                        </file>
+                        <file>
+                            ${project.build.directory}/install4j/${project.artifactId}-x32-${project.version}.sh
+                        </file>
+                        <file>
+                            ${project.build.directory}/install4j/${project.artifactId}-x64-${project.version}.exe
                         </file>
                     </files>
                 </configuration>
