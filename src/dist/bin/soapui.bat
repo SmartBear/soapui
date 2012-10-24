@@ -15,8 +15,7 @@ echo Set JAVA_HOME to the directory of your local JDK to avoid this message.
 
 rem init classpath
 
-:FIXME Get from Maven properties
-set CLASSPATH=%SOAPUI_HOME%\bin\soapui-5.0.0-SNAPSHOT.jar;%SOAPUI_HOME%\lib\*;
+set CLASSPATH=%SOAPUI_HOME%\bin\${project.artifactId}-${project.version}.jar;%SOAPUI_HOME%\lib\*;
 
 rem JVM parameters, modify as appropriate
 
@@ -35,4 +34,3 @@ rem    set JAVA_OPTS=%JAVA_OPTS% -Dsoapui.jxbrowser.disable="true"
 rem ********* run soapui ***********
 
 "%JAVA%" %JAVA_OPTS% -cp "%CLASSPATH%" com.eviware.soapui.SoapUI %*
-
