@@ -31,6 +31,8 @@ public class WsdlRequestTestCaseIT extends JettyTestCaseBase
 	public void testRequest() throws Exception
 	{
 		replaceInFile("test1/TestService.wsdl","8082","" + getPort());
+		replaceInFile("test1/TestService.wsdl","www.eviware.com","localhost:" + getPort());
+
 		// create new project
 		WsdlProject project = new WsdlProject();
 

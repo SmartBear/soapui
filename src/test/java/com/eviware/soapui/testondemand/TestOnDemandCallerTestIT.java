@@ -53,11 +53,6 @@ public class TestOnDemandCallerTestIT
 
 	public final static Logger log = Logger.getLogger( TestOnDemandCallerTestIT.class );
 
-	public static junit.framework.Test suite()
-	{
-		return new JUnit4TestAdapter( TestOnDemandCallerTestIT.class );
-	}
-
 	@Before
 	public void setUp() throws Exception
 	{
