@@ -15,6 +15,8 @@ package com.eviware.soapui.impl.wsdl;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+
+import com.eviware.soapui.support.JettyTestCaseBase;
 import junit.framework.JUnit4TestAdapter;
 
 import org.junit.Test;
@@ -23,18 +25,15 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlImporter;
 import com.eviware.soapui.support.TestCaseWithJetty;
 
-public class WsdlProjectTestCaseIT extends TestCaseWithJetty
+public class WsdlProjectTestCaseIT extends JettyTestCaseBase
 {
-	public static junit.framework.Test suite()
-	{
-		return new JUnit4TestAdapter( WsdlProjectTestCaseIT.class );
-	}
 
 	@Test
 	public void testComplexLoad() throws Exception
 	{
+		replaceInFile("test8/TestService.wsdl","8082","" + getPort());
 		WsdlProject project = new WsdlProject();
-		WsdlInterface[] wsdls = WsdlImporter.importWsdl( project, "http://localhost:8082/test8/TestService.wsdl" );
+		WsdlInterface[] wsdls = WsdlImporter.importWsdl( project, "http://localhost:" + getPort() + "/test8/TestService.wsdl" );
 
 		assertEquals( 1, wsdls.length );
 	}

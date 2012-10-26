@@ -13,6 +13,8 @@
 package com.eviware.soapui.impl.wsdl;
 
 import static org.junit.Assert.assertNotNull;
+
+import com.eviware.soapui.support.JettyTestCaseBase;
 import junit.framework.JUnit4TestAdapter;
 
 import org.junit.Test;
@@ -22,21 +24,18 @@ import com.eviware.soapui.model.iface.Response;
 import com.eviware.soapui.support.TestCaseWithJetty;
 
 // TODO Move this integration test to the it folder.
-public class WsdlRequestTestCaseIT extends TestCaseWithJetty
+public class WsdlRequestTestCaseIT extends JettyTestCaseBase
 {
-	public static junit.framework.Test suite()
-	{
-		return new JUnit4TestAdapter( WsdlRequestTestCaseIT.class );
-	}
 
 	@Test
 	public void testRequest() throws Exception
 	{
+		replaceInFile("test1/TestService.wsdl","8082","" + getPort());
 		// create new project
 		WsdlProject project = new WsdlProject();
 
 		// import amazon wsdl
-		WsdlInterface iface = WsdlInterfaceFactory.importWsdl( project, "http://127.0.0.1:8082/test1/TestService.wsdl",
+		WsdlInterface iface = WsdlInterfaceFactory.importWsdl( project, "http://localhost:" + getPort() + "/test1/TestService.wsdl",
 true )[0];
 
 		// get "Help" operation
