@@ -209,25 +209,24 @@
             </plugin>
 
             <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-surefire-plugin</artifactId>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
             <version>2.12.1</version>
-
         </plugin>
 
-        </plugins>
-
-    </build>
-
-    <reporting>
-        <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-changelog-plugin</artifactId>
-                <version>2.2</version>
+                <groupId>com.github.danielflower.mavenplugins</groupId>
+                <artifactId>maven-gitlog-plugin</artifactId>
+                <version>1.4.11</version>
+                <configuration>
+                    <reportTitle>soapUI ${project.version} | https://github.com/SmartBear/soapui/tree/maintenance</reportTitle>
+                    <generatePlainTextChangeLog>false</generatePlainTextChangeLog>
+                    <generateHTMLTableOnlyChangeLog>false</generateHTMLTableOnlyChangeLog>
+                    <generateSimpleHTMLChangeLog>true</generateSimpleHTMLChangeLog>
+                </configuration>
             </plugin>
         </plugins>
-    </reporting>
+    </build>
 
     <dependencies>
 
