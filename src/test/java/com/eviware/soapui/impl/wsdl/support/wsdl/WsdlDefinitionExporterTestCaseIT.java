@@ -17,10 +17,16 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 
+import com.eviware.soapui.support.JettyTestCaseBase;
+import com.google.common.io.Files;
 import junit.framework.JUnit4TestAdapter;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.xmlbeans.XmlException;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import com.eviware.soapui.impl.support.definition.export.WsdlDefinitionExporter;
@@ -30,25 +36,30 @@ import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.TestCaseWithJetty;
 
 // TODO Integartion test. Move to it folder.
-public class WsdlDefinitionExporterTestCaseIT extends TestCaseWithJetty
+public class WsdlDefinitionExporterTestCaseIT extends JettyTestCaseBase
 {
-	public static junit.framework.Test suite()
+	private static String createTempResourcePath()
 	{
-		return new JUnit4TestAdapter( WsdlDefinitionExporterTestCaseIT.class );
+		return "." + File.separator + "src" + File.separator + "test" + File.separator + "resources";
 	}
+
+	private final File tempResourceDir = Files.createTempDir();
 
 	@Test
 	public void shouldSaveDefinition() throws Exception
 	{
-		testLoader( "http://localhost:8082/test1/TestService.wsdl" );
-		testLoader( "http://localhost:8082/test2/TestService.wsdl" );
-		testLoader( "http://localhost:8082/test3/TestService.wsdl" );
-		testLoader( "http://localhost:8082/test4/TestService.wsdl" );
-		testLoader( "http://localhost:8082/test5/TestService.wsdl" );
-		testLoader( "http://localhost:8082/test6/TestService.wsdl" );
-		testLoader( "http://localhost:8082/test7/TestService.wsdl" );
-		testLoader( "http://localhost:8082/test8/TestService.wsdl" );
-		testLoader( "http://localhost:8082/testonewayop/TestService.wsdl" );
+		replaceInFile("test7/TestService.wsdl","8082","" + getPort());
+		replaceInFile("test8/TestService.wsdl","8082","" + getPort());
+
+		testLoader( "http://localhost:" + getPort() + "/test1/TestService.wsdl" );
+		testLoader( "http://localhost:" + getPort() + "/test2/TestService.wsdl" );
+		testLoader( "http://localhost:" + getPort() + "/test3/TestService.wsdl" );
+		testLoader( "http://localhost:" + getPort() + "/test4/TestService.wsdl" );
+		testLoader( "http://localhost:" + getPort() + "/test5/TestService.wsdl" );
+		testLoader( "http://localhost:" + getPort() + "/test6/TestService.wsdl" );
+		testLoader( "http://localhost:" + getPort() + "/test7/TestService.wsdl" );
+		testLoader( "http://localhost:" + getPort() + "/test8/TestService.wsdl" );
+		testLoader( "http://localhost:" + getPort() + "/testonewayop/TestService.wsdl" );
 	}
 
 	private void testLoader( String wsdlUrl ) throws XmlException, IOException, Exception

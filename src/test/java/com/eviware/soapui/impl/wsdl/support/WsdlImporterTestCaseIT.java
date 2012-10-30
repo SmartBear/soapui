@@ -20,6 +20,7 @@ import static org.junit.Assert.assertTrue;
 import javax.wsdl.BindingOperation;
 import javax.wsdl.Definition;
 
+import com.eviware.soapui.support.JettyTestCaseBase;
 import junit.framework.JUnit4TestAdapter;
 
 import org.junit.Test;
@@ -35,18 +36,16 @@ import com.eviware.soapui.model.iface.Submit;
 import com.eviware.soapui.support.TestCaseWithJetty;
 
 // TODO Integration test. Move to it folder.
-public class WsdlImporterTestCaseIT extends TestCaseWithJetty
+public class WsdlImporterTestCaseIT extends JettyTestCaseBase
 {
-	public static junit.framework.Test suite()
-	{
-		return new JUnit4TestAdapter( WsdlImporterTestCaseIT.class );
-	}
 
 	@Test
 	public void testOneWayOperationImport() throws Exception
 	{
+		replaceInFile("testonewayop/TestService.wsdl","8082","" + getPort());
+
 		WsdlProject project = new WsdlProject();
-		WsdlInterface[] wsdls = WsdlImporter.importWsdl( project, "http://localhost:8082/testonewayop/TestService.wsdl" );
+		WsdlInterface[] wsdls = WsdlImporter.importWsdl( project, "http://localhost:" + getPort() + "/testonewayop/TestService.wsdl" );
 
 		assertEquals( 1, wsdls.length );
 
@@ -60,7 +59,7 @@ public class WsdlImporterTestCaseIT extends TestCaseWithJetty
 		assertNotNull( operation );
 		assertEquals( "GetDefaultPageData", operation.getName() );
 
-		Definition definition = WsdlUtils.readDefinition( "http://localhost:8082/testonewayop/TestService.wsdl" );
+		Definition definition = WsdlUtils.readDefinition( "http://localhost:" + getPort() + "/testonewayop/TestService.wsdl" );
 
 		BindingOperation bindingOperation = operation.findBindingOperation( definition );
 		assertNotNull( bindingOperation );
