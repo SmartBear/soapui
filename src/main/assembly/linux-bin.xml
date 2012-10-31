@@ -57,6 +57,9 @@ bundled or none -->
         <fileSet>
             <directory>${maven.wsi.root}</directory>
             <outputDirectory>wsi-test-tools</outputDirectory>
+            <excludes>
+                <exclude>**/*.bat</exclude>
+            </excludes>
         </fileSet>
     </fileSets>
 </assembly>
