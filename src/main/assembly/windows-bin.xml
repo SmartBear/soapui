@@ -54,6 +54,22 @@ bundled or none -->
             <lineEnding>windows</lineEnding>
             <fileMode>0766</fileMode>
         </fileSet>
+        <!-- TODO Ugly hack to create the empty listeners and actions directories -->
+        <fileSet>
+            <!-- This must be a directory without sub directories -->
+            <directory>src/dist/bin/ext</directory>
+            <outputDirectory>bin/actions</outputDirectory>
+            <excludes>
+                <exclude>*</exclude>
+            </excludes>
+        </fileSet>
+        <fileSet>
+            <directory>src/dist/bin/ext</directory>
+            <outputDirectory>bin/listeners</outputDirectory>
+            <excludes>
+                <exclude>*</exclude>
+            </excludes>
+        </fileSet>
         <fileSet>
             <directory>${maven.wsi.root}</directory>
             <outputDirectory>wsi-test-tools</outputDirectory>
