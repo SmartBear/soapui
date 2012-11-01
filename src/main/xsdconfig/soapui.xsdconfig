@@ -4,9 +4,6 @@
 	<xb:namespace uri="http://eviware.com/soapui/config">
 	  <xb:suffix>Config</xb:suffix>
 	</xb:namespace>
-	<xb:namespace uri="http://eviware.com/soapui/coverage">
-	  <xb:suffix>Config</xb:suffix>
-	</xb:namespace>
 	<xb:namespace uri="http://www.eviware.com/soapui/InferredSchema">
 	  <xb:suffix>Config</xb:suffix>
 	</xb:namespace>
