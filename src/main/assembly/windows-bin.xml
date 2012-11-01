@@ -15,6 +15,11 @@ bundled or none -->
             <outputDirectory>lib</outputDirectory>
             <useProjectArtifact>false</useProjectArtifact>
             <scope>runtime</scope>
+            <excludes>
+                <exclude>teamdev:xulrunner-mac</exclude>
+                <exclude>teamdev:xulrunner-linux</exclude>
+                <exclude>teamdev:xulrunner-linux64</exclude>
+            </excludes>
         </dependencySet>
     </dependencySets>
     <fileSets>
