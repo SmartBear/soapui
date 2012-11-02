@@ -14,12 +14,13 @@
       </dependencySets>
     <fileSets>
         <fileSet>
-            <directory>${maven.wsi.root}</directory>
-            <outputDirectory>wsi-test-tools</outputDirectory>
-        </fileSet>
-        <fileSet>
             <directory>${basedir}/src/dist</directory>
             <outputDirectory>/</outputDirectory>
+            <excludes>
+                <exclude>**/bin/*.bat</exclude>
+                <exclude>**/bin/*.sh</exclude>
+                <exclude>**/bin/*.log</exclude>
+            </excludes>
         </fileSet>
         <fileSet>
             <directory>${project.build.directory}</directory>
@@ -28,7 +29,30 @@
                 <include>*.jar</include>
             </includes>
         </fileSet>
-        <!-- TODO Ugly hack to create the empty listeners and actions directories -->
+        <fileSet>
+            <directory>${basedir}/src/dist/bin</directory>
+            <outputDirectory>bin</outputDirectory>
+            <includes>
+                <include>*.sh</include>
+                <include>*.bat</include>
+            </includes>
+            <fileMode>0755</fileMode>
+            <filtered>true</filtered>
+        </fileSet>
+        <fileSet>
+            <directory>${basedir}/src/dist/bin</directory>
+            <outputDirectory>bin</outputDirectory>
+            <includes>
+                <include>*.log</include>
+            </includes>
+            <fileMode>0766</fileMode>
+        </fileSet>
+        <fileSet>
+            <directory>${maven.wsi.root}</directory>
+            <outputDirectory>wsi-test-tools</outputDirectory>
+        </fileSet>
+
+          <!-- TODO Ugly hack to create the empty listeners and actions directories -->
         <fileSet>
             <!-- This must be a directory without sub directories -->
             <directory>src/dist/bin/ext</directory>
@@ -45,78 +69,4 @@
             </excludes>
         </fileSet>
     </fileSets>
-
-    <!-- Filtred shell scripts -->
-    <files>
-        <file>
-            <source>${basedir}/src/dist/bin/soapui.sh</source>
-            <outputDirectory>bin/</outputDirectory>
-            <filtered>true</filtered>
-        </file>
-        <file>
-            <source>${basedir}/src/dist/bin/soapui.bat</source>
-            <outputDirectory>bin/</outputDirectory>
-            <filtered>true</filtered>
-        </file>
-        <file>
-            <source>${basedir}/src/dist/bin/loadtestrunner.sh</source>
-            <outputDirectory>bin/</outputDirectory>
-            <filtered>true</filtered>
-        </file>
-        <file>
-            <source>${basedir}/src/dist/bin/loadtestrunner.bat</source>
-            <outputDirectory>bin/</outputDirectory>
-            <filtered>true</filtered>
-        </file>
-        <file>
-            <source>${basedir}/src/dist/bin/mockservicerunner.sh</source>
-            <outputDirectory>bin/</outputDirectory>
-            <filtered>true</filtered>
-        </file>
-        <file>
-            <source>${basedir}/src/dist/bin/mockservicerunner.bat</source>
-            <outputDirectory>bin/</outputDirectory>
-            <filtered>true</filtered>
-        </file>
-        <file>
-            <source>${basedir}/src/dist/bin/securitytestrunner.sh</source>
-            <outputDirectory>bin/</outputDirectory>
-            <filtered>true</filtered>
-        </file>
-        <file>
-            <source>${basedir}/src/dist/bin/securitytestrunner.bat</source>
-            <outputDirectory>bin/</outputDirectory>
-            <filtered>true</filtered>
-        </file>
-        <file>
-            <source>${basedir}/src/dist/bin/testrunner.sh</source>
-            <outputDirectory>bin/</outputDirectory>
-            <filtered>true</filtered>
-        </file>
-        <file>
-            <source>${basedir}/src/dist/bin/testrunner.bat</source>
-            <outputDirectory>bin/</outputDirectory>
-            <filtered>true</filtered>
-        </file>
-        <file>
-            <source>${basedir}/src/dist/bin/toolrunner.sh</source>
-            <outputDirectory>bin/</outputDirectory>
-            <filtered>true</filtered>
-        </file>
-        <file>
-            <source>${basedir}/src/dist/bin/toolrunner.bat</source>
-            <outputDirectory>bin/</outputDirectory>
-            <filtered>true</filtered>
-        </file>
-        <file>
-            <source>${basedir}/src/dist/bin/wargenerator.sh</source>
-            <outputDirectory>bin/</outputDirectory>
-            <filtered>true</filtered>
-        </file>
-        <file>
-            <source>${basedir}/src/dist/bin/wargenerator.bat</source>
-            <outputDirectory>bin/</outputDirectory>
-            <filtered>true</filtered>
-        </file>
-    </files>
 </assembly>
