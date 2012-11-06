@@ -58,6 +58,14 @@ bundled or none -->
             <lineEnding>unix</lineEnding>
             <fileMode>0766</fileMode>
         </fileSet>
+        <fileSet>
+            <directory>${maven.wsi.root}</directory>
+            <outputDirectory>wsi-test-tools</outputDirectory>
+            <excludes>
+                <exclude>**/*.bat</exclude>
+            </excludes>
+        </fileSet>
+
         <!-- TODO Ugly hack to create the empty listeners and actions directories -->
         <fileSet>
             <!-- This must be a directory without sub directories -->
@@ -72,13 +80,6 @@ bundled or none -->
             <outputDirectory>bin/listeners</outputDirectory>
             <excludes>
                 <exclude>*</exclude>
-            </excludes>
-        </fileSet>
-        <fileSet>
-            <directory>${maven.wsi.root}</directory>
-            <outputDirectory>wsi-test-tools</outputDirectory>
-            <excludes>
-                <exclude>**/*.bat</exclude>
             </excludes>
         </fileSet>
     </fileSets>
