@@ -20,7 +20,7 @@ set JAVA=java
 
 rem init classpath
 
-@SOAPUICLASSPATHCOMPACT@
+set CLASSPATH=%SOAPUI_HOME%\bin\${project.artifactId}-${project.version}.jar;%SOAPUI_HOME%\lib\*;
 
 rem JVM parameters, modify as appropriate
 set JAVA_OPTS=-Xms128m -Xmx1024m -Dsoapui.properties=soapui.properties "-Dsoapui.home=%SOAPUI_HOME%\"

@@ -21,8 +21,7 @@ set JAVA=java
 
 rem init classpath
 
-:FIXME Get from Maven properties
-set CLASSPATH=%SOAPUI_HOME%\bin\soapui-5.0.0-SNAPSHOT.jar;%SOAPUI_HOME%\lib\*;
+set CLASSPATH=%SOAPUI_HOME%\bin\${project.artifactId}-${project.version}.jar;%SOAPUI_HOME%\lib\*;
 
 rem JVM parameters, modify as appropriate
 set JAVA_OPTS=-Xms128m -Xmx1024m -Dsoapui.properties=soapui.properties "-Dsoapui.home=%SOAPUI_HOME%\"
