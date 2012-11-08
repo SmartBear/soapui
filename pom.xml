@@ -1,8 +1,6 @@
 <?xml version="1.0"?>
-<!-- TODO Make the XML beans inherite soapUI version number (sub project?) -->
 <!-- TODO Go through the list of dependencies and remove unused -->
 <!-- TODO Check if there is some artifacts witht he wrong group and artifacts id that is in maven central and could be removed from eviware public repo -->
-<!-- TODO Check wsi-test-tools?? -->
 <!-- TODO Check the xorg.apache jar -->
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -39,10 +37,29 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <!-- Custom properties -->
+        <project.name.full>${project.artifactId}-${project.version}</project.name.full>
+        <assembly.build.directory>${project.build.directory}/assemblies</assembly.build.directory>
+        <installer.build.directory>${project.build.directory}/install4j</installer.build.directory>
     </properties>
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.4</version>
+                <inherited>true</inherited>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
 
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -80,46 +97,42 @@
             </plugin>
 
             <plugin>
-                <groupId>net.ju-n.maven.plugins</groupId>
-                <artifactId>maven-checksum-plugin</artifactId>
-                <version>1.0</version>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.12.1</version>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>2.12.1</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
                 <configuration>
-                    <!-- TODO parameterize this better-->
-                    <files>
-                        <file>
-                            ${project.build.directory}/install4j/${project.artifactId}-${project.version}-linux-bin.tar.gz
-                        </file>
-                        <file>
-                            ${project.build.directory}/install4j/${project.artifactId}-${project.version}-mac-bin.tgz
-                        </file>
-                        <file>
-                            ${project.build.directory}/install4j/${project.artifactId}-${project.version}-windows-bin.zip
-                        </file>
-                        <file>
-                            ${project.build.directory}/install4j/${project.artifactId}-${project.version}.dmg
-                        </file>
-                        <file>
-                            ${project.build.directory}/install4j/${project.artifactId}-x32-${project.version}.exe
-                        </file>
-                        <file>
-                            ${project.build.directory}/install4j/${project.artifactId}-x32-${project.version}.sh
-                        </file>
-                        <file>
-                            ${project.build.directory}/install4j/${project.artifactId}-x64-${project.version}.exe
-                        </file>
-                    </files>
+                    <!-- FIXME Ignoring integration test failures for now -->
+                    <testFailureIgnore>true</testFailureIgnore>
                 </configuration>
             </plugin>
 
             <plugin>
-            <artifactId>maven-assembly-plugin</artifactId>
-            <version>2.3</version>
-            <configuration>
-                <descriptors>
-                    <descriptor>src/main/assembly/dist.xml</descriptor>
-                    <descriptor>src/main/assembly/dist-standalone.xml</descriptor>
-                </descriptors>
-            </configuration>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.3</version>
+                <configuration>
+                    <outputDirectory>${assembly.build.directory}</outputDirectory>
+                    <descriptors>
+                        <descriptor>src/main/assembly/dist.xml</descriptor>
+                        <descriptor>src/main/assembly/dist-standalone.xml</descriptor>
+                        <descriptor>src/main/assembly/windows-bin.xml</descriptor>
+                        <descriptor>src/main/assembly/linux-bin.xml</descriptor>
+                        <descriptor>src/main/assembly/mac-bin.xml</descriptor>
+                    </descriptors>
+                </configuration>
             </plugin>
 
             <plugin>
@@ -132,6 +145,7 @@
                     <attach>true</attach>
                     <skipOnMissingExecutable>true</skipOnMissingExecutable>
                     <!-- FIXME  Move this to src/main/install4j -->
+                    <!-- FIXME Decide what goes here and what goes in he *.install4j and what goes in Jenkins -->
                     <configFile>${project.basedir}/src/install4j/SoapUI.install4j</configFile>
                     <compilerVariables>
                         <property>
@@ -142,17 +156,18 @@
                             <name>SRC_ROOT</name>
                             <value>${basedir}/src</value>
                         </property>
-                        <!-- FIXME Paramatize -->
                         <property>
                             <name>DIST_ROOT</name>
-                            <value>${project.build.directory}/soapui-4.5.2-SNAPSHOT-dist/soapui-4.5.2-SNAPSHOT</value>
+                            <value>
+                                ${assembly.build.directory}/${project.name.full}-dist
+                            </value>
                         </property>
-                        <!-- FIXME Paramatize -->
                         <property>
                             <name>DIST_STANDALONE</name>
-                            <value>${project.build.directory}/soapui-4.5.2-SNAPSHOT-dist-standalone/soapui-4.5.2-SNAPSHOT</value>
+                            <value>
+                                ${assembly.build.directory}/${project.name.full}-dist-standalone
+                            </value>
                         </property>
-                        <!-- FIXME Paramatize ? -->
                         <property>
                             <name>RESOURCES_HOME</name>
                             <value>${basedir}/src/install4j/resources</value>
@@ -181,7 +196,6 @@
                             <name>WIN_DLLS_PATH</name>
                             <value>${maven.install4j.cert}</value>
                         </property>
-                        <!-- FIXME This should not be hard coded -->
                         <property>
                             <name>LOADUI_DOWNLOADER</name>
                             <value>${maven.loadUI.downloader}</value>
@@ -191,40 +205,52 @@
             </plugin>
 
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <version>2.12.1</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>integration-test</goal>
-                            <goal>verify</goal>
-                        </goals>
-                    </execution>
-                </executions>
+                <groupId>net.ju-n.maven.plugins</groupId>
+                <artifactId>maven-checksum-plugin</artifactId>
+                <version>1.0</version>
                 <configuration>
-                    <!-- FIXME Ignoring integration test failures for now -->
-                    <testFailureIgnore>true</testFailureIgnore>
+                    <!-- TODO parameterize this better-->
+                    <files>
+                        <!-- Archives -->
+                        <file>
+                            ${assembly.build.directory}/${project.name.full}-windows-bin.zip
+                        </file>
+                        <file>
+                            ${assembly.build.directory}/${project.name.full}-linux-bin.tar.gz
+                        </file>
+                        <file>
+                            ${assembly.build.directory}/${project.name.full}-mac-bin.zip
+                        </file>
+                        <!-- Installers -->
+                        <file>
+                            ${installer.build.directory}/soapUI-x32-${project.version}.exe
+                        </file>
+                        <file>
+                            ${installer.build.directory}/soapUI-x64-${project.version}.exe
+                        </file>
+                        <file>
+                            ${installer.build.directory}/soapUI-x32-${project.version}.sh
+                        </file>
+                        <file>
+                            ${installer.build.directory}/soapUI-${project.version}.dmg
+                        </file>
+                    </files>
                 </configuration>
             </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-            <version>2.12.1</version>
-        </plugin>
 
             <plugin>
                 <groupId>com.github.danielflower.mavenplugins</groupId>
                 <artifactId>maven-gitlog-plugin</artifactId>
                 <version>1.4.11</version>
                 <configuration>
-                    <reportTitle>soapUI ${project.version} | https://github.com/SmartBear/soapui/tree/maintenance</reportTitle>
+                    <reportTitle>soapUI ${project.version} | https://github.com/SmartBear/soapui/tree/maintenance
+                    </reportTitle>
                     <generatePlainTextChangeLog>false</generatePlainTextChangeLog>
                     <generateHTMLTableOnlyChangeLog>false</generateHTMLTableOnlyChangeLog>
                     <generateSimpleHTMLChangeLog>true</generateSimpleHTMLChangeLog>
                 </configuration>
             </plugin>
+
         </plugins>
     </build>
 
@@ -525,7 +551,7 @@
             <groupId>xom</groupId>
             <artifactId>xom</artifactId>
             <version>1.1</version>
-             <exclusions>
+            <exclusions>
                 <exclusion>
                     <artifactId>xercesImpl</artifactId>
                     <groupId>xerces</groupId>
@@ -697,7 +723,7 @@
             <artifactId>xmlsec</artifactId>
             <version>1.4.5</version>
         </dependency>
-         <dependency>
+        <dependency>
             <groupId>org.apache.xerces</groupId>
             <artifactId>xml-apis</artifactId>
             <version>2.9.1</version>
@@ -730,7 +756,7 @@
         </dependency>
 
 
-         <!-- TODO Not sure if thease are needed -->
+        <!-- TODO Not sure if thease are needed -->
 
         <dependency>
             <groupId>commons-net</groupId>
