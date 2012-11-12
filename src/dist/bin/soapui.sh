@@ -11,9 +11,13 @@ DIRNAME=`dirname $0`
 
 # OS specific support (must be 'true' or 'false').
 cygwin=false;
+darwin=false;
 case "`uname`" in
     CYGWIN*)
         cygwin=true
+        ;;
+    Darwin*)
+        darwin=true
         ;;
 esac
 
@@ -30,6 +34,11 @@ SOAPUI_CLASSPATH=$SOAPUI_HOME/bin/${project.artifactId}-${project.version}.jar:$
 export SOAPUI_CLASSPATH
 
 JAVA_OPTS="-Xms128m -Xmx1024m -Dsoapui.properties=soapui.properties -Dsoapui.home=$SOAPUI_HOME"
+
+if $darwin
+then
+    JAVA_OPTS="$JAVA_OPTS -Dapple.awt.graphics.UseQuartz=true; -Dswing.crossplatformlaf=apple.laf.AquaLookAndFeel"
+fi
 
 if [ $SOAPUI_HOME != "" ] 
 then
