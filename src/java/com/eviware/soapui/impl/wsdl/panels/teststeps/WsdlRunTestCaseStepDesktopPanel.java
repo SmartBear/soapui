@@ -430,7 +430,7 @@ public class WsdlRunTestCaseStepDesktopPanel extends ModelItemDesktopPanel<WsdlR
 		@AField( name = "Copy LoadTest Properties", description = "Copies LoadTest related properties to target context", type = AFieldType.BOOLEAN )
 		public static final String COPY_LOADTEST_PROPERTIES = "Copy LoadTest Properties";
 
-		@AField( name = "Copy HTTP Session", description = "Copies LoadTest related properties to target context", type = AFieldType.BOOLEAN )
+		@AField( name = "Copy HTTP Session", description = "Copies HTTP Session to and from the target TestCase", type = AFieldType.BOOLEAN )
 		public static final String COPY_HTTP_SESSION = "Copy HTTP Session";
 
 		@AField( name = "Ignore Empty Properties", description = "Does not set empty TestCase property values", type = AFieldType.BOOLEAN )

@@ -225,7 +225,7 @@ public class WsdlRunTestCaseTestStep extends WsdlTestStep
 						properties.put( TestRunContext.RUN_COUNT, testRunContext.getProperty( TestRunContext.RUN_COUNT ) );
 					}
 
-					if( isCopyHttpSession() && properties.containsKey( TestRunContext.HTTP_STATE_PROPERTY ) )
+					if( isCopyHttpSession() && testRunContext.hasProperty( TestRunContext.HTTP_STATE_PROPERTY ) )
 					{
 						properties.put( TestRunContext.HTTP_STATE_PROPERTY,
 								testRunContext.getProperty( TestRunContext.HTTP_STATE_PROPERTY ) );
