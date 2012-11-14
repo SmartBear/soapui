@@ -42,9 +42,20 @@
         <project.name.full>${project.artifactId}-${project.version}</project.name.full>
         <assembly.build.directory>${project.build.directory}/assemblies</assembly.build.directory>
         <installer.build.directory>${project.build.directory}/install4j</installer.build.directory>
+        <build.date>${maven.build.timestamp}</build.date>
     </properties>
 
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>buildinfo.properties</include>
+                </includes>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -55,7 +66,6 @@
                     <archive>
                         <manifest>
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
                         </manifest>
                     </archive>
                 </configuration>
@@ -158,15 +168,11 @@
                         </property>
                         <property>
                             <name>DIST_ROOT</name>
-                            <value>
-                                ${assembly.build.directory}/${project.name.full}-dist
-                            </value>
+                            <value>${assembly.build.directory}/${project.name.full}-dist</value>
                         </property>
                         <property>
                             <name>DIST_STANDALONE</name>
-                            <value>
-                                ${assembly.build.directory}/${project.name.full}-dist-standalone
-                            </value>
+                            <value>${assembly.build.directory}/${project.name.full}-dist</value>
                         </property>
                         <property>
                             <name>RESOURCES_HOME</name>
@@ -250,7 +256,6 @@
                     <generateSimpleHTMLChangeLog>true</generateSimpleHTMLChangeLog>
                 </configuration>
             </plugin>
-
         </plugins>
     </build>
 

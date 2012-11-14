@@ -59,6 +59,7 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 
+import com.google.common.base.Objects;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.PosixParser;
@@ -171,12 +172,14 @@ public class SoapUI
 	public static final String DEFAULT_DESKTOP = "Default";
 	public static final String CURRENT_SOAPUI_WORKSPACE = SoapUI.class.getName() + "@workspace";
 	public final static Logger log = Logger.getLogger( SoapUI.class );
-	public final static String SOAPUI_VERSION = "4.5.2-SNAPSHOT";
+	public final static String SOAPUI_VERSION =
+            Objects.firstNonNull(System.getProperty(SoapUISystemProperties.VERSION),
+                Objects.firstNonNull(com.eviware.soapui.SoapUI.class.getPackage().getImplementationVersion(), "UNKNOWN VERSION"));
 	public static final String DEFAULT_WORKSPACE_FILE = "default-soapui-workspace.xml";
 	public static final String SOAPUI_SPLASH = "soapui-splash.png";
 	public static final String SOAPUI_TITLE = "/branded/branded.properties";
 	private static final int DEFAULT_DESKTOP_ACTIONS_COUNT = 3;
-	public static final String BUILDINFO_RESOURCE = "/com/eviware/soapui/resources/conf/buildinfo.txt";
+	public static final String BUILDINFO_PROPERTIES = "/buildinfo.properties";
 	public static final String PROXY_ENABLED_ICON = "/proxyEnabled.png";
 	public static final String PROXY_DISABLED_ICON = "/proxyDisabled.png";
 
@@ -1400,7 +1403,11 @@ public class SoapUI
 
 	private static class AboutAction extends AbstractAction
 	{
-		public AboutAction()
+        private static final String COPYRIGHT = "2004-2012 smartbear.com";
+        private static final String SOAPUI_WEBSITE = "http://www.soapui.org";
+        private static final String SMARTBEAR_WEBSITE = "http://www.smartbear.com";
+
+        public AboutAction()
 		{
 			super( "About soapUI" );
 			putValue( Action.SHORT_DESCRIPTION, "Shows information on soapUI" );
@@ -1418,24 +1425,27 @@ public class SoapUI
 				SoapUI.logError( e1 );
 			}
 
-			Properties props = new Properties();
-			try
-			{
-				props.load( SoapUI.class.getResourceAsStream( BUILDINFO_RESOURCE ) );
-			}
-			catch( Exception e1 )
-			{
-				SoapUI.logError( e1 );
-			}
+			Properties buildInfoProperties = new Properties();
+            try
+            {
+                buildInfoProperties.load(SoapUI.class.getResourceAsStream(BUILDINFO_PROPERTIES));
+            }
+            catch( Exception exception )
+            {
+                SoapUI.logError (exception, "Could not read build info properties");
+            }
+
+
 
 			UISupport.showExtendedInfo(
 					"About soapUI",
 					null,
 					"<html><body><p align=center> <font face=\"Verdana,Arial,Helvetica\"><strong><img src=\"" + splashURI
-							+ "\"><br>soapUI " + SOAPUI_VERSION + ", copyright (C) 2004-2012 smartbear.com<br>"
-							+ "<a href=\"http://www.soapui.org\">http://www.soapui.org</a> | "
-							+ "<a href=\"http://smartbear.com\">http://smartbear.com</a><br>" + "Build "
-							+ props.getProperty( "build.number" ) + ", Build Date " + props.getProperty( "build.date" )
+							+ "\"><br>soapUI " + SOAPUI_VERSION + "<br>"
+                            + "Copyright (C) " + COPYRIGHT + "<br>"
+							+ "<a href=\"" + SOAPUI_WEBSITE + "\">" + SOAPUI_WEBSITE + "</a> | "
+							    + "<a href=\"" + SMARTBEAR_WEBSITE + "\">" + SMARTBEAR_WEBSITE + "</a><br>"
+                            + "Build Date: " + Objects.firstNonNull(buildInfoProperties.getProperty( "build.date" ), "UNKNOWN BUILD DATE")
 							+ "</strong></font></p></body></html>",
 
 					new Dimension( 470, 375 ) );

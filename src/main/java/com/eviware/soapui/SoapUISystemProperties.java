@@ -26,4 +26,6 @@ public interface SoapUISystemProperties
 
 	public static final String SOAPUI_SSL_KEYSTORE_LOCATION = "soapui.ssl.keystore.location";
 	public static final String SOAPUI_SSL_KEYSTORE_PASSWORD = "soapui.ssl.keystore.password";
+
+    public static final String VERSION = "soapui.version";
 }
