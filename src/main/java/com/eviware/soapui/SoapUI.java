@@ -179,7 +179,6 @@ public class SoapUI
 	public static final String SOAPUI_SPLASH = "soapui-splash.png";
 	public static final String SOAPUI_TITLE = "/branded/branded.properties";
 	private static final int DEFAULT_DESKTOP_ACTIONS_COUNT = 3;
-	public static final String BUILDINFO_PROPERTIES = "/buildinfo.properties";
 	public static final String PROXY_ENABLED_ICON = "/proxyEnabled.png";
 	public static final String PROXY_DISABLED_ICON = "/proxyDisabled.png";
 
@@ -1406,6 +1405,7 @@ public class SoapUI
         private static final String COPYRIGHT = "2004-2012 smartbear.com";
         private static final String SOAPUI_WEBSITE = "http://www.soapui.org";
         private static final String SMARTBEAR_WEBSITE = "http://www.smartbear.com";
+        public static final String BUILDINFO_PROPERTIES = "/buildinfo.properties";
 
         public AboutAction()
 		{
