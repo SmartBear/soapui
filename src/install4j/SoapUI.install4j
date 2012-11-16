@@ -15,8 +15,7 @@
       <variable name="SOAPUI_HOME" value="${installer:sys.installationDir}" />
       <variable name="BRANDED_TITLE" value="" />
       <variable name="EXECUTABLE_NAME" value="soapUI-${compiler:VERSION_NUMBER}${compiler:BRANDED_TITLE}" />
-      <variable name="LOADUI_VERSION_NUMBER" value="2.1.1" />
-      <variable name="LOADUI_INSTALLER_URL" value="http://dl.eviware.com/loadui/os/${compiler:LOADUI_VERSION_NUMBER}" />
+      <variable name="LOADUI_INSTALLER_URL" value="${compiler:LOADUI_INSTALLER_URL_BASE}/${compiler:LOADUI_VERSION_NUMBER}" />
       <variable name="OS_EXT" value="" />
     </variables>
   </application>
@@ -1919,7 +1918,7 @@ return installTutorials;</condition>
                           </void>
                           <void property="file">
                             <object class="java.io.File">
-                              <string>${compiler:DIST_ROOT}/bin/soapui.log</string>
+                              <string>bin/soapui.log</string>
                             </object>
                           </void>
                           <void property="group">
@@ -1945,7 +1944,7 @@ return installTutorials;</condition>
                           </void>
                           <void property="file">
                             <object class="java.io.File">
-                              <string>${compiler:DIST_ROOT}/bin/soapui-errors.log</string>
+                              <string>bin/soapui-errors.log</string>
                             </object>
                           </void>
                           <void property="group">
