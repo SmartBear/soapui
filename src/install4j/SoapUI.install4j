@@ -1961,6 +1961,40 @@ return installTutorials;</condition>
                     </serializedBean>
                     <condition />
                   </action>
+                  <action name="soapui.log on Unix" id="4624" beanClass="com.install4j.runtime.beans.actions.files.SetModeAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                    <serializedBean>
+                      <java class="java.beans.XMLDecoder">
+                        <object class="com.install4j.runtime.beans.actions.files.SetModeAction">
+                          <void property="file">
+                            <object class="java.io.File">
+                              <string>bin/soapui.log</string>
+                            </object>
+                          </void>
+                          <void property="mode">
+                            <string>666</string>
+                          </void>
+                        </object>
+                      </java>
+                    </serializedBean>
+                    <condition />
+                  </action>
+                  <action name="soapui-errors.log on Unix" id="4625" beanClass="com.install4j.runtime.beans.actions.files.SetModeAction" enabled="true" commentSet="false" comment="" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                    <serializedBean>
+                      <java class="java.beans.XMLDecoder">
+                        <object class="com.install4j.runtime.beans.actions.files.SetModeAction">
+                          <void property="file">
+                            <object class="java.io.File">
+                              <string>bin/soapui-errors.log</string>
+                            </object>
+                          </void>
+                          <void property="mode">
+                            <string>666</string>
+                          </void>
+                        </object>
+                      </java>
+                    </serializedBean>
+                    <condition />
+                  </action>
                 </beans>
               </group>
             </actions>
@@ -2354,4 +2388,3 @@ return installTutorials;</condition>
     <mediaSet refId="196" />
   </buildIds>
 </install4j>
-
