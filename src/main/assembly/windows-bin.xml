@@ -57,7 +57,7 @@ bundled or none -->
                 <include>*.log</include>
             </includes>
             <lineEnding>windows</lineEnding>
-            <fileMode>0766</fileMode>
+            <fileMode>0666</fileMode>
         </fileSet>
         <fileSet>
             <directory>${maven.wsi.root}</directory>
