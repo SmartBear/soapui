@@ -172,7 +172,7 @@
       <fileEntry mountPoint="3779" file="${compiler:SRC_ROOT}/install4j/loadUI/loadUIInstall.sh" overwrite="4" shared="false" mode="644" uninstallMode="0" />
       <fileEntry mountPoint="3779" file="${compiler:SRC_ROOT}/install4j/loadUI/loadUIInstall64bit.bat" overwrite="4" shared="false" mode="644" uninstallMode="0" />
       <fileEntry mountPoint="4418" file="${compiler:DIST_ROOT}/bin/soapui.log" overwrite="4" shared="false" mode="666" uninstallMode="0" />
-      <fileEntry mountPoint="4418" file="${compiler:DIST_ROOT}/bin/soapui-error.log" overwrite="4" shared="false" mode="666" uninstallMode="0" />
+      <fileEntry mountPoint="4418" file="${compiler:DIST_ROOT}/bin/soapui-errors.log" overwrite="4" shared="false" mode="666" uninstallMode="0" />
     </entries>
     <components>
       <component name="SoapUI" id="132" displayDescription="false" selected="true" mandatory="true" downloadable="false">
