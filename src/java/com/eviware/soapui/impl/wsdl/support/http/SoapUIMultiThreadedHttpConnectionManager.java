@@ -356,7 +356,7 @@ public class SoapUIMultiThreadedHttpConnectionManager extends ThreadSafeClientCo
 		}
 	}
 
-	private class SoapUIBasicPooledConnAdapter extends BasicPooledConnAdapter
+	static class SoapUIBasicPooledConnAdapter extends BasicPooledConnAdapter
 	{
 
 		protected SoapUIBasicPooledConnAdapter( ThreadSafeClientConnManager tsccm, AbstractPoolEntry entry )
