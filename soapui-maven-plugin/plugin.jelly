@@ -1,0 +1,651 @@
+<?xml version="1.0"?>
+
+<project
+  xmlns:j="jelly:core"
+  xmlns:ant="jelly:ant" 
+  xmlns:define="jelly:define"
+  xmlns:u="jelly:util"
+  xmlns:soapui="soapui"
+  xmlns:maven="jelly:maven" 
+  xmlns:util="jelly:util" 
+  >
+
+  <define:taglib uri="soapui">
+    
+    <define:tag name="test">
+    
+    	<echo>Running soapui project ${maven.soapui.project} with endpoint [${maven.soapui.test.endpoint}]</echo>
+    	<ant:java fork="true" failonerror="true" classname="com.eviware.soapui.tools.SoapUITestCaseRunner">
+    	    <ant:arg value="${maven.soapui.project}"/>
+    	    
+    	    <j:set var="tmp" value="${maven.soapui.test.endpoint}"/>
+    	    <j:if test="${!empty(tmp)}">
+    	       <ant:arg value="-e${maven.soapui.test.endpoint}"/>
+   	    	</j:if>
+   	    	
+    	    <j:set var="tmp" value="${maven.soapui.test.testsuite}"/>
+    	    <j:if test="${!empty(tmp)}">
+    	       <ant:arg value="-s${maven.soapui.test.testsuite}"/>
+   	    	</j:if>
+
+    	    <j:set var="tmp" value="${maven.soapui.test.testcase}"/>
+    	    <j:if test="${!empty(tmp)}">
+    	       <ant:arg value="-c${maven.soapui.test.testcase}"/>
+   	    	</j:if>
+
+    	    <j:set var="tmp" value="${maven.soapui.test.username}"/>
+    	    <j:if test="${!empty(tmp)}">
+    	       <ant:arg value="-u${maven.soapui.test.username}"/>
+   	    	</j:if>
+
+    	    <j:set var="tmp" value="${maven.soapui.test.host}"/>
+    	    <j:if test="${!empty(tmp)}">
+    	       <ant:arg value="-h${maven.soapui.test.host}"/>
+   	    	</j:if>
+
+    	    <j:set var="tmp" value="${maven.soapui.test.password}"/>
+    	    <j:if test="${!empty(tmp)}">
+    	       <ant:arg value="-p${maven.soapui.test.password}"/>
+   	    	</j:if>
+   	    	
+   	    	<j:set var="tmp" value="${maven.soapui.test.wssPasswordType}"/>
+    	    <j:if test="${!empty(tmp)}">
+    	       <ant:arg value="-w${maven.soapui.test.wssPasswordType}"/>
+   	    	</j:if>
+
+    	    <j:set var="tmp" value="${maven.soapui.test.domain}"/>
+    	    <j:if test="${!empty(tmp)}">
+    	       <ant:arg value="-d${maven.soapui.test.domain}"/>
+   	    	</j:if>
+    	    
+    	    <j:set var="tmp" value="${maven.soapui.report}"/>
+    	    <j:if test="${tmp == 'yes'}">
+    	       <ant:arg value="-r"/>
+   	    	</j:if>
+   	    	
+    	    <j:set var="tmp" value="${maven.soapui.report.all}"/>
+    	    <j:if test="${tmp == 'yes'}">
+    	       <ant:arg value="-a"/>
+   	    	</j:if>
+
+   	    	<j:set var="tmp" value="${maven.soapui.report.folder}"/>
+    	    <j:if test="${!empty(tmp)}">
+    	       <ant:arg value="-f${maven.soapui.report.folder}"/>
+   	    	</j:if>
+   	    	
+   	    	<j:set var="tmp" value="${maven.soapui.report.junit}"/>
+    	    <j:if test="${tmp == 'yes'}">
+    	       <ant:arg value="-j"/>
+   	    	</j:if>
+   	    	
+   	    	<j:set var="tmp" value="${maven.soapui.settings}"/>
+    	    <j:if test="${!empty(tmp)}">
+    	       <ant:arg value="-t${tmp}"/>
+   	    	</j:if>
+   	    	
+   	    	<j:set var="tmp" value="${maven.soapui.settings.password}"/>
+    	    <j:if test="${!empty(tmp)}">
+    	       <ant:arg value="-v${tmp}"/>
+   	    	</j:if>
+   	    	
+   	    	<j:set var="tmp" value="${maven.soapui.project.password}"/>
+    	    <j:if test="${!empty(tmp)}">
+    	       <ant:arg value="-x${tmp}"/>
+   	    	</j:if>
+   	    	
+   	    	<j:set var="tmp" value="${maven.soapui.test.FailIgnore}"/>
+    	    <j:if test="${!empty(tmp)}">
+    	       <ant:arg value="-I"/>
+   	    	</j:if>
+   	    	
+   	    	<j:set var="tmp" value="${maven.soapui.test.save}"/>
+    	    <j:if test="${!empty(tmp)}">
+    	       <ant:arg value="-S"/>
+   	    	</j:if>
+   	    	
+   	    	<j:set var="tmp" value="${maven.soapui.test.wssPasswordType}"/>
+    	    <j:if test="${!empty(tmp)}">
+    	       <ant:arg value="-w"/>
+   	    	</j:if>
+   	    	
+   	    	<ant:classpath>
+	       		<ant:pathelement location="${plugin.getDependencyPath('eviware:soapui')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('activation:activation')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('javamail:javamail')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('wsdl4j:wsdl4j')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('log4j:log4j')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('commons-logging:commons-logging')}"/>
+   	    		<ant:pathelement location="${plugin.getDependencyPath('commons-collections:commons-collections')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('commons-lang:commons-lang')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('commons-io:commons-io')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('commons-ssl:not-yet-commons-ssl')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('commons-cli:commons-cli')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('commons-beanutils:commons-beanutils')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('org.apache.httpcomponents:httpclient')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('org.apache.httpcomponents:httpmime')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('org.apache.httpcomponents:httpclient-cache')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('org.apache.httpcomponents:httpcore')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('org.apache.httpcomponents:httpcore-nio')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('org.samba.jcifs:jcifs')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('json:json-lib')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('ezmorph:ezmorph')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('xom:xom')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('swingx:swingx')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('commons-codec:commons-codec')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('groovy:groovy-all')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('rhino:js')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('jetty:jetty')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('jetty:jetty-util')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('jetty:servlet-api')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('net-components:net-components')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('xmlbeans:xbean')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('xmlbeans:xbean_xpath')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('xmlbeans:xmlpublic')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('xmlbeans:jsr173_1.0_api')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('eviware:soapui-xmlbeans')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('eviware:policy-xmlbeans')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('eviware:soap-xmlbeans')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('eviware:wadl-xmlbeans')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('eviware:j2ee-xmlbeans')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('eviware:ext-xmlbeans')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('saxon:saxon')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('saxon:saxon-dom')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('xmlunit:xmlunit')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('xml-security:xmlsec')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('opensaml:opensaml')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('xalan:xalan')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('xerces:xercesImpl')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('wss4j:wss4j')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('bouncycastle:bcprov')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('jtidy:jtidy')}"/>
+   	    		<ant:pathelement location="${plugin.getDependencyPath('javax.jms:jms')}"/>
+				<ant:pathelement location="${plugin.getDependencyPath('hermesjms:hermes')}"/>
+				<ant:pathelement location="${plugin.getDependencyPath('amf:flex-messaging-common')}"/>
+				<ant:pathelement location="${plugin.getDependencyPath('amf:flex-messaging-core')}"/>
+				<ant:pathelement location="${plugin.getDependencyPath('amf:flex-messaging-opt')}"/>
+				<ant:pathelement location="${plugin.getDependencyPath('amf:flex-messaging-proxy')}"/>
+				<ant:pathelement location="${plugin.getDependencyPath('amf:flex-messaging-remoting')}"/>
+				<ant:pathelement location="${plugin.getDependencyPath('thoughtworks:xstream')}"/>
+				<ant:pathelement location="${plugin.getDependencyPath('net.sourceforge.htmlunit:htmlunit')}"/>
+				<ant:pathelement location="${plugin.getDependencyPath('org.w3c.css:sac')}"/>
+				<ant:pathelement location="${plugin.getDependencyPath('net.sourceforge.htmlunit:htmlunit-core-js')}"/>
+				<ant:pathelement location="${plugin.getDependencyPath('net.sourceforge.cssparser:cssparser')}"/>
+				<ant:pathelement location="${plugin.getDependencyPath('net.sourceforge.nekohtml:nekohtml')}"/>
+				<ant:pathelement location="${plugin.getDependencyPath('jgoodies:looks')}"/>
+				<ant:pathelement location="${plugin.getDependencyPath('fife:rsyntaxtextarea')}"/>
+	       	</ant:classpath>
+   		</ant:java>
+    </define:tag>
+    
+    <define:tag name="loadtest">
+    
+    	<echo>Running soapui project ${maven.soapui.project} with endpoint [${maven.soapui.test.endpoint}]</echo>
+    	<ant:java fork="true" failonerror="true" classname="com.eviware.soapui.tools.SoapUILoadTestRunner">
+    	    <ant:arg value="${maven.soapui.project}"/>
+    	    
+    	    <j:set var="tmp" value="${maven.soapui.test.endpoint}"/>
+    	    <j:if test="${!empty(tmp)}">
+    	       <ant:arg value="-e${maven.soapui.test.endpoint}"/>
+   	    	</j:if>
+   	    	
+    	    <j:set var="tmp" value="${maven.soapui.test.testsuite}"/>
+    	    <j:if test="${!empty(tmp)}">
+    	       <ant:arg value="-s${maven.soapui.test.testsuite}"/>
+   	    	</j:if>
+
+    	    <j:set var="tmp" value="${maven.soapui.test.testcase}"/>
+    	    <j:if test="${!empty(tmp)}">
+    	       <ant:arg value="-c${maven.soapui.test.testcase}"/>
+   	    	</j:if>
+   	    	
+   	    	 <j:set var="tmp" value="${maven.soapui.test.loadtest}"/>
+    	    <j:if test="${!empty(tmp)}">
+    	       <ant:arg value="-l${maven.soapui.test.loadtest}"/>
+   	    	</j:if>
+
+    	    <j:set var="tmp" value="${maven.soapui.test.username}"/>
+    	    <j:if test="${!empty(tmp)}">
+    	       <ant:arg value="-u${maven.soapui.test.username}"/>
+   	    	</j:if>
+
+    	    <j:set var="tmp" value="${maven.soapui.test.host}"/>
+    	    <j:if test="${!empty(tmp)}">
+    	       <ant:arg value="-h${maven.soapui.test.host}"/>
+   	    	</j:if>
+
+    	    <j:set var="tmp" value="${maven.soapui.test.password}"/>
+    	    <j:if test="${!empty(tmp)}">
+    	       <ant:arg value="-p${maven.soapui.test.password}"/>
+   	    	</j:if>
+
+   	    	<j:set var="tmp" value="${maven.soapui.test.wssPasswordType}"/>
+    	    <j:if test="${!empty(tmp)}">
+    	       <ant:arg value="-w${maven.soapui.test.wssPasswordType}"/>
+   	    	</j:if>
+   	    	
+    	    <j:set var="tmp" value="${maven.soapui.test.domain}"/>
+    	    <j:if test="${!empty(tmp)}">
+    	       <ant:arg value="-d${maven.soapui.test.domain}"/>
+   	    	</j:if>
+    	    
+    	    <j:set var="tmp" value="${maven.soapui.test.limit}"/>
+    	    <j:if test="${!empty(tmp)}">
+    	       <ant:arg value="-m${maven.soapui.test.limit}"/>
+   	    	</j:if>
+
+    	    <j:set var="tmp" value="${maven.soapui.test.threadcount}"/>
+    	    <j:if test="${!empty(tmp)}">
+    	       <ant:arg value="-n${maven.soapui.test.threadcount}"/>
+   	    	</j:if>
+    	    
+    	    <j:set var="tmp" value="${maven.soapui.report}"/>
+    	    <j:if test="${tmp == 'yes'}">
+    	       <ant:arg value="-r"/>
+   	    	</j:if>
+   	    	
+   	    	<j:set var="tmp" value="${maven.soapui.report.folder}"/>
+    	    <j:if test="${!empty(tmp)}">
+    	       <ant:arg value="-f${maven.soapui.report.folder}"/>
+   	    	</j:if>
+   	    	
+   	    	<j:set var="tmp" value="${maven.soapui.settings}"/>
+    	    <j:if test="${!empty(tmp)}">
+    	       <ant:arg value="-t${tmp}"/>
+   	    	</j:if>
+   	    	
+   	    	<j:set var="tmp" value="${maven.soapui.settings.password}"/>
+    	    <j:if test="${!empty(tmp)}">
+    	       <ant:arg value="-v${maven.soapui.settings.password}"/>
+   	    	</j:if>
+   	    	
+   	    	<j:set var="tmp" value="${maven.soapui.project.password}"/>
+    	    <j:if test="${!empty(tmp)}">
+    	       <ant:arg value="-x${maven.soapui.project.password}"/>
+   	    	</j:if>
+   	    	
+   	    	<j:set var="tmp" value="${maven.soapui.test.save}"/>
+    	    <j:if test="${!empty(tmp)}">
+    	       <ant:arg value="-x${maven.soapui.test.save}"/>
+   	    	</j:if>
+    	    
+   	    	<ant:classpath>
+	       		<ant:pathelement location="${plugin.getDependencyPath('eviware:soapui')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('activation:activation')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('javamail:javamail')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('wsdl4j:wsdl4j')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('log4j:log4j')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('commons-logging:commons-logging')}"/>
+   	    		<ant:pathelement location="${plugin.getDependencyPath('commons-collections:commons-collections')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('commons-lang:commons-lang')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('commons-io:commons-io')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('commons-ssl:not-yet-commons-ssl')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('commons-cli:commons-cli')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('commons-beanutils:commons-beanutils')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('org.apache.httpcomponents:httpclient')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('org.apache.httpcomponents:httpmime')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('org.apache.httpcomponents:httpclient-cache')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('org.apache.httpcomponents:httpcore')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('org.apache.httpcomponents:httpcore-nio')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('org.samba.jcifs:jcifs')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('json:json-lib')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('ezmorph:ezmorph')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('xom:xom')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('swingx:swingx')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('commons-codec:commons-codec')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('groovy:groovy-all')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('rhino:js')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('jetty:jetty')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('jetty:jetty-util')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('jetty:servlet-api')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('net-components:net-components')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('xmlbeans:xbean')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('xmlbeans:xbean_xpath')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('xmlbeans:xmlpublic')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('xmlbeans:jsr173_1.0_api')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('eviware:soapui-xmlbeans')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('eviware:policy-xmlbeans')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('eviware:soap-xmlbeans')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('eviware:wadl-xmlbeans')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('eviware:j2ee-xmlbeans')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('eviware:ext-xmlbeans')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('saxon:saxon')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('saxon:saxon-dom')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('xmlunit:xmlunit')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('xml-security:xmlsec')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('opensaml:opensaml')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('xalan:xalan')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('xerces:xercesImpl')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('wss4j:wss4j')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('bouncycastle:bcprov')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('jtidy:jtidy')}"/>
+   	    		<ant:pathelement location="${plugin.getDependencyPath('javax.jms:jms')}"/>
+				<ant:pathelement location="${plugin.getDependencyPath('hermesjms:hermes')}"/>
+				<ant:pathelement location="${plugin.getDependencyPath('amf:flex-messaging-common')}"/>
+				<ant:pathelement location="${plugin.getDependencyPath('amf:flex-messaging-core')}"/>
+				<ant:pathelement location="${plugin.getDependencyPath('amf:flex-messaging-opt')}"/>
+				<ant:pathelement location="${plugin.getDependencyPath('amf:flex-messaging-proxy')}"/>
+				<ant:pathelement location="${plugin.getDependencyPath('amf:flex-messaging-remoting')}"/>
+				<ant:pathelement location="${plugin.getDependencyPath('thoughtworks:xstream')}"/>
+				<ant:pathelement location="${plugin.getDependencyPath('net.sourceforge.htmlunit:htmlunit')}"/>
+				<ant:pathelement location="${plugin.getDependencyPath('org.w3c.css:sac')}"/>
+				<ant:pathelement location="${plugin.getDependencyPath('net.sourceforge.htmlunit:htmlunit-core-js')}"/>
+				<ant:pathelement location="${plugin.getDependencyPath('net.sourceforge.cssparser:cssparser')}"/>
+				<ant:pathelement location="${plugin.getDependencyPath('net.sourceforge.nekohtml:nekohtml')}"/>
+				<ant:pathelement location="${plugin.getDependencyPath('jgoodies:looks')}"/>
+				<ant:pathelement location="${plugin.getDependencyPath('fife:rsyntaxtextarea')}"/>
+	       	</ant:classpath>
+   		</ant:java>
+    </define:tag>
+    
+    <define:tag name="mock">
+    
+    	<echo>Running soapui project ${maven.soapui.project} with endpoint [${maven.soapui.test.endpoint}]</echo>
+    	<ant:java fork="true" failonerror="true" classname="com.eviware.soapui.tools.SoapUIMockServiceRunner">
+    	    <ant:arg value="${maven.soapui.project}"/>
+    	    
+    	    <j:set var="tmp" value="${maven.soapui.mock.service}"/>
+    	    <j:if test="${!empty(tmp)}">
+    	       <ant:arg value="-m${tmp}"/>
+   	    	</j:if>
+   	    	
+    	    <j:set var="tmp" value="${maven.soapui.mock.port}"/>
+    	    <j:if test="${!empty(tmp)}">
+    	       <ant:arg value="-s${tmp}"/>
+   	    	</j:if>
+
+    	    <j:set var="tmp" value="${maven.soapui.mock.path}"/>
+    	    <j:if test="${!empty(tmp)}">
+    	       <ant:arg value="-a${tmp}"/>
+   	    	</j:if>
+   	    	
+   	    	 <j:set var="tmp" value="${maven.soapui.mock.noblock}"/>
+    	      <j:if test="${tmp == 'yes'}">
+    	       <ant:arg value="-b"/>
+   	    	</j:if>
+   	    	
+   	    	<j:set var="tmp" value="${maven.soapui.settings}"/>
+    	    <j:if test="${!empty(tmp)}">
+    	       <ant:arg value="-s${tmp}"/>
+   	    	</j:if>
+   	    	
+   	    	<j:set var="tmp" value="${maven.soapui.settings.password}"/>
+    	    <j:if test="${!empty(tmp)}">
+    	       <ant:arg value="-v${tmp}"/>
+   	    	</j:if>
+   	    	
+   	    	<j:set var="tmp" value="${maven.soapui.project.password}"/>
+    	    <j:if test="${!empty(tmp)}">
+    	       <ant:arg value="-x${tmp}"/>
+   	    	</j:if>
+   	    	
+   	    	<j:set var="tmp" value="${maven.soapui.test.save}"/>
+    	    <j:if test="${!empty(tmp)}">
+    	       <ant:arg value="-x${maven.soapui.test.save}"/>
+   	    	</j:if>
+
+   	    	<ant:classpath>
+	       		<ant:pathelement location="${plugin.getDependencyPath('eviware:soapui')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('activation:activation')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('javamail:javamail')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('wsdl4j:wsdl4j')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('log4j:log4j')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('commons-logging:commons-logging')}"/>
+   	    		<ant:pathelement location="${plugin.getDependencyPath('commons-collections:commons-collections')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('commons-lang:commons-lang')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('commons-io:commons-io')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('commons-ssl:not-yet-commons-ssl')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('commons-cli:commons-cli')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('commons-beanutils:commons-beanutils')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('org.apache.httpcomponents:httpclient')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('org.apache.httpcomponents:httpmime')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('org.apache.httpcomponents:httpclient-cache')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('org.apache.httpcomponents:httpcore')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('org.apache.httpcomponents:httpcore-nio')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('org.samba.jcifs:jcifs')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('json:json-lib')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('ezmorph:ezmorph')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('xom:xom')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('swingx:swingx')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('commons-codec:commons-codec')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('groovy:groovy-all')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('rhino:js')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('jetty:jetty')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('jetty:jetty-util')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('jetty:servlet-api')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('net-components:net-components')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('xmlbeans:xbean')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('xmlbeans:xbean_xpath')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('xmlbeans:xmlpublic')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('xmlbeans:jsr173_1.0_api')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('eviware:soapui-xmlbeans')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('eviware:policy-xmlbeans')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('eviware:soap-xmlbeans')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('eviware:wadl-xmlbeans')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('eviware:j2ee-xmlbeans')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('eviware:ext-xmlbeans')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('saxon:saxon')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('saxon:saxon-dom')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('xmlunit:xmlunit')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('xml-security:xmlsec')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('opensaml:opensaml')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('xalan:xalan')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('xerces:xercesImpl')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('wss4j:wss4j')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('bouncycastle:bcprov')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('jtidy:jtidy')}"/>
+   	    		<ant:pathelement location="${plugin.getDependencyPath('javax.jms:jms')}"/>
+				<ant:pathelement location="${plugin.getDependencyPath('hermesjms:hermes')}"/>
+				<ant:pathelement location="${plugin.getDependencyPath('amf:flex-messaging-common')}"/>
+				<ant:pathelement location="${plugin.getDependencyPath('amf:flex-messaging-core')}"/>
+				<ant:pathelement location="${plugin.getDependencyPath('amf:flex-messaging-opt')}"/>
+				<ant:pathelement location="${plugin.getDependencyPath('amf:flex-messaging-proxy')}"/>
+				<ant:pathelement location="${plugin.getDependencyPath('amf:flex-messaging-remoting')}"/>
+				<ant:pathelement location="${plugin.getDependencyPath('thoughtworks:xstream')}"/>
+				<ant:pathelement location="${plugin.getDependencyPath('net.sourceforge.htmlunit:htmlunit')}"/>
+				<ant:pathelement location="${plugin.getDependencyPath('org.w3c.css:sac')}"/>
+				<ant:pathelement location="${plugin.getDependencyPath('net.sourceforge.htmlunit:htmlunit-core-js')}"/>
+				<ant:pathelement location="${plugin.getDependencyPath('net.sourceforge.cssparser:cssparser')}"/>
+				<ant:pathelement location="${plugin.getDependencyPath('net.sourceforge.nekohtml:nekohtml')}"/>
+				<ant:pathelement location="${plugin.getDependencyPath('jgoodies:looks')}"/>
+				<ant:pathelement location="${plugin.getDependencyPath('fife:rsyntaxtextarea')}"/>
+	       	</ant:classpath>
+   		</ant:java>
+    </define:tag>
+    
+    <define:tag name="security-test">
+    
+    	<echo>Running soapui project ${maven.soapui.project} with endpoint [${maven.soapui.test.endpoint}]</echo>
+    	<ant:java fork="true" failonerror="true" classname="com.eviware.soapui.security.tools.SoapUISecurityTestRunner">
+    	    <ant:arg value="${maven.soapui.project}"/>
+    	    
+    	    <j:set var="tmp" value="${maven.soapui.test.endpoint}"/>
+    	    <j:if test="${!empty(tmp)}">
+    	       <ant:arg value="-e${maven.soapui.test.endpoint}"/>
+   	    	</j:if>
+   	    	
+    	    <j:set var="tmp" value="${maven.soapui.test.testsuite}"/>
+    	    <j:if test="${!empty(tmp)}">
+    	       <ant:arg value="-s${maven.soapui.test.testsuite}"/>
+   	    	</j:if>
+
+    	    <j:set var="tmp" value="${maven.soapui.test.testcase}"/>
+    	    <j:if test="${!empty(tmp)}">
+    	       <ant:arg value="-c${maven.soapui.test.testcase}"/>
+   	    	</j:if>
+
+    	    <j:set var="tmp" value="${maven.soapui.test.username}"/>
+    	    <j:if test="${!empty(tmp)}">
+    	       <ant:arg value="-u${maven.soapui.test.username}"/>
+   	    	</j:if>
+
+    	    <j:set var="tmp" value="${maven.soapui.test.host}"/>
+    	    <j:if test="${!empty(tmp)}">
+    	       <ant:arg value="-h${maven.soapui.test.host}"/>
+   	    	</j:if>
+
+    	    <j:set var="tmp" value="${maven.soapui.test.password}"/>
+    	    <j:if test="${!empty(tmp)}">
+    	       <ant:arg value="-p${maven.soapui.test.password}"/>
+   	    	</j:if>
+   	    	
+   	    	<j:set var="tmp" value="${maven.soapui.test.wssPasswordType}"/>
+    	    <j:if test="${!empty(tmp)}">
+    	       <ant:arg value="-w${maven.soapui.test.wssPasswordType}"/>
+   	    	</j:if>
+
+    	    <j:set var="tmp" value="${maven.soapui.test.domain}"/>
+    	    <j:if test="${!empty(tmp)}">
+    	       <ant:arg value="-d${maven.soapui.test.domain}"/>
+   	    	</j:if>
+    	    
+    	    <j:set var="tmp" value="${maven.soapui.report}"/>
+    	    <j:if test="${tmp == 'yes'}">
+    	       <ant:arg value="-r"/>
+   	    	</j:if>
+   	    	
+    	    <j:set var="tmp" value="${maven.soapui.report.all}"/>
+    	    <j:if test="${tmp == 'yes'}">
+    	       <ant:arg value="-a"/>
+   	    	</j:if>
+
+   	    	<j:set var="tmp" value="${maven.soapui.report.folder}"/>
+    	    <j:if test="${!empty(tmp)}">
+    	       <ant:arg value="-f${maven.soapui.report.folder}"/>
+   	    	</j:if>
+   	    	
+   	    	<j:set var="tmp" value="${maven.soapui.report.junit}"/>
+    	    <j:if test="${tmp == 'yes'}">
+    	       <ant:arg value="-j"/>
+   	    	</j:if>
+   	    	
+   	    	<j:set var="tmp" value="${maven.soapui.settings}"/>
+    	    <j:if test="${!empty(tmp)}">
+    	       <ant:arg value="-t${tmp}"/>
+   	    	</j:if>
+   	    	
+   	    	<j:set var="tmp" value="${maven.soapui.settings.password}"/>
+    	    <j:if test="${!empty(tmp)}">
+    	       <ant:arg value="-v${tmp}"/>
+   	    	</j:if>
+   	    	
+   	    	<j:set var="tmp" value="${maven.soapui.project.password}"/>
+    	    <j:if test="${!empty(tmp)}">
+    	       <ant:arg value="-x${tmp}"/>
+   	    	</j:if>
+   	    	
+   	    	<j:set var="tmp" value="${maven.soapui.test.FailIgnore}"/>
+    	    <j:if test="${!empty(tmp)}">
+    	       <ant:arg value="-I"/>
+   	    	</j:if>
+   	    	
+   	    	<j:set var="tmp" value="${maven.soapui.test.save}"/>
+    	    <j:if test="${!empty(tmp)}">
+    	       <ant:arg value="-S"/>
+   	    	</j:if>
+   	    	
+   	    	<j:set var="tmp" value="${maven.soapui.test.wssPasswordType}"/>
+    	    <j:if test="${!empty(tmp)}">
+    	       <ant:arg value="-w"/>
+   	    	</j:if>
+   	    	
+   	    	<j:set var="tmp" value="${maven.soapui.test.securitytest}"/>
+    	    <j:if test="${!empty(tmp)}">
+    	       <ant:arg value="-n${tmp}"/>
+   	    	</j:if>
+   	    	
+   	    	<ant:classpath>
+	       		<ant:pathelement location="${plugin.getDependencyPath('eviware:soapui')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('activation:activation')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('javamail:javamail')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('wsdl4j:wsdl4j')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('log4j:log4j')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('commons-logging:commons-logging')}"/>
+   	    		<ant:pathelement location="${plugin.getDependencyPath('commons-collections:commons-collections')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('commons-lang:commons-lang')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('commons-io:commons-io')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('commons-ssl:not-yet-commons-ssl')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('commons-cli:commons-cli')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('commons-beanutils:commons-beanutils')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('org.apache.httpcomponents:httpclient')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('org.apache.httpcomponents:httpmime')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('org.apache.httpcomponents:httpclient-cache')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('org.apache.httpcomponents:httpcore')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('org.apache.httpcomponents:httpcore-nio')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('org.samba.jcifs:jcifs')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('json:json-lib')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('ezmorph:ezmorph')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('xom:xom')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('swingx:swingx')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('commons-codec:commons-codec')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('groovy:groovy-all')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('rhino:js')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('jetty:jetty')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('jetty:jetty-util')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('jetty:servlet-api')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('net-components:net-components')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('xmlbeans:xbean')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('xmlbeans:xbean_xpath')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('xmlbeans:xmlpublic')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('xmlbeans:jsr173_1.0_api')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('eviware:soapui-xmlbeans')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('eviware:policy-xmlbeans')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('eviware:soap-xmlbeans')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('eviware:wadl-xmlbeans')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('eviware:j2ee-xmlbeans')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('eviware:ext-xmlbeans')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('saxon:saxon')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('saxon:saxon-dom')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('xmlunit:xmlunit')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('xml-security:xmlsec')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('opensaml:opensaml')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('xalan:xalan')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('xerces:xercesImpl')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('wss4j:wss4j')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('bouncycastle:bcprov')}"/>
+	       		<ant:pathelement location="${plugin.getDependencyPath('jtidy:jtidy')}"/>
+   	    		<ant:pathelement location="${plugin.getDependencyPath('javax.jms:jms')}"/>
+				<ant:pathelement location="${plugin.getDependencyPath('hermesjms:hermes')}"/>
+				<ant:pathelement location="${plugin.getDependencyPath('amf:flex-messaging-common')}"/>
+				<ant:pathelement location="${plugin.getDependencyPath('amf:flex-messaging-core')}"/>
+				<ant:pathelement location="${plugin.getDependencyPath('amf:flex-messaging-opt')}"/>
+				<ant:pathelement location="${plugin.getDependencyPath('amf:flex-messaging-proxy')}"/>
+				<ant:pathelement location="${plugin.getDependencyPath('amf:flex-messaging-remoting')}"/>
+				<ant:pathelement location="${plugin.getDependencyPath('thoughtworks:xstream')}"/>
+				<ant:pathelement location="${plugin.getDependencyPath('net.sourceforge.htmlunit:htmlunit')}"/>
+				<ant:pathelement location="${plugin.getDependencyPath('org.w3c.css:sac')}"/>
+				<ant:pathelement location="${plugin.getDependencyPath('net.sourceforge.htmlunit:htmlunit-core-js')}"/>
+				<ant:pathelement location="${plugin.getDependencyPath('net.sourceforge.cssparser:cssparser')}"/>
+				<ant:pathelement location="${plugin.getDependencyPath('net.sourceforge.nekohtml:nekohtml')}"/>
+				<ant:pathelement location="${plugin.getDependencyPath('jgoodies:looks')}"/>
+				<ant:pathelement location="${plugin.getDependencyPath('fife:rsyntaxtextarea')}"/>
+	       	</ant:classpath>
+   		</ant:java>
+    </define:tag>
+    
+  </define:taglib>
+  
+  <goal 
+    name="soapui:security-test" 
+    description="Runs security tests as specified in project.properties">
+    <soapui:security-test/>
+  </goal>
+  
+  <goal 
+    name="soapui:test" 
+    description="Runs testcases/testsuites as specified in project.properties">
+    <soapui:test/>
+  </goal>
+ 
+  <goal 
+    name="soapui:loadtest" 
+    description="Runs loadtests as specified in project.properties">
+    <soapui:loadtest/>
+  </goal>
+  
+    <goal 
+    name="soapui:mock" 
+    description="Runs a MockService as specified in project.properties">
+    <soapui:loadtest/>
+  </goal>
+
+</project>

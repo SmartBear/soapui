@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+
+<!-- TODO Extend with better tests -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.smartbear.soapui</groupId>
+    <artifactId>soapui-maven-plugin-tester</artifactId>
+    <name>soapUI Maven plugin tester</name>
+
+    <parent>
+        <groupId>com.smartbear.soapui</groupId>
+        <artifactId>soapui-project</artifactId>
+        <version>4.5.2-SNAPSHOT</version>
+    </parent>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>eviwarePluginRepository</id>
+            <url>http://www.eviware.com/repository/maven2/</url>
+        </pluginRepository>
+    </pluginRepositories>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.smartbear.soapui</groupId>
+                <artifactId>maven-soapui-plugin</artifactId>
+                <version>${project.parent.version}</version>
+                <executions>
+                    <execution>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <projectFile>${project.basedir}/SoapUIMavenPluginTestProject-soapui-project.xml</projectFile>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
