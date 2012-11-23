@@ -289,6 +289,7 @@
             <groupId>org.mockito</groupId>
             <artifactId>mockito-all</artifactId>
             <version>1.8.5</version>
+            <scope>test</scope>
         </dependency>
 
         <!-- XML Beans -->
@@ -601,11 +602,6 @@
             <version>1.7R2</version>
         </dependency>
         <dependency>
-            <groupId>net-components</groupId>
-            <artifactId>netcomponents</artifactId>
-            <version>1.3.8a</version>
-        </dependency>
-        <dependency>
             <groupId>saxon</groupId>
             <artifactId>saxon</artifactId>
             <version>9.1.0.8j</version>
@@ -620,11 +616,11 @@
             <artifactId>xmlunit</artifactId>
             <version>1.2</version>
         </dependency>
-        <dependency>
-            <groupId>xml-security</groupId>
-            <artifactId>xmlsec</artifactId>
-            <version>1.4.3</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>xml-security</groupId>-->
+            <!--<artifactId>xmlsec</artifactId>-->
+            <!--<version>1.4.3</version>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>xalan</groupId>
             <artifactId>xalan</artifactId>
@@ -710,36 +706,36 @@
             <artifactId>l2fprod-common-fontchooser</artifactId>
             <version>7.3</version>
         </dependency>
-        <dependency>
-            <groupId>asm</groupId>
-            <artifactId>asm</artifactId>
-            <version>1.4.1</version>
-        </dependency>
-        <dependency>
-            <groupId>ant</groupId>
-            <artifactId>ant</artifactId>
-            <version>1.6.1</version>
-        </dependency>
-        <dependency>
-            <groupId>ant</groupId>
-            <artifactId>ant-launcher</artifactId>
-            <version>1.6.1</version>
-        </dependency>
-        <dependency>
-            <groupId>easymock</groupId>
-            <artifactId>easymock</artifactId>
-            <version>2.0</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-jexl</groupId>
-            <artifactId>commons-jexl</artifactId>
-            <version>1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>lint4j</groupId>
-            <artifactId>jutils-lint4j-plugin</artifactId>
-            <version>1.3.1</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>asm</groupId>-->
+            <!--<artifactId>asm</artifactId>-->
+            <!--<version>1.4.1</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>ant</groupId>-->
+            <!--<artifactId>ant</artifactId>-->
+            <!--<version>1.6.1</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>ant</groupId>-->
+            <!--<artifactId>ant-launcher</artifactId>-->
+            <!--<version>1.6.1</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>easymock</groupId>-->
+            <!--<artifactId>easymock</artifactId>-->
+            <!--<version>2.0</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>commons-jexl</groupId>-->
+            <!--<artifactId>commons-jexl</artifactId>-->
+            <!--<version>1.0</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>lint4j</groupId>-->
+            <!--<artifactId>jutils-lint4j-plugin</artifactId>-->
+            <!--<version>1.3.1</version>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>org.apache.santuario</groupId>
             <artifactId>xmlsec</artifactId>
@@ -756,11 +752,11 @@
             <version>2.7.1</version>
             <type>jar</type>
         </dependency>
-        <dependency>
-            <groupId>commons-jelly</groupId>
-            <artifactId>commons-jelly-tags-jsl</artifactId>
-            <version>20030211.143151</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>commons-jelly</groupId>-->
+            <!--<artifactId>commons-jelly-tags-jsl</artifactId>-->
+            <!--<version>20030211.143151</version>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>gnu.cajo</groupId>
             <artifactId>cajo</artifactId>
@@ -778,43 +774,44 @@
         </dependency>
 
 
+
         <!-- TODO Not sure if thease are needed -->
 
-        <dependency>
-            <groupId>commons-net</groupId>
-            <artifactId>commons-net</artifactId>
-            <version>1.1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>isorelax</groupId>
-            <artifactId>isorelax</artifactId>
-            <version>20030108</version>
-        </dependency>
-        <dependency>
-            <groupId>velocity-dvsl</groupId>
-            <artifactId>velocity-dvsl</artifactId>
-            <version>0.45</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>commons-net</groupId>-->
+            <!--<artifactId>commons-net</artifactId>-->
+            <!--<version>1.1.0</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>isorelax</groupId>-->
+            <!--<artifactId>isorelax</artifactId>-->
+            <!--<version>20030108</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>velocity-dvsl</groupId>-->
+            <!--<artifactId>velocity-dvsl</artifactId>-->
+            <!--<version>0.45</version>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>xml-apis</groupId>
             <artifactId>xml-apis</artifactId>
             <version>1.0.b2</version>
         </dependency>
-        <dependency>
-            <groupId>dom4j</groupId>
-            <artifactId>dom4j</artifactId>
-            <version>1.4-dev-8</version>
-        </dependency>
-        <dependency>
+        <!--<dependency>-->
+            <!--<groupId>dom4j</groupId>-->
+            <!--<artifactId>dom4j</artifactId>-->
+            <!--<version>1.4-dev-8</version>-->
+        <!--</dependency>-->
+    <!--    <dependency>
             <groupId>thaiopensource</groupId>
             <artifactId>jing</artifactId>
             <version>20030619</version>
-        </dependency>
-        <dependency>
-            <groupId>jsch</groupId>
-            <artifactId>jsch</artifactId>
-            <version>0.1.5</version>
-        </dependency>
+        </dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>jsch</groupId>-->
+            <!--<artifactId>jsch</artifactId>-->
+            <!--<version>0.1.5</version>-->
+        <!--</dependency>-->
 
         <!--  old http client needed by some 3rd party components -->
 
