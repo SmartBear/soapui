@@ -12,30 +12,29 @@
 
 package com.eviware.soapui.impl.wsdl.support;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
-import java.io.File;
-import java.util.Map;
-
-import javax.xml.namespace.QName;
-
-import junit.framework.JUnit4TestAdapter;
-
-import org.apache.xmlbeans.SchemaTypeLoader;
-import org.apache.xmlbeans.XmlObject;
-import org.junit.Test;
-
 import com.eviware.soapui.impl.wsdl.support.wsdl.UrlWsdlLoader;
 import com.eviware.soapui.impl.wsdl.support.xsd.SchemaUtils;
 import com.eviware.soapui.support.TestCaseWithJetty;
+import com.eviware.soapui.test.IntegrationTest;
+import junit.framework.JUnit4TestAdapter;
+import org.apache.xmlbeans.SchemaTypeLoader;
+import org.apache.xmlbeans.XmlObject;
+import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
-// TODO Move this integration test to the it folder.
-public class SchemaUtilsTestCaseIT extends TestCaseWithJetty
+import javax.xml.namespace.QName;
+import java.io.File;
+import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+@Category( IntegrationTest.class )
+public class SchemaUtilsTestCase extends TestCaseWithJetty
 {
 	public static junit.framework.Test suite()
 	{
-		return new JUnit4TestAdapter( SchemaUtilsTestCaseIT.class );
+		return new JUnit4TestAdapter( SchemaUtilsTestCase.class );
 	}
 
 	@Test

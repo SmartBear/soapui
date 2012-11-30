@@ -12,20 +12,17 @@
 
 package com.eviware.soapui.impl.wsdl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import com.eviware.soapui.support.JettyTestCaseBase;
-import junit.framework.JUnit4TestAdapter;
-
-import org.junit.Test;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlImporter;
-import com.eviware.soapui.support.TestCaseWithJetty;
+import com.eviware.soapui.support.JettyTestCaseBase;
+import com.eviware.soapui.test.IntegrationTest;
+import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
-public class WsdlProjectTestCaseIT extends JettyTestCaseBase
+import static org.junit.Assert.*;
+
+@Category( IntegrationTest.class )
+public class WsdlProjectTestCase extends JettyTestCaseBase
 {
 
 	@Test

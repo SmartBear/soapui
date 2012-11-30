@@ -12,19 +12,17 @@
 
 package com.eviware.soapui.impl.wsdl;
 
-import static org.junit.Assert.assertNotNull;
-
-import com.eviware.soapui.support.JettyTestCaseBase;
-import junit.framework.JUnit4TestAdapter;
-
-import org.junit.Test;
-
 import com.eviware.soapui.impl.WsdlInterfaceFactory;
 import com.eviware.soapui.model.iface.Response;
-import com.eviware.soapui.support.TestCaseWithJetty;
+import com.eviware.soapui.support.JettyTestCaseBase;
+import com.eviware.soapui.test.IntegrationTest;
+import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
-// TODO Move this integration test to the it folder.
-public class WsdlRequestTestCaseIT extends JettyTestCaseBase
+import static org.junit.Assert.assertNotNull;
+
+@Category( IntegrationTest.class )
+public class WsdlRequestTestCase extends JettyTestCaseBase
 {
 
 	@Test

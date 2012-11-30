@@ -12,31 +12,25 @@
 
 package com.eviware.soapui.impl.wsdl.support.wsdl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.Charset;
-
-import com.eviware.soapui.support.JettyTestCaseBase;
-import com.google.common.io.Files;
-import junit.framework.JUnit4TestAdapter;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.xmlbeans.XmlException;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
 import com.eviware.soapui.impl.support.definition.export.WsdlDefinitionExporter;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.settings.WsdlSettings;
-import com.eviware.soapui.support.TestCaseWithJetty;
+import com.eviware.soapui.support.JettyTestCaseBase;
+import com.eviware.soapui.test.IntegrationTest;
+import com.google.common.io.Files;
+import org.apache.xmlbeans.XmlException;
+import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
-// TODO Integartion test. Move to it folder.
-public class WsdlDefinitionExporterTestCaseIT extends JettyTestCaseBase
+import java.io.File;
+import java.io.IOException;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+@Category( IntegrationTest.class )
+public class WsdlDefinitionExporterTestCase extends JettyTestCaseBase
 {
 	private static String createTempResourcePath()
 	{
