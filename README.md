@@ -4,7 +4,7 @@ This is the main soapUI project
 
 ## Structure
 
-* **soapui** - The core module for building and running soapUI
+* **soapui** - The core module
 * **maven-plugin-tester** – [The Maven plugin](http://www.soapui.org/Test-Automation/maven-2x.html) used for running soapUI in a CI environment
 * **soapui-maven-plugin-tester** - A small test `pom.xml` used for testing the *soapui-maven-plugin*
 
