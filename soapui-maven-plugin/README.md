@@ -5,4 +5,5 @@
 See our [website](http://www.soapui.org/Test-Automation/maven-2x.html) for for documentation.
 
 ##TODO
-Add info from website and the readme.txt
+* Add info from website 
+* Add info from readme.txt
