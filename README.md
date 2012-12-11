@@ -32,7 +32,7 @@ As soapUI is using a standard Maven 3 setup, building and running soapUI from an
 **Intellij IDEA (version 11)**
 
 * Go to *File* -> *New project* -> *Import project from external module* -> *Maven* -> At *Root directory* enter the path to the root folder of the soapUI project and then finish the wizard.
-* After you have created the IDEA project sucessfully, navigate to the main class `com.eviware.soapui.Soapui` right click and select *Run*. 
+* After you have created the IDEA project sucessfully, navigate to the main class `com.eviware.soapui.SoapUI` right click and select *Run*. 
 
 **Eclipse (version 4 / Juno)**
 TODO!
