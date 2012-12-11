@@ -3,3 +3,6 @@
 *This is a submodule of [The soapUI project](https://github.com/SmartBear/soapui/tree/SOAPUI-3838-Convert-to-maven3)*
 
 Check the `pom.xml` for how this is configured.
+
+## Building and running
+Execute `mvn clean test` to run the tests.
