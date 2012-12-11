@@ -26,6 +26,10 @@ This is the main soapUI project.
 
 To run soapUI after it has been built, execute `mvn exec:java` in the root folder of the *soapui* submodule.
 
+### Getting the latest changes
+
+To get the latest source code changes run `git pull` in the root directory of the soapUI project or the root directory of the submodule you want to update.
+
 ### IDE support
 
 As soapUI is using a standard Maven 3 setup, building and running soapUI from an IDE is usually very straight forward, as long as the IDE has good Maven support.
