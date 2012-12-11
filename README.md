@@ -1,12 +1,13 @@
+![The soapUI logo](http://www.soapui.org/images/stories/homepage/soapUI_header_logo.png)
 # The soapUI project
 
-This is the main soapUI project
+This is the main soapUI project.
 
 ## Structure and submodules
 
-* *[soapui](https://github.com/SmartBear/soapui/tree/SOAPUI-3838-Convert-to-maven3/soapui)* - The core module
-* *[soapui-maven-plugin](https://github.com/SmartBear/soapui/tree/SOAPUI-3838-Convert-to-maven3/soapui-maven-plugin)* – [The Maven plugin](http://www.soapui.org/Test-Automation/maven-2x.html) used for running soapUI in a CI environment
-* *[soapui-maven-plugin-tester](https://github.com/SmartBear/soapui/tree/SOAPUI-3838-Convert-to-maven3/soapui-maven-plugin-tester)* - A small test `pom.xml` used for testing the *soapui-maven-plugin*
+* *[soapui](https://github.com/SmartBear/soapui/tree/SOAPUI-3838-Convert-to-maven3/soapui)* - The core module.
+* *[soapui-maven-plugin](https://github.com/SmartBear/soapui/tree/SOAPUI-3838-Convert-to-maven3/soapui-maven-plugin)* – [The Maven plugin](http://www.soapui.org/Test-Automation/maven-2x.html) used for running soapUI in a Continuous integration environment (such as [Jenkins](http://jenkins-ci.org)).
+* *[soapui-maven-plugin-tester](https://github.com/SmartBear/soapui/tree/SOAPUI-3838-Convert-to-maven3/soapui-maven-plugin-tester)* - A small test `pom.xml` used for testing the *soapui-maven-plugin*.
 
 ## Building and running
 
@@ -23,11 +24,11 @@ This is the main soapUI project
 
 ### Running
 
-The easiest way to run soapui after it has been build is by executing `mvn exec:java -Dexec.mainClass="com.eviware.soapui.SoapUI"` in the root folder of the *soapui* submodule.
+The easiest way to run soapui after it has been build is by executing `mvn exec:java` in the root folder of the *soapui* submodule.
 
 ### IDE support
 
-As soapUI is using a standard Maven 3 setup, building and running soapUI from an IDE is usually very straight forward as long as IDE has good Maven support.
+As soapUI is using a standard Maven 3 setup, building and running soapUI from an IDE is usually very straight forward as long as the IDE has good Maven support.
 
 **Intellij IDEA (version 11)**
 
@@ -36,3 +37,15 @@ As soapUI is using a standard Maven 3 setup, building and running soapUI from an
 
 **Eclipse (version 4 / Juno)**
 TODO!
+
+## Documentation
+To generate documentation ([JavaDoc](http://www.oracle.com/technetwork/java/javase/documentation/index-jsp-135444.html)) run `mvn javadoc:javadoc` in the root folder of the submodule you want documentation for. The documentation will be located in the `target/site/javadoc` folder after the Maven command has terminated successfully. 
+
+You can also get the latest JavaDoc for soapUI [here](http://www.soapui.org/apidocs).
+
+
+## Additional resources
+* *[soapUI Groovy examples](https://github.com/SmartBear/soapui-groovy-examples)* - This is a collection of soapUI projects and Groovy Scripts used to demonstrate the Groovy scripting capabilities in soapUI.
+* [Extending soapUI](http://www.soapui.org/Developers-Corner/extending-soapui.html)
+* [Custom factories](http://www.soapui.or g/Developers-Corner/custom-factories.html)
+* [Integrating with soapUI](http://www.soapui.org/Developers-Corner/integrating-with-soapui.html)
