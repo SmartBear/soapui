@@ -12,31 +12,22 @@
 
 package com.eviware.soapui.impl.wsdl.support;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import com.eviware.soapui.impl.wsdl.*;
+import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlImporter;
+import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlUtils;
+import com.eviware.soapui.model.iface.Submit;
+import com.eviware.soapui.support.JettyTestCaseBase;
+import com.eviware.soapui.test.IntegrationTest;
+import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import javax.wsdl.BindingOperation;
 import javax.wsdl.Definition;
 
-import com.eviware.soapui.support.JettyTestCaseBase;
-import junit.framework.JUnit4TestAdapter;
+import static org.junit.Assert.*;
 
-import org.junit.Test;
-
-import com.eviware.soapui.impl.wsdl.WsdlInterface;
-import com.eviware.soapui.impl.wsdl.WsdlOperation;
-import com.eviware.soapui.impl.wsdl.WsdlProject;
-import com.eviware.soapui.impl.wsdl.WsdlRequest;
-import com.eviware.soapui.impl.wsdl.WsdlSubmitContext;
-import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlImporter;
-import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlUtils;
-import com.eviware.soapui.model.iface.Submit;
-import com.eviware.soapui.support.TestCaseWithJetty;
-
-// TODO Integration test. Move to it folder.
-public class WsdlImporterTestCaseIT extends JettyTestCaseBase
+@Category( IntegrationTest.class )
+public class WsdlImporterTestCase extends JettyTestCaseBase
 {
 
 	@Test

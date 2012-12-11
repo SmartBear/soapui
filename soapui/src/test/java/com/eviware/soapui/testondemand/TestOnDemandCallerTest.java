@@ -12,23 +12,21 @@
 
 package com.eviware.soapui.testondemand;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
-import java.io.File;
-import java.util.List;
-
-import junit.framework.JUnit4TestAdapter;
-
-import org.apache.log4j.Logger;
-import org.junit.Before;
-import org.junit.Test;
-
 import com.eviware.soapui.SoapUISystemProperties;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
+import com.eviware.soapui.test.IntegrationTest;
 import com.google.common.base.Strings;
+import org.apache.log4j.Logger;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.experimental.categories.Category;
+
+import java.io.File;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author Erik R. Yverling
@@ -37,8 +35,8 @@ import com.google.common.base.Strings;
  *         AlertSite Rest API.
  */
 
-// FIXME We need to add the soapui.testondemand.host system property to Nightly build Hudson to be able to run this
-public class TestOnDemandCallerTestIT
+@Category( IntegrationTest.class )
+public class TestOnDemandCallerTest
 {
 	private static final String FIRST_LOCATION_NAME = "Fort Lauderdale, FL";
 	private static final String FIRST_LOCATION_CODE = "10";
@@ -51,7 +49,7 @@ public class TestOnDemandCallerTestIT
 	private WsdlTestCase testCase;
 	private static final String NOT_THE_RIGHT_HOST = "You need to specify the host name of the test server";
 
-	public final static Logger log = Logger.getLogger( TestOnDemandCallerTestIT.class );
+	public final static Logger log = Logger.getLogger( TestOnDemandCallerTest.class );
 
 	@Before
 	public void setUp() throws Exception
