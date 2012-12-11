@@ -34,5 +34,4 @@ As soapUI is using a standard Maven 3 setup, building and running soapUI from an
 Go to *File* -> *New project* -> *Import project from external module* -> *Maven* -> At *Root directory* enter the path to the root folder of the soapUI project
 
 **Eclipse (version 4 / Juno)**
-
-
+TODO!
