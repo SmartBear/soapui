@@ -17,6 +17,10 @@ This is the main soapUI project.
 * [Maven (version 2.0 or higher)](http://maven.apache.org/)
 * [Git (version 1.8 or higher)](http://git-scm.com)
 
+### Getting the source code for the first time
+
+To get the source code run `git clone https://github.com/SmartBear/soapui.git` where you want to the root folder for the soapUI project.
+
 ### Building
 
 * To build the whole soapUI project including all submodules, run `mvn clean install` in the root folder.
