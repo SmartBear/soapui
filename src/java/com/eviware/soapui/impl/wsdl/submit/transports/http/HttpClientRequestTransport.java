@@ -338,8 +338,6 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 			org.apache.http.HttpResponse httpResponse, HttpContext httpContext ) throws Exception
 	{
 		ExtendedGetMethod getMethod = new ExtendedGetMethod();
-		for( Header header : httpMethod.getAllHeaders() )
-			getMethod.addHeader( header );
 
 		getMethod
 				.getMetrics()
@@ -363,16 +361,18 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 
 			try
 			{
-				return followRedirects( httpClient, redirectCount + 1, getMethod, response, httpContext );
+				getMethod = followRedirects( httpClient, redirectCount + 1, getMethod, response, httpContext );
 			}
 			finally
 			{
 				//getMethod.releaseConnection();
 			}
 		}
-		else
-			return getMethod;
 
+		for( Header header : httpMethod.getAllHeaders() )
+			getMethod.addHeader( header );
+
+		return getMethod;
 	}
 
 	private void createDefaultResponse( SubmitContext submitContext, AbstractHttpRequestInterface<?> httpRequest,
