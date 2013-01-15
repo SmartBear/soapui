@@ -16,6 +16,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import junit.framework.JUnit4TestAdapter;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class ProxyUtilsTestCase
@@ -25,7 +26,11 @@ public class ProxyUtilsTestCase
 		return new JUnit4TestAdapter( ProxyUtilsTestCase.class );
 	}
 
+	/* FIXME This will do nslookups which will not always mach of natural reasons since test.com is a real domain
+		What is the purpose of this? */
+
 	@Test
+	@Ignore
 	public void testExcludes()
 	{
 		assertFalse( ProxyUtils.excludes( new String[] { "" }, "www.test.com", 8080 ) );
