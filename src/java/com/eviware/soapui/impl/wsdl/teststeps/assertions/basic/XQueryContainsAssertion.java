@@ -309,7 +309,7 @@ public class XQueryContainsAssertion extends WsdlMessageAssertion implements Req
 					}
 				}
 
-				return Diff.RETURN_IGNORE_DIFFERENCE_NODES_IDENTICAL;
+				return Diff.RETURN_ACCEPT_DIFFERENCE;
 			}
 
 			public void skippedComparison( Node arg0, Node arg1 )
