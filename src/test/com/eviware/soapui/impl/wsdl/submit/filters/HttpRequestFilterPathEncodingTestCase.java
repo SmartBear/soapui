@@ -3,6 +3,7 @@ package com.eviware.soapui.impl.wsdl.submit.filters;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import junit.framework.JUnit4TestAdapter;
 
 import org.junit.After;
 import org.junit.Before;
@@ -10,6 +11,11 @@ import org.junit.Test;
 
 
 public class HttpRequestFilterPathEncodingTestCase {
+	
+	public static junit.framework.Test suite()
+	{
+		return new JUnit4TestAdapter( HttpRequestFilterPathEncodingTestCase.class );
+	}
 	
 	HttpRequestFilter httpRequestFilter; 
 	
