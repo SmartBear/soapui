@@ -75,6 +75,7 @@ public class HttpRequestFilter extends AbstractRequestFilter
 
 		String path = PropertyExpander.expandProperties( context, request.getPath() );
 		StringBuffer query = new StringBuffer();
+		String encoding = System.getProperty( "soapui.request.encoding", StringUtils.unquote( request.getEncoding() ) );
 
 		StringToStringMap responseProperties = ( StringToStringMap )context
 				.getProperty( BaseHttpRequestTransport.RESPONSE_PROPERTIES );
@@ -103,8 +104,6 @@ public class HttpRequestFilter extends AbstractRequestFilter
 			{
 				try
 				{
-					String encoding = System.getProperty( "soapui.request.encoding", request.getEncoding() );
-
 					if( StringUtils.hasContent( encoding ) )
 					{
 						value = URLEncoder.encode( value, encoding );
@@ -171,7 +170,16 @@ public class HttpRequestFilter extends AbstractRequestFilter
 
 				break;
 			case TEMPLATE :
-				path = path.replaceAll( "\\{" + param.getName() + "\\}", value == null ? "" : value );
+				try
+				{
+					path = path.replaceAll( "\\{" + param.getName() + "\\}", value == null ? "" : value );
+					path = getPathAccordingToSettings(path, encoding, param.isDisableUrlEncoding(), request
+							.getSettings().getBoolean( HttpSettings.ENCODED_URLS ) );
+				}
+				catch( UnsupportedEncodingException e )
+				{
+					SoapUI.logError( e );
+				}
 				break;
 			case MATRIX :
 				if( param.getType().equals( XmlBoolean.type.getName() ) )
@@ -188,6 +196,15 @@ public class HttpRequestFilter extends AbstractRequestFilter
 					{
 						path += "=" + value;
 					}
+				}
+				try
+				{
+					path = getPathAccordingToSettings(path, encoding, param.isDisableUrlEncoding(), request
+							.getSettings().getBoolean( HttpSettings.ENCODED_URLS ) );
+				}
+				catch( UnsupportedEncodingException e )
+				{
+					SoapUI.logError( e );
 				}
 			case PLAIN :
 				break;
@@ -221,8 +238,7 @@ public class HttpRequestFilter extends AbstractRequestFilter
 			try
 			{
 				java.net.URI oldUri = httpMethod.getURI();
-				String pathToSet = StringUtils.hasContent( oldUri.getPath() ) && !"/".equals( oldUri.getPath() ) ? oldUri
-						.getPath() + path : path;
+				String pathToSet = StringUtils.hasContent( oldUri.getRawPath() ) && !"/".equals( oldUri.getRawPath() ) ? oldUri.getRawPath() + path : path;
 				java.net.URI newUri = URIUtils.createURI( oldUri.getScheme(), oldUri.getHost(), oldUri.getPort(),
 						pathToSet, oldUri.getQuery(), oldUri.getFragment() );
 				httpMethod.setURI( newUri );
@@ -241,7 +257,7 @@ public class HttpRequestFilter extends AbstractRequestFilter
 			{
 				java.net.URI oldUri = httpMethod.getURI();
 				httpMethod.setURI( URIUtils.createURI( oldUri.getScheme(), oldUri.getHost(), oldUri.getPort(),
-						oldUri.getPath(), query.toString(), oldUri.getFragment() ) );
+						oldUri.getRawPath(), query.toString(), oldUri.getFragment() ) );
 			}
 			catch( Exception e )
 			{
@@ -257,8 +273,6 @@ public class HttpRequestFilter extends AbstractRequestFilter
 				httpMethod.setHeader( "Accept", acceptEncoding );
 			}
 		}
-
-		String encoding = System.getProperty( "soapui.request.encoding", StringUtils.unquote( request.getEncoding() ) );
 
 		if( formMp != null )
 		{
@@ -460,6 +474,41 @@ public class HttpRequestFilter extends AbstractRequestFilter
 
 		DataHandler dataHandler = new DataHandler( new RestRequestDataSource( wsdlRequest, requestContent ) );
 		rootPart.setDataHandler( dataHandler );
+	}
+	
+	protected String getPathAccordingToSettings(String path, String encoding, boolean isDisableUrlEncoding, boolean isPreEncoded ) throws UnsupportedEncodingException
+	{
+
+		// get default encoding if there is no encoding set
+		if(!StringUtils.hasContent( encoding ))
+		{
+			encoding = System.getProperty("file.encoding");
+		}
+		
+		if(isAlreadyEncoded(path, encoding ))
+		{
+			// Already encoded so we don't do anything
+			return path;
+		}
+		
+		if( isDisableUrlEncoding || isPreEncoded )
+		{
+			// If encoding is disabled or it is pre-encoded then we don't encode
+			return path;
+		}
+		else
+		{
+			// encoding NOT disabled neither it is pre-encoded, so we encode here
+			return URLEncoder.encode(path, encoding ); //FIXME: Since we get null in encoding settings
+		}
+
+	}
+	
+	protected boolean isAlreadyEncoded( String path, String encoding ) throws UnsupportedEncodingException
+	{
+		String decodedPath = java.net.URLDecoder.decode(path, encoding);
+		return !path.equals(decodedPath);
+				
 	}
 
 }
