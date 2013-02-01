@@ -476,7 +476,7 @@ public class HttpRequestFilter extends AbstractRequestFilter
 		rootPart.setDataHandler( dataHandler );
 	}
 	
-	protected String getPathAccordingToSettings(String path, String encoding, boolean isDisableUrlEncoding, boolean isPreEncoded ) throws UnsupportedEncodingException
+	protected String getPathAccordingToSettings( String path, String encoding, boolean isDisableUrlEncoding, boolean isPreEncoded ) throws UnsupportedEncodingException
 	{
 
 		// get default encoding if there is no encoding set
