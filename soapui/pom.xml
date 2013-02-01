@@ -168,6 +168,7 @@
                         <descriptor>src/main/assembly/dist.xml</descriptor>
                         <descriptor>src/main/assembly/dist-standalone.xml</descriptor>
                         <descriptor>src/main/assembly/windows-bin.xml</descriptor>
+                        <descriptor>src/main/assembly/win32-standalone-bin.xml</descriptor>
                         <descriptor>src/main/assembly/linux-bin.xml</descriptor>
                         <descriptor>src/main/assembly/mac-bin.xml</descriptor>
                     </descriptors>
@@ -257,6 +258,9 @@
                         <!-- Archives -->
                         <file>
                             ${assembly.build.directory}/${project.name.full}-windows-bin.zip
+                        </file>
+                        <file>
+                            ${assembly.build.directory}/${project.name.full}-win32-standalone-bin.zip
                         </file>
                         <file>
                             ${assembly.build.directory}/${project.name.full}-linux-bin.tar.gz
