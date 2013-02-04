@@ -1,4 +1,3 @@
-![The soapUI logo](http://www.soapui.org/images/stories/homepage/soapUI_header_logo.png)
 # The soapUI project
 
 This is the main soapUI project.
