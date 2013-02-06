@@ -124,6 +124,9 @@
                         <include>**/*.class</include>
                     </includes>
                     <excludedGroups>com.eviware.soapui.test.IntegrationTest</excludedGroups>
+                    <systemProperties>
+                        <soapui.log4j.config>${project.build.testOutputDirectory}/config/soapui-test-log4j.xml</soapui.log4j.config>
+                    </systemProperties>
                 </configuration>
             </plugin>
 
@@ -144,6 +147,9 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <systemProperties>
+                        <soapui.log4j.config>${project.build.testOutputDirectory}/config/soapui-test-log4j.xml</soapui.log4j.config>
+                    </systemProperties>
                     <!-- FIXME Ignoring integration test failures for now -->
                     <testFailureIgnore>true</testFailureIgnore>
                     <groups>com.eviware.soapui.test.IntegrationTest</groups>
