@@ -302,9 +302,17 @@ public class AddAssertionPanel extends SimpleDialog
 
 	protected boolean isAssertionApplicable( String assertionType, ModelItem modelItem, String property )
 	{
-		//property is only used for adding assertions with selecting source and property,
-		//therefore here can be empty string, but gets its meaning in Override of this method 
-		return TestAssertionRegistry.getInstance().canAssert( assertionType, assertable );
+		try
+		{
+			//property is only used for adding assertions with selecting source and property,
+			//therefore here can be empty string, but gets its meaning in Override of this method
+			return TestAssertionRegistry.getInstance().canAssert( assertionType, assertable );
+		}
+		catch( Throwable t )
+		{
+			SoapUI.logError( t );
+			return false;
+		}
 	}
 
 	protected void enableCategoriesList( boolean enable )
