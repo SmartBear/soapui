@@ -39,10 +39,9 @@
                         <goals>
                             <goal>test</goal>
                         </goals>
-                        <!--
                         <configuration>
                             <projectFile>${project.basedir}/SoapUIMavenPluginTestProject-soapui-project.xml</projectFile>
-                        </configuration>  -->
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
