@@ -29,7 +29,6 @@
 
     <build>
         <plugins>
-            <!--
             <plugin>
                 <groupId>com.smartbear.soapui</groupId>
                 <artifactId>maven-soapui-plugin</artifactId>
@@ -45,7 +44,7 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>       -->
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
