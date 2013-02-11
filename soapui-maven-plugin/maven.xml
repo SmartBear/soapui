@@ -1,0 +1,32 @@
+
+<project xmlns:j="jelly:core" xmlns:velocity="jelly:velocity"
+	xmlns:ant="jelly:ant" xmlns:artifact="artifact" xmlns:maven="jelly:maven"
+	xmlns:util="jelly:util" xmlns:jetty="jelly:jetty" xmlns:define="jelly:define"
+	xmlns:x="jelly:xml" xmlns:jsl="jelly:jsl" xmlns:interact="jelly:interaction">
+	
+	<goal name="ftp-publish">
+		<j:set var="source" value="${maven.soapui.ftp.source}" />
+		<j:if test="${!empty(source)}">
+			<echo>ftp:ing!</echo>
+			<taskdef name="ftp"	classname="org.apache.tools.ant.taskdefs.optional.net.FTP" />
+			<ant:ftp server="${maven.soapui.ftp.host}" port="${maven.soapui.ftp.port}"
+				verbose="yes" userid="${maven.soapui.ftp.username}" password="${maven.soapui.ftp.password}"
+				remoteDir="${maven.soapui.ftp.remote.dir}">
+				<ant:fileset dir="${source}" >
+					<ant:include name="**/*.jar" />
+					<ant:include name="**/*.pom" />
+					<ant:include name="**/*.SHA1" />
+					<ant:include name="**/*.MD5" />
+				</ant:fileset>
+			</ant:ftp>
+		</j:if>
+	</goal>
+	
+	<goal name="create-checksum">
+		<checksum file="target/${pom.artifactId}-${pom.currentVersion}.jar" forceOverwrite="yes"/>
+		<checksum file="target/${pom.artifactId}-${pom.currentVersion}.pom" forceOverwrite="yes"/>
+		<checksum file="target/${pom.artifactId}-${pom.currentVersion}.jar" algorithm="SHA1" forceOverwrite="yes"/>
+		<checksum file="target/${pom.artifactId}-${pom.currentVersion}.pom" algorithm="SHA1" forceOverwrite="yes"/>
+	</goal>
+	
+</project>
