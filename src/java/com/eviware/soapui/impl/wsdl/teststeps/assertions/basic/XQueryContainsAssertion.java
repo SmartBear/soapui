@@ -43,6 +43,7 @@ import org.custommonkey.xmlunit.Difference;
 import org.custommonkey.xmlunit.DifferenceEngine;
 import org.custommonkey.xmlunit.DifferenceListener;
 import org.custommonkey.xmlunit.XMLAssert;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
@@ -239,6 +240,14 @@ public class XQueryContainsAssertion extends WsdlMessageAssertion implements Req
 								else
 									XMLAssert.assertEquals( expandedContent, expandedValue );
 								break;
+							case Node.DOCUMENT_NODE :
+								expandedValue = PropertyExpander.expandProperties( context,
+										XmlUtils.getElementText( ( ( Document )domNode ).getDocumentElement() ) );
+								if( allowWildcards )
+									Tools.assertSimilar( expandedContent, expandedValue, '*' );
+								else
+									XMLAssert.assertEquals( expandedContent, expandedValue );
+								break;
 							case Node.ATTRIBUTE_NODE :
 								expandedValue = PropertyExpander.expandProperties( context, domNode.getNodeValue() );
 								if( allowWildcards )
@@ -300,7 +309,7 @@ public class XQueryContainsAssertion extends WsdlMessageAssertion implements Req
 					}
 				}
 
-				return Diff.RETURN_ACCEPT_DIFFERENCE;
+				return Diff.RETURN_IGNORE_DIFFERENCE_NODES_IDENTICAL;
 			}
 
 			public void skippedComparison( Node arg0, Node arg1 )
