@@ -40,6 +40,7 @@
                             <goal>test</goal>
                         </goals>
                         <configuration>
+                            <junitReport>true</junitReport>
                             <projectFile>${project.basedir}/SoapUIMavenPluginTestProject-soapui-project.xml</projectFile>
                         </configuration>
                     </execution>
