@@ -40,10 +40,6 @@
                             <goal>test</goal>
                         </goals>
                         <configuration>
-                            <junitReport>true</junitReport>
-                            <testFailIgnore>true</testFailIgnore>
-                            <exportAll>true</exportAll>
-                            <outputFolder>${project.basedir}/target/surefire-reports/</outputFolder>
                             <projectFile>${project.basedir}/SoapUIMavenPluginTestProject-soapui-project.xml</projectFile>
                         </configuration>
                     </execution>
