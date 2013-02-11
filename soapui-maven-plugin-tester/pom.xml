@@ -41,6 +41,7 @@
                         </goals>
                         <configuration>
                             <junitReport>true</junitReport>
+                            <outputFolder>${project.basedir}/target/surefire-reports/</outputFolder>
                             <projectFile>${project.basedir}/SoapUIMavenPluginTestProject-soapui-project.xml</projectFile>
                         </configuration>
                     </execution>
