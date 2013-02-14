@@ -12,7 +12,7 @@
     <modules>
         <module>soapui</module>
         <module>soapui-maven-plugin</module>
-        <!-- <module>soapui-maven-plugin-tester</module>  -->
+        <module>soapui-maven-plugin-tester</module>
     </modules>
 
 </project>
