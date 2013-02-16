@@ -50,7 +50,7 @@ public class MockAsWar
 	protected File soapuiDir;
 
 	protected Logger log = Logger.getLogger( MockAsWar.class );
-	
+
 	private boolean includeExt;
 	protected boolean includeActions;
 	protected boolean includeListeners;
@@ -196,10 +196,12 @@ public class MockAsWar
 				{
 					return pathname.getName().indexOf( "servlet" ) == -1 && pathname.getName().indexOf( "xulrunner" ) == -1
 							&& pathname.getName().indexOf( "Mozilla" ) == -1 && pathname.getName().indexOf( "l2fprod" ) == -1
-							&& pathname.getName().indexOf( "tuxpack" ) == -1 && pathname.getName().indexOf( "winpack" ) == -1
-						//	&& pathname.getName().indexOf( "rsyntax" ) == -1
+							&& pathname.getName().indexOf( "tuxpack" ) == -1
+							&& pathname.getName().indexOf( "winpack" ) == -1
+							//	&& pathname.getName().indexOf( "rsyntax" ) == -1
 							&& pathname.getName().indexOf( "ActiveQueryBuilder" ) == -1
-							&& pathname.getName().indexOf( "jxbrowser" ) == -1;
+							&& pathname.getName().indexOf( "jxbrowser" ) == -1
+							&& pathname.getName().toLowerCase().indexOf( "protection" ) == -1;
 				}
 			} );
 
@@ -316,7 +318,7 @@ public class MockAsWar
 					}
 					clearDir( listenersDir );
 				}
-				
+
 				return true;
 			}
 		}

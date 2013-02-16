@@ -48,18 +48,6 @@
 		</dependency>
    	</dependencies>
 
-    <reporting>
-		<plugins>
-			<plugin>
-				<artifactId>maven-changes-plugin</artifactId>
-				<configuration>
-					<xmlPath>${basedir}/xdocs/changes.xml
-					</xmlPath>
-				</configuration>
-			</plugin>
-		</plugins>
-	</reporting>
-
     <build>
 		<plugins>
 			<plugin>

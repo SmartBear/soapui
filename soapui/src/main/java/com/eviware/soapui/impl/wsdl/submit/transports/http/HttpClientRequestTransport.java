@@ -19,13 +19,9 @@ import java.util.List;
 
 import org.apache.commons.httpclient.URI;
 import org.apache.http.Header;
-import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.conn.params.ConnRoutePNames;
-import org.apache.http.impl.client.BasicCookieStore;
-import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 
@@ -45,6 +41,7 @@ import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.Exten
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPutMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedTraceMethod;
 import com.eviware.soapui.impl.wsdl.support.PathUtils;
+import com.eviware.soapui.impl.wsdl.support.http.HeaderRequestInterceptor;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 import com.eviware.soapui.impl.wsdl.support.http.SoapUIHttpRoute;
 import com.eviware.soapui.impl.wsdl.support.wss.WssCrypto;
@@ -145,13 +142,9 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 		HttpContext httpContext = ( HttpContext )submitContext.getProperty( SubmitContext.HTTP_STATE_PROPERTY );
 		if( httpContext == null )
 		{
-			httpContext = new BasicHttpContext();
+			httpContext = HttpClientSupport.createEmptyContext();
 			submitContext.setProperty( SubmitContext.HTTP_STATE_PROPERTY, httpContext );
 			createdContext = true;
-
-			// always use local cookie store so we don't share cookies with other threads/executions/requests
-			CookieStore cookieStore = new BasicCookieStore();
-			httpContext.setAttribute( ClientContext.COOKIE_STORE, cookieStore );
 		}
 
 		String localAddress = System.getProperty( "soapui.bind.address", httpRequest.getBindAddress() );
@@ -239,6 +232,9 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 
 			// submit!
 			httpResponse = HttpClientSupport.execute( httpMethod, httpContext );
+
+			// save request headers captured by interceptor
+			saveRequestHeaders( httpMethod, httpContext );
 
 			if( httpMethod.getMetrics() != null )
 			{
@@ -338,8 +334,6 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 			org.apache.http.HttpResponse httpResponse, HttpContext httpContext ) throws Exception
 	{
 		ExtendedGetMethod getMethod = new ExtendedGetMethod();
-		for( Header header : httpMethod.getAllHeaders() )
-			getMethod.addHeader( header );
 
 		getMethod
 				.getMetrics()
@@ -363,16 +357,18 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 
 			try
 			{
-				return followRedirects( httpClient, redirectCount + 1, getMethod, response, httpContext );
+				getMethod = followRedirects( httpClient, redirectCount + 1, getMethod, response, httpContext );
 			}
 			finally
 			{
 				//getMethod.releaseConnection();
 			}
 		}
-		else
-			return getMethod;
 
+		for( Header header : httpMethod.getAllHeaders() )
+			getMethod.addHeader( header );
+
+		return getMethod;
 	}
 
 	private void createDefaultResponse( SubmitContext submitContext, AbstractHttpRequestInterface<?> httpRequest,
@@ -451,4 +447,27 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 			/* ignore */
 		}
 	}
+
+	private void saveRequestHeaders( ExtendedHttpMethod httpMethod, HttpContext httpContext )
+	{
+		List<Header> requestHeaders = ( List<Header> )httpContext
+				.getAttribute( HeaderRequestInterceptor.SOAPUI_REQUEST_HEADERS );
+
+		if( requestHeaders != null )
+		{
+			for( Header header : requestHeaders )
+			{
+				Header[] existingHeaders = httpMethod.getHeaders( header.getName() );
+
+				int c = 0;
+				for( ; c < existingHeaders.length; c++ )
+					if( existingHeaders[c].getValue().equals( header.getValue() ) )
+						break;
+
+				if( c == existingHeaders.length )
+					httpMethod.addHeader( header );
+			}
+		}
+	}
+
 }

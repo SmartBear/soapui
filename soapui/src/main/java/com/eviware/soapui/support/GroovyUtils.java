@@ -22,9 +22,11 @@ import java.sql.DriverManager;
 import java.sql.DriverPropertyInfo;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -100,19 +102,22 @@ public class GroovyUtils
 		return XmlUtils.createXmlObject( node ).xmlText();
 	}
 
-	private static Set<String> registeredDrivers = new HashSet<String>();
+	private static final ConcurrentHashMap<String,Boolean> registeredDrivers = new ConcurrentHashMap<String,Boolean>();
+	private static final Object[] mutex = new Object[0];
 
 	public static void registerJdbcDriver( String name )
 	{
-		if( registeredDrivers.contains( name ) )
+		if( registeredDrivers.containsKey( name ) )
 			return;
 
 		try
 		{
-			Driver d = ( Driver )Class.forName( name, true, SoapUI.getSoapUICore().getExtensionClassLoader() )
-					.newInstance();
-			DriverManager.registerDriver( new DriverProxy( d ) );
-			registeredDrivers.add( name );
+			synchronized (mutex){
+				Class driverClass = Class.forName( name, true, SoapUI.getSoapUICore().getExtensionClassLoader() );
+				Driver d = ( Driver )driverClass.newInstance();
+				DriverManager.registerDriver( new DriverProxy( d ) );
+			}
+			registeredDrivers.putIfAbsent( name , Boolean.TRUE);
 		}
 		catch( Exception e )
 		{

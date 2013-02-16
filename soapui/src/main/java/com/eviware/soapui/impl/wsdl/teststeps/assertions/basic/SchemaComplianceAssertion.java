@@ -17,6 +17,7 @@ import java.util.Map;
 
 import org.apache.xmlbeans.XmlObject;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.RestService;
@@ -337,8 +338,16 @@ public class SchemaComplianceAssertion extends WsdlMessageAssertion implements R
 		@Override
 		public boolean canAssert( Assertable assertable )
 		{
-			return super.canAssert( assertable ) && assertable.getInterface() instanceof AbstractInterface
-					&& ( ( AbstractInterface<?> )assertable.getInterface() ).getDefinitionContext().hasSchemaTypes();
+			try
+			{
+				return super.canAssert( assertable ) && assertable.getInterface() instanceof AbstractInterface
+						&& ( ( AbstractInterface<?> )assertable.getInterface() ).getDefinitionContext().hasSchemaTypes();
+			}
+			catch( Throwable e )
+			{
+				SoapUI.logError( e );
+				return false;
+			}
 		}
 
 		@Override
