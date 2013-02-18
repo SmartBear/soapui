@@ -167,5 +167,12 @@
         </plugins>
     </build>
 
+    <dependencies>
+         <dependency>
+             <groupId>com.smartbear.soapui</groupId>
+             <artifactId>soapui</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
 
 </project>
