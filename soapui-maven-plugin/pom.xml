@@ -50,18 +50,19 @@
 
     <build>
 		<plugins>
-            <!-- FIXME Why do we need this plugin ? -->
+      <!-- FIXME Why do we need this plugin ? -->
 			<plugin>
-			
-                <artifactId>maven-antrun-plugin</artifactId>
+				<groupId>org.apache.maven.plugins</groupId>
+			  <artifactId>maven-antrun-plugin</artifactId>
+        <version>1.7</version>
 				<executions>
 					<execution>
 						<phase>install</phase>
 						<configuration>
-							<tasks>
+							<target>
 								<copy file="pom.xml"
 									tofile="${project.build.directory}/maven-soapui-plugin-${project.version}.pom" />
-							</tasks>
+							</target>
 						</configuration>
 						<goals>
 							<goal>run</goal>
