@@ -40,6 +40,14 @@
           </plugin>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-plugin-plugin</artifactId>
+            <!-- this is the default version used when running maven 3.0.4
+            TODO upgrade to 3.2 (and fix warning in soapui-maven-plugin because of usage of deprecated declaration in mojo code)
+            -->
+            <version>2.9</version>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-surefire-plugin</artifactId>
             <version>2.12.1</version>
           </plugin>
