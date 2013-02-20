@@ -53,7 +53,6 @@
                         </goals>
                         <configuration>
                             <noBlock>true</noBlock>
-                            <outputFolder>${project.build.directory}/soapui/output</outputFolder>
                             <port>${mockServerPort}</port>
                         </configuration>
                     </execution>
@@ -67,6 +66,7 @@
                             <exportAll>true</exportAll>
                             <host>localhost:${mockServerPort}</host>
                             <junitReport>true</junitReport>
+                            <outputFolder>${project.build.directory}/soapui/output</outputFolder>
                             <printReport>true</printReport>
                         </configuration>
                     </execution>
