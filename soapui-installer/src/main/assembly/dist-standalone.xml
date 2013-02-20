@@ -13,6 +13,17 @@
             <outputDirectory>lib</outputDirectory>
             <useProjectArtifact>false</useProjectArtifact>
             <scope>runtime</scope>
+            <excludes>
+                <exclude>${project.name.full}.jar</exclude>
+            </excludes>
+        </dependencySet>
+        <dependencySet>
+            <outputDirectory>bin</outputDirectory>
+            <useProjectArtifact>false</useProjectArtifact>
+            <scope>runtime</scope>
+            <includes>
+                <include>${project.name.full}.jar</include>
+            </includes>
         </dependencySet>
     </dependencySets>
     <fileSets>
@@ -31,6 +42,9 @@
             <includes>
                 <include>*.jar</include>
             </includes>
+            <excludes>
+                <exclude>${project.artifactId}-${project.version}.jar</exclude>
+            </excludes>
         </fileSet>
         <fileSet>
             <directory>${basedir}/src/dist_standalone/bin</directory>
