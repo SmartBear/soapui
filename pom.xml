@@ -11,8 +11,7 @@
 
     <properties>
         <!-- Custom properties -->
-        <project.name>soapui</project.name>
-        <project.name.full>${project.name}-${project.version}</project.name.full>
+        <project.name.full>soapui-${project.version}</project.name.full>
     </properties>
 
     <modules>
