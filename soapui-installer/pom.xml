@@ -41,7 +41,6 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <!-- Custom properties -->
-        <project.name.full>${project.artifactId}-${project.version}</project.name.full>
         <assembly.build.directory>${project.build.directory}/assemblies</assembly.build.directory>
         <installer.build.directory>${project.build.directory}/install4j</installer.build.directory>
         <build.date>${maven.build.timestamp}</build.date>
