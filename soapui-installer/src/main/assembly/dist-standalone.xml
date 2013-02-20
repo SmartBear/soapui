@@ -20,6 +20,7 @@
         <dependencySet>
             <outputDirectory>bin</outputDirectory>
             <useProjectArtifact>false</useProjectArtifact>
+            <useStrictFiltering>true</useStrictFiltering>
             <scope>runtime</scope>
             <includes>
                 <include>${project.name.full}.jar</include>
