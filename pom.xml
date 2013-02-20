@@ -12,6 +12,7 @@
     <properties>
         <!-- Custom properties -->
         <project.name.full>soapui-${project.version}</project.name.full>
+        <project.src.artifactId>soapui</project.src.artifactId>
     </properties>
 
     <modules>

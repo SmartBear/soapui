@@ -14,7 +14,7 @@
             <useProjectArtifact>false</useProjectArtifact>
             <scope>runtime</scope>
             <excludes>
-                <exclude>${project.name.full}.jar</exclude>
+                <exclude>${project.groupId}:${project.src.artifactId}:jar:${project.version}</exclude>
             </excludes>
         </dependencySet>
         <dependencySet>
@@ -23,7 +23,7 @@
             <useStrictFiltering>true</useStrictFiltering>
             <scope>runtime</scope>
             <includes>
-                <include>${project.name.full}.jar</include>
+                <include>${project.groupId}:${project.src.artifactId}:jar:${project.version}</include>
             </includes>
         </dependencySet>
     </dependencySets>
@@ -44,7 +44,7 @@
                 <include>*.jar</include>
             </includes>
             <excludes>
-                <exclude>${project.artifactId}-${project.version}.jar</exclude>
+                <exclude>${project.groupId}:${project.artifactId}:jar:${project.version}</exclude>
             </excludes>
         </fileSet>
         <fileSet>
