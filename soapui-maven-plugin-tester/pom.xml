@@ -18,6 +18,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <mockServerPort>9090</mockServerPort>
     </properties>
 
     <pluginRepositories>
@@ -33,14 +34,39 @@
                 <groupId>com.smartbear.soapui</groupId>
                 <artifactId>maven-soapui-plugin</artifactId>
                 <version>${project.parent.version}</version>
+                <configuration>
+                    <projectFile>${project.basedir}/src/main/soapui/test-soapui-project.xml</projectFile>
+                    <soapuiProperties>
+                      <property>
+                          <name>soapui.logroot</name>
+                          <value>${project.build.directory}/soapui/logs/</value>
+                      </property>
+                    </soapuiProperties>
+                </configuration>
                 <executions>
                     <execution>
-                        <phase>test</phase>
+                        <id>soapui-mock</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>mock</goal>
+                        </goals>
+                        <configuration>
+                            <noBlock>true</noBlock>
+                            <outputFolder>${project.build.directory}/soapui/output</outputFolder>
+                            <port>${mockServerPort}</port>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>soapui-test</id>
+                        <phase>integration-test</phase>
                         <goals>
                             <goal>test</goal>
                         </goals>
                         <configuration>
-                            <projectFile>${project.basedir}/SoapUIMavenPluginTestProject-soapui-project.xml</projectFile>
+                            <exportAll>true</exportAll>
+                            <host>localhost:${mockServerPort}</host>
+                            <junitReport>true</junitReport>
+                            <printReport>true</printReport>
                         </configuration>
                     </execution>
                 </executions>
