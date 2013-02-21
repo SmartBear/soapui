@@ -9,6 +9,19 @@
     <version>4.5.2-SNAPSHOT</version>
     <packaging>pom</packaging>
 
+    <repositories>
+        <repository>
+            <id>eviware</id>
+            <name>Eviware Maven2 Repository</name>
+            <url>http://www.soapui.org/repository/maven2</url>
+        </repository>
+        <repository>
+            <id>central</id>
+            <name>Central Maven2 Repository</name>
+            <url>http://repo1.maven.org/maven2</url>
+        </repository>
+    </repositories>
+
     <modules>
         <module>soapui</module>
         <module>soapui-maven-plugin</module>
