@@ -83,7 +83,7 @@
         </fileSet>
         <fileSet>
             <directory>${basedir}/src/main</directory>
-            <outputDirectory>source</outputDirectory>
+            <outputDirectory>source/main</outputDirectory>
             <includes>
                 <include>assembly/</include>
             </includes>
