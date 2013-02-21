@@ -15,7 +15,7 @@ echo Set JAVA_HOME to the directory of your local JDK to avoid this message.
 
 rem init classpath
 
-set CLASSPATH=%SOAPUI_HOME%${project.artifactId}-${project.version}.jar;%SOAPUI_HOME%..\lib\*;
+set CLASSPATH=%SOAPUI_HOME%${project.src.artifactId}-${project.version}.jar;%SOAPUI_HOME%..\lib\*;
 
 rem JVM parameters, modify as appropriate
 

@@ -25,7 +25,7 @@ then
 fi
 export SOAPUI_HOME
 
-SOAPUI_CLASSPATH=$SOAPUI_HOME/bin/${project.artifactId}-${project.version}.jar:$SOAPUI_HOME/lib/*
+SOAPUI_CLASSPATH=$SOAPUI_HOME/bin/${project.src.artifactId}-${project.version}.jar:$SOAPUI_HOME/lib/*
 
 export SOAPUI_HOME
 
