@@ -31,13 +31,6 @@
             </excludes>
         </fileSet>
         <fileSet>
-            <directory>${project.build.directory}</directory>
-            <outputDirectory>bin</outputDirectory>
-            <includes>
-                <include>*.jar</include>
-            </includes>
-        </fileSet>
-        <fileSet>
             <directory>${basedir}/src/dist_standalone/bin</directory>
             <outputDirectory>bin</outputDirectory>
             <includes>

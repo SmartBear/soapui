@@ -38,16 +38,6 @@
             </excludes>
         </fileSet>
         <fileSet>
-            <directory>${project.build.directory}</directory>
-            <outputDirectory>bin</outputDirectory>
-            <includes>
-                <include>*.jar</include>
-            </includes>
-            <excludes>
-                <exclude>${project.groupId}:${project.artifactId}:jar:${project.version}</exclude>
-            </excludes>
-        </fileSet>
-        <fileSet>
             <directory>${basedir}/src/dist_standalone/bin</directory>
             <outputDirectory>bin</outputDirectory>
             <includes>
