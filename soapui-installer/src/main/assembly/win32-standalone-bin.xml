@@ -71,7 +71,7 @@
             <outputDirectory>jre</outputDirectory>
         </fileSet>
         <fileSet>
-            <directory>${basedir}/src</directory>
+            <directory>${project.parent.basedir}/${project.src.artifactId}/src</directory>
             <outputDirectory>source</outputDirectory>
             <includes>
                 <include>html/</include>
