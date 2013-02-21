@@ -81,6 +81,13 @@
                 <include>main/</include>
             </includes>
         </fileSet>
+        <fileSet>
+            <directory>${basedir}/src/main</directory>
+            <outputDirectory>source</outputDirectory>
+            <includes>
+                <include>assembly/</include>
+            </includes>
+        </fileSet>
 
         <!-- TODO Ugly hack to create the empty listeners and actions directories -->
         <fileSet>
