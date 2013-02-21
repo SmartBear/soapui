@@ -44,7 +44,7 @@ public abstract class AbstractHttpXmlRequestDesktopPanel<T extends ModelItem, T2
 	}
 
 	public class HttpRequestMessageEditor extends
-			AbstractHttpRequestDesktopPanel<?, ?>.AbstractHttpRequestMessageEditor<HttpRequestDocument>
+			AbstractHttpRequestDesktopPanel.AbstractHttpRequestMessageEditor
 	{
 		public HttpRequestMessageEditor( HttpRequestInterface<?> modelItem )
 		{
@@ -53,7 +53,7 @@ public abstract class AbstractHttpXmlRequestDesktopPanel<T extends ModelItem, T2
 	}
 
 	public class HttpResponseMessageEditor extends
-			AbstractHttpRequestDesktopPanel<?, ?>.AbstractHttpResponseMessageEditor<HttpResponseDocument>
+			AbstractHttpRequestDesktopPanel.AbstractHttpResponseMessageEditor
 	{
 		public HttpResponseMessageEditor( HttpRequestInterface<?> modelItem )
 		{
