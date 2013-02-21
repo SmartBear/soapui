@@ -20,20 +20,6 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
 
-    <repositories>
-		<repository>
-			<id>eviwareRepository</id>
-			<url>http://www.eviware.com/repository/maven2</url>
-		</repository>
-	</repositories>
-	
-    <pluginRepositories>
-		<pluginRepository>
-			<id>eviwarePluginRepository</id>
-			<url>http://www.eviware.com/repository/maven2</url>
-		</pluginRepository>
-	</pluginRepositories>
-
     <dependencies>
 		<dependency>
 			<groupId>com.smartbear.soapui</groupId>

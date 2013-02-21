@@ -20,13 +20,6 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
 
-    <pluginRepositories>
-        <pluginRepository>
-            <id>eviwarePluginRepository</id>
-            <url>http://www.eviware.com/repository/maven2/</url>
-        </pluginRepository>
-    </pluginRepositories>
-
     <build>
         <plugins>
             <plugin>
