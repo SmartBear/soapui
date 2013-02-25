@@ -8,7 +8,7 @@
     
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.smartbear.soapui</groupId>
-    <artifactId>${project.src.artifactId}</artifactId>
+    <artifactId>soapui</artifactId>
     <name>soapUI</name>
     <description>The main soapUI project</description>
     <packaging>jar</packaging>
