@@ -62,6 +62,8 @@
                         <descriptor>src/main/assembly/linux-bin.xml</descriptor>
                         <descriptor>src/main/assembly/mac-bin.xml</descriptor>
                     </descriptors>
+                    <finalName>${project.name.full}</finalName>
+                    <appendAssemblyId>true</appendAssemblyId>
                 </configuration>
             </plugin>
 
