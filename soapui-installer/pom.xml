@@ -90,11 +90,11 @@
                         </property>
                         <property>
                             <name>DIST_ROOT</name>
-                            <value>${assembly.build.directory}/${project.name}-${project.version}-dist</value>
+                            <value>${assembly.build.directory}/${project.name.full}-dist</value>
                         </property>
                         <property>
                             <name>DIST_STANDALONE</name>
-                            <value>${assembly.build.directory}/${project.name}-${project.version}-dist</value>
+                            <value>${assembly.build.directory}/${project.name.full}-dist-standalone</value>
                         </property>
                         <property>
                             <name>RESOURCES_HOME</name>
