@@ -36,27 +36,19 @@
 
     <build>
 		<plugins>
+      <!-- FIXME Why do we need this plugin ? -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.0.2</version>
-				<configuration>
-					<source>1.5</source>
-					<target>1.5</target>
-				</configuration>
-			</plugin>
-            <!-- FIXME Why do we need this plugin ? -->
-			<plugin>
-			
-                <artifactId>maven-antrun-plugin</artifactId>
+			  <artifactId>maven-antrun-plugin</artifactId>
+        <version>1.7</version>
 				<executions>
 					<execution>
 						<phase>install</phase>
 						<configuration>
-							<tasks>
+							<target>
 								<copy file="pom.xml"
 									tofile="${project.build.directory}/maven-soapui-plugin-${project.version}.pom" />
-							</tasks>
+							</target>
 						</configuration>
 						<goals>
 							<goal>run</goal>
@@ -65,6 +57,7 @@
 				</executions>
 			</plugin>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<configuration>
 					<descriptors>

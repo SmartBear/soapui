@@ -28,4 +28,50 @@
         <module>soapui-maven-plugin-tester</module>
     </modules>
 
+    <properties>
+        <!-- Use 1.6 as we use guava 12.0 (it requires java 6: http://code.google.com/p/guava-libraries/wiki/Release12#JDK6_APIs) -->
+        <!-- Note that xmlbeans generator may use a different version -->
+        <javaMinimumVersion>1.6</javaMinimumVersion>
+    </properties>
+
+    <build>
+      <pluginManagement>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <version>2.3</version>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>2.5.1</version>
+            <configuration>
+              <source>${javaMinimumVersion}</source>
+              <target>${javaMinimumVersion}</target>
+            </configuration>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-plugin-plugin</artifactId>
+            <!-- this is the default version used when running maven 3.0.4
+            TODO upgrade to 3.2 (and fix warning in soapui-maven-plugin because of usage of deprecated declaration in mojo code)
+            -->
+            <version>2.9</version>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>2.12.1</version>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-failsafe-plugin</artifactId>
+            <version>2.12.1</version>
+          </plugin>
+        </plugins>
+      </pluginManagement>
+    </build>
+    
+    
 </project>
