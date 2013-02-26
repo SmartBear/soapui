@@ -28,7 +28,7 @@ bundled or none -->
             <useStrictFiltering>true</useStrictFiltering>
             <scope>runtime</scope>
             <includes>
-                <include>${project.groupId}:${project.src.artifactId}:jar:${project.version}</include>
+                <include>${project.groupId}:${project.src.artifactId}:jar:${project.baseVersion}</include>
             </includes>
         </dependencySet>
     </dependencySets>
