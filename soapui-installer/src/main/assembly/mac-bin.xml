@@ -30,7 +30,7 @@ bundled or none -->
             <includes>
                 <include>${project.groupId}:${project.src.artifactId}:jar:${project.version}</include>
             </includes>
-            <outputFileNameMapping>${project.groupId}:${project.src.artifactId}:jar:${project.version}</outputFileNameMapping>
+            <outputFileNameMapping>${project.src.artifactId}-${project.version}.jar</outputFileNameMapping>
         </dependencySet>
     </dependencySets>
     <fileSets>
