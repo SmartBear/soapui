@@ -30,6 +30,7 @@ bundled or none -->
             <includes>
                 <include>${project.groupId}:${project.src.artifactId}:jar:${project.baseVersion}</include>
             </includes>
+            <outputFileNameMapping>${project.groupId}:${project.src.artifactId}:jar:${project.baseVersion}</outputFileNameMapping>
         </dependencySet>
     </dependencySets>
     <fileSets>
