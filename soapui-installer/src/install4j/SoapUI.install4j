@@ -2566,7 +2566,7 @@ return installTutorials;</condition>
       <excludedComponents />
       <includedDownloadableComponents />
     </windows>
-    <unixInstaller name="Unix Installer x32" id="196" customizedId="" mediaFileName="soapUI-x32-${compiler:VERSION_NUMBER}" installDir="SmartBear/soapUI-${compiler:VERSION_NUMBER}" overridePrincipalLanguage="false" jreBitType="all" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" includedJRE="macosx-amd64-1.7.0_15" manualJREEntry="false" bundleType="1" jreURL="" jreShared="false" directDownload="false" installOnlyIfNecessary="false" customInstallBaseDir="" contentFilesType="1" downloadURL="">
+    <unixInstaller name="Unix Installer x32" id="196" customizedId="" mediaFileName="soapUI-x32-${compiler:VERSION_NUMBER}" installDir="SmartBear/soapUI-${compiler:VERSION_NUMBER}" overridePrincipalLanguage="false" jreBitType="all" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" includedJRE="linux-x86-1.7.0_15" manualJREEntry="false" bundleType="1" jreURL="" jreShared="false" directDownload="false" installOnlyIfNecessary="false" customInstallBaseDir="" contentFilesType="1" downloadURL="">
       <excludedLaunchers />
       <excludedBeans>
         <bean refId="493" />
