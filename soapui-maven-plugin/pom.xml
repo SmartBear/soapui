@@ -4,7 +4,7 @@
 
     <modelVersion>4.0.0</modelVersion>
 	<groupId>com.smartbear.soapui</groupId>
-	<artifactId>maven-soapui-plugin</artifactId>
+	<artifactId>soapui-maven-plugin</artifactId>
     <name>soapUI Maven plugin</name>
     <description>Maven 2 project for building a soapUI plugin that is compatible with both Maven 1.x and Maven 2.x.</description>
 	<packaging>maven-plugin</packaging>
@@ -55,7 +55,7 @@
 						<configuration>
 							<tasks>
 								<copy file="pom.xml"
-									tofile="${project.build.directory}/maven-soapui-plugin-${project.version}.pom" />
+									tofile="${project.build.directory}/soapui-maven-plugin-${project.version}.pom" />
 							</tasks>
 						</configuration>
 						<goals>
