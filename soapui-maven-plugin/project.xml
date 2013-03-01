@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
 	<pomVersion>3</pomVersion>
-	<artifactId>maven-soapui-plugin</artifactId>
+	<artifactId>soapui-maven-plugin</artifactId>
 	<groupId>eviware</groupId>
 	<organization>
 		<name>eviware.com</name>
 	</organization>
 	<inceptionYear>2006</inceptionYear>
-	<name>maven-soapui-plugin</name>
+	<name>soapui-maven-plugin</name>
 	<currentVersion>4.5.1</currentVersion>
 	<package>com.eviware.soapui</package>
 	<shortDescription>maven plugin for soapui</shortDescription>

@@ -24,7 +24,7 @@
         <plugins>
             <plugin>
                 <groupId>com.smartbear.soapui</groupId>
-                <artifactId>maven-soapui-plugin</artifactId>
+                <artifactId>soapui-maven-plugin</artifactId>
                 <version>${project.parent.version}</version>
                 <executions>
                     <execution>
