@@ -415,7 +415,7 @@
         <dependency>
             <groupId>teamdev</groupId>
             <artifactId>jxbrowser</artifactId>
-            <version>3.0</version>
+            <version>3.3</version>
         </dependency>
         <dependency>
             <groupId>teamdev</groupId>
