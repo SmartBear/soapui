@@ -419,28 +419,33 @@
         </dependency>
         <dependency>
             <groupId>teamdev</groupId>
+            <artifactId>comfyj</artifactId>
+            <version>2.9</version>
+        </dependency>
+        <dependency>
+            <groupId>teamdev</groupId>
             <artifactId>winpack</artifactId>
-            <version>3.8.2</version>
+            <version>3.8.3</version>
         </dependency>
         <dependency>
             <groupId>teamdev</groupId>
             <artifactId>xulrunner-windows</artifactId>
-            <version>3.0</version>
+            <version>3.3</version>
         </dependency>
         <dependency>
             <groupId>teamdev</groupId>
             <artifactId>xulrunner-linux64</artifactId>
-            <version>3.0</version>
+            <version>3.3</version>
         </dependency>
         <dependency>
             <groupId>teamdev</groupId>
             <artifactId>xulrunner-linux</artifactId>
-            <version>3.0</version>
+            <version>3.3</version>
         </dependency>
         <dependency>
             <groupId>teamdev</groupId>
             <artifactId>xulrunner-mac</artifactId>
-            <version>3.0</version>
+            <version>3.3</version>
         </dependency>
         <dependency>
             <groupId>teamdev</groupId>
@@ -450,17 +455,27 @@
         <dependency>
             <groupId>teamdev</groupId>
             <artifactId>engine-gecko</artifactId>
-            <version>3.0</version>
+            <version>3.3</version>
+        </dependency>
+        <dependency>
+            <groupId>teamdev</groupId>
+            <artifactId>engine-gecko15</artifactId>
+            <version>3.3</version>
         </dependency>
         <dependency>
             <groupId>teamdev</groupId>
             <artifactId>engine-ie</artifactId>
-            <version>3.0</version>
+            <version>3.3</version>
         </dependency>
         <dependency>
             <groupId>teamdev</groupId>
             <artifactId>engine-webkit</artifactId>
-            <version>3.0</version>
+            <version>3.3</version>
+        </dependency>
+        <dependency>
+            <groupId>teamdev</groupId>
+            <artifactId>jniwrap</artifactId>
+            <version>3.8.4</version>
         </dependency>
 
         <!-- Jetty -->
