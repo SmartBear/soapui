@@ -4,6 +4,7 @@
 .settings/
 .classpath
 .project
+*-ide-plugin.xml
 
 # Logs
 *.log
