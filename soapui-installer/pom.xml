@@ -50,17 +50,8 @@
 
         <plugins>
             <plugin>
-
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>2.3</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                    </execution>
-                </executions>
                 <configuration>
                     <outputDirectory>${assembly.build.directory}</outputDirectory>
                     <descriptors>
@@ -80,14 +71,6 @@
                 <groupId>com.google.code.maven-install4j</groupId>
                 <artifactId>maven-install4j-plugin</artifactId>
                 <version>0.1.1</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                    </execution>
-                </executions>
                 <configuration>
                     <executable>${devenv.install4jc}</executable>
                     <releaseId>${project.version}</releaseId>
@@ -161,14 +144,6 @@
                 <groupId>net.ju-n.maven.plugins</groupId>
                 <artifactId>maven-checksum-plugin</artifactId>
                 <version>1.0</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>files</goal>
-                        </goals>
-                    </execution>
-                </executions>
                 <configuration>
                     <!-- TODO parameterize this better-->
                     <files>
@@ -206,14 +181,6 @@
                 <groupId>com.github.danielflower.mavenplugins</groupId>
                 <artifactId>maven-gitlog-plugin</artifactId>
                 <version>1.4.11</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                    </execution>
-                </executions>
                 <configuration>
                     <reportTitle>soapUI ${project.version} | https://github.com/SmartBear/soapui/tree/maintenance
                     </reportTitle>
@@ -222,21 +189,6 @@
                     <generateSimpleHTMLChangeLog>true</generateSimpleHTMLChangeLog>
                 </configuration>
             </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.9</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>javadoc</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
         </plugins>
     </build>
 
