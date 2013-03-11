@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!-- TODO Insert a nice header here plz -->
+<xb:config xmlns:xb="http://xml.apache.org/xmlbeans/2004/02/xbean/config">
+	<xb:namespace uri="http://eviware.com/soapui/config">
+	  <xb:suffix>Config</xb:suffix>
+	</xb:namespace>
+	<xb:namespace uri="http://www.eviware.com/soapui/InferredSchema">
+	  <xb:suffix>Config</xb:suffix>
+	</xb:namespace>
+</xb:config>
+
+
+

@@ -1,3 +1,0 @@
-#Sun Mar 09 12:08:16 CET 2008
-build.number=[internal]
-build.date=2008/03/09 12\:08

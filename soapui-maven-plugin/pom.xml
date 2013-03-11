@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+	<groupId>com.smartbear.soapui</groupId>
+	<artifactId>maven-soapui-plugin</artifactId>
+    <name>soapUI Maven plugin</name>
+    <description>Maven 2 project for building a soapUI plugin that is compatible with both Maven 1.x and Maven 2.x.</description>
+	<packaging>maven-plugin</packaging>
+
+    <parent>
+        <groupId>com.smartbear.soapui</groupId>
+        <artifactId>soapui-project</artifactId>
+        <version>4.5.2-SNAPSHOT</version>
+    </parent>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    </properties>
+
+    <dependencies>
+		<dependency>
+			<groupId>com.smartbear.soapui</groupId>
+			<artifactId>soapui</artifactId>
+			<version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>teamdev</artifactId>
+                    <groupId>jxbrowser</groupId>
+                </exclusion>
+            </exclusions>
+		</dependency>
+   	</dependencies>
+
+    <build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.0.2</version>
+				<configuration>
+					<source>1.5</source>
+					<target>1.5</target>
+				</configuration>
+			</plugin>
+            <!-- FIXME Why do we need this plugin ? -->
+			<plugin>
+			
+                <artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>install</phase>
+						<configuration>
+							<tasks>
+								<copy file="pom.xml"
+									tofile="${project.build.directory}/maven-soapui-plugin-${project.version}.pom" />
+							</tasks>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<descriptors>
+						<descriptor>src/assembly/src.xml</descriptor>
+					</descriptors>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>
