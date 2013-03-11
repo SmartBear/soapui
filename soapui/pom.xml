@@ -328,6 +328,16 @@
             <artifactId>jniwrap</artifactId>
             <version>3.8.4</version>
         </dependency>
+        <dependency>
+            <groupId>teamdev</groupId>
+            <artifactId>xulrunner15-mac</artifactId>
+            <version>3.3</version>
+        </dependency>
+        <dependency>
+            <groupId>teamdev</groupId>
+            <artifactId>xulrunner15-windows</artifactId>
+            <version>3.3</version>
+        </dependency>
 
         <!-- Jetty -->
 
