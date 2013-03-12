@@ -149,8 +149,6 @@
           <entry location="wstf" fileType="regular" />
         </exclude>
       </dirEntry>
-      <fileEntry mountPoint="776" file="../../maven.xml" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
-      <fileEntry mountPoint="776" file="../../project.xml" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
       <fileEntry mountPoint="1334" file="${compiler:HERMES_INSTALLER}" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
       <fileEntry mountPoint="1334" file="${compiler:SRC_ROOT}/install4j/hermes/hermesInstall.bat" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
       <fileEntry mountPoint="1334" file="${compiler:SRC_ROOT}/install4j/hermes/hermesInstall64bit.bat" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
