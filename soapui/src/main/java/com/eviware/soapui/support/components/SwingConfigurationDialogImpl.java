@@ -29,6 +29,7 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.ActionList;
@@ -176,6 +177,15 @@ public class SwingConfigurationDialogImpl implements ConfigurationDialog
 
 			form.getValues( values );
 			dialog.setVisible( false );
+			try
+			{
+				SoapUI.saveSettings();
+			}
+			catch( Exception e1 )
+			{
+				SoapUI.logError( e1, "There was an error when attempting to save your preferences" );
+				UISupport.showErrorMessage( e1 );
+			}
 		}
 	}
 

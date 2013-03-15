@@ -1485,6 +1485,7 @@ public class SoapUI
 			}
 			catch( Exception e1 )
 			{
+				SoapUI.logError( e1, "There was an error when attempting to save your preferences" );
 				UISupport.showErrorMessage( e1 );
 			}
 		}
