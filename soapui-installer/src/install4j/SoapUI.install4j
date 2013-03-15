@@ -83,10 +83,12 @@
       </dirEntry>
       <dirEntry mountPoint="318" file="${compiler:DIST_ROOT}/lib" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" entryMode="direct" subDirectory="" excludeSuffixes="" dirMode="755" overrideDirMode="true">
         <exclude>
-          <entry location="xulrunner-linux-3.0.jar" fileType="regular" />
-          <entry location="xulrunner-linux64-3.0.jar" fileType="regular" />
-          <entry location="xulrunner-mac-3.0.jar" fileType="regular" />
-          <entry location="xulrunner-windows-3.0.jar" fileType="regular" />
+          <entry location="xulrunner-linux-3.3.jar" fileType="regular" />
+          <entry location="xulrunner-linux64-3.3.jar" fileType="regular" />
+          <entry location="xulrunner-mac-3.3.jar" fileType="regular" />
+          <entry location="xulrunner-windows-3.3.jar" fileType="regular" />
+          <entry location="xulrunner15-mac-3.3.jar" fileType="regular" />
+          <entry location="xulrunner15-windows-3.3.jar" fileType="regular" />
         </exclude>
       </dirEntry>
       <dirEntry mountPoint="399" file="${compiler:DIST_ROOT}/licenses" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" entryMode="direct" subDirectory="" excludeSuffixes="" dirMode="755" overrideDirMode="true">
@@ -147,8 +149,6 @@
           <entry location="wstf" fileType="regular" />
         </exclude>
       </dirEntry>
-      <fileEntry mountPoint="776" file="../../maven.xml" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
-      <fileEntry mountPoint="776" file="../../project.xml" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
       <fileEntry mountPoint="1334" file="${compiler:HERMES_INSTALLER}" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
       <fileEntry mountPoint="1334" file="${compiler:SRC_ROOT}/install4j/hermes/hermesInstall.bat" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
       <fileEntry mountPoint="1334" file="${compiler:SRC_ROOT}/install4j/hermes/hermesInstall64bit.bat" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
@@ -161,10 +161,12 @@
       <dirEntry mountPoint="1956" file="${compiler:DIST_ROOT}/wsi-test-tools" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" entryMode="direct" subDirectory="" excludeSuffixes="" dirMode="755" overrideDirMode="true">
         <exclude />
       </dirEntry>
-      <fileEntry mountPoint="2236" file="${compiler:DIST_ROOT}/lib/xulrunner-windows-3.0.jar" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
-      <fileEntry mountPoint="2237" file="${compiler:DIST_ROOT}/lib/xulrunner-mac-3.0.jar" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
-      <fileEntry mountPoint="2238" file="${compiler:DIST_ROOT}/lib/xulrunner-linux64-3.0.jar" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
-      <fileEntry mountPoint="2238" file="${compiler:DIST_ROOT}/lib/xulrunner-linux-3.0.jar" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
+      <fileEntry mountPoint="2236" file="${compiler:DIST_ROOT}/lib/xulrunner-windows-3.3.jar" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
+      <fileEntry mountPoint="2236" file="${compiler:DIST_ROOT}/lib/xulrunner15-windows-3.3.jar" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
+      <fileEntry mountPoint="2237" file="${compiler:DIST_ROOT}/lib/xulrunner-mac-3.3.jar" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
+      <fileEntry mountPoint="2237" file="${compiler:DIST_ROOT}/lib/xulrunner15-mac-3.3.jar" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
+      <fileEntry mountPoint="2238" file="${compiler:DIST_ROOT}/lib/xulrunner-linux64-3.3.jar" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
+      <fileEntry mountPoint="2238" file="${compiler:DIST_ROOT}/lib/xulrunner-linux-3.3.jar" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
       <dirEntry mountPoint="2392" file="${compiler:DIST_ROOT}/Tutorials" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" entryMode="direct" subDirectory="" excludeSuffixes="" dirMode="755" overrideDirMode="true">
         <exclude />
       </dirEntry>

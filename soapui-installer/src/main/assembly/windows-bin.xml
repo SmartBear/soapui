@@ -13,6 +13,7 @@
             <scope>runtime</scope>
             <excludes>
                 <exclude>teamdev:xulrunner-mac</exclude>
+                <exclude>teamdev:xulrunner15-mac</exclude>
                 <exclude>teamdev:xulrunner-linux</exclude>
                 <exclude>teamdev:xulrunner-linux64</exclude>
                 <exclude>${project.groupId}:${project.src.artifactId}:jar:${project.version}</exclude>
