@@ -172,7 +172,7 @@ public class HttpRequestFilter extends AbstractRequestFilter
 			case TEMPLATE :
 				try
 				{
-					value = encodeAccordingToSettings( value, encoding, param.isDisableUrlEncoding(), request
+					value = getEncodedValue( value, encoding, param.isDisableUrlEncoding(), request
 							.getSettings().getBoolean( HttpSettings.ENCODED_URLS ) );
 					path = path.replaceAll( "\\{" + param.getName() + "\\}", value == null ? "" : value );
 				}
@@ -184,7 +184,7 @@ public class HttpRequestFilter extends AbstractRequestFilter
 			case MATRIX :
 				try
 				{
-					value = encodeAccordingToSettings( value, encoding, param.isDisableUrlEncoding(), request
+					value = getEncodedValue( value, encoding, param.isDisableUrlEncoding(), request
 							.getSettings().getBoolean( HttpSettings.ENCODED_URLS ) );
 				}
 				catch( UnsupportedEncodingException e )
@@ -477,7 +477,7 @@ public class HttpRequestFilter extends AbstractRequestFilter
 		rootPart.setDataHandler( dataHandler );
 	}
 	
-	protected String encodeAccordingToSettings( String path, String encoding, boolean isDisableUrlEncoding, boolean isPreEncoded ) throws UnsupportedEncodingException
+	protected String getEncodedValue( String value, String encoding, boolean isDisableUrlEncoding, boolean isPreEncoded ) throws UnsupportedEncodingException
 	{
 
 		// get default encoding if there is no encoding set
@@ -486,22 +486,22 @@ public class HttpRequestFilter extends AbstractRequestFilter
 			encoding = System.getProperty("file.encoding");
 		}
 		
-		if(isAlreadyEncoded(path, encoding ))
+		if(isAlreadyEncoded(value, encoding ))
 		{
 			// Already encoded so we don't do anything
-			return path;
+			return value;
 		}
 		else if( isDisableUrlEncoding || isPreEncoded )
 		{
 			// If encoding is disabled or it is pre-encoded then we don't encode
-			return path;
+			return value;
 		}
 		else
 		{
 			// encoding NOT disabled neither it is pre-encoded, so we encode here
-			String encodedPath =  URLEncoder.encode(path, encoding );
+			String encodedValue =  URLEncoder.encode(value, encoding );
 			// URLEncoder replaces space with "+", but we want "%20".
-			return encodedPath.replaceAll( "\\+", "%20" );
+			return encodedValue.replaceAll( "\\+", "%20" );
 		}
 
 	}

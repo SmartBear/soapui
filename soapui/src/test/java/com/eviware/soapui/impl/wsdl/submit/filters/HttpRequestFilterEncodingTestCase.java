@@ -37,8 +37,8 @@ public class HttpRequestFilterEncodingTestCase
 		// String getPathAccordingToSettings(String path, String encoding,
 		// boolean isDisableUrlEncoding, boolean isPreEncoded )
 		assertEquals("%257cresource/sub%257cresource",
-				httpRequestFilter.encodeAccordingToSettings(
-						"%257cresource/sub%257cresource", "UTF-8", false, true));
+				httpRequestFilter.getEncodedValue(
+						"%257cresource/sub%257cresource", "UTF-8", false, true ));
 	}
 
 	@Test
@@ -46,8 +46,8 @@ public class HttpRequestFilterEncodingTestCase
 		// String getPathAccordingToSettings(String path, String encoding,
 		// boolean isDisableUrlEncoding, boolean isPreEncoded )
 		assertEquals("%257cresource/sub%257cresource",
-				httpRequestFilter.encodeAccordingToSettings(
-						"%257cresource/sub%257cresource", "UTF-8", true, false));
+				httpRequestFilter.getEncodedValue(
+						"%257cresource/sub%257cresource", "UTF-8", true, false ));
 	}
 
 	@Test
@@ -56,8 +56,8 @@ public class HttpRequestFilterEncodingTestCase
 		// String getPathAccordingToSettings(String path, String encoding,
 		// boolean isDisableUrlEncoding, boolean isPreEncoded )
 		assertEquals("%257cresource/sub%257cresource",
-				httpRequestFilter.encodeAccordingToSettings(
-						"%257cresource/sub%257cresource", "UTF-8", true, true));
+				httpRequestFilter.getEncodedValue(
+						"%257cresource/sub%257cresource", "UTF-8", true, true ));
 	}
 
 	@Test
@@ -67,9 +67,9 @@ public class HttpRequestFilterEncodingTestCase
 		// boolean isDisableUrlEncoding, boolean isPreEncoded )
 		assertEquals("%257cresource/sub%257cresource",
 				httpRequestFilter
-						.encodeAccordingToSettings(
+						.getEncodedValue(
 								"%257cresource/sub%257cresource", "UTF-8",
-								false, false));
+								false, false ));
 	}
 
 	@Test
@@ -77,8 +77,8 @@ public class HttpRequestFilterEncodingTestCase
 		// String getPathAccordingToSettings(String path, String encoding,
 		// boolean isDisableUrlEncoding, boolean isPreEncoded )
 		assertEquals("resource/subresource|id",
-				httpRequestFilter.encodeAccordingToSettings(
-						"resource/subresource|id", "UTF-8", false, true));
+				httpRequestFilter.getEncodedValue(
+						"resource/subresource|id", "UTF-8", false, true ));
 	}
 
 	@Test
@@ -86,8 +86,8 @@ public class HttpRequestFilterEncodingTestCase
 		// String getPathAccordingToSettings(String path, String encoding,
 		// boolean isDisableUrlEncoding, boolean isPreEncoded )
 		assertEquals("resource/subresource|id",
-				httpRequestFilter.encodeAccordingToSettings(
-						"resource/subresource|id", "UTF-8", true, false));
+				httpRequestFilter.getEncodedValue(
+						"resource/subresource|id", "UTF-8", true, false ));
 	}
 
 	@Test
@@ -96,8 +96,8 @@ public class HttpRequestFilterEncodingTestCase
 		// String getPathAccordingToSettings(String path, String encoding,
 		// boolean isDisableUrlEncoding, boolean isPreEncoded )
 		assertEquals("resource/subresource|id",
-				httpRequestFilter.encodeAccordingToSettings(
-						"resource/subresource|id", "UTF-8", true, true));
+				httpRequestFilter.getEncodedValue(
+						"resource/subresource|id", "UTF-8", true, true ));
 	}
 
 	@Test
@@ -105,8 +105,8 @@ public class HttpRequestFilterEncodingTestCase
 		// String getPathAccordingToSettings(String path, String encoding,
 		// boolean isDisableUrlEncoding, boolean isPreEncoded )
 		assertEquals("resource%2Fsubresource%7Cid",
-				httpRequestFilter.encodeAccordingToSettings(
-						"resource/subresource|id", "UTF-8", false, false));
+				httpRequestFilter.getEncodedValue(
+						"resource/subresource|id", "UTF-8", false, false ));
 	}
 
 	@Test
@@ -114,8 +114,8 @@ public class HttpRequestFilterEncodingTestCase
 		// String getPathAccordingToSettings(String path, String encoding,
 		// boolean isDisableUrlEncoding, boolean isPreEncoded )
 		assertEquals("resource%2Fsub%20resource%7Cid",
-				httpRequestFilter.encodeAccordingToSettings(
-						"resource/sub resource|id", "UTF-8", false, false));
+				httpRequestFilter.getEncodedValue(
+						"resource/sub resource|id", "UTF-8", false, false ));
 	}
 
 	@Test
@@ -123,16 +123,16 @@ public class HttpRequestFilterEncodingTestCase
 		// String getPathAccordingToSettings(String path, String encoding,
 		// boolean isDisableUrlEncoding, boolean isPreEncoded )
 		assertEquals("resource%2Fsubresource%7Cid",
-				httpRequestFilter.encodeAccordingToSettings(
-						"resource/subresource|id", null, false, false));
+				httpRequestFilter.getEncodedValue(
+						"resource/subresource|id", null, false, false ));
 	}
 
 	@Test(expected = UnsupportedEncodingException.class)
 	public void valueWithInvalidEncodingTest() throws Exception {
 		// String getPathAccordingToSettings(String path, String encoding,
 		// boolean isDisableUrlEncoding, boolean isPreEncoded )
-		httpRequestFilter.encodeAccordingToSettings("resource/subresource|id",
-				"ZF", false, false);
+		httpRequestFilter.getEncodedValue( "resource/subresource|id",
+				"ZF", false, false );
 	}
 
 	@Test
