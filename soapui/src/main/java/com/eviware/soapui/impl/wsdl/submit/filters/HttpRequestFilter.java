@@ -172,9 +172,9 @@ public class HttpRequestFilter extends AbstractRequestFilter
 			case TEMPLATE :
 				try
 				{
-					path = path.replaceAll( "\\{" + param.getName() + "\\}", value == null ? "" : value );
-					path = getPathAccordingToSettings(path, encoding, param.isDisableUrlEncoding(), request
+					value = encodeAccordingToSettings( value, encoding, param.isDisableUrlEncoding(), request
 							.getSettings().getBoolean( HttpSettings.ENCODED_URLS ) );
+					path = path.replaceAll( "\\{" + param.getName() + "\\}", value == null ? "" : value );
 				}
 				catch( UnsupportedEncodingException e )
 				{
@@ -182,6 +182,16 @@ public class HttpRequestFilter extends AbstractRequestFilter
 				}
 				break;
 			case MATRIX :
+				try
+				{
+					value = encodeAccordingToSettings( value, encoding, param.isDisableUrlEncoding(), request
+							.getSettings().getBoolean( HttpSettings.ENCODED_URLS ) );
+				}
+				catch( UnsupportedEncodingException e )
+				{
+					SoapUI.logError( e );
+				}
+
 				if( param.getType().equals( XmlBoolean.type.getName() ) )
 				{
 					if( value.toUpperCase().equals( "TRUE" ) || value.equals( "1" ) )
@@ -196,15 +206,6 @@ public class HttpRequestFilter extends AbstractRequestFilter
 					{
 						path += "=" + value;
 					}
-				}
-				try
-				{
-					path = getPathAccordingToSettings(path, encoding, param.isDisableUrlEncoding(), request
-							.getSettings().getBoolean( HttpSettings.ENCODED_URLS ) );
-				}
-				catch( UnsupportedEncodingException e )
-				{
-					SoapUI.logError( e );
 				}
 			case PLAIN :
 				break;
@@ -476,7 +477,7 @@ public class HttpRequestFilter extends AbstractRequestFilter
 		rootPart.setDataHandler( dataHandler );
 	}
 	
-	protected String getPathAccordingToSettings( String path, String encoding, boolean isDisableUrlEncoding, boolean isPreEncoded ) throws UnsupportedEncodingException
+	protected String encodeAccordingToSettings( String path, String encoding, boolean isDisableUrlEncoding, boolean isPreEncoded ) throws UnsupportedEncodingException
 	{
 
 		// get default encoding if there is no encoding set
@@ -490,8 +491,7 @@ public class HttpRequestFilter extends AbstractRequestFilter
 			// Already encoded so we don't do anything
 			return path;
 		}
-		
-		if( isDisableUrlEncoding || isPreEncoded )
+		else if( isDisableUrlEncoding || isPreEncoded )
 		{
 			// If encoding is disabled or it is pre-encoded then we don't encode
 			return path;
@@ -499,7 +499,9 @@ public class HttpRequestFilter extends AbstractRequestFilter
 		else
 		{
 			// encoding NOT disabled neither it is pre-encoded, so we encode here
-			return URLEncoder.encode(path, encoding ); //FIXME: Since we get null in encoding settings
+			String encodedPath =  URLEncoder.encode(path, encoding );
+			// URLEncoder replaces space with "+", but we want "%20".
+			return encodedPath.replaceAll( "\\+", "%20" );
 		}
 
 	}
