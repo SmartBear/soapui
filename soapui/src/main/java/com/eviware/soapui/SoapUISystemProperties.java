@@ -17,7 +17,7 @@ package com.eviware.soapui;
  *
  *         This is a container for all system properties used in soapUI core.
  */
-public class SoapUISystemProperties
+public final class SoapUISystemProperties
 {
 	public static final String TEST_ON_DEMAND_HOST = "soapui.testondemand.host";
 	public static final String TEST_ON_DEMAND_FIRST_PAGE_URL = "soapui.testondemand.firstpage.url";
@@ -30,4 +30,8 @@ public class SoapUISystemProperties
 	public static final String VERSION = "soapui.version";
 
 	public static final String SOAPUI_LOG4j_CONFIG_FILE = "soapui.log4j.config";
+
+	private SoapUISystemProperties() {
+		throw new AssertionError();
+	}
 }
