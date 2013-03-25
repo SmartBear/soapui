@@ -458,7 +458,7 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
 			context.setSearchFor( searchExpression );
 			context.setReplaceWith( replacement );
 			context.setRegularExpression( false );
-			context.setMatchCase( caseCheck.isEnabled() );
+			context.setMatchCase( caseCheck.isSelected() );
 			context.setSearchForward( forwardButton.isSelected() );
 			context.setWholeWord( false );
 			return context;
@@ -477,7 +477,7 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
 			context.setSearchFor( searchExpression );
 			context.setRegularExpression( false );
 			context.setSearchForward( forwardButton.isSelected() );
-			context.setMatchCase( caseCheck.isEnabled() );
+			context.setMatchCase( caseCheck.isSelected() );
 			context.setWholeWord( false );
 			return context;
 		}
