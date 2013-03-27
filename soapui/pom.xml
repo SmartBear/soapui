@@ -108,29 +108,20 @@
                 </configuration>
             </plugin>
 
+            <!-- TODO As noticed we are NOT using the Category annotations.
+                      This is because they cause problems when running the Cucumber tests.
+                      We are thus using the standard *Test.java suffix for unit tests and
+                     *IT.java suffix for integration tests.
+                     This should be fixed. -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>2.12.1</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>integration-test</goal>
-                        </goals>
-                        <configuration>
-                            <includes>
-                                <include>**/*.class</include>
-                            </includes>
-                        </configuration>
-                    </execution>
-                </executions>
                 <configuration>
                     <systemProperties>
                         <soapui.log4j.config>${project.build.testOutputDirectory}/config/soapui-test-log4j.xml</soapui.log4j.config>
                     </systemProperties>
-                    <!-- FIXME Ignoring integration test failures for now -->
                     <testFailureIgnore>true</testFailureIgnore>
-                    <groups>com.eviware.soapui.test.IntegrationTest</groups>
                 </configuration>
             </plugin>
 
@@ -160,6 +151,29 @@
             <version>1.8.5</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- TODO We are using 1.0.8 because of issue with results not
+             being shown correctly in the json report:
+             https://github.com/cucumber/gherkin/issues/165 -->
+        <dependency>
+            <groupId>info.cukes</groupId>
+            <artifactId>cucumber-java</artifactId>
+            <version>1.0.8</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>info.cukes</groupId>
+            <artifactId>cucumber-junit</artifactId>
+            <version>1.0.8</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.easytesting</groupId>
+            <artifactId>fest-swing</artifactId>
+            <version>1.2.1</version>
+            <scope>test</scope>
+        </dependency>
+
 
         <!-- XML Beans -->
 
