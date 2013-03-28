@@ -98,11 +98,8 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.12.1</version>
                 <configuration>
-                    <includes>
-                        <include>**/*.class</include>
-                    </includes>
-                    <excludedGroups>com.eviware.soapui.test.IntegrationTest</excludedGroups>
                     <systemProperties>
+                        <!-- Only log errors and only log to the console to decrease the log verbosity -->
                         <soapui.log4j.config>${project.build.testOutputDirectory}/config/soapui-test-log4j.xml</soapui.log4j.config>
                     </systemProperties>
                 </configuration>
