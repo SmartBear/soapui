@@ -690,7 +690,7 @@ public class DefaultSoapUICore implements SoapUICore
 			{
 				if( factoryFile.isDirectory() )
 				{
-					addExternalListeners( factoryFile.getAbsolutePath(), classLoader );
+					addExternalFactories( factoryFile.getAbsolutePath(), classLoader );
 					continue;
 				}
 
