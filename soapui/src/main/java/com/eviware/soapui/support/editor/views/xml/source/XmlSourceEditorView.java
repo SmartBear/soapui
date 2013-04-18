@@ -306,7 +306,6 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
 		private JButton replaceAllButton;
 		private JComboBox findCombo;
 		private JComboBox replaceCombo;
-		private JCheckBox wrapCheck;
 		private final String title;
 
 		public FindAndReplaceDialogView( String title )
@@ -397,12 +396,9 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
 			caseCheck.setBorder( BorderFactory.createEmptyBorder( 3, 3, 3, 3 ) );
 			wholeWordCheck = new JCheckBox( "Whole Word" );
 			wholeWordCheck.setBorder( BorderFactory.createEmptyBorder( 3, 3, 3, 3 ) );
-			wrapCheck = new JCheckBox( "Wrap Search" );
-			wrapCheck.setBorder( BorderFactory.createEmptyBorder( 3, 3, 3, 3 ) );
-			JPanel optionsPanel = new JPanel( new GridLayout( 3, 1 ) );
+			JPanel optionsPanel = new JPanel( new GridLayout( 2, 1 ) );
 			optionsPanel.add( caseCheck );
 			optionsPanel.add( wholeWordCheck );
-			optionsPanel.add( wrapCheck );
 			optionsPanel.setBorder( BorderFactory.createTitledBorder( "Options" ) );
 
 			// create panel with options
@@ -460,7 +456,7 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
 			context.setRegularExpression( false );
 			context.setMatchCase( caseCheck.isSelected() );
 			context.setSearchForward( forwardButton.isSelected() );
-			context.setWholeWord( false );
+			context.setWholeWord( wholeWordCheck.isSelected() );
 			return context;
 		}
 
