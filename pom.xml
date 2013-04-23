@@ -22,10 +22,24 @@
         </repository>
     </repositories>
 
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <!-- Custom properties -->
+        <assembly.build.directory>${project.build.directory}/assemblies</assembly.build.directory>
+        <installer.build.directory>${project.build.directory}/install4j</installer.build.directory>
+        <build.date>${maven.build.timestamp}</build.date>
+
+        <project.name.full>soapui-${project.version}</project.name.full>
+        <project.src.artifactId>soapui</project.src.artifactId>
+    </properties>
+
     <modules>
         <module>soapui</module>
         <module>soapui-maven-plugin</module>
         <module>soapui-maven-plugin-tester</module>
+        <module>soapui-installer</module>
     </modules>
 
 </project>

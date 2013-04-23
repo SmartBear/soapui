@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>soapui-project</artifactId>
+        <groupId>com.smartbear.soapui</groupId>
+        <version>4.5.2-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>soapui-installer</artifactId>
+
+    <repositories>
+        <repository>
+            <id>eviware</id>
+            <name>Eviware Maven2 Repository</name>
+            <url>http://www.eviware.com/repository/maven2</url>
+        </repository>
+        <repository>
+            <id>central</id>
+            <name>Central Maven2 Repository</name>
+            <url>http://repo1.maven.org/maven2</url>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>googlecode-maven-install4j</id>
+            <name>googlecode-maven-install4j</name>
+            <url>http://maven-install4j.googlecode.com/svn/m2-repo</url>
+        </pluginRepository>
+    </pluginRepositories>
+
+    <scm>
+        <connection>scm:git:git://github.com/SmartBear/soapui.git</connection>
+    </scm>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <excludes>
+                    <!-- TODO Not sure if this is needed -->
+                    <exclude>src/main/resources/com/eviware/soapui/resources/conf/soapui-log4j.xml</exclude>
+                </excludes>
+            </resource>
+        </resources>
+
+        <plugins>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.3</version>
+                <configuration>
+                    <outputDirectory>${assembly.build.directory}</outputDirectory>
+                    <descriptors>
+                        <descriptor>src/main/assembly/dist.xml</descriptor>
+                        <descriptor>src/main/assembly/dist-standalone.xml</descriptor>
+                        <descriptor>src/main/assembly/windows-bin.xml</descriptor>
+                        <descriptor>src/main/assembly/win32-standalone-bin.xml</descriptor>
+                        <descriptor>src/main/assembly/linux-bin.xml</descriptor>
+                        <descriptor>src/main/assembly/mac-bin.xml</descriptor>
+                    </descriptors>
+                    <finalName>${project.name.full}</finalName>
+                    <appendAssemblyId>true</appendAssemblyId>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>com.google.code.maven-install4j</groupId>
+                <artifactId>maven-install4j-plugin</artifactId>
+                <version>0.1.1</version>
+                <configuration>
+                    <executable>${devenv.install4jc}</executable>
+                    <releaseId>${project.version}</releaseId>
+                    <attach>true</attach>
+                    <skipOnMissingExecutable>true</skipOnMissingExecutable>
+                    <!-- FIXME  Move this to src/main/install4j -->
+                    <!-- FIXME Decide what goes here and what goes in he *.install4j and what goes in Jenkins -->
+                    <configFile>${project.basedir}/src/install4j/SoapUI.install4j</configFile>
+                    <compilerVariables>
+                        <property>
+                            <name>VERSION_NUMBER</name>
+                            <value>${project.version}</value>
+                        </property>
+                        <property>
+                            <name>SRC_ROOT</name>
+                            <value>${basedir}/src</value>
+                        </property>
+                        <property>
+                            <name>DIST_ROOT</name>
+                            <value>${assembly.build.directory}/${project.name.full}-dist</value>
+                        </property>
+                        <property>
+                            <name>DIST_STANDALONE</name>
+                            <value>${assembly.build.directory}/${project.name.full}-dist-standalone</value>
+                        </property>
+                        <property>
+                            <name>RESOURCES_HOME</name>
+                            <value>${basedir}/src/install4j/resources</value>
+                        </property>
+                        <property>
+                            <name>SIGNTOOL_PATH</name>
+                            <value>${maven.install4j.signtool}</value>
+                        </property>
+                        <property>
+                            <name>CERT_PATH</name>
+                            <value>${maven.install4j.cert}</value>
+                        </property>
+                        <property>
+                            <name>CERT_PASS</name>
+                            <value>${maven.install4j.cert.pass}</value>
+                        </property>
+                        <property>
+                            <name>WIN_DLLS_PATH</name>
+                            <value>${maven.install4j.cert}</value>
+                        </property>
+                        <property>
+                            <name>HERMES_INSTALLER</name>
+                            <value>${maven.hermes.installer}</value>
+                        </property>
+                        <property>
+                            <name>WIN_DLLS_PATH</name>
+                            <value>${maven.install4j.cert}</value>
+                        </property>
+                        <property>
+                            <name>LOADUI_DOWNLOADER</name>
+                            <value>${maven.loadUI.downloader}</value>
+                        </property>
+                        <property>
+                            <name>LOADUI_VERSION_NUMBER</name>
+                            <value>2.1.1</value>
+                        </property>
+                        <property>
+                            <name>LOADUI_INSTALLER_URL_BASE</name>
+                            <value>http://dl.eviware.com/loadui/os</value>
+                        </property>
+                    </compilerVariables>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>net.ju-n.maven.plugins</groupId>
+                <artifactId>maven-checksum-plugin</artifactId>
+                <version>1.0</version>
+                <configuration>
+                    <!-- TODO parameterize this better-->
+                    <files>
+                        <!-- Archives -->
+                        <file>
+                            ${assembly.build.directory}/${project.name.full}-windows-bin.zip
+                        </file>
+                        <file>
+                            ${assembly.build.directory}/${project.name.full}-win32-standalone-bin.zip
+                        </file>
+                        <file>
+                            ${assembly.build.directory}/${project.name.full}-linux-bin.tar.gz
+                        </file>
+                        <file>
+                            ${assembly.build.directory}/${project.name.full}-mac-bin.zip
+                        </file>
+                        <!-- Installers -->
+                        <file>
+                            ${installer.build.directory}/soapUI-x32-${project.version}.exe
+                        </file>
+                        <file>
+                            ${installer.build.directory}/soapUI-x64-${project.version}.exe
+                        </file>
+                        <file>
+                            ${installer.build.directory}/soapUI-x32-${project.version}.sh
+                        </file>
+                        <file>
+                            ${installer.build.directory}/soapUI-${project.version}.dmg
+                        </file>
+                    </files>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>com.github.danielflower.mavenplugins</groupId>
+                <artifactId>maven-gitlog-plugin</artifactId>
+                <version>1.4.11</version>
+                <configuration>
+                    <reportTitle>soapUI ${project.version} | https://github.com/SmartBear/soapui/tree/maintenance
+                    </reportTitle>
+                    <generatePlainTextChangeLog>false</generatePlainTextChangeLog>
+                    <generateHTMLTableOnlyChangeLog>false</generateHTMLTableOnlyChangeLog>
+                    <generateSimpleHTMLChangeLog>true</generateSimpleHTMLChangeLog>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+         <dependency>
+             <groupId>com.smartbear.soapui</groupId>
+             <artifactId>soapui</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-plugin-api</artifactId>
+            <version>2.0</version>
+        </dependency>
+    </dependencies>
+
+</project>

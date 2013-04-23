@@ -536,7 +536,7 @@ public class DefaultSoapUICore implements SoapUICore
 	{
 		if( !logIsInitialized )
 		{
-			String logFileName = System.getProperty( "soapui.log4j.config", "soapui-log4j.xml" );
+			String logFileName = System.getProperty( SoapUISystemProperties.SOAPUI_LOG4j_CONFIG_FILE, "soapui-log4j.xml" );
 			File log4jconfig = root == null ? new File( logFileName ) : new File( new File( getRoot() ), logFileName );
 			if( log4jconfig.exists() )
 			{
