@@ -6,13 +6,16 @@ SETLOCAL ENABLEDELAYEDEXPANSION
 :::::::::::::::::::::::::::::::::
 
 TITLE Script %~n0%~x0 running from %~dp0
+ECHO Args passed to %~n0%~x0 :
+FOR %%I IN (%*) DO ECHO %%I
+ECHO.
 
 :: Set SOAPUI_HOME and make sure script runs from bin directory.
 CALL :getparentfolder bin
 
 IF EXIST "%SOAPUI_HOME%\jre\bin" (
   ECHO Using embedded version of Java at ^"%SOAPUI_HOME%\jre\bin\java.exe^".
-  SET JAVA=%SOAPUI_HOME%\jre\bin\java.exe
+  SET "JAVA=%SOAPUI_HOME%\jre\bin\java.exe"
 ) ELSE (
   IF NOT DEFINED JAVA_HOME (
     ECHO JAVA_HOME is not set, unexpected results may occur with %~n0%~x0 .
@@ -20,14 +23,13 @@ IF EXIST "%SOAPUI_HOME%\jre\bin" (
     SET JAVA=java.exe
   ) ELSE (
     ECHO Using Java defined by JAVA_HOME.
-    SET JAVA=%JAVA_HOME%\bin\java.exe
+    SET "JAVA=%JAVA_HOME%\bin\java.exe"
   )
 )
 ECHO.
 
-:: Initialize classpath var with optional PRE_CLASSPATH var prepended
-:: testcaserunner class will auto load this var without need to pass as arg.
-:: @SOAPUICLASSPATHCOMPACT@
+:: Initialize classpath var with optional PRE_CLASSPATH var prepended testcaserunner
+:: class will auto load this var implicitly without need to pass as arg.
 IF NOT DEFINED CLASSPATH SET CLASSPATH=.
 IF DEFINED PRE_CLASSPATH SET "CLASSPATH=%PRE_CLASSPATH%;%CLASSPATH%"
 SET "CLASSPATH=%CLASSPATH%;%SOAPUI_HOME%\bin\soapui-4.5.1.jar;%SOAPUI_HOME%\lib\*"
