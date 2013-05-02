@@ -29,8 +29,8 @@ ECHO.
 :: testcaserunner class will auto load this var without need to pass as arg.
 :: @SOAPUICLASSPATHCOMPACT@
 IF NOT DEFINED CLASSPATH SET CLASSPATH=.
-IF DEFINED PRE_CLASSPATH set CLASSPATH=%PRE_CLASSPATH%;%CLASSPATH%
-SET CLASSPATH=%CLASSPATH%;%SOAPUI_HOME%\bin\soapui-4.5.1.jar;%SOAPUI_HOME%\lib\*
+IF DEFINED PRE_CLASSPATH SET "CLASSPATH=%PRE_CLASSPATH%;%CLASSPATH%"
+SET "CLASSPATH=%CLASSPATH%;%SOAPUI_HOME%\bin\soapui-4.5.1.jar;%SOAPUI_HOME%\lib\*"
 
 :: JVM parameters, modify as appropriate
 SET JAVA_OPTS=-Xms128m -Xmx1024m -D^"soapui.properties=%BIN_HOME%\soapui.properties^" -D^"soapui.home=%BIN_HOME%^"
