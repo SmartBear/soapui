@@ -1,38 +1,77 @@
-@echo off
+@ECHO off
+SETLOCAL ENABLEDELAYEDEXPANSION
 
-set SOAPUI_HOME=%~dp0
-if exist "%SOAPUI_HOME%..\jre\bin" goto SET_BUNDLED_JAVA
+:::::::::::::::::::::::::::::::::
+:: testrunner.bat
+:::::::::::::::::::::::::::::::::
 
-if exist "%JAVA_HOME%" goto SET_SYSTEM_JAVA
+TITLE Script %~n0%~x0 running from %~dp0
 
-echo JAVA_HOME is not set, unexpected results may occur.
-echo Set JAVA_HOME to the directory of your local JDK to avoid this message.
-goto SET_SYSTEM_JAVA
+:: Set SOAPUI_HOME and make sure script runs from bin directory.
+CALL :getparentfolder bin
 
-:SET_BUNDLED_JAVA
-set JAVA=%SOAPUI_HOME%..\jre\bin\java
-goto END_SETTING_JAVA
+IF EXIST "%SOAPUI_HOME%\jre\bin" (
+  ECHO Using embedded version of Java at ^"%SOAPUI_HOME%\jre\bin\java.exe^".
+  SET JAVA=%SOAPUI_HOME%\jre\bin\java.exe
+) ELSE (
+  IF NOT DEFINED JAVA_HOME (
+    ECHO JAVA_HOME is not set, unexpected results may occur with %~n0%~x0 .
+    ECHO Set JAVA_HOME to the directory of your local JDK to avoid this message.
+    SET JAVA=java.exe
+  ) ELSE (
+    ECHO Using Java defined by JAVA_HOME.
+    SET JAVA=%JAVA_HOME%\bin\java.exe
+  )
+)
+ECHO.
 
-:SET_SYSTEM_JAVA
-set JAVA=java
+:: Initialize classpath var with optional PRE_CLASSPATH var prepended
+:: testcaserunner class will auto load this var without need to pass as arg.
+:: @SOAPUICLASSPATHCOMPACT@
+IF NOT DEFINED CLASSPATH SET CLASSPATH=.
+IF DEFINED PRE_CLASSPATH set CLASSPATH=%PRE_CLASSPATH%;%CLASSPATH%
+SET CLASSPATH=%CLASSPATH%;%SOAPUI_HOME%\bin\soapui-4.5.1.jar;%SOAPUI_HOME%\lib\*
 
-:END_SETTING_JAVA
-
-
-rem init classpath
-
-@SOAPUICLASSPATHCOMPACT@
-
-rem JVM parameters, modify as appropriate
-set JAVA_OPTS=-Xms128m -Xmx1024m -Dsoapui.properties=soapui.properties "-Dsoapui.home=%SOAPUI_HOME%\"
-
-if "%SOAPUI_HOME%\" == "" goto START
-    set JAVA_OPTS=%JAVA_OPTS% -Dsoapui.ext.libraries="%SOAPUI_HOME%ext"
-    set JAVA_OPTS=%JAVA_OPTS% -Dsoapui.ext.listeners="%SOAPUI_HOME%listeners"
-    set JAVA_OPTS=%JAVA_OPTS% -Dsoapui.ext.actions="%SOAPUI_HOME%actions"
+:: JVM parameters, modify as appropriate
+SET JAVA_OPTS=-Xms128m -Xmx1024m -D^"soapui.properties=%BIN_HOME%\soapui.properties^" -D^"soapui.home=%BIN_HOME%^"
+SET JAVA_OPTS=%JAVA_OPTS% -D^"soapui.ext.libraries=%SOAPUI_HOME%\bin\ext^"
+SET JAVA_OPTS=%JAVA_OPTS% -D^"soapui.ext.listeners=%SOAPUI_HOME%\bin\listeners^"
+SET JAVA_OPTS=%JAVA_OPTS% -D^"soapui.ext.actions=%SOAPUI_HOME%\bin\actions^"
 
 :START
-
-rem ********* run soapui testcase runner ***********
-
+pause
+ECHO ::::::::::::::::::::::::::::::::::::::::
+ECHO :: Running soapui testcase runner...
+ECHO :: Implicit classpath: %CLASSPATH%
+ECHO :: Java opts: %JAVA_OPTS%
+ECHO ::::::::::::::::::::::::::::::::::::::::
+ECHO.
 "%JAVA%" %JAVA_OPTS% com.eviware.soapui.tools.SoapUITestCaseRunner %*
+
+GOTO :END
+
+:: Function to get parent folder name of scripts currrent folder.
+:: Function requires current folders name as an arg or it will fail to run.
+:getparentfolder dirName
+SET "BIN_HOME=%~dp0"
+IF "%BIN_HOME:~-1%"=="\" SET "BIN_HOME=%BIN_HOME:~0,-1%"
+ECHO Current directory is: %BIN_HOME%
+FOR /F "delims=" %%I IN ("%BIN_HOME%") DO (
+  SET THISFOLDER=%%~nI
+)
+ECHO This folder name is ^"%THISFOLDER%^".
+IF "%~1"=="%THISFOLDER%" (
+  SET SOAPUI_HOME=!BIN_HOME:\%THISFOLDER%=!
+  ECHO SOAPUI_HOME: %SOAPUI_HOME%
+) ELSE (
+  ECHO Function arg ^"%~1^" must match actual folder name.
+  ECHO This script may not be running from the expected folder.
+  GOTO :ERROR
+)
+EXIT /B 0
+
+:ERROR
+ECHO There was an error in %~n0%~x0
+PING.exe -n 10 -w 1 127.0.0.1>nul
+:END
+ECHO The script %~n0%~x0 is finished.
