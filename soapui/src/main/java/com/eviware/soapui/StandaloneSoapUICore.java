@@ -67,12 +67,12 @@ public class StandaloneSoapUICore extends SwingSoapUICore
 	{
 		try
 		{
-			// force for mac OS Lion to be native LF ()
-			if( Tools.isMacLion() )
+			// Enabling native look & feel by default on Mac OS X
+			if( Tools.isMac() )
 			{
 				javax.swing.UIManager.setLookAndFeel( UIManager.getSystemLookAndFeelClassName() );
 				getSettings().setBoolean( UISettings.NATIVE_LAF, true );
-				log.info( "Forcing Native L&F for mac OSX Lion!" );
+				log.info( "Defaulting to native L&F for Mac OS X" );
 			}
 			else if( !SoapUI.isJXBrowserDisabled( true ) && PlatformContext.isMacOS() )
 			{
