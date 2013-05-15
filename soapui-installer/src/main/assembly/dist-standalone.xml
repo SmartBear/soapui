@@ -30,6 +30,13 @@
     </dependencySets>
     <fileSets>
         <fileSet>
+            <directory>${project.parent.basedir}</directory>
+            <outputDirectory>/</outputDirectory>
+            <includes>
+                <include>*.md</include>
+            </includes>
+        </fileSet>
+        <fileSet>
             <directory>${basedir}/src/dist</directory>
             <outputDirectory>/</outputDirectory>
             <excludes>
