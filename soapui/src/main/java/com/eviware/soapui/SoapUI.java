@@ -1448,7 +1448,7 @@ public class SoapUI
                             + "Build Date: " + Objects.firstNonNull(buildInfoProperties.getProperty( "build.date" ), "UNKNOWN BUILD DATE")
 							+ "</strong></font></p></body></html>",
 
-					new Dimension( 470, 375 ) );
+					new Dimension( 646, 481 ) );	//Splash screen width + 70px, height + 175px
 		}
 	}
 
