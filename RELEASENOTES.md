@@ -2,16 +2,27 @@
 
 ## version 4.5.2 - 2013-05-xx
 
-### Major Features ###
-* Same updated Jre version for all the distribution
+### Build improvements ###
+* Build system upgraded from maven 1 to maven 3.
+* All the distributions now come bundled with the same JRE version.
 
-### Minor Improvements ###
-* Update soapui build to maven 3
-
-### Bug Fixes ###
-* SOAPUI-4425 HTTP Session ID kept across test cases if "Maintain HTTP Session" is checked
-* SOAPUI-4594 URL encoded REST URL get's decoded unintentionally
-* SOAPUI-4273 NTLM authentication broken (Pro Only)
+### Bugs fixed ###
+* SOAPUI-4425 HTTP Session ID kept across test cases if "Maintain HTTP Session" is checked.
+* SOAPUI-4594 Encoded REST URLs no longer get decoded unintentionally.
+* SOAP-22     HTTP headers are no longer copied back to the request until after redirection.
+* SOAP-68     Windows 32-bit users no longer receive an error message when doing web recording.
+* SOAP-16     Fixed ClassCastException when using HTTPS with self-signed certificates.
+* SOAP-17     The command line TestRunner now correctly generates TXT reports.
+* SOAP-18     (Pro) Fixed NTLM authentication.
+* SOAP-19     Fixed loading of schemas to use array correctly.
+* SOAP-20     Added jar-file filtering of protection jars.
+* SOAP-23     Fixed endless loop during schema loading when opening the add assertion panel.
+* SOAP-24     Fixed classloading issues.
+* SOAP-25     SSL Info tab is no longer always inactive.
+* SOAP-26     Fixed minor spelling mistakes and propagation of HTTP Sessions in RunTestCase invocation.
+* SOAP-118    Preferences are now automatically saved when clicking "OK" in the preferences dialog.
+* SOAP-121    URL encoder no longer also encodes the path itself.
+* SOAP-132    The "Case sensitive" option in the find/replace dialog now works correctly.
 
 
 ## version 4.5.1 - 2012-06-27
