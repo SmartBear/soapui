@@ -551,11 +551,10 @@ public class Tools
 		return input;
 	}
 
-	public static boolean isMacLion()
+	public static boolean isMac()
 	{
 		String osName = System.getProperty( "os.name" );
-		String osVersion = System.getProperty( "os.version" );
-		if( osName.equals( "Mac OS X" ) && osVersion.startsWith( "10.7" ) )
+		if( osName.equals( "Mac OS X" ) )
 		{
 			return true;
 		}
@@ -570,7 +569,7 @@ public class Tools
 	 * 
 	 * @param expected
 	 * @param real
-	 * @param c
+	 * @param wildcard
 	 * @throws ComparisonFailure
 	 */
 	public static void assertSimilar( String expected, String real, char wildcard ) throws ComparisonFailure
