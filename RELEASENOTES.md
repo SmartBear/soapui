@@ -7,22 +7,23 @@
 * All the distributions now come bundled with the same JRE version.
 
 ### Bugs fixed ###
-* SOAPUI-4425 HTTP Session ID kept across test cases if "Maintain HTTP Session" is checked.
-* SOAPUI-4594 Encoded REST URLs no longer get decoded unintentionally.
-* SOAP-22     HTTP headers are no longer copied back to the request until after redirection.
-* SOAP-68     Windows 32-bit users no longer receive an error message when doing web recording.
-* SOAP-16     Fixed ClassCastException when using HTTPS with self-signed certificates.
-* SOAP-17     The command line TestRunner now correctly generates TXT reports.
-* SOAP-18     (Pro) Fixed NTLM authentication.
-* SOAP-19     Fixed loading of schemas to use array correctly.
-* SOAP-20     Added jar-file filtering of protection jars.
-* SOAP-23     Fixed endless loop during schema loading when opening the add assertion panel.
-* SOAP-24     Fixed classloading issues.
-* SOAP-25     SSL Info tab is no longer always inactive.
-* SOAP-26     Fixed minor spelling mistakes and propagation of HTTP Sessions in RunTestCase invocation.
-* SOAP-118    Preferences are now automatically saved when clicking "OK" in the preferences dialog.
-* SOAP-121    URL encoder no longer also encodes the path itself.
-* SOAP-132    The "Case sensitive" option in the find/replace dialog now works correctly.
+* HTTP Session ID kept across test cases if "Maintain HTTP Session" is checked (SOAPUI-4425).
+* Encoded REST URLs no longer get decoded unintentionally (SOAPUI-4594)
+* HTTP headers are no longer copied back to the request until after redirection (SOAPUI-3607).
+* Windows 32-bit users no longer receive an error message when doing web recording (SOAP-68).
+* Fixed ClassCastException when using HTTPS with self-signed certificates (SOAPUI-3918).
+* The command line TestRunner now correctly generates TXT reports (SOAPUI-4501).
+* (Pro) Fixed NTLM authentication (SOAPUI-4273).
+* Fixed loading of schemas to use array correctly (SOAPUI-4512).
+* Added jar-file filtering of protection jars (SOAP-20)
+* Fixed endless loop during schema loading when opening the add assertion panel (SOAPUI-4375).
+* Fixed classloading issues (SOAP-24).
+* SSL Info tab is no longer always inactive (SOAPUI-4395)
+* Fixed minor spelling mistakes and propagation of HTTP Sessions in RunTestCase invocation (SOAP-26).
+* Preferences are now automatically saved when clicking "OK" in the preferences dialog (SOAP-118).
+* URL encoder no longer also encodes the path itself (SOAPUI-4601, SOAPUI-3032, SOAP-121).
+* The "Case sensitive" option in the find/replace dialog now works correctly (SOAP-132).
+* Native look & feel is now enabled by default on Mac OS X (SOAP-115).
 
 
 ## version 4.5.1 - 2012-06-27
