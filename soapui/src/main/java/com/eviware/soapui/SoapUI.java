@@ -1402,7 +1402,7 @@ public class SoapUI
 
 	private static class AboutAction extends AbstractAction
 	{
-        private static final String COPYRIGHT = "2004-2012 smartbear.com";
+        private static final String COPYRIGHT = "2004-2013 smartbear.com";
         private static final String SOAPUI_WEBSITE = "http://www.soapui.org";
         private static final String SMARTBEAR_WEBSITE = "http://www.smartbear.com";
         public static final String BUILDINFO_PROPERTIES = "/buildinfo.properties";
