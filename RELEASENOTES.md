@@ -1,6 +1,6 @@
 # Release Notes for SoapUI
 
-## version 4.5.2 - 2013-05-xx
+## version 4.5.2 - 2013-05-22
 
 ### Build improvements ###
 * Build system upgraded from maven 1 to maven 3.
