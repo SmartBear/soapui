@@ -1,6 +1,6 @@
-# The soapUI project
+# The SoapUI project
 
-This is the main soapUI project.
+This is the main SoapUI project.
 
 ## Structure and submodules
 
@@ -32,6 +32,10 @@ To run soapUI after it has been built, execute `mvn exec:java` in the root folde
 ### Getting the latest changes
 
 To get the latest source code changes clone the project by running `git pull` in the root directory of the soapUI project or the root directory of the submodule you want to update.
+
+## Contributing
+
+When you have decided that you want to take a more active part in improving SoapUI then there are a few things you have to do before you can get started. Go to http://www.soapui.org/Developers-Corner/contribute-to-soapui.html for more information.
 
 ### IDE support
 
