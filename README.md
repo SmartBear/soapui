@@ -5,6 +5,7 @@ This is the main SoapUI project.
 ## Structure and submodules
 
 * *[soapui](https://github.com/SmartBear/soapui/tree/SOAPUI-3838-Convert-to-maven3/soapui)* - The core module.
+* *[soapui-installer](https://smartbearsweden.atlassian.net/browse/SOAP-59)* - The installer module for creatnig packages.
 * *[soapui-maven-plugin](https://github.com/SmartBear/soapui/tree/SOAPUI-3838-Convert-to-maven3/soapui-maven-plugin)* – A Maven plugin used for running soapUI in a Continuous integration environment (such as [Jenkins](http://jenkins-ci.org)).
 * *[soapui-maven-plugin-tester](https://github.com/SmartBear/soapui/tree/SOAPUI-3838-Convert-to-maven3/soapui-maven-plugin-tester)* - A small test `pom.xml` used for testing the *soapui-maven-plugin*.
 
