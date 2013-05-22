@@ -24,6 +24,7 @@
 * URL encoder no longer also encodes the path itself (SOAPUI-4601, SOAPUI-3032, SOAP-121).
 * The "Case sensitive" option in the find/replace dialog now works correctly (SOAP-132).
 * Native look & feel is now enabled by default on Mac OS X (SOAP-115).
+    * If you're experiencing problems with not being able to close the starter page, change your screen resolution.
 
 
 ## version 4.5.1 - 2012-06-27
