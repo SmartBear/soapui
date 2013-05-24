@@ -6,7 +6,7 @@
     <groupId>com.smartbear.soapui</groupId>
     <name>soapUI project</name>
     <artifactId>soapui-project</artifactId>
-    <version>4.5.2</version>
+    <version>4.5.3-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <repositories>
