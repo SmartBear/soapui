@@ -11,7 +11,7 @@ SET JARFILE=soapui-4.5.2.jar
 :::::::::::::::::::::::::::::::::
 
 TITLE Script %~nx0 running from %~dp0
-ECHO Args passed to %~n0%~x0 :
+ECHO Args passed to %~nx0 :
 FOR %%I IN (%*) DO ECHO %%I
 ECHO.
 
@@ -30,7 +30,7 @@ IF EXIST "%SOAPUI_HOME%\jre\bin" (
   SET "JAVA=%SOAPUI_HOME%\jre\bin\java.exe"
 ) ELSE (
   IF NOT DEFINED JAVA_HOME (
-    ECHO JAVA_HOME is not set, unexpected results may occur with %~n0%~x0 .
+    ECHO JAVA_HOME is not set, unexpected results may occur with %~nx0 .
     ECHO Set JAVA_HOME to the directory of your local JDK to avoid this message.
     SET JAVA=java.exe
   ) ELSE (
@@ -89,4 +89,4 @@ ECHO There was an error in %~nx0
 PING.exe -n 10 -w 1 127.0.0.1>nul
 
 :END
-ECHO The script %~n0%~x0 is finished.
+ECHO The script %~nx0 is finished.
