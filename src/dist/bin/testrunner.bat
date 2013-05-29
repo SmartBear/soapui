@@ -1,14 +1,26 @@
 @ECHO off
 SETLOCAL ENABLEDELAYEDEXPANSION
 
+SET JARFILE=soapui-4.5.2.jar
+
 :::::::::::::::::::::::::::::::::
-:: testrunner.bat
+:: testrunner.bat v.2.0
+:: for SoapUI
+:: pre-configuration and execution script for SoapUITestCaseRunner
+::
 :::::::::::::::::::::::::::::::::
 
-TITLE Script %~n0%~x0 running from %~dp0
+TITLE Script %~nx0 running from %~dp0
 ECHO Args passed to %~n0%~x0 :
 FOR %%I IN (%*) DO ECHO %%I
 ECHO.
+
+:: check if configured jar file exists
+IF NOT EXIST "%SOAPUI_HOME%\bin\%JARFILE%" (
+  ECHO The JARFILE variable configured in this script is not pointing to an existing jar file:
+  ECHO     ^"%SOAPUI_HOME%\bin\%JARFILE%^"
+  GOTO :ERROR
+)
 
 :: Set SOAPUI_HOME and make sure script runs from bin directory.
 CALL :getparentfolder bin
@@ -32,7 +44,7 @@ ECHO.
 :: class will auto load this var implicitly without need to pass as arg.
 IF NOT DEFINED CLASSPATH SET CLASSPATH=.
 IF DEFINED PRE_CLASSPATH SET "CLASSPATH=%PRE_CLASSPATH%;%CLASSPATH%"
-SET "CLASSPATH=%CLASSPATH%;%SOAPUI_HOME%\bin\soapui-4.5.1.jar;%SOAPUI_HOME%\lib\*"
+SET "CLASSPATH=%CLASSPATH%;%SOAPUI_HOME%\bin\%JARFILE%;%SOAPUI_HOME%\lib\*"
 
 :: JVM parameters, modify as appropriate
 SET JAVA_OPTS=-Xms128m -Xmx1024m -D^"soapui.properties=%BIN_HOME%\soapui.properties^" -D^"soapui.home=%BIN_HOME%^"
@@ -73,7 +85,8 @@ IF "%~1"=="%THISFOLDER%" (
 EXIT /B 0
 
 :ERROR
-ECHO There was an error in %~n0%~x0
+ECHO There was an error in %~nx0
 PING.exe -n 10 -w 1 127.0.0.1>nul
+
 :END
 ECHO The script %~n0%~x0 is finished.
