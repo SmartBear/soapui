@@ -26,8 +26,10 @@ IF NOT EXIST "%SOAPUI_HOME%\bin\%JARFILE%" (
   GOTO :ERROR
 )
 
-:: Set SOAPUI_HOME and make sure script runs from bin directory.
+:: Make sure script runs from bin directory.
 CALL :verifyparentfolder bin
+:: Set SOAPUI_HOME var based on parent folder
+CALL ::setsoapuihome
 
 IF EXIST "%SOAPUI_HOME%\jre\bin" (
   ECHO Using embedded version of Java at ^"%SOAPUI_HOME%\jre\bin\java.exe^".
@@ -85,13 +87,17 @@ FOR /F "delims=" %%I IN ("%BIN_HOME%") DO (
 )
 ECHO This folder name is ^"%THISFOLDER%^".
 IF "%~1"=="%THISFOLDER%" (
-  SET SOAPUI_HOME=!BIN_HOME:\%THISFOLDER%=!
-  ECHO SOAPUI_HOME: %SOAPUI_HOME%
+  ECHO Satisfied folder check.
 ) ELSE (
   ECHO Function arg ^"%~1^" must match actual parent folder name.
   ECHO This script may not be running from the expected folder.
   GOTO :ERROR
 )
+EXIT /B 0
+
+:setsoapuihome
+SET SOAPUI_HOME=!BIN_HOME:\%THISFOLDER%=!
+ECHO SOAPUI_HOME: %SOAPUI_HOME%
 EXIT /B 0
 
 :ERROR
