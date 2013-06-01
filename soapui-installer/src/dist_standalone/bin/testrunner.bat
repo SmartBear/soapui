@@ -19,6 +19,15 @@ ECHO Args passed to %~nx0 :
 FOR %%I IN (%*) DO ECHO %%I
 ECHO.
 
+:: Set BIN_HOME to current directory
+SET "BIN_HOME=%~dp0"
+IF "%BIN_HOME:~-1%"=="\" SET "BIN_HOME=%BIN_HOME:~0,-1%"
+FOR /F "delims=" %%I IN ("%BIN_HOME%") DO (
+  SET THISFOLDER=%%~nI
+)
+ECHO Current directory is: ^"%BIN_HOME%^".
+ECHO Current folder name is: ^"%THISFOLDER%^".
+
 :: check if configured jar file exists
 IF NOT EXIST "%SOAPUI_HOME%\bin\%JARFILE%" (
   ECHO The JARFILE variable configured in this script is not pointing to an existing jar file:
@@ -79,13 +88,6 @@ GOTO :END
 :: Function to verify parent folder name of script 
 :::::::::::::::::::::::::::::::::
 :verifyparentfolder dirName
-SET "BIN_HOME=%~dp0"
-IF "%BIN_HOME:~-1%"=="\" SET "BIN_HOME=%BIN_HOME:~0,-1%"
-ECHO Current directory is: %BIN_HOME%
-FOR /F "delims=" %%I IN ("%BIN_HOME%") DO (
-  SET THISFOLDER=%%~nI
-)
-ECHO This folder name is ^"%THISFOLDER%^".
 IF "%~1"=="%THISFOLDER%" (
   ECHO Satisfied folder check.
 ) ELSE (
