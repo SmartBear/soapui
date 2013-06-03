@@ -44,11 +44,11 @@ CALL :setsoapuihome
 IF EXIST "%SOAPUI_HOME%\jre\bin" (
   ECHO Using embedded version of Java at ^"%SOAPUI_HOME%\jre\bin\java.exe^".
   SET "JAVA=%SOAPUI_HOME%\jre\bin\java.exe"
+  SET JAVA=java.exe
 ) ELSE (
   IF NOT DEFINED JAVA_HOME (
     ECHO JAVA_HOME is not set, unexpected results may occur with %~nx0 .
     ECHO Set JAVA_HOME to the directory of your local JDK to avoid this message.
-    SET JAVA=java.exe
   ) ELSE (
     ECHO Using Java defined by JAVA_HOME.
     SET "JAVA=%JAVA_HOME%\bin\java.exe"
