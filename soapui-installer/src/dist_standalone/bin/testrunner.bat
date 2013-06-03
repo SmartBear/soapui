@@ -37,8 +37,9 @@ IF NOT EXIST "%SOAPUI_HOME%\bin\%JARFILE%" (
 
 :: Make sure script runs from bin directory.
 CALL :verifyparentfolder bin
+
 :: Set SOAPUI_HOME var based on parent folder
-CALL ::setsoapuihome
+CALL :setsoapuihome
 
 IF EXIST "%SOAPUI_HOME%\jre\bin" (
   ECHO Using embedded version of Java at ^"%SOAPUI_HOME%\jre\bin\java.exe^".
