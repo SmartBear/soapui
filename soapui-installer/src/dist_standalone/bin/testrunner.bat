@@ -13,6 +13,9 @@ TITLE Script %~nx0 running from %~dp0
 :: Modify as desired
 :::::::::::::::::::::::::::::::::
 SET JARFILE=${project.src.artifactId}-${project.version}.jar
+::SET CLASSNAME=com.eviware.soapui.tools.SoapUITestCaseRunner
+::SET CLASSNAME=com.eviware.soapui.SoapUIProTestCaseRunner
+SET CLASSNAME=${maven.jar.mainclass}
 
 ECHO Args passed to %~nx0 :
 FOR %%I IN (%*) DO ECHO %%I
@@ -82,7 +85,7 @@ ECHO -- Implicit classpath: %CLASSPATH%
 ECHO -- Java opts: %JAVA_OPTS%
 ECHO ----------------------------------------
 ECHO.
-"%JAVA%" %JAVA_OPTS% com.eviware.soapui.tools.SoapUITestCaseRunner %*
+"%JAVA%" %JAVA_OPTS% %CLASSNAME% %*
 
 GOTO :END
 
