@@ -6,7 +6,6 @@ TITLE Script %~nx0 running from %~dp0
 :: testrunner.bat
 :: for SoapUI
 :: pre-configuration and execution script for SoapUITestCaseRunner
-::
 :::::::::::::::::::::::::::::::::
 
 :::::::::::::::::::::::::::::::::
@@ -41,18 +40,20 @@ CALL :verifyparentfolder bin
 :: Set SOAPUI_HOME var based on parent folder
 CALL :setsoapuihome
 
-IF EXIST "%SOAPUI_HOME%\jre\bin" (
-  ECHO Using embedded version of Java at ^"%SOAPUI_HOME%\jre\bin\java.exe^".
-  SET "JAVA=%SOAPUI_HOME%\jre\bin\java.exe"
-  SET JAVA=java.exe
-) ELSE (
-  IF NOT DEFINED JAVA_HOME (
-    ECHO JAVA_HOME is not set, unexpected results may occur with %~nx0 .
-    ECHO Set JAVA_HOME to the directory of your local JDK to avoid this message.
+IF NOT DEFINED JAVA_HOME (
+  IF EXIST "%SOAPUI_HOME%\jre\bin" (
+    ECHO Using embedded version of Java at ^"%SOAPUI_HOME%\jre\bin\java.exe^".
+    SET "JAVA=%SOAPUI_HOME%\jre\bin\java.exe"
+    SET JAVA=java.exe
   ) ELSE (
-    ECHO Using Java defined by JAVA_HOME.
-    SET "JAVA=%JAVA_HOME%\bin\java.exe"
+    ECHO JAVA_HOME is not set, unexpected results may occur with the %~nx0 script.
+    ECHO Set JAVA_HOME to the directory of your local JDK to avoid this message.
+    GOTO :ERROR
   )
+) ELSE (
+  ECHO Using Java defined by JAVA_HOME.
+  ECHO JAVA_HOME=%JAVA_HOME%
+  SET "JAVA=%JAVA_HOME%\bin\java.exe"
 )
 ECHO.
 
