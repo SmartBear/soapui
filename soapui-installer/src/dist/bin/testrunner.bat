@@ -1,25 +1,26 @@
 @ECHO off
 SETLOCAL ENABLEDELAYEDEXPANSION
 TITLE Script %~nx0 running from %~dp0
-
+ECHO Args passed to %~nx0 :
+FOR %%I IN (%*) DO ECHO %%I
+ECHO.
 :::::::::::::::::::::::::::::::::
 :: testrunner.bat
 :: for SoapUI
 :: pre-configuration and execution script for SoapUITestCaseRunner
 :::::::::::::::::::::::::::::::::
 
-:::::::::::::::::::::::::::::::::
-:: Jar file name set by Maven build system
-:: Modify as desired
-:::::::::::::::::::::::::::::::::
-SET JARFILE=${project.src.artifactId}-${project.version}.jar
-::SET CLASSNAME=com.eviware.soapui.tools.SoapUITestCaseRunner
-::SET CLASSNAME=com.eviware.soapui.SoapUIProTestCaseRunner
-SET CLASSNAME=${maven.jar.mainclass}
+SET ARTIFACT=${project.src.artifactId}
+SET VERSION=${project.version}
 
-ECHO Args passed to %~nx0 :
-FOR %%I IN (%*) DO ECHO %%I
-ECHO.
+:: SET JARFILE=soapui-4.5.1.jar
+SET JARFILE=%ARTIFACT%-%VERSION%.jar
+
+IF "%ARTIFACT%"=="soapui-pro" (
+  SET CLASSNAME=com.eviware.soapui.SoapUIProTestCaseRunner
+) ELSE (
+  SET CLASSNAME=com.eviware.soapui.tools.SoapUITestCaseRunner
+)
 
 :: Set BIN_HOME to current directory
 SET "BIN_HOME=%~dp0"
