@@ -10,10 +10,10 @@ ECHO.
 :: pre-configuration and execution script for SoapUITestCaseRunner
 :::::::::::::::::::::::::::::::::
 
-SET ARTIFACT=${project.src.artifactId}
-SET VERSION=${project.version}
+IF NOT DEFINED SOAPUI_ARTIFACT SET SOAPUI_ARTIFACT=${project.src.artifactId}
+IF NOT DEFINED SOAPUI_VERSION SET SOAPUI_VERSION=${project.version}
 :: SET JARFILE=soapui-4.5.2.jar
-SET JARFILE=%ARTIFACT%-%VERSION%.jar
+SET JARFILE=%SOAPUI_ARTIFACT%-%SOAPUI_VERSION%.jar
 
 :: Set BIN_HOME to current directory
 SET "BIN_HOME=%~dp0"
@@ -64,7 +64,7 @@ IF NOT DEFINED JAVA_HOME (
   SET "JAVA=%JAVA_HOME%\bin\java.exe"
 )
 
-IF "%ARTIFACT%"=="soapui-pro" (
+IF "%SOAPUI_ARTIFACT%"=="soapui-pro" (
   SET CLASSNAME=com.eviware.soapui.SoapUIProTestCaseRunner
 ) ELSE (
   SET CLASSNAME=com.eviware.soapui.tools.SoapUITestCaseRunner
