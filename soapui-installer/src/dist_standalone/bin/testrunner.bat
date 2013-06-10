@@ -1,38 +1,102 @@
-@echo off
+@ECHO off
+SETLOCAL ENABLEDELAYEDEXPANSION
+TITLE Script %~nx0 running from %~dp0
+ECHO Args passed to %~nx0 :
+FOR %%I IN (%*) DO ECHO %%I
+ECHO.
+:::::::::::::::::::::::::::::::::
+:: testrunner.bat
+:: for SoapUI
+:: pre-configuration and execution script for SoapUITestCaseRunner
+:::::::::::::::::::::::::::::::::
 
-set SOAPUI_HOME=%~dp0
-if exist "%SOAPUI_HOME%..\jre\bin" goto SET_BUNDLED_JAVA
+SET ARTIFACT=${project.src.artifactId}
+SET VERSION=${project.version}
+:: SET JARFILE=soapui-4.5.2.jar
+SET JARFILE=%ARTIFACT%-%VERSION%.jar
 
-if exist "%JAVA_HOME%" goto SET_SYSTEM_JAVA
+:: Set BIN_HOME to current directory
+SET "BIN_HOME=%~dp0"
+IF "%BIN_HOME:~-1%"=="\" SET "BIN_HOME=%BIN_HOME:~0,-1%"
+FOR /F "delims=" %%I IN ("%BIN_HOME%") DO (
+  SET THISFOLDER=%%~nI
+)
+ECHO Current directory is: %BIN_HOME%
+ECHO Current folder name is: %THISFOLDER%
 
-echo JAVA_HOME is not set, unexpected results may occur.
-echo Set JAVA_HOME to the directory of your local JDK to avoid this message.
-goto SET_SYSTEM_JAVA
+:: check if configured jar file exists
+IF NOT EXIST "%BIN_HOME%\%JARFILE%" (
+  ECHO The JARFILE variable configured in this script is not pointing to an existing jar file:
+  ECHO     %BIN_HOME%\%JARFILE%
+  GOTO :ERROR
+)
 
-:SET_BUNDLED_JAVA
-set JAVA=%SOAPUI_HOME%..\jre\bin\java
-goto END_SETTING_JAVA
+:: Make sure script runs from bin directory.
+IF "bin"=="%THISFOLDER%" (
+  ECHO Satisfied folder check.
+) ELSE (
+  ECHO Function arg ^"%~1^" must match actual parent folder name.
+  ECHO This script may not be running from the expected folder.
+  GOTO :ERROR
+)
 
-:SET_SYSTEM_JAVA
-set JAVA=java
+:: Set SOAPUI_HOME var based on parent folder
+IF DEFINED SOAPUI_HOME (
+  ECHO The SOAPUI_HOME variable was explicitly defined:
+  ECHO Defined SOAPUI_HOME: %SOAPUI_HOME%
+)
+SET SOAPUI_HOME=!BIN_HOME:\%THISFOLDER%=!
+ECHO Determined SOAPUI_HOME: %SOAPUI_HOME%
 
-:END_SETTING_JAVA
+IF NOT DEFINED JAVA_HOME (
+  IF EXIST "%SOAPUI_HOME%\jre\bin" (
+    ECHO Using embedded version of Java at ^"%SOAPUI_HOME%\jre\bin\java.exe^".
+    SET "JAVA=%SOAPUI_HOME%\jre\bin\java.exe"
+    SET JAVA=java.exe
+  ) ELSE (
+    ECHO JAVA_HOME is not set, unexpected results may occur with %~nx0 .
+    ECHO Set JAVA_HOME to the directory of your local JDK to avoid this message.
+    GOTO :ERROR
+  )
+) ELSE (
+  ECHO Using Java defined by JAVA_HOME.
+  ECHO JAVA_HOME=%JAVA_HOME%
+  SET "JAVA=%JAVA_HOME%\bin\java.exe"
+)
 
+IF "%ARTIFACT%"=="soapui-pro" (
+  SET CLASSNAME=com.eviware.soapui.SoapUIProTestCaseRunner
+) ELSE (
+  SET CLASSNAME=com.eviware.soapui.tools.SoapUITestCaseRunner
+)
 
-rem init classpath
+:::::::::::::::::::::::::::::::::
+:: JVM parameters. Modify as desired.
+:::::::::::::::::::::::::::::::::
+SET "JAVA_OPTS=-Xms128m -Xmx1024m -Dsoapui.properties=%BIN_HOME%\soapui.properties"
+SET "JAVA_OPTS=%JAVA_OPTS% -Dgroovy.source.encoding=iso-8859-1 -Dsoapui.home=%BIN_HOME%"
+SET "JAVA_OPTS=%JAVA_OPTS% -Dsoapui.ext.libraries=%SOAPUI_HOME%\bin\ext"
+SET "JAVA_OPTS=%JAVA_OPTS% -Dsoapui.ext.listeners=%SOAPUI_HOME%\bin\listeners"
+SET "JAVA_OPTS=%JAVA_OPTS% -Dsoapui.ext.actions=%SOAPUI_HOME%\bin\actions"
 
-set CLASSPATH=%SOAPUI_HOME%${project.src.artifactId}-${project.version}.jar;%SOAPUI_HOME%..\lib\*;
+:::::::::::::::::::::::::::::::::
+:: Start SoapUI.
+:::::::::::::::::::::::::::::::::
+ECHO ----------------------------------------
+ECHO -- Running soapui testcase runner...
+ECHO -- Implicit classpath: %CLASSPATH%
+ECHO -- Java opts: %JAVA_OPTS%
+ECHO ----------------------------------------
+ECHO.
 
-rem JVM parameters, modify as appropriate
-set JAVA_OPTS=-Xms128m -Xmx1024m -Dsoapui.properties=soapui.properties "-Dsoapui.home=%SOAPUI_HOME%\"
+"%JAVA%" %JAVA_OPTS% %CLASSNAME% %*
 
-if "%SOAPUI_HOME%\" == "" goto START
-    set JAVA_OPTS=%JAVA_OPTS% -Dsoapui.ext.libraries="%SOAPUI_HOME%ext"
-    set JAVA_OPTS=%JAVA_OPTS% -Dsoapui.ext.listeners="%SOAPUI_HOME%listeners"
-    set JAVA_OPTS=%JAVA_OPTS% -Dsoapui.ext.actions="%SOAPUI_HOME%actions"
+GOTO :END
 
-:START
+:ERROR
+ECHO There was an error in the %~nx0 script.
+PING.exe -n 10 -w 1000 127.0.0.1>NUL
 
-rem ********* run soapui testcase runner ***********
-
-"%JAVA%" %JAVA_OPTS% com.eviware.soapui.tools.SoapUITestCaseRunner %*
+:END
+ECHO The script %~nx0 is finished.
+ECHO.
