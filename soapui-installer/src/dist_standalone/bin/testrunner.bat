@@ -66,8 +66,29 @@ IF NOT DEFINED JAVA_HOME (
 
 IF "%SOAPUI_ARTIFACT%"=="soapui-pro" (
   SET CLASSNAME=com.eviware.soapui.SoapUIProTestCaseRunner
+  IF NOT DEFINED PROARGS (
+    ECHO Please define PROARGS variable before calling this script with optional
+    ECHO  F, R, g, and/or E options defined.
+  )
 ) ELSE (
   SET CLASSNAME=com.eviware.soapui.tools.SoapUITestCaseRunner
+  SET "ARGS=%*"
+  IF "!%ARGS%:-F=!" NEQ "!%ARGS%!" (
+    ECHO Pro option -F was found and not allowed by community edition of SoapUI.
+    GOTO :ERROR
+  )
+  IF "!%ARGS%:-R=!" NEQ "!%ARGS%!" (
+    ECHO Pro option -R was found and not allowed by community edition of SoapUI.
+    GOTO :ERROR
+  )
+  IF "!%ARGS%:-g=!" NEQ "!%ARGS%!" (
+    ECHO Pro option -g was found and not allowed by community edition of SoapUI.
+    GOTO :ERROR
+  )
+  IF "!%ARGS%:-E=!" NEQ "!%ARGS%!" (
+    ECHO Pro option -E was found and not allowed by community edition of SoapUI.
+    GOTO :ERROR
+  )
 )
 
 :::::::::::::::::::::::::::::::::
