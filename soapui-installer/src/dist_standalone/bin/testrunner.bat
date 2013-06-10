@@ -32,9 +32,10 @@ ECHO Current directory is: ^"%BIN_HOME%^".
 ECHO Current folder name is: ^"%THISFOLDER%^".
 
 :: check if configured jar file exists
-IF NOT EXIST "%SOAPUI_HOME%\bin\%JARFILE%" (
-  ECHO The JARFILE variable configured in this script is not pointing to an existing jar file:
-  ECHO     ^"%SOAPUI_HOME%\bin\%JARFILE%^"
+IF NOT EXIST "%BIN_HOME%\%JARFILE%" (
+  ECHO The JARFILE variable configured in this script is not pointing to an existing jar file.
+  ECHO You may need to edit the artifact name in this testrunner.bat script.
+  ECHO     ^"%BIN_HOME%\%JARFILE%^"
   GOTO :ERROR
 )
 
@@ -104,9 +105,12 @@ IF "%~1"=="%THISFOLDER%" (
 EXIT /B 0
 
 :setsoapuihome
-IF DEFINED SOAPUI_HOME ECHO Script ignoring system SOAPUI_HOME value.
+IF DEFINED SOAPUI_HOME (
+  ECHO The SOAPUI_HOME variable was explicitly defined:
+  ECHO Defined SOAPUI_HOME: %SOAPUI_HOME%
+)
 SET SOAPUI_HOME=!BIN_HOME:\%THISFOLDER%=!
-ECHO SOAPUI_HOME: %SOAPUI_HOME%
+ECHO Determined SOAPUI_HOME: %SOAPUI_HOME%
 EXIT /B 0
 
 :ERROR
