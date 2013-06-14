@@ -188,8 +188,8 @@ public class MockAsWar
 		// create file system first
 		if( createWarFileSystem() )
 		{
-			// copy all from bin/../lib to soapui.home/war/WEB-INF/lib/
-			File fromDir = new File( System.getProperty( "soapui.home" ), ".." + File.separator + "lib" );
+			// copy all from lib to soapui.home/war/WEB-INF/lib/
+			File fromDir = new File( System.getProperty( "soapui.home" ), "lib" );
 			JarPackager.copyAllFromTo( fromDir, lib, new FileFilter()
 			{
 				public boolean accept( File pathname )
@@ -208,12 +208,12 @@ public class MockAsWar
 			if( includeExt )
 			{
 				// copy all from bin/ext to soapui.home/war/WEB-INF/lib/
-				fromDir = new File( System.getProperty( "soapui.home" ), "ext" );
+				fromDir = new File( System.getProperty( "soapui.home" ), "bin" + File.separator + "ext" );
 				JarPackager.copyAllFromTo( fromDir, lib, null );
 			}
 
 			// copy soapui jar to soapui.home/war/WEB-INF/lib/
-			File soapUIHome = new File( System.getProperty( "soapui.home" ) );
+			File soapUIHome = new File( System.getProperty( "soapui.home" ), "bin" );
 			String[] mainJar = soapUIHome.list( new FilenameFilter()
 			{
 				public boolean accept( File dir, String name )
@@ -224,7 +224,7 @@ public class MockAsWar
 				}
 			} );
 
-			fromDir = new File( System.getProperty( "soapui.home" ), mainJar[0] );
+			fromDir = new File( System.getProperty( "soapui.home" ), "bin" + File.separator + mainJar[0] );
 			JarPackager.copyFileToDir( fromDir, lib );
 			// copy project and settings file to bin/war/WEB-INF/soapui/
 			copyProjectFile();
