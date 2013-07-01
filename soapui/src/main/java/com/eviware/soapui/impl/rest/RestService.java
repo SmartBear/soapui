@@ -37,6 +37,7 @@ public class RestService extends AbstractInterface<RestServiceConfig> implements
 {
 	private List<RestResource> resources = new ArrayList<RestResource>();
 	private WadlDefinitionContext wadlContext;
+   private boolean exportChanges = false;
 
 	public RestService( WsdlProject project, RestServiceConfig serviceConfig )
 	{
@@ -299,4 +300,15 @@ public class RestService extends AbstractInterface<RestServiceConfig> implements
 	{
 		return new ArrayList<RestResource>( resources );
 	}
+
+	public boolean exportChanges()
+	{
+		return exportChanges;
+	}
+
+	public void setExportChanges( boolean exportChanges )
+	{
+		this.exportChanges = exportChanges;
+	}
+
 }
