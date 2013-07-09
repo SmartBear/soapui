@@ -412,7 +412,7 @@
         <tns:actionMapping actionId="NewRESTProjectAction"
             keyStroke="menu alt N" />
         <tns:actionMapping actionId="NewGenericProjectAction"
-            keyStroke="menu alt G" />
+            keyStroke="menu alt shift N" />
         <tns:actionMapping actionId="SeperatorAction" />
 		<tns:actionMapping actionId="ImportWsdlProjectAction"
 			keyStroke="menu I" />
