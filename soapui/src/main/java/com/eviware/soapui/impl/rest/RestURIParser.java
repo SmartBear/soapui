@@ -28,5 +28,12 @@ public interface RestURIParser extends URIParser
 	/**
 	 * @return
 	 */
+	public String getResourceName();
+
+	//TODO: Consider adding "getResourcePath" instead of "getPath", more descriptive name.
+
+	/**
+	 * @return
+	 */
 	public String getParams();
 }
