@@ -49,19 +49,105 @@ public class RestURIParserImplTestCase
 	}
 
 	@Test
-	public void encodedParamURITest() throws Exception
+	public void encodedParamURITest() throws URISyntaxException
 	{
 		String uri = "http://service.com/api/1.2/json/search/search?title=Kill%20me";
 		String expectedEndpoint = "http://service.com";
 		String expectedPath = "/api/1.2/json/search/search";
+		String expectedResourceName = "Search";
 		String expectedParams = "title=Kill me";
 
 		restURIParser = new RestURIParserImpl( uri );
 
 		assertEquals( expectedEndpoint, restURIParser.getEndpoint() );
 		assertEquals( expectedPath, restURIParser.getPath() );
+		assertEquals( expectedResourceName, restURIParser.getResourceName() );
 		assertEquals( expectedParams, restURIParser.getParams() );
 	}
 
+	@Test
+	//FIXME: Fix implementation to allow decoded characters in URI. Maybe try encoding them first?
+	public void decodedParamURITest() throws URISyntaxException
+	{
+		String uri = "http://service.com/api/1.2/json/search/search?title=Kill me";
+		String expectedEndpoint = "http://service.com";
+		String expectedPath = "/api/1.2/json/search/search";
+		String expectedResourceName = "Search";
+		String expectedParams = "title=Kill me";
 
+		restURIParser = new RestURIParserImpl( uri );
+
+		assertEquals( expectedEndpoint, restURIParser.getEndpoint() );
+		assertEquals( expectedPath, restURIParser.getPath() );
+		assertEquals( expectedResourceName, restURIParser.getResourceName() );
+		assertEquals( expectedParams, restURIParser.getParams() );
+	}
+
+	@Test
+	public void noParameterTest() throws URISyntaxException
+	{
+		String uri = "http://service.com/rest/";
+		String expectedEndpoint = "http://service.com";
+		String expectedPath = "/rest";
+		String expectedResourceName = "Rest";
+		String expectedParams = "";
+
+		restURIParser = new RestURIParserImpl( uri );
+
+		assertEquals( expectedEndpoint, restURIParser.getEndpoint() );
+		assertEquals( expectedPath, restURIParser.getPath() );
+		assertEquals( expectedResourceName, restURIParser.getResourceName() );
+		assertEquals( expectedParams, "");
+	}
+
+	@Test
+	public void noEndpointTest() throws URISyntaxException
+	{
+		String uri = "/abc?book=15;column=12";
+		String expectedEndpoint = "";
+		String expectedPath = "/abc";
+		String expectedResourceName = "Abc";
+		String expectedParams = "book=15;column=12";
+
+		restURIParser = new RestURIParserImpl( uri );
+
+		assertEquals( expectedEndpoint, restURIParser.getEndpoint() );
+		assertEquals( expectedPath, restURIParser.getPath() );
+		assertEquals( expectedResourceName, restURIParser.getResourceName());
+		assertEquals( expectedParams, restURIParser.getParams() );
+	}
+
+	@Test
+	//FIXME: Fix implementation to add slash to start of resource path
+	public void noEndpointNorPrefixSlashTest() throws URISyntaxException
+	{
+		String uri = "1.2/json.search/search?title=Kill%20me";
+		String expectedEndpoint = "";
+		String expectedPath = "/1.2/json.search/search";
+		String expectedResourceName = "Search";
+		String expectedParams = "title=Kill me";
+
+		restURIParser = new RestURIParserImpl( uri );
+
+		assertEquals( expectedEndpoint, restURIParser.getEndpoint() );
+		assertEquals( expectedPath, restURIParser.getPath() );
+		assertEquals( expectedResourceName, restURIParser.getResourceName());
+		assertEquals( expectedParams, restURIParser.getParams() );
+	}
+
+	public void parametereizedURITest() throws URISyntaxException
+	{
+		String uri = "/conversation/date/{date}/time/{time}/?userId=1234";
+		String expectedEndpoint = "";
+		String expectedPath = "/conversation/date/{date}/time/{time}";
+		String expectedResourceName = "Time";
+		String expectedParams = "userId=1234";
+
+		restURIParser = new RestURIParserImpl( uri );
+
+		assertEquals( expectedEndpoint, restURIParser.getEndpoint() );
+		assertEquals( expectedPath, restURIParser.getPath() );
+		assertEquals( expectedResourceName, restURIParser.getResourceName());
+		assertEquals( expectedParams, restURIParser.getParams() );
+	}
 }

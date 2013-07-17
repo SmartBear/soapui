@@ -24,7 +24,8 @@ import java.net.URISyntaxException;
 public class RestURIParserImpl implements RestURIParser
 {
 	URI uri;
-	private static final String HTTP_SCHEME_SEPARATOR = "://";
+	private static final String SCHEME_SEPARATOR = "://";
+	private static final String DEFAULT_SCHEME = "http";
 
 	public RestURIParserImpl( String uri ) throws URISyntaxException
 	{
@@ -34,8 +35,34 @@ public class RestURIParserImpl implements RestURIParser
 	@Override
 	public String getEndpoint()
 	{
-		String endpoint = uri.getScheme() + HTTP_SCHEME_SEPARATOR + uri.getAuthority();
+		String scheme = uri.getScheme();
+		String authority = uri.getAuthority();
+		String endpoint;
+
+		if( authority == null )
+		{
+			endpoint = "";
+		}
+		else if( scheme == null )
+		{
+			endpoint = DEFAULT_SCHEME + SCHEME_SEPARATOR + authority;
+		}
+		else
+		{
+			endpoint = uri.getScheme() + SCHEME_SEPARATOR + uri.getAuthority();
+		}
+
 		return endpoint;
+	}
+
+	@Override
+	public String getResourceName()
+	{
+		String[] splitResourcePath = uri.getPath().split( "/" );
+		String resourceName = splitResourcePath[splitResourcePath.length - 1];
+		String capitalizedResourceName = resourceName.substring( 0, 1 ).toUpperCase() + resourceName.substring( 1 );
+
+		return capitalizedResourceName;
 	}
 
 	@Override
