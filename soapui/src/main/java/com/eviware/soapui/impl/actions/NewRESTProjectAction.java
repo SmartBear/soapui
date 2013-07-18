@@ -15,10 +15,11 @@ package com.eviware.soapui.impl.actions;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.WorkspaceImpl;
 
+import com.eviware.soapui.impl.rest.RestURIParser;
+import com.eviware.soapui.impl.rest.support.RestURIParserImpl;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.support.MessageSupport;
-import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 import com.eviware.x.form.XFormDialog;
@@ -71,7 +72,11 @@ public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 					// TODO: Expand the dialog box with more options
 				}
 
-				SoapUI.log.info( "User Input URI:" + URI );
+				RestURIParser restURIParser = new RestURIParserImpl( URI );
+				SoapUI.log.info( "Parsed Endpoint: " + restURIParser.getEndpoint() );
+				SoapUI.log.info( "Parsed Path: " + restURIParser.getPath() );
+				SoapUI.log.info( "Parsed Parameters: " + restURIParser.getParams() );
+
 
 				// If there is no exception or error we break out
 				break;
