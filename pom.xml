@@ -39,25 +39,8 @@
         <module>soapui</module>
         <module>soapui-maven-plugin</module>
         <module>soapui-installer</module>
+        <module>soapui-maven-plugin-tester</module>
     </modules>
-
-    <profiles>
-        <profile>
-            <id>allTests</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-                <property>
-                    <name>allTests</name>
-                </property>
-            </activation>
-            <modules>
-                <module>soapui</module>
-                <module>soapui-maven-plugin</module>
-                <module>soapui-maven-plugin-tester</module>
-                <module>soapui-installer</module>
-            </modules>
-        </profile>
-    </profiles>
 
     <build>
         <plugins>
