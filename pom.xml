@@ -6,7 +6,7 @@
     <groupId>com.smartbear.soapui</groupId>
     <name>soapUI project</name>
     <artifactId>soapui-project</artifactId>
-    <version>4.5.3-SNAPSHOT</version>
+    <version>4.5.4-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <repositories>
@@ -38,8 +38,25 @@
     <modules>
         <module>soapui</module>
         <module>soapui-maven-plugin</module>
-        <module>soapui-maven-plugin-tester</module>
         <module>soapui-installer</module>
     </modules>
+
+    <profiles>
+        <profile>
+            <id>allTests</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+                <property>
+                    <name>allTests</name>
+                </property>
+            </activation>
+            <modules>
+                <module>soapui</module>
+                <module>soapui-maven-plugin</module>
+                <module>soapui-maven-plugin-tester</module>
+                <module>soapui-installer</module>
+            </modules>
+        </profile>
+    </profiles>
 
 </project>
