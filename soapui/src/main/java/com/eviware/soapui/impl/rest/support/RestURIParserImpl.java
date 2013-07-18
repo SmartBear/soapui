@@ -49,7 +49,7 @@ public class RestURIParserImpl implements RestURIParser
 		}
 		else
 		{
-			endpoint = uri.getScheme() + SCHEME_SEPARATOR + uri.getAuthority();
+			endpoint = scheme + SCHEME_SEPARATOR + authority;
 		}
 
 		return endpoint;
