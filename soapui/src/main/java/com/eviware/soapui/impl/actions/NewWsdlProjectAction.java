@@ -78,7 +78,6 @@ public class NewWsdlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 					dialog.getFormField( Form.GENERATEMOCKSERVICE ).setEnabled(
 							newValue.trim().length() > 0 && !newValue.endsWith( ".wadl" ) );
 					dialog.getFormField( Form.GENERATETESTSUITE ).setEnabled( newValue.trim().length() > 0 );
-					dialog.getFormField( Form.ADDRESTSERVICE ).setEnabled( newValue.trim().length() == 0 );
 
 					initProjectName( newValue );
 				}
@@ -88,12 +87,10 @@ public class NewWsdlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 		{
 			dialog.setValue( Form.INITIALWSDL, "" );
 			dialog.setValue( Form.PROJECTNAME, "" );
-			dialog.setBooleanValue( Form.ADDRESTSERVICE, false );
 
 			dialog.getFormField( Form.CREATEREQUEST ).setEnabled( false );
 			dialog.getFormField( Form.GENERATEMOCKSERVICE ).setEnabled( false );
 			dialog.getFormField( Form.GENERATETESTSUITE ).setEnabled( false );
-			dialog.getFormField( Form.ADDRESTSERVICE ).setEnabled( true );
 		}
 
 		if( param instanceof String )
@@ -146,16 +143,9 @@ public class NewWsdlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 							if( new File( url ).exists() )
 								url = new File( url ).toURI().toURL().toString();
 
-							if( url.toUpperCase().endsWith( "WADL" ) )
-								importWadl( project, url );
-							else
 								importWsdl( project, url );
 						}
-						else if( dialog.getBooleanValue( Form.ADDRESTSERVICE ) )
-						{
-							SoapUI.getActionRegistry().getAction( NewRestServiceAction.SOAPUI_ACTION_ID )
-									.perform( project, project );
-						}
+
 						if( dialog.getBooleanValue( Form.CREATEWEBTEST ) )
 						{
 							new CreateWebTestAction().perform( project, param );
@@ -267,9 +257,6 @@ public class NewWsdlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 
 		@AField( description = "Form.GenerateMockService.Description", type = AFieldType.BOOLEAN, enabled = false )
 		public final static String GENERATEMOCKSERVICE = messages.get( "Form.GenerateMockService.Label" );
-
-		@AField( description = "Form.AddRestService.Description", type = AFieldType.BOOLEAN, enabled = true )
-		public final static String ADDRESTSERVICE = messages.get( "Form.AddRestService.Label" );
 
 		@AField( description = "Form.RelativePaths.Description", type = AFieldType.BOOLEAN, enabled = true )
 		public final static String RELATIVEPATHS = messages.get( "Form.RelativePaths.Label" );
