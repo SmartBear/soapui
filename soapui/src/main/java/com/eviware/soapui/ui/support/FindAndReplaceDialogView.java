@@ -193,6 +193,7 @@ public class FindAndReplaceDialogView extends AbstractAction
 		context.setRegularExpression( false );
 		context.setSearchForward( forwardButton.isSelected() );
 		context.setWholeWord( wholeWordCheck.isSelected() );
+		context.setMatchCase( caseCheck.isSelected() );
 		return context;
 	}
 
@@ -210,6 +211,7 @@ public class FindAndReplaceDialogView extends AbstractAction
 		context.setRegularExpression( false );
 		context.setSearchForward( forwardButton.isSelected() );
 		context.setWholeWord( wholeWordCheck.isSelected() );
+		context.setMatchCase( caseCheck.isSelected() );
 		return context;
 	}
 

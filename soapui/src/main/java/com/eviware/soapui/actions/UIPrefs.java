@@ -87,7 +87,7 @@ public class UIPrefs implements Prefs
 			editorForm.appendCheckBox( SHOW_DESCRIPTIONS, "Show description content when available", false );
 			editorForm.appendSeparator();
 
-			editorForm.appendCheckBox( AUTOSAVE_ONEXIT, "Automatically save all projects on exit", true );
+			editorForm.appendCheckBox( AUTOSAVE_ONEXIT, "Ask to save projects on exit", true );
 			backupCheckBox = editorForm.appendCheckBox( CREATE_BACKUP, "Backup project files before they are saved", true );
 			backupFolder = editorForm.appendTextField( BACKUP_FOLDER,
 					"Folder to backup to (can be both relative or absolute)" );
@@ -108,9 +108,9 @@ public class UIPrefs implements Prefs
 				editorForm.appendComboBox( DESKTOP_TYPE, DesktopRegistry.getInstance().getNames(),
 						"Select the type of desktop to use" );
 				JCheckBox cb = editorForm.appendCheckBox( NATIVE_LAF, "Use native Look & Feel (requires restart)", true );
-				if( Tools.isMacLion() ) {
+				if( Tools.isMac() )
+				{
 					cb.setSelected( true );
-					cb.setEnabled( false );
 				}
 			}
 

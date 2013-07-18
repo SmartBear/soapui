@@ -93,6 +93,8 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 	private SoapUIScriptEngine tearDownScriptEngine;
 	/**
 	 * runFromHereContext is used only for run from here action
+	 * TODO: runFromHereContext is only used from UI and should be moved in a UI model. For more information
+	 * SOAP-165
 	 */
 	private StringToObjectMap runFromHereContext = new StringToObjectMap();
 
@@ -1252,6 +1254,9 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 
 	public void setRunFromHereContext( StringToObjectMap runFromHereContext )
 	{
-		this.runFromHereContext = new StringToObjectMap( runFromHereContext );
+		  if( !isForLoadTest() )
+		  {
+				this.runFromHereContext = new StringToObjectMap( runFromHereContext );
+		  }
 	}
 }

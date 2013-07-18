@@ -1,10 +1,11 @@
-# The soapUI project
+# The SoapUI project
 
-This is the main soapUI project.
+This is the main SoapUI project.
 
 ## Structure and submodules
 
 * *[soapui](https://github.com/SmartBear/soapui/tree/SOAPUI-3838-Convert-to-maven3/soapui)* - The core module.
+* *[soapui-installer](https://smartbearsweden.atlassian.net/browse/SOAP-59)* - The installer module for creating packages.
 * *[soapui-maven-plugin](https://github.com/SmartBear/soapui/tree/SOAPUI-3838-Convert-to-maven3/soapui-maven-plugin)* – A Maven plugin used for running soapUI in a Continuous integration environment (such as [Jenkins](http://jenkins-ci.org)).
 * *[soapui-maven-plugin-tester](https://github.com/SmartBear/soapui/tree/SOAPUI-3838-Convert-to-maven3/soapui-maven-plugin-tester)* - A small test `pom.xml` used for testing the *soapui-maven-plugin*.
 
@@ -22,7 +23,8 @@ To get the source code run `git clone https://github.com/SmartBear/soapui.git` w
 
 ### Building
 
-* To build the whole soapUI project including all submodules, run `mvn clean install` in the root folder.
+* To build the SoapUI project run `mvn clean install` in the root folder.
+* To also include the soapui-maven-plugin-tester module, instead run `mvn clean install -DallTests` in the root folder.
 * To build a individual submodule run `mvn clean install` the root folder of the submodule you want to build.
 
 ### Running
@@ -32,6 +34,10 @@ To run soapUI after it has been built, execute `mvn exec:java` in the root folde
 ### Getting the latest changes
 
 To get the latest source code changes clone the project by running `git pull` in the root directory of the soapUI project or the root directory of the submodule you want to update.
+
+## Contributing
+
+When you have decided that you want to take a more active part in improving SoapUI then there are a few things you have to do before you can get started. Go to http://www.soapui.org/Developers-Corner/contribute-to-soapui.html for more information.
 
 ### IDE support
 

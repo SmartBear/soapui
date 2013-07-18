@@ -1,0 +1,227 @@
+# Release Notes for SoapUI
+
+## version 4.5.2 - 2013-05-22
+
+### Build improvements ###
+* Build system upgraded from maven 1 to maven 3.
+* All the distributions now come bundled with the same JRE version.
+
+### Bugs fixed ###
+* HTTP Session ID kept across test cases if "Maintain HTTP Session" is checked (SOAPUI-4425).
+* Encoded REST URLs no longer get decoded unintentionally (SOAPUI-4594)
+* HTTP headers are no longer copied back to the request until after redirection (SOAPUI-3607).
+* Windows 32-bit users no longer receive an error message when doing web recording (SOAP-68).
+* Fixed ClassCastException when using HTTPS with self-signed certificates (SOAPUI-3918).
+* The command line TestRunner now correctly generates TXT reports (SOAPUI-4501).
+* (Pro) Fixed NTLM authentication (SOAPUI-4273).
+* Fixed loading of schemas to use array correctly (SOAPUI-4512).
+* Added jar-file filtering of protection jars (SOAP-20)
+* Fixed endless loop during schema loading when opening the add assertion panel (SOAPUI-4375).
+* Fixed classloading issues (SOAP-24).
+* SSL Info tab is no longer always inactive (SOAPUI-4395)
+* Fixed minor spelling mistakes and propagation of HTTP Sessions in RunTestCase invocation (SOAP-26).
+* Preferences are now automatically saved when clicking "OK" in the preferences dialog (SOAP-118).
+* URL encoder no longer also encodes the path itself (SOAPUI-4601, SOAPUI-3032, SOAP-121).
+* The "Case sensitive" option in the find/replace dialog now works correctly (SOAP-132).
+* Native look & feel is now enabled by default on Mac OS X (SOAP-115).
+    * If you're experiencing problems with not being able to close the starter page, change your screen resolution.
+
+
+## version 4.5.1 - 2012-06-27
+
+Please see http://soapui.org/Downloads/soapui-451-bugs-fixed.html for an overview 
+of the bugs fixed in this release.
+
+### Bugs fixed
+- Added the GetData feature to the editable fields of the Message Content Assertion feature.
+- Improved the new licensing model to improve user experience with activating and managing the soapUI license including providing an excel license key registry file.
+- Added the ability to search for data in the response editors.
+- Enhanced the request’s authorization tab to guide the user when configuring for either pre-emptive or NTLM/Kerberos security
+- Defined test environments can be renamed.
+- Improved load testing when using jdbc datasource.
+- Improved the Test On Demand feature to incorporate the use of the Assertion.
+- Improved XQuery and XPath wildcard match handling to match whole or portions of values.
+- Fixed the HTTP raw request view to include all headers as listed in the HTTP log.
+- Corrected the response editor Right Click menu to include additional editor management options.
+- Fixed SOAP Fault and Not SOAP Fault to evaluate correctly.
+- Fixed the NPE error in the getPropertyValue in WsdlProjectPro of the soapUI API.
+- Fixed the cut and copy feature in the response editors.
+- Fixed the SAML XML editor window in the WS-Security form so it is no longer read only.
+- Fixed the ability to open a P12 keystore when using WS-Security.
+- Fixed the Mock Service response editor so that it is editable.
+- Fixed soapUI so it can now use the correct number, as defined, of concurrent connections/sockets.
+- Fixed the REST URL encoding for GET requests .
+- Fixed the ClassCastException error when upgrading 4.0.1 projects to 4.5.0.
+
+
+## version 4.5- 2012-03-28: The Big Ears Release
+-------------------------------------------------------------------------------
+Please see http://soapui.org/About-SoapUI/whats-new-in-soapui-45.html for an overview 
+of all the new great features and more details on fixes in the final release!
+
+### Major New Features:
+- Test Debugging (Pro)
+- Assertion TestSteps (Pro)
+- Message Content Assertion (Pro)
+- TestOnDemand. Run your tests from the Cloud
+- Multi Environment Support (Pro)
+- Floating Licenses (Pro)
+
+### Minor Improvements
+- HTTP Monitor now works for all HTTP Methods
+- Improved the XPath Assertion to support wildcards within elements
+- Improved the XQuery Assertion to support wildcards within elements
+- Added possibility to override JUnitReportCollector for creating custom JUnit style reports
+- Enlarged the controls in Security Test
+- Added support for SAML 2
+- Added support for NTLM 2 and Kerberos
+- Added line numbers when having a Groovy Null Pointer
+
+### Bug Fixes
+- Changed SOAP message to put elements in WSDL Defined proper sequence of when when elements were of complexe type
+- Updates to Schema Compliance/li>
+- Fixes to WSDL handling that was changed between 3.6.1 and 4.0.0/li>
+- Under some ciscumstances you could get NullPointerException when doing a Show Message - Exchange for XML Bomb security test
+- Fixes to TestRunner for the HTTP test step when using 3.0.1 project files in 4.0.0
+Fixed a SoapUI Pro Testrunner bug, When you overrode Global Properties you could get a ClassCastException
+- Under some circumstance a HTTP Redirect with path as location was not followed correctly
+- When trying to export Complex Project with many external dependencies you could get a Null pointer
+- Fixed and error loading WSDL’s containing UTF-8 Characters
+- Corrected JDBC connections when the uses used regexp in configurations
+- Fixed NPE’s when the users tried to start JMS in the context menu of a project
+- Fixed contains assertion to work with multi lines
+- Fixed issues with the maven2 plugin dependencies
+- The maven2 plugin would fail for composite projects if global properties were specified
+- Fixed soapUI problems on Java 7
+- Made Datasource Row or Column windows to be resizable
+- Optional recursive elements or types were not shown in form editor
+- Under some conditions it was not possible to delete multiple assertions using the keyboard delete button
+- REST TestSteps weren’t saving their assigned REST Resource and Method in some cases
+- Small Spelling and Language fixes...
+- Under some conditions the password in service endpoints and environments could be visible to the end user
+- Testcase that contains " (quotation mark) in its label weren’t executed in composite projects
+- Fixed a problem where a combination of soapUI composite project and SVN when renaming test suites
+- Custom Assertion weren’t visible in the list of available assertions
+- Corrected Mock War Packaging Issues
+- Pre encoded endpoints setting wasn’t working for REST or HTTP URLs
+- REST URL’s weren’t calculated correctly when endPoints had context
+- Importing WADL generated by SoapUI could break method names
+- Fixed GUI glitches for Assertion Display and Highlighting of List Items
+- Form view did not not create container elements for sequence of complex type containing only attributes
+- You could get a stackoverflow when calling selectFromCurrent from script assertion
+- The empty report template was missing language="groovy" attribute which gave the reporting engine issues
+- The Execution of Parallel TestCases in the Command Line runner did not execute any of the tests
+- If response message contains the text "\u0000" then the Outline view did not work anymore
+- NPE when creating Command Line report for failed REST requests
+- Corrected an inconsistent numbering of TestStep index
+
+## 4.0.1 Bugs Fixed - 2011-09-12
+-------------------------------------------------------------------------------
+Please see http://soapui.org/About-SoapUI/soapui-40-bugs-fixed.html for an overview 
+of the bugs fixed in this release.
+
+##4.0 The Security Release - 2011-06-14
+-------------------------------------------------------------------------------
+Please see http://www.soapui.org/About-SoapUI/whats-new-in-soapui-40.html for an overview 
+of all the new great features and more details on fixes in the final release!
+
+##4.0 beta 2 - 2011-05-31
+-------------------------------------------------------------------------------
+###Major New Features:
+- Added a "Fuzzing Scan" to the list of Security Scans 
+- Improved Command-line Security-Test runner to support all TestCase Runner options and custom JUnit-Style report (Security, Automation)
+- Added wargenerator command-line utility that creates war files from soapui projects
+
+###Minor Improvements
+- Added option to run Security Scans only once in TestCase with complex flow logic (Security)
+- Fixed all password fields in soapUI to use masked input (Functional Testing)
+- Improved feedback in Security Test log (Security)
+- Added new wargenerator command-line utility for generating war files for a Project  (Mocking, Automation)
+- General UI Improvements
+
+###Bug Fixes
+- Generated WAR files now work on WebLogic
+- Fixed syncing of file system with composite projects  and non-alphanumeric characters in TestCase names
+- Fixed ignoring of DataSource StartRow with shared DataSources
+- Fixed inserting of new TestSteps to be after selected TestStep
+- Fixed correct generation of loadUI Tests from soapUI Simple Strategy LoadTests
+- Fixed saving of project file when syncing to loadUI
+- REST Coverage was not being calculated correctly for child resources
+
+###Library Updates
+- Jasper Reports 4.0.2
+- Jetty 6.1.26
+
+##4.0 beta1 - 2011-05-17
+--------------------------------------------------------------------------------
+###Major New Feature:
+- Security Testing for scanning your target services for common functional vulnerabilities:
+  - SQL Injection
+  - XPath Injection
+  - Boundary Scan
+  - Invalid Datatype
+  - Cross Site Scripting
+  - XML Bomb
+  - Malicious Attachment
+  - Malformed XML
+  - Custom Scan
+
+###Minor New Features:
+- Introduced factory extension mechanism for easily adding your own TestSteps, Assertions, etc.  (Ecosystem)
+- Added possibility to override JUnitReportCollector for creating custom JUnit style reports (Analytics)
+- Added possibility to ignore XML comments in XPath assertions (Functional Testing)
+- Improved error messages when WSDL loading fails (Technology Support)
+- Added custom multi-value delimiter for REST parameter values (Functional Testing)
+- Added global setting for normalizing forward slashes (which was always performed previously) (Functional Testing)
+- Added support for property expansions in output folder for command-line runners (Automation)
+- Improved WADL importer support for referenced representations and parameters (Technology Support)
+- Added adding of Quotes “”to File DataSink (Functional Testing)
+- Added Digest Algorithm setting to WS-Security Signature entry (Technology Support)
+- Improved handling of internal errors in Schema Validation (Functional Testing)
+- Added encoding property to File DataSink (if you need to write files with some other charset than the system one) (Functional Testing)
+- Improved creation of CSV Files in File DataSink (Functional Testing)
+- Improved installer to install the tutorials in custom location (Ecosystem)
+- Improved installer to install the Browser Component in soapUI directory instead of local profile (Ecosystem)
+- Improved error messages when trying to install a Renewal license over a Trial (Ecosystem)
+- Improved REST Resource resolution for REST TestRequests when there are multiple resources  with the same path (Functional Testing)
+- Improved Redirect handling to always use GET (Functional Testing)
+- General Stability and Performance improvements
+
+###Bugs Fixed:
+- Fixed duplicate retrieval of web pages when BrowserComponent was enabled
+- Fixed support for Composite projects in MockAsWar functionality
+- Fixed Composite Projects with regard to renaming of REST Resources and Services
+- Fixed double encoding of Template URL parameters
+- Fixed forward-slashes in WAR file create by DeployAsWar and removed unnecessary jars
+- Fixed support for composite projects in DeployAsWar packaging
+- Fixed Reliable Messaging sequence identifier
+- Fixed loading of XSDs and WSDLs with leading or trailing whitespace
+- Fixed loading of projects with filenames containing non-URL characters
+- Fixed incorrect replacing of SOAP Header content when updating a WSDL with Header definitions
+- Fixed normalization of filenames when exporting TestCases or TestSuites
+- Fixed synchronization of shared File DataSinks
+- Fixed combo-box editor in Mode column for Service Endpoints for REST services
+- Fixed automatic setting of WS-A version when WS-RM version 1.0 is selected
+- Fixed normalization of column names to XML names when generating XML from a JDBC ResultSet
+- Fixed wildcards for CDATA sections in the XPath Contains assertion
+- Fixed error when running MockServices containing definition parts with unexpected content types
+- Fixed potential NPEs in DataSource cleanup and StringList constructors
+- Fixed QName extraction of REST Request Representations
+- Fixed Null Pointer Exception in HTTP and REST request editor when Browser Component is disabled
+- Fixed truncating of property values when writing to Excel DataSink if they are over 32k and also added corresponding warning to soapUI log
+- Fixed crash on extremely large tooltips; internal limit now set to 500 characters for tooltips in the outline editor showing node values
+- Fixed width of XPath Assertion configuration dialog to show the "Select Content" options
+- Fixed WADL importing of child resources with same path; these are now merged into a single resource
+- Fixed layouting of DataSink and DataSource config panels and fixed GroovyD DataSource/DataSink editors and Get Data popups
+- Fixed handling of WADL parameters with non XSD types in the soapUI Pro Form Editor
+- Fixed double encoding of Template URL parameters
+- Fixed forward-slashes in WAR file create by DeployAsWar and removed unnecessary jars
+- Fixed Raw view for JDBC Requests to show expanded variables
+- Fixed incorrect TestSuite Jasper Report Template 
+- Fixed duplicate saving of standard projects in pro version
+
+###Updated Libraries:
+- JXBrowser 2.8
+- Groovy 1.8.0
+- Bundled JRE 1.6.0_25
+
