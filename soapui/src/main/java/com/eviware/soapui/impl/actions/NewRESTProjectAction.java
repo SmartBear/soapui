@@ -75,7 +75,7 @@ public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 				RestURIParser restURIParser = new RestURIParserImpl( URI );
 				SoapUI.log.info( "Parsed Endpoint: " + restURIParser.getEndpoint() );
 				SoapUI.log.info( "Parsed Resource: " + restURIParser.getPath() );
-				SoapUI.log.info( "Parsed Query: " + restURIParser.getParams() );
+				SoapUI.log.info( "Parsed Query: " + restURIParser.getQuery() );
 
 
 				// If there is no exception or error we break out

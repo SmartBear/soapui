@@ -23,7 +23,7 @@ import static org.junit.Assert.*;
 
 /**
  * Tests RestURIParserImpl
- * Author: Shadid Chowdhury
+ * @author : Shadid Chowdhury
  */
 public class RestURIParserImplTestCase
 {
@@ -55,14 +55,14 @@ public class RestURIParserImplTestCase
 		String expectedEndpoint = "http://service.com";
 		String expectedPath = "/api/1.2/json/search/search";
 		String expectedResourceName = "Search";
-		String expectedParams = "title=Kill me";
+		String expectedQuery = "title=Kill me";
 
 		restURIParser = new RestURIParserImpl( uri );
 
 		assertEquals( expectedEndpoint, restURIParser.getEndpoint() );
 		assertEquals( expectedPath, restURIParser.getPath() );
 		assertEquals( expectedResourceName, restURIParser.getResourceName() );
-		assertEquals( expectedParams, restURIParser.getParams() );
+		assertEquals( expectedQuery, restURIParser.getQuery() );
 	}
 
 	@Test
@@ -73,14 +73,14 @@ public class RestURIParserImplTestCase
 		String expectedEndpoint = "http://service.com";
 		String expectedPath = "/api/1.2/json/search/search";
 		String expectedResourceName = "Search";
-		String expectedParams = "title=Kill me";
+		String expectedQuery = "title=Kill me";
 
 		restURIParser = new RestURIParserImpl( uri );
 
 		assertEquals( expectedEndpoint, restURIParser.getEndpoint() );
 		assertEquals( expectedPath, restURIParser.getPath() );
 		assertEquals( expectedResourceName, restURIParser.getResourceName() );
-		assertEquals( expectedParams, restURIParser.getParams() );
+		assertEquals( expectedQuery, restURIParser.getQuery() );
 	}
 
 	@Test
@@ -90,14 +90,14 @@ public class RestURIParserImplTestCase
 		String expectedEndpoint = "http://service.com";
 		String expectedPath = "/rest";
 		String expectedResourceName = "Rest";
-		String expectedParams = "";
+		String expectedQuery = "";
 
 		restURIParser = new RestURIParserImpl( uri );
 
 		assertEquals( expectedEndpoint, restURIParser.getEndpoint() );
 		assertEquals( expectedPath, restURIParser.getPath() );
 		assertEquals( expectedResourceName, restURIParser.getResourceName() );
-		assertEquals( expectedParams, "");
+		assertEquals( expectedQuery, "");
 	}
 
 	@Test
@@ -107,14 +107,14 @@ public class RestURIParserImplTestCase
 		String expectedEndpoint = "";
 		String expectedPath = "/abc";
 		String expectedResourceName = "Abc";
-		String expectedParams = "book=15;column=12";
+		String expectedQuery = "book=15;column=12";
 
 		restURIParser = new RestURIParserImpl( uri );
 
 		assertEquals( expectedEndpoint, restURIParser.getEndpoint() );
 		assertEquals( expectedPath, restURIParser.getPath() );
 		assertEquals( expectedResourceName, restURIParser.getResourceName());
-		assertEquals( expectedParams, restURIParser.getParams() );
+		assertEquals( expectedQuery, restURIParser.getQuery() );
 	}
 
 	@Test
@@ -125,14 +125,14 @@ public class RestURIParserImplTestCase
 		String expectedEndpoint = "";
 		String expectedPath = "/1.2/json.search/search";
 		String expectedResourceName = "Search";
-		String expectedParams = "title=Kill me";
+		String expectedQuery = "title=Kill me";
 
 		restURIParser = new RestURIParserImpl( uri );
 
 		assertEquals( expectedEndpoint, restURIParser.getEndpoint() );
 		assertEquals( expectedPath, restURIParser.getPath() );
 		assertEquals( expectedResourceName, restURIParser.getResourceName());
-		assertEquals( expectedParams, restURIParser.getParams() );
+		assertEquals( expectedQuery, restURIParser.getQuery() );
 	}
 
 	public void parametereizedURITest() throws URISyntaxException
@@ -141,13 +141,13 @@ public class RestURIParserImplTestCase
 		String expectedEndpoint = "";
 		String expectedPath = "/conversation/date/{date}/time/{time}";
 		String expectedResourceName = "Time";
-		String expectedParams = "userId=1234";
+		String expectedQuery = "userId=1234";
 
 		restURIParser = new RestURIParserImpl( uri );
 
 		assertEquals( expectedEndpoint, restURIParser.getEndpoint() );
 		assertEquals( expectedPath, restURIParser.getPath() );
 		assertEquals( expectedResourceName, restURIParser.getResourceName());
-		assertEquals( expectedParams, restURIParser.getParams() );
+		assertEquals( expectedQuery, restURIParser.getQuery() );
 	}
 }
