@@ -74,8 +74,8 @@ public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 
 				RestURIParser restURIParser = new RestURIParserImpl( URI );
 				SoapUI.log.info( "Parsed Endpoint: " + restURIParser.getEndpoint() );
-				SoapUI.log.info( "Parsed Path: " + restURIParser.getPath() );
-				SoapUI.log.info( "Parsed Parameters: " + restURIParser.getParams() );
+				SoapUI.log.info( "Parsed Resource: " + restURIParser.getPath() );
+				SoapUI.log.info( "Parsed Query: " + restURIParser.getParams() );
 
 
 				// If there is no exception or error we break out
@@ -93,16 +93,16 @@ public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 		}
 	}
 
-	/*
-		* This Form interface contains all the fields that will be used to populate the XFormDialog
-		*/
-	@AForm( name = "Form.Title", description = "Form.Description", helpUrl = HelpUrls.NEWPROJECT_HELP_URL, icon = UISupport.TOOL_ICON_PATH )
+	/**
+	 * This Form interface contains all the fields that will be used to populate the XFormDialog
+	 */
+	@AForm(name = "Form.Title", description = "Form.Description", helpUrl = HelpUrls.NEWPROJECT_HELP_URL, icon = UISupport.TOOL_ICON_PATH)
 	public interface Form
 	{
-		@AField( description = "Form.URI.Description", type = AField.AFieldType.STRING )
+		@AField(description = "Form.URI.Description", type = AField.AFieldType.STRING)
 		public final static String URI = messages.get( "Form.URI.Label" );
 
-		@AField( description = "Form.MoreOptions.Description", type = AField.AFieldType.BOOLEAN, enabled = true )
+		@AField(description = "Form.MoreOptions.Description", type = AField.AFieldType.BOOLEAN, enabled = true)
 		public final static String MOREOPTIONS = messages.get( "Form.MoreOptions.Label" );
 
 	}
