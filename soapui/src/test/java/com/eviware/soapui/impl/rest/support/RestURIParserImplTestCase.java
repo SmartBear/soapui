@@ -13,13 +13,7 @@
 package com.eviware.soapui.impl.rest.support;
 
 import junit.framework.JUnit4TestAdapter;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 
 import java.net.URISyntaxException;
 
@@ -29,12 +23,8 @@ import static org.junit.Assert.*;
  * Tests RestURIParserImpl
  * Author: Shadid Chowdhury
  */
-@RunWith( JUnit4.class )
 public class RestURIParserImplTestCase
 {
-	@Rule
-	public ExpectedException exception = ExpectedException.none();
-
 	public static junit.framework.Test suite()
 	{
 		return new JUnit4TestAdapter(
@@ -137,15 +127,6 @@ public class RestURIParserImplTestCase
 		String expectedQuery = "";
 
 		assertURIParsedCorrectly( uri, expectedEndpoint, expectedPath, expectedResourceName, expectedQuery );
-	}
-
-	@Test
-	public void invalidSchemeIsRejectedTest() throws URISyntaxException
-	{
-		String uri = "ftp://spotify.com/api/?userId=1234";
-
-		exception.expect( InvalidURISchemeException.class );
-		RestURIParserImpl restURIParser = new RestURIParserImpl( uri );
 	}
 
 	private static void assertURIParsedCorrectly( String uri,
