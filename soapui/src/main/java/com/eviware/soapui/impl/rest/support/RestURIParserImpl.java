@@ -100,4 +100,18 @@ public class RestURIParserImpl implements RestURIParser
 	{
 		return uri.getQuery();
 	}
+
+	private boolean isValidScheme( URI uri )
+	{
+		String scheme = uri.getScheme();
+
+		if (scheme.equals( "http" ) || scheme.equals ("https") )
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 }

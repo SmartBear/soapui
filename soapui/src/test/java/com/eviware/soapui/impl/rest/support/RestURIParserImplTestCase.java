@@ -15,7 +15,11 @@ package com.eviware.soapui.impl.rest.support;
 import junit.framework.JUnit4TestAdapter;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 import java.net.URISyntaxException;
 
@@ -25,27 +29,16 @@ import static org.junit.Assert.*;
  * Tests RestURIParserImpl
  * Author: Shadid Chowdhury
  */
+@RunWith( JUnit4.class )
 public class RestURIParserImplTestCase
 {
-
+	@Rule
+	public ExpectedException exception = ExpectedException.none();
 
 	public static junit.framework.Test suite()
 	{
 		return new JUnit4TestAdapter(
 				RestURIParserImplTestCase.class );
-	}
-
-	RestURIParserImpl restURIParser;
-
-	@Before
-	public void setUp() throws URISyntaxException
-	{
-	}
-
-	@After
-	public void tearDown()
-	{
-		restURIParser = null;
 	}
 
 	@Test
@@ -57,12 +50,7 @@ public class RestURIParserImplTestCase
 		String expectedResourceName = "Search";
 		String expectedParams = "title=Kill me";
 
-		restURIParser = new RestURIParserImpl( uri );
-
-		assertEquals( expectedEndpoint, restURIParser.getEndpoint() );
-		assertEquals( expectedPath, restURIParser.getPath() );
-		assertEquals( expectedResourceName, restURIParser.getResourceName() );
-		assertEquals( expectedParams, restURIParser.getParams() );
+		assertURIParsedCorrectly( uri, expectedEndpoint, expectedPath, expectedResourceName, expectedParams );
 	}
 
 	@Test
@@ -75,12 +63,7 @@ public class RestURIParserImplTestCase
 		String expectedResourceName = "Search";
 		String expectedParams = "title=Kill me";
 
-		restURIParser = new RestURIParserImpl( uri );
-
-		assertEquals( expectedEndpoint, restURIParser.getEndpoint() );
-		assertEquals( expectedPath, restURIParser.getPath() );
-		assertEquals( expectedResourceName, restURIParser.getResourceName() );
-		assertEquals( expectedParams, restURIParser.getParams() );
+		assertURIParsedCorrectly( uri, expectedEndpoint, expectedPath, expectedResourceName, expectedParams );
 	}
 
 	@Test
@@ -92,12 +75,7 @@ public class RestURIParserImplTestCase
 		String expectedResourceName = "Rest";
 		String expectedParams = "";
 
-		restURIParser = new RestURIParserImpl( uri );
-
-		assertEquals( expectedEndpoint, restURIParser.getEndpoint() );
-		assertEquals( expectedPath, restURIParser.getPath() );
-		assertEquals( expectedResourceName, restURIParser.getResourceName() );
-		assertEquals( expectedParams, "");
+		assertURIParsedCorrectly( uri, expectedEndpoint, expectedPath, expectedResourceName, expectedParams );
 	}
 
 	@Test
@@ -109,12 +87,7 @@ public class RestURIParserImplTestCase
 		String expectedResourceName = "Abc";
 		String expectedParams = "book=15;column=12";
 
-		restURIParser = new RestURIParserImpl( uri );
-
-		assertEquals( expectedEndpoint, restURIParser.getEndpoint() );
-		assertEquals( expectedPath, restURIParser.getPath() );
-		assertEquals( expectedResourceName, restURIParser.getResourceName());
-		assertEquals( expectedParams, restURIParser.getParams() );
+		assertURIParsedCorrectly( uri, expectedEndpoint, expectedPath, expectedResourceName, expectedParams );
 	}
 
 	@Test
@@ -127,14 +100,10 @@ public class RestURIParserImplTestCase
 		String expectedResourceName = "Search";
 		String expectedParams = "title=Kill me";
 
-		restURIParser = new RestURIParserImpl( uri );
-
-		assertEquals( expectedEndpoint, restURIParser.getEndpoint() );
-		assertEquals( expectedPath, restURIParser.getPath() );
-		assertEquals( expectedResourceName, restURIParser.getResourceName());
-		assertEquals( expectedParams, restURIParser.getParams() );
+		assertURIParsedCorrectly( uri, expectedEndpoint, expectedPath, expectedResourceName, expectedParams );
 	}
 
+	@Test
 	public void parametereizedURITest() throws URISyntaxException
 	{
 		String uri = "/conversation/date/{date}/time/{time}/?userId=1234";
@@ -143,11 +112,53 @@ public class RestURIParserImplTestCase
 		String expectedResourceName = "Time";
 		String expectedParams = "userId=1234";
 
-		restURIParser = new RestURIParserImpl( uri );
+		assertURIParsedCorrectly( uri, expectedEndpoint, expectedPath, expectedResourceName, expectedParams );
+	}
+
+	@Test
+	public void numbersInResourcePathTest() throws URISyntaxException
+	{
+		String uri = "http://bokus.se/books/ISBN-5012359";
+		String expectedEndpoint = "http://bokus.se";
+		String expectedPath = "/books/ISBN-5012359";
+		String expectedResourceName = "ISBN-5012359";
+		String expectedParams = "";
+
+		assertURIParsedCorrectly( uri, expectedEndpoint, expectedPath, expectedResourceName, expectedParams );
+	}
+
+	@Test
+	public void httpPrefixAddedWhenOmittedTest() throws URISyntaxException
+	{
+		String uri = "spotify.com";
+		String expectedEndpoint = "http://spotify.com";
+		String expectedPath = "";
+		String expectedResourceName = "";
+		String expectedParams = "";
+
+		assertURIParsedCorrectly( uri, expectedEndpoint, expectedPath, expectedResourceName, expectedParams );
+	}
+
+	@Test
+	public void invalidSchemeIsRejectedTest() throws URISyntaxException
+	{
+		String uri = "ftp://spotify.com/api/?userId=1234";
+
+		exception.expect( InvalidURISchemeException.class );
+		RestURIParserImpl restURIParser = new RestURIParserImpl( uri );
+	}
+
+	private static void assertURIParsedCorrectly( String uri,
+																 String expectedEndpoint,
+																 String expectedPath,
+																 String expectedResourceName,
+																 String expectedParams ) throws URISyntaxException
+	{
+		RestURIParserImpl restURIParser = new RestURIParserImpl( uri );
 
 		assertEquals( expectedEndpoint, restURIParser.getEndpoint() );
 		assertEquals( expectedPath, restURIParser.getPath() );
-		assertEquals( expectedResourceName, restURIParser.getResourceName());
+		assertEquals( expectedResourceName, restURIParser.getResourceName() );
 		assertEquals( expectedParams, restURIParser.getParams() );
 	}
 }
