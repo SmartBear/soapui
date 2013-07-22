@@ -14,35 +14,49 @@ package com.eviware.soapui.impl;
 
 
 /**
- * URLParser should parse the URI based on ths standard syntax components referred
- * in http://www.ietf.org/rfc/rfc3986.txt as [scheme:][//authority][path][?query][#fragment]
- * Author: Shadid Chowdhury
+ * URIParser should parse the URI based on ths standard syntax components referred
+ * in {@link http://www.ietf.org/rfc/rfc3986.txt} as [scheme:][//authority][path][?query][#fragment]
+ *
+ * @author Shadid Chowdhury
+ * @since 4.5.6
  */
 
 public interface URIParser
 {
+
 	/**
-	 * @return
+	 * This method returns the scheme of the URI if there is one, otherwise empty space.
+	 *
+	 * @return scheme of a the URI
 	 */
 	public String getScheme();
 
 	/**
-	 * @return
+	 * This method returns the decoded authority component of the URI.
+	 * Usually authority is composed of hostname and port.
+	 *
+	 * @return decoded authority of the URI or empty space if there is no authority in the URI
 	 */
 	public String getAuthority();
 
 	/**
-	 * @return
+	 * This method returns the decoded path of the URI.
+	 *
+	 * @return decoded path of the URI or empty space if there is no path in the URI
 	 */
 	public String getPath();
 
 	/**
-	 * @return
+	 * This method returns the decoded query of the URI.
+	 *
+	 * @return decoded query of the URI or empty space if there is no query in the URI
 	 */
 	public String getQuery();
 
 	/**
-	 * @return
+	 * This method returns the decoded fragment of the URI.
+	 *
+	 * @return decoded fragment of the URI or empty space if there is no fragment in the URI
 	 */
 	public String getFragment();
 

@@ -19,7 +19,9 @@ import java.net.URISyntaxException;
 
 /**
  * Basic RestURIParser using java's .net.URI class
- * Author: Shadid Chowdhury
+ *
+ * @author Shadid Chowdhury
+ * @since 4.5.6
  */
 public class RestURIParserImpl implements RestURIParser
 {
@@ -58,7 +60,11 @@ public class RestURIParserImpl implements RestURIParser
 	@Override
 	public String getResourceName()
 	{
-		String[] splitResourcePath = uri.getPath().split( "/" );
+		String path = uri.getPath();
+		if( path == null )
+			return "";
+
+		String[] splitResourcePath = path.split( "/" );
 		String resourceName = splitResourcePath[splitResourcePath.length - 1];
 		String capitalizedResourceName = resourceName.substring( 0, 1 ).toUpperCase() + resourceName.substring( 1 );
 
@@ -68,37 +74,51 @@ public class RestURIParserImpl implements RestURIParser
 	@Override
 	public String getScheme()
 	{
-		return uri.getScheme();
+		String scheme = uri.getScheme();
+		if( scheme == null )
+			return "";
+
+		return scheme;
 	}
 
 	@Override
 	public String getAuthority()
 	{
-		return uri.getAuthority();
+		String authority = uri.getAuthority();
+		if( authority == null )
+			return "";
+
+		return authority;
 	}
 
 	@Override
 	public String getPath()
 	{
-		return uri.getPath();
+		String path = uri.getPath();
+		if( path == null )
+			return "";
+
+		return path;
 	}
 
 	@Override
 	public String getQuery()
 	{
-		return uri.getQuery();
+		String query = uri.getQuery();
+		if( query == null )
+			return "";
+
+		return query;
 	}
 
 	@Override
 	public String getFragment()
 	{
-		return uri.getFragment();
-	}
+		String fragment = uri.getFragment();
+		if( fragment == null )
+			return "";
 
-	@Override
-	public String getParams()
-	{
-		return uri.getQuery();
+		return fragment;
 	}
 
 	private boolean isValidScheme( URI uri )
