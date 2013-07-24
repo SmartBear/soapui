@@ -45,7 +45,7 @@ import java.io.File;
 /**
  *  Action class to create new Generic project.
  *
- * @author: Shadid Chowdhury
+ * @author Ole.Matzura
  */
 
 public class NewGenericProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
