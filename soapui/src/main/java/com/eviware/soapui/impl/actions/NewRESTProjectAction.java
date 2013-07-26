@@ -122,7 +122,7 @@ public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 	}
 
 	/*
-		TODO: move these methods to some common place for reuse
+		TODO: SOAP-391 Add input validation and move these methods to some common place for reuse
 	 */
 	protected void extractAndFillParameters( String URI, RestParamsPropertyHolder params )
 	{
