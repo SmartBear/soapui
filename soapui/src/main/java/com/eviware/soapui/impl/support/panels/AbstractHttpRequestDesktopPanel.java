@@ -290,6 +290,7 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 	protected JComponent buildEndpointComponent()
 	{
 		final JComboBox endpointCombo = new JComboBox( endpointsModel );
+		endpointCombo.setEditable( true );
 		endpointCombo.addPropertyChangeListener( this );
 		endpointCombo.setToolTipText( endpointsModel.getSelectedItem().toString() );
 
