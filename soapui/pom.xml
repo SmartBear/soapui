@@ -17,21 +17,9 @@
     <parent>
         <groupId>com.smartbear.soapui</groupId>
         <artifactId>soapui-project</artifactId>
-        <version>4.5.2-SNAPSHOT</version>
+        <version>4.5.3</version>
     </parent>
 
-    <repositories>
-        <repository>
-            <id>eviware</id>
-            <name>Eviware Maven2 Repository</name>
-            <url>http://www.eviware.com/repository/maven2</url>
-        </repository>
-        <repository>
-            <id>central</id>
-            <name>Central Maven2 Repository</name>
-            <url>http://repo1.maven.org/maven2</url>
-        </repository>
-    </repositories>
     <pluginRepositories>
         <pluginRepository>
             <id>googlecode-maven-install4j</id>
@@ -42,16 +30,6 @@
     <scm>
         <connection>scm:git:git://github.com/SmartBear/soapui.git</connection>
     </scm>
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-
-        <!-- Custom properties -->
-        <project.name.full>${project.artifactId}-${project.version}</project.name.full>
-        <assembly.build.directory>${project.build.directory}/assemblies</assembly.build.directory>
-        <installer.build.directory>${project.build.directory}/install4j</installer.build.directory>
-        <build.date>${maven.build.timestamp}</build.date>
-    </properties>
 
     <build>
         <resources>
@@ -120,39 +98,27 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.12.1</version>
                 <configuration>
-                    <includes>
-                        <include>**/*.class</include>
-                    </includes>
-                    <excludedGroups>com.eviware.soapui.test.IntegrationTest</excludedGroups>
                     <systemProperties>
+                        <!-- Only log errors and only log to the console to decrease the log verbosity -->
                         <soapui.log4j.config>${project.build.testOutputDirectory}/config/soapui-test-log4j.xml</soapui.log4j.config>
                     </systemProperties>
                 </configuration>
             </plugin>
 
+            <!-- TODO As noticed we are NOT using the Category annotations.
+                      This is because they cause problems when running the Cucumber tests.
+                      We are thus using the standard *Test.java suffix for unit tests and
+                     *IT.java suffix for integration tests.
+                     This should be fixed. -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>2.12.1</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>integration-test</goal>
-                        </goals>
-                        <configuration>
-                            <includes>
-                                <include>**/*.class</include>
-                            </includes>
-                        </configuration>
-                    </execution>
-                </executions>
                 <configuration>
                     <systemProperties>
                         <soapui.log4j.config>${project.build.testOutputDirectory}/config/soapui-test-log4j.xml</soapui.log4j.config>
                     </systemProperties>
-                    <!-- FIXME Ignoring integration test failures for now -->
                     <testFailureIgnore>true</testFailureIgnore>
-                    <groups>com.eviware.soapui.test.IntegrationTest</groups>
                 </configuration>
             </plugin>
 
@@ -162,145 +128,6 @@
                 <version>1.2.1</version>
                 <configuration>
                     <mainClass>com.eviware.soapui.SoapUI</mainClass>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <version>2.3</version>
-                <configuration>
-                    <outputDirectory>${assembly.build.directory}</outputDirectory>
-                    <descriptors>
-                        <descriptor>src/main/assembly/dist.xml</descriptor>
-                        <descriptor>src/main/assembly/dist-standalone.xml</descriptor>
-                        <descriptor>src/main/assembly/windows-bin.xml</descriptor>
-                        <descriptor>src/main/assembly/win32-standalone-bin.xml</descriptor>
-                        <descriptor>src/main/assembly/linux-bin.xml</descriptor>
-                        <descriptor>src/main/assembly/mac-bin.xml</descriptor>
-                    </descriptors>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>com.google.code.maven-install4j</groupId>
-                <artifactId>maven-install4j-plugin</artifactId>
-                <version>0.1.1</version>
-                <configuration>
-                    <executable>${devenv.install4jc}</executable>
-                    <releaseId>${project.version}</releaseId>
-                    <attach>true</attach>
-                    <skipOnMissingExecutable>true</skipOnMissingExecutable>
-                    <!-- FIXME  Move this to src/main/install4j -->
-                    <!-- FIXME Decide what goes here and what goes in he *.install4j and what goes in Jenkins -->
-                    <configFile>${project.basedir}/src/install4j/SoapUI.install4j</configFile>
-                    <compilerVariables>
-                        <property>
-                            <name>VERSION_NUMBER</name>
-                            <value>${project.version}</value>
-                        </property>
-                        <property>
-                            <name>SRC_ROOT</name>
-                            <value>${basedir}/src</value>
-                        </property>
-                        <property>
-                            <name>DIST_ROOT</name>
-                            <value>${assembly.build.directory}/${project.name.full}-dist</value>
-                        </property>
-                        <property>
-                            <name>DIST_STANDALONE</name>
-                            <value>${assembly.build.directory}/${project.name.full}-dist</value>
-                        </property>
-                        <property>
-                            <name>RESOURCES_HOME</name>
-                            <value>${basedir}/src/install4j/resources</value>
-                        </property>
-                        <property>
-                            <name>SIGNTOOL_PATH</name>
-                            <value>${maven.install4j.signtool}</value>
-                        </property>
-                        <property>
-                            <name>CERT_PATH</name>
-                            <value>${maven.install4j.cert}</value>
-                        </property>
-                        <property>
-                            <name>CERT_PASS</name>
-                            <value>${maven.install4j.cert.pass}</value>
-                        </property>
-                        <property>
-                            <name>WIN_DLLS_PATH</name>
-                            <value>${maven.install4j.cert}</value>
-                        </property>
-                        <property>
-                            <name>HERMES_INSTALLER</name>
-                            <value>${maven.hermes.installer}</value>
-                        </property>
-                        <property>
-                            <name>WIN_DLLS_PATH</name>
-                            <value>${maven.install4j.cert}</value>
-                        </property>
-                        <property>
-                            <name>LOADUI_DOWNLOADER</name>
-                            <value>${maven.loadUI.downloader}</value>
-                        </property>
-                        <property>
-                            <name>LOADUI_VERSION_NUMBER</name>
-                            <value>2.1.1</value>
-                        </property>
-                        <property>
-                            <name>LOADUI_INSTALLER_URL_BASE</name>
-                            <value>http://dl.eviware.com/loadui/os</value>
-                        </property>
-                    </compilerVariables>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>net.ju-n.maven.plugins</groupId>
-                <artifactId>maven-checksum-plugin</artifactId>
-                <version>1.0</version>
-                <configuration>
-                    <!-- TODO parameterize this better-->
-                    <files>
-                        <!-- Archives -->
-                        <file>
-                            ${assembly.build.directory}/${project.name.full}-windows-bin.zip
-                        </file>
-                        <file>
-                            ${assembly.build.directory}/${project.name.full}-win32-standalone-bin.zip
-                        </file>
-                        <file>
-                            ${assembly.build.directory}/${project.name.full}-linux-bin.tar.gz
-                        </file>
-                        <file>
-                            ${assembly.build.directory}/${project.name.full}-mac-bin.zip
-                        </file>
-                        <!-- Installers -->
-                        <file>
-                            ${installer.build.directory}/soapUI-x32-${project.version}.exe
-                        </file>
-                        <file>
-                            ${installer.build.directory}/soapUI-x64-${project.version}.exe
-                        </file>
-                        <file>
-                            ${installer.build.directory}/soapUI-x32-${project.version}.sh
-                        </file>
-                        <file>
-                            ${installer.build.directory}/soapUI-${project.version}.dmg
-                        </file>
-                    </files>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>com.github.danielflower.mavenplugins</groupId>
-                <artifactId>maven-gitlog-plugin</artifactId>
-                <version>1.4.11</version>
-                <configuration>
-                    <reportTitle>soapUI ${project.version} | https://github.com/SmartBear/soapui/tree/maintenance
-                    </reportTitle>
-                    <generatePlainTextChangeLog>false</generatePlainTextChangeLog>
-                    <generateHTMLTableOnlyChangeLog>false</generateHTMLTableOnlyChangeLog>
-                    <generateSimpleHTMLChangeLog>true</generateSimpleHTMLChangeLog>
                 </configuration>
             </plugin>
         </plugins>
@@ -321,6 +148,29 @@
             <version>1.8.5</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- TODO We are using 1.0.8 because of issue with results not
+             being shown correctly in the json report:
+             https://github.com/cucumber/gherkin/issues/165 -->
+        <dependency>
+            <groupId>info.cukes</groupId>
+            <artifactId>cucumber-java</artifactId>
+            <version>1.0.8</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>info.cukes</groupId>
+            <artifactId>cucumber-junit</artifactId>
+            <version>1.0.8</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.easytesting</groupId>
+            <artifactId>fest-swing</artifactId>
+            <version>1.2.1</version>
+            <scope>test</scope>
+        </dependency>
+
 
         <!-- XML Beans -->
 
@@ -366,7 +216,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>12.0</version>
+            <version>14.0</version>
         </dependency>
         <dependency>
             <groupId>commons-collections</groupId>
@@ -427,32 +277,37 @@
         <dependency>
             <groupId>teamdev</groupId>
             <artifactId>jxbrowser</artifactId>
-            <version>3.0</version>
+            <version>3.3</version>
+        </dependency>
+        <dependency>
+            <groupId>teamdev</groupId>
+            <artifactId>comfyj</artifactId>
+            <version>2.9</version>
         </dependency>
         <dependency>
             <groupId>teamdev</groupId>
             <artifactId>winpack</artifactId>
-            <version>3.8.2</version>
+            <version>3.8.3</version>
         </dependency>
         <dependency>
             <groupId>teamdev</groupId>
             <artifactId>xulrunner-windows</artifactId>
-            <version>3.0</version>
+            <version>3.3</version>
         </dependency>
         <dependency>
             <groupId>teamdev</groupId>
             <artifactId>xulrunner-linux64</artifactId>
-            <version>3.0</version>
+            <version>3.3</version>
         </dependency>
         <dependency>
             <groupId>teamdev</groupId>
             <artifactId>xulrunner-linux</artifactId>
-            <version>3.0</version>
+            <version>3.3</version>
         </dependency>
         <dependency>
             <groupId>teamdev</groupId>
             <artifactId>xulrunner-mac</artifactId>
-            <version>3.0</version>
+            <version>3.3</version>
         </dependency>
         <dependency>
             <groupId>teamdev</groupId>
@@ -462,17 +317,37 @@
         <dependency>
             <groupId>teamdev</groupId>
             <artifactId>engine-gecko</artifactId>
-            <version>3.0</version>
+            <version>3.3</version>
+        </dependency>
+        <dependency>
+            <groupId>teamdev</groupId>
+            <artifactId>engine-gecko15</artifactId>
+            <version>3.3</version>
         </dependency>
         <dependency>
             <groupId>teamdev</groupId>
             <artifactId>engine-ie</artifactId>
-            <version>3.0</version>
+            <version>3.3</version>
         </dependency>
         <dependency>
             <groupId>teamdev</groupId>
             <artifactId>engine-webkit</artifactId>
-            <version>3.0</version>
+            <version>3.3</version>
+        </dependency>
+        <dependency>
+            <groupId>teamdev</groupId>
+            <artifactId>jniwrap</artifactId>
+            <version>3.8.4</version>
+        </dependency>
+        <dependency>
+            <groupId>teamdev</groupId>
+            <artifactId>xulrunner15-mac</artifactId>
+            <version>3.3</version>
+        </dependency>
+        <dependency>
+            <groupId>teamdev</groupId>
+            <artifactId>xulrunner15-windows</artifactId>
+            <version>3.3</version>
         </dependency>
 
         <!-- Jetty -->

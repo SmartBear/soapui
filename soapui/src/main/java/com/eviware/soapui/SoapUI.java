@@ -1402,7 +1402,7 @@ public class SoapUI
 
 	private static class AboutAction extends AbstractAction
 	{
-        private static final String COPYRIGHT = "2004-2012 smartbear.com";
+        private static final String COPYRIGHT = "2004-2013 smartbear.com";
         private static final String SOAPUI_WEBSITE = "http://www.soapui.org";
         private static final String SMARTBEAR_WEBSITE = "http://www.smartbear.com";
         public static final String BUILDINFO_PROPERTIES = "/buildinfo.properties";
@@ -1448,7 +1448,7 @@ public class SoapUI
                             + "Build Date: " + Objects.firstNonNull(buildInfoProperties.getProperty( "build.date" ), "UNKNOWN BUILD DATE")
 							+ "</strong></font></p></body></html>",
 
-					new Dimension( 470, 375 ) );
+					new Dimension( 646, 480 ) );	//Splash screen width + 70px, height + 175px
 		}
 	}
 
@@ -1485,6 +1485,7 @@ public class SoapUI
 			}
 			catch( Exception e1 )
 			{
+				SoapUI.logError( e1, "There was an error when attempting to save your preferences" );
 				UISupport.showErrorMessage( e1 );
 			}
 		}

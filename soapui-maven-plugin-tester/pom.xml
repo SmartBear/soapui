@@ -12,20 +12,13 @@
     <parent>
         <groupId>com.smartbear.soapui</groupId>
         <artifactId>soapui-project</artifactId>
-        <version>4.5.2-SNAPSHOT</version>
+        <version>4.5.3</version>
     </parent>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
-
-    <pluginRepositories>
-        <pluginRepository>
-            <id>eviwarePluginRepository</id>
-            <url>http://www.eviware.com/repository/maven2/</url>
-        </pluginRepository>
-    </pluginRepositories>
 
     <build>
         <plugins>

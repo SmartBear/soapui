@@ -1,0 +1,1 @@
+Put the classes for running automated SoapUI GUI tests here.
