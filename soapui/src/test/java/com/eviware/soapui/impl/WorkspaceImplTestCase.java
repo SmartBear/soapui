@@ -12,15 +12,14 @@
 
 package com.eviware.soapui.impl;
 
+import com.eviware.soapui.impl.wsdl.WsdlProject;
 import java.io.File;
-
+import java.io.IOException;
 import junit.framework.JUnit4TestAdapter;
 import junit.framework.TestCase;
-
+import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
-
-import com.eviware.soapui.impl.wsdl.WsdlProject;
 
 public class WorkspaceImplTestCase extends TestCase
 {
@@ -29,26 +28,27 @@ public class WorkspaceImplTestCase extends TestCase
 		return new JUnit4TestAdapter( WorkspaceImplTestCase.class );
 	}
 
-	@Before
-	protected void setUp() throws Exception
+	public File getOuputDirectory() {
+	    return new File("target/test-ouput/" + getClass().getName());
+	}
+	
+	@Override
+    @Before
+	protected void setUp() throws IOException
 	{
-		File file = new File( "test-workspace.xml" );
-		if( file.exists() )
-			file.delete();
-
-		file = new File( "test-project.xml" );
-		if( file.exists() )
-			file.delete();
+	    File ouputDirectory = getOuputDirectory();
+        FileUtils.deleteDirectory(ouputDirectory);
+        FileUtils.forceMkdir(ouputDirectory);
 	}
 
 	@Test
 	public void testProjectRoot() throws Exception
 	{
-		File wsFile = new File( "test-workspace.xml" );
+		File wsFile = new File( getOuputDirectory(), "test-workspace.xml" );
 		WorkspaceImpl ws = new WorkspaceImpl( wsFile.getAbsolutePath(), null );
 
 		WsdlProject project = ws.createProject( "Test Project", null );
-		project.saveAs( new File( "test-project.xml" ).getAbsolutePath() );
+		project.saveAs( new File( getOuputDirectory(), "test-project.xml" ).getAbsolutePath() );
 
 		ws.save( false );
 		ws.switchWorkspace( wsFile );
