@@ -1,6 +1,6 @@
 # The soapUI Maven plugin tester
 
-*This is a submodule of [The soapUI project](https://github.com/SmartBear/soapui/tree/SOAPUI-3838-Convert-to-maven3)*
+*This is a submodule of [The soapUI project](../)*
 
 This module tests the `mock` and `test` goals of soapui-maven-plugin.
 
