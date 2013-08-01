@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<con:soapui-project activeEnvironment="Default" name="test-mock-service" resourceRoot="" soapui-version="4.5.1" abortOnError="false" runType="SEQUENTIAL" xmlns:con="http://eviware.com/soapui/config">
+<con:soapui-project activeEnvironment="Default" name="test-mock-service" resourceRoot="" soapui-version="4.5.2" abortOnError="false" runType="SEQUENTIAL" xmlns:con="http://eviware.com/soapui/config">
   <con:settings/>
   <con:interface xsi:type="con:WsdlInterface" wsaVersion="NONE" name="HelloWorldImplServiceSoapBinding" type="wsdl" bindingName="{http://mogul.com/}HelloWorldImplServiceSoapBinding" soapVersion="1_1" anonymous="optional" definition="file:basic.wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <con:settings/>
@@ -104,17 +104,13 @@
    <soapenv:Header/>
    <soapenv:Body>
       <mog:sayHi>
-         <hi>hello brad, how are you?</hi>
-      </mog:sayHi>
+         
+      <hi>hi!</hi></mog:sayHi>
    </soapenv:Body>
 </soapenv:Envelope>]]></con:request>
             <con:assertion type="SOAP Fault Assertion" name="Not SOAP Fault"/>
             <con:assertion type="Simple Contains" name="Contains">
-              <con:configuration>
-                <token>&lt;response>hello helen, thanks for coming!&lt;/response></token>
-                <ignoreCase>false</ignoreCase>
-                <useRegEx>false</useRegEx>
-              </con:configuration>
+              <con:configuration><token>&lt;response>hello back from mock service!&lt;/response></token><ignoreCase>false</ignoreCase><useRegEx>false</useRegEx></con:configuration>
             </con:assertion>
             <con:credentials>
               <con:authType>Global HTTP Settings</con:authType>
@@ -127,9 +123,9 @@
         </con:config>
       </con:testStep>
       <con:properties/>
-    </con:testCase>
+    <con:reportParameters/></con:testCase>
     <con:properties/>
-  </con:testSuite>
+  <con:reportParameters/></con:testSuite>
   <con:mockService port="8088" path="/mockHelloWorld" host="127.0.0.1" name="HelloWorld MockService" bindToHostOnly="false" docroot="" faultMockOperation="sayHi">
     <con:settings>
       <con:setting id="com.eviware.soapui.impl.wsdl.mock.WsdlMockService@require-soap-action">false</con:setting>
@@ -144,7 +140,7 @@
    <soapenv:Header/>
    <soapenv:Body>
       <mog:sayHiResponse>
-         <response>hello helen, thanks for coming!</response>
+         <response>hello back from mock service!</response>
       </mog:sayHiResponse>
    </soapenv:Body>
 </soapenv:Envelope>]]></con:responseContent>
@@ -156,5 +152,5 @@
   </con:mockService>
   <con:properties/>
   <con:wssContainer/>
-  <con:sensitiveInformation/>
+  <con:databaseConnectionContainer/><con:reporting><con:xmlTemplates/><con:parameters/></con:reporting><con:sensitiveInformation/>
 </con:soapui-project>
