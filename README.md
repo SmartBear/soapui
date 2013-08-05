@@ -4,10 +4,10 @@ This is the main SoapUI project.
 
 ## Structure and submodules
 
-* *[soapui](https://github.com/SmartBear/soapui/tree/SOAPUI-3838-Convert-to-maven3/soapui)* - The core module.
-* *[soapui-installer](https://smartbearsweden.atlassian.net/browse/SOAP-59)* - The installer module for creating packages.
-* *[soapui-maven-plugin](https://github.com/SmartBear/soapui/tree/SOAPUI-3838-Convert-to-maven3/soapui-maven-plugin)* – A Maven plugin used for running soapUI in a Continuous integration environment (such as [Jenkins](http://jenkins-ci.org)).
-* *[soapui-maven-plugin-tester](https://github.com/SmartBear/soapui/tree/SOAPUI-3838-Convert-to-maven3/soapui-maven-plugin-tester)* - A small test `pom.xml` used for testing the *soapui-maven-plugin*.
+* *[soapui](soapui)* - The core module.
+* *[soapui-installer](soapui-installer)* - The installer module for creating packages.
+* *[soapui-maven-plugin](soapui-maven-plugin)* – A Maven plugin used for running soapUI in a Continuous integration environment (such as [Jenkins](http://jenkins-ci.org)).
+* *[soapui-maven-plugin-tester](soapui-maven-plugin-tester)* - A small test `pom.xml` used for testing the *soapui-maven-plugin*.
 
 ## Building and running
 
@@ -24,7 +24,6 @@ To get the source code run `git clone https://github.com/SmartBear/soapui.git` w
 ### Building
 
 * To build the SoapUI project run `mvn clean install` in the root folder.
-* To also include the soapui-maven-plugin-tester module, instead run `mvn clean install -DallTests` in the root folder.
 * To build a individual submodule run `mvn clean install` the root folder of the submodule you want to build.
 
 ### Running
