@@ -20,19 +20,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.beans.PropertyChangeEvent;
 
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.JSplitPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JToggleButton;
-import javax.swing.KeyStroke;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -79,6 +67,7 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 		extends ModelItemDesktopPanel<T> implements SubmitListener
 {
 	private final static Logger log = Logger.getLogger( AbstractHttpRequestDesktopPanel.class );
+
 
 	private JComponent endpointComponent;
 	private JButton submitButton;
@@ -128,6 +117,16 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 	public void setEndpointsModel( T2 request )
 	{
 		this.endpointsModel = new EndpointsComboBoxModel( request );
+	}
+
+	public ComboBoxModel getEndpointsModel( )
+	{
+		return endpointsModel;
+	}
+
+	public void setEndpointComponent( JComponent endpointComponent )
+	{
+		this.endpointComponent = endpointComponent;
 	}
 
 	protected void init( T2 request )

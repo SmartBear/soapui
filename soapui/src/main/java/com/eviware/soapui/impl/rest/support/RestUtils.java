@@ -316,8 +316,49 @@ public class RestUtils
 		return path;
 	}
 
-	// private final static Pattern splitPattern = Pattern.compile( "[^|]\\|[^|]"
-	// );
+	// TODO: make it cleaner
+	public static String getQueryParamsString( RestParamsPropertyHolder params, RestRequestInterface request )
+	{
+		StringBuffer query = request.isPostQueryString() || "multipart/form-data".equals( request.getMediaType() ) ? null
+				: new StringBuffer();
+
+		for( int c = 0; c < params.getPropertyCount(); c++ )
+		{
+			RestParamProperty param = params.getPropertyAt( c );
+
+			String value = param.getValue();
+			List<String> valueParts = splitMultipleParameters( value, request.getMultiValueDelimiter() );
+
+			if( ( !StringUtils.hasContent( value ) && !param.getRequired() ) || param.getStyle() != ParameterStyle.QUERY )
+				continue;
+
+			if( value == null )
+				value = "";
+
+			if( query != null && valueParts != null )
+			{
+				for( String valuePart : valueParts )
+				{
+					if( query.length() > 0 )
+						query.append( '&' );
+
+					query.append( param.getName() );
+					query.append( '=' );
+
+					if( StringUtils.hasContent( valuePart ) )
+						query.append( valuePart );
+				}
+			}
+
+		}
+
+		String queryString = "";
+		if( query != null && query.length() > 0 )
+			queryString += "?" + query.toString();
+
+		return queryString;
+	}
+
 
 	public static List<String> splitMultipleParameters( String paramStr, String delimiter )
 	{

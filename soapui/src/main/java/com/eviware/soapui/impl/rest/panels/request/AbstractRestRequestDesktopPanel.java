@@ -20,15 +20,7 @@ import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import javax.swing.AbstractListModel;
-import javax.swing.ComboBoxModel;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.text.Document;
 
 import com.eviware.soapui.impl.rest.RestMethod;
@@ -137,19 +129,48 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 	@Override
 	protected JComponent buildToolbar()
 	{
-		if( getRequest().getResource() != null )
+		if( getRequest().getResource() != null)
 		{
-			JPanel panel = new JPanel( new BorderLayout() );
-			panel.add( super.buildToolbar(), BorderLayout.NORTH );
+			JComponent baseToolBar = UISupport.createToolbar();
+			baseToolBar.setPreferredSize( new Dimension( 600, 45 ) );
 
-			JXToolBar toolbar = UISupport.createToolbar();
-			addToolbarComponents( toolbar );
 
-			panel.add( toolbar, BorderLayout.SOUTH );
-			return panel;
+			JComponent submitButton = super.getSubmitButton();
+
+			JPanel endpointPanel = new JPanel( new BorderLayout() );
+			endpointPanel.setMinimumSize( new Dimension( 150, 45 ) );
+
+			JComponent endpointCombo = super.buildEndpointComponent();
+			super.setEndpointComponent( endpointCombo );
+
+			JLabel endPointLabel = new JLabel( "Endpoint" );
+
+			endpointPanel.add( endpointCombo, BorderLayout.NORTH );
+			endpointPanel.add( endPointLabel, BorderLayout.SOUTH );
+
+
+			JComponent resourcePanel = createPanelWithLabelAtBottom( "Resource" );
+			JComponent queryPanel = createPanelWithLabelAtBottom( "Query" );
+
+			// TODO: remove casting
+			String path = getRequest().getResource().getPath();
+			((JTextField)resourcePanel.getComponent( 0 )).setText( path );
+
+			String query = RestUtils.getQueryParamsString( getRequest().getParams(), getRequest() );
+			((JTextField)queryPanel.getComponent( 0 )).setText(query);
+
+
+			baseToolBar.add( submitButton );
+			baseToolBar.add( endpointPanel );
+			baseToolBar.add( resourcePanel );
+			baseToolBar.add( queryPanel);
+
+
+			return baseToolBar;
 		}
 		else
 		{
+			//TODO: If we don't need special clause for empty resources then remove it
 			return super.buildToolbar();
 		}
 	}
@@ -347,6 +368,51 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 			return result;
 		}
 
+	}
+
+	/*
+	private class PanelWithVerticalLabel<T extends JComponent>
+	{
+		private T component;
+		private JPanel containerPanel;
+
+		public JPanel createPanelWithVerticalLabel( T component, String label )
+		{
+
+			containerPanel = new JPanel( new BorderLayout() );
+			containerPanel.setMinimumSize( new Dimension( 150, 45 ) );
+
+			this.component = component;
+			JLabel textLabel = new JLabel( label );
+
+			containerPanel.add( this.component, BorderLayout.NORTH );
+			containerPanel.add( textLabel, BorderLayout.SOUTH );
+
+			return containerPanel;
+		}
+
+		public T getComponent()
+		{
+			return (T)containerPanel.getComponent( 0 );
+		}
+
+	}
+	*/
+
+
+	public JComponent createPanelWithLabelAtBottom( String label )
+	{
+
+		JPanel containerPanel = new JPanel( new BorderLayout() );
+		containerPanel.setMinimumSize( new Dimension( 150, 45 ) );
+
+		JComponent textField = new JTextField();
+		JLabel textLabel = new JLabel( label );
+
+		containerPanel.add( textField, BorderLayout.NORTH );
+		containerPanel.add( textLabel, BorderLayout.SOUTH );
+
+		return containerPanel;
 	}
 
 }

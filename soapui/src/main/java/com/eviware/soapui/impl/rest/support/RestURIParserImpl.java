@@ -60,9 +60,10 @@ public class RestURIParserImpl implements RestURIParser
 	@Override
 	public String getResourceName()
 	{
-		String path = uri.getPath();
-		if( path == null )
-			return "";
+		String path = getPath();
+
+		if( path.isEmpty() )
+			return path;
 
 		String[] splitResourcePath = path.split( "/" );
 		String resourceName = splitResourcePath[splitResourcePath.length - 1];
@@ -125,7 +126,7 @@ public class RestURIParserImpl implements RestURIParser
 	{
 		String scheme = uri.getScheme();
 
-		if (scheme.equals( "http" ) || scheme.equals ("https") )
+		if( scheme.equals( "http" ) || scheme.equals( "https" ) )
 		{
 			return true;
 		}
