@@ -27,6 +27,7 @@ import com.eviware.soapui.impl.rest.RestMethod;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
+import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.rest.support.RestUtils;
 import com.eviware.soapui.impl.support.panels.AbstractHttpXmlRequestDesktopPanel;
 import com.eviware.soapui.impl.wsdl.WsdlSubmitContext;
@@ -46,6 +47,8 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 		AbstractHttpXmlRequestDesktopPanel<T, T2>
 {
 	private boolean updatingRequest;
+	private TextPanelWithBottomLabel resourcePanel;
+	private TextPanelWithBottomLabel queryPanel;
 	private JUndoableTextField pathTextField;
 	private JComboBox acceptCombo;
 	private JLabel pathLabel;
@@ -74,6 +77,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 	public void propertyChange( PropertyChangeEvent evt )
 	{
 		updateFullPathLabel();
+		updateResourcePathAndQuery();
 
 		if( evt.getPropertyName().equals( "accept" ) && !updatingRequest )
 		{
@@ -104,6 +108,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 
 		super.propertyChange( evt );
 	}
+
 
 	@Override
 	protected Submit doSubmit() throws SubmitException
@@ -149,16 +154,13 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 			endpointPanel.add( endPointLabel, BorderLayout.SOUTH );
 
 
-			JComponent resourcePanel = createPanelWithLabelAtBottom( "Resource" );
-			JComponent queryPanel = createPanelWithLabelAtBottom( "Query" );
-
-			// TODO: remove casting
 			String path = getRequest().getResource().getPath();
-			((JTextField)resourcePanel.getComponent( 0 )).setText( path );
+			resourcePanel = new TextPanelWithBottomLabel( "Resource", path );
+			resourcePanel.addPropertyChangeListener( this );
 
 			String query = RestUtils.getQueryParamsString( getRequest().getParams(), getRequest() );
-			((JTextField)queryPanel.getComponent( 0 )).setText(query);
-
+			queryPanel = new TextPanelWithBottomLabel( "Query", query );
+			queryPanel.addPropertyChangeListener( this );
 
 			baseToolBar.add( submitButton );
 			baseToolBar.add( endpointPanel );
@@ -199,6 +201,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 			toolbar.addSeparator();
 
 			if( getRequest() instanceof RestTestRequestInterface )
+
 			{
 				pathCombo = new JComboBox( new PathComboBoxModel() );
 				pathCombo.setRenderer( new RestMethodListCellRenderer() );
@@ -254,6 +257,9 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 
 		getRequest().removeTestPropertyListener( testPropertyListener );
 
+		resourcePanel.removePropertyChangeListener( this );
+		queryPanel.removePropertyChangeListener( this );
+
 		for( TestProperty param : getRequest().getParams().getProperties().values() )
 		{
 			( ( RestParamProperty )param ).removePropertyChangeListener( restParamPropertyChangeListener );
@@ -300,6 +306,32 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 			pathLabel.setText( "[" + text + "]" );
 			pathLabel.setToolTipText( text );
 		}
+	}
+
+	private void updateResourcePathAndQuery()
+	{
+		if(resourcePanel != null && queryPanel != null)
+		{
+			updateResource();
+			updateQuery();
+		}
+
+	}
+
+	private void updateResource()
+	{
+		String path = resourcePanel.getText();
+		getRequest().getResource().setPath( path );
+
+	}
+
+	private void updateQuery()
+	{
+		String query = queryPanel.getText();
+		RestParamsPropertyHolder propertyHolder = getRequest().getResource().getParams();
+		if(! query.isEmpty() )
+			RestUtils.extractParamsFromQueryString( propertyHolder, query.substring( 1 )  );
+
 	}
 
 	private class RestParamPropertyChangeListener implements PropertyChangeListener
@@ -370,49 +402,30 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 
 	}
 
-	/*
-	private class PanelWithVerticalLabel<T extends JComponent>
+
+	private class TextPanelWithBottomLabel extends JPanel
 	{
-		private T component;
-		private JPanel containerPanel;
+		JLabel textLabel;
+		JTextField textField;
 
-		public JPanel createPanelWithVerticalLabel( T component, String label )
+		public TextPanelWithBottomLabel( String label, String text )
 		{
-
-			containerPanel = new JPanel( new BorderLayout() );
-			containerPanel.setMinimumSize( new Dimension( 150, 45 ) );
-
-			this.component = component;
-			JLabel textLabel = new JLabel( label );
-
-			containerPanel.add( this.component, BorderLayout.NORTH );
-			containerPanel.add( textLabel, BorderLayout.SOUTH );
-
-			return containerPanel;
+			textLabel = new JLabel( label );
+			textField = new JTextField( text );
+			super.setLayout( new BorderLayout(  ) );
+			super.add( textField, BorderLayout.NORTH );
+			super.add( textLabel, BorderLayout.SOUTH );
 		}
 
-		public T getComponent()
+		public String getText()
 		{
-			return (T)containerPanel.getComponent( 0 );
+			return textField.getText();
 		}
 
-	}
-	*/
-
-
-	public JComponent createPanelWithLabelAtBottom( String label )
-	{
-
-		JPanel containerPanel = new JPanel( new BorderLayout() );
-		containerPanel.setMinimumSize( new Dimension( 150, 45 ) );
-
-		JComponent textField = new JTextField();
-		JLabel textLabel = new JLabel( label );
-
-		containerPanel.add( textField, BorderLayout.NORTH );
-		containerPanel.add( textLabel, BorderLayout.SOUTH );
-
-		return containerPanel;
+		public void setText( String text )
+		{
+			textField.setText( text );
+		}
 	}
 
 }
