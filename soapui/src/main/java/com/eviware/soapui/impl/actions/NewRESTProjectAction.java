@@ -27,6 +27,7 @@ import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AForm;
 
+import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 
 /**
@@ -91,16 +92,16 @@ public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 		}
 	}
 
-	protected void createRestProject( WsdlProject project, String URI ) throws URISyntaxException
+	protected void createRestProject( WsdlProject project, String URI ) throws MalformedURLException
 	{
 
 		RestURIParser restURIParser = new RestURIParserImpl( URI );
 		RestParamsPropertyHolder params = new XmlBeansRestParamsTestPropertyHolder( null,
 				RestParametersConfig.Factory.newInstance() );
 
-		String resourcePath = restURIParser.getPath();
+		String resourcePath = restURIParser.getResourcePath();
 		String resourceName = restURIParser.getResourceName();
-		String host = restURIParser.getAuthority();
+		String host = restURIParser.getEndpoint();
 
 		RestService restService = ( RestService )project.addNewInterface( host, RestServiceFactory.REST_TYPE );
 		restService.addEndpoint( restURIParser.getEndpoint() );

@@ -37,14 +37,14 @@ public interface URIParser
 	 *
 	 * @return decoded authority of the URI or empty space if there is no authority in the URI
 	 */
-	public String getAuthority();
+	//public String getAuthority();
 
 	/**
 	 * This method returns the decoded path of the URI.
 	 *
 	 * @return decoded path of the URI or empty space if there is no path in the URI
 	 */
-	public String getPath();
+	public String getResourcePath();
 
 	/**
 	 * This method returns the decoded query of the URI.
@@ -52,12 +52,5 @@ public interface URIParser
 	 * @return decoded query of the URI or empty space if there is no query in the URI
 	 */
 	public String getQuery();
-
-	/**
-	 * This method returns the decoded fragment of the URI.
-	 *
-	 * @return decoded fragment of the URI or empty space if there is no fragment in the URI
-	 */
-	public String getFragment();
 
 }

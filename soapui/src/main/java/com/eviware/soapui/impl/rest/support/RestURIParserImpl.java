@@ -14,8 +14,10 @@ package com.eviware.soapui.impl.rest.support;
 
 import com.eviware.soapui.impl.rest.RestURIParser;
 
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 
 /**
  * Basic RestURIParser using java's .net.URI class
@@ -25,27 +27,40 @@ import java.net.URISyntaxException;
  */
 public class RestURIParserImpl implements RestURIParser
 {
-	URI uri;
 	private static final String SCHEME_SEPARATOR = "://";
 	private static final String DEFAULT_SCHEME = "http";
 
-	public RestURIParserImpl( String uri ) throws URISyntaxException
+	private String resourcePath = "";
+	private String query = "";
+	private String scheme = "";
+	private String authority = "";
+
+	public RestURIParserImpl( String uriString ) throws MalformedURLException
 	{
-		this.uri = new URI( uri );
+		if( uriString == null || uriString.isEmpty() )
+			throw new MalformedURLException( "Empty URI" );
+
+		try
+		{
+			parseWithURI( uriString );
+		}
+		catch( URISyntaxException e )
+		{
+			parseWithURL( uriString );
+
+		}
 	}
 
 	@Override
 	public String getEndpoint()
 	{
-		String scheme = uri.getScheme();
-		String authority = uri.getAuthority();
 		String endpoint;
 
-		if( authority == null )
+		if( authority.isEmpty() )
 		{
 			endpoint = "";
 		}
-		else if( scheme == null )
+		else if( scheme.isEmpty() )
 		{
 			endpoint = DEFAULT_SCHEME + SCHEME_SEPARATOR + authority;
 		}
@@ -60,13 +75,14 @@ public class RestURIParserImpl implements RestURIParser
 	@Override
 	public String getResourceName()
 	{
-		String path = getPath();
+		String path = getResourcePath();
 
 		if( path.isEmpty() )
 			return path;
 
 		String[] splitResourcePath = path.split( "/" );
 		String resourceName = splitResourcePath[splitResourcePath.length - 1];
+		resourceName = resourceName.replaceAll( "^\\{|\\}$", "" );
 		String capitalizedResourceName = resourceName.substring( 0, 1 ).toUpperCase() + resourceName.substring( 1 );
 
 		return capitalizedResourceName;
@@ -75,29 +91,16 @@ public class RestURIParserImpl implements RestURIParser
 	@Override
 	public String getScheme()
 	{
-		String scheme = uri.getScheme();
-		if( scheme == null )
-			return "";
-
 		return scheme;
 	}
 
 	@Override
-	public String getAuthority()
+	public String getResourcePath()
 	{
-		String authority = uri.getAuthority();
-		if( authority == null )
-			return "";
+		String path = resourcePath;
 
-		return authority;
-	}
-
-	@Override
-	public String getPath()
-	{
-		String path = uri.getPath();
-		if( path == null )
-			return "";
+		path = removeTrailingSlash( path );
+		path = addPrefixSlash( path );
 
 		return path;
 	}
@@ -105,34 +108,83 @@ public class RestURIParserImpl implements RestURIParser
 	@Override
 	public String getQuery()
 	{
-		String query = uri.getQuery();
-		if( query == null )
-			return "";
-
 		return query;
 	}
 
-	@Override
-	public String getFragment()
+	private String removeTrailingSlash( String path )
 	{
-		String fragment = uri.getFragment();
-		if( fragment == null )
-			return "";
-
-		return fragment;
+		return path.replaceFirst( "/$", "" );
 	}
 
-	private boolean isValidScheme( URI uri )
+	private String addPrefixSlash( String path )
 	{
-		String scheme = uri.getScheme();
+		if( !path.startsWith( "/" ) && !path.isEmpty() )
+			path = "/" + path;
 
-		if( scheme.equals( "http" ) || scheme.equals( "https" ) )
+		return path;
+	}
+
+	private void parseWithURI( String uriString ) throws URISyntaxException
+	{
+		if( isOnlyAuthority( uriString ) )
 		{
-			return true;
+			authority = uriString;
+			return;
 		}
-		else
+
+		URI uri = new URI( uriString );
+		resourcePath = ( uri.getPath() == null ? "" : uri.getPath() );
+		query = ( uri.getQuery() == null ? "" : uri.getQuery() );
+		scheme = ( uri.getScheme() == null ? "" : uri.getScheme() );
+		authority = ( uri.getAuthority() == null ? "" : uri.getAuthority() );
+	}
+
+	private boolean isOnlyAuthority( String uriString )
+	{
+		// To match spotify.com and 127.0.0.1
+		// TODO: Add port support like spotify.com:8081
+		return uriString.matches( "([a-zA-Z0-9]+\\.[a-z]+)|([0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+)" );
+	}
+
+	private void parseWithURL( String uriString ) throws MalformedURLException
+	{
+		URL uri = null;
+		try
 		{
-			return false;
+			uri = new URL( uriString );
+			resourcePath = ( uri.getPath() == null ? "" : uri.getPath() );
+			query = ( uri.getQuery() == null ? "" : uri.getQuery() );
+			scheme = ( uri.getProtocol() == null ? "" : uri.getProtocol() );
+			authority = ( uri.getAuthority() == null ? "" : uri.getAuthority() );
+		}
+		catch( MalformedURLException e )
+		{
+			parseManually( uriString );
+		}
+
+	}
+
+	private void parseManually( String uriString )
+	{
+		//String uriExtractorPattern = "^((http[s]?):\\/)?\\/?([^:\\/\\s]+)((\\/\\w+)*\\/)([\\w\\-\\.]+[^#?\\s]+)(.*)?(#[\\w\\-]+)?$";
+		resourcePath = uriString;
+		query = "";
+		scheme = "";
+		authority = "";
+
+		int startIndexOfQuery = uriString.indexOf( '?' );
+		if( startIndexOfQuery >= 0 )
+		{
+			query = uriString.substring( startIndexOfQuery + 1 );
+			resourcePath = uriString.substring( 0, startIndexOfQuery );
+		}
+
+		int startIndexOfResource = resourcePath.indexOf( '/' );
+		if( startIndexOfResource >= 0 )
+		{
+			resourcePath = resourcePath.substring( startIndexOfResource + 1 );
+			authority = resourcePath.substring( 0, startIndexOfResource );
 		}
 	}
+
 }

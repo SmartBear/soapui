@@ -12,16 +12,19 @@
  */
 package com.eviware.soapui.impl.rest.support;
 
+import com.eviware.soapui.config.RestParametersConfig;
 import junit.framework.JUnit4TestAdapter;
 import org.junit.After;
 import org.junit.Test;
 
+import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 
 import static org.junit.Assert.*;
 
 /**
  * Tests RestURIParserImpl
+ *
  * @author Shadid Chowdhury
  */
 public class RestURIParserImplTestCase
@@ -41,7 +44,7 @@ public class RestURIParserImplTestCase
 	}
 
 	@Test
-	public void encodedParamURITest() throws URISyntaxException
+	public void encodedParamURITest() throws MalformedURLException
 	{
 		String uri = "http://service.com/api/1.2/json/search/search?title=Kill%20me";
 		String expectedEndpoint = "http://service.com";
@@ -55,8 +58,7 @@ public class RestURIParserImplTestCase
 	}
 
 	@Test
-	//FIXME: Fix implementation to allow decoded characters in URI. Maybe try encoding them first?
-	public void decodedParamURITest() throws URISyntaxException
+	public void decodedParamURITest() throws MalformedURLException
 	{
 		String uri = "http://service.com/api/1.2/json/search/search?title=Kill me";
 		String expectedEndpoint = "http://service.com";
@@ -70,7 +72,7 @@ public class RestURIParserImplTestCase
 	}
 
 	@Test
-	public void noParameterTest() throws URISyntaxException
+	public void noParameterTest() throws MalformedURLException
 	{
 		String uri = "http://service.com/rest/";
 		String expectedEndpoint = "http://service.com";
@@ -84,7 +86,7 @@ public class RestURIParserImplTestCase
 	}
 
 	@Test
-	public void noEndpointTest() throws URISyntaxException
+	public void noEndpointTest() throws MalformedURLException
 	{
 		String uri = "/abc?book=15;column=12";
 		String expectedEndpoint = "";
@@ -98,8 +100,7 @@ public class RestURIParserImplTestCase
 	}
 
 	@Test
-	//FIXME: Fix implementation to add slash to start of resource path
-	public void noEndpointNorPrefixSlashTest() throws URISyntaxException
+	public void noEndpointNorPrefixSlashTest() throws MalformedURLException
 	{
 		String uri = "1.2/json.search/search?title=Kill%20me";
 		String expectedEndpoint = "";
@@ -113,7 +114,7 @@ public class RestURIParserImplTestCase
 	}
 
 	@Test
-	public void parametereizedURITest() throws URISyntaxException
+	public void parametereizedURITest() throws MalformedURLException
 	{
 		String uri = "/conversation/date/{date}/time/{time}/?userId=1234";
 		String expectedEndpoint = "";
@@ -127,7 +128,35 @@ public class RestURIParserImplTestCase
 	}
 
 	@Test
-	public void numbersInResourcePathTest() throws URISyntaxException
+	public void parametereizedURIWithEndpointTest() throws MalformedURLException
+	{
+		String uri = "/conversation/{date}";
+		String expectedEndpoint = "";
+		String expectedPath = "/conversation/{date}";
+		String expectedResourceName = "Date";
+		String expectedQuery = "";
+
+		restURIParser = new RestURIParserImpl( uri );
+
+		assertURIParsedCorrectly( expectedEndpoint, expectedPath, expectedResourceName, expectedQuery, restURIParser );
+	}
+
+	@Test
+	public void parametereizedFullURITest() throws MalformedURLException
+	{
+		String uri = "http://servo.com/conversation/date/{date}/time/{time}/?userId=1234";
+		String expectedEndpoint = "http://servo.com";
+		String expectedPath = "/conversation/date/{date}/time/{time}";
+		String expectedResourceName = "Time";
+		String expectedQuery = "userId=1234";
+
+		restURIParser = new RestURIParserImpl( uri );
+
+		assertURIParsedCorrectly( expectedEndpoint, expectedPath, expectedResourceName, expectedQuery, restURIParser );
+	}
+
+	@Test
+	public void numbersInResourcePathTest() throws MalformedURLException
 	{
 		String uri = "http://bokus.se/books/ISBN-5012359";
 		String expectedEndpoint = "http://bokus.se";
@@ -141,7 +170,7 @@ public class RestURIParserImplTestCase
 	}
 
 	@Test
-	public void httpPrefixAddedWhenOmittedTest() throws URISyntaxException
+	public void httpPrefixAddedWhenOmittedTest() throws MalformedURLException
 	{
 		String uri = "spotify.com";
 		String expectedEndpoint = "http://spotify.com";
@@ -157,10 +186,10 @@ public class RestURIParserImplTestCase
 	private void assertURIParsedCorrectly( String expectedEndpoint,
 														String expectedPath,
 														String expectedResourceName,
-														String expectedQuery, RestURIParserImpl restURIParser ) throws URISyntaxException
+														String expectedQuery, RestURIParserImpl restURIParser ) throws MalformedURLException
 	{
 		assertEquals( expectedEndpoint, restURIParser.getEndpoint() );
-		assertEquals( expectedPath, restURIParser.getPath() );
+		assertEquals( expectedPath, restURIParser.getResourcePath() );
 		assertEquals( expectedResourceName, restURIParser.getResourceName() );
 		assertEquals( expectedQuery, restURIParser.getQuery() );
 	}
