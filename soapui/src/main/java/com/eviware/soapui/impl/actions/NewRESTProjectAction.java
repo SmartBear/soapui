@@ -75,7 +75,7 @@ public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 					// TODO: Expand the dialog box with more options
 				}
 
-				createRestProject( project, URI );
+				RestService restService = createRestProject( project, URI );
 
 				// If there is no exception or error we break out
 				break;
@@ -92,7 +92,7 @@ public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 		}
 	}
 
-	protected void createRestProject( WsdlProject project, String URI ) throws MalformedURLException
+	protected RestService createRestProject( WsdlProject project, String URI ) throws MalformedURLException
 	{
 
 		RestURIParser restURIParser = new RestURIParserImpl( URI );
@@ -119,12 +119,9 @@ public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 		UISupport.select( restRequest );
 		UISupport.showDesktopPanel( restRequest );
 
-		return;
+		return restService;
 	}
 
-	/*
-		TODO: SOAP-391 Add input validation and move these methods to some common place for reuse
-	 */
 	protected void extractAndFillParameters( String URI, RestParamsPropertyHolder params )
 	{
 		// This does lot of magic including extracting and filling up parameters on the params
