@@ -51,9 +51,8 @@ public class TestOnDemandCallerTestIT
 	@Before
 	public void setUp() throws Exception
 	{
-        // TODO Hardcoded madness
-		WsdlProject project = new WsdlProject( "src" + File.separatorChar + "test" + File.separatorChar + "resources" + File.separatorChar
-				+ "sample-soapui-project.xml" );
+		WsdlProject project = new WsdlProject(TestOnDemandCallerTestIT.class.getResource(
+				"/sample-soapui-project.xml").getPath() );
 		WsdlTestSuite testSuite = project.getTestSuiteByName( "Test Suite" );
 		testCase = testSuite.getTestCaseByName( "Test Conversions" );
 		caller = new TestOnDemandCaller();
