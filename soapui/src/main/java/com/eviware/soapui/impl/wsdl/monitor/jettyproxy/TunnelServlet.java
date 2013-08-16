@@ -12,25 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.monitor.jettyproxy;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.URISyntaxException;
-import java.util.Enumeration;
-
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.http.Header;
-import org.apache.http.client.utils.URIUtils;
-import org.apache.http.entity.InputStreamEntity;
-import org.apache.http.protocol.BasicHttpContext;
-import org.mortbay.util.IO;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.actions.monitor.SoapMonitorAction.LaunchForm;
 import com.eviware.soapui.impl.wsdl.actions.monitor.SoapMonitorAction.SecurityTabForm;
@@ -46,6 +27,25 @@ import com.eviware.soapui.impl.wsdl.support.http.SoapUIHttpRoute;
 import com.eviware.soapui.model.propertyexpansion.DefaultPropertyExpansionContext;
 import com.eviware.soapui.support.types.StringToStringsMap;
 import com.eviware.soapui.support.xml.XmlUtils;
+import org.apache.http.Header;
+import org.apache.http.HttpVersion;
+import org.apache.http.client.utils.URIUtils;
+import org.apache.http.entity.InputStreamEntity;
+import org.apache.http.params.CoreProtocolPNames;
+import org.apache.http.protocol.BasicHttpContext;
+import org.mortbay.util.IO;
+
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.URISyntaxException;
+import java.util.Enumeration;
 
 public class TunnelServlet extends ProxyServlet
 {
@@ -101,10 +101,12 @@ public class TunnelServlet extends ProxyServlet
 		JProxyServletWsdlMonitorMessageExchange capturedData = new JProxyServletWsdlMonitorMessageExchange( project );
 		capturedData.setRequestHost( httpRequest.getRemoteHost() );
 		capturedData.setRequestHeader( httpRequest );
+		capturedData.setHttpRequestParameters( httpRequest );
 		capturedData.setTargetURL( this.prot + inetAddress.getHostName() );
 
 		CaptureInputStream capture = new CaptureInputStream( httpRequest.getInputStream() );
 
+		long contentLength = -1;
 		// copy headers
 		Enumeration<?> headerNames = httpRequest.getHeaderNames();
 		while( headerNames.hasMoreElements() )
@@ -112,8 +114,11 @@ public class TunnelServlet extends ProxyServlet
 			String hdr = ( String )headerNames.nextElement();
 			String lhdr = hdr.toLowerCase();
 
-			if( "content-length".equals( lhdr ) )
+			if( "content-length".equals( lhdr ) ) {
+				String val = httpRequest.getHeader( hdr );
+				contentLength =  Long.parseLong( val );
 				continue;
+			}
 
 			if( "transfer-encoding".equals( lhdr ) )
 				continue;
@@ -145,7 +150,7 @@ public class TunnelServlet extends ProxyServlet
 
 		if( postMethod instanceof ExtendedPostMethod )
 		{
-			InputStreamEntity entity = new InputStreamEntity( capture, -1 );
+			InputStreamEntity entity = new InputStreamEntity( capture, contentLength);
 			entity.setContentType( request.getContentType() );
 			( ( ExtendedPostMethod )postMethod ).setEntity( entity );
 		}
@@ -164,6 +169,8 @@ public class TunnelServlet extends ProxyServlet
 				SoapUIHttpRoute.SOAPUI_SSL_CONFIG,
 				settings.getString( SecurityTabForm.SSLTUNNEL_KEYSTOREPATH, "" ) + " "
 						+ settings.getString( SecurityTabForm.SSLTUNNEL_KEYSTOREPASSWORD, "" ) );
+
+		setProtocolversion( postMethod, request.getProtocol() );
 
 		ProxyUtils.initProxySettings( settings, postMethod, httpState, prot + sslEndPoint,
 				new DefaultPropertyExpansionContext( project ) );
@@ -228,6 +235,18 @@ public class TunnelServlet extends ProxyServlet
 		}
 
 		capturedData = null;
+	}
+
+	protected void setProtocolversion( ExtendedHttpMethod postMethod, String protocolVersion )
+	{
+		if( protocolVersion.equals( HttpVersion.HTTP_1_1.toString() ) )
+		{
+			postMethod.getParams().setParameter( CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1 );
+		}
+		else if(protocolVersion.equals( HttpVersion.HTTP_1_0.toString() ) )
+		{
+			postMethod.getParams().setParameter( CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_0 );
+		}
 	}
 
 	private byte[] getResponseToBytes( String footer, ExtendedHttpMethod postMethod, byte[] res )
