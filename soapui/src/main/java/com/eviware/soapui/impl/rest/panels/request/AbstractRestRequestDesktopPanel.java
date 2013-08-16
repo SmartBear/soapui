@@ -156,10 +156,12 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 
 			String path = getRequest().getResource().getPath();
 			resourcePanel = new TextPanelWithBottomLabel( "Resource", path );
+			//TODO: SOAP-385 add document listener and filter to the text filed to synch
 			resourcePanel.addPropertyChangeListener( this );
 
 			String query = RestUtils.getQueryParamsString( getRequest().getParams(), getRequest() );
 			queryPanel = new TextPanelWithBottomLabel( "Query", query );
+			//TODO: SOAP-385 add document listener and filter to the text filed to synch
 			queryPanel.addPropertyChangeListener( this );
 
 			baseToolBar.add( submitButton );
@@ -257,6 +259,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 
 		getRequest().removeTestPropertyListener( testPropertyListener );
 
+		//TODO: SOAP-385 add document listener and filter to the text filed to synch
 		resourcePanel.removePropertyChangeListener( this );
 		queryPanel.removePropertyChangeListener( this );
 
