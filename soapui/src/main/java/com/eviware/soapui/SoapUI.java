@@ -191,7 +191,6 @@ public class SoapUI
 
 	// ------------------------------ FIELDS ------------------------------
 
-	// private static SoapUI instance;
 	private static List<Object> logCache = new ArrayList<Object>();
 
 	private static SoapUICore soapUICore;
@@ -343,7 +342,6 @@ public class SoapUI
 			ProxyUtils.setProxyEnabled( false );
 		}
 		launchLoadUIButton = mainToolbar.add( new LaunchLoadUIButtonAction() );
-		//		mainToolbar.add( new ExitButtonAction() );
 
 		mainToolbar.addGlue();
 
@@ -478,8 +476,6 @@ public class SoapUI
 		toolsMenu.add( SwingActionDelegate.createDelegate( GSoapAction.SOAPUI_ACTION_ID ) );
 		toolsMenu.addSeparator();
 		toolsMenu.add( SwingActionDelegate.createDelegate( TcpMonAction.SOAPUI_ACTION_ID ) );
-		// toolsMenu.addSeparator();
-		// toolsMenu.add( new XQueryXPathTesterAction());
 		toolsMenu.addSeparator();
 		StartHermesJMSButtonAction hermesJMSButtonAction = new StartHermesJMSButtonAction();
 		hermesJMSButtonAction.setEnabled( HermesUtils.isHermesJMSSupported() );
@@ -1233,8 +1229,6 @@ public class SoapUI
 	{
 		public ApplyProxyButtonAction()
 		{
-			// putValue(Action.SMALL_ICON,
-			// UISupport.createImageIcon("/proxyEnabled.png"));
 			putValue( Action.SHORT_DESCRIPTION, "Apply proxy defined in global preferences" );
 		}
 
@@ -1313,22 +1307,6 @@ public class SoapUI
 		{
 			Thread launchLoadUI = new Thread( new LoadUIRunner() );
 			launchLoadUI.start();
-		}
-	}
-
-	private class ExitButtonAction extends AbstractAction
-	{
-		public ExitButtonAction()
-		{
-			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/system-log-out.png" ) );
-			putValue( Action.SHORT_DESCRIPTION, "Saves all projects and exits SoapUI" );
-		}
-
-		public void actionPerformed( ActionEvent e )
-		{
-			saveOnExit = true;
-			WindowEvent windowEvent = new WindowEvent( frame, WindowEvent.WINDOW_CLOSING );
-			frame.dispatchEvent( windowEvent );
 		}
 	}
 
