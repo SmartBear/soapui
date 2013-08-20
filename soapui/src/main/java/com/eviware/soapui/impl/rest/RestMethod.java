@@ -358,17 +358,10 @@ public class RestMethod extends AbstractWsdlModelItem<RestMethodConfig> implemen
 		requests.add( request );
 		request.resetPropertyValues();
 
-		/*
-		 * for (RestParamProperty prop : getDefaultParams()) { if
-		 * (!request.hasProperty(prop.getName()))
-		 * request.addProperty(prop.getName()).setValue(prop.getDefaultValue()); }
-		 */
-
 		String[] endpoints = getInterface().getEndpoints();
 		if( endpoints.length > 0 )
 			request.setEndpoint( endpoints[0] );
 
-		// getInterface().fireRequestAdded(request);
 		notifyPropertyChanged( "childRequests", null, request );
 		return request;
 	}
@@ -381,7 +374,6 @@ public class RestMethod extends AbstractWsdlModelItem<RestMethodConfig> implemen
 		RestRequest newRequest = new RestRequest( this, requestConfig, false );
 		requests.add( newRequest );
 
-		// getInterface().fireRequestAdded(newRequest);
 		notifyPropertyChanged( "childRequests", null, newRequest );
 		return newRequest;
 	}
@@ -422,7 +414,6 @@ public class RestMethod extends AbstractWsdlModelItem<RestMethodConfig> implemen
 		super.release();
 		for( int i = requests.size(); i > 0; i-- )
 		{
-			// removeRequest(requests.get(i-1));
 			requests.get( i - 1 ).release();
 		}
 		getOperation().removePropertyChangeListener( this );
