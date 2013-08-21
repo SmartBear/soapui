@@ -43,6 +43,8 @@ import com.eviware.soapui.support.components.JUndoableTextField;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.propertyexpansion.PropertyExpansionPopupListener;
 
+import static com.eviware.soapui.impl.rest.RestRequestInterface.RequestMethod;
+
 public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 extends RestRequestInterface> extends
 		AbstractHttpXmlRequestDesktopPanel<T, T2>
 {
@@ -56,6 +58,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 	private InternalTestPropertyListener testPropertyListener = new InternalTestPropertyListener();
 	private RestParamPropertyChangeListener restParamPropertyChangeListener = new RestParamPropertyChangeListener();
 	private JComboBox pathCombo;
+	private JComboBox<RequestMethod> methodComboBox;
 
 	public AbstractRestRequestDesktopPanel( T modelItem, T2 requestItem )
 	{
@@ -77,7 +80,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 	public void propertyChange( PropertyChangeEvent evt )
 	{
 		updateFullPathLabel();
-		updateResourcePathAndQuery();
+		updateMethodResourcePathAndQuery();
 
 		if( evt.getPropertyName().equals( "accept" ) && !updatingRequest )
 		{
@@ -134,7 +137,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 	@Override
 	protected JComponent buildToolbar()
 	{
-		if( getRequest().getResource() != null)
+		if( getRequest().getResource() != null )
 		{
 			JComponent baseToolBar = UISupport.createToolbar();
 			baseToolBar.setPreferredSize( new Dimension( 600, 45 ) );
@@ -142,8 +145,16 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 
 			JComponent submitButton = super.getSubmitButton();
 
+			JPanel methodPanel = new JPanel( new BorderLayout() );
+			methodPanel.setMinimumSize( new Dimension( 150, 45 ) );
+			methodComboBox = new JComboBox<RequestMethod>( RequestMethod.values() );
+			methodComboBox.setSelectedItem( getRequest().getMethod() );
+			JLabel methodLabel = new JLabel( "Method" );
+			methodPanel.add( methodComboBox, BorderLayout.NORTH );
+			methodPanel.add( methodLabel, BorderLayout.SOUTH );
+
 			JPanel endpointPanel = new JPanel( new BorderLayout() );
-			endpointPanel.setMinimumSize( new Dimension( 150, 45 ) );
+			endpointPanel.setMinimumSize( new Dimension( 75, 45 ) );
 
 			JComponent endpointCombo = super.buildEndpointComponent();
 			super.setEndpointComponent( endpointCombo );
@@ -165,9 +176,10 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 			queryPanel.addPropertyChangeListener( this );
 
 			baseToolBar.add( submitButton );
+			baseToolBar.add( methodPanel );
 			baseToolBar.add( endpointPanel );
 			baseToolBar.add( resourcePanel );
-			baseToolBar.add( queryPanel);
+			baseToolBar.add( queryPanel );
 
 
 			return baseToolBar;
@@ -311,14 +323,21 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 		}
 	}
 
-	private void updateResourcePathAndQuery()
+	private void updateMethodResourcePathAndQuery()
 	{
-		if(resourcePanel != null && queryPanel != null)
+		if( resourcePanel != null && queryPanel != null )
 		{
+			updateMethod();
 			updateResource();
 			updateQuery();
 		}
 
+	}
+
+	private void updateMethod()
+	{
+		RequestMethod method = (RequestMethod)methodComboBox.getSelectedItem();
+		getRequest().setMethod( method );
 	}
 
 	private void updateResource()
@@ -332,8 +351,8 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 	{
 		String query = queryPanel.getText();
 		RestParamsPropertyHolder propertyHolder = getRequest().getResource().getParams();
-		if(! query.isEmpty() )
-			RestUtils.extractParamsFromQueryString( propertyHolder, query.substring( 1 )  );
+		if( !query.isEmpty() )
+			RestUtils.extractParamsFromQueryString( propertyHolder, query.substring( 1 ) );
 
 	}
 
@@ -389,7 +408,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 	{
 		@Override
 		public Component getListCellRendererComponent( JList list, Object value, int index, boolean isSelected,
-				boolean cellHasFocus )
+																	  boolean cellHasFocus )
 		{
 			Component result = super.getListCellRendererComponent( list, value, index, isSelected, cellHasFocus );
 
@@ -415,7 +434,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 		{
 			textLabel = new JLabel( label );
 			textField = new JTextField( text );
-			super.setLayout( new BorderLayout(  ) );
+			super.setLayout( new BorderLayout() );
 			super.add( textField, BorderLayout.NORTH );
 			super.add( textLabel, BorderLayout.SOUTH );
 		}
