@@ -78,7 +78,7 @@ public class TestRunnerAction extends AbstractToolsAction<WsdlProject>
 	protected static final String PROJECTPASSWORD = "Project Password";
 	protected static final String SOAPUISETTINGSPASSWORD = "soapui-setings.xml Password";
 	protected static final String IGNOREERRORS = "Ignore Errors";
-	protected static final String GENERATEREPORTSEACHTESTCASE = "Report to Generate";
+	protected static final String GENERATEREPORTSEACHTESTCASE = "Select Report Template";
 	protected static final String REPORTFORMAT = "Report Format(s)";
 	protected static final String SAVEAFTER = "Save After";
 	protected static final String GLOBALPROPERTIES = "Global Properties";
@@ -189,8 +189,8 @@ public class TestRunnerAction extends AbstractToolsAction<WsdlProject>
 		reportForm.addCheckBox( COVERAGE, "Generate WSDL Coverage report (soapUI Pro only)" ).setEnabled( proVersion );
 		reportForm.addCheckBox( OPEN_REPORT, "Opens generated report(s) in browser (soapUI Pro only)" ).setEnabled(
 				proVersion );
-		reportForm.addTextField( GENERATEREPORTSEACHTESTCASE, "Report to Generate (soapUI Pro only)",
-				XForm.FieldType.TEXT ).setEnabled( proVersion );
+		reportForm.addComboBox( GENERATEREPORTSEACHTESTCASE, new String[0],
+				"Template used to generate report (soapUI Pro only)").setEnabled( proVersion );
 		reportForm.addTextField( REPORTFORMAT, "Choose report format(s), comma-separated (soapUI Pro only)",
 				XForm.FieldType.TEXT ).setEnabled( proVersion );
 
