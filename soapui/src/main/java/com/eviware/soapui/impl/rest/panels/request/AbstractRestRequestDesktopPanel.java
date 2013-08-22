@@ -12,17 +12,6 @@
 
 package com.eviware.soapui.impl.rest.panels.request;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-
-import javax.swing.*;
-import javax.swing.text.Document;
-
 import com.eviware.soapui.impl.rest.RestMethod;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.RestResource;
@@ -42,6 +31,14 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JUndoableTextField;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.propertyexpansion.PropertyExpansionPopupListener;
+
+import javax.swing.*;
+import javax.swing.text.Document;
+import java.awt.*;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import static com.eviware.soapui.impl.rest.RestRequestInterface.RequestMethod;
 
@@ -80,7 +77,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 	public void propertyChange( PropertyChangeEvent evt )
 	{
 		updateFullPathLabel();
-		updateMethodResourcePathAndQuery();
+		updateResourcePathAndQuery();
 
 		if( evt.getPropertyName().equals( "accept" ) && !updatingRequest )
 		{
@@ -147,8 +144,8 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 
 			JPanel methodPanel = new JPanel( new BorderLayout() );
 			methodPanel.setMinimumSize( new Dimension( 150, 45 ) );
-			methodComboBox = new JComboBox<RequestMethod>( RequestMethod.values() );
-			methodComboBox.setSelectedItem( getRequest().getMethod() );
+			methodComboBox = new JComboBox<RequestMethod>( new RestRequestMethodModel( getRequest() ) );
+
 			JLabel methodLabel = new JLabel( "Method" );
 			methodPanel.add( methodComboBox, BorderLayout.NORTH );
 			methodPanel.add( methodLabel, BorderLayout.SOUTH );
@@ -323,22 +320,15 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 		}
 	}
 
-	private void updateMethodResourcePathAndQuery()
+	private void updateResourcePathAndQuery()
 	{
 		if( resourcePanel != null && queryPanel != null )
 		{
-			updateMethod();
 			updateResource();
 			updateQuery();
 		}
-
 	}
 
-	private void updateMethod()
-	{
-		RequestMethod method = (RequestMethod)methodComboBox.getSelectedItem();
-		getRequest().setMethod( method );
-	}
 
 	private void updateResource()
 	{
@@ -353,7 +343,6 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 		RestParamsPropertyHolder propertyHolder = getRequest().getResource().getParams();
 		if( !query.isEmpty() )
 			RestUtils.extractParamsFromQueryString( propertyHolder, query.substring( 1 ) );
-
 	}
 
 	private class RestParamPropertyChangeListener implements PropertyChangeListener
@@ -421,9 +410,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 
 			return result;
 		}
-
 	}
-
 
 	private class TextPanelWithBottomLabel extends JPanel
 	{
@@ -449,5 +436,4 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 			textField.setText( text );
 		}
 	}
-
 }
