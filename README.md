@@ -23,8 +23,7 @@ To get the source code run `git clone https://github.com/SmartBear/soapui.git` w
 
 ### Building
 
-* To build the SoapUI project run `mvn clean install` in the root folder.
-* To also include the soapui-maven-plugin-tester module, instead run `mvn clean install -DallTests` in the root folder.
+* To build the whole soapUI project including all submodules, run `mvn clean install` in the root folder.
 * To build a individual submodule run `mvn clean install` the root folder of the submodule you want to build.
 
 ### Running
