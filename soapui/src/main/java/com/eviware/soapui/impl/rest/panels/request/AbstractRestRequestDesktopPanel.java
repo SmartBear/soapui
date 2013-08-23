@@ -1,12 +1,12 @@
 /*
- *  soapUI, copyright (C) 2004-2012 smartbear.com 
+ *  soapUI, copyright (C) 2004-2012 smartbear.com
  *
- *  soapUI is free software; you can redistribute it and/or modify it under the 
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
+ *  soapUI is free software; you can redistribute it and/or modify it under the
+ *  terms of version 2.1 of the GNU Lesser General Public License as published by
  *  the Free Software Foundation.
  *
- *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
 
@@ -77,7 +77,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 	public void propertyChange( PropertyChangeEvent evt )
 	{
 		updateFullPathLabel();
-		updateResourcePathAndQuery();
+		updateMethodResourcePathAndQuery();
 
 		if( evt.getPropertyName().equals( "accept" ) && !updatingRequest )
 		{
@@ -143,8 +143,9 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 			JComponent submitButton = super.getSubmitButton();
 
 			JPanel methodPanel = new JPanel( new BorderLayout() );
-			methodPanel.setMinimumSize( new Dimension( 150, 45 ) );
+			methodPanel.setMaximumSize( new Dimension( 75, 45 ) );
 			methodComboBox = new JComboBox<RequestMethod>( new RestRequestMethodModel( getRequest() ) );
+			methodComboBox.setSelectedItem( getRequest().getMethod() );
 
 			JLabel methodLabel = new JLabel( "Method" );
 			methodPanel.add( methodComboBox, BorderLayout.NORTH );
@@ -320,7 +321,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 		}
 	}
 
-	private void updateResourcePathAndQuery()
+	private void updateMethodResourcePathAndQuery()
 	{
 		if( resourcePanel != null && queryPanel != null )
 		{
@@ -343,6 +344,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 		RestParamsPropertyHolder propertyHolder = getRequest().getResource().getParams();
 		if( !query.isEmpty() )
 			RestUtils.extractParamsFromQueryString( propertyHolder, query.substring( 1 ) );
+
 	}
 
 	private class RestParamPropertyChangeListener implements PropertyChangeListener
@@ -410,7 +412,9 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 
 			return result;
 		}
+
 	}
+
 
 	private class TextPanelWithBottomLabel extends JPanel
 	{
@@ -436,4 +440,5 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 			textField.setText( text );
 		}
 	}
+
 }
