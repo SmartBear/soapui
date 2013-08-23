@@ -1379,7 +1379,7 @@ public class SoapUI
 
 	private static void addAutoCloseOfStartPageOnMac()
 	{
-		if( System.getProperty( "os.name" ).contains( "Mac" ) )
+		if( shouldAutoCloseStartPage() )
 		{
 			desktop.addDesktopListener( new DesktopListenerAdapter()
 			{
@@ -1393,6 +1393,12 @@ public class SoapUI
 				}
 			} );
 		}
+	}
+
+	private static boolean shouldAutoCloseStartPage()
+	{
+		return System.getProperty( "os.name" ).contains( "Mac" ) &&
+				!(desktop.getClass().getName().contains( "Tabbed" ));
 	}
 
 	private static class AboutAction extends AbstractAction
