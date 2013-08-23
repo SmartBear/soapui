@@ -7,12 +7,16 @@ import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.iface.Submit;
 import com.eviware.soapui.model.iface.SubmitContext;
+import com.eviware.soapui.utils.ContainerWalker;
 import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import static junit.framework.Assert.*;
+import static com.eviware.soapui.utils.SwingMatchers.enabled;
+import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsNot.not;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -27,9 +31,9 @@ public class WsdlRequestDesktopPanelTest
 	private ContainerWalker containerWalker;
 
 	@BeforeClass
-	public static void initSoapUICore()
+	public static void initSoapUICoreLog()
 	{
-		DefaultSoapUICore.log = mock(Logger.class);
+		DefaultSoapUICore.log = mock( Logger.class );
 	}
 
 	@Before
@@ -37,10 +41,10 @@ public class WsdlRequestDesktopPanelTest
 	{
 		request = mock( WsdlRequest.class );
 		WsdlProject stubbedProject = mock( WsdlProject.class );
-		when(stubbedProject.isEnvironmentMode()).thenReturn( true );
-		when(request.getParent()).thenReturn( stubbedProject );
+		when( stubbedProject.isEnvironmentMode() ).thenReturn( true );
+		when( request.getParent() ).thenReturn( stubbedProject );
 		XmlBeansSettingsImpl settings = mock( XmlBeansSettingsImpl.class );
-		when(request.getSettings()).thenReturn( settings );
+		when( request.getSettings() ).thenReturn( settings );
 		desktopPanel = new WsdlRequestDesktopPanel( request );
 		containerWalker = new ContainerWalker( desktopPanel );
 	}
@@ -48,24 +52,24 @@ public class WsdlRequestDesktopPanelTest
 	@Test
 	public void returnsCorrectHelpUrl() throws Exception
 	{
-		assertEquals( HelpUrls.REQUESTEDITOR_HELP_URL, desktopPanel.getHelpUrl());
+		assertThat( desktopPanel.getHelpUrl(), is(HelpUrls.REQUESTEDITOR_HELP_URL) );
 	}
 
 	@Test
 	public void returnsRequest() throws Exception
 	{
-		assertSame(request, desktopPanel.getRequest());
+		assertThat( desktopPanel.getRequest(), is( request ) );
 	}
 
 	@Test
 	public void disablesInteractionsDuringSubmit() throws Exception
 	{
 		Submit submit = makeSubmitMockWithRequest();
-		desktopPanel.beforeSubmit( submit, mock( SubmitContext.class) );
+		desktopPanel.beforeSubmit( submit, mock( SubmitContext.class ) );
 
-		assertFalse("Should disable Submit button", desktopPanel.getSubmitButton().isEnabled());
-		assertFalse("Should disable Create empty button", containerWalker.findButtonWithIcon( "create_empty_request.gif" ).isEnabled());
-		assertFalse("Should disable Clone button", containerWalker.findButtonWithIcon( "clone_request.gif" ).isEnabled());
+		assertThat( desktopPanel.getSubmitButton(), not( is( enabled() ) ) );
+		assertThat( containerWalker.findButtonWithIcon( "create_empty_request.gif" ), not( is( enabled() ) ) );
+		assertThat( containerWalker.findButtonWithIcon( "clone_request.gif" ), not( is( enabled() ) ) );
 	}
 
 	@Test
@@ -76,17 +80,16 @@ public class WsdlRequestDesktopPanelTest
 		desktopPanel.beforeSubmit( submit, submitContext );
 		desktopPanel.afterSubmit( submit, submitContext );
 
-		assertTrue("Create empty button should be enabled", containerWalker.findButtonWithIcon( "create_empty_request.gif" ).isEnabled());
-		assertTrue("Clone button should be enabled", containerWalker.findButtonWithIcon( "clone_request.gif" ).isEnabled());
+		assertThat( containerWalker.findButtonWithIcon( "create_empty_request.gif" ), is( enabled() ) );
+		assertThat( containerWalker.findButtonWithIcon( "clone_request.gif" ), is( enabled() ) );
 
 	}
-
 
 
 	private Submit makeSubmitMockWithRequest()
 	{
 		Submit submit = mock( Submit.class );
-		when(submit.getRequest()).thenReturn( request );
+		when( submit.getRequest() ).thenReturn( request );
 		return submit;
 	}
 
