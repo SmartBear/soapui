@@ -12,13 +12,14 @@
 
 package com.eviware.soapui.impl.wsdl.submit.transports.http;
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.httpclient.URI;
-import org.apache.http.Header;
+import org.apache.http.*;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.conn.params.ConnRoutePNames;
@@ -135,7 +136,7 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 	{
 		AbstractHttpRequestInterface<?> httpRequest = ( AbstractHttpRequestInterface<?> )request;
 
-		HttpClientSupport.SoapUIHttpClient httpClient = HttpClientSupport.getHttpClient();
+		HttpClientSupport.SoapUIHttpClient httpClient = getSoapUIHttpClient();
 		ExtendedHttpMethod httpMethod = createHttpMethod( httpRequest );
 
 		boolean createdContext = false;
@@ -151,7 +152,7 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 		if( localAddress == null || localAddress.trim().length() == 0 )
 			localAddress = SoapUI.getSettings().getString( HttpSettings.BIND_ADDRESS, null );
 
-		org.apache.http.HttpResponse httpResponse = null;
+		org.apache.http.HttpResponse httpResponse;
 		if( localAddress != null && localAddress.trim().length() > 0 )
 		{
 			try
@@ -195,8 +196,9 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 			{
 				for( String headerValue : headers.get( header ) )
 				{
+					String headerName = PropertyExpander.expandProperties( submitContext, header );
 					headerValue = PropertyExpander.expandProperties( submitContext, headerValue );
-					httpMethod.addHeader( header, headerValue );
+					httpMethod.addHeader( headerName, headerValue );
 				}
 			}
 
@@ -231,7 +233,7 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 			}
 
 			// submit!
-			httpResponse = HttpClientSupport.execute( httpMethod, httpContext );
+			httpResponse = submitRequest( httpMethod, httpContext );
 
 			// save request headers captured by interceptor
 			saveRequestHeaders( httpMethod, httpContext );
@@ -249,8 +251,7 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 					EntityUtils.consume( httpResponse.getEntity() );
 				}
 
-				ExtendedGetMethod returnMethod = followRedirects( httpClient, 0, httpMethod, httpResponse, httpContext );
-				httpMethod = returnMethod;
+				httpMethod = followRedirects( httpClient, 0, httpMethod, httpResponse, httpContext );
 				submitContext.setProperty( HTTP_METHOD, httpMethod );
 			}
 		}
@@ -316,6 +317,16 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 		return ( Response )submitContext.getProperty( BaseHttpRequestTransport.RESPONSE );
 	}
 
+	protected org.apache.http.HttpResponse submitRequest( ExtendedHttpMethod httpMethod, HttpContext httpContext ) throws IOException
+	{
+		return HttpClientSupport.execute( httpMethod, httpContext );
+	}
+
+	protected HttpClientSupport.SoapUIHttpClient getSoapUIHttpClient()
+	{
+		return HttpClientSupport.getHttpClient();
+	}
+
 	private boolean isRedirectResponse( int statusCode )
 	{
 		switch( statusCode )
@@ -348,7 +359,7 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 				uri.getPath(), uri.getQuery(), uri.getFragment() );
 		getMethod.setURI( newUri );
 
-		org.apache.http.HttpResponse response = HttpClientSupport.execute( getMethod, httpContext );
+		org.apache.http.HttpResponse response = submitRequest( getMethod, httpContext );
 
 		if( isRedirectResponse( response.getStatusLine().getStatusCode() ) )
 		{
@@ -361,6 +372,7 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 			}
 			finally
 			{
+				//TODO: check if this is necessary!
 				//getMethod.releaseConnection();
 			}
 		}
@@ -376,7 +388,7 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 	{
 		String requestContent = ( String )submitContext.getProperty( BaseHttpRequestTransport.REQUEST_CONTENT );
 
-		// check content-type for multiplart
+		// check content-type for multipart
 		String responseContentTypeHeader = null;
 		if( httpMethod.hasHttpResponse() && httpMethod.getHttpResponse().getEntity() != null )
 		{
@@ -384,8 +396,7 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 			responseContentTypeHeader = h.toString();
 		}
 
-		Response response = null;
-
+		Response response;
 		if( responseContentTypeHeader != null && responseContentTypeHeader.toUpperCase().startsWith( "MULTIPART" ) )
 		{
 			response = new MimeMessageResponse( httpRequest, httpMethod, requestContent, submitContext );
@@ -435,8 +446,7 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 			httpMethod.getMetrics().setIpAddress( InetAddress.getByName( httpMethod.getURI().getHost() ).getHostAddress() );
 			httpMethod.getMetrics().setPort(
 					httpMethod.getURI().getPort(),
-					httpClient.getConnectionManager().getSchemeRegistry().getScheme( httpMethod.getURI().getScheme() )
-							.getDefaultPort() );
+					getDefaultHttpPort( httpMethod, httpClient ) );
 		}
 		catch( UnknownHostException uhe )
 		{
@@ -446,6 +456,12 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 		{
 			/* ignore */
 		}
+	}
+
+	protected int getDefaultHttpPort( ExtendedHttpMethod httpMethod, HttpClient httpClient )
+	{
+		return httpClient.getConnectionManager().getSchemeRegistry().getScheme( httpMethod.getURI().getScheme() )
+				.getDefaultPort();
 	}
 
 	private void saveRequestHeaders( ExtendedHttpMethod httpMethod, HttpContext httpContext )
