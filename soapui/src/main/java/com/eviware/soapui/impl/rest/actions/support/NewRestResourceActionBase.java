@@ -12,16 +12,6 @@
 
 package com.eviware.soapui.impl.rest.actions.support;
 
-import java.awt.event.ActionEvent;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.swing.AbstractAction;
-import javax.swing.DefaultCellEditor;
-import javax.swing.JComboBox;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.RestParametersConfig;
 import com.eviware.soapui.impl.rest.RestMethod;
@@ -47,10 +37,17 @@ import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.validators.RequiredValidator;
 
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Actions for importing an existing soapUI project file into the current
  * workspace
- * 
+ *
  * @author Ole.Matzura
  */
 
@@ -73,7 +70,6 @@ public abstract class NewRestResourceActionBase<T extends ModelItem> extends Abs
 			dialog = ADialogBuilder.buildDialog( Form.class );
 			dialog.getFormField( Form.RESOURCENAME ).addFormFieldValidator( new RequiredValidator() );
 			dialog.getFormField( Form.EXTRACTPARAMS ).setProperty( "action", new ExtractParamsAction() );
-			// dialog.setBooleanValue(Form.CREATEREQUEST, true);
 		}
 		else
 		{
@@ -113,14 +109,6 @@ public abstract class NewRestResourceActionBase<T extends ModelItem> extends Abs
 			RestResource resource = createRestResource( service, path, dialog );
 			paramsTable.extractParams( resource.getParams(), ParamLocation.RESOURCE );
 
-			// RestMethod method = createRestMethod(resource, dialog);
-			// paramsTable.extractParams(method.getParams(), ParamLocation.METHOD);
-
-			// UISupport.select(method);
-
-			// if (dialog.getBooleanValue(Form.CREATEREQUEST)) {
-			// createRequest(method);
-			// }
 			XmlBeansRestParamsTestPropertyHolder methodParams = new XmlBeansRestParamsTestPropertyHolder( null,
 					RestParametersConfig.Factory.newInstance() );
 			paramsTable.extractParams( methodParams, ParamLocation.METHOD );
@@ -162,12 +150,16 @@ public abstract class NewRestResourceActionBase<T extends ModelItem> extends Abs
 
 	public static class InternalRestParamsTable extends RestParamsTable
 	{
-		private ParamLocation defaultLocation;
 
 		public InternalRestParamsTable( RestParamsPropertyHolder params, ParamLocation defaultLocation )
 		{
-			super( params, false );
-			this.defaultLocation = defaultLocation;
+			this( params, false, new InternalRestParamsTableModel( params, defaultLocation ) );
+		}
+
+		public InternalRestParamsTable( RestParamsPropertyHolder params, boolean showInspector,
+												  InternalRestParamsTableModel model )
+		{
+			super( params, showInspector, model );
 		}
 
 		public void extractParams( RestParamsPropertyHolder params, ParamLocation location )
@@ -182,11 +174,6 @@ public abstract class NewRestResourceActionBase<T extends ModelItem> extends Abs
 			}
 		}
 
-		protected RestParamsTableModel createTableModel( RestParamsPropertyHolder params )
-		{
-			return new InternalRestParamsTableModel( params );
-		}
-
 		protected void init( RestParamsPropertyHolder params, boolean showInspector )
 		{
 			super.init( params, showInspector );
@@ -194,14 +181,16 @@ public abstract class NewRestResourceActionBase<T extends ModelItem> extends Abs
 					ParamLocation.RESOURCE, ParamLocation.METHOD } ) ) );
 		}
 
-		public class InternalRestParamsTableModel extends RestParamsTableModel
+		public static class InternalRestParamsTableModel extends RestParamsTableModel
 		{
 			private Map<RestParamProperty, ParamLocation> locations = new HashMap<RestParamProperty, ParamLocation>();
 			private int columnCount;
+			private ParamLocation defaultLocation;
 
-			public InternalRestParamsTableModel( RestParamsPropertyHolder params )
+			public InternalRestParamsTableModel( RestParamsPropertyHolder params, ParamLocation defaultLocation )
 			{
 				super( params );
+				this.defaultLocation = defaultLocation;
 				columnCount = super.getColumnCount();
 			}
 
@@ -294,48 +283,5 @@ public abstract class NewRestResourceActionBase<T extends ModelItem> extends Abs
 		@AField( description = "Form.ParamsTable.Description", type = AFieldType.COMPONENT )
 		public final static String PARAMSTABLE = messages.get( "Form.ParamsTable.Label" );
 
-		// @AField(description = "Form.CreateRequest.Description", type =
-		// AFieldType.BOOLEAN)
-		// public final static String CREATEREQUEST = messages
-		// .get("Form.CreateRequest.Label");
 	}
-
-	// public void performAutomatic( RestService service, URL param )
-	// {
-	//
-	// params = new XmlBeansRestParamsTestPropertyHolder( null,
-	// RestParametersConfig.Factory.newInstance() );
-	// String path = null;
-	// path = RestUtils.extractParams( param.toString(), params, false );
-	//
-	// try
-	// {
-	// URL url = new URL( path );
-	// path = url.getPath();
-	// }
-	// catch( MalformedURLException e )
-	// {
-	// }
-	//
-	// RestResource resource = ( ( RestService )service ).addNewResource(
-	// "Monitor Resource",path );
-	//
-	// XmlBeansRestParamsTestPropertyHolder methodParams = new
-	// XmlBeansRestParamsTestPropertyHolder( null,
-	// RestParametersConfig.Factory.newInstance() );
-	// createMethodAutomatic( resource, methodParams, resource.getName(),
-	// RestRequestInterface.RequestMethod.GET );
-	//
-	// }
-	//
-	// public RestRequest createMethodAutomatic( RestResource resource, Object
-	// param, String resourceName,
-	// RestRequestInterface.RequestMethod methodName )
-	// {
-	// RestMethod method = resource.addNewMethod( resourceName );
-	// method.setMethod( methodName );
-	// RestRequest request = method.addNewRequest( "Request " + (
-	// method.getRequestCount() + 1 ) );
-	// return request;
-	// }
 }

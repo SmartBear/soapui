@@ -32,7 +32,7 @@ public class InstanceRestParamsTable extends RestParamsTable
 
 	public InstanceRestParamsTable( RestParamsPropertyHolder params )
 	{
-		super( params, false );
+		super( params, false, new InstanceRestParamsTableModel( params ) );
 	}
 
 	public JTable getParamsTable()
@@ -42,7 +42,6 @@ public class InstanceRestParamsTable extends RestParamsTable
 
 	protected void init( RestParamsPropertyHolder params, boolean showInspector )
 	{
-		paramsTableModel = new InstanceRestParamsTableModel( params );
 		paramsTable = new JTable( paramsTableModel );
 		paramsTable.setRowHeight( 19 );
 		paramsTable.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
@@ -68,7 +67,7 @@ public class InstanceRestParamsTable extends RestParamsTable
 		return toolbar;
 	}
 
-	private class InstanceRestParamsTableModel extends RestParamsTableModel
+	private static class InstanceRestParamsTableModel extends RestParamsTableModel
 	{
 
 		public InstanceRestParamsTableModel( RestParamsPropertyHolder params )

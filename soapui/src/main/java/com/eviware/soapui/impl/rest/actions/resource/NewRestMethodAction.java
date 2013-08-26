@@ -19,8 +19,6 @@ import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase.InternalRestParamsTable;
 import com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase.ParamLocation;
-import com.eviware.soapui.impl.rest.panels.resource.RestParamsTableModel;
-import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.support.MessageSupport;
@@ -32,10 +30,12 @@ import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.support.AForm;
 
+import static com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase.InternalRestParamsTable.InternalRestParamsTableModel;
+
 /**
  * Actions for importing an existing soapUI project file into the current
  * workspace
- * 
+ *
  * @author Ole.Matzura
  */
 
@@ -44,8 +44,6 @@ public class NewRestMethodAction extends AbstractSoapUIAction<RestResource>
 	public static final String SOAPUI_ACTION_ID = "NewRestMethodAction";
 	public static final MessageSupport messages = MessageSupport.getMessages( NewRestMethodAction.class );
 	private XFormDialog dialog;
-	private XmlBeansRestParamsTestPropertyHolder params;
-	private InternalRestParamsTable paramsTable;
 
 	public NewRestMethodAction()
 	{
@@ -62,12 +60,22 @@ public class NewRestMethodAction extends AbstractSoapUIAction<RestResource>
 
 		dialog.setValue( Form.RESOURCENAME, "Method " + ( resource.getRestMethodCount() + 1 ) );
 
+		XmlBeansRestParamsTestPropertyHolder params;
 		if( param instanceof XmlBeansRestParamsTestPropertyHolder )
 			params = ( XmlBeansRestParamsTestPropertyHolder )param;
 		else
 			params = new XmlBeansRestParamsTestPropertyHolder( null, RestParametersConfig.Factory.newInstance() );
 
-		paramsTable = new MethodInternalRestParamsTable( params, ParamLocation.METHOD );
+
+		InternalRestParamsTableModel model = new InternalRestParamsTableModel( params, ParamLocation.METHOD )
+		{
+			public int getColumnCount()
+			{
+				return super.getColumnCount() - 1;
+			}
+		};
+		InternalRestParamsTable paramsTable = new InternalRestParamsTable( params, false, model );
+
 		dialog.getFormField( Form.PARAMSTABLE ).setProperty( "component", paramsTable );
 
 		if( dialog.show() )
@@ -85,45 +93,26 @@ public class NewRestMethodAction extends AbstractSoapUIAction<RestResource>
 		}
 	}
 
-	private class MethodInternalRestParamsTable extends InternalRestParamsTable
-	{
-		public MethodInternalRestParamsTable( RestParamsPropertyHolder params, ParamLocation defaultLocation )
-		{
-			super( params, defaultLocation );
-		}
-
-		protected RestParamsTableModel createTableModel( RestParamsPropertyHolder params )
-		{
-			return new InternalRestParamsTableModel( params )
-			{
-				public int getColumnCount()
-				{
-					return super.getColumnCount() - 1;
-				}
-			};
-		}
-	}
-
 	protected void createRequest( RestMethod method )
 	{
 		RestRequest request = method.addNewRequest( "Request " + ( method.getRequestCount() + 1 ) );
 		UISupport.showDesktopPanel( request );
 	}
 
-	@AForm( name = "Form.Title", description = "Form.Description", helpUrl = HelpUrls.NEWRESTSERVICE_HELP_URL, icon = UISupport.TOOL_ICON_PATH )
+	@AForm(name = "Form.Title", description = "Form.Description", helpUrl = HelpUrls.NEWRESTSERVICE_HELP_URL, icon = UISupport.TOOL_ICON_PATH)
 	public interface Form
 	{
-		@AField( description = "Form.ResourceName.Description", type = AFieldType.STRING )
+		@AField(description = "Form.ResourceName.Description", type = AFieldType.STRING)
 		public final static String RESOURCENAME = messages.get( "Form.ResourceName.Label" );
 
-		@AField( description = "Form.Method.Description", type = AFieldType.ENUMERATION, values = { "GET", "POST", "PUT",
-				"DELETE", "HEAD", "PATCH" } )
+		@AField(description = "Form.Method.Description", type = AFieldType.ENUMERATION, values = { "GET", "POST", "PUT",
+				"DELETE", "HEAD", "PATCH" })
 		public final static String METHOD = messages.get( "Form.Method.Label" );
 
-		@AField( description = "Form.ParamsTable.Description", type = AFieldType.COMPONENT )
+		@AField(description = "Form.ParamsTable.Description", type = AFieldType.COMPONENT)
 		public final static String PARAMSTABLE = messages.get( "Form.ParamsTable.Label" );
 
-		@AField( description = "Form.CreateRequest.Description", type = AFieldType.BOOLEAN )
+		@AField(description = "Form.CreateRequest.Description", type = AFieldType.BOOLEAN)
 		public final static String CREATEREQUEST = messages.get( "Form.CreateRequest.Label" );
 	}
 }

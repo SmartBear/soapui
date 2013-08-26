@@ -69,19 +69,18 @@ public class RestParamsTable extends JPanel
 
 	public RestParamsTable( RestParamsPropertyHolder params, boolean showInspector )
 	{
+		this( params, showInspector, new RestParamsTableModel( params ) );
+	}
+	public RestParamsTable( RestParamsPropertyHolder params, boolean showInspector, RestParamsTableModel model)
+	{
 		super( new BorderLayout() );
 		this.params = params;
+		this.paramsTableModel = model;
 		init( params, showInspector );
-	}
-
-	protected RestParamsTableModel createTableModel( RestParamsPropertyHolder params )
-	{
-		return new RestParamsTableModel( params );
 	}
 
 	protected void init( RestParamsPropertyHolder params, boolean showInspector )
 	{
-		paramsTableModel = createTableModel( params );
 		paramsTable = new JTable( paramsTableModel );
 		paramsTable.setRowHeight( 19 );
 		paramsTable.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
