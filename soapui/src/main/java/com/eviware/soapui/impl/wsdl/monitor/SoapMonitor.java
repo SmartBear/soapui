@@ -121,8 +121,7 @@ public class SoapMonitor extends JPanel
 	private final WsdlProject project;
 	private MessageExchangeRequestMessageEditor requestViewer;
 	private MessageExchangeResponseMessageEditor responseViewer;
-	private SoapUIListenerSupport<MonitorListener> listeners = new SoapUIListenerSupport<MonitorListener>(
-			MonitorListener.class );
+
 	private MessageExchangeModelItem requestModelItem;
 	private JButton optionsButton;
 	private int listenPort;
@@ -160,6 +159,7 @@ public class SoapMonitor extends JPanel
 	private boolean oldProxyEnabled;
 	private String sslEndpoint;
 	private JInspectorPanel inspectorPanel;
+	private SoapMonitorListenerCallBack listenerCallBack;
 
 	public SoapMonitor( WsdlProject project, int listenPort, String incomingRequestWss, String incomingResponseWss,
 			JXToolBar mainToolbar, boolean setAsProxy, String sslEndpoint )
@@ -494,11 +494,15 @@ public class SoapMonitor extends JPanel
 	public void start()
 	{
 		int localPort = getLocalPort();
-		// monitorEngine = new TcpMonMonitorEngine();
-
-		monitorEngine = new SoapMonitorEngineImpl();
-		( ( SoapMonitorEngineImpl )monitorEngine ).setSslEndpoint( sslEndpoint );
-		monitorEngine.start( this, localPort );
+		listenerCallBack = new SoapMonitorListenerCallBack(){
+			@Override
+			public void fireAddMessageExchange( WsdlMonitorMessageExchange messageExchange )
+			{
+				addMessageExchange( messageExchange );
+			}
+		};
+		monitorEngine = new SoapMonitorEngineImpl( sslEndpoint );
+		monitorEngine.start( this.getProject(), localPort, listenerCallBack );
 
 		if( monitorEngine.isRunning() )
 		{
@@ -785,24 +789,6 @@ public class SoapMonitor extends JPanel
 					}
 					else
 					{
-
-						// if( me.getResponseContentType().contains( "/x-amf" ) )
-						// {
-						// AMFRequestStepFactory httpRequestStepFactory = new
-						// AMFRequestStepFactory();
-						// AMFRequestTestStep test = ( AMFRequestTestStep
-						// )testCase.insertTestStep( httpRequestStepFactory
-						// .createConfig( me, "Monitor Request " + ( row + 1 ) ), -1
-						// );
-						//
-						// AMFRequest request = test.getAMFRequest();
-						// // request.setRequestContent( me.getRequestContent() );
-						// request.setEndpoint( me.getTargetUrl().toString() );
-						// request.setHttpHeaders( me.getRequestHeaders() );
-						//
-						// }
-						// else
-						// {
 						HttpRequestStepFactory httpRequestStepFactory = new HttpRequestStepFactory();
 						HttpTestRequestStep test = ( HttpTestRequestStep )testCase.insertTestStep(
 								httpRequestStepFactory.createConfig( me, "Monitor Request " + ( row + 1 ) ), -1 );
@@ -846,139 +832,6 @@ public class SoapMonitor extends JPanel
 			}
 		}
 	}
-
-	// @AForm( description =
-	// "Set options for adding selected REST requests to a TestCase", name =
-	// "Add Rest Test Step(s) To TestCase" )
-	// // private final class AddToRESTTestCaseAction implements ActionListener
-	// {
-	// private static final String CREATE_NEW_OPTION = "<Create New>";
-	// private XFormDialog dialog;
-	//
-	// @AField( name = "Target TestSuite", description = "The target TestSuite",
-	// type = AFieldType.ENUMERATION )
-	// public final static String TESTSUITE = "Target TestSuite";
-	//
-	// @AField( name = "Target TestCase", description =
-	// "The target TestCase for the requests", type = AFieldType.ENUMERATION )
-	// public final static String TESTCASE = "Target TestCase";
-	//
-	// @AField( name = "Open Editor", description = "Open the created TestCase",
-	// type = AFieldType.BOOLEAN )
-	// public final static String OPENEDITOR = "Open Editor";
-	//
-	// TestSuite testSuite;
-	//
-	// public void actionPerformed( ActionEvent e )
-	// {
-	// int[] rows = logTable.getSelectedRows();
-	// if( rows.length == 0 )
-	// return;
-	//
-	// if( dialog == null )
-	// {
-	// dialog = ADialogBuilder.buildDialog( this.getClass() );
-	// dialog.getFormField( TESTSUITE ).addFormFieldListener( new
-	// XFormFieldListener()
-	// {
-	// public void valueChanged( XFormField sourceField, String newValue, String
-	// oldValue )
-	// {
-	// if( newValue.equals( CREATE_NEW_OPTION ) )
-	// {
-	// dialog.setOptions( TESTCASE, new String[] { CREATE_NEW_OPTION } );
-	// }
-	// else
-	// {
-	// testSuite = getProject().getTestSuiteByName( newValue );
-	// dialog.setOptions( TESTCASE, testSuite == null ? new String[] {
-	// CREATE_NEW_OPTION } : ModelSupport
-	// .getNames( testSuite.getTestCaseList(), new String[] { CREATE_NEW_OPTION }
-	// ) );
-	// }
-	// }
-	// } );
-	// }
-	//
-	// String[] testSuiteNames = ModelSupport.getNames( new String[] {
-	// CREATE_NEW_OPTION }, getProject()
-	// .getTestSuiteList() );
-	// dialog.setOptions( TESTSUITE, testSuiteNames );
-	// testSuite = getProject().getTestSuiteByName( dialog.getValue( TESTSUITE )
-	// );
-	// dialog.setOptions( TESTCASE, testSuite == null ? new String[] {
-	// CREATE_NEW_OPTION } : ModelSupport.getNames(
-	// testSuite.getTestCaseList(), new String[] { CREATE_NEW_OPTION } ) );
-	//
-	// if( dialog.show() )
-	// {
-	// String targetTestSuiteName = dialog.getValue( TESTSUITE );
-	// String targetTestCaseName = dialog.getValue( TESTCASE );
-	//
-	// WsdlTestSuite testSuite = getProject().getTestSuiteByName(
-	// targetTestSuiteName );
-	// if( testSuite == null )
-	// {
-	// targetTestSuiteName = ModelSupport.promptForUniqueName( "TestSuite",
-	// getProject(), "" );
-	// if( targetTestSuiteName == null )
-	// return;
-	//
-	// testSuite = getProject().addNewTestSuite( targetTestSuiteName );
-	// }
-	//
-	// WsdlTestCase testCase = testSuite.getTestCaseByName( targetTestCaseName );
-	// if( testCase == null )
-	// {
-	// targetTestCaseName = ModelSupport.promptForUniqueName( "TestCase",
-	// testSuite, "" );
-	// if( targetTestCaseName == null )
-	// return;
-	//
-	// testCase = testSuite.addNewTestCase( targetTestCaseName );
-	// }
-	//
-	// for( int row : rows )
-	// {
-	// WsdlMonitorMessageExchange me = tableModel.getMessageExchangeAt( row );
-	//
-	// RestService restService = ( RestService )project.addNewInterface(
-	// "Monitor Interface " + ( row + 1 ),
-	// RestServiceFactory.REST_TYPE );
-	// restService.addEndpoint( me.getTargetUrl().getProtocol()
-	// +"://"+me.getTargetUrl().getHost() );
-	// restService.setBasePath( me.getTargetUrl().getPath() );
-	// ( ( NewRestResourceActionBase )SoapUI.getActionRegistry().getAction(
-	// NewRestResourceAction.SOAPUI_ACTION_ID ) ).performAutomatic( restService,
-	// me.getTargetUrl() );
-	//
-	// RestRequestStepFactory restRequestStepFactory = new
-	// RestRequestStepFactory();
-	// RestTestRequestStep test = ( RestTestRequestStep )testCase.insertTestStep(
-	// restRequestStepFactory
-	// .createNewTestStep( testCase, "Monitor Request " + ( row + 1 ) ), -1 );
-	// test.getTestRequest().setRequestContent( me.getRequestContent() );
-	// test.getTestRequest().setRequestHeaders( me.getRequestHeaders() );
-	//
-	// RestTestRequest request = ( RestTestRequest )test.getHttpRequest();
-	// request.setRequestContent( me.getRequestContent() );
-	// request.setEndpoint( me.getTargetUrl().toString() );
-	//
-	// Attachment[] requestAttachments = me.getRequestAttachments();
-	// if( requestAttachments != null )
-	// {
-	// for( Attachment attachment : requestAttachments )
-	// {
-	// request.importAttachment( attachment );
-	// }
-	// }
-	// }
-	//
-	// if( dialog.getBooleanValue( OPENEDITOR ) )
-	// UISupport.selectAndShow( testCase );
-	// }
-	// }
-	// }
 
 	private final class CreateRequestsAction implements ActionListener
 	{
@@ -1344,7 +1197,7 @@ public class SoapMonitor extends JPanel
 
 			tableModel.addMessageExchange( messageExchange );
 
-			fireOnMessageExchange( messageExchange );
+			listenerCallBack.fireOnMessageExchange( messageExchange );
 		}
 
 		@SuppressWarnings( "unused" )
@@ -1372,12 +1225,12 @@ public class SoapMonitor extends JPanel
 
 	public void addSoapMonitorListener( MonitorListener listener )
 	{
-		listeners.add( listener );
+		listenerCallBack.addSoapMonitorListener( listener );
 	}
 
 	public void removeSoapMonitorListener( MonitorListener listener )
 	{
-		listeners.remove( listener );
+		listenerCallBack.removeSoapMonitorListener( listener );
 	}
 
 	public WsdlProject getProject()
@@ -1478,94 +1331,7 @@ public class SoapMonitor extends JPanel
 		return monitorEngine.isRunning();
 	}
 
-	public void fireOnMessageExchange( WsdlMonitorMessageExchange messageExchange )
-	{
-		for( MonitorListener listener : listeners.get() )
-		{
-			try
-			{
-				listener.onMessageExchange( messageExchange );
-			}
-			catch( Throwable t )
-			{
-				SoapUI.logError( t );
-			}
-		}
-	}
 
-	public void fireOnRequest( ServletRequest request, ServletResponse response )
-	{
-		for( MonitorListener listener : listeners.get() )
-		{
-			try
-			{
-				listener.onRequest( this, request, response );
-			}
-			catch( Throwable t )
-			{
-				SoapUI.logError( t );
-			}
-		}
-	}
-
-	public void fireBeforeProxy( ServletRequest request, ServletResponse response, HttpRequest httpRequest )
-	{
-		for( MonitorListener listener : listeners.get() )
-		{
-			try
-			{
-				listener.beforeProxy( this, request, response, httpRequest );
-			}
-			catch( Throwable t )
-			{
-				SoapUI.logError( t );
-			}
-		}
-	}
-
-	public void fireAfterProxy( ServletRequest request, ServletResponse response, HttpRequest httpRequest,
-			WsdlMonitorMessageExchange capturedData )
-	{
-		for( MonitorListener listener : listeners.get() )
-		{
-			try
-			{
-				listener.afterProxy( this, request, response, httpRequest, capturedData );
-			}
-			catch( Throwable t )
-			{
-				SoapUI.logError( t );
-			}
-		}
-	}
-
-	public static class SoapUIListenerSupport<T extends Object>
-	{
-		private Set<T> listeners = new HashSet<T>();
-		@SuppressWarnings( "unused" )
-		private final Class<T> listenerClass;
-
-		public SoapUIListenerSupport( Class<T> listenerClass )
-		{
-			this.listenerClass = listenerClass;
-			listeners.addAll( SoapUI.getListenerRegistry().getListeners( listenerClass ) );
-		}
-
-		public void add( T listener )
-		{
-			listeners.add( listener );
-		}
-
-		public void remove( T listener )
-		{
-			listeners.remove( listener );
-		}
-
-		public Collection<T> get()
-		{
-			return listeners;
-		}
-	}
 
 	public MessageExchangeModelItem getRequestModelItem()
 	{

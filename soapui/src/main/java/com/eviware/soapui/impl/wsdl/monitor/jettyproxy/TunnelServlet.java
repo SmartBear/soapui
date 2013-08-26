@@ -13,11 +13,13 @@
 package com.eviware.soapui.impl.wsdl.monitor.jettyproxy;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.actions.monitor.SoapMonitorAction.LaunchForm;
 import com.eviware.soapui.impl.wsdl.actions.monitor.SoapMonitorAction.SecurityTabForm;
 import com.eviware.soapui.impl.wsdl.monitor.CaptureInputStream;
 import com.eviware.soapui.impl.wsdl.monitor.JProxyServletWsdlMonitorMessageExchange;
 import com.eviware.soapui.impl.wsdl.monitor.SoapMonitor;
+import com.eviware.soapui.impl.wsdl.monitor.SoapMonitorListenerCallBack;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedGetMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPostMethod;
@@ -53,9 +55,9 @@ public class TunnelServlet extends ProxyServlet
 	private int sslPort = 443;
 	private String prot = "https://";
 
-	public TunnelServlet( SoapMonitor soapMonitor, String sslEndpoint )
+	public TunnelServlet( WsdlProject project, String sslEndpoint, SoapMonitorListenerCallBack listenerCallBack )
 	{
-		super( soapMonitor );
+		super( project, listenerCallBack );
 
 		if( !sslEndpoint.startsWith( "https" ) )
 		{
@@ -84,7 +86,7 @@ public class TunnelServlet extends ProxyServlet
 
 	public void service( ServletRequest request, ServletResponse response ) throws ServletException, IOException
 	{
-		monitor.fireOnRequest( request, response );
+		listenerCallBack.fireOnRequest( project, request, response );
 		if( response.isCommitted() )
 			return;
 
@@ -194,7 +196,7 @@ public class TunnelServlet extends ProxyServlet
 			}
 		}
 
-		monitor.fireBeforeProxy( request, response, postMethod );
+		listenerCallBack.fireBeforeProxy( project, request, response, postMethod );
 
 		if( settings.getBoolean( LaunchForm.SSLTUNNEL_REUSESTATE ) )
 		{
@@ -215,7 +217,7 @@ public class TunnelServlet extends ProxyServlet
 		capturedData.setRawResponseData( getResponseToBytes( response.toString(), postMethod,
 				capturedData.getRawResponseBody() ) );
 
-		monitor.fireAfterProxy( request, response, postMethod, capturedData );
+		listenerCallBack.fireAfterProxy( project, request, response, postMethod, capturedData );
 
 		StringToStringsMap responseHeaders = capturedData.getResponseHeaders();
 		// copy headers to response
@@ -231,7 +233,7 @@ public class TunnelServlet extends ProxyServlet
 
 		synchronized( this )
 		{
-			monitor.addMessageExchange( capturedData );
+			listenerCallBack.fireAddMessageExchange( capturedData );
 		}
 
 		capturedData = null;
