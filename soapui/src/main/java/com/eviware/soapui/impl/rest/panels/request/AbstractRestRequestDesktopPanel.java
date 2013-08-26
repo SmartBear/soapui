@@ -46,8 +46,8 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 		AbstractHttpXmlRequestDesktopPanel<T, T2>
 {
 	private boolean updatingRequest;
-	private TextPanelWithBottomLabel resourcePanel;
-	private TextPanelWithBottomLabel queryPanel;
+	private TextPanelWithTopLabel resourcePanel;
+	private TextPanelWithTopLabel queryPanel;
 	private JUndoableTextField pathTextField;
 	private JComboBox acceptCombo;
 	private JLabel pathLabel;
@@ -139,7 +139,6 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 			JComponent baseToolBar = UISupport.createToolbar();
 			baseToolBar.setPreferredSize( new Dimension( 600, 45 ) );
 
-
 			JComponent submitButton = super.getSubmitButton();
 
 			JPanel methodPanel = new JPanel( new BorderLayout() );
@@ -148,8 +147,8 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 			methodComboBox.setSelectedItem( getRequest().getMethod() );
 
 			JLabel methodLabel = new JLabel( "Method" );
-			methodPanel.add( methodComboBox, BorderLayout.NORTH );
-			methodPanel.add( methodLabel, BorderLayout.SOUTH );
+			methodPanel.add( methodLabel, BorderLayout.NORTH );
+			methodPanel.add( methodComboBox, BorderLayout.SOUTH );
 
 			JPanel endpointPanel = new JPanel( new BorderLayout() );
 			endpointPanel.setMinimumSize( new Dimension( 75, 45 ) );
@@ -159,24 +158,28 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 
 			JLabel endPointLabel = new JLabel( "Endpoint" );
 
-			endpointPanel.add( endpointCombo, BorderLayout.NORTH );
-			endpointPanel.add( endPointLabel, BorderLayout.SOUTH );
+			endpointPanel.add( endPointLabel, BorderLayout.NORTH );
+			endpointPanel.add( endpointCombo, BorderLayout.SOUTH );
 
 
 			String path = getRequest().getResource().getPath();
-			resourcePanel = new TextPanelWithBottomLabel( "Resource", path );
+			resourcePanel = new TextPanelWithTopLabel( "Resource", path );
 			//TODO: SOAP-385 add document listener and filter to the text filed to synch
 			resourcePanel.addPropertyChangeListener( this );
 
 			String query = RestUtils.getQueryParamsString( getRequest().getParams(), getRequest() );
-			queryPanel = new TextPanelWithBottomLabel( "Query", query );
+			queryPanel = new TextPanelWithTopLabel( "Query", query );
 			//TODO: SOAP-385 add document listener and filter to the text filed to synch
 			queryPanel.addPropertyChangeListener( this );
 
+
 			baseToolBar.add( submitButton );
 			baseToolBar.add( methodPanel );
+			baseToolBar.add( Box.createHorizontalStrut(4) );
 			baseToolBar.add( endpointPanel );
+			baseToolBar.add( Box.createHorizontalStrut(4) );
 			baseToolBar.add( resourcePanel );
+			baseToolBar.add( Box.createHorizontalStrut(4) );
 			baseToolBar.add( queryPanel );
 
 
@@ -416,18 +419,18 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 	}
 
 
-	private class TextPanelWithBottomLabel extends JPanel
+	private class TextPanelWithTopLabel extends JPanel
 	{
 		JLabel textLabel;
 		JTextField textField;
 
-		public TextPanelWithBottomLabel( String label, String text )
+		public TextPanelWithTopLabel( String label, String text )
 		{
 			textLabel = new JLabel( label );
 			textField = new JTextField( text );
 			super.setLayout( new BorderLayout() );
-			super.add( textField, BorderLayout.NORTH );
-			super.add( textLabel, BorderLayout.SOUTH );
+			super.add( textLabel, BorderLayout.NORTH );
+			super.add( textField, BorderLayout.SOUTH );
 		}
 
 		public String getText()
