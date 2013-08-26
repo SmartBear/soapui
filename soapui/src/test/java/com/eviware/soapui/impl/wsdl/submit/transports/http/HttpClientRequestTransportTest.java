@@ -21,8 +21,9 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -52,8 +53,8 @@ public class HttpClientRequestTransportTest
 		SubmitContext submitContext = new StubbedSubmitContext( request );
 
 		httpTransport.sendRequest( submitContext, request );
-		assertNotNull( methodExecuted );
-		assertNotNull(contextUsed);
+		assertThat( methodExecuted, is(notNullValue()) );
+		assertThat( contextUsed, is( notNullValue() ) );
 	}
 
 	@Test
@@ -61,19 +62,18 @@ public class HttpClientRequestTransportTest
 	{
 		StringToStringsMap headers = new StringToStringsMap();
 		String headerValue = "The value";
-		headers.add("Header-for-${=request.name}", headerValue );
+		headers.add("Header-for-${request}", headerValue );
 		AbstractHttpRequest request = prepareRequestWithHeaders( headers );
-		String requestName = "Fin-fin request";
-		request.setName(requestName);
 		SubmitContext submitContext = new StubbedSubmitContext( request );
+		String requestName = "Fin-fin request";
+		submitContext.setProperty( "request", requestName );
 
 		httpTransport.sendRequest( submitContext, request );
-		//TODO: find out what it takes to get property expansion to work
-		String expectedHeaderName = "Header-for-" + ""; //requestName;
+		String expectedHeaderName = "Header-for-" + requestName;
 		Header[] modifiedHeaders = methodExecuted.getHeaders( expectedHeaderName );
-		assertEquals(1, modifiedHeaders.length);
-		assertEquals(expectedHeaderName, modifiedHeaders[0].getName());
-		assertEquals(headerValue, modifiedHeaders[0].getValue());
+		assertThat( modifiedHeaders.length, is( 1 ) );
+		assertThat( modifiedHeaders[0].getName(), is( expectedHeaderName ) );
+		assertThat( modifiedHeaders[0].getValue(), is( headerValue ) );
 	}
 
 	private AbstractHttpRequest prepareRequestWithHeaders( StringToStringsMap headers )
