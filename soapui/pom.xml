@@ -152,6 +152,7 @@
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-core</artifactId>
             <version>1.1</version>
+            <scope>test</scope>
         </dependency>
 
         <!-- TODO We are using 1.0.8 because of issue with results not
