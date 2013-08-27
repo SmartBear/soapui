@@ -239,17 +239,6 @@ public class TunnelServlet extends ProxyServlet
 		capturedData = null;
 	}
 
-	protected void setProtocolversion( ExtendedHttpMethod postMethod, String protocolVersion )
-	{
-		if( protocolVersion.equals( HttpVersion.HTTP_1_1.toString() ) )
-		{
-			postMethod.getParams().setParameter( CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1 );
-		}
-		else if(protocolVersion.equals( HttpVersion.HTTP_1_0.toString() ) )
-		{
-			postMethod.getParams().setParameter( CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_0 );
-		}
-	}
 
 	private byte[] getResponseToBytes( String footer, ExtendedHttpMethod postMethod, byte[] res )
 	{

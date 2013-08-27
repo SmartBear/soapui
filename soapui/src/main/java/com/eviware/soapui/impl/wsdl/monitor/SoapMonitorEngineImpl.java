@@ -13,6 +13,7 @@
 package com.eviware.soapui.impl.wsdl.monitor;
 
 import com.eviware.soapui.impl.wsdl.WsdlProject;
+import com.eviware.soapui.support.StringUtils;
 import org.mortbay.jetty.bio.SocketConnector;
 import org.mortbay.jetty.security.SslSocketConnector;
 import org.mortbay.jetty.servlet.Context;
@@ -54,7 +55,7 @@ public class SoapMonitorEngineImpl implements SoapMonitorEngine
 		server.setThreadPool( new SoapUIJettyThreadPool() );
 		Context context = new Context( server, ROOT, 0 );
 
-		if( sslEndpoint != null )
+		if( !StringUtils.isNullOrEmpty(  sslEndpoint ))
 		{
 			if( sslEndpoint.startsWith( HTTPS ) )
 			{

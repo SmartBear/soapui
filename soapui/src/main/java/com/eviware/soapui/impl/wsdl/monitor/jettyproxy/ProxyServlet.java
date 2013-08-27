@@ -33,8 +33,10 @@ import javax.servlet.http.HttpServletResponse;
 import com.eviware.soapui.impl.wsdl.monitor.SoapMonitorListenerCallBack;
 import org.apache.http.Header;
 import org.apache.http.HttpEntityEnclosingRequest;
+import org.apache.http.HttpVersion;
 import org.apache.http.client.params.ClientPNames;
 import org.apache.http.entity.ByteArrayEntity;
+import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.mortbay.util.IO;
@@ -227,6 +229,7 @@ public class ProxyServlet implements Servlet
 		}
 
 		method.getParams().setParameter( ClientPNames.HANDLE_REDIRECTS, false );
+		setProtocolversion( method, request.getProtocol() );
 		listenerCallBack.fireBeforeProxy( project, request, response, method );
 
 		if( settings.getBoolean( LaunchForm.SSLTUNNEL_REUSESTATE ) )
@@ -361,6 +364,18 @@ public class ProxyServlet implements Servlet
 		}
 
 		return out.toByteArray();
+	}
+
+	protected void setProtocolversion( ExtendedHttpMethod postMethod, String protocolVersion )
+	{
+		if( protocolVersion.equals( HttpVersion.HTTP_1_1.toString() ) )
+		{
+			postMethod.getParams().setParameter( CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1 );
+		}
+		else if(protocolVersion.equals( HttpVersion.HTTP_1_0.toString() ) )
+		{
+			postMethod.getParams().setParameter( CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_0 );
+		}
 	}
 
 }
