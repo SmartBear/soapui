@@ -185,20 +185,15 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 			// custom http headers last so they can be overridden
 			StringToStringsMap headers = httpRequest.getRequestHeaders();
 
-			// first remove so we don't get any unwanted duplicates
-			for( String header : headers.keySet() )
+			// clear headers specified in GUI, and re-add them, with property expansion
+			for( String headerName : headers.keySet() )
 			{
-				httpMethod.removeHeaders( header );
-			}
-
-			// now add
-			for( String header : headers.keySet() )
-			{
-				for( String headerValue : headers.get( header ) )
+				String expandedHeaderName = PropertyExpander.expandProperties( submitContext, headerName );
+				httpMethod.removeHeaders( expandedHeaderName );
+				for( String headerValue : headers.get( headerName ) )
 				{
-					String headerName = PropertyExpander.expandProperties( submitContext, header );
 					headerValue = PropertyExpander.expandProperties( submitContext, headerValue );
-					httpMethod.addHeader( headerName, headerValue );
+					httpMethod.addHeader( expandedHeaderName, headerValue );
 				}
 			}
 
