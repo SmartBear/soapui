@@ -33,12 +33,11 @@ public class AttachmentTestCase
 	public void shouldHaveAttachments() throws Exception
 	{
 
-        //TODO Hardcoded madness!
-		String wsdlUrl = new File( "src/test/resources/attachment-test.wsdl" ).toURI().toURL().toString();
+		String wsdlUrl = AttachmentTestCase.class.getResource( "/attachment-test.wsdl" ).toString();
 		WsdlProject project = new WsdlProject();
 		WsdlInterface iface = WsdlInterfaceFactory.importWsdl( project, wsdlUrl, false )[0];
 
-		WsdlOperation operation = ( WsdlOperation )iface.getOperationByName( "SendClaim" );
+		WsdlOperation operation = iface.getOperationByName( "SendClaim" );
 		WsdlRequest request = operation.addNewRequest( "Test" );
 
 		request.setRequestContent( operation.createRequest( true ) );

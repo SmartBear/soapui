@@ -35,17 +35,17 @@ public class WsdlRequestStepTestCase
 	}
 
 	@Test
-	public void testAssert() throws Exception
+	public void executesAndReturnsResult() throws Exception
 	{
-		WsdlProject project = new WsdlProject( "src" + File.separatorChar + "test" + File.separatorChar
-                + "resources" + File.separatorChar + "sample-soapui-project.xml" );
+		File sampleProjectFile = new File( WsdlRequestStepTestCase.class.getResource( "/sample-soapui-project.xml" ).toURI() );
+		WsdlProject project = new WsdlProject( sampleProjectFile.getAbsolutePath()  );
 		TestSuite testSuite = project.getTestSuiteByName( "Test Suite" );
 		com.eviware.soapui.model.testsuite.TestCase testCase = testSuite.getTestCaseByName( "Test Conversions" );
 
 		WsdlTestRequestStep testStep = ( WsdlTestRequestStep )testCase.getTestStepByName( "SEK to USD Test" );
 
-		MockTestRunner testRunner = new MockTestRunner( ( WsdlTestCase )testStep.getTestCase() );
-		MockTestRunContext testRunContext = new MockTestRunContext( testRunner, ( WsdlTestStep )testStep );
+		MockTestRunner testRunner = new MockTestRunner( testStep.getTestCase() );
+		MockTestRunContext testRunContext = new MockTestRunContext( testRunner, testStep );
 
 		TestStepResult result = testStep.run( testRunner, testRunContext );
 
