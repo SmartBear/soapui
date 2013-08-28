@@ -59,6 +59,7 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 
+import com.eviware.soapui.impl.actions.NewGenericProjectAction;
 import com.google.common.base.Objects;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -1562,12 +1563,12 @@ public class SoapUI
 		public NewWsdlProjectActionDelegate()
 		{
 			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/project.gif" ) );
-			putValue( Action.SHORT_DESCRIPTION, "Creates a new soapUI Project" );
+			putValue( Action.SHORT_DESCRIPTION, "Creates a new generic project" );
 		}
 
 		public void actionPerformed( ActionEvent e )
 		{
-			SoapUI.getActionRegistry().getAction( NewWsdlProjectAction.SOAPUI_ACTION_ID ).perform( workspace, null );
+			SoapUI.getActionRegistry().getAction( NewGenericProjectAction.SOAPUI_ACTION_ID ).perform( workspace, null );
 		}
 	}
 

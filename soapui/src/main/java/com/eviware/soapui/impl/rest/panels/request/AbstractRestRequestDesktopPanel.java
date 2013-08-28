@@ -1,27 +1,16 @@
 /*
- *  soapUI, copyright (C) 2004-2012 smartbear.com 
+ *  soapUI, copyright (C) 2004-2012 smartbear.com
  *
- *  soapUI is free software; you can redistribute it and/or modify it under the 
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
+ *  soapUI is free software; you can redistribute it and/or modify it under the
+ *  terms of version 2.1 of the GNU Lesser General Public License as published by
  *  the Free Software Foundation.
  *
- *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
 
 package com.eviware.soapui.impl.rest.panels.request;
-
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-
-import javax.swing.*;
-import javax.swing.text.Document;
 
 import com.eviware.soapui.impl.rest.RestMethod;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
@@ -43,12 +32,23 @@ import com.eviware.soapui.support.components.JUndoableTextField;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.propertyexpansion.PropertyExpansionPopupListener;
 
+import javax.swing.*;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.Document;
+import java.awt.*;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
+import static com.eviware.soapui.impl.rest.RestRequestInterface.RequestMethod;
+
 public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 extends RestRequestInterface> extends
 		AbstractHttpXmlRequestDesktopPanel<T, T2>
 {
 	private boolean updatingRequest;
-	private TextPanelWithBottomLabel resourcePanel;
-	private TextPanelWithBottomLabel queryPanel;
+	private TextPanelWithTopLabel resourcePanel;
+	private TextPanelWithTopLabel queryPanel;
 	private JUndoableTextField pathTextField;
 	private JComboBox acceptCombo;
 	private JLabel pathLabel;
@@ -56,6 +56,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 	private InternalTestPropertyListener testPropertyListener = new InternalTestPropertyListener();
 	private RestParamPropertyChangeListener restParamPropertyChangeListener = new RestParamPropertyChangeListener();
 	private JComboBox pathCombo;
+	private JComboBox<RequestMethod> methodComboBox;
 
 	public AbstractRestRequestDesktopPanel( T modelItem, T2 requestItem )
 	{
@@ -77,7 +78,6 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 	public void propertyChange( PropertyChangeEvent evt )
 	{
 		updateFullPathLabel();
-		updateResourcePathAndQuery();
 
 		if( evt.getPropertyName().equals( "accept" ) && !updatingRequest )
 		{
@@ -134,40 +134,55 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 	@Override
 	protected JComponent buildToolbar()
 	{
-		if( getRequest().getResource() != null)
+		if( getRequest().getResource() != null )
 		{
 			JComponent baseToolBar = UISupport.createToolbar();
 			baseToolBar.setPreferredSize( new Dimension( 600, 45 ) );
 
-
 			JComponent submitButton = super.getSubmitButton();
 
+			JPanel methodPanel = new JPanel( new BorderLayout() );
+			methodPanel.setMaximumSize( new Dimension( 75, 45 ) );
+			methodComboBox = new JComboBox<RequestMethod>( new RestRequestMethodModel( getRequest() ) );
+			methodComboBox.setSelectedItem( getRequest().getMethod() );
+
+			JLabel methodLabel = new JLabel( "Method" );
+			methodPanel.add( methodLabel, BorderLayout.NORTH );
+			methodPanel.add( methodComboBox, BorderLayout.SOUTH );
+
 			JPanel endpointPanel = new JPanel( new BorderLayout() );
-			endpointPanel.setMinimumSize( new Dimension( 150, 45 ) );
+			endpointPanel.setMinimumSize( new Dimension( 75, 45 ) );
 
 			JComponent endpointCombo = super.buildEndpointComponent();
 			super.setEndpointComponent( endpointCombo );
 
 			JLabel endPointLabel = new JLabel( "Endpoint" );
 
-			endpointPanel.add( endpointCombo, BorderLayout.NORTH );
-			endpointPanel.add( endPointLabel, BorderLayout.SOUTH );
+			endpointPanel.add( endPointLabel, BorderLayout.NORTH );
+			endpointPanel.add( endpointCombo, BorderLayout.SOUTH );
 
 
 			String path = getRequest().getResource().getPath();
-			resourcePanel = new TextPanelWithBottomLabel( "Resource", path );
-			//TODO: SOAP-385 add document listener and filter to the text filed to synch
-			resourcePanel.addPropertyChangeListener( this );
+			resourcePanel = new TextPanelWithTopLabel( "Resource", path, new DocumentListenerAdapter()
+			{
+				@Override
+				public void update( Document document )
+				{
+					synchResourcePanel();
+				}
+			} );
 
 			String query = RestUtils.getQueryParamsString( getRequest().getParams(), getRequest() );
-			queryPanel = new TextPanelWithBottomLabel( "Query", query );
-			//TODO: SOAP-385 add document listener and filter to the text filed to synch
-			queryPanel.addPropertyChangeListener( this );
+			queryPanel = new TextPanelWithTopLabel( "Query", query, false );
 
 			baseToolBar.add( submitButton );
+			baseToolBar.add( methodPanel );
+			baseToolBar.add( Box.createHorizontalStrut(4) );
 			baseToolBar.add( endpointPanel );
+			baseToolBar.add( Box.createHorizontalStrut(4) );
 			baseToolBar.add( resourcePanel );
-			baseToolBar.add( queryPanel);
+			baseToolBar.add( Box.createHorizontalStrut(4) );
+			baseToolBar.add( queryPanel );
 
 
 			return baseToolBar;
@@ -259,10 +274,6 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 
 		getRequest().removeTestPropertyListener( testPropertyListener );
 
-		//TODO: SOAP-385 add document listener and filter to the text filed to synch
-		resourcePanel.removePropertyChangeListener( this );
-		queryPanel.removePropertyChangeListener( this );
-
 		for( TestProperty param : getRequest().getParams().getProperties().values() )
 		{
 			( ( RestParamProperty )param ).removePropertyChangeListener( restParamPropertyChangeListener );
@@ -311,30 +322,19 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 		}
 	}
 
-	private void updateResourcePathAndQuery()
+	private void synchResourcePanel()
 	{
-		if(resourcePanel != null && queryPanel != null)
+		if( resourcePanel != null )
 		{
 			updateResource();
-			updateQuery();
 		}
-
 	}
+
 
 	private void updateResource()
 	{
 		String path = resourcePanel.getText();
 		getRequest().getResource().setPath( path );
-
-	}
-
-	private void updateQuery()
-	{
-		String query = queryPanel.getText();
-		RestParamsPropertyHolder propertyHolder = getRequest().getResource().getParams();
-		if(! query.isEmpty() )
-			RestUtils.extractParamsFromQueryString( propertyHolder, query.substring( 1 )  );
-
 	}
 
 	private class RestParamPropertyChangeListener implements PropertyChangeListener
@@ -389,7 +389,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 	{
 		@Override
 		public Component getListCellRendererComponent( JList list, Object value, int index, boolean isSelected,
-				boolean cellHasFocus )
+																	  boolean cellHasFocus )
 		{
 			Component result = super.getListCellRendererComponent( list, value, index, isSelected, cellHasFocus );
 
@@ -406,18 +406,29 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 	}
 
 
-	private class TextPanelWithBottomLabel extends JPanel
+	private class TextPanelWithTopLabel extends JPanel
 	{
 		JLabel textLabel;
 		JTextField textField;
 
-		public TextPanelWithBottomLabel( String label, String text )
+		public TextPanelWithTopLabel( String label, String text, boolean isEditable )
 		{
 			textLabel = new JLabel( label );
 			textField = new JTextField( text );
-			super.setLayout( new BorderLayout(  ) );
-			super.add( textField, BorderLayout.NORTH );
-			super.add( textLabel, BorderLayout.SOUTH );
+			textField.setEditable( isEditable );
+			super.setLayout( new BorderLayout() );
+			super.add( textLabel, BorderLayout.NORTH );
+			super.add( textField, BorderLayout.SOUTH );
+		}
+
+		public TextPanelWithTopLabel( String label, String text, DocumentListener documentListener )
+		{
+			textLabel = new JLabel( label );
+			textField = new JTextField( text );
+			textField.getDocument().addDocumentListener( documentListener );
+			super.setLayout( new BorderLayout() );
+			super.add( textLabel, BorderLayout.NORTH );
+			super.add( textField, BorderLayout.SOUTH );
 		}
 
 		public String getText()
