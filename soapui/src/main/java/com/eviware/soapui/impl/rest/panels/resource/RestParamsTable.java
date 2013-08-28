@@ -34,6 +34,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.xml.namespace.QName;
 
+import com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase;
 import org.apache.xmlbeans.SchemaType;
 import org.apache.xmlbeans.XmlBeans;
 
@@ -67,9 +68,10 @@ public class RestParamsTable extends JPanel
 	private StringListFormComponent optionsFormComponent;
 	private SimpleBindingForm detailsForm;
 
-	public RestParamsTable( RestParamsPropertyHolder params, boolean showInspector )
+	public RestParamsTable( RestParamsPropertyHolder params, boolean showInspector,
+									NewRestResourceActionBase.ParamLocation location )
 	{
-		this( params, showInspector, new RestParamsTableModel( params ) );
+		this( params, showInspector, new RestParamsTableModel( params, location ) );
 	}
 	public RestParamsTable( RestParamsPropertyHolder params, boolean showInspector, RestParamsTableModel model)
 	{
@@ -84,9 +86,10 @@ public class RestParamsTable extends JPanel
 		paramsTable = new JTable( paramsTableModel );
 		paramsTable.setRowHeight( 19 );
 		paramsTable.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
-		paramsTable.setDefaultEditor( ParameterStyle.class, new DefaultCellEditor( new JComboBox( new Object[] {
-				ParameterStyle.QUERY, ParameterStyle.TEMPLATE, ParameterStyle.HEADER, ParameterStyle.MATRIX,
-				ParameterStyle.PLAIN } ) ) );
+		paramsTable.setDefaultEditor( ParameterStyle.class, new DefaultCellEditor(
+				new JComboBox( paramsTableModel.getParameterStylesForEdit() ) ) );
+		paramsTable.setDefaultEditor( NewRestResourceActionBase.ParamLocation.class, new DefaultCellEditor(
+				new JComboBox( paramsTableModel.getParameterLevels() ) ) );
 
 		paramsTable.getSelectionModel().addListSelectionListener( new ListSelectionListener()
 		{
@@ -109,23 +112,12 @@ public class RestParamsTable extends JPanel
 				}
 				else
 				{
-					// inspectorPanel.deactivate();
 					if( paramDetailsModel != null )
 					{
 						detailsForm.setEnabled( false );
 						paramDetailsModel.setBean( null );
 					}
 				}
-
-				/*
-				 * if( detailsInspector != null ) { detailsInspector.setEnabled(
-				 * selectedRow != -1 );
-				 * 
-				 * if( selectedRow != -1 ) { RestParamProperty selectedParameter =
-				 * getSelectedParameter(); paramDetailsModel.setBean(
-				 * selectedParameter ); } else { inspectorPanel.deactivate();
-				 * paramDetailsModel.setBean( null ); } }
-				 */
 			}
 		} );
 
@@ -225,6 +217,17 @@ public class RestParamsTable extends JPanel
 	{
 	}
 
+	public void extractParams( RestParamsPropertyHolder params, NewRestResourceActionBase.ParamLocation location )
+	{
+		for( int i = 0; i < paramsTable.getRowCount(); i++ )
+		{
+			RestParamProperty prop = paramsTableModel.getParameterAt( i );
+			if( paramsTableModel.getParamLocationAt( i ) == location )
+			{
+				params.addParameter( prop );
+			}
+		}
+	}
 	private class AddParamAction extends AbstractAction
 	{
 		public AddParamAction()
@@ -309,7 +312,8 @@ public class RestParamsTable extends JPanel
 			if( UISupport.confirm( "Remove parameter [" + propertyName + "]?", "Remove Parameter" ) )
 			{
 				paramsTable.clearSelection();
-				params.removeProperty( propertyName );
+				paramsTableModel.removeProperty( propertyName );
+				//params.removeProperty( propertyName );
 				clearParamsAction.setEnabled( params.getPropertyCount() > 0 );
 			}
 		}

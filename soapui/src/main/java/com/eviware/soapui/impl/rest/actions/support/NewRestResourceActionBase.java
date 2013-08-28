@@ -19,9 +19,6 @@ import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.actions.resource.NewRestMethodAction;
 import com.eviware.soapui.impl.rest.panels.resource.RestParamsTable;
-import com.eviware.soapui.impl.rest.panels.resource.RestParamsTableModel;
-import com.eviware.soapui.impl.rest.support.RestParamProperty;
-import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.rest.support.RestUtils;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
@@ -41,8 +38,6 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Actions for importing an existing soapUI project file into the current
@@ -55,7 +50,7 @@ public abstract class NewRestResourceActionBase<T extends ModelItem> extends Abs
 {
 	private XFormDialog dialog;
 	private XmlBeansRestParamsTestPropertyHolder params;
-	private InternalRestParamsTable paramsTable;
+	private RestParamsTable paramsTable;
 	public static final MessageSupport messages = MessageSupport.getMessages( NewRestResourceActionBase.class );
 
 	public NewRestResourceActionBase( String title, String description )
@@ -90,7 +85,7 @@ public abstract class NewRestResourceActionBase<T extends ModelItem> extends Abs
 				paramsTable.refresh();
 		}
 
-		paramsTable = new InternalRestParamsTable( params, ParamLocation.RESOURCE );
+		paramsTable = new RestParamsTable( params, false, ParamLocation.RESOURCE );
 		dialog.getFormField( Form.PARAMSTABLE ).setProperty( "component", paramsTable );
 
 		if( dialog.show() )
@@ -145,102 +140,9 @@ public abstract class NewRestResourceActionBase<T extends ModelItem> extends Abs
 
 	public enum ParamLocation
 	{
-		RESOURCE, METHOD
+		RESOURCE, METHOD, REQUEST
 	}
 
-	public static class InternalRestParamsTable extends RestParamsTable
-	{
-
-		public InternalRestParamsTable( RestParamsPropertyHolder params, ParamLocation defaultLocation )
-		{
-			this( params, false, new InternalRestParamsTableModel( params, defaultLocation ) );
-		}
-
-		public InternalRestParamsTable( RestParamsPropertyHolder params, boolean showInspector,
-												  InternalRestParamsTableModel model )
-		{
-			super( params, showInspector, model );
-		}
-
-		public void extractParams( RestParamsPropertyHolder params, ParamLocation location )
-		{
-			for( int i = 0; i < paramsTable.getRowCount(); i++ )
-			{
-				RestParamProperty prop = paramsTableModel.getParameterAt( i );
-				if( ( ( InternalRestParamsTableModel )paramsTableModel ).getParamLocationAt( i ) == location )
-				{
-					params.addParameter( prop );
-				}
-			}
-		}
-
-		protected void init( RestParamsPropertyHolder params, boolean showInspector )
-		{
-			super.init( params, showInspector );
-			paramsTable.setDefaultEditor( ParamLocation.class, new DefaultCellEditor( new JComboBox( new Object[] {
-					ParamLocation.RESOURCE, ParamLocation.METHOD } ) ) );
-		}
-
-		public static class InternalRestParamsTableModel extends RestParamsTableModel
-		{
-			private Map<RestParamProperty, ParamLocation> locations = new HashMap<RestParamProperty, ParamLocation>();
-			private int columnCount;
-			private ParamLocation defaultLocation;
-
-			public InternalRestParamsTableModel( RestParamsPropertyHolder params, ParamLocation defaultLocation )
-			{
-				super( params );
-				this.defaultLocation = defaultLocation;
-				columnCount = super.getColumnCount();
-			}
-
-			public int getColumnCount()
-			{
-				return columnCount + 1;
-			}
-
-			public ParamLocation getParamLocationAt( int rowIndex )
-			{
-				return ( ParamLocation )getValueAt( rowIndex, columnCount );
-			}
-
-			public Object getValueAt( int rowIndex, int columnIndex )
-			{
-				if( columnIndex != columnCount )
-					return super.getValueAt( rowIndex, columnIndex );
-				RestParamProperty name = params.getPropertyAt( rowIndex );
-				if( !locations.containsKey( name ) )
-					locations.put( name, defaultLocation );
-				return locations.get( name );
-			}
-
-			@Override
-			public String getColumnName( int column )
-			{
-				return column != columnCount ? super.getColumnName( column ) : "Location";
-			}
-
-			@Override
-			public Class<?> getColumnClass( int columnIndex )
-			{
-				return columnIndex != columnCount ? super.getColumnClass( columnIndex ) : ParamLocation.class;
-			}
-
-			@Override
-			public void setValueAt( Object value, int rowIndex, int columnIndex )
-			{
-				if( columnIndex != columnCount )
-					super.setValueAt( value, rowIndex, columnIndex );
-				else
-				{
-					RestParamProperty name = params.getPropertyAt( rowIndex );
-					locations.put( name, ( ParamLocation )value );
-				}
-			}
-
-		}
-
-	}
 
 	private class ExtractParamsAction extends AbstractAction
 	{

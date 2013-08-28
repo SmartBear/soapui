@@ -12,20 +12,9 @@
 
 package com.eviware.soapui.impl.rest.panels.request.views.content;
 
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.beans.PropertyChangeEvent;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.JButton;
-
-import org.apache.xmlbeans.SchemaType;
-
 import com.eviware.soapui.impl.rest.RestRepresentation;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
-import com.eviware.soapui.impl.rest.panels.resource.InstanceRestParamsTable;
+import com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase;
 import com.eviware.soapui.impl.rest.panels.resource.RestParamsTable;
 import com.eviware.soapui.impl.rest.support.RestUtils;
 import com.eviware.soapui.impl.support.http.HttpRequestContentView;
@@ -35,12 +24,17 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.types.StringList;
 import com.eviware.soapui.support.types.TupleList;
+import org.apache.xmlbeans.SchemaType;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeEvent;
 
 public class RestRequestContentView extends HttpRequestContentView
 {
 	private RestRequestInterface restRequest;
 	private JButton recreateButton;
-	private RestParamsTable paramsTable;
 
 	@SuppressWarnings( "unchecked" )
 	public RestRequestContentView( HttpRequestMessageEditor restRequestMessageEditor, RestRequestInterface restRequest )
@@ -49,16 +43,10 @@ public class RestRequestContentView extends HttpRequestContentView
 		this.restRequest = restRequest;
 	}
 
+
 	protected RestParamsTable buildParamsTable()
 	{
-		paramsTable = new InstanceRestParamsTable( restRequest.getParams() )
-		{
-			protected void insertAdditionalButtons( JXToolBar toolbar )
-			{
-				toolbar.add( UISupport.createToolbarButton( new UpdateRestParamsAction() ) );
-			}
-		};
-		return paramsTable;
+		return new RestParamsTable( restRequest.getParams(), false, NewRestResourceActionBase.ParamLocation.REQUEST );
 	}
 
 	public RestParamsTable getParamsTable()

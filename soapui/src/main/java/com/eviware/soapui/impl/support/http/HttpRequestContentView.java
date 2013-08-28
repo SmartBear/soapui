@@ -12,6 +12,7 @@
 
 package com.eviware.soapui.impl.support.http;
 
+import com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase;
 import com.eviware.soapui.impl.rest.panels.resource.RestParamsTable;
 import com.eviware.soapui.impl.rest.panels.resource.RestParamsTableModel;
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
@@ -45,7 +46,7 @@ public class HttpRequestContentView extends AbstractXmlEditorView<HttpRequestDoc
 	private JComponent panel;
 	private JComboBox mediaTypeCombo;
 	private JSplitPane split;
-	private RestParamsTable paramsTable;
+	protected RestParamsTable paramsTable;
 	private JCheckBox postQueryCheckBox;
 
 	public HttpRequestContentView( HttpRequestMessageEditor httpRequestMessageEditor, HttpRequestInterface<?> httpRequest )
@@ -85,7 +86,8 @@ public class HttpRequestContentView extends AbstractXmlEditorView<HttpRequestDoc
 
 	protected RestParamsTable buildParamsTable()
 	{
-		RestParamsTableModel restParamsTableModel = new RestParamsTableModel(  httpRequest.getParams() )
+		RestParamsTableModel restParamsTableModel = new RestParamsTableModel(  httpRequest.getParams(),
+				NewRestResourceActionBase.ParamLocation.REQUEST )
 		{
 			@Override
 			public String getColumnName( int column )

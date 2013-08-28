@@ -17,8 +17,9 @@ import com.eviware.soapui.impl.rest.RestMethod;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.RestResource;
-import com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase.InternalRestParamsTable;
-import com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase.ParamLocation;
+import com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase;
+import com.eviware.soapui.impl.rest.panels.resource.RestParamsTable;
+import com.eviware.soapui.impl.rest.panels.resource.RestParamsTableModel;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.support.MessageSupport;
@@ -30,7 +31,6 @@ import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.support.AForm;
 
-import static com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase.InternalRestParamsTable.InternalRestParamsTableModel;
 
 /**
  * Actions for importing an existing soapUI project file into the current
@@ -67,14 +67,8 @@ public class NewRestMethodAction extends AbstractSoapUIAction<RestResource>
 			params = new XmlBeansRestParamsTestPropertyHolder( null, RestParametersConfig.Factory.newInstance() );
 
 
-		InternalRestParamsTableModel model = new InternalRestParamsTableModel( params, ParamLocation.METHOD )
-		{
-			public int getColumnCount()
-			{
-				return super.getColumnCount() - 1;
-			}
-		};
-		InternalRestParamsTable paramsTable = new InternalRestParamsTable( params, false, model );
+		RestParamsTableModel model = new RestParamsTableModel( params, NewRestResourceActionBase.ParamLocation.METHOD  );
+		RestParamsTable paramsTable = new RestParamsTable( params, false, model );
 
 		dialog.getFormField( Form.PARAMSTABLE ).setProperty( "component", paramsTable );
 
@@ -82,7 +76,7 @@ public class NewRestMethodAction extends AbstractSoapUIAction<RestResource>
 		{
 			RestMethod method = resource.addNewMethod( dialog.getValue( Form.RESOURCENAME ) );
 			method.setMethod( RestRequestInterface.RequestMethod.valueOf( dialog.getValue( Form.METHOD ) ) );
-			paramsTable.extractParams( method.getParams(), ParamLocation.METHOD );
+			paramsTable.extractParams( method.getParams(), NewRestResourceActionBase.ParamLocation.METHOD );
 
 			UISupport.select( method );
 

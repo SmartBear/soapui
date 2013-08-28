@@ -25,6 +25,7 @@ import com.eviware.soapui.impl.rest.RestMethod;
 import com.eviware.soapui.impl.rest.RestRepresentation;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.actions.method.NewRestRequestAction;
+import com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase;
 import com.eviware.soapui.impl.rest.panels.resource.RestParamsTable;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
@@ -53,7 +54,11 @@ public class RestMethodDesktopPanel extends ModelItemDesktopPanel<RestMethod>
 	{
 		JTabbedPane tabs = new JTabbedPane();
 
-		paramsTable = new RestParamsTable( getModelItem().getParams(), true );
+		paramsTable = new RestParamsTable( getModelItem().getParams(), true,
+				NewRestResourceActionBase.ParamLocation.METHOD );
+
+		paramsTable.extractParams( getModelItem().getResource().getParams(),
+				NewRestResourceActionBase.ParamLocation.METHOD );
 		tabs.addTab( "Method Parameters", paramsTable );
 
 		restRepresentationsTable = new RestRepresentationsTable( getModelItem(), new RestRepresentation.Type[] {

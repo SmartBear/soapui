@@ -23,6 +23,7 @@ import javax.swing.text.Document;
 
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.actions.resource.NewRestMethodAction;
+import com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase;
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder.ParameterStyle;
 import com.eviware.soapui.impl.rest.support.RestUtils;
@@ -53,7 +54,8 @@ public class RestResourceDesktopPanel extends ModelItemDesktopPanel<RestResource
 	private Component buildContent()
 	{
 		JTabbedPane tabs = new JTabbedPane();
-		paramsTable = new RestParamsTable( getModelItem().getParams(), true );
+		paramsTable = new RestParamsTable( getModelItem().getParams(), true,
+				NewRestResourceActionBase.ParamLocation.RESOURCE );
 		tabs.addTab( "Resource Parameters", paramsTable );
 		return UISupport.createTabPanel( tabs, false );
 	}
