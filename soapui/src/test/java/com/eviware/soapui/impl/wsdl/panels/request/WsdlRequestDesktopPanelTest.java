@@ -4,21 +4,33 @@ import com.eviware.soapui.DefaultSoapUICore;
 import com.eviware.soapui.impl.settings.XmlBeansSettingsImpl;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
+import com.eviware.soapui.impl.wsdl.WsdlSubmit;
+import com.eviware.soapui.impl.wsdl.submit.RequestTransport;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.iface.Submit;
 import com.eviware.soapui.model.iface.SubmitContext;
+import com.eviware.soapui.model.iface.SubmitListener;
 import com.eviware.soapui.utils.ContainerWalker;
 import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import javax.swing.AbstractButton;
+
+import java.util.Arrays;
+
 import static com.eviware.soapui.utils.SwingMatchers.enabled;
 import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsAnything.anything;
 import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
 
 /**
  * Unit tests for WsdlRequestDesktopPanel, indirectly testing AbstractHttpRequestDesktopPanel as well.
@@ -26,6 +38,7 @@ import static org.mockito.Mockito.when;
 public class WsdlRequestDesktopPanelTest
 {
 
+	public static final String ENDPOINT_URL = "http://google.com/webservices";
 	private WsdlRequestDesktopPanel desktopPanel;
 	private WsdlRequest request;
 	private ContainerWalker containerWalker;
@@ -40,6 +53,7 @@ public class WsdlRequestDesktopPanelTest
 	public void setUp() throws Exception
 	{
 		request = mock( WsdlRequest.class );
+		when(request.getEndpoint()).thenReturn( ENDPOINT_URL );
 		WsdlProject stubbedProject = mock( WsdlProject.class );
 		when( stubbedProject.isEnvironmentMode() ).thenReturn( true );
 		when( request.getParent() ).thenReturn( stubbedProject );
@@ -56,9 +70,35 @@ public class WsdlRequestDesktopPanelTest
 	}
 
 	@Test
+	public void endpointComboBoxIsEditable() throws Exception
+	{
+		assertThat( containerWalker.findComboBoxWithValue( request ).isEditable(), is(false) );
+	}
+
+	@Test
 	public void returnsRequest() throws Exception
 	{
 		assertThat( desktopPanel.getRequest(), is( request ) );
+	}
+
+	@Test
+	public void submitsRequestWhenRunButtonIsClicked() throws Exception
+	{
+		RequestTransport anyTransport = mock( RequestTransport.class );
+		WsdlSubmit<WsdlRequest> submit = new WsdlSubmit<WsdlRequest>( request, new SubmitListener[0], anyTransport );
+		when(request.submit( isA(SubmitContext.class), eq(true) )).thenReturn( submit );
+
+		AbstractButton runButton = desktopPanel.getSubmitButton();
+		runButton.doClick();
+		verify(request).submit( isA( SubmitContext.class ), eq( true ) );
+	}
+
+	@Test
+	public void disablesSubmitButtonWhenEndpointIsEmpty() throws Exception
+	{
+		//containerWalker.findComboBoxWithValue( ENDPOINT_URL ).getModel().se
+
+		assertThat( desktopPanel.getSubmitButton(), is( not( enabled() ) ) );
 	}
 
 	@Test
@@ -67,9 +107,9 @@ public class WsdlRequestDesktopPanelTest
 		Submit submit = makeSubmitMockWithRequest();
 		desktopPanel.beforeSubmit( submit, mock( SubmitContext.class ) );
 
-		assertThat( desktopPanel.getSubmitButton(), not( is( enabled() ) ) );
-		assertThat( containerWalker.findButtonWithIcon( "create_empty_request.gif" ), not( is( enabled() ) ) );
-		assertThat( containerWalker.findButtonWithIcon( "clone_request.gif" ), not( is( enabled() ) ) );
+		assertThat( desktopPanel.getSubmitButton(), is( not( enabled() ) ) );
+		assertThat( containerWalker.findButtonWithIcon( "create_empty_request.gif" ), is( not( enabled() ) ) );
+		assertThat( containerWalker.findButtonWithIcon( "clone_request.gif" ), is( not( enabled() ) ) );
 	}
 
 	@Test
@@ -85,6 +125,8 @@ public class WsdlRequestDesktopPanelTest
 
 	}
 
+
+	/* Helpers */
 
 	private Submit makeSubmitMockWithRequest()
 	{
