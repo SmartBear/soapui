@@ -30,10 +30,13 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.eviware.soapui.impl.wsdl.monitor.SoapMonitorListenerCallBack;
 import org.apache.http.Header;
 import org.apache.http.HttpEntityEnclosingRequest;
+import org.apache.http.HttpVersion;
 import org.apache.http.client.params.ClientPNames;
 import org.apache.http.entity.ByteArrayEntity;
+import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.mortbay.util.IO;
@@ -61,11 +64,10 @@ public class ProxyServlet implements Servlet
 {
 	protected ServletConfig config;
 	protected ServletContext context;
-	protected SoapMonitor monitor;
 	protected WsdlProject project;
 	protected HttpContext httpState = new BasicHttpContext();
 	protected Settings settings;
-
+	protected final SoapMonitorListenerCallBack listenerCallBack;
 	static HashSet<String> dontProxyHeaders = new HashSet<String>();
 	{
 		dontProxyHeaders.add( "proxy-connection" );
@@ -80,10 +82,12 @@ public class ProxyServlet implements Servlet
 		dontProxyHeaders.add( "content-length" );
 	}
 
-	public ProxyServlet( SoapMonitor soapMonitor )
+
+
+	public ProxyServlet( final WsdlProject project, final SoapMonitorListenerCallBack listenerCallBack )
 	{
-		this.monitor = soapMonitor;
-		this.project = monitor.getProject();
+		this.listenerCallBack = listenerCallBack;
+		this.project = project;
 		settings = project.getSettings();
 	}
 
@@ -109,7 +113,7 @@ public class ProxyServlet implements Servlet
 
 	public void service( ServletRequest request, ServletResponse response ) throws ServletException, IOException
 	{
-		monitor.fireOnRequest( request, response );
+		listenerCallBack.fireOnRequest( project, request, response );
 		if( response.isCommitted() )
 			return;
 
@@ -225,7 +229,8 @@ public class ProxyServlet implements Servlet
 		}
 
 		method.getParams().setParameter( ClientPNames.HANDLE_REDIRECTS, false );
-		monitor.fireBeforeProxy( request, response, method );
+		setProtocolversion( method, request.getProtocol() );
+		listenerCallBack.fireBeforeProxy( project, request, response, method );
 
 		if( settings.getBoolean( LaunchForm.SSLTUNNEL_REUSESTATE ) )
 		{
@@ -252,7 +257,7 @@ public class ProxyServlet implements Servlet
 		capturedData.setResponseStatusLine( method.hasHttpResponse() ? method.getHttpResponse().getStatusLine()
 				.toString() : null );
 
-		monitor.fireAfterProxy( request, response, method, capturedData );
+		listenerCallBack.fireAfterProxy( project, request, response, method, capturedData );
 
 		( ( HttpServletResponse )response ).setStatus( method.hasHttpResponse() ? method.getHttpResponse()
 				.getStatusLine().getStatusCode() : null );
@@ -277,7 +282,7 @@ public class ProxyServlet implements Servlet
 		{
 			if( checkContentType( method ) )
 			{
-				monitor.addMessageExchange( capturedData );
+				listenerCallBack.fireAddMessageExchange( capturedData );
 			}
 		}
 	}
@@ -359,6 +364,18 @@ public class ProxyServlet implements Servlet
 		}
 
 		return out.toByteArray();
+	}
+
+	protected void setProtocolversion( ExtendedHttpMethod postMethod, String protocolVersion )
+	{
+		if( protocolVersion.equals( HttpVersion.HTTP_1_1.toString() ) )
+		{
+			postMethod.getParams().setParameter( CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1 );
+		}
+		else if(protocolVersion.equals( HttpVersion.HTTP_1_0.toString() ) )
+		{
+			postMethod.getParams().setParameter( CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_0 );
+		}
 	}
 
 }

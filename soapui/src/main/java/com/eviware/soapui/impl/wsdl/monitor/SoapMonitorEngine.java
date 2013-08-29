@@ -12,9 +12,11 @@
 
 package com.eviware.soapui.impl.wsdl.monitor;
 
+import com.eviware.soapui.impl.wsdl.WsdlProject;
+
 public interface SoapMonitorEngine
 {
-	void start( SoapMonitor soapMonitor, int localPort );
+	void start( WsdlProject project, int localPort, SoapMonitorListenerCallBack listenerCallBack );
 
 	void stop();
 
