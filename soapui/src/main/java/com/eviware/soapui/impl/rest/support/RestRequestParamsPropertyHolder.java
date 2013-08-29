@@ -544,7 +544,7 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 
 		public void setStyle( ParameterStyle style )
 		{
-			// overriddenProp.setStyle(style);
+			overriddenProp.setStyle(style);
 		}
 
 		public void setType( QName arg0 )

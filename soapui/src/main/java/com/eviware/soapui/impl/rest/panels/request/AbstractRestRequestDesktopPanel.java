@@ -16,7 +16,6 @@ import com.eviware.soapui.impl.rest.RestMethod;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
-import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.rest.support.RestUtils;
 import com.eviware.soapui.impl.support.panels.AbstractHttpXmlRequestDesktopPanel;
 import com.eviware.soapui.impl.wsdl.WsdlSubmitContext;
@@ -42,6 +41,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import static com.eviware.soapui.impl.rest.RestRequestInterface.RequestMethod;
+import static com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder.ParameterStyle;
+import static com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder.ParameterStyle.QUERY;
 
 public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 extends RestRequestInterface> extends
 		AbstractHttpXmlRequestDesktopPanel<T, T2>
@@ -168,7 +169,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 				@Override
 				public void update( Document document )
 				{
-					synchResourcePanel();
+					getRequest().getResource().setPath( resourcePanel.getText() );
 				}
 			} );
 
@@ -177,11 +178,11 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 
 			baseToolBar.add( submitButton );
 			baseToolBar.add( methodPanel );
-			baseToolBar.add( Box.createHorizontalStrut(4) );
+			baseToolBar.add( Box.createHorizontalStrut( 4 ) );
 			baseToolBar.add( endpointPanel );
-			baseToolBar.add( Box.createHorizontalStrut(4) );
+			baseToolBar.add( Box.createHorizontalStrut( 4 ) );
 			baseToolBar.add( resourcePanel );
-			baseToolBar.add( Box.createHorizontalStrut(4) );
+			baseToolBar.add( Box.createHorizontalStrut( 4 ) );
 			baseToolBar.add( queryPanel );
 
 
@@ -287,6 +288,16 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 		@Override
 		public void propertyValueChanged( String name, String oldValue, String newValue )
 		{
+			RestParamProperty property = getRequest().getParams().getProperty( name );
+			ParameterStyle style = property.getStyle();
+			if( style.equals( QUERY ) )
+			{
+				resetQueryPanelText();
+			}
+			else if( style.equals( ParameterStyle.TEMPLATE ) )
+			{
+				//resourcePanel.setText(  );
+			}
 			updateFullPathLabel();
 		}
 
@@ -311,6 +322,11 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 		}
 	}
 
+	private void resetQueryPanelText()
+	{
+		queryPanel.setText( RestUtils.getQueryParamsString( getRequest().getParams(), getRequest() ) );
+	}
+
 	private void updateFullPathLabel()
 	{
 		if( pathLabel != null && getRequest().getResource() != null )
@@ -322,26 +338,53 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 		}
 	}
 
-	private void synchResourcePanel()
-	{
-		if( resourcePanel != null )
-		{
-			updateResource();
-		}
-	}
-
-
-	private void updateResource()
-	{
-		String path = resourcePanel.getText();
-		getRequest().getResource().setPath( path );
-	}
 
 	private class RestParamPropertyChangeListener implements PropertyChangeListener
 	{
 		public void propertyChange( PropertyChangeEvent evt )
 		{
+			removeParamForStyle( (RestParamProperty)evt.getSource(), ( ParameterStyle )evt.getOldValue() );
+			addPropertyForStyle( (RestParamProperty)evt.getSource(), ( ParameterStyle ) evt.getNewValue() );
 			updateFullPathLabel();
+		}
+
+
+	}
+
+	private void removeParamForStyle( RestParamProperty property, ParameterStyle style )
+	{
+		switch( style )
+		{
+			case QUERY:
+				resetQueryPanelText();
+				break;
+			case TEMPLATE:
+				resourcePanel.setText( resourcePanel.getText().replaceAll( "\\{"+property.getName() +"\\}","" ) );
+				break;
+			case MATRIX:
+				resourcePanel.setText( resourcePanel.getText().replaceAll( ";"+property.getName() +"=" +
+						property.getValue(),"" ) );
+				break;
+			default:
+				break;
+		}
+	}
+
+	private void addPropertyForStyle( RestParamProperty property, ParameterStyle style )
+	{
+		switch( style )
+		{
+			case QUERY:
+				resetQueryPanelText();
+				break;
+			case TEMPLATE:
+				resourcePanel.setText( resourcePanel.getText() + "{"+property.getName() +"}" );
+				break;
+			case MATRIX:
+				resourcePanel.setText( resourcePanel.getText() + ";"+property.getName() +"=" + property.getValue() );
+				break;
+			default:
+				break;
 		}
 	}
 
