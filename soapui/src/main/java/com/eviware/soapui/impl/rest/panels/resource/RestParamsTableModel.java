@@ -20,13 +20,21 @@ import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder.ParameterStyle;
 import com.eviware.soapui.model.testsuite.TestPropertyListener;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase.ParamLocation;
+
 public class RestParamsTableModel extends AbstractTableModel implements TableModel, TestPropertyListener
 {
 	protected RestParamsPropertyHolder params;
+	private ParamLocation paramLocation;
+	private Map<RestParamProperty, ParamLocation> paramLocations = new HashMap<RestParamProperty, ParamLocation>();
 
-	public RestParamsTableModel( RestParamsPropertyHolder params )
+	public RestParamsTableModel( RestParamsPropertyHolder params, ParamLocation paramLocation )
 	{
 		this.params = params;
+		this.paramLocation = paramLocation;
 
 		params.addTestPropertyListener( this );
 	}
@@ -38,7 +46,7 @@ public class RestParamsTableModel extends AbstractTableModel implements TableMod
 
 	public int getColumnCount()
 	{
-		return 3;
+		return 4;
 	}
 
 	@Override
@@ -46,12 +54,14 @@ public class RestParamsTableModel extends AbstractTableModel implements TableMod
 	{
 		switch( column )
 		{
-		case 0 :
-			return "Name";
-		case 1 :
-			return "Default value";
-		case 2 :
-			return "Style";
+			case 0:
+				return "Name";
+			case 1:
+				return "Default value";
+			case 2:
+				return "Style";
+			case 3:
+				return "Level";
 		}
 
 		return null;
@@ -60,7 +70,18 @@ public class RestParamsTableModel extends AbstractTableModel implements TableMod
 	@Override
 	public Class<?> getColumnClass( int columnIndex )
 	{
-		return columnIndex < 2 ? String.class : ParameterStyle.class;
+		switch( columnIndex )
+		{
+			case 0:
+			case 1:
+				return String.class;
+			case 2:
+				return ParameterStyle.class;
+			case 3:
+				return ParamLocation.class;
+		}
+
+		return null;
 	}
 
 	@Override
@@ -74,20 +95,27 @@ public class RestParamsTableModel extends AbstractTableModel implements TableMod
 		return params.getPropertyCount();
 	}
 
+	public ParamLocation getParamLocationAt( int rowIndex )
+	{
+		return ( ParamLocation )getValueAt( rowIndex, 3 );
+	}
+
+
 	public Object getValueAt( int rowIndex, int columnIndex )
 	{
 		RestParamProperty prop = params.getPropertyAt( rowIndex );
 
 		switch( columnIndex )
 		{
-		case 0 :
-			return prop.getName();
-		case 1 :
-			return prop.getDefaultValue();
-			// case 1 : return StringUtils.hasContent(prop.getValue()) ?
-			// prop.getValue() : prop.getDefaultValue();
-		case 2 :
-			return prop.getStyle();
+			case 0:
+				return prop.getName();
+			case 1:
+				return prop.getValue();
+			case 2:
+				return prop.getStyle();
+			case 3:
+				ParamLocation level = this.paramLocations.get( prop );
+				return level == null ? paramLocation : level;
 		}
 
 		return null;
@@ -100,16 +128,22 @@ public class RestParamsTableModel extends AbstractTableModel implements TableMod
 
 		switch( columnIndex )
 		{
-		case 0 :
-			params.renameProperty( prop.getName(), value.toString() );
-			return;
-		case 1 :
-			prop.setDefaultValue( value.toString() );
-			prop.setValue( value.toString() );
-			return;
-		case 2 :
-			prop.setStyle( ( ParameterStyle )value );
-			return;
+			case 0:
+				params.renameProperty( prop.getName(), value.toString() );
+				return;
+			case 1:
+				if(!paramLocation.equals( ParamLocation.REQUEST ))
+				{
+					prop.setDefaultValue( value.toString() );
+				}
+				prop.setValue( value.toString() );
+				return;
+			case 2:
+				prop.setStyle( ( ParameterStyle )value );
+				return;
+			case 3:
+				this.paramLocations.put( prop, ( ParamLocation )value );
+				return;
 		}
 	}
 
@@ -143,6 +177,18 @@ public class RestParamsTableModel extends AbstractTableModel implements TableMod
 		fireTableDataChanged();
 	}
 
+	public ParameterStyle[] getParameterStylesForEdit()
+	{
+		return new ParameterStyle[] {
+				ParameterStyle.QUERY, ParameterStyle.TEMPLATE, ParameterStyle.HEADER, ParameterStyle.MATRIX,
+				ParameterStyle.PLAIN };
+	}
+
+	public ParamLocation[] getParameterLevels()
+	{
+		return ParamLocation.values();
+	}
+
 	public void setParams( RestParamsPropertyHolder params )
 	{
 		this.params.removeTestPropertyListener( this );
@@ -150,5 +196,10 @@ public class RestParamsTableModel extends AbstractTableModel implements TableMod
 		this.params.addTestPropertyListener( this );
 
 		fireTableDataChanged();
+	}
+
+	public void removeProperty( String propertyName )
+	{
+		params.remove( propertyName );
 	}
 }

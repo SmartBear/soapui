@@ -26,6 +26,7 @@ import java.util.Set;
 
 import javax.xml.namespace.QName;
 
+import com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase;
 import org.apache.xmlbeans.SchemaType;
 
 import com.eviware.soapui.model.ModelItem;
@@ -241,9 +242,32 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 
 	public boolean renameProperty( String name, String newName )
 	{
-		values.put( newName, values.get( name ) );
-		values.remove( name );
+		if(name.equals( newName ))
+		{
+			return false;
+		}
+
+		renameLocalProperty( name, newName );
 		return methodParams.renameProperty( name, newName );
+	}
+
+	private void renameLocalProperty( String name, String newName )
+	{
+		if(this.containsKey( name )) {
+			RestParamProperty restParamProperty = this.get( name );
+			restParamProperty.setName( newName );
+			this.put( newName, restParamProperty );
+			this.remove( name );
+		}
+		boolean existsInRequestParam = values.containsKey( name );
+		String value =  values.get( name )==null ?  getPropertyValue( name ) :  values.get( name );
+
+		values.put( newName, value );
+		values.remove( name );
+		if(existsInRequestParam)
+		{
+			firePropertyRenamed( name, newName );
+		}
 	}
 
 	public void resetValues()
@@ -430,7 +454,7 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 
 		public void setName( String name )
 		{
-			// overriddenProp.setName(name);
+			overriddenProp.setName(name);
 		}
 
 		public String getDefaultValue()
@@ -475,6 +499,7 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 			String oldValue = getValue();
 			if( getDefaultValue() != null && getDefaultValue().equals( value ) )
 				value = null;
+
 			if( value == null )
 				values.remove( getName() );
 			else
@@ -499,7 +524,7 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 
 		public void setDefaultValue( String default1 )
 		{
-			// overriddenProp.setDefaultValue(default1);
+			//overriddenProp.setDefaultValue(default1);
 		}
 
 		public void setDescription( String description )

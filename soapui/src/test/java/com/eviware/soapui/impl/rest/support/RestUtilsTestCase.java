@@ -53,9 +53,7 @@ public class RestUtilsTestCase
 		WsdlProject project = new WsdlProject();
 		RestService service = ( RestService )project.addNewInterface( "Test", RestServiceFactory.REST_TYPE );
 
-		 // TODO Hardcoded madness!
-		new WadlImporter( service ).initFromWadl( new File( "src" + File.separatorChar + "test" + File.separatorChar + "resources"
-				+ File.separatorChar + "wadl" + File.separatorChar + "YahooSearch.wadl" ).toURI().toURL().toString() );
+		new WadlImporter( service ).initFromWadl( RestUtilsTestCase.class.getResource(  "/wadl/YahooSearch.wadl" ).toURI().toString());
 
 		assertEquals( 1, service.getOperationCount() );
 		assertEquals( "/NewsSearchService/V1/", service.getBasePath() );

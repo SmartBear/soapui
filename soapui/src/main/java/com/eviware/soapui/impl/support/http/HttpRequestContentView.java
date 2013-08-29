@@ -12,30 +12,10 @@
 
 package com.eviware.soapui.impl.support.http;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.SwingUtilities;
-import javax.swing.text.Document;
-
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
-
+import com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase;
 import com.eviware.soapui.impl.rest.panels.resource.RestParamsTable;
 import com.eviware.soapui.impl.rest.panels.resource.RestParamsTableModel;
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
-import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.support.panels.AbstractHttpXmlRequestDesktopPanel.HttpRequestDocument;
 import com.eviware.soapui.impl.support.panels.AbstractHttpXmlRequestDesktopPanel.HttpRequestMessageEditor;
@@ -45,6 +25,15 @@ import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.editor.views.AbstractXmlEditorView;
 import com.eviware.soapui.support.propertyexpansion.PropertyExpansionPopupListener;
 import com.eviware.soapui.support.xml.SyntaxEditorUtil;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+
+import javax.swing.*;
+import javax.swing.text.Document;
+import java.awt.*;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 @SuppressWarnings( "unchecked" )
 public class HttpRequestContentView extends AbstractXmlEditorView<HttpRequestDocument> implements
@@ -57,7 +46,7 @@ public class HttpRequestContentView extends AbstractXmlEditorView<HttpRequestDoc
 	private JComponent panel;
 	private JComboBox mediaTypeCombo;
 	private JSplitPane split;
-	private RestParamsTable paramsTable;
+	protected RestParamsTable paramsTable;
 	private JCheckBox postQueryCheckBox;
 
 	public HttpRequestContentView( HttpRequestMessageEditor httpRequestMessageEditor, HttpRequestInterface<?> httpRequest )
@@ -97,42 +86,37 @@ public class HttpRequestContentView extends AbstractXmlEditorView<HttpRequestDoc
 
 	protected RestParamsTable buildParamsTable()
 	{
-		paramsTable = new RestParamsTable( httpRequest.getParams(), false )
+		RestParamsTableModel restParamsTableModel = new RestParamsTableModel(  httpRequest.getParams(),
+				NewRestResourceActionBase.ParamLocation.REQUEST )
 		{
-			protected RestParamsTableModel createTableModel( RestParamsPropertyHolder params )
+			@Override
+			public String getColumnName( int column )
 			{
-				return new RestParamsTableModel( params )
-				{
-					@Override
-					public String getColumnName( int column )
-					{
-						return column == 0 ? "Name" : "Value";
-					}
+				return column == 0 ? "Name" : "Value";
+			}
 
-					public int getColumnCount()
-					{
-						return 2;
-					}
+			public int getColumnCount()
+			{
+				return 2;
+			}
 
-					public Object getValueAt( int rowIndex, int columnIndex )
-					{
-						RestParamProperty prop = params.getPropertyAt( rowIndex );
-						return columnIndex == 0 ? prop.getName() : prop.getValue();
-					}
+			public Object getValueAt( int rowIndex, int columnIndex )
+			{
+				RestParamProperty prop = params.getPropertyAt( rowIndex );
+				return columnIndex == 0 ? prop.getName() : prop.getValue();
+			}
 
-					@Override
-					public void setValueAt( Object value, int rowIndex, int columnIndex )
-					{
-						RestParamProperty prop = params.getPropertyAt( rowIndex );
-						if( columnIndex == 0 )
-							prop.setName( value.toString() );
-						else
-							prop.setValue( value.toString() );
-					}
-				};
+			@Override
+			public void setValueAt( Object value, int rowIndex, int columnIndex )
+			{
+				RestParamProperty prop = params.getPropertyAt( rowIndex );
+				if( columnIndex == 0 )
+					prop.setName( value.toString() );
+				else
+					prop.setValue( value.toString() );
 			}
 		};
-		return paramsTable;
+		return new RestParamsTable( httpRequest.getParams(), false, restParamsTableModel );
 	}
 
 	@Override

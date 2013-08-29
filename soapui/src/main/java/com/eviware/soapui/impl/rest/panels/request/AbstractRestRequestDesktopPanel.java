@@ -33,6 +33,7 @@ import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.propertyexpansion.PropertyExpansionPopupListener;
 
 import javax.swing.*;
+import javax.swing.event.DocumentListener;
 import javax.swing.text.Document;
 import java.awt.*;
 import java.awt.event.ItemEvent;
@@ -77,7 +78,6 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 	public void propertyChange( PropertyChangeEvent evt )
 	{
 		updateFullPathLabel();
-		updateMethodResourcePathAndQuery();
 
 		if( evt.getPropertyName().equals( "accept" ) && !updatingRequest )
 		{
@@ -163,15 +163,17 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 
 
 			String path = getRequest().getResource().getPath();
-			resourcePanel = new TextPanelWithTopLabel( "Resource", path );
-			//TODO: SOAP-385 add document listener and filter to the text filed to synch
-			resourcePanel.addPropertyChangeListener( this );
+			resourcePanel = new TextPanelWithTopLabel( "Resource", path, new DocumentListenerAdapter()
+			{
+				@Override
+				public void update( Document document )
+				{
+					synchResourcePanel();
+				}
+			} );
 
 			String query = RestUtils.getQueryParamsString( getRequest().getParams(), getRequest() );
-			queryPanel = new TextPanelWithTopLabel( "Query", query );
-			//TODO: SOAP-385 add document listener and filter to the text filed to synch
-			queryPanel.addPropertyChangeListener( this );
-
+			queryPanel = new TextPanelWithTopLabel( "Query", query, false );
 
 			baseToolBar.add( submitButton );
 			baseToolBar.add( methodPanel );
@@ -272,10 +274,6 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 
 		getRequest().removeTestPropertyListener( testPropertyListener );
 
-		//TODO: SOAP-385 add document listener and filter to the text filed to synch
-		resourcePanel.removePropertyChangeListener( this );
-		queryPanel.removePropertyChangeListener( this );
-
 		for( TestProperty param : getRequest().getParams().getProperties().values() )
 		{
 			( ( RestParamProperty )param ).removePropertyChangeListener( restParamPropertyChangeListener );
@@ -324,12 +322,11 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 		}
 	}
 
-	private void updateMethodResourcePathAndQuery()
+	private void synchResourcePanel()
 	{
-		if( resourcePanel != null && queryPanel != null )
+		if( resourcePanel != null )
 		{
 			updateResource();
-			updateQuery();
 		}
 	}
 
@@ -338,16 +335,6 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 	{
 		String path = resourcePanel.getText();
 		getRequest().getResource().setPath( path );
-
-	}
-
-	private void updateQuery()
-	{
-		String query = queryPanel.getText();
-		RestParamsPropertyHolder propertyHolder = getRequest().getResource().getParams();
-		if( !query.isEmpty() )
-			RestUtils.extractParamsFromQueryString( propertyHolder, query.substring( 1 ) );
-
 	}
 
 	private class RestParamPropertyChangeListener implements PropertyChangeListener
@@ -424,10 +411,21 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 		JLabel textLabel;
 		JTextField textField;
 
-		public TextPanelWithTopLabel( String label, String text )
+		public TextPanelWithTopLabel( String label, String text, boolean isEditable )
 		{
 			textLabel = new JLabel( label );
 			textField = new JTextField( text );
+			textField.setEditable( isEditable );
+			super.setLayout( new BorderLayout() );
+			super.add( textLabel, BorderLayout.NORTH );
+			super.add( textField, BorderLayout.SOUTH );
+		}
+
+		public TextPanelWithTopLabel( String label, String text, DocumentListener documentListener )
+		{
+			textLabel = new JLabel( label );
+			textField = new JTextField( text );
+			textField.getDocument().addDocumentListener( documentListener );
 			super.setLayout( new BorderLayout() );
 			super.add( textLabel, BorderLayout.NORTH );
 			super.add( textField, BorderLayout.SOUTH );

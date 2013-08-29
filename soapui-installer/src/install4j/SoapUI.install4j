@@ -1858,6 +1858,9 @@ else return "";</string>
                           <void index="9">
                             <string>-Djava.util.Arrays.useLegacyMergeSort=true</string>
                           </void>
+                          <void index="10">
+                            <string>-Dfile.encoding=UTF8</string>
+                          </void>
                         </array>
                       </void>
                     </object>

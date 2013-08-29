@@ -19,7 +19,7 @@ set CLASSPATH=%SOAPUI_HOME%${project.src.artifactId}-${project.version}.jar;%SOA
 
 rem JVM parameters, modify as appropriate
 
-set JAVA_OPTS=-Xms128m -Xmx1024m -Dsoapui.properties=soapui.properties "-Dsoapui.home=%SOAPUI_HOME%\"
+set JAVA_OPTS=-Xms128m -Xmx1024m -Dsoapui.properties=soapui.properties "-Dsoapui.home=%SOAPUI_HOME%\" -Dfile.encoding=UTF8
 
 if "%SOAPUI_HOME%" == "" goto START
     set JAVA_OPTS=%JAVA_OPTS% -Dsoapui.ext.libraries="%SOAPUI_HOME%ext"

@@ -186,7 +186,16 @@ public class OverlayRestParamsPropertyHolder implements RestParamsPropertyHolder
 
 	public boolean renameProperty( String name, String newName )
 	{
-		return overlay.renameProperty( name, newName );
+		RestParamProperty restParamProperty = this.get( name );
+
+		if(restParamProperty !=null )
+		{
+			restParamProperty.setName( newName );
+			this.put( newName, restParamProperty );
+			this.remove( name );
+			return true;
+		}
+	   return overlay.renameProperty( name, newName );
 	}
 
 	public void resetValues()
