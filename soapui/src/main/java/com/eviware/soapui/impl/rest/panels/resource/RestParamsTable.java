@@ -52,6 +52,8 @@ import com.eviware.soapui.support.components.SimpleBindingForm;
 import com.eviware.soapui.support.components.StringListFormComponent;
 import com.jgoodies.binding.PresentationModel;
 
+import static com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase.ParamLocation;
+
 public class RestParamsTable extends JPanel
 {
 	protected RestParamsPropertyHolder params;
@@ -69,9 +71,9 @@ public class RestParamsTable extends JPanel
 	private SimpleBindingForm detailsForm;
 
 	public RestParamsTable( RestParamsPropertyHolder params, boolean showInspector,
-									NewRestResourceActionBase.ParamLocation location )
+									ParamLocation location )
 	{
-		this( params, showInspector, new RestParamsTableModel( params, location ) );
+		this( params, showInspector, new RestParamsTableModel( params ) );
 	}
 	public RestParamsTable( RestParamsPropertyHolder params, boolean showInspector, RestParamsTableModel model)
 	{
@@ -88,7 +90,7 @@ public class RestParamsTable extends JPanel
 		paramsTable.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
 		paramsTable.setDefaultEditor( ParameterStyle.class, new DefaultCellEditor(
 				new JComboBox( paramsTableModel.getParameterStylesForEdit() ) ) );
-		paramsTable.setDefaultEditor( NewRestResourceActionBase.ParamLocation.class, new DefaultCellEditor(
+		paramsTable.setDefaultEditor( ParamLocation.class, new DefaultCellEditor(
 				new JComboBox( paramsTableModel.getParameterLevels() ) ) );
 
 		paramsTable.getSelectionModel().addListSelectionListener( new ListSelectionListener()
@@ -217,7 +219,7 @@ public class RestParamsTable extends JPanel
 	{
 	}
 
-	public void extractParams( RestParamsPropertyHolder params, NewRestResourceActionBase.ParamLocation location )
+	public void extractParams( RestParamsPropertyHolder params, ParamLocation location )
 	{
 		for( int i = 0; i < paramsTable.getRowCount(); i++ )
 		{

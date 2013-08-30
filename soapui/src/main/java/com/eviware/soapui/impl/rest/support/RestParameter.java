@@ -12,6 +12,8 @@
 
 package com.eviware.soapui.impl.rest.support;
 
+import com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase;
+
 import javax.xml.namespace.QName;
 
 public interface RestParameter
@@ -27,6 +29,10 @@ public interface RestParameter
 	XmlBeansRestParamsTestPropertyHolder.ParameterStyle getStyle();
 
 	void setStyle( XmlBeansRestParamsTestPropertyHolder.ParameterStyle style );
+
+	NewRestResourceActionBase.ParamLocation getParamLocation();
+
+	void  setParamLocation( NewRestResourceActionBase.ParamLocation paramLocation );
 
 	String getValue();
 

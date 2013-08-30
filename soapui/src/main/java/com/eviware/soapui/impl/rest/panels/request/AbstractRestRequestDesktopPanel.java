@@ -16,7 +16,9 @@ import com.eviware.soapui.impl.rest.RestMethod;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
+import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.rest.support.RestUtils;
+import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
 import com.eviware.soapui.impl.support.panels.AbstractHttpXmlRequestDesktopPanel;
 import com.eviware.soapui.impl.wsdl.WsdlSubmitContext;
 import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestInterface;
@@ -41,6 +43,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import static com.eviware.soapui.impl.rest.RestRequestInterface.RequestMethod;
+import static com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase.ParamLocation;
 import static com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder.ParameterStyle;
 import static com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder.ParameterStyle.QUERY;
 
@@ -63,16 +66,21 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 	{
 		super( modelItem, requestItem );
 
-		if( requestItem.getResource() != null )
-		{
-			requestItem.getResource().addPropertyChangeListener( this );
-		}
+		addPropertyChangeListenerToResource( requestItem );
 
 		requestItem.addTestPropertyListener( testPropertyListener );
 
 		for( TestProperty param : requestItem.getParams().getProperties().values() )
 		{
 			( ( RestParamProperty )param ).addPropertyChangeListener( restParamPropertyChangeListener );
+		}
+	}
+
+	private void addPropertyChangeListenerToResource( T2 requestItem )
+	{
+		if( requestItem.getResource() != null )
+		{
+			requestItem.getResource().addPropertyChangeListener( this );
 		}
 	}
 
@@ -288,16 +296,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 		@Override
 		public void propertyValueChanged( String name, String oldValue, String newValue )
 		{
-			RestParamProperty property = getRequest().getParams().getProperty( name );
-			ParameterStyle style = property.getStyle();
-			if( style.equals( QUERY ) )
-			{
-				resetQueryPanelText();
-			}
-			else if( style.equals( ParameterStyle.TEMPLATE ) )
-			{
-				//resourcePanel.setText(  );
-			}
+			updateResourceAndQueryString( name, oldValue, newValue );
 			updateFullPathLabel();
 		}
 
@@ -318,7 +317,37 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 		@Override
 		public void propertyRenamed( String oldName, String newName )
 		{
+			RestParamProperty property = getRequest().getParams().getProperty( newName );
+			ParameterStyle style = property.getStyle();
+			if( style.equals( QUERY ) )
+			{
+				resetQueryPanelText();
+			}
+			else if( style.equals( ParameterStyle.TEMPLATE ) )
+			{
+				resourcePanel.setText( resourcePanel.getText().replaceAll("\\{" + oldName +"\\}", "{" + newName + "}"));
+			}
+			else if( style.equals( ParameterStyle.MATRIX ) )
+			{
+				resourcePanel.setText( resourcePanel.getText().replaceAll(oldName +"=" +
+						property.getValue(), property.getName() + "=" + property.getValue()) );
+			}
 			updateFullPathLabel();
+		}
+	}
+
+	private void updateResourceAndQueryString( String propertyName, String oldValue, String newValue )
+	{
+		RestParamProperty property = getRequest().getParams().getProperty( propertyName );
+		ParameterStyle style = property.getStyle();
+		if( style.equals( QUERY ) )
+		{
+			resetQueryPanelText();
+		}
+		else if( style.equals( ParameterStyle.MATRIX ) )
+		{
+			resourcePanel.setText( resourcePanel.getText().replaceAll(property.getName() +"=" +
+					oldValue, property.getName() + "=" + newValue) );
 		}
 	}
 
@@ -343,11 +372,64 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 	{
 		public void propertyChange( PropertyChangeEvent evt )
 		{
-			removeParamForStyle( (RestParamProperty)evt.getSource(), ( ParameterStyle )evt.getOldValue() );
-			addPropertyForStyle( (RestParamProperty)evt.getSource(), ( ParameterStyle ) evt.getNewValue() );
+			if(evt.getPropertyName().equals( XmlBeansRestParamsTestPropertyHolder.PROPERTY_STYLE ))
+			{
+				RestParamProperty source = ( RestParamProperty )evt.getSource();
+				removeParamForStyle( source, ( ParameterStyle )evt.getOldValue() );
+				addPropertyForStyle( source, ( ParameterStyle ) evt.getNewValue() );
+			}
+
+			if(evt.getPropertyName().equals( XmlBeansRestParamsTestPropertyHolder.PARAM_LOCATION ))
+			{
+				RestParamProperty source = ( RestParamProperty )evt.getSource();
+				addPropertyToLevel( source, ( ParamLocation )evt.getNewValue() );
+				removePropertyFromLevel(source.getName(), ( ParamLocation) evt.getOldValue());
+			}
 			updateFullPathLabel();
 		}
 
+
+	}
+
+	private void addPropertyToLevel( RestParamProperty property, ParamLocation location )
+	{
+		RestParamsPropertyHolder paramsPropertyHolder = null;
+		switch( location )
+		{
+			case METHOD:
+				paramsPropertyHolder = getRequest().getRestMethod().getParams();
+				break;
+			case RESOURCE:
+				paramsPropertyHolder = getRequest().getResource().getParams();
+				break;
+			case REQUEST:
+				paramsPropertyHolder = getRequest().getParams();
+				break;
+		}
+
+		if(paramsPropertyHolder != null)
+		{
+			paramsPropertyHolder.addParameter( property );
+			RestParamProperty addedParameter = paramsPropertyHolder.getProperty( property.getName() );
+			addedParameter.addPropertyChangeListener( restParamPropertyChangeListener );
+		}
+		addPropertyChangeListenerToResource( getRequest() );
+	}
+
+	private void removePropertyFromLevel( String propertytName, ParamLocation location )
+	{
+		switch( location )
+		{
+			case METHOD:
+				getRequest().getRestMethod().removeProperty( propertytName );
+				break;
+			case RESOURCE:
+				getRequest().getResource().removeProperty( propertytName );
+				break;
+			case REQUEST:
+				getRequest().removeProperty( propertytName );
+				break;
+		}
 
 	}
 

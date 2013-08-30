@@ -66,7 +66,7 @@ public class RestParamsTableModelColumnsNamesAndTypesUnitTest
 	public void setUp()
 	{
 		RestParamsPropertyHolder params = Mockito.mock( RestParamsPropertyHolder.class );
-		restParamsTableModel = new RestParamsTableModel( params, NewRestResourceActionBase.ParamLocation.RESOURCE );
+		restParamsTableModel = new RestParamsTableModel( params );
 	}
 
 	@Test

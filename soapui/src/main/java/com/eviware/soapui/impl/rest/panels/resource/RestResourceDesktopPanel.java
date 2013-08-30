@@ -165,7 +165,7 @@ public class RestResourceDesktopPanel extends ModelItemDesktopPanel<RestResource
 				updating = false;
 			}
 		}
-
+		paramsTable.refresh();
 		super.propertyChange( evt );
 	}
 }

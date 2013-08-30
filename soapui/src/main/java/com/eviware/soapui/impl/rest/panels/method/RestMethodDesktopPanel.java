@@ -57,8 +57,6 @@ public class RestMethodDesktopPanel extends ModelItemDesktopPanel<RestMethod>
 		paramsTable = new RestParamsTable( getModelItem().getParams(), true,
 				NewRestResourceActionBase.ParamLocation.METHOD );
 
-		paramsTable.extractParams( getModelItem().getResource().getParams(),
-				NewRestResourceActionBase.ParamLocation.METHOD );
 		tabs.addTab( "Method Parameters", paramsTable );
 
 		restRepresentationsTable = new RestRepresentationsTable( getModelItem(), new RestRepresentation.Type[] {
@@ -152,6 +150,7 @@ public class RestMethodDesktopPanel extends ModelItemDesktopPanel<RestMethod>
 		{
 			methodCombo.setSelectedItem( evt.getNewValue() );
 		}
+		paramsTable.refresh();
 	}
 
 }

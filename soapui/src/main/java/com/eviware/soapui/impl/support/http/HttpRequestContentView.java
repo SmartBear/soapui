@@ -86,8 +86,7 @@ public class HttpRequestContentView extends AbstractXmlEditorView<HttpRequestDoc
 
 	protected RestParamsTable buildParamsTable()
 	{
-		RestParamsTableModel restParamsTableModel = new RestParamsTableModel(  httpRequest.getParams(),
-				NewRestResourceActionBase.ParamLocation.REQUEST )
+		RestParamsTableModel restParamsTableModel = new RestParamsTableModel(  httpRequest.getParams() )
 		{
 			@Override
 			public String getColumnName( int column )

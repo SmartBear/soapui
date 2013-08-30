@@ -37,7 +37,7 @@ public class RestParamsTableModelUnitTest
 	public void setUp()
 	{
 		params = Mockito.mock( RestParamsPropertyHolder.class );
-		restParamsTableModel = new RestParamsTableModel( params, NewRestResourceActionBase.ParamLocation.RESOURCE );
+		restParamsTableModel = new RestParamsTableModel( params );
 	}
 
 
@@ -62,6 +62,7 @@ public class RestParamsTableModelUnitTest
 	public void givenModelWithParamsWhenSetValueThenShouldSetValueToProperty()
 	{
 		RestParamProperty param = mock( RestParamProperty.class );
+		when( param.getParamLocation() ).thenReturn( NewRestResourceActionBase.ParamLocation.METHOD );
 		when( params.getPropertyAt( 0 ) ).thenReturn( param );
 		String value = "New value";
 		restParamsTableModel.setValueAt( value, 0, VALUE_COLUMN_INDEX );
@@ -95,6 +96,6 @@ public class RestParamsTableModelUnitTest
 		RestParamProperty param = mock( RestParamProperty.class );
 		when( params.getPropertyAt( 0 ) ).thenReturn( param );
 		restParamsTableModel.setValueAt( METHOD, 0, LOCATION_COLUMN_INDEX );
-		Assert.assertThat( restParamsTableModel.getParamLocationAt( 0 ), Is.is(METHOD) );
+		verify( param, times( 1 ) ).setParamLocation( METHOD );
 	}
 }

@@ -261,15 +261,11 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 			this.put( newName, restParamProperty );
 			this.remove( name );
 		}
-		boolean existsInRequestParam = values.containsKey( name );
 		String value =  values.get( name )==null ?  getPropertyValue( name ) :  values.get( name );
 
 		values.put( newName, value );
 		values.remove( name );
-		if(existsInRequestParam)
-		{
-			firePropertyRenamed( name, newName );
-		}
+		firePropertyRenamed( name, newName );
 	}
 
 	public void resetValues()
@@ -547,6 +543,18 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 		public void setStyle( ParameterStyle style )
 		{
 			overriddenProp.setStyle(style);
+		}
+
+		@Override
+		public NewRestResourceActionBase.ParamLocation getParamLocation()
+		{
+			return overriddenProp.getParamLocation();
+		}
+
+		@Override
+		public void setParamLocation( NewRestResourceActionBase.ParamLocation paramLocation )
+		{
+			overriddenProp.setParamLocation( paramLocation );
 		}
 
 		public void setType( QName arg0 )

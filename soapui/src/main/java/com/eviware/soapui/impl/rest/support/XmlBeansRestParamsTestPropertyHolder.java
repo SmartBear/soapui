@@ -29,6 +29,10 @@ import java.util.Set;
 
 import javax.xml.namespace.QName;
 
+import com.eviware.soapui.impl.rest.RestMethod;
+import com.eviware.soapui.impl.rest.RestRequest;
+import com.eviware.soapui.impl.rest.RestResource;
+import com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase;
 import org.apache.xmlbeans.SchemaType;
 import org.apache.xmlbeans.XmlBeans;
 import org.apache.xmlbeans.XmlObject;
@@ -45,8 +49,12 @@ import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestPropertyListener;
 import com.eviware.soapui.support.StringUtils;
 
+import static com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase.ParamLocation;
+
 public class XmlBeansRestParamsTestPropertyHolder implements RestParamsPropertyHolder
 {
+	public static final String PROPERTY_STYLE = "style";
+	public static final String PARAM_LOCATION = "paramLocation";
 	private RestParametersConfig config;
 	private List<RestParamProperty> properties = new ArrayList<RestParamProperty>();
 	private Map<String, RestParamProperty> propertyMap = new HashMap<String, RestParamProperty>();
@@ -68,7 +76,8 @@ public class XmlBeansRestParamsTestPropertyHolder implements RestParamsPropertyH
 
 	protected XmlBeansRestParamProperty addProperty( RestParameterConfig propertyConfig, boolean notify )
 	{
-		XmlBeansRestParamProperty propertiesStepProperty = new XmlBeansRestParamProperty( propertyConfig );
+		XmlBeansRestParamProperty propertiesStepProperty = new XmlBeansRestParamProperty( propertyConfig,
+				getParamLocation());
 		properties.add( propertiesStepProperty );
 		propertyMap.put( propertiesStepProperty.getName().toUpperCase(), propertiesStepProperty );
 
@@ -78,6 +87,22 @@ public class XmlBeansRestParamsTestPropertyHolder implements RestParamsPropertyH
 		}
 
 		return propertiesStepProperty;
+	}
+
+	private ParamLocation getParamLocation()
+	{
+
+		if(getModelItem() instanceof RestRequest)
+		{
+			return ParamLocation.REQUEST;
+		} else if (getModelItem() instanceof RestResource)
+		{
+			return ParamLocation.RESOURCE;
+		} else if (getModelItem() instanceof RestMethod)
+		{
+			return ParamLocation.METHOD;
+		}
+		return null;
 	}
 
 	private void firePropertyAdded( String name )
@@ -262,11 +287,12 @@ public class XmlBeansRestParamsTestPropertyHolder implements RestParamsPropertyH
 	{
 		private RestParameterConfig propertyConfig;
 		private PropertyChangeSupport propertySupport;
+		private ParamLocation paramLocation;
 
-		public XmlBeansRestParamProperty( RestParameterConfig propertyConfig )
+		public XmlBeansRestParamProperty( RestParameterConfig propertyConfig, ParamLocation location )
 		{
 			this.propertyConfig = propertyConfig;
-
+			this.paramLocation = location;
 			propertySupport = new PropertyChangeSupport( this );
 		}
 
@@ -349,6 +375,18 @@ public class XmlBeansRestParamsTestPropertyHolder implements RestParamsPropertyH
 			propertySupport.firePropertyChange( "description", old, description );
 		}
 
+		public ParamLocation getParamLocation()
+		{
+			return this.paramLocation;
+		}
+
+		public void setParamLocation( ParamLocation paramLocation )
+		{
+			ParamLocation old = this.paramLocation;
+			this.paramLocation = paramLocation;
+			propertySupport.firePropertyChange( PARAM_LOCATION, old, this.paramLocation );
+		}
+
 		public ParameterStyle getStyle()
 		{
 			if( propertyConfig.xgetStyle() == null )
@@ -362,7 +400,7 @@ public class XmlBeansRestParamsTestPropertyHolder implements RestParamsPropertyH
 			ParameterStyle old = getStyle();
 
 			propertyConfig.setStyle( RestParameterConfig.Style.Enum.forString( style.name() ) );
-			propertySupport.firePropertyChange( "style", old, style );
+			propertySupport.firePropertyChange( PROPERTY_STYLE, old, style );
 		}
 
 		public String getValue()
