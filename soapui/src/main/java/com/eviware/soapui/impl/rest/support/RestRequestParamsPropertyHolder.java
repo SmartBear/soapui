@@ -225,14 +225,16 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 
 	public TestProperty remove( Object key )
 	{
-		values.remove( key );
-		return methodParams.get( key );
+		return removeProperty( ( String )key );
 	}
 
 	public RestParamProperty removeProperty( String propertyName )
 	{
 		values.remove( propertyName );
-		return methodParams.getProperty( propertyName );
+
+		RestParamProperty property = methodParams.removeProperty( propertyName );
+		firePropertyRemoved( propertyName );
+		return property;
 	}
 
 	public void removeTestPropertyListener( TestPropertyListener listener )

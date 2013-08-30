@@ -181,7 +181,8 @@ public class OverlayRestParamsPropertyHolder implements RestParamsPropertyHolder
 
 	public RestParamProperty removeProperty( String propertyName )
 	{
-		return overlay.removeProperty( propertyName );
+		return overlay.containsKey( propertyName ) ?
+					overlay.removeProperty( propertyName ) : parent.removeProperty( propertyName );
 	}
 
 	public boolean renameProperty( String name, String newName )
