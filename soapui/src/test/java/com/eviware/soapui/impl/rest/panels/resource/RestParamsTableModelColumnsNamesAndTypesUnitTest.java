@@ -2,9 +2,9 @@ package com.eviware.soapui.impl.rest.panels.resource;
 
 import com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
-import org.hamcrest.CoreMatchers;
 import org.hamcrest.core.Is;
 import org.hamcrest.core.IsEqual;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,9 +44,9 @@ public class RestParamsTableModelColumnsNamesAndTypesUnitTest
 		return Arrays.asList( new Object[][] {
 				{
 						-1, null, null
-				},{
-						0, RestParamsTableModel.COLUMN_NAMES[0], RestParamsTableModel.COLUMN_TYPES[0]
-				},
+				}, {
+				0, RestParamsTableModel.COLUMN_NAMES[0], RestParamsTableModel.COLUMN_TYPES[0]
+		},
 				{
 						1, RestParamsTableModel.COLUMN_NAMES[1], RestParamsTableModel.COLUMN_TYPES[1]
 				},
@@ -70,11 +70,13 @@ public class RestParamsTableModelColumnsNamesAndTypesUnitTest
 	}
 
 	@Test
-	public void verifyColumnCountNamesAndColumnTypes()
+	public void verifyColumnCountNamesColumnTypesAndThatAllColumnsAreEditable()
 	{
 		assertThat( restParamsTableModel.getColumnCount(), Is.is( 4 ) );
-		assertThat( restParamsTableModel.getColumnName( this.columnIndex ), IsEqual.equalTo( this.columnName ));
+		assertThat( restParamsTableModel.getColumnName( this.columnIndex ), IsEqual.equalTo( this.columnName ) );
 		assertThat( restParamsTableModel.getColumnClass( this.columnIndex ), IsEqual.equalTo( this.columnType ) );
+
+		assertThat( restParamsTableModel.isCellEditable( 1, this.columnIndex ), Is.is (true) );
 	}
 
 }
