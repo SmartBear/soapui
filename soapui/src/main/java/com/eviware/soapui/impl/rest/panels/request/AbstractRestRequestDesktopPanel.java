@@ -154,7 +154,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 			JPanel endpointPanel = new JPanel( new BorderLayout() );
 			endpointPanel.setMinimumSize( new Dimension( 75, 45 ) );
 
-			JComponent endpointCombo = super.buildEndpointComponent();
+			JComponent endpointCombo = buildEndpointComponent();
 			super.setEndpointComponent( endpointCombo );
 
 			JLabel endPointLabel = new JLabel( "Endpoint" );
