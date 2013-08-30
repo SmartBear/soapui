@@ -71,10 +71,10 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 
 	private JComponent endpointComponent;
 	private JButton submitButton;
-	private JButton cancelButton;
+	protected JButton cancelButton;
 	protected EndpointsComboBoxModel endpointsModel;
 	private JEditorStatusBarWithProgress statusBar;
-	private JButton splitButton;
+	protected JButton splitButton;
 	private Submit submit;
 	private JSplitPane requestSplitPane;
 	private MoveFocusAction moveFocusAction;
@@ -86,7 +86,7 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 
 	private JTabbedPane requestTabs;
 	private JPanel requestTabPanel;
-	private JToggleButton tabsButton;
+	protected JToggleButton tabsButton;
 
 	private boolean responseHasFocus;
 	private SubmitAction submitAction;
