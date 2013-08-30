@@ -12,6 +12,7 @@
  */
 package com.eviware.soapui.impl.rest.support;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -52,6 +53,12 @@ public class OverlayRestParamsPropertyHolderTest
 		assertNull( propertyHolder.removeProperty( "paramOverLay" ) );
 		assertNotNull( propertyHolder.removeProperty( "paramParent" ) );
 		assertNull( propertyHolder.removeProperty( "paramParent" ) );
+	}
+
+	@After
+	public void tearDown()
+	{
+		propertyHolder = null;
 	}
 
 }
