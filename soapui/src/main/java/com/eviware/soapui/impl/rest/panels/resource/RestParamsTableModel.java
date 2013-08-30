@@ -12,14 +12,13 @@
 
 package com.eviware.soapui.impl.rest.panels.resource;
 
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableModel;
-
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder.ParameterStyle;
 import com.eviware.soapui.model.testsuite.TestPropertyListener;
 
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableModel;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,9 +26,13 @@ import static com.eviware.soapui.impl.rest.actions.support.NewRestResourceAction
 
 public class RestParamsTableModel extends AbstractTableModel implements TableModel, TestPropertyListener
 {
+	public static final int PARAM_LOCATION_COLUMN_INDEX = 3;
 	protected RestParamsPropertyHolder params;
 	private ParamLocation paramLocation;
 	private Map<RestParamProperty, ParamLocation> paramLocations = new HashMap<RestParamProperty, ParamLocation>();
+
+	static String[] COLUMN_NAMES = new String[] { "Name", "Default value", "Style", "Level" };
+	static Class[] COLUMN_TYPES = new Class[] { String.class, String.class, ParameterStyle.class, ParamLocation.class };
 
 	public RestParamsTableModel( RestParamsPropertyHolder params, ParamLocation paramLocation )
 	{
@@ -50,38 +53,28 @@ public class RestParamsTableModel extends AbstractTableModel implements TableMod
 	}
 
 	@Override
-	public String getColumnName( int column )
+	public String getColumnName( int columnIndex )
 	{
-		switch( column )
+		if( isColumnIndexOutOfBound( columnIndex ) )
 		{
-			case 0:
-				return "Name";
-			case 1:
-				return "Default value";
-			case 2:
-				return "Style";
-			case 3:
-				return "Level";
+			return null;
 		}
-
-		return null;
+		return COLUMN_NAMES[columnIndex];
 	}
 
 	@Override
 	public Class<?> getColumnClass( int columnIndex )
 	{
-		switch( columnIndex )
+		if( isColumnIndexOutOfBound( columnIndex ) )
 		{
-			case 0:
-			case 1:
-				return String.class;
-			case 2:
-				return ParameterStyle.class;
-			case 3:
-				return ParamLocation.class;
+			return null;
 		}
+		return COLUMN_TYPES[columnIndex];
+	}
 
-		return null;
+	private boolean isColumnIndexOutOfBound( int columnIndex )
+	{
+		return ( columnIndex < 0 ) || ( columnIndex > 3 );
 	}
 
 	@Override
@@ -97,7 +90,7 @@ public class RestParamsTableModel extends AbstractTableModel implements TableMod
 
 	public ParamLocation getParamLocationAt( int rowIndex )
 	{
-		return ( ParamLocation )getValueAt( rowIndex, 3 );
+		return ( ParamLocation )getValueAt( rowIndex, PARAM_LOCATION_COLUMN_INDEX );
 	}
 
 
@@ -132,7 +125,7 @@ public class RestParamsTableModel extends AbstractTableModel implements TableMod
 				params.renameProperty( prop.getName(), value.toString() );
 				return;
 			case 1:
-				if(!paramLocation.equals( ParamLocation.REQUEST ))
+				if( !paramLocation.equals( ParamLocation.REQUEST ) )
 				{
 					prop.setDefaultValue( value.toString() );
 				}
@@ -179,9 +172,8 @@ public class RestParamsTableModel extends AbstractTableModel implements TableMod
 
 	public ParameterStyle[] getParameterStylesForEdit()
 	{
-		return new ParameterStyle[] {
-				ParameterStyle.QUERY, ParameterStyle.TEMPLATE, ParameterStyle.HEADER, ParameterStyle.MATRIX,
-				ParameterStyle.PLAIN };
+		return new ParameterStyle[] { ParameterStyle.QUERY, ParameterStyle.TEMPLATE, ParameterStyle.HEADER,
+				ParameterStyle.MATRIX, ParameterStyle.PLAIN };
 	}
 
 	public ParamLocation[] getParameterLevels()
