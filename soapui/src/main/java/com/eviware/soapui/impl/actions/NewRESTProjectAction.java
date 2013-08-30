@@ -14,21 +14,35 @@ package com.eviware.soapui.impl.actions;
 
 import com.eviware.soapui.config.RestParametersConfig;
 import com.eviware.soapui.impl.WorkspaceImpl;
-
-import com.eviware.soapui.impl.rest.*;
-import com.eviware.soapui.impl.rest.support.*;
+import com.eviware.soapui.impl.rest.RestMethod;
+import com.eviware.soapui.impl.rest.RestRequest;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
+import com.eviware.soapui.impl.rest.RestResource;
+import com.eviware.soapui.impl.rest.RestService;
+import com.eviware.soapui.impl.rest.RestServiceFactory;
+import com.eviware.soapui.impl.rest.RestURIParser;
+import com.eviware.soapui.impl.rest.support.RestParamProperty;
+import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
+import com.eviware.soapui.impl.rest.support.RestURIParserImpl;
+import com.eviware.soapui.impl.rest.support.RestUtils;
+import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.support.MessageSupport;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
+import com.eviware.soapui.support.components.JUndoableTextField;
 import com.eviware.x.form.XFormDialog;
+import com.eviware.x.form.XFormField;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AForm;
+import com.eviware.x.impl.swing.JTextFieldFormField;
 
+import java.awt.Font;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 
 /**
  * Action class to create new REST project.
@@ -54,11 +68,15 @@ public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 		if( dialog == null )
 		{
 			dialog = ADialogBuilder.buildDialog( Form.class );
-			dialog.setValue( Form.URI, "http://example.com/resource/path/search?parameter=value" );
+
 		}
-		else
-		{
-			dialog.setValue( Form.URI, "http://example.com/resource/path/search?parameter=value" );
+		dialog.setValue( Form.URI, "http://example.com/resource/path/search?parameter=value" );
+		XFormField uriField = dialog.getFormField( Form.URI );
+		if (uriField instanceof JTextFieldFormField) {
+			JUndoableTextField textField = (( JTextFieldFormField )uriField).getComponent();
+			textField.requestFocus();
+			textField.setFont( textField.getFont().deriveFont( Font.ITALIC ) );
+			addTextInputListenerTo( textField );
 		}
 
 		while( dialog.show() )
@@ -70,12 +88,7 @@ public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 
 				project = workspace.createProject( PROJECT_NAME, null );
 
-				if( dialog.getBooleanValue( Form.MOREOPTIONS ) )
-				{
-					// TODO: Expand the dialog box with more options
-				}
-
-				RestService restService = createRestProject( project, URI );
+				createRestProject( project, URI );
 
 				// If there is no exception or error we break out
 				break;
@@ -90,6 +103,20 @@ public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 				}
 			}
 		}
+	}
+
+
+	private void addTextInputListenerTo( final JUndoableTextField innerField )
+	{
+		innerField.addKeyListener( new KeyAdapter() {
+			@Override
+			public void keyPressed( KeyEvent e )
+			{
+				innerField.setText("");
+				innerField.setFont(innerField.getFont().deriveFont( Font.PLAIN ));
+				innerField.removeKeyListener( this );
+			}
+		});
 	}
 
 	protected RestService createRestProject( WsdlProject project, String URI ) throws MalformedURLException
@@ -165,8 +192,8 @@ public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 		@AField( description = "Form.URI.Description", type = AField.AFieldType.STRING )
 		public final static String URI = messages.get( "Form.URI.Label" );
 
-		@AField( description = "Form.MoreOptions.Description", type = AField.AFieldType.BOOLEAN, enabled = true )
-		public final static String MOREOPTIONS = messages.get( "Form.MoreOptions.Label" );
+		@AField(description = "", type = AField.AFieldType.LABEL)
+		public static final String URI_HINT = messages.get("Form.URI-Hint");
 
 	}
 }
