@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import static com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase.ParamLocation.METHOD;
+import static com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder.ParameterStyle.QUERY;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyList;
 import static org.mockito.Mockito.*;
@@ -84,9 +85,8 @@ public class RestParamsTableModelUnitTest
 	{
 		RestParamProperty param = mock( RestParamProperty.class );
 		when( params.getPropertyAt( 0 ) ).thenReturn( param );
-		String value = "New value";
-		restParamsTableModel.setValueAt( value, 0, STYLE_COLUMN_INDEX );
-		verify( param, times( 1 ) ).setValue( value );
+		restParamsTableModel.setValueAt( QUERY, 0, STYLE_COLUMN_INDEX );
+		verify( param, times( 1 ) ).setStyle( QUERY );
 	}
 
 	@Test
