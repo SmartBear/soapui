@@ -15,10 +15,12 @@ package com.eviware.soapui.impl.rest.panels.request;
 import com.eviware.soapui.impl.rest.RestMethod;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.RestResource;
+import com.eviware.soapui.impl.rest.actions.request.AddRestRequestToTestCaseAction;
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.rest.support.RestUtils;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
+import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.support.panels.AbstractHttpXmlRequestDesktopPanel;
 import com.eviware.soapui.impl.wsdl.WsdlSubmitContext;
 import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestInterface;
@@ -29,6 +31,7 @@ import com.eviware.soapui.model.support.TestPropertyListenerAdapter;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.action.swing.SwingActionDelegate;
 import com.eviware.soapui.support.components.JUndoableTextField;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.propertyexpansion.PropertyExpansionPopupListener;
@@ -150,6 +153,9 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 
 			JComponent submitButton = super.getSubmitButton();
 
+			JButton addToTestCaseButton = createActionButton( SwingActionDelegate.createDelegate(
+					AddRestRequestToTestCaseAction.SOAPUI_ACTION_ID, getRequest(), null, "/addToTestCase.gif" ), true );
+
 			JPanel methodPanel = new JPanel( new BorderLayout() );
 			methodPanel.setMaximumSize( new Dimension( 75, 45 ) );
 			methodComboBox = new JComboBox<RequestMethod>( new RestRequestMethodModel( getRequest() ) );
@@ -162,7 +168,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 			JPanel endpointPanel = new JPanel( new BorderLayout() );
 			endpointPanel.setMinimumSize( new Dimension( 75, 45 ) );
 
-			JComponent endpointCombo = super.buildEndpointComponent();
+			JComponent endpointCombo = buildEndpointComponent();
 			super.setEndpointComponent( endpointCombo );
 
 			JLabel endPointLabel = new JLabel( "Endpoint" );
@@ -185,6 +191,8 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 			queryPanel = new TextPanelWithTopLabel( "Query", query, false );
 
 			baseToolBar.add( submitButton );
+			baseToolBar.add( addToTestCaseButton );
+			baseToolBar.add( cancelButton );
 			baseToolBar.add( methodPanel );
 			baseToolBar.add( Box.createHorizontalStrut( 4 ) );
 			baseToolBar.add( endpointPanel );
@@ -193,6 +201,10 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 			baseToolBar.add( Box.createHorizontalStrut( 4 ) );
 			baseToolBar.add( queryPanel );
 
+			baseToolBar.add( Box.createHorizontalGlue() );
+			baseToolBar.add( tabsButton );
+			baseToolBar.add( splitButton );
+			baseToolBar.add( UISupport.createToolbarButton( new ShowOnlineHelpAction( getHelpUrl() ) ) );
 
 			return baseToolBar;
 		}
