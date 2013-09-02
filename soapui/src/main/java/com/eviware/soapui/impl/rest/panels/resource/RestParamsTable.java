@@ -70,8 +70,7 @@ public class RestParamsTable extends JPanel
 	private StringListFormComponent optionsFormComponent;
 	private SimpleBindingForm detailsForm;
 
-	public RestParamsTable( RestParamsPropertyHolder params, boolean showInspector,
-									ParamLocation location )
+	public RestParamsTable( RestParamsPropertyHolder params, boolean showInspector )
 	{
 		this( params, showInspector, new RestParamsTableModel( params ) );
 	}

@@ -85,7 +85,7 @@ public abstract class NewRestResourceActionBase<T extends ModelItem> extends Abs
 				paramsTable.refresh();
 		}
 
-		paramsTable = new RestParamsTable( params, false, ParamLocation.RESOURCE );
+		paramsTable = new RestParamsTable( params, false );
 		dialog.getFormField( Form.PARAMSTABLE ).setProperty( "component", paramsTable );
 
 		if( dialog.show() )
@@ -140,7 +140,7 @@ public abstract class NewRestResourceActionBase<T extends ModelItem> extends Abs
 
 	public enum ParamLocation
 	{
-		RESOURCE, METHOD, REQUEST
+		RESOURCE, METHOD //, REQUEST : TODO - we don't suppor the request level parameters yet
 	}
 
 

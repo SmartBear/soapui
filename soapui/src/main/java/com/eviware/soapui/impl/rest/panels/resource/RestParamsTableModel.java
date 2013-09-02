@@ -120,10 +120,10 @@ public class RestParamsTableModel extends AbstractTableModel implements TableMod
 				params.renameProperty( prop.getName(), value.toString() );
 				return;
 			case 1:
-				if( !prop.getParamLocation().equals( ParamLocation.REQUEST ) )
-				{
+				//if( !prop.getParamLocation().equals( ParamLocation.REQUEST ) )
+				//{
 					prop.setDefaultValue( value.toString() );
-				}
+				//}
 				prop.setValue( value.toString() );
 				return;
 			case 2:
