@@ -39,15 +39,20 @@ import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AForm;
 import com.eviware.x.impl.swing.JTextFieldFormField;
 
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.net.MalformedURLException;
 
 /**
  * Action class to create new REST project.
  *
- * @author: Shadid Chowdhury
+ * @author Shadid Chowdhury
  */
 
 public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
@@ -57,6 +62,8 @@ public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 	private XFormDialog dialog;
 
 	public static final MessageSupport messages = MessageSupport.getMessages( NewRESTProjectAction.class );
+	private KeyListener initialKeyListener;
+	private MouseListener initialMouseListener;
 
 	public NewRESTProjectAction()
 	{
@@ -76,7 +83,8 @@ public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 			JUndoableTextField textField = (( JTextFieldFormField )uriField).getComponent();
 			textField.requestFocus();
 			textField.setFont( textField.getFont().deriveFont( Font.ITALIC ) );
-			addTextInputListenerTo( textField );
+			textField.setForeground( new Color(170, 170, 170) );
+			addListenersTo( textField );
 		}
 
 		while( dialog.show() )
@@ -106,17 +114,35 @@ public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 	}
 
 
-	private void addTextInputListenerTo( final JUndoableTextField innerField )
+	private void addListenersTo( final JUndoableTextField innerField )
 	{
-		innerField.addKeyListener( new KeyAdapter() {
+		initialKeyListener = new KeyAdapter()
+		{
 			@Override
 			public void keyPressed( KeyEvent e )
 			{
-				innerField.setText("");
-				innerField.setFont(innerField.getFont().deriveFont( Font.PLAIN ));
-				innerField.removeKeyListener( this );
+				removeInitialListeners(innerField);
 			}
-		});
+		};
+		innerField.addKeyListener( initialKeyListener );
+		initialMouseListener = new MouseAdapter() {
+
+			@Override
+			public void mouseClicked( MouseEvent e )
+			{
+				removeInitialListeners( innerField );
+			}
+		};
+		innerField.addMouseListener( initialMouseListener );
+	}
+
+	private void removeInitialListeners( JUndoableTextField innerField )
+	{
+		innerField.setText( "" );
+		innerField.setFont( innerField.getFont().deriveFont( Font.PLAIN ) );
+		innerField.setForeground( Color.BLACK );
+		innerField.removeKeyListener( initialKeyListener );
+		innerField.removeMouseListener( initialMouseListener );
 	}
 
 	protected RestService createRestProject( WsdlProject project, String URI ) throws MalformedURLException
@@ -152,8 +178,7 @@ public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 	protected void extractAndFillParameters( String URI, RestParamsPropertyHolder params )
 	{
 		// This does lot of magic including extracting and filling up parameters on the params
-		String path = RestUtils.extractParams( URI, params, false );
-
+		RestUtils.extractParams( URI, params, false );
 	}
 
 	//TODO: In advanced version we have to apply filtering like which type of parameter goes to which location
@@ -178,9 +203,7 @@ public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 
 	protected RestRequest addNewRequest( RestMethod restMethod )
 	{
-		RestRequest restRequest = restMethod.addNewRequest( "Request " + ( restMethod.getRequestCount() + 1 ) );
-
-		return restRequest;
+		return restMethod.addNewRequest( "Request " + ( restMethod.getRequestCount() + 1 ) );
 	}
 
 	/**
@@ -192,8 +215,6 @@ public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 		@AField( description = "Form.URI.Description", type = AField.AFieldType.STRING )
 		public final static String URI = messages.get( "Form.URI.Label" );
 
-		@AField(description = "", type = AField.AFieldType.LABEL)
-		public static final String URI_HINT = messages.get("Form.URI-Hint");
 
 	}
 }
