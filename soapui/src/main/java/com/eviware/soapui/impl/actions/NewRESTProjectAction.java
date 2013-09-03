@@ -121,7 +121,7 @@ public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 			@Override
 			public void keyPressed( KeyEvent e )
 			{
-				removeInitialListeners(innerField);
+				resetUriField( innerField );
 			}
 		};
 		innerField.addKeyListener( initialKeyListener );
@@ -130,13 +130,13 @@ public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 			@Override
 			public void mouseClicked( MouseEvent e )
 			{
-				removeInitialListeners( innerField );
+				resetUriField( innerField );
 			}
 		};
 		innerField.addMouseListener( initialMouseListener );
 	}
 
-	private void removeInitialListeners( JUndoableTextField innerField )
+	private void resetUriField( JUndoableTextField innerField )
 	{
 		innerField.setText( "" );
 		innerField.setFont( innerField.getFont().deriveFont( Font.PLAIN ) );
