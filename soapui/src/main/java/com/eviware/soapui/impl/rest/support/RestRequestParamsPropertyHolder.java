@@ -255,13 +255,14 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 
 	private void renameLocalProperty( String name, String newName )
 	{
+		String value =  values.get( name )==null ?  getPropertyValue( name ) :  values.get( name );
+
 		if(this.containsKey( name )) {
 			RestParamProperty restParamProperty = this.get( name );
 			restParamProperty.setName( newName );
 			this.put( newName, restParamProperty );
 			this.remove( name );
 		}
-		String value =  values.get( name )==null ?  getPropertyValue( name ) :  values.get( name );
 
 		values.put( newName, value );
 		values.remove( name );
