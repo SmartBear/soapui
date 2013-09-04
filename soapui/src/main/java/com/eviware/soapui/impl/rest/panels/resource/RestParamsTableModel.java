@@ -12,6 +12,7 @@
 
 package com.eviware.soapui.impl.rest.panels.resource;
 
+import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder.ParameterStyle;
@@ -19,12 +20,13 @@ import com.eviware.soapui.model.testsuite.TestPropertyListener;
 
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
-import java.util.HashMap;
-import java.util.Map;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import static com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase.ParamLocation;
 
-public class RestParamsTableModel extends AbstractTableModel implements TableModel, TestPropertyListener
+public class RestParamsTableModel extends AbstractTableModel implements TableModel, TestPropertyListener,
+		PropertyChangeListener
 {
 	public static final int PARAM_LOCATION_COLUMN_INDEX = 3;
 	protected RestParamsPropertyHolder params;
@@ -36,6 +38,12 @@ public class RestParamsTableModel extends AbstractTableModel implements TableMod
 	{
 		this.params = params;
 		params.addTestPropertyListener( this );
+		if(params.getModelItem() instanceof RestRequest) {
+			( ( RestRequest )params.getModelItem() ).getResource().getParams().addTestPropertyListener( this );
+			( ( RestRequest )params.getModelItem() ).getResource().addPropertyChangeListener( this );
+			( ( RestRequest )params.getModelItem() ).getRestMethod().getParams().addTestPropertyListener( this );
+			( ( RestRequest )params.getModelItem() ).getRestMethod().addPropertyChangeListener( this );
+		}
 	}
 
 	public void release()
@@ -188,5 +196,11 @@ public class RestParamsTableModel extends AbstractTableModel implements TableMod
 	public void removeProperty( String propertyName )
 	{
 		params.remove( propertyName );
+	}
+
+	@Override
+	public void propertyChange( PropertyChangeEvent evt )
+	{
+		fireTableDataChanged();
 	}
 }

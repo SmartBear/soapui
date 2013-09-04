@@ -35,6 +35,7 @@ import com.eviware.soapui.support.action.swing.SwingActionDelegate;
 import com.eviware.soapui.support.components.JUndoableTextField;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.propertyexpansion.PropertyExpansionPopupListener;
+import org.apache.xmlbeans.impl.values.XmlValueDisconnectedException;
 
 import javax.swing.*;
 import javax.swing.event.DocumentListener;
@@ -422,9 +423,15 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 
 		if(paramsPropertyHolder != null)
 		{
-			paramsPropertyHolder.addParameter( property );
-			RestParamProperty addedParameter = paramsPropertyHolder.getProperty( property.getName() );
-			addedParameter.addPropertyChangeListener( restParamPropertyChangeListener );
+			try
+			{
+				paramsPropertyHolder.addParameter( property );
+				RestParamProperty addedParameter = paramsPropertyHolder.getProperty( property.getName() );
+				addedParameter.addPropertyChangeListener( restParamPropertyChangeListener );
+			} catch( XmlValueDisconnectedException exception )
+			{
+				//Do nothing, it must have been removed by another request editor instance under the same resource/method
+			}
 		}
 		addPropertyChangeListenerToResource( getRequest() );
 	}
