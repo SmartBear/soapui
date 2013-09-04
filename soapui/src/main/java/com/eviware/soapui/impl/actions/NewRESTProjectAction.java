@@ -65,6 +65,7 @@ public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 	public static final MessageSupport messages = MessageSupport.getMessages( NewRESTProjectAction.class );
 	private KeyListener initialKeyListener;
 	private MouseListener initialMouseListener;
+	private Font originalFont;
 
 	public NewRESTProjectAction()
 	{
@@ -83,7 +84,8 @@ public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 		if (uriField instanceof JTextFieldFormField) {
 			JUndoableTextField textField = (( JTextFieldFormField )uriField).getComponent();
 			textField.requestFocus();
-			textField.setFont( textField.getFont().deriveFont( Font.ITALIC ) );
+			originalFont = textField.getFont();
+			textField.setFont( originalFont.deriveFont( Font.ITALIC ) );
 			textField.setForeground( new Color(170, 170, 170) );
 			addListenersTo( textField );
 		}
@@ -142,9 +144,10 @@ public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 		try
 		{
 			innerField.setText( "" );
-			innerField.setFont( innerField.getFont().deriveFont( Font.PLAIN ) );
+			innerField.setFont( originalFont );
 			innerField.setForeground( Color.BLACK );
 		}
+		//TODO: remove logging once we've finished troubleshooting strange, intermittent problem
 		catch (Exception e)
 		{
 			SoapUI.logError(e, "Exception resetting URI field");
