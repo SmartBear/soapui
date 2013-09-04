@@ -12,6 +12,7 @@
 
 package com.eviware.soapui.impl.actions;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.RestParametersConfig;
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.rest.RestMethod;
@@ -38,6 +39,8 @@ import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AForm;
 import com.eviware.x.impl.swing.JTextFieldFormField;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -58,12 +61,15 @@ import java.net.MalformedURLException;
 public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 {
 	public static final String SOAPUI_ACTION_ID = "NewRESTProjectAction";
+
+	private final static Logger logger = Logger.getLogger( NewRESTProjectAction.class );
 	private static final String PROJECT_NAME = "REST Project"; //TODO: configurable or some other intelligent way
 	private XFormDialog dialog;
 
 	public static final MessageSupport messages = MessageSupport.getMessages( NewRESTProjectAction.class );
 	private KeyListener initialKeyListener;
 	private MouseListener initialMouseListener;
+	private Font originalFont;
 
 	public NewRESTProjectAction()
 	{
@@ -82,8 +88,10 @@ public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 		if (uriField instanceof JTextFieldFormField) {
 			JUndoableTextField textField = (( JTextFieldFormField )uriField).getComponent();
 			textField.requestFocus();
-			textField.setFont( textField.getFont().deriveFont( Font.ITALIC ) );
-			textField.setForeground( new Color(170, 170, 170) );
+			originalFont = textField.getFont();
+			textField.setFont( originalFont.deriveFont( Font.ITALIC ) );
+			textField.setForeground( new Color( 170, 170, 170 ) );
+			logger.log( Level.DEBUG, "Adding listeners to URI text field");
 			addListenersTo( textField );
 		}
 
@@ -140,10 +148,23 @@ public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 	{
 		try
 		{
+			logger.log( Level.DEBUG, "Resetting URI field - originalFont = " + originalFont);
 			innerField.setText( "" );
-			innerField.setFont( innerField.getFont().deriveFont( Font.PLAIN ) );
+			innerField.setFont( originalFont );
 			innerField.setForeground( Color.BLACK );
-		} finally
+		}
+		//TODO: remove logging once we've finished troubleshooting strange, intermittent problem
+		catch (Exception e)
+		{
+			SoapUI.logError(e, "Exception resetting URI field");
+		}
+		// errors should not be swallowed, hence a second catch clause that rethrows it
+		catch (Error e)
+		{
+			SoapUI.logError(e, "Error resetting URI field");
+			throw e;
+		}
+		finally
 		{
 			if( initialKeyListener != null )
 			{
