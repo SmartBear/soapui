@@ -251,6 +251,7 @@ public class HttpRequestContentView extends AbstractXmlEditorView<HttpRequestDoc
 		}
 
 		super.propertyChange( evt );
+		paramsTable.refresh();
 	}
 
 	private void fixRequestPanel()

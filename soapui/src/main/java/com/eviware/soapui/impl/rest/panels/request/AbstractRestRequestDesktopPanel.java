@@ -84,6 +84,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 		if( requestItem.getResource() != null )
 		{
 			requestItem.getResource().addPropertyChangeListener( this );
+			requestItem.getResource().addTestPropertyListener( testPropertyListener );
 		}
 	}
 
