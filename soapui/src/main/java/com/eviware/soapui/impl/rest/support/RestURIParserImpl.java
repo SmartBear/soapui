@@ -20,7 +20,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 
 /**
- * Basic RestURIParser using java's .net.URI class
+ * Basic RestURIParser using java's .net.URI and .net.URL class
  *
  * @author Shadid Chowdhury
  * @since 4.5.6
@@ -148,14 +148,14 @@ public class RestURIParserImpl implements RestURIParser
 
 	private void parseWithURL( String uriString ) throws MalformedURLException
 	{
-		URL uri = null;
+		URL url = null;
 		try
 		{
-			uri = new URL( uriString );
-			resourcePath = ( uri.getPath() == null ? "" : uri.getPath() );
-			query = ( uri.getQuery() == null ? "" : uri.getQuery() );
-			scheme = ( uri.getProtocol() == null ? "" : uri.getProtocol() );
-			authority = ( uri.getAuthority() == null ? "" : uri.getAuthority() );
+			url = new URL( uriString );
+			resourcePath = ( url.getPath() == null ? "" : url.getPath() );
+			query = ( url.getQuery() == null ? "" : url.getQuery() );
+			scheme = ( url.getProtocol() == null ? "" : url.getProtocol() );
+			authority = ( url.getAuthority() == null ? "" : url.getAuthority() );
 		}
 		catch( MalformedURLException e )
 		{
@@ -166,7 +166,6 @@ public class RestURIParserImpl implements RestURIParser
 
 	private void parseManually( String uriString )
 	{
-		//String uriExtractorPattern = "^((http[s]?):\\/)?\\/?([^:\\/\\s]+)((\\/\\w+)*\\/)([\\w\\-\\.]+[^#?\\s]+)(.*)?(#[\\w\\-]+)?$";
 		resourcePath = uriString;
 		query = "";
 		scheme = "";
