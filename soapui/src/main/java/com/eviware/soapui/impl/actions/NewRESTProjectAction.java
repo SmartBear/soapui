@@ -39,6 +39,8 @@ import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AForm;
 import com.eviware.x.impl.swing.JTextFieldFormField;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -59,6 +61,8 @@ import java.net.MalformedURLException;
 public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 {
 	public static final String SOAPUI_ACTION_ID = "NewRESTProjectAction";
+
+	private final static Logger logger = Logger.getLogger( NewRESTProjectAction.class );
 	private static final String PROJECT_NAME = "REST Project"; //TODO: configurable or some other intelligent way
 	private XFormDialog dialog;
 
@@ -86,7 +90,8 @@ public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 			textField.requestFocus();
 			originalFont = textField.getFont();
 			textField.setFont( originalFont.deriveFont( Font.ITALIC ) );
-			textField.setForeground( new Color(170, 170, 170) );
+			textField.setForeground( new Color( 170, 170, 170 ) );
+			logger.log( Level.DEBUG, "Adding listeners to URI text field");
 			addListenersTo( textField );
 		}
 
@@ -143,6 +148,7 @@ public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 	{
 		try
 		{
+			logger.log( Level.DEBUG, "Resetting URI field - originalFont = " + originalFont);
 			innerField.setText( "" );
 			innerField.setFont( originalFont );
 			innerField.setForeground( Color.BLACK );
