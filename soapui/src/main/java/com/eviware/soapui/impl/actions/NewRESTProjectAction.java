@@ -12,6 +12,7 @@
 
 package com.eviware.soapui.impl.actions;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.RestParametersConfig;
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.rest.RestMethod;
@@ -143,7 +144,18 @@ public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 			innerField.setText( "" );
 			innerField.setFont( innerField.getFont().deriveFont( Font.PLAIN ) );
 			innerField.setForeground( Color.BLACK );
-		} finally
+		}
+		catch (Exception e)
+		{
+			SoapUI.logError(e, "Exception resetting URI field");
+		}
+		// errors should not be swallowed, hence a second catch clause that rethrows it
+		catch (Error e)
+		{
+			SoapUI.logError(e, "Error resetting URI field");
+			throw e;
+		}
+		finally
 		{
 			if( initialKeyListener != null )
 			{
