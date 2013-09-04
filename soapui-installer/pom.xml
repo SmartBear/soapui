@@ -130,7 +130,7 @@
                         </property>
                         <property>
                             <name>LOADUI_VERSION_NUMBER</name>
-                            <value>2.1.1</value>
+                            <value>2.6.1</value>
                         </property>
                         <property>
                             <name>LOADUI_INSTALLER_URL_BASE</name>
