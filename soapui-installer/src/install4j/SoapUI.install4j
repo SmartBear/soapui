@@ -1827,7 +1827,7 @@ else return "";</string>
                         <string>64</string>
                       </void>
                       <void property="vmOptions">
-                        <array class="java.lang.String" length="10">
+                        <array class="java.lang.String" length="11">
                           <void index="0">
                             <string>-Xms128m</string>
                           </void>
