@@ -5,7 +5,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.smartbear.soapui</groupId>
     <artifactId>soapui-maven-plugin-tester</artifactId>
     <name>soapUI Maven plugin tester</name>
     <packaging>pom</packaging>
@@ -26,7 +25,7 @@
         <plugins>
             <plugin>
                 <groupId>com.smartbear.soapui</groupId>
-                <artifactId>maven-soapui-plugin</artifactId>
+                <artifactId>soapui-maven-plugin</artifactId>
                 <version>${project.parent.version}</version>
                 <configuration>
                     <projectFile>${project.basedir}/src/main/soapui/test-soapui-project.xml</projectFile>

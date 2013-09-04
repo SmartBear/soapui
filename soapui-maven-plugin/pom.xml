@@ -3,8 +3,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-	<groupId>com.smartbear.soapui</groupId>
-	<artifactId>maven-soapui-plugin</artifactId>
+	<artifactId>soapui-maven-plugin</artifactId>
     <name>soapUI Maven plugin</name>
     <description>Maven 2 project for building a soapUI plugin that is compatible with both Maven 1.x and Maven 2.x.</description>
 	<packaging>maven-plugin</packaging>
@@ -26,9 +25,87 @@
 			<artifactId>soapui</artifactId>
 			<version>${project.version}</version>
             <exclusions>
+
+                <!-- These are mainly GUI artifacts not needed in the headless test runner-->
+                <!-- TODO We might also want to remove: fife:rsyntaxtextarea.
+                          It's included in prior versions (< 4.5.2) though -->
+
+                <!-- Team dev -->
+
                 <exclusion>
-                    <artifactId>teamdev</artifactId>
-                    <groupId>jxbrowser</groupId>
+                    <groupId>teamdev</groupId>
+                    <artifactId>jxbrowser</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>teamdev</groupId>
+                    <artifactId>comfyj</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>teamdev</groupId>
+                    <artifactId>winpack</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>teamdev</groupId>
+                    <artifactId>xulrunner-windows</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>teamdev</groupId>
+                    <artifactId>xulrunner-linux64</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>teamdev</groupId>
+                    <artifactId>xulrunner-linux</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>teamdev</groupId>
+                    <artifactId>xulrunner-mac</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>teamdev</groupId>
+                    <artifactId>MozillaInterfaces</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>teamdev</groupId>
+                    <artifactId>engine-gecko</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>teamdev</groupId>
+                    <artifactId>engine-gecko15</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>teamdev</groupId>
+                    <artifactId>engine-ie</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>teamdev</groupId>
+                    <artifactId>engine-webkit</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>teamdev</groupId>
+                    <artifactId>jniwrap</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>teamdev</groupId>
+                    <artifactId>xulrunner15-mac</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>teamdev</groupId>
+                    <artifactId>xulrunner15-windows</artifactId>
+                </exclusion>
+
+                <!-- JGoodies -->
+
+                <exclusion>
+                    <groupId>com.jgoodies</groupId>
+                    <artifactId>forms</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.jgoodies</groupId>
+                    <artifactId>looks</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.jgoodies</groupId>
+                    <artifactId>binding</artifactId>
                 </exclusion>
             </exclusions>
 		</dependency>
@@ -45,9 +122,9 @@
 					<target>1.5</target>
 				</configuration>
 			</plugin>
+
             <!-- FIXME Why do we need this plugin ? -->
 			<plugin>
-			
                 <artifactId>maven-antrun-plugin</artifactId>
 				<executions>
 					<execution>
@@ -64,6 +141,7 @@
 					</execution>
 				</executions>
 			</plugin>
+
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<configuration>
