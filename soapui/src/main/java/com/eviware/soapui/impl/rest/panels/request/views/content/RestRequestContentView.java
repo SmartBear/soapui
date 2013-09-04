@@ -46,7 +46,7 @@ public class RestRequestContentView extends HttpRequestContentView
 
 	protected RestParamsTable buildParamsTable()
 	{
-		return new RestParamsTable( restRequest.getParams(), false, NewRestResourceActionBase.ParamLocation.REQUEST );
+		return new RestParamsTable( restRequest.getParams(), false );
 	}
 
 	public RestParamsTable getParamsTable()

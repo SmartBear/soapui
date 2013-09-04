@@ -28,17 +28,13 @@ public class RestParamsTableModel extends AbstractTableModel implements TableMod
 {
 	public static final int PARAM_LOCATION_COLUMN_INDEX = 3;
 	protected RestParamsPropertyHolder params;
-	private ParamLocation paramLocation;
-	private Map<RestParamProperty, ParamLocation> paramLocations = new HashMap<RestParamProperty, ParamLocation>();
 
 	static String[] COLUMN_NAMES = new String[] { "Name", "Default value", "Style", "Level" };
 	static Class[] COLUMN_TYPES = new Class[] { String.class, String.class, ParameterStyle.class, ParamLocation.class };
 
-	public RestParamsTableModel( RestParamsPropertyHolder params, ParamLocation paramLocation )
+	public RestParamsTableModel( RestParamsPropertyHolder params )
 	{
 		this.params = params;
-		this.paramLocation = paramLocation;
-
 		params.addTestPropertyListener( this );
 	}
 
@@ -107,8 +103,7 @@ public class RestParamsTableModel extends AbstractTableModel implements TableMod
 			case 2:
 				return prop.getStyle();
 			case 3:
-				ParamLocation level = this.paramLocations.get( prop );
-				return level == null ? paramLocation : level;
+				return prop.getParamLocation();
 		}
 
 		return null;
@@ -125,17 +120,17 @@ public class RestParamsTableModel extends AbstractTableModel implements TableMod
 				params.renameProperty( prop.getName(), value.toString() );
 				return;
 			case 1:
-				if( !paramLocation.equals( ParamLocation.REQUEST ) )
-				{
+				//if( !prop.getParamLocation().equals( ParamLocation.REQUEST ) )
+				//{
 					prop.setDefaultValue( value.toString() );
-				}
+				//}
 				prop.setValue( value.toString() );
 				return;
 			case 2:
 				prop.setStyle( ( ParameterStyle )value );
 				return;
 			case 3:
-				this.paramLocations.put( prop, ( ParamLocation )value );
+				prop.setParamLocation(  ( ParamLocation )value );
 				return;
 		}
 	}
