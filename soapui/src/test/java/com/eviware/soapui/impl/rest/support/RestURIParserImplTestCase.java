@@ -172,10 +172,52 @@ public class RestURIParserImplTestCase
 	@Test
 	public void httpPrefixAddedWhenOmittedTest() throws MalformedURLException
 	{
-		String uri = "spotify.com";
-		String expectedEndpoint = "http://spotify.com";
+		String uri = "soapui.com";
+		String expectedEndpoint = "http://soapui.com";
 		String expectedPath = "";
 		String expectedResourceName = "";
+		String expectedQuery = "";
+
+		restURIParser = new RestURIParserImpl( uri );
+
+		assertURIParsedCorrectly( expectedEndpoint, expectedPath, expectedResourceName, expectedQuery, restURIParser );
+	}
+
+	@Test
+	public void uriWithLargeDomainTest() throws MalformedURLException
+	{
+		String uri = "soapui.local";
+		String expectedEndpoint = "http://soapui.local";
+		String expectedPath = "";
+		String expectedResourceName = "";
+		String expectedQuery = "";
+
+		restURIParser = new RestURIParserImpl( uri );
+
+		assertURIParsedCorrectly( expectedEndpoint, expectedPath, expectedResourceName, expectedQuery, restURIParser );
+	}
+
+	@Test
+	public void numericResourceTest() throws MalformedURLException
+	{
+		String uri = "1.57/api/get?id=1234";
+		String expectedEndpoint = "";
+		String expectedPath = "/1.57/api/get";
+		String expectedResourceName = "Get";
+		String expectedQuery = "id=1234";
+
+		restURIParser = new RestURIParserImpl( uri );
+
+		assertURIParsedCorrectly( expectedEndpoint, expectedPath, expectedResourceName, expectedQuery, restURIParser );
+	}
+
+	@Test
+	public void domainWithHyphenAndPortTest() throws MalformedURLException
+	{
+		String uri = "http://consys-qa-m09.websys.aol.com:8090/subscribers/subscriber";
+		String expectedEndpoint = "http://consys-qa-m09.websys.aol.com:8090";
+		String expectedPath = "/subscribers/subscriber";
+		String expectedResourceName = "Subscriber";
 		String expectedQuery = "";
 
 		restURIParser = new RestURIParserImpl( uri );
