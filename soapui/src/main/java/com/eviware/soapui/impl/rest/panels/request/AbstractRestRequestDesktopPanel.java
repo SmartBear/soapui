@@ -57,7 +57,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 	private TextPanelWithTopLabel resourcePanel;
 	private TextPanelWithTopLabel queryPanel;
 	private JUndoableTextField pathTextField;
-	private JComboBox acceptCombo;
+//	private JComboBox acceptCombo;
 	private JLabel pathLabel;
 	private boolean updating;
 	private InternalTestPropertyListener testPropertyListener = new InternalTestPropertyListener();
@@ -91,6 +91,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 	{
 		updateFullPathLabel();
 
+		/*
 		if( evt.getPropertyName().equals( "accept" ) && !updatingRequest )
 		{
 			acceptCombo.setSelectedItem( evt.getNewValue() );
@@ -100,8 +101,8 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 			Object item = acceptCombo.getSelectedItem();
 			acceptCombo.setModel( new DefaultComboBoxModel( ( Object[] )evt.getNewValue() ) );
 			acceptCombo.setSelectedItem( item );
-		}
-		else if( ( evt.getPropertyName().equals( "path" ) || evt.getPropertyName().equals( "restMethod" ) )
+		}*/
+		if( ( evt.getPropertyName().equals( "path" ) || evt.getPropertyName().equals( "restMethod" ) )
 				&& ( getRequest().getResource() == null || getRequest().getResource() == evt.getSource() ) )
 		{
 			if( pathLabel != null )
@@ -148,6 +149,8 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 	{
 		if( getRequest().getResource() != null )
 		{
+			JPanel panel = new JPanel( new BorderLayout() );
+
 			JComponent baseToolBar = UISupport.createToolbar();
 			baseToolBar.setPreferredSize( new Dimension( 600, 45 ) );
 
@@ -206,7 +209,14 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 			baseToolBar.add( splitButton );
 			baseToolBar.add( UISupport.createToolbarButton( new ShowOnlineHelpAction( getHelpUrl() ) ) );
 
-			return baseToolBar;
+			panel.add( baseToolBar, BorderLayout.NORTH );
+
+			JXToolBar toolbar = UISupport.createToolbar();
+			addToolbarComponents( toolbar );
+
+			panel.add( toolbar, BorderLayout.SOUTH );
+
+			return panel;
 		}
 		else
 		{
@@ -221,6 +231,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 
 		if( getRequest().getResource() != null )
 		{
+			/*
 			acceptCombo = new JComboBox( getRequest().getResponseMediaTypes() );
 			acceptCombo.setEditable( true );
 			acceptCombo.setToolTipText( "Sets accepted encoding(s) for response" );
@@ -236,7 +247,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 			} );
 
 			toolbar.addLabeledFixed( "Accept", acceptCombo );
-			toolbar.addSeparator();
+			toolbar.addSeparator(); */
 
 			if( getRequest() instanceof RestTestRequestInterface )
 
