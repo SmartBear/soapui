@@ -61,7 +61,7 @@ public class ProxyUtils
 
 		if( manualProxy && proxyEnabled )
 		{
-			setManualProxySettings( settings, httpMethod, httpContext, urlString, context, proxyEnabled );
+			setManualProxySettings( settings, httpMethod, httpContext, urlString, context );
 		}
 		else if( proxyEnabled )
 		{
@@ -98,7 +98,7 @@ public class ProxyUtils
 		httpClient.setRoutePlanner( new ProxySelectorRoutePlanner( httpClient.getConnectionManager().getSchemeRegistry(), proxySelector ) );
 	}
 
-	private static void setManualProxySettings( Settings settings, HttpUriRequest httpMethod, HttpContext httpContext, String urlString, PropertyExpansionContext context, boolean enabled )
+	private static void setManualProxySettings( Settings settings, HttpUriRequest httpMethod, HttpContext httpContext, String urlString, PropertyExpansionContext context )
 	{
 		resetRoutePlanner();
 

@@ -133,13 +133,6 @@ public class ProxyUtilsTestCase
 		assertManualProxy( httpMethod, PROXY_SETTINGS_URL_STRING );
 	}
 
-	private void assertManualProxy( HttpUriRequest httpMethod, String proxyUrl )
-	{
-		HttpHost proxy = ( HttpHost )httpMethod.getParams().getParameter( ConnRoutePNames.DEFAULT_PROXY );
-
-		assertEquals( proxyUrl, proxy.toURI() );
-	}
-
 	@Test
 	public void givenAutomaticProxyDetectionAndNoProxyAvailableThenDoNotSetProxy()
 	{
@@ -152,9 +145,18 @@ public class ProxyUtilsTestCase
 	}
 
 	@Test
+	@Ignore
 	public void testSwitchBetweenDifferentProxySettings()
 	{
 
+	}
+
+
+	private void assertManualProxy( HttpUriRequest httpMethod, String proxyUrl )
+	{
+		HttpHost proxy = ( HttpHost )httpMethod.getParams().getParameter( ConnRoutePNames.DEFAULT_PROXY );
+
+		assertEquals( proxyUrl, proxy.toURI() );
 	}
 
 	private SettingsImpl emptySettings()
