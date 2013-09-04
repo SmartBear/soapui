@@ -119,7 +119,7 @@ public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 		initialKeyListener = new KeyAdapter()
 		{
 			@Override
-			public void keyPressed( KeyEvent e )
+			public void keyTyped( KeyEvent e )
 			{
 				resetUriField( innerField );
 			}
@@ -138,11 +138,23 @@ public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 
 	private void resetUriField( JUndoableTextField innerField )
 	{
-		innerField.setText( "" );
-		innerField.setFont( innerField.getFont().deriveFont( Font.PLAIN ) );
-		innerField.setForeground( Color.BLACK );
-		innerField.removeKeyListener( initialKeyListener );
-		innerField.removeMouseListener( initialMouseListener );
+		try
+		{
+			innerField.setText( "" );
+			innerField.setFont( innerField.getFont().deriveFont( Font.PLAIN ) );
+			innerField.setForeground( Color.BLACK );
+		} finally
+		{
+			if( initialKeyListener != null )
+			{
+				innerField.removeKeyListener( initialKeyListener );
+			}
+			if( initialMouseListener != null )
+			{
+				innerField.removeMouseListener( initialMouseListener );
+			}
+		}
+
 	}
 
 	protected RestService createRestProject( WsdlProject project, String URI ) throws MalformedURLException
