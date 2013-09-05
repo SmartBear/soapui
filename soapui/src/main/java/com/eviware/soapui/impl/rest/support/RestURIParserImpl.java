@@ -40,6 +40,11 @@ public class RestURIParserImpl implements RestURIParser
 		if( uriString == null || uriString.isEmpty() )
 			throw new MalformedURLException( "Empty URI" );
 
+		parseURI( uriString );
+	}
+
+	private void parseURI( String uriString ) throws MalformedURLException
+	{
 		try
 		{
 			parseWithURI( uriString );
