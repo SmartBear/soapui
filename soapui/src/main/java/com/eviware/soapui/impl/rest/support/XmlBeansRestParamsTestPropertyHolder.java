@@ -97,7 +97,7 @@ public class XmlBeansRestParamsTestPropertyHolder implements RestParamsPropertyH
 		{
 			return ParamLocation.REQUEST;
 		} else*/
-		if (getModelItem() instanceof RestResource)
+		if (getModelItem()==null || getModelItem() instanceof RestResource)
 		{
 			return ParamLocation.RESOURCE;
 		} else if (getModelItem() instanceof RestMethod)
