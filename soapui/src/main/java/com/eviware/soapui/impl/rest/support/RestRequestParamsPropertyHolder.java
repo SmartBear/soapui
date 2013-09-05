@@ -130,7 +130,7 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 
 	public ModelItem getModelItem()
 	{
-		return methodParams.getModelItem();
+		return this.modelItem;
 	}
 
 	public Map<String, TestProperty> getProperties()

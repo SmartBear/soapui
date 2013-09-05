@@ -16,6 +16,7 @@ import com.eviware.soapui.impl.rest.RestRepresentation;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase;
 import com.eviware.soapui.impl.rest.panels.resource.RestParamsTable;
+import com.eviware.soapui.impl.rest.panels.resource.RestParamsTableModel;
 import com.eviware.soapui.impl.rest.support.RestUtils;
 import com.eviware.soapui.impl.support.http.HttpRequestContentView;
 import com.eviware.soapui.impl.support.panels.AbstractHttpXmlRequestDesktopPanel.HttpRequestMessageEditor;
@@ -46,7 +47,18 @@ public class RestRequestContentView extends HttpRequestContentView
 
 	protected RestParamsTable buildParamsTable()
 	{
-		return new RestParamsTable( restRequest.getParams(), false );
+		RestParamsTableModel model = new RestParamsTableModel( restRequest.getParams() ) {
+			@Override
+			public String getColumnName( int columnIndex )
+			{
+				if(columnIndex==1){
+					return "Value";
+				}
+
+				return super.getColumnName( columnIndex );
+			}
+		};
+		return new RestParamsTable( restRequest.getParams(), false, model );
 	}
 
 	public RestParamsTable getParamsTable()

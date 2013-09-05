@@ -28,6 +28,7 @@ import com.eviware.soapui.impl.rest.support.RestUtils;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
+import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.MessageSupport;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
@@ -38,12 +39,12 @@ import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AForm;
 import com.eviware.x.impl.swing.JTextFieldFormField;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 
+import javax.swing.text.Document;
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -58,12 +59,15 @@ import java.net.MalformedURLException;
 public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 {
 	public static final String SOAPUI_ACTION_ID = "NewRESTProjectAction";
+
+	private final static Logger logger = Logger.getLogger( NewRESTProjectAction.class );
 	private static final String PROJECT_NAME = "REST Project"; //TODO: configurable or some other intelligent way
 	private XFormDialog dialog;
 
 	public static final MessageSupport messages = MessageSupport.getMessages( NewRESTProjectAction.class );
-	private KeyListener initialKeyListener;
+	private DocumentListenerAdapter initialDocumentListener;
 	private MouseListener initialMouseListener;
+	private Font originalFont;
 
 	public NewRESTProjectAction()
 	{
@@ -82,8 +86,10 @@ public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 		if (uriField instanceof JTextFieldFormField) {
 			JUndoableTextField textField = (( JTextFieldFormField )uriField).getComponent();
 			textField.requestFocus();
-			textField.setFont( textField.getFont().deriveFont( Font.ITALIC ) );
-			textField.setForeground( new Color(170, 170, 170) );
+			originalFont = textField.getFont();
+			textField.setFont( originalFont.deriveFont( Font.ITALIC ) );
+			textField.setForeground( new Color( 170, 170, 170 ) );
+			logger.log( Level.DEBUG, "Adding listeners to URI text field");
 			addListenersTo( textField );
 		}
 
@@ -116,15 +122,16 @@ public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 
 	private void addListenersTo( final JUndoableTextField innerField )
 	{
-		initialKeyListener = new KeyAdapter()
+		initialDocumentListener = new DocumentListenerAdapter()
 		{
+
 			@Override
-			public void keyPressed( KeyEvent e )
+			public void update( Document document )
 			{
 				resetUriField( innerField );
 			}
 		};
-		innerField.addKeyListener( initialKeyListener );
+		innerField.getDocument().addDocumentListener( initialDocumentListener );
 		initialMouseListener = new MouseAdapter() {
 
 			@Override
@@ -138,11 +145,24 @@ public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 
 	private void resetUriField( JUndoableTextField innerField )
 	{
-		innerField.setText( "" );
-		innerField.setFont( innerField.getFont().deriveFont( Font.PLAIN ) );
-		innerField.setForeground( Color.BLACK );
-		innerField.removeKeyListener( initialKeyListener );
-		innerField.removeMouseListener( initialMouseListener );
+		try
+		{
+			innerField.setText( "" );
+			innerField.setFont( originalFont );
+			innerField.setForeground( Color.BLACK );
+		}
+		finally
+		{
+			if( initialDocumentListener != null )
+			{
+				innerField.getDocument().removeDocumentListener( initialDocumentListener );
+			}
+			if( initialMouseListener != null )
+			{
+				innerField.removeMouseListener( initialMouseListener );
+			}
+		}
+
 	}
 
 	protected RestService createRestProject( WsdlProject project, String URI ) throws MalformedURLException
