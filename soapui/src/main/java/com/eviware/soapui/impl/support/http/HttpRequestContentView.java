@@ -12,7 +12,6 @@
 
 package com.eviware.soapui.impl.support.http;
 
-import com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase;
 import com.eviware.soapui.impl.rest.panels.resource.RestParamsTable;
 import com.eviware.soapui.impl.rest.panels.resource.RestParamsTableModel;
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
@@ -27,9 +26,18 @@ import com.eviware.soapui.support.propertyexpansion.PropertyExpansionPopupListen
 import com.eviware.soapui.support.xml.SyntaxEditorUtil;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
-import javax.swing.*;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.SwingUtilities;
 import javax.swing.text.Document;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
@@ -199,14 +207,12 @@ public class HttpRequestContentView extends AbstractXmlEditorView<HttpRequestDoc
 			}
 		} );
 
-		postQueryCheckBox.setPreferredSize( new Dimension( 130, 20 ) );
 		toolbar.addFixed( postQueryCheckBox );
 	}
 
 	protected void addMediaTypeCombo( JXToolBar toolbar )
 	{
 		mediaTypeCombo = new JComboBox( getRequestMediaTypes() );
-		mediaTypeCombo.setPreferredSize( new Dimension( 120, 20 ) );
 		mediaTypeCombo.setEnabled( httpRequest.hasRequestBody() );
 		mediaTypeCombo.setEditable( true );
 		if( httpRequest.getMediaType() != null )
@@ -300,8 +306,8 @@ public class HttpRequestContentView extends AbstractXmlEditorView<HttpRequestDoc
 
 	public void setEditable( boolean enabled )
 	{
-		contentEditor.setEnabled( enabled ? httpRequest.hasRequestBody() : false );
-		contentEditor.setEditable( enabled ? httpRequest.hasRequestBody() : false );
+		contentEditor.setEnabled( enabled && httpRequest.hasRequestBody() );
+		contentEditor.setEditable( enabled && httpRequest.hasRequestBody() );
 		mediaTypeCombo.setEnabled( enabled && !httpRequest.isPostQueryString() );
 		postQueryCheckBox.setEnabled( enabled );
 	}
