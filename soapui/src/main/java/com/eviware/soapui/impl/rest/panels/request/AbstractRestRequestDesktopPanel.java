@@ -53,11 +53,9 @@ import static com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder.Para
 public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 extends RestRequestInterface> extends
 		AbstractHttpXmlRequestDesktopPanel<T, T2>
 {
-	private boolean updatingRequest;
 	private TextPanelWithTopLabel resourcePanel;
 	private TextPanelWithTopLabel queryPanel;
 	private JUndoableTextField pathTextField;
-//	private JComboBox acceptCombo;
 	private JLabel pathLabel;
 	private boolean updating;
 	private InternalTestPropertyListener testPropertyListener = new InternalTestPropertyListener();
@@ -91,17 +89,6 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 	{
 		updateFullPathLabel();
 
-		/*
-		if( evt.getPropertyName().equals( "accept" ) && !updatingRequest )
-		{
-			acceptCombo.setSelectedItem( evt.getNewValue() );
-		}
-		else if( evt.getPropertyName().equals( "responseMediaTypes" ) && !updatingRequest )
-		{
-			Object item = acceptCombo.getSelectedItem();
-			acceptCombo.setModel( new DefaultComboBoxModel( ( Object[] )evt.getNewValue() ) );
-			acceptCombo.setSelectedItem( item );
-		}*/
 		if( ( evt.getPropertyName().equals( "path" ) || evt.getPropertyName().equals( "restMethod" ) )
 				&& ( getRequest().getResource() == null || getRequest().getResource() == evt.getSource() ) )
 		{
@@ -140,7 +127,9 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 	{
 		if( getRequest().getResource() == null )
 		{
-			addToolbarComponents( toolbar );
+			JButton addToTestCaseButton = createActionButton( SwingActionDelegate.createDelegate(
+					AddRestRequestToTestCaseAction.SOAPUI_ACTION_ID, getRequest(), null, "/addToTestCase.gif" ), true );
+			toolbar.add( addToTestCaseButton );
 		}
 	}
 
@@ -151,14 +140,14 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 		{
 			JPanel panel = new JPanel( new BorderLayout() );
 
-			JComponent baseToolBar = UISupport.createToolbar();
+			JXToolBar baseToolBar = UISupport.createToolbar();
 			baseToolBar.setPreferredSize( new Dimension( 600, 45 ) );
 
 			JComponent submitButton = super.getSubmitButton();
+			baseToolBar.add( submitButton );
 
-			JButton addToTestCaseButton = createActionButton( SwingActionDelegate.createDelegate(
-					AddRestRequestToTestCaseAction.SOAPUI_ACTION_ID, getRequest(), null, "/addToTestCase.gif" ), true );
-
+			// insertButtons injects different buttons for different editors. It is overridden in other subclasses
+			insertButtons( baseToolBar );
 			JPanel methodPanel = new JPanel( new BorderLayout() );
 			methodPanel.setMaximumSize( new Dimension( 75, 45 ) );
 			methodComboBox = new JComboBox<RequestMethod>( new RestRequestMethodModel( getRequest() ) );
@@ -180,29 +169,14 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 			endpointPanel.add( endpointCombo, BorderLayout.SOUTH );
 
 
-			String path = getRequest().getResource().getPath();
-			resourcePanel = new TextPanelWithTopLabel( "Resource", path, new DocumentListenerAdapter()
-			{
-				@Override
-				public void update( Document document )
-				{
-					getRequest().getResource().setPath( resourcePanel.getText() );
-				}
-			} );
 
-			String query = RestUtils.getQueryParamsString( getRequest().getParams(), getRequest() );
-			queryPanel = new TextPanelWithTopLabel( "Query", query, false );
-
-			baseToolBar.add( submitButton );
-			baseToolBar.add( addToTestCaseButton );
 			baseToolBar.add( cancelButton );
 			baseToolBar.add( methodPanel );
 			baseToolBar.add( Box.createHorizontalStrut( 4 ) );
 			baseToolBar.add( endpointPanel );
 			baseToolBar.add( Box.createHorizontalStrut( 4 ) );
-			baseToolBar.add( resourcePanel );
-			baseToolBar.add( Box.createHorizontalStrut( 4 ) );
-			baseToolBar.add( queryPanel );
+
+			addResourceAndQueryField( baseToolBar );
 
 			baseToolBar.add( Box.createHorizontalGlue() );
 			baseToolBar.add( tabsButton );
@@ -225,45 +199,42 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 		}
 	}
 
+	private void addResourceAndQueryField( JXToolBar toolbar )
+	{
+		if( !(getRequest() instanceof RestTestRequestInterface) )
+		{
+			String path = getRequest().getResource().getPath();
+			resourcePanel = new TextPanelWithTopLabel( "Resource", path, new DocumentListenerAdapter()
+			{
+				@Override
+				public void update( Document document )
+				{
+					getRequest().getResource().setPath( resourcePanel.getText() );
+				}
+			} );
+			toolbar.add( resourcePanel );
+
+			toolbar.add( Box.createHorizontalStrut( 4 ) );
+
+			String query = RestUtils.getQueryParamsString( getRequest().getParams(), getRequest() );
+			queryPanel = new TextPanelWithTopLabel( "Query", query, false );
+			toolbar.add( queryPanel );
+		}
+	}
+
 	protected void addToolbarComponents( JXToolBar toolbar )
 	{
 		toolbar.addSeparator();
 
-		if( getRequest().getResource() != null )
+		if( getRequest().getResource() != null && getRequest() instanceof RestTestRequestInterface )
 		{
-			/*
-			acceptCombo = new JComboBox( getRequest().getResponseMediaTypes() );
-			acceptCombo.setEditable( true );
-			acceptCombo.setToolTipText( "Sets accepted encoding(s) for response" );
-			acceptCombo.setSelectedItem( getRequest().getAccept() );
-			acceptCombo.addItemListener( new ItemListener()
-			{
-				public void itemStateChanged( ItemEvent e )
-				{
-					updatingRequest = true;
-					getRequest().setAccept( String.valueOf( acceptCombo.getSelectedItem() ) );
-					updatingRequest = false;
-				}
-			} );
+			pathCombo = new JComboBox( new PathComboBoxModel() );
+			pathCombo.setRenderer( new RestMethodListCellRenderer() );
+			pathCombo.setPreferredSize( new Dimension( 200, 20 ) );
+			pathCombo.setSelectedItem( getRequest().getRestMethod() );
 
-			toolbar.addLabeledFixed( "Accept", acceptCombo );
-			toolbar.addSeparator(); */
-
-			if( getRequest() instanceof RestTestRequestInterface )
-
-			{
-				pathCombo = new JComboBox( new PathComboBoxModel() );
-				pathCombo.setRenderer( new RestMethodListCellRenderer() );
-				pathCombo.setPreferredSize( new Dimension( 200, 20 ) );
-				pathCombo.setSelectedItem( getRequest().getRestMethod() );
-
-				toolbar.addLabeledFixed( "Resource/Method:", pathCombo );
-				toolbar.addSeparator();
-			}
-			else
-			{
-				toolbar.add( new JLabel( "Full Path: " ) );
-			}
+			toolbar.addLabeledFixed( "Resource/Method:", pathCombo );
+			toolbar.addSeparator();
 
 			pathLabel = new JLabel();
 			updateFullPathLabel();
@@ -361,6 +332,9 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 
 	private void updateResourceAndQueryString( String propertyName, String oldValue, String newValue )
 	{
+		if( resourcePanel == null || queryPanel == null )
+			return;
+
 		RestParamProperty property = getRequest().getParams().getProperty( propertyName );
 		ParameterStyle style = property.getStyle();
 		if( style.equals( QUERY ) )
@@ -369,8 +343,8 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 		}
 		else if( style.equals( ParameterStyle.MATRIX ) )
 		{
-			resourcePanel.setText( resourcePanel.getText().replaceAll(property.getName() +"=" +
-					oldValue, property.getName() + "=" + newValue) );
+			resourcePanel.setText( resourcePanel.getText().replaceAll( property.getName() + "=" +
+					oldValue, property.getName() + "=" + newValue ) );
 		}
 	}
 
