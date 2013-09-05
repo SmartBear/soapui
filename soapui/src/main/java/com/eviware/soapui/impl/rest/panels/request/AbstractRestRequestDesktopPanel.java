@@ -339,12 +339,12 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 			}
 			else if( style.equals( ParameterStyle.TEMPLATE ) )
 			{
-				resourcePanel.setText( resourcePanel.getText().replaceAll("\\{" + oldName +"\\}", "{" + newName + "}"));
+				resourcePanel.setText( resourcePanel.getText().replaceAll( "\\{" + oldName + "\\}", "{" + newName + "}" ) );
 			}
 			else if( style.equals( ParameterStyle.MATRIX ) )
 			{
-				resourcePanel.setText( resourcePanel.getText().replaceAll(oldName +"=" +
-						property.getValue(), property.getName() + "=" + property.getValue()) );
+				resourcePanel.setText( resourcePanel.getText().replaceAll( oldName + "=" +
+						property.getValue(), property.getName() + "=" + property.getValue() ) );
 			}
 			updateFullPathLabel();
 		}
@@ -360,8 +360,8 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 		}
 		else if( style.equals( ParameterStyle.MATRIX ) )
 		{
-			resourcePanel.setText( resourcePanel.getText().replaceAll(property.getName() +"=" +
-					oldValue, property.getName() + "=" + newValue) );
+			resourcePanel.setText( resourcePanel.getText().replaceAll( property.getName() + "=" +
+					oldValue, property.getName() + "=" + newValue ) );
 		}
 	}
 
@@ -386,18 +386,25 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 	{
 		public void propertyChange( PropertyChangeEvent evt )
 		{
-			if(evt.getPropertyName().equals( XmlBeansRestParamsTestPropertyHolder.PROPERTY_STYLE ))
+			try
 			{
-				RestParamProperty source = ( RestParamProperty )evt.getSource();
-				removeParamForStyle( source, ( ParameterStyle )evt.getOldValue() );
-				addPropertyForStyle( source, ( ParameterStyle ) evt.getNewValue() );
-			}
+				if( evt.getPropertyName().equals( XmlBeansRestParamsTestPropertyHolder.PROPERTY_STYLE ) )
+				{
+					RestParamProperty source = ( RestParamProperty )evt.getSource();
+					removeParamForStyle( source, ( ParameterStyle )evt.getOldValue() );
+					addPropertyForStyle( source, ( ParameterStyle )evt.getNewValue() );
+				}
 
-			if(evt.getPropertyName().equals( XmlBeansRestParamsTestPropertyHolder.PARAM_LOCATION ))
+				if( evt.getPropertyName().equals( XmlBeansRestParamsTestPropertyHolder.PARAM_LOCATION ) )
+				{
+					RestParamProperty source = ( RestParamProperty )evt.getSource();
+					addPropertyToLevel( source, ( ParamLocation )evt.getNewValue() );
+					removePropertyFromLevel( source.getName(), ( ParamLocation )evt.getOldValue() );
+				}
+			}
+			catch( XmlValueDisconnectedException exception )
 			{
-				RestParamProperty source = ( RestParamProperty )evt.getSource();
-				addPropertyToLevel( source, ( ParamLocation )evt.getNewValue() );
-				removePropertyFromLevel(source.getName(), ( ParamLocation) evt.getOldValue());
+				//Do nothing, it must have been removed by another request editor instance under the same resource/method
 			}
 			updateFullPathLabel();
 		}
@@ -421,17 +428,11 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 			//	break;
 		}
 
-		if(paramsPropertyHolder != null)
+		if( paramsPropertyHolder != null )
 		{
-			try
-			{
-				paramsPropertyHolder.addParameter( property );
-				RestParamProperty addedParameter = paramsPropertyHolder.getProperty( property.getName() );
-				addedParameter.addPropertyChangeListener( restParamPropertyChangeListener );
-			} catch( XmlValueDisconnectedException exception )
-			{
-				//Do nothing, it must have been removed by another request editor instance under the same resource/method
-			}
+			paramsPropertyHolder.addParameter( property );
+			RestParamProperty addedParameter = paramsPropertyHolder.getProperty( property.getName() );
+			addedParameter.addPropertyChangeListener( restParamPropertyChangeListener );
 		}
 		addPropertyChangeListenerToResource( getRequest() );
 	}
@@ -447,8 +448,8 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 				getRequest().getResource().removeProperty( propertytName );
 				break;
 			//case REQUEST:
-				//getRequest().removeProperty( propertytName );
-				//break;
+			//getRequest().removeProperty( propertytName );
+			//break;
 		}
 
 	}
@@ -461,11 +462,11 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 				resetQueryPanelText();
 				break;
 			case TEMPLATE:
-				resourcePanel.setText( resourcePanel.getText().replaceAll( "\\{"+property.getName() +"\\}","" ) );
+				resourcePanel.setText( resourcePanel.getText().replaceAll( "\\{" + property.getName() + "\\}", "" ) );
 				break;
 			case MATRIX:
-				resourcePanel.setText( resourcePanel.getText().replaceAll( ";"+property.getName() +"=" +
-						property.getValue(),"" ) );
+				resourcePanel.setText( resourcePanel.getText().replaceAll( ";" + property.getName() + "=" +
+						property.getValue(), "" ) );
 				break;
 			default:
 				break;
@@ -480,10 +481,10 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 				resetQueryPanelText();
 				break;
 			case TEMPLATE:
-				resourcePanel.setText( resourcePanel.getText() + "{"+property.getName() +"}" );
+				resourcePanel.setText( resourcePanel.getText() + "{" + property.getName() + "}" );
 				break;
 			case MATRIX:
-				resourcePanel.setText( resourcePanel.getText() + ";"+property.getName() +"=" + property.getValue() );
+				resourcePanel.setText( resourcePanel.getText() + ";" + property.getName() + "=" + property.getValue() );
 				break;
 			default:
 				break;
