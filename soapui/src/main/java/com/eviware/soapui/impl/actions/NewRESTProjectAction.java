@@ -28,7 +28,6 @@ import com.eviware.soapui.impl.rest.support.RestUtils;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
-import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.MessageSupport;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
@@ -42,9 +41,11 @@ import com.eviware.x.impl.swing.JTextFieldFormField;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
-import javax.swing.text.Document;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -65,7 +66,7 @@ public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 	private XFormDialog dialog;
 
 	public static final MessageSupport messages = MessageSupport.getMessages( NewRESTProjectAction.class );
-	private DocumentListenerAdapter initialDocumentListener;
+	private KeyListener initialKeyListener;
 	private MouseListener initialMouseListener;
 	private Font originalFont;
 
@@ -122,16 +123,17 @@ public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 
 	private void addListenersTo( final JUndoableTextField innerField )
 	{
-		initialDocumentListener = new DocumentListenerAdapter()
+		initialKeyListener = new KeyAdapter()
 		{
 
 			@Override
-			public void update( Document document )
+			public void keyPressed( KeyEvent e )
 			{
 				resetUriField( innerField );
+
 			}
 		};
-		innerField.getDocument().addDocumentListener( initialDocumentListener );
+		innerField.addKeyListener( initialKeyListener );
 		initialMouseListener = new MouseAdapter() {
 
 			@Override
@@ -153,9 +155,9 @@ public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 		}
 		finally
 		{
-			if( initialDocumentListener != null )
+			if( initialKeyListener != null )
 			{
-				innerField.getDocument().removeDocumentListener( initialDocumentListener );
+				innerField.removeKeyListener( initialKeyListener );
 			}
 			if( initialMouseListener != null )
 			{

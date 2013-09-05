@@ -12,9 +12,6 @@
 
 package com.eviware.soapui.impl.rest.actions.project;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.rest.RestServiceFactory;
@@ -25,16 +22,15 @@ import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.support.MessageSupport;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
-import com.eviware.x.form.ValidationMessage;
-import com.eviware.x.form.XFormDialog;
-import com.eviware.x.form.XFormField;
-import com.eviware.x.form.XFormFieldListener;
-import com.eviware.x.form.XFormFieldValidator;
+import com.eviware.x.form.*;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.validators.RequiredValidator;
+
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * Actions for importing an existing soapUI project file into the current
@@ -96,10 +92,12 @@ public class NewRestServiceAction extends AbstractSoapUIAction<WsdlProject>
 					}
 
 					dialog.getFormField( Form.EXTRACTPARAMS ).setEnabled( enable );
+					dialog.setBooleanValue( Form.EXTRACTPARAMS, enable );
 				}
 			} );
 
 			dialog.getFormField( Form.EXTRACTPARAMS ).setEnabled( false );
+			dialog.setBooleanValue( Form.EXTRACTPARAMS, false );
 			dialog.getFormField( Form.EXTRACTPARAMS ).addFormFieldListener( new XFormFieldListener()
 			{
 				public void valueChanged( XFormField sourceField, String newValue, String oldValue )
