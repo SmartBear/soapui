@@ -15,7 +15,9 @@ package com.eviware.soapui.impl.rest.support;
 import com.eviware.soapui.config.RestParametersConfig;
 import junit.framework.JUnit4TestAdapter;
 import org.junit.After;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
@@ -29,18 +31,16 @@ import static org.junit.Assert.*;
  */
 public class RestURIParserImplTestCase
 {
-	public static junit.framework.Test suite()
-	{
-		return new JUnit4TestAdapter(
-				RestURIParserImplTestCase.class );
-	}
-
 	private RestURIParserImpl restURIParser;
+
+	@Rule
+	public ExpectedException thrown= ExpectedException.none();
 
 	@After
 	public void tearDown()
 	{
 		restURIParser = null;
+		thrown = null;
 	}
 
 	@Test
@@ -223,6 +223,55 @@ public class RestURIParserImplTestCase
 		restURIParser = new RestURIParserImpl( uri );
 
 		assertURIParsedCorrectly( expectedEndpoint, expectedPath, expectedResourceName, expectedQuery, restURIParser );
+
+	}
+
+	@Test
+	public void invalidProtocol() throws MalformedURLException
+	{
+		String uri = "ftp://spotify.com/api/?userId=1234";
+
+		thrown.expect( MalformedURLException.class );
+		thrown.expectMessage( "unsupported protocol" );
+
+		restURIParser = new RestURIParserImpl( uri );
+
+	}
+
+	@Test
+	public void invalidHost() throws MalformedURLException
+	{
+		String uri = "http://sp\\sd.com/api/?userId=1234";
+
+		thrown.expect( MalformedURLException.class );
+		thrown.expectMessage( "Invalid" );
+
+		restURIParser = new RestURIParserImpl( uri );
+
+	}
+
+	@Test
+	public void nullURI() throws MalformedURLException
+	{
+		String uri = null;
+
+		thrown.expect( MalformedURLException.class );
+		thrown.expectMessage( "Empty" );
+
+		restURIParser = new RestURIParserImpl( uri );
+
+	}
+
+	@Test
+	public void emptyURI() throws MalformedURLException
+	{
+		String uri = "";
+
+		thrown.expect( MalformedURLException.class );
+		thrown.expectMessage( "Empty" );
+
+		restURIParser = new RestURIParserImpl( uri );
+
 	}
 
 	private void assertURIParsedCorrectly( String expectedEndpoint,

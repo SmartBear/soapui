@@ -12,6 +12,7 @@
 
 package com.eviware.soapui.impl.rest.support;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.RestURIParser;
 
 import java.net.MalformedURLException;
@@ -37,10 +38,17 @@ public class RestURIParserImpl implements RestURIParser
 
 	public RestURIParserImpl( String uriString ) throws MalformedURLException
 	{
-		if( uriString == null || uriString.isEmpty() )
-			throw new MalformedURLException( "Empty URI" );
+		preValidation( uriString );
 
 		parseURI( uriString );
+
+		postValidation( );
+	}
+
+	private void preValidation( String uriString ) throws MalformedURLException
+	{
+		if( uriString == null || uriString.isEmpty() )
+			throw new MalformedURLException( "Empty URI" );
 	}
 
 	private void parseURI( String uriString ) throws MalformedURLException
@@ -54,6 +62,36 @@ public class RestURIParserImpl implements RestURIParser
 			parseWithURL( uriString );
 
 		}
+	}
+
+	private void postValidation( ) throws MalformedURLException
+	{
+		if( !validateScheme() )
+		{
+			throw new MalformedURLException( "URI contains unsupported protocol. Supported protocols are HTTP/HTTPS" );
+		}
+		else if( !validateAuthority() )
+		{
+			throw new MalformedURLException( "Invalid endpoint" );
+		}
+	}
+
+	private boolean validateScheme() throws MalformedURLException
+	{
+		String scheme = getScheme();
+		if( scheme.isEmpty() )
+			return true;
+
+		return scheme.matches( "(HTTP|http).*" );
+	}
+
+	private boolean validateAuthority() throws MalformedURLException
+	{
+		String endpoint = getEndpoint();
+		if( endpoint.isEmpty() )
+			return true;
+
+		return !endpoint.matches( ".*[\\\\]+.*" );
 	}
 
 	@Override
