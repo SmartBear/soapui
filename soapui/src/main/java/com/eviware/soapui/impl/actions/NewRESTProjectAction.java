@@ -110,7 +110,7 @@ public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 			}
 			catch( Exception ex )
 			{
-				UISupport.showErrorMessage( ex );
+				UISupport.showErrorMessage( ex.getMessage() );
 				if( project != null )
 				{
 					workspace.removeProject( project );
