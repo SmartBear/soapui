@@ -12,7 +12,6 @@
 
 package com.eviware.soapui.impl.actions;
 
-import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.RestParametersConfig;
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.rest.RestMethod;
@@ -29,6 +28,7 @@ import com.eviware.soapui.impl.rest.support.RestUtils;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
+import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.MessageSupport;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
@@ -42,11 +42,9 @@ import com.eviware.x.impl.swing.JTextFieldFormField;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
+import javax.swing.text.Document;
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -67,7 +65,7 @@ public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 	private XFormDialog dialog;
 
 	public static final MessageSupport messages = MessageSupport.getMessages( NewRESTProjectAction.class );
-	private KeyListener initialKeyListener;
+	private DocumentListenerAdapter initialDocumentListener;
 	private MouseListener initialMouseListener;
 	private Font originalFont;
 
@@ -124,15 +122,16 @@ public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 
 	private void addListenersTo( final JUndoableTextField innerField )
 	{
-		initialKeyListener = new KeyAdapter()
+		initialDocumentListener = new DocumentListenerAdapter()
 		{
+
 			@Override
-			public void keyTyped( KeyEvent e )
+			public void update( Document document )
 			{
 				resetUriField( innerField );
 			}
 		};
-		innerField.addKeyListener( initialKeyListener );
+		innerField.getDocument().addDocumentListener( initialDocumentListener );
 		initialMouseListener = new MouseAdapter() {
 
 			@Override
@@ -148,27 +147,15 @@ public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 	{
 		try
 		{
-			logger.log( Level.DEBUG, "Resetting URI field - originalFont = " + originalFont);
 			innerField.setText( "" );
 			innerField.setFont( originalFont );
 			innerField.setForeground( Color.BLACK );
 		}
-		//TODO: remove logging once we've finished troubleshooting strange, intermittent problem
-		catch (Exception e)
-		{
-			SoapUI.logError(e, "Exception resetting URI field");
-		}
-		// errors should not be swallowed, hence a second catch clause that rethrows it
-		catch (Error e)
-		{
-			SoapUI.logError(e, "Error resetting URI field");
-			throw e;
-		}
 		finally
 		{
-			if( initialKeyListener != null )
+			if( initialDocumentListener != null )
 			{
-				innerField.removeKeyListener( initialKeyListener );
+				innerField.getDocument().removeDocumentListener( initialDocumentListener );
 			}
 			if( initialMouseListener != null )
 			{
