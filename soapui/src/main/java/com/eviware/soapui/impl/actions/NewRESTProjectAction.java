@@ -12,7 +12,6 @@
 
 package com.eviware.soapui.impl.actions;
 
-import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.RestParametersConfig;
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.rest.RestMethod;
@@ -126,10 +125,12 @@ public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 	{
 		initialKeyListener = new KeyAdapter()
 		{
+
 			@Override
-			public void keyTyped( KeyEvent e )
+			public void keyPressed( KeyEvent e )
 			{
 				resetUriField( innerField );
+
 			}
 		};
 		innerField.addKeyListener( initialKeyListener );
@@ -148,21 +149,9 @@ public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 	{
 		try
 		{
-			logger.log( Level.DEBUG, "Resetting URI field - originalFont = " + originalFont);
 			innerField.setText( "" );
 			innerField.setFont( originalFont );
 			innerField.setForeground( Color.BLACK );
-		}
-		//TODO: remove logging once we've finished troubleshooting strange, intermittent problem
-		catch (Exception e)
-		{
-			SoapUI.logError(e, "Exception resetting URI field");
-		}
-		// errors should not be swallowed, hence a second catch clause that rethrows it
-		catch (Error e)
-		{
-			SoapUI.logError(e, "Error resetting URI field");
-			throw e;
 		}
 		finally
 		{
