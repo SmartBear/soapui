@@ -1,4 +1,4 @@
-# The soapUI Maven plugin tester
+# The SoapUI Maven plugin tester
 
 *This is a submodule of [The soapUI project](../)*
 
