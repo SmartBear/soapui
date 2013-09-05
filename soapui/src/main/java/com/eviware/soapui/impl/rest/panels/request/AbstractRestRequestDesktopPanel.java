@@ -27,6 +27,7 @@ import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestInterface;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Request.SubmitException;
 import com.eviware.soapui.model.iface.Submit;
+import com.eviware.soapui.model.support.AbstractModelItem;
 import com.eviware.soapui.model.support.TestPropertyListenerAdapter;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.support.DocumentListenerAdapter;
@@ -393,6 +394,8 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 					RestParamProperty source = ( RestParamProperty )evt.getSource();
 					removeParamForStyle( source, ( ParameterStyle )evt.getOldValue() );
 					addPropertyForStyle( source, ( ParameterStyle )evt.getNewValue() );
+					((AbstractModelItem)source.getModelItem()).notifyPropertyChanged( evt.getPropertyName(),
+							evt.getOldValue(), evt.getNewValue()  );
 				}
 
 				if( evt.getPropertyName().equals( XmlBeansRestParamsTestPropertyHolder.PARAM_LOCATION ) )

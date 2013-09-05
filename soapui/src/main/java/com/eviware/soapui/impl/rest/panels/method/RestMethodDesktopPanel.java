@@ -145,7 +145,11 @@ public class RestMethodDesktopPanel extends ModelItemDesktopPanel<RestMethod>
 		{
 			methodCombo.setSelectedItem( evt.getNewValue() );
 		}
-		paramsTable.refresh();
+
+		if( paramsTable != null )
+		{
+			paramsTable.refresh();
+		}
 	}
 
 }
