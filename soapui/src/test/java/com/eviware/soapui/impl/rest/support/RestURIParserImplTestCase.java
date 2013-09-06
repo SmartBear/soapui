@@ -76,7 +76,7 @@ public class RestURIParserImplTestCase
 	{
 		String uri = "http://service.com/rest/";
 		String expectedEndpoint = "http://service.com";
-		String expectedPath = "/rest";
+		String expectedPath = "/rest/";
 		String expectedResourceName = "Rest";
 		String expectedQuery = "";
 
@@ -118,7 +118,7 @@ public class RestURIParserImplTestCase
 	{
 		String uri = "/conversation/date/{date}/time/{time}/?userId=1234";
 		String expectedEndpoint = "";
-		String expectedPath = "/conversation/date/{date}/time/{time}";
+		String expectedPath = "/conversation/date/{date}/time/{time}/";
 		String expectedResourceName = "Time";
 		String expectedQuery = "userId=1234";
 
@@ -146,7 +146,7 @@ public class RestURIParserImplTestCase
 	{
 		String uri = "http://servo.com/conversation/date/{date}/time/{time}/?userId=1234";
 		String expectedEndpoint = "http://servo.com";
-		String expectedPath = "/conversation/date/{date}/time/{time}";
+		String expectedPath = "/conversation/date/{date}/time/{time}/";
 		String expectedResourceName = "Time";
 		String expectedQuery = "userId=1234";
 
@@ -219,6 +219,21 @@ public class RestURIParserImplTestCase
 		String expectedPath = "/subscribers/subscriber";
 		String expectedResourceName = "Subscriber";
 		String expectedQuery = "";
+
+		restURIParser = new RestURIParserImpl( uri );
+
+		assertURIParsedCorrectly( expectedEndpoint, expectedPath, expectedResourceName, expectedQuery, restURIParser );
+
+	}
+
+	@Test
+	public void queryParamRightAfterSlashTest() throws MalformedURLException
+	{
+		String uri = "http://ws.spotify.com/lookup/1/?uri=spotify:artist:4YrKBkKSVeqDamzBPWVnSJ";
+		String expectedEndpoint = "http://ws.spotify.com";
+		String expectedPath = "/lookup/1/";
+		String expectedResourceName = "1";
+		String expectedQuery = "uri=spotify:artist:4YrKBkKSVeqDamzBPWVnSJ";
 
 		restURIParser = new RestURIParserImpl( uri );
 
