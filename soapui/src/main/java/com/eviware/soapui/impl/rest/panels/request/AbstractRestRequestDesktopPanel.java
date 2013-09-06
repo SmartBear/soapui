@@ -210,7 +210,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 				@Override
 				public void update( Document document )
 				{
-					getRequest().getResource().setPath( resourcePanel.getText() );
+					getRequest().getResource().setPath( resourcePanel.getText().trim() );
 				}
 			} );
 			toolbar.add( resourcePanel );
