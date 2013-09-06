@@ -390,8 +390,11 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 				if( evt.getPropertyName().equals( XmlBeansRestParamsTestPropertyHolder.PARAM_LOCATION ) )
 				{
 					RestParamProperty source = ( RestParamProperty )evt.getSource();
-					addPropertyToLevel( source, ( ParamLocation )evt.getNewValue() );
+					String propName = source.getName();
+					String propValue = source.getValue();
+					ParameterStyle propStyle = source.getStyle();
 					removePropertyFromLevel( source.getName(), ( ParamLocation )evt.getOldValue() );
+					addPropertyToLevel( propName, propValue, propStyle, ( ParamLocation )evt.getNewValue() );
 				}
 			}
 			catch( XmlValueDisconnectedException exception )
@@ -404,7 +407,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 
 	}
 
-	private void addPropertyToLevel( RestParamProperty property, ParamLocation location )
+	private void addPropertyToLevel( String name, String value, ParameterStyle style, ParamLocation location )
 	{
 		RestParamsPropertyHolder paramsPropertyHolder = null;
 		switch( location )
@@ -422,9 +425,11 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 
 		if( paramsPropertyHolder != null )
 		{
-			paramsPropertyHolder.addParameter( property );
-			RestParamProperty addedParameter = paramsPropertyHolder.getProperty( property.getName() );
+			paramsPropertyHolder.addProperty( name );
+			RestParamProperty addedParameter = paramsPropertyHolder.getProperty( name );
 			addedParameter.addPropertyChangeListener( restParamPropertyChangeListener );
+			addedParameter.setValue( value );
+			addedParameter.setStyle( style );
 		}
 		addPropertyChangeListenerToResource( getRequest() );
 	}
