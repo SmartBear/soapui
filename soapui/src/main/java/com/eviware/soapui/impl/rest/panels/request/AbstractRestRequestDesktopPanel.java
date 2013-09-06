@@ -57,9 +57,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 {
 	private TextPanelWithTopLabel resourcePanel;
 	private TextPanelWithTopLabel queryPanel;
-	private JUndoableTextField pathTextField;
 	private JLabel pathLabel;
-	private boolean updating;
 	private InternalTestPropertyListener testPropertyListener = new InternalTestPropertyListener();
 	private RestParamPropertyChangeListener restParamPropertyChangeListener = new RestParamPropertyChangeListener();
 	private JComboBox pathCombo;
@@ -98,14 +96,6 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 			if( pathLabel != null )
 			{
 				updateFullPathLabel();
-			}
-
-			if( !updating && pathTextField != null )
-			{
-				updating = true;
-				pathTextField.setText( ( String )evt.getNewValue() );
-				pathTextField.setToolTipText( pathTextField.getText() );
-				updating = false;
 			}
 		}
 
@@ -244,30 +234,6 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 
 			toolbar.add( pathLabel );
 		}
-		else
-		{
-			pathTextField = new JUndoableTextField();
-			pathTextField.setPreferredSize( new Dimension( 300, 20 ) );
-			pathTextField.setText( getRequest().getPath() );
-			pathTextField.setToolTipText( pathTextField.getText() );
-			pathTextField.getDocument().addDocumentListener( new DocumentListenerAdapter()
-			{
-				@Override
-				public void update( Document document )
-				{
-					if( updating )
-						return;
-
-					updating = true;
-					getRequest().setPath( pathTextField.getText() );
-					updating = false;
-				}
-			} );
-			PropertyExpansionPopupListener.enable( pathTextField, getModelItem() );
-
-			toolbar.addLabeledFixed( "Request URL:", pathTextField );
-		}
-
 		toolbar.addSeparator();
 	}
 
