@@ -130,7 +130,9 @@ public class RestResourceDesktopPanel extends ModelItemDesktopPanel<RestResource
 			}
 		} );
 
-		toolbar.addLabeledFixed( "Resource Path", pathTextField );
+		toolbar.addFixed( new JLabel( "Resource Path" ) );
+		toolbar.addSeparator( new Dimension( 3, 3 ) );
+		toolbar.addWithOnlyMinimumHeight( pathTextField );
 
 		toolbar.addGlue();
 		toolbar.add( UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.RESTRESOURCEEDITOR_HELPURL ) ) );
