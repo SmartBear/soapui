@@ -141,8 +141,6 @@ public class RestURIParserImpl implements RestURIParser
 	public String getResourcePath()
 	{
 		String path = resourcePath;
-
-		path = removeTrailingSlash( path );
 		path = addPrefixSlash( path );
 
 		return path;
@@ -152,11 +150,6 @@ public class RestURIParserImpl implements RestURIParser
 	public String getQuery()
 	{
 		return query;
-	}
-
-	private String removeTrailingSlash( String path )
-	{
-		return path.replaceFirst( "/$", "" );
 	}
 
 	private String addPrefixSlash( String path )
