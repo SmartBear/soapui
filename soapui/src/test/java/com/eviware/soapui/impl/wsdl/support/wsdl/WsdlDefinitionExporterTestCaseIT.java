@@ -17,24 +17,15 @@ import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.JettyTestCaseBase;
-import com.google.common.io.Files;
-import org.apache.xmlbeans.XmlException;
 import org.junit.Test;
 
 import java.io.File;
-import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class WsdlDefinitionExporterTestCaseIT extends JettyTestCaseBase
 {
-	private static String createTempResourcePath()
-	{
-		return "." + File.separator + "src" + File.separator + "test" + File.separator + "resources";
-	}
-
-	private final File tempResourceDir = Files.createTempDir();
 
 	@Test
 	public void shouldSaveDefinition() throws Exception
@@ -53,7 +44,7 @@ public class WsdlDefinitionExporterTestCaseIT extends JettyTestCaseBase
 		testLoader( "http://localhost:" + getPort() + "/testonewayop/TestService.wsdl" );
 	}
 
-	private void testLoader( String wsdlUrl ) throws XmlException, IOException, Exception
+	private void testLoader( String wsdlUrl ) throws Exception
 	{
 		WsdlProject project = new WsdlProject();
 		project.getSettings().setBoolean( WsdlSettings.CACHE_WSDLS, true );

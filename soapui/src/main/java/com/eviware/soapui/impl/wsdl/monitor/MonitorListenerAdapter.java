@@ -15,17 +15,17 @@ package com.eviware.soapui.impl.wsdl.monitor;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
+import com.eviware.soapui.impl.wsdl.WsdlProject;
 import org.apache.http.HttpRequest;
 
 public class MonitorListenerAdapter implements MonitorListener
 {
-	public void afterProxy( SoapMonitor soapMonitor, ServletRequest request, ServletResponse response,
-			HttpRequest method, WsdlMonitorMessageExchange capturedData )
+	public void afterProxy( WsdlProject project, ServletRequest request, ServletResponse response, HttpRequest method,
+									WsdlMonitorMessageExchange capturedData )
 	{
 	}
 
-	public void beforeProxy( SoapMonitor soapMonitor, ServletRequest request, ServletResponse response,
-			HttpRequest method )
+	public void beforeProxy( WsdlProject project, ServletRequest request, ServletResponse response, HttpRequest method )
 	{
 	}
 
@@ -33,7 +33,7 @@ public class MonitorListenerAdapter implements MonitorListener
 	{
 	}
 
-	public void onRequest( SoapMonitor soapMonitor, ServletRequest request, ServletResponse response )
+	public void onRequest( WsdlProject project, ServletRequest request, ServletResponse response )
 	{
 	}
 }

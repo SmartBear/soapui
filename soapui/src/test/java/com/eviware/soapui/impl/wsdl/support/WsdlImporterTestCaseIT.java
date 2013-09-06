@@ -22,11 +22,17 @@ import org.junit.Test;
 import javax.wsdl.BindingOperation;
 import javax.wsdl.Definition;
 
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
+import static org.junit.matchers.JUnitMatchers.containsString;
 
 public class WsdlImporterTestCaseIT extends JettyTestCaseBase
 {
 
+	//TODO: Should be split up into several smaller methods
 	@Test
 	public void testOneWayOperationImport() throws Exception
 	{
@@ -35,36 +41,36 @@ public class WsdlImporterTestCaseIT extends JettyTestCaseBase
 		WsdlProject project = new WsdlProject();
 		WsdlInterface[] wsdls = WsdlImporter.importWsdl( project, "http://localhost:" + getPort() + "/testonewayop/TestService.wsdl" );
 
-		assertEquals( 1, wsdls.length );
+		assertThat( wsdls.length, is( 1 ) );
 
 		WsdlInterface iface = wsdls[0];
 
-		assertNotNull( iface );
-		assertEquals( 2, iface.getOperationCount() );
+		assertThat( iface, is(notNullValue()) );
+		assertThat(iface.getOperationCount(), is(2) );
 
-		WsdlOperation operation = ( WsdlOperation )iface.getOperationAt( 0 );
+		WsdlOperation operation = iface.getOperationAt( 0 );
 
-		assertNotNull( operation );
-		assertEquals( "GetDefaultPageData", operation.getName() );
+		assertThat( operation, is( notNullValue() ) );
+		assertThat( operation.getName(), is( "GetDefaultPageData" ) );
 
 		Definition definition = WsdlUtils.readDefinition( "http://localhost:" + getPort() + "/testonewayop/TestService.wsdl" );
 
 		BindingOperation bindingOperation = operation.findBindingOperation( definition );
-		assertNotNull( bindingOperation );
-		assertEquals( bindingOperation.getName(), operation.getBindingOperationName() );
+		assertThat( bindingOperation, is( notNullValue() ) );
+		assertThat( operation.getBindingOperationName(), is(bindingOperation.getName()) );
 
-		assertNull( operation.getOutputName() );
+		assertThat( operation.getOutputName(), is( nullValue() ) );
 
 		WsdlRequest request = operation.addNewRequest( "TestRequest" );
-		assertNotNull( request );
+		assertThat( request, is(notNullValue()) );
 
 		String requestXml = operation.createRequest( true );
-		assertNotNull( requestXml );
+		assertThat( requestXml, is(notNullValue()) );
 
 		request.setRequestContent( requestXml );
 
 		Submit submit = request.submit( new WsdlSubmitContext( null ), false );
 
-		assertTrue( submit.getResponse().getContentAsString().indexOf( "Error 404 NOT_FOUND" ) > 0 );
+		assertThat( submit.getResponse().getContentAsString(), containsString( "Error 404 NOT_FOUND" ));
 	}
 }

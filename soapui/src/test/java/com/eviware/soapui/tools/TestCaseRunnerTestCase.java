@@ -31,6 +31,8 @@ public class TestCaseRunnerTestCase
 		return new JUnit4TestAdapter( TestCaseRunnerTestCase.class );
 	}
 
+	private String projectFilePath = TestCaseRunnerTestCase.class.getResource( "/sample-soapui-project.xml" ).getPath();
+
 	@Test
 	public void testReplaceHost() throws Exception
 	{
@@ -51,8 +53,7 @@ public class TestCaseRunnerTestCase
 	public void testInvalidTestCaseName() throws Exception
 	{
 		SoapUITestCaseRunner runner = new SoapUITestCaseRunner();
-        // TODO Hardcoded madness
-		runner.setProjectFile( new File( "src/test/resources/sample-soapui-project.xml" ).toURI().toString() );
+		runner.setProjectFile( projectFilePath );
 		runner.setTestCase( "tjoho" );
 
 		boolean failed = false;
@@ -76,8 +77,7 @@ public class TestCaseRunnerTestCase
 		runner.setOutputFolder( "/dev/${#Project#Env}" );
 
 		assertEquals( "/dev/", runner.getAbsoluteOutputFolder( null ) );
-        // TODO Hardcoded madness
-		WsdlProject project = new WsdlProject( "src/test/resources/sample-soapui-project.xml" );
+		WsdlProject project = new WsdlProject( projectFilePath );
 		project.setPropertyValue( "Env", "test" );
 		assertEquals( "/dev/test", runner.getAbsoluteOutputFolder( project ) );
 	}
@@ -86,7 +86,7 @@ public class TestCaseRunnerTestCase
 	public void testInvalidTestCaseWithValidTestSuiteName() throws Exception
 	{
 		SoapUITestCaseRunner runner = new SoapUITestCaseRunner();
-		runner.setProjectFile( new File( "src/test/resources/sample-soapui-project.xml" ).toURI().toString() );
+		runner.setProjectFile( new File( projectFilePath ).toURI().toString() );
 		runner.setTestCase( "tjoho" );
 		runner.setTestSuite( "Test Suite" );
 
@@ -109,7 +109,7 @@ public class TestCaseRunnerTestCase
 	public void testInvalidTestSuiteName() throws Exception
 	{
 		SoapUITestCaseRunner runner = new SoapUITestCaseRunner();
-		runner.setProjectFile( new File( "src/test/resources/sample-soapui-project.xml" ).toURI().toString() );
+		runner.setProjectFile( new File( projectFilePath ).toURI().toString() );
 		runner.setTestSuite( "tjoho" );
 
 		boolean failed = false;
@@ -130,8 +130,7 @@ public class TestCaseRunnerTestCase
 	public void testTestCaseRunner() throws Exception
 	{
 		SoapUITestCaseRunner runner = new SoapUITestCaseRunner();
-        // TODO Hardcoded madness
-		runner.setProjectFile( new File( "src/test/resources/sample-soapui-project.xml"  ).toURI().toString() );
+		runner.setProjectFile( projectFilePath );
 		// assertTrue( runner.run() );
 	}
 
@@ -139,8 +138,7 @@ public class TestCaseRunnerTestCase
 	public void testValidTestSuiteAndTestCaseName() throws Exception
 	{
 		SoapUITestCaseRunner runner = new SoapUITestCaseRunner();
-        // TODO Hardcoded madness
-		runner.setProjectFile( new File( "src/test/resources/sample-soapui-project.xml"  ).toURI().toString() );
+		runner.setProjectFile( projectFilePath );
 		runner.setTestSuite( "Test Suite" );
 		runner.setTestCase( "Test Conversions" );
 		// assertTrue( runner.run() );
