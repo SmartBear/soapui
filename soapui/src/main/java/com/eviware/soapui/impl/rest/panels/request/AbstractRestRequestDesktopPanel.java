@@ -31,6 +31,7 @@ import com.eviware.soapui.model.support.AbstractModelItem;
 import com.eviware.soapui.model.support.TestPropertyListenerAdapter;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.support.DocumentListenerAdapter;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.SwingActionDelegate;
 import com.eviware.soapui.support.components.JUndoableTextField;
@@ -202,7 +203,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 
 	private void addResourceAndQueryField( JXToolBar toolbar )
 	{
-		if( !(getRequest() instanceof RestTestRequestInterface) )
+		if( !( getRequest() instanceof RestTestRequestInterface ) )
 		{
 			String path = getRequest().getResource().getPath();
 			resourcePanel = new TextPanelWithTopLabel( "Resource", path, new DocumentListenerAdapter()
@@ -275,13 +276,30 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 		public void propertyAdded( String name )
 		{
 			updateFullPathLabel();
-
-			getRequest().getParams().getProperty( name ).addPropertyChangeListener( restParamPropertyChangeListener );
+			RestParamProperty property = getRequest().getParams().getProperty( name );
+			updateResourceAndQueryString( name, null, property.getValue() );
+			property.addPropertyChangeListener( restParamPropertyChangeListener );
 		}
 
 		@Override
 		public void propertyRemoved( String name )
 		{
+			resetQueryPanelText();   //query param
+			String resourcePanelText = resourcePanel.getText();
+			String paramStartString = ";" + name + "=";
+			if( resourcePanelText.contains( paramStartString ) )   //Matrix param
+			{
+				String substringWithParamValue = resourcePanelText.substring( resourcePanelText.indexOf( paramStartString ) + 1 );
+				int endIndex =  substringWithParamValue.indexOf( ";" ) > 0 ? substringWithParamValue.indexOf( ";" ) :
+						substringWithParamValue.length();
+				String paramValue = substringWithParamValue.substring( substringWithParamValue.indexOf("=")+1, endIndex);
+				resourcePanel.setText( resourcePanel.getText().replaceAll( ";" + name + "=" + paramValue, "" ) );
+			}
+
+			if( resourcePanelText.contains( "{" + name + "}" ) )    //Template param
+			{
+				resourcePanel.setText( resourcePanelText.replaceAll( "\\{" + name + "\\}", "" ) );
+			}
 			updateFullPathLabel();
 		}
 
@@ -320,8 +338,20 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 		}
 		else if( style.equals( ParameterStyle.MATRIX ) )
 		{
-			resourcePanel.setText( resourcePanel.getText().replaceAll( property.getName() + "=" +
-					oldValue, property.getName() + "=" + newValue ) );
+			String name = property.getName();
+			String newValueStr =  name + "=" + newValue;
+			if( oldValue == null )
+			{
+				addPropertyForStyle( property, ParameterStyle.MATRIX );
+			}
+			else if( StringUtils.isNullOrEmpty( newValue ) || !resourcePanel.getText().contains( newValueStr ))
+			{
+				resourcePanel.setText( resourcePanel.getText().replaceAll( name + "=" + oldValue, newValueStr ) );
+			}
+		}
+		else if( property.getStyle().equals( ParameterStyle.TEMPLATE ) )
+		{
+			addPropertyForStyle( property, ParameterStyle.TEMPLATE );
 		}
 	}
 
@@ -353,8 +383,8 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 					RestParamProperty source = ( RestParamProperty )evt.getSource();
 					removeParamForStyle( source, ( ParameterStyle )evt.getOldValue() );
 					addPropertyForStyle( source, ( ParameterStyle )evt.getNewValue() );
-					((AbstractModelItem)source.getModelItem()).notifyPropertyChanged( evt.getPropertyName(),
-							evt.getOldValue(), evt.getNewValue()  );
+					( ( AbstractModelItem )source.getModelItem() ).notifyPropertyChanged( evt.getPropertyName(),
+							evt.getOldValue(), evt.getNewValue() );
 				}
 
 				if( evt.getPropertyName().equals( XmlBeansRestParamsTestPropertyHolder.PARAM_LOCATION ) )
@@ -443,10 +473,17 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 				resetQueryPanelText();
 				break;
 			case TEMPLATE:
-				resourcePanel.setText( resourcePanel.getText() + "{" + property.getName() + "}" );
+				if( !resourcePanel.getText().contains( "{" + property.getName() + "}" ) )
+				{
+					resourcePanel.setText( resourcePanel.getText() + "{" + property.getName() + "}" );
+				}
 				break;
 			case MATRIX:
-				resourcePanel.setText( resourcePanel.getText() + ";" + property.getName() + "=" + property.getValue() );
+				String valueToSet = ";" + property.getName() + "=" + property.getValue();
+				if(!resourcePanel.getText().contains( valueToSet ))
+				{
+					resourcePanel.setText( resourcePanel.getText() + valueToSet );
+				}
 				break;
 			default:
 				break;
