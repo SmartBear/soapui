@@ -26,10 +26,13 @@ import com.eviware.soapui.support.UISupport;
 
 public class JXToolBar extends JToolBar
 {
+
+	public static final int STANDARD_COMPONENT_HEIGHT = 18;
+
 	public <T extends JComponent> T addFixed( T component )
 	{
 		if( !( component instanceof JButton ) )
-			UISupport.setPreferredHeight( component, 18 );
+			UISupport.setPreferredHeight( component, STANDARD_COMPONENT_HEIGHT );
 
 		Dimension preferredSize = component.getPreferredSize();
 		component.setMinimumSize( preferredSize );
@@ -43,9 +46,20 @@ public class JXToolBar extends JToolBar
 	public Component add( Component component )
 	{
 		if( !( component instanceof AbstractButton ) )
-			UISupport.setPreferredHeight( component, 18 );
+			UISupport.setPreferredHeight( component, STANDARD_COMPONENT_HEIGHT );
 
 		return super.add( component );
+	}
+
+	public <T extends JComponent> T addWithOnlyMinimumHeight( T component )
+	{
+		if( !( component instanceof JButton ) )
+		{
+			Dimension minimumSize = component.getMinimumSize();
+			component.setMinimumSize( new Dimension( minimumSize.width, STANDARD_COMPONENT_HEIGHT ) );
+		}
+		super.add( component );
+		return component;
 	}
 
 	public void addGlue()

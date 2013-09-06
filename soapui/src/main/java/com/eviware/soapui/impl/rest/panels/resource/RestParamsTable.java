@@ -12,12 +12,21 @@
 
 package com.eviware.soapui.impl.rest.panels.resource;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.util.ArrayList;
-import java.util.List;
+import com.eviware.soapui.impl.rest.support.RestParamProperty;
+import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
+import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder.ParameterStyle;
+import com.eviware.soapui.impl.rest.support.RestUtils;
+import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
+import com.eviware.soapui.impl.wsdl.support.HelpUrls;
+import com.eviware.soapui.model.testsuite.TestProperty;
+import com.eviware.soapui.support.StringUtils;
+import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.components.JXToolBar;
+import com.eviware.soapui.support.components.SimpleBindingForm;
+import com.eviware.soapui.support.components.StringListFormComponent;
+import com.jgoodies.binding.PresentationModel;
+import org.apache.xmlbeans.SchemaType;
+import org.apache.xmlbeans.XmlBeans;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -33,24 +42,12 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.xml.namespace.QName;
-
-import com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase;
-import org.apache.xmlbeans.SchemaType;
-import org.apache.xmlbeans.XmlBeans;
-
-import com.eviware.soapui.impl.rest.support.RestParamProperty;
-import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
-import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder.ParameterStyle;
-import com.eviware.soapui.impl.rest.support.RestUtils;
-import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
-import com.eviware.soapui.impl.wsdl.support.HelpUrls;
-import com.eviware.soapui.model.testsuite.TestProperty;
-import com.eviware.soapui.support.StringUtils;
-import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.components.JXToolBar;
-import com.eviware.soapui.support.components.SimpleBindingForm;
-import com.eviware.soapui.support.components.StringListFormComponent;
-import com.jgoodies.binding.PresentationModel;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase.ParamLocation;
 
@@ -85,7 +82,6 @@ public class RestParamsTable extends JPanel
 	protected void init( RestParamsPropertyHolder params, boolean showInspector )
 	{
 		paramsTable = new JTable( paramsTableModel );
-		paramsTable.setRowHeight( 19 );
 		paramsTable.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
 		paramsTable.setDefaultEditor( ParameterStyle.class, new DefaultCellEditor(
 				new JComboBox( paramsTableModel.getParameterStylesForEdit() ) ) );
