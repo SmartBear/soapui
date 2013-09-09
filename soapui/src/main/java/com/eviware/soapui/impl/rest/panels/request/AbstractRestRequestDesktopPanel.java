@@ -34,9 +34,7 @@ import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.SwingActionDelegate;
-import com.eviware.soapui.support.components.JUndoableTextField;
 import com.eviware.soapui.support.components.JXToolBar;
-import com.eviware.soapui.support.propertyexpansion.PropertyExpansionPopupListener;
 import org.apache.xmlbeans.impl.values.XmlValueDisconnectedException;
 
 import javax.swing.AbstractListModel;
@@ -53,6 +51,7 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.Document;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.beans.PropertyChangeEvent;
@@ -558,6 +557,8 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 
 	private class TextPanelWithTopLabel extends JPanel
 	{
+		private final Color MAC_DISABLED_BGCOLOR = new Color( 232, 232, 232 );
+
 		JLabel textLabel;
 		JTextField textField;
 
@@ -567,6 +568,10 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 			textField = new JTextField( text );
 			setToolTipText( text );
 			textField.setEditable( isEditable );
+			if (UISupport.isMac())
+			{
+				textField.setBackground( MAC_DISABLED_BGCOLOR );
+			}
 			super.setLayout( new BorderLayout() );
 			super.add( textLabel, BorderLayout.NORTH );
 			super.add( textField, BorderLayout.SOUTH );
