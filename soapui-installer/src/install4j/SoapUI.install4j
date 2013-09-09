@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<install4j version="5.1.5" transformSequenceNumber="4">
+<install4j version="5.1.6" transformSequenceNumber="4">
   <directoryPresets config="./resources/images" />
   <application name="soapUI ${compiler:VERSION_NUMBER}${compiler:BRANDED_TITLE}" distributionSourceDir="" applicationId="5517-2803-0637-4585" mediaDir="./media" mediaFilePattern="${compiler:sys.shortName}-${compiler:sys.platform}-${compiler:sys.version}" compression="6" lzmaCompression="false" pack200Compression="false" excludeSignedFromPacking="true" commonExternalFiles="false" createMd5Sums="true" shrinkRuntime="true" shortName="soapUI" publisher="SmartBear Software" publisherWeb="http://www.smartbear.com" version="${compiler:VERSION_NUMBER}" allPathsRelative="true" backupOnSave="false" autoSave="true" convertDotsToUnderscores="false" macSignature="????" installerName="" javaMinVersion="1.6" javaMaxVersion="" allowBetaVM="true" jdkMode="runtimeJre" jdkName="">
     <languages skipLanguageSelection="false" languageSelectionInPrincipalLanguage="false">
@@ -15,7 +15,7 @@
       <variable name="SOAPUI_HOME" value="${installer:sys.installationDir}" description="" category="" />
       <variable name="BRANDED_TITLE" value="" description="" category="" />
       <variable name="EXECUTABLE_NAME" value="soapUI-${compiler:VERSION_NUMBER}${compiler:BRANDED_TITLE}" description="" category="" />
-      <variable name="LOADUI_INSTALLER_URL" value="${compiler:LOADUI_INSTALLER_URL_BASE}/${compiler:LOADUI_VERSION_NUMBER}" description="" category="" />
+      <variable name="LOADUI_INSTALLER_URL" value="${compiler:LOADUI_INSTALLER_URL_BASE}" description="" category="" />
       <variable name="OS_EXT" value="" description="" category="" />
     </variables>
     <mergedProjects />
@@ -937,7 +937,7 @@ else return false;
                             </array>
                           </void>
                           <void property="replaceValue">
-                            <string>${compiler:LOADUI_INSTALLER_URL}/loadUI-${compiler:LOADUI_VERSION_NUMBER}.exe</string>
+                            <string>${compiler:LOADUI_INSTALLER_URL}</string>
                           </void>
                           <void property="searchValue">
                             <string>loadUI.download.url</string>
@@ -1018,7 +1018,7 @@ else return false;
                             </array>
                           </void>
                           <void property="replaceValue">
-                            <string>${compiler:LOADUI_INSTALLER_URL}/loadUI-${compiler:LOADUI_VERSION_NUMBER}.exe</string>
+                            <string>${compiler:LOADUI_INSTALLER_URL}</string>
                           </void>
                           <void property="searchValue">
                             <string>loadUI.download.url</string>
@@ -1099,7 +1099,7 @@ else return false;
                             </array>
                           </void>
                           <void property="replaceValue">
-                            <string>${compiler:LOADUI_INSTALLER_URL}/loadUI-${compiler:LOADUI_VERSION_NUMBER}.sh</string>
+                            <string>${compiler:LOADUI_INSTALLER_URL}</string>
                           </void>
                           <void property="searchValue">
                             <string>loadUI.download.url</string>
@@ -1201,7 +1201,7 @@ else return false;
                             </array>
                           </void>
                           <void property="replaceValue">
-                            <string>${compiler:LOADUI_INSTALLER_URL}/loadUI-${compiler:LOADUI_VERSION_NUMBER}.dmg</string>
+                            <string>${compiler:LOADUI_INSTALLER_URL}</string>
                           </void>
                           <void property="searchValue">
                             <string>loadUI.download.url</string>
@@ -1827,7 +1827,7 @@ else return "";</string>
                         <string>64</string>
                       </void>
                       <void property="vmOptions">
-                        <array class="java.lang.String" length="10">
+                        <array class="java.lang.String" length="11">
                           <void index="0">
                             <string>-Xms128m</string>
                           </void>
