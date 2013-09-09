@@ -34,7 +34,7 @@ public class RestURIParserImplTestCase
 	private RestURIParserImpl restURIParser;
 
 	@Rule
-	public ExpectedException thrown= ExpectedException.none();
+	public ExpectedException thrown = ExpectedException.none();
 
 	@After
 	public void tearDown()
@@ -234,6 +234,36 @@ public class RestURIParserImplTestCase
 		String expectedPath = "/lookup/1/";
 		String expectedResourceName = "1";
 		String expectedQuery = "uri=spotify:artist:4YrKBkKSVeqDamzBPWVnSJ";
+
+		restURIParser = new RestURIParserImpl( uri );
+
+		assertURIParsedCorrectly( expectedEndpoint, expectedPath, expectedResourceName, expectedQuery, restURIParser );
+
+	}
+
+	@Test
+	public void ipv4AddressWithPortTest() throws MalformedURLException
+	{
+		String uri = "http://10.10.1.230:8090/subscribers/subscriber";
+		String expectedEndpoint = "http://10.10.1.230:8090";
+		String expectedPath = "/subscribers/subscriber";
+		String expectedResourceName = "Subscriber";
+		String expectedQuery = "";
+
+		restURIParser = new RestURIParserImpl( uri );
+
+		assertURIParsedCorrectly( expectedEndpoint, expectedPath, expectedResourceName, expectedQuery, restURIParser );
+
+	}
+
+	@Test
+	public void ipv6AddressWithPortTest() throws MalformedURLException
+	{
+		String uri = "http://2001:0db8:85a3:0000:0000:8a2e:0370:7334:8090/subscribers/subscriber";
+		String expectedEndpoint = "http://2001:0db8:85a3:0000:0000:8a2e:0370:7334:8090";
+		String expectedPath = "/subscribers/subscriber";
+		String expectedResourceName = "Subscriber";
+		String expectedQuery = "";
 
 		restURIParser = new RestURIParserImpl( uri );
 

@@ -130,7 +130,7 @@ public class RestRequestContentView extends HttpRequestContentView
 	{
 		private UpdateRestParamsAction()
 		{
-			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/add_property.gif" ) );
+			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/update-request-parameters-from-url.png" ) );
 			putValue( Action.SHORT_DESCRIPTION, "Updates this Requests params from a specified URL" );
 		}
 

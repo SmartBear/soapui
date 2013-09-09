@@ -180,8 +180,7 @@ public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 
 		RestService restService = ( RestService )project.addNewInterface( host, RestServiceFactory.REST_TYPE );
 		restService.addEndpoint( restURIParser.getEndpoint() );
-		//TODO: to find out why do we need to separate base path and resource path
-		// restService.setBasePath( restURIParser.getPath() );
+		restService.setBasePath( restURIParser.getResourcePath() );
 
 		RestResource restResource = restService.addNewResource( resourceName, resourcePath );
 
@@ -200,7 +199,7 @@ public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 	protected void extractAndFillParameters( String URI, RestParamsPropertyHolder params )
 	{
 		// This does lot of magic including extracting and filling up parameters on the params
-		RestUtils.extractParams( URI, params, false );
+		RestUtils.extractParams( URI, params, false, false );
 	}
 
 	//TODO: In advanced version we have to apply filtering like which type of parameter goes to which location
