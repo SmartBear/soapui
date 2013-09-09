@@ -76,10 +76,10 @@ public class RestParamsTable extends JPanel
 		super( new BorderLayout() );
 		this.params = params;
 		this.paramsTableModel = model;
-		init( params, showInspector );
+		init( showInspector );
 	}
 
-	protected void init( RestParamsPropertyHolder params, boolean showInspector )
+	protected void init( boolean showInspector )
 	{
 		paramsTable = new JTable( paramsTableModel );
 		paramsTable.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
