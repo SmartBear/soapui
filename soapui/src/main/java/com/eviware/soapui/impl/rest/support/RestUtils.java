@@ -61,6 +61,11 @@ public class RestUtils
 
 	public static String extractParams( String pathOrEndpoint, RestParamsPropertyHolder params, boolean keepHost )
 	{
+		return extractParams( pathOrEndpoint, params, keepHost, true );
+	}
+
+	public static String extractParams( String pathOrEndpoint, RestParamsPropertyHolder params, boolean keepHost, boolean createTemplateParams )
+	{
 		if( StringUtils.isNullOrEmpty( pathOrEndpoint ) )
 			return "";
 
@@ -141,20 +146,24 @@ public class RestUtils
 						}
 					}
 
-					Integer.parseInt( item );
-
-					String name = "param" + templateParamCount++ ;
-					RestParamProperty property = params.getProperty( name );
-					if( !params.hasProperty( name ) )
+					if( createTemplateParams )
 					{
-						property = params.addProperty( name );
+						Integer.parseInt( item );
+
+						String name = "param" + templateParamCount++ ;
+						RestParamProperty property = params.getProperty( name );
+						if( !params.hasProperty( name ) )
+						{
+							property = params.addProperty( name );
+						}
+
+						property.setStyle( ParameterStyle.TEMPLATE );
+						property.setValue( item );
+						property.setDefaultValue( item );
+
+						item = "{" + property.getName() + "}";
+
 					}
-
-					property.setStyle( ParameterStyle.TEMPLATE );
-					property.setValue( item );
-					property.setDefaultValue( item );
-
-					item = "{" + property.getName() + "}";
 				}
 			}
 			catch( Throwable e )
