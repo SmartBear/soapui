@@ -65,6 +65,8 @@ import static com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder.Para
 public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 extends RestRequestInterface> extends
 		AbstractHttpXmlRequestDesktopPanel<T, T2>
 {
+	private static final int STANDARD_TOOLBAR_HEIGHT = 45;
+
 	private TextPanelWithTopLabel resourcePanel;
 	private TextPanelWithTopLabel queryPanel;
 	private JLabel pathLabel;
@@ -132,6 +134,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 					AddRestRequestToTestCaseAction.SOAPUI_ACTION_ID, getRequest(), null, "/addToTestCase.gif" ), true );
 			toolbar.add( addToTestCaseButton );
 		}
+		toolbar.add( cancelButton );
 	}
 
 	@Override
@@ -142,7 +145,6 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 			JPanel panel = new JPanel( new BorderLayout() );
 
 			JXToolBar baseToolBar = UISupport.createToolbar();
-			baseToolBar.setPreferredSize( new Dimension( 600, 45 ) );
 
 			JComponent submitButton = super.getSubmitButton();
 			baseToolBar.add( submitButton );
@@ -150,7 +152,6 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 			// insertButtons injects different buttons for different editors. It is overridden in other subclasses
 			insertButtons( baseToolBar );
 			JPanel methodPanel = new JPanel( new BorderLayout() );
-			methodPanel.setMaximumSize( new Dimension( 75, 45 ) );
 			JComboBox<RequestMethod> methodComboBox = new JComboBox<RequestMethod>( new RestRequestMethodModel( getRequest() ) );
 			methodComboBox.setSelectedItem( getRequest().getMethod() );
 
@@ -159,7 +160,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 			methodPanel.add( methodComboBox, BorderLayout.SOUTH );
 
 			JPanel endpointPanel = new JPanel( new BorderLayout() );
-			endpointPanel.setMinimumSize( new Dimension( 75, 45 ) );
+			endpointPanel.setMinimumSize( new Dimension( 75, STANDARD_TOOLBAR_HEIGHT ) );
 
 			JComponent endpointCombo = buildEndpointComponent();
 			super.setEndpointComponent( endpointCombo );
@@ -171,7 +172,6 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 
 
 
-			baseToolBar.add( cancelButton );
 			baseToolBar.add( methodPanel );
 			baseToolBar.add( Box.createHorizontalStrut( 4 ) );
 			baseToolBar.add( endpointPanel );
@@ -183,6 +183,8 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 			baseToolBar.add( tabsButton );
 			baseToolBar.add( splitButton );
 			baseToolBar.add( UISupport.createToolbarButton( new ShowOnlineHelpAction( getHelpUrl() ) ) );
+			int maximumPreferredHeight = findMaximumPreferredHeight(endpointPanel, resourcePanel, queryPanel);
+			baseToolBar.setPreferredSize( new Dimension( 600, Math.max(maximumPreferredHeight, STANDARD_TOOLBAR_HEIGHT ) ) );
 
 			panel.add( baseToolBar, BorderLayout.NORTH );
 
@@ -200,6 +202,16 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 		}
 	}
 
+	private int findMaximumPreferredHeight( JComponent... components )
+	{
+		int maximum = 0;
+		for( JComponent component : components )
+		{
+			maximum = Math.max(maximum, component.getPreferredSize().height);
+		}
+		return maximum;
+	}
+
 	private void addResourceAndQueryField( JXToolBar toolbar )
 	{
 		if( !( getRequest() instanceof RestTestRequestInterface ) )
@@ -213,13 +225,13 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 					getRequest().getResource().setPath( resourcePanel.getText().trim() );
 				}
 			} );
-			toolbar.add( resourcePanel );
+			toolbar.addWithOnlyMinimumHeight( resourcePanel );
 
 			toolbar.add( Box.createHorizontalStrut( 4 ) );
 
 			String query = RestUtils.getQueryParamsString( getRequest().getParams(), getRequest() );
 			queryPanel = new TextPanelWithTopLabel( "Query", query, false );
-			toolbar.add( queryPanel );
+			toolbar.addWithOnlyMinimumHeight( queryPanel );
 		}
 	}
 
@@ -562,29 +574,30 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 		JLabel textLabel;
 		JTextField textField;
 
-		public TextPanelWithTopLabel( String label, String text, boolean isEditable )
+		TextPanelWithTopLabel( String label, String text)
 		{
 			textLabel = new JLabel( label );
 			textField = new JTextField( text );
 			setToolTipText( text );
-			textField.setEditable( isEditable );
-			if (UISupport.isMac())
-			{
-				textField.setBackground( MAC_DISABLED_BGCOLOR );
-			}
 			super.setLayout( new BorderLayout() );
 			super.add( textLabel, BorderLayout.NORTH );
 			super.add( textField, BorderLayout.SOUTH );
 		}
 
+		public TextPanelWithTopLabel( String label, String text, boolean isEditable )
+		{
+			this(label, text);
+			textField.setEditable( isEditable );
+			if (!isEditable && UISupport.isMac())
+			{
+				textField.setBackground( MAC_DISABLED_BGCOLOR );
+			}
+		}
+
 		public TextPanelWithTopLabel( String label, String text, DocumentListener documentListener )
 		{
-			textLabel = new JLabel( label );
-			textField = new JTextField( text );
+			this(label, text);
 			textField.getDocument().addDocumentListener( documentListener );
-			super.setLayout( new BorderLayout() );
-			super.add( textLabel, BorderLayout.NORTH );
-			super.add( textField, BorderLayout.SOUTH );
 		}
 
 		public String getText()
