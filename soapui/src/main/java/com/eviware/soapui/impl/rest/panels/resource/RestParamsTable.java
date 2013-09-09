@@ -66,16 +66,19 @@ public class RestParamsTable extends JPanel
 	private PresentationModel<RestParamProperty> paramDetailsModel;
 	private StringListFormComponent optionsFormComponent;
 	private SimpleBindingForm detailsForm;
+	private final ParamLocation defaultParamLocation;
 
-	public RestParamsTable( RestParamsPropertyHolder params, boolean showInspector )
+	public RestParamsTable( RestParamsPropertyHolder params, boolean showInspector, ParamLocation defaultParamLocation )
 	{
-		this( params, showInspector, new RestParamsTableModel( params ) );
+		this( params, showInspector, new RestParamsTableModel( params ), defaultParamLocation );
 	}
-	public RestParamsTable( RestParamsPropertyHolder params, boolean showInspector, RestParamsTableModel model)
+	public RestParamsTable( RestParamsPropertyHolder params, boolean showInspector, RestParamsTableModel model,
+									ParamLocation defaultParamLocation)
 	{
 		super( new BorderLayout() );
 		this.params = params;
 		this.paramsTableModel = model;
+		this.defaultParamLocation = defaultParamLocation;
 		init( showInspector );
 	}
 
@@ -239,6 +242,9 @@ public class RestParamsTable extends JPanel
 			if( StringUtils.hasContent( name ) )
 			{
 				params.addProperty( name );
+				RestParamProperty addedProperty = params.getProperty( name );
+				addedProperty.setParamLocation( defaultParamLocation );
+
 				final int row = params.getPropertyNames().length - 1;
 				SwingUtilities.invokeLater( new Runnable()
 				{

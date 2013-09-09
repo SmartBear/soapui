@@ -20,6 +20,8 @@ import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase;
 import com.eviware.soapui.impl.rest.panels.resource.RestParamsTable;
 import com.eviware.soapui.impl.rest.panels.resource.RestParamsTableModel;
+import com.eviware.soapui.impl.rest.support.RestParamProperty;
+import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.support.MessageSupport;
@@ -30,6 +32,8 @@ import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.support.AForm;
+
+import static com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase.ParamLocation;
 
 
 /**
@@ -68,7 +72,7 @@ public class NewRestMethodAction extends AbstractSoapUIAction<RestResource>
 
 
 		RestParamsTableModel model = new RestParamsTableModel( params );
-		RestParamsTable paramsTable = new RestParamsTable( params, false, model );
+		RestParamsTable paramsTable = new RestParamsTable( params, false, model, ParamLocation.METHOD );
 
 		dialog.getFormField( Form.PARAMSTABLE ).setProperty( "component", paramsTable );
 
@@ -76,20 +80,21 @@ public class NewRestMethodAction extends AbstractSoapUIAction<RestResource>
 		{
 			RestMethod method = resource.addNewMethod( dialog.getValue( Form.RESOURCENAME ) );
 			method.setMethod( RestRequestInterface.RequestMethod.valueOf( dialog.getValue( Form.METHOD ) ) );
-			paramsTable.extractParams( method.getParams(), NewRestResourceActionBase.ParamLocation.METHOD );
+			paramsTable.extractParams( method.getParams(), ParamLocation.METHOD );
 
 			UISupport.select( method );
 
 			if( dialog.getBooleanValue( Form.CREATEREQUEST ) )
 			{
-				createRequest( method );
+				createRequest( method, method.getParams() );
 			}
 		}
 	}
 
-	protected void createRequest( RestMethod method )
+	protected void createRequest( RestMethod method, RestParamsPropertyHolder params )
 	{
 		RestRequest request = method.addNewRequest( "Request " + ( method.getRequestCount() + 1 ) );
+		( ( RestParamProperty )params ).addPropertyChangeListener( request );
 		UISupport.showDesktopPanel( request );
 	}
 

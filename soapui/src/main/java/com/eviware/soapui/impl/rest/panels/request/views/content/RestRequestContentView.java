@@ -32,6 +32,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 
+import static com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase.ParamLocation;
+
 public class RestRequestContentView extends HttpRequestContentView
 {
 	private RestRequestInterface restRequest;
@@ -58,7 +60,7 @@ public class RestRequestContentView extends HttpRequestContentView
 				return super.getColumnName( columnIndex );
 			}
 		};
-		return new RestParamsTable( restRequest.getParams(), true, model );
+		return new RestParamsTable( restRequest.getParams(), true, model, ParamLocation.RESOURCE );
 	}
 
 	public RestParamsTable getParamsTable()

@@ -34,6 +34,8 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.beans.PropertyChangeEvent;
 
+import static com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase.ParamLocation;
+
 public class RestResourceDesktopPanel extends ModelItemDesktopPanel<RestResource>
 {
 	private JUndoableTextField pathTextField;
@@ -51,7 +53,7 @@ public class RestResourceDesktopPanel extends ModelItemDesktopPanel<RestResource
 	private Component buildContent()
 	{
 		JTabbedPane tabs = new JTabbedPane();
-		paramsTable = new RestParamsTable( getModelItem().getParams(), true );
+		paramsTable = new RestParamsTable( getModelItem().getParams(), true, ParamLocation.RESOURCE );
 		tabs.addTab( "Resource Parameters", paramsTable );
 		return UISupport.createTabPanel( tabs, false );
 	}

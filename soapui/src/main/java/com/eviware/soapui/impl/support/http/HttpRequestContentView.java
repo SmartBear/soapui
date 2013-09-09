@@ -26,22 +26,15 @@ import com.eviware.soapui.support.propertyexpansion.PropertyExpansionPopupListen
 import com.eviware.soapui.support.xml.SyntaxEditorUtil;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 import javax.swing.text.Document;
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
+import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+
+import static com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase.ParamLocation;
 
 @SuppressWarnings( "unchecked" )
 public class HttpRequestContentView extends AbstractXmlEditorView<HttpRequestDocument> implements
@@ -123,7 +116,7 @@ public class HttpRequestContentView extends AbstractXmlEditorView<HttpRequestDoc
 					prop.setValue( value.toString() );
 			}
 		};
-		return new RestParamsTable( httpRequest.getParams(), false, restParamsTableModel );
+		return new RestParamsTable( httpRequest.getParams(), false, restParamsTableModel, ParamLocation.RESOURCE );
 	}
 
 	@Override

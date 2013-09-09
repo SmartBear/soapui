@@ -384,6 +384,10 @@ public class XmlBeansRestParamsTestPropertyHolder implements RestParamsPropertyH
 
 		public void setParamLocation( ParamLocation paramLocation )
 		{
+			if(this.paramLocation==paramLocation)
+			{
+				return;
+			}
 			ParamLocation old = this.paramLocation;
 			this.paramLocation = paramLocation;
 			propertySupport.firePropertyChange( PARAM_LOCATION, old, this.paramLocation );

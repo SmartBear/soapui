@@ -17,6 +17,7 @@ import com.eviware.soapui.config.RestParameterConfig;
 import com.eviware.soapui.config.RestParametersConfig;
 import com.eviware.soapui.config.TestStepConfig;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
+import com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase;
 import com.eviware.soapui.impl.rest.panels.resource.RestParamsTable;
 import com.eviware.soapui.impl.rest.support.RestUtils;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
@@ -81,7 +82,7 @@ public class HttpRequestStepFactory extends WsdlTestStepFactory
 
 		params = new XmlBeansRestParamsTestPropertyHolder( testCase, RestParametersConfig.Factory.newInstance() );
 
-		paramsTable = new RestParamsTable( params, false );
+		paramsTable = new RestParamsTable( params, false, NewRestResourceActionBase.ParamLocation.RESOURCE );
 		dialog.getFormField( Form.PARAMSTABLE ).setProperty( "component", paramsTable );
 		dialog.setValue( Form.STEPNAME, name );
 
