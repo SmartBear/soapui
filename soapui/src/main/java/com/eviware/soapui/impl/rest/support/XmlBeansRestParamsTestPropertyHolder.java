@@ -504,7 +504,13 @@ public class XmlBeansRestParamsTestPropertyHolder implements RestParamsPropertyH
 
 		public void setType( QName arg0 )
 		{
+			QName old = getType();
+			if(old.equals( arg0 ))
+			{
+				return;
+			}
 			propertyConfig.setType( arg0 );
+			propertySupport.firePropertyChange( "type", old, arg0 );
 		}
 
 		public void setDefaultValue( String default1 )
