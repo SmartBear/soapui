@@ -461,8 +461,9 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 				resourcePanel.setText( resourcePanel.getText().replaceAll( "\\{" + property.getName() + "\\}", "" ) );
 				break;
 			case MATRIX:
+				String propValueAtRequestLevel = getRequest().getParams().getProperty( property.getName() ).getValue();
 				resourcePanel.setText( resourcePanel.getText().replaceAll( ";" + property.getName() + "=" +
-						property.getValue(), "" ) );
+						propValueAtRequestLevel, "" ) );
 				break;
 			default:
 				break;
@@ -483,7 +484,8 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 				}
 				break;
 			case MATRIX:
-				String valueToSet = ";" + property.getName() + "=" + property.getValue();
+				String propValueAtRequestLevel = getRequest().getParams().getProperty( property.getName() ).getValue();
+				String valueToSet = ";" + property.getName() + "=" + propValueAtRequestLevel;
 				if(!resourcePanel.getText().contains( valueToSet ))
 				{
 					resourcePanel.setText( resourcePanel.getText() + valueToSet );
