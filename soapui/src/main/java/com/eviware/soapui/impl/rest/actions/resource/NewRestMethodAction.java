@@ -17,7 +17,6 @@ import com.eviware.soapui.impl.rest.RestMethod;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.RestResource;
-import com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase;
 import com.eviware.soapui.impl.rest.panels.resource.RestParamsTable;
 import com.eviware.soapui.impl.rest.panels.resource.RestParamsTableModel;
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
@@ -72,7 +71,7 @@ public class NewRestMethodAction extends AbstractSoapUIAction<RestResource>
 
 
 		RestParamsTableModel model = new RestParamsTableModel( params );
-		RestParamsTable paramsTable = new RestParamsTable( params, false, model, ParamLocation.METHOD );
+		RestParamsTable paramsTable = new RestParamsTable( params, false, model, ParamLocation.METHOD, false );
 
 		dialog.getFormField( Form.PARAMSTABLE ).setProperty( "component", paramsTable );
 
@@ -98,20 +97,20 @@ public class NewRestMethodAction extends AbstractSoapUIAction<RestResource>
 		UISupport.showDesktopPanel( request );
 	}
 
-	@AForm(name = "Form.Title", description = "Form.Description", helpUrl = HelpUrls.NEWRESTSERVICE_HELP_URL, icon = UISupport.TOOL_ICON_PATH)
+	@AForm( name = "Form.Title", description = "Form.Description", helpUrl = HelpUrls.NEWRESTSERVICE_HELP_URL, icon = UISupport.TOOL_ICON_PATH )
 	public interface Form
 	{
-		@AField(description = "Form.ResourceName.Description", type = AFieldType.STRING)
+		@AField( description = "Form.ResourceName.Description", type = AFieldType.STRING )
 		public final static String RESOURCENAME = messages.get( "Form.ResourceName.Label" );
 
-		@AField(description = "Form.Method.Description", type = AFieldType.ENUMERATION, values = { "GET", "POST", "PUT",
-				"DELETE", "HEAD", "PATCH" })
+		@AField( description = "Form.Method.Description", type = AFieldType.ENUMERATION, values = { "GET", "POST", "PUT",
+				"DELETE", "HEAD", "PATCH" } )
 		public final static String METHOD = messages.get( "Form.Method.Label" );
 
-		@AField(description = "Form.ParamsTable.Description", type = AFieldType.COMPONENT)
+		@AField( description = "Form.ParamsTable.Description", type = AFieldType.COMPONENT )
 		public final static String PARAMSTABLE = messages.get( "Form.ParamsTable.Label" );
 
-		@AField(description = "Form.CreateRequest.Description", type = AFieldType.BOOLEAN)
+		@AField( description = "Form.CreateRequest.Description", type = AFieldType.BOOLEAN )
 		public final static String CREATEREQUEST = messages.get( "Form.CreateRequest.Label" );
 	}
 }

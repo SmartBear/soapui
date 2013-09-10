@@ -52,7 +52,7 @@ public class RestMethodDesktopPanel extends ModelItemDesktopPanel<RestMethod>
 	{
 		JTabbedPane tabs = new JTabbedPane();
 
-		paramsTable = new RestParamsTable( getModelItem().getParams(), true, ParamLocation.METHOD );
+		paramsTable = new RestParamsTable( getModelItem().getParams(), true, ParamLocation.METHOD, false );
 
 		tabs.addTab( "Method Parameters", paramsTable );
 

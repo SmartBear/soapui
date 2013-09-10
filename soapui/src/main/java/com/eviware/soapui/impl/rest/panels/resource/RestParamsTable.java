@@ -47,7 +47,6 @@ public class RestParamsTable extends JPanel
 	protected JTable paramsTable;
 	protected AddParamAction addParamAction = new AddParamAction();
 	protected RemoveParamAction removeParamAction = new RemoveParamAction();
-	protected ClearParamsAction clearParamsAction = new ClearParamsAction();
 	protected UseDefaultParamsAction defaultParamsAction = new UseDefaultParamsAction();
 	protected MovePropertyDownAction movePropertyDownAction = new MovePropertyDownAction();
 	protected MovePropertyUpAction movePropertyUpAction = new MovePropertyUpAction();
@@ -56,18 +55,21 @@ public class RestParamsTable extends JPanel
 	private StringListFormComponent optionsFormComponent;
 	private SimpleBindingForm detailsForm;
 	private final ParamLocation defaultParamLocation;
+	private boolean showDefaultParamsButton;
 
-	public RestParamsTable( RestParamsPropertyHolder params, boolean showInspector, ParamLocation defaultParamLocation )
+	public RestParamsTable( RestParamsPropertyHolder params, boolean showInspector, ParamLocation defaultParamLocation, boolean showDefaultParamsButton )
 	{
-		this( params, showInspector, new RestParamsTableModel( params ), defaultParamLocation );
+		this( params, showInspector, new RestParamsTableModel( params ), defaultParamLocation, showDefaultParamsButton );
 	}
+
 	public RestParamsTable( RestParamsPropertyHolder params, boolean showInspector, RestParamsTableModel model,
-									ParamLocation defaultParamLocation)
+									ParamLocation defaultParamLocation, boolean showDefaultParamsButton )
 	{
 		super( new BorderLayout() );
 		this.params = params;
 		this.paramsTableModel = model;
 		this.defaultParamLocation = defaultParamLocation;
+		this.showDefaultParamsButton = showDefaultParamsButton;
 		init( showInspector );
 	}
 
@@ -185,8 +187,12 @@ public class RestParamsTable extends JPanel
 
 		toolbar.add( UISupport.createToolbarButton( addParamAction ) );
 		toolbar.add( UISupport.createToolbarButton( removeParamAction, false ) );
-		toolbar.add( UISupport.createToolbarButton( clearParamsAction, paramsTable.getRowCount() > 0 ) );
-		toolbar.addSeparator();
+
+		if( showDefaultParamsButton )
+		{
+			toolbar.add( UISupport.createToolbarButton( defaultParamsAction, paramsTable.getRowCount() > 0 ) );
+			toolbar.addSeparator();
+		}
 		toolbar.add( UISupport.createToolbarButton( movePropertyDownAction, false ) );
 		toolbar.add( UISupport.createToolbarButton( movePropertyUpAction, false ) );
 		toolbar.addSeparator();
@@ -217,6 +223,7 @@ public class RestParamsTable extends JPanel
 			}
 		}
 	}
+
 	private class AddParamAction extends AbstractAction
 	{
 		public AddParamAction()
@@ -251,8 +258,6 @@ public class RestParamsTable extends JPanel
 						} );
 					}
 				} );
-
-				clearParamsAction.setEnabled( true );
 			}
 		}
 	}
@@ -306,24 +311,6 @@ public class RestParamsTable extends JPanel
 				paramsTable.clearSelection();
 				paramsTableModel.removeProperty( propertyName );
 				//params.removeProperty( propertyName );
-				clearParamsAction.setEnabled( params.getPropertyCount() > 0 );
-			}
-		}
-	}
-
-	private class ClearParamsAction extends AbstractAction
-	{
-		public ClearParamsAction()
-		{
-			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/clear_properties.gif" ) );
-			putValue( Action.SHORT_DESCRIPTION, "Clears all current parameter values" );
-		}
-
-		public void actionPerformed( ActionEvent e )
-		{
-			if( UISupport.confirm( "Clear all parameter values?", "Clear Parameters" ) )
-			{
-				params.clear();
 			}
 		}
 	}
