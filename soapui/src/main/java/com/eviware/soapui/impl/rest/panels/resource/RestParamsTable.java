@@ -47,7 +47,6 @@ public class RestParamsTable extends JPanel
 	protected JTable paramsTable;
 	protected AddParamAction addParamAction = null;
 	protected RemoveParamAction removeParamAction = null;
-	protected ClearParamsAction clearParamsAction = null;
 	protected UseDefaultParamsAction defaultParamsAction = null;
 	protected MovePropertyDownAction movePropertyDownAction = null;
 	protected MovePropertyUpAction movePropertyUpAction = null;
@@ -75,7 +74,6 @@ public class RestParamsTable extends JPanel
 
 	protected void init( boolean showInspector )
 	{
-		clearParamsAction = new ClearParamsAction();
 		defaultParamsAction = new UseDefaultParamsAction();
 		movePropertyDownAction = new MovePropertyDownAction();
 		movePropertyUpAction = new MovePropertyUpAction();
@@ -211,8 +209,6 @@ public class RestParamsTable extends JPanel
 			toolbar.add( UISupport.createToolbarButton( removeParamAction, false ) );
 			toolbar.addSeparator();
 		}
-		toolbar.add( UISupport.createToolbarButton( clearParamsAction, paramsTable.getRowCount() > 0 ) );
-		toolbar.addSeparator();
 		toolbar.add( UISupport.createToolbarButton( movePropertyDownAction, false ) );
 		toolbar.add( UISupport.createToolbarButton( movePropertyUpAction, false ) );
 		toolbar.addSeparator();
@@ -278,7 +274,6 @@ public class RestParamsTable extends JPanel
 					}
 				} );
 
-				clearParamsAction.setEnabled( true );
 			}
 		}
 	}
@@ -332,24 +327,6 @@ public class RestParamsTable extends JPanel
 				paramsTable.clearSelection();
 				paramsTableModel.removeProperty( propertyName );
 				//params.removeProperty( propertyName );
-				clearParamsAction.setEnabled( params.getPropertyCount() > 0 );
-			}
-		}
-	}
-
-	private class ClearParamsAction extends AbstractAction
-	{
-		public ClearParamsAction()
-		{
-			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/clear_properties.gif" ) );
-			putValue( Action.SHORT_DESCRIPTION, "Clears all current parameter values" );
-		}
-
-		public void actionPerformed( ActionEvent e )
-		{
-			if( UISupport.confirm( "Clear all parameter values?", "Clear Parameters" ) )
-			{
-				params.clear();
 			}
 		}
 	}
