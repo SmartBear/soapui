@@ -392,8 +392,9 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 					String propName = source.getName();
 					String propValue = source.getValue();
 					ParameterStyle propStyle = source.getStyle();
+					String requestLevelValue = getRequest().getParams().getProperty( propName ).getValue();
 					removePropertyFromLevel( source.getName(), ( ParamLocation )evt.getOldValue() );
-					addPropertyToLevel( propName, propValue, propStyle, ( ParamLocation )evt.getNewValue() );
+					addPropertyToLevel( propName, propValue, propStyle, ( ParamLocation )evt.getNewValue(), requestLevelValue );
 				}
 			}
 			catch( XmlValueDisconnectedException exception )
@@ -406,7 +407,8 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 
 	}
 
-	private void addPropertyToLevel( String name, String value, ParameterStyle style, ParamLocation location )
+	private void addPropertyToLevel( String name, String value, ParameterStyle style, ParamLocation location,
+												String requestLevelValue )
 	{
 		RestParamsPropertyHolder paramsPropertyHolder = null;
 		switch( location )
@@ -428,7 +430,10 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 			RestParamProperty addedParameter = paramsPropertyHolder.getProperty( name );
 			addedParameter.addPropertyChangeListener( restParamPropertyChangeListener );
 			addedParameter.setValue( value );
+			addedParameter.setDefaultValue( value );
 			addedParameter.setStyle( style );
+			//Override the request level value as well
+			getRequest().getParams().getProperty( name ).setValue( requestLevelValue );
 		}
 		addPropertyChangeListenerToResource( getRequest() );
 	}
