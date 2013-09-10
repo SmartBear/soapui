@@ -180,8 +180,6 @@ public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 
 		RestService restService = ( RestService )project.addNewInterface( host, RestServiceFactory.REST_TYPE );
 		restService.addEndpoint( restURIParser.getEndpoint() );
-		restService.setBasePath( restURIParser.getResourcePath() );
-
 		RestResource restResource = restService.addNewResource( resourceName, resourcePath );
 
 		RestMethod restMethod = addNewMethod( restResource, resourceName );
