@@ -228,7 +228,7 @@ public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 	/**
 	 * This Form interface contains all the fields that will be used to populate the XFormDialog
 	 */
-	@AForm( name = "Form.Title", description = "Form.Description", helpUrl = HelpUrls.NEWPROJECT_HELP_URL, icon = UISupport.TOOL_ICON_PATH )
+	@AForm( name = "Form.Title", description = "Form.Description", helpUrl = HelpUrls.NEWRESTPROJECT_HELP_URL, icon = UISupport.TOOL_ICON_PATH )
 	public interface Form
 	{
 		@AField( description = "Form.URI.Description", type = AField.AFieldType.STRING )
