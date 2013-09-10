@@ -365,7 +365,7 @@ public class RestParamsTable extends JPanel
 			int ix = paramsTable.getSelectedRow();
 			if( ix != -1 )
 			{
-				params.moveProperty( params.getPropertyAt( ix ).getName(), ix - 1 );
+				moveProperty( ix, ix-1 );
 				paramsTable.setRowSelectionInterval( ix - 1, ix - 1 );
 			}
 		}
@@ -385,10 +385,17 @@ public class RestParamsTable extends JPanel
 			int ix = paramsTable.getSelectedRow();
 			if( ix != -1 )
 			{
-				params.moveProperty( params.getPropertyAt( ix ).getName(), ix + 1 );
+				moveProperty( ix, ix+1 );
 				paramsTable.setRowSelectionInterval( ix + 1, ix + 1 );
 			}
 		}
+	}
+
+	private void moveProperty( int oldRow, int newRow )
+	{
+		String propName = (String) paramsTableModel.getValueAt( oldRow, 0 );
+		params.moveProperty( propName, newRow );
+		paramsTableModel.moveProperty( propName, oldRow, newRow );
 	}
 
 	public void setParams( RestParamsPropertyHolder params )

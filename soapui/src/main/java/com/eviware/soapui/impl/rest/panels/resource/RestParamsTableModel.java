@@ -33,7 +33,7 @@ public class RestParamsTableModel extends AbstractTableModel implements TableMod
 {
 	public static final int PARAM_LOCATION_COLUMN_INDEX = 3;
 	protected RestParamsPropertyHolder params;
-	private List<String> propNamesIndex = new ArrayList<String>(  );
+	private List<String> paramNameIndex = new ArrayList<String>(  );
 
 	static String[] COLUMN_NAMES = new String[] { "Name", "Default value", "Style", "Level" };
 	static Class[] COLUMN_TYPES = new Class[] { String.class, String.class, ParameterStyle.class, ParamLocation.class };
@@ -54,10 +54,10 @@ public class RestParamsTableModel extends AbstractTableModel implements TableMod
 
 	private void buildParamNameIndex( RestParamsPropertyHolder params )
 	{
-		propNamesIndex.clear();
+		paramNameIndex.clear();
 		for (TestProperty property : params.getProperties().values())
 		{
-			propNamesIndex.add( property.getName() );
+			paramNameIndex.add( property.getName() );
 		}
 	}
 
@@ -115,7 +115,7 @@ public class RestParamsTableModel extends AbstractTableModel implements TableMod
 
 	public Object getValueAt( int rowIndex, int columnIndex )
 	{
-		RestParamProperty prop = params.getProperty( propNamesIndex.get( rowIndex ) );
+		RestParamProperty prop = params.getProperty( paramNameIndex.get( rowIndex ) );
 
 		switch( columnIndex )
 		{
@@ -135,7 +135,7 @@ public class RestParamsTableModel extends AbstractTableModel implements TableMod
 	@Override
 	public void setValueAt( Object value, int rowIndex, int columnIndex )
 	{
-		RestParamProperty prop = params.getProperty( propNamesIndex.get( rowIndex ) );
+		RestParamProperty prop = params.getProperty( paramNameIndex.get( rowIndex ) );
 
 		switch( columnIndex )
 		{
@@ -160,43 +160,51 @@ public class RestParamsTableModel extends AbstractTableModel implements TableMod
 
 	public RestParamProperty getParameterAt( int selectedRow )
 	{
-		return params.getProperty( propNamesIndex.get( selectedRow ) );
+		return params.getProperty( paramNameIndex.get( selectedRow ) );
 	}
 
 	public void propertyAdded( String name )
 	{
-		if(!propNamesIndex.contains( name ))
+		if(!paramNameIndex.contains( name ))
 		{
-			propNamesIndex.add( name );
+			paramNameIndex.add( name );
 		}
 		fireTableDataChanged();
 	}
 
 	public void propertyRemoved( String name )
 	{
-		propNamesIndex.remove( name );
+		paramNameIndex.remove( name );
 		fireTableDataChanged();
 	}
 
 	public void propertyRenamed( String oldName, String newName )
 	{
-		int paramIndex = propNamesIndex.indexOf( oldName );
+		int paramIndex = paramNameIndex.indexOf( oldName );
 		if( paramIndex < 0 )
 		{
 			return;
 		}
-		propNamesIndex.set( paramIndex, newName );
+		paramNameIndex.set( paramIndex, newName );
 		fireTableDataChanged();
 	}
 
 	public void propertyValueChanged( String name, String oldValue, String newValue )
 	{
-		fireTableCellUpdated( propNamesIndex.indexOf( name ), 1 );
+		fireTableCellUpdated( paramNameIndex.indexOf( name ), 1 );
 	}
 
 	public void propertyMoved( String name, int oldIndex, int newIndex )
 	{
 		fireTableDataChanged();
+	}
+
+	public void moveProperty(String name, int oldIndex, int newIndex)
+	{
+		String valueAtNewindex = paramNameIndex.get( newIndex );
+		paramNameIndex.set( newIndex, name );
+		paramNameIndex.set( oldIndex, valueAtNewindex );
+		propertyMoved( name, oldIndex, newIndex );
 	}
 
 	public ParameterStyle[] getParameterStylesForEdit()
