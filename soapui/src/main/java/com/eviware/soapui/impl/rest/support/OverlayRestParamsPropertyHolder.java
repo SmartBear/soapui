@@ -331,6 +331,9 @@ public class OverlayRestParamsPropertyHolder implements RestParamsPropertyHolder
 			else if( overlay.hasProperty( newName ) )
 			{
 				firePropertyRemoved( oldName );
+			} else
+			{
+				firePropertyRenamed( oldName, newName );
 			}
 		}
 
