@@ -14,18 +14,8 @@ package com.eviware.soapui.impl.actions;
 
 import com.eviware.soapui.config.RestParametersConfig;
 import com.eviware.soapui.impl.WorkspaceImpl;
-import com.eviware.soapui.impl.rest.RestMethod;
-import com.eviware.soapui.impl.rest.RestRequest;
-import com.eviware.soapui.impl.rest.RestRequestInterface;
-import com.eviware.soapui.impl.rest.RestResource;
-import com.eviware.soapui.impl.rest.RestService;
-import com.eviware.soapui.impl.rest.RestServiceFactory;
-import com.eviware.soapui.impl.rest.RestURIParser;
-import com.eviware.soapui.impl.rest.support.RestParamProperty;
-import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
-import com.eviware.soapui.impl.rest.support.RestURIParserImpl;
-import com.eviware.soapui.impl.rest.support.RestUtils;
-import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
+import com.eviware.soapui.impl.rest.*;
+import com.eviware.soapui.impl.rest.support.*;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.support.MessageSupport;
@@ -41,14 +31,8 @@ import com.eviware.x.impl.swing.JTextFieldFormField;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.*;
+import java.awt.event.*;
 import java.net.MalformedURLException;
 
 /**
@@ -63,12 +47,15 @@ public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 
 	private final static Logger logger = Logger.getLogger( NewRESTProjectAction.class );
 	private static final String PROJECT_NAME = "REST Project"; //TODO: configurable or some other intelligent way
+	public static final String EXAMPLE_URI = "http://example.com/resource/path/search?parameter=value";
 	private XFormDialog dialog;
 
 	public static final MessageSupport messages = MessageSupport.getMessages( NewRESTProjectAction.class );
 	private KeyListener initialKeyListener;
 	private MouseListener initialMouseListener;
 	private Font originalFont;
+
+	private boolean defaultURIReplaced;
 
 	public NewRESTProjectAction()
 	{
@@ -80,17 +67,20 @@ public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 		if( dialog == null )
 		{
 			dialog = ADialogBuilder.buildDialog( Form.class );
-
 		}
-		dialog.setValue( Form.URI, "http://example.com/resource/path/search?parameter=value" );
+		dialog.setValue( Form.URI, EXAMPLE_URI );
 		XFormField uriField = dialog.getFormField( Form.URI );
-		if (uriField instanceof JTextFieldFormField) {
-			JUndoableTextField textField = (( JTextFieldFormField )uriField).getComponent();
+
+		JUndoableTextField textField = null;
+		if( uriField instanceof JTextFieldFormField )
+		{
+			defaultURIReplaced = false;
+			textField = ( ( JTextFieldFormField )uriField ).getComponent();
 			textField.requestFocus();
 			originalFont = textField.getFont();
 			textField.setFont( originalFont.deriveFont( Font.ITALIC ) );
 			textField.setForeground( new Color( 170, 170, 170 ) );
-			logger.log( Level.DEBUG, "Adding listeners to URI text field");
+			logger.log( Level.DEBUG, "Adding listeners to URI text field" );
 			addListenersTo( textField );
 		}
 
@@ -99,6 +89,11 @@ public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 			WsdlProject project = null;
 			try
 			{
+				if( !defaultURIReplaced && textField != null )
+				{
+					resetUriField( textField );
+				}
+
 				String URI = dialog.getValue( Form.URI ).trim();
 
 				project = workspace.createProject( PROJECT_NAME, null );
@@ -118,6 +113,10 @@ public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 				}
 			}
 		}
+		if( !defaultURIReplaced && textField != null )
+		{
+			resetUriField( textField );
+		}
 	}
 
 
@@ -134,7 +133,8 @@ public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 			}
 		};
 		innerField.addKeyListener( initialKeyListener );
-		initialMouseListener = new MouseAdapter() {
+		initialMouseListener = new MouseAdapter()
+		{
 
 			@Override
 			public void mouseClicked( MouseEvent e )
@@ -149,6 +149,7 @@ public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 	{
 		try
 		{
+			defaultURIReplaced = true;
 			innerField.setText( "" );
 			innerField.setFont( originalFont );
 			innerField.setForeground( Color.BLACK );
@@ -180,9 +181,6 @@ public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 
 		RestService restService = ( RestService )project.addNewInterface( host, RestServiceFactory.REST_TYPE );
 		restService.addEndpoint( restURIParser.getEndpoint() );
-		//TODO: to find out why do we need to separate base path and resource path
-		// restService.setBasePath( restURIParser.getPath() );
-
 		RestResource restResource = restService.addNewResource( resourceName, resourcePath );
 
 		RestMethod restMethod = addNewMethod( restResource, resourceName );
@@ -200,7 +198,7 @@ public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 	protected void extractAndFillParameters( String URI, RestParamsPropertyHolder params )
 	{
 		// This does lot of magic including extracting and filling up parameters on the params
-		RestUtils.extractParams( URI, params, false );
+		RestUtils.extractParams( URI, params, false, false );
 	}
 
 	//TODO: In advanced version we have to apply filtering like which type of parameter goes to which location

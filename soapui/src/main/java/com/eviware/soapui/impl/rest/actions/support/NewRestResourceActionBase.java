@@ -85,7 +85,7 @@ public abstract class NewRestResourceActionBase<T extends ModelItem> extends Abs
 				paramsTable.refresh();
 		}
 
-		paramsTable = new RestParamsTable( params, false );
+		paramsTable = new RestParamsTable( params, false, ParamLocation.RESOURCE );
 		dialog.getFormField( Form.PARAMSTABLE ).setProperty( "component", paramsTable );
 
 		if( dialog.show() )

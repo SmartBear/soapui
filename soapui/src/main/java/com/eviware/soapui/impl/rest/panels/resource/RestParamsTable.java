@@ -28,28 +28,17 @@ import com.jgoodies.binding.PresentationModel;
 import org.apache.xmlbeans.SchemaType;
 import org.apache.xmlbeans.XmlBeans;
 
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.DefaultCellEditor;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.xml.namespace.QName;
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase.ParamLocation;
+
 
 public class RestParamsTable extends JPanel
 {
@@ -66,20 +55,23 @@ public class RestParamsTable extends JPanel
 	private PresentationModel<RestParamProperty> paramDetailsModel;
 	private StringListFormComponent optionsFormComponent;
 	private SimpleBindingForm detailsForm;
+	private final ParamLocation defaultParamLocation;
 
-	public RestParamsTable( RestParamsPropertyHolder params, boolean showInspector )
+	public RestParamsTable( RestParamsPropertyHolder params, boolean showInspector, ParamLocation defaultParamLocation )
 	{
-		this( params, showInspector, new RestParamsTableModel( params ) );
+		this( params, showInspector, new RestParamsTableModel( params ), defaultParamLocation );
 	}
-	public RestParamsTable( RestParamsPropertyHolder params, boolean showInspector, RestParamsTableModel model)
+	public RestParamsTable( RestParamsPropertyHolder params, boolean showInspector, RestParamsTableModel model,
+									ParamLocation defaultParamLocation)
 	{
 		super( new BorderLayout() );
 		this.params = params;
 		this.paramsTableModel = model;
-		init( params, showInspector );
+		this.defaultParamLocation = defaultParamLocation;
+		init( showInspector );
 	}
 
-	protected void init( RestParamsPropertyHolder params, boolean showInspector )
+	protected void init( boolean showInspector )
 	{
 		paramsTable = new JTable( paramsTableModel );
 		paramsTable.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
@@ -239,18 +231,30 @@ public class RestParamsTable extends JPanel
 			if( StringUtils.hasContent( name ) )
 			{
 				params.addProperty( name );
-				final int row = params.getPropertyNames().length - 1;
+				RestParamProperty addedProperty = params.getProperty( name );
+				addedProperty.setParamLocation( defaultParamLocation );
+				int row = 0;
+				//This is workaround to deal with the reordering of params as soon as a new param is added
+				for (int i=0; i<params.size(); i++)
+				{
+					if( name.equals( paramsTable.getValueAt( i, 0 ) ) )
+					{
+						row = i;
+						break;
+					}
+				}
+				final int rowNum = row;
 				SwingUtilities.invokeLater( new Runnable()
 				{
 					public void run()
 					{
 						requestFocusInWindow();
-						scrollRectToVisible( paramsTable.getCellRect( row, 1, true ) );
+						scrollRectToVisible( paramsTable.getCellRect( rowNum, 1, true ) );
 						SwingUtilities.invokeLater( new Runnable()
 						{
 							public void run()
 							{
-								paramsTable.editCellAt( row, 1 );
+								paramsTable.editCellAt( rowNum, 1 );
 								paramsTable.getEditorComponent().requestFocusInWindow();
 							}
 						} );
@@ -266,7 +270,7 @@ public class RestParamsTable extends JPanel
 	{
 		private UpdateParamsAction()
 		{
-			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/add_property.gif" ) );
+			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/update-request-parameters-from-url.png" ) );
 			putValue( Action.SHORT_DESCRIPTION, "Updates params from a specified URL" );
 		}
 

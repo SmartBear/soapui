@@ -448,7 +448,7 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 
 		public void setDisableUrlEncoding( boolean encode )
 		{
-			// overriddenProp.setDisableUrlEncoding(encode);
+			overriddenProp.setDisableUrlEncoding(encode);
 		}
 
 		public void setName( String name )
@@ -528,17 +528,17 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 
 		public void setDescription( String description )
 		{
-			// overriddenProp.setDescription(description);
+			overriddenProp.setDescription(description);
 		}
 
 		public void setOptions( String[] arg0 )
 		{
-			// overriddenProp.setOptions(arg0);
+			overriddenProp.setOptions(arg0);
 		}
 
 		public void setRequired( boolean arg0 )
 		{
-			// overriddenProp.setRequired(arg0);
+			overriddenProp.setRequired(arg0);
 		}
 
 		public void setStyle( ParameterStyle style )
@@ -560,7 +560,7 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 
 		public void setType( QName arg0 )
 		{
-			// overriddenProp.setType(arg0);
+			overriddenProp.setType(arg0);
 		}
 
 		public void propertyChange( PropertyChangeEvent evt )

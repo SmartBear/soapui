@@ -34,7 +34,7 @@ public class RestURIParserImplTestCase
 	private RestURIParserImpl restURIParser;
 
 	@Rule
-	public ExpectedException thrown= ExpectedException.none();
+	public ExpectedException thrown = ExpectedException.none();
 
 	@After
 	public void tearDown()
@@ -100,9 +100,9 @@ public class RestURIParserImplTestCase
 	}
 
 	@Test
-	public void noEndpointNorPrefixSlashTest() throws MalformedURLException
+	public void numericResourceTest() throws MalformedURLException
 	{
-		String uri = "1.2/json.search/search?title=Kill%20me";
+		String uri = "/1.2/json.search/search?title=Kill%20me";
 		String expectedEndpoint = "";
 		String expectedPath = "/1.2/json.search/search";
 		String expectedResourceName = "Search";
@@ -184,10 +184,10 @@ public class RestURIParserImplTestCase
 	}
 
 	@Test
-	public void uriWithLargeDomainTest() throws MalformedURLException
+	public void onlyEndPointWithPortTest() throws MalformedURLException
 	{
-		String uri = "soapui.local";
-		String expectedEndpoint = "http://soapui.local";
+		String uri = "soapui.com:8080";
+		String expectedEndpoint = "http://soapui.com:8080";
 		String expectedPath = "";
 		String expectedResourceName = "";
 		String expectedQuery = "";
@@ -198,13 +198,27 @@ public class RestURIParserImplTestCase
 	}
 
 	@Test
-	public void numericResourceTest() throws MalformedURLException
+	public void withoutHTTPPrefixPortTest() throws MalformedURLException
 	{
-		String uri = "1.57/api/get?id=1234";
-		String expectedEndpoint = "";
-		String expectedPath = "/1.57/api/get";
-		String expectedResourceName = "Get";
-		String expectedQuery = "id=1234";
+		String uri = "soapui.com:8080/services";
+		String expectedEndpoint = "http://soapui.com:8080";
+		String expectedPath = "/services";
+		String expectedResourceName = "Services";
+		String expectedQuery = "";
+
+		restURIParser = new RestURIParserImpl( uri );
+
+		assertURIParsedCorrectly( expectedEndpoint, expectedPath, expectedResourceName, expectedQuery, restURIParser );
+	}
+
+	@Test
+	public void uriWithLargeDomainTest() throws MalformedURLException
+	{
+		String uri = "soapui.local";
+		String expectedEndpoint = "http://soapui.local";
+		String expectedPath = "";
+		String expectedResourceName = "";
+		String expectedQuery = "";
 
 		restURIParser = new RestURIParserImpl( uri );
 
@@ -227,6 +241,22 @@ public class RestURIParserImplTestCase
 	}
 
 	@Test
+	public void endpointsWithSubDomainTest() throws MalformedURLException
+	{
+		String uri = "api.soapui.com/services";
+		String expectedEndpoint = "http://api.soapui.com";
+		String expectedPath = "/services";
+		String expectedResourceName = "Services";
+		String expectedQuery = "";
+
+		restURIParser = new RestURIParserImpl( uri );
+
+		assertURIParsedCorrectly( expectedEndpoint, expectedPath, expectedResourceName, expectedQuery, restURIParser );
+
+	}
+
+
+	@Test
 	public void queryParamRightAfterSlashTest() throws MalformedURLException
 	{
 		String uri = "http://ws.spotify.com/lookup/1/?uri=spotify:artist:4YrKBkKSVeqDamzBPWVnSJ";
@@ -234,6 +264,51 @@ public class RestURIParserImplTestCase
 		String expectedPath = "/lookup/1/";
 		String expectedResourceName = "1";
 		String expectedQuery = "uri=spotify:artist:4YrKBkKSVeqDamzBPWVnSJ";
+
+		restURIParser = new RestURIParserImpl( uri );
+
+		assertURIParsedCorrectly( expectedEndpoint, expectedPath, expectedResourceName, expectedQuery, restURIParser );
+
+	}
+
+	@Test
+	public void ipv4AddressWithPortTest() throws MalformedURLException
+	{
+		String uri = "http://10.10.1.230:8090/subscribers/subscriber";
+		String expectedEndpoint = "http://10.10.1.230:8090";
+		String expectedPath = "/subscribers/subscriber";
+		String expectedResourceName = "Subscriber";
+		String expectedQuery = "";
+
+		restURIParser = new RestURIParserImpl( uri );
+
+		assertURIParsedCorrectly( expectedEndpoint, expectedPath, expectedResourceName, expectedQuery, restURIParser );
+
+	}
+
+	@Test
+	public void ipv4AddressWithoutSchemeTest() throws MalformedURLException
+	{
+		String uri = "10.10.1.230:8090/subscribers/subscriber";
+		String expectedEndpoint = "http://10.10.1.230:8090";
+		String expectedPath = "/subscribers/subscriber";
+		String expectedResourceName = "Subscriber";
+		String expectedQuery = "";
+
+		restURIParser = new RestURIParserImpl( uri );
+
+		assertURIParsedCorrectly( expectedEndpoint, expectedPath, expectedResourceName, expectedQuery, restURIParser );
+
+	}
+
+	@Test
+	public void ipv6AddressWithPortTest() throws MalformedURLException
+	{
+		String uri = "http://2001:0db8:85a3:0000:0000:8a2e:0370:7334:8090/subscribers/subscriber";
+		String expectedEndpoint = "http://2001:0db8:85a3:0000:0000:8a2e:0370:7334:8090";
+		String expectedPath = "/subscribers/subscriber";
+		String expectedResourceName = "Subscriber";
+		String expectedQuery = "";
 
 		restURIParser = new RestURIParserImpl( uri );
 

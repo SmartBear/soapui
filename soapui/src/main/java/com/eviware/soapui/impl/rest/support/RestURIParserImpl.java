@@ -12,7 +12,6 @@
 
 package com.eviware.soapui.impl.rest.support;
 
-import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.RestURIParser;
 
 import java.net.MalformedURLException;
@@ -55,6 +54,11 @@ public class RestURIParserImpl implements RestURIParser
 	{
 		try
 		{
+			if( isAPossibleEndPointWithoutScheme( uriString ) )
+			{
+				uriString = DEFAULT_SCHEME + SCHEME_SEPARATOR + uriString;
+			}
+
 			parseWithURI( uriString );
 		}
 		catch( URISyntaxException e )
@@ -162,11 +166,6 @@ public class RestURIParserImpl implements RestURIParser
 
 	private void parseWithURI( String uriString ) throws URISyntaxException
 	{
-		if( isOnlyAuthority( uriString ) )
-		{
-			authority = uriString;
-			return;
-		}
 
 		URI uri = new URI( uriString );
 		resourcePath = ( uri.getPath() == null ? "" : uri.getPath() );
@@ -175,11 +174,18 @@ public class RestURIParserImpl implements RestURIParser
 		authority = ( uri.getAuthority() == null ? "" : uri.getAuthority() );
 	}
 
-	private boolean isOnlyAuthority( String uriString )
+	private boolean isURIWithoutScheme( String uriString )
 	{
-		// To match spotify.com and 127.0.0.1
-		// TODO: Add port support like spotify.com:8081
-		return uriString.matches( "([a-zA-Z0-9]+\\.[a-z]+)|([0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+)" );
+		return !uriString.matches( "[a-zA-Z]+\\:[\\/\\/]+.*");
+
+	}
+
+	private boolean isAPossibleEndPointWithoutScheme( String uriString )
+	{
+		int indexOfDot = uriString.indexOf( "." );
+
+		return indexOfDot > 0 && isURIWithoutScheme( uriString );
+
 	}
 
 	private void parseWithURL( String uriString ) throws MalformedURLException
@@ -197,7 +203,6 @@ public class RestURIParserImpl implements RestURIParser
 		{
 			parseManually( uriString );
 		}
-
 	}
 
 	private void parseManually( String uriString )

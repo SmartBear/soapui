@@ -404,8 +404,9 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 					String propName = source.getName();
 					String propValue = source.getValue();
 					ParameterStyle propStyle = source.getStyle();
+					String requestLevelValue = getRequest().getParams().getProperty( propName ).getValue();
 					removePropertyFromLevel( source.getName(), ( ParamLocation )evt.getOldValue() );
-					addPropertyToLevel( propName, propValue, propStyle, ( ParamLocation )evt.getNewValue() );
+					addPropertyToLevel( propName, propValue, propStyle, ( ParamLocation )evt.getNewValue(), requestLevelValue );
 				}
 			}
 			catch( XmlValueDisconnectedException exception )
@@ -418,7 +419,8 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 
 	}
 
-	private void addPropertyToLevel( String name, String value, ParameterStyle style, ParamLocation location )
+	private void addPropertyToLevel( String name, String value, ParameterStyle style, ParamLocation location,
+												String requestLevelValue )
 	{
 		RestParamsPropertyHolder paramsPropertyHolder = null;
 		switch( location )
@@ -440,7 +442,10 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 			RestParamProperty addedParameter = paramsPropertyHolder.getProperty( name );
 			addedParameter.addPropertyChangeListener( restParamPropertyChangeListener );
 			addedParameter.setValue( value );
+			addedParameter.setDefaultValue( value );
 			addedParameter.setStyle( style );
+			//Override the request level value as well
+			getRequest().getParams().getProperty( name ).setValue( requestLevelValue );
 		}
 		addPropertyChangeListenerToResource( getRequest() );
 	}
@@ -473,8 +478,9 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 				resourcePanel.setText( resourcePanel.getText().replaceAll( "\\{" + property.getName() + "\\}", "" ) );
 				break;
 			case MATRIX:
+				String propValueAtRequestLevel = getRequest().getParams().getProperty( property.getName() ).getValue();
 				resourcePanel.setText( resourcePanel.getText().replaceAll( ";" + property.getName() + "=" +
-						property.getValue(), "" ) );
+						propValueAtRequestLevel, "" ) );
 				break;
 			default:
 				break;
@@ -495,7 +501,8 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 				}
 				break;
 			case MATRIX:
-				String valueToSet = ";" + property.getName() + "=" + property.getValue();
+				String propValueAtRequestLevel = getRequest().getParams().getProperty( property.getName() ).getValue();
+				String valueToSet = ";" + property.getName() + "=" + propValueAtRequestLevel;
 				if(!resourcePanel.getText().contains( valueToSet ))
 				{
 					resourcePanel.setText( resourcePanel.getText() + valueToSet );

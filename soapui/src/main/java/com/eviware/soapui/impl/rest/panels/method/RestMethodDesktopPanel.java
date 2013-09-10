@@ -31,6 +31,8 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 
+import static com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase.ParamLocation;
+
 public class RestMethodDesktopPanel extends ModelItemDesktopPanel<RestMethod>
 {
 	private RestParamsTable paramsTable;
@@ -50,7 +52,7 @@ public class RestMethodDesktopPanel extends ModelItemDesktopPanel<RestMethod>
 	{
 		JTabbedPane tabs = new JTabbedPane();
 
-		paramsTable = new RestParamsTable( getModelItem().getParams(), true );
+		paramsTable = new RestParamsTable( getModelItem().getParams(), true, ParamLocation.METHOD );
 
 		tabs.addTab( "Method Parameters", paramsTable );
 
