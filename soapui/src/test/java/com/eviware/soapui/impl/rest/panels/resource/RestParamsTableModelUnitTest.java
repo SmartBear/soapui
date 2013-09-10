@@ -42,9 +42,13 @@ public class RestParamsTableModelUnitTest
 		when( param.getParamLocation() ).thenReturn( NewRestResourceActionBase.ParamLocation.METHOD );
 		when( param.getName() ).thenReturn( PARAM_NAME );
 		when( params.getProperty(PARAM_NAME) ).thenReturn( param );
+		when( params.getPropertyIndex( PARAM_NAME ) ).thenReturn( 0 );
+		when( params.size() ).thenReturn( 1 );
+
 		Map<String, TestProperty> properties = new HashMap<String, TestProperty>(  );
 		properties.put( PARAM_NAME, param );
 		when (params.getProperties()).thenReturn( properties );
+
 		restParamsTableModel = new RestParamsTableModel( params );
 	}
 
