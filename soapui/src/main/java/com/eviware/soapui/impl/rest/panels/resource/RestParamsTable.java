@@ -150,7 +150,7 @@ public class RestParamsTable extends JPanel
 	{
 		addParamAction = new AddParamAction();
 		removeParamAction = new RemoveParamAction();
-		updateParamsAction = new UpdateParamsAction();
+
 	}
 
 	private JComponent buildDetails()

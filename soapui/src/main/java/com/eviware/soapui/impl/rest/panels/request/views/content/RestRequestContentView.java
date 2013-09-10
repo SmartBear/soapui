@@ -49,11 +49,13 @@ public class RestRequestContentView extends HttpRequestContentView
 
 	protected RestParamsTable buildParamsTable()
 	{
-		RestParamsTableModel model = new RestParamsTableModel( restRequest.getParams() ) {
+		RestParamsTableModel model = new RestParamsTableModel( restRequest.getParams() )
+		{
 			@Override
 			public String getColumnName( int columnIndex )
 			{
-				if(columnIndex==1){
+				if( columnIndex == 1 )
+				{
 					return "Value";
 				}
 
