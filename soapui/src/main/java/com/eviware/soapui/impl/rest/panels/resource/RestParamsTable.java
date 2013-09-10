@@ -240,19 +240,28 @@ public class RestParamsTable extends JPanel
 				params.addProperty( name );
 				RestParamProperty addedProperty = params.getProperty( name );
 				addedProperty.setParamLocation( defaultParamLocation );
-
-				final int row = params.getPropertyNames().length - 1;
+				int row = 0;
+				//This is workaround to deal with the reordering of params as soon as a new param is added
+				for (int i=0; i<params.size(); i++)
+				{
+					if( name.equals( paramsTable.getValueAt( i, 0 ) ) )
+					{
+						row = i;
+						break;
+					}
+				}
+				final int rowNum = row;
 				SwingUtilities.invokeLater( new Runnable()
 				{
 					public void run()
 					{
 						requestFocusInWindow();
-						scrollRectToVisible( paramsTable.getCellRect( row, 1, true ) );
+						scrollRectToVisible( paramsTable.getCellRect( rowNum, 1, true ) );
 						SwingUtilities.invokeLater( new Runnable()
 						{
 							public void run()
 							{
-								paramsTable.editCellAt( row, 1 );
+								paramsTable.editCellAt( rowNum, 1 );
 								paramsTable.getEditorComponent().requestFocusInWindow();
 							}
 						} );
