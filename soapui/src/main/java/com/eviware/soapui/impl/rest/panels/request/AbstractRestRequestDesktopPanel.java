@@ -183,15 +183,12 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 			baseToolBar.add( tabsButton );
 			baseToolBar.add( splitButton );
 			baseToolBar.add( UISupport.createToolbarButton( new ShowOnlineHelpAction( getHelpUrl() ) ) );
-			int maximumPreferredHeight = findMaximumPreferredHeight(endpointPanel, resourcePanel, queryPanel);
+			int maximumPreferredHeight = findMaximumPreferredHeight(endpointPanel, resourcePanel, queryPanel) + 6;
 			baseToolBar.setPreferredSize( new Dimension( 600, Math.max(maximumPreferredHeight, STANDARD_TOOLBAR_HEIGHT ) ) );
 
 			panel.add( baseToolBar, BorderLayout.NORTH );
 
-			JXToolBar toolbar = UISupport.createToolbar();
-			addToolbarComponents( toolbar );
-
-			panel.add( toolbar, BorderLayout.SOUTH );
+			addMethodSelectorToolbar( panel );
 
 			return panel;
 		}
@@ -207,7 +204,8 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 		int maximum = 0;
 		for( JComponent component : components )
 		{
-			maximum = Math.max(maximum, component.getPreferredSize().height);
+			int componentPreferredHeight = component == null || component.getPreferredSize() == null ? 0 : component.getPreferredSize().height;
+			maximum = Math.max(maximum, componentPreferredHeight);
 		}
 		return maximum;
 	}
@@ -235,12 +233,11 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 		}
 	}
 
-	protected void addToolbarComponents( JXToolBar toolbar )
+	private void addMethodSelectorToolbar( JPanel panel )
 	{
-		toolbar.addSeparator();
-
 		if( getRequest().getResource() != null && getRequest() instanceof RestTestRequestInterface )
 		{
+			JXToolBar toolbar = UISupport.createToolbar();
 			JComboBox pathCombo = new JComboBox( new PathComboBoxModel() );
 			pathCombo.setRenderer( new RestMethodListCellRenderer() );
 			pathCombo.setPreferredSize( new Dimension( 200, 20 ) );
@@ -253,8 +250,8 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 			updateFullPathLabel();
 
 			toolbar.add( pathLabel );
+			panel.add( toolbar, BorderLayout.SOUTH );
 		}
-		toolbar.addSeparator();
 	}
 
 	protected boolean release()

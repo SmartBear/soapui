@@ -53,7 +53,7 @@ public class RestResourceDesktopPanel extends ModelItemDesktopPanel<RestResource
 	private Component buildContent()
 	{
 		JTabbedPane tabs = new JTabbedPane();
-		paramsTable = new RestParamsTable( getModelItem().getParams(), true, ParamLocation.RESOURCE, false );
+		paramsTable = new RestParamsTable( getModelItem().getParams(), true, ParamLocation.RESOURCE );
 		tabs.addTab( "Resource Parameters", paramsTable );
 		return UISupport.createTabPanel( tabs, false );
 	}
