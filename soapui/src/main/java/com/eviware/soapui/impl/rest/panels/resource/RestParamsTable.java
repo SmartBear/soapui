@@ -148,6 +148,7 @@ public class RestParamsTable extends JPanel
 	{
 		addParamAction = new AddParamAction();
 		removeParamAction = new RemoveParamAction();
+		updateParamsAction = new UpdateParamsAction();
 
 	}
 
@@ -208,11 +209,13 @@ public class RestParamsTable extends JPanel
 			toolbar.add( UISupport.createToolbarButton( addParamAction ) );
 			toolbar.add( UISupport.createToolbarButton( removeParamAction, false ) );
 			toolbar.addSeparator();
+			toolbar.add( UISupport.createToolbarButton( updateParamsAction ) );
 		}
+
+		toolbar.add( UISupport.createToolbarButton( defaultParamsAction, paramsTable.getRowCount() > 0 ) );
+		toolbar.addSeparator();
 		toolbar.add( UISupport.createToolbarButton( movePropertyDownAction, false ) );
 		toolbar.add( UISupport.createToolbarButton( movePropertyUpAction, false ) );
-		toolbar.addSeparator();
-		toolbar.add( UISupport.createToolbarButton( updateParamsAction ) );
 		toolbar.addSeparator();
 
 		insertAdditionalButtons( toolbar );
