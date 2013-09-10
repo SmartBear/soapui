@@ -72,7 +72,7 @@ public class NewRestMethodAction extends AbstractSoapUIAction<RestResource>
 
 
 		RestParamsTableModel model = new RestParamsTableModel( params );
-		RestParamsTable paramsTable = new RestParamsTable( params, false, model, ParamLocation.METHOD );
+		RestParamsTable paramsTable = new RestParamsTable( params, false, model, ParamLocation.METHOD, false );
 
 		dialog.getFormField( Form.PARAMSTABLE ).setProperty( "component", paramsTable );
 

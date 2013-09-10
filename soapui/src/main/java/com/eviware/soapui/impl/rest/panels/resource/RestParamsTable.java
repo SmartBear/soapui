@@ -45,26 +45,28 @@ public class RestParamsTable extends JPanel
 	protected RestParamsPropertyHolder params;
 	protected RestParamsTableModel paramsTableModel;
 	protected JTable paramsTable;
-	protected AddParamAction addParamAction = new AddParamAction();
-	protected RemoveParamAction removeParamAction = new RemoveParamAction();
-	protected ClearParamsAction clearParamsAction = new ClearParamsAction();
-	protected UseDefaultParamsAction defaultParamsAction = new UseDefaultParamsAction();
-	protected MovePropertyDownAction movePropertyDownAction = new MovePropertyDownAction();
-	protected MovePropertyUpAction movePropertyUpAction = new MovePropertyUpAction();
-	protected UpdateParamsAction updateParamsAction = new UpdateParamsAction();
+	protected AddParamAction addParamAction = null;
+	protected RemoveParamAction removeParamAction = null;
+	protected ClearParamsAction clearParamsAction = null;
+	protected UseDefaultParamsAction defaultParamsAction = null;
+	protected MovePropertyDownAction movePropertyDownAction = null;
+	protected MovePropertyUpAction movePropertyUpAction = null;
+	protected UpdateParamsAction updateParamsAction = null;
 	private PresentationModel<RestParamProperty> paramDetailsModel;
 	private StringListFormComponent optionsFormComponent;
 	private SimpleBindingForm detailsForm;
 	private final ParamLocation defaultParamLocation;
+	private boolean isOnlyValueEditable;
 
 	public RestParamsTable( RestParamsPropertyHolder params, boolean showInspector, ParamLocation defaultParamLocation )
 	{
-		this( params, showInspector, new RestParamsTableModel( params ), defaultParamLocation );
+		this( params, showInspector, new RestParamsTableModel( params ), defaultParamLocation, false );
 	}
 	public RestParamsTable( RestParamsPropertyHolder params, boolean showInspector, RestParamsTableModel model,
-									ParamLocation defaultParamLocation)
+									ParamLocation defaultParamLocation, boolean isOnlyValueEditable)
 	{
 		super( new BorderLayout() );
+		this.isOnlyValueEditable = isOnlyValueEditable;
 		this.params = params;
 		this.paramsTableModel = model;
 		this.defaultParamLocation = defaultParamLocation;
@@ -73,6 +75,16 @@ public class RestParamsTable extends JPanel
 
 	protected void init( boolean showInspector )
 	{
+		clearParamsAction = new ClearParamsAction();
+		defaultParamsAction = new UseDefaultParamsAction();
+		movePropertyDownAction = new MovePropertyDownAction();
+		movePropertyUpAction = new MovePropertyUpAction();
+
+		if( !isOnlyValueEditable )
+		{
+			initEditableButtons();
+		}
+
 		paramsTable = new JTable( paramsTableModel );
 		paramsTable.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
 		paramsTable.setDefaultEditor( ParameterStyle.class, new DefaultCellEditor(
@@ -86,7 +98,10 @@ public class RestParamsTable extends JPanel
 			public void valueChanged( ListSelectionEvent e )
 			{
 				int selectedRow = paramsTable.getSelectedRow();
-				removeParamAction.setEnabled( selectedRow != -1 );
+				if( !isOnlyValueEditable)
+				{
+					removeParamAction.setEnabled( selectedRow != -1 );
+				}
 				movePropertyDownAction.setEnabled( selectedRow < paramsTable.getRowCount() - 1 );
 				movePropertyUpAction.setEnabled( selectedRow > 0 );
 
@@ -129,6 +144,13 @@ public class RestParamsTable extends JPanel
 		{
 			add( new JScrollPane( paramsTable ), BorderLayout.CENTER );
 		}
+	}
+
+	private void initEditableButtons()
+	{
+		addParamAction = new AddParamAction();
+		removeParamAction = new RemoveParamAction();
+		updateParamsAction = new UpdateParamsAction();
 	}
 
 	private JComponent buildDetails()
@@ -183,8 +205,12 @@ public class RestParamsTable extends JPanel
 	{
 		JXToolBar toolbar = UISupport.createToolbar();
 
-		toolbar.add( UISupport.createToolbarButton( addParamAction ) );
-		toolbar.add( UISupport.createToolbarButton( removeParamAction, false ) );
+		if( !isOnlyValueEditable )
+		{
+			toolbar.add( UISupport.createToolbarButton( addParamAction ) );
+			toolbar.add( UISupport.createToolbarButton( removeParamAction, false ) );
+			toolbar.addSeparator();
+		}
 		toolbar.add( UISupport.createToolbarButton( clearParamsAction, paramsTable.getRowCount() > 0 ) );
 		toolbar.addSeparator();
 		toolbar.add( UISupport.createToolbarButton( movePropertyDownAction, false ) );
