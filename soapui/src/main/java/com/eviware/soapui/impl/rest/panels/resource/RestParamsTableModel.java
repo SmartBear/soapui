@@ -24,6 +24,7 @@ import javax.swing.table.TableModel;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase.ParamLocation;
@@ -54,10 +55,10 @@ public class RestParamsTableModel extends AbstractTableModel implements TableMod
 
 	private void buildParamNameIndex( RestParamsPropertyHolder params )
 	{
-		paramNameIndex.clear();
+		paramNameIndex = new ArrayList<String>( Collections.nCopies( params.size(), "" ));//Initialize with empty values
 		for (TestProperty property : params.getProperties().values())
 		{
-			paramNameIndex.add( property.getName() );
+			paramNameIndex.set( params.getPropertyIndex( property.getName() ), property.getName() );
 		}
 	}
 
