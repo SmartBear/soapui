@@ -89,7 +89,8 @@ public class RestParamsTable extends JPanel
 				new JComboBox( paramsTableModel.getParameterStylesForEdit() ) ) );
 		paramsTable.setDefaultEditor( ParamLocation.class, new DefaultCellEditor(
 				new JComboBox( paramsTableModel.getParameterLevels() ) ) );
-
+		// Workaround: for some reason the lower part of text gets clipped on some platforms
+		paramsTable.setRowHeight( 25 );
 		paramsTable.getSelectionModel().addListSelectionListener( new ListSelectionListener()
 		{
 
