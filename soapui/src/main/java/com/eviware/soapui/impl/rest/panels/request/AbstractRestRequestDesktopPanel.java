@@ -220,7 +220,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 				@Override
 				public void update( Document document )
 				{
-					getRequest().getResource().setPath( resourcePanel.getText().trim() );
+					getRequest().getResource().setPath( getResourcePanelText().trim() );
 				}
 			} );
 			toolbar.addWithOnlyMinimumHeight( resourcePanel );
@@ -293,7 +293,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 		public void propertyRemoved( String name )
 		{
 			resetQueryPanelText();   //query param
-			String resourcePanelText = resourcePanel.getText();
+			String resourcePanelText = getResourcePanelText();
 			String paramStartString = ";" + name + "=";
 			if( resourcePanelText.contains( paramStartString ) )   //Matrix param
 			{
@@ -301,12 +301,12 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 				int endIndex =  substringWithParamValue.indexOf( ";" ) > 0 ? substringWithParamValue.indexOf( ";" ) :
 						substringWithParamValue.length();
 				String paramValue = substringWithParamValue.substring( substringWithParamValue.indexOf("=")+1, endIndex);
-				resourcePanel.setText( resourcePanel.getText().replaceAll( ";" + name + "=" + paramValue, "" ) );
+				setResourcePanelText( getResourcePanelText().replaceAll( ";" + name + "=" + paramValue, "" ) );
 			}
 
 			if( resourcePanelText.contains( "{" + name + "}" ) )    //Template param
 			{
-				resourcePanel.setText( resourcePanelText.replaceAll( "\\{" + name + "\\}", "" ) );
+				setResourcePanelText( resourcePanelText.replaceAll( "\\{" + name + "\\}", "" ) );
 			}
 			updateFullPathLabel();
 		}
@@ -322,11 +322,11 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 			}
 			else if( style.equals( ParameterStyle.TEMPLATE ) )
 			{
-				resourcePanel.setText( resourcePanel.getText().replaceAll( "\\{" + oldName + "\\}", "{" + newName + "}" ) );
+				setResourcePanelText( getResourcePanelText().replaceAll( "\\{" + oldName + "\\}", "{" + newName + "}" ) );
 			}
 			else if( style.equals( ParameterStyle.MATRIX ) )
 			{
-				resourcePanel.setText( resourcePanel.getText().replaceAll( oldName + "=" +
+				setResourcePanelText( getResourcePanelText().replaceAll( oldName + "=" +
 						property.getValue(), property.getName() + "=" + property.getValue() ) );
 			}
 			updateFullPathLabel();
@@ -352,9 +352,9 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 			{
 				addPropertyForStyle( property, ParameterStyle.MATRIX );
 			}
-			else if( StringUtils.isNullOrEmpty( newValue ) || !resourcePanel.getText().contains( newValueStr ))
+			else if( StringUtils.isNullOrEmpty( newValue ) || !getResourcePanelText().contains( newValueStr ))
 			{
-				resourcePanel.setText( resourcePanel.getText().replaceAll( name + "=" + oldValue, newValueStr ) );
+				setResourcePanelText( getResourcePanelText().replaceAll( name + "=" + oldValue, newValueStr ) );
 			}
 		}
 		else if( property.getStyle().equals( ParameterStyle.TEMPLATE ) )
@@ -365,7 +365,11 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 
 	private void resetQueryPanelText()
 	{
-		queryPanel.setText( RestUtils.getQueryParamsString( getRequest().getParams(), getRequest() ) );
+		if ( queryPanel != null )
+		{
+			queryPanel.setText( RestUtils.getQueryParamsString( getRequest().getParams(), getRequest() ) );
+		}
+
 	}
 
 	private void updateFullPathLabel()
@@ -472,11 +476,11 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 				resetQueryPanelText();
 				break;
 			case TEMPLATE:
-				resourcePanel.setText( resourcePanel.getText().replaceAll( "\\{" + property.getName() + "\\}", "" ) );
+				setResourcePanelText( getResourcePanelText().replaceAll( "\\{" + property.getName() + "\\}", "" ) );
 				break;
 			case MATRIX:
 				String propValueAtRequestLevel = getRequest().getParams().getProperty( property.getName() ).getValue();
-				resourcePanel.setText( resourcePanel.getText().replaceAll( ";" + property.getName() + "=" +
+				setResourcePanelText( getResourcePanelText().replaceAll( ";" + property.getName() + "=" +
 						propValueAtRequestLevel, "" ) );
 				break;
 			default:
@@ -492,17 +496,17 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 				resetQueryPanelText();
 				break;
 			case TEMPLATE:
-				if( !resourcePanel.getText().contains( "{" + property.getName() + "}" ) )
+				if( !getResourcePanelText().contains( "{" + property.getName() + "}" ) )
 				{
-					resourcePanel.setText( resourcePanel.getText() + "{" + property.getName() + "}" );
+					setResourcePanelText( getResourcePanelText() + "{" + property.getName() + "}" );
 				}
 				break;
 			case MATRIX:
 				String propValueAtRequestLevel = getRequest().getParams().getProperty( property.getName() ).getValue();
 				String valueToSet = ";" + property.getName() + "=" + propValueAtRequestLevel;
-				if(!resourcePanel.getText().contains( valueToSet ))
+				if(!getResourcePanelText().contains( valueToSet ))
 				{
-					resourcePanel.setText( resourcePanel.getText() + valueToSet );
+					setResourcePanelText( getResourcePanelText() + valueToSet );
 				}
 				break;
 			default:
@@ -600,9 +604,10 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 
 		public TextPanelWithTopLabel( String label, String text, DocumentListener documentListener )
 		{
-			this(label, text);
+			this( label, text );
 			textField.getDocument().addDocumentListener( documentListener );
 		}
+
 
 		public String getText()
 		{
@@ -622,6 +627,23 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 			textLabel.setToolTipText( text );
 			textField.setToolTipText( text );
 		}
+	}
+
+	//TODO: Temporary fix resource panel should be moved to appropriate subclass
+	private String getResourcePanelText()
+	{
+		if( resourcePanel == null )
+			return "";
+		else
+			return resourcePanel.getText();
+	}
+
+	private void setResourcePanelText( String text )
+	{
+		if( resourcePanel == null )
+			return;
+		else
+			resourcePanel.setText( text );
 	}
 
 }
