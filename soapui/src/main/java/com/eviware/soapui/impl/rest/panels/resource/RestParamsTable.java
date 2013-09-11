@@ -28,11 +28,23 @@ import com.jgoodies.binding.PresentationModel;
 import org.apache.xmlbeans.SchemaType;
 import org.apache.xmlbeans.XmlBeans;
 
-import javax.swing.*;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.DefaultCellEditor;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.xml.namespace.QName;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -171,7 +183,8 @@ public class RestParamsTable extends JPanel
 
 		detailsForm.appendComboBox( "type", "Type", types.toArray(), "The type of the parameter" );
 		optionsFormComponent = new StringListFormComponent( "Available values for this Parameter" );
-		optionsFormComponent.setPreferredSize( new Dimension( 350, 80 ) );
+		//TODO: Consider removing hardcoded size
+		optionsFormComponent.setPreferredSize( new Dimension( 350, 100 ) );
 		detailsForm.appendComponent( "options", "Options", optionsFormComponent );
 		detailsForm.appendTextField( "description", "Description", "A short description of the parameter" );
 		detailsForm.appendCheckBox( "disableUrlEncoding", "Disable Encoding",
