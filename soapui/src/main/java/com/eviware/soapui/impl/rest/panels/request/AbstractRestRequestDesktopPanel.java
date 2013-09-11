@@ -135,7 +135,6 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 					AddRestRequestToTestCaseAction.SOAPUI_ACTION_ID, getRequest(), null, "/addToTestCase.gif" ), true );
 			toolbar.add( addToTestCaseButton );
 		}
-		toolbar.add( cancelButton );
 	}
 
 	@Override
@@ -149,6 +148,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 
 			JComponent submitButton = super.getSubmitButton();
 			baseToolBar.add( submitButton );
+			baseToolBar.add( cancelButton );
 
 			// insertButtons injects different buttons for different editors. It is overridden in other subclasses
 			insertButtons( baseToolBar );
