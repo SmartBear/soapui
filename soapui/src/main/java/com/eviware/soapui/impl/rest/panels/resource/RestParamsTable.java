@@ -56,18 +56,21 @@ public class RestParamsTable extends JPanel
 	private SimpleBindingForm detailsForm;
 	private final ParamLocation defaultParamLocation;
 	private boolean showEditableButtons;
+	private boolean showDefaultParamsButton;
 
 	public RestParamsTable( RestParamsPropertyHolder params, boolean showInspector, ParamLocation defaultParamLocation ,
-									boolean showEditableButtons )
+									boolean showEditableButtons, boolean showDefaultParamsButton )
 	{
-		this( params, showInspector, new RestParamsTableModel( params ), defaultParamLocation, showEditableButtons );
+		this( params, showInspector, new RestParamsTableModel( params ), defaultParamLocation, showEditableButtons,
+				showDefaultParamsButton );
 	}
 
 	public RestParamsTable( RestParamsPropertyHolder params, boolean showInspector, RestParamsTableModel model,
-									ParamLocation defaultParamLocation, boolean showEditableButtons )
+									ParamLocation defaultParamLocation, boolean showEditableButtons, boolean showDefaultParamsButton )
 	{
 		super( new BorderLayout() );
 		this.showEditableButtons = showEditableButtons;
+		this.showDefaultParamsButton = showDefaultParamsButton;
 		this.params = params;
 		this.paramsTableModel = model;
 		this.defaultParamLocation = defaultParamLocation;
@@ -76,7 +79,11 @@ public class RestParamsTable extends JPanel
 
 	protected void init( boolean showInspector )
 	{
-		defaultParamsAction = new UseDefaultParamsAction();
+		if ( showDefaultParamsButton )
+		{
+			defaultParamsAction = new UseDefaultParamsAction();
+		}
+
 		movePropertyDownAction = new MovePropertyDownAction();
 		movePropertyUpAction = new MovePropertyUpAction();
 
@@ -214,7 +221,11 @@ public class RestParamsTable extends JPanel
 			toolbar.add( UISupport.createToolbarButton( updateParamsAction ) );
 		}
 
-		toolbar.add( UISupport.createToolbarButton( defaultParamsAction, paramsTable.getRowCount() > 0 ) );
+		if( showDefaultParamsButton )
+		{
+			toolbar.add( UISupport.createToolbarButton( defaultParamsAction, paramsTable.getRowCount() > 0 ) );
+		}
+
 		toolbar.addSeparator();
 		toolbar.add( UISupport.createToolbarButton( movePropertyDownAction, false ) );
 		toolbar.add( UISupport.createToolbarButton( movePropertyUpAction, false ) );
