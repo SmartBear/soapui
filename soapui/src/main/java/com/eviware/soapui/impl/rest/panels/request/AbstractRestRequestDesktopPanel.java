@@ -53,6 +53,7 @@ import javax.swing.text.Document;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -172,9 +173,9 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 
 
 
-			baseToolBar.add( methodPanel );
+			baseToolBar.addWithOnlyMinimumHeight( methodPanel );
 			baseToolBar.add( Box.createHorizontalStrut( 4 ) );
-			baseToolBar.add( endpointPanel );
+			baseToolBar.addWithOnlyMinimumHeight( endpointPanel );
 			baseToolBar.add( Box.createHorizontalStrut( 4 ) );
 
 			addResourceAndQueryField( baseToolBar );
@@ -183,7 +184,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 			baseToolBar.add( tabsButton );
 			baseToolBar.add( splitButton );
 			baseToolBar.add( UISupport.createToolbarButton( new ShowOnlineHelpAction( getHelpUrl() ) ) );
-			int maximumPreferredHeight = findMaximumPreferredHeight(endpointPanel, resourcePanel, queryPanel) + 6;
+			int maximumPreferredHeight = findMaximumPreferredHeight(baseToolBar) + 6;
 			baseToolBar.setPreferredSize( new Dimension( 600, Math.max(maximumPreferredHeight, STANDARD_TOOLBAR_HEIGHT ) ) );
 
 			panel.add( baseToolBar, BorderLayout.NORTH );
@@ -199,10 +200,10 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 		}
 	}
 
-	private int findMaximumPreferredHeight( JComponent... components )
+	private int findMaximumPreferredHeight( Container parent )
 	{
 		int maximum = 0;
-		for( JComponent component : components )
+		for( Component component : parent.getComponents() )
 		{
 			int componentPreferredHeight = component == null || component.getPreferredSize() == null ? 0 : component.getPreferredSize().height;
 			maximum = Math.max(maximum, componentPreferredHeight);
