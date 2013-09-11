@@ -12,9 +12,7 @@
 
 package com.eviware.soapui;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
+import java.awt.*;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DragSource;
 import java.awt.event.ActionEvent;
@@ -32,11 +30,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Properties;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -186,7 +181,7 @@ public class SoapUI
 	@SuppressWarnings("deprecation")
 	public static String PUSH_PAGE_URL = "http://soapui.org/Appindex/soapui-starterpage.html?version="
 			+ URLEncoder.encode( SOAPUI_VERSION );
-	public static String FRAME_ICON = "/soapui-icon.png";
+	public static String FRAME_ICON = "/soapui-icon-16.png;/soapui-icon-24.png;/soapui-icon-32.png;/soapui-icon-48.png;/soapui-icon-256.png";
 	public static String PUSH_PAGE_ERROR_URL = "file://" + System.getProperty( "soapui.home", "." )
 			+ "/starter-page.html";
 
@@ -777,7 +772,12 @@ public class SoapUI
 
 		SoapUISplash splash = new SoapUISplash( splashImage, frame );
 
-		frame.setIconImage( UISupport.createImageIcon( FRAME_ICON ).getImage() );
+		List<Image> iconList = new ArrayList<Image>();
+		for( String iconPath : FRAME_ICON.split( ";" ) )
+		{
+			iconList.add( UISupport.createImageIcon( iconPath ).getImage() );
+		}
+		frame.setIconImages( iconList );
 
 		JPopupMenu.setDefaultLightWeightPopupEnabled( false );
 		ToolTipManager.sharedInstance().setLightWeightPopupEnabled( false );
@@ -1399,7 +1399,7 @@ public class SoapUI
 	private static boolean shouldAutoCloseStartPage()
 	{
 		return System.getProperty( "os.name" ).contains( "Mac" ) &&
-				!(desktop.getClass().getName().contains( "Tabbed" ));
+				!( desktop.getClass().getName().contains( "Tabbed" ) );
 	}
 
 	private static class AboutAction extends AbstractAction
