@@ -53,7 +53,7 @@ public class RestTestRequestContentView extends RestRequestContentView
 			}
 		};
 
-		return new RestParamsTable( super.getRestRequest().getParams(), false, restTestParamsTableModel, NewRestResourceActionBase.ParamLocation.RESOURCE, true );
+		return new RestParamsTable( super.getRestRequest().getParams(), false, restTestParamsTableModel, NewRestResourceActionBase.ParamLocation.RESOURCE, false );
 	}
 
 }

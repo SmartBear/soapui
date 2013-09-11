@@ -55,17 +55,19 @@ public class RestParamsTable extends JPanel
 	private StringListFormComponent optionsFormComponent;
 	private SimpleBindingForm detailsForm;
 	private final ParamLocation defaultParamLocation;
-	private boolean isOnlyValueEditable;
+	private boolean showEditableButtons;
 
-	public RestParamsTable( RestParamsPropertyHolder params, boolean showInspector, ParamLocation defaultParamLocation )
+	public RestParamsTable( RestParamsPropertyHolder params, boolean showInspector, ParamLocation defaultParamLocation ,
+									boolean showEditableButtons )
 	{
-		this( params, showInspector, new RestParamsTableModel( params ), defaultParamLocation, false );
+		this( params, showInspector, new RestParamsTableModel( params ), defaultParamLocation, showEditableButtons );
 	}
+
 	public RestParamsTable( RestParamsPropertyHolder params, boolean showInspector, RestParamsTableModel model,
-									ParamLocation defaultParamLocation, boolean isOnlyValueEditable)
+									ParamLocation defaultParamLocation, boolean showEditableButtons )
 	{
 		super( new BorderLayout() );
-		this.isOnlyValueEditable = isOnlyValueEditable;
+		this.showEditableButtons = showEditableButtons;
 		this.params = params;
 		this.paramsTableModel = model;
 		this.defaultParamLocation = defaultParamLocation;
@@ -78,7 +80,7 @@ public class RestParamsTable extends JPanel
 		movePropertyDownAction = new MovePropertyDownAction();
 		movePropertyUpAction = new MovePropertyUpAction();
 
-		if( !isOnlyValueEditable )
+		if( showEditableButtons )
 		{
 			initEditableButtons();
 		}
@@ -96,7 +98,7 @@ public class RestParamsTable extends JPanel
 			public void valueChanged( ListSelectionEvent e )
 			{
 				int selectedRow = paramsTable.getSelectedRow();
-				if( !isOnlyValueEditable)
+				if( showEditableButtons)
 				{
 					removeParamAction.setEnabled( selectedRow != -1 );
 				}
@@ -204,7 +206,7 @@ public class RestParamsTable extends JPanel
 	{
 		JXToolBar toolbar = UISupport.createToolbar();
 
-		if( !isOnlyValueEditable )
+		if( showEditableButtons )
 		{
 			toolbar.add( UISupport.createToolbarButton( addParamAction ) );
 			toolbar.add( UISupport.createToolbarButton( removeParamAction, false ) );
