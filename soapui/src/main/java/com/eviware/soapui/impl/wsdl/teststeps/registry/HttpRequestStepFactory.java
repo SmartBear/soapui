@@ -82,7 +82,7 @@ public class HttpRequestStepFactory extends WsdlTestStepFactory
 
 		params = new XmlBeansRestParamsTestPropertyHolder( testCase, RestParametersConfig.Factory.newInstance() );
 
-		paramsTable = new RestParamsTable( params, false, NewRestResourceActionBase.ParamLocation.RESOURCE, false, false );
+		paramsTable = new RestParamsTable( params, false, NewRestResourceActionBase.ParamLocation.RESOURCE, true, false );
 		dialog.getFormField( Form.PARAMSTABLE ).setProperty( "component", paramsTable );
 		dialog.setValue( Form.STEPNAME, name );
 
