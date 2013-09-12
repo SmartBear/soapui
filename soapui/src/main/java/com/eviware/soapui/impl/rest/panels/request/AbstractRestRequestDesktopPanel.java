@@ -53,6 +53,7 @@ import javax.swing.text.Document;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -65,6 +66,8 @@ import static com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder.Para
 public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 extends RestRequestInterface> extends
 		AbstractHttpXmlRequestDesktopPanel<T, T2>
 {
+	private static final int STANDARD_TOOLBAR_HEIGHT = 45;
+
 	private TextPanelWithTopLabel resourcePanel;
 	private TextPanelWithTopLabel queryPanel;
 	private JLabel pathLabel;
@@ -142,15 +145,14 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 			JPanel panel = new JPanel( new BorderLayout() );
 
 			JXToolBar baseToolBar = UISupport.createToolbar();
-			baseToolBar.setPreferredSize( new Dimension( 600, 45 ) );
 
 			JComponent submitButton = super.getSubmitButton();
 			baseToolBar.add( submitButton );
+			baseToolBar.add( cancelButton );
 
 			// insertButtons injects different buttons for different editors. It is overridden in other subclasses
 			insertButtons( baseToolBar );
 			JPanel methodPanel = new JPanel( new BorderLayout() );
-			methodPanel.setMaximumSize( new Dimension( 75, 45 ) );
 			JComboBox<RequestMethod> methodComboBox = new JComboBox<RequestMethod>( new RestRequestMethodModel( getRequest() ) );
 			methodComboBox.setSelectedItem( getRequest().getMethod() );
 
@@ -159,7 +161,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 			methodPanel.add( methodComboBox, BorderLayout.SOUTH );
 
 			JPanel endpointPanel = new JPanel( new BorderLayout() );
-			endpointPanel.setMinimumSize( new Dimension( 75, 45 ) );
+			endpointPanel.setMinimumSize( new Dimension( 75, STANDARD_TOOLBAR_HEIGHT ) );
 
 			JComponent endpointCombo = buildEndpointComponent();
 			super.setEndpointComponent( endpointCombo );
@@ -171,10 +173,9 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 
 
 
-			baseToolBar.add( cancelButton );
-			baseToolBar.add( methodPanel );
+			baseToolBar.addWithOnlyMinimumHeight( methodPanel );
 			baseToolBar.add( Box.createHorizontalStrut( 4 ) );
-			baseToolBar.add( endpointPanel );
+			baseToolBar.addWithOnlyMinimumHeight( endpointPanel );
 			baseToolBar.add( Box.createHorizontalStrut( 4 ) );
 
 			addResourceAndQueryField( baseToolBar );
@@ -183,13 +184,12 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 			baseToolBar.add( tabsButton );
 			baseToolBar.add( splitButton );
 			baseToolBar.add( UISupport.createToolbarButton( new ShowOnlineHelpAction( getHelpUrl() ) ) );
+			int maximumPreferredHeight = findMaximumPreferredHeight(baseToolBar) + 6;
+			baseToolBar.setPreferredSize( new Dimension( 600, Math.max(maximumPreferredHeight, STANDARD_TOOLBAR_HEIGHT ) ) );
 
 			panel.add( baseToolBar, BorderLayout.NORTH );
 
-			JXToolBar toolbar = UISupport.createToolbar();
-			addToolbarComponents( toolbar );
-
-			panel.add( toolbar, BorderLayout.SOUTH );
+			addMethodSelectorToolbar( panel );
 
 			return panel;
 		}
@@ -198,6 +198,17 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 			//TODO: If we don't need special clause for empty resources then remove it
 			return super.buildToolbar();
 		}
+	}
+
+	private int findMaximumPreferredHeight( Container parent )
+	{
+		int maximum = 0;
+		for( Component component : parent.getComponents() )
+		{
+			int componentPreferredHeight = component == null || component.getPreferredSize() == null ? 0 : component.getPreferredSize().height;
+			maximum = Math.max(maximum, componentPreferredHeight);
+		}
+		return maximum;
 	}
 
 	private void addResourceAndQueryField( JXToolBar toolbar )
@@ -210,25 +221,24 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 				@Override
 				public void update( Document document )
 				{
-					getRequest().getResource().setPath( resourcePanel.getText().trim() );
+					getRequest().getResource().setPath( getResourcePanelText().trim() );
 				}
 			} );
-			toolbar.add( resourcePanel );
+			toolbar.addWithOnlyMinimumHeight( resourcePanel );
 
 			toolbar.add( Box.createHorizontalStrut( 4 ) );
 
 			String query = RestUtils.getQueryParamsString( getRequest().getParams(), getRequest() );
 			queryPanel = new TextPanelWithTopLabel( "Query", query, false );
-			toolbar.add( queryPanel );
+			toolbar.addWithOnlyMinimumHeight( queryPanel );
 		}
 	}
 
-	protected void addToolbarComponents( JXToolBar toolbar )
+	private void addMethodSelectorToolbar( JPanel panel )
 	{
-		toolbar.addSeparator();
-
 		if( getRequest().getResource() != null && getRequest() instanceof RestTestRequestInterface )
 		{
+			JXToolBar toolbar = UISupport.createToolbar();
 			JComboBox pathCombo = new JComboBox( new PathComboBoxModel() );
 			pathCombo.setRenderer( new RestMethodListCellRenderer() );
 			pathCombo.setPreferredSize( new Dimension( 200, 20 ) );
@@ -241,8 +251,8 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 			updateFullPathLabel();
 
 			toolbar.add( pathLabel );
+			panel.add( toolbar, BorderLayout.SOUTH );
 		}
-		toolbar.addSeparator();
 	}
 
 	protected boolean release()
@@ -284,7 +294,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 		public void propertyRemoved( String name )
 		{
 			resetQueryPanelText();   //query param
-			String resourcePanelText = resourcePanel.getText();
+			String resourcePanelText = getResourcePanelText();
 			String paramStartString = ";" + name + "=";
 			if( resourcePanelText.contains( paramStartString ) )   //Matrix param
 			{
@@ -292,12 +302,12 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 				int endIndex =  substringWithParamValue.indexOf( ";" ) > 0 ? substringWithParamValue.indexOf( ";" ) :
 						substringWithParamValue.length();
 				String paramValue = substringWithParamValue.substring( substringWithParamValue.indexOf("=")+1, endIndex);
-				resourcePanel.setText( resourcePanel.getText().replaceAll( ";" + name + "=" + paramValue, "" ) );
+				setResourcePanelText( getResourcePanelText().replaceAll( ";" + name + "=" + paramValue, "" ) );
 			}
 
 			if( resourcePanelText.contains( "{" + name + "}" ) )    //Template param
 			{
-				resourcePanel.setText( resourcePanelText.replaceAll( "\\{" + name + "\\}", "" ) );
+				setResourcePanelText( resourcePanelText.replaceAll( "\\{" + name + "\\}", "" ) );
 			}
 			updateFullPathLabel();
 		}
@@ -313,11 +323,11 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 			}
 			else if( style.equals( ParameterStyle.TEMPLATE ) )
 			{
-				resourcePanel.setText( resourcePanel.getText().replaceAll( "\\{" + oldName + "\\}", "{" + newName + "}" ) );
+				setResourcePanelText( getResourcePanelText().replaceAll( "\\{" + oldName + "\\}", "{" + newName + "}" ) );
 			}
 			else if( style.equals( ParameterStyle.MATRIX ) )
 			{
-				resourcePanel.setText( resourcePanel.getText().replaceAll( oldName + "=" +
+				setResourcePanelText( getResourcePanelText().replaceAll( oldName + "=" +
 						property.getValue(), property.getName() + "=" + property.getValue() ) );
 			}
 			updateFullPathLabel();
@@ -343,9 +353,9 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 			{
 				addPropertyForStyle( property, ParameterStyle.MATRIX );
 			}
-			else if( StringUtils.isNullOrEmpty( newValue ) || !resourcePanel.getText().contains( newValueStr ))
+			else if( StringUtils.isNullOrEmpty( newValue ) || !getResourcePanelText().contains( newValueStr ))
 			{
-				resourcePanel.setText( resourcePanel.getText().replaceAll( name + "=" + oldValue, newValueStr ) );
+				setResourcePanelText( getResourcePanelText().replaceAll( name + "=" + oldValue, newValueStr ) );
 			}
 		}
 		else if( property.getStyle().equals( ParameterStyle.TEMPLATE ) )
@@ -356,7 +366,11 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 
 	private void resetQueryPanelText()
 	{
-		queryPanel.setText( RestUtils.getQueryParamsString( getRequest().getParams(), getRequest() ) );
+		if ( queryPanel != null )
+		{
+			queryPanel.setText( RestUtils.getQueryParamsString( getRequest().getParams(), getRequest() ) );
+		}
+
 	}
 
 	private void updateFullPathLabel()
@@ -392,8 +406,9 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 					String propName = source.getName();
 					String propValue = source.getValue();
 					ParameterStyle propStyle = source.getStyle();
+					String requestLevelValue = getRequest().getParams().getProperty( propName ).getValue();
 					removePropertyFromLevel( source.getName(), ( ParamLocation )evt.getOldValue() );
-					addPropertyToLevel( propName, propValue, propStyle, ( ParamLocation )evt.getNewValue() );
+					addPropertyToLevel( propName, propValue, propStyle, ( ParamLocation )evt.getNewValue(), requestLevelValue );
 				}
 			}
 			catch( XmlValueDisconnectedException exception )
@@ -406,7 +421,8 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 
 	}
 
-	private void addPropertyToLevel( String name, String value, ParameterStyle style, ParamLocation location )
+	private void addPropertyToLevel( String name, String value, ParameterStyle style, ParamLocation location,
+												String requestLevelValue )
 	{
 		RestParamsPropertyHolder paramsPropertyHolder = null;
 		switch( location )
@@ -428,7 +444,10 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 			RestParamProperty addedParameter = paramsPropertyHolder.getProperty( name );
 			addedParameter.addPropertyChangeListener( restParamPropertyChangeListener );
 			addedParameter.setValue( value );
+			addedParameter.setDefaultValue( value );
 			addedParameter.setStyle( style );
+			//Override the request level value as well
+			getRequest().getParams().getProperty( name ).setValue( requestLevelValue );
 		}
 		addPropertyChangeListenerToResource( getRequest() );
 	}
@@ -458,11 +477,11 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 				resetQueryPanelText();
 				break;
 			case TEMPLATE:
-				resourcePanel.setText( resourcePanel.getText().replaceAll( "\\{" + property.getName() + "\\}", "" ) );
+				setResourcePanelText( getResourcePanelText().replaceAll( "\\{" + property.getName() + "\\}", "" ) );
 				break;
 			case MATRIX:
 				String propValueAtRequestLevel = getRequest().getParams().getProperty( property.getName() ).getValue();
-				resourcePanel.setText( resourcePanel.getText().replaceAll( ";" + property.getName() + "=" +
+				setResourcePanelText( getResourcePanelText().replaceAll( ";" + property.getName() + "=" +
 						propValueAtRequestLevel, "" ) );
 				break;
 			default:
@@ -478,17 +497,17 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 				resetQueryPanelText();
 				break;
 			case TEMPLATE:
-				if( !resourcePanel.getText().contains( "{" + property.getName() + "}" ) )
+				if( !getResourcePanelText().contains( "{" + property.getName() + "}" ) )
 				{
-					resourcePanel.setText( resourcePanel.getText() + "{" + property.getName() + "}" );
+					setResourcePanelText( getResourcePanelText() + "{" + property.getName() + "}" );
 				}
 				break;
 			case MATRIX:
 				String propValueAtRequestLevel = getRequest().getParams().getProperty( property.getName() ).getValue();
 				String valueToSet = ";" + property.getName() + "=" + propValueAtRequestLevel;
-				if(!resourcePanel.getText().contains( valueToSet ))
+				if(!getResourcePanelText().contains( valueToSet ))
 				{
-					resourcePanel.setText( resourcePanel.getText() + valueToSet );
+					setResourcePanelText( getResourcePanelText() + valueToSet );
 				}
 				break;
 			default:
@@ -564,30 +583,32 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 		JLabel textLabel;
 		JTextField textField;
 
-		public TextPanelWithTopLabel( String label, String text, boolean isEditable )
+		TextPanelWithTopLabel( String label, String text)
 		{
 			textLabel = new JLabel( label );
 			textField = new JTextField( text );
 			setToolTipText( text );
-			textField.setEditable( isEditable );
-			if (UISupport.isMac())
-			{
-				textField.setBackground( MAC_DISABLED_BGCOLOR );
-			}
 			super.setLayout( new BorderLayout() );
 			super.add( textLabel, BorderLayout.NORTH );
 			super.add( textField, BorderLayout.SOUTH );
 		}
 
+		public TextPanelWithTopLabel( String label, String text, boolean isEditable )
+		{
+			this(label, text);
+			textField.setEditable( isEditable );
+			if (!isEditable && UISupport.isMac())
+			{
+				textField.setBackground( MAC_DISABLED_BGCOLOR );
+			}
+		}
+
 		public TextPanelWithTopLabel( String label, String text, DocumentListener documentListener )
 		{
-			textLabel = new JLabel( label );
-			textField = new JTextField( text );
+			this( label, text );
 			textField.getDocument().addDocumentListener( documentListener );
-			super.setLayout( new BorderLayout() );
-			super.add( textLabel, BorderLayout.NORTH );
-			super.add( textField, BorderLayout.SOUTH );
 		}
+
 
 		public String getText()
 		{
@@ -607,6 +628,23 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 			textLabel.setToolTipText( text );
 			textField.setToolTipText( text );
 		}
+	}
+
+	//TODO: Temporary fix resource panel should be moved to appropriate subclass
+	private String getResourcePanelText()
+	{
+		if( resourcePanel == null )
+			return "";
+		else
+			return resourcePanel.getText();
+	}
+
+	private void setResourcePanelText( String text )
+	{
+		if( resourcePanel == null )
+			return;
+		else
+			resourcePanel.setText( text );
 	}
 
 }

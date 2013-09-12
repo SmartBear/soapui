@@ -85,7 +85,7 @@ public abstract class NewRestResourceActionBase<T extends ModelItem> extends Abs
 				paramsTable.refresh();
 		}
 
-		paramsTable = new RestParamsTable( params, false, ParamLocation.RESOURCE );
+		paramsTable = new RestParamsTable( params, false, ParamLocation.RESOURCE, true, false );
 		dialog.getFormField( Form.PARAMSTABLE ).setProperty( "component", paramsTable );
 
 		if( dialog.show() )
@@ -170,19 +170,19 @@ public abstract class NewRestResourceActionBase<T extends ModelItem> extends Abs
 		}
 	}
 
-	@AForm( name = "Form.Title", description = "Form.Description", helpUrl = HelpUrls.NEWRESTSERVICE_HELP_URL, icon = UISupport.TOOL_ICON_PATH )
+	@AForm(name = "Form.Title", description = "Form.Description", helpUrl = HelpUrls.NEWRESTSERVICE_HELP_URL, icon = UISupport.TOOL_ICON_PATH)
 	public interface Form
 	{
-		@AField( description = "Form.ServiceName.Description", type = AFieldType.STRING )
+		@AField(description = "Form.ServiceName.Description", type = AFieldType.STRING)
 		public final static String RESOURCENAME = messages.get( "Form.ResourceName.Label" );
 
-		@AField( description = "Form.ServiceUrl.Description", type = AFieldType.STRING )
+		@AField(description = "Form.ServiceUrl.Description", type = AFieldType.STRING)
 		public final static String RESOURCEPATH = messages.get( "Form.ResourcePath.Label" );
 
-		@AField( description = "Form.ExtractParams.Description", type = AFieldType.ACTION )
+		@AField(description = "Form.ExtractParams.Description", type = AFieldType.ACTION)
 		public final static String EXTRACTPARAMS = messages.get( "Form.ExtractParams.Label" );
 
-		@AField( description = "Form.ParamsTable.Description", type = AFieldType.COMPONENT )
+		@AField(description = "Form.ParamsTable.Description", type = AFieldType.COMPONENT)
 		public final static String PARAMSTABLE = messages.get( "Form.ParamsTable.Label" );
 
 	}

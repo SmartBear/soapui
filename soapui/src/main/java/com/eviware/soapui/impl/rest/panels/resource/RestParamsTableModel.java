@@ -16,12 +16,16 @@ import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder.ParameterStyle;
+import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestPropertyListener;
 
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import static com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase.ParamLocation;
 
@@ -30,6 +34,7 @@ public class RestParamsTableModel extends AbstractTableModel implements TableMod
 {
 	public static final int PARAM_LOCATION_COLUMN_INDEX = 3;
 	protected RestParamsPropertyHolder params;
+	private List<String> paramNameIndex = new ArrayList<String>(  );
 
 	static String[] COLUMN_NAMES = new String[] { "Name", "Default value", "Style", "Level" };
 	static Class[] COLUMN_TYPES = new Class[] { String.class, String.class, ParameterStyle.class, ParamLocation.class };
@@ -43,6 +48,17 @@ public class RestParamsTableModel extends AbstractTableModel implements TableMod
 			( ( RestRequest )params.getModelItem() ).getResource().addPropertyChangeListener( this );
 			( ( RestRequest )params.getModelItem() ).getRestMethod().getParams().addTestPropertyListener( this );
 			( ( RestRequest )params.getModelItem() ).getRestMethod().addPropertyChangeListener( this );
+		}
+
+		buildParamNameIndex( params );
+	}
+
+	private void buildParamNameIndex( RestParamsPropertyHolder params )
+	{
+		paramNameIndex = new ArrayList<String>( Collections.nCopies( params.size(), "" ));//Initialize with empty values
+		for (TestProperty property : params.getProperties().values())
+		{
+			paramNameIndex.set( params.getPropertyIndex( property.getName() ), property.getName() );
 		}
 	}
 
@@ -100,7 +116,7 @@ public class RestParamsTableModel extends AbstractTableModel implements TableMod
 
 	public Object getValueAt( int rowIndex, int columnIndex )
 	{
-		RestParamProperty prop = params.getPropertyAt( rowIndex );
+		RestParamProperty prop = params.getProperty( paramNameIndex.get( rowIndex ) );
 
 		switch( columnIndex )
 		{
@@ -120,7 +136,7 @@ public class RestParamsTableModel extends AbstractTableModel implements TableMod
 	@Override
 	public void setValueAt( Object value, int rowIndex, int columnIndex )
 	{
-		RestParamProperty prop = params.getPropertyAt( rowIndex );
+		RestParamProperty prop = params.getProperty( paramNameIndex.get( rowIndex ) );
 
 		switch( columnIndex )
 		{
@@ -145,32 +161,51 @@ public class RestParamsTableModel extends AbstractTableModel implements TableMod
 
 	public RestParamProperty getParameterAt( int selectedRow )
 	{
-		return params.getPropertyAt( selectedRow );
+		return params.getProperty( paramNameIndex.get( selectedRow ) );
 	}
 
 	public void propertyAdded( String name )
 	{
+		if(!paramNameIndex.contains( name ))
+		{
+			paramNameIndex.add( name );
+		}
 		fireTableDataChanged();
 	}
 
 	public void propertyRemoved( String name )
 	{
+		paramNameIndex.remove( name );
 		fireTableDataChanged();
 	}
 
 	public void propertyRenamed( String oldName, String newName )
 	{
+		int paramIndex = paramNameIndex.indexOf( oldName );
+		if( paramIndex < 0 )
+		{
+			return;
+		}
+		paramNameIndex.set( paramIndex, newName );
 		fireTableDataChanged();
 	}
 
 	public void propertyValueChanged( String name, String oldValue, String newValue )
 	{
-		fireTableCellUpdated( params.getPropertyIndex( name ), 1 );
+		fireTableCellUpdated( paramNameIndex.indexOf( name ), 1 );
 	}
 
 	public void propertyMoved( String name, int oldIndex, int newIndex )
 	{
 		fireTableDataChanged();
+	}
+
+	public void moveProperty(String name, int oldIndex, int newIndex)
+	{
+		String valueAtNewindex = paramNameIndex.get( newIndex );
+		paramNameIndex.set( newIndex, name );
+		paramNameIndex.set( oldIndex, valueAtNewindex );
+		propertyMoved( name, oldIndex, newIndex );
 	}
 
 	public ParameterStyle[] getParameterStylesForEdit()
@@ -190,6 +225,7 @@ public class RestParamsTableModel extends AbstractTableModel implements TableMod
 		this.params = params;
 		this.params.addTestPropertyListener( this );
 
+		buildParamNameIndex( params );
 		fireTableDataChanged();
 	}
 
