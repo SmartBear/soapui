@@ -52,7 +52,7 @@ public class SoapUIVersionUpdate
 	static final String VERSION_UPDATE_URL_SYS_PROP_KEY = "versionUpdateUrl";
 	static final String LATEST_VERSION_XML_LOCATION = versionUpdateUrl("http://dl.eviware.com/version-update/soapui-version.xml");
 	public static final String VERSION_TO_SKIP = SoapUI.class.getName() + "@versionToSkip";
-	protected static final String NO_RELEASE_NOTES_INFO = "<tr><td>Sorry! No Release notes currently available.</td></tr>";
+	protected static final String NO_RELEASE_NOTES_INFO = "Sorry! No Release notes currently available.";
 
 	//	JDialog dialog
 
