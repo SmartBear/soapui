@@ -1,8 +1,19 @@
 # Release Notes for SoapUI
 
-
 ## version 4.6.0 - 2013-09-16
 -------------------------------------------------------------------------------
+
+### Major New Feature ###
+* Pragmatic REST
+** Create a REST project with REST request easily using only a URI as input
+** Automatic split of a REST URI into Endpoint, Resource and Query
+** Automatic extraction of template parameters and query parameters
+** Automatic level and style assignment of parameters
+** Simplified editing of parameters
+** Simplified selection of Method
+
+### Known Issue ###
+* Resource field parameter changes are not synched with the parameter table (SOAP-621 )
 
 ### Bugs fixed ###
 * Exporting WADL doesn't export changes that were made (SOAPUI-4620)
