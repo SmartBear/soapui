@@ -57,4 +57,10 @@ public class ModelItemMatchers
 			}
 		};
 	}
+
+	public static RestRequestWithParamsMatcher hasARestParameterNamed(String name)
+	{
+		return new RestRequestWithParamsMatcher( name );
+	}
+
 }
