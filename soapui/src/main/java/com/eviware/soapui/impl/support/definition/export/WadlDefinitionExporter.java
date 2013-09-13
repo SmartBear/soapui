@@ -43,8 +43,7 @@ public class WadlDefinitionExporter extends AbstractDefinitionExporter<RestServi
 
 	public String export( String folderName ) throws Exception
 	{
-		if( getDefinition().getInterface().isGenerated() )
-			setDefinition( getDefinition().getInterface().getWadlContext().regenerateWadl() );
+		setDefinition( getDefinition().getInterface().getWadlContext().regenerateWadl() );
 
 		return super.export( folderName );
 	}

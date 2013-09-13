@@ -29,6 +29,7 @@ import com.eviware.soapui.support.StringUtils;
 public class WadlDefinitionContext extends
 		AbstractDefinitionContext<RestService, DefinitionLoader, WadlInterfaceDefinition>
 {
+
 	public WadlDefinitionContext( String url, RestService iface )
 	{
 		super( url, iface );
@@ -42,7 +43,8 @@ public class WadlDefinitionContext extends
 	protected DefinitionLoader createDefinitionLoader( DefinitionCache restServiceDefinitionCache )
 	{
 		if( getInterface() != null
-				&& ( getInterface().isGenerated() || StringUtils.isNullOrEmpty( getInterface().getWadlUrl() ) ) )
+				&& ( getInterface().isGenerated() || StringUtils.isNullOrEmpty( getInterface().getWadlUrl() )
+					|| getInterface().exportChanges()) )
 			return new GeneratedWadlDefinitionLoader( getInterface() );
 		else
 			return new InterfaceCacheDefinitionLoader( restServiceDefinitionCache );
@@ -50,7 +52,8 @@ public class WadlDefinitionContext extends
 
 	protected DefinitionLoader createDefinitionLoader( String url )
 	{
-		if( ( getInterface() != null && getInterface().isGenerated() ) || StringUtils.isNullOrEmpty( url ) )
+		if( ( getInterface() != null && getInterface().isGenerated() ) || StringUtils.isNullOrEmpty( url )
+					|| getInterface().exportChanges() )
 			return new GeneratedWadlDefinitionLoader( getInterface() );
 		else
 			return new UrlWsdlLoader( url, getInterface() );
@@ -70,7 +73,6 @@ public class WadlDefinitionContext extends
 	{
 		try
 		{
-			if( getInterface().isGenerated() )
 				reload();
 
 			return getInterfaceDefinition();

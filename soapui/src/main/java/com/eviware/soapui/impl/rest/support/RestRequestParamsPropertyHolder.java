@@ -26,6 +26,7 @@ import java.util.Set;
 
 import javax.xml.namespace.QName;
 
+import com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase;
 import org.apache.xmlbeans.SchemaType;
 
 import com.eviware.soapui.model.ModelItem;
@@ -129,7 +130,7 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 
 	public ModelItem getModelItem()
 	{
-		return methodParams.getModelItem();
+		return this.modelItem;
 	}
 
 	public Map<String, TestProperty> getProperties()
@@ -224,14 +225,16 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 
 	public TestProperty remove( Object key )
 	{
-		values.remove( key );
-		return methodParams.get( key );
+		return removeProperty( ( String )key );
 	}
 
 	public RestParamProperty removeProperty( String propertyName )
 	{
 		values.remove( propertyName );
-		return methodParams.getProperty( propertyName );
+
+		RestParamProperty property = methodParams.removeProperty( propertyName );
+		firePropertyRemoved( propertyName );
+		return property;
 	}
 
 	public void removeTestPropertyListener( TestPropertyListener listener )
@@ -241,9 +244,29 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 
 	public boolean renameProperty( String name, String newName )
 	{
-		values.put( newName, values.get( name ) );
-		values.remove( name );
+		if(name.equals( newName ))
+		{
+			return false;
+		}
+
+		renameLocalProperty( name, newName );
 		return methodParams.renameProperty( name, newName );
+	}
+
+	private void renameLocalProperty( String name, String newName )
+	{
+		String value =  values.get( name )==null ?  getPropertyValue( name ) :  values.get( name );
+
+		if(this.containsKey( name )) {
+			RestParamProperty restParamProperty = this.get( name );
+			restParamProperty.setName( newName );
+			this.put( newName, restParamProperty );
+			this.remove( name );
+		}
+
+		values.put( newName, value );
+		values.remove( name );
+		firePropertyRenamed( name, newName );
 	}
 
 	public void resetValues()
@@ -425,12 +448,12 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 
 		public void setDisableUrlEncoding( boolean encode )
 		{
-			// overriddenProp.setDisableUrlEncoding(encode);
+			overriddenProp.setDisableUrlEncoding(encode);
 		}
 
 		public void setName( String name )
 		{
-			// overriddenProp.setName(name);
+			overriddenProp.setName(name);
 		}
 
 		public String getDefaultValue()
@@ -475,6 +498,7 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 			String oldValue = getValue();
 			if( getDefaultValue() != null && getDefaultValue().equals( value ) )
 				value = null;
+
 			if( value == null )
 				values.remove( getName() );
 			else
@@ -499,32 +523,44 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 
 		public void setDefaultValue( String default1 )
 		{
-			// overriddenProp.setDefaultValue(default1);
+			//overriddenProp.setDefaultValue(default1);
 		}
 
 		public void setDescription( String description )
 		{
-			// overriddenProp.setDescription(description);
+			overriddenProp.setDescription(description);
 		}
 
 		public void setOptions( String[] arg0 )
 		{
-			// overriddenProp.setOptions(arg0);
+			overriddenProp.setOptions(arg0);
 		}
 
 		public void setRequired( boolean arg0 )
 		{
-			// overriddenProp.setRequired(arg0);
+			overriddenProp.setRequired(arg0);
 		}
 
 		public void setStyle( ParameterStyle style )
 		{
-			// overriddenProp.setStyle(style);
+			overriddenProp.setStyle(style);
+		}
+
+		@Override
+		public NewRestResourceActionBase.ParamLocation getParamLocation()
+		{
+			return overriddenProp.getParamLocation();
+		}
+
+		@Override
+		public void setParamLocation( NewRestResourceActionBase.ParamLocation paramLocation )
+		{
+			overriddenProp.setParamLocation( paramLocation );
 		}
 
 		public void setType( QName arg0 )
 		{
-			// overriddenProp.setType(arg0);
+			overriddenProp.setType(arg0);
 		}
 
 		public void propertyChange( PropertyChangeEvent evt )

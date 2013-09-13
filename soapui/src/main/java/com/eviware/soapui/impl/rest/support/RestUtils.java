@@ -61,6 +61,11 @@ public class RestUtils
 
 	public static String extractParams( String pathOrEndpoint, RestParamsPropertyHolder params, boolean keepHost )
 	{
+		return extractParams( pathOrEndpoint, params, keepHost, true );
+	}
+
+	public static String extractParams( String pathOrEndpoint, RestParamsPropertyHolder params, boolean keepHost, boolean createTemplateParams )
+	{
 		if( StringUtils.isNullOrEmpty( pathOrEndpoint ) )
 			return "";
 
@@ -141,20 +146,24 @@ public class RestUtils
 						}
 					}
 
-					Integer.parseInt( item );
-
-					String name = "param" + templateParamCount++ ;
-					RestParamProperty property = params.getProperty( name );
-					if( !params.hasProperty( name ) )
+					if( createTemplateParams )
 					{
-						property = params.addProperty( name );
+						Integer.parseInt( item );
+
+						String name = "param" + templateParamCount++ ;
+						RestParamProperty property = params.getProperty( name );
+						if( !params.hasProperty( name ) )
+						{
+							property = params.addProperty( name );
+						}
+
+						property.setStyle( ParameterStyle.TEMPLATE );
+						property.setValue( item );
+						property.setDefaultValue( item );
+
+						item = "{" + property.getName() + "}";
+
 					}
-
-					property.setStyle( ParameterStyle.TEMPLATE );
-					property.setValue( item );
-					property.setDefaultValue( item );
-
-					item = "{" + property.getName() + "}";
 				}
 			}
 			catch( Throwable e )
@@ -316,8 +325,49 @@ public class RestUtils
 		return path;
 	}
 
-	// private final static Pattern splitPattern = Pattern.compile( "[^|]\\|[^|]"
-	// );
+	// TODO: make it cleaner
+	public static String getQueryParamsString( RestParamsPropertyHolder params, RestRequestInterface request )
+	{
+		StringBuffer query = request.isPostQueryString() || "multipart/form-data".equals( request.getMediaType() ) ? null
+				: new StringBuffer();
+
+		for( int c = 0; c < params.getPropertyCount(); c++ )
+		{
+			RestParamProperty param = params.getPropertyAt( c );
+
+			String value = param.getValue();
+			List<String> valueParts = splitMultipleParameters( value, request.getMultiValueDelimiter() );
+
+			if( ( !StringUtils.hasContent( value ) && !param.getRequired() ) || param.getStyle() != ParameterStyle.QUERY )
+				continue;
+
+			if( value == null )
+				value = "";
+
+			if( query != null && valueParts != null )
+			{
+				for( String valuePart : valueParts )
+				{
+					if( query.length() > 0 )
+						query.append( '&' );
+
+					query.append( param.getName() );
+					query.append( '=' );
+
+					if( StringUtils.hasContent( valuePart ) )
+						query.append( valuePart );
+				}
+			}
+
+		}
+
+		String queryString = "";
+		if( query != null && query.length() > 0 )
+			queryString += "?" + query.toString();
+
+		return queryString;
+	}
+
 
 	public static List<String> splitMultipleParameters( String paramStr, String delimiter )
 	{

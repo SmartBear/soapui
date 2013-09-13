@@ -12,15 +12,6 @@
 
 package com.eviware.soapui.impl.rest.panels.resource;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.beans.PropertyChangeEvent;
-
-import javax.swing.JTabbedPane;
-import javax.swing.text.Document;
-
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.actions.resource.NewRestMethodAction;
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
@@ -35,6 +26,15 @@ import com.eviware.soapui.support.action.swing.SwingActionDelegate;
 import com.eviware.soapui.support.components.JUndoableTextField;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
+
+import javax.swing.*;
+import javax.swing.text.Document;
+import java.awt.*;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.beans.PropertyChangeEvent;
+
+import static com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase.ParamLocation;
 
 public class RestResourceDesktopPanel extends ModelItemDesktopPanel<RestResource>
 {
@@ -53,7 +53,7 @@ public class RestResourceDesktopPanel extends ModelItemDesktopPanel<RestResource
 	private Component buildContent()
 	{
 		JTabbedPane tabs = new JTabbedPane();
-		paramsTable = new RestParamsTable( getModelItem().getParams(), true );
+		paramsTable = new RestParamsTable( getModelItem().getParams(), true, ParamLocation.RESOURCE, true, false );
 		tabs.addTab( "Resource Parameters", paramsTable );
 		return UISupport.createTabPanel( tabs, false );
 	}
@@ -132,7 +132,9 @@ public class RestResourceDesktopPanel extends ModelItemDesktopPanel<RestResource
 			}
 		} );
 
-		toolbar.addLabeledFixed( "Resource Path", pathTextField );
+		toolbar.addFixed( new JLabel( "Resource Path" ) );
+		toolbar.addSeparator( new Dimension( 3, 3 ) );
+		toolbar.addWithOnlyMinimumHeight( pathTextField );
 
 		toolbar.addGlue();
 		toolbar.add( UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.RESTRESOURCEEDITOR_HELPURL ) ) );
@@ -163,7 +165,7 @@ public class RestResourceDesktopPanel extends ModelItemDesktopPanel<RestResource
 				updating = false;
 			}
 		}
-
+		paramsTable.refresh();
 		super.propertyChange( evt );
 	}
 }

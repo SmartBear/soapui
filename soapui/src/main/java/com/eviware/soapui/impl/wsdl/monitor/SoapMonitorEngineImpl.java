@@ -12,6 +12,8 @@
 
 package com.eviware.soapui.impl.wsdl.monitor;
 
+import com.eviware.soapui.impl.wsdl.WsdlProject;
+import com.eviware.soapui.support.StringUtils;
 import org.mortbay.jetty.bio.SocketConnector;
 import org.mortbay.jetty.security.SslSocketConnector;
 import org.mortbay.jetty.servlet.Context;
@@ -34,21 +36,26 @@ public class SoapMonitorEngineImpl implements SoapMonitorEngine
 	JettyServer server = new JettyServer();
 	SocketConnector connector = new SocketConnector();
 	private SslSocketConnector sslConnector;
-	private String sslEndpoint = null;
+	private final String sslEndpoint;
 	private boolean proxyOrTunnel = true;
+
+	public SoapMonitorEngineImpl(final String sslEndpoint)
+	{
+		this.sslEndpoint = sslEndpoint;
+	}
 
 	public boolean isRunning()
 	{
 		return server.isRunning();
 	}
 
-	public void start( SoapMonitor soapMonitor, int localPort )
+	public void start( WsdlProject project, int localPort, SoapMonitorListenerCallBack listenerCallBack )
 	{
-		Settings settings = soapMonitor.getProject().getSettings();
+		Settings settings = project.getSettings();
 		server.setThreadPool( new SoapUIJettyThreadPool() );
 		Context context = new Context( server, ROOT, 0 );
 
-		if( sslEndpoint != null )
+		if( !StringUtils.isNullOrEmpty(  sslEndpoint ))
 		{
 			if( sslEndpoint.startsWith( HTTPS ) )
 			{
@@ -67,7 +74,7 @@ public class SoapMonitorEngineImpl implements SoapMonitorEngine
 				sslConnector.setPort( localPort );
 
 				server.addConnector( sslConnector );
-				context.addServlet( new ServletHolder( new TunnelServlet( soapMonitor, sslEndpoint ) ), ROOT );
+				context.addServlet( new ServletHolder( new TunnelServlet( project, sslEndpoint, listenerCallBack ) ), ROOT );
 			}
 			else
 			{
@@ -75,7 +82,7 @@ public class SoapMonitorEngineImpl implements SoapMonitorEngine
 				{
 					connector.setPort( localPort );
 					server.addConnector( connector );
-					context.addServlet( new ServletHolder( new TunnelServlet( soapMonitor, sslEndpoint ) ), ROOT );
+					context.addServlet( new ServletHolder( new TunnelServlet( project, sslEndpoint, listenerCallBack ) ), ROOT );
 				}
 				else
 				{
@@ -90,7 +97,7 @@ public class SoapMonitorEngineImpl implements SoapMonitorEngine
 			proxyOrTunnel = true;
 			connector.setPort( localPort );
 			server.addConnector( connector );
-			context.addServlet( new ServletHolder( new ProxyServlet( soapMonitor ) ), ROOT );
+			context.addServlet( new ServletHolder( new ProxyServlet( project, listenerCallBack ) ), ROOT );
 		}
 		try
 		{
@@ -125,11 +132,6 @@ public class SoapMonitorEngineImpl implements SoapMonitorEngine
 			}
 		}
 
-	}
-
-	protected void setSslEndpoint( String sslEndpoint )
-	{
-		this.sslEndpoint = sslEndpoint;
 	}
 
 	/*

@@ -161,7 +161,14 @@ public class OverlayRestParamsPropertyHolder implements RestParamsPropertyHolder
 
 	public void moveProperty( String propertyName, int targetIndex )
 	{
-		overlay.moveProperty( propertyName, targetIndex );
+		if(overlay.containsKey( propertyName ))
+		{
+			overlay.moveProperty( propertyName, targetIndex );
+		} else if( parent.containsKey( propertyName ))
+		{
+			parent.moveProperty( propertyName, targetIndex );
+		}
+
 	}
 
 	public TestProperty put( String key, TestProperty value )
@@ -181,12 +188,22 @@ public class OverlayRestParamsPropertyHolder implements RestParamsPropertyHolder
 
 	public RestParamProperty removeProperty( String propertyName )
 	{
-		return overlay.removeProperty( propertyName );
+		return overlay.containsKey( propertyName ) ?
+					overlay.removeProperty( propertyName ) : parent.removeProperty( propertyName );
 	}
 
 	public boolean renameProperty( String name, String newName )
 	{
-		return overlay.renameProperty( name, newName );
+		RestParamProperty restParamProperty = this.get( name );
+
+		if(restParamProperty !=null )
+		{
+			restParamProperty.setName( newName );
+			this.put( newName, restParamProperty );
+			this.remove( name );
+			return true;
+		}
+	   return overlay.renameProperty( name, newName );
 	}
 
 	public void resetValues()
@@ -321,6 +338,9 @@ public class OverlayRestParamsPropertyHolder implements RestParamsPropertyHolder
 			else if( overlay.hasProperty( newName ) )
 			{
 				firePropertyRemoved( oldName );
+			} else
+			{
+				firePropertyRenamed( oldName, newName );
 			}
 		}
 

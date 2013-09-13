@@ -17,12 +17,13 @@ import com.eviware.soapui.impl.rest.RestMethod;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.RestResource;
-import com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase.InternalRestParamsTable;
-import com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase.ParamLocation;
+import com.eviware.soapui.impl.rest.panels.resource.RestParamsTable;
 import com.eviware.soapui.impl.rest.panels.resource.RestParamsTableModel;
+import com.eviware.soapui.impl.rest.support.RestParamProperty;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
+import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.support.MessageSupport;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
@@ -32,10 +33,13 @@ import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.support.AForm;
 
+import static com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase.ParamLocation;
+
+
 /**
  * Actions for importing an existing soapUI project file into the current
  * workspace
- * 
+ *
  * @author Ole.Matzura
  */
 
@@ -44,8 +48,6 @@ public class NewRestMethodAction extends AbstractSoapUIAction<RestResource>
 	public static final String SOAPUI_ACTION_ID = "NewRestMethodAction";
 	public static final MessageSupport messages = MessageSupport.getMessages( NewRestMethodAction.class );
 	private XFormDialog dialog;
-	private XmlBeansRestParamsTestPropertyHolder params;
-	private InternalRestParamsTable paramsTable;
 
 	public NewRestMethodAction()
 	{
@@ -62,12 +64,16 @@ public class NewRestMethodAction extends AbstractSoapUIAction<RestResource>
 
 		dialog.setValue( Form.RESOURCENAME, "Method " + ( resource.getRestMethodCount() + 1 ) );
 
+		XmlBeansRestParamsTestPropertyHolder params;
 		if( param instanceof XmlBeansRestParamsTestPropertyHolder )
 			params = ( XmlBeansRestParamsTestPropertyHolder )param;
 		else
 			params = new XmlBeansRestParamsTestPropertyHolder( null, RestParametersConfig.Factory.newInstance() );
 
-		paramsTable = new MethodInternalRestParamsTable( params, ParamLocation.METHOD );
+
+		RestParamsTableModel model = new RestParamsTableModel( params );
+		RestParamsTable paramsTable = new RestParamsTable( params, false, model, ParamLocation.METHOD, true, false );
+
 		dialog.getFormField( Form.PARAMSTABLE ).setProperty( "component", paramsTable );
 
 		if( dialog.show() )
@@ -80,33 +86,19 @@ public class NewRestMethodAction extends AbstractSoapUIAction<RestResource>
 
 			if( dialog.getBooleanValue( Form.CREATEREQUEST ) )
 			{
-				createRequest( method );
+				createRequest( method, method.getParams() );
 			}
 		}
 	}
 
-	private class MethodInternalRestParamsTable extends InternalRestParamsTable
-	{
-		public MethodInternalRestParamsTable( RestParamsPropertyHolder params, ParamLocation defaultLocation )
-		{
-			super( params, defaultLocation );
-		}
-
-		protected RestParamsTableModel createTableModel( RestParamsPropertyHolder params )
-		{
-			return new InternalRestParamsTableModel( params )
-			{
-				public int getColumnCount()
-				{
-					return super.getColumnCount() - 1;
-				}
-			};
-		}
-	}
-
-	protected void createRequest( RestMethod method )
+	protected void createRequest( RestMethod method, RestParamsPropertyHolder params )
 	{
 		RestRequest request = method.addNewRequest( "Request " + ( method.getRequestCount() + 1 ) );
+		for ( TestProperty param : params.getProperties().values())
+		{
+			( ( RestParamProperty )param ).addPropertyChangeListener( request );
+		}
+
 		UISupport.showDesktopPanel( request );
 	}
 

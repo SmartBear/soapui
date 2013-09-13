@@ -35,6 +35,7 @@ import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStepResult;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.security.SecurityCheckedParameter;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
@@ -154,9 +155,13 @@ public class CrossSiteScriptingScan extends AbstractSecurityScanWithProperties
 			}
 			else
 			{
-				WsdlTestRequestStepResult message = ( WsdlTestRequestStepResult )mutation.getTestStep().run(
+				MessageExchange message = ( MessageExchange )mutation.getTestStep().run(
 						( TestCaseRunner )securityTestRunner, context );
-				message.setRequestContent( "", false );
+				if(message instanceof WsdlTestRequestStepResult)
+				{
+					( ( WsdlTestRequestStepResult ) message ).setRequestContent( "", false );
+				}
+
 				createMessageExchange( mutation.getMutatedParameters(), message, context );
 			}
 		}

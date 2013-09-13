@@ -8,16 +8,18 @@
     <groupId>com.smartbear.soapui</groupId>
     <artifactId>soapui-maven-plugin-tester</artifactId>
     <name>soapUI Maven plugin tester</name>
+    <packaging>pom</packaging>
 
     <parent>
         <groupId>com.smartbear.soapui</groupId>
         <artifactId>soapui-project</artifactId>
-        <version>4.5.3</version>
+        <version>4.6.0-SNAPSHOT</version>
     </parent>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <mockServerPort>9090</mockServerPort>
     </properties>
 
     <build>
@@ -26,22 +28,42 @@
                 <groupId>com.smartbear.soapui</groupId>
                 <artifactId>maven-soapui-plugin</artifactId>
                 <version>${project.parent.version}</version>
+                <configuration>
+                    <projectFile>${project.basedir}/src/main/soapui/test-soapui-project.xml</projectFile>
+                    <soapuiProperties>
+                      <property>
+                          <name>soapui.logroot</name>
+                          <value>${project.build.directory}/soapui/logs/</value>
+                      </property>
+                    </soapuiProperties>
+                </configuration>
                 <executions>
                     <execution>
-                        <phase>test</phase>
+                        <id>soapui-mock</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>mock</goal>
+                        </goals>
+                        <configuration>
+                            <noBlock>true</noBlock>
+                            <port>${mockServerPort}</port>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>soapui-test</id>
+                        <phase>integration-test</phase>
                         <goals>
                             <goal>test</goal>
                         </goals>
                         <configuration>
-                            <projectFile>${project.basedir}/SoapUIMavenPluginTestProject-soapui-project.xml</projectFile>
+                            <exportAll>true</exportAll>
+                            <host>localhost:${mockServerPort}</host>
+                            <junitReport>true</junitReport>
+                            <outputFolder>${project.build.directory}/soapui/output</outputFolder>
+                            <printReport>true</printReport>
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.12.1</version>
             </plugin>
         </plugins>
     </build>

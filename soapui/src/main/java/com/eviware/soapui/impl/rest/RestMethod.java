@@ -223,7 +223,7 @@ public class RestMethod extends AbstractWsdlModelItem<RestMethodConfig> implemen
 		RestRepresentation[] representations = getRepresentations( RestRepresentation.Type.REQUEST, null );
 		if( representations.length >= 1 )
 			return representations[0].getMediaType();
-		return "application/xml";
+		return "application/json";
 	}
 
 	public RestRepresentation[] getRepresentations()

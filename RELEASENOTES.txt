@@ -1,5 +1,12 @@
 # Release Notes for SoapUI
 
+
+## version 4.5.3 - 2013-xx-xx
+-------------------------------------------------------------------------------
+
+### Bugs fixed ###
+* REST load tests taking too long to run if a small Test Delay is set (SOAPUI-4668)
+
 ## version 4.5.2 - 2013-05-22
 
 ### Build improvements ###

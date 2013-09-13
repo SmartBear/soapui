@@ -12,21 +12,11 @@
 
 package com.eviware.soapui.impl.rest.panels.request.views.content;
 
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.beans.PropertyChangeEvent;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.JButton;
-
-import org.apache.xmlbeans.SchemaType;
-
 import com.eviware.soapui.impl.rest.RestRepresentation;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
-import com.eviware.soapui.impl.rest.panels.resource.InstanceRestParamsTable;
+import com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase;
 import com.eviware.soapui.impl.rest.panels.resource.RestParamsTable;
+import com.eviware.soapui.impl.rest.panels.resource.RestParamsTableModel;
 import com.eviware.soapui.impl.rest.support.RestUtils;
 import com.eviware.soapui.impl.support.http.HttpRequestContentView;
 import com.eviware.soapui.impl.support.panels.AbstractHttpXmlRequestDesktopPanel.HttpRequestMessageEditor;
@@ -35,12 +25,19 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.types.StringList;
 import com.eviware.soapui.support.types.TupleList;
+import org.apache.xmlbeans.SchemaType;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeEvent;
+
+import static com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase.ParamLocation;
 
 public class RestRequestContentView extends HttpRequestContentView
 {
 	private RestRequestInterface restRequest;
 	private JButton recreateButton;
-	private RestParamsTable paramsTable;
 
 	@SuppressWarnings( "unchecked" )
 	public RestRequestContentView( HttpRequestMessageEditor restRequestMessageEditor, RestRequestInterface restRequest )
@@ -49,16 +46,23 @@ public class RestRequestContentView extends HttpRequestContentView
 		this.restRequest = restRequest;
 	}
 
+
 	protected RestParamsTable buildParamsTable()
 	{
-		paramsTable = new InstanceRestParamsTable( restRequest.getParams() )
+		RestParamsTableModel model = new RestParamsTableModel( restRequest.getParams() )
 		{
-			protected void insertAdditionalButtons( JXToolBar toolbar )
+			@Override
+			public String getColumnName( int columnIndex )
 			{
-				toolbar.add( UISupport.createToolbarButton( new UpdateRestParamsAction() ) );
+				if( columnIndex == 1 )
+				{
+					return "Value";
+				}
+
+				return super.getColumnName( columnIndex );
 			}
 		};
-		return paramsTable;
+		return new RestParamsTable( restRequest.getParams(), true, model, ParamLocation.RESOURCE, true, true );
 	}
 
 	public RestParamsTable getParamsTable()
@@ -128,7 +132,7 @@ public class RestRequestContentView extends HttpRequestContentView
 	{
 		private UpdateRestParamsAction()
 		{
-			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/add_property.gif" ) );
+			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/update-request-parameters-from-url.png" ) );
 			putValue( Action.SHORT_DESCRIPTION, "Updates this Requests params from a specified URL" );
 		}
 

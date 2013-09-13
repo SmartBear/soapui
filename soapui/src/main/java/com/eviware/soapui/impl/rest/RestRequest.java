@@ -71,7 +71,7 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 
 	public RestRequest( RestMethod method, RestRequestConfig requestConfig, boolean forLoadTest )
 	{
-		super( requestConfig, method.getOperation(), "/rest_request.gif", false );
+		super( requestConfig, method.getOperation(), "/rest_request.gif", forLoadTest );
 		this.method = method;
 
 		if( requestConfig.getParameters() == null )
