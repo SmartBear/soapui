@@ -9,6 +9,7 @@ import com.eviware.soapui.impl.rest.support.RestParamProperty;
 import com.eviware.soapui.support.editor.EditorView;
 import com.eviware.soapui.support.editor.xml.XmlDocument;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.swing.JTable;
@@ -40,6 +41,7 @@ public class RestRequestDesktopPanelTest
 		requestDesktopPanel = new RestRequestDesktopPanel( restRequest );
 	}
 
+	@Ignore
 	@Test
 	public void retainsParameterValueWhenChangingItsLevel() throws Exception
 	{

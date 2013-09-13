@@ -14,6 +14,7 @@ import com.eviware.soapui.utils.ContainerWalker;
 import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.swing.AbstractButton;
@@ -69,6 +70,7 @@ public class WsdlRequestDesktopPanelTest
 		assertThat( desktopPanel.getHelpUrl(), is(HelpUrls.REQUESTEDITOR_HELP_URL) );
 	}
 
+	@Ignore
 	@Test
 	public void endpointComboBoxIsEditable() throws Exception
 	{
@@ -93,6 +95,7 @@ public class WsdlRequestDesktopPanelTest
 		verify(request).submit( isA( SubmitContext.class ), eq( true ) );
 	}
 
+	@Ignore
 	@Test
 	public void disablesSubmitButtonWhenEndpointIsEmpty() throws Exception
 	{
