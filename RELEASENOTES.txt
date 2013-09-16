@@ -4,7 +4,7 @@
 -------------------------------------------------------------------------------
 
 ### Major New Feature ###
-* Pragmatic REST
+* Pragmatic REST (SOAP-342)
 ** Create a REST project with REST request easily using only a URI as input
 ** Automatic split of a REST URI into Endpoint, Resource and Query
 ** Automatic extraction of template parameters and query parameters
@@ -28,7 +28,7 @@
 * Cant run security tests on "HTTP Test Request" test step (SOAP-442)
 * (Pro only) JDBC test step fails to reflect changes on environment (SOAP-431)
 * Stabilize soapui maven plugin tester (SOAP-369)
-* Xpath button more visible (164)
+* Xpath button more visible (SOAP-164)
 
 ### Minor improvements
 * (Pro only) Improved error message when trying to load an XLSX DataSource (SOAP-330)
