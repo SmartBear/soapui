@@ -197,11 +197,13 @@ public class RestRequestStepResult extends WsdlTestStepResult implements Respons
 
 		if( response == null )
 		{
-			writer.println( "\r\n- missing response / garbage collected -" );
+			writer.println();
+			writer.println( "- missing response / garbage collected -" );
 			return;
 		}
 
-		writer.println( "\r\n----------------- Properties ------------------------------" );
+		writer.println();
+		writer.println( "----------------- Properties ------------------------------" );
 		if( properties != null )
 		{
 			for( String key : properties.keySet() )
@@ -211,32 +213,34 @@ public class RestRequestStepResult extends WsdlTestStepResult implements Respons
 			}
 		}
 
-		writer.println( "\r\n---------------- Request ---------------------------" );
+		writer.println();
+		writer.println( "---------------- Request ---------------------------" );
 		StringToStringsMap headers = response.getRequestHeaders();
 		for( String key : headers.keySet() )
 		{
 			if( headers.get( key ) != null )
 				writer.println( key + ": " + headers.get( key ) );
 		}
-
 		byte[] rawRequestData = response.getRawRequestData();
 		if( rawRequestData != null )
 		{
-			writer.println( "\r\n" + new String( rawRequestData ) );
+			writer.println();
+			writer.println( new String( rawRequestData ) );
 		}
 
-		writer.println( "\r\n---------------- Response --------------------------" );
-
+		writer.println();
+		writer.println( "---------------- Response --------------------------" );
 		headers = response.getResponseHeaders();
 		for( String key : headers.keySet() )
 		{
 			if( headers.get( key ) != null )
 				writer.println( key + ": " + headers.get( key ) );
 		}
-
 		String respContent = response.getContentAsString();
-		if( respContent != null )
-			writer.println( "\r\n" + respContent );
+		if( respContent != null ) {
+			writer.println();
+			writer.println( respContent );
+		}
 	}
 
 	@Override
