@@ -1,6 +1,8 @@
 package com.eviware.soapui.utils;
 
 import com.eviware.soapui.support.UISupport;
+import com.eviware.x.dialogs.XDialogs;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -14,10 +16,12 @@ public class StubbedDialogsTest
 {
 
 	private StubbedDialogs dialogs;
+	private XDialogs originalDialogs;
 
 	@Before
 	public void resetDialogs()
 	{
+		originalDialogs = UISupport.getDialogs();
 		dialogs = new StubbedDialogs();
 		UISupport.setDialogs( dialogs );
 	}
@@ -38,5 +42,10 @@ public class StubbedDialogsTest
 
 		UISupport.showInfoMessage( infoMessage );
 		assertThat(dialogs.getInfoMessages(), hasItem(infoMessage));
+	}
+
+	@After
+	public void restoreDialogs() {
+		 UISupport.setDialogs( originalDialogs );
 	}
 }
