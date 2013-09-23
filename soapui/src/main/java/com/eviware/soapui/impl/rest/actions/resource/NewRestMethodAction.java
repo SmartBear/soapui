@@ -23,6 +23,7 @@ import com.eviware.soapui.impl.rest.support.RestParamProperty;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
+import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.support.MessageSupport;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
@@ -71,7 +72,7 @@ public class NewRestMethodAction extends AbstractSoapUIAction<RestResource>
 
 
 		RestParamsTableModel model = new RestParamsTableModel( params );
-		RestParamsTable paramsTable = new RestParamsTable( params, false, model, ParamLocation.METHOD, false );
+		RestParamsTable paramsTable = new RestParamsTable( params, false, model, ParamLocation.METHOD, true, false );
 
 		dialog.getFormField( Form.PARAMSTABLE ).setProperty( "component", paramsTable );
 
@@ -93,7 +94,11 @@ public class NewRestMethodAction extends AbstractSoapUIAction<RestResource>
 	protected void createRequest( RestMethod method, RestParamsPropertyHolder params )
 	{
 		RestRequest request = method.addNewRequest( "Request " + ( method.getRequestCount() + 1 ) );
-		( ( RestParamProperty )params ).addPropertyChangeListener( request );
+		for ( TestProperty param : params.getProperties().values())
+		{
+			( ( RestParamProperty )param ).addPropertyChangeListener( request );
+		}
+
 		UISupport.showDesktopPanel( request );
 	}
 

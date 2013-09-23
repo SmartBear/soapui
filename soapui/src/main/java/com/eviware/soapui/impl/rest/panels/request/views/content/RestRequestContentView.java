@@ -62,7 +62,7 @@ public class RestRequestContentView extends HttpRequestContentView
 				return super.getColumnName( columnIndex );
 			}
 		};
-		return new RestParamsTable( restRequest.getParams(), true, model, ParamLocation.RESOURCE, false );
+		return new RestParamsTable( restRequest.getParams(), true, model, ParamLocation.RESOURCE, true, true );
 	}
 
 	public RestParamsTable getParamsTable()

@@ -182,7 +182,7 @@ public class HttpRequestFilter extends AbstractRequestFilter
 				}
 				break;
 			case MATRIX :
-				String valueInPath = ";" + param.getName() + "=" + param.getValue();
+				String valueInPath = ";" + param.getName() + "=" + value;
 				String valueToBeSet = ";" + param.getName(); //if parameter type is boolean then it is presented by
 				                                             // presence of parameter
 				try

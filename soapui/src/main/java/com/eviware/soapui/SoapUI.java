@@ -770,8 +770,6 @@ public class SoapUI
 
 		frame = new JFrame( title );
 
-		SoapUISplash splash = new SoapUISplash( splashImage, frame );
-
 		List<Image> iconList = new ArrayList<Image>();
 		for( String iconPath : FRAME_ICON.split( ";" ) )
 		{
@@ -829,8 +827,6 @@ public class SoapUI
 		core.prepareUI();
 		soapUI.show( workspace );
 		core.afterStartup( workspace );
-		Thread.sleep( 500 );
-		splash.setVisible( false );
 
 		if( getSettings().getBoolean( UISettings.SHOW_STARTUP_PAGE ) && !SoapUI.isJXBrowserDisabled( true ) )
 		{
@@ -1399,7 +1395,7 @@ public class SoapUI
 	private static boolean shouldAutoCloseStartPage()
 	{
 		return System.getProperty( "os.name" ).contains( "Mac" ) &&
-				!( desktop.getClass().getName().contains( "Tabbed" ) );
+				!(desktop.getClass().getName().contains( "Tabbed" ));
 	}
 
 	private static class AboutAction extends AbstractAction

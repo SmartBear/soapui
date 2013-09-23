@@ -159,6 +159,9 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 			JLabel methodLabel = new JLabel( "Method" );
 			methodPanel.add( methodLabel, BorderLayout.NORTH );
 			methodPanel.add( methodComboBox, BorderLayout.SOUTH );
+			methodPanel.setMinimumSize( new Dimension( 75, STANDARD_TOOLBAR_HEIGHT ) );
+			//TODO: remove hard coded height adjustment
+			methodPanel.setMaximumSize( new Dimension( 75, STANDARD_TOOLBAR_HEIGHT + 10 ) );
 
 			JPanel endpointPanel = new JPanel( new BorderLayout() );
 			endpointPanel.setMinimumSize( new Dimension( 75, STANDARD_TOOLBAR_HEIGHT ) );

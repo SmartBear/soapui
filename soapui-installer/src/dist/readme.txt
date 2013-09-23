@@ -1,6 +1,46 @@
 Welcome to soapUI!
 
-## 2013-05-22: 4.5.2 
+## version 4.6.0 - 2013-09-16
+-------------------------------------------------------------------------------
+
+### Major New Feature ###
+* Pragmatic REST (SOAP-342)
+** Create a REST project with REST request easily using only a URI as input
+** Automatic split of a REST URI into Endpoint, Resource and Query
+** Automatic extraction of template parameters and query parameters
+** Automatic level and style assignment of parameters
+** Simplified editing of parameters
+** Simplified selection of Method
+
+### Known Issue ###
+* Resource field parameter changes are not synched with the parameter table (SOAP-621 )
+
+### Bugs fixed ###
+* Exporting WADL doesn't export changes that were made (SOAPUI-4620)
+* REST load tests taking too long to run if a small Test Delay is set (SOAPUI-4668)
+* (Pro only) JDBC test step fails to reflect changes on environment (SOAP-431)
+* HTTP Tunnel monitor drops the http protocol version (always uses HTTP/1.1) (SOAP-354)
+* JDBC connection wizard for DB2 does not add semi colon at end of connection string (SOAP-472)
+* Add -Dfile.encoding=UTF8 to start file jvm parameters (SOAP-461)
+* Assertion TestStep editor cannot be reopened after entering invalid "assertion field" value (SOAP-331)
+* Remove the word "TestCase" from tabs with names "TestCase Coverage", "TestCase Requirements", etc. (SOAP-460)
+* Start page hides other desktop panels on Mac (SOAP-446)
+* Cant run security tests on "HTTP Test Request" test step (SOAP-442)
+* (Pro only) JDBC test step fails to reflect changes on environment (SOAP-431)
+* Stabilize soapui maven plugin tester (SOAP-369)
+* Xpath button more visible (SOAP-164)
+
+### Minor improvements
+* (Pro only) Improved error message when trying to load an XLSX DataSource (SOAP-330)
+* (Pro only) List box rather than text field for selecting report type (SOAP-279)
+* (Pro only) Improved GUI for Generating XPath in Property transfer panel (SOAP-311)
+* Property expansion now works for HTTP header names (SOAP-450)
+* Broken module link in documentation (SOAP-421 )
+* Show License is now Show EULA (SOAP-109)
+* SoapUI installer pointed to old version of LoadUI installer (SOAP-397)
+
+
+## 2013-05-22: 4.5.2
 -------------------------------------------------------------------------------
 
 ### Build improvements ###
@@ -32,7 +72,7 @@ Welcome to soapUI!
 Please see http://soapui.org/About-SoapUI/soapui-451-bugs-fixed.html for an overview 
 of the bugs fixed in this release.
 
-2011-03-28: 4.5 The Big Ears Release - Final 
+2012-03-28: 4.5 The Big Ears Release - Final
 -------------------------------------------------------------------------------
 Please see http://soapui.org/About-SoapUI/whats-new-in-soapui-45.html for an overview 
 of all the new great features and more details on fixes in the final release!

@@ -28,11 +28,23 @@ import com.jgoodies.binding.PresentationModel;
 import org.apache.xmlbeans.SchemaType;
 import org.apache.xmlbeans.XmlBeans;
 
-import javax.swing.*;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.DefaultCellEditor;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.xml.namespace.QName;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,17 +67,22 @@ public class RestParamsTable extends JPanel
 	private StringListFormComponent optionsFormComponent;
 	private SimpleBindingForm detailsForm;
 	private final ParamLocation defaultParamLocation;
-	private boolean isOnlyValueEditable;
+	private boolean showEditableButtons;
+	private boolean showDefaultParamsButton;
 
-	public RestParamsTable( RestParamsPropertyHolder params, boolean showInspector, ParamLocation defaultParamLocation )
+	public RestParamsTable( RestParamsPropertyHolder params, boolean showInspector, ParamLocation defaultParamLocation ,
+									boolean showEditableButtons, boolean showDefaultParamsButton )
 	{
-		this( params, showInspector, new RestParamsTableModel( params ), defaultParamLocation, false );
+		this( params, showInspector, new RestParamsTableModel( params ), defaultParamLocation, showEditableButtons,
+				showDefaultParamsButton );
 	}
+
 	public RestParamsTable( RestParamsPropertyHolder params, boolean showInspector, RestParamsTableModel model,
-									ParamLocation defaultParamLocation, boolean isOnlyValueEditable)
+									ParamLocation defaultParamLocation, boolean showEditableButtons, boolean showDefaultParamsButton )
 	{
 		super( new BorderLayout() );
-		this.isOnlyValueEditable = isOnlyValueEditable;
+		this.showEditableButtons = showEditableButtons;
+		this.showDefaultParamsButton = showDefaultParamsButton;
 		this.params = params;
 		this.paramsTableModel = model;
 		this.defaultParamLocation = defaultParamLocation;
@@ -74,11 +91,15 @@ public class RestParamsTable extends JPanel
 
 	protected void init( boolean showInspector )
 	{
-		defaultParamsAction = new UseDefaultParamsAction();
+		if ( showDefaultParamsButton )
+		{
+			defaultParamsAction = new UseDefaultParamsAction();
+		}
+
 		movePropertyDownAction = new MovePropertyDownAction();
 		movePropertyUpAction = new MovePropertyUpAction();
 
-		if( !isOnlyValueEditable )
+		if( showEditableButtons )
 		{
 			initEditableButtons();
 		}
@@ -97,7 +118,7 @@ public class RestParamsTable extends JPanel
 			public void valueChanged( ListSelectionEvent e )
 			{
 				int selectedRow = paramsTable.getSelectedRow();
-				if( !isOnlyValueEditable)
+				if( showEditableButtons)
 				{
 					removeParamAction.setEnabled( selectedRow != -1 );
 				}
@@ -171,7 +192,8 @@ public class RestParamsTable extends JPanel
 
 		detailsForm.appendComboBox( "type", "Type", types.toArray(), "The type of the parameter" );
 		optionsFormComponent = new StringListFormComponent( "Available values for this Parameter" );
-		optionsFormComponent.setPreferredSize( new Dimension( 350, 80 ) );
+		//TODO: Consider removing hardcoded size
+		optionsFormComponent.setPreferredSize( new Dimension( 350, 100 ) );
 		detailsForm.appendComponent( "options", "Options", optionsFormComponent );
 		detailsForm.appendTextField( "description", "Description", "A short description of the parameter" );
 		detailsForm.appendCheckBox( "disableUrlEncoding", "Disable Encoding",
@@ -205,7 +227,7 @@ public class RestParamsTable extends JPanel
 	{
 		JXToolBar toolbar = UISupport.createToolbar();
 
-		if( !isOnlyValueEditable )
+		if( showEditableButtons )
 		{
 			toolbar.add( UISupport.createToolbarButton( addParamAction ) );
 			toolbar.add( UISupport.createToolbarButton( removeParamAction, false ) );
@@ -213,7 +235,11 @@ public class RestParamsTable extends JPanel
 			toolbar.add( UISupport.createToolbarButton( updateParamsAction ) );
 		}
 
-		toolbar.add( UISupport.createToolbarButton( defaultParamsAction, paramsTable.getRowCount() > 0 ) );
+		if( showDefaultParamsButton )
+		{
+			toolbar.add( UISupport.createToolbarButton( defaultParamsAction, paramsTable.getRowCount() > 0 ) );
+		}
+
 		toolbar.addSeparator();
 		toolbar.add( UISupport.createToolbarButton( movePropertyDownAction, false ) );
 		toolbar.add( UISupport.createToolbarButton( movePropertyUpAction, false ) );

@@ -193,6 +193,8 @@ public interface HelpUrls
 
 	public static final String RESOLVEPROJECT_HELP_URL = HELP_URL_ROOT + "projects/resolving.html";
 
+	public static final String NEWRESTPROJECT_HELP_URL = "http://www.soapui.org/REST-Testing/working-with-rest-services.html";
+
 	public static final String NEWRESTSERVICE_HELP_URL = HELP_URL_ROOT + "rest/index.html";
 
 	public static final String RESTREQUESTEDITOR_HELP_URL = HELP_URL_ROOT + "rest/requests.html";

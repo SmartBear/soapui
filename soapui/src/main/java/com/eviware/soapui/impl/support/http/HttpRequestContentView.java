@@ -116,7 +116,7 @@ public class HttpRequestContentView extends AbstractXmlEditorView<HttpRequestDoc
 					prop.setValue( value.toString() );
 			}
 		};
-		return new RestParamsTable( httpRequest.getParams(), false, restParamsTableModel, ParamLocation.RESOURCE, false );
+		return new RestParamsTable( httpRequest.getParams(), false, restParamsTableModel, ParamLocation.RESOURCE, true, false );
 	}
 
 	@Override
