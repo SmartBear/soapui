@@ -775,8 +775,6 @@ public class SoapUI
 
 		frame = new JFrame( title );
 
-		SoapUISplash splash = new SoapUISplash( splashImage, frame );
-
 		frame.setIconImage( UISupport.createImageIcon( FRAME_ICON ).getImage() );
 
 		JPopupMenu.setDefaultLightWeightPopupEnabled( false );
@@ -829,8 +827,6 @@ public class SoapUI
 		core.prepareUI();
 		soapUI.show( workspace );
 		core.afterStartup( workspace );
-		Thread.sleep( 500 );
-		splash.setVisible( false );
 
 		if( getSettings().getBoolean( UISettings.SHOW_STARTUP_PAGE ) && !SoapUI.isJXBrowserDisabled( true ) )
 		{
