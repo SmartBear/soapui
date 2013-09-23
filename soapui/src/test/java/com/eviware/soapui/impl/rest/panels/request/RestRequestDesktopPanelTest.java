@@ -3,6 +3,7 @@ package com.eviware.soapui.impl.rest.panels.request;
 import com.eviware.soapui.config.RestRequestConfig;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
+import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase;
 import com.eviware.soapui.impl.rest.panels.request.views.content.RestRequestContentView;
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
@@ -26,6 +27,8 @@ public class RestRequestDesktopPanelTest
 
 	public static final String PARAMETER_NAME = "jsessionid";
 	public static final String PARAMETER_VALUE = "Da Value";
+	public static final String ENDPOINT = "http://sunet.se/search";
+
 	private RestRequestDesktopPanel requestDesktopPanel;
 	private RestRequest restRequest;
 
@@ -35,6 +38,8 @@ public class RestRequestDesktopPanelTest
 		restRequest = new RestRequest( makeRestMethod(), RestRequestConfig.Factory.newInstance(), false );
 		restRequest.setMethod( RestRequestInterface.RequestMethod.GET);
 		restRequest.getResource().getParams().addProperty( PARAMETER_NAME );
+		getRestService().addEndpoint( ENDPOINT );
+		restRequest.setEndpoint( ENDPOINT );
 		RestParamProperty restParamProperty = restRequest.getParams().getProperty( PARAMETER_NAME );
 		restParamProperty.setValue( PARAMETER_VALUE );
 		requestDesktopPanel = new RestRequestDesktopPanel( restRequest );
@@ -51,5 +56,22 @@ public class RestRequestDesktopPanelTest
 
 		RestParamProperty returnedParameter = restRequest.getParams().getProperty( PARAMETER_NAME );
 		assertThat(returnedParameter.getValue(), is(PARAMETER_VALUE));
+	}
+
+	@Test
+	public void displaysEndpoint() {
+		assertThat(requestDesktopPanel.getEndpointsModel().getSelectedItem(), is((Object)ENDPOINT));
+	}
+
+	@Test
+	public void reactsToEndpointChanges() {
+		String anotherEndpoint = "http://mafia.ru/search";
+		getRestService().changeEndpoint( ENDPOINT, anotherEndpoint );
+		assertThat( requestDesktopPanel.getEndpointsModel().getSelectedItem(), is( ( Object )anotherEndpoint ) );
+	}
+
+	private RestService getRestService()
+	{
+		return restRequest.getOperation().getInterface();
 	}
 }
