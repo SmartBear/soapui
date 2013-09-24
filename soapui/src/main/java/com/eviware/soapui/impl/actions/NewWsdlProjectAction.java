@@ -12,14 +12,11 @@
 
 package com.eviware.soapui.impl.actions;
 
-import java.io.File;
-
-import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.SaveStatus;
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.WsdlInterfaceFactory;
 import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.rest.RestServiceFactory;
-import com.eviware.soapui.impl.rest.actions.project.NewRestServiceAction;
 import com.eviware.soapui.impl.rest.actions.service.GenerateRestTestSuiteAction;
 import com.eviware.soapui.impl.rest.support.WadlImporter;
 import com.eviware.soapui.impl.support.definition.support.InvalidDefinitionException;
@@ -43,9 +40,11 @@ import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.support.AForm;
 
+import java.io.File;
+
 /**
  * Action for creating a new WSDL project
- * 
+ *
  * @author Ole.Matzura
  */
 
@@ -124,10 +123,10 @@ public class NewWsdlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 
 							if( PathUtils.isFilePath( url ) && PathUtils.isAbsolutePath( url ) )
 							{
-								folder = new File( url ).getParent().toString();
+								folder = new File( url ).getParent();
 							}
 
-							if( !project.save( folder ) )
+							if( project.save( folder ) != SaveStatus.SUCCESS )
 							{
 								UISupport
 										.showErrorMessage( "Project was not saved, paths will not be stored relatively until configured." );
@@ -143,7 +142,7 @@ public class NewWsdlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 							if( new File( url ).exists() )
 								url = new File( url ).toURI().toURL().toString();
 
-								importWsdl( project, url );
+							importWsdl( project, url );
 						}
 
 						if( dialog.getBooleanValue( Form.CREATEWEBTEST ) )
@@ -240,28 +239,28 @@ public class NewWsdlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 	// addNewWebTestAction.createWebTest( targetTestCase );
 	// }
 
-	@AForm( name = "Form.Title", description = "Form.Description", helpUrl = HelpUrls.NEWPROJECT_HELP_URL, icon = UISupport.TOOL_ICON_PATH )
+	@AForm(name = "Form.Title", description = "Form.Description", helpUrl = HelpUrls.NEWPROJECT_HELP_URL, icon = UISupport.TOOL_ICON_PATH)
 	public interface Form
 	{
-		@AField( description = "Form.ProjectName.Description", type = AFieldType.STRING )
+		@AField(description = "Form.ProjectName.Description", type = AFieldType.STRING)
 		public final static String PROJECTNAME = messages.get( "Form.ProjectName.Label" );
 
-		@AField( description = "Form.InitialWsdl.Description", type = AFieldType.FILE )
+		@AField(description = "Form.InitialWsdl.Description", type = AFieldType.FILE)
 		public final static String INITIALWSDL = messages.get( "Form.InitialWsdl.Label" );
 
-		@AField( description = "Form.CreateRequests.Description", type = AFieldType.BOOLEAN, enabled = false )
+		@AField(description = "Form.CreateRequests.Description", type = AFieldType.BOOLEAN, enabled = false)
 		public final static String CREATEREQUEST = messages.get( "Form.CreateRequests.Label" );
 
-		@AField( description = "Form.GenerateTestSuite.Description", type = AFieldType.BOOLEAN, enabled = false )
+		@AField(description = "Form.GenerateTestSuite.Description", type = AFieldType.BOOLEAN, enabled = false)
 		public final static String GENERATETESTSUITE = messages.get( "Form.GenerateTestSuite.Label" );
 
-		@AField( description = "Form.GenerateMockService.Description", type = AFieldType.BOOLEAN, enabled = false )
+		@AField(description = "Form.GenerateMockService.Description", type = AFieldType.BOOLEAN, enabled = false)
 		public final static String GENERATEMOCKSERVICE = messages.get( "Form.GenerateMockService.Label" );
 
-		@AField( description = "Form.RelativePaths.Description", type = AFieldType.BOOLEAN, enabled = true )
+		@AField(description = "Form.RelativePaths.Description", type = AFieldType.BOOLEAN, enabled = true)
 		public final static String RELATIVEPATHS = messages.get( "Form.RelativePaths.Label" );
 
-		@AField( description = "Form.CreateWebTest.Description", type = AFieldType.BOOLEAN, enabled = true )
+		@AField(description = "Form.CreateWebTest.Description", type = AFieldType.BOOLEAN, enabled = true)
 		public final static String CREATEWEBTEST = messages.get( "Form.CreateWebTest.Label" );
 
 		// @AField( description = "Form.CreateProjectFile.Description", type =

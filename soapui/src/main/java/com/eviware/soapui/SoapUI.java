@@ -12,69 +12,11 @@
 
 package com.eviware.soapui;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.dnd.DnDConstants;
-import java.awt.dnd.DragSource;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.JTabbedPane;
-import javax.swing.JTextField;
-import javax.swing.JToggleButton;
-import javax.swing.JTree;
-import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
-import javax.swing.ToolTipManager;
-
-import com.eviware.soapui.impl.actions.NewGenericProjectAction;
-import com.google.common.base.Objects;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.PosixParser;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-
-import com.eviware.soapui.actions.SaveAllProjectsAction;
-import com.eviware.soapui.actions.ShowSystemPropertiesAction;
-import com.eviware.soapui.actions.SoapUIPreferencesAction;
-import com.eviware.soapui.actions.StartHermesJMSButtonAction;
-import com.eviware.soapui.actions.SwitchDesktopPanelAction;
-import com.eviware.soapui.actions.VersionUpdateAction;
+import com.eviware.soapui.actions.*;
+import com.eviware.soapui.impl.SaveStatus;
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.actions.ImportWsdlProjectAction;
+import com.eviware.soapui.impl.actions.NewGenericProjectAction;
 import com.eviware.soapui.impl.actions.NewWsdlProjectAction;
 import com.eviware.soapui.impl.rest.actions.project.NewRestServiceAction;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
@@ -117,22 +59,14 @@ import com.eviware.soapui.monitor.TestMonitor;
 import com.eviware.soapui.settings.ProxySettings;
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.settings.VersionUpdateSettings;
-import com.eviware.soapui.support.SoapUIException;
-import com.eviware.soapui.support.SoapUIVersionUpdate;
-import com.eviware.soapui.support.StringUtils;
-import com.eviware.soapui.support.Tools;
-import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.*;
 import com.eviware.soapui.support.action.SoapUIAction;
 import com.eviware.soapui.support.action.SoapUIActionRegistry;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.ActionListBuilder;
 import com.eviware.soapui.support.action.swing.ActionSupport;
 import com.eviware.soapui.support.action.swing.SwingActionDelegate;
-import com.eviware.soapui.support.components.JComponentInspector;
-import com.eviware.soapui.support.components.JInspectorPanel;
-import com.eviware.soapui.support.components.JInspectorPanelFactory;
-import com.eviware.soapui.support.components.JPropertiesTable;
-import com.eviware.soapui.support.components.JXToolBar;
+import com.eviware.soapui.support.components.*;
 import com.eviware.soapui.support.dnd.DropType;
 import com.eviware.soapui.support.dnd.NavigatorDragAndDropable;
 import com.eviware.soapui.support.dnd.SoapUIDragAndDropHandler;
@@ -159,10 +93,32 @@ import com.eviware.soapui.ui.desktop.SoapUIDesktop;
 import com.eviware.soapui.ui.desktop.standalone.StandaloneDesktop;
 import com.eviware.soapui.ui.support.DesktopListenerAdapter;
 import com.eviware.x.impl.swing.SwingDialogs;
+import com.google.common.base.Objects;
 import com.jgoodies.looks.HeaderStyle;
 import com.jgoodies.looks.Options;
 import com.jniwrapper.PlatformContext;
 import com.teamdev.jxbrowser.BrowserType;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.PosixParser;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DragSource;
+import java.awt.event.*;
+import java.io.*;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.*;
+import java.util.List;
+import java.util.Timer;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * Main SoapUI entry point.
@@ -183,7 +139,7 @@ public class SoapUI
 	public static final String PROXY_ENABLED_ICON = "/proxyEnabled.png";
 	public static final String PROXY_DISABLED_ICON = "/proxyDisabled.png";
 
-	@SuppressWarnings("deprecation")
+	@SuppressWarnings( "deprecation" )
 	public static String PUSH_PAGE_URL = "http://soapui.org/Appindex/soapui-starterpage.html?version="
 			+ URLEncoder.encode( SOAPUI_VERSION );
 	public static String FRAME_ICON = "/soapui-icon.png";
@@ -236,7 +192,7 @@ public class SoapUI
 	private static JToggleButton applyProxyButton;
 	private static Logger groovyLogger;
 	private static Logger loadUILogger;
-	@SuppressWarnings("unused")
+	@SuppressWarnings( "unused" )
 	private static JButton launchLoadUIButton;
 	private static CmdLineRunner soapUIRunner;
 
@@ -376,7 +332,7 @@ public class SoapUI
 		return mainToolbar;
 	}
 
-	@SuppressWarnings("deprecation")
+	@SuppressWarnings( "deprecation" )
 	public void doForumSearch( String text )
 	{
 		if( !searchField.getText().equals( text ) )
@@ -1011,7 +967,11 @@ public class SoapUI
 			try
 			{
 				soapUICore.saveSettings();
-				workspace.onClose();
+				SaveStatus saveStatus = workspace.onClose();
+				if( saveStatus == SaveStatus.CANCELLED )
+				{
+					return false;
+				}
 			}
 			catch( Exception e1 )
 			{
@@ -1052,7 +1012,7 @@ public class SoapUI
 		if( getSoapUICore() != null && getSettings().getBoolean( UISettings.DISABLE_BROWSER ) )
 			return true;
 
-		if( !disable.equals( "false" ) && allowNative == true
+		if( !disable.equals( "false" ) && allowNative
 				&& ( BrowserType.Mozilla.isSupported() || BrowserType.IE.isSupported() || BrowserType.Safari.isSupported() ) )
 			return false;
 
@@ -1280,7 +1240,7 @@ public class SoapUI
 					{
 						BufferedInputStream inputStream = new BufferedInputStream( is );
 						BufferedReader bris = new BufferedReader( new InputStreamReader( inputStream ) );
-						String line = null;
+						String line;
 						while( ( line = bris.readLine() ) != null )
 						{
 							loadUILogger.info( line );
@@ -1399,7 +1359,7 @@ public class SoapUI
 	private static boolean shouldAutoCloseStartPage()
 	{
 		return System.getProperty( "os.name" ).contains( "Mac" ) &&
-				!(desktop.getClass().getName().contains( "Tabbed" ));
+				!( desktop.getClass().getName().contains( "Tabbed" ) );
 	}
 
 	private static class AboutAction extends AbstractAction

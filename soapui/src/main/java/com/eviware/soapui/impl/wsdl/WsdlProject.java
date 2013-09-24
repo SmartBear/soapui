@@ -12,69 +12,10 @@
 
 package com.eviware.soapui.impl.wsdl;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.security.GeneralSecurityException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.swing.ImageIcon;
-import javax.xml.namespace.QName;
-
-import org.apache.commons.ssl.OpenSSL;
-import org.apache.log4j.Logger;
-import org.apache.xmlbeans.XmlError;
-import org.apache.xmlbeans.XmlException;
-import org.apache.xmlbeans.XmlObject;
-import org.apache.xmlbeans.XmlOptions;
-
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.config.CrossSiteScriptingScanConfig;
-import com.eviware.soapui.config.GroovySecurityCheckConfig;
-import com.eviware.soapui.config.GroovySecurityScanConfig;
-import com.eviware.soapui.config.InterfaceConfig;
-import com.eviware.soapui.config.InvalidSecurityCheckConfig;
-import com.eviware.soapui.config.InvalidSecurityScanConfig;
-import com.eviware.soapui.config.MaliciousAttachmentConfig;
-import com.eviware.soapui.config.MaliciousAttachmentElementConfig;
-import com.eviware.soapui.config.MaliciousAttachmentSecurityCheckConfig;
-import com.eviware.soapui.config.MaliciousAttachmentSecurityScanConfig;
-import com.eviware.soapui.config.MockServiceConfig;
-import com.eviware.soapui.config.MockServiceDocumentConfig;
-import com.eviware.soapui.config.ParameterExposureCheckConfig;
-import com.eviware.soapui.config.ProjectConfig;
-import com.eviware.soapui.config.SQLInjectionCheckConfig;
-import com.eviware.soapui.config.SQLInjectionScanConfig;
-import com.eviware.soapui.config.SchemaTypeForSecurityCheckConfig;
-import com.eviware.soapui.config.SchemaTypeForSecurityScanConfig;
-import com.eviware.soapui.config.SecurityCheckConfig;
-import com.eviware.soapui.config.SecurityScanConfig;
-import com.eviware.soapui.config.SecurityTestConfig;
-import com.eviware.soapui.config.SoapuiProjectDocumentConfig;
-import com.eviware.soapui.config.TestAssertionConfig;
-import com.eviware.soapui.config.TestCaseConfig;
-import com.eviware.soapui.config.TestStepSecurityTestConfig;
-import com.eviware.soapui.config.TestSuiteConfig;
-import com.eviware.soapui.config.TestSuiteDocumentConfig;
-import com.eviware.soapui.config.TestSuiteRunTypesConfig;
+import com.eviware.soapui.config.*;
 import com.eviware.soapui.config.TestSuiteRunTypesConfig.Enum;
-import com.eviware.soapui.config.XmlBombSecurityCheckConfig;
-import com.eviware.soapui.config.XmlBombSecurityScanConfig;
+import com.eviware.soapui.impl.SaveStatus;
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.WsdlInterfaceFactory;
 import com.eviware.soapui.impl.rest.support.RestRequestConverter.RestConversionException;
@@ -105,11 +46,7 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.support.ModelSupport;
-import com.eviware.soapui.model.testsuite.ProjectRunContext;
-import com.eviware.soapui.model.testsuite.ProjectRunListener;
-import com.eviware.soapui.model.testsuite.ProjectRunner;
-import com.eviware.soapui.model.testsuite.TestRunnable;
-import com.eviware.soapui.model.testsuite.TestSuite;
+import com.eviware.soapui.model.testsuite.*;
 import com.eviware.soapui.model.testsuite.TestSuite.TestSuiteRunType;
 import com.eviware.soapui.settings.ProjectSettings;
 import com.eviware.soapui.settings.UISettings;
@@ -124,10 +61,25 @@ import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
 import com.eviware.soapui.support.types.StringToObjectMap;
 import com.eviware.soapui.support.xml.XmlUtils;
+import org.apache.commons.ssl.OpenSSL;
+import org.apache.log4j.Logger;
+import org.apache.xmlbeans.XmlError;
+import org.apache.xmlbeans.XmlException;
+import org.apache.xmlbeans.XmlOptions;
+
+import javax.swing.*;
+import javax.xml.namespace.QName;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.security.GeneralSecurityException;
+import java.util.*;
 
 /**
  * WSDL project implementation
- * 
+ *
  * @author Ole.Matzura
  */
 
@@ -213,7 +165,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 	}
 
 	public WsdlProject( String path, WorkspaceImpl workspace, boolean create, boolean open, String tempName,
-			String projectPassword )
+							  String projectPassword )
 	{
 		super( null, workspace, "/project.gif" );
 
@@ -345,9 +297,6 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 
 			log.info( "Loaded project from [" + file.toString() + "]" );
 
-			// TODO remove this after beta2 - this was for 4.0.0
-			//			updateChecksToScans( getConfig() );
-
 			try
 			{
 				int majorVersion = Integer
@@ -397,9 +346,6 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 
 			if( !getConfig().isSetAbortOnError() )
 				getConfig().setAbortOnError( false );
-
-			// if( !getConfig().isSetFailOnErrors() )
-			// getConfig().setFailOnErrors( true );
 
 			if( !getConfig().isSetRunType() )
 				getConfig().setRunType( TestSuiteRunTypesConfig.SEQUENTIAL );
@@ -463,7 +409,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 
 	/**
 	 * Decode encrypted data and restore user/pass
-	 * 
+	 *
 	 * @param soapuiProject
 	 * @return 0 - not encrypted, 1 - successfull decryption , -1 error while
 	 *         decrypting, bad password, no password.
@@ -475,13 +421,16 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 	{
 
 		byte[] encryptedContent = soapuiProject.getEncryptedContent();
-		char[] password = null;
+		char[] password;
 
 		// no encrypted data then go back
 		if( encryptedContent == null || encryptedContent.length == 0 )
+		{
 			return 0;
+		}
 
-		String projectPassword = null;
+		String projectPassword;
+
 		if( workspace != null )
 		{
 			projectPassword = workspace.getProjectPassword( soapuiProject.getName() );
@@ -490,6 +439,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 		{
 			projectPassword = this.projectPassword;
 		}
+
 		if( projectPassword == null )
 		{
 			password = UISupport.promptPassword( "Enter Password:", soapuiProject.getName() );
@@ -498,7 +448,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 		{
 			password = projectPassword.toCharArray();
 		}
-		byte[] data = null;
+		byte[] data;
 		// no pass go back.
 		if( password == null )
 		{
@@ -517,14 +467,12 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 
 		String decryptedData = new String( data, "UTF-8" );
 
-		if( decryptedData != null )
+		if( data != null )
 		{
 			if( decryptedData.length() > 0 )
 			{
 				try
 				{
-					// projectDocument.getSoapuiProject().set(
-					// XmlObject.Factory.parse( decryptedData ) );
 					projectDocument.getSoapuiProject().set( XmlUtils.createXmlObject( decryptedData ) );
 					wrongPasswordSupplied = false;
 				}
@@ -557,9 +505,9 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 		{
 			ProjectListener[] a = projectListeners.toArray( new ProjectListener[projectListeners.size()] );
 
-			for( int c = 0; c < a.length; c++ )
+			for( ProjectListener listener : a )
 			{
-				a[c].afterLoad( this );
+				listener.afterLoad( this );
 			}
 
 			runAfterLoadScript();
@@ -576,7 +524,9 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 		{
 			int ix = path.lastIndexOf( File.separatorChar );
 			if( ix > 0 )
+			{
 				getSettings().setString( ProjectSettings.PROJECT_ROOT, path.substring( 0, ix ) );
+			}
 		}
 	}
 
@@ -591,7 +541,9 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 	public String getResourceRoot()
 	{
 		if( !getConfig().isSetResourceRoot() )
+		{
 			getConfig().setResourceRoot( "" );
+		}
 
 		return getConfig().getResourceRoot();
 	}
@@ -600,7 +552,9 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 	public ImageIcon getIcon()
 	{
 		if( isDisabled() )
+		{
 			return disabledIcon;
+		}
 		else if( getEncrypted() != 0 )
 		{
 			if( isOpen() )
@@ -623,8 +577,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 	private String getNameFromPath()
 	{
 		int ix = path.lastIndexOf( isRemote() ? '/' : File.separatorChar );
-		String name = ix == -1 ? path : path.substring( ix + 1 );
-		return name;
+		return ix == -1 ? path : path.substring( ix + 1 );
 	}
 
 	@Override
@@ -679,34 +632,41 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 		return path;
 	}
 
-	public boolean save() throws IOException
+	public SaveStatus save() throws IOException
 	{
 		return save( null );
 	}
 
-	public boolean save( String folder ) throws IOException
+	public SaveStatus save( String folder ) throws IOException
 	{
 		if( !isOpen() || isDisabled() || isRemote() )
-			return true;
-
-		if( path == null || isRemote() )
 		{
-			path = StringUtils.createFileName2( getName(), '-' ) + "-soapui-project.xml";
+			return SaveStatus.SUCCESS;
+		}
+
+		if( !hasBeenSavedBefore() )
+		{
+			String tempPath = StringUtils.createFileName2( getName(), '-' ) + "-soapui-project.xml";
+
 			if( folder != null )
 			{
-				path = folder + File.separatorChar + path;
+				tempPath = folder + File.separatorChar + tempPath;
 			}
 
 			File file = null;
 
 			while( file == null
 					|| ( file.exists() && !UISupport.confirm( "File [" + file.getName() + "] exists, overwrite?",
-							"Overwrite File?" ) ) )
+					"Overwrite File?" ) ) )
 			{
+
 				file = UISupport.getFileDialogs().saveAs( this, "Save project " + getName(), ".xml", "XML Files (*.xml)",
-						new File( path ) );
+						new File( tempPath ) );
+
 				if( file == null )
-					return false;
+				{
+					return SaveStatus.CANCELLED;
+				}
 			}
 
 			path = file.getAbsolutePath();
@@ -722,20 +682,24 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 						"XML Files (*.xml)", projectFile );
 
 				if( projectFile == null )
-					return false;
+					return SaveStatus.CANCELLED;
 
 				path = projectFile.getAbsolutePath();
 			}
 			else
-				return false;
+			{
+				return SaveStatus.CANCELLED;
+			}
 		}
 
 		// check modified
-		if( projectFile.exists() && lastModified != 0 && lastModified < projectFile.lastModified() )
+		if( projectFileModified( projectFile ) )
 		{
 			if( !UISupport.confirm( "Project file for [" + getName() + "] has been modified externally, overwrite?",
 					"Save Project" ) )
-				return false;
+			{
+				return SaveStatus.DONT_SAVE;
+			}
 		}
 
 		if( projectFile.exists() && getSettings().getBoolean( UISettings.CREATE_BACKUP ) )
@@ -746,10 +710,20 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 		return saveIn( projectFile );
 	}
 
-	public boolean saveBackup() throws IOException
+	private boolean projectFileModified( File projectFile )
+	{
+		return projectFile.exists() && lastModified != 0 && lastModified < projectFile.lastModified();
+	}
+
+	private boolean hasBeenSavedBefore()
+	{
+		return path != null;
+	}
+
+	public SaveStatus saveBackup() throws IOException
 	{
 		File projectFile;
-		if( path == null || isRemote() )
+		if( hasBeenSavedBefore() || isRemote() )
 		{
 			projectFile = new File( StringUtils.createFileName2( getName(), '-' ) + "-soapui-project.xml" );
 		}
@@ -761,12 +735,12 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 		return saveIn( backupFile );
 	}
 
-	public boolean saveIn( File projectFile ) throws IOException
+	public SaveStatus saveIn( File projectFile ) throws IOException
 	{
-		long size = 0;
+		long size;
 
 		beforeSave();
-		// work with copy beacuse we do not want to change working project while
+		// work with copy because we do not want to change working project while
 		// working with it
 		// if user choose save project, save all etc.
 		SoapuiProjectDocumentConfig projectDocument = ( SoapuiProjectDocumentConfig )this.projectDocument.copy();
@@ -778,53 +752,18 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 			removeDefinitionCaches( projectDocument );
 		}
 
-		// remove project root
-		XmlBeansSettingsImpl tempSettings = new XmlBeansSettingsImpl( this, null, projectDocument.getSoapuiProject()
-				.getSettings() );
-		tempSettings.clearSetting( ProjectSettings.PROJECT_ROOT );
+		removeProjectRoot( projectDocument );
 
-		// check for encryption
-		String passwordForEncryption = getSettings().getString( ProjectSettings.SHADOW_PASSWORD, null );
-
-		// if it has encryptedContend that means it is not decrypted corectly( bad
-		// password, etc ), so do not encrypt it again.
-		if( projectDocument.getSoapuiProject().getEncryptedContent() == null )
+		if( hasBeenSuccessfullyDecrypted( projectDocument ) && hasEncryptionPassword() )
 		{
-			if( passwordForEncryption != null )
-			{
-				if( passwordForEncryption.length() > 1 )
-				{
-					// we have password so do encryption
-					try
-					{
-						String data = getConfig().xmlText();
-						byte[] encrypted = OpenSSL.encrypt( "des3", passwordForEncryption.toCharArray(), data.getBytes() );
-						projectDocument.getSoapuiProject().setEncryptedContent( encrypted );
-						projectDocument.getSoapuiProject().setInterfaceArray( null );
-						projectDocument.getSoapuiProject().setTestSuiteArray( null );
-						projectDocument.getSoapuiProject().setMockServiceArray( null );
-						projectDocument.getSoapuiProject().unsetWssContainer();
-						projectDocument.getSoapuiProject().unsetSettings();
-						projectDocument.getSoapuiProject().unsetProperties();
-
-					}
-					catch( GeneralSecurityException e )
-					{
-						UISupport.showErrorMessage( "Encryption Error" );
-					}
-				}
-				else
-				{
-					// no password no encryption.
-					projectDocument.getSoapuiProject().setEncryptedContent( null );
-				}
-			}
+			encrypt( projectDocument );
 		}
-		// end of encryption.
 
 		XmlOptions options = new XmlOptions();
 		if( SoapUI.getSettings().getBoolean( WsdlSettings.PRETTY_PRINT_PROJECT_FILES ) )
+		{
 			options.setSavePrettyPrint();
+		}
 
 		projectDocument.getSoapuiProject().setSoapuiVersion( SoapUI.SOAPUI_VERSION );
 
@@ -869,13 +808,61 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 		{
 			SoapUI.logError( t );
 			UISupport.showErrorMessage( "Failed to save project [" + getName() + "]: " + t.toString() );
-			return false;
+			return SaveStatus.FAILED;
 		}
 
 		lastModified = projectFile.lastModified();
 		log.info( "Saved project [" + getName() + "] to [" + projectFile.getAbsolutePath() + " - " + size + " bytes" );
 		setProjectRoot( getPath() );
-		return true;
+		return SaveStatus.SUCCESS;
+	}
+
+	private boolean hasEncryptionPassword()
+	{
+		String passwordForEncryption = getSettings().getString( ProjectSettings.SHADOW_PASSWORD, null );
+		return StringUtils.hasContent( passwordForEncryption );
+	}
+
+	private boolean hasBeenSuccessfullyDecrypted( SoapuiProjectDocumentConfig projectDocument )
+	{
+		// if it has encryptedContend that means it is not decrypted correctly( bad
+		// password, etc ), so do not encrypt it again.
+		return projectDocument.getSoapuiProject().getEncryptedContent() == null;
+	}
+
+	private void removeProjectRoot( SoapuiProjectDocumentConfig projectDocument )
+	{
+		XmlBeansSettingsImpl tempSettings = new XmlBeansSettingsImpl( this, null, projectDocument.getSoapuiProject()
+				.getSettings() );
+		tempSettings.clearSetting( ProjectSettings.PROJECT_ROOT );
+	}
+
+	private void encrypt( SoapuiProjectDocumentConfig projectDocument ) throws IOException
+	{
+		// check for encryption
+		String passwordForEncryption = getSettings().getString( ProjectSettings.SHADOW_PASSWORD, null );
+
+		if( hasEncryptionPassword() )
+		{
+			// we have password so do encryption
+			try
+			{
+				String data = getConfig().xmlText();
+				byte[] encrypted = OpenSSL.encrypt( "des3", passwordForEncryption.toCharArray(), data.getBytes() );
+				projectDocument.getSoapuiProject().setEncryptedContent( encrypted );
+				projectDocument.getSoapuiProject().setInterfaceArray( null );
+				projectDocument.getSoapuiProject().setTestSuiteArray( null );
+				projectDocument.getSoapuiProject().setMockServiceArray( null );
+				projectDocument.getSoapuiProject().unsetWssContainer();
+				projectDocument.getSoapuiProject().unsetSettings();
+				projectDocument.getSoapuiProject().unsetProperties();
+
+			}
+			catch( GeneralSecurityException e )
+			{
+				UISupport.showErrorMessage( "Encryption Error" );
+			}
+		}
 	}
 
 	private static void normalizeLineBreak( File target, File tmpFile ) throws IOException
@@ -884,7 +871,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 		BufferedReader in = new BufferedReader( fr );
 		FileWriter fw = new FileWriter( target );
 		BufferedWriter out = new BufferedWriter( fw );
-		String line = "";
+		String line;
 		while( ( line = in.readLine() ) != null )
 		{
 			out.write( line );
@@ -903,9 +890,9 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 		{
 			ProjectListener[] a = projectListeners.toArray( new ProjectListener[projectListeners.size()] );
 
-			for( int c = 0; c < a.length; c++ )
+			for( ProjectListener listener : a )
 			{
-				a[c].beforeSave( this );
+				listener.beforeSave( this );
 			}
 
 			runBeforeSaveScript();
@@ -917,13 +904,19 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 
 		// notify
 		for( AbstractInterface<?> iface : interfaces )
+		{
 			iface.beforeSave();
+		}
 
 		for( WsdlTestSuite testSuite : testSuites )
+		{
 			testSuite.beforeSave();
+		}
 
 		for( WsdlMockService mockService : mockServices )
+		{
 			mockService.beforeSave();
+		}
 
 		endpointStrategy.onSave();
 	}
@@ -948,8 +941,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 		if( !backupFolder.exists() )
 			backupFolder.mkdirs();
 
-		File backupFile = new File( backupFolder, projectFile.getName() + ".backup" );
-		return backupFile;
+		return new File( backupFolder, projectFile.getName() + ".backup" );
 	}
 
 	protected void removeDefinitionCaches( SoapuiProjectDocumentConfig config )
@@ -966,7 +958,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 
 	public AbstractInterface<?> addNewInterface( String name, String type )
 	{
-		AbstractInterface<?> iface = ( AbstractInterface<?> )InterfaceFactoryRegistry.createNew( this, type, name );
+		AbstractInterface<?> iface = InterfaceFactoryRegistry.createNew( this, type, name );
 		if( iface != null )
 		{
 			iface.getConfig().setType( type );
@@ -990,121 +982,121 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 
 	public void fireInterfaceAdded( AbstractInterface<?> iface )
 	{
-		ProjectListener[] a = projectListeners.toArray( new ProjectListener[projectListeners.size()] );
+		ProjectListener[] listeners = projectListeners.toArray( new ProjectListener[projectListeners.size()] );
 
-		for( int c = 0; c < a.length; c++ )
+		for( ProjectListener listener : listeners )
 		{
-			a[c].interfaceAdded( iface );
+			listener.interfaceAdded( iface );
 		}
 	}
 
 	public void fireInterfaceRemoved( AbstractInterface<?> iface )
 	{
-		ProjectListener[] a = projectListeners.toArray( new ProjectListener[projectListeners.size()] );
+		ProjectListener[] listeners = projectListeners.toArray( new ProjectListener[projectListeners.size()] );
 
-		for( int c = 0; c < a.length; c++ )
+		for( ProjectListener listener : listeners )
 		{
-			a[c].interfaceRemoved( iface );
+			listener.interfaceRemoved( iface );
 		}
 	}
 
 	public void fireInterfaceUpdated( AbstractInterface<?> iface )
 	{
-		ProjectListener[] a = projectListeners.toArray( new ProjectListener[projectListeners.size()] );
+		ProjectListener[] listeners = projectListeners.toArray( new ProjectListener[projectListeners.size()] );
 
-		for( int c = 0; c < a.length; c++ )
+		for( ProjectListener listener : listeners )
 		{
-			a[c].interfaceUpdated( iface );
+			listener.interfaceUpdated( iface );
 		}
 	}
 
 	public void fireTestSuiteAdded( WsdlTestSuite testSuite )
 	{
-		ProjectListener[] a = projectListeners.toArray( new ProjectListener[projectListeners.size()] );
+		ProjectListener[] listeners = projectListeners.toArray( new ProjectListener[projectListeners.size()] );
 
-		for( int c = 0; c < a.length; c++ )
+		for( ProjectListener listener : listeners )
 		{
-			a[c].testSuiteAdded( testSuite );
+			listener.testSuiteAdded( testSuite );
 		}
 	}
 
 	private void fireTestSuiteMoved( WsdlTestSuite testCase, int ix, int offset )
 	{
-		ProjectListener[] a = projectListeners.toArray( new ProjectListener[projectListeners.size()] );
+		ProjectListener[] listeners = projectListeners.toArray( new ProjectListener[projectListeners.size()] );
 
-		for( int c = 0; c < a.length; c++ )
+		for( ProjectListener listener : listeners )
 		{
-			a[c].testSuiteMoved( testCase, ix, offset );
+			listener.testSuiteMoved( testCase, ix, offset );
 		}
 	}
 
 	public void fireTestSuiteRemoved( WsdlTestSuite testSuite )
 	{
-		ProjectListener[] a = projectListeners.toArray( new ProjectListener[projectListeners.size()] );
+		ProjectListener[] listeners = projectListeners.toArray( new ProjectListener[projectListeners.size()] );
 
-		for( int c = 0; c < a.length; c++ )
+		for( ProjectListener listener : listeners )
 		{
-			a[c].testSuiteRemoved( testSuite );
+			listener.testSuiteRemoved( testSuite );
 		}
 	}
 
 	public void fireMockServiceAdded( WsdlMockService mockService )
 	{
-		ProjectListener[] a = projectListeners.toArray( new ProjectListener[projectListeners.size()] );
+		ProjectListener[] listeners = projectListeners.toArray( new ProjectListener[projectListeners.size()] );
 
-		for( int c = 0; c < a.length; c++ )
+		for( ProjectListener listener : listeners )
 		{
-			a[c].mockServiceAdded( mockService );
+			listener.mockServiceAdded( mockService );
 		}
 	}
 
 	public void fireMockServiceRemoved( WsdlMockService mockService )
 	{
-		ProjectListener[] a = projectListeners.toArray( new ProjectListener[projectListeners.size()] );
+		ProjectListener[] listeners = projectListeners.toArray( new ProjectListener[projectListeners.size()] );
 
-		for( int c = 0; c < a.length; c++ )
+		for( ProjectListener listener : listeners )
 		{
-			a[c].mockServiceRemoved( mockService );
+			listener.mockServiceRemoved( mockService );
 		}
 	}
 
 	public void fireEnvironmentAdded( Environment env )
 	{
-		ProjectListener[] a = projectListeners.toArray( new ProjectListener[projectListeners.size()] );
+		ProjectListener[] listeners = projectListeners.toArray( new ProjectListener[projectListeners.size()] );
 
-		for( int c = 0; c < a.length; c++ )
+		for( ProjectListener listener : listeners )
 		{
-			a[c].environmentAdded( env );
+			listener.environmentAdded( env );
 		}
 	}
 
 	private void fireEnvironmentSwitched( Environment environment )
 	{
-		ProjectListener[] a = projectListeners.toArray( new ProjectListener[projectListeners.size()] );
+		ProjectListener[] listeners = projectListeners.toArray( new ProjectListener[projectListeners.size()] );
 
-		for( int c = 0; c < a.length; c++ )
+		for( ProjectListener listener : listeners )
 		{
-			a[c].environmentSwitched( environment );
+			listener.environmentSwitched( environment );
 		}
 	}
 
 	public void fireEnvironmentRemoved( Environment env, int index )
 	{
-		ProjectListener[] a = projectListeners.toArray( new ProjectListener[projectListeners.size()] );
+		ProjectListener[] listeners = projectListeners.toArray( new ProjectListener[projectListeners.size()] );
 
-		for( int c = 0; c < a.length; c++ )
+		for( ProjectListener listener : listeners )
 		{
-			a[c].environmentRemoved( env, index );
+			listener.environmentRemoved( env, index );
 		}
 	}
 
 	public void fireEnvironmentRenamed( Environment env, String oldName, String newName )
 	{
-		ProjectListener[] a = projectListeners.toArray( new ProjectListener[projectListeners.size()] );
+		ProjectListener[] listeners = projectListeners.toArray( new ProjectListener[projectListeners.size()] );
 
-		for( int c = 0; c < a.length; c++ )
+		for( ProjectListener listener : listeners )
 		{
-			a[c].environmentRenamed( env, oldName, newName );
+			listener.environmentRenamed( env, oldName, newName );
 		}
 	}
 
@@ -1141,11 +1133,11 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 
 	public void firePropertyValueChanged( Property property )
 	{
-		EnvironmentListener[] a = environmentListeners.toArray( new EnvironmentListener[environmentListeners.size()] );
+		EnvironmentListener[] listeners = environmentListeners.toArray( new EnvironmentListener[environmentListeners.size()] );
 
-		for( int c = 0; c < a.length; c++ )
+		for( EnvironmentListener listener : listeners )
 		{
-			a[c].propertyValueChanged( property );
+			listener.propertyValueChanged( property );
 		}
 	}
 
@@ -1189,18 +1181,22 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 		getSettings().setBoolean( WsdlSettings.CACHE_WSDLS, cacheDefinitions );
 	}
 
-	public boolean saveAs( String fileName ) throws IOException
+	public SaveStatus saveAs( String fileName ) throws IOException
 	{
 		if( !isOpen() || isDisabled() )
-			return false;
+			return SaveStatus.FAILED;
 
 		String oldPath = path;
 		path = fileName;
-		boolean result = save();
-		if( !result )
-			path = oldPath;
-		else
+		SaveStatus result = save();
+		if( result == SaveStatus.SUCCESS )
+		{
 			remote = false;
+		}
+		else
+		{
+			path = oldPath;
+		}
 
 		setProjectRoot( path );
 
@@ -1217,13 +1213,19 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 			endpointStrategy.release();
 
 			for( WsdlTestSuite testSuite : testSuites )
+			{
 				testSuite.release();
+			}
 
 			for( WsdlMockService mockService : mockServices )
+			{
 				mockService.release();
+			}
 
 			for( AbstractInterface<?> iface : interfaces )
+			{
 				iface.release();
+			}
 
 			if( wssContainer != null )
 			{
@@ -1369,7 +1371,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 	}
 
 	public WsdlTestSuite importTestSuite( WsdlTestSuite testSuite, String name, int index, boolean createCopy,
-			String description )
+													  String description )
 	{
 		testSuite.beforeSave();
 		TestSuiteConfig testSuiteConfig = index == -1 ? ( TestSuiteConfig )getConfig().addNewTestSuite().set(
@@ -1415,7 +1417,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 	}
 
 	public WsdlMockService importMockService( WsdlMockService mockService, String name, boolean createCopy,
-			String description )
+															String description )
 	{
 		mockService.beforeSave();
 		MockServiceConfig mockServiceConfig = ( MockServiceConfig )getConfig().addNewMockService().set(
@@ -1552,8 +1554,6 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 		List<PropertyExpansion> result = new ArrayList<PropertyExpansion>();
 
 		result.addAll( Arrays.asList( wssContainer.getPropertyExpansions() ) );
-		// result.addAll(Arrays.asList(databaseConnectionContainer.
-		// getPropertyExpansions()));
 
 		return result.toArray( new PropertyExpansion[result.size()] );
 
@@ -1672,7 +1672,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 		for( AbstractInterface<?> iface : interfaces )
 		{
 			if( iface.getType().equals( type ) )
-				result++ ;
+				result++;
 		}
 
 		return result;
@@ -1762,20 +1762,16 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 	}
 
 	/**
-	 * @see com.eviware.soapui.impl.WsdlInterfaceFactory.importWsdl
-	 * @deprecated
+	 * @deprecated replaced by {@link WsdlInterfaceFactory#importWsdl(WsdlProject, String, boolean)}
 	 */
-
 	public WsdlInterface[] importWsdl( String url, boolean createRequests ) throws SoapUIException
 	{
 		return WsdlInterfaceFactory.importWsdl( this, url, createRequests );
 	}
 
 	/**
-	 * @see com.eviware.soapui.impl.WsdlInterfaceFactory.importWsdl
-	 * @deprecated see WsdlInterfaceFactory
+	 * @deprecated replaced by {@link WsdlInterfaceFactory#importWsdl(WsdlProject, String, boolean, WsdlLoader)}
 	 */
-
 	public WsdlInterface[] importWsdl( String url, boolean createRequests, WsdlLoader wsdlLoader )
 			throws SoapUIException
 	{
@@ -1783,8 +1779,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 	}
 
 	/**
-	 * @see com.eviware.soapui.impl.WsdlInterfaceFactory.importWsdl
-	 * @deprecated see WsdlInterfaceFactory
+	 * @deprecated replaced by {@link WsdlInterfaceFactory#importWsdl(WsdlProject, String, boolean, QName, WsdlLoader)}
 	 */
 
 	public WsdlInterface[] importWsdl( String url, boolean createRequests, QName bindingName, WsdlLoader wsdlLoader )
@@ -1908,16 +1903,6 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 	{
 		return getConfig().getAbortOnError();
 	}
-
-	// public boolean isFailOnErrors()
-	// {
-	// return getConfig().getFailOnErrors();
-	// }
-	//
-	// public void setFailOnErrors( boolean arg0 )
-	// {
-	// getConfig().setFailOnErrors( arg0 );
-	// }
 
 	public void setAbortOnError( boolean arg0 )
 	{
@@ -2061,26 +2046,6 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 		resolver.resolve( mockService );
 	}
 
-	// we switch from check to scan, and then we work with scans only
-	// quick and dirty way to get this done
-	private static Map<String, String> checkToScanMap = initCheckToScanMap();
-
-	private static Map<String, String> initCheckToScanMap()
-	{
-		Map<String, String> map = new HashMap<String, String>();
-		map.put( "BoundaryCheck", "BoundaryScan" );
-		map.put( "ParameterExposureCheck", "CrossSiteScriptingScan" );
-		map.put( "FuzzingScan", "FuzzingScan" );
-		map.put( "GroovySecurityCheck", "GroovySecurityScan" );
-		map.put( "InvalidTypesSecurityCheck", "InvalidTypesSecurityScan" );
-		map.put( "MalformedXmlSecurityCheck", "MalformedXmlSecurityScan" );
-		map.put( "MaliciousAttachmentSecurityCheck", "MaliciousAttachmentSecurityScan" );
-		map.put( "SQLInjectionCheck", "SQLInjectionScan" );
-		map.put( "XmlBombSecurityCheck", "XmlBombSecurityScan" );
-		map.put( "XPathInjectionSecurityCheck", "XPathInjectionSecurityScan" );
-		return map;
-	}
-
 	public void addEnvironmentListener( EnvironmentListener listener )
 	{
 		environmentListeners.add( listener );
@@ -2090,150 +2055,4 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 	{
 		environmentListeners.remove( listener );
 	}
-
-	//	protected void updateChecksToScans( ProjectConfig config )
-	//	{
-	//		for( TestSuiteConfig testSuite : config.getTestSuiteList() )
-	//		{
-	//			for( TestCaseConfig testCase : testSuite.getTestCaseList() )
-	//			{
-	//				for( SecurityTestConfig securityTest : testCase.getSecurityTestList() )
-	//				{
-	//					if( securityTest.getFailSecurityTestOnCheckErrors() )
-	//					{
-	//						securityTest.setFailSecurityTestOnScanErrors( securityTest.getFailSecurityTestOnCheckErrors() );
-	//					}
-	//
-	//					for( TestStepSecurityTestConfig testStep : securityTest.getTestStepSecurityTestList() )
-	//					{
-	//						// get all checks
-	//						List<SecurityCheckConfig> checkList = testStep.getTestStepSecurityCheckList();
-	//
-	//						// transform to scans
-	//						for( SecurityCheckConfig check : checkList )
-	//						{
-	//							SecurityScanConfig scan = testStep.addNewTestStepSecurityScan();
-	//
-	//							scan.setName( check.getName() );
-	//							scan.setTestStep( check.getTestStep() );
-	//							scan.setExecutionStrategy( check.getExecutionStrategy() );
-	//							scan.setType( checkToScanMap.get( check.getType() ) );
-	//
-	//							for( TestAssertionConfig assertion : check.getAssertionList() )
-	//							{
-	//								TestAssertionConfig assertion2 = scan.addNewAssertion();
-	//
-	//								assertion2.setConfiguration( assertion.getConfiguration() );
-	//								assertion2.setType( assertion.getType() );
-	//								assertion2.setName( assertion.getName() );
-	//								if( assertion.isSetDescription() )
-	//								{
-	//									assertion2.setDescription( assertion.getDescription() );
-	//								}
-	//								if( assertion.isSetDisabled() )
-	//								{
-	//									assertion2.setDisabled( assertion.getDisabled() );
-	//								}
-	//								if( assertion.isSetId() )
-	//								{
-	//									assertion2.setId( assertion.getId() );
-	//								}
-	//								if( assertion.isSetTimestamp() )
-	//								{
-	//									assertion2.setTimestamp( assertion.getTimestamp() );
-	//								}
-	//							}
-	//
-	//							scan.setCheckedParameters( check.getCheckedPameters() );
-	//
-	//							XmlObject obj = check.getConfig();
-	//
-	//							if( obj instanceof InvalidSecurityCheckConfig )
-	//							{
-	//								InvalidSecurityScanConfig obj2 = InvalidSecurityScanConfig.Factory.newInstance();
-	//								for( SchemaTypeForSecurityCheckConfig el : ( ( InvalidSecurityCheckConfig )obj )
-	//										.getTypesListList() )
-	//								{
-	//									SchemaTypeForSecurityScanConfig type = obj2.addNewTypesList();
-	//									type.setType( el.getType() );
-	//									type.setValue( el.getValue() );
-	//								}
-	//							}
-	//							else if( obj instanceof GroovySecurityCheckConfig )
-	//							{
-	//								GroovySecurityScanConfig obj2 = GroovySecurityScanConfig.Factory.newInstance();
-	//								obj2.setExecuteScript( ( ( GroovySecurityCheckConfig )obj ).getExecuteScript() );
-	//							}
-	//							else if( obj instanceof ParameterExposureCheckConfig )
-	//							{
-	//								CrossSiteScriptingScanConfig obj2 = CrossSiteScriptingScanConfig.Factory.newInstance();
-	//								for( String el : ( ( ParameterExposureCheckConfig )obj ).getParameterExposureStringsList() )
-	//								{
-	//									obj2.addParameterExposureStrings( el );
-	//								}
-	//							}
-	//							else if( obj instanceof MaliciousAttachmentSecurityCheckConfig )
-	//							{
-	//								MaliciousAttachmentSecurityScanConfig obj2 = MaliciousAttachmentSecurityScanConfig.Factory
-	//										.newInstance();
-	//								obj2.setRequestTimeout( ( ( MaliciousAttachmentSecurityCheckConfig )obj ).getRequestTimeout() );
-	//								for( MaliciousAttachmentElementConfig el : ( ( MaliciousAttachmentSecurityCheckConfig )obj )
-	//										.getElementList() )
-	//								{
-	//									MaliciousAttachmentElementConfig el2 = obj2.addNewElement();
-	//									el2.setKey( el.getKey() );
-	//									el2.setRemove( el.getRemove() );
-	//									for( MaliciousAttachmentConfig gen : el.getGenerateAttachmentList() )
-	//									{
-	//										MaliciousAttachmentConfig gen2 = el2.addNewGenerateAttachment();
-	//										gen2.setCached( gen.getCached() );
-	//										gen2.setContentType( gen.getContentType() );
-	//										gen2.setEnabled( gen.getEnabled() );
-	//										gen2.setFilename( gen.getFilename() );
-	//										gen2.setSize( gen.getSize() );
-	//									}
-	//									for( MaliciousAttachmentConfig repl : el.getReplaceAttachmentList() )
-	//									{
-	//										MaliciousAttachmentConfig repl2 = el2.addNewReplaceAttachment();
-	//										repl2.setCached( repl.getCached() );
-	//										repl2.setContentType( repl.getContentType() );
-	//										repl2.setEnabled( repl.getEnabled() );
-	//										repl2.setFilename( repl.getFilename() );
-	//										repl2.setSize( repl.getSize() );
-	//									}
-	//								}
-	//							}
-	//							else if( obj instanceof SQLInjectionCheckConfig )
-	//							{
-	//								SQLInjectionScanConfig obj2 = SQLInjectionScanConfig.Factory.newInstance();
-	//								for( String el : ( ( SQLInjectionCheckConfig )obj ).getSqlInjectionStringsList() )
-	//								{
-	//									obj2.addSqlInjectionStrings( el );
-	//								}
-	//							}
-	//							else if( obj instanceof XmlBombSecurityCheckConfig )
-	//							{
-	//								XmlBombSecurityScanConfig obj2 = XmlBombSecurityScanConfig.Factory.newInstance();
-	//								obj2.setAttachXmlBomb( ( ( XmlBombSecurityCheckConfig )obj ).getAttachXmlBomb() );
-	//								obj2.setXmlAttachmentPrefix( ( ( XmlBombSecurityCheckConfig )obj ).getXmlAttachmentPrefix() );
-	//								for( String el : ( ( XmlBombSecurityCheckConfig )obj ).getXmlBombsList() )
-	//								{
-	//									obj2.addXmlBombs( el );
-	//								}
-	//							}
-	//							else
-	//							{
-	//								// boundary scan, malformed xml, xpath
-	//								scan.setConfig( obj );
-	//							}
-	//						}
-	//
-	//						// finally, remove checks
-	//						testStep.setTestStepSecurityCheckArray( new SecurityCheckConfig[0] );
-	//					}
-	//				}
-	//			}
-	//		}
-	//	}
-
 }
