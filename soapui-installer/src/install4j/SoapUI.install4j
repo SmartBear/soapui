@@ -251,6 +251,8 @@
       <iconImageFiles>
         <file path="${compiler:RESOURCES_HOME}/images/soapui16.png" />
         <file path="${compiler:RESOURCES_HOME}/images/soapui32.png" />
+        <file path="${compiler:RESOURCES_HOME}/images/soapui48.png" />
+        <file path="${compiler:RESOURCES_HOME}/images/soapui256.png" />
       </iconImageFiles>
     </launcher>
   </launchers>
