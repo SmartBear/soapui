@@ -23,6 +23,8 @@ import java.beans.PropertyChangeEvent;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.text.Document;
+import javax.swing.text.JTextComponent;
 
 import org.apache.log4j.Logger;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
@@ -290,6 +292,8 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 	{
 		final JComboBox endpointCombo = new JComboBox( endpointsModel );
 		endpointCombo.setEditable( true );
+		Document textFieldDocument = ( ( JTextComponent )endpointCombo.getEditor().getEditorComponent() ).getDocument();
+		endpointsModel.listenToChangesIn( textFieldDocument );
 		endpointCombo.addPropertyChangeListener( this );
 		endpointCombo.setToolTipText( endpointsModel.getSelectedItem().toString() );
 
@@ -679,7 +683,7 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 				if( retVal == null )
 					return false;
 
-				if( retVal.booleanValue() && submit.getStatus() == Submit.Status.RUNNING )
+				if( retVal && submit.getStatus() == Submit.Status.RUNNING )
 				{
 					submit.cancel();
 				}

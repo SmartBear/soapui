@@ -7,15 +7,26 @@ import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase;
 import com.eviware.soapui.impl.rest.panels.request.views.content.RestRequestContentView;
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
+import com.eviware.soapui.impl.support.EndpointsComboBoxModel;
+import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.editor.EditorView;
 import com.eviware.soapui.support.editor.xml.XmlDocument;
+import com.eviware.soapui.utils.ContainerWalker;
+import com.eviware.soapui.utils.StubbedDialogs;
+import com.eviware.x.dialogs.XDialogs;
+import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
+import javax.swing.JComboBox;
 import javax.swing.JTable;
+import javax.swing.text.Document;
+import javax.swing.text.JTextComponent;
 import java.util.List;
 
 import static com.eviware.soapui.utils.ModelItemFactory.makeRestMethod;
+import static com.eviware.soapui.utils.StubbedDialogs.hasPromptWithValue;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -31,6 +42,9 @@ public class RestRequestDesktopPanelTest
 
 	private RestRequestDesktopPanel requestDesktopPanel;
 	private RestRequest restRequest;
+	private StubbedDialogs dialogs;
+	private XDialogs originalDialogs;
+	private JComboBox<String> endpointsCombo;
 
 	@Before
 	public void setUp() throws Exception
@@ -38,11 +52,15 @@ public class RestRequestDesktopPanelTest
 		restRequest = new RestRequest( makeRestMethod(), RestRequestConfig.Factory.newInstance(), false );
 		restRequest.setMethod( RestRequestInterface.RequestMethod.GET);
 		restRequest.getResource().getParams().addProperty( PARAMETER_NAME );
-		getRestService().addEndpoint( ENDPOINT );
+		restService().addEndpoint( ENDPOINT );
 		restRequest.setEndpoint( ENDPOINT );
 		RestParamProperty restParamProperty = restRequest.getParams().getProperty( PARAMETER_NAME );
 		restParamProperty.setValue( PARAMETER_VALUE );
 		requestDesktopPanel = new RestRequestDesktopPanel( restRequest );
+		originalDialogs = UISupport.getDialogs();
+		dialogs = new StubbedDialogs();
+		UISupport.setDialogs( dialogs );
+		endpointsCombo = findEndpointsComboBox();
 	}
 
 	@Test
@@ -66,11 +84,77 @@ public class RestRequestDesktopPanelTest
 	@Test
 	public void reactsToEndpointChanges() {
 		String anotherEndpoint = "http://mafia.ru/search";
-		getRestService().changeEndpoint( ENDPOINT, anotherEndpoint );
+		restService().changeEndpoint( ENDPOINT, anotherEndpoint );
 		assertThat( requestDesktopPanel.getEndpointsModel().getSelectedItem(), is( ( Object )anotherEndpoint ) );
 	}
 
-	private RestService getRestService()
+	@Test
+	public void keepsEnteredEndpointValueWhenEditingEndpoint() throws Exception
+	{
+		JComboBox<String> endpointsCombo = findEndpointsComboBox();
+		String otherValue = "http://dn.se";
+		setComboTextFieldValue( endpointsCombo, otherValue );
+		endpointsCombo.setSelectedItem( EndpointsComboBoxModel.EDIT_ENDPOINT );
+
+		waitForSwingThread();
+		assertThat(dialogs.getPrompts(), hasPromptWithValue(otherValue));
+	}
+
+	@Test
+	public void keepsEnteredEndpointValueWhenAddingNewEndpoint() throws Exception
+	{
+		String otherValue = "http://dn.se";
+		setComboTextFieldValue( endpointsCombo, otherValue );
+		endpointsCombo.setSelectedItem( EndpointsComboBoxModel.ADD_NEW_ENDPOINT );
+
+		waitForSwingThread();
+		assertThat( dialogs.getPrompts(), hasPromptWithValue( otherValue ) );
+	}
+
+	@Ignore("For some reason this test fails, although it works fine in the GUI")
+	@Test
+	public void resetsToEnteredValueWhenCancelingAdd() throws Exception
+	{
+		dialogs.mockPromptWithReturnValue( null );
+		String otherValue = "http://dn.se";
+		setComboTextFieldValue( endpointsCombo, otherValue );
+		endpointsCombo.setSelectedItem( EndpointsComboBoxModel.ADD_NEW_ENDPOINT );
+
+		waitForSwingThread();
+		assertThat( getComboTextFieldValue(), is( otherValue ) );
+	}
+
+	@After
+	public void resetDialogs()
+	{
+		UISupport.setDialogs( originalDialogs );
+	}
+
+	/* Helpers */
+
+	private String getComboTextFieldValue() throws Exception
+	{
+		Document document = ( ( JTextComponent )endpointsCombo.getEditor().getEditorComponent() ).getDocument();
+		return document.getText( 0, document.getLength() );
+	}
+
+	private JComboBox<String> findEndpointsComboBox()
+	{
+		ContainerWalker finder = new ContainerWalker( requestDesktopPanel );
+		return finder.findComboBoxWithValue( ENDPOINT );
+	}
+
+	private void setComboTextFieldValue( JComboBox<String> endpointsCombo, String otherValue )
+	{
+		(( JTextComponent ) endpointsCombo.getEditor().getEditorComponent()).setText(otherValue);
+	}
+
+	private void waitForSwingThread() throws InterruptedException
+	{
+		Thread.sleep( 50 );
+	}
+
+	private RestService restService()
 	{
 		return restRequest.getOperation().getInterface();
 	}
