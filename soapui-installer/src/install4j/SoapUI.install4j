@@ -250,6 +250,7 @@
       </infoPlist>
       <iconImageFiles>
         <file path="${compiler:RESOURCES_HOME}/images/soapui-icon-16.png" />
+        <file path="${compiler:RESOURCES_HOME}/images/soapui-icon-24.png" />
         <file path="${compiler:RESOURCES_HOME}/images/soapui-icon-32.png" />
         <file path="${compiler:RESOURCES_HOME}/images/soapui-icon-48.png" />
         <file path="${compiler:RESOURCES_HOME}/images/soapui-icon-256.png" />
