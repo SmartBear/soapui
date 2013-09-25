@@ -152,13 +152,7 @@ public class RestParamsTable extends JPanel
 			final JSplitPane splitPane = UISupport.createVerticalSplit( new JScrollPane( paramsTable ), buildDetails() );
 			add( splitPane, BorderLayout.CENTER );
 
-			SwingUtilities.invokeLater( new Runnable()
-			{
-				public void run()
-				{
-					splitPane.setDividerLocation( 0.5 );
-				}
-			} );
+			splitPane.setResizeWeight( 0.7 );
 		}
 		else
 		{
