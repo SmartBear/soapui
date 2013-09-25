@@ -142,7 +142,7 @@ public class SoapUI
 	@SuppressWarnings( "deprecation" )
 	public static String PUSH_PAGE_URL = "http://soapui.org/Appindex/soapui-starterpage.html?version="
 			+ URLEncoder.encode( SOAPUI_VERSION );
-	public static String FRAME_ICON = "/soapui-icon.png";
+	public static String FRAME_ICON = "/soapui-icon-16.png;/soapui-icon-24.png;/soapui-icon-32.png;/soapui-icon-48.png;/soapui-icon-256.png";
 	public static String PUSH_PAGE_ERROR_URL = "file://" + System.getProperty( "soapui.home", "." )
 			+ "/starter-page.html";
 
@@ -731,9 +731,12 @@ public class SoapUI
 
 		frame = new JFrame( title );
 
-		SoapUISplash splash = new SoapUISplash( splashImage, frame );
-
-		frame.setIconImage( UISupport.createImageIcon( FRAME_ICON ).getImage() );
+		List<Image> iconList = new ArrayList<Image>();
+		for( String iconPath : FRAME_ICON.split( ";" ) )
+		{
+			iconList.add( UISupport.createImageIcon( iconPath ).getImage() );
+		}
+		frame.setIconImages( iconList );
 
 		JPopupMenu.setDefaultLightWeightPopupEnabled( false );
 		ToolTipManager.sharedInstance().setLightWeightPopupEnabled( false );
@@ -785,8 +788,6 @@ public class SoapUI
 		core.prepareUI();
 		soapUI.show( workspace );
 		core.afterStartup( workspace );
-		Thread.sleep( 500 );
-		splash.setVisible( false );
 
 		if( getSettings().getBoolean( UISettings.SHOW_STARTUP_PAGE ) && !SoapUI.isJXBrowserDisabled( true ) )
 		{

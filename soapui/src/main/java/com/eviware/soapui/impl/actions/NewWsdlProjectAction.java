@@ -15,16 +15,10 @@ package com.eviware.soapui.impl.actions;
 import com.eviware.soapui.impl.SaveStatus;
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.WsdlInterfaceFactory;
-import com.eviware.soapui.impl.rest.RestService;
-import com.eviware.soapui.impl.rest.RestServiceFactory;
-import com.eviware.soapui.impl.rest.actions.service.GenerateRestTestSuiteAction;
-import com.eviware.soapui.impl.rest.support.WadlImporter;
 import com.eviware.soapui.impl.support.definition.support.InvalidDefinitionException;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
-import com.eviware.soapui.impl.wsdl.actions.iface.GenerateMockServiceAction;
 import com.eviware.soapui.impl.wsdl.actions.iface.GenerateWsdlTestSuiteAction;
-import com.eviware.soapui.impl.wsdl.actions.project.CreateWebTestAction;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.support.PathUtils;
 import com.eviware.soapui.support.MessageSupport;
@@ -74,8 +68,6 @@ public class NewWsdlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 
 					dialog.getFormField( Form.CREATEREQUEST )
 							.setEnabled( value.length() > 0 && !newValue.endsWith( ".wadl" ) );
-					dialog.getFormField( Form.GENERATEMOCKSERVICE ).setEnabled(
-							newValue.trim().length() > 0 && !newValue.endsWith( ".wadl" ) );
 					dialog.getFormField( Form.GENERATETESTSUITE ).setEnabled( newValue.trim().length() > 0 );
 
 					initProjectName( newValue );
@@ -88,7 +80,6 @@ public class NewWsdlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 			dialog.setValue( Form.PROJECTNAME, "" );
 
 			dialog.getFormField( Form.CREATEREQUEST ).setEnabled( false );
-			dialog.getFormField( Form.GENERATEMOCKSERVICE ).setEnabled( false );
 			dialog.getFormField( Form.GENERATETESTSUITE ).setEnabled( false );
 		}
 
@@ -145,11 +136,6 @@ public class NewWsdlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 							importWsdl( project, url );
 						}
 
-						if( dialog.getBooleanValue( Form.CREATEWEBTEST ) )
-						{
-							new CreateWebTestAction().perform( project, param );
-						}
-
 						break;
 					}
 				}
@@ -186,27 +172,6 @@ public class NewWsdlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 		}
 	}
 
-	private void importWadl( WsdlProject project, String url )
-	{
-		RestService restService = ( RestService )project
-				.addNewInterface( project.getName(), RestServiceFactory.REST_TYPE );
-		UISupport.select( restService );
-		try
-		{
-			new WadlImporter( restService ).initFromWadl( url );
-
-			if( dialog.getBooleanValue( Form.GENERATETESTSUITE ) )
-			{
-				GenerateRestTestSuiteAction generateTestSuiteAction = new GenerateRestTestSuiteAction();
-				generateTestSuiteAction.generateTestSuite( restService, true );
-			}
-		}
-		catch( Exception e )
-		{
-			UISupport.showErrorMessage( e );
-		}
-	}
-
 	private void importWsdl( WsdlProject project, String url ) throws SoapUIException
 	{
 		WsdlInterface[] results = WsdlInterfaceFactory.importWsdl( project, url, dialog.getValue( Form.CREATEREQUEST )
@@ -221,25 +186,10 @@ public class NewWsdlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 				generateTestSuiteAction.generateTestSuite( iface, true );
 			}
 
-			if( dialog.getBooleanValue( Form.GENERATEMOCKSERVICE ) )
-			{
-				GenerateMockServiceAction generateMockAction = new GenerateMockServiceAction();
-				generateMockAction.generateMockService( iface, false );
-			}
 		}
 	}
 
-	// private void createWebTest( WsdlProject project )
-	// {
-	// WsdlTestSuite targetTestSuite = project.addNewTestSuite(
-	// "WebTest TestSuite" );
-	// WsdlTestCase targetTestCase = targetTestSuite.addNewTestCase(
-	// "WebTest TestCase" );
-	// CreateWebTestAction addNewWebTestAction = new CreateWebTestAction();
-	// addNewWebTestAction.createWebTest( targetTestCase );
-	// }
-
-	@AForm(name = "Form.Title", description = "Form.Description", helpUrl = HelpUrls.NEWPROJECT_HELP_URL, icon = UISupport.TOOL_ICON_PATH)
+	@AForm( name = "Form.Title", description = "Form.Description", helpUrl = HelpUrls.NEWPROJECT_HELP_URL, icon = UISupport.TOOL_ICON_PATH )
 	public interface Form
 	{
 		@AField(description = "Form.ProjectName.Description", type = AFieldType.STRING)
@@ -254,18 +204,8 @@ public class NewWsdlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 		@AField(description = "Form.GenerateTestSuite.Description", type = AFieldType.BOOLEAN, enabled = false)
 		public final static String GENERATETESTSUITE = messages.get( "Form.GenerateTestSuite.Label" );
 
-		@AField(description = "Form.GenerateMockService.Description", type = AFieldType.BOOLEAN, enabled = false)
-		public final static String GENERATEMOCKSERVICE = messages.get( "Form.GenerateMockService.Label" );
-
-		@AField(description = "Form.RelativePaths.Description", type = AFieldType.BOOLEAN, enabled = true)
+		@AField( description = "Form.RelativePaths.Description", type = AFieldType.BOOLEAN, enabled = true )
 		public final static String RELATIVEPATHS = messages.get( "Form.RelativePaths.Label" );
 
-		@AField(description = "Form.CreateWebTest.Description", type = AFieldType.BOOLEAN, enabled = true)
-		public final static String CREATEWEBTEST = messages.get( "Form.CreateWebTest.Label" );
-
-		// @AField( description = "Form.CreateProjectFile.Description", type =
-		// AFieldType.BOOLEAN )
-		// public final static String CREATEPROJECTFILE =
-		// messages.get("Form.CreateProjectFile.Label");
 	}
 }

@@ -3,6 +3,9 @@ package com.eviware.soapui.utils;
 import com.eviware.soapui.support.NullProgressDialog;
 import com.eviware.x.dialogs.XDialogs;
 import com.eviware.x.dialogs.XProgressDialog;
+import org.hamcrest.Description;
+import org.hamcrest.Matcher;
+import org.junit.internal.matchers.TypeSafeMatcher;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -16,6 +19,9 @@ public class StubbedDialogs implements XDialogs
 
 	private List<String> errorMessages = new ArrayList<String>();
 	private List<String> infoMessages = new ArrayList<String>();
+	private List<Prompt> prompts = new ArrayList<Prompt>();
+	private boolean mockingPromptValue = false;
+	private Object valueToReturnFromPrompt = null;
 
 	@Override
 	public void showErrorMessage( String message )
@@ -62,25 +68,29 @@ public class StubbedDialogs implements XDialogs
 	@Override
 	public String prompt( String question, String title, String value )
 	{
-		return null;
+		prompts.add( new Prompt( question, title, value ) );
+		return mockingPromptValue ? (String)valueToReturnFromPrompt : value;
 	}
 
 	@Override
 	public String prompt( String question, String title )
 	{
+		prompts.add( new Prompt( question, title, null ) );
 		return null;
 	}
 
 	@Override
 	public Object prompt( String question, String title, Object[] objects )
 	{
-		return null;
+		prompts.add( new Prompt( question, title, objects ) );
+		return objects;
 	}
 
 	@Override
 	public Object prompt( String question, String title, Object[] objects, String value )
 	{
-		return null;
+		prompts.add( new Prompt( question, title, objects ) );
+		return value;
 	}
 
 	@Override
@@ -121,5 +131,64 @@ public class StubbedDialogs implements XDialogs
 	public List<String> getInfoMessages()
 	{
 		return infoMessages;
+	}
+
+	public List<Prompt> getPrompts()
+	{
+		return prompts;
+	}
+
+	public void mockPromptWithReturnValue(Object value)
+	{
+		mockingPromptValue = true;
+		valueToReturnFromPrompt = value;
+	}
+
+	public static class Prompt
+	{
+		public final String question;
+		public final String title;
+		public final Object value;
+
+		public Prompt( String question, String title, Object value )
+		{
+			this.question = question;
+			this.title = title;
+			this.value = value;
+		}
+
+		@Override
+		public String toString()
+		{
+			return "Prompt{" +
+					"question='" + question + '\'' +
+					", title='" + title + '\'' +
+					", value=" + value +
+					'}';
+		}
+	}
+
+	public static Matcher<List<Prompt>> hasPromptWithValue(final String value)
+	{
+		return new TypeSafeMatcher<List<Prompt>>()
+		{
+			@Override
+			public boolean matchesSafely( List<Prompt> prompts )
+			{
+				for( Prompt prompt : prompts )
+				{
+					 if (prompt.value.equals(value)) {
+						 return true;
+					 }
+				}
+				return false;
+			}
+
+			@Override
+			public void describeTo( Description description )
+			{
+				description.appendText("a Prompt list with a prompt with the value '" + value + "'");
+			}
+		};
 	}
 }

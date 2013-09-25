@@ -167,6 +167,9 @@
                             ${installer.build.directory}/soapUI-x32-${project.version}.sh
                         </file>
                         <file>
+                            ${installer.build.directory}/soapUI-x64-${project.version}.sh
+                        </file>
+                        <file>
                             ${installer.build.directory}/soapUI-${project.version}.dmg
                         </file>
                     </files>
