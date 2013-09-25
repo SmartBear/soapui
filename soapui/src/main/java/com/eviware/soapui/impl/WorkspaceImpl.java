@@ -299,17 +299,10 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace
 						continue;
 					}
 				}
-				saveWorkspace( projects, project );
+				saveWorkspaceProjectConfig( projects, project );
 			}
 
-			workspaceConfig.getSoapuiWorkspace().setProjectArray(
-					projects.toArray( new WorkspaceProjectConfig[projects.size()] ) );
-			workspaceConfig.getSoapuiWorkspace().setSoapuiVersion( SoapUI.SOAPUI_VERSION );
-
-			File workspaceFile = new File( path );
-			workspaceConfig.save( workspaceFile, new XmlOptions().setSavePrettyPrint() );
-
-			log.info( messages.get( "SavedWorkspace.Info", workspaceFile.getAbsolutePath() ) ); //$NON-NLS-1$ //$NON-NLS-2$
+			saveWorkspaceConfig( projects );
 		}
 		catch( IOException e )
 		{
@@ -319,7 +312,19 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace
 		return SaveStatus.SUCCESS;
 	}
 
-	private void saveWorkspace( List<WorkspaceProjectConfig> projects, WsdlProject project )
+	private void saveWorkspaceConfig( List<WorkspaceProjectConfig> projects ) throws IOException
+	{
+		workspaceConfig.getSoapuiWorkspace().setProjectArray(
+				projects.toArray( new WorkspaceProjectConfig[projects.size()] ) );
+		workspaceConfig.getSoapuiWorkspace().setSoapuiVersion( SoapUI.SOAPUI_VERSION );
+
+		File workspaceFile = new File( path );
+		workspaceConfig.save( workspaceFile, new XmlOptions().setSavePrettyPrint() );
+
+		log.info( messages.get( "SavedWorkspace.Info", workspaceFile.getAbsolutePath() ) ); //$NON-NLS-1$ //$NON-NLS-2$
+	}
+
+	private void saveWorkspaceProjectConfig( List<WorkspaceProjectConfig> projects, WsdlProject project )
 	{
 		String path = project.getPath();
 		if( path != null )

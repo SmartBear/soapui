@@ -682,7 +682,9 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 						"XML Files (*.xml)", projectFile );
 
 				if( projectFile == null )
+				{
 					return SaveStatus.CANCELLED;
+				}
 
 				path = projectFile.getAbsolutePath();
 			}
@@ -692,7 +694,6 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 			}
 		}
 
-		// check modified
 		if( projectFileModified( projectFile ) )
 		{
 			if( !UISupport.confirm( "Project file for [" + getName() + "] has been modified externally, overwrite?",
