@@ -249,10 +249,10 @@
         <content />
       </infoPlist>
       <iconImageFiles>
-        <file path="${compiler:RESOURCES_HOME}/images/soapui16.png" />
-        <file path="${compiler:RESOURCES_HOME}/images/soapui32.png" />
-        <file path="${compiler:RESOURCES_HOME}/images/soapui48.png" />
-        <file path="${compiler:RESOURCES_HOME}/images/soapui256.png" />
+        <file path="${compiler:RESOURCES_HOME}/images/soapui-icon-16.png" />
+        <file path="${compiler:RESOURCES_HOME}/images/soapui-icon-32.png" />
+        <file path="${compiler:RESOURCES_HOME}/images/soapui-icon-48.png" />
+        <file path="${compiler:RESOURCES_HOME}/images/soapui-icon-256.png" />
       </iconImageFiles>
     </launcher>
   </launchers>
@@ -269,18 +269,18 @@
             <object class="com.install4j.runtime.beans.applications.InstallerApplication">
               <void property="customHeaderImage">
                 <object class="com.install4j.api.beans.ExternalFile">
-                  <string>${compiler:RESOURCES_HOME}/images/soapui32.png</string>
+                  <string>${compiler:RESOURCES_HOME}/images/soapui-icon-32.png</string>
                 </object>
               </void>
               <void property="customIconImageFiles">
                 <void method="add">
                   <object class="com.install4j.api.beans.ExternalFile">
-                    <string>${compiler:RESOURCES_HOME}/images/soapui16.png</string>
+                    <string>${compiler:RESOURCES_HOME}/images/soapui-icon-16.png</string>
                   </object>
                 </void>
                 <void method="add">
                   <object class="com.install4j.api.beans.ExternalFile">
-                    <string>${compiler:RESOURCES_HOME}/images/soapui32.png</string>
+                    <string>${compiler:RESOURCES_HOME}/images/soapui-icon-32.png</string>
                   </object>
                 </void>
               </void>
@@ -2583,7 +2583,6 @@ return installTutorials;</condition>
       </excludedBeans>
       <overriddenPrincipalLanguage id="en" customLocalizationFile="" />
       <exclude>
-        <entry location="bin/soapui32.png" fileType="regular" />
         <entry location=".i4j_fileset_1658" fileType="regular" />
         <entry location=".i4j_fileset_1843" fileType="regular" />
         <entry location=".i4j_fileset_1573" fileType="regular" />
@@ -2660,7 +2659,6 @@ return installTutorials;</condition>
       </excludedBeans>
       <overriddenPrincipalLanguage id="en" customLocalizationFile="" />
       <exclude>
-        <entry location="bin/soapui32.png" fileType="regular" />
         <entry location=".i4j_fileset_1658" fileType="regular" />
         <entry location=".i4j_fileset_1843" fileType="regular" />
         <entry location=".i4j_fileset_1573" fileType="regular" />
