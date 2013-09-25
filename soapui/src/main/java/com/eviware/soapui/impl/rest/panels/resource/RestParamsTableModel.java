@@ -38,18 +38,13 @@ public class RestParamsTableModel extends AbstractTableModel implements TableMod
 
 	static String[] COLUMN_NAMES = new String[] { "Name", "Default value", "Style", "Level" };
 	static Class[] COLUMN_TYPES = new Class[] { String.class, String.class, ParameterStyle.class, ParamLocation.class };
+	private boolean isLastChangeParameterLevelChange = false;
 
 	public RestParamsTableModel( RestParamsPropertyHolder params )
 	{
 		this.params = params;
 		params.addTestPropertyListener( this );
-		if(params.getModelItem() instanceof RestRequest) {
-			( ( RestRequest )params.getModelItem() ).getResource().getParams().addTestPropertyListener( this );
-			( ( RestRequest )params.getModelItem() ).getResource().addPropertyChangeListener( this );
-			( ( RestRequest )params.getModelItem() ).getRestMethod().getParams().addTestPropertyListener( this );
-			( ( RestRequest )params.getModelItem() ).getRestMethod().addPropertyChangeListener( this );
-		}
-
+		params.getModelItem().addPropertyChangeListener( this );
 		buildParamNameIndex( params );
 	}
 
@@ -154,6 +149,7 @@ public class RestParamsTableModel extends AbstractTableModel implements TableMod
 				prop.setStyle( ( ParameterStyle )value );
 				return;
 			case 3:
+				this.isLastChangeParameterLevelChange = true;
 				prop.setParamLocation(  ( ParamLocation )value );
 				return;
 		}
@@ -175,7 +171,11 @@ public class RestParamsTableModel extends AbstractTableModel implements TableMod
 
 	public void propertyRemoved( String name )
 	{
-		paramNameIndex.remove( name );
+		if(!this.isLastChangeParameterLevelChange)
+		{
+			paramNameIndex.remove( name );
+		}
+		this.isLastChangeParameterLevelChange = false;
 		fireTableDataChanged();
 	}
 

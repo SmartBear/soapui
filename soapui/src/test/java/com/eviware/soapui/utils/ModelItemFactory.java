@@ -1,10 +1,12 @@
 package com.eviware.soapui.utils;
 
 import com.eviware.soapui.config.RestMethodConfig;
+import com.eviware.soapui.config.RestRequestConfig;
 import com.eviware.soapui.config.RestResourceConfig;
 import com.eviware.soapui.config.RestServiceConfig;
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.rest.RestMethod;
+import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
@@ -21,6 +23,11 @@ import com.eviware.soapui.support.types.StringToStringMap;
  */
 public class ModelItemFactory
 {
+	public static RestRequest makeRestRequest() throws SoapUIException
+	{
+			return new RestRequest( makeRestMethod(), RestRequestConfig.Factory.newInstance(), false);
+	}
+
 	public static RestMethod makeRestMethod() throws SoapUIException
 	{
 		return new RestMethod( makeRestResource(), RestMethodConfig.Factory.newInstance());
