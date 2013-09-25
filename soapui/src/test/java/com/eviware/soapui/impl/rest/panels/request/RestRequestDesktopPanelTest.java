@@ -1,6 +1,5 @@
 package com.eviware.soapui.impl.rest.panels.request;
 
-import com.eviware.soapui.config.RestRequestConfig;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.RestService;
@@ -20,13 +19,11 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import javax.swing.JComboBox;
-import javax.swing.JTable;
+import javax.swing.*;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import java.util.List;
 
-import static com.eviware.soapui.utils.ModelItemFactory.makeRestMethod;
 import static com.eviware.soapui.utils.StubbedDialogs.hasPromptWithValue;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
