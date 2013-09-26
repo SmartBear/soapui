@@ -188,6 +188,28 @@
                     <generateSimpleHTMLChangeLog>true</generateSimpleHTMLChangeLog>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.2.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <mainClass>com.eviware.soapui.tools.SplashScreenStomper</mainClass>
+                    <arguments>
+                        <argument>SoapUI ${project.version}</argument>
+                        <argument>${basedir}/src/main/resources/soapui-splash-blank.png</argument>
+                        <argument>${basedir}/target/soapui-splash.png</argument>
+                    </arguments>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 

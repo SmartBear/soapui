@@ -53,6 +53,13 @@ bundled or none -->
             </excludes>
         </fileSet>
         <fileSet>
+            <directory>${basedir}/target</directory>
+            <outputDirectory>bin</outputDirectory>
+            <includes>
+                <include>soapui-splash.png</include>
+            </includes>
+        </fileSet>
+        <fileSet>
             <directory>${basedir}/src/dist/bin</directory>
             <outputDirectory>bin</outputDirectory>
             <includes>
