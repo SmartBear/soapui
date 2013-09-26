@@ -677,7 +677,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 			projectFile = createFile( path );
 		}
 
-		while( !projectFile.canWrite() )
+		while( projectFile.exists() && !projectFile.canWrite() )
 		{
 			Boolean confirm = UISupport.confirmOrCancel( "Project file [" + projectFile.getAbsolutePath() + "] can not be written to, save to new file?", "Save Project" );
 			if( confirm == null )
@@ -716,9 +716,15 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 			createBackup( projectFile );
 		}
 
-		path = projectFile.getAbsolutePath();
 
-		return saveIn( projectFile );
+		SaveStatus saveStatus = saveIn( projectFile );
+
+		if( saveStatus == SaveStatus.SUCCESS )
+		{
+			path = projectFile.getAbsolutePath();
+		}
+
+		return saveStatus;
 	}
 
 	File createFile( String filePath )

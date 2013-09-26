@@ -283,14 +283,9 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace
 
 				if( !saveWorkspaceOnly )
 				{
-					SaveStatus status = SaveStatus.FAILED;
+					SaveStatus status = saveProject( skipProjectsWithRunningTests, project );
 
-					while( status == SaveStatus.FAILED )
-					{
-						status = saveProject( skipProjectsWithRunningTests, project );
-					}
-
-					if( status == SaveStatus.CANCELLED )
+					if( status == SaveStatus.CANCELLED || status == SaveStatus.FAILED )
 					{
 						return status;
 					}

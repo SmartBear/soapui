@@ -141,29 +141,30 @@ public class WsdlProjectTestCase extends JettyTestCaseBase
 	public void askForNewFileNameIfSelectedFileIsNotWritable() throws IOException
 	{
 		dialogs.mockConfirmWithReturnValue( true );
-		file = FileBuilder.file().canWrite( false, true ).build();
+		file = FileBuilder.file().canWrite( false, true ).exists( true ).build();
 		saveAsDialogShouldReturn( file );
 
 		WsdlProject project = createWsdlProject( true );
 		SaveStatus saveResult = project.save();
 
-		assertThat( dialogs.getConfirmations(), hasConfirmationWithQuestion( "Project file [" + FILE_PATH + "] can not be written to, save to new file?" ) );
 		assertThat( saveResult, equalTo( SaveStatus.SUCCESS ) );
+		assertThat( dialogs.getConfirmations(), hasConfirmationWithQuestion( "Project file [" + FILE_PATH + "] can not be written to, save to new file?" ) );
 	}
 
 	@Test
 	public void shouldBePossibleToCancelIfFileIsNotWritable() throws IOException
 	{
+		// cancel "save to new file?" dialog
 		dialogs.mockConfirmWithReturnValue( null );
-		file = FileBuilder.file().canWrite( false ).build();
+		file = FileBuilder.file().canWrite( false ).exists( true ).build();
 		saveAsDialogShouldReturn( file );
 
 		WsdlProject project = createWsdlProject( true );
+		project.path = FILE_PATH;
 		SaveStatus saveResult = project.save();
 
 		assertThat( dialogs.getConfirmations(), hasConfirmationWithQuestion( "Project file [" + FILE_PATH + "] can not be written to, save to new file?" ) );
 		assertThat( saveResult, equalTo( SaveStatus.CANCELLED ) );
-		assertThat( project.getPath(), is( nullValue() ) );
 	}
 
 	private WsdlProject createWsdlProject( boolean isOpen )

@@ -969,7 +969,7 @@ public class SoapUI
 			{
 				soapUICore.saveSettings();
 				SaveStatus saveStatus = workspace.onClose();
-				if( saveStatus == SaveStatus.CANCELLED )
+				if( saveStatus == SaveStatus.CANCELLED || saveStatus == SaveStatus.FAILED )
 				{
 					return false;
 				}
