@@ -64,7 +64,7 @@ public class WsdlProjectTestCase extends JettyTestCaseBase
 	@Test
 	public void saveIsConsideredSuccessfulIfProjectIsClosed() throws XmlException, IOException, SoapUIException
 	{
-		WsdlProject project = createWsdlProject( false );
+		WsdlProject project = createWsdlProject( false, false );
 		SaveStatus saved = project.save();
 
 		assertThat( saved, equalTo( SaveStatus.SUCCESS ) );
@@ -75,7 +75,7 @@ public class WsdlProjectTestCase extends JettyTestCaseBase
 	{
 		saveAsDialogShouldReturn( null );
 
-		WsdlProject project = createWsdlProject( true );
+		WsdlProject project = createWsdlProject( true, false );
 		SaveStatus saveResult = project.save();
 
 		assertThat( project.getPath(), is( nullValue() ) );
@@ -88,7 +88,7 @@ public class WsdlProjectTestCase extends JettyTestCaseBase
 		file = FileBuilder.file().canWrite( true ).build();
 		saveAsDialogShouldReturn( file );
 
-		WsdlProject project = createWsdlProject( true );
+		WsdlProject project = createWsdlProject( true, false );
 		SaveStatus saveResult = project.save();
 
 		assertThat( project.getPath(), equalTo( FILE_PATH ) );
@@ -103,7 +103,7 @@ public class WsdlProjectTestCase extends JettyTestCaseBase
 
 		saveAsDialogShouldReturn( file );
 
-		WsdlProject project = createWsdlProject( true );
+		WsdlProject project = createWsdlProject( true, false );
 		SaveStatus saveStatus = project.save();
 
 		assertThat( dialogs.getConfirmations(), hasConfirmationWithQuestion( "File [" + FILE_NAME + "] exists, overwrite?" ) );
@@ -117,8 +117,7 @@ public class WsdlProjectTestCase extends JettyTestCaseBase
 		file = FileBuilder.file().canWrite( false ).exists( true ).build();
 		saveAsDialogShouldReturn( null );
 
-		WsdlProject project = createWsdlProject( true );
-		project.path = FILE_PATH;
+		WsdlProject project = createWsdlProject( true, true );
 
 		SaveStatus saveResult = project.save();
 		assertThat( saveResult, equalTo( SaveStatus.CANCELLED ) );
@@ -130,8 +129,7 @@ public class WsdlProjectTestCase extends JettyTestCaseBase
 		dialogs.mockConfirmWithReturnValue( false );
 		file = FileBuilder.file().canWrite( false ).exists( true ).build();
 
-		WsdlProject project = createWsdlProject( true );
-		project.path = FILE_PATH;
+		WsdlProject project = createWsdlProject( true, true );
 		SaveStatus saveResult = project.save();
 
 		assertThat( saveResult, equalTo( SaveStatus.DONT_SAVE ) );
@@ -144,7 +142,7 @@ public class WsdlProjectTestCase extends JettyTestCaseBase
 		file = FileBuilder.file().canWrite( false, true ).exists( true ).build();
 		saveAsDialogShouldReturn( file );
 
-		WsdlProject project = createWsdlProject( true );
+		WsdlProject project = createWsdlProject( true, false );
 		SaveStatus saveResult = project.save();
 
 		assertThat( saveResult, equalTo( SaveStatus.SUCCESS ) );
@@ -159,15 +157,14 @@ public class WsdlProjectTestCase extends JettyTestCaseBase
 		file = FileBuilder.file().canWrite( false ).exists( true ).build();
 		saveAsDialogShouldReturn( file );
 
-		WsdlProject project = createWsdlProject( true );
-		project.path = FILE_PATH;
+		WsdlProject project = createWsdlProject( true, true );
 		SaveStatus saveResult = project.save();
 
 		assertThat( dialogs.getConfirmations(), hasConfirmationWithQuestion( "Project file [" + FILE_PATH + "] can not be written to, save to new file?" ) );
 		assertThat( saveResult, equalTo( SaveStatus.CANCELLED ) );
 	}
 
-	private WsdlProject createWsdlProject( boolean isOpen )
+	private WsdlProject createWsdlProject( boolean isOpen, boolean exitingProject )
 	{
 		WsdlProject wsdlProject = new WsdlProject( null, null, true, isOpen, PROJECT_NAME, null )
 		{
@@ -185,6 +182,10 @@ public class WsdlProjectTestCase extends JettyTestCaseBase
 			}
 		};
 		wsdlProject.getSettings().setBoolean( UISettings.LINEBREAK, false );
+		if( exitingProject )
+		{
+			wsdlProject.path = FILE_PATH;
+		}
 		return wsdlProject;
 	}
 

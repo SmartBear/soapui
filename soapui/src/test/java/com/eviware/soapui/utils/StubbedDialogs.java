@@ -58,7 +58,12 @@ public class StubbedDialogs implements XDialogs
 		confirmations.add( new Confirmation( question, title ) );
 		if( mockingConfirmValue )
 		{
-			return getCurrentConfirmationReturnValue();
+			Boolean currentConfirmationReturnValue = getCurrentConfirmationReturnValue();
+			if( currentConfirmationReturnValue == null )
+			{
+				return false;
+			}
+			return currentConfirmationReturnValue;
 		}
 		return false;
 	}
