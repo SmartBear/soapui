@@ -179,10 +179,16 @@ public class StubbedDialogs implements XDialogs
 		return confirmations;
 	}
 
-	public void mockConfirmWithReturnValue( Boolean... values )
+	public void mockConfirmWithReturnValue( Boolean value )
 	{
 		mockingConfirmValue = true;
 		currentValueToReturnFromConfirm = 0;
+		valuesToReturnFromConfirm.add( value );
+	}
+
+	public void mockConfirmWithReturnValue( Boolean value, Boolean... values )
+	{
+		mockConfirmWithReturnValue( value );
 		if( values != null )
 		{
 			valuesToReturnFromConfirm.addAll( Arrays.asList( values ) );
