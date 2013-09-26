@@ -264,7 +264,7 @@ public class SoapUI
 		}
 		catch( Exception exception )
 		{
-			SoapUI.logError( exception, "Could not read build info properties" );
+			//ignore
 		}
 		return "UNKNOWN VERSION";
 	}
