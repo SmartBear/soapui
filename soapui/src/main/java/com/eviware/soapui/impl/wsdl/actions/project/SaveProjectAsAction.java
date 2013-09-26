@@ -12,8 +12,8 @@
 
 package com.eviware.soapui.impl.wsdl.actions.project;
 
-import com.eviware.soapui.impl.SaveStatus;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
+import com.eviware.soapui.model.project.SaveStatus;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 

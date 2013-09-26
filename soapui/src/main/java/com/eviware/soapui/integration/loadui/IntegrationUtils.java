@@ -13,12 +13,12 @@
 package com.eviware.soapui.integration.loadui;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.SaveStatus;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
 import com.eviware.soapui.impl.wsdl.loadtest.WsdlLoadTest;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.integration.impl.CajoClient;
+import com.eviware.soapui.model.project.SaveStatus;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 

@@ -24,6 +24,7 @@ import com.eviware.soapui.impl.wsdl.support.PathUtils;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.model.project.ProjectFactoryRegistry;
+import com.eviware.soapui.model.project.SaveStatus;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.support.AbstractModelItem;
 import com.eviware.soapui.model.workspace.Workspace;

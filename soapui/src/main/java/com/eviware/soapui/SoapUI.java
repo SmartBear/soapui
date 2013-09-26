@@ -13,7 +13,6 @@
 package com.eviware.soapui;
 
 import com.eviware.soapui.actions.*;
-import com.eviware.soapui.impl.SaveStatus;
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.actions.ImportWsdlProjectAction;
 import com.eviware.soapui.impl.actions.NewGenericProjectAction;
@@ -47,6 +46,7 @@ import com.eviware.soapui.model.PanelBuilder;
 import com.eviware.soapui.model.TestPropertyHolder;
 import com.eviware.soapui.model.environment.EnvironmentListener;
 import com.eviware.soapui.model.environment.Property;
+import com.eviware.soapui.model.project.SaveStatus;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.settings.SettingsListener;

@@ -15,7 +15,6 @@ package com.eviware.soapui.impl.wsdl;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.*;
 import com.eviware.soapui.config.TestSuiteRunTypesConfig.Enum;
-import com.eviware.soapui.impl.SaveStatus;
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.WsdlInterfaceFactory;
 import com.eviware.soapui.impl.rest.support.RestRequestConverter.RestConversionException;
@@ -40,6 +39,7 @@ import com.eviware.soapui.model.mock.MockService;
 import com.eviware.soapui.model.project.EndpointStrategy;
 import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.model.project.ProjectListener;
+import com.eviware.soapui.model.project.SaveStatus;
 import com.eviware.soapui.model.propertyexpansion.DefaultPropertyExpansionContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
@@ -89,6 +89,8 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 	public final static String AFTER_LOAD_SCRIPT_PROPERTY = WsdlProject.class.getName() + "@setupScript";
 	public final static String BEFORE_SAVE_SCRIPT_PROPERTY = WsdlProject.class.getName() + "@tearDownScript";
 	public final static String RESOURCE_ROOT_PROPERTY = WsdlProject.class.getName() + "@resourceRoot";
+	private static final String XML_FILE_TYPE = "XML Files (*.xml)";
+	private static final String XML_EXTENSION = ".xml";
 
 	private WorkspaceImpl workspace;
 	protected String path;
@@ -644,6 +646,8 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 			return SaveStatus.SUCCESS;
 		}
 
+		File projectFile = null;
+
 		if( !hasBeenSavedBefore() )
 		{
 			String tempPath = StringUtils.createFileName2( getName(), '-' ) + "-soapui-project.xml";
@@ -653,46 +657,50 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 				tempPath = folder + File.separatorChar + tempPath;
 			}
 
-			File file = null;
-
-			while( file == null
-					|| ( file.exists() && !UISupport.confirm( "File [" + file.getName() + "] exists, overwrite?",
+			while( projectFile == null
+					|| ( projectFile.exists() && !UISupport.confirm( "File [" + projectFile.getName() + "] exists, overwrite?",
 					"Overwrite File?" ) ) )
 			{
 
-				file = UISupport.getFileDialogs().saveAs( this, "Save project " + getName(), ".xml", "XML Files (*.xml)",
+				projectFile = UISupport.getFileDialogs().saveAs( this, "Save project " + getName(), XML_EXTENSION, XML_FILE_TYPE,
 						new File( tempPath ) );
 
-				if( file == null )
+				if( projectFile == null )
 				{
 					return SaveStatus.CANCELLED;
 				}
 			}
-
-			path = file.getAbsolutePath();
 		}
 
-		File projectFile = new File( path );
-
-		while( projectFile.exists() && !projectFile.canWrite() )
+		if( projectFile == null )
 		{
-			if( UISupport.confirm( "Project file [" + path + "] can not be written to, save to new file?", "Save Project" ) )
+			projectFile = createFile( path );
+		}
+
+		while( !projectFile.canWrite() )
+		{
+			Boolean confirm = UISupport.confirmOrCancel( "Project file [" + projectFile.getAbsolutePath() + "] can not be written to, save to new file?", "Save Project" );
+			if( confirm == null )
 			{
-				projectFile = UISupport.getFileDialogs().saveAs( this, "Save project " + getName(), ".xml",
-						"XML Files (*.xml)", projectFile );
+				return SaveStatus.CANCELLED;
+			}
+			else if( !confirm )
+			{
+				return SaveStatus.DONT_SAVE;
+			}
+			else
+			{
+				projectFile = UISupport.getFileDialogs().saveAs( this, "Save project " + getName(), XML_EXTENSION,
+						XML_FILE_TYPE, projectFile );
 
 				if( projectFile == null )
 				{
 					return SaveStatus.CANCELLED;
 				}
 
-				path = projectFile.getAbsolutePath();
-			}
-			else
-			{
-				return SaveStatus.CANCELLED;
 			}
 		}
+
 
 		if( projectFileModified( projectFile ) )
 		{
@@ -708,7 +716,14 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 			createBackup( projectFile );
 		}
 
+		path = projectFile.getAbsolutePath();
+
 		return saveIn( projectFile );
+	}
+
+	File createFile( String filePath )
+	{
+		return new File( filePath );
 	}
 
 	private boolean projectFileModified( File projectFile )
@@ -770,7 +785,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 
 		try
 		{
-			File tempFile = File.createTempFile( "project-temp-", ".xml", projectFile.getParentFile() );
+			File tempFile = File.createTempFile( "project-temp-", XML_EXTENSION, projectFile.getParentFile() );
 
 			// save once to make sure it can be saved
 			FileOutputStream tempOut = new FileOutputStream( tempFile );

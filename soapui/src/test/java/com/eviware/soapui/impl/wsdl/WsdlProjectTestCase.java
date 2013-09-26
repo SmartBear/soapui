@@ -12,11 +12,13 @@
 
 package com.eviware.soapui.impl.wsdl;
 
-import com.eviware.soapui.impl.SaveStatus;
+import com.eviware.soapui.model.project.SaveStatus;
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.JettyTestCaseBase;
 import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.utils.StubbedDialogs;
+import com.eviware.x.dialogs.XDialogs;
 import com.eviware.x.dialogs.XFileDialogs;
 import cucumber.annotation.Before;
 import org.apache.xmlbeans.XmlException;
@@ -26,6 +28,7 @@ import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
 
+import static com.eviware.soapui.utils.StubbedDialogs.hasConfirmationWithQuestion;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.*;
@@ -34,32 +37,34 @@ import static org.mockito.Mockito.when;
 
 public class WsdlProjectTestCase extends JettyTestCaseBase
 {
+	private static final String PROJECT_NAME = "ProjectName";
+	private static final String FILE_NAME = "thefile.xml";
+	private static final String FILE_PATH = "/tmp/" + FILE_NAME;
+
 	private XFileDialogs originalFileDialogs;
 	private XFileDialogs fileDialogs;
-	private static final String FILE_PATH = "/tmp/thefile.xml";
-	private static final String PROJECT_NAME = "ProjectName";
+	private XDialogs originalDialogs;
+	private StubbedDialogs dialogs;
+
+	private File file;
 
 	@Before
 	public void setup()
 	{
 		originalFileDialogs = UISupport.getFileDialogs();
+		originalDialogs = UISupport.getDialogs();
 
 		fileDialogs = mock( XFileDialogs.class );
-		when( fileDialogs.saveAs( anyObject(), anyString(), anyString(), anyString(), isA( File.class ) ) ).thenReturn( new File( FILE_PATH ) );
 		UISupport.setFileDialogs( fileDialogs );
-	}
 
-	@After
-	public void teardown()
-	{
-		UISupport.setFileDialogs( originalFileDialogs );
+		dialogs = new StubbedDialogs();
+		UISupport.setDialogs( dialogs );
 	}
 
 	@Test
 	public void saveIsConsideredSuccessfulIfProjectIsClosed() throws XmlException, IOException, SoapUIException
 	{
 		WsdlProject project = createWsdlProject( false );
-
 		SaveStatus saved = project.save();
 
 		assertThat( saved, equalTo( SaveStatus.SUCCESS ) );
@@ -68,9 +73,9 @@ public class WsdlProjectTestCase extends JettyTestCaseBase
 	@Test
 	public void projectIsNotSavedIfSaveAsDialogIsCancelled() throws IOException
 	{
-		WsdlProject project = createWsdlProject( true );
-		when( fileDialogs.saveAs( anyObject(), anyString(), anyString(), anyString(), isA( File.class ) ) ).thenReturn( null );
+		saveAsDialogShouldReturn( null );
 
+		WsdlProject project = createWsdlProject( true );
 		SaveStatus saveResult = project.save();
 
 		assertThat( project.getPath(), is( nullValue() ) );
@@ -80,8 +85,10 @@ public class WsdlProjectTestCase extends JettyTestCaseBase
 	@Test
 	public void projectIsSavedIfWritableFileSelected() throws IOException
 	{
-		WsdlProject project = createWsdlProject( true );
+		file = FileBuilder.file().canWrite( true ).build();
+		saveAsDialogShouldReturn( file );
 
+		WsdlProject project = createWsdlProject( true );
 		SaveStatus saveResult = project.save();
 
 		assertThat( project.getPath(), equalTo( FILE_PATH ) );
@@ -89,14 +96,74 @@ public class WsdlProjectTestCase extends JettyTestCaseBase
 	}
 
 	@Test
-	public void projectIsNotSavedIfFileIsNotWritable() throws IOException
+	public void confirmIfTryingToOverwriteExistingFile() throws IOException
 	{
+		dialogs.mockConfirmWithReturnValue( true );
+		file = FileBuilder.file().canWrite( false, true ).exists( true ).build();
+
+		saveAsDialogShouldReturn( file );
+
 		WsdlProject project = createWsdlProject( true );
+		SaveStatus saveStatus = project.save();
+
+		assertThat( dialogs.getConfirmations(), hasConfirmationWithQuestion( "File [" + FILE_NAME + "] exists, overwrite?" ) );
+		assertThat( saveStatus, equalTo( SaveStatus.SUCCESS ) );
+	}
+
+	@Test
+	public void cancelSaveOfExistingFileIfNotWritableAndNoNewFileSelected() throws IOException
+	{
+		dialogs.mockConfirmWithReturnValue( true );
+		file = FileBuilder.file().canWrite( false ).exists( true ).build();
+		saveAsDialogShouldReturn( null );
+
+		WsdlProject project = createWsdlProject( true );
+		project.path = FILE_PATH;
 
 		SaveStatus saveResult = project.save();
+		assertThat( saveResult, equalTo( SaveStatus.CANCELLED ) );
+	}
 
-		assertThat( project.getPath(), equalTo( FILE_PATH ) );
+	@Test
+	public void doNotSaveExistingFileIfNotWritableAndWeDontWantToSave() throws IOException
+	{
+		dialogs.mockConfirmWithReturnValue( false );
+		file = FileBuilder.file().canWrite( false ).exists( true ).build();
+
+		WsdlProject project = createWsdlProject( true );
+		project.path = FILE_PATH;
+		SaveStatus saveResult = project.save();
+
+		assertThat( saveResult, equalTo( SaveStatus.DONT_SAVE ) );
+	}
+
+	@Test
+	public void askForNewFileNameIfSelectedFileIsNotWritable() throws IOException
+	{
+		dialogs.mockConfirmWithReturnValue( true );
+		file = FileBuilder.file().canWrite( false, true ).build();
+		saveAsDialogShouldReturn( file );
+
+		WsdlProject project = createWsdlProject( true );
+		SaveStatus saveResult = project.save();
+
+		assertThat( dialogs.getConfirmations(), hasConfirmationWithQuestion( "Project file [" + FILE_PATH + "] can not be written to, save to new file?" ) );
 		assertThat( saveResult, equalTo( SaveStatus.SUCCESS ) );
+	}
+
+	@Test
+	public void shouldBePossibleToCancelIfFileIsNotWritable() throws IOException
+	{
+		dialogs.mockConfirmWithReturnValue( null );
+		file = FileBuilder.file().canWrite( false ).build();
+		saveAsDialogShouldReturn( file );
+
+		WsdlProject project = createWsdlProject( true );
+		SaveStatus saveResult = project.save();
+
+		assertThat( dialogs.getConfirmations(), hasConfirmationWithQuestion( "Project file [" + FILE_PATH + "] can not be written to, save to new file?" ) );
+		assertThat( saveResult, equalTo( SaveStatus.CANCELLED ) );
+		assertThat( project.getPath(), is( nullValue() ) );
 	}
 
 	private WsdlProject createWsdlProject( boolean isOpen )
@@ -109,9 +176,61 @@ public class WsdlProjectTestCase extends JettyTestCaseBase
 				// always return success for the actual save step
 				return SaveStatus.SUCCESS;
 			}
+
+			@Override
+			public File createFile( String path )
+			{
+				return file;
+			}
 		};
 		wsdlProject.getSettings().setBoolean( UISettings.LINEBREAK, false );
-
 		return wsdlProject;
+	}
+
+	@After
+	public void teardown()
+	{
+		UISupport.setFileDialogs( originalFileDialogs );
+		UISupport.setDialogs( originalDialogs );
+	}
+
+	static class FileBuilder
+	{
+
+		private File file = mock( File.class );
+
+		private FileBuilder()
+		{
+		}
+
+		static FileBuilder file()
+		{
+			return new FileBuilder();
+		}
+
+		FileBuilder canWrite( Boolean firstInvocation, Boolean... commingInvocations )
+		{
+			when( file.canWrite() ).thenReturn( firstInvocation, commingInvocations );
+			return this;
+		}
+
+		FileBuilder exists( boolean exists )
+		{
+			when( file.exists() ).thenReturn( exists );
+			return this;
+		}
+
+		File build()
+		{
+			when( file.getAbsolutePath() ).thenReturn( FILE_PATH );
+			when( file.getName() ).thenReturn( FILE_NAME );
+			return file;
+		}
+
+	}
+
+	private void saveAsDialogShouldReturn( File file, File... files )
+	{
+		when( fileDialogs.saveAs( anyObject(), anyString(), anyString(), anyString(), isA( File.class ) ) ).thenReturn( file, files );
 	}
 }

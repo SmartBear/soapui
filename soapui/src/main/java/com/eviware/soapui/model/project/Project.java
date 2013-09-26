@@ -12,7 +12,6 @@
 
 package com.eviware.soapui.model.project;
 
-import com.eviware.soapui.impl.SaveStatus;
 import com.eviware.soapui.model.TestModelItem;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.mock.MockService;

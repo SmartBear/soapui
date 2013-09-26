@@ -12,9 +12,9 @@
 
 package com.eviware.soapui.model.workspace;
 
-import com.eviware.soapui.impl.SaveStatus;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.project.Project;
+import com.eviware.soapui.model.project.SaveStatus;
 import com.eviware.soapui.support.SoapUIException;
 
 import java.io.File;

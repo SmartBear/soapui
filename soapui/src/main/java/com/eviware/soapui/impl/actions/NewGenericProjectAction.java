@@ -13,7 +13,6 @@
 package com.eviware.soapui.impl.actions;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.SaveStatus;
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.WsdlInterfaceFactory;
 import com.eviware.soapui.impl.rest.RestService;
@@ -29,6 +28,7 @@ import com.eviware.soapui.impl.wsdl.actions.iface.GenerateWsdlTestSuiteAction;
 import com.eviware.soapui.impl.wsdl.actions.project.CreateWebTestAction;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.support.PathUtils;
+import com.eviware.soapui.model.project.SaveStatus;
 import com.eviware.soapui.support.MessageSupport;
 import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.support.StringUtils;

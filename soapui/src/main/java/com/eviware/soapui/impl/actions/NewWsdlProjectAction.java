@@ -12,7 +12,6 @@
 
 package com.eviware.soapui.impl.actions;
 
-import com.eviware.soapui.impl.SaveStatus;
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.WsdlInterfaceFactory;
 import com.eviware.soapui.impl.support.definition.support.InvalidDefinitionException;
@@ -21,6 +20,7 @@ import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.actions.iface.GenerateWsdlTestSuiteAction;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.support.PathUtils;
+import com.eviware.soapui.model.project.SaveStatus;
 import com.eviware.soapui.support.MessageSupport;
 import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.support.StringUtils;
@@ -189,7 +189,7 @@ public class NewWsdlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 		}
 	}
 
-	@AForm( name = "Form.Title", description = "Form.Description", helpUrl = HelpUrls.NEWPROJECT_HELP_URL, icon = UISupport.TOOL_ICON_PATH )
+	@AForm(name = "Form.Title", description = "Form.Description", helpUrl = HelpUrls.NEWPROJECT_HELP_URL, icon = UISupport.TOOL_ICON_PATH)
 	public interface Form
 	{
 		@AField(description = "Form.ProjectName.Description", type = AFieldType.STRING)
@@ -204,7 +204,7 @@ public class NewWsdlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 		@AField(description = "Form.GenerateTestSuite.Description", type = AFieldType.BOOLEAN, enabled = false)
 		public final static String GENERATETESTSUITE = messages.get( "Form.GenerateTestSuite.Label" );
 
-		@AField( description = "Form.RelativePaths.Description", type = AFieldType.BOOLEAN, enabled = true )
+		@AField(description = "Form.RelativePaths.Description", type = AFieldType.BOOLEAN, enabled = true)
 		public final static String RELATIVEPATHS = messages.get( "Form.RelativePaths.Label" );
 
 	}

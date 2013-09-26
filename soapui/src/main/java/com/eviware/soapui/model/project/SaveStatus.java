@@ -1,4 +1,4 @@
-package com.eviware.soapui.impl;
+package com.eviware.soapui.model.project;
 
 /**
  * @author Anders Jaensson
