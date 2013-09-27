@@ -168,7 +168,7 @@ public class SoapUI
 	public static final String DEFAULT_DESKTOP = "Default";
 	public static final String CURRENT_SOAPUI_WORKSPACE = SoapUI.class.getName() + "@workspace";
 	public final static Logger log = Logger.getLogger( SoapUI.class );
-	public final static String SOAPUI_VERSION =getVersion();
+	public final static String SOAPUI_VERSION = getVersion( SoapUISystemProperties.VERSION );
 	public static final String DEFAULT_WORKSPACE_FILE = "default-soapui-workspace.xml";
 	public static final String SOAPUI_SPLASH = "soapui-splash.png";
 	public static final String SOAPUI_TITLE = "/branded/branded.properties";
@@ -240,9 +240,9 @@ public class SoapUI
 	{
 	}
 
-	private static String getVersion()
+	static String getVersion( String versionPropertyName )
 	{
-		String version = System.getProperty( SoapUISystemProperties.VERSION );
+		String version = System.getProperty( versionPropertyName );
 		if( version != null )
 		{
 			return version;
@@ -252,9 +252,9 @@ public class SoapUI
 		{
 			return version;
 		}
-		Properties buildInfoProperties = new Properties();
 		try
 		{
+			Properties buildInfoProperties = new Properties();
 			buildInfoProperties.load( SoapUI.class.getResourceAsStream( BUILDINFO_PROPERTIES ) );
 			version = buildInfoProperties.getProperty( "version" );
 			if( !StringUtils.isNullOrEmpty( version ) )
