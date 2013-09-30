@@ -51,6 +51,13 @@
             </includes>
         </fileSet>
         <fileSet>
+            <directory>${basedir}/..</directory>
+            <outputDirectory>.</outputDirectory>
+            <includes>
+                <include>RELEASENOTES.txt</include>
+            </includes>
+        </fileSet>
+        <fileSet>
             <directory>${basedir}/src/dist/bin</directory>
             <outputDirectory>bin</outputDirectory>
             <includes>
