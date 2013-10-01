@@ -14,6 +14,7 @@ package com.eviware.soapui.impl.wsdl.submit.filters;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
+import com.eviware.soapui.impl.support.HttpUtils;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransport;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
@@ -21,7 +22,6 @@ import com.eviware.soapui.settings.HttpSettings;
 import com.eviware.soapui.support.StringUtils;
 import org.apache.commons.httpclient.URI;
 import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.client.utils.URIUtils;
 
 /**
  * RequestFilter that adds SOAP specific headers
@@ -44,8 +44,7 @@ public class EndpointRequestFilter extends AbstractRequestFilter
 			{
 				URI uri = new URI( strURL, request.getSettings().getBoolean( HttpSettings.ENCODED_URLS ) );
 				context.setProperty( BaseHttpRequestTransport.REQUEST_URI, uri );
-				httpMethod.setURI( URIUtils.createURI( uri.getScheme(), uri.getHost(), uri.getPort(), uri.getEscapedPath(),
-						uri.getEscapedQuery(), uri.getEscapedFragment() ) );
+				httpMethod.setURI( HttpUtils.createUri( uri ) );
 			}
 		}
 		catch( Exception e )

@@ -18,6 +18,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.eviware.soapui.impl.support.HttpUtils;
 import org.apache.commons.httpclient.URI;
 import org.apache.http.*;
 import org.apache.http.client.HttpClient;
@@ -350,8 +351,8 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 
 		String location = httpResponse.getFirstHeader( "Location" ).getValue();
 		URI uri = new URI( new URI( httpMethod.getURI().toString(), true ), location, true );
-		java.net.URI newUri = new java.net.URI( uri.getScheme(), uri.getUserinfo(), uri.getHost(), uri.getPort(),
-				uri.getPath(), uri.getQuery(), uri.getFragment() );
+		java.net.URI newUri = HttpUtils.createUri( uri.getScheme(), uri.getEscapedUserinfo(), uri.getHost(), uri.getPort(),
+				uri.getEscapedPath(), uri.getEscapedQuery(), uri.getEscapedFragment() );
 		getMethod.setURI( newUri );
 
 		org.apache.http.HttpResponse response = submitRequest( getMethod, httpContext );

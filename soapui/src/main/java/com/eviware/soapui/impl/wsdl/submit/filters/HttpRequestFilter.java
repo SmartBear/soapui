@@ -26,6 +26,7 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.PreencodedMimeBodyPart;
 
+import com.eviware.soapui.impl.support.HttpUtils;
 import org.apache.commons.httpclient.URI;
 import org.apache.http.HttpEntityEnclosingRequest;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
@@ -222,9 +223,8 @@ public class HttpRequestFilter extends AbstractRequestFilter
 				context.setProperty( BaseHttpRequestTransport.REQUEST_URI, uri );
 				java.net.URI oldUri = httpMethod.getURI();
 				httpMethod
-						.setURI( new java.net.URI( oldUri.getScheme(), oldUri.getUserInfo(), oldUri.getHost(), oldUri
-								.getPort(), ( uri.getPath() ) == null ? "/" : uri.getPath(), oldUri.getQuery(), oldUri
-								.getFragment() ) );
+						.setURI( HttpUtils.createUri( oldUri.getScheme(), oldUri.getRawUserInfo(), oldUri.getHost(), oldUri.getPort(), oldUri.getRawPath(),
+								uri.getEscapedQuery(), oldUri.getRawFragment() ) );
 			}
 			catch( Exception e )
 			{

@@ -30,7 +30,7 @@ public class EndpointRequestFilterTest
 	@Test
 	public void doesNotDoubleEncodeAlreadyEncodedUri() throws URISyntaxException
 	{
-		String encodedUri = "http://google.se/search?q=%3F";
+		String encodedUri = "http://user:password@google.se/search?q=%3F";
 
 		HttpRequestBase httpMethod = Mockito.mock( HttpRequestBase.class );
 
