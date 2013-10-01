@@ -1025,6 +1025,19 @@ public class UISupport
 		return dialogs.promptPassword( question, title );
 	}
 
+	public static void maximizeWindow(JFrame frame)
+	{
+		//TODO: Uncomment code below to try setExtendedState() on other platforms. Crashes GUI on Mac!
+		// if (isMac())
+		// {
+		frame.setSize( Toolkit.getDefaultToolkit().getScreenSize());
+		//}
+		//else
+		// {
+		// 	frame.setExtendedState(JFrame.MAXIMIZE_BOTH);
+		// }
+	}
+
 	private static final class ItemListenerImplementation implements ItemListener
 	{
 		private final JComboBox combo;
