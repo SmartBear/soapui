@@ -304,7 +304,8 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 			{
 				String substringWithParamValue = resourcePanelText.substring( resourcePanelText.indexOf( paramStartString ) + 1 );
 				int endIndex = substringWithParamValue.indexOf( ";" ) > 0 ? substringWithParamValue.indexOf( ";" ) :
-						substringWithParamValue.length();
+						( substringWithParamValue.indexOf( "{" ) > 0 ? substringWithParamValue.indexOf( "{" ) :
+						substringWithParamValue.length() );
 				String paramValue = substringWithParamValue.substring( substringWithParamValue.indexOf( "=" ) + 1, endIndex );
 				setResourcePanelText( getResourcePanelText().replaceAll( ";" + name + "=" + paramValue, "" ) );
 			}
