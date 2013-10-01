@@ -1,15 +1,14 @@
 package com.eviware.soapui.impl.rest.panels.resource;
 
-import com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase;
-import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
+import com.eviware.soapui.impl.rest.RestRequest;
+import com.eviware.soapui.support.SoapUIException;
+import com.eviware.soapui.utils.ModelItemFactory;
 import org.hamcrest.core.Is;
 import org.hamcrest.core.IsEqual;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import org.mockito.Mockito;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -63,10 +62,10 @@ public class RestParamsTableModelColumnsNamesAndTypesUnitTest
 	}
 
 	@Before
-	public void setUp()
+	public void setUp() throws SoapUIException
 	{
-		RestParamsPropertyHolder params = Mockito.mock( RestParamsPropertyHolder.class );
-		restParamsTableModel = new RestParamsTableModel( params );
+		RestRequest restRequest = ModelItemFactory.makeRestRequest();
+		restParamsTableModel = new RestParamsTableModel( restRequest.getParams() );
 	}
 
 	@Test

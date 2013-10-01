@@ -1,6 +1,5 @@
 package com.eviware.soapui.impl.rest.panels.request;
 
-import com.eviware.soapui.config.RestRequestConfig;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.RestService;
@@ -12,6 +11,7 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.editor.EditorView;
 import com.eviware.soapui.support.editor.xml.XmlDocument;
 import com.eviware.soapui.utils.ContainerWalker;
+import com.eviware.soapui.utils.ModelItemFactory;
 import com.eviware.soapui.utils.StubbedDialogs;
 import com.eviware.x.dialogs.XDialogs;
 import org.junit.After;
@@ -19,13 +19,11 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import javax.swing.JComboBox;
-import javax.swing.JTable;
+import javax.swing.*;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import java.util.List;
 
-import static com.eviware.soapui.utils.ModelItemFactory.makeRestMethod;
 import static com.eviware.soapui.utils.StubbedDialogs.hasPromptWithValue;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -49,7 +47,7 @@ public class RestRequestDesktopPanelTest
 	@Before
 	public void setUp() throws Exception
 	{
-		restRequest = new RestRequest( makeRestMethod(), RestRequestConfig.Factory.newInstance(), false );
+		restRequest = ModelItemFactory.makeRestRequest();
 		restRequest.setMethod( RestRequestInterface.RequestMethod.GET);
 		restRequest.getResource().getParams().addProperty( PARAMETER_NAME );
 		restService().addEndpoint( ENDPOINT );
@@ -66,15 +64,36 @@ public class RestRequestDesktopPanelTest
 	@Test
 	public void retainsParameterValueWhenChangingItsLevel() throws Exception
 	{
-		List<? extends EditorView<? extends XmlDocument>> views = requestDesktopPanel.getRequestEditor().getViews();
-		RestRequestContentView restRequestContentView = ( RestRequestContentView )views.get( 0 );
-		JTable paramsTable = restRequestContentView.getParamsTable().getParamsTable();
+		JTable paramsTable = getRestParameterTable();
 		paramsTable.setValueAt( NewRestResourceActionBase.ParamLocation.METHOD, 0, 3 );
 		paramsTable.setValueAt( NewRestResourceActionBase.ParamLocation.RESOURCE, 0, 3 );
 
 		RestParamProperty returnedParameter = restRequest.getParams().getProperty( PARAMETER_NAME );
 		assertThat(returnedParameter.getValue(), is(PARAMETER_VALUE));
 	}
+
+	@Test
+	public void retainsParameterOrderWhenChangingItsLevel() throws Exception
+	{
+		restRequest.getParams().addProperty( "Param2" );
+		getRestParameterTable().setValueAt( NewRestResourceActionBase.ParamLocation.METHOD, 0, 3 );
+
+		assertThat( (String) getRestParameterTable().getValueAt( 0, 0 ), is(PARAMETER_NAME));
+	}
+
+	@Test
+	public void allowsRemovalOfParameterAfterParameterLevelChange() throws Exception
+	{
+		restRequest.getParams().addProperty( "Param2" );
+		getRestParameterTable().setValueAt( NewRestResourceActionBase.ParamLocation.METHOD, 0, 3 );
+
+		String paramNameAtRow0;
+		restRequest.getParams().removeProperty( PARAMETER_NAME );
+		paramNameAtRow0 = (String) getRestParameterTable().getValueAt( 0, 0 );
+		assertThat(paramNameAtRow0, is("Param2"));
+
+	}
+
 
 	@Test
 	public void displaysEndpoint() {
@@ -153,6 +172,14 @@ public class RestRequestDesktopPanelTest
 	{
 		Thread.sleep( 50 );
 	}
+
+	private JTable getRestParameterTable()
+	{
+		List<? extends EditorView<? extends XmlDocument>> views = requestDesktopPanel.getRequestEditor().getViews();
+		RestRequestContentView restRequestContentView = ( RestRequestContentView )views.get( 0 );
+		return restRequestContentView.getParamsTable().getParamsTable();
+	}
+
 
 	private RestService restService()
 	{
