@@ -910,9 +910,9 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 	{
 		try
 		{
-			ProjectListener[] a = projectListeners.toArray( new ProjectListener[projectListeners.size()] );
+			ProjectListener[] listeners = projectListeners.toArray( new ProjectListener[projectListeners.size()] );
 
-			for( ProjectListener listener : a )
+			for( ProjectListener listener : listeners )
 			{
 				listener.beforeSave( this );
 			}
