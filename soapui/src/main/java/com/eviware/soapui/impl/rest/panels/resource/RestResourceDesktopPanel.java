@@ -38,7 +38,9 @@ import static com.eviware.soapui.impl.rest.actions.support.NewRestResourceAction
 
 public class RestResourceDesktopPanel extends ModelItemDesktopPanel<RestResource>
 {
-	private JUndoableTextField pathTextField;
+	// package protected to facilitate unit testing
+	JUndoableTextField pathTextField;
+
 	private boolean updating;
 	private RestParamsTable paramsTable;
 
@@ -93,7 +95,7 @@ public class RestResourceDesktopPanel extends ModelItemDesktopPanel<RestResource
 
 		toolbar.addSeparator();
 
-		pathTextField = new JUndoableTextField( getModelItem().getPath(), 20 );
+		pathTextField = new JUndoableTextField( getModelItem().getFullPath(), 20 );
 		pathTextField.getDocument().addDocumentListener( new DocumentListenerAdapter()
 		{
 			public void update( Document document )
@@ -101,7 +103,7 @@ public class RestResourceDesktopPanel extends ModelItemDesktopPanel<RestResource
 				if( !updating )
 				{
 					updating = true;
-					getModelItem().setPath( getText( document ) );
+					getModelItem().setPath( extractLastPathElementFrom( getText(document ) ) );
 					updating = false;
 				}
 			}
@@ -140,6 +142,11 @@ public class RestResourceDesktopPanel extends ModelItemDesktopPanel<RestResource
 		toolbar.add( UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.RESTRESOURCEEDITOR_HELPURL ) ) );
 
 		return toolbar;
+	}
+
+	private String extractLastPathElementFrom( String fullPath )
+	{
+		return fullPath.contains("/") ? fullPath.substring(fullPath.lastIndexOf( '/' ) + 1) : "";
 	}
 
 	@Override

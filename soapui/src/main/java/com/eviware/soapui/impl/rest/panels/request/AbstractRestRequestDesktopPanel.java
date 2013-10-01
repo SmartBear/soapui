@@ -219,7 +219,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 	{
 		if( !( getRequest() instanceof RestTestRequestInterface ) )
 		{
-			String path = getRequest().getResource().getPath();
+			String path = getRequest().getResource().getFullPath();
 			resourcePanel = new TextPanelWithTopLabel( "Resource", path, new DocumentListenerAdapter()
 			{
 				@Override
