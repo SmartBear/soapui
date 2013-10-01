@@ -12,18 +12,19 @@
 
 package com.eviware.soapui.impl.wsdl.actions.project;
 
-import java.io.IOException;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.model.mock.MockService;
+import com.eviware.soapui.model.project.SaveStatus;
 import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 
+import java.io.IOException;
+
 /**
  * Removes a WsdlProject from the workspace
- * 
+ *
  * @author Ole.Matzura
  */
 
@@ -44,13 +45,13 @@ public class RemoveProjectAction extends AbstractSoapUIAction<WsdlProject>
 			return;
 		}
 
-		Boolean retval = Boolean.FALSE;
+		Boolean saveProject = Boolean.FALSE;
 
 		if( project.isOpen() )
 		{
-			retval = UISupport.confirmOrCancel( "Save project [" + project.getName() + "] before removing?",
+			saveProject = UISupport.confirmOrCancel( "Save project [" + project.getName() + "] before removing?",
 					"Remove Project" );
-			if( retval == null )
+			if( saveProject == null )
 				return;
 		}
 		else
@@ -59,19 +60,23 @@ public class RemoveProjectAction extends AbstractSoapUIAction<WsdlProject>
 				return;
 		}
 
-		if( retval.booleanValue() )
+		if( saveProject )
 		{
 			try
 			{
-				project.save();
+				SaveStatus status = project.save();
+				if( status == SaveStatus.CANCELLED || status == SaveStatus.FAILED )
+				{
+					return;
+				}
 			}
 			catch( IOException e1 )
 			{
 				UISupport.showErrorMessage( e1 );
 			}
 		}
-
 		project.getWorkspace().removeProject( project );
+
 	}
 
 	private boolean hasRunningTests( WsdlProject project )
