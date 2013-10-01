@@ -12,6 +12,7 @@
 
 package com.eviware.soapui.impl.rest.panels.resource;
 
+import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder.ParameterStyle;
@@ -148,7 +149,10 @@ public class RestParamsTableModel extends AbstractTableModel implements TableMod
 				prop.setStyle( ( ParameterStyle )value );
 				return;
 			case 3:
-				this.isLastChangeParameterLevelChange = true;
+				if(params.getModelItem() instanceof RestRequest)
+				{
+					this.isLastChangeParameterLevelChange = true;
+				}
 				prop.setParamLocation(  ( ParamLocation )value );
 				return;
 		}

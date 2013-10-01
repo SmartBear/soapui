@@ -28,6 +28,16 @@ public class ModelItemFactory
 			return new RestRequest( makeRestMethod(), RestRequestConfig.Factory.newInstance(), false);
 	}
 
+	public static RestRequest makeRestRequest(RestResource restResource) throws SoapUIException
+	{
+		return new RestRequest( makeRestMethod(restResource), RestRequestConfig.Factory.newInstance(), false);
+	}
+
+	private static RestMethod makeRestMethod( RestResource restResource )
+	{
+		return new RestMethod( restResource, RestMethodConfig.Factory.newInstance());
+	}
+
 	public static RestMethod makeRestMethod() throws SoapUIException
 	{
 		return new RestMethod( makeRestResource(), RestMethodConfig.Factory.newInstance());
