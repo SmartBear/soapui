@@ -153,6 +153,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 
 public class SoapUI
 {
+	// ------------------------------ CONSTANTS ------------------------------
 	public static final String DEFAULT_DESKTOP = "Default";
 	public static final String CURRENT_SOAPUI_WORKSPACE = SoapUI.class.getName() + "@workspace";
 	public final static Logger log = Logger.getLogger( SoapUI.class );
@@ -160,23 +161,24 @@ public class SoapUI
 	public static final String DEFAULT_WORKSPACE_FILE = "default-soapui-workspace.xml";
 	public static final String SOAPUI_SPLASH = "soapui-splash.png";
 	public static final String SOAPUI_TITLE = "/branded/branded.properties";
-	private static final int DEFAULT_DESKTOP_ACTIONS_COUNT = 3;
 	public static final String PROXY_ENABLED_ICON = "/proxyEnabled.png";
 	public static final String PROXY_DISABLED_ICON = "/proxyDisabled.png";
 	public static final String BUILDINFO_PROPERTIES = "/buildinfo.properties";
-	private static final int DEFAULT_MAX_THREADPOOL_SIZE = 200;
-
 	@SuppressWarnings( "deprecation" )
 	public static String PUSH_PAGE_URL = "http://soapui.org/Appindex/soapui-starterpage.html?version="
 			+ URLEncoder.encode( SOAPUI_VERSION );
 	public static String FRAME_ICON = "/soapui-icon-16.png;/soapui-icon-24.png;/soapui-icon-32.png;/soapui-icon-48.png;/soapui-icon-256.png";
+
 	public static String PUSH_PAGE_ERROR_URL = "file://" + System.getProperty( "soapui.home", "." )
 			+ "/starter-page.html";
+
+	private static final int DEFAULT_DESKTOP_ACTIONS_COUNT = 3;
+	private static final int DEFAULT_MAX_THREADPOOL_SIZE = 200;
+
 
 	// ------------------------------ FIELDS ------------------------------
 
 	private static List<Object> logCache = new ArrayList<Object>();
-
 	private static SoapUICore soapUICore;
 	private static Timer soapUITimer = new Timer();
 	private static JFrame frame;
