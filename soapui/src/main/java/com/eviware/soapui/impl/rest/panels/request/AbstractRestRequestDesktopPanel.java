@@ -300,13 +300,27 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 			resetQueryPanelText();   //query param
 			String resourcePanelText = getResourcePanelText();
 			String paramStartString = ";" + name + "=";
+			//Update the resource path UGLY way, till the time the synchronization is implemented in a better way
 			if( resourcePanelText.contains( paramStartString ) )   //Matrix param
 			{
-				String substringWithParamValue = resourcePanelText.substring( resourcePanelText.indexOf( paramStartString ) + 1 );
-				int endIndex = substringWithParamValue.indexOf( ";" ) > 0 ? substringWithParamValue.indexOf( ";" ) :
-						( substringWithParamValue.indexOf( "{" ) > 0 ? substringWithParamValue.indexOf( "{" ) :
-						substringWithParamValue.length() );
-				String paramValue = substringWithParamValue.substring( substringWithParamValue.indexOf( "=" ) + 1, endIndex );
+				String substringWithParamValue = resourcePanelText.substring( resourcePanelText.indexOf(
+						paramStartString ) + 1 );
+				int indexOfNextMatrixParam = substringWithParamValue.indexOf( ";" );
+				int indexOfNextTemplateParam = substringWithParamValue.indexOf( "{" );
+				int paramValueEndIndex=  substringWithParamValue.length();
+				if(indexOfNextMatrixParam != -1 && (indexOfNextTemplateParam==-1
+						|| indexOfNextMatrixParam < indexOfNextTemplateParam))
+				{
+					paramValueEndIndex =   indexOfNextMatrixParam;
+				}
+				else if(indexOfNextTemplateParam != -1 && (indexOfNextMatrixParam==-1
+						|| indexOfNextTemplateParam < indexOfNextMatrixParam))
+				{
+					paramValueEndIndex =   indexOfNextTemplateParam;
+				}
+
+				String paramValue = substringWithParamValue.substring( substringWithParamValue.indexOf( "=" ) + 1,
+						paramValueEndIndex );
 				setResourcePanelText( getResourcePanelText().replaceAll( ";" + name + "=" + paramValue, "" ) );
 			}
 
