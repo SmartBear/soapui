@@ -2292,7 +2292,7 @@ return installTutorials;</condition>
                   <java class="java.beans.XMLDecoder">
                     <object class="com.install4j.runtime.beans.formcomponents.CheckboxComponent">
                       <void property="checkboxText">
-                        <string>Yes, I would like to view the RELEASENOTES file</string>
+                        <string>View the RELEASENOTES file</string>
                       </void>
                       <void property="initiallySelected">
                         <boolean>true</boolean>
