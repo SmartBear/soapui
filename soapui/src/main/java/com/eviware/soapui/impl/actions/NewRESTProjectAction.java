@@ -12,6 +12,7 @@
 
 package com.eviware.soapui.impl.actions;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.RestParametersConfig;
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.rest.*;
@@ -21,16 +22,15 @@ import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.support.MessageSupport;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
+import com.eviware.soapui.support.action.swing.ActionList;
+import com.eviware.soapui.support.action.swing.DefaultActionList;
 import com.eviware.soapui.support.components.JUndoableTextField;
-import com.eviware.x.form.XFormDialog;
-import com.eviware.x.form.XFormField;
-import com.eviware.x.form.support.ADialogBuilder;
-import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AForm;
+import com.eviware.x.form.*;
 import com.eviware.x.impl.swing.JTextFieldFormField;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.net.MalformedURLException;
@@ -45,12 +45,16 @@ public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 {
 	public static final String SOAPUI_ACTION_ID = "NewRESTProjectAction";
 
-	private final static Logger logger = Logger.getLogger( NewRESTProjectAction.class );
+	private static final Logger logger = Logger.getLogger( NewRESTProjectAction.class );
 	private static final String PROJECT_NAME = "REST Project"; //TODO: configurable or some other intelligent way
-	public static final String EXAMPLE_URI = "http://example.com/resource/path/search?parameter=value";
+	private static final String EXAMPLE_URI = "http://example.com/resource/path/search?parameter=value";
+	private static final MessageSupport messages = MessageSupport.getMessages( NewRESTProjectAction.class );
+	private static final String URI_LABEL = messages.get( "Form.URI.Label" );
+	private static final String URI_DESCRIPTION = messages.get( "Form.URI.Description" );
+
+
 	private XFormDialog dialog;
 
-	public static final MessageSupport messages = MessageSupport.getMessages( NewRESTProjectAction.class );
 	private KeyListener initialKeyListener;
 	private MouseListener initialMouseListener;
 	private Font originalFont;
@@ -62,14 +66,38 @@ public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 		super( messages.get( "Title" ), messages.get( "Description" ) );
 	}
 
+
+	private XFormDialog buildDialog()
+	{
+
+		XFormDialogBuilder newDialogBuilder = XFormFactory.createDialogBuilder( messages.get( "Title" ) );
+		XForm form = newDialogBuilder.createForm( "" );
+		form.addTextField( URI_LABEL, URI_DESCRIPTION, XForm.FieldType.TEXT );
+
+		ActionList actions = new DefaultActionList();
+		actions.addActions( newDialogBuilder.buildOkCancelHelpActions( HelpUrls.NEWRESTPROJECT_HELP_URL ) );
+
+		actions.addAction( new AbstractAction( "Import WADL..." )
+		{
+			@Override
+			public void actionPerformed( ActionEvent e )
+			{
+				dialog.setVisible( false );
+				SoapUI.getActionRegistry().getAction( NewGenericProjectAction.SOAPUI_ACTION_ID ).perform( SoapUI.getWorkspace(), null );
+			}
+		} );
+
+		return newDialogBuilder.buildDialog( actions, messages.get( "Description" ), UISupport.TOOL_ICON );
+	}
+
 	public void perform( WorkspaceImpl workspace, Object param )
 	{
 		if( dialog == null )
 		{
-			dialog = ADialogBuilder.buildDialog( Form.class );
+			dialog = buildDialog();
 		}
-		dialog.setValue( Form.URI, EXAMPLE_URI );
-		XFormField uriField = dialog.getFormField( Form.URI );
+		dialog.setValue( URI_LABEL, EXAMPLE_URI );
+		XFormField uriField = dialog.getFormField( URI_LABEL );
 
 		JUndoableTextField textField = null;
 		if( uriField instanceof JTextFieldFormField )
@@ -94,7 +122,7 @@ public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 					resetUriField( textField );
 				}
 
-				String URI = dialog.getValue( Form.URI ).trim();
+				String URI = dialog.getValue( URI_LABEL ).trim();
 
 				project = workspace.createProject( PROJECT_NAME, null );
 
@@ -224,17 +252,5 @@ public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 	protected RestRequest addNewRequest( RestMethod restMethod )
 	{
 		return restMethod.addNewRequest( "Request " + ( restMethod.getRequestCount() + 1 ) );
-	}
-
-	/**
-	 * This Form interface contains all the fields that will be used to populate the XFormDialog
-	 */
-	@AForm( name = "Form.Title", description = "Form.Description", helpUrl = HelpUrls.NEWRESTPROJECT_HELP_URL, icon = UISupport.TOOL_ICON_PATH )
-	public interface Form
-	{
-		@AField( description = "Form.URI.Description", type = AField.AFieldType.STRING )
-		public final static String URI = messages.get( "Form.URI.Label" );
-
-
 	}
 }
