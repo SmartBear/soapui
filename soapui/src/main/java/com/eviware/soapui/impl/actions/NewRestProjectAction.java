@@ -41,14 +41,14 @@ import java.net.MalformedURLException;
  * @author Shadid Chowdhury
  */
 
-public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
+public class NewRestProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 {
-	public static final String SOAPUI_ACTION_ID = "NewRESTProjectAction";
+	public static final String SOAPUI_ACTION_ID = "NewRestProjectAction";
 
-	private static final Logger logger = Logger.getLogger( NewRESTProjectAction.class );
+	private static final Logger logger = Logger.getLogger( NewRestProjectAction.class );
 	private static final String PROJECT_NAME = "REST Project"; //TODO: configurable or some other intelligent way
 	private static final String EXAMPLE_URI = "http://example.com/resource/path/search?parameter=value";
-	private static final MessageSupport messages = MessageSupport.getMessages( NewRESTProjectAction.class );
+	private static final MessageSupport messages = MessageSupport.getMessages( NewRestProjectAction.class );
 	private static final String URI_LABEL = messages.get( "Form.URI.Label" );
 	private static final String URI_DESCRIPTION = messages.get( "Form.URI.Description" );
 
@@ -61,7 +61,7 @@ public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 
 	private boolean defaultURIReplaced;
 
-	public NewRESTProjectAction()
+	public NewRestProjectAction()
 	{
 		super( messages.get( "Title" ), messages.get( "Description" ) );
 	}
@@ -83,7 +83,7 @@ public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 			public void actionPerformed( ActionEvent e )
 			{
 				dialog.setVisible( false );
-				SoapUI.getActionRegistry().getAction( NewGenericProjectAction.SOAPUI_ACTION_ID ).perform( SoapUI.getWorkspace(), null );
+				SoapUI.getActionRegistry().getAction( NewWadlProjectAction.SOAPUI_ACTION_ID ).perform( SoapUI.getWorkspace(), null );
 			}
 		} );
 
