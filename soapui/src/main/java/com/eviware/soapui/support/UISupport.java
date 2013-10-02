@@ -1027,15 +1027,18 @@ public class UISupport
 
 	public static void maximizeWindow(JFrame frame)
 	{
-		//TODO: Uncomment code below to try setExtendedState() on other platforms. Crashes GUI on Mac!
-		// if (isMac())
-		// {
-		frame.setSize( Toolkit.getDefaultToolkit().getScreenSize());
-		//}
-		//else
-		// {
-		// 	frame.setExtendedState(JFrame.MAXIMIZE_BOTH);
-		// }
+		Dimension screenResolution = Toolkit.getDefaultToolkit().getScreenSize();
+		// the following code is a workaround for the fact that setExtendedState() crashes the GUI on Mac,
+		// probably due to the JXBrowser component
+		if (isMac())
+		{
+			frame.setSize( screenResolution );
+		}
+		else
+		{
+			frame.setSize(new Dimension((int)(.7 * screenResolution.width), (int)(.7 * screenResolution.width)));
+			frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+		}
 	}
 
 	private static final class ItemListenerImplementation implements ItemListener
