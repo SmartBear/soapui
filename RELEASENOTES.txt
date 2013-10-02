@@ -86,9 +86,6 @@
 
 ## version 4.5.1 - 2012-06-27
 
-Please see http://soapui.org/Downloads/soapui-451-bugs-fixed.html for an overview
-of the bugs fixed in this release.
-
 ### Bugs fixed
 - Added the GetData feature to the editable fields of the Message Content Assertion feature.
 - Improved the new licensing model to improve user experience with activating and managing the soapUI license including providing an excel license key registry file.
