@@ -155,7 +155,7 @@ Fixed a SoapUI Pro Testrunner bug, When you overrode Global Properties you could
 - Under some conditions the password in service endpoints and environments could be visible to the end user
 - Testcase that contains " (quotation mark) in its label weren't executed in composite projects
 - Fixed a problem where a combination of soapUI composite project and SVN when renaming test suites
-- Custom Assertion werem't visible in the list of available assertions
+- Custom Assertion weren't visible in the list of available assertions
 - Corrected Mock War Packaging Issues
 - Pre encoded endpoints setting wasn't working for REST or HTTP URLs
 - REST URLs weren't calculated correctly when endPoints had context
