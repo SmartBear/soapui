@@ -129,15 +129,14 @@ public class SoapUI
 	public static final String DEFAULT_DESKTOP = "Default";
 	public static final String CURRENT_SOAPUI_WORKSPACE = SoapUI.class.getName() + "@workspace";
 	public final static Logger log = Logger.getLogger( SoapUI.class );
-	public final static String SOAPUI_VERSION =
-			Objects.firstNonNull( System.getProperty( SoapUISystemProperties.VERSION ),
-					Objects.firstNonNull( com.eviware.soapui.SoapUI.class.getPackage().getImplementationVersion(), "UNKNOWN VERSION" ) );
+	public final static String SOAPUI_VERSION = getVersion( SoapUISystemProperties.VERSION );
 	public static final String DEFAULT_WORKSPACE_FILE = "default-soapui-workspace.xml";
 	public static final String SOAPUI_SPLASH = "soapui-splash.png";
 	public static final String SOAPUI_TITLE = "/branded/branded.properties";
 	private static final int DEFAULT_DESKTOP_ACTIONS_COUNT = 3;
 	public static final String PROXY_ENABLED_ICON = "/proxyEnabled.png";
 	public static final String PROXY_DISABLED_ICON = "/proxyDisabled.png";
+	public static final String BUILDINFO_PROPERTIES = "/buildinfo.properties";
 
 	@SuppressWarnings( "deprecation" )
 	public static String PUSH_PAGE_URL = "http://soapui.org/Appindex/soapui-starterpage.html?version="
@@ -200,6 +199,35 @@ public class SoapUI
 
 	private SoapUI()
 	{
+	}
+
+	static String getVersion( String versionPropertyName )
+	{
+		String version = System.getProperty( versionPropertyName );
+		if( version != null )
+		{
+			return version;
+		}
+		version = com.eviware.soapui.SoapUI.class.getPackage().getImplementationVersion();
+		if( version != null )
+		{
+			return version;
+		}
+		try
+		{
+			Properties buildInfoProperties = new Properties();
+			buildInfoProperties.load( SoapUI.class.getResourceAsStream( BUILDINFO_PROPERTIES ) );
+			version = buildInfoProperties.getProperty( "version" );
+			if( !StringUtils.isNullOrEmpty( version ) )
+			{
+				return version;
+			}
+		}
+		catch( Exception exception )
+		{
+			//ignore
+		}
+		return "UNKNOWN VERSION";
 	}
 
 	private static int getSystemPropertyAsInt( String string, int defaultValue )
@@ -1368,7 +1396,6 @@ public class SoapUI
 		private static final String COPYRIGHT = "2004-2013 smartbear.com";
 		private static final String SOAPUI_WEBSITE = "http://www.soapui.org";
 		private static final String SMARTBEAR_WEBSITE = "http://www.smartbear.com";
-		public static final String BUILDINFO_PROPERTIES = "/buildinfo.properties";
 
 		public AboutAction()
 		{

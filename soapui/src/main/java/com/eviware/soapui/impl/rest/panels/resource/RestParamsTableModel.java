@@ -16,6 +16,7 @@ import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder.ParameterStyle;
+import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestPropertyListener;
 
@@ -34,29 +35,28 @@ public class RestParamsTableModel extends AbstractTableModel implements TableMod
 {
 	public static final int PARAM_LOCATION_COLUMN_INDEX = 3;
 	protected RestParamsPropertyHolder params;
-	private List<String> paramNameIndex = new ArrayList<String>(  );
+	private List<String> paramNameIndex = new ArrayList<String>();
 
 	static String[] COLUMN_NAMES = new String[] { "Name", "Default value", "Style", "Level" };
 	static Class[] COLUMN_TYPES = new Class[] { String.class, String.class, ParameterStyle.class, ParamLocation.class };
+	private boolean isLastChangeParameterLevelChange = false;
 
 	public RestParamsTableModel( RestParamsPropertyHolder params )
 	{
 		this.params = params;
 		params.addTestPropertyListener( this );
-		if(params.getModelItem() instanceof RestRequest) {
-			( ( RestRequest )params.getModelItem() ).getResource().getParams().addTestPropertyListener( this );
-			( ( RestRequest )params.getModelItem() ).getResource().addPropertyChangeListener( this );
-			( ( RestRequest )params.getModelItem() ).getRestMethod().getParams().addTestPropertyListener( this );
-			( ( RestRequest )params.getModelItem() ).getRestMethod().addPropertyChangeListener( this );
+		ModelItem parametersOwner = params.getModelItem();
+		if( parametersOwner != null )
+		{
+			parametersOwner.addPropertyChangeListener( this );
 		}
-
 		buildParamNameIndex( params );
 	}
 
 	private void buildParamNameIndex( RestParamsPropertyHolder params )
 	{
-		paramNameIndex = new ArrayList<String>( Collections.nCopies( params.size(), "" ));//Initialize with empty values
-		for (TestProperty property : params.getProperties().values())
+		paramNameIndex = new ArrayList<String>( Collections.nCopies( params.size(), "" ) );//Initialize with empty values
+		for( TestProperty property : params.getProperties().values() )
 		{
 			paramNameIndex.set( params.getPropertyIndex( property.getName() ), property.getName() );
 		}
@@ -146,7 +146,7 @@ public class RestParamsTableModel extends AbstractTableModel implements TableMod
 			case 1:
 				//if( !prop.getParamLocation().equals( ParamLocation.REQUEST ) )
 				//{
-					prop.setDefaultValue( value.toString() );
+				prop.setDefaultValue( value.toString() );
 				//}
 				prop.setValue( value.toString() );
 				return;
@@ -154,7 +154,11 @@ public class RestParamsTableModel extends AbstractTableModel implements TableMod
 				prop.setStyle( ( ParameterStyle )value );
 				return;
 			case 3:
-				prop.setParamLocation(  ( ParamLocation )value );
+				if( params.getModelItem() instanceof RestRequest )
+				{
+					this.isLastChangeParameterLevelChange = true;
+				}
+				prop.setParamLocation( ( ParamLocation )value );
 				return;
 		}
 	}
@@ -166,7 +170,7 @@ public class RestParamsTableModel extends AbstractTableModel implements TableMod
 
 	public void propertyAdded( String name )
 	{
-		if(!paramNameIndex.contains( name ))
+		if( !paramNameIndex.contains( name ) )
 		{
 			paramNameIndex.add( name );
 		}
@@ -175,7 +179,11 @@ public class RestParamsTableModel extends AbstractTableModel implements TableMod
 
 	public void propertyRemoved( String name )
 	{
-		paramNameIndex.remove( name );
+		if( !this.isLastChangeParameterLevelChange )
+		{
+			paramNameIndex.remove( name );
+		}
+		this.isLastChangeParameterLevelChange = false;
 		fireTableDataChanged();
 	}
 
@@ -200,7 +208,7 @@ public class RestParamsTableModel extends AbstractTableModel implements TableMod
 		fireTableDataChanged();
 	}
 
-	public void moveProperty(String name, int oldIndex, int newIndex)
+	public void moveProperty( String name, int oldIndex, int newIndex )
 	{
 		String valueAtNewindex = paramNameIndex.get( newIndex );
 		paramNameIndex.set( newIndex, name );

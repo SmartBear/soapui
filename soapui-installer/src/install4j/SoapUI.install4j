@@ -2265,7 +2265,7 @@ return installTutorials;</condition>
                     <object class="com.install4j.runtime.beans.actions.finish.ShowFileAction">
                       <void property="file">
                         <object class="java.io.File">
-                          <string>readme.txt</string>
+                          <string>RELEASENOTES.txt</string>
                         </object>
                       </void>
                     </object>
@@ -2292,7 +2292,7 @@ return installTutorials;</condition>
                   <java class="java.beans.XMLDecoder">
                     <object class="com.install4j.runtime.beans.formcomponents.CheckboxComponent">
                       <void property="checkboxText">
-                        <string>${i18n:ShowReadmeCheck}</string>
+                        <string>View the release notes</string>
                       </void>
                       <void property="initiallySelected">
                         <boolean>true</boolean>
