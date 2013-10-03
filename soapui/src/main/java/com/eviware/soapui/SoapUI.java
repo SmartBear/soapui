@@ -12,7 +12,12 @@
 
 package com.eviware.soapui;
 
-import com.eviware.soapui.actions.*;
+import com.eviware.soapui.actions.SaveAllProjectsAction;
+import com.eviware.soapui.actions.ShowSystemPropertiesAction;
+import com.eviware.soapui.actions.SoapUIPreferencesAction;
+import com.eviware.soapui.actions.StartHermesJMSButtonAction;
+import com.eviware.soapui.actions.SwitchDesktopPanelAction;
+import com.eviware.soapui.actions.VersionUpdateAction;
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.actions.ImportWsdlProjectAction;
 import com.eviware.soapui.impl.actions.NewGenericProjectAction;
@@ -59,14 +64,22 @@ import com.eviware.soapui.monitor.TestMonitor;
 import com.eviware.soapui.settings.ProxySettings;
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.settings.VersionUpdateSettings;
-import com.eviware.soapui.support.*;
+import com.eviware.soapui.support.SoapUIException;
+import com.eviware.soapui.support.SoapUIVersionUpdate;
+import com.eviware.soapui.support.StringUtils;
+import com.eviware.soapui.support.Tools;
+import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.SoapUIAction;
 import com.eviware.soapui.support.action.SoapUIActionRegistry;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.ActionListBuilder;
 import com.eviware.soapui.support.action.swing.ActionSupport;
 import com.eviware.soapui.support.action.swing.SwingActionDelegate;
-import com.eviware.soapui.support.components.*;
+import com.eviware.soapui.support.components.JComponentInspector;
+import com.eviware.soapui.support.components.JInspectorPanel;
+import com.eviware.soapui.support.components.JInspectorPanelFactory;
+import com.eviware.soapui.support.components.JPropertiesTable;
+import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.dnd.DropType;
 import com.eviware.soapui.support.dnd.NavigatorDragAndDropable;
 import com.eviware.soapui.support.dnd.SoapUIDragAndDropHandler;
@@ -104,19 +117,49 @@ import org.apache.commons.cli.PosixParser;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.BorderFactory;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
+import javax.swing.JToggleButton;
+import javax.swing.JTree;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.ToolTipManager;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DragSource;
-import java.awt.event.*;
-import java.io.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -137,6 +180,7 @@ public class SoapUI
 	public static final String PROXY_ENABLED_ICON = "/proxyEnabled.png";
 	public static final String PROXY_DISABLED_ICON = "/proxyDisabled.png";
 	public static final String BUILDINFO_PROPERTIES = "/buildinfo.properties";
+	private static final int DEFAULT_MAX_THREADPOOL_SIZE = 200;
 
 	@SuppressWarnings( "deprecation" )
 	public static String PUSH_PAGE_URL = "http://soapui.org/Appindex/soapui-starterpage.html?version="
@@ -163,8 +207,6 @@ public class SoapUI
 	private static TestMonitor testMonitor;
 
 	private JMenu desktopMenu;
-	private JMenu helpMenu;
-	private JMenu fileMenu;
 	private static JMenuBar menuBar;
 	private JDesktopPanelsList desktopPanelsList;
 
@@ -172,7 +214,6 @@ public class SoapUI
 	private static Boolean launchedTestRunner = false;
 
 	private JPanel overviewPanel;
-	private JMenu toolsMenu;
 	private boolean saveOnExit = true;
 	private InternalDesktopListener internalDesktopListener = new InternalDesktopListener();
 	private JInspectorPanel mainInspector;
@@ -186,13 +227,10 @@ public class SoapUI
 	private static GCTimerTask gcTimerTask;
 
 	private final static ThreadPoolExecutor threadPool = ( ThreadPoolExecutor )Executors.newFixedThreadPool(
-			getSystemPropertyAsInt( "soapui.threadpool.max", 200 ), new SoapUIThreadCreator() );
+			getMaxThreadpoolSize(), new SoapUIThreadCreator() );
 	private JTextField searchField;
 	private static JToggleButton applyProxyButton;
 	private static Logger groovyLogger;
-	private static Logger loadUILogger;
-	@SuppressWarnings( "unused" )
-	private static JButton launchLoadUIButton;
 	private static CmdLineRunner soapUIRunner;
 
 	// --------------------------- CONSTRUCTORS ---------------------------
@@ -230,26 +268,20 @@ public class SoapUI
 		return "UNKNOWN VERSION";
 	}
 
-	private static int getSystemPropertyAsInt( String string, int defaultValue )
+	private static int getMaxThreadpoolSize()
 	{
-
-		String strValue = System.getProperty( "soapui.threadpool.max" );
-		int parseInt = defaultValue;
 		try
 		{
-			parseInt = Integer.parseInt( strValue );
+			return Integer.parseInt( System.getProperty( "soapui.threadpool.max" ) );
 		}
 		catch( Exception e )
 		{
-			// Ignore, return default
+			return DEFAULT_MAX_THREADPOOL_SIZE;
 		}
-
-		return parseInt;
 	}
 
 	private void buildUI()
 	{
-		// display used java version
 		log.info( "Used java version: " + System.getProperty( "java.version" ) );
 		frame.addWindowListener( new MainFrameWindowListener() );
 		UISupport.setMainFrame( frame );
@@ -326,7 +358,7 @@ public class SoapUI
 			applyProxyButton.setIcon( UISupport.createImageIcon( PROXY_DISABLED_ICON ) );
 			ProxyUtils.setProxyEnabled( false );
 		}
-		launchLoadUIButton = mainToolbar.add( new LaunchLoadUIButtonAction() );
+		mainToolbar.add( new LaunchLoadUIButtonAction() );
 
 		mainToolbar.addGlue();
 
@@ -414,7 +446,7 @@ public class SoapUI
 
 	private JMenu buildHelpMenu()
 	{
-		helpMenu = new JMenu( "Help" );
+		JMenu helpMenu = new JMenu( "Help" );
 		helpMenu.setMnemonic( KeyEvent.VK_H );
 
 		helpMenu.add( new ShowPushPageAction() );
@@ -439,7 +471,7 @@ public class SoapUI
 
 	private JMenu buildToolsMenu()
 	{
-		toolsMenu = new JMenu( "Tools" );
+		JMenu toolsMenu = new JMenu( "Tools" );
 		toolsMenu.setMnemonic( KeyEvent.VK_T );
 
 		toolsMenu.add( SwingActionDelegate.createDelegate( WSToolsWsdl2JavaAction.SOAPUI_ACTION_ID ) );
@@ -471,7 +503,7 @@ public class SoapUI
 
 	private JMenu buildFileMenu()
 	{
-		fileMenu = new JMenu( "File" );
+		JMenu fileMenu = new JMenu( "File" );
 		fileMenu.setMnemonic( KeyEvent.VK_F );
 
 		ActionList actions = ActionListBuilder.buildActions( workspace );
@@ -642,7 +674,7 @@ public class SoapUI
 					brandedTitleExt = "";
 				}
 
-				startSoapUI( mainArgs, "soapUI " + SOAPUI_VERSION + " " + brandedTitleExt, SOAPUI_SPLASH,
+				startSoapUI( mainArgs, "soapUI " + SOAPUI_VERSION + " " + brandedTitleExt,
 						new StandaloneSoapUICore( true ) );
 
 				if( isAutoUpdateVersion() )
@@ -751,7 +783,7 @@ public class SoapUI
 		return mainArgs;
 	}
 
-	public static SoapUI startSoapUI( String[] args, String title, String splashImage, SwingSoapUICore core )
+	public static SoapUI startSoapUI( String[] args, String title, SwingSoapUICore core )
 			throws Exception
 	{
 		System.setProperty( "apple.laf.useScreenMenuBar", "true" );
@@ -779,7 +811,7 @@ public class SoapUI
 		CommandLineParser parser = new PosixParser();
 		CommandLine cmd = parser.parse( options, args );
 
-		if( !processCommandLineArgs( cmd, options ) )
+		if( !processCommandLineArgs( cmd ) )
 		{
 			System.exit( 1 );
 		}
@@ -791,11 +823,11 @@ public class SoapUI
 		}
 		else
 		{
-			String wsfile = soapUICore.getSettings().getString( CURRENT_SOAPUI_WORKSPACE,
+			String workspaceFile = soapUICore.getSettings().getString( CURRENT_SOAPUI_WORKSPACE,
 					System.getProperty( "user.home" ) + File.separatorChar + DEFAULT_WORKSPACE_FILE );
 			try
 			{
-				workspace = WorkspaceFactory.getInstance().openWorkspace( wsfile, projectOptions );
+				workspace = WorkspaceFactory.getInstance().openWorkspace( workspaceFile, projectOptions );
 			}
 			catch( Exception e )
 			{
@@ -803,8 +835,8 @@ public class SoapUI
 				if( UISupport
 						.confirm( "Failed to open workspace: [" + e.toString() + "], create new one instead?", "Error" ) )
 				{
-					new File( wsfile ).renameTo( new File( wsfile + ".bak" ) );
-					workspace = WorkspaceFactory.getInstance().openWorkspace( wsfile, projectOptions );
+					new File( workspaceFile ).renameTo( new File( workspaceFile + ".bak" ) );
+					workspace = WorkspaceFactory.getInstance().openWorkspace( workspaceFile, projectOptions );
 				}
 				else
 				{
@@ -845,7 +877,7 @@ public class SoapUI
 					URL url = new URL( arg );
 					SwingUtilities.invokeLater( new RestProjectCreator( url ) );
 				}
-				catch( Exception e )
+				catch( Exception ignore )
 				{
 				}
 			}
@@ -853,7 +885,7 @@ public class SoapUI
 		return soapUI;
 	}
 
-	private static boolean processCommandLineArgs( CommandLine cmd, org.apache.commons.cli.Options options )
+	private static boolean processCommandLineArgs( CommandLine cmd )
 	{
 		if( cmd.hasOption( 'w' ) )
 		{
@@ -1028,10 +1060,7 @@ public class SoapUI
 
 	public static boolean isJXBrowserDisabled( boolean allowNative )
 	{
-		if( UISupport.isHeadless() )
-			return true;
-
-		if( isCommandLine() )
+		if( UISupport.isHeadless() || isCommandLine())
 			return true;
 
 		String disable = System.getProperty( "soapui.jxbrowser.disable", "nope" );
@@ -1045,11 +1074,9 @@ public class SoapUI
 				&& ( BrowserType.Mozilla.isSupported() || BrowserType.IE.isSupported() || BrowserType.Safari.isSupported() ) )
 			return false;
 
-		if( !disable.equals( "false" )
-				&& ( !PlatformContext.isMacOS() && "64".equals( System.getProperty( "sun.arch.data.model" ) ) ) )
-			return true;
+		return !disable.equals( "false" )
+				&& ( !PlatformContext.isMacOS() && "64".equals( System.getProperty( "sun.arch.data.model" ) ) );
 
-		return false;
 	}
 
 	public static boolean isJXBrowserPluginsDisabled()
@@ -1073,7 +1100,7 @@ public class SoapUI
 		if( msg == null )
 			msg = e.toString();
 
-		log.error( "An error occured [" + msg + "], see error log for details" );
+		log.error( "An error occurred [" + msg + "], see error log for details" );
 
 		try
 		{
@@ -1264,7 +1291,7 @@ public class SoapUI
 				if( p != null )
 				{
 					InputStream is = p.getInputStream();
-					loadUILogger = Logger.getLogger( "com.eviware.soapui" );
+					Logger soapUILogger = Logger.getLogger( "com.eviware.soapui" );
 					try
 					{
 						BufferedInputStream inputStream = new BufferedInputStream( is );
@@ -1272,7 +1299,7 @@ public class SoapUI
 						String line;
 						while( ( line = bris.readLine() ) != null )
 						{
-							loadUILogger.info( line );
+							soapUILogger.info( line );
 						}
 						inputStream.close();
 						bris.close();
@@ -1751,10 +1778,10 @@ public class SoapUI
 				public void run()
 				{
 					SoapUI.log( "Autosaving Workspace" );
-					WorkspaceImpl wrkspc = ( WorkspaceImpl )SoapUI.getWorkspace();
-					if( wrkspc != null )
+					WorkspaceImpl workspaceImplementation = ( WorkspaceImpl )SoapUI.getWorkspace();
+					if( workspaceImplementation != null )
 					{
-						wrkspc.save( false, true );
+						workspaceImplementation.save( false, true );
 					}
 				}
 			} );
