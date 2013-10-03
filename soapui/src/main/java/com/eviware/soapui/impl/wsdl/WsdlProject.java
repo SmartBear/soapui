@@ -650,7 +650,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 
 		if( !hasBeenSavedBefore() )
 		{
-			String tempPath = StringUtils.createFileName2( getName(), '-' ) + "-soapui-project.xml";
+			String tempPath = createProjectFileName();
 
 			if( folder != null )
 			{
@@ -711,7 +711,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 			}
 		}
 
-		if( projectFile.exists() && getSettings().getBoolean( UISettings.CREATE_BACKUP ) )
+		if( shouldCreateBackup( projectFile ) )
 		{
 			createBackup( projectFile );
 		}
@@ -727,12 +727,22 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 		return saveStatus;
 	}
 
+	protected boolean shouldCreateBackup( File projectFile )
+	{
+		return projectFile.exists() && getSettings().getBoolean( UISettings.CREATE_BACKUP );
+	}
+
+	protected String createProjectFileName()
+	{
+		return StringUtils.createFileName2( getName(), '-' ) + "-soapui-project.xml";
+	}
+
 	File createFile( String filePath )
 	{
 		return new File( filePath );
 	}
 
-	private boolean projectFileModified( File projectFile )
+	protected boolean projectFileModified( File projectFile )
 	{
 		return projectFile.exists() && lastModified != 0 && lastModified < projectFile.lastModified();
 	}
