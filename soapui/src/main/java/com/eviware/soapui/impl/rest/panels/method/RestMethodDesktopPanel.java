@@ -12,15 +12,6 @@
 
 package com.eviware.soapui.impl.rest.panels.method;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.beans.PropertyChangeEvent;
-
-import javax.swing.JComboBox;
-import javax.swing.JTabbedPane;
-
 import com.eviware.soapui.impl.rest.RestMethod;
 import com.eviware.soapui.impl.rest.RestRepresentation;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
@@ -33,6 +24,14 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.SwingActionDelegate;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.beans.PropertyChangeEvent;
+
+import static com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase.ParamLocation;
 
 public class RestMethodDesktopPanel extends ModelItemDesktopPanel<RestMethod>
 {
@@ -53,7 +52,8 @@ public class RestMethodDesktopPanel extends ModelItemDesktopPanel<RestMethod>
 	{
 		JTabbedPane tabs = new JTabbedPane();
 
-		paramsTable = new RestParamsTable( getModelItem().getParams(), true );
+		paramsTable = new RestParamsTable( getModelItem().getParams(), true, ParamLocation.METHOD, true, false );
+
 		tabs.addTab( "Method Parameters", paramsTable );
 
 		restRepresentationsTable = new RestRepresentationsTable( getModelItem(), new RestRepresentation.Type[] {
@@ -146,6 +146,11 @@ public class RestMethodDesktopPanel extends ModelItemDesktopPanel<RestMethod>
 		if( evt.getPropertyName().equals( "method" ) && !updatingRequest )
 		{
 			methodCombo.setSelectedItem( evt.getNewValue() );
+		}
+
+		if( paramsTable != null )
+		{
+			paramsTable.refresh();
 		}
 	}
 

@@ -50,6 +50,7 @@ public class RestRequestDesktopPanel extends
 		addToTestCaseButton.setEnabled( enabled );
 	}
 
+	@Override
 	protected void insertButtons( JXToolBar toolbar )
 	{
 		toolbar.add( addToTestCaseButton );

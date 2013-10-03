@@ -182,6 +182,9 @@ public class HttpRequestFilter extends AbstractRequestFilter
 				}
 				break;
 			case MATRIX :
+				String valueInPath = ";" + param.getName() + "=" + value;
+				String valueToBeSet = ";" + param.getName(); //if parameter type is boolean then it is presented by
+				                                             // presence of parameter
 				try
 				{
 					value = getEncodedValue( value, encoding, param.isDisableUrlEncoding(), request
@@ -192,21 +195,15 @@ public class HttpRequestFilter extends AbstractRequestFilter
 					SoapUI.logError( e );
 				}
 
-				if( param.getType().equals( XmlBoolean.type.getName() ) )
+				if( !param.getType().equals( XmlBoolean.type.getName() ) )
 				{
-					if( value.toUpperCase().equals( "TRUE" ) || value.equals( "1" ) )
-					{
-						path += ";" + param.getName();
-					}
-				}
-				else
-				{
-					path += ";" + param.getName();
 					if( StringUtils.hasContent( value ) )
 					{
-						path += "=" + value;
+						valueToBeSet += "=" + value;
 					}
 				}
+				path = path.replaceAll( valueInPath,  valueToBeSet);
+				break;
 			case PLAIN :
 				break;
 			}

@@ -5,7 +5,7 @@
     <parent>
         <artifactId>soapui-project</artifactId>
         <groupId>com.smartbear.soapui</groupId>
-        <version>4.5.4-SNAPSHOT</version>
+        <version>4.6.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -129,12 +129,8 @@
                             <value>${maven.loadUI.downloader}</value>
                         </property>
                         <property>
-                            <name>LOADUI_VERSION_NUMBER</name>
-                            <value>2.1.1</value>
-                        </property>
-                        <property>
                             <name>LOADUI_INSTALLER_URL_BASE</name>
-                            <value>http://dl.eviware.com/loadui/os</value>
+                            <value>http://dl.eviware.com/loadui/os/version/LoadUI-version</value>
                         </property>
                     </compilerVariables>
                 </configuration>
@@ -171,6 +167,9 @@
                             ${installer.build.directory}/soapUI-x32-${project.version}.sh
                         </file>
                         <file>
+                            ${installer.build.directory}/soapUI-x64-${project.version}.sh
+                        </file>
+                        <file>
                             ${installer.build.directory}/soapUI-${project.version}.dmg
                         </file>
                     </files>
@@ -187,6 +186,28 @@
                     <generatePlainTextChangeLog>false</generatePlainTextChangeLog>
                     <generateHTMLTableOnlyChangeLog>false</generateHTMLTableOnlyChangeLog>
                     <generateSimpleHTMLChangeLog>true</generateSimpleHTMLChangeLog>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.2.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <mainClass>com.eviware.soapui.tools.SplashScreenStomper</mainClass>
+                    <arguments>
+                        <argument>SoapUI ${project.version}</argument>
+                        <argument>${basedir}/src/main/resources/soapui-splash-blank.png</argument>
+                        <argument>${basedir}/target/soapui-splash.png</argument>
+                    </arguments>
                 </configuration>
             </plugin>
         </plugins>

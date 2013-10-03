@@ -12,30 +12,9 @@
 
 package com.eviware.soapui.impl.support.http;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.SwingUtilities;
-import javax.swing.text.Document;
-
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
-
 import com.eviware.soapui.impl.rest.panels.resource.RestParamsTable;
 import com.eviware.soapui.impl.rest.panels.resource.RestParamsTableModel;
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
-import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.support.panels.AbstractHttpXmlRequestDesktopPanel.HttpRequestDocument;
 import com.eviware.soapui.impl.support.panels.AbstractHttpXmlRequestDesktopPanel.HttpRequestMessageEditor;
@@ -45,6 +24,17 @@ import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.editor.views.AbstractXmlEditorView;
 import com.eviware.soapui.support.propertyexpansion.PropertyExpansionPopupListener;
 import com.eviware.soapui.support.xml.SyntaxEditorUtil;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+
+import javax.swing.*;
+import javax.swing.text.Document;
+import java.awt.*;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
+import static com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase.ParamLocation;
 
 @SuppressWarnings( "unchecked" )
 public class HttpRequestContentView extends AbstractXmlEditorView<HttpRequestDocument> implements
@@ -57,7 +47,7 @@ public class HttpRequestContentView extends AbstractXmlEditorView<HttpRequestDoc
 	private JComponent panel;
 	private JComboBox mediaTypeCombo;
 	private JSplitPane split;
-	private RestParamsTable paramsTable;
+	protected RestParamsTable paramsTable;
 	private JCheckBox postQueryCheckBox;
 
 	public HttpRequestContentView( HttpRequestMessageEditor httpRequestMessageEditor, HttpRequestInterface<?> httpRequest )
@@ -97,42 +87,36 @@ public class HttpRequestContentView extends AbstractXmlEditorView<HttpRequestDoc
 
 	protected RestParamsTable buildParamsTable()
 	{
-		paramsTable = new RestParamsTable( httpRequest.getParams(), false )
+		RestParamsTableModel restParamsTableModel = new RestParamsTableModel( httpRequest.getParams() )
 		{
-			protected RestParamsTableModel createTableModel( RestParamsPropertyHolder params )
+			@Override
+			public String getColumnName( int column )
 			{
-				return new RestParamsTableModel( params )
-				{
-					@Override
-					public String getColumnName( int column )
-					{
-						return column == 0 ? "Name" : "Value";
-					}
+				return column == 0 ? "Name" : "Value";
+			}
 
-					public int getColumnCount()
-					{
-						return 2;
-					}
+			public int getColumnCount()
+			{
+				return 2;
+			}
 
-					public Object getValueAt( int rowIndex, int columnIndex )
-					{
-						RestParamProperty prop = params.getPropertyAt( rowIndex );
-						return columnIndex == 0 ? prop.getName() : prop.getValue();
-					}
+			public Object getValueAt( int rowIndex, int columnIndex )
+			{
+				RestParamProperty prop = params.getPropertyAt( rowIndex );
+				return columnIndex == 0 ? prop.getName() : prop.getValue();
+			}
 
-					@Override
-					public void setValueAt( Object value, int rowIndex, int columnIndex )
-					{
-						RestParamProperty prop = params.getPropertyAt( rowIndex );
-						if( columnIndex == 0 )
-							prop.setName( value.toString() );
-						else
-							prop.setValue( value.toString() );
-					}
-				};
+			@Override
+			public void setValueAt( Object value, int rowIndex, int columnIndex )
+			{
+				RestParamProperty prop = params.getPropertyAt( rowIndex );
+				if( columnIndex == 0 )
+					prop.setName( value.toString() );
+				else
+					prop.setValue( value.toString() );
 			}
 		};
-		return paramsTable;
+		return new RestParamsTable( httpRequest.getParams(), false, restParamsTableModel, ParamLocation.RESOURCE, true, false );
 	}
 
 	@Override
@@ -216,14 +200,12 @@ public class HttpRequestContentView extends AbstractXmlEditorView<HttpRequestDoc
 			}
 		} );
 
-		postQueryCheckBox.setPreferredSize( new Dimension( 130, 20 ) );
 		toolbar.addFixed( postQueryCheckBox );
 	}
 
 	protected void addMediaTypeCombo( JXToolBar toolbar )
 	{
 		mediaTypeCombo = new JComboBox( getRequestMediaTypes() );
-		mediaTypeCombo.setPreferredSize( new Dimension( 120, 20 ) );
 		mediaTypeCombo.setEnabled( httpRequest.hasRequestBody() );
 		mediaTypeCombo.setEditable( true );
 		if( httpRequest.getMediaType() != null )
@@ -242,7 +224,7 @@ public class HttpRequestContentView extends AbstractXmlEditorView<HttpRequestDoc
 
 	protected Object[] getRequestMediaTypes()
 	{
-		return new String[] { "application/xml", "text/xml", "multipart/form-data" };
+		return new String[] { "application/json", "application/xml", "text/xml", "multipart/form-data" };
 	}
 
 	public void propertyChange( PropertyChangeEvent evt )
@@ -268,6 +250,10 @@ public class HttpRequestContentView extends AbstractXmlEditorView<HttpRequestDoc
 		}
 
 		super.propertyChange( evt );
+		if( paramsTable != null )
+		{
+			paramsTable.refresh();
+		}
 	}
 
 	private void fixRequestPanel()
@@ -313,8 +299,8 @@ public class HttpRequestContentView extends AbstractXmlEditorView<HttpRequestDoc
 
 	public void setEditable( boolean enabled )
 	{
-		contentEditor.setEnabled( enabled ? httpRequest.hasRequestBody() : false );
-		contentEditor.setEditable( enabled ? httpRequest.hasRequestBody() : false );
+		contentEditor.setEnabled( enabled && httpRequest.hasRequestBody() );
+		contentEditor.setEditable( enabled && httpRequest.hasRequestBody() );
 		mediaTypeCombo.setEnabled( enabled && !httpRequest.isPostQueryString() );
 		postQueryCheckBox.setEnabled( enabled );
 	}

@@ -126,7 +126,6 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
 	private JCheckBox transferAllCheckBox;
 	private JCheckBox entitizeCheckBox;
 	private JCheckBox transferChildNodesCheckBox;
-	private DesktopPanel resultDesktopPanel;
 	private TransfersTableModel transferLogTableModel;
 	private InternalTestRunListener testRunListener;
 	private JComponentInspector<JComponent> logInspector;
@@ -500,8 +499,7 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
 
 					if( valueTransfer != null )
 					{
-						String name = "";
-
+						String name;
 						if( targetStep == PropertyExpansionUtils.getGlobalProperties() )
 							name = PropertyExpansion.GLOBAL_REFERENCE;
 						else if( targetStep == transferStep.getTestCase().getTestSuite().getProject() )
@@ -546,8 +544,13 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
 		} );
 
 		toolbar.add( UISupport.setFixedSize( targetPropertyCombo, 130, 21 ) );
-		toolbar.addGlue();
+		customizeTargetToolbar( toolbar );
 		return toolbar;
+	}
+
+	protected void customizeTargetToolbar( JXToolBar toolbar )
+	{
+		toolbar.addGlue();
 	}
 
 	protected JXToolBar createSourceToolbar()
@@ -612,8 +615,7 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
 
 					if( valueTransfer != null )
 					{
-						String name = "";
-
+						String name;
 						if( sourceStep == PropertyExpansionUtils.getGlobalProperties() )
 							name = PropertyExpansion.GLOBAL_REFERENCE;
 						else if( sourceStep == transferStep.getTestCase().getTestSuite().getProject() )
@@ -658,8 +660,13 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
 		} );
 
 		toolbar.add( UISupport.setFixedSize( sourcePropertyCombo, 130, 21 ) );
-		toolbar.addGlue();
+		customizeSourceToolbar( toolbar );
 		return toolbar;
+	}
+
+	protected void customizeSourceToolbar( JXToolBar toolbar )
+	{
+		toolbar.addGlue();
 	}
 
 	public PropertyTransfer getCurrentTransfer()
@@ -1289,9 +1296,6 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
 		}
 
 		componentEnabler.release();
-		if( resultDesktopPanel != null )
-			SoapUI.getDesktop().closeDesktopPanel( resultDesktopPanel );
-
 		inspectorPanel.release();
 
 		return release();

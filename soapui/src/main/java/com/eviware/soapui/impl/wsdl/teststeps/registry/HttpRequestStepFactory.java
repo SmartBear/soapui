@@ -12,18 +12,12 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps.registry;
 
-import java.awt.event.ActionEvent;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import javax.swing.AbstractAction;
-
 import com.eviware.soapui.config.HttpRequestConfig;
 import com.eviware.soapui.config.RestParameterConfig;
 import com.eviware.soapui.config.RestParametersConfig;
 import com.eviware.soapui.config.TestStepConfig;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
+import com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase;
 import com.eviware.soapui.impl.rest.panels.resource.RestParamsTable;
 import com.eviware.soapui.impl.rest.support.RestUtils;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
@@ -43,9 +37,15 @@ import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.validators.RequiredValidator;
 
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 /**
  * Factory for WsdlTestRequestSteps
- * 
+ *
  * @author Ole.Matzura
  */
 
@@ -82,7 +82,7 @@ public class HttpRequestStepFactory extends WsdlTestStepFactory
 
 		params = new XmlBeansRestParamsTestPropertyHolder( testCase, RestParametersConfig.Factory.newInstance() );
 
-		paramsTable = new RestParamsTable( params, false );
+		paramsTable = new RestParamsTable( params, false, NewRestResourceActionBase.ParamLocation.RESOURCE, true, false );
 		dialog.getFormField( Form.PARAMSTABLE ).setProperty( "component", paramsTable );
 		dialog.setValue( Form.STEPNAME, name );
 

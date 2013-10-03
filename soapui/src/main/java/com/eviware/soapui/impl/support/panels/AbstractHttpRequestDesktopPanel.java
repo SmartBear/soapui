@@ -20,21 +20,11 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.beans.PropertyChangeEvent;
 
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.JSplitPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JToggleButton;
-import javax.swing.KeyStroke;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.text.Document;
+import javax.swing.text.JTextComponent;
 
 import org.apache.log4j.Logger;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
@@ -80,12 +70,13 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 {
 	private final static Logger log = Logger.getLogger( AbstractHttpRequestDesktopPanel.class );
 
+
 	private JComponent endpointComponent;
 	private JButton submitButton;
-	private JButton cancelButton;
+	protected JButton cancelButton;
 	protected EndpointsComboBoxModel endpointsModel;
 	private JEditorStatusBarWithProgress statusBar;
-	private JButton splitButton;
+	protected JButton splitButton;
 	private Submit submit;
 	private JSplitPane requestSplitPane;
 	private MoveFocusAction moveFocusAction;
@@ -97,7 +88,7 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 
 	private JTabbedPane requestTabs;
 	private JPanel requestTabPanel;
-	private JToggleButton tabsButton;
+	protected JToggleButton tabsButton;
 
 	private boolean responseHasFocus;
 	private SubmitAction submitAction;
@@ -128,6 +119,16 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 	public void setEndpointsModel( T2 request )
 	{
 		this.endpointsModel = new EndpointsComboBoxModel( request );
+	}
+
+	public ComboBoxModel getEndpointsModel( )
+	{
+		return endpointsModel;
+	}
+
+	public void setEndpointComponent( JComponent endpointComponent )
+	{
+		this.endpointComponent = endpointComponent;
 	}
 
 	protected void init( T2 request )
@@ -290,6 +291,9 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 	protected JComponent buildEndpointComponent()
 	{
 		final JComboBox endpointCombo = new JComboBox( endpointsModel );
+		endpointCombo.setEditable( true );
+		Document textFieldDocument = ( ( JTextComponent )endpointCombo.getEditor().getEditorComponent() ).getDocument();
+		endpointsModel.listenToChangesIn( textFieldDocument );
 		endpointCombo.addPropertyChangeListener( this );
 		endpointCombo.setToolTipText( endpointsModel.getSelectedItem().toString() );
 
@@ -679,7 +683,7 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 				if( retVal == null )
 					return false;
 
-				if( retVal.booleanValue() && submit.getStatus() == Submit.Status.RUNNING )
+				if( retVal && submit.getStatus() == Submit.Status.RUNNING )
 				{
 					submit.cancel();
 				}

@@ -12,6 +12,7 @@ import org.mortbay.jetty.handler.ResourceHandler;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -28,11 +29,15 @@ public class JettyTestCaseBase
 		resourceBase = Files.createTempDir().getAbsolutePath();
 		try
 		{
-			FileUtils.copyDirectory( new File( "." + File.separator + "src" + File.separator + "test" + File.separator + "resources" ), new File( resourceBase ) );
+			FileUtils.copyDirectory( new File( JettyTestCaseBase.class.getResource( "/config" ).toURI()).getParentFile(), new File( resourceBase ) );
 		}
 		catch( IOException e )
 		{
 			throw new IllegalStateException(e);
+		}
+		catch( URISyntaxException e )
+		{
+			throw new RuntimeException( "Unexpected URI syntax exception! - this shouldn't happen", e );
 		}
 		ResourceHandler resource_handler = new ResourceHandler();
 		resource_handler.setResourceBase(resourceBase);

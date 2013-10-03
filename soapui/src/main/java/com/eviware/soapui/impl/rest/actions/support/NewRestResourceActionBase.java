@@ -12,16 +12,6 @@
 
 package com.eviware.soapui.impl.rest.actions.support;
 
-import java.awt.event.ActionEvent;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.swing.AbstractAction;
-import javax.swing.DefaultCellEditor;
-import javax.swing.JComboBox;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.RestParametersConfig;
 import com.eviware.soapui.impl.rest.RestMethod;
@@ -29,9 +19,6 @@ import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.actions.resource.NewRestMethodAction;
 import com.eviware.soapui.impl.rest.panels.resource.RestParamsTable;
-import com.eviware.soapui.impl.rest.panels.resource.RestParamsTableModel;
-import com.eviware.soapui.impl.rest.support.RestParamProperty;
-import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.rest.support.RestUtils;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
@@ -47,10 +34,15 @@ import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.validators.RequiredValidator;
 
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.net.MalformedURLException;
+import java.net.URL;
+
 /**
  * Actions for importing an existing soapUI project file into the current
  * workspace
- * 
+ *
  * @author Ole.Matzura
  */
 
@@ -58,7 +50,7 @@ public abstract class NewRestResourceActionBase<T extends ModelItem> extends Abs
 {
 	private XFormDialog dialog;
 	private XmlBeansRestParamsTestPropertyHolder params;
-	private InternalRestParamsTable paramsTable;
+	private RestParamsTable paramsTable;
 	public static final MessageSupport messages = MessageSupport.getMessages( NewRestResourceActionBase.class );
 
 	public NewRestResourceActionBase( String title, String description )
@@ -73,7 +65,6 @@ public abstract class NewRestResourceActionBase<T extends ModelItem> extends Abs
 			dialog = ADialogBuilder.buildDialog( Form.class );
 			dialog.getFormField( Form.RESOURCENAME ).addFormFieldValidator( new RequiredValidator() );
 			dialog.getFormField( Form.EXTRACTPARAMS ).setProperty( "action", new ExtractParamsAction() );
-			// dialog.setBooleanValue(Form.CREATEREQUEST, true);
 		}
 		else
 		{
@@ -94,7 +85,7 @@ public abstract class NewRestResourceActionBase<T extends ModelItem> extends Abs
 				paramsTable.refresh();
 		}
 
-		paramsTable = new InternalRestParamsTable( params, ParamLocation.RESOURCE );
+		paramsTable = new RestParamsTable( params, false, ParamLocation.RESOURCE, true, false );
 		dialog.getFormField( Form.PARAMSTABLE ).setProperty( "component", paramsTable );
 
 		if( dialog.show() )
@@ -113,14 +104,6 @@ public abstract class NewRestResourceActionBase<T extends ModelItem> extends Abs
 			RestResource resource = createRestResource( service, path, dialog );
 			paramsTable.extractParams( resource.getParams(), ParamLocation.RESOURCE );
 
-			// RestMethod method = createRestMethod(resource, dialog);
-			// paramsTable.extractParams(method.getParams(), ParamLocation.METHOD);
-
-			// UISupport.select(method);
-
-			// if (dialog.getBooleanValue(Form.CREATEREQUEST)) {
-			// createRequest(method);
-			// }
 			XmlBeansRestParamsTestPropertyHolder methodParams = new XmlBeansRestParamsTestPropertyHolder( null,
 					RestParametersConfig.Factory.newInstance() );
 			paramsTable.extractParams( methodParams, ParamLocation.METHOD );
@@ -157,101 +140,9 @@ public abstract class NewRestResourceActionBase<T extends ModelItem> extends Abs
 
 	public enum ParamLocation
 	{
-		RESOURCE, METHOD
+		RESOURCE, METHOD //, REQUEST : TODO - we don't suppor the request level parameters yet
 	}
 
-	public static class InternalRestParamsTable extends RestParamsTable
-	{
-		private ParamLocation defaultLocation;
-
-		public InternalRestParamsTable( RestParamsPropertyHolder params, ParamLocation defaultLocation )
-		{
-			super( params, false );
-			this.defaultLocation = defaultLocation;
-		}
-
-		public void extractParams( RestParamsPropertyHolder params, ParamLocation location )
-		{
-			for( int i = 0; i < paramsTable.getRowCount(); i++ )
-			{
-				RestParamProperty prop = paramsTableModel.getParameterAt( i );
-				if( ( ( InternalRestParamsTableModel )paramsTableModel ).getParamLocationAt( i ) == location )
-				{
-					params.addParameter( prop );
-				}
-			}
-		}
-
-		protected RestParamsTableModel createTableModel( RestParamsPropertyHolder params )
-		{
-			return new InternalRestParamsTableModel( params );
-		}
-
-		protected void init( RestParamsPropertyHolder params, boolean showInspector )
-		{
-			super.init( params, showInspector );
-			paramsTable.setDefaultEditor( ParamLocation.class, new DefaultCellEditor( new JComboBox( new Object[] {
-					ParamLocation.RESOURCE, ParamLocation.METHOD } ) ) );
-		}
-
-		public class InternalRestParamsTableModel extends RestParamsTableModel
-		{
-			private Map<RestParamProperty, ParamLocation> locations = new HashMap<RestParamProperty, ParamLocation>();
-			private int columnCount;
-
-			public InternalRestParamsTableModel( RestParamsPropertyHolder params )
-			{
-				super( params );
-				columnCount = super.getColumnCount();
-			}
-
-			public int getColumnCount()
-			{
-				return columnCount + 1;
-			}
-
-			public ParamLocation getParamLocationAt( int rowIndex )
-			{
-				return ( ParamLocation )getValueAt( rowIndex, columnCount );
-			}
-
-			public Object getValueAt( int rowIndex, int columnIndex )
-			{
-				if( columnIndex != columnCount )
-					return super.getValueAt( rowIndex, columnIndex );
-				RestParamProperty name = params.getPropertyAt( rowIndex );
-				if( !locations.containsKey( name ) )
-					locations.put( name, defaultLocation );
-				return locations.get( name );
-			}
-
-			@Override
-			public String getColumnName( int column )
-			{
-				return column != columnCount ? super.getColumnName( column ) : "Location";
-			}
-
-			@Override
-			public Class<?> getColumnClass( int columnIndex )
-			{
-				return columnIndex != columnCount ? super.getColumnClass( columnIndex ) : ParamLocation.class;
-			}
-
-			@Override
-			public void setValueAt( Object value, int rowIndex, int columnIndex )
-			{
-				if( columnIndex != columnCount )
-					super.setValueAt( value, rowIndex, columnIndex );
-				else
-				{
-					RestParamProperty name = params.getPropertyAt( rowIndex );
-					locations.put( name, ( ParamLocation )value );
-				}
-			}
-
-		}
-
-	}
 
 	private class ExtractParamsAction extends AbstractAction
 	{
@@ -279,63 +170,20 @@ public abstract class NewRestResourceActionBase<T extends ModelItem> extends Abs
 		}
 	}
 
-	@AForm( name = "Form.Title", description = "Form.Description", helpUrl = HelpUrls.NEWRESTSERVICE_HELP_URL, icon = UISupport.TOOL_ICON_PATH )
+	@AForm(name = "Form.Title", description = "Form.Description", helpUrl = HelpUrls.NEWRESTSERVICE_HELP_URL, icon = UISupport.TOOL_ICON_PATH)
 	public interface Form
 	{
-		@AField( description = "Form.ServiceName.Description", type = AFieldType.STRING )
+		@AField(description = "Form.ServiceName.Description", type = AFieldType.STRING)
 		public final static String RESOURCENAME = messages.get( "Form.ResourceName.Label" );
 
-		@AField( description = "Form.ServiceUrl.Description", type = AFieldType.STRING )
+		@AField(description = "Form.ServiceUrl.Description", type = AFieldType.STRING)
 		public final static String RESOURCEPATH = messages.get( "Form.ResourcePath.Label" );
 
-		@AField( description = "Form.ExtractParams.Description", type = AFieldType.ACTION )
+		@AField(description = "Form.ExtractParams.Description", type = AFieldType.ACTION)
 		public final static String EXTRACTPARAMS = messages.get( "Form.ExtractParams.Label" );
 
-		@AField( description = "Form.ParamsTable.Description", type = AFieldType.COMPONENT )
+		@AField(description = "Form.ParamsTable.Description", type = AFieldType.COMPONENT)
 		public final static String PARAMSTABLE = messages.get( "Form.ParamsTable.Label" );
 
-		// @AField(description = "Form.CreateRequest.Description", type =
-		// AFieldType.BOOLEAN)
-		// public final static String CREATEREQUEST = messages
-		// .get("Form.CreateRequest.Label");
 	}
-
-	// public void performAutomatic( RestService service, URL param )
-	// {
-	//
-	// params = new XmlBeansRestParamsTestPropertyHolder( null,
-	// RestParametersConfig.Factory.newInstance() );
-	// String path = null;
-	// path = RestUtils.extractParams( param.toString(), params, false );
-	//
-	// try
-	// {
-	// URL url = new URL( path );
-	// path = url.getPath();
-	// }
-	// catch( MalformedURLException e )
-	// {
-	// }
-	//
-	// RestResource resource = ( ( RestService )service ).addNewResource(
-	// "Monitor Resource",path );
-	//
-	// XmlBeansRestParamsTestPropertyHolder methodParams = new
-	// XmlBeansRestParamsTestPropertyHolder( null,
-	// RestParametersConfig.Factory.newInstance() );
-	// createMethodAutomatic( resource, methodParams, resource.getName(),
-	// RestRequestInterface.RequestMethod.GET );
-	//
-	// }
-	//
-	// public RestRequest createMethodAutomatic( RestResource resource, Object
-	// param, String resourceName,
-	// RestRequestInterface.RequestMethod methodName )
-	// {
-	// RestMethod method = resource.addNewMethod( resourceName );
-	// method.setMethod( methodName );
-	// RestRequest request = method.addNewRequest( "Request " + (
-	// method.getRequestCount() + 1 ) );
-	// return request;
-	// }
 }

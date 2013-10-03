@@ -12,9 +12,7 @@
 
 package com.eviware.soapui;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
+import java.awt.*;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DragSource;
 import java.awt.event.ActionEvent;
@@ -32,11 +30,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Properties;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -59,6 +54,7 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 
+import com.eviware.soapui.impl.actions.NewGenericProjectAction;
 import com.google.common.base.Objects;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -172,26 +168,24 @@ public class SoapUI
 	public static final String DEFAULT_DESKTOP = "Default";
 	public static final String CURRENT_SOAPUI_WORKSPACE = SoapUI.class.getName() + "@workspace";
 	public final static Logger log = Logger.getLogger( SoapUI.class );
-	public final static String SOAPUI_VERSION =
-            Objects.firstNonNull(System.getProperty(SoapUISystemProperties.VERSION),
-                Objects.firstNonNull(com.eviware.soapui.SoapUI.class.getPackage().getImplementationVersion(), "UNKNOWN VERSION"));
+	public final static String SOAPUI_VERSION = getVersion( SoapUISystemProperties.VERSION );
 	public static final String DEFAULT_WORKSPACE_FILE = "default-soapui-workspace.xml";
 	public static final String SOAPUI_SPLASH = "soapui-splash.png";
 	public static final String SOAPUI_TITLE = "/branded/branded.properties";
 	private static final int DEFAULT_DESKTOP_ACTIONS_COUNT = 3;
 	public static final String PROXY_ENABLED_ICON = "/proxyEnabled.png";
 	public static final String PROXY_DISABLED_ICON = "/proxyDisabled.png";
+	public static final String BUILDINFO_PROPERTIES = "/buildinfo.properties";
 
-	@SuppressWarnings( "deprecation" )
+	@SuppressWarnings("deprecation")
 	public static String PUSH_PAGE_URL = "http://soapui.org/Appindex/soapui-starterpage.html?version="
 			+ URLEncoder.encode( SOAPUI_VERSION );
-	public static String FRAME_ICON = "/16-perc.gif";
+	public static String FRAME_ICON = "/soapui-icon-16.png;/soapui-icon-24.png;/soapui-icon-32.png;/soapui-icon-48.png;/soapui-icon-256.png";
 	public static String PUSH_PAGE_ERROR_URL = "file://" + System.getProperty( "soapui.home", "." )
 			+ "/starter-page.html";
 
 	// ------------------------------ FIELDS ------------------------------
 
-	// private static SoapUI instance;
 	private static List<Object> logCache = new ArrayList<Object>();
 
 	private static SoapUICore soapUICore;
@@ -236,7 +230,7 @@ public class SoapUI
 	private static JToggleButton applyProxyButton;
 	private static Logger groovyLogger;
 	private static Logger loadUILogger;
-	@SuppressWarnings( "unused" )
+	@SuppressWarnings("unused")
 	private static JButton launchLoadUIButton;
 	private static CmdLineRunner soapUIRunner;
 
@@ -244,6 +238,35 @@ public class SoapUI
 
 	private SoapUI()
 	{
+	}
+
+	static String getVersion( String versionPropertyName )
+	{
+		String version = System.getProperty( versionPropertyName );
+		if( version != null )
+		{
+			return version;
+		}
+		version = com.eviware.soapui.SoapUI.class.getPackage().getImplementationVersion();
+		if( version != null )
+		{
+			return version;
+		}
+		try
+		{
+			Properties buildInfoProperties = new Properties();
+			buildInfoProperties.load( SoapUI.class.getResourceAsStream( BUILDINFO_PROPERTIES ) );
+			version = buildInfoProperties.getProperty( "version" );
+			if( !StringUtils.isNullOrEmpty( version ) )
+			{
+				return version;
+			}
+		}
+		catch( Exception exception )
+		{
+			//ignore
+		}
+		return "UNKNOWN VERSION";
 	}
 
 	private static int getSystemPropertyAsInt( String string, int defaultValue )
@@ -343,7 +366,6 @@ public class SoapUI
 			ProxyUtils.setProxyEnabled( false );
 		}
 		launchLoadUIButton = mainToolbar.add( new LaunchLoadUIButtonAction() );
-		//		mainToolbar.add( new ExitButtonAction() );
 
 		mainToolbar.addGlue();
 
@@ -377,7 +399,7 @@ public class SoapUI
 		return mainToolbar;
 	}
 
-	@SuppressWarnings( "deprecation" )
+	@SuppressWarnings("deprecation")
 	public void doForumSearch( String text )
 	{
 		if( !searchField.getText().equals( text ) )
@@ -478,8 +500,6 @@ public class SoapUI
 		toolsMenu.add( SwingActionDelegate.createDelegate( GSoapAction.SOAPUI_ACTION_ID ) );
 		toolsMenu.addSeparator();
 		toolsMenu.add( SwingActionDelegate.createDelegate( TcpMonAction.SOAPUI_ACTION_ID ) );
-		// toolsMenu.addSeparator();
-		// toolsMenu.add( new XQueryXPathTesterAction());
 		toolsMenu.addSeparator();
 		StartHermesJMSButtonAction hermesJMSButtonAction = new StartHermesJMSButtonAction();
 		hermesJMSButtonAction.setEnabled( HermesUtils.isHermesJMSSupported() );
@@ -778,9 +798,12 @@ public class SoapUI
 
 		frame = new JFrame( title );
 
-		SoapUISplash splash = new SoapUISplash( splashImage, frame );
-
-		frame.setIconImage( UISupport.createImageIcon( FRAME_ICON ).getImage() );
+		List<Image> iconList = new ArrayList<Image>();
+		for( String iconPath : FRAME_ICON.split( ";" ) )
+		{
+			iconList.add( UISupport.createImageIcon( iconPath ).getImage() );
+		}
+		frame.setIconImages( iconList );
 
 		JPopupMenu.setDefaultLightWeightPopupEnabled( false );
 		ToolTipManager.sharedInstance().setLightWeightPopupEnabled( false );
@@ -832,8 +855,6 @@ public class SoapUI
 		core.prepareUI();
 		soapUI.show( workspace );
 		core.afterStartup( workspace );
-		Thread.sleep( 500 );
-		splash.setVisible( false );
 
 		if( getSettings().getBoolean( UISettings.SHOW_STARTUP_PAGE ) && !SoapUI.isJXBrowserDisabled( true ) )
 		{
@@ -1233,8 +1254,6 @@ public class SoapUI
 	{
 		public ApplyProxyButtonAction()
 		{
-			// putValue(Action.SMALL_ICON,
-			// UISupport.createImageIcon("/proxyEnabled.png"));
 			putValue( Action.SHORT_DESCRIPTION, "Apply proxy defined in global preferences" );
 		}
 
@@ -1316,22 +1335,6 @@ public class SoapUI
 		}
 	}
 
-	private class ExitButtonAction extends AbstractAction
-	{
-		public ExitButtonAction()
-		{
-			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/system-log-out.png" ) );
-			putValue( Action.SHORT_DESCRIPTION, "Saves all projects and exits SoapUI" );
-		}
-
-		public void actionPerformed( ActionEvent e )
-		{
-			saveOnExit = true;
-			WindowEvent windowEvent = new WindowEvent( frame, WindowEvent.WINDOW_CLOSING );
-			frame.dispatchEvent( windowEvent );
-		}
-	}
-
 	private class ShowPushPageAction extends AbstractAction
 	{
 		public ShowPushPageAction()
@@ -1395,19 +1398,41 @@ public class SoapUI
 
 		DesktopPanel dp = UISupport.showDesktopPanel( urlDesktopPanel );
 		desktop.maximize( dp );
-
+		addAutoCloseOfStartPageOnMac();
 		urlDesktopPanel.navigate( PUSH_PAGE_URL, PUSH_PAGE_ERROR_URL, true );
+	}
 
+	private static void addAutoCloseOfStartPageOnMac()
+	{
+		if( shouldAutoCloseStartPage() )
+		{
+			desktop.addDesktopListener( new DesktopListenerAdapter()
+			{
+				@Override
+				public void desktopPanelCreated( DesktopPanel desktopPanel )
+				{
+					if( desktopPanel != urlDesktopPanel && urlDesktopPanel != null )
+					{
+						desktop.closeDesktopPanel( urlDesktopPanel );
+					}
+				}
+			} );
+		}
+	}
+
+	private static boolean shouldAutoCloseStartPage()
+	{
+		return System.getProperty( "os.name" ).contains( "Mac" ) &&
+				!(desktop.getClass().getName().contains( "Tabbed" ));
 	}
 
 	private static class AboutAction extends AbstractAction
 	{
-        private static final String COPYRIGHT = "2004-2013 smartbear.com";
-        private static final String SOAPUI_WEBSITE = "http://www.soapui.org";
-        private static final String SMARTBEAR_WEBSITE = "http://www.smartbear.com";
-        public static final String BUILDINFO_PROPERTIES = "/buildinfo.properties";
+		private static final String COPYRIGHT = "2004-2013 smartbear.com";
+		private static final String SOAPUI_WEBSITE = "http://www.soapui.org";
+		private static final String SMARTBEAR_WEBSITE = "http://www.smartbear.com";
 
-        public AboutAction()
+		public AboutAction()
 		{
 			super( "About soapUI" );
 			putValue( Action.SHORT_DESCRIPTION, "Shows information on soapUI" );
@@ -1426,15 +1451,14 @@ public class SoapUI
 			}
 
 			Properties buildInfoProperties = new Properties();
-            try
-            {
-                buildInfoProperties.load(SoapUI.class.getResourceAsStream(BUILDINFO_PROPERTIES));
-            }
-            catch( Exception exception )
-            {
-                SoapUI.logError (exception, "Could not read build info properties");
-            }
-
+			try
+			{
+				buildInfoProperties.load( SoapUI.class.getResourceAsStream( BUILDINFO_PROPERTIES ) );
+			}
+			catch( Exception exception )
+			{
+				SoapUI.logError( exception, "Could not read build info properties" );
+			}
 
 
 			UISupport.showExtendedInfo(
@@ -1442,13 +1466,13 @@ public class SoapUI
 					null,
 					"<html><body><p align=center> <font face=\"Verdana,Arial,Helvetica\"><strong><img src=\"" + splashURI
 							+ "\"><br>soapUI " + SOAPUI_VERSION + "<br>"
-                            + "Copyright (C) " + COPYRIGHT + "<br>"
+							+ "Copyright (C) " + COPYRIGHT + "<br>"
 							+ "<a href=\"" + SOAPUI_WEBSITE + "\">" + SOAPUI_WEBSITE + "</a> | "
-							    + "<a href=\"" + SMARTBEAR_WEBSITE + "\">" + SMARTBEAR_WEBSITE + "</a><br>"
-                            + "Build Date: " + Objects.firstNonNull(buildInfoProperties.getProperty( "build.date" ), "UNKNOWN BUILD DATE")
+							+ "<a href=\"" + SMARTBEAR_WEBSITE + "\">" + SMARTBEAR_WEBSITE + "</a><br>"
+							+ "Build Date: " + Objects.firstNonNull( buildInfoProperties.getProperty( "build.date" ), "UNKNOWN BUILD DATE" )
 							+ "</strong></font></p></body></html>",
 
-					new Dimension( 646, 480 ) );	//Splash screen width + 70px, height + 175px
+					new Dimension( 646, 480 ) );   //Splash screen width + 70px, height + 175px
 		}
 	}
 
@@ -1562,12 +1586,12 @@ public class SoapUI
 		public NewWsdlProjectActionDelegate()
 		{
 			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/project.gif" ) );
-			putValue( Action.SHORT_DESCRIPTION, "Creates a new soapUI Project" );
+			putValue( Action.SHORT_DESCRIPTION, "Creates a new generic project" );
 		}
 
 		public void actionPerformed( ActionEvent e )
 		{
-			SoapUI.getActionRegistry().getAction( NewWsdlProjectAction.SOAPUI_ACTION_ID ).perform( workspace, null );
+			SoapUI.getActionRegistry().getAction( NewGenericProjectAction.SOAPUI_ACTION_ID ).perform( workspace, null );
 		}
 	}
 

@@ -48,9 +48,7 @@ public class KeyMaterialWssCryptoTest
 		return new JUnit4TestAdapter( KeyMaterialWssCryptoTest.class );
 	}
 
-    // TODO hardcoded madness
-	private static final String TEST_RESOURCES_DIR = "src" + File.separator + "test"  + File.separator
-            + "resources" + File.separator + "keys" + File.separator;
+	private static final String TEST_RESOURCES_DIR = "/keys/";
 
 	private static final String CORRECT_PASSWORD = "test";
 	private static final String INCORRECT_PASSWORD = "not-correct";
@@ -139,7 +137,7 @@ public class KeyMaterialWssCryptoTest
 
 	private String initLoad( CryptoType type, String filename, String password )
 	{
-		String path = TEST_RESOURCES_DIR + filename;
+		String path = KeyMaterialWssCryptoTest.class.getResource( TEST_RESOURCES_DIR + filename).getPath();
 
 		when( containerMock.getModelItem() ).thenReturn( project );
 		when( configMock.getSource() ).thenReturn( path );

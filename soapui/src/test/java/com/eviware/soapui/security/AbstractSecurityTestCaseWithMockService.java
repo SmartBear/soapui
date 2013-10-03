@@ -12,17 +12,6 @@
 
 package com.eviware.soapui.security;
 
-import static org.junit.Assert.assertTrue;
-
-import java.io.File;
-import java.util.List;
-
-import junit.framework.JUnit4TestAdapter;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
 import com.eviware.soapui.config.SecurityScanConfig;
 import com.eviware.soapui.config.SecurityTestConfig;
 import com.eviware.soapui.config.TestStepSecurityTestConfig;
@@ -38,6 +27,14 @@ import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestSuite;
+import junit.framework.JUnit4TestAdapter;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.util.List;
+
+import static org.junit.Assert.assertTrue;
 
 public class AbstractSecurityTestCaseWithMockService
 {
@@ -69,21 +66,20 @@ public class AbstractSecurityTestCaseWithMockService
 	@Before
 	public void setUp() throws Exception
 	{
-        // TODO Hardcoded madness
-		WsdlProject project = new WsdlProject( "src" + File.separatorChar + "test" + File.separatorChar + "resources" + File.separatorChar
-				+ "sample-soapui-project.xml" );
+		WsdlProject project = new WsdlProject(AbstractSecurityTestCaseWithMockService.class.getResource(
+				"/sample-soapui-project.xml").getPath() );
 		TestSuite testSuite = project.getTestSuiteByName( "Test Suite" );
 		testCase = ( WsdlTestCase )testSuite.getTestCaseByName( "Test Conversions" );
 
 		WsdlInterface iface = ( WsdlInterface )project.getInterfaceAt( 0 );
 
-		mockService = ( WsdlMockService )project.addNewMockService( "MockService 1" );
+		mockService = project.addNewMockService( "MockService 1" );
 
 		mockService.setPort( 9081 );
 		mockService.setPath( "/testmock" );
 
-		WsdlOperation operation = ( WsdlOperation )iface.getOperationAt( 0 );
-		WsdlMockOperation mockOperation = ( WsdlMockOperation )mockService.addNewMockOperation( operation );
+		WsdlOperation operation = iface.getOperationAt( 0 );
+		WsdlMockOperation mockOperation = mockService.addNewMockOperation( operation );
 		WsdlMockResponse mockResponse = mockOperation.addNewMockResponse( "Test Response", true );
 		mockResponse.setResponseContent( "Tjohoo!" );
 

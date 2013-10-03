@@ -1,6 +1,6 @@
-# The soapUI Maven plugin tester
+# The SoapUI Maven plugin tester
 
-*This is a submodule of [The soapUI project](../)*
+*This is a submodule of [The SoapUI project](../)*
 
 This module tests the `mock` and `test` goals of soapui-maven-plugin.
 
