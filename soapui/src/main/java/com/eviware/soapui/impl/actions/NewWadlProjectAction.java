@@ -19,6 +19,7 @@ import com.eviware.soapui.impl.rest.support.WadlImporter;
 import com.eviware.soapui.impl.support.definition.support.InvalidDefinitionException;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
+import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.support.MessageSupport;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
@@ -97,7 +98,7 @@ public class NewWadlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 								importWadl( project, url );
 							}
 						}
-
+						showDeepestEditor( project );
 						break;
 					}
 				}
@@ -115,6 +116,27 @@ public class NewWadlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 				}
 			}
 		}
+	}
+
+	private void showDeepestEditor( WsdlProject project )
+	{
+		ModelItem item = findLeafItem( project );
+
+		if( item != null )
+		{
+			UISupport.select( item );
+			UISupport.showDesktopPanel( item );
+		}
+	}
+
+	private ModelItem findLeafItem( ModelItem item )
+	{
+		if( item.getChildren().isEmpty() )
+		{
+			return item;
+		}
+
+		return findLeafItem( item.getChildren().get( 0 ) );
 	}
 
 	public String createProjectName( String filePath )
