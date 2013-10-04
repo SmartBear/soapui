@@ -20,6 +20,7 @@ import com.eviware.soapui.impl.rest.support.*;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.support.MessageSupport;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 import com.eviware.soapui.support.action.swing.ActionList;
@@ -196,8 +197,12 @@ public class NewRestProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 
 	}
 
-	protected RestService createRestProject( WsdlProject project, String URI ) throws MalformedURLException
+	protected void createRestProject( WsdlProject project, String URI ) throws MalformedURLException
 	{
+		if( StringUtils.isNullOrEmpty( URI ) )
+		{
+			return;
+		}
 
 		RestURIParser restURIParser = new RestURIParserImpl( URI );
 		RestParamsPropertyHolder params = new XmlBeansRestParamsTestPropertyHolder( null,
@@ -220,7 +225,6 @@ public class NewRestProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 		UISupport.select( restRequest );
 		UISupport.showDesktopPanel( restRequest );
 
-		return restService;
 	}
 
 	protected void extractAndFillParameters( String URI, RestParamsPropertyHolder params )
