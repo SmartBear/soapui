@@ -70,7 +70,7 @@ public class NewWadlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 			WsdlProject project = null;
 			try
 			{
-				String projectName = initProjectName( dialog.getFormField( Form.INITIALWADL ).getValue() );
+				String projectName = createProjectName( dialog.getFormField( Form.INITIALWADL ).getValue() );
 
 				if( projectName.length() == 0 )
 				{
@@ -117,22 +117,24 @@ public class NewWadlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 		}
 	}
 
-	public String initProjectName( String newValue )
+	public String createProjectName( String filePath )
 	{
-		if( StringUtils.hasContent( newValue ) )
+		if( StringUtils.hasContent( filePath ) )
 		{
-			int ix = newValue.lastIndexOf( '.' );
-			if( ix > 0 )
-				newValue = newValue.substring( 0, ix );
+			String projectName = filePath;
 
-			ix = newValue.lastIndexOf( '/' );
+			int ix = projectName.lastIndexOf( '.' );
+			if( ix > 0 )
+				projectName = projectName.substring( 0, ix );
+
+			ix = projectName.lastIndexOf( '/' );
 			if( ix == -1 )
-				ix = newValue.lastIndexOf( '\\' );
+				ix = projectName.lastIndexOf( '\\' );
 
 			if( ix != -1 )
-				newValue = newValue.substring( ix + 1 );
+				projectName = projectName.substring( ix + 1 );
 
-			return newValue;
+			return projectName;
 		}
 		return DEFAULT_PROJECT_NAME;
 	}
