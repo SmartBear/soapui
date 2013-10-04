@@ -1,15 +1,14 @@
 package com.eviware.soapui.utils;
 
-import com.eviware.soapui.config.RestMethodConfig;
-import com.eviware.soapui.config.RestRequestConfig;
-import com.eviware.soapui.config.RestResourceConfig;
-import com.eviware.soapui.config.RestServiceConfig;
+import com.eviware.soapui.config.*;
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.rest.RestMethod;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
+import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
+import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.model.workspace.WorkspaceFactory;
 import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.support.types.StringToStringMap;
@@ -51,5 +50,10 @@ public class ModelItemFactory
 	public static WsdlProject makeWsdlProject() throws SoapUIException
 	{
 		return new WsdlProject( (WorkspaceImpl )WorkspaceFactory.getInstance().openWorkspace( "testWorkSpace" , new StringToStringMap()));
+	}
+
+	public static WsdlTestCase makeTestCase() throws SoapUIException
+	{
+		return new WsdlTestCase( new WsdlTestSuite( makeWsdlProject(), TestSuiteConfig.Factory.newInstance() ), TestCaseConfig.Factory.newInstance(), false );
 	}
 }

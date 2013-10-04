@@ -133,6 +133,7 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 
 	protected void init( T2 request )
 	{
+		initializeFields();
 		setEndpointsModel( request );
 
 		request.addSubmitListener( this );
@@ -156,6 +157,11 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 					requestEditor.requestFocusInWindow();
 			}
 		} );
+	}
+
+	protected void initializeFields()
+	{
+
 	}
 
 	public final T2 getRequest()

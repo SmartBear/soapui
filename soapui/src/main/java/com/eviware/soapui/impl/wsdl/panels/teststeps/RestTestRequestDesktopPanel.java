@@ -15,12 +15,11 @@ package com.eviware.soapui.impl.wsdl.panels.teststeps;
 import java.beans.PropertyChangeEvent;
 import java.util.Date;
 
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.ListModel;
+import javax.swing.*;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.panels.request.AbstractRestRequestDesktopPanel;
+import com.eviware.soapui.impl.rest.support.RestUtils;
 import com.eviware.soapui.impl.support.components.ModelItemXmlEditor;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
@@ -61,6 +60,8 @@ public class RestTestRequestDesktopPanel extends AbstractRestRequestDesktopPanel
 	private JComponentInspector<?> logInspector;
 	private InternalAssertionsListener assertionsListener = new InternalAssertionsListener();
 	private long startTime;
+	protected JLabel pathLabel;
+
 
 	public RestTestRequestDesktopPanel( RestTestRequestStep requestStep )
 	{
@@ -94,7 +95,7 @@ public class RestTestRequestDesktopPanel extends AbstractRestRequestDesktopPanel
 		{
 			protected void selectError( AssertionError error )
 			{
-				ModelItemXmlEditor<?, ?> editor = ( ModelItemXmlEditor<?, ?> )getResponseEditor();
+				ModelItemXmlEditor<?, ?> editor = getResponseEditor();
 				editor.requestFocus();
 			}
 		};
@@ -164,8 +165,29 @@ public class RestTestRequestDesktopPanel extends AbstractRestRequestDesktopPanel
 
 	protected JComponent buildToolbar()
 	{
+		/* TODO: pathLabel = new JLabel();
+			updateFullPathLabel();
+
+			toolbar.add( pathLabel );*/
 		addAssertionButton = createActionButton( new AddAssertionAction( getRequest() ), true );
 		return super.buildToolbar();
+	}
+
+	@Override
+	protected void updateUiValues()
+	{
+		updateFullPathLabel();
+	}
+
+	private void updateFullPathLabel()
+	{
+		if( pathLabel != null && getRequest().getResource() != null )
+		{
+			String text = RestUtils.expandPath( getRequest().getResource().getFullPath(), getRequest().getParams(),
+					getRequest() );
+			pathLabel.setText( "[" + text + "]" );
+			pathLabel.setToolTipText( text );
+		}
 	}
 
 	@Override

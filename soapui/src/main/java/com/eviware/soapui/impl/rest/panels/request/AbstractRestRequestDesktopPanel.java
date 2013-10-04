@@ -31,47 +31,25 @@ import com.eviware.soapui.model.iface.Submit;
 import com.eviware.soapui.model.support.AbstractModelItem;
 import com.eviware.soapui.model.support.TestPropertyListenerAdapter;
 import com.eviware.soapui.model.testsuite.TestProperty;
-import com.eviware.soapui.support.DocumentListenerAdapter;
-import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.SwingActionDelegate;
 import com.eviware.soapui.support.components.JXToolBar;
 import org.apache.xmlbeans.impl.values.XmlValueDisconnectedException;
 
-import javax.swing.AbstractListModel;
-import javax.swing.Box;
-import javax.swing.ComboBoxModel;
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.event.DocumentListener;
-import javax.swing.text.Document;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.Dimension;
+import javax.swing.*;
+import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import static com.eviware.soapui.impl.rest.RestRequestInterface.RequestMethod;
 import static com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase.ParamLocation;
 import static com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder.ParameterStyle;
-import static com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder.ParameterStyle.QUERY;
 
 public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 extends RestRequestInterface> extends
 		AbstractHttpXmlRequestDesktopPanel<T, T2>
 {
-	private static final int STANDARD_TOOLBAR_HEIGHT = 45;
+	protected static final int STANDARD_TOOLBAR_HEIGHT = 45;
 
-	private TextPanelWithTopLabel resourcePanel;
-	private TextPanelWithTopLabel queryPanel;
-	private JLabel pathLabel;
 	private InternalTestPropertyListener testPropertyListener = new InternalTestPropertyListener();
 	private RestParamPropertyChangeListener restParamPropertyChangeListener = new RestParamPropertyChangeListener();
 
@@ -101,18 +79,8 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 
 	public void propertyChange( PropertyChangeEvent evt )
 	{
-		updateFullPathLabel();
-
-		if( ( evt.getPropertyName().equals( "path" ) || evt.getPropertyName().equals( "restMethod" ) )
-				&& ( getRequest().getResource() == null || getRequest().getResource() == evt.getSource() ) )
-		{
-			if( pathLabel != null )
-			{
-				updateFullPathLabel();
-			}
-		}
-
 		super.propertyChange( evt );
+		updateUiValues();
 	}
 
 
@@ -182,8 +150,6 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 			baseToolBar.addWithOnlyMinimumHeight( endpointPanel );
 			baseToolBar.add( Box.createHorizontalStrut( 4 ) );
 
-			addResourceAndQueryField( baseToolBar );
-
 			baseToolBar.add( Box.createHorizontalGlue() );
 			baseToolBar.add( tabsButton );
 			baseToolBar.add( splitButton );
@@ -204,7 +170,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 		}
 	}
 
-	private int findMaximumPreferredHeight( Container parent )
+	protected int findMaximumPreferredHeight( Container parent )
 	{
 		int maximum = 0;
 		for( Component component : parent.getComponents() )
@@ -212,33 +178,13 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 			int componentPreferredHeight = component == null || component.getPreferredSize() == null ? 0 : component.getPreferredSize().height;
 			maximum = Math.max( maximum, componentPreferredHeight );
 		}
+
 		return maximum;
 	}
 
-	private void addResourceAndQueryField( JXToolBar toolbar )
-	{
-		if( !( getRequest() instanceof RestTestRequestInterface ) )
-		{
-			String path = getRequest().getResource().getFullPath();
-			resourcePanel = new TextPanelWithTopLabel( "Resource", path, new DocumentListenerAdapter()
-			{
-				@Override
-				public void update( Document document )
-				{
-					getRequest().getResource().setPath( getResourcePanelText().trim() );
-				}
-			} );
-			toolbar.addWithOnlyMinimumHeight( resourcePanel );
 
-			toolbar.add( Box.createHorizontalStrut( 4 ) );
 
-			String query = RestUtils.getQueryParamsString( getRequest().getParams(), getRequest() );
-			queryPanel = new TextPanelWithTopLabel( "Query", query, false );
-			toolbar.addWithOnlyMinimumHeight( queryPanel );
-		}
-	}
-
-	private void addMethodSelectorToolbar( JPanel panel )
+	protected void addMethodSelectorToolbar( JPanel panel )
 	{
 		if( getRequest().getResource() != null && getRequest() instanceof RestTestRequestInterface )
 		{
@@ -251,13 +197,11 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 			toolbar.addLabeledFixed( "Resource/Method:", pathCombo );
 			toolbar.addSeparator();
 
-			pathLabel = new JLabel();
-			updateFullPathLabel();
-
-			toolbar.add( pathLabel );
 			panel.add( toolbar, BorderLayout.SOUTH );
 		}
 	}
+
+	protected abstract void updateUiValues();
 
 	protected boolean release()
 	{
@@ -276,132 +220,41 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 		return super.release();
 	}
 
+
 	private class InternalTestPropertyListener extends TestPropertyListenerAdapter
 	{
 		@Override
 		public void propertyValueChanged( String name, String oldValue, String newValue )
 		{
-			updateResourceAndQueryString( name, oldValue, newValue );
-			updateFullPathLabel();
+			updateUiValues();
 		}
 
 		@Override
 		public void propertyAdded( String name )
 		{
-			updateFullPathLabel();
+			updateUiValues();
 			RestParamProperty property = getRequest().getParams().getProperty( name );
-			updateResourceAndQueryString( name, null, property.getValue() );
 			property.addPropertyChangeListener( restParamPropertyChangeListener );
 		}
 
 		@Override
 		public void propertyRemoved( String name )
 		{
-			resetQueryPanelText();   //query param
-			String resourcePanelText = getResourcePanelText();
-			String paramStartString = ";" + name + "=";
-			//Update the resource path UGLY way, till the time the synchronization is implemented in a better way
-			if( resourcePanelText.contains( paramStartString ) )   //Matrix param
-			{
-				String substringWithParamValue = resourcePanelText.substring( resourcePanelText.indexOf(
-						paramStartString ) + 1 );
-				int indexOfNextMatrixParam = substringWithParamValue.indexOf( ";" );
-				int indexOfNextTemplateParam = substringWithParamValue.indexOf( "{" );
-				int paramValueEndIndex=  substringWithParamValue.length();
-				if(indexOfNextMatrixParam != -1 && (indexOfNextTemplateParam==-1
-						|| indexOfNextMatrixParam < indexOfNextTemplateParam))
-				{
-					paramValueEndIndex =   indexOfNextMatrixParam;
-				}
-				else if(indexOfNextTemplateParam != -1 && (indexOfNextMatrixParam==-1
-						|| indexOfNextTemplateParam < indexOfNextMatrixParam))
-				{
-					paramValueEndIndex =   indexOfNextTemplateParam;
-				}
-
-				String paramValue = substringWithParamValue.substring( substringWithParamValue.indexOf( "=" ) + 1,
-						paramValueEndIndex );
-				setResourcePanelText( getResourcePanelText().replaceAll( ";" + name + "=" + paramValue, "" ) );
-			}
-
-			if( resourcePanelText.contains( "{" + name + "}" ) )    //Template param
-			{
-				setResourcePanelText( resourcePanelText.replaceAll( "\\{" + name + "\\}", "" ) );
-			}
-			updateFullPathLabel();
+			updateUiValues();
 		}
 
 		@Override
 		public void propertyRenamed( String oldName, String newName )
 		{
-			RestParamProperty property = getRequest().getParams().getProperty( newName );
-			ParameterStyle style = property.getStyle();
-			if( style.equals( QUERY ) )
-			{
-				resetQueryPanelText();
-			}
-			else if( style.equals( ParameterStyle.TEMPLATE ) )
-			{
-				setResourcePanelText( getResourcePanelText().replaceAll( "\\{" + oldName + "\\}", "{" + newName + "}" ) );
-			}
-			else if( style.equals( ParameterStyle.MATRIX ) )
-			{
-				setResourcePanelText( getResourcePanelText().replaceAll( oldName + "=" +
-						property.getValue(), property.getName() + "=" + property.getValue() ) );
-			}
-			updateFullPathLabel();
+			updateUiValues();
 		}
 	}
 
-	private void updateResourceAndQueryString( String propertyName, String oldValue, String newValue )
-	{
-		if( resourcePanel == null || queryPanel == null )
-			return;
 
-		RestParamProperty property = getRequest().getParams().getProperty( propertyName );
-		ParameterStyle style = property.getStyle();
-		if( style.equals( QUERY ) )
-		{
-			resetQueryPanelText();
-		}
-		else if( style.equals( ParameterStyle.MATRIX ) )
-		{
-			String name = property.getName();
-			String newValueStr = name + "=" + newValue;
-			if( oldValue == null )
-			{
-				addPropertyForStyle( property, ParameterStyle.MATRIX );
-			}
-			else if( StringUtils.isNullOrEmpty( newValue ) || !getResourcePanelText().contains( newValueStr ) )
-			{
-				setResourcePanelText( getResourcePanelText().replaceAll( name + "=" + oldValue, newValueStr ) );
-			}
-		}
-		else if( property.getStyle().equals( ParameterStyle.TEMPLATE ) )
-		{
-			addPropertyForStyle( property, ParameterStyle.TEMPLATE );
-		}
-	}
 
-	private void resetQueryPanelText()
-	{
-		if( queryPanel != null )
-		{
-			queryPanel.setText( RestUtils.getQueryParamsString( getRequest().getParams(), getRequest() ) );
-		}
 
-	}
 
-	private void updateFullPathLabel()
-	{
-		if( pathLabel != null && getRequest().getResource() != null )
-		{
-			String text = RestUtils.expandPath( getRequest().getResource().getFullPath(), getRequest().getParams(),
-					getRequest() );
-			pathLabel.setText( "[" + text + "]" );
-			pathLabel.setToolTipText( text );
-		}
-	}
+
 
 
 	private class RestParamPropertyChangeListener implements PropertyChangeListener
@@ -413,8 +266,6 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 				if( evt.getPropertyName().equals( XmlBeansRestParamsTestPropertyHolder.PROPERTY_STYLE ) )
 				{
 					RestParamProperty source = ( RestParamProperty )evt.getSource();
-					removeParamForStyle( source, ( ParameterStyle )evt.getOldValue() );
-					addPropertyForStyle( source, ( ParameterStyle )evt.getNewValue() );
 					( ( AbstractModelItem )source.getModelItem() ).notifyPropertyChanged( evt.getPropertyName(),
 							evt.getOldValue(), evt.getNewValue() );
 				}
@@ -434,7 +285,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 			{
 				//Do nothing, it must have been removed by another request editor instance under the same resource/method
 			}
-			updateFullPathLabel();
+			updateUiValues();
 		}
 
 
@@ -488,51 +339,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 
 	}
 
-	private void removeParamForStyle( RestParamProperty property, ParameterStyle style )
-	{
-		switch( style )
-		{
-			case QUERY:
-				resetQueryPanelText();
-				break;
-			case TEMPLATE:
-				setResourcePanelText( getResourcePanelText().replaceAll( "\\{" + property.getName() + "\\}", "" ) );
-				break;
-			case MATRIX:
-				String propValueAtRequestLevel = getRequest().getParams().getProperty( property.getName() ).getValue();
-				setResourcePanelText( getResourcePanelText().replaceAll( ";" + property.getName() + "=" +
-						propValueAtRequestLevel, "" ) );
-				break;
-			default:
-				break;
-		}
-	}
 
-	private void addPropertyForStyle( RestParamProperty property, ParameterStyle style )
-	{
-		switch( style )
-		{
-			case QUERY:
-				resetQueryPanelText();
-				break;
-			case TEMPLATE:
-				if( !getResourcePanelText().contains( "{" + property.getName() + "}" ) )
-				{
-					setResourcePanelText( getResourcePanelText() + "{" + property.getName() + "}" );
-				}
-				break;
-			case MATRIX:
-				String propValueAtRequestLevel = getRequest().getParams().getProperty( property.getName() ).getValue();
-				String valueToSet = ";" + property.getName() + "=" + propValueAtRequestLevel;
-				if( !getResourcePanelText().contains( valueToSet ) )
-				{
-					setResourcePanelText( getResourcePanelText() + valueToSet );
-				}
-				break;
-			default:
-				break;
-		}
-	}
 
 	private class PathComboBoxModel extends AbstractListModel implements ComboBoxModel
 	{
@@ -595,76 +402,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 	}
 
 
-	private class TextPanelWithTopLabel extends JPanel
-	{
-		private final Color MAC_DISABLED_BGCOLOR = new Color( 232, 232, 232 );
 
-		JLabel textLabel;
-		JTextField textField;
-
-		TextPanelWithTopLabel( String label, String text )
-		{
-			textLabel = new JLabel( label );
-			textField = new JTextField( text );
-			setToolTipText( text );
-			super.setLayout( new BorderLayout() );
-			super.add( textLabel, BorderLayout.NORTH );
-			super.add( textField, BorderLayout.SOUTH );
-		}
-
-		public TextPanelWithTopLabel( String label, String text, boolean isEditable )
-		{
-			this( label, text );
-			textField.setEditable( isEditable );
-			if( !isEditable && UISupport.isMac() )
-			{
-				textField.setBackground( MAC_DISABLED_BGCOLOR );
-			}
-		}
-
-		public TextPanelWithTopLabel( String label, String text, DocumentListener documentListener )
-		{
-			this( label, text );
-			textField.getDocument().addDocumentListener( documentListener );
-		}
-
-
-		public String getText()
-		{
-			return textField.getText();
-		}
-
-		public void setText( String text )
-		{
-			textField.setText( text );
-			setToolTipText( text );
-		}
-
-		@Override
-		public void setToolTipText( String text )
-		{
-			super.setToolTipText( text );
-			textLabel.setToolTipText( text );
-			textField.setToolTipText( text );
-		}
-	}
-
-	//TODO: Temporary fix resource panel should be moved to appropriate subclass
-	private String getResourcePanelText()
-	{
-		if( resourcePanel == null )
-			return "";
-		else
-			return resourcePanel.getText();
-	}
-
-	private void setResourcePanelText( String text )
-	{
-		if( resourcePanel != null )
-		{
-			resourcePanel.setText( text );
-		}
-	}
 
 	private class EndpointChangeListener implements PropertyChangeListener
 	{
