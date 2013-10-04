@@ -61,7 +61,7 @@
 		<subsection name="The Groovy Script Editor">
 		<p>The Groovy Script editor is a straight forward text-editor without not to many bells-and-whistles except undo/redo
 		functionality;</p>
-		<p align="center"><img src="images/script_editor.gif" alt="soapUI Groovy Script editor"></img></p>
+		<p align="center"><img src="images/script_editor.gif" alt="SoapUI Groovy Script editor"></img></p>
 		<p>The editor has three components (from top to bottom):</p>
 		<ul>
 		<li><b>A toolbar</b> : currently only containing a "Run" button</li>
@@ -215,7 +215,7 @@ state.addCookie( new org.apache.commons.httpclient.Cookie( "127.0.0.1", "Session
 		</subsection>
 		
 		
-		<subsection name="soapUI GroovyUtils">
+		<subsection name="SoapUI GroovyUtils">
 		<p>The GroovyUtils class simplifies several common scripting tasks. Instantiate 
 		GroovyUtils from within any Groovy Script in soapUI (MockResponse, Script Assertion, etc) using:</p>
 		<source>def groovyUtils = new com.eviware.soapui.support.GroovyUtils( context )</source>
@@ -294,7 +294,7 @@ log.info( holder["//abc:RequestId"] )</source>
 		
 		</subsection>
 
-		<subsection name="soapUI Pro GroovyUtilsPro">
+		<subsection name="SoapUI Pro GroovyUtilsPro">
 		<p>The GroovyUtilsPro class has additional options for working with 
 		<a href="../projects/jdbcConnections.html">JDBC connections defined at the Project level</a>.
 		Instantiate	GroovyUtilsPro using:</p>

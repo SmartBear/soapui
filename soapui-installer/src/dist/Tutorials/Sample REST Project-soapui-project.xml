@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<con:soapui-project name="Sample REST Project" resourceRoot="" soapui-version="3.0-beta2" xmlns:con="http://eviware.com/soapui/config"><con:settings/><con:interface xsi:type="con:RestService" name="Sample REST Project" type="rest" basePath="/NewsSearchService/V1/" definitionUrl="file:/C:/Program%20Files/eviware/soapUI-Pro-2.5-beta2/Tutorials/WSDL-WADL/YahooSearch.wadl" wadlVersion="http://research.sun.com/wadl/2006/10" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart="file:/C:/Program%20Files/eviware/soapUI-Pro-2.5-beta2/Tutorials/WSDL-WADL/YahooSearch.wadl"><con:part><con:url>file:\C:\Program%20Files\eviware\soapUI-Pro-2.5-beta2\Tutorials\WSDL-WADL\NewsSearchResponse.xsd</con:url><con:content><![CDATA[<!--The contents of this file are subject to the terms
+<con:soapui-project name="Sample REST Project" resourceRoot="" soapui-version="3.0-beta2" xmlns:con="http://eviware.com/soapui/config"><con:settings/><con:interface xsi:type="con:RestService" name="Sample REST Project" type="rest" basePath="/NewsSearchService/V1/" definitionUrl="file:/C:/Program%20Files/eviware/SoapUI-Pro-2.5-beta2/Tutorials/WSDL-WADL/YahooSearch.wadl" wadlVersion="http://research.sun.com/wadl/2006/10" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart="file:/C:/Program%20Files/eviware/SoapUI-Pro-2.5-beta2/Tutorials/WSDL-WADL/YahooSearch.wadl"><con:part><con:url>file:\C:\Program%20Files\eviware\SoapUI-Pro-2.5-beta2\Tutorials\WSDL-WADL\NewsSearchResponse.xsd</con:url><con:content><![CDATA[<!--The contents of this file are subject to the terms
 of the Common Development and Distribution License
 (the "License").  You may not use this file except
 in compliance with the License.
@@ -41,7 +41,7 @@ permissions and limitations under the License.-->
     </xs:sequence>
   </xs:complexType>
 </xs:schema>
-<!--ws02.search.re2.yahoo.com compressed/chunked Tue Oct 18 13:12:21 PDT 2005-->]]></con:content><con:type>http://www.w3.org/2001/XMLSchema</con:type></con:part><con:part><con:url>file:\C:\Program%20Files\eviware\soapUI-Pro-2.5-beta2\Tutorials\WSDL-WADL\NewsSearchError.xsd</con:url><con:content><![CDATA[<!--The contents of this file are subject to the terms
+<!--ws02.search.re2.yahoo.com compressed/chunked Tue Oct 18 13:12:21 PDT 2005-->]]></con:content><con:type>http://www.w3.org/2001/XMLSchema</con:type></con:part><con:part><con:url>file:\C:\Program%20Files\eviware\SoapUI-Pro-2.5-beta2\Tutorials\WSDL-WADL\NewsSearchError.xsd</con:url><con:content><![CDATA[<!--The contents of this file are subject to the terms
 of the Common Development and Distribution License
 (the "License").  You may not use this file except
 in compliance with the License.
@@ -58,7 +58,7 @@ permissions and limitations under the License.-->
       </xs:sequence>
     </xs:complexType>
   </xs:element>
-</xs:schema>]]></con:content><con:type>http://www.w3.org/2001/XMLSchema</con:type></con:part><con:part><con:url>file:/C:/Program%20Files/eviware/soapUI-Pro-2.5-beta2/Tutorials/WSDL-WADL/YahooSearch.wadl</con:url><con:content><![CDATA[<!--The contents of this file are subject to the terms
+</xs:schema>]]></con:content><con:type>http://www.w3.org/2001/XMLSchema</con:type></con:part><con:part><con:url>file:/C:/Program%20Files/eviware/SoapUI-Pro-2.5-beta2/Tutorials/WSDL-WADL/YahooSearch.wadl</con:url><con:content><![CDATA[<!--The contents of this file are subject to the terms
 of the Common Development and Distribution License
 (the "License").  You may not use this file except
 in compliance with the License.

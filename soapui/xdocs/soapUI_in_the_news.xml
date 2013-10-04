@@ -4,7 +4,7 @@
         <title>news</title>
     </properties>
     <body>
-        <section name="soapUI in the News">
+        <section name="SoapUI in the News">
  
     <subsection name="Developers Blog">
 	    	<columns>
@@ -65,7 +65,7 @@
 	    		</column>
 	    		<column align="left">
 	    		    <i>2009-08-18</i>
-	    	        <p>The post starts: "soapUI has Maven getting started guide..."<br/>
+	    	        <p>The post starts: "SoapUI has Maven getting started guide..."<br/>
 	    			<a href="http://blog.karit.geek.nz/2009/08/using-soapui-to-do-testing-as-part-of.html">[Read more]</a></p>
 	    		</column>
 	    	</columns>
@@ -119,7 +119,7 @@
 	    		</column>
 	    		<column align="left">
 	    		    <i>2009-08-04</i>
-	    	        <p>The post starts: "soapUI 3.0 comes with support for creating..."<br/>
+	    	        <p>The post starts: "SoapUI 3.0 comes with support for creating..."<br/>
 	    			<a href="http://tedwise.com/2009/08/04/super-simple-soapui-tests/">[Read more]</a></p>
 	    		</column>
 	    	</columns>
@@ -154,7 +154,7 @@
 	</subsection>
     
     
-    <subsection name="soapUI: Open Source way to explore WSDL">
+    <subsection name="SoapUI: Open Source way to explore WSDL">
 	    	<columns>
 	    		<column width="200">
 	    		<img src="images/inthenews/ick.gif" alt="Web service testing tool"/>	    	    
@@ -233,7 +233,7 @@
 	    	</columns>
 	</subsection>
                 
-    <subsection name="soapUI property Expansion">
+    <subsection name="SoapUI property Expansion">
 	    	<columns>
 	    		<column width="200">
 	    		<img src="images/inthenews/techwheel.gif" alt="Groovy in soapui"/>
@@ -253,7 +253,7 @@
 	    	    </column>
 	    		<column align="left">
 	    		    <i>2009-01-16</i>
-	    			<p>The post starts: "soapUI has a maven plugin? I think this might..."<br/>
+	    			<p>The post starts: "SoapUI has a maven plugin? I think this might..."<br/>
 	    			<a href="http://joshdevins.blogspot.com/2009/01/web-service-testing.html">[Read more]</a></p>
 	    		</column>
 	    	</columns>
@@ -273,7 +273,7 @@
 	</subsection>
                 
        
-    <subsection name="soapUI a great way to do integration">
+    <subsection name="SoapUI a great way to do integration">
 	    	<columns>
 	    		<column width="200">
 	    		<img src="images/inthenews/marcusoft.gif" alt="Groovy in soapui"/>
@@ -315,7 +315,7 @@
       <subsection name="Solutions Blog">
 	    	<columns>
 	    		<column width="200">
-	    		<img src="images/inthenews/solutions.gif" alt="soapUI Rest Support"/>
+	    		<img src="images/inthenews/solutions.gif" alt="SoapUI Rest Support"/>
 	    		</column>
 	    		<column align="left">
 	    		    <i>2008-11-18</i>
@@ -325,10 +325,10 @@
 	    	</columns>
 		</subsection>    
         
-        <subsection name="soapUI Rest Support">
+        <subsection name="SoapUI Rest Support">
 	    	<columns>
 	    		<column width="200">
-	    		<img src="images/inthenews/sleepless.gif" alt="soapUI Rest Support"/>
+	    		<img src="images/inthenews/sleepless.gif" alt="SoapUI Rest Support"/>
 	    		</column>
 	    		<column align="left">
 	    		    <i>2008-10-20</i>
@@ -350,7 +350,7 @@
 	    	</columns>
 		</subsection>   
  
-		<subsection name="soapUI - How to synchronize using threads during load test">
+		<subsection name="SoapUI - How to synchronize using threads during load test">
 	    	<columns>
 	    		<column width="200">
 	    		<img src="images/inthenews/darshan.gif" alt="How to synchronize using threads during load test"/>
@@ -375,10 +375,10 @@
 	    	</columns>
 		</subsection> 
 		
-		<subsection name="soapUI 2.0: Web Service Testing Tool">
+		<subsection name="SoapUI 2.0: Web Service Testing Tool">
 	    	<columns>
 	    		<column width="200">
-	    	    <img src="images/inthenews/gmj.gif" alt="soapUI Web Service Testing Tool"/>
+	    	    <img src="images/inthenews/gmj.gif" alt="SoapUI Web Service Testing Tool"/>
 	    		</column>
 	    		<column align="left">
 	    		<i>2007-12-14:</i>
@@ -431,7 +431,7 @@
 	    <subsection name="Using soapUI for testing your webservice">
 	    	<columns>
 	    		<column width="200">
-	    		<img src="images/inthenews/pascal.gif" alt="soapUI for testing your web services"/>
+	    		<img src="images/inthenews/pascal.gif" alt="SoapUI for testing your web services"/>
 	    		</column>
 	    		<column align="left">
 	    		    <i>2007-05-23</i>
@@ -442,7 +442,7 @@
 		</subsection>
 			
 		
-        <subsection name="soapUI vs. JUnit">
+        <subsection name="SoapUI vs. JUnit">
 	    	<columns>
 	    		<column width="200">
 	    		<img src="images/inthenews/myarch.gif" alt="open source test tool."/>
@@ -471,7 +471,7 @@
 	    <subsection name="The right tool for the job">
 	    	<columns>
 	    		<column width="200">
-	    		<img src="images/inthenews/jroller.gif" alt="soapUI for testing web services"/>
+	    		<img src="images/inthenews/jroller.gif" alt="SoapUI for testing web services"/>
 	    		</column>
 	    		<column align="left">
 	    		    <i>2007-04-28</i>
@@ -523,7 +523,7 @@
         <subsection name="Another look at soapUI: load test">
 	    	<columns>
 	    		<column width="200">
-	    		<img src="images/inthenews/chrismc.gif" alt="soapUI load test"/>
+	    		<img src="images/inthenews/chrismc.gif" alt="SoapUI load test"/>
 	    		</column>
 	    		<column align="left">
 	    		    <i>2006-11-09</i>
@@ -536,7 +536,7 @@
         <subsection name="The long way round">
 	    	<columns>
 	    		<column width="200">
-	    		<img src="images/inthenews/cognifide.gif" alt="soapUI load test"/>
+	    		<img src="images/inthenews/cognifide.gif" alt="SoapUI load test"/>
 	    		</column>
 	    		<column align="left">
 	    		    <p>The post starts: "Sorry, been online for a bit with project. Anyway we are..." <br/>
@@ -574,7 +574,7 @@
 		<subsection name="From SOAPscope to soapUI">
 	    	<columns>
 	    		<column width="200">
-	    		<img src="images/inthenews/testingr.gif" alt="soapUI for wsdl testing"/>
+	    		<img src="images/inthenews/testingr.gif" alt="SoapUI for wsdl testing"/>
 	    		</column>
 	    		<column align="left">
 	    		    <i>2006-08-09</i>

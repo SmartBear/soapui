@@ -4,7 +4,7 @@
         <title>SOAP Testing Tool soapUI - conditional goto steps</title>
     </properties>
     <body>
-		<section name="soapUI Conditional Gotos">
+		<section name="SoapUI Conditional Gotos">
 		   <p>Conditional Goto steps evaluate an arbitrary number of XPath conditions
 		   on the previous requests response message and transfer TestCase execution to the TestStep associated with
 		   the first condition that evaluates to true. This allows for conditional TestCase execution paths, where the 
@@ -30,7 +30,7 @@
 		 <p>soapUI Pro adds an <a href="../xpath_selector.html">XPath Selector</a> button to the right
 		 of the Test Condition button for easily selecting the XPath that should be used for evaluation.</p>
 		 
-		 <p align="center"><img src="images/gotostep_editor.gif" alt="soapUI Conditional Goto Editor"/></p>
+		 <p align="center"><img src="images/gotostep_editor.gif" alt="SoapUI Conditional Goto Editor"/></p>
 		
 		 <p>The following actions are available from the bottom toolbar</p>
 		 <ul>

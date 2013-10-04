@@ -4,7 +4,7 @@
         <title>web service testing - soapUI 2.5</title>
     </properties>
     <body>
-        <section name="soapUI 2.5 new features">
+        <section name="SoapUI 2.5 new features">
             <p>Welcome to soapUI 2.5, the REST release!</p>
             <p>
                 <i>As always, make backups of your project files before switching and let us know if you have any
@@ -18,7 +18,7 @@
                         <div>
                             <a href="http://www.soapui.org/jnlp/2.5.1/soapui.jnlp"
                                urchinTracker="/jnlp/soapui/2_5_1">
-                                <img class="webstart" src="images/webstart_green.png" border="0" alt="soapUI WebStart"/>
+                                <img class="webstart" src="images/webstart_green.png" border="0" alt="SoapUI WebStart"/>
                             </a>
                         </div>
                         [<a target="_new"
@@ -31,7 +31,7 @@
                             <a href="http://www.eviware.com/jnlp/2.5.1/soapui-pro.jnlp"
                                urchinTracker="/jnlp/soapui/2_5_1-pro">
                                 <img class="webstart" src="images/webstart_orange.png" border="0"
-                                     alt="soapUI Pro WebStart"/>
+                                     alt="SoapUI Pro WebStart"/>
                             </a>
                         </div>
                         [<a target="_new" href="http://www.eviware.com">Try or buy soapUI Pro</a>]

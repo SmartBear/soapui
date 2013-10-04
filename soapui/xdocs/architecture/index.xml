@@ -41,7 +41,7 @@
 		 implementation class (this should obviously be fixed).</p>
 		 </subsection>
 		 
-		 <subsection name="soapUI WSDL implementation">
+		 <subsection name="SoapUI WSDL implementation">
 		 <p>The WSDL/SOAP/HTTP-Binding implementation of the core object model is available in the 
 		 <code>com.eviware.soapui.impl.wsdl.*</code> packages;</p>
 		 <ul>

@@ -4,7 +4,7 @@
         <title>web service testing - soapUI 3.0</title>
     </properties>
     <body>
-        <section name="soapUI 3.0 new features">
+        <section name="SoapUI 3.0 new features">
             <p>Welcome to soapUI 3.0- The Reporting Release!</p>
             <p>
                 <i>As always, make backups of your project files before switching and let us know if you have any
@@ -18,7 +18,7 @@
                         <div>
                             <a href="http://www.soapui.org/jnlp/3.0.1/soapui.jnlp"
                                urchinTracker="/jnlp/soapui/3_0_1">
-                                <img class="webstart" src="images/webstart_green.png" border="0" alt="soapUI WebStart"/>
+                                <img class="webstart" src="images/webstart_green.png" border="0" alt="SoapUI WebStart"/>
                             </a>
                         </div>
                        [<a target="_new"
@@ -31,7 +31,7 @@
                             <a href="http://www.eviware.com/jnlp/3.0.1/soapui-pro.jnlp"
                                urchinTracker="/jnlp/soapui/3_0_1">
                                 <img class="webstart" src="images/webstart_orange.png" border="0"
-                                     alt="soapUI Pro WebStart"/>
+                                     alt="SoapUI Pro WebStart"/>
                             </a>
                         </div>
                      [<a target="_new" href="http://www.eviware.com/index.php?option=com_content&amp;task=blogsection&amp;id=12&amp;Itemid=58">Download</a>]
@@ -100,9 +100,9 @@
 		 </subsection>
 
          <subsection name="Major New Features">
-         <p>(* = soapUI Pro only)</p>
+         <p>(* = SoapUI Pro only)</p>
          <ul>
-         <li><p><b>Reporting *</b> - soapUI Pro 3.0 adds an extensive framework for creating reports from 
+         <li><p><b>Reporting *</b> - SoapUI Pro 3.0 adds an extensive framework for creating reports from
          project and test result data. The framework comes with a number of pre-configured reports for your 
          tests which allows you to save test results and test metrics. Reports can be saved as
          <ul>

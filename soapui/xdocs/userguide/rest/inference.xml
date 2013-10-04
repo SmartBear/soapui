@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <!--
-  ~ soapUI, copyright (C) 2004-2008 eviware.com
+  ~ SoapUI, copyright (C) 2004-2008 eviware.com
   ~
-  ~ soapUI is free software; you can redistribute it and/or modify it under the
+  ~ SoapUI is free software; you can redistribute it and/or modify it under the
   ~ terms of version 2.1 of the GNU Lesser General Public License as published by
   ~ the Free Software Foundation.
   ~
-  ~ soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+  ~ SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
   ~ even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
   ~ See the GNU Lesser General Public License for more details at gnu.org.
   -->
@@ -23,7 +23,7 @@
 		and also inference of XSD schemas from any incoming responses that can be converted to XML, 
 		such as XML, JSON and HTML.</p>
 
-		<subsection name="soapUI Schema inspector">
+		<subsection name="SoapUI Schema inspector">
 		<p>To infer an XSD schema, soapUI provides a Schema inspector that can analyze each response. 
 		Doing so, the inspector is able to generate an XML schema for your responses, 
 		but also refine them over time as it gathers more data.</p>

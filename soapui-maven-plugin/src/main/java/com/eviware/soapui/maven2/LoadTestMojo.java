@@ -1,5 +1,5 @@
 /*
- *  soapUI, copyright (C) 2004-2011 smartbear.com 
+ *  SoapUI, copyright (C) 2004-2011 smartbear.com
  *
  *  SoapUI is free software; you can redistribute it and/or modify it under the 
  *  terms of the GNU Lesser General Public License as published by the Free Software Foundation; 
@@ -22,7 +22,7 @@ import java.io.File;
 import java.util.Properties;
 
 /**
- * Runs soapUI loadtests
+ * Runs SoapUI loadtests
  * 
  * @goal loadtest
  */
@@ -45,7 +45,7 @@ public class LoadTestMojo extends AbstractMojo
 //		}
 		
 		SoapUILoadTestRunner runner = new SoapUILoadTestRunner( 
-					"soapUI " + SoapUI.SOAPUI_VERSION + " Maven2 LoadTest Runner");
+					"SoapUI " + SoapUI.SOAPUI_VERSION + " Maven2 LoadTest Runner");
 		runner.setProjectFile( projectFile );
 		
 		if( endpoint != null )
@@ -121,7 +121,7 @@ public class LoadTestMojo extends AbstractMojo
 	}
 	
 	/**
-    * The soapUI project file to test with
+    * The SoapUI project file to test with
     *
     * @parameter expression="${soapui.projectFile}"    
     * 	default-value="${project.artifactId}-soapui-project.xml"
@@ -236,7 +236,7 @@ public class LoadTestMojo extends AbstractMojo
    private boolean printReport;
    
    /**
-    * Specifies soapUI settings file to use
+    * Specifies SoapUI settings file to use
     *
     * @parameter expression="${soapui.settingsFile}"    
     * */
@@ -250,7 +250,7 @@ public class LoadTestMojo extends AbstractMojo
    private boolean skip;
    
    /**
-    * Specifies password for encrypted soapUI project file
+    * Specifies password for encrypted SoapUI project file
     * 
     * @parameter expression="${soapui.project.password}"
     */

@@ -4,7 +4,7 @@
         <title>Groovy scripting Web Service Tests</title>
     </properties>
     <body>
-		<section name="soapUI Scripting">
+		<section name="SoapUI Scripting">
 		<p>soapUI provides extensive options for scripting, using either Groovy or Javascript (since soapUI 3.0) as its scripting language, which 
 		to use is set a the project level in the project details tab at the bottom left. The majority of the documentation 
 		available here will be for the Groovy language, as it greatly simplifies the scripting of Java APIs 

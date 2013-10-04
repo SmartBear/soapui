@@ -1,11 +1,11 @@
 /*
- *  soapUI, copyright (C) 2004-2011 smartbear.com 
+ *  SoapUI, copyright (C) 2004-2011 smartbear.com
  *
- *  soapUI is free software; you can redistribute it and/or modify it under the 
+ *  SoapUI is free software; you can redistribute it and/or modify it under the
  *  terms of version 2.1 of the GNU Lesser General Public License as published by 
  *  the Free Software Foundation.
  *
- *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
@@ -277,7 +277,7 @@ public class SoapUI
 
 		mainInspector = JInspectorPanelFactory.build( buildContentPanel(), SwingConstants.LEFT );
 		mainInspector.addInspector( new JComponentInspector<JComponent>( buildMainPanel(), "Navigator",
-				"The soapUI Navigator", true ) );
+				"The SoapUI Navigator", true ) );
 		mainInspector.setCurrentInspector( "Navigator" );
 
 		frame.setJMenuBar( buildMainMenu() );
@@ -321,11 +321,11 @@ public class SoapUI
 		mainToolbar.add( new SaveAllActionDelegate() );
 		mainToolbar.addSpace( 2 );
 		mainToolbar.add( new ShowOnlineHelpAction( "User Guide", HelpUrls.USERGUIDE_HELP_URL,
-				"Opens the soapUI User-Guide in a browser" ) );
+				"Opens the SoapUI User-Guide in a browser" ) );
 		mainToolbar.add( new ShowOnlineHelpAction( "Forum", HelpUrls.FORUMS_HELP_URL,
-				"Opens the soapUI Forum in a browser", "/group_go.png" ) );
+				"Opens the SoapUI Forum in a browser", "/group_go.png" ) );
 		mainToolbar.addSpace( 2 );
-		mainToolbar.add( new ShowOnlineHelpAction( "Trial", HelpUrls.TRIAL_URL, "Apply for soapUI Pro Trial License",
+		mainToolbar.add( new ShowOnlineHelpAction( "Trial", HelpUrls.TRIAL_URL, "Apply for SoapUI Pro Trial License",
 				"/favicon.png" ) );
 		mainToolbar.addSpace( 2 );
 		mainToolbar.add( new PreferencesActionDelegate() );
@@ -450,8 +450,8 @@ public class SoapUI
 		helpMenu.addSeparator();
 		helpMenu.add( new VersionUpdateAction() );
 		helpMenu.addSeparator();
-		helpMenu.add( new ShowOnlineHelpAction( "soapUI Pro Trial", HelpUrls.TRIAL_URL,
-				"Apply for soapUI Pro Trial License", "/favicon.png" ) );
+		helpMenu.add( new ShowOnlineHelpAction( "SoapUI Pro Trial", HelpUrls.TRIAL_URL,
+				"Apply for SoapUI Pro Trial License", "/favicon.png" ) );
 		helpMenu.addSeparator();
 		helpMenu.add( new OpenUrlAction( "soapui.org", "http://www.soapui.org" ) );
 		helpMenu.add( new OpenUrlAction( "smartbear.com", "http://smartbear.com" ) );
@@ -580,7 +580,7 @@ public class SoapUI
 
 	private JComponent buildContentPanel()
 	{
-		return buildLogPanel( true, "soapUI log" );
+		return buildLogPanel( true, "SoapUI log" );
 	}
 
 	private JComponent buildLogPanel( boolean hasDefault, String defaultName )
@@ -665,7 +665,7 @@ public class SoapUI
 					brandedTitleExt = "";
 				}
 
-				startSoapUI( mainArgs, "soapUI " + SOAPUI_VERSION + " " + brandedTitleExt,
+				startSoapUI( mainArgs, "SoapUI " + SOAPUI_VERSION + " " + brandedTitleExt,
 						new StandaloneSoapUICore( true ) );
 
 				if( isAutoUpdateVersion() )
@@ -1328,7 +1328,7 @@ public class SoapUI
 	{
 		public ToolbarForumSearchAction()
 		{
-			putValue( Action.SHORT_DESCRIPTION, "Searches the soapUI Support Forum" );
+			putValue( Action.SHORT_DESCRIPTION, "Searches the SoapUI Support Forum" );
 			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/find.png" ) );
 		}
 
@@ -1343,7 +1343,7 @@ public class SoapUI
 		public SearchForumAction()
 		{
 			super( "Search Forum" );
-			putValue( Action.SHORT_DESCRIPTION, "Searches the soapUI Support Forum" );
+			putValue( Action.SHORT_DESCRIPTION, "Searches the SoapUI Support Forum" );
 		}
 
 		public void actionPerformed( ActionEvent e )
@@ -1362,7 +1362,7 @@ public class SoapUI
 		{
 			try
 			{
-				urlDesktopPanel = new URLDesktopPanel( "soapUI Starter Page", "Info on soapUI", null );
+				urlDesktopPanel = new URLDesktopPanel( "SoapUI Starter Page", "Info on SoapUI", null );
 			}
 			catch( Throwable t )
 			{
@@ -1409,8 +1409,8 @@ public class SoapUI
 
 		public AboutAction()
 		{
-			super( "About soapUI" );
-			putValue( Action.SHORT_DESCRIPTION, "Shows information on soapUI" );
+			super( "About SoapUI" );
+			putValue( Action.SHORT_DESCRIPTION, "Shows information on SoapUI" );
 		}
 
 		public void actionPerformed( ActionEvent e )
@@ -1437,10 +1437,10 @@ public class SoapUI
 
 
 			UISupport.showExtendedInfo(
-					"About soapUI",
+					"About SoapUI",
 					null,
 					"<html><body><p align=center> <font face=\"Verdana,Arial,Helvetica\"><strong><img src=\"" + splashURI
-							+ "\"><br>soapUI " + SOAPUI_VERSION + "<br>"
+							+ "\"><br>SoapUI " + SOAPUI_VERSION + "<br>"
 							+ "Copyright (C) " + COPYRIGHT + "<br>"
 							+ "<a href=\"" + SOAPUI_WEBSITE + "\">" + SOAPUI_WEBSITE + "</a> | "
 							+ "<a href=\"" + SMARTBEAR_WEBSITE + "\">" + SMARTBEAR_WEBSITE + "</a><br>"
@@ -1575,7 +1575,7 @@ public class SoapUI
 		public ImportWsdlProjectActionDelegate()
 		{
 			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/import_project.gif" ) );
-			putValue( Action.SHORT_DESCRIPTION, "Imports an existing soapUI Project into the current workspace" );
+			putValue( Action.SHORT_DESCRIPTION, "Imports an existing SoapUI Project into the current workspace" );
 		}
 
 		public void actionPerformed( ActionEvent e )
@@ -1603,7 +1603,7 @@ public class SoapUI
 		public PreferencesActionDelegate()
 		{
 			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/options.gif" ) );
-			putValue( Action.SHORT_DESCRIPTION, "Sets Global soapUI Preferences" );
+			putValue( Action.SHORT_DESCRIPTION, "Sets Global SoapUI Preferences" );
 		}
 
 		public void actionPerformed( ActionEvent e )
@@ -1619,7 +1619,7 @@ public class SoapUI
 		public ImportPreferencesAction()
 		{
 			super( ImportPreferencesAction.IMPORT_PREFERENCES_ACTION_NAME );
-			putValue( Action.SHORT_DESCRIPTION, "Imports soapUI Settings from another settings-file" );
+			putValue( Action.SHORT_DESCRIPTION, "Imports SoapUI Settings from another settings-file" );
 		}
 
 		public void actionPerformed( ActionEvent e )
@@ -1628,7 +1628,7 @@ public class SoapUI
 			{
 				// prompt for import
 				File file = UISupport.getFileDialogs().open( null, ImportPreferencesAction.IMPORT_PREFERENCES_ACTION_NAME,
-						".xml", "soapUI Settings XML (*.xml)", null );
+						".xml", "SoapUI Settings XML (*.xml)", null );
 				if( file != null )
 					soapUICore.importSettings( file );
 			}

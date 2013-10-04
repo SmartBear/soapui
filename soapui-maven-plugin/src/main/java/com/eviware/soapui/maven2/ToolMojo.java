@@ -1,7 +1,7 @@
 package com.eviware.soapui.maven2;
 
 /*
- *  soapUI, copyright (C) 2004-2011 smartbear.com 
+ *  SoapUI, copyright (C) 2004-2011 smartbear.com
  *
  *  SoapUI is free software; you can redistribute it and/or modify it under the 
  *  terms of the GNU Lesser General Public License as published by the Free Software Foundation; 
@@ -23,7 +23,7 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.tools.SoapUIToolRunner;
 
 /**
- * Runs soapUI tools
+ * Runs SoapUI tools
  * 
  * @goal tool
  */
@@ -42,7 +42,7 @@ public class ToolMojo extends AbstractMojo
 //			throw new MojoExecutionException("soapui-project-file [" + projectFile + "] is not found");
 //		}
 
-		SoapUIToolRunner runner = new SoapUIToolRunner("soapUI " + SoapUI.SOAPUI_VERSION + " Maven2 Tool Runner");
+		SoapUIToolRunner runner = new SoapUIToolRunner("SoapUI " + SoapUI.SOAPUI_VERSION + " Maven2 Tool Runner");
 		runner.setProjectFile(projectFile);
 
 		if (iface != null)
@@ -82,7 +82,7 @@ public class ToolMojo extends AbstractMojo
 	}
 
 	/**
-	 * The soapUI project file to test with
+	 * The SoapUI project file to test with
 	 * 
 	 * @parameter expression="${soapui.projectFile}"
 	 *            default-value="${project.artifactId}-soapui-project.xml"
@@ -107,7 +107,7 @@ public class ToolMojo extends AbstractMojo
 	private String iface;
 
 	/**
-	 * Specifies soapUI settings file to use
+	 * Specifies SoapUI settings file to use
 	 * 
 	 * @parameter expression="${soapui.settingsFile}"
 	 */
@@ -115,7 +115,7 @@ public class ToolMojo extends AbstractMojo
 	private String settingsFile;
 
 	/**
-	 * Specifies password for encrypted soapUI project file
+	 * Specifies password for encrypted SoapUI project file
 	 * 
 	 * @parameter expression="${soapui.project.password}"
 	 */

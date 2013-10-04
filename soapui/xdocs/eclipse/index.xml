@@ -4,7 +4,7 @@
         <title>Web Service Testing in eclipse - soapUI plugin</title>
     </properties>
     <body>
-		<section name="soapUI eclipse-plugin">
+		<section name="SoapUI eclipse-plugin">
 		
 		<p>The soapUI eclipse plugin provides full soapUI functionality from within eclipse. Apart from "standard" 
 		soapUI 2.5 functionality, the eclipse plugin contains a soapUI project nature and also adds a new soapUI 
@@ -27,7 +27,7 @@
 		<thumbnail src="images/eclipse3.gif" size="250" caption="(Axis2 Wizard with WS-I Basic Profile Report in background)" alt="the soapUI Axis2 Wizard with WS-I Basic Profile Report in background in eclipse"/>
 		</column></columns>
 		
-		<subsection name="soapUI eclipse Update Site">
+		<subsection name="SoapUI eclipse Update Site">
 		<p>An eclipse update site is now available at http://www.soapui.org/eclipse/update/site.xml, install the 
 		soapui-eclipse-plugin with the following steps:</p>
 		<columns>
@@ -49,11 +49,11 @@
 		<columns>
 		<column>
 		<div>Once installed, open the soapUI Perspective by using the standard Window/Open Perspective/Other... Command and 
-		selecting "soapUI" from the list. The perspective will open 2 views;</div>
+		selecting "SoapUI" from the list. The perspective will open 2 views;</div>
 		<ul>
-		<li>A "soapUI Navigator" view to the left containing the same Navigator and Details tab as the standalone soapUI 
+		<li>A "SoapUI Navigator" view to the left containing the same Navigator and Details tab as the standalone soapUI
 		version.</li>
-		<li>A "soapUI Logs" view to the bottom containing the same log tabs as the standalone soapUI version. </li>
+		<li>A "SoapUI Logs" view to the bottom containing the same log tabs as the standalone soapUI version. </li>
 		</ul>
 		<p>Navigation/actions work the same as in the standalone version, windows are opened as tabs on the eclipse desktop
 		and can be moved/docked around as usual</p>
@@ -66,9 +66,9 @@
 		
 		</subsection>
 		
-		<subsection name="soapUI Preferences">
+		<subsection name="SoapUI Preferences">
 		<p>Most soapUI Settings are available from the standard Window/Preferences dialog under the soapUI node;</p>
-		<p align="center"><img src="images/eclipse-preferences.gif"  alt="soapUI preferences in eclipse"/></p>
+		<p align="center"><img src="images/eclipse-preferences.gif"  alt="SoapUI preferences in eclipse"/></p>
 		
 		</subsection>
 		 <p><hr size="1"/>Next: <a href="soapui_nature.html">soapUI Nature in the Eclipse Plug in</a></p>

@@ -1,11 +1,11 @@
 /*
- *  soapUI, copyright (C) 2004-2011 smartbear.com 
+ *  SoapUI, copyright (C) 2004-2011 smartbear.com
  *
- *  soapUI is free software; you can redistribute it and/or modify it under the 
+ *  SoapUI is free software; you can redistribute it and/or modify it under the
  *  terms of version 2.1 of the GNU Lesser General Public License as published by 
  *  the Free Software Foundation.
  *
- *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
@@ -207,7 +207,7 @@ public class SoapUIVersionUpdate
 
 		JPanel versionUpdatePanel = new JPanel( new BorderLayout() );
 		JDialog dialog = new JDialog();
-		versionUpdatePanel.add( UISupport.buildDescription( "New Version of soapUI is Available", "", null ),
+		versionUpdatePanel.add( UISupport.buildDescription( "New Version of SoapUI is Available", "", null ),
 				BorderLayout.NORTH );
 		JEditorPane text = createReleaseNotesPane();
 		JScrollPane scb = new JScrollPane( text );
@@ -274,7 +274,7 @@ public class SoapUIVersionUpdate
 		if( isNewReleaseAvailable() && ( !skipThisVersion() || helpAction ) )
 			showNewVersionDownloadDialog();
 		else if( helpAction )
-			UISupport.showInfoMessage( "You are running the latest version of soapUI!", "Version Check" );
+			UISupport.showInfoMessage( "You are running the latest version of SoapUI!", "Version Check" );
 	}
 
 	protected class IgnoreUpdateAction extends AbstractAction

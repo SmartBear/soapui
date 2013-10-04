@@ -4,7 +4,7 @@
 		<title>soapUI Preferences</title>
 	</properties>
 	<body>
-		<section name="soapUI Preferences">
+		<section name="SoapUI Preferences">
 			<p>The preferences dialog opened when selecting the "Preferences"
 				option from the file menu contains the
 				following tabs:</p>
@@ -436,7 +436,7 @@
 		<p align="center"><img src="images/wsa_settings.gif" alt="The soapUI Pro Settings Tab in soapUI"/></p>
 		</subsection>
 		
-		<subsection name="soapUI Pro Settings">
+		<subsection name="SoapUI Pro Settings">
 		<p>These settings are related to soapUI Pro specific functionality.</p>
 		<table><tr><th>Setting</th><th>Description</th></tr>
 		<tr><td>Default Request Editor</td><td>Sets the default Message Editor to use when a Request is opened</td></tr>

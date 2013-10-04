@@ -9,8 +9,8 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.smartbear.soapui</groupId>
     <artifactId>soapui</artifactId>
-    <name>soapUI</name>
-    <description>The main soapUI project</description>
+    <name>SoapUI</name>
+    <description>The main SoapUI project</description>
     <packaging>jar</packaging>
     <url>http://www.soapui.org</url>
 

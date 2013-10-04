@@ -4,7 +4,7 @@
         <title>Web Service structure view - soapUI Pro outline editor</title>
     </properties>
     <body>
-		<section name="soapUI Pro Outline Editor">
+		<section name="SoapUI Pro Outline Editor">
 		<p>The soapUI Pro Outline Editor is available for all request and response messages and shows a tree view 
 		of the current message content. The
 		left column of the editor shows the tree structure and the center column shows editable node values.

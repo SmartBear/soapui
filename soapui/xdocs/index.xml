@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <!--
-  ~ soapUI, copyright (C) 2004-20010 eviware.com
+  ~ SoapUI, copyright (C) 2004-20010 eviware.com
   ~
-  ~ soapUI is free software; you can redistribute it and/or modify it under the
+  ~ SoapUI is free software; you can redistribute it and/or modify it under the
   ~ terms of version 2.1 of the GNU Lesser General Public License as published by
   ~ the Free Software Foundation.
   ~
-  ~ soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+  ~ SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
   ~ even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
   ~ See the GNU Lesser General Public License for more details at gnu.org.
   -->
@@ -22,7 +22,7 @@
  <link rel="stylesheet" type="text/css" href="style/new.css" />
 
 <div id="head">
-<img src="img/head.jpg" alt="soapUI Pro 3.5.1" />
+<img src="img/head.jpg" alt="SoapUI Pro 3.5.1" />
 
 <div id="lead-text">
 soapUI, the leading tool for Web Service Testing. With more than <b>1 400 000 downloads</b>, it's the most used tool for SOA Testing in the world.
@@ -85,7 +85,7 @@ soapUI, the leading tool for Web Service Testing. With more than <b>1 400 000 do
  
             <columns>
                 <column width="250">
-                    <subsection name="soapUI 3.5 Final!">
+                    <subsection name="SoapUI 3.5 Final!">
                     <p>
                     soapUI 3.5 is out, introducing functionality that drastically expands the 
                     scope of Functional- and Load Testing features of soapUI;
@@ -180,7 +180,7 @@ soapUI, the leading tool for Web Service Testing. With more than <b>1 400 000 do
                    </subsection>
                 </column>
                 <column align="left" width="350">
-                    <subsection name="soapUI on the web">
+                    <subsection name="SoapUI on the web">
   
                         <p>
                             <i>2010-03-03:</i>

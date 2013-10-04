@@ -5,8 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 	<groupId>com.smartbear.soapui</groupId>
 	<artifactId>maven-soapui-plugin</artifactId>
-    <name>soapUI Maven plugin</name>
-    <description>Maven 2 project for building a soapUI plugin that is compatible with both Maven 1.x and Maven 2.x.</description>
+    <name>SoapUI Maven plugin</name>
+    <description>Maven 2 project for building a SoapUI plugin that is compatible with both Maven 1.x and Maven 2.x.</description>
 	<packaging>maven-plugin</packaging>
 
     <parent>

@@ -4,7 +4,7 @@
         <title>Data Driven Web Service Testing - DataSinks</title>
     </properties>
     <body>
-		<section name="soapUI Pro DataSink Step">
+		<section name="SoapUI Pro DataSink Step">
 		<p>Often you want save the data when doing Web Service testing. This can be in to take a response and 
 		use it in later Requests, save info for logging purposes or even to actually populate a business database.</p>
 		
@@ -73,7 +73,7 @@
 		are added/removed using the Add/Remove toolbar buttons. The DataSink dropdown selects the DataSink to use</p>
 		</subsection>
 		
-		<subsection name="soapUI Pro DataSink Options" >
+		<subsection name="SoapUI Pro DataSink Options" >
 		<p>The DataSink Options dialog is as follows:</p>
 		<p align="center"><img src="images/datasink_options.gif" alt="The soapUI Pro DataSink Editor Options"/></p>
 		<p>The following settings are available:</p>
@@ -82,7 +82,7 @@
 		</ul>
 		</subsection>
 		
-		<subsection name="soapUI Pro DataSink Execution">
+		<subsection name="SoapUI Pro DataSink Execution">
 		<p>Every time the TestCase execution flow passes the DataSink Step it will call the configured DataSink with
 		the current property values. Values should have been previously set by either a Groovy script or a property transfer,
 		or can alternatively contain a PropertyExpansion syntax.</p>
@@ -93,7 +93,7 @@
 		meaning	that all running threads will write (synchronized) to the same DataSink instead of each creating their own.</p>
 		</subsection>
 
-		<subsection name="soapUI Pro JDBC DataSink">
+		<subsection name="SoapUI Pro JDBC DataSink">
 		<p>The JDBC DataSink has the following configuration panel:</p>
 		<p align="center"><img src="images/jdbc_datasink_config_panel.gif" alt="The soapUI Pro JDBC DataSink configuration panel"/></p>
 		<p>There are 5 available options pretty straight forward, with buttons for using wizard for configuring them, and for testing if
@@ -121,14 +121,14 @@
 		</ul>
 		</subsection>
 		
-		<subsection name="soapUI Pro JDBC Connection DataSink">
+		<subsection name="SoapUI Pro JDBC Connection DataSink">
 		<p>The JDBC DataSink has the following configuration panel:</p>
 		<p align="center"><img src="images/jdbcconnection_datasink_config_panel.gif" alt="The soapUI Pro JDBC Connection DataSink configuration panel"/></p>
 		<p>Configuration options are pretty much the same as for JDBC DataSink except that here JDBC Connection set on project level
 		is used instead of configuring driver/connection string for this particular data sink.</p>
 		</subsection>
 		
-		<subsection name="soapUI Pro Excel DataSink">
+		<subsection name="SoapUI Pro Excel DataSink">
 		<p>The Excel DataSink has the following configuration panel:</p>
 		<p align="center"><img src="images/excel_datasink.gif" alt="The soapUI Pro Excel DataSink configuration panel"/></p>
 		<p>The 4 available options are pretty straight-forward:</p>
@@ -140,7 +140,7 @@
 		</ul>
 		</subsection>
 		
-		<subsection name="soapUI Pro File DataSink">
+		<subsection name="SoapUI Pro File DataSink">
 		<p>The File DataSink has the following configuration panel:</p>
 		<p align="center"><img src="images/file_datasink_config_panel.gif" alt="The soapUI Pro File DataSink configuration panel"/></p>
 		<p>Files will be written in a simple row format, using the specified separator. The available options are:</p>
@@ -152,7 +152,7 @@
 		</ul>
 		</subsection>
 
-		<subsection name="soapUI Pro Groovy DataSink">
+		<subsection name="SoapUI Pro Groovy DataSink">
 		<p>The Groovy DataSink has the following configuration panel:</p>
 		<p align="center"><img src="images/groovy_datasink_config_panel.gif" alt="The soapUI Pro Groovy DataSink configuration panel"/></p>
 		<p>This step allows any kind of DataSink to be created for a DataSink Step. Available context variables are:</p>
@@ -164,7 +164,7 @@
 		</ul> 
 		</subsection>
 
-            <subsection name="soapUI Pro Property DataSink">
+            <subsection name="SoapUI Pro Property DataSink">
 		<p>The Property DataSink has the following configuration panel:</p>
 		<p align="center"><img src="images/property_datasink_config_panel.gif" alt="The soapUI Pro Property DataSink configuration panel"/></p>
 		<p>This step allows for aggregation of values into a property that can be used elsewhere:</p>
@@ -179,7 +179,7 @@
          the DataSinks "test" property.</p>
 		</subsection>
 		
-		    <subsection name="soapUI Pro SubReport DataSink">
+		    <subsection name="SoapUI Pro SubReport DataSink">
 		<p>The SubReport DataSink collects data and exposes it to generated reports:</p>
 		<p align="center"><img src="images/subreport_datasink_config_panel.gif" alt="The soapUI Pro SubReport DataSink configuration panel"/></p>
 		

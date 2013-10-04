@@ -1,11 +1,11 @@
 /*
- *  soapUI, copyright (C) 2004-2012 smartbear.com 
+ *  SoapUI, copyright (C) 2004-2012 smartbear.com
  *
- *  soapUI is free software; you can redistribute it and/or modify it under the 
+ *  SoapUI is free software; you can redistribute it and/or modify it under the
  *  terms of version 2.1 of the GNU Lesser General Public License as published by 
  *  the Free Software Foundation.
  *
- *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
@@ -47,10 +47,10 @@ public class SoapUIToolRunner extends AbstractSoapUIRunner implements ToolHost, 
 	private RunnerStatus status;
 	private String projectPassword;
 
-	public static String TITLE = "soapUI " + SoapUI.SOAPUI_VERSION + " Tool Runner";
+	public static String TITLE = "SoapUI " + SoapUI.SOAPUI_VERSION + " Tool Runner";
 
 	/**
-	 * Runs the specified tool in the specified soapUI project file, see soapUI
+	 * Runs the specified tool in the specified soapUI project file, see SoapUI
 	 * xdocs for details.
 	 * 
 	 * @param args
@@ -95,7 +95,7 @@ public class SoapUIToolRunner extends AbstractSoapUIRunner implements ToolHost, 
 		String projectFile = getProjectFile();
 
 		if( !new File( projectFile ).exists() )
-			throw new Exception( "soapUI project file [" + projectFile + "] not found" );
+			throw new Exception( "SoapUI project file [" + projectFile + "] not found" );
 
 		// WsdlProject project = new WsdlProject( projectFile,
 		// getProjectPassword() );

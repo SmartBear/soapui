@@ -1,11 +1,11 @@
 /*
- *  soapUI, copyright (C) 2004-2012 smartbear.com 
+ *  SoapUI, copyright (C) 2004-2012 smartbear.com
  *
- *  soapUI is free software; you can redistribute it and/or modify it under the 
+ *  SoapUI is free software; you can redistribute it and/or modify it under the
  *  terms of version 2.1 of the GNU Lesser General Public License as published by 
  *  the Free Software Foundation.
  *
- *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
@@ -48,7 +48,7 @@ import com.eviware.x.form.XFormFieldListener;
 import com.eviware.x.impl.swing.JTextAreaFormField;
 
 /**
- * Invokes soapUI TestRunner tool
+ * Invokes SoapUI TestRunner tool
  * 
  * @author Ole.Matzura
  */
@@ -186,12 +186,12 @@ public class TestRunnerAction extends AbstractToolsAction<WsdlProject>
 		reportForm.addCheckBox( EXPORTALL, "Exports all results (not only errors)" );
 		reportForm.addTextField( ROOTFOLDER, "Folder to export to", XForm.FieldType.FOLDER );
 		reportForm.addSeparator();
-		reportForm.addCheckBox( COVERAGE, "Generate WSDL Coverage report (soapUI Pro only)" ).setEnabled( proVersion );
-		reportForm.addCheckBox( OPEN_REPORT, "Opens generated report(s) in browser (soapUI Pro only)" ).setEnabled(
+		reportForm.addCheckBox( COVERAGE, "Generate WSDL Coverage report (SoapUI Pro only)" ).setEnabled( proVersion );
+		reportForm.addCheckBox( OPEN_REPORT, "Opens generated report(s) in browser (SoapUI Pro only)" ).setEnabled(
 				proVersion );
 		reportForm.addComboBox( GENERATEREPORTSEACHTESTCASE, new String[0],
-				"Template used to generate report (soapUI Pro only)").setEnabled( proVersion );
-		reportForm.addTextField( REPORTFORMAT, "Choose report format(s), comma-separated (soapUI Pro only)",
+				"Template used to generate report (SoapUI Pro only)").setEnabled( proVersion );
+		reportForm.addTextField( REPORTFORMAT, "Choose report format(s), comma-separated (SoapUI Pro only)",
 				XForm.FieldType.TEXT ).setEnabled( proVersion );
 
 		propertyForm = builder.createForm( "Properties" );
@@ -203,7 +203,7 @@ public class TestRunnerAction extends AbstractToolsAction<WsdlProject>
 		buildArgsForm( builder, false, "TestRunner" );
 
 		return builder.buildDialog( buildDefaultActions( HelpUrls.TESTRUNNER_HELP_URL, modelItem ),
-				"Specify arguments for launching soapUI TestRunner", UISupport.TOOL_ICON );
+				"Specify arguments for launching SoapUI TestRunner", UISupport.TOOL_ICON );
 	}
 
 	protected JTextAreaFormField createTextArea()
@@ -338,7 +338,7 @@ public class TestRunnerAction extends AbstractToolsAction<WsdlProject>
 			log.debug( "Launching testrunner in directory [" + builder.directory() + "] with arguments ["
 					+ args.toString() + "]" );
 
-		toolHost.run( new ProcessToolRunner( builder, "soapUI TestRunner", modelItem, args ) );
+		toolHost.run( new ProcessToolRunner( builder, "SoapUI TestRunner", modelItem, args ) );
 	}
 
 	protected ArgumentBuilder buildArgs( WsdlProject modelItem ) throws IOException

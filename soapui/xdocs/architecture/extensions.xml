@@ -4,7 +4,7 @@
         <title>extending Web Service Tests</title>
     </properties>
     <body>
-		<section name="soapUI Extensions">
+		<section name="SoapUI Extensions">
 		<p>As of soapUI 1.7.6, we are in the process of creating an "Extension API" for easily extending soapUI with custom
 		actions, editors, transports, TestStep, assertions,  etc... etc... This API is very likely to change over the initial releases, 
 		please bear with us :-)</p>
@@ -21,7 +21,7 @@
 		<p><b>Please Share!!</b> any extensions you create that may be of use for others! Contact us and we will help you publish
 		them on the soapUI and soapUI Pro web sites. Thank you!!</p>
 		
-		<subsection name="soapUI Actions">
+		<subsection name="SoapUI Actions">
 		<p>All popup menu actions are stored in a "SoapUIActionRegistry" and are initialized from a "soapui-action.xml" file 
 		included in the soapui-XXX.jar file. The actionRegistry can merge additional actions into the existing ones from
 		external XXX-actions.xml files in a bin\actions folder under the soapUI installation. The actions.xml file has 2 parts:
@@ -134,7 +134,7 @@ public class DemoListener extends TestRunListenerAdapter
 		configuration</p>
 		</subsection>
 		
-		<subsection name="soapUI Pro Extension Scripting">
+		<subsection name="SoapUI Pro Extension Scripting">
 		<p>In soapUI Pro all the above extensions can be created in Groovy and loaded from the Groovy 
 		<a href="../userguide/scripting.html">Script Library</a> instead. 
 		soapUI Pro provides special utility classes that allows Groovy-extensions to be reloaded on modification so updates will be available

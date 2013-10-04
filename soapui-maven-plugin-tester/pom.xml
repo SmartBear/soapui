@@ -7,7 +7,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.smartbear.soapui</groupId>
     <artifactId>soapui-maven-plugin-tester</artifactId>
-    <name>soapUI Maven plugin tester</name>
+    <name>SoapUI Maven plugin tester</name>
     <packaging>pom</packaging>
 
     <parent>

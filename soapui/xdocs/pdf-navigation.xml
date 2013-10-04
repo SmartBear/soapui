@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="soapUI">
+<project name="SoapUI">
   <title>soapUI User Guide</title>
   <body>
    <menu name="User Guide" collapse="true" href="/userguide/index.html">
@@ -142,7 +142,7 @@
 			 <item name="IntelliJ Plugin" href="/intellij/index.html"/>
 			 
 			 <item name="Eclipse Plugin" href="/eclipse/index.html">
-		        <item href="/eclipse/soapui_nature.html" name="soapUI Nature"/>
+		        <item href="/eclipse/soapui_nature.html" name="SoapUI Nature"/>
 		     </item>  
 	
 		</item>

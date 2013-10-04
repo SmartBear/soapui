@@ -4,7 +4,7 @@
         <title>intellij Web Service test plugin</title>
     </properties>
     <body>
-		<section name="soapUI IntelliJ Plugin">
+		<section name="SoapUI IntelliJ Plugin">
 		<p>The soapUI IntelliJ Plugin provides all soapUI functionality directly from within 
 		<a target="_new" href="http://www.jetbrains.com/idea/">IntelliJ IDEA</a> allowing one integrated development and 
 		testing environment for Web Services in Java.</p>
@@ -12,9 +12,9 @@
 			seperately by installing the standalone soapUI version.</p>
         <p>Existing soapUI desktop components are made available through two ToolWindows:</p>
 		<ul>
-		<li>A "soapUI Navigator" ToolWindow at the left contains the 
+		<li>A "SoapUI Navigator" ToolWindow at the left contains the
 		<a href="../userguide/overview.html#Navigator_Tree_Model">soapUI Workspace Navigator</a> and Details Tab</li>
-		<li>A "soapUI Log" ToolWindow at the bottom contains the same 
+		<li>A "SoapUI Log" ToolWindow at the bottom contains the same
 		<a href="../userguide/overview.html#Log_Tabs">Log Tabs</a> as in soapUI</li>
 		</ul>
 		<p>All soapUI Desktop Panels are made available as editor tabs in IDEA and will be opened and closed as usual. Here 
@@ -31,7 +31,7 @@
 		<p>Currently, the plugin can be seen as a "level 1" integration, i.e. it is "merely" a packaging of soapUI 
 		components in the IntelliJ environment.</p>	
 		
-		<subsection name="soapUI Intellij Plugin Installation">
+		<subsection name="SoapUI Intellij Plugin Installation">
 		
 		<p>Since IntelliJ 8, a direct link for installing the soapUI IntelliJ plugin is available in the Tools/Web Services menu.
         Is is also downloadable from SourceForge and through IntelliJ&apos;s plugin-manager. After installing, you should increase IntelliJ&apos;s PermGen space

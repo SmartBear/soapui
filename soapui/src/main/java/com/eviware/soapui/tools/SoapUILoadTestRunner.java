@@ -1,11 +1,11 @@
 /*
- *  soapUI, copyright (C) 2004-2012 smartbear.com 
+ *  SoapUI, copyright (C) 2004-2012 smartbear.com
  *
- *  soapUI is free software; you can redistribute it and/or modify it under the 
+ *  SoapUI is free software; you can redistribute it and/or modify it under the
  *  terms of version 2.1 of the GNU Lesser General Public License as published by 
  *  the Free Software Foundation.
  *
- *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
@@ -65,10 +65,10 @@ public class SoapUILoadTestRunner extends AbstractSoapUITestRunner implements Lo
 	private long threadCount = -1;
 	private boolean saveAfterRun;
 
-	public static String TITLE = "soapUI " + SoapUI.SOAPUI_VERSION + " LoadTest Runner";
+	public static String TITLE = "SoapUI " + SoapUI.SOAPUI_VERSION + " LoadTest Runner";
 
 	/**
-	 * Runs the loadtests in the specified soapUI project file, see soapUI xdocs
+	 * Runs the loadtests in the specified soapUI project file, see SoapUI xdocs
 	 * for details.
 	 * 
 	 * @param args
@@ -250,7 +250,7 @@ public class SoapUILoadTestRunner extends AbstractSoapUITestRunner implements Lo
 				getProjectPassword() );
 
 		if( project.isDisabled() )
-			throw new Exception( "Failed to load soapUI project file [" + projectFile + "]" );
+			throw new Exception( "Failed to load SoapUI project file [" + projectFile + "]" );
 
 		initProjectProperties( project );
 
@@ -335,7 +335,7 @@ public class SoapUILoadTestRunner extends AbstractSoapUITestRunner implements Lo
 			else
 				log.info( "Skipping testcase [" + name + "], filter is [" + testCase + "]" );
 		}
-		log.info( "soapUI suite [" + suite.getName() + "] finished in " + ( System.currentTimeMillis() - start ) + "ms" );
+		log.info( "SoapUI suite [" + suite.getName() + "] finished in " + ( System.currentTimeMillis() - start ) + "ms" );
 	}
 
 	/**

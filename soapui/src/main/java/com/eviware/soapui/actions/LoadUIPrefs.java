@@ -1,11 +1,11 @@
 /*
- *  soapUI, copyright (C) 2004-2012 smartbear.com 
+ *  SoapUI, copyright (C) 2004-2012 smartbear.com
  *
- *  soapUI is free software; you can redistribute it and/or modify it under the 
+ *  SoapUI is free software; you can redistribute it and/or modify it under the
  *  terms of version 2.1 of the GNU Lesser General Public License as published by 
  *  the Free Software Foundation.
  *
- *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
@@ -24,7 +24,7 @@ public class LoadUIPrefs implements Prefs
 {
 	public static final String LOADUI_PATH = "loadUI.bat(.sh) folder";
 	public static final String LOADUI_CAJO_PORT = "loadUI integration port";
-	public static final String SOAPUI_CAJO_PORT = "soapUI integration port";
+	public static final String SOAPUI_CAJO_PORT = "SoapUI integration port";
 
 	private final String title;
 	private SimpleForm editorForm;
@@ -47,7 +47,7 @@ public class LoadUIPrefs implements Prefs
 			editorForm.append( LOADUI_PATH, directoryFormComponent );
 			editorForm.appendTextField( LOADUI_CAJO_PORT, "Client port for loadUI integration" );
 			editorForm.appendTextField( SOAPUI_CAJO_PORT,
-					"Server port of soapUI integration (change requires restart of soapUI)" );
+					"Server port of SoapUI integration (change requires restart of SoapUI)" );
 
 		}
 		return editorForm;

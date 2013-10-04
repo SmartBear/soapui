@@ -1,5 +1,5 @@
 /*
- * soapUI, copyright (C) 2004-2011 smartbear.com 
+ * SoapUI, copyright (C) 2004-2011 smartbear.com
  *
  *  SoapUI is free software; you can redistribute it and/or modify it under the 
  *  terms of the GNU Lesser General Public License as published by the Free Software Foundation; 
@@ -24,7 +24,7 @@ import java.net.URL;
 import java.util.Properties;
 
 /**
- * Runs soapUI functional tests
+ * Runs SoapUI functional tests
  * 
  * @goal test
  */
@@ -48,7 +48,7 @@ public class TestMojo extends AbstractMojo
 //				throw new MojoExecutionException( "soapui-project-file [" + projectFile + "] is not found or not specified" );
 //			}
 
-		SoapUITestCaseRunner runner = new SoapUITestCaseRunner( "soapUI " + SoapUI.SOAPUI_VERSION
+		SoapUITestCaseRunner runner = new SoapUITestCaseRunner( "SoapUI " + SoapUI.SOAPUI_VERSION
 				+ " Maven2 TestCase Runner" );
 		runner.setProjectFile( projectFile );
 
@@ -120,7 +120,7 @@ public class TestMojo extends AbstractMojo
 	}
 
 	/**
-	 * The soapUI project file to test with
+	 * The SoapUI project file to test with
 	 * 
 	 * @parameter expression="${soapui.projectfile}"
 	 *            default-value="${project.artifactId}-soapui-project.xml"
@@ -236,7 +236,7 @@ public class TestMojo extends AbstractMojo
 	private boolean junitReport;
 
 	/**
-	 * Specifies soapUI settings file to use
+	 * Specifies SoapUI settings file to use
 	 * 
 	 * @parameter expression="${soapui.settingsFile}"
 	 */
@@ -252,7 +252,7 @@ public class TestMojo extends AbstractMojo
 	private boolean skip;
 
 	/**
-	 * Specifies password for encrypted soapUI project file
+	 * Specifies password for encrypted SoapUI project file
 	 * 
 	 * @parameter expression="${soapui.project.password}"
 	 */

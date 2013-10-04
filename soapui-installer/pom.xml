@@ -158,19 +158,19 @@
                         </file>
                         <!-- Installers -->
                         <file>
-                            ${installer.build.directory}/soapUI-x32-${project.version}.exe
+                            ${installer.build.directory}/SoapUI-x32-${project.version}.exe
                         </file>
                         <file>
-                            ${installer.build.directory}/soapUI-x64-${project.version}.exe
+                            ${installer.build.directory}/SoapUI-x64-${project.version}.exe
                         </file>
                         <file>
-                            ${installer.build.directory}/soapUI-x32-${project.version}.sh
+                            ${installer.build.directory}/SoapUI-x32-${project.version}.sh
                         </file>
                         <file>
-                            ${installer.build.directory}/soapUI-x64-${project.version}.sh
+                            ${installer.build.directory}/SoapUI-x64-${project.version}.sh
                         </file>
                         <file>
-                            ${installer.build.directory}/soapUI-${project.version}.dmg
+                            ${installer.build.directory}/SoapUI-${project.version}.dmg
                         </file>
                     </files>
                 </configuration>
@@ -181,7 +181,7 @@
                 <artifactId>maven-gitlog-plugin</artifactId>
                 <version>1.4.11</version>
                 <configuration>
-                    <reportTitle>soapUI ${project.version} | https://github.com/SmartBear/soapui/tree/maintenance
+                    <reportTitle>SoapUI ${project.version} | https://github.com/SmartBear/soapui/tree/maintenance
                     </reportTitle>
                     <generatePlainTextChangeLog>false</generatePlainTextChangeLog>
                     <generateHTMLTableOnlyChangeLog>false</generateHTMLTableOnlyChangeLog>

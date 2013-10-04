@@ -4,7 +4,7 @@
         <title>WSDL Coverage for Web Service Tests</title>
     </properties>
     <body>
-		<section name="soapUI Pro Web Service Coverage">
+		<section name="SoapUI Pro Web Service Coverage">
 		<p>soapUI Pro introduces the unique concept of Web Service Coverage, which dynamically allows you to analyze how
 		much of a given SOAP or REST Web Service is being covered by your Functional Tests, MockServices, Mock Clients and SOAP Monitor clients
 		and targets. This document aims at giving a brief overview of the concepts of Web Service Coverage, with links to the corresponding 

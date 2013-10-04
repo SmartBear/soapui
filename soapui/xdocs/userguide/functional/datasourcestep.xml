@@ -4,7 +4,7 @@
         <title>Data Driven Testing - soapUI Pro Data Source Step </title>
     </properties>
     <body>
-		<section name="soapUI Pro DataSource Steps">
+		<section name="SoapUI Pro DataSource Steps">
 		<p>
 		Data Driven Web Service Testing is one on soapUIs' strengths. In soapUI this can be done by Groovy scripting, but in soapUI
 		Pro this is simplified. The basis for this is the DataSource Step. 
@@ -76,7 +76,7 @@
 		<li>A Test Log inspector at the bottom for displaying rows returned when either testing the datasource 
 		or when running its containing TestCase</li>
 		</ul>
-		<p align="center"><img src="images/datasource_editor.gif" alt="soapUI Pro DataSource Editor for data driven soap testing"/></p>
+		<p align="center"><img src="images/datasource_editor.gif" alt="SoapUI Pro DataSource Editor for data driven soap testing"/></p>
 		<p>The list of Properties must contain the properties that will be "exposed" by the DataSource step, they 
 		are added or removed using the Add/Remove toolbar buttons. Each DataSource then has its own way of reading data into
 		the properties, as described below.</p>
@@ -87,7 +87,7 @@
 		
 		<subsection name="DataSource Options">
 		<p>The DataSource Options dialog is as follows:</p>
-		<p align="center"><img src="images/datasource_options.gif" alt="soapUI Pro DataSource Options"/></p>
+		<p align="center"><img src="images/datasource_options.gif" alt="SoapUI Pro DataSource Options"/></p>
 		<p>The following settings are available:</p>
 		<ul>
 		<li><b>Shared</b> - controls whether this DataSource should be shared between threads in a LoadTest (see below)</li>
@@ -123,7 +123,7 @@
 
 		<subsection name="JDBC DataSource">
 		<p>The JDBC DataSource has the following configuration panel:</p>
-		<p align="center"><img src="images/jdbc_datasource_config_panel.gif" alt="soapUI Pro JDBC DataSource Options"/></p>
+		<p align="center"><img src="images/jdbc_datasource_config_panel.gif" alt="SoapUI Pro JDBC DataSource Options"/></p>
 		<p>There are 5 available options pretty straight-forward, with buttons for using wizard for configuring them, and for testing if
 		properly configured:</p>
 		<ul>
@@ -161,7 +161,7 @@
 		
 		<subsection name="JDBC Connection DataSource">
 		<p>The JDBC Connection DataSource has the following configuration panel:</p>
-		<p align="center"><img src="images/jdbcconnection_datasource_config_panel.gif" alt="soapUI Pro JDBC Connection DataSource Options"/></p>
+		<p align="center"><img src="images/jdbcconnection_datasource_config_panel.gif" alt="SoapUI Pro JDBC Connection DataSource Options"/></p>
 		<p>Configuration options are pretty much the same as for JDBC DataSource except that here JDBC Connection set on project level
 		is selected instead of configuring driver/connection string for this particular data source. Here is also possible creating a new JDBC connection
 		for specified project which will be added to the project list.</p>
@@ -169,7 +169,7 @@
 		
 		<subsection name="Excel DataSource">
 		<p>The Excel DataSource has the following configuration panel:</p>
-		<p align="center"><img src="images/excel_datasource.gif"  alt="soapUI Pro Excel DataSource Options"/></p>
+		<p align="center"><img src="images/excel_datasource.gif"  alt="SoapUI Pro Excel DataSource Options"/></p>
 		<p>The 3 available options are pretty straight forward:</p>
 		<ul>
 		<li><b>File</b> - the excel file containing the data to use</li>
@@ -180,7 +180,7 @@
 		
 		<subsection name="Grid DataSource">
 		<p>The Grid DataSource has the following configuration panel:</p>
-		<p align="center"><img src="images/grid_datasource.gif" alt="soapUI Pro Grid DataSource Options"/></p>
+		<p align="center"><img src="images/grid_datasource.gif" alt="SoapUI Pro Grid DataSource Options"/></p>
 		<p>
 		Grid DataSources are the easiest way of creating a DataSource allowing very rapid data driven testing. 
 		While it is not meant to scale to massive amounts of data, it is very useful for early iterations in Agile Web Service Testing and can
@@ -199,7 +199,7 @@
 
 		<subsection name="XML DataSource">
 		<p>The XML DataSource has the following configuration panel:</p>
-		<p align="center"><img src="images/xml_datasource_config_panel.gif" alt="soapUI Pro XML DataSource Options"/></p>
+		<p align="center"><img src="images/xml_datasource_config_panel.gif" alt="SoapUI Pro XML DataSource Options"/></p>
 		<p>XML DataSources are very usable since this means you can use a previous response as a DataSource</p>
 		<p>The available options are:</p>
 		<ul>
@@ -214,7 +214,7 @@
 
 		<subsection name="File DataSource">
 		<p>The File DataSource has the following configuration panel:</p>
-		<p align="center"><img src="images/file_datasource_config_panel.gif"  alt="soapUI Pro File DataSource Options"/></p>
+		<p align="center"><img src="images/file_datasource_config_panel.gif"  alt="SoapUI Pro File DataSource Options"/></p>
 		<p>Files are expected to be in a simple row format (for example comma-separated), where each row contains 
 		the supplied data values separated by a configurable separator. The available options are:</p>
 		<ul>
@@ -226,7 +226,7 @@
 
 		<subsection name="Directory DataSource">
 		<p>The Directory DataSource has the following configuration panel:</p>
-		<p align="center"><img src="images/directory_datasource_config_panel.gif" alt="soapUI Pro Directory DataSource Options"/></p>
+		<p align="center"><img src="images/directory_datasource_config_panel.gif" alt="SoapUI Pro Directory DataSource Options"/></p>
 		<p>The directory DataSource has 2 options:</p>
 		<ul>
 		<li>Directory : the Directory to scan for files</li>
@@ -239,7 +239,7 @@
 
 		<subsection name="Groovy DataSource">
 		<p>The Groovy DataSource has the following configuration panel:</p>
-		<p align="center"><img src="images/groovy_datasource_config_panel.gif"  alt="soapUI Pro Groovy DataSource Options"/></p>
+		<p align="center"><img src="images/groovy_datasource_config_panel.gif"  alt="SoapUI Pro Groovy DataSource Options"/></p>
 		<p>This step allows any kind of DataSource to be created for a DataSource Step. The Groovy script must set 
 		desired properties in the available "result" object	(a StringToStringMap), available context variables are:</p>
 		<ul>

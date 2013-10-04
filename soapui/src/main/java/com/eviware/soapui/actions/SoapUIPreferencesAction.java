@@ -1,11 +1,11 @@
 /*
- *  soapUI, copyright (C) 2004-2012 smartbear.com 
+ *  SoapUI, copyright (C) 2004-2012 smartbear.com
  *
- *  soapUI is free software; you can redistribute it and/or modify it under the 
+ *  SoapUI is free software; you can redistribute it and/or modify it under the
  *  terms of version 2.1 of the GNU Lesser General Public License as published by 
  *  the Free Software Foundation.
  *
- *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
@@ -68,7 +68,7 @@ public class SoapUIPreferencesAction extends AbstractAction
 	{
 		super( "Preferences" );
 
-		putValue( Action.SHORT_DESCRIPTION, "Sets global soapUI preferences" );
+		putValue( Action.SHORT_DESCRIPTION, "Sets global SoapUI preferences" );
 		putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "menu alt P" ) );
 
 		// addPrefs( new HttpPrefs( HTTP_SETTINGS));
@@ -143,8 +143,8 @@ public class SoapUIPreferencesAction extends AbstractAction
 
 	private void buildDialog()
 	{
-		dialog = new SwingConfigurationDialogImpl( "soapUI Preferences", HelpUrls.PREFERENCES_HELP_URL,
-				"Set global soapUI settings", UISupport.OPTIONS_ICON );
+		dialog = new SwingConfigurationDialogImpl( "SoapUI Preferences", HelpUrls.PREFERENCES_HELP_URL,
+				"Set global SoapUI settings", UISupport.OPTIONS_ICON );
 
 		tabs = new JTabbedPane();
 		tabs.setTabLayoutPolicy( JTabbedPane.SCROLL_TAB_LAYOUT );

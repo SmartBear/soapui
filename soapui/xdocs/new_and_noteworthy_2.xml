@@ -4,17 +4,17 @@
         <title>web service testing - soapUI 2.0</title>
     </properties>
     <body>
-		<section name="soapUI 2.0 new features!">
+		<section name="SoapUI 2.0 new features!">
 		<p>Welcome to soapUI 2.0! For the big two oh we have lined up a number of features that 
 		significantly extends what you can do with soapUI. </p>
  		<p><i>As always, make backups of your project files before switching and let us know if you have any issues!</i></p>
 		<table class="webstartlinkstable">
 		<tr>
 		        <td align="center" bgcolor="white"><span class="webstartheader">soapUI 2.0.2</span><div>
-				<a href="http://www.soapui.org/jnlp/2.0.1/soapui.jnlp" urchinTracker="/jnlp/soapui/2_0_2"><img class="webstart" src="images/webstart_green.png" border="0" alt="soapUI WebStart"/></a></div>
+				<a href="http://www.soapui.org/jnlp/2.0.1/soapui.jnlp" urchinTracker="/jnlp/soapui/2_0_2"><img class="webstart" src="images/webstart_green.png" border="0" alt="SoapUI WebStart"/></a></div>
 			 [<a target="_new" href="http://sourceforge.net/project/showfiles.php?group_id=136013&amp;package_id=163662&amp;release_id=571745">Download</a>]</td>
 			 <td align="center" bgcolor="white"><span class="webstartheader">soapUI 2.0.2 Pro</span><div>
-				<a href="http://www.eviware.com/jnlp/2.0.1/soapui-pro.jnlp" urchinTracker="/jnlp/soapui/2_0_2-pro"><img class="webstart" src="images/webstart_orange.png" border="0" alt="soapUI Pro WebStart"/></a></div>
+				<a href="http://www.eviware.com/jnlp/2.0.1/soapui-pro.jnlp" urchinTracker="/jnlp/soapui/2_0_2-pro"><img class="webstart" src="images/webstart_orange.png" border="0" alt="SoapUI Pro WebStart"/></a></div>
 			  
 			 [<a target="_new" href="http://www.eviware.com" class="externalLink" title="External Link">Trial/Buy</a>]
 
@@ -28,7 +28,7 @@
 		The most notable improvements to both soapUI and soapUI Pro are described below, on top of these are a large number of bug fixes, minor UI improvements.
 		</p>
 		
-		<subsection name="soapUI Movies">
+		<subsection name="SoapUI Movies">
 			<div>
 			<p>
 				In order for you to be able to see some of the more complex functionality in action we have created some simple movies.
@@ -86,7 +86,7 @@
 		
 
 		
-		<subsection name="soapUI 2.0.2 Release">
+		<subsection name="SoapUI 2.0.2 Release">
 		<p>The 2.0.2 release is mainly another bug-fix release with a small number of improvements and
 		also includes updated version of all IDE / maven plugins;</p>
 		<ul>
@@ -114,7 +114,7 @@
 		</ul>
 		</subsection>
 		
-		<subsection name="soapUI 2.0.1 Release">
+		<subsection name="SoapUI 2.0.1 Release">
 		<p>The 2.0.1 release is mainly a bug-fix release but also includes a small number of improvements:</p>
 		
 		<ul>

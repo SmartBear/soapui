@@ -4,7 +4,7 @@
         <title>eclipse SOA testing - the soapUI nature</title>
     </properties>
     <body>
-		<section name="soapUI Nature">
+		<section name="SoapUI Nature">
 		<p>The soapUI Nature allows integrated access to all soapUI functionality directly from within a Java project.</p>
 		<p>The following example walks through a "top down" scenario:</p>
 		
@@ -14,7 +14,7 @@
 		<p>If enabling goes will, you will see a "SoapUI Web Services" node in the project:</p>
 		<p align="center"><img src="images/soapui_nature_project.gif" alt="a soapUI project node in eclipse"/></p>
 		<p>When shown in the Eclipse Project Explorer View, this node behaves like a standard soapUI project node. Its 
-		right-click menu includes a "soapUI" menu with available project actions:</p>
+		right-click menu includes a "SoapUI" menu with available project actions:</p>
 		<p align="center"><img src="images/soapui_menu.gif" alt="a soapUI context senistive menu in eclipse"/></p>
 		</subsection>
 		
@@ -22,10 +22,10 @@
 		<columns><column><div>You can either manually create a WSDL or WADL in your project (using for example the 
 		formidable Web Tools Project WSDL Editor) or just import one into your project using one of the standard 
 		"Add WSDL" or "Add WADL" actions.</div><p>When creating the WSDL or WADL in your project, right-click on the
-		file and select "soapUI -> Add to soapUI Project"</p>
+		file and select "SoapUI -> Add to soapUI Project"</p>
 		<p align="center"><img src="images/add_wsdl_to_soapui_project.gif" alt="Add to soapUI Project"/></p>
 		<p>Once imported, the WSDL or WADL is shown as a "standard" soapUI Interface node under the 
-		"soapUI Web Services" node:</p></column><column>
+		"SoapUI Web Services" node:</p></column><column>
 		<img src="images/added_wsdl.gif"  alt="WSDL shown in the soapUI eclipse plug in"/></column></columns> 
 		</subsection>
 		

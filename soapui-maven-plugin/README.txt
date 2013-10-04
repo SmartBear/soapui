@@ -1,4 +1,4 @@
-soapUI plugin for both maven 1.X and maven 2
+SoapUI plugin for both maven 1.X and maven 2
 --------------------------------------------
 maven 1.X related files:
 - project.xml

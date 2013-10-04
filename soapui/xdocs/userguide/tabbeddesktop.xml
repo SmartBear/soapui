@@ -4,7 +4,7 @@
         <title>soapUI Pro tabbed desktop</title>
     </properties>
     <body>
-		<section name="soapUI Pro Tabbed Desktop">
+		<section name="SoapUI Pro Tabbed Desktop">
 		<p>soapUI Pro adds a tabbed desktop as commonly available in other tools and IDE's. The layout is activated from 
 		the <a href="preferences.html#UI_Settings">UI Settings Tab</a> in the soapUI global preferences dialog; select
 		"Tabbed" from the Desktop Type combo box.</p>

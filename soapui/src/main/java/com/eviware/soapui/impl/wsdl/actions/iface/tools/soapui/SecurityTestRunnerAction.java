@@ -1,11 +1,11 @@
 /*
- *  soapUI, copyright (C) 2004-2012 smartbear.com 
+ *  SoapUI, copyright (C) 2004-2012 smartbear.com
  *
- *  soapUI is free software; you can redistribute it and/or modify it under the 
+ *  SoapUI is free software; you can redistribute it and/or modify it under the
  *  terms of version 2.1 of the GNU Lesser General Public License as published by 
  *  the Free Software Foundation.
  *
- *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
@@ -46,7 +46,7 @@ import com.eviware.x.form.XFormField;
 import com.eviware.x.form.XFormFieldListener;
 
 /**
- * Invokes soapUI Security TestRunner tool
+ * Invokes SoapUI Security TestRunner tool
  * 
  * @author nebojsa.tasic
  */
@@ -178,7 +178,7 @@ public class SecurityTestRunnerAction extends AbstractToolsAction<WsdlProject>
 		buildArgsForm( builder, false, "TestRunner" );
 
 		return builder.buildDialog( buildDefaultActions( HelpUrls.TESTRUNNER_HELP_URL, modelItem ),
-				"Specify arguments for launching soapUI Security TestRunner", UISupport.TOOL_ICON );
+				"Specify arguments for launching SoapUI Security TestRunner", UISupport.TOOL_ICON );
 	}
 
 	protected XForm buildArgsForm( XFormDialogBuilder builder, boolean addJavaArgs, String toolName )
@@ -288,7 +288,7 @@ public class SecurityTestRunnerAction extends AbstractToolsAction<WsdlProject>
 			log.debug( "Launching security testrunner in directory [" + builder.directory() + "] with arguments ["
 					+ args.toString() + "]" );
 
-		toolHost.run( new ProcessToolRunner( builder, "soapUI Security TestRunner", modelItem, args ) );
+		toolHost.run( new ProcessToolRunner( builder, "SoapUI Security TestRunner", modelItem, args ) );
 	}
 
 	private ArgumentBuilder buildArgs( WsdlProject modelItem ) throws IOException

@@ -27,7 +27,7 @@ class FESTRunner
 		try {
 			frame = findFrame(new GenericTypeMatcher<Frame>(Frame.class) {
 				protected boolean isMatching(Frame frame) {
-					return frame.getTitle().startsWith("soapUI") && frame.isShowing();
+					return frame.getTitle().startsWith("SoapUI") && frame.isShowing();
 				}
 			}).using(robot);
 		}
@@ -37,7 +37,7 @@ class FESTRunner
 			robot = BasicRobot.robotWithCurrentAwtHierarchy();
 			frame = findFrame(new GenericTypeMatcher<Frame>(Frame.class) {
 				protected boolean isMatching(Frame frame) {
-					return frame.getTitle().startsWith("soapUI") && frame.isShowing();
+					return frame.getTitle().startsWith("SoapUI") && frame.isShowing();
 				}
 			}).using(robot);
 		}
