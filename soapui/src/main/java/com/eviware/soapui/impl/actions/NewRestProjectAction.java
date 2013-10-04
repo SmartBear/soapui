@@ -109,7 +109,7 @@ public class NewRestProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 			originalFont = textField.getFont();
 			textField.setFont( originalFont.deriveFont( Font.ITALIC ) );
 			textField.setForeground( new Color( 170, 170, 170 ) );
-			logger.log( Level.DEBUG, "Adding listeners to URI text field" );
+			logger.log( Level.TRACE, "Adding listeners to URI text field" );
 			addListenersTo( textField );
 		}
 
