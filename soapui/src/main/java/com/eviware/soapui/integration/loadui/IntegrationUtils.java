@@ -12,21 +12,22 @@
 
 package com.eviware.soapui.integration.loadui;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
 import com.eviware.soapui.impl.wsdl.loadtest.WsdlLoadTest;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.integration.impl.CajoClient;
+import com.eviware.soapui.model.project.SaveStatus;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 
 public class IntegrationUtils
 {
@@ -97,8 +98,7 @@ public class IntegrationUtils
 		boolean isOpened = false;
 		try
 		{
-			isOpened = ( ( Boolean )CajoClient.getInstance().invoke( "isProjectOpened", new String[] { projectName } ) )
-					.booleanValue();
+			isOpened = ( Boolean )CajoClient.getInstance().invoke( "isProjectOpened", new String[] { projectName } );
 		}
 		catch( Exception e )
 		{
@@ -146,8 +146,8 @@ public class IntegrationUtils
 	}
 
 	public static HashMap<String, String> createSoapUIRunner( String soapUIProjectPath, String soapUITestSuite,
-			String soapUITestCase, String loadUIProject, String loadUITestCase, String loadUISoapUISampler,
-			String generatorType, String analisysType ) throws IOException
+																				 String soapUITestCase, String loadUIProject, String loadUITestCase, String loadUISoapUISampler,
+																				 String generatorType, String analisysType ) throws IOException
 	{
 		HashMap<String, String> samplerSettings = new HashMap<String, String>();
 		try
@@ -174,7 +174,7 @@ public class IntegrationUtils
 	}
 
 	public static HashMap<String, String> createMockServiceRunner( String soapUIProjectPath, String soapUIMockService,
-			String path, String port, String loadUIProject, String loadUITestCase, String mockServiceRunner )
+																						String path, String port, String loadUIProject, String loadUITestCase, String mockServiceRunner )
 			throws IOException
 	{
 		HashMap<String, String> mockServiceSettings = new HashMap<String, String>();
@@ -203,7 +203,7 @@ public class IntegrationUtils
 	}
 
 	public static HashMap<String, Object> exportLoadTestToLoadUI( WsdlLoadTest loadTest, String loadUIProject,
-			String loadUITestCase, String loadUISoapUISampler ) throws IOException
+																					  String loadUITestCase, String loadUISoapUISampler ) throws IOException
 	{
 		HashMap<String, Object> contextSettings = new HashMap<String, Object>();
 		try
@@ -235,7 +235,7 @@ public class IntegrationUtils
 	}
 
 	public static HashMap<String, String> exportMultipleLoadTestToLoadUI( WsdlTestCase testCase, String[] loadTests,
-			String loadUIProject ) throws IOException
+																								 String loadUIProject ) throws IOException
 	{
 		HashMap<String, String> samplerSettings = new HashMap<String, String>();
 		try
@@ -267,7 +267,7 @@ public class IntegrationUtils
 	}
 
 	public static HashMap<String, String> exportMultipleLoadTestToLoadUI( WsdlTestSuite testSuite, String[] loadTests,
-			String loadUIProject ) throws IOException
+																								 String loadUIProject ) throws IOException
 	{
 		HashMap<String, String> samplerSettings = new HashMap<String, String>();
 		try
@@ -277,7 +277,7 @@ public class IntegrationUtils
 			String testCaseName = names[0];
 			String loadTestName = names[1];
 			WsdlTestCase testCase = testSuite.getTestCaseByName( testCaseName );
-			HashMap<String, Object> firstSamplerSettings = new HashMap<String, Object>();
+			HashMap<String, Object> firstSamplerSettings;
 			// String loadUITestCaseAddedTo = "";
 			String loadUIProjectAddedTo = "";
 			if( testCase != null )
@@ -326,60 +326,59 @@ public class IntegrationUtils
 	}
 
 	public static void generateTestSuiteLoadTests( String soapUIProjectPath, String soapUITestSuite,
-			String[] soapUITestCases, String loadUIProject, int levelToAdd ) throws IOException
+																  String[] soapUITestCases, String loadUIProject, int levelToAdd ) throws IOException
 	{
 
 		String firstTestCase = soapUITestCases[0];
-		HashMap<String, String> firstSamplerSettings = new HashMap<String, String>();
-		String loadUITestCaseAddedTo = "";
-		String loadUIProjectAddedTo = "";
+		HashMap<String, String> firstSamplerSettings;
+		String loadUITestCaseAddedTo;
+		String loadUIProjectAddedTo;
 		switch( levelToAdd )
 		{
-		case ADD_TO_PROJECT_LEVEL :
-			firstSamplerSettings = createSoapUIRunner( soapUIProjectPath, soapUITestSuite, firstTestCase, loadUIProject,
-					null, CREATE_NEW_OPTION, NOT_SELECTED, NOT_SELECTED );
-			loadUIProjectAddedTo = firstSamplerSettings.get( ContextMapping.LOADUI_PROJECT_NAME );
-			for( int i = 1; i < soapUITestCases.length; i++ )
-			{
-				String testCase = soapUITestCases[i];
-				createSoapUIRunner( soapUIProjectPath, soapUITestSuite, testCase, loadUIProjectAddedTo, null,
-						CREATE_NEW_OPTION, NOT_SELECTED, NOT_SELECTED );
-			}
-			break;
+			case ADD_TO_PROJECT_LEVEL:
+				firstSamplerSettings = createSoapUIRunner( soapUIProjectPath, soapUITestSuite, firstTestCase, loadUIProject,
+						null, CREATE_NEW_OPTION, NOT_SELECTED, NOT_SELECTED );
+				loadUIProjectAddedTo = firstSamplerSettings.get( ContextMapping.LOADUI_PROJECT_NAME );
+				for( int i = 1; i < soapUITestCases.length; i++ )
+				{
+					String testCase = soapUITestCases[i];
+					createSoapUIRunner( soapUIProjectPath, soapUITestSuite, testCase, loadUIProjectAddedTo, null,
+							CREATE_NEW_OPTION, NOT_SELECTED, NOT_SELECTED );
+				}
+				break;
 
-		case ADD_TO_SINGLE_TESTCASE :
-			firstSamplerSettings = createSoapUIRunner( soapUIProjectPath, soapUITestSuite, firstTestCase, loadUIProject,
-					CREATE_NEW_OPTION, CREATE_NEW_OPTION, NOT_SELECTED, NOT_SELECTED );
-			loadUITestCaseAddedTo = firstSamplerSettings.get( ContextMapping.LOADUI_TEST_CASE_NAME );
-			loadUIProjectAddedTo = firstSamplerSettings.get( ContextMapping.LOADUI_PROJECT_NAME );
-			for( int i = 1; i < soapUITestCases.length; i++ )
-			{
-				String testCase = soapUITestCases[i];
-				createSoapUIRunner( soapUIProjectPath, soapUITestSuite, testCase, loadUIProjectAddedTo,
-						loadUITestCaseAddedTo, CREATE_NEW_OPTION, NOT_SELECTED, NOT_SELECTED );
+			case ADD_TO_SINGLE_TESTCASE:
+				firstSamplerSettings = createSoapUIRunner( soapUIProjectPath, soapUITestSuite, firstTestCase, loadUIProject,
+						CREATE_NEW_OPTION, CREATE_NEW_OPTION, NOT_SELECTED, NOT_SELECTED );
+				loadUITestCaseAddedTo = firstSamplerSettings.get( ContextMapping.LOADUI_TEST_CASE_NAME );
+				loadUIProjectAddedTo = firstSamplerSettings.get( ContextMapping.LOADUI_PROJECT_NAME );
+				for( int i = 1; i < soapUITestCases.length; i++ )
+				{
+					String testCase = soapUITestCases[i];
+					createSoapUIRunner( soapUIProjectPath, soapUITestSuite, testCase, loadUIProjectAddedTo,
+							loadUITestCaseAddedTo, CREATE_NEW_OPTION, NOT_SELECTED, NOT_SELECTED );
 
-			}
-			break;
-		case ADD_TO_SEPARATE_TESTCASES :
-			firstSamplerSettings = createSoapUIRunner( soapUIProjectPath, soapUITestSuite, firstTestCase, loadUIProject,
-					CREATE_NEW_OPTION, CREATE_NEW_OPTION, NOT_SELECTED, NOT_SELECTED );
-			loadUIProjectAddedTo = firstSamplerSettings.get( ContextMapping.LOADUI_PROJECT_NAME );
-			for( int i = 1; i < soapUITestCases.length; i++ )
-			{
-				String testCase = soapUITestCases[i];
-				createSoapUIRunner( soapUIProjectPath, soapUITestSuite, testCase, loadUIProjectAddedTo, CREATE_NEW_OPTION,
-						CREATE_NEW_OPTION, NOT_SELECTED, NOT_SELECTED );
-			}
-			break;
+				}
+				break;
+			case ADD_TO_SEPARATE_TESTCASES:
+				firstSamplerSettings = createSoapUIRunner( soapUIProjectPath, soapUITestSuite, firstTestCase, loadUIProject,
+						CREATE_NEW_OPTION, CREATE_NEW_OPTION, NOT_SELECTED, NOT_SELECTED );
+				loadUIProjectAddedTo = firstSamplerSettings.get( ContextMapping.LOADUI_PROJECT_NAME );
+				for( int i = 1; i < soapUITestCases.length; i++ )
+				{
+					String testCase = soapUITestCases[i];
+					createSoapUIRunner( soapUIProjectPath, soapUITestSuite, testCase, loadUIProjectAddedTo, CREATE_NEW_OPTION,
+							CREATE_NEW_OPTION, NOT_SELECTED, NOT_SELECTED );
+				}
+				break;
 		}
 	}
 
 	/**
 	 * Closes currently opened project in loadUI.
-	 * 
-	 * @param saveProject
-	 *           If true project will be saved before closing. If false project
-	 *           will be closed without saving.
+	 *
+	 * @param saveProject If true project will be saved before closing. If false project
+	 * will be closed without saving.
 	 */
 	public static void closeOpenedLoadUIProject( boolean saveProject )
 	{
@@ -399,7 +398,7 @@ public class IntegrationUtils
 
 	/**
 	 * Checks if currently opened project in loadUI is dirty.
-	 * 
+	 *
 	 * @return true if project is dirty, false if it is not, null if there is no
 	 *         opened project.
 	 */
@@ -424,7 +423,7 @@ public class IntegrationUtils
 	 * close project. When project is not dirty available options are: Yes -
 	 * close project, No - don't close. If there is no opened project user is not
 	 * prompted since there is no project to close.
-	 * 
+	 *
 	 * @return true if operation is canceled, false if not.
 	 */
 	public static boolean checkOpenedLoadUIProjectForClose()
@@ -438,7 +437,7 @@ public class IntegrationUtils
 
 		// holds user decision if project should be closed (true) or not
 		// (false or null)
-		Boolean close = null;
+		Boolean close;
 		// holds user decision if project should be saved before close (true) or
 		// not (false or null). This makes sense only if close is true.
 		Boolean saveProject = null;
@@ -466,7 +465,7 @@ public class IntegrationUtils
 		// method result. Set to true if user canceled operation and to false if
 		// project was closed.
 		boolean quit = true;
-		if( close != null && close )
+		if( close )
 		{
 			closeOpenedLoadUIProject( saveProject != null && saveProject );
 			quit = false;
@@ -546,11 +545,10 @@ public class IntegrationUtils
 	}
 
 	/**
-	 * 
 	 * When exporting soapUI project to loadUI, loadUI uses project file to get
 	 * resources so soapUI project need to be saved for loadUI be able to pick
 	 * all changes if there is any.
-	 * 
+	 *
 	 * @param project
 	 * @return
 	 */
@@ -561,7 +559,7 @@ public class IntegrationUtils
 		{
 			try
 			{
-				if( project.save() )
+				if( project.save() == SaveStatus.SUCCESS )
 					return true;
 				else
 				{

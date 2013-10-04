@@ -28,6 +28,7 @@ import com.eviware.soapui.impl.wsdl.actions.iface.GenerateWsdlTestSuiteAction;
 import com.eviware.soapui.impl.wsdl.actions.project.CreateWebTestAction;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.support.PathUtils;
+import com.eviware.soapui.model.project.SaveStatus;
 import com.eviware.soapui.support.MessageSupport;
 import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.support.StringUtils;
@@ -43,7 +44,7 @@ import com.eviware.x.form.support.AForm;
 import java.io.File;
 
 /**
- *  Action class to create new Generic project.
+ * Action class to create new Generic project.
  *
  * @author Ole.Matzura
  */
@@ -127,10 +128,10 @@ public class NewGenericProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 
 							if( PathUtils.isFilePath( url ) && PathUtils.isAbsolutePath( url ) )
 							{
-								folder = new File( url ).getParent().toString();
+								folder = new File( url ).getParent();
 							}
 
-							if( !project.save( folder ) )
+							if( project.save( folder ) != SaveStatus.SUCCESS )
 							{
 								UISupport
 										.showErrorMessage( "Project was not saved, paths will not be stored relatively until configured." );
@@ -240,31 +241,31 @@ public class NewGenericProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 		}
 	}
 
-	@AForm( name = "Form.Title", description = "Form.Description", helpUrl = HelpUrls.NEWPROJECT_HELP_URL, icon = UISupport.TOOL_ICON_PATH )
+	@AForm(name = "Form.Title", description = "Form.Description", helpUrl = HelpUrls.NEWPROJECT_HELP_URL, icon = UISupport.TOOL_ICON_PATH)
 	public interface Form
 	{
-		@AField( description = "Form.ProjectName.Description", type = AField.AFieldType.STRING )
+		@AField(description = "Form.ProjectName.Description", type = AField.AFieldType.STRING)
 		public final static String PROJECTNAME = messages.get( "Form.ProjectName.Label" );
 
-		@AField( description = "Form.InitialWsdl.Description", type = AField.AFieldType.FILE )
+		@AField(description = "Form.InitialWsdl.Description", type = AField.AFieldType.FILE)
 		public final static String INITIALWSDL = messages.get( "Form.InitialWsdl.Label" );
 
-		@AField( description = "Form.CreateRequests.Description", type = AField.AFieldType.BOOLEAN, enabled = false )
+		@AField(description = "Form.CreateRequests.Description", type = AField.AFieldType.BOOLEAN, enabled = false)
 		public final static String CREATEREQUEST = messages.get( "Form.CreateRequests.Label" );
 
-		@AField( description = "Form.GenerateTestSuite.Description", type = AField.AFieldType.BOOLEAN, enabled = false )
+		@AField(description = "Form.GenerateTestSuite.Description", type = AField.AFieldType.BOOLEAN, enabled = false)
 		public final static String GENERATETESTSUITE = messages.get( "Form.GenerateTestSuite.Label" );
 
-		@AField( description = "Form.GenerateMockService.Description", type = AField.AFieldType.BOOLEAN, enabled = false )
+		@AField(description = "Form.GenerateMockService.Description", type = AField.AFieldType.BOOLEAN, enabled = false)
 		public final static String GENERATEMOCKSERVICE = messages.get( "Form.GenerateMockService.Label" );
 
-		@AField( description = "Form.AddRestService.Description", type = AField.AFieldType.BOOLEAN, enabled = true )
+		@AField(description = "Form.AddRestService.Description", type = AField.AFieldType.BOOLEAN, enabled = true)
 		public final static String ADDRESTSERVICE = messages.get( "Form.AddRestService.Label" );
 
-		@AField( description = "Form.RelativePaths.Description", type = AField.AFieldType.BOOLEAN, enabled = true )
+		@AField(description = "Form.RelativePaths.Description", type = AField.AFieldType.BOOLEAN, enabled = true)
 		public final static String RELATIVEPATHS = messages.get( "Form.RelativePaths.Label" );
 
-		@AField( description = "Form.CreateWebTest.Description", type = AField.AFieldType.BOOLEAN, enabled = true )
+		@AField(description = "Form.CreateWebTest.Description", type = AField.AFieldType.BOOLEAN, enabled = true)
 		public final static String CREATEWEBTEST = messages.get( "Form.CreateWebTest.Label" );
 
 	}

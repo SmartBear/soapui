@@ -12,16 +12,17 @@
 
 package com.eviware.soapui.model.workspace;
 
+import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.project.Project;
+import com.eviware.soapui.model.project.SaveStatus;
+import com.eviware.soapui.support.SoapUIException;
+
 import java.io.File;
 import java.util.List;
 
-import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.project.Project;
-import com.eviware.soapui.support.SoapUIException;
-
 /**
  * SoapUI workspace behaviour
- * 
+ *
  * @author Ole.Matzura
  */
 
@@ -33,9 +34,9 @@ public interface Workspace extends ModelItem
 
 	public int getProjectCount();
 
-	public void onClose();
+	public SaveStatus onClose();
 
-	public void save( boolean workspaceOnly );
+	public SaveStatus save( boolean workspaceOnly );
 
 	public void addWorkspaceListener( WorkspaceListener listener );
 

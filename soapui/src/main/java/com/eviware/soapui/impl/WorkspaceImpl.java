@@ -12,22 +12,6 @@
 
 package com.eviware.soapui.impl;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.swing.ImageIcon;
-
-import org.apache.log4j.Logger;
-import org.apache.xmlbeans.XmlException;
-import org.apache.xmlbeans.XmlOptions;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.SoapuiWorkspaceDocumentConfig;
 import com.eviware.soapui.config.WorkspaceProjectConfig;
@@ -40,6 +24,7 @@ import com.eviware.soapui.impl.wsdl.support.PathUtils;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.model.project.ProjectFactoryRegistry;
+import com.eviware.soapui.model.project.SaveStatus;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.support.AbstractModelItem;
 import com.eviware.soapui.model.workspace.Workspace;
@@ -51,10 +36,18 @@ import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.resolver.ResolveDialog;
 import com.eviware.soapui.support.types.StringToStringMap;
+import org.apache.log4j.Logger;
+import org.apache.xmlbeans.XmlException;
+import org.apache.xmlbeans.XmlOptions;
+
+import javax.swing.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * Default Workspace implementation
- * 
+ *
  * @author Ole.Matzura
  */
 
@@ -159,19 +152,14 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace
 
 			boolean closeOnStartup = getSettings().getBoolean( UISettings.CLOSE_PROJECTS );
 			List<WorkspaceProjectConfig> projects = workspaceConfig.getSoapuiWorkspace().getProjectList();
-			for( int i = 0; i < projects.size(); i++ )
+			for( WorkspaceProjectConfig wsc : projects )
 			{
-				WorkspaceProjectConfig wsc = projects.get( i );
 				String str = PathUtils.denormalizePath( wsc.getStringValue() );
 
 				str = PathUtils.adjustRelativePath( str, getProjectRoot(), this );
 
 				try
 				{
-					// WsdlProject project = new WsdlProject( str, this, false,
-					// !closeOnStartup &&
-					// wsc.getStatus() != Status.CLOSED && wsc.getType() !=
-					// Type.REMOTE, wsc.getName(), null);
 					WsdlProject project = ( WsdlProject )ProjectFactoryRegistry.getProjectFactory( "wsdl" ).createNew( str,
 							this, false, !closeOnStartup && wsc.getStatus() != Status.CLOSED && wsc.getType() != Type.REMOTE,
 							wsc.getName(), null );
@@ -246,7 +234,9 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace
 		for( Project project : projectList )
 		{
 			if( project.getName().equals( projectName ) )
+			{
 				return project;
+			}
 		}
 
 		return null;
@@ -257,17 +247,17 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace
 		return projectList.size();
 	}
 
-	public void onClose()
+	public SaveStatus onClose()
 	{
-		save( !getSettings().getBoolean( UISettings.AUTO_SAVE_PROJECTS_ON_EXIT ) );
+		return save( !getSettings().getBoolean( UISettings.AUTO_SAVE_PROJECTS_ON_EXIT ) );
 	}
 
-	public void save( boolean workspaceOnly )
+	public SaveStatus save( boolean workspaceOnly )
 	{
-		save( workspaceOnly, false );
+		return save( workspaceOnly, false );
 	}
 
-	public void save( boolean workspaceOnly, boolean skipProjectsWithRunningTests )
+	public SaveStatus save( boolean saveWorkspaceOnly, boolean skipProjectsWithRunningTests )
 	{
 		try
 		{
@@ -277,7 +267,9 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace
 				File file = UISupport.getFileDialogs().saveAs( this, messages.get( "SaveWorkspace.Title" ), ".xml",
 						"XML Files (*.xml)", null );
 				if( file == null )
-					return;
+				{
+					return SaveStatus.CANCELLED;
+				}
 
 				path = file.getAbsolutePath();
 			}
@@ -289,70 +281,109 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace
 			{
 				WsdlProject project = ( WsdlProject )getProjectAt( c );
 
-				if( !workspaceOnly )
+				if( !saveWorkspaceOnly )
 				{
-					if( skipProjectsWithRunningTests && SoapUI.getTestMonitor().hasRunningTests( project ) )
+					SaveStatus status = saveProject( skipProjectsWithRunningTests, project );
+
+					if( status == SaveStatus.CANCELLED || status == SaveStatus.FAILED )
 					{
-						log.warn( messages.get( "ProjectHasRunningTests.Warning", project.getName() ) );
+						return status;
 					}
-					else
+
+					if( status == SaveStatus.DONT_SAVE )
 					{
-						String path = project.getPath();
-						if( !StringUtils.hasContent( path ) )
-						{
-							if( UISupport.confirm( messages.get( "ProjectHasNotBeenSaved.Label", project.getName() ),
-									messages.get( "ProjectHasNotBeenSaved.Title" ) ) )
-							{
-								project.save();
-							}
-						}
-						else
-						{
-							project.save();
-						}
+						continue;
 					}
 				}
-
-				String path = project.getPath();
-				if( path != null )
-				{
-					path = PathUtils.createRelativePath( path, getProjectRoot(), this );
-
-					WorkspaceProjectConfig wpc = WorkspaceProjectConfig.Factory.newInstance();
-					wpc.setStringValue( PathUtils.normalizePath( path ) );
-					if( project.isRemote() )
-						wpc.setType( Type.REMOTE );
-
-					if( !project.isOpen() )
-					{
-						if( project.getEncrypted() == 0 )
-						{
-							wpc.setStatus( Status.CLOSED );
-						}
-						else
-						{
-							wpc.setStatus( Status.CLOSED_AND_ENCRYPTED );
-						}
-					}
-
-					wpc.setName( project.getName() );
-					projects.add( wpc );
-				}
+				saveWorkspaceProjectConfig( projects, project );
 			}
 
-			workspaceConfig.getSoapuiWorkspace().setProjectArray(
-					projects.toArray( new WorkspaceProjectConfig[projects.size()] ) );
-			workspaceConfig.getSoapuiWorkspace().setSoapuiVersion( SoapUI.SOAPUI_VERSION );
-
-			File workspaceFile = new File( path );
-			workspaceConfig.save( workspaceFile, new XmlOptions().setSavePrettyPrint() );
-
-			log.info( messages.get( "SavedWorkspace.Info", workspaceFile.getAbsolutePath() ) ); //$NON-NLS-1$ //$NON-NLS-2$
+			saveWorkspaceConfig( projects );
 		}
 		catch( IOException e )
 		{
 			log.error( messages.get( "FailedToSaveWorkspace.Error" ) + e.getMessage(), e ); //$NON-NLS-1$
+			return SaveStatus.FAILED;
 		}
+		return SaveStatus.SUCCESS;
+	}
+
+	private void saveWorkspaceConfig( List<WorkspaceProjectConfig> projects ) throws IOException
+	{
+		workspaceConfig.getSoapuiWorkspace().setProjectArray(
+				projects.toArray( new WorkspaceProjectConfig[projects.size()] ) );
+		workspaceConfig.getSoapuiWorkspace().setSoapuiVersion( SoapUI.SOAPUI_VERSION );
+
+		File workspaceFile = new File( path );
+		workspaceConfig.save( workspaceFile, new XmlOptions().setSavePrettyPrint() );
+
+		log.info( messages.get( "SavedWorkspace.Info", workspaceFile.getAbsolutePath() ) ); //$NON-NLS-1$ //$NON-NLS-2$
+	}
+
+	private void saveWorkspaceProjectConfig( List<WorkspaceProjectConfig> projects, WsdlProject project )
+	{
+		String path = project.getPath();
+		if( path != null )
+		{
+			path = PathUtils.createRelativePath( path, getProjectRoot(), this );
+
+			WorkspaceProjectConfig wpc = WorkspaceProjectConfig.Factory.newInstance();
+			wpc.setStringValue( PathUtils.normalizePath( path ) );
+			if( project.isRemote() )
+			{
+				wpc.setType( Type.REMOTE );
+			}
+
+			if( !project.isOpen() )
+			{
+				if( project.getEncrypted() == 0 )
+				{
+					wpc.setStatus( Status.CLOSED );
+				}
+				else
+				{
+					wpc.setStatus( Status.CLOSED_AND_ENCRYPTED );
+				}
+			}
+
+			wpc.setName( project.getName() );
+			projects.add( wpc );
+		}
+	}
+
+	private SaveStatus saveProject( boolean skipProjectsWithRunningTests, WsdlProject project ) throws IOException
+	{
+		if( skipProjectsWithRunningTests && SoapUI.getTestMonitor().hasRunningTests( project ) )
+		{
+			log.warn( messages.get( "ProjectHasRunningTests.Warning", project.getName() ) );
+		}
+		else
+		{
+			if( !StringUtils.hasContent( project.getPath() ) )
+			{
+				Boolean shouldSave = UISupport.confirmOrCancel( messages.get( "ProjectHasNotBeenSaved.Label", project.getName() ),
+						messages.get( "ProjectHasNotBeenSaved.Title" ) );
+
+				if( shouldSave == null )
+				{
+					return SaveStatus.CANCELLED;
+				}
+
+				if( shouldSave )
+				{
+					return project.save();
+				}
+				else
+				{
+					return SaveStatus.DONT_SAVE;
+				}
+			}
+			else
+			{
+				return project.save();
+			}
+		}
+		return SaveStatus.SUCCESS;
 	}
 
 	public void addWorkspaceListener( WorkspaceListener listener )
@@ -409,13 +440,13 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace
 		while( projectFile != null && projectFile.exists() )
 		{
 			Boolean result = Boolean.FALSE;
-			while( !result.booleanValue() )
+			while( !result )
 			{
 				result = UISupport.confirmOrCancel( messages.get( "OverwriteProject.Label" ),
 						messages.get( "OverwriteProject.Title" ) );
 				if( result == null )
 					return null;
-				if( result.booleanValue() )
+				if( result )
 				{
 					projectFile.delete();
 				}
@@ -423,16 +454,18 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace
 				{
 					projectFile = UISupport.getFileDialogs().saveAs( this, messages.get( "CreateProject.Title" ), ".xml",
 							"XML Files (*.xml)", projectFile ); //$NON-NLS-1$
-					if( projectFile == null )
-						return null;
-					else
+					if( projectFile != null )
+					{
 						break;
+					}
+					else
+					{
+						return null;
+					}
 				}
 			}
 		}
 
-		// WsdlProject project = new WsdlProject( projectFile == null ? null :
-		// projectFile.getAbsolutePath(), this );
 		WsdlProject project = ( WsdlProject )ProjectFactoryRegistry.getProjectFactory( WsdlProjectFactory.WSDL_TYPE )
 				.createNew( null, this );
 
@@ -444,58 +477,54 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace
 		try
 		{
 			if( projectFile != null )
+			{
 				project.saveAs( projectFile.getAbsolutePath() );
+			}
 		}
 		catch( IOException e )
 		{
 			log.error( messages.get( "FailedToSaveProject.Error" ) + e.getMessage(), e );
 		}
-		// save( true );
 
 		return project;
 	}
 
 	private void fireProjectOpened( Project project )
 	{
-		for( Iterator<WorkspaceListener> iter = listeners.iterator(); iter.hasNext(); )
+		for( WorkspaceListener listener : listeners )
 		{
-			WorkspaceListener listener = iter.next();
 			listener.projectOpened( project );
 		}
 	}
 
 	private void fireProjectClosed( Project project )
 	{
-		for( Iterator<WorkspaceListener> iter = listeners.iterator(); iter.hasNext(); )
+		for( WorkspaceListener listener : listeners )
 		{
-			WorkspaceListener listener = iter.next();
 			listener.projectClosed( project );
 		}
 	}
 
 	private void fireProjectAdded( Project project )
 	{
-		for( Iterator<WorkspaceListener> iter = listeners.iterator(); iter.hasNext(); )
+		for( WorkspaceListener listener : listeners )
 		{
-			WorkspaceListener listener = iter.next();
 			listener.projectAdded( project );
 		}
 	}
 
 	private void fireWorkspaceSwitching()
 	{
-		for( Iterator<WorkspaceListener> iter = listeners.iterator(); iter.hasNext(); )
+		for( WorkspaceListener listener : listeners )
 		{
-			WorkspaceListener listener = iter.next();
 			listener.workspaceSwitching( this );
 		}
 	}
 
 	private void fireWorkspaceSwitched()
 	{
-		for( Iterator<WorkspaceListener> iter = listeners.iterator(); iter.hasNext(); )
+		for( WorkspaceListener listener : listeners )
 		{
-			WorkspaceListener listener = iter.next();
 			listener.workspaceSwitched( this );
 		}
 	}
@@ -509,7 +538,9 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace
 	{
 		int ix = projectList.indexOf( project );
 		if( ix == -1 )
+		{
 			throw new RuntimeException( "Project [" + project.getName() + "] not available in workspace for removal" );
+		}
 
 		projectList.remove( ix );
 
@@ -520,7 +551,6 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace
 		finally
 		{
 			project.release();
-			// workspaceConfig.getSoapuiWorkspace().removeProject( ix );
 		}
 	}
 
@@ -528,15 +558,17 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace
 	{
 		int ix = projectList.indexOf( project );
 		if( ix == -1 )
+		{
 			throw new RuntimeException( "Project [" + project.getName() //$NON-NLS-1$
 					+ "] not available in workspace for reload" ); //$NON-NLS-1$
+		}
 
 		projectList.remove( ix );
 		fireProjectRemoved( project );
 
 		String tempName = project.getName();
 		project.release();
-		project = ( WsdlProject )ProjectFactoryRegistry.getProjectFactory( "wsdl" ).createNew( project.getPath(), this,
+		project = ProjectFactoryRegistry.getProjectFactory( "wsdl" ).createNew( project.getPath(), this,
 				false, true, tempName, null );
 		projectList.add( ix, project );
 
@@ -548,10 +580,9 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace
 
 	private void fireProjectRemoved( Project project )
 	{
-		WorkspaceListener[] listenerArray = listeners.toArray( new WorkspaceListener[listeners.size()] );
-		for( int c = 0; c < listenerArray.length; c++ )
+		for( WorkspaceListener listener : listeners )
 		{
-			listenerArray[c].projectRemoved( project );
+			listener.projectRemoved( project );
 		}
 	}
 
@@ -590,7 +621,9 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace
 		settings.release();
 
 		for( Project project : projectList )
+		{
 			project.release();
+		}
 	}
 
 	public List<? extends Project> getProjectList()
@@ -605,7 +638,6 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace
 
 	public WsdlProject importRemoteProject( String url ) throws SoapUIException
 	{
-		// WsdlProject project = new WsdlProject( url, this, false );
 		WsdlProject project = ( WsdlProject )ProjectFactoryRegistry.getProjectFactory( "wsdl" ).createNew( url, this,
 				false );
 		projectList.add( project );
@@ -623,7 +655,9 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace
 		int oldProjectEncrypt = ( ( WsdlProject )project ).getEncrypted();
 		int ix = projectList.indexOf( project );
 		if( ix == -1 )
+		{
 			throw new RuntimeException( "Project [" + project.getName() + "] not available in workspace for close" );
+		}
 
 		projectList.remove( ix );
 		fireProjectRemoved( project );
@@ -634,8 +668,6 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace
 
 		try
 		{
-			// project = new WsdlProject( project.getPath(), this, false, false,
-			// name, null );
 			project = ProjectFactoryRegistry.getProjectFactory( WsdlProjectFactory.WSDL_TYPE ).createNew(
 					project.getPath(), this, false, false, name, null );
 			( ( WsdlProject )project ).setEncrypted( oldProjectEncrypt );
@@ -654,8 +686,12 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace
 		List<Project> availableProjects = new ArrayList<Project>();
 
 		for( Project project : projectList )
+		{
 			if( project.isOpen() )
+			{
 				availableProjects.add( project );
+			}
+		}
 
 		return availableProjects;
 	}
@@ -682,11 +718,12 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace
 
 	public void inspectProjects()
 	{
-		for( int cnt = 0; cnt < projectList.size(); cnt++ )
+		for( Project project : projectList )
 		{
-			Project project = projectList.get( cnt );
 			if( project.isOpen() )
+			{
 				project.inspect();
+			}
 		}
 	}
 

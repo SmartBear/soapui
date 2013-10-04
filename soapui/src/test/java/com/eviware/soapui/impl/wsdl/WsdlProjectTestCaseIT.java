@@ -25,7 +25,7 @@ public class WsdlProjectTestCaseIT extends JettyTestCaseBase
 	@Test
 	public void testComplexLoad() throws Exception
 	{
-		replaceInFile("test8/TestService.wsdl","8082","" + getPort());
+		replaceInFile( "test8/TestService.wsdl", "8082", "" + getPort() );
 		WsdlProject project = new WsdlProject();
 		WsdlInterface[] wsdls = WsdlImporter.importWsdl( project, "http://localhost:" + getPort() + "/test8/TestService.wsdl" );
 

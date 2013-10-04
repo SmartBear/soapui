@@ -12,15 +12,16 @@
 
 package com.eviware.soapui.impl.wsdl.actions.project;
 
-import java.io.IOException;
-
 import com.eviware.soapui.impl.wsdl.WsdlProject;
+import com.eviware.soapui.model.project.SaveStatus;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 
+import java.io.IOException;
+
 /**
  * Renames a WsdlProject
- * 
+ *
  * @author Ole.Matzura
  */
 
@@ -38,22 +39,30 @@ public class CloseProjectAction extends AbstractSoapUIAction<WsdlProject>
 		if( project.isRemote() )
 		{
 			if( UISupport.confirm( "Close remote project? (changes will be lost)", getName() ) )
-				;
-			project.getWorkspace().closeProject( project );
+			{
+				project.getWorkspace().closeProject( project );
+			}
 		}
 		else
 		{
-			Boolean retval = UISupport.confirmOrCancel( "Save project [" + project.getName() + "] before closing?",
+			Boolean saveProject = UISupport.confirmOrCancel( "Save project [" + project.getName() + "] before closing?",
 					"Close Project" );
 
-			if( retval == null )
+			if( saveProject == null )
+			{
 				return;
+			}
 
 			try
 			{
-				if( retval )
-					project.save();
-
+				if( saveProject )
+				{
+					SaveStatus status = project.save();
+					if( status == SaveStatus.CANCELLED || status == SaveStatus.FAILED )
+					{
+						return;
+					}
+				}
 				project.getWorkspace().closeProject( project );
 			}
 			catch( IOException e )

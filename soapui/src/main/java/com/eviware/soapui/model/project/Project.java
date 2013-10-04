@@ -12,27 +12,31 @@
 
 package com.eviware.soapui.model.project;
 
-import java.io.IOException;
-import java.util.List;
-
 import com.eviware.soapui.model.TestModelItem;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.mock.MockService;
 import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.model.workspace.Workspace;
 
+import java.io.IOException;
+import java.util.List;
+
 /**
  * A SoapUI project
- * 
+ *
  * @author Ole.Matzura
  */
 
 public interface Project extends TestModelItem
 {
-	/** The id of the JBossWS project nature */
+	/**
+	 * The id of the JBossWS project nature
+	 */
 	public static final String JBOSSWS_NATURE_ID = "com.eviware.soapui.jbosside.jbosswsNature";
 
-	/** The id of the SoapUI project nature */
+	/**
+	 * The id of the SoapUI project nature
+	 */
 	public static final String SOAPUI_NATURE_ID = "com.eviware.soapui.soapuiNature";
 
 	public Workspace getWorkspace();
@@ -63,7 +67,7 @@ public interface Project extends TestModelItem
 
 	public MockService addNewMockService( String name );
 
-	public boolean save() throws IOException;
+	public SaveStatus save() throws IOException;
 
 	public List<TestSuite> getTestSuiteList();
 

@@ -9,6 +9,7 @@ import org.junit.internal.matchers.TypeSafeMatcher;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -20,8 +21,12 @@ public class StubbedDialogs implements XDialogs
 	private List<String> errorMessages = new ArrayList<String>();
 	private List<String> infoMessages = new ArrayList<String>();
 	private List<Prompt> prompts = new ArrayList<Prompt>();
+	private List<Confirmation> confirmations = new ArrayList<Confirmation>();
 	private boolean mockingPromptValue = false;
 	private Object valueToReturnFromPrompt = null;
+	private boolean mockingConfirmValue;
+	private List<Boolean> valuesToReturnFromConfirm = new ArrayList<Boolean>();
+	private int currentValueToReturnFromConfirm = 0;
 
 	@Override
 	public void showErrorMessage( String message )
@@ -50,13 +55,38 @@ public class StubbedDialogs implements XDialogs
 	@Override
 	public boolean confirm( String question, String title )
 	{
+		confirmations.add( new Confirmation( question, title ) );
+		if( mockingConfirmValue )
+		{
+			Boolean currentConfirmationReturnValue = getCurrentConfirmationReturnValue();
+			if( currentConfirmationReturnValue == null )
+			{
+				return false;
+			}
+			return currentConfirmationReturnValue;
+		}
 		return false;
 	}
 
 	@Override
 	public Boolean confirmOrCancel( String question, String title )
 	{
+		confirmations.add( new Confirmation( question, title ) );
+		if( mockingConfirmValue )
+		{
+			return getCurrentConfirmationReturnValue();
+		}
 		return null;
+	}
+
+	private Boolean getCurrentConfirmationReturnValue()
+	{
+		Boolean returnValue = valuesToReturnFromConfirm.get( currentValueToReturnFromConfirm );
+		if( currentValueToReturnFromConfirm < valuesToReturnFromConfirm.size() - 1 )
+		{
+			currentValueToReturnFromConfirm++;
+		}
+		return returnValue;
 	}
 
 	@Override
@@ -69,7 +99,7 @@ public class StubbedDialogs implements XDialogs
 	public String prompt( String question, String title, String value )
 	{
 		prompts.add( new Prompt( question, title, value ) );
-		return mockingPromptValue ? (String)valueToReturnFromPrompt : value;
+		return mockingPromptValue ? ( String )valueToReturnFromPrompt : value;
 	}
 
 	@Override
@@ -138,10 +168,35 @@ public class StubbedDialogs implements XDialogs
 		return prompts;
 	}
 
-	public void mockPromptWithReturnValue(Object value)
+	public void mockPromptWithReturnValue( Object value )
 	{
 		mockingPromptValue = true;
 		valueToReturnFromPrompt = value;
+	}
+
+	public List<Confirmation> getConfirmations()
+	{
+		return confirmations;
+	}
+
+	public void mockConfirmWithReturnValue( Boolean value )
+	{
+		mockingConfirmValue = true;
+		currentValueToReturnFromConfirm = 0;
+		valuesToReturnFromConfirm.add( value );
+	}
+
+	public void mockConfirmWithReturnValue( Boolean value, Boolean... values )
+	{
+		mockConfirmWithReturnValue( value );
+		if( values != null )
+		{
+			valuesToReturnFromConfirm.addAll( Arrays.asList( values ) );
+		}
+		else
+		{
+			valuesToReturnFromConfirm.add( null );
+		}
 	}
 
 	public static class Prompt
@@ -168,7 +223,29 @@ public class StubbedDialogs implements XDialogs
 		}
 	}
 
-	public static Matcher<List<Prompt>> hasPromptWithValue(final String value)
+	public static class Confirmation
+	{
+
+		public final String question;
+		public final String title;
+
+		public Confirmation( String question, String title )
+		{
+			this.question = question;
+			this.title = title;
+		}
+
+		@Override
+		public String toString()
+		{
+			return "Confirmation{" +
+					"question='" + question + '\'' +
+					", title='" + title + '\'' +
+					'}';
+		}
+	}
+
+	public static Matcher<List<Prompt>> hasPromptWithValue( final String value )
 	{
 		return new TypeSafeMatcher<List<Prompt>>()
 		{
@@ -177,9 +254,10 @@ public class StubbedDialogs implements XDialogs
 			{
 				for( Prompt prompt : prompts )
 				{
-					 if (prompt.value.equals(value)) {
-						 return true;
-					 }
+					if( prompt.value.equals( value ) )
+					{
+						return true;
+					}
 				}
 				return false;
 			}
@@ -187,7 +265,32 @@ public class StubbedDialogs implements XDialogs
 			@Override
 			public void describeTo( Description description )
 			{
-				description.appendText("a Prompt list with a prompt with the value '" + value + "'");
+				description.appendText( "a Prompt list with a prompt with the value '" + value + "'" );
+			}
+		};
+	}
+
+	public static Matcher<List<Confirmation>> hasConfirmationWithQuestion( final String question )
+	{
+		return new TypeSafeMatcher<List<Confirmation>>()
+		{
+			@Override
+			public boolean matchesSafely( List<Confirmation> confirmations )
+			{
+				for( Confirmation confirmation : confirmations )
+				{
+					if( confirmation.question.equals( question ) )
+					{
+						return true;
+					}
+				}
+				return false;
+			}
+
+			@Override
+			public void describeTo( Description description )
+			{
+				description.appendText( "a Confirm list with a confirm with the question '" + question + "'" );
 			}
 		};
 	}

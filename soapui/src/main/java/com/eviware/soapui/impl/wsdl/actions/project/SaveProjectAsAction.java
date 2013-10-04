@@ -12,16 +12,17 @@
 
 package com.eviware.soapui.impl.wsdl.actions.project;
 
-import java.io.File;
-import java.io.IOException;
-
 import com.eviware.soapui.impl.wsdl.WsdlProject;
+import com.eviware.soapui.model.project.SaveStatus;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 
+import java.io.File;
+import java.io.IOException;
+
 /**
  * Prompts to save a WsdlProject to a new file
- * 
+ *
  * @author Ole.Matzura
  */
 
@@ -54,7 +55,7 @@ public class SaveProjectAsAction extends AbstractSoapUIAction<WsdlProject>
 				if( fileName == null )
 					return;
 
-				if( project.saveAs( fileName ) )
+				if( project.saveAs( fileName ) == SaveStatus.SUCCESS )
 				{
 					project.getWorkspace().save( true );
 				}
