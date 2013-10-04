@@ -125,16 +125,29 @@ public class NewWadlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 
 			int ix = projectName.lastIndexOf( '.' );
 			if( ix > 0 )
+			{
 				projectName = projectName.substring( 0, ix );
+			}
 
 			ix = projectName.lastIndexOf( '/' );
 			if( ix == -1 )
+			{
 				ix = projectName.lastIndexOf( '\\' );
+			}
 
 			if( ix != -1 )
+			{
 				projectName = projectName.substring( ix + 1 );
+			}
 
-			return projectName;
+			if( StringUtils.isNullOrEmpty( projectName ) )
+			{
+				return DEFAULT_PROJECT_NAME;
+			}
+			else
+			{
+				return projectName;
+			}
 		}
 		return DEFAULT_PROJECT_NAME;
 	}

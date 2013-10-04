@@ -24,7 +24,6 @@ import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 import com.eviware.soapui.support.action.swing.ActionList;
-import com.eviware.soapui.support.action.swing.DefaultActionList;
 import com.eviware.soapui.support.components.JUndoableTextField;
 import com.eviware.x.form.*;
 import com.eviware.x.impl.swing.JTextFieldFormField;
@@ -75,8 +74,7 @@ public class NewRestProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 		XForm form = newDialogBuilder.createForm( "" );
 		form.addTextField( URI_LABEL, URI_DESCRIPTION, XForm.FieldType.TEXT );
 
-		ActionList actions = new DefaultActionList();
-		actions.addActions( newDialogBuilder.buildOkCancelHelpActions( HelpUrls.NEWRESTPROJECT_HELP_URL ) );
+		ActionList actions = newDialogBuilder.buildOkCancelHelpActions( HelpUrls.NEWRESTPROJECT_HELP_URL );
 
 		actions.addAction( new AbstractAction( "Import WADL..." )
 		{
