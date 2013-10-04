@@ -18,6 +18,7 @@ import com.eviware.soapui.impl.rest.*;
 import com.eviware.soapui.impl.rest.support.*;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
+import com.eviware.soapui.model.workspace.Workspace;
 import com.eviware.soapui.support.MessageSupport;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
@@ -46,7 +47,7 @@ public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 	public static final String SOAPUI_ACTION_ID = "NewRESTProjectAction";
 
 	private final static Logger logger = Logger.getLogger( NewRESTProjectAction.class );
-	private static final String PROJECT_NAME = "REST Project"; //TODO: configurable or some other intelligent way
+	protected static final String DEFAULT_PROJECT_NAME = "REST Project";
 	public static final String EXAMPLE_URI = "http://example.com/resource/path/search?parameter=value";
 	private XFormDialog dialog;
 
@@ -96,7 +97,7 @@ public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 
 				String URI = dialog.getValue( Form.URI ).trim();
 
-				project = workspace.createProject( PROJECT_NAME, null );
+				project = workspace.createProject( createDefaultProjectName( workspace ), null );
 
 				createRestProject( project, URI );
 
@@ -117,6 +118,16 @@ public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 		{
 			resetUriField( textField );
 		}
+	}
+
+	protected String createDefaultProjectName( Workspace workspace )
+	{
+		int index = 1;
+		while(workspace.getProjectByName( DEFAULT_PROJECT_NAME + " " + index ) !=null)
+		{
+			index++;
+		}
+		return DEFAULT_PROJECT_NAME + " " + index ;
 	}
 
 
