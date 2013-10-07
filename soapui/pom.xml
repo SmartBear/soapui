@@ -20,13 +20,6 @@
         <version>4.6.1-SNAPSHOT</version>
     </parent>
 
-    <pluginRepositories>
-        <pluginRepository>
-            <id>googlecode-maven-install4j</id>
-            <name>googlecode-maven-install4j</name>
-            <url>http://maven-install4j.googlecode.com/svn/m2-repo</url>
-        </pluginRepository>
-    </pluginRepositories>
     <scm>
         <connection>scm:git:git://github.com/SmartBear/soapui.git</connection>
     </scm>
