@@ -37,7 +37,7 @@ JAVA_OPTS="-Xms128m -Xmx1024m -Dsoapui.properties=soapui.properties -Dsoapui.hom
 
 if $darwin
 then
-    JAVA_OPTS="$JAVA_OPTS -Dapple.awt.graphics.UseQuartz=true; -Dswing.crossplatformlaf=apple.laf.AquaLookAndFeel"
+    JAVA_OPTS="$JAVA_OPTS -Dswing.crossplatformlaf=apple.laf.AquaLookAndFeel"
 fi
 
 if [ $SOAPUI_HOME != "" ] 
