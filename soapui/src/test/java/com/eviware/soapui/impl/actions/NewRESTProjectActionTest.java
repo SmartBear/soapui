@@ -9,6 +9,8 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.eviware.soapui.impl.actions.NewRESTProjectAction.DEFAULT_PROJECT_NAME;
 import static org.junit.Assert.assertThat;
@@ -60,19 +62,30 @@ public class NewRESTProjectActionTest
 	}
 
 	@Test
-	public void createsProjectWithNameRESTProject2IfProjectsExistWithNameRESTProject1AndRESTProject3() throws Exception
+	public void createsProjectWithNameRESTProject4IfProjectsExistWithNameRESTProject1AndRESTProject3() throws Exception
 	{
-		mockWorkspaceProjects( DEFAULT_PROJECT_NAME + " 1", DEFAULT_PROJECT_NAME + " 3" );
-		String expectedFirstProjectName = DEFAULT_PROJECT_NAME + " 2";
+		mockWorkspaceProjects( DEFAULT_PROJECT_NAME + "1", DEFAULT_PROJECT_NAME + "3" );  //REST Project1, REST Project3
+		String expectedFirstProjectName = DEFAULT_PROJECT_NAME + " 4";
+		assertThat( newRESTProjectAction.createDefaultProjectName( workspace ), Is.is( expectedFirstProjectName ) );
+	}
+
+	@Test
+	public void doesNotThrowAnExceptionIfProjectExistsWithNameRESTProject3x() throws Exception
+	{
+		mockWorkspaceProjects( DEFAULT_PROJECT_NAME + " 3x" );
+		String expectedFirstProjectName = DEFAULT_PROJECT_NAME + " 1";
 		assertThat( newRESTProjectAction.createDefaultProjectName( workspace ), Is.is( expectedFirstProjectName ) );
 	}
 
 	private void mockWorkspaceProjects( String... projectNames )
 	{
+		List projectList = new ArrayList<Project>(  );
 		for( String projectName : projectNames )
 		{
 			Project project = Mockito.mock( Project.class );
-			when( workspace.getProjectByName( projectName ) ).thenReturn( project );
+			when( project.getName() ).thenReturn( projectName );
+			projectList.add( project );
 		}
+		when( workspace.getProjectList() ).thenReturn( projectList );
 	}
 }
