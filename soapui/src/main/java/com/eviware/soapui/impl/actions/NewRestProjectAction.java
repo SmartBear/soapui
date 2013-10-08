@@ -20,6 +20,7 @@ import com.eviware.soapui.impl.rest.support.*;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.support.MessageSupport;
+import com.eviware.soapui.support.ModelItemNamer;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
@@ -46,7 +47,7 @@ public class NewRestProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 	public static final String SOAPUI_ACTION_ID = "NewRestProjectAction";
 
 	private static final Logger logger = Logger.getLogger( NewRestProjectAction.class );
-	private static final String PROJECT_NAME = "REST Project"; //TODO: configurable or some other intelligent way
+	private static final String DEFAULT_PROJECT_NAME = "REST Project"; //TODO: configurable or some other intelligent way
 	private static final String EXAMPLE_URI = "http://example.com/resource/path/search?parameter=value";
 	private static final MessageSupport messages = MessageSupport.getMessages( NewRestProjectAction.class );
 	private static final String URI_LABEL = messages.get( "Form.URI.Label" );
@@ -123,7 +124,7 @@ public class NewRestProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 
 				String URI = dialog.getValue( URI_LABEL ).trim();
 
-				project = workspace.createProject( PROJECT_NAME, null );
+				project = workspace.createProject( ModelItemNamer.createName( DEFAULT_PROJECT_NAME, workspace.getProjectList() ), null );
 
 				createRestProject( project, URI );
 
@@ -145,7 +146,6 @@ public class NewRestProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 			resetUriField( textField );
 		}
 	}
-
 
 	private void addListenersTo( final JUndoableTextField innerField )
 	{
