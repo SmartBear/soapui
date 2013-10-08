@@ -18,7 +18,6 @@ import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.actions.request.AddRestRequestToTestCaseAction;
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
-import com.eviware.soapui.impl.rest.support.RestUtils;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.support.panels.AbstractHttpXmlRequestDesktopPanel;
@@ -159,7 +158,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 
 			panel.add( baseToolBar, BorderLayout.NORTH );
 
-			addMethodSelectorToolbar( panel );
+			addBottomToolbar( panel );
 
 			return panel;
 		}
@@ -183,22 +182,9 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 	}
 
 
-
-	protected void addMethodSelectorToolbar( JPanel panel )
+	protected void addBottomToolbar( JPanel panel )
 	{
-		if( getRequest().getResource() != null && getRequest() instanceof RestTestRequestInterface )
-		{
-			JXToolBar toolbar = UISupport.createToolbar();
-			JComboBox pathCombo = new JComboBox( new PathComboBoxModel() );
-			pathCombo.setRenderer( new RestMethodListCellRenderer() );
-			pathCombo.setPreferredSize( new Dimension( 200, 20 ) );
-			pathCombo.setSelectedItem( getRequest().getRestMethod() );
-
-			toolbar.addLabeledFixed( "Resource/Method:", pathCombo );
-			toolbar.addSeparator();
-
-			panel.add( toolbar, BorderLayout.SOUTH );
-		}
+		// Hook for sub classes
 	}
 
 	protected abstract void updateUiValues();
@@ -249,12 +235,6 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 			updateUiValues();
 		}
 	}
-
-
-
-
-
-
 
 
 	private class RestParamPropertyChangeListener implements PropertyChangeListener
@@ -338,70 +318,6 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 		}
 
 	}
-
-
-
-	private class PathComboBoxModel extends AbstractListModel implements ComboBoxModel
-	{
-		public int getSize()
-		{
-			int sz = 0;
-			for( RestResource resource : getRequest().getResource().getService().getAllResources() )
-			{
-				sz += resource.getRestMethodCount();
-			}
-
-			return sz;
-		}
-
-		public Object getElementAt( int index )
-		{
-			int sz = 0;
-			for( RestResource resource : getRequest().getResource().getService().getAllResources() )
-			{
-				if( index < sz + resource.getRestMethodCount() )
-				{
-					return resource.getRestMethodAt( index - sz );
-				}
-
-				sz += resource.getRestMethodCount();
-			}
-
-			return null;
-		}
-
-		public void setSelectedItem( Object anItem )
-		{
-			( ( RestTestRequestInterface )getRequest() ).getTestStep().setRestMethod( ( RestMethod )anItem );
-		}
-
-		public Object getSelectedItem()
-		{
-			return getRequest().getRestMethod();
-		}
-	}
-
-	private class RestMethodListCellRenderer extends DefaultListCellRenderer
-	{
-		@Override
-		public Component getListCellRendererComponent( JList list, Object value, int index, boolean isSelected,
-																	  boolean cellHasFocus )
-		{
-			Component result = super.getListCellRendererComponent( list, value, index, isSelected, cellHasFocus );
-
-			if( value instanceof RestMethod )
-			{
-				RestMethod item = ( RestMethod )value;
-				setIcon( item.getIcon() );
-				setText( item.getResource().getName() + " -> " + item.getName() );
-			}
-
-			return result;
-		}
-
-	}
-
-
 
 
 	private class EndpointChangeListener implements PropertyChangeListener

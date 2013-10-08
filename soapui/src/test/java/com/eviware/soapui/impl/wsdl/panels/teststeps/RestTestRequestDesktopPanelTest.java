@@ -15,28 +15,24 @@ import com.eviware.soapui.config.RestMethodConfig;
 import com.eviware.soapui.config.RestRequestConfig;
 import com.eviware.soapui.config.RestRequestStepConfig;
 import com.eviware.soapui.config.TestStepConfig;
-import com.eviware.soapui.impl.rest.*;
-import com.eviware.soapui.impl.rest.panels.request.views.content.RestRequestContentView;
+import com.eviware.soapui.impl.rest.RestRequest;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
+import com.eviware.soapui.impl.rest.RestResource;
+import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
 import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.registry.RestRequestStepFactory;
 import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.editor.EditorView;
-import com.eviware.soapui.support.editor.xml.XmlDocument;
 import com.eviware.soapui.utils.ContainerWalker;
 import com.eviware.soapui.utils.StatefulModelItemFactory;
 import com.eviware.soapui.utils.StubbedDialogs;
 import com.eviware.x.dialogs.XDialogs;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.swing.*;
-import javax.swing.text.Document;
-import javax.swing.text.JTextComponent;
-import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -72,11 +68,11 @@ public class RestTestRequestDesktopPanelTest
 		assertThat( restTestDesktopPanel.getEndpointsModel().getSelectedItem(), is( ( Object )ENDPOINT ) );
 	}
 
-	@Ignore("Temporary before we fix the actual editor")
 	@Test
 	public void displaysFullResourcePathInPathLabel()
 	{
-		assertThat( restTestDesktopPanel.pathLabel.getText(), is( restRequest.getResource().getFullPath() ) );
+		String expectedPath = "[" + restRequest.getResource().getFullPath() + "]";
+		assertThat( restTestDesktopPanel.pathLabel.getText(), is( expectedPath ) );
 	}
 
 	/* Helpers */

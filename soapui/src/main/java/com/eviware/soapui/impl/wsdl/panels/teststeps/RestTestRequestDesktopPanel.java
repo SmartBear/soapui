@@ -12,12 +12,15 @@
 
 package com.eviware.soapui.impl.wsdl.panels.teststeps;
 
+import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.util.Date;
 
 import javax.swing.*;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.rest.RestMethod;
+import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.panels.request.AbstractRestRequestDesktopPanel;
 import com.eviware.soapui.impl.rest.support.RestUtils;
 import com.eviware.soapui.impl.support.components.ModelItemXmlEditor;
@@ -165,12 +168,32 @@ public class RestTestRequestDesktopPanel extends AbstractRestRequestDesktopPanel
 
 	protected JComponent buildToolbar()
 	{
-		/* TODO: pathLabel = new JLabel();
-			updateFullPathLabel();
 
-			toolbar.add( pathLabel );*/
 		addAssertionButton = createActionButton( new AddAssertionAction( getRequest() ), true );
 		return super.buildToolbar();
+	}
+
+	@Override
+	protected void addBottomToolbar( JPanel panel )
+	{
+		if( getRequest().getResource() != null  )
+		{
+			JXToolBar toolbar = UISupport.createToolbar();
+			JComboBox pathCombo = new JComboBox( new PathComboBoxModel() );
+			pathCombo.setRenderer( new RestMethodListCellRenderer() );
+			pathCombo.setPreferredSize( new Dimension( 200, 20 ) );
+			pathCombo.setSelectedItem( getRequest().getRestMethod() );
+
+			toolbar.addLabeledFixed( "Resource/Method:", pathCombo );
+			toolbar.addSeparator();
+
+			pathLabel = new JLabel();
+			updateFullPathLabel();
+
+			toolbar.add( pathLabel );
+
+			panel.add( toolbar, BorderLayout.SOUTH );
+		}
 	}
 
 	@Override
@@ -336,4 +359,66 @@ public class RestTestRequestDesktopPanel extends AbstractRestRequestDesktopPanel
 		if( evt.getPropertyName().equals( RestTestRequestInterface.STATUS_PROPERTY ) )
 			updateStatusIcon();
 	}
+
+	private class PathComboBoxModel extends AbstractListModel implements ComboBoxModel
+	{
+		public int getSize()
+		{
+			int sz = 0;
+			for( RestResource resource : getRequest().getResource().getService().getAllResources() )
+			{
+				sz += resource.getRestMethodCount();
+			}
+
+			return sz;
+		}
+
+		public Object getElementAt( int index )
+		{
+			int sz = 0;
+			for( RestResource resource : getRequest().getResource().getService().getAllResources() )
+			{
+				if( index < sz + resource.getRestMethodCount() )
+				{
+					return resource.getRestMethodAt( index - sz );
+				}
+
+				sz += resource.getRestMethodCount();
+			}
+
+			return null;
+		}
+
+		public void setSelectedItem( Object anItem )
+		{
+			( ( RestTestRequestInterface )getRequest() ).getTestStep().setRestMethod( ( RestMethod )anItem );
+		}
+
+		public Object getSelectedItem()
+		{
+			return getRequest().getRestMethod();
+		}
+	}
+
+	private class RestMethodListCellRenderer extends DefaultListCellRenderer
+	{
+		@Override
+		public Component getListCellRendererComponent( JList list, Object value, int index, boolean isSelected,
+																	  boolean cellHasFocus )
+		{
+			Component result = super.getListCellRendererComponent( list, value, index, isSelected, cellHasFocus );
+
+			if( value instanceof RestMethod )
+			{
+				RestMethod item = ( RestMethod )value;
+				setIcon( item.getIcon() );
+				setText( item.getResource().getName() + " -> " + item.getName() );
+			}
+
+			return result;
+		}
+
+	}
+
+
 }
