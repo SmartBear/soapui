@@ -62,7 +62,7 @@
                         <descriptor>src/main/assembly/linux-bin.xml</descriptor>
                         <descriptor>src/main/assembly/mac-bin.xml</descriptor>
                     </descriptors>
-                    <finalName>${project.name.full}</finalName>
+                    <finalName>${project.name.visible}-${project.version}</finalName>
                     <appendAssemblyId>true</appendAssemblyId>
                 </configuration>
             </plugin>
@@ -145,32 +145,32 @@
                     <files>
                         <!-- Archives -->
                         <file>
-                            ${assembly.build.directory}/${project.name.full}-windows-bin.zip
+                            ${assembly.build.directory}/${project.name.visible}-${project.version}-windows-bin.zip
                         </file>
                         <file>
-                            ${assembly.build.directory}/${project.name.full}-win32-standalone-bin.zip
+                            ${assembly.build.directory}/${project.name.visible}-${project.version}-win32-standalone-bin.zip
                         </file>
                         <file>
-                            ${assembly.build.directory}/${project.name.full}-linux-bin.tar.gz
+                            ${assembly.build.directory}/${project.name.visible}-${project.version}-linux-bin.tar.gz
                         </file>
                         <file>
-                            ${assembly.build.directory}/${project.name.full}-mac-bin.zip
+                            ${assembly.build.directory}/${project.name.visible}-${project.version}-mac-bin.zip
                         </file>
                         <!-- Installers -->
                         <file>
-                            ${installer.build.directory}/SoapUI-x32-${project.version}.exe
+                            ${installer.build.directory}/${project.name.visible}-x32-${project.version}.exe
                         </file>
                         <file>
-                            ${installer.build.directory}/SoapUI-x64-${project.version}.exe
+                            ${installer.build.directory}/${project.name.visible}-x64-${project.version}.exe
                         </file>
                         <file>
-                            ${installer.build.directory}/SoapUI-x32-${project.version}.sh
+                            ${installer.build.directory}/${project.name.visible}-x32-${project.version}.sh
                         </file>
                         <file>
-                            ${installer.build.directory}/SoapUI-x64-${project.version}.sh
+                            ${installer.build.directory}/${project.name.visible}-x64-${project.version}.sh
                         </file>
                         <file>
-                            ${installer.build.directory}/SoapUI-${project.version}.dmg
+                            ${installer.build.directory}/${project.name.visible}-${project.version}.dmg
                         </file>
                     </files>
                 </configuration>

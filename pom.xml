@@ -32,6 +32,7 @@
         <build.date>${maven.build.timestamp}</build.date>
 
         <project.name.full>soapui-${project.version}</project.name.full>
+        <project.name.visible>SoapUI</project.name.visible>
         <project.src.artifactId>soapui</project.src.artifactId>
     </properties>
 
