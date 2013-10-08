@@ -56,6 +56,7 @@ public class RestTestRequestDesktopPanel extends AbstractRestRequestDesktopPanel
 	private JLogList logArea;
 	private InternalTestMonitorListener testMonitorListener = new InternalTestMonitorListener();
 	private JButton addAssertionButton;
+	protected JComboBox methodResourceCombo;
 	protected boolean updatingRequest;
 	private AssertionsPanel assertionsPanel;
 	private JInspectorPanel inspectorPanel;
@@ -179,12 +180,12 @@ public class RestTestRequestDesktopPanel extends AbstractRestRequestDesktopPanel
 		if( getRequest().getResource() != null  )
 		{
 			JXToolBar toolbar = UISupport.createToolbar();
-			JComboBox pathCombo = new JComboBox( new PathComboBoxModel() );
-			pathCombo.setRenderer( new RestMethodListCellRenderer() );
-			pathCombo.setPreferredSize( new Dimension( 200, 20 ) );
-			pathCombo.setSelectedItem( getRequest().getRestMethod() );
+			methodResourceCombo = new JComboBox( new PathComboBoxModel() );
+			methodResourceCombo.setRenderer( new RestMethodListCellRenderer() );
+			methodResourceCombo.setPreferredSize( new Dimension( 200, 20 ) );
+			methodResourceCombo.setSelectedItem( getRequest().getRestMethod() );
 
-			toolbar.addLabeledFixed( "Resource/Method:", pathCombo );
+			toolbar.addLabeledFixed( "Resource/Method:", methodResourceCombo );
 			toolbar.addSeparator();
 
 			pathLabel = new JLabel();

@@ -75,6 +75,13 @@ public class RestTestRequestDesktopPanelTest
 		assertThat( restTestDesktopPanel.pathLabel.getText(), is( expectedPath ) );
 	}
 
+	@Test
+	public void displaysResourceMethodCombo()
+	{
+		Object expectedMethodResourceCombo = restRequest.getResource().getRestMethodByName( "Get" ); //TODO: remove hardcoded value
+		assertThat( restTestDesktopPanel.methodResourceCombo.getSelectedItem(), is( expectedMethodResourceCombo ) );
+	}
+
 	/* Helpers */
 
 	private JComboBox<String> findEndpointsComboBox()
