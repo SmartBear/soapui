@@ -19,6 +19,8 @@ import com.eviware.soapui.impl.rest.*;
 import com.eviware.soapui.impl.rest.support.*;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
+import com.eviware.soapui.model.project.Project;
+import com.eviware.soapui.model.workspace.Workspace;
 import com.eviware.soapui.support.MessageSupport;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
@@ -45,8 +47,8 @@ public class NewRestProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 {
 	public static final String SOAPUI_ACTION_ID = "NewRestProjectAction";
 
-	private static final Logger logger = Logger.getLogger( NewRestProjectAction.class );
-	private static final String PROJECT_NAME = "REST Project"; //TODO: configurable or some other intelligent way
+	private static final  Logger logger = Logger.getLogger( NewRestProjectAction.class );
+	protected static final String DEFAULT_PROJECT_NAME = "REST Project";
 	private static final String EXAMPLE_URI = "http://example.com/resource/path/search?parameter=value";
 	private static final MessageSupport messages = MessageSupport.getMessages( NewRestProjectAction.class );
 	private static final String URI_LABEL = messages.get( "Form.URI.Label" );
@@ -123,7 +125,7 @@ public class NewRestProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 
 				String URI = dialog.getValue( URI_LABEL ).trim();
 
-				project = workspace.createProject( PROJECT_NAME, null );
+				project = workspace.createProject( createDefaultProjectName( workspace ), null );
 
 				createRestProject( project, URI );
 
@@ -144,6 +146,33 @@ public class NewRestProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 		{
 			resetUriField( textField );
 		}
+	}
+
+	protected String createDefaultProjectName( Workspace workspace )
+	{
+		int maxExistingIndex = 0;
+		for( Project project : workspace.getProjectList() )
+		{
+			String projectName = project.getName();
+			if( projectName.startsWith( DEFAULT_PROJECT_NAME ) )
+			{
+				try
+				{
+					int beginIndex = projectName.indexOf( DEFAULT_PROJECT_NAME ) + DEFAULT_PROJECT_NAME.length();
+					int indexInProjectName = Integer.parseInt( projectName.substring( beginIndex ).trim() );
+					if( indexInProjectName > maxExistingIndex )
+					{
+						maxExistingIndex = indexInProjectName;
+					}
+				}
+				catch( Exception e )
+				{
+					//Do nothing, at worst it will create the project with same name
+				}
+			}
+		}
+
+		return DEFAULT_PROJECT_NAME + " " + ( ++maxExistingIndex );
 	}
 
 
@@ -180,8 +209,7 @@ public class NewRestProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 			innerField.setText( "" );
 			innerField.setFont( originalFont );
 			innerField.setForeground( Color.BLACK );
-		}
-		finally
+		} finally
 		{
 			if( initialKeyListener != null )
 			{
