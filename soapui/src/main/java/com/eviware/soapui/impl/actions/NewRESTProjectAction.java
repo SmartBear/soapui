@@ -127,7 +127,7 @@ public class NewRESTProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 		for( Project project : workspace.getProjectList() )
 		{
 			String projectName = project.getName();
-			if( projectName.contains( DEFAULT_PROJECT_NAME ) )
+			if( projectName.startsWith( DEFAULT_PROJECT_NAME ) )
 			{
 				try
 				{
